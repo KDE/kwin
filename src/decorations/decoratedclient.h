@@ -24,8 +24,6 @@ class AbstractClient;
 namespace Decoration
 {
 
-class Renderer;
-
 class DecoratedClientImpl : public QObject, public KDecoration2::ApplicationMenuEnabledDecoratedClientPrivate
 {
     Q_OBJECT
@@ -82,9 +80,6 @@ public:
     AbstractClient *client() {
         return m_client;
     }
-    Renderer *renderer() {
-        return m_renderer;
-    }
     KDecoration2::DecoratedClient *decoratedClient() {
         return KDecoration2::DecoratedClientPrivate::client();
     }
@@ -95,12 +90,8 @@ private Q_SLOTS:
     void delayedRequestToggleMaximization(Options::WindowOperation operation);
 
 private:
-    void createRenderer();
-    void destroyRenderer();
     AbstractClient *m_client;
     QSize m_clientSize;
-    Renderer *m_renderer;
-    QMetaObject::Connection m_compositorToggledConnection;
 
     QString m_toolTipText;
     QTimer m_toolTipWakeUp;

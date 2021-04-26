@@ -28,6 +28,7 @@
 #include "screens.h"
 #include "shadowitem.h"
 #include "surfaceitem_x11.h"
+#include "windowitem.h"
 #include "xcbutils.h"
 #include "decorations/decoratedclient.h"
 
@@ -135,7 +136,7 @@ Shadow *SceneXrender::createShadow(Toplevel *toplevel)
     return new SceneXRenderShadow(toplevel);
 }
 
-Decoration::Renderer *SceneXrender::createDecorationRenderer(Decoration::DecoratedClientImpl* client)
+DecorationRenderer *SceneXrender::createDecorationRenderer(Decoration::DecoratedClientImpl *client)
 {
     return new SceneXRenderDecorationRenderer(client);
 }
@@ -309,7 +310,8 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
     X11Client *client = dynamic_cast<X11Client *>(toplevel);
     Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
     const QRect decorationRect = toplevel->rect();
-    if ((client && client->isDecorated()) || (deleted && deleted->wasDecorated())) {
+    const DecorationItem *decorationItem = windowItem()->decorationItem();
+    if (decorationItem) {
         // decorated client
         transformed_shape = decorationRect;
         if (toplevel->shape()) {
@@ -378,7 +380,7 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
     // This solves a number of glitches and on top of this
     // it optimizes painting quite a bit
     const bool blitInTempPixmap = xRenderOffscreen() || (data.crossFadeProgress() < 1.0 && !opaque) ||
-                                 (scaled && (wantShadow || (client && client->isDecorated()) || (deleted && deleted->wasDecorated())));
+                                 (scaled && (wantShadow || decorationItem));
 
     xcb_render_picture_t renderTarget = m_scene->xrenderBufferPicture();
     if (blitInTempPixmap) {
@@ -423,18 +425,15 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
     xcb_render_picture_t bottom = XCB_RENDER_PICTURE_NONE;
     QRect dtr, dlr, drr, dbr;
     const SceneXRenderDecorationRenderer *renderer = nullptr;
-    if (client && client->isDecorated()) {
-        SceneXRenderDecorationRenderer *r = static_cast<SceneXRenderDecorationRenderer*>(client->decoratedClient()->renderer());
-        if (r) {
-            r->render();
-            renderer = r;
+    if (decorationItem) {
+        renderer = static_cast<const SceneXRenderDecorationRenderer *>(decorationItem->renderer());
+        noBorder = false;
+
+        if (client) {
+            client->layoutDecorationRects(dlr, dtr, drr, dbr);
+        } else if (deleted) {
+            deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
         }
-        noBorder = false;
-        client->layoutDecorationRects(dlr, dtr, drr, dbr);
-    } else if (deleted && deleted->wasDecorated()) {
-        renderer = static_cast<const SceneXRenderDecorationRenderer*>(deleted->decorationRenderer());
-        noBorder = false;
-        deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
     }
     if (renderer) {
         left   = renderer->picture(SceneXRenderDecorationRenderer::DecorationPart::Left);
@@ -1004,10 +1003,9 @@ xcb_render_picture_t SceneXRenderShadow::picture(Shadow::ShadowElements element)
 }
 
 SceneXRenderDecorationRenderer::SceneXRenderDecorationRenderer(Decoration::DecoratedClientImpl *client)
-    : Renderer(client)
+    : DecorationRenderer(client)
     , m_gc(XCB_NONE)
 {
-    connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (AbstractClient::*)(const QRegion&)>(&AbstractClient::addRepaint));
     for (int i = 0; i < int(DecorationPart::Count); ++i) {
         m_pixmaps[i] = XCB_PIXMAP_NONE;
         m_pictures[i] = nullptr;
@@ -1027,12 +1025,8 @@ SceneXRenderDecorationRenderer::~SceneXRenderDecorationRenderer()
     }
 }
 
-void SceneXRenderDecorationRenderer::render()
+void SceneXRenderDecorationRenderer::render(const QRegion &region)
 {
-    QRegion scheduled = getScheduled();
-    if (scheduled.isEmpty()) {
-        return;
-    }
     if (areImageSizesDirty()) {
         resizePixmaps();
         resetImageSizesDirty();
@@ -1058,7 +1052,7 @@ void SceneXRenderDecorationRenderer::render()
                       image.width(), image.height(), geo.x() - offset.x(), geo.y() - offset.y(), 0, 32,
                       image.sizeInBytes(), image.constBits());
     };
-    const QRect geometry = scheduled.boundingRect();
+    const QRect geometry = region.boundingRect();
     renderPart(left.intersected(geometry),   left.topLeft(),   int(DecorationPart::Left));
     renderPart(top.intersected(geometry),    top.topLeft(),    int(DecorationPart::Top));
     renderPart(right.intersected(geometry),  right.topLeft(),  int(DecorationPart::Right));
@@ -1111,12 +1105,6 @@ xcb_render_picture_t SceneXRenderDecorationRenderer::picture(SceneXRenderDecorat
         return XCB_RENDER_PICTURE_NONE;
     }
     return *picture;
-}
-
-void SceneXRenderDecorationRenderer::reparent(Deleted *deleted)
-{
-    render();
-    Renderer::reparent(deleted);
 }
 
 #undef DOUBLE_TO_FIXED

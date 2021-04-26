@@ -23,12 +23,11 @@ namespace KWin
 namespace Decoration
 {
 class DecoratedClientImpl;
-class Renderer;
 }
 
 class AbstractOutput;
 class AbstractThumbnailItem;
-class DecorationItem;
+class DecorationRenderer;
 class Deleted;
 class EffectFrameImpl;
 class EffectWindowImpl;
@@ -156,7 +155,7 @@ public:
 
     virtual void triggerFence();
 
-    virtual Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *) = 0;
+    virtual DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *) = 0;
 
     /**
      * Whether the Scene is able to drive animations.

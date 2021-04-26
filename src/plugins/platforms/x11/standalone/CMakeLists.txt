@@ -8,7 +8,6 @@ set(X11PLATFORM_SOURCES
     overlaywindow_x11.cpp
     screenedges_filter.cpp
     windowselector.cpp
-    x11_decoration_renderer.cpp
     x11_output.cpp
     x11_platform.cpp
     x11cursor.cpp

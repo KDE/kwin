@@ -45,12 +45,6 @@ class Toplevel;
 class XRenderBackend;
 #endif
 
-namespace Decoration
-{
-class Renderer;
-class DecoratedClientImpl;
-}
-
 class KWIN_EXPORT Outputs : public QVector<AbstractOutput*>
 {
 public:
@@ -358,13 +352,6 @@ public:
      * Default implementation creates an OutlineVisual suited for composited usage.
      */
     virtual OutlineVisual *createOutline(Outline *outline);
-
-    /**
-     * Creates the Decoration::Renderer for the given @p client.
-     *
-     * The default implementation creates a Renderer suited for the Compositor, @c nullptr if there is no Compositor.
-     */
-    virtual Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client);
 
     /**
      * Platform specific way to invert the screen.

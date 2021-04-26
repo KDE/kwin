@@ -75,6 +75,71 @@ const NET::WindowTypes SUPPORTED_MANAGED_WINDOW_TYPES_MASK = NET::NormalMask | N
         | NET::UtilityMask | NET::SplashMask | NET::NotificationMask | NET::OnScreenDisplayMask
         | NET::CriticalNotificationMask;
 
+X11DecorationRenderer::X11DecorationRenderer(Decoration::DecoratedClientImpl *client)
+    : DecorationRenderer(client)
+    , m_scheduleTimer(new QTimer(this))
+    , m_gc(XCB_NONE)
+{
+    // Delay any rendering to end of event cycle to catch multiple updates per cycle.
+    m_scheduleTimer->setSingleShot(true);
+    m_scheduleTimer->setInterval(0);
+    connect(m_scheduleTimer, &QTimer::timeout, this, &X11DecorationRenderer::update);
+    connect(this, &X11DecorationRenderer::damaged, m_scheduleTimer, static_cast<void (QTimer::*)()>(&QTimer::start));
+}
+
+X11DecorationRenderer::~X11DecorationRenderer()
+{
+    if (m_gc != XCB_NONE) {
+        xcb_free_gc(connection(), m_gc);
+    }
+}
+
+void X11DecorationRenderer::update()
+{
+    if (!damage().isEmpty()) {
+        render(damage());
+        resetDamage();
+    }
+}
+
+void X11DecorationRenderer::render(const QRegion &region)
+{
+    if (!client()) {
+        return;
+    }
+    xcb_connection_t *c = kwinApp()->x11Connection();
+    if (m_gc == XCB_NONE) {
+        m_gc = xcb_generate_id(c);
+        xcb_create_gc(c, m_gc, client()->client()->frameId(), 0, nullptr);
+    }
+
+    QRect left, top, right, bottom;
+    client()->client()->layoutDecorationRects(left, top, right, bottom);
+
+    const QRect geometry = region.boundingRect();
+    left   = left.intersected(geometry);
+    top    = top.intersected(geometry);
+    right  = right.intersected(geometry);
+    bottom = bottom.intersected(geometry);
+
+    auto renderPart = [this, c](const QRect &geo) {
+        if (!geo.isValid()) {
+            return;
+        }
+        QImage image = renderToImage(geo);
+        xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, client()->client()->frameId(), m_gc,
+                      image.width(), image.height(), geo.x(), geo.y(), 0, client()->client()->depth(),
+                      image.sizeInBytes(), image.constBits());
+    };
+    renderPart(left);
+    renderPart(top);
+    renderPart(right);
+    renderPart(bottom);
+
+    xcb_flush(c);
+    resetImageSizesDirty();
+}
+
 // Creating a client:
 //  - only by calling Workspace::createClient()
 //      - it creates a new client and calls manage() for it
@@ -1054,6 +1119,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
     move(calculateGravitation(false));
     resize(adjustedSize());
     updateDecorationInputShape();
+    maybeCreateX11DecorationRenderer();
     if (Compositor::compositing()) {
         discardWindowPixmap();
     }
@@ -1066,6 +1132,7 @@ void X11Client::destroyDecoration()
     if (isDecorated()) {
         QPoint grav = calculateGravitation(true);
         AbstractClient::destroyDecoration();
+        maybeDestroyX11DecorationRenderer();
         resize(adjustedSize());
         move(grav);
         if (compositing())
@@ -1075,6 +1142,22 @@ void X11Client::destroyDecoration()
         }
     }
     m_decoInputExtent.reset();
+}
+
+void X11Client::maybeCreateX11DecorationRenderer()
+{
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        return;
+    }
+    if (!compositing() && decoratedClient()) {
+        m_decorationRenderer.reset(new X11DecorationRenderer(decoratedClient()));
+        decoration()->update();
+    }
+}
+
+void X11Client::maybeDestroyX11DecorationRenderer()
+{
+    m_decorationRenderer.reset();
 }
 
 void X11Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const
@@ -1353,6 +1436,8 @@ bool X11Client::setupCompositing()
     if (!Toplevel::setupCompositing()){
         return false;
     }
+    // If compositing is back on, stop rendering decoration in the frame window.
+    maybeDestroyX11DecorationRenderer();
     updateVisibility(); // for internalKeep()
     return true;
 }
@@ -1363,6 +1448,8 @@ void X11Client::finishCompositing(ReleaseReason releaseReason)
     updateVisibility();
     // for safety in case KWin is just resizing the window
     resetHaveResizeEffect();
+    // If compositing is off, render the decoration in the X11 frame window.
+    maybeCreateX11DecorationRenderer();
 }
 
 /**

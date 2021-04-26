@@ -11,6 +11,7 @@
 #pragma once
 
 // kwin
+#include "decorationitem.h"
 #include "options.h"
 #include "rules.h"
 #include "abstract_client.h"
@@ -44,6 +45,28 @@ enum class Predicate {
     WrapperIdMatch,
     FrameIdMatch,
     InputIdMatch,
+};
+
+/**
+ * @todo Remove when the X11 platform support is dropped. This decoration renderer
+ * will be used if compositing is off.
+ */
+class X11DecorationRenderer : public DecorationRenderer
+{
+    Q_OBJECT
+
+public:
+    explicit X11DecorationRenderer(Decoration::DecoratedClientImpl *client);
+    ~X11DecorationRenderer() override;
+
+protected:
+    void render(const QRegion &region) override;
+
+private:
+    void update();
+
+    QTimer *m_scheduleTimer;
+    xcb_gcontext_t m_gc;
 };
 
 class KWIN_EXPORT X11Client : public AbstractClient
@@ -424,6 +447,9 @@ private:
      */
     void updateShowOnScreenEdge();
 
+    void maybeCreateX11DecorationRenderer();
+    void maybeDestroyX11DecorationRenderer();
+
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
     Xcb::Window m_frame;
@@ -506,6 +532,7 @@ private:
     QRect m_bufferGeometryBeforeUpdateBlocking;
     QRect m_frameGeometryBeforeUpdateBlocking;
     QRect m_clientGeometryBeforeUpdateBlocking;
+    QScopedPointer<X11DecorationRenderer> m_decorationRenderer;
 };
 
 inline xcb_window_t X11Client::wrapperId() const

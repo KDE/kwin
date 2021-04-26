@@ -13,12 +13,11 @@
 
 #include "openglbackend.h"
 
+#include "decorationitem.h"
 #include "scene.h"
 #include "shadow.h"
 
 #include "kwinglutils.h"
-
-#include "decorations/decorationrenderer.h"
 
 namespace KWin
 {
@@ -45,7 +44,7 @@ public:
     void doneOpenGLContextCurrent() override;
     bool supportsSurfacelessContext() const override;
     bool supportsNativeFence() const override;
-    Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
+    DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     void triggerFence() override;
     virtual QMatrix4x4 projectionMatrix() const = 0;
     bool animationsSupported() const override;
@@ -256,7 +255,7 @@ private:
     QSharedPointer<GLTexture> m_texture;
 };
 
-class SceneOpenGLDecorationRenderer : public Decoration::Renderer
+class SceneOpenGLDecorationRenderer : public DecorationRenderer
 {
     Q_OBJECT
 public:
@@ -270,8 +269,7 @@ public:
     explicit SceneOpenGLDecorationRenderer(Decoration::DecoratedClientImpl *client);
     ~SceneOpenGLDecorationRenderer() override;
 
-    void render() override;
-    void reparent(Deleted *deleted) override;
+    void render(const QRegion &region) override;
 
     GLTexture *texture() {
         return m_texture.data();

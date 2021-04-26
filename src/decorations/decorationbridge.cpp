@@ -8,7 +8,6 @@
 */
 #include "decorationbridge.h"
 #include "decoratedclient.h"
-#include "decorationrenderer.h"
 #include "decorations_logging.h"
 #include "settings.h"
 // KWin core

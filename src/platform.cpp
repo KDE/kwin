@@ -595,14 +595,6 @@ OutlineVisual *Platform::createOutline(Outline *outline)
     return nullptr;
 }
 
-Decoration::Renderer *Platform::createDecorationRenderer(Decoration::DecoratedClientImpl *client)
-{
-    if (Compositor::self()->scene()) {
-        return Compositor::self()->scene()->createDecorationRenderer(client);
-    }
-    return nullptr;
-}
-
 void Platform::invertScreen()
 {
     if (effects) {

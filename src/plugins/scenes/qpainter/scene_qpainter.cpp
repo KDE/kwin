@@ -314,25 +314,18 @@ void SceneQPainter::Window::renderShadow(QPainter* painter)
 void SceneQPainter::Window::renderWindowDecorations(QPainter *painter)
 {
     // TODO: custom decoration opacity
-    AbstractClient *client = dynamic_cast<AbstractClient*>(toplevel);
-    Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
-    if (!client && !deleted) {
+    const DecorationItem *decorationItem = windowItem()->decorationItem();
+    if (!decorationItem) {
         return;
     }
 
-    const SceneQPainterDecorationRenderer *renderer = nullptr;
+    const auto renderer = static_cast<const SceneQPainterDecorationRenderer *>(decorationItem->renderer());
     QRect dtr, dlr, drr, dbr;
-    if (client && client->isDecorated()) {
-        if (SceneQPainterDecorationRenderer *r = static_cast<SceneQPainterDecorationRenderer *>(client->decoratedClient()->renderer())) {
-            r->render();
-            renderer = r;
-        }
+    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
         client->layoutDecorationRects(dlr, dtr, drr, dbr);
-    } else if (deleted && deleted->wasDecorated()) {
+    } else if (auto deleted = qobject_cast<Deleted *>(toplevel)) {
         deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
-        renderer = static_cast<const SceneQPainterDecorationRenderer *>(deleted->decorationRenderer());
-    }
-    if (!renderer) {
+    } else {
         return;
     }
 
@@ -342,7 +335,7 @@ void SceneQPainter::Window::renderWindowDecorations(QPainter *painter)
     painter->drawImage(dbr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Bottom));
 }
 
-Decoration::Renderer *SceneQPainter::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
+DecorationRenderer *SceneQPainter::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
 {
     return new SceneQPainterDecorationRenderer(impl);
 }
@@ -690,12 +683,9 @@ bool SceneQPainterShadow::prepareBackend()
 // QPainterDecorationRenderer
 //****************************************
 SceneQPainterDecorationRenderer::SceneQPainterDecorationRenderer(Decoration::DecoratedClientImpl *client)
-    : Renderer(client)
+    : DecorationRenderer(client)
 {
-    connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (AbstractClient::*)(const QRegion&)>(&AbstractClient::addRepaint));
 }
-
-SceneQPainterDecorationRenderer::~SceneQPainterDecorationRenderer() = default;
 
 QImage SceneQPainterDecorationRenderer::image(SceneQPainterDecorationRenderer::DecorationPart part) const
 {
@@ -703,12 +693,8 @@ QImage SceneQPainterDecorationRenderer::image(SceneQPainterDecorationRenderer::D
     return m_images[int(part)];
 }
 
-void SceneQPainterDecorationRenderer::render()
+void SceneQPainterDecorationRenderer::render(const QRegion &region)
 {
-    const QRegion scheduled = getScheduled();
-    if (scheduled.isEmpty()) {
-        return;
-    }
     if (areImageSizesDirty()) {
         resizeImages();
         resetImageSizesDirty();
@@ -723,7 +709,7 @@ void SceneQPainterDecorationRenderer::render()
     const QRect right(QPoint(top.width() - imageSize(DecorationPart::Right).width(), top.height()), imageSize(DecorationPart::Right));
     const QRect bottom(QPoint(0, left.y() + left.height()), imageSize(DecorationPart::Bottom));
 
-    const QRect geometry = scheduled.boundingRect();
+    const QRect geometry = region.boundingRect();
     auto renderPart = [this](const QRect &rect, const QRect &partRect, int index) {
         if (rect.isEmpty()) {
             return;
@@ -766,13 +752,6 @@ void SceneQPainterDecorationRenderer::resizeImages()
     checkAndCreate(int(DecorationPart::Top), top.size());
     checkAndCreate(int(DecorationPart::Bottom), bottom.size());
 }
-
-void SceneQPainterDecorationRenderer::reparent(Deleted *deleted)
-{
-    render();
-    Renderer::reparent(deleted);
-}
-
 
 QPainterFactory::QPainterFactory(QObject *parent)
     : SceneFactory(parent)

@@ -10,9 +10,9 @@
 #ifndef KWIN_SCENE_XRENDER_H
 #define KWIN_SCENE_XRENDER_H
 
+#include "decorationitem.h"
 #include "scene.h"
 #include "shadow.h"
-#include "decorations/decorationrenderer.h"
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
@@ -39,7 +39,7 @@ public:
     void screenGeometryChanged(const QSize &size) override;
     xcb_render_picture_t xrenderBufferPicture() const override;
     OverlayWindow *overlayWindow() const override;
-    Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client) override;
+    DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
 
     bool animationsSupported() const override {
@@ -162,7 +162,7 @@ private:
     XRenderPicture* m_pictures[ShadowElementsCount];
 };
 
-class SceneXRenderDecorationRenderer : public Decoration::Renderer
+class SceneXRenderDecorationRenderer : public DecorationRenderer
 {
     Q_OBJECT
 public:
@@ -176,8 +176,7 @@ public:
     explicit SceneXRenderDecorationRenderer(Decoration::DecoratedClientImpl *client);
     ~SceneXRenderDecorationRenderer() override;
 
-    void render() override;
-    void reparent(Deleted *deleted) override;
+    void render(const QRegion &region) override;
 
     xcb_render_picture_t picture(DecorationPart part) const;
 

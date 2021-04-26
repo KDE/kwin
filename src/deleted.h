@@ -17,11 +17,6 @@ namespace KWin
 
 class AbstractClient;
 
-namespace Decoration
-{
-class Renderer;
-}
-
 class KWIN_EXPORT Deleted : public Toplevel
 {
     Q_OBJECT
@@ -41,7 +36,6 @@ public:
     QRect transparentRect() const override;
     bool isDeleted() const override;
     xcb_window_t frameId() const override;
-    bool wasDecorated() const;
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
     Layer layer() const override {
         return m_layer;
@@ -60,10 +54,6 @@ public:
         return m_wasClient;
     }
     QByteArray windowRole() const override;
-
-    const Decoration::Renderer *decorationRenderer() const {
-        return m_decorationRenderer;
-    }
 
     bool isFullScreen() const {
         return m_fullscreen;
@@ -127,7 +117,6 @@ private:
     bool m_modal;
     QList<AbstractClient*> m_mainClients;
     bool m_wasClient;
-    Decoration::Renderer *m_decorationRenderer;
     NET::WindowType m_type = NET::Unknown;
     QByteArray m_windowRole;
     bool m_fullscreen;
@@ -136,7 +125,6 @@ private:
     QString m_caption;
     bool m_wasPopupWindow;
     bool m_wasOutline;
-    bool m_wasDecorated;
     bool m_wasLockScreen;
     qreal m_bufferScale = 1;
 };

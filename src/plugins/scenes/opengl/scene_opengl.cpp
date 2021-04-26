@@ -39,6 +39,7 @@
 #include "decorations/decoratedclient.h"
 #include "shadowitem.h"
 #include "surfaceitem.h"
+#include "windowitem.h"
 #include <logging.h>
 
 #include <KWaylandServer/buffer_interface.h>
@@ -901,7 +902,7 @@ Shadow *SceneOpenGL::createShadow(Toplevel *toplevel)
     return new SceneOpenGLShadow(toplevel);
 }
 
-Decoration::Renderer *SceneOpenGL::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
+DecorationRenderer *SceneOpenGL::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
 {
     return new SceneOpenGLDecorationRenderer(impl);
 }
@@ -1213,22 +1214,10 @@ void OpenGLWindow::endRenderWindow()
 
 GLTexture *OpenGLWindow::getDecorationTexture() const
 {
-    if (AbstractClient *client = dynamic_cast<AbstractClient *>(toplevel)) {
-        if (!client->isDecorated()) {
-            return nullptr;
-        }
-        if (SceneOpenGLDecorationRenderer *renderer = static_cast<SceneOpenGLDecorationRenderer*>(client->decoratedClient()->renderer())) {
-            renderer->render();
-            return renderer->texture();
-        }
-    } else if (toplevel->isDeleted()) {
-        Deleted *deleted = static_cast<Deleted *>(toplevel);
-        if (!deleted->wasDecorated()) {
-            return nullptr;
-        }
-        if (const SceneOpenGLDecorationRenderer *renderer = static_cast<const SceneOpenGLDecorationRenderer*>(deleted->decorationRenderer())) {
-            return renderer->texture();
-        }
+    const DecorationItem *decorationItem = windowItem()->decorationItem();
+    if (decorationItem) {
+        auto renderer = static_cast<const SceneOpenGLDecorationRenderer *>(decorationItem->renderer());
+        return renderer->texture();
     }
     return nullptr;
 }
@@ -2489,10 +2478,9 @@ bool SceneOpenGLShadow::prepareBackend()
 }
 
 SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::DecoratedClientImpl *client)
-    : Renderer(client)
+    : DecorationRenderer(client)
     , m_texture()
 {
-    connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (AbstractClient::*)(const QRegion&)>(&AbstractClient::addRepaint));
 }
 
 SceneOpenGLDecorationRenderer::~SceneOpenGLDecorationRenderer()
@@ -2573,12 +2561,8 @@ static void clamp(QImage &image, const QRect &viewport)
     }
 }
 
-void SceneOpenGLDecorationRenderer::render()
+void SceneOpenGLDecorationRenderer::render(const QRegion &region)
 {
-    const QRegion scheduled = getScheduled();
-    if (scheduled.isEmpty()) {
-        return;
-    }
     if (areImageSizesDirty()) {
         resizeTexture();
         resetImageSizesDirty();
@@ -2645,7 +2629,7 @@ void SceneOpenGLDecorationRenderer::render()
         m_texture->update(image, (position + dirtyOffset - viewport.topLeft()) * image.devicePixelRatio());
     };
 
-    const QRect geometry = scheduled.boundingRect();
+    const QRect geometry = region.boundingRect();
 
     const QPoint topPosition(padding, padding);
     const QPoint bottomPosition(padding, topPosition.y() + top.height() + 2 * padding);
@@ -2694,13 +2678,6 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
         m_texture.reset();
     }
 }
-
-void SceneOpenGLDecorationRenderer::reparent(Deleted *deleted)
-{
-    render();
-    Renderer::reparent(deleted);
-}
-
 
 OpenGLFactory::OpenGLFactory(QObject *parent)
     : SceneFactory(parent)

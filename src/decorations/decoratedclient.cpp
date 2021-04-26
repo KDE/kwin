@@ -9,7 +9,6 @@
 #include "decoratedclient.h"
 #include "decorationbridge.h"
 #include "decorationpalette.h"
-#include "decorationrenderer.h"
 #include "abstract_client.h"
 #include "composite.h"
 #include "cursor.h"
@@ -33,9 +32,7 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
     , ApplicationMenuEnabledDecoratedClientPrivate(decoratedClient, decoration)
     , m_client(client)
     , m_clientSize(client->clientSize())
-    , m_renderer(nullptr)
 {
-    createRenderer();
     client->setDecoratedClient(QPointer<DecoratedClientImpl>(this));
     connect(client, &AbstractClient::activeChanged, this,
         [decoratedClient, client]() {
@@ -77,19 +74,6 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
             &Decoration::DecoratedClientImpl::signalShadeChange);
     connect(client, &AbstractClient::keepAboveChanged, decoratedClient, &KDecoration2::DecoratedClient::keepAboveChanged);
     connect(client, &AbstractClient::keepBelowChanged, decoratedClient, &KDecoration2::DecoratedClient::keepBelowChanged);
-    connect(Compositor::self(), &Compositor::aboutToToggleCompositing, this, &DecoratedClientImpl::destroyRenderer);
-    m_compositorToggledConnection = connect(Compositor::self(), &Compositor::compositingToggled, this,
-        [this, decoration]() {
-            createRenderer();
-            decoration->update();
-        }
-    );
-    connect(Compositor::self(), &Compositor::aboutToDestroy, this,
-        [this] {
-            disconnect(m_compositorToggledConnection);
-            m_compositorToggledConnection = QMetaObject::Connection();
-        }
-    );
     connect(client, &AbstractClient::quickTileModeChanged, decoratedClient,
         [this, decoratedClient]() {
             emit decoratedClient->adjacentScreenEdgesChanged(adjacentScreenEdges());
@@ -316,17 +300,6 @@ bool DecoratedClientImpl::hasApplicationMenu() const
 bool DecoratedClientImpl::isApplicationMenuActive() const
 {
     return m_client->applicationMenuActive();
-}
-
-void DecoratedClientImpl::createRenderer()
-{
-    m_renderer = kwinApp()->platform()->createDecorationRenderer(this);
-}
-
-void DecoratedClientImpl::destroyRenderer()
-{
-    delete m_renderer;
-    m_renderer = nullptr;
 }
 
 }

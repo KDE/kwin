@@ -15,6 +15,7 @@ class Decoration;
 
 namespace KWin
 {
+class DecorationItem;
 
 /**
  * The WindowItem class represents a window in the scene.

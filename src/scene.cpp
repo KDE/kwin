@@ -57,7 +57,6 @@
 
 #include "scene.h"
 #include "abstract_output.h"
-#include "decorationitem.h"
 #include "internal_client.h"
 #include "platform.h"
 #include "shadowitem.h"

@@ -14,8 +14,6 @@
 #include "group.h"
 #include "netinfo.h"
 #include "shadow.h"
-#include "decorations/decoratedclient.h"
-#include "decorations/decorationrenderer.h"
 
 #include <QDebug>
 
@@ -30,13 +28,11 @@ Deleted::Deleted()
     , m_minimized(false)
     , m_modal(false)
     , m_wasClient(false)
-    , m_decorationRenderer(nullptr)
     , m_fullscreen(false)
     , m_keepAbove(false)
     , m_keepBelow(false)
     , m_wasPopupWindow(false)
     , m_wasOutline(false)
-    , m_wasDecorated(false)
     , m_wasLockScreen(false)
 {
 }
@@ -85,18 +81,11 @@ void Deleted::copyToDeleted(Toplevel* c)
     if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
         cinfo->disable();
     if (AbstractClient *client = dynamic_cast<AbstractClient*>(c)) {
-        m_wasDecorated = client->isDecorated();
-        if (m_wasDecorated) {
+        if (client->isDecorated()) {
             client->layoutDecorationRects(decoration_left,
                                           decoration_top,
                                           decoration_right,
                                           decoration_bottom);
-            if (client->isDecorated()) {
-                if (Decoration::Renderer *renderer = client->decoratedClient()->renderer()) {
-                    m_decorationRenderer = renderer;
-                    m_decorationRenderer->reparent(this);
-                }
-            }
         }
         m_wasClient = true;
         m_minimized = client->isMinimized();
@@ -161,11 +150,6 @@ QVector<VirtualDesktop *> Deleted::desktops() const
 QPoint Deleted::clientPos() const
 {
     return contentsRect.topLeft();
-}
-
-bool Deleted::wasDecorated() const
-{
-    return m_wasDecorated;
 }
 
 void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect& bottom) const

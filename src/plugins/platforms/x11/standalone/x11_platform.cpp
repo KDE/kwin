@@ -33,7 +33,6 @@
 #include "overlaywindow_x11.h"
 #include "non_composited_outline.h"
 #include "workspace.h"
-#include "x11_decoration_renderer.h"
 #include "x11_output.h"
 #include "xcbutils.h"
 #include "renderloop.h"
@@ -404,15 +403,6 @@ OutlineVisual *X11StandalonePlatform::createOutline(Outline *outline)
         ret = new NonCompositedOutlineVisual(outline);
     }
     return ret;
-}
-
-Decoration::Renderer *X11StandalonePlatform::createDecorationRenderer(Decoration::DecoratedClientImpl *client)
-{
-    auto renderer = Platform::createDecorationRenderer(client);
-    if (!renderer) {
-        renderer = new Decoration::X11Renderer(client);
-    }
-    return renderer;
 }
 
 void X11StandalonePlatform::invertScreen()

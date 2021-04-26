@@ -37,7 +37,6 @@ set(kwin_SRCS
     decorations/decoratedclient.cpp
     decorations/decorationbridge.cpp
     decorations/decorationpalette.cpp
-    decorations/decorationrenderer.cpp
     decorations/decorations_logging.cpp
     decorations/settings.cpp
     deleted.cpp

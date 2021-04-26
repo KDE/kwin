@@ -11,10 +11,9 @@
 
 #include "qpainterbackend.h"
 
+#include "decorationitem.h"
 #include "scene.h"
 #include "shadow.h"
-
-#include "decorations/decorationrenderer.h"
 
 namespace KWin {
 
@@ -32,7 +31,7 @@ public:
     bool initFailed() const override;
     EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
-    Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
+    DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     void screenGeometryChanged(const QSize &size) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
@@ -112,7 +111,7 @@ private:
     QImage m_texture;
 };
 
-class SceneQPainterDecorationRenderer : public Decoration::Renderer
+class SceneQPainterDecorationRenderer : public DecorationRenderer
 {
     Q_OBJECT
 public:
@@ -124,10 +123,8 @@ public:
         Count
     };
     explicit SceneQPainterDecorationRenderer(Decoration::DecoratedClientImpl *client);
-    ~SceneQPainterDecorationRenderer() override;
 
-    void render() override;
-    void reparent(Deleted *deleted) override;
+    void render(const QRegion &region) override;
 
     QImage image(DecorationPart part) const;
 
