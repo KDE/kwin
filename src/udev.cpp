@@ -98,11 +98,10 @@ void UdevEnumerate::scan()
 
 std::vector<UdevDevice::Ptr> UdevEnumerate::find()
 {
-    std::vector<UdevDevice::Ptr> vect;
     if (m_enumerate.isNull()) {
-        vect.push_back( UdevDevice::Ptr() );
-        return vect;
+        return {};
     }
+    std::vector<UdevDevice::Ptr> vect;
     QString defaultSeat = QStringLiteral("seat0");
     udev_list_entry *it = udev_enumerate_get_list_entry(m_enumerate.data());
     while (it) {
@@ -127,9 +126,7 @@ std::vector<UdevDevice::Ptr> UdevEnumerate::find()
 std::vector<UdevDevice::Ptr> Udev::listGPUs()
 {
     if (!m_udev) {
-        std::vector<UdevDevice::Ptr> vect;
-        vect.push_back(UdevDevice::Ptr());
-        return vect;
+        return {};
     }
 #if defined(Q_OS_FREEBSD)
     std::vector<UdevDevice::Ptr> r;
@@ -159,9 +156,7 @@ std::vector<UdevDevice::Ptr> Udev::listGPUs()
 std::vector<UdevDevice::Ptr> Udev::listFramebuffers()
 {
     if (!m_udev) {
-        std::vector<UdevDevice::Ptr> vect;
-        vect.push_back(UdevDevice::Ptr());
-        return vect;
+        return {};
     }
     UdevEnumerate enumerate(this);
     enumerate.addMatch(UdevEnumerate::Match::SubSystem, "graphics");
