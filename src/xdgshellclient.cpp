@@ -952,7 +952,18 @@ Layer XdgToplevelClient::layerForDock() const
 
 void XdgToplevelClient::handleWindowTitleChanged()
 {
-    setCaption(m_shellSurface->windowTitle());
+    const auto title = m_shellSurface->windowTitle();
+
+    // HACK: Due to timing issue (the plasma shell surface interface being
+    // known to kwin only too late), we're setting a special title to the
+    // OSD windows. This way kwin can pick that up and mark the window type
+    // properly. Especially important for window rules and placement processing
+    // which take the wrong decision otherwise.
+    if (title.startsWith(QStringLiteral("PlasmaShell/OSD"))) {
+        m_windowType = NET::OnScreenDisplay;
+    }
+
+    setCaption(title);
 }
 
 void XdgToplevelClient::handleWindowClassChanged()
