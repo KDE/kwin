@@ -503,7 +503,7 @@ QList<Toplevel *> Workspace::constrainedStackingOrder()
         QMultiMap<Group*, Layer>::iterator mLayer = current.find(c ? c->group() : nullptr);
         if (mLayer != current.end()) {
             // If a window is raised above some other window in the same window group
-            // which is in the ActiveLayer (i.e. it's fulscreened), make sure it stays
+            // which is in the ActiveLayer (i.e. it's fullscreened), make sure it stays
             // above that window (see #95731).
             if (*mLayer == ActiveLayer && (l > BelowLayer))
                 l = ActiveLayer;
