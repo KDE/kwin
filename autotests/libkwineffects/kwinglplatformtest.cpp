@@ -119,8 +119,8 @@ void GLPlatformTest::testChipClassToString_data()
     QTest::newRow("Adreno5XX") << Adreno5XX << QStringLiteral("Adreno 5xx series");
     QTest::newRow("UnknownAdreno") << UnknownAdreno << QStringLiteral("Unknown");
     QTest::newRow("MaliT7XX") << MaliT7XX << QStringLiteral("Mali T7xx series");
-    QTest::newRow("MaliT8XX") << MaliT7XX << QStringLiteral("Mali T8xx series");
-    QTest::newRow("MaliGXX") << MaliT7XX << QStringLiteral("Mali Gxx series");
+    QTest::newRow("MaliT8XX") << MaliT8XX << QStringLiteral("Mali T8xx series");
+    QTest::newRow("MaliGXX") << MaliGXX << QStringLiteral("Mali Gxx series");
     QTest::newRow("UnknownPanfrost") << UnknownAdreno << QStringLiteral("Unknown");
     QTest::newRow("UnknownChipClass") << UnknownChipClass << QStringLiteral("Unknown");
 }
