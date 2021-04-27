@@ -171,7 +171,8 @@ int ConsoleKitSession::openRestricted(const QString &fileName)
     QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, m_sessionPath,
                                                           s_sessionInterface,
                                                           QStringLiteral("TakeDevice"));
-    message.setArguments({ major(st.st_rdev), minor(st.st_rdev) });
+    // major() and minor() macros return ints on FreeBSD instead of uints.
+    message.setArguments({uint(major(st.st_rdev)), uint(minor(st.st_rdev))});
 
     const QDBusMessage reply = QDBusConnection::systemBus().call(message);
     if (reply.type() == QDBusMessage::ErrorMessage) {
@@ -199,7 +200,8 @@ void ConsoleKitSession::closeRestricted(int fileDescriptor)
     QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, m_sessionPath,
                                                           s_sessionInterface,
                                                           QStringLiteral("ReleaseDevice"));
-    message.setArguments({ major(st.st_rdev), minor(st.st_rdev) });
+    // major() and minor() macros return ints on FreeBSD instead of uints.
+    message.setArguments({uint(major(st.st_rdev)), uint(minor(st.st_rdev))});
 
     QDBusConnection::systemBus().asyncCall(message);
 
