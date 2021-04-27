@@ -95,33 +95,8 @@ void WaylandTestApplication::performStartup()
     if (!m_inputMethodServerToStart.isEmpty()) {
         InputMethod::create();
         if (m_inputMethodServerToStart != QStringLiteral("internal")) {
-            int socket = dup(waylandServer()->createInputMethodConnection());
-            if (socket >= 0) {
-                QProcessEnvironment environment = processStartupEnvironment();
-                environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
-                environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
-                environment.remove("DISPLAY");
-                environment.remove("WAYLAND_DISPLAY");
-                environment.remove("XAUTHORITY");
-                QProcess *p = new Process(this);
-                p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
-                connect(p, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this,
-                    [p] {
-                        if (waylandServer()) {
-                            waylandServer()->destroyInputMethodConnection();
-                        }
-                        p->deleteLater();
-                    }
-                );
-                p->setProcessEnvironment(environment);
-                p->setProgram(m_inputMethodServerToStart);
-            //  p->setArguments(arguments);
-                p->start();
-                connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, p, [p] {
-                    p->kill();
-                    p->waitForFinished();
-                });
-            }
+            InputMethod::self()->setInputMethodCommand(m_inputMethodServerToStart);
+            InputMethod::self()->setEnabled(true);
         }
     }
 

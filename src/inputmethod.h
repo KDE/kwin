@@ -15,9 +15,11 @@
 #include <kwin_export.h>
 
 #include <QPointer>
+#include <QTimer>
 #include <KWaylandServer/textinput_v2_interface.h>
 
 class KStatusNotifierItem;
+class QProcess;
 
 namespace KWin
 {
@@ -45,6 +47,8 @@ public:
     void setActive(bool active);
     void hide();
     void show();
+
+    void setInputMethodCommand(const QString &path);
 
 Q_SIGNALS:
     void activeChanged(bool active);
@@ -76,6 +80,8 @@ private:
     void setCursorPosition(qint32 index, qint32 anchor);
     void setLanguage(uint32_t serial, const QString &language);
     void setTextDirection(uint32_t serial, Qt::LayoutDirection direction);
+    void startInputMethod();
+    void stopInputMethod();
 
     struct {
         QString text = QString();
@@ -88,6 +94,11 @@ private:
     KStatusNotifierItem *m_sni = nullptr;
     QPointer<AbstractClient> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;
+
+    QProcess *m_inputMethodProcess = nullptr;
+    QTimer m_inputMethodCrashTimer;
+    uint m_inputMethodCrashes = 0;
+    QString m_inputMethodCommand;
 
     KWIN_SINGLETON(InputMethod)
 };

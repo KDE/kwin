@@ -25,6 +25,7 @@
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/inputmethod_v1_interface.h>
 
+#include <KShell>
 #include <KStatusNotifierItem>
 #include <KLocalizedString>
 
@@ -34,6 +35,7 @@
 
 #include <linux/input-event-codes.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
+#include <unistd.h>
 
 using namespace KWaylandServer;
 
@@ -48,13 +50,23 @@ InputMethod::InputMethod(QObject *parent)
     // this is actually too late. Other processes are started before init,
     // so might miss the availability of text input
     // but without Workspace we don't have the window listed at all
-    connect(kwinApp(), &Application::workspaceCreated, this, &InputMethod::init);
+    if (workspace()) {
+        init();
+    } else {
+        connect(kwinApp(), &Application::workspaceCreated, this, &InputMethod::init);
+    }
 }
 
 InputMethod::~InputMethod() = default;
 
 void InputMethod::init()
 {
+    // Stop restarting the input method if it starts crashing very frequently
+    m_inputMethodCrashTimer.setInterval(20000);
+    m_inputMethodCrashTimer.setSingleShot(true);
+    connect(&m_inputMethodCrashTimer, &QTimer::timeout, this, [this] {
+        m_inputMethodCrashes = 0;
+    });
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &InputMethod::hide);
 
     if (waylandServer()) {
@@ -230,6 +242,10 @@ void InputMethod::contentTypeChanged()
 
 void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServer::TextInputV2Interface::UpdateReason reason)
 {
+    if (!m_enabled) {
+        return;
+    }
+
     auto t2 = waylandServer()->seat()->textInputV2();
     auto inputContext = waylandServer()->inputMethod()->context();
     if (!inputContext) {
@@ -259,6 +275,10 @@ void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServe
 
 void InputMethod::textInputInterfaceV2EnabledChanged()
 {
+    if (!m_enabled) {
+        return;
+    }
+
     auto t = waylandServer()->seat()->textInputV2();
     if (t->isEnabled()) {
         waylandServer()->inputMethod()->sendActivate();
@@ -270,6 +290,10 @@ void InputMethod::textInputInterfaceV2EnabledChanged()
 
 void InputMethod::textInputInterfaceV3EnabledChanged()
 {
+    if (!m_enabled) {
+        return;
+    }
+
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3->isEnabled()) {
         waylandServer()->inputMethod()->sendActivate();
@@ -313,17 +337,11 @@ void InputMethod::setEnabled(bool enabled)
     );
     msg.setArguments({enabled});
     QDBusConnection::sessionBus().asyncCall(msg);
-
-    auto textInputV2 = waylandServer()->seat()->textInputV2();
-    auto textInputV3 = waylandServer()->seat()->textInputV3();
-    if (m_enabled) {
-        connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged, Qt::UniqueConnection);
-        connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged, Qt::UniqueConnection);
-    } else {
+    if (!m_enabled) {
         hide();
-
-        disconnect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged);
-        disconnect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
+        stopInputMethod();
+    } else {
+        startInputMethod();
     }
 }
 
@@ -518,4 +536,87 @@ void InputMethod::updateInputPanelState()
     t->setInputPanelState(m_inputClient && m_inputClient->isShown(false), QRect(0, 0, 0, 0));
 }
 
+void InputMethod::setInputMethodCommand(const QString &command)
+{
+    if (m_inputMethodCommand == command) {
+        return;
+    }
+
+    m_inputMethodCommand = command;
+
+    if (m_enabled) {
+        startInputMethod();
+    }
+}
+
+void InputMethod::stopInputMethod()
+{
+    if (!m_inputMethodProcess) {
+        return;
+    }
+    disconnect(m_inputMethodProcess, nullptr, this, nullptr);
+
+    m_inputMethodProcess->terminate();
+    if (!m_inputMethodProcess->waitForFinished()) {
+        m_inputMethodProcess->kill();
+        m_inputMethodProcess->waitForFinished();
+    }
+    if (waylandServer()) {
+        waylandServer()->destroyInputMethodConnection();
+    }
+    m_inputMethodProcess->deleteLater();
+    m_inputMethodProcess = nullptr;
+}
+
+void InputMethod::startInputMethod()
+{
+    stopInputMethod();
+    if (m_inputMethodCommand.isEmpty() || kwinApp()->isTerminating()) {
+        return;
+    }
+
+    connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, this, &InputMethod::stopInputMethod, Qt::UniqueConnection);
+
+    QStringList arguments = KShell::splitArgs(m_inputMethodCommand);
+    if (arguments.isEmpty()) {
+        qWarning("Failed to launch the input method server: %s is an invalid command", qPrintable(m_inputMethodCommand));
+        return;
+    }
+
+    const QString program = arguments.takeFirst();
+    int socket = waylandServer()->createInputMethodConnection();
+    if (socket < 0) {
+        qWarning("Failed to create the input method connection");
+        return;
+    }
+    socket = dup(socket);
+
+    QProcessEnvironment environment = kwinApp()->processStartupEnvironment();
+    environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
+    environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
+    environment.remove("DISPLAY");
+    environment.remove("WAYLAND_DISPLAY");
+    environment.remove("XAUTHORITY");
+
+    m_inputMethodProcess = new Process(this);
+    m_inputMethodProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
+    m_inputMethodProcess->setProcessEnvironment(environment);
+    m_inputMethodProcess->setProgram(program);
+    m_inputMethodProcess->setArguments(arguments);
+    m_inputMethodProcess->start();
+    close(socket);
+    connect(m_inputMethodProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this](int exitCode, QProcess::ExitStatus exitStatus) {
+        if (exitStatus == QProcess::CrashExit) {
+            m_inputMethodCrashes++;
+            m_inputMethodCrashTimer.start();
+            qWarning() << "Input Method crashed" << m_inputMethodProcess->program() << m_inputMethodProcess->arguments() << exitCode << exitStatus;
+            if (m_inputMethodCrashes < 5) {
+                startInputMethod();
+            } else {
+                qWarning() << "Input Method keeps crashing, please fix" << m_inputMethodProcess->program() << m_inputMethodProcess->arguments();
+                stopInputMethod();
+            }
+        }
+    });
+}
 }

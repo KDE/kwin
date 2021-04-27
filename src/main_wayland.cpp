@@ -114,12 +114,6 @@ void gainRealTime(RealTimeFlags flags = RealTimeFlags::DontReset)
 ApplicationWayland::ApplicationWayland(int &argc, char **argv)
     : ApplicationWaylandAbstract(OperationModeWaylandOnly, argc, argv)
 {
-    // Stop restarting the input method if it starts crashing very frequently
-    m_inputMethodCrashTimer.setInterval(20000);
-    m_inputMethodCrashTimer.setSingleShot(true);
-    connect(&m_inputMethodCrashTimer, &QTimer::timeout, this, [this] {
-        m_inputMethodCrashes = 0;
-    });
 }
 
 ApplicationWayland::~ApplicationWayland()
@@ -216,89 +210,19 @@ void ApplicationWayland::continueStartupWithScene()
     m_xwayland->start();
 }
 
-
-void ApplicationWayland::stopInputMethod()
-{
-    if (!m_inputMethodProcess) {
-        return;
-    }
-    disconnect(m_inputMethodProcess, nullptr, this, nullptr);
-
-    m_inputMethodProcess->terminate();
-    if (!m_inputMethodProcess->waitForFinished()) {
-        m_inputMethodProcess->kill();
-        m_inputMethodProcess->waitForFinished();
-    }
-    if (waylandServer()) {
-        waylandServer()->destroyInputMethodConnection();
-    }
-    m_inputMethodProcess->deleteLater();
-    m_inputMethodProcess = nullptr;
-}
-
-void ApplicationWayland::startInputMethod(const QString &executable)
-{
-    stopInputMethod();
-    if (executable.isEmpty() || isTerminating()) {
-        return;
-    }
-
-    connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, this, &ApplicationWayland::stopInputMethod, Qt::UniqueConnection);
-
-    QStringList arguments = KShell::splitArgs(executable);
-    if (arguments.isEmpty()) {
-        qWarning("Failed to launch the input method server: %s is an invalid command", qPrintable(m_inputMethodServerToStart));
-        return;
-    }
-
-    const QString program = arguments.takeFirst();
-    int socket = dup(waylandServer()->createInputMethodConnection());
-    if (socket < 0) {
-        qWarning("Failed to create the input method connection");
-        return;
-    }
-
-    QProcessEnvironment environment = processStartupEnvironment();
-    environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
-    environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
-    environment.remove("DISPLAY");
-    environment.remove("WAYLAND_DISPLAY");
-    environment.remove("XAUTHORITY");
-
-    m_inputMethodProcess = new Process(this);
-    m_inputMethodProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
-    m_inputMethodProcess->setProcessEnvironment(environment);
-    m_inputMethodProcess->setProgram(program);
-    m_inputMethodProcess->setArguments(arguments);
-    m_inputMethodProcess->start();
-    connect(m_inputMethodProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, executable] (int exitCode, QProcess::ExitStatus exitStatus) {
-        if (exitStatus == QProcess::CrashExit) {
-            m_inputMethodCrashes++;
-            m_inputMethodCrashTimer.start();
-            qWarning() << "Input Method crashed" << executable << exitCode << exitStatus;
-            if (m_inputMethodCrashes < 5) {
-                startInputMethod(executable);
-            } else {
-                qWarning() << "Input Method keeps crashing, please fix" << executable;
-                stopInputMethod();
-            }
-        }
-    });
-}
-
 void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteArrayList &names)
 {
     if (group.name() != "Wayland" || !names.contains("InputMethod")) {
         return;
     }
 
-    startInputMethod(group.readEntry("InputMethod", QString()));
+    InputMethod::self()->setInputMethodCommand(group.readEntry("InputMethod", QString()));
 }
 
 void ApplicationWayland::startSession()
 {
     if (!m_inputMethodServerToStart.isEmpty()) {
-        startInputMethod(m_inputMethodServerToStart);
+        InputMethod::self()->setInputMethodCommand(m_inputMethodServerToStart);
     } else {
         KSharedConfig::Ptr kwinSettings = kwinApp()->config();
         m_settingsWatcher = KConfigWatcher::create(kwinSettings);
@@ -306,7 +230,7 @@ void ApplicationWayland::startSession()
 
         KConfigGroup group = kwinSettings->group("Wayland");
         KDesktopFile file(group.readEntry("InputMethod", QString()));
-        startInputMethod(file.desktopGroup().readEntry("Exec", QString()));
+        InputMethod::self()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
     }
 
     // start session

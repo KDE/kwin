@@ -55,19 +55,13 @@ private:
     void continueStartupWithScene();
     void finalizeStartup();
     void startSession() override;
-    void startInputMethod(const QString &executable);
     void refreshSettings(const KConfigGroup &group, const QByteArrayList &names);
-    void stopInputMethod();
 
     bool m_startXWayland = false;
     QStringList m_applicationsToStart;
     QString m_inputMethodServerToStart;
     QProcessEnvironment m_environment;
     QString m_sessionArgument;
-
-    QProcess *m_inputMethodProcess = nullptr;
-    QTimer m_inputMethodCrashTimer;
-    uint m_inputMethodCrashes = 0;
 
     Xwl::Xwayland *m_xwayland = nullptr;
     KConfigWatcher::Ptr m_settingsWatcher;
