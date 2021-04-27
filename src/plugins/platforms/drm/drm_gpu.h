@@ -114,6 +114,7 @@ private:
     void dispatchEvents();
     DrmPlane *getCompatiblePlane(DrmPlane::TypeIndex typeIndex, DrmCrtc *crtc);
     DrmOutput *findOutput(quint32 connector);
+    void removeOutput(DrmOutput *output);
 
     DrmBackend* const m_backend;
     AbstractEglBackend *m_eglBackend;

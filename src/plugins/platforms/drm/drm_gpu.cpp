@@ -81,10 +81,13 @@ DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId)
 DrmGpu::~DrmGpu()
 {
     waitIdle();
+    const auto outputs = m_outputs;
+    for (const auto &output : outputs) {
+        removeOutput(output);
+    }
     if (m_eglDisplay != EGL_NO_DISPLAY) {
         eglTerminate(m_eglDisplay);
     }
-    qDeleteAll(m_outputs);
     qDeleteAll(m_crtcs);
     qDeleteAll(m_connectors);
     qDeleteAll(m_planes);
@@ -293,15 +296,7 @@ bool DrmGpu::updateOutputs()
     m_outputs = connectedOutputs;
 
     for(DrmOutput *removedOutput : removedOutputs) {
-        emit outputRemoved(removedOutput);
-        removedOutput->teardown();
-        removedOutput->m_crtc = nullptr;
-        m_connectors.removeOne(removedOutput->m_conn);
-        delete removedOutput->m_conn;
-        removedOutput->m_conn = nullptr;
-        if (removedOutput->m_primaryPlane) {
-            m_unusedPlanes << removedOutput->m_primaryPlane;
-        }
+        removeOutput(removedOutput);
     }
 
     qDeleteAll(oldConnectors);
@@ -416,6 +411,20 @@ void DrmGpu::dispatchEvents()
     context.version = 2;
     context.page_flip_handler = pageFlipHandler;
     drmHandleEvent(m_fd, &context);
+}
+
+void DrmGpu::removeOutput(DrmOutput *output)
+{
+    m_outputs.removeOne(output);
+    emit outputRemoved(output);
+    output->teardown();
+    output->m_crtc = nullptr;
+    m_connectors.removeOne(output->m_conn);
+    delete output->m_conn;
+    output->m_conn = nullptr;
+    if (output->m_primaryPlane) {
+        m_unusedPlanes << output->m_primaryPlane;
+    }
 }
 
 }

@@ -15,10 +15,11 @@
 namespace KWin
 {
 
-class EglMultiBackend : public OpenGLBackend
+class EglMultiBackend : public QObject, public OpenGLBackend
 {
+    Q_OBJECT
 public:
-    EglMultiBackend(AbstractEglDrmBackend *backend0);
+    EglMultiBackend(DrmBackend *backend, AbstractEglDrmBackend *primaryEglBackend);
     ~EglMultiBackend();
 
     void init() override;
@@ -39,7 +40,12 @@ public:
 
     bool directScanoutAllowed(int screen) const override;
 
+public Q_SLOTS:
+    void addGpu(DrmGpu *gpu);
+    void removeGpu(DrmGpu *gpu);
+
 private:
+    DrmBackend *m_platform;
     QVector<AbstractEglDrmBackend*> m_backends;
 
     AbstractEglDrmBackend *findBackend(int screenId, int& internalScreenId) const;

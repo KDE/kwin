@@ -36,6 +36,7 @@ namespace KWin
 
 class Udev;
 class UdevMonitor;
+class UdevDevice;
 
 class DrmOutput;
 class DrmPlane;
@@ -79,8 +80,14 @@ public:
 
     QString supportInformation() const override;
 
+    DrmGpu *primaryGpu() const;
+
 public Q_SLOTS:
     void turnOutputsOn();
+
+Q_SIGNALS:
+    void gpuRemoved(DrmGpu *gpu);
+    void gpuAdded(DrmGpu *gpu);
 
 protected:
     void doHideCursor() override;
@@ -104,6 +111,8 @@ private:
     DrmOutput *findOutput(quint32 connector);
     void updateOutputsEnabled();
     void handleUdevEvent();
+    DrmGpu *addGpu(std::unique_ptr<UdevDevice> device);
+
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;
     Session *m_session = nullptr;

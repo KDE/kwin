@@ -32,6 +32,7 @@ public:
     int sysNum() const;
     const char *property(const char *key);
     bool hasProperty(const char *key, const char *value);
+    QString action() const;
 
     QMap<QByteArray, QByteArray> properties() const;
     bool isBootVga() const;

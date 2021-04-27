@@ -199,35 +199,7 @@ bool DrmBackend::initialize()
     }
 
     for (unsigned int gpu_index = 0; gpu_index < devices.size(); gpu_index++) {
-        auto device = std::move(devices.at(gpu_index));
-        auto devNode = QByteArray(device->devNode());
-        int fd = session()->openRestricted(devNode.constData());
-        if (fd < 0) {
-            qCWarning(KWIN_DRM) << "failed to open drm device at" << devNode;
-            return false;
-        }
-
-        // try to make a simple drm get resource call, if it fails it is not useful for us
-        drmModeRes *resources = drmModeGetResources(fd);
-        if (!resources) {
-            qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << devNode;
-            session()->closeRestricted(fd);
-            continue;
-        }
-        drmModeFreeResources(resources);
-
-        DrmGpu *gpu = new DrmGpu(this, devNode, fd, device->sysNum());
-        if (!gpu->useEglStreams() || gpu_index == 0) {
-            m_gpus.append(gpu);
-            m_active = true;
-            connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
-            connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
-            if (gpu->useEglStreams()) {
-                break;
-            }
-        } else {
-            delete gpu;
-        }
+        addGpu(std::move(devices.at(gpu_index)));
     }
 
     // trying to activate Atomic Mode Setting (this means also Universal Planes)
@@ -264,22 +236,70 @@ void DrmBackend::handleUdevEvent()
         if (!session()->isActive()) {
             continue;
         }
-
-        bool drm = false;
-        for (auto gpu : m_gpus) {
+        DrmGpu *drmGpu = nullptr;
+        for (const auto &gpu : qAsConst(m_gpus)) {
             if (gpu->drmId() == device->sysNum()) {
-                drm = true;
+                drmGpu = gpu;
                 break;
             }
         }
-        if (!drm) {
-            continue;
+        if (device->action() == QStringLiteral("add")) {
+            if (m_gpus.isEmpty() || !primaryGpu()->useEglStreams()) {
+                if (const auto &gpu = addGpu(std::move(device))) {
+                    updateOutputs();
+                    updateCursor();
+                    emit gpuAdded(gpu);
+                }
+            }
+        } else if (drmGpu) {
+            if (device->action() == QStringLiteral("change")) {
+                qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
+                updateOutputs();
+                updateCursor();
+            } else if (device->action() == QStringLiteral("remove")) {
+                if (primaryGpu() == drmGpu) {
+                    qCCritical(KWIN_DRM) << "Primary gpu has been removed! Quitting...";
+                    kwinApp()->quit();
+                    return;
+                } else {
+                    emit gpuRemoved(drmGpu);
+                    m_gpus.removeOne(drmGpu);
+                    delete drmGpu;
+                    updateOutputs();
+                    updateCursor();
+                }
+            }
         }
-        if (device->hasProperty("HOTPLUG", "1")) {
-            qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
-            updateOutputs();
-            updateCursor();
-        }
+    }
+}
+
+DrmGpu *DrmBackend::addGpu(std::unique_ptr<UdevDevice> device)
+{
+    int fd = session()->openRestricted(device->devNode());
+    if (fd < 0) {
+        qCWarning(KWIN_DRM) << "failed to open drm device at" << device->devNode();
+        return nullptr;
+    }
+
+    // try to make a simple drm get resource call, if it fails it is not useful for us
+    drmModeRes *resources = drmModeGetResources(fd);
+    if (!resources) {
+        qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << device->devNode();
+        session()->closeRestricted(fd);
+        return nullptr;
+    }
+    drmModeFreeResources(resources);
+
+    DrmGpu *gpu = new DrmGpu(this, device->devNode(), fd, device->sysNum());
+    if (!gpu->useEglStreams() || m_gpus.isEmpty()) {
+        m_gpus.append(gpu);
+        m_active = true;
+        connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
+        connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
+        return gpu;
+    } else {
+        delete gpu;
+        return nullptr;
     }
 }
 
@@ -584,9 +604,9 @@ OpenGLBackend *DrmBackend::createOpenGLBackend()
 #endif
 
 #if HAVE_GBM
-    auto backend0 = new EglGbmBackend(this, m_gpus.at(0));
-    AbstractEglBackend::setPrimaryBackend(backend0);
-    EglMultiBackend *backend = new EglMultiBackend(backend0);
+    auto primaryBackend = new EglGbmBackend(this, m_gpus.at(0));
+    AbstractEglBackend::setPrimaryBackend(primaryBackend);
+    EglMultiBackend *backend = new EglMultiBackend(this, primaryBackend);
     for (int i = 1; i < m_gpus.count(); i++) {
         auto backendi = new EglGbmBackend(this, m_gpus.at(i));
         backend->addBackend(backendi);
@@ -648,6 +668,11 @@ DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
 #else
     return nullptr;
 #endif
+}
+
+DrmGpu *DrmBackend::primaryGpu() const
+{
+    return m_gpus.isEmpty() ? nullptr : m_gpus[0];
 }
 
 }

@@ -9,13 +9,20 @@
 
 #include "egl_multi_backend.h"
 #include "logging.h"
+#include "egl_gbm_backend.h"
+#include "drm_backend.h"
+#include "drm_gpu.h"
 
 namespace KWin
 {
 
-EglMultiBackend::EglMultiBackend(AbstractEglDrmBackend *backend0) : OpenGLBackend()
+EglMultiBackend::EglMultiBackend(DrmBackend *backend, AbstractEglDrmBackend *primaryEglBackend)
+    : OpenGLBackend()
+    , m_platform(backend)
 {
-    m_backends.append(backend0);
+    connect(m_platform, &DrmBackend::gpuAdded, this, &EglMultiBackend::addGpu);
+    connect(m_platform, &DrmBackend::gpuRemoved, this, &EglMultiBackend::removeGpu);
+    m_backends.append(primaryEglBackend);
     setIsDirectRendering(true);
 }
 
@@ -33,23 +40,11 @@ void EglMultiBackend::init()
     for (auto b : qAsConst(m_backends)) {
         b->init();
     }
-    // if any don't support it set it to not supported
-    setSupportsBufferAge(true);
-    setSupportsPartialUpdate(true);
-    setSupportsSwapBuffersWithDamage(true);
-    for (auto b : qAsConst(m_backends)) {
-        if (!b->supportsBufferAge()) {
-            setSupportsBufferAge(false);
-        }
-        if (!b->supportsPartialUpdate()) {
-            setSupportsPartialUpdate(false);
-        }
-        if (!b->supportsSwapBuffersWithDamage()) {
-            setSupportsSwapBuffersWithDamage(false);
-        }
-    }
-    // we only care about the rendering GPU here
+    // we only care about the rendering GPU
     setSupportsSurfacelessContext(m_backends[0]->supportsSurfacelessContext());
+    setSupportsBufferAge(m_backends[0]->supportsBufferAge());
+    setSupportsPartialUpdate(m_backends[0]->supportsPartialUpdate());
+    setSupportsSwapBuffersWithDamage(m_backends[0]->supportsSwapBuffersWithDamage());
     // these are client extensions and the same for all egl backends
     setExtensions(m_backends[0]->extensions());
 
@@ -137,6 +132,25 @@ bool EglMultiBackend::directScanoutAllowed(int screenId) const
     AbstractEglBackend *backend = findBackend(screenId, internalScreenId);
     Q_ASSERT(backend != nullptr);
     return backend->directScanoutAllowed(internalScreenId);
+}
+
+void EglMultiBackend::addGpu(DrmGpu *gpu)
+{
+    // secondary GPUs are atm guaranteed to be gbm
+    auto backend = new EglGbmBackend(m_platform, gpu);
+    backend->init();
+    m_backends.append(backend);
+}
+
+void EglMultiBackend::removeGpu(DrmGpu *gpu)
+{
+    auto it = std::find_if(m_backends.constBegin(), m_backends.constEnd(), [gpu](auto backend) {
+        return backend->gpu() == gpu;
+    });
+    if (it != m_backends.constEnd()) {
+        m_backends.removeOne(*it);
+        delete *it;
+    }
 }
 
 }

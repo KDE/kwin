@@ -38,6 +38,10 @@ public:
         return QRegion();
     }
 
+    DrmGpu *gpu() const {
+        return m_gpu;
+    }
+
     static AbstractEglDrmBackend *renderingBackend() {
         return static_cast<AbstractEglDrmBackend*>(primaryBackend());
     }
