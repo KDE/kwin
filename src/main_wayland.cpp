@@ -216,7 +216,8 @@ void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteA
         return;
     }
 
-    InputMethod::self()->setInputMethodCommand(group.readEntry("InputMethod", QString()));
+    KDesktopFile file(group.readEntry("InputMethod", QString()));
+    InputMethod::self()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
 }
 
 void ApplicationWayland::startSession()
@@ -228,9 +229,7 @@ void ApplicationWayland::startSession()
         m_settingsWatcher = KConfigWatcher::create(kwinSettings);
         connect(m_settingsWatcher.data(), &KConfigWatcher::configChanged, this, &ApplicationWayland::refreshSettings);
 
-        KConfigGroup group = kwinSettings->group("Wayland");
-        KDesktopFile file(group.readEntry("InputMethod", QString()));
-        InputMethod::self()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
+        refreshSettings(kwinSettings->group("Wayland"), {"InputMethod"});
     }
 
     // start session
