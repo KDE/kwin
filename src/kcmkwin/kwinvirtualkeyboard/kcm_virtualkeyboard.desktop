@@ -11,6 +11,7 @@ X-KDE-ParentApp=kcontrol
 
 X-KDE-System-Settings-Parent-Category=input-devices
 X-KDE-OnlyShowOnQtPlatforms=wayland;
+X-DocPath=kcontrol/kwinvirtualkeyboard/index.html
 
 Name=Virtual Keyboard
 Comment=Select which virtual keyboard to use

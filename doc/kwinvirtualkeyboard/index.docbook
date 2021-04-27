@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE" > <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title>Touch Screen</title>
+<authorgroup>
+<author>
+<firstname>Yuri</firstname>
+<surname>Chornoivan</surname>
+</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2021-04-27</date>
+<releaseinfo>Plasma 5.22</releaseinfo>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>Systemsettings</keyword>
+<keyword>virtual</keyword>
+<keyword>keyboard</keyword>
+</keywordset>
+</articleinfo>
+
+<para>
+    This module lets you choose the virtual keyboard to use. The virtual keyboard will be automatically enabled when there is no hardware keyboard detected.
+</para>
+
+<para>
+    Select a <ulink url="https://en.wikipedia.org/wiki/Virtual_keyboard">virtual keyboard</ulink>
+    from the list or choose <guilabel>None</guilabel> if you do not want to use any virtual keyboard.
+</para>
+
+<para>
+    It is advisable to install corresponding input method engines before using this module.
+</para>
+
+</article>
