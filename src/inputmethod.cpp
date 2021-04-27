@@ -134,9 +134,7 @@ void InputMethod::setActive(bool active)
         }
 
         waylandServer()->inputMethod()->sendActivate();
-        if (m_active) {
-            adoptInputMethodContext();
-        }
+        adoptInputMethodContext();
     } else {
         updateInputPanelState();
     }
