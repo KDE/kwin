@@ -54,6 +54,7 @@ public:
         VerticalRGB,
         VerticalBGR,
     };
+    Q_ENUM(SubPixel)
     enum class Transform {
         Normal,
         Rotated90,
@@ -64,14 +65,17 @@ public:
         Flipped180,
         Flipped270,
     };
+    Q_ENUM(Transform)
     enum class Enablement {
         Disabled = 0,
         Enabled = 1,
     };
+    Q_ENUM(Enablement)
     enum class ModeFlag {
         Current = 1,
         Preferred = 2,
     };
+    Q_ENUM(ModeFlag)
     Q_DECLARE_FLAGS(ModeFlags, ModeFlag)
     struct Mode {
         QSize size = QSize();
@@ -87,6 +91,7 @@ public:
     enum class Capability {
         Overscan = 0x1,
     };
+    Q_ENUM(Capability)
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
     explicit OutputDeviceInterface(Display *display, QObject *parent = nullptr);
