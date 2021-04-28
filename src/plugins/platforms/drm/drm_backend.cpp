@@ -236,13 +236,7 @@ void DrmBackend::handleUdevEvent()
         if (!session()->isActive()) {
             continue;
         }
-        DrmGpu *drmGpu = nullptr;
-        for (const auto &gpu : qAsConst(m_gpus)) {
-            if (gpu->drmId() == device->sysNum()) {
-                drmGpu = gpu;
-                break;
-            }
-        }
+
         if (device->action() == QStringLiteral("add")) {
             if (m_gpus.isEmpty() || !primaryGpu()->useEglStreams()) {
                 if (const auto &gpu = addGpu(std::move(device))) {
@@ -251,23 +245,27 @@ void DrmBackend::handleUdevEvent()
                     emit gpuAdded(gpu);
                 }
             }
-        } else if (drmGpu) {
-            if (device->action() == QStringLiteral("change")) {
-                qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
-                updateOutputs();
-                updateCursor();
-            } else if (device->action() == QStringLiteral("remove")) {
-                if (primaryGpu() == drmGpu) {
+        } else if (device->action() == QStringLiteral("remove")) {
+            DrmGpu *gpu = findGpu(device->sysNum());
+            if (gpu) {
+                if (primaryGpu() == gpu) {
                     qCCritical(KWIN_DRM) << "Primary gpu has been removed! Quitting...";
                     kwinApp()->quit();
                     return;
                 } else {
-                    emit gpuRemoved(drmGpu);
-                    m_gpus.removeOne(drmGpu);
-                    delete drmGpu;
+                    emit gpuRemoved(gpu);
+                    m_gpus.removeOne(gpu);
+                    delete gpu;
                     updateOutputs();
                     updateCursor();
                 }
+            }
+        } else if (device->action() == QStringLiteral("change")) {
+            DrmGpu *gpu = findGpu(device->sysNum());
+            if (gpu) {
+                qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
+                updateOutputs();
+                updateCursor();
             }
         }
     }
@@ -673,6 +671,16 @@ DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
 DrmGpu *DrmBackend::primaryGpu() const
 {
     return m_gpus.isEmpty() ? nullptr : m_gpus[0];
+}
+
+DrmGpu *DrmBackend::findGpu(int sysNum) const
+{
+    for (DrmGpu *gpu : qAsConst(m_gpus)) {
+        if (gpu->drmId() == sysNum) {
+            return gpu;
+        }
+    }
+    return nullptr;
 }
 
 }

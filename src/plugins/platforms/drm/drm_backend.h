@@ -64,6 +64,7 @@ public:
     QString supportInformation() const override;
 
     DrmGpu *primaryGpu() const;
+    DrmGpu *findGpu(int sysNum) const;
 
 public Q_SLOTS:
     void turnOutputsOn();
