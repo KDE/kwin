@@ -29,7 +29,7 @@ public:
     ~UdevDevice();
 
     const char *devNode();
-    int sysNum() const;
+    dev_t devNum() const;
     const char *property(const char *key);
     bool hasProperty(const char *key, const char *value);
     QString action() const;

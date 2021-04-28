@@ -246,7 +246,7 @@ void DrmBackend::handleUdevEvent()
                 }
             }
         } else if (device->action() == QStringLiteral("remove")) {
-            DrmGpu *gpu = findGpu(device->sysNum());
+            DrmGpu *gpu = findGpu(device->devNum());
             if (gpu) {
                 if (primaryGpu() == gpu) {
                     qCCritical(KWIN_DRM) << "Primary gpu has been removed! Quitting...";
@@ -261,7 +261,7 @@ void DrmBackend::handleUdevEvent()
                 }
             }
         } else if (device->action() == QStringLiteral("change")) {
-            DrmGpu *gpu = findGpu(device->sysNum());
+            DrmGpu *gpu = findGpu(device->devNum());
             if (gpu) {
                 qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
                 updateOutputs();
@@ -288,7 +288,7 @@ DrmGpu *DrmBackend::addGpu(std::unique_ptr<UdevDevice> device)
     }
     drmModeFreeResources(resources);
 
-    DrmGpu *gpu = new DrmGpu(this, device->devNode(), fd, device->sysNum());
+    DrmGpu *gpu = new DrmGpu(this, device->devNode(), fd, device->devNum());
     if (!gpu->useEglStreams() || m_gpus.isEmpty()) {
         m_gpus.append(gpu);
         m_active = true;
@@ -673,10 +673,10 @@ DrmGpu *DrmBackend::primaryGpu() const
     return m_gpus.isEmpty() ? nullptr : m_gpus[0];
 }
 
-DrmGpu *DrmBackend::findGpu(int sysNum) const
+DrmGpu *DrmBackend::findGpu(dev_t deviceId) const
 {
     for (DrmGpu *gpu : qAsConst(m_gpus)) {
-        if (gpu->drmId() == sysNum) {
+        if (gpu->deviceId() == deviceId) {
             return gpu;
         }
     }

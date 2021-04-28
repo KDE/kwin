@@ -213,9 +213,9 @@ const char *UdevDevice::devNode()
     return udev_device_get_devnode(m_device);
 }
 
-int UdevDevice::sysNum() const
+dev_t UdevDevice::devNum() const
 {
-    return QByteArray(udev_device_get_sysnum(m_device)).toInt();
+    return udev_device_get_devnum(m_device);
 }
 
 const char *UdevDevice::property(const char *key)

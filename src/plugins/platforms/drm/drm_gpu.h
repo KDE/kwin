@@ -34,7 +34,7 @@ class DrmGpu : public QObject
 {
     Q_OBJECT
 public:
-    DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId);
+    DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, dev_t deviceId);
     ~DrmGpu();
 
     // getters
@@ -46,8 +46,8 @@ public:
         return m_fd;
     }
 
-    int drmId() const {
-        return m_drmId;
+    dev_t deviceId() const {
+        return m_deviceId;
     }
 
     bool atomicModeSetting() const {
@@ -122,7 +122,7 @@ private:
     const QByteArray m_devNode;
     QSize m_cursorSize;
     const int m_fd;
-    const int m_drmId;
+    const dev_t m_deviceId;
     bool m_atomicModeSetting;
     bool m_useEglStreams;
     gbm_device* m_gbmDevice;
