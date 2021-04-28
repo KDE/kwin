@@ -63,6 +63,13 @@ bool Context::assignSeat(const char *seat)
     if (!isValid()) {
         return false;
     }
+#if defined(Q_OS_FREEBSD)
+    // On FreeBSD, seat-assignment does work; when assigning
+    // to a different seat, no input devices are ever reported.
+    // Using the default seat **does** return devices, so
+    // use that instead.
+    seat = "seat0";
+#endif
     return libinput_udev_assign_seat(m_libinput, seat) == 0;
 }
 
