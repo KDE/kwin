@@ -3,6 +3,14 @@
 
 [Desktop Entry]
 Name=Virtual Keyboard
+Name[az]=Virtual Klaviatura
+Name[ca]=Teclat virtual
+Name[de]=Virtuelle Tastatur
+Name[es]=Teclado virtual
+Name[nl]=Virtueel toetsenbord
+Name[sv]=Virtuellt tangentbord
+Name[uk]=Віртуальна клавіатура
+Name[x-test]=xxVirtual Keyboardxx
 
 Icon=input-keyboard-virtual
 Type=Service

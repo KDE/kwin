@@ -14,6 +14,22 @@ X-KDE-OnlyShowOnQtPlatforms=wayland;
 X-DocPath=kcontrol/kwinvirtualkeyboard/index.html
 
 Name=Virtual Keyboard
+Name[az]=Virtual Klaviatura
+Name[ca]=Teclat virtual
+Name[de]=Virtuelle Tastatur
+Name[es]=Teclado virtual
+Name[nl]=Virtueel toetsenbord
+Name[sv]=Virtuellt tangentbord
+Name[uk]=Віртуальна клавіатура
+Name[x-test]=xxVirtual Keyboardxx
 Comment=Select which virtual keyboard to use
+Comment[az]=İstifadə edəcəyiniz klaviaturanı seçin
+Comment[ca]=Seleccioneu el teclat virtual a usar
+Comment[de]=Wählen Sie die zu verwendende virtuelle Tastatur
+Comment[es]=Seleccionar el teclado virtual a usar
+Comment[nl]=Het te gebruiken virtuele toetsenbord selecteren
+Comment[sv]=Välj vilket virtuellt tangentbord som ska användas
+Comment[uk]=Вибір віртуальної клавіатури
+Comment[x-test]=xxSelect which virtual keyboard to usexx
 
 Categories=Qt;KDE;
