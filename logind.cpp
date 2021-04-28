@@ -356,6 +356,11 @@ void LogindIntegration::releaseControl()
     emit hasSessionControlChanged(false);
 }
 
+static QVariantList fromRDev(const dev_t rdev)
+{
+    return QVariantList({quint32(major(rdev)), quint32(minor(rdev))});
+}
+
 int LogindIntegration::takeDevice(const char *path)
 {
     struct stat st;
@@ -367,7 +372,7 @@ int LogindIntegration::takeDevice(const char *path)
                                                           m_sessionPath,
                                                           m_sessionControllerSessionInterface,
                                                           QStringLiteral("TakeDevice"));
-    message.setArguments(QVariantList({QVariant(major(st.st_rdev)), QVariant(minor(st.st_rdev))}));
+    message.setArguments(fromRDev(st.st_rdev));
     // intended to be a blocking call
     QDBusMessage reply = m_bus.call(message);
     if (reply.type() == QDBusMessage::ErrorMessage) {
@@ -389,7 +394,7 @@ void LogindIntegration::releaseDevice(int fd)
                                                               m_sessionPath,
                                                               m_sessionControllerSessionInterface,
                                                               QStringLiteral("ReleaseDevice"));
-        message.setArguments(QVariantList({QVariant(major(st.st_rdev)), QVariant(minor(st.st_rdev))}));
+        message.setArguments(fromRDev(st.st_rdev));
         m_bus.asyncCall(message);
     }
     close(fd);
