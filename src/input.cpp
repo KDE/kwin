@@ -1612,7 +1612,14 @@ public:
             tabletSeat->addTabletPad(device->sysName(), device->name(), {QString::fromUtf8(devnode)}, buttonsCount, ringsCount, stripsCount, modes, libinput_tablet_pad_mode_group_get_mode(firstGroup), tablet);
         }
     }
-    void removeDevice(const QString &sysname)
+
+    void removeDevice(LibInput::Device *device)
+    {
+        auto deviceGroup = libinput_device_get_device_group(device->device());
+        libinput_device_group_set_user_data(deviceGroup, nullptr);
+    }
+
+    void removeDeviceBySysName(const QString &sysname)
     {
         KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
         if (tabletSeat)
@@ -2258,7 +2265,9 @@ void InputRedirection::setupInputFilters()
                 m_tabletSupport->integrateDevice(dev);
             }
             connect(m_libInput, &LibInput::Connection::deviceAdded, m_tabletSupport, &TabletInputFilter::integrateDevice);
-            connect(m_libInput, &LibInput::Connection::deviceRemovedSysName, m_tabletSupport, &TabletInputFilter::removeDevice);
+            connect(m_libInput, &LibInput::Connection::deviceRemoved, m_tabletSupport, &TabletInputFilter::removeDevice);
+
+            connect(m_libInput, &LibInput::Connection::deviceRemovedSysName, m_tabletSupport, &TabletInputFilter::removeDeviceBySysName);
             installInputEventFilter(m_tabletSupport);
         }
     }
