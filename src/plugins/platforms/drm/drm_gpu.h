@@ -105,9 +105,7 @@ Q_SIGNALS:
     void outputDisabled(DrmOutput *output);
 
 protected:
-
     friend class DrmBackend;
-    void tryAMS();
     bool updateOutputs();
 
 private:
@@ -115,6 +113,7 @@ private:
     DrmPlane *getCompatiblePlane(DrmPlane::TypeIndex typeIndex, DrmCrtc *crtc);
     DrmOutput *findOutput(quint32 connector);
     void removeOutput(DrmOutput *output);
+    void tryAMS();
 
     DrmBackend* const m_backend;
     AbstractEglBackend *m_eglBackend;

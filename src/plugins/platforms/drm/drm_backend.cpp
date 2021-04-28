@@ -202,12 +202,6 @@ bool DrmBackend::initialize()
         addGpu(std::move(devices.at(gpu_index)));
     }
 
-    // trying to activate Atomic Mode Setting (this means also Universal Planes)
-    if (!qEnvironmentVariableIsSet("KWIN_DRM_NO_AMS")) {
-        for (auto gpu : m_gpus)
-            gpu->tryAMS();
-    }
-
     initCursor();
     if (!updateOutputs())
         return false;

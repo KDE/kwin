@@ -76,6 +76,12 @@ DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, dev_t deviceId)
 
     m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
     connect(m_socketNotifier, &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
+
+    // trying to activate Atomic Mode Setting (this means also Universal Planes)
+    static const bool atomicModesetting = !qEnvironmentVariableIsSet("KWIN_DRM_NO_AMS");
+    if (atomicModesetting) {
+        tryAMS();
+    }
 }
 
 DrmGpu::~DrmGpu()
