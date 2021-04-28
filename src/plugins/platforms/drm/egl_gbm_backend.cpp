@@ -10,6 +10,7 @@
 // kwin
 #include "composite.h"
 #include "drm_backend.h"
+#include "drm_buffer_gbm.h"
 #include "drm_output.h"
 #include "gbm_surface.h"
 #include "logging.h"

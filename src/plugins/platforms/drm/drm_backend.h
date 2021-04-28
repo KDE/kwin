@@ -9,27 +9,14 @@
 #ifndef KWIN_DRM_BACKEND_H
 #define KWIN_DRM_BACKEND_H
 #include "platform.h"
-#include "input.h"
 
-#include "drm_buffer.h"
-#if HAVE_GBM
-#include "drm_buffer_gbm.h"
-#endif
 #include "drm_inputeventfilter.h"
-#include "drm_pointer.h"
 
-#include <QElapsedTimer>
-#include <QImage>
 #include <QPointer>
 #include <QSize>
 #include <QVector>
-#include <xf86drmMode.h>
 
 #include <memory>
-
-struct gbm_bo;
-struct gbm_device;
-struct gbm_surface;
 
 namespace KWin
 {
@@ -39,10 +26,6 @@ class UdevMonitor;
 class UdevDevice;
 
 class DrmOutput;
-class DrmPlane;
-class DrmCrtc;
-class DrmConnector;
-class GbmSurface;
 class Cursor;
 class DrmGpu;
 
