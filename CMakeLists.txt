@@ -238,6 +238,15 @@ set_package_properties(lcms2 PROPERTIES
 )
 add_feature_info("lcms2" lcms2_FOUND "Required for the color management system")
 
+find_package(seatd)
+set_package_properties(seatd PROPERTIES
+    DESCRIPTION "Seat management daemon and library"
+    URL "https://git.sr.ht/~kennylevinsen/seatd/"
+    TYPE OPTIONAL
+)
+add_feature_info("seatd" seatd_FOUND "Required for seatd integration")
+set(HAVE_SEATD ${seatd_FOUND})
+
 # All the required XCB components
 find_package(XCB 1.10 REQUIRED COMPONENTS
     COMPOSITE

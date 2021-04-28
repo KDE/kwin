@@ -34,6 +34,7 @@ public:
         Noop,
         ConsoleKit,
         Logind,
+        Seatd,
     };
 
     /**

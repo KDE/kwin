@@ -33,6 +33,7 @@
 #if HAVE_BREEZE_DECO
 #define BREEZE_KDECORATION_PLUGIN_ID "${BREEZE_KDECORATION_PLUGIN_ID}"
 #endif
+#cmakedefine01 HAVE_SEATD
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #cmakedefine HAVE_UNISTD_H 1

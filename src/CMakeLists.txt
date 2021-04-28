@@ -241,6 +241,11 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
     target_sources(kwin PRIVATE session_direct_freebsd.cpp)
 endif()
 
+if (HAVE_SEATD)
+    target_sources(kwin PRIVATE session_seatd.cpp)
+    target_link_libraries(kwin seatd::seatd)
+endif()
+
 if (KWIN_BUILD_CMS)
     target_sources(kwin PRIVATE
         colordevice.cpp
