@@ -60,9 +60,11 @@ public:
         : QObject(parent)
         , m_parent(parent)
     {
-        auto c = LibInput::Connection::self();
-        connect(c, &LibInput::Connection::deviceAdded, this, &TabletModeTouchpadRemovedSpy::refresh);
-        connect(c, &LibInput::Connection::deviceRemoved, this, &TabletModeTouchpadRemovedSpy::refresh);
+        auto c = LibInput::Connection::self(); // May be nullptr
+        if (c) {
+            connect(c, &LibInput::Connection::deviceAdded, this, &TabletModeTouchpadRemovedSpy::refresh);
+            connect(c, &LibInput::Connection::deviceRemoved, this, &TabletModeTouchpadRemovedSpy::refresh);
+        }
 
         check();
     }
