@@ -192,14 +192,15 @@ bool DrmBackend::initialize()
 {
     connect(session(), &Session::activeChanged, this, &DrmBackend::activate);
     connect(session(), &Session::awoke, this, &DrmBackend::turnOutputsOn);
-    std::vector<UdevDevice::Ptr> devices = m_udev->listGPUs();
-    if (devices.size() == 0) {
-        qCWarning(KWIN_DRM) << "Did not find a GPU";
-        return false;
-    }
 
+    std::vector<UdevDevice::Ptr> devices = m_udev->listGPUs();
     for (unsigned int gpu_index = 0; gpu_index < devices.size(); gpu_index++) {
         addGpu(std::move(devices.at(gpu_index)));
+    }
+
+    if (m_gpus.isEmpty()) {
+        qCWarning(KWIN_DRM) << "No suitable DRM devices have been found";
+        return false;
     }
 
     initCursor();
