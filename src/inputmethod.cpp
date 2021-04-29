@@ -173,22 +173,13 @@ void InputMethod::clientAdded(AbstractClient* client)
         return;
     }
     m_inputClient = client;
-    auto refreshFrame = [this] {
-        if (!m_trackedClient) {
-            return;
-        }
-
-        if (m_inputClient && !m_inputClient->inputGeometry().isEmpty()) {
-            m_trackedClient->setVirtualKeyboardGeometry(m_inputClient->inputGeometry());
-        }
-    };
-    connect(client->surface(), &SurfaceInterface::inputChanged, this, refreshFrame);
+    connect(client->surface(), &SurfaceInterface::inputChanged, this, &InputMethod::updateInputPanelState);
     connect(client, &QObject::destroyed, this, [this] {
         if (m_trackedClient) {
             m_trackedClient->setVirtualKeyboardGeometry({});
         }
     });
-    connect(m_inputClient, &AbstractClient::frameGeometryChanged, this, refreshFrame);
+    connect(m_inputClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
     // Current code have a assumption that InputMethod started by the kwin is virtual keyboard,
     // InputMethod::hide sends out a deactivate signal to input-method client, this is not desired
     // when we support input methods like ibus which can show and hide surfaces/windows as they please
@@ -208,7 +199,9 @@ void InputMethod::handleFocusedSurfaceChanged()
             if (m_trackedClient) {
                 m_trackedClient->setVirtualKeyboardGeometry(QRect());
             }
+            disconnect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
             m_trackedClient = focusedClient;
+            connect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
         }
         updateInputPanelState();
     } else {
@@ -545,10 +538,16 @@ void InputMethod::updateInputPanelState()
         return;
     }
 
+    QRect overlap = QRect(0, 0, 0, 0);
     if (m_trackedClient) {
         m_trackedClient->setVirtualKeyboardGeometry(m_inputClient ? m_inputClient->inputGeometry() : QRect());
+
+        if (m_inputClient) {
+            overlap = m_trackedClient->frameGeometry() & m_inputClient->inputGeometry();
+            overlap.moveTo(m_trackedClient->mapToLocal(overlap.topLeft()));
+        }
     }
-    t->setInputPanelState(m_inputClient && m_inputClient->isShown(false), QRect(0, 0, 0, 0));
+    t->setInputPanelState(m_inputClient && m_inputClient->isShown(false), overlap);
 }
 
 void InputMethod::setInputMethodCommand(const QString &command)
