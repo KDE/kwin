@@ -384,7 +384,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
     if (m_activated || m_motionManager.areWindowsMoving()) {
         DataHash::const_iterator winData = m_windowData.constFind(w);
         if (winData == m_windowData.constEnd() || (w->isDock() && m_showPanel)) {
-            // in case the panel should be shown just display it without any changes
+	    // we are darkening the panel to communicate that it's not interactive
             data.multiplyBrightness(interpolate(0.40, 1.0, winData->highlight));
             effects->paintWindow(w, mask, region, data);
             return;
