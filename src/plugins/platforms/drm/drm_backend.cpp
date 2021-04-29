@@ -470,17 +470,6 @@ void DrmBackend::enableOutput(DrmOutput *output, bool enable)
     emit screensQueried();
 }
 
-DrmOutput *DrmBackend::findOutput(quint32 connector)
-{
-    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [connector] (DrmOutput *o) {
-        return o->m_conn->id() == connector;
-    });
-    if (it != m_outputs.constEnd()) {
-        return *it;
-    }
-    return nullptr;
-}
-
 void DrmBackend::initCursor()
 {
 
