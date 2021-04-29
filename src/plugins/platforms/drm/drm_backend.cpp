@@ -312,7 +312,6 @@ bool DrmBackend::updateOutputs()
     if (oldOutputs != m_outputs) {
         readOutputsConfiguration();
     }
-    updateOutputsEnabled();
     if (!m_outputs.isEmpty()) {
         emit screensQueried();
     }
@@ -443,7 +442,6 @@ void DrmBackend::enableOutput(DrmOutput *output, bool enable)
         emit output->gpu()->outputDisabled(output);
         emit outputDisabled(output);
     }
-    updateOutputsEnabled();
     checkOutputsAreOn();
     emit screensQueried();
 }
@@ -580,15 +578,6 @@ OpenGLBackend *DrmBackend::createOpenGLBackend()
 #else
     return Platform::createOpenGLBackend();
 #endif
-}
-
-void DrmBackend::updateOutputsEnabled()
-{
-    bool enabled = false;
-    for (auto it = m_enabledOutputs.constBegin(); it != m_enabledOutputs.constEnd(); ++it) {
-        enabled = enabled || (*it)->isDpmsEnabled();
-    }
-    setOutputsEnabled(enabled);
 }
 
 QVector<CompositingType> DrmBackend::supportedCompositors() const

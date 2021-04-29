@@ -586,11 +586,7 @@ void Compositor::addRepaintFull()
 
 void Compositor::handleFrameRequested(RenderLoop *renderLoop)
 {
-    // If outputs are disabled, we return to the event loop and
-    // continue processing events until the outputs are enabled again
-    if (kwinApp()->platform()->areOutputsEnabled()) {
-        composite(renderLoop);
-    }
+    composite(renderLoop);
 }
 
 void Compositor::composite(RenderLoop *renderLoop)

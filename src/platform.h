@@ -344,12 +344,6 @@ public:
     bool supportsPointerWarping() const {
         return m_pointerWarping;
     }
-    bool areOutputsEnabled() const {
-        return m_outputsEnabled;
-    }
-    void setOutputsEnabled(bool enabled) {
-        m_outputsEnabled = enabled;
-    }
     int initialOutputCount() const {
         return m_initialOutputCount;
     }
@@ -583,7 +577,6 @@ private:
     QSize m_initialWindowSize;
     QByteArray m_deviceIdentifier;
     bool m_pointerWarping = false;
-    bool m_outputsEnabled = true;
     int m_initialOutputCount = 1;
     qreal m_initialOutputScale = 1;
     EGLDisplay m_eglDisplay;

@@ -91,7 +91,6 @@ private:
     void readOutputsConfiguration();
     void writeOutputsConfiguration();
     QString generateOutputConfigurationUuid() const;
-    void updateOutputsEnabled();
     void handleUdevEvent();
     DrmGpu *addGpu(std::unique_ptr<UdevDevice> device);
 
