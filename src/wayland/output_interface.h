@@ -42,7 +42,7 @@ public:
         HorizontalRGB,
         HorizontalBGR,
         VerticalRGB,
-        VerticalBGR
+        VerticalBGR,
     };
     enum class Transform {
         Normal,
@@ -52,7 +52,7 @@ public:
         Flipped,
         Flipped90,
         Flipped180,
-        Flipped270
+        Flipped270,
     };
     struct Mode {
         QSize size = QSize();
@@ -62,7 +62,7 @@ public:
         On,
         Standby,
         Suspend,
-        Off
+        Off,
     };
 
     explicit OutputInterface(Display *display, QObject *parent = nullptr);

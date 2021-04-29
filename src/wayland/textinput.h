@@ -62,7 +62,7 @@ enum class TextInputContentHint {
     /**
      * the text input is multi line
      */
-    MultiLine = 1 << 9
+    MultiLine = 1 << 9,
 };
 
 Q_DECLARE_FLAGS(TextInputContentHints, TextInputContentHint)
@@ -129,7 +129,7 @@ enum class TextInputContentPurpose {
     /**
      * input is numeric password
      */
-    Pin
+    Pin,
 };
 
 enum class TextInputChangeCause {
@@ -141,7 +141,7 @@ enum class TextInputChangeCause {
     /**
      * Something else other than input method caused change
      */
-    Other
+    Other,
 };
 
 }

@@ -115,7 +115,7 @@ private:
         ClientHeader,
         ServerHeader,
         ClientCode,
-        ServerCode
+        ServerCode,
     } m_option;
 
     QByteArray m_protocolName;

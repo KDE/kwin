@@ -99,7 +99,7 @@ public:
         AlwaysVisible, ///< The panel should be always visible
         AutoHide, ///< The panel auto hides at a screen edge and returns on mouse press against edge
         WindowsCanCover, ///< Windows are allowed to go above the panel, it raises on mouse press against screen edge
-        WindowsGoBelow ///< Window are allowed to go below the panel
+        WindowsGoBelow, ///< Window are allowed to go below the panel
     };
     /**
      * @returns The PanelBehavior for a PlasmaShellSurfaceInterface with role @c Role::Panel

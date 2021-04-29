@@ -66,7 +66,7 @@ public:
 
     enum class LifeTime : uint {
         OneShot = 1,
-        Persistent = 2
+        Persistent = 2,
     };
 
     LifeTime lifeTime() const;
@@ -182,7 +182,7 @@ public:
 
     enum class LifeTime : uint {
         OneShot = 1,
-        Persistent = 2
+        Persistent = 2,
     };
 
     LifeTime lifeTime() const;

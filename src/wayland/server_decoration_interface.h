@@ -46,7 +46,7 @@ public:
         /**
          * The surface gets embedded into a decoration frame provided by the Server.
          */
-        Server
+        Server,
     };
 
     /**

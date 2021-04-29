@@ -81,7 +81,7 @@ public:
     enum Flag {
         YInverted           = (1 << 0),    /// Contents are y-inverted
         Interlaced          = (1 << 1),    /// Content is interlaced
-        BottomFieldFirst    = (1 << 2)     /// Bottom field first
+        BottomFieldFirst    = (1 << 2),    /// Bottom field first
     };
 
     Q_DECLARE_FLAGS(Flags, Flag)

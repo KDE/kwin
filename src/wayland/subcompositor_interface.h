@@ -67,7 +67,7 @@ public:
      */
     enum class Mode {
         Synchronized,
-        Desynchronized
+        Desynchronized,
     };
 
     /**

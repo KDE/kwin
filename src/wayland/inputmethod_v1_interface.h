@@ -121,7 +121,7 @@ public:
     ~InputPanelSurfaceV1Interface() override;
 
     enum Position {
-        CenterBottom = 0
+        CenterBottom = 0,
     };
     Q_ENUM(Position)
 

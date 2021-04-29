@@ -33,7 +33,7 @@ public:
     ~PlasmaWindowManagementInterface() override;
     enum class ShowingDesktopState {
         Disabled,
-        Enabled
+        Enabled,
     };
     void setShowingDesktopState(ShowingDesktopState state);
 

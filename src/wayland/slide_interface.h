@@ -38,7 +38,7 @@ public:
         Left = 0, /**< Slide from the left edge of the screen */
         Top = 1, /**< Slide from the top edge of the screen */
         Right = 2, /**< Slide from the bottom edge of the screen */
-        Bottom = 3 /**< Slide from the bottom edge of the screen */
+        Bottom = 3, /**< Slide from the bottom edge of the screen */
     };
 
     ~SlideInterface() override;

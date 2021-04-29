@@ -78,7 +78,7 @@ public:
         Distance = 3, ///< Distance axis
         Rotation = 4, ///< Z-rotation axis
         Slider = 5, ///< Slider axis
-        Wheel = 6 ///< Wheel axis
+        Wheel = 6, ///< Wheel axis
     };
     Q_ENUM(Capability)
 

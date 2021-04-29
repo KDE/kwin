@@ -37,7 +37,7 @@ public:
         None = 0,
         Copy = 1 << 0,
         Move = 1 << 1,
-        Ask = 1 << 2
+        Ask = 1 << 2,
     };
     Q_DECLARE_FLAGS(DnDActions, DnDAction)
 

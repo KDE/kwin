@@ -103,7 +103,7 @@ public:
             BottomRightBuffer = 1 << 5,
             BottomBuffer = 1 << 6,
             BottomLeftBuffer = 1 << 7,
-            Offset = 1 << 8
+            Offset = 1 << 8,
         };
         BufferInterface *left = nullptr;
         BufferInterface *topLeft = nullptr;
