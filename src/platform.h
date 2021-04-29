@@ -81,13 +81,6 @@ public:
     }
 
     /**
-     * Informs the Platform that it is about to go down and shall do appropriate cleanup.
-     * Child classes can override this function but must call the parent implementation in
-     * the end.
-     */
-    virtual void prepareShutdown();
-
-    /**
      * Allows the platform to create a platform specific screen edge.
      * The default implementation creates a Edge.
      */

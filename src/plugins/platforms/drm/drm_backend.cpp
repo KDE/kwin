@@ -65,21 +65,13 @@ DrmBackend::DrmBackend(QObject *parent)
 
 DrmBackend::~DrmBackend()
 {
+    writeOutputsConfiguration();
     qDeleteAll(m_gpus);
 }
 
 Session *DrmBackend::session() const
 {
     return m_session;
-}
-
-void DrmBackend::prepareShutdown()
-{
-    writeOutputsConfiguration();
-    for (DrmOutput *output : m_outputs) {
-        output->teardown();
-    }
-    Platform::prepareShutdown();
 }
 
 Outputs DrmBackend::outputs() const

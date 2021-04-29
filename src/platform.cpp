@@ -91,11 +91,6 @@ XRenderBackend *Platform::createXRenderBackend()
 }
 #endif
 
-void Platform::prepareShutdown()
-{
-    setOutputsEnabled(false);
-}
-
 Edge *Platform::createScreenEdge(ScreenEdges *edges)
 {
     return new Edge(edges);

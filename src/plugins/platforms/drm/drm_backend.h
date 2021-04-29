@@ -43,7 +43,6 @@ public:
     DmaBufTexture *createDmaBufTexture(const QSize &size) override;
     Session *session() const override;
     bool initialize() override;
-    void prepareShutdown() override;
 
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;

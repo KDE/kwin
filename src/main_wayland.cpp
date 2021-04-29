@@ -129,9 +129,6 @@ ApplicationWayland::~ApplicationWayland()
         return;
     }
 
-    if (auto *platform = kwinApp()->platform()) {
-        platform->prepareShutdown();
-    }
     // need to unload all effects prior to destroying X connection as they might do X calls
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
