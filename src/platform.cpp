@@ -506,16 +506,6 @@ QSize Platform::screenSize() const
     return QSize();
 }
 
-QVector<QRect> Platform::screenGeometries() const
-{
-    return QVector<QRect>({QRect(QPoint(0, 0), screenSize())});
-}
-
-QVector<qreal> Platform::screenScales() const
-{
-    return QVector<qreal>({1});
-}
-
 bool Platform::requiresCompositing() const
 {
     return true;

@@ -153,21 +153,6 @@ public:
      */
     virtual QSize screenSize() const;
     /**
-     * Implementing subclasses should provide all geometries in case the backend represents
-     * a basic screen and uses the BasicScreens.
-     *
-     * Base implementation returns one QRect positioned at 0/0 with screenSize() as size.
-     */
-    virtual QVector<QRect> screenGeometries() const;
-
-    /**
-     * Implementing subclasses should provide all geometries in case the backend represents
-     * a basic screen and uses the BasicScreens.
-     *
-     * Base implementation returns a screen with a scale of 1.
-     */
-    virtual QVector<qreal> screenScales() const;
-    /**
      * Implement this method to receive configuration change requests through KWayland's
      * OutputManagement interface.
      *

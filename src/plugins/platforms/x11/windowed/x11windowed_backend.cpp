@@ -475,7 +475,7 @@ void X11WindowedBackend::createCursor(const QImage &srcImage, const QPoint &hots
     const xcb_cursor_t cid = xcb_generate_id(m_connection);
 
     //right now on X we only have one scale between all screens, and we know we will have at least one screen
-    const qreal outputScale = screenScales().first();
+    const qreal outputScale = 1;
     const QSize targetSize = srcImage.size() * outputScale / srcImage.devicePixelRatio();
     const QImage img = srcImage.scaled(targetSize, Qt::KeepAspectRatio);
 
