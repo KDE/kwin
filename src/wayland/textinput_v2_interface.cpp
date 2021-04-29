@@ -293,6 +293,9 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_disable(Resource *resource, 
 {
     Q_UNUSED(resource)
     Q_UNUSED(s)
+
+    q->setInputPanelState(false, {0, 0, 0, 0});
+
     surface.clear();
     enabled = false;
     emit q->enabledChanged();
