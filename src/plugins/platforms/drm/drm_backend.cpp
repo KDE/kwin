@@ -38,7 +38,6 @@
 // Qt
 #include <QCryptographicHash>
 #include <QSocketNotifier>
-#include <QPainter>
 // system
 #include <algorithm>
 #include <unistd.h>
@@ -48,14 +47,6 @@
 
 #include "drm_gpu.h"
 #include "egl_multi_backend.h"
-
-#ifndef DRM_CAP_CURSOR_WIDTH
-#define DRM_CAP_CURSOR_WIDTH 0x8
-#endif
-
-#ifndef DRM_CAP_CURSOR_HEIGHT
-#define DRM_CAP_CURSOR_HEIGHT 0x9
-#endif
 
 namespace KWin
 {
