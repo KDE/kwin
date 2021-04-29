@@ -14,6 +14,8 @@
 #include <vector>
 #include <QVector>
 
+#include <sys/types.h>
+
 struct udev;
 struct udev_device;
 struct udev_monitor;
