@@ -93,12 +93,12 @@ void AbstractClient::setKeepBelow(bool keepBelow)
     emit keepBelowChanged();
 }
 
-bool AbstractClient::isResize() const
+bool AbstractClient::isInteractiveResize() const
 {
     return m_resize;
 }
 
-void AbstractClient::setResize(bool set)
+void AbstractClient::setInteractiveResize(bool set)
 {
     m_resize = set;
 }

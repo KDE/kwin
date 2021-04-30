@@ -957,14 +957,14 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     Cursors::self()->mouse()->setPos(origGeo.center());
     workspace()->performWindowOperation(client2, Options::MoveOp);
     QTRY_COMPARE(workspace()->moveResizeClient(), client2);
-    QVERIFY(client2->isMove());
+    QVERIFY(client2->isInteractiveMove());
     // move to next screen - step is 8 pixel, so 800 pixel
     for (int i = 0; i < 100; i++) {
         client2->keyPressEvent(Qt::Key_Left);
         QTest::qWait(50);
     }
     client2->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(client2->isMove(), false);
+    QCOMPARE(client2->isInteractiveMove(), false);
     QVERIFY(workspace()->moveResizeClient() == nullptr);
     QCOMPARE(client2->frameGeometry(), QRect(origGeo.translated(-800, 0)));
 }

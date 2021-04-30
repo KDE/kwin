@@ -36,8 +36,8 @@ public:
     void setHiddenInternal(bool set);
     void setFrameGeometry(const QRect &rect);
     void setKeepBelow(bool);
-    bool isResize() const;
-    void setResize(bool set);
+    bool isInteractiveResize() const;
+    void setInteractiveResize(bool set);
     virtual void showOnScreenEdge() = 0;
 
 Q_SIGNALS:

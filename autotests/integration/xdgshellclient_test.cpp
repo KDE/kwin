@@ -1303,7 +1303,7 @@ void TestXdgShellClient::testXdgWindowGeometryInteractiveResize()
     // Go right.
     QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
     client->keyPressEvent(Qt::Key_Right);
-    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
@@ -1321,7 +1321,7 @@ void TestXdgShellClient::testXdgWindowGeometryInteractiveResize()
     // Go down.
     cursorPos = KWin::Cursors::self()->mouse()->pos();
     client->keyPressEvent(Qt::Key_Down);
-    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(0, 8));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);

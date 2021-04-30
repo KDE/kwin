@@ -584,7 +584,7 @@ void AbstractClient::setShade(ShadeMode mode)
 {
     if (!isShadeable())
         return;
-    if (mode == ShadeHover && isMove())
+    if (mode == ShadeHover && isInteractiveMove())
         return; // causes geometry breaks and is probably nasty
     if (isSpecialWindow() || noBorder())
         mode = ShadeNone;
@@ -643,7 +643,7 @@ void AbstractClient::startShadeHoverTimer()
 
 void AbstractClient::startShadeUnhoverTimer()
 {
-    if (m_shadeMode == ShadeHover && !isMoveResize() && !isMoveResizePointerButtonDown()) {
+    if (m_shadeMode == ShadeHover && !isInteractiveMoveResize() && !isInteractiveMoveResizePointerButtonDown()) {
         m_shadeHoverTimer = new QTimer(this);
         connect(m_shadeHoverTimer, &QTimer::timeout, this, &AbstractClient::shadeUnhover);
         m_shadeHoverTimer->setSingleShot(true);
@@ -929,26 +929,26 @@ void AbstractClient::move(int x, int y)
     emit frameGeometryChanged(this, oldFrameGeometry);
 }
 
-bool AbstractClient::startMoveResize()
+bool AbstractClient::startInteractiveMoveResize()
 {
-    Q_ASSERT(!isMoveResize());
+    Q_ASSERT(!isInteractiveMoveResize());
     Q_ASSERT(QWidget::keyboardGrabber() == nullptr);
     Q_ASSERT(QWidget::mouseGrabber() == nullptr);
-    stopDelayedMoveResize();
+    stopDelayedInteractiveMoveResize();
     if (QApplication::activePopupWidget() != nullptr)
         return false; // popups have grab
     if (isFullScreen() && (screens()->count() < 2 || !isMovableAcrossScreens()))
         return false;
-    if (!doStartMoveResize()) {
+    if (!doStartInteractiveMoveResize()) {
         return false;
     }
 
     invalidateDecorationDoubleClickTimer();
 
-    setMoveResize(true);
+    setInteractiveMoveResize(true);
     workspace()->setMoveResizeClient(this);
 
-    const Position mode = moveResizePointerMode();
+    const Position mode = interactiveMoveResizePointerMode();
     if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
         if (maximizeMode() == MaximizeFull) { // partial is cond. reset in finishMoveResize
             setGeometryRestore(frameGeometry()); // "restore" to current geometry
@@ -966,30 +966,30 @@ bool AbstractClient::startMoveResize()
 
     updateHaveResizeEffect();
     updateInitialMoveResizeGeometry();
-    checkUnrestrictedMoveResize();
+    checkUnrestrictedInteractiveMoveResize();
     emit clientStartUserMovedResized(this);
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
         ScreenEdges::self()->reserveDesktopSwitching(true, Qt::Vertical|Qt::Horizontal);
     return true;
 }
 
-void AbstractClient::finishMoveResize(bool cancel)
+void AbstractClient::finishInteractiveMoveResize(bool cancel)
 {
     GeometryUpdatesBlocker blocker(this);
-    const bool wasResize = isResize(); // store across leaveMoveResize
-    leaveMoveResize();
+    const bool wasResize = isInteractiveResize(); // store across leaveMoveResize
+    leaveInteractiveMoveResize();
 
-    doFinishMoveResize();
+    doFinishInteractiveMoveResize();
 
     if (cancel)
-        setFrameGeometry(initialMoveResizeGeometry());
+        setFrameGeometry(initialInteractiveMoveResizeGeometry());
     else {
         const QRect &moveResizeGeom = moveResizeGeometry();
         if (wasResize) {
             const bool restoreH = maximizeMode() == MaximizeHorizontal &&
-                                    moveResizeGeom.width() != initialMoveResizeGeometry().width();
+                                    moveResizeGeom.width() != initialInteractiveMoveResizeGeometry().width();
             const bool restoreV = maximizeMode() == MaximizeVertical &&
-                                    moveResizeGeom.height() != initialMoveResizeGeometry().height();
+                                    moveResizeGeom.height() != initialInteractiveMoveResizeGeometry().height();
             if (restoreH || restoreV) {
                 changeMaximize(restoreH, restoreV, false);
             }
@@ -997,7 +997,7 @@ void AbstractClient::finishMoveResize(bool cancel)
         setFrameGeometry(moveResizeGeom);
     }
     checkScreen(); // needs to be done because clientFinishUserMovedResized has not yet re-activated online alignment
-    if (screen() != moveResizeStartScreen()) {
+    if (screen() != interactiveMoveResizeStartScreen()) {
         if (isFullScreen() || isElectricBorderMaximizing()) {
             updateGeometryRestoresForFullscreen(screen());
         }
@@ -1031,9 +1031,9 @@ void AbstractClient::finishMoveResize(bool cancel)
 // If e.g. the titlebar is already outside of the workarea, there's no point in performing
 // a restricted move resize, because then e.g. resize would also move the window (#74555).
 // NOTE: Most of it is duplicated from handleMoveResize().
-void AbstractClient::checkUnrestrictedMoveResize()
+void AbstractClient::checkUnrestrictedInteractiveMoveResize()
 {
-    if (isUnrestrictedMoveResize())
+    if (isUnrestrictedInteractiveMoveResize())
         return;
     const QRect &moveResizeGeom = moveResizeGeometry();
     QRect desktopArea = workspace()->clientArea(WorkArea, moveResizeGeom.center(), desktop());
@@ -1043,101 +1043,101 @@ void AbstractClient::checkUnrestrictedMoveResize()
     left_marge = qMin(100 + borderRight(), moveResizeGeom.width());
     right_marge = qMin(100 + borderLeft(), moveResizeGeom.width());
     // width/height change with opaque resizing, use the initial ones
-    titlebar_marge = initialMoveResizeGeometry().height();
+    titlebar_marge = initialInteractiveMoveResizeGeometry().height();
     top_marge = borderBottom();
     bottom_marge = borderTop();
-    if (isResize()) {
+    if (isInteractiveResize()) {
         if (moveResizeGeom.bottom() < desktopArea.top() + top_marge)
-            setUnrestrictedMoveResize(true);
+            setUnrestrictedInteractiveMoveResize(true);
         if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge)
-            setUnrestrictedMoveResize(true);
+            setUnrestrictedInteractiveMoveResize(true);
         if (moveResizeGeom.right() < desktopArea.left() + left_marge)
-            setUnrestrictedMoveResize(true);
+            setUnrestrictedInteractiveMoveResize(true);
         if (moveResizeGeom.left() > desktopArea.right() - right_marge)
-            setUnrestrictedMoveResize(true);
-        if (!isUnrestrictedMoveResize() && moveResizeGeom.top() < desktopArea.top())   // titlebar mustn't go out
-            setUnrestrictedMoveResize(true);
+            setUnrestrictedInteractiveMoveResize(true);
+        if (!isUnrestrictedInteractiveMoveResize() && moveResizeGeom.top() < desktopArea.top())   // titlebar mustn't go out
+            setUnrestrictedInteractiveMoveResize(true);
     }
-    if (isMove()) {
+    if (isInteractiveMove()) {
         if (moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1)
-            setUnrestrictedMoveResize(true);
+            setUnrestrictedInteractiveMoveResize(true);
         // no need to check top_marge, titlebar_marge already handles it
         if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge + 1) // titlebar mustn't go out
-            setUnrestrictedMoveResize(true);
+            setUnrestrictedInteractiveMoveResize(true);
         if (moveResizeGeom.right() < desktopArea.left() + left_marge)
-            setUnrestrictedMoveResize(true);
+            setUnrestrictedInteractiveMoveResize(true);
         if (moveResizeGeom.left() > desktopArea.right() - right_marge)
-            setUnrestrictedMoveResize(true);
+            setUnrestrictedInteractiveMoveResize(true);
     }
 }
 
 // When the user pressed mouse on the titlebar, don't activate move immediately,
 // since it may be just a click. Activate instead after a delay. Move used to be
 // activated only after moving by several pixels, but that looks bad.
-void AbstractClient::startDelayedMoveResize()
+void AbstractClient::startDelayedInteractiveMoveResize()
 {
-    Q_ASSERT(!m_moveResize.delayedTimer);
-    m_moveResize.delayedTimer = new QTimer(this);
-    m_moveResize.delayedTimer->setSingleShot(true);
-    connect(m_moveResize.delayedTimer, &QTimer::timeout, this,
+    Q_ASSERT(!m_interactiveMoveResize.delayedTimer);
+    m_interactiveMoveResize.delayedTimer = new QTimer(this);
+    m_interactiveMoveResize.delayedTimer->setSingleShot(true);
+    connect(m_interactiveMoveResize.delayedTimer, &QTimer::timeout, this,
         [this]() {
-            Q_ASSERT(isMoveResizePointerButtonDown());
-            if (!startMoveResize()) {
-                setMoveResizePointerButtonDown(false);
+            Q_ASSERT(isInteractiveMoveResizePointerButtonDown());
+            if (!startInteractiveMoveResize()) {
+                setInteractiveMoveResizePointerButtonDown(false);
             }
             updateCursor();
-            stopDelayedMoveResize();
+            stopDelayedInteractiveMoveResize();
         }
     );
-    m_moveResize.delayedTimer->start(QApplication::startDragTime());
+    m_interactiveMoveResize.delayedTimer->start(QApplication::startDragTime());
 }
 
-void AbstractClient::stopDelayedMoveResize()
+void AbstractClient::stopDelayedInteractiveMoveResize()
 {
-    delete m_moveResize.delayedTimer;
-    m_moveResize.delayedTimer = nullptr;
+    delete m_interactiveMoveResize.delayedTimer;
+    m_interactiveMoveResize.delayedTimer = nullptr;
 }
 
-void AbstractClient::updateMoveResize(const QPointF &currentGlobalCursor)
+void AbstractClient::updateInteractiveMoveResize(const QPointF &currentGlobalCursor)
 {
-    handleMoveResize(pos(), currentGlobalCursor.toPoint());
+    handleInteractiveMoveResize(pos(), currentGlobalCursor.toPoint());
 }
 
-void AbstractClient::handleMoveResize(const QPoint &local, const QPoint &global)
+void AbstractClient::handleInteractiveMoveResize(const QPoint &local, const QPoint &global)
 {
     const QRect oldGeo = frameGeometry();
-    handleMoveResize(local.x(), local.y(), global.x(), global.y());
-    if (!isFullScreen() && isMove()) {
+    handleInteractiveMoveResize(local.x(), local.y(), global.x(), global.y());
+    if (!isFullScreen() && isInteractiveMove()) {
         if (quickTileMode() != QuickTileMode(QuickTileFlag::None) && oldGeo != frameGeometry()) {
             GeometryUpdatesBlocker blocker(this);
             setQuickTileMode(QuickTileFlag::None);
             const QRect &geom_restore = geometryRestore();
-            setMoveOffset(QPoint(double(moveOffset().x()) / double(oldGeo.width()) * double(geom_restore.width()),
-                                 double(moveOffset().y()) / double(oldGeo.height()) * double(geom_restore.height())));
+            setInteractiveMoveOffset(QPoint(double(interactiveMoveOffset().x()) / double(oldGeo.width()) * double(geom_restore.width()),
+                                 double(interactiveMoveOffset().y()) / double(oldGeo.height()) * double(geom_restore.height())));
             if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore)
                 setMoveResizeGeometry(geom_restore);
-            handleMoveResize(local.x(), local.y(), global.x(), global.y()); // fix position
+            handleInteractiveMoveResize(local.x(), local.y(), global.x(), global.y()); // fix position
         } else if (quickTileMode() == QuickTileMode(QuickTileFlag::None) && isResizable()) {
             checkQuickTilingMaximizationZones(global.x(), global.y());
         }
     }
 }
 
-void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
+void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
 {
-    if (isWaitingForMoveResizeSync())
+    if (isWaitingForInteractiveMoveResizeSync())
         return; // we're still waiting for the client or the timeout
 
-    const Position mode = moveResizePointerMode();
+    const Position mode = interactiveMoveResizePointerMode();
     if ((mode == PositionCenter && !isMovableAcrossScreens())
             || (mode != PositionCenter && (isShade() || !isResizable())))
         return;
 
-    if (!isMoveResize()) {
-        QPoint p(QPoint(x/* - padding_left*/, y/* - padding_top*/) - moveOffset());
+    if (!isInteractiveMoveResize()) {
+        QPoint p(QPoint(x/* - padding_left*/, y/* - padding_top*/) - interactiveMoveOffset());
         if (p.manhattanLength() >= QApplication::startDragDistance()) {
-            if (!startMoveResize()) {
-                setMoveResizePointerButtonDown(false);
+            if (!startInteractiveMoveResize()) {
+                setInteractiveMoveResizePointerButtonDown(false);
                 updateCursor();
                 return;
             }
@@ -1153,8 +1153,8 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
     QPoint globalPos(x_root, y_root);
     // these two points limit the geometry rectangle, i.e. if bottomleft resizing is done,
     // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
-    QPoint topleft = globalPos - moveOffset();
-    QPoint bottomright = globalPos + invertedMoveOffset();
+    QPoint topleft = globalPos - interactiveMoveOffset();
+    QPoint bottomright = globalPos + invertedInteractiveMoveOffset();
     QRect previousMoveResizeGeom = moveResizeGeometry();
 
     // TODO move whole group when moving its leader or when the leader is not mapped?
@@ -1188,8 +1188,8 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
     };
 
     bool update = false;
-    if (isResize()) {
-        QRect orig = initialMoveResizeGeometry();
+    if (isInteractiveResize()) {
+        QRect orig = initialInteractiveMoveResizeGeometry();
         SizeMode sizeMode = SizeModeAny;
         auto calculateMoveResizeGeom = [this, &topleft, &bottomright, &orig, &sizeMode, &mode]() {
             switch(mode) {
@@ -1233,7 +1233,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
         // adjust new size to snap to other windows/borders
         setMoveResizeGeometry(workspace()->adjustClientSize(this, moveResizeGeometry(), mode));
 
-        if (!isUnrestrictedMoveResize()) {
+        if (!isUnrestrictedInteractiveMoveResize()) {
             // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
             // the other directions. If not visible enough, move the window to the closest valid
             // point. We bruteforce this by slowly moving the window back to its previous position
@@ -1338,7 +1338,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
 
         if (moveResizeGeometry().size() != previousMoveResizeGeom.size())
             update = true;
-    } else if (isMove()) {
+    } else if (isInteractiveMove()) {
         Q_ASSERT(mode == PositionCenter);
         if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
             // Special moving of maximized windows on Xinerama screens
@@ -1360,10 +1360,10 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
             QRect moveResizeGeom = moveResizeGeometry();
             moveResizeGeom.moveTopLeft(topleft);
             moveResizeGeom.moveTopLeft(workspace()->adjustClientPosition(this, moveResizeGeom.topLeft(),
-                                       isUnrestrictedMoveResize()));
+                                       isUnrestrictedInteractiveMoveResize()));
             setMoveResizeGeometry(moveResizeGeom);
 
-            if (!isUnrestrictedMoveResize()) {
+            if (!isUnrestrictedInteractiveMoveResize()) {
                 const QRegion strut = workspace()->restrictedMoveArea(desktop());   // Strut areas
                 QRegion availableArea(workspace()->clientArea(FullArea, -1, 0));   // On the screen
                 availableArea -= strut;   // Strut areas
@@ -1434,23 +1434,23 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
     if (!update)
         return;
 
-    if (isResize() && !haveResizeEffect()) {
-        doResizeSync();
+    if (isInteractiveResize() && !haveResizeEffect()) {
+        doInteractiveResizeSync();
     } else
-        performMoveResize();
+        performInteractiveMoveResize();
 
-    if (isMove()) {
+    if (isInteractiveMove()) {
         ScreenEdges::self()->check(globalPos, QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC));
     }
 }
 
-void AbstractClient::performMoveResize()
+void AbstractClient::performInteractiveMoveResize()
 {
     const QRect &moveResizeGeom = moveResizeGeometry();
-    if (isMove() || (isResize() && !haveResizeEffect())) {
+    if (isInteractiveMove() || (isInteractiveResize() && !haveResizeEffect())) {
         setFrameGeometry(moveResizeGeom);
     }
-    doPerformMoveResize();
+    doPerformInteractiveMoveResize();
     positionGeometryTip();
     emit clientStepUserMovedResized(this, moveResizeGeom);
 }
@@ -1868,16 +1868,16 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
     case Options::MouseUnrestrictedMove: {
         if (!isMovableAcrossScreens())
             break;
-        if (isMoveResize())
-            finishMoveResize(false);
-        setMoveResizePointerMode(PositionCenter);
-        setMoveResizePointerButtonDown(true);
-        setMoveOffset(QPoint(globalPos.x() - x(), globalPos.y() - y()));  // map from global
-        setInvertedMoveOffset(rect().bottomRight() - moveOffset());
-        setUnrestrictedMoveResize((cmd == Options::MouseActivateRaiseAndUnrestrictedMove
+        if (isInteractiveMoveResize())
+            finishInteractiveMoveResize(false);
+        setInteractiveMoveResizePointerMode(PositionCenter);
+        setInteractiveMoveResizePointerButtonDown(true);
+        setInteractiveMoveOffset(QPoint(globalPos.x() - x(), globalPos.y() - y()));  // map from global
+        setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
+        setUnrestrictedInteractiveMoveResize((cmd == Options::MouseActivateRaiseAndUnrestrictedMove
                                   || cmd == Options::MouseUnrestrictedMove));
-        if (!startMoveResize())
-            setMoveResizePointerButtonDown(false);
+        if (!startInteractiveMoveResize())
+            setInteractiveMoveResizePointerButtonDown(false);
         updateCursor();
         break;
     }
@@ -1885,11 +1885,11 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
     case Options::MouseUnrestrictedResize: {
         if (!isResizable() || isShade())
             break;
-        if (isMoveResize())
-            finishMoveResize(false);
-        setMoveResizePointerButtonDown(true);
+        if (isInteractiveMoveResize())
+            finishInteractiveMoveResize(false);
+        setInteractiveMoveResizePointerButtonDown(true);
         const QPoint moveOffset = QPoint(globalPos.x() - x(), globalPos.y() - y());  // map from global
-        setMoveOffset(moveOffset);
+        setInteractiveMoveOffset(moveOffset);
         int x = moveOffset.x(), y = moveOffset.y();
         bool left = x < width() / 3;
         bool right = x >= 2 * width() / 3;
@@ -1902,11 +1902,11 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
             mode = left ? PositionBottomLeft : (right ? PositionBottomRight : PositionBottom);
         else
             mode = (x < width() / 2) ? PositionLeft : PositionRight;
-        setMoveResizePointerMode(mode);
-        setInvertedMoveOffset(rect().bottomRight() - moveOffset);
-        setUnrestrictedMoveResize((cmd == Options::MouseUnrestrictedResize));
-        if (!startMoveResize())
-            setMoveResizePointerButtonDown(false);
+        setInteractiveMoveResizePointerMode(mode);
+        setInvertedInteractiveMoveOffset(rect().bottomRight() - moveOffset);
+        setUnrestrictedInteractiveMoveResize((cmd == Options::MouseUnrestrictedResize));
+        if (!startInteractiveMoveResize())
+            setInteractiveMoveResizePointerButtonDown(false);
         updateCursor();
         break;
     }
@@ -2104,14 +2104,14 @@ void AbstractClient::doMove(int, int)
 
 void AbstractClient::updateInitialMoveResizeGeometry()
 {
-    m_moveResize.initialGeometry = frameGeometry();
-    m_moveResize.geometry = m_moveResize.initialGeometry;
-    m_moveResize.startScreen = screen();
+    m_interactiveMoveResize.initialGeometry = frameGeometry();
+    m_interactiveMoveResize.geometry = m_interactiveMoveResize.initialGeometry;
+    m_interactiveMoveResize.startScreen = screen();
 }
 
 void AbstractClient::updateCursor()
 {
-    Position m = moveResizePointerMode();
+    Position m = interactiveMoveResizePointerMode();
     if (!isResizable() || isShade())
         m = PositionCenter;
     CursorShape c = Qt::ArrowCursor;
@@ -2141,22 +2141,22 @@ void AbstractClient::updateCursor()
         c = KWin::ExtendedCursor::SizeEast;
         break;
     default:
-        if (isMoveResize())
+        if (isInteractiveMoveResize())
             c = Qt::SizeAllCursor;
         else
             c = Qt::ArrowCursor;
         break;
     }
-    if (c == m_moveResize.cursor)
+    if (c == m_interactiveMoveResize.cursor)
         return;
-    m_moveResize.cursor = c;
+    m_interactiveMoveResize.cursor = c;
     emit moveResizeCursorChanged(c);
 }
 
-void AbstractClient::leaveMoveResize()
+void AbstractClient::leaveInteractiveMoveResize()
 {
     workspace()->setMoveResizeClient(nullptr);
-    setMoveResize(false);
+    setInteractiveMoveResize(false);
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
         ScreenEdges::self()->reserveDesktopSwitching(false, Qt::Vertical|Qt::Horizontal);
     if (isElectricBorderMaximizing()) {
@@ -2172,12 +2172,12 @@ void AbstractClient::updateHaveResizeEffect()
     s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
 }
 
-bool AbstractClient::doStartMoveResize()
+bool AbstractClient::doStartInteractiveMoveResize()
 {
     return true;
 }
 
-void AbstractClient::doFinishMoveResize()
+void AbstractClient::doFinishInteractiveMoveResize()
 {
 }
 
@@ -2185,16 +2185,16 @@ void AbstractClient::positionGeometryTip()
 {
 }
 
-void AbstractClient::doPerformMoveResize()
+void AbstractClient::doPerformInteractiveMoveResize()
 {
 }
 
-bool AbstractClient::isWaitingForMoveResizeSync() const
+bool AbstractClient::isWaitingForInteractiveMoveResizeSync() const
 {
     return false;
 }
 
-void AbstractClient::doResizeSync()
+void AbstractClient::doInteractiveResizeSync()
 {
 }
 
@@ -2248,7 +2248,7 @@ void AbstractClient::checkQuickTilingMaximizationZones(int xroot, int yroot)
                 m_electricMaximizingDelay->setInterval(250);
                 m_electricMaximizingDelay->setSingleShot(true);
                 connect(m_electricMaximizingDelay, &QTimer::timeout, [this]() {
-                    if (isMove())
+                    if (isInteractiveMove())
                         setElectricBorderMaximizing(electricBorderMode() != QuickTileMode(QuickTileFlag::None));
                 });
             }
@@ -2261,7 +2261,7 @@ void AbstractClient::checkQuickTilingMaximizationZones(int xroot, int yroot)
 
 void AbstractClient::keyPressEvent(uint key_code)
 {
-    if (!isMove() && !isResize())
+    if (!isInteractiveMove() && !isInteractiveResize())
         return;
     bool is_control = key_code & Qt::CTRL;
     bool is_alt = key_code & Qt::ALT;
@@ -2284,13 +2284,13 @@ void AbstractClient::keyPressEvent(uint key_code)
     case Qt::Key_Space:
     case Qt::Key_Return:
     case Qt::Key_Enter:
-        setMoveResizePointerButtonDown(false);
-        finishMoveResize(false);
+        setInteractiveMoveResizePointerButtonDown(false);
+        finishInteractiveMoveResize(false);
         updateCursor();
         break;
     case Qt::Key_Escape:
-        setMoveResizePointerButtonDown(false);
-        finishMoveResize(true);
+        setInteractiveMoveResizePointerButtonDown(false);
+        finishInteractiveMoveResize(true);
         updateCursor();
         break;
     default:
@@ -2304,12 +2304,12 @@ QSize AbstractClient::resizeIncrements() const
     return QSize(1, 1);
 }
 
-void AbstractClient::dontMoveResize()
+void AbstractClient::dontInteractiveMoveResize()
 {
-    setMoveResizePointerButtonDown(false);
-    stopDelayedMoveResize();
-    if (isMoveResize())
-        finishMoveResize(false);
+    setInteractiveMoveResizePointerButtonDown(false);
+    stopDelayedInteractiveMoveResize();
+    if (isInteractiveMoveResize())
+        finishInteractiveMoveResize(false);
 }
 
 AbstractClient::Position AbstractClient::mousePosition() const
@@ -2339,13 +2339,13 @@ AbstractClient::Position AbstractClient::mousePosition() const
     return PositionCenter;
 }
 
-void AbstractClient::endMoveResize()
+void AbstractClient::endInteractiveMoveResize()
 {
-    setMoveResizePointerButtonDown(false);
-    stopDelayedMoveResize();
-    if (isMoveResize()) {
-        finishMoveResize(false);
-        setMoveResizePointerMode(mousePosition());
+    setInteractiveMoveResizePointerButtonDown(false);
+    stopDelayedInteractiveMoveResize();
+    if (isInteractiveMoveResize()) {
+        finishInteractiveMoveResize(false);
+        setInteractiveMoveResizePointerMode(mousePosition());
     }
     updateCursor();
 }
@@ -2440,14 +2440,14 @@ void AbstractClient::layoutDecorationRects(QRect &left, QRect &top, QRect &right
 
 void AbstractClient::processDecorationMove(const QPoint &localPos, const QPoint &globalPos)
 {
-    if (isMoveResizePointerButtonDown()) {
-        handleMoveResize(localPos.x(), localPos.y(), globalPos.x(), globalPos.y());
+    if (isInteractiveMoveResizePointerButtonDown()) {
+        handleInteractiveMoveResize(localPos.x(), localPos.y(), globalPos.x(), globalPos.y());
         return;
     }
     // TODO: handle modifiers
     Position newmode = mousePosition();
-    if (newmode != moveResizePointerMode()) {
-        setMoveResizePointerMode(newmode);
+    if (newmode != interactiveMoveResizePointerMode()) {
+        setInteractiveMoveResizePointerMode(newmode);
         updateCursor();
     }
 }
@@ -2468,7 +2468,7 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
                 m_decoration.doubleClickTimer.start(); // expired -> new first click and pot. init
             } else {
                 Workspace::self()->performWindowOperation(this, options->operationTitlebarDblClick());
-                dontMoveResize();
+                dontInteractiveMoveResize();
                 return false;
             }
         }
@@ -2487,12 +2487,12 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
             && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
             && com != Options::MouseMinimize)  // mouse release event
     {
-        setMoveResizePointerMode(mousePosition());
-        setMoveResizePointerButtonDown(true);
-        setMoveOffset(event->pos());
-        setInvertedMoveOffset(rect().bottomRight() - moveOffset());
-        setUnrestrictedMoveResize(false);
-        startDelayedMoveResize();
+        setInteractiveMoveResizePointerMode(mousePosition());
+        setInteractiveMoveResizePointerButtonDown(true);
+        setInteractiveMoveOffset(event->pos());
+        setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
+        setUnrestrictedInteractiveMoveResize(false);
+        startDelayedInteractiveMoveResize();
         updateCursor();
     }
     // In the new API the decoration may process the menu action to display an inactive tab's menu.
@@ -2518,11 +2518,11 @@ void AbstractClient::processDecorationButtonRelease(QMouseEvent *event)
     }
 
     if (event->buttons() == Qt::NoButton) {
-        setMoveResizePointerButtonDown(false);
-        stopDelayedMoveResize();
-        if (isMoveResize()) {
-            finishMoveResize(false);
-            setMoveResizePointerMode(mousePosition());
+        setInteractiveMoveResizePointerButtonDown(false);
+        stopDelayedInteractiveMoveResize();
+        if (isInteractiveMoveResize()) {
+            finishInteractiveMoveResize(false);
+            setInteractiveMoveResizePointerMode(mousePosition());
         }
         updateCursor();
     }

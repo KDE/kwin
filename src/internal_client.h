@@ -69,7 +69,7 @@ protected:
     bool acceptsFocus() const override;
     bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
     void doMove(int x, int y) override;
-    void doResizeSync() override;
+    void doInteractiveResizeSync() override;
     void updateCaption() override;
 
 private:

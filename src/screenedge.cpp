@@ -172,7 +172,7 @@ bool Edge::activatesForPointer() const
     }
     if (m_edges->isDesktopSwitchingMovingClients()) {
         auto c = Workspace::self()->moveResizeClient();
-        if (c && !c->isResize()) {
+        if (c && !c->isInteractiveResize()) {
             return true;
         }
     }
@@ -286,7 +286,7 @@ bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
 void Edge::handle(const QPoint &cursorPos)
 {
     AbstractClient *movingClient = Workspace::self()->moveResizeClient();
-    if ((edges()->isDesktopSwitchingMovingClients() && movingClient && !movingClient->isResize()) ||
+    if ((edges()->isDesktopSwitchingMovingClients() && movingClient && !movingClient->isInteractiveResize()) ||
         (edges()->isDesktopSwitching() && isScreenEdge())) {
         // always switch desktops in case:
         // moving a Client and option for switch on client move is enabled

@@ -222,7 +222,7 @@ void XdgSurfaceClient::handleNextWindowGeometry()
     // to "gravitate" the new geometry according to the current move-resize pointer mode so
     // the opposite window corner stays still.
 
-    if (isMoveResize()) {
+    if (isInteractiveMoveResize()) {
         frameGeometry = adjustMoveResizeGeometry(frameGeometry);
     } else if (lastAcknowledgedConfigure()) {
         XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure();
@@ -234,8 +234,8 @@ void XdgSurfaceClient::handleNextWindowGeometry()
 
     updateGeometry(frameGeometry);
 
-    if (isResize()) {
-        performMoveResize();
+    if (isInteractiveResize()) {
+        performInteractiveMoveResize();
     }
 }
 
@@ -258,7 +258,7 @@ QRect XdgSurfaceClient::adjustMoveResizeGeometry(const QRect &rect) const
 {
     QRect geometry = rect;
 
-    switch (moveResizePointerMode()) {
+    switch (interactiveMoveResizePointerMode()) {
     case PositionTopLeft:
         geometry.moveRight(moveResizeGeometry().right());
         geometry.moveBottom(moveResizeGeometry().bottom());
@@ -319,8 +319,8 @@ QRect XdgSurfaceClient::frameRectToBufferRect(const QRect &rect) const
 void XdgSurfaceClient::destroyClient()
 {
     markAsZombie();
-    if (isMoveResize()) {
-        leaveMoveResize();
+    if (isInteractiveMoveResize()) {
+        leaveInteractiveMoveResize();
         emit clientFinishUserMovedResized(this);
     }
     m_configureTimer->stop();
@@ -777,7 +777,7 @@ void XdgToplevelClient::doMinimize()
     workspace()->updateMinimizedOfTransients(this);
 }
 
-void XdgToplevelClient::doResizeSync()
+void XdgToplevelClient::doInteractiveResizeSync()
 {
     requestGeometry(moveResizeGeometry());
 }
@@ -879,9 +879,9 @@ void XdgToplevelClient::doSetQuickTileMode()
     scheduleConfigure();
 }
 
-bool XdgToplevelClient::doStartMoveResize()
+bool XdgToplevelClient::doStartInteractiveMoveResize()
 {
-    if (moveResizePointerMode() != PositionCenter) {
+    if (interactiveMoveResizePointerMode() != PositionCenter) {
         m_requestedStates |= XdgToplevelInterface::State::Resizing;
     }
 
@@ -889,7 +889,7 @@ bool XdgToplevelClient::doStartMoveResize()
     return true;
 }
 
-void XdgToplevelClient::doFinishMoveResize()
+void XdgToplevelClient::doFinishInteractiveMoveResize()
 {
     m_requestedStates &= ~XdgToplevelInterface::State::Resizing;
     scheduleConfigure();
@@ -999,13 +999,13 @@ void XdgToplevelClient::handleResizeRequested(SeatInterface *seat, Qt::Edges edg
     if (!isResizable() || isShade()) {
         return;
     }
-    if (isMoveResize()) {
-        finishMoveResize(false);
+    if (isInteractiveMoveResize()) {
+        finishInteractiveMoveResize(false);
     }
-    setMoveResizePointerButtonDown(true);
-    setMoveOffset(Cursors::self()->mouse()->pos() - pos());  // map from global
-    setInvertedMoveOffset(rect().bottomRight() - moveOffset());
-    setUnrestrictedMoveResize(false);
+    setInteractiveMoveResizePointerButtonDown(true);
+    setInteractiveMoveOffset(Cursors::self()->mouse()->pos() - pos());  // map from global
+    setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
+    setUnrestrictedInteractiveMoveResize(false);
     auto toPosition = [edges] {
         Position position = PositionCenter;
         if (edges.testFlag(Qt::TopEdge)) {
@@ -1020,9 +1020,9 @@ void XdgToplevelClient::handleResizeRequested(SeatInterface *seat, Qt::Edges edg
         }
         return position;
     };
-    setMoveResizePointerMode(toPosition());
-    if (!startMoveResize()) {
-        setMoveResizePointerButtonDown(false);
+    setInteractiveMoveResizePointerMode(toPosition());
+    if (!startInteractiveMoveResize()) {
+        setInteractiveMoveResizePointerButtonDown(false);
     }
     updateCursor();
 }
@@ -1558,7 +1558,7 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     }
     GeometryUpdatesBlocker blocker2(this);
     if (set) {
-        dontMoveResize();
+        dontInteractiveMoveResize();
     }
 
     updateDecoration(false, false);
@@ -1620,7 +1620,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
 
     StackingUpdatesBlocker blocker(workspace());
     if (m_requestedMaximizeMode != MaximizeRestore) {
-        dontMoveResize();
+        dontInteractiveMoveResize();
     }
 
     // call into decoration update borders

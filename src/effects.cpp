@@ -1981,8 +1981,8 @@ NET::WindowType EffectWindowImpl::windowType() const
 
 CLIENT_HELPER(bool, isMovable, isMovable, false)
 CLIENT_HELPER(bool, isMovableAcrossScreens, isMovableAcrossScreens, false)
-CLIENT_HELPER(bool, isUserMove, isMove, false)
-CLIENT_HELPER(bool, isUserResize, isResize, false)
+CLIENT_HELPER(bool, isUserMove, isInteractiveMove, false)
+CLIENT_HELPER(bool, isUserResize, isInteractiveResize, false)
 CLIENT_HELPER(QRect, iconGeometry, iconGeometry, QRect())
 CLIENT_HELPER(bool, isSpecialWindow, isSpecialWindow, true)
 CLIENT_HELPER(bool, acceptsFocus, wantsInput, true) // We don't actually know...

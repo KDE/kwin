@@ -570,7 +570,7 @@ void LockScreenTest::testMoveWindow()
 
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeClient(), c);
-    QVERIFY(c->isMove());
+    QVERIFY(c->isInteractiveMove());
     kwinApp()->platform()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
     QEXPECT_FAIL("", "First event is ignored", Continue);
@@ -584,20 +584,20 @@ void LockScreenTest::testMoveWindow()
     // while locking our window should continue to be in move resize
     LOCK
     QCOMPARE(workspace()->moveResizeClient(), c);
-    QVERIFY(c->isMove());
+    QVERIFY(c->isInteractiveMove());
     kwinApp()->platform()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
 
     UNLOCK
     QCOMPARE(workspace()->moveResizeClient(), c);
-    QVERIFY(c->isMove());
+    QVERIFY(c->isInteractiveMove());
     kwinApp()->platform()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
     kwinApp()->platform()->keyboardKeyPressed(KEY_ESC, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_ESC, timestamp++);
-    QVERIFY(!c->isMove());
+    QVERIFY(!c->isInteractiveMove());
 }
 
 void LockScreenTest::testPointerShortcut()

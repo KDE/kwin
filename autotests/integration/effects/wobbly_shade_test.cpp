@@ -146,10 +146,10 @@ void WobblyWindowsShadeTest::testShadeMove()
 
     // begin move
     QVERIFY(workspace()->moveResizeClient() == nullptr);
-    QCOMPARE(client->isMove(), false);
+    QCOMPARE(client->isInteractiveMove(), false);
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeClient(), client);
-    QCOMPARE(client->isMove(), true);
+    QCOMPARE(client->isInteractiveMove(), true);
     QCOMPARE(windowStartUserMovedResizedSpy.count(), 1);
 
     // wait for frame rendered
@@ -157,19 +157,19 @@ void WobblyWindowsShadeTest::testShadeMove()
 
     // send some key events, not going through input redirection
     client->keyPressEvent(Qt::Key_Right);
-    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
 
     // wait for frame rendered
     QTest::qWait(100);
 
     client->keyPressEvent(Qt::Key_Right);
-    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
 
     // wait for frame rendered
     QTest::qWait(100);
 
     client->keyPressEvent(Qt::Key_Down | Qt::ALT);
-    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
 
     // wait for frame rendered
     QTest::qWait(100);

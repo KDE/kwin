@@ -164,12 +164,12 @@ protected:
     XdgSurfaceConfigure *sendRoleConfigure() const override;
     void handleRoleCommit() override;
     void doMinimize() override;
-    void doResizeSync() override;
+    void doInteractiveResizeSync() override;
     void doSetActive() override;
     void doSetFullScreen();
     void doSetMaximized();
-    bool doStartMoveResize() override;
-    void doFinishMoveResize() override;
+    bool doStartInteractiveMoveResize() override;
+    void doFinishInteractiveMoveResize() override;
     bool acceptsFocus() const override;
     void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
     Layer layerForDock() const override;

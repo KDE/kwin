@@ -157,7 +157,7 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     QTest::qWait(200);
     QVERIFY(m_translucencyEffect->isActive());
     // now end move resize
-    client->endMoveResize();
+    client->endInteractiveMoveResize();
     QVERIFY(m_translucencyEffect->isActive());
     QTest::qWait(500);
     QTRY_VERIFY(!m_translucencyEffect->isActive());

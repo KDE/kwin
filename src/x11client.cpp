@@ -151,7 +151,7 @@ X11Client::X11Client()
         m_frame.defineCursor(nativeCursor);
         if (m_decoInputExtent.isValid())
             m_decoInputExtent.defineCursor(nativeCursor);
-        if (isMoveResize()) {
+        if (isInteractiveMoveResize()) {
             // changing window attributes doesn't change cursor if there's pointer grab active
             xcb_change_active_pointer_grab(connection(), nativeCursor, xTime(),
                 XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW);
@@ -173,7 +173,7 @@ X11Client::~X11Client()
     if (m_syncRequest.alarm != XCB_NONE) {
         xcb_sync_destroy_alarm(connection(), m_syncRequest.alarm);
     }
-    Q_ASSERT(!isMoveResize());
+    Q_ASSERT(!isInteractiveMoveResize());
     Q_ASSERT(m_client == XCB_WINDOW_NONE);
     Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
     Q_ASSERT(m_frame == XCB_WINDOW_NONE);
@@ -197,14 +197,14 @@ void X11Client::releaseWindow(bool on_shutdown)
     if (!on_shutdown) {
         del = Deleted::create(this);
     }
-    if (isMoveResize())
+    if (isInteractiveMoveResize())
         emit clientFinishUserMovedResized(this);
     emit windowClosed(this, del);
     finishCompositing();
     RuleBook::self()->discardUsed(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
-    if (isMoveResize())
-        leaveMoveResize();
+    if (isInteractiveMoveResize())
+        leaveInteractiveMoveResize();
     finishWindowRules();
     blockGeometryUpdates();
     if (isOnCurrentDesktop() && isShown(true))
@@ -261,14 +261,14 @@ void X11Client::destroyClient()
     markAsZombie();
     cleanTabBox();
     Deleted* del = Deleted::create(this);
-    if (isMoveResize())
+    if (isInteractiveMoveResize())
         emit clientFinishUserMovedResized(this);
     emit windowClosed(this, del);
     finishCompositing(ReleaseReason::Destroyed);
     RuleBook::self()->discardUsed(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
-    if (isMoveResize())
-        leaveMoveResize();
+    if (isInteractiveMoveResize())
+        leaveInteractiveMoveResize();
     finishWindowRules();
     blockGeometryUpdates();
     if (isOnCurrentDesktop() && isShown(true))
@@ -2713,11 +2713,11 @@ void X11Client::handleSync()
     if (m_syncRequest.failsafeTimeout) {
         m_syncRequest.failsafeTimeout->stop();
     }
-    if (isResize()) {
+    if (isInteractiveResize()) {
         if (m_syncRequest.timeout) {
             m_syncRequest.timeout->stop();
         }
-        performMoveResize();
+        performInteractiveMoveResize();
         updateWindowPixmap();
     } else // setReadyForPainting does as well, but there's a small chance for resize syncs after the resize ended
         addRepaintFull();
@@ -3966,7 +3966,7 @@ bool X11Client::isResizable() const
         return false;
     if (rules()->checkSize(QSize()).isValid())   // forced size
         return false;
-    const Position mode = moveResizePointerMode();
+    const Position mode = interactiveMoveResizePointerMode();
     if ((mode == PositionTop || mode == PositionTopLeft || mode == PositionTopRight ||
          mode == PositionLeft || mode == PositionBottomLeft) && rules()->checkPosition(invalidPoint) != invalidPoint)
         return false;
@@ -4140,7 +4140,7 @@ void X11Client::updateServerGeometry()
         }
         updateShape();
     } else {
-        if (isMoveResize()) {
+        if (isInteractiveMoveResize()) {
             if (compositing()) { // Defer the X update until we leave this mode
                 needsXWindowMove = true;
             } else {
@@ -4523,7 +4523,7 @@ static GeometryTip* geometryTip    = nullptr;
 
 void X11Client::positionGeometryTip()
 {
-    Q_ASSERT(isMove() || isResize());
+    Q_ASSERT(isInteractiveMove() || isInteractiveResize());
     // Position and Size display
     if (effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::GeometryTip))
         return; // some effect paints this for us
@@ -4543,7 +4543,7 @@ void X11Client::positionGeometryTip()
     }
 }
 
-bool X11Client::doStartMoveResize()
+bool X11Client::doStartInteractiveMoveResize()
 {
     bool has_grab = false;
     // This reportedly improves smoothness of the moveresize operation,
@@ -4571,14 +4571,14 @@ bool X11Client::doStartMoveResize()
     return true;
 }
 
-void X11Client::leaveMoveResize()
+void X11Client::leaveInteractiveMoveResize()
 {
     if (needsXWindowMove) {
         // Do the deferred move
         m_frame.move(m_bufferGeometry.topLeft());
         needsXWindowMove = false;
     }
-    if (!isResize())
+    if (!isInteractiveResize())
         sendSyntheticConfigureNotify(); // tell the client about it's new final position
     if (geometryTip) {
         geometryTip->hide();
@@ -4595,19 +4595,19 @@ void X11Client::leaveMoveResize()
     }
     delete m_syncRequest.timeout;
     m_syncRequest.timeout = nullptr;
-    AbstractClient::leaveMoveResize();
+    AbstractClient::leaveInteractiveMoveResize();
 }
 
-bool X11Client::isWaitingForMoveResizeSync() const
+bool X11Client::isWaitingForInteractiveMoveResizeSync() const
 {
-    return m_syncRequest.isPending && isResize();
+    return m_syncRequest.isPending && isInteractiveResize();
 }
 
-void X11Client::doResizeSync()
+void X11Client::doInteractiveResizeSync()
 {
     if (!m_syncRequest.timeout) {
         m_syncRequest.timeout = new QTimer(this);
-        connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Client::performMoveResize);
+        connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Client::performInteractiveMoveResize);
         m_syncRequest.timeout->setSingleShot(true);
     }
     if (m_syncRequest.counter != XCB_NONE) {
@@ -4629,7 +4629,7 @@ void X11Client::doResizeSync()
     m_client.setGeometry(QRect(QPoint(0, 0), moveResizeClientGeometry.size()));
 }
 
-void X11Client::doPerformMoveResize()
+void X11Client::doPerformInteractiveMoveResize()
 {
     if (m_syncRequest.counter == XCB_NONE) { // client w/o XSYNC support. allow the next resize event
         m_syncRequest.isPending = false;     // NEVER do this for clients with a valid counter

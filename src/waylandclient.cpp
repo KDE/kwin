@@ -295,8 +295,8 @@ void WaylandClient::internalHide()
     if (isHidden()) {
         return;
     }
-    if (isMoveResize()) {
-        leaveMoveResize();
+    if (isInteractiveMoveResize()) {
+        leaveInteractiveMoveResize();
     }
     m_isHidden = true;
     addWorkspaceRepaint(visibleGeometry());

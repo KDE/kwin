@@ -613,15 +613,15 @@ void InternalWindowTest::testModifierClickUnrestrictedMove()
     // simulate modifier+click
     quint32 timestamp = 1;
     kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    QVERIFY(!internalClient->isMove());
+    QVERIFY(!internalClient->isInteractiveMove());
     kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
-    QVERIFY(internalClient->isMove());
+    QVERIFY(internalClient->isInteractiveMove());
     // release modifier should not change it
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
-    QVERIFY(internalClient->isMove());
+    QVERIFY(internalClient->isInteractiveMove());
     // but releasing the key should end move/resize
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
-    QVERIFY(!internalClient->isMove());
+    QVERIFY(!internalClient->isInteractiveMove());
 }
 
 void InternalWindowTest::testModifierScroll()

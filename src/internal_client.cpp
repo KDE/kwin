@@ -339,8 +339,8 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
 void InternalClient::destroyClient()
 {
     markAsZombie();
-    if (isMoveResize()) {
-        leaveMoveResize();
+    if (isInteractiveMoveResize()) {
+        leaveInteractiveMoveResize();
         emit clientFinishUserMovedResized(this);
     }
 
@@ -431,7 +431,7 @@ void InternalClient::doMove(int x, int y)
     syncGeometryToInternalWindow();
 }
 
-void InternalClient::doResizeSync()
+void InternalClient::doInteractiveResizeSync()
 {
     requestGeometry(moveResizeGeometry());
 }
@@ -487,8 +487,8 @@ void InternalClient::commitGeometry(const QRect &rect)
     }
     emit geometryShapeChanged(this, oldFrameGeometry);
 
-    if (isResize()) {
-        performMoveResize();
+    if (isInteractiveResize()) {
+        performInteractiveMoveResize();
     }
 }
 
@@ -527,7 +527,7 @@ void InternalClient::syncGeometryToInternalWindow()
 
 void InternalClient::updateInternalWindowGeometry()
 {
-    if (isMoveResize()) {
+    if (isInteractiveMoveResize()) {
         return;
     }
 

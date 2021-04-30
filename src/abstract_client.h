@@ -228,13 +228,13 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * Whether the Client is currently being moved by the user.
      * Notify signal is emitted when the Client starts or ends move/resize mode.
      */
-    Q_PROPERTY(bool move READ isMove NOTIFY moveResizedChanged)
+    Q_PROPERTY(bool move READ isInteractiveMove NOTIFY moveResizedChanged)
 
     /**
      * Whether the Client is currently being resized by the user.
      * Notify signal is emitted when the Client starts or ends move/resize mode.
      */
-    Q_PROPERTY(bool resize READ isResize NOTIFY moveResizedChanged)
+    Q_PROPERTY(bool resize READ isInteractiveResize NOTIFY moveResizedChanged)
 
     /**
      * Whether the decoration is currently using an alpha channel.
@@ -574,11 +574,11 @@ public:
     void shrinkHorizontal();
     void growVertical();
     void shrinkVertical();
-    void updateMoveResize(const QPointF &currentGlobalCursor);
+    void updateInteractiveMoveResize(const QPointF &currentGlobalCursor);
     /**
      * Ends move resize when all pointer buttons are up again.
      */
-    void endMoveResize();
+    void endInteractiveMoveResize();
     void keyPressEvent(uint key_code);
 
     void enterEvent(const QPoint &globalPos);
@@ -682,20 +682,20 @@ public:
     /**
      * Returns @c true if the Client is being interactively moved; otherwise @c false.
      */
-    bool isMove() const {
-        return isMoveResize() && moveResizePointerMode() == PositionCenter;
+    bool isInteractiveMove() const {
+        return isInteractiveMoveResize() && interactiveMoveResizePointerMode() == PositionCenter;
     }
     /**
      * Returns @c true if the Client is being interactively resized; otherwise @c false.
      */
-    bool isResize() const {
-        return isMoveResize() && moveResizePointerMode() != PositionCenter;
+    bool isInteractiveResize() const {
+        return isInteractiveMoveResize() && interactiveMoveResizePointerMode() != PositionCenter;
     }
     /**
      * Cursor shape for move/resize mode.
      */
     CursorShape cursor() const {
-        return m_moveResize.cursor;
+        return m_interactiveMoveResize.cursor;
     }
 
     virtual StrutRect strutRect(StrutArea area) const;
@@ -1059,75 +1059,75 @@ protected:
     /**
      * @returns whether the Client is currently in move resize mode
      */
-    bool isMoveResize() const {
-        return m_moveResize.enabled;
+    bool isInteractiveMoveResize() const {
+        return m_interactiveMoveResize.enabled;
     }
     /**
      * Sets whether the Client is in move resize mode to @p enabled.
      */
-    void setMoveResize(bool enabled) {
-        m_moveResize.enabled = enabled;
+    void setInteractiveMoveResize(bool enabled) {
+        m_interactiveMoveResize.enabled = enabled;
     }
     /**
      * @returns whether the move resize mode is unrestricted.
      */
-    bool isUnrestrictedMoveResize() const {
-        return m_moveResize.unrestricted;
+    bool isUnrestrictedInteractiveMoveResize() const {
+        return m_interactiveMoveResize.unrestricted;
     }
     /**
      * Sets whether move resize mode is unrestricted to @p set.
      */
-    void setUnrestrictedMoveResize(bool set) {
-        m_moveResize.unrestricted = set;
+    void setUnrestrictedInteractiveMoveResize(bool set) {
+        m_interactiveMoveResize.unrestricted = set;
     }
-    QPoint moveOffset() const {
-        return m_moveResize.offset;
+    QPoint interactiveMoveOffset() const {
+        return m_interactiveMoveResize.offset;
     }
-    void setMoveOffset(const QPoint &offset) {
-        m_moveResize.offset = offset;
+    void setInteractiveMoveOffset(const QPoint &offset) {
+        m_interactiveMoveResize.offset = offset;
     }
-    QPoint invertedMoveOffset() const {
-        return m_moveResize.invertedOffset;
+    QPoint invertedInteractiveMoveOffset() const {
+        return m_interactiveMoveResize.invertedOffset;
     }
-    void setInvertedMoveOffset(const QPoint &offset) {
-        m_moveResize.invertedOffset = offset;
+    void setInvertedInteractiveMoveOffset(const QPoint &offset) {
+        m_interactiveMoveResize.invertedOffset = offset;
     }
-    QRect initialMoveResizeGeometry() const {
-        return m_moveResize.initialGeometry;
+    QRect initialInteractiveMoveResizeGeometry() const {
+        return m_interactiveMoveResize.initialGeometry;
     }
     /**
      * Sets the initial move resize geometry to the current geometry.
      */
     void updateInitialMoveResizeGeometry();
     QRect moveResizeGeometry() const {
-        return m_moveResize.geometry;
+        return m_interactiveMoveResize.geometry;
     }
     void setMoveResizeGeometry(const QRect &geo) {
-        m_moveResize.geometry = geo;
+        m_interactiveMoveResize.geometry = geo;
     }
-    Position moveResizePointerMode() const {
-        return m_moveResize.pointer;
+    Position interactiveMoveResizePointerMode() const {
+        return m_interactiveMoveResize.pointer;
     }
-    void setMoveResizePointerMode(Position mode) {
-        m_moveResize.pointer = mode;
+    void setInteractiveMoveResizePointerMode(Position mode) {
+        m_interactiveMoveResize.pointer = mode;
     }
-    bool isMoveResizePointerButtonDown() const {
-        return m_moveResize.buttonDown;
+    bool isInteractiveMoveResizePointerButtonDown() const {
+        return m_interactiveMoveResize.buttonDown;
     }
-    void setMoveResizePointerButtonDown(bool down) {
-        m_moveResize.buttonDown = down;
+    void setInteractiveMoveResizePointerButtonDown(bool down) {
+        m_interactiveMoveResize.buttonDown = down;
     }
-    int moveResizeStartScreen() const {
-        return m_moveResize.startScreen;
+    int interactiveMoveResizeStartScreen() const {
+        return m_interactiveMoveResize.startScreen;
     }
-    void checkUnrestrictedMoveResize();
+    void checkUnrestrictedInteractiveMoveResize();
     /**
      * Sets an appropriate cursor shape for the logical mouse position.
      */
     void updateCursor();
-    void startDelayedMoveResize();
-    void stopDelayedMoveResize();
-    bool startMoveResize();
+    void startDelayedInteractiveMoveResize();
+    void stopDelayedInteractiveMoveResize();
+    bool startInteractiveMoveResize();
     /**
      * Called from startMoveResize.
      *
@@ -1136,25 +1136,25 @@ protected:
      *
      * Base implementation returns @c true.
      */
-    virtual bool doStartMoveResize();
-    virtual void doFinishMoveResize();
-    void finishMoveResize(bool cancel);
+    virtual bool doStartInteractiveMoveResize();
+    virtual void doFinishInteractiveMoveResize();
+    void finishInteractiveMoveResize(bool cancel);
     /**
      * Leaves the move resize mode.
      *
      * Inheriting classes must invoke the base implementation which
      * ensures that the internal mode is properly ended.
      */
-    virtual void leaveMoveResize();
+    virtual void leaveInteractiveMoveResize();
     virtual void positionGeometryTip();
-    void performMoveResize();
+    void performInteractiveMoveResize();
     /**
      * Called from performMoveResize() after actually performing the change of geometry.
      * Implementing subclasses can perform windowing system specific handling here.
      *
      * Default implementation does nothing.
      */
-    virtual void doPerformMoveResize();
+    virtual void doPerformInteractiveMoveResize();
     /*
      * Checks if the mouse cursor is near the edge of the screen and if so
      * activates quick tiling or maximization
@@ -1164,17 +1164,17 @@ protected:
      * Whether a sync request is still pending.
      * Default implementation returns @c false.
      */
-    virtual bool isWaitingForMoveResizeSync() const;
+    virtual bool isWaitingForInteractiveMoveResizeSync() const;
     /**
      * Called during handling a resize. Implementing subclasses can use this
      * method to perform windowing system specific syncing.
      *
      * Default implementation does nothing.
      */
-    virtual void doResizeSync();
-    void handleMoveResize(int x, int y, int x_root, int y_root);
-    void handleMoveResize(const QPoint &local, const QPoint &global);
-    void dontMoveResize();
+    virtual void doInteractiveResizeSync();
+    void handleInteractiveMoveResize(int x, int y, int x_root, int y_root);
+    void handleInteractiveMoveResize(const QPoint &local, const QPoint &global);
+    void dontInteractiveMoveResize();
 
     virtual QSize resizeIncrements() const;
 
@@ -1308,7 +1308,7 @@ private:
         CursorShape cursor = Qt::ArrowCursor;
         int startScreen = 0;
         QTimer *delayedTimer = nullptr;
-    } m_moveResize;
+    } m_interactiveMoveResize;
 
     struct {
         KDecoration2::Decoration *decoration = nullptr;

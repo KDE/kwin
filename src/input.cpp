@@ -516,11 +516,11 @@ public:
         }
         switch (event->type()) {
         case QEvent::MouseMove:
-            c->updateMoveResize(event->screenPos().toPoint());
+            c->updateInteractiveMoveResize(event->screenPos().toPoint());
             break;
         case QEvent::MouseButtonRelease:
             if (event->buttons() == Qt::NoButton) {
-                c->endMoveResize();
+                c->endInteractiveMoveResize();
             }
             break;
         default:
@@ -540,9 +540,9 @@ public:
         }
         if (event->type() == QEvent::KeyPress) {
             c->keyPressEvent(event->key() | event->modifiers());
-            if (c->isMove() || c->isResize()) {
+            if (c->isInteractiveMove() || c->isInteractiveResize()) {
                 // only update if mode didn't end
-                c->updateMoveResize(input()->globalPointer());
+                c->updateInteractiveMoveResize(input()->globalPointer());
             }
         }
         return true;
@@ -570,7 +570,7 @@ public:
             m_set = true;
         }
         if (m_id == id) {
-            c->updateMoveResize(pos.toPoint());
+            c->updateInteractiveMoveResize(pos.toPoint());
         }
         return true;
     }
@@ -582,7 +582,7 @@ public:
             return false;
         }
         if (m_id == id || !m_set) {
-            c->endMoveResize();
+            c->endInteractiveMoveResize();
             m_set = false;
             // pass through to update decoration filter later on
             return false;

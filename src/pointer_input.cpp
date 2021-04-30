@@ -498,8 +498,8 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
             update();
             if (oldDeco &&
                     oldDeco == decoration() &&
-                    !decoration()->client()->isMove() &&
-                    !decoration()->client()->isResize() &&
+                    !decoration()->client()->isInteractiveMove() &&
+                    !decoration()->client()->isInteractiveResize() &&
                     !areButtonsPressed()) {
                 // position of window did not change, we need to send HoverMotion manually
                 const QPointF p = m_pos - decoration()->client()->pos();

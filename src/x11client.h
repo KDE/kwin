@@ -324,10 +324,10 @@ protected:
     void doSetSkipSwitcher() override;
     void doSetDemandsAttention() override;
     bool belongsToDesktop() const override;
-    bool doStartMoveResize() override;
-    void doPerformMoveResize() override;
-    bool isWaitingForMoveResizeSync() const override;
-    void doResizeSync() override;
+    bool doStartInteractiveMoveResize() override;
+    void doPerformInteractiveMoveResize() override;
+    bool isWaitingForInteractiveMoveResizeSync() const override;
+    void doInteractiveResizeSync() override;
     QSize resizeIncrements() const override;
     bool acceptsFocus() const override;
 
@@ -383,7 +383,7 @@ private:
     int checkShadeGeometry(int w, int h);
     void getSyncCounter();
     void sendSyncRequest();
-    void leaveMoveResize() override;
+    void leaveInteractiveMoveResize() override;
     void positionGeometryTip() override;
     void establishCommandWindowGrab(uint8_t button);
     void establishCommandAllGrab(uint8_t button);
