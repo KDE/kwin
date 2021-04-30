@@ -35,5 +35,8 @@ KCM.GridViewKCM {
         onClicked: {
             kcm.settings.inputMethod = model.desktopFileName;
         }
+        onDoubleClicked: {
+            kcm.save();
+        }
     }
 }
