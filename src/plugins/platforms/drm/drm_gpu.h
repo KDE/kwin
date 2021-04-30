@@ -34,7 +34,7 @@ class DrmGpu : public QObject
 {
     Q_OBJECT
 public:
-    DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, dev_t deviceId);
+    DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t deviceId);
     ~DrmGpu();
 
     // getters
@@ -58,7 +58,7 @@ public:
         return m_useEglStreams;
     }
 
-    QByteArray devNode() const {
+    QString devNode() const {
         return m_devNode;
     }
 
@@ -118,7 +118,7 @@ private:
     DrmBackend* const m_backend;
     AbstractEglBackend *m_eglBackend;
 
-    const QByteArray m_devNode;
+    const QString m_devNode;
     QSize m_cursorSize;
     const int m_fd;
     const dev_t m_deviceId;

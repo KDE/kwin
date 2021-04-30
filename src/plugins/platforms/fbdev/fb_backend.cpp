@@ -103,14 +103,14 @@ bool FramebufferBackend::initialize()
 {
     setSoftwareCursorForced(true);
 
-    QByteArray framebufferDevice = deviceIdentifier();
+    QString framebufferDevice = deviceIdentifier();
     if (framebufferDevice.isEmpty()) {
         const auto fbs = Udev().listFramebuffers();
         if (fbs.size() > 0) {
             framebufferDevice = fbs.at(0)->devNode();
         }
     }
-    int fd = open(framebufferDevice.constData(), O_RDWR | O_CLOEXEC);
+    int fd = open(framebufferDevice.toUtf8().constData(), O_RDWR | O_CLOEXEC);
     qCDebug(KWIN_FB) << "Using frame buffer device:" << framebufferDevice;
     if (fd < 0) {
         qCWarning(KWIN_FB) << "failed to open frame buffer device:" << framebufferDevice;

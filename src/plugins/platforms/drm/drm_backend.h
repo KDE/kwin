@@ -92,7 +92,7 @@ private:
     void writeOutputsConfiguration();
     QString generateOutputConfigurationUuid() const;
     void handleUdevEvent();
-    DrmGpu *addGpu(std::unique_ptr<UdevDevice> device);
+    DrmGpu *addGpu(const QString &fileName);
 
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;

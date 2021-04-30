@@ -30,7 +30,7 @@ public:
     UdevDevice(udev_device *device);
     ~UdevDevice();
 
-    const char *devNode();
+    QString devNode() const;
     dev_t devNum() const;
     const char *property(const char *key);
     bool hasProperty(const char *key, const char *value);

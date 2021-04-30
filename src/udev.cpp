@@ -208,9 +208,9 @@ UdevDevice::~UdevDevice()
     udev_device_unref(m_device);
 }
 
-const char *UdevDevice::devNode()
+QString UdevDevice::devNode() const
 {
-    return udev_device_get_devnode(m_device);
+    return QString::fromUtf8(udev_device_get_devnode(m_device));
 }
 
 dev_t UdevDevice::devNum() const

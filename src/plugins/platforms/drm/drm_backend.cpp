@@ -40,6 +40,7 @@
 #include <QSocketNotifier>
 // system
 #include <algorithm>
+#include <sys/stat.h>
 #include <unistd.h>
 // drm
 #include <xf86drm.h>
@@ -176,9 +177,16 @@ bool DrmBackend::initialize()
     connect(session(), &Session::activeChanged, this, &DrmBackend::activate);
     connect(session(), &Session::awoke, this, &DrmBackend::turnOutputsOn);
 
-    std::vector<UdevDevice::Ptr> devices = m_udev->listGPUs();
-    for (unsigned int gpu_index = 0; gpu_index < devices.size(); gpu_index++) {
-        addGpu(std::move(devices.at(gpu_index)));
+    const QStringList explicitGpus = qEnvironmentVariable("KWIN_DRM_DEVICES").split(':', Qt::SkipEmptyParts);
+    if (!explicitGpus.isEmpty()) {
+        for (const QString &fileName : explicitGpus) {
+            addGpu(fileName);
+        }
+    } else {
+        const auto devices = m_udev->listGPUs();
+        for (const UdevDevice::Ptr &device : devices) {
+            addGpu(device->devNode());
+        }
     }
 
     if (m_gpus.isEmpty()) {
@@ -217,7 +225,7 @@ void DrmBackend::handleUdevEvent()
 
         if (device->action() == QStringLiteral("add")) {
             if (m_gpus.isEmpty() || !primaryGpu()->useEglStreams()) {
-                if (const auto &gpu = addGpu(std::move(device))) {
+                if (const auto &gpu = addGpu(device->devNode())) {
                     updateOutputs();
                     updateCursor();
                     emit gpuAdded(gpu);
@@ -249,24 +257,31 @@ void DrmBackend::handleUdevEvent()
     }
 }
 
-DrmGpu *DrmBackend::addGpu(std::unique_ptr<UdevDevice> device)
+DrmGpu *DrmBackend::addGpu(const QString &fileName)
 {
-    int fd = session()->openRestricted(device->devNode());
+    int fd = session()->openRestricted(fileName);
     if (fd < 0) {
-        qCWarning(KWIN_DRM) << "failed to open drm device at" << device->devNode();
+        qCWarning(KWIN_DRM) << "failed to open drm device at" << fileName;
         return nullptr;
     }
 
     // try to make a simple drm get resource call, if it fails it is not useful for us
     drmModeRes *resources = drmModeGetResources(fd);
     if (!resources) {
-        qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << device->devNode();
+        qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << fileName;
         session()->closeRestricted(fd);
         return nullptr;
     }
     drmModeFreeResources(resources);
 
-    DrmGpu *gpu = new DrmGpu(this, device->devNode(), fd, device->devNum());
+    struct stat buf;
+    if (fstat(fd, &buf) == -1) {
+        qCDebug(KWIN_DRM, "Failed to fstat %s: %s", qPrintable(fileName), strerror(errno));
+        session()->closeRestricted(fd);
+        return nullptr;
+    }
+
+    DrmGpu *gpu = new DrmGpu(this, fileName, fd, buf.st_rdev);
     if (!gpu->useEglStreams() || m_gpus.isEmpty()) {
         m_gpus.append(gpu);
         m_active = true;
