@@ -103,6 +103,13 @@ void DrmBackend::turnOutputsOn()
     for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
         (*it)->setDpmsMode(AbstractWaylandOutput::DpmsMode::On);
     }
+    // workaround for misbehaving dpms of monitors:
+    // while monitors are turned off with dpms ignore all hotplug events
+    // and only update when waking up again
+    static const bool dpmsWorkaround = !qEnvironmentVariableIsSet("KWIN_DRM_NO_DPMS_HOTPLUG_WORKAROUND");
+    if (dpmsWorkaround) {
+        updateOutputs();
+    }
 }
 
 void DrmBackend::checkOutputsAreOn()
@@ -248,6 +255,13 @@ void DrmBackend::handleUdevEvent()
                 }
             }
         } else if (device->action() == QStringLiteral("change")) {
+            static const bool dpmsWorkaround = !qEnvironmentVariableIsSet("KWIN_DRM_NO_DPMS_HOTPLUG_WORKAROUND");
+            if (m_dpmsFilter && dpmsWorkaround) {
+                // workaround for misbehaving dpms of monitors:
+                // while monitors are turned off with dpms ignore all hotplug events
+                // and only update when waking up again
+                continue;
+            }
             DrmGpu *gpu = findGpu(device->devNum());
             if (!gpu) {
                 gpu = addGpu(device->devNode());
