@@ -93,6 +93,8 @@ public:
 
     void scheduleRepaint(const QRegion &region);
     void scheduleRepaint();
+    QRegion repaints(int screen) const;
+    void resetRepaints(int screen);
 
 Q_SIGNALS:
     /**
@@ -126,6 +128,7 @@ private:
     void addChild(Item *item);
     void removeChild(Item *item);
     void updateBoundingRect();
+    void reallocRepaints();
 
     Scene::Window *m_window;
     QPointer<Item> m_parentItem;
@@ -135,6 +138,7 @@ private:
     int m_y = 0;
     int m_width = 0;
     int m_height = 0;
+    QVector<QRegion> m_repaints;
 
     friend class Scene::Window;
 };

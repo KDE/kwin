@@ -360,13 +360,9 @@ public:
     void unreferencePreviousPixmap();
     void discardQuads();
     void preprocess(Item *item);
-    void addLayerRepaint(const QRegion &region);
-    QRegion repaints(int screen) const;
-    void resetRepaints(int screen);
     WindowItem *windowItem() const;
     SurfaceItem *surfaceItem() const;
     ShadowItem *shadowItem() const;
-    void scheduleRepaint();
 
     virtual QSharedPointer<GLTexture> windowTexture() {
         return {};
@@ -385,9 +381,7 @@ private:
     void unreferencePreviousPixmap_helper(SurfaceItem *item);
 
     void updateWindowPosition();
-    void reallocRepaints();
 
-    QVector<QRegion> m_repaints;
     int disable_painting;
     mutable QScopedPointer<WindowQuadList> cached_quad_list;
     QScopedPointer<WindowItem> m_windowItem;

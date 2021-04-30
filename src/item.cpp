@@ -5,6 +5,12 @@
 */
 
 #include "item.h"
+#include "abstract_output.h"
+#include "composite.h"
+#include "main.h"
+#include "platform.h"
+#include "renderloop.h"
+#include "screens.h"
 
 namespace KWin
 {
@@ -13,11 +19,24 @@ Item::Item(Scene::Window *window, Item *parent)
     : m_window(window)
 {
     setParentItem(parent);
+
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+        connect(kwinApp()->platform(), &Platform::outputEnabled, this, &Item::reallocRepaints);
+        connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Item::reallocRepaints);
+    }
+    reallocRepaints();
 }
 
 Item::~Item()
 {
     setParentItem(nullptr);
+
+    for (int i = 0; i < m_repaints.count(); ++i) {
+        const QRegion dirty = repaints(i);
+        if (!dirty.isEmpty()) {
+            Compositor::self()->addRepaint(dirty);
+        }
+    }
 }
 
 int Item::x() const
@@ -325,12 +344,39 @@ void Item::stackChildren(const QList<Item *> &children)
 
 void Item::scheduleRepaint(const QRegion &region)
 {
-    window()->addLayerRepaint(mapToGlobal(region));
+    const QRegion globalRegion = mapToGlobal(region);
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+        const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+        if (m_repaints.count() != outputs.count()) {
+            return; // Repaints haven't been reallocated yet, do nothing.
+        }
+        for (int screenId = 0; screenId < m_repaints.count(); ++screenId) {
+            AbstractOutput *output = outputs[screenId];
+            const QRegion dirtyRegion = globalRegion & output->geometry();
+            if (!dirtyRegion.isEmpty()) {
+                m_repaints[screenId] += dirtyRegion;
+                output->renderLoop()->scheduleRepaint();
+            }
+        }
+    } else {
+        m_repaints[0] += globalRegion;
+        kwinApp()->platform()->renderLoop()->scheduleRepaint();
+    }
 }
 
 void Item::scheduleRepaint()
 {
-    window()->scheduleRepaint();
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+        const QRect geometry = mapToGlobal(rect());
+        const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+        for (const AbstractOutput *output : outputs) {
+            if (output->geometry().intersects(geometry)) {
+                output->renderLoop()->scheduleRepaint();
+            }
+        }
+    } else {
+        kwinApp()->platform()->renderLoop()->scheduleRepaint();
+    }
 }
 
 void Item::preprocess()
@@ -340,6 +386,34 @@ void Item::preprocess()
 void Item::discardQuads()
 {
     window()->discardQuads();
+}
+
+QRegion Item::repaints(int screen) const
+{
+    Q_ASSERT(!m_repaints.isEmpty());
+    const int index = screen != -1 ? screen : 0;
+    if (m_repaints[index] == infiniteRegion()) {
+        return QRect(QPoint(0, 0), screens()->size());
+    }
+    return m_repaints[index];
+}
+
+void Item::resetRepaints(int screen)
+{
+    Q_ASSERT(!m_repaints.isEmpty());
+    const int index = screen != -1 ? screen : 0;
+    m_repaints[index] = QRegion();
+}
+
+void Item::reallocRepaints()
+{
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+        m_repaints.resize(kwinApp()->platform()->enabledOutputs().count());
+    } else {
+        m_repaints.resize(1);
+    }
+
+    m_repaints.fill(infiniteRegion());
 }
 
 } // namespace KWin
