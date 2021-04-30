@@ -244,7 +244,7 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
 
     std::chrono::nanoseconds timestamp = convertTimestamp(gpu->presentationClock(),
                                                           CLOCK_MONOTONIC,
-                                                          { sec, usec * 1000 });
+                                                          { static_cast<time_t>(sec), static_cast<long>(usec * 1000) });
     if (timestamp == std::chrono::nanoseconds::zero()) {
         qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on output %s",
                 sec, usec, qPrintable(output->name()));
