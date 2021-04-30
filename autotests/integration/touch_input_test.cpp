@@ -155,7 +155,7 @@ void TouchInputTest::testMultipleTouchPoints()
     QFETCH(bool, decorated);
     AbstractClient *c = showWindow(decorated);
     QCOMPARE(c->isDecorated(), decorated);
-    c->move(100, 100);
+    c->move(QPoint(100, 100));
     QVERIFY(c);
     QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
     QVERIFY(sequenceStartedSpy.isValid());
@@ -215,7 +215,7 @@ void TouchInputTest::testCancel()
 {
     using namespace KWayland::Client;
     AbstractClient *c = showWindow();
-    c->move(100, 100);
+    c->move(QPoint(100, 100));
     QVERIFY(c);
     QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
     QVERIFY(sequenceStartedSpy.isValid());

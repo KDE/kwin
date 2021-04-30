@@ -48,8 +48,6 @@ LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface,
     setSkipSwitcher(!isDesktop());
     setSkipPager(true);
     setSkipTaskbar(true);
-    setSizeSyncMode(SyncMode::Async);
-    setPositionSyncMode(SyncMode::Sync);
 
     connect(shellSurface, &LayerSurfaceV1Interface::aboutToBeDestroyed,
             this, &LayerShellV1Client::destroyClient);
@@ -218,10 +216,25 @@ bool LayerShellV1Client::acceptsFocus() const
     return m_shellSurface->acceptsFocus();
 }
 
-void LayerShellV1Client::requestGeometry(const QRect &rect)
+void LayerShellV1Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
 {
-    WaylandClient::requestGeometry(rect);
-    m_shellSurface->sendConfigure(rect.size());
+    if (areGeometryUpdatesBlocked()) {
+        setPendingMoveResizeMode(mode);
+        return;
+    }
+
+    const QSize requestedClientSize = frameSizeToClientSize(rect.size());
+    if (requestedClientSize != clientSize()) {
+        m_shellSurface->sendConfigure(rect.size());
+    } else {
+        updateGeometry(rect);
+        return;
+    }
+
+    // The surface position is updated synchronously.
+    QRect updateRect = m_frameGeometry;
+    updateRect.moveTopLeft(rect.topLeft());
+    updateGeometry(updateRect);
 }
 
 void LayerShellV1Client::handleSizeChanged()

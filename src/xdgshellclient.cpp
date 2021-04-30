@@ -41,9 +41,6 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
     , m_shellSurface(shellSurface)
     , m_configureTimer(new QTimer(this))
 {
-    setSizeSyncMode(SyncMode::Async);
-    setPositionSyncMode(SyncMode::Async);
-
     connect(shellSurface, &XdgSurfaceInterface::configureAcknowledged,
             this, &XdgSurfaceClient::handleConfigureAcknowledged);
     connect(shellSurface, &XdgSurfaceInterface::resetOccurred,
@@ -117,48 +114,20 @@ XdgSurfaceConfigure *XdgSurfaceClient::lastAcknowledgedConfigure() const
     return m_lastAcknowledgedConfigure.data();
 }
 
-bool XdgSurfaceClient::stateCompare() const
+void XdgSurfaceClient::scheduleConfigure()
 {
-    if (requestedFrameGeometry() != frameGeometry()) {
-        return true;
-    }
-    if (requestedClientGeometry() != clientGeometry()) {
-        return true;
-    }
-    if (requestedClientGeometry().isEmpty()) {
-        return true;
-    }
-    return false;
-}
-
-void XdgSurfaceClient::scheduleConfigure(ConfigureFlags flags)
-{
-    if (isZombie()) {
-        return;
-    }
-
-    m_configureFlags |= flags;
-
-    if ((m_configureFlags & ConfigureRequired) || stateCompare()) {
+    if (!isZombie()) {
         m_configureTimer->start();
-    } else {
-        m_configureTimer->stop();
     }
 }
 
 void XdgSurfaceClient::sendConfigure()
 {
     XdgSurfaceConfigure *configureEvent = sendRoleConfigure();
+    configureEvent->flags = m_configureFlags;
 
-    if (configureEvent->position != pos()) {
-        configureEvent->presentFields |= XdgSurfaceConfigure::PositionField;
-    }
-    if (configureEvent->size != size()) {
-        configureEvent->presentFields |= XdgSurfaceConfigure::SizeField;
-    }
-
+    m_configureFlags = {};
     m_configureEvents.append(configureEvent);
-    m_configureFlags = ConfigureFlags();
 }
 
 void XdgSurfaceClient::handleConfigureAcknowledged(quint32 serial)
@@ -193,6 +162,25 @@ void XdgSurfaceClient::handleRoleCommit()
 {
 }
 
+void XdgSurfaceClient::maybeUpdateMoveResizeGeometry(const QRect &rect)
+{
+    // We are about to send a configure event, ignore the committed window geometry.
+    if (m_configureTimer->isActive()) {
+        return;
+    }
+
+    // If there are unacknowledged configure events that change the geometry, don't sync
+    // the move resize geometry in order to avoid rolling back to old state. When the last
+    // configure event is acknowledged, the move resize geometry will be synchronized.
+    for (int i = m_configureEvents.count() - 1; i >= 0; --i) {
+        if (m_configureEvents[i]->flags & XdgSurfaceConfigure::ConfigurePosition) {
+            return;
+        }
+    }
+
+    setMoveResizeGeometry(rect);
+}
+
 void XdgSurfaceClient::handleNextWindowGeometry()
 {
     const QRect boundingGeometry = surface()->boundingRect();
@@ -224,12 +212,16 @@ void XdgSurfaceClient::handleNextWindowGeometry()
 
     if (isInteractiveMoveResize()) {
         frameGeometry = adjustMoveResizeGeometry(frameGeometry);
-    } else if (lastAcknowledgedConfigure()) {
-        XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure();
-
-        if (configureEvent->presentFields & XdgSurfaceConfigure::PositionField) {
-            frameGeometry.moveTopLeft(configureEvent->position);
+    } else {
+        if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
+            if (configureEvent->flags & XdgSurfaceConfigure::ConfigurePosition) {
+                frameGeometry.moveTopLeft(configureEvent->position);
+            }
         }
+
+        // Both the compositor and the client can change the window geometry. If the client
+        // sets a new window geometry, the compositor's move-resize geometry will be invalid.
+        maybeUpdateMoveResizeGeometry(frameGeometry);
     }
 
     updateGeometry(frameGeometry);
@@ -285,11 +277,29 @@ QRect XdgSurfaceClient::adjustMoveResizeGeometry(const QRect &rect) const
     return geometry;
 }
 
-void XdgSurfaceClient::requestGeometry(const QRect &rect)
+void XdgSurfaceClient::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
 {
-    WaylandClient::requestGeometry(rect);
+    if (areGeometryUpdatesBlocked()) {
+        setPendingMoveResizeMode(mode);
+        return;
+    }
 
-    scheduleConfigure(); // Send the configure event later.
+    if (mode != MoveResizeMode::Move) {
+        const QSize requestedClientSize = frameSizeToClientSize(rect.size());
+        if (requestedClientSize == clientSize()) {
+            updateGeometry(rect);
+        } else {
+            m_configureFlags |= XdgSurfaceConfigure::ConfigurePosition;
+            scheduleConfigure();
+        }
+    } else {
+        // If the window is moved, cancel any queued window position updates.
+        for (XdgSurfaceConfigure *configureEvent : qAsConst(m_configureEvents)) {
+            configureEvent->flags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
+        }
+        m_configureFlags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
+        updateGeometry(QRect(rect.topLeft(), size()));
+    }
 }
 
 /**
@@ -334,38 +344,6 @@ void XdgSurfaceClient::destroyClient()
     waylandServer()->removeClient(this);
     deleted->unrefWindow();
     delete this;
-}
-
-void XdgSurfaceClient::setVirtualKeyboardGeometry(const QRect &geo)
-{
-    // No keyboard anymore
-    if (geo.isEmpty() && !keyboardGeometryRestore().isEmpty()) {
-        setFrameGeometry(keyboardGeometryRestore());
-        setKeyboardGeometryRestore(QRect());
-    } else if (geo.isEmpty()) {
-        return;
-    // The keyboard has just been opened (rather than resized) save client geometry for a restore
-    } else if (keyboardGeometryRestore().isEmpty()) {
-        setKeyboardGeometryRestore(requestedFrameGeometry().isEmpty() ? frameGeometry() : requestedFrameGeometry());
-    }
-
-    m_virtualKeyboardGeometry = geo;
-
-    // Don't resize Desktop and fullscreen windows
-    if (isFullScreen() || isDesktop()) {
-        return;
-    }
-
-    if (!geo.intersects(keyboardGeometryRestore())) {
-        return;
-    }
-
-    const QRect availableArea = workspace()->clientArea(MaximizeArea, this);
-    QRect newWindowGeometry = keyboardGeometryRestore();
-    newWindowGeometry.moveBottom(geo.top());
-    newWindowGeometry.setTop(qMax(newWindowGeometry.top(), availableArea.top()));
-
-    setFrameGeometry(newWindowGeometry);
 }
 
 XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)
@@ -622,7 +600,6 @@ void XdgToplevelClient::updateDecoration(bool check_workspace_pos, bool force)
     }
     const QRect oldFrameGeometry = frameGeometry();
     const QRect oldClientGeometry = clientGeometry();
-    blockGeometryUpdates(true);
     if (force) {
         destroyDecoration();
     }
@@ -649,7 +626,6 @@ void XdgToplevelClient::updateDecoration(bool check_workspace_pos, bool force)
         checkWorkspacePosition(oldFrameGeometry, -2, oldClientGeometry);
         setGeometryRestore(oldGeometryRestore);
     }
-    blockGeometryUpdates(false);
 }
 
 bool XdgToplevelClient::supportsWindowRules() const
@@ -739,23 +715,15 @@ void XdgToplevelClient::closeWindow()
 
 XdgSurfaceConfigure *XdgToplevelClient::sendRoleConfigure() const
 {
-    const quint32 serial = m_shellSurface->sendConfigure(requestedClientSize(), m_requestedStates);
+    const QSize requestedClientSize = frameSizeToClientSize(moveResizeGeometry().size());
+    const quint32 serial = m_shellSurface->sendConfigure(requestedClientSize, m_requestedStates);
 
     XdgToplevelConfigure *configureEvent = new XdgToplevelConfigure();
-    configureEvent->position = requestedPos();
-    configureEvent->size = requestedSize();
+    configureEvent->position = moveResizeGeometry().topLeft();
     configureEvent->states = m_requestedStates;
     configureEvent->serial = serial;
 
     return configureEvent;
-}
-
-bool XdgToplevelClient::stateCompare() const
-{
-    if (m_requestedStates != m_acknowledgedStates) {
-        return true;
-    }
-    return XdgSurfaceClient::stateCompare();
 }
 
 void XdgToplevelClient::handleRoleCommit()
@@ -779,7 +747,7 @@ void XdgToplevelClient::doMinimize()
 
 void XdgToplevelClient::doInteractiveResizeSync()
 {
-    requestGeometry(moveResizeGeometry());
+    moveResizeInternal(moveResizeGeometry(), MoveResizeMode::Resize);
 }
 
 void XdgToplevelClient::doSetActive()
@@ -1052,7 +1020,7 @@ void XdgToplevelClient::handleMaximizeRequested()
 {
     if (m_isInitialized) {
         maximize(MaximizeFull);
-        scheduleConfigure(ConfigureRequired);
+        scheduleConfigure();
     } else {
         m_initialStates |= XdgToplevelInterface::State::Maximized;
     }
@@ -1062,7 +1030,7 @@ void XdgToplevelClient::handleUnmaximizeRequested()
 {
     if (m_isInitialized) {
         maximize(MaximizeRestore);
-        scheduleConfigure(ConfigureRequired);
+        scheduleConfigure();
     } else {
         m_initialStates &= ~XdgToplevelInterface::State::Maximized;
     }
@@ -1074,7 +1042,7 @@ void XdgToplevelClient::handleFullscreenRequested(OutputInterface *output)
 
     if (m_isInitialized) {
         setFullScreen(/* set */ true, /* user */ false);
-        scheduleConfigure(ConfigureRequired);
+        scheduleConfigure();
     } else {
         m_initialStates |= XdgToplevelInterface::State::FullScreen;
     }
@@ -1085,7 +1053,7 @@ void XdgToplevelClient::handleUnfullscreenRequested()
     m_fullScreenRequestedOutput.clear();
     if (m_isInitialized) {
         setFullScreen(/* set */ false, /* user */ false);
-        scheduleConfigure(ConfigureRequired);
+        scheduleConfigure();
     } else {
         m_initialStates &= ~XdgToplevelInterface::State::FullScreen;
     }
@@ -1187,8 +1155,6 @@ bool XdgToplevelClient::initialFullScreenMode() const
 
 void XdgToplevelClient::initialize()
 {
-    blockGeometryUpdates(true);
-
     bool needsPlacement = isPlaceable();
 
     updateDecoration(false, false);
@@ -1196,11 +1162,7 @@ void XdgToplevelClient::initialize()
     if (supportsWindowRules()) {
         setupWindowRules(false);
 
-        const QRect originalGeometry = frameGeometry();
-        const QRect ruledGeometry = rules()->checkGeometry(originalGeometry, true);
-        if (originalGeometry != ruledGeometry) {
-            setFrameGeometry(ruledGeometry);
-        }
+        moveResize(rules()->checkGeometry(frameGeometry(), true));
         maximize(rules()->checkMaximize(initialMaximizeMode(), true));
         setFullScreen(rules()->checkFullScreen(initialFullScreenMode(), true), false);
         setDesktop(rules()->checkDesktop(desktop(), true));
@@ -1237,8 +1199,7 @@ void XdgToplevelClient::initialize()
         placeIn(area);
     }
 
-    blockGeometryUpdates(false);
-    scheduleConfigure(ConfigureRequired);
+    scheduleConfigure();
     updateColorScheme();
     m_isInitialized = true;
 }
@@ -1549,35 +1510,32 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     if (wasFullscreen) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
     } else {
-        setFullscreenGeometryRestore(frameGeometry());
+        setFullscreenGeometryRestore(moveResizeGeometry());
     }
     m_isRequestedFullScreen = set;
 
     if (set) {
         workspace()->raiseClient(this);
-    }
-    GeometryUpdatesBlocker blocker2(this);
-    if (set) {
         dontInteractiveMoveResize();
     }
 
     updateDecoration(false, false);
 
     if (set) {
-        const int screen = m_fullScreenRequestedOutput ? kwinApp()->platform()->enabledOutputs().indexOf(m_fullScreenRequestedOutput) : screens()->number(frameGeometry().center());
-        setFrameGeometry(workspace()->clientArea(FullScreenArea, screen, desktop()));
+        const int screen = m_fullScreenRequestedOutput ? kwinApp()->platform()->enabledOutputs().indexOf(m_fullScreenRequestedOutput) : screens()->number(moveResizeGeometry().center());
+        moveResize(workspace()->clientArea(FullScreenArea, screen, desktop()));
     } else {
         m_fullScreenRequestedOutput.clear();
         if (fullscreenGeometryRestore().isValid()) {
             int currentScreen = screen();
-            setFrameGeometry(QRect(fullscreenGeometryRestore().topLeft(),
-                                   constrainFrameSize(fullscreenGeometryRestore().size())));
+            moveResize(QRect(fullscreenGeometryRestore().topLeft(),
+                             constrainFrameSize(fullscreenGeometryRestore().size())));
             if( currentScreen != screen())
                 workspace()->sendClientToScreen( this, currentScreen );
         } else {
             // this can happen when the window was first shown already fullscreen,
             // so let the client set the size by itself
-            setFrameGeometry(QRect(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
+            moveResize(QRect(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
         }
     }
 
@@ -1600,10 +1558,10 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
 
     const QRect clientArea = isElectricBorderMaximizing() ?
         workspace()->clientArea(MaximizeArea, Cursors::self()->mouse()->pos(), desktop()) :
-        workspace()->clientArea(MaximizeArea, this);
+        workspace()->clientArea(MaximizeArea, moveResizeGeometry().center(), desktop());
 
     const MaximizeMode oldMode = m_requestedMaximizeMode;
-    const QRect oldGeometry = frameGeometry();
+    const QRect oldGeometry = moveResizeGeometry();
 
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
     if (!adjust) {
@@ -1724,7 +1682,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
         updateQuickTileMode(QuickTileFlag::None);
     }
 
-    setFrameGeometry(geometry);
+    moveResize(geometry);
 
     if (oldQuickTileMode != quickTileMode()) {
         doSetQuickTileMode();
@@ -1770,9 +1728,8 @@ void XdgPopupClient::handleRepositionRequested(quint32 token)
 
 void XdgPopupClient::relayout()
 {
-    GeometryUpdatesBlocker blocker(this);
     Placement::self()->place(this, QRect());
-    scheduleConfigure(ConfigureRequired);
+    scheduleConfigure();
 }
 
 XdgPopupClient::~XdgPopupClient()
@@ -2027,13 +1984,12 @@ bool XdgPopupClient::acceptsFocus() const
 XdgSurfaceConfigure *XdgPopupClient::sendRoleConfigure() const
 {
     const QPoint parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
-    const QPoint popupPosition = requestedPos() - parentPosition;
+    const QPoint popupPosition = moveResizeGeometry().topLeft() - parentPosition;
 
-    const quint32 serial = m_shellSurface->sendConfigure(QRect(popupPosition, requestedClientSize()));
+    const quint32 serial = m_shellSurface->sendConfigure(QRect(popupPosition, moveResizeGeometry().size()));
 
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
-    configureEvent->position = requestedPos();
-    configureEvent->size = requestedSize();
+    configureEvent->position = moveResizeGeometry().topLeft();
     configureEvent->serial = serial;
 
     return configureEvent;
@@ -2054,13 +2010,11 @@ void XdgPopupClient::initialize()
 
     updateReactive();
 
-    blockGeometryUpdates(true);
     const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
     placeIn(area);
-    blockGeometryUpdates(false);
-
-    scheduleConfigure(ConfigureRequired);
+    scheduleConfigure();
 }
+
 void XdgPopupClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface)
 {
     m_plasmaShellSurface = shellSurface;

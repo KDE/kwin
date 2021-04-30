@@ -71,7 +71,7 @@ void AbstractClient::setHiddenInternal(bool set)
     m_hiddenInternal = set;
 }
 
-void AbstractClient::setFrameGeometry(const QRect &rect)
+void AbstractClient::moveResize(const QRect &rect)
 {
     m_frameGeometry = rect;
     emit geometryChanged();

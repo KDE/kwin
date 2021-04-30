@@ -849,7 +849,7 @@ void AbstractClient::applyWindowRules()
     QRect orig_geom = QRect(pos(), adjustedSize());   // handle shading
     QRect geom = client_rules->checkGeometry(orig_geom);
     if (geom != orig_geom)
-        setFrameGeometry(geom);
+        moveResize(geom);
     // MinSize, MaxSize handled by Geometry
     // IgnoreGeometry
     setDesktop(desktop());

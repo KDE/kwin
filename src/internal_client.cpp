@@ -57,8 +57,8 @@ InternalClient::InternalClient(QWindow *window)
     blockGeometryUpdates(true);
     commitGeometry(m_internalWindow->geometry());
     updateDecoration(true);
-    setFrameGeometry(clientRectToFrameRect(m_internalWindow->geometry()));
-    setGeometryRestore(frameGeometry());
+    moveResize(clientRectToFrameRect(m_internalWindow->geometry()));
+    setGeometryRestore(moveResizeGeometry());
     blockGeometryUpdates(false);
 
     m_internalWindow->installEventFilter(this);
@@ -251,29 +251,18 @@ void InternalClient::resizeWithChecks(const QSize &size)
         return;
     }
     const QRect area = workspace()->clientArea(WorkArea, this);
-    setFrameGeometry(QRect{pos(), size.boundedTo(area.size())});
+    resize(size.boundedTo(area.size()));
 }
 
-void InternalClient::setFrameGeometry(const QRect &rect)
+void InternalClient::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
 {
     if (areGeometryUpdatesBlocked()) {
-        m_frameGeometry = rect;
-        setPendingGeometryUpdate(PendingGeometryNormal);
+        setPendingMoveResizeMode(mode);
         return;
     }
 
-    if (pendingGeometryUpdate() != PendingGeometryNone) {
-        // Reset geometry to the one before blocking, so that we can compare properly.
-        m_frameGeometry = frameGeometryBeforeUpdateBlocking();
-    }
-
-    if (m_frameGeometry == rect) {
-        return;
-    }
-
-    const QRect newClientGeometry = frameRectToClientRect(rect);
-
-    if (clientSize() == newClientGeometry.size()) {
+    const QSize requestedClientSize = frameSizeToClientSize(rect.size());
+    if (clientSize() == requestedClientSize) {
         commitGeometry(rect);
     } else {
         requestGeometry(rect);
@@ -377,6 +366,10 @@ void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
 
     setDepth(32);
     surfaceItem()->addDamage(surfaceItem()->rect());
+
+    if (isInteractiveResize()) {
+        performInteractiveMoveResize();
+    }
 }
 
 void InternalClient::present(const QImage &image, const QRegion &damage)
@@ -392,6 +385,10 @@ void InternalClient::present(const QImage &image, const QRegion &damage)
 
     setDepth(32);
     surfaceItem()->addDamage(damage);
+
+    if (isInteractiveResize()) {
+        performInteractiveMoveResize();
+    }
 }
 
 QWindow *InternalClient::internalWindow() const
@@ -416,14 +413,6 @@ bool InternalClient::belongsToSameApplication(const AbstractClient *other, SameA
     }
     return otherInternal->internalWindow()->isAncestorOf(internalWindow()) ||
             internalWindow()->isAncestorOf(otherInternal->internalWindow());
-}
-
-void InternalClient::doMove(int x, int y)
-{
-    Q_UNUSED(x)
-    Q_UNUSED(y)
-
-    syncGeometryToInternalWindow();
 }
 
 void InternalClient::doInteractiveResizeSync()
@@ -457,10 +446,6 @@ void InternalClient::requestGeometry(const QRect &rect)
 
 void InternalClient::commitGeometry(const QRect &rect)
 {
-    if (m_frameGeometry == rect && pendingGeometryUpdate() == PendingGeometryNone) {
-        return;
-    }
-
     // The client geometry and the buffer geometry are the same.
     const QRect oldClientGeometry = m_clientGeometry;
     const QRect oldFrameGeometry = m_frameGeometry;
@@ -469,7 +454,10 @@ void InternalClient::commitGeometry(const QRect &rect)
     m_frameGeometry = rect;
     m_bufferGeometry = m_clientGeometry;
 
-    updateGeometryBeforeUpdateBlocking();
+    if (oldClientGeometry == m_clientGeometry && oldFrameGeometry == m_frameGeometry) {
+        return;
+    }
+
     syncGeometryToInternalWindow();
 
     if (oldClientGeometry != m_clientGeometry) {
@@ -480,10 +468,6 @@ void InternalClient::commitGeometry(const QRect &rect)
         emit frameGeometryChanged(this, oldFrameGeometry);
     }
     emit geometryShapeChanged(this, oldFrameGeometry);
-
-    if (isInteractiveResize()) {
-        performInteractiveMoveResize();
-    }
 }
 
 void InternalClient::setCaption(const QString &caption)
@@ -521,11 +505,11 @@ void InternalClient::syncGeometryToInternalWindow()
 
 void InternalClient::updateInternalWindowGeometry()
 {
-    if (isInteractiveMoveResize()) {
-        return;
+    if (!isInteractiveMoveResize()) {
+        const QRect rect = clientRectToFrameRect(m_internalWindow->geometry());
+        setMoveResizeGeometry(rect);
+        commitGeometry(rect);
     }
-
-    commitGeometry(clientRectToFrameRect(m_internalWindow->geometry()));
 }
 
 }

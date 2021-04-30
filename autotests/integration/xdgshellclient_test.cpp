@@ -127,7 +127,7 @@ void TestXdgShellClient::testXdgWindowReactive()
     QSignalSpy popupConfigureRequested(popup.data(), &Test::XdgPopup::configureRequested);
     QVERIFY(popupConfigureRequested.isValid());
 
-    rootClient->move(rootClient->x()+20, rootClient->y()+20);
+    rootClient->move(rootClient->pos() + QPoint(20, 20));
 
     QVERIFY(popupConfigureRequested.wait());
     QCOMPARE(popupConfigureRequested.count(), 1);
@@ -310,7 +310,7 @@ void TestXdgShellClient::testWindowOutputs()
 
     auto c = Test::renderAndWaitForShown(surface.data(), size, Qt::blue);
     //move to be in the first screen
-    c->setFrameGeometry(QRect(QPoint(100,100), size));
+    c->moveResize(QRect(QPoint(100,100), size));
     //we don't don't know where the compositor first placed this window,
     //this might fire, it might not
     outputEnteredSpy.wait(5);
@@ -320,7 +320,7 @@ void TestXdgShellClient::testWindowOutputs()
     QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(0,0));
 
     //move to overlapping both first and second screen
-    c->setFrameGeometry(QRect(QPoint(1250,100), size));
+    c->moveResize(QRect(QPoint(1250,100), size));
     QVERIFY(outputEnteredSpy.wait());
     QCOMPARE(outputEnteredSpy.count(), 1);
     QCOMPARE(outputLeftSpy.count(), 0);
@@ -328,7 +328,7 @@ void TestXdgShellClient::testWindowOutputs()
     QVERIFY(surface->outputs()[0] != surface->outputs()[1]);
 
     //move entirely into second screen
-    c->setFrameGeometry(QRect(QPoint(1400,100), size));
+    c->moveResize(QRect(QPoint(1400,100), size));
     QVERIFY(outputLeftSpy.wait());
     QCOMPARE(outputEnteredSpy.count(), 1);
     QCOMPARE(outputLeftSpy.count(), 1);
@@ -649,6 +649,7 @@ void TestXdgShellClient::testWindowOpensLargerThanScreen()
     QVERIFY(c);
     QVERIFY(c->isActive());
     QVERIFY(c->isDecorated());
+    QEXPECT_FAIL("", "BUG 366632", Continue);
     QCOMPARE(c->frameGeometry(), QRect(QPoint(0, 0), screens()->size(0)));
 }
 
@@ -1524,7 +1525,7 @@ void TestXdgShellClient::testPointerInputTransform()
 
 void TestXdgShellClient::testReentrantSetFrameGeometry()
 {
-    // This test verifies that calling setFrameGeometry() from a slot connected directly
+    // This test verifies that calling moveResize() from a slot connected directly
     // to the frameGeometryChanged() signal won't cause an infinite recursion.
 
     // Create an xdg-toplevel surface and wait for the compositor to catch up.
@@ -1536,7 +1537,7 @@ void TestXdgShellClient::testReentrantSetFrameGeometry()
 
     // Let's pretend that there is a script that really wants the client to be at (100, 100).
     connect(client, &AbstractClient::frameGeometryChanged, this, [client]() {
-        client->setFrameGeometry(QRect(QPoint(100, 100), client->size()));
+        client->moveResize(QRect(QPoint(100, 100), client->size()));
     });
 
     // Trigger the lambda above.

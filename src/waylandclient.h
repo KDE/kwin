@@ -11,11 +11,6 @@
 namespace KWin
 {
 
-enum class SyncMode {
-    Sync,
-    Async,
-};
-
 class WaylandClient : public AbstractClient
 {
     Q_OBJECT
@@ -31,9 +26,6 @@ public:
     bool isLocalhost() const override;
     AbstractClient *findModal(bool allow_itself = false) override;
     void resizeWithChecks(const QSize &size) override;
-    void setFrameGeometry(const QRect &rect) override;
-    using AbstractClient::move;
-    void move(int x, int y) override;
     void killWindow() override;
     QByteArray windowRole() const override;
     bool isShown(bool shaded_is_shown) const override;
@@ -41,11 +33,6 @@ public:
     void hideClient(bool hide) override;
 
     virtual QRect frameRectToBufferRect(const QRect &rect) const;
-    QRect requestedFrameGeometry() const;
-    QPoint requestedPos() const;
-    QSize requestedSize() const;
-    QRect requestedClientGeometry() const;
-    QSize requestedClientSize() const;
     bool isHidden() const;
 
     void updateDepth();
@@ -57,12 +44,8 @@ protected:
     void doSetActive() override;
     void updateCaption() override;
 
-    void setPositionSyncMode(SyncMode syncMode);
-    void setSizeSyncMode(SyncMode syncMode);
     void cleanGrouping();
-
-    virtual void requestGeometry(const QRect &rect);
-    virtual void updateGeometry(const QRect &rect);
+    void updateGeometry(const QRect &rect);
 
 private:
     void updateClientOutputs();
@@ -73,10 +56,6 @@ private:
 
     QString m_captionNormal;
     QString m_captionSuffix;
-    QRect m_requestedFrameGeometry;
-    QRect m_requestedClientGeometry;
-    SyncMode m_positionSyncMode = SyncMode::Sync;
-    SyncMode m_sizeSyncMode = SyncMode::Sync;
     bool m_isHidden = false;
 };
 

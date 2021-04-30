@@ -105,7 +105,7 @@ void WaylandClient::resizeWithChecks(const QSize &size)
     if (height > area.height()) {
         height = area.height();
     }
-    setFrameGeometry(QRect(x(), y(), width, height));
+    resize(QSize(width, height));
 }
 
 void WaylandClient::killWindow()
@@ -304,108 +304,6 @@ QRect WaylandClient::frameRectToBufferRect(const QRect &rect) const
     return QRect(rect.topLeft(), surface()->size());
 }
 
-QRect WaylandClient::requestedFrameGeometry() const
-{
-    return m_requestedFrameGeometry;
-}
-
-QPoint WaylandClient::requestedPos() const
-{
-    return m_requestedFrameGeometry.topLeft();
-}
-
-QSize WaylandClient::requestedSize() const
-{
-    return m_requestedFrameGeometry.size();
-}
-
-QRect WaylandClient::requestedClientGeometry() const
-{
-    return m_requestedClientGeometry;
-}
-
-QSize WaylandClient::requestedClientSize() const
-{
-    return requestedClientGeometry().size();
-}
-
-void WaylandClient::setFrameGeometry(const QRect &rect)
-{
-    m_requestedFrameGeometry = rect;
-
-    if (isShade()) {
-        if (m_requestedFrameGeometry.height() == borderTop() + borderBottom()) {
-            qCDebug(KWIN_CORE) << "Passed shaded frame geometry to setFrameGeometry()";
-        } else {
-            m_requestedClientGeometry = frameRectToClientRect(m_requestedFrameGeometry);
-            m_requestedFrameGeometry.setHeight(borderTop() + borderBottom());
-        }
-    } else {
-        m_requestedClientGeometry = frameRectToClientRect(m_requestedFrameGeometry);
-    }
-
-    if (areGeometryUpdatesBlocked()) {
-        m_frameGeometry = m_requestedFrameGeometry;
-        setPendingGeometryUpdate(PendingGeometryNormal);
-        return;
-    }
-
-    m_frameGeometry = frameGeometryBeforeUpdateBlocking();
-
-    if (requestedClientSize() != clientSize()) {
-        requestGeometry(requestedFrameGeometry());
-    } else {
-        updateGeometry(requestedFrameGeometry());
-        return;
-    }
-
-    QRect updateRect = m_frameGeometry;
-    if (m_positionSyncMode == SyncMode::Sync) {
-        updateRect.moveTopLeft(requestedPos());
-    }
-    if (m_sizeSyncMode == SyncMode::Sync) {
-        updateRect.setSize(requestedSize());
-    }
-    updateGeometry(updateRect);
-}
-
-void WaylandClient::move(int x, int y)
-{
-    Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
-    QPoint p(x, y);
-    if (!areGeometryUpdatesBlocked() && p != rules()->checkPosition(p)) {
-        qCDebug(KWIN_CORE) << "forced position fail:" << p << ":" << rules()->checkPosition(p);
-    }
-    m_requestedFrameGeometry.moveTopLeft(p);
-    m_requestedClientGeometry.moveTopLeft(framePosToClientPos(p));
-    if (m_frameGeometry.topLeft() == p) {
-        return;
-    }
-    m_frameGeometry.moveTopLeft(m_requestedFrameGeometry.topLeft());
-    if (areGeometryUpdatesBlocked()) {
-        setPendingGeometryUpdate(PendingGeometryNormal);
-        return;
-    }
-    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
-    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
-    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
-    m_clientGeometry.moveTopLeft(m_requestedClientGeometry.topLeft());
-    m_bufferGeometry = frameRectToBufferRect(m_frameGeometry);
-    updateGeometryBeforeUpdateBlocking();
-    updateWindowRules(Rules::Position);
-    screens()->setCurrent(this);
-    workspace()->updateStackingOrder();
-    emit bufferGeometryChanged(this, oldBufferGeometry);
-    emit clientGeometryChanged(this, oldClientGeometry);
-    emit frameGeometryChanged(this, oldFrameGeometry);
-}
-
-void WaylandClient::requestGeometry(const QRect &rect)
-{
-    m_requestedFrameGeometry = rect;
-    m_requestedClientGeometry = frameRectToClientRect(rect);
-}
-
 void WaylandClient::updateGeometry(const QRect &rect)
 {
     const QRect oldClientGeometry = m_clientGeometry;
@@ -433,7 +331,6 @@ void WaylandClient::updateGeometry(const QRect &rect)
     }
 
     updateWindowRules(Rules::Position | Rules::Size);
-    updateGeometryBeforeUpdateBlocking();
 
     if (changedGeometries & WaylandGeometryBuffer) {
         emit bufferGeometryChanged(this, oldBufferGeometry);
@@ -445,16 +342,6 @@ void WaylandClient::updateGeometry(const QRect &rect)
         emit frameGeometryChanged(this, oldFrameGeometry);
     }
     emit geometryShapeChanged(this, oldFrameGeometry);
-}
-
-void WaylandClient::setPositionSyncMode(SyncMode syncMode)
-{
-    m_positionSyncMode = syncMode;
-}
-
-void WaylandClient::setSizeSyncMode(SyncMode syncMode)
-{
-    m_sizeSyncMode = syncMode;
 }
 
 } // namespace KWin

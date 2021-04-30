@@ -30,8 +30,6 @@ InputPanelV1Client::InputPanelV1Client(InputPanelSurfaceV1Interface *panelSurfac
     setSkipSwitcher(true);
     setSkipPager(true);
     setSkipTaskbar(true);
-    setPositionSyncMode(SyncMode::Sync);
-    setSizeSyncMode(SyncMode::Sync);
 
     connect(surface(), &SurfaceInterface::aboutToBeDestroyed, this, &InputPanelV1Client::destroyClient);
     connect(surface(), &SurfaceInterface::sizeChanged, this, &InputPanelV1Client::reposition);
@@ -77,7 +75,7 @@ void KWin::InputPanelV1Client::reposition()
                 }
                 QRect geo(availableArea.topLeft(), panelSize);
                 geo.translate((availableArea.width() - panelSize.width())/2, availableArea.height() - panelSize.height());
-                updateGeometry(geo);
+                moveResize(geo);
             }
         }   break;
         case Overlay: {
@@ -85,7 +83,7 @@ void KWin::InputPanelV1Client::reposition()
             auto textInput = waylandServer()->seat()->textInputV2();
             if (textClient && textInput) {
                 const auto cursorRectangle = textInput->cursorRectangle();
-                updateGeometry({textClient->pos() + textClient->clientPos() + cursorRectangle.bottomLeft(), surface()->size()});
+                moveResize({textClient->pos() + textClient->clientPos() + cursorRectangle.bottomLeft(), surface()->size()});
             }
         }   break;
     }
@@ -125,6 +123,12 @@ void InputPanelV1Client::setOutput(OutputInterface *outputIface)
     if (m_output) {
         connect(m_output, &AbstractWaylandOutput::geometryChanged, this, &InputPanelV1Client::reposition);
     }
+}
+
+void InputPanelV1Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
+{
+    Q_UNUSED(mode)
+    updateGeometry(rect);
 }
 
 } // namespace KWin

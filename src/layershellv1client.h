@@ -48,7 +48,7 @@ public:
 protected:
     Layer belongsToLayer() const override;
     bool acceptsFocus() const override;
-    void requestGeometry(const QRect &rect) override;
+    void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
 
 private:
     void handleSizeChanged();

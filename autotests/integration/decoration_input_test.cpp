@@ -197,7 +197,7 @@ void DecorationInputTest::testAxis()
     QVERIFY(c->keepAbove());
 
     // test top most deco pixel, BUG: 362860
-    c->move(0, 0);
+    c->move(QPoint(0, 0));
     QFETCH(QPoint, decoPoint);
     MOTION(decoPoint);
     QVERIFY(input()->pointer()->decoration());
@@ -243,7 +243,7 @@ void KWin::DecorationInputTest::testDoubleClick()
     QVERIFY(!c->isOnAllDesktops());
 
     // test top most deco pixel, BUG: 362860
-    c->move(0, 0);
+    c->move(QPoint(0, 0));
     QFETCH(QPoint, decoPoint);
     MOTION(decoPoint);
     QVERIFY(input()->pointer()->decoration());
@@ -296,7 +296,7 @@ void KWin::DecorationInputTest::testDoubleTap()
     //
     // Not directly at (0, 0), otherwise ScreenEdgeInputFilter catches
     // event before DecorationEventFilter.
-    c->move(10, 10);
+    c->move(QPoint(10, 10));
     QFETCH(QPoint, decoPoint);
     // double click
     kwinApp()->platform()->touchDown(0, decoPoint, timestamp++);

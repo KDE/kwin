@@ -50,7 +50,6 @@ public:
     bool isHiddenInternal() const override;
     void hideClient(bool hide) override;
     void resizeWithChecks(const QSize &size) override;
-    void setFrameGeometry(const QRect &rect) override;
     AbstractClient *findModal(bool allow_itself = false) override;
     bool takeFocus() override;
     void setNoBorder(bool set) override;
@@ -67,9 +66,9 @@ public:
 protected:
     bool acceptsFocus() const override;
     bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
-    void doMove(int x, int y) override;
     void doInteractiveResizeSync() override;
     void updateCaption() override;
+    void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
 
 private:
     void requestGeometry(const QRect &rect);

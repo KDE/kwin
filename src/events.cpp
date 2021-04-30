@@ -614,7 +614,7 @@ void X11Client::configureRequestEvent(xcb_configure_request_event_t *e)
     // the ICCCM doesn't require this - it can be though of as 'the WM decided to move
     // the window later'. The client should not cause that many configure request,
     // so this should not have any significant impact. With user moving/resizing
-    // the it should be optimized though (see also X11Client::setGeometry()/plainResize()/move()).
+    // the it should be optimized though (see also X11Client::setGeometry()/resize()/move()).
     sendSyntheticConfigureNotify();
 
     // SELI TODO accept configure requests for isDesktop windows (because kdesktop

@@ -216,13 +216,13 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      *
      * @deprecated Use frameGeometry
      */
-    Q_PROPERTY(QRect geometry READ frameGeometry WRITE setFrameGeometry)
+    Q_PROPERTY(QRect geometry READ frameGeometry WRITE moveResize)
 
     /**
      * The geometry of this Client. Be aware that depending on resize mode the frameGeometryChanged
      * signal might be emitted at each resize step or only at the end of the resize operation.
      */
-    Q_PROPERTY(QRect frameGeometry READ frameGeometry WRITE setFrameGeometry)
+    Q_PROPERTY(QRect frameGeometry READ frameGeometry WRITE moveResize)
 
     /**
      * Whether the Client is currently being moved by the user.
@@ -622,13 +622,14 @@ public:
 
     void placeIn(const QRect &area);
 
-    virtual void move(int x, int y);
-    void move(const QPoint &p);
+    void move(const QPoint &point);
+    void resize(const QSize &size);
+    void moveResize(const QRect &rect);
+
     virtual void resizeWithChecks(const QSize& s) = 0;
     void keepInArea(QRect area, bool partial = false);
     virtual QSize minSize() const;
     virtual QSize maxSize() const;
-    virtual void setFrameGeometry(const QRect &rect) = 0;
 
     /**
      * How to resize the window in order to obey constraints (mainly aspect ratios).
@@ -680,6 +681,17 @@ public:
      * Notice that size constraints won't be applied.
      */
     QRect clientRectToFrameRect(const QRect &rect) const;
+
+    /**
+     * Returns the last requested geometry. The returned value indicates the bounding
+     * geometry, meaning that the client can commit smaller window geometry if the window
+     * is resized.
+     *
+     * The main difference between the frame geometry and the move-resize geometry is
+     * that the former specifies the current geometry while the latter specifies the next
+     * geometry.
+     */
+    QRect moveResizeGeometry() const;
 
     /**
      * Returns @c true if the Client is being interactively moved; otherwise @c false.
@@ -1045,25 +1057,24 @@ protected:
     virtual void changeMaximize(bool horizontal, bool vertical, bool adjust);
     void setGeometryRestore(const QRect &rect);
 
-    /**
-     * Called from move after updating the geometry. Can be reimplemented to perform specific tasks.
-     * The base implementation does nothing.
-     */
-    virtual void doMove(int x, int y);
+
     void blockGeometryUpdates(bool block);
     void blockGeometryUpdates();
     void unblockGeometryUpdates();
     bool areGeometryUpdatesBlocked() const;
-    enum PendingGeometry_t {
-        PendingGeometryNone,
-        PendingGeometryNormal,
+    enum class MoveResizeMode : uint {
+        None,
+        Move = 0x1,
+        Resize = 0x2,
+        MoveResize = Move | Resize,
     };
-    PendingGeometry_t pendingGeometryUpdate() const;
-    void setPendingGeometryUpdate(PendingGeometry_t update);
+    MoveResizeMode pendingMoveResizeMode() const;
+    void setPendingMoveResizeMode(MoveResizeMode mode);
     QRect bufferGeometryBeforeUpdateBlocking() const;
     QRect frameGeometryBeforeUpdateBlocking() const;
     QRect clientGeometryBeforeUpdateBlocking() const;
     void updateGeometryBeforeUpdateBlocking();
+    virtual void moveResizeInternal(const QRect &rect, MoveResizeMode mode) = 0;
 
     /**
      * @returns whether the Client is currently in move resize mode
@@ -1108,12 +1119,7 @@ protected:
      * Sets the initial move resize geometry to the current geometry.
      */
     void updateInitialMoveResizeGeometry();
-    QRect moveResizeGeometry() const {
-        return m_interactiveMoveResize.geometry;
-    }
-    void setMoveResizeGeometry(const QRect &geo) {
-        m_interactiveMoveResize.geometry = geo;
-    }
+    void setMoveResizeGeometry(const QRect &geo);
     Position interactiveMoveResizePointerMode() const {
         return m_interactiveMoveResize.pointer;
     }
@@ -1296,8 +1302,9 @@ private:
 
     // geometry
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
-    PendingGeometry_t m_pendingGeometryUpdate = PendingGeometryNone;
+    MoveResizeMode m_pendingMoveResizeMode = MoveResizeMode::None;
     friend class GeometryUpdatesBlocker;
+    QRect m_moveResizeGeometry;
     QRect m_bufferGeometryBeforeUpdateBlocking;
     QRect m_frameGeometryBeforeUpdateBlocking;
     QRect m_clientGeometryBeforeUpdateBlocking;
@@ -1311,7 +1318,6 @@ private:
         QPoint offset;
         QPoint invertedOffset;
         QRect initialGeometry;
-        QRect geometry;
         Position pointer = PositionCenter;
         bool buttonDown = false;
         CursorShape cursor = Qt::ArrowCursor;
@@ -1358,11 +1364,6 @@ private:
     AbstractClient* cl;
 };
 
-inline void AbstractClient::move(const QPoint &p)
-{
-    move(p.x(), p.y());
-}
-
 inline const QList<AbstractClient*>& AbstractClient::transients() const
 {
     return m_transients;
@@ -1383,14 +1384,14 @@ inline void AbstractClient::unblockGeometryUpdates()
     m_blockGeometryUpdates--;
 }
 
-inline AbstractClient::PendingGeometry_t AbstractClient::pendingGeometryUpdate() const
+inline AbstractClient::MoveResizeMode AbstractClient::pendingMoveResizeMode() const
 {
-    return m_pendingGeometryUpdate;
+    return m_pendingMoveResizeMode;
 }
 
-inline void AbstractClient::setPendingGeometryUpdate(PendingGeometry_t update)
+inline void AbstractClient::setPendingMoveResizeMode(MoveResizeMode mode)
 {
-    m_pendingGeometryUpdate = update;
+    m_pendingMoveResizeMode = MoveResizeMode(uint(m_pendingMoveResizeMode) | uint(mode));
 }
 
 }

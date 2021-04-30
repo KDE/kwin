@@ -154,7 +154,7 @@ static void rearrangeLayer(const QList<LayerShellV1Client *> &clients, QRect *wo
         }
 
         if (geometry.isValid()) {
-            client->setFrameGeometry(geometry);
+            client->moveResize(geometry);
         } else {
             qCWarning(KWIN_CORE) << "Closing a layer shell client due to invalid geometry";
             client->closeWindow();

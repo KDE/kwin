@@ -93,10 +93,10 @@ void KWinBindingsTest::testSwitchWindow()
     QVERIFY(c2 != c1);
 
     // let's position all windows
-    c1->move(0, 0);
-    c2->move(200, 0);
-    c3->move(200, 200);
-    c4->move(0, 200);
+    c1->move(QPoint(0, 0));
+    c2->move(QPoint(200, 0));
+    c3->move(QPoint(200, 200));
+    c4->move(QPoint(0, 200));
 
     // now let's trigger the shortcuts
 
@@ -153,10 +153,10 @@ void KWinBindingsTest::testSwitchWindowScript()
     QVERIFY(c2 != c1);
 
     // let's position all windows
-    c1->move(0, 0);
-    c2->move(200, 0);
-    c3->move(200, 200);
-    c4->move(0, 200);
+    c1->move(QPoint(0, 0));
+    c2->move(QPoint(200, 0));
+    c3->move(QPoint(200, 200));
+    c4->move(QPoint(0, 200));
 
     auto runScript = [] (const QString &slot) {
         QTemporaryFile tmpFile;

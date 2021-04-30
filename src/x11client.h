@@ -165,12 +165,6 @@ public:
 
     void updateShape();
 
-    using AbstractClient::move;
-    void move(int x, int y) override;
-    void setFrameGeometry(const QRect &rect) override;
-    /// plainResize() simply resizes
-    void plainResize(int w, int h);
-    void plainResize(const QSize& s);
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
     void resizeWithChecks(const QSize &size) override;
     void resizeWithChecks(int w, int h, xcb_gravity_t gravity);
@@ -330,6 +324,7 @@ protected:
     void doInteractiveResizeSync() override;
     QSize resizeIncrements() const override;
     bool acceptsFocus() const override;
+    void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
 
     //Signals for the scripting interface
     //Signals make an excellent way for communication
@@ -585,11 +580,6 @@ inline int X11Client::sessionStackingOrder() const
 inline bool X11Client::isManaged() const
 {
     return m_managed;
-}
-
-inline void X11Client::plainResize(const QSize& s)
-{
-    plainResize(s.width(), s.height());
 }
 
 inline void X11Client::resizeWithChecks(const QSize &s)

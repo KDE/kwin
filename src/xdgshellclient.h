@@ -36,16 +36,14 @@ class XdgSurfaceConfigure
 public:
     virtual ~XdgSurfaceConfigure() {}
 
-    enum ConfigureField {
-        PositionField = 0x1,
-        SizeField = 0x2,
+    enum ConfigureFlag {
+        ConfigurePosition = 0x1,
     };
-    Q_DECLARE_FLAGS(ConfigureFields, ConfigureField)
+    Q_DECLARE_FLAGS(ConfigureFlags, ConfigureFlag)
 
-    ConfigureFields presentFields;
     QPoint position;
-    QSize size;
     qreal serial;
+    ConfigureFlags flags;
 };
 
 class XdgSurfaceClient : public WaylandClient
@@ -60,24 +58,17 @@ public:
     QRect inputGeometry() const override;
     QMatrix4x4 inputTransformation() const override;
     void destroyClient() override;
-    void setVirtualKeyboardGeometry(const QRect &geo) override;
 
     virtual void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) = 0;
 
 protected:
-    void requestGeometry(const QRect &rect) override;
+    void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
 
     virtual XdgSurfaceConfigure *sendRoleConfigure() const = 0;
     virtual void handleRoleCommit();
-    virtual bool stateCompare() const;
-
-    enum ConfigureFlag {
-        ConfigureRequired = 0x1,
-    };
-    Q_DECLARE_FLAGS(ConfigureFlags, ConfigureFlag)
 
     XdgSurfaceConfigure *lastAcknowledgedConfigure() const;
-    void scheduleConfigure(ConfigureFlags flags = ConfigureFlags());
+    void scheduleConfigure();
     void sendConfigure();
 
     QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
@@ -91,13 +82,14 @@ private:
     void resetHaveNextWindowGeometry();
     QRect adjustMoveResizeGeometry(const QRect &rect) const;
     void updateGeometryRestoreHack();
+    void maybeUpdateMoveResizeGeometry(const QRect &rect);
 
     KWaylandServer::XdgSurfaceInterface *m_shellSurface;
     QTimer *m_configureTimer;
+    XdgSurfaceConfigure::ConfigureFlags m_configureFlags;
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
     QScopedPointer<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
     QRect m_windowGeometry;
-    ConfigureFlags m_configureFlags;
     bool m_haveNextWindowGeometry = false;
 };
 
@@ -173,7 +165,6 @@ protected:
     bool acceptsFocus() const override;
     void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
     Layer layerForDock() const override;
-    bool stateCompare() const override;
     void doSetQuickTileMode() override;
 
 private:
@@ -266,4 +257,4 @@ private:
 
 } // namespace KWin
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::XdgSurfaceConfigure::ConfigureFields)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::XdgSurfaceConfigure::ConfigureFlags)

@@ -103,7 +103,7 @@ void TestOutputManagement::testOutputDeviceDisabled()
 
     auto c = Test::renderAndWaitForShown(surface.data(), size, Qt::blue);
     //move to be in the first screen
-    c->setFrameGeometry(QRect(QPoint(100,100), size));
+    c->moveResize(QRect(QPoint(100,100), size));
     //we don't don't know where the compositor first placed this window,
     //this might fire, it might not
     outputEnteredSpy.wait(5);

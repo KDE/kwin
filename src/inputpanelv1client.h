@@ -43,6 +43,9 @@ public:
     NET::WindowType windowType(bool /*direct*/, int /*supported_types*/) const override;
     QRect inputGeometry() const override;
 
+protected:
+    void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
+
 private:
     void showTopLevel(KWaylandServer::OutputInterface *output, KWaylandServer::InputPanelSurfaceV1Interface::Position position);
     void showOverlayPanel();

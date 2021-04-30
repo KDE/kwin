@@ -94,7 +94,7 @@ void Placement::place(AbstractClient *c, const QRect &area, Policy policy, Polic
 
     if (options->borderSnapZone()) {
         // snap to titlebar / snap to window borders on inner screen edges
-        const QRect geo(c->frameGeometry());
+        const QRect geo(c->moveResizeGeometry());
         QPoint corner = geo.topLeft();
         const QMargins frameMargins = c->frameMargins();
         AbstractClient::Position titlePos = c->titlebarPosition();
@@ -162,7 +162,7 @@ void Placement::placeAtRandom(AbstractClient* c, const QRect& area, Policy /*nex
             ty = 0;
         py = area.y();
     }
-    c->move(tx, ty);
+    c->move(QPoint(tx, ty));
 }
 
 // TODO: one day, there'll be C++11 ...
@@ -339,7 +339,7 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
     }
 
     // place the window
-    c->move(x_optimal, y_optimal);
+    c->move(QPoint(x_optimal, y_optimal));
 
 }
 
@@ -501,9 +501,7 @@ void Placement::placeTransient(AbstractClient *c)
 {
     const auto parent = c->transientFor();
     const QRect screen =  Workspace::self()->clientArea(parent->isFullScreen() ? FullScreenArea : PlacementArea, parent);
-    const QRect popupGeometry = c->transientPlacement(screen);
-    c->setFrameGeometry(popupGeometry);
-
+    c->moveResize(c->transientPlacement(screen));
 
     // Potentially a client could set no constraint adjustments
     // and we'll be offscreen.
@@ -511,7 +509,7 @@ void Placement::placeTransient(AbstractClient *c)
     // The spec implies we should place window the offscreen. However,
     // practically Qt doesn't set any constraint adjustments yet so we can't.
     // Also kwin generally doesn't let clients do what they want
-    if (!screen.contains(c->frameGeometry())) {
+    if (!screen.contains(c->moveResizeGeometry())) {
         c->keepInArea(screen);
     }
 }
@@ -596,7 +594,7 @@ void Placement::placeMaximizing(AbstractClient *c, const QRect &area, Policy nex
             c->maximize(MaximizeFull);
         else { // if the geometry doesn't match default maximize area (xinerama case?),
             // it's probably better to use the given area
-            c->setFrameGeometry(area);
+            c->moveResize(area);
         }
     } else {
         c->resizeWithChecks(c->maxSize().boundedTo(area.size()));
@@ -661,7 +659,7 @@ void AbstractClient::packTo(int left, int top)
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
 
     const int oldScreen = screen();
-    move(left, top);
+    move(QPoint(left, top));
     if (screen() != oldScreen) {
         workspace()->sendClientToScreen(this, screen()); // checks rule validity
         if (maximizeMode() != MaximizeRestore)
@@ -674,30 +672,38 @@ void AbstractClient::packTo(int left, int top)
  */
 void Workspace::slotWindowPackLeft()
 {
-    if (active_client && active_client->isMovable())
-        active_client->packTo(packPositionLeft(active_client, active_client->frameGeometry().left(), true),
-                              active_client->y());
+    if (active_client && active_client->isMovable()) {
+        const QRect geometry = active_client->moveResizeGeometry();
+        active_client->packTo(packPositionLeft(active_client, geometry.left(), true),
+                              geometry.y());
+    }
 }
 
 void Workspace::slotWindowPackRight()
 {
-    if (active_client && active_client->isMovable())
-        active_client->packTo(packPositionRight(active_client, active_client->frameGeometry().right(), true)
-                                                - active_client->width() + 1, active_client->y());
+    if (active_client && active_client->isMovable()) {
+        const QRect geometry = active_client->moveResizeGeometry();
+        active_client->packTo(packPositionRight(active_client, geometry.right(), true) - geometry.width() + 1,
+                              geometry.y());
+    }
 }
 
 void Workspace::slotWindowPackUp()
 {
-    if (active_client && active_client->isMovable())
-        active_client->packTo(active_client->x(),
-                              packPositionUp(active_client, active_client->frameGeometry().top(), true));
+    if (active_client && active_client->isMovable()) {
+        const QRect geometry = active_client->moveResizeGeometry();
+        active_client->packTo(geometry.x(),
+                              packPositionUp(active_client, geometry.top(), true));
+    }
 }
 
 void Workspace::slotWindowPackDown()
 {
-    if (active_client && active_client->isMovable())
-        active_client->packTo(active_client->x(),
-                              packPositionDown(active_client, active_client->frameGeometry().bottom(), true) - active_client->height() + 1);
+    if (active_client && active_client->isMovable()) {
+        const QRect geometry = active_client->moveResizeGeometry();
+        active_client->packTo(geometry.x(),
+                              packPositionDown(active_client, geometry.bottom(), true) - geometry.height() + 1);
+    }
 }
 
 void Workspace::slotWindowGrowHorizontal()
@@ -710,21 +716,21 @@ void AbstractClient::growHorizontal()
 {
     if (!isResizable() || isShade())
         return;
-    QRect geom = frameGeometry();
+    QRect geom = moveResizeGeometry();
     geom.setRight(workspace()->packPositionRight(this, geom.right(), true));
     QSize adjsize = constrainFrameSize(geom.size(), SizeModeFixedW);
-    if (frameGeometry().size() == adjsize && geom.size() != adjsize && resizeIncrements().width() > 1) { // take care of size increments
+    if (moveResizeGeometry().size() == adjsize && geom.size() != adjsize && resizeIncrements().width() > 1) { // take care of size increments
         int newright = workspace()->packPositionRight(this, geom.right() + resizeIncrements().width() - 1, true);
         // check that it hasn't grown outside of the area, due to size increments
         // TODO this may be wrong?
         if (workspace()->clientArea(MovementArea,
-                                   QPoint((x() + newright) / 2, frameGeometry().center().y()), desktop()).right() >= newright)
+                                   QPoint((x() + newright) / 2, moveResizeGeometry().center().y()), desktop()).right() >= newright)
             geom.setRight(newright);
     }
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedW));
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
-    setFrameGeometry(geom);
+    moveResize(geom);
 }
 
 void Workspace::slotWindowShrinkHorizontal()
@@ -737,14 +743,14 @@ void AbstractClient::shrinkHorizontal()
 {
     if (!isResizable() || isShade())
         return;
-    QRect geom = frameGeometry();
+    QRect geom = moveResizeGeometry();
     geom.setRight(workspace()->packPositionLeft(this, geom.right(), false));
     if (geom.width() <= 1)
         return;
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedW));
     if (geom.width() > 20) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
-        setFrameGeometry(geom);
+        moveResize(geom);
     }
 }
 
@@ -758,19 +764,19 @@ void AbstractClient::growVertical()
 {
     if (!isResizable() || isShade())
         return;
-    QRect geom = frameGeometry();
+    QRect geom = moveResizeGeometry();
     geom.setBottom(workspace()->packPositionDown(this, geom.bottom(), true));
     QSize adjsize = constrainFrameSize(geom.size(), SizeModeFixedH);
-    if (frameGeometry().size() == adjsize && geom.size() != adjsize && resizeIncrements().height() > 1) { // take care of size increments
+    if (moveResizeGeometry().size() == adjsize && geom.size() != adjsize && resizeIncrements().height() > 1) { // take care of size increments
         int newbottom = workspace()->packPositionDown(this, geom.bottom() + resizeIncrements().height() - 1, true);
         // check that it hasn't grown outside of the area, due to size increments
         if (workspace()->clientArea(MovementArea,
-                                   QPoint(frameGeometry().center().x(), (y() + newbottom) / 2), desktop()).bottom() >= newbottom)
+                                   QPoint(moveResizeGeometry().center().x(), (y() + newbottom) / 2), desktop()).bottom() >= newbottom)
             geom.setBottom(newbottom);
     }
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
-    setFrameGeometry(geom);
+    moveResize(geom);
 }
 
 
@@ -784,14 +790,14 @@ void AbstractClient::shrinkVertical()
 {
     if (!isResizable() || isShade())
         return;
-    QRect geom = frameGeometry();
+    QRect geom = moveResizeGeometry();
     geom.setBottom(workspace()->packPositionUp(this, geom.bottom(), false));
     if (geom.height() <= 1)
         return;
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
     if (geom.height() > 20) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
-        setFrameGeometry(geom);
+        moveResize(geom);
     }
 }
 

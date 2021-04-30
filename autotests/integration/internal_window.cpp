@@ -65,7 +65,7 @@ private Q_SLOTS:
     void testChangeWindowType_data();
     void testChangeWindowType();
     void testEffectWindow();
-    void testReentrantSetFrameGeometry();
+    void testReentrantMoveResize();
     void testDismissPopup();
 };
 
@@ -531,18 +531,18 @@ void InternalWindowTest::testMove()
     QCOMPARE(internalClient->frameGeometry(), QRect(0, 0, 100, 100));
 
     // normal move should be synced
-    internalClient->move(5, 10);
+    internalClient->move(QPoint(5, 10));
     QCOMPARE(internalClient->frameGeometry(), QRect(5, 10, 100, 100));
     QTRY_COMPARE(win.geometry(), QRect(5, 10, 100, 100));
     // another move should also be synced
-    internalClient->move(10, 20);
+    internalClient->move(QPoint(10, 20));
     QCOMPARE(internalClient->frameGeometry(), QRect(10, 20, 100, 100));
     QTRY_COMPARE(win.geometry(), QRect(10, 20, 100, 100));
 
     // now move with a Geometry update blocker
     {
         GeometryUpdatesBlocker blocker(internalClient);
-        internalClient->move(5, 10);
+        internalClient->move(QPoint(5, 10));
         // not synced!
         QCOMPARE(win.geometry(), QRect(10, 20, 100, 100));
     }
@@ -784,9 +784,9 @@ void InternalWindowTest::testEffectWindow()
     QCOMPARE(effects->findWindow(&win)->internalWindow(), &win);
 }
 
-void InternalWindowTest::testReentrantSetFrameGeometry()
+void InternalWindowTest::testReentrantMoveResize()
 {
-    // This test verifies that calling setFrameGeometry() from a slot connected directly
+    // This test verifies that calling moveResize() from a slot connected directly
     // to the frameGeometryChanged() signal won't cause an infinite recursion.
 
     // Create an internal window.
@@ -802,7 +802,7 @@ void InternalWindowTest::testReentrantSetFrameGeometry()
 
     // Let's pretend that there is a script that really wants the client to be at (100, 100).
     connect(client, &AbstractClient::frameGeometryChanged, this, [client]() {
-        client->setFrameGeometry(QRect(QPoint(100, 100), client->size()));
+        client->moveResize(QRect(QPoint(100, 100), client->size()));
     });
 
     // Trigger the lambda above.

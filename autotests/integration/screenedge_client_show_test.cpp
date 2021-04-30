@@ -170,7 +170,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     QVERIFY(client->isHiddenInternal());
     QFETCH(QRect, resizedWindowGeometry);
     //resizewhile hidden
-    client->setFrameGeometry(resizedWindowGeometry);
+    client->moveResize(resizedWindowGeometry);
     //triggerPos shouldn't be valid anymore
     Cursors::self()->mouse()->setPos(triggerPos);
     QVERIFY(client->isHiddenInternal());

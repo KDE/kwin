@@ -50,7 +50,7 @@ private Q_SLOTS:
     void testCaptionMultipleWindows();
     void testFullscreenWindowGroups();
     void testActivateFocusedWindow();
-    void testReentrantSetFrameGeometry();
+    void testReentrantMoveResize();
 };
 
 void X11ClientTest::initTestCase()
@@ -1058,9 +1058,9 @@ void X11ClientTest::testActivateFocusedWindow()
     QVERIFY(Test::waitForWindowDestroyed(client1));
 }
 
-void X11ClientTest::testReentrantSetFrameGeometry()
+void X11ClientTest::testReentrantMoveResize()
 {
-    // This test verifies that calling setFrameGeometry() from a slot connected directly
+    // This test verifies that calling moveResize() from a slot connected directly
     // to the frameGeometryChanged() signal won't cause an infinite recursion.
 
     // Create a test window.
@@ -1092,7 +1092,7 @@ void X11ClientTest::testReentrantSetFrameGeometry()
 
     // Let's pretend that there is a script that really wants the client to be at (100, 100).
     connect(client, &AbstractClient::frameGeometryChanged, this, [client]() {
-        client->setFrameGeometry(QRect(QPoint(100, 100), client->size()));
+        client->moveResize(QRect(QPoint(100, 100), client->size()));
     });
 
     // Trigger the lambda above.

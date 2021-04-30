@@ -34,7 +34,7 @@ public:
     void setScreen(int screen);
     void setFullScreen(bool set);
     void setHiddenInternal(bool set);
-    void setFrameGeometry(const QRect &rect);
+    void moveResize(const QRect &rect);
     void setKeepBelow(bool);
     bool isInteractiveResize() const;
     void setInteractiveResize(bool set);
