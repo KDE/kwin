@@ -374,7 +374,7 @@ void AbstractWaylandOutput::setOverscan(uint32_t overscan)
 
 void AbstractWaylandOutput::setVrrPolicy(RenderLoop::VrrPolicy policy)
 {
-    if (renderLoop()->vrrPolicy() != policy) {
+    if (renderLoop()->vrrPolicy() != policy && (m_capabilities & Capability::Vrr)) {
         renderLoop()->setVrrPolicy(policy);
         emit vrrPolicyChanged();
     }
