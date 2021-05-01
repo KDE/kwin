@@ -31,7 +31,7 @@ class FadeEffect {
     loadConfig() {
         this.fadeInTime = animationTime(effect.readConfig("FadeInTime", 150));
         this.fadeOutTime = animationTime(effect.readConfig("FadeOutTime", 150)) * 4;
-        this.fadeWindows = effect.readConfig("FadeWindows", true);
+        this.fadeWindows = effect.readConfig("FadeWindows", true); // TODO Plasma 6: Remove it.
     }
 
     static isFadeWindow(w) {
