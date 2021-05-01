@@ -457,9 +457,14 @@ bool XdgToplevelClient::isFullScreen() const
     return m_isFullScreen;
 }
 
+bool XdgToplevelClient::isRequestedFullScreen() const
+{
+    return m_isRequestedFullScreen;
+}
+
 bool XdgToplevelClient::isMovable() const
 {
-    if (isFullScreen()) {
+    if (isRequestedFullScreen()) {
         return false;
     }
     if (isSpecialWindow() && !isSplash() && !isToolbar()) {
@@ -484,7 +489,7 @@ bool XdgToplevelClient::isMovableAcrossScreens() const
 
 bool XdgToplevelClient::isResizable() const
 {
-    if (isFullScreen()) {
+    if (isRequestedFullScreen()) {
         return false;
     }
     if (isSpecialWindow() || isSplash() || isToolbar()) {
@@ -577,7 +582,7 @@ bool XdgToplevelClient::noBorder() const
     if (m_serverDecoration) {
         switch (m_serverDecoration->mode()) {
         case ServerSideDecorationManagerInterface::Mode::Server:
-            return m_userNoBorder || isFullScreen();
+            return m_userNoBorder || isRequestedFullScreen();
         case ServerSideDecorationManagerInterface::Mode::Client:
         case ServerSideDecorationManagerInterface::Mode::None:
             return true;
@@ -587,7 +592,7 @@ bool XdgToplevelClient::noBorder() const
         switch (m_xdgDecoration->preferredMode()) {
         case XdgToplevelDecorationV1Interface::Mode::Server:
         case XdgToplevelDecorationV1Interface::Mode::Undefined:
-            return !Decoration::DecorationBridge::hasPlugin() || m_userNoBorder || isFullScreen();
+            return !Decoration::DecorationBridge::hasPlugin() || m_userNoBorder || isRequestedFullScreen();
         case XdgToplevelDecorationV1Interface::Mode::Client:
             return true;
         }
@@ -791,7 +796,7 @@ void XdgToplevelClient::doSetActive()
 
 void XdgToplevelClient::doSetFullScreen()
 {
-    if (isFullScreen()) {
+    if (isRequestedFullScreen()) {
         m_requestedStates |= XdgToplevelInterface::State::FullScreen;
     } else {
         m_requestedStates &= ~XdgToplevelInterface::State::FullScreen;
@@ -1223,7 +1228,7 @@ void XdgToplevelClient::initialize()
         RuleBook::self()->discardUsed(this, false); // Remove Apply Now rules.
         updateWindowRules(Rules::All);
     }
-    if (isFullScreen()) {
+    if (isRequestedFullScreen()) {
         needsPlacement = false;
     }
     if (needsPlacement) {
@@ -1253,7 +1258,9 @@ void XdgToplevelClient::updateFullScreenMode(bool set)
     if (m_isFullScreen == set) {
         return;
     }
+    StackingUpdatesBlocker blocker1(workspace());
     m_isFullScreen = set;
+    updateLayer();
     updateWindowRules(Rules::Fullscreen);
     emit fullScreenChanged();
 }
@@ -1527,7 +1534,7 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
 {
     set = rules()->checkFullScreen(set);
 
-    const bool wasFullscreen = isFullScreen();
+    const bool wasFullscreen = isRequestedFullScreen();
     if (wasFullscreen == set) {
         return;
     }
@@ -1543,18 +1550,16 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     } else {
         setFullscreenGeometryRestore(frameGeometry());
     }
-    m_isFullScreen = set;
+    m_isRequestedFullScreen = set;
 
     if (set) {
         workspace()->raiseClient(this);
     }
-    StackingUpdatesBlocker blocker1(workspace());
     GeometryUpdatesBlocker blocker2(this);
     if (set) {
         dontMoveResize();
     }
 
-    workspace()->updateClientLayer(this);   // active fullscreens get different layer
     updateDecoration(false, false);
 
     if (set) {
@@ -1576,9 +1581,6 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     }
 
     doSetFullScreen();
-
-    updateWindowRules(Rules::Fullscreen|Rules::Position|Rules::Size);
-    emit fullScreenChanged();
 }
 
 /**

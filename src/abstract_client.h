@@ -419,6 +419,7 @@ public:
     virtual void hideClient(bool hide) = 0;
     virtual bool isFullScreenable() const;
     virtual bool isFullScreen() const;
+    virtual bool isRequestedFullScreen() const;
     // TODO: remove boolean trap
     virtual AbstractClient *findModal(bool allow_itself = false) = 0;
     virtual bool isTransient() const;

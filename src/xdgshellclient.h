@@ -126,6 +126,7 @@ public:
     QSize minSize() const override;
     QSize maxSize() const override;
     bool isFullScreen() const override;
+    bool isRequestedFullScreen() const override;
     bool isMovableAcrossScreens() const override;
     bool isMovable() const override;
     bool isResizable() const override;
@@ -215,6 +216,7 @@ private:
     MaximizeMode m_maximizeMode = MaximizeRestore;
     MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
     bool m_isFullScreen = false;
+    bool m_isRequestedFullScreen = false;
     bool m_isInitialized = false;
     bool m_userNoBorder = false;
     bool m_isTransient = false;

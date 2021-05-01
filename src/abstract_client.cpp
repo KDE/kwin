@@ -3615,6 +3615,11 @@ bool AbstractClient::isFullScreen() const
     return false;
 }
 
+bool AbstractClient::isRequestedFullScreen() const
+{
+    return isFullScreen();
+}
+
 /**
  * Returns whether requests initiated by the user to enter or leave full screen mode are honored.
  *
