@@ -128,6 +128,7 @@ void XdgToplevelDecorationV1Interface::sendConfigure(Mode mode)
     case Mode::Client:
         d->send_configure(QtWaylandServer::zxdg_toplevel_decoration_v1::mode_client_side);
         break;
+    case Mode::None: // Faked as server_side mode.
     case Mode::Server:
         d->send_configure(QtWaylandServer::zxdg_toplevel_decoration_v1::mode_server_side);
         break;
