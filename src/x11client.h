@@ -475,7 +475,7 @@ private:
     } m_fullscreenMode;
 
     MaximizeMode max_mode;
-    QRect m_bufferGeometry = QRect(0, 0, 100, 100);
+    QRect m_bufferGeometry;
     xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix;
     Group* in_group;

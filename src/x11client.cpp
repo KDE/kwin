@@ -142,12 +142,6 @@ X11Client::X11Client()
 
     max_mode = MaximizeRestore;
 
-    //Client to workspace connections require that each
-    //client constructed be connected to the workspace wrapper
-
-    m_frameGeometry = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
-    m_clientGeometry = QRect(0, 0, 100, 100);
-
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Client::updateCaption);
     connect(options, &Options::configChanged, this, &X11Client::updateMouseGrab);
     connect(options, &Options::condensedTitleChanged, this, &X11Client::updateCaption);
