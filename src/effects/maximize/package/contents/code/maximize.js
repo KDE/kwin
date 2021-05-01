@@ -8,26 +8,36 @@
 
 "use strict";
 
-var maximizeEffect = {
-    duration: animationTime(250),
-    loadConfig: function () {
-        maximizeEffect.duration = animationTime(250);
-    },
-    maximizeChanged: function (window) {
+class MaximizeEffect {
+    constructor() {
+        effect.configChanged.connect(this.loadConfig.bind(this));
+        effects.windowFrameGeometryChanged.connect(
+                this.onWindowFrameGeometryChanged.bind(this));
+        effects.windowMaximizedStateChanged.connect(
+                this.onWindowMaximizedStateChanged.bind(this));
+        effect.animationEnded.connect(this.restoreForceBlurState.bind(this));
+
+        this.loadConfig();
+    }
+
+    loadConfig() {
+        this.duration = animationTime(250);
+    }
+
+    onWindowMaximizedStateChanged(window) {
         if (!window.oldGeometry) {
             return;
         }
         window.setData(Effect.WindowForceBlurRole, true);
-        var oldGeometry, newGeometry;
-        oldGeometry = window.oldGeometry;
-        newGeometry = window.geometry;
+        let oldGeometry = window.oldGeometry;
+        const newGeometry = window.geometry;
         if (oldGeometry.width == newGeometry.width && oldGeometry.height == newGeometry.height)
             oldGeometry = window.olderGeometry;
         window.olderGeometry = Object.assign({}, window.oldGeometry);
         window.oldGeometry = Object.assign({}, newGeometry);
         window.maximizeAnimation1 = animate({
             window: window,
-            duration: maximizeEffect.duration,
+            duration: this.duration,
             animations: [{
                 type: Effect.Size,
                 to: {
@@ -55,7 +65,7 @@ var maximizeEffect = {
         if (!window.resize) {
             window.maximizeAnimation2 =animate({
                 window: window,
-                duration: maximizeEffect.duration,
+                duration: this.duration,
                 animations: [{
                     type: Effect.CrossFadePrevious,
                     to: 1.0,
@@ -64,11 +74,13 @@ var maximizeEffect = {
                 }]
             });
         }
-    },
-    restoreForceBlurState: function(window) {
+    }
+
+    restoreForceBlurState(window) {
         window.setData(Effect.WindowForceBlurRole, null);
-    },
-    geometryChange: function (window, oldGeometry) {
+    }
+
+    onWindowFrameGeometryChanged(window, oldGeometry) {
         if (window.maximizeAnimation1) {
             if (window.geometry.width != window.oldGeometry.width ||
                 window.geometry.height != window.oldGeometry.height) {
@@ -82,12 +94,7 @@ var maximizeEffect = {
         }
         window.oldGeometry = Object.assign({}, window.geometry);
         window.olderGeometry = Object.assign({}, oldGeometry);
-    },
-    init: function () {
-        effect.configChanged.connect(maximizeEffect.loadConfig);
-        effects.windowFrameGeometryChanged.connect(maximizeEffect.geometryChange);
-        effects.windowMaximizedStateChanged.connect(maximizeEffect.maximizeChanged);
-        effect.animationEnded.connect(maximizeEffect.restoreForceBlurState);
     }
-};
-maximizeEffect.init();
+}
+
+new MaximizeEffect();
