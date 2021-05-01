@@ -8,6 +8,7 @@
 #include "kcmrules.h"
 #include "rulesettings.h"
 
+#include <QDBusAbstractAdaptor>
 #include <QDBusConnection>
 #include <QDBusMessage>
 
@@ -18,11 +19,11 @@
 
 namespace KWin
 {
-
 KCMKWinRules::KCMKWinRules(QObject *parent, const QVariantList &arguments)
     : KQuickAddons::ConfigModule(parent, arguments)
     , m_ruleBookModel(new RuleBookModel(this))
     , m_rulesModel(new RulesModel(this))
+    , m_dbusAdaptor(new KWinRulesDBusAdaptor(this))
 {
     auto about = new KAboutData(QStringLiteral("kcm_kwinrules"),
                                 i18n("Window Rules"),
@@ -40,11 +41,9 @@ KCMKWinRules::KCMKWinRules(QObject *parent, const QVariantList &arguments)
                       " KWin as your window manager. If you do use a different window manager, please refer to its documentation"
                       " for how to customize window behavior.</p>"));
 
-    QStringList argList;
-    for (const QVariant &arg : arguments) {
-        argList << arg.toString();
-    }
-    parseArguments(argList);
+    QDBusConnection::sessionBus().registerService(QLatin1String("org.kde.KWin.KCMKWinRules"));
+    QDBusConnection::sessionBus().registerObject(QLatin1String("/KCMKWinRules"), m_dbusAdaptor, QDBusConnection::ExportAllSlots);
+    connect(m_dbusAdaptor, &KWinRulesDBusAdaptor::argumentsUpdated, this, &KCMKWinRules::parseArguments);
 
     connect(m_rulesModel, &RulesModel::descriptionChanged, this, [this] {
         if (m_editIndex.isValid()) {
@@ -55,6 +54,14 @@ KCMKWinRules::KCMKWinRules(QObject *parent, const QVariantList &arguments)
         Q_EMIT m_ruleBookModel->dataChanged(m_editIndex, m_editIndex, {});
     });
     connect(m_ruleBookModel, &RuleBookModel::dataChanged, this, &KCMKWinRules::updateNeedsSave);
+
+    if (!arguments.isEmpty()) {
+        QStringList argList;
+        for (const QVariant &arg : arguments) {
+            argList << arg.toString();
+        }
+        parseArguments(argList);
+    }
 }
 
 void KCMKWinRules::parseArguments(const QStringList &args)
@@ -483,6 +490,11 @@ void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVar
             settings->setWmclassmatch(Rules::ExactMatch);
         }
     }
+}
+
+void KWinRulesDBusAdaptor::updateArguments(const QStringList &arguments)
+{
+    Q_EMIT argumentsUpdated(arguments);
 }
 
 K_PLUGIN_CLASS_WITH_JSON(KCMKWinRules, "metadata.json");

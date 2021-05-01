@@ -8,6 +8,8 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <QIcon>
 #include <QUuid>
 
@@ -50,6 +52,19 @@ int main(int argc, char *argv[])
         kcm_args << QStringLiteral("whole-app");
     }
 
+    // Try to reach any open instance of the KCM and send the petition there
+    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin.KCMKWinRules"),
+                                                          QStringLiteral("/KCMKWinRules"),
+                                                          QStringLiteral("org.kde.KWin.KCMKWinRules"),
+                                                          QStringLiteral("updateArguments"));
+    message.setArguments({kcm_args});
+    const QDBusMessage response = QDBusConnection::sessionBus().call(message, QDBus::Block, 1);
+    if (response.type() == QDBusMessage::ReplyMessage) {
+        // A previous instance of the KCM has already handled the message.
+        return 0;
+    }
+
+    // Open a new KCM instance
     KPluginMetaData pluginData = KPluginMetaData(QStringLiteral("kcms/kcm_kwinrules"));
 
     KCMultiDialog *dialog = new KCMultiDialog;
