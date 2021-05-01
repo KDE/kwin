@@ -42,6 +42,7 @@
 #include <algorithm>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <cerrno>
 // drm
 #include <xf86drm.h>
 #include <libdrm/drm_mode.h>
