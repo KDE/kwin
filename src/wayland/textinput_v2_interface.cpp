@@ -284,7 +284,7 @@ TextInputV2InterfacePrivate::TextInputV2InterfacePrivate(SeatInterface *seat, Te
 void TextInputV2InterfacePrivate::zwp_text_input_v2_enable(Resource *resource, wl_resource *s)
 {
     Q_UNUSED(resource)
-    surface = QPointer<SurfaceInterface>(SurfaceInterface::get(s));
+    surface = SurfaceInterface::get(s);
     enabled = true;
     emit q->enabledChanged();
 }
@@ -316,7 +316,7 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_hide_input_panel(Resource *r
 void TextInputV2InterfacePrivate::zwp_text_input_v2_set_surrounding_text(Resource *resource, const QString &text, int32_t cursor, int32_t anchor)
 {
     Q_UNUSED(resource)
-    surroundingText = QString(text);
+    surroundingText = text;
     surroundingTextCursorPosition = cursor;
     surroundingTextSelectionAnchor = anchor;
     emit q->surroundingTextChanged();
