@@ -345,11 +345,19 @@ void WaylandClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
         if (m_requestedFrameGeometry.height() == borderTop() + borderBottom()) {
             qCDebug(KWIN_CORE) << "Passed shaded frame geometry to setFrameGeometry()";
         } else {
-            m_requestedClientGeometry = frameRectToClientRect(m_requestedFrameGeometry);
+            if (isRequestedFullScreen()) { // TODO: Pass the requested state to frameRectToClientRect()
+                m_requestedClientGeometry = m_requestedFrameGeometry;
+            } else {
+                m_requestedClientGeometry = frameRectToClientRect(rect);
+            }
             m_requestedFrameGeometry.setHeight(borderTop() + borderBottom());
         }
     } else {
-        m_requestedClientGeometry = frameRectToClientRect(m_requestedFrameGeometry);
+        if (isRequestedFullScreen()) { // TODO: Pass the requested state to frameRectToClientRect()
+            m_requestedClientGeometry = m_requestedFrameGeometry;
+        } else {
+            m_requestedClientGeometry = frameRectToClientRect(rect);
+        }
     }
 
     if (areGeometryUpdatesBlocked()) {
@@ -425,7 +433,11 @@ void WaylandClient::move(int x, int y, ForceGeometry_t force)
 void WaylandClient::requestGeometry(const QRect &rect)
 {
     m_requestedFrameGeometry = rect;
-    m_requestedClientGeometry = frameRectToClientRect(rect);
+    if (isRequestedFullScreen()) { // TODO: Pass the requested state to frameRectToClientRect()
+        m_requestedClientGeometry = m_requestedFrameGeometry;
+    } else {
+        m_requestedClientGeometry = frameRectToClientRect(rect);
+    }
 }
 
 void WaylandClient::updateGeometry(const QRect &rect)
@@ -434,7 +446,7 @@ void WaylandClient::updateGeometry(const QRect &rect)
     const QRect oldFrameGeometry = m_frameGeometry;
     const QRect oldBufferGeometry = m_bufferGeometry;
 
-    m_clientGeometry = frameRectToClientRect(rect);
+    m_clientGeometry = frameRectToClientRect(rect); // TODO: Pass the current state to frameRectToBufferRect()
     m_frameGeometry = rect;
     m_bufferGeometry = frameRectToBufferRect(rect);
 
