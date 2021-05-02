@@ -14,7 +14,6 @@
 #include <QWindow>
 
 #include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/contrast_interface.h>
 #include <KWaylandServer/display.h>
 
 namespace KWin
@@ -34,7 +33,7 @@ ContrastEffect::ContrastEffect()
         net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
         KWaylandServer::Display *display = effects->waylandDisplay();
         if (display) {
-            m_contrastManager = new KWaylandServer::ContrastManagerInterface(display, this);
+            m_contrastManager.reset(new KWaylandServer::ContrastManagerInterface(display));
         }
     } else {
         net_wm_contrast_region = 0;
@@ -84,8 +83,7 @@ void ContrastEffect::reconfigure(ReconfigureFlags flags)
 
     if (!shader || !shader->isValid()) {
         effects->removeSupportProperty(s_contrastAtomName, this);
-        delete m_contrastManager;
-        m_contrastManager = nullptr;
+        m_contrastManager.reset();
     }
 }
 

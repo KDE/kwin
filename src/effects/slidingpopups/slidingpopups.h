@@ -14,6 +14,9 @@
 // Include with base class for effects.
 #include <kwineffects.h>
 
+#include <KWaylandServer/slide_interface.h>
+#include <KWaylandServer/utils.h>
+
 namespace KWin
 {
 
@@ -58,6 +61,7 @@ private:
     void setupAnimData(EffectWindow *w);
     void setupInternalWindowSlide(EffectWindow *w);
 
+    KWaylandServer::ScopedGlobalPointer<KWaylandServer::SlideManagerInterface> m_slideManager;
     long m_atom;
 
     int m_slideLength;

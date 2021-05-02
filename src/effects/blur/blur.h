@@ -16,10 +16,8 @@
 #include <QVector2D>
 #include <QStack>
 
-namespace KWaylandServer
-{
-class BlurManagerInterface;
-}
+#include <KWaylandServer/blur_interface.h>
+#include <KWaylandServer/utils.h>
 
 namespace KWin
 {
@@ -117,7 +115,7 @@ private:
     QVector <BlurValuesStruct> blurStrengthValues;
 
     QMap <EffectWindow*, QMetaObject::Connection> windowBlurChangedConnections;
-    KWaylandServer::BlurManagerInterface *m_blurManager = nullptr;
+    KWaylandServer::ScopedGlobalPointer<KWaylandServer::BlurManagerInterface> m_blurManager;
 };
 
 inline

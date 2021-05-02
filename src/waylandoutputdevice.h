@@ -9,6 +9,7 @@
 #include "abstract_wayland_output.h"
 
 #include <KWaylandServer/outputdevice_interface.h>
+#include <KWaylandServer/utils.h>
 
 namespace KWin
 {
@@ -32,7 +33,7 @@ private Q_SLOTS:
 
 private:
     AbstractWaylandOutput *m_platformOutput;
-    KWaylandServer::OutputDeviceInterface *m_outputDevice;
+    KWaylandServer::ScopedGlobalPointer<KWaylandServer::OutputDeviceInterface> m_outputDevice;
 };
 
 } // namespace KWin

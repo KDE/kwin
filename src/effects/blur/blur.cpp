@@ -19,7 +19,6 @@
 #include <cmath> // for ceil()
 
 #include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/blur_interface.h>
 #include <KWaylandServer/shadow_interface.h>
 #include <KWaylandServer/display.h>
 #include <KSharedConfig>
@@ -44,7 +43,7 @@ BlurEffect::BlurEffect()
         net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
         KWaylandServer::Display *display = effects->waylandDisplay();
         if (display) {
-            m_blurManager = new KWaylandServer::BlurManagerInterface(display, this);
+            m_blurManager.reset(new KWaylandServer::BlurManagerInterface(display));
         }
     } else {
         net_wm_blur_region = 0;
@@ -250,8 +249,7 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
 
     if (!m_shader || !m_shader->isValid()) {
         effects->removeSupportProperty(s_blurAtomName, this);
-        delete m_blurManager;
-        m_blurManager = nullptr;
+        m_blurManager.reset();
     }
 
     // Update all windows for the blur to take effect

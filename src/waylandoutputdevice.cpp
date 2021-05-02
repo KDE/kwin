@@ -40,7 +40,7 @@ static KWaylandServer::OutputDeviceInterface::VrrPolicy kwinVrrPolicyToOutputDev
 WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject *parent)
     : QObject(parent)
     , m_platformOutput(output)
-    , m_outputDevice(new KWaylandServer::OutputDeviceInterface(waylandServer()->display(), this))
+    , m_outputDevice(new KWaylandServer::OutputDeviceInterface(waylandServer()->display()))
 {
     m_outputDevice->setManufacturer(output->manufacturer());
     m_outputDevice->setEdid(output->edid());

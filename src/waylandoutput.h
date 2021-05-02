@@ -10,6 +10,7 @@
 
 #include <KWaylandServer/output_interface.h>
 #include <KWaylandServer/xdgoutput_v1_interface.h>
+#include <KWaylandServer/utils.h>
 
 namespace KWin
 {
@@ -33,7 +34,7 @@ private Q_SLOTS:
 private:
     AbstractWaylandOutput *m_platformOutput;
     QTimer m_updateTimer;
-    KWaylandServer::OutputInterface *m_waylandOutput;
+    KWaylandServer::ScopedGlobalPointer<KWaylandServer::OutputInterface> m_waylandOutput;
     KWaylandServer::XdgOutputV1Interface *m_xdgOutputV1;
 };
 
