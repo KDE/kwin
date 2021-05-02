@@ -38,6 +38,8 @@ public:
         return m_bo;
     }
 
+    void releaseBuffer();
+
 protected:
     QSharedPointer<GbmSurface> m_surface;
     gbm_bo *m_bo = nullptr;
@@ -60,6 +62,8 @@ public:
             return true;
         }
     }
+
+    void releaseGbm() override;
 
     bool hasBo() const {
         return m_bo != nullptr;

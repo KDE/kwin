@@ -71,9 +71,9 @@ void EglGbmBackend::cleanupOutput(Output &output)
 {
     cleanupFramebuffer(output);
 
-    output.buffer = nullptr;
-    output.secondaryBuffer = nullptr;
     if (output.eglSurface != EGL_NO_SURFACE) {
+        // gbm buffers have to be released before destroying the egl surface
+        output.output->releaseGbm();
         eglDestroySurface(eglDisplay(), output.eglSurface);
     }
 }
@@ -200,6 +200,8 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
 
     // destroy previous surface
     if (output.eglSurface != EGL_NO_SURFACE) {
+        // gbm buffers have to be released before destroying the egl surface
+        output.output->releaseGbm();
         eglDestroySurface(eglDisplay(), output.eglSurface);
     }
     output.eglSurface = eglSurface;

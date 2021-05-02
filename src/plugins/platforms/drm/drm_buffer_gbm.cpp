@@ -46,14 +46,20 @@ GbmBuffer::GbmBuffer(gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInte
 
 GbmBuffer::~GbmBuffer()
 {
+    releaseBuffer();
+}
+
+void GbmBuffer::releaseBuffer()
+{
     if (m_bufferInterface) {
         clearBufferInterface();
     }
-    if (m_surface) {
+    if (m_surface && m_bo) {
         m_surface->releaseBuffer(m_bo);
     } else if (m_bo) {
         gbm_bo_destroy(m_bo);
     }
+    m_bo = nullptr;
 }
 
 void GbmBuffer::clearBufferInterface()
@@ -84,6 +90,11 @@ DrmGbmBuffer::~DrmGbmBuffer()
     if (m_bufferId) {
         drmModeRmFB(m_gpu->fd(), m_bufferId);
     }
+}
+
+void DrmGbmBuffer::releaseGbm()
+{
+    releaseBuffer();
 }
 
 void DrmGbmBuffer::initialize()

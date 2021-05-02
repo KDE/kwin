@@ -75,6 +75,24 @@ void DrmOutput::teardown()
     //this is needed so that the pageflipcallback handle isn't deleted
 }
 
+void DrmOutput::releaseGbm()
+{
+    if (auto buffer = m_crtc->current()) {
+        buffer->releaseGbm();
+    }
+    if (auto buffer = m_crtc->next()) {
+        buffer->releaseGbm();
+    }
+    if (m_primaryPlane) {
+        if (auto buffer = m_primaryPlane->current()) {
+            buffer->releaseGbm();
+        }
+        if (auto buffer = m_primaryPlane->next()) {
+            buffer->releaseGbm();
+        }
+    }
+}
+
 bool DrmOutput::hideCursor()
 {
     if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive

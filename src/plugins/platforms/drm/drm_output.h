@@ -44,6 +44,7 @@ public:
 
     ///queues deleting the output after a page flip has completed.
     void teardown();
+    void releaseGbm();
     bool showCursor(DrmDumbBuffer *buffer);
     bool showCursor();
     bool hideCursor();
