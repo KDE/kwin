@@ -53,6 +53,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
             emit numberScreensChanged(currentCount);
         }
     );
+    // TODO Plasma 6: Remove it.
     connect(QApplication::desktop(), &QDesktopWidget::resized, this, &WorkspaceWrapper::screenResized);
 
     const QList<AbstractClient *> clients = ws->allClientList();

@@ -117,6 +117,8 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the size of @p screen changes.
      * Don't forget to fetch an updated client area.
+     *
+     * @deprecated Use QScreen::geometryChanged signal instead.
      */
     void screenResized(int screen);
     /**
