@@ -48,12 +48,7 @@ static PlatformCursorImage loadReferenceThemeCursor_helper(const KXcursorTheme &
         return PlatformCursorImage();
     }
 
-    QImage cursorImage = sprites.first().data();
-    cursorImage.setDevicePixelRatio(theme.devicePixelRatio());
-
-    QPoint cursorHotspot = sprites.first().hotspot();
-
-    return PlatformCursorImage(cursorImage, cursorHotspot);
+    return PlatformCursorImage(sprites.constFirst().data(), sprites.constFirst().hotspot());
 }
 
 static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)

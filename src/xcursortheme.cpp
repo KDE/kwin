@@ -25,7 +25,6 @@ class KXcursorThemePrivate : public QSharedData
 {
 public:
     QMap<QByteArray, QVector<KXcursorSprite>> registry;
-    qreal devicePixelRatio = 1;
 };
 
 KXcursorSprite::KXcursorSprite()
@@ -72,29 +71,45 @@ std::chrono::milliseconds KXcursorSprite::delay() const
     return d->delay;
 }
 
+struct XcursorThemeClosure
+{
+    QMap<QByteArray, QVector<KXcursorSprite>> registry;
+    int desiredSize;
+};
+
 static void load_callback(XcursorImages *images, void *data)
 {
-    KXcursorThemePrivate *themePrivate = static_cast<KXcursorThemePrivate *>(data);
+    XcursorThemeClosure *closure = static_cast<XcursorThemeClosure *>(data);
     QVector<KXcursorSprite> sprites;
 
     for (int i = 0; i < images->nimage; ++i) {
         const XcursorImage *nativeCursorImage = images->images[i];
+        const qreal scale = std::max(qreal(1), qreal(nativeCursorImage->size) / closure->desiredSize);
         const QPoint hotspot(nativeCursorImage->xhot, nativeCursorImage->yhot);
         const std::chrono::milliseconds delay(nativeCursorImage->delay);
 
         QImage data(nativeCursorImage->width, nativeCursorImage->height, QImage::Format_ARGB32_Premultiplied);
+        data.setDevicePixelRatio(scale);
         memcpy(data.bits(), nativeCursorImage->pixels, data.sizeInBytes());
 
-        sprites.append(KXcursorSprite(data, hotspot / themePrivate->devicePixelRatio, delay));
+        sprites.append(KXcursorSprite(data, hotspot / scale, delay));
     }
 
-    themePrivate->registry.insert(images->name, sprites);
+    if (!sprites.isEmpty()) {
+        closure->registry.insert(images->name, sprites);
+    }
     XcursorImagesDestroy(images);
 }
 
 KXcursorTheme::KXcursorTheme()
     : d(new KXcursorThemePrivate)
 {
+}
+
+KXcursorTheme::KXcursorTheme(const QMap<QByteArray, QVector<KXcursorSprite>> &registry)
+    : KXcursorTheme()
+{
+    d->registry = registry;
 }
 
 KXcursorTheme::KXcursorTheme(const KXcursorTheme &other)
@@ -112,11 +127,6 @@ KXcursorTheme &KXcursorTheme::operator=(const KXcursorTheme &other)
     return *this;
 }
 
-qreal KXcursorTheme::devicePixelRatio() const
-{
-    return d->devicePixelRatio;
-}
-
 bool KXcursorTheme::isEmpty() const
 {
     return d->registry.isEmpty();
@@ -129,14 +139,18 @@ QVector<KXcursorSprite> KXcursorTheme::shape(const QByteArray &name) const
 
 KXcursorTheme KXcursorTheme::fromTheme(const QString &themeName, int size, qreal dpr)
 {
-    KXcursorTheme theme;
-    KXcursorThemePrivate *themePrivate = theme.d;
-    themePrivate->devicePixelRatio = dpr;
+    // Xcursors don't support HiDPI natively so we fake it by scaling the desired cursor
+    // size. The device pixel ratio argument acts only as a hint. The real scale factor
+    // of every cursor sprite will be computed in the loading closure.
+    XcursorThemeClosure closure;
+    closure.desiredSize = size;
+    xcursor_load_theme(themeName.toUtf8().constData(), size * dpr, load_callback, &closure);
 
-    const QByteArray nativeThemeName = themeName.toUtf8();
-    xcursor_load_theme(nativeThemeName, size * dpr, load_callback, themePrivate);
+    if (closure.registry.isEmpty()) {
+        return KXcursorTheme();
+    }
 
-    return theme;
+    return KXcursorTheme(closure.registry);
 }
 
 } // namespace KWin

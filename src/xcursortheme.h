@@ -100,11 +100,6 @@ public:
     KXcursorTheme &operator=(const KXcursorTheme &other);
 
     /**
-     * Returns the ratio between device pixels and logical pixels for the Xcursor theme.
-     */
-    qreal devicePixelRatio() const;
-
-    /**
      * Returns @c true if the Xcursor theme is empty; otherwise returns @c false.
      */
     bool isEmpty() const;
@@ -115,11 +110,14 @@ public:
     QVector<KXcursorSprite> shape(const QByteArray &name) const;
 
     /**
-     * Attempts to load the Xcursor theme with the given @a themeName and @a size.
+     * Loads the Xcursor theme with the given @ themeName and the desired @a size.
+     * The @a dpr specifies the desired scale factor. If no theme with the provided
+     * name exists, an empty KXcursorTheme is returned.
      */
     static KXcursorTheme fromTheme(const QString &themeName, int size, qreal dpr);
 
 private:
+    KXcursorTheme(const QMap<QByteArray, QVector<KXcursorSprite>> &registry);
     QSharedDataPointer<KXcursorThemePrivate> d;
 };
 
