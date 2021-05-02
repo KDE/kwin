@@ -7,7 +7,6 @@
 #include "display.h"
 #include "surface_interface_p.h"
 
-#include <wayland-server.h>
 #include <qwayland-server-slide.h>
 
 namespace KWaylandServer
@@ -20,13 +19,18 @@ class SlideManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_slide_
 public:
     SlideManagerInterfacePrivate(SlideManagerInterface *_q, Display *display);
 
-private:
     SlideManagerInterface *q;
 
 protected:
+    void org_kde_kwin_slide_manager_destroy_global() override;
     void org_kde_kwin_slide_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
     void org_kde_kwin_slide_manager_unset(Resource *resource, wl_resource *surface) override;
 };
+
+void SlideManagerInterfacePrivate::org_kde_kwin_slide_manager_destroy_global()
+{
+    delete q;
+}
 
 void SlideManagerInterfacePrivate::org_kde_kwin_slide_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
 {
@@ -43,7 +47,6 @@ void SlideManagerInterfacePrivate::org_kde_kwin_slide_manager_create(Resource *r
     }
 
     auto slide = new SlideInterface(q, slide_resource);
-    
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
     surfacePrivate->setSlide(QPointer<SlideInterface>(slide));
 }
@@ -72,6 +75,10 @@ SlideManagerInterface::SlideManagerInterface(Display *display, QObject *parent)
 }
 
 SlideManagerInterface::~SlideManagerInterface()
+{
+}
+
+void SlideManagerInterface::remove()
 {
     d->globalRemove();
 }

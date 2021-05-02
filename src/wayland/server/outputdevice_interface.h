@@ -105,6 +105,8 @@ public:
     explicit OutputDeviceInterface(Display *display, QObject *parent = nullptr);
     ~OutputDeviceInterface() override;
 
+    void remove();
+
     QSize physicalSize() const;
     QPoint globalPosition() const;
     QString manufacturer() const;

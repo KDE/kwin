@@ -18,6 +18,20 @@ struct wl_resource;
 namespace KWaylandServer
 {
 
+template <typename T>
+struct SafeGlobalDeleter
+{
+    static inline void cleanup(T *global)
+    {
+        if (global) {
+            global->remove();
+        }
+    }
+};
+
+template <typename T>
+using ScopedGlobalPointer = QScopedPointer<T, SafeGlobalDeleter<T>>;
+
 /**
  * Returns an infinite region.
  */

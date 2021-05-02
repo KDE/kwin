@@ -569,6 +569,7 @@ bool Scanner::process()
             printf("        QMultiMap<struct ::wl_client*, Resource*> resourceMap() { return m_resource_map; }\n");
             printf("        const QMultiMap<struct ::wl_client*, Resource*> resourceMap() const { return m_resource_map; }\n");
             printf("\n");
+            printf("        bool isGlobalRemoved() const { return m_globalRemovedEvent; }\n");
             printf("        void globalRemove();\n");
             printf("\n");
             printf("        bool isGlobal() const { return m_global != nullptr; }\n");
@@ -599,6 +600,8 @@ bool Scanner::process()
             printf("    protected:\n");
             printf("        virtual Resource *%s_allocate();\n", interfaceNameStripped);
             printf("\n");
+            printf("        virtual void %s_destroy_global();\n", interfaceNameStripped);
+            printf("\n");
             printf("        virtual void %s_bind_resource(Resource *resource);\n", interfaceNameStripped);
             printf("        virtual void %s_destroy_resource(Resource *resource);\n", interfaceNameStripped);
 
@@ -618,6 +621,7 @@ bool Scanner::process()
             printf("        static void bind_func(struct ::wl_client *client, void *data, uint32_t version, uint32_t id);\n");
             printf("        static void destroy_func(struct ::wl_resource *client_resource);\n");
             printf("        static void display_destroy_func(struct ::wl_listener *listener, void *data);\n");
+            printf("        static int deferred_destroy_global_func(void *data);\n");
             printf("\n");
             printf("        Resource *bind(struct ::wl_client *client, uint32_t id, int version);\n");
             printf("        Resource *bind(struct ::wl_resource *handle);\n");
@@ -640,6 +644,7 @@ bool Scanner::process()
             printf("        Resource *m_resource;\n");
             printf("        struct ::wl_global *m_global;\n");
             printf("        struct ::wl_display *m_display;\n");
+            printf("        struct wl_event_source *m_globalRemovedEvent;\n");
             printf("        uint32_t m_globalVersion;\n");
             printf("        struct DisplayDestroyedListener : ::wl_listener {\n");
             printf("            %s *parent;\n", interfaceName);
@@ -670,21 +675,6 @@ bool Scanner::process()
 
         bool needsNewLine = false;
 
-        printf("\n");
-        printf("    struct deferred_destroy_global_data {\n");
-        printf("        struct wl_global *global;\n");
-        printf("        struct wl_event_source *event_source;\n");
-        printf("    };\n");
-        printf("\n");
-        printf("    static int deferred_destroy_global_func(void *_data) {\n");
-        printf("        deferred_destroy_global_data *data = static_cast<deferred_destroy_global_data *>(_data);\n");
-        printf("        wl_global_destroy(data->global);\n");
-        printf("        wl_event_source_remove(data->event_source);\n");
-        printf("        delete data;\n");
-        printf("        return 0;\n");
-        printf("    }\n");
-        printf("\n");
-
         for (const WaylandInterface &interface : interfaces) {
 
             if (ignoreInterface(interface.name))
@@ -700,11 +690,24 @@ bool Scanner::process()
             QByteArray stripped = stripInterfaceName(interface.name);
             const char *interfaceNameStripped = stripped.constData();
 
+            printf("\n");
+            printf("    int %s::deferred_destroy_global_func(void *data) {\n", interfaceName);
+            printf("        auto object = static_cast<%s *>(data);\n", interfaceName);
+            printf("        wl_global_destroy(object->m_global);\n");
+            printf("        object->m_global = nullptr;\n");
+            printf("        wl_event_source_remove(object->m_globalRemovedEvent);\n");
+            printf("        object->m_globalRemovedEvent = nullptr;\n");
+            printf("        object->%s_destroy_global();\n", interfaceNameStripped);
+            printf("        return 0;\n");
+            printf("    }\n");
+            printf("\n");
+
             printf("    %s::%s(struct ::wl_client *client, int id, int version)\n", interfaceName, interfaceName);
             printf("        : m_resource_map()\n");
             printf("        , m_resource(nullptr)\n");
             printf("        , m_global(nullptr)\n");
             printf("        , m_display(nullptr)\n");
+            printf("        , m_globalRemovedEvent(nullptr)\n");
             printf("    {\n");
             printf("        init(client, id, version);\n");
             printf("    }\n");
@@ -715,6 +718,7 @@ bool Scanner::process()
             printf("        , m_resource(nullptr)\n");
             printf("        , m_global(nullptr)\n");
             printf("        , m_display(nullptr)\n");
+            printf("        , m_globalRemovedEvent(nullptr)\n");
             printf("    {\n");
             printf("        init(display, version);\n");
             printf("    }\n");
@@ -725,6 +729,7 @@ bool Scanner::process()
             printf("        , m_resource(nullptr)\n");
             printf("        , m_global(nullptr)\n");
             printf("        , m_display(nullptr)\n");
+            printf("        , m_globalRemovedEvent(nullptr)\n");
             printf("    {\n");
             printf("        init(resource);\n");
             printf("    }\n");
@@ -734,6 +739,8 @@ bool Scanner::process()
             printf("        : m_resource_map()\n");
             printf("        , m_resource(nullptr)\n");
             printf("        , m_global(nullptr)\n");
+            printf("        , m_display(nullptr)\n");
+            printf("        , m_globalRemovedEvent(nullptr)\n");
             printf("    {\n");
             printf("    }\n");
             printf("\n");
@@ -747,6 +754,8 @@ bool Scanner::process()
             printf("            m_resource->%s_object = nullptr;\n", interfaceNameStripped);
             printf("\n");
             printf("        if (m_global) {\n");
+            printf("            if (m_globalRemovedEvent)\n");
+            printf("                wl_event_source_remove(m_globalRemovedEvent);\n");
             printf("            wl_global_destroy(m_global);\n");
             printf("            wl_list_remove(&m_displayDestroyedListener.link);\n");
             printf("        }\n");
@@ -804,6 +813,11 @@ bool Scanner::process()
             printf("    }\n");
             printf("\n");
 
+            printf("    void %s::%s_destroy_global()\n", interfaceName, interfaceNameStripped);
+            printf("    {\n");
+            printf("    }\n");
+            printf("\n");
+
             printf("    void %s::%s_bind_resource(Resource *)\n", interfaceName, interfaceNameStripped);
             printf("    {\n");
             printf("    }\n");
@@ -826,6 +840,7 @@ bool Scanner::process()
             printf("        Q_UNUSED(data);\n");
             printf("        %s *that = static_cast<%s::DisplayDestroyedListener *>(listener)->parent;\n", interfaceName, interfaceName);
             printf("        that->m_global = nullptr;\n");
+            printf("        that->m_globalRemovedEvent = nullptr;\n");
             printf("    }\n");
             printf("\n");
 
@@ -851,19 +866,14 @@ bool Scanner::process()
             printf("\n");
             printf("    void %s::globalRemove()\n", interfaceName);
             printf("    {\n");
-            printf("        if (!m_global)\n");
+            printf("        if (!m_global || m_globalRemovedEvent)\n");
             printf("            return;\n");
             printf("\n");
             printf("        wl_global_remove(m_global);\n");
-            printf("        wl_global_set_user_data(m_global, nullptr);\n");
             printf("\n");
             printf("        struct wl_event_loop *event_loop = wl_display_get_event_loop(m_display);\n");
-            printf("        struct deferred_destroy_global_data *data = new deferred_destroy_global_data;\n");
-            printf("        data->global = m_global;\n");
-            printf("        data->event_source = wl_event_loop_add_timer(event_loop, deferred_destroy_global_func, data);\n");
-            printf("        wl_event_source_timer_update(data->event_source, 5000);\n");
-            printf("        m_global = nullptr;\n");
-            printf("        wl_list_remove(&m_displayDestroyedListener.link);\n");
+            printf("        m_globalRemovedEvent = wl_event_loop_add_timer(event_loop, deferred_destroy_global_func, this);\n");
+            printf("        wl_event_source_timer_update(m_globalRemovedEvent, 5000);\n");
             printf("    }\n");
             printf("\n");
 

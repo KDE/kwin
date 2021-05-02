@@ -68,6 +68,8 @@ public:
     explicit OutputInterface(Display *display, QObject *parent = nullptr);
     ~OutputInterface() override;
 
+    void remove();
+
     QSize physicalSize() const;
     QPoint globalPosition() const;
     QString manufacturer() const;
@@ -120,7 +122,6 @@ public:
     static OutputInterface *get(wl_resource *native);
 
 Q_SIGNALS:
-    void aboutToBeDestroyed();
     void physicalSizeChanged(const QSize&);
     void globalPositionChanged(const QPoint&);
     void manufacturerChanged(const QString&);
@@ -133,6 +134,7 @@ Q_SIGNALS:
     void modeChanged();
     void dpmsModeChanged();
     void dpmsSupportedChanged();
+    void removed();
 
     /**
      * Change of dpms @p mode is requested.

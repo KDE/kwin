@@ -26,6 +26,8 @@ public:
     explicit SlideManagerInterface(Display *display, QObject *parent = nullptr);
     ~SlideManagerInterface() override;
 
+    void remove();
+
 private:
     QScopedPointer<SlideManagerInterfacePrivate> d;
 };

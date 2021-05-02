@@ -9,7 +9,6 @@
 #include "display.h"
 #include "surface_interface_p.h"
 
-#include <wayland-server.h>
 #include <qwayland-server-contrast.h>
 
 namespace KWaylandServer
@@ -20,16 +19,25 @@ static const quint32 s_version = 1;
 class ContrastManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_contrast_manager
 {
 public:
-    ContrastManagerInterfacePrivate(Display *display);
+    ContrastManagerInterfacePrivate(ContrastManagerInterface *q, Display *display);
+
+    ContrastManagerInterface *q;
 
 protected:
+    void org_kde_kwin_contrast_manager_destroy_global() override;
     void org_kde_kwin_contrast_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
     void org_kde_kwin_contrast_manager_unset(Resource *resource, wl_resource *surface) override;
 };
 
-ContrastManagerInterfacePrivate::ContrastManagerInterfacePrivate(Display *display)
+ContrastManagerInterfacePrivate::ContrastManagerInterfacePrivate(ContrastManagerInterface *q, Display *display)
     : QtWaylandServer::org_kde_kwin_contrast_manager(*display, s_version)
+    , q(q)
 {
+}
+
+void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_destroy_global()
+{
+    delete q;
 }
 
 void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
@@ -63,11 +71,15 @@ void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_unset(Resour
 
 ContrastManagerInterface::ContrastManagerInterface(Display *display, QObject *parent)
     : QObject(parent)
-    , d(new ContrastManagerInterfacePrivate(display))
+    , d(new ContrastManagerInterfacePrivate(this, display))
 {
 }
 
 ContrastManagerInterface::~ContrastManagerInterface()
+{
+}
+
+void ContrastManagerInterface::remove()
 {
     d->globalRemove();
 }

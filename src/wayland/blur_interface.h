@@ -35,6 +35,8 @@ public:
     explicit BlurManagerInterface(Display *display, QObject *parent = nullptr);
     ~BlurManagerInterface() override;
 
+    void remove();
+
 private:
     QScopedPointer<BlurManagerInterfacePrivate> d;
 };

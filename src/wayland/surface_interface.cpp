@@ -827,7 +827,7 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
         for (wl_resource *outputResource : resources) {
             d->send_enter(outputResource);
         }
-        d->outputDestroyedConnections[o] = connect(o, &OutputInterface::aboutToBeDestroyed, this, [this, o] {
+        d->outputDestroyedConnections[o] = connect(o, &OutputInterface::removed, this, [this, o] {
             auto outputs = d->outputs;
             if (outputs.removeOne(o)) {
                 setOutputs(outputs);

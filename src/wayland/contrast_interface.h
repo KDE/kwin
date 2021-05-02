@@ -35,6 +35,8 @@ public:
     explicit ContrastManagerInterface(Display *display, QObject *parent = nullptr);
     ~ContrastManagerInterface() override;
 
+    void remove();
+
 private:
     QScopedPointer<ContrastManagerInterfacePrivate> d;
 };

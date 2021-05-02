@@ -47,6 +47,7 @@ public:
     } dpms;
 
 private:
+    void output_destroy_global() override;
     void output_bind_resource(Resource *resource);
     void output_release(Resource *resource);
 };
@@ -138,6 +139,11 @@ void OutputInterfacePrivate::broadcastGeometry()
     }
 }
 
+void OutputInterfacePrivate::output_destroy_global()
+{
+    delete q;
+}
+
 void OutputInterfacePrivate::output_release(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
@@ -145,6 +151,10 @@ void OutputInterfacePrivate::output_release(Resource *resource)
 
 void OutputInterfacePrivate::output_bind_resource(Resource *resource)
 {
+    if (isGlobalRemoved()) {
+        return; // We are waiting for the wl_output global to be destroyed.
+    }
+
     sendMode(resource);
     sendScale(resource);
     sendGeometry(resource);
@@ -163,7 +173,14 @@ OutputInterface::OutputInterface(Display *display, QObject *parent)
 
 OutputInterface::~OutputInterface()
 {
-    emit aboutToBeDestroyed();
+    remove();
+}
+
+void OutputInterface::remove()
+{
+    if (d->isGlobalRemoved()) {
+        return;
+    }
 
     if (d->display) {
         DisplayPrivate *displayPrivate = DisplayPrivate::get(d->display);
@@ -171,6 +188,7 @@ OutputInterface::~OutputInterface()
     }
 
     d->globalRemove();
+    emit removed();
 }
 
 QSize OutputInterface::pixelSize() const

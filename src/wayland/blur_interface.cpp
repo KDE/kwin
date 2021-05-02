@@ -10,8 +10,6 @@
 #include "display.h"
 #include "surface_interface_p.h"
 
-#include <wayland-server.h>
-
 #include "qwayland-server-blur.h"
 
 namespace KWaylandServer
@@ -27,6 +25,7 @@ public:
     BlurManagerInterface *q;
 
 protected:
+    void org_kde_kwin_blur_manager_destroy_global() override;
     void org_kde_kwin_blur_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
     void org_kde_kwin_blur_manager_unset(Resource *resource, wl_resource *surface) override;
 };
@@ -35,6 +34,11 @@ BlurManagerInterfacePrivate::BlurManagerInterfacePrivate(BlurManagerInterface *_
     : QtWaylandServer::org_kde_kwin_blur_manager(*d, s_version)
     , q(_q)
 {
+}
+
+void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_destroy_global()
+{
+    delete q;
 }
 
 void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_unset(Resource *resource, wl_resource *surface)
@@ -73,6 +77,10 @@ BlurManagerInterface::BlurManagerInterface(Display *display, QObject *parent)
 }
 
 BlurManagerInterface::~BlurManagerInterface()
+{
+}
+
+void BlurManagerInterface::remove()
 {
     d->globalRemove();
 }

@@ -23,7 +23,6 @@ class OutputDeviceInterfacePrivate : public QtWaylandServer::org_kde_kwin_output
 {
 public:
     OutputDeviceInterfacePrivate(OutputDeviceInterface *q, Display *display);
-    ~OutputDeviceInterfacePrivate() override;
 
     void updateGeometry();
     void updateUuid();
@@ -65,14 +64,12 @@ public:
     OutputDeviceInterface::ColorCurves colorCurves;
     QList<OutputDeviceInterface::Mode> modes;
     OutputDeviceInterface::Mode currentMode;
-
     QByteArray edid;
     OutputDeviceInterface::Enablement enabled = OutputDeviceInterface::Enablement::Enabled;
     QUuid uuid;
     OutputDeviceInterface::Capabilities capabilities;
     uint32_t overscan = 0;
     OutputDeviceInterface::VrrPolicy vrrPolicy = OutputDeviceInterface::VrrPolicy::Automatic;
-
     QPointer<Display> display;
     OutputDeviceInterface *q;
 
@@ -81,24 +78,20 @@ private:
     int32_t toSubPixel() const;
 
 protected:
+    void org_kde_kwin_outputdevice_destroy_global() override;
     void org_kde_kwin_outputdevice_bind_resource(Resource *resource) override;
 };
+
+void OutputDeviceInterfacePrivate::org_kde_kwin_outputdevice_destroy_global()
+{
+    delete q;
+}
 
 OutputDeviceInterfacePrivate::OutputDeviceInterfacePrivate(OutputDeviceInterface *q, Display *display)
     : QtWaylandServer::org_kde_kwin_outputdevice(*display, s_version)
     , display(display)
     , q(q)
 {
-    DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
-    displayPrivate->outputdevices.append(q);
-}
-
-OutputDeviceInterfacePrivate::~OutputDeviceInterfacePrivate()
-{
-    if (display) {
-        DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
-        displayPrivate->outputdevices.removeOne(q);
-    }
 }
 
 OutputDeviceInterface::OutputDeviceInterface(Display *display, QObject *parent)
@@ -122,10 +115,27 @@ OutputDeviceInterface::OutputDeviceInterface(Display *display, QObject *parent)
     connect(this, &OutputDeviceInterface::manufacturerChanged,   this, [this] { d->updateGeometry(); });
     connect(this, &OutputDeviceInterface::scaleFChanged,         this, [this] { d->updateScale(); });
     connect(this, &OutputDeviceInterface::colorCurvesChanged,    this, [this] { d->updateColorCurves(); });
+
+    DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
+    displayPrivate->outputdevices.append(this);
 }
 
 OutputDeviceInterface::~OutputDeviceInterface()
 {
+    remove();
+}
+
+void OutputDeviceInterface::remove()
+{
+    if (d->isGlobalRemoved()) {
+        return;
+    }
+
+    if (d->display) {
+        DisplayPrivate *displayPrivate = DisplayPrivate::get(d->display);
+        displayPrivate->outputdevices.removeOne(this);
+    }
+
     d->globalRemove();
 }
 
