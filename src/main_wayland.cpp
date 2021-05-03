@@ -714,6 +714,15 @@ int main(int argc, char * argv[])
     a.platform()->setInitialOutputCount(outputCount);
 
     QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);
+
+    // If startup doesn't complete within 20 seconds, exit rather than hanging
+    // around forever (e.g. if workspace creation can't happen due to DBus errors)
+    QTimer* startupTimeout = new QTimer;
+    QObject::connect(startupTimeout, &QTimer::timeout, [&](){ a.exit(2); });
+    QObject::connect(&a, &KWin::Application::workspaceCreated, [&](){ startupTimeout->stop(); delete startupTimeout; });
+    startupTimeout->setSingleShot(true);
+    startupTimeout->start(std::chrono::seconds(20));
+
     if (!server->socketName().isEmpty()) {
         environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->socketName());
     }
