@@ -380,8 +380,8 @@ bool ScreenShotEffect::takeScreenShot(ScreenShotScreenData *screenshot)
 
         QImage snapshot = blitScreenshot(screenshot->screen->geometry(), devicePixelRatio);
         if (screenshot->flags & ScreenShotIncludeCursor) {
-            const int xOffset = screenshot->screen->geometry().width();
-            const int yOffset = screenshot->screen->geometry().height();
+            const int xOffset = screenshot->screen->geometry().x();
+            const int yOffset = screenshot->screen->geometry().y();
             grabPointerImage(snapshot, xOffset, yOffset);
         }
 
