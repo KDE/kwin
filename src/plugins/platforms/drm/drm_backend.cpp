@@ -229,7 +229,6 @@ void DrmBackend::handleUdevEvent()
                 if (const auto &gpu = addGpu(device->devNode())) {
                     updateOutputs();
                     updateCursor();
-                    emit gpuAdded(gpu);
                 }
             }
         } else if (device->action() == QStringLiteral("remove")) {
@@ -249,6 +248,9 @@ void DrmBackend::handleUdevEvent()
             }
         } else if (device->action() == QStringLiteral("change")) {
             DrmGpu *gpu = findGpu(device->devNum());
+            if (!gpu) {
+                gpu = addGpu(device->devNode());
+            }
             if (gpu) {
                 qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
                 updateOutputs();
@@ -288,6 +290,7 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
         m_active = true;
         connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
         connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
+        emit gpuAdded(gpu);
         return gpu;
     } else {
         delete gpu;
@@ -320,8 +323,16 @@ bool DrmBackend::updateOutputs()
         return false;
     }
     const auto oldOutputs = m_outputs;
-    for (auto gpu : m_gpus) {
+    for (auto it = m_gpus.begin(); it < m_gpus.end();) {
+        auto gpu = *it;
         gpu->updateOutputs();
+        if (gpu->outputs().isEmpty() && gpu != primaryGpu()) {
+            it = m_gpus.erase(it);
+            emit gpuRemoved(gpu);
+            delete gpu;
+        } else {
+            it++;
+        }
     }
 
     std::sort(m_outputs.begin(), m_outputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_conn->id() < b->m_conn->id(); });
