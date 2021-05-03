@@ -301,7 +301,7 @@ _XcursorFileHeaderDestroy (XcursorFileHeader *fileHeader)
 }
 
 static XcursorFileHeader *
-_XcursorFileHeaderCreate (int ntoc)
+_XcursorFileHeaderCreate (XcursorUInt ntoc)
 {
     XcursorFileHeader	*fileHeader;
 
@@ -622,16 +622,43 @@ XcursorFileLoadImages (FILE *file, int size)
 #define XCURSORPATH "~/.icons:/usr/share/icons:/usr/share/pixmaps:~/.cursors:/usr/share/cursors/xorg-x11:"ICONDIR
 #endif
 
-static const char *
+#define XDG_DATA_HOME_FALLBACK "~/.local/share"
+#define CURSORDIR "/icons"
+
+/** Get search path for cursor themes
+ *
+ * This function builds the list of directories to look for cursor
+ * themes in.  The format is PATH-like: directories are separated by
+ * colons.
+ *
+ * The memory block returned by this function is allocated on the heap
+ * and must be freed by the caller.
+ */
+static char *
 XcursorLibraryPath (void)
 {
-    static const char	*path;
+    const char		*env_var;
+    char		*path = NULL;
+    int		pathlen = 0;
 
-    if (!path)
+    env_var = getenv ("XCURSOR_PATH");
+    if (env_var)
     {
-	path = getenv ("XCURSOR_PATH");
-	if (!path)
-	    path = XCURSORPATH;
+	path = strdup (env_var);
+    }
+    else
+    {
+	env_var = getenv ("XDG_DATA_HOME");
+	if (env_var) {
+            pathlen = strlen (env_var) + strlen (CURSORDIR ":" XCURSORPATH) + 1;
+            path = malloc (pathlen);
+            snprintf (path, pathlen, "%s%s", env_var,
+                      CURSORDIR ":" XCURSORPATH);
+	}
+	else
+	{
+	    path = strdup (XDG_DATA_HOME_FALLBACK CURSORDIR ":" XCURSORPATH);
+	}
     }
     return path;
 }
@@ -804,6 +831,7 @@ XcursorScanTheme (const char *theme, const char *name)
     const char  *path;
     char	*inherits = NULL;
     const char	*i;
+    char	*xcursor_path;
 
     if (!theme || !name)
         return NULL;
@@ -811,7 +839,8 @@ XcursorScanTheme (const char *theme, const char *name)
     /*
      * Scan this theme
      */
-    for (path = XcursorLibraryPath ();
+    xcursor_path = XcursorLibraryPath ();
+    for (path = xcursor_path;
 	 path && f == NULL;
 	 path = _XcursorNextPath (path))
     {
@@ -843,6 +872,7 @@ XcursorScanTheme (const char *theme, const char *name)
 	f = XcursorScanTheme (i, name);
     if (inherits != NULL)
 	free (inherits);
+    free (xcursor_path);
     return f;
 }
 
@@ -941,11 +971,13 @@ xcursor_load_theme(const char *theme, int size,
 	char *full, *dir;
 	char *inherits = NULL;
 	const char *path, *i;
+	char *xcursor_path;
 
 	if (!theme)
 		theme = "default";
 
-	for (path = XcursorLibraryPath();
+	xcursor_path = XcursorLibraryPath();
+	for (path = xcursor_path;
 	     path;
 	     path = _XcursorNextPath(path)) {
 		dir = _XcursorBuildThemeDir(path, theme);
@@ -976,4 +1008,6 @@ xcursor_load_theme(const char *theme, int size,
 
 	if (inherits)
 		free(inherits);
+
+	free (xcursor_path);
 }
