@@ -473,7 +473,6 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
 {
     disconnect(m_decorationGeometryConnection);
     m_decorationGeometryConnection = QMetaObject::Connection();
-    workspace()->updateFocusMousePosition(position().toPoint());
 
     if (old) {
         // send leave event to old decoration
@@ -524,7 +523,6 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
 
     if (AbstractClient *ac = qobject_cast<AbstractClient*>(focusNow)) {
         ac->enterEvent(m_pos.toPoint());
-        workspace()->updateFocusMousePosition(m_pos.toPoint());
     }
 
     if (internalWindow()) {

@@ -2846,6 +2846,7 @@ void InputDeviceHandler::update()
     setAt(toplevel);
 
     if (focusUpdatesBlocked()) {
+        workspace()->updateFocusMousePosition(position().toPoint());
         return;
     }
 
@@ -2860,21 +2861,20 @@ void InputDeviceHandler::update()
             // went onto or off from decoration, update focus
             updateFocus();
         }
-        return;
-    }
-    updateInternalWindow(nullptr);
+    } else {
+        updateInternalWindow(nullptr);
 
-    if (m_focus.focus != m_at.at) {
-        // focus change
-        updateDecoration();
-        updateFocus();
-        return;
+        if (m_focus.focus != m_at.at) {
+            // focus change
+            updateDecoration();
+            updateFocus();
+        } else if (updateDecoration()) {
+            // went onto or off from decoration, update focus
+            updateFocus();
+        }
     }
-    // check if switched to/from decoration while staying on the same Toplevel
-    if (updateDecoration()) {
-        // went onto or off from decoration, update focus
-        updateFocus();
-    }
+
+    workspace()->updateFocusMousePosition(position().toPoint());
 }
 
 Toplevel *InputDeviceHandler::at() const
