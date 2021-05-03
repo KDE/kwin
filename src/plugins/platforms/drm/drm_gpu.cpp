@@ -394,9 +394,14 @@ static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsign
 
     auto output = static_cast<DrmOutput *>(data);
 
+    // The static_cast<> here are for a 32-bit environment where 
+    // sizeof(time_t) == sizeof(unsigned int) == 4 . Putting @p sec
+    // into a time_t cuts off the most-significant bit (after the
+    // year 2038), similarly long can't hold all the bits of an
+    // unsigned multiplication.
     std::chrono::nanoseconds timestamp = convertTimestamp(output->gpu()->presentationClock(),
                                                           CLOCK_MONOTONIC,
-                                                          { sec, usec * 1000 });
+                                                          { static_cast<time_t>(sec), static_cast<long>(usec * 1000) });
     if (timestamp == std::chrono::nanoseconds::zero()) {
         qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on output %s",
                 sec, usec, qPrintable(output->name()));
