@@ -177,12 +177,14 @@ Rectangle {
             Layout.fillHeight: true
             Layout.minimumHeight: availableButtonsGrid.cellHeight * 2
             Layout.margins: Kirigami.Units.largeSpacing
+            cellWidth: Kirigami.Units.gridUnit * 6
+            cellHeight: Kirigami.Units.gridUnit * 6
             model: kcm.availableButtonsModel
             interactive: false
 
             delegate: ColumnLayout {
-                width: availableButtonsGrid.cellWidth
-                height: availableButtonsGrid.cellHeight
+                width: availableButtonsGrid.cellWidth - Kirigami.Units.largeSpacing
+                height: availableButtonsGrid.cellHeight - Kirigami.Units.largeSpacing
                 opacity: baseLayout.draggingTitlebarButtons ? 0.15 : 1.0
 
                 Rectangle {
