@@ -27,7 +27,7 @@ target_link_libraries(kwinxrenderutils
 )
 
 set_target_properties(kwinxrenderutils PROPERTIES
-    VERSION ${KWINEFFECTS_VERSION_STRING}
+    VERSION ${KWINEFFECTS_VERSION}
     SOVERSION ${KWINEFFECTS_SOVERSION}
 )
 set_target_properties(kwinxrenderutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}xrenderutils)
@@ -61,7 +61,7 @@ if (KWIN_HAVE_XRENDER_COMPOSITING)
     target_link_libraries(kwineffects PRIVATE kwinxrenderutils XCB::XFIXES)
 endif()
 set_target_properties(kwineffects PROPERTIES
-    VERSION ${KWINEFFECTS_VERSION_STRING}
+    VERSION ${KWINEFFECTS_VERSION}
     SOVERSION ${KWINEFFECTS_SOVERSION}
 )
 set_target_properties(kwineffects PROPERTIES OUTPUT_NAME ${KWIN_NAME}effects)
@@ -82,7 +82,7 @@ add_library(kwinglutils SHARED ${kwin_GLUTILSLIB_SRCS})
 generate_export_header(kwinglutils BASE_NAME kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
 target_link_libraries(kwinglutils PUBLIC XCB::XCB KF5::CoreAddons KF5::ConfigCore KF5::WindowSystem epoxy::epoxy)
 set_target_properties(kwinglutils PROPERTIES
-    VERSION ${KWINEFFECTS_VERSION_STRING}
+    VERSION ${KWINEFFECTS_VERSION}
     SOVERSION ${KWINEFFECTS_SOVERSION}
     OUTPUT_NAME ${KWIN_NAME}glutils
 )
