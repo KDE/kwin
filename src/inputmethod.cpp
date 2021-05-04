@@ -197,8 +197,8 @@ void InputMethod::handleFocusedSurfaceChanged()
         if (m_trackedClient != focusedClient) {
             if (m_trackedClient) {
                 m_trackedClient->setVirtualKeyboardGeometry(QRect());
+                disconnect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
             }
-            disconnect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
             m_trackedClient = focusedClient;
             connect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
         }
