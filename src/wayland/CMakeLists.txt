@@ -302,7 +302,7 @@ target_compile_definitions(KWaylandServer PRIVATE
     EGL_NO_PLATFORM_SPECIFIC_TYPES
 )
 
-set_target_properties(KWaylandServer PROPERTIES VERSION   ${KWAYLANDSERVER_VERSION_STRING}
+set_target_properties(KWaylandServer PROPERTIES VERSION   ${KWAYLANDSERVER_VERSION}
                                                 SOVERSION ${KWAYLANDSERVER_SOVERSION}
 )
 
