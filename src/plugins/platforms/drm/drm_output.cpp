@@ -523,14 +523,14 @@ void DrmOutput::updateTransform(Transform transform)
 
 void DrmOutput::updateMode(uint32_t width, uint32_t height, uint32_t refreshRate)
 {
-    if (m_mode.hdisplay == width && m_mode.vdisplay == height && m_mode.vrefresh == refreshRate) {
+    if (m_mode.hdisplay == width && m_mode.vdisplay == height && refreshRateForMode(&m_mode) == refreshRate) {
         return;
     }
     // try to find a fitting mode
     DrmScopedPointer<drmModeConnector> connector(drmModeGetConnectorCurrent(m_gpu->fd(), m_conn->id()));
     for (int i = 0; i < connector->count_modes; i++) {
         auto mode = connector->modes[i];
-        if (mode.hdisplay == width && mode.vdisplay == height && mode.vrefresh == refreshRate) {
+        if (mode.hdisplay == width && mode.vdisplay == height && refreshRateForMode(&mode) == refreshRate) {
             updateMode(i);
             return;
         }
