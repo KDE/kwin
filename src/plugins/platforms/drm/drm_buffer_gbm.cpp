@@ -32,11 +32,17 @@ GbmBuffer::GbmBuffer(const QSharedPointer<GbmSurface> &surface)
     : m_surface(surface)
 {
     m_bo = m_surface->lockFrontBuffer();
+    if (m_bo) {
+        m_stride = gbm_bo_get_stride(m_bo);
+    } else {
+        qCWarning(KWIN_DRM) << "failed to lock front buffer!" << strerror(errno);
+    }
 }
 
 GbmBuffer::GbmBuffer(gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface)
     : m_bo(buffer)
     , m_bufferInterface(bufferInterface)
+    , m_stride(gbm_bo_get_stride(m_bo))
 {
     if (m_bufferInterface) {
         m_bufferInterface->ref();
@@ -54,12 +60,30 @@ void GbmBuffer::releaseBuffer()
     if (m_bufferInterface) {
         clearBufferInterface();
     }
-    if (m_surface && m_bo) {
+    if (!m_bo) {
+        return;
+    }
+    if (m_mapping) {
+        gbm_bo_unmap(m_bo, m_mapping);
+    }
+    if (m_surface) {
         m_surface->releaseBuffer(m_bo);
-    } else if (m_bo) {
+    } else {
         gbm_bo_destroy(m_bo);
     }
     m_bo = nullptr;
+}
+
+bool GbmBuffer::map(uint32_t flags)
+{
+    if (m_data) {
+        return true;
+    }
+    if (!m_bo) {
+        return false;
+    }
+    m_data = gbm_bo_map(m_bo, 0, 0, gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo), flags, &m_stride, &m_mapping);
+    return m_data;
 }
 
 void GbmBuffer::clearBufferInterface()

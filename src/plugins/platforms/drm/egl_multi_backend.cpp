@@ -97,14 +97,8 @@ PlatformSurfaceTexture *EglMultiBackend::createPlatformSurfaceTextureWayland(Sur
 
 QSharedPointer<GLTexture> EglMultiBackend::textureForOutput(AbstractOutput *requestedOutput) const
 {
-    // this assumes that the wrong backends return {}
-    for (auto backend : qAsConst(m_backends)) {
-        auto texture = backend->textureForOutput(requestedOutput);
-        if (!texture.isNull()) {
-            return texture;
-        }
-    }
-    return {};
+    // this assumes that all outputs are rendered on backend 0
+    return m_backends[0]->textureForOutput(requestedOutput);
 }
 
 void EglMultiBackend::screenGeometryChanged(const QSize &size)
