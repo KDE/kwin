@@ -60,7 +60,9 @@ public:
     QImage *image() const {
         return m_image;
     }
-
+    void *data() const {
+        return m_memory;
+    }
     quint32 stride() const {
         return m_stride;
     }

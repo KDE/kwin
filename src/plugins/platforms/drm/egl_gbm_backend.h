@@ -29,6 +29,7 @@ class DrmGbmBuffer;
 class DrmOutput;
 class GbmSurface;
 class GbmBuffer;
+class DumbSwapchain;
 
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
@@ -54,8 +55,10 @@ public:
 
     void addOutput(DrmOutput *output) override;
     void removeOutput(DrmOutput *output) override;
-    int getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32_t *format, uint32_t *stride) override;
-    QRegion beginFrameForSecondaryGpu(AbstractOutput *output) override;
+    bool swapBuffers(DrmOutput *output) override;
+    bool exportFramebuffer(DrmOutput *output, void *data, const QSize &size, uint32_t stride) override;
+    int exportFramebufferAsDmabuf(DrmOutput *output, uint32_t *format, uint32_t *stride) override;
+    QRegion beginFrameForSecondaryGpu(DrmOutput *output) override;
 
     bool directScanoutAllowed(int screen) const override;
 
@@ -68,9 +71,13 @@ private:
     bool initBufferConfigs();
     bool initRenderingContext();
 
+    enum class ImportMode {
+        Dmabuf,
+        DumbBuffer
+    };
     struct Output {
         DrmOutput *output = nullptr;
-        QSharedPointer<DrmGbmBuffer> buffer;
+        QSharedPointer<DrmBuffer> buffer;
         QSharedPointer<GbmBuffer> secondaryBuffer;
         QSharedPointer<GbmSurface> gbmSurface;
         EGLSurface eglSurface = EGL_NO_SURFACE;
@@ -87,6 +94,8 @@ private:
         } render;
 
         KWaylandServer::SurfaceInterface *surfaceInterface = nullptr;
+        ImportMode importMode = ImportMode::Dmabuf;
+        QSharedPointer<DumbSwapchain> importSwapchain;
     };
 
     bool resetOutput(Output &output, DrmOutput *drmOutput);
@@ -101,6 +110,7 @@ private:
     void prepareRenderFramebuffer(const Output &output) const;
     void renderFramebufferToSurface(Output &output);
     QRegion prepareRenderingForOutput(Output &output) const;
+    void importFramebuffer(Output &output) const;
 
     bool presentOnOutput(Output &output, const QRegion &damagedRegion);
     bool directScanoutActive(const Output &output);

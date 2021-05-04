@@ -13,6 +13,7 @@ set(DRM_SOURCES
     drm_gpu.cpp
     egl_multi_backend.cpp
     abstract_egl_drm_backend.cpp
+    dumb_swapchain.cpp
 )
 
 if (HAVE_GBM)

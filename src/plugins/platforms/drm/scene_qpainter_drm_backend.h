@@ -14,6 +14,8 @@
 #include <QVector>
 #include <QSharedPointer>
 
+#include "dumb_swapchain.h"
+
 namespace KWin
 {
 
@@ -36,9 +38,8 @@ public:
 private:
     void initOutput(DrmOutput *output);
     struct Output {
-        QSharedPointer<DrmDumbBuffer> buffer[2];
         DrmOutput *output;
-        int index = 0;
+        QSharedPointer<DumbSwapchain> swapchain;
     };
     QVector<Output> m_outputs;
     DrmBackend *m_backend;

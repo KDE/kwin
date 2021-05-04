@@ -44,12 +44,9 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu)
 void DrmQPainterBackend::initOutput(DrmOutput *output)
 {
     Output o;
-    auto initBuffer = [&o, output, this] (int index) {
-        o.buffer[index] = QSharedPointer<DrmDumbBuffer>::create(m_gpu, output->pixelSize());
-        if (o.buffer[index]->map()) {
-            o.buffer[index]->image()->fill(Qt::black);
-        }
-    };
+    o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize());
+    o.output = output;
+    m_outputs << o;
     connect(output, &DrmOutput::modeChanged, this,
         [output, this] {
             auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
@@ -60,26 +57,14 @@ void DrmQPainterBackend::initOutput(DrmOutput *output)
             if (it == m_outputs.end()) {
                 return;
             }
-            auto initBuffer = [it, output, this] (int index) {
-                it->buffer[index] = QSharedPointer<DrmDumbBuffer>::create(m_gpu, output->pixelSize());
-                if (it->buffer[index]->map()) {
-                    it->buffer[index]->image()->fill(Qt::black);
-                }
-            };
-            initBuffer(0);
-            initBuffer(1);
+            it->swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize());
         }
     );
-    initBuffer(0);
-    initBuffer(1);
-    o.output = output;
-    m_outputs << o;
 }
 
 QImage *DrmQPainterBackend::bufferForScreen(int screenId)
 {
-    const Output &o = m_outputs.at(screenId);
-    return o.buffer[o.index]->image();
+    return m_outputs[screenId].swapchain->currentBuffer()->image();
 }
 
 bool DrmQPainterBackend::needsFullRepaint(int screenId) const
@@ -90,8 +75,7 @@ bool DrmQPainterBackend::needsFullRepaint(int screenId) const
 
 void DrmQPainterBackend::beginFrame(int screenId)
 {
-    Output &rendererOutput = m_outputs[screenId];
-    rendererOutput.index = (rendererOutput.index + 1) % 2;
+    m_outputs[screenId].swapchain->acquireBuffer();
 }
 
 void DrmQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
@@ -102,7 +86,7 @@ void DrmQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
     const Output &rendererOutput = m_outputs[screenId];
     DrmOutput *drmOutput = rendererOutput.output;
 
-    if (!drmOutput->present(rendererOutput.buffer[rendererOutput.index])) {
+    if (!drmOutput->present(rendererOutput.swapchain->currentBuffer())) {
         RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
         renderLoopPrivate->notifyFrameFailed();
     }

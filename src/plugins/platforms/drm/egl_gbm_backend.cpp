@@ -20,6 +20,7 @@
 #include "surfaceitem_wayland.h"
 #include "drm_gpu.h"
 #include "linux_dmabuf.h"
+#include "dumb_swapchain.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwineglimagetexture.h>
@@ -74,6 +75,7 @@ void EglGbmBackend::cleanupOutput(Output &output)
     if (output.eglSurface != EGL_NO_SURFACE) {
         // gbm buffers have to be released before destroying the egl surface
         output.output->releaseGbm();
+        output.secondaryBuffer = nullptr;
         eglDestroySurface(eglDisplay(), output.eglSurface);
     }
 }
@@ -202,6 +204,7 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
     if (output.eglSurface != EGL_NO_SURFACE) {
         // gbm buffers have to be released before destroying the egl surface
         output.output->releaseGbm();
+        output.secondaryBuffer = nullptr;
         eglDestroySurface(eglDisplay(), output.eglSurface);
     }
     output.eglSurface = eglSurface;
@@ -259,7 +262,54 @@ void EglGbmBackend::removeOutput(DrmOutput *drmOutput)
     outputs.erase(it);
 }
 
-int EglGbmBackend::getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32_t *format, uint32_t *stride)
+bool EglGbmBackend::swapBuffers(DrmOutput *drmOutput)
+{
+    auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
+        [drmOutput] (const Output &output) {
+            return output.output == drmOutput;
+        }
+    );
+    if (it == m_secondaryGpuOutputs.end()) {
+        return false;
+    }
+    renderFramebufferToSurface(*it);
+    auto error = eglSwapBuffers(eglDisplay(), it->eglSurface);
+    if (error != EGL_TRUE) {
+        qCDebug(KWIN_DRM) << "an error occurred while swapping buffers" << error;
+        it->secondaryBuffer = nullptr;
+        return false;
+    }
+    it->secondaryBuffer = QSharedPointer<GbmBuffer>::create(it->gbmSurface);
+    if (it->secondaryBuffer->getBo()) {
+        return true;
+    } else {
+        it->secondaryBuffer = nullptr;
+        return false;
+    }
+}
+
+bool EglGbmBackend::exportFramebuffer(DrmOutput *drmOutput, void *data, const QSize &size, uint32_t stride)
+{
+    auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
+        [drmOutput] (const Output &output) {
+            return output.output == drmOutput;
+        }
+    );
+    if (it == m_secondaryGpuOutputs.end()) {
+        return false;
+    }
+
+    if (!it->secondaryBuffer || !it->secondaryBuffer->map(GBM_BO_TRANSFER_READ)) {
+        return false;
+    }
+    if (stride != it->secondaryBuffer->stride()) {
+        // shouldn't happen if formats are the same
+        return false;
+    }
+    return memcpy(data, it->secondaryBuffer->mappedData(), size.height() * stride);
+}
+
+int EglGbmBackend::exportFramebufferAsDmabuf(DrmOutput *output, uint32_t *format, uint32_t *stride)
 {
     DrmOutput *drmOutput = static_cast<DrmOutput*>(output);
     auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
@@ -270,14 +320,6 @@ int EglGbmBackend::getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32
     if (it == m_secondaryGpuOutputs.end()) {
         return -1;
     }
-    renderFramebufferToSurface(*it);
-    auto error = eglSwapBuffers(eglDisplay(), it->eglSurface);
-    if (error != EGL_TRUE) {
-        qCDebug(KWIN_DRM) << "an error occurred while swapping buffers" << error;
-        it->secondaryBuffer = nullptr;
-        return -1;
-    }
-    it->secondaryBuffer = QSharedPointer<GbmBuffer>::create(it->gbmSurface);
     int fd = gbm_bo_get_fd(it->secondaryBuffer->getBo());
     if (fd == -1) {
         qCDebug(KWIN_DRM) << "failed to export gbm_bo as dma-buf!";
@@ -288,9 +330,8 @@ int EglGbmBackend::getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32
     return fd;
 }
 
-QRegion EglGbmBackend::beginFrameForSecondaryGpu(AbstractOutput *output)
+QRegion EglGbmBackend::beginFrameForSecondaryGpu(DrmOutput *drmOutput)
 {
-    DrmOutput *drmOutput = static_cast<DrmOutput*>(output);
     auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
         [drmOutput] (const Output &output) {
             return output.output == drmOutput;
@@ -300,6 +341,56 @@ QRegion EglGbmBackend::beginFrameForSecondaryGpu(AbstractOutput *output)
         return QRegion();
     }
     return prepareRenderingForOutput(*it);
+}
+
+void EglGbmBackend::importFramebuffer(Output &output) const
+{
+    if (!renderingBackend()->swapBuffers(output.output)) {
+        qCWarning(KWIN_DRM) << "swapping buffers failed on output" << output.output;
+        return;
+    }
+    output.buffer = nullptr;
+    const auto size = output.output->modeSize();
+    if (output.importMode == ImportMode::Dmabuf) {
+        uint32_t stride = 0;
+        uint32_t format = 0;
+        int fd = renderingBackend()->exportFramebufferAsDmabuf(output.output, &format, &stride);
+        if (fd != -1) {
+            struct gbm_import_fd_data data = {};
+            data.fd = fd;
+            data.width = (uint32_t) size.width();
+            data.height = (uint32_t) size.height();
+            data.stride = stride;
+            data.format = format;
+            gbm_bo *importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT | GBM_BO_USE_LINEAR);
+            close(fd);
+            if (importedBuffer) {
+                auto buffer = QSharedPointer<DrmGbmBuffer>::create(m_gpu, importedBuffer, nullptr);
+                if (buffer->bufferId() > 0) {
+                    output.buffer = buffer;
+                    return;
+                }
+            }
+        }
+        qCDebug(KWIN_DRM) << "import with dmabuf failed! Switching to CPU import on output" << output.output;
+        output.importMode = ImportMode::DumbBuffer;
+    }
+    // ImportMode::DumbBuffer
+    if (!output.importSwapchain || output.importSwapchain->size() != size) {
+        output.importSwapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, size);
+        if (output.importSwapchain->isEmpty()) {
+            output.importSwapchain = nullptr;
+        }
+    }
+    if (output.importSwapchain) {
+        auto buffer = output.importSwapchain->acquireBuffer();
+        if (renderingBackend()->exportFramebuffer(output.output, buffer->data(), size, buffer->stride())) {
+            output.buffer = buffer;
+            return;
+        }
+    }
+    qCWarning(KWIN_DRM) << "all imports failed on output" << output.output;
+    // TODO turn off output?
 }
 
 const float vertices[] = {
@@ -375,81 +466,58 @@ void EglGbmBackend::initRenderTarget(Output &output)
 
 void EglGbmBackend::renderFramebufferToSurface(Output &output)
 {
-    if (!output.render.framebuffer && isPrimary()) {
+    if (!output.render.framebuffer) {
         // No additional render target.
         return;
     }
+    makeContextCurrent(output);
+
     const auto size = output.output->modeSize();
-    if (isPrimary()) {
-        // primary GPU
-        makeContextCurrent(output);
+    glViewport(0, 0, size.width(), size.height());
 
-        glViewport(0, 0, size.width(), size.height());
+    auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
 
-        auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+    QMatrix4x4 mvpMatrix;
 
-        QMatrix4x4 mvpMatrix;
-
-        const DrmOutput *drmOutput = output.output;
-        switch (drmOutput->transform()) {
-        case DrmOutput::Transform::Normal:
-        case DrmOutput::Transform::Flipped:
-            break;
-        case DrmOutput::Transform::Rotated90:
-        case DrmOutput::Transform::Flipped90:
-            mvpMatrix.rotate(90, 0, 0, 1);
-            break;
-        case DrmOutput::Transform::Rotated180:
-        case DrmOutput::Transform::Flipped180:
-            mvpMatrix.rotate(180, 0, 0, 1);
-            break;
-        case DrmOutput::Transform::Rotated270:
-        case DrmOutput::Transform::Flipped270:
-            mvpMatrix.rotate(270, 0, 0, 1);
-            break;
-        }
-        switch (drmOutput->transform()) {
-        case DrmOutput::Transform::Flipped:
-        case DrmOutput::Transform::Flipped90:
-        case DrmOutput::Transform::Flipped180:
-        case DrmOutput::Transform::Flipped270:
-            mvpMatrix.scale(-1, 1);
-            break;
-        default:
-            break;
-        }
-
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
-
-        initRenderTarget(output);
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        GLRenderTarget::setKWinFramebuffer(0);
-        glBindTexture(GL_TEXTURE_2D, output.render.texture);
-        output.render.vbo->render(GL_TRIANGLES);
-        ShaderManager::instance()->popShader();
-        glBindTexture(GL_TEXTURE_2D, 0);
-    } else {
-        // secondary GPU: render on primary and import framebuffer
-        uint32_t stride = 0;
-        uint32_t format = 0;
-        int fd = renderingBackend()->getDmabufForSecondaryGpuOutput(output.output, &format, &stride);
-        if (fd != -1) {
-            struct gbm_import_fd_data data = {};
-            data.fd = fd;
-            data.width = (uint32_t) size.width();
-            data.height = (uint32_t) size.height();
-            data.stride = stride;
-            data.format = format;
-            if (gbm_bo *importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT | GBM_BO_USE_LINEAR)) {
-                output.buffer = QSharedPointer<DrmGbmBuffer>::create(m_gpu, importedBuffer, nullptr);
-            } else {
-                qCDebug(KWIN_DRM) << "failed to import dma-buf!" << strerror(errno);
-                output.buffer = nullptr;
-            }
-            close(fd);
-        }
+    const DrmOutput *drmOutput = output.output;
+    switch (drmOutput->transform()) {
+    case DrmOutput::Transform::Normal:
+    case DrmOutput::Transform::Flipped:
+        break;
+    case DrmOutput::Transform::Rotated90:
+    case DrmOutput::Transform::Flipped90:
+        mvpMatrix.rotate(90, 0, 0, 1);
+        break;
+    case DrmOutput::Transform::Rotated180:
+    case DrmOutput::Transform::Flipped180:
+        mvpMatrix.rotate(180, 0, 0, 1);
+        break;
+    case DrmOutput::Transform::Rotated270:
+    case DrmOutput::Transform::Flipped270:
+        mvpMatrix.rotate(270, 0, 0, 1);
+        break;
     }
+    switch (drmOutput->transform()) {
+    case DrmOutput::Transform::Flipped:
+    case DrmOutput::Transform::Flipped90:
+    case DrmOutput::Transform::Flipped180:
+    case DrmOutput::Transform::Flipped270:
+        mvpMatrix.scale(-1, 1);
+        break;
+    default:
+        break;
+    }
+
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
+
+    initRenderTarget(output);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    GLRenderTarget::setKWinFramebuffer(0);
+    glBindTexture(GL_TEXTURE_2D, output.render.texture);
+    output.render.vbo->render(GL_TRIANGLES);
+    ShaderManager::instance()->popShader();
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void EglGbmBackend::prepareRenderFramebuffer(const Output &output) const
@@ -585,7 +653,7 @@ bool EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion
         }
         output.buffer = QSharedPointer<DrmGbmBuffer>::create(m_gpu, output.gbmSurface);
     } else if (!output.buffer) {
-        qCDebug(KWIN_DRM) << "imported gbm_bo does not exist!";
+        qCDebug(KWIN_DRM) << "imported buffer does not exist!";
         return false;
     }
 
@@ -661,7 +729,11 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion,
     Output &output = m_outputs[screenId];
     DrmOutput *drmOutput = output.output;
 
-    renderFramebufferToSurface(output);
+    if (isPrimary()) {
+        renderFramebufferToSurface(output);
+    } else {
+        importFramebuffer(output);
+    }
 
     const QRegion dirty = damagedRegion.intersected(output.output->geometry());
     if (!presentOnOutput(output, dirty)) {
@@ -753,13 +825,20 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
 
 QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *abstractOutput) const
 {
-    const QVector<KWin::EglGbmBackend::Output>::const_iterator itOutput = std::find_if(m_outputs.begin(), m_outputs.end(),
+    auto itOutput = std::find_if(m_outputs.begin(), m_outputs.end(),
         [abstractOutput] (const auto &output) {
             return output.output == abstractOutput;
         }
     );
     if (itOutput == m_outputs.end()) {
-        return {};
+        itOutput = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
+            [abstractOutput] (const auto &output) {
+                return output.output == abstractOutput;
+            }
+        );
+        if (itOutput == m_secondaryGpuOutputs.end()) {
+            return {};
+        }
     }
 
     DrmOutput *drmOutput = itOutput->output;
@@ -769,7 +848,12 @@ QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *abstra
         return glTexture;
     }
 
-    EGLImageKHR image = eglCreateImageKHR(eglDisplay(), nullptr, EGL_NATIVE_PIXMAP_KHR, itOutput->buffer->getBo(), nullptr);
+    auto gbmBuffer = dynamic_cast<GbmBuffer*>(itOutput->buffer.data());
+    if (!gbmBuffer) {
+        qCWarning(KWIN_DRM) << "Failed to record frame: Dumb buffer used for presentation!";
+        return {};
+    }
+    EGLImageKHR image = eglCreateImageKHR(eglDisplay(), nullptr, EGL_NATIVE_PIXMAP_KHR, gbmBuffer->getBo(), nullptr);
     if (image == EGL_NO_IMAGE_KHR) {
         qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << glGetError();
         return {};

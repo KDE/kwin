@@ -40,10 +40,22 @@ public:
 
     void releaseBuffer();
 
+    bool map(uint32_t flags);
+    void *mappedData() const {
+        return m_data;
+    }
+    uint32_t stride() const {
+        return m_stride;
+    }
+
 protected:
     QSharedPointer<GbmSurface> m_surface;
     gbm_bo *m_bo = nullptr;
     KWaylandServer::BufferInterface *m_bufferInterface = nullptr;
+
+    void *m_data = nullptr;
+    void *m_mapping = nullptr;
+    uint32_t m_stride = 0;
 
     void clearBufferInterface();
 };
