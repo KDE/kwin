@@ -106,13 +106,16 @@ void PipeWireStream::onStreamParamChanged(void *data, uint32_t id, const struct 
 
 void PipeWireStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
 {
+    QSharedPointer<DmaBufTexture> dmabuf;
     PipeWireStream *stream = static_cast<PipeWireStream *>(data);
     struct spa_data *spa_data = buffer->buffer->datas;
 
     spa_data->mapoffset = 0;
     spa_data->flags = SPA_DATA_FLAG_READWRITE;
 
-    QSharedPointer<DmaBufTexture> dmabuf(kwinApp()->platform()->createDmaBufTexture(stream->m_resolution));
+    if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf))
+        dmabuf.reset(kwinApp()->platform()->createDmaBufTexture(stream->m_resolution));
+
     if (dmabuf) {
       spa_data->type = SPA_DATA_DmaBuf;
       spa_data->fd = dmabuf->fd();
@@ -122,6 +125,11 @@ void PipeWireStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
       stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuf);
 #ifdef F_SEAL_SEAL //Disable memfd on systems that don't have it, like BSD < 12
     } else {
+        if (!(spa_data[0].type & (1 << SPA_DATA_MemFd))) {
+            qCCritical(KWIN_SCREENCAST) << "memfd: Client doesn't support memfd buffer data type";
+            return;
+        }
+
         const int bytesPerPixel = stream->m_hasAlpha ? 4 : 3;
         const int stride = SPA_ROUND_UP_N (stream->m_resolution.width() * bytesPerPixel, 4);
         spa_data->maxsize = stride * stream->m_resolution.height();
@@ -341,7 +349,7 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
 
     const auto size = frameTexture->size();
     spa_data->chunk->offset = 0;
-    if (data) {
+    if (data || spa_data[0].type == SPA_DATA_MemFd) {
         const int bpp = data && !m_hasAlpha ? 3 : 4;
         const uint stride = SPA_ROUND_UP_N (size.width() * bpp, 4);
         const uint bufferSize = stride * size.height();
