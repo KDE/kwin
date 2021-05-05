@@ -279,7 +279,9 @@ RenderLoop::VrrPolicy Screens::vrrPolicy(int screen) const
     return RenderLoop::VrrPolicy::Never;
 #else
     if (auto output = findOutput(screen)) {
-        return output->renderLoop()->vrrPolicy();
+        if (auto waylandOutput = dynamic_cast<AbstractWaylandOutput *>(output)) {
+            return waylandOutput->vrrPolicy();
+        }
     }
     return RenderLoop::VrrPolicy::Never;
 #endif
