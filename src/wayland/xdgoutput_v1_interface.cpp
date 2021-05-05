@@ -112,20 +112,6 @@ XdgOutputV1Interface::XdgOutputV1Interface(OutputInterface *output, QObject *par
 
 XdgOutputV1Interface::~XdgOutputV1Interface()
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 2)
-    // Starting from 5.15.2, qtwaylandscanner properly handles destruction of inert/orphaned resources.
-
-    // Generated code typically cleans up resource objects when the client calls the relevant destructor
-    // In multi-cast mode our wrapper can be deleted at any time whilst a client resource exists.
-    // any existing resources that have a pending message will then crash the compositor.
-
-    // Deleting resources ahead of time also resolves this. calls to this resource will no-op
-    const QMultiMap<struct ::wl_client*, QtWaylandServer::zxdg_output_v1::Resource*> resourceMap = d->resourceMap();
-    for (auto resource : resourceMap)
-    {
-        wl_resource_destroy(resource->handle);
-    }
-#endif
 }
 
 void XdgOutputV1Interface::setLogicalSize(const QSize &size)
