@@ -121,7 +121,9 @@ void XdgOutputV1Interface::setLogicalSize(const QSize &size)
     }
     d->size = size;
     d->dirty = true;
-    for (auto resource : d->resourceMap()) {
+
+    const auto outputResources = d->resourceMap();
+    for (auto resource : outputResources) {
         d->send_logical_size(resource->handle, size.width(), size.height());
     }
 }
@@ -138,7 +140,9 @@ void XdgOutputV1Interface::setLogicalPosition(const QPoint &pos)
     }
     d->pos = pos;
     d->dirty = true;
-    for (auto resource : d->resourceMap()) {
+
+    const auto outputResources = d->resourceMap();
+    for (auto resource : outputResources) {
         d->send_logical_position(resource->handle, pos.x(), pos.y());
     }
 }
@@ -167,7 +171,9 @@ void XdgOutputV1Interface::done()
         return;
     }
     d->dirty = false;
-    for (auto resource : d->resourceMap()) {
+
+    const auto outputResources = d->resourceMap();
+    for (auto resource : outputResources) {
         if (wl_resource_get_version(resource->handle) < 3) {
             d->send_done(resource->handle);
         }
