@@ -31,12 +31,14 @@
 // KWayland
 #include <KWaylandServer/seat_interface.h>
 // KF5
-#include <KConfigGroup>
 #include <KCoreAddons>
 #include <KLocalizedString>
-#include <KSharedConfig>
 // Qt
 #include <QCryptographicHash>
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QSocketNotifier>
 // system
 #include <algorithm>
@@ -67,7 +69,6 @@ DrmBackend::DrmBackend(QObject *parent)
 
 DrmBackend::~DrmBackend()
 {
-    writeOutputsConfiguration();
     qDeleteAll(m_gpus);
 }
 
@@ -345,43 +346,87 @@ bool DrmBackend::updateOutputs()
     return true;
 }
 
-static QString transformToString(DrmOutput::Transform transform)
+namespace KWinKScreenIntegration
 {
-    switch (transform) {
-    case DrmOutput::Transform::Normal:
-        return QStringLiteral("normal");
-    case DrmOutput::Transform::Rotated90:
-        return QStringLiteral("rotate-90");
-    case DrmOutput::Transform::Rotated180:
-        return QStringLiteral("rotate-180");
-    case DrmOutput::Transform::Rotated270:
-        return QStringLiteral("rotate-270");
-    case DrmOutput::Transform::Flipped:
-        return QStringLiteral("flip");
-    case DrmOutput::Transform::Flipped90:
-        return QStringLiteral("flip-90");
-    case DrmOutput::Transform::Flipped180:
-        return QStringLiteral("flip-180");
-    case DrmOutput::Transform::Flipped270:
-        return QStringLiteral("flip-270");
-    default:
-        return QStringLiteral("normal");
+    /// See KScreen::Output::hashMd5
+    QString outputHash(DrmOutput *output)
+    {
+        QCryptographicHash hash(QCryptographicHash::Md5);
+        if (!output->edid().isEmpty()) {
+            hash.addData(output->edid());
+        } else {
+            hash.addData(output->name().toLatin1());
+        }
+        return QString::fromLatin1(hash.result().toHex());
     }
-}
 
-static DrmOutput::Transform stringToTransform(const QString &text)
-{
-    static const QHash<QString, DrmOutput::Transform> stringToTransform {
-        { QStringLiteral("normal"),     DrmOutput::Transform::Normal },
-        { QStringLiteral("rotate-90"),  DrmOutput::Transform::Rotated90 },
-        { QStringLiteral("rotate-180"), DrmOutput::Transform::Rotated180 },
-        { QStringLiteral("rotate-270"), DrmOutput::Transform::Rotated270 },
-        { QStringLiteral("flip"),       DrmOutput::Transform::Flipped },
-        { QStringLiteral("flip-90"),    DrmOutput::Transform::Flipped90 },
-        { QStringLiteral("flip-180"),   DrmOutput::Transform::Flipped180 },
-        { QStringLiteral("flip-270"),   DrmOutput::Transform::Flipped270 }
+    /// See KScreen::Config::connectedOutputsHash in libkscreen
+    QString connectedOutputsHash(const QVector<DrmOutput*> &outputs)
+    {
+        QStringList hashedOutputs;
+        hashedOutputs.reserve(outputs.count());
+        for (auto output : qAsConst(outputs)) {
+            hashedOutputs << outputHash(output);
+        }
+        std::sort(hashedOutputs.begin(), hashedOutputs.end());
+        const auto hash = QCryptographicHash::hash(hashedOutputs.join(QString()).toLatin1(), QCryptographicHash::Md5);
+        return QString::fromLatin1(hash.toHex());
+    }
+
+    QMap<DrmOutput*, QJsonObject> outputsConfig(const QVector<DrmOutput*> &outputs)
+    {
+        const QString kscreenJsonPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/") % connectedOutputsHash(outputs));
+        QFile f(kscreenJsonPath);
+        if (!f.open(QIODevice::ReadOnly)) {
+            qCWarning(KWIN_DRM) << "Could not open file" << kscreenJsonPath;
+            return {};
+        }
+
+        QJsonParseError error;
+        const auto doc = QJsonDocument::fromJson(f.readAll(), &error);
+        if (error.error != QJsonParseError::NoError) {
+            qCWarning(KWIN_DRM) << "Failed to parse" << kscreenJsonPath << error.errorString();
+            return {};
+        }
+
+        QMap<DrmOutput*, QJsonObject> ret;
+        const auto outputsJson = doc.array();
+        for (const auto &outputJson : outputsJson) {
+            const auto outputObject = outputJson.toObject();
+            for (auto it = outputs.constBegin(), itEnd = outputs.constEnd(); it != itEnd; ) {
+                if (!ret.contains(*it) && outputObject["id"] == outputHash(*it)) {
+                    ret[*it] = outputObject;
+                    continue;
+                }
+                ++it;
+            }
+        }
+        return ret;
+    }
+
+    /// See KScreen::Output::Rotation
+    enum Rotation {
+        None = 1,
+        Left = 2,
+        Inverted = 4,
+        Right = 8,
     };
-    return stringToTransform.value(text, DrmOutput::Transform::Normal);
+
+    DrmOutput::Transform toDrmTransform(int rotation)
+    {
+        switch (Rotation(rotation)) {
+        case None:
+            return DrmOutput::Transform::Normal;
+        case Left:
+            return DrmOutput::Transform::Rotated90;
+        case Inverted:
+            return DrmOutput::Transform::Rotated180;
+        case Right:
+            return DrmOutput::Transform::Rotated270;
+        default:
+            Q_UNREACHABLE();
+        }
+    }
 }
 
 void DrmBackend::readOutputsConfiguration()
@@ -389,70 +434,31 @@ void DrmBackend::readOutputsConfiguration()
     if (m_outputs.isEmpty()) {
         return;
     }
-    const QString uuid = generateOutputConfigurationUuid();
-    const auto outputGroup = kwinApp()->config()->group("DrmOutputs");
-    const auto configGroup = outputGroup.group(uuid);
+    const auto outputsInfo = KWinKScreenIntegration::outputsConfig(m_outputs);
+
     // default position goes from left to right
     QPoint pos(0, 0);
     for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
-        qCDebug(KWIN_DRM) << "Reading output configuration for [" << uuid << "] ["<< (*it)->uuid() << "]";
-        const auto outputConfig = configGroup.group((*it)->uuid().toString(QUuid::WithoutBraces));
-        (*it)->setGlobalPos(outputConfig.readEntry<QPoint>("Position", pos));
-        if (outputConfig.hasKey("Scale"))
-            (*it)->setScale(outputConfig.readEntry("Scale", 1.0));
-        (*it)->setTransformInternal(stringToTransform(outputConfig.readEntry("Transform", "normal")));
-        pos.setX(pos.x() + (*it)->geometry().width());
-        if (outputConfig.hasKey("Mode")) {
-            QString mode = outputConfig.readEntry("Mode");
-            QStringList list = mode.split("_");
-            if (list.size() > 1) {
-                QStringList size = list[0].split("x");
-                if (size.size() > 1) {
-                    int width = size[0].toInt();
-                    int height = size[1].toInt();
-                    int refreshRate = list[1].toInt();
-                    (*it)->updateMode(width, height, refreshRate);
-                }
+        const QJsonObject outputInfo = outputsInfo[*it];
+        qCDebug(KWIN_DRM) << "Reading output configuration for " << *it;
+        if (!outputInfo.isEmpty()) {
+            const QJsonObject pos = outputInfo["pos"].toObject();
+            (*it)->setGlobalPos({pos["x"].toInt(), pos["y"].toInt()});
+            if (const QJsonValue scale = outputInfo["scale"]; !scale.isUndefined()) {
+                (*it)->setScale(scale.toDouble(1.));
             }
+            (*it)->setTransformInternal(KWinKScreenIntegration::toDrmTransform(outputInfo["rotation"].toInt()));
+
+            if (const QJsonObject mode = outputInfo["mode"].toObject(); !mode.isEmpty()) {
+                const QJsonObject size = mode["size"].toObject();
+                (*it)->updateMode(size["width"].toInt(), size["height"].toInt(), mode["refresh"].toDouble() * 1000);
+            }
+        } else {
+            (*it)->setGlobalPos(pos);
+            (*it)->setTransformInternal(DrmOutput::Transform::Normal);
         }
+        pos.setX(pos.x() + (*it)->geometry().width());
     }
-}
-
-void DrmBackend::writeOutputsConfiguration()
-{
-    if (m_outputs.isEmpty()) {
-        return;
-    }
-    const QString uuid = generateOutputConfigurationUuid();
-    auto configGroup = KSharedConfig::openConfig()->group("DrmOutputs").group(uuid);
-    // default position goes from left to right
-    for (auto it = m_outputs.cbegin(); it != m_outputs.cend(); ++it) {
-        qCDebug(KWIN_DRM) << "Writing output configuration for [" << uuid << "] ["<< (*it)->uuid() << "]";
-        auto outputConfig = configGroup.group((*it)->uuid().toString(QUuid::WithoutBraces));
-        outputConfig.writeEntry("Scale", (*it)->scale());
-        outputConfig.writeEntry("Transform", transformToString((*it)->transform()));
-        QString mode;
-        mode += QString::number((*it)->modeSize().width());
-        mode += "x";
-        mode += QString::number((*it)->modeSize().height());
-        mode += "_";
-        mode += QString::number((*it)->refreshRate());
-        outputConfig.writeEntry("Mode", mode);
-    }
-}
-
-QString DrmBackend::generateOutputConfigurationUuid() const
-{
-    auto it = m_outputs.constBegin();
-    if (m_outputs.size() == 1) {
-        // special case: one output
-        return (*it)->uuid().toString(QUuid::WithoutBraces);
-    }
-    QCryptographicHash hash(QCryptographicHash::Md5);
-    for (const DrmOutput *output: qAsConst(m_outputs)) {
-        hash.addData(output->uuid().toByteArray());
-    }
-    return QString::fromLocal8Bit(hash.result().toHex().left(10));
 }
 
 void DrmBackend::enableOutput(DrmOutput *output, bool enable)

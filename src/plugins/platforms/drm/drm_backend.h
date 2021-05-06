@@ -89,8 +89,6 @@ private:
     void moveCursor();
     void initCursor();
     void readOutputsConfiguration();
-    void writeOutputsConfiguration();
-    QString generateOutputConfigurationUuid() const;
     void handleUdevEvent();
     DrmGpu *addGpu(const QString &fileName);
 
