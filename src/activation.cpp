@@ -476,7 +476,6 @@ bool Workspace::activateNextClient(AbstractClient* c)
             auto leaders = c->mainClients();
             if (leaders.count() == 1 && FocusChain::self()->isUsableFocusCandidate(leaders.at(0), c)) {
                 get_focus = leaders.at(0);
-                raiseClient(get_focus);   // also raise - we don't know where it came from
             }
         }
         if (!get_focus) {
@@ -488,10 +487,7 @@ bool Workspace::activateNextClient(AbstractClient* c)
     if (get_focus == nullptr)   // last chance: focus the desktop
         get_focus = findDesktop(true, desktop);
 
-    if (get_focus != nullptr)
-        requestFocus(get_focus);
-    else
-        focusToNull();
+    activateClient(get_focus);
 
     return true;
 
