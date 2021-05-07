@@ -316,6 +316,9 @@
     </group>
     <group name="Wayland">
         <entry name="InputMethod" type="Path" />
+        <entry name="DoubleTapWakeup" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
     <group name="Xwayland">
         <entry name="XwaylandCrashPolicy" type="Enum">
