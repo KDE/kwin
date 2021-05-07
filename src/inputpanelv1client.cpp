@@ -69,7 +69,12 @@ void KWin::InputPanelV1Client::reposition()
                     return;
                 }
 
-                const QRect availableArea = workspace()->clientArea(MaximizeArea, m_output, desktop());
+                QRect availableArea;
+                if (waylandServer()->isScreenLocked()) {
+                    availableArea = m_output->geometry();
+                } else {
+                    availableArea = workspace()->clientArea(MaximizeArea, m_output, desktop());
+                }
                 QRect geo(availableArea.topLeft(), panelSize);
                 geo.translate((availableArea.width() - panelSize.width())/2, availableArea.height() - panelSize.height());
                 updateGeometry(geo);
