@@ -837,11 +837,18 @@ void InternalWindowTest::testDismissPopup()
     auto serverPopup = clientAddedSpy.last().first().value<InternalClient *>();
     QVERIFY(serverPopup);
 
+    //Create the other window to click
+    HelperWindow otherClientToplevel;
+    otherClientToplevel.setGeometry(100, 100, 100, 100);
+    otherClientToplevel.show();
+    QTRY_COMPARE(clientAddedSpy.count(), 3);
+    auto serverOtherToplevel = clientAddedSpy.last().first().value<InternalClient *>();
+    QVERIFY(serverOtherToplevel);
+
     // Click somewhere outside the popup window.
     QSignalSpy popupClosedSpy(serverPopup, &InternalClient::windowClosed);
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerMotion(QPointF(serverPopup->x() + serverPopup->width() + 1,
-                                                 serverPopup->y() + serverPopup->height() + 1),
+    kwinApp()->platform()->pointerMotion(serverOtherToplevel->frameGeometry().center(),
                                          timestamp++);
     kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
     QTRY_COMPARE(popupClosedSpy.count(), 1);
