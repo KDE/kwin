@@ -373,10 +373,7 @@ void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
     commitGeometry(QRect(pos(), clientSizeToFrameSize(bufferSize)));
     markAsMapped();
 
-    if (m_internalFBO != fbo) {
-        discardWindowPixmap();
-        m_internalFBO = fbo;
-    }
+    m_internalFBO = fbo;
 
     setDepth(32);
     surfaceItem()->addDamage(surfaceItem()->rect());
@@ -390,10 +387,6 @@ void InternalClient::present(const QImage &image, const QRegion &damage)
 
     commitGeometry(QRect(pos(), clientSizeToFrameSize(bufferSize)));
     markAsMapped();
-
-    if (m_internalImage.size() != image.size()) {
-        discardWindowPixmap();
-    }
 
     m_internalImage = image;
 
