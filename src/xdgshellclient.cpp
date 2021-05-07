@@ -1633,7 +1633,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
             emit c->maximizedHorizontallyChanged(m_requestedMaximizeMode & MaximizeHorizontal);
         }
         if ((m_requestedMaximizeMode == MaximizeFull) != (oldMode == MaximizeFull)) {
-            emit c->maximizedChanged(m_requestedMaximizeMode & MaximizeFull);
+            emit c->maximizedChanged(m_requestedMaximizeMode == MaximizeFull);
         }
         changeMaximizeRecursion = false;
     }

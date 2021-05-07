@@ -4272,7 +4272,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
             emit c->maximizedHorizontallyChanged(max_mode & MaximizeHorizontal);
         }
         if ((max_mode == MaximizeFull) != (old_mode == MaximizeFull)) {
-            emit c->maximizedChanged(max_mode & MaximizeFull);
+            emit c->maximizedChanged(max_mode == MaximizeFull);
         }
         changeMaximizeRecursion = false;
     }
