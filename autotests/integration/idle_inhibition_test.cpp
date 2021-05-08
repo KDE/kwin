@@ -52,7 +52,7 @@ void TestIdleInhibition::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    waylandServer()->initWorkspace();
+    Test::initWaylandWorkspace();
 }
 
 void TestIdleInhibition::init()

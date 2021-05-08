@@ -56,7 +56,7 @@ void KWinBindingsTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    waylandServer()->initWorkspace();
+    Test::initWaylandWorkspace();
 }
 
 void KWinBindingsTest::init()

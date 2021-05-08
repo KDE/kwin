@@ -71,7 +71,7 @@ void DontCrashCursorPhysicalSizeEmpty::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    waylandServer()->initWorkspace();
+    Test::initWaylandWorkspace();
 }
 
 void DontCrashCursorPhysicalSizeEmpty::testMoveCursorOverDeco()

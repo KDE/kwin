@@ -42,7 +42,7 @@ void ScreenChangesTest::initTestCase()
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     setenv("QT_QPA_PLATFORM", "wayland", true);
-    waylandServer()->initWorkspace();
+    Test::initWaylandWorkspace();
 }
 
 void ScreenChangesTest::init()

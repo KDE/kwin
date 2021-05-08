@@ -947,5 +947,12 @@ bool unlockScreen()
     return true;
 }
 
+void initWaylandWorkspace()
+{
+    QSignalSpy workspaceInitializedSpy(waylandServer(), &WaylandServer::initialized);
+    waylandServer()->initWorkspace();
+    QVERIFY(workspaceInitializedSpy.count() || workspaceInitializedSpy.wait());
+}
+
 }
 }

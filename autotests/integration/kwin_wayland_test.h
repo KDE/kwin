@@ -364,6 +364,9 @@ bool lockScreen();
  * @returns @c true if the screen could be unlocked, @c false otherwise
  */
 bool unlockScreen();
+
+void initWaylandWorkspace();
+
 }
 
 }

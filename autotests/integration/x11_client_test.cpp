@@ -66,7 +66,7 @@ void X11ClientTest::initTestCase()
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     QVERIFY(KWin::Compositor::self());
-    waylandServer()->initWorkspace();
+    Test::initWaylandWorkspace();
 }
 
 void X11ClientTest::init()

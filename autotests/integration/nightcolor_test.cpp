@@ -46,7 +46,7 @@ void NightColorTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    waylandServer()->initWorkspace();
+    Test::initWaylandWorkspace();
 
     NightColorManager *manager = NightColorManager::self();
     QVERIFY(manager);

@@ -67,7 +67,7 @@ void MinimizeAnimationTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    waylandServer()->initWorkspace();
+    Test::initWaylandWorkspace();
 
     auto scene = Compositor::self()->scene();
     QVERIFY(scene);

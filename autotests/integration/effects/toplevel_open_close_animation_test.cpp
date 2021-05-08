@@ -68,7 +68,7 @@ void ToplevelOpenCloseAnimationTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    waylandServer()->initWorkspace();
+    Test::initWaylandWorkspace();
 
     auto scene = KWin::Compositor::self()->scene();
     QVERIFY(scene);
