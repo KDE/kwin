@@ -200,7 +200,9 @@ void InputMethod::handleFocusedSurfaceChanged()
                 disconnect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
             }
             m_trackedClient = focusedClient;
-            connect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
+            if (m_trackedClient) {
+                connect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
+            }
         }
         updateInputPanelState();
     } else {
