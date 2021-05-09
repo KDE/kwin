@@ -473,38 +473,58 @@ void Workspace::restoreSessionStackingOrder(X11Client *c)
     unconstrained_stacking_order.append(c);
 }
 
+static Layer layerForClient(const X11Client *client)
+{
+    Layer layer = client->layer();
+
+    // Desktop windows cannot be promoted to upper layers.
+    if (layer == DesktopLayer) {
+        return layer;
+    }
+
+    if (const Group *group = client->group()) {
+        const auto members = group->members();
+        for (const X11Client *member : members) {
+            if (member == client) {
+                continue;
+            } else if (member->screen() != client->screen()) {
+                continue;
+            }
+            if (member->layer() > layer) {
+                layer = member->layer();
+            }
+        }
+    }
+
+    return layer;
+}
+
+static Layer computeLayer(const Toplevel *toplevel)
+{
+    if (auto client = qobject_cast<const X11Client *>(toplevel)) {
+        return layerForClient(client);
+    } else {
+        return toplevel->layer();
+    }
+}
+
 /**
  * Returns a stacking order based upon \a list that fulfills certain contained.
  */
 QList<Toplevel *> Workspace::constrainedStackingOrder()
-{
-    QList<Toplevel *> layer[ NumLayers ];
-
-    // build the order from layers
-    QVector< QMultiMap<Group*, Layer> > minimum_layer(screens()->count());
-    for (auto it = unconstrained_stacking_order.constBegin(),
-                                  end = unconstrained_stacking_order.constEnd(); it != end; ++it) {
-        Layer l = (*it)->layer();
-
-        const int screen = (*it)->screen();
-        X11Client *c = qobject_cast<X11Client *>(*it);
-        QMultiMap<Group*, Layer> &current = minimum_layer[screen];
-        QMultiMap<Group*, Layer>::iterator mLayer = current.find(c ? c->group() : nullptr);
-        if (mLayer != current.end()) {
-            // If a window is raised above some other window in the same window group
-            // which is in the ActiveLayer (i.e. it's fullscreened), make sure it stays
-            // above that window (see #95731).
-            if (*mLayer == ActiveLayer && (l > BelowLayer))
-                l = ActiveLayer;
-            *mLayer = l;
-        } else if (c) {
-            current.insert(c->group(), l);
-        }
-        layer[ l ].append(*it);
+{ 
+    // Sort the windows based on their layers while preserving their relative order in the
+    // unconstrained stacking order.
+    std::array<QList<Toplevel *>, NumLayers> windows;
+    for (Toplevel *window : qAsConst(unconstrained_stacking_order)) {
+        const Layer layer = computeLayer(window);
+        windows[layer] << window;
     }
+
     QList<Toplevel *> stacking;
-    for (int lay = FirstLayer; lay < NumLayers; ++lay) {
-        stacking += layer[lay];
+    stacking.reserve(unconstrained_stacking_order.count());
+    for (uint layer = FirstLayer; layer < NumLayers; ++layer) {
+        stacking += windows[layer];
     }
 
     // Apply the stacking order constraints. First, we enqueue the root constraints, i.e.
