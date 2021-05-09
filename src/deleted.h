@@ -84,72 +84,6 @@ public:
     }
 
     /**
-     *  Returns whether the client was active.
-     *
-     * @returns @c true if the client was active at the time when it was closed,
-     *   @c false otherwise
-     */
-    bool wasActive() const {
-        return m_wasActive;
-    }
-
-    /**
-     * Returns whether this was an X11 client.
-     *
-     * @returns @c true if it was an X11 client, @c false otherwise.
-     */
-    bool wasX11Client() const {
-        return m_wasX11Client;
-    }
-
-    /**
-     * Returns whether this was a Wayland client.
-     *
-     * @returns @c true if it was a Wayland client, @c false otherwise.
-     */
-    bool wasWaylandClient() const {
-        return m_wasWaylandClient;
-    }
-
-    /**
-     * Returns whether the client was a transient.
-     *
-     * @returns @c true if it was a transient, @c false otherwise.
-     */
-    bool wasTransient() const {
-        return !m_transientFor.isEmpty();
-    }
-
-    /**
-     * Returns whether the client was a group transient.
-     *
-     * @returns @c true if it was a group transient, @c false otherwise.
-     * @note This is relevant only for X11 clients.
-     */
-    bool wasGroupTransient() const {
-        return m_wasGroupTransient;
-    }
-
-    /**
-     * Checks whether this client was a transient for given toplevel.
-     *
-     * @param toplevel Toplevel against which we are testing.
-     * @returns @c true if it was a transient for given toplevel, @c false otherwise.
-     */
-    bool wasTransientFor(const Toplevel *toplevel) const {
-        return m_transientFor.contains(const_cast<Toplevel *>(toplevel));
-    }
-
-    /**
-     * Returns the list of transients.
-     *
-     * Because the window is Deleted, it can have only Deleted child transients.
-     */
-    QList<Deleted *> transients() const {
-        return m_transients;
-    }
-
-    /**
      * Returns whether the client was a popup.
      *
      * @returns @c true if the client was a popup, @c false otherwise.
@@ -169,17 +103,11 @@ public:
 
 private Q_SLOTS:
     void mainClientClosed(KWin::Toplevel *client);
-    void transientForClosed(Toplevel *toplevel, Deleted *deleted);
 
 private:
     Deleted();   // use create()
     void copyToDeleted(Toplevel* c);
     ~Deleted() override; // deleted only using unrefWindow()
-
-    void addTransient(Deleted *transient);
-    void removeTransient(Deleted *transient);
-    void addTransientFor(AbstractClient *parent);
-    void removeTransientFor(Deleted *parent);
 
     QRect m_bufferGeometry;
     QMargins m_frameMargins;
@@ -209,12 +137,6 @@ private:
     bool m_keepAbove;
     bool m_keepBelow;
     QString m_caption;
-    bool m_wasActive;
-    bool m_wasX11Client;
-    bool m_wasWaylandClient;
-    bool m_wasGroupTransient;
-    QList<Toplevel *> m_transientFor;
-    QList<Deleted *> m_transients;
     bool m_wasPopupWindow;
     bool m_wasOutline;
     bool m_wasDecorated;

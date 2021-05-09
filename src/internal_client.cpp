@@ -68,6 +68,22 @@ InternalClient::~InternalClient()
 {
 }
 
+bool InternalClient::hitTest(const QPoint &point) const
+{
+    if (!AbstractClient::hitTest(point)) {
+        return false;
+    }
+
+    const QRegion mask = m_internalWindow->mask();
+    if (!mask.isEmpty() && !mask.contains(mapToLocal(point))) {
+        return false;
+    } else if (m_internalWindow->property("outputOnly").toBool()) {
+        return false;
+    }
+
+    return true;
+}
+
 bool InternalClient::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == m_internalWindow && event->type() == QEvent::DynamicPropertyChange) {

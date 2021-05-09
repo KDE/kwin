@@ -464,16 +464,14 @@ void Workspace::cleanupX11()
     const QList<X11Client *> orderedClients = ensureStackingOrder(clients);
     for (X11Client *client : orderedClients) {
         client->releaseWindow(true);
-        unconstrained_stacking_order.removeOne(client);
-        stacking_order.removeOne(client);
+        removeFromStack(client);
     }
 
     // We need a shadow copy because windows get removed as we go through them.
     const QList<Unmanaged *> unmanaged = m_unmanaged;
     for (Unmanaged *overrideRedirect : unmanaged) {
         overrideRedirect->release(ReleaseReason::KWinShutsDown);
-        unconstrained_stacking_order.removeOne(overrideRedirect);
-        stacking_order.removeOne(overrideRedirect);
+        removeFromStack(overrideRedirect);
     }
 
     manual_overlays.clear();
@@ -538,6 +536,138 @@ void Workspace::setupClientConnections(AbstractClient *c)
     connect(c, &AbstractClient::minimizedChanged, this, std::bind(&Workspace::clientMinimizedChanged, this, c));
 }
 
+void Workspace::constrain(AbstractClient *below, AbstractClient *above)
+{
+    if (below == above) {
+        return;
+    }
+
+    QList<Constraint *> parents;
+    QList<Constraint *> children;
+    for (Constraint *constraint : qAsConst(m_constraints)) {
+        if (constraint->below == below && constraint->above == above) {
+            return;
+        }
+        if (constraint->below == above) {
+            children << constraint;
+        } else if (constraint->above == below) {
+            parents << constraint;
+        }
+    }
+
+    Constraint *constraint = new Constraint();
+    constraint->parents = parents;
+    constraint->below = below;
+    constraint->above = above;
+    constraint->children = children;
+    m_constraints << constraint;
+
+    for (Constraint *parent : qAsConst(parents)) {
+        parent->children << constraint;
+    }
+
+    for (Constraint *child : qAsConst(children)) {
+        child->parents << constraint;
+    }
+
+    markXStackingOrderAsDirty();
+    updateXStackingOrder();
+}
+
+void Workspace::unconstrain(AbstractClient *below, AbstractClient *above)
+{
+    Constraint *constraint = nullptr;
+    for (int i = 0; i < m_constraints.count(); ++i) {
+        if (m_constraints[i]->below == below && m_constraints[i]->above == above) {
+            constraint = m_constraints.takeAt(i);
+            break;
+        }
+    }
+
+    if (!constraint) {
+        return;
+    }
+
+    const QList<Constraint *> parents = constraint->parents;
+    for (Constraint *parent : parents) {
+        parent->children.removeOne(constraint);
+    }
+
+    const QList<Constraint *> children = constraint->children;
+    for (Constraint *child : children) {
+        child->parents.removeOne(constraint);
+    }
+
+    delete constraint;
+
+    markXStackingOrderAsDirty();
+    updateStackingOrder();
+}
+
+void Workspace::addToStack(Toplevel *toplevel)
+{
+    // If the stacking order of a window has been restored from the session, that
+    // toplevel will already be in the stack when Workspace::addClient() is called.
+    if (!unconstrained_stacking_order.contains(toplevel)) {
+        unconstrained_stacking_order.append(toplevel);
+    }
+    if (!stacking_order.contains(toplevel)) {
+        stacking_order.append(toplevel);
+    }
+}
+
+void Workspace::replaceInStack(Toplevel *original, Deleted *deleted)
+{
+    const int unconstraintedIndex = unconstrained_stacking_order.indexOf(original);
+    if (unconstraintedIndex != -1) {
+        unconstrained_stacking_order.replace(unconstraintedIndex, deleted);
+    } else {
+        // This can be the case only if an override-redirect window is unmapped.
+        unconstrained_stacking_order.append(deleted);
+    }
+
+    const int index = stacking_order.indexOf(original);
+    if (index != -1) {
+        stacking_order.replace(index, deleted);
+    } else {
+        // This can be the case only if an override-redirect window is unmapped.
+        stacking_order.append(deleted);
+    }
+
+    for (Constraint *constraint : qAsConst(m_constraints)) {
+        if (constraint->below == original) {
+            constraint->below = deleted;
+        } else if (constraint->above == original) {
+            constraint->above = deleted;
+        }
+    }
+}
+
+void Workspace::removeFromStack(Toplevel *toplevel)
+{
+    unconstrained_stacking_order.removeAll(toplevel);
+    stacking_order.removeAll(toplevel);
+
+    for (int i = m_constraints.count() - 1; i >= 0; --i) {
+        Constraint *constraint = m_constraints[i];
+        const bool isBelow = (constraint->below == toplevel);
+        const bool isAbove = (constraint->above == toplevel);
+        if (!isBelow && !isAbove) {
+            continue;
+        }
+        if (isBelow) {
+            for (Constraint *child : qAsConst(constraint->children)) {
+                child->parents.removeOne(constraint);
+            }
+        } else {
+            for (Constraint *parent : qAsConst(constraint->parents)) {
+                parent->children.removeOne(constraint);
+            }
+        }
+        delete m_constraints.takeAt(i);
+    }
+}
+
 X11Client *Workspace::createClient(xcb_window_t w, bool is_mapped)
 {
     StackingUpdatesBlocker blocker(this);
@@ -594,10 +724,7 @@ void Workspace::addClient(X11Client *c)
     }
     clients.append(c);
     m_allClients.append(c);
-    if (!unconstrained_stacking_order.contains(c))
-        unconstrained_stacking_order.append(c);   // Raise if it hasn't got any stacking position yet
-    if (!stacking_order.contains(c))    // It'll be updated later, and updateToolWindows() requires
-        stacking_order.append(c);      // c to be in stacking_order
+    addToStack(c);
     markXStackingOrderAsDirty();
     updateClientArea(); // This cannot be in manage(), because the client got added only now
     updateClientLayer(c);
@@ -676,18 +803,7 @@ void Workspace::addDeleted(Deleted* c, Toplevel *orig)
 {
     Q_ASSERT(!deleted.contains(c));
     deleted.append(c);
-    const int unconstraintedIndex = unconstrained_stacking_order.indexOf(orig);
-    if (unconstraintedIndex != -1) {
-        unconstrained_stacking_order.replace(unconstraintedIndex, c);
-    } else {
-        unconstrained_stacking_order.append(c);
-    }
-    const int index = stacking_order.indexOf(orig);
-    if (index != -1) {
-        stacking_order.replace(index, c);
-    } else {
-        stacking_order.append(c);
-    }
+    replaceInStack(orig, c);
     markXStackingOrderAsDirty();
 }
 
@@ -696,8 +812,7 @@ void Workspace::removeDeleted(Deleted* c)
     Q_ASSERT(deleted.contains(c));
     emit deletedRemoved(c);
     deleted.removeAll(c);
-    unconstrained_stacking_order.removeAll(c);
-    stacking_order.removeAll(c);
+    removeFromStack(c);
     markXStackingOrderAsDirty();
     if (!c->wasClient()) {
         return;
@@ -729,12 +844,7 @@ void Workspace::addShellClient(AbstractClient *client)
         }
     }
     m_allClients.append(client);
-    if (!unconstrained_stacking_order.contains(client)) {
-        unconstrained_stacking_order.append(client); // Raise if it hasn't got any stacking position yet
-    }
-    if (!stacking_order.contains(client)) { // It'll be updated later, and updateToolWindows() requires
-        stacking_order.append(client);      // client to be in stacking_order
-    }
+    addToStack(client);
 
     markXStackingOrderAsDirty();
     updateStackingOrder(true);
@@ -1845,6 +1955,7 @@ void Workspace::updateTabbox()
 void Workspace::addInternalClient(InternalClient *client)
 {
     m_internalClients.append(client);
+    addToStack(client);
 
     setupClientConnections(client);
     client->updateLayer();

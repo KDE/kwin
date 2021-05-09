@@ -203,6 +203,9 @@ public:
     void updateStackingOrder(bool propagate_new_clients = false);
     void forceRestacking();
 
+    void constrain(AbstractClient *below, AbstractClient *above);
+    void unconstrain(AbstractClient *below, AbstractClient *above);
+
     void clientHidden(AbstractClient*);
     void clientAttentionChanged(AbstractClient* c, bool set);
 
@@ -536,12 +539,13 @@ private:
     void raiseClientWithinApplication(AbstractClient* c);
     void lowerClientWithinApplication(AbstractClient* c);
     bool allowFullClientRaising(const AbstractClient* c, xcb_timestamp_t timestamp);
-    bool keepTransientAbove(const AbstractClient* mainwindow, const AbstractClient* transient);
-    bool keepDeletedTransientAbove(const Toplevel *mainWindow, const Deleted *transient) const;
     void blockStackingUpdates(bool block);
     void updateToolWindows(bool also_hide);
     void fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geom);
     void saveOldScreenSizes();
+    void addToStack(Toplevel *toplevel);
+    void replaceInStack(Toplevel *original, Deleted *deleted);
+    void removeFromStack(Toplevel *toplevel);
 
     /// This is the right way to create a new client
     X11Client *createClient(xcb_window_t w, bool is_mapped);
@@ -562,6 +566,19 @@ private:
     void activateClientOnNewDesktop(uint desktop);
     AbstractClient *findClientToActivateOnDesktop(uint desktop);
 
+    struct Constraint
+    {
+        Toplevel *below;
+        Toplevel *above;
+        // All constraints above our "below" window
+        QList<Constraint *> parents;
+        // All constraints below our "above" window
+        QList<Constraint *> children;
+        // Used to prevent cycles.
+        bool enqueued = false;
+    };
+
+    QList<Constraint *> m_constraints;
     QWidget* active_popup;
     AbstractClient* active_popup_client;
 

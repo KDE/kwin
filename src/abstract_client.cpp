@@ -2009,11 +2009,38 @@ bool AbstractClient::isModal() const
     return m_modal;
 }
 
+// check whether a transient should be actually kept above its mainwindow
+// there may be some special cases where this rule shouldn't be enfored
+static bool shouldKeepTransientAbove(const AbstractClient *parent, const AbstractClient *transient)
+{
+    // #93832 - don't keep splashscreens above dialogs
+    if (transient->isSplash() && parent->isDialog()) {
+        return false;
+    }
+    // This is rather a hack for #76026. Don't keep non-modal dialogs above
+    // the mainwindow, but only if they're group transient (since only such dialogs
+    // have taskbar entry in Kicker). A proper way of doing this (both kwin and kicker)
+    // needs to be found.
+    if (transient->isDialog() && !transient->isModal() && transient->groupTransient()) {
+        return false;
+    }
+    // #63223 - don't keep transients above docks, because the dock is kept high,
+    // and e.g. dialogs for them would be too high too
+    // ignore this if the transient has a placement hint which indicates it should go above it's parent
+    if (parent->isDock() && !transient->hasTransientPlacementHint()) {
+        return false;
+    }
+    return true;
+}
+
 void AbstractClient::addTransient(AbstractClient *cl)
 {
     Q_ASSERT(!m_transients.contains(cl));
     Q_ASSERT(cl != this);
     m_transients.append(cl);
+    if (shouldKeepTransientAbove(this, cl)) {
+        workspace()->constrain(this, cl);
+    }
 }
 
 void AbstractClient::removeTransient(AbstractClient *cl)
@@ -2022,6 +2049,7 @@ void AbstractClient::removeTransient(AbstractClient *cl)
     if (cl->transientFor() == this) {
         cl->setTransientFor(nullptr);
     }
+    workspace()->unconstrain(this, cl);
 }
 
 void AbstractClient::removeTransientFromList(AbstractClient *cl)
