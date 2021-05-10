@@ -31,14 +31,14 @@ class AnimationEffectPrivate {
 public:
     AnimationEffectPrivate()
     {
-        m_animated = m_damageDirty = m_animationsTouched = m_isInitialized = false;
+        m_animationsTouched = m_isInitialized = false;
         m_justEndedAnimation = 0;
     }
     AnimationEffect::AniMap m_animations;
     static quint64 m_animCounter;
     quint64 m_justEndedAnimation; // protect against cancel
     QWeakPointer<FullScreenEffectLock> m_fullScreenEffectLock;
-    bool m_animated, m_damageDirty, m_needSceneRepaint, m_animationsTouched, m_isInitialized;
+    bool m_needSceneRepaint, m_animationsTouched, m_isInitialized;
 };
 
 quint64 AnimationEffectPrivate::m_animCounter = 0;
@@ -46,7 +46,6 @@ quint64 AnimationEffectPrivate::m_animCounter = 0;
 AnimationEffect::AnimationEffect() : d_ptr(new AnimationEffectPrivate())
 {
     Q_D(AnimationEffect);
-    d->m_animated = false;
     if (!s_clock.isValid())
         s_clock.start();
     /* this is the same as the QTimer::singleShot(0, SLOT(init())) kludge
@@ -395,73 +394,15 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, std::chrono::mil
         return;
     }
 
-    d->m_animationsTouched = false;
-    AniMap::iterator entry = d->m_animations.begin(), mapEnd = d->m_animations.end();
-    d->m_animated = false;
-//     short int transformed = 0;
-    while (entry != mapEnd) {
-        bool invalidateLayerRect = false;
-        QList<AniData>::iterator anim = entry->first.begin(), animEnd = entry->first.end();
-        int animCounter = 0;
-        while (anim != animEnd) {
-            if (anim->startTime > clock()) {
-                if (!anim->waitAtSource) {
-                    ++anim;
-                    ++animCounter;
-                    continue;
-                }
-            } else {
+    for (auto entry = d->m_animations.begin(); entry != d->m_animations.end(); ++entry) {
+        for (auto anim = entry->first.begin(); anim != entry->first.end(); ++anim) {
+            if (anim->startTime <= clock()) {
                 if (anim->lastPresentTime.count()) {
                     anim->timeLine.update(presentTime - anim->lastPresentTime);
                 }
                 anim->lastPresentTime = presentTime;
             }
-
-            if (anim->isActive()) {
-//                 if (anim->attribute != Brightness && anim->attribute != Saturation && anim->attribute != Opacity)
-//                     transformed = true;
-                d->m_animated = true;
-                ++anim;
-                ++animCounter;
-            } else {
-                EffectWindow *oldW = entry.key();
-                d->m_justEndedAnimation = anim->id;
-                animationEnded(oldW, anim->attribute, anim->meta);
-                d->m_justEndedAnimation = 0;
-                // NOTICE animationEnded is an external call and might have called "::animate"
-                // as a result our iterators could now point random junk on the heap
-                // so we've to restore the former states, ie. find our window list and animation
-                if (d->m_animationsTouched) {
-                    d->m_animationsTouched = false;
-                    entry = d->m_animations.begin(), mapEnd = d->m_animations.end();
-                    while (entry.key() != oldW && entry != mapEnd)
-                        ++entry;
-                    Q_ASSERT(entry != mapEnd); // usercode should not delete animations from animationEnded (not even possible atm.)
-                    anim = entry->first.begin(), animEnd = entry->first.end();
-                    Q_ASSERT(animCounter < entry->first.count());
-                    for (int i = 0; i < animCounter; ++i)
-                        ++anim;
-                }
-                anim = entry->first.erase(anim);
-                invalidateLayerRect = d->m_damageDirty = true;
-                animEnd = entry->first.end();
-            }
         }
-        if (entry->first.isEmpty()) {
-            data.paint |= entry->second;
-//             d->m_damageDirty = true; // TODO likely no longer required
-            entry = d->m_animations.erase(entry);
-            mapEnd = d->m_animations.end();
-        } else {
-            if (invalidateLayerRect)
-                *const_cast<QRect*>(&(entry->second)) = QRect(); // invalidate
-            ++entry;
-        }
-    }
-
-    // janitorial...
-    if (d->m_animations.isEmpty()) {
-        disconnectGeometryChanges();
     }
 
     effects->prePaintScreen(data, presentTime);
@@ -559,36 +500,34 @@ void AnimationEffect::disconnectGeometryChanges()
 void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime )
 {
     Q_D(AnimationEffect);
-    if ( d->m_animated ) {
-        AniMap::const_iterator entry = d->m_animations.constFind( w );
-        if ( entry != d->m_animations.constEnd() ) {
-            bool isUsed = false;
-            bool paintDeleted = false;
-            for (QList<AniData>::const_iterator anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim) {
-                if (anim->startTime > clock() && !anim->waitAtSource)
-                    continue;
+    AniMap::const_iterator entry = d->m_animations.constFind( w );
+    if ( entry != d->m_animations.constEnd() ) {
+        bool isUsed = false;
+        bool paintDeleted = false;
+        for (QList<AniData>::const_iterator anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim) {
+            if (anim->startTime > clock() && !anim->waitAtSource)
+                continue;
 
-                isUsed = true;
-                if (anim->attribute == Opacity || anim->attribute == CrossFadePrevious)
-                    data.setTranslucent();
-                else if (!(anim->attribute == Brightness || anim->attribute == Saturation)) {
-                    data.setTransformed();
-                    if (anim->attribute == Clip)
-                        clipWindow(w, *anim, data.quads);
-                }
+            isUsed = true;
+            if (anim->attribute == Opacity || anim->attribute == CrossFadePrevious)
+                data.setTranslucent();
+            else if (!(anim->attribute == Brightness || anim->attribute == Saturation)) {
+                data.setTransformed();
+                if (anim->attribute == Clip)
+                    clipWindow(w, *anim, data.quads);
+            }
 
-                paintDeleted |= anim->keepAlive;
-            }
-            if ( isUsed ) {
-                if ( w->isMinimized() )
-                    w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
-                else if ( w->isDeleted() && paintDeleted )
-                    w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
-                else if ( !w->isOnCurrentDesktop() )
-                    w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
-//                 if( !w->isPaintingEnabled() && !effects->activeFullScreenEffect() )
-//                     effects->addLayerRepaint(w->expandedGeometry());
-            }
+            paintDeleted |= anim->keepAlive;
+        }
+        if ( isUsed ) {
+            if ( w->isMinimized() )
+                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
+            else if ( w->isDeleted() && paintDeleted )
+                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
+            else if ( !w->isOnCurrentDesktop() )
+                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
+//            if( !w->isPaintingEnabled() && !effects->activeFullScreenEffect() )
+//                effects->addLayerRepaint(w->expandedGeometry());
         }
     }
     effects->prePaintWindow(w, data, presentTime);
@@ -606,107 +545,105 @@ static inline float geometryCompensation(int flags, float v)
 void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
 {
     Q_D(AnimationEffect);
-    if ( d->m_animated ) {
-        AniMap::const_iterator entry = d->m_animations.constFind( w );
-        if ( entry != d->m_animations.constEnd() ) {
-            for ( QList<AniData>::const_iterator anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim ) {
+    AniMap::const_iterator entry = d->m_animations.constFind( w );
+    if ( entry != d->m_animations.constEnd() ) {
+        for ( QList<AniData>::const_iterator anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim ) {
 
-                if (anim->startTime > clock() && !anim->waitAtSource)
-                    continue;
+            if (anim->startTime > clock() && !anim->waitAtSource)
+                continue;
 
-                switch (anim->attribute) {
-                case Opacity:
-                    data.multiplyOpacity(interpolated(*anim)); break;
-                case Brightness:
-                    data.multiplyBrightness(interpolated(*anim)); break;
-                case Saturation:
-                    data.multiplySaturation(interpolated(*anim)); break;
-                case Scale: {
-                    const QSize sz = w->geometry().size();
-                    float f1(1.0), f2(0.0);
-                    if (anim->from[0] >= 0.0 && anim->to[0] >= 0.0) { // scale x
-                        f1 = interpolated(*anim, 0);
-                        f2 = geometryCompensation( anim->meta & AnimationEffect::Horizontal, f1 );
-                        data.translate(f2 * sz.width());
-                        data.setXScale(data.xScale() * f1);
-                    }
-                    if (anim->from[1] >= 0.0 && anim->to[1] >= 0.0) { // scale y
-                        if (!anim->isOneDimensional()) {
-                            f1 = interpolated(*anim, 1);
-                            f2 = geometryCompensation( anim->meta & AnimationEffect::Vertical, f1 );
-                        }
-                        else if ( ((anim->meta & AnimationEffect::Vertical)>>1) != (anim->meta & AnimationEffect::Horizontal) )
-                            f2 = geometryCompensation( anim->meta & AnimationEffect::Vertical, f1 );
-                        data.translate(0.0, f2 * sz.height());
-                        data.setYScale(data.yScale() * f1);
-                    }
-                    break;
+            switch (anim->attribute) {
+            case Opacity:
+                data.multiplyOpacity(interpolated(*anim)); break;
+            case Brightness:
+                data.multiplyBrightness(interpolated(*anim)); break;
+            case Saturation:
+                data.multiplySaturation(interpolated(*anim)); break;
+            case Scale: {
+                const QSize sz = w->geometry().size();
+                float f1(1.0), f2(0.0);
+                if (anim->from[0] >= 0.0 && anim->to[0] >= 0.0) { // scale x
+                    f1 = interpolated(*anim, 0);
+                    f2 = geometryCompensation( anim->meta & AnimationEffect::Horizontal, f1 );
+                    data.translate(f2 * sz.width());
+                    data.setXScale(data.xScale() * f1);
                 }
-                case Clip:
-                    region = clipRect(w->expandedGeometry(), *anim);
-                    break;
-                case Translation:
-                    data += QPointF(interpolated(*anim, 0), interpolated(*anim, 1));
-                    break;
-                case Size: {
-                    FPx2 dest = anim->from + progress(*anim) * (anim->to - anim->from);
-                    const QSize sz = w->geometry().size();
-                    float f;
-                    if (anim->from[0] >= 0.0 && anim->to[0] >= 0.0) { // resize x
-                        f = dest[0]/sz.width();
-                        data.translate(geometryCompensation( anim->meta & AnimationEffect::Horizontal, f ) * sz.width());
-                        data.setXScale(data.xScale() * f);
+                if (anim->from[1] >= 0.0 && anim->to[1] >= 0.0) { // scale y
+                    if (!anim->isOneDimensional()) {
+                        f1 = interpolated(*anim, 1);
+                        f2 = geometryCompensation( anim->meta & AnimationEffect::Vertical, f1 );
                     }
-                    if (anim->from[1] >= 0.0 && anim->to[1] >= 0.0) { // resize y
-                        f = dest[1]/sz.height();
-                        data.translate(0.0, geometryCompensation( anim->meta & AnimationEffect::Vertical, f ) * sz.height());
-                        data.setYScale(data.yScale() * f);
-                    }
-                    break;
+                    else if ( ((anim->meta & AnimationEffect::Vertical)>>1) != (anim->meta & AnimationEffect::Horizontal) )
+                        f2 = geometryCompensation( anim->meta & AnimationEffect::Vertical, f1 );
+                    data.translate(0.0, f2 * sz.height());
+                    data.setYScale(data.yScale() * f1);
                 }
-                case Position: {
-                    const QRect geo = w->geometry();
-                    const float prgrs = progress(*anim);
-                    if ( anim->from[0] >= 0.0 && anim->to[0] >= 0.0 ) {
-                        float dest = interpolated(*anim, 0);
-                        const int x[2] = {  xCoord(geo, metaData(SourceAnchor, anim->meta)),
-                                            xCoord(geo, metaData(TargetAnchor, anim->meta)) };
-                        data.translate(dest - (x[0] + prgrs*(x[1] - x[0])));
-                    }
-                    if ( anim->from[1] >= 0.0 && anim->to[1] >= 0.0 ) {
-                        float dest = interpolated(*anim, 1);
-                        const int y[2] = {  yCoord(geo, metaData(SourceAnchor, anim->meta)),
-                                            yCoord(geo, metaData(TargetAnchor, anim->meta)) };
-                        data.translate(0.0, dest - (y[0] + prgrs*(y[1] - y[0])));
-                    }
-                    break;
+                break;
+            }
+            case Clip:
+                region = clipRect(w->expandedGeometry(), *anim);
+                break;
+            case Translation:
+                data += QPointF(interpolated(*anim, 0), interpolated(*anim, 1));
+                break;
+            case Size: {
+                FPx2 dest = anim->from + progress(*anim) * (anim->to - anim->from);
+                const QSize sz = w->geometry().size();
+                float f;
+                if (anim->from[0] >= 0.0 && anim->to[0] >= 0.0) { // resize x
+                    f = dest[0]/sz.width();
+                    data.translate(geometryCompensation( anim->meta & AnimationEffect::Horizontal, f ) * sz.width());
+                    data.setXScale(data.xScale() * f);
                 }
-                case Rotation: {
-                    data.setRotationAxis((Qt::Axis)metaData(Axis, anim->meta));
-                    const float prgrs = progress(*anim);
-                    data.setRotationAngle(anim->from[0] + prgrs*(anim->to[0] - anim->from[0]));
+                if (anim->from[1] >= 0.0 && anim->to[1] >= 0.0) { // resize y
+                    f = dest[1]/sz.height();
+                    data.translate(0.0, geometryCompensation( anim->meta & AnimationEffect::Vertical, f ) * sz.height());
+                    data.setYScale(data.yScale() * f);
+                }
+                break;
+            }
+            case Position: {
+                const QRect geo = w->geometry();
+                const float prgrs = progress(*anim);
+                if ( anim->from[0] >= 0.0 && anim->to[0] >= 0.0 ) {
+                    float dest = interpolated(*anim, 0);
+                    const int x[2] = {  xCoord(geo, metaData(SourceAnchor, anim->meta)),
+                                        xCoord(geo, metaData(TargetAnchor, anim->meta)) };
+                    data.translate(dest - (x[0] + prgrs*(x[1] - x[0])));
+                }
+                if ( anim->from[1] >= 0.0 && anim->to[1] >= 0.0 ) {
+                    float dest = interpolated(*anim, 1);
+                    const int y[2] = {  yCoord(geo, metaData(SourceAnchor, anim->meta)),
+                                        yCoord(geo, metaData(TargetAnchor, anim->meta)) };
+                    data.translate(0.0, dest - (y[0] + prgrs*(y[1] - y[0])));
+                }
+                break;
+            }
+            case Rotation: {
+                data.setRotationAxis((Qt::Axis)metaData(Axis, anim->meta));
+                const float prgrs = progress(*anim);
+                data.setRotationAngle(anim->from[0] + prgrs*(anim->to[0] - anim->from[0]));
 
-                    const QRect geo = w->rect();
-                    const uint  sAnchor = metaData(SourceAnchor, anim->meta),
-                                tAnchor = metaData(TargetAnchor, anim->meta);
-                    QPointF pt(xCoord(geo, sAnchor), yCoord(geo, sAnchor));
+                const QRect geo = w->rect();
+                const uint  sAnchor = metaData(SourceAnchor, anim->meta),
+                            tAnchor = metaData(TargetAnchor, anim->meta);
+                QPointF pt(xCoord(geo, sAnchor), yCoord(geo, sAnchor));
 
-                    if (tAnchor != sAnchor) {
-                        QPointF pt2(xCoord(geo, tAnchor), yCoord(geo, tAnchor));
-                        pt += static_cast<qreal>(prgrs)*(pt2 - pt);
-                    }
-                    data.setRotationOrigin(QVector3D(pt));
-                    break;
+                if (tAnchor != sAnchor) {
+                    QPointF pt2(xCoord(geo, tAnchor), yCoord(geo, tAnchor));
+                    pt += static_cast<qreal>(prgrs)*(pt2 - pt);
                 }
-                case Generic:
-                    genericAnimation(w, data, progress(*anim), anim->meta);
-                    break;
-                case CrossFadePrevious:
-                    data.setCrossFadeProgress(progress(*anim));
-                    break;
-                default:
-                    break;
-                }
+                data.setRotationOrigin(QVector3D(pt));
+                break;
+            }
+            case Generic:
+                genericAnimation(w, data, progress(*anim), anim->meta);
+                break;
+            case CrossFadePrevious:
+                data.setCrossFadeProgress(progress(*anim));
+                break;
+            default:
+                break;
             }
         }
     }
@@ -716,30 +653,75 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
 void AnimationEffect::postPaintScreen()
 {
     Q_D(AnimationEffect);
-    if ( d->m_animated ) {
-        if (d->m_damageDirty)
-            updateLayerRepaints();
-        if (d->m_needSceneRepaint) {
-            effects->addRepaintFull();
-        } else {
-            AniMap::const_iterator it = d->m_animations.constBegin(), end = d->m_animations.constEnd();
-            for (; it != end; ++it) {
-                bool addRepaint = false;
-                QList<AniData>::const_iterator anim = it->first.constBegin();
-                for (; anim != it->first.constEnd(); ++anim) {
-                    if (anim->startTime > clock())
-                        continue;
-                    if (!anim->timeLine.done()) {
-                        addRepaint = true;
-                        break;
-                    }
+    d->m_animationsTouched = false;
+    bool damageDirty = false;
+
+    for (auto entry = d->m_animations.begin(); entry != d->m_animations.end();) {
+        bool invalidateLayerRect = false;
+        int animCounter = 0;
+        for (auto anim = entry->first.begin(); anim != entry->first.end();) {
+            if (anim->isActive() || anim->startTime > clock() && !anim->waitAtSource) {
+                ++anim;
+                ++animCounter;
+                continue;
+            }
+            EffectWindow *window = entry.key();
+            d->m_justEndedAnimation = anim->id;
+            animationEnded(window, anim->attribute, anim->meta);
+            d->m_justEndedAnimation = 0;
+            // NOTICE animationEnded is an external call and might have called "::animate"
+            // as a result our iterators could now point random junk on the heap
+            // so we've to restore the former states, ie. find our window list and animation
+            if (d->m_animationsTouched) {
+                d->m_animationsTouched = false;
+                entry = d->m_animations.begin();
+                while (entry.key() != window && entry != d->m_animations.end()) {
+                    ++entry;
                 }
-                if (addRepaint) {
-                    it.key()->addLayerRepaint(it->second);
+                Q_ASSERT(entry != d->m_animations.end()); // usercode should not delete animations from animationEnded (not even possible atm.)
+                anim = entry->first.begin();
+                Q_ASSERT(animCounter < entry->first.count());
+                for (int i = 0; i < animCounter; ++i) {
+                    ++anim;
+                }
+            }
+            anim = entry->first.erase(anim);
+            invalidateLayerRect = damageDirty = true;
+        }
+        if (entry->first.isEmpty()) {
+            effects->addRepaint(entry->second);
+            entry = d->m_animations.erase(entry);
+        } else {
+            if (invalidateLayerRect) {
+                *const_cast<QRect*>(&(entry->second)) = QRect(); // invalidate
+            }
+            ++entry;
+        }
+    }
+
+    if (damageDirty) {
+        updateLayerRepaints();
+    }
+    if (d->m_needSceneRepaint) {
+        effects->addRepaintFull();
+    } else {
+        for (auto entry = d->m_animations.constBegin(); entry != d->m_animations.constEnd(); ++entry) {
+            for (auto anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim) {
+                if (anim->startTime > clock())
+                    continue;
+                if (!anim->timeLine.done()) {
+                    entry.key()->addLayerRepaint(entry->second);
+                    break;
                 }
             }
         }
     }
+
+    // janitorial...
+    if (d->m_animations.isEmpty()) {
+        disconnectGeometryChanges();
+    }
+
     effects->postPaintScreen();
 }
 
@@ -959,7 +941,6 @@ region_creation:
             *layerRect = rect;
         }
     }
-    d->m_damageDirty = false;
 }
 
 void AnimationEffect::_windowExpandedGeometryChanged(KWin::EffectWindow *w)
