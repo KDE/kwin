@@ -576,7 +576,6 @@ private:
 
     AbstractClient* active_client;
     AbstractClient* last_active_client;
-    AbstractClient* most_recently_raised; // Used ONLY by raiseOrLowerClient()
     AbstractClient* movingClient;
 
     // Delay(ed) window focus timer and client

@@ -277,14 +277,9 @@ AbstractClient* Workspace::findDesktop(bool topmost, int desktop) const
 void Workspace::raiseOrLowerClient(AbstractClient *c)
 {
     if (!c) return;
-    AbstractClient* topmost = nullptr;
-// TODO    Q_ASSERT( block_stacking_updates == 0 );
-    if (most_recently_raised && stacking_order.contains(most_recently_raised) &&
-            most_recently_raised->isShown(true) && c->isOnCurrentDesktop())
-        topmost = most_recently_raised;
-    else
-        topmost = topClientOnDesktop(c->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : c->desktop(),
-                                     options->isSeparateScreenFocus() ? c->screen() : -1);
+    const AbstractClient *topmost =
+            topClientOnDesktop(c->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : c->desktop(),
+                               options->isSeparateScreenFocus() ? c->screen() : -1);
 
     if (c == topmost)
         lowerClient(c);
@@ -317,9 +312,6 @@ void Workspace::lowerClient(AbstractClient* c, bool nogroup)
                 lowerClient(wins[ i ], true);
         }
     }
-
-    if (c == most_recently_raised)
-        most_recently_raised = nullptr;
 }
 
 void Workspace::lowerClientWithinApplication(AbstractClient* c)
@@ -372,10 +364,6 @@ void Workspace::raiseClient(AbstractClient* c, bool nogroup)
 
     unconstrained_stacking_order.removeAll(c);
     unconstrained_stacking_order.append(c);
-
-    if (!c->isSpecialWindow()) {
-        most_recently_raised = c;
-    }
 }
 
 void Workspace::raiseClientWithinApplication(AbstractClient* c)

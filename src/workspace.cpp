@@ -114,7 +114,6 @@ Workspace::Workspace()
     , m_initialDesktop(1)
     , active_client(nullptr)
     , last_active_client(nullptr)
-    , most_recently_raised(nullptr)
     , movingClient(nullptr)
     , delayfocus_client(nullptr)
     , force_restacking(false)
@@ -650,8 +649,6 @@ void Workspace::removeClient(X11Client *c)
     if (group != nullptr)
         group->lostLeader();
 
-    if (c == most_recently_raised)
-        most_recently_raised = nullptr;
     should_get_focus.removeAll(c);
     if (c == active_client)
         active_client = nullptr;
@@ -768,9 +765,6 @@ void Workspace::removeShellClient(AbstractClient *client)
 {
     clientHidden(client);
     m_allClients.removeAll(client);
-    if (client == most_recently_raised) {
-        most_recently_raised = nullptr;
-    }
     if (client == delayfocus_client) {
         cancelDelayFocus();
     }
