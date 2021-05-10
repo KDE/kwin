@@ -68,7 +68,7 @@ void InputMethodTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
-    static_cast<WaylandTestApplication *>(kwinApp())->setInputMethodServerToStart("internal");
+    static_cast<WaylandTestApplication *>(kwinApp())->setInputMethodServerToStart("qml " + QFINDTESTDATA("emptywindow.qml"));
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 2);
