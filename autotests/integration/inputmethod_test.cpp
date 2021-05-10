@@ -153,10 +153,6 @@ void InputMethodTest::testOpenClose()
 
 void InputMethodTest::testEnableDisableV3()
 {
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    QSignalSpy clientRemovedSpy(workspace(), &Workspace::clientRemoved);
-    QVERIFY(clientAddedSpy.isValid());
-
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -168,21 +164,21 @@ void InputMethodTest::testEnableDisableV3()
     Test::TextInputV3 *textInputV3 = new Test::TextInputV3();
     textInputV3->init(Test::waylandTextInputManagerV3()->get_text_input(*(Test::waylandSeat())));
     textInputV3->enable();
+
+    QSignalSpy inputMethodActiveSpy(InputMethod::self(), &InputMethod::activeChanged);
     // just enabling the text-input should not show it but rather on commit
-    QVERIFY(!clientAddedSpy.wait(100));
-
+    QVERIFY(!InputMethod::self()->isActive());
     textInputV3->commit();
-
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *keyboardClient = clientAddedSpy.last().first().value<AbstractClient *>();
-    QVERIFY(keyboardClient);
-    QVERIFY(keyboardClient->isInputMethod());
+    QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
+    QVERIFY(InputMethod::self()->isActive());
 
     // disable text input and ensure that it is not hiding input panel without commit
+    inputMethodActiveSpy.clear();
+    QVERIFY(InputMethod::self()->isActive());
     textInputV3->disable();
-    QVERIFY(!clientRemovedSpy.wait(100));
     textInputV3->commit();
-    QVERIFY(clientRemovedSpy.wait());
+    QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
+    QVERIFY(!InputMethod::self()->isActive());
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)
