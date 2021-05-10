@@ -317,10 +317,19 @@ void InputMethod::textInputInterfaceV3EnabledChanged()
 
 void InputMethod::stateCommitted(uint32_t serial)
 {
-    auto inputContext = waylandServer()->inputMethod()->context();
-    if (!inputContext) {
+    if (!isEnabled()) {
+	return;
+    }
+    TextInputV3Interface *textInputV3 = waylandServer()->seat()->textInputV3();
+    if (!textInputV3) {
         return;
     }
+
+    if (!isActive() && textInputV3->isEnabled()) {
+        show();
+    }
+
+    auto inputContext = waylandServer()->inputMethod()->context();
     inputContext->sendCommitState(serial);
 }
 
