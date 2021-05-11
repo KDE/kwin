@@ -32,7 +32,6 @@
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/xdgshell.h>
 #include <KWayland/Client/textinput.h>
 #include <KWayland/Client/seat.h>
 
@@ -106,21 +105,21 @@ void InputMethodTest::testOpenClose()
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QCOMPARE(client->frameGeometry().size(), QSize(1280, 1024));
     QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
-    QVERIFY(configureRequestedSpy.isValid());
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     QScopedPointer<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
     QVERIFY(!textInput.isNull());
     textInput->enable(surface.data());
-    QVERIFY(configureRequestedSpy.wait());
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     // Show the keyboard
     textInput->showInputPanel();
@@ -131,9 +130,9 @@ void InputMethodTest::testOpenClose()
     QVERIFY(keyboardClient->isInputMethod());
 
     // Do the actual resize
-    QVERIFY(configureRequestedSpy.wait());
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
 
-    Test::render(surface.data(), configureRequestedSpy.last().first().value<QSize>(), Qt::red);
+    Test::render(surface.data(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
 
     QCOMPARE(client->frameGeometry().height(), 1024 - keyboardClient->inputGeometry().height() + 1);
@@ -141,8 +140,8 @@ void InputMethodTest::testOpenClose()
     // Hide the keyboard
     textInput->hideInputPanel();
 
-    QVERIFY(configureRequestedSpy.wait());
-    Test::render(surface.data(), configureRequestedSpy.last().first().value<QSize>(), Qt::red);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    Test::render(surface.data(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
 
     QCOMPARE(client->frameGeometry().height(), 1024);
@@ -160,7 +159,7 @@ void InputMethodTest::testEnableDisableV3()
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
     QVERIFY(client);
     QVERIFY(client->isActive());

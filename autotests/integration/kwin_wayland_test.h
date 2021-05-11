@@ -14,11 +14,9 @@
 // Qt
 #include <QtTest>
 
-// KWayland
-#include <KWayland/Client/xdgshell.h>
-
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
+#include "qwayland-xdg-decoration-unstable-v1.h"
 #include "qwayland-xdg-shell.h"
 
 namespace KWayland
@@ -29,6 +27,7 @@ class AppMenuManager;
 class ConnectionThread;
 class Compositor;
 class IdleInhibitManager;
+class Output;
 class PlasmaShell;
 class PlasmaWindowManagement;
 class PointerConstraints;
@@ -39,7 +38,6 @@ class ShmPool;
 class SubCompositor;
 class SubSurface;
 class Surface;
-class XdgDecorationManager;
 class OutputManagement;
 class TextInputManager;
 class OutputDevice;
@@ -214,12 +212,35 @@ public:
 
 Q_SIGNALS:
     void configureRequested(const QRect &rect);
+    void doneReceived();
 
 protected:
     void xdg_popup_configure(int32_t x, int32_t y, int32_t width, int32_t height) override;
+    void xdg_popup_popup_done() override;
 
 private:
     QScopedPointer<XdgSurface> m_xdgSurface;
+};
+
+class XdgDecorationManagerV1 : public QtWayland::zxdg_decoration_manager_v1
+{
+public:
+    ~XdgDecorationManagerV1() override;
+};
+
+class XdgToplevelDecorationV1 : public QObject, public QtWayland::zxdg_toplevel_decoration_v1
+{
+    Q_OBJECT
+
+public:
+    XdgToplevelDecorationV1(XdgDecorationManagerV1 *manager, XdgToplevel *toplevel, QObject *parent = nullptr);
+    ~XdgToplevelDecorationV1() override;
+
+Q_SIGNALS:
+    void configureRequested(QtWayland::zxdg_toplevel_decoration_v1::mode mode);
+
+protected:
+    void zxdg_toplevel_decoration_v1_configure(uint32_t mode) override;
 };
 
 enum class AdditionalWaylandInterface {
@@ -231,13 +252,13 @@ enum class AdditionalWaylandInterface {
     IdleInhibition = 1 << 5,
     AppMenu = 1 << 6,
     ShadowManager = 1 << 7,
-    XdgDecoration = 1 << 8,
+    XdgDecorationV1 = 1 << 8,
     OutputManagement = 1 << 9,
     TextInputManagerV2 = 1 << 10,
     InputMethodV1 = 1 << 11,
     LayerShellV1 = 1 << 12,
     TextInputManagerV3 = 1 << 13,
-    OutputDevice = 1 << 14
+    OutputDevice = 1 << 14,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 /**
@@ -268,7 +289,6 @@ KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
 KWayland::Client::PointerConstraints *waylandPointerConstraints();
 KWayland::Client::IdleInhibitManager *waylandIdleInhibitManager();
 KWayland::Client::AppMenuManager *waylandAppMenuManager();
-KWayland::Client::XdgDecorationManager *xdgDecorationManager();
 KWayland::Client::OutputManagement *waylandOutputManagement();
 KWayland::Client::TextInputManager *waylandTextInputManager();
 QVector<KWayland::Client::Output *> waylandOutputs();
@@ -299,15 +319,6 @@ enum class CreationSetup {
 QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface,
                                                                  KWayland::Client::Output *output);
 
-KWayland::Client::XdgShellSurface *createXdgShellStableSurface(KWayland::Client::Surface *surface,
-                                                               QObject *parent = nullptr,
-                                                               CreationSetup = CreationSetup::CreateAndConfigure);
-KWayland::Client::XdgShellPopup *createXdgShellStablePopup(KWayland::Client::Surface *surface,
-                                                           KWayland::Client::XdgShellSurface *parentSurface,
-                                                           const KWayland::Client::XdgPositioner &positioner,
-                                                           QObject *parent = nullptr,
-                                                           CreationSetup = CreationSetup::CreateAndConfigure);
-
 XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr,
                                       CreationSetup configureMode = CreationSetup::CreateAndConfigure);
 
@@ -317,13 +328,7 @@ XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *
                                 XdgPositioner *positioner, QObject *parent = nullptr,
                                 CreationSetup configureMode = CreationSetup::CreateAndConfigure);
 
-
-/**
- * Commits the XdgShellSurface to the given surface, and waits for the configure event from the compositor
- */
-void initXdgShellSurface(KWayland::Client::Surface *surface, KWayland::Client::XdgShellSurface *shellSurface);
-void initXdgShellPopup(KWayland::Client::Surface *surface, KWayland::Client::XdgShellPopup *popup);
-
+XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QObject *parent = nullptr);
 
 
 /**
@@ -373,6 +378,7 @@ void initWaylandWorkspace();
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
 Q_DECLARE_METATYPE(KWin::Test::XdgToplevel::States)
+Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
 
 #define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode) \
 int main(int argc, char *argv[]) \

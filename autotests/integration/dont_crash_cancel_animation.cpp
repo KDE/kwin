@@ -85,7 +85,7 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
     // create a window
     Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
-    XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
     // let's render
     auto c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);

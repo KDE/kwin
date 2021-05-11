@@ -81,7 +81,7 @@ void DontCrashCursorPhysicalSizeEmpty::testMoveCursorOverDeco()
     // see BUG: 390314
     QScopedPointer<Surface> surface(Test::createSurface());
     Test::waylandServerSideDecoration()->create(surface.data(), surface.data());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
 
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);

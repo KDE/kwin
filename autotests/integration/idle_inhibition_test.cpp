@@ -14,7 +14,6 @@
 
 #include <KWayland/Client/idleinhibit.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/xdgshell.h>
 
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/idle_interface.h>
@@ -79,7 +78,7 @@ void TestIdleInhibition::testInhibit()
 
     // now create window
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
 
     // now create inhibition on window
     QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));
@@ -126,7 +125,7 @@ void TestIdleInhibition::testDontInhibitWhenNotOnCurrentDesktop()
     // Create the test client.
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
 
     // Create the inhibitor object.
@@ -183,7 +182,7 @@ void TestIdleInhibition::testDontInhibitWhenMinimized()
     // Create the test client.
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
 
     // Create the inhibitor object.
@@ -230,10 +229,10 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     // Create the test client.
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
-    QVERIFY(configureRequestedSpy.isValid());
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.isValid());
 
     // Create the inhibitor object.
     QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));
@@ -251,8 +250,8 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QCOMPARE(client->readyForPainting(), true);
 
     // The compositor will respond with a configure event when the surface becomes active.
-    QVERIFY(configureRequestedSpy.wait());
-    QCOMPARE(configureRequestedSpy.count(), 1);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
 
     // This should inhibit our server object.
     QVERIFY(idle->isInhibited());
@@ -272,8 +271,8 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     surface->commit(Surface::CommitFlag::None);
 
     // The compositor will respond with a configure event.
-    QVERIFY(configureRequestedSpy.wait());
-    QCOMPARE(configureRequestedSpy.count(), 2);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
 
     // Map the client.
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
@@ -313,7 +312,7 @@ void TestIdleInhibition::testDontInhibitWhenLeftCurrentDesktop()
     // Create the test client.
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
 
     // Create the inhibitor object.

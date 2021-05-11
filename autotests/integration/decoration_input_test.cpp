@@ -96,7 +96,7 @@ AbstractClient *DecorationInputTest::showWindow()
 
     Surface *surface = Test::createSurface(Test::waylandCompositor());
     VERIFY(surface);
-    XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     VERIFY(shellSurface);
     auto deco = Test::waylandServerSideDecoration()->create(surface, surface);
     QSignalSpy decoSpy(deco, &ServerSideDecoration::modeChanged);

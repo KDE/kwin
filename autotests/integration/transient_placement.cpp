@@ -28,9 +28,18 @@
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
-#include <KWayland/Client/xdgshell.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
+
+struct PopupLayout
+{
+    QRect anchorRect;
+    QSize size;
+    quint32 anchor = 0;
+    quint32 gravity = 0;
+    quint32 constraint = 0;
+};
+Q_DECLARE_METATYPE(PopupLayout)
 
 namespace KWin
 {
@@ -86,137 +95,315 @@ void TransientPlacementTest::testXdgPopup_data()
 
     QTest::addColumn<QSize>("parentSize");
     QTest::addColumn<QPoint>("parentPosition");
-    QTest::addColumn<XdgPositioner>("positioner");
+    QTest::addColumn<PopupLayout>("layout");
     QTest::addColumn<QRect>("expectedGeometry");
 
+    // parent window is 500,500, starting at 300,300, anchorRect is therefore between 350->750 in both dirs
+
+    // ----------------------------------------------------------------
     // window in the middle, plenty of room either side: Changing anchor
 
-    // parent window is 500,500, starting at 300,300, anchorRect is therefore between 350->750 in both dirs
-    XdgPositioner positioner(QSize(200,200), QRect(50,50, 400,400));
-    positioner.setGravity(Qt::BottomEdge | Qt::RightEdge);
+    const PopupLayout layoutAnchorCenter {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_none,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+    };
+    QTest::newRow("anchorCentre") << QSize(500, 500) << QPoint(300,300) << layoutAnchorCenter << QRect(550, 550, 200, 200);
 
-    positioner.setAnchorEdge(Qt::Edges());
-    QTest::newRow("anchorCentre") << QSize(500, 500) << QPoint(300,300) << positioner << QRect(550, 550, 200, 200);
-    positioner.setAnchorEdge(Qt::TopEdge | Qt::LeftEdge);
-    QTest::newRow("anchorTopLeft") << QSize(500, 500) << QPoint(300,300) << positioner << QRect(350,350, 200, 200);
-    positioner.setAnchorEdge(Qt::TopEdge);
-    QTest::newRow("anchorTop") << QSize(500, 500) << QPoint(300,300) << positioner << QRect(550, 350, 200, 200);
-    positioner.setAnchorEdge(Qt::TopEdge | Qt::RightEdge);
-    QTest::newRow("anchorTopRight") << QSize(500, 500) << QPoint(300,300) << positioner << QRect(750, 350, 200, 200);
-    positioner.setAnchorEdge(Qt::RightEdge);
-    QTest::newRow("anchorRight") << QSize(500, 500) << QPoint(300,300) << positioner << QRect(750, 550, 200, 200);
-    positioner.setAnchorEdge(Qt::BottomEdge | Qt::RightEdge);
-    QTest::newRow("anchorBottomRight") << QSize(500,500) << QPoint(300,300) << positioner << QRect(750, 750, 200, 200);
-    positioner.setAnchorEdge(Qt::BottomEdge);
-    QTest::newRow("anchorBottom") << QSize(500, 500) << QPoint(300,300) << positioner << QRect(550, 750, 200, 200);
-    positioner.setAnchorEdge(Qt::BottomEdge | Qt::LeftEdge);
-    QTest::newRow("anchorBottomLeft") << QSize(500, 500) << QPoint(300,300) << positioner << QRect(350, 750, 200, 200);
-    positioner.setAnchorEdge(Qt::LeftEdge);
-    QTest::newRow("anchorLeft") << QSize(500, 500) << QPoint(300,300) << positioner << QRect(350, 550, 200, 200);
+    const PopupLayout layoutAnchorTopLeft {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_top_left,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+    };
+    QTest::newRow("anchorTopLeft") << QSize(500, 500) << QPoint(300,300) << layoutAnchorTopLeft << QRect(350,350, 200, 200);
+
+    const PopupLayout layoutAnchorTop {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_top,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+    };
+    QTest::newRow("anchorTop") << QSize(500, 500) << QPoint(300,300) << layoutAnchorTop << QRect(550, 350, 200, 200);
+
+    const PopupLayout layoutAnchorTopRight {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_top_right,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+    };
+    QTest::newRow("anchorTopRight") << QSize(500, 500) << QPoint(300,300) << layoutAnchorTopRight << QRect(750, 350, 200, 200);
+
+    const PopupLayout layoutAnchorRight {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_right,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+    };
+    QTest::newRow("anchorRight") << QSize(500, 500) << QPoint(300,300) << layoutAnchorRight << QRect(750, 550, 200, 200);
+
+    const PopupLayout layoutAnchorBottomRight {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+    };
+    QTest::newRow("anchorBottomRight") << QSize(500,500) << QPoint(300,300) << layoutAnchorBottomRight << QRect(750, 750, 200, 200);
+
+    const PopupLayout layoutAnchorBottom {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+    };
+    QTest::newRow("anchorBottom") << QSize(500, 500) << QPoint(300,300) << layoutAnchorBottom << QRect(550, 750, 200, 200);
+
+    const PopupLayout layoutAnchorBottomLeft {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_left,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+    };
+    QTest::newRow("anchorBottomLeft") << QSize(500, 500) << QPoint(300,300) << layoutAnchorBottomLeft << QRect(350, 750, 200, 200);
+
+    const PopupLayout layoutAnchorLeft {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_left,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+    };
+    QTest::newRow("anchorLeft") << QSize(500, 500) << QPoint(300,300) << layoutAnchorLeft << QRect(350, 550, 200, 200);
 
     // ----------------------------------------------------------------
     // window in the middle, plenty of room either side: Changing gravity around the bottom right anchor
-    positioner.setAnchorEdge(Qt::BottomEdge | Qt::RightEdge);
-    positioner.setGravity(Qt::Edges());
-    QTest::newRow("gravityCentre") << QSize(500, 500) << QPoint(300, 300) << positioner << QRect(650, 650, 200, 200);
-    positioner.setGravity(Qt::TopEdge | Qt::LeftEdge);
-    QTest::newRow("gravityTopLeft") << QSize(500, 500) << QPoint(300, 300) << positioner << QRect(550, 550, 200, 200);
-    positioner.setGravity(Qt::TopEdge);
-    QTest::newRow("gravityTop") << QSize(500, 500) << QPoint(300, 300) << positioner << QRect(650, 550, 200, 200);
-    positioner.setGravity(Qt::TopEdge | Qt::RightEdge);
-    QTest::newRow("gravityTopRight") << QSize(500, 500) << QPoint(300, 300) << positioner << QRect(750, 550, 200, 200);
-    positioner.setGravity(Qt::RightEdge);
-    QTest::newRow("gravityRight") << QSize(500, 500) << QPoint(300, 300) << positioner << QRect(750, 650, 200, 200);
-    positioner.setGravity(Qt::BottomEdge | Qt::RightEdge);
-    QTest::newRow("gravityBottomRight") << QSize(500, 500) << QPoint(300, 300) << positioner << QRect(750, 750, 200, 200);
-    positioner.setGravity(Qt::BottomEdge);
-    QTest::newRow("gravityBottom") << QSize(500, 500) << QPoint(300, 300) << positioner << QRect(650, 750, 200, 200);
-    positioner.setGravity(Qt::BottomEdge | Qt::LeftEdge);
-    QTest::newRow("gravityBottomLeft") << QSize(500, 500) << QPoint(300, 300) << positioner << QRect(550, 750, 200, 200);
-    positioner.setGravity(Qt::LeftEdge);
-    QTest::newRow("gravityLeft") << QSize(500, 500) << QPoint(300, 300) << positioner << QRect(550, 650, 200, 200);
+
+    const PopupLayout layoutGravityCenter {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_none,
+    };
+    QTest::newRow("gravityCentre") << QSize(500, 500) << QPoint(300, 300) << layoutGravityCenter << QRect(650, 650, 200, 200);
+
+    const PopupLayout layoutGravityTopLeft {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_top_left,
+    };
+    QTest::newRow("gravityTopLeft") << QSize(500, 500) << QPoint(300, 300) << layoutGravityTopLeft << QRect(550, 550, 200, 200);
+
+    const PopupLayout layoutGravityTop {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_top,
+    };
+    QTest::newRow("gravityTop") << QSize(500, 500) << QPoint(300, 300) << layoutGravityTop << QRect(650, 550, 200, 200);
+
+    const PopupLayout layoutGravityTopRight {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_top_right,
+    };
+    QTest::newRow("gravityTopRight") << QSize(500, 500) << QPoint(300, 300) << layoutGravityTopRight << QRect(750, 550, 200, 200);
+
+    const PopupLayout layoutGravityRight {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_right,
+    };
+    QTest::newRow("gravityRight") << QSize(500, 500) << QPoint(300, 300) << layoutGravityRight << QRect(750, 650, 200, 200);
+
+    const PopupLayout layoutGravityBottomRight {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+    };
+    QTest::newRow("gravityBottomRight") << QSize(500, 500) << QPoint(300, 300) << layoutGravityBottomRight << QRect(750, 750, 200, 200);
+
+    const PopupLayout layoutGravityBottom {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_bottom,
+    };
+    QTest::newRow("gravityBottom") << QSize(500, 500) << QPoint(300, 300) << layoutGravityBottom << QRect(650, 750, 200, 200);
+
+    const PopupLayout layoutGravityBottomLeft {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_bottom_left,
+    };
+    QTest::newRow("gravityBottomLeft") << QSize(500, 500) << QPoint(300, 300) << layoutGravityBottomLeft << QRect(550, 750, 200, 200);
+
+    const PopupLayout layoutGravityLeft {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_left,
+    };
+    QTest::newRow("gravityLeft") << QSize(500, 500) << QPoint(300, 300) << layoutGravityLeft << QRect(550, 650, 200, 200);
 
     // ----------------------------------------------------------------
-    //constrain and slide
-    //popup is still 200,200. window moved near edge of screen, popup always comes out towards the screen edge
-    positioner.setConstraints(XdgPositioner::Constraint::SlideX | XdgPositioner::Constraint::SlideY);
+    // constrain and slide
+    // popup is still 200,200. window moved near edge of screen, popup always comes out towards the screen edge
 
-    positioner.setAnchorEdge(Qt::TopEdge);
-    positioner.setGravity(Qt::TopEdge);
-    QTest::newRow("constraintSlideTop") << QSize(500, 500) << QPoint(80, 80) << positioner << QRect(80 + 250 - 100, 0, 200, 200);
+    const PopupLayout layoutSlideTop {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_top,
+        .gravity = Test::XdgPositioner::gravity_top,
+        .constraint = Test::XdgPositioner::constraint_adjustment_slide_x | Test::XdgPositioner::constraint_adjustment_slide_y,
+    };
+    QTest::newRow("constraintSlideTop") << QSize(500, 500) << QPoint(80, 80) << layoutSlideTop << QRect(80 + 250 - 100, 0, 200, 200);
 
-    positioner.setAnchorEdge(Qt::LeftEdge);
-    positioner.setGravity(Qt::LeftEdge);
-    QTest::newRow("constraintSlideLeft") << QSize(500, 500) << QPoint(80, 80) << positioner << QRect(0, 80 + 250 - 100, 200, 200);
+    const PopupLayout layoutSlideLeft {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_left,
+        .gravity = Test::XdgPositioner::gravity_left,
+        .constraint = Test::XdgPositioner::constraint_adjustment_slide_x | Test::XdgPositioner::constraint_adjustment_slide_y,
+    };
+    QTest::newRow("constraintSlideLeft") << QSize(500, 500) << QPoint(80, 80) << layoutSlideLeft << QRect(0, 80 + 250 - 100, 200, 200);
 
-    positioner.setAnchorEdge(Qt::RightEdge);
-    positioner.setGravity(Qt::RightEdge);
-    QTest::newRow("constraintSlideRight") << QSize(500, 500) << QPoint(700, 80) << positioner << QRect(1280 - 200, 80 + 250 - 100, 200, 200);
+    const PopupLayout layoutSlideRight {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_right,
+        .gravity = Test::XdgPositioner::gravity_right,
+        .constraint = Test::XdgPositioner::constraint_adjustment_slide_x | Test::XdgPositioner::constraint_adjustment_slide_y,
+    };
+    QTest::newRow("constraintSlideRight") << QSize(500, 500) << QPoint(700, 80) << layoutSlideRight << QRect(1280 - 200, 80 + 250 - 100, 200, 200);
 
-    positioner.setAnchorEdge(Qt::BottomEdge);
-    positioner.setGravity(Qt::BottomEdge);
-    QTest::newRow("constraintSlideBottom") << QSize(500, 500) << QPoint(80, 500) << positioner << QRect(80 + 250 - 100, 1024 - 200, 200, 200);
+    const PopupLayout layoutSlideBottom {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom,
+        .gravity = Test::XdgPositioner::gravity_bottom,
+        .constraint = Test::XdgPositioner::constraint_adjustment_slide_x | Test::XdgPositioner::constraint_adjustment_slide_y,
+    };
+    QTest::newRow("constraintSlideBottom") << QSize(500, 500) << QPoint(80, 500) << layoutSlideBottom << QRect(80 + 250 - 100, 1024 - 200, 200, 200);
 
-    positioner.setAnchorEdge(Qt::BottomEdge | Qt::RightEdge);
-    positioner.setGravity(Qt::BottomEdge| Qt::RightEdge);
-    QTest::newRow("constraintSlideBottomRight") << QSize(500, 500) << QPoint(700, 1000) << positioner << QRect(1280 - 200, 1024 - 200, 200, 200);
-
+    const PopupLayout layoutSlideBottomRight {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+        .constraint = Test::XdgPositioner::constraint_adjustment_slide_x | Test::XdgPositioner::constraint_adjustment_slide_y,
+    };
+    QTest::newRow("constraintSlideBottomRight") << QSize(500, 500) << QPoint(700, 1000) << layoutSlideBottomRight << QRect(1280 - 200, 1024 - 200, 200, 200);
 
     // ----------------------------------------------------------------
     // constrain and flip
-    positioner.setConstraints(XdgPositioner::Constraint::FlipX | XdgPositioner::Constraint::FlipY);
 
-    positioner.setAnchorEdge(Qt::TopEdge);
-    positioner.setGravity(Qt::TopEdge);
-    QTest::newRow("constraintFlipTop") << QSize(500, 500) << QPoint(80, 80) << positioner << QRect(230, 80 + 500 - 50, 200, 200);
+    const PopupLayout layoutFlipTop {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_top,
+        .gravity = Test::XdgPositioner::gravity_top,
+        .constraint = Test::XdgPositioner::constraint_adjustment_flip_x | Test::XdgPositioner::constraint_adjustment_flip_y,
+    };
+    QTest::newRow("constraintFlipTop") << QSize(500, 500) << QPoint(80, 80) << layoutFlipTop << QRect(230, 80 + 500 - 50, 200, 200);
 
-    positioner.setAnchorEdge(Qt::LeftEdge);
-    positioner.setGravity(Qt::LeftEdge);
-    QTest::newRow("constraintFlipLeft") << QSize(500, 500) << QPoint(80, 80) << positioner << QRect(80 + 500 - 50, 230, 200, 200);
+    const PopupLayout layoutFlipLeft {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_left,
+        .gravity = Test::XdgPositioner::gravity_left,
+        .constraint = Test::XdgPositioner::constraint_adjustment_flip_x | Test::XdgPositioner::constraint_adjustment_flip_y,
+    };
+    QTest::newRow("constraintFlipLeft") << QSize(500, 500) << QPoint(80, 80) << layoutFlipLeft << QRect(80 + 500 - 50, 230, 200, 200);
 
-    positioner.setAnchorEdge(Qt::RightEdge);
-    positioner.setGravity(Qt::RightEdge);
-    QTest::newRow("constraintFlipRight") << QSize(500, 500) << QPoint(700, 80) << positioner << QRect(700 + 50 - 200, 230, 200, 200);
+    const PopupLayout layoutFlipRight {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_right,
+        .gravity = Test::XdgPositioner::gravity_right,
+        .constraint = Test::XdgPositioner::constraint_adjustment_flip_x | Test::XdgPositioner::constraint_adjustment_flip_y,
+    };
+    QTest::newRow("constraintFlipRight") << QSize(500, 500) << QPoint(700, 80) << layoutFlipRight << QRect(700 + 50 - 200, 230, 200, 200);
 
-    positioner.setAnchorEdge(Qt::BottomEdge);
-    positioner.setGravity(Qt::BottomEdge);
-    QTest::newRow("constraintFlipBottom") << QSize(500, 500) << QPoint(80, 500) << positioner << QRect(230, 500 + 50 - 200, 200, 200);
+    const PopupLayout layoutFlipBottom {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom,
+        .gravity = Test::XdgPositioner::gravity_bottom,
+        .constraint = Test::XdgPositioner::constraint_adjustment_flip_x | Test::XdgPositioner::constraint_adjustment_flip_y,
+    };
+    QTest::newRow("constraintFlipBottom") << QSize(500, 500) << QPoint(80, 500) << layoutFlipBottom << QRect(230, 500 + 50 - 200, 200, 200);
 
-    positioner.setAnchorEdge(Qt::BottomEdge | Qt::RightEdge);
-    positioner.setGravity(Qt::BottomEdge| Qt::RightEdge);
-    QTest::newRow("constraintFlipBottomRight") << QSize(500, 500) << QPoint(700, 500) << positioner << QRect(700 + 50 - 200, 500 + 50 - 200, 200, 200);
+    const PopupLayout layoutFlipBottomRight {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom_right,
+        .gravity = Test::XdgPositioner::gravity_bottom_right,
+        .constraint = Test::XdgPositioner::constraint_adjustment_flip_x | Test::XdgPositioner::constraint_adjustment_flip_y,
+    };
+    QTest::newRow("constraintFlipBottomRight") << QSize(500, 500) << QPoint(700, 500) << layoutFlipBottomRight << QRect(700 + 50 - 200, 500 + 50 - 200, 200, 200);
 
-    positioner.setAnchorEdge(Qt::TopEdge);
-    positioner.setGravity(Qt::RightEdge);
-    //as popup is positioned in the middle of the parent we need a massive popup to be able to overflow
-    positioner.setInitialSize(QSize(400, 400));
-    QTest::newRow("constraintFlipRightNoAnchor") << QSize(500, 500) << QPoint(700, 80) << positioner << QRect(700 + 250 - 400, 330, 400, 400);
+    const PopupLayout layoutFlipRightNoAnchor {
+        .anchorRect = QRect(50, 50, 400, 400),
+        //as popup is positioned in the middle of the parent we need a massive popup to be able to overflow
+        .size = QSize(400, 400),
+        .anchor = Test::XdgPositioner::anchor_top,
+        .gravity = Test::XdgPositioner::gravity_right,
+        .constraint = Test::XdgPositioner::constraint_adjustment_flip_x | Test::XdgPositioner::constraint_adjustment_flip_y,
+    };
+    QTest::newRow("constraintFlipRightNoAnchor") << QSize(500, 500) << QPoint(700, 80) << layoutFlipRightNoAnchor << QRect(700 + 250 - 400, 330, 400, 400);
 
-    positioner.setAnchorEdge(Qt::RightEdge);
-    positioner.setGravity(Qt::TopEdge);
-    positioner.setInitialSize(QSize(300, 200));
-    QTest::newRow("constraintFlipRightNoGravity") << QSize(500, 500) << QPoint(700, 80) << positioner << QRect(700 + 50 - 150, 130, 300, 200);
+    const PopupLayout layoutFlipRightNoGravity {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(300, 200),
+        .anchor = Test::XdgPositioner::anchor_right,
+        .gravity = Test::XdgPositioner::gravity_top,
+        .constraint = Test::XdgPositioner::constraint_adjustment_flip_x | Test::XdgPositioner::constraint_adjustment_flip_y,
+    };
+    QTest::newRow("constraintFlipRightNoGravity") << QSize(500, 500) << QPoint(700, 80) << layoutFlipRightNoGravity << QRect(700 + 50 - 150, 130, 300, 200);
 
     // ----------------------------------------------------------------
     // resize
-    positioner.setConstraints(XdgPositioner::Constraint::ResizeX | XdgPositioner::Constraint::ResizeY);
-    positioner.setInitialSize(QSize(200, 200));
 
-    positioner.setAnchorEdge(Qt::TopEdge);
-    positioner.setGravity(Qt::TopEdge);
-    QTest::newRow("resizeTop") << QSize(500, 500) << QPoint(80, 80) << positioner << QRect(80 + 250 - 100, 0, 200, 130);
+    const PopupLayout layoutResizeTop {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_top,
+        .gravity = Test::XdgPositioner::gravity_top,
+        .constraint = Test::XdgPositioner::constraint_adjustment_resize_x | Test::XdgPositioner::constraint_adjustment_resize_y,
+    };
+    QTest::newRow("resizeTop") << QSize(500, 500) << QPoint(80, 80) << layoutResizeTop << QRect(80 + 250 - 100, 0, 200, 130);
 
-    positioner.setAnchorEdge(Qt::LeftEdge);
-    positioner.setGravity(Qt::LeftEdge);
-    QTest::newRow("resizeLeft") << QSize(500, 500) << QPoint(80, 80) << positioner << QRect(0, 80 + 250 - 100, 130, 200);
+    const PopupLayout layoutResizeLeft {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_left,
+        .gravity = Test::XdgPositioner::gravity_left,
+        .constraint = Test::XdgPositioner::constraint_adjustment_resize_x | Test::XdgPositioner::constraint_adjustment_resize_y,
+    };
+    QTest::newRow("resizeLeft") << QSize(500, 500) << QPoint(80, 80) << layoutResizeLeft << QRect(0, 80 + 250 - 100, 130, 200);
 
-    positioner.setAnchorEdge(Qt::RightEdge);
-    positioner.setGravity(Qt::RightEdge);
-    QTest::newRow("resizeRight") << QSize(500, 500) << QPoint(700, 80) << positioner << QRect(700 + 50 + 400, 80 + 250 - 100, 130, 200);
+    const PopupLayout layoutResizeRight {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_right,
+        .gravity = Test::XdgPositioner::gravity_right,
+        .constraint = Test::XdgPositioner::constraint_adjustment_resize_x | Test::XdgPositioner::constraint_adjustment_resize_y,
+    };
+    QTest::newRow("resizeRight") << QSize(500, 500) << QPoint(700, 80) << layoutResizeRight << QRect(700 + 50 + 400, 80 + 250 - 100, 130, 200);
 
-    positioner.setAnchorEdge(Qt::BottomEdge);
-    positioner.setGravity(Qt::BottomEdge);
-    QTest::newRow("resizeBottom") << QSize(500, 500) << QPoint(80, 500) << positioner << QRect(80 + 250 - 100, 500 + 50 + 400, 200, 74);
+    const PopupLayout layoutResizeBottom {
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_bottom,
+        .gravity = Test::XdgPositioner::gravity_bottom,
+        .constraint = Test::XdgPositioner::constraint_adjustment_resize_x | Test::XdgPositioner::constraint_adjustment_resize_y,
+    };
+    QTest::newRow("resizeBottom") << QSize(500, 500) << QPoint(80, 500) << layoutResizeBottom << QRect(80 + 250 - 100, 500 + 50 + 400, 200, 74);
 }
 
 void TransientPlacementTest::testXdgPopup()
@@ -233,7 +420,7 @@ void TransientPlacementTest::testXdgPopup()
 
     Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
-    auto parentShellSurface = Test::createXdgShellStableSurface(surface, Test::waylandCompositor());
+    auto parentShellSurface = Test::createXdgToplevelSurface(surface, Test::waylandCompositor());
     QVERIFY(parentShellSurface);
     auto parent = Test::renderAndWaitForShown(surface, parentSize, Qt::blue);
     QVERIFY(parent);
@@ -243,19 +430,26 @@ void TransientPlacementTest::testXdgPopup()
     QCOMPARE(parent->frameGeometry(), QRect(parentPosition, parentSize));
 
     //create popup
-    QFETCH(XdgPositioner, positioner);
+    QFETCH(PopupLayout, layout);
 
     Surface *transientSurface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(transientSurface);
 
-    auto popup = Test::createXdgShellStablePopup(transientSurface, parentShellSurface, positioner, Test::waylandCompositor(), Test::CreationSetup::CreateOnly);
-    QSignalSpy configureRequestedSpy(popup, &XdgShellPopup::configureRequested);
+    QScopedPointer<Test::XdgPositioner> positioner(Test::createXdgPositioner());
+    positioner->set_anchor_rect(layout.anchorRect.x(), layout.anchorRect.y(), layout.anchorRect.width(), layout.anchorRect.height());
+    positioner->set_size(layout.size.width(), layout.size.height());
+    positioner->set_anchor(layout.anchor);
+    positioner->set_gravity(layout.gravity);
+    positioner->set_constraint_adjustment(layout.constraint);
+    auto popup = Test::createXdgPopupSurface(transientSurface, parentShellSurface->xdgSurface(), positioner.data(), Test::waylandCompositor(), Test::CreationSetup::CreateOnly);
+    QSignalSpy popupConfigureRequestedSpy(popup, &Test::XdgPopup::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(popup->xdgSurface(), &Test::XdgSurface::configureRequested);
     transientSurface->commit(Surface::CommitFlag::None);
 
-    configureRequestedSpy.wait();
-    QCOMPARE(configureRequestedSpy.count(), 1);
-    QCOMPARE(configureRequestedSpy.first()[0].value<QRect>(), expectedRelativeGeometry);
-    popup->ackConfigure(configureRequestedSpy.first()[1].toUInt());
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+    QCOMPARE(popupConfigureRequestedSpy.last()[0].value<QRect>(), expectedRelativeGeometry);
+    popup->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last()[0].toUInt());
 
     auto transient = Test::renderAndWaitForShown(transientSurface, expectedRelativeGeometry.size(), Qt::red);
     QVERIFY(transient);
@@ -264,7 +458,7 @@ void TransientPlacementTest::testXdgPopup()
     QVERIFY(transient->hasTransientPlacementHint());
     QCOMPARE(transient->frameGeometry(), expectedGeometry);
 
-    QCOMPARE(configureRequestedSpy.count(), 1); // check that we did not get reconfigured
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1); // check that we did not get reconfigured
 }
 
 void TransientPlacementTest::testXdgPopupWithPanel()
@@ -273,7 +467,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
 
     QScopedPointer<Surface> surface{Test::createSurface()};
     QVERIFY(!surface.isNull());
-    QScopedPointer<XdgShellSurface> dockShellSurface{Test::createXdgShellStableSurface(surface.data(), surface.data())};
+    QScopedPointer<Test::XdgToplevel> dockShellSurface{Test::createXdgToplevelSurface(surface.data())};
     QVERIFY(!dockShellSurface.isNull());
     QScopedPointer<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
@@ -294,7 +488,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     //create parent
     Surface *parentSurface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(parentSurface);
-    auto parentShellSurface = Test::createXdgShellStableSurface(parentSurface, Test::waylandCompositor());
+    auto parentShellSurface = Test::createXdgToplevelSurface(parentSurface, Test::waylandCompositor());
     QVERIFY(parentShellSurface);
     auto parent = Test::renderAndWaitForShown(parentSurface, {800, 600}, Qt::blue);
     QVERIFY(parent);
@@ -306,10 +500,13 @@ void TransientPlacementTest::testXdgPopupWithPanel()
 
     Surface *transientSurface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(transientSurface);
-    XdgPositioner positioner(QSize(200,200), QRect(50,500, 200,200));
 
-    auto transientShellSurface = Test::createXdgShellStablePopup(transientSurface, parentShellSurface, positioner, Test::waylandCompositor());
-    auto transient = Test::renderAndWaitForShown(transientSurface, positioner.initialSize(), Qt::red);
+    QScopedPointer<Test::XdgPositioner> positioner(Test::createXdgPositioner());
+    positioner->set_size(200, 200);
+    positioner->set_anchor_rect(50, 500, 200, 200);
+
+    auto transientShellSurface = Test::createXdgPopupSurface(transientSurface, parentShellSurface->xdgSurface(), positioner.data(), Test::waylandCompositor());
+    auto transient = Test::renderAndWaitForShown(transientSurface, QSize(200, 200), Qt::red);
     QVERIFY(transient);
 
     QVERIFY(!transient->isDecorated());
@@ -322,14 +519,14 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(Test::waitForWindowDestroyed(transient));
 
     // now parent to fullscreen - on fullscreen the panel is ignored
-    QSignalSpy fullscreenSpy{parentShellSurface, &XdgShellSurface::configureRequested};
-    QVERIFY(fullscreenSpy.isValid());
+    QSignalSpy toplevelConfigureRequestedSpy(parentShellSurface, &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(parentShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     parent->setFullScreen(true);
-    QVERIFY(fullscreenSpy.wait());
-    parentShellSurface->ackConfigure(fullscreenSpy.first().at(2).value<quint32>());
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    parentShellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     QSignalSpy frameGeometryChangedSpy{parent, &AbstractClient::frameGeometryChanged};
     QVERIFY(frameGeometryChangedSpy.isValid());
-    Test::render(parentSurface, fullscreenSpy.first().at(0).toSize(), Qt::red);
+    Test::render(parentSurface, toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(parent->frameGeometry(), screens()->geometry(0));
     QVERIFY(parent->isFullScreen());
@@ -338,9 +535,12 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     transientSurface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(transientSurface);
 
-    XdgPositioner positioner2(QSize(200,200), QRect(50,screens()->geometry(0).height()-100, 200,200));
-    transientShellSurface = Test::createXdgShellStablePopup(transientSurface, parentShellSurface, positioner2, Test::waylandCompositor());
-    transient = Test::renderAndWaitForShown(transientSurface, positioner2.initialSize(), Qt::red);
+    const QRect anchorRect2(50, screens()->geometry(0).height()-100, 200,200);
+    QScopedPointer<Test::XdgPositioner> positioner2(Test::createXdgPositioner());
+    positioner2->set_size(200, 200);
+    positioner2->set_anchor_rect(anchorRect2.x(), anchorRect2.y(), anchorRect2.width(), anchorRect2.height());
+    transientShellSurface = Test::createXdgPopupSurface(transientSurface, parentShellSurface->xdgSurface(), positioner2.data(), Test::waylandCompositor());
+    transient = Test::renderAndWaitForShown(transientSurface, QSize(200, 200), Qt::red);
     QVERIFY(transient);
 
     QVERIFY(!transient->isDecorated());

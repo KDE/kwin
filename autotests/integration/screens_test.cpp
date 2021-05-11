@@ -16,7 +16,6 @@
 
 #include <KConfigGroup>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/xdgshell.h>
 
 namespace KWin
 {
@@ -245,7 +244,7 @@ void ScreensTest::testCurrentClient()
 
     // create a test window
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<KWayland::Client::XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(200, 100), Qt::red);
     QVERIFY(client);
     QVERIFY(client->isActive());

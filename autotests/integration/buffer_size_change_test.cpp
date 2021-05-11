@@ -13,7 +13,6 @@
 #include "scene.h"
 #include "wayland_server.h"
 
-#include <KWayland/Client/xdgshell.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 
@@ -47,7 +46,7 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
 
     // set buffer size
@@ -77,7 +76,7 @@ void BufferSizeChangeTest::testShmBufferSizeChangeOnSubSurface()
     // setup parent surface
     QScopedPointer<Surface> parentSurface(Test::createSurface());
     QVERIFY(!parentSurface.isNull());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(parentSurface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(parentSurface.data()));
     QVERIFY(!shellSurface.isNull());
 
     // setup sub surface
