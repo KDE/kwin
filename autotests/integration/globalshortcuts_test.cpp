@@ -76,6 +76,9 @@ void GlobalShortcutsTest::init()
     QVERIFY(Test::setupWaylandConnection());
     screens()->setCurrent(0);
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+
+    auto xkb = input()->keyboard()->xkb();
+    xkb->switchToLayout(0);
 }
 
 void GlobalShortcutsTest::cleanup()
