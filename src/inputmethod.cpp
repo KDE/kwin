@@ -318,7 +318,7 @@ void InputMethod::textInputInterfaceV3EnabledChanged()
 void InputMethod::stateCommitted(uint32_t serial)
 {
     if (!isEnabled()) {
-	return;
+        return;
     }
     TextInputV3Interface *textInputV3 = waylandServer()->seat()->textInputV3();
     if (!textInputV3) {
