@@ -457,6 +457,7 @@ void MoveResizeWindowTest::testGrowShrink()
     QVERIFY(surfaceConfigureRequestedSpy.isValid());
     // let's render
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(toplevelConfigureRequestedSpy.wait());
 
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
