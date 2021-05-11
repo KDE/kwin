@@ -604,6 +604,8 @@ void WaylandServer::initWorkspace()
         });
     }
 
+    initOutputs();
+
     if (hasScreenLockerIntegration()) {
         if (m_internalConnection.interfacesAnnounced) {
             initScreenLocker();
@@ -613,8 +615,6 @@ void WaylandServer::initWorkspace()
     } else {
         emit initialized();
     }
-
-    initOutputs();
 }
 
 void WaylandServer::initScreenLocker()
