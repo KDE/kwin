@@ -216,10 +216,10 @@ void GlobalShortcutsTest::testRepeatedTrigger()
     QVERIFY(triggeredSpy.wait());
     // now release the key
     kwinApp()->platform()->keyboardKeyReleased(KEY_5, timestamp++);
-    QVERIFY(!triggeredSpy.wait(500));
+    QVERIFY(!triggeredSpy.wait(50));
 
     kwinApp()->platform()->keyboardKeyReleased(KEY_WAKEUP, timestamp++);
-    QVERIFY(!triggeredSpy.wait(500));
+    QVERIFY(!triggeredSpy.wait(50));
 
     // release shift
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
