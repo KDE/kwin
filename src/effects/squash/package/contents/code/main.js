@@ -8,6 +8,15 @@
 
 "use strict";
 
+function fitScale(rect, bounds)
+{
+    if (bounds.width > bounds.height) {
+        return bounds.height / rect.height;
+    } else {
+        return bounds.width / rect.width;
+    }
+}
+
 var squashEffect = {
     duration: animationTime(250),
     loadConfig: function () {
@@ -20,8 +29,13 @@ var squashEffect = {
 
         // If the window doesn't have an icon in the task manager,
         // don't animate it.
-        var iconRect = window.iconGeometry;
+        const iconRect = window.iconGeometry;
         if (iconRect.width == 0 || iconRect.height == 0) {
+            return;
+        }
+
+        const windowRect = window.geometry;
+        if (windowRect.width == 0 || windowRect.height == 0) {
             return;
         }
 
@@ -40,40 +54,24 @@ var squashEffect = {
             cancel(window.minimizeAnimation);
         }
 
-        var windowRect = window.geometry;
-
         window.minimizeAnimation = animate({
             window: window,
             curve: QEasingCurve.InCubic,
             duration: squashEffect.duration,
             animations: [
                 {
-                    type: Effect.Size,
-                    from: {
-                        value1: windowRect.width,
-                        value2: windowRect.height
-                    },
-                    to: {
-                        value1: iconRect.width,
-                        value2: iconRect.height
-                    }
+                    type: Effect.Scale,
+                    to: fitScale(windowRect, iconRect)
                 },
                 {
-                    type: Effect.Translation,
-                    from: {
-                        value1: 0.0,
-                        value2: 0.0
-                    },
+                    type: Effect.Position,
                     to: {
-                        value1: iconRect.x - windowRect.x -
-                            (windowRect.width - iconRect.width) / 2,
-                        value2: iconRect.y - windowRect.y -
-                            (windowRect.height - iconRect.height) / 2,
+                        value1: iconRect.x + iconRect.width / 2,
+                        value2: iconRect.y + iconRect.height / 2
                     }
                 },
                 {
                     type: Effect.Opacity,
-                    from: 1.0,
                     to: 0.0
                 }
             ]
@@ -86,8 +84,13 @@ var squashEffect = {
 
         // If the window doesn't have an icon in the task manager,
         // don't animate it.
-        var iconRect = window.iconGeometry;
+        const iconRect = window.iconGeometry;
         if (iconRect.width == 0 || iconRect.height == 0) {
+            return;
+        }
+
+        const windowRect = window.geometry;
+        if (windowRect.width == 0 || windowRect.height == 0) {
             return;
         }
 
@@ -106,41 +109,25 @@ var squashEffect = {
             cancel(window.unminimizeAnimation);
         }
 
-        var windowRect = window.geometry;
-
         window.unminimizeAnimation = animate({
             window: window,
             curve: QEasingCurve.OutCubic,
             duration: squashEffect.duration,
             animations: [
                 {
-                    type: Effect.Size,
-                    from: {
-                        value1: iconRect.width,
-                        value2: iconRect.height
-                    },
-                    to: {
-                        value1: windowRect.width,
-                        value2: windowRect.height
-                    }
+                    type: Effect.Scale,
+                    from: fitScale(windowRect, iconRect)
                 },
                 {
-                    type: Effect.Translation,
+                    type: Effect.Position,
                     from: {
-                        value1: iconRect.x - windowRect.x -
-                            (windowRect.width - iconRect.width) / 2,
-                        value2: iconRect.y - windowRect.y -
-                            (windowRect.height - iconRect.height) / 2,
-                    },
-                    to: {
-                        value1: 0.0,
-                        value2: 0.0
+                        value1: iconRect.x + iconRect.width / 2,
+                        value2: iconRect.y + iconRect.height / 2
                     }
                 },
                 {
                     type: Effect.Opacity,
-                    from: 0.0,
-                    to: 1.0
+                    from: 0.0
                 }
             ]
         });
