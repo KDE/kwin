@@ -306,6 +306,9 @@ struct XcbConnectionDeleter
 
 void GlobalShortcutsTest::testX11ClientShortcut()
 {
+#ifdef NO_XWAYLAND
+    QSKIP("x11 test, unnecessary without xwayland");
+#endif
     // create an X11 window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
