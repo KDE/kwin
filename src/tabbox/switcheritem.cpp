@@ -8,6 +8,7 @@
 */
 #include "switcheritem.h"
 // KWin
+#include "composite.h"
 #include "tabboxhandler.h"
 #include "screens.h"
 // Qt
@@ -32,6 +33,7 @@ SwitcherItem::SwitcherItem(QObject *parent)
         }
     });
     connect(screens(), &Screens::changed, this, &SwitcherItem::screenGeometryChanged);
+    connect(Compositor::self(), &Compositor::compositingToggled, this, &SwitcherItem::compositingChanged);
 }
 
 SwitcherItem::~SwitcherItem()
@@ -98,6 +100,11 @@ void SwitcherItem::setNoModifierGrab(bool set)
     }
     m_noModifierGrab = set;
     emit noModifierGrabChanged();
+}
+
+bool SwitcherItem::compositing()
+{
+    return Compositor::compositing();
 }
 
 }
