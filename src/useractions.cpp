@@ -1187,8 +1187,6 @@ void Workspace::slotWindowToScreen()
 {
     if (USABLE_ACTIVE_CLIENT) {
         const int i = senderValue(sender());
-        if (i < 0)
-            return;
         if (i >= 0 && i <= screens()->count()) {
             sendClientToScreen(active_client, i);
         }
