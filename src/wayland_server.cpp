@@ -240,6 +240,10 @@ void WaylandServer::terminateClientConnections()
 
 void WaylandServer::registerShellClient(AbstractClient *client)
 {
+    if (client->isLockScreen()) {
+        ScreenLocker::KSldApp::self()->lockScreenShown();
+    }
+
     if (client->readyForPainting()) {
         emit shellClientAdded(client);
     } else {
@@ -253,10 +257,6 @@ void WaylandServer::registerXdgToplevelClient(XdgToplevelClient *client)
     // TODO: Find a better way and more generic to install extensions.
 
     SurfaceInterface *surface = client->surface();
-
-    if (surface->client() == m_screenLockerClientConnection) {
-        ScreenLocker::KSldApp::self()->lockScreenShown();
-    }
 
     registerShellClient(client);
 
