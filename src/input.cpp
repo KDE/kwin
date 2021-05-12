@@ -1021,6 +1021,7 @@ class InternalWindowEventFilter : public InputEventFilter {
         auto touch = input()->touch();
         if (touch->internalPressId() != -1) {
             // already on internal window, ignore further touch points, but filter out
+            m_pressedIds.insert(id);
             return true;
         }
         // a new touch point
@@ -1052,7 +1053,7 @@ class InternalWindowEventFilter : public InputEventFilter {
             return false;
         }
         waylandServer()->seat()->setTimestamp(time);
-        if (touch->internalPressId() != qint32(id)) {
+        if (touch->internalPressId() != qint32(id) || m_pressedIds.contains(id)) {
             // ignore, but filter out
             return true;
         }
@@ -1066,11 +1067,12 @@ class InternalWindowEventFilter : public InputEventFilter {
     bool touchUp(qint32 id, quint32 time) override {
         auto touch = input()->touch();
         auto internal = touch->internalWindow();
+        const bool removed = m_pressedIds.remove(id);
         if (!internal) {
-            return false;
+            return removed;
         }
         if (touch->internalPressId() == -1) {
-            return false;
+            return removed;
         }
         waylandServer()->seat()->setTimestamp(time);
         if (touch->internalPressId() != qint32(id)) {
@@ -1091,6 +1093,7 @@ class InternalWindowEventFilter : public InputEventFilter {
         return true;
     }
 private:
+    QSet<qint32> m_pressedIds;
     QPointF m_lastGlobalTouchPos;
     QPointF m_lastLocalTouchPos;
 };
