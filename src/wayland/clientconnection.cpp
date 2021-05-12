@@ -68,6 +68,7 @@ void ClientConnectionPrivate::destroyListenerCallback(wl_listener *listener, voi
     Q_ASSERT(it != s_allClients.constEnd());
     auto p = (*it);
     auto q = p->q;
+    emit q->aboutToBeDestroyed();
     p->client = nullptr;
     wl_list_remove(&p->listener.link);
     emit q->disconnected(q);
