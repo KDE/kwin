@@ -490,8 +490,8 @@ static Layer layerForClient(const X11Client *client)
             } else if (member->screen() != client->screen()) {
                 continue;
             }
-            if (member->layer() > layer) {
-                layer = member->layer();
+            if (member->layer() == ActiveLayer) {
+                return ActiveLayer;
             }
         }
     }
