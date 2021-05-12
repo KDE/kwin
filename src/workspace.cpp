@@ -2202,25 +2202,16 @@ void Workspace::updateClientArea(bool force)
     }
 #endif
 
-    bool changed = force;
-
-    if (screenarea.isEmpty())
-        changed = true;
-
+    bool changed = force || screenarea.isEmpty();
     for (int i = 1;
             !changed && i <= numberOfDesktops;
             ++i) {
-        if (workarea[ i ] != new_wareas[ i ])
-            changed = true;
-        if (restrictedmovearea[ i ] != new_rmoveareas[ i ])
-            changed = true;
-        if (screenarea[ i ].size() != new_sareas[ i ].size())
-            changed = true;
-        for (int iS = 0;
-                !changed && iS < nscreens;
-                iS ++)
-            if (new_sareas[ i ][ iS ] != screenarea [ i ][ iS ])
-                changed = true;
+        changed |= workarea[i] != new_wareas[i];
+        changed |= restrictedmovearea[i] != new_rmoveareas[i];
+        changed |= screenarea[i].size() != new_sareas[i].size();
+        for (int iS = 0; !changed && iS < nscreens; iS++) {
+            changed |= new_sareas[i][iS] != screenarea[i][iS];
+        }
     }
 
     if (changed) {
