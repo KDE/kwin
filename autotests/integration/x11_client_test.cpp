@@ -569,7 +569,7 @@ void X11ClientTest::testFullscreenLayerWithActiveWaylandWindow()
     QVERIFY(waylandClient->isActive());
     QCOMPARE(waylandClient->layer(), NormalLayer);
     QCOMPARE(workspace()->stackingOrder().last(), waylandClient);
-    QCOMPARE(workspace()->xStackingOrder().last(), waylandClient);
+    QCOMPARE(workspace()->stackingOrder().last(), waylandClient);
     QCOMPARE(client->layer(), NormalLayer);
 
     // now activate fullscreen again
@@ -577,13 +577,13 @@ void X11ClientTest::testFullscreenLayerWithActiveWaylandWindow()
     QTRY_VERIFY(client->isActive());
     QCOMPARE(client->layer(), ActiveLayer);
     QCOMPARE(workspace()->stackingOrder().last(), client);
-    QCOMPARE(workspace()->xStackingOrder().last(), client);
+    QCOMPARE(workspace()->stackingOrder().last(), client);
 
     // activate wayland window again
     workspace()->activateClient(waylandClient);
     QTRY_VERIFY(waylandClient->isActive());
     QCOMPARE(workspace()->stackingOrder().last(), waylandClient);
-    QCOMPARE(workspace()->xStackingOrder().last(), waylandClient);
+    QCOMPARE(workspace()->stackingOrder().last(), waylandClient);
 
     // back to x window
     workspace()->activateClient(client);
@@ -596,13 +596,13 @@ void X11ClientTest::testFullscreenLayerWithActiveWaylandWindow()
     workspace()->slotWindowFullScreen();
     QVERIFY(client->isFullScreen());
     QCOMPARE(workspace()->stackingOrder().last(), client);
-    QCOMPARE(workspace()->xStackingOrder().last(), client);
+    QCOMPARE(workspace()->stackingOrder().last(), client);
 
     // activate wayland window again
     workspace()->activateClient(waylandClient);
     QTRY_VERIFY(waylandClient->isActive());
     QCOMPARE(workspace()->stackingOrder().last(), waylandClient);
-    QCOMPARE(workspace()->xStackingOrder().last(), waylandClient);
+    QCOMPARE(workspace()->stackingOrder().last(), waylandClient);
 
     // back to X11 window
     workspace()->activateClient(client);
@@ -619,13 +619,13 @@ void X11ClientTest::testFullscreenLayerWithActiveWaylandWindow()
     xcb_flush(c.data());
     QTRY_VERIFY(client->isFullScreen());
     QCOMPARE(workspace()->stackingOrder().last(), client);
-    QCOMPARE(workspace()->xStackingOrder().last(), client);
+    QCOMPARE(workspace()->stackingOrder().last(), client);
 
     // activate wayland window again
     workspace()->activateClient(waylandClient);
     QTRY_VERIFY(waylandClient->isActive());
     QCOMPARE(workspace()->stackingOrder().last(), waylandClient);
-    QCOMPARE(workspace()->xStackingOrder().last(), waylandClient);
+    QCOMPARE(workspace()->stackingOrder().last(), waylandClient);
     QCOMPARE(client->layer(), NormalLayer);
 
     // close the window
