@@ -34,6 +34,8 @@ class AbstractOutput;
 class XdgSurfaceConfigure
 {
 public:
+    virtual ~XdgSurfaceConfigure() {}
+
     enum ConfigureField {
         PositionField = 0x1,
         SizeField = 0x2,
