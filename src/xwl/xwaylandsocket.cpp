@@ -147,8 +147,8 @@ static bool checkSocketsDirectory()
         qCWarning(KWIN_XWL) << path << "is not a directory. Broken system?";
         return false;
     }
-    if (info.st_uid != 0) {
-        qCWarning(KWIN_XWL) << path << "is not owned by root. Your system might be compromised!";
+    if (info.st_uid != 0 && info.st_uid != getuid()) {
+        qCWarning(KWIN_XWL) << path << "is not owned by root or us";
         return false;
     }
     if (!(info.st_mode & S_ISVTX)) {
