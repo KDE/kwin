@@ -299,11 +299,9 @@ KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, void *userData)
     case LIBINPUT_TABLET_TOOL_TYPE_LENS:
         toolType = InputRedirection::Lens;
         break;
-#ifdef LIBINPUT_HAS_TOTEM
     case LIBINPUT_TABLET_TOOL_TYPE_TOTEM:
         toolType = InputRedirection::Totem;
         break;
-#endif
     }
     QVector<InputRedirection::Capability> capabilities;
     if (libinput_tablet_tool_has_pressure(tool)) {

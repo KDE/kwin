@@ -176,10 +176,6 @@ ki18n_wrap_ui(kwin_SRCS
 )
 
 add_library(kwin SHARED ${kwin_SRCS})
-if (Libinput_VERSION_STRING VERSION_GREATER 1.14)
-    set_source_files_properties(libinput/connection.cpp PROPERTIES COMPILE_DEFINITIONS LIBINPUT_HAS_TOTEM)
-endif ()
-
 set_target_properties(kwin PROPERTIES
    VERSION ${PROJECT_VERSION}
    SOVERSION ${PROJECT_VERSION_MAJOR}
