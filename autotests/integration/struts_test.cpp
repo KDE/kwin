@@ -520,7 +520,7 @@ void StrutsTest::testX11Struts_data()
                                            << QRect(0, 0, 1280, 1024)
                                            << QRect(1280, 0, 1280, 1024)
                                            << QRect(0, 0, 2560, 1024)
-                                           << QRegion(0, 0, 1279, 1024);
+                                           << QRegion();
 }
 
 struct XcbConnectionDeleter
