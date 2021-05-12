@@ -696,6 +696,7 @@ bool Scanner::process()
             printf("        object->m_global = nullptr;\n");
             printf("        wl_event_source_remove(object->m_globalRemovedEvent);\n");
             printf("        object->m_globalRemovedEvent = nullptr;\n");
+            printf("        wl_list_remove(&object->m_displayDestroyedListener.link);\n");
             printf("        object->%s_destroy_global();\n", interfaceNameStripped);
             printf("        return 0;\n");
             printf("    }\n");
