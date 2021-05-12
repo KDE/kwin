@@ -100,6 +100,9 @@ public:
     bool isOutline() const override {
         return m_wasOutline;
     }
+    bool isLockScreen() const override {
+        return m_wasLockScreen;
+    }
 
 private Q_SLOTS:
     void mainClientClosed(KWin::Toplevel *client);
@@ -140,6 +143,7 @@ private:
     bool m_wasPopupWindow;
     bool m_wasOutline;
     bool m_wasDecorated;
+    bool m_wasLockScreen;
     qreal m_bufferScale = 1;
 };
 

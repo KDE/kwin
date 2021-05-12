@@ -48,6 +48,8 @@ WaylandClient::WaylandClient(SurfaceInterface *surface)
             this, &WaylandClient::updateIcon);
     connect(screens(), &Screens::changed, this,
             &WaylandClient::updateClientOutputs);
+    connect(surface->client(), &ClientConnection::aboutToBeDestroyed,
+            this, &WaylandClient::destroyClient);
 
     updateResourceName();
     updateIcon();

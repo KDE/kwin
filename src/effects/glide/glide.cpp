@@ -310,8 +310,8 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
         return false;
     }
 
-    // Don't animate the outline because it looks very sick.
-    if (w->isOutline()) {
+    // Don't animate the outline and the screenlocker as it looks bad.
+    if (w->isLockScreen() || w->isOutline()) {
         return false;
     }
 

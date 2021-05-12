@@ -251,6 +251,9 @@ public:
     bool isOutline() const override {
         return false;
     }
+    bool isLockScreen() const override {
+        return false;
+    }
     pid_t pid() const override {
         return 0;
     }
