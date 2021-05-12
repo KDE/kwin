@@ -570,7 +570,7 @@ void Workspace::constrain(AbstractClient *below, AbstractClient *above)
         child->parents << constraint;
     }
 
-    updateXStackingOrder();
+    updateStackingOrder();
 }
 
 void Workspace::unconstrain(AbstractClient *below, AbstractClient *above)
