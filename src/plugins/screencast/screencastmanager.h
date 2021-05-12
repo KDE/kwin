@@ -30,7 +30,7 @@ public:
                       KWaylandServer::ScreencastV1Interface::CursorMode mode);
 
 private:
-    void integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, PipeWireStream *pipewireStream);
+    void integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, PipeWireStream *stream);
 
     KWaylandServer::ScreencastV1Interface *m_screencast;
 };
