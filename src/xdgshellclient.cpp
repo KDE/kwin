@@ -148,16 +148,7 @@ void XdgSurfaceClient::scheduleConfigure(ConfigureFlags flags)
 
 void XdgSurfaceClient::sendConfigure()
 {
-    XdgSurfaceConfigure *configureEvent = sendRoleConfigure();
-
-    if (configureEvent->position != pos()) {
-        configureEvent->presentFields |= XdgSurfaceConfigure::PositionField;
-    }
-    if (configureEvent->size != size()) {
-        configureEvent->presentFields |= XdgSurfaceConfigure::SizeField;
-    }
-
-    m_configureEvents.append(configureEvent);
+    m_configureEvents.append(sendRoleConfigure());
     m_configureFlags = ConfigureFlags();
 }
 
@@ -226,9 +217,10 @@ void XdgSurfaceClient::handleNextWindowGeometry()
         frameGeometry = adjustMoveResizeGeometry(frameGeometry);
     } else if (lastAcknowledgedConfigure()) {
         XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure();
-
-        if (configureEvent->presentFields & XdgSurfaceConfigure::PositionField) {
+        if (!m_plasmaShellSurface || !m_plasmaShellSurface->isPositionSet()) {
             frameGeometry.moveTopLeft(configureEvent->position);
+        } else {
+            frameGeometry.moveTopLeft(m_plasmaShellSurface->position());
         }
     }
 
@@ -742,7 +734,6 @@ XdgSurfaceConfigure *XdgToplevelClient::sendRoleConfigure() const
 
     XdgToplevelConfigure *configureEvent = new XdgToplevelConfigure();
     configureEvent->position = requestedPos();
-    configureEvent->size = requestedSize();
     configureEvent->states = m_requestedStates;
     configureEvent->serial = serial;
 
@@ -2032,7 +2023,6 @@ XdgSurfaceConfigure *XdgPopupClient::sendRoleConfigure() const
 
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
     configureEvent->position = requestedPos();
-    configureEvent->size = requestedSize();
     configureEvent->serial = serial;
 
     return configureEvent;
