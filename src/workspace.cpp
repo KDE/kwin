@@ -802,6 +802,7 @@ void Workspace::addDeleted(Deleted* c, Toplevel *orig)
     deleted.append(c);
     replaceInStack(orig, c);
     markXStackingOrderAsDirty();
+    updateStackingOrder();
 }
 
 void Workspace::removeDeleted(Deleted* c)
@@ -811,6 +812,7 @@ void Workspace::removeDeleted(Deleted* c)
     deleted.removeAll(c);
     removeFromStack(c);
     markXStackingOrderAsDirty();
+    updateStackingOrder();
     if (!c->wasClient()) {
         return;
     }
