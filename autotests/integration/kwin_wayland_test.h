@@ -127,6 +127,10 @@ class XdgShell : public QtWayland::xdg_wm_base
 {
 public:
     ~XdgShell() override;
+    void xdg_wm_base_ping(uint32_t serial) override
+    {
+        pong(serial);
+    }
 };
 
 /**
