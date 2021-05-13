@@ -247,6 +247,8 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
     case KeepBelowAction:
         client->setKeepBelow(!client->keepBelow());
         break;
+    case ActivateDesktopAction:
+        Q_UNREACHABLE();
     }
 }
 
