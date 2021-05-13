@@ -255,7 +255,7 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
 RemoteMatch WindowsRunner::desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action, qreal relevance) const
 {
     RemoteMatch match;
-    match.id = QString::number((int)action) + QLatin1Char('_') + desktop->id();
+    match.id = QString::number(action) + QLatin1Char('_') + desktop->id();
     match.type = Plasma::QueryMatch::ExactMatch;
     match.iconName = QStringLiteral("user-desktop");
     match.text = desktop->name();
