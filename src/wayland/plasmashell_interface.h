@@ -153,6 +153,7 @@ public:
      * @returns The PlasmaShellSurfaceInterface for the @p native resource.
      */
     static PlasmaShellSurfaceInterface *get(wl_resource *native);
+    static PlasmaShellSurfaceInterface *get(SurfaceInterface *surface);
 
 Q_SIGNALS:
     /**
