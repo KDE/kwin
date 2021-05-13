@@ -950,7 +950,7 @@ class InternalWindowEventFilter : public InputEventFilter {
                 }
             }
         }
-        const QPointF localPos = event->globalPosF() - QPointF(internal->x(), internal->y());
+        const QPointF localPos = event->globalPosF() - internal->position();
         const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
         const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
         QWheelEvent e(localPos, event->globalPosF(), QPoint(),
@@ -1033,7 +1033,7 @@ class InternalWindowEventFilter : public InputEventFilter {
         touch->setInternalPressId(id);
         // Qt's touch event API is rather complex, let's do fake mouse events instead
         m_lastGlobalTouchPos = pos;
-        m_lastLocalTouchPos = pos - QPointF(internal->x(), internal->y());
+        m_lastLocalTouchPos = pos - internal->position();
 
         QEnterEvent enterEvent(m_lastLocalTouchPos, m_lastLocalTouchPos, pos);
         QCoreApplication::sendEvent(internal, &enterEvent);
