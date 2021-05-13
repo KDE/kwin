@@ -538,20 +538,20 @@ void AbstractEglTexture::createTextureSubImage(const QImage &image, const QRegio
             const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
             for (const QRect &rect : damage) {
                 glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
-                                GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.copy(rect).bits());
+                                GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.copy(rect).constBits());
             }
         } else {
             const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
             for (const QRect &rect : damage) {
                 glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
-                                GL_RGBA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
+                                GL_RGBA, GL_UNSIGNED_BYTE, im.copy(rect).constBits());
             }
         }
     } else {
         const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
         for (const QRect &rect : damage) {
             glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
-                            GL_BGRA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
+                            GL_BGRA, GL_UNSIGNED_BYTE, im.copy(rect).constBits());
         }
     }
     q->unbind();
