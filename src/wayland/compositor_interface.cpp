@@ -44,7 +44,7 @@ void CompositorInterfacePrivate::compositor_create_surface(Resource *resource, u
         wl_resource_post_no_memory(resource->handle);
         return;
     }
-    emit q->surfaceCreated(new SurfaceInterface(q, surfaceResource));
+    Q_EMIT q->surfaceCreated(new SurfaceInterface(q, surfaceResource));
 }
 
 void CompositorInterfacePrivate::compositor_create_region(Resource *resource, uint32_t id)

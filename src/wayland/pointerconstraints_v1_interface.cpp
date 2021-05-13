@@ -160,19 +160,19 @@ void LockedPointerV1InterfacePrivate::commit()
     if (hasPendingRegion) {
         region = pendingRegion;
         hasPendingRegion = false;
-        emit q->regionChanged();
+        Q_EMIT q->regionChanged();
     }
     if (hasPendingHint) {
         hint = pendingHint;
         hasPendingHint = false;
-        emit q->cursorPositionHintChanged();
+        Q_EMIT q->cursorPositionHintChanged();
     }
 }
 
 void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_destroy_resource(Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->aboutToBeDestroyed();
+    Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
@@ -242,7 +242,7 @@ void LockedPointerV1Interface::setLocked(bool locked)
     } else {
         d->send_unlocked();
     }
-    emit lockedChanged();
+    Q_EMIT lockedChanged();
 }
 
 ConfinedPointerV1InterfacePrivate *ConfinedPointerV1InterfacePrivate::get(ConfinedPointerV1Interface *q)
@@ -266,7 +266,7 @@ void ConfinedPointerV1InterfacePrivate::commit()
     if (hasPendingRegion) {
         region = pendingRegion;
         hasPendingRegion = false;
-        emit q->regionChanged();
+        Q_EMIT q->regionChanged();
     }
 }
 
@@ -325,7 +325,7 @@ void ConfinedPointerV1Interface::setConfined(bool confined)
     } else {
         d->send_unconfined();
     }
-    emit confinedChanged();
+    Q_EMIT confinedChanged();
 }
 
 } // namespace KWaylandServer

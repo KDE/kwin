@@ -47,9 +47,9 @@ void Resource::Private::create(ClientConnection *c, quint32 version, quint32 id)
 void Resource::Private::unbind(wl_resource *r)
 {
     Private *p = cast<Private>(r);
-    emit p->q->aboutToBeUnbound();
+    Q_EMIT p->q->aboutToBeUnbound();
     p->resource = nullptr;
-    emit p->q->unbound();
+    Q_EMIT p->q->unbound();
     p->q->deleteLater();
 }
 

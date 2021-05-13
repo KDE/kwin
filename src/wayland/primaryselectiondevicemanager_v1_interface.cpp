@@ -42,7 +42,7 @@ void PrimarySelectionDeviceManagerV1InterfacePrivate::zwp_primary_selection_devi
         return;
     }
     PrimarySelectionSourceV1Interface *dataSource = new PrimarySelectionSourceV1Interface(q, data_source_resource);
-    emit q->dataSourceCreated(dataSource);
+    Q_EMIT q->dataSourceCreated(dataSource);
 }
 
 void PrimarySelectionDeviceManagerV1InterfacePrivate::zwp_primary_selection_device_manager_v1_get_device(Resource *resource, uint32_t id, wl_resource *seat)
@@ -59,7 +59,7 @@ void PrimarySelectionDeviceManagerV1InterfacePrivate::zwp_primary_selection_devi
         return;
     }
     PrimarySelectionDeviceV1Interface *dataDevice = new PrimarySelectionDeviceV1Interface(s, data_device_resource);
-    emit q->dataDeviceCreated(dataDevice);
+    Q_EMIT q->dataDeviceCreated(dataDevice);
 }
 
 void PrimarySelectionDeviceManagerV1InterfacePrivate::zwp_primary_selection_device_manager_v1_destroy(Resource *resource)

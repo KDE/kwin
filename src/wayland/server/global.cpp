@@ -67,7 +67,7 @@ void Global::destroy()
     if (!d->global) {
         return;
     }
-    emit aboutToDestroyGlobal();
+    Q_EMIT aboutToDestroyGlobal();
     wl_global_destroy(d->global);
     d->global = nullptr;
 }

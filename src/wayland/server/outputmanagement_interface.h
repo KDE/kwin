@@ -19,7 +19,7 @@ class OutputConfigurationInterface;
  *
  * This class is used to change the configuration of the Wayland server's outputs.
  * The client requests an OutputConfiguration, changes its OutputDevices and then
- * calls OutputConfiguration::apply, which makes this class emit a signal, carrying
+ * calls OutputConfiguration::apply, which makes this class Q_EMIT a signal, carrying
  * the new configuration.
  * The server is then expected to make the requested changes by applying the settings
  * of the OutputDevices to the Outputs.

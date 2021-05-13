@@ -46,7 +46,7 @@ void AppMenuManagerInterfacePrivate::org_kde_kwin_appmenu_manager_create(Resourc
     QObject::connect(appmenu, &QObject::destroyed, q, [=]() {
         appmenus.removeOne(appmenu);
     });
-    emit q->appMenuCreated(appmenu);
+    Q_EMIT q->appMenuCreated(appmenu);
 }
 
 AppMenuManagerInterfacePrivate::AppMenuManagerInterfacePrivate(AppMenuManagerInterface *_q, Display *d)
@@ -92,7 +92,7 @@ void AppMenuInterfacePrivate::org_kde_kwin_appmenu_set_address(Resource *resourc
 
     address.serviceName = service_name;
     address.objectPath = object_path;
-    emit q->addressChanged(address);
+    Q_EMIT q->addressChanged(address);
 }
 
 void AppMenuInterfacePrivate::org_kde_kwin_appmenu_release(QtWaylandServer::org_kde_kwin_appmenu::Resource *resource)

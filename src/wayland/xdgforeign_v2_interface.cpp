@@ -153,7 +153,7 @@ void XdgImporterV2Interface::link(XdgImportedV2Interface *parent, SurfaceInterfa
     m_parents[child] = parent;
     m_children[parent] = child;
 
-    emit m_foreign->transientChanged(child, parent->surface());
+    Q_EMIT m_foreign->transientChanged(child, parent->surface());
 }
 
 void XdgImporterV2Interface::unlink(XdgImportedV2Interface *parent, SurfaceInterface *child)
@@ -166,7 +166,7 @@ void XdgImporterV2Interface::unlink(XdgImportedV2Interface *parent, SurfaceInter
             SurfaceInterface *child = *it;
             m_parents.remove(*it);
             m_children.erase(it);
-            emit m_foreign->transientChanged(child, nullptr);
+            Q_EMIT m_foreign->transientChanged(child, nullptr);
         }
     } else if (child) {
         // If the child endpoint is unlinked, the transientChanged() signal will indicate
@@ -176,7 +176,7 @@ void XdgImporterV2Interface::unlink(XdgImportedV2Interface *parent, SurfaceInter
             XdgImportedV2Interface *parent = *it;
             m_children.remove(*it);
             m_parents.erase(it);
-            emit m_foreign->transientChanged(nullptr, parent->surface());
+            Q_EMIT m_foreign->transientChanged(nullptr, parent->surface());
         }
     }
 }
@@ -252,7 +252,7 @@ void XdgImportedV2Interface::zxdg_imported_v2_set_parent_of(Resource *resource, 
     }
 
     m_child = surf;
-    emit childChanged(surf);
+    Q_EMIT childChanged(surf);
 }
 
 void XdgImportedV2Interface::zxdg_imported_v2_destroy(Resource *resource)

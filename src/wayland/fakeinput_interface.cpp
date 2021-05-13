@@ -67,7 +67,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_bind_resource(Resource *
     FakeInputDevice *device = new FakeInputDevice(q, resource->handle);
     devices << device;
     QObject::connect(device, &FakeInputDevice::destroyed, q, [device, this] { devices.removeAll(device); });
-    emit q->deviceCreated(device);
+    Q_EMIT q->deviceCreated(device);
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_destroy_resource(Resource *resource)
@@ -92,7 +92,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_authenticate(Resource *r
     if (!d) {
         return;
     }
-    emit d->authenticationRequested(application, reason);
+    Q_EMIT d->authenticationRequested(application, reason);
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_pointer_motion(Resource *resource, wl_fixed_t delta_x, wl_fixed_t delta_y)
@@ -101,7 +101,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_pointer_motion(Resource 
     if (!d || !d->isAuthenticated()) {
         return;
     }
-    emit d->pointerMotionRequested(QSizeF(wl_fixed_to_double(delta_x), wl_fixed_to_double(delta_y)));
+    Q_EMIT d->pointerMotionRequested(QSizeF(wl_fixed_to_double(delta_x), wl_fixed_to_double(delta_y)));
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_button(Resource *resource, uint32_t button, uint32_t state)
@@ -112,10 +112,10 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_button(Resource *resourc
     }
     switch (state) {
     case WL_POINTER_BUTTON_STATE_PRESSED:
-        emit d->pointerButtonPressRequested(button);
+        Q_EMIT d->pointerButtonPressRequested(button);
         break;
     case WL_POINTER_BUTTON_STATE_RELEASED:
-        emit d->pointerButtonReleaseRequested(button);
+        Q_EMIT d->pointerButtonReleaseRequested(button);
         break;
     default:
         // nothing
@@ -140,7 +140,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_axis(Resource *resource,
         // invalid
         return;
     }
-    emit d->pointerAxisRequested(orientation, wl_fixed_to_double(value));
+    Q_EMIT d->pointerAxisRequested(orientation, wl_fixed_to_double(value));
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_down(Resource *resource, uint32_t id, wl_fixed_t x, wl_fixed_t y)
@@ -153,7 +153,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_down(Resource *res
         return;
     }
     touchIds << id;
-    emit d->touchDownRequested(id, QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
+    Q_EMIT d->touchDownRequested(id, QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_motion(Resource *resource, uint32_t id, wl_fixed_t x, wl_fixed_t y)
@@ -165,7 +165,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_motion(Resource *r
     if (!touchIds.contains(id)) {
         return;
     }
-    emit d->touchMotionRequested(id, QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
+    Q_EMIT d->touchMotionRequested(id, QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_up(Resource *resource, uint32_t id)
@@ -178,7 +178,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_up(Resource *resou
         return;
     }
     touchIds.removeOne(id);
-    emit d->touchUpRequested(id);
+    Q_EMIT d->touchUpRequested(id);
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_cancel(Resource *resource)
@@ -188,7 +188,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_cancel(Resource *r
         return;
     }
     touchIds.clear();
-    emit d->touchCancelRequested();
+    Q_EMIT d->touchCancelRequested();
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_frame(Resource *resource)
@@ -197,7 +197,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_touch_frame(Resource *re
     if (!d || !d->isAuthenticated()) {
         return;
     }
-    emit d->touchFrameRequested();
+    Q_EMIT d->touchFrameRequested();
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_pointer_motion_absolute(Resource *resource, wl_fixed_t x, wl_fixed_t y)
@@ -206,7 +206,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_pointer_motion_absolute(
     if (!d || !d->isAuthenticated()) {
         return;
     }
-    emit d->pointerMotionAbsoluteRequested(QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
+    Q_EMIT d->pointerMotionAbsoluteRequested(QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_keyboard_key(Resource *resource, uint32_t button, uint32_t state)
@@ -217,10 +217,10 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_keyboard_key(Resource *r
     }
     switch (state) {
     case WL_KEYBOARD_KEY_STATE_PRESSED:
-        emit d->keyboardKeyPressRequested(button);
+        Q_EMIT d->keyboardKeyPressRequested(button);
         break;
     case WL_KEYBOARD_KEY_STATE_RELEASED:
-        emit d->keyboardKeyReleaseRequested(button);
+        Q_EMIT d->keyboardKeyReleaseRequested(button);
         break;
     default:
         // nothing

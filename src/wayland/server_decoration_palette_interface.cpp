@@ -50,7 +50,7 @@ void ServerSideDecorationPaletteManagerInterfacePrivate::org_kde_kwin_server_dec
     QObject::connect(palette, &QObject::destroyed, q, [=]() {
         palettes.removeOne(palette);
     });
-    emit q->paletteCreated(palette);
+    Q_EMIT q->paletteCreated(palette);
 }
 
 ServerSideDecorationPaletteManagerInterfacePrivate::ServerSideDecorationPaletteManagerInterfacePrivate(ServerSideDecorationPaletteManagerInterface *_q, Display *display)
@@ -105,7 +105,7 @@ void ServerSideDecorationPaletteInterfacePrivate::org_kde_kwin_server_decoration
         return;
     }
     this->palette = palette;
-    emit q->paletteChanged(this->palette);
+    Q_EMIT q->paletteChanged(this->palette);
 }
 
 void ServerSideDecorationPaletteInterfacePrivate::org_kde_kwin_server_decoration_palette_destroy_resource(Resource *resource)

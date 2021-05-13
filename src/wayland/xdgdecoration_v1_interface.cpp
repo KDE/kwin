@@ -50,7 +50,7 @@ void XdgDecorationManagerV1InterfacePrivate::zxdg_decoration_manager_v1_get_topl
     auto decoration = new XdgToplevelDecorationV1Interface(toplevelPrivate->q, decorationResource);
     toplevelPrivate->decoration = decoration;
 
-    emit q->decorationCreated(decoration);
+    Q_EMIT q->decorationCreated(decoration);
 }
 
 XdgDecorationManagerV1Interface::XdgDecorationManagerV1Interface(Display *display, QObject *parent)
@@ -96,14 +96,14 @@ void XdgToplevelDecorationV1InterfacePrivate::zxdg_toplevel_decoration_v1_set_mo
         break;
     }
 
-    emit q->preferredModeChanged(preferredMode);
+    Q_EMIT q->preferredModeChanged(preferredMode);
 }
 
 void XdgToplevelDecorationV1InterfacePrivate::zxdg_toplevel_decoration_v1_unset_mode(Resource *resource)
 {
     Q_UNUSED(resource)
     preferredMode = XdgToplevelDecorationV1Interface::Mode::Undefined;
-    emit q->preferredModeChanged(preferredMode);
+    Q_EMIT q->preferredModeChanged(preferredMode);
 }
 
 XdgToplevelDecorationV1Interface::XdgToplevelDecorationV1Interface(XdgToplevelInterface *toplevel,

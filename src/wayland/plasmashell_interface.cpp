@@ -92,7 +92,7 @@ void PlasmaShellInterfacePrivate::org_kde_plasma_shell_get_surface(QtWaylandServ
         s_shellSurfaces.removeOne(shellSurface);
     });
 
-    emit q->surfaceCreated(shellSurface);
+    Q_EMIT q->surfaceCreated(shellSurface);
 }
 
 /*********************************
@@ -143,7 +143,7 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_position(Res
     }
     m_positionSet = true;
     m_globalPos = globalPos;
-    emit q->positionChanged();
+    Q_EMIT q->positionChanged();
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_role(Resource *resource, uint32_t role)
@@ -179,7 +179,7 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_role(Resourc
         return;
     }
     m_role = r;
-    emit q->roleChanged();
+    Q_EMIT q->roleChanged();
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_panel_behavior(Resource *resource, uint32_t flag)
@@ -205,7 +205,7 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_panel_behavi
         return;
     }
     m_panelBehavior = newBehavior;
-    emit q->panelBehaviorChanged();
+    Q_EMIT q->panelBehaviorChanged();
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_skip_taskbar(Resource *resource, uint32_t skip)
@@ -213,7 +213,7 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_skip_taskbar
     Q_UNUSED(resource)
 
     m_skipTaskbar = (bool)skip;
-    emit q->skipTaskbarChanged();
+    Q_EMIT q->skipTaskbarChanged();
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_skip_switcher(Resource *resource, uint32_t skip)
@@ -221,7 +221,7 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_skip_switche
     Q_UNUSED(resource)
 
     m_skipSwitcher = (bool)skip;
-    emit q->skipSwitcherChanged();
+    Q_EMIT q->skipSwitcherChanged();
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_panel_auto_hide_hide(Resource *resource)
@@ -230,7 +230,7 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_panel_auto_hide_
         wl_resource_post_error(resource->handle, error_panel_not_auto_hide, "Not an auto hide panel");
         return;
     }
-    emit q->panelAutoHideHideRequested();
+    Q_EMIT q->panelAutoHideHideRequested();
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_panel_auto_hide_show(Resource *resource)
@@ -239,7 +239,7 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_panel_auto_hide_
         wl_resource_post_error(resource->handle, error_panel_not_auto_hide, "Not an auto hide panel");
         return;
     }
-    emit q->panelAutoHideShowRequested();
+    Q_EMIT q->panelAutoHideShowRequested();
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_panel_takes_focus(Resource *resource, uint32_t takesFocus)
@@ -250,7 +250,7 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_panel_takes_
         return;
     }
     m_panelTakesFocus = takesFocus;
-    emit q->panelTakesFocusChanged();
+    Q_EMIT q->panelTakesFocusChanged();
 }
 
 QPoint PlasmaShellSurfaceInterface::position() const

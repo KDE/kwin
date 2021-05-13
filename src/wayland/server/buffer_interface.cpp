@@ -222,7 +222,7 @@ void BufferInterface::Private::destroyListenerCallback(wl_listener *listener, vo
     Q_UNUSED(listener);
     auto b = cast(reinterpret_cast<wl_resource*>(data));
     b->buffer = nullptr;
-    emit b->q->aboutToBeDestroyed(b->q);
+    Q_EMIT b->q->aboutToBeDestroyed(b->q);
     delete b->q;
 }
 
@@ -327,7 +327,7 @@ void BufferInterface::setSize(const QSize &size)
         return;
     }
     d->size = size;
-    emit sizeChanged();
+    Q_EMIT sizeChanged();
 }
 
 bool BufferInterface::hasAlphaChannel() const

@@ -42,7 +42,7 @@ void EglStreamControllerInterfacePrivate::eglstream_controller_attach_eglstream_
         wl_resource_post_error(resource->handle, 0, "Invalid  surface");
         return;
     }
-    emit q->streamConsumerAttached(surface, eglStream, attribs);
+    Q_EMIT q->streamConsumerAttached(surface, eglStream, attribs);
 }
 
 EglStreamControllerInterfacePrivate::EglStreamControllerInterfacePrivate(EglStreamControllerInterface *_q, Display *display)

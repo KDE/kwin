@@ -70,7 +70,7 @@ void SubCompositorInterfacePrivate::subcompositor_get_subsurface(Resource *resou
         return;
     }
 
-    emit q->subSurfaceCreated(new SubSurfaceInterface(surface, parent, subsurfaceResource));
+    Q_EMIT q->subSurfaceCreated(new SubSurfaceInterface(surface, parent, subsurfaceResource));
 }
 
 SubCompositorInterface::SubCompositorInterface(Display *display, QObject *parent)
@@ -164,7 +164,7 @@ void SubSurfaceInterfacePrivate::subsurface_set_sync(Resource *)
         return;
     }
     mode = SubSurfaceInterface::Mode::Synchronized;
-    emit q->modeChanged(SubSurfaceInterface::Mode::Synchronized);
+    Q_EMIT q->modeChanged(SubSurfaceInterface::Mode::Synchronized);
 }
 
 void SubSurfaceInterfacePrivate::subsurface_set_desync(Resource *)
@@ -176,7 +176,7 @@ void SubSurfaceInterfacePrivate::subsurface_set_desync(Resource *)
     if (!q->isSynchronized()) {
         synchronizedCommit();
     }
-    emit q->modeChanged(SubSurfaceInterface::Mode::Desynchronized);
+    Q_EMIT q->modeChanged(SubSurfaceInterface::Mode::Desynchronized);
 }
 
 void SubSurfaceInterfacePrivate::commit()
@@ -206,7 +206,7 @@ void SubSurfaceInterfacePrivate::parentCommit(bool synchronized)
     if (hasPendingPosition) {
         hasPendingPosition = false;
         position = pendingPosition;
-        emit q->positionChanged(position);
+        Q_EMIT q->positionChanged(position);
     }
 
     if (synchronized || mode == SubSurfaceInterface::Mode::Synchronized) {

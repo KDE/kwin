@@ -93,7 +93,7 @@ void PointerInterfacePrivate::pointer_set_cursor(Resource *resource, uint32_t se
         cursor = new Cursor(q);
         cursor->d->update(surface, serial, QPoint(hotspot_x, hotspot_y));
         QObject::connect(cursor, &Cursor::changed, q, &PointerInterface::cursorChanged);
-        emit q->cursorChanged();
+        Q_EMIT q->cursorChanged();
     } else {
         cursor->d->update(surface, serial, QPoint(hotspot_x, hotspot_y));
     }
@@ -180,14 +180,14 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, const QPoint
             d->sendLeave(d->seat->display()->nextSerial());
             d->sendFrame();
             d->focusedSurface = nullptr;
-            emit focusedSurfaceChanged();
+            Q_EMIT focusedSurfaceChanged();
         });
         d->sendEnter(position, serial);
         d->sendFrame();
         d->lastPosition = position;
     }
 
-    emit focusedSurfaceChanged();
+    Q_EMIT focusedSurfaceChanged();
 }
 
 void PointerInterface::sendButton(quint32 button, PointerButtonState state, quint32 serial)
@@ -301,12 +301,12 @@ void CursorPrivate::update(SurfaceInterface *s, quint32 serial, const QPoint &p)
     if (enteredSerial != serial) {
         enteredSerial = serial;
         emitChanged = true;
-        emit q->enteredSerialChanged();
+        Q_EMIT q->enteredSerialChanged();
     }
     if (hotspot != p) {
         hotspot = p;
         emitChanged = true;
-        emit q->hotspotChanged();
+        Q_EMIT q->hotspotChanged();
     }
     if (surface != s) {
         if (!surface.isNull()) {
@@ -317,10 +317,10 @@ void CursorPrivate::update(SurfaceInterface *s, quint32 serial, const QPoint &p)
             QObject::connect(surface.data(), &SurfaceInterface::damaged, q, &Cursor::changed);
         }
         emitChanged = true;
-        emit q->surfaceChanged();
+        Q_EMIT q->surfaceChanged();
     }
     if (emitChanged) {
-        emit q->changed();
+        Q_EMIT q->changed();
     }
 }
 

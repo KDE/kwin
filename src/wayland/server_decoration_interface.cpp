@@ -61,7 +61,7 @@ void ServerSideDecorationManagerInterfacePrivate::org_kde_kwin_server_decoration
     }
     auto decoration = new ServerSideDecorationInterface(s, decorationResource);
     decoration->setMode(defaultMode);
-    emit q->decorationCreated(decoration);
+    Q_EMIT q->decorationCreated(decoration);
 }
 
 void ServerSideDecorationManagerInterfacePrivate::setDefaultMode(ServerSideDecorationManagerInterface::Mode mode)
@@ -148,7 +148,7 @@ void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_reques
         qCWarning(KWAYLAND_SERVER) << "Invalid mode:" << mode;
         return;
     }
-    emit q->modeRequested(m);
+    Q_EMIT q->modeRequested(m);
 }
 
 void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_release(Resource *resource)

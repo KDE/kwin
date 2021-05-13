@@ -160,7 +160,7 @@ void OutputInterfacePrivate::output_bind_resource(Resource *resource)
     sendGeometry(resource);
     sendDone(resource);
 
-    emit q->bound(display->getConnection(resource->client()), resource->handle);
+    Q_EMIT q->bound(display->getConnection(resource->client()), resource->handle);
 }
 
 OutputInterface::OutputInterface(Display *display, QObject *parent)
@@ -188,7 +188,7 @@ void OutputInterface::remove()
     }
 
     d->globalRemove();
-    emit removed();
+    Q_EMIT removed();
 }
 
 QSize OutputInterface::pixelSize() const
@@ -219,9 +219,9 @@ void OutputInterface::setMode(const Mode &mode)
         d->sendMode(resource);
     }
 
-    emit modeChanged();
-    emit refreshRateChanged(mode.refreshRate);
-    emit pixelSizeChanged(mode.size);
+    Q_EMIT modeChanged();
+    Q_EMIT refreshRateChanged(mode.refreshRate);
+    Q_EMIT pixelSizeChanged(mode.size);
 }
 
 void OutputInterface::setMode(const QSize &size, int refreshRate)
@@ -241,7 +241,7 @@ void OutputInterface::setPhysicalSize(const QSize &physicalSize)
     }
     d->physicalSize = physicalSize;
     d->broadcastGeometry();
-    emit physicalSizeChanged(d->physicalSize);
+    Q_EMIT physicalSizeChanged(d->physicalSize);
 }
 
 QPoint OutputInterface::globalPosition() const
@@ -255,7 +255,7 @@ void OutputInterface::setGlobalPosition(const QPoint &globalPos)
         return;
     }
     d->globalPosition = globalPos;
-    emit globalPositionChanged(d->globalPosition);
+    Q_EMIT globalPositionChanged(d->globalPosition);
 }
 
 QString OutputInterface::manufacturer() const
@@ -270,7 +270,7 @@ void OutputInterface::setManufacturer(const QString &manufacturer)
     }
     d->manufacturer = manufacturer;
     d->broadcastGeometry();
-    emit manufacturerChanged(d->manufacturer);
+    Q_EMIT manufacturerChanged(d->manufacturer);
 }
 
 QString OutputInterface::model() const
@@ -285,7 +285,7 @@ void OutputInterface::setModel(const QString &model)
     }
     d->model = model;
     d->broadcastGeometry();
-    emit modelChanged(d->model);
+    Q_EMIT modelChanged(d->model);
 }
 
 int OutputInterface::scale() const
@@ -305,7 +305,7 @@ void OutputInterface::setScale(int scale)
         d->sendScale(resource);
     }
 
-    emit scaleChanged(d->scale);
+    Q_EMIT scaleChanged(d->scale);
 }
 
 OutputInterface::SubPixel OutputInterface::subPixel() const
@@ -320,7 +320,7 @@ void OutputInterface::setSubPixel(SubPixel subPixel)
     }
     d->subPixel = subPixel;
     d->broadcastGeometry();
-    emit subPixelChanged(d->subPixel);
+    Q_EMIT subPixelChanged(d->subPixel);
 }
 
 OutputInterface::Transform OutputInterface::transform() const
@@ -335,7 +335,7 @@ void OutputInterface::setTransform(Transform transform)
     }
     d->transform = transform;
     d->broadcastGeometry();
-    emit transformChanged(d->transform);
+    Q_EMIT transformChanged(d->transform);
 }
 
 void OutputInterface::setDpmsMode(OutputInterface::DpmsMode mode)
@@ -344,7 +344,7 @@ void OutputInterface::setDpmsMode(OutputInterface::DpmsMode mode)
         return;
     }
     d->dpms.mode = mode;
-    emit dpmsModeChanged();
+    Q_EMIT dpmsModeChanged();
 }
 
 void OutputInterface::setDpmsSupported(bool supported)
@@ -353,7 +353,7 @@ void OutputInterface::setDpmsSupported(bool supported)
         return;
     }
     d->dpms.supported = supported;
-    emit dpmsSupportedChanged();
+    Q_EMIT dpmsSupportedChanged();
 }
 
 OutputInterface::DpmsMode OutputInterface::dpmsMode() const

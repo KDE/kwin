@@ -47,7 +47,7 @@ DataSourceInterfacePrivate::DataSourceInterfacePrivate(DataSourceInterface *_q, 
 void DataSourceInterfacePrivate::data_source_destroy_resource(Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->aboutToBeDestroyed();
+    Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
@@ -55,7 +55,7 @@ void DataSourceInterfacePrivate::data_source_offer(QtWaylandServer::wl_data_sour
 {
     Q_UNUSED(resource)
     mimeTypes << mime_type;
-    emit q->mimeTypeOffered(mime_type);
+    Q_EMIT q->mimeTypeOffered(mime_type);
 }
 
 void DataSourceInterfacePrivate::data_source_destroy(QtWaylandServer::wl_data_source::Resource *resource)
@@ -66,7 +66,7 @@ void DataSourceInterfacePrivate::data_source_destroy(QtWaylandServer::wl_data_so
 void DataSourceInterfacePrivate::offer(const QString &mimeType)
 {
     mimeTypes << mimeType;
-    emit q->mimeTypeOffered(mimeType);
+    Q_EMIT q->mimeTypeOffered(mimeType);
 }
 
 void DataSourceInterfacePrivate::data_source_set_actions(Resource *resource, uint32_t dnd_actions)
@@ -90,7 +90,7 @@ void DataSourceInterfacePrivate::data_source_set_actions(Resource *resource, uin
     }
     if (supportedDnDActions!= supportedActions) {
         supportedDnDActions = supportedActions;
-        emit q->supportedDragAndDropActionsChanged();
+        Q_EMIT q->supportedDragAndDropActionsChanged();
     }
 }
 

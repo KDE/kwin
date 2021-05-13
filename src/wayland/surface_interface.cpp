@@ -84,8 +84,8 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
     cached.children.append(child);
     current.children.append(child);
     child->surface()->setOutputs(outputs);
-    emit q->childSubSurfaceAdded(child);
-    emit q->childSubSurfacesChanged();
+    Q_EMIT q->childSubSurfaceAdded(child);
+    Q_EMIT q->childSubSurfacesChanged();
 }
 
 void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
@@ -94,8 +94,8 @@ void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
     pending.children.removeAll(child);
     cached.children.removeAll(child);
     current.children.removeAll(child);
-    emit q->childSubSurfaceRemoved(child);
-    emit q->childSubSurfacesChanged();
+    Q_EMIT q->childSubSurfaceRemoved(child);
+    Q_EMIT q->childSubSurfacesChanged();
 }
 
 bool SurfaceInterfacePrivate::raiseChild(SubSurfaceInterface *subsurface, SurfaceInterface *sibling)
@@ -206,7 +206,7 @@ void SurfaceInterfacePrivate::installPointerConstraint(LockedPointerV1Interface 
         constrainsOneShotConnection = QMetaObject::Connection();
         QObject::disconnect(constrainsUnboundConnection);
         constrainsUnboundConnection = QMetaObject::Connection();
-        emit q->pointerConstraintsChanged();
+        Q_EMIT q->pointerConstraintsChanged();
     };
 
     if (lock->lifeTime() == LockedPointerV1Interface::LifeTime::OneShot) {
@@ -220,7 +220,7 @@ void SurfaceInterfacePrivate::installPointerConstraint(LockedPointerV1Interface 
         );
     }
     constrainsUnboundConnection = QObject::connect(lock, &LockedPointerV1Interface::destroyed, q, cleanUp);
-    emit q->pointerConstraintsChanged();
+    Q_EMIT q->pointerConstraintsChanged();
 }
 
 void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerV1Interface *confinement)
@@ -236,7 +236,7 @@ void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerV1Interfac
         constrainsOneShotConnection = QMetaObject::Connection();
         QObject::disconnect(constrainsUnboundConnection);
         constrainsUnboundConnection = QMetaObject::Connection();
-        emit q->pointerConstraintsChanged();
+        Q_EMIT q->pointerConstraintsChanged();
     };
 
     if (confinement->lifeTime() == ConfinedPointerV1Interface::LifeTime::OneShot) {
@@ -250,7 +250,7 @@ void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerV1Interfac
         );
     }
     constrainsUnboundConnection = QObject::connect(confinement, &ConfinedPointerV1Interface::destroyed, q, cleanUp);
-    emit q->pointerConstraintsChanged();
+    Q_EMIT q->pointerConstraintsChanged();
 }
 
 void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorV1Interface *inhibitor)
@@ -260,18 +260,18 @@ void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorV1Interface *inh
         [this, inhibitor] {
             idleInhibitors.removeOne(inhibitor);
             if (idleInhibitors.isEmpty()) {
-                emit q->inhibitsIdleChanged();
+                Q_EMIT q->inhibitsIdleChanged();
             }
         }
     );
     if (idleInhibitors.count() == 1) {
-        emit q->inhibitsIdleChanged();
+        Q_EMIT q->inhibitsIdleChanged();
     }
 }
 
 void SurfaceInterfacePrivate::surface_destroy_resource(Resource *)
 {
-    emit q->aboutToBeDestroyed();
+    Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
@@ -610,24 +610,24 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
     bufferToSurfaceMatrix = surfaceToBufferMatrix.inverted();
     inputRegion = target->input & QRect(QPoint(0, 0), target->size);
     if (opaqueRegionChanged) {
-        emit q->opaqueChanged(target->opaque);
+        Q_EMIT q->opaqueChanged(target->opaque);
     }
     if (oldInputRegion != inputRegion) {
-        emit q->inputChanged(inputRegion);
+        Q_EMIT q->inputChanged(inputRegion);
     }
     if (scaleFactorChanged) {
-        emit q->bufferScaleChanged(target->bufferScale);
+        Q_EMIT q->bufferScaleChanged(target->bufferScale);
     }
     if (transformChanged) {
-        emit q->bufferTransformChanged(target->bufferTransform);
+        Q_EMIT q->bufferTransformChanged(target->bufferTransform);
     }
     if (visibilityChanged) {
         if (target->buffer) {
             subSurfaceIsMapped = true;
-            emit q->mapped();
+            Q_EMIT q->mapped();
         } else {
             subSurfaceIsMapped = false;
-            emit q->unmapped();
+            Q_EMIT q->unmapped();
         }
     }
     if (bufferChanged) {
@@ -635,32 +635,32 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
             const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
             const QRegion bufferDamage = q->mapFromBuffer(target->bufferDamage);
             target->damage = windowRegion.intersected(target->damage.united(bufferDamage));
-            emit q->damaged(target->damage);
+            Q_EMIT q->damaged(target->damage);
         }
     }
     if (surfaceToBufferMatrix != oldSurfaceToBufferMatrix) {
-        emit q->surfaceToBufferMatrixChanged();
+        Q_EMIT q->surfaceToBufferMatrixChanged();
     }
     if (bufferSize != oldBufferSize) {
-        emit q->bufferSizeChanged();
+        Q_EMIT q->bufferSizeChanged();
     }
     if (target->size != oldSize) {
-        emit q->sizeChanged();
+        Q_EMIT q->sizeChanged();
     }
     if (shadowChanged) {
-        emit q->shadowChanged();
+        Q_EMIT q->shadowChanged();
     }
     if (blurChanged) {
-        emit q->blurChanged();
+        Q_EMIT q->blurChanged();
     }
     if (contrastChanged) {
-        emit q->contrastChanged();
+        Q_EMIT q->contrastChanged();
     }
     if (slideChanged) {
-        emit q->slideOnShowHideChanged();
+        Q_EMIT q->slideOnShowHideChanged();
     }
     if (childrenChanged) {
-        emit q->childSubSurfacesChanged();
+        Q_EMIT q->childSubSurfacesChanged();
     }
 }
 
@@ -681,7 +681,7 @@ void SurfaceInterfacePrivate::commit()
         role->commit();
     }
 
-    emit q->committed();
+    Q_EMIT q->committed();
 }
 
 QRegion SurfaceInterface::damage() const

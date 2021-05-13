@@ -286,7 +286,7 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_enable(Resource *resource, w
     Q_UNUSED(resource)
     surface = SurfaceInterface::get(s);
     enabled = true;
-    emit q->enabledChanged();
+    Q_EMIT q->enabledChanged();
 }
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_disable(Resource *resource, wl_resource *s)
@@ -298,19 +298,19 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_disable(Resource *resource, 
 
     surface.clear();
     enabled = false;
-    emit q->enabledChanged();
+    Q_EMIT q->enabledChanged();
 }
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_update_state(Resource *resource, uint32_t serial, uint32_t reason)
 {
     Q_UNUSED(resource)
-    emit q->stateUpdated(serial, TextInputV2Interface::UpdateReason(reason));
+    Q_EMIT q->stateUpdated(serial, TextInputV2Interface::UpdateReason(reason));
 }
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_hide_input_panel(Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->requestHideInputPanel();
+    Q_EMIT q->requestHideInputPanel();
 }
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_set_surrounding_text(Resource *resource, const QString &text, int32_t cursor, int32_t anchor)
@@ -319,7 +319,7 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_set_surrounding_text(Resourc
     surroundingText = text;
     surroundingTextCursorPosition = cursor;
     surroundingTextSelectionAnchor = anchor;
-    emit q->surroundingTextChanged();
+    Q_EMIT q->surroundingTextChanged();
 }
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_set_content_type(Resource *resource, uint32_t hint, uint32_t purpose)
@@ -330,7 +330,7 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_set_content_type(Resource *r
     if (this->contentHints != contentHints || this->contentPurpose != contentPurpose) {
         this->contentHints = contentHints;
         this->contentPurpose = contentPurpose;
-        emit q->contentTypeChanged();
+        Q_EMIT q->contentTypeChanged();
     }
 }
 
@@ -340,7 +340,7 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_set_cursor_rectangle(Resourc
     const QRect rect = QRect(x, y, width, height);
     if (cursorRectangle != rect) {
         cursorRectangle = rect;
-        emit q->cursorRectangleChanged(cursorRectangle);
+        Q_EMIT q->cursorRectangleChanged(cursorRectangle);
     }
 }
 
@@ -349,14 +349,14 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_set_preferred_language(Resou
     Q_UNUSED(resource)
     if (preferredLanguage != language) {
         preferredLanguage = language;
-        emit q->preferredLanguageChanged(preferredLanguage);
+        Q_EMIT q->preferredLanguageChanged(preferredLanguage);
     }
 }
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_show_input_panel(Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->requestShowInputPanel();
+    Q_EMIT q->requestShowInputPanel();
 }
 
 QList<TextInputV2InterfacePrivate::Resource *> TextInputV2InterfacePrivate::textInputsForClient(ClientConnection *client) const

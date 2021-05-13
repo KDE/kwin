@@ -55,10 +55,10 @@ void XdgShellInterfacePrivate::registerPing(quint32 serial)
     QObject::connect(timer, &QTimer::timeout, q, [this, serial, attempt = 0]() mutable {
         ++attempt;
         if (attempt == 1) {
-            emit q->pingDelayed(serial);
+            Q_EMIT q->pingDelayed(serial);
             return;
         }
-        emit q->pingTimeout(serial);
+        Q_EMIT q->pingTimeout(serial);
         delete pings.take(serial);
     });
     pings.insert(serial, timer);
@@ -111,7 +111,7 @@ void XdgShellInterfacePrivate::xdg_wm_base_pong(Resource *resource, uint32_t ser
     if (QTimer *timer = pings.take(serial)) {
         delete timer;
     }
-    emit q->pongReceived(serial);
+    Q_EMIT q->pongReceived(serial);
 }
 
 XdgShellInterface::XdgShellInterface(Display *display, QObject *parent)
@@ -153,7 +153,7 @@ void XdgSurfaceInterfacePrivate::commit()
 {
     if (current.windowGeometry != next.windowGeometry) {
         current.windowGeometry = next.windowGeometry;
-        emit q->windowGeometryChanged(current.windowGeometry);
+        Q_EMIT q->windowGeometryChanged(current.windowGeometry);
     }
     isMapped = surface->buffer();
 }
@@ -162,7 +162,7 @@ void XdgSurfaceInterfacePrivate::reset()
 {
     isConfigured = false;
     current = next = State();
-    emit q->resetOccurred();
+    Q_EMIT q->resetOccurred();
 }
 
 XdgSurfaceInterfacePrivate *XdgSurfaceInterfacePrivate::get(XdgSurfaceInterface *surface)
@@ -199,7 +199,7 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_toplevel(Resource *resource, ui
                                                        resource->version(), id);
 
     toplevel = new XdgToplevelInterface(q, toplevelResource);
-    emit shell->toplevelCreated(toplevel);
+    Q_EMIT shell->toplevelCreated(toplevel);
 }
 
 void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint32_t id,
@@ -233,7 +233,7 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint3
                                                     resource->version(), id);
 
     popup = new XdgPopupInterface(q, parentSurface, positioner, popupResource);
-    emit shell->popupCreated(popup);
+    Q_EMIT shell->popupCreated(popup);
 }
 
 void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resource,
@@ -258,7 +258,7 @@ void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resou
 void XdgSurfaceInterfacePrivate::xdg_surface_ack_configure(Resource *resource, uint32_t serial)
 {
     Q_UNUSED(resource)
-    emit q->configureAcknowledged(serial);
+    Q_EMIT q->configureAcknowledged(serial);
 }
 
 XdgSurfaceInterface::XdgSurfaceInterface(XdgShellInterface *shell, SurfaceInterface *surface,
@@ -329,7 +329,7 @@ void XdgToplevelInterfacePrivate::commit()
     if (xdgSurfacePrivate->isConfigured) {
         xdgSurfacePrivate->commit();
     } else {
-        emit q->initializeRequested();
+        Q_EMIT q->initializeRequested();
         return;
     }
 
@@ -340,11 +340,11 @@ void XdgToplevelInterfacePrivate::commit()
 
     if (current.minimumSize != next.minimumSize) {
         current.minimumSize = next.minimumSize;
-        emit q->minimumSizeChanged(current.minimumSize);
+        Q_EMIT q->minimumSizeChanged(current.minimumSize);
     }
     if (current.maximumSize != next.maximumSize) {
         current.maximumSize = next.maximumSize;
-        emit q->maximumSizeChanged(current.maximumSize);
+        Q_EMIT q->maximumSizeChanged(current.maximumSize);
     }
 }
 
@@ -357,7 +357,7 @@ void XdgToplevelInterfacePrivate::reset()
     windowClass = QString();
     current = next = State();
 
-    emit q->resetOccurred();
+    Q_EMIT q->resetOccurred();
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_destroy_resource(Resource *resource)
@@ -380,7 +380,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_parent(Resource *resource,
         return;
     }
     parentXdgToplevel = parent;
-    emit q->parentXdgToplevelChanged();
+    Q_EMIT q->parentXdgToplevelChanged();
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_title(Resource *resource, const QString &title)
@@ -390,7 +390,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_title(Resource *resource, con
         return;
     }
     windowTitle = title;
-    emit q->windowTitleChanged(title);
+    Q_EMIT q->windowTitleChanged(title);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_app_id(Resource *resource, const QString &app_id)
@@ -400,7 +400,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_app_id(Resource *resource, co
         return;
     }
     windowClass = app_id;
-    emit q->windowClassChanged(app_id);
+    Q_EMIT q->windowClassChanged(app_id);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_show_window_menu(Resource *resource, ::wl_resource *seatResource,
@@ -415,7 +415,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_show_window_menu(Resource *resour
     }
 
     SeatInterface *seat = SeatInterface::get(seatResource);
-    emit q->windowMenuRequested(seat, QPoint(x, y), serial);
+    Q_EMIT q->windowMenuRequested(seat, QPoint(x, y), serial);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_move(Resource *resource, ::wl_resource *seatResource, uint32_t serial)
@@ -429,7 +429,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_move(Resource *resource, ::wl_res
     }
 
     SeatInterface *seat = SeatInterface::get(seatResource);
-    emit q->moveRequested(seat, serial);
+    Q_EMIT q->moveRequested(seat, serial);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_resize(Resource *resource, ::wl_resource *seatResource,
@@ -459,7 +459,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_resize(Resource *resource, ::wl_r
         edges |= Qt::LeftEdge;
     }
 
-    emit q->resizeRequested(seat, edges, serial);
+    Q_EMIT q->resizeRequested(seat, edges, serial);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_max_size(Resource *resource, int32_t width, int32_t height)
@@ -483,32 +483,32 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_min_size(Resource *resource, 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_maximized(Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->maximizeRequested();
+    Q_EMIT q->maximizeRequested();
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_unset_maximized(Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->unmaximizeRequested();
+    Q_EMIT q->unmaximizeRequested();
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_fullscreen(Resource *resource, ::wl_resource *outputResource)
 {
     Q_UNUSED(resource)
     OutputInterface *output = OutputInterface::get(outputResource);
-    emit q->fullscreenRequested(output);
+    Q_EMIT q->fullscreenRequested(output);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_unset_fullscreen(Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->unfullscreenRequested();
+    Q_EMIT q->unfullscreenRequested();
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_minimized(Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->minimizeRequested();
+    Q_EMIT q->minimizeRequested();
 }
 
 XdgToplevelInterfacePrivate *XdgToplevelInterfacePrivate::get(XdgToplevelInterface *toplevel)
@@ -666,7 +666,7 @@ void XdgPopupInterfacePrivate::commit()
     if (xdgSurfacePrivate->isConfigured) {
         xdgSurfacePrivate->commit();
     } else {
-        emit q->initializeRequested();
+        Q_EMIT q->initializeRequested();
         return;
     }
 
@@ -703,14 +703,14 @@ void XdgPopupInterfacePrivate::xdg_popup_grab(Resource *resource, ::wl_resource 
         return;
     }
     SeatInterface *seat = SeatInterface::get(seatHandle);
-    emit q->grabRequested(seat, serial);
+    Q_EMIT q->grabRequested(seat, serial);
 }
 
 void XdgPopupInterfacePrivate::xdg_popup_reposition(Resource *resource, ::wl_resource *positionerResource, uint32_t token)
 {
     Q_UNUSED(resource)
     positioner = XdgPositioner::get(positionerResource);
-    emit q->repositionRequested(token);
+    Q_EMIT q->repositionRequested(token);
 }
 
 XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *surface,

@@ -119,7 +119,7 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource, wl_r
     }
     surface = focusSurface;
     drag.serial = serial;
-    emit q->dragStarted();
+    Q_EMIT q->dragStarted();
 }
 
 void DataDeviceInterfacePrivate::data_device_set_selection(Resource *resource, wl_resource *source, uint32_t serial)
@@ -141,9 +141,9 @@ void DataDeviceInterfacePrivate::data_device_set_selection(Resource *resource, w
     }
     selection = dataSource;
     if (selection) {
-        emit q->selectionChanged(selection);
+        Q_EMIT q->selectionChanged(selection);
     } else {
-        emit q->selectionCleared();
+        Q_EMIT q->selectionCleared();
     }
 }
 
@@ -175,7 +175,7 @@ DataOfferInterface *DataDeviceInterfacePrivate::createDataOffer(AbstractDataSour
 void DataDeviceInterfacePrivate::data_device_destroy_resource(QtWaylandServer::wl_data_device::Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->aboutToBeDestroyed();
+    Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 

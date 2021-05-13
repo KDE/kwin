@@ -28,7 +28,7 @@ DisplayPrivate::DisplayPrivate(Display *q)
 void DisplayPrivate::registerSocketName(const QString &socketName)
 {
     socketNames.append(socketName);
-    emit q->socketNamesChanged();
+    Q_EMIT q->socketNamesChanged();
 }
 
 Display::Display(QObject *parent)
@@ -97,7 +97,7 @@ bool Display::start()
     connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this, &Display::flush);
 
     d->running = true;
-    emit runningChanged(true);
+    Q_EMIT runningChanged(true);
 
     return true;
 }
@@ -180,10 +180,10 @@ ClientConnection *Display::getConnection(wl_client *client)
             Q_ASSERT(index != -1);
             d->clients.remove(index);
             Q_ASSERT(d->clients.indexOf(c) == -1);
-            emit clientDisconnected(c);
+            Q_EMIT clientDisconnected(c);
         }
     );
-    emit clientConnected(c);
+    Q_EMIT clientConnected(c);
     return c;
 }
 

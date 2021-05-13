@@ -84,13 +84,13 @@ void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desk
 void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desktop_management_request_create_virtual_desktop(Resource *resource, const QString &name, uint32_t position)
 {
     Q_UNUSED(resource)
-    emit q->desktopCreateRequested(name, qBound<quint32>(0, position, (quint32)desktops.count()));
+    Q_EMIT q->desktopCreateRequested(name, qBound<quint32>(0, position, (quint32)desktops.count()));
 }
 
 void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desktop_management_request_remove_virtual_desktop(Resource *resource, const QString &desktop_id)
 {
     Q_UNUSED(resource)
-    emit q->desktopRemoveRequested(desktop_id);
+    Q_EMIT q->desktopRemoveRequested(desktop_id);
 }
 
 PlasmaVirtualDesktopManagementInterfacePrivate::PlasmaVirtualDesktopManagementInterfacePrivate(PlasmaVirtualDesktopManagementInterface *_q, Display *display)
@@ -221,7 +221,7 @@ void PlasmaVirtualDesktopManagementInterface::sendDone()
 void PlasmaVirtualDesktopInterfacePrivate::org_kde_plasma_virtual_desktop_request_activate(Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->activateRequested();
+    Q_EMIT q->activateRequested();
 }
 
 PlasmaVirtualDesktopInterfacePrivate::PlasmaVirtualDesktopInterfacePrivate(PlasmaVirtualDesktopInterface *q, PlasmaVirtualDesktopManagementInterface *c)

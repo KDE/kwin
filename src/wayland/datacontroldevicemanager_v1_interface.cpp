@@ -44,7 +44,7 @@ void DataControlDeviceManagerV1InterfacePrivate::zwlr_data_control_manager_v1_cr
         return;
     }
     DataControlSourceV1Interface *dataSource = new DataControlSourceV1Interface(q, data_source_resource);
-    emit q->dataSourceCreated(dataSource);
+    Q_EMIT q->dataSourceCreated(dataSource);
 }
 
 void DataControlDeviceManagerV1InterfacePrivate::zwlr_data_control_manager_v1_get_data_device(Resource *resource, uint32_t id, wl_resource *seat)
@@ -61,7 +61,7 @@ void DataControlDeviceManagerV1InterfacePrivate::zwlr_data_control_manager_v1_ge
         return;
     }
     DataControlDeviceV1Interface *dataDevice = new DataControlDeviceV1Interface(s, data_device_resource);
-    emit q->dataDeviceCreated(dataDevice);
+    Q_EMIT q->dataDeviceCreated(dataDevice);
 }
 
 void DataControlDeviceManagerV1InterfacePrivate::zwlr_data_control_manager_v1_destroy(QtWaylandServer::zwlr_data_control_manager_v1::Resource *resource)

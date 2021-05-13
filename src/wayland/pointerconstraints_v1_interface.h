@@ -54,7 +54,7 @@ private:
  * and that the pointer is inside the {@link LockedPointerV1Interface::region} when
  * it activates the lock.
  *
- * While the lock is active the PointerInterface does no longer emit pointer motion
+ * While the lock is active the PointerInterface does no longer Q_EMIT pointer motion
  * events, but still emits relative pointer motion events.
  */
 class KWAYLANDSERVER_EXPORT LockedPointerV1Interface : public QObject
@@ -87,7 +87,7 @@ public:
     /**
      * Indicates where the mouse cursor should be positioned after it has been unlocked again.
      * The compositor can warp the cursor at this moment to the position. For that it
-     * will not emit any relative motion events. The hint is relative to the top-left
+     * will not Q_EMIT any relative motion events. The hint is relative to the top-left
      * corner of the surface the lock was applied to. Only non-negative x and y values
      * are allowed. Otherwise the hint is invalid and should be ignored by the compositor.
      *

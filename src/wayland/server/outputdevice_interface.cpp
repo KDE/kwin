@@ -194,12 +194,12 @@ void OutputDeviceInterface::addMode(Mode &mode)
         }
     );
     auto emitChanges = [this, mode] {
-        emit modesChanged();
+        Q_EMIT modesChanged();
         if (mode.flags.testFlag(ModeFlag::Current)) {
             d->currentMode = mode;
-            emit refreshRateChanged(mode.refreshRate);
-            emit pixelSizeChanged(mode.size);
-            emit currentModeChanged();
+            Q_EMIT refreshRateChanged(mode.refreshRate);
+            Q_EMIT pixelSizeChanged(mode.size);
+            Q_EMIT currentModeChanged();
         }
     };
     if (existingModeIt != d->modes.end()) {
@@ -247,10 +247,10 @@ void OutputDeviceInterface::setCurrentMode(const int modeId)
     Q_ASSERT(existingModeIt != d->modes.end());
     (*existingModeIt).flags |= ModeFlag::Current;
     d->currentMode = *existingModeIt;
-    emit modesChanged();
-    emit refreshRateChanged((*existingModeIt).refreshRate);
-    emit pixelSizeChanged((*existingModeIt).size);
-    emit currentModeChanged();
+    Q_EMIT modesChanged();
+    Q_EMIT refreshRateChanged((*existingModeIt).refreshRate);
+    Q_EMIT pixelSizeChanged((*existingModeIt).size);
+    Q_EMIT currentModeChanged();
 }
 
 bool OutputDeviceInterface::setCurrentMode(const QSize &size, int refreshRate)
@@ -467,7 +467,7 @@ bool OutputDeviceInterface::ColorCurves::operator!=(const ColorCurves &cc) const
             return; \
         } \
         d->argumentName = arg; \
-        emit argumentName##Changed(d->argumentName); \
+        Q_EMIT argumentName##Changed(d->argumentName); \
     }
 
 SETTER(setPhysicalSize, const QSize&, physicalSize)
@@ -487,7 +487,7 @@ void OutputDeviceInterface::setScaleF(qreal scale)
         return;
     }
     d->scale = scale;
-    emit scaleFChanged(d->scale);
+    Q_EMIT scaleFChanged(d->scale);
 }
 
 QSize OutputDeviceInterface::physicalSize() const
@@ -562,14 +562,14 @@ void OutputDeviceInterface::setColorCurves(const ColorCurves &colorCurves)
         return;
     }
     d->colorCurves = colorCurves;
-    emit colorCurvesChanged(d->colorCurves);
+    Q_EMIT colorCurvesChanged(d->colorCurves);
 }
 
 void OutputDeviceInterface::setEdid(const QByteArray &edid)
 {
     d->edid = edid;
     d->updateEdid();
-    emit edidChanged();
+    Q_EMIT edidChanged();
 }
 
 QByteArray OutputDeviceInterface::edid() const
@@ -582,7 +582,7 @@ void OutputDeviceInterface::setEnabled(OutputDeviceInterface::Enablement enabled
     if (d->enabled != enabled) {
         d->enabled = enabled;
         d->updateEnabled();
-        emit enabledChanged();
+        Q_EMIT enabledChanged();
     }
 }
 
@@ -596,7 +596,7 @@ void OutputDeviceInterface::setUuid(const QUuid &uuid)
     if (d->uuid != uuid) {
         d->uuid = uuid;
         d->updateUuid();
-        emit uuidChanged();
+        Q_EMIT uuidChanged();
     }
 }
 
@@ -671,7 +671,7 @@ void OutputDeviceInterface::setCapabilities(Capabilities cap)
     if (d->capabilities != cap) {
         d->capabilities = cap;
         d->updateCapabilities();
-        emit capabilitiesChanged();
+        Q_EMIT capabilitiesChanged();
     }
 }
 
@@ -696,7 +696,7 @@ void OutputDeviceInterface::setOverscan(uint32_t overscan)
     if (d->overscan != overscan) {
         d->overscan = overscan;
         d->updateOverscan();
-        emit overscanChanged();
+        Q_EMIT overscanChanged();
     }
 }
 
@@ -734,7 +734,7 @@ void OutputDeviceInterface::setVrrPolicy(VrrPolicy policy)
     if (d->vrrPolicy != policy) {
         d->vrrPolicy = policy;
         d->updateVrrPolicy();
-        emit vrrPolicyChanged();
+        Q_EMIT vrrPolicyChanged();
     }
 }
 

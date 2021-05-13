@@ -47,12 +47,12 @@ public:
 
     void zwp_keyboard_shortcuts_inhibitor_v1_active() override
     {
-        emit inhibitorActive();
+        Q_EMIT inhibitorActive();
     }
 
     void zwp_keyboard_shortcuts_inhibitor_v1_inactive() override
     {
-        emit inhibitorInactive();
+        Q_EMIT inhibitorInactive();
     }
 
 Q_SIGNALS:

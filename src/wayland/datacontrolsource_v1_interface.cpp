@@ -40,14 +40,14 @@ DataControlSourceV1InterfacePrivate::DataControlSourceV1InterfacePrivate(DataCon
 void DataControlSourceV1InterfacePrivate::zwlr_data_control_source_v1_destroy_resource(QtWaylandServer::zwlr_data_control_source_v1::Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->aboutToBeDestroyed();
+    Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
 void DataControlSourceV1InterfacePrivate::zwlr_data_control_source_v1_offer(Resource *, const QString &mimeType)
 {
     mimeTypes << mimeType;
-    emit q->mimeTypeOffered(mimeType);
+    Q_EMIT q->mimeTypeOffered(mimeType);
 }
 
 void DataControlSourceV1InterfacePrivate::zwlr_data_control_source_v1_destroy(QtWaylandServer::zwlr_data_control_source_v1::Resource *resource)

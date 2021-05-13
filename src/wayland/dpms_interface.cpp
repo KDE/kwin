@@ -94,7 +94,7 @@ void DpmsInterface::org_kde_kwin_dpms_set(Resource *resource, uint32_t mode)
     default:
         return;
     }
-    emit output->dpmsModeRequested(dpmsMode);
+    Q_EMIT output->dpmsModeRequested(dpmsMode);
 }
 
 void DpmsInterface::sendSupported()

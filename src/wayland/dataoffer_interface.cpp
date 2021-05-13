@@ -123,7 +123,7 @@ void DataOfferInterfacePrivate::data_offer_set_actions(Resource *resource, uint3
 
     supportedDnDActions = supportedActions;
     preferredDnDAction = preferredAction;
-    emit q->dragAndDropActionsChanged();
+    Q_EMIT q->dragAndDropActionsChanged();
 }
 
 void DataOfferInterface::sendSourceActions()

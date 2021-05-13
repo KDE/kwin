@@ -60,7 +60,7 @@ void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_set_select
         selection->cancel();
     }
     selection = dataSource;
-    emit q->selectionChanged(selection);
+    Q_EMIT q->selectionChanged(selection);
 }
 
 void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_destroy(QtWaylandServer::zwlr_data_control_device_v1::Resource *resource)

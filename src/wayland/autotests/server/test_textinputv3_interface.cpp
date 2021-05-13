@@ -41,10 +41,10 @@ Q_SIGNALS:
 public:
     ~TextInputV3() override { destroy(); }
     void zwp_text_input_v3_enter(struct ::wl_surface * surface) override {
-        emit surface_enter(surface);
+        Q_EMIT surface_enter(surface);
     }
     void zwp_text_input_v3_leave(struct ::wl_surface * surface) override {
-        emit surface_leave(surface);
+        Q_EMIT surface_leave(surface);
     }
     void zwp_text_input_v3_commit_string(const QString & text) override {
         commitText = text;
@@ -54,10 +54,10 @@ public:
         after = after_length;
     }
     void zwp_text_input_v3_done(uint32_t serial) override {
-        emit commit_string(commitText);
-        emit preedit_string(preeditText, cursorBegin, cursorEnd);
-        emit delete_surrounding_text(before, after);
-        emit done(serial);
+        Q_EMIT commit_string(commitText);
+        Q_EMIT preedit_string(preeditText, cursorBegin, cursorEnd);
+        Q_EMIT delete_surrounding_text(before, after);
+        Q_EMIT done(serial);
     }
     void zwp_text_input_v3_preedit_string(const QString &text, int32_t cursor_begin, int32_t cursor_end) override {
         preeditText = text;

@@ -47,7 +47,7 @@ void DataDeviceManagerInterfacePrivate::data_device_manager_create_data_source(R
         return;
     }
     DataSourceInterface *dataSource = new DataSourceInterface(q, data_source_resource);
-    emit q->dataSourceCreated(dataSource);
+    Q_EMIT q->dataSourceCreated(dataSource);
 }
 
 void DataDeviceManagerInterfacePrivate::data_device_manager_get_data_device(Resource *resource, uint32_t id, wl_resource *seat)
@@ -64,7 +64,7 @@ void DataDeviceManagerInterfacePrivate::data_device_manager_get_data_device(Reso
         return;
     }
     DataDeviceInterface *dataDevice = new DataDeviceInterface(s, data_device_resource);
-    emit q->dataDeviceCreated(dataDevice);
+    Q_EMIT q->dataDeviceCreated(dataDevice);
 }
 
 DataDeviceManagerInterface::DataDeviceManagerInterface(Display *display, QObject *parent)

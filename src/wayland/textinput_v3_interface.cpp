@@ -289,7 +289,7 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
 
     if (enabled != pending.enabled) {
         enabled = pending.enabled;
-        emit q->enabledChanged();
+        Q_EMIT q->enabledChanged();
     }
 
     if (surroundingTextChangeCause != pending.surroundingTextChangeCause) {
@@ -301,14 +301,14 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
         contentHints = pending.contentHints;
         contentPurpose = pending.contentPurpose;
         if (enabled) {
-            emit q->contentTypeChanged();
+            Q_EMIT q->contentTypeChanged();
         }
     }
 
     if (cursorRectangle != pending.cursorRectangle) {
         cursorRectangle = pending.cursorRectangle;
         if (enabled) {
-            emit q->cursorRectangleChanged(cursorRectangle);
+            Q_EMIT q->cursorRectangleChanged(cursorRectangle);
         }
     }
 
@@ -317,11 +317,11 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
         surroundingTextCursorPosition = pending.surroundingTextCursorPosition;
         surroundingTextSelectionAnchor = pending.surroundingTextSelectionAnchor;
         if (enabled) {
-            emit q->surroundingTextChanged();
+            Q_EMIT q->surroundingTextChanged();
         }
     }
 
-    emit q->stateCommitted(serialHash[resource]);
+    Q_EMIT q->stateCommitted(serialHash[resource]);
 }
 
 void TextInputV3InterfacePrivate::defaultPending()

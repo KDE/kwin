@@ -126,7 +126,7 @@ void LayerShellV1InterfacePrivate::zwlr_layer_shell_v1_get_layer_surface(Resourc
     auto layerSurface = new LayerSurfaceV1Interface(q, surface, output,
                                                     LayerSurfaceV1Interface::Layer(layer),
                                                     scope, layerSurfaceResource);
-    emit q->surfaceCreated(layerSurface);
+    Q_EMIT q->surfaceCreated(layerSurface);
 }
 
 void LayerShellV1InterfacePrivate::zwlr_layer_shell_v1_destroy(Resource *resource)
@@ -160,7 +160,7 @@ LayerSurfaceV1InterfacePrivate::LayerSurfaceV1InterfacePrivate(LayerSurfaceV1Int
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_destroy_resource(Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->aboutToBeDestroyed();
+    Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
@@ -241,7 +241,7 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_ack_configure(Resourc
         }
     }
     if (!isClosed) {
-        emit q->configureAcknowledged(serial);
+        Q_EMIT q->configureAcknowledged(serial);
     }
 }
 
@@ -304,22 +304,22 @@ void LayerSurfaceV1InterfacePrivate::commit()
     isCommitted = true; // Must set the committed state before emitting any signals.
 
     if (previous.acceptsFocus != current.acceptsFocus) {
-        emit q->acceptsFocusChanged();
+        Q_EMIT q->acceptsFocusChanged();
     }
     if (previous.layer != current.layer) {
-        emit q->layerChanged();
+        Q_EMIT q->layerChanged();
     }
     if (previous.anchor != current.anchor) {
-        emit q->anchorChanged();
+        Q_EMIT q->anchorChanged();
     }
     if (previous.desiredSize != current.desiredSize) {
-        emit q->desiredSizeChanged();
+        Q_EMIT q->desiredSizeChanged();
     }
     if (previous.exclusiveZone != current.exclusiveZone) {
-        emit q->exclusiveZoneChanged();
+        Q_EMIT q->exclusiveZoneChanged();
     }
     if (previous.margins != current.margins) {
-        emit q->marginsChanged();
+        Q_EMIT q->marginsChanged();
     }
 }
 
