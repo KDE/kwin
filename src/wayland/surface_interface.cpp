@@ -110,8 +110,8 @@ bool SurfaceInterfacePrivate::raiseChild(SubSurfaceInterface *subsurface, Surfac
     }
     if (sibling == q) {
         // it's to the parent, so needs to become last item
-        pending.children.append(*it);
         pending.children.erase(it);
+        pending.children.append(subsurface);
         pending.childrenChanged = true;
         return true;
     }
