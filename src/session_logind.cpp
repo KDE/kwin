@@ -61,19 +61,11 @@ static const QString s_managerPath = QStringLiteral("/org/freedesktop/login1");
 
 static QString findProcessSessionPath()
 {
-    const QString sessionId = qEnvironmentVariable("XDG_SESSION_ID");
-    QDBusMessage message;
-    if (sessionId.isEmpty()) {
-        message = QDBusMessage::createMethodCall(s_serviceName, s_managerPath,
-                                                 s_managerInterface,
-                                                 QStringLiteral("GetSessionByPID"));
-        message.setArguments({uint32_t(QCoreApplication::applicationPid())});
-    } else {
-        message = QDBusMessage::createMethodCall(s_serviceName, s_managerPath,
-                                                 s_managerInterface,
-                                                 QStringLiteral("GetSession"));
-        message.setArguments({sessionId});
-    }
+    const QString sessionId = qEnvironmentVariable("XDG_SESSION_ID", QStringLiteral("auto"));
+    QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, s_managerPath,
+                                                          s_managerInterface,
+                                                          QStringLiteral("GetSession"));
+    message.setArguments({sessionId});
     const QDBusMessage reply = QDBusConnection::systemBus().call(message);
     if (reply.type() == QDBusMessage::ErrorMessage) {
         return QString();
