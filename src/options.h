@@ -67,9 +67,9 @@ class Settings;
 class KWIN_EXPORT Options : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(XwaylandCrashPolicy)
-    Q_ENUMS(LatencyPolicy)
-    Q_ENUMS(RenderTimeEstimator)
+    Q_ENUM(XwaylandCrashPolicy)
+    Q_ENUM(LatencyPolicy)
+    Q_ENUM(RenderTimeEstimator)
     Q_PROPERTY(FocusPolicy focusPolicy READ focusPolicy WRITE setFocusPolicy NOTIFY focusPolicyChanged)
     Q_PROPERTY(XwaylandCrashPolicy xwaylandCrashPolicy READ xwaylandCrashPolicy WRITE setXwaylandCrashPolicy NOTIFY xwaylandCrashPolicyChanged)
     Q_PROPERTY(int xwaylandMaxCrashCount READ xwaylandMaxCrashCount WRITE setXwaylandMaxCrashCount NOTIFY xwaylandMaxCrashCountChanged)
