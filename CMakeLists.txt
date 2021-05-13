@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(PROJECT_VERSION "5.21.80") # Handled by release scripts
+set(PROJECT_VERSION "5.21.90") # Handled by release scripts
 project(KWin VERSION ${PROJECT_VERSION})
 
 set(QT_MIN_VERSION "5.15.0")
