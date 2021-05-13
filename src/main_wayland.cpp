@@ -151,6 +151,7 @@ void ApplicationWayland::performStartup()
         std::exit(1);
     }
 
+    waylandServer()->initPlatform();
     createColorManager();
     waylandServer()->createInternalConnection();
 

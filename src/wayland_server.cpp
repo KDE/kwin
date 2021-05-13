@@ -299,7 +299,7 @@ void WaylandServer::registerXdgGenericClient(AbstractClient *client)
     qCDebug(KWIN_CORE) << "Received invalid xdg client:" << client->surface();
 }
 
-void WaylandServer::initOutputs()
+void WaylandServer::initPlatform()
 {
     connect(kwinApp()->platform(), &Platform::outputAdded, this, &WaylandServer::handleOutputAdded);
     connect(kwinApp()->platform(), &Platform::outputRemoved, this, &WaylandServer::handleOutputRemoved);
@@ -581,8 +581,6 @@ void WaylandServer::initWorkspace()
             connect(workspace(), &Workspace::stackingOrderChanged, this, f);
         });
     }
-
-    initOutputs();
 
     if (hasScreenLockerIntegration()) {
         if (m_internalConnection.interfacesAnnounced) {

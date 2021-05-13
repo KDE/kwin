@@ -106,6 +106,7 @@ void WaylandTestApplication::performStartup()
     if (!platform()->initialize()) {
         std::exit(1);
     }
+    waylandServer()->initPlatform();
     createColorManager();
     waylandServer()->createInternalConnection();
 

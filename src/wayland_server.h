@@ -182,6 +182,7 @@ public:
     bool hasGlobalShortcutSupport() const;
 
     void createInternalConnection();
+    void initPlatform();
     void initWorkspace();
 
     KWaylandServer::ClientConnection *xWaylandConnection() const;
@@ -263,7 +264,6 @@ private:
     void shellClientShown(Toplevel *t);
     void destroyInternalConnection();
     void initScreenLocker();
-    void initOutputs();
     void registerXdgGenericClient(AbstractClient *client);
     void registerXdgToplevelClient(XdgToplevelClient *client);
     void registerXdgPopupClient(XdgPopupClient *client);
