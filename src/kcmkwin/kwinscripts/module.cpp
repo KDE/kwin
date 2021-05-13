@@ -57,10 +57,10 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     });
 
     connect(ui->scriptSelector, &KPluginSelector::changed, this, [this](bool isChanged){
-        changed(isChanged || !m_pendingDeletions.isEmpty());
+        Q_EMIT changed(isChanged || !m_pendingDeletions.isEmpty());
     });
     connect(ui->scriptSelector, &KPluginSelector::defaulted, this, [this](bool isDefaulted){
-        defaulted(isDefaulted && m_pendingDeletions.isEmpty());
+        Q_EMIT defaulted(isDefaulted && m_pendingDeletions.isEmpty());
     });
     connect(this, &Module::defaultsIndicatorsVisibleChanged, ui->scriptSelector, &KPluginSelector::setDefaultsIndicatorsVisible);
     connect(ui->importScriptButton, &QPushButton::clicked, this, &Module::importScript);
