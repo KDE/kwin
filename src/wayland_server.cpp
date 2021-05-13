@@ -217,6 +217,7 @@ void WaylandServer::destroyInternalConnection()
         delete m_internalConnection.compositor;
         delete m_internalConnection.seat;
         delete m_internalConnection.ddm;
+        delete m_internalConnection.eventQueue; // Must be destroyed last.
         dispatch();
         m_internalConnection.client->deleteLater();
         m_internalConnection.clientThread->quit();
@@ -721,11 +722,12 @@ void WaylandServer::createInternalConnection()
     connect(m_internalConnection.client, &ConnectionThread::connected, this,
         [this] {
             Registry *registry = new Registry(this);
-            EventQueue *eventQueue = new EventQueue(registry);
+            EventQueue *eventQueue = new EventQueue(this);
             eventQueue->setup(m_internalConnection.client);
             registry->setEventQueue(eventQueue);
             registry->create(m_internalConnection.client);
             m_internalConnection.registry = registry;
+            m_internalConnection.eventQueue = eventQueue;
             connect(registry, &Registry::interfacesAnnounced, this,
                 [this, registry] {
                     m_internalConnection.interfacesAnnounced = true;
