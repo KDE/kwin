@@ -253,7 +253,6 @@ private:
 class JSEngineGlobalMethodsWrapper : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(ClientAreaOption)
 public:
 //------------------------------------------------------------------
 //enums copy&pasted from kwinglobals.h for exporting
@@ -276,6 +275,7 @@ public:
         ///< one whole screen, ignore struts
         ScreenArea
     };
+    Q_ENUM(ClientAreaOption)
     explicit JSEngineGlobalMethodsWrapper(DeclarativeScript *parent);
     ~JSEngineGlobalMethodsWrapper() override;
 

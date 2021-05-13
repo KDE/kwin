@@ -27,8 +27,6 @@ class X11Client;
 class WorkspaceWrapper : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(ClientAreaOption)
-    Q_ENUMS(ElectricBorder)
     Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
     Q_PROPERTY(KWin::AbstractClient *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
     // TODO: write and notify?
@@ -177,6 +175,7 @@ public:
         ///< one whole screen, ignore struts
         ScreenArea
     };
+    Q_ENUM(ClientAreaOption)
     enum ElectricBorder {
         ElectricTop,
         ElectricTopRight,
@@ -189,6 +188,7 @@ public:
         ELECTRIC_COUNT,
         ElectricNone
     };
+    Q_ENUM(ElectricBorder)
 
 protected:
     explicit WorkspaceWrapper(QObject* parent = nullptr);

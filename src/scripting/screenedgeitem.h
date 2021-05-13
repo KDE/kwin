@@ -35,8 +35,6 @@ namespace KWin
 class ScreenEdgeItem : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(Edge)
-    Q_ENUMS(Mode)
     /**
      * @brief Whether the edge is currently enabled, that is reserved. Default value is @c true.
      */
@@ -62,6 +60,7 @@ public:
         EDGE_COUNT,
         NoEdge
     };
+    Q_ENUM(Edge)
     /**
      * Enum describing the operation modes of the edge.
      */
@@ -69,6 +68,7 @@ public:
         Pointer,
         Touch
     };
+    Q_ENUM(Mode)
     explicit ScreenEdgeItem(QObject *parent = nullptr);
     ~ScreenEdgeItem() override;
     bool isEnabled() const;
