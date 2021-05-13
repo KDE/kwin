@@ -416,7 +416,7 @@ void EffectsModel::load(LoadOptions options)
 
     auto commit = [this, options] {
         if (options == LoadOptions::KeepDirty) {
-            for (const EffectData &oldEffect : m_effects) {
+            for (const EffectData &oldEffect : qAsConst(m_effects)) {
                 if (!oldEffect.changed) {
                     continue;
                 }
@@ -448,7 +448,7 @@ void EffectsModel::load(LoadOptions options)
     if (interface.isValid()) {
         QStringList effectNames;
         effectNames.reserve(m_pendingEffects.count());
-        for (const EffectData &data : m_pendingEffects) {
+        for (const EffectData &data : qAsConst(m_pendingEffects)) {
             effectNames.append(data.serviceName);
         }
 

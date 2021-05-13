@@ -1019,7 +1019,7 @@ void Workspace::slotReconfigure()
     updateToolWindows(true);
 
     RuleBook::self()->load();
-    for (AbstractClient *client : m_allClients) {
+    for (AbstractClient *client : qAsConst(m_allClients)) {
         if (client->supportsWindowRules()) {
             client->evaluateWindowRules();
             RuleBook::self()->discardUsed(client, false);
@@ -1030,8 +1030,8 @@ void Workspace::slotReconfigure()
             !options->borderlessMaximizedWindows()) {
         // in case borderless maximized windows option changed and new option
         // is to have borders, we need to unset the borders for all maximized windows
-        for (auto it = m_allClients.begin();
-                it != m_allClients.end();
+        for (auto it = m_allClients.cbegin();
+                it != m_allClients.cend();
                 ++it) {
             if ((*it)->maximizeMode() == MaximizeFull)
                 (*it)->checkNoBorder();

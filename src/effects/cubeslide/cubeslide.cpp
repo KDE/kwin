@@ -377,7 +377,7 @@ void CubeSlideEffect::postPaintScreen()
             else
                 timeLine.setEasingCurve(QEasingCurve::Linear);
             if (slideRotations.empty()) {
-                for (EffectWindow* w : staticWindows) {
+                for (EffectWindow* w : qAsConst(staticWindows)) {
                     w->setData(WindowForceBlurRole, QVariant());
                     w->setData(WindowForceBackgroundContrastRole, QVariant());
                 }
@@ -654,7 +654,7 @@ void CubeSlideEffect::slotNumberDesktopsChanged()
         return;
     }
 
-    for (EffectWindow *w : staticWindows) {
+    for (EffectWindow *w : qAsConst(staticWindows)) {
         w->setData(WindowForceBlurRole, QVariant());
         w->setData(WindowForceBackgroundContrastRole, QVariant());
     }

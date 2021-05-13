@@ -323,7 +323,7 @@ DrmOutput *DrmGpu::findOutput(quint32 connector)
 
 DrmPlane *DrmGpu::getCompatiblePlane(DrmPlane::TypeIndex typeIndex, DrmCrtc *crtc)
 {
-    for (auto plane : m_unusedPlanes) {
+    for (auto plane : qAsConst(m_unusedPlanes)) {
         if (plane->type() != typeIndex) {
             continue;
         }

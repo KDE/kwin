@@ -262,7 +262,7 @@ void ScriptedEffectLoader::queryAndLoadAll()
     m_queryConnection = connect(watcher, &QFutureWatcher<QList<KPluginMetaData>>::finished, this,
         [this, watcher]() {
             const auto effects = watcher->result();
-            for (auto effect : effects) {
+            for (const auto &effect : effects) {
                 const LoadEffectFlags flags = readConfig(effect.pluginId(), effect.isEnabledByDefault());
                 if (flags.testFlag(LoadEffectFlag::Load)) {
                     m_queue->enqueue(qMakePair(effect, flags));

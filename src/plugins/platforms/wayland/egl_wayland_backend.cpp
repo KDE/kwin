@@ -125,7 +125,7 @@ EglWaylandBackend::~EglWaylandBackend()
 
 void EglWaylandBackend::cleanupSurfaces()
 {
-    for (auto o : m_outputs) {
+    for (auto o : qAsConst(m_outputs)) {
         cleanupOutput(o);
     }
     m_outputs.clear();

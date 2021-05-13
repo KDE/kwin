@@ -425,8 +425,8 @@ QList<QAction *> KWin::Script::actionsForUserActionMenu(KWin::AbstractClient *cl
     QList<QAction *> actions;
     actions.reserve(m_userActionsMenuCallbacks.count());
 
-    for (QJSValue callback : m_userActionsMenuCallbacks) {
-        QJSValue result = callback.call({ m_engine->toScriptValue(client) });
+    for (QJSValue callback : qAsConst(m_userActionsMenuCallbacks)) {
+        const QJSValue result = callback.call({ m_engine->toScriptValue(client) });
         if (result.isError()) {
             continue;
         }
@@ -813,7 +813,7 @@ KWin::Scripting::~Scripting()
 QList< QAction * > KWin::Scripting::actionsForUserActionMenu(KWin::AbstractClient *c, QMenu *parent)
 {
     QList<QAction*> actions;
-    for (AbstractScript *s : scripts) {
+    for (AbstractScript *s : qAsConst(scripts)) {
         // TODO: Allow declarative scripts to add their own user actions.
         if (Script *script = qobject_cast<Script *>(s)) {
             actions << script->actionsForUserActionMenu(c, parent);

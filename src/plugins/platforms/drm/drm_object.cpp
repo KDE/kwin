@@ -27,9 +27,7 @@ DrmObject::DrmObject(DrmGpu *gpu, uint32_t objectId)
 
 DrmObject::~DrmObject()
 {
-    for (auto *p : m_props) {
-        delete p;
-    }
+    qDeleteAll(m_props);
 }
 
 bool DrmObject::initProps(const QVector<PropertyDefinition> &&vector, uint32_t objectType)

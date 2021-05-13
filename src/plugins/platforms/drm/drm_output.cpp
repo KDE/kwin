@@ -595,7 +595,7 @@ void DrmOutput::pageFlipped()
         return;
     }
     if (m_gpu->atomicModeSetting()) {
-        for (DrmPlane *p : m_nextPlanesFlipList) {
+        for (DrmPlane *p : qAsConst(m_nextPlanesFlipList)) {
             p->flipBuffer();
         }
         m_nextPlanesFlipList.clear();
@@ -770,7 +770,7 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
         }
 
         // TODO: see above, rework later for overlay planes!
-        for (DrmPlane *p : m_nextPlanesFlipList) {
+        for (DrmPlane *p : qAsConst(m_nextPlanesFlipList)) {
             p->setNext(nullptr);
         }
         m_nextPlanesFlipList.clear();

@@ -199,7 +199,7 @@ void DesktopGridEffect::paintScreen(int mask, const QRegion &region, ScreenPaint
     }
 
     // paint the add desktop button
-    for (EffectQuickScene *view : m_desktopButtons) {
+    for (EffectQuickScene *view : qAsConst(m_desktopButtons)) {
         view->rootItem()->setOpacity(timeline.currentValue());
         effects->renderEffectQuickView(view);
     }
@@ -474,7 +474,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
         return;
     QMouseEvent* me = static_cast< QMouseEvent* >(e);
     if (!(wasWindowMove || wasDesktopMove)) {
-        for (EffectQuickScene *view : m_desktopButtons) {
+        for (EffectQuickScene *view : qAsConst(m_desktopButtons)) {
             view->forwardMouseEvent(me);
             if (e->isAccepted()) {
                 return;
@@ -1062,7 +1062,7 @@ void DesktopGridEffect::setActive(bool active)
             [this] {
                 if (activated)
                     return;
-                for (EffectQuickScene *view : m_desktopButtons) {
+                for (EffectQuickScene *view : qAsConst(m_desktopButtons)) {
                     view->hide();
                 }
             }

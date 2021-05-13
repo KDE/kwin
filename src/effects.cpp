@@ -271,7 +271,7 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
 
 void EffectsHandlerImpl::unloadAllEffects()
 {
-    for (const EffectPair &pair : loaded_effects) {
+    for (const EffectPair &pair : qAsConst(loaded_effects)) {
         destroyEffect(pair.second);
     }
 

@@ -162,7 +162,7 @@ void EglDmabufBuffer::addImage(EGLImage image)
 
 void EglDmabufBuffer::removeImages()
 {
-    for (auto image : m_images) {
+    for (auto image : qAsConst(m_images)) {
         eglDestroyImageKHR(m_interfaceImpl->m_backend->eglDisplay(), image);
     }
     m_images.clear();

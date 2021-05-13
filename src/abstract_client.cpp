@@ -458,14 +458,14 @@ void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
         } else {
             windowManagementInterface()->setOnAllDesktops(false);
             auto currentDesktops = windowManagementInterface()->plasmaVirtualDesktops();
-            for (auto desktop: m_desktops) {
+            for (auto desktop: qAsConst(m_desktops)) {
                 if (!currentDesktops.contains(desktop->id())) {
                     windowManagementInterface()->addPlasmaVirtualDesktop(desktop->id());
                 } else {
                     currentDesktops.removeOne(desktop->id());
                 }
             }
-            for (auto desktopId: currentDesktops) {
+            for (const auto &desktopId: qAsConst(currentDesktops)) {
                 windowManagementInterface()->removePlasmaVirtualDesktop(desktopId);
             }
         }
@@ -1637,7 +1637,7 @@ void AbstractClient::setupWindowManagementInterface()
         }
     );
 
-    for (const auto vd : m_desktops) {
+    for (const auto vd : qAsConst(m_desktops)) {
         w->addPlasmaVirtualDesktop(vd->id());
     }
 
@@ -1678,7 +1678,7 @@ void AbstractClient::setupWindowManagementInterface()
         }
     );
 
-    for (const auto &activity : m_activityList) {
+    for (const auto &activity : qAsConst(m_activityList)) {
         w->addPlasmaActivity(activity);
     }
 

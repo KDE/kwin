@@ -242,7 +242,7 @@ void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
         m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
         updateRootInfo();
         m_rootInfo->setCurrentDesktop(currentDesktop()->x11DesktopNumber());
-        for (auto *vd : m_desktops) {
+        for (auto *vd : qAsConst(m_desktops)) {
             m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
         }
     }
@@ -611,7 +611,7 @@ void VirtualDesktopManager::setCount(uint count)
     if (!s_loadingDesktopSettings) {
         save();
     }
-    for (auto vd : newDesktops) {
+    for (auto vd : qAsConst(newDesktops)) {
         emit desktopCreated(vd);
     }
     emit countChanged(oldCount, m_desktops.count());

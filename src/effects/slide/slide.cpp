@@ -391,7 +391,7 @@ void SlideEffect::stop()
         w->setData(WindowForceBlurRole, QVariant());
     }
 
-    for (EffectWindow *w : m_elevatedWindows) {
+    for (EffectWindow *w : qAsConst(m_elevatedWindows)) {
         effects->setElevatedWindow(w, false);
     }
     m_elevatedWindows.clear();

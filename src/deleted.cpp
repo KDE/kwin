@@ -113,7 +113,7 @@ void Deleted::copyToDeleted(Toplevel* c)
         m_caption = client->caption();
     }
 
-    for (auto vd : m_desktops) {
+    for (auto vd : qAsConst(m_desktops)) {
         connect(vd, &QObject::destroyed, this, [=] {
             m_desktops.removeOne(vd);
         });
