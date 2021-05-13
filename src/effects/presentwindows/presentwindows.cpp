@@ -1837,7 +1837,7 @@ void PresentWindowsEffect::closeWindow()
 EffectWindow* PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, int ydiff, bool wrap) const
 {
     if (!w)
-        return m_motionManager.managedWindows().first();
+        return m_motionManager.managedWindows().constFirst();
 
     // TODO: Is it possible to select hidden windows?
     EffectWindow* next;

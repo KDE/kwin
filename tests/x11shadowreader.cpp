@@ -89,7 +89,7 @@ int main(int argc, char **argv)
     }
 
     bool ok = false;
-    const auto shadow = readShadow(parser.positionalArguments().first().toULongLong(&ok, 16));
+    const auto shadow = readShadow(parser.positionalArguments().constFirst().toULongLong(&ok, 16));
     if (!ok) {
         qDebug() << "!!! Failed to read window id";
         return 1;

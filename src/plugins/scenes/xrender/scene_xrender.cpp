@@ -958,14 +958,14 @@ void SceneXRenderShadow::layoutShadowRects(QRect& top, QRect& topRight,
         return;
     }
 
-    WindowQuad topQuad = quads.select(WindowQuadShadowTop)[0];
-    WindowQuad topRightQuad = quads.select(WindowQuadShadowTopRight)[0];
-    WindowQuad topLeftQuad = quads.select(WindowQuadShadowTopLeft)[0];
-    WindowQuad leftQuad = quads.select(WindowQuadShadowLeft)[0];
-    WindowQuad rightQuad = quads.select(WindowQuadShadowRight)[0];
-    WindowQuad bottomQuad = quads.select(WindowQuadShadowBottom)[0];
-    WindowQuad bottomRightQuad = quads.select(WindowQuadShadowBottomRight)[0];
-    WindowQuad bottomLeftQuad = quads.select(WindowQuadShadowBottomLeft)[0];
+    WindowQuad topQuad = quads.select(WindowQuadShadowTop).constFirst();
+    WindowQuad topRightQuad = quads.select(WindowQuadShadowTopRight).constFirst();
+    WindowQuad topLeftQuad = quads.select(WindowQuadShadowTopLeft).constFirst();
+    WindowQuad leftQuad = quads.select(WindowQuadShadowLeft).constFirst();
+    WindowQuad rightQuad = quads.select(WindowQuadShadowRight).constFirst();
+    WindowQuad bottomQuad = quads.select(WindowQuadShadowBottom).constFirst();
+    WindowQuad bottomRightQuad = quads.select(WindowQuadShadowBottomRight).constFirst();
+    WindowQuad bottomLeftQuad = quads.select(WindowQuadShadowBottomLeft).constFirst();
 
     top = QRect(topQuad.left(), topQuad.top(), (topQuad.right()-topQuad.left()), (topQuad.bottom()-topQuad.top()));
     topLeft = QRect(topLeftQuad.left(), topLeftQuad.top(), (topLeftQuad.right()-topLeftQuad.left()), (topLeftQuad.bottom()-topLeftQuad.top()));

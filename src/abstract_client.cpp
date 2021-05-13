@@ -2612,7 +2612,8 @@ QRect AbstractClient::iconGeometry() const
     AbstractClient *candidatePanel = nullptr;
     QRect candidateGeom;
 
-    for (auto i = windowManagementInterface()->minimizedGeometries().constBegin(), end = windowManagementInterface()->minimizedGeometries().constEnd(); i != end; ++i) {
+    const auto minGeometries = windowManagementInterface()->minimizedGeometries();
+    for (auto i = minGeometries.constBegin(), end = minGeometries.constEnd(); i != end; ++i) {
         AbstractClient *client = waylandServer()->findClient(i.key());
         if (!client) {
             continue;

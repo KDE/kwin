@@ -295,7 +295,7 @@ void Workspace::activateClient(AbstractClient* c, bool force)
     if (!c->isOnCurrentActivity()) {
         ++block_focus;
         //DBUS!
-        Activities::self()->setCurrent(c->activities().first()); //first isn't necessarily best, but it's easiest
+        Activities::self()->setCurrent(c->activities().constFirst()); //first isn't necessarily best, but it's easiest
         --block_focus;
     }
 #endif

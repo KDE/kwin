@@ -2345,7 +2345,7 @@ void EffectFrameImpl::setIcon(const QIcon& icon)
         m_sceneFrame->crossFadeIcon();
     }
     if (m_iconSize.isEmpty() && !m_icon.availableSizes().isEmpty()) { // Set a size if we don't already have one
-        setIconSize(m_icon.availableSizes().first());
+        setIconSize(m_icon.availableSizes().constFirst());
     }
     m_sceneFrame->freeIconFrame();
 }

@@ -39,7 +39,7 @@ int main(int argc, char **argv)
     KWinDecorationSettings *settings = new KWinDecorationSettings(&app);
     QTextStream ts(stdout);
     if (!parser->positionalArguments().isEmpty()) {
-        QString requestedTheme{parser->positionalArguments().first()};
+        QString requestedTheme{parser->positionalArguments().constFirst()};
         if (requestedTheme.endsWith(QStringLiteral("/*"))) {
             // Themes installed through KNewStuff will commonly be given an installed files entry
             // which has the main directory name and an asterix to say the cursors are all in that directory,

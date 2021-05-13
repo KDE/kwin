@@ -449,7 +449,8 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap, const QRegion &regi
     auto s = pixmap->surface();
     if (EglDmabufBuffer *dmabuf = static_cast<EglDmabufBuffer *>(buffer->linuxDmabufBuffer())) {
         q->bind();
-        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) dmabuf->images()[0]);   //TODO
+        auto images = dmabuf->images();
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) images[0]);   //TODO
         q->unbind();
         if (m_image != EGL_NO_IMAGE_KHR) {
             eglDestroyImageKHR(m_backend->eglDisplay(), m_image);
@@ -589,7 +590,7 @@ bool AbstractEglTexture::loadEglTexture(const QPointer< KWaylandServer::BufferIn
 bool AbstractEglTexture::loadDmabufTexture(const QPointer< KWaylandServer::BufferInterface > &buffer)
 {
     auto *dmabuf = static_cast<EglDmabufBuffer *>(buffer->linuxDmabufBuffer());
-    if (!dmabuf || dmabuf->images()[0] == EGL_NO_IMAGE_KHR) {
+    if (!dmabuf || dmabuf->images().isEmpty() || dmabuf->images().constFirst() == EGL_NO_IMAGE_KHR) {
         qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
         q->discard();
         return false;
@@ -601,7 +602,7 @@ bool AbstractEglTexture::loadDmabufTexture(const QPointer< KWaylandServer::Buffe
     q->setWrapMode(GL_CLAMP_TO_EDGE);
     q->setFilter(GL_NEAREST);
     q->bind();
-    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) dmabuf->images()[0]);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) dmabuf->images().constFirst());
     q->unbind();
 
     m_size = dmabuf->size();
