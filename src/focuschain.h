@@ -154,6 +154,8 @@ public:
      */
     AbstractClient *firstMostRecentlyUsed() const;
 
+    bool isUsableFocusCandidate(AbstractClient *c, AbstractClient *prev) const;
+
 public Q_SLOTS:
     /**
      * @brief Resizes the per virtual desktop focus chains from @p previousSize to @p newSize.
@@ -175,7 +177,6 @@ public Q_SLOTS:
     void setSeparateScreenFocus(bool enabled);
     void setActiveClient(KWin::AbstractClient *client);
     void setCurrentDesktop(uint previous, uint newDesktop);
-    bool isUsableFocusCandidate(AbstractClient *c, AbstractClient *prev) const;
 
 private:
     using Chain = QList<AbstractClient*>;
