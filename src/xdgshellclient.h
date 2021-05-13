@@ -36,7 +36,15 @@ class XdgSurfaceConfigure
 public:
     virtual ~XdgSurfaceConfigure() {}
 
+    enum ConfigureField {
+        PositionField = 0x1,
+        SizeField = 0x2,
+    };
+    Q_DECLARE_FLAGS(ConfigureFields, ConfigureField)
+
+    ConfigureFields presentFields;
     QPoint position;
+    QSize size;
     qreal serial;
 };
 
@@ -257,3 +265,5 @@ private:
 };
 
 } // namespace KWin
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::XdgSurfaceConfigure::ConfigureFields)
