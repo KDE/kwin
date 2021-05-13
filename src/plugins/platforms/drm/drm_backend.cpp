@@ -226,7 +226,7 @@ void DrmBackend::handleUdevEvent()
 
         if (device->action() == QStringLiteral("add")) {
             if (m_gpus.isEmpty() || !primaryGpu()->useEglStreams()) {
-                if (const auto &gpu = addGpu(device->devNode())) {
+                if (addGpu(device->devNode())) {
                     updateOutputs();
                     updateCursor();
                 }

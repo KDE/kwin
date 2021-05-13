@@ -377,6 +377,7 @@ QRegion EglWaylandBackend::beginFrame(int screenId)
 
 void EglWaylandBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(renderedRegion);
     EglWaylandOutput *output = m_outputs[screenId];
     QRegion damage = damagedRegion.intersected(output->m_waylandOutput->geometry());
     presentOnSurface(output, damage);

@@ -41,6 +41,7 @@ GenericScriptedConfig::GenericScriptedConfig(const QString &componentName, const
     , m_packageName(keyword)
     , m_translator(new KLocalizedTranslator(this))
 {
+    Q_UNUSED(componentName);
     QCoreApplication::instance()->installTranslator(m_translator);
 }
 
