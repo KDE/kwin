@@ -191,5 +191,3 @@ void Module::save()
 
     emit changed(false);
 }
-
-#include "module.moc"
