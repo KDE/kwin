@@ -46,7 +46,6 @@ class ServerSideDecorationPaletteManagerInterface;
 class SurfaceInterface;
 class OutputInterface;
 class PlasmaShellInterface;
-class PlasmaShellSurfaceInterface;
 class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
 class OutputManagementInterface;
@@ -310,7 +309,6 @@ private:
     KWaylandServer::KeyStateInterface *m_keyState = nullptr;
     QList<AbstractClient *> m_clients;
     InitializationFlags m_initFlags;
-    QVector<KWaylandServer::PlasmaShellSurfaceInterface*> m_plasmaShellSurfaces;
     QHash<AbstractWaylandOutput *, WaylandOutput *> m_waylandOutputs;
     QHash<AbstractWaylandOutput *, WaylandOutputDevice *> m_waylandOutputDevices;
     KWIN_SINGLETON(WaylandServer)

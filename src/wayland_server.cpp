@@ -260,14 +260,8 @@ void WaylandServer::registerXdgToplevelClient(XdgToplevelClient *client)
 
     registerShellClient(client);
 
-    auto it = std::find_if(m_plasmaShellSurfaces.begin(), m_plasmaShellSurfaces.end(),
-        [surface] (PlasmaShellSurfaceInterface *plasmaSurface) {
-            return plasmaSurface->surface() == surface;
-        }
-    );
-    if (it != m_plasmaShellSurfaces.end()) {
-        client->installPlasmaShellSurface(*it);
-        m_plasmaShellSurfaces.erase(it);
+    if (auto shellSurface = PlasmaShellSurfaceInterface::get(surface)) {
+        client->installPlasmaShellSurface(shellSurface);
     }
     if (auto decoration = ServerSideDecorationInterface::get(surface)) {
         client->installServerDecoration(decoration);
@@ -297,19 +291,9 @@ void WaylandServer::registerXdgGenericClient(AbstractClient *client)
     XdgPopupClient *popupClient = qobject_cast<XdgPopupClient *>(client);
     if (popupClient) {
         registerShellClient(popupClient);
-
-        SurfaceInterface *surface = client->surface();
-        auto it = std::find_if(m_plasmaShellSurfaces.begin(), m_plasmaShellSurfaces.end(),
-            [surface] (PlasmaShellSurfaceInterface *plasmaSurface) {
-                return plasmaSurface->surface() == surface;
-            }
-        );
-
-        if (it != m_plasmaShellSurfaces.end()) {
-            popupClient->installPlasmaShellSurface(*it);
-            m_plasmaShellSurfaces.erase(it);
+        if (auto shellSurface = PlasmaShellSurfaceInterface::get(client->surface())) {
+            popupClient->installPlasmaShellSurface(shellSurface);
         }
-
         return;
     }
     qCDebug(KWIN_CORE) << "Received invalid xdg client:" << client->surface();
@@ -457,13 +441,7 @@ bool WaylandServer::init(InitializationFlags flags)
         [this] (PlasmaShellSurfaceInterface *surface) {
             if (XdgSurfaceClient *client = findXdgSurfaceClient(surface->surface())) {
                 client->installPlasmaShellSurface(surface);
-                return;
             }
-
-            m_plasmaShellSurfaces.append(surface);
-            connect(surface, &QObject::destroyed, this, [this, surface] {
-                m_plasmaShellSurfaces.removeOne(surface);
-            });
         }
     );
     m_appMenuManager = new AppMenuManagerInterface(m_display, m_display);
