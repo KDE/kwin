@@ -23,6 +23,7 @@ namespace KWayland
 namespace Client
 {
 class ConnectionThread;
+class EventQueue;
 class Registry;
 class Compositor;
 class Seat;
@@ -297,6 +298,7 @@ private:
     struct {
         KWaylandServer::ClientConnection *server = nullptr;
         KWayland::Client::ConnectionThread *client = nullptr;
+        KWayland::Client::EventQueue *eventQueue = nullptr;
         QThread *clientThread = nullptr;
         KWayland::Client::Registry *registry = nullptr;
         KWayland::Client::Compositor *compositor = nullptr;
