@@ -1113,14 +1113,14 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
     while (!tmpList.isEmpty()) {
         EffectWindow *w = tmpList.first();
         int slotCandidate = -1, slotCandidateDistance = INT_MAX;
-        QPoint pos = w->geometry().center();
+        QPoint pos = w->frameGeometry().center();
 
         for (int i = 0; i < columns*rows; ++i) { // all slots
             const int dist = distance(pos, slotCenters[i]);
             if (dist < slotCandidateDistance) { // window is interested in this slot
                 EffectWindow *occupier = takenSlots[i];
                 Q_ASSERT(occupier != w);
-                if (!occupier || dist < distance((otherPos = occupier->geometry().center()), slotCenters[i])) {
+                if (!occupier || dist < distance((otherPos = occupier->frameGeometry().center()), slotCenters[i])) {
                     // either nobody lives here, or we're better - takeover the slot if it's our best
                     slotCandidate = i;
                     slotCandidateDistance = dist;
@@ -1313,13 +1313,13 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
     // just have a single window on a Xinerama screen or have two windows that do not touch.
     // TODO: Work out why this happens, is most likely a bug in the manager.
     foreach (EffectWindow * w, windowlist)
-        if (motionManager.transformedGeometry(w) == w->geometry())
+        if (motionManager.transformedGeometry(w) == w->frameGeometry())
             motionManager.reset(w);
 
     if (windowlist.count() == 1) {
         // Just move the window to its original location to save time
-        if (effects->clientArea(FullScreenArea, windowlist[0]).contains(windowlist[0]->geometry())) {
-            motionManager.moveWindow(windowlist[0], windowlist[0]->geometry());
+        if (effects->clientArea(FullScreenArea, windowlist[0]).contains(windowlist[0]->frameGeometry())) {
+            motionManager.moveWindow(windowlist[0], windowlist[0]->frameGeometry());
             return;
         }
     }
@@ -1336,8 +1336,8 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
     QHash<EffectWindow*, QRect> targets;
     QHash<EffectWindow*, int> directions;
     foreach (EffectWindow * w, windowlist) {
-        bounds = bounds.united(w->geometry());
-        targets[w] = w->geometry();
+        bounds = bounds.united(w->frameGeometry());
+        targets[w] = w->frameGeometry();
         // Reuse the unused "slot" as a preferred direction attribute. This is used when the window
         // is on the edge of the screen to try to use as much screen real estate as possible.
         directions[w] = direction;
@@ -1683,7 +1683,7 @@ void PresentWindowsEffect::setActive(bool active)
 
         // Move all windows back to their original position
         foreach (EffectWindow * w, m_motionManager.managedWindows())
-        m_motionManager.moveWindow(w, w->geometry());
+        m_motionManager.moveWindow(w, w->frameGeometry());
         if (m_filterFrame) {
             m_filterFrame->free();
         }

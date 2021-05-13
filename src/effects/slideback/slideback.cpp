@@ -64,9 +64,9 @@ void SlideBackEffect::windowRaised(EffectWindow *w)
         } else {
             if (isWindowUsable(tmp) && tmp->isOnCurrentDesktop() && w->isOnCurrentDesktop()) {
                 // Do we have to move it?
-                if (intersects(w, tmp->geometry())) {
+                if (intersects(w, tmp->frameGeometry())) {
                     QRect slideRect;
-                    slideRect = getSlideDestination(getModalGroupGeometry(w), tmp->geometry());
+                    slideRect = getSlideDestination(getModalGroupGeometry(w), tmp->frameGeometry());
                     effects->setElevatedWindow(tmp, true);
                     elevatedList.append(tmp);
                     motionManager.manage(tmp);
@@ -76,7 +76,7 @@ void SlideBackEffect::windowRaised(EffectWindow *w)
                 } else {
                     //Does it intersect with a moved (elevated) window and do we have to elevate it too?
                     foreach (EffectWindow * elevatedWindow, elevatedList) {
-                        if (tmp->geometry().intersects(elevatedWindow->geometry())) {
+                        if (tmp->frameGeometry().intersects(elevatedWindow->frameGeometry())) {
                             effects->setElevatedWindow(tmp, true);
                             elevatedList.append(tmp);
                             break;
@@ -192,11 +192,11 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
                 if (coveringWindows.contains(w)) {
                     EffectWindowList tmpList;
                     foreach (EffectWindow * tmp, elevatedList) {
-                        QRect elevatedGeometry = tmp->geometry();
+                        QRect elevatedGeometry = tmp->frameGeometry();
                         if (motionManager.isManaging(tmp)) {
                             elevatedGeometry = motionManager.transformedGeometry(tmp).toAlignedRect();
                         }
-                        if (m_upmostWindow && !tmp->isDock() && !tmp->keepAbove() && m_upmostWindow->geometry().intersects(elevatedGeometry)) {
+                        if (m_upmostWindow && !tmp->isDock() && !tmp->keepAbove() && m_upmostWindow->frameGeometry().intersects(elevatedGeometry)) {
                             QRect newDestination;
                             newDestination = getSlideDestination(getModalGroupGeometry(m_upmostWindow), elevatedGeometry);
                             if (!motionManager.isManaging(tmp)) {
@@ -208,7 +208,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
                             if (!tmp->isDock()) {
                                 bool keepElevated = false;
                                 foreach (EffectWindow * elevatedWindow, tmpList) {
-                                    if (tmp->geometry().intersects(elevatedWindow->geometry())) {
+                                    if (tmp->frameGeometry().intersects(elevatedWindow->frameGeometry())) {
                                         keepElevated = true;
                                     }
                                 }
@@ -222,7 +222,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
                     }
                 } else {
                     // Move the window back where it belongs
-                    motionManager.moveWindow(w, w->geometry());
+                    motionManager.moveWindow(w, w->frameGeometry());
                     destinationList.remove(w);
                 }
             }
@@ -310,7 +310,7 @@ EffectWindowList SlideBackEffect::usableWindows(const EffectWindowList & allWind
 {
     EffectWindowList retList;
     auto isWindowVisible = [] (const EffectWindow *window) {
-        return window && effects->virtualScreenGeometry().intersects(window->geometry());
+        return window && effects->virtualScreenGeometry().intersects(window->frameGeometry());
     };
     foreach (EffectWindow * tmp, allWindows) {
         if (isWindowUsable(tmp) && isWindowVisible(tmp)) {
@@ -322,7 +322,7 @@ EffectWindowList SlideBackEffect::usableWindows(const EffectWindowList & allWind
 
 QRect SlideBackEffect::getModalGroupGeometry(EffectWindow *w)
 {
-    QRect modalGroupGeometry = w->geometry();
+    QRect modalGroupGeometry = w->frameGeometry();
     if (w->isModal()) {
         foreach (EffectWindow * modalWindow, w->mainWindows()) {
             modalGroupGeometry = modalGroupGeometry.united(getModalGroupGeometry(modalWindow));

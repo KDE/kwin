@@ -89,7 +89,7 @@ void SheetEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     //  [move to the origin] -> [scale] -> [rotate] -> [translate] ->
     //    -> [perspective projection] -> [reverse "move to the origin"]
     const QMatrix4x4 oldProjMatrix = data.screenProjectionMatrix();
-    const QRectF windowGeo = w->geometry();
+    const QRectF windowGeo = w->frameGeometry();
     const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
     QMatrix4x4 invOffsetMatrix;
     invOffsetMatrix.translate(invOffset.x(), invOffset.y());

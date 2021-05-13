@@ -536,7 +536,7 @@ void ScreenShotDBusInterface1::screenshotWindowUnderCursor(int mask)
         if (hoveredWindow->isOnCurrentDesktop()
                 && !hoveredWindow->isMinimized()
                 && !hoveredWindow->isDeleted()
-                && hoveredWindow->geometry().contains(cursor)) {
+                && hoveredWindow->frameGeometry().contains(cursor)) {
             break;
         }
         hoveredWindow = nullptr;

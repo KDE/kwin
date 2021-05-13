@@ -115,7 +115,7 @@ void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, co
 
     } else if (a == Position) {
         QRect area = effects->clientArea(ScreenArea , w);
-        QPoint pt = w->geometry().bottomRight(); // cannot be < 0 ;-)
+        QPoint pt = w->frameGeometry().bottomRight(); // cannot be < 0 ;-)
         if (from) {
             if (from->isValid()) {
                 RELATIVE_XY(Source);
@@ -560,7 +560,7 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
             case Saturation:
                 data.multiplySaturation(interpolated(*anim)); break;
             case Scale: {
-                const QSize sz = w->geometry().size();
+                const QSize sz = w->frameGeometry().size();
                 float f1(1.0), f2(0.0);
                 if (anim->from[0] >= 0.0 && anim->to[0] >= 0.0) { // scale x
                     f1 = interpolated(*anim, 0);
@@ -588,7 +588,7 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                 break;
             case Size: {
                 FPx2 dest = anim->from + progress(*anim) * (anim->to - anim->from);
-                const QSize sz = w->geometry().size();
+                const QSize sz = w->frameGeometry().size();
                 float f;
                 if (anim->from[0] >= 0.0 && anim->to[0] >= 0.0) { // resize x
                     f = dest[0]/sz.width();
@@ -603,7 +603,7 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                 break;
             }
             case Position: {
-                const QRect geo = w->geometry();
+                const QRect geo = w->frameGeometry();
                 const float prgrs = progress(*anim);
                 if ( anim->from[0] >= 0.0 && anim->to[0] >= 0.0 ) {
                     float dest = interpolated(*anim, 0);
@@ -866,7 +866,7 @@ void AnimationEffect::updateLayerRepaints()
                 case Translation:
                 case Position: {
                     createRegion = true;
-                    QRect r(entry.key()->geometry());
+                    QRect r(entry.key()->frameGeometry());
                     int x[2] = {0,0};
                     int y[2] = {0,0};
                     if (anim->attribute == Translation) {
@@ -894,7 +894,7 @@ void AnimationEffect::updateLayerRepaints()
                 case Size:
                 case Scale: {
                     createRegion = true;
-                    const QSize sz = entry.key()->geometry().size();
+                    const QSize sz = entry.key()->frameGeometry().size();
                     float fx = qMax(fixOvershoot(anim->from[0], *anim, 1), fixOvershoot(anim->to[0], *anim, 2));
 //                     float fx = qMax(interpolated(*anim,0), anim->to[0]);
                     if (fx >= 0.0) {

@@ -1261,7 +1261,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                     continue;
                 paint = paint.subtracted(QRegion(effects->clientArea(ScreenArea, i, painting_desktop)));
             }
-            paint = paint.subtracted(QRegion(w->geometry()));
+            paint = paint.subtracted(QRegion(w->frameGeometry()));
             // in case of free area in multiscreen setup fill it with cap color
             if (!paint.isEmpty()) {
                 glEnable(GL_BLEND);

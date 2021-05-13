@@ -138,8 +138,8 @@ void ResizeEffect::slotWindowStartUserMovedResized(EffectWindow *w)
     if (w->isUserResize() && !w->isUserMove()) {
         m_active = true;
         m_resizeWindow = w;
-        m_originalGeometry = w->geometry();
-        m_currentGeometry = w->geometry();
+        m_originalGeometry = w->frameGeometry();
+        m_currentGeometry = w->frameGeometry();
         w->addRepaintFull();
     }
 }

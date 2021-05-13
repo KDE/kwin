@@ -293,7 +293,7 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long atom)
 void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
 {
     const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
-    const QRect windowGeo = w->geometry();
+    const QRect windowGeo = w->frameGeometry();
     AnimationData &animData = m_animationsData[w];
 
     if (animData.offset == -1) {

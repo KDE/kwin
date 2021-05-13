@@ -328,7 +328,7 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
         for (int screen = 0; screen < effects->numScreens(); screen++) {
             QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
 
-            QRectF transformedGeo = w->geometry();
+            QRectF transformedGeo = w->frameGeometry();
             // Display all quads on the same screen on the same pass
             WindowQuadList screenQuads;
             bool quadsAdded = false;
@@ -363,8 +363,8 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
 
             QPointF newPos = scalePos(transformedGeo.topLeft().toPoint(), paintingDesktop, screen);
             double progress = timeline.currentValue();
-            d.setXScale(interpolate(1, xScale * scale[screen] * (float)transformedGeo.width() / (float)w->geometry().width(), progress));
-            d.setYScale(interpolate(1, yScale * scale[screen] * (float)transformedGeo.height() / (float)w->geometry().height(), progress));
+            d.setXScale(interpolate(1, xScale * scale[screen] * (float)transformedGeo.width() / (float)w->frameGeometry().width(), progress));
+            d.setYScale(interpolate(1, yScale * scale[screen] * (float)transformedGeo.height() / (float)w->frameGeometry().height(), progress));
             d += QPoint(qRound(newPos.x() - w->x()), qRound(newPos.y() - w->y()));
 
             if (isUsingPresentWindows() && (w->isDock() || w->isSkipSwitcher())) {
@@ -889,12 +889,12 @@ EffectWindow* DesktopGridEffect::windowAt(QPoint pos) const
         if (w)
             return w;
         foreach (EffectWindow * w, windows) {
-            if (w->isOnDesktop(desktop) && w->isDesktop() && w->geometry().contains(pos))
+            if (w->isOnDesktop(desktop) && w->isDesktop() && w->frameGeometry().contains(pos))
                 return w;
         }
     } else {
         foreach (EffectWindow * w, windows) {
-            if (w->isOnDesktop(desktop) && w->isOnCurrentActivity() && !w->isMinimized() && w->geometry().contains(pos))
+            if (w->isOnDesktop(desktop) && w->isOnCurrentActivity() && !w->isMinimized() && w->frameGeometry().contains(pos))
                 return w;
         }
     }
@@ -1054,7 +1054,7 @@ void DesktopGridEffect::setActive(bool active)
             QList<WindowMotionManager>::iterator it;
             for (it = m_managers.begin(); it != m_managers.end(); ++it) {
                 foreach (EffectWindow * w, (*it).managedWindows()) {
-                    (*it).moveWindow(w, w->geometry());
+                    (*it).moveWindow(w, w->frameGeometry());
                 }
             }
         }

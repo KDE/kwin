@@ -109,9 +109,9 @@ void WindowGeometry::slotWindowStartUserMovedResized(EffectWindow *w)
     createFrames();
     iAmActive = true;
     myResizeWindow = w;
-    myOriginalGeometry = w->geometry();
-    myCurrentGeometry = w->geometry();
-    slotWindowStepUserMovedResized(w, w->geometry());
+    myOriginalGeometry = w->frameGeometry();
+    myCurrentGeometry = w->frameGeometry();
+    slotWindowStepUserMovedResized(w, w->frameGeometry());
 }
 
 void WindowGeometry::slotWindowFinishUserMovedResized(EffectWindow *w)
@@ -159,8 +159,8 @@ void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect
         QRect expandedGeometry = w->expandedGeometry();
         expandedGeometry = geometry.adjusted(expandedGeometry.x() - w->x(),
                                              expandedGeometry.y() - w->y(),
-                                             expandedGeometry.right() - w->geometry().right(),
-                                             expandedGeometry.bottom() - w->geometry().bottom());
+                                             expandedGeometry.right() - w->frameGeometry().right(),
+                                             expandedGeometry.bottom() - w->frameGeometry().bottom());
 
         // sufficient for moves, resizes calculated otherwise
         int dx = r.x() - r2.x();

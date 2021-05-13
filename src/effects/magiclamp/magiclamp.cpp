@@ -84,7 +84,7 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
         // 0 = not minimized, 1 = fully minimized
         const qreal progress = (*animationIt).timeLine.value();
 
-        QRect geo = w->geometry();
+        QRect geo = w->frameGeometry();
         QRect icon = w->iconGeometry();
         IconPosition position = Top;
         // If there's no icon geometry, minimize to the center of the screen
@@ -133,7 +133,7 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                     continue;
                 // we have to use intersects as there seems to be a Plasma bug
                 // the published icon geometry might be bigger than the panel
-                if (window->geometry().intersects(icon)) {
+                if (window->frameGeometry().intersects(icon)) {
                     panel = window;
                     break;
                 }
