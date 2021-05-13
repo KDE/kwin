@@ -17,7 +17,6 @@
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
-#include <KWayland/Client/idleinhibit.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
@@ -208,6 +207,21 @@ void XdgToplevelDecorationV1::zxdg_toplevel_decoration_v1_configure(uint32_t m)
     emit configureRequested(mode(m));
 }
 
+IdleInhibitManagerV1::~IdleInhibitManagerV1()
+{
+    destroy();
+}
+
+IdleInhibitorV1::IdleInhibitorV1(IdleInhibitManagerV1 *manager, KWayland::Client::Surface *surface)
+    : QtWayland::zwp_idle_inhibitor_v1(manager->create_inhibitor(*surface))
+{
+}
+
+IdleInhibitorV1::~IdleInhibitorV1()
+{
+    destroy();
+}
+
 static struct {
     ConnectionThread *connection = nullptr;
     EventQueue *queue = nullptr;
@@ -226,7 +240,7 @@ static struct {
     QThread *thread = nullptr;
     QVector<Output*> outputs;
     QVector<OutputDevice*> outputDevices;
-    IdleInhibitManager *idleInhibit = nullptr;
+    IdleInhibitManagerV1 *idleInhibitManagerV1 = nullptr;
     AppMenuManager *appMenu = nullptr;
     XdgDecorationManagerV1 *xdgDecorationManagerV1 = nullptr;
     TextInputManager *textInputManager = nullptr;
@@ -384,6 +398,13 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
                 return;
             }
         }
+        if (flags & AdditionalWaylandInterface::IdleInhibitV1) {
+            if (interface == zwp_idle_inhibit_manager_v1_interface.name) {
+                s_waylandConnection.idleInhibitManagerV1 = new IdleInhibitManagerV1();
+                s_waylandConnection.idleInhibitManagerV1->init(*registry, name, version);
+                return;
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &Registry::interfacesAnnounced);
@@ -459,13 +480,6 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             return false;
         }
     }
-    if (flags.testFlag(AdditionalWaylandInterface::IdleInhibition)) {
-        s_waylandConnection.idleInhibit = registry->createIdleInhibitManager(registry->interface(Registry::Interface::IdleInhibitManagerUnstableV1).name,
-                                                                            registry->interface(Registry::Interface::IdleInhibitManagerUnstableV1).version);
-        if (!s_waylandConnection.idleInhibit->isValid()) {
-            return false;
-        }
-    }
     if (flags.testFlag(AdditionalWaylandInterface::AppMenu)) {
         s_waylandConnection.appMenu = registry->createAppMenuManager(registry->interface(Registry::Interface::AppMenu).name, registry->interface(Registry::Interface::AppMenu).version);
         if (!s_waylandConnection.appMenu->isValid()) {
@@ -504,8 +518,8 @@ void destroyWaylandConnection()
     s_waylandConnection.xdgShell = nullptr;
     delete s_waylandConnection.shadowManager;
     s_waylandConnection.shadowManager = nullptr;
-    delete s_waylandConnection.idleInhibit;
-    s_waylandConnection.idleInhibit = nullptr;
+    delete s_waylandConnection.idleInhibitManagerV1;
+    s_waylandConnection.idleInhibitManagerV1 = nullptr;
     delete s_waylandConnection.shm;
     s_waylandConnection.shm = nullptr;
     delete s_waylandConnection.queue;
@@ -588,11 +602,6 @@ PlasmaWindowManagement *waylandWindowManagement()
 PointerConstraints *waylandPointerConstraints()
 {
     return s_waylandConnection.pointerConstraints;
-}
-
-IdleInhibitManager *waylandIdleInhibitManager()
-{
-    return s_waylandConnection.idleInhibit;
 }
 
 AppMenuManager* waylandAppMenuManager()
@@ -843,6 +852,17 @@ XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QO
     }
 
     return new XdgToplevelDecorationV1(manager, toplevel, parent);
+}
+
+IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface)
+{
+    IdleInhibitManagerV1 *manager = s_waylandConnection.idleInhibitManagerV1;
+    if (!manager) {
+        qWarning() << "Could not create an idle_inhibitor_v1 because idle_inhibit_manager_v1 global is not bound";
+        return nullptr;
+    }
+
+    return new IdleInhibitorV1(manager, surface);
 }
 
 bool waitForWindowDestroyed(AbstractClient *client)

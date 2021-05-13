@@ -14,6 +14,7 @@
 // Qt
 #include <QtTest>
 
+#include "qwayland-idle-inhibit-unstable-v1.h"
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
 #include "qwayland-xdg-decoration-unstable-v1.h"
@@ -26,7 +27,6 @@ namespace Client
 class AppMenuManager;
 class ConnectionThread;
 class Compositor;
-class IdleInhibitManager;
 class Output;
 class PlasmaShell;
 class PlasmaWindowManagement;
@@ -247,13 +247,26 @@ protected:
     void zxdg_toplevel_decoration_v1_configure(uint32_t mode) override;
 };
 
+class IdleInhibitManagerV1 : public QtWayland::zwp_idle_inhibit_manager_v1
+{
+public:
+    ~IdleInhibitManagerV1() override;
+};
+
+class IdleInhibitorV1 : public QtWayland::zwp_idle_inhibitor_v1
+{
+public:
+    IdleInhibitorV1(IdleInhibitManagerV1 *manager, KWayland::Client::Surface *surface);
+    ~IdleInhibitorV1() override;
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     Decoration = 1 << 1,
     PlasmaShell = 1 << 2,
     WindowManagement = 1 << 3,
     PointerConstraints = 1 << 4,
-    IdleInhibition = 1 << 5,
+    IdleInhibitV1 = 1 << 5,
     AppMenu = 1 << 6,
     ShadowManager = 1 << 7,
     XdgDecorationV1 = 1 << 8,
@@ -291,7 +304,6 @@ KWayland::Client::ServerSideDecorationManager *waylandServerSideDecoration();
 KWayland::Client::PlasmaShell *waylandPlasmaShell();
 KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
 KWayland::Client::PointerConstraints *waylandPointerConstraints();
-KWayland::Client::IdleInhibitManager *waylandIdleInhibitManager();
 KWayland::Client::AppMenuManager *waylandAppMenuManager();
 KWayland::Client::OutputManagement *waylandOutputManagement();
 KWayland::Client::TextInputManager *waylandTextInputManager();
@@ -333,6 +345,7 @@ XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *
                                 CreationSetup configureMode = CreationSetup::CreateAndConfigure);
 
 XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QObject *parent = nullptr);
+IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface);
 
 
 /**

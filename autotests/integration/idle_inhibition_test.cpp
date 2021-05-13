@@ -12,7 +12,6 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/idleinhibit.h>
 #include <KWayland/Client/surface.h>
 
 #include <KWaylandServer/display.h>
@@ -56,7 +55,7 @@ void TestIdleInhibition::initTestCase()
 
 void TestIdleInhibition::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::IdleInhibition));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::IdleInhibitV1));
 
 }
 
@@ -81,8 +80,8 @@ void TestIdleInhibition::testInhibit()
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
 
     // now create inhibition on window
-    QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));
-    QVERIFY(inhibitor->isValid());
+    QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
+    QVERIFY(inhibitor);
 
     // render the client
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
@@ -97,7 +96,7 @@ void TestIdleInhibition::testInhibit()
     QVERIFY(!idle->isInhibited());
 
     // inhibit again and destroy window
-    Test::waylandIdleInhibitManager()->createInhibitor(surface.data(), surface.data());
+    QScopedPointer<Test::IdleInhibitorV1> inhibitor2(Test::createIdleInhibitorV1(surface.data()));
     QVERIFY(inhibitedSpy.wait());
     QVERIFY(idle->isInhibited());
 
@@ -129,8 +128,8 @@ void TestIdleInhibition::testDontInhibitWhenNotOnCurrentDesktop()
     QVERIFY(!shellSurface.isNull());
 
     // Create the inhibitor object.
-    QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));
-    QVERIFY(inhibitor->isValid());
+    QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
+    QVERIFY(inhibitor);
 
     // Render the client.
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
@@ -186,8 +185,8 @@ void TestIdleInhibition::testDontInhibitWhenMinimized()
     QVERIFY(!shellSurface.isNull());
 
     // Create the inhibitor object.
-    QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));
-    QVERIFY(inhibitor->isValid());
+    QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
+    QVERIFY(inhibitor);
 
     // Render the client.
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
@@ -235,8 +234,8 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QVERIFY(surfaceConfigureRequestedSpy.isValid());
 
     // Create the inhibitor object.
-    QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));
-    QVERIFY(inhibitor->isValid());
+    QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
+    QVERIFY(inhibitor);
 
     // Map the client.
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
@@ -316,8 +315,8 @@ void TestIdleInhibition::testDontInhibitWhenLeftCurrentDesktop()
     QVERIFY(!shellSurface.isNull());
 
     // Create the inhibitor object.
-    QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));
-    QVERIFY(inhibitor->isValid());
+    QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
+    QVERIFY(inhibitor);
 
     // Render the client.
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
