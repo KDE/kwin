@@ -250,7 +250,6 @@ void KWinTabBoxConfigForm::loadShortcuts()
 
 void KWinTabBoxConfigForm::resetShortcuts()
 {
-    QString action;
     auto resetShortcut = [this](KKeySequenceWidget *widget, const QKeySequence &sequence = QKeySequence()) {
         const QString action = widget->property("shortcutAction").toString();
         QAction *a = m_actionCollection->action(action);

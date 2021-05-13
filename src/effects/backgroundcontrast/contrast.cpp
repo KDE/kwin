@@ -357,8 +357,6 @@ void ContrastEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, s
         return;
     }
 
-    const QRegion oldPaint = data.paint;
-
     // we don't have to blur a region we don't see
     m_currentContrast -= data.clip;
     // if we have to paint a non-opaque part of this window that intersects with the
