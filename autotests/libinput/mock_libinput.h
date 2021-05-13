@@ -100,6 +100,7 @@ struct libinput_device {
 };
 
 struct libinput_event {
+    virtual ~libinput_event() {}
     libinput_device *device = nullptr;
     libinput_event_type type = LIBINPUT_EVENT_NONE;
     quint32 time = 0;
