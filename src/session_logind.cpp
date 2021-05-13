@@ -294,12 +294,12 @@ bool LogindSession::initialize()
     QDBusConnection::systemBus().connect(s_serviceName, m_sessionPath, s_sessionInterface,
                                          QStringLiteral("PauseDevice"),
                                          this,
-                                         SLOT(handlePauseDevice(uint, uint, QString)));
+                                         SLOT(handlePauseDevice(uint,uint,QString)));
 
     QDBusConnection::systemBus().connect(s_serviceName, m_sessionPath, s_propertiesInterface,
                                          QStringLiteral("PropertiesChanged"),
                                          this,
-                                         SLOT(handlePropertiesChanged(QString, QVariantMap)));
+                                         SLOT(handlePropertiesChanged(QString,QVariantMap)));
 
     return true;
 }
