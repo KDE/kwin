@@ -444,6 +444,7 @@ void WaylandClient::updateGeometry(const QRect &rect)
 
     updateWindowRules(Rules::Position | Rules::Size);
     updateGeometryBeforeUpdateBlocking();
+    screens()->setCurrent(this);
 
     if (changedGeometries & WaylandGeometryBuffer) {
         emit bufferGeometryChanged(this, oldBufferGeometry);
