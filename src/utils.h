@@ -29,6 +29,7 @@ Q_DECLARE_LOGGING_CATEGORY(KWIN_CORE)
 Q_DECLARE_LOGGING_CATEGORY(KWIN_VIRTUALKEYBOARD)
 namespace KWin
 {
+Q_NAMESPACE
 
 const QPoint invalidPoint(INT_MIN, INT_MIN);
 
@@ -47,6 +48,7 @@ enum Layer {
     UnmanagedLayer, // layer for override redirect windows.
     NumLayers, // number of layers, must be last
 };
+Q_ENUM_NS(Layer)
 
 enum StrutArea {
     StrutAreaInvalid = 0, // Null

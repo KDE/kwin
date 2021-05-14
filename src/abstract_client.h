@@ -320,6 +320,8 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      */
     Q_PROPERTY(QString colorScheme READ colorScheme NOTIFY colorSchemeChanged)
 
+    Q_PROPERTY(KWin::Layer layer READ layer)
+
 public:
     ~AbstractClient() override;
 

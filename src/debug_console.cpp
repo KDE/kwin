@@ -1132,6 +1132,8 @@ QVariant DebugConsoleModel::propertyData(QObject *object, const QModelIndex &ind
             default:
                 return QStringLiteral("NET::Unknown");
             }
+        } else if (qstrcmp(property.name(), "layer") == 0) {
+            return QMetaEnum::fromType<Layer>().valueToKey(value.value<Layer>());
         }
         return value;
     }
