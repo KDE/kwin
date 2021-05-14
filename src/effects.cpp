@@ -1926,29 +1926,36 @@ TOPLEVEL_HELPER(qlonglong, windowId, window)
 
 #undef TOPLEVEL_HELPER
 
-#define CLIENT_HELPER_WITH_DELETED( rettype, prototype, propertyname, defaultValue ) \
+#define CLIENT_HELPER( rettype, prototype, propertyname, defaultValue ) \
     rettype EffectWindowImpl::prototype ( ) const \
     { \
         auto client = qobject_cast<AbstractClient *>(toplevel); \
         if (client) { \
             return client->propertyname(); \
         } \
-        auto deleted = qobject_cast<Deleted *>(toplevel); \
-        if (deleted) { \
-            return deleted->propertyname(); \
-        } \
         return defaultValue; \
     }
 
-CLIENT_HELPER_WITH_DELETED(bool, isMinimized, isMinimized, false)
-CLIENT_HELPER_WITH_DELETED(bool, isModal, isModal, false)
-CLIENT_HELPER_WITH_DELETED(bool, isFullScreen, isFullScreen, false)
-CLIENT_HELPER_WITH_DELETED(bool, keepAbove, keepAbove, false)
-CLIENT_HELPER_WITH_DELETED(bool, keepBelow, keepBelow, false)
-CLIENT_HELPER_WITH_DELETED(QString, caption, caption, QString());
-CLIENT_HELPER_WITH_DELETED(QVector<uint>, desktops, x11DesktopIds, QVector<uint>());
+CLIENT_HELPER(bool, isMinimized, isMinimized, false)
+CLIENT_HELPER(bool, isModal, isModal, false)
+CLIENT_HELPER(bool, isFullScreen, isFullScreen, false)
+CLIENT_HELPER(bool, keepAbove, keepAbove, false)
+CLIENT_HELPER(bool, keepBelow, keepBelow, false)
+CLIENT_HELPER(QString, caption, caption, QString());
+CLIENT_HELPER(QVector<uint>, desktops, x11DesktopIds, QVector<uint>());
+CLIENT_HELPER(bool, isMovable, isMovable, false)
+CLIENT_HELPER(bool, isMovableAcrossScreens, isMovableAcrossScreens, false)
+CLIENT_HELPER(bool, isUserMove, isInteractiveMove, false)
+CLIENT_HELPER(bool, isUserResize, isInteractiveResize, false)
+CLIENT_HELPER(QRect, iconGeometry, iconGeometry, QRect())
+CLIENT_HELPER(bool, isSpecialWindow, isSpecialWindow, true)
+CLIENT_HELPER(bool, acceptsFocus, wantsInput, true) // We don't actually know...
+CLIENT_HELPER(QIcon, icon, icon, QIcon())
+CLIENT_HELPER(bool, isSkipSwitcher, skipSwitcher, false)
+CLIENT_HELPER(bool, decorationHasAlpha, decorationHasAlpha, false)
+CLIENT_HELPER(bool, isUnresponsive, unresponsive, false)
 
-#undef CLIENT_HELPER_WITH_DELETED
+#undef CLIENT_HELPER
 
 // legacy from tab groups, can be removed when no effects use this any more.
 bool EffectWindowImpl::isCurrentTab() const
@@ -1970,30 +1977,6 @@ NET::WindowType EffectWindowImpl::windowType() const
 {
     return toplevel->windowType();
 }
-
-#define CLIENT_HELPER( rettype, prototype, propertyname, defaultValue ) \
-    rettype EffectWindowImpl::prototype ( ) const \
-    { \
-        auto client = qobject_cast<AbstractClient *>(toplevel); \
-        if (client) { \
-            return client->propertyname(); \
-        } \
-        return defaultValue; \
-    }
-
-CLIENT_HELPER(bool, isMovable, isMovable, false)
-CLIENT_HELPER(bool, isMovableAcrossScreens, isMovableAcrossScreens, false)
-CLIENT_HELPER(bool, isUserMove, isInteractiveMove, false)
-CLIENT_HELPER(bool, isUserResize, isInteractiveResize, false)
-CLIENT_HELPER(QRect, iconGeometry, iconGeometry, QRect())
-CLIENT_HELPER(bool, isSpecialWindow, isSpecialWindow, true)
-CLIENT_HELPER(bool, acceptsFocus, wantsInput, true) // We don't actually know...
-CLIENT_HELPER(QIcon, icon, icon, QIcon())
-CLIENT_HELPER(bool, isSkipSwitcher, skipSwitcher, false)
-CLIENT_HELPER(bool, decorationHasAlpha, decorationHasAlpha, false)
-CLIENT_HELPER(bool, isUnresponsive, unresponsive, false)
-
-#undef CLIENT_HELPER
 
 QSize EffectWindowImpl::basicUnit() const
 {
@@ -2103,9 +2086,6 @@ EffectWindowList EffectWindowImpl::mainWindows() const
 {
     if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
         return getMainWindows(client);
-    }
-    if (auto deleted = qobject_cast<Deleted *>(toplevel)) {
-        return getMainWindows(deleted);
     }
     return {};
 }

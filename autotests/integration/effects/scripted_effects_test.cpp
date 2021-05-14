@@ -184,7 +184,7 @@ void ScriptedEffectsTest::testEffectsHandler()
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
     auto waitFor = [&effectOutputSpy](const QString &expected) {
         QVERIFY(effectOutputSpy.count() > 0 || effectOutputSpy.wait());
-        QCOMPARE(effectOutputSpy.first().first(), expected);
+        QCOMPARE(effectOutputSpy.first().first().toString(), expected);
         effectOutputSpy.removeFirst();
     };
     QVERIFY(effect->load("effectsHandler"));
