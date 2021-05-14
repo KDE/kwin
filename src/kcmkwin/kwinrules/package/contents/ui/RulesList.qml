@@ -178,6 +178,15 @@ ScrollViewKCM {
                     }
                 }
 
+                Rectangle {
+                    radius: width * 0.5
+                    implicitWidth: Kirigami.Units.largeSpacing
+                    implicitHeight: Kirigami.Units.largeSpacing
+                    Layout.margins: Kirigami.Units.largeSpacing
+                    opacity: (model && model.needsSave) ? 1 : 0
+                    color: Kirigami.Theme.highlightColor
+                }
+
                 QQC2.CheckBox {
                     id: itemSelectionCheck
                     visible: exportInfo.visible

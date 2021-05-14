@@ -23,6 +23,7 @@ QHash<int, QByteArray> RuleBookModel::roleNames() const
 {
     static auto roles = QHash<int, QByteArray> {
         { DescriptionRole, QByteArray("display") },
+        { ModifiedRole, QByteArray("needsSave") },
     }.unite(QAbstractListModel::roleNames());
     return roles;
 }
@@ -48,6 +49,8 @@ QVariant RuleBookModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case RuleBookModel::DescriptionRole:
         return settings->description();
+    case RuleBookModel::ModifiedRole:
+        return settings->isSaveNeeded();
     }
 
     return QVariant();
@@ -72,7 +75,7 @@ bool RuleBookModel::setData(const QModelIndex &index, const QVariant &value, int
         return false;
     }
 
-    Q_EMIT dataChanged(index, index, {role});
+    Q_EMIT dataChanged(index, index, {role, ModifiedRole});
 
     return true;
 }
@@ -176,7 +179,11 @@ void RuleBookModel::load()
 
 void RuleBookModel::save()
 {
+    beginResetModel();
+
     m_ruleBook->save();
+
+    endResetModel();
 }
 
 bool RuleBookModel::isSaveNeeded()
