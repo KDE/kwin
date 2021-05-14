@@ -46,9 +46,16 @@ public:
     {
         if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
             setObjectName(client->desktopFileName());
+            client->acquireRecording();
         }
         connect(toplevel, &Toplevel::windowClosed, this, &PipeWireStream::stopStreaming);
         connect(this, &PipeWireStream::startStreaming, this, &WindowStream::startFeeding);
+    }
+
+    ~WindowStream() {
+        if (auto client = qobject_cast<AbstractClient *>(m_toplevel)) {
+            client->releaseRecording();
+        }
     }
 
 private:

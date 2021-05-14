@@ -2821,6 +2821,9 @@ QString AbstractClient::caption() const
         cap += QLatin1String(" ");
         cap += i18nc("Application is not responding, appended to window title", "(Not Responding)");
     }
+    if (isRecording()) {
+        cap += i18nc("Window is being recorded", " (Recording)");
+    }
     return cap;
 }
 
@@ -3784,6 +3787,23 @@ void AbstractClient::cleanTabBox()
         tabBox->nextPrev(true);
     }
 #endif
+}
+
+void AbstractClient::acquireRecording()
+{
+    m_recording++;
+    if (m_recording == 1) {
+        Q_EMIT captionChanged();
+    }
+}
+
+void AbstractClient::releaseRecording()
+{
+    Q_ASSERT(m_recording > 0);
+    m_recording--;
+    if (m_recording == 0) {
+        Q_EMIT captionChanged();
+    }
 }
 
 }

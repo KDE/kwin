@@ -876,6 +876,12 @@ public:
 
     QRect fullscreenGeometryRestore() const;
 
+    void acquireRecording();
+    void releaseRecording();
+    bool isRecording() const {
+        return m_recording > 0;
+    }
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -923,6 +929,7 @@ Q_SIGNALS:
     void applicationMenuActiveChanged(bool);
     void unresponsiveChanged(bool);
     void decorationChanged();
+    void recordingChanged(bool recording);
 
 protected:
     AbstractClient();
@@ -1323,6 +1330,7 @@ private:
     QString m_applicationMenuObjectPath;
 
     bool m_unresponsive = false;
+    uint m_recording = 0;
 
     QKeySequence _shortcut;
 
