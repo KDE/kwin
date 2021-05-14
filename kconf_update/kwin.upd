@@ -49,3 +49,9 @@ Id=no-swap-encourage
 File=kwinrc
 Group=Compositing
 Script=kwin-5.21-no-swap-encourage.py,python3
+
+# Make the Translucency effect disabled by default
+Id=make-translucency-effect-disabled-by-default
+File=kwinrc
+Group=Plugins
+Script=kwin-5.23-disable-translucency-effect.sh,sh
