@@ -16,7 +16,6 @@
 #define KWIN_XCLIPBOARD_SYNC_BIN "${CMAKE_INSTALL_FULL_LIBEXECDIR}/org_kde_kwin_xclipboard_syncer"
 #cmakedefine01 HAVE_X11_XCB
 #cmakedefine01 HAVE_X11_XINPUT
-#cmakedefine01 HAVE_DRM
 #cmakedefine01 HAVE_GBM
 #cmakedefine01 HAVE_EGL_STREAMS
 #cmakedefine01 HAVE_WAYLAND_EGL

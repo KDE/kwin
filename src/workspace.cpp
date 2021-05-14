@@ -1509,12 +1509,6 @@ QString Workspace::supportInformation() const
 #else
     support.append(no);
 #endif
-    support.append(QStringLiteral("HAVE_DRM: "));
-#if HAVE_DRM
-    support.append(yes);
-#else
-    support.append(no);
-#endif
     support.append(QStringLiteral("HAVE_GBM: "));
 #if HAVE_GBM
     support.append(yes);

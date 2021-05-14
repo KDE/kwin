@@ -289,9 +289,7 @@ void ApplicationWayland::startSession()
 static const QString s_waylandPlugin = QStringLiteral("KWinWaylandWaylandBackend");
 static const QString s_x11Plugin = QStringLiteral("KWinWaylandX11Backend");
 static const QString s_fbdevPlugin = QStringLiteral("KWinWaylandFbdevBackend");
-#if HAVE_DRM
 static const QString s_drmPlugin = QStringLiteral("KWinWaylandDrmBackend");
-#endif
 static const QString s_virtualPlugin = QStringLiteral("KWinWaylandVirtualBackend");
 
 
@@ -312,13 +310,11 @@ static QString automaticBackendSelection(SpawnMode spawnMode)
     if (qEnvironmentVariableIsSet("DISPLAY")) {
         return s_x11Plugin;
     }
-#if HAVE_DRM
     // Only default to drm when there's dri drivers. This way fbdev will be
     // used when running using nomodeset
     if (QFileInfo::exists("/dev/dri")) {
         return s_drmPlugin;
     }
-#endif
     return s_fbdevPlugin;
 }
 
@@ -439,9 +435,7 @@ int main(int argc, char * argv[])
     const bool hasVirtualOption = hasPlugin(KWin::s_virtualPlugin);
     const bool hasWaylandOption = hasPlugin(KWin::s_waylandPlugin);
     const bool hasFramebufferOption = hasPlugin(KWin::s_fbdevPlugin);
-#if HAVE_DRM
     const bool hasDrmOption = hasPlugin(KWin::s_drmPlugin);
-#endif
 
     QCommandLineOption xwaylandOption(QStringLiteral("xwayland"),
                                       i18n("Start a rootless Xwayland server."));
@@ -517,12 +511,10 @@ int main(int argc, char * argv[])
     QCommandLineOption libinputOption(QStringLiteral("libinput"),
                                       i18n("Enable libinput support for input events processing. Note: never use in a nested session.	(deprecated)"));
     parser.addOption(libinputOption);
-#if HAVE_DRM
     QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));
     if (hasDrmOption) {
         parser.addOption(drmOption);
     }
-#endif
 
     QCommandLineOption inputMethodOption(QStringLiteral("inputmethod"),
                                          i18n("Input method that KWin starts."),
@@ -594,11 +586,9 @@ int main(int argc, char * argv[])
     int outputCount = 1;
     qreal outputScale = 1;
 
-#if HAVE_DRM
     if (hasDrmOption && parser.isSet(drmOption)) {
         pluginName = KWin::s_drmPlugin;
     }
-#endif
 
     if (hasSizeOption) {
         bool ok = false;

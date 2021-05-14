@@ -203,21 +203,14 @@ set_package_properties(UDev PROPERTIES
 )
 
 find_package(Libdrm 2.4.62)
-set_package_properties(Libdrm PROPERTIES TYPE OPTIONAL PURPOSE "Required for drm output on Wayland.")
-set(HAVE_DRM FALSE)
-if (Libdrm_FOUND)
-    set(HAVE_DRM TRUE)
-endif()
+set_package_properties(Libdrm PROPERTIES TYPE REQUIRED PURPOSE "Required for drm output on Wayland.")
 
 find_package(gbm)
 set_package_properties(gbm PROPERTIES TYPE OPTIONAL PURPOSE "Required for egl output of drm backend.")
-set(HAVE_GBM FALSE)
-if (HAVE_DRM AND gbm_FOUND)
-    set(HAVE_GBM TRUE)
-endif()
+set(HAVE_GBM ${gbm_FOUND})
 
 option(KWIN_BUILD_EGL_STREAM_BACKEND "Enable building of EGLStream based DRM backend" ON)
-if (HAVE_DRM AND KWIN_BUILD_EGL_STREAM_BACKEND)
+if (KWIN_BUILD_EGL_STREAM_BACKEND)
     set(HAVE_EGL_STREAMS TRUE)
 endif()
 
