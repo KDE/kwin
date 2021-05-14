@@ -353,6 +353,7 @@ void InternalClient::destroyClient()
     markAsZombie();
     if (isMoveResize()) {
         leaveMoveResize();
+        emit clientFinishUserMovedResized(this);
     }
 
     Deleted *deleted = Deleted::create(this);

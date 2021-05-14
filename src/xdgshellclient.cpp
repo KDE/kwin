@@ -319,10 +319,11 @@ QRect XdgSurfaceClient::frameRectToBufferRect(const QRect &rect) const
 void XdgSurfaceClient::destroyClient()
 {
     markAsZombie();
-    m_configureTimer->stop();
     if (isMoveResize()) {
         leaveMoveResize();
+        emit clientFinishUserMovedResized(this);
     }
+    m_configureTimer->stop();
     cleanTabBox();
     Deleted *deleted = Deleted::create(this);
     emit windowClosed(this, deleted);
