@@ -10,14 +10,12 @@
 #ifndef KWIN_DELETED_H
 #define KWIN_DELETED_H
 
-#include "toplevel.h"
+#include "abstract_client.h"
 
 namespace KWin
 {
 
-class AbstractClient;
-
-class KWIN_EXPORT Deleted : public Toplevel
+class KWIN_EXPORT Deleted : public AbstractClient
 {
     Q_OBJECT
 
@@ -36,7 +34,7 @@ public:
     QRect transparentRect() const override;
     bool isDeleted() const override;
     xcb_window_t frameId() const override;
-    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
+    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const override;
     Layer layer() const override {
         return m_layer;
     }
@@ -46,7 +44,7 @@ public:
     bool isModal() const {
         return m_modal;
     }
-    QList<AbstractClient*> mainClients() const {
+    QList<AbstractClient*> mainClients() const override {
         return m_mainClients;
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
@@ -55,7 +53,7 @@ public:
     }
     QByteArray windowRole() const override;
 
-    bool isFullScreen() const {
+    bool isFullScreen() const override {
         return m_fullscreen;
     }
 
@@ -65,9 +63,27 @@ public:
     bool keepBelow() const {
         return m_keepBelow;
     }
-    QString caption() const {
-        return m_caption;
-    }
+
+    QString captionNormal() const override { return m_caption; }
+    QString captionSuffix() const override { return {}; }
+    bool isCloseable() const override { return false; }
+    bool isShown(bool /*shaded_is_shown*/) const override { return false; }
+    bool isHiddenInternal() const override { return false; }
+    void hideClient(bool /*hide*/) override {}
+    AbstractClient *findModal(bool /*allow_itself*/) override { return nullptr; }
+    bool isResizable() const override { return false; }
+    bool isMovable() const override { return false; }
+    bool isMovableAcrossScreens() const override { return false; }
+    bool takeFocus() override { return false; }
+    bool wantsInput() const override { return false; }
+    void killWindow() override {}
+    void destroyClient() override {}
+    void closeWindow() override {}
+    bool acceptsFocus() const override { return false; }
+    bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks /*checks*/) const override { return other == this; }
+    void updateCaption() override {}
+    void resizeWithChecks(const QSize&) override {}
+    void moveResizeInternal(const QRect & /*rect*/, KWin::AbstractClient::MoveResizeMode /*mode*/) override {}
 
     /**
      * Returns whether the client was a popup.

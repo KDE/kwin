@@ -21,7 +21,7 @@ namespace KWin
 {
 
 Deleted::Deleted()
-    : Toplevel()
+    : AbstractClient()
     , delete_refcount(1)
     , m_frame(XCB_WINDOW_NONE)
     , m_layer(UnknownLayer)
@@ -152,7 +152,7 @@ QPoint Deleted::clientPos() const
     return contentsRect.topLeft();
 }
 
-void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect& bottom) const
+void Deleted::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const
 {
     left = decoration_left;
     top = decoration_top;
@@ -208,4 +208,3 @@ QVector<uint> Deleted::x11DesktopIds() const
 }
 
 } // namespace
-
