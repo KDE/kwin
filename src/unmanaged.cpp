@@ -37,7 +37,7 @@ const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask |
         | NET::CriticalNotificationMask;
 
 Unmanaged::Unmanaged()
-    : Toplevel()
+    : AbstractClient()
 {
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeXwayland:
