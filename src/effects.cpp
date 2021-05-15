@@ -2014,7 +2014,7 @@ void EffectWindowImpl::setSceneWindow(Scene::Window* w)
 
 QRegion EffectWindowImpl::shape() const
 {
-    if (isX11Client() && sceneWindow()) {
+    if (isX11Client() && sceneWindow() && sceneWindow()->surfaceItem()) {
         return sceneWindow()->surfaceItem()->shape();
     }
     return toplevel->rect();
