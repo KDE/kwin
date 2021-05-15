@@ -16,6 +16,7 @@
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "decorationitem.h"
 #include "deleted.h"
 #include "x11client.h"
 #include "cursor.h"
@@ -35,6 +36,7 @@
 #include "thumbnailitem.h"
 #include "virtualdesktops.h"
 #include "window_property_notify_x11_filter.h"
+#include "windowitem.h"
 #include "workspace.h"
 #include "kwinglutils.h"
 #include "kwineffectquickview.h"
@@ -2014,8 +2016,13 @@ void EffectWindowImpl::setSceneWindow(Scene::Window* w)
 
 QRegion EffectWindowImpl::shape() const
 {
-    if (isX11Client() && sceneWindow()) {
-        return sceneWindow()->surfaceItem()->shape();
+    if (isX11Client()) {
+        const WindowItem *windowItem = sceneWindow()->windowItem();
+        if (DecorationItem *item = windowItem->decorationItem()) {
+            return item->rect();
+        } else if (SurfaceItem *item = windowItem->surfaceItem()) {
+            return item->shape();
+        }
     }
     return toplevel->rect();
 }
