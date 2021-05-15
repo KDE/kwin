@@ -625,6 +625,15 @@ QVector<OutputDevice *> waylandOutputDevices()
     return s_waylandConnection.outputDevices;
 }
 
+bool waitForWaylandSurface(AbstractClient *client)
+{
+    if (client->surface()) {
+        return true;
+    }
+    QSignalSpy surfaceChangedSpy(client, &Toplevel::surfaceChanged);
+    return surfaceChangedSpy.wait();
+}
+
 bool waitForWaylandPointer()
 {
     if (!s_waylandConnection.seat) {
