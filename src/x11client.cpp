@@ -410,8 +410,6 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     setSkipSwitcher((info->state() & NET::SkipSwitcher) != 0);
     readFirstInTabBox(firstInTabBoxCookie);
 
-    setupCompositing();
-
     KStartupInfoId asn_id;
     KStartupInfoData asn_data;
     bool asn_valid = workspace()->checkStartupNotification(window(), asn_id, asn_data);

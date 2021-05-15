@@ -515,9 +515,8 @@ Workspace::~Workspace()
         client->destroyClient();
     }
 
-    for (auto it = deleted.begin(); it != deleted.end();) {
-        emit deletedRemoved(*it);
-        it = deleted.erase(it);
+    while (!deleted.isEmpty()) {
+        deleted.first()->discard();
     }
 
     delete RuleBook::self();

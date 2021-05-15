@@ -342,27 +342,30 @@ void Compositor::startupWithWorkspace()
 
     // Sets also the 'effects' pointer.
     kwinApp()->platform()->createEffectsHandler(this, m_scene);
-    connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::removeToplevel);
     connect(effects, &EffectsHandler::screenGeometryChanged, this, &Compositor::addRepaintFull);
 
     for (X11Client *c : Workspace::self()->clientList()) {
-        c->setupCompositing();
-        c->updateShadow();
+        if (c->readyForPainting()) {
+            c->setupCompositing();
+        }
     }
     for (Unmanaged *c : Workspace::self()->unmanagedList()) {
-        c->setupCompositing();
-        c->updateShadow();
+        if (c->readyForPainting()) {
+            c->setupCompositing();
+        }
     }
     for (InternalClient *client : workspace()->internalClients()) {
-        client->setupCompositing();
-        client->updateShadow();
+        if (client->readyForPainting()) {
+            client->setupCompositing();
+        }
     }
 
     if (auto *server = waylandServer()) {
         const auto clients = server->clients();
         for (AbstractClient *c : clients) {
-            c->setupCompositing();
-            c->updateShadow();
+            if (c->readyForPainting()) {
+                c->setupCompositing();
+            }
         }
     }
 
@@ -436,15 +439,6 @@ void Compositor::stop()
 
     if (Workspace::self()) {
         for (X11Client *c : Workspace::self()->clientList()) {
-            m_scene->removeToplevel(c);
-        }
-        for (Unmanaged *c : Workspace::self()->unmanagedList()) {
-            m_scene->removeToplevel(c);
-        }
-        for (InternalClient *client : workspace()->internalClients()) {
-            m_scene->removeToplevel(client);
-        }
-        for (X11Client *c : Workspace::self()->clientList()) {
             c->finishCompositing();
         }
         for (Unmanaged *c : Workspace::self()->unmanagedList()) {
@@ -463,9 +457,6 @@ void Compositor::stop()
     }
 
     if (waylandServer()) {
-        for (AbstractClient *c : waylandServer()->clients()) {
-            m_scene->removeToplevel(c);
-        }
         for (AbstractClient *c : waylandServer()->clients()) {
             c->finishCompositing();
         }

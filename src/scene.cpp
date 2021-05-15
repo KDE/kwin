@@ -484,8 +484,10 @@ void Scene::createStackingOrder(const QList<Toplevel *> &toplevels)
 {
     // TODO: cache the stacking_order in case it has not changed
     foreach (Toplevel *c, toplevels) {
-        Q_ASSERT(m_windows.contains(c));
-        stacking_order.append(m_windows[ c ]);
+        Scene::Window *window = m_windows.value(c);
+        if (window) {
+            stacking_order.append(window);
+        }
     }
 }
 

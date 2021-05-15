@@ -119,7 +119,6 @@ bool Unmanaged::track(xcb_window_t w)
     detectShape(w);
     getWmOpaqueRegion();
     getSkipCloseAnimation();
-    setupCompositing();
     if (QWindow *internalWindow = findInternalWindow()) {
         m_outline = internalWindow->property("__kwin_outline").toBool();
     }

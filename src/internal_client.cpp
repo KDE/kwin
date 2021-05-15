@@ -50,8 +50,6 @@ InternalClient::InternalClient(QWindow *window)
     setOpacity(m_internalWindow->opacity());
     setSkipCloseAnimation(m_internalWindow->property(s_skipClosePropertyName).toBool());
 
-    // Create scene window, effect window, and update server-side shadow.
-    setupCompositing();
     updateColorScheme();
 
     blockGeometryUpdates(true);

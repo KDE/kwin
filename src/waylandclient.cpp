@@ -38,7 +38,6 @@ Q_DECLARE_FLAGS(WaylandGeometryTypes, WaylandGeometryType)
 WaylandClient::WaylandClient(SurfaceInterface *surface)
 {
     setSurface(surface);
-    setupCompositing();
 
     connect(surface, &SurfaceInterface::shadowChanged,
             this, &WaylandClient::updateShadow);

@@ -361,6 +361,7 @@ void Toplevel::setReadyForPainting()
     if (!ready_for_painting) {
         ready_for_painting = true;
         if (compositing()) {
+            setupCompositing();
             addRepaintFull();
             emit windowShown(this);
         }
@@ -369,8 +370,11 @@ void Toplevel::setReadyForPainting()
 
 void Toplevel::deleteEffectWindow()
 {
-    delete effect_window;
-    effect_window = nullptr;
+    if (effect_window) {
+        Compositor::self()->scene()->removeToplevel(this);
+        delete effect_window;
+        effect_window = nullptr;
+    }
 }
 
 void Toplevel::checkScreen()
@@ -437,6 +441,9 @@ bool Toplevel::isOnOutput(AbstractOutput *output) const
 
 void Toplevel::updateShadow()
 {
+    if (!windowItem()) {
+        return;
+    }
     if (shadow()) {
         if (!effectWindow()->sceneWindow()->shadow()->updateShadow()) {
             effectWindow()->sceneWindow()->updateShadow(nullptr);
