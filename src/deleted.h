@@ -32,7 +32,6 @@ public:
     void refWindow();
     void unrefWindow();
     void discard();
-    QRect bufferGeometry() const override;
     QMargins frameMargins() const override;
     qreal bufferScale() const override;
     int desktop() const override;
@@ -112,7 +111,6 @@ private:
     void copyToDeleted(Toplevel* c);
     ~Deleted() override; // deleted only using unrefWindow()
 
-    QRect m_bufferGeometry;
     QMargins m_frameMargins;
 
     int delete_refcount;

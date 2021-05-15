@@ -23,7 +23,6 @@ class WaylandClient : public AbstractClient
 public:
     WaylandClient(KWaylandServer::SurfaceInterface *surface);
 
-    QRect bufferGeometry() const override;
     QString captionNormal() const override;
     QString captionSuffix() const override;
     QPoint clientContentPos() const override;
@@ -76,7 +75,6 @@ private:
     QString m_captionNormal;
     QString m_captionSuffix;
     QRect m_requestedFrameGeometry;
-    QRect m_bufferGeometry;
     QRect m_requestedClientGeometry;
     SyncMode m_positionSyncMode = SyncMode::Sync;
     SyncMode m_sizeSyncMode = SyncMode::Sync;

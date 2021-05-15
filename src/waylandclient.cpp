@@ -329,11 +329,6 @@ QRect WaylandClient::requestedClientGeometry() const
     return m_requestedClientGeometry;
 }
 
-QRect WaylandClient::bufferGeometry() const
-{
-    return m_bufferGeometry;
-}
-
 QSize WaylandClient::requestedClientSize() const
 {
     return requestedClientGeometry().size();

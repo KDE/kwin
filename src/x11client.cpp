@@ -2494,11 +2494,6 @@ QRect X11Client::inputGeometry() const
     return m_bufferGeometry;
 }
 
-QRect X11Client::bufferGeometry() const
-{
-    return m_bufferGeometry;
-}
-
 QPoint X11Client::framePosToClientPos(const QPoint &point) const
 {
     int x = point.x();

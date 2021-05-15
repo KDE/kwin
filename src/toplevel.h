@@ -306,7 +306,7 @@ public:
      * For Wayland clients, this method returns rectangle that the main surface
      * occupies on the screen, in global screen coordinates.
      */
-    virtual QRect bufferGeometry() const = 0;
+    QRect bufferGeometry() const;
     /**
      * Returns the geometry of the Toplevel, excluding invisible portions, e.g.
      * server-side and client-side drop shadows, etc.
@@ -701,6 +701,7 @@ protected:
     void setDepth(int depth);
     QRect m_frameGeometry;
     QRect m_clientGeometry;
+    QRect m_bufferGeometry;
     xcb_visualid_t m_visual;
     int bit_depth;
     NETWinInfo* info;
@@ -742,6 +743,11 @@ inline void Toplevel::setWindowHandles(xcb_window_t w)
 {
     Q_ASSERT(!m_client.isValid() && w != XCB_WINDOW_NONE);
     m_client.reset(w, false);
+}
+
+inline QRect Toplevel::bufferGeometry() const
+{
+    return m_bufferGeometry;
 }
 
 inline QRect Toplevel::clientGeometry() const

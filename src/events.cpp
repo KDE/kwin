@@ -1256,6 +1256,7 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
         QRect old = m_frameGeometry;
         m_clientGeometry = newgeom;
         m_frameGeometry = newgeom;
+        m_bufferGeometry = newgeom;
         emit bufferGeometryChanged(this, old);
         emit clientGeometryChanged(this, old);
         emit frameGeometryChanged(this, old);

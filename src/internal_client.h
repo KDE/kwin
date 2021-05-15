@@ -24,7 +24,6 @@ public:
 
     bool eventFilter(QObject *watched, QEvent *event) override;
 
-    QRect bufferGeometry() const override;
     qreal bufferScale() const override;
     QString captionNormal() const override;
     QString captionSuffix() const override;

@@ -98,6 +98,7 @@ bool Unmanaged::track(xcb_window_t w)
     }
     setWindowHandles(w);   // the window is also the frame
     Xcb::selectInput(w, attr->your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
+    m_bufferGeometry = geo.rect();
     m_frameGeometry = geo.rect();
     m_clientGeometry = geo.rect();
     checkScreen();
@@ -158,11 +159,6 @@ void Unmanaged::deleteUnmanaged(Unmanaged* c)
 bool Unmanaged::hasScheduledRelease() const
 {
     return m_scheduledRelease;
-}
-
-QRect Unmanaged::bufferGeometry() const
-{
-    return m_frameGeometry;
 }
 
 int Unmanaged::desktop() const

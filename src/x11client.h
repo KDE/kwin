@@ -81,7 +81,6 @@ public:
     xcb_window_t frameId() const override;
 
     QRect inputGeometry() const override;
-    QRect bufferGeometry() const override;
 
     QPoint framePosToClientPos(const QPoint &point) const override;
     QPoint clientPosToFramePos(const QPoint &point) const override;
@@ -475,7 +474,6 @@ private:
     } m_fullscreenMode;
 
     MaximizeMode max_mode;
-    QRect m_bufferGeometry;
     xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix;
     Group* in_group;

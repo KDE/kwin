@@ -102,11 +102,6 @@ bool InternalClient::eventFilter(QObject *watched, QEvent *event)
     return false;
 }
 
-QRect InternalClient::bufferGeometry() const
-{
-    return m_clientGeometry;
-}
-
 qreal InternalClient::bufferScale() const
 {
     if (m_internalWindow) {
@@ -477,6 +472,7 @@ void InternalClient::commitGeometry(const QRect &rect)
 
     m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;
+    m_bufferGeometry = m_clientGeometry;
 
     addWorkspaceRepaint(visibleGeometry());
     updateGeometryBeforeUpdateBlocking();
