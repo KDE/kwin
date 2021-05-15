@@ -418,8 +418,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
 
     // Make sure that the input window is created before we update the stacking order
     updateInputWindow();
-
-    workspace()->updateClientLayer(this);
+    updateLayer();
 
     SessionInfo* session = workspace()->takeSessionInfo(this);
     if (session) {
@@ -2938,7 +2937,7 @@ void X11Client::setTransient(xcb_window_t new_transient_for_id)
         } // checkGroup() will check 'check_active_modal'
         setTransientFor(transient_for);
         checkGroup(nullptr, true);   // force, because transiency has changed
-        workspace()->updateClientLayer(this);
+        updateLayer();
         workspace()->resetUpdateToolWindowsTimer();
         emit transientChanged();
     }
@@ -3377,7 +3376,7 @@ void X11Client::checkGroup(Group* set_group, bool force)
         old_group->deref(); // can be now deleted if empty
     checkGroupTransients();
     checkActiveModal();
-    workspace()->updateClientLayer(this);
+    updateLayer();
 }
 
 // used by Workspace::findClientLeaderGroup()
@@ -4458,7 +4457,7 @@ void X11Client::setFullScreen(bool set, bool user)
     GeometryUpdatesBlocker blocker2(this);
 
     // active fullscreens get different layer
-    workspace()->updateClientLayer(this);
+    updateLayer();
 
     info->setState(isFullScreen() ? NET::FullScreen : NET::States(), NET::FullScreen);
     updateDecoration(false, false);

@@ -52,10 +52,6 @@
  see Workspace::constrainedStackingOrder(), they may also be in higher layers, but
  they should never be below their mainwindow.
 
- When some client attribute changes (above/below flag, transiency...),
- Workspace::updateClientLayer() should be called in order to make
- sure it's moved to the appropriate layer QList<X11Client *> if needed.
-
  Currently the things that affect client in which layer a client
  belongs: KeepAbove/Keep Below flags, window type, fullscreen
  state and whether the client is active, mainclient (transiency).
@@ -94,12 +90,6 @@ namespace KWin
 //*******************************
 // Workspace
 //*******************************
-
-void Workspace::updateClientLayer(AbstractClient* c)
-{
-    if (c)
-        c->updateLayer();
-}
 
 void Workspace::updateStackingOrder(bool propagate_new_clients)
 {

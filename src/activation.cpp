@@ -244,7 +244,7 @@ void Workspace::setActiveClient(AbstractClient* c)
         if (screens()->count() > 1) {
             for (auto it = m_allClients.begin(); it != m_allClients.end(); ++it) {
                 if (*it != active_client && (*it)->layer() == ActiveLayer && (*it)->screen() == active_client->screen()) {
-                    updateClientLayer(*it);
+                    (*it)->updateLayer();
                 }
             }
         }

@@ -724,7 +724,7 @@ void Workspace::addClient(X11Client *c)
     addToStack(c);
     markXStackingOrderAsDirty();
     updateClientArea(); // This cannot be in manage(), because the client got added only now
-    updateClientLayer(c);
+    c->updateLayer();
     if (c->isDesktop()) {
         raiseClient(c);
         // If there's no active client, make this desktop the active one
@@ -822,7 +822,7 @@ void Workspace::removeDeleted(Deleted* c)
 void Workspace::addShellClient(AbstractClient *client)
 {
     setupClientConnections(client);
-    updateClientLayer(client);
+    client->updateLayer();
 
     if (client->isPlaceable()) {
         const QRect area = clientArea(PlacementArea, Screens::self()->current(), client->desktop());
@@ -851,7 +851,7 @@ void Workspace::addShellClient(AbstractClient *client)
     }
     updateTabbox();
     connect(client, &AbstractClient::windowShown, this, [this, client] {
-        updateClientLayer(client);
+        client->updateLayer();
         markXStackingOrderAsDirty();
         updateStackingOrder(true);
         updateClientArea();

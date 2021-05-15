@@ -196,7 +196,6 @@ public:
     void lowerClientRequest(AbstractClient* c);
     void restackClientUnderActive(AbstractClient*);
     void restack(AbstractClient *c, AbstractClient *under, bool force = false);
-    void updateClientLayer(AbstractClient* c);
     void raiseOrLowerClient(AbstractClient*);
     void resetUpdateToolWindowsTimer();
     void restoreSessionStackingOrder(X11Client *c);

@@ -209,13 +209,13 @@ void AbstractClient::setActive(bool act)
         setShade(ShadeNormal);
 
     StackingUpdatesBlocker blocker(workspace());
-    workspace()->updateClientLayer(this);   // active windows may get different layer
+    updateLayer(); // active windows may get different layer
     auto mainclients = mainClients();
     for (auto it = mainclients.constBegin();
             it != mainclients.constEnd();
             ++it)
         if ((*it)->isFullScreen())  // fullscreens go high even if their transient is active
-            workspace()->updateClientLayer(*it);
+            (*it)->updateLayer();
 
     doSetActive();
     emit activeChanged();
@@ -338,7 +338,7 @@ void AbstractClient::setKeepAbove(bool b)
     }
     m_keepAbove = b;
     doSetKeepAbove();
-    workspace()->updateClientLayer(this);
+    updateLayer();
     updateWindowRules(Rules::Above);
 
     emit keepAboveChanged(m_keepAbove);
@@ -358,7 +358,7 @@ void AbstractClient::setKeepBelow(bool b)
     }
     m_keepBelow = b;
     doSetKeepBelow();
-    workspace()->updateClientLayer(this);
+    updateLayer();
     updateWindowRules(Rules::Below);
 
     emit keepBelowChanged(m_keepBelow);
