@@ -168,13 +168,10 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     QVERIFY(!client->hasStrut());
     QVERIFY(!client->isHiddenInternal());
     QVERIFY(!client->readyForPainting());
+
     QMetaObject::invokeMethod(client, "setReadyForPainting");
     QVERIFY(client->readyForPainting());
-    QVERIFY(!client->surface());
-    QSignalSpy surfaceChangedSpy(client, &Toplevel::surfaceChanged);
-    QVERIFY(surfaceChangedSpy.isValid());
-    QVERIFY(surfaceChangedSpy.wait());
-    QVERIFY(client->surface());
+    QVERIFY(Test::waitForWaylandSurface(client));
 
     // move pointer into the window, should trigger an enter
     QVERIFY(!client->frameGeometry().contains(Cursors::self()->mouse()->pos()));
@@ -265,11 +262,7 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
 
     QMetaObject::invokeMethod(client, "setReadyForPainting");
     QVERIFY(client->readyForPainting());
-    QVERIFY(!client->surface());
-    QSignalSpy surfaceChangedSpy(client, &Toplevel::surfaceChanged);
-    QVERIFY(surfaceChangedSpy.isValid());
-    QVERIFY(surfaceChangedSpy.wait());
-    QVERIFY(client->surface());
+    QVERIFY(Test::waitForWaylandSurface(client));
 
     // Move pointer into the window, should trigger an enter.
     QVERIFY(!client->frameGeometry().contains(Cursors::self()->mouse()->pos()));

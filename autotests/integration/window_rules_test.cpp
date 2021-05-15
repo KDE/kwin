@@ -137,11 +137,7 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     QVERIFY(!client->readyForPainting());
     QMetaObject::invokeMethod(client, "setReadyForPainting");
     QVERIFY(client->readyForPainting());
-    QVERIFY(!client->surface());
-    QSignalSpy surfaceChangedSpy(client, &Toplevel::surfaceChanged);
-    QVERIFY(surfaceChangedSpy.isValid());
-    QVERIFY(surfaceChangedSpy.wait());
-    QVERIFY(client->surface());
+    QVERIFY(Test::waitForWaylandSurface(client));
     QCOMPARE(client->maximizeMode(), MaximizeVertical);
 
     // destroy window again
@@ -208,11 +204,7 @@ void WindowRuleTest::testWindowClassChange()
     QVERIFY(!client->readyForPainting());
     QMetaObject::invokeMethod(client, "setReadyForPainting");
     QVERIFY(client->readyForPainting());
-    QVERIFY(!client->surface());
-    QSignalSpy surfaceChangedSpy(client, &Toplevel::surfaceChanged);
-    QVERIFY(surfaceChangedSpy.isValid());
-    QVERIFY(surfaceChangedSpy.wait());
-    QVERIFY(client->surface());
+    QVERIFY(Test::waitForWaylandSurface(client));
     QCOMPARE(client->keepAbove(), false);
 
     // now change class

@@ -310,6 +310,8 @@ KWayland::Client::TextInputManager *waylandTextInputManager();
 QVector<KWayland::Client::Output *> waylandOutputs();
 QVector<KWayland::Client::OutputDevice *> waylandOutputDevices();
 
+bool waitForWaylandSurface(AbstractClient *client);
+
 bool waitForWaylandPointer();
 bool waitForWaylandTouch();
 bool waitForWaylandKeyboard();

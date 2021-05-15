@@ -322,13 +322,7 @@ void SceneQPainterTest::testX11Window()
     QVERIFY(client);
     QCOMPARE(client->window(), w);
     QCOMPARE(client->clientSize(), QSize(100, 200));
-    if (!client->surface()) {
-        // wait for surface
-        QSignalSpy surfaceChangedSpy(client, &Toplevel::surfaceChanged);
-        QVERIFY(surfaceChangedSpy.isValid());
-        QVERIFY(surfaceChangedSpy.wait());
-    }
-    QVERIFY(client->surface());
+    QVERIFY(Test::waitForWaylandSurface(client));
     QTRY_VERIFY(client->surface()->buffer());
     QTRY_COMPARE(client->surface()->buffer()->data().size(), client->size());
     QImage compareImage(client->clientSize(), QImage::Format_RGB32);
