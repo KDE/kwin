@@ -686,6 +686,11 @@ QPointF Toplevel::mapToLocal(const QPointF &point) const
     return point - bufferGeometry().topLeft();
 }
 
+QPointF Toplevel::mapFromLocal(const QPointF &point) const
+{
+    return point + bufferGeometry().topLeft();
+}
+
 QRect Toplevel::inputGeometry() const
 {
     return frameGeometry();

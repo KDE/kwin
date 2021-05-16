@@ -357,11 +357,6 @@ public:
      */
     virtual qreal bufferScale() const;
     virtual QPoint clientPos() const = 0; // inside of geometry()
-    /**
-     * Describes how the client's content maps to the window geometry including the frame.
-     * The default implementation is a 1:1 mapping meaning the frame is part of the content.
-     */
-    virtual QPoint clientContentPos() const;
     QSize clientSize() const;
     /**
      * Returns a rectangle that the window occupies on the screen, including drop-shadows.
@@ -382,6 +377,7 @@ public:
      */
     QPoint mapToLocal(const QPoint &point) const;
     QPointF mapToLocal(const QPointF &point) const;
+    QPointF mapFromLocal(const QPointF &point) const;
 
     // prefer isXXX() instead
     // 0 for supported types means default for managed/unmanaged types
@@ -1004,11 +1000,6 @@ inline const QSharedPointer<QOpenGLFramebufferObject> &Toplevel::internalFramebu
 inline QImage Toplevel::internalImageObject() const
 {
     return m_internalImage;
-}
-
-inline QPoint Toplevel::clientContentPos() const
-{
-    return QPoint(0, 0);
 }
 
 template <class T, class U>

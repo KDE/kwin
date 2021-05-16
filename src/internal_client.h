@@ -27,7 +27,6 @@ public:
     qreal bufferScale() const override;
     QString captionNormal() const override;
     QString captionSuffix() const override;
-    QPoint clientContentPos() const override;
     QSize minSize() const override;
     QSize maxSize() const override;
     QRect transparentRect() const override;

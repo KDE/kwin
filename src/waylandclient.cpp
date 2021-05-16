@@ -65,11 +65,6 @@ QString WaylandClient::captionSuffix() const
     return m_captionSuffix;
 }
 
-QPoint WaylandClient::clientContentPos() const
-{
-    return -clientPos();
-}
-
 QRect WaylandClient::transparentRect() const
 {
     return QRect();

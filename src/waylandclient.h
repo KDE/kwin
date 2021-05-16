@@ -25,7 +25,6 @@ public:
 
     QString captionNormal() const override;
     QString captionSuffix() const override;
-    QPoint clientContentPos() const override;
     QRect transparentRect() const override;
     pid_t pid() const override;
     bool isLockScreen() const override;
