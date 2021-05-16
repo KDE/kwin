@@ -10,6 +10,7 @@
 #include "backingstore.h"
 #include "window.h"
 
+#include "clientbuffer_internal.h"
 #include "internal_client.h"
 
 #include <QPainter>
@@ -74,7 +75,7 @@ void BackingStore::flush(QWindow *window, const QRegion &region, const QPoint &o
 
     blitImage(m_backBuffer, m_frontBuffer, region);
 
-    client->present(m_frontBuffer, region);
+    client->present(new ClientBufferInternal(m_frontBuffer, platformWindow->devicePixelRatio()), region);
 }
 
 }

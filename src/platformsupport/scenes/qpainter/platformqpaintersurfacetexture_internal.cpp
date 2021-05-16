@@ -5,6 +5,7 @@
 */
 
 #include "platformqpaintersurfacetexture_internal.h"
+#include "clientbuffer_internal.h"
 #include "surfaceitem_internal.h"
 
 namespace KWin
@@ -26,7 +27,10 @@ bool PlatformQPainterSurfaceTextureInternal::create()
 void PlatformQPainterSurfaceTextureInternal::update(const QRegion &region)
 {
     Q_UNUSED(region)
-    m_image = m_pixmap->image();
+    const ClientBufferInternal *buffer = ClientBufferInternal::from(m_pixmap->buffer());
+    if (buffer) {
+        m_image = buffer->image();
+    }
 }
 
 } // namespace KWin

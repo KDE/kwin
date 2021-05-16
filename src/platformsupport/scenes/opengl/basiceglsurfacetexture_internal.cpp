@@ -5,6 +5,7 @@
 */
 
 #include "basiceglsurfacetexture_internal.h"
+#include "clientbuffer_internal.h"
 #include "kwingltexture.h"
 #include "logging.h"
 #include "surfaceitem_internal.h"
@@ -22,9 +23,13 @@ BasicEGLSurfaceTextureInternal::BasicEGLSurfaceTextureInternal(OpenGLBackend *ba
 
 bool BasicEGLSurfaceTextureInternal::create()
 {
-    if (updateFromFramebuffer()) {
+    const ClientBufferInternal *buffer = ClientBufferInternal::from(m_pixmap->buffer());
+    if (!buffer) {
+        return false;
+    }
+    if (updateFromFramebuffer(buffer)) {
         return true;
-    } else if (updateFromImage(m_pixmap->image().rect())) {
+    } else if (updateFromImage(buffer, QRect(QPoint(0, 0), buffer->size()))) {
         return true;
     } else {
         qCDebug(KWIN_OPENGL) << "Failed to create surface texture for internal window";
@@ -34,18 +39,22 @@ bool BasicEGLSurfaceTextureInternal::create()
 
 void BasicEGLSurfaceTextureInternal::update(const QRegion &region)
 {
-    if (updateFromFramebuffer()) {
+    const ClientBufferInternal *buffer = ClientBufferInternal::from(m_pixmap->buffer());
+    if (!buffer) {
         return;
-    } else if (updateFromImage(region)) {
+    }
+    if (updateFromFramebuffer(buffer)) {
+        return;
+    } else if (updateFromImage(buffer, region)) {
         return;
     } else {
         qCDebug(KWIN_OPENGL) << "Failed to update surface texture for internal window";
     }
 }
 
-bool BasicEGLSurfaceTextureInternal::updateFromFramebuffer()
+bool BasicEGLSurfaceTextureInternal::updateFromFramebuffer(const ClientBufferInternal *buffer)
 {
-    const QOpenGLFramebufferObject *fbo = m_pixmap->fbo();
+    const QOpenGLFramebufferObject *fbo = buffer->fbo();
     if (!fbo) {
         return false;
     }
@@ -69,9 +78,9 @@ static QRegion scale(const QRegion &region, qreal scaleFactor)
     return scaled;
 }
 
-bool BasicEGLSurfaceTextureInternal::updateFromImage(const QRegion &region)
+bool BasicEGLSurfaceTextureInternal::updateFromImage(const ClientBufferInternal *buffer, const QRegion &region)
 {
-    const QImage image = m_pixmap->image();
+    const QImage image = buffer->image();
     if (image.isNull()) {
         return false;
     }

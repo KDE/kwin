@@ -8,9 +8,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "window.h"
+#include "clientbuffer_internal.h"
 #include "eglhelpers.h"
 #include "platform.h"
 #include "screens.h"
+#include "swapchain.h"
 
 #include "internal_client.h"
 
@@ -82,9 +84,9 @@ void Window::setGeometry(const QRect &rect)
 
     const QSize nativeSize = rect.size() * m_scale;
 
-    if (m_contentFBO) {
-        if (m_contentFBO->size() != nativeSize) {
-            m_resized = true;
+    if (m_swapchain) {
+        if (m_swapchain->size() != nativeSize) {
+            m_swapchain.reset();
         }
     }
     QWindowSystemInterface::handleGeometryChange(window(), geometry());
@@ -100,43 +102,25 @@ qreal Window::devicePixelRatio() const
     return m_scale;
 }
 
-void Window::bindContentFBO()
+ClientBufferInternal *Window::backbuffer() const
 {
-    if (m_resized || !m_contentFBO) {
-        createFBO();
+    return m_backBuffer;
+}
+
+ClientBufferInternal *Window::swap()
+{
+    if (!m_swapchain) {
+        const QSize nativeSize = geometry().size() * m_scale;
+        m_swapchain.reset(new Swapchain(nativeSize, m_scale));
     }
-    m_contentFBO->bind();
-}
 
-const QSharedPointer<QOpenGLFramebufferObject> &Window::contentFBO() const
-{
-    return m_contentFBO;
-}
-
-QSharedPointer<QOpenGLFramebufferObject> Window::swapFBO()
-{
-    QSharedPointer<QOpenGLFramebufferObject> fbo = m_contentFBO;
-    m_contentFBO.clear();
-    return fbo;
+    m_backBuffer = m_swapchain->acquire();
+    return m_backBuffer;
 }
 
 InternalClient *Window::client() const
 {
     return m_handle;
-}
-
-void Window::createFBO()
-{
-    const QRect &r = geometry();
-    if (m_contentFBO && r.size().isEmpty()) {
-        return;
-    }
-    const QSize nativeSize = r.size() * m_scale;
-    m_contentFBO.reset(new QOpenGLFramebufferObject(nativeSize.width(), nativeSize.height(), QOpenGLFramebufferObject::CombinedDepthStencil));
-    if (!m_contentFBO->isValid()) {
-        qCWarning(KWIN_QPA) << "Content FBO is not valid";
-    }
-    m_resized = false;
 }
 
 void Window::createPbuffer()
@@ -182,8 +166,7 @@ void Window::unmap()
 
     m_handle->destroyClient();
     m_handle = nullptr;
-
-    m_contentFBO = nullptr;
+    m_swapchain.reset();
 }
 
 EGLSurface Window::eglSurface() const

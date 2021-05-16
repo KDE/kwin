@@ -7,6 +7,7 @@ set(QPA_SOURCES
     offscreensurface.cpp
     platformcursor.cpp
     screen.cpp
+    swapchain.cpp
     window.cpp
 )
 

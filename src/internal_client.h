@@ -10,9 +10,12 @@
 #pragma once
 
 #include "abstract_client.h"
+#include "clientbufferref.h"
 
 namespace KWin
 {
+
+class ClientBufferInternal;
 
 class KWIN_EXPORT InternalClient : public AbstractClient
 {
@@ -60,8 +63,8 @@ public:
     void popupDone() override;
     bool hitTest(const QPoint &point) const override;
 
-    void present(const QSharedPointer<QOpenGLFramebufferObject> fbo);
-    void present(const QImage &image, const QRegion &damage);
+    ClientBufferRef buffer() const;
+    void present(ClientBufferInternal *buffer, const QRegion &damage);
     QWindow *internalWindow() const;
 
 protected:
@@ -79,6 +82,7 @@ private:
     void syncGeometryToInternalWindow();
     void updateInternalWindowGeometry();
 
+    ClientBufferRef m_bufferRef;
     QWindow *m_internalWindow = nullptr;
     QString m_captionNormal;
     QString m_captionSuffix;

@@ -29,6 +29,9 @@ set(kwin_SRCS
     appmenu.cpp
     atoms.cpp
     client_machine.cpp
+    clientbuffer.cpp
+    clientbuffer_internal.cpp
+    clientbufferref.cpp
     composite.cpp
     cursor.cpp
     dbusinterface.cpp

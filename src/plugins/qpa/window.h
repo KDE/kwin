@@ -15,15 +15,15 @@
 #include <QPointer>
 #include <qpa/qplatformwindow.h>
 
-class QOpenGLFramebufferObject;
-
 namespace KWin
 {
 
+class ClientBufferInternal;
 class InternalClient;
 
 namespace QPA
 {
+class Swapchain;
 
 class Window : public QPlatformWindow
 {
@@ -37,9 +37,8 @@ public:
     WId winId() const override;
     qreal devicePixelRatio() const override;
 
-    void bindContentFBO();
-    const QSharedPointer<QOpenGLFramebufferObject> &contentFBO() const;
-    QSharedPointer<QOpenGLFramebufferObject> swapFBO();
+    ClientBufferInternal *backbuffer() const;
+    ClientBufferInternal *swap();
 
     InternalClient *client() const;
     EGLSurface eglSurface() const;
@@ -52,11 +51,11 @@ private:
 
     QSurfaceFormat m_format;
     QPointer<InternalClient> m_handle;
-    QSharedPointer<QOpenGLFramebufferObject> m_contentFBO;
+    QPointer<ClientBufferInternal> m_backBuffer;
+    QScopedPointer<Swapchain> m_swapchain;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     quint32 m_windowId;
-    bool m_resized = false;
     qreal m_scale = 1;
 };
 

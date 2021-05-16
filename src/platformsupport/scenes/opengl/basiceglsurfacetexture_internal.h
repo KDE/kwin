@@ -11,6 +11,8 @@
 namespace KWin
 {
 
+class ClientBufferInternal;
+
 class KWIN_EXPORT BasicEGLSurfaceTextureInternal : public PlatformOpenGLSurfaceTextureInternal
 {
 public:
@@ -20,8 +22,8 @@ public:
     void update(const QRegion &region) override;
 
 private:
-    bool updateFromFramebuffer();
-    bool updateFromImage(const QRegion &region);
+    bool updateFromFramebuffer(const ClientBufferInternal *buffer);
+    bool updateFromImage(const ClientBufferInternal *buffer, const QRegion &region);
 };
 
 } // namespace KWin

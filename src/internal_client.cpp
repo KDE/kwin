@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "internal_client.h"
+#include "clientbuffer_internal.h"
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
 #include "surfaceitem.h"
@@ -364,32 +365,18 @@ void InternalClient::popupDone()
     m_internalWindow->hide();
 }
 
-void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
+ClientBufferRef InternalClient::buffer() const
 {
-    Q_ASSERT(m_internalImage.isNull());
-
-    const QSize bufferSize = fbo->size() / bufferScale();
-
-    commitGeometry(QRect(pos(), clientSizeToFrameSize(bufferSize)));
-    markAsMapped();
-
-    m_internalFBO = fbo;
-
-    setDepth(32);
-    surfaceItem()->addDamage(surfaceItem()->rect());
+    return m_bufferRef;
 }
 
-void InternalClient::present(const QImage &image, const QRegion &damage)
+void InternalClient::present(ClientBufferInternal *buffer, const QRegion &damage)
 {
-    Q_ASSERT(m_internalFBO.isNull());
-
-    const QSize bufferSize = image.size() / bufferScale();
+    const QSize bufferSize = buffer->size() / buffer->devicePixelRatio();
+    m_bufferRef = buffer;
 
     commitGeometry(QRect(pos(), clientSizeToFrameSize(bufferSize)));
     markAsMapped();
-
-    m_internalImage = image;
-
     setDepth(32);
     surfaceItem()->addDamage(damage);
 }

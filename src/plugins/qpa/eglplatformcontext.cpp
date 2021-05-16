@@ -9,6 +9,7 @@
 */
 
 #include "eglplatformcontext.h"
+#include "clientbuffer_internal.h"
 #include "egl_context_attribute_builder.h"
 #include "eglhelpers.h"
 #include "internal_client.h"
@@ -79,7 +80,16 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
         QOpenGLContextPrivate::setCurrentContext(context());
 
         Window *window = static_cast<Window *>(surface);
-        window->bindContentFBO();
+
+        ClientBufferInternal *back = window->backbuffer();
+        if (!back) {
+            back = window->swap();
+        }
+        if (back) {
+            back->fbo()->bind();
+        } else {
+            qCWarning(KWIN_QPA) << "Failed to bind offscreen framebuffer";
+        }
     }
 
     return true;
@@ -120,16 +130,24 @@ void EGLPlatformContext::swapBuffers(QPlatformSurface *surface)
         }
         context()->makeCurrent(surface->surface());
         glFlush();
-        client->present(window->swapFBO());
-        window->bindContentFBO();
+
+        ClientBufferInternal *front = window->backbuffer();
+        client->present(front, QRect(QPoint(0, 0), window->window()->size()));
+
+        ClientBufferInternal *back = window->swap();
+        back->fbo()->bind();
     }
 }
 
 GLuint EGLPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) const
 {
     if (Window *window = dynamic_cast<Window *>(surface)) {
-        const auto &fbo = window->contentFBO();
-        if (!fbo.isNull()) {
+        const ClientBufferInternal *back = window->backbuffer();
+        if (!back) {
+            return 0;
+        }
+        const QOpenGLFramebufferObject *fbo = back->fbo();
+        if (fbo) {
             return fbo->handle();
         }
         qCDebug(KWIN_QPA) << "No default framebuffer object for internal window";

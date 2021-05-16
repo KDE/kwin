@@ -6,6 +6,7 @@
 
 #include "surfaceitem_internal.h"
 #include "composite.h"
+#include "internal_client.h"
 #include "scene.h"
 
 namespace KWin
@@ -51,14 +52,9 @@ SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject 
 {
 }
 
-QOpenGLFramebufferObject *SurfacePixmapInternal::fbo() const
+ClientBufferRef SurfacePixmapInternal::buffer() const
 {
-    return m_fbo.data();
-}
-
-QImage SurfacePixmapInternal::image() const
-{
-    return m_rasterBuffer;
+    return m_bufferRef;
 }
 
 void SurfacePixmapInternal::create()
@@ -68,20 +64,16 @@ void SurfacePixmapInternal::create()
 
 void SurfacePixmapInternal::update()
 {
-    const Toplevel *toplevel = m_item->window()->window();
-
-    if (toplevel->internalFramebufferObject()) {
-        m_fbo = toplevel->internalFramebufferObject();
-        m_hasAlphaChannel = true;
-    } else if (!toplevel->internalImageObject().isNull()) {
-        m_rasterBuffer = toplevel->internalImageObject();
-        m_hasAlphaChannel = m_rasterBuffer.hasAlphaChannel();
+    const InternalClient *client = qobject_cast<InternalClient *>(m_item->window()->window());
+    if (client) {
+        m_bufferRef = client->buffer();
+        m_hasAlphaChannel = m_bufferRef.hasAlphaChannel();
     }
 }
 
 bool SurfacePixmapInternal::isValid() const
 {
-    return !m_fbo.isNull() || !m_rasterBuffer.isNull();
+    return m_bufferRef;
 }
 
 } // namespace KWin

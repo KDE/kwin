@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "clientbufferref.h"
 #include "surfaceitem.h"
 
 namespace KWin
@@ -38,8 +39,7 @@ class KWIN_EXPORT SurfacePixmapInternal final : public SurfacePixmap
 public:
     explicit SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent = nullptr);
 
-    QOpenGLFramebufferObject *fbo() const;
-    QImage image() const;
+    ClientBufferRef buffer() const;
 
     void create() override;
     void update() override;
@@ -47,8 +47,7 @@ public:
 
 private:
     SurfaceItemInternal *m_item;
-    QSharedPointer<QOpenGLFramebufferObject> m_fbo;
-    QImage m_rasterBuffer;
+    ClientBufferRef m_bufferRef;
 };
 
 } // namespace KWin

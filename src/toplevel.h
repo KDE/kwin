@@ -27,8 +27,6 @@
 // c++
 #include <functional>
 
-class QOpenGLFramebufferObject;
-
 namespace KWaylandServer
 {
 class SurfaceInterface;
@@ -499,9 +497,6 @@ public:
     KWaylandServer::SurfaceInterface *surface() const;
     void setSurface(KWaylandServer::SurfaceInterface *surface);
 
-    const QSharedPointer<QOpenGLFramebufferObject> &internalFramebufferObject() const;
-    QImage internalImageObject() const;
-
     /**
      * @returns Transformation to map from global to window coordinates.
      *
@@ -702,11 +697,6 @@ protected:
     int bit_depth;
     NETWinInfo* info;
     bool ready_for_painting;
-    /**
-     * An FBO object KWin internal windows might render to.
-     */
-    QSharedPointer<QOpenGLFramebufferObject> m_internalFBO;
-    QImage m_internalImage;
 
 private:
     // when adding new data members, check also copyToDeleted()
@@ -990,16 +980,6 @@ inline quint32 Toplevel::surfaceId() const
 inline KWaylandServer::SurfaceInterface *Toplevel::surface() const
 {
     return m_surface;
-}
-
-inline const QSharedPointer<QOpenGLFramebufferObject> &Toplevel::internalFramebufferObject() const
-{
-    return m_internalFBO;
-}
-
-inline QImage Toplevel::internalImageObject() const
-{
-    return m_internalImage;
 }
 
 template <class T, class U>
