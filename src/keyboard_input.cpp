@@ -15,7 +15,7 @@
 #include "modifier_only_shortcuts.h"
 #include "utils.h"
 #include "screenlockerwatcher.h"
-#include "toplevel.h"
+#include "abstract_client.h"
 #include "wayland_server.h"
 #include "workspace.h"
 // KWayland

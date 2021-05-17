@@ -80,6 +80,7 @@
 #include "screenedge.h"
 #include "wayland_server.h"
 #include "internal_client.h"
+#include "virtualdesktops.h"
 
 #include <QDebug>
 #include <QQueue>

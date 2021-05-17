@@ -7,6 +7,7 @@
 */
 
 #include "waylandclient.h"
+#include "rules.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -330,7 +331,7 @@ void WaylandClient::updateGeometry(const QRect &rect)
         return;
     }
 
-    updateWindowRules(Rules::Position | Rules::Size);
+    updateWindowRules(RulesType::Position | RulesType::Size);
 
     if (changedGeometries & WaylandGeometryBuffer) {
         emit bufferGeometryChanged(this, oldBufferGeometry);

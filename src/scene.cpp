@@ -490,7 +490,7 @@ void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
     Window *window = m_windows.take(toplevel);
     window->updateToplevel(deleted);
     if (window->shadowItem()) {
-        window->shadowItem()->shadow()->setToplevel(deleted);
+        window->shadowItem()->shadow()->setClient(deleted);
     }
     m_windows[deleted] = window;
 }

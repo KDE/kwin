@@ -35,7 +35,6 @@ namespace KWin
 class InputRedirection;
 class KeyboardLayout;
 class ModifiersChangedSpy;
-class Toplevel;
 
 namespace LibInput
 {

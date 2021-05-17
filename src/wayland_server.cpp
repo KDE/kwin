@@ -22,6 +22,7 @@
 #include "xdgactivationv1.h"
 #include "service_utils.h"
 #include "unmanaged.h"
+#include "virtualdesktops.h"
 #include "waylandoutput.h"
 #include "waylandoutputdevice.h"
 

@@ -33,6 +33,7 @@
 #include "screenedge.h"
 #include "screens.h"
 #include "unmanaged.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwl/xwayland_interface.h"
@@ -444,7 +445,7 @@ public:
 private:
     bool surfaceAllowed(KWaylandServer::SurfaceInterface *(KWaylandServer::SeatInterface::*method)() const) const {
         if (KWaylandServer::SurfaceInterface *s = (waylandServer()->seat()->*method)()) {
-            if (Toplevel *t = waylandServer()->findClient(s)) {
+            if (auto t = waylandServer()->findClient(s)) {
                 return t->isLockScreen() || t->isInputMethod();
             }
             return false;
@@ -1827,7 +1828,7 @@ public:
 
     KWaylandServer::TabletPadV2Interface *findAndAdoptPad(const TabletPadId &tabletPadId) const
     {
-        Toplevel *toplevel = workspace()->activeClient();
+        auto toplevel = workspace()->activeClient();
         auto seat = findTabletSeat();
         if (!toplevel || !toplevel->surface() || !seat->isClientSupported(toplevel->surface()->client())) {
             return nullptr;
@@ -2565,7 +2566,7 @@ Qt::MouseButtons InputRedirection::qtButtonStates() const
     return m_pointer->buttons();
 }
 
-Toplevel *InputRedirection::findToplevel(const QPoint &pos)
+AbstractClient *InputRedirection::findToplevel(const QPoint &pos)
 {
     if (!Workspace::self()) {
         return nullptr;
@@ -2587,7 +2588,7 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
     return findManagedToplevel(pos);
 }
 
-Toplevel *InputRedirection::findManagedToplevel(const QPoint &pos)
+AbstractClient *InputRedirection::findManagedToplevel(const QPoint &pos)
 {
     if (!Workspace::self()) {
         return nullptr;

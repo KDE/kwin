@@ -10,7 +10,6 @@
 #ifndef KWIN_RULES_H
 #define KWIN_RULES_H
 
-
 #include <netwm_def.h>
 #include <QRect>
 #include <QVector>
@@ -92,15 +91,6 @@ public:
     Rules();
     explicit Rules(const RuleSettings*);
     Rules(const QString&, bool temporary);
-    enum Type {
-        Position = 1<<0, Size = 1<<1, Desktop = 1<<2,
-        MaximizeVert = 1<<3, MaximizeHoriz = 1<<4, Minimize = 1<<5,
-        Shade = 1<<6, SkipTaskbar = 1<<7, SkipPager = 1<<8,
-        SkipSwitcher = 1<<9, Above = 1<<10, Below = 1<<11, Fullscreen = 1<<12,
-        NoBorder = 1<<13, OpacityActive = 1<<14, OpacityInactive = 1<<15,
-        Activity = 1<<16, Screen = 1<<17, DesktopFile = 1 << 18, All = 0xffffffff
-    };
-    Q_DECLARE_FLAGS(Types, Type)
     // All these values are saved to the cfg file, and are also used in kstart!
     enum {
         Unused = 0,
@@ -375,7 +365,5 @@ void WindowRules::remove(Rules* rule)
 QDebug& operator<<(QDebug& stream, const Rules*);
 
 } // namespace
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Rules::Types)
 
 #endif

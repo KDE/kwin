@@ -7,6 +7,7 @@
 #pragma once
 
 #include "surfaceitem.h"
+#include <xcb/damage.h>
 
 namespace KWin
 {

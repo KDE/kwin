@@ -49,7 +49,6 @@ public:
     bool isMovableAcrossScreens() const override { return false; }
     bool takeFocus() override { return false; }
     bool wantsInput() const override { return false; }
-    void setFrameGeometry(const QRect &/*rect*/) override {}
     void killWindow() override {}
     void destroyClient() override {}
     void closeWindow() override {}
@@ -57,6 +56,7 @@ public:
     bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks /*checks*/) const override { return other == this; }
     void updateCaption() override {}
     void resizeWithChecks(const QSize&) override {}
+    void moveResizeInternal(const QRect &/*rect*/, MoveResizeMode /*mode*/) override {}
 
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);

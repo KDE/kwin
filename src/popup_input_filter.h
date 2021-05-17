@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-class Toplevel;
 
 class PopupInputFilter : public QObject, public InputEventFilter
 {
@@ -24,12 +23,12 @@ public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
     bool keyEvent(QKeyEvent *event) override;
 private:
-    void handleClientAdded(Toplevel *client);
-    void handleClientRemoved(Toplevel *client);
-    void disconnectClient(Toplevel *client);
+    void handleClientAdded(AbstractClient *client);
+    void handleClientRemoved(AbstractClient *client);
+    void disconnectClient(AbstractClient *client);
     void cancelPopups();
 
-    QVector<Toplevel*> m_popupClients;
+    QVector<AbstractClient*> m_popupClients;
 };
 }
 

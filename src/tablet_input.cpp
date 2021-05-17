@@ -13,7 +13,7 @@
 #include "input_event_spy.h"
 #include "libinput/device.h"
 #include "pointer_input.h"
-#include "toplevel.h"
+#include "abstract_client.h"
 #include "wayland_server.h"
 #include "workspace.h"
 // KDecoration

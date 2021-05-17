@@ -227,12 +227,12 @@ QVariantMap DBusInterface::queryWindowInfo()
     setDelayedReply(true);
     kwinApp()->platform()->startInteractiveWindowSelection(
         [this] (Toplevel *t) {
-            if (auto c = qobject_cast<AbstractClient*>(t)) {
-                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createReply(clientToVariantMap(c)));
-            } else if (qobject_cast<Unmanaged*>(t)) {
+            if (qobject_cast<Unmanaged*>(t)) {
                 QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
                     QStringLiteral("org.kde.KWin.Error.InvalidWindow"),
                     QStringLiteral("Tried to query information about an unmanaged window")));
+            } else if (auto c = qobject_cast<AbstractClient*>(t)) {
+                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createReply(clientToVariantMap(c)));
             } else {
                 QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
                     QStringLiteral("org.kde.KWin.Error.UserCancel"),

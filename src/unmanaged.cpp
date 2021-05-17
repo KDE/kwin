@@ -18,6 +18,7 @@
 
 #include <QTimer>
 #include <QDebug>
+#include <QWidget>
 #include <QWindow>
 
 #include <xcb/shape.h>

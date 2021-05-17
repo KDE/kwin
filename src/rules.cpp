@@ -19,6 +19,7 @@
 #include <QDir>
 
 #ifndef KCMRULES
+#include "abstract_client.h"
 #include "x11client.h"
 #include "client_machine.h"
 #include "screens.h"
@@ -412,7 +413,7 @@ bool Rules::match(const AbstractClient* c) const
     return true;
 }
 
-#define NOW_REMEMBER(_T_, _V_) ((selection & _T_) && (_V_##rule == (SetRule)Remember))
+#define NOW_REMEMBER(_T_, _V_) ((selection & int(AbstractClient::RulesType:: _T_)) && (_V_##rule == (int)Remember))
 
 bool Rules::update(AbstractClient* c, int selection)
 {
@@ -834,7 +835,7 @@ CHECK_RULE(DesktopFile, QString)
 void AbstractClient::setupWindowRules(bool ignore_temporary)
 {
     disconnect(this, &AbstractClient::captionChanged, this, &AbstractClient::evaluateWindowRules);
-    m_rules = RuleBook::self()->find(this, ignore_temporary);
+    m_rules.reset(new WindowRules(RuleBook::self()->find(this, ignore_temporary)));
     // check only after getting the rules, because there may be a rule forcing window type
 }
 
@@ -894,24 +895,24 @@ void AbstractClient::applyWindowRules()
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName()).toUtf8());
 }
 
-void X11Client::updateWindowRules(Rules::Types selection)
+void X11Client::updateWindowRules(RulesTypes selection)
 {
     if (!isManaged())  // not fully setup yet
         return;
     AbstractClient::updateWindowRules(selection);
 }
 
-void AbstractClient::updateWindowRules(Rules::Types selection)
+void AbstractClient::updateWindowRules(RulesTypes selection)
 {
     if (RuleBook::self()->areUpdatesDisabled())
         return;
-    m_rules.update(this, selection);
+    m_rules->update(this, selection);
 }
 
 void AbstractClient::finishWindowRules()
 {
-    updateWindowRules(Rules::All);
-    m_rules = WindowRules();
+    updateWindowRules(RulesType::All);
+    m_rules.reset(new WindowRules());
 }
 
 // Workspace
@@ -1100,7 +1101,7 @@ void RuleBook::setUpdatesDisabled(bool disable)
     m_updatesDisabled = disable;
     if (!disable) {
         foreach (X11Client *c, Workspace::self()->clientList())
-            c->updateWindowRules(Rules::All);
+            c->updateWindowRules(AbstractClient::RulesType::All);
     }
 }
 

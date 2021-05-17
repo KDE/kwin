@@ -40,7 +40,6 @@ class RenderLoop;
 class Scene;
 class ScreenEdges;
 class Session;
-class Toplevel;
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 class XRenderBackend;
 #endif
@@ -225,7 +224,7 @@ public:
      * @param callback The function to invoke once the interactive window selection ends
      * @param cursorName The optional name of the cursor shape to use, default is crosshair
      */
-    virtual void startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName = QByteArray());
+    virtual void startInteractiveWindowSelection(std::function<void(KWin::AbstractClient*)> callback, const QByteArray &cursorName = QByteArray());
 
     /**
      * Starts an interactive position selection process.

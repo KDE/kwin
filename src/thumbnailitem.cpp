@@ -12,6 +12,7 @@
 #include "x11client.h"
 #include "composite.h"
 #include "effects.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 #include "wayland_server.h"
 // Qt

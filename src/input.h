@@ -31,8 +31,8 @@ class QWheelEvent;
 
 namespace KWin
 {
+class AbstractClient;
 class GlobalShortcutsManager;
-class Toplevel;
 class InputEventFilter;
 class InputEventSpy;
 class KeyboardInputRedirection;
@@ -200,8 +200,8 @@ public:
      */
     void uninstallInputEventSpy(InputEventSpy *spy);
 
-    Toplevel *findToplevel(const QPoint &pos);
-    Toplevel *findManagedToplevel(const QPoint &pos);
+    AbstractClient *findToplevel(const QPoint &pos);
+    AbstractClient *findManagedToplevel(const QPoint &pos);
     GlobalShortcutsManager *shortcuts() const {
         return m_shortcuts;
     }
@@ -259,7 +259,7 @@ public:
     bool hasAlphaNumericKeyboard();
     bool hasTabletModeSwitch();
 
-    void startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName);
+    void startInteractiveWindowSelection(std::function<void(KWin::AbstractClient*)> callback, const QByteArray &cursorName);
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
     bool isSelectingWindow() const;
 
@@ -433,7 +433,7 @@ public:
      *
      * This will be null if no toplevel is at the position
      */
-    Toplevel *at() const;
+    AbstractClient *at() const;
     /**
      * @brief Toplevel currently having pointer input focus (this might
      * be different from the Toplevel at the position of the pointer).
@@ -441,7 +441,7 @@ public:
      *
      * This will be null if no toplevel has focus
      */
-    Toplevel *focus() const;
+    AbstractClient *focus() const;
 
     /**
      * @brief The Decoration currently receiving events.
@@ -456,12 +456,12 @@ public:
 
     virtual QPointF position() const = 0;
 
-    void setFocus(Toplevel *toplevel);
+    void setFocus(AbstractClient *toplevel);
     void setDecoration(Decoration::DecoratedClientImpl *decoration);
     void setInternalWindow(QWindow *window);
 
 Q_SIGNALS:
-    void atChanged(Toplevel *old, Toplevel *now);
+    void atChanged(AbstractClient *old, AbstractClient *now);
     void decorationChanged();
 
 protected:
@@ -470,7 +470,7 @@ protected:
     virtual void cleanupInternalWindow(QWindow *old, QWindow *now) = 0;
     virtual void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) = 0;
 
-    virtual void focusUpdate(Toplevel *old, Toplevel *now) = 0;
+    virtual void focusUpdate(AbstractClient *old, AbstractClient *now) = 0;
 
     /**
      * Certain input devices can be in a state of having no valid
@@ -492,18 +492,18 @@ protected:
     }
 
 private:
-    bool setAt(Toplevel *toplevel);
+    bool setAt(AbstractClient *toplevel);
     void updateFocus();
     bool updateDecoration();
     void updateInternalWindow(QWindow *window);
 
     struct {
-        QPointer<Toplevel> at;
+        QPointer<AbstractClient> at;
         QMetaObject::Connection surfaceCreatedConnection;
     } m_at;
 
     struct {
-        QPointer<Toplevel> focus;
+        QPointer<AbstractClient> focus;
         QPointer<Decoration::DecoratedClientImpl> decoration;
         QPointer<QWindow> internalWindow;
     } m_focus;

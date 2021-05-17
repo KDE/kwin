@@ -10,7 +10,7 @@
 #ifndef KWIN_SCENE_H
 #define KWIN_SCENE_H
 
-#include "toplevel.h"
+#include "abstract_client.h"
 #include "utils.h"
 #include "kwineffects.h"
 
@@ -365,7 +365,7 @@ public:
 protected:
     WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region) const;
     WindowQuadList makeContentsQuads() const;
-    Toplevel* toplevel;
+    AbstractClient* toplevel;
     ImageFilterType filter;
 private:
     void referencePreviousPixmap_helper(SurfaceItem *item);
@@ -445,7 +445,7 @@ QRect Scene::Window::rect() const
 }
 
 inline
-Toplevel* Scene::Window::window() const
+AbstractClient* Scene::Window::window() const
 {
     return toplevel;
 }

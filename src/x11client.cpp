@@ -26,6 +26,7 @@
 #include "screens.h"
 #include "shadow.h"
 #include "surfaceitem_x11.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 #include "screenedge.h"
 #include "decorations/decorationbridge.h"
@@ -840,7 +841,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     discardTemporaryRules();
     applyWindowRules(); // Just in case
     RuleBook::self()->discardUsed(this, false);   // Remove ApplyNow rules
-    updateWindowRules(Rules::All); // Was blocked while !isManaged()
+    updateWindowRules(RulesType::All); // Was blocked while !isManaged()
 
     setBlockingCompositing(info->isBlockingCompositing());
     readShowOnScreenEdge(showOnScreenEdgeCookie);
@@ -1258,7 +1259,7 @@ void X11Client::setNoBorder(bool set)
         return;
     noborder = set;
     updateDecoration(true, false);
-    updateWindowRules(Rules::NoBorder);
+    updateWindowRules(RulesType::NoBorder);
 }
 
 void X11Client::checkNoBorder()
@@ -3997,7 +3998,7 @@ void X11Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
     const QRect oldClientGeometry = m_clientGeometryBeforeUpdateBlocking;
 
     updateServerGeometry();
-    updateWindowRules(Rules::Position|Rules::Size);
+    updateWindowRules(RulesType::Position|RulesType::Size);
 
     m_bufferGeometryBeforeUpdateBlocking = m_bufferGeometry;
     m_frameGeometryBeforeUpdateBlocking = m_frameGeometry;
@@ -4316,7 +4317,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
     }
 
     updateAllowedActions();
-    updateWindowRules(Rules::MaximizeVert|Rules::MaximizeHoriz|Rules::Position|Rules::Size);
+    updateWindowRules(RulesType::MaximizeVert|RulesType::MaximizeHoriz|RulesType::Position|RulesType::Size);
     emit quickTileModeChanged();
 }
 
@@ -4379,7 +4380,7 @@ void X11Client::setFullScreen(bool set, bool user)
         }
     }
 
-    updateWindowRules(Rules::Fullscreen | Rules::Position | Rules::Size);
+    updateWindowRules(RulesType::Fullscreen | RulesType::Position | RulesType::Size);
     emit clientFullScreenSet(this, set, user);
     emit fullScreenChanged();
 }

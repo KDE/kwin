@@ -13,9 +13,11 @@
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
 #include "platform.h"
+#include "rules.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "subsurfacemonitor.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -590,7 +592,7 @@ void XdgToplevelClient::setNoBorder(bool set)
     }
     m_userNoBorder = set;
     updateDecoration(true, false);
-    updateWindowRules(Rules::NoBorder);
+    updateWindowRules(RulesType::NoBorder);
 }
 
 void XdgToplevelClient::updateDecoration(bool check_workspace_pos, bool force)
@@ -1189,7 +1191,7 @@ void XdgToplevelClient::initialize()
 
         discardTemporaryRules();
         RuleBook::self()->discardUsed(this, false); // Remove Apply Now rules.
-        updateWindowRules(Rules::All);
+        updateWindowRules(RulesType::All);
     }
     if (isRequestedFullScreen()) {
         needsPlacement = false;
@@ -1210,7 +1212,7 @@ void XdgToplevelClient::updateMaximizeMode(MaximizeMode maximizeMode)
         return;
     }
     m_maximizeMode = maximizeMode;
-    updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz);
+    updateWindowRules(RulesType::MaximizeVert | RulesType::MaximizeHoriz);
     emit clientMaximizedStateChanged(this, maximizeMode);
     emit clientMaximizedStateChanged(this, maximizeMode & MaximizeHorizontal, maximizeMode & MaximizeVertical);
 }
@@ -1223,7 +1225,7 @@ void XdgToplevelClient::updateFullScreenMode(bool set)
     StackingUpdatesBlocker blocker1(workspace());
     m_isFullScreen = set;
     updateLayer();
-    updateWindowRules(Rules::Fullscreen);
+    updateWindowRules(RulesType::Fullscreen);
     emit fullScreenChanged();
 }
 

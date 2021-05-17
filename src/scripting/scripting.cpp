@@ -18,6 +18,7 @@
 #include "scripting_model.h"
 #include "scripting_logging.h"
 
+#include "input.h"
 #include "options.h"
 #include "screenedge.h"
 #include "thumbnailitem.h"

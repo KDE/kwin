@@ -94,7 +94,7 @@ bool DataBridge::nativeEventFilter(const QByteArray &eventType, void *message, l
     return false;
 }
 
-DragEventReply DataBridge::dragMoveFilter(Toplevel *target, const QPoint &pos)
+DragEventReply DataBridge::dragMoveFilter(AbstractClient *target, const QPoint &pos)
 {
     if (!m_dnd) {
         return DragEventReply::Wayland;

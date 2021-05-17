@@ -20,7 +20,6 @@ namespace KWin
 {
 
 class InputRedirection;
-class Toplevel;
 
 namespace Decoration
 {
@@ -74,7 +73,7 @@ private:
     void cleanupInternalWindow(QWindow *old, QWindow *now) override;
     void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
 
-    void focusUpdate(Toplevel *focusOld, Toplevel *focusNow) override;
+    void focusUpdate(AbstractClient *focusOld, AbstractClient *focusNow) override;
 
     QSet<qint32> m_activeTouchPoints;
     bool m_inited = false;

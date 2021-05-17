@@ -16,7 +16,7 @@
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
 #include "logging.h"
-#include "toplevel.h"
+#include "abstract_client.h"
 #include "x11client.h"
 #include "composite.h"
 #include "deleted.h"

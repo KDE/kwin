@@ -19,6 +19,7 @@
 #include "rules.h"
 #include "screens.h"
 #endif
+#include "virtualdesktops.h"
 
 #include <QTextStream>
 #include <QTimer>

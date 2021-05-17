@@ -31,7 +31,6 @@ namespace KWin
 {
 class CursorImage;
 class InputRedirection;
-class Toplevel;
 class CursorShape;
 
 namespace Decoration
@@ -135,7 +134,7 @@ private:
     void cleanupInternalWindow(QWindow *old, QWindow *now) override;
     void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
 
-    void focusUpdate(Toplevel *focusOld, Toplevel *focusNow) override;
+    void focusUpdate(AbstractClient *focusOld, AbstractClient *focusNow) override;
 
     QPointF position() const override;
 

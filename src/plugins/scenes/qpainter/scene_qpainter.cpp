@@ -19,7 +19,7 @@
 #include "screens.h"
 #include "shadowitem.h"
 #include "surfaceitem.h"
-#include "toplevel.h"
+#include "abstract_client.h"
 #include "platform.h"
 #include "wayland_server.h"
 #include "windowitem.h"

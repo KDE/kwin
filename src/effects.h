@@ -29,6 +29,7 @@ namespace KWaylandServer
 class Display;
 }
 
+class QWheelEvent;
 class QDBusPendingCallWatcher;
 class QDBusServiceWatcher;
 
@@ -45,7 +46,6 @@ class Compositor;
 class Deleted;
 class EffectLoader;
 class Group;
-class Toplevel;
 class Unmanaged;
 class WindowPropertyNotifyX11Filter;
 
@@ -289,15 +289,15 @@ public Q_SLOTS:
     Q_SCRIPTABLE QString debug(const QString& name, const QString& parameter = QString()) const;
 
 protected Q_SLOTS:
-    void slotClientShown(KWin::Toplevel*);
-    void slotUnmanagedShown(KWin::Toplevel*);
-    void slotWindowClosed(KWin::Toplevel *c, KWin::Deleted *d);
+    void slotClientShown(KWin::AbstractClient*);
+    void slotUnmanagedShown(KWin::AbstractClient*);
+    void slotWindowClosed(KWin::AbstractClient *c, KWin::Deleted *d);
     void slotClientMaximized(KWin::AbstractClient *c, MaximizeMode maxMode);
-    void slotOpacityChanged(KWin::Toplevel *t, qreal oldOpacity);
+    void slotOpacityChanged(KWin::AbstractClient *t, qreal oldOpacity);
     void slotClientModalityChanged();
-    void slotGeometryShapeChanged(KWin::Toplevel *t, const QRect &old);
-    void slotFrameGeometryChanged(Toplevel *toplevel, const QRect &oldGeometry);
-    void slotWindowDamaged(KWin::Toplevel *t, const QRegion& r);
+    void slotGeometryShapeChanged(KWin::AbstractClient *t, const QRect &old);
+    void slotFrameGeometryChanged(KWin::AbstractClient *client, const QRect &oldGeometry);
+    void slotWindowDamaged(KWin::AbstractClient *t, const QRegion& r);
     void slotOutputEnabled(AbstractOutput *output);
     void slotOutputDisabled(AbstractOutput *output);
 
@@ -504,10 +504,10 @@ public:
 
     QWindow *internalWindow() const override;
 
-    const Toplevel* window() const;
-    Toplevel* window();
+    const AbstractClient* window() const;
+    AbstractClient* window();
 
-    void setWindow(Toplevel* w);   // internal
+    void setWindow(AbstractClient* w);   // internal
     void setSceneWindow(Scene::Window* w);   // internal
     const Scene::Window* sceneWindow() const; // internal
     Scene::Window* sceneWindow(); // internal

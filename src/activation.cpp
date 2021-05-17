@@ -19,6 +19,7 @@
 #include "cursor.h"
 #include "focuschain.h"
 #include "netinfo.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"

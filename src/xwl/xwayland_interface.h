@@ -18,7 +18,7 @@ class QProcess;
 
 namespace KWin
 {
-class Toplevel;
+class AbstractClient;
 
 namespace Xwl
 {
@@ -39,7 +39,7 @@ class KWIN_EXPORT XwaylandInterface : public QObject
 public:
     static XwaylandInterface *self();
 
-    virtual Xwl::DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) = 0;
+    virtual Xwl::DragEventReply dragMoveFilter(AbstractClient *target, const QPoint &pos) = 0;
     virtual QProcess *process() const = 0;
 
 protected:

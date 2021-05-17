@@ -304,6 +304,7 @@ target_link_libraries(testOnScreenNotification
     Qt::Widgets # QAction include
 
     KF5::ConfigCore
+    KF5::WindowSystem
 )
 
 add_test(NAME kwin-testOnScreenNotification COMMAND testOnScreenNotification)
