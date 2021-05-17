@@ -49,7 +49,7 @@ public:
     bool isMovableAcrossScreens() const override { return false; }
     bool takeFocus() override { return false; }
     bool wantsInput() const override { return false; }
-    void killWindow() override {}
+    void killWindow() override;
     void destroyClient() override {}
     void closeWindow() override {}
     bool acceptsFocus() const override { return false; }
