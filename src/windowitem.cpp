@@ -18,11 +18,8 @@ namespace KWin
 WindowItem::WindowItem(Scene::Window *window, Item *parent)
     : Item(window, parent)
 {
-    AbstractClient *client = qobject_cast<AbstractClient *>(window->window());
-    if (client) {
-        connect(client, &AbstractClient::decorationChanged, this, &WindowItem::updateDecorationItem);
-        updateDecorationItem();
-    }
+    connect(window->window(), &AbstractClient::decorationChanged, this, &WindowItem::updateDecorationItem);
+    updateDecorationItem();
 }
 
 SurfaceItem *WindowItem::surfaceItem() const
@@ -80,7 +77,7 @@ void WindowItem::setShadow(Shadow *shadow)
 
 void WindowItem::updateDecorationItem()
 {
-    AbstractClient *client = qobject_cast<AbstractClient *>(window()->window());
+    AbstractClient *client = window()->window();
     if (!client || client->isZombie()) {
         return;
     }

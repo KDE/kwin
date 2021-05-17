@@ -207,7 +207,7 @@ void TestPointerConstraints::testConfinedPointer()
     QVERIFY(unconfinedSpy2.isValid());
 
     // activate it again, this confines again
-    workspace()->activateClient(static_cast<AbstractClient*>(input()->pointer()->focus()));
+    workspace()->activateClient(input()->pointer()->focus());
     QVERIFY(confinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 
@@ -216,7 +216,7 @@ void TestPointerConstraints::testConfinedPointer()
     QVERIFY(unconfinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), false);
     // activate it again, this confines again
-    workspace()->activateClient(static_cast<AbstractClient*>(input()->pointer()->focus()));
+    workspace()->activateClient(input()->pointer()->focus());
     QVERIFY(confinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 
@@ -313,7 +313,7 @@ void TestPointerConstraints::testLockedPointer()
     QVERIFY(lockedSpy2.isValid());
 
     // activate the client again, this should lock again
-    workspace()->activateClient(static_cast<AbstractClient*>(input()->pointer()->focus()));
+    workspace()->activateClient(input()->pointer()->focus());
     QVERIFY(lockedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 

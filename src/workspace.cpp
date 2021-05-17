@@ -910,7 +910,7 @@ void Workspace::updateToolWindows(bool also_hide)
     for (auto it = stacking_order.constBegin();
             it != stacking_order.constEnd();
             ++it) {
-        auto c = qobject_cast<AbstractClient*>(*it);
+        auto c = *it;
         if (!c) {
             continue;
         }
@@ -1109,7 +1109,7 @@ AbstractClient *Workspace::findClientToActivateOnDesktop(uint desktop)
     if (options->isNextFocusPrefersMouse()) {
         auto it = stackingOrder().constEnd();
         while (it != stackingOrder().constBegin()) {
-            AbstractClient *client = qobject_cast<AbstractClient *>(*(--it));
+            AbstractClient *client = *(--it);
             if (!client) {
                 continue;
             }
@@ -1384,7 +1384,7 @@ void Workspace::setShowingDesktop(bool showing)
     { // for the blocker RAII
     StackingUpdatesBlocker blocker(this); // updateLayer & lowerClient would invalidate stacking_order
     for (int i = stacking_order.count() - 1; i > -1; --i) {
-        AbstractClient *c = qobject_cast<AbstractClient*>(stacking_order.at(i));
+        AbstractClient *c = stacking_order.at(i);
         if (c && c->isOnCurrentDesktop()) {
             if (c->isDock()) {
                 c->updateLayer();
@@ -1792,7 +1792,7 @@ AbstractClient *Workspace::findAbstractClient(std::function<bool (const Abstract
 
 AbstractClient *Workspace::findAbstractClient(const QUuid &internalId) const
 {
-    return qobject_cast<AbstractClient *>(findToplevel(internalId));
+    return findToplevel(internalId);
 }
 
 Unmanaged *Workspace::findUnmanaged(std::function<bool (const Unmanaged*)> func) const

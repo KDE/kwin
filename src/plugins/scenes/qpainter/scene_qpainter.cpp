@@ -314,23 +314,18 @@ void SceneQPainter::Window::renderShadow(QPainter* painter)
 void SceneQPainter::Window::renderWindowDecorations(QPainter *painter)
 {
     // TODO: custom decoration opacity
-    AbstractClient *client = dynamic_cast<AbstractClient*>(toplevel);
     Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
-    if (!client && !deleted) {
-        return;
-    }
-
     const SceneQPainterDecorationRenderer *renderer = nullptr;
     QRect dtr, dlr, drr, dbr;
-    if (client && client->isDecorated()) {
-        if (SceneQPainterDecorationRenderer *r = static_cast<SceneQPainterDecorationRenderer *>(client->decoratedClient()->renderer())) {
+    if (deleted && deleted->wasDecorated()) {
+        deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
+        renderer = static_cast<const SceneQPainterDecorationRenderer *>(deleted->decorationRenderer());
+    } else if (toplevel->isDecorated()) {
+        if (SceneQPainterDecorationRenderer *r = static_cast<SceneQPainterDecorationRenderer *>(toplevel->decoratedClient()->renderer())) {
             r->render();
             renderer = r;
         }
-        client->layoutDecorationRects(dlr, dtr, drr, dbr);
-    } else if (deleted && deleted->wasDecorated()) {
-        deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
-        renderer = static_cast<const SceneQPainterDecorationRenderer *>(deleted->decorationRenderer());
+        toplevel->layoutDecorationRects(dlr, dtr, drr, dbr);
     }
     if (!renderer) {
         return;

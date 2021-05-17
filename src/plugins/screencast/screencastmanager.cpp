@@ -44,9 +44,7 @@ public:
         : PipeWireStream(toplevel->hasAlpha(), toplevel->bufferGeometry().size() * toplevel->bufferScale(), parent)
         , m_toplevel(toplevel)
     {
-        if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
-            setObjectName(client->desktopFileName());
-        }
+        setObjectName(toplevel->desktopFileName());
         connect(toplevel, &Toplevel::windowClosed, this, &PipeWireStream::stopStreaming);
         connect(this, &PipeWireStream::startStreaming, this, &WindowStream::startFeeding);
         connect(this, &PipeWireStream::stopStreaming, this, &WindowStream::stopFeeding);

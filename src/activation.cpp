@@ -413,11 +413,7 @@ AbstractClient *Workspace::clientUnderMouse(int screen) const
 {
     auto it = stackingOrder().constEnd();
     while (it != stackingOrder().constBegin()) {
-        AbstractClient *client = qobject_cast<AbstractClient*>(*(--it));
-        if (!client) {
-            continue;
-        }
-
+        AbstractClient *client = *(--it);
         // rule out clients which are not really visible.
         // the screen test is rather superfluous for xrandr & twinview since the geometry would differ -> TODO: might be dropped
         if (!(client->isShown(false) && client->isOnCurrentDesktop() &&

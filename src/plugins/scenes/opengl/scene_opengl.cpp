@@ -649,8 +649,7 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
             Window *window = stacking_order[i];
             Toplevel *toplevel = window->window();
             if (toplevel->isOnScreen(screenId) && window->isVisible() && toplevel->opacity() > 0) {
-                AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
-                if (!c || !c->isFullScreen()) {
+                if (!toplevel->isFullScreen()) {
                     break;
                 }
                 if (!window->surfaceItem()) {
@@ -1213,20 +1212,20 @@ void OpenGLWindow::endRenderWindow()
 
 GLTexture *OpenGLWindow::getDecorationTexture() const
 {
-    if (AbstractClient *client = dynamic_cast<AbstractClient *>(toplevel)) {
-        if (!client->isDecorated()) {
-            return nullptr;
-        }
-        if (SceneOpenGLDecorationRenderer *renderer = static_cast<SceneOpenGLDecorationRenderer*>(client->decoratedClient()->renderer())) {
-            renderer->render();
-            return renderer->texture();
-        }
-    } else if (toplevel->isDeleted()) {
+    if (toplevel->isDeleted()) {
         Deleted *deleted = static_cast<Deleted *>(toplevel);
         if (!deleted->wasDecorated()) {
             return nullptr;
         }
         if (const SceneOpenGLDecorationRenderer *renderer = static_cast<const SceneOpenGLDecorationRenderer*>(deleted->decorationRenderer())) {
+            return renderer->texture();
+        }
+    } else {
+        if (!toplevel->isDecorated()) {
+            return nullptr;
+        }
+        if (SceneOpenGLDecorationRenderer *renderer = static_cast<SceneOpenGLDecorationRenderer*>(toplevel->decoratedClient()->renderer())) {
+            renderer->render();
             return renderer->texture();
         }
     }

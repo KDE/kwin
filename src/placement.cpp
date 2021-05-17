@@ -238,7 +238,7 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
             cxl = x; cxr = x + cw;
             cyt = y; cyb = y + ch;
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
-                AbstractClient *client = qobject_cast<AbstractClient*>(*l);
+                AbstractClient *client = *l;
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
@@ -286,7 +286,7 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
 
             // compare to the position of each client on the same desk
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
-                AbstractClient *client = qobject_cast<AbstractClient*>(*l);
+                AbstractClient *client = *l;
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
@@ -316,7 +316,7 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
 
             //test the position of each window on the desk
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
-                AbstractClient *client = qobject_cast<AbstractClient*>(*l);
+                AbstractClient *client = *l;
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
@@ -608,8 +608,7 @@ void Placement::cascadeDesktop()
     Workspace *ws = Workspace::self();
     const int desktop = VirtualDesktopManager::self()->current();
     reinitCascading(desktop);
-    foreach (Toplevel *toplevel, ws->stackingOrder()) {
-        auto client = qobject_cast<AbstractClient*>(toplevel);
+    foreach (Toplevel *client, ws->stackingOrder()) {
         if (!client ||
                 (!client->isOnCurrentDesktop()) ||
                 (client->isMinimized())         ||

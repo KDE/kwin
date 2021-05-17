@@ -284,7 +284,7 @@ public:
             return false;
         }
 
-        auto client = qobject_cast<AbstractClient *>(input()->findToplevel(event->globalPos()));
+        auto client = input()->findToplevel(event->globalPos());
         if (client && client->isLockScreen()) {
             workspace()->activateClient(client);
         }
@@ -1354,11 +1354,11 @@ public:
         if (event->type() != QEvent::MouseButtonPress) {
             return false;
         }
-        AbstractClient *c = dynamic_cast<AbstractClient*>(input()->pointer()->focus());
-        if (!c) {
+        AbstractClient *focusedClient = input()->pointer()->focus();
+        if (!focusedClient) {
             return false;
         }
-        const auto actionResult = performClientMouseAction(event, c, MouseAction::ModifierAndWindow);
+        const auto actionResult = performClientMouseAction(event, focusedClient, MouseAction::ModifierAndWindow);
         if (actionResult.first) {
             return actionResult.second;
         }
@@ -1369,11 +1369,11 @@ public:
             // only actions on vertical scroll
             return false;
         }
-        AbstractClient *c = dynamic_cast<AbstractClient*>(input()->pointer()->focus());
-        if (!c) {
+        AbstractClient *focusedClient = input()->pointer()->focus();
+        if (!focusedClient) {
             return false;
         }
-        const auto actionResult = performClientWheelAction(event, c, MouseAction::ModifierAndWindow);
+        const auto actionResult = performClientWheelAction(event, focusedClient, MouseAction::ModifierAndWindow);
         if (actionResult.first) {
             return actionResult.second;
         }
@@ -1386,14 +1386,14 @@ public:
         if (seat->isTouchSequence()) {
             return false;
         }
-        AbstractClient *c = dynamic_cast<AbstractClient*>(input()->touch()->focus());
-        if (!c) {
+        AbstractClient *focusedClient = input()->touch()->focus();
+        if (!focusedClient) {
             return false;
         }
         bool wasAction = false;
-        const Options::MouseCommand command = c->getMouseCommand(Qt::LeftButton, &wasAction);
+        const Options::MouseCommand command = focusedClient->getMouseCommand(Qt::LeftButton, &wasAction);
         if (wasAction) {
-            return !c->performMouseCommand(command, pos.toPoint());
+            return !focusedClient->performMouseCommand(command, pos.toPoint());
         }
         return false;
     }
@@ -1930,10 +1930,9 @@ public:
             if (t) {
                 // TODO: consider decorations
                 if (t->surface() != seat->dragSurface()) {
-                    if ((m_dragTarget = qobject_cast<AbstractClient*>(t))) {
-                        workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
-                        m_raiseTimer.start();
-                    }
+                    m_dragTarget = t;
+                    workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
+                    m_raiseTimer.start();
                     seat->setDragTarget(t->surface(), t->inputTransformation());
                 }
                 if ((pos - m_lastPos).manhattanLength() > 10) {
@@ -2003,10 +2002,9 @@ public:
         if (Toplevel *t = input()->findToplevel(pos.toPoint())) {
             // TODO: consider decorations
             if (t->surface() != seat->dragSurface()) {
-                if ((m_dragTarget = qobject_cast<AbstractClient*>(t))) {
-                    workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
-                    m_raiseTimer.start();
-                }
+                m_dragTarget = t;
+                workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
+                m_raiseTimer.start();
                 seat->setDragTarget(t->surface(), pos, t->inputTransformation());
             }
             if ((pos - m_lastPos).manhattanLength() > 10) {
@@ -2606,14 +2604,10 @@ AbstractClient *InputRedirection::findManagedToplevel(const QPoint &pos)
             // a deleted window doesn't get mouse events
             continue;
         }
-        if (AbstractClient *c = dynamic_cast<AbstractClient*>(t)) {
-            if (!c->isOnCurrentActivity() || !c->isOnCurrentDesktop() || c->isMinimized() || c->isHiddenInternal()) {
-                continue;
-            }
-        }
-        if (!t->readyForPainting()) {
+        if (!t->isOnCurrentActivity() || !t->isOnCurrentDesktop() || t->isMinimized() || t->isHiddenInternal() || !t->readyForPainting()) {
             continue;
         }
+
         if (isScreenLocked) {
             if (!t->isLockScreen() && !t->isInputMethod()) {
                 continue;
@@ -2774,7 +2768,7 @@ bool InputDeviceHandler::updateDecoration()
     const auto oldDeco = m_focus.decoration;
     m_focus.decoration = nullptr;
 
-    auto *ac = qobject_cast<AbstractClient*>(m_at.at);
+    auto ac = m_at.at;
     if (ac && ac->decoratedClient()) {
         if (!ac->clientGeometry().contains(position().toPoint())) {
             // input device above decoration

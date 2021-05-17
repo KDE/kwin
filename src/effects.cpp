@@ -556,10 +556,8 @@ void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)
     emit windowOpacityChanged(t->effectWindow(), oldOpacity, (qreal)t->opacity());
 }
 
-void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
+void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *c)
 {
-    Q_ASSERT(qobject_cast<AbstractClient *>(t));
-    AbstractClient *c = static_cast<AbstractClient *>(t);
     disconnect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
     setupClientConnections(c);
     emit windowAdded(c->effectWindow());
@@ -871,7 +869,7 @@ QByteArray EffectsHandlerImpl::readRootProperty(long atom, long type, int format
 
 void EffectsHandlerImpl::activateWindow(EffectWindow* c)
 {
-    if (auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(c)->window())) {
+    if (auto cl = static_cast<EffectWindowImpl *>(c)->window()) {
         Workspace::self()->activateClient(cl, true);
     }
 }
@@ -883,7 +881,7 @@ EffectWindow* EffectsHandlerImpl::activeWindow() const
 
 void EffectsHandlerImpl::moveWindow(EffectWindow* w, const QPoint& pos, bool snap, double snapAdjust)
 {
-    auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
+    auto cl = static_cast<EffectWindowImpl *>(w)->window();
     if (!cl || !cl->isMovable())
         return;
 
@@ -895,7 +893,7 @@ void EffectsHandlerImpl::moveWindow(EffectWindow* w, const QPoint& pos, bool sna
 
 void EffectsHandlerImpl::windowToDesktop(EffectWindow* w, int desktop)
 {
-    auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
+    auto cl = static_cast<EffectWindowImpl *>(w)->window();
     if (cl && !cl->isDesktop() && !cl->isDock()) {
         Workspace::self()->sendClientToDesktop(cl, desktop, true);
     }
@@ -903,7 +901,7 @@ void EffectsHandlerImpl::windowToDesktop(EffectWindow* w, int desktop)
 
 void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &desktopIds)
 {
-    AbstractClient* cl = qobject_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(w)->window());
+    AbstractClient* cl = static_cast<EffectWindowImpl*>(w)->window();
     if (!cl || cl->isDesktop() || cl->isDock()) {
         return;
     }
@@ -925,7 +923,7 @@ void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &
 
 void EffectsHandlerImpl::windowToScreen(EffectWindow* w, int screen)
 {
-    auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
+    auto cl = static_cast<EffectWindowImpl *>(w)->window();
     if (cl && !cl->isDesktop() && !cl->isDock())
         Workspace::self()->sendClientToScreen(cl, screen);
 }
@@ -1113,7 +1111,7 @@ void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow* w, bool set)
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (auto c = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window())) {
+    if (auto c = static_cast<EffectWindowImpl *>(w)->window()) {
         TabBox::TabBox::self()->setCurrentClient(c);
     }
 #else
@@ -1236,8 +1234,8 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, int screen, int deskt
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow* c) const
 {
     const Toplevel* t = static_cast< const EffectWindowImpl* >(c)->window();
-    if (const auto *cl = qobject_cast<const AbstractClient *>(t)) {
-        return Workspace::self()->clientArea(opt, cl);
+    if (t) {
+        return Workspace::self()->clientArea(opt, t);
     } else {
         return Workspace::self()->clientArea(opt, t->frameGeometry().center(), VirtualDesktopManager::self()->current());
     }
@@ -1923,39 +1921,26 @@ TOPLEVEL_HELPER(bool, isOutline, isOutline)
 TOPLEVEL_HELPER(bool, isLockScreen, isLockScreen)
 TOPLEVEL_HELPER(pid_t, pid, pid)
 TOPLEVEL_HELPER(qlonglong, windowId, window)
+TOPLEVEL_HELPER(bool, isMinimized, isMinimized)
+TOPLEVEL_HELPER(bool, isModal, isModal)
+TOPLEVEL_HELPER(bool, isFullScreen, isFullScreen)
+TOPLEVEL_HELPER(bool, keepAbove, keepAbove)
+TOPLEVEL_HELPER(bool, keepBelow, keepBelow)
+TOPLEVEL_HELPER(QString, caption, caption);
+TOPLEVEL_HELPER(QVector<uint>, desktops, x11DesktopIds);
+TOPLEVEL_HELPER(bool, isMovable, isMovable)
+TOPLEVEL_HELPER(bool, isMovableAcrossScreens, isMovableAcrossScreens)
+TOPLEVEL_HELPER(bool, isUserMove, isInteractiveMove)
+TOPLEVEL_HELPER(bool, isUserResize, isInteractiveResize)
+TOPLEVEL_HELPER(QRect, iconGeometry, iconGeometry)
+TOPLEVEL_HELPER(bool, isSpecialWindow, isSpecialWindow)
+TOPLEVEL_HELPER(bool, acceptsFocus, wantsInput) // We don't actually know...
+TOPLEVEL_HELPER(QIcon, icon, icon)
+TOPLEVEL_HELPER(bool, isSkipSwitcher, skipSwitcher)
+TOPLEVEL_HELPER(bool, decorationHasAlpha, decorationHasAlpha)
+TOPLEVEL_HELPER(bool, isUnresponsive, unresponsive)
 
 #undef TOPLEVEL_HELPER
-
-#define CLIENT_HELPER( rettype, prototype, propertyname, defaultValue ) \
-    rettype EffectWindowImpl::prototype ( ) const \
-    { \
-        auto client = qobject_cast<AbstractClient *>(toplevel); \
-        if (client) { \
-            return client->propertyname(); \
-        } \
-        return defaultValue; \
-    }
-
-CLIENT_HELPER(bool, isMinimized, isMinimized, false)
-CLIENT_HELPER(bool, isModal, isModal, false)
-CLIENT_HELPER(bool, isFullScreen, isFullScreen, false)
-CLIENT_HELPER(bool, keepAbove, keepAbove, false)
-CLIENT_HELPER(bool, keepBelow, keepBelow, false)
-CLIENT_HELPER(QString, caption, caption, QString());
-CLIENT_HELPER(QVector<uint>, desktops, x11DesktopIds, QVector<uint>());
-CLIENT_HELPER(bool, isMovable, isMovable, false)
-CLIENT_HELPER(bool, isMovableAcrossScreens, isMovableAcrossScreens, false)
-CLIENT_HELPER(bool, isUserMove, isInteractiveMove, false)
-CLIENT_HELPER(bool, isUserResize, isInteractiveResize, false)
-CLIENT_HELPER(QRect, iconGeometry, iconGeometry, QRect())
-CLIENT_HELPER(bool, isSpecialWindow, isSpecialWindow, true)
-CLIENT_HELPER(bool, acceptsFocus, wantsInput, true) // We don't actually know...
-CLIENT_HELPER(QIcon, icon, icon, QIcon())
-CLIENT_HELPER(bool, isSkipSwitcher, skipSwitcher, false)
-CLIENT_HELPER(bool, decorationHasAlpha, decorationHasAlpha, false)
-CLIENT_HELPER(bool, isUnresponsive, unresponsive, false)
-
-#undef CLIENT_HELPER
 
 // legacy from tab groups, can be removed when no effects use this any more.
 bool EffectWindowImpl::isCurrentTab() const
@@ -2033,12 +2018,7 @@ void EffectWindowImpl::deleteProperty(long int atom) const
 
 EffectWindow* EffectWindowImpl::findModal()
 {
-    auto client = qobject_cast<AbstractClient *>(toplevel);
-    if (!client) {
-        return nullptr;
-    }
-
-    AbstractClient *modal = client->findModal();
+    AbstractClient *modal = toplevel->findModal();
     if (modal) {
         return modal->effectWindow();
     }
@@ -2048,12 +2028,7 @@ EffectWindow* EffectWindowImpl::findModal()
 
 EffectWindow* EffectWindowImpl::transientFor()
 {
-    auto client = qobject_cast<AbstractClient *>(toplevel);
-    if (!client) {
-        return nullptr;
-    }
-
-    AbstractClient *transientFor = client->transientFor();
+    AbstractClient *transientFor = toplevel->transientFor();
     if (transientFor) {
         return transientFor->effectWindow();
     }
@@ -2084,10 +2059,7 @@ EffectWindowList getMainWindows(T *c)
 
 EffectWindowList EffectWindowImpl::mainWindows() const
 {
-    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
-        return getMainWindows(client);
-    }
-    return {};
+    return getMainWindows(toplevel);
 }
 
 WindowQuadList EffectWindowImpl::buildQuads(bool force) const
@@ -2170,23 +2142,17 @@ void EffectWindowImpl::desktopThumbnailDestroyed(QObject *object)
 
 void EffectWindowImpl::minimize()
 {
-    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
-        client->minimize();
-    }
+    toplevel->minimize();
 }
 
 void EffectWindowImpl::unminimize()
 {
-    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
-        client->unminimize();
-    }
+    toplevel->unminimize();
 }
 
 void EffectWindowImpl::closeWindow()
 {
-    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
-        client->closeWindow();
-    }
+    toplevel->closeWindow();
 }
 
 void EffectWindowImpl::referencePreviousWindowPixmap()

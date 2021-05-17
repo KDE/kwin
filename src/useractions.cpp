@@ -1471,12 +1471,9 @@ bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curP
     AbstractClient *switchTo = nullptr;
     int bestScore = 0;
 
-    QList<Toplevel *> clist = stackingOrder();
+    const QList<Toplevel *> clist = stackingOrder();
     for (auto i = clist.rbegin(); i != clist.rend(); ++i) {
-        auto client = qobject_cast<AbstractClient*>(*i);
-        if (!client) {
-            continue;
-        }
+        auto client = *i;
         if (client->wantsTabFocus() && *i != c &&
                 client->isOnDesktop(d) && !client->isMinimized() && (*i)->isOnCurrentActivity()) {
             // Centre of the other window

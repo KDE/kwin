@@ -274,10 +274,8 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
 {
     QList<Toplevel *> stacking = Workspace::self()->stackingOrder();
     TabBoxClientList ret;
-    foreach (Toplevel *toplevel, stacking) {
-        if (auto client = qobject_cast<AbstractClient*>(toplevel)) {
-            ret.append(client->tabBoxClient());
-        }
+    foreach (Toplevel *client, stacking) {
+        ret.append(client->tabBoxClient());
     }
     return ret;
 }
@@ -317,8 +315,7 @@ void TabBoxHandlerImpl::shadeClient(TabBoxClient *c, bool b) const
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
-    foreach (Toplevel *toplevel, Workspace::self()->stackingOrder()) {
-        auto client = qobject_cast<AbstractClient*>(toplevel);
+    foreach (Toplevel *client, Workspace::self()->stackingOrder()) {
         if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->screen() == screens()->current()) {
             return client->tabBoxClient();
         }
@@ -1203,7 +1200,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
     for (int i = Workspace::self()->stackingOrder().size() - 1;
             i >= 0 ;
             --i) {
-        auto it = qobject_cast<AbstractClient*>(Workspace::self()->stackingOrder().at(i));
+        auto it = Workspace::self()->stackingOrder().at(i);
         if (it && it->isOnCurrentActivity() && it->isOnCurrentDesktop() && !it->isSpecialWindow()
                 && it->isShown(false) && it->wantsTabFocus()
                 && !it->keepAbove() && !it->keepBelow()) {

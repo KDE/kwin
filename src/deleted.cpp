@@ -85,32 +85,30 @@ void Deleted::copyToDeleted(Toplevel* c)
     m_windowRole = c->windowRole();
     if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
         cinfo->disable();
-    if (AbstractClient *client = dynamic_cast<AbstractClient*>(c)) {
-        m_wasDecorated = client->isDecorated();
-        if (m_wasDecorated) {
-            client->layoutDecorationRects(decoration_left,
-                                          decoration_top,
-                                          decoration_right,
-                                          decoration_bottom);
-            if (client->isDecorated()) {
-                if (Decoration::Renderer *renderer = client->decoratedClient()->renderer()) {
-                    m_decorationRenderer = renderer;
-                    m_decorationRenderer->reparent(this);
-                }
+    m_wasDecorated = c->isDecorated();
+    if (m_wasDecorated) {
+        c->layoutDecorationRects(decoration_left,
+                                 decoration_top,
+                                 decoration_right,
+                                 decoration_bottom);
+        if (c->isDecorated()) {
+            if (Decoration::Renderer *renderer = c->decoratedClient()->renderer()) {
+                m_decorationRenderer = renderer;
+                m_decorationRenderer->reparent(this);
             }
         }
-        m_wasClient = true;
-        m_minimized = client->isMinimized();
-        m_modal = client->isModal();
-        m_mainClients = client->mainClients();
-        foreach (AbstractClient *c, m_mainClients) {
-            connect(c, &AbstractClient::windowClosed, this, &Deleted::mainClientClosed);
-        }
-        m_fullscreen = client->isFullScreen();
-        m_keepAbove = client->keepAbove();
-        m_keepBelow = client->keepBelow();
-        m_caption = client->caption();
     }
+    m_wasClient = true;
+    m_minimized = c->isMinimized();
+    m_modal = c->isModal();
+    m_mainClients = c->mainClients();
+    foreach (AbstractClient *c, m_mainClients) {
+        connect(c, &AbstractClient::windowClosed, this, &Deleted::mainClientClosed);
+    }
+    m_fullscreen = c->isFullScreen();
+    m_keepAbove = c->keepAbove();
+    m_keepBelow = c->keepBelow();
+    m_caption = c->caption();
 
     for (auto vd : qAsConst(m_desktops)) {
         connect(vd, &QObject::destroyed, this, [=] {
@@ -196,8 +194,7 @@ NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
 
 void Deleted::mainClientClosed(Toplevel *client)
 {
-    if (AbstractClient *c = dynamic_cast<AbstractClient*>(client))
-        m_mainClients.removeAll(c);
+    m_mainClients.removeAll(client);
 }
 
 xcb_window_t Deleted::frameId() const

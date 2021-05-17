@@ -38,9 +38,8 @@ WlToXDrag::WlToXDrag()
     m_dsi = waylandServer()->seat()->dragSource()->dragSource();
 }
 
-DragEventReply WlToXDrag::moveFilter(Toplevel *target, const QPoint &pos)
+DragEventReply WlToXDrag::moveFilter(AbstractClient *ac, const QPoint &pos)
 {
-    AbstractClient *ac = qobject_cast<AbstractClient *>(target);
     auto *seat = waylandServer()->seat();
     if (m_visit && m_visit->target() == ac) {
         // no target change

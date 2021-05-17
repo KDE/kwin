@@ -229,11 +229,8 @@ AbstractClient* Workspace::topClientOnDesktop(int desktop, int screen, bool unco
     for (int i = list.size() - 1;
             i >= 0;
             --i) {
-        AbstractClient *c = qobject_cast<AbstractClient*>(list.at(i));
-        if (!c) {
-            continue;
-        }
-        if (c->isOnDesktop(desktop) && c->isShown(false) && c->isOnCurrentActivity()) {
+        AbstractClient *c = list.at(i);
+        if (c && c->isOnDesktop(desktop) && c->isShown(false) && c->isOnCurrentActivity()) {
             if (screen != -1 && c->screen() != screen)
                 continue;
             if (!only_normal)
@@ -250,15 +247,14 @@ AbstractClient* Workspace::findDesktop(bool topmost, int desktop) const
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if (topmost) {
         for (int i = stacking_order.size() - 1; i >= 0; i--) {
-            AbstractClient *c = qobject_cast<AbstractClient*>(stacking_order.at(i));
+            AbstractClient *c = stacking_order.at(i);
             if (c && c->isOnDesktop(desktop) && c->isDesktop()
                     && c->isShown(true))
                 return c;
         }
     } else { // bottom-most
-        foreach (Toplevel * c, stacking_order) {
-            AbstractClient *client = qobject_cast<AbstractClient*>(c);
-            if (client && c->isOnDesktop(desktop) && c->isDesktop()
+        foreach (Toplevel * client, stacking_order) {
+            if (client && client->isOnDesktop(desktop) && client->isDesktop()
                     && client->isShown(true))
                 return client;
         }
@@ -321,11 +317,7 @@ void Workspace::lowerClientWithinApplication(AbstractClient* c)
     for (auto it = unconstrained_stacking_order.begin();
             it != unconstrained_stacking_order.end();
             ++it) {
-        AbstractClient *client = qobject_cast<AbstractClient*>(*it);
-        if (!client) {
-            continue;
-        }
-        if (AbstractClient::belongToSameApplication(client, c)) {
+        if (AbstractClient::belongToSameApplication(*it, c)) {
             unconstrained_stacking_order.insert(it, c);
             lowered = true;
             break;
@@ -370,10 +362,7 @@ void Workspace::raiseClientWithinApplication(AbstractClient* c)
 
     // first try to put it above the top-most window of the application
     for (int i = unconstrained_stacking_order.size() - 1; i > -1 ; --i) {
-        AbstractClient *other = qobject_cast<AbstractClient*>(unconstrained_stacking_order.at(i));
-        if (!other) {
-            continue;
-        }
+        AbstractClient *other = unconstrained_stacking_order.at(i);
         if (other == c)     // don't lower it just because it asked to be raised
             return;
         if (AbstractClient::belongToSameApplication(other, c)) {
@@ -417,8 +406,8 @@ void Workspace::restack(AbstractClient* c, AbstractClient* under, bool force)
     if (!force && !AbstractClient::belongToSameApplication(under, c)) {
          // put in the stacking order below _all_ windows belonging to the active application
         for (int i = 0; i < unconstrained_stacking_order.size(); ++i) {
-            AbstractClient *other = qobject_cast<AbstractClient*>(unconstrained_stacking_order.at(i));
-            if (other && other->layer() == c->layer() && AbstractClient::belongToSameApplication(under, other)) {
+            AbstractClient *other = unconstrained_stacking_order.at(i);
+            if (other->layer() == c->layer() && AbstractClient::belongToSameApplication(under, other)) {
                 under = (c == other) ? nullptr : other;
                 break;
             }

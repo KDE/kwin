@@ -74,16 +74,12 @@ Shadow *Shadow::createShadowFromX11(AbstractClient *toplevel)
     }
 }
 
-Shadow *Shadow::createShadowFromDecoration(AbstractClient *toplevel)
+Shadow *Shadow::createShadowFromDecoration(AbstractClient *c)
 {
-    AbstractClient *c = qobject_cast<AbstractClient*>(toplevel);
-    if (!c) {
-        return nullptr;
-    }
     if (!c->decoration()) {
         return nullptr;
     }
-    Shadow *shadow = Compositor::self()->scene()->createShadow(toplevel);
+    Shadow *shadow = Compositor::self()->scene()->createShadow(c);
     if (!shadow->init(c->decoration())) {
         delete shadow;
         return nullptr;
@@ -390,11 +386,9 @@ bool Shadow::updateShadow()
     }
 
     if (m_decorationShadow) {
-        if (AbstractClient *c = qobject_cast<AbstractClient*>(m_topLevel)) {
-            if (c->decoration()) {
-                if (init(c->decoration())) {
-                    return true;
-                }
+        if (m_topLevel->decoration()) {
+            if (init(m_topLevel->decoration())) {
+                return true;
             }
         }
         return false;
