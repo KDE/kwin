@@ -250,7 +250,7 @@ class KWIN_EXPORT AbstractClient : public QObject
      * The geometry of this Client. Be aware that depending on resize mode the frameGeometryChanged
      * signal might be emitted at each resize step or only at the end of the resize operation.
      */
-    Q_PROPERTY(QRect frameGeometry READ frameGeometry WRITE moveResize)
+    Q_PROPERTY(QRect frameGeometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
 
     /**
      * Whether the Client is currently being moved by the user.
@@ -370,12 +370,6 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(QRect bufferGeometry READ bufferGeometry)
 
     /**
-     * This property holds the geometry of the Toplevel, excluding invisible
-     * portions, e.g. server-side and client-side drop-shadows, etc.
-     */
-    Q_PROPERTY(QRect frameGeometry READ frameGeometry NOTIFY frameGeometryChanged)
-
-    /**
      * This property holds the position of the Toplevel's frame geometry.
      */
     Q_PROPERTY(QPoint pos READ pos)
@@ -409,13 +403,6 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(int screen READ screen NOTIFY screenChanged)
     Q_PROPERTY(qulonglong windowId READ window CONSTANT)
-    Q_PROPERTY(int desktop READ desktop)
-
-    /**
-     * Whether the window is on all desktops. That is desktop is -1.
-     */
-    Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops)
-
     Q_PROPERTY(QRect rect READ rect)
     Q_PROPERTY(QPoint clientPos READ clientPos)
     Q_PROPERTY(QSize clientSize READ clientSize)
@@ -525,8 +512,6 @@ class KWIN_EXPORT AbstractClient : public QObject
      * See https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
     Q_PROPERTY(int windowType READ windowType)
-
-    Q_PROPERTY(QStringList activities READ activities)
 
     /**
      * Whether this Toplevel is managed by KWin (it has control over its placement and other
