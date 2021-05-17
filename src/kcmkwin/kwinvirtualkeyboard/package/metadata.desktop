@@ -11,6 +11,7 @@ Name[es]=Teclado virtual
 Name[fr]=Clavier virtuel
 Name[ia]=Claviero virtual
 Name[it]=Tastiera virtuale
+Name[ko]=가상 키보드
 Name[nl]=Virtueel toetsenbord
 Name[pl]=Klawiatura ekranowa
 Name[pt]=Teclado Virtual
@@ -20,6 +21,7 @@ Name[sl]=Virtualna tipkovnica
 Name[sv]=Virtuellt tangentbord
 Name[uk]=Віртуальна клавіатура
 Name[x-test]=xxVirtual Keyboardxx
+Name[zh_CN]=虚拟键盘
 
 Icon=input-keyboard-virtual
 Type=Service
