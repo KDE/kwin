@@ -81,10 +81,6 @@
 #include "thumbnailitem.h"
 #include "composite.h"
 
-#include <KWaylandServer/buffer_interface.h>
-#include <KWaylandServer/subcompositor_interface.h>
-#include <KWaylandServer/surface_interface.h>
-
 namespace KWin
 {
 

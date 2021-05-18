@@ -17,14 +17,6 @@
 #include <QElapsedTimer>
 #include <QMatrix4x4>
 
-class QOpenGLFramebufferObject;
-
-namespace KWaylandServer
-{
-class BufferInterface;
-class SubSurfaceInterface;
-}
-
 namespace KWin
 {
 

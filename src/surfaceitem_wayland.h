@@ -8,6 +8,13 @@
 
 #include "surfaceitem.h"
 
+namespace KWaylandServer
+{
+class BufferInterface;
+class SubSurfaceInterface;
+class SurfaceInterface;
+}
+
 namespace KWin
 {
 

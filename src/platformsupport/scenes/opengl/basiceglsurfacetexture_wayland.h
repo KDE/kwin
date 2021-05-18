@@ -10,6 +10,11 @@
 
 #include <epoxy/egl.h>
 
+namespace KWaylandServer
+{
+class BufferInterface;
+}
+
 namespace KWin
 {
 
