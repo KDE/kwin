@@ -946,71 +946,7 @@ protected Q_SLOTS:
     void removeCheckScreenConnection();
     void setReadyForPainting();
 
-protected:
-    void setWindowHandles(xcb_window_t client);
-    void detectShape(xcb_window_t id);
-    virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
-    virtual void clientMessageEvent(xcb_client_message_event_t *e);
-    Xcb::Property fetchWmClientLeader() const;
-    void readWmClientLeader(Xcb::Property &p);
-    void getWmClientLeader();
-    void getWmClientMachine();
-    /**
-     * @returns Whether there is a compositor and it is active.
-     */
-    bool compositing() const;
-
-    /**
-     * This function fetches the opaque region from this Toplevel.
-     * Will only be called on corresponding property changes and for initialization.
-     */
-    void getWmOpaqueRegion();
-    void discardShapeRegion();
-
-    void getResourceClass();
-    void setResourceClass(const QByteArray &name, const QByteArray &className = QByteArray());
-    Xcb::Property fetchSkipCloseAnimation() const;
-    void readSkipCloseAnimation(Xcb::Property &prop);
-    void getSkipCloseAnimation();
-    void copyToDeleted(AbstractClient* c);
-    void disownDataPassedToDeleted();
-    void deleteEffectWindow();
-    void setDepth(int depth);
-    QRect m_frameGeometry;
-    QRect m_clientGeometry;
-    QRect m_bufferGeometry;
-    xcb_visualid_t m_visual;
-    int bit_depth = 24;
-    NETWinInfo* info = nullptr;
-    bool ready_for_painting = false;
-    /**
-     * An FBO object KWin internal windows might render to.
-     */
-    QSharedPointer<QOpenGLFramebufferObject> m_internalFBO;
-    QImage m_internalImage;
-
-private:
-    // when adding new data members, check also copyToDeleted()
-    QUuid m_internalId;
-    Xcb::Window m_client;
-    bool is_shape = false;
-    EffectWindowImpl* effect_window = nullptr;
-    QByteArray resource_name;
-    QByteArray resource_class;
-    ClientMachine *m_clientMachine;
-    xcb_window_t m_wmClientLeader;
-    QRegion opaque_region;
-    mutable QRegion m_shapeRegion;
-    mutable bool m_shapeRegionIsValid = false;
-    int m_screen = 0;
-    bool m_skipCloseAnimation = false;
-    quint32 m_surfaceId = 0;
-    KWaylandServer::SurfaceInterface *m_surface = nullptr;
-    // when adding new data members, check also copyToDeleted()
-    qreal m_screenScale = 1.0;
-    qreal m_opacity = 1.0;
 public:
-
     ~AbstractClient() override;
 
     QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const {
@@ -1936,6 +1872,48 @@ protected:
     void setFullscreenGeometryRestore(const QRect &geom);
 
     void cleanTabBox();
+    void setWindowHandles(xcb_window_t client);
+    void detectShape(xcb_window_t id);
+    virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
+    virtual void clientMessageEvent(xcb_client_message_event_t *e);
+    void discardWindowPixmap();
+    Xcb::Property fetchWmClientLeader() const;
+    void readWmClientLeader(Xcb::Property &p);
+    void getWmClientLeader();
+    void getWmClientMachine();
+    /**
+     * @returns Whether there is a compositor and it is active.
+     */
+    bool compositing() const;
+
+    /**
+     * This function fetches the opaque region from this Toplevel.
+     * Will only be called on corresponding property changes and for initialization.
+     */
+    void getWmOpaqueRegion();
+    void discardShapeRegion();
+
+    void getResourceClass();
+    void setResourceClass(const QByteArray &name, const QByteArray &className = QByteArray());
+    Xcb::Property fetchSkipCloseAnimation() const;
+    void readSkipCloseAnimation(Xcb::Property &prop);
+    void getSkipCloseAnimation();
+    void copyToDeleted(AbstractClient* c);
+    void disownDataPassedToDeleted();
+    void deleteEffectWindow();
+    void setDepth(int depth);
+    QRect m_frameGeometry;
+    QRect m_clientGeometry;
+    QRect m_bufferGeometry;
+    xcb_visualid_t m_visual;
+    int bit_depth = 24;
+    NETWinInfo* info = nullptr;
+    bool ready_for_painting = false;
+    /**
+     * An FBO object KWin internal windows might render to.
+     */
+    QSharedPointer<QOpenGLFramebufferObject> m_internalFBO;
+    QImage m_internalImage;
 
 private Q_SLOTS:
     void shadeHover();
@@ -1943,6 +1921,24 @@ private Q_SLOTS:
 
 private:
     void handlePaletteChange();
+    // when adding new data members, check also copyToDeleted()
+    QUuid m_internalId;
+    Xcb::Window m_client;
+    bool is_shape = false;
+    EffectWindowImpl* effect_window = nullptr;
+    QByteArray resource_name;
+    QByteArray resource_class;
+    ClientMachine *m_clientMachine;
+    xcb_window_t m_wmClientLeader;
+    QRegion opaque_region;
+    mutable QRegion m_shapeRegion;
+    mutable bool m_shapeRegionIsValid = false;
+    int m_screen = 0;
+    bool m_skipCloseAnimation = false;
+    quint32 m_surfaceId = 0;
+    KWaylandServer::SurfaceInterface *m_surface = nullptr;
+    qreal m_screenScale = 1.0;
+    qreal m_opacity = 1.0;
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox = false;
     bool m_skipTaskbar = false;
