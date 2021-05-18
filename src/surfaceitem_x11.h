@@ -7,6 +7,7 @@
 #pragma once
 
 #include "surfaceitem.h"
+#include "clientbufferref.h"
 
 namespace KWin
 {
@@ -50,17 +51,15 @@ class KWIN_EXPORT SurfacePixmapX11 final : public SurfacePixmap
 
 public:
     explicit SurfacePixmapX11(SurfaceItemX11 *item, QObject *parent = nullptr);
-    ~SurfacePixmapX11() override;
 
-    xcb_pixmap_t pixmap() const;
-    xcb_visualid_t visual() const;
+    ClientBufferRef buffer() const;
 
     void create() override;
     bool isValid() const override;
 
 private:
     SurfaceItemX11 *m_item;
-    xcb_pixmap_t m_pixmap = XCB_PIXMAP_NONE;
+    ClientBufferRef m_bufferRef;
 };
 
 } // namespace KWaylandServer

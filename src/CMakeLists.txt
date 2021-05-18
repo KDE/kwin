@@ -31,6 +31,7 @@ set(kwin_SRCS
     client_machine.cpp
     clientbuffer.cpp
     clientbuffer_internal.cpp
+    clientbuffer_x11.cpp
     clientbufferref.cpp
     composite.cpp
     cursor.cpp

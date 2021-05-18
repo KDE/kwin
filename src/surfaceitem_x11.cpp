@@ -5,6 +5,7 @@
 */
 
 #include "surfaceitem_x11.h"
+#include "clientbuffer_x11.h"
 #include "composite.h"
 #include "scene.h"
 
@@ -148,70 +149,27 @@ SurfacePixmapX11::SurfacePixmapX11(SurfaceItemX11 *item, QObject *parent)
 {
 }
 
-SurfacePixmapX11::~SurfacePixmapX11()
-{
-    if (m_pixmap != XCB_PIXMAP_NONE) {
-        xcb_free_pixmap(kwinApp()->x11Connection(), m_pixmap);
-    }
-}
-
 bool SurfacePixmapX11::isValid() const
 {
-    return m_pixmap != XCB_PIXMAP_NONE;
+    return m_bufferRef;
 }
 
-xcb_pixmap_t SurfacePixmapX11::pixmap() const
+ClientBufferRef SurfacePixmapX11::buffer() const
 {
-    return m_pixmap;
-}
-
-xcb_visualid_t SurfacePixmapX11::visual() const
-{
-    return m_item->window()->window()->visual();
+    return m_bufferRef;
 }
 
 void SurfacePixmapX11::create()
 {
     const Toplevel *toplevel = m_item->window()->window();
-    if (toplevel->isDeleted()) {
-        return;
+    if (!toplevel->isDeleted()) {
+        auto buffer = new ClientBufferX11(toplevel);
+        if (buffer->pixmap() == XCB_PIXMAP_NONE) {
+            delete buffer;
+        } else {
+            m_bufferRef = buffer;
+        }
     }
-
-    XServerGrabber grabber;
-    xcb_connection_t *connection = kwinApp()->x11Connection();
-    xcb_window_t frame = toplevel->frameId();
-    xcb_pixmap_t pixmap = xcb_generate_id(connection);
-    xcb_void_cookie_t namePixmapCookie = xcb_composite_name_window_pixmap_checked(connection,
-                                                                                  frame,
-                                                                                  pixmap);
-    Xcb::WindowAttributes windowAttributes(frame);
-    Xcb::WindowGeometry windowGeometry(frame);
-    if (xcb_generic_error_t *error = xcb_request_check(connection, namePixmapCookie)) {
-        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (error code %d)",
-                toplevel->window(), error->error_code);
-        free(error);
-        return;
-    }
-    // check that the received pixmap is valid and actually matches what we
-    // know about the window (i.e. size)
-    if (!windowAttributes || windowAttributes->map_state != XCB_MAP_STATE_VIEWABLE) {
-        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (not viewable)",
-                toplevel->window());
-        xcb_free_pixmap(connection, pixmap);
-        return;
-    }
-    const QRect bufferGeometry = toplevel->bufferGeometry();
-    if (windowGeometry.size() != bufferGeometry.size()) {
-        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (mismatched geometry)",
-                toplevel->window());
-        xcb_free_pixmap(connection, pixmap);
-        return;
-    }
-
-    m_pixmap = pixmap;
-    m_hasAlphaChannel = toplevel->hasAlpha();
-    m_size = bufferGeometry.size();
-    m_contentsRect = QRect(toplevel->clientPos(), toplevel->clientSize());
 }
 
 } // namespace KWin

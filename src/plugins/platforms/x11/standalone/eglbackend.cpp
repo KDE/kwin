@@ -6,6 +6,7 @@
 */
 
 #include "eglbackend.h"
+#include "clientbuffer_x11.h"
 #include "options.h"
 #include "overlaywindow.h"
 #include "platform.h"
@@ -162,7 +163,8 @@ EglPixmapTexturePrivate::~EglPixmapTexturePrivate()
 
 bool EglPixmapTexturePrivate::create(SurfacePixmapX11 *pixmap)
 {
-    const xcb_pixmap_t nativePixmap = pixmap->pixmap();
+    const ClientBufferX11 *buffer = ClientBufferX11::from(pixmap->buffer());
+    const xcb_pixmap_t nativePixmap = buffer->pixmap();
     if (nativePixmap == XCB_NONE) {
         return false;
     }

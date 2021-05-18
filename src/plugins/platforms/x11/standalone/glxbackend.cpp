@@ -21,6 +21,7 @@
 #include "softwarevsyncmonitor.h"
 #include "x11_platform.h"
 // kwin
+#include "clientbuffer_x11.h"
 #include "options.h"
 #include "overlaywindow.h"
 #include "composite.h"
@@ -850,10 +851,11 @@ void GlxPixmapTexturePrivate::onDamage()
 
 bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
 {
-    if (texture->pixmap() == XCB_NONE || texture->size().isEmpty() || texture->visual() == XCB_NONE)
+    const ClientBufferX11 *buffer = ClientBufferX11::from(texture->buffer());
+    if (buffer->pixmap() == XCB_NONE || buffer->size().isEmpty() || buffer->visual() == XCB_NONE)
         return false;
 
-    const FBConfigInfo *info = m_backend->infoForVisual(texture->visual());
+    const FBConfigInfo *info = m_backend->infoForVisual(buffer->visual());
     if (!info || info->fbconfig == nullptr)
         return false;
 
@@ -876,7 +878,7 @@ bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
         0
     };
 
-    m_glxPixmap     = glXCreatePixmap(m_backend->display(), info->fbconfig, texture->pixmap(), attrs);
+    m_glxPixmap     = glXCreatePixmap(m_backend->display(), info->fbconfig, buffer->pixmap(), attrs);
     m_size          = texture->size();
     m_yInverted     = info->y_inverted ? true : false;
     m_canUseMipmaps = false;

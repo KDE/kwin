@@ -5,6 +5,7 @@
 */
 
 #include "platformxrendersurfacetexture_x11.h"
+#include "clientbuffer_x11.h"
 #include "main.h"
 #include "surfaceitem_x11.h"
 
@@ -41,12 +42,13 @@ bool PlatformXrenderSurfaceTextureX11::create()
         return true;
     }
 
-    const xcb_pixmap_t pixmap = m_pixmap->pixmap();
+    const ClientBufferX11 *buffer = ClientBufferX11::from(m_pixmap->buffer());
+    const xcb_pixmap_t pixmap = buffer->pixmap();
     if (pixmap == XCB_PIXMAP_NONE) {
         return false;
     }
 
-    xcb_render_pictformat_t format = XRenderUtils::findPictFormat(m_pixmap->visual());
+    xcb_render_pictformat_t format = XRenderUtils::findPictFormat(buffer->visual());
     if (format == XCB_NONE) {
         return false;
     }
