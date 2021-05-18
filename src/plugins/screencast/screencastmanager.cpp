@@ -49,16 +49,20 @@ public:
         }
         connect(toplevel, &Toplevel::windowClosed, this, &PipeWireStream::stopStreaming);
         connect(this, &PipeWireStream::startStreaming, this, &WindowStream::startFeeding);
+        connect(this, &PipeWireStream::stopStreaming, this, &WindowStream::stopFeeding);
     }
 
 private:
     void startFeeding() {
-        auto scene = Compositor::self()->scene();
-        connect(scene, &Scene::frameRendered, this, &WindowStream::bufferToStream);
+        connect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowStream::bufferToStream);
 
         connect(m_toplevel, &Toplevel::damaged, this, &WindowStream::includeDamage);
         m_damagedRegion = m_toplevel->visibleGeometry();
         m_toplevel->addRepaintFull();
+    }
+
+    void stopFeeding() {
+        disconnect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowStream::bufferToStream);
     }
 
     void includeDamage(Toplevel *toplevel, const QRegion &damage) {
