@@ -27,14 +27,9 @@ Deleted::Deleted()
     : AbstractClient()
     , delete_refcount(1)
     , m_frame(XCB_WINDOW_NONE)
-    , m_layer(UnknownLayer)
-    , m_minimized(false)
-    , m_modal(false)
     , m_wasClient(false)
     , m_decorationRenderer(nullptr)
     , m_fullscreen(false)
-    , m_keepAbove(false)
-    , m_keepBelow(false)
     , m_wasPopupWindow(false)
     , m_wasOutline(false)
     , m_wasDecorated(false)
@@ -99,15 +94,11 @@ void Deleted::copyToDeleted(Toplevel* c)
         }
     }
     m_wasClient = true;
-    m_minimized = c->isMinimized();
-    m_modal = c->isModal();
     m_mainClients = c->mainClients();
     foreach (AbstractClient *c, m_mainClients) {
         connect(c, &AbstractClient::windowClosed, this, &Deleted::mainClientClosed);
     }
     m_fullscreen = c->isFullScreen();
-    m_keepAbove = c->keepAbove();
-    m_keepBelow = c->keepBelow();
     m_caption = c->caption();
 
     for (auto vd : qAsConst(m_desktops)) {

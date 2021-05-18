@@ -3870,7 +3870,7 @@ void AbstractClient::detectShape(xcb_window_t id)
     }
 }
 
-// used only by Deleted::copy()
+// used only by Deleted::copyToDeleted()
 void AbstractClient::copyToDeleted(AbstractClient* c)
 {
     m_internalId = c->internalId();
@@ -3897,6 +3897,11 @@ void AbstractClient::copyToDeleted(AbstractClient* c)
     m_internalFBO = c->m_internalFBO;
     m_internalImage = c->m_internalImage;
     m_opacity = c->m_opacity;
+    m_modal = c->m_modal;
+    m_layer = c->m_layer;
+    m_keepAbove = c->m_keepAbove;
+    m_keepBelow = c->m_keepBelow;
+    m_screenScale = c->m_screenScale;
 }
 
 // before being deleted, remove references to everything that's now

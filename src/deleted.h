@@ -44,12 +44,6 @@ public:
     Layer layer() const override {
         return m_layer;
     }
-    bool isMinimized() const {
-        return m_minimized;
-    }
-    bool isModal() const {
-        return m_modal;
-    }
     QList<AbstractClient*> mainClients() const override {
         return m_mainClients;
     }
@@ -65,13 +59,6 @@ public:
 
     bool isFullScreen() const override {
         return m_fullscreen;
-    }
-
-    bool keepAbove() const {
-        return m_keepAbove;
-    }
-    bool keepBelow() const {
-        return m_keepBelow;
     }
 
     QString captionNormal() const override { return m_caption; }
@@ -139,16 +126,12 @@ private:
     QRect decoration_top;
     QRect decoration_bottom;
     Layer m_layer;
-    bool m_minimized;
-    bool m_modal;
     QList<AbstractClient*> m_mainClients;
     bool m_wasClient;
     Decoration::Renderer *m_decorationRenderer;
     NET::WindowType m_type = NET::Unknown;
     QByteArray m_windowRole;
     bool m_fullscreen;
-    bool m_keepAbove;
-    bool m_keepBelow;
     QString m_caption;
     bool m_wasPopupWindow;
     bool m_wasOutline;
