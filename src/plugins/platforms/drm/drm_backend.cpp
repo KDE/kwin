@@ -197,12 +197,6 @@ bool DrmBackend::initialize()
     }
 
     initCursor();
-    if (!updateOutputs())
-        return false;
-
-    if (m_outputs.isEmpty()) {
-        qCDebug(KWIN_DRM) << "No connected outputs found on startup.";
-    }
 
     // setup udevMonitor
     if (m_udevMonitor) {
@@ -318,11 +312,8 @@ void DrmBackend::removeOutput(DrmOutput *o)
     emit outputRemoved(o);
 }
 
-bool DrmBackend::updateOutputs()
+void DrmBackend::updateOutputs()
 {
-    if (m_gpus.size() == 0) {
-        return false;
-    }
     const auto oldOutputs = m_outputs;
     for (auto it = m_gpus.begin(); it < m_gpus.end();) {
         auto gpu = *it;
@@ -343,7 +334,6 @@ bool DrmBackend::updateOutputs()
     if (!m_outputs.isEmpty()) {
         emit screensQueried();
     }
-    return true;
 }
 
 namespace KWinKScreenIntegration
@@ -611,6 +601,11 @@ OpenGLBackend *DrmBackend::createOpenGLBackend()
 #else
     return Platform::createOpenGLBackend();
 #endif
+}
+
+void DrmBackend::sceneInitialized()
+{
+    updateOutputs();
 }
 
 QVector<CompositingType> DrmBackend::supportedCompositors() const

@@ -67,6 +67,7 @@ public:
 
 public Q_SLOTS:
     void turnOutputsOn();
+    void sceneInitialized() override;
 
 Q_SIGNALS:
     void gpuRemoved(DrmGpu *gpu);
@@ -84,7 +85,7 @@ private:
     void activate(bool active);
     void reactivate();
     void deactivate();
-    bool updateOutputs();
+    void updateOutputs();
     void updateCursor();
     void moveCursor();
     void initCursor();

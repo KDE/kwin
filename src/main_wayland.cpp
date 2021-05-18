@@ -164,6 +164,16 @@ void ApplicationWayland::performStartup()
     TabletModeManager::create(this);
     createPlugins();
 
+    createScreens();
+    WaylandCompositor::create();
+
+    connect(Compositor::self(), &Compositor::sceneCreated, platform(), &Platform::sceneInitialized);
+    connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
+}
+
+void ApplicationWayland::continueStartupWithScene()
+{
+    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
     if (!platform()->enabledOutputs().isEmpty()) {
         continueStartupWithScreens();
     } else {
@@ -173,25 +183,7 @@ void ApplicationWayland::performStartup()
 
 void ApplicationWayland::continueStartupWithScreens()
 {
-    disconnect(kwinApp()->platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
-    createScreens();
-    WaylandCompositor::create();
-    connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
-}
-
-void ApplicationWayland::finalizeStartup()
-{
-    if (m_xwayland) {
-        disconnect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
-        disconnect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
-    }
-    startSession();
-    notifyStarted();
-}
-
-void ApplicationWayland::continueStartupWithScene()
-{
-    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
+    disconnect(platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
 
     // Note that we start accepting client connections after creating the Workspace.
     createWorkspace();
@@ -209,6 +201,16 @@ void ApplicationWayland::continueStartupWithScene()
     connect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
     connect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
     m_xwayland->start();
+}
+
+void ApplicationWayland::finalizeStartup()
+{
+    if (m_xwayland) {
+        disconnect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
+        disconnect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
+    }
+    startSession();
+    notifyStarted();
 }
 
 void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteArrayList &names)

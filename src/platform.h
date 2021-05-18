@@ -459,6 +459,7 @@ public Q_SLOTS:
     void processPinchGestureCancelled(quint32 time);
 
     void cursorRendered(const QRect &geometry);
+    virtual void sceneInitialized() {};
 
 Q_SIGNALS:
     void screensQueried();

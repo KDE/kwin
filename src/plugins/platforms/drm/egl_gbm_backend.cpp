@@ -146,23 +146,8 @@ void EglGbmBackend::init()
 bool EglGbmBackend::initRenderingContext()
 {
     initBufferConfigs();
-    // no secondary GPU -> no OpenGL context!
-    if (isPrimary() && !createContext()) {
-        return false;
-    }
-
-    const auto outputs = m_gpu->outputs();
-
-    for (DrmOutput *drmOutput: outputs) {
-        addOutput(drmOutput);
-    }
-
-    if (m_outputs.isEmpty() && !outputs.isEmpty()) {
-        qCCritical(KWIN_DRM) << "Create Window Surfaces failed";
-        return false;
-    }
     if (isPrimary()) {
-        return makeCurrent();
+        return createContext() && makeCurrent();
     }
     return true;
 }
