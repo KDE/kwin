@@ -682,11 +682,7 @@ void AnimationEffect::postPaintScreen()
 
 float AnimationEffect::interpolated( const AniData &a, int i ) const
 {
-    if (a.startTime > clock())
-        return a.from[i];
-    if (!a.timeLine.done())
-        return a.from[i] + a.timeLine.value() * (a.to[i] - a.from[i]);
-    return a.to[i]; // we're done and "waiting" at the target value
+    return a.from[i] + a.timeLine.value() * (a.to[i] - a.from[i]);
 }
 
 float AnimationEffect::progress( const AniData &a ) const
