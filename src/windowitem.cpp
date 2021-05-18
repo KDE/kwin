@@ -39,19 +39,19 @@ ShadowItem *WindowItem::shadowItem() const
 
 void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
 {
-    Toplevel *toplevel = window()->window();
+    AbstractClient *toplevel = window()->window();
 
     m_surfaceItem.reset(surfaceItem);
 
-    connect(toplevel, &Toplevel::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
-    connect(toplevel, &Toplevel::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
+    connect(toplevel, &AbstractClient::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
+    connect(toplevel, &AbstractClient::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
 
     updateSurfacePosition();
 }
 
 void WindowItem::updateSurfacePosition()
 {
-    const Toplevel *toplevel = window()->window();
+    const AbstractClient *toplevel = window()->window();
 
     const QRect bufferGeometry = toplevel->bufferGeometry();
     const QRect frameGeometry = toplevel->frameGeometry();
@@ -96,7 +96,7 @@ void WindowItem::updateDecorationItem()
 WindowItemX11::WindowItemX11(Scene::Window *window, Item *parent)
     : WindowItem(window, parent)
 {
-    Toplevel *toplevel = window->window();
+    AbstractClient *toplevel = window->window();
 
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeX11:
@@ -107,7 +107,7 @@ WindowItemX11::WindowItemX11(Scene::Window *window, Item *parent)
         if (toplevel->surface()) {
             initialize();
         } else {
-            connect(toplevel, &Toplevel::surfaceChanged, this, &WindowItemX11::initialize);
+            connect(toplevel, &AbstractClient::surfaceChanged, this, &WindowItemX11::initialize);
         }
         break;
     case Application::OperationModeWaylandOnly:
@@ -127,7 +127,7 @@ void WindowItemX11::initialize()
 WindowItemWayland::WindowItemWayland(Scene::Window *window, Item *parent)
     : WindowItem(window, parent)
 {
-    Toplevel *toplevel = window->window();
+    AbstractClient *toplevel = window->window();
     updateSurfaceItem(new SurfaceItemWayland(toplevel->surface(), window, this));
 }
 

@@ -14,13 +14,13 @@ namespace KWin
 SurfaceItemX11::SurfaceItemX11(Scene::Window *window, Item *parent)
     : SurfaceItem(window, parent)
 {
-    Toplevel *toplevel = window->window();
+    AbstractClient *toplevel = window->window();
 
-    connect(toplevel, &Toplevel::bufferGeometryChanged,
+    connect(toplevel, &AbstractClient::bufferGeometryChanged,
             this, &SurfaceItemX11::handleBufferGeometryChanged);
-    connect(toplevel, &Toplevel::markedAsZombie,
+    connect(toplevel, &AbstractClient::markedAsZombie,
             this, &SurfaceItemX11::destroyDamage);
-    connect(toplevel, &Toplevel::geometryShapeChanged,
+    connect(toplevel, &AbstractClient::geometryShapeChanged,
             this, &SurfaceItemX11::discardQuads);
 
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
@@ -106,7 +106,7 @@ void SurfaceItemX11::destroyDamage()
     }
 }
 
-void SurfaceItemX11::handleBufferGeometryChanged(Toplevel *toplevel, const QRect &old)
+void SurfaceItemX11::handleBufferGeometryChanged(AbstractClient *toplevel, const QRect &old)
 {
     if (toplevel->bufferGeometry().size() != old.size()) {
         discardPixmap();
@@ -121,7 +121,7 @@ QPointF SurfaceItemX11::mapToBuffer(const QPointF &point) const
 
 QRegion SurfaceItemX11::shape() const
 {
-    const Toplevel *toplevel = window()->window();
+    const AbstractClient *toplevel = window()->window();
     if (window()->isShaded()) {
         return QRegion();
     }
@@ -172,7 +172,7 @@ xcb_visualid_t SurfacePixmapX11::visual() const
 
 void SurfacePixmapX11::create()
 {
-    const Toplevel *toplevel = m_item->window()->window();
+    const AbstractClient *toplevel = m_item->window()->window();
     if (toplevel->isDeleted()) {
         return;
     }

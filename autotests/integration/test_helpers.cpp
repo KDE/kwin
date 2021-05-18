@@ -639,7 +639,7 @@ bool waitForWaylandSurface(AbstractClient *client)
     if (client->surface()) {
         return true;
     }
-    QSignalSpy surfaceChangedSpy(client, &Toplevel::surfaceChanged);
+    QSignalSpy surfaceChangedSpy(client, &AbstractClient::surfaceChanged);
     return surfaceChangedSpy.wait();
 }
 

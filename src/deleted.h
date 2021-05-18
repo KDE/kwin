@@ -25,7 +25,7 @@ class KWIN_EXPORT Deleted : public AbstractClient
     Q_OBJECT
 
 public:
-    static Deleted* create(Toplevel* c);
+    static Deleted* create(AbstractClient* c);
     // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
     void refWindow();
     void unrefWindow();
@@ -104,11 +104,11 @@ public:
     }
 
 private Q_SLOTS:
-    void mainClientClosed(KWin::Toplevel *client);
+    void mainClientClosed(KWin::AbstractClient *client);
 
 private:
     Deleted();   // use create()
-    void copyToDeleted(Toplevel* c);
+    void copyToDeleted(AbstractClient* c);
     ~Deleted() override; // deleted only using unrefWindow()
 
     QMargins m_frameMargins;

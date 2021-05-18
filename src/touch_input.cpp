@@ -79,7 +79,7 @@ bool TouchInputRedirection::positionValid() const
     return !m_activeTouchPoints.isEmpty();
 }
 
-void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
+void TouchInputRedirection::focusUpdate(AbstractClient *focusOld, AbstractClient *focusNow)
 {
     // TODO: handle pointer grab aka popups
 
@@ -103,7 +103,7 @@ void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
 
     // FIXME: add input transformation API to KWaylandServer::SeatInterface for touch input
     seat->setFocusedTouchSurface(focusNow->surface(), -1 * focusNow->inputTransformation().map(focusNow->pos()) + focusNow->pos());
-    m_focusGeometryConnection = connect(focusNow, &Toplevel::frameGeometryChanged, this,
+    m_focusGeometryConnection = connect(focusNow, &AbstractClient::frameGeometryChanged, this,
         [this] {
             if (!focus()) {
                 return;

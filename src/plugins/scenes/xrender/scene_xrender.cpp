@@ -79,7 +79,7 @@ bool SceneXrender::initFailed() const
 }
 
 // the entry point for painting
-void SceneXrender::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels,
+void SceneXrender::paint(int screenId, const QRegion &damage, const QList<AbstractClient *> &toplevels,
                          RenderLoop *renderLoop)
 {
     painted_screen = screenId;
@@ -120,7 +120,7 @@ void SceneXrender::paintBackground(const QRegion &region)
     xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, xrenderBufferPicture(), col, rects.count(), rects.data());
 }
 
-Scene::Window *SceneXrender::createWindow(Toplevel *toplevel)
+Scene::Window *SceneXrender::createWindow(AbstractClient *toplevel)
 {
     return new Window(toplevel, this);
 }
@@ -130,7 +130,7 @@ Scene::EffectFrame *SceneXrender::createEffectFrame(EffectFrameImpl *frame)
     return new SceneXrender::EffectFrame(frame);
 }
 
-Shadow *SceneXrender::createShadow(Toplevel *toplevel)
+Shadow *SceneXrender::createShadow(AbstractClient *toplevel)
 {
     return new SceneXRenderShadow(toplevel);
 }
@@ -153,7 +153,7 @@ XRenderPicture *SceneXrender::Window::s_tempPicture = nullptr;
 QRect SceneXrender::Window::temp_visibleRect;
 XRenderPicture *SceneXrender::Window::s_fadeAlphaPicture = nullptr;
 
-SceneXrender::Window::Window(Toplevel* c, SceneXrender *scene)
+SceneXrender::Window::Window(AbstractClient* c, SceneXrender *scene)
     : Scene::Window(c)
     , m_scene(scene)
 {
@@ -915,7 +915,7 @@ void SceneXrender::EffectFrame::updateTextPicture()
     m_textPicture = new XRenderPicture(pixmap.toImage());
 }
 
-SceneXRenderShadow::SceneXRenderShadow(Toplevel *toplevel)
+SceneXRenderShadow::SceneXRenderShadow(AbstractClient *toplevel)
     :Shadow(toplevel)
 {
     for (int i=0; i<ShadowElementsCount; ++i) {

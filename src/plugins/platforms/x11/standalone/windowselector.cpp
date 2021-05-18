@@ -43,7 +43,7 @@ WindowSelector::~WindowSelector()
 {
 }
 
-void WindowSelector::start(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
+void WindowSelector::start(std::function<void(KWin::AbstractClient*)> callback, const QByteArray &cursorName)
 {
     if (m_active) {
         callback(nullptr);
@@ -219,7 +219,7 @@ void WindowSelector::release()
     xcb_ungrab_pointer(connection(), XCB_TIME_CURRENT_TIME);
     ungrabXServer();
     m_active = false;
-    m_callback = std::function<void(KWin::Toplevel*)>();
+    m_callback = std::function<void(KWin::AbstractClient*)>();
     m_pointSelectionFallback = std::function<void(const QPoint&)>();
 }
 

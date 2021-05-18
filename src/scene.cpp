@@ -317,7 +317,7 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
     // Traverse the scene windows from bottom to top.
     for (int i = 0; i < stacking_order.count(); ++i) {
         Window *window = stacking_order[i];
-        Toplevel *toplevel = window->window();
+        AbstractClient *toplevel = window->window();
         WindowPrePaintData data;
         data.mask = orig_mask | (window->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT);
         window->resetPaintingEnabled();
@@ -456,26 +456,26 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
     }
 }
 
-void Scene::addToplevel(Toplevel *c)
+void Scene::addToplevel(AbstractClient *c)
 {
     Q_ASSERT(!m_windows.contains(c));
     Scene::Window *w = createWindow(c);
     m_windows[ c ] = w;
 
-    connect(c, &Toplevel::windowClosed, this, &Scene::windowClosed);
+    connect(c, &AbstractClient::windowClosed, this, &Scene::windowClosed);
 
     c->effectWindow()->setSceneWindow(w);
     c->updateShadow();
 }
 
-void Scene::removeToplevel(Toplevel *toplevel)
+void Scene::removeToplevel(AbstractClient *toplevel)
 {
     Q_ASSERT(m_windows.contains(toplevel));
     delete m_windows.take(toplevel);
     toplevel->effectWindow()->setSceneWindow(nullptr);
 }
 
-void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
+void Scene::windowClosed(AbstractClient *toplevel, Deleted *deleted)
 {
     if (!deleted) {
         removeToplevel(toplevel);
@@ -491,10 +491,10 @@ void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
     m_windows[deleted] = window;
 }
 
-void Scene::createStackingOrder(const QList<Toplevel *> &toplevels)
+void Scene::createStackingOrder(const QList<AbstractClient *> &toplevels)
 {
     // TODO: cache the stacking_order in case it has not changed
-    foreach (Toplevel *c, toplevels) {
+    foreach (AbstractClient *c, toplevels) {
         Q_ASSERT(m_windows.contains(c));
         stacking_order.append(m_windows[ c ]);
     }
@@ -755,7 +755,7 @@ PlatformSurfaceTexture *Scene::createPlatformSurfaceTextureWayland(SurfacePixmap
 // Scene::Window
 //****************************************
 
-Scene::Window::Window(Toplevel *client, QObject *parent)
+Scene::Window::Window(AbstractClient *client, QObject *parent)
     : QObject(parent)
     , toplevel(client)
     , filter(ImageFilterFast)
@@ -772,7 +772,7 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
         Q_UNREACHABLE();
     }
 
-    connect(toplevel, &Toplevel::frameGeometryChanged, this, &Window::updateWindowPosition);
+    connect(toplevel, &AbstractClient::frameGeometryChanged, this, &Window::updateWindowPosition);
     updateWindowPosition();
 }
 

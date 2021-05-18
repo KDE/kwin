@@ -14,12 +14,12 @@ namespace KWin
 DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Scene::Window *window, Item *parent)
     : Item(window, parent)
 {
-    Toplevel *toplevel = window->window();
+    AbstractClient *toplevel = window->window();
 
-    connect(toplevel, &Toplevel::frameGeometryChanged,
+    connect(toplevel, &AbstractClient::frameGeometryChanged,
             this, &DecorationItem::handleFrameGeometryChanged);
 
-    connect(toplevel, &Toplevel::screenScaleChanged,
+    connect(toplevel, &AbstractClient::screenScaleChanged,
             this, &DecorationItem::discardQuads);
     connect(decoration, &KDecoration2::Decoration::bordersChanged,
             this, &DecorationItem::discardQuads);

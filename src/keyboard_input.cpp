@@ -125,7 +125,7 @@ void KeyboardInputRedirection::init()
         [this] {
             disconnect(m_activeClientSurfaceChangedConnection);
             if (auto c = workspace()->activeClient()) {
-                m_activeClientSurfaceChangedConnection = connect(c, &Toplevel::surfaceChanged, this, &KeyboardInputRedirection::update);
+                m_activeClientSurfaceChangedConnection = connect(c, &AbstractClient::surfaceChanged, this, &KeyboardInputRedirection::update);
             } else {
                 m_activeClientSurfaceChangedConnection = QMetaObject::Connection();
             }
@@ -144,14 +144,14 @@ void KeyboardInputRedirection::update()
     }
     auto seat = waylandServer()->seat();
     // TODO: this needs better integration
-    Toplevel *found = nullptr;
+    AbstractClient *found = nullptr;
     if (waylandServer()->isScreenLocked()) {
-        const QList<Toplevel *> &stacking = Workspace::self()->stackingOrder();
+        const QList<AbstractClient *> &stacking = Workspace::self()->stackingOrder();
         if (!stacking.isEmpty()) {
             auto it = stacking.end();
             do {
                 --it;
-                Toplevel *t = (*it);
+                AbstractClient *t = (*it);
                 if (t->isDeleted()) {
                     // a deleted window doesn't get mouse events
                     continue;

@@ -24,20 +24,20 @@ PopupInputFilter::PopupInputFilter()
     connect(workspace(), &Workspace::internalClientAdded, this, &PopupInputFilter::handleClientAdded);
 }
 
-void PopupInputFilter::handleClientAdded(Toplevel *client)
+void PopupInputFilter::handleClientAdded(AbstractClient *client)
 {
     if (m_popupClients.contains(client)) {
         return;
     }
     if (client->hasPopupGrab()) {
         // TODO: verify that the Toplevel is allowed as a popup
-        connect(client, &Toplevel::windowShown, this, &PopupInputFilter::handleClientAdded, Qt::UniqueConnection);
-        connect(client, &Toplevel::windowClosed, this, &PopupInputFilter::handleClientRemoved, Qt::UniqueConnection);
+        connect(client, &AbstractClient::windowShown, this, &PopupInputFilter::handleClientAdded, Qt::UniqueConnection);
+        connect(client, &AbstractClient::windowClosed, this, &PopupInputFilter::handleClientRemoved, Qt::UniqueConnection);
         m_popupClients << client;
     }
 }
 
-void PopupInputFilter::handleClientRemoved(Toplevel *client)
+void PopupInputFilter::handleClientRemoved(AbstractClient *client)
 {
     m_popupClients.removeOne(client);
 }

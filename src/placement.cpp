@@ -608,7 +608,7 @@ void Placement::cascadeDesktop()
     Workspace *ws = Workspace::self();
     const int desktop = VirtualDesktopManager::self()->current();
     reinitCascading(desktop);
-    foreach (Toplevel *client, ws->stackingOrder()) {
+    foreach (AbstractClient *client, ws->stackingOrder()) {
         if (!client ||
                 (!client->isOnCurrentDesktop()) ||
                 (client->isMinimized())         ||

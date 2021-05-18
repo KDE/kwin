@@ -614,7 +614,7 @@ static SurfaceItem *findTopMostSurface(SurfaceItem *item)
     }
 }
 
-void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels,
+void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<AbstractClient *> &toplevels,
                         RenderLoop *renderLoop)
 {
     if (m_resetOccurred) {
@@ -647,7 +647,7 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
         SurfaceItem *fullscreenSurface = nullptr;
         for (int i = stacking_order.count() - 1; i >=0; i--) {
             Window *window = stacking_order[i];
-            Toplevel *toplevel = window->window();
+            AbstractClient *toplevel = window->window();
             if (toplevel->isOnScreen(screenId) && window->isVisible() && toplevel->opacity() > 0) {
                 if (!toplevel->isFullScreen()) {
                     break;
@@ -895,7 +895,7 @@ Scene::EffectFrame *SceneOpenGL::createEffectFrame(EffectFrameImpl *frame)
     return new SceneOpenGL::EffectFrame(frame, this);
 }
 
-Shadow *SceneOpenGL::createShadow(Toplevel *toplevel)
+Shadow *SceneOpenGL::createShadow(AbstractClient *toplevel)
 {
     return new SceneOpenGLShadow(toplevel);
 }
@@ -1079,7 +1079,7 @@ void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
     vbo->render(GL_TRIANGLES);
 }
 
-Scene::Window *SceneOpenGL2::createWindow(Toplevel *t)
+Scene::Window *SceneOpenGL2::createWindow(AbstractClient *t)
 {
     return new OpenGLWindow(t, this);
 }
@@ -1114,7 +1114,7 @@ void SceneOpenGL2::performPaintWindow(EffectWindowImpl* w, int mask, const QRegi
 // OpenGLWindow
 //****************************************
 
-OpenGLWindow::OpenGLWindow(Toplevel *toplevel, SceneOpenGL *scene)
+OpenGLWindow::OpenGLWindow(AbstractClient *toplevel, SceneOpenGL *scene)
     : Scene::Window(toplevel)
     , m_scene(scene)
 {
@@ -2136,7 +2136,7 @@ QSharedPointer<GLTexture> DecorationShadowTextureCache::getTexture(SceneOpenGLSh
     return d.texture;
 }
 
-SceneOpenGLShadow::SceneOpenGLShadow(Toplevel *toplevel)
+SceneOpenGLShadow::SceneOpenGLShadow(AbstractClient *toplevel)
     : Shadow(toplevel)
 {
 }

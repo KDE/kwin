@@ -363,7 +363,7 @@ void X11StandalonePlatform::doShowCursor()
     xcb_xfixes_show_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
 }
 
-void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
+void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::AbstractClient*)> callback, const QByteArray &cursorName)
 {
     if (m_windowSelector.isNull()) {
         m_windowSelector.reset(new WindowSelector);

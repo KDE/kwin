@@ -14,9 +14,9 @@ namespace KWin
 SurfaceItemInternal::SurfaceItemInternal(Scene::Window *window, Item *parent)
     : SurfaceItem(window, parent)
 {
-    Toplevel *toplevel = window->window();
+    AbstractClient *toplevel = window->window();
 
-    connect(toplevel, &Toplevel::bufferGeometryChanged,
+    connect(toplevel, &AbstractClient::bufferGeometryChanged,
             this, &SurfaceItemInternal::handleBufferGeometryChanged);
 
     setSize(toplevel->bufferGeometry().size());
@@ -37,7 +37,7 @@ SurfacePixmap *SurfaceItemInternal::createPixmap()
     return new SurfacePixmapInternal(this);
 }
 
-void SurfaceItemInternal::handleBufferGeometryChanged(Toplevel *toplevel, const QRect &old)
+void SurfaceItemInternal::handleBufferGeometryChanged(AbstractClient *toplevel, const QRect &old)
 {
     if (toplevel->bufferGeometry().size() != old.size()) {
         discardPixmap();
@@ -68,7 +68,7 @@ void SurfacePixmapInternal::create()
 
 void SurfacePixmapInternal::update()
 {
-    const Toplevel *toplevel = m_item->window()->window();
+    const AbstractClient *toplevel = m_item->window()->window();
 
     if (toplevel->internalFramebufferObject()) {
         m_fbo = toplevel->internalFramebufferObject();

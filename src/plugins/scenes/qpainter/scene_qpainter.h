@@ -25,13 +25,13 @@ class KWIN_EXPORT SceneQPainter : public Scene
 public:
     ~SceneQPainter() override;
     OverlayWindow* overlayWindow() const override;
-    void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
+    void paint(int screenId, const QRegion &damage, const QList<AbstractClient *> &windows,
                RenderLoop *renderLoop) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     CompositingType compositingType() const override;
     bool initFailed() const override;
     EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
-    Shadow *createShadow(Toplevel *toplevel) override;
+    Shadow *createShadow(AbstractClient *toplevel) override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     void screenGeometryChanged(const QSize &size) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
@@ -52,7 +52,7 @@ public:
 
 protected:
     void paintBackground(const QRegion &region) override;
-    Scene::Window *createWindow(Toplevel *toplevel) override;
+    Scene::Window *createWindow(AbstractClient *toplevel) override;
     void paintCursor(const QRegion &region) override;
     void paintEffectQuickView(EffectQuickView *w) override;
 
@@ -68,7 +68,7 @@ class SceneQPainter::Window : public Scene::Window
     Q_OBJECT
 
 public:
-    Window(SceneQPainter *scene, Toplevel *c);
+    Window(SceneQPainter *scene, AbstractClient *c);
     ~Window() override;
     void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
 private:
@@ -97,7 +97,7 @@ private:
 class SceneQPainterShadow : public Shadow
 {
 public:
-    SceneQPainterShadow(Toplevel* toplevel);
+    SceneQPainterShadow(AbstractClient* toplevel);
     ~SceneQPainterShadow() override;
 
     QImage &shadowTexture() {

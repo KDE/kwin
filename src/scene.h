@@ -74,7 +74,7 @@ public:
     // The entry point for the main part of the painting pass.
     // returns the time since the last vblank signal - if there's one
     // ie. "what of this frame is lost to painting"
-    virtual void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
+    virtual void paint(int screenId, const QRegion &damage, const QList<AbstractClient *> &windows,
                        RenderLoop *renderLoop) = 0;
 
     /**
@@ -86,7 +86,7 @@ public:
      * @param toplevel The window to be added.
      * @note You can add a toplevel to scene only once.
      */
-    void addToplevel(Toplevel *toplevel);
+    void addToplevel(AbstractClient *toplevel);
 
     /**
      * Removes the Toplevel from the Scene.
@@ -94,7 +94,7 @@ public:
      * @param toplevel The window to be removed.
      * @note You can remove a toplevel from the scene only once.
      */
-    void removeToplevel(Toplevel *toplevel);
+    void removeToplevel(AbstractClient *toplevel);
 
     /**
      * @brief Creates the Scene backend of an EffectFrame.
@@ -110,7 +110,7 @@ public:
      *
      * @param toplevel The Toplevel for which the Shadow needs to be created.
      */
-    virtual Shadow *createShadow(Toplevel *toplevel) = 0;
+    virtual Shadow *createShadow(AbstractClient *toplevel) = 0;
     /**
      * Method invoked when the screen geometry is changed.
      * Reimplementing classes should also invoke the parent method
@@ -208,10 +208,10 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     // a window has been closed
-    void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
+    void windowClosed(KWin::AbstractClient* c, KWin::Deleted* deleted);
 protected:
-    virtual Window *createWindow(Toplevel *toplevel) = 0;
-    void createStackingOrder(const QList<Toplevel *> &toplevels);
+    virtual Window *createWindow(AbstractClient *toplevel) = 0;
+    void createStackingOrder(const QList<AbstractClient *> &toplevels);
     void clearStackingOrder();
     // shared implementation, starts painting the screen
     void paintScreen(int *mask, const QRegion &damage, const QRegion &repaint,
@@ -277,7 +277,7 @@ private:
     void paintDesktopThumbnails(Scene::Window *w);
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     void reallocRepaints();
-    QHash< Toplevel*, Window* > m_windows;
+    QHash< AbstractClient*, Window* > m_windows;
     QVector<QRegion> m_repaints;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
@@ -307,7 +307,7 @@ class Scene::Window : public QObject
     Q_OBJECT
 
 public:
-    explicit Window(Toplevel *client, QObject *parent = nullptr);
+    explicit Window(AbstractClient *client, QObject *parent = nullptr);
     ~Window() override;
     // perform the actual painting of the window
     virtual void performPaint(int mask, const QRegion &region, const WindowPaintData &data) = 0;
@@ -321,7 +321,7 @@ public:
     QRect rect() const;
     // access to the internal window class
     // TODO eventually get rid of this
-    Toplevel* window() const;
+    AbstractClient* window() const;
     // should the window be painted
     bool isPaintingEnabled() const;
     void resetPaintingEnabled();

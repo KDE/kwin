@@ -169,7 +169,7 @@ bool Dnd::handleClientMessage(xcb_client_message_event_t *event)
     return false;
 }
 
-DragEventReply Dnd::dragMoveFilter(Toplevel *target, const QPoint &pos)
+DragEventReply Dnd::dragMoveFilter(AbstractClient *target, const QPoint &pos)
 {
     // This filter only is used when a drag is in process.
     Q_ASSERT(m_currentDrag);

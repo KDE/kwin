@@ -596,11 +596,11 @@ void Compositor::composite(RenderLoop *renderLoop)
     fTraceDuration("Paint (", screens()->name(screenId), ")");
 
     // Create a list of all windows in the stacking order
-    QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
+    QList<AbstractClient *> windows = Workspace::self()->xStackingOrder();
 
     // Move elevated windows to the top of the stacking order
     for (EffectWindow *c : static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows()) {
-        Toplevel *t = static_cast<EffectWindowImpl *>(c)->window();
+        AbstractClient *t = static_cast<EffectWindowImpl *>(c)->window();
         windows.removeAll(t);
         windows.append(t);
     }
@@ -611,7 +611,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     // TODO? This cannot be used so carelessly - needs protections against broken clients, the
     // window should not get focus before it's displayed, handle unredirected windows properly and
     // so on.
-    for (Toplevel *win : windows) {
+    for (AbstractClient *win : windows) {
         if (!win->readyForPainting()) {
             windows.removeAll(win);
         }
@@ -631,7 +631,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         const std::chrono::milliseconds frameTime =
                 std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->lastPresentationTimestamp());
 
-        for (Toplevel *window : qAsConst(windows)) {
+        for (AbstractClient *window : qAsConst(windows)) {
             if (!window->readyForPainting()) {
                 continue;
             }
@@ -781,12 +781,12 @@ void X11Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
-    QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
+    QList<AbstractClient *> windows = Workspace::self()->xStackingOrder();
     QList<SurfaceItemX11 *> dirtyItems;
 
     // Reset the damage state of each window and fetch the damage region
     // without waiting for a reply
-    for (Toplevel *window : qAsConst(windows)) {
+    for (AbstractClient *window : qAsConst(windows)) {
         SurfaceItemX11 *surfaceItem = static_cast<SurfaceItemX11 *>(window->surfaceItem());
         if (surfaceItem->fetchDamage()) {
             dirtyItems.append(surfaceItem);

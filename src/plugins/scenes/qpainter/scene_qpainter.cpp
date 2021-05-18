@@ -85,7 +85,7 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
     m_painter->restore();
 }
 
-void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<Toplevel *> &toplevels,
+void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<AbstractClient *> &toplevels,
                           RenderLoop *renderLoop)
 {
     Q_ASSERT(kwinApp()->platform()->isPerScreenRenderingEnabled());
@@ -159,7 +159,7 @@ void SceneQPainter::paintEffectQuickView(EffectQuickView *w)
     painter->drawImage(w->geometry(), buffer);
 }
 
-Scene::Window *SceneQPainter::createWindow(Toplevel *toplevel)
+Scene::Window *SceneQPainter::createWindow(AbstractClient *toplevel)
 {
     return new SceneQPainter::Window(this, toplevel);
 }
@@ -169,7 +169,7 @@ Scene::EffectFrame *SceneQPainter::createEffectFrame(EffectFrameImpl *frame)
     return new QPainterEffectFrame(frame, this);
 }
 
-Shadow *SceneQPainter::createShadow(Toplevel *toplevel)
+Shadow *SceneQPainter::createShadow(AbstractClient *toplevel)
 {
     return new SceneQPainterShadow(toplevel);
 }
@@ -188,7 +188,7 @@ QImage *SceneQPainter::qpainterRenderBuffer(int screenId) const
 //****************************************
 // SceneQPainter::Window
 //****************************************
-SceneQPainter::Window::Window(SceneQPainter *scene, Toplevel *c)
+SceneQPainter::Window::Window(SceneQPainter *scene, AbstractClient *c)
     : Scene::Window(c)
     , m_scene(scene)
 {
@@ -433,7 +433,7 @@ void QPainterEffectFrame::render(const QRegion &region, double opacity, double f
 //****************************************
 // QPainterShadow
 //****************************************
-SceneQPainterShadow::SceneQPainterShadow(Toplevel* toplevel)
+SceneQPainterShadow::SceneQPainterShadow(AbstractClient* toplevel)
     : Shadow(toplevel)
 {
 }

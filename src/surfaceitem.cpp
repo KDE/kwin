@@ -34,7 +34,7 @@ void SurfaceItem::addDamage(const QRegion &region)
     m_damage += region;
     scheduleRepaint(region);
 
-    Toplevel *toplevel = window()->window();
+    AbstractClient *toplevel = window()->window();
     emit toplevel->damaged(toplevel, region);
 }
 

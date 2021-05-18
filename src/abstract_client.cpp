@@ -105,7 +105,7 @@ AbstractClient::AbstractClient()
 
     // replace on-screen-display on size changes
     connect(this, &AbstractClient::frameGeometryChanged, this,
-        [this] (Toplevel *c, const QRect &old) {
+        [this] (AbstractClient *c, const QRect &old) {
             Q_UNUSED(c)
             if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && isPlaceable()) {
                 GeometryUpdatesBlocker blocker(this);
@@ -2346,7 +2346,7 @@ void AbstractClient::createDecoration(const QRect &oldGeometry)
     KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
     if (decoration) {
         QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
-        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
+        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &AbstractClient::updateShadow);
         connect(decoration, &KDecoration2::Decoration::bordersChanged,
                 this, &AbstractClient::updateDecorationInputShape);
         connect(decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged,

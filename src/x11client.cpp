@@ -1024,7 +1024,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
     KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
     if (decoration) {
         QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
-        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
+        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &AbstractClient::updateShadow);
         connect(decoration, &KDecoration2::Decoration::bordersChanged,
                 this, &X11Client::updateDecorationInputShape);
         connect(decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged,
@@ -1351,7 +1351,7 @@ void X11Client::hideClient(bool hide)
 
 bool X11Client::setupCompositing()
 {
-    if (!Toplevel::setupCompositing()){
+    if (!AbstractClient::setupCompositing()){
         return false;
     }
     updateVisibility(); // for internalKeep()
@@ -1360,7 +1360,7 @@ bool X11Client::setupCompositing()
 
 void X11Client::finishCompositing(ReleaseReason releaseReason)
 {
-    Toplevel::finishCompositing(releaseReason);
+    AbstractClient::finishCompositing(releaseReason);
     updateVisibility();
     // for safety in case KWin is just resizing the window
     resetHaveResizeEffect();
@@ -1476,7 +1476,7 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
         if ((shadeMode() == ShadeHover || shadeMode() == ShadeActivated) && rules()->checkAcceptFocus(info->input()))
             setActive(true);
         if (shadeMode() == ShadeHover) {
-            QList<Toplevel *> order = workspace()->stackingOrder();
+            QList<AbstractClient *> order = workspace()->stackingOrder();
             // invalidate, since "this" could be the topmost toplevel and shade_below dangeling
             shade_below = nullptr;
             // this is likely related to the index parameter?!

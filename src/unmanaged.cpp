@@ -43,7 +43,7 @@ Unmanaged::Unmanaged()
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeXwayland:
         // The wayland surface is associated with the override-redirect window asynchronously.
-        connect(this, &Toplevel::surfaceChanged, this, &Unmanaged::associate);
+        connect(this, &AbstractClient::surfaceChanged, this, &Unmanaged::associate);
         break;
     case Application::OperationModeX11:
         // We have no way knowing whether the override-redirect window can be painted. Mark it

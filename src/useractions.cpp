@@ -1471,7 +1471,7 @@ bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curP
     AbstractClient *switchTo = nullptr;
     int bestScore = 0;
 
-    const QList<Toplevel *> clist = stackingOrder();
+    const QList<AbstractClient *> clist = stackingOrder();
     for (auto i = clist.rbegin(); i != clist.rend(); ++i) {
         auto client = *i;
         if (client->wantsTabFocus() && *i != c &&

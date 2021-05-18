@@ -601,7 +601,7 @@ void Workspace::unconstrain(AbstractClient *below, AbstractClient *above)
     updateStackingOrder();
 }
 
-void Workspace::addToStack(Toplevel *toplevel)
+void Workspace::addToStack(AbstractClient *toplevel)
 {
     // If the stacking order of a window has been restored from the session, that
     // toplevel will already be in the stack when Workspace::addClient() is called.
@@ -613,7 +613,7 @@ void Workspace::addToStack(Toplevel *toplevel)
     }
 }
 
-void Workspace::replaceInStack(Toplevel *original, Deleted *deleted)
+void Workspace::replaceInStack(AbstractClient *original, Deleted *deleted)
 {
     const int unconstraintedIndex = unconstrained_stacking_order.indexOf(original);
     if (unconstraintedIndex != -1) {
@@ -640,7 +640,7 @@ void Workspace::replaceInStack(Toplevel *original, Deleted *deleted)
     }
 }
 
-void Workspace::removeFromStack(Toplevel *toplevel)
+void Workspace::removeFromStack(AbstractClient *toplevel)
 {
     unconstrained_stacking_order.removeAll(toplevel);
     stacking_order.removeAll(toplevel);
@@ -773,7 +773,7 @@ void Workspace::removeUnmanaged(Unmanaged* c)
     markXStackingOrderAsDirty();
 }
 
-void Workspace::addDeleted(Deleted* c, Toplevel *orig)
+void Workspace::addDeleted(Deleted* c, AbstractClient *orig)
 {
     Q_ASSERT(!deleted.contains(c));
     deleted.append(c);
@@ -1773,7 +1773,7 @@ QString Workspace::supportInformation() const
 
 X11Client *Workspace::findClient(std::function<bool (const X11Client *)> func) const
 {
-    if (X11Client *ret = Toplevel::findInList(m_x11Clients, func)) {
+    if (X11Client *ret = AbstractClient::findInList(m_x11Clients, func)) {
         return ret;
     }
     return nullptr;
@@ -1781,10 +1781,10 @@ X11Client *Workspace::findClient(std::function<bool (const X11Client *)> func) c
 
 AbstractClient *Workspace::findAbstractClient(std::function<bool (const AbstractClient*)> func) const
 {
-    if (AbstractClient *ret = Toplevel::findInList(m_allClients, func)) {
+    if (AbstractClient *ret = AbstractClient::findInList(m_allClients, func)) {
         return ret;
     }
-    if (InternalClient *ret = Toplevel::findInList(m_internalClients, func)) {
+    if (InternalClient *ret = AbstractClient::findInList(m_internalClients, func)) {
         return ret;
     }
     return nullptr;
@@ -1797,7 +1797,7 @@ AbstractClient *Workspace::findAbstractClient(const QUuid &internalId) const
 
 Unmanaged *Workspace::findUnmanaged(std::function<bool (const Unmanaged*)> func) const
 {
-    return Toplevel::findInList(m_unmanaged, func);
+    return AbstractClient::findInList(m_unmanaged, func);
 }
 
 Unmanaged *Workspace::findUnmanaged(xcb_window_t w) const
@@ -1830,28 +1830,28 @@ X11Client *Workspace::findClient(Predicate predicate, xcb_window_t w) const
     return nullptr;
 }
 
-Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) const
+AbstractClient *Workspace::findToplevel(std::function<bool (const AbstractClient*)> func) const
 {
-    if (auto *ret = Toplevel::findInList(m_allClients, func)) {
+    if (auto *ret = AbstractClient::findInList(m_allClients, func)) {
         return ret;
     }
-    if (Unmanaged *ret = Toplevel::findInList(m_unmanaged, func)) {
+    if (Unmanaged *ret = AbstractClient::findInList(m_unmanaged, func)) {
         return ret;
     }
-    if (InternalClient *ret = Toplevel::findInList(m_internalClients, func)) {
+    if (InternalClient *ret = AbstractClient::findInList(m_internalClients, func)) {
         return ret;
     }
     return nullptr;
 }
 
-Toplevel *Workspace::findToplevel(const QUuid &internalId) const
+AbstractClient *Workspace::findToplevel(const QUuid &internalId) const
 {
-    return findToplevel([internalId] (const KWin::Toplevel* l) -> bool {
+    return findToplevel([internalId] (const KWin::AbstractClient* l) -> bool {
         return internalId == l->internalId();
     });
 }
 
-void Workspace::forEachToplevel(std::function<void (Toplevel *)> func)
+void Workspace::forEachToplevel(std::function<void (AbstractClient *)> func)
 {
     std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
     std::for_each(deleted.constBegin(), deleted.constEnd(), func);
@@ -1877,7 +1877,7 @@ void Workspace::forEachAbstractClient(std::function< void (AbstractClient*) > fu
     std::for_each(m_internalClients.constBegin(), m_internalClients.constEnd(), func);
 }
 
-Toplevel *Workspace::findInternal(QWindow *w) const
+AbstractClient *Workspace::findInternal(QWindow *w) const
 {
     if (!w) {
         return nullptr;

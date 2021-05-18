@@ -272,9 +272,9 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient* cl
 
 TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
 {
-    QList<Toplevel *> stacking = Workspace::self()->stackingOrder();
+    QList<AbstractClient *> stacking = Workspace::self()->stackingOrder();
     TabBoxClientList ret;
-    foreach (Toplevel *client, stacking) {
+    foreach (AbstractClient *client, stacking) {
         ret.append(client->tabBoxClient());
     }
     return ret;
@@ -299,7 +299,7 @@ void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, QWindow *tabbox, bool b) 
 {
     auto cl = static_cast<TabBoxClientImpl*>(c)->client();
     cl->elevate(b);
-    if (Toplevel *w = Workspace::self()->findInternal(tabbox))
+    if (AbstractClient *w = Workspace::self()->findInternal(tabbox))
         w->elevate(b);
 }
 
@@ -315,7 +315,7 @@ void TabBoxHandlerImpl::shadeClient(TabBoxClient *c, bool b) const
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
-    foreach (Toplevel *client, Workspace::self()->stackingOrder()) {
+    foreach (AbstractClient *client, Workspace::self()->stackingOrder()) {
         if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->screen() == screens()->current()) {
             return client->tabBoxClient();
         }
@@ -337,7 +337,7 @@ void TabBoxHandlerImpl::highlightWindows(TabBoxClient *window, QWindow *controll
     if (window) {
         windows << static_cast<TabBoxClientImpl*>(window)->client()->effectWindow();
     }
-    if (Toplevel *t = workspace()->findInternal(controller)) {
+    if (AbstractClient *t = workspace()->findInternal(controller)) {
         windows << t->effectWindow();
     }
     static_cast<EffectsHandlerImpl*>(effects)->highlightWindows(windows);

@@ -32,10 +32,10 @@ public:
     CompositingType compositingType() const override {
         return XRenderCompositing;
     }
-    void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
+    void paint(int screenId, const QRegion &damage, const QList<AbstractClient *> &windows,
                RenderLoop *renderLoop) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
-    Shadow *createShadow(Toplevel *toplevel) override;
+    Shadow *createShadow(AbstractClient *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;
     xcb_render_picture_t xrenderBufferPicture() const override;
     OverlayWindow *overlayWindow() const override;
@@ -48,7 +48,7 @@ public:
 
     static SceneXrender *createScene(QObject *parent);
 protected:
-    Scene::Window *createWindow(Toplevel *toplevel) override;
+    Scene::Window *createWindow(AbstractClient *toplevel) override;
     void paintBackground(const QRegion &region) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
@@ -66,7 +66,7 @@ class SceneXrender::Window : public Scene::Window
     Q_OBJECT
 
 public:
-    Window(Toplevel* c, SceneXrender *scene);
+    Window(AbstractClient* c, SceneXrender *scene);
     ~Window() override;
     void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
     QRegion transformedShape() const;
@@ -136,7 +136,7 @@ class SceneXRenderShadow
     : public Shadow
 {
 public:
-    explicit SceneXRenderShadow(Toplevel *toplevel);
+    explicit SceneXRenderShadow(AbstractClient *toplevel);
     using Shadow::ShadowElements;
     using Shadow::ShadowElementTop;
     using Shadow::ShadowElementTopRight;

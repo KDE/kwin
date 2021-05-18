@@ -572,7 +572,7 @@ void InternalWindowTest::testSkipCloseAnimation()
     auto internalClient = clientAddedSpy.first().first().value<InternalClient *>();
     QVERIFY(internalClient);
     QCOMPARE(internalClient->skipsCloseAnimation(), initial);
-    QSignalSpy skipCloseChangedSpy(internalClient, &Toplevel::skipCloseAnimationChanged);
+    QSignalSpy skipCloseChangedSpy(internalClient, &AbstractClient::skipCloseAnimationChanged);
     QVERIFY(skipCloseChangedSpy.isValid());
     win.setProperty("KWIN_SKIP_CLOSE_ANIMATION", !initial);
     QCOMPARE(skipCloseChangedSpy.count(), 1);

@@ -226,7 +226,7 @@ QVariantMap DBusInterface::queryWindowInfo()
     m_replyQueryWindowInfo = message();
     setDelayedReply(true);
     kwinApp()->platform()->startInteractiveWindowSelection(
-        [this] (Toplevel *t) {
+        [this] (AbstractClient *t) {
             if (qobject_cast<Unmanaged*>(t)) {
                 QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
                     QStringLiteral("org.kde.KWin.Error.InvalidWindow"),

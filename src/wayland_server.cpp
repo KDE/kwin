@@ -577,7 +577,7 @@ void WaylandServer::initWorkspace()
             auto f = [this] () {
                 QVector<quint32> ids;
                 QVector<QString> uuids;
-                for (Toplevel *client : workspace()->stackingOrder()) {
+                for (AbstractClient *client : workspace()->stackingOrder()) {
                     if (client->windowManagementInterface()) {
                         ids << client->windowManagementInterface()->internalId();
                         uuids << client->windowManagementInterface()->uuid();

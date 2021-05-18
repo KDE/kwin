@@ -317,13 +317,13 @@ void TestMaximized::testMaximizedGainFocusAndBeActivated()
 
     QVERIFY(!client->isActive());
     QVERIFY(client2->isActive());
-    QCOMPARE(workspace()->stackingOrder(), (QList<Toplevel *>{client, client2}));
+    QCOMPARE(workspace()->stackingOrder(), (QList<AbstractClient *>{client, client2}));
 
     workspace()->performWindowOperation(client, Options::MaximizeOp);
 
     QVERIFY(client->isActive());
     QVERIFY(!client2->isActive());
-    QCOMPARE(workspace()->stackingOrder(), (QList<Toplevel *>{client2, client}));
+    QCOMPARE(workspace()->stackingOrder(), (QList<AbstractClient *>{client2, client}));
 
     xdgShellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));

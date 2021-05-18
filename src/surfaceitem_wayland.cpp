@@ -203,7 +203,7 @@ SurfaceItemXwayland::SurfaceItemXwayland(Scene::Window *window, Item *parent)
 
 QRegion SurfaceItemXwayland::shape() const
 {
-    const Toplevel *toplevel = window()->window();
+    const AbstractClient *toplevel = window()->window();
     if (window()->isShaded()) {
         return QRegion();
     }

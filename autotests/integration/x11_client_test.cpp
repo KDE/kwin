@@ -734,7 +734,7 @@ void X11ClientTest::testX11WindowId()
     QUuid deletedUuid;
     QCOMPARE(deletedUuid.isNull(), true);
 
-    connect(client, &X11Client::windowClosed, this, [&deletedUuid] (Toplevel *, Deleted *d) { deletedUuid = d->internalId(); });
+    connect(client, &X11Client::windowClosed, this, [&deletedUuid] (AbstractClient *, Deleted *d) { deletedUuid = d->internalId(); });
 
 
     NETRootInfo rootInfo(c.data(), NET::WMAllProperties);

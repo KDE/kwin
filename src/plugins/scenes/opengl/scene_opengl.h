@@ -35,10 +35,10 @@ public:
     class EffectFrame;
     ~SceneOpenGL() override;
     bool initFailed() const override;
-    void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
+    void paint(int screenId, const QRegion &damage, const QList<AbstractClient *> &windows,
                RenderLoop *renderLoop) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
-    Shadow *createShadow(Toplevel *toplevel) override;
+    Shadow *createShadow(AbstractClient *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;
     OverlayWindow *overlayWindow() const override;
     bool makeOpenGLContextCurrent() override;
@@ -113,7 +113,7 @@ protected:
     void paintSimpleScreen(int mask, const QRegion &region) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     void doPaintBackground(const QVector< float >& vertices) override;
-    Scene::Window *createWindow(Toplevel *t) override;
+    Scene::Window *createWindow(AbstractClient *t) override;
     void finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data) override;
     void updateProjectionMatrix() override;
     void paintCursor(const QRegion &region) override;
@@ -174,7 +174,7 @@ public:
         int quadCount = 0;
     };
 
-    OpenGLWindow(Toplevel *toplevel, SceneOpenGL *scene);
+    OpenGLWindow(AbstractClient *toplevel, SceneOpenGL *scene);
     ~OpenGLWindow() override;
 
     void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
@@ -243,7 +243,7 @@ class SceneOpenGLShadow
     : public Shadow
 {
 public:
-    explicit SceneOpenGLShadow(Toplevel *toplevel);
+    explicit SceneOpenGLShadow(AbstractClient *toplevel);
     ~SceneOpenGLShadow() override;
 
     GLTexture *shadowTexture() {

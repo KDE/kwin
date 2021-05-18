@@ -132,7 +132,7 @@ XToWlDrag::~XToWlDrag()
     m_dataSource = nullptr;
 }
 
-DragEventReply XToWlDrag::moveFilter(Toplevel *target, const QPoint &pos)
+DragEventReply XToWlDrag::moveFilter(AbstractClient *target, const QPoint &pos)
 {
     Q_UNUSED(pos);
 

@@ -355,7 +355,7 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(qulonglong frameId READ frameId)
 
     /**
-     * This property holds the geometry of the Toplevel, excluding invisible
+     * This property holds the geometry of the AbstractClient, excluding invisible
      * portions, e.g. client-side and server-side drop-shadows, etc.
      *
      * @deprecated Use frameGeometry property instead.
@@ -363,39 +363,39 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(QRect geometry READ frameGeometry NOTIFY frameGeometryChanged)
 
     /**
-     * This property holds rectangle that the pixmap or buffer of this Toplevel
+     * This property holds rectangle that the pixmap or buffer of this AbstractClient
      * occupies on the screen. This rectangle includes invisible portions of the
      * client, e.g. client-side drop shadows, etc.
      */
     Q_PROPERTY(QRect bufferGeometry READ bufferGeometry)
 
     /**
-     * This property holds the position of the Toplevel's frame geometry.
+     * This property holds the position of the AbstractClient's frame geometry.
      */
     Q_PROPERTY(QPoint pos READ pos)
 
     /**
-     * This property holds the size of the Toplevel's frame geometry.
+     * This property holds the size of the AbstractClient's frame geometry.
      */
     Q_PROPERTY(QSize size READ size)
 
     /**
-     * This property holds the x position of the Toplevel's frame geometry.
+     * This property holds the x position of the AbstractClient's frame geometry.
      */
     Q_PROPERTY(int x READ x)
 
     /**
-     * This property holds the y position of the Toplevel's frame geometry.
+     * This property holds the y position of the AbstractClient's frame geometry.
      */
     Q_PROPERTY(int y READ y)
 
     /**
-     * This property holds the width of the Toplevel's frame geometry.
+     * This property holds the width of the AbstractClient's frame geometry.
      */
     Q_PROPERTY(int width READ width)
 
     /**
-     * This property holds the height of the Toplevel's frame geometry.
+     * This property holds the height of the AbstractClient's frame geometry.
      */
     Q_PROPERTY(int height READ height)
 
@@ -514,13 +514,13 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(int windowType READ windowType)
 
     /**
-     * Whether this Toplevel is managed by KWin (it has control over its placement and other
+     * Whether this AbstractClient is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).
      */
     Q_PROPERTY(bool managed READ isClient CONSTANT)
 
     /**
-     * Whether this Toplevel represents an already deleted window and only kept for the compositor for animations.
+     * Whether this AbstractClient represents an already deleted window and only kept for the compositor for animations.
      */
     Q_PROPERTY(bool deleted READ isDeleted CONSTANT)
 
@@ -537,7 +537,7 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation WRITE setSkipCloseAnimation NOTIFY skipCloseAnimationChanged)
 
     /**
-     * The Id of the Wayland Surface associated with this Toplevel.
+     * The Id of the Wayland Surface associated with this AbstractClient.
      * On X11 only setups the value is @c 0.
      */
     Q_PROPERTY(quint32 surfaceId READ surfaceId NOTIFY surfaceIdChanged)
@@ -554,14 +554,14 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(bool popupWindow READ isPopupWindow)
 
     /**
-     * Whether this Toplevel represents the outline.
+     * Whether this AbstractClient represents the outline.
      *
      * @note It's always @c false if compositing is turned off.
      */
     Q_PROPERTY(bool outline READ isOutline)
 
     /**
-     * This property holds a UUID to uniquely identify this Toplevel.
+     * This property holds a UUID to uniquely identify this AbstractClient.
      */
     Q_PROPERTY(QUuid internalId READ internalId CONSTANT)
 
@@ -576,16 +576,16 @@ public:
     virtual xcb_window_t frameId() const;
     xcb_window_t window() const;
     /**
-     * Returns the geometry of the pixmap or buffer attached to this Toplevel.
+     * Returns the geometry of the pixmap or buffer attached to this AbstractClient.
      *
-     * For X11 clients, this method returns server-side geometry of the Toplevel.
+     * For X11 clients, this method returns server-side geometry of the AbstractClient.
      *
      * For Wayland clients, this method returns rectangle that the main surface
      * occupies on the screen, in global screen coordinates.
      */
     QRect bufferGeometry() const;
     /**
-     * Returns the geometry of the Toplevel, excluding invisible portions, e.g.
+     * Returns the geometry of the AbstractClient, excluding invisible portions, e.g.
      * server-side and client-side drop shadows, etc.
      */
     QRect frameGeometry() const;
@@ -603,7 +603,7 @@ public:
      */
     virtual QMargins frameMargins() const;
     /**
-     * The geometry of the Toplevel which accepts input events. This might be larger
+     * The geometry of the AbstractClient which accepts input events. This might be larger
      * than the actual geometry, e.g. to support resizing outside the window.
      *
      * Default implementation returns same as geometry.
@@ -747,13 +747,13 @@ public:
      */
     void updateShadow();
     /**
-     * Whether the Toplevel currently wants the shadow to be rendered. Default
+     * Whether the AbstractClient currently wants the shadow to be rendered. Default
      * implementation always returns @c true.
      */
     virtual bool wantsShadowToBeRendered() const;
 
     /**
-     * This method returns the area that the Toplevel window reports to be opaque.
+     * This method returns the area that the AbstractClient window reports to be opaque.
      * It is supposed to only provide valuable information if hasAlpha is @c true .
      * @see hasAlpha
      */
@@ -789,7 +789,7 @@ public:
      *
      * Normally this is only relevant for transient windows.
      *
-     * Once the popup grab ends (e.g. pointer press outside of any Toplevel of
+     * Once the popup grab ends (e.g. pointer press outside of any AbstractClient of
      * the client), the method popupDone should be invoked.
      *
      * The default implementation returns @c false.
@@ -800,7 +800,7 @@ public:
         return false;
     }
     /**
-     * This method should be invoked for Toplevels with a popup grab when
+     * This method should be invoked for AbstractClients with a popup grab when
      * the grab ends.
      *
      * The default implementation does nothing.
@@ -810,13 +810,13 @@ public:
     virtual void popupDone() {};
 
     /**
-     * @brief Finds the Toplevel matching the condition expressed in @p func in @p list.
+     * @brief Finds the AbstractClient matching the condition expressed in @p func in @p list.
      *
-     * The method is templated to operate on either a list of Toplevels or on a list of
-     * a subclass type of Toplevel.
+     * The method is templated to operate on either a list of AbstractClients or on a list of
+     * a subclass type of AbstractClient.
      * @param list The list to search in
      * @param func The condition function (compare std::find_if)
-     * @return T* The found Toplevel or @c null if there is no matching Toplevel
+     * @return T* The found AbstractClient or @c null if there is no matching AbstractClient
      */
     template <class T, class U>
     static T *findInList(const QList<T*> &list, std::function<bool (const U*)> func);
@@ -831,7 +831,7 @@ public:
     virtual bool isPopupWindow() const;
 
     /**
-     * A UUID to uniquely identify this Toplevel independent of windowing system.
+     * A UUID to uniquely identify this AbstractClient independent of windowing system.
      */
     QUuid internalId() const
     {
@@ -844,7 +844,7 @@ Q_SIGNALS:
     void damaged(KWin::AbstractClient* toplevel, const QRegion& damage);
     void inputTransformationChanged();
     /**
-     * This signal is emitted when the Toplevel's frame geometry changes.
+     * This signal is emitted when the AbstractClient's frame geometry changes.
      * @deprecated since 5.19, use frameGeometryChanged instead
      */
     void geometryChanged();
@@ -859,8 +859,8 @@ Q_SIGNALS:
      */
     void shapedChanged();
     /**
-     * Emitted whenever the Toplevel's screen changes. This can happen either in consequence to
-     * a screen being removed/added or if the Toplevel's geometry changes.
+     * Emitted whenever the AbstractClient's screen changes. This can happen either in consequence to
+     * a screen being removed/added or if the AbstractClient's geometry changes.
      * @since 4.11
      */
     void screenChanged();
@@ -876,7 +876,7 @@ Q_SIGNALS:
      */
     void windowClassChanged();
     /**
-     * Emitted when a Wayland Surface gets associated with this Toplevel.
+     * Emitted when a Wayland Surface gets associated with this AbstractClient.
      * @since 5.3
      */
     void surfaceIdChanged(quint32);
@@ -886,7 +886,7 @@ Q_SIGNALS:
     void hasAlphaChanged();
 
     /**
-     * Emitted whenever the Surface for this Toplevel changes.
+     * Emitted whenever the Surface for this AbstractClient changes.
      */
     void surfaceChanged();
 
@@ -904,15 +904,15 @@ Q_SIGNALS:
     void shadowChanged();
 
     /**
-     * This signal is emitted when the Toplevel's buffer geometry changes.
+     * This signal is emitted when the AbstractClient's buffer geometry changes.
      */
     void bufferGeometryChanged(KWin::AbstractClient *toplevel, const QRect &oldGeometry);
     /**
-     * This signal is emitted when the Toplevel's frame geometry changes.
+     * This signal is emitted when the AbstractClient's frame geometry changes.
      */
     void frameGeometryChanged(KWin::AbstractClient *toplevel, const QRect &oldGeometry);
     /**
-     * This signal is emitted when the Toplevel's client geometry has changed.
+     * This signal is emitted when the AbstractClient's client geometry has changed.
      */
     void clientGeometryChanged(KWin::AbstractClient *toplevel, const QRect &oldGeometry);
 
@@ -923,8 +923,8 @@ Q_SIGNALS:
 
 protected Q_SLOTS:
     /**
-     * Checks whether the screen number for this Toplevel changed and updates if needed.
-     * Any method changing the geometry of the Toplevel should call this method.
+     * Checks whether the screen number for this AbstractClient changed and updates if needed.
+     * Any method changing the geometry of the AbstractClient should call this method.
      */
     void checkScreen();
     void setupCheckScreenConnection();
@@ -1872,7 +1872,7 @@ protected:
     bool compositing() const;
 
     /**
-     * This function fetches the opaque region from this Toplevel.
+     * This function fetches the opaque region from this AbstractClient.
      * Will only be called on corresponding property changes and for initialization.
      */
     void getWmOpaqueRegion();
@@ -2342,8 +2342,6 @@ inline bool AbstractClient::isPopupWindow() const
         return false;
     }
 }
-
-using Toplevel = AbstractClient;
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const AbstractClient *toplevel);
 

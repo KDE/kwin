@@ -134,7 +134,7 @@ void TabletInputRedirection::cleanupInternalWindow(QWindow *old, QWindow *now)
     Q_UNUSED(now)
 }
 
-void TabletInputRedirection::focusUpdate(KWin::Toplevel *old, KWin::Toplevel *now)
+void TabletInputRedirection::focusUpdate(KWin::AbstractClient *old, KWin::AbstractClient *now)
 {
     Q_UNUSED(old)
     Q_UNUSED(now)

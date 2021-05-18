@@ -386,7 +386,7 @@ class EffectWindowImpl : public EffectWindow
 {
     Q_OBJECT
 public:
-    explicit EffectWindowImpl(Toplevel *toplevel);
+    explicit EffectWindowImpl(AbstractClient *toplevel);
     ~EffectWindowImpl() override;
 
     void enablePainting(int reason) override;
@@ -531,7 +531,7 @@ private Q_SLOTS:
     void desktopThumbnailDestroyed(QObject *object);
 private:
     void insertThumbnail(WindowThumbnailItem *item);
-    Toplevel* toplevel;
+    AbstractClient* toplevel;
     Scene::Window* sw; // This one is used only during paint pass.
     QHash<int, QVariant> dataMap;
     QHash<WindowThumbnailItem*, QPointer<EffectWindowImpl> > m_thumbnails;
@@ -660,7 +660,7 @@ EffectWindowGroupImpl::EffectWindowGroupImpl(Group* g)
 {
 }
 
-EffectWindow* effectWindow(Toplevel* w);
+EffectWindow* effectWindow(AbstractClient* w);
 EffectWindow* effectWindow(Scene::Window* w);
 
 inline
@@ -676,13 +676,13 @@ Scene::Window* EffectWindowImpl::sceneWindow()
 }
 
 inline
-const Toplevel* EffectWindowImpl::window() const
+const AbstractClient* EffectWindowImpl::window() const
 {
     return toplevel;
 }
 
 inline
-Toplevel* EffectWindowImpl::window()
+AbstractClient* EffectWindowImpl::window()
 {
     return toplevel;
 }
