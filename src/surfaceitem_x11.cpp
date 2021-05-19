@@ -37,7 +37,7 @@ SurfaceItemX11::~SurfaceItemX11()
 void SurfaceItemX11::processDamage()
 {
     m_isDamaged = true;
-    scheduleRepaint();
+    scheduleFrame();
 }
 
 bool SurfaceItemX11::fetchDamage()

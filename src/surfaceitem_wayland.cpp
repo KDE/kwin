@@ -90,7 +90,7 @@ void SurfaceItemWayland::handleSurfaceSizeChanged()
 void SurfaceItemWayland::handleSurfaceCommitted()
 {
     if (m_surface->hasFrameCallbacks()) {
-        scheduleRepaint();
+        scheduleFrame();
     }
 }
 

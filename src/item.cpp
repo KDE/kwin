@@ -364,7 +364,7 @@ void Item::scheduleRepaint(const QRegion &region)
     }
 }
 
-void Item::scheduleRepaint()
+void Item::scheduleFrame()
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         const QRect geometry = mapToGlobal(rect());

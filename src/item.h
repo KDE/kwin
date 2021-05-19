@@ -92,7 +92,7 @@ public:
     void stackChildren(const QList<Item *> &children);
 
     void scheduleRepaint(const QRegion &region);
-    void scheduleRepaint();
+    void scheduleFrame();
     QRegion repaints(int screen) const;
     void resetRepaints(int screen);
 
