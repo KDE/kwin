@@ -187,8 +187,8 @@ void OutputInterface::remove()
         displayPrivate->outputs.removeOne(this);
     }
 
-    d->globalRemove();
     Q_EMIT removed();
+    d->globalRemove();
 }
 
 QSize OutputInterface::pixelSize() const
