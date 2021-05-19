@@ -31,6 +31,9 @@ public:
     void resetDamage();
     QRegion damage() const;
 
+    void discardPixmap();
+    void updatePixmap();
+
     SurfacePixmap *pixmap() const;
     SurfacePixmap *previousPixmap() const;
 
@@ -42,9 +45,6 @@ protected:
 
     virtual SurfacePixmap *createPixmap() = 0;
     void preprocess() override;
-
-    void discardPixmap();
-    void updatePixmap();
 
     QRegion m_damage;
     QScopedPointer<SurfacePixmap> m_pixmap;

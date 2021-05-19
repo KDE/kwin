@@ -411,6 +411,7 @@ private:
 
     void updateInputShape();
     void updateServerGeometry();
+    void discardWindowPixmap();
     void updateWindowPixmap();
 
     xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,

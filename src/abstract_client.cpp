@@ -607,8 +607,6 @@ void AbstractClient::setShade(ShadeMode mode)
     GeometryUpdatesBlocker blocker(this);
 
     doSetShade(previousShadeMode);
-
-    discardWindowPixmap();
     updateWindowRules(Rules::Shade);
 
     emit shadeChanged();

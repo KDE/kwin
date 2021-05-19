@@ -824,40 +824,6 @@ void Scene::Window::unreferencePreviousPixmap_helper(SurfaceItem *item)
     }
 }
 
-void Scene::Window::discardPixmap()
-{
-    if (surfaceItem()) {
-        discardPixmap_helper(surfaceItem());
-    }
-}
-
-void Scene::Window::discardPixmap_helper(SurfaceItem *item)
-{
-    item->discardPixmap();
-
-    const QList<Item *> children = item->childItems();
-    for (Item *child : children) {
-        discardPixmap_helper(static_cast<SurfaceItem *>(child));
-    }
-}
-
-void Scene::Window::updatePixmap()
-{
-    if (surfaceItem()) {
-        updatePixmap_helper(surfaceItem());
-    }
-}
-
-void Scene::Window::updatePixmap_helper(SurfaceItem *item)
-{
-    item->updatePixmap();
-
-    const QList<Item *> children = item->childItems();
-    for (Item *child : children) {
-        updatePixmap_helper(static_cast<SurfaceItem *>(child));
-    }
-}
-
 QRegion Scene::Window::decorationShape() const
 {
     return QRegion(toplevel->rect()) - toplevel->transparentRect();

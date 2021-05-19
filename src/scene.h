@@ -311,9 +311,6 @@ public:
     ~Window() override;
     // perform the actual painting of the window
     virtual void performPaint(int mask, const QRegion &region, const WindowPaintData &data) = 0;
-    // do any cleanup needed when the window's composite pixmap is discarded
-    void discardPixmap();
-    void updatePixmap();
     int x() const;
     int y() const;
     int width() const;
@@ -374,9 +371,6 @@ protected:
     Toplevel* toplevel;
     ImageFilterType filter;
 private:
-    void discardPixmap_helper(SurfaceItem *item);
-    void updatePixmap_helper(SurfaceItem *item);
-
     void referencePreviousPixmap_helper(SurfaceItem *item);
     void unreferencePreviousPixmap_helper(SurfaceItem *item);
 

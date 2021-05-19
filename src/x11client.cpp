@@ -1500,6 +1500,7 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
     info->setState(isShown(false) ? NET::States() : NET::Hidden, NET::Hidden);
     updateVisibility();
     updateAllowedActions();
+    discardWindowPixmap();
 }
 
 void X11Client::updateVisibility()
@@ -4744,10 +4745,17 @@ void X11Client::damageNotifyEvent()
     }
 }
 
+void X11Client::discardWindowPixmap()
+{
+    if (auto item = surfaceItem()) {
+        item->discardPixmap();
+    }
+}
+
 void X11Client::updateWindowPixmap()
 {
-    if (effectWindow() && effectWindow()->sceneWindow()) {
-        effectWindow()->sceneWindow()->updatePixmap();
+    if (auto item = surfaceItem()) {
+        item->updatePixmap();
     }
 }
 

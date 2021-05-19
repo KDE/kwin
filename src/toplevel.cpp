@@ -282,12 +282,6 @@ void Toplevel::finishCompositing(ReleaseReason)
     }
 }
 
-void Toplevel::discardWindowPixmap()
-{
-    if (effectWindow() != nullptr && effectWindow()->sceneWindow() != nullptr)
-        effectWindow()->sceneWindow()->discardPixmap();
-}
-
 bool Toplevel::compositing() const
 {
     if (!Workspace::self()) {
