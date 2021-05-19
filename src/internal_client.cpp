@@ -469,7 +469,6 @@ void InternalClient::commitGeometry(const QRect &rect)
     m_frameGeometry = rect;
     m_bufferGeometry = m_clientGeometry;
 
-    addWorkspaceRepaint(visibleGeometry());
     updateGeometryBeforeUpdateBlocking();
     syncGeometryToInternalWindow();
 
