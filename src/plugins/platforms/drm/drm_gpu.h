@@ -13,6 +13,7 @@
 #include <qobject.h>
 #include <QVector>
 #include <QSocketNotifier>
+#include <QPointer>
 
 #include <epoxy/egl.h>
 
@@ -116,7 +117,7 @@ private:
     void tryAMS();
 
     DrmBackend* const m_backend;
-    AbstractEglBackend *m_eglBackend;
+    QPointer<AbstractEglBackend> m_eglBackend;
 
     const QString m_devNode;
     QSize m_cursorSize;
