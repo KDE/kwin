@@ -692,7 +692,7 @@ bool SceneQPainterShadow::prepareBackend()
 SceneQPainterDecorationRenderer::SceneQPainterDecorationRenderer(Decoration::DecoratedClientImpl *client)
     : Renderer(client)
 {
-    connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (AbstractClient::*)(const QRect&)>(&AbstractClient::addRepaint));
+    connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (AbstractClient::*)(const QRegion&)>(&AbstractClient::addRepaint));
 }
 
 SceneQPainterDecorationRenderer::~SceneQPainterDecorationRenderer() = default;

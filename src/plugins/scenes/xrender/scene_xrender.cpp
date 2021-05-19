@@ -1007,7 +1007,7 @@ SceneXRenderDecorationRenderer::SceneXRenderDecorationRenderer(Decoration::Decor
     : Renderer(client)
     , m_gc(XCB_NONE)
 {
-    connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (AbstractClient::*)(const QRect&)>(&AbstractClient::addRepaint));
+    connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (AbstractClient::*)(const QRegion&)>(&AbstractClient::addRepaint));
     for (int i = 0; i < int(DecorationPart::Count); ++i) {
         m_pixmaps[i] = XCB_PIXMAP_NONE;
         m_pictures[i] = nullptr;

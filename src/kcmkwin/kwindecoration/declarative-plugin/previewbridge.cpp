@@ -53,17 +53,6 @@ std::unique_ptr<DecoratedClientPrivate> PreviewBridge::createClient(DecoratedCli
     return ptr;
 }
 
-void PreviewBridge::update(Decoration *decoration, const QRect &geometry)
-{
-    Q_UNUSED(geometry)
-    auto it = std::find_if(m_previewItems.constBegin(), m_previewItems.constEnd(), [decoration](PreviewItem *item) {
-        return item->decoration() == decoration;
-    });
-    if (it != m_previewItems.constEnd()) {
-        (*it)->update();
-    }
-}
-
 std::unique_ptr<DecorationSettingsPrivate> PreviewBridge::settings(DecorationSettings *parent)
 {
     auto ptr = std::unique_ptr<PreviewSettings>(new PreviewSettings(parent));

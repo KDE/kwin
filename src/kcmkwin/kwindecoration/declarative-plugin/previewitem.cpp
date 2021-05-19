@@ -85,6 +85,7 @@ void PreviewItem::setDecoration(Decoration *deco)
     connect(m_decoration, &Decoration::bordersChanged, this, &PreviewItem::syncSize);
     connect(m_decoration, &Decoration::shadowChanged, this, &PreviewItem::syncSize);
     connect(m_decoration, &Decoration::shadowChanged, this, &PreviewItem::shadowChanged);
+    connect(m_decoration, &Decoration::damaged, this, [this]() { update(); });
     emit decorationChanged(m_decoration);
 }
 

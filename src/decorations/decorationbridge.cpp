@@ -258,16 +258,6 @@ std::unique_ptr<KDecoration2::DecorationSettingsPrivate> DecorationBridge::setti
     return std::unique_ptr<SettingsImpl>(new SettingsImpl(parent));
 }
 
-void DecorationBridge::update(KDecoration2::Decoration *decoration, const QRect &geometry)
-{
-    // TODO: remove check once all compositors implement it
-    if (AbstractClient *c = Workspace::self()->findAbstractClient([decoration] (const AbstractClient *client) { return client->decoration() == decoration; })) {
-        if (Renderer *renderer = c->decoratedClient()->renderer()) {
-            renderer->schedule(geometry);
-        }
-    }
-}
-
 KDecoration2::Decoration *DecorationBridge::createDecoration(AbstractClient *client)
 {
     if (m_noPlugin) {
