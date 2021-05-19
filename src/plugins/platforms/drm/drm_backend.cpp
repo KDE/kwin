@@ -648,13 +648,12 @@ QString DrmBackend::supportInformation() const
 DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
 {
 #if HAVE_GBM
-    // as the first GPU is assumed to always be the one used for scene rendering
-    // make sure we're on the right context:
-    m_gpus.at(0)->eglBackend()->makeCurrent();
-    return GbmDmaBuf::createBuffer(size, m_gpus.at(0)->gbmDevice());
-#else
-    return nullptr;
+    if (primaryGpu()->eglBackend() && primaryGpu()->gbmDevice()) {
+        primaryGpu()->eglBackend()->makeCurrent();
+        return GbmDmaBuf::createBuffer(size, primaryGpu()->gbmDevice());
+    }
 #endif
+    return nullptr;
 }
 
 DrmGpu *DrmBackend::primaryGpu() const
