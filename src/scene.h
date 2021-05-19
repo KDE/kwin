@@ -350,9 +350,6 @@ public:
     void updateToplevel(Deleted *deleted);
     // creates initial quad list for the window
     virtual WindowQuadList buildQuads(bool force = false) const;
-    void updateShadow(Shadow* shadow);
-    const Shadow* shadow() const;
-    Shadow* shadow();
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();
     void discardQuads();

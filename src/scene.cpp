@@ -470,7 +470,6 @@ void Scene::addToplevel(Toplevel *c)
 
     c->effectWindow()->setSceneWindow(w);
     c->updateShadow();
-    w->updateShadow(c->shadow());
 }
 
 void Scene::removeToplevel(Toplevel *toplevel)
@@ -490,8 +489,8 @@ void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
     Q_ASSERT(m_windows.contains(toplevel));
     Window *window = m_windows.take(toplevel);
     window->updateToplevel(deleted);
-    if (window->shadow()) {
-        window->shadow()->setToplevel(deleted);
+    if (window->shadowItem()) {
+        window->shadowItem()->shadow()->setToplevel(deleted);
     }
     m_windows[deleted] = window;
 }
@@ -1054,27 +1053,6 @@ WindowQuadList Scene::Window::makeContentsQuads() const
 void Scene::Window::discardQuads()
 {
     cached_quad_list.reset();
-}
-
-const Shadow *Scene::Window::shadow() const
-{
-    if (shadowItem()) {
-        return shadowItem()->shadow();
-    }
-    return nullptr;
-}
-
-Shadow *Scene::Window::shadow()
-{
-    if (shadowItem()) {
-        return shadowItem()->shadow();
-    }
-    return nullptr;
-}
-
-void Scene::Window::updateShadow(Shadow* shadow)
-{
-    m_windowItem->setShadow(shadow);
 }
 
 void Scene::Window::preprocess(Item *item)

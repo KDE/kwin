@@ -34,7 +34,9 @@
 #include "effects.h"
 #include "platform.h"
 #include "shadow.h"
+#include "shadowitem.h"
 #include "wayland_server.h"
+#include "windowitem.h"
 #include "workspace.h"
 
 Q_DECLARE_METATYPE(KWin::WindowQuadList);
@@ -638,8 +640,8 @@ void SceneOpenGLShadowTest::testShadowTileOverlaps()
     // Get shadow.
     QVERIFY(client->effectWindow());
     QVERIFY(client->effectWindow()->sceneWindow());
-    QVERIFY(client->effectWindow()->sceneWindow()->shadow());
-    auto *shadow = client->effectWindow()->sceneWindow()->shadow();
+    auto *shadow = client->windowItem()->shadowItem()->shadow();
+    QVERIFY(shadow);
 
     // Validate shadow quads.
     const WindowQuadList &quads = shadow->shadowQuads();
@@ -730,7 +732,7 @@ void SceneOpenGLShadowTest::testNoCornerShadowTiles()
 
     QVERIFY(client->effectWindow());
     QVERIFY(client->effectWindow()->sceneWindow());
-    KWin::Shadow *shadow = client->effectWindow()->sceneWindow()->shadow();
+    KWin::Shadow *shadow = client->windowItem()->shadowItem()->shadow();
     QVERIFY(shadow != nullptr);
 
     const WindowQuadList &quads = shadow->shadowQuads();
@@ -810,7 +812,7 @@ void SceneOpenGLShadowTest::testDistributeHugeCornerTiles()
 
     QVERIFY(client->effectWindow());
     QVERIFY(client->effectWindow()->sceneWindow());
-    KWin::Shadow *shadow = client->effectWindow()->sceneWindow()->shadow();
+    KWin::Shadow *shadow = client->windowItem()->shadowItem()->shadow();
     QVERIFY(shadow != nullptr);
 
     WindowQuadList expectedQuads;

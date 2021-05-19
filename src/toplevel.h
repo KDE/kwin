@@ -464,14 +464,6 @@ public:
     void elevate(bool elevate);
 
     /**
-     * Returns the pointer to the Toplevel's Shadow. A Shadow
-     * is only available if Compositing is enabled and the corresponding X window
-     * has the Shadow property set.
-     * @returns The Shadow belonging to this Toplevel, @c null if there's no Shadow.
-     */
-    const Shadow *shadow() const;
-    Shadow *shadow();
-    /**
      * Updates the Shadow associated with this Toplevel from X11 Property.
      * Call this method when the Property changes or Compositing is started.
      */

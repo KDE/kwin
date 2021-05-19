@@ -17,10 +17,12 @@
 #include "main.h"
 #include "renderloop.h"
 #include "screens.h"
+#include "shadowitem.h"
 #include "surfaceitem.h"
 #include "toplevel.h"
 #include "platform.h"
 #include "wayland_server.h"
+#include "windowitem.h"
 
 #include <kwineffectquickview.h>
 
@@ -287,10 +289,11 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
 
 void SceneQPainter::Window::renderShadow(QPainter* painter)
 {
-    if (!toplevel->shadow()) {
+    const ShadowItem *shadowItem = windowItem()->shadowItem();
+    if (!shadowItem) {
         return;
     }
-    SceneQPainterShadow *shadow = static_cast<SceneQPainterShadow *>(toplevel->shadow());
+    SceneQPainterShadow *shadow = static_cast<SceneQPainterShadow *>(shadowItem->shadow());
 
     const QImage &shadowTexture = shadow->shadowTexture();
     const WindowQuadList &shadowQuads = shadow->shadowQuads();

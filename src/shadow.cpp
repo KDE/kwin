@@ -12,8 +12,8 @@
 #include "atoms.h"
 #include "abstract_client.h"
 #include "composite.h"
-#include "effects.h"
 #include "internal_client.h"
+#include "scene.h"
 #include "toplevel.h"
 #include "wayland_server.h"
 
@@ -45,9 +45,6 @@ Shadow::~Shadow()
 
 Shadow *Shadow::createShadow(Toplevel *toplevel)
 {
-    if (!effects) {
-        return nullptr;
-    }
     Shadow *shadow = createShadowFromDecoration(toplevel);
     if (!shadow && waylandServer()) {
         shadow = createShadowFromWayland(toplevel);
@@ -57,13 +54,6 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     }
     if (!shadow) {
         shadow = createShadowFromInternalWindow(toplevel);
-    }
-    if (!shadow) {
-        return nullptr;
-    }
-    if (toplevel->effectWindow() && toplevel->effectWindow()->sceneWindow()) {
-        toplevel->effectWindow()->sceneWindow()->updateShadow(shadow);
-        emit toplevel->shadowChanged();
     }
     return shadow;
 }

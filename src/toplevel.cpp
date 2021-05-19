@@ -19,6 +19,7 @@
 #include "effects.h"
 #include "screens.h"
 #include "shadow.h"
+#include "shadowitem.h"
 #include "windowitem.h"
 #include "workspace.h"
 
@@ -427,31 +428,21 @@ bool Toplevel::isOnOutput(AbstractOutput *output) const
 
 void Toplevel::updateShadow()
 {
-    if (shadow()) {
-        if (!effectWindow()->sceneWindow()->shadow()->updateShadow()) {
-            effectWindow()->sceneWindow()->updateShadow(nullptr);
+    WindowItem *windowItem = this->windowItem();
+    if (!windowItem) {
+        return;
+    }
+    if (auto shadowItem = windowItem->shadowItem()) {
+        if (!shadowItem->shadow()->updateShadow()) {
+            windowItem->setShadow(nullptr);
         }
         emit shadowChanged();
     } else {
-        Shadow::createShadow(this);
-    }
-}
-
-Shadow *Toplevel::shadow()
-{
-    if (effectWindow() && effectWindow()->sceneWindow()) {
-        return effectWindow()->sceneWindow()->shadow();
-    } else {
-        return nullptr;
-    }
-}
-
-const Shadow *Toplevel::shadow() const
-{
-    if (effectWindow() && effectWindow()->sceneWindow()) {
-        return effectWindow()->sceneWindow()->shadow();
-    } else {
-        return nullptr;
+        Shadow *shadow = Shadow::createShadow(this);
+        if (shadow) {
+            windowItem->setShadow(shadow);
+            emit shadowChanged();
+        }
     }
 }
 

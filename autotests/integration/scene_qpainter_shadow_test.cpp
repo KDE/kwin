@@ -39,7 +39,9 @@
 #include "platform.h"
 #include "plugins/scenes/qpainter/scene_qpainter.h"
 #include "shadow.h"
+#include "shadowitem.h"
 #include "wayland_server.h"
+#include "windowitem.h"
 #include "workspace.h"
 
 Q_DECLARE_METATYPE(KWin::WindowQuadList)
@@ -642,8 +644,8 @@ void SceneQPainterShadowTest::testShadowTileOverlaps()
     // Get shadow.
     QVERIFY(client->effectWindow());
     QVERIFY(client->effectWindow()->sceneWindow());
-    QVERIFY(client->effectWindow()->sceneWindow()->shadow());
-    auto *shadow = client->effectWindow()->sceneWindow()->shadow();
+    auto *shadow = client->windowItem()->shadowItem()->shadow();
+    QVERIFY(shadow);
 
     // Validate shadow quads.
     const WindowQuadList &quads = shadow->shadowQuads();
@@ -756,8 +758,8 @@ void SceneQPainterShadowTest::testShadowTextureReconstruction()
     // Get SceneQPainterShadow's texture.
     QVERIFY(client->effectWindow());
     QVERIFY(client->effectWindow()->sceneWindow());
-    QVERIFY(client->effectWindow()->sceneWindow()->shadow());
-    auto &shadowTexture = static_cast<SceneQPainterShadow *>(client->effectWindow()->sceneWindow()->shadow())->shadowTexture();
+    auto *shadow = client->windowItem()->shadowItem()->shadow();
+    auto &shadowTexture = static_cast<SceneQPainterShadow *>(shadow)->shadowTexture();
 
     QCOMPARE(shadowTexture, referenceShadowTexture);
 }
