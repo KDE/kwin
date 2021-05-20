@@ -53,6 +53,7 @@
 #include <KScreenLocker/KsldApp>
 // Qt
 #include <QKeyEvent>
+#include <QtXkbCommonSupport/private/qxkbcommon_p.h>
 
 #include <xkbcommon/xkbcommon.h>
 
@@ -996,10 +997,12 @@ class InternalWindowEventFilter : public InputEventFilter {
             return false;
         }
         auto xkb = input()->keyboard()->xkb();
-        Qt::Key key = xkb->toQtKey( xkb->toKeysym(event->nativeScanCode()),
-                                    event->nativeScanCode(),
+        Qt::Key key = Qt::Key( QXkbCommon::keysymToQtKey(
+                                    xkb->toKeysym(event->nativeScanCode()),
                                     Qt::KeyboardModifiers(),
-                                    true /* workaround for QTBUG-62102 */ );
+                                    nullptr,
+                                    0,
+                                    true /* workaround for QTBUG-62102 */ ) );
         QKeyEvent internalEvent(event->type(), key,
                                 event->modifiers(), event->nativeScanCode(), event->nativeVirtualKey(),
                                 event->nativeModifiers(), event->text());

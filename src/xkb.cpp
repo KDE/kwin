@@ -452,7 +452,7 @@ Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts(uint32_t scanCode
         // in that case the shift should be removed from the consumed modifiers again
         // otherwise it would not be possible to trigger e.g. Shift+W as a shortcut
         // see BUG: 370341
-        if (QChar(toQtKey(m_keysym, scanCode, Qt::ControlModifier)).isLetter()) {
+        if (QChar( QXkbCommon::keysymToQtKey(m_keysym, Qt::ControlModifier, m_state, scanCode + 8) ).isLetter()) {
             consumedMods = Qt::KeyboardModifiers();
         }
     }
@@ -479,30 +479,6 @@ QString Xkb::toString(xkb_keysym_t keysym)
         return QString();
     }
     return QString::fromUtf8(byteArray.constData());
-}
-
-Qt::Key Xkb::toQtKey(xkb_keysym_t keySym,
-                     uint32_t scanCode,
-                     Qt::KeyboardModifiers modifiers,
-                     bool superAsMeta) const
-{
-    // FIXME: passing superAsMeta doesn't have impact due to bug in the Qt function, so handle it below
-    Qt::Key qtKey = Qt::Key( QXkbCommon::keysymToQtKey(keySym, modifiers, m_state, scanCode + 8, superAsMeta) );
-
-    // FIXME: workarounds for symbols currently wrong/not mappable via keysymToQtKey()
-    if (superAsMeta && (qtKey == Qt::Key_Super_L || qtKey == Qt::Key_Super_R)) {
-        // translate Super/Hyper keys to Meta if we're using them as the MetaModifier
-        qtKey = Qt::Key_Meta;
-    } else if (qtKey > 0xff && keySym <= 0xff) {
-        // XKB_KEY_mu, XKB_KEY_ydiaeresis go here
-        qtKey = Qt::Key(keySym);
-#if QT_VERSION_MAJOR < 6	// since Qt 5 LTS is frozen
-    } else if (keySym == XKB_KEY_Sys_Req) {
-        // fixed in QTBUG-92087
-        qtKey = Qt::Key_SysReq;
-#endif
-    }
-    return qtKey;
 }
 
 bool Xkb::shouldKeyRepeat(quint32 key) const

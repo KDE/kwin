@@ -27,6 +27,7 @@
 #include <KGlobalAccel>
 // Qt
 #include <QKeyEvent>
+#include <QtXkbCommonSupport/private/qxkbcommon_p.h>
 
 namespace KWin
 {
@@ -204,7 +205,10 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     const xkb_keysym_t keySym = m_xkb->currentKeysym();
     const Qt::KeyboardModifiers globalShortcutsModifiers = m_xkb->modifiersRelevantForGlobalShortcuts(key);
     KeyEvent event(type,
-                   m_xkb->toQtKey(keySym, key, globalShortcutsModifiers ? Qt::ControlModifier : Qt::KeyboardModifiers()),
+                   Qt::Key( QXkbCommon::keysymToQtKey(keySym,
+                                                      globalShortcutsModifiers ? Qt::ControlModifier : Qt::KeyboardModifiers(),
+                                                      m_xkb->state(),
+                                                      key + 8) ),
                    m_xkb->modifiers(),
                    key,
                    keySym,

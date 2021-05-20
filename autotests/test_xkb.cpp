@@ -9,6 +9,7 @@
 #include "xkb.h"
 
 #include <QtTest>
+#include <QtXkbCommonSupport/private/qxkbcommon_p.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
 
 using namespace KWin;
@@ -473,9 +474,8 @@ void XkbTest::testToQtKey_data()
 
 void XkbTest::testToQtKey()
 {
-    Xkb xkb;
     QFETCH(xkb_keysym_t, keySym);
-    QTEST(xkb.toQtKey(keySym), "qt");
+    QTEST(Qt::Key( QXkbCommon::keysymToQtKey(keySym, Qt::KeyboardModifiers()) ), "qt");
 }
 
 QTEST_MAIN(XkbTest)
