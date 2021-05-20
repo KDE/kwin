@@ -2057,28 +2057,6 @@ BORDER(Right)
 BORDER(Top)
 #undef BORDER
 
-QRect AbstractClient::bufferGeometryBeforeUpdateBlocking() const
-{
-    return m_bufferGeometryBeforeUpdateBlocking;
-}
-
-QRect AbstractClient::frameGeometryBeforeUpdateBlocking() const
-{
-    return m_frameGeometryBeforeUpdateBlocking;
-}
-
-QRect AbstractClient::clientGeometryBeforeUpdateBlocking() const
-{
-    return m_clientGeometryBeforeUpdateBlocking;
-}
-
-void AbstractClient::updateGeometryBeforeUpdateBlocking()
-{
-    m_bufferGeometryBeforeUpdateBlocking = bufferGeometry();
-    m_frameGeometryBeforeUpdateBlocking = frameGeometry();
-    m_clientGeometryBeforeUpdateBlocking = clientGeometry();
-}
-
 void AbstractClient::updateInitialMoveResizeGeometry()
 {
     m_interactiveMoveResize.initialGeometry = frameGeometry();

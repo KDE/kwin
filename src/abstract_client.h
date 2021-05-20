@@ -1070,10 +1070,6 @@ protected:
     };
     MoveResizeMode pendingMoveResizeMode() const;
     void setPendingMoveResizeMode(MoveResizeMode mode);
-    QRect bufferGeometryBeforeUpdateBlocking() const;
-    QRect frameGeometryBeforeUpdateBlocking() const;
-    QRect clientGeometryBeforeUpdateBlocking() const;
-    void updateGeometryBeforeUpdateBlocking();
     virtual void moveResizeInternal(const QRect &rect, MoveResizeMode mode) = 0;
 
     /**
@@ -1305,9 +1301,6 @@ private:
     MoveResizeMode m_pendingMoveResizeMode = MoveResizeMode::None;
     friend class GeometryUpdatesBlocker;
     QRect m_moveResizeGeometry;
-    QRect m_bufferGeometryBeforeUpdateBlocking;
-    QRect m_frameGeometryBeforeUpdateBlocking;
-    QRect m_clientGeometryBeforeUpdateBlocking;
     QRect m_keyboardGeometryRestore;
     QRect m_maximizeGeometryRestore;
     QRect m_fullscreenGeometryRestore;

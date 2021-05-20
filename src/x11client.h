@@ -503,6 +503,9 @@ private:
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
 
     QMargins m_clientFrameExtents;
+    QRect m_bufferGeometryBeforeUpdateBlocking;
+    QRect m_frameGeometryBeforeUpdateBlocking;
+    QRect m_clientGeometryBeforeUpdateBlocking;
 };
 
 inline xcb_window_t X11Client::wrapperId() const

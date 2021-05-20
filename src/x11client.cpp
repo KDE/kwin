@@ -3992,13 +3992,16 @@ void X11Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
         return;
     }
 
-    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
-    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
-    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
+    const QRect oldBufferGeometry = m_bufferGeometryBeforeUpdateBlocking;
+    const QRect oldFrameGeometry = m_frameGeometryBeforeUpdateBlocking;
+    const QRect oldClientGeometry = m_clientGeometryBeforeUpdateBlocking;
 
     updateServerGeometry();
     updateWindowRules(Rules::Position|Rules::Size);
-    updateGeometryBeforeUpdateBlocking();
+
+    m_bufferGeometryBeforeUpdateBlocking = m_bufferGeometry;
+    m_frameGeometryBeforeUpdateBlocking = m_frameGeometry;
+    m_clientGeometryBeforeUpdateBlocking = m_clientGeometry;
 
     // keep track of old maximize mode
     // to detect changes
@@ -4019,7 +4022,7 @@ void X11Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
 
 void X11Client::updateServerGeometry()
 {
-    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    const QRect oldBufferGeometry = m_bufferGeometryBeforeUpdateBlocking;
 
     if (oldBufferGeometry.size() != m_bufferGeometry.size()) {
         resizeDecoration();
