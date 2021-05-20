@@ -71,9 +71,8 @@ public:
         return m_eglDisplay;
     }
 
-    AbstractEglBackend *eglBackend() {
-        return m_eglBackend;
-    }
+    AbstractEglBackend *eglBackend() const;
+    void setEglBackend(AbstractEglBackend *eglBackend);
 
     void setGbmDevice(gbm_device *d) {
         m_gbmDevice = d;
@@ -81,10 +80,6 @@ public:
 
     void setEglDisplay(EGLDisplay display) {
         m_eglDisplay = display;
-    }
-
-    void setEglBackend(AbstractEglBackend *eglBackend) {
-        m_eglBackend = eglBackend;
     }
 
     /**

@@ -438,4 +438,14 @@ void DrmGpu::removeOutput(DrmOutput *output)
     }
 }
 
+AbstractEglBackend *DrmGpu::eglBackend() const
+{
+    return m_eglBackend;
+}
+
+void DrmGpu::setEglBackend(AbstractEglBackend *eglBackend)
+{
+    m_eglBackend = eglBackend;
+}
+
 }
