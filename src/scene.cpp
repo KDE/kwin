@@ -1049,7 +1049,9 @@ WindowQuadList Scene::Window::makeContentsQuads() const
 
 void Scene::Window::discardQuads()
 {
-    cached_quad_list.reset();
+    if (cached_quad_list && !toplevel->isDeleted()) {
+        cached_quad_list.reset();
+    }
 }
 
 void Scene::Window::preprocess(Item *item)
