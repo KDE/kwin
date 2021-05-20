@@ -48,8 +48,8 @@ public:
 
 private:
     void output_destroy_global() override;
-    void output_bind_resource(Resource *resource);
-    void output_release(Resource *resource);
+    void output_bind_resource(Resource *resource) override;
+    void output_release(Resource *resource) override;
 };
 
 OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface *q)
