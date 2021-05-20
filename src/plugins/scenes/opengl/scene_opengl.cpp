@@ -1285,8 +1285,8 @@ static bool bindSurfaceTexture(SurfaceItem *surfaceItem)
         const QRegion region = surfaceItem->damage();
         if (!region.isEmpty()) {
             platformSurfaceTexture->update(region);
+            surfaceItem->resetDamage();
         }
-        surfaceItem->resetDamage();
         return true;
     }
     if (!surfacePixmap->isValid()) {
