@@ -6,7 +6,6 @@
 
 #include "session.h"
 #include "session_consolekit.h"
-#include "session_direct.h"
 #include "session_logind.h"
 #include "session_noop.h"
 
@@ -19,7 +18,6 @@ static const struct {
 } s_availableSessions[] = {
     { Session::Type::Logind, &LogindSession::create },
     { Session::Type::ConsoleKit, &ConsoleKitSession::create },
-    { Session::Type::Direct, &DirectSession::create },
     { Session::Type::Noop, &NoopSession::create },
 };
 

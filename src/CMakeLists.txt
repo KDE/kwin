@@ -109,7 +109,6 @@ set(kwin_SRCS
     scripting/workspace_wrapper.cpp
     session.cpp
     session_consolekit.cpp
-    session_direct.h
     session_logind.cpp
     session_noop.cpp
     shadow.cpp
@@ -230,12 +229,6 @@ target_link_libraries(kwin
 
     Threads::Threads
 )
-
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_sources(kwin PRIVATE session_direct_linux.cpp)
-elseif (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-    target_sources(kwin PRIVATE session_direct_freebsd.cpp)
-endif()
 
 if (KWIN_BUILD_CMS)
     target_sources(kwin PRIVATE

@@ -30,7 +30,6 @@ public:
      * This enum type is used to specify the type of the session.
      */
     enum class Type {
-        Direct,
         Noop,
         ConsoleKit,
         Logind,
