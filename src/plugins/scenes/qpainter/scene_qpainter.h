@@ -72,7 +72,6 @@ public:
     void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
 private:
     void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem);
-    void renderShadow(QPainter *painter);
     void renderWindowDecorations(QPainter *painter);
     SceneQPainter *m_scene;
 };
@@ -99,16 +98,8 @@ public:
     SceneQPainterShadow(Toplevel* toplevel);
     ~SceneQPainterShadow() override;
 
-    QImage &shadowTexture() {
-        return m_texture;
-    }
-
 protected:
-    void buildQuads() override;
     bool prepareBackend() override;
-
-private:
-    QImage m_texture;
 };
 
 class SceneQPainterDecorationRenderer : public DecorationRenderer
