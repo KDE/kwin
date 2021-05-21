@@ -41,9 +41,7 @@ public:
     bool isEnabled() const {
         return m_enabled;
     }
-    bool isActive() const {
-        return m_active;
-    }
+    bool isActive() const;
     void setActive(bool active);
     void hide();
     void show();
@@ -90,7 +88,6 @@ private:
     } preedit;
 
     bool m_enabled = false;
-    bool m_active = false;
     quint32 m_serial = 0;
     KStatusNotifierItem *m_sni = nullptr;
     QPointer<AbstractClient> m_inputClient;

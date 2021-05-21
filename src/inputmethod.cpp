@@ -145,9 +145,8 @@ void InputMethod::hide()
 
 void InputMethod::setActive(bool active)
 {
-    if (m_active) {
-        waylandServer()->inputMethod()->sendDeactivate();
-    }
+    bool wasActive = waylandServer()->inputMethod()->context();
+    waylandServer()->inputMethod()->sendDeactivate();
 
     if (active) {
         if (!m_enabled) {
@@ -160,8 +159,7 @@ void InputMethod::setActive(bool active)
         updateInputPanelState();
     }
 
-    if (m_active != active) {
-        m_active = active;
+    if (wasActive != isActive()) {
         Q_EMIT activeChanged(active);
     }
 }
@@ -279,12 +277,7 @@ void InputMethod::textInputInterfaceV2EnabledChanged()
     }
 
     auto t = waylandServer()->seat()->textInputV2();
-    if (t->isEnabled()) {
-        waylandServer()->inputMethod()->sendActivate();
-        adoptInputMethodContext();
-    } else {
-        hide();
-    }
+    setActive(t->isEnabled());
 }
 
 void InputMethod::textInputInterfaceV3EnabledChanged()
@@ -294,10 +287,8 @@ void InputMethod::textInputInterfaceV3EnabledChanged()
     }
 
     auto t3 = waylandServer()->seat()->textInputV3();
-    if (t3->isEnabled()) {
-        waylandServer()->inputMethod()->sendActivate();
-    } else {
-        waylandServer()->inputMethod()->sendDeactivate();
+    setActive(t3->isEnabled());
+    if (!t3->isEnabled()) {
         // reset value of preedit when textinput is disabled
         preedit.text = QString();
         preedit.begin = 0;
@@ -638,4 +629,10 @@ void InputMethod::startInputMethod()
         }
     });
 }
+bool InputMethod::isActive() const
+{
+    return waylandServer()->inputMethod()->context();
 }
+
+}
+
