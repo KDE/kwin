@@ -157,7 +157,6 @@ public:
     xcb_render_picture_t picture(ShadowElements element) const;
 
 protected:
-    void buildQuads() override;
     bool prepareBackend() override;
 private:
     XRenderPicture* m_pictures[ShadowElementsCount];

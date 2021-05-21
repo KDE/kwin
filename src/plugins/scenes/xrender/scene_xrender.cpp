@@ -960,18 +960,6 @@ void SceneXRenderShadow::layoutShadowRects(QRect& top, QRect& topRight,
     bottomRight = QRect(bottomRightQuad.left(), bottomRightQuad.top(), (bottomRightQuad.right()-bottomRightQuad.left()), (bottomRightQuad.bottom()-bottomRightQuad.top()));
 }
 
-void SceneXRenderShadow::buildQuads()
-{
-    Shadow::buildQuads();
-
-    if (shadowQuads().count() == 0) {
-        return;
-    }
-
-    QRect stlr, str, strr, srr, sbrr, sbr, sblr, slr;
-    layoutShadowRects(str, strr, srr, sbrr, sbr, sblr, slr, stlr);
-}
-
 bool SceneXRenderShadow::prepareBackend()
 {
     if (hasDecorationShadow()) {
