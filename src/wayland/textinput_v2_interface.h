@@ -70,6 +70,7 @@ public:
         StateReset = 2, // full state after reset
         StateEnter = 3, // full state after switching focus to a different widget on client side
     };
+    Q_ENUM(UpdateReason);
     /**
      * The preferred language as a RFC-3066 format language tag.
      *

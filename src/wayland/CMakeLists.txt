@@ -56,6 +56,7 @@ set(SERVER_LIB_SRCS
     surface_interface.cpp
     surfacerole.cpp
     tablet_v2_interface.cpp
+    textinput.cpp
     textinput_v2_interface.cpp
     textinput_v3_interface.cpp
     touch_interface.cpp
