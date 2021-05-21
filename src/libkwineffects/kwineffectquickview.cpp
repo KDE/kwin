@@ -153,9 +153,10 @@ void EffectQuickView::update()
             return;
         }
 
-        if (d->m_fbo.isNull() || d->m_fbo->size() != d->m_view->size()) {
+        const QSize nativeSize = d->m_view->size() * d->m_view->effectiveDevicePixelRatio();
+        if (d->m_fbo.isNull() || d->m_fbo->size() != nativeSize) {
             d->m_textureExport.reset(nullptr);
-            d->m_fbo.reset(new QOpenGLFramebufferObject(d->m_view->size(), QOpenGLFramebufferObject::CombinedDepthStencil));
+            d->m_fbo.reset(new QOpenGLFramebufferObject(nativeSize, QOpenGLFramebufferObject::CombinedDepthStencil));
             if (!d->m_fbo->isValid()) {
                 d->m_fbo.reset();
                 d->m_glcontext->doneCurrent();

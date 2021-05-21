@@ -408,8 +408,14 @@ void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
     if (!m_view) {
         return;
     }
+
+    const QImage image = m_view->bufferAsImage();
+    const qreal dpr = image.devicePixelRatioF();
+
+    QRect nativeContentRect = QRect(m_contentRect.topLeft() * dpr, m_contentRect.size() * dpr);
+
     painter->fillRect(rect(), Qt::transparent);
-    painter->drawImage(rect(), m_view->bufferAsImage(), m_contentRect);
+    painter->drawImage(rect(), image, nativeContentRect);
 }
 
 void Decoration::updateShadow()
@@ -431,22 +437,24 @@ void Decoration::updateShadow()
             }
         }
         const QImage m_buffer = m_view->bufferAsImage();
+        const qreal dpr = m_buffer.devicePixelRatioF();
 
-        QImage img(m_buffer.size(), QImage::Format_ARGB32_Premultiplied);
+        QImage img(m_buffer.size() / m_buffer.devicePixelRatioF(), QImage::Format_ARGB32_Premultiplied);
+        QSizeF imageSize = m_buffer.size() / m_buffer.devicePixelRatioF();
         img.fill(Qt::transparent);
         QPainter p(&img);
         // top
-        p.drawImage(0, 0, m_buffer, 0, 0, img.width(), m_padding->top());
+        p.drawImage(0, 0, m_buffer, 0, 0, imageSize.width() * dpr, m_padding->top()  * dpr);
         // left
-        p.drawImage(0, m_padding->top(), m_buffer, 0, m_padding->top(), m_padding->left(), m_buffer.height() - m_padding->top());
+        p.drawImage(0, m_padding->top(), m_buffer, 0, m_padding->top()  * dpr, m_padding->left()  * dpr, (imageSize.height() - m_padding->top()) * dpr);
         // bottom
-        p.drawImage(m_padding->left(), m_buffer.height() - m_padding->bottom(), m_buffer,
-                    m_padding->left(), m_buffer.height() - m_padding->bottom(),
-                    m_buffer.width() - m_padding->left(), m_padding->bottom());
+        p.drawImage(m_padding->left(), imageSize.height() - m_padding->bottom(), m_buffer,
+                    m_padding->left() * dpr, (imageSize.height() - m_padding->bottom()) * dpr,
+                    (imageSize.width() - m_padding->left()) * dpr, m_padding->bottom() * dpr);
         // right
-        p.drawImage(m_buffer.width() - m_padding->right(), m_padding->top(), m_buffer,
-                    m_buffer.width() - m_padding->right(), m_padding->top(),
-                    m_padding->right(), m_buffer.height() - m_padding->top() - m_padding->bottom());
+        p.drawImage(imageSize.width() - m_padding->right(), m_padding->top(), m_buffer,
+                    (imageSize.width() - m_padding->right()) * dpr, m_padding->top() * dpr,
+                    m_padding->right() * dpr, (imageSize.height() - m_padding->top() - m_padding->bottom())  * dpr);
         if (!updateShadow) {
             updateShadow = (oldShadow->shadow() != img);
         }
@@ -456,8 +464,8 @@ void Decoration::updateShadow()
             s->setPadding(*m_padding);
             s->setInnerShadowRect(QRect(m_padding->left(),
                                         m_padding->top(),
-                                        m_buffer.width() - m_padding->left() - m_padding->right(),
-                                        m_buffer.height() - m_padding->top() - m_padding->bottom()));
+                                        imageSize.width() - m_padding->left() - m_padding->right(),
+                                        imageSize.height() - m_padding->top() - m_padding->bottom()));
             setShadow(s);
         }
     } else {
@@ -573,7 +581,11 @@ void Decoration::updateExtendedBorders()
 
 void Decoration::updateBuffer()
 {
-    m_contentRect = QRect(QPoint(0, 0), m_view->bufferAsImage().size());
+    const QImage buffer = m_view->bufferAsImage();
+    if (buffer.isNull()) {
+        return;
+    }
+    m_contentRect = QRect(QPoint(0, 0), m_view->contentItem()->size().toSize());
     if (m_padding &&
             (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) &&
             !clientPointer()->isMaximized()) {
