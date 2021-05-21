@@ -9,6 +9,7 @@
 #include "abstract_client.h"
 #include "composite.h"
 #include "decorations/decoratedclient.h"
+#include "deleted.h"
 #include "scene.h"
 #include "utils.h"
 
@@ -142,6 +143,89 @@ void DecorationItem::handleFrameGeometryChanged()
 DecorationRenderer *DecorationItem::renderer() const
 {
     return m_renderer.data();
+}
+
+WindowQuadList DecorationItem::buildQuads() const
+{
+    const Toplevel *toplevel = window()->window();
+    if (toplevel->frameMargins().isNull()) {
+        return WindowQuadList();
+    }
+
+    QRect rects[4];
+
+    if (const AbstractClient *client = qobject_cast<const AbstractClient *>(toplevel)) {
+        client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
+    } else if (const Deleted *deleted = qobject_cast<const Deleted *>(toplevel)) {
+        deleted->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
+    }
+
+    const qreal textureScale = toplevel->screenScale();
+    const int padding = 1;
+
+    const QPoint topSpritePosition(padding, padding);
+    const QPoint bottomSpritePosition(padding, topSpritePosition.y() + rects[1].height() + 2 * padding);
+    const QPoint leftSpritePosition(bottomSpritePosition.y() + rects[3].height() + 2 * padding, padding);
+    const QPoint rightSpritePosition(leftSpritePosition.x() + rects[0].width() + 2 * padding, padding);
+
+    const QPoint offsets[4] = {
+        QPoint(-rects[0].x(), -rects[0].y()) + leftSpritePosition,
+        QPoint(-rects[1].x(), -rects[1].y()) + topSpritePosition,
+        QPoint(-rects[2].x(), -rects[2].y()) + rightSpritePosition,
+        QPoint(-rects[3].x(), -rects[3].y()) + bottomSpritePosition,
+    };
+
+    const Qt::Orientation orientations[4] = {
+        Qt::Vertical,   // Left
+        Qt::Horizontal, // Top
+        Qt::Vertical,   // Right
+        Qt::Horizontal, // Bottom
+    };
+
+    const QRegion shape = QRegion(toplevel->rect()) - toplevel->transparentRect();
+
+    WindowQuadList list;
+    list.reserve(shape.rectCount());
+
+    for (int i = 0; i < 4; i++) {
+        const QRegion intersectedRegion = (shape & rects[i]);
+        for (const QRect &r : intersectedRegion) {
+            if (!r.isValid()) {
+                continue;
+            }
+
+            const bool swap = orientations[i] == Qt::Vertical;
+
+            const int x0 = r.x();
+            const int y0 = r.y();
+            const int x1 = r.x() + r.width();
+            const int y1 = r.y() + r.height();
+
+            const int u0 = (x0 + offsets[i].x()) * textureScale;
+            const int v0 = (y0 + offsets[i].y()) * textureScale;
+            const int u1 = (x1 + offsets[i].x()) * textureScale;
+            const int v1 = (y1 + offsets[i].y()) * textureScale;
+
+            WindowQuad quad(WindowQuadDecoration, const_cast<DecorationItem *>(this));
+            quad.setUVAxisSwapped(swap);
+
+            if (swap) {
+                quad[0] = WindowVertex(x0, y0, v0, u0); // Top-left
+                quad[1] = WindowVertex(x1, y0, v0, u1); // Top-right
+                quad[2] = WindowVertex(x1, y1, v1, u1); // Bottom-right
+                quad[3] = WindowVertex(x0, y1, v1, u0); // Bottom-left
+            } else {
+                quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
+                quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
+                quad[2] = WindowVertex(x1, y1, u1, v1); // Bottom-right
+                quad[3] = WindowVertex(x0, y1, u0, v1); // Bottom-left
+            }
+
+            list.append(quad);
+        }
+    }
+
+    return list;
 }
 
 } // namespace KWin

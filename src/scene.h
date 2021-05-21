@@ -337,15 +337,11 @@ public:
     bool isVisible() const;
     // is the window fully opaque
     bool isOpaque() const;
-    // is the window shaded
-    bool isShaded() const;
     QRegion decorationShape() const;
     void updateToplevel(Deleted *deleted);
-    // creates initial quad list for the window
-    virtual WindowQuadList buildQuads(bool force = false) const;
+    WindowQuadList buildQuads() const;
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();
-    void discardQuads();
     void preprocess(Item *item);
     WindowItem *windowItem() const;
     SurfaceItem *surfaceItem() const;
@@ -356,8 +352,6 @@ public:
     }
 
 protected:
-    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region) const;
-    WindowQuadList makeContentsQuads() const;
     Toplevel* toplevel;
     ImageFilterType filter;
 private:
@@ -367,7 +361,6 @@ private:
     void updateWindowPosition();
 
     int disable_painting;
-    mutable QScopedPointer<WindowQuadList> cached_quad_list;
     QScopedPointer<WindowItem> m_windowItem;
     Q_DISABLE_COPY(Window)
 };

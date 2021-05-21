@@ -71,8 +71,9 @@ public:
     ~Window() override;
     void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
 private:
-    void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem);
-    void renderWindowDecorations(QPainter *painter);
+    void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const;
+    void renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const;
+    void renderItem(QPainter *painter, Item *item) const;
     SceneQPainter *m_scene;
 };
 

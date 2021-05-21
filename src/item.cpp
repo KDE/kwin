@@ -394,9 +394,24 @@ void Item::preprocess()
 {
 }
 
+WindowQuadList Item::buildQuads() const
+{
+    return WindowQuadList();
+}
+
 void Item::discardQuads()
 {
-    window()->discardQuads();
+    m_quads = WindowQuadList();
+    m_quadsValid = false;
+}
+
+WindowQuadList Item::quads() const
+{
+    if (!m_quadsValid) {
+        m_quads = buildQuads();
+        m_quadsValid = true;
+    }
+    return m_quads;
 }
 
 QRegion Item::repaints(int screen) const

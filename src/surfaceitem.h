@@ -45,6 +45,7 @@ protected:
 
     virtual SurfacePixmap *createPixmap() = 0;
     void preprocess() override;
+    WindowQuadList buildQuads() const override;
 
     QRegion m_damage;
     QScopedPointer<SurfacePixmap> m_pixmap;

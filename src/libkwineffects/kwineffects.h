@@ -2614,14 +2614,14 @@ private:
 class KWINEFFECTS_EXPORT WindowQuad
 {
 public:
-    explicit WindowQuad(WindowQuadType type, int id = -1);
+    explicit WindowQuad(WindowQuadType type, void *userData = nullptr);
     WindowQuad makeSubQuad(double x1, double y1, double x2, double y2) const;
     WindowVertex& operator[](int index);
     const WindowVertex& operator[](int index) const;
     WindowQuadType type() const;
     void setUVAxisSwapped(bool value) { uvSwapped = value; }
     bool uvAxisSwapped() const { return uvSwapped; }
-    int id() const;
+    void *userData() const;
     bool decoration() const;
     bool effect() const;
     double left() const;
@@ -2637,9 +2637,9 @@ public:
 private:
     friend class WindowQuadList;
     WindowVertex verts[ 4 ];
+    void *m_userData;
     WindowQuadType quadType; // 0 - contents, 1 - decoration
     bool uvSwapped;
-    int quadID;
 };
 
 class KWINEFFECTS_EXPORT WindowQuadList
@@ -3822,10 +3822,10 @@ void WindowVertex::setY(double y)
 ***************************************************************/
 
 inline
-WindowQuad::WindowQuad(WindowQuadType t, int id)
-    : quadType(t)
+WindowQuad::WindowQuad(WindowQuadType t, void *userData)
+    : m_userData(userData)
+    , quadType(t)
     , uvSwapped(false)
-    , quadID(id)
 {
 }
 
@@ -3851,9 +3851,9 @@ WindowQuadType WindowQuad::type() const
 }
 
 inline
-int WindowQuad::id() const
+void *WindowQuad::userData() const
 {
-    return quadID;
+    return m_userData;
 }
 
 inline

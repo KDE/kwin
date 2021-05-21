@@ -24,6 +24,9 @@ public:
 
     Shadow *shadow() const;
 
+protected:
+    WindowQuadList buildQuads() const override;
+
 private Q_SLOTS:
     void handleTextureChanged();
     void handleRegionChanged();

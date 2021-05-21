@@ -56,15 +56,6 @@ public:
     const QRegion &shadowRegion() const {
         return m_shadowRegion;
     };
-    /**
-     * @return Cached Shadow Quads
-     */
-    const WindowQuadList &shadowQuads() const {
-        return m_shadowQuads;
-    };
-    WindowQuadList &shadowQuads() {
-        return m_shadowQuads;
-    };
 
     /**
      * This method updates the Shadow when the property has been changed.
@@ -105,15 +96,6 @@ public:
         return m_decorationShadow.toWeakRef();
     }
 
-Q_SIGNALS:
-    void regionChanged();
-    void textureChanged();
-
-public Q_SLOTS:
-    void geometryChanged();
-
-protected:
-    Shadow(Toplevel *toplevel);
     enum ShadowElements {
         ShadowElementTop,
         ShadowElementTopRight,
@@ -124,10 +106,6 @@ protected:
         ShadowElementLeft,
         ShadowElementTopLeft,
         ShadowElementsCount
-    };
-
-    inline const QPixmap &shadowPixmap(ShadowElements element) const {
-        return m_shadowElements[element];
     };
     QSize elementSize(ShadowElements element) const;
 
@@ -143,16 +121,23 @@ protected:
     int leftOffset() const {
         return m_leftOffset;
     };
-    virtual void buildQuads();
+
+Q_SIGNALS:
+    void regionChanged();
+    void textureChanged();
+
+public Q_SLOTS:
+    void geometryChanged();
+
+protected:
+    Shadow(Toplevel *toplevel);
+
+    inline const QPixmap &shadowPixmap(ShadowElements element) const {
+        return m_shadowElements[element];
+    };
+
     void updateShadowRegion();
-    Toplevel *topLevel() {
-        return m_topLevel;
-    };
-    void setShadowRegion(const QRegion &region) {
-        m_shadowRegion = region;
-    };
     virtual bool prepareBackend() = 0;
-    WindowQuadList m_shadowQuads;
     void setShadowElement(const QPixmap &shadow, ShadowElements element);
 
 private:

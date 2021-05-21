@@ -74,6 +74,7 @@ private Q_SLOTS:
 
 protected:
     void preprocess() override;
+    WindowQuadList buildQuads() const override;
 
 private:
     QPointer<KDecoration2::Decoration> m_decoration;

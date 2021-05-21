@@ -752,7 +752,6 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
     , toplevel(client)
     , filter(ImageFilterFast)
     , disable_painting(0)
-    , cached_quad_list(nullptr)
 {
     if (qobject_cast<WaylandClient *>(client)) {
         m_windowItem.reset(new WindowItemWayland(this));
@@ -834,11 +833,6 @@ bool Scene::Window::isOpaque() const
     return toplevel->opacity() == 1.0 && !toplevel->hasAlpha();
 }
 
-bool Scene::Window::isShaded() const
-{
-    return toplevel->isShade();
-}
-
 bool Scene::Window::isPaintingEnabled() const
 {
     return !disable_painting;
@@ -878,166 +872,23 @@ void Scene::Window::disablePainting(int reason)
     disable_painting |= reason;
 }
 
-WindowQuadList Scene::Window::buildQuads(bool force) const
+static void buildQuadsHelper(const Item *item, WindowQuadList *ret)
 {
-    if (cached_quad_list != nullptr && !force)
-        return *cached_quad_list;
+    *ret += item->quads();
 
-    WindowQuadList *ret = new WindowQuadList;
-
-    if (!isShaded()) {
-        *ret += makeContentsQuads();
-    }
-
-    if (!toplevel->frameMargins().isNull()) {
-        QRect rects[4];
-
-        if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
-            client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
-        } else if (Deleted *deleted = qobject_cast<Deleted *>(toplevel)) {
-            deleted->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
+    const QList<Item *> childItems = item->childItems();
+    for (const Item *childItem : childItems) {
+        if (childItem->isVisible()) {
+            buildQuadsHelper(childItem, ret);
         }
-
-        *ret += makeDecorationQuads(rects, decorationShape());
     }
-    if (shadowItem() && toplevel->wantsShadowToBeRendered()) {
-        *ret << shadowItem()->shadow()->shadowQuads();
-    }
-    cached_quad_list.reset(ret);
-    return *ret;
 }
 
-WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QRegion &region) const
+WindowQuadList Scene::Window::buildQuads() const
 {
-    WindowQuadList list;
-
-    const qreal textureScale = toplevel->screenScale();
-    const int padding = 1;
-
-    const QPoint topSpritePosition(padding, padding);
-    const QPoint bottomSpritePosition(padding, topSpritePosition.y() + rects[1].height() + 2 * padding);
-    const QPoint leftSpritePosition(bottomSpritePosition.y() + rects[3].height() + 2 * padding, padding);
-    const QPoint rightSpritePosition(leftSpritePosition.x() + rects[0].width() + 2 * padding, padding);
-
-    const QPoint offsets[4] = {
-        QPoint(-rects[0].x(), -rects[0].y()) + leftSpritePosition,
-        QPoint(-rects[1].x(), -rects[1].y()) + topSpritePosition,
-        QPoint(-rects[2].x(), -rects[2].y()) + rightSpritePosition,
-        QPoint(-rects[3].x(), -rects[3].y()) + bottomSpritePosition,
-    };
-
-    const Qt::Orientation orientations[4] = {
-        Qt::Vertical,   // Left
-        Qt::Horizontal, // Top
-        Qt::Vertical,   // Right
-        Qt::Horizontal, // Bottom
-    };
-
-    for (int i = 0; i < 4; i++) {
-        const QRegion intersectedRegion = (region & rects[i]);
-        for (const QRect &r : intersectedRegion) {
-            if (!r.isValid())
-                continue;
-
-            const bool swap = orientations[i] == Qt::Vertical;
-
-            const int x0 = r.x();
-            const int y0 = r.y();
-            const int x1 = r.x() + r.width();
-            const int y1 = r.y() + r.height();
-
-            const int u0 = (x0 + offsets[i].x()) * textureScale;
-            const int v0 = (y0 + offsets[i].y()) * textureScale;
-            const int u1 = (x1 + offsets[i].x()) * textureScale;
-            const int v1 = (y1 + offsets[i].y()) * textureScale;
-
-            WindowQuad quad(WindowQuadDecoration);
-            quad.setUVAxisSwapped(swap);
-
-            if (swap) {
-                quad[0] = WindowVertex(x0, y0, v0, u0); // Top-left
-                quad[1] = WindowVertex(x1, y0, v0, u1); // Top-right
-                quad[2] = WindowVertex(x1, y1, v1, u1); // Bottom-right
-                quad[3] = WindowVertex(x0, y1, v1, u0); // Bottom-left
-            } else {
-                quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
-                quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
-                quad[2] = WindowVertex(x1, y1, u1, v1); // Bottom-right
-                quad[3] = WindowVertex(x0, y1, u0, v1); // Bottom-left
-            }
-
-            list.append(quad);
-        }
-    }
-
-    return list;
-}
-
-WindowQuadList Scene::Window::makeContentsQuads() const
-{
-    // TODO(vlad): What about the case where we need to build window quads for a deleted
-    // window? Presumably, the current window will be invalid so no window quads will be
-    // generated. Is it okay?
-
-    SurfaceItem *currentItem = surfaceItem();
-    if (!currentItem)
-        return WindowQuadList();
-
-    WindowQuadList quads;
-    int id = 0;
-
-    // We need to assign an id to each generated window quad in order to be able to match
-    // a list of window quads against a particular window pixmap. We traverse the window
-    // pixmap tree in the depth-first search manner and assign an id to each window quad.
-    // The id is the time when we visited the window pixmap.
-
-    QStack<SurfaceItem *> stack;
-    stack.push(currentItem);
-
-    while (!stack.isEmpty()) {
-        SurfaceItem *item = stack.pop();
-
-        const QRegion region = item->shape();
-        const int quadId = id++;
-
-        for (const QRectF rect : region) {
-            // Note that the window quad id is not unique if the window is shaped, i.e. the
-            // region contains more than just one rectangle. We assume that the "source" quad
-            // had been subdivided.
-            WindowQuad quad(WindowQuadContents, quadId);
-
-            const QPointF windowTopLeft = item->mapToWindow(rect.topLeft());
-            const QPointF windowTopRight = item->mapToWindow(rect.topRight());
-            const QPointF windowBottomRight = item->mapToWindow(rect.bottomRight());
-            const QPointF windowBottomLeft = item->mapToWindow(rect.bottomLeft());
-
-            const QPointF bufferTopLeft = item->mapToBuffer(rect.topLeft());
-            const QPointF bufferTopRight = item->mapToBuffer(rect.topRight());
-            const QPointF bufferBottomRight = item->mapToBuffer(rect.bottomRight());
-            const QPointF bufferBottomLeft = item->mapToBuffer(rect.bottomLeft());
-
-            quad[0] = WindowVertex(windowTopLeft, bufferTopLeft);
-            quad[1] = WindowVertex(windowTopRight, bufferTopRight);
-            quad[2] = WindowVertex(windowBottomRight, bufferBottomRight);
-            quad[3] = WindowVertex(windowBottomLeft, bufferBottomLeft);
-
-            quads << quad;
-        }
-
-        // Push the child window pixmaps onto the stack, remember we're visiting the pixmaps
-        // in the depth-first search manner.
-        const QList<Item *> children = item->childItems();
-        for (auto it = children.rbegin(); it != children.rend(); ++it) {
-            stack.push(static_cast<SurfaceItem *>(*it));
-        }
-    }
-
-    return quads;
-}
-
-void Scene::Window::discardQuads()
-{
-    cached_quad_list.reset();
+    WindowQuadList ret;
+    buildQuadsHelper(windowItem(), &ret);
+    return ret;
 }
 
 void Scene::Window::preprocess(Item *item)

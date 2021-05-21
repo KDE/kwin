@@ -99,6 +99,8 @@ public:
     QRegion repaints(int screen) const;
     void resetRepaints(int screen);
 
+    WindowQuadList quads() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the x coordinate of this item has changed.
@@ -125,6 +127,7 @@ Q_SIGNALS:
 
 protected:
     virtual void preprocess();
+    virtual WindowQuadList buildQuads() const;
     void discardQuads();
 
 private:
@@ -148,6 +151,8 @@ private:
     bool m_visible = true;
     bool m_effectiveVisible = true;
     QVector<QRegion> m_repaints;
+    mutable WindowQuadList m_quads;
+    mutable bool m_quadsValid = false;
 
     friend class Scene::Window;
 };

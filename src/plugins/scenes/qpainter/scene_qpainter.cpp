@@ -228,8 +228,8 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
         tempPainter.translate(toplevel->frameGeometry().topLeft() - toplevel->visibleGeometry().topLeft());
         painter = &tempPainter;
     }
-    renderWindowDecorations(painter);
-    renderSurfaceItem(painter, surfaceItem());
+
+    renderItem(painter, windowItem());
 
     if (!opaque) {
         tempPainter.restore();
@@ -245,7 +245,23 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     painter->restore();
 }
 
-void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem)
+void SceneQPainter::Window::renderItem(QPainter *painter, Item *item) const
+{
+    if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
+        renderSurfaceItem(painter, surfaceItem);
+    } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
+        renderDecorationItem(painter, decorationItem);
+    }
+
+    const QList<Item *> childItems = item->childItems();
+    for (Item *childItem : childItems) {
+        if (childItem->isVisible()) {
+            renderItem(painter, childItem);
+        }
+    }
+}
+
+void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const
 {
     const SurfacePixmap *surfaceTexture = surfaceItem->pixmap();
     if (!surfaceTexture || !surfaceTexture->isValid()) {
@@ -273,21 +289,10 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
                            platformSurfaceTexture->image(),
                            QRectF(bufferTopLeft, bufferBottomRight));
     }
-
-    const QList<Item *> children = surfaceItem->childItems();
-    for (Item *child : children) {
-        renderSurfaceItem(painter, static_cast<SurfaceItem *>(child));
-    }
 }
 
-void SceneQPainter::Window::renderWindowDecorations(QPainter *painter)
+void SceneQPainter::Window::renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const
 {
-    // TODO: custom decoration opacity
-    const DecorationItem *decorationItem = windowItem()->decorationItem();
-    if (!decorationItem) {
-        return;
-    }
-
     const auto renderer = static_cast<const SceneQPainterDecorationRenderer *>(decorationItem->renderer());
     QRect dtr, dlr, drr, dbr;
     if (auto client = qobject_cast<AbstractClient *>(toplevel)) {

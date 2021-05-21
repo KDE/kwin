@@ -134,33 +134,19 @@ class OpenGLWindow final : public Scene::Window
 public:
     struct RenderNode
     {
-        RenderNode()
-            : texture(nullptr)
-            , firstVertex(0)
-            , vertexCount(0)
-            , opacity(1.0)
-            , hasAlpha(false)
-            , coordinateType(UnnormalizedCoordinates)
-        {
-        }
-
-        GLTexture *texture;
+        GLTexture *texture = nullptr;
         WindowQuadList quads;
-        int firstVertex;
-        int vertexCount;
-        float opacity;
-        bool hasAlpha;
-        TextureCoordinateType coordinateType;
+        int firstVertex = 0;
+        int vertexCount = 0;
+        qreal opacity = 1;
+        bool hasAlpha = false;
+        TextureCoordinateType coordinateType = UnnormalizedCoordinates;
     };
 
     struct RenderContext
     {
         QVector<RenderNode> renderNodes;
-        int shadowOffset = 0;
-        int decorationOffset = 0;
-        int contentOffset = 0;
-        int previousContentOffset = 0;
-        int quadCount = 0;
+        QHash<Item *, WindowQuadList> quads;
     };
 
     OpenGLWindow(Toplevel *toplevel, SceneOpenGL *scene);
@@ -171,11 +157,10 @@ public:
 
 private:
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
-    GLTexture *getDecorationTexture() const;
     QMatrix4x4 modelViewProjectionMatrix(int mask, const WindowPaintData &data) const;
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
-    void initializeRenderContext(RenderContext &context, const WindowPaintData &data);
+    void createRenderNode(Item *item, RenderContext *context, const WindowPaintData &data);
     bool beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data);
     void endRenderWindow();
 
@@ -239,7 +224,6 @@ public:
         return m_texture.data();
     }
 protected:
-    void buildQuads() override;
     bool prepareBackend() override;
 private:
     QSharedPointer<GLTexture> m_texture;
