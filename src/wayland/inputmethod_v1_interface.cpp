@@ -162,8 +162,8 @@ void InputMethodContextV1Interface::sendContentType(TextInputContentHints hint, 
     if (hint.testFlag(TextInputContentHint::AutoCorrection)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_auto_correction;
     }
-    if (hint.testFlag(TextInputContentHint::AutoCapitalization)) {
-        contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_auto_capitalization;
+    if (hint.testFlag(TextInputContentHint::AutoCompletion)) {
+        contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_auto_completion;
     }
     if (hint.testFlag(TextInputContentHint::LowerCase)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_lowercase;
