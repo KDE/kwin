@@ -80,6 +80,7 @@ private:
     void setTextDirection(uint32_t serial, Qt::LayoutDirection direction);
     void startInputMethod();
     void stopInputMethod();
+    void setTrackedClient(AbstractClient *trackedClient);
 
     struct {
         QString text = QString();

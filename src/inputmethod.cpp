@@ -166,25 +166,29 @@ void InputMethod::clientAdded(AbstractClient* client)
     connect(m_inputClient, &AbstractClient::windowClosed, this, &InputMethod::hide);
 }
 
+void InputMethod::setTrackedClient(AbstractClient* trackedClient)
+{
+    // Reset the old client virtual keybaord geom if necessary
+    // Old and new clients could be the same if focus moves between subsurfaces
+    if (m_trackedClient == trackedClient) {
+        return;
+    }
+    if (m_trackedClient) {
+        m_trackedClient->setVirtualKeyboardGeometry(QRect());
+        disconnect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
+    }
+    m_trackedClient = trackedClient;
+    if (m_trackedClient) {
+        connect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
+    }
+    updateInputPanelState();
+}
+
 void InputMethod::handleFocusedSurfaceChanged()
 {
     SurfaceInterface *focusedSurface = waylandServer()->seat()->focusedTextInputSurface();
-    if (focusedSurface) {
-        AbstractClient *focusedClient = waylandServer()->findClient(focusedSurface);
-        // Reset the old client virtual keybaord geom if necessary
-        // Old and new clients could be the same if focus moves between subsurfaces
-        if (m_trackedClient != focusedClient) {
-            if (m_trackedClient) {
-                m_trackedClient->setVirtualKeyboardGeometry(QRect());
-                disconnect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
-            }
-            m_trackedClient = focusedClient;
-            if (m_trackedClient) {
-                connect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
-            }
-        }
-        updateInputPanelState();
-    } else {
+    setTrackedClient(waylandServer()->findClient(focusedSurface));
+    if (!focusedSurface) {
         setActive(false);
     }
 }
