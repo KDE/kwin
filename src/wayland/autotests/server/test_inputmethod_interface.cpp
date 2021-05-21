@@ -582,7 +582,6 @@ void TestInputMethodInterface::testContentPurpose()
     serverContext->sendContentType(KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::None), serverPurpose);
     QVERIFY(contentTypeChangedSpy.wait());
     QCOMPARE(contentTypeChangedSpy.count(), 1);
-    QEXPECT_FAIL("Normal", "Normal should not return content_purpose_alpha", Continue);
     QEXPECT_FAIL("Pin", "Pin should return content_purpose_password", Continue);
     QTEST(imContext->contentPurpose(), "imPurpose");
 

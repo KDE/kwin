@@ -229,7 +229,7 @@ void InputMethodContextV1Interface::sendContentType(TextInputContentHints hint, 
         break;
     case TextInputContentPurpose::Normal:
     default:
-        contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_alpha;
+        contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_normal;
     }
 
     for (auto r : d->resourceMap()) {
