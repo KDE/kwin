@@ -905,7 +905,6 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
     if (shadowItem() && toplevel->wantsShadowToBeRendered()) {
         *ret << shadowItem()->shadow()->shadowQuads();
     }
-    effects->buildQuads(toplevel->effectWindow(), *ret);
     cached_quad_list.reset(ret);
     return *ret;
 }

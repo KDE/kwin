@@ -40,7 +40,6 @@ public:
     xcb_atom_t announceSupportProperty(const QByteArray &, KWin::Effect *) override {
         return XCB_ATOM_NONE;
     }
-    void buildQuads(KWin::EffectWindow *, KWin::WindowQuadList &) override {}
     QRect clientArea(KWin::clientAreaOption, const QPoint &, int) const override {
         return QRect();
     }

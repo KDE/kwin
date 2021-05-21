@@ -609,11 +609,6 @@ void Effect::drawWindow(EffectWindow* w, int mask, const QRegion &region, Window
     effects->drawWindow(w, mask, region, data);
 }
 
-void Effect::buildQuads(EffectWindow* w, WindowQuadList& quadList)
-{
-    effects->buildQuads(w, quadList);
-}
-
 void Effect::setPositionTransformations(WindowPaintData& data, QRect& region, EffectWindow* w,
                                         const QRect& r, Qt::AspectRatioMode aspect)
 {

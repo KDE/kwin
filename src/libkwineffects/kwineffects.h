@@ -512,12 +512,6 @@ public:
      */
     virtual void drawWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data);
 
-    /**
-     * Define new window quads so that they can be transformed by other effects.
-     * It's up to the effect to keep track of them.
-     */
-    virtual void buildQuads(EffectWindow* w, WindowQuadList& quadList);
-
     virtual void windowInputMouseEvent(QEvent* e);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
 
@@ -844,7 +838,6 @@ public:
     virtual void postPaintWindow(EffectWindow* w) = 0;
     virtual void paintEffectFrame(EffectFrame* frame, const QRegion &region, double opacity, double frameOpacity) = 0;
     virtual void drawWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data) = 0;
-    virtual void buildQuads(EffectWindow* w, WindowQuadList& quadList) = 0;
     virtual QVariant kwinOption(KWinOption kwopt) = 0;
     /**
      * Sets the cursor while the mouse is intercepted.
@@ -2440,7 +2433,7 @@ public:
     /**
      * Returns the unmodified window quad list. Can also be used to force rebuilding.
      */
-    virtual WindowQuadList buildQuads(bool force = false) const = 0;
+    virtual WindowQuadList buildQuads() const = 0;
 
     void setMinimized(bool minimize);
     virtual void minimize() = 0;

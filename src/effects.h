@@ -75,8 +75,6 @@ public:
 
     void drawWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data) override;
 
-    void buildQuads(EffectWindow* w, WindowQuadList& quadList) override;
-
     void activateWindow(EffectWindow* c) override;
     EffectWindow* activeWindow() const override;
     void moveWindow(EffectWindow* w, const QPoint& pos, bool snap = false, double snapAdjust = 1.0) override;
@@ -349,7 +347,6 @@ private:
     EffectsIterator m_currentPaintWindowIterator;
     EffectsIterator m_currentPaintEffectFrameIterator;
     EffectsIterator m_currentPaintScreenIterator;
-    EffectsIterator m_currentBuildQuadsIterator;
     typedef QHash< QByteArray, QList< Effect*> > PropertyEffectMap;
     PropertyEffectMap m_propertiesForEffects;
     QHash<QByteArray, qulonglong> m_managedProperties;
@@ -493,7 +490,7 @@ public:
     EffectWindow* transientFor() override;
     EffectWindowList mainWindows() const override;
 
-    WindowQuadList buildQuads(bool force = false) const override;
+    WindowQuadList buildQuads() const override;
 
     void minimize() override;
     void unminimize() override;

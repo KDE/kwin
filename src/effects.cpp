@@ -133,8 +133,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     new EffectsAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject(QStringLiteral("/Effects"), this);
-    // init is important, otherwise causes crashes when quads are build before the first painting pass start
-    m_currentBuildQuadsIterator = m_activeEffects.constEnd();
 
     Workspace *ws = Workspace::self();
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
@@ -475,21 +473,6 @@ void EffectsHandlerImpl::drawWindow(EffectWindow* w, int mask, const QRegion &re
         --m_currentDrawWindowIterator;
     } else
         m_scene->finalDrawWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
-}
-
-void EffectsHandlerImpl::buildQuads(EffectWindow* w, WindowQuadList& quadList)
-{
-    static bool initIterator = true;
-    if (initIterator) {
-        m_currentBuildQuadsIterator = m_activeEffects.constBegin();
-        initIterator = false;
-    }
-    if (m_currentBuildQuadsIterator != m_activeEffects.constEnd()) {
-        (*m_currentBuildQuadsIterator++)->buildQuads(w, quadList);
-        --m_currentBuildQuadsIterator;
-    }
-    if (m_currentBuildQuadsIterator == m_activeEffects.constBegin())
-        initIterator = true;
 }
 
 bool EffectsHandlerImpl::hasDecorationShadows() const
@@ -2106,9 +2089,9 @@ EffectWindowList EffectWindowImpl::mainWindows() const
     return {};
 }
 
-WindowQuadList EffectWindowImpl::buildQuads(bool force) const
+WindowQuadList EffectWindowImpl::buildQuads() const
 {
-    return sceneWindow()->buildQuads(force);
+    return sceneWindow()->buildQuads();
 }
 
 void EffectWindowImpl::setData(int role, const QVariant &data)
