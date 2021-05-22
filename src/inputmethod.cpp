@@ -376,17 +376,16 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
 void InputMethod::commitString(qint32 serial, const QString &text)
 {
     Q_UNUSED(serial)
-    auto t2 = waylandServer()->seat()->textInputV2();
-    if (t2 && t2->isEnabled()) {
+    if (auto t2 = waylandServer()->seat()->textInputV2(); t2 && t2->isEnabled()) {
         t2->commitString(text.toUtf8());
         t2->preEdit({}, {});
         return;
-    }
-    auto t3 = waylandServer()->seat()->textInputV3();
-    if (t3 && t3->isEnabled()) {
+    } else if (auto t3 = waylandServer()->seat()->textInputV3(); t3 && t3->isEnabled()) {
         t3->commitString(text.toUtf8());
         t3->done();
         return;
+    } else {
+        qCWarning(KWIN_VIRTUALKEYBOARD) << "We have nobody to commit to!!!";
     }
 }
 
