@@ -11,6 +11,7 @@
 #include <QPointer>
 #include <QRect>
 #include <QVector>
+#include <QSet>
 
 #include <qwayland-server-text-input-unstable-v2.h>
 
@@ -56,7 +57,6 @@ public:
     TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;
     SeatInterface *seat = nullptr;
     QPointer<SurfaceInterface> surface;
-    bool enabled = false;
     QString surroundingText;
     qint32 surroundingTextCursorPosition = 0;
     qint32 surroundingTextSelectionAnchor = 0;
@@ -64,6 +64,7 @@ public:
     QRect overlappedSurfaceArea;
     QString language;
     TextInputV2Interface *q;
+    QSet<SurfaceInterface*> m_enabledSurfaces;
 
 protected:
     void zwp_text_input_v2_enable(Resource *resource, wl_resource *surface) override;

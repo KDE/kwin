@@ -240,7 +240,7 @@ void TextInputTest::testEnterLeave()
     QCOMPARE(textInputChangedSpy.count(), 2);
     QVERIFY(leftSpy.wait());
     QVERIFY(!textInput->enteredSurface());
-    QVERIFY(serverTextInput->isEnabled());
+    QVERIFY(!serverTextInput->isEnabled());
 
     // if we enter again we should directly get the text input as it's still activated
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
@@ -254,7 +254,7 @@ void TextInputTest::testEnterLeave()
     // let's deactivate on client side
     textInput->disable(surface.data());
     QVERIFY(enabledChangedSpy.wait());
-    QCOMPARE(enabledChangedSpy.count(), 1);
+    QCOMPARE(enabledChangedSpy.count(), 3);
     QVERIFY(!serverTextInput->isEnabled());
     // does not trigger a leave
     QCOMPARE(textInputChangedSpy.count(), 3);

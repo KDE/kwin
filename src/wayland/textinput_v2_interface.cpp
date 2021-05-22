@@ -97,6 +97,22 @@ TextInputManagerV2InterfacePrivate::TextInputManagerV2InterfacePrivate(TextInput
 {
 }
 
+class EnabledEmitter {
+public:
+    EnabledEmitter(TextInputV2Interface *q)
+        : q(q)
+        , m_wasEnabled(q->isEnabled())
+    {}
+    ~EnabledEmitter() {
+        if (m_wasEnabled != q->isEnabled()) {
+            Q_EMIT q->enabledChanged();
+        }
+    }
+private:
+    TextInputV2Interface *q;
+    const bool m_wasEnabled;
+};
+
 void TextInputManagerV2InterfacePrivate::zwp_text_input_manager_v2_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
@@ -122,27 +138,33 @@ TextInputManagerV2Interface::TextInputManagerV2Interface(Display *display, QObje
 
 TextInputManagerV2Interface::~TextInputManagerV2Interface() = default;
 
-void TextInputV2InterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 serial)
+void TextInputV2InterfacePrivate::sendEnter(SurfaceInterface *newSurface, quint32 serial)
 {
-    if (!surface) {
-        return;
+    EnabledEmitter emitter(q);
+    if (surface) {
+        sendLeave(serial, newSurface);
     }
 
-    const auto clientResources = textInputsForClient(surface->client());
-    for (auto resource : clientResources) {
-        send_enter(resource->handle, serial, surface->resource());
+    surface = newSurface;
+    if (surface) {
+        const auto clientResources = textInputsForClient(newSurface->client());
+        for (auto resource : clientResources) {
+            send_enter(resource->handle, serial, newSurface->resource());
+        }
     }
 }
 
-void TextInputV2InterfacePrivate::sendLeave(quint32 serial, SurfaceInterface *surface)
+void TextInputV2InterfacePrivate::sendLeave(quint32 serial, SurfaceInterface *leavingSurface)
 {
-    if (!surface) {
+    if (leavingSurface != surface || !leavingSurface) {
         return;
     }
 
-    const auto clientResources = textInputsForClient(surface->client());
+    EnabledEmitter emitter(q);
+    surface.clear();
+    const auto clientResources = textInputsForClient(leavingSurface->client());
     for (auto resource : clientResources) {
-        send_leave(resource->handle, serial, surface->resource());
+        send_leave(resource->handle, serial, leavingSurface->resource());
     }
 }
 
@@ -284,21 +306,21 @@ TextInputV2InterfacePrivate::TextInputV2InterfacePrivate(SeatInterface *seat, Te
 void TextInputV2InterfacePrivate::zwp_text_input_v2_enable(Resource *resource, wl_resource *s)
 {
     Q_UNUSED(resource)
-    surface = SurfaceInterface::get(s);
-    enabled = true;
-    Q_EMIT q->enabledChanged();
+    EnabledEmitter emitter(q);
+    auto enabledSurface = SurfaceInterface::get(s);
+    m_enabledSurfaces.insert(enabledSurface);
 }
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_disable(Resource *resource, wl_resource *s)
 {
     Q_UNUSED(resource)
-    Q_UNUSED(s)
+    EnabledEmitter emitter(q);
+    auto disabledSurface = SurfaceInterface::get(s);
+    m_enabledSurfaces.remove(disabledSurface);
 
-    q->setInputPanelState(false, {0, 0, 0, 0});
-
-    surface.clear();
-    enabled = false;
-    Q_EMIT q->enabledChanged();
+    if (disabledSurface == surface) {
+        q->setInputPanelState(false, {0, 0, 0, 0});
+    }
 }
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_update_state(Resource *resource, uint32_t serial, uint32_t reason)
@@ -476,6 +498,7 @@ QRect TextInputV2Interface::cursorRectangle() const
 
 bool TextInputV2Interface::isEnabled() const
 {
-    return d->enabled;
+    return d->surface && d->m_enabledSurfaces.contains(d->surface);
 }
+
 }
