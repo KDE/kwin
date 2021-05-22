@@ -53,9 +53,12 @@ KCM.ScrollViewKCM {
 
                     readOnly: true
 
+                    onTextEdited: {
+                        Qt.callLater(kcm.desktopsModel.setDesktopName, model.Id, text);
+                    }
+
                     onEditingFinished: {
                         readOnly = true;
-                        Qt.callLater(kcm.desktopsModel.setDesktopName, model.Id, text);
                     }
                 }
 
