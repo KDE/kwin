@@ -119,6 +119,8 @@ KCM.ScrollViewKCM {
     view: ListView {
         id: desktopsList
 
+        clip: true
+
         model: kcm.desktopsModel.ready ? kcm.desktopsModel : null
 
         section.property: "DesktopRow"
