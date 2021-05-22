@@ -269,6 +269,7 @@ KCM.ScrollViewKCM {
                     stepSize: 100
 
                     textFromValue: function(value, locale) { return i18n("%1 ms", value)}
+                    valueFromText: function(text, locale) {return Number.fromLocaleString(locale, text.split(" ")[0])}
 
                     value: kcm.virtualDesktopsSettings.popupHideDelay
 
