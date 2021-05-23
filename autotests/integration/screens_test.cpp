@@ -177,7 +177,7 @@ void ScreensTest::testCount()
     QCOMPARE(countChangedSpy.count(), 1);
     QCOMPARE(screens()->count(), 1);
 
-    // setting the same geometries shouldn't Q_EMIT the signal, but we should get a changed signal
+    // setting the same geometries shouldn't emit the signal, but we should get a changed signal
     QSignalSpy changedSpy(screens(), &Screens::changed);
     QVERIFY(changedSpy.isValid());
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection, Q_ARG(int, 1));
