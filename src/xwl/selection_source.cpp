@@ -269,7 +269,7 @@ void X11Source::setDataSource(KWayland::Client::DataSource *dataSource)
 
 void X11Source::setOffers(const Mimes &offers)
 {
-    // TODO: share code with handleTargets and emit signals accordingly?
+    // TODO: share code with handleTargets and Q_EMIT signals accordingly?
     m_offers = offers;
 }
 

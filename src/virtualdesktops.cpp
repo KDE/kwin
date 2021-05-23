@@ -38,7 +38,7 @@ VirtualDesktop::VirtualDesktop(QObject *parent)
 
 VirtualDesktop::~VirtualDesktop()
 {
-    emit aboutToBeDestroyed();
+    Q_EMIT aboutToBeDestroyed();
 }
 
 void VirtualDesktopManager::setVirtualDesktopManagement(KWaylandServer::PlasmaVirtualDesktopManagementInterface *management)
@@ -131,7 +131,7 @@ void VirtualDesktop::setX11DesktopNumber(uint number)
     m_x11DesktopNumber = number;
 
     if (m_x11DesktopNumber != 0) {
-        emit x11DesktopNumberChanged();
+        Q_EMIT x11DesktopNumberChanged();
     }
 }
 
@@ -141,7 +141,7 @@ void VirtualDesktop::setName(const QString &name)
         return;
     }
     m_name = name;
-    emit nameChanged();
+    Q_EMIT nameChanged();
 }
 
 VirtualDesktopGrid::VirtualDesktopGrid()
@@ -483,8 +483,8 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const
     save();
 
     updateRootInfo();
-    emit desktopCreated(vd);
-    emit countChanged(m_desktops.count()-1, m_desktops.count());
+    Q_EMIT desktopCreated(vd);
+    Q_EMIT countChanged(m_desktops.count()-1, m_desktops.count());
     return vd;
 }
 
@@ -513,14 +513,14 @@ void VirtualDesktopManager::removeVirtualDesktop(const QByteArray &id)
     const uint newCurrent = qMin(oldCurrent, (uint)m_desktops.count());
     m_current = m_desktops.at(newCurrent - 1);
     if (oldCurrent != newCurrent) {
-        emit currentChanged(oldCurrent, newCurrent);
+        Q_EMIT currentChanged(oldCurrent, newCurrent);
     }
 
     save();
 
     updateRootInfo();
-    emit desktopRemoved(desktop);
-    emit countChanged(m_desktops.count()+1, m_desktops.count());
+    Q_EMIT desktopRemoved(desktop);
+    Q_EMIT countChanged(m_desktops.count()+1, m_desktops.count());
 
     desktop->deleteLater();
 }
@@ -553,7 +553,7 @@ bool VirtualDesktopManager::setCurrent(VirtualDesktop *newDesktop)
     }
     const uint oldDesktop = current();
     m_current = newDesktop;
-    emit currentChanged(oldDesktop, newDesktop->x11DesktopNumber());
+    Q_EMIT currentChanged(oldDesktop, newDesktop->x11DesktopNumber());
     return true;
 }
 
@@ -575,11 +575,11 @@ void VirtualDesktopManager::setCount(uint count)
             uint newCurrent = qMin(oldCurrent, count);
             m_current = m_desktops.at(newCurrent - 1);
             if (oldCurrent != newCurrent) {
-                emit currentChanged(oldCurrent, newCurrent);
+                Q_EMIT currentChanged(oldCurrent, newCurrent);
             }
         }
         for (auto desktop : desktopsToRemove) {
-            emit desktopRemoved(desktop);
+            Q_EMIT desktopRemoved(desktop);
             desktop->deleteLater();
         }
     } else {
@@ -612,9 +612,9 @@ void VirtualDesktopManager::setCount(uint count)
         save();
     }
     for (auto vd : qAsConst(newDesktops)) {
-        emit desktopCreated(vd);
+        Q_EMIT desktopCreated(vd);
     }
-    emit countChanged(oldCount, m_desktops.count());
+    Q_EMIT countChanged(oldCount, m_desktops.count());
 }
 
 
@@ -791,8 +791,8 @@ void VirtualDesktopManager::setNETDesktopLayout(Qt::Orientation orientation, uin
 
     m_grid.update(QSize(width, height), orientation, m_desktops);
     // TODO: why is there no call to m_rootInfo->setDesktopLayout?
-    emit layoutChanged(width, height);
-    emit rowsChanged(height);
+    Q_EMIT layoutChanged(width, height);
+    Q_EMIT rowsChanged(height);
 }
 
 void VirtualDesktopManager::initShortcuts()
@@ -876,7 +876,7 @@ void VirtualDesktopManager::setNavigationWrappingAround(bool enabled)
         return;
     }
     m_navigationWrapsAround = enabled;
-    emit navigationWrappingAroundChanged();
+    Q_EMIT navigationWrappingAroundChanged();
 }
 
 void VirtualDesktopManager::slotDown()

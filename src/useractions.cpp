@@ -853,7 +853,7 @@ void ShortcutDialog::accept()
 void ShortcutDialog::done(int r)
 {
     QDialog::done(r);
-    emit dialogDone(r == Accepted);
+    Q_EMIT dialogDone(r == Accepted);
 }
 
 void ShortcutDialog::keySequenceChanged()

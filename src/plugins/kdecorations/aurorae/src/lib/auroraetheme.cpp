@@ -124,7 +124,7 @@ void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
     d->initButtonFrame(HelpButton);
 
     d->themeConfig.load(config);
-    emit themeChanged();
+    Q_EMIT themeChanged();
 }
 
 bool AuroraeTheme::hasButton(AuroraeButtonType button) const
@@ -448,7 +448,7 @@ void AuroraeTheme::setBorderSize(KDecoration2::BorderSize size)
         return;
     }
     d->borderSize = size;
-    emit borderSizesChanged();
+    Q_EMIT borderSizesChanged();
 }
 
 void AuroraeTheme::setButtonSize(KDecoration2::BorderSize size)
@@ -457,7 +457,7 @@ void AuroraeTheme::setButtonSize(KDecoration2::BorderSize size)
         return;
     }
     d->buttonSize = size;
-    emit buttonSizesChanged();
+    Q_EMIT buttonSizesChanged();
 }
 
 void AuroraeTheme::setTabDragMimeType(const QString &mime)

@@ -240,7 +240,7 @@ void DrmBackend::handleUdevEvent()
                     kwinApp()->quit();
                     return;
                 } else {
-                    emit gpuRemoved(gpu);
+                    Q_EMIT gpuRemoved(gpu);
                     m_gpus.removeOne(gpu);
                     delete gpu;
                     updateOutputs();
@@ -291,7 +291,7 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
         m_active = true;
         connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
         connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
-        emit gpuAdded(gpu);
+        Q_EMIT gpuAdded(gpu);
         return gpu;
     } else {
         delete gpu;
@@ -303,19 +303,19 @@ void DrmBackend::addOutput(DrmOutput *o)
 {
     m_outputs.append(o);
     m_enabledOutputs.append(o);
-    emit o->gpu()->outputEnabled(o);
-    emit outputAdded(o);
-    emit outputEnabled(o);
+    Q_EMIT o->gpu()->outputEnabled(o);
+    Q_EMIT outputAdded(o);
+    Q_EMIT outputEnabled(o);
 }
 
 void DrmBackend::removeOutput(DrmOutput *o)
 {
-    emit o->gpu()->outputDisabled(o);
+    Q_EMIT o->gpu()->outputDisabled(o);
     if (m_enabledOutputs.removeOne(o)) {
-        emit outputDisabled(o);
+        Q_EMIT outputDisabled(o);
     }
     m_outputs.removeOne(o);
-    emit outputRemoved(o);
+    Q_EMIT outputRemoved(o);
 }
 
 bool DrmBackend::updateOutputs()
@@ -329,7 +329,7 @@ bool DrmBackend::updateOutputs()
         gpu->updateOutputs();
         if (gpu->outputs().isEmpty() && gpu != primaryGpu()) {
             it = m_gpus.erase(it);
-            emit gpuRemoved(gpu);
+            Q_EMIT gpuRemoved(gpu);
             delete gpu;
         } else {
             it++;
@@ -341,7 +341,7 @@ bool DrmBackend::updateOutputs()
         readOutputsConfiguration();
     }
     if (!m_outputs.isEmpty()) {
-        emit screensQueried();
+        Q_EMIT screensQueried();
     }
     return true;
 }
@@ -466,17 +466,17 @@ void DrmBackend::enableOutput(DrmOutput *output, bool enable)
     if (enable) {
         Q_ASSERT(!m_enabledOutputs.contains(output));
         m_enabledOutputs << output;
-        emit output->gpu()->outputEnabled(output);
-        emit outputEnabled(output);
+        Q_EMIT output->gpu()->outputEnabled(output);
+        Q_EMIT outputEnabled(output);
     } else {
         Q_ASSERT(m_enabledOutputs.contains(output));
         m_enabledOutputs.removeOne(output);
         Q_ASSERT(!m_enabledOutputs.contains(output));
-        emit output->gpu()->outputDisabled(output);
-        emit outputDisabled(output);
+        Q_EMIT output->gpu()->outputDisabled(output);
+        Q_EMIT outputDisabled(output);
     }
     checkOutputsAreOn();
-    emit screensQueried();
+    Q_EMIT screensQueried();
 }
 
 void DrmBackend::initCursor()

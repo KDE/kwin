@@ -144,9 +144,9 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         [this](int old, AbstractClient *c) {
             const int newDesktop = VirtualDesktopManager::self()->current();
             if (old != 0 && newDesktop != old) {
-                emit desktopChanged(old, newDesktop, c ? c->effectWindow() : nullptr);
+                Q_EMIT desktopChanged(old, newDesktop, c ? c->effectWindow() : nullptr);
                 // TODO: remove in 4.10
-                emit desktopChanged(old, newDesktop);
+                Q_EMIT desktopChanged(old, newDesktop);
             }
         }
     );
@@ -155,7 +155,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
             if (!c->effectWindow()) {
                 return;
             }
-            emit desktopPresenceChanged(c->effectWindow(), old, c->desktop());
+            Q_EMIT desktopPresenceChanged(c->effectWindow(), old, c->desktop());
         }
     );
     connect(ws, &Workspace::clientAdded, this,
@@ -175,17 +175,17 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(ws, &Workspace::internalClientAdded, this,
         [this](InternalClient *client) {
             setupClientConnections(client);
-            emit windowAdded(client->effectWindow());
+            Q_EMIT windowAdded(client->effectWindow());
         }
     );
     connect(ws, &Workspace::clientActivated, this,
         [this](KWin::AbstractClient *c) {
-            emit windowActivated(c ? c->effectWindow() : nullptr);
+            Q_EMIT windowActivated(c ? c->effectWindow() : nullptr);
         }
     );
     connect(ws, &Workspace::deletedRemoved, this,
         [this](KWin::Deleted *d) {
-            emit windowDeleted(d->effectWindow());
+            Q_EMIT windowDeleted(d->effectWindow());
             elevated_windows.removeAll(d->effectWindow());
         }
     );
@@ -232,7 +232,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
             } else {
                 m_x11WindowPropertyNotify.reset();
             }
-            emit xcbConnectionChanged();
+            Q_EMIT xcbConnectionChanged();
         }
     );
 
@@ -290,17 +290,17 @@ void EffectsHandlerImpl::setupClientConnections(AbstractClient* c)
             this, &EffectsHandlerImpl::slotClientMaximized);
     connect(c, &AbstractClient::clientStartUserMovedResized, this,
         [this](AbstractClient *c) {
-            emit windowStartUserMovedResized(c->effectWindow());
+            Q_EMIT windowStartUserMovedResized(c->effectWindow());
         }
     );
     connect(c, &AbstractClient::clientStepUserMovedResized, this,
         [this](AbstractClient *c, const QRect &geometry) {
-            emit windowStepUserMovedResized(c->effectWindow(), geometry);
+            Q_EMIT windowStepUserMovedResized(c->effectWindow(), geometry);
         }
     );
     connect(c, &AbstractClient::clientFinishUserMovedResized, this,
         [this](AbstractClient *c) {
-            emit windowFinishUserMovedResized(c->effectWindow());
+            Q_EMIT windowFinishUserMovedResized(c->effectWindow());
         }
     );
     connect(c, &AbstractClient::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
@@ -308,7 +308,7 @@ void EffectsHandlerImpl::setupClientConnections(AbstractClient* c)
         [this](AbstractClient *c, bool animate) {
             // TODO: notify effects even if it should not animate?
             if (animate) {
-                emit windowMinimized(c->effectWindow());
+                Q_EMIT windowMinimized(c->effectWindow());
             }
         }
     );
@@ -316,7 +316,7 @@ void EffectsHandlerImpl::setupClientConnections(AbstractClient* c)
         [this](AbstractClient* c, bool animate) {
             // TODO: notify effects even if it should not animate?
             if (animate) {
-                emit windowUnminimized(c->effectWindow());
+                Q_EMIT windowUnminimized(c->effectWindow());
             }
         }
     );
@@ -326,38 +326,38 @@ void EffectsHandlerImpl::setupClientConnections(AbstractClient* c)
     connect(c, &AbstractClient::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
     connect(c, &AbstractClient::unresponsiveChanged, this,
         [this, c](bool unresponsive) {
-            emit windowUnresponsiveChanged(c->effectWindow(), unresponsive);
+            Q_EMIT windowUnresponsiveChanged(c->effectWindow(), unresponsive);
         }
     );
     connect(c, &AbstractClient::windowShown, this,
         [this](Toplevel *c) {
-            emit windowShown(c->effectWindow());
+            Q_EMIT windowShown(c->effectWindow());
         }
     );
     connect(c, &AbstractClient::windowHidden, this,
         [this](Toplevel *c) {
-            emit windowHidden(c->effectWindow());
+            Q_EMIT windowHidden(c->effectWindow());
         }
     );
     connect(c, &AbstractClient::keepAboveChanged, this,
         [this, c](bool above) {
             Q_UNUSED(above)
-            emit windowKeepAboveChanged(c->effectWindow());
+            Q_EMIT windowKeepAboveChanged(c->effectWindow());
         }
     );
     connect(c, &AbstractClient::keepBelowChanged, this,
         [this, c](bool below) {
             Q_UNUSED(below)
-            emit windowKeepBelowChanged(c->effectWindow());
+            Q_EMIT windowKeepBelowChanged(c->effectWindow());
         }
     );
     connect(c, &AbstractClient::fullScreenChanged, this,
         [this, c]() {
-            emit windowFullScreenChanged(c->effectWindow());
+            Q_EMIT windowFullScreenChanged(c->effectWindow());
         }
     );
     connect(c, &AbstractClient::visibleGeometryChanged, this, [this, c]() {
-        emit windowExpandedGeometryChanged(c->effectWindow());
+        Q_EMIT windowExpandedGeometryChanged(c->effectWindow());
     });
 }
 
@@ -369,7 +369,7 @@ void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
     connect(u, &Unmanaged::frameGeometryChanged, this, &EffectsHandlerImpl::slotFrameGeometryChanged);
     connect(u, &Unmanaged::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
     connect(u, &Unmanaged::visibleGeometryChanged, this, [this, u]() {
-        emit windowExpandedGeometryChanged(u->effectWindow());
+        Q_EMIT windowExpandedGeometryChanged(u->effectWindow());
     });
 }
 
@@ -544,7 +544,7 @@ void EffectsHandlerImpl::slotClientMaximized(KWin::AbstractClient *c, MaximizeMo
         break;
     }
     if (EffectWindowImpl *w = c->effectWindow()) {
-        emit windowMaximizedStateChanged(w, horizontal, vertical);
+        Q_EMIT windowMaximizedStateChanged(w, horizontal, vertical);
     }
 }
 
@@ -553,7 +553,7 @@ void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)
     if (t->opacity() == oldOpacity || !t->effectWindow()) {
         return;
     }
-    emit windowOpacityChanged(t->effectWindow(), oldOpacity, (qreal)t->opacity());
+    Q_EMIT windowOpacityChanged(t->effectWindow(), oldOpacity, (qreal)t->opacity());
 }
 
 void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
@@ -562,7 +562,7 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
     AbstractClient *c = static_cast<AbstractClient *>(t);
     disconnect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
     setupClientConnections(c);
-    emit windowAdded(c->effectWindow());
+    Q_EMIT windowAdded(c->effectWindow());
 }
 
 void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
@@ -570,35 +570,35 @@ void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
     Q_ASSERT(qobject_cast<Unmanaged *>(t));
     Unmanaged *u = static_cast<Unmanaged*>(t);
     setupUnmanagedConnections(u);
-    emit windowAdded(u->effectWindow());
+    Q_EMIT windowAdded(u->effectWindow());
 }
 
 void EffectsHandlerImpl::slotWindowClosed(KWin::Toplevel *c, KWin::Deleted *d)
 {
     c->disconnect(this);
     if (d) {
-        emit windowClosed(c->effectWindow());
+        Q_EMIT windowClosed(c->effectWindow());
     }
 }
 
 void EffectsHandlerImpl::slotClientModalityChanged()
 {
-    emit windowModalityChanged(static_cast<X11Client *>(sender())->effectWindow());
+    Q_EMIT windowModalityChanged(static_cast<X11Client *>(sender())->effectWindow());
 }
 
 void EffectsHandlerImpl::slotCurrentTabAboutToChange(EffectWindow *from, EffectWindow *to)
 {
-    emit currentTabAboutToChange(from, to);
+    Q_EMIT currentTabAboutToChange(from, to);
 }
 
 void EffectsHandlerImpl::slotTabAdded(EffectWindow* w, EffectWindow* to)
 {
-    emit tabAdded(w, to);
+    Q_EMIT tabAdded(w, to);
 }
 
 void EffectsHandlerImpl::slotTabRemoved(EffectWindow *w, EffectWindow* leaderOfFormerGroup)
 {
-    emit tabRemoved(w, leaderOfFormerGroup);
+    Q_EMIT tabRemoved(w, leaderOfFormerGroup);
 }
 
 void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRegion& r)
@@ -607,7 +607,7 @@ void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRegion& r)
         // can happen during tear down of window
         return;
     }
-    emit windowDamaged(t->effectWindow(), r);
+    Q_EMIT windowDamaged(t->effectWindow(), r);
 }
 
 void EffectsHandlerImpl::slotGeometryShapeChanged(Toplevel* t, const QRect& old)
@@ -616,14 +616,14 @@ void EffectsHandlerImpl::slotGeometryShapeChanged(Toplevel* t, const QRect& old)
     // in some functions that may still call this
     if (t == nullptr || t->effectWindow() == nullptr)
         return;
-    emit windowGeometryShapeChanged(t->effectWindow(), old);
+    Q_EMIT windowGeometryShapeChanged(t->effectWindow(), old);
 }
 
 void EffectsHandlerImpl::slotFrameGeometryChanged(Toplevel *toplevel, const QRect &oldGeometry)
 {
     // effectWindow() might be nullptr during tear down of the client.
     if (toplevel->effectWindow()) {
-        emit windowFrameGeometryChanged(toplevel->effectWindow(), oldGeometry);
+        Q_EMIT windowFrameGeometryChanged(toplevel->effectWindow(), oldGeometry);
     }
 }
 
@@ -634,9 +634,9 @@ void EffectsHandlerImpl::setActiveFullScreenEffect(Effect* e)
     }
     const bool activeChanged = (e == nullptr || fullscreen_effect == nullptr);
     fullscreen_effect = e;
-    emit activeFullScreenEffectChanged();
+    Q_EMIT activeFullScreenEffectChanged();
     if (activeChanged) {
-        emit hasActiveFullScreenEffectChanged();
+        Q_EMIT hasActiveFullScreenEffectChanged();
     }
 }
 
@@ -804,7 +804,7 @@ bool EffectsHandlerImpl::hasKeyboardGrab() const
 void EffectsHandlerImpl::desktopResized(const QSize &size)
 {
     m_scene->screenGeometryChanged(size);
-    emit screenGeometryChanged(size);
+    Q_EMIT screenGeometryChanged(size);
 }
 
 void EffectsHandlerImpl::registerPropertyType(long atom, bool reg)
@@ -1733,7 +1733,7 @@ void EffectsHandlerImpl::slotOutputEnabled(AbstractOutput *output)
 {
     EffectScreen *screen = new EffectScreenImpl(output, this);
     m_effectScreens.append(screen);
-    emit screenAdded(screen);
+    Q_EMIT screenAdded(screen);
 }
 
 void EffectsHandlerImpl::slotOutputDisabled(AbstractOutput *output)
@@ -1744,7 +1744,7 @@ void EffectsHandlerImpl::slotOutputDisabled(AbstractOutput *output)
     if (it != m_effectScreens.end()) {
         EffectScreen *screen = *it;
         m_effectScreens.erase(it);
-        emit screenRemoved(screen);
+        Q_EMIT screenRemoved(screen);
         delete screen;
     }
 }
@@ -2121,7 +2121,7 @@ void EffectWindowImpl::setData(int role, const QVariant &data)
         dataMap[ role ] = data;
     else
         dataMap.remove(role);
-    emit effects->windowDataChanged(this, role);
+    Q_EMIT effects->windowDataChanged(this, role);
 }
 
 QVariant EffectWindowImpl::data(int role) const

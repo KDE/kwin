@@ -140,7 +140,7 @@ void RuleBookModel::setDescriptionAt(int row, const QString &description)
 
     m_rules.at(row)->description = description;
 
-    emit dataChanged(index(row), index(row), QVector<int>{Qt::DisplayRole});
+    Q_EMIT dataChanged(index(row), index(row), QVector<int>{Qt::DisplayRole});
 }
 
 void RuleBookModel::setRuleAt(int row, Rules *rule)
@@ -150,7 +150,7 @@ void RuleBookModel::setRuleAt(int row, Rules *rule)
     delete m_rules.at(row);
     m_rules[row] = rule;
 
-    emit dataChanged(index(row), index(row), QVector<int>{Qt::DisplayRole});
+    Q_EMIT dataChanged(index(row), index(row), QVector<int>{Qt::DisplayRole});
 }
 
 

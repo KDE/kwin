@@ -55,7 +55,7 @@ void Activities::slotCurrentChanged(const QString &newActivity)
     }
     m_previous = m_current;
     m_current = newActivity;
-    emit currentChanged(newActivity);
+    Q_EMIT currentChanged(newActivity);
 }
 
 void Activities::slotRemoved(const QString &activity)

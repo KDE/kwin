@@ -2053,7 +2053,7 @@ void CloseWindowView::clicked()
 {
     // 50ms until the window is elevated (seen!) and 300ms more to be "realized" by the user.
     if (m_armTimer.hasExpired(350)) {
-        emit requestClose();
+        Q_EMIT requestClose();
     }
 }
 

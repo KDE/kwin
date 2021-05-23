@@ -49,7 +49,7 @@ void FTraceLogger::setEnabled(bool enabled)
     } else {
         m_file.close();
     }
-    emit enabledChanged();
+    Q_EMIT enabledChanged();
 }
 
 bool FTraceLogger::open()

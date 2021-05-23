@@ -687,7 +687,7 @@ bool DrmOutput::presentAtomically(const QSharedPointer<DrmBuffer> &buffer)
                 showCursor();
             }
             setCurrentModeInternal();
-            emit screens()->changed();
+            Q_EMIT screens()->changed();
         }
         return false;
     }

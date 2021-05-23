@@ -60,7 +60,7 @@ void XdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *toplevel
         return;
     }
 
-    emit clientCreated(new XdgToplevelClient(toplevel));
+    Q_EMIT clientCreated(new XdgToplevelClient(toplevel));
 }
 
 void XdgShellIntegration::registerXdgPopup(XdgPopupInterface *popup)
@@ -71,7 +71,7 @@ void XdgShellIntegration::registerXdgPopup(XdgPopupInterface *popup)
         return;
     }
 
-    emit clientCreated(new XdgPopupClient(popup));
+    Q_EMIT clientCreated(new XdgPopupClient(popup));
 }
 
 } // namespace KWin

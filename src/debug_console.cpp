@@ -1531,21 +1531,21 @@ void InputDeviceModel::setupDeviceConnections(LibInput::Device *device)
         [this, device] {
             const QModelIndex parent = index(m_devices.indexOf(device), 0, QModelIndex());
             const QModelIndex child = index(device->metaObject()->indexOfProperty("enabled"), 1, parent);
-            emit dataChanged(child, child, QVector<int>{Qt::DisplayRole});
+            Q_EMIT dataChanged(child, child, QVector<int>{Qt::DisplayRole});
         }
     );
     connect(device, &LibInput::Device::leftHandedChanged, this,
         [this, device] {
             const QModelIndex parent = index(m_devices.indexOf(device), 0, QModelIndex());
             const QModelIndex child = index(device->metaObject()->indexOfProperty("leftHanded"), 1, parent);
-            emit dataChanged(child, child, QVector<int>{Qt::DisplayRole});
+            Q_EMIT dataChanged(child, child, QVector<int>{Qt::DisplayRole});
         }
     );
     connect(device, &LibInput::Device::pointerAccelerationChanged, this,
         [this, device] {
             const QModelIndex parent = index(m_devices.indexOf(device), 0, QModelIndex());
             const QModelIndex child = index(device->metaObject()->indexOfProperty("pointerAcceleration"), 1, parent);
-            emit dataChanged(child, child, QVector<int>{Qt::DisplayRole});
+            Q_EMIT dataChanged(child, child, QVector<int>{Qt::DisplayRole});
         }
     );
 }

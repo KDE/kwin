@@ -36,7 +36,7 @@ void PreviewButtonItem::setType(KDecoration2::DecorationButtonType type)
         return;
     }
     m_type = type;
-    emit typeChanged();
+    Q_EMIT typeChanged();
 }
 
 KDecoration2::DecorationButtonType PreviewButtonItem::type() const
@@ -55,7 +55,7 @@ void PreviewButtonItem::setBridge(PreviewBridge *bridge)
         return;
     }
     m_bridge = bridge;
-    emit bridgeChanged();
+    Q_EMIT bridgeChanged();
 }
 
 Settings *PreviewButtonItem::settings() const
@@ -69,7 +69,7 @@ void PreviewButtonItem::setSettings(Settings *settings)
         return;
     }
     m_settings = settings;
-    emit settingsChanged();
+    Q_EMIT settingsChanged();
 }
 
 int PreviewButtonItem::typeAsInt() const

@@ -43,7 +43,7 @@ Renderer::~Renderer() = default;
 void Renderer::schedule(const QRect &rect)
 {
     m_scheduled = m_scheduled.united(rect);
-    emit renderScheduled(rect);
+    Q_EMIT renderScheduled(rect);
 }
 
 QRegion Renderer::getScheduled()

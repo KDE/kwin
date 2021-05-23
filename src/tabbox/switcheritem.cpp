@@ -47,13 +47,13 @@ void SwitcherItem::setItem(QObject *item)
         return;
     }
     m_item = item;
-    emit itemChanged();
+    Q_EMIT itemChanged();
 }
 
 void SwitcherItem::setModel(QAbstractItemModel *model)
 {
     m_model = model;
-    emit modelChanged();
+    Q_EMIT modelChanged();
 }
 
 void SwitcherItem::setVisible(bool visible)
@@ -62,9 +62,9 @@ void SwitcherItem::setVisible(bool visible)
         return;
     }
     if (visible)
-        emit screenGeometryChanged();
+        Q_EMIT screenGeometryChanged();
     m_visible = visible;
-    emit visibleChanged();
+    Q_EMIT visibleChanged();
 }
 
 QRect SwitcherItem::screenGeometry() const
@@ -81,7 +81,7 @@ void SwitcherItem::setCurrentIndex(int index)
     if (m_model) {
         tabBox->setCurrentIndex(m_model->index(index, 0));
     }
-    emit currentIndexChanged(m_currentIndex);
+    Q_EMIT currentIndexChanged(m_currentIndex);
 }
 
 void SwitcherItem::setAllDesktops(bool all)
@@ -90,7 +90,7 @@ void SwitcherItem::setAllDesktops(bool all)
         return;
     }
     m_allDesktops = all;
-    emit allDesktopsChanged();
+    Q_EMIT allDesktopsChanged();
 }
 
 void SwitcherItem::setNoModifierGrab(bool set)
@@ -99,7 +99,7 @@ void SwitcherItem::setNoModifierGrab(bool set)
         return;
     }
     m_noModifierGrab = set;
-    emit noModifierGrabChanged();
+    Q_EMIT noModifierGrabChanged();
 }
 
 bool SwitcherItem::compositing()

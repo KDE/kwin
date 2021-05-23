@@ -532,7 +532,7 @@ bool WaylandBackend::initialize()
             }
             m_relativePointerManager = m_registry->createRelativePointerManager(name, version, this);
             if (m_pointerConstraints) {
-                emit pointerLockSupportedChanged();
+                Q_EMIT pointerLockSupportedChanged();
             }
         }
     );
@@ -543,7 +543,7 @@ bool WaylandBackend::initialize()
             }
             m_pointerConstraints = m_registry->createPointerConstraints(name, version, this);
             if (m_relativePointerManager) {
-                emit pointerLockSupportedChanged();
+                Q_EMIT pointerLockSupportedChanged();
             }
         }
     );
@@ -573,7 +573,7 @@ bool WaylandBackend::initialize()
             }
             m_waylandCursor->installImage();
             auto c = Cursors::self()->currentCursor();
-            emit c->rendered(c->geometry());
+            Q_EMIT c->rendered(c->geometry());
         }
     );
     connect(this, &WaylandBackend::pointerLockChanged, this, [this] (bool locked) {
@@ -631,7 +631,7 @@ void WaylandBackend::initConnection()
     connect(m_connectionThreadObject, &ConnectionThread::connectionDied, this,
         [this]() {
             setReady(false);
-            emit systemCompositorDied();
+            Q_EMIT systemCompositorDied();
             delete m_seat;
             m_shm->destroy();
 
@@ -739,19 +739,19 @@ void WaylandBackend::createOutputs()
 
         logicalWidthSum += logicalWidth;
         m_outputs << waylandOutput;
-        emit outputAdded(waylandOutput);
-        emit outputEnabled(waylandOutput);
+        Q_EMIT outputAdded(waylandOutput);
+        Q_EMIT outputEnabled(waylandOutput);
     }
     setReady(true);
-    emit screensQueried();
+    Q_EMIT screensQueried();
 }
 
 void WaylandBackend::destroyOutputs()
 {
     while (!m_outputs.isEmpty()) {
         WaylandOutput *output = m_outputs.takeLast();
-        emit outputDisabled(output);
-        emit outputRemoved(output);
+        Q_EMIT outputDisabled(output);
+        Q_EMIT outputRemoved(output);
         delete output;
     }
 }

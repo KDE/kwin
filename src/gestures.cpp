@@ -86,7 +86,7 @@ void GestureRecognizer::unregisterGesture(KWin::Gesture* gesture)
     }
     m_gestures.removeAll(gesture);
     if (m_activeSwipeGestures.removeOne(gesture)) {
-        emit gesture->cancelled();
+        Q_EMIT gesture->cancelled();
     }
 }
 
@@ -134,7 +134,7 @@ int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startP
         // direction doesn't matter yet
         m_activeSwipeGestures << swipeGesture;
         count++;
-        emit swipeGesture->started();
+        Q_EMIT swipeGesture->started();
     }
     return count;
 }
@@ -166,11 +166,11 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
         auto g = qobject_cast<SwipeGesture*>(*it);
         if (g->direction() == direction) {
             if (g->isMinimumDeltaRelevant()) {
-                emit g->progress(g->minimumDeltaReachedProgress(combinedDelta));
+                Q_EMIT g->progress(g->minimumDeltaReachedProgress(combinedDelta));
             }
             it++;
         } else {
-            emit g->cancelled();
+            Q_EMIT g->cancelled();
             it = m_activeSwipeGestures.erase(it);
         }
     }
@@ -179,7 +179,7 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
 void GestureRecognizer::cancelActiveSwipeGestures()
 {
     for (auto g : qAsConst(m_activeSwipeGestures)) {
-        emit g->cancelled();
+        Q_EMIT g->cancelled();
     }
     m_activeSwipeGestures.clear();
 }
@@ -195,9 +195,9 @@ void GestureRecognizer::endSwipeGesture()
     const QSizeF delta = std::accumulate(m_swipeUpdates.constBegin(), m_swipeUpdates.constEnd(), QSizeF(0, 0));
     for (auto g : qAsConst(m_activeSwipeGestures)) {
         if (static_cast<SwipeGesture*>(g)->minimumDeltaReached(delta)) {
-            emit g->triggered();
+            Q_EMIT g->triggered();
         } else {
-            emit g->cancelled();
+            Q_EMIT g->cancelled();
         }
     }
     m_activeSwipeGestures.clear();

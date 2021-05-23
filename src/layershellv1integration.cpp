@@ -49,7 +49,7 @@ void LayerShellV1Integration::createClient(LayerSurfaceV1Interface *shellSurface
         return;
     }
 
-    emit clientCreated(new LayerShellV1Client(shellSurface, output, this));
+    Q_EMIT clientCreated(new LayerShellV1Client(shellSurface, output, this));
 }
 
 void LayerShellV1Integration::recreateClient(LayerSurfaceV1Interface *shellSurface)

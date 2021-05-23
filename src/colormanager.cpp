@@ -65,7 +65,7 @@ void ColorManager::handleOutputEnabled(AbstractOutput *output)
 {
     ColorDevice *device = new ColorDevice(output, this);
     d->devices.append(device);
-    emit deviceAdded(device);
+    Q_EMIT deviceAdded(device);
 }
 
 void ColorManager::handleOutputDisabled(AbstractOutput *output)
@@ -79,7 +79,7 @@ void ColorManager::handleOutputDisabled(AbstractOutput *output)
     }
     ColorDevice *device = *it;
     d->devices.erase(it);
-    emit deviceRemoved(device);
+    Q_EMIT deviceRemoved(device);
     delete device;
 }
 

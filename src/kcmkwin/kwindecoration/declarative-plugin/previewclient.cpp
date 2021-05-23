@@ -68,37 +68,37 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     connect(this, &PreviewClient::paletteChanged,               c, &DecoratedClient::paletteChanged);
     connect(this, &PreviewClient::maximizedVerticallyChanged, this,
         [this]() {
-            emit maximizedChanged(isMaximized());
+            Q_EMIT maximizedChanged(isMaximized());
         }
     );
     connect(this, &PreviewClient::maximizedHorizontallyChanged, this,
         [this]() {
-            emit maximizedChanged(isMaximized());
+            Q_EMIT maximizedChanged(isMaximized());
         }
     );
     connect(this, &PreviewClient::iconNameChanged, this,
         [this]() {
             m_icon = QIcon::fromTheme(m_iconName);
-            emit iconChanged(m_icon);
+            Q_EMIT iconChanged(m_icon);
         }
     );
     connect(this, &PreviewClient::desktopChanged, this,
         [this]() {
-            emit onAllDesktopsChanged(isOnAllDesktops());
+            Q_EMIT onAllDesktopsChanged(isOnAllDesktops());
         }
     );
     connect(&m_palette, &KWin::Decoration::DecorationPalette::changed, [this]() {
-        emit paletteChanged(m_palette.palette());
+        Q_EMIT paletteChanged(m_palette.palette());
     });
     auto emitEdgesChanged = [this, c]() {
-        emit c->adjacentScreenEdgesChanged(adjacentScreenEdges());
+        Q_EMIT c->adjacentScreenEdgesChanged(adjacentScreenEdges());
     };
     connect(this, &PreviewClient::bordersTopEdgeChanged,    this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersLeftEdgeChanged,   this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersRightEdgeChanged,  this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersBottomEdgeChanged, this, emitEdgesChanged);
     auto emitSizeChanged = [c]() {
-        emit c->sizeChanged(c->size());
+        Q_EMIT c->sizeChanged(c->size());
     };
     connect(this, &PreviewClient::widthChanged, this, emitSizeChanged);
     connect(this, &PreviewClient::heightChanged, this, emitSizeChanged);
@@ -111,7 +111,7 @@ PreviewClient::~PreviewClient() = default;
 void PreviewClient::setIcon(const QIcon &pixmap)
 {
     m_icon = pixmap;
-    emit iconChanged(m_icon);
+    Q_EMIT iconChanged(m_icon);
 }
 
 int PreviewClient::width() const
@@ -153,7 +153,7 @@ void PreviewClient::setDesktop(int desktop)
         return;
     }
     m_desktop = desktop;
-    emit desktopChanged(m_desktop);
+    Q_EMIT desktopChanged(m_desktop);
 }
 
 QIcon PreviewClient::icon() const
@@ -315,7 +315,7 @@ void PreviewClient::setBordersBottomEdge(bool enabled)
         return;
     }
     m_bordersBottomEdge = enabled;
-    emit bordersBottomEdgeChanged(enabled);
+    Q_EMIT bordersBottomEdgeChanged(enabled);
 }
 
 void PreviewClient::setBordersLeftEdge(bool enabled)
@@ -324,7 +324,7 @@ void PreviewClient::setBordersLeftEdge(bool enabled)
         return;
     }
     m_bordersLeftEdge = enabled;
-    emit bordersLeftEdgeChanged(enabled);
+    Q_EMIT bordersLeftEdgeChanged(enabled);
 }
 
 void PreviewClient::setBordersRightEdge(bool enabled)
@@ -333,7 +333,7 @@ void PreviewClient::setBordersRightEdge(bool enabled)
         return;
     }
     m_bordersRightEdge = enabled;
-    emit bordersRightEdgeChanged(enabled);
+    Q_EMIT bordersRightEdgeChanged(enabled);
 }
 
 void PreviewClient::setBordersTopEdge(bool enabled)
@@ -342,7 +342,7 @@ void PreviewClient::setBordersTopEdge(bool enabled)
         return;
     }
     m_bordersTopEdge = enabled;
-    emit bordersTopEdgeChanged(enabled);
+    Q_EMIT bordersTopEdgeChanged(enabled);
 }
 
 void PreviewClient::requestShowToolTip(const QString &text)
@@ -356,7 +356,7 @@ void PreviewClient::requestHideToolTip()
 
 void PreviewClient::requestClose()
 {
-    emit closeRequested();
+    Q_EMIT closeRequested();
 }
 
 void PreviewClient::requestContextHelp()
@@ -378,7 +378,7 @@ void PreviewClient::requestToggleMaximization(Qt::MouseButtons buttons)
 
 void PreviewClient::requestMinimize()
 {
-    emit minimizeRequested();
+    Q_EMIT minimizeRequested();
 }
 
 void PreviewClient::requestToggleKeepAbove()
@@ -394,7 +394,7 @@ void PreviewClient::requestToggleKeepBelow()
 void PreviewClient::requestShowWindowMenu(const QRect &rect)
 {
     Q_UNUSED(rect)
-    emit showWindowMenuRequested();
+    Q_EMIT showWindowMenuRequested();
 }
 
 void PreviewClient::requestShowApplicationMenu(const QRect &rect, int actionId)
@@ -425,7 +425,7 @@ void PreviewClient::name(type variable) \
         return; \
     } \
     m_##variable = variable; \
-    emit variable##Changed(m_##variable); \
+    Q_EMIT variable##Changed(m_##variable); \
 }
 
 #define SETTER2(name, variable) SETTER(bool, name, variable)

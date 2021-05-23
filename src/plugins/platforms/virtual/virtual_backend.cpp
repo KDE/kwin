@@ -69,8 +69,8 @@ bool VirtualBackend::initialize()
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput ;
         m_outputsEnabled << dummyOutput;
-        emit outputAdded(dummyOutput);
-        emit outputEnabled(dummyOutput);
+        Q_EMIT outputAdded(dummyOutput);
+        Q_EMIT outputEnabled(dummyOutput);
     }
 
     setSoftwareCursorForced(true);
@@ -79,7 +79,7 @@ bool VirtualBackend::initialize()
     waylandServer()->seat()->setHasKeyboard(true);
     waylandServer()->seat()->setHasTouch(true);
 
-    emit screensQueried();
+    Q_EMIT screensQueried();
     return true;
 }
 
@@ -118,12 +118,12 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
 
     while (!m_outputsEnabled.isEmpty()) {
         VirtualOutput *output = m_outputsEnabled.takeLast();
-        emit outputDisabled(output);
+        Q_EMIT outputDisabled(output);
     }
 
     while (!m_outputs.isEmpty()) {
         VirtualOutput *output = m_outputs.takeLast();
-        emit outputRemoved(output);
+        Q_EMIT outputRemoved(output);
         delete output;
     }
 
@@ -142,11 +142,11 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
         }
         m_outputs.append(vo);
         m_outputsEnabled.append(vo);
-        emit outputAdded(vo);
-        emit outputEnabled(vo);
+        Q_EMIT outputAdded(vo);
+        Q_EMIT outputEnabled(vo);
     }
 
-    emit screensQueried();
+    Q_EMIT screensQueried();
 }
 
 void VirtualBackend::enableOutput(VirtualOutput *output, bool enable)
@@ -154,14 +154,14 @@ void VirtualBackend::enableOutput(VirtualOutput *output, bool enable)
     if (enable) {
         Q_ASSERT(!m_outputsEnabled.contains(output));
         m_outputsEnabled << output;
-        emit outputEnabled(output);
+        Q_EMIT outputEnabled(output);
     } else {
         Q_ASSERT(m_outputsEnabled.contains(output));
         m_outputsEnabled.removeOne(output);
-        emit outputDisabled(output);
+        Q_EMIT outputDisabled(output);
     }
 
-    emit screensQueried();
+    Q_EMIT screensQueried();
 }
 
 void VirtualBackend::removeOutput(AbstractOutput *output)
@@ -170,11 +170,11 @@ void VirtualBackend::removeOutput(AbstractOutput *output)
     virtualOutput->setEnabled(false);
 
     m_outputs.removeOne(virtualOutput);
-    emit outputRemoved(virtualOutput);
+    Q_EMIT outputRemoved(virtualOutput);
 
     delete virtualOutput;
 
-    emit screensQueried();
+    Q_EMIT screensQueried();
 }
 
 }

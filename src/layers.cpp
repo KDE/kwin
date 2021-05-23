@@ -105,7 +105,7 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
     if (changed || propagate_new_clients) {
         propagateClients(propagate_new_clients);
         markXStackingOrderAsDirty();
-        emit stackingOrderChanged();
+        Q_EMIT stackingOrderChanged();
         if (m_compositor) {
             m_compositor->addRepaintFull();
         }

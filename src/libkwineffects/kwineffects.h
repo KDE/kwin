@@ -2516,7 +2516,7 @@ public:
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.
      *
-     * Invoking this method will emit the signal EffectsHandler::windowDataChanged.
+     * Invoking this method will Q_EMIT the signal EffectsHandler::windowDataChanged.
      * @see EffectsHandler::windowDataChanged
      */
     Q_SCRIPTABLE virtual void setData(int role, const QVariant &data) = 0;

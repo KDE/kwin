@@ -36,7 +36,7 @@ void KeyboardRepeat::handleKeyRepeat()
         m_timer->setInterval(1000 / waylandServer()->seat()->keyboard()->keyRepeatRate());
     }
     // TODO: better time
-    emit keyRepeat(m_key, m_time);
+    Q_EMIT keyRepeat(m_key, m_time);
 }
 
 void KeyboardRepeat::keyEvent(KeyEvent *event)

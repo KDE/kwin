@@ -695,9 +695,9 @@ public:
     {
         Q_UNUSED(watched)
         if (event->type() == QEvent::HoverMove) {
-            emit hoverMove();
+            Q_EMIT hoverMove();
         } else if (event->type() == QEvent::HoverLeave) {
-            emit hoverLeave();
+            Q_EMIT hoverLeave();
         }
         return false;
     }

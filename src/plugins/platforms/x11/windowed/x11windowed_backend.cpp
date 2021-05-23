@@ -103,7 +103,7 @@ bool X11WindowedBackend::initialize()
         if (m_hasXInput) {
             waylandServer()->seat()->setHasTouch(true);
         }
-        emit screensQueried();
+        Q_EMIT screensQueried();
         return true;
     } else {
         return false;
@@ -185,8 +185,8 @@ void X11WindowedBackend::createOutputs()
 
         logicalWidthSum += logicalWidth;
         m_outputs << output;
-        emit outputAdded(output);
-        emit outputEnabled(output);
+        Q_EMIT outputAdded(output);
+        Q_EMIT outputEnabled(output);
     }
 
     updateWindowTitle();
@@ -391,8 +391,8 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
                     x += (*it)->geometry().width();
                 }
 
-                emit outputDisabled(removedOutput);
-                emit outputRemoved(removedOutput);
+                Q_EMIT outputDisabled(removedOutput);
+                Q_EMIT outputRemoved(removedOutput);
                 delete removedOutput;
                 QMetaObject::invokeMethod(screens(), "updateCount");
             }
@@ -465,7 +465,7 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
     if (s != output->pixelSize()) {
         output->setGeometry(output->internalPosition(), s);
     }
-    emit sizeChanged();
+    Q_EMIT sizeChanged();
 }
 
 void X11WindowedBackend::createCursor(const QImage &srcImage, const QPoint &hotspot)

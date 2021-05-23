@@ -137,14 +137,14 @@ void Xwayland::start()
     QScopedPointer<XwaylandSocket> socket(new XwaylandSocket());
     if (!socket->isValid()) {
         qCWarning(KWIN_XWL) << "Failed to create Xwayland connection sockets";
-        emit errorOccurred();
+        Q_EMIT errorOccurred();
         return;
     }
 
     if (!qEnvironmentVariableIsSet("KWIN_WAYLAND_NO_XAUTHORITY")) {
         if (!generateXauthorityFile(socket->display(), &m_authorityFile)) {
             qCWarning(KWIN_XWL) << "Failed to create an Xauthority file";
-            emit errorOccurred();
+            Q_EMIT errorOccurred();
             return;
         }
     }
@@ -165,7 +165,7 @@ bool Xwayland::startInternal()
     const int abstractSocket = dup(m_socket->abstractFileDescriptor());
     if (abstractSocket == -1) {
         qCWarning(KWIN_XWL, "Failed to duplicate file descriptor: %s", strerror(errno));
-        emit errorOccurred();
+        Q_EMIT errorOccurred();
         return false;
     }
     auto abstractSocketCleanup = qScopeGuard([&abstractSocket]() {
@@ -176,7 +176,7 @@ bool Xwayland::startInternal()
     const int unixSocket = dup(m_socket->unixFileDescriptor());
     if (unixSocket == -1) {
         qCWarning(KWIN_XWL, "Failed to duplicate file descriptor: %s", strerror(errno));
-        emit errorOccurred();
+        Q_EMIT errorOccurred();
         return false;
     }
     auto unixSocketCleanup = qScopeGuard([&unixSocket]() {
@@ -186,32 +186,32 @@ bool Xwayland::startInternal()
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
         qCWarning(KWIN_XWL, "Failed to create pipe to start Xwayland: %s", strerror(errno));
-        emit errorOccurred();
+        Q_EMIT errorOccurred();
         return false;
     }
     int sx[2];
     if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
         qCWarning(KWIN_XWL, "Failed to open socket for XCB connection: %s", strerror(errno));
-        emit errorOccurred();
+        Q_EMIT errorOccurred();
         return false;
     }
     int fd = dup(sx[1]);
     if (fd < 0) {
         qCWarning(KWIN_XWL, "Failed to open socket for XCB connection: %s", strerror(errno));
-        emit errorOccurred();
+        Q_EMIT errorOccurred();
         return false;
     }
 
     const int waylandSocket = waylandServer()->createXWaylandConnection();
     if (waylandSocket == -1) {
         qCWarning(KWIN_XWL, "Failed to open socket for Xwayland server: %s", strerror(errno));
-        emit errorOccurred();
+        Q_EMIT errorOccurred();
         return false;
     }
     const int wlfd = dup(waylandSocket);
     if (wlfd < 0) {
         qCWarning(KWIN_XWL, "Failed to open socket for Xwayland server: %s", strerror(errno));
-        emit errorOccurred();
+        Q_EMIT errorOccurred();
         return false;
     }
 
@@ -422,7 +422,7 @@ void Xwayland::handleXwaylandError(QProcess::ProcessError error)
         qCWarning(KWIN_XWL) << "An unknown error has occurred in Xwayland";
         break;
     }
-    emit errorOccurred();
+    Q_EMIT errorOccurred();
 }
 
 void Xwayland::handleXwaylandReady()
@@ -431,7 +431,7 @@ void Xwayland::handleXwaylandReady()
     maybeDestroyReadyNotifier();
 
     if (!createX11Connection()) {
-        emit errorOccurred();
+        Q_EMIT errorOccurred();
         return;
     }
 
@@ -479,7 +479,7 @@ void Xwayland::handleSelectionFailedToClaimOwnership()
 
 void Xwayland::handleSelectionClaimedOwnership()
 {
-    emit started();
+    Q_EMIT started();
 }
 
 void Xwayland::maybeDestroyReadyNotifier()
@@ -517,7 +517,7 @@ bool Xwayland::createX11Connection()
 
     // Note that it's very important to have valid x11RootWindow(), x11ScreenNumber(), and
     // atoms when the rest of kwin is notified about the new X11 connection.
-    emit m_app->x11ConnectionChanged();
+    Q_EMIT m_app->x11ConnectionChanged();
 
     return true;
 }
@@ -528,7 +528,7 @@ void Xwayland::destroyX11Connection()
         return;
     }
 
-    emit m_app->x11ConnectionAboutToBeDestroyed();
+    Q_EMIT m_app->x11ConnectionAboutToBeDestroyed();
 
     Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
     m_app->destroyAtoms();
@@ -542,7 +542,7 @@ void Xwayland::destroyX11Connection()
     m_app->setX11ScreenNumber(-1);
     m_app->setX11RootWindow(XCB_WINDOW_NONE);
 
-    emit m_app->x11ConnectionChanged();
+    Q_EMIT m_app->x11ConnectionChanged();
 }
 
 DragEventReply Xwayland::dragMoveFilter(Toplevel *target, const QPoint &pos)

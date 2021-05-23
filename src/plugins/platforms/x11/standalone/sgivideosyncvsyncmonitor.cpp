@@ -112,7 +112,7 @@ void SGIVideoSyncVsyncMonitorHelper::poll()
 {
     if (!glXMakeCurrent(m_display, m_drawable, m_localContext)) {
         qCDebug(KWIN_X11STANDALONE) << "Failed to make vsync monitor OpenGL context current";
-        emit errorOccurred();
+        Q_EMIT errorOccurred();
         return;
     }
 
@@ -122,7 +122,7 @@ void SGIVideoSyncVsyncMonitorHelper::poll()
     glXWaitVideoSyncSGI(2, (count + 1) % 2, &count);
 
     // Using monotonic clock is inaccurate, but it's still a pretty good estimate.
-    emit vblankOccurred(std::chrono::steady_clock::now().time_since_epoch());
+    Q_EMIT vblankOccurred(std::chrono::steady_clock::now().time_since_epoch());
 }
 
 SGIVideoSyncVsyncMonitor::SGIVideoSyncVsyncMonitor(QObject *parent)

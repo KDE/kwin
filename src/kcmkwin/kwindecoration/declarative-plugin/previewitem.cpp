@@ -85,7 +85,7 @@ void PreviewItem::setDecoration(Decoration *deco)
     connect(m_decoration, &Decoration::bordersChanged, this, &PreviewItem::syncSize);
     connect(m_decoration, &Decoration::shadowChanged, this, &PreviewItem::syncSize);
     connect(m_decoration, &Decoration::shadowChanged, this, &PreviewItem::shadowChanged);
-    emit decorationChanged(m_decoration);
+    Q_EMIT decorationChanged(m_decoration);
 }
 
 QColor PreviewItem::windowColor() const
@@ -99,7 +99,7 @@ void PreviewItem::setWindowColor(const QColor &color)
         return;
     }
     m_windowColor = color;
-    emit windowColorChanged(m_windowColor);
+    Q_EMIT windowColorChanged(m_windowColor);
     update();
 }
 
@@ -380,7 +380,7 @@ void PreviewItem::setDrawingBackground(bool set)
         return;
     }
     m_drawBackground = set;
-    emit drawingBackgroundChanged(set);
+    Q_EMIT drawingBackgroundChanged(set);
 }
 
 PreviewBridge *PreviewItem::bridge() const
@@ -400,7 +400,7 @@ void PreviewItem::setBridge(PreviewBridge *bridge)
     if (m_bridge) {
         m_bridge->registerPreviewItem(this);
     }
-    emit bridgeChanged();
+    Q_EMIT bridgeChanged();
 }
 
 Settings *PreviewItem::settings() const
@@ -414,7 +414,7 @@ void PreviewItem::setSettings(Settings *settings)
         return;
     }
     m_settings = settings;
-    emit settingsChanged();
+    Q_EMIT settingsChanged();
 }
 
 PreviewClient *PreviewItem::client()

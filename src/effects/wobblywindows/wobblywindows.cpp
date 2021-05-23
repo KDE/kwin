@@ -131,7 +131,7 @@ WobblyWindowsEffect::~WobblyWindowsEffect()
 {
     if (!windows.empty()) {
         // we should be empty at this point...
-        // emit a warning and clean the list.
+        // Q_EMIT a warning and clean the list.
         qCDebug(KWINEFFECTS) << "Windows list not empty. Left items : " << windows.count();
         QHash< const EffectWindow*,  WindowWobblyInfos >::iterator i;
         for (i = windows.begin(); i != windows.end(); ++i) {

@@ -120,7 +120,7 @@ void OMLSyncControlVsyncMonitorHelper::poll()
     glXGetSyncValuesOML(m_display, m_drawable, &ust, &msc, &sbc);
     glXWaitForMscOML(m_display, m_drawable, 0, 2, (msc + 1) % 2, &ust, &msc, &sbc);
 
-    emit vblankOccurred(std::chrono::microseconds(ust));
+    Q_EMIT vblankOccurred(std::chrono::microseconds(ust));
 }
 
 OMLSyncControlVsyncMonitor::OMLSyncControlVsyncMonitor(QObject *parent)

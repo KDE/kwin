@@ -200,7 +200,7 @@ bool EffectsModel::setData(const QModelIndex &index, const QVariant &value, int 
         EffectData &data = m_effects[index.row()];
         data.status = Status(value.toInt());
         data.changed = data.status != data.originalStatus;
-        emit dataChanged(index, index);
+        Q_EMIT dataChanged(index, index);
 
         if (data.status == Status::Enabled && !data.exclusiveGroup.isEmpty()) {
             // need to disable all other exclusive effects in the same category
@@ -212,7 +212,7 @@ bool EffectsModel::setData(const QModelIndex &index, const QVariant &value, int 
                 if (otherData.exclusiveGroup == data.exclusiveGroup) {
                     otherData.status = Status::Disabled;
                     otherData.changed = otherData.status != otherData.originalStatus;
-                    emit dataChanged(this->index(i, 0), this->index(i, 0));
+                    Q_EMIT dataChanged(this->index(i, 0), this->index(i, 0));
                 }
             }
         }
@@ -438,7 +438,7 @@ void EffectsModel::load(LoadOptions options)
         m_pendingEffects.clear();
         endResetModel();
 
-        emit loaded();
+        Q_EMIT loaded();
     };
 
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),

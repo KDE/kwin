@@ -516,7 +516,7 @@ Workspace::~Workspace()
     }
 
     for (auto it = deleted.begin(); it != deleted.end();) {
-        emit deletedRemoved(*it);
+        Q_EMIT deletedRemoved(*it);
         it = deleted.erase(it);
     }
 
@@ -700,7 +700,7 @@ Unmanaged* Workspace::createUnmanaged(xcb_window_t w)
         return nullptr;
     }
     addUnmanaged(c);
-    emit unmanagedAdded(c);
+    Q_EMIT unmanagedAdded(c);
     return c;
 }
 
@@ -708,7 +708,7 @@ void Workspace::addClient(X11Client *c)
 {
     Group* grp = findGroup(c->window());
 
-    emit clientAdded(c);
+    Q_EMIT clientAdded(c);
 
     if (grp != nullptr)
         grp->gotLeader(c);
@@ -781,7 +781,7 @@ void Workspace::removeClient(X11Client *c)
     if (c == delayfocus_client)
         cancelDelayFocus();
 
-    emit clientRemoved(c);
+    Q_EMIT clientRemoved(c);
 
     updateStackingOrder(true);
     updateClientArea();
@@ -792,7 +792,7 @@ void Workspace::removeUnmanaged(Unmanaged* c)
 {
     Q_ASSERT(m_unmanaged.contains(c));
     m_unmanaged.removeAll(c);
-    emit unmanagedRemoved(c);
+    Q_EMIT unmanagedRemoved(c);
     markXStackingOrderAsDirty();
 }
 
@@ -807,7 +807,7 @@ void Workspace::addDeleted(Deleted* c, Toplevel *orig)
 void Workspace::removeDeleted(Deleted* c)
 {
     Q_ASSERT(deleted.contains(c));
-    emit deletedRemoved(c);
+    Q_EMIT deletedRemoved(c);
     deleted.removeAll(c);
     removeFromStack(c);
     markXStackingOrderAsDirty();
@@ -865,7 +865,7 @@ void Workspace::addShellClient(AbstractClient *client)
         updateStackingOrder(true);
         updateClientArea();
     });
-    emit clientAdded(client);
+    Q_EMIT clientAdded(client);
 }
 
 void Workspace::removeShellClient(AbstractClient *client)
@@ -887,7 +887,7 @@ void Workspace::removeShellClient(AbstractClient *client)
     if (!client->shortcut().isEmpty()) {
         client->setShortcut(QString());   // Remove from client_keys
     }
-    emit clientRemoved(client);
+    Q_EMIT clientRemoved(client);
     markXStackingOrderAsDirty();
     updateStackingOrder(true);
     updateClientArea();
@@ -1014,7 +1014,7 @@ void Workspace::slotReconfigure()
     kwinApp()->config()->reparseConfiguration();
     options->updateSettings();
 
-    emit configChanged();
+    Q_EMIT configChanged();
     m_userActionsMenu->discard();
     updateToolWindows(true);
 
@@ -1049,7 +1049,7 @@ void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
     --block_focus;
 
     activateClientOnNewDesktop(newDesktop);
-    emit currentDesktopChanged(oldDesktop, movingClient);
+    Q_EMIT currentDesktopChanged(oldDesktop, movingClient);
 }
 
 void Workspace::updateClientVisibilityOnDesktopChange(uint newDesktop)
@@ -1425,7 +1425,7 @@ void Workspace::setShowingDesktop(bool showing)
         }
     }
     if (changed)
-        emit showingDesktopChanged(showing);
+        Q_EMIT showingDesktopChanged(showing);
 }
 
 void Workspace::disableGlobalShortcutsForClient(bool disable)
@@ -1960,7 +1960,7 @@ void Workspace::addInternalClient(InternalClient *client)
     updateStackingOrder(true);
     updateClientArea();
 
-    emit internalClientAdded(client);
+    Q_EMIT internalClientAdded(client);
 }
 
 void Workspace::removeInternalClient(InternalClient *client)
@@ -1971,7 +1971,7 @@ void Workspace::removeInternalClient(InternalClient *client)
     updateStackingOrder(true);
     updateClientArea();
 
-    emit internalClientRemoved(client);
+    Q_EMIT internalClientRemoved(client);
 }
 
 Group* Workspace::findGroup(xcb_window_t leader) const
@@ -2093,7 +2093,7 @@ void Workspace::desktopResized()
     updateClientArea();
     saveOldScreenSizes(); // after updateClientArea(), so that one still uses the previous one
 
-    // TODO: emit a signal instead and remove the deep function calls into edges and effects
+    // TODO: Q_EMIT a signal instead and remove the deep function calls into edges and effects
     ScreenEdges::self()->recreateEdges();
 
     if (effects) {

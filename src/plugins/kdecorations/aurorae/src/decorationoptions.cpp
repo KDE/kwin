@@ -168,14 +168,14 @@ void DecorationOptions::setDecoration(KDecoration2::Decoration *decoration)
     m_paletteConnection = connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::paletteChanged, this,
         [this] (const QPalette &pal) {
             m_colors.update(pal);
-            emit colorsChanged();
+            Q_EMIT colorsChanged();
         }
     );
     auto s = m_decoration->settings();
     connect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
     connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
     connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
-    emit decorationChanged();
+    Q_EMIT decorationChanged();
 }
 
 void DecorationOptions::slotActiveChanged()
@@ -187,8 +187,8 @@ void DecorationOptions::slotActiveChanged()
         return;
     }
     m_active = m_decoration->client().toStrongRef().data()->isActive();
-    emit colorsChanged();
-    emit fontChanged();
+    Q_EMIT colorsChanged();
+    Q_EMIT fontChanged();
 }
 
 int DecorationOptions::mousePressAndHoldInterval() const
@@ -216,7 +216,7 @@ void Borders::methodName(int name) \
         return; \
     } \
     m_##name = name; \
-    emit name##Changed(); \
+    Q_EMIT name##Changed(); \
 }
 
 SETTER(setLeft, left)

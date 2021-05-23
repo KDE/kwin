@@ -628,13 +628,13 @@ void TabBox::reset(bool partial_reset)
         break;
     }
 
-    emit tabBoxUpdated();
+    Q_EMIT tabBoxUpdated();
 }
 
 void TabBox::nextPrev(bool next)
 {
     setCurrentIndex(m_tabBox->nextPrev(next), false);
-    emit tabBoxUpdated();
+    Q_EMIT tabBoxUpdated();
 }
 
 AbstractClient* TabBox::currentClient()
@@ -687,13 +687,13 @@ void TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
         return;
     m_tabBox->setCurrentIndex(index);
     if (notifyEffects) {
-        emit tabBoxUpdated();
+        Q_EMIT tabBoxUpdated();
     }
 }
 
 void TabBox::show()
 {
-    emit tabBoxAdded(m_tabBoxMode);
+    Q_EMIT tabBoxAdded(m_tabBoxMode);
     if (isDisplayed()) {
         m_isShown = false;
         return;
@@ -711,7 +711,7 @@ void TabBox::hide(bool abort)
         m_isShown = false;
         unreference();
     }
-    emit tabBoxClosed();
+    Q_EMIT tabBoxClosed();
     if (isDisplayed())
         qCDebug(KWIN_TABBOX) << "Tab box was not properly closed by an effect";
     m_tabBox->hide(abort);
@@ -876,7 +876,7 @@ bool TabBox::handleWheelEvent(QWheelEvent *event)
 
 void TabBox::grabbedKeyEvent(QKeyEvent* event)
 {
-    emit tabBoxKeyEvent(event);
+    Q_EMIT tabBoxKeyEvent(event);
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
         return;

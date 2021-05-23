@@ -142,7 +142,7 @@ void ScreenPreviewWidget::dropEvent(QDropEvent *e)
     if (!uris.isEmpty()) {
         // TODO: Download remote file
         if (uris.first().isLocalFile())
-           emit imageDropped(uris.first().path());
+           Q_EMIT imageDropped(uris.first().path());
     }
 }
 

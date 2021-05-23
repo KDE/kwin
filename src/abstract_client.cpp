@@ -91,7 +91,7 @@ AbstractClient::AbstractClient()
     );
 
     connect(ApplicationMenu::self(), &ApplicationMenu::applicationMenuEnabledChanged, this, [this] {
-        emit hasApplicationMenuChanged(hasApplicationMenu());
+        Q_EMIT hasApplicationMenuChanged(hasApplicationMenu());
     });
 }
 
@@ -133,7 +133,7 @@ void AbstractClient::setSkipSwitcher(bool set)
     m_skipSwitcher = set;
     doSetSkipSwitcher();
     updateWindowRules(Rules::SkipSwitcher);
-    emit skipSwitcherChanged();
+    Q_EMIT skipSwitcherChanged();
 }
 
 void AbstractClient::setSkipPager(bool b)
@@ -144,7 +144,7 @@ void AbstractClient::setSkipPager(bool b)
     m_skipPager = b;
     doSetSkipPager();
     updateWindowRules(Rules::SkipPager);
-    emit skipPagerChanged();
+    Q_EMIT skipPagerChanged();
 }
 
 void AbstractClient::doSetSkipPager()
@@ -162,7 +162,7 @@ void AbstractClient::setSkipTaskbar(bool b)
     if (was_wants_tab_focus != wantsTabFocus()) {
         FocusChain::self()->update(this, isActive() ? FocusChain::MakeFirst : FocusChain::Update);
     }
-    emit skipTaskbarChanged();
+    Q_EMIT skipTaskbarChanged();
 }
 
 void AbstractClient::setOriginalSkipTaskbar(bool b)
@@ -184,7 +184,7 @@ void AbstractClient::doSetSkipSwitcher()
 void AbstractClient::setIcon(const QIcon &icon)
 {
     m_icon = icon;
-    emit iconChanged();
+    Q_EMIT iconChanged();
 }
 
 void AbstractClient::setActive(bool act)
@@ -218,7 +218,7 @@ void AbstractClient::setActive(bool act)
             (*it)->updateLayer();
 
     doSetActive();
-    emit activeChanged();
+    Q_EMIT activeChanged();
     updateMouseGrab();
 }
 
@@ -236,7 +236,7 @@ void AbstractClient::markAsZombie()
     Q_ASSERT(!m_zombie);
     m_zombie = true;
     addWorkspaceRepaint(visibleGeometry());
-    emit markedAsZombie();
+    Q_EMIT markedAsZombie();
 }
 
 Layer AbstractClient::layer() const
@@ -341,7 +341,7 @@ void AbstractClient::setKeepAbove(bool b)
     updateLayer();
     updateWindowRules(Rules::Above);
 
-    emit keepAboveChanged(m_keepAbove);
+    Q_EMIT keepAboveChanged(m_keepAbove);
 }
 
 void AbstractClient::doSetKeepAbove()
@@ -361,7 +361,7 @@ void AbstractClient::setKeepBelow(bool b)
     updateLayer();
     updateWindowRules(Rules::Below);
 
-    emit keepBelowChanged(m_keepBelow);
+    Q_EMIT keepBelowChanged(m_keepBelow);
 }
 
 void AbstractClient::doSetKeepBelow()
@@ -415,7 +415,7 @@ void AbstractClient::demandAttention(bool set)
     m_demandsAttention = set;
     doSetDemandsAttention();
     workspace()->clientAttentionChanged(this, set);
-    emit demandsAttentionChanged();
+    Q_EMIT demandsAttentionChanged();
 }
 
 void AbstractClient::doSetDemandsAttention()
@@ -498,10 +498,10 @@ void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
     FocusChain::self()->update(this, FocusChain::MakeFirst);
     updateWindowRules(Rules::Desktop);
 
-    emit desktopChanged();
+    Q_EMIT desktopChanged();
     if (wasOnCurrentDesktop != isOnCurrentDesktop())
-        emit desktopPresenceChanged(this, was_desk);
-    emit x11DesktopIdsChanged();
+        Q_EMIT desktopPresenceChanged(this, was_desk);
+    Q_EMIT x11DesktopIdsChanged();
 }
 
 void AbstractClient::doSetDesktop()
@@ -599,7 +599,7 @@ void AbstractClient::setShade(ShadeMode mode)
 
     if (wasShade == isShade()) {
         // Decoration may want to update after e.g. hover-shade changes
-        emit shadeChanged();
+        Q_EMIT shadeChanged();
         return; // No real change in shaded state
     }
 
@@ -609,7 +609,7 @@ void AbstractClient::setShade(ShadeMode mode)
     doSetShade(previousShadeMode);
     updateWindowRules(Rules::Shade);
 
-    emit shadeChanged();
+    Q_EMIT shadeChanged();
 }
 
 void AbstractClient::doSetShade(ShadeMode previousShadeMode)
@@ -713,8 +713,8 @@ void AbstractClient::minimize(bool avoid_animation)
 
     // TODO: merge signal with s_minimized
     addWorkspaceRepaint(visibleGeometry());
-    emit clientMinimized(this, !avoid_animation);
-    emit minimizedChanged();
+    Q_EMIT clientMinimized(this, !avoid_animation);
+    Q_EMIT minimizedChanged();
 }
 
 void AbstractClient::unminimize(bool avoid_animation)
@@ -730,8 +730,8 @@ void AbstractClient::unminimize(bool avoid_animation)
     doMinimize();
 
     updateWindowRules(Rules::Minimize);
-    emit clientUnminimized(this, !avoid_animation);
-    emit minimizedChanged();
+    Q_EMIT clientUnminimized(this, !avoid_animation);
+    Q_EMIT minimizedChanged();
 }
 
 void AbstractClient::doMinimize()
@@ -799,8 +799,8 @@ void AbstractClient::setColorScheme(const QString &colorScheme)
 
         connect(m_palette.get(), &Decoration::DecorationPalette::changed, this, &AbstractClient::handlePaletteChange);
 
-        emit paletteChanged(palette());
-        emit colorSchemeChanged();
+        Q_EMIT paletteChanged(palette());
+        Q_EMIT colorSchemeChanged();
     }
 }
 
@@ -811,7 +811,7 @@ void AbstractClient::updateColorScheme()
 
 void AbstractClient::handlePaletteChange()
 {
-    emit paletteChanged(palette());
+    Q_EMIT paletteChanged(palette());
 }
 
 void AbstractClient::keepInArea(QRect area, bool partial)
@@ -893,8 +893,8 @@ void AbstractClient::setMaximize(bool vertically, bool horizontally)
         false);
     const MaximizeMode newMode = maximizeMode();
     if (oldMode != newMode) {
-        emit clientMaximizedStateChanged(this, newMode);
-        emit clientMaximizedStateChanged(this, vertically, horizontally);
+        Q_EMIT clientMaximizedStateChanged(this, newMode);
+        Q_EMIT clientMaximizedStateChanged(this, vertically, horizontally);
     }
 }
 
@@ -922,9 +922,9 @@ void AbstractClient::move(int x, int y)
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     // client itself is not damaged
-    emit bufferGeometryChanged(this, oldBufferGeometry);
-    emit clientGeometryChanged(this, oldClientGeometry);
-    emit frameGeometryChanged(this, oldFrameGeometry);
+    Q_EMIT bufferGeometryChanged(this, oldBufferGeometry);
+    Q_EMIT clientGeometryChanged(this, oldClientGeometry);
+    Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
 }
 
 bool AbstractClient::startInteractiveMoveResize()
@@ -959,13 +959,13 @@ bool AbstractClient::startInteractiveMoveResize()
         updateQuickTileMode(QuickTileFlag::None); // Do so without restoring original geometry
         setGeometryRestore(frameGeometry());
         doSetQuickTileMode();
-        emit quickTileModeChanged();
+        Q_EMIT quickTileModeChanged();
     }
 
     updateHaveResizeEffect();
     updateInitialMoveResizeGeometry();
     checkUnrestrictedInteractiveMoveResize();
-    emit clientStartUserMovedResized(this);
+    Q_EMIT clientStartUserMovedResized(this);
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
         ScreenEdges::self()->reserveDesktopSwitching(true, Qt::Vertical|Qt::Horizontal);
     return true;
@@ -1022,7 +1022,7 @@ void AbstractClient::finishInteractiveMoveResize(bool cancel)
     }
 // FRAME    update();
 
-    emit clientFinishUserMovedResized(this);
+    Q_EMIT clientFinishUserMovedResized(this);
 }
 
 // This function checks if it actually makes sense to perform a restricted move/resize.
@@ -1450,7 +1450,7 @@ void AbstractClient::performInteractiveMoveResize()
     }
     doPerformInteractiveMoveResize();
     positionGeometryTip();
-    emit clientStepUserMovedResized(this, moveResizeGeom);
+    Q_EMIT clientStepUserMovedResized(this, moveResizeGeom);
 }
 
 StrutRect AbstractClient::strutRect(StrutArea area) const
@@ -1938,7 +1938,7 @@ void AbstractClient::setTransientFor(AbstractClient *transientFor)
         return;
     }
     m_transientFor = transientFor;
-    emit transientChanged();
+    Q_EMIT transientChanged();
 }
 
 const AbstractClient *AbstractClient::transientFor() const
@@ -1992,7 +1992,7 @@ void AbstractClient::setModal(bool m)
     if (m_modal == m)
         return;
     m_modal = m;
-    emit modalChanged();
+    Q_EMIT modalChanged();
     // Changing modality for a mapped window is weird (?)
     // _NET_WM_STATE_MODAL should possibly rather be _NET_WM_WINDOW_TYPE_MODAL_DIALOG
 }
@@ -2148,7 +2148,7 @@ void AbstractClient::updateCursor()
     if (c == m_interactiveMoveResize.cursor)
         return;
     m_interactiveMoveResize.cursor = c;
-    emit moveResizeCursorChanged(c);
+    Q_EMIT moveResizeCursorChanged(c);
 }
 
 void AbstractClient::leaveInteractiveMoveResize()
@@ -2364,7 +2364,7 @@ void AbstractClient::createDecoration(const QRect &oldGeometry)
             if (!isShade()) {
                 checkWorkspacePosition(oldGeometry);
             }
-            emit geometryShapeChanged(this, oldGeometry);
+            Q_EMIT geometryShapeChanged(this, oldGeometry);
         });
         connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
                 this, &AbstractClient::updateDecorationInputShape);
@@ -2373,7 +2373,7 @@ void AbstractClient::createDecoration(const QRect &oldGeometry)
     setFrameGeometry(QRect(oldGeometry.topLeft(), clientSizeToFrameSize(clientSize())));
     updateDecorationInputShape();
 
-    emit geometryShapeChanged(this, oldGeometry);
+    Q_EMIT geometryShapeChanged(this, oldGeometry);
 }
 
 void AbstractClient::destroyDecoration()
@@ -2386,7 +2386,7 @@ void AbstractClient::destroyDecoration()
 void AbstractClient::setDecoration(KDecoration2::Decoration *decoration)
 {
     m_decoration.decoration = decoration;
-    emit decorationChanged();
+    Q_EMIT decorationChanged();
 }
 
 void AbstractClient::updateDecorationInputShape()
@@ -2702,7 +2702,7 @@ void AbstractClient::setDesktopFileName(QByteArray name)
     }
     m_desktopFileName = name;
     updateWindowRules(Rules::DesktopFile);
-    emit desktopFileNameChanged();
+    Q_EMIT desktopFileNameChanged();
 }
 
 QString AbstractClient::iconFromDesktopFile() const
@@ -2744,9 +2744,9 @@ void AbstractClient::updateApplicationMenuServiceName(const QString &serviceName
 
     const bool new_hasApplicationMenu = hasApplicationMenu();
 
-    emit applicationMenuChanged();
+    Q_EMIT applicationMenuChanged();
     if (old_hasApplicationMenu != new_hasApplicationMenu) {
-        emit hasApplicationMenuChanged(new_hasApplicationMenu);
+        Q_EMIT hasApplicationMenuChanged(new_hasApplicationMenu);
     }
 }
 
@@ -2758,9 +2758,9 @@ void AbstractClient::updateApplicationMenuObjectPath(const QString &objectPath)
 
     const bool new_hasApplicationMenu = hasApplicationMenu();
 
-    emit applicationMenuChanged();
+    Q_EMIT applicationMenuChanged();
     if (old_hasApplicationMenu != new_hasApplicationMenu) {
-        emit hasApplicationMenuChanged(new_hasApplicationMenu);
+        Q_EMIT hasApplicationMenuChanged(new_hasApplicationMenu);
     }
 }
 
@@ -2768,7 +2768,7 @@ void AbstractClient::setApplicationMenuActive(bool applicationMenuActive)
 {
     if (m_applicationMenuActive != applicationMenuActive) {
         m_applicationMenuActive = applicationMenuActive;
-        emit applicationMenuActiveChanged(applicationMenuActive);
+        Q_EMIT applicationMenuActiveChanged(applicationMenuActive);
     }
 }
 
@@ -2791,8 +2791,8 @@ void AbstractClient::setUnresponsive(bool unresponsive)
 {
     if (m_unresponsive != unresponsive) {
         m_unresponsive = unresponsive;
-        emit unresponsiveChanged(m_unresponsive);
-        emit captionChanged();
+        Q_EMIT unresponsiveChanged(m_unresponsive);
+        Q_EMIT captionChanged();
     }
 }
 
@@ -2953,7 +2953,7 @@ void AbstractClient::updateActivities(bool includeTransients)
         m_blockedActivityUpdatesRequireTransients |= includeTransients;
         return;
     }
-    emit activitiesChanged(this);
+    Q_EMIT activitiesChanged(this);
     m_blockedActivityUpdatesRequireTransients = false; // reset
     FocusChain::self()->update(this, FocusChain::MakeFirst);
     updateWindowRules(Rules::Activity);
@@ -3117,7 +3117,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
             setGeometryRestore(prev_geom_restore);
         }
         doSetQuickTileMode();
-        emit quickTileModeChanged();
+        Q_EMIT quickTileModeChanged();
         return;
     }
 
@@ -3146,7 +3146,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
         }
 
         doSetQuickTileMode();
-        emit quickTileModeChanged();
+        Q_EMIT quickTileModeChanged();
 
         return;
     }
@@ -3222,7 +3222,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
         checkWorkspacePosition(); // Just in case it's a different screen
     }
     doSetQuickTileMode();
-    emit quickTileModeChanged();
+    Q_EMIT quickTileModeChanged();
 }
 
 void AbstractClient::doSetQuickTileMode()

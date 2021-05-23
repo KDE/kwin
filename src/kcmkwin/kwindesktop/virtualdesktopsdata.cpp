@@ -19,9 +19,9 @@ VirtualDesktopsData::VirtualDesktopsData(QObject *parent, const QVariantList &ar
     , m_desktopsModel(new DesktopsModel(this))
     , m_animationsModel(new AnimationsModel(this))
 {
-    // Default behavior of KCModuleData is to emit loaded signal after being initialized.
+    // Default behavior of KCModuleData is to Q_EMIT loaded signal after being initialized.
     // To handle asynchronous load of EffectsModel we disable default behavior and
-    // emit loaded signal when EffectsModel is actually loaded.
+    // Q_EMIT loaded signal when EffectsModel is actually loaded.
     disconnect(this, &KCModuleData::aboutToLoad, nullptr, nullptr);
     connect(m_animationsModel, &EffectsModel::loaded, this, &KCModuleData::loaded);
 

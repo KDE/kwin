@@ -498,8 +498,8 @@ void X11StandalonePlatform::doUpdateOutputs()
     auto fallback = [this]() {
         X11PlaceholderOutput *dummyOutput = new X11PlaceholderOutput();
         m_outputs << dummyOutput;
-        emit outputAdded(dummyOutput);
-        emit outputEnabled(dummyOutput);
+        Q_EMIT outputAdded(dummyOutput);
+        Q_EMIT outputEnabled(dummyOutput);
     };
 
     // TODO: instead of resetting all outputs, check if new output is added/removed
@@ -507,20 +507,20 @@ void X11StandalonePlatform::doUpdateOutputs()
     //       untouched (like in DRM backend)
     while (!m_outputs.isEmpty()) {
         AbstractOutput *output = m_outputs.takeLast();
-        emit outputDisabled(output);
-        emit outputRemoved(output);
+        Q_EMIT outputDisabled(output);
+        Q_EMIT outputRemoved(output);
         delete output;
     }
 
     if (!Xcb::Extensions::self()->isRandrAvailable()) {
         fallback();
-        emit screensQueried();
+        Q_EMIT screensQueried();
         return;
     }
     T resources(rootWindow());
     if (resources.isNull()) {
         fallback();
-        emit screensQueried();
+        Q_EMIT screensQueried();
         return;
     }
     xcb_randr_crtc_t *crtcs = resources.crtcs();
@@ -598,8 +598,8 @@ void X11StandalonePlatform::doUpdateOutputs()
             }
 
             m_outputs << o;
-            emit outputAdded(o);
-            emit outputEnabled(o);
+            Q_EMIT outputAdded(o);
+            Q_EMIT outputEnabled(o);
         }
     }
 
@@ -607,7 +607,7 @@ void X11StandalonePlatform::doUpdateOutputs()
         fallback();
     }
 
-    emit screensQueried();
+    Q_EMIT screensQueried();
 }
 
 Outputs X11StandalonePlatform::outputs() const

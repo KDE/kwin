@@ -262,7 +262,7 @@ void Workspace::setActiveClient(AbstractClient* c)
         rootInfo()->setActiveClient(active_client);
     }
 
-    emit clientActivated(active_client);
+    Q_EMIT clientActivated(active_client);
     --set_active_client_recursion;
 }
 
@@ -680,7 +680,7 @@ void Workspace::clientAttentionChanged(AbstractClient* c, bool set)
         attention_chain.prepend(c);
     } else
         attention_chain.removeAll(c);
-    emit clientDemandsAttentionChanged(c, set);
+    Q_EMIT clientDemandsAttentionChanged(c, set);
 }
 
 //********************************************

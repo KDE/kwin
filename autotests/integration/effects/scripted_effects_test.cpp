@@ -87,7 +87,7 @@ signals:
 
 void ScriptedEffectWithDebugSpy::sendTestResponse(const QString &out)
 {
-    emit testOutput(out);
+    Q_EMIT testOutput(out);
 }
 
 QList<QAction *> ScriptedEffectWithDebugSpy::actions()

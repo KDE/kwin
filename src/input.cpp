@@ -1718,7 +1718,7 @@ public:
 
             cursor->updateCursor(cursorImage, tcursor->hotspot());
         });
-        emit cursor->cursorChanged();
+        Q_EMIT cursor->cursorChanged();
         return tool;
     }
 
@@ -2392,7 +2392,7 @@ void InputRedirection::setupLibInput()
                         return;
                     }
                     // TODO: this should update the seat, only workaround for QTBUG-54371
-                    emit hasAlphaNumericKeyboardChanged(set);
+                    Q_EMIT hasAlphaNumericKeyboardChanged(set);
                 }
             );
             connect(conn, &LibInput::Connection::hasTabletModeSwitchChanged, this,
@@ -2400,7 +2400,7 @@ void InputRedirection::setupLibInput()
                     if (m_libInput->isSuspended()) {
                         return;
                     }
-                    emit hasTabletModeSwitchChanged(set);
+                    Q_EMIT hasTabletModeSwitchChanged(set);
                 }
             );
             connect(conn, &LibInput::Connection::hasPointerChanged, this,
@@ -2725,7 +2725,7 @@ bool InputDeviceHandler::setAt(Toplevel *toplevel)
     m_at.surfaceCreatedConnection = QMetaObject::Connection();
 
     m_at.at = toplevel;
-    emit atChanged(old, toplevel);
+    Q_EMIT atChanged(old, toplevel);
     return true;
 }
 
@@ -2740,7 +2740,7 @@ void InputDeviceHandler::setDecoration(Decoration::DecoratedClientImpl *decorati
     auto oldDeco = m_focus.decoration;
     m_focus.decoration = decoration;
     cleanupDecoration(oldDeco.data(), m_focus.decoration.data());
-    emit decorationChanged();
+    Q_EMIT decorationChanged();
 }
 
 void InputDeviceHandler::setInternalWindow(QWindow *window)
@@ -2786,7 +2786,7 @@ bool InputDeviceHandler::updateDecoration()
         return false;
     }
     cleanupDecoration(oldDeco.data(), m_focus.decoration.data());
-    emit decorationChanged();
+    Q_EMIT decorationChanged();
     return true;
 }
 

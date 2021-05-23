@@ -98,7 +98,7 @@ public:
      * After enabling cursor change tracking the signal cursorChanged will be emitted
      * whenever a change to the cursor image is recognized.
      *
-     * Use stopCursorTracking to no longer emit this signal. Note: the signal will be
+     * Use stopCursorTracking to no longer Q_EMIT this signal. Note: the signal will be
      * emitted until each call of this method has been matched with a call to stopCursorTracking.
      *
      * This tracking is not about pointer position tracking.

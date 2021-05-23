@@ -169,9 +169,9 @@ void ClientLevel::addClient(AbstractClient *client)
     if (containsClient(client)) {
         return;
     }
-    emit beginInsert(m_clients.count(), m_clients.count(), id());
+    Q_EMIT beginInsert(m_clients.count(), m_clients.count(), id());
     m_clients.insert(nextId(), client);
-    emit endInsert();
+    Q_EMIT endInsert();
 }
 
 void ClientLevel::removeClient(AbstractClient *client)
@@ -186,9 +186,9 @@ void ClientLevel::removeClient(AbstractClient *client)
     if (it == m_clients.end()) {
         return;
     }
-    emit beginRemove(index, index, id());
+    Q_EMIT beginRemove(index, index, id());
     m_clients.erase(it);
-    emit endRemove();
+    Q_EMIT endRemove();
 }
 
 void ClientLevel::init()
@@ -418,14 +418,14 @@ void ForkLevel::desktopCountChanged(uint previousCount, uint newCount)
     }
     if (previousCount > newCount) {
         // desktops got removed
-        emit beginRemove(newCount, previousCount-1, id());
+        Q_EMIT beginRemove(newCount, previousCount-1, id());
         while (uint(m_children.count()) > newCount) {
             delete m_children.takeLast();
         }
-        emit endRemove();
+        Q_EMIT endRemove();
     } else {
         // desktops got added
-        emit beginInsert(previousCount, newCount-1, id());
+        Q_EMIT beginInsert(previousCount, newCount-1, id());
         for (uint i=previousCount+1; i<=newCount; ++i) {
             AbstractLevel *childLevel = AbstractLevel::create(m_childRestrictions, restrictions(), model(), this);
             if (!childLevel) {
@@ -435,7 +435,7 @@ void ForkLevel::desktopCountChanged(uint previousCount, uint newCount)
             childLevel->init();
             addChild(childLevel);
         }
-        emit endInsert();
+        Q_EMIT endInsert();
     }
 }
 
@@ -450,14 +450,14 @@ void ForkLevel::screenCountChanged(int previousCount, int newCount)
 
     if (previousCount > newCount) {
         // screens got removed
-        emit beginRemove(newCount, previousCount-1, id());
+        Q_EMIT beginRemove(newCount, previousCount-1, id());
         while (m_children.count() > newCount) {
             delete m_children.takeLast();
         }
-        emit endRemove();
+        Q_EMIT endRemove();
     } else {
         // screens got added
-        emit beginInsert(previousCount, newCount-1, id());
+        Q_EMIT beginInsert(previousCount, newCount-1, id());
         for (int i=previousCount; i<newCount; ++i) {
             AbstractLevel *childLevel = AbstractLevel::create(m_childRestrictions, restrictions(), model(), this);
             if (!childLevel) {
@@ -467,7 +467,7 @@ void ForkLevel::screenCountChanged(int previousCount, int newCount)
             childLevel->init();
             addChild(childLevel);
         }
-        emit endInsert();
+        Q_EMIT endInsert();
     }
 }
 
@@ -483,16 +483,16 @@ void ForkLevel::activityAdded(const QString &activityId)
             return;
         }
     }
-    emit beginInsert(m_children.count(), m_children.count(), id());
+    Q_EMIT beginInsert(m_children.count(), m_children.count(), id());
     AbstractLevel *childLevel = AbstractLevel::create(m_childRestrictions, restrictions(), model(), this);
     if (!childLevel) {
-        emit endInsert();
+        Q_EMIT endInsert();
         return;
     }
     childLevel->setActivity(activityId);
     childLevel->init();
     addChild(childLevel);
-    emit endInsert();
+    Q_EMIT endInsert();
 #else
     Q_UNUSED(activityId)
 #endif
@@ -506,9 +506,9 @@ void ForkLevel::activityRemoved(const QString &activityId)
     }
     for (int i=0; i<m_children.length(); ++i) {
         if (m_children.at(i)->activity() == activityId) {
-            emit beginRemove(i, i, id());
+            Q_EMIT beginRemove(i, i, id());
             delete m_children.takeAt(i);
-            emit endRemove();
+            Q_EMIT endRemove();
             break;
         }
     }
@@ -662,7 +662,7 @@ void ClientModel::setExclusions(ClientModel::Exclusions exclusions)
         return;
     }
     m_exclusions = exclusions;
-    emit exclusionsChanged();
+    Q_EMIT exclusionsChanged();
 }
 
 QVariant ClientModel::data(const QModelIndex &index, int role) const
@@ -847,7 +847,7 @@ void ClientFilterModel::setClientModel(ClientModel *clientModel)
     }
     m_clientModel = clientModel;
     setSourceModel(m_clientModel);
-    emit clientModelChanged();
+    Q_EMIT clientModelChanged();
 }
 
 void ClientFilterModel::setFilter(const QString &filter)
@@ -856,7 +856,7 @@ void ClientFilterModel::setFilter(const QString &filter)
         return;
     }
     m_filter = filter;
-    emit filterChanged();
+    Q_EMIT filterChanged();
     invalidateFilter();
 }
 

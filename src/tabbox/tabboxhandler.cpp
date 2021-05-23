@@ -361,7 +361,7 @@ const KWin::TabBox::TabBoxConfig& TabBoxHandler::config() const
 void TabBoxHandler::setConfig(const TabBoxConfig& config)
 {
     d->config = config;
-    emit configChanged();
+    Q_EMIT configChanged();
 }
 
 void TabBoxHandler::show()
@@ -503,7 +503,7 @@ void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
             d->updateHighlightWindows();
         }
     }
-    emit selectedIndexChanged();
+    Q_EMIT selectedIndexChanged();
 }
 
 const QModelIndex& TabBoxHandler::currentIndex() const

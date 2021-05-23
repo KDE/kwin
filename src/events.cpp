@@ -363,7 +363,7 @@ bool X11Client::windowEvent(xcb_generic_event_t *e)
             // ### Inform the decoration
         }
         if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
-            emit windowRoleChanged();
+            Q_EMIT windowRoleChanged();
         }
         if (dirtyProperties2.testFlag(NET::WM2WindowClass)) {
             getResourceClass();
@@ -1191,7 +1191,7 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
         getWmOpaqueRegion();
     }
     if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
-        emit windowRoleChanged();
+        Q_EMIT windowRoleChanged();
     }
     if (dirtyProperties2.testFlag(NET::WM2WindowClass)) {
         getResourceClass();
@@ -1237,7 +1237,7 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
             detectShape(window());
             addRepaintFull();
             addWorkspaceRepaint(frameGeometry());  // in case shape change removes part of this window
-            emit geometryShapeChanged(this, frameGeometry());
+            Q_EMIT geometryShapeChanged(this, frameGeometry());
         }
         if (eventType == Xcb::Extensions::self()->damageNotifyEvent())
             damageNotifyEvent();
@@ -1257,10 +1257,10 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
         m_clientGeometry = newgeom;
         m_frameGeometry = newgeom;
         m_bufferGeometry = newgeom;
-        emit bufferGeometryChanged(this, old);
-        emit clientGeometryChanged(this, old);
-        emit frameGeometryChanged(this, old);
-        emit geometryShapeChanged(this, old);
+        Q_EMIT bufferGeometryChanged(this, old);
+        Q_EMIT clientGeometryChanged(this, old);
+        Q_EMIT frameGeometryChanged(this, old);
+        Q_EMIT geometryShapeChanged(this, old);
     }
 }
 
@@ -1293,7 +1293,7 @@ void Toplevel::clientMessageEvent(xcb_client_message_event_t *e)
                 setSurface(s);
             }
         }
-        emit surfaceIdChanged(m_surfaceId);
+        Q_EMIT surfaceIdChanged(m_surfaceId);
     }
 }
 

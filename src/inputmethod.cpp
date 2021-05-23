@@ -337,7 +337,7 @@ void InputMethod::setEnabled(bool enabled)
         return;
     }
     m_enabled = enabled;
-    emit enabledChanged(m_enabled);
+    Q_EMIT enabledChanged(m_enabled);
 
     // send OSD message
     QDBusMessage msg = QDBusMessage::createMethodCall(

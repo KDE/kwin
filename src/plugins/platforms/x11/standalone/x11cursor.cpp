@@ -62,7 +62,7 @@ void X11Cursor::doSetPos()
 {
     const QPoint &pos = currentPos();
     xcb_warp_pointer(connection(), XCB_WINDOW_NONE, rootWindow(), 0, 0, 0, 0, pos.x(), pos.y());
-    // call default implementation to emit signal
+    // call default implementation to Q_EMIT signal
     Cursor::doSetPos();
 }
 
@@ -126,7 +126,7 @@ void X11Cursor::mousePolled()
     static uint16_t lastMask = m_buttonMask;
     doGetPos(); // Update if needed
     if (lastPos != currentPos() || lastMask != m_buttonMask) {
-        emit mouseChanged(currentPos(), lastPos,
+        Q_EMIT mouseChanged(currentPos(), lastPos,
             x11ToQtMouseButtons(m_buttonMask), x11ToQtMouseButtons(lastMask),
             x11ToQtKeyboardModifiers(m_buttonMask), x11ToQtKeyboardModifiers(lastMask));
         lastPos = currentPos();
@@ -177,10 +177,10 @@ xcb_cursor_t X11Cursor::createCursor(const QByteArray &name)
 void X11Cursor::notifyCursorChanged()
 {
     if (!isCursorTracking()) {
-        // cursor change tracking is currently disabled, so don't emit signal
+        // cursor change tracking is currently disabled, so don't Q_EMIT signal
         return;
     }
-    emit cursorChanged();
+    Q_EMIT cursorChanged();
 }
 
 }

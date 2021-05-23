@@ -727,7 +727,7 @@ inline AbstractClient *Workspace::mostRecentlyActivatedClient() const
 
 inline void Workspace::addGroup(Group* group)
 {
-    emit groupAdded(group);
+    Q_EMIT groupAdded(group);
     groups.append(group);
 }
 

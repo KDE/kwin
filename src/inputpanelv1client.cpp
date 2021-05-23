@@ -96,7 +96,7 @@ void InputPanelV1Client::destroyClient()
     markAsZombie();
 
     Deleted *deleted = Deleted::create(this);
-    emit windowClosed(this, deleted);
+    Q_EMIT windowClosed(this, deleted);
     StackingUpdatesBlocker blocker(workspace());
     waylandServer()->removeClient(this);
     deleted->unrefWindow();

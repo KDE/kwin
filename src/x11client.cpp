@@ -198,8 +198,8 @@ void X11Client::releaseWindow(bool on_shutdown)
         del = Deleted::create(this);
     }
     if (isInteractiveMoveResize())
-        emit clientFinishUserMovedResized(this);
-    emit windowClosed(this, del);
+        Q_EMIT clientFinishUserMovedResized(this);
+    Q_EMIT windowClosed(this, del);
     finishCompositing();
     RuleBook::self()->discardUsed(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
@@ -262,8 +262,8 @@ void X11Client::destroyClient()
     cleanTabBox();
     Deleted* del = Deleted::create(this);
     if (isInteractiveMoveResize())
-        emit clientFinishUserMovedResized(this);
-    emit windowClosed(this, del);
+        Q_EMIT clientFinishUserMovedResized(this);
+    Q_EMIT windowClosed(this, del);
     finishCompositing(ReleaseReason::Destroyed);
     RuleBook::self()->discardUsed(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
@@ -862,7 +862,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     // TODO: there's a small problem here - isManaged() depends on the mapping state,
     // but this client is not yet in Workspace's client list at this point, will
     // be only done in addClient()
-    emit clientManaging(this);
+    Q_EMIT clientManaging(this);
     return true;
 }
 
@@ -1041,7 +1041,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
                 plainResize(adjustedSize());
                 if (!isShade())
                     checkWorkspacePosition(oldgeom);
-                emit geometryShapeChanged(this, oldgeom);
+                Q_EMIT geometryShapeChanged(this, oldgeom);
             }
         );
         connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::widthChanged, this, &X11Client::updateInputWindow);
@@ -1057,7 +1057,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
     if (Compositor::compositing()) {
         discardWindowPixmap();
     }
-    emit geometryShapeChanged(this, oldgeom);
+    Q_EMIT geometryShapeChanged(this, oldgeom);
 }
 
 void X11Client::destroyDecoration()
@@ -1071,7 +1071,7 @@ void X11Client::destroyDecoration()
         if (compositing())
             discardWindowPixmap();
         if (!isZombie()) {
-            emit geometryShapeChanged(this, oldgeom);
+            Q_EMIT geometryShapeChanged(this, oldgeom);
         }
     }
     m_decoInputExtent.reset();
@@ -1192,11 +1192,11 @@ void X11Client::setClientFrameExtents(const NETStrut &strut)
     setFrameGeometry(frameGeometry());
 
     if (wasClientSideDecorated != isClientSideDecorated()) {
-        emit clientSideDecoratedChanged();
+        Q_EMIT clientSideDecoratedChanged();
     }
 
     // This will invalidate the window quads cache.
-    emit geometryShapeChanged(this, frameGeometry());
+    Q_EMIT geometryShapeChanged(this, frameGeometry());
 }
 
 /**
@@ -1300,7 +1300,7 @@ void X11Client::updateShape()
         addRepaintFull();
         addWorkspaceRepaint(visibleGeometry());   // In case shape change removes part of this window
     }
-    emit geometryShapeChanged(this, frameGeometry());
+    Q_EMIT geometryShapeChanged(this, frameGeometry());
 }
 
 static Xcb::Window shape_helper_window(XCB_WINDOW_NONE);
@@ -1576,7 +1576,7 @@ void X11Client::internalShow()
         m_decoInputExtent.map();
         updateHiddenPreview();
     }
-    emit windowShown(this);
+    Q_EMIT windowShown(this);
 }
 
 void X11Client::internalHide()
@@ -1591,7 +1591,7 @@ void X11Client::internalHide()
         updateHiddenPreview();
     addWorkspaceRepaint(visibleGeometry());
     workspace()->clientHidden(this);
-    emit windowHidden(this);
+    Q_EMIT windowHidden(this);
 }
 
 void X11Client::internalKeep()
@@ -2019,7 +2019,7 @@ void X11Client::setCaption(const QString& _s, bool force)
     }
     cap_normal = s;
     if (!force && !changed) {
-        emit captionChanged();
+        Q_EMIT captionChanged();
         return;
     }
 
@@ -2050,7 +2050,7 @@ void X11Client::setCaption(const QString& _s, bool force)
         // Keep the same suffix in iconic name if it's set
         info->setVisibleIconName(QString(cap_iconic + cap_suffix).toUtf8().constData());
 
-    emit captionChanged();
+    Q_EMIT captionChanged();
 }
 
 void X11Client::updateCaption()
@@ -2120,7 +2120,7 @@ void X11Client::getMotifHints()
     if (isManaged())
         updateDecoration(true);   // Check if noborder state has changed
     if (closabilityChanged) {
-        emit closeableChanged(isCloseable());
+        Q_EMIT closeableChanged(isCloseable());
     }
 }
 
@@ -2290,7 +2290,7 @@ void X11Client::setBlockingCompositing(bool block)
     const bool usedToBlock = blocks_compositing;
     blocks_compositing = rules()->checkBlockCompositing(block && options->windowsBlockCompositing());
     if (usedToBlock != blocks_compositing) {
-        emit blockingCompositingChanged(blocks_compositing ? this : nullptr);
+        Q_EMIT blockingCompositingChanged(blocks_compositing ? this : nullptr);
     }
 }
 
@@ -2325,13 +2325,13 @@ void X11Client::updateAllowedActions(bool force)
     const NET::Actions relevant = ~(NET::ActionMove|NET::ActionResize);
     if ((allowed_actions & relevant) != (old_allowed_actions & relevant)) {
         if ((allowed_actions & NET::ActionMinimize) != (old_allowed_actions & NET::ActionMinimize)) {
-            emit minimizeableChanged(allowed_actions & NET::ActionMinimize);
+            Q_EMIT minimizeableChanged(allowed_actions & NET::ActionMinimize);
         }
         if ((allowed_actions & NET::ActionShade) != (old_allowed_actions & NET::ActionShade)) {
-            emit shadeableChanged(allowed_actions & NET::ActionShade);
+            Q_EMIT shadeableChanged(allowed_actions & NET::ActionShade);
         }
         if ((allowed_actions & NET::ActionMax) != (old_allowed_actions & NET::ActionMax)) {
-            emit maximizeableChanged(allowed_actions & NET::ActionMax);
+            Q_EMIT maximizeableChanged(allowed_actions & NET::ActionMax);
         }
     }
 }
@@ -2753,13 +2753,13 @@ void X11Client::move(int x, int y)
     workspace()->updateStackingOrder();
     // client itself is not damaged
     if (oldBufferGeometry != bufferGeometry()) {
-        emit bufferGeometryChanged(this, oldBufferGeometry);
+        Q_EMIT bufferGeometryChanged(this, oldBufferGeometry);
     }
     if (oldClientGeometry != clientGeometry()) {
-        emit clientGeometryChanged(this, oldClientGeometry);
+        Q_EMIT clientGeometryChanged(this, oldClientGeometry);
     }
     if (oldFrameGeometry != frameGeometry()) {
-        emit frameGeometryChanged(this, oldFrameGeometry);
+        Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
     }
 }
 
@@ -2935,7 +2935,7 @@ void X11Client::setTransient(xcb_window_t new_transient_for_id)
         checkGroup(nullptr, true);   // force, because transiency has changed
         updateLayer();
         workspace()->resetUpdateToolWindowsTimer();
-        emit transientChanged();
+        Q_EMIT transientChanged();
     }
 }
 
@@ -3730,7 +3730,7 @@ void X11Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
     if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
         updateQuickTileMode(QuickTileFlag::None);
         max_mode = MaximizeRestore;
-        emit quickTileModeChanged();
+        Q_EMIT quickTileModeChanged();
     } else if (!app_noborder && quickTileMode() == QuickTileMode(QuickTileFlag::None) &&
         (maximizeMode() == MaximizeVertical || maximizeMode() == MaximizeHorizontal)) {
         // ignoring can be, because either we do, or the user does explicitly not want it.
@@ -4046,15 +4046,15 @@ void X11Client::setFrameGeometry(const QRect &rect)
     workspace()->updateStackingOrder();
 
     if (oldBufferGeometry != m_bufferGeometry) {
-        emit bufferGeometryChanged(this, oldBufferGeometry);
+        Q_EMIT bufferGeometryChanged(this, oldBufferGeometry);
     }
     if (oldClientGeometry != m_clientGeometry) {
-        emit clientGeometryChanged(this, oldClientGeometry);
+        Q_EMIT clientGeometryChanged(this, oldClientGeometry);
     }
     if (oldFrameGeometry != m_frameGeometry) {
-        emit frameGeometryChanged(this, oldFrameGeometry);
+        Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
     }
-    emit geometryShapeChanged(this, oldFrameGeometry);
+    Q_EMIT geometryShapeChanged(this, oldFrameGeometry);
 }
 
 void X11Client::plainResize(int w, int h)
@@ -4103,15 +4103,15 @@ void X11Client::plainResize(int w, int h)
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     if (oldBufferGeometry != m_bufferGeometry) {
-        emit bufferGeometryChanged(this, oldBufferGeometry);
+        Q_EMIT bufferGeometryChanged(this, oldBufferGeometry);
     }
     if (oldClientGeometry != m_clientGeometry) {
-        emit clientGeometryChanged(this, oldClientGeometry);
+        Q_EMIT clientGeometryChanged(this, oldClientGeometry);
     }
     if (oldFrameGeometry != m_frameGeometry) {
-        emit frameGeometryChanged(this, oldFrameGeometry);
+        Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
     }
-    emit geometryShapeChanged(this, oldFrameGeometry);
+    Q_EMIT geometryShapeChanged(this, oldFrameGeometry);
 }
 
 void X11Client::updateServerGeometry()
@@ -4238,13 +4238,13 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         changeMaximizeRecursion = true;
         const auto c = decoration()->client().toStrongRef();
         if ((max_mode & MaximizeVertical) != (old_mode & MaximizeVertical)) {
-            emit c->maximizedVerticallyChanged(max_mode & MaximizeVertical);
+            Q_EMIT c->maximizedVerticallyChanged(max_mode & MaximizeVertical);
         }
         if ((max_mode & MaximizeHorizontal) != (old_mode & MaximizeHorizontal)) {
-            emit c->maximizedHorizontallyChanged(max_mode & MaximizeHorizontal);
+            Q_EMIT c->maximizedHorizontallyChanged(max_mode & MaximizeHorizontal);
         }
         if ((max_mode == MaximizeFull) != (old_mode == MaximizeFull)) {
-            emit c->maximizedChanged(max_mode == MaximizeFull);
+            Q_EMIT c->maximizedChanged(max_mode == MaximizeFull);
         }
         changeMaximizeRecursion = false;
     }
@@ -4411,7 +4411,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
 
     updateAllowedActions();
     updateWindowRules(Rules::MaximizeVert|Rules::MaximizeHoriz|Rules::Position|Rules::Size);
-    emit quickTileModeChanged();
+    Q_EMIT quickTileModeChanged();
 }
 
 bool X11Client::userCanSetFullScreen() const
@@ -4474,8 +4474,8 @@ void X11Client::setFullScreen(bool set, bool user)
     }
 
     updateWindowRules(Rules::Fullscreen | Rules::Position | Rules::Size);
-    emit clientFullScreenSet(this, set, user);
-    emit fullScreenChanged();
+    Q_EMIT clientFullScreenSet(this, set, user);
+    Q_EMIT fullScreenChanged();
 }
 
 

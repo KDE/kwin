@@ -381,37 +381,37 @@ void KWinTabBoxConfigForm::tabBoxToggled(bool on)
 
 void KWinTabBoxConfigForm::onFilterScreen()
 {
-    emit filterScreenChanged(filterScreen());
+    Q_EMIT filterScreenChanged(filterScreen());
 }
 
 void KWinTabBoxConfigForm::onFilterDesktop()
 {
-    emit filterDesktopChanged(filterDesktop());
+    Q_EMIT filterDesktopChanged(filterDesktop());
 }
 
 void KWinTabBoxConfigForm::onFilterActivites()
 {
-    emit filterActivitiesChanged(filterActivities());
+    Q_EMIT filterActivitiesChanged(filterActivities());
 }
 
 void KWinTabBoxConfigForm::onFilterMinimization()
 {
-    emit filterMinimizationChanged(filterMinimization());
+    Q_EMIT filterMinimizationChanged(filterMinimization());
 }
 
 void KWin::KWinTabBoxConfigForm::onApplicationMode()
 {
-    emit applicationModeChanged(applicationMode());
+    Q_EMIT applicationModeChanged(applicationMode());
 }
 
 void KWinTabBoxConfigForm::onShowDesktopMode()
 {
-    emit showDesktopModeChanged(showDesktopMode());
+    Q_EMIT showDesktopModeChanged(showDesktopMode());
 }
 
 void KWinTabBoxConfigForm::onSwitchingMode()
 {
-    emit switchingModeChanged(switchingMode());
+    Q_EMIT switchingModeChanged(switchingMode());
 }
 
 void KWinTabBoxConfigForm::onEffectCombo()
@@ -423,7 +423,7 @@ void KWinTabBoxConfigForm::onEffectCombo()
     }
     ui->kcfg_HighlightWindows->setEnabled(isAddonEffect && m_isHighlightWindowsEnabled);
 
-    emit layoutNameChanged(layoutName());
+    Q_EMIT layoutNameChanged(layoutName());
 }
 
 void KWinTabBoxConfigForm::shortcutChanged(const QKeySequence &seq)

@@ -336,11 +336,11 @@ void InternalClient::destroyClient()
     markAsZombie();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
-        emit clientFinishUserMovedResized(this);
+        Q_EMIT clientFinishUserMovedResized(this);
     }
 
     Deleted *deleted = Deleted::create(this);
-    emit windowClosed(this, deleted);
+    Q_EMIT windowClosed(this, deleted);
 
     destroyDecoration();
 
@@ -444,7 +444,7 @@ void InternalClient::updateCaption()
         } while (findClientWithSameCaption());
     }
     if (m_captionSuffix != oldSuffix) {
-        emit captionChanged();
+        Q_EMIT captionChanged();
     }
 }
 
@@ -473,13 +473,13 @@ void InternalClient::commitGeometry(const QRect &rect)
     syncGeometryToInternalWindow();
 
     if (oldClientGeometry != m_clientGeometry) {
-        emit bufferGeometryChanged(this, oldClientGeometry);
-        emit clientGeometryChanged(this, oldClientGeometry);
+        Q_EMIT bufferGeometryChanged(this, oldClientGeometry);
+        Q_EMIT clientGeometryChanged(this, oldClientGeometry);
     }
     if (oldFrameGeometry != m_frameGeometry) {
-        emit frameGeometryChanged(this, oldFrameGeometry);
+        Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
     }
-    emit geometryShapeChanged(this, oldFrameGeometry);
+    Q_EMIT geometryShapeChanged(this, oldFrameGeometry);
 
     if (isInteractiveResize()) {
         performInteractiveMoveResize();
@@ -498,7 +498,7 @@ void InternalClient::setCaption(const QString &caption)
     updateCaption();
 
     if (m_captionSuffix == oldCaptionSuffix) {
-        emit captionChanged();
+        Q_EMIT captionChanged();
     }
 }
 

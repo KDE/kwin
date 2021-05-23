@@ -283,7 +283,7 @@ void DirectSession::updateActive(bool active)
 {
     if (m_isActive != active) {
         m_isActive = active;
-        emit activeChanged(active);
+        Q_EMIT activeChanged(active);
     }
 }
 
