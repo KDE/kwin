@@ -196,6 +196,9 @@ void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *su
                                             void *eglStream,
                                             wl_array *attribs)
 {
+    if (!m_outputs.isEmpty()) {
+        makeContextCurrent(m_outputs.first());
+    }
     QVector<EGLAttrib> streamAttribs;
     streamAttribs << EGL_WAYLAND_EGLSTREAM_WL << (EGLAttrib)eglStream;
     EGLAttrib *attribArray = (EGLAttrib *)attribs->data;
@@ -224,6 +227,9 @@ void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *su
 
         connect(surface, &KWaylandServer::SurfaceInterface::destroyed, this,
             [surface, this]() {
+                if (!m_outputs.isEmpty()) {
+                    makeContextCurrent(m_outputs.first());
+                }
                 const StreamTexture &st = m_streamTextures.take(surface);
                 pEglDestroyStreamKHR(eglDisplay(), st.stream);
                 glDeleteTextures(1, &st.texture);
