@@ -85,7 +85,7 @@ KCM.ScrollViewKCM {
                 }
             },
             Kirigami.Action {
-                enabled: model && !model.IsMissing
+                enabled: model && !model.IsMissing && desktopsList.count !== 1
                 iconName: "edit-delete-remove"
                 tooltip: i18nc("@info:tooltip", "Remove")
                 onTriggered: kcm.desktopsModel.removeDesktop(model.Id)
