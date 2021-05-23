@@ -91,7 +91,7 @@ private:
 
     bool m_enabled = false;
     bool m_active = false;
-    KStatusNotifierItem *m_sni = nullptr;
+    QScopedPointer<KStatusNotifierItem> m_sni;
     QPointer<AbstractClient> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;
 

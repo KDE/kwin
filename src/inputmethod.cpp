@@ -81,27 +81,8 @@ void InputMethod::init()
         );
     }
 
-    qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the SNI";
-
-    QMenu *sniMenu = new QMenu;
-    sniMenu->addAction(i18n("Configure virtual keyboards..."), this, [] {
-        QProcess::startDetached("systemsettings5", {"kcm_virtualkeyboard"});
-    });
-
-    m_sni = new KStatusNotifierItem(QStringLiteral("kwin-virtual-keyboard"), this);
-    m_sni->setStandardActionsEnabled(false);
-    m_sni->setCategory(KStatusNotifierItem::Hardware);
-    m_sni->setStatus(KStatusNotifierItem::Passive);
-    m_sni->setTitle(i18n("Virtual Keyboard"));
-    m_sni->setToolTipTitle(i18n("Whether to show the virtual keyboard on demand."));
-    m_sni->setStandardActionsEnabled(false);
-    m_sni->setContextMenu(sniMenu);
     updateSni();
-    connect(m_sni, &KStatusNotifierItem::activateRequested, this,
-        [this] {
-            setEnabled(!m_enabled);
-        }
-    );
+
     connect(this, &InputMethod::enabledChanged, this, &InputMethod::updateSni);
 
     new VirtualKeyboardDBus(this);
@@ -516,21 +497,42 @@ void InputMethod::adoptInputMethodContext()
 
 void InputMethod::updateSni()
 {
-    if (!m_sni) {
-        return;
-    }
-    if (m_inputMethodCommand.isEmpty()) {
-        m_sni->setIconByName(QStringLiteral("input-keyboard-virtual-on"));
-        m_sni->setOverlayIconByName(QStringLiteral("emblem-unavailable"));
-        m_sni->setTitle(i18n("No Virtual Keyboard configured"));
-    } else if (m_enabled) {
-        m_sni->setIconByName(QStringLiteral("input-keyboard-virtual-on"));
-        m_sni->setTitle(i18n("Virtual Keyboard: enabled"));
-        m_sni->setOverlayIconByName({});
+    if (!m_inputMethodCommand.isEmpty()) {
+        if (!m_sni) {
+            qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the SNI";
+            m_sni.reset(new KStatusNotifierItem(QStringLiteral("kwin-virtual-keyboard"), this));
+
+            connect(m_sni.get(), &KStatusNotifierItem::activateRequested, this,
+                [this] {
+                    setEnabled(!m_enabled);
+                }
+            );
+        }
+        m_sni->setStandardActionsEnabled(false);
+        m_sni->setCategory(KStatusNotifierItem::Hardware);
+        m_sni->setStatus(KStatusNotifierItem::Passive);
+        m_sni->setTitle(i18n("Virtual Keyboard"));
+        m_sni->setToolTipTitle(i18n("Whether to show the virtual keyboard on demand."));
+        m_sni->setStandardActionsEnabled(false);
+
+        QMenu *sniMenu = new QMenu;
+        sniMenu->addAction(i18n("Configure virtual keyboards..."), this, [] {
+            QProcess::startDetached("systemsettings5", {"kcm_virtualkeyboard"});
+        });
+
+        m_sni->setContextMenu(sniMenu);
+
+        if (m_enabled) {
+            m_sni->setIconByName(QStringLiteral("input-keyboard-virtual-on"));
+            m_sni->setTitle(i18n("Virtual Keyboard: enabled"));
+            m_sni->setOverlayIconByName({});
+        } else {
+            m_sni->setIconByName(QStringLiteral("input-keyboard-virtual-off"));
+            m_sni->setTitle(i18n("Virtual Keyboard: disabled"));
+            m_sni->setOverlayIconByName({});
+        }
     } else {
-        m_sni->setIconByName(QStringLiteral("input-keyboard-virtual-off"));
-        m_sni->setTitle(i18n("Virtual Keyboard: disabled"));
-        m_sni->setOverlayIconByName({});
+        m_sni.reset();
     }
 }
 
