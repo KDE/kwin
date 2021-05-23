@@ -25,7 +25,7 @@ public:
     void screenGeometryChanged(const QSize &size) override;
 
     virtual int screenCount() const = 0;
-    virtual void addOutput(DrmOutput *output) = 0;
+    virtual bool addOutput(DrmOutput *output) = 0;
     virtual void removeOutput(DrmOutput *output) = 0;
     virtual bool swapBuffers(DrmOutput *output) {
         Q_UNUSED(output)

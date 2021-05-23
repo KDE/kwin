@@ -37,8 +37,6 @@ public:
 
     void screenGeometryChanged(const QSize &size) override;
 
-    void addBackend(AbstractEglDrmBackend *backend);
-
     bool directScanoutAllowed(int screen) const override;
 
 public Q_SLOTS:
@@ -48,6 +46,7 @@ public Q_SLOTS:
 private:
     DrmBackend *m_platform;
     QVector<AbstractEglDrmBackend*> m_backends;
+    bool m_initialized = false;
 
     AbstractEglDrmBackend *findBackend(int screenId, int& internalScreenId) const;
 };

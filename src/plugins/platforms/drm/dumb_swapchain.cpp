@@ -32,7 +32,7 @@ DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size)
         m_buffers << buffer;
     }
     if (m_buffers.count() < 3) {
-        qCWarning(KWIN_DRM) << "Failed to create gbm buffers for swapchain!";
+        qCWarning(KWIN_DRM) << "Failed to create dumb buffers for swapchain!";
         m_buffers.clear();
     }
 }

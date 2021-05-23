@@ -18,7 +18,8 @@ namespace KWin
 {
 
 class DrmOutput;
-class DrmBuffer;
+class DrmDumbBuffer;
+class DumbSwapchain;
 
 /**
  * @brief OpenGL Backend using Egl with an EGLDevice.
@@ -39,7 +40,7 @@ public:
         return m_outputs.count();
     }
 
-    void addOutput(DrmOutput *output) override;
+    bool addOutput(DrmOutput *output) override;
     void removeOutput(DrmOutput *output) override;
 
 protected:
@@ -61,13 +62,15 @@ private:
     struct Output
     {
         DrmOutput *output = nullptr;
-        QSharedPointer<DrmBuffer> buffer;
+        QSharedPointer<DrmDumbBuffer> buffer;
         EGLSurface eglSurface = EGL_NO_SURFACE;
         EGLStreamKHR eglStream = EGL_NO_STREAM_KHR;
+
+        // for operation as secondary GPU
+        QSharedPointer<DumbSwapchain> dumbSwapchain;
     };
     bool resetOutput(Output &output, DrmOutput *drmOutput);
     bool makeContextCurrent(const Output &output);
-    bool presentOnOutput(Output &output);
     void cleanupOutput(const Output &output);
 
     QVector<Output> m_outputs;

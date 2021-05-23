@@ -656,14 +656,12 @@ bool DrmOutput::presentAtomically(const QSharedPointer<DrmBuffer> &buffer)
         return false;
     }
 
-#if HAVE_EGL_STREAMS
-    if (m_gpu->useEglStreams() && !m_modesetRequested) {
-        // EglStreamBackend queues normal page flips through EGL,
-        // modesets are still performed through DRM-KMS
+    // EglStreamBackend queues normal page flips through EGL when used as the rendering backend,
+    // modesets are still performed through DRM-KMS
+    if (m_gpu->useEglStreams() && !m_modesetRequested && m_gpu == m_backend->primaryGpu()) {
         m_pageFlipPending = true;
         return true;
     }
-#endif
 
     m_primaryPlane->setNext(buffer);
     m_nextPlanesFlipList << m_primaryPlane;
@@ -814,12 +812,12 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
                 flags |= DRM_MODE_ATOMIC_NONBLOCK;
             }
 
-#if HAVE_EGL_STREAMS
-            if (!m_gpu->useEglStreams())
-                // EglStreamBackend uses the NV_output_drm_flip_event EGL extension
-                // to register the flip event through eglStreamConsumerAcquireAttribNV
-#endif
+            // EglStreamBackend uses the NV_output_drm_flip_event EGL extension
+            // to register the flip event through eglStreamConsumerAcquireAttribNV
+            // but only when used as the rendering GPU
+            if (!m_gpu->useEglStreams() || m_gpu != m_backend->primaryGpu()) {
                 flags |= DRM_MODE_PAGE_FLIP_EVENT;
+            }
         }
     } else {
         flags |= DRM_MODE_ATOMIC_TEST_ONLY;
