@@ -185,8 +185,22 @@ bool DrmBackend::initialize()
         }
     } else {
         const auto devices = m_udev->listGPUs();
+        bool bootVga = false;
         for (const UdevDevice::Ptr &device : devices) {
-            addGpu(device->devNode());
+            if (addGpu(device->devNode())) {
+                bootVga |= device->isBootVga();
+            }
+        }
+
+        // if a boot device is set, honor that setting
+        // if not, prefer gbm for rendering because that works better
+        if (!bootVga && !m_gpus.isEmpty() && m_gpus[0]->useEglStreams()) {
+            for (int i = 1; i < m_gpus.count(); i++) {
+                if (!m_gpus[i]->useEglStreams()) {
+                    m_gpus.swapItemsAt(i, 0);
+                    break;
+                }
+            }
         }
     }
 
@@ -225,11 +239,10 @@ void DrmBackend::handleUdevEvent()
         }
 
         if (device->action() == QStringLiteral("add")) {
-            if (m_gpus.isEmpty() || !primaryGpu()->useEglStreams()) {
-                if (const auto &gpu = addGpu(device->devNode())) {
-                    updateOutputs();
-                    updateCursor();
-                }
+            qCDebug(KWIN_DRM) << "New gpu found:" << device->devNode();
+            if (addGpu(device->devNode())) {
+                updateOutputs();
+                updateCursor();
             }
         } else if (device->action() == QStringLiteral("remove")) {
             DrmGpu *gpu = findGpu(device->devNum());
@@ -239,6 +252,7 @@ void DrmBackend::handleUdevEvent()
                     kwinApp()->quit();
                     return;
                 } else {
+                    qCDebug(KWIN_DRM) << "Removing gpu" << gpu->devNode();
                     emit gpuRemoved(gpu);
                     m_gpus.removeOne(gpu);
                     delete gpu;
@@ -252,7 +266,7 @@ void DrmBackend::handleUdevEvent()
                 gpu = addGpu(device->devNode());
             }
             if (gpu) {
-                qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
+                qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device" << gpu->devNode();
                 updateOutputs();
                 updateCursor();
             }
@@ -262,6 +276,9 @@ void DrmBackend::handleUdevEvent()
 
 DrmGpu *DrmBackend::addGpu(const QString &fileName)
 {
+    if (primaryGpu() && primaryGpu()->useEglStreams()) {
+        return nullptr;
+    }
     int fd = session()->openRestricted(fileName);
     if (fd < 0) {
         qCWarning(KWIN_DRM) << "failed to open drm device at" << fileName;
@@ -285,17 +302,12 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
     }
 
     DrmGpu *gpu = new DrmGpu(this, fileName, fd, buf.st_rdev);
-    if (!gpu->useEglStreams() || m_gpus.isEmpty()) {
-        m_gpus.append(gpu);
-        m_active = true;
-        connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
-        connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
-        emit gpuAdded(gpu);
-        return gpu;
-    } else {
-        delete gpu;
-        return nullptr;
-    }
+    m_gpus.append(gpu);
+    m_active = true;
+    connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
+    connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
+    emit gpuAdded(gpu);
+    return gpu;
 }
 
 void DrmBackend::addOutput(DrmOutput *o)
@@ -327,6 +339,7 @@ bool DrmBackend::updateOutputs()
         auto gpu = *it;
         gpu->updateOutputs();
         if (gpu->outputs().isEmpty() && gpu != primaryGpu()) {
+            qCDebug(KWIN_DRM) << "removing unused GPU" << gpu->devNode();
             it = m_gpus.erase(it);
             emit gpuRemoved(gpu);
             delete gpu;
@@ -598,8 +611,7 @@ OpenGLBackend *DrmBackend::createOpenGLBackend()
     AbstractEglBackend::setPrimaryBackend(primaryBackend);
     EglMultiBackend *backend = new EglMultiBackend(this, primaryBackend);
     for (int i = 1; i < m_gpus.count(); i++) {
-        auto backendi = new EglGbmBackend(this, m_gpus.at(i));
-        backend->addBackend(backendi);
+        backend->addGpu(m_gpus[i]);
     }
     return backend;
 #else

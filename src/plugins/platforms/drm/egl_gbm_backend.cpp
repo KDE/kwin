@@ -215,7 +215,7 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
     return true;
 }
 
-void EglGbmBackend::addOutput(DrmOutput *drmOutput)
+bool EglGbmBackend::addOutput(DrmOutput *drmOutput)
 {
     if (isPrimary()) {
         Output newOutput;
@@ -235,13 +235,18 @@ void EglGbmBackend::addOutput(DrmOutput *drmOutput)
                 }
             );
             outputs << newOutput;
+        } else {
+            return false;
         }
     } else {
         Output newOutput;
         newOutput.output = drmOutput;
-        renderingBackend()->addOutput(drmOutput);
+        if (!renderingBackend()->addOutput(drmOutput)) {
+            return false;
+        }
         m_outputs << newOutput;
     }
+    return true;
 }
 
 void EglGbmBackend::removeOutput(DrmOutput *drmOutput)
@@ -276,7 +281,7 @@ bool EglGbmBackend::swapBuffers(DrmOutput *drmOutput)
     renderFramebufferToSurface(*it);
     auto error = eglSwapBuffers(eglDisplay(), it->eglSurface);
     if (error != EGL_TRUE) {
-        qCDebug(KWIN_DRM) << "an error occurred while swapping buffers" << error;
+        qCCritical(KWIN_DRM) << "an error occurred while swapping buffers" << error;
         it->secondaryBuffer = nullptr;
         return false;
     }

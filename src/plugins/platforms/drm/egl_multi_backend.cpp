@@ -10,6 +10,7 @@
 #include "egl_multi_backend.h"
 #include "logging.h"
 #include "egl_gbm_backend.h"
+#include "egl_stream_backend.h"
 #include "drm_backend.h"
 #include "drm_gpu.h"
 
@@ -49,6 +50,7 @@ void EglMultiBackend::init()
     setExtensions(m_backends[0]->extensions());
 
     m_backends[0]->makeCurrent();
+    m_initialized = true;
 }
 
 QRegion EglMultiBackend::beginFrame(int screenId)
@@ -115,11 +117,6 @@ AbstractEglDrmBackend *EglMultiBackend::findBackend(int screenId, int& internalS
     return nullptr;
 }
 
-void EglMultiBackend::addBackend(AbstractEglDrmBackend *backend)
-{
-    m_backends.append(backend);
-}
-
 bool EglMultiBackend::directScanoutAllowed(int screenId) const
 {
     int internalScreenId;
@@ -130,9 +127,15 @@ bool EglMultiBackend::directScanoutAllowed(int screenId) const
 
 void EglMultiBackend::addGpu(DrmGpu *gpu)
 {
-    // secondary GPUs are atm guaranteed to be gbm
-    auto backend = new EglGbmBackend(m_platform, gpu);
-    backend->init();
+    AbstractEglDrmBackend *backend;
+    if (gpu->useEglStreams()) {
+        backend = new EglStreamBackend(m_platform, gpu);
+    } else {
+        backend = new EglGbmBackend(m_platform, gpu);
+    }
+    if (m_initialized) {
+        backend->init();
+    }
     m_backends.append(backend);
 }
 

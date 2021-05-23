@@ -53,7 +53,7 @@ public:
         return m_outputs.count();
     }
 
-    void addOutput(DrmOutput *output) override;
+    bool addOutput(DrmOutput *output) override;
     void removeOutput(DrmOutput *output) override;
     bool swapBuffers(DrmOutput *output) override;
     bool exportFramebuffer(DrmOutput *output, void *data, const QSize &size, uint32_t stride) override;

@@ -19,12 +19,14 @@
 #include "screens.h"
 #include "wayland_server.h"
 #include <kwinglplatform.h>
+#include "drm_gpu.h"
+#include "dumb_swapchain.h"
+
 #include <QOpenGLContext>
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/eglstream_controller_interface.h>
 #include <KWaylandServer/resource.h>
-#include "drm_gpu.h"
 
 namespace KWin
 {
@@ -247,23 +249,31 @@ void EglStreamBackend::init()
         return;
     }
 
-    if (!initializeEgl()) {
-        setFailed("Failed to initialize EGL api");
-        return;
-    }
-    if (!initRenderingContext()) {
-        setFailed("Failed to initialize rendering context");
-        return;
-    }
+    if (isPrimary()) {
+        if (!initializeEgl()) {
+            setFailed("Failed to initialize EGL api");
+            return;
+        }
+        if (!initRenderingContext()) {
+            setFailed("Failed to initialize rendering context");
+            return;
+        }
 
-    initKWinGL();
-    setSupportsBufferAge(false);
-    initWayland();
+        initKWinGL();
+        setSupportsBufferAge(false);
+        initWayland();
 
-    using namespace KWaylandServer;
-    m_eglStreamControllerInterface = new EglStreamControllerInterface(waylandServer()->display());
-    connect(m_eglStreamControllerInterface, &EglStreamControllerInterface::streamConsumerAttached, this,
-            &EglStreamBackend::attachStreamConsumer);
+        using namespace KWaylandServer;
+        m_eglStreamControllerInterface = new EglStreamControllerInterface(waylandServer()->display());
+        connect(m_eglStreamControllerInterface, &EglStreamControllerInterface::streamConsumerAttached, this,
+                &EglStreamBackend::attachStreamConsumer);
+    } else {
+        // secondary NVidia GPUs only import dumb buffers
+        const auto outputs = m_gpu->outputs();
+        for (DrmOutput *drmOutput : outputs) {
+            addOutput(drmOutput);
+        }
+    }
 }
 
 bool EglStreamBackend::initRenderingContext()
@@ -294,69 +304,80 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
     // dumb buffer used for modesetting
     o.buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, drmOutput->pixelSize());
 
-    EGLAttrib streamAttribs[] = {
-        EGL_STREAM_FIFO_LENGTH_KHR, 0, // mailbox mode
-        EGL_CONSUMER_AUTO_ACQUIRE_EXT, EGL_FALSE,
-        EGL_NONE
-    };
-    EGLStreamKHR stream = pEglCreateStreamAttribNV(eglDisplay(), streamAttribs);
-    if (stream == EGL_NO_STREAM_KHR) {
-        qCCritical(KWIN_DRM) << "Failed to create EGL stream for output";
-        return false;
-    }
-
-    EGLAttrib outputAttribs[3];
-    if (drmOutput->primaryPlane()) {
-        outputAttribs[0] = EGL_DRM_PLANE_EXT;
-        outputAttribs[1] = drmOutput->primaryPlane()->id();
-    } else {
-        outputAttribs[0] = EGL_DRM_CRTC_EXT;
-        outputAttribs[1] = drmOutput->crtc()->id();
-    }
-    outputAttribs[2] = EGL_NONE;
-    EGLint numLayers;
-    EGLOutputLayerEXT outputLayer;
-    pEglGetOutputLayersEXT(eglDisplay(), outputAttribs, &outputLayer, 1, &numLayers);
-    if (numLayers == 0) {
-        qCCritical(KWIN_DRM) << "No EGL output layers found";
-        return false;
-    }
-
-    pEglStreamConsumerOutputEXT(eglDisplay(), stream, outputLayer);
-    EGLint streamProducerAttribs[] = {
-        EGL_WIDTH, drmOutput->pixelSize().width(),
-        EGL_HEIGHT, drmOutput->pixelSize().height(),
-        EGL_NONE
-    };
-    EGLSurface eglSurface = pEglCreateStreamProducerSurfaceKHR(eglDisplay(), config(), stream,
-                                                               streamProducerAttribs);
-    if (eglSurface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_DRM) << "Failed to create EGL surface for output";
-        return false;
-    }
-
-    if (o.eglSurface != EGL_NO_SURFACE) {
-        if (surface() == o.eglSurface) {
-            setSurface(eglSurface);
+    if (isPrimary()) {
+        EGLAttrib streamAttribs[] = {
+            EGL_STREAM_FIFO_LENGTH_KHR, 0, // mailbox mode
+            EGL_CONSUMER_AUTO_ACQUIRE_EXT, EGL_FALSE,
+            EGL_NONE
+        };
+        EGLStreamKHR stream = pEglCreateStreamAttribNV(eglDisplay(), streamAttribs);
+        if (stream == EGL_NO_STREAM_KHR) {
+            qCCritical(KWIN_DRM) << "Failed to create EGL stream for output";
+            return false;
         }
-        eglDestroySurface(eglDisplay(), o.eglSurface);
-    }
 
-    if (o.eglStream != EGL_NO_STREAM_KHR) {
-        pEglDestroyStreamKHR(eglDisplay(), o.eglStream);
-    }
+        EGLAttrib outputAttribs[3];
+        if (drmOutput->primaryPlane()) {
+            outputAttribs[0] = EGL_DRM_PLANE_EXT;
+            outputAttribs[1] = drmOutput->primaryPlane()->id();
+        } else {
+            outputAttribs[0] = EGL_DRM_CRTC_EXT;
+            outputAttribs[1] = drmOutput->crtc()->id();
+        }
+        outputAttribs[2] = EGL_NONE;
+        EGLint numLayers;
+        EGLOutputLayerEXT outputLayer;
+        pEglGetOutputLayersEXT(eglDisplay(), outputAttribs, &outputLayer, 1, &numLayers);
+        if (numLayers == 0) {
+            qCCritical(KWIN_DRM) << "No EGL output layers found";
+            return false;
+        }
 
-    o.eglStream = stream;
-    o.eglSurface = eglSurface;
+        pEglStreamConsumerOutputEXT(eglDisplay(), stream, outputLayer);
+        EGLint streamProducerAttribs[] = {
+            EGL_WIDTH, drmOutput->pixelSize().width(),
+            EGL_HEIGHT, drmOutput->pixelSize().height(),
+            EGL_NONE
+        };
+        EGLSurface eglSurface = pEglCreateStreamProducerSurfaceKHR(eglDisplay(), config(), stream,
+                                                                streamProducerAttribs);
+        if (eglSurface == EGL_NO_SURFACE) {
+            qCCritical(KWIN_DRM) << "Failed to create EGL surface for output";
+            return false;
+        }
+
+        if (o.eglSurface != EGL_NO_SURFACE) {
+            if (surface() == o.eglSurface) {
+                setSurface(eglSurface);
+            }
+            eglDestroySurface(eglDisplay(), o.eglSurface);
+        }
+
+        if (o.eglStream != EGL_NO_STREAM_KHR) {
+            pEglDestroyStreamKHR(eglDisplay(), o.eglStream);
+        }
+
+        o.eglStream = stream;
+        o.eglSurface = eglSurface;
+    } else {
+        QSize size = drmOutput->hardwareTransforms() ? drmOutput->pixelSize() : drmOutput->modeSize();
+        o.dumbSwapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, size);
+        if (o.dumbSwapchain->isEmpty()) {
+            return false;
+        }
+    }
     return true;
 }
 
-void EglStreamBackend::addOutput(DrmOutput *drmOutput)
+bool EglStreamBackend::addOutput(DrmOutput *drmOutput)
 {
     Q_ASSERT(drmOutput->gpu() == m_gpu);
     Output o;
     if (!resetOutput(o, drmOutput)) {
-        return;
+        return false;
+    }
+    if (!isPrimary() && !renderingBackend()->addOutput(drmOutput)) {
+        return false;
     }
 
     connect(drmOutput, &DrmOutput::modeChanged, this,
@@ -373,6 +394,7 @@ void EglStreamBackend::addOutput(DrmOutput *drmOutput)
         }
     );
     m_outputs << o;
+    return true;
 }
 
 void EglStreamBackend::removeOutput(DrmOutput *drmOutput)
@@ -388,6 +410,9 @@ void EglStreamBackend::removeOutput(DrmOutput *drmOutput)
     }
     cleanupOutput(*it);
     m_outputs.erase(it);
+    if (!isPrimary()) {
+        renderingBackend()->removeOutput(drmOutput);
+    }
 }
 
 bool EglStreamBackend::makeContextCurrent(const Output &output)
@@ -443,16 +468,6 @@ bool EglStreamBackend::initBufferConfigs()
     return true;
 }
 
-bool EglStreamBackend::presentOnOutput(EglStreamBackend::Output &o)
-{
-    if (!eglSwapBuffers(eglDisplay(), o.eglSurface)) {
-        qCCritical(KWIN_DRM, "eglSwapBuffers() failed: %x", eglGetError());
-        return false;
-    }
-
-    return o.output->present(o.buffer);
-}
-
 SceneOpenGLTexturePrivate *EglStreamBackend::createBackendTexture(SceneOpenGLTexture *texture)
 {
     return new EglStreamTexture(texture, this);
@@ -461,8 +476,12 @@ SceneOpenGLTexturePrivate *EglStreamBackend::createBackendTexture(SceneOpenGLTex
 QRegion EglStreamBackend::beginFrame(int screenId)
 {
     const Output &o = m_outputs.at(screenId);
-    makeContextCurrent(o);
-    return o.output->geometry();
+    if (isPrimary()) {
+        makeContextCurrent(o);
+        return o.output->geometry();
+    } else {
+        return renderingBackend()->beginFrameForSecondaryGpu(o.output);
+    }
 }
 
 void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -473,18 +492,41 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
     Output &renderOutput = m_outputs[screenId];
     DrmOutput *drmOutput = renderOutput.output;
 
-    if (!presentOnOutput(renderOutput)) {
-        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
-        renderLoopPrivate->notifyFrameFailed();
-        return;
+    bool frameFailed = false;
+
+    QSharedPointer<DrmDumbBuffer> buffer;
+    if (isPrimary()) {
+        buffer = renderOutput.buffer;
+        if (!eglSwapBuffers(eglDisplay(), renderOutput.eglSurface)) {
+            qCCritical(KWIN_DRM, "eglSwapBuffers() failed: %x", eglGetError());
+            frameFailed = true;
+        }
+    } else {
+        if (!renderingBackend()->swapBuffers(drmOutput)) {
+            qCCritical(KWIN_DRM) << "swapping buffers on render backend for" << drmOutput << "failed!";
+            frameFailed = true;
+        }
+        buffer = renderOutput.dumbSwapchain->acquireBuffer();
+        if (!frameFailed && !renderingBackend()->exportFramebuffer(drmOutput, buffer->data(), buffer->size(), buffer->stride())) {
+            qCCritical(KWIN_DRM) << "importing framebuffer from render backend for" << drmOutput << "failed!";
+            frameFailed = true;
+        }
+    }
+    if (!frameFailed && !renderOutput.output->present(buffer)) {
+        frameFailed = true;
     }
 
-    EGLAttrib acquireAttribs[] = {
-        EGL_DRM_FLIP_EVENT_DATA_NV, (EGLAttrib)drmOutput,
-        EGL_NONE,
-    };
-    if (!pEglStreamConsumerAcquireAttribNV(eglDisplay(), renderOutput.eglStream, acquireAttribs)) {
-        qCWarning(KWIN_DRM) << "Failed to acquire output EGL stream frame";
+    if (frameFailed) {
+        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
+        renderLoopPrivate->notifyFrameFailed();
+    } else if (isPrimary()) {
+        EGLAttrib acquireAttribs[] = {
+            EGL_DRM_FLIP_EVENT_DATA_NV, (EGLAttrib)drmOutput,
+            EGL_NONE,
+        };
+        if (!pEglStreamConsumerAcquireAttribNV(eglDisplay(), renderOutput.eglStream, acquireAttribs)) {
+            qCWarning(KWIN_DRM) << "Failed to acquire output EGL stream frame";
+        }
     }
 }
 
