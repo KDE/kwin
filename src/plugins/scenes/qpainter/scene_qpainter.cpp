@@ -12,6 +12,7 @@
 #include "abstract_client.h"
 #include "composite.h"
 #include "cursor.h"
+#include "decorations/decoratedclient.h"
 #include "deleted.h"
 #include "effects.h"
 #include "main.h"
@@ -21,15 +22,9 @@
 #include "surfaceitem.h"
 #include "toplevel.h"
 #include "platform.h"
-#include "wayland_server.h"
 #include "windowitem.h"
 
 #include <kwineffectquickview.h>
-
-#include <KWaylandServer/buffer_interface.h>
-#include <KWaylandServer/subcompositor_interface.h>
-#include <KWaylandServer/surface_interface.h>
-#include "decorations/decoratedclient.h"
 // Qt
 #include <QDebug>
 #include <QPainter>
