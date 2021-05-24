@@ -12,7 +12,7 @@ KWin is an easy to use, but flexible, composited Window Manager for Xorg windowi
 # Contacting KWin development team
 
  * mailing list: [kwin@kde.org](https://mail.kde.org/mailman/listinfo/kwin)
- * IRC: #kwin on irc.libera.chat
+ * IRC: #kde-kwin on irc.libera.chat
 
 # Support
 ## Application Developer
