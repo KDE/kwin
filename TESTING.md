@@ -1,5 +1,5 @@
 # Testing in KWin
-KWin provides a unit and integration test suit for X11 and Wayland. The source code for the tests can be found in the subdirectory autotests. The test suite should be run prior to any merge to KWin.
+KWin provides a unit and integration test suite for X11 and Wayland. The source code for the tests can be found in the subdirectory autotests. The test suite should be run prior to any merge to KWin.
 
 # Dependencies
 The following additional software needs to be installed for running the test suite:
