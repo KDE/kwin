@@ -220,7 +220,7 @@ void X11Client::releaseWindow(bool on_shutdown)
     m_frame.unmap();  // Destroying decoration would cause ugly visual effect
     destroyDecoration();
     cleanGrouping();
-    workspace()->removeClient(this);
+    workspace()->removeX11Client(this);
     if (!on_shutdown) {
         // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
         info->setDesktop(0);
@@ -278,7 +278,7 @@ void X11Client::destroyClient()
     workspace()->clientHidden(this);
     destroyDecoration();
     cleanGrouping();
-    workspace()->removeClient(this);
+    workspace()->removeX11Client(this);
     m_client.reset(); // invalidate
     m_wrapper.reset();
     m_frame.reset();

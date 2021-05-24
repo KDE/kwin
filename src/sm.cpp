@@ -84,7 +84,7 @@ void Workspace::storeSession(const QString &sessionName, SMSavePhase phase)
     int count =  0;
     int active_client = -1;
 
-    for (auto it = clients.begin(); it != clients.end(); ++it) {
+    for (auto it = m_x11Clients.begin(); it != m_x11Clients.end(); ++it) {
         X11Client *c = (*it);
         if (c->windowType() > NET::Splash) {
             //window types outside this are not tooltips/menus/OSDs
@@ -164,7 +164,7 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
     KConfigGroup cg(KSharedConfig::openConfig(), QLatin1String("SubSession: ") + name);
     int count =  0;
     int active_client = -1;
-    for (auto it = clients.begin(); it != clients.end(); ++it) {
+    for (auto it = m_x11Clients.begin(); it != m_x11Clients.end(); ++it) {
         X11Client *c = (*it);
         if (c->windowType() > NET::Splash) {
             continue;

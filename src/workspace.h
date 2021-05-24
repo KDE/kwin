@@ -212,7 +212,7 @@ public:
      * @return List of clients currently managed by Workspace
      */
     const QList<X11Client *> &clientList() const {
-        return clients;
+        return m_x11Clients;
     }
     /**
      * @return List of unmanaged "clients" currently registered in Workspace
@@ -319,7 +319,7 @@ public:
     void setShowingDesktop(bool showing);
     bool showingDesktop() const;
 
-    void removeClient(X11Client *);   // Only called from X11Client::destroyClient() or X11Client::releaseWindow()
+    void removeX11Client(X11Client *);   // Only called from X11Client::destroyClient() or X11Client::releaseWindow()
     void setActiveClient(AbstractClient*);
     Group* findGroup(xcb_window_t leader) const;
     void addGroup(Group* group);
@@ -564,6 +564,7 @@ private:
     void updateClientVisibilityOnDesktopChange(uint newDesktop);
     void activateClientOnNewDesktop(uint desktop);
     AbstractClient *findClientToActivateOnDesktop(uint desktop);
+    void removeAbstractClient(AbstractClient *client);
 
     struct Constraint
     {
@@ -599,7 +600,7 @@ private:
     AbstractClient* delayfocus_client;
     QPoint focusMousePos;
 
-    QList<X11Client *> clients;
+    QList<X11Client *> m_x11Clients;
     QList<AbstractClient*> m_allClients;
     QList<Unmanaged *> m_unmanaged;
     QList<Deleted *> deleted;
@@ -781,7 +782,7 @@ inline QPoint Workspace::focusMousePosition() const
 inline
 void Workspace::forEachClient(std::function< void (X11Client *) > func)
 {
-    std::for_each(clients.constBegin(), clients.constEnd(), func);
+    std::for_each(m_x11Clients.constBegin(), m_x11Clients.constEnd(), func);
 }
 
 inline

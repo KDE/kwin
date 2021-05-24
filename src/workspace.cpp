@@ -461,7 +461,7 @@ void Workspace::cleanupX11()
     StackingUpdatesBlocker blocker(this);
 
     // Use stacking_order, so that kwin --replace keeps stacking order.
-    const QList<X11Client *> orderedClients = ensureStackingOrder(clients);
+    const QList<X11Client *> orderedClients = ensureStackingOrder(m_x11Clients);
     for (X11Client *client : orderedClients) {
         client->releaseWindow(true);
         removeFromStack(client);
@@ -719,7 +719,7 @@ void Workspace::addClient(X11Client *c)
     } else {
         FocusChain::self()->update(c, FocusChain::Update);
     }
-    clients.append(c);
+    m_x11Clients.append(c);
     m_allClients.append(c);
     addToStack(c);
     markXStackingOrderAsDirty();
@@ -748,7 +748,7 @@ void Workspace::addUnmanaged(Unmanaged* c)
 /**
  * Destroys the client \a c
  */
-void Workspace::removeClient(X11Client *c)
+void Workspace::removeX11Client(X11Client *c)
 {
     if (c == active_popup_client)
         closeActivePopup();
@@ -756,36 +756,10 @@ void Workspace::removeClient(X11Client *c)
         m_userActionsMenu->close();
     }
 
-    if (client_keys_client == c)
-        setupWindowShortcutDone(false);
-    if (!c->shortcut().isEmpty()) {
-        c->setShortcut(QString());   // Remove from client_keys
-        clientShortcutUpdated(c);   // Needed, since this is otherwise delayed by setShortcut() and wouldn't run
-    }
-
-    Q_ASSERT(clients.contains(c));
+    Q_ASSERT(m_x11Clients.contains(c));
     // TODO: if marked client is removed, notify the marked list
-    clients.removeAll(c);
-    m_allClients.removeAll(c);
-    markXStackingOrderAsDirty();
-    attention_chain.removeAll(c);
-    Group* group = findGroup(c->window());
-    if (group != nullptr)
-        group->lostLeader();
-
-    should_get_focus.removeAll(c);
-    if (c == active_client)
-        active_client = nullptr;
-    if (c == last_active_client)
-        last_active_client = nullptr;
-    if (c == delayfocus_client)
-        cancelDelayFocus();
-
-    emit clientRemoved(c);
-
-    updateStackingOrder(true);
-    updateClientArea();
-    updateTabbox();
+    m_x11Clients.removeAll(c);
+    removeAbstractClient(c);
 }
 
 void Workspace::removeUnmanaged(Unmanaged* c)
@@ -871,10 +845,21 @@ void Workspace::addShellClient(AbstractClient *client)
 void Workspace::removeShellClient(AbstractClient *client)
 {
     clientHidden(client);
+    removeAbstractClient(client);
+}
+
+void Workspace::removeAbstractClient(AbstractClient *client)
+{
     m_allClients.removeAll(client);
     if (client == delayfocus_client) {
         cancelDelayFocus();
     }
+    attention_chain.removeAll(client);
+    Group* group = findGroup(client->window());
+    if (group != nullptr)
+        group->lostLeader();
+
+    should_get_focus.removeAll(client);
     if (client == active_client) {
         active_client = nullptr;
     }
@@ -886,9 +871,12 @@ void Workspace::removeShellClient(AbstractClient *client)
     }
     if (!client->shortcut().isEmpty()) {
         client->setShortcut(QString());   // Remove from client_keys
+        clientShortcutUpdated(client);    // Needed, since this is otherwise delayed by setShortcut() and wouldn't run
     }
+
     emit clientRemoved(client);
     markXStackingOrderAsDirty();
+
     updateStackingOrder(true);
     updateClientArea();
     updateTabbox();
@@ -898,7 +886,7 @@ void Workspace::updateToolWindows(bool also_hide)
 {
     // TODO: What if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
     if (!options->isHideUtilityWindowsForInactive()) {
-        for (auto it = clients.constBegin(); it != clients.constEnd(); ++it)
+        for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it)
             (*it)->hideClient(false);
         return;
     }
@@ -1441,8 +1429,8 @@ void Workspace::disableGlobalShortcutsForClient(bool disable)
 
     global_shortcuts_disabled_for_client = disable;
     // Update also Meta+LMB actions etc.
-    for (auto it = clients.constBegin();
-            it != clients.constEnd();
+    for (auto it = m_x11Clients.constBegin();
+            it != m_x11Clients.constEnd();
             ++it)
         (*it)->updateMouseGrab();
 }
@@ -1786,7 +1774,7 @@ QString Workspace::supportInformation() const
 
 X11Client *Workspace::findClient(std::function<bool (const X11Client *)> func) const
 {
-    if (X11Client *ret = Toplevel::findInList(clients, func)) {
+    if (X11Client *ret = Toplevel::findInList(m_x11Clients, func)) {
         return ret;
     }
     return nullptr;
@@ -1990,8 +1978,8 @@ Group* Workspace::findGroup(xcb_window_t leader) const
 Group* Workspace::findClientLeaderGroup(const X11Client *c) const
 {
     Group* ret = nullptr;
-    for (auto it = clients.constBegin();
-            it != clients.constEnd();
+    for (auto it = m_x11Clients.constBegin();
+            it != m_x11Clients.constEnd();
             ++it) {
         if (*it == c)
             continue;
@@ -2071,8 +2059,8 @@ void Workspace::updateOnAllDesktopsOfTransients(AbstractClient* c)
 // A new window has been mapped. Check if it's not a mainwindow for some already existing transient window.
 void Workspace::checkTransients(xcb_window_t w)
 {
-    for (auto it = clients.constBegin();
-            it != clients.constEnd();
+    for (auto it = m_x11Clients.constBegin();
+            it != m_x11Clients.constEnd();
             ++it)
         (*it)->checkTransient(w);
 }

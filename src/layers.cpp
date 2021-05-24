@@ -186,11 +186,11 @@ void Workspace::propagateClients(bool propagate_new_clients)
     int pos = 0;
     xcb_window_t *cl(nullptr);
     if (propagate_new_clients) {
-        cl = new xcb_window_t[ manual_overlays.count() + clients.count()];
+        cl = new xcb_window_t[ manual_overlays.count() + m_x11Clients.count()];
         for (const auto win : qAsConst(manual_overlays)) {
             cl[pos++] = win;
         }
-        for (auto it = clients.constBegin(); it != clients.constEnd(); ++it)
+        for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it)
             cl[pos++] = (*it)->window();
         rootInfo()->setClientList(cl, pos);
         delete [] cl;
