@@ -91,6 +91,7 @@ private:
 
     bool m_enabled = false;
     bool m_active = false;
+    quint32 m_serial = 0;
     KStatusNotifierItem *m_sni = nullptr;
     QPointer<AbstractClient> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;

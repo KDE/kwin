@@ -249,6 +249,7 @@ void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServe
     if (!m_enabled) {
         return;
     }
+    Q_UNUSED(serial);
 
     auto t2 = waylandServer()->seat()->textInputV2();
     auto inputContext = waylandServer()->inputMethod()->context();
@@ -260,19 +261,13 @@ void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServe
     }
     switch (reason) {
     case KWaylandServer::TextInputV2Interface::UpdateReason::StateChange:
-        inputContext->sendCommitState(serial);
         break;
     case KWaylandServer::TextInputV2Interface::UpdateReason::StateEnter:
-        waylandServer()->inputMethod()->sendActivate();
-        inputContext->sendCommitState(serial);
-        break;
     case KWaylandServer::TextInputV2Interface::UpdateReason::StateFull:
         adoptInputMethodContext();
-        inputContext->sendCommitState(serial);
         break;
     case KWaylandServer::TextInputV2Interface::UpdateReason::StateReset:
         inputContext->sendReset();
-        inputContext->sendCommitState(serial);
         break;
     }
 }
@@ -505,6 +500,7 @@ void InputMethod::adoptInputMethodContext()
         inputContext->sendSurroundingText(t3->surroundingText(), t3->surroundingTextCursorPosition(), t3->surroundingTextSelectionAnchor());
         inputContext->sendContentType(t3->contentHints(), t3->contentPurpose());
     }
+    inputContext->sendCommitState(m_serial++);
 
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::keysym, this, &InputMethod::keysymReceived, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::commitString, this, &InputMethod::commitString, Qt::UniqueConnection);
