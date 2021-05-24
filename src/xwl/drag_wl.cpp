@@ -158,6 +158,10 @@ bool Xvisit::handleStatus(xcb_client_message_event_t *event)
     m_accepts = data->data32[1] & 1;
     xcb_atom_t actionAtom = data->data32[4];
 
+    auto drag = m_drag->dataSourceIface();
+    if (drag && !drag->mimeTypes().isEmpty()) {
+        drag->accept(m_accepts ? drag->mimeTypes().constFirst() : QString());
+    }
     // TODO: we could optimize via rectangle in data32[2] and data32[3]
 
     // position round trip finished
