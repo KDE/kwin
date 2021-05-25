@@ -12,8 +12,6 @@
 #include "settings.h"
 // KWin core
 #include "abstract_client.h"
-#include "composite.h"
-#include "scene.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <config-kwin.h>
@@ -27,6 +25,7 @@
 #include <KWaylandServer/server_decoration_interface.h>
 
 // Frameworks
+#include <KPluginFactory>
 #include <KPluginMetaData>
 #include <KPluginLoader>
 

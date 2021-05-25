@@ -10,9 +10,7 @@
 #include "decorationbridge.h"
 #include "decorationpalette.h"
 #include "abstract_client.h"
-#include "composite.h"
 #include "cursor.h"
-#include "platform.h"
 #include "workspace.h"
 
 #include <KDecoration2/DecoratedClient>
