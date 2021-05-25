@@ -49,7 +49,7 @@ public:
     bool hideCursor();
     bool updateCursor();
     void moveCursor();
-    bool init(drmModeConnector *connector);
+    bool init();
     bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion);
     void pageFlipped();
 
@@ -104,7 +104,7 @@ private:
 
     bool presentLegacy(const QSharedPointer<DrmBuffer> &buffer);
     bool setModeLegacy(DrmBuffer *buffer);
-    void initOutputDevice(drmModeConnector *connector);
+    void initOutputDevice();
 
     bool isCurrentMode(const drmModeModeInfo *mode) const;
 
@@ -139,7 +139,6 @@ private:
     DrmConnector *m_conn = nullptr;
     DrmCrtc *m_crtc = nullptr;
     bool m_lastGbm = false;
-    drmModeModeInfo m_mode;
     DpmsMode m_dpmsModePending = DpmsMode::On;
     RenderLoop *m_renderLoop;
 
@@ -154,7 +153,7 @@ private:
 
     struct {
         Transform transform;
-        drmModeModeInfo mode;
+        int modeIndex = 0;
         DrmPlane::Transformations planeTransformations;
         QPoint globalPos;
         bool valid = false;

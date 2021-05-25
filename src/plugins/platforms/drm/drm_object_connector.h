@@ -3,16 +3,21 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2016 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2021 Xaver Hugl <xaver.hugl@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DRM_OBJECT_CONNECTOR_H
-#define KWIN_DRM_OBJECT_CONNECTOR_H
+#pragma once
+
+#include <QPoint>
+#include <QSize>
 
 #include <QSize>
 
 #include "drm_object.h"
 #include "edid.h"
+#include "drm_pointer.h"
+#include "abstract_wayland_output.h"
 
 namespace KWin
 {
@@ -72,6 +77,19 @@ public:
     bool isInternal() const;
     QSize physicalSize() const;
 
+    struct Mode {
+        drmModeModeInfo mode;
+        QSize size;
+        uint32_t refreshRate;
+    };
+    const Mode &currentMode() const;
+    int currentModeIndex() const;
+    const QVector<Mode> &modes();
+    void setModeIndex(int index);
+    void findCurrentMode(drmModeModeInfo currentMode);
+
+    AbstractWaylandOutput::SubPixel subpixel() const;
+
     bool hasOverscan() const;
     uint32_t overscan() const;
     void setOverscan(uint32_t overscan, const QSize &modeSize);
@@ -83,10 +101,9 @@ private:
     QVector<uint32_t> m_encoders;
     Edid m_edid;
     QSize m_physicalSize = QSize(-1, -1);
+    QVector<Mode> m_modes;
+    int m_modeIndex = 0;
 
 };
 
 }
-
-#endif
-

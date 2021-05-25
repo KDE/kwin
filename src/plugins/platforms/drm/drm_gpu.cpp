@@ -275,9 +275,8 @@ bool DrmGpu::updateOutputs()
                 output->m_conn = con;
                 output->m_crtc = crtc;
                 output->m_primaryPlane = primary;
-                output->m_mode = connector->modes[0];
 
-                if (!output->init(connector.data())) {
+                if (!output->init()) {
                     qCWarning(KWIN_DRM) << "Failed to create output for connector " << con->id();
                     delete output;
                     continue;

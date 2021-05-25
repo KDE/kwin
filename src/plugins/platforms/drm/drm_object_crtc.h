@@ -64,6 +64,8 @@ public:
     bool setVrr(bool enable);
     bool isVrrEnabled() const;
 
+    drmModeModeInfo queryCurrentMode();
+
 private:
     DrmScopedPointer<drmModeCrtc> m_crtc;
     QSharedPointer<DrmBuffer> m_currentBuffer;

@@ -193,52 +193,13 @@ void DrmOutput::moveCursor()
     }
 }
 
-namespace {
-quint64 refreshRateForMode(_drmModeModeInfo *m)
-{
-    // Calculate higher precision (mHz) refresh rate
-    // logic based on Weston, see compositor-drm.c
-    quint64 refreshRate = (m->clock * 1000000LL / m->htotal + m->vtotal / 2) / m->vtotal;
-    if (m->flags & DRM_MODE_FLAG_INTERLACE) {
-        refreshRate *= 2;
-    }
-    if (m->flags & DRM_MODE_FLAG_DBLSCAN) {
-        refreshRate /= 2;
-    }
-    if (m->vscan > 1) {
-        refreshRate /= m->vscan;
-    }
-    return refreshRate;
-}
-}
-
-static AbstractWaylandOutput::SubPixel drmSubPixelToKWinSubPixel(drmModeSubPixel subpixel)
-{
-    switch (subpixel) {
-    case DRM_MODE_SUBPIXEL_UNKNOWN:
-        return AbstractWaylandOutput::SubPixel::Unknown;
-    case DRM_MODE_SUBPIXEL_NONE:
-        return AbstractWaylandOutput::SubPixel::None;
-    case DRM_MODE_SUBPIXEL_HORIZONTAL_RGB:
-        return AbstractWaylandOutput::SubPixel::Horizontal_RGB;
-    case DRM_MODE_SUBPIXEL_HORIZONTAL_BGR:
-        return AbstractWaylandOutput::SubPixel::Horizontal_BGR;
-    case DRM_MODE_SUBPIXEL_VERTICAL_RGB:
-        return AbstractWaylandOutput::SubPixel::Vertical_RGB;
-    case DRM_MODE_SUBPIXEL_VERTICAL_BGR:
-        return AbstractWaylandOutput::SubPixel::Vertical_BGR;
-    default:
-        Q_UNREACHABLE();
-    }
-}
-
-bool DrmOutput::init(drmModeConnector *connector)
+bool DrmOutput::init()
 {
     if (m_gpu->atomicModeSetting() && !m_primaryPlane) {
         return false;
     }
 
-    setSubPixelInternal(drmSubPixelToKWinSubPixel(connector->subpixel));
+    setSubPixelInternal(m_conn->subpixel());
     setInternal(m_conn->isInternal());
     setCapabilityInternal(DrmOutput::Capability::Dpms);
     if (m_conn->hasOverscan()) {
@@ -249,7 +210,7 @@ bool DrmOutput::init(drmModeConnector *connector)
         setCapabilityInternal(Capability::Vrr);
         setVrrPolicy(RenderLoop::VrrPolicy::Automatic);
     }
-    initOutputDevice(connector);
+    initOutputDevice();
 
     if (!m_gpu->atomicModeSetting() && !m_crtc->blank(this)) {
         // We use legacy mode and the initial output blank failed.
@@ -260,27 +221,25 @@ bool DrmOutput::init(drmModeConnector *connector)
     return true;
 }
 
-void DrmOutput::initOutputDevice(drmModeConnector *connector)
+void DrmOutput::initOutputDevice()
 {
-    // read in mode information
-    QVector<Mode> modes;
-    modes.reserve(connector->count_modes);
-    for (int i = 0; i < connector->count_modes; ++i) {
-        // TODO: in AMS here we could read and store for later every mode's blob_id
-        // would simplify isCurrentMode(..) and presentAtomically(..) in case of mode set
-        auto *m = &connector->modes[i];
+    m_conn->findCurrentMode(m_crtc->queryCurrentMode());
+    auto modelist = m_conn->modes();
 
+    QVector<Mode> modes;
+    modes.reserve(modelist.count());
+    for (int i = 0; i < modelist.count(); ++i) {
         Mode mode;
-        if (isCurrentMode(m)) {
+        if (i == m_conn->currentModeIndex()) {
             mode.flags |= ModeFlag::Current;
         }
-        if (m->type & DRM_MODE_TYPE_PREFERRED) {
+        if (modelist[i].mode.type & DRM_MODE_TYPE_PREFERRED) {
             mode.flags |= ModeFlag::Preferred;
         }
 
         mode.id = i;
-        mode.size = QSize(m->hdisplay, m->vdisplay);
-        mode.refreshRate = refreshRateForMode(m);
+        mode.size = modelist[i].size;
+        mode.refreshRate = modelist[i].refreshRate;
         modes << mode;
     }
 
@@ -288,25 +247,6 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
     initialize(m_conn->modelName(), m_conn->edid()->manufacturerString(),
                m_conn->edid()->eisaId(), m_conn->edid()->serialNumber(),
                m_conn->physicalSize(), modes, m_conn->edid()->raw());
-}
-
-bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
-{
-    return mode->clock       == m_mode.clock
-        && mode->hdisplay    == m_mode.hdisplay
-        && mode->hsync_start == m_mode.hsync_start
-        && mode->hsync_end   == m_mode.hsync_end
-        && mode->htotal      == m_mode.htotal
-        && mode->hskew       == m_mode.hskew
-        && mode->vdisplay    == m_mode.vdisplay
-        && mode->vsync_start == m_mode.vsync_start
-        && mode->vsync_end   == m_mode.vsync_end
-        && mode->vtotal      == m_mode.vtotal
-        && mode->vscan       == m_mode.vscan
-        && mode->vrefresh    == m_mode.vrefresh
-        && mode->flags       == m_mode.flags
-        && mode->type        == m_mode.type
-        && qstrcmp(mode->name, m_mode.name) == 0;
 }
 
 bool DrmOutput::initCursor(const QSize &cursorSize)
@@ -548,14 +488,12 @@ void DrmOutput::updateTransform(Transform transform)
 
 void DrmOutput::updateMode(uint32_t width, uint32_t height, uint32_t refreshRate)
 {
-    if (m_mode.hdisplay == width && m_mode.vdisplay == height && refreshRateForMode(&m_mode) == refreshRate) {
+    if (m_conn->currentMode().size == QSize(width, height) && m_conn->currentMode().refreshRate == refreshRate) {
         return;
     }
-    // try to find a fitting mode
-    DrmScopedPointer<drmModeConnector> connector(drmModeGetConnectorCurrent(m_gpu->fd(), m_conn->id()));
-    for (int i = 0; i < connector->count_modes; i++) {
-        auto mode = connector->modes[i];
-        if (mode.hdisplay == width && mode.vdisplay == height && refreshRateForMode(&mode) == refreshRate) {
+    auto modelist = m_conn->modes();
+    for (int i = 0; i < modelist.size(); i++) {
+        if (modelist[i].size == QSize(width, height) && modelist[i].refreshRate == refreshRate) {
             updateMode(i);
             return;
         }
@@ -566,17 +504,10 @@ void DrmOutput::updateMode(uint32_t width, uint32_t height, uint32_t refreshRate
 
 void DrmOutput::updateMode(int modeIndex)
 {
-    // get all modes on the connector
-    DrmScopedPointer<drmModeConnector> connector(drmModeGetConnector(m_gpu->fd(), m_conn->id()));
-    if (connector->count_modes <= modeIndex) {
-        // TODO: error?
+    if (m_conn->currentModeIndex() == modeIndex) {
         return;
     }
-    if (isCurrentMode(&connector->modes[modeIndex])) {
-        // nothing to do
-        return;
-    }
-    m_mode = connector->modes[modeIndex];
+    m_conn->setModeIndex(modeIndex);
     m_modesetRequested = true;
     // aspect ratio might need to be adjusted
     m_conn->setOverscan(m_conn->overscan(), modeSize());
@@ -585,8 +516,8 @@ void DrmOutput::updateMode(int modeIndex)
 
 void DrmOutput::setCurrentModeInternal()
 {
-    AbstractWaylandOutput::setCurrentModeInternal(QSize(m_mode.hdisplay, m_mode.vdisplay),
-                                          refreshRateForMode(&m_mode));
+    auto mode = m_conn->currentMode();
+    AbstractWaylandOutput::setCurrentModeInternal(mode.size, mode.refreshRate);
 }
 
 void DrmOutput::pageFlipped()
@@ -686,7 +617,7 @@ bool DrmOutput::presentAtomically(const QSharedPointer<DrmBuffer> &buffer)
         qCDebug(KWIN_DRM) << "Atomic test commit failed. Aborting present.";
         // go back to previous state
         if (m_lastWorkingState.valid) {
-            m_mode = m_lastWorkingState.mode;
+            m_conn->setModeIndex(m_lastWorkingState.modeIndex);
             setTransformInternal(m_lastWorkingState.transform);
             setGlobalPos(m_lastWorkingState.globalPos);
             if (m_primaryPlane) {
@@ -713,14 +644,14 @@ bool DrmOutput::presentAtomically(const QSharedPointer<DrmBuffer> &buffer)
     }
     if (wasModeset) {
         // store current mode set as new good state
-        m_lastWorkingState.mode = m_mode;
+        m_lastWorkingState.modeIndex = m_conn->currentModeIndex();
         m_lastWorkingState.transform = transform();
         m_lastWorkingState.globalPos = globalPos();
         if (m_primaryPlane) {
             m_lastWorkingState.planeTransformations = m_primaryPlane->transformation();
         }
         m_lastWorkingState.valid = true;
-        m_renderLoop->setRefreshRate(refreshRateForMode(&m_mode));
+        m_renderLoop->setRefreshRate(m_conn->currentMode().refreshRate);
     }
     m_pageFlipPending = true;
     return true;
@@ -755,7 +686,8 @@ bool DrmOutput::presentLegacy(const QSharedPointer<DrmBuffer> &buffer)
 bool DrmOutput::setModeLegacy(DrmBuffer *buffer)
 {
     uint32_t connId = m_conn->id();
-    if (drmModeSetCrtc(m_gpu->fd(), m_crtc->id(), buffer->bufferId(), 0, 0, &connId, 1, &m_mode) == 0) {
+    auto mode = m_conn->currentMode().mode;
+    if (drmModeSetCrtc(m_gpu->fd(), m_crtc->id(), buffer->bufferId(), 0, 0, &connId, 1, &mode) == 0) {
         return true;
     } else {
         qCWarning(KWIN_DRM) << "Mode setting failed";
@@ -801,7 +733,8 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
     // Do we need to set a new mode?
     if (m_modesetRequested) {
         if (m_dpmsModePending == DpmsMode::On) {
-            if (drmModeCreatePropertyBlob(m_gpu->fd(), &m_mode, sizeof(m_mode), &m_blobId) != 0) {
+            auto mode = m_conn->currentMode();
+            if (drmModeCreatePropertyBlob(m_gpu->fd(), &mode, sizeof(mode), &m_blobId) != 0) {
                 qCWarning(KWIN_DRM) << "Failed to create property blob";
                 errorHandler();
                 return false;
@@ -943,7 +876,7 @@ void DrmOutput::setVrr(bool enable)
 
 bool DrmOutput::isCursorVisible()
 {
-    return m_cursor[m_cursorIndex] && QRect(m_cursorPos, m_cursor[m_cursorIndex]->size()).intersects(QRect(0, 0, m_mode.vdisplay, m_mode.hdisplay));
+    return m_cursor[m_cursorIndex] && QRect(m_cursorPos, m_cursor[m_cursorIndex]->size()).intersects(QRect(0, 0, modeSize().width(), modeSize().height()));
 }
 
 DrmBuffer *DrmOutput::currentBuffer() const

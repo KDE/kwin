@@ -108,4 +108,10 @@ bool DrmCrtc::isVrrEnabled() const
     return false;
 }
 
+drmModeModeInfo DrmCrtc::queryCurrentMode()
+{
+    m_crtc.reset(drmModeGetCrtc(gpu()->fd(), id()));
+    return m_crtc->mode;
+}
+
 }
