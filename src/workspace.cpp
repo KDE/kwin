@@ -759,6 +759,9 @@ void Workspace::removeX11Client(X11Client *c)
     Q_ASSERT(m_x11Clients.contains(c));
     // TODO: if marked client is removed, notify the marked list
     m_x11Clients.removeAll(c);
+    Group* group = findGroup(c->window());
+    if (group != nullptr)
+        group->lostLeader();
     removeAbstractClient(c);
 }
 
@@ -855,10 +858,6 @@ void Workspace::removeAbstractClient(AbstractClient *client)
         cancelDelayFocus();
     }
     attention_chain.removeAll(client);
-    Group* group = findGroup(client->window());
-    if (group != nullptr)
-        group->lostLeader();
-
     should_get_focus.removeAll(client);
     if (client == active_client) {
         active_client = nullptr;
