@@ -71,7 +71,7 @@ class ScaleEffect {
 
         // Override-redirect windows are usually used for user interface
         // concepts that are not expected to be animated by this effect.
-        if (window.x11Client && !window.managed) {
+        if (!window.managed) {
             return false;
         }
 

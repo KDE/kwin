@@ -37,7 +37,7 @@ function isPopupWindow(window) {
     // Override-redirect windows are usually used for user interface
     // concepts that are expected to be animated by this effect, e.g.
     // popups that contain window thumbnails on X11, etc.
-    if (window.x11Client && !window.managed) {
+    if (!window.managed) {
         // Some utility windows can look like popup windows (e.g. the
         // address bar dropdown in Firefox), but we don't want to fade
         // them because the fade effect didn't do that.

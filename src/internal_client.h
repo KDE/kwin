@@ -32,6 +32,7 @@ public:
     QRect transparentRect() const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     void killWindow() override;
+    bool isClient() const override;
     bool isPopupWindow() const override;
     QByteArray windowRole() const override;
     void closeWindow() override;

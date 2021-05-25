@@ -47,7 +47,7 @@ var dimScreenEffect = {
         if (window.popupWindow) {
             return;
         }
-        if (window.x11Client && !window.managed) {
+        if (!window.managed) {
             return;
         }
         if (window.dimAnimation) {

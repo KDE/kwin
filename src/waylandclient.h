@@ -22,6 +22,7 @@ public:
     QString captionSuffix() const override;
     QRect transparentRect() const override;
     pid_t pid() const override;
+    bool isClient() const override;
     bool isLockScreen() const override;
     bool isLocalhost() const override;
     AbstractClient *findModal(bool allow_itself = false) override;

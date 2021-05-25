@@ -41,7 +41,7 @@ class FadeEffect {
         if (w.popupWindow) {
             return false;
         }
-        if (w.x11Client && !w.managed) {
+        if (!w.managed) {
             return false;
         }
         if (!w.visible) {

@@ -68,6 +68,11 @@ InternalClient::~InternalClient()
 {
 }
 
+bool InternalClient::isClient() const
+{
+    return true;
+}
+
 bool InternalClient::hitTest(const QPoint &point) const
 {
     if (!AbstractClient::hitTest(point)) {

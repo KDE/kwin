@@ -75,6 +75,11 @@ pid_t WaylandClient::pid() const
     return surface()->client()->processId();
 }
 
+bool WaylandClient::isClient() const
+{
+    return true;
+}
+
 bool WaylandClient::isLockScreen() const
 {
     return surface()->client() == waylandServer()->screenLockerClientConnection();
