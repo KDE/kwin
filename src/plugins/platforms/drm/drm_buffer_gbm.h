@@ -30,7 +30,7 @@ class GbmBuffer : public QObject
 {
     Q_OBJECT
 public:
-    GbmBuffer(const QSharedPointer<GbmSurface> &surface);
+    GbmBuffer(GbmSurface *surface, gbm_bo *bo);
     GbmBuffer(gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface);
     virtual ~GbmBuffer();
 
@@ -49,7 +49,7 @@ public:
     }
 
 protected:
-    QSharedPointer<GbmSurface> m_surface;
+    GbmSurface *m_surface;
     gbm_bo *m_bo = nullptr;
     KWaylandServer::BufferInterface *m_bufferInterface = nullptr;
 
@@ -63,7 +63,7 @@ protected:
 class DrmGbmBuffer : public DrmBuffer, public GbmBuffer
 {
 public:
-    DrmGbmBuffer(DrmGpu *gpu, const QSharedPointer<GbmSurface> &surface);
+    DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo);
     DrmGbmBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface);
     ~DrmGbmBuffer() override;
 
@@ -74,8 +74,6 @@ public:
             return true;
         }
     }
-
-    void releaseGbm() override;
 
     bool hasBo() const {
         return m_bo != nullptr;

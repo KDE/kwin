@@ -28,15 +28,11 @@
 namespace KWin
 {
 
-GbmBuffer::GbmBuffer(const QSharedPointer<GbmSurface> &surface)
+GbmBuffer::GbmBuffer(GbmSurface *surface, gbm_bo *bo)
     : m_surface(surface)
+    , m_bo(bo)
 {
-    m_bo = m_surface->lockFrontBuffer();
-    if (m_bo) {
-        m_stride = gbm_bo_get_stride(m_bo);
-    } else {
-        qCWarning(KWIN_DRM) << "failed to lock front buffer!" << strerror(errno);
-    }
+    m_stride = gbm_bo_get_stride(m_bo);
 }
 
 GbmBuffer::GbmBuffer(gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface)
@@ -67,7 +63,8 @@ void GbmBuffer::releaseBuffer()
         gbm_bo_unmap(m_bo, m_mapping);
     }
     if (m_surface) {
-        m_surface->releaseBuffer(m_bo);
+        m_surface->releaseBuffer(this);
+        m_surface = nullptr;
     } else {
         gbm_bo_destroy(m_bo);
     }
@@ -93,13 +90,9 @@ void GbmBuffer::clearBufferInterface()
     m_bufferInterface = nullptr;
 }
 
-DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, const QSharedPointer<GbmSurface> &surface)
-    : DrmBuffer(gpu), GbmBuffer(surface)
+DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
+    : DrmBuffer(gpu), GbmBuffer(surface, bo)
 {
-    if (!m_bo) {
-        qCWarning(KWIN_DRM) << "Locking front buffer failed";
-        return;
-    }
     initialize();
 }
 
@@ -114,11 +107,6 @@ DrmGbmBuffer::~DrmGbmBuffer()
     if (m_bufferId) {
         drmModeRmFB(m_gpu->fd(), m_bufferId);
     }
-}
-
-void DrmGbmBuffer::releaseGbm()
-{
-    releaseBuffer();
 }
 
 void DrmGbmBuffer::initialize()
