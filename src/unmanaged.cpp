@@ -222,5 +222,10 @@ void Unmanaged::damageNotifyEvent()
     }
 }
 
+void Unmanaged::killWindow()
+{
+    xcb_kill_client(connection(), window());
+}
+
 } // namespace
 

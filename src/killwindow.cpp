@@ -35,14 +35,11 @@ void KillWindow::start()
     kwinApp()->platform()->startInteractiveWindowSelection(
         [] (KWin::Toplevel *t) {
             OSD::hide();
-            if (!t) {
+            AbstractClient* client = qobject_cast<AbstractClient*>(t);
+            if (!client) {
                 return;
             }
-            if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
-                c->killWindow();
-            } else if (Unmanaged *u = qobject_cast<Unmanaged*>(t)) {
-                xcb_kill_client(connection(), u->window());
-            }
+            client->killWindow();
         }, QByteArrayLiteral("pirate")
     );
 }
