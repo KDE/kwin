@@ -1159,13 +1159,6 @@ protected:
     virtual void leaveInteractiveMoveResize();
     virtual void positionGeometryTip();
     void performInteractiveMoveResize();
-    /**
-     * Called from performMoveResize() after actually performing the change of geometry.
-     * Implementing subclasses can perform windowing system specific handling here.
-     *
-     * Default implementation does nothing.
-     */
-    virtual void doPerformInteractiveMoveResize();
     /*
      * Checks if the mouse cursor is near the edge of the screen and if so
      * activates quick tiling or maximization

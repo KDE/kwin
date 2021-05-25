@@ -4514,7 +4514,7 @@ void X11Client::doInteractiveResizeSync()
 {
     if (!m_syncRequest.timeout) {
         m_syncRequest.timeout = new QTimer(this);
-        connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Client::performInteractiveMoveResize);
+        connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Client::handleSyncTimeout);
         m_syncRequest.timeout->setSingleShot(true);
     }
     if (m_syncRequest.counter != XCB_NONE) {
@@ -4536,11 +4536,12 @@ void X11Client::doInteractiveResizeSync()
     m_client.setGeometry(QRect(QPoint(0, 0), moveResizeClientGeometry.size()));
 }
 
-void X11Client::doPerformInteractiveMoveResize()
+void X11Client::handleSyncTimeout()
 {
     if (m_syncRequest.counter == XCB_NONE) { // client w/o XSYNC support. allow the next resize event
         m_syncRequest.isPending = false;     // NEVER do this for clients with a valid counter
     }                                        // (leads to sync request races in some clients)
+    performInteractiveMoveResize();
 }
 
 NETExtendedStrut X11Client::strut() const

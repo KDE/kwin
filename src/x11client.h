@@ -280,6 +280,7 @@ public:
     }
     virtual bool wantsSyncCounter() const;
     void handleSync();
+    void handleSyncTimeout();
 
     static void cleanupX11();
 
@@ -319,7 +320,6 @@ protected:
     void doSetDemandsAttention() override;
     bool belongsToDesktop() const override;
     bool doStartInteractiveMoveResize() override;
-    void doPerformInteractiveMoveResize() override;
     bool isWaitingForInteractiveMoveResizeSync() const override;
     void doInteractiveResizeSync() override;
     QSize resizeIncrements() const override;

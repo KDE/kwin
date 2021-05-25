@@ -1431,7 +1431,6 @@ void AbstractClient::performInteractiveMoveResize()
     } else if (isInteractiveResize() && !haveResizeEffect()) {
         resize(moveResizeGeom.size());
     }
-    doPerformInteractiveMoveResize();
     positionGeometryTip();
     emit clientStepUserMovedResized(this, moveResizeGeom);
 }
@@ -2136,10 +2135,6 @@ void AbstractClient::doFinishInteractiveMoveResize()
 }
 
 void AbstractClient::positionGeometryTip()
-{
-}
-
-void AbstractClient::doPerformInteractiveMoveResize()
 {
 }
 
