@@ -86,7 +86,7 @@ void DrmQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
     const Output &rendererOutput = m_outputs[screenId];
     DrmOutput *drmOutput = rendererOutput.output;
 
-    if (!drmOutput->present(rendererOutput.swapchain->currentBuffer())) {
+    if (!drmOutput->present(rendererOutput.swapchain->currentBuffer(), drmOutput->geometry())) {
         RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
         renderLoopPrivate->notifyFrameFailed();
     }
