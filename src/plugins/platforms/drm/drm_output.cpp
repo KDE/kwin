@@ -590,7 +590,7 @@ void DrmOutput::pageFlipped()
     }
 }
 
-bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer)
+bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion)
 {
     if (!buffer || buffer->bufferId() == 0) {
         return false;
@@ -600,7 +600,12 @@ bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer)
     }
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
     setVrr(renderLoopPrivate->presentMode == RenderLoopPrivate::SyncMode::Adaptive);
-    return m_gpu->atomicModeSetting() ? presentAtomically(buffer) : presentLegacy(buffer);
+    if (m_gpu->atomicModeSetting() ? presentAtomically(buffer) : presentLegacy(buffer)) {
+        Q_EMIT outputChange(damagedRegion);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool DrmOutput::dpmsAtomicOff()
@@ -910,6 +915,15 @@ void DrmOutput::setVrr(bool enable)
 bool DrmOutput::isCursorVisible()
 {
     return m_cursor[m_cursorIndex] && QRect(m_cursorPos, m_cursor[m_cursorIndex]->size()).intersects(QRect(0, 0, m_mode.vdisplay, m_mode.hdisplay));
+}
+
+DrmBuffer *DrmOutput::currentBuffer() const
+{
+    if (m_primaryPlane) {
+        return m_primaryPlane->current().get();
+    } else {
+        return m_crtc->current().get();
+    }
 }
 
 }

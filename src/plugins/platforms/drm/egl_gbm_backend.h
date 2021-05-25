@@ -81,7 +81,6 @@ private:
     };
     struct Output {
         DrmOutput *output = nullptr;
-        QSharedPointer<DrmBuffer> buffer;
         QSharedPointer<GbmSurface> gbmSurface;
         int bufferAge = 0;
         /**
@@ -111,10 +110,7 @@ private:
     void prepareRenderFramebuffer(const Output &output) const;
     void renderFramebufferToSurface(Output &output);
     QRegion prepareRenderingForOutput(Output &output) const;
-    void importFramebuffer(Output &output) const;
-
-    bool presentOnOutput(Output &output, const QRegion &damagedRegion);
-    bool directScanoutActive(const Output &output);
+    QSharedPointer<DrmBuffer> importFramebuffer(Output &output) const;
 
     void cleanupFramebuffer(Output &output);
 

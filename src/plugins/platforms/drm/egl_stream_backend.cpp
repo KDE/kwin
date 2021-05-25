@@ -495,7 +495,6 @@ QRegion EglStreamBackend::beginFrame(int screenId)
 void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion);
-    Q_UNUSED(damagedRegion);
 
     Output &renderOutput = m_outputs[screenId];
     DrmOutput *drmOutput = renderOutput.output;
@@ -520,7 +519,7 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
             frameFailed = true;
         }
     }
-    if (!frameFailed && !renderOutput.output->present(buffer)) {
+    if (!frameFailed && !renderOutput.output->present(buffer, damagedRegion)) {
         frameFailed = true;
     }
 

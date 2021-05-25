@@ -50,7 +50,7 @@ public:
     bool updateCursor();
     void moveCursor();
     bool init(drmModeConnector *connector);
-    bool present(const QSharedPointer<DrmBuffer> &buffer);
+    bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion);
     void pageFlipped();
 
     bool isDpmsEnabled() const {
@@ -71,6 +71,7 @@ public:
     const DrmPlane *primaryPlane() const {
         return m_primaryPlane;
     }
+    DrmBuffer *currentBuffer() const;
 
     bool initCursor(const QSize &cursorSize);
 
