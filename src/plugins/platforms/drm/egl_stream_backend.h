@@ -44,6 +44,8 @@ public:
     bool addOutput(DrmOutput *output) override;
     void removeOutput(DrmOutput *output) override;
 
+    QSharedPointer<DrmBuffer> renderTestFrame(DrmOutput *output) override;
+
 protected:
     void cleanupSurfaces() override;
 

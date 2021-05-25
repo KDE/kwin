@@ -67,6 +67,8 @@ public:
 
     bool directScanoutAllowed(int screen) const override;
 
+    QSharedPointer<DrmBuffer> renderTestFrame(DrmOutput *output) override;
+
 protected:
     void cleanupSurfaces() override;
     void aboutToStartPainting(int screenId, const QRegion &damage) override;
@@ -82,29 +84,35 @@ private:
     };
     struct Output {
         DrmOutput *output = nullptr;
-        QSharedPointer<GbmSurface> gbmSurface;
-        int bufferAge = 0;
-        /**
-         * @brief The damage history for the past 10 frames.
-         */
-        QList<QRegion> damageHistory;
+        struct RenderData {
+            QSharedPointer<ShadowBuffer> shadowBuffer;
+            QSharedPointer<GbmSurface> gbmSurface;
+            int bufferAge = 0;
+            /**
+            * @brief The damage history for the past 10 frames.
+            */
+            QList<QRegion> damageHistory;
 
-        QSharedPointer<ShadowBuffer> shadowBuffer;
+            // for secondary GPU import
+            ImportMode importMode = ImportMode::Dmabuf;
+            QSharedPointer<DumbSwapchain> importSwapchain;
+        } old, current;
 
         KWaylandServer::SurfaceInterface *surfaceInterface = nullptr;
-        ImportMode importMode = ImportMode::Dmabuf;
-        QSharedPointer<DumbSwapchain> importSwapchain;
     };
 
+    bool doesRenderFit(DrmOutput *output, const Output::RenderData &render);
     bool resetOutput(Output &output, DrmOutput *drmOutput);
 
-    bool makeContextCurrent(const Output &output) const;
+    bool makeContextCurrent(const Output::RenderData &output) const;
     void setViewport(const Output &output) const;
 
-    void prepareRenderFramebuffer(const Output &output) const;
     void renderFramebufferToSurface(Output &output);
-    QRegion prepareRenderingForOutput(Output &output) const;
+    QRegion prepareRenderingForOutput(Output &output);
     QSharedPointer<DrmBuffer> importFramebuffer(Output &output) const;
+    QSharedPointer<DrmBuffer> endFrameWithBuffer(int screenId);
+
+    void cleanupRenderData(Output::RenderData &output);
 
     QVector<Output> m_outputs;
     QVector<Output> m_secondaryGpuOutputs;

@@ -81,12 +81,12 @@ bool DrmPlane::init()
 
 DrmPlane::TypeIndex DrmPlane::type()
 {
-    auto property = m_props.at(static_cast<uint32_t>(PropertyIndex::Type));
+    auto property = getProp(PropertyIndex::Type);
     if (!property) {
         return TypeIndex::Overlay;
     }
     for (uint32_t i = 0; i < static_cast<uint32_t>(TypeIndex::Count); i++) {
-        if (property->enumMap(i) == property->value()) {
+        if (property->enumMap(i) == property->current()) {
             return TypeIndex(i);
         }
     }
@@ -95,19 +95,22 @@ DrmPlane::TypeIndex DrmPlane::type()
 
 void DrmPlane::setNext(const QSharedPointer<DrmBuffer> &b)
 {
-    setValue(PropertyIndex::FbId, b ? b->bufferId() : 0);
     m_next = b;
 }
 
-void DrmPlane::setTransformation(Transformations t)
+bool DrmPlane::setTransformation(Transformations t)
 {
-    setValue(PropertyIndex::Rotation, t);
+    if (m_supportedTransformations & t) {
+        return setPending(PropertyIndex::Rotation, t);
+    } else {
+        return false;
+    }
 }
 
 DrmPlane::Transformations DrmPlane::transformation()
 {
-    if (auto property = m_props.at(static_cast<uint32_t>(PropertyIndex::Rotation))) {
-        return Transformations(static_cast<uint32_t>(property->value()));
+    if (auto property = getProp(PropertyIndex::Rotation)) {
+        return Transformations(static_cast<uint32_t>(property->pending()));
     }
     return Transformations(Transformation::Rotate0);
 }
@@ -116,6 +119,29 @@ void DrmPlane::flipBuffer()
 {
     m_current = m_next;
     m_next = nullptr;
+}
+
+void DrmPlane::set(const QPoint &srcPos, const QSize &srcSize, const QPoint &dstPos, const QSize &dstSize)
+{
+    // Src* are in 16.16 fixed point format
+    setPending(PropertyIndex::SrcX, srcPos.x() << 16);
+    setPending(PropertyIndex::SrcY, srcPos.y() << 16);
+    setPending(PropertyIndex::SrcW, srcSize.width() << 16);
+    setPending(PropertyIndex::SrcH, srcSize.height() << 16);
+    setPending(PropertyIndex::CrtcX, dstPos.x());
+    setPending(PropertyIndex::CrtcY, dstPos.y());
+    setPending(PropertyIndex::CrtcW, dstSize.width());
+    setPending(PropertyIndex::CrtcH, dstSize.height());
+}
+
+void DrmPlane::setBuffer(DrmBuffer *buffer)
+{
+    setPending(PropertyIndex::FbId, buffer ? buffer->bufferId() : 0);
+}
+
+bool DrmPlane::needsModeset() const
+{
+    return getProp(PropertyIndex::CrtcId)->needsCommit() || getProp(PropertyIndex::Rotation)->needsCommit();
 }
 
 }

@@ -18,6 +18,7 @@ namespace KWin
 class DrmBackend;
 class DrmGpu;
 class DrmOutput;
+class DrmBuffer;
 
 class AbstractEglDrmBackend : public AbstractEglBackend
 {
@@ -52,6 +53,8 @@ public:
     DrmGpu *gpu() const {
         return m_gpu;
     }
+
+    virtual QSharedPointer<DrmBuffer> renderTestFrame(DrmOutput *output) = 0;
 
     static AbstractEglDrmBackend *renderingBackend() {
         return static_cast<AbstractEglDrmBackend*>(primaryBackend());

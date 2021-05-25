@@ -18,6 +18,7 @@
 #include "session.h"
 #include "renderloop_p.h"
 #include "main.h"
+#include "drm_pipeline.h"
 
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
@@ -253,17 +254,10 @@ bool DrmGpu::updateOutputs()
                 // check if crtc isn't used yet -- currently we don't allow multiple outputs on one crtc (cloned mode)
                 auto it = std::find_if(connectedOutputs.constBegin(), connectedOutputs.constEnd(),
                     [crtc] (DrmOutput *o) {
-                        return o->m_crtc == crtc;
+                        return o->m_pipeline->crtc() == crtc;
                     }
                 );
                 if (it != connectedOutputs.constEnd()) {
-                    continue;
-                }
-
-                // we found a suitable encoder+crtc
-                // TODO: we could avoid these lib drm calls if we store all struct data in DrmCrtc and DrmConnector in the beginning
-                DrmScopedPointer<drmModeCrtc> modeCrtc(drmModeGetCrtc(m_fd, crtc->id()));
-                if (!modeCrtc) {
                     continue;
                 }
 
@@ -272,23 +266,31 @@ bool DrmGpu::updateOutputs()
                     continue;
                 }
 
-                DrmOutput *output = new DrmOutput(this->m_backend, this);
-                output->m_conn = con;
-                output->m_crtc = crtc;
-                output->m_primaryPlane = primary;
+                auto pipeline = new DrmPipeline(this, con, crtc, primary);
+                DrmOutput *output = new DrmOutput(m_backend, this, pipeline);
 
-                if (!output->init()) {
-                    qCWarning(KWIN_DRM) << "Failed to create output for connector " << con->id();
+                // outputEnabled only adds it to the render backend but not to the platform
+                // this is necessary for accurate pipeline tests
+                Q_EMIT outputEnabled(output);
+
+                // test
+                if (!pipeline->test(m_pipelines)) {
+                    Q_EMIT outputDisabled(output);
                     delete output;
+                    delete pipeline;
                     continue;
                 }
+                m_pipelines << pipeline;
+
+                // add the output to the platform and create wayland objects
+                Q_EMIT outputAdded(output);
+
                 if (!output->initCursor(m_cursorSize)) {
                     m_backend->setSoftwareCursorForced(true);
                 }
-                qCDebug(KWIN_DRM, "For new output %s on GPU %s use mode %dx%d@%d", qPrintable(output->name()), qPrintable(m_devNode), output->m_mode.hdisplay, output->m_mode.vdisplay, output->refreshRate());
+                qCDebug(KWIN_DRM, "For new output %s on GPU %s use mode %dx%d@%d", qPrintable(output->name()), qPrintable(m_devNode), output->modeSize().width(), output->modeSize().height(), output->refreshRate());
 
                 connectedOutputs << output;
-                Q_EMIT outputAdded(output);
                 outputDone = true;
                 break;
             }
@@ -297,7 +299,7 @@ bool DrmGpu::updateOutputs()
             }
         }
     }
-    std::sort(connectedOutputs.begin(), connectedOutputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_conn->id() < b->m_conn->id(); });
+    std::sort(connectedOutputs.begin(), connectedOutputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_pipeline->connector()->id() < b->m_pipeline->connector()->id(); });
     m_outputs = connectedOutputs;
 
     for(DrmOutput *removedOutput : removedOutputs) {
@@ -312,7 +314,7 @@ bool DrmGpu::updateOutputs()
 DrmOutput *DrmGpu::findOutput(quint32 connector)
 {
     auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [connector] (DrmOutput *o) {
-        return o->m_conn->id() == connector;
+        return o->m_pipeline->connector()->id() == connector;
     });
     if (it != m_outputs.constEnd()) {
         return *it;
@@ -438,25 +440,35 @@ void DrmGpu::dispatchEvents()
 void DrmGpu::removeOutput(DrmOutput *output)
 {
     m_outputs.removeOne(output);
+    Q_EMIT outputDisabled(output);
     Q_EMIT outputRemoved(output);
-    auto connector = output->m_conn;
-    auto primary = output->m_primaryPlane;
+    auto pipeline = output->m_pipeline;
     delete output;
-    m_connectors.removeOne(connector);
-    delete connector;
-    if (primary) {
-        m_unusedPlanes << primary;
+    m_connectors.removeOne(pipeline->connector());
+    if (pipeline->primaryPlane()) {
+        m_unusedPlanes << pipeline->primaryPlane();
     }
+    m_pipelines.removeOne(pipeline);
+    delete pipeline;
 }
 
-AbstractEglBackend *DrmGpu::eglBackend() const
+AbstractEglDrmBackend *DrmGpu::eglBackend() const
 {
     return m_eglBackend;
 }
 
-void DrmGpu::setEglBackend(AbstractEglBackend *eglBackend)
+void DrmGpu::setEglBackend(AbstractEglDrmBackend *eglBackend)
 {
     m_eglBackend = eglBackend;
+}
+
+DrmBackend *DrmGpu::platform() const {
+    return m_backend;
+}
+
+const QVector<DrmPipeline*> DrmGpu::pipelines() const
+{
+    return m_pipelines;
 }
 
 }

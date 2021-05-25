@@ -35,6 +35,7 @@ static const float texCoords[] = {
 };
 
 ShadowBuffer::ShadowBuffer(const QSize &size)
+    : m_size(size)
 {
     glGenFramebuffers(1, &m_framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
@@ -126,6 +127,11 @@ bool ShadowBuffer::isComplete() const
 int ShadowBuffer::texture() const
 {
     return m_texture;
+}
+
+QSize ShadowBuffer::textureSize() const
+{
+    return m_size;
 }
 
 }

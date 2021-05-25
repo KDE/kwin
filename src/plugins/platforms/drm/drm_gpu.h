@@ -29,7 +29,8 @@ class DrmOutput;
 class DrmCrtc;
 class DrmConnector;
 class DrmBackend;
-class AbstractEglBackend;
+class AbstractEglDrmBackend;
+class DrmPipeline;
 
 class DrmGpu : public QObject
 {
@@ -71,8 +72,8 @@ public:
         return m_eglDisplay;
     }
 
-    AbstractEglBackend *eglBackend() const;
-    void setEglBackend(AbstractEglBackend *eglBackend);
+    AbstractEglDrmBackend *eglBackend() const;
+    void setEglBackend(AbstractEglDrmBackend *eglBackend);
 
     void setGbmDevice(gbm_device *d) {
         m_gbmDevice = d;
@@ -93,6 +94,8 @@ public:
     }
 
     void waitIdle();
+    DrmBackend *platform() const;
+    const QVector<DrmPipeline*> pipelines() const;
 
 Q_SIGNALS:
     void outputAdded(DrmOutput *output);
@@ -112,7 +115,7 @@ private:
     void tryAMS();
 
     DrmBackend* const m_backend;
-    QPointer<AbstractEglBackend> m_eglBackend;
+    QPointer<AbstractEglDrmBackend> m_eglBackend;
 
     const QString m_devNode;
     QSize m_cursorSize;
@@ -133,7 +136,8 @@ private:
     QVector<DrmCrtc*> m_crtcs;
     // connectors
     QVector<DrmConnector*> m_connectors;
-    // active output pipelines (planes + crtc + encoder + connector)
+    // pipelines
+    QVector<DrmPipeline*> m_pipelines;
     QVector<DrmOutput*> m_outputs;
 };
 

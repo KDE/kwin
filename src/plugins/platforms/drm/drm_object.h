@@ -56,11 +56,22 @@ public:
     bool atomicPopulate(drmModeAtomicReq *req) const;
 
     template <typename T>
-    void setValue(T prop, uint64_t new_value)
+    bool setPending(T prop, uint64_t new_value)
     {
         if (auto &property = m_props.at(static_cast<uint32_t>(prop))) {
-            property->setValue(new_value);
+            property->setPending(new_value);
+            return true;
         }
+        return false;
+    }
+
+    template <typename T>
+    bool setPendingBlob(T prop, void *data, size_t length)
+    {
+        if (auto &property = m_props.at(static_cast<uint32_t>(prop))) {
+            return property->setPendingBlob(data, length);
+        }
+        return false;
     }
 
     template <typename T>
@@ -69,6 +80,107 @@ public:
         const auto &property = m_props.at(static_cast<uint32_t>(prop));
         return property ? property->hasEnum(value) : false;
     }
+
+    class Property
+    {
+    public:
+        Property(DrmGpu *gpu, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames, drmModePropertyBlobRes *blob);
+        virtual ~Property();
+
+        void initEnumMap(drmModePropertyRes *prop);
+
+        /**
+         * For properties of enum type the enum map identifies the kernel runtime values,
+         * which must be queried beforehand.
+         *
+         * @param n the index to the enum
+         * @return the runtime enum value corresponding with enum index @param n
+         */
+        uint64_t enumMap(int n) const {
+            return m_enumMap[n];    // TODO: test on index out of bounds?
+        }
+        bool hasEnum(uint64_t value) const {
+            return m_enumMap.contains(value);
+        }
+
+        template <typename T>
+        bool setEnum(T index) {
+            if (hasEnum(static_cast<uint64_t>(index))) {
+                setPending(m_enumMap[static_cast<uint32_t>(index)]);
+                return true;
+            }
+            return false;
+        }
+
+        uint32_t propId() const {
+            return m_propId;
+        }
+        const QByteArray &name() const {
+            return m_propName;
+        }
+        bool isImmutable() const {
+            return m_immutable;
+        }
+        bool isLegacy() const {
+            return m_legacy;
+        }
+        /**
+         * Makes this property be ignored by DrmObject::atomicPopulate
+         */
+        void setLegacy() {
+            m_legacy = true;
+        }
+
+        void setPending(uint64_t value);
+        uint64_t pending() const;
+        bool setPendingBlob(void *blob, size_t length);
+        drmModePropertyBlobRes *pendingBlob() const;
+
+        void setCurrent(uint64_t value);
+        uint64_t current() const;
+        void setCurrentBlob(drmModePropertyBlobRes *blob);
+        drmModePropertyBlobRes *currentBlob() const;
+
+        void commit();
+        void commitPending();
+        void rollbackPending();
+        bool needsCommit() const;
+
+    private:
+        uint32_t m_propId = 0;
+        QByteArray m_propName;
+
+        // the value that will be m_next after the property has been committed
+        // has not necessarily been tested to work
+        uint64_t m_pending = 0;
+        drmModePropertyBlobRes *m_pendingBlob = nullptr;
+        // the value that will be m_current after the next atomic commit
+        // and has been tested to work
+        uint64_t m_next = 0;
+        drmModePropertyBlobRes *m_nextBlob = nullptr;
+        // the value currently set for or by the kernel
+        uint64_t m_current = 0;
+        drmModePropertyBlobRes *m_currentBlob = nullptr;
+
+        QVector<uint64_t> m_enumMap;
+        QVector<QByteArray> m_enumNames;
+        const bool m_immutable;
+        bool m_legacy = false;
+        const DrmGpu *m_gpu;
+    };
+
+    template <typename T>
+    Property *getProp(T propIndex) const {
+        return m_props[static_cast<uint32_t>(propIndex)];
+    }
+
+    QVector<Property*> properties();
+    void commit();
+    void commitPending();
+    void rollbackPending();
+
+    bool needsCommit() const;
+    virtual bool needsModeset() const = 0;
 
 protected:
     struct PropertyDefinition
@@ -95,85 +207,11 @@ protected:
         m_props[static_cast<uint32_t>(prop)] = nullptr;
     }
 
-    class Property;
-    bool atomicAddProperty(drmModeAtomicReq *req, Property *property) const;
-
     // for comparison with received name of DRM object
     QVector<Property *> m_props;
 
-    class Property
-    {
-    public:
-        Property(drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames, drmModePropertyBlobRes *blob);
-        virtual ~Property();
-
-        void initEnumMap(drmModePropertyRes *prop);
-
-        /**
-         * For properties of enum type the enum map identifies the kernel runtime values,
-         * which must be queried beforehand.
-         *
-         * @param n the index to the enum
-         * @return the runtime enum value corresponding with enum index @param n
-         */
-        uint64_t enumMap(int n) const {
-            return m_enumMap[n];    // TODO: test on index out of bounds?
-        }
-        bool hasEnum(uint64_t value) const {
-            return m_enumMap.contains(value);
-        }
-        template <typename T>
-        bool setEnum(T index) {
-            if (hasEnum(static_cast<uint64_t>(index))) {
-                setValue(m_enumMap[static_cast<uint32_t>(index)]);
-                return true;
-            }
-            return false;
-        }
-
-        uint32_t propId() const {
-            return m_propId;
-        }
-        uint64_t value() const {
-            return m_value;
-        }
-        void setValue(uint64_t new_value) {
-            m_value = new_value;
-        }
-        const QByteArray &name() const {
-            return m_propName;
-        }
-        bool isImmutable() const {
-            return m_immutable;
-        }
-        drmModePropertyBlobRes *blob() const {
-            return m_blob.data();
-        }
-        bool isLegacy() const {
-            return m_legacy;
-        }
-        /**
-         * Makes this property be ignored by DrmObject::atomicPopulate
-         */
-        void setLegacy() {
-            m_legacy = true;
-        }
-
-    private:
-        uint32_t m_propId = 0;
-        QByteArray m_propName;
-
-        uint64_t m_value = 0;
-        QVector<uint64_t> m_enumMap;
-        QVector<QByteArray> m_enumNames;
-        const bool m_immutable;
-        bool m_legacy = false;
-        DrmScopedPointer<drmModePropertyBlobRes> m_blob;
-    };
-
 private:
     DrmGpu *m_gpu;
-    QVector<QByteArray> m_propsNames;
     const uint32_t m_id;
 };
 

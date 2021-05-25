@@ -29,10 +29,13 @@ public:
 
     int texture() const;
 
+    QSize textureSize() const;
+
 private:
     GLuint m_texture;
     GLuint m_framebuffer;
     QScopedPointer<GLVertexBuffer> m_vbo;
+    QSize m_size;
 };
 
 }

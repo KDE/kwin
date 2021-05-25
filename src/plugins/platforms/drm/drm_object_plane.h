@@ -81,7 +81,7 @@ public:
         m_current = b;
     }
     void setNext(const QSharedPointer<DrmBuffer> &b);
-    void setTransformation(Transformations t);
+    bool setTransformation(Transformations t);
     Transformations transformation();
 
     void flipBuffer();
@@ -89,6 +89,11 @@ public:
     Transformations supportedTransformations() const {
         return m_supportedTransformations;
     }
+
+    void set(const QPoint &srcPos, const QSize &srcSize, const QPoint &dstPos, const QSize &dstSize);
+    void setBuffer(DrmBuffer *buffer);
+
+    bool needsModeset() const override;
 
 private:
     QSharedPointer<DrmBuffer> m_current;

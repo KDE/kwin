@@ -80,7 +80,7 @@ bool DrmConnector::init()
         return false;
     }
 
-    if (auto dpmsProp = m_props[static_cast<uint32_t>(PropertyIndex::Dpms)]) {
+    if (auto dpmsProp = getProp(PropertyIndex::Dpms)) {
         dpmsProp->setLegacy();
     } else {
         qCDebug(KWIN_DRM) << "Could not find DPMS property!";
@@ -90,7 +90,7 @@ bool DrmConnector::init()
     auto vborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_vborder)];
     auto hborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_hborder)];
     if (underscan && vborder && hborder) {
-        underscan->setEnum(vborder->value() > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
+        underscan->setEnum(vborder->current() > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
     } else {
         deleteProp(PropertyIndex::Underscan);
         deleteProp(PropertyIndex::Underscan_vborder);
@@ -98,9 +98,9 @@ bool DrmConnector::init()
     }
 
     // parse edid
-    auto edidProp = m_props[static_cast<uint32_t>(PropertyIndex::Edid)];
-    if (edidProp && edidProp->blob() && edidProp->blob()->data) {
-        m_edid = Edid(edidProp->blob()->data, edidProp->blob()->length);
+    auto edidProp = getProp(PropertyIndex::Edid);
+    if (edidProp && edidProp->currentBlob() && edidProp->currentBlob()->data) {
+        m_edid = Edid(edidProp->currentBlob()->data, edidProp->currentBlob()->length);
         if (!m_edid.isValid()) {
             qCWarning(KWIN_DRM, "Couldn't parse EDID for connector with id %d", id());
         }
@@ -267,15 +267,15 @@ AbstractWaylandOutput::SubPixel DrmConnector::subpixel() const
 
 bool DrmConnector::hasOverscan() const
 {
-    return m_props[static_cast<uint32_t>(PropertyIndex::Overscan)] || m_props[static_cast<uint32_t>(PropertyIndex::Underscan)];
+    return getProp(PropertyIndex::Overscan) || getProp(PropertyIndex::Underscan);
 }
 
 uint32_t DrmConnector::overscan() const
 {
-    if (const auto &prop = m_props[static_cast<uint32_t>(PropertyIndex::Overscan)]) {
-        return prop->value();
-    } else if (const auto &prop = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_vborder)]) {
-        return prop->value();
+    if (const auto &prop = getProp(PropertyIndex::Overscan)) {
+        return prop->pending();
+    } else if (const auto &prop = getProp(PropertyIndex::Underscan_vborder)) {
+        return prop->pending();
     }
     return 0;
 }
@@ -283,7 +283,7 @@ uint32_t DrmConnector::overscan() const
 void DrmConnector::setOverscan(uint32_t overscan, const QSize &modeSize)
 {
     if (auto prop = m_props[static_cast<uint32_t>(PropertyIndex::Overscan)]) {
-        prop->setValue(overscan);
+        prop->setPending(overscan);
     } else if (auto prop = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)]) {
         float aspectRatio = modeSize.width() / static_cast<float>(modeSize.height());
         prop->setEnum(overscan > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
@@ -293,17 +293,22 @@ void DrmConnector::setOverscan(uint32_t overscan, const QSize &modeSize)
             overscan = 128 / aspectRatio;
         }
         // overscan only goes from 0-100 so we cut off the 101-128 value range of underscan_vborder
-        setValue(PropertyIndex::Underscan_vborder, overscan);
-        setValue(PropertyIndex::Underscan_hborder, hborder);
+        setPending(PropertyIndex::Underscan_vborder, overscan);
+        setPending(PropertyIndex::Underscan_hborder, hborder);
     }
 }
 
 bool DrmConnector::vrrCapable() const
 {
-    if (const auto &prop = m_props[static_cast<int>(PropertyIndex::VrrCapable)]) {
-        return prop->value();
+    if (const auto &prop = getProp(PropertyIndex::VrrCapable)) {
+        return prop->pending();
     }
     return false;
+}
+
+bool DrmConnector::needsModeset() const
+{
+    return getProp(PropertyIndex::CrtcId)->needsCommit();
 }
 
 }

@@ -34,6 +34,8 @@ bool DrmCrtc::init()
         PropertyDefinition(QByteArrayLiteral("MODE_ID")),
         PropertyDefinition(QByteArrayLiteral("ACTIVE")),
         PropertyDefinition(QByteArrayLiteral("VRR_ENABLED")),
+        PropertyDefinition(QByteArrayLiteral("GAMMA_LUT")),
+        PropertyDefinition(QByteArrayLiteral("GAMMA_LUT_SIZE")),
     }, DRM_MODE_OBJECT_CRTC);
 }
 
@@ -44,30 +46,6 @@ void DrmCrtc::flipBuffer()
 
     delete m_blackBuffer;
     m_blackBuffer = nullptr;
-}
-
-bool DrmCrtc::blank(DrmOutput *output)
-{
-    if (gpu()->atomicModeSetting()) {
-        return false;
-    }
-
-    if (!m_blackBuffer) {
-        DrmDumbBuffer *blackBuffer = new DrmDumbBuffer(gpu(), output->pixelSize());
-        if (!blackBuffer->map()) {
-            delete blackBuffer;
-            return false;
-        }
-        blackBuffer->image()->fill(Qt::black);
-        m_blackBuffer = blackBuffer;
-    }
-
-    if (output->setModeLegacy(m_blackBuffer)) {
-        m_currentBuffer = nullptr;
-        m_nextBuffer = nullptr;
-        return true;
-    }
-    return false;
 }
 
 bool DrmCrtc::setGammaRamp(const GammaRamp &gamma)
@@ -85,10 +63,10 @@ bool DrmCrtc::setGammaRamp(const GammaRamp &gamma)
 bool DrmCrtc::setVrr(bool enable)
 {
     if (const auto &prop = m_props[static_cast<int>(PropertyIndex::VrrEnabled)]) {
-        if (prop->value() == enable) {
+        if (prop->pending() == enable) {
             return false;
         }
-        prop->setValue(enable);
+        prop->setPending(enable);
         if (!gpu()->atomicModeSetting() || gpu()->useEglStreams()) {
             if (drmModeObjectSetProperty(gpu()->fd(), id(), DRM_MODE_OBJECT_CRTC, prop->propId(), enable) != 0) {
                 qCWarning(KWIN_DRM) << "drmModeObjectSetProperty(VRR_ENABLED) failed";
@@ -103,7 +81,7 @@ bool DrmCrtc::setVrr(bool enable)
 bool DrmCrtc::isVrrEnabled() const
 {
     if (const auto &prop = m_props[static_cast<int>(PropertyIndex::VrrEnabled)]) {
-        return prop->value();
+        return prop->pending();
     }
     return false;
 }
@@ -112,6 +90,12 @@ drmModeModeInfo DrmCrtc::queryCurrentMode()
 {
     m_crtc.reset(drmModeGetCrtc(gpu()->fd(), id()));
     return m_crtc->mode;
+}
+
+bool DrmCrtc::needsModeset() const
+{
+    return getProp(PropertyIndex::Active)->needsCommit()
+        || getProp(PropertyIndex::ModeId)->needsCommit();
 }
 
 }

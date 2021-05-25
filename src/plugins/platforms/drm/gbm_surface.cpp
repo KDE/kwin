@@ -11,7 +11,7 @@
 #include <gbm.h>
 #include <errno.h>
 
-#include "abstract_egl_backend.h"
+#include "abstract_egl_drm_backend.h"
 #include "drm_gpu.h"
 #include "logging.h"
 
@@ -21,6 +21,7 @@ namespace KWin
 GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags)
     : m_surface(gbm_surface_create(gpu->gbmDevice(), size.width(), size.height(), format, flags))
     , m_gpu(gpu)
+    , m_size(size)
 {
     if (!m_surface) {
         qCCritical(KWIN_DRM) << "Could not create gbm surface!" << strerror(errno);

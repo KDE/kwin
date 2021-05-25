@@ -52,6 +52,7 @@
 
 #include "drm_gpu.h"
 #include "egl_multi_backend.h"
+#include "drm_pipeline.h"
 
 namespace KWin
 {
@@ -139,18 +140,16 @@ void DrmBackend::reactivate()
         return;
     }
     m_active = true;
-    if (!usesSoftwareCursor()) {
-        for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-            DrmOutput *o = *it;
-            // only relevant in atomic mode
-            o->m_modesetRequested = true;
-            o->m_crtc->blank(o);
+
+    for (const auto &output : qAsConst(m_outputs)) {
+        if (output->isEnabled()) {
+            output->renderLoop()->uninhibit();
+            output->showCursor();
+        } else {
+            output->pipeline()->setActive(false);
         }
     }
 
-    for (DrmOutput *output : qAsConst(m_outputs)) {
-        output->renderLoop()->uninhibit();
-    }
     if (Compositor *compositor = Compositor::self()) {
         compositor->addRepaintFull();
     }
@@ -168,8 +167,10 @@ void DrmBackend::deactivate()
     }
 
     for (DrmOutput *output : qAsConst(m_outputs)) {
-        output->hideCursor();
-        output->renderLoop()->inhibit();
+        if (output->isEnabled()) {
+            output->hideCursor();
+            output->renderLoop()->inhibit();
+        }
     }
 
     m_active = false;
@@ -314,14 +315,12 @@ void DrmBackend::addOutput(DrmOutput *o)
 {
     m_outputs.append(o);
     m_enabledOutputs.append(o);
-    Q_EMIT o->gpu()->outputEnabled(o);
     Q_EMIT outputAdded(o);
     Q_EMIT outputEnabled(o);
 }
 
 void DrmBackend::removeOutput(DrmOutput *o)
 {
-    Q_EMIT o->gpu()->outputDisabled(o);
     if (m_enabledOutputs.removeOne(o)) {
         Q_EMIT outputDisabled(o);
     }
@@ -345,7 +344,7 @@ void DrmBackend::updateOutputs()
         }
     }
 
-    std::sort(m_outputs.begin(), m_outputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_conn->id() < b->m_conn->id(); });
+    std::sort(m_outputs.begin(), m_outputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->pipeline()->connector()->id() < b->pipeline()->connector()->id(); });
     if (oldOutputs != m_outputs) {
         readOutputsConfiguration();
     }
@@ -552,7 +551,11 @@ void DrmBackend::updateCursor()
             qCDebug(KWIN_DRM) << "Failed to show cursor on output" << output->name();
             break;
         }
-        output->moveCursor();
+        success = output->moveCursor();
+        if (!success) {
+            qCDebug(KWIN_DRM) << "Failed to move cursor on output" << output->name();
+            break;
+        }
     }
 
     setSoftwareCursor(!success);

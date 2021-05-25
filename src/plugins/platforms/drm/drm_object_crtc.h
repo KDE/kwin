@@ -33,6 +33,8 @@ public:
         ModeId = 0,
         Active,
         VrrEnabled,
+        Gamma_LUT,
+        Gamma_LUT_size,
         Count
     };
 
@@ -40,10 +42,10 @@ public:
         return m_pipeIndex;
     }
 
-    QSharedPointer<DrmBuffer> current() {
+    QSharedPointer<DrmBuffer> current() const {
         return m_currentBuffer;
     }
-    QSharedPointer<DrmBuffer> next() {
+    QSharedPointer<DrmBuffer> next() const {
         return m_nextBuffer;
     }
     void setCurrent(const QSharedPointer<DrmBuffer> &buffer) {
@@ -54,9 +56,11 @@ public:
     }
 
     void flipBuffer();
-    bool blank(DrmOutput *output);
 
     int gammaRampSize() const {
+        if (auto prop = getProp(PropertyIndex::Gamma_LUT_size)) {
+            return prop->current();
+        }
         return m_crtc->gamma_size;
     }
     bool setGammaRamp(const GammaRamp &gamma);
@@ -65,6 +69,8 @@ public:
     bool isVrrEnabled() const;
 
     drmModeModeInfo queryCurrentMode();
+
+    bool needsModeset() const override;
 
 private:
     DrmScopedPointer<drmModeCrtc> m_crtc;

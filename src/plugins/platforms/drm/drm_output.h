@@ -32,6 +32,7 @@ class DrmConnector;
 class DrmCrtc;
 class Cursor;
 class DrmGpu;
+class DrmPipeline;
 
 class KWIN_EXPORT DrmOutput : public AbstractWaylandOutput
 {
@@ -42,33 +43,15 @@ public:
 
     RenderLoop *renderLoop() const override;
 
-    bool showCursor(DrmDumbBuffer *buffer);
     bool showCursor();
     bool hideCursor();
     bool updateCursor();
-    void moveCursor();
-    bool init();
+    bool moveCursor();
     bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion);
     void pageFlipped();
+    bool isDpmsEnabled() const;
 
-    bool isDpmsEnabled() const {
-        // We care for current as well as pending mode in order to allow first present in AMS.
-        return m_dpmsModePending == DpmsMode::On;
-    }
-
-    DpmsMode dpmsModePending() const {
-        return m_dpmsModePending;
-    }
-
-    const DrmCrtc *crtc() const {
-        return m_crtc;
-    }
-    const DrmConnector *connector() const {
-        return m_conn;
-    }
-    const DrmPlane *primaryPlane() const {
-        return m_primaryPlane;
-    }
+    DrmPipeline *pipeline() const;
     DrmBuffer *currentBuffer() const;
 
     bool initCursor(const QSize &cursorSize);
@@ -88,77 +71,29 @@ public:
 private:
     friend class DrmGpu;
     friend class DrmBackend;
-    friend class DrmCrtc;   // TODO: For use of setModeLegacy. Remove later when we allow multiple connectors per crtc
-                            //       and save the connector ids in the DrmCrtc instance.
-    DrmOutput(DrmBackend *backend, DrmGpu* gpu);
+    DrmOutput(DrmBackend *backend, DrmGpu* gpu, DrmPipeline *pipeline);
 
-    bool presentAtomically(const QSharedPointer<DrmBuffer> &buffer);
-
-    enum class AtomicCommitMode {
-        Test,
-        Real
-    };
-    bool doAtomicCommit(AtomicCommitMode mode);
-
-    bool presentLegacy(const QSharedPointer<DrmBuffer> &buffer);
-    bool setModeLegacy(DrmBuffer *buffer);
     void initOutputDevice();
-
     bool isCurrentMode(const drmModeModeInfo *mode) const;
 
-    void atomicEnable();
-    void atomicDisable();
     void updateEnablement(bool enable) override;
-
-    bool dpmsAtomicOff();
-    bool dpmsLegacyApply();
-
-    void dpmsFinishOn();
-    void dpmsFinishOff();
-
-    void setModesetValues(bool enable);
     void setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
     void updateMode(int modeIndex) override;
     void updateMode(uint32_t width, uint32_t height, uint32_t refreshRate);
-    void setCurrentModeInternal();
-
     void updateTransform(Transform transform) override;
 
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
     void setOverscan(uint32_t overscan) override;
 
-    void setVrr(bool enable);
-    bool isCursorVisible();
-
     DrmBackend *m_backend;
     DrmGpu *m_gpu;
-    DrmConnector *m_conn = nullptr;
-    DrmCrtc *m_crtc = nullptr;
-    bool m_lastGbm = false;
-    DpmsMode m_dpmsModePending = DpmsMode::On;
+    DrmPipeline *m_pipeline;
     RenderLoop *m_renderLoop;
 
-    uint32_t m_blobId = 0;
-    DrmPlane *m_primaryPlane = nullptr;
-    QVector<DrmPlane*> m_nextPlanesFlipList;
-
-    QPoint m_cursorPos;
+    QSharedPointer<DrmDumbBuffer> m_cursor;
     bool m_pageFlipPending = false;
-    bool m_atomicOffPending = false;
-    bool m_modesetRequested = true;
-
-    struct {
-        Transform transform;
-        int modeIndex = 0;
-        DrmPlane::Transformations planeTransformations;
-        QPoint globalPos;
-        bool valid = false;
-    } m_lastWorkingState;
-    QScopedPointer<DrmDumbBuffer> m_cursor[2];
-    int m_cursorIndex = 0;
-    bool m_hasNewCursor = false;
     QTimer m_turnOffTimer;
 };
 

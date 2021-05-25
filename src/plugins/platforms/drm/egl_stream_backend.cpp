@@ -26,6 +26,7 @@
 #include "dumb_swapchain.h"
 #include "kwineglutils_p.h"
 #include "shadowbuffer.h"
+#include "drm_pipeline.h"
 
 #include <QOpenGLContext>
 #include <KWaylandServer/buffer_interface.h>
@@ -305,7 +306,7 @@ bool EglStreamBackend::initRenderingContext()
 bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
 {
     o.output = drmOutput;
-    QSize sourceSize = drmOutput->hardwareTransforms() ? drmOutput->pixelSize() : drmOutput->modeSize();
+    QSize sourceSize = drmOutput->pipeline()->sourceSize();
 
     if (isPrimary()) {
         // dumb buffer used for modesetting
@@ -323,12 +324,12 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
         }
 
         EGLAttrib outputAttribs[3];
-        if (drmOutput->primaryPlane()) {
+        if (drmOutput->pipeline()->primaryPlane()) {
             outputAttribs[0] = EGL_DRM_PLANE_EXT;
-            outputAttribs[1] = drmOutput->primaryPlane()->id();
+            outputAttribs[1] = drmOutput->pipeline()->primaryPlane()->id();
         } else {
             outputAttribs[0] = EGL_DRM_CRTC_EXT;
-            outputAttribs[1] = drmOutput->crtc()->id();
+            outputAttribs[1] = drmOutput->pipeline()->crtc()->id();
         }
         outputAttribs[2] = EGL_NONE;
         EGLint numLayers;
@@ -548,6 +549,25 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
         if (!pEglStreamConsumerAcquireAttribNV(eglDisplay(), renderOutput.eglStream, acquireAttribs)) {
             qCWarning(KWIN_DRM) << "Failed to acquire output EGL stream frame:" << getEglErrorString();
         }
+    }
+}
+
+QSharedPointer<DrmBuffer> EglStreamBackend::renderTestFrame(DrmOutput *drmOutput)
+{
+    auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+        [drmOutput] (const Output &o) {
+            return o.output == drmOutput;
+        }
+    );
+    if (it == m_outputs.end()) {
+        return nullptr;
+    }
+    auto buffer = (*it).dumbSwapchain ? (*it).dumbSwapchain->currentBuffer() : (*it).buffer;
+    auto size = drmOutput->pipeline()->sourceSize();
+    if (buffer->size() == size) {
+        return buffer;
+    } else {
+        return QSharedPointer<DrmDumbBuffer>::create(m_gpu, size);
     }
 }
 

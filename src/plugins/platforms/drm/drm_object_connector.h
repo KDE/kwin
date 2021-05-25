@@ -60,7 +60,7 @@ public:
         if (!prop) {
             return false;
         }
-        return prop->value();
+        return prop->pending();
     }
 
     Property *dpms() const {
@@ -95,6 +95,8 @@ public:
     void setOverscan(uint32_t overscan, const QSize &modeSize);
 
     bool vrrCapable() const;
+
+    bool needsModeset() const override;
 
 private:
     DrmScopedPointer<drmModeConnector> m_conn;

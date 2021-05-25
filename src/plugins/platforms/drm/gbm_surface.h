@@ -39,6 +39,10 @@ public:
         return m_eglSurface;
     }
 
+    QSize size() const {
+        return m_size;
+    }
+
     bool isValid() const {
         return m_surface != nullptr && m_eglSurface != EGL_NO_SURFACE;
     }
@@ -47,6 +51,7 @@ private:
     gbm_surface *m_surface;
     DrmGpu *m_gpu;
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
+    QSize m_size;
 
     QSharedPointer<GbmBuffer> m_currentBuffer;
     QSharedPointer<DrmGbmBuffer> m_currentDrmBuffer;
