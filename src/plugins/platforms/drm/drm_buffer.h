@@ -25,8 +25,6 @@ public:
 
     virtual bool needsModeChange(DrmBuffer *b) const {Q_UNUSED(b) return false;}
 
-    virtual void releaseGbm() {}
-
     quint32 bufferId() const {
         return m_bufferId;
     }

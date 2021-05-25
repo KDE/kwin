@@ -83,9 +83,7 @@ private:
     struct Output {
         DrmOutput *output = nullptr;
         QSharedPointer<DrmBuffer> buffer;
-        QSharedPointer<GbmBuffer> secondaryBuffer;
         QSharedPointer<GbmSurface> gbmSurface;
-        EGLSurface eglSurface = EGL_NO_SURFACE;
         int bufferAge = 0;
         /**
          * @brief The damage history for the past 10 frames.
@@ -100,7 +98,6 @@ private:
     };
 
     bool resetOutput(Output &output, DrmOutput *drmOutput);
-    EGLSurface createEglSurface(QSharedPointer<GbmSurface> gbmSurface) const;
 
     bool makeContextCurrent(const Output &output) const;
     void setViewport(const Output &output) const;
@@ -112,9 +109,6 @@ private:
 
     bool presentOnOutput(Output &output, const QRegion &damagedRegion);
     bool directScanoutActive(const Output &output);
-
-    void cleanupOutput(Output &output);
-    void cleanupFramebuffer(Output &output);
 
     QVector<Output> m_outputs;
     QVector<Output> m_secondaryGpuOutputs;

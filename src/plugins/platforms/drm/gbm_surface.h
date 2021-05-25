@@ -10,8 +10,11 @@
 #define KWIN_DRM_GBM_SURFACE_H
 
 #include <cstdint>
+#include <epoxy/egl.h>
+#include <QVector>
 
-struct gbm_bo;
+#include "drm_buffer_gbm.h"
+
 struct gbm_device;
 struct gbm_surface;
 
@@ -21,22 +24,33 @@ namespace KWin
 class GbmSurface
 {
 public:
-    explicit GbmSurface(gbm_device *gbm, uint32_t width, uint32_t height, uint32_t format, uint32_t flags);
+    explicit GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags);
     ~GbmSurface();
 
-    gbm_bo *lockFrontBuffer();
-    void releaseBuffer(gbm_bo *bo);
+    QSharedPointer<DrmGbmBuffer> swapBuffersForDrm();
+    QSharedPointer<GbmBuffer> swapBuffers();
 
-    operator bool() const {
-        return m_surface != nullptr;
+    void releaseBuffer(GbmBuffer *buffer);
+
+    QSharedPointer<GbmBuffer> currentBuffer() const;
+    QSharedPointer<DrmGbmBuffer> currentDrmBuffer() const;
+
+    EGLSurface eglSurface() const {
+        return m_eglSurface;
     }
 
-    gbm_surface* surface() const {
-        return m_surface;
+    bool isValid() const {
+        return m_surface != nullptr && m_eglSurface != EGL_NO_SURFACE;
     }
 
 private:
     gbm_surface *m_surface;
+    DrmGpu *m_gpu;
+    EGLSurface m_eglSurface = EGL_NO_SURFACE;
+
+    QSharedPointer<GbmBuffer> m_currentBuffer;
+    QSharedPointer<DrmGbmBuffer> m_currentDrmBuffer;
+    QVector<GbmBuffer*> m_lockedBuffers;
 };
 
 }

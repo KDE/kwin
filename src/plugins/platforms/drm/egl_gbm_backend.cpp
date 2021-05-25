@@ -55,25 +55,9 @@ EglGbmBackend::~EglGbmBackend()
 
 void EglGbmBackend::cleanupSurfaces()
 {
-    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
-        cleanupOutput(*it);
-    }
+    // shadow buffer needs context current for destruction
+    makeCurrent();
     m_outputs.clear();
-}
-
-void EglGbmBackend::cleanupOutput(Output &output)
-{
-    if (output.shadowBuffer) {
-        makeContextCurrent(output);
-        output.shadowBuffer = nullptr;
-    }
-
-    if (output.eglSurface != EGL_NO_SURFACE) {
-        // gbm buffers have to be released before destroying the egl surface
-        output.output->releaseGbm();
-        output.secondaryBuffer = nullptr;
-        eglDestroySurface(eglDisplay(), output.eglSurface);
-    }
 }
 
 bool EglGbmBackend::initializeEgl()
@@ -151,18 +135,6 @@ bool EglGbmBackend::initRenderingContext()
     }
     return true;
 }
-
-EGLSurface EglGbmBackend::createEglSurface(QSharedPointer<GbmSurface> gbmSurface) const
-{
-    auto eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(),
-                                                        (void *)(gbmSurface->surface()), nullptr);
-    if (eglSurface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_DRM) << "Creating EGL surface failed:" << getEglErrorString();
-        return EGL_NO_SURFACE;
-    }
-    return eglSurface;
-}
-
 bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
 {
     output.output = drmOutput;
@@ -174,27 +146,11 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
     } else {
         flags |= GBM_BO_USE_LINEAR;
     }
-    auto gbmSurface = QSharedPointer<GbmSurface>::create(m_gpu->gbmDevice(),
-                                                         size.width(), size.height(),
-                                                         GBM_FORMAT_XRGB8888,
-                                                         flags);
+    auto gbmSurface = QSharedPointer<GbmSurface>::create(m_gpu, size, GBM_FORMAT_XRGB8888, flags);
     if (!gbmSurface) {
-        qCCritical(KWIN_DRM) << "Creating GBM surface failed" << strerror(errno);
+        qCCritical(KWIN_DRM) << "Creating GBM surface failed:" << strerror(errno);
         return false;
     }
-    auto eglSurface = createEglSurface(gbmSurface);
-    if (eglSurface == EGL_NO_SURFACE) {
-        return false;
-    }
-
-    // destroy previous surface
-    if (output.eglSurface != EGL_NO_SURFACE) {
-        // gbm buffers have to be released before destroying the egl surface
-        output.output->releaseGbm();
-        output.secondaryBuffer = nullptr;
-        eglDestroySurface(eglDisplay(), output.eglSurface);
-    }
-    output.eglSurface = eglSurface;
     output.gbmSurface = gbmSurface;
 
     if (output.output->hardwareTransforms()) {
@@ -255,7 +211,8 @@ void EglGbmBackend::removeOutput(DrmOutput *drmOutput)
         return;
     }
     if (isPrimary()) {
-        cleanupOutput(*it);
+        // shadow buffer needs context current for destruction
+        makeCurrent();
     } else {
         renderingBackend()->removeOutput((*it).output);
     }
@@ -273,19 +230,7 @@ bool EglGbmBackend::swapBuffers(DrmOutput *drmOutput)
         return false;
     }
     renderFramebufferToSurface(*it);
-    auto error = eglSwapBuffers(eglDisplay(), it->eglSurface);
-    if (error != EGL_TRUE) {
-        qCCritical(KWIN_DRM) << "an error occurred while swapping buffers" << error;
-        it->secondaryBuffer = nullptr;
-        return false;
-    }
-    it->secondaryBuffer = QSharedPointer<GbmBuffer>::create(it->gbmSurface);
-    if (it->secondaryBuffer->getBo()) {
-        return true;
-    } else {
-        it->secondaryBuffer = nullptr;
-        return false;
-    }
+    return it->gbmSurface->swapBuffers() != nullptr;
 }
 
 bool EglGbmBackend::exportFramebuffer(DrmOutput *drmOutput, void *data, const QSize &size, uint32_t stride)
@@ -298,15 +243,15 @@ bool EglGbmBackend::exportFramebuffer(DrmOutput *drmOutput, void *data, const QS
     if (it == m_secondaryGpuOutputs.end()) {
         return false;
     }
-
-    if (!it->secondaryBuffer || !it->secondaryBuffer->map(GBM_BO_TRANSFER_READ)) {
+    auto bo = it->gbmSurface->currentBuffer();
+    if (!bo->map(GBM_BO_TRANSFER_READ)) {
         return false;
     }
-    if (stride != it->secondaryBuffer->stride()) {
+    if (stride != bo->stride()) {
         // shouldn't happen if formats are the same
         return false;
     }
-    return memcpy(data, it->secondaryBuffer->mappedData(), size.height() * stride);
+    return memcpy(data, bo->mappedData(), size.height() * stride);
 }
 
 int EglGbmBackend::exportFramebufferAsDmabuf(DrmOutput *output, uint32_t *format, uint32_t *stride)
@@ -320,13 +265,14 @@ int EglGbmBackend::exportFramebufferAsDmabuf(DrmOutput *output, uint32_t *format
     if (it == m_secondaryGpuOutputs.end()) {
         return -1;
     }
-    int fd = gbm_bo_get_fd(it->secondaryBuffer->getBo());
+    auto bo = it->gbmSurface->currentBuffer()->getBo();
+    int fd = gbm_bo_get_fd(bo);
     if (fd == -1) {
         qCWarning(KWIN_DRM) << "failed to export gbm_bo as dma-buf:" << strerror(errno);
         return -1;
     }
-    *format = gbm_bo_get_format(it->secondaryBuffer->getBo());
-    *stride = gbm_bo_get_stride(it->secondaryBuffer->getBo());
+    *format = gbm_bo_get_format(bo);
+    *stride = gbm_bo_get_stride(bo);
     return fd;
 }
 
@@ -406,11 +352,11 @@ void EglGbmBackend::renderFramebufferToSurface(Output &output)
 bool EglGbmBackend::makeContextCurrent(const Output &output) const
 {
     Q_ASSERT(isPrimary());
-    const EGLSurface surface = output.eglSurface;
-    if (surface == EGL_NO_SURFACE) {
+    const auto surface = output.gbmSurface;
+    if (!surface) {
         return false;
     }
-    if (eglMakeCurrent(eglDisplay(), surface, surface, context()) == EGL_FALSE) {
+    if (eglMakeCurrent(eglDisplay(), surface->eglSurface(), surface->eglSurface(), context()) == EGL_FALSE) {
         qCCritical(KWIN_DRM) << "eglMakeCurrent failed:" << getEglErrorString();
         return false;
     }
@@ -503,7 +449,7 @@ void EglGbmBackend::aboutToStartPainting(int screenId, const QRegion &damagedReg
         const QRegion region = damagedRegion & output.output->geometry();
 
         QVector<EGLint> rects = regionToRects(region, output.output);
-        const bool correct = eglSetDamageRegionKHR(eglDisplay(), output.eglSurface,
+        const bool correct = eglSetDamageRegionKHR(eglDisplay(), output.gbmSurface->eglSurface(),
                                                    rects.data(), rects.count()/4);
         if (!correct) {
             qCWarning(KWIN_DRM) << "eglSetDamageRegionKHR failed:" << getEglErrorString();
@@ -514,20 +460,7 @@ void EglGbmBackend::aboutToStartPainting(int screenId, const QRegion &damagedReg
 bool EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion)
 {
     if (isPrimary() && !directScanoutActive(output)) {
-        if (supportsSwapBuffersWithDamage()) {
-            QVector<EGLint> rects = regionToRects(damagedRegion, output.output);
-            if (!eglSwapBuffersWithDamageEXT(eglDisplay(), output.eglSurface,
-                                             rects.data(), rects.count() / 4)) {
-                qCCritical(KWIN_DRM) << "eglSwapBuffersWithDamageEXT() failed:" << getEglErrorString();
-                return false;
-            }
-        } else {
-            if (!eglSwapBuffers(eglDisplay(), output.eglSurface)) {
-                qCCritical(KWIN_DRM) << "eglSwapBuffers() failed:" << getEglErrorString();
-                return false;
-            }
-        }
-        output.buffer = QSharedPointer<DrmGbmBuffer>::create(m_gpu, output.gbmSurface);
+        output.buffer = output.gbmSurface->swapBuffersForDrm();
     } else if (!output.buffer) {
         qCDebug(KWIN_DRM) << "imported buffer does not exist!";
         return false;
@@ -539,7 +472,7 @@ bool EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion
     }
 
     if (supportsBufferAge()) {
-        eglQuerySurface(eglDisplay(), output.eglSurface, EGL_BUFFER_AGE_EXT, &output.bufferAge);
+        eglQuerySurface(eglDisplay(), output.gbmSurface->eglSurface(), EGL_BUFFER_AGE_EXT, &output.bufferAge);
     }
     return true;
 }
