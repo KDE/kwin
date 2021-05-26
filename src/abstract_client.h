@@ -521,7 +521,7 @@ public:
     /**
      * @c true only for @c ShadeNormal
      */
-    bool isShade() const {
+    bool isShade() const override {
         return shadeMode() == ShadeNormal;
     }
     ShadeMode shadeMode() const; // Prefer isShade()
@@ -918,7 +918,6 @@ Q_SIGNALS:
     void desktopChanged();
     void activitiesChanged(KWin::AbstractClient* client);
     void x11DesktopIdsChanged();
-    void shadeChanged();
     void minimizedChanged();
     void clientMinimized(KWin::AbstractClient* client, bool animate);
     void clientUnminimized(KWin::AbstractClient* client, bool animate);

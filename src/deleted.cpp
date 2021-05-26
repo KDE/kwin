@@ -25,6 +25,7 @@ Deleted::Deleted()
     , delete_refcount(1)
     , m_frame(XCB_WINDOW_NONE)
     , m_layer(UnknownLayer)
+    , m_shade(false)
     , m_minimized(false)
     , m_modal(false)
     , m_wasClient(false)
@@ -78,6 +79,7 @@ void Deleted::copyToDeleted(Toplevel* c)
     m_frame = c->frameId();
     m_type = c->windowType();
     m_windowRole = c->windowRole();
+    m_shade = c->isShade();
     if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
         cinfo->disable();
     if (AbstractClient *client = dynamic_cast<AbstractClient*>(c)) {

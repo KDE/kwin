@@ -40,6 +40,9 @@ public:
     Layer layer() const override {
         return m_layer;
     }
+    bool isShade() const override {
+        return m_shade;
+    }
     bool isMinimized() const {
         return m_minimized;
     }
@@ -113,6 +116,7 @@ private:
     QRect decoration_top;
     QRect decoration_bottom;
     Layer m_layer;
+    bool m_shade;
     bool m_minimized;
     bool m_modal;
     QList<AbstractClient*> m_mainClients;

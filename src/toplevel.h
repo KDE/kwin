@@ -562,7 +562,13 @@ public:
         return m_internalId;
     }
 
+    /**
+     * Returns @c true if the window is shaded; otherwise returns @c false.
+     */
+    virtual bool isShade() const { return false; }
+
 Q_SIGNALS:
+    void shadeChanged();
     void markedAsZombie();
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRegion& damage);

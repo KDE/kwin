@@ -836,9 +836,7 @@ bool Scene::Window::isOpaque() const
 
 bool Scene::Window::isShaded() const
 {
-    if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel))
-        return client->isShade();
-    return false;
+    return toplevel->isShade();
 }
 
 bool Scene::Window::isPaintingEnabled() const
