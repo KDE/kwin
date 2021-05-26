@@ -46,10 +46,12 @@ void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
 
     m_surfaceItem.reset(surfaceItem);
 
+    connect(toplevel, &Toplevel::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
     connect(toplevel, &Toplevel::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
     connect(toplevel, &Toplevel::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
 
     updateSurfacePosition();
+    updateSurfaceVisibility();
 }
 
 void WindowItem::updateSurfacePosition()
@@ -60,6 +62,11 @@ void WindowItem::updateSurfacePosition()
     const QRect frameGeometry = toplevel->frameGeometry();
 
     m_surfaceItem->setPosition(bufferGeometry.topLeft() - frameGeometry.topLeft());
+}
+
+void WindowItem::updateSurfaceVisibility()
+{
+    m_surfaceItem->setVisible(!window()->window()->isShade());
 }
 
 void WindowItem::setShadow(Shadow *shadow)

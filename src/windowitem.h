@@ -41,6 +41,7 @@ protected:
 private Q_SLOTS:
     void updateDecorationItem();
     void updateSurfacePosition();
+    void updateSurfaceVisibility();
 
 private:
     QScopedPointer<SurfaceItem> m_surfaceItem;

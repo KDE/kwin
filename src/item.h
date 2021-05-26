@@ -91,6 +91,9 @@ public:
      */
     void stackChildren(const QList<Item *> &children);
 
+    bool isVisible() const;
+    void setVisible(bool visible);
+
     void scheduleRepaint(const QRegion &region);
     void scheduleFrame();
     QRegion repaints(int screen) const;
@@ -128,7 +131,11 @@ private:
     void addChild(Item *item);
     void removeChild(Item *item);
     void updateBoundingRect();
+    void scheduleRepaintInternal(const QRegion &region);
     void reallocRepaints();
+
+    bool computeEffectiveVisibility() const;
+    void updateEffectiveVisibility();
 
     Scene::Window *m_window;
     QPointer<Item> m_parentItem;
@@ -138,6 +145,8 @@ private:
     int m_y = 0;
     int m_width = 0;
     int m_height = 0;
+    bool m_visible = true;
+    bool m_effectiveVisible = true;
     QVector<QRegion> m_repaints;
 
     friend class Scene::Window;

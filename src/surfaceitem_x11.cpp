@@ -122,10 +122,6 @@ QPointF SurfaceItemX11::mapToBuffer(const QPointF &point) const
 QRegion SurfaceItemX11::shape() const
 {
     const Toplevel *toplevel = window()->window();
-    if (window()->isShaded()) {
-        return QRegion();
-    }
-
     const QRect clipRect = toplevel->clientGeometry().translated(-toplevel->bufferGeometry().topLeft());
     const QRegion shape = toplevel->shapeRegion();
 

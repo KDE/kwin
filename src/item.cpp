@@ -126,6 +126,7 @@ void Item::setParentItem(Item *item)
     if (m_parentItem) {
         m_parentItem->addChild(this);
     }
+    updateEffectiveVisibility();
 }
 
 void Item::addChild(Item *item)
@@ -344,6 +345,13 @@ void Item::stackChildren(const QList<Item *> &children)
 
 void Item::scheduleRepaint(const QRegion &region)
 {
+    if (isVisible()) {
+        scheduleRepaintInternal(region);
+    }
+}
+
+void Item::scheduleRepaintInternal(const QRegion &region)
+{
     const QRegion globalRegion = mapToGlobal(region);
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
@@ -366,6 +374,9 @@ void Item::scheduleRepaint(const QRegion &region)
 
 void Item::scheduleFrame()
 {
+    if (!isVisible()) {
+        return;
+    }
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         const QRect geometry = mapToGlobal(rect());
         const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
@@ -414,6 +425,39 @@ void Item::reallocRepaints()
     }
 
     m_repaints.fill(infiniteRegion());
+}
+
+bool Item::isVisible() const
+{
+    return m_effectiveVisible;
+}
+
+void Item::setVisible(bool visible)
+{
+    if (m_visible != visible) {
+        m_visible = visible;
+        updateEffectiveVisibility();
+    }
+}
+
+bool Item::computeEffectiveVisibility() const
+{
+    return m_visible && (!m_parentItem || m_parentItem->isVisible());
+}
+
+void Item::updateEffectiveVisibility()
+{
+    const bool effectiveVisible = computeEffectiveVisibility();
+    if (m_effectiveVisible == effectiveVisible) {
+        return;
+    }
+
+    m_effectiveVisible = effectiveVisible;
+    scheduleRepaintInternal(boundingRect());
+
+    for (Item *childItem : qAsConst(m_childItems)) {
+        childItem->updateEffectiveVisibility();
+    }
 }
 
 } // namespace KWin
