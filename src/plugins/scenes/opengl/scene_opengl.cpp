@@ -1593,7 +1593,7 @@ QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
         frame = static_cast<PlatformOpenGLSurfaceTexture *>(item->pixmap()->platformTexture());
     }
 
-    if (frame && item->childItems().isEmpty()) {
+    if (frame && item->childItems().isEmpty() && frame->texture()) {
         return QSharedPointer<GLTexture>(new GLTexture(*frame->texture()));
     } else {
         auto effectWindow = window()->effectWindow();
