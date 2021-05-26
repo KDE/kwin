@@ -1464,8 +1464,6 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     const QMatrix4x4 modelViewProjection = modelViewProjectionMatrix(mask, data);
     const QMatrix4x4 mvpMatrix = modelViewProjection * windowMatrix;
 
-    bool useX11TextureClamp = false;
-
     GLShader *shader = data.shader;
     GLenum filter;
 
@@ -1474,7 +1472,6 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     } else {
         const bool isTransformed = mask & (Effect::PAINT_WINDOW_TRANSFORMED |
                                            Effect::PAINT_SCREEN_TRANSFORMED);
-        useX11TextureClamp = isTransformed;
         if (isTransformed && options->glSmoothScale() != 0) {
             filter = GL_LINEAR;
         } else {
@@ -1484,9 +1481,6 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
     if (!shader) {
         ShaderTraits traits = ShaderTrait::MapTexture;
-        if (useX11TextureClamp) {
-            traits |= ShaderTrait::ClampTexture;
-        }
 
         if (data.opacity() != 1.0 || data.brightness() != 1.0 || data.crossFadeProgress() != 1.0)
             traits |= ShaderTrait::Modulate;
@@ -1550,25 +1544,6 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
         renderNode.texture->setFilter(filter);
         renderNode.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         renderNode.texture->bind();
-
-        if (renderNode.leafType == ContentLeaf && useX11TextureClamp) {
-            // X11 windows are reparented to have their buffer in the middle of a larger texture
-            // holding the frame window.
-            // This code passes the texture geometry to the fragment shader
-            // any samples near the edge of the texture will be constrained to be
-            // at least half a pixel in bounds, meaning we don't bleed the transparent border
-            QRectF bufferContentRect = surfaceItem()->shape().boundingRect();
-            bufferContentRect.adjust(0.5, 0.5, -0.5, -0.5);
-            const QRect bufferGeometry = toplevel->bufferGeometry();
-
-            float leftClamp = bufferContentRect.left() / bufferGeometry.width();
-            float topClamp = bufferContentRect.top() / bufferGeometry.height();
-            float rightClamp = bufferContentRect.right() / bufferGeometry.width();
-            float bottomClamp = bufferContentRect.bottom() / bufferGeometry.height();
-            shader->setUniform(GLShader::TextureClamp, QVector4D({leftClamp, topClamp, rightClamp, bottomClamp}));
-        } else {
-            shader->setUniform(GLShader::TextureClamp, QVector4D({0, 0, 1, 1}));
-        }
 
         vbo->draw(region, primitiveType, renderNode.firstVertex,
                   renderNode.vertexCount, m_hardwareClipping);

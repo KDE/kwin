@@ -333,7 +333,6 @@ void GLShader::resolveLocations()
     mFloatLocation[Saturation]    = uniformLocation("saturation");
 
     mColorLocation[Color] = uniformLocation("geometryColor");
-    mVec4Location[TextureClamp] = uniformLocation("textureClamp");
 
     mLocationsResolved = true;
 }
@@ -856,21 +855,12 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     } else if (traits & ShaderTrait::UniformColor)
         stream << "uniform vec4 geometryColor;\n";
 
-    if (traits & ShaderTrait::ClampTexture) {
-        stream << "uniform vec4 textureClamp;\n";
-    }
-
     if (output != QByteArrayLiteral("gl_FragColor"))
         stream << "\nout vec4 " << output << ";\n";
 
     stream << "\nvoid main(void)\n{\n";
     if (traits & ShaderTrait::MapTexture) {
         stream << "vec2 texcoordC = texcoord0;\n";
-
-        if (traits & ShaderTrait::ClampTexture) {
-            stream << "texcoordC.x = clamp(texcoordC.x, textureClamp.x, textureClamp.z);\n";
-            stream << "texcoordC.y = clamp(texcoordC.y, textureClamp.y, textureClamp.w);\n";
-        }
 
         if (traits & (ShaderTrait::Modulate | ShaderTrait::AdjustSaturation)) {
             stream << "    vec4 texel = " << textureLookup << "(sampler, texcoordC);\n";
