@@ -11,7 +11,7 @@
 #define KWIN_WOBBLYWINDOWS_H
 
 // Include with base class for effects.
-#include <kwineffects.h>
+#include <kwindeformeffect.h>
 
 namespace KWin
 {
@@ -21,7 +21,7 @@ struct ParameterSet;
 /**
  * Effect which wobble windows
  */
-class WobblyWindowsEffect : public Effect
+class WobblyWindowsEffect : public DeformEffect
 {
     Q_OBJECT
     Q_PROPERTY(qreal stiffness READ stiffness)
@@ -45,7 +45,6 @@ public:
     void reconfigure(ReconfigureFlags) override;
     void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
@@ -114,6 +113,9 @@ public:
     bool isResizeWobble() const {
         return m_resizeWobble;
     }
+
+protected:
+    void deform(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads) override;
 
 public Q_SLOTS:
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);

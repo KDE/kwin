@@ -188,7 +188,7 @@ void WobblyWindowsEffect::reconfigure(ReconfigureFlags)
 
 bool WobblyWindowsEffect::supported()
 {
-    return effects->isOpenGLCompositing() && effects->animationsSupported();
+    return DeformEffect::supported() && effects->animationsSupported();
 }
 
 void WobblyWindowsEffect::setParameterSet(const ParameterSet& pset)
@@ -247,7 +247,6 @@ void WobblyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
     auto infoIt = windows.find(w);
     if (infoIt != windows.end()) {
         data.setTransformed();
-        data.quads = data.quads.makeRegularGrid(m_xTesselation, m_yTesselation);
 
         // We have to reset the clip region in order to render clients below
         // opaque wobbly windows.
@@ -266,9 +265,11 @@ void WobblyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+void WobblyWindowsEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
     if (!(mask & PAINT_SCREEN_TRANSFORMED) && windows.contains(w)) {
+        quads = quads.makeRegularGrid(m_xTesselation, m_yTesselation);
+
         WindowWobblyInfos& wwi = windows[w];
         int tx = w->frameGeometry().x();
         int ty = w->frameGeometry().y();
@@ -278,17 +279,17 @@ void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         double top = 0.0;
         double right = w->width();
         double bottom = w->height();
-        for (int i = 0; i < data.quads.count(); ++i) {
+        for (int i = 0; i < quads.count(); ++i) {
             for (int j = 0; j < 4; ++j) {
-                WindowVertex& v = data.quads[i][j];
+                WindowVertex& v = quads[i][j];
                 Pair uv = {v.x() / width, v.y() / height};
                 Pair newPos = computeBezierPoint(wwi, uv);
                 v.move(newPos.x - tx, newPos.y - ty);
             }
-            left   = qMin(left,   data.quads[i].left());
-            top    = qMin(top,    data.quads[i].top());
-            right  = qMax(right,  data.quads[i].right());
-            bottom = qMax(bottom, data.quads[i].bottom());
+            left   = qMin(left,   quads[i].left());
+            top    = qMin(top,    quads[i].top());
+            right  = qMax(right,  quads[i].right());
+            bottom = qMax(bottom, quads[i].bottom());
         }
         QRectF dirtyRect(
             left * data.xScale() + w->x() + data.xTranslation(),
@@ -299,9 +300,6 @@ void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         dirtyRect.adjust(-1.0, -1.0, 1.0, 1.0);
         m_updateRegion = m_updateRegion.united(dirtyRect.toRect());
     }
-
-    // Call the next effect.
-    effects->paintWindow(w, mask, region, data);
 }
 
 void WobblyWindowsEffect::postPaintScreen()
@@ -379,6 +377,7 @@ void WobblyWindowsEffect::startMovedResized(EffectWindow* w)
         WindowWobblyInfos new_wwi;
         initWobblyInfo(new_wwi, w->frameGeometry());
         windows[w] = new_wwi;
+        redirect(w);
     }
 
     WindowWobblyInfos& wwi = windows[w];
@@ -933,6 +932,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
     if (wwi.status != Moving && acc_sum < m_stopAcceleration && vel_sum < m_stopVelocity) {
         freeWobblyInfo(wwi);
         windows.remove(w);
+        unredirect(w);
         if (windows.isEmpty())
             effects->addRepaintFull();
         return false;
