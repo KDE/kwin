@@ -362,7 +362,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when the Effect is constructed.
      */
-    Effect();
+    Effect(QObject *parent = nullptr);
     /**
      * Destructs the Effect object.
      *

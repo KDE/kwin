@@ -530,7 +530,8 @@ EffectScreen *ScreenPaintData::screen() const
 // Effect
 //****************************************
 
-Effect::Effect()
+Effect::Effect(QObject *parent)
+    : QObject(parent)
 {
 }
 
