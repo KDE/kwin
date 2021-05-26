@@ -10,7 +10,7 @@
 #ifndef KWIN_MAGICLAMP_H
 #define KWIN_MAGICLAMP_H
 
-#include <kwineffects.h>
+#include <kwindeformeffect.h>
 
 namespace KWin
 {
@@ -21,8 +21,7 @@ struct MagicLampAnimation
     std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
 };
 
-class MagicLampEffect
-    : public Effect
+class MagicLampEffect : public DeformEffect
 {
     Q_OBJECT
 
@@ -32,7 +31,6 @@ public:
     void reconfigure(ReconfigureFlags) override;
     void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
@@ -42,6 +40,9 @@ public:
 
     static bool supported();
 
+protected:
+    void deform(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
+
 public Q_SLOTS:
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowMinimized(KWin::EffectWindow *w);
@@ -49,7 +50,7 @@ public Q_SLOTS:
 
 private:
     std::chrono::milliseconds m_duration;
-    QHash<const EffectWindow *, MagicLampAnimation> m_animations;
+    QHash<EffectWindow *, MagicLampAnimation> m_animations;
 
     enum IconPosition {
         Top,

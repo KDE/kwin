@@ -27,7 +27,7 @@ MagicLampEffect::MagicLampEffect()
 
 bool MagicLampEffect::supported()
 {
-    return effects->isOpenGLCompositing() && effects->animationsSupported();
+    return DeformEffect::supported() && effects->animationsSupported();
 }
 
 void MagicLampEffect::reconfigure(ReconfigureFlags)
@@ -70,15 +70,16 @@ void MagicLampEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, 
     if (m_animations.contains(w)) {
         // We'll transform this window
         data.setTransformed();
-        data.quads = data.quads.makeGrid(40);
         w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
     }
 
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+void MagicLampEffect::deform(EffectWindow* w, int mask, WindowPaintData& data, WindowQuadList &quads)
 {
+    Q_UNUSED(mask)
+    Q_UNUSED(data)
     auto animationIt = m_animations.constFind(w);
     if (animationIt != m_animations.constEnd()) {
         // 0 = not minimized, 1 = fully minimized
@@ -190,8 +191,7 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                                                                             quad[2]._SET_B_(quad[2]._B_() + offset[_O2_]);\
                                                                             quad[3]._SET_B_(quad[3]._B_() + offset[_O3_])
 
-        WindowQuadList newQuads;
-        newQuads.reserve(data.quads.count());
+        quads = quads.makeGrid(40);
         float quadFactor;   // defines how fast a quad is vertically moved: y coordinates near to window top are slowed down
                             // it is used as quadFactor^3/windowHeight^3
                             // quadFactor is the y position of the quad but is changed towards becomming the window height
@@ -209,7 +209,7 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
 
         if (position == Bottom) {
             float height_cube = float(geo.height()) * float(geo.height()) * float(geo.height());
-            foreach (WindowQuad quad, data.quads) { // krazy:exclude=foreach
+            for (WindowQuad &quad : quads) {
 
                 if (quad[0].y() != lastQuad[0].y() || quad[2].y() != lastQuad[2].y()) {
                     quadFactor = quad[0].y() + (geo.height() - quad[0].y()) * progress;
@@ -224,12 +224,10 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                 SANITIZE_PROGRESS;
                 // x values are moved towards the center of the icon
                 SET_QUADS(setX, x, width, setY, y, 0,0,1,1);
-
-                newQuads.append(quad);
             }
         } else if (position == Top) {
             float height_cube = float(geo.height()) * float(geo.height()) * float(geo.height());
-            foreach (WindowQuad quad, data.quads) { // krazy:exclude=foreach
+            for (WindowQuad &quad : quads) {
 
                 if (quad[0].y() != lastQuad[0].y() || quad[2].y() != lastQuad[2].y()) {
                     quadFactor = geo.height() - quad[0].y() + (quad[0].y()) * progress;
@@ -247,12 +245,10 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                 SANITIZE_PROGRESS;
                 // x values are moved towards the center of the icon
                 SET_QUADS(setX, x, width, setY, y, 0,0,1,1);
-
-                newQuads.append(quad);
             }
         } else if (position == Left) {
             float width_cube = float(geo.width()) * float(geo.width()) * float(geo.width());
-            foreach (WindowQuad quad, data.quads) { // krazy:exclude=foreach
+            for (WindowQuad &quad : quads) {
 
                 if (quad[0].x() != lastQuad[0].x() || quad[1].x() != lastQuad[1].x()) {
                     quadFactor = geo.width() - quad[0].x() + (quad[0].x()) * progress;
@@ -270,12 +266,10 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                 SANITIZE_PROGRESS;
                 // y values are moved towards the center of the icon
                 SET_QUADS(setY, y, height, setX, x, 0,1,1,0);
-
-                newQuads.append(quad);
             }
         } else if (position == Right) {
             float width_cube = float(geo.width()) * float(geo.width()) * float(geo.width());
-            foreach (WindowQuad quad, data.quads) { // krazy:exclude=foreach
+            for (WindowQuad &quad : quads) {
 
                 if (quad[0].x() != lastQuad[0].x() || quad[1].x() != lastQuad[1].x()) {
                     quadFactor = quad[0].x() + (geo.width() - quad[0].x()) * progress;
@@ -290,15 +284,9 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                 SANITIZE_PROGRESS;
                 // y values are moved towards the center of the icon
                 SET_QUADS(setY, y, height, setX, x, 0,1,1,0);
-
-                newQuads.append(quad);
             }
         }
-        data.quads = newQuads;
     }
-
-    // Call the next effect.
-    effects->paintWindow(w, mask, region, data);
 }
 
 void MagicLampEffect::postPaintScreen()
@@ -306,6 +294,7 @@ void MagicLampEffect::postPaintScreen()
     auto animationIt = m_animations.begin();
     while (animationIt != m_animations.end()) {
         if ((*animationIt).timeLine.done()) {
+            unredirect(animationIt.key());
             animationIt = m_animations.erase(animationIt);
         } else {
             ++animationIt;
@@ -338,6 +327,7 @@ void MagicLampEffect::slotWindowMinimized(EffectWindow* w)
         animation.timeLine.setEasingCurve(QEasingCurve::Linear);
     }
 
+    redirect(w);
     effects->addRepaintFull();
 }
 
@@ -356,6 +346,7 @@ void MagicLampEffect::slotWindowUnminimized(EffectWindow* w)
         animation.timeLine.setEasingCurve(QEasingCurve::Linear);
     }
 
+    redirect(w);
     effects->addRepaintFull();
 }
 
