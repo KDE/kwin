@@ -199,6 +199,8 @@ void SurfacePixmapWayland::setBuffer(KWaylandServer::BufferInterface *buffer)
 SurfaceItemXwayland::SurfaceItemXwayland(Scene::Window *window, Item *parent)
     : SurfaceItemWayland(window->window()->surface(), window, parent)
 {
+    const Toplevel *toplevel = window->window();
+    connect(toplevel, &Toplevel::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);
 }
 
 QRegion SurfaceItemXwayland::shape() const
