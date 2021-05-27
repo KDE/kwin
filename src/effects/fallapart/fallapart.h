@@ -10,7 +10,7 @@
 #ifndef KWIN_FALLAPART_H
 #define KWIN_FALLAPART_H
 
-#include <kwineffects.h>
+#include <kwindeformeffect.h>
 
 namespace KWin
 {
@@ -21,8 +21,7 @@ struct FallApartAnimation
     qreal progress = 0;
 };
 
-class FallApartEffect
-    : public Effect
+class FallApartEffect : public DeformEffect
 {
     Q_OBJECT
     Q_PROPERTY(int blockSize READ configuredBlockSize)
@@ -31,7 +30,6 @@ public:
     void reconfigure(ReconfigureFlags) override;
     void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
@@ -45,6 +43,9 @@ public:
     }
 
     static bool supported();
+
+protected:
+    void deform(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads) override;
 
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *c);
