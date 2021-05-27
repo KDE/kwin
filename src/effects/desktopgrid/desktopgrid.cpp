@@ -291,18 +291,6 @@ void DesktopGridEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data
                 w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
             data.mask |= PAINT_WINDOW_TRANSFORMED;
 
-            // Split windows at screen edges
-            for (int screen = 0; screen < effects->numScreens(); screen++) {
-                QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
-                if (w->x() < screenGeom.x())
-                    data.quads = data.quads.splitAtX(screenGeom.x() - w->x());
-                if (w->x() + w->width() > screenGeom.x() + screenGeom.width())
-                    data.quads = data.quads.splitAtX(screenGeom.x() + screenGeom.width() - w->x());
-                if (w->y() < screenGeom.y())
-                    data.quads = data.quads.splitAtY(screenGeom.y() - w->y());
-                if (w->y() + w->height() > screenGeom.y() + screenGeom.height())
-                    data.quads = data.quads.splitAtY(screenGeom.y() + screenGeom.height() - w->y());
-            }
             if (windowMove && wasWindowMove && windowMove->findModal() == w)
                 w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
         } else
@@ -329,37 +317,22 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
             QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
 
             QRectF transformedGeo = w->frameGeometry();
-            // Display all quads on the same screen on the same pass
-            WindowQuadList screenQuads;
-            bool quadsAdded = false;
             if (isUsingPresentWindows()) {
                 WindowMotionManager& manager = m_managers[(paintingDesktop-1)*(effects->numScreens())+screen ];
                 if (manager.isManaging(w)) {
-                    foreach (const WindowQuad & quad, data.quads)
-                        screenQuads.append(quad);
                     transformedGeo = manager.transformedGeometry(w);
-                    quadsAdded = true;
                     if (!manager.areWindowsMoving() && timeline.currentValue() == 1.0)
                         mask |= PAINT_WINDOW_LANCZOS;
-                } else if (w->screen() != screen)
-                    quadsAdded = true; // we don't want parts of overlapping windows on the other screen
-                if (w->isDesktop())
-                    quadsAdded = false;
-            }
-            if (!quadsAdded) {
-                foreach (const WindowQuad & quad, data.quads) {
-                    QRect quadRect(
-                        w->x() + quad.left(), w->y() + quad.top(),
-                        quad.right() - quad.left(), quad.bottom() - quad.top()
-                    );
-                    if (quadRect.intersects(screenGeom))
-                        screenQuads.append(quad);
+                } else if (w->screen() != screen) {
+                    continue; // we don't want parts of overlapping windows on the other screen
                 }
-            }
-            if (screenQuads.isEmpty())
+                if (w->isDesktop() && !transformedGeo.intersects(screenGeom)) {
+                    continue;
+                }
+            } else if (!transformedGeo.intersects(screenGeom)) {
                 continue; // Nothing is being displayed, don't bother
+            }
             WindowPaintData d = data;
-            d.quads = screenQuads;
 
             QPointF newPos = scalePos(transformedGeo.topLeft().toPoint(), paintingDesktop, screen);
             double progress = timeline.currentValue();
