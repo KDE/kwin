@@ -529,9 +529,9 @@ private:
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
 
     QMargins m_clientFrameExtents;
-    QRect m_bufferGeometryBeforeUpdateBlocking;
-    QRect m_frameGeometryBeforeUpdateBlocking;
-    QRect m_clientGeometryBeforeUpdateBlocking;
+    QRect m_lastBufferGeometry;
+    QRect m_lastFrameGeometry;
+    QRect m_lastClientGeometry;
     QScopedPointer<X11DecorationRenderer> m_decorationRenderer;
 };
 

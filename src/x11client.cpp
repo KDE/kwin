@@ -4069,9 +4069,9 @@ void X11Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
     m_bufferGeometry = frameRectToBufferRect(frameGeometry);
 
     if (pendingMoveResizeMode() == MoveResizeMode::None &&
-            m_bufferGeometryBeforeUpdateBlocking == m_bufferGeometry &&
-            m_frameGeometryBeforeUpdateBlocking == m_frameGeometry &&
-            m_clientGeometryBeforeUpdateBlocking == m_clientGeometry) {
+            m_lastBufferGeometry == m_bufferGeometry &&
+            m_lastFrameGeometry == m_frameGeometry &&
+            m_lastClientGeometry == m_clientGeometry) {
         return;
     }
     if (areGeometryUpdatesBlocked()) {
@@ -4079,16 +4079,16 @@ void X11Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
         return;
     }
 
-    const QRect oldBufferGeometry = m_bufferGeometryBeforeUpdateBlocking;
-    const QRect oldFrameGeometry = m_frameGeometryBeforeUpdateBlocking;
-    const QRect oldClientGeometry = m_clientGeometryBeforeUpdateBlocking;
+    const QRect oldBufferGeometry = m_lastBufferGeometry;
+    const QRect oldFrameGeometry = m_lastFrameGeometry;
+    const QRect oldClientGeometry = m_lastClientGeometry;
 
     updateServerGeometry();
     updateWindowRules(Rules::Position|Rules::Size);
 
-    m_bufferGeometryBeforeUpdateBlocking = m_bufferGeometry;
-    m_frameGeometryBeforeUpdateBlocking = m_frameGeometry;
-    m_clientGeometryBeforeUpdateBlocking = m_clientGeometry;
+    m_lastBufferGeometry = m_bufferGeometry;
+    m_lastFrameGeometry = m_frameGeometry;
+    m_lastClientGeometry = m_clientGeometry;
 
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
@@ -4107,11 +4107,11 @@ void X11Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
 
 void X11Client::updateServerGeometry()
 {
-    const QRect oldBufferGeometry = m_bufferGeometryBeforeUpdateBlocking;
+    const QRect oldBufferGeometry = m_lastBufferGeometry;
 
     // Compute the old client rect, the client geometry is always inside the buffer geometry.
-    QRect oldClientRect = m_clientGeometryBeforeUpdateBlocking;
-    oldClientRect.translate(-m_bufferGeometryBeforeUpdateBlocking.topLeft());
+    QRect oldClientRect = m_lastClientGeometry;
+    oldClientRect.translate(-m_lastBufferGeometry.topLeft());
 
     if (oldBufferGeometry.size() != m_bufferGeometry.size() ||
             oldClientRect != QRect(clientPos(), clientSize())) {
