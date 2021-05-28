@@ -2276,6 +2276,7 @@ public:
      * @since 5.18
      */
     virtual QRect bufferGeometry() const = 0;
+    virtual QRect clientGeometry() const = 0;
     /**
      * Geometry of the window including decoration and potentially shadows.
      * May be different from geometry() if the window has a shadow.

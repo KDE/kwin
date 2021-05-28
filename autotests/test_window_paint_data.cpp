@@ -104,6 +104,9 @@ public:
     QRect bufferGeometry() const override {
         return QRect();
     }
+    QRect clientGeometry() const override {
+        return QRect();
+    }
     int screen() const override {
         return 0;
     }

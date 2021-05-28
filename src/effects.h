@@ -421,6 +421,7 @@ public:
     QRect geometry() const override;
     QRect frameGeometry() const override;
     QRect bufferGeometry() const override;
+    QRect clientGeometry() const override;
 
     QString caption() const override;
 
