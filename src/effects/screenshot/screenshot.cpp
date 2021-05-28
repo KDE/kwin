@@ -238,50 +238,23 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
     EffectWindow *window = screenshot->window;
 
     WindowPaintData d(window);
-    double left = 0;
-    double top = 0;
-    double right = window->width();
-    double bottom = window->height();
-    if (window->hasDecoration() && (screenshot->flags & ScreenShotIncludeDecoration)) {
-        for (const WindowQuad &quad : qAsConst(d.quads)) {
-            // we need this loop to include the decoration padding
-            left = qMin(left, quad.left());
-            top = qMin(top, quad.top());
-            right = qMax(right, quad.right());
-            bottom = qMax(bottom, quad.bottom());
-        }
-    } else if (window->hasDecoration()) {
-        WindowQuadList newQuads;
-        left = window->width();
-        top = window->height();
-        right = 0;
-        bottom = 0;
-        for (const WindowQuad &quad : qAsConst(d.quads)) {
-            if (quad.type() == WindowQuadContents) {
-                newQuads << quad;
-                left = qMin(left, quad.left());
-                top = qMin(top, quad.top());
-                right = qMax(right, quad.right());
-                bottom = qMax(bottom, quad.bottom());
-            }
-        }
-        d.quads = newQuads;
+    QRect geometry = window->expandedGeometry();
+    if (window->hasDecoration() && !(screenshot->flags & ScreenShotIncludeDecoration)) {
+        geometry = window->clientGeometry();
     }
-    const int width = right - left;
-    const int height = bottom - top;
     bool validTarget = true;
     QScopedPointer<GLTexture> offscreenTexture;
     QScopedPointer<GLRenderTarget> target;
     if (effects->isOpenGLCompositing()) {
-        offscreenTexture.reset(new GLTexture(GL_RGBA8, width, height));
+        offscreenTexture.reset(new GLTexture(GL_RGBA8, geometry.size()));
         offscreenTexture->setFilter(GL_LINEAR);
         offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         target.reset(new GLRenderTarget(*offscreenTexture));
         validTarget = target->valid();
     }
     if (validTarget) {
-        d.setXTranslation(-window->x() - left);
-        d.setYTranslation(-window->y() - top);
+        d.setXTranslation(-geometry.x());
+        d.setYTranslation(-geometry.y());
 
         // render window into offscreen texture
         int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
@@ -293,31 +266,32 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
             glClearColor(0.0, 0.0, 0.0, 1.0);
 
             QMatrix4x4 projection;
-            projection.ortho(QRect(0, 0, offscreenTexture->width(), offscreenTexture->height()));
+            projection.ortho(QRect(0, 0, geometry.width(), geometry.height()));
             d.setProjectionMatrix(projection);
 
             effects->drawWindow(window, mask, infiniteRegion(), d);
 
             // copy content from framebuffer into image
-            img = QImage(QSize(width, height), QImage::Format_ARGB32);
-            glReadnPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
+            img = QImage(offscreenTexture->size(), QImage::Format_ARGB32);
+            glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
                           static_cast<GLvoid *>(img.bits()));
             GLRenderTarget::popRenderTarget();
-            convertFromGLImage(img, width, height);
+            convertFromGLImage(img, img.width(), img.height());
         }
 #if defined(KWIN_HAVE_XRENDER_COMPOSITING)
         if (effects->compositingType() == XRenderCompositing) {
             setXRenderOffscreen(true);
-            effects->drawWindow(window, mask, QRegion(0, 0, width, height), d);
+            effects->drawWindow(window, mask, QRegion(0, 0, geometry.width(), geometry.height()), d);
             if (xRenderOffscreenTarget()) {
-                img = xPictureToImage(xRenderOffscreenTarget(), QRect(0, 0, width, height));
+                img = xPictureToImage(xRenderOffscreenTarget(),
+                                      QRect(0, 0, geometry.width(), geometry.height()));
             }
             setXRenderOffscreen(false);
         }
 #endif
 
         if (screenshot->flags & ScreenShotIncludeCursor) {
-            grabPointerImage(img, window->x() + left, window->y() + top);
+            grabPointerImage(img, geometry.x(), geometry.y());
         }
 
         screenshot->promise.reportResult(img);
