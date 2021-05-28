@@ -4109,7 +4109,12 @@ void X11Client::updateServerGeometry()
 {
     const QRect oldBufferGeometry = m_bufferGeometryBeforeUpdateBlocking;
 
-    if (oldBufferGeometry.size() != m_bufferGeometry.size()) {
+    // Compute the old client rect, the client geometry is always inside the buffer geometry.
+    QRect oldClientRect = m_clientGeometryBeforeUpdateBlocking;
+    oldClientRect.translate(-m_bufferGeometryBeforeUpdateBlocking.topLeft());
+
+    if (oldBufferGeometry.size() != m_bufferGeometry.size() ||
+            oldClientRect != QRect(clientPos(), clientSize())) {
         resizeDecoration();
         // If the client is being interactively resized, then the frame window, the wrapper window,
         // and the client window have correct geometry at this point, so we don't have to configure
