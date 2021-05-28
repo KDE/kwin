@@ -239,14 +239,20 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
 
     WindowPaintData d(window);
     QRect geometry = window->expandedGeometry();
+    qreal devicePixelRatio = 1;
     if (window->hasDecoration() && !(screenshot->flags & ScreenShotIncludeDecoration)) {
         geometry = window->clientGeometry();
+    }
+    if (screenshot->flags & ScreenShotNativeResolution) {
+        if (const EffectScreen *screen = effects->findScreen(window->screen())) {
+            devicePixelRatio = screen->devicePixelRatio();
+        }
     }
     bool validTarget = true;
     QScopedPointer<GLTexture> offscreenTexture;
     QScopedPointer<GLRenderTarget> target;
     if (effects->isOpenGLCompositing()) {
-        offscreenTexture.reset(new GLTexture(GL_RGBA8, geometry.size()));
+        offscreenTexture.reset(new GLTexture(GL_RGBA8, geometry.size() * devicePixelRatio));
         offscreenTexture->setFilter(GL_LINEAR);
         offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         target.reset(new GLRenderTarget(*offscreenTexture));
@@ -273,6 +279,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
 
             // copy content from framebuffer into image
             img = QImage(offscreenTexture->size(), QImage::Format_ARGB32);
+            img.setDevicePixelRatio(devicePixelRatio);
             glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
                           static_cast<GLvoid *>(img.bits()));
             GLRenderTarget::popRenderTarget();
