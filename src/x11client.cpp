@@ -4090,8 +4090,6 @@ void X11Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
     m_frameGeometryBeforeUpdateBlocking = m_frameGeometry;
     m_clientGeometryBeforeUpdateBlocking = m_clientGeometry;
 
-    // keep track of old maximize mode
-    // to detect changes
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
 
