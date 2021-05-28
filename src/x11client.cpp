@@ -4066,9 +4066,6 @@ void X11Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
         m_clientGeometry = frameRectToClientRect(frameGeometry);
     }
     const QRect bufferGeometry = frameRectToBufferRect(frameGeometry);
-    if (!areGeometryUpdatesBlocked() && frameGeometry != rules()->checkGeometry(frameGeometry)) {
-        qCDebug(KWIN_CORE) << "forced geometry fail:" << frameGeometry << ":" << rules()->checkGeometry(frameGeometry);
-    }
     m_frameGeometry = frameGeometry;
     if (m_bufferGeometry == bufferGeometry && pendingMoveResizeMode() == MoveResizeMode::None) {
         return;
