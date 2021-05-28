@@ -4065,12 +4065,15 @@ void X11Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
     } else {
         m_clientGeometry = frameRectToClientRect(frameGeometry);
     }
-    const QRect bufferGeometry = frameRectToBufferRect(frameGeometry);
     m_frameGeometry = frameGeometry;
-    if (m_bufferGeometry == bufferGeometry && pendingMoveResizeMode() == MoveResizeMode::None) {
+    m_bufferGeometry = frameRectToBufferRect(frameGeometry);
+
+    if (pendingMoveResizeMode() == MoveResizeMode::None &&
+            m_bufferGeometryBeforeUpdateBlocking == m_bufferGeometry &&
+            m_frameGeometryBeforeUpdateBlocking == m_frameGeometry &&
+            m_clientGeometryBeforeUpdateBlocking == m_clientGeometry) {
         return;
     }
-    m_bufferGeometry = bufferGeometry;
     if (areGeometryUpdatesBlocked()) {
         setPendingMoveResizeMode(mode);
         return;
