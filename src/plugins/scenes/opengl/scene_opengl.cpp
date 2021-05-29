@@ -2650,7 +2650,9 @@ void SceneOpenGLDecorationRenderer::render()
         renderToPainter(&painter, geo);
         painter.end();
 
-        clamp(image, QRect(viewport.topLeft(), viewport.size() * devicePixelRatio));
+        const QRect viewportScaled(viewport.topLeft() * devicePixelRatio, viewport.size() * devicePixelRatio);
+        const bool isIntegerScaling = qFuzzyCompare(devicePixelRatio, std::ceil(devicePixelRatio));
+        clamp(image, isIntegerScaling ? viewportScaled : viewportScaled.marginsRemoved({1, 1, 1, 1}));
 
         if (rotated) {
             // TODO: get this done directly when rendering to the image
