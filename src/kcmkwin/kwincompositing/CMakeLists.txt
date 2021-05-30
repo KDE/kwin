@@ -11,7 +11,7 @@ set(kwincompositing_SRC
 
 kconfig_add_kcfg_files(kwincompositing_SRC kwincompositing_setting.kcfgc GENERATE_MOC)
 
-qt5_add_dbus_interface(kwincompositing_SRC
+qt_add_dbus_interface(kwincompositing_SRC
     ${KWin_SOURCE_DIR}/src/org.kde.kwin.Compositing.xml kwin_compositing_interface
 )
 

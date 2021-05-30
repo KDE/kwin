@@ -3,7 +3,7 @@ configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/lib
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h)
 
 set(kwin_effects_dbus_xml ${CMAKE_CURRENT_SOURCE_DIR}/org.kde.kwin.Effects.xml)
-qt5_add_dbus_interface(effects_interface_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
+qt_add_dbus_interface(effects_interface_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 add_library(KWinEffectsInterface STATIC ${effects_interface_SRCS})
 target_link_libraries(KWinEffectsInterface Qt::DBus)
 
@@ -152,22 +152,22 @@ set(kwin_SRCS
     xwl/xwayland_interface.cpp
 )
 
-qt5_add_dbus_adaptor(kwin_SRCS scripting/org.kde.kwin.Script.xml scripting/scripting.h KWin::AbstractScript)
+qt_add_dbus_adaptor(kwin_SRCS scripting/org.kde.kwin.Script.xml scripting/scripting.h KWin::AbstractScript)
 
 kconfig_add_kcfg_files(kwin_SRCS settings.kcfgc)
 kconfig_add_kcfg_files(kwin_SRCS rulesettings.kcfgc)
 kconfig_add_kcfg_files(kwin_SRCS rulebooksettingsbase.kcfgc)
 
-qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface)
-qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.Compositing.xml dbusinterface.h KWin::CompositorDBusInterface)
-qt5_add_dbus_adaptor(kwin_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl)
-qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
-qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
-qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin::PluginManagerDBusInterface)
+qt_add_dbus_adaptor(kwin_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface)
+qt_add_dbus_adaptor(kwin_SRCS org.kde.kwin.Compositing.xml dbusinterface.h KWin::CompositorDBusInterface)
+qt_add_dbus_adaptor(kwin_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl)
+qt_add_dbus_adaptor(kwin_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
+qt_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
+qt_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin::PluginManagerDBusInterface)
 
-qt5_add_dbus_interface(kwin_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface)
-qt5_add_dbus_interface(kwin_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/org.kde.screensaver.xml kscreenlocker_interface)
-qt5_add_dbus_interface(kwin_SRCS org.kde.kappmenu.xml appmenu_interface)
+qt_add_dbus_interface(kwin_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface)
+qt_add_dbus_interface(kwin_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/org.kde.screensaver.xml kscreenlocker_interface)
+qt_add_dbus_interface(kwin_SRCS org.kde.kappmenu.xml appmenu_interface)
 
 ki18n_wrap_ui(kwin_SRCS
     debug_console.ui

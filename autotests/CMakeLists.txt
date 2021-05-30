@@ -256,7 +256,7 @@ set(testScreenEdges_SRCS
     test_screen_edges.cpp
 )
 kconfig_add_kcfg_files(testScreenEdges_SRCS ../src/settings.kcfgc)
-qt5_add_dbus_interface(testScreenEdges_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface )
+qt_add_dbus_interface(testScreenEdges_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface )
 
 add_executable(testScreenEdges ${testScreenEdges_SRCS})
 set_target_properties(testScreenEdges PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")

@@ -9,7 +9,7 @@ set(kcm_screenedges_SRCS
     kwinscreenedgeconfigform.cpp
 )
 
-qt5_add_dbus_interface(kcm_screenedges_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
+qt_add_dbus_interface(kcm_screenedges_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
 
 set(kcm_kwinscreenedges_PART_SRCS main.cpp ${kcm_screenedges_SRCS})
 

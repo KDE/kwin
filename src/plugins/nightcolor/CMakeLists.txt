@@ -15,7 +15,7 @@ ecm_qt_declare_logging_category(nightcolor_SOURCES
 )
 
 kconfig_add_kcfg_files(nightcolor_SOURCES nightcolorsettings.kcfgc)
-qt5_add_dbus_adaptor(nightcolor_SOURCES org.kde.kwin.ColorCorrect.xml
+qt_add_dbus_adaptor(nightcolor_SOURCES org.kde.kwin.ColorCorrect.xml
     nightcolordbusinterface.h KWin::NightColorDBusInterface)
 
 add_library(KWinNightColorPlugin SHARED ${nightcolor_SOURCES})

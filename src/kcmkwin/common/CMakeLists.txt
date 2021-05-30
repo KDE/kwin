@@ -7,7 +7,7 @@ set(kcmkwincommon_SRC
     effectsmodel.cpp
 )
 
-qt5_add_dbus_interface(kcmkwincommon_SRC
+qt_add_dbus_interface(kcmkwincommon_SRC
     ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface
 )
 
