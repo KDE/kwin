@@ -28,12 +28,13 @@
 #include <gbm.h>
 #include <unistd.h>
 #include <errno.h>
+#include <egl_dmabuf.h>
+#include <drm_fourcc.h>
 // kwayland server
 #include "KWaylandServer/surface_interface.h"
 #include "KWaylandServer/buffer_interface.h"
 #include "KWaylandServer/linuxdmabuf_v1_interface.h"
-#include <egl_dmabuf.h>
-#include <drm_fourcc.h>
+#include "KWaylandServer/clientconnection.h"
 
 namespace KWin
 {
@@ -691,6 +692,9 @@ void EglGbmBackend::setViewport(const Output &output) const
 QRegion EglGbmBackend::beginFrame(int screenId)
 {
     Output &output = m_outputs[screenId];
+    if (output.surfaceInterface) {
+        qCDebug(KWIN_DRM) << "Direct scanout stopped on output" << output.output->name();
+    }
     output.surfaceInterface = nullptr;
     if (isPrimary()) {
         return prepareRenderingForOutput(output);
@@ -819,8 +823,18 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
         damage = output.output->geometry();
     }
     output.buffer = QSharedPointer<DrmGbmBuffer>::create(m_gpu, importedBuffer, buffer);
+    auto oldSurface = output.surfaceInterface;
     output.surfaceInterface = surface;
-    return presentOnOutput(output, damage);
+    if (presentOnOutput(output, damage)) {
+        if (oldSurface != surface) {
+            auto path = surface->client()->executablePath();
+            qCDebug(KWIN_DRM).nospace() << "Direct scanout starting on output " << output.output->name() << " for application \"" << path << "\"";
+        }
+        return true;
+    } else {
+        output.surfaceInterface = nullptr;
+        return false;
+    }
 }
 
 QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *abstractOutput) const
