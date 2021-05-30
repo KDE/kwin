@@ -207,19 +207,6 @@ SubSurfaceInterface::SubSurfaceInterface(SurfaceInterface *surface, SurfaceInter
     surfacePrivate->subSurface = this;
     parentPrivate->addChild(this);
 
-    // copy current state to subSurfacePending state
-    // it's the reference for all new pending state which needs to be committed
-    surfacePrivate->cached = surfacePrivate->current;
-    surfacePrivate->cached.blurIsSet = false;
-    surfacePrivate->cached.bufferIsSet = false;
-    surfacePrivate->cached.childrenChanged = false;
-    surfacePrivate->cached.contrastIsSet = false;
-    surfacePrivate->cached.frameCallbacks.clear();
-    surfacePrivate->cached.inputIsSet = false;
-    surfacePrivate->cached.opaqueIsSet = false;
-    surfacePrivate->cached.shadowIsSet = false;
-    surfacePrivate->cached.slideIsSet = false;
-
     connect(surface, &SurfaceInterface::destroyed, this, [this]() { delete this; });
 }
 
