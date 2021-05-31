@@ -67,3 +67,9 @@ Id=remove-cover-switch-effect
 File=kwinrc
 Group=TabBox,TabBoxAlternative
 Script=kwin-5.23-remove-cover-switch.py,python3
+
+# Remove the Desktop Cube Animation effect
+Id=remove-cubeslide-effect
+File=kwinrc
+Group=Plugins
+Script=kwin-5.23-remove-cubeslide.py,python3

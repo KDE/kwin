@@ -92,7 +92,6 @@ void DesktopSwitchingAnimationTest::testSwitchDesktops_data()
 {
     QTest::addColumn<QString>("effectName");
 
-    QTest::newRow("Desktop Cube Animation") << QStringLiteral("cubeslide");
     QTest::newRow("Fade Desktop")           << QStringLiteral("kwin4_effect_fadedesktop");
     QTest::newRow("Slide")                  << QStringLiteral("slide");
 }

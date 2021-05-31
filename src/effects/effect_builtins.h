@@ -26,7 +26,6 @@ enum class BuiltInEffect
     Blur,
     ColorPicker,
     Contrast,
-    CubeSlide,
     DesktopGrid,
     DimInactive,
     FallApart,

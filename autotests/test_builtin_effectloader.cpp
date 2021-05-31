@@ -73,7 +73,6 @@ void TestBuiltInEffectLoader::testHasEffect_data()
     QTest::newRow("case sensitive")                 << QStringLiteral("BlUR")              << true;
     QTest::newRow("Colorpicker")                    << QStringLiteral("colorpicker")       << true;
     QTest::newRow("Contrast")                       << QStringLiteral("contrast")          << true;
-    QTest::newRow("CubeSlide")                      << QStringLiteral("cubeslide")         << true;
     QTest::newRow("DesktopGrid")                    << QStringLiteral("desktopgrid")       << true;
     QTest::newRow("DimInactive")                    << QStringLiteral("diminactive")       << true;
     QTest::newRow("FallApart")                      << QStringLiteral("fallapart")         << true;
@@ -124,7 +123,6 @@ void TestBuiltInEffectLoader::testKnownEffects()
     expectedEffects << QStringLiteral("blur")
                     << QStringLiteral("colorpicker")
                     << QStringLiteral("contrast")
-                    << QStringLiteral("cubeslide")
                     << QStringLiteral("desktopgrid")
                     << QStringLiteral("diminactive")
                     << QStringLiteral("fallapart")
@@ -183,9 +181,6 @@ void TestBuiltInEffectLoader::testSupported_data()
     QTest::newRow("Contrast")                       << QStringLiteral("contrast")          << false << xc << true;
     // fails for GL as it does proper tests on what's supported and doesn't just check whether it's GL
     QTest::newRow("Contrast-GL")                    << QStringLiteral("contrast")          << false << oc << true;
-    QTest::newRow("CubeSlide")                      << QStringLiteral("cubeslide")         << false << xc << true;
-    QTest::newRow("CubeSlide-GL")                   << QStringLiteral("cubeslide")         << true  << oc << true;
-    QTest::newRow("CubeSlide-GL-no-anim")           << QStringLiteral("cubeslide")         << false << oc << false;
     QTest::newRow("DesktopGrid")                    << QStringLiteral("desktopgrid")       << true  << xc << true;
     QTest::newRow("DimInactive")                    << QStringLiteral("diminactive")       << true  << xc << true;
     QTest::newRow("FallApart")                      << QStringLiteral("fallapart")         << false << xc << true;
@@ -264,8 +259,6 @@ void TestBuiltInEffectLoader::testLoadEffect_data()
     QTest::newRow("Contrast")                       << QStringLiteral("contrast")          << false << xc;
     // fails for GL as it does proper tests on what's supported and doesn't just check whether it's GL
     QTest::newRow("Contrast-GL")                    << QStringLiteral("contrast")          << false << oc;
-    QTest::newRow("CubeSlide")                      << QStringLiteral("cubeslide")         << false << xc;
-    QTest::newRow("CubeSlide-GL")                   << QStringLiteral("cubeslide")         << true  << oc;
     QTest::newRow("DesktopGrid")                    << QStringLiteral("desktopgrid")       << true  << xc;
     QTest::newRow("DimInactive")                    << QStringLiteral("diminactive")       << true  << xc;
     QTest::newRow("FallApart")                      << QStringLiteral("fallapart")         << false << xc;

@@ -1,5 +1,0 @@
-File=cubeslide.kcfg
-ClassName=CubeSlideConfig
-NameSpace=KWin
-Singleton=true
-Mutators=true
