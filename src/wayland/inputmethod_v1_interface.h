@@ -18,6 +18,7 @@ namespace KWaylandServer
 class OutputInterface;
 class SurfaceInterface;
 class Display;
+class KeyboardInterface;
 class InputPanelSurfaceV1Interface;
 class InputMethodContextV1Interface;
 
@@ -25,6 +26,10 @@ class InputMethodV1InterfacePrivate;
 class InputMethodContextV1InterfacePrivate;
 class InputPanelV1InterfacePrivate;
 class InputPanelSurfaceV1InterfacePrivate;
+class InputMethodGrabV1;
+class InputKeyboardV1InterfacePrivate;
+
+enum class KeyboardKeyState : quint32;
 
 //This file's classes implment input_method_unstable_v1
 
@@ -73,6 +78,8 @@ public:
     void sendCommitState(quint32 serial);
     void sendPreferredLanguage(const QString &language);
 
+    InputMethodGrabV1 *keyboardGrab() const;
+
 Q_SIGNALS:
     void commitString(quint32 serial, const QString &text);
     void preeditString(quint32 serial, const QString &text, const QString &commit);
@@ -81,11 +88,11 @@ Q_SIGNALS:
     void deleteSurroundingText(qint32 index, quint32 length);
     void cursorPosition(qint32 index, qint32 anchor);
     void keysym(quint32 serial, quint32 time, quint32 sym, bool pressed, Qt::KeyboardModifiers modifiers);
-    void grabKeyboard(quint32 keyboard);
     void key(quint32 serial, quint32 time, quint32 key, bool pressed);
     void modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group);
     void language(quint32 serial, const QString &language);
     void textDirection(quint32 serial, Qt::LayoutDirection direction);
+    void keyboardGrabRequested(InputMethodGrabV1 *keyboardGrab);
 
 private:
     friend class InputMethodV1Interface;
@@ -125,7 +132,6 @@ public:
     };
     Q_ENUM(Position)
 
-    quint32 id() const;
     SurfaceInterface *surface() const;
 
 Q_SIGNALS:
@@ -138,6 +144,27 @@ private:
     QScopedPointer<InputPanelSurfaceV1InterfacePrivate> d;
 };
 
+/**
+ * Implements a wl_keyboard tailored for zwp_input_method_v1 use-cases
+ */
+class KWAYLANDSERVER_EXPORT InputMethodGrabV1 : public QObject
+{
+    Q_OBJECT
+public:
+    ~InputMethodGrabV1() override;
+
+    void sendKeymap(const QByteArray &content);
+    void sendKey(quint32 serial, quint32 timestamp, quint32 key, KeyboardKeyState state);
+    void sendModifiers(quint32 serial, quint32 depressed, quint32 latched, quint32 locked, quint32 group);
+
+private:
+    InputMethodGrabV1(QObject *parent);
+    friend class InputPanelV1InterfacePrivate;
+    friend class InputMethodContextV1InterfacePrivate;
+    QScopedPointer<InputKeyboardV1InterfacePrivate> d;
+};
+
 }
 
 Q_DECLARE_METATYPE(KWaylandServer::InputMethodV1Interface *)
+Q_DECLARE_METATYPE(KWaylandServer::InputMethodGrabV1 *)

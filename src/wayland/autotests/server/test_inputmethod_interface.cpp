@@ -20,10 +20,13 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/seat.h"
 #include "KWayland/Client/surface.h"
+#include "KWayland/Client/keyboard.h"
 #include "KWayland/Client/output.h"
 
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-server-text-input-unstable-v1.h"
+
+#include <linux/input-event-codes.h>
 
 using namespace KWaylandServer;
 
@@ -147,7 +150,7 @@ private Q_SLOTS:
     void testContentHints();
     void testContentPurpose_data();
     void testContentPurpose();
-
+    void testKeyboardGrab();
 private:
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
@@ -593,6 +596,30 @@ void TestInputMethodInterface::testContentPurpose()
     QVERIFY(!m_inputMethod->context());
 }
 
+void TestInputMethodInterface::testKeyboardGrab()
+{
+    QVERIFY(m_inputMethodIface);
+    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
+
+    m_inputMethodIface->sendActivate();
+    QVERIFY(inputMethodActivateSpy.wait());
+
+    QSignalSpy keyboardGrabSpy(m_inputMethodIface->context(), &InputMethodContextV1Interface::keyboardGrabRequested);
+    InputMethodV1Context *imContext = m_inputMethod->context();
+    QVERIFY(imContext);
+    KWayland::Client::Keyboard *keyboard = new KWayland::Client::Keyboard(this);
+    keyboard->setup(imContext->grab_keyboard());
+    QVERIFY(keyboard->isValid());
+    QVERIFY(keyboardGrabSpy.count() || keyboardGrabSpy.wait());
+
+    QSignalSpy keyboardSpy(keyboard, &KWayland::Client::Keyboard::keyChanged);
+    m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, KeyboardKeyState::Pressed);
+    m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, KeyboardKeyState::Released);
+    keyboardSpy.wait();
+    QCOMPARE(keyboardSpy.count(), 2);
+
+    m_inputMethodIface->sendDeactivate();
+}
 
 QTEST_GUILESS_MAIN(TestInputMethodInterface)
 #include "test_inputmethod_interface.moc"

@@ -7,19 +7,87 @@
 #include "inputmethod_v1_interface.h"
 #include "seat_interface.h"
 #include "display.h"
+#include "keyboard_interface.h"
+#include "keyboard_interface_p.h"
 #include "surface_interface.h"
 #include "output_interface.h"
 #include "surfacerole_p.h"
+#include "logging.h"
 
 #include <QHash>
+#include <QTemporaryFile>
+
+#include <unistd.h>
 
 #include "qwayland-server-input-method-unstable-v1.h"
 #include "qwayland-server-text-input-unstable-v1.h"
+#include "qwayland-server-wayland.h"
 
 namespace KWaylandServer
 {
 
 static int s_version = 1;
+
+class InputKeyboardV1InterfacePrivate : public QtWaylandServer::wl_keyboard
+{
+public:
+    InputKeyboardV1InterfacePrivate()
+    {}
+};
+
+InputMethodGrabV1::InputMethodGrabV1(QObject *parent)
+    : QObject(parent)
+    , d(new InputKeyboardV1InterfacePrivate)
+{}
+
+InputMethodGrabV1::~InputMethodGrabV1()
+{
+}
+
+void InputMethodGrabV1::sendKeymap(const QByteArray &keymap)
+{
+    QScopedPointer<QTemporaryFile> tmp(new QTemporaryFile());
+    if (!tmp->open()) {
+        qCWarning(KWAYLAND_SERVER) << "Failed to create keymap file:" << tmp->errorString();
+        return;
+    }
+
+    unlink(tmp->fileName().toUtf8().constData());
+    if (!tmp->resize(keymap.size())) {
+        qCWarning(KWAYLAND_SERVER) << "Failed to resize keymap file:" << tmp->errorString();
+        return;
+    }
+
+    uchar *address = tmp->map(0, keymap.size());
+    if (!address) {
+        qCWarning(KWAYLAND_SERVER) << "Failed to map keymap file:" << tmp->errorString();
+        return;
+    }
+
+    qstrncpy(reinterpret_cast<char *>(address), keymap.constData(), keymap.size() + 1);
+    tmp->unmap(address);
+
+    const auto resources = d->resourceMap();
+    for (auto r : resources) {
+        d->send_keymap(r->handle, QtWaylandServer::wl_keyboard::keymap_format::keymap_format_xkb_v1, tmp->handle(), tmp->size());
+    }
+}
+
+void InputMethodGrabV1::sendKey(quint32 serial, quint32 timestamp, quint32 key, KeyboardKeyState state)
+{
+    const auto resources = d->resourceMap();
+    for (auto r : resources) {
+        d->send_key(r->handle, serial, timestamp, key, quint32(state));
+    }
+}
+
+void InputMethodGrabV1::sendModifiers(quint32 serial, quint32 depressed, quint32 latched, quint32 locked, quint32 group)
+{
+    const auto resources = d->resourceMap();
+    for (auto r : resources) {
+        d->send_modifiers(r->handle, depressed, latched, locked, group, serial);
+    }
+}
 
 class InputMethodContextV1InterfacePrivate : public QtWaylandServer::zwp_input_method_context_v1
 {
@@ -29,6 +97,8 @@ public:
         , q(q)
     {
     }
+
+    ~InputMethodContextV1InterfacePrivate() {}
 
     void zwp_input_method_context_v1_commit_string(Resource *, uint32_t serial, const QString &text) override
     {
@@ -80,9 +150,11 @@ public:
     {
         Q_EMIT q->keysym(serial, time, sym, state == WL_KEYBOARD_KEY_STATE_PRESSED, toQtModifiers(modifiers));
     }
-    void zwp_input_method_context_v1_grab_keyboard(Resource *, uint32_t keyboard) override
+    void zwp_input_method_context_v1_grab_keyboard(Resource *resource, uint32_t id) override
     {
-        Q_EMIT q->grabKeyboard(keyboard);
+        m_keyboardGrab.reset(new InputMethodGrabV1(q));
+        m_keyboardGrab->d->add(resource->client(), id, 1);
+        Q_EMIT q->keyboardGrabRequested(m_keyboardGrab.data());
     }
     void zwp_input_method_context_v1_key(Resource *, uint32_t serial, uint32_t time, uint32_t key, uint32_t state) override
     {
@@ -131,8 +203,8 @@ public:
         wl_resource_destroy(resource->handle);
     }
 
-private:
     InputMethodContextV1Interface *const q;
+    QScopedPointer<InputMethodGrabV1> m_keyboardGrab;
     QVector<Qt::KeyboardModifiers> mods;
 };
 
@@ -263,6 +335,11 @@ void InputMethodContextV1Interface::sendSurroundingText(const QString &text, uin
     for (auto r : d->resourceMap()) {
         d->send_surrounding_text(r->handle, text, cursor, anchor);
     }
+}
+
+InputMethodGrabV1 *InputMethodContextV1Interface::keyboardGrab() const
+{
+    return d->m_keyboardGrab.get();
 }
 
 class InputPanelSurfaceV1InterfacePrivate : public QtWaylandServer::zwp_input_panel_surface_v1, public SurfaceRole
@@ -417,3 +494,4 @@ InputMethodContextV1Interface *InputMethodV1Interface::context() const
 }
 
 }
+
