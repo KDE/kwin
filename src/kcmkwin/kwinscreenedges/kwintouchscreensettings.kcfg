@@ -34,17 +34,6 @@
             <default>ElectricNone</default>
         </entry>
     </group>
-    <group name="Effect-Cube">
-        <entry name="TouchBorderActivateCube" key="TouchBorderActivate" type="IntList">
-            <default>ElectricNone</default>
-        </entry>
-        <entry key="TouchBorderActivateCylinder" type="IntList">
-            <default>ElectricNone</default>
-        </entry>
-        <entry key="TouchBorderActivateSphere" type="IntList">
-            <default>ElectricNone</default>
-        </entry>
-    </group>
     <group name="TabBox">
         <entry name="TouchBorderActivateTabBox" key="TouchBorderActivate" type="IntList">
             <default>ElectricNone</default>

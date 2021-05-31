@@ -83,8 +83,6 @@ set(kwin4_effect_builtins_sources
     blur/blur.cpp
     blur/blurshader.cpp
     colorpicker/colorpicker.cpp
-    cube/cube.cpp
-    cube/cube_proxy.cpp
     cubeslide/cubeslide.cpp
     desktopgrid/desktopgrid.cpp
     diminactive/diminactive.cpp
@@ -123,7 +121,6 @@ qt5_add_resources(kwin4_effect_builtins_sources shaders.qrc)
 
 kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     blur/blurconfig.kcfgc
-    cube/cubeconfig.kcfgc
     cubeslide/cubeslideconfig.kcfgc
     desktopgrid/desktopgridconfig.kcfgc
     diminactive/diminactiveconfig.kcfgc
@@ -196,7 +193,6 @@ add_subdirectory(zoom)
 # OpenGL-specific effects
 add_subdirectory(blur)
 include(backgroundcontrast/CMakeLists.txt)
-add_subdirectory(cube)
 add_subdirectory(cubeslide)
 add_subdirectory(glide)
 add_subdirectory(invert)

@@ -92,7 +92,6 @@ void KWinScreenEdgesConfig::save()
                                              QDBusConnection::sessionBus());
     interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::PresentWindows));
     interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::DesktopGrid));
-    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::Cube));
 
     KCModule::save();
 }
@@ -135,10 +134,6 @@ void KWinScreenEdgesConfig::monitorInit()
     m_form->monitorAddItem(i18n("%1 - Current Desktop", presentWindowsName));
     m_form->monitorAddItem(i18n("%1 - Current Application", presentWindowsName));
     m_form->monitorAddItem(BuiltInEffects::effectData(BuiltInEffect::DesktopGrid).displayName);
-    const QString cubeName = BuiltInEffects::effectData(BuiltInEffect::Cube).displayName;
-    m_form->monitorAddItem(i18n("%1 - Cube", cubeName));
-    m_form->monitorAddItem(i18n("%1 - Cylinder", cubeName));
-    m_form->monitorAddItem(i18n("%1 - Sphere", cubeName));
 
     m_form->monitorAddItem(i18n("Toggle window switching"));
     m_form->monitorAddItem(i18n("Toggle alternative window switching"));
@@ -189,11 +184,6 @@ void KWinScreenEdgesConfig::monitorLoadSettings()
     // Desktop Grid
     m_form->monitorChangeEdge(m_data->settings()->borderActivateDesktopGrid(), DesktopGrid);
 
-    // Desktop Cube
-    m_form->monitorChangeEdge(m_data->settings()->borderActivateCube(), Cube);
-    m_form->monitorChangeEdge(m_data->settings()->borderActivateCylinder(), Cylinder);
-    m_form->monitorChangeEdge(m_data->settings()->borderActivateSphere(), Sphere);
-
     // TabBox
     m_form->monitorChangeEdge(m_data->settings()->borderActivateTabBox(), TabBox);
     // Alternative TabBox
@@ -232,11 +222,6 @@ void KWinScreenEdgesConfig::monitorLoadDefaultSettings()
     // Desktop Grid
     m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateDesktopGridValue(), DesktopGrid);
 
-    // Desktop Cube
-    m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateCubeValue(), Cube);
-    m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateCylinderValue(), Cylinder);
-    m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateSphereValue(), Sphere);
-
     // TabBox
     m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateTabBoxValue(), TabBox);
     // Alternative TabBox
@@ -265,11 +250,6 @@ void KWinScreenEdgesConfig::monitorSaveSettings()
     // Desktop Grid
     m_data->settings()->setBorderActivateDesktopGrid(m_form->monitorCheckEffectHasEdge(DesktopGrid));
 
-    // Desktop Cube
-    m_data->settings()->setBorderActivateCube(m_form->monitorCheckEffectHasEdge(Cube));
-    m_data->settings()->setBorderActivateCylinder(m_form->monitorCheckEffectHasEdge(Cylinder));
-    m_data->settings()->setBorderActivateSphere(m_form->monitorCheckEffectHasEdge(Sphere));
-
     // TabBox
     m_data->settings()->setBorderActivateTabBox(m_form->monitorCheckEffectHasEdge(TabBox));
     m_data->settings()->setBorderAlternativeActivate(m_form->monitorCheckEffectHasEdge(TabBoxAlternative));
@@ -295,11 +275,6 @@ void KWinScreenEdgesConfig::monitorShowEvent()
     enabled = effectEnabled(BuiltInEffect::DesktopGrid, config);
     m_form->monitorItemSetEnabled(DesktopGrid, enabled);
 
-    // Desktop Cube
-    enabled = effectEnabled(BuiltInEffect::Cube, config);
-    m_form->monitorItemSetEnabled(Cube, enabled);
-    m_form->monitorItemSetEnabled(Cylinder, enabled);
-    m_form->monitorItemSetEnabled(Sphere, enabled);
     // tabbox, depends on reasonable focus policy.
     KConfigGroup config2(m_config, "Windows");
     QString focusPolicy = config2.readEntry("FocusPolicy", QString());

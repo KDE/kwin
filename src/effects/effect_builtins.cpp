@@ -33,7 +33,6 @@
 #include "windowgeometry/windowgeometry.h"
 #include "zoom/zoom.h"
 // OpenGL-specific effects for desktop
-#include "cube/cube.h"
 #include "cubeslide/cubeslide.h"
 #include "glide/glide.h"
 #include "invert/invert.h"
@@ -133,22 +132,6 @@ EFFECT_FALLBACK
 #endif
 EFFECT_FALLBACK
         QString()
-    }, {
-        QStringLiteral("cube"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Desktop Cube"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display each virtual desktop on a side of a cube"),
-        QStringLiteral("Window Management"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/desktop_cube.ogv")),
-        false,
-        false,
-#ifdef EFFECT_BUILTINS
-        &createHelper<CubeEffect>,
-        &CubeEffect::supported,
-        nullptr,
-#endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_cube_config")
     }, {
         QStringLiteral("cubeslide"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Desktop Cube Animation"),

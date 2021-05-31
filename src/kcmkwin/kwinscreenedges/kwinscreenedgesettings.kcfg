@@ -66,17 +66,6 @@
             <default>ElectricNone</default>
         </entry>
     </group>
-    <group name="Effect-Cube">
-        <entry name="BorderActivateCube" key="BorderActivate" type="IntList">
-            <default>ElectricNone</default>
-        </entry>
-        <entry key="BorderActivateCylinder" type="IntList">
-            <default>ElectricNone</default>
-        </entry>
-        <entry key="BorderActivateSphere" type="IntList">
-            <default>ElectricNone</default>
-        </entry>
-    </group>
     <group name="TabBox">
         <entry name="BorderActivateTabBox" key="BorderActivate" type="IntList">
             <default>ElectricLeft</default>

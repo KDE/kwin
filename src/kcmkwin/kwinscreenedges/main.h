@@ -53,9 +53,6 @@ private:
         PresentWindowsCurrent,
         PresentWindowsClass,
         DesktopGrid,
-        Cube,
-        Cylinder,
-        Sphere,
         TabBox,
         TabBoxAlternative,
         EffectCount

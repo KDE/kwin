@@ -64,7 +64,6 @@ void TestPluginEffectLoader::testHasEffect_data()
     QTest::newRow("blur")              << QStringLiteral("blur")                      << false;
     QTest::newRow("ColorPicker")       << QStringLiteral("colorpicker")               << false;
     QTest::newRow("Contrast")          << QStringLiteral("contrast")                  << false;
-    QTest::newRow("Cube")              << QStringLiteral("cube")                      << false;
     QTest::newRow("CubeSlide")         << QStringLiteral("cubeslide")                 << false;
     QTest::newRow("DesktopGrid")       << QStringLiteral("desktopgrid")               << false;
     QTest::newRow("DimInactive")       << QStringLiteral("diminactive")               << false;
