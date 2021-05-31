@@ -1331,7 +1331,6 @@ void OpenGLWindow::initializeRenderContext(RenderContext &context, const WindowP
         shadowRenderNode.opacity = data.opacity();
         shadowRenderNode.hasAlpha = true;
         shadowRenderNode.coordinateType = NormalizedCoordinates;
-        shadowRenderNode.leafType = ShadowLeaf;
     }
 
     RenderNode &decorationRenderNode = renderNodes[context.decorationOffset];
@@ -1340,7 +1339,6 @@ void OpenGLWindow::initializeRenderContext(RenderContext &context, const WindowP
         decorationRenderNode.opacity = data.opacity();
         decorationRenderNode.hasAlpha = true;
         decorationRenderNode.coordinateType = UnnormalizedCoordinates;
-        decorationRenderNode.leafType = DecorationLeaf;
     }
 
     if (surfaceItem()) {
@@ -1377,7 +1375,6 @@ void OpenGLWindow::initializeRenderContext(RenderContext &context, const WindowP
             contentRenderNode.hasAlpha = surfaceTexture->hasAlphaChannel();
             contentRenderNode.opacity = contentOpacity;
             contentRenderNode.coordinateType = UnnormalizedCoordinates;
-            contentRenderNode.leafType = ContentLeaf;
 
             const QList<Item *> children = item->childItems();
             for (auto it = children.rbegin(); it != children.rend(); ++it) {
@@ -1422,7 +1419,6 @@ void OpenGLWindow::initializeRenderContext(RenderContext &context, const WindowP
                 previousContentRenderNode.hasAlpha = previous->hasAlphaChannel();
                 previousContentRenderNode.opacity = data.opacity() * (1.0 - data.crossFadeProgress());
                 previousContentRenderNode.coordinateType = NormalizedCoordinates;
-                previousContentRenderNode.leafType = PreviousContentLeaf;
 
                 context.quadCount += previousContentRenderNode.quads.count();
             }

@@ -134,13 +134,6 @@ class OpenGLWindow final : public Scene::Window
     Q_OBJECT
 
 public:
-    enum Leaf {
-        ShadowLeaf,
-        DecorationLeaf,
-        ContentLeaf,
-        PreviousContentLeaf,
-    };
-
     struct RenderNode
     {
         RenderNode()
@@ -160,7 +153,6 @@ public:
         float opacity;
         bool hasAlpha;
         TextureCoordinateType coordinateType;
-        Leaf leafType;
     };
 
     struct RenderContext
