@@ -55,3 +55,9 @@ Id=make-translucency-effect-disabled-by-default
 File=kwinrc
 Group=Plugins
 Script=kwin-5.23-disable-translucency-effect.sh,sh
+
+# Remove the Flip Switch effect
+Id=remove-flip-switch-effect
+File=kwinrc
+Group=TabBox,TabBoxAlternative
+Script=kwin-5.23-remove-flip-switch.py,python3

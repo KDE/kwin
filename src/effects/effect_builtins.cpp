@@ -36,7 +36,6 @@
 #include "coverswitch/coverswitch.h"
 #include "cube/cube.h"
 #include "cubeslide/cubeslide.h"
-#include "flipswitch/flipswitch.h"
 #include "glide/glide.h"
 #include "invert/invert.h"
 #include "lookingglass/lookingglass.h"
@@ -231,22 +230,6 @@ EFFECT_FALLBACK
 #endif
 EFFECT_FALLBACK
         QString()
-    }, {
-        QStringLiteral("flipswitch"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Flip Switch"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Flip through windows that are in a stack for the alt+tab window switcher"),
-        QStringLiteral("Window Management"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/flip_switch.mp4")),
-        false,
-        false,
-#ifdef EFFECT_BUILTINS
-        &createHelper<FlipSwitchEffect>,
-        &FlipSwitchEffect::supported,
-        nullptr,
-#endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_flipswitch_config")
     }, {
         QStringLiteral("glide"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Glide"),

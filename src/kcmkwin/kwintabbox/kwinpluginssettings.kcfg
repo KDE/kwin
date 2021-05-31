@@ -8,9 +8,6 @@
         <entry key="coverswitchEnabled" type="Bool">
             <default code="true">BuiltInEffects::enabledByDefault(BuiltInEffect::CoverSwitch)</default>
         </entry>
-        <entry key="flipswitchEnabled" type="Bool">
-            <default code="true">BuiltInEffects::enabledByDefault(BuiltInEffect::FlipSwitch)</default>
-        </entry>
         <entry key="highlightwindowEnabled" type="Bool">
             <default code="true">BuiltInEffects::enabledByDefault(BuiltInEffect::HighlightWindow)</default>
         </entry>

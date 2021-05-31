@@ -138,7 +138,6 @@ void KWinTabBoxConfig::initLayoutLists()
 {
     // search the effect names
     m_coverSwitch = BuiltInEffects::effectData(BuiltInEffect::CoverSwitch).name;
-    m_flipSwitch = BuiltInEffects::effectData(BuiltInEffect::FlipSwitch).name;
 
     QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->listPackages("KWin/WindowSwitcher");
     QStringList layoutNames, layoutPlugins, layoutPaths;
@@ -182,11 +181,6 @@ void KWinTabBoxConfig::initLayoutLists()
         coverItem->setData(m_coverSwitch, Qt::UserRole);
         coverItem->setData(false, KWinTabBoxConfigForm::AddonEffect);
         model->appendRow(coverItem);
-
-        QStandardItem *flipItem = new QStandardItem(BuiltInEffects::effectData(BuiltInEffect::FlipSwitch).displayName);
-        flipItem->setData(m_flipSwitch, Qt::UserRole);
-        flipItem->setData(false, KWinTabBoxConfigForm::AddonEffect);
-        model->appendRow(flipItem);
 
         for (int j = 0; j < layoutNames.count(); ++j) {
             QStandardItem *item = new QStandardItem(layoutNames[j]);
@@ -304,7 +298,6 @@ void KWinTabBoxConfig::load()
     updateUiFromConfig(m_alternativeTabBoxUi , m_data->tabBoxAlternativeConfig());
 
     m_data->coverSwitchConfig()->load();
-    m_data->flipSwitchConfig()->load();
 
     m_data->pluginsConfig()->load();
 
@@ -314,14 +307,6 @@ void KWinTabBoxConfig::load()
         }
         if (m_data->coverSwitchConfig()->tabBoxAlternative()) {
             m_alternativeTabBoxUi->setLayoutName(m_coverSwitch);
-        }
-    }
-    if (m_data->pluginsConfig()->flipswitchEnabled()) {
-        if (m_data->flipSwitchConfig()->tabBox()) {
-            m_primaryTabBoxUi->setLayoutName(m_flipSwitch);
-        }
-        if (m_data->flipSwitchConfig()->tabBoxAlternative()) {
-            m_alternativeTabBoxUi->setLayoutName(m_flipSwitch);
         }
     }
 
@@ -337,26 +322,17 @@ void KWinTabBoxConfig::save()
     const bool highlightWindows = m_primaryTabBoxUi->highlightWindows() || m_alternativeTabBoxUi->highlightWindows();
     const bool coverSwitch = m_primaryTabBoxUi->showTabBox()
             && m_primaryTabBoxUi->effectComboCurrentData().toString() == m_coverSwitch;
-    const bool flipSwitch = m_primaryTabBoxUi->showTabBox()
-            && m_primaryTabBoxUi->effectComboCurrentData().toString() == m_flipSwitch;
     const bool coverSwitchAlternative = m_alternativeTabBoxUi->showTabBox()
             && m_alternativeTabBoxUi->effectComboCurrentData().toString() == m_coverSwitch;
-    const bool flipSwitchAlternative = m_alternativeTabBoxUi->showTabBox()
-            && m_alternativeTabBoxUi->effectComboCurrentData().toString() == m_flipSwitch;
 
     // activate effects if they are used otherwise deactivate them.
     m_data->pluginsConfig()->setCoverswitchEnabled(coverSwitch || coverSwitchAlternative);
-    m_data->pluginsConfig()->setFlipswitchEnabled(flipSwitch || flipSwitchAlternative);
     m_data->pluginsConfig()->setHighlightwindowEnabled(highlightWindows);
     m_data->pluginsConfig()->save();
 
     m_data->coverSwitchConfig()->setTabBox(coverSwitch);
     m_data->coverSwitchConfig()->setTabBoxAlternative(coverSwitchAlternative);
     m_data->coverSwitchConfig()->save();
-
-    m_data->flipSwitchConfig()->setTabBox(flipSwitch);
-    m_data->flipSwitchConfig()->setTabBoxAlternative(flipSwitchAlternative);
-    m_data->flipSwitchConfig()->save();
 
     updateConfigFromUi(m_primaryTabBoxUi, m_data->tabBoxConfig());
     updateConfigFromUi(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
@@ -375,13 +351,11 @@ void KWinTabBoxConfig::save()
                                              QStringLiteral("/Effects"),
                                              QDBusConnection::sessionBus());
     interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::CoverSwitch));
-    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::FlipSwitch));
 }
 
 void KWinTabBoxConfig::defaults()
 {
     m_data->coverSwitchConfig()->setDefaults();
-    m_data->flipSwitchConfig()->setDefaults();
 
     updateUiFromDefaultConfig(m_primaryTabBoxUi, m_data->tabBoxConfig());
     updateUiFromDefaultConfig(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());

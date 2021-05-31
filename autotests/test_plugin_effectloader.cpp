@@ -70,7 +70,6 @@ void TestPluginEffectLoader::testHasEffect_data()
     QTest::newRow("DesktopGrid")       << QStringLiteral("desktopgrid")               << false;
     QTest::newRow("DimInactive")       << QStringLiteral("diminactive")               << false;
     QTest::newRow("FallApart")         << QStringLiteral("fallapart")                 << false;
-    QTest::newRow("FlipSwitch")        << QStringLiteral("flipswitch")                << false;
     QTest::newRow("Glide")             << QStringLiteral("glide")                     << false;
     QTest::newRow("HighlightWindow")   << QStringLiteral("highlightwindow")           << false;
     QTest::newRow("Invert")            << QStringLiteral("invert")                    << false;

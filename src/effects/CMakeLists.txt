@@ -90,7 +90,6 @@ set(kwin4_effect_builtins_sources
     desktopgrid/desktopgrid.cpp
     diminactive/diminactive.cpp
     effect_builtins.cpp
-    flipswitch/flipswitch.cpp
     glide/glide.cpp
     invert/invert.cpp
     logging.cpp
@@ -131,7 +130,6 @@ kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     desktopgrid/desktopgridconfig.kcfgc
     diminactive/diminactiveconfig.kcfgc
     fallapart/fallapartconfig.kcfgc
-    flipswitch/flipswitchconfig.kcfgc
     glide/glideconfig.kcfgc
     lookingglass/lookingglassconfig.kcfgc
     magiclamp/magiclampconfig.kcfgc
@@ -203,7 +201,6 @@ include(backgroundcontrast/CMakeLists.txt)
 add_subdirectory(coverswitch)
 add_subdirectory(cube)
 add_subdirectory(cubeslide)
-add_subdirectory(flipswitch)
 add_subdirectory(glide)
 add_subdirectory(invert)
 add_subdirectory(lookingglass)
