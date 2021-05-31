@@ -61,3 +61,9 @@ Id=remove-flip-switch-effect
 File=kwinrc
 Group=TabBox,TabBoxAlternative
 Script=kwin-5.23-remove-flip-switch.py,python3
+
+# Remove the Cover Switch effect
+Id=remove-cover-switch-effect
+File=kwinrc
+Group=TabBox,TabBoxAlternative
+Script=kwin-5.23-remove-cover-switch.py,python3

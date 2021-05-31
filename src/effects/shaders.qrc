@@ -1,6 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/effect-shaders-1.10">
-  <file alias="coverswitch-reflection.glsl">coverswitch/shaders/1.10/coverswitch-reflection.glsl</file>
   <file alias="cube-cap.glsl">cube/data/1.10/cube-cap.glsl</file>
   <file alias="cube-reflection.glsl">cube/data/1.10/cube-reflection.glsl</file>
   <file alias="cylinder.vert">cube/data/1.10/cylinder.vert</file>
@@ -10,7 +9,6 @@
   <file alias="blinking-startup-fragment.glsl">startupfeedback/data/1.10/blinking-startup-fragment.glsl</file>
 </qresource>
 <qresource prefix="/effect-shaders-1.40">
-  <file alias="coverswitch-reflection.glsl">coverswitch/shaders/1.40/coverswitch-reflection.glsl</file>
   <file alias="cube-cap.glsl">cube/data/1.40/cube-cap.glsl</file>
   <file alias="cube-reflection.glsl">cube/data/1.40/cube-reflection.glsl</file>
   <file alias="cylinder.vert">cube/data/1.40/cylinder.vert</file>

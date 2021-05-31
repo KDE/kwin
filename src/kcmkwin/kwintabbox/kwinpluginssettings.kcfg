@@ -5,9 +5,6 @@
        http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile name="kwinrc" />
     <group name="Plugins">
-        <entry key="coverswitchEnabled" type="Bool">
-            <default code="true">BuiltInEffects::enabledByDefault(BuiltInEffect::CoverSwitch)</default>
-        </entry>
         <entry key="highlightwindowEnabled" type="Bool">
             <default code="true">BuiltInEffects::enabledByDefault(BuiltInEffect::HighlightWindow)</default>
         </entry>

@@ -136,9 +136,6 @@ static QList<KPackage::Package> availableLnFPackages()
 
 void KWinTabBoxConfig::initLayoutLists()
 {
-    // search the effect names
-    m_coverSwitch = BuiltInEffects::effectData(BuiltInEffect::CoverSwitch).name;
-
     QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->listPackages("KWin/WindowSwitcher");
     QStringList layoutNames, layoutPlugins, layoutPaths;
 
@@ -176,11 +173,6 @@ void KWinTabBoxConfig::initLayoutLists()
     KWinTabBoxConfigForm *ui[2] = { m_primaryTabBoxUi, m_alternativeTabBoxUi };
     for (int i=0; i<2; ++i) {
         QStandardItemModel *model = new QStandardItemModel;
-
-        QStandardItem *coverItem = new QStandardItem(BuiltInEffects::effectData(BuiltInEffect::CoverSwitch).displayName);
-        coverItem->setData(m_coverSwitch, Qt::UserRole);
-        coverItem->setData(false, KWinTabBoxConfigForm::AddonEffect);
-        model->appendRow(coverItem);
 
         for (int j = 0; j < layoutNames.count(); ++j) {
             QStandardItem *item = new QStandardItem(layoutNames[j]);
@@ -297,18 +289,7 @@ void KWinTabBoxConfig::load()
     updateUiFromConfig(m_primaryTabBoxUi, m_data->tabBoxConfig());
     updateUiFromConfig(m_alternativeTabBoxUi , m_data->tabBoxAlternativeConfig());
 
-    m_data->coverSwitchConfig()->load();
-
     m_data->pluginsConfig()->load();
-
-    if (m_data->pluginsConfig()->coverswitchEnabled()) {
-        if (m_data->coverSwitchConfig()->tabBox()) {
-            m_primaryTabBoxUi->setLayoutName(m_coverSwitch);
-        }
-        if (m_data->coverSwitchConfig()->tabBoxAlternative()) {
-            m_alternativeTabBoxUi->setLayoutName(m_coverSwitch);
-        }
-    }
 
     m_primaryTabBoxUi->loadShortcuts();
     m_alternativeTabBoxUi->loadShortcuts();
@@ -320,19 +301,10 @@ void KWinTabBoxConfig::save()
 {
     // effects
     const bool highlightWindows = m_primaryTabBoxUi->highlightWindows() || m_alternativeTabBoxUi->highlightWindows();
-    const bool coverSwitch = m_primaryTabBoxUi->showTabBox()
-            && m_primaryTabBoxUi->effectComboCurrentData().toString() == m_coverSwitch;
-    const bool coverSwitchAlternative = m_alternativeTabBoxUi->showTabBox()
-            && m_alternativeTabBoxUi->effectComboCurrentData().toString() == m_coverSwitch;
 
     // activate effects if they are used otherwise deactivate them.
-    m_data->pluginsConfig()->setCoverswitchEnabled(coverSwitch || coverSwitchAlternative);
     m_data->pluginsConfig()->setHighlightwindowEnabled(highlightWindows);
     m_data->pluginsConfig()->save();
-
-    m_data->coverSwitchConfig()->setTabBox(coverSwitch);
-    m_data->coverSwitchConfig()->setTabBoxAlternative(coverSwitchAlternative);
-    m_data->coverSwitchConfig()->save();
 
     updateConfigFromUi(m_primaryTabBoxUi, m_data->tabBoxConfig());
     updateConfigFromUi(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
@@ -346,17 +318,10 @@ void KWinTabBoxConfig::save()
     // Reload KWin.
     QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
-    // and reconfigure the effects
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                             QStringLiteral("/Effects"),
-                                             QDBusConnection::sessionBus());
-    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::CoverSwitch));
 }
 
 void KWinTabBoxConfig::defaults()
 {
-    m_data->coverSwitchConfig()->setDefaults();
-
     updateUiFromDefaultConfig(m_primaryTabBoxUi, m_data->tabBoxConfig());
     updateUiFromDefaultConfig(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 

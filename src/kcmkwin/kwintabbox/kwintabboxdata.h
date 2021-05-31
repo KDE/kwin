@@ -31,13 +31,11 @@ public:
 
     TabBoxSettings *tabBoxConfig() const;
     TabBoxSettings *tabBoxAlternativeConfig() const;
-    SwitchEffectSettings *coverSwitchConfig() const;
     PluginsSettings *pluginsConfig() const;
 
 private:
     TabBoxSettings *m_tabBoxConfig;
     TabBoxSettings *m_tabBoxAlternativeConfig;
-    SwitchEffectSettings *m_coverSwitchConfig;
     PluginsSettings *m_pluginsConfig;
 };
 

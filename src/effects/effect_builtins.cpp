@@ -33,7 +33,6 @@
 #include "windowgeometry/windowgeometry.h"
 #include "zoom/zoom.h"
 // OpenGL-specific effects for desktop
-#include "coverswitch/coverswitch.h"
 #include "cube/cube.h"
 #include "cubeslide/cubeslide.h"
 #include "glide/glide.h"
@@ -134,22 +133,6 @@ EFFECT_FALLBACK
 #endif
 EFFECT_FALLBACK
         QString()
-    }, {
-        QStringLiteral("coverswitch"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Cover Switch"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display a Cover Flow effect for the alt+tab window switcher"),
-        QStringLiteral("Window Management"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/cover_switch.mp4")),
-        false,
-        true,
-#ifdef EFFECT_BUILTINS
-        &createHelper<CoverSwitchEffect>,
-        &CoverSwitchEffect::supported,
-        nullptr,
-#endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_coverswitch_config")
     }, {
         QStringLiteral("cube"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Desktop Cube"),
