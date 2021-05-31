@@ -147,7 +147,13 @@ bool EglGbmBackend::initRenderingContext()
 {
     initBufferConfigs();
     if (isPrimary()) {
-        return createContext() && makeCurrent();
+        if (!createContext() || !makeCurrent()) {
+            return false;
+        }
+    }
+    const auto outputs = m_gpu->outputs();
+    for (const auto &output : outputs) {
+        addOutput(output);
     }
     return true;
 }
