@@ -284,19 +284,28 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
 
 void Xkb::createKeymapFile()
 {
-    if (!m_seat || !m_seat->keyboard()) {
+    const auto currentKeymap = keymapContents();
+    if (currentKeymap.isEmpty()) {
         return;
+    }
+    m_seat->keyboard()->setKeymap(currentKeymap);
+}
+
+QByteArray Xkb::keymapContents() const
+{
+    if (!m_seat || !m_seat->keyboard()) {
+        return {};
     }
     // TODO: uninstall keymap on server?
     if (!m_keymap) {
-        return;
+        return {};
     }
 
     ScopedCPointer<char> keymapString(xkb_keymap_get_as_string(m_keymap, XKB_KEYMAP_FORMAT_TEXT_V1));
     if (keymapString.isNull()) {
-        return;
+        return {};
     }
-    m_seat->keyboard()->setKeymap(keymapString.data());
+    return keymapString.data();
 }
 
 void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)

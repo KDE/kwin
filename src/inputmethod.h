@@ -21,6 +21,11 @@
 class KStatusNotifierItem;
 class QProcess;
 
+namespace KWaylandServer
+{
+class InputMethodGrabV1;
+}
+
 namespace KWin
 {
 
@@ -81,6 +86,7 @@ private:
     void startInputMethod();
     void stopInputMethod();
     void setTrackedClient(AbstractClient *trackedClient);
+    void installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboardGrab);
 
     struct {
         QString text = QString();

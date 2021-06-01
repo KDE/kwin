@@ -98,6 +98,7 @@ public:
     void forwardModifiers();
 
     void setSeat(KWaylandServer::SeatInterface *seat);
+    QByteArray keymapContents() const;
 
 Q_SIGNALS:
     void ledsChanged(const LEDs &leds);

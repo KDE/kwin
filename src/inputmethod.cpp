@@ -33,6 +33,7 @@
 #include <QDBusPendingCall>
 #include <QDBusMessage>
 #include <QMenu>
+#include <QKeyEvent>
 
 #include <linux/input-event-codes.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
@@ -472,6 +473,7 @@ void InputMethod::adoptInputMethodContext()
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::cursorPosition, this, &InputMethod::setCursorPosition, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditString, this, &InputMethod::setPreeditString, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditCursor, this, &InputMethod::setPreeditCursor, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::keyboardGrabRequested, this, &InputMethod::installKeyboardGrab, Qt::UniqueConnection);
 }
 
 void InputMethod::updateSni()
@@ -626,6 +628,35 @@ void InputMethod::startInputMethod()
 bool InputMethod::isActive() const
 {
     return waylandServer()->inputMethod()->context();
+}
+
+class InputKeyboardFilter : public InputEventFilter {
+public:
+    InputKeyboardFilter(KWaylandServer::InputMethodGrabV1 *grab)
+        : m_keyboardGrab(grab)
+    {
+    }
+
+    bool keyEvent(QKeyEvent *event) override {
+        if (event->isAutoRepeat()) {
+            return true;
+        }
+        auto newState = event->type() == QEvent::KeyPress ? KWaylandServer::KeyboardKeyState::Pressed : KWaylandServer::KeyboardKeyState::Released;
+        m_keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->timestamp(), event->nativeScanCode(), newState);
+        return true;
+    }
+    InputMethodGrabV1 *const m_keyboardGrab;
+};
+
+void InputMethod::installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboardGrab)
+{
+    auto xkb = input()->keyboard()->xkb();
+    auto filter = new InputKeyboardFilter(keyboardGrab);
+    keyboardGrab->sendKeymap(xkb->keymapContents());
+    input()->prependInputEventFilter(filter);
+    connect(keyboardGrab, &QObject::destroyed, input(), [filter] {
+        input()->uninstallInputEventFilter(filter);
+    });
 }
 
 }
