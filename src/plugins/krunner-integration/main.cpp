@@ -33,6 +33,4 @@ Plugin *KRunnerIntegrationFactory::create() const
     return new WindowsRunner();
 }
 
-K_EXPORT_PLUGIN_VERSION(KWIN_PLUGIN_API_VERSION)
-
 #include "main.moc"

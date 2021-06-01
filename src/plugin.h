@@ -15,11 +15,7 @@
 namespace KWin
 {
 
-#define KWIN_PLUGIN_API_VERSION QT_VERSION_CHECK(KWIN_VERSION_MAJOR, \
-                                                 KWIN_VERSION_MINOR, \
-                                                 KWIN_VERSION_PATCH)
-
-#define PluginFactory_iid "org.kde.kwin.PluginFactoryInterface"
+#define PluginFactory_iid "org.kde.kwin.PluginFactoryInterface" KWIN_PLUGIN_VERSION_STRING
 
 /**
  * The Plugin class is the baseclass for all binary compositor extensions.

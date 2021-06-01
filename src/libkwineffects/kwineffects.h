@@ -726,6 +726,8 @@ public:
     virtual KWin::Effect *createEffect() const = 0;
 };
 
+#define EffectPluginFactory_iid "org.kde.kwin.EffectPluginFactory" KWIN_PLUGIN_VERSION_STRING
+
 /**
  * Defines an EffectPluginFactory sub class with customized isSupported and enabledByDefault methods.
  *
@@ -733,10 +735,8 @@ public:
  * the simplified KWIN_EFFECT_FACTORY, KWIN_EFFECT_FACTORY_SUPPORTED or KWIN_EFFECT_FACTORY_ENABLED
  * macros which create an EffectPluginFactory with a useable default value.
  *
- * The macro also adds a useable K_EXPORT_PLUGIN_VERSION to the definition. KWin will not load
- * any Effect with a non-matching plugin version. This API is not providing binary compatibility
- * and thus the effect plugin must be compiled against the same kwineffects library version as
- * KWin.
+ * This API is not providing binary compatibility and thus the effect plugin must be compiled against
+ * the same kwineffects library version as KWin.
  *
  * @param factoryName The name to be used for the EffectPluginFactory
  * @param className The class name of the Effect sub class which is to be created by the factory
@@ -748,7 +748,7 @@ public:
     class factoryName : public KWin::EffectPluginFactory \
     { \
         Q_OBJECT \
-        Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE jsonFile) \
+        Q_PLUGIN_METADATA(IID EffectPluginFactory_iid FILE jsonFile) \
         Q_INTERFACES(KPluginFactory) \
     public: \
         explicit factoryName() {} \
@@ -762,8 +762,7 @@ public:
         KWin::Effect *createEffect() const override { \
             return new className(); \
         } \
-    }; \
-    K_EXPORT_PLUGIN_VERSION(quint32(KWIN_EFFECT_API_VERSION))
+    };
 
 #define KWIN_EFFECT_FACTORY_ENABLED( factoryName, className, jsonFile, enabled ) \
     KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED( factoryName, className, jsonFile, return true;, enabled )

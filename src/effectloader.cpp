@@ -12,6 +12,7 @@
 #include <config-kwin.h>
 #include <kwineffects.h>
 #include "effects/effect_builtins.h"
+#include "plugin.h"
 #include "scripting/scriptedeffect.h"
 #include "utils.h"
 // KDE
@@ -345,8 +346,8 @@ EffectPluginFactory *PluginEffectLoader::factory(const KPluginMetaData &info) co
         return nullptr;
     }
     KPluginLoader loader(info.fileName());
-    if (loader.pluginVersion() != KWIN_EFFECT_API_VERSION) {
-        qCDebug(KWIN_CORE) << info.pluginId() << " has not matching plugin version, expected " << KWIN_EFFECT_API_VERSION << "got " << loader.pluginVersion();
+    if (loader.metaData().value("IID").toString() != EffectPluginFactory_iid) {
+        qCDebug(KWIN_CORE) << info.pluginId() << " has not matching plugin version, expected " << PluginFactory_iid << "got " << loader.metaData().value("IID");
         return nullptr;
     }
     KPluginFactory *factory = loader.factory();

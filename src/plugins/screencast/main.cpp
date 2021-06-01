@@ -41,6 +41,4 @@ Plugin *ScreencastManagerFactory::create() const
     }
 }
 
-K_EXPORT_PLUGIN_VERSION(KWIN_PLUGIN_API_VERSION)
-
 #include "main.moc"

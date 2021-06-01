@@ -24,7 +24,7 @@ public:
 class FakeEffectPluginFactory : public KWin::EffectPluginFactory
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "fakeeffectplugin_version.json")
+    Q_PLUGIN_METADATA(IID "not_a_valid_version" FILE "fakeeffectplugin_version.json")
     Q_INTERFACES(KPluginFactory)
 public:
     FakeEffectPluginFactory() {}
@@ -33,7 +33,6 @@ public:
         return new KWin::FakeVersionEffect();
     }
 };
-K_EXPORT_PLUGIN_VERSION(quint32(KWIN_EFFECT_API_VERSION) - 1)
 
 
 #include "fakeeffectplugin_version.moc"

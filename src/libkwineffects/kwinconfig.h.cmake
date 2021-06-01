@@ -9,6 +9,8 @@
 #ifndef KWINCONFIG_H
 #define KWINCONFIG_H
 
+#define KWIN_PLUGIN_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}"
+
 /*
 
  These should be primarily used to detect what kind of compositing

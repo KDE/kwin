@@ -145,7 +145,7 @@ bool PluginManager::loadDynamicPlugin(const KPluginMetaData &metadata)
 
     const QString pluginId = metadata.pluginId();
     KPluginLoader pluginLoader(metadata.fileName());
-    if (pluginLoader.pluginVersion() != KWIN_PLUGIN_API_VERSION) {
+    if (pluginLoader.metaData().value("IID").toString() != PluginFactory_iid) {
         qCWarning(KWIN_CORE) << pluginId << "has mismatching plugin version";
         return false;
     }
