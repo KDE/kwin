@@ -205,9 +205,15 @@ public:
      */
     SubSurfaceInterface *subSurface() const;
     /**
-     * @returns Children in stacking order from bottom (first) to top (last).
+     * Returns the sub-surfaces that are below this surface. The sub-surfaces are sorted
+     * from bottom to top.
      */
-    QList<SubSurfaceInterface *> childSubSurfaces() const;
+    QList<SubSurfaceInterface *> below() const;
+    /**
+     * Returns the sub-surfaces that are above this surface. The sub-surfaces are sorted
+     * from bottom to top.
+     */
+    QList<SubSurfaceInterface *> above() const;
 
     /**
      * @returns The Shadow for this Surface.

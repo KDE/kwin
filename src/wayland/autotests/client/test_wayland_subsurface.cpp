@@ -199,14 +199,16 @@ void TestSubSurface::testCreate()
     QCOMPARE(serverSurface->subSurface(), serverSubSurface);
     QCOMPARE(serverSubSurface->mainSurface(), serverParentSurface);
     // children are only added after committing the surface
+    QCOMPARE(serverParentSurface->below().count(), 0);
     QEXPECT_FAIL("", "Incorrect adding of child windows to workaround QtWayland behavior", Continue);
-    QCOMPARE(serverParentSurface->childSubSurfaces().count(), 0);
+    QCOMPARE(serverParentSurface->above().count(), 0);
     // so let's commit the surface, to apply the stacking change
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverParentSurface->childSubSurfaces().count(), 1);
-    QCOMPARE(serverParentSurface->childSubSurfaces().first(), serverSubSurface);
+    QCOMPARE(serverParentSurface->below().count(), 0);
+    QCOMPARE(serverParentSurface->above().count(), 1);
+    QCOMPARE(serverParentSurface->above().constFirst(), serverSubSurface);
 
     // and let's destroy it again
     QSignalSpy destroyedSpy(serverSubSurface, &QObject::destroyed);
@@ -215,17 +217,19 @@ void TestSubSurface::testCreate()
     QVERIFY(destroyedSpy.wait());
     QCOMPARE(serverSurface->subSurface(), QPointer<SubSurfaceInterface>());
     // only applied after next commit
+    QCOMPARE(serverParentSurface->below().count(), 0);
     QEXPECT_FAIL("", "Incorrect removing of child windows to workaround QtWayland behavior", Continue);
-    QCOMPARE(serverParentSurface->childSubSurfaces().count(), 1);
+    QCOMPARE(serverParentSurface->above().count(), 1);
     // but the surface should be invalid
-    if (!serverParentSurface->childSubSurfaces().isEmpty()) {
-        QVERIFY(!serverParentSurface->childSubSurfaces().first());
+    if (!serverParentSurface->above().isEmpty()) {
+        QVERIFY(!serverParentSurface->above().constFirst());
     }
     // committing the state should solve it
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverParentSurface->childSubSurfaces().count(), 0);
+    QCOMPARE(serverParentSurface->below().count(), 0);
+    QCOMPARE(serverParentSurface->above().count(), 0);
 }
 
 void TestSubSurface::testMode()
@@ -368,74 +372,76 @@ void TestSubSurface::testPlaceAbove()
     subSurfaceCreatedSpy.clear();
 
     // so far the stacking order should still be empty
+    QVERIFY(serverSubSurface1->parentSurface()->below().isEmpty());
     QEXPECT_FAIL("", "Incorrect adding of child windows to workaround QtWayland behavior", Continue);
-    QVERIFY(serverSubSurface1->parentSurface()->childSubSurfaces().isEmpty());
+    QVERIFY(serverSubSurface1->parentSurface()->above().isEmpty());
 
     // committing the parent should create the stacking order
     parent->commit(Surface::CommitFlag::None);
     // ensure it's processed on server side
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface1);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface2);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().count(), 0);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(0), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(1), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(2), serverSubSurface3);
 
     // raising subsurface1 should place it to top of stack
-    subSurface1->raise();
+    subSurface1->placeAbove(subSurface3.data());
     // ensure it's processed on server side
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
     // but as long as parent is not committed it shouldn't change on server side
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(0), serverSubSurface1);
     // after commit it's changed
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface2);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(0), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(1), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(2), serverSubSurface1);
 
     // try placing 3 above 1, should result in 2, 1, 3
     subSurface3->placeAbove(QPointer<SubSurface>(subSurface1.data()));
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface2);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface1);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(0), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(1), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(2), serverSubSurface3);
 
     // try placing 3 above 2, should result in 2, 3, 1
     subSurface3->placeAbove(QPointer<SubSurface>(subSurface2.data()));
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface2);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(0), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(1), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(2), serverSubSurface1);
 
     // try placing 1 above 3 - shouldn't change
     subSurface1->placeAbove(QPointer<SubSurface>(subSurface3.data()));
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface2);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(0), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(1), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(2), serverSubSurface1);
 
     // and 2 above 3 - > 3, 2, 1
     subSurface2->placeAbove(QPointer<SubSurface>(subSurface3.data()));
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface2);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(0), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(1), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(2), serverSubSurface1);
 }
 
 void TestSubSurface::testPlaceBelow()
@@ -469,18 +475,19 @@ void TestSubSurface::testPlaceBelow()
     subSurfaceCreatedSpy.clear();
 
     // so far the stacking order should still be empty
+    QVERIFY(serverSubSurface1->parentSurface()->below().isEmpty());
     QEXPECT_FAIL("", "Incorrect adding of child windows to workaround QtWayland behavior", Continue);
-    QVERIFY(serverSubSurface1->parentSurface()->childSubSurfaces().isEmpty());
+    QVERIFY(serverSubSurface1->parentSurface()->above().isEmpty());
 
     // committing the parent should create the stacking order
     parent->commit(Surface::CommitFlag::None);
     // ensure it's processed on server side
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface1);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface2);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(0), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(1), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(2), serverSubSurface3);
 
     // lowering subsurface3 should place it to the bottom of stack
     subSurface3->lower();
@@ -488,55 +495,60 @@ void TestSubSurface::testPlaceBelow()
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
     // but as long as parent is not committed it shouldn't change on server side
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(0), serverSubSurface1);
     // after commit it's changed
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface1);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().count(), 1);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(0), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 2);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(0), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(1), serverSubSurface2);
 
     // place 1 below 3 -> 1, 3, 2
     subSurface1->placeBelow(QPointer<SubSurface>(subSurface3.data()));
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface1);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().count(), 2);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(0), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(1), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 1);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().at(0), serverSubSurface2);
 
     // 2 below 3 -> 1, 2, 3
     subSurface2->placeBelow(QPointer<SubSurface>(subSurface3.data()));
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface1);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface2);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().count(), 3);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(0), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(1), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(2), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 0);
 
     // 1 below 2 -> shouldn't change
     subSurface1->placeBelow(QPointer<SubSurface>(subSurface2.data()));
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface1);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface2);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().count(), 3);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(0), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(1), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(2), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 0);
 
     // and 3 below 1 -> 3, 1, 2
     subSurface3->placeBelow(QPointer<SubSurface>(subSurface1.data()));
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().count(), 3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(0), serverSubSurface3);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(1), serverSubSurface1);
-    QCOMPARE(serverSubSurface1->parentSurface()->childSubSurfaces().at(2), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().count(), 3);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(0), serverSubSurface3);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(1), serverSubSurface1);
+    QCOMPARE(serverSubSurface1->parentSurface()->below().at(2), serverSubSurface2);
+    QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 0);
 }
 
 void TestSubSurface::testDestroy()
@@ -728,19 +740,23 @@ void TestSubSurface::testMainSurfaceFromTree()
     parentSurface->commit(Surface::CommitFlag::None);
     QVERIFY(parentCommittedSpy.wait());
 
-    QCOMPARE(parentServerSurface->childSubSurfaces().count(), 1);
-    auto child = parentServerSurface->childSubSurfaces().first();
+    QCOMPARE(parentServerSurface->below().count(), 0);
+    QCOMPARE(parentServerSurface->above().count(), 1);
+    auto child = parentServerSurface->above().constFirst();
     QCOMPARE(child->parentSurface(), parentServerSurface);
     QCOMPARE(child->mainSurface(), parentServerSurface);
-    QCOMPARE(child->surface()->childSubSurfaces().count(), 1);
-    auto child2 = child->surface()->childSubSurfaces().first();
+    QCOMPARE(child->surface()->below().count(), 0);
+    QCOMPARE(child->surface()->above().count(), 1);
+    auto child2 = child->surface()->above().constFirst();
     QCOMPARE(child2->parentSurface(), child->surface());
     QCOMPARE(child2->mainSurface(), parentServerSurface);
-    QCOMPARE(child2->surface()->childSubSurfaces().count(), 1);
-    auto child3 = child2->surface()->childSubSurfaces().first();
+    QCOMPARE(child2->surface()->below().count(), 0);
+    QCOMPARE(child2->surface()->above().count(), 1);
+    auto child3 = child2->surface()->above().constFirst();
     QCOMPARE(child3->parentSurface(), child2->surface());
     QCOMPARE(child3->mainSurface(), parentServerSurface);
-    QCOMPARE(child3->surface()->childSubSurfaces().count(), 0);
+    QCOMPARE(child3->surface()->below().count(), 0);
+    QCOMPARE(child3->surface()->above().count(), 0);
 }
 
 void TestSubSurface::testRemoveSurface()
@@ -768,12 +784,14 @@ void TestSubSurface::testRemoveSurface()
     parentSurface->commit(Surface::CommitFlag::None);
     QVERIFY(childrenChangedSpy.wait());
 
-    QCOMPARE(parentServerSurface->childSubSurfaces().count(), 1);
+    QCOMPARE(parentServerSurface->below().count(), 0);
+    QCOMPARE(parentServerSurface->above().count(), 1);
 
     // destroy surface, takes place immediately
     childSurface.reset();
     QVERIFY(childrenChangedSpy.wait());
-    QCOMPARE(parentServerSurface->childSubSurfaces().count(), 0);
+    QCOMPARE(parentServerSurface->below().count(), 0);
+    QCOMPARE(parentServerSurface->above().count(), 0);
 }
 
 void TestSubSurface::testMappingOfSurfaceTree()
@@ -810,15 +828,19 @@ void TestSubSurface::testMappingOfSurfaceTree()
     parentSurface->commit(Surface::CommitFlag::None);
     QVERIFY(parentCommittedSpy.wait());
 
-    QCOMPARE(parentServerSurface->childSubSurfaces().count(), 1);
-    auto child = parentServerSurface->childSubSurfaces().first();
-    QCOMPARE(child->surface()->childSubSurfaces().count(), 1);
-    auto child2 = child->surface()->childSubSurfaces().first();
-    QCOMPARE(child2->surface()->childSubSurfaces().count(), 1);
-    auto child3 = child2->surface()->childSubSurfaces().first();
+    QCOMPARE(parentServerSurface->below().count(), 0);
+    QCOMPARE(parentServerSurface->above().count(), 1);
+    auto child = parentServerSurface->above().constFirst();
+    QCOMPARE(child->surface()->below().count(), 0);
+    QCOMPARE(child->surface()->above().count(), 1);
+    auto child2 = child->surface()->above().constFirst();
+    QCOMPARE(child2->surface()->below().count(), 0);
+    QCOMPARE(child2->surface()->above().count(), 1);
+    auto child3 = child2->surface()->above().constFirst();
     QCOMPARE(child3->parentSurface(), child2->surface());
     QCOMPARE(child3->mainSurface(), parentServerSurface);
-    QCOMPARE(child3->surface()->childSubSurfaces().count(), 0);
+    QCOMPARE(child3->surface()->below().count(), 0);
+    QCOMPARE(child3->surface()->above().count(), 0);
 
     // so far no surface is mapped
     QVERIFY(!parentServerSurface->isMapped());

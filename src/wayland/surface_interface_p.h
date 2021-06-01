@@ -56,12 +56,16 @@ struct SurfaceState
     QList<KWaylandFrameCallback *> frameCallbacks;
     QPoint offset = QPoint();
     BufferInterface *buffer = nullptr;
-    // stacking order: bottom (first) -> top (last)
-    QList<SubSurfaceInterface *> children;
     QPointer<ShadowInterface> shadow;
     QPointer<BlurInterface> blur;
     QPointer<ContrastInterface> contrast;
     QPointer<SlideInterface> slide;
+
+    // Subsurfaces are stored in two lists. The below list contains subsurfaces that
+    // are below their parent surface; the above list contains subsurfaces that are
+    // placed above the parent surface.
+    QList<SubSurfaceInterface *> below;
+    QList<SubSurfaceInterface *> above;
 
     struct {
         QRectF sourceGeometry = QRectF();
@@ -81,8 +85,8 @@ public:
 
     void addChild(SubSurfaceInterface *subsurface);
     void removeChild(SubSurfaceInterface *subsurface);
-    bool raiseChild(SubSurfaceInterface *subsurface, SurfaceInterface *sibling);
-    bool lowerChild(SubSurfaceInterface *subsurface, SurfaceInterface *sibling);
+    bool raiseChild(SubSurfaceInterface *subsurface, SurfaceInterface *anchor);
+    bool lowerChild(SubSurfaceInterface *subsurface, SurfaceInterface *anchor);
     void setShadow(const QPointer<ShadowInterface> &shadow);
     void setBlur(const QPointer<BlurInterface> &blur);
     void setContrast(const QPointer<ContrastInterface> &contrast);

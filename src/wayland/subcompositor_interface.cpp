@@ -193,8 +193,11 @@ void SubSurfaceInterfacePrivate::commit()
             surfacePrivate->swapStates(&surfacePrivate->pending, &surfacePrivate->current, true);
         }
 
-        const QList<SubSurfaceInterface *> children = surfacePrivate->current.children;
-        for (SubSurfaceInterface *subsurface : children) {
+        for (SubSurfaceInterface *subsurface : qAsConst(surfacePrivate->current.below)) {
+            SubSurfaceInterfacePrivate *subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
+            subsurfacePrivate->parentCommit();
+        }
+        for (SubSurfaceInterface *subsurface : qAsConst(surfacePrivate->current.above)) {
             SubSurfaceInterfacePrivate *subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
             subsurfacePrivate->parentCommit();
         }
@@ -219,8 +222,11 @@ void SubSurfaceInterfacePrivate::synchronizedCommit()
     const SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
     commitFromCache();
 
-    const QList<SubSurfaceInterface *> children = surfacePrivate->current.children;
-    for (SubSurfaceInterface *subsurface : children) {
+    for (SubSurfaceInterface *subsurface : qAsConst(surfacePrivate->current.below)) {
+        SubSurfaceInterfacePrivate *subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
+        subsurfacePrivate->parentCommit(true);
+    }
+    for (SubSurfaceInterface *subsurface : qAsConst(surfacePrivate->current.above)) {
         SubSurfaceInterfacePrivate *subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
         subsurfacePrivate->parentCommit(true);
     }
