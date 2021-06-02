@@ -316,6 +316,7 @@ void SeatInterfacePrivate::endDrag(quint32 serial)
     if (dragSource) {
         // TODO: Also check the current drag-and-drop action.
         if (dragTargetDevice && dragSource->isAccepted()) {
+            Q_EMIT q->dragDropped();
             dragTargetDevice->drop();
             dragSource->dropPerformed();
         } else {

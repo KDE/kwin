@@ -657,6 +657,11 @@ Q_SIGNALS:
      * @see dragSurface
      */
     void dragSurfaceChanged();
+
+    /** Emitted when a drop ocurrs in a drag'n'drop operation. This is emitted
+     * before dragEnded
+     */
+    void dragDropped();
     /**
      * Emitted whenever the focused text input changed.
      * @see focusedTextInput
