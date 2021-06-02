@@ -24,6 +24,7 @@
 #include "unmanaged.h"
 #include "waylandoutput.h"
 #include "waylandoutputdevice.h"
+#include "cecinput.h"
 
 // Client
 #include <KWayland/Client/connection_thread.h>
@@ -534,6 +535,7 @@ bool WaylandServer::init(InitializationFlags flags)
         connect(static_cast<Application*>(qApp), &Application::workspaceCreated, this, init);
     }
 
+    new CECInput(this);
     return true;
 }
 
