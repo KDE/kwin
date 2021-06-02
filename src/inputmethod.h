@@ -88,7 +88,7 @@ private:
         quint32 end = 0;
     } preedit;
 
-    bool m_enabled = false;
+    bool m_enabled = true;
     quint32 m_serial = 0;
     QScopedPointer<KStatusNotifierItem> m_sni;
     QPointer<AbstractClient> m_inputClient;

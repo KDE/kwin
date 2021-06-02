@@ -70,17 +70,6 @@ void InputMethod::init()
     });
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &InputMethod::hide);
 
-    if (waylandServer()) {
-        m_enabled = !input()->hasAlphaNumericKeyboard();
-        qCDebug(KWIN_VIRTUALKEYBOARD) << "enabled by default: " << m_enabled;
-        connect(input(), &InputRedirection::hasAlphaNumericKeyboardChanged, this,
-            [this] (bool set) {
-                qCDebug(KWIN_VIRTUALKEYBOARD) << "AlphaNumeric Keyboard changed:" << set << "toggling virtual keyboard.";
-                setEnabled(!set);
-            }
-        );
-    }
-
     updateSni();
 
     connect(this, &InputMethod::enabledChanged, this, &InputMethod::updateSni);
