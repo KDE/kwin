@@ -398,6 +398,9 @@ add_feature_info("SCHED_RESET_ON_FORK"
 pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=0.3.29)
 add_feature_info(PipeWire PipeWire_FOUND "Required for Wayland screencasting")
 
+pkg_check_modules(LibCEC IMPORTED_TARGET libcec)
+add_feature_info(LibCEC LibCEC_FOUND "Required for CEC support (remote control over HDMI support)")
+
 ########### global ###############
 
 include_directories(BEFORE

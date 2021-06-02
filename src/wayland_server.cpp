@@ -26,6 +26,7 @@
 #include "waylandoutput.h"
 #include "waylandoutputdevicev2.h"
 #include "virtualdesktops.h"
+#include "cecinput.h"
 
 // Server
 #include <KWaylandServer/appmenu_interface.h>
@@ -518,6 +519,7 @@ bool WaylandServer::init(InitializationFlags flags)
         connect(static_cast<Application*>(qApp), &Application::workspaceCreated, this, init);
     }
 
+    new CECInput(this);
     return true;
 }
 

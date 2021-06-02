@@ -235,6 +235,11 @@ target_link_libraries(kwin
 add_subdirectory(backends)
 add_subdirectory(scenes)
 
+if(TARGET PkgConfig::LibCEC)
+    target_sources(kwin PRIVATE cecinput.cpp)
+    target_link_libraries(kwin PkgConfig::LibCEC ${CMAKE_DL_LIBS})
+endif()
+
 if (KWIN_BUILD_CMS)
     target_sources(kwin PRIVATE
         colordevice.cpp
