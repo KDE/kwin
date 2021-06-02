@@ -105,6 +105,7 @@ set(kwin_SRCS
     scripting/scripting_logging.cpp
     scripting/scripting_model.cpp
     scripting/scriptingutils.cpp
+    scripting/thumbnailitem.cpp
     scripting/workspace_wrapper.cpp
     session.cpp
     session_consolekit.cpp
@@ -120,7 +121,6 @@ set(kwin_SRCS
     surfaceitem_x11.cpp
     syncalarmx11filter.cpp
     tablet_input.cpp
-    thumbnailitem.cpp
     toplevel.cpp
     touch_hide_cursor_spy.cpp
     touch_input.cpp

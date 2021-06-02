@@ -17,10 +17,10 @@
 #include "screenedgeitem.h"
 #include "scripting_model.h"
 #include "scripting_logging.h"
+#include "thumbnailitem.h"
 
 #include "options.h"
 #include "screenedge.h"
-#include "thumbnailitem.h"
 #include "workspace.h"
 #include "x11client.h"
 // KDE

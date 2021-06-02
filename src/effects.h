@@ -35,11 +35,6 @@ class QDBusServiceWatcher;
 
 namespace KWin
 {
-
-class AbstractThumbnailItem;
-class DesktopThumbnailItem;
-class WindowThumbnailItem;
-
 class AbstractClient;
 class Compositor;
 class Deleted;
@@ -508,25 +503,10 @@ public:
     void setData(int role, const QVariant &data) override;
     QVariant data(int role) const override;
 
-    void registerThumbnail(AbstractThumbnailItem *item);
-    QHash<WindowThumbnailItem*, QPointer<EffectWindowImpl> > const &thumbnails() const {
-        return m_thumbnails;
-    }
-    QList<DesktopThumbnailItem*> const &desktopThumbnails() const {
-        return m_desktopThumbnails;
-    }
-
-private Q_SLOTS:
-    void thumbnailDestroyed(QObject *object);
-    void thumbnailTargetChanged();
-    void desktopThumbnailDestroyed(QObject *object);
 private:
-    void insertThumbnail(WindowThumbnailItem *item);
     Toplevel* toplevel;
     Scene::Window* sw; // This one is used only during paint pass.
     QHash<int, QVariant> dataMap;
-    QHash<WindowThumbnailItem*, QPointer<EffectWindowImpl> > m_thumbnails;
-    QList<DesktopThumbnailItem*> m_desktopThumbnails;
     bool managed = false;
     bool waylandClient;
     bool x11Client;

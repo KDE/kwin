@@ -26,7 +26,6 @@ class DecoratedClientImpl;
 }
 
 class AbstractOutput;
-class AbstractThumbnailItem;
 class DecorationRenderer;
 class Deleted;
 class EffectFrameImpl;
@@ -193,6 +192,8 @@ public:
     virtual PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap);
     virtual PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
+    virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
+
 Q_SIGNALS:
     void frameRendered();
     void resetCompositing();
@@ -236,7 +237,6 @@ protected:
     // let the scene decide whether it's better to paint more of the screen, eg. in order to allow a buffer swap
     // the default is NOOP
     virtual void extendPaintRegion(QRegion &region, bool opaqueFullscreen);
-    virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
 
     virtual void paintEffectQuickView(EffectQuickView *w) = 0;
 
@@ -263,8 +263,6 @@ protected:
     // windows in their stacking order
     QVector< Window* > stacking_order;
 private:
-    void paintWindowThumbnails(Scene::Window *w, const QRegion &region, qreal opacity, qreal brightness, qreal saturation);
-    void paintDesktopThumbnails(Scene::Window *w);
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     void reallocRepaints();
     QHash< Toplevel*, Window* > m_windows;

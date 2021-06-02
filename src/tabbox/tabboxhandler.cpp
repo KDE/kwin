@@ -15,7 +15,6 @@
 // tabbox
 #include "clientmodel.h"
 #include "desktopmodel.h"
-#include "thumbnailitem.h"
 #include "scripting/scripting.h"
 #include "switcheritem.h"
 #include "tabbox_logging.h"

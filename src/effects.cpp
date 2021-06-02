@@ -31,7 +31,6 @@
 #include "scripting/scriptedeffect.h"
 #include "screens.h"
 #include "screenlockerwatcher.h"
-#include "thumbnailitem.h"
 #include "virtualdesktops.h"
 #include "window_property_notify_x11_filter.h"
 #include "workspace.h"
@@ -39,6 +38,8 @@
 #include "kwineffectquickview.h"
 
 #include <QDebug>
+#include <QMouseEvent>
+#include <QWheelEvent>
 
 #include <Plasma/Theme>
 
@@ -2096,47 +2097,6 @@ EffectWindow* effectWindow(Scene::Window* w)
 void EffectWindowImpl::elevate(bool elevate)
 {
     effects->setElevatedWindow(this, elevate);
-}
-
-void EffectWindowImpl::registerThumbnail(AbstractThumbnailItem *item)
-{
-    if (WindowThumbnailItem *thumb = qobject_cast<WindowThumbnailItem*>(item)) {
-        insertThumbnail(thumb);
-        connect(thumb, &QObject::destroyed, this, &EffectWindowImpl::thumbnailDestroyed);
-        connect(thumb, &WindowThumbnailItem::wIdChanged, this, &EffectWindowImpl::thumbnailTargetChanged);
-    } else if (DesktopThumbnailItem *desktopThumb = qobject_cast<DesktopThumbnailItem*>(item)) {
-        m_desktopThumbnails.append(desktopThumb);
-        connect(desktopThumb, &QObject::destroyed, this, &EffectWindowImpl::desktopThumbnailDestroyed);
-    }
-}
-
-void EffectWindowImpl::thumbnailDestroyed(QObject *object)
-{
-    // we know it is a ThumbnailItem
-    m_thumbnails.remove(static_cast<WindowThumbnailItem*>(object));
-}
-
-void EffectWindowImpl::thumbnailTargetChanged()
-{
-    if (WindowThumbnailItem *item = qobject_cast<WindowThumbnailItem*>(sender())) {
-        insertThumbnail(item);
-    }
-}
-
-void EffectWindowImpl::insertThumbnail(WindowThumbnailItem *item)
-{
-    EffectWindow *w = effects->findWindow(item->wId());
-    if (w) {
-        m_thumbnails.insert(item, QPointer<EffectWindowImpl>(static_cast<EffectWindowImpl*>(w)));
-    } else {
-        m_thumbnails.insert(item, QPointer<EffectWindowImpl>());
-    }
-}
-
-void EffectWindowImpl::desktopThumbnailDestroyed(QObject *object)
-{
-    // we know it is a DesktopThumbnailItem
-    m_desktopThumbnails.removeAll(static_cast<DesktopThumbnailItem*>(object));
 }
 
 void EffectWindowImpl::minimize()
