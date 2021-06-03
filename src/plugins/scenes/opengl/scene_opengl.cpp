@@ -443,7 +443,7 @@ void SceneOpenGL::initDebugOutput()
 
 SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
 {
-    OpenGLBackend *backend = kwinApp()->platform()->createOpenGLBackend();
+    QScopedPointer<OpenGLBackend> backend(kwinApp()->platform()->createOpenGLBackend());
     if (!backend) {
         return nullptr;
     }
@@ -451,13 +451,12 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
         backend->init();
     }
     if (backend->isFailed()) {
-        delete backend;
         return nullptr;
     }
     SceneOpenGL *scene = nullptr;
     // first let's try an OpenGL 2 scene
-    if (SceneOpenGL2::supported(backend)) {
-        scene = new SceneOpenGL2(backend, parent);
+    if (SceneOpenGL2::supported(backend.data())) {
+        scene = new SceneOpenGL2(backend.take(), parent);
         if (scene->initFailed()) {
             delete scene;
             scene = nullptr;
@@ -471,7 +470,6 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
             qCCritical(KWIN_OPENGL) << "To overwrite the detection use the environment variable KWIN_COMPOSE";
             qCCritical(KWIN_OPENGL) << "For more information see https://community.kde.org/KWin/Environment_Variables#KWIN_COMPOSE";
         }
-        delete backend;
     }
 
     return scene;
