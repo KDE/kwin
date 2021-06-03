@@ -197,6 +197,8 @@ void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint
     ScreenPaintData data(projection, effects->findScreen(painted_screen));
     effects->paintScreen(*mask, region, data);
 
+    Q_EMIT frameRendered();
+
     foreach (Window *w, stacking_order) {
         effects->postPaintWindow(effectWindow(w));
     }
@@ -224,8 +226,6 @@ void Scene::finalPaintScreen(int mask, const QRegion &region, ScreenPaintData& d
         paintGenericScreen(mask, data);
     else
         paintSimpleScreen(mask, region);
-
-    Q_EMIT frameRendered();
 }
 
 static void resetRepaintsHelper(Item *item, int screen)
