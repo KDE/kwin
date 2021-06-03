@@ -417,17 +417,21 @@ int main(int argc, char * argv[])
     QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
     // KSMServer talks to us directly on DBus.
     QCoreApplication::setAttribute(Qt::AA_DisableSessionManager);
+    // For sharing thumbnails between our scene graph and qtquick.
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+
+    QSurfaceFormat format = QSurfaceFormat::defaultFormat();
+    // shared opengl contexts must have the same reset notification policy
+    format.setOptions(QSurfaceFormat::ResetNotification);
+    // disables vsync for any QtQuick windows we create (BUG 406180)
+    format.setSwapInterval(0);
+    QSurfaceFormat::setDefaultFormat(format);
 
     KWin::ApplicationX11 a(argc, argv);
     a.setupTranslator();
 
     KWin::Application::createAboutData();
     KQuickAddons::QtQuickSettings::init();
-
-    // disables vsync for any QtQuick windows we create (BUG 406180)
-    QSurfaceFormat format = QSurfaceFormat::defaultFormat();
-    format.setSwapInterval(0);
-    QSurfaceFormat::setDefaultFormat(format);
 
     QCommandLineOption replaceOption(QStringLiteral("replace"), i18n("Replace already-running ICCCM2.0-compliant window manager"));
 

@@ -27,6 +27,8 @@ public:
     EglBackend(Display *display, X11StandalonePlatform *platform);
     ~EglBackend() override;
 
+    void init() override;
+
     PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *texture) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;

@@ -29,8 +29,6 @@
 namespace KWin
 {
 
-static std::unique_ptr<QOpenGLContext> s_shareContext;
-
 class Q_DECL_HIDDEN EffectQuickView::Private
 {
 public:
@@ -88,7 +86,7 @@ EffectQuickView::EffectQuickView(QObject *parent, ExportMode exportMode)
         format.setStencilBufferSize(8);
 
         d->m_glcontext.reset(new QOpenGLContext);
-        d->m_glcontext->setShareContext(s_shareContext.get());
+        d->m_glcontext->setShareContext(QOpenGLContext::globalShareContext());
         d->m_glcontext->setFormat(format);
         d->m_glcontext->create();
 
@@ -103,11 +101,6 @@ EffectQuickView::EffectQuickView(QObject *parent, ExportMode exportMode)
 
         if (!d->m_glcontext->shareContext()) {
             qCDebug(LIBKWINEFFECTS) << "Failed to create a shared context, falling back to raster rendering";
-
-            qCDebug(LIBKWINEFFECTS) << "Extra debug:";
-            qCDebug(LIBKWINEFFECTS) << "our context:" << d->m_glcontext.data();
-            qCDebug(LIBKWINEFFECTS) << "share context:" << s_shareContext.get();
-
             // still render via GL, but blit for presentation
             d->m_useBlit = true;
         }
@@ -236,11 +229,6 @@ void EffectQuickView::forwardKeyEvent(QKeyEvent *keyEvent)
         return;
     }
     QCoreApplication::sendEvent(d->m_view, keyEvent);
-}
-
-void EffectQuickView::setShareContext(std::unique_ptr<QOpenGLContext> context)
-{
-    s_shareContext = std::move(context);
 }
 
 QRect EffectQuickView::geometry() const

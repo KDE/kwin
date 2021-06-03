@@ -6,6 +6,7 @@
 */
 
 #include "eglbackend.h"
+#include "logging.h"
 #include "options.h"
 #include "overlaywindow.h"
 #include "platform.h"
@@ -15,6 +16,9 @@
 #include "softwarevsyncmonitor.h"
 #include "surfaceitem_x11.h"
 #include "x11_platform.h"
+
+#include <QOpenGLContext>
+#include <QtPlatformHeaders/QEGLNativeContext>
 
 namespace KWin
 {
@@ -46,6 +50,30 @@ EglBackend::~EglBackend()
 PlatformSurfaceTexture *EglBackend::createPlatformSurfaceTextureX11(SurfacePixmapX11 *texture)
 {
     return new EglSurfaceTextureX11(this, texture);
+}
+
+void EglBackend::init()
+{
+    QOpenGLContext *qtShareContext = QOpenGLContext::globalShareContext();
+    EGLContext shareContext = EGL_NO_CONTEXT;
+    if (qtShareContext) {
+        qDebug(KWIN_X11STANDALONE) << "Global share context format:" << qtShareContext->format();
+        const QVariant nativeHandle = qtShareContext->nativeHandle();
+        if (!nativeHandle.canConvert<QEGLNativeContext>()) {
+            setFailed(QStringLiteral("Invalid QOpenGLContext::globalShareContext()"));
+            return;
+        } else {
+            QEGLNativeContext handle = qvariant_cast<QEGLNativeContext>(nativeHandle);
+            shareContext = handle.context();
+        }
+    }
+    if (shareContext == EGL_NO_CONTEXT) {
+        setFailed(QStringLiteral("QOpenGLContext::globalShareContext() is required"));
+        return;
+    }
+
+    kwinApp()->platform()->setSceneEglGlobalShareContext(shareContext);
+    EglOnXBackend::init();
 }
 
 void EglBackend::screenGeometryChanged(const QSize &size)
