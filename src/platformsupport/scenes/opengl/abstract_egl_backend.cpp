@@ -116,13 +116,15 @@ void AbstractEglBackend::teardown()
 
 void AbstractEglBackend::cleanup()
 {
-    cleanupGL();
-    doneCurrent();
-    eglDestroyContext(m_display, m_context);
     cleanupSurfaces();
-    eglReleaseThread();
-    kwinApp()->platform()->setSceneEglContext(EGL_NO_CONTEXT);
-    kwinApp()->platform()->setSceneEglConfig(nullptr);
+    if (isPrimary()) {
+        cleanupGL();
+        doneCurrent();
+        eglDestroyContext(m_display, m_context);
+        eglReleaseThread();
+        kwinApp()->platform()->setSceneEglContext(EGL_NO_CONTEXT);
+        kwinApp()->platform()->setSceneEglConfig(nullptr);
+    }
 }
 
 void AbstractEglBackend::cleanupSurfaces()
