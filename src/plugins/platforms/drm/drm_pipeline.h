@@ -71,6 +71,7 @@ public:
     void printDebugInfo() const;
     void setUserData(DrmOutput *data);
     QSize sourceSize() const;
+    void updateProperties();
 
 private:
     bool atomicCommit();

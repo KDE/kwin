@@ -83,12 +83,23 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
             return true;
         }
     }
-    bool result = m_gpu->atomicModeSetting() ? atomicCommit() : presentLegacy();
-    if (!result) {
-        qCWarning(KWIN_DRM) << "Present failed!" << strerror(errno);
-        printDebugInfo();
+    if (m_gpu->atomicModeSetting()) {
+        if (!atomicCommit()) {
+            // update properties and try again
+            updateProperties();
+            if (!atomicCommit()) {
+                qCWarning(KWIN_DRM) << "Atomic present failed!" << strerror(errno);
+                printDebugInfo();
+                return false;
+            }
+        }
+    } else {
+        if (!presentLegacy()) {
+            qCWarning(KWIN_DRM) << "Present failed!" << strerror(errno);
+            return false;
+        }
     }
-    return result;
+    return true;
 }
 
 bool DrmPipeline::atomicCommit()
@@ -333,6 +344,10 @@ bool DrmPipeline::setActive(bool active)
         m_primaryPlane->setPending(DrmPlane::PropertyIndex::CrtcId, active ? m_crtc->id() : 0);
         if (active) {
             success = test();
+            if (!success) {
+                updateProperties();
+                success = test();
+            }
         } else {
             // immediately commit if disabling as there will be no present
             success = atomicCommit();
@@ -495,6 +510,13 @@ void DrmPipeline::pageFlipped()
 void DrmPipeline::setUserData(DrmOutput *data)
 {
     m_pageflipUserData = data;
+}
+
+void DrmPipeline::updateProperties()
+{
+    for (const auto &obj : qAsConst(m_allObjects)) {
+        obj->updateProperties();
+    }
 }
 
 static void printProps(DrmObject *object)

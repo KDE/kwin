@@ -26,12 +26,6 @@ class DrmOutput;
 class DrmObject
 {
 public:
-    /**
-     * Create DRM object representation.
-     * @param object_id provided by the kernel
-     * @param fd of the DRM device
-     */
-    DrmObject(DrmGpu *gpu, uint32_t objectId);
     virtual ~DrmObject();
 
     /**
@@ -182,6 +176,8 @@ public:
     bool needsCommit() const;
     virtual bool needsModeset() const = 0;
 
+    virtual bool updateProperties();
+
 protected:
     struct PropertyDefinition
     {
@@ -192,13 +188,10 @@ protected:
         QByteArray name;
         QVector<QByteArray> enumNames;
     };
-    /**
-     * Initialize properties of object. Only derived classes know names and quantities of
-     * properties.
-     *
-     * @return true when properties have been initialized successfully
-     */
-    bool initProps(const QVector<PropertyDefinition> &&vector, uint32_t objectType);
+
+    DrmObject(DrmGpu *gpu, uint32_t objectId, const QVector<PropertyDefinition> &&vector, uint32_t objectType);
+
+    bool initProps();
 
     template <typename T>
     void deleteProp(T prop)
@@ -207,12 +200,13 @@ protected:
         m_props[static_cast<uint32_t>(prop)] = nullptr;
     }
 
-    // for comparison with received name of DRM object
     QVector<Property *> m_props;
 
 private:
     DrmGpu *m_gpu;
     const uint32_t m_id;
+    const uint32_t m_objectType;
+    const QVector<PropertyDefinition> m_propertyDefinitions;
 };
 
 }

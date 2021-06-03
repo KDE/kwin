@@ -142,6 +142,7 @@ void DrmBackend::reactivate()
     m_active = true;
 
     for (const auto &output : qAsConst(m_outputs)) {
+        output->pipeline()->updateProperties();
         if (output->isEnabled()) {
             output->renderLoop()->uninhibit();
             output->showCursor();

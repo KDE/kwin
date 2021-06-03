@@ -22,7 +22,21 @@ namespace KWin
 {
 
 DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
-    : DrmObject(gpu, connectorId)
+    : DrmObject(gpu, connectorId, {
+            PropertyDefinition(QByteArrayLiteral("CRTC_ID")),
+            PropertyDefinition(QByteArrayLiteral("non-desktop")),
+            PropertyDefinition(QByteArrayLiteral("DPMS")),
+            PropertyDefinition(QByteArrayLiteral("EDID")),
+            PropertyDefinition(QByteArrayLiteral("overscan")),
+            PropertyDefinition(QByteArrayLiteral("vrr_capable")),
+            PropertyDefinition(QByteArrayLiteral("underscan"), {
+                QByteArrayLiteral("off"),
+                QByteArrayLiteral("on"),
+                QByteArrayLiteral("auto")
+            }),
+            PropertyDefinition(QByteArrayLiteral("underscan vborder")),
+            PropertyDefinition(QByteArrayLiteral("underscan hborder")),
+        }, DRM_MODE_OBJECT_CONNECTOR)
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
     if (m_conn) {
@@ -62,21 +76,7 @@ bool DrmConnector::init()
     }
     qCDebug(KWIN_DRM) << "Creating connector" << id();
 
-    if (!initProps({
-            PropertyDefinition(QByteArrayLiteral("CRTC_ID")),
-            PropertyDefinition(QByteArrayLiteral("non-desktop")),
-            PropertyDefinition(QByteArrayLiteral("DPMS")),
-            PropertyDefinition(QByteArrayLiteral("EDID")),
-            PropertyDefinition(QByteArrayLiteral("overscan")),
-            PropertyDefinition(QByteArrayLiteral("vrr_capable")),
-            PropertyDefinition(QByteArrayLiteral("underscan"), {
-                QByteArrayLiteral("off"),
-                QByteArrayLiteral("on"),
-                QByteArrayLiteral("auto")
-            }),
-            PropertyDefinition(QByteArrayLiteral("underscan vborder")),
-            PropertyDefinition(QByteArrayLiteral("underscan hborder")),
-        }, DRM_MODE_OBJECT_CONNECTOR)) {
+    if (!initProps()) {
         return false;
     }
 

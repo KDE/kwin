@@ -16,29 +16,7 @@ namespace KWin
 {
 
 DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
-    : DrmObject(gpu, planeId)
-{
-}
-
-bool DrmPlane::init()
-{
-    qCDebug(KWIN_DRM) << "Atomic init for plane:" << id();
-    DrmScopedPointer<drmModePlane> p(drmModeGetPlane(gpu()->fd(), id()));
-
-    if (!p) {
-        qCWarning(KWIN_DRM) << "Failed to get kernel plane" << id();
-        return false;
-    }
-
-    m_possibleCrtcs = p->possible_crtcs;
-
-    int count_formats = p->count_formats;
-    m_formats.resize(count_formats);
-    for (int i = 0; i < count_formats; i++) {
-        m_formats[i] = p->formats[i];
-    }
-
-    bool success = initProps({
+    : DrmObject(gpu, planeId, {
         PropertyDefinition(QByteArrayLiteral("type"), {
             QByteArrayLiteral("Overlay"),
             QByteArrayLiteral("Primary"),
@@ -60,8 +38,29 @@ bool DrmPlane::init()
             QByteArrayLiteral("rotate-270"),
             QByteArrayLiteral("reflect-x"),
             QByteArrayLiteral("reflect-y")}),
-        }, DRM_MODE_OBJECT_PLANE
-    );
+        }, DRM_MODE_OBJECT_PLANE)
+{
+}
+
+bool DrmPlane::init()
+{
+    qCDebug(KWIN_DRM) << "Atomic init for plane:" << id();
+    DrmScopedPointer<drmModePlane> p(drmModeGetPlane(gpu()->fd(), id()));
+
+    if (!p) {
+        qCWarning(KWIN_DRM) << "Failed to get kernel plane" << id();
+        return false;
+    }
+
+    m_possibleCrtcs = p->possible_crtcs;
+
+    int count_formats = p->count_formats;
+    m_formats.resize(count_formats);
+    for (int i = 0; i < count_formats; i++) {
+        m_formats[i] = p->formats[i];
+    }
+
+    bool success = initProps();
     if (success) {
         m_supportedTransformations = Transformations();
         auto checkSupport = [this] (uint64_t value, Transformation t) {

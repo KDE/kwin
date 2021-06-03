@@ -19,10 +19,13 @@ namespace KWin
  * Definitions for class DrmObject
  */
 
-DrmObject::DrmObject(DrmGpu *gpu, uint32_t objectId)
+DrmObject::DrmObject(DrmGpu *gpu, uint32_t objectId, const QVector<PropertyDefinition> &&vector, uint32_t objectType)
     : m_gpu(gpu)
     , m_id(objectId)
+    , m_objectType(objectType)
+    , m_propertyDefinitions(vector)
 {
+    m_props.resize(m_propertyDefinitions.count());
 }
 
 DrmObject::~DrmObject()
@@ -30,37 +33,15 @@ DrmObject::~DrmObject()
     qDeleteAll(m_props);
 }
 
-bool DrmObject::initProps(const QVector<PropertyDefinition> &&vector, uint32_t objectType)
+bool DrmObject::initProps()
 {
-    DrmScopedPointer<drmModeObjectProperties> properties(drmModeObjectGetProperties(m_gpu->fd(), m_id, objectType));
-    if (!properties) {
-        qCWarning(KWIN_DRM) << "Failed to get properties for object" << m_id;
+    if (!updateProperties()) {
         return false;
     }
-    m_props.resize(vector.count());
-    for (uint32_t i = 0; i < properties->count_props; i++) {
-        DrmScopedPointer<drmModePropertyRes> prop(drmModeGetProperty(m_gpu->fd(), properties->props[i]));
-        if (!prop) {
-            qCWarning(KWIN_DRM, "Getting property %d of object %d failed!", i, m_id);
-            continue;
-        }
-        for (int j = 0; j < vector.count(); j++) {
-            const PropertyDefinition &def = vector[j];
-            if (def.name == prop->name) {
-                drmModePropertyBlobRes *blob = nullptr;
-                if (prop->flags & DRM_MODE_PROP_BLOB) {
-                    blob = drmModeGetPropertyBlob(m_gpu->fd(), properties->prop_values[i]);
-                }
-                qCDebug(KWIN_DRM, "Found property %s with value %lu", def.name.data(), properties->prop_values[i]);
-                m_props[j] = new Property(m_gpu, prop.data(), properties->prop_values[i], def.enumNames, blob);
-                break;
-            }
-        }
-    }
-    if (KWIN_DRM().isDebugEnabled()) {
-        for (int i = 0; i < vector.count(); i++) {
+    if (KWIN_DRM().isDebugEnabled() && m_gpu->atomicModeSetting()) {
+        for (int i = 0; i < m_propertyDefinitions.count(); i++) {
             if (!m_props[i]) {
-                qCDebug(KWIN_DRM) << "Could not find property" << vector[i].name;
+                qCDebug(KWIN_DRM) << "Could not find property" << m_propertyDefinitions[i].name;
             }
         }
     }
@@ -123,8 +104,50 @@ bool DrmObject::needsCommit() const
     return false;
 }
 
+bool DrmObject::updateProperties()
+{
+    DrmScopedPointer<drmModeObjectProperties> properties(drmModeObjectGetProperties(m_gpu->fd(), m_id, m_objectType));
+    if (!properties) {
+        qCWarning(KWIN_DRM) << "Failed to get properties for object" << m_id;
+        return false;
+    }
+    for (int i = 0; i < m_propertyDefinitions.count(); i++) {
+        const PropertyDefinition &def = m_propertyDefinitions[i];
+        bool found = false;
+        for (uint32_t j = 0; j < properties->count_props; j++) {
+            DrmScopedPointer<drmModePropertyRes> prop(drmModeGetProperty(m_gpu->fd(), properties->props[j]));
+            if (!prop) {
+                qCWarning(KWIN_DRM, "Getting property %d of object %d failed!", j, m_id);
+                continue;
+            }
+            if (def.name == prop->name) {
+                drmModePropertyBlobRes *blob = nullptr;
+                if (prop->flags & DRM_MODE_PROP_BLOB) {
+                    blob = drmModeGetPropertyBlob(m_gpu->fd(), properties->prop_values[j]);
+                }
+                if (m_props[i]) {
+                    if (prop->flags & DRM_MODE_PROP_BLOB) {
+                        m_props[i]->setCurrentBlob(blob);
+                    } else {
+                        m_props[i]->setCurrent(properties->prop_values[i]);
+                    }
+                } else {
+                    qCDebug(KWIN_DRM, "Found property %s with value %lu", def.name.data(), properties->prop_values[j]);
+                    m_props[i] = new Property(m_gpu, prop.data(), properties->prop_values[j], def.enumNames, blob);
+                }
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            deleteProp(i);
+        }
+    }
+    return true;
+}
+
 /*
- * Definitions for struct Prop
+ * Definitions for DrmObject::Property
  */
 
 DrmObject::Property::Property(DrmGpu *gpu, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames, drmModePropertyBlobRes *blob)
