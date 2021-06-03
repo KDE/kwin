@@ -12,9 +12,6 @@
 #include "drag.h"
 
 #include <KWayland/Client/datadevicemanager.h>
-#include <KWayland/Client/dataoffer.h>
-
-#include <KWaylandServer/datadevicemanager_interface.h>
 
 #include <QPoint>
 #include <QPointer>
@@ -52,8 +49,8 @@ public:
     DragEventReply moveFilter(Toplevel *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
-    void setDragAndDropAction(DnDAction action);
-    DnDAction selectedDragAndDropAction();
+    void setDragAndDropAction(KWayland::Client::DataDeviceManager::DnDAction action);
+    KWayland::Client::DataDeviceManager::DnDAction selectedDragAndDropAction();
 
     bool end() override {
         return false;
@@ -81,7 +78,7 @@ private:
     QVector<WlVisit *> m_oldVisits;
 
     bool m_performed = false;
-    DnDAction m_lastSelectedDragAndDropAction = DnDAction::None;
+    KWayland::Client::DataDeviceManager::DnDAction m_lastSelectedDragAndDropAction = KWayland::Client::DataDeviceManager::DnDAction::None;
 
     Q_DISABLE_COPY(XToWlDrag)
 };
@@ -142,7 +139,7 @@ private:
     uint32_t m_version = 0;
 
     xcb_atom_t m_actionAtom;
-    DnDAction m_action = DnDAction::None;
+    KWayland::Client::DataDeviceManager::DnDAction m_action = KWayland::Client::DataDeviceManager::DnDAction::None;
 
     bool m_mapped = false;
     bool m_entered = false;

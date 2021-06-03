@@ -11,19 +11,12 @@
 
 #include "drag.h"
 
-#include <KWayland/Client/dataoffer.h>
+#include <KWaylandServer/datadevicemanager_interface.h>
 
 #include <QPoint>
 #include <QPointer>
 #include <QVector>
 
-namespace KWayland
-{
-namespace Client
-{
-class Surface;
-}
-}
 namespace KWaylandServer
 {
 class DataDeviceInterface;
@@ -41,8 +34,6 @@ namespace Xwl
 class X11Source;
 enum class DragEventReply;
 class Xvisit;
-
-using DnDActions = KWayland::Client::DataDeviceManager::DnDActions;
 
 class WlToXDrag : public Drag
 {
@@ -125,16 +116,12 @@ private:
         QPoint cache;
     } m_pos;
 
-    // Must be QPointer, because KWayland::Client::DataDevice
-    // might delete it.
-    QPointer<KWayland::Client::DataOffer> m_dataOffer;
-
     // supported by the Wl source
-    DnDActions m_supportedActions = DnDAction::None;
+    KWaylandServer::DataDeviceManagerInterface::DnDActions m_supportedActions = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
     // preferred by the X client
-    DnDAction m_preferredAction = DnDAction::None;
+    KWaylandServer::DataDeviceManagerInterface::DnDAction m_preferredAction = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
     // decided upon by the compositor
-    DnDAction m_proposedAction = DnDAction::None;
+    KWaylandServer::DataDeviceManagerInterface::DnDAction m_proposedAction = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
 
     struct {
         bool entered = false;

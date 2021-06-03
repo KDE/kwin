@@ -44,33 +44,5 @@ void Drag::sendClientMessage(xcb_window_t target, xcb_atom_t type, xcb_client_me
     xcb_flush(xcbConn);
 }
 
-DnDAction Drag::atomToClientAction(xcb_atom_t atom)
-{
-    if (atom == atoms->xdnd_action_copy) {
-        return DnDAction::Copy;
-    } else if (atom == atoms->xdnd_action_move) {
-        return DnDAction::Move;
-    } else if (atom == atoms->xdnd_action_ask) {
-        // we currently do not support it - need some test client first
-        return DnDAction::None;
-//        return DnDAction::Ask;
-    }
-    return DnDAction::None;
-}
-
-xcb_atom_t Drag::clientActionToAtom(DnDAction action)
-{
-    if (action == DnDAction::Copy) {
-        return atoms->xdnd_action_copy;
-    } else if (action == DnDAction::Move) {
-        return atoms->xdnd_action_move;
-    } else if (action == DnDAction::Ask) {
-        // we currently do not support it - need some test client first
-        return XCB_ATOM_NONE;
-//        return atoms->xdnd_action_ask;
-    }
-    return XCB_ATOM_NONE;
-}
-
 } // namespace Xwl
 } // namespace KWin
