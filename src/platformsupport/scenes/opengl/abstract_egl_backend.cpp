@@ -37,13 +37,13 @@ static bool isOpenGLES_helper()
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }
 
-static bool ensureGlobalShareContext()
+static EGLContext ensureGlobalShareContext()
 {
     const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
     const EGLConfig eglConfig = kwinApp()->platform()->sceneEglConfig();
 
-    if (s_globalShareContext != EGL_NO_CONTEXT) {
-        return true;
+    if (kwinApp()->platform()->sceneEglGlobalShareContext() != EGL_NO_CONTEXT) {
+        return kwinApp()->platform()->sceneEglGlobalShareContext();
     }
 
     std::vector<int> attribs;
@@ -62,8 +62,7 @@ static bool ensureGlobalShareContext()
     }
 
     kwinApp()->platform()->setSceneEglGlobalShareContext(s_globalShareContext);
-
-    return s_globalShareContext != EGL_NO_CONTEXT;
+    return s_globalShareContext;
 }
 
 static void destroyGlobalShareContext()
@@ -255,7 +254,8 @@ bool AbstractEglBackend::isOpenGLES() const
 
 bool AbstractEglBackend::createContext()
 {
-    if (!ensureGlobalShareContext()) {
+    EGLContext globalShareContext = ensureGlobalShareContext();
+    if (globalShareContext == EGL_NO_CONTEXT) {
         return false;
     }
 
@@ -329,7 +329,7 @@ bool AbstractEglBackend::createContext()
     EGLContext ctx = EGL_NO_CONTEXT;
     for (auto it = candidates.begin(); it != candidates.end(); it++) {
         const auto attribs = (*it)->build();
-        ctx = eglCreateContext(m_display, config(), s_globalShareContext, attribs.data());
+        ctx = eglCreateContext(m_display, config(), globalShareContext, attribs.data());
         if (ctx != EGL_NO_CONTEXT) {
             qCDebug(KWIN_OPENGL) << "Created EGL context with attributes:" << (*it).get();
             break;
