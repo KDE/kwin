@@ -24,6 +24,16 @@ std::vector<int> GlxContextAttributeBuilder::build() const
         attribs.emplace_back(majorVersion());
         attribs.emplace_back(GLX_CONTEXT_MINOR_VERSION_ARB);
         attribs.emplace_back(minorVersion());
+
+        // We should specify profile if OpenGL 3.2 or newer is requested.
+        if (majorVersion() >= 3 && minorVersion() >= 2) {
+            attribs.emplace_back(GLX_CONTEXT_PROFILE_MASK_ARB);
+            if (isCoreProfile()) {
+                attribs.emplace_back(GLX_CONTEXT_CORE_PROFILE_BIT_ARB);
+            } else {
+                attribs.emplace_back(GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB);
+            }
+        }
     }
     if (isRobust()) {
         attribs.emplace_back(GLX_CONTEXT_FLAGS_ARB);

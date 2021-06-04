@@ -321,18 +321,21 @@ bool GlxBackend::initRenderingContext()
             if (have_robustness) {
                 if (haveVideoMemoryPurge) {
                     GlxContextAttributeBuilder purgeMemoryCore;
-                    purgeMemoryCore.setVersion(3, 1);
+                    purgeMemoryCore.setVersion(3, 2);
                     purgeMemoryCore.setRobust(true);
+                    purgeMemoryCore.setCoreProfile(true);
                     purgeMemoryCore.setResetOnVideoMemoryPurge(true);
                     candidates.emplace_back(std::move(purgeMemoryCore));
                 }
                 GlxContextAttributeBuilder robustCore;
-                robustCore.setVersion(3, 1);
+                robustCore.setVersion(3, 2);
                 robustCore.setRobust(true);
+                robustCore.setCoreProfile(true);
                 candidates.emplace_back(std::move(robustCore));
             }
             GlxContextAttributeBuilder core;
-            core.setVersion(3, 1);
+            core.setVersion(3, 2);
+            core.setCoreProfile(true);
             candidates.emplace_back(std::move(core));
         } else {
             if (have_robustness) {
