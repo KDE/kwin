@@ -259,7 +259,6 @@ public:
     QRect transparentRect() const override;
 
     bool isClientSideDecorated() const;
-    bool wantsShadowToBeRendered() const override;
 
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const override;
 

@@ -3770,4 +3770,9 @@ void AbstractClient::cleanTabBox()
 #endif
 }
 
+bool AbstractClient::wantsShadowToBeRendered() const
+{
+    return !isFullScreen() && maximizeMode() != MaximizeFull;
+}
+
 }

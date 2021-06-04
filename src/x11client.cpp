@@ -1349,11 +1349,6 @@ void X11Client::checkNoBorder()
     setNoBorder(app_noborder);
 }
 
-bool X11Client::wantsShadowToBeRendered() const
-{
-    return !isFullScreen() && maximizeMode() != MaximizeFull;
-}
-
 void X11Client::updateShape()
 {
     if (shape()) {
