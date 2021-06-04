@@ -737,6 +737,7 @@ public:
     void processDecorationMove(const QPoint &localPos, const QPoint &globalPos);
     bool processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu = false);
     void processDecorationButtonRelease(QMouseEvent *event);
+    bool wantsShadowToBeRendered() const override;
 
     /**
      * TODO: fix boolean traps
