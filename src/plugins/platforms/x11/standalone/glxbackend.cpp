@@ -716,9 +716,6 @@ void GlxBackend::screenGeometryChanged(const QSize &size)
     overlayWindow()->setup(window);
     Xcb::sync();
 
-    makeCurrent();
-    glViewport(0, 0, size.width(), size.height());
-
     // The back buffer contents are now undefined
     m_bufferAge = 0;
 }
@@ -734,6 +731,9 @@ QRegion GlxBackend::beginFrame(int screenId)
 
     QRegion repaint;
     makeCurrent();
+
+    const QSize size = screens()->size();
+    glViewport(0, 0, size.width(), size.height());
 
     if (supportsBufferAge())
         repaint = accumulatedDamageHistory(m_bufferAge);

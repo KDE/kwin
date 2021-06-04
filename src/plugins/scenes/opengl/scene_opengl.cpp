@@ -832,7 +832,6 @@ void SceneOpenGL::screenGeometryChanged(const QSize &size)
     if (!viewportLimitsMatched(size))
         return;
     Scene::screenGeometryChanged(size);
-    glViewport(0,0, size.width(), size.height());
     m_backend->screenGeometryChanged(size);
     GLRenderTarget::setVirtualScreenSize(size);
 }

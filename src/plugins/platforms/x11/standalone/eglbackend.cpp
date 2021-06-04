@@ -61,6 +61,10 @@ void EglBackend::screenGeometryChanged(const QSize &size)
 QRegion EglBackend::beginFrame(int screenId)
 {
     Q_UNUSED(screenId)
+    makeCurrent();
+
+    const QSize size = screens()->size();
+    glViewport(0, 0, size.width(), size.height());
 
     QRegion repaint;
     if (supportsBufferAge())
