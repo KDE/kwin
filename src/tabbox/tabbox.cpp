@@ -1327,7 +1327,7 @@ void TabBox::keyPress(int keyQt)
             TabBoxWindowsMode, TabBoxWindowsAlternativeMode,
             TabBoxCurrentAppWindowsMode, TabBoxCurrentAppWindowsAlternativeMode
         };
-        static const QKeySequence cuts[2*ModeCount] = {
+        const QKeySequence cuts[2*ModeCount] = {
             // forward
             m_cutWalkThroughWindows, m_cutWalkThroughWindowsAlternative,
             m_cutWalkThroughCurrentAppWindows, m_cutWalkThroughCurrentAppWindowsAlternative,
