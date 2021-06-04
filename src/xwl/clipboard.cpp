@@ -167,22 +167,16 @@ void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &re
     const Mimes offers = source->offers();
 
     if (!offers.isEmpty()) {
-        if (!source->dataSource() || !removed.isEmpty()) {
-            // create new Wl DataSource if there is none or when types
-            // were removed (Wl Data Sources can only add types)
-            KWayland::Client::DataDeviceManager *dataDeviceManager =
-                waylandServer()->internalDataDeviceManager();
-            KWayland::Client::DataSource *dataSource =
-                dataDeviceManager->createDataSource(source);
+        // create new Wl DataSource if there is none or when types
+        // were removed (Wl Data Sources can only add types)
+        KWayland::Client::DataDeviceManager *dataDeviceManager =
+            waylandServer()->internalDataDeviceManager();
+        KWayland::Client::DataSource *dataSource =
+            dataDeviceManager->createDataSource(source);
 
-            // also offers directly the currently available types
-            source->setDataSource(dataSource);
-            DataBridge::self()->dataDevice()->setSelection(0, dataSource);
-        } else if (auto *dataSource = source->dataSource()) {
-            for (const QString &mime : added) {
-                dataSource->offer(mime);
-            }
-        }
+        // also offers directly the currently available types
+        source->setDataSource(dataSource);
+        DataBridge::self()->dataDevice()->setSelection(0, dataSource);
     } else {
         KWaylandServer::AbstractDataSource *currentSelection = waylandServer()->seat()->selection();
         if (!ownsSelection(currentSelection)) {
