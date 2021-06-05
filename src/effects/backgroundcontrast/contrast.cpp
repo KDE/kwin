@@ -91,10 +91,10 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
 {
     QRegion region;
     float colorTransform[16];
-    QByteArray value;
+    bool valid = false;
 
     if (net_wm_contrast_region != XCB_ATOM_NONE) {
-        value = w->readProperty(net_wm_contrast_region, net_wm_contrast_region, 32);
+        const QByteArray value = w->readProperty(net_wm_contrast_region, net_wm_contrast_region, 32);
 
         if (value.size() > 0 && !((value.size() - (16 * sizeof(uint32_t))) % ((4 * sizeof(uint32_t))))) {
             const uint32_t *cardinals = reinterpret_cast<const uint32_t*>(value.constData());
@@ -115,6 +115,8 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
             QMatrix4x4 colorMatrix(colorTransform);
             m_colorMatrices[w] = colorMatrix;
         }
+
+        valid = !value.isNull();
     }
 
     KWaylandServer::SurfaceInterface *surf = w->surface();
@@ -122,6 +124,7 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
     if (surf && surf->contrast()) {
         region = surf->contrast()->region();
         m_colorMatrices[w] = colorMatrix(surf->contrast()->contrast(), surf->contrast()->intensity(), surf->contrast()->saturation());
+        valid = true;
     }
 
     if (auto internal = w->internalWindow()) {
@@ -142,18 +145,19 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
                 saturation = 1.0;
             }
             m_colorMatrices[w] = colorMatrix(contrast, intensity, saturation);
+            valid = true;
         }
     }
 
-    //!value.isNull() full window in X11 case, surf->contrast()
-    //valid, full window in wayland case
-    if (region.isEmpty() && (!value.isNull() || (surf && surf->contrast()))) {
+    // If the specified region is empty, enable the contrast effect for the whole window.
+    if (region.isEmpty() && valid) {
         // Set the data to a dummy value.
         // This is needed to be able to distinguish between the value not
         // being set, and being set to an empty region.
         w->setData(WindowBackgroundContrastRole, 1);
-    } else
+    } else {
         w->setData(WindowBackgroundContrastRole, region);
+    }
 }
 
 void ContrastEffect::slotWindowAdded(EffectWindow *w)
