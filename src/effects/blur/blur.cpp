@@ -259,10 +259,10 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
 void BlurEffect::updateBlurRegion(EffectWindow *w) const
 {
     QRegion region;
-    QByteArray value;
+    bool valid = false;
 
     if (net_wm_blur_region != XCB_ATOM_NONE) {
-        value = w->readProperty(net_wm_blur_region, XCB_ATOM_CARDINAL, 32);
+        const QByteArray value = w->readProperty(net_wm_blur_region, XCB_ATOM_CARDINAL, 32);
         if (value.size() > 0 && !(value.size() % (4 * sizeof(uint32_t)))) {
             const uint32_t *cardinals = reinterpret_cast<const uint32_t*>(value.constData());
             for (unsigned int i = 0; i < value.size() / sizeof(uint32_t);) {
@@ -273,30 +273,33 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
                 region += QRect(x, y, w, h);
             }
         }
+        valid = !value.isNull();
     }
 
     KWaylandServer::SurfaceInterface *surf = w->surface();
 
     if (surf && surf->blur()) {
         region = surf->blur()->region();
+        valid = true;
     }
 
     if (auto internal = w->internalWindow()) {
         const auto property = internal->property("kwin_blur");
         if (property.isValid()) {
             region = property.value<QRegion>();
+            valid = true;
         }
     }
 
-    //!value.isNull() full window in X11 case, surf->blur()
-    //valid, full window in wayland case
-    if (region.isEmpty() && (!value.isNull() || (surf && surf->blur()))) {
+    // If the specified blur region is empty, enable blur for the whole window.
+    if (region.isEmpty() && valid) {
         // Set the data to a dummy value.
         // This is needed to be able to distinguish between the value not
         // being set, and being set to an empty region.
         w->setData(WindowBlurBehindRole, 1);
-    } else
+    } else {
         w->setData(WindowBlurBehindRole, region);
+    }
 }
 
 void BlurEffect::slotWindowAdded(EffectWindow *w)
