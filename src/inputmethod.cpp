@@ -10,6 +10,7 @@
 #include "abstract_client.h"
 #include "virtualkeyboard_dbus.h"
 #include "input.h"
+#include "inputpanelv1client.h"
 #include "keyboard_input.h"
 #include "utils.h"
 #include "screens.h"
@@ -135,11 +136,13 @@ void InputMethod::setActive(bool active)
     }
 }
 
-void InputMethod::clientAdded(AbstractClient* client)
+void InputMethod::clientAdded(AbstractClient *_client)
 {
-    if (!client->isInputMethod()) {
+    if (!_client->isInputMethod()) {
         return;
     }
+    const auto client = dynamic_cast<InputPanelV1Client *>(_client);
+
     m_inputClient = client;
     connect(client->surface(), &SurfaceInterface::inputChanged, this, &InputMethod::updateInputPanelState);
     connect(client, &QObject::destroyed, this, [this] {
@@ -545,7 +548,8 @@ void InputMethod::updateInputPanelState()
 
     QRect overlap = QRect(0, 0, 0, 0);
     if (m_trackedClient) {
-        m_trackedClient->setVirtualKeyboardGeometry(m_inputClient ? m_inputClient->inputGeometry() : QRect());
+        const bool bottomKeyboard = m_inputClient && m_inputClient->mode() != InputPanelV1Client::Overlay;
+        m_trackedClient->setVirtualKeyboardGeometry(bottomKeyboard ? m_inputClient->inputGeometry() : QRect());
 
         if (m_inputClient) {
             overlap = m_trackedClient->frameGeometry() & m_inputClient->inputGeometry();

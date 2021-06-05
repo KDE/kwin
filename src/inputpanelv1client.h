@@ -43,6 +43,11 @@ public:
     NET::WindowType windowType(bool /*direct*/, int /*supported_types*/) const override;
     QRect inputGeometry() const override;
 
+    Mode mode() const
+    {
+        return m_mode;
+    }
+
 protected:
     void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
 

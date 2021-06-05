@@ -30,6 +30,7 @@ namespace KWin
 {
 
 class AbstractClient;
+class InputPanelV1Client;
 
 /**
  * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
@@ -99,7 +100,7 @@ private:
     bool m_enabled = true;
     quint32 m_serial = 0;
     QScopedPointer<KStatusNotifierItem> m_sni;
-    QPointer<AbstractClient> m_inputClient;
+    QPointer<InputPanelV1Client> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;
 
     QProcess *m_inputMethodProcess = nullptr;
