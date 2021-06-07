@@ -141,8 +141,13 @@ void InputMethod::clientAdded(AbstractClient *_client)
     if (!_client->isInputMethod()) {
         return;
     }
-    const auto client = dynamic_cast<InputPanelV1Client *>(_client);
 
+    if (m_inputClient) {
+        qCWarning(KWIN_VIRTUALKEYBOARD) << "Replacing input client" << m_inputClient;
+        disconnect(m_inputClient, nullptr, this, nullptr);
+    }
+
+    const auto client = dynamic_cast<InputPanelV1Client *>(_client);
     m_inputClient = client;
     connect(client->surface(), &SurfaceInterface::inputChanged, this, &InputMethod::updateInputPanelState);
     connect(client, &QObject::destroyed, this, [this] {
@@ -545,7 +550,7 @@ void InputMethod::updateInputPanelState()
 
     QRect overlap = QRect(0, 0, 0, 0);
     if (m_trackedClient) {
-        const bool bottomKeyboard = m_inputClient && m_inputClient->mode() != InputPanelV1Client::Overlay;
+        const bool bottomKeyboard = m_inputClient && m_inputClient->mode() != InputPanelV1Client::Overlay && m_inputClient->isShown(false);
         m_trackedClient->setVirtualKeyboardGeometry(bottomKeyboard ? m_inputClient->inputGeometry() : QRect());
 
         if (m_inputClient) {
