@@ -107,12 +107,23 @@ ScrollViewKCM {
         QQC2.SpinBox {
             id: delaySpin
             enabled: detectButton.enabled
-            Layout.preferredWidth: Kirigami.Units.gridUnit * 8
+            Layout.preferredWidth: Math.max(metricsInstant.advanceWidth, metricsAfter.advanceWidth) + Kirigami.Units.gridUnit * 2
             from: 0
             to: 30
             textFromValue: (value, locale) => {
                 return (value == 0) ? i18n("Instantly")
                                     : i18np("After %1 second", "After %1 seconds", value)
+            }
+
+            TextMetrics {
+                id: metricsInstant
+                font: delaySpin.font
+                text: i18n("Instantly")
+            }
+            TextMetrics {
+                id: metricsAfter
+                font: delaySpin.font
+                text: i18np("After %1 second", "After %1 seconds", 99)
             }
         }
 
