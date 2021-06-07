@@ -49,21 +49,6 @@ DrmOutput::DrmOutput(DrmBackend *backend, DrmGpu *gpu)
 
 DrmOutput::~DrmOutput()
 {
-    Q_ASSERT(!m_pageFlipPending);
-    teardown();
-}
-
-RenderLoop *DrmOutput::renderLoop() const
-{
-    return m_renderLoop;
-}
-
-void DrmOutput::teardown()
-{
-    if (m_deleted) {
-        return;
-    }
-    m_deleted = true;
     hideCursor();
     m_crtc->blank(this);
 
@@ -74,10 +59,14 @@ void DrmOutput::teardown()
 
     m_cursor[0].reset(nullptr);
     m_cursor[1].reset(nullptr);
-    if (!m_pageFlipPending) {
-        deleteLater();
-    } //else will be deleted in the page flip handler
-    //this is needed so that the pageflipcallback handle isn't deleted
+    if (m_pageFlipPending) {
+        pageFlipped();
+    }
+}
+
+RenderLoop *DrmOutput::renderLoop() const
+{
+    return m_renderLoop;
 }
 
 bool DrmOutput::hideCursor()
@@ -105,10 +94,6 @@ bool DrmOutput::showCursor(DrmDumbBuffer *c)
 
 bool DrmOutput::showCursor()
 {
-    if (m_deleted) {
-        return false;
-    }
-
     const bool ret = showCursor(m_cursor[m_cursorIndex].data());
     if (!ret) {
         qCDebug(KWIN_DRM) << "DrmOutput::showCursor(DrmDumbBuffer) failed";
@@ -141,9 +126,6 @@ static bool isCursorSpriteCompatible(const QImage *buffer, const QImage *sprite)
 
 bool DrmOutput::updateCursor()
 {
-    if (m_deleted) {
-        return false;
-    }
     const Cursor *cursor = Cursors::self()->currentCursor();
     const QImage cursorImage = cursor->image();
     if (cursorImage.isNull()) {
@@ -525,11 +507,6 @@ void DrmOutput::pageFlipped()
     // In legacy mode we might get a page flip through a blank.
     Q_ASSERT(m_pageFlipPending || !m_gpu->atomicModeSetting());
     m_pageFlipPending = false;
-
-    if (m_deleted) {
-        deleteLater();
-        return;
-    }
 
     if (!m_crtc) {
         return;

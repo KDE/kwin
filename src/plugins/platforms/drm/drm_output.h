@@ -42,8 +42,6 @@ public:
 
     RenderLoop *renderLoop() const override;
 
-    ///queues deleting the output after a page flip has completed.
-    void teardown();
     bool showCursor(DrmDumbBuffer *buffer);
     bool showCursor();
     bool hideCursor();
@@ -161,7 +159,6 @@ private:
     QScopedPointer<DrmDumbBuffer> m_cursor[2];
     int m_cursorIndex = 0;
     bool m_hasNewCursor = false;
-    bool m_deleted = false;
     QTimer m_turnOffTimer;
 };
 

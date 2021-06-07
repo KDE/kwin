@@ -687,4 +687,14 @@ DrmGpu *DrmBackend::findGpu(dev_t deviceId) const
     return nullptr;
 }
 
+DrmGpu *DrmBackend::findGpuByFd(int fd) const
+{
+    for (DrmGpu *gpu : qAsConst(m_gpus)) {
+        if (gpu->fd() == fd) {
+            return gpu;
+        }
+    }
+    return nullptr;
+}
+
 }

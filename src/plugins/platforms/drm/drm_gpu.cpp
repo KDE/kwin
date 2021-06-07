@@ -17,6 +17,7 @@
 #include "logging.h"
 #include "session.h"
 #include "renderloop_p.h"
+#include "main.h"
 
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
@@ -390,7 +391,19 @@ static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsign
     Q_UNUSED(fd)
     Q_UNUSED(frame)
 
+    auto backend = dynamic_cast<DrmBackend*>(kwinApp()->platform());
+    if (!backend) {
+        return;
+    }
+    auto gpu = backend->findGpuByFd(fd);
+    if (!gpu) {
+        return;
+    }
     auto output = static_cast<DrmOutput *>(data);
+    if (!gpu->outputs().contains(output)) {
+        // output already got deleted
+        return;
+    }
 
     // The static_cast<> here are for a 32-bit environment where 
     // sizeof(time_t) == sizeof(unsigned int) == 4 . Putting @p sec
@@ -426,13 +439,13 @@ void DrmGpu::removeOutput(DrmOutput *output)
 {
     m_outputs.removeOne(output);
     Q_EMIT outputRemoved(output);
-    output->teardown();
-    output->m_crtc = nullptr;
-    m_connectors.removeOne(output->m_conn);
-    delete output->m_conn;
-    output->m_conn = nullptr;
-    if (output->m_primaryPlane) {
-        m_unusedPlanes << output->m_primaryPlane;
+    auto connector = output->m_conn;
+    auto primary = output->m_primaryPlane;
+    delete output;
+    m_connectors.removeOne(connector);
+    delete connector;
+    if (primary) {
+        m_unusedPlanes << primary;
     }
 }
 

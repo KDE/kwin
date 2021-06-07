@@ -64,6 +64,7 @@ public:
 
     DrmGpu *primaryGpu() const;
     DrmGpu *findGpu(dev_t deviceId) const;
+    DrmGpu *findGpuByFd(int fd) const;
 
 public Q_SLOTS:
     void turnOutputsOn();
