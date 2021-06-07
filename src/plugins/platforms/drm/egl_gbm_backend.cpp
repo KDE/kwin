@@ -825,6 +825,8 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
     output.buffer = QSharedPointer<DrmGbmBuffer>::create(m_gpu, importedBuffer, buffer);
     auto oldSurface = output.surfaceInterface;
     output.surfaceInterface = surface;
+    // ensure that a context is current like with normal presentation
+    makeCurrent();
     if (presentOnOutput(output, damage)) {
         if (oldSurface != surface) {
             auto path = surface->client()->executablePath();
