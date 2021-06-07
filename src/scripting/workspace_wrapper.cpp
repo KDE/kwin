@@ -248,6 +248,11 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Abstract
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
 
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::AbstractClient *c) const
+{
+    return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
+}
+
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int screen, int desktop) const
 {
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), screen, desktop);
