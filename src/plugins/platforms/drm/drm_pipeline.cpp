@@ -307,21 +307,29 @@ bool DrmPipeline::checkTestBuffer()
 
 bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer)
 {
+    if (!m_cursor.dirty && m_cursor.buffer == buffer) {
+        return true;
+    }
     const QSize &s = buffer ? buffer->size() : QSize(64, 64);
     if (drmModeSetCursor(m_gpu->fd(), m_crtc->id(), buffer ? buffer->handle() : 0, s.width(), s.height()) != 0) {
         qCWarning(KWIN_DRM) << "Could not set cursor:" << strerror(errno);
         return false;
     }
     m_cursor.buffer = buffer;
+    m_cursor.dirty = false;
     return true;
 }
 
 bool DrmPipeline::moveCursor(QPoint pos)
 {
+    if (!m_cursor.dirty && m_cursor.pos == pos) {
+        return true;
+    }
     if (drmModeMoveCursor(m_gpu->fd(), m_crtc->id(), pos.x(), pos.y()) != 0) {
         m_cursor.pos = pos;
         return false;
     }
+    m_cursor.dirty = false;
     return true;
 }
 
@@ -517,6 +525,9 @@ void DrmPipeline::updateProperties()
     for (const auto &obj : qAsConst(m_allObjects)) {
         obj->updateProperties();
     }
+    // with legacy we don't know what happened to the cursor after VT switch
+    // so make sure it gets set again
+    m_cursor.dirty = true;
 }
 
 static void printProps(DrmObject *object)

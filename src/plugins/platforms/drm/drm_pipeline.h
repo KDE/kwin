@@ -98,6 +98,7 @@ private:
     struct {
         QPoint pos = QPoint(100, 100);
         QSharedPointer<DrmDumbBuffer> buffer;
+        bool dirty = true;// we don't know what the current state is
     } m_cursor;
 
     QVector<DrmObject*> m_allObjects;
