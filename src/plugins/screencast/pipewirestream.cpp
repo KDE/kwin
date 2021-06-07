@@ -366,8 +366,10 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
         frameTexture->bind();
         if (GLPlatform::instance()->isGLES()) {
             glReadPixels(0, 0, size.width(), size.height(), m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, (GLvoid*)data);
-        } else {
+        } else if (GLPlatform::instance()->glVersion() >= kVersionNumber(4, 5)) {
             glGetTextureImage(frameTexture->texture(), 0, m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bufferSize, data);
+        } else {
+            glGetTexImage(frameTexture->target(), 0, m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, data);
         }
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
