@@ -84,13 +84,6 @@ QPainterBackend *Platform::createQPainterBackend()
     return nullptr;
 }
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-XRenderBackend *Platform::createXRenderBackend()
-{
-    return nullptr;
-}
-#endif
-
 Edge *Platform::createScreenEdge(ScreenEdges *edges)
 {
     return new Edge(edges);

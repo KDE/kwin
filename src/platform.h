@@ -41,9 +41,6 @@ class Scene;
 class ScreenEdges;
 class Session;
 class Toplevel;
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-class XRenderBackend;
-#endif
 
 class KWIN_EXPORT Outputs : public QVector<AbstractOutput*>
 {
@@ -66,9 +63,6 @@ public:
     virtual bool initialize() = 0;
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    virtual XRenderBackend *createXRenderBackend();
-#endif
     virtual DmaBufTexture *createDmaBufTexture(const QSize &size) {
         Q_UNUSED(size);
         return nullptr;

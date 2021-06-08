@@ -37,7 +37,7 @@ enum CompositingType {
      * use EffectsHandler::isOpenGLCompositing().
      */
     OpenGLCompositing = 1,
-    XRenderCompositing = 1<<1,
+    /* XRenderCompositing = 1<<1, */
     QPainterCompositing = 1<< 2,
     OpenGL2Compositing = 1<<3 | OpenGLCompositing,
 };

@@ -1,5 +1,2 @@
 add_subdirectory(qpainter)
 add_subdirectory(opengl)
-if (KWIN_BUILD_XRENDER_COMPOSITING)
-    add_subdirectory(xrender)
-endif()

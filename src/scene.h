@@ -166,12 +166,6 @@ public:
     virtual bool animationsSupported() const = 0;
 
     /**
-     * The render buffer used by an XRender based compositor scene.
-     * Default implementation returns XCB_RENDER_PICTURE_NONE
-     */
-    virtual xcb_render_picture_t xrenderBufferPicture() const;
-
-    /**
      * The QPainter used by a QPainter based compositor scene.
      * Default implementation returns @c nullptr;
      */

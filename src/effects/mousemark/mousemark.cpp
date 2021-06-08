@@ -23,10 +23,6 @@
 
 #include <cmath>
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <xcb/render.h>
-#endif
-
 namespace KWin
 {
 
@@ -72,33 +68,6 @@ void MouseMarkEffect::reconfigure(ReconfigureFlags)
     color.setAlphaF(1.0);
 }
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-void MouseMarkEffect::addRect(const QPoint &p1, const QPoint &p2, xcb_rectangle_t *r, xcb_render_color_t *c)
-{
-    r->x = qMin(p1.x(), p2.x()) - width_2;
-    r->y = qMin(p1.y(), p2.y()) - width_2;
-    r->width = qAbs(p1.x()-p2.x()) + 1 + width_2;
-    r->height = qAbs(p1.y()-p2.y()) + 1 + width_2;
-    // fast move -> large rect, <strike>tess...</strike> interpolate a line
-    if (r->width > 3*width/2 && r->height > 3*width/2) {
-        const int n = sqrt(r->width*r->width + r->height*r->height) / width;
-        xcb_rectangle_t *rects = new xcb_rectangle_t[n-1];
-        const int w = p1.x() < p2.x() ? r->width : -r->width;
-        const int h = p1.y() < p2.y() ? r->height : -r->height;
-        for (int i = 1; i < n; ++i) {
-            rects[i-1].x = p1.x() + i*w/n;
-            rects[i-1].y = p1.y() + i*h/n;
-            rects[i-1].width = rects[i-1].height = width;
-        }
-        xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), *c, n - 1, rects);
-        delete [] rects;
-        r->x = p1.x();
-        r->y = p1.y();
-        r->width = r->height = width;
-    }
-}
-#endif
-
 void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);   // paint normal screen
@@ -143,32 +112,7 @@ void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
             glDisable(GL_LINE_SMOOTH);
             glDisable(GL_BLEND);
         }
-    }
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if ( effects->compositingType() == XRenderCompositing) {
-        xcb_render_color_t c = preMultiply(color);
-        for (int i = 0; i < marks.count(); ++i) {
-            const int n = marks[i].count() - 1;
-            if (n > 0) {
-                xcb_rectangle_t *rects = new xcb_rectangle_t[n];
-                for (int j = 0; j < marks[i].count()-1; ++j) {
-                    addRect(marks[i][j], marks[i][j+1], &rects[j], &c);
-                }
-                xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), c, n, rects);
-                delete [] rects;
-            }
-        }
-        const int n = drawing.count() - 1;
-        if (n > 0) {
-            xcb_rectangle_t *rects = new xcb_rectangle_t[n];
-            for (int i = 0; i < n; ++i)
-                addRect(drawing[i], drawing[i+1], &rects[i], &c);
-            xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), c, n, rects);
-            delete [] rects;
-        }
-    }
-#endif
-    if (effects->compositingType() == QPainterCompositing) {
+    } else if (effects->compositingType() == QPainterCompositing) {
         QPainter *painter = effects->scenePainter();
         painter->save();
         QPen pen(color);

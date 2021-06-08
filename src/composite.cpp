@@ -205,9 +205,6 @@ bool Compositor::setupStart()
 
     for (auto type : qAsConst(supportedCompositors)) {
         switch (type) {
-        case XRenderCompositing:
-            qCDebug(KWIN_CORE) << "Attempting to load the XRender scene";
-            break;
         case OpenGLCompositing:
         case OpenGL2Compositing:
             qCDebug(KWIN_CORE) << "Attempting to load the OpenGL scene";

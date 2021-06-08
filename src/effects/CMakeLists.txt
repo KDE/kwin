@@ -11,10 +11,6 @@ set(kwin_effect_OWN_LIBS
     kwineffects
 )
 
-if (KWIN_HAVE_XRENDER_COMPOSITING)
-    set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinxrenderutils)
-endif()
-
 set(kwin_effect_KDE_LIBS
     KF5::ConfigGui
     KF5::ConfigWidgets
@@ -46,10 +42,6 @@ set(kwin_effect_XCB_LIBS
     XCB::XCB
     XCB::XFIXES
 )
-
-if (KWIN_HAVE_XRENDER_COMPOSITING)
-    set(kwin_effect_XCB_LIBS ${kwin_effect_XCB_LIBS} XCB::RENDER)
-endif()
 
 set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinglutils)
 

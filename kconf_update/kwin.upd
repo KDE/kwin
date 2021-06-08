@@ -73,3 +73,9 @@ Id=remove-cubeslide-effect
 File=kwinrc
 Group=Plugins
 Script=kwin-5.23-remove-cubeslide.py,python3
+
+# Remove Backend if it has a value of "XRender"
+Id=remove-xrender-backend
+File=kwinrc
+Group=Compositing
+Script=kwin-5.23-remove-xrender-backend.py,python3

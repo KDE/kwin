@@ -171,7 +171,7 @@ void GLPlatformTest::testPriorDetect()
 
     QCOMPARE(gl->isLooseBinding(), false);
     QCOMPARE(gl->isGLES(), false);
-    QCOMPARE(gl->recommendedCompositor(), XRenderCompositing);
+    QCOMPARE(gl->recommendedCompositor(), QPainterCompositing);
     QCOMPARE(gl->preferBufferSubData(), false);
     QCOMPARE(gl->platformInterface(), NoOpenGLPlatformInterface);
 }

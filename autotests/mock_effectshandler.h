@@ -220,9 +220,6 @@ public:
     int workspaceWidth() const override {
         return 0;
     }
-    long unsigned int xrenderBufferPicture() override {
-        return 0;
-    }
     xcb_connection_t *xcbConnection() const override {
         return QX11Info::connection();
     }

@@ -466,8 +466,8 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
         }
     }
     if (!scene) {
-        if (GLPlatform::instance()->recommendedCompositor() == XRenderCompositing) {
-            qCCritical(KWIN_OPENGL) << "OpenGL driver recommends XRender based compositing. Falling back to XRender.";
+        if (GLPlatform::instance()->recommendedCompositor() == QPainterCompositing) {
+            qCCritical(KWIN_OPENGL) << "OpenGL driver recommends QPainter based compositing. Falling back to QPainter.";
             qCCritical(KWIN_OPENGL) << "To overwrite the detection use the environment variable KWIN_COMPOSE";
             qCCritical(KWIN_OPENGL) << "For more information see https://community.kde.org/KWin/Environment_Variables#KWIN_COMPOSE";
         }

@@ -18,10 +18,6 @@
 #include <kstandardaction.h>
 
 #include <kwinglutils.h>
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <kwinxrenderutils.h>
-#include <xcb/render.h>
-#endif
 #include <KGlobalAccel>
 
 namespace KWin
@@ -36,9 +32,6 @@ MagnifierEffect::MagnifierEffect()
     , m_lastPresentTime(std::chrono::milliseconds::zero())
     , m_texture(nullptr)
     , m_fbo(nullptr)
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    , m_pixmap(XCB_PIXMAP_NONE)
-#endif
 {
     initConfig<MagnifierConfig>();
     QAction* a;
@@ -67,30 +60,14 @@ MagnifierEffect::~MagnifierEffect()
 {
     delete m_fbo;
     delete m_texture;
-    destroyPixmap();
     // Save the zoom value.
     MagnifierConfig::setInitialZoom(target_zoom);
     MagnifierConfig::self()->save();
 }
 
-void MagnifierEffect::destroyPixmap()
-{
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (effects->compositingType() != XRenderCompositing) {
-        return;
-    }
-    m_picture.reset();
-    if (m_pixmap != XCB_PIXMAP_NONE) {
-        xcb_free_pixmap(xcbConnection(), m_pixmap);
-        m_pixmap = XCB_PIXMAP_NONE;
-    }
-#endif
-}
-
 bool MagnifierEffect::supported()
 {
-    return  effects->compositingType() == XRenderCompositing ||
-            (effects->isOpenGLCompositing() && GLRenderTarget::blitSupported());
+    return effects->isOpenGLCompositing() && GLRenderTarget::blitSupported();
 }
 
 void MagnifierEffect::reconfigure(ReconfigureFlags)
@@ -122,7 +99,6 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::mill
                 delete m_texture;
                 m_fbo = nullptr;
                 m_texture = nullptr;
-                destroyPixmap();
             }
         }
     }
@@ -201,48 +177,6 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
             binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
             vbo->render(GL_TRIANGLES);
         }
-        if (effects->compositingType() == XRenderCompositing) {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            if (m_pixmap == XCB_PIXMAP_NONE || m_pixmapSize != srcArea.size()) {
-                destroyPixmap();
-                m_pixmap = xcb_generate_id(xcbConnection());
-                m_pixmapSize = srcArea.size();
-                xcb_create_pixmap(xcbConnection(), 32, m_pixmap, x11RootWindow(), m_pixmapSize.width(), m_pixmapSize.height());
-                m_picture.reset(new XRenderPicture(m_pixmap, 32));
-            }
-#define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
-            static const xcb_render_transform_t identity = {
-                DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
-                DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
-                DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
-            };
-            static xcb_render_transform_t xform = {
-                DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
-                DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
-                DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
-            };
-            xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), 0, *m_picture,
-                                srcArea.x(), srcArea.y(), 0, 0, 0, 0, srcArea.width(), srcArea.height());
-            xcb_flush(xcbConnection());
-            xform.matrix11 = DOUBLE_TO_FIXED(1.0/zoom);
-            xform.matrix22 = DOUBLE_TO_FIXED(1.0/zoom);
-#undef DOUBLE_TO_FIXED
-            xcb_render_set_picture_transform(xcbConnection(), *m_picture, xform);
-            xcb_render_set_picture_filter(xcbConnection(), *m_picture, 4, const_cast<char*>("good"), 0, nullptr);
-            xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_SRC, *m_picture, 0, effects->xrenderBufferPicture(),
-                                 0, 0, 0, 0, area.x(), area.y(), area.width(), area.height() );
-            xcb_render_set_picture_filter(xcbConnection(), *m_picture, 4, const_cast<char*>("fast"), 0, nullptr);
-            xcb_render_set_picture_transform(xcbConnection(), *m_picture, identity);
-            const xcb_rectangle_t rects[4] = {
-                { int16_t(area.x()+FRAME_WIDTH), int16_t(area.y()), uint16_t(area.width()-FRAME_WIDTH), uint16_t(FRAME_WIDTH)},
-                { int16_t(area.right()-FRAME_WIDTH), int16_t(area.y()+FRAME_WIDTH), uint16_t(FRAME_WIDTH), uint16_t(area.height()-FRAME_WIDTH)},
-                { int16_t(area.x()), int16_t(area.bottom()-FRAME_WIDTH), uint16_t(area.width()-FRAME_WIDTH), uint16_t(FRAME_WIDTH)},
-                { int16_t(area.x()), int16_t(area.y()), uint16_t(FRAME_WIDTH), uint16_t(area.height()-FRAME_WIDTH)}
-            };
-            xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(),
-                                       preMultiply(QColor(0,0,0,255)), 4, rects);
-#endif
-        }
     }
 }
 
@@ -292,7 +226,6 @@ void MagnifierEffect::zoomOut()
             delete m_texture;
             m_fbo = nullptr;
             m_texture = nullptr;
-            destroyPixmap();
         }
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));

@@ -32,7 +32,6 @@ private Q_SLOTS:
 
 private:
     void paintGL(const QMatrix4x4 &projection);
-    void paintXrender();
     void paintQPainter();
 
     bool m_active = false;

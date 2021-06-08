@@ -58,9 +58,6 @@ target_link_libraries(kwineffects
         KF5::Declarative
         kwinglutils
 )
-if (KWIN_HAVE_XRENDER_COMPOSITING)
-    target_link_libraries(kwineffects PRIVATE kwinxrenderutils XCB::XFIXES)
-endif()
 set_target_properties(kwineffects PROPERTIES
     VERSION ${KWINEFFECTS_VERSION}
     SOVERSION ${KWINEFFECTS_SOVERSION}

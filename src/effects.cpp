@@ -1347,11 +1347,6 @@ void EffectsHandlerImpl::unregisterTouchBorder(ElectricBorder border, QAction *a
     ScreenEdges::self()->unreserveTouch(border, action);
 }
 
-unsigned long EffectsHandlerImpl::xrenderBufferPicture()
-{
-    return m_scene->xrenderBufferPicture();
-}
-
 QPainter *EffectsHandlerImpl::scenePainter()
 {
     return m_scene->scenePainter();

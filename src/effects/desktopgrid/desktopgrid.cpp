@@ -348,27 +348,12 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
                 d.multiplyOpacity(timeline.currentValue());
             }
 
-            if (effects->compositingType() == XRenderCompositing) {
-                // More exact clipping as XRender displays the entire window instead of just the quad
-                QPointF screenPosF = scalePos(screenGeom.topLeft(), paintingDesktop).toPoint();
-                QPoint screenPos(
-                    qRound(screenPosF.x()),
-                    qRound(screenPosF.y())
-                );
-                QSize screenSize(
-                    qRound(interpolate(screenGeom.width(), scaledSize[screen].width(), progress)),
-                    qRound(interpolate(screenGeom.height(), scaledSize[screen].height(), progress))
-                );
-                PaintClipper pc(effects->clientArea(ScreenArea, screen, 0) & QRect(screenPos, screenSize));
-                effects->paintWindow(w, mask, region, d);
-            } else {
-                if (w->isDesktop() && timeline.currentValue() == 1.0) {
-                    // desktop windows are not in a motion manager and can always be rendered with
-                    // lanczos sampling except for animations
-                    mask |= PAINT_WINDOW_LANCZOS;
-                }
-                effects->paintWindow(w, mask, effects->clientArea(ScreenArea, screen, 0), d);
+            if (w->isDesktop() && timeline.currentValue() == 1.0) {
+                // desktop windows are not in a motion manager and can always be rendered with
+                // lanczos sampling except for animations
+                mask |= PAINT_WINDOW_LANCZOS;
             }
+            effects->paintWindow(w, mask, effects->clientArea(ScreenArea, screen, 0), d);
         }
     } else
         effects->paintWindow(w, mask, region, data);

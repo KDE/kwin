@@ -21,7 +21,6 @@
 
 #include <kwinconfig.h>
 #include <kwinglutils.h>
-#include <kwinxrenderutils.h>
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -36,11 +35,6 @@ TrackMouseEffect::TrackMouseEffect()
 {
     initConfig<TrackMouseConfig>();
     m_texture[0] = m_texture[1] = nullptr;
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    m_picture[0] = m_picture[1] = nullptr;
-    if ( effects->compositingType() == XRenderCompositing)
-        m_angleBase = 1.57079632679489661923; // Pi/2
-#endif
     if ( effects->isOpenGLCompositing() || effects->compositingType() == QPainterCompositing)
         m_angleBase = 90.0;
     m_mousePolling = false;
@@ -64,9 +58,6 @@ TrackMouseEffect::~TrackMouseEffect()
         effects->stopMousePolling();
     for (int i = 0; i < 2; ++i) {
         delete m_texture[i]; m_texture[i] = nullptr;
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        delete m_picture[i]; m_picture[i] = nullptr;
-#endif
     }
 }
 
@@ -132,35 +123,7 @@ void TrackMouseEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             m_texture[i]->unbind();
         }
         glDisable(GL_BLEND);
-    }
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if ( effects->compositingType() == XRenderCompositing && m_picture[0] && m_picture[1]) {
-        float sine = sin(m_angle);
-        const float cosine = cos(m_angle);
-        for (int i = 0; i < 2; ++i) {
-            if (i) sine = -sine;
-            const float dx = m_size[i].width()/2.0;
-            const float dy = m_size[i].height()/2.0;
-            const xcb_render_picture_t picture = *m_picture[i];
-#define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
-            xcb_render_transform_t xform = {
-                DOUBLE_TO_FIXED( cosine ), DOUBLE_TO_FIXED( -sine ), DOUBLE_TO_FIXED( dx - cosine*dx + sine*dy ),
-                DOUBLE_TO_FIXED( sine ), DOUBLE_TO_FIXED( cosine ), DOUBLE_TO_FIXED( dy - sine*dx - cosine*dy ),
-                DOUBLE_TO_FIXED( 0.0 ), DOUBLE_TO_FIXED( 0.0 ), DOUBLE_TO_FIXED( 1.0 )
-            };
-#undef DOUBLE_TO_FIXED
-            xcb_render_set_picture_transform(xcbConnection(), picture, xform);
-            xcb_render_set_picture_filter(xcbConnection(), picture, 8, "bilinear", 0, nullptr);
-            const QRect &rect = m_lastRect[i];
-            xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_OVER, picture, XCB_RENDER_PICTURE_NONE,
-                                 effects->xrenderBufferPicture(), 0, 0, 0, 0,
-                                 qRound((rect.x()+rect.width()/2.0)*data.xScale() - rect.width()/2.0 + data.xTranslation()),
-                                 qRound((rect.y()+rect.height()/2.0)*data.yScale() - rect.height()/2.0 + data.yTranslation()),
-                                 rect.width(), rect.height());
-        }
-    }
-#endif
-    if (effects->compositingType() == QPainterCompositing && !m_image[0].isNull() && !m_image[1].isNull()) {
+    } else if (effects->compositingType() == QPainterCompositing && !m_image[0].isNull() && !m_image[1].isNull()) {
         QPainter *painter = effects->scenePainter();
         const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width()/2.0, m_lastRect[0].height()/2.0);
         for (int i = 0; i < 2; ++i) {
@@ -183,19 +146,11 @@ void TrackMouseEffect::postPaintScreen()
 bool TrackMouseEffect::init()
 {
     effects->makeOpenGLContextCurrent();
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (!(m_texture[0] || m_picture[0] || !m_image[0].isNull())) {
-        loadTexture();
-        if (!(m_texture[0] || m_picture[0] || !m_image[0].isNull()))
-            return false;
-    }
-#else
     if (!m_texture[0] || m_image[0].isNull()) {
         loadTexture();
         if (!m_texture[0] || m_image[0].isNull())
             return false;
     }
-#endif
     m_lastRect[0].moveCenter(cursorPos());
     m_lastRect[1].moveCenter(cursorPos());
     m_angle = 0;
@@ -278,14 +233,6 @@ void TrackMouseEffect::loadTexture()
             m_texture[i] = new GLTexture(img);
             m_lastRect[i].setSize(img.size());
         }
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        if ( effects->compositingType() == XRenderCompositing) {
-            QImage pixmap(f[i]);
-            m_picture[i] = new XRenderPicture(pixmap);
-            m_size[i] = pixmap.size();
-            m_lastRect[i].setSize(pixmap.size());
-        }
-#endif
         if (effects->compositingType() == QPainterCompositing) {
             m_image[i] = QImage(f[i]);
             m_lastRect[i].setSize(m_image[i].size());

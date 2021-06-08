@@ -1725,15 +1725,12 @@ QString Workspace::supportInformation() const
             support.append(QStringLiteral("OpenGL 2 Shaders are used\n"));
             break;
         }
-        case XRenderCompositing:
-            support.append(QStringLiteral("Compositing Type: XRender\n"));
-            break;
         case QPainterCompositing:
             support.append("Compositing Type: QPainter\n");
             break;
         case NoCompositing:
         default:
-            support.append(QStringLiteral("Something is really broken, neither OpenGL nor XRender is used"));
+            support.append(QStringLiteral("Something is really broken, neither OpenGL nor QPainter is used"));
         }
         support.append(QStringLiteral("\nLoaded Effects:\n"));
         support.append(QStringLiteral(  "---------------\n"));

@@ -26,10 +26,6 @@
 #include <KLocalizedString>
 
 #include <kwinglutils.h>
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <kwinxrenderutils.h>
-#include <xcb/render.h>
-#endif
 
 namespace KWin
 {
@@ -168,9 +164,6 @@ void ZoomEffect::showCursor()
         // show the previously hidden mouse-pointer again and free the loaded texture/picture.
         effects->showCursor();
         texture.reset();
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        xrenderPicture.reset();
-#endif
         isMouseHidden = false;
     }
 }
@@ -185,10 +178,6 @@ void ZoomEffect::hideCursor()
         bool shouldHide = false;
         if (effects->isOpenGLCompositing()) {
             shouldHide = !texture.isNull();
-        } else if (effects->compositingType() == XRenderCompositing) {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            shouldHide = !xrenderPicture.isNull();
-#endif
         }
         if (shouldHide) {
             effects->hideCursor();
@@ -210,10 +199,6 @@ void ZoomEffect::recreateTexture()
             texture.reset(new GLTexture(cursor.image()));
             texture->setWrapMode(GL_CLAMP_TO_EDGE);
         }
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        if (effects->compositingType() == XRenderCompositing)
-            xrenderPicture.reset(new XRenderPicture(cursor.image()));
-#endif
     }
     else {
         qCDebug(KWINEFFECTS) << "Falling back to proportional mouse tracking!";
@@ -365,30 +350,6 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& d
             texture->unbind();
             glDisable(GL_BLEND);
         }
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        if (xrenderPicture) {
-#define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
-            static const xcb_render_transform_t xrenderIdentity = {
-                DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
-                DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
-                DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
-            };
-            if (mousePointer == MousePointerScale) {
-                xcb_render_set_picture_filter(xcbConnection(), *xrenderPicture, 4, const_cast<char*>("good"), 0, nullptr);
-                const xcb_render_transform_t xform = {
-                    DOUBLE_TO_FIXED(1.0 / zoom), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
-                    DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1.0 / zoom), DOUBLE_TO_FIXED(0),
-                    DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
-                };
-                xcb_render_set_picture_transform(xcbConnection(), *xrenderPicture, xform);
-            }
-            xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_OVER, *xrenderPicture, XCB_RENDER_PICTURE_NONE,
-                                 effects->xrenderBufferPicture(), 0, 0, 0, 0, rect.x(), rect.y(), rect.width(), rect.height());
-            if (mousePointer == MousePointerScale)
-                xcb_render_set_picture_transform(xcbConnection(), *xrenderPicture, xrenderIdentity);
-#undef DOUBLE_TO_FIXED
-        }
-#endif
     }
 }
 

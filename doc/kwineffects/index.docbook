@@ -69,7 +69,7 @@ effects can be activated.
 </para>
 
 <para>All effects which are not supported by the currently used compositing backend 
-are hidden by default (&eg; OpenGL effects when using XRender).
+are hidden by default (&eg; OpenGL effects when using software renderer).
 </para> 
 
 <para>Also all internal or helper effects are hidden by default. These are effects which replace 

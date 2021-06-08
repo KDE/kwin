@@ -11,9 +11,6 @@
 #include "showpaint.h"
 
 #include <kwinglutils.h>
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <xcb/render.h>
-#endif
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -53,13 +50,7 @@ void ShowPaintEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
     effects->paintScreen(mask, region, data);
     if (effects->isOpenGLCompositing()) {
         paintGL(data.projectionMatrix());
-    }
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (effects->compositingType() == XRenderCompositing) {
-        paintXrender();
-    }
-#endif
-    if (effects->compositingType() == QPainterCompositing) {
+    } else if (effects->compositingType() == QPainterCompositing) {
         paintQPainter();
     }
     if (++m_colorIndex == s_colors.count()) {
@@ -98,25 +89,6 @@ void ShowPaintEffect::paintGL(const QMatrix4x4 &projection)
     vbo->setData(verts.count() / 2, 2, verts.data(), nullptr);
     vbo->render(GL_TRIANGLES);
     glDisable(GL_BLEND);
-}
-
-void ShowPaintEffect::paintXrender()
-{
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    xcb_render_color_t col;
-    const QColor &color = s_colors[m_colorIndex];
-    col.alpha = int(s_alpha * 0xffff);
-    col.red = int(s_alpha * 0xffff * color.red() / 255);
-    col.green = int(s_alpha * 0xffff * color.green() / 255);
-    col.blue = int(s_alpha * 0xffff * color.blue() / 255);
-    QVector<xcb_rectangle_t> rects;
-    rects.reserve(m_painted.rectCount());
-    for (const QRect &r : m_painted) {
-        xcb_rectangle_t rect = {int16_t(r.x()), int16_t(r.y()), uint16_t(r.width()), uint16_t(r.height())};
-        rects << rect;
-    }
-    xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_OVER, effects->xrenderBufferPicture(), col, rects.count(), rects.constData());
-#endif
 }
 
 void ShowPaintEffect::paintQPainter()

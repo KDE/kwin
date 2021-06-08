@@ -38,9 +38,6 @@ public:
     Session *session() const override;
 
     OpenGLBackend *createOpenGLBackend() override;
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    XRenderBackend *createXRenderBackend() override;
-#endif
     Edge *createScreenEdge(ScreenEdges *parent) override;
     void createPlatformCursor(QObject *parent = nullptr) override;
     bool requiresCompositing() const override;

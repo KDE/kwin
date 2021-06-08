@@ -18,9 +18,6 @@
 
 */
 
-/* KWIN_HAVE_XRENDER_COMPOSITING - whether XRender-based compositing support is available */
-#cmakedefine KWIN_HAVE_XRENDER_COMPOSITING
-
 #cmakedefine01 HAVE_EPOXY_GLX
 
 #cmakedefine01 HAVE_DL_LIBRARY

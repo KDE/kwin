@@ -15,10 +15,6 @@
 #include <kwinconfig.h>
 
 #include <kwinglutils.h>
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <kwinxrenderutils.h>
-#include <xcb/render.h>
-#endif
 
 #include <KLocalizedString>
 
@@ -155,14 +151,7 @@ void ShowFpsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData
     if (effects->isOpenGLCompositing()) {
         paintGL(fps, data.projectionMatrix());
         glFinish(); // make sure all rendering is done
-    }
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (effects->compositingType() == XRenderCompositing) {
-        paintXrender(fps);
-        xcb_flush(xcbConnection());   // make sure all rendering is done
-    }
-#endif
-    if (effects->compositingType() == QPainterCompositing) {
+    } else if (effects->compositingType() == QPainterCompositing) {
         paintQPainter(fps);
     }
     m_noBenchmark->render(infiniteRegion(), 1.0, alpha);
@@ -244,64 +233,6 @@ void ShowFpsEffect::paintGL(int fps, const QMatrix4x4 &projectionMatrix)
     // Paint paint sizes
     glDisable(GL_BLEND);
 }
-
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-/*
- Differences between OpenGL and XRender:
- - differently specified rectangles (X: width/height, O: x2,y2)
- - XRender uses pre-multiplied alpha
-*/
-void ShowFpsEffect::paintXrender(int fps)
-{
-    xcb_pixmap_t pixmap = xcb_generate_id(xcbConnection());
-    xcb_create_pixmap(xcbConnection(), 32, pixmap, x11RootWindow(), FPS_WIDTH, MAX_TIME);
-    XRenderPicture p(pixmap, 32);
-    xcb_free_pixmap(xcbConnection(), pixmap);
-    xcb_render_color_t col;
-    col.alpha = int(alpha * 0xffff);
-    col.red = int(alpha * 0xffff);   // white
-    col.green = int(alpha * 0xffff);
-    col.blue = int(alpha * 0xffff);
-    xcb_rectangle_t rect = {0, 0, FPS_WIDTH, MAX_TIME};
-    xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, p, col, 1, &rect);
-    col.red = 0; // blue
-    col.green = 0;
-    col.blue = int(alpha * 0xffff);
-    rect.y = MAX_TIME - fps;
-    rect.width = FPS_WIDTH;
-    rect.height = fps;
-    xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, p, col, 1, &rect);
-    col.red = 0; // black
-    col.green = 0;
-    col.blue = 0;
-    QVector<xcb_rectangle_t> rects;
-    for (int i = 10;
-            i < MAX_TIME;
-            i += 10) {
-        xcb_rectangle_t rect = {0, int16_t(MAX_TIME - i), uint16_t(FPS_WIDTH), 1};
-        rects << rect;
-    }
-    xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, p, col, rects.count(), rects.constData());
-    xcb_render_composite(xcbConnection(), alpha != 1.0 ? XCB_RENDER_PICT_OP_OVER : XCB_RENDER_PICT_OP_SRC, p, XCB_RENDER_PICTURE_NONE,
-                         effects->xrenderBufferPicture(), 0, 0, 0, 0, x, y, FPS_WIDTH, MAX_TIME);
-
-
-    // Paint FPS graph
-    paintFPSGraph(x + FPS_WIDTH, y);
-
-    // Paint amount of rendered pixels graph
-    paintDrawSizeGraph(x + FPS_WIDTH + MAX_TIME, y);
-
-    // Paint FPS numerical value
-    if (fpsTextRect.isValid()) {
-        QImage textImg(fpsTextImage(fps));
-        XRenderPicture textPic(textImg);
-        xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_OVER, textPic, XCB_RENDER_PICTURE_NONE,
-                        effects->xrenderBufferPicture(), 0, 0, 0, 0, fpsTextRect.x(), fpsTextRect.y(), textImg.width(), textImg.height());
-        effects->addRepaint(fpsTextRect);
-    }
-}
-#endif
 
 void ShowFpsEffect::paintQPainter(int fps)
 {
@@ -428,67 +359,7 @@ void ShowFpsEffect::paintGraph(int x, int y, QList<int> values, QList<int> lines
             vbo->setData(verts.size() / 2, 2, verts.constData(), nullptr);
             vbo->render(GL_LINES);
         }
-    }
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (effects->compositingType() == XRenderCompositing) {
-        xcb_pixmap_t pixmap = xcb_generate_id(xcbConnection());
-        xcb_create_pixmap(xcbConnection(), 32, pixmap, x11RootWindow(), values.count(), MAX_TIME);
-        XRenderPicture p(pixmap, 32);
-        xcb_free_pixmap(xcbConnection(), pixmap);
-        xcb_render_color_t col;
-        col.alpha = int(alpha * 0xffff);
-
-        // Draw background
-        col.red = col.green = col.blue = int(alpha * 0xffff);   // white
-        xcb_rectangle_t rect = {0, 0, uint16_t(values.count()), uint16_t(MAX_TIME)};
-        xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, p, col, 1, &rect);
-
-        // Then the values
-        col.red = col.green = col.blue = int(alpha * 0x8000);    // grey
-        for (int i = 0; i < values.count(); i++) {
-            int value = values[ i ];
-            if (colorize) {
-                if (value <= 10) {
-                    // green
-                    col.red = 0;
-                    col.green = int(alpha * 0xffff);
-                    col.blue = 0;
-                } else if (value <= 20) {
-                    // yellow
-                    col.red = int(alpha * 0xffff);
-                    col.green = int(alpha * 0xffff);
-                    col.blue = 0;
-                } else if (value <= 50) {
-                    // red
-                    col.red = int(alpha * 0xffff);
-                    col.green = 0;
-                    col.blue = 0;
-                } else {
-                    // black
-                    col.red = 0;
-                    col.green = 0;
-                    col.blue = 0;
-                }
-            }
-            xcb_rectangle_t rect = {int16_t(values.count() - i), int16_t(MAX_TIME - value), 1, uint16_t(value)};
-            xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, p, col, 1, &rect);
-        }
-
-        // Then the lines
-        col.red = col.green = col.blue = 0;  // black
-        QVector<xcb_rectangle_t> rects;
-        Q_FOREACH (int h, lines) {
-            xcb_rectangle_t rect = {0, int16_t(MAX_TIME - h), uint16_t(values.count()), 1};
-            rects << rect;
-        }
-        xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, p, col, rects.count(), rects.constData());
-
-        // Finally render the pixmap onto screen
-        xcb_render_composite(xcbConnection(), alpha != 1.0 ? XCB_RENDER_PICT_OP_OVER : XCB_RENDER_PICT_OP_SRC, p,
-                             XCB_RENDER_PICTURE_NONE, effects->xrenderBufferPicture(), 0, 0, 0, 0, x, y, values.count(), MAX_TIME);
-    }
-#endif
-    if (effects->compositingType() == QPainterCompositing) {
+    } else if (effects->compositingType() == QPainterCompositing) {
         QPainter *painter = effects->scenePainter();
         painter->setPen(Qt::black);
         // First draw the lines

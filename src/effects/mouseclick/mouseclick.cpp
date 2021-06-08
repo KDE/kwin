@@ -13,11 +13,6 @@
 
 #include <QAction>
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <xcb/xcb.h>
-#include <xcb/render.h>
-#endif
-
 #include <KConfigGroup>
 #include <KGlobalAccel>
 
@@ -247,9 +242,7 @@ void MouseClickEffect::drawCircle(const QColor& color, float cx, float cy, float
 {
     if (effects->isOpenGLCompositing())
         drawCircleGl(color, cx, cy, r);
-    if (effects->compositingType() == XRenderCompositing)
-        drawCircleXr(color, cx, cy, r);
-    if (effects->compositingType() == QPainterCompositing)
+    else if (effects->compositingType() == QPainterCompositing)
         drawCircleQPainter(color, cx, cy, r);
 }
 
@@ -292,66 +285,6 @@ void MouseClickEffect::drawCircleGl(const QColor& color, float cx, float cy, flo
     }
     vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
     vbo->render(GL_LINE_LOOP);
-}
-
-void MouseClickEffect::drawCircleXr(const QColor& color, float cx, float cy, float r)
-{
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (r <= m_lineWidth)
-        return;
-
-    int num_segments = r+8;
-    float theta = 2.0 * 3.1415926 / num_segments;
-    float cos = cosf(theta); //precalculate the sine and cosine
-    float sin = sinf(theta);
-    float x[2] = {r, r-m_lineWidth};
-    float y[2] = {0, 0};
-
-#define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
-    QVector<xcb_render_pointfix_t> strip;
-    strip.reserve(2*num_segments+2);
-
-    xcb_render_pointfix_t point;
-    point.x = DOUBLE_TO_FIXED(x[1]+cx);
-    point.y = DOUBLE_TO_FIXED(y[1]+cy);
-    strip << point;
-
-    for (int i = 0; i < num_segments; ++i) {
-        //apply the rotation matrix
-        const float h[2] = {x[0], x[1]};
-        x[0] = cos * x[0] - sin * y[0];
-        x[1] = cos * x[1] - sin * y[1];
-        y[0] = sin * h[0] + cos * y[0];
-        y[1] = sin * h[1] + cos * y[1];
-
-        point.x = DOUBLE_TO_FIXED(x[0]+cx);
-        point.y = DOUBLE_TO_FIXED(y[0]+cy);
-        strip << point;
-
-        point.x = DOUBLE_TO_FIXED(x[1]+cx);
-        point.y = DOUBLE_TO_FIXED(y[1]+cy);
-        strip << point;
-    }
-
-    const float h = x[0];
-    x[0] = cos * x[0] - sin * y[0];
-    y[0] = sin * h    + cos * y[0];
-
-    point.x = DOUBLE_TO_FIXED(x[0]+cx);
-    point.y = DOUBLE_TO_FIXED(y[0]+cy);
-    strip << point;
-
-    XRenderPicture fill = xRenderFill(color);
-    xcb_render_tri_strip(xcbConnection(), XCB_RENDER_PICT_OP_OVER,
-                          fill, effects->xrenderBufferPicture(), 0,
-                          0, 0, strip.count(), strip.constData());
-#undef DOUBLE_TO_FIXED
-#else
-    Q_UNUSED(color)
-    Q_UNUSED(cx)
-    Q_UNUSED(cy)
-    Q_UNUSED(r)
-#endif
 }
 
 void MouseClickEffect::drawCircleQPainter(const QColor &color, float cx, float cy, float r)

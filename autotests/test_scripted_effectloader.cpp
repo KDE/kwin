@@ -142,7 +142,7 @@ void TestScriptedEffectLoader::testHasEffect()
     QFETCH(QString, name);
     QFETCH(bool, expected);
 
-    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::XRenderCompositing));
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::QPainterCompositing));
     KWin::ScriptedEffectLoader loader;
     QCOMPARE(loader.hasEffect(name), expected);
 
@@ -217,7 +217,7 @@ void TestScriptedEffectLoader::testLoadEffect()
     QFETCH(QString, name);
     QFETCH(bool, expected);
 
-    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::XRenderCompositing));
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::QPainterCompositing));
     KWin::ScriptedEffectLoader loader;
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     loader.setConfig(config);
@@ -290,7 +290,7 @@ void TestScriptedEffectLoader::testLoadScriptedEffect()
     QFETCH(bool, expected);
     QFETCH(KWin::LoadEffectFlags, loadFlags);
 
-    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::XRenderCompositing));
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::QPainterCompositing));
     KWin::ScriptedEffectLoader loader;
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     loader.setConfig(config);
@@ -344,7 +344,7 @@ void TestScriptedEffectLoader::testLoadScriptedEffect()
 
 void TestScriptedEffectLoader::testLoadAllEffects()
 {
-    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::XRenderCompositing));
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::QPainterCompositing));
     KWin::ScriptedEffectLoader loader;
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -429,7 +429,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
 void TestScriptedEffectLoader::testCancelLoadAllEffects()
 {
     // this test verifies that no test gets loaded when the loader gets cleared
-    MockEffectsHandler mockHandler(KWin::XRenderCompositing);
+    MockEffectsHandler mockHandler(KWin::QPainterCompositing);
     KWin::ScriptedEffectLoader loader;
 
     // prepare the configuration to hard enable/disable the effects we want to load

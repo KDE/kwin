@@ -147,14 +147,14 @@ void TestPluginEffectLoader::testSupported_data()
     QTest::addColumn<bool>("expected");
     QTest::addColumn<KWin::CompositingType>("type");
 
-    const KWin::CompositingType xc = KWin::XRenderCompositing;
+    const KWin::CompositingType qc = KWin::QPainterCompositing;
     const KWin::CompositingType oc = KWin::OpenGL2Compositing;
 
-    QTest::newRow("invalid")        << QStringLiteral("blur")             << false << xc;
-    QTest::newRow("fake - xrender") << QStringLiteral("fakeeffectplugin") << false << xc;
+    QTest::newRow("invalid")        << QStringLiteral("blur")             << false << qc;
+    QTest::newRow("fake - qpainter") << QStringLiteral("fakeeffectplugin") << false << qc;
     QTest::newRow("fake - opengl")  << QStringLiteral("fakeeffectplugin") << true  << oc;
     QTest::newRow("fake - CS")      << QStringLiteral("fakeEffectPlugin") << true  << oc;
-    QTest::newRow("version")        << QStringLiteral("effectversion")    << false << xc;
+    QTest::newRow("version")        << QStringLiteral("effectversion")    << false << qc;
 }
 
 void TestPluginEffectLoader::testSupported()
@@ -175,14 +175,14 @@ void TestPluginEffectLoader::testLoadEffect_data()
     QTest::addColumn<bool>("expected");
     QTest::addColumn<KWin::CompositingType>("type");
 
-    const KWin::CompositingType xc = KWin::XRenderCompositing;
+    const KWin::CompositingType qc = KWin::QPainterCompositing;
     const KWin::CompositingType oc = KWin::OpenGL2Compositing;
 
-    QTest::newRow("invalid")        << QStringLiteral("slide")            << false << xc;
-    QTest::newRow("fake - xrender") << QStringLiteral("fakeeffectplugin") << false << xc;
+    QTest::newRow("invalid")        << QStringLiteral("slide")            << false << qc;
+    QTest::newRow("fake - qpainter") << QStringLiteral("fakeeffectplugin") << false << qc;
     QTest::newRow("fake - opengl")  << QStringLiteral("fakeeffectplugin") << true  << oc;
     QTest::newRow("fake - CS")      << QStringLiteral("fakeEffectPlugin") << true  << oc;
-    QTest::newRow("version")        << QStringLiteral("effectversion")    << false << xc;
+    QTest::newRow("version")        << QStringLiteral("effectversion")    << false << qc;
 }
 
 void TestPluginEffectLoader::testLoadEffect()
@@ -246,7 +246,7 @@ void TestPluginEffectLoader::testLoadPluginEffect_data()
     QTest::addColumn<KWin::LoadEffectFlags>("loadFlags");
     QTest::addColumn<bool>("enabledByDefault");
 
-    const KWin::CompositingType xc = KWin::XRenderCompositing;
+    const KWin::CompositingType qc = KWin::QPainterCompositing;
     const KWin::CompositingType oc = KWin::OpenGL2Compositing;
 
     const KWin::LoadEffectFlags checkDefault = KWin::LoadEffectFlag::Load | KWin::LoadEffectFlag::CheckDefaultFunction;
@@ -254,7 +254,7 @@ void TestPluginEffectLoader::testLoadPluginEffect_data()
     const KWin::LoadEffectFlags dontLoadFlags = KWin::LoadEffectFlags();
 
     // enabled by default, but not supported
-    QTest::newRow("fakeeffectplugin")                       << QStringLiteral("fakeeffectplugin") << false << xc << checkDefault  << false;
+    QTest::newRow("fakeeffectplugin")                       << QStringLiteral("fakeeffectplugin") << false << qc << checkDefault  << false;
     // enabled by default, check default false
     QTest::newRow("supported, check default error")         << QStringLiteral("fakeeffectplugin") << false << oc << checkDefault  << false;
     // enabled by default, check default true
@@ -264,7 +264,7 @@ void TestPluginEffectLoader::testLoadPluginEffect_data()
     // enabled by default, check default true
     QTest::newRow("supported, check default, don't load")   << QStringLiteral("fakeeffectplugin") << false << oc << dontLoadFlags << true;
     // incorrect version
-    QTest::newRow("Version")                                << QStringLiteral("effectversion")    << false << xc << forceFlags    << true;
+    QTest::newRow("Version")                                << QStringLiteral("effectversion")    << false << qc << forceFlags    << true;
 }
 
 void TestPluginEffectLoader::testLoadPluginEffect()

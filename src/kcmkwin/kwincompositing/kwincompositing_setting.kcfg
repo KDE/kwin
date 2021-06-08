@@ -26,14 +26,6 @@
            <default>2</default>
        </entry>
 
-       <entry name="XRenderSmoothScale" type="Enum">
-        <default>Crisp</default>
-        <choices>
-            <choice name="Crisp" value="false" />
-            <choice name="Smooth" value="true" />
-        </choices>
-       </entry>
-
        <entry name="Enabled" type="Bool">
         <default>true</default>
        </entry>
@@ -56,7 +48,6 @@
            <default>OpenGL</default>
            <choices>
                <choice name="OpenGL" />
-               <choice name="XRender" />
            </choices>
        </entry>
 

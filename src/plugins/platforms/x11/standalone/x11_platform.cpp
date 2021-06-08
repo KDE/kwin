@@ -12,9 +12,6 @@
 #include "edge.h"
 #include "session.h"
 #include "windowselector.h"
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include "x11xrenderbackend.h"
-#endif
 #include <config-kwin.h>
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
@@ -174,13 +171,6 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
     }
 }
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-XRenderBackend *X11StandalonePlatform::createXRenderBackend()
-{
-    return new X11XRenderBackend(this);
-}
-#endif
-
 Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
 {
     if (m_screenEdgesFilter.isNull()) {
@@ -224,21 +214,14 @@ QString X11StandalonePlatform::compositingNotPossibleReason() const
         return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
                     "This was most likely due to a driver bug."
                     "<p>If you think that you have meanwhile upgraded to a stable driver,<br>"
-                    "you can reset this protection but <b>be aware that this might result in an immediate crash!</b></p>"
-                    "<p>Alternatively, you might want to use the XRender backend instead.</p>");
+                    "you can reset this protection but <b>be aware that this might result in an immediate crash!</b></p>");
 
     if (!Xcb::Extensions::self()->isCompositeAvailable() || !Xcb::Extensions::self()->isDamageAvailable()) {
         return i18n("Required X extensions (XComposite and XDamage) are not available.");
     }
-#if !defined( KWIN_HAVE_XRENDER_COMPOSITING )
-    if (!hasGlx())
-        return i18n("GLX/OpenGL are not available and only OpenGL support is compiled.");
-#else
-    if (!(hasGlx()
-            || (Xcb::Extensions::self()->isRenderAvailable() && Xcb::Extensions::self()->isFixesAvailable()))) {
-        return i18n("GLX/OpenGL and XRender/XFixes are not available.");
+    if (!hasGlx()) {
+        return i18n("GLX/OpenGL is not available.");
     }
-#endif
     return QString();
 }
 
@@ -262,16 +245,12 @@ bool X11StandalonePlatform::compositingPossible() const
     }
     if (hasGlx())
         return true;
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (Xcb::Extensions::self()->isRenderAvailable() && Xcb::Extensions::self()->isFixesAvailable())
-        return true;
-#endif
     if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
         return true;
     } else if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
         return true;
     }
-    qCDebug(KWIN_X11STANDALONE) << "No OpenGL or XRender/XFixes support";
+    qCDebug(KWIN_X11STANDALONE) << "No OpenGL support";
     return false;
 }
 
@@ -457,9 +436,6 @@ QVector<CompositingType> X11StandalonePlatform::supportedCompositors() const
     QVector<CompositingType> compositors;
 #if HAVE_EPOXY_GLX
     compositors << OpenGLCompositing;
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    compositors << XRenderCompositing;
 #endif
     compositors << NoCompositing;
     return compositors;

@@ -12,11 +12,6 @@
 
 #include <kwinglutils.h>
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <kwinxrenderutils.h>
-#include <xcb/render.h>
-#endif
-
 #include <QPainter>
 
 namespace KWin
@@ -161,63 +156,7 @@ void SnapHelperEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
 
         glDisable(GL_BLEND);
         glLineWidth(1.0);
-    }
-    if (effects->compositingType() == XRenderCompositing) {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        for (int i = 0; i < effects->numScreens(); ++i) {
-            const QRect rect = effects->clientArea(ScreenArea, i, 0);
-            const int midX = rect.x() + rect.width() / 2;
-            const int midY = rect.y() + rect.height() / 2 ;
-            const int halfWidth = m_geometry.width() / 2;
-            const int halfHeight = m_geometry.height() / 2;
-
-            xcb_rectangle_t rects[6];
-
-            // Center vertical line.
-            rects[0].x = rect.x() + rect.width() / 2 - s_lineWidth / 2;
-            rects[0].y = rect.y();
-            rects[0].width = s_lineWidth;
-            rects[0].height = rect.height();
-
-            // Center horizontal line.
-            rects[1].x = rect.x();
-            rects[1].y = rect.y() + rect.height() / 2 - s_lineWidth / 2;
-            rects[1].width = rect.width();
-            rects[1].height = s_lineWidth;
-
-            // Top edge of the window outline.
-            rects[2].x = midX - halfWidth - s_lineWidth / 2;
-            rects[2].y = midY - halfHeight - s_lineWidth / 2;
-            rects[2].width = 2 * halfWidth + s_lineWidth;
-            rects[2].height = s_lineWidth;
-
-            // Right edge of the window outline.
-            rects[3].x = midX + halfWidth - s_lineWidth / 2;
-            rects[3].y = midY - halfHeight + s_lineWidth / 2;
-            rects[3].width = s_lineWidth;
-            rects[3].height = 2 * halfHeight - s_lineWidth;
-
-            // Bottom edge of the window outline.
-            rects[4].x = midX - halfWidth - s_lineWidth / 2;
-            rects[4].y = midY + halfHeight - s_lineWidth / 2;
-            rects[4].width = 2 * halfWidth + s_lineWidth;
-            rects[4].height = s_lineWidth;
-
-            // Left edge of the window outline.
-            rects[5].x = midX - halfWidth - s_lineWidth / 2;
-            rects[5].y = midY - halfHeight + s_lineWidth / 2;
-            rects[5].width = s_lineWidth;
-            rects[5].height = 2 * halfHeight - s_lineWidth;
-
-            QColor color = s_lineColor;
-            color.setAlphaF(color.alphaF() * opacityFactor);
-
-            xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_OVER, effects->xrenderBufferPicture(),
-                                       preMultiply(color), 6, rects);
-        }
-#endif
-    }
-    if (effects->compositingType() == QPainterCompositing) {
+    } else if (effects->compositingType() == QPainterCompositing) {
         QPainter *painter = effects->scenePainter();
         painter->save();
         QColor color = s_lineColor;

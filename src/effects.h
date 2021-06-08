@@ -165,7 +165,6 @@ public:
     void registerTouchBorder(ElectricBorder border, QAction *action) override;
     void unregisterTouchBorder(ElectricBorder border, QAction *action) override;
 
-    unsigned long xrenderBufferPicture() override;
     QPainter* scenePainter() override;
     void reconfigure() override;
     QByteArray readRootProperty(long atom, long type, int format) const override;

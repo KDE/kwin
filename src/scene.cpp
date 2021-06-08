@@ -8,9 +8,6 @@
 */
 
 /*
- The base class for compositing, implementing shared functionality
- between the OpenGL and XRender backends.
-
  Design:
 
  When compositing is turned on, XComposite extension is used to redirect
@@ -713,11 +710,6 @@ void Scene::triggerFence()
 QMatrix4x4 Scene::screenProjectionMatrix() const
 {
     return QMatrix4x4();
-}
-
-xcb_render_picture_t Scene::xrenderBufferPicture() const
-{
-    return XCB_RENDER_PICTURE_NONE;
 }
 
 QPainter *Scene::scenePainter() const

@@ -10,17 +10,12 @@
 // KWin
 #include <kwinglutils.h>
 #include <kwingltexture.h>
-#include <kwinxrenderutils.h>
 // KDE
 #include <Plasma/Svg>
 // Qt
 #include <QTimer>
 #include <QPainter>
 #include <QVector4D>
-// xcb
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <xcb/render.h>
-#endif
 
 namespace KWin {
 
@@ -102,33 +97,6 @@ void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             texture->render(infiniteRegion(), (*it)->geometry);
             texture->unbind();
             glDisable(GL_BLEND);
-        } else if (effects->compositingType() == XRenderCompositing) {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            const QRect &rect = (*it)->geometry;
-            const QSize &size = (*it)->pictureSize;
-            int x = rect.x();
-            int y = rect.y();
-            int width = rect.width();
-            int height = rect.height();
-            switch ((*it)->border) {
-                case ElectricTopRight:
-                    x = rect.x() + rect.width() - size.width();
-                    break;
-                case ElectricBottomRight:
-                    x = rect.x() + rect.width() - size.width();
-                    y = rect.y() + rect.height() - size.height();
-                    break;
-                case ElectricBottomLeft:
-                    y = rect.y() + rect.height() - size.height();
-                    break;
-                default:
-                    // nothing
-                    break;
-            }
-            xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_OVER, *(*it)->picture.data(),
-                                 xRenderBlendPicture(opacity), effects->xrenderBufferPicture(),
-                                 0, 0, 0, 0, x, y, width, height);
-#endif
         } else if (effects->compositingType() == QPainterCompositing) {
             QImage tmp((*it)->image->size(), QImage::Format_ARGB32_Premultiplied);
             tmp.fill(Qt::transparent);
@@ -178,10 +146,6 @@ void ScreenEdgeEffect::edgeApproaching(ElectricBorder border, qreal factor, cons
             if (border == ElectricLeft || border == ElectricRight || border == ElectricTop || border == ElectricBottom) {
                 if (effects->isOpenGLCompositing()) {
                     (*it)->texture.reset(createEdgeGlow<GLTexture>(border, geometry.size()));
-                } else if (effects->compositingType() == XRenderCompositing) {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-                    (*it)->picture.reset(createEdgeGlow<XRenderPicture>(border, geometry.size()));
-#endif
                 } else if (effects->compositingType() == QPainterCompositing) {
                     (*it)->image.reset(createEdgeGlow<QImage>(border, geometry.size()));
                 }
@@ -224,20 +188,6 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
             delete glow;
             return nullptr;
         }
-    } else if (effects->compositingType() == XRenderCompositing) {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        if (border == ElectricTopLeft || border == ElectricTopRight || border == ElectricBottomRight || border == ElectricBottomLeft) {
-            glow->pictureSize = cornerGlowSize(border);
-            glow->picture.reset(createCornerGlow<XRenderPicture>(border));
-        } else {
-            glow->pictureSize = geometry.size();
-            glow->picture.reset(createEdgeGlow<XRenderPicture>(border, geometry.size()));
-        }
-        if (glow->picture.isNull()) {
-            delete glow;
-            return nullptr;
-        }
-#endif
     } else if (effects->compositingType() == QPainterCompositing) {
         if (border == ElectricTopLeft || border == ElectricTopRight || border == ElectricBottomRight || border == ElectricBottomLeft) {
             glow->image.reset(createCornerGlow<QImage>(border));

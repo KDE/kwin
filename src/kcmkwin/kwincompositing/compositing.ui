@@ -28,8 +28,7 @@
         <string>OpenGL compositing (the default) has crashed KWin in the past.
 This was most likely due to a driver bug.
 If you think that you have meanwhile upgraded to a stable driver,
-you can reset this protection but be aware that this might result in an immediate crash!
-Alternatively, you might want to use the XRender backend instead.</string>
+you can reset this protection but be aware that this might result in an immediate crash!</string>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -159,20 +158,6 @@ Alternatively, you might want to use the XRender backend instead.</string>
    </item>
    <item row="5" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QComboBox" name="kcfg_XRenderSmoothScale">
-       <item>
-        <property name="text">
-         <string>Crisp</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Smooth (slower)</string>
-        </property>
-       </item>
-      </widget>
-     </item>
      <item>
       <widget class="QComboBox" name="kcfg_glTextureFilter">
        <item>

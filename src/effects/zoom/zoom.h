@@ -25,7 +25,6 @@ class ZoomAccessibilityIntegration;
 #endif
 
 class GLTexture;
-class XRenderPicture;
 
 class ZoomEffect
     : public Effect
@@ -120,9 +119,6 @@ private:
     QTime lastMouseEvent;
     QTime lastFocusEvent;
     QScopedPointer<GLTexture> texture;
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    QScopedPointer<XRenderPicture> xrenderPicture;
-#endif
     int imageWidth;
     int imageHeight;
     bool isMouseHidden;

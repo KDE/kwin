@@ -12,9 +12,6 @@
 #include "kwineffects.h"
 
 #include "config-kwin.h"
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include "kwinxrenderutils.h"
-#endif
 
 #include <QVariant>
 #include <QTimeLine>
@@ -27,10 +24,6 @@
 #include <kconfiggroup.h>
 
 #include <KWaylandServer/surface_interface.h>
-
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <xcb/xfixes.h>
-#endif
 
 #if defined(__SSE2__)
 #  include <emmintrin.h>
@@ -1376,20 +1369,10 @@ PaintClipper::Iterator::Iterator()
         data->index = -1;
         next(); // move to the first one
     }
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (clip() && effects->compositingType() == XRenderCompositing) {
-        XFixesRegion region(paintArea());
-        xcb_xfixes_set_picture_clip_region(connection(), effects->xrenderBufferPicture(), region, 0, 0);
-    }
-#endif
 }
 
 PaintClipper::Iterator::~Iterator()
 {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (clip() && effects->compositingType() == XRenderCompositing)
-        xcb_xfixes_set_picture_clip_region(connection(), effects->xrenderBufferPicture(), XCB_XFIXES_REGION_NONE, 0, 0);
-#endif
     delete data;
 }
 
@@ -1399,10 +1382,6 @@ bool PaintClipper::Iterator::isDone()
         return data->index == 1; // run once
     if (effects->isOpenGLCompositing())
         return data->index >= data->region.rectCount(); // run once per each area
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (effects->compositingType() == XRenderCompositing)
-        return data->index == 1; // run once
-#endif
     abort();
 }
 
@@ -1417,10 +1396,6 @@ QRect PaintClipper::Iterator::boundingRect() const
         return infiniteRegion();
     if (effects->isOpenGLCompositing())
         return *(data->region.begin() + data->index);
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (effects->compositingType() == XRenderCompositing)
-        return data->region.boundingRect();
-#endif
     abort();
     return infiniteRegion();
 }

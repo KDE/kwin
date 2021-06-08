@@ -12,9 +12,6 @@
 #include "resizeconfig.h"
 
 #include <kwinglutils.h>
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include "kwinxrenderutils.h"
-#endif
 
 #include <KColorScheme>
 
@@ -94,21 +91,7 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                 vbo->setData(verts.count() / 2, 2, verts.data(), nullptr);
                 vbo->render(GL_TRIANGLES);
                 glDisable(GL_BLEND);
-            }
-
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            if (effects->compositingType() == XRenderCompositing) {
-                QVector<xcb_rectangle_t> rects;
-                for (const QRect &r : paintRegion) {
-                    xcb_rectangle_t rect = {int16_t(r.x()), int16_t(r.y()), uint16_t(r.width()), uint16_t(r.height())};
-                    rects << rect;
-                }
-                xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_OVER,
-                                           effects->xrenderBufferPicture(), preMultiply(color, alpha),
-                                           rects.count(), rects.constData());
-            }
-#endif
-            if (effects->compositingType() == QPainterCompositing) {
+            } else if (effects->compositingType() == QPainterCompositing) {
                 QPainter *painter = effects->scenePainter();
                 painter->save();
                 color.setAlphaF(alpha);

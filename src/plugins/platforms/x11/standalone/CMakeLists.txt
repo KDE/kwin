@@ -33,11 +33,6 @@ if (HAVE_EPOXY_GLX)
     )
 endif()
 
-if (KWIN_BUILD_XRENDER_COMPOSITING)
-    target_sources(KWinX11Platform PRIVATE x11xrenderbackend.cpp)
-    target_link_libraries(KWinX11Platform SceneXRenderBackend)
-endif()
-
 if (HAVE_DL_LIBRARY)
     target_link_libraries(KWinX11Platform ${DL_LIBRARY})
 endif()

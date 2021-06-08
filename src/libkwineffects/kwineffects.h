@@ -73,7 +73,6 @@ class EffectScreen;
 class Effect;
 class WindowQuad;
 class GLShader;
-class XRenderPicture;
 class WindowQuadList;
 class WindowPrePaintData;
 class WindowPaintData;
@@ -1135,7 +1134,6 @@ public:
      * @return bool @c true in case of OpenGL based Compositor, @c false otherwise
      */
     bool isOpenGLCompositing() const;
-    virtual unsigned long xrenderBufferPicture() = 0;
     /**
      * @brief Provides access to the QPainter which is rendering to the back buffer.
      *

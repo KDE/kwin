@@ -37,7 +37,6 @@ public:
     enum CompositingTypeIndex {
         OPENGL31_INDEX = 0,
         OPENGL20_INDEX,
-        XRENDER_INDEX
     };
 
     explicit KWinCompositingKCM(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
@@ -162,7 +161,6 @@ void KWinCompositingKCM::init()
     // compositing type
     m_form.backend->addItem(i18n("OpenGL 3.1"), CompositingTypeIndex::OPENGL31_INDEX);
     m_form.backend->addItem(i18n("OpenGL 2.0"), CompositingTypeIndex::OPENGL20_INDEX);
-    m_form.backend->addItem(i18n("XRender"), CompositingTypeIndex::XRENDER_INDEX);
 
     connect(m_form.backend, currentIndexChangedSignal, this, &KWinCompositingKCM::onBackendChanged);
 
@@ -175,8 +173,8 @@ void KWinCompositingKCM::onBackendChanged()
 {
     const int currentType = m_form.backend->currentData().toInt();
 
-    m_form.kcfg_glTextureFilter->setVisible(currentType != CompositingTypeIndex::XRENDER_INDEX);
-    m_form.kcfg_XRenderSmoothScale->setVisible(currentType == CompositingTypeIndex::XRENDER_INDEX);
+    m_form.kcfg_glTextureFilter->setVisible(currentType == CompositingTypeIndex::OPENGL31_INDEX ||
+            currentType == CompositingTypeIndex::OPENGL20_INDEX);
 
     updateUnmanagedItemStatus();
 }
@@ -191,10 +189,6 @@ void KWinCompositingKCM::updateUnmanagedItemStatus()
         // default already set
         break;
     case CompositingTypeIndex::OPENGL20_INDEX:
-        glCore = false;
-        break;
-    case CompositingTypeIndex::XRENDER_INDEX:
-        backend = KWinCompositingSetting::EnumBackend::XRender;
         glCore = false;
         break;
     }
@@ -242,8 +236,6 @@ void KWinCompositingKCM::load()
         } else {
             m_form.backend->setCurrentIndex(CompositingTypeIndex::OPENGL20_INDEX);
         }
-    } else {
-        m_form.backend->setCurrentIndex(CompositingTypeIndex::XRENDER_INDEX);
     }
     m_form.backend->setDisabled(m_settings->isBackendImmutable());
 
@@ -271,10 +263,6 @@ void KWinCompositingKCM::save()
         break;
     case CompositingTypeIndex::OPENGL20_INDEX:
         backend = KWinCompositingSetting::EnumBackend::OpenGL;
-        glCore = false;
-        break;
-    case CompositingTypeIndex::XRENDER_INDEX:
-        backend = KWinCompositingSetting::EnumBackend::XRender;
         glCore = false;
         break;
     }

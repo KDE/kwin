@@ -17,7 +17,6 @@ kwin_scripting KWin Scripting DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_SCRIPT
 aurorae KWin Aurorae Window Decoration Engine DEFAULT_SEVERITY [WARNING] IDENTIFIER [AURORAE]
 kwin_xkbcommon KWin xkbcommon integration DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_XKB]
 kwin_qpa_plugin KWin QtPlatformAbstraction plugin DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_QPA]
-kwin_scene_xrender KWin XRender based compositor scene plugin DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_XRENDER]
 kwin_scene_qpainter KWin QPainter based compositor scene plugin DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_QPAINTER]
 kwin_scene_opengl KWin OpenGL based compositor scene plugins DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_OPENGL]
 kwin_screencast KWin Screen Cast Service DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_SCREENCAST]
