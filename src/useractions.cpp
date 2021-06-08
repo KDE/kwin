@@ -955,7 +955,6 @@ void Workspace::initShortcut(const QString &actionName, const QString &descripti
  */
 void Workspace::initShortcuts()
 {
-#define IN_KWIN
     // Some shortcuts have Tarzan-speech like names, they need extra
     // normal human descriptions with DEF2() the others can use DEF()
     // new DEF3 allows to pass data to the action, replacing the %1 argument in the name
