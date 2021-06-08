@@ -17,7 +17,7 @@ namespace KWin
 DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size)
     : m_size(size)
 {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 2; i++) {
         auto buffer = QSharedPointer<DrmDumbBuffer>::create(gpu, size);
         if (!buffer->bufferId()) {
             break;
@@ -28,8 +28,8 @@ DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size)
         buffer->image()->fill(Qt::black);
         m_buffers << buffer;
     }
-    if (m_buffers.count() < 3) {
-        qCWarning(KWIN_DRM) << "Failed to create gbm buffers for swapchain!";
+    if (m_buffers.count() < 2) {
+        qCWarning(KWIN_DRM) << "Failed to create dumb buffers for swapchain!";
         m_buffers.clear();
     }
 }
