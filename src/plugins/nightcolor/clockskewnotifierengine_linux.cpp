@@ -57,7 +57,7 @@ void LinuxClockSkewNotifierEngine::handleTimerCancelled()
     uint64_t expirationCount;
     read(m_fd, &expirationCount, sizeof(expirationCount));
 
-    emit clockSkewed();
+    Q_EMIT clockSkewed();
 }
 
 } // namespace KWin

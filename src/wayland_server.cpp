@@ -205,7 +205,7 @@ KWaylandServer::ClientConnection *WaylandServer::xWaylandConnection() const
 
 void WaylandServer::destroyInternalConnection()
 {
-    emit terminatingInternalClientConnection();
+    Q_EMIT terminatingInternalClientConnection();
     if (m_internalConnection.client) {
         // delete all connections hold by plugins like e.g. widget style
         const auto connections = KWayland::Client::ConnectionThread::connections();
@@ -213,7 +213,7 @@ void WaylandServer::destroyInternalConnection()
             if (c == m_internalConnection.client) {
                 continue;
             }
-            emit c->connectionDied();
+            Q_EMIT c->connectionDied();
         }
 
         delete m_internalConnection.registry;
@@ -249,7 +249,7 @@ void WaylandServer::registerShellClient(AbstractClient *client)
     }
 
     if (client->readyForPainting()) {
-        emit shellClientAdded(client);
+        Q_EMIT shellClientAdded(client);
     } else {
         connect(client, &AbstractClient::windowShown, this, &WaylandServer::shellClientShown);
     }
@@ -281,7 +281,7 @@ void WaylandServer::registerXdgToplevelClient(XdgToplevelClient *client)
     }
 
     connect(m_XdgForeign, &XdgForeignV2Interface::transientChanged, client, [this](SurfaceInterface *child) {
-        emit foreignTransientChanged(child);
+        Q_EMIT foreignTransientChanged(child);
     });
 }
 
@@ -559,7 +559,7 @@ void WaylandServer::shellClientShown(Toplevel *toplevel)
         return;
     }
     disconnect(client, &AbstractClient::windowShown, this, &WaylandServer::shellClientShown);
-    emit shellClientAdded(client);
+    Q_EMIT shellClientAdded(client);
 }
 
 void WaylandServer::initWorkspace()
@@ -603,7 +603,7 @@ void WaylandServer::initWorkspace()
             connect(m_internalConnection.registry, &KWayland::Client::Registry::interfacesAnnounced, this, &WaylandServer::initScreenLocker);
         }
     } else {
-        emit initialized();
+        Q_EMIT initialized();
     }
 }
 
@@ -652,7 +652,7 @@ void WaylandServer::initScreenLocker()
     if (m_initFlags.testFlag(InitializationFlag::LockScreen)) {
         ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     }
-    emit initialized();
+    Q_EMIT initialized();
 }
 
 WaylandServer::SocketPairConnection WaylandServer::createConnection()
@@ -768,7 +768,7 @@ void WaylandServer::createInternalConnection()
 void WaylandServer::removeClient(AbstractClient *c)
 {
     m_clients.removeAll(c);
-    emit shellClientRemoved(c);
+    Q_EMIT shellClientRemoved(c);
 }
 
 void WaylandServer::dispatch()

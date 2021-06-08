@@ -97,7 +97,7 @@ void Toplevel::detectShape(xcb_window_t id)
     const bool wasShape = is_shape;
     is_shape = Xcb::Extensions::self()->hasShape(id);
     if (wasShape != is_shape) {
-        emit shapedChanged();
+        Q_EMIT shapedChanged();
     }
 }
 
@@ -234,7 +234,7 @@ void Toplevel::setResourceClass(const QByteArray &name, const QByteArray &classN
 {
     resource_name  = name;
     resource_class = className;
-    emit windowClassChanged();
+    Q_EMIT windowClassChanged();
 }
 
 bool Toplevel::resourceMatch(const Toplevel *c1, const Toplevel *c2)
@@ -257,7 +257,7 @@ void Toplevel::setOpacity(qreal opacity)
     m_opacity = opacity;
     if (compositing()) {
         addRepaintFull();
-        emit opacityChanged(this, oldOpacity);
+        Q_EMIT opacityChanged(this, oldOpacity);
     }
 }
 
@@ -353,7 +353,7 @@ void Toplevel::setReadyForPainting()
         ready_for_painting = true;
         if (compositing()) {
             addRepaintFull();
-            emit windowShown(this);
+            Q_EMIT windowShown(this);
         }
     }
 }
@@ -369,19 +369,19 @@ void Toplevel::checkScreen()
     if (screens()->count() == 1) {
         if (m_screen != 0) {
             m_screen = 0;
-            emit screenChanged();
+            Q_EMIT screenChanged();
         }
     } else {
         const int s = screens()->number(frameGeometry().center());
         if (s != m_screen) {
             m_screen = s;
-            emit screenChanged();
+            Q_EMIT screenChanged();
         }
     }
     qreal newScale = screens()->scale(m_screen);
     if (newScale != m_screenScale) {
         m_screenScale = newScale;
-        emit screenScaleChanged();
+        Q_EMIT screenScaleChanged();
     }
 }
 
@@ -436,12 +436,12 @@ void Toplevel::updateShadow()
         if (!shadowItem->shadow()->updateShadow()) {
             windowItem->setShadow(nullptr);
         }
-        emit shadowChanged();
+        Q_EMIT shadowChanged();
     } else {
         Shadow *shadow = Shadow::createShadow(this);
         if (shadow) {
             windowItem->setShadow(shadow);
-            emit shadowChanged();
+            Q_EMIT shadowChanged();
         }
     }
 }
@@ -590,7 +590,7 @@ void Toplevel::setSkipCloseAnimation(bool set)
         return;
     }
     m_skipCloseAnimation = set;
-    emit skipCloseAnimationChanged();
+    Q_EMIT skipCloseAnimationChanged();
 }
 
 void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
@@ -604,7 +604,7 @@ void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
         m_surfaceId = 0;
     });
     m_surfaceId = surface->id();
-    emit surfaceChanged();
+    Q_EMIT surfaceChanged();
 }
 
 QByteArray Toplevel::windowRole() const
@@ -623,7 +623,7 @@ void Toplevel::setDepth(int depth)
     const bool oldAlpha = hasAlpha();
     bit_depth = depth;
     if (oldAlpha != hasAlpha()) {
-        emit hasAlphaChanged();
+        Q_EMIT hasAlphaChanged();
     }
 }
 

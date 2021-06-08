@@ -147,14 +147,14 @@ void TabletModeManager::setIsTablet(bool tablet)
     }
 
     m_isTabletMode = tablet;
-    emit tabletModeChanged(tablet);
+    Q_EMIT tabletModeChanged(tablet);
 }
 
 void KWin::TabletModeManager::setTabletModeAvailable(bool detecting)
 {
     if (m_detecting != detecting) {
         m_detecting = detecting;
-        emit tabletModeAvailableChanged(detecting);
+        Q_EMIT tabletModeAvailableChanged(detecting);
     }
 }
 

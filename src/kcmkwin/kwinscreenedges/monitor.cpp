@@ -183,7 +183,7 @@ void Monitor::selectEdgeItem(int edge, int index)
 
 int Monitor::selectedEdgeItem(int edge) const
 {
-    foreach (QAction * act, popup_actions[ edge ])
+    Q_FOREACH (QAction * act, popup_actions[ edge ])
     if (act->isChecked())
         return popup_actions[ edge ].indexOf(act);
     abort();
@@ -199,8 +199,8 @@ void Monitor::popup(Corner* c, QPoint pos)
                 return;
             if (QAction* a = popups[ i ]->exec(pos)) {
                 selectEdgeItem(i, popup_actions[ i ].indexOf(a));
-                emit changed();
-                emit edgeSelectionChanged(i, popup_actions[ i ].indexOf(a));
+                Q_EMIT changed();
+                Q_EMIT edgeSelectionChanged(i, popup_actions[ i ].indexOf(a));
                 c->setToolTip(KLocalizedString::removeAcceleratorMarker(a->text()));
             }
             return;

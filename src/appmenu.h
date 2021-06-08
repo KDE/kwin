@@ -40,7 +40,7 @@ public:
 
     void setViewEnabled(bool enabled);
 
-signals:
+Q_SIGNALS:
     void applicationMenuEnabledChanged(bool enabled);
 
 private Q_SLOTS:

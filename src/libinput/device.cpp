@@ -316,7 +316,7 @@ void Device::setPointerAcceleration(qreal acceleration)
     if (libinput_device_config_accel_set_speed(m_device, acceleration) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
         if (m_pointerAcceleration != acceleration) {
             m_pointerAcceleration = acceleration;
-            emit pointerAccelerationChanged();
+            Q_EMIT pointerAccelerationChanged();
             writeEntry(ConfigKey::PointerAcceleration, QString::number(acceleration, 'f', 3));
         }
     }
@@ -331,7 +331,7 @@ void Device::setScrollButton(quint32 button)
         if (m_scrollButton != button) {
             m_scrollButton = button;
             writeEntry(ConfigKey::ScrollButton, m_scrollButton);
-            emit scrollButtonChanged();
+            Q_EMIT scrollButtonChanged();
         }
     }
 }
@@ -351,7 +351,7 @@ void Device::setPointerAccelerationProfile(bool set, enum  libinput_config_accel
     if (libinput_device_config_accel_set_profile(m_device, profile) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
         if (m_pointerAccelerationProfile != profile) {
             m_pointerAccelerationProfile = profile;
-            emit pointerAccelerationProfileChanged();
+            Q_EMIT pointerAccelerationProfileChanged();
             writeEntry(ConfigKey::PointerAccelerationProfile, (quint32) profile);
         }
     }
@@ -372,7 +372,7 @@ void Device::setClickMethod(bool set, enum libinput_config_click_method method)
     if (libinput_device_config_click_set_method(m_device, method) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
         if (m_clickMethod != method) {
             m_clickMethod = method;
-            emit clickMethodChanged();
+            Q_EMIT clickMethodChanged();
             writeEntry(ConfigKey::ClickMethod, (quint32) method);
         }
     }
@@ -397,7 +397,7 @@ void Device::setScrollMethod(bool set, enum libinput_config_scroll_method method
     if (libinput_device_config_scroll_set_method(m_device, method) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
         if (!isCurrent) {
             m_scrollMethod = method;
-            emit scrollMethodChanged();
+            Q_EMIT scrollMethodChanged();
             writeEntry(ConfigKey::ScrollMethod, (quint32) method);
         }
     }
@@ -418,7 +418,7 @@ void Device::setLmrTapButtonMap(bool set)
         if (m_tapButtonMap != map) {
             m_tapButtonMap = map;
             writeEntry(ConfigKey::LmrTapButtonMap, set);
-            emit tapButtonMapChanged();
+            Q_EMIT tapButtonMapChanged();
         }
     }
 }
@@ -450,7 +450,7 @@ void Device::method(bool set) \
         if (m_##variable != set) { \
             m_##variable = set; \
             writeEntry(ConfigKey::key, m_##variable); \
-            emit variable##Changed(); \
+            Q_EMIT variable##Changed(); \
         }\
     } \
 }
@@ -470,7 +470,7 @@ void Device::method(bool set) \
         if (m_##variable != set) { \
             m_##variable = set; \
             writeEntry(ConfigKey::key, m_##variable); \
-            emit variable##Changed(); \
+            Q_EMIT variable##Changed(); \
         }\
     } \
 }
@@ -489,7 +489,7 @@ void Device::setScrollFactor(qreal factor)
     if (m_scrollFactor != factor) {
         m_scrollFactor = factor;
         writeEntry(ConfigKey::ScrollFactor, m_scrollFactor);
-        emit scrollFactorChanged();
+        Q_EMIT scrollFactorChanged();
     }
 }
 

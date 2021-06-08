@@ -141,7 +141,7 @@ void CoverSwitchEffect::paintScreen(int mask, const QRegion &region, ScreenPaint
                 if (index >= tempList.count())
                     index = index % tempList.count();
             }
-            foreach (Direction direction, scheduled_directions) {
+            Q_FOREACH (Direction direction, scheduled_directions) {
                 if (direction == Right)
                     index++;
                 else
@@ -287,7 +287,7 @@ void CoverSwitchEffect::postPaintScreen()
             if (stop) {
                 stop = false;
                 effects->setActiveFullScreenEffect(nullptr);
-                foreach (EffectWindow * window, referrencedWindows) {
+                Q_FOREACH (EffectWindow * window, referrencedWindows) {
                     window->unrefWindow();
                 }
                 referrencedWindows.clear();

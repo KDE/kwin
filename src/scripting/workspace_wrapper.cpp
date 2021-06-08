@@ -50,7 +50,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(screens(), &Screens::countChanged, this,
         [this] (int previousCount, int currentCount) {
             Q_UNUSED(previousCount)
-            emit numberScreensChanged(currentCount);
+            Q_EMIT numberScreensChanged(currentCount);
         }
     );
     // TODO Plasma 6: Remove it.

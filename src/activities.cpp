@@ -55,7 +55,7 @@ void Activities::slotCurrentChanged(const QString &newActivity)
     }
     m_previous = m_current;
     m_current = newActivity;
-    emit currentChanged(newActivity);
+    Q_EMIT currentChanged(newActivity);
 }
 
 void Activities::slotRemoved(const QString &activity)
@@ -172,7 +172,7 @@ void Activities::reallyStop(const QString &id)
         }
 
         const QStringList activities = c->activities();
-        foreach (const QString & activityId, activities) {
+        Q_FOREACH (const QString & activityId, activities) {
             if (activityId == id) {
                 saveSessionIds << sessionId;
             } else if (running().contains(activityId)) {
@@ -185,7 +185,7 @@ void Activities::reallyStop(const QString &id)
 
     QStringList saveAndClose;
     QStringList saveOnly;
-    foreach (const QByteArray & sessionId, saveSessionIds) {
+    Q_FOREACH (const QByteArray & sessionId, saveSessionIds) {
         if (dontCloseSessionIds.contains(sessionId)) {
             saveOnly << sessionId;
         } else {

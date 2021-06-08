@@ -119,7 +119,7 @@ void PointerInputRedirection::init()
         auto cursor = Cursors::self()->mouse();
         cursor->updateCursor(m_cursor->image(), m_cursor->hotSpot());
     });
-    emit m_cursor->changed();
+    Q_EMIT m_cursor->changed();
 
     connect(Cursors::self()->mouse(), &Cursor::rendered, m_cursor, &CursorImage::markAsRendered);
 
@@ -305,7 +305,7 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
 {
     update();
 
-    emit input()->pointerAxisChanged(axis, delta);
+    Q_EMIT input()->pointerAxisChanged(axis, delta);
 
     WheelEvent wheelEvent(m_pos, delta, discreteDelta,
                            (axis == InputRedirection::PointerAxisHorizontal) ? Qt::Horizontal : Qt::Vertical,
@@ -826,7 +826,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
         return;
     }
     m_pos = p;
-    emit input()->globalPointerChanged(m_pos);
+    Q_EMIT input()->globalPointerChanged(m_pos);
 }
 
 void PointerInputRedirection::updateButton(uint32_t button, InputRedirection::PointerButtonState state)
@@ -842,7 +842,7 @@ void PointerInputRedirection::updateButton(uint32_t button, InputRedirection::Po
         m_qtButtons |= buttonToQtMouseButton(it.key());
     }
 
-    emit input()->pointerButtonStateChanged(button, state);
+    Q_EMIT input()->pointerButtonStateChanged(button, state);
 }
 
 void PointerInputRedirection::warp(const QPointF &pos)
@@ -1045,7 +1045,7 @@ void CursorImage::updateDecorationCursor()
     if (AbstractClient *c = deco ? deco->client() : nullptr) {
         loadThemeCursor(c->cursor(), &m_decorationCursor);
         if (m_currentSource == CursorSource::Decoration) {
-            emit changed();
+            Q_EMIT changed();
         }
     }
     reevaluteSource();
@@ -1057,7 +1057,7 @@ void CursorImage::updateMoveResize()
     if (AbstractClient *c = workspace()->moveResizeClient()) {
         loadThemeCursor(c->cursor(), &m_moveResizeCursor);
         if (m_currentSource == CursorSource::MoveResize) {
-            emit changed();
+            Q_EMIT changed();
         }
     }
     reevaluteSource();
@@ -1071,28 +1071,28 @@ void CursorImage::updateServerCursor()
     auto p = waylandServer()->seat()->pointer();
     if (!p) {
         if (needsEmit) {
-            emit changed();
+            Q_EMIT changed();
         }
         return;
     }
     auto c = p->cursor();
     if (!c) {
         if (needsEmit) {
-            emit changed();
+            Q_EMIT changed();
         }
         return;
     }
     auto cursorSurface = c->surface();
     if (!cursorSurface) {
         if (needsEmit) {
-            emit changed();
+            Q_EMIT changed();
         }
         return;
     }
     auto buffer = cursorSurface->buffer();
     if (!buffer) {
         if (needsEmit) {
-            emit changed();
+            Q_EMIT changed();
         }
         return;
     }
@@ -1100,7 +1100,7 @@ void CursorImage::updateServerCursor()
     m_serverCursor.cursor.image = buffer->data().copy();
     m_serverCursor.cursor.image.setDevicePixelRatio(cursorSurface->bufferScale());
     if (needsEmit) {
-        emit changed();
+        Q_EMIT changed();
     }
 }
 
@@ -1108,7 +1108,7 @@ void CursorImage::setEffectsOverrideCursor(Qt::CursorShape shape)
 {
     loadThemeCursor(shape, &m_effectsCursor);
     if (m_currentSource == CursorSource::EffectsOverride) {
-        emit changed();
+        Q_EMIT changed();
     }
     reevaluteSource();
 }
@@ -1126,7 +1126,7 @@ void CursorImage::setWindowSelectionCursor(const QByteArray &shape)
         loadThemeCursor(shape, &m_windowSelectionCursor);
     }
     if (m_currentSource == CursorSource::WindowSelector) {
-        emit changed();
+        Q_EMIT changed();
     }
     reevaluteSource();
 }
@@ -1168,28 +1168,28 @@ void CursorImage::updateDragCursor()
     auto p = waylandServer()->seat()->pointer();
     if (!p) {
         if (needsEmit) {
-            emit changed();
+            Q_EMIT changed();
         }
         return;
     }
     auto c = p->cursor();
     if (!c) {
         if (needsEmit) {
-            emit changed();
+            Q_EMIT changed();
         }
         return;
     }
     auto cursorSurface = c->surface();
     if (!cursorSurface) {
         if (needsEmit) {
-            emit changed();
+            Q_EMIT changed();
         }
         return;
     }
     auto buffer = cursorSurface->buffer();
     if (!buffer) {
         if (needsEmit) {
-            emit changed();
+            Q_EMIT changed();
         }
         return;
     }
@@ -1230,7 +1230,7 @@ void CursorImage::updateDragCursor()
     }
 
     if (needsEmit) {
-        emit changed();
+        Q_EMIT changed();
     }
     // TODO: add the cursor image
 }
@@ -1362,7 +1362,7 @@ void CursorImage::setSource(CursorSource source)
         return;
     }
     m_currentSource = source;
-    emit changed();
+    Q_EMIT changed();
 }
 
 QImage CursorImage::image() const
@@ -1438,20 +1438,20 @@ void InputRedirectionCursor::doSetPos()
         input()->warpPointer(currentPos());
     }
     slotPosChanged(input()->globalPointer());
-    emit posChanged(currentPos());
+    Q_EMIT posChanged(currentPos());
 }
 
 void InputRedirectionCursor::slotPosChanged(const QPointF &pos)
 {
     const QPoint oldPos = currentPos();
     updatePos(pos.toPoint());
-    emit mouseChanged(pos.toPoint(), oldPos, m_currentButtons, m_currentButtons,
+    Q_EMIT mouseChanged(pos.toPoint(), oldPos, m_currentButtons, m_currentButtons,
                       input()->keyboardModifiers(), input()->keyboardModifiers());
 }
 
 void InputRedirectionCursor::slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods)
 {
-    emit mouseChanged(currentPos(), currentPos(), m_currentButtons, m_currentButtons, mods, oldMods);
+    Q_EMIT mouseChanged(currentPos(), currentPos(), m_currentButtons, m_currentButtons, mods, oldMods);
 }
 
 void InputRedirectionCursor::slotPointerButtonChanged()
@@ -1459,7 +1459,7 @@ void InputRedirectionCursor::slotPointerButtonChanged()
     const Qt::MouseButtons oldButtons = m_currentButtons;
     m_currentButtons = input()->qtButtonStates();
     const QPoint pos = currentPos();
-    emit mouseChanged(pos, pos, m_currentButtons, oldButtons, input()->keyboardModifiers(), input()->keyboardModifiers());
+    Q_EMIT mouseChanged(pos, pos, m_currentButtons, oldButtons, input()->keyboardModifiers(), input()->keyboardModifiers());
 }
 
 void InputRedirectionCursor::doStartCursorTracking()

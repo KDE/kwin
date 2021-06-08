@@ -77,7 +77,7 @@ void WindowGeometryConfig::save()
 void WindowGeometryConfig::defaults()
 {
     myUi->shortcuts->allDefault();
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 } //namespace

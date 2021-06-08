@@ -186,7 +186,7 @@ void NightColorManager::inhibit()
 
     if (m_inhibitReferenceCount == 1) {
         resetAllTimers();
-        emit inhibitedChanged();
+        Q_EMIT inhibitedChanged();
     }
 }
 
@@ -196,7 +196,7 @@ void NightColorManager::uninhibit()
 
     if (!m_inhibitReferenceCount) {
         resetAllTimers();
-        emit inhibitedChanged();
+        Q_EMIT inhibitedChanged();
     }
 }
 
@@ -487,7 +487,7 @@ void NightColorManager::updateTargetTemperature()
 
     m_targetTemperature = targetTemperature;
 
-    emit targetTemperatureChanged();
+    Q_EMIT targetTemperatureChanged();
 }
 
 void NightColorManager::updateTransitionTimings(bool force)
@@ -495,8 +495,8 @@ void NightColorManager::updateTransitionTimings(bool force)
     if (m_mode == NightColorMode::Constant) {
         m_next = DateTimes();
         m_prev = DateTimes();
-        emit previousTransitionTimingsChanged();
-        emit scheduledTransitionTimingsChanged();
+        Q_EMIT previousTransitionTimingsChanged();
+        Q_EMIT scheduledTransitionTimingsChanged();
         return;
     }
 
@@ -518,8 +518,8 @@ void NightColorManager::updateTransitionTimings(bool force)
             m_next = DateTimes(morB.addDays(1), morE.addDays(1));
             m_prev = DateTimes(eveB, eveE);
         }
-        emit previousTransitionTimingsChanged();
-        emit scheduledTransitionTimingsChanged();
+        Q_EMIT previousTransitionTimingsChanged();
+        Q_EMIT scheduledTransitionTimingsChanged();
         return;
     }
 
@@ -563,8 +563,8 @@ void NightColorManager::updateTransitionTimings(bool force)
         }
     }
 
-    emit previousTransitionTimingsChanged();
-    emit scheduledTransitionTimingsChanged();
+    Q_EMIT previousTransitionTimingsChanged();
+    Q_EMIT scheduledTransitionTimingsChanged();
 }
 
 DateTimes NightColorManager::getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const
@@ -840,7 +840,7 @@ bool NightColorManager::changeConfiguration(QHash<QString, QVariant> data)
     if (resetNeeded) {
         resetAllTimers();
     }
-    emit configChange(info());
+    Q_EMIT configChange(info());
     return true;
 }
 
@@ -866,7 +866,7 @@ void NightColorManager::autoLocationUpdate(double latitude, double longitude)
     s->save();
 
     resetAllTimers();
-    emit configChange(info());
+    Q_EMIT configChange(info());
 }
 
 void NightColorManager::setEnabled(bool enabled)
@@ -876,7 +876,7 @@ void NightColorManager::setEnabled(bool enabled)
     }
     m_active = enabled;
     m_skewNotifier->setActive(enabled);
-    emit enabledChanged();
+    Q_EMIT enabledChanged();
 }
 
 void NightColorManager::setRunning(bool running)
@@ -885,7 +885,7 @@ void NightColorManager::setRunning(bool running)
         return;
     }
     m_running = running;
-    emit runningChanged();
+    Q_EMIT runningChanged();
 }
 
 void NightColorManager::setCurrentTemperature(int temperature)
@@ -894,7 +894,7 @@ void NightColorManager::setCurrentTemperature(int temperature)
         return;
     }
     m_currentTemp = temperature;
-    emit currentTemperatureChanged();
+    Q_EMIT currentTemperatureChanged();
 }
 
 void NightColorManager::setMode(NightColorMode mode)
@@ -903,7 +903,7 @@ void NightColorManager::setMode(NightColorMode mode)
         return;
     }
     m_mode = mode;
-    emit modeChanged();
+    Q_EMIT modeChanged();
 }
 
 } // namespace KWin

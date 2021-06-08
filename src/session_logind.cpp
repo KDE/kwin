@@ -300,7 +300,7 @@ void LogindSession::updateActive(bool active)
 {
     if (m_isActive != active) {
         m_isActive = active;
-        emit activeChanged(active);
+        Q_EMIT activeChanged(active);
     }
 }
 
@@ -329,7 +329,7 @@ void LogindSession::handlePropertiesChanged(const QString &interfaceName, const 
 void LogindSession::handlePrepareForSleep(bool sleep)
 {
     if (!sleep) {
-        emit awoke();
+        Q_EMIT awoke();
     }
 }
 

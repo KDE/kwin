@@ -208,7 +208,7 @@ void WaylandClient::updateCaption()
         } while (findClientWithSameCaption());
     }
     if (m_captionSuffix != oldSuffix) {
-        emit captionChanged();
+        Q_EMIT captionChanged();
     }
 }
 
@@ -219,7 +219,7 @@ void WaylandClient::setCaption(const QString &caption)
     updateCaption();
     if (m_captionSuffix == oldSuffix) {
         // Don't emit caption change twice it already got emitted by the changing suffix.
-        emit captionChanged();
+        Q_EMIT captionChanged();
     }
 }
 
@@ -287,7 +287,7 @@ void WaylandClient::internalShow()
     }
     m_isHidden = false;
     addRepaintFull();
-    emit windowShown(this);
+    Q_EMIT windowShown(this);
 }
 
 void WaylandClient::internalHide()
@@ -301,7 +301,7 @@ void WaylandClient::internalHide()
     m_isHidden = true;
     addWorkspaceRepaint(visibleGeometry());
     workspace()->clientHidden(this);
-    emit windowHidden(this);
+    Q_EMIT windowHidden(this);
 }
 
 QRect WaylandClient::frameRectToBufferRect(const QRect &rect) const
@@ -338,15 +338,15 @@ void WaylandClient::updateGeometry(const QRect &rect)
     updateWindowRules(Rules::Position | Rules::Size);
 
     if (changedGeometries & WaylandGeometryBuffer) {
-        emit bufferGeometryChanged(this, oldBufferGeometry);
+        Q_EMIT bufferGeometryChanged(this, oldBufferGeometry);
     }
     if (changedGeometries & WaylandGeometryClient) {
-        emit clientGeometryChanged(this, oldClientGeometry);
+        Q_EMIT clientGeometryChanged(this, oldClientGeometry);
     }
     if (changedGeometries & WaylandGeometryFrame) {
-        emit frameGeometryChanged(this, oldFrameGeometry);
+        Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
     }
-    emit geometryShapeChanged(this, oldFrameGeometry);
+    Q_EMIT geometryShapeChanged(this, oldFrameGeometry);
 }
 
 } // namespace KWin

@@ -84,7 +84,7 @@ Edge::Edge(ScreenEdges *parent)
             int factor = progress * 256.0f;
             if (m_lastApproachingFactor != factor) {
                 m_lastApproachingFactor = factor;
-                emit approaching(border(), m_lastApproachingFactor/256.0f, m_approachGeometry);
+                Q_EMIT approaching(border(), m_lastApproachingFactor/256.0f, m_approachGeometry);
             }
         }
     );
@@ -534,7 +534,7 @@ void Edge::checkBlocking()
     const bool wasTouch = activatesForTouchGesture();
     m_blocked = newValue;
     if (wasTouch != activatesForTouchGesture()) {
-        emit activatesForTouchGestureChanged();
+        Q_EMIT activatesForTouchGestureChanged();
     }
     doUpdateBlocking();
 }
@@ -577,7 +577,7 @@ void Edge::startApproaching()
     m_approaching = true;
     doStartApproaching();
     m_lastApproachingFactor = 0;
-    emit approaching(border(), 0.0, m_approachGeometry);
+    Q_EMIT approaching(border(), 0.0, m_approachGeometry);
 }
 
 void Edge::doStartApproaching()
@@ -592,7 +592,7 @@ void Edge::stopApproaching()
     m_approaching = false;
     doStopApproaching();
     m_lastApproachingFactor = 0;
-    emit approaching(border(), 0.0, m_approachGeometry);
+    Q_EMIT approaching(border(), 0.0, m_approachGeometry);
 }
 
 void Edge::doStopApproaching()
@@ -638,7 +638,7 @@ void Edge::updateApproaching(const QPoint &point)
         factor = 256 - factor;
         if (m_lastApproachingFactor != factor) {
             m_lastApproachingFactor = factor;
-            emit approaching(border(), m_lastApproachingFactor/256.0f, m_approachGeometry);
+            Q_EMIT approaching(border(), m_lastApproachingFactor/256.0f, m_approachGeometry);
         }
     } else {
         stopApproaching();
@@ -680,7 +680,7 @@ void Edge::setTouchAction(ElectricBorderAction action) {
     const bool wasTouch = activatesForTouchGesture();
     m_touchAction = action;
     if (wasTouch != activatesForTouchGesture()) {
-        emit activatesForTouchGestureChanged();
+        Q_EMIT activatesForTouchGestureChanged();
     }
 }
 
@@ -689,7 +689,7 @@ void Edge::setClient(AbstractClient *client)
     const bool wasTouch = activatesForTouchGesture();
     m_client = client;
     if (wasTouch != activatesForTouchGesture()) {
-        emit activatesForTouchGestureChanged();
+        Q_EMIT activatesForTouchGestureChanged();
     }
 }
 

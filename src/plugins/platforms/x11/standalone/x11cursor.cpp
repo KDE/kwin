@@ -126,7 +126,7 @@ void X11Cursor::mousePolled()
     static uint16_t lastMask = m_buttonMask;
     doGetPos(); // Update if needed
     if (lastPos != currentPos() || lastMask != m_buttonMask) {
-        emit mouseChanged(currentPos(), lastPos,
+        Q_EMIT mouseChanged(currentPos(), lastPos,
             x11ToQtMouseButtons(m_buttonMask), x11ToQtMouseButtons(lastMask),
             x11ToQtKeyboardModifiers(m_buttonMask), x11ToQtKeyboardModifiers(lastMask));
         lastPos = currentPos();
@@ -180,7 +180,7 @@ void X11Cursor::notifyCursorChanged()
         // cursor change tracking is currently disabled, so don't emit signal
         return;
     }
-    emit cursorChanged();
+    Q_EMIT cursorChanged();
 }
 
 }

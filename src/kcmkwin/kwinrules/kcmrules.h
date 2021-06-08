@@ -38,14 +38,14 @@ public:
     Q_INVOKABLE void exportToFile(const QUrl &path, const QList<int> &indexes);
     Q_INVOKABLE void importFromFile(const QUrl &path);
 
-public slots:
+public Q_SLOTS:
     void load() override;
     void save() override;
 
-signals:
+Q_SIGNALS:
     void editIndexChanged();
 
-private slots:
+private Q_SLOTS:
     void updateNeedsSave();
 
 private:

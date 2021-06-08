@@ -155,7 +155,7 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface
         }
     }
 
-    emit screens()->changed();
+    Q_EMIT screens()->changed();
     config->setApplied();
 }
 
@@ -448,7 +448,7 @@ void Platform::setReady(bool ready)
         return;
     }
     m_ready = ready;
-    emit readyChanged(m_ready);
+    Q_EMIT readyChanged(m_ready);
 }
 
 bool Platform::isPerScreenRenderingEnabled() const

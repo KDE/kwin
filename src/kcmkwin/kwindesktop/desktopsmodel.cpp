@@ -171,8 +171,8 @@ void DesktopsModel::setRows(int rows)
     if (m_rows != rows) {
         m_rows = rows;
 
-        emit rowsChanged();
-        emit dataChanged(index(0, 0), index(m_desktops.count() - 1, 0), QVector<int>{DesktopRow});
+        Q_EMIT rowsChanged();
+        Q_EMIT dataChanged(index(0, 0), index(m_desktops.count() - 1, 0), QVector<int>{DesktopRow});
 
         updateModifiedState();
     }
@@ -197,7 +197,7 @@ void DesktopsModel::createDesktop(const QString &name)
     m_names[dummyId] = name;
 
     endInsertRows();
-    emit desktopCountChanged();
+    Q_EMIT desktopCountChanged();
 
     updateModifiedState();
 }
@@ -216,7 +216,7 @@ void DesktopsModel::removeDesktop(const QString &id)
     m_names.remove(id);
 
     endRemoveRows();
-    emit desktopCountChanged();
+    Q_EMIT desktopCountChanged();
 
     updateModifiedState();
 }
@@ -231,7 +231,7 @@ void DesktopsModel::setDesktopName(const QString &id, const QString &name)
 
     const QModelIndex &idx = index(m_desktops.indexOf(id), 0);
 
-    emit dataChanged(idx, idx, QVector<int>{Qt::DisplayRole});
+    Q_EMIT dataChanged(idx, idx, QVector<int>{Qt::DisplayRole});
 
     updateModifiedState();
 }
@@ -308,7 +308,7 @@ void DesktopsModel::syncWithServer()
         m_names[newId] = m_names.take(oldId);
     }
 
-    emit dataChanged(index(0, 0), index(rowCount() - 1, 0), QVector<int>{Qt::DisplayRole});
+    Q_EMIT dataChanged(index(0, 0), index(rowCount() - 1, 0), QVector<int>{Qt::DisplayRole});
 
     // Sync names.
     if (m_names != m_serverSideNames) {
@@ -440,7 +440,7 @@ void DesktopsModel::getAllAndConnect(const QDBusMessage &msg)
         || m_serverSideRows != newServerSideRows) {
         if (!m_serverSideDesktops.isEmpty() || m_userModified) {
             m_serverModified = true;
-            emit serverModifiedChanged();
+            Q_EMIT serverModifiedChanged();
         }
 
         m_serverSideDesktops = newServerSideDesktops;
@@ -460,11 +460,11 @@ void DesktopsModel::getAllAndConnect(const QDBusMessage &msg)
         endResetModel();
     }
 
-    emit readyChanged();
+    Q_EMIT readyChanged();
 
     auto handleConnectionError = [this]() {
         m_error = i18n("There was an error connecting to the compositor.");
-        emit errorChanged();
+        Q_EMIT errorChanged();
     };
 
     bool connected = QDBusConnection::sessionBus().connect(
@@ -544,7 +544,7 @@ void DesktopsModel::desktopCreated(const QString &id, const KWin::DBusDesktopDat
         m_names.remove(dummyId);
         m_names[id] = data.name;
         const QModelIndex &idx = index(data.position, 0);
-        emit dataChanged(idx, idx, QVector<int>{Id});
+        Q_EMIT dataChanged(idx, idx, QVector<int>{Id});
 
         updateModifiedState(/* server */ true);
     }
@@ -584,7 +584,7 @@ void DesktopsModel::desktopDataChanged(const QString &id, const KWin::DBusDeskto
 
         const QModelIndex &idx = index(desktopIndex, 0);
 
-        emit dataChanged(idx, idx, QVector<int>{Qt::DisplayRole});
+        Q_EMIT dataChanged(idx, idx, QVector<int>{Qt::DisplayRole});
     } else {
         updateModifiedState(/* server */ true);
     }
@@ -603,8 +603,8 @@ void DesktopsModel::desktopRowsChanged(uint rows)
     if (!m_userModified) {
         m_rows = m_serverSideRows;
 
-        emit rowsChanged();
-        emit dataChanged(index(0, 0), index(m_desktops.count() - 1, 0), QVector<int>{DesktopRow});
+        Q_EMIT rowsChanged();
+        Q_EMIT dataChanged(index(0, 0), index(m_desktops.count() - 1, 0), QVector<int>{DesktopRow});
     } else {
         updateModifiedState(/* server */ true);
     }
@@ -627,7 +627,7 @@ void DesktopsModel::updateModifiedState(bool server)
             m_names[newId] = m_names.take(oldId);
         }
 
-        emit dataChanged(index(0, 0), index(rowCount() - 1, 0), QVector<int>{Qt::DisplayRole});
+        Q_EMIT dataChanged(index(0, 0), index(rowCount() - 1, 0), QVector<int>{Qt::DisplayRole});
     }
 
     if (m_desktops == m_serverSideDesktops
@@ -635,22 +635,22 @@ void DesktopsModel::updateModifiedState(bool server)
         && m_rows == m_serverSideRows) {
 
         m_userModified = false;
-        emit userModifiedChanged();
+        Q_EMIT userModifiedChanged();
 
         m_serverModified = false;
-        emit serverModifiedChanged();
+        Q_EMIT serverModifiedChanged();
     } else {
         if (m_pendingCalls > 0) {
             m_serverModified = false;
-            emit serverModifiedChanged();
+            Q_EMIT serverModifiedChanged();
 
             syncWithServer();
         } else if (server) {
             m_serverModified = true;
-            emit serverModifiedChanged();
+            Q_EMIT serverModifiedChanged();
         } else {
             m_userModified = true;
-            emit userModifiedChanged();
+            Q_EMIT userModifiedChanged();
         }
     }
 }
@@ -660,13 +660,13 @@ void DesktopsModel::handleCallError()
     if (m_pendingCalls > 0) {
 
         m_serverModified = false;
-        emit serverModifiedChanged();
+        Q_EMIT serverModifiedChanged();
 
         m_error = i18n("There was an error saving the settings to the compositor.");
-        emit errorChanged();
+        Q_EMIT errorChanged();
     } else {
         m_error = i18n("There was an error requesting information from the compositor.");
-        emit errorChanged();
+        Q_EMIT errorChanged();
     }
 }
 

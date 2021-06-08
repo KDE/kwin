@@ -65,7 +65,7 @@ void KWinIdleTimePoller::addTimeout(int nextTimeout)
     m_timeouts.insert(nextTimeout, timeout);
     connect(timeout, &KWayland::Client::IdleTimeout::idle, this,
         [this, nextTimeout] {
-            emit timeoutReached(nextTimeout);
+            Q_EMIT timeoutReached(nextTimeout);
         }
     );
     connect(timeout, &KWayland::Client::IdleTimeout::resumeFromIdle, this, &KWinIdleTimePoller::resumingFromIdle);
@@ -99,7 +99,7 @@ void KWinIdleTimePoller::catchIdleEvent()
     connect(m_catchResumeTimeout, &KWayland::Client::IdleTimeout::resumeFromIdle, this,
         [this] {
             stopCatchingIdleEvents();
-            emit resumingFromIdle();
+            Q_EMIT resumingFromIdle();
         }
     );
 }

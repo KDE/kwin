@@ -74,7 +74,7 @@ Q_SIGNALS:
 
 bool TestObject::callback(KWin::ElectricBorder border)
 {
-    emit gotCallback(border);
+    Q_EMIT gotCallback(border);
     return true;
 }
 
@@ -682,7 +682,7 @@ void TestScreenEdges::testFullScreenBlocking()
     QAction action;
     s->reserveTouch(KWin::ElectricRight, &action);
     // currently there is no active client yet, so check blocking shouldn't do anything
-    emit s->checkBlocking();
+    Q_EMIT s->checkBlocking();
     for (auto e: s->findChildren<Edge*>()) {
         QCOMPARE(e->activatesForTouchGesture(), e->border() == KWin::ElectricRight);
     }
@@ -709,7 +709,7 @@ void TestScreenEdges::testFullScreenBlocking()
     client.setActive(true);
     client.setFullScreen(true);
     ws.setActiveClient(&client);
-    emit s->checkBlocking();
+    Q_EMIT s->checkBlocking();
     // the signal doesn't trigger for corners, let's go over all windows just to be sure that it doesn't call for corners
     for (auto e: s->findChildren<Edge*>()) {
         e->checkBlocking();
@@ -726,7 +726,7 @@ void TestScreenEdges::testFullScreenBlocking()
 
     // let's make the client not fullscreen, which should trigger
     client.setFullScreen(false);
-    emit s->checkBlocking();
+    Q_EMIT s->checkBlocking();
     for (auto e: s->findChildren<Edge*>()) {
         QCOMPARE(e->activatesForTouchGesture(), e->border() == KWin::ElectricRight);
     }
@@ -739,7 +739,7 @@ void TestScreenEdges::testFullScreenBlocking()
     QTest::qWait(351);
     client.setFullScreen(true);
     client.moveResize(client.frameGeometry().translated(10, 0));
-    emit s->checkBlocking();
+    Q_EMIT s->checkBlocking();
     spy.clear();
     Cursors::self()->mouse()->setPos(0, 50);
     event.time = QDateTime::currentMSecsSinceEpoch();
@@ -750,7 +750,7 @@ void TestScreenEdges::testFullScreenBlocking()
 
     // just to be sure, let's set geometry back
     client.moveResize(screens()->geometry());
-    emit s->checkBlocking();
+    Q_EMIT s->checkBlocking();
     Cursors::self()->mouse()->setPos(0, 50);
     QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
@@ -852,7 +852,7 @@ void TestScreenEdges::testClientEdge()
     QCOMPARE(client.isHiddenInternal(), true);
 
     // now let's emulate the removal of a Client through Workspace
-    emit workspace()->clientRemoved(&client);
+    Q_EMIT workspace()->clientRemoved(&client);
     for (auto e : s->findChildren<Edge*>()) {
         QVERIFY(!e->client());
     }

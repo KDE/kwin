@@ -127,7 +127,7 @@ void FlipSwitchEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             // using stacking order directly is not possible
             // as not each window in stacking order is shown
             // TODO: store list instead of calculating in each frame?
-            foreach (EffectWindow * w, effects->stackingOrder()) {
+            Q_FOREACH (EffectWindow * w, effects->stackingOrder()) {
                 if (m_windows.contains(w))
                     tempList.append(w);
             }
@@ -137,7 +137,7 @@ void FlipSwitchEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
 
         int tabIndex = index;
         if (m_mode == TabboxMode) {
-            foreach (SwitchingDirection direction, m_scheduledDirections) { // krazy:exclude=foreach
+            Q_FOREACH (SwitchingDirection direction, m_scheduledDirections) { // krazy:exclude=foreach
                 if (direction == DirectionBackward)
                     index++;
                 else
@@ -164,7 +164,7 @@ void FlipSwitchEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
                 m_flipOrderedWindows.append(w);
             }
         } else {
-            foreach (SwitchingDirection direction, m_scheduledDirections) { // krazy:exclude=foreach
+            Q_FOREACH (SwitchingDirection direction, m_scheduledDirections) { // krazy:exclude=foreach
                 if (direction == DirectionForward)
                     index++;
                 else
@@ -229,7 +229,7 @@ void FlipSwitchEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             }
         }
 
-        foreach (EffectWindow *w, m_flipOrderedWindows) {
+        Q_FOREACH (EffectWindow *w, m_flipOrderedWindows) {
             ItemInfo *info = m_windows.value(w,0);
             if (!info)
                 continue;
@@ -513,7 +513,7 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
         }
 
         m_mode = mode;
-        foreach (EffectWindow * w, effects->stackingOrder()) {
+        Q_FOREACH (EffectWindow * w, effects->stackingOrder()) {
             if (isSelectableWindow(w) && !m_windows.contains(w))
                 m_windows[ w ] = new ItemInfo;
         }

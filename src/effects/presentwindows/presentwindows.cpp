@@ -126,24 +126,24 @@ PresentWindowsEffect::~PresentWindowsEffect()
 void PresentWindowsEffect::reconfigure(ReconfigureFlags)
 {
     PresentWindowsConfig::self()->read();
-    foreach (ElectricBorder border, m_borderActivate) {
+    Q_FOREACH (ElectricBorder border, m_borderActivate) {
         effects->unreserveElectricBorder(border, this);
     }
-    foreach (ElectricBorder border, m_borderActivateAll) {
+    Q_FOREACH (ElectricBorder border, m_borderActivateAll) {
         effects->unreserveElectricBorder(border, this);
     }
     m_borderActivate.clear();
     m_borderActivateAll.clear();
 
-    foreach (int i, PresentWindowsConfig::borderActivate()) {
+    Q_FOREACH (int i, PresentWindowsConfig::borderActivate()) {
         m_borderActivate.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i), this);
     }
-    foreach (int i, PresentWindowsConfig::borderActivateAll()) {
+    Q_FOREACH (int i, PresentWindowsConfig::borderActivateAll()) {
         m_borderActivateAll.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i), this);
     }
-    foreach (int i, PresentWindowsConfig::borderActivateClass()) {
+    Q_FOREACH (int i, PresentWindowsConfig::borderActivateClass()) {
         m_borderActivateClass.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i), this);
     }
@@ -265,7 +265,7 @@ void PresentWindowsEffect::postPaintScreen()
             }
             m_windowData.clear();
 
-            foreach (EffectWindow * w, effects->stackingOrder()) {
+            Q_FOREACH (EffectWindow * w, effects->stackingOrder()) {
                 w->setData(WindowForceBlurRole, QVariant());
                 w->setData(WindowForceBackgroundContrastRole, QVariant());
             }
@@ -530,7 +530,7 @@ void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
 
     rearrangeWindows();
 
-    foreach (EffectWindow *w, m_motionManager.managedWindows()) {
+    Q_FOREACH (EffectWindow *w, m_motionManager.managedWindows()) {
         winData = m_windowData.find(w);
         if (winData != m_windowData.end() && !winData->deleted)
            return; // found one that is not deleted? then we go on
@@ -972,7 +972,7 @@ void PresentWindowsEffect::rearrangeWindows()
 
     if (m_windowFilter.isEmpty()) {
         windowlist = m_motionManager.managedWindows();
-        foreach (EffectWindow * w, m_motionManager.managedWindows()) {
+        Q_FOREACH (EffectWindow * w, m_motionManager.managedWindows()) {
             DataHash::iterator winData = m_windowData.find(w);
             if (winData == m_windowData.end() || winData->deleted)
                 continue; // don't include closed windows
@@ -981,7 +981,7 @@ void PresentWindowsEffect::rearrangeWindows()
         }
     } else {
         // Can we move this filtering somewhere else?
-        foreach (EffectWindow * w, m_motionManager.managedWindows()) {
+        Q_FOREACH (EffectWindow * w, m_motionManager.managedWindows()) {
             DataHash::iterator winData = m_windowData.find(w);
             if (winData == m_windowData.end() || winData->deleted)
                 continue; // don't include closed windows
@@ -1033,7 +1033,7 @@ void PresentWindowsEffect::rearrangeWindows()
 
     // Resize text frames if required
     QFontMetrics* metrics = nullptr; // All fonts are the same
-    foreach (EffectWindow * w, m_motionManager.managedWindows()) {
+    Q_FOREACH (EffectWindow * w, m_motionManager.managedWindows()) {
         DataHash::iterator winData = m_windowData.find(w);
         if (winData == m_windowData.end())
             continue;
@@ -1312,7 +1312,7 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
     // If windows do not overlap they scale into nothingness, fix by resetting. To reproduce
     // just have a single window on a Xinerama screen or have two windows that do not touch.
     // TODO: Work out why this happens, is most likely a bug in the manager.
-    foreach (EffectWindow * w, windowlist)
+    Q_FOREACH (EffectWindow * w, windowlist)
         if (motionManager.transformedGeometry(w) == w->frameGeometry())
             motionManager.reset(w);
 
@@ -1335,7 +1335,7 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
     int direction = 0;
     QHash<EffectWindow*, QRect> targets;
     QHash<EffectWindow*, int> directions;
-    foreach (EffectWindow * w, windowlist) {
+    Q_FOREACH (EffectWindow * w, windowlist) {
         bounds = bounds.united(w->frameGeometry());
         targets[w] = w->frameGeometry();
         // Reuse the unused "slot" as a preferred direction attribute. This is used when the window
@@ -1351,9 +1351,9 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
     bool overlap;
     do {
         overlap = false;
-        foreach (EffectWindow * w, windowlist) {
+        Q_FOREACH (EffectWindow * w, windowlist) {
             QRect *target_w = &targets[w];
-            foreach (EffectWindow * e, windowlist) {
+            Q_FOREACH (EffectWindow * e, windowlist) {
                 if (w == e)
                     continue;
 
@@ -1454,7 +1454,7 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
         bool moved;
         do {
             moved = false;
-            foreach (EffectWindow * w, windowlist) {
+            Q_FOREACH (EffectWindow * w, windowlist) {
                 QRect oldRect;
                 QRect *target = &targets[w];
                 // This may cause some slight distortion if the windows are enlarged a large amount
@@ -1531,7 +1531,7 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
         // The expanding code above can actually enlarge windows over 1.0/2.0 scale, we don't like this
         // We can't add this to the loop above as it would cause a never-ending loop so we have to make
         // do with the less-than-optimal space usage with using this method.
-        foreach (EffectWindow * w, windowlist) {
+        Q_FOREACH (EffectWindow * w, windowlist) {
             QRect *target = &targets[w];
             double scale = target->width() / double(w->width());
             if (scale > 2.0 || (scale > 1.0 && (w->width() > 300 || w->height() > 300))) {
@@ -1546,7 +1546,7 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
     }
 
     // Notify the motion manager of the targets
-    foreach (EffectWindow * w, windowlist)
+    Q_FOREACH (EffectWindow * w, windowlist)
         motionManager.moveWindow(w, targets.value(w));
 }
 
@@ -1597,7 +1597,7 @@ void PresentWindowsEffect::setActive(bool active)
         }
 
         // Add every single window to m_windowData (Just calling [w] creates it)
-        foreach (EffectWindow * w, effects->stackingOrder()) {
+        Q_FOREACH (EffectWindow * w, effects->stackingOrder()) {
             DataHash::iterator winData;
             if ((winData = m_windowData.find(w)) != m_windowData.end()) {
                 winData->visible = isVisibleWindow(w);
@@ -1627,7 +1627,7 @@ void PresentWindowsEffect::setActive(bool active)
         }
 
         // Filter out special windows such as panels and taskbars
-        foreach (EffectWindow * w, effects->stackingOrder()) {
+        Q_FOREACH (EffectWindow * w, effects->stackingOrder()) {
             if (isSelectableWindow(w)) {
                 m_motionManager.manage(w);
             }
@@ -1658,7 +1658,7 @@ void PresentWindowsEffect::setActive(bool active)
         rearrangeWindows();
         setHighlightedWindow(effects->activeWindow());
 
-        foreach (EffectWindow * w, effects->stackingOrder()) {
+        Q_FOREACH (EffectWindow * w, effects->stackingOrder()) {
             w->setData(WindowForceBlurRole, QVariant(true));
             w->setData(WindowForceBackgroundContrastRole, QVariant(true));
         }
@@ -1672,7 +1672,7 @@ void PresentWindowsEffect::setActive(bool active)
         int desktop = effects->currentDesktop();
         if (activeWindow && !activeWindow->isOnAllDesktops())
             desktop = activeWindow->desktop();
-        foreach (EffectWindow * w, effects->stackingOrder()) {
+        Q_FOREACH (EffectWindow * w, effects->stackingOrder()) {
             DataHash::iterator winData = m_windowData.find(w);
             if (winData != m_windowData.end())
                 winData->visible = (w->isOnDesktop(desktop) || w->isOnAllDesktops()) &&
@@ -1682,7 +1682,7 @@ void PresentWindowsEffect::setActive(bool active)
             m_closeView->hide();
 
         // Move all windows back to their original position
-        foreach (EffectWindow * w, m_motionManager.managedWindows())
+        Q_FOREACH (EffectWindow * w, m_motionManager.managedWindows())
         m_motionManager.moveWindow(w, w->frameGeometry());
         if (m_filterFrame) {
             m_filterFrame->free();
@@ -1853,7 +1853,7 @@ EffectWindow* PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, i
                 detectRect = QRect(0, wArea.y(), area.width(), wArea.height());
                 next = nullptr;
 
-                foreach (EffectWindow * e, m_motionManager.managedWindows()) {
+                Q_FOREACH (EffectWindow * e, m_motionManager.managedWindows()) {
                     DataHash::const_iterator winData = m_windowData.find(e);
                     if (winData == m_windowData.end() || !winData->visible)
                         continue;
@@ -1885,7 +1885,7 @@ EffectWindow* PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, i
                 detectRect = QRect(0, wArea.y(), area.width(), wArea.height());
                 next = nullptr;
 
-                foreach (EffectWindow * e, m_motionManager.managedWindows()) {
+                Q_FOREACH (EffectWindow * e, m_motionManager.managedWindows()) {
                     DataHash::const_iterator winData = m_windowData.find(e);
                     if (winData == m_windowData.end() || !winData->visible)
                         continue;
@@ -1922,7 +1922,7 @@ EffectWindow* PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, i
                 detectRect = QRect(wArea.x(), 0, wArea.width(), area.height());
                 next = nullptr;
 
-                foreach (EffectWindow * e, m_motionManager.managedWindows()) {
+                Q_FOREACH (EffectWindow * e, m_motionManager.managedWindows()) {
                     DataHash::const_iterator winData = m_windowData.find(e);
                     if (winData == m_windowData.end() || !winData->visible)
                         continue;
@@ -1954,7 +1954,7 @@ EffectWindow* PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, i
                 detectRect = QRect(wArea.x(), 0, wArea.width(), area.height());
                 next = nullptr;
 
-                foreach (EffectWindow * e, m_motionManager.managedWindows()) {
+                Q_FOREACH (EffectWindow * e, m_motionManager.managedWindows()) {
                     DataHash::const_iterator winData = m_windowData.find(e);
                     if (winData == m_windowData.end() || !winData->visible)
                         continue;
@@ -1990,7 +1990,7 @@ EffectWindow* PresentWindowsEffect::findFirstWindow() const
     EffectWindow *topLeft = nullptr;
     QRectF topLeftGeometry;
 
-    foreach (EffectWindow * w, m_motionManager.managedWindows()) {
+    Q_FOREACH (EffectWindow * w, m_motionManager.managedWindows()) {
         DataHash::const_iterator winData = m_windowData.find(w);
         if (winData == m_windowData.end())
             continue;
@@ -2053,7 +2053,7 @@ void CloseWindowView::clicked()
 {
     // 50ms until the window is elevated (seen!) and 300ms more to be "realized" by the user.
     if (m_armTimer.hasExpired(350)) {
-        emit requestClose();
+        Q_EMIT requestClose();
     }
 }
 

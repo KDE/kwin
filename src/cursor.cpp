@@ -125,7 +125,7 @@ void Cursor::updateTheme(const QString &name, int size)
     if (m_themeName != name || m_themeSize != size) {
         m_themeName = name;
         m_themeSize = size;
-        emit themeChanged();
+        Q_EMIT themeChanged();
     }
 }
 
@@ -204,7 +204,7 @@ xcb_cursor_t Cursor::x11Cursor(const QByteArray &name)
 
 void Cursor::doSetPos()
 {
-    emit posChanged(m_pos);
+    Q_EMIT posChanged(m_pos);
 }
 
 void Cursor::doGetPos()
@@ -217,7 +217,7 @@ void Cursor::updatePos(const QPoint &pos)
         return;
     }
     m_pos = pos;
-    emit posChanged(m_pos);
+    Q_EMIT posChanged(m_pos);
 }
 
 void Cursor::startMousePolling()

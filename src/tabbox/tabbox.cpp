@@ -274,7 +274,7 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
 {
     QList<Toplevel *> stacking = Workspace::self()->stackingOrder();
     TabBoxClientList ret;
-    foreach (Toplevel *toplevel, stacking) {
+    Q_FOREACH (Toplevel *toplevel, stacking) {
         if (auto client = qobject_cast<AbstractClient*>(toplevel)) {
             ret.append(client->tabBoxClient());
         }
@@ -317,7 +317,7 @@ void TabBoxHandlerImpl::shadeClient(TabBoxClient *c, bool b) const
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
-    foreach (Toplevel *toplevel, Workspace::self()->stackingOrder()) {
+    Q_FOREACH (Toplevel *toplevel, Workspace::self()->stackingOrder()) {
         auto client = qobject_cast<AbstractClient*>(toplevel);
         if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->screen() == screens()->current()) {
             return client->tabBoxClient();
@@ -628,13 +628,13 @@ void TabBox::reset(bool partial_reset)
         break;
     }
 
-    emit tabBoxUpdated();
+    Q_EMIT tabBoxUpdated();
 }
 
 void TabBox::nextPrev(bool next)
 {
     setCurrentIndex(m_tabBox->nextPrev(next), false);
-    emit tabBoxUpdated();
+    Q_EMIT tabBoxUpdated();
 }
 
 AbstractClient* TabBox::currentClient()
@@ -651,7 +651,7 @@ QList<AbstractClient*> TabBox::currentClientList()
 {
     TabBoxClientList list = m_tabBox->clientList();
     QList<AbstractClient*> ret;
-    foreach (const QWeakPointer<TabBoxClient> &clientPointer, list) {
+    Q_FOREACH (const QWeakPointer<TabBoxClient> &clientPointer, list) {
         QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef();
         if (!client)
             continue;
@@ -687,13 +687,13 @@ void TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
         return;
     m_tabBox->setCurrentIndex(index);
     if (notifyEffects) {
-        emit tabBoxUpdated();
+        Q_EMIT tabBoxUpdated();
     }
 }
 
 void TabBox::show()
 {
-    emit tabBoxAdded(m_tabBoxMode);
+    Q_EMIT tabBoxAdded(m_tabBoxMode);
     if (isDisplayed()) {
         m_isShown = false;
         return;
@@ -711,7 +711,7 @@ void TabBox::hide(bool abort)
         m_isShown = false;
         unreference();
     }
-    emit tabBoxClosed();
+    Q_EMIT tabBoxClosed();
     if (isDisplayed())
         qCDebug(KWIN_TABBOX) << "Tab box was not properly closed by an effect";
     m_tabBox->hide(abort);
@@ -745,12 +745,12 @@ void TabBox::reconfigure()
     QList<ElectricBorder> *borders = &m_borderActivate;
     QString borderConfig = QStringLiteral("BorderActivate");
     for (int i = 0; i < 2; ++i) {
-        foreach (ElectricBorder border, *borders) {
+        Q_FOREACH (ElectricBorder border, *borders) {
             ScreenEdges::self()->unreserve(border, this);
         }
         borders->clear();
         QStringList list = config.readEntry(borderConfig, QStringList());
-        foreach (const QString &s, list) {
+        Q_FOREACH (const QString &s, list) {
             bool ok;
             const int i = s.toInt(&ok);
             if (!ok)
@@ -876,7 +876,7 @@ bool TabBox::handleWheelEvent(QWheelEvent *event)
 
 void TabBox::grabbedKeyEvent(QKeyEvent* event)
 {
-    emit tabBoxKeyEvent(event);
+    Q_EMIT tabBoxKeyEvent(event);
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
         return;

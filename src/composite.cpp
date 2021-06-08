@@ -152,7 +152,7 @@ Compositor::Compositor(QObject* workspace)
 
 Compositor::~Compositor()
 {
-    emit aboutToDestroy();
+    Q_EMIT aboutToDestroy();
     stop();
     deleteUnusedSupportProperties();
     destroyCompositorSelection();
@@ -183,7 +183,7 @@ bool Compositor::setupStart()
         }
     }
 
-    emit aboutToToggleCompositing();
+    Q_EMIT aboutToToggleCompositing();
 
     auto supportedCompositors = kwinApp()->platform()->supportedCompositors();
     const auto userConfigIt = std::find(supportedCompositors.begin(), supportedCompositors.end(),
@@ -280,7 +280,7 @@ bool Compositor::setupStart()
     }
 
     connect(m_scene, &Scene::resetCompositing, this, &Compositor::reinitialize);
-    emit sceneCreated();
+    Q_EMIT sceneCreated();
 
     return true;
 }
@@ -367,7 +367,7 @@ void Compositor::startupWithWorkspace()
     }
 
     m_state = State::On;
-    emit compositingToggled(true);
+    Q_EMIT compositingToggled(true);
 
     if (m_releaseSelectionTimer.isActive()) {
         m_releaseSelectionTimer.stop();
@@ -424,7 +424,7 @@ void Compositor::stop()
         return;
     }
     m_state = State::Stopping;
-    emit aboutToToggleCompositing();
+    Q_EMIT aboutToToggleCompositing();
 
     m_releaseSelectionTimer.start();
 
@@ -484,7 +484,7 @@ void Compositor::stop()
     m_scene = nullptr;
 
     m_state = State::Off;
-    emit compositingToggled(false);
+    Q_EMIT compositingToggled(false);
 }
 
 void Compositor::destroyCompositorSelection()

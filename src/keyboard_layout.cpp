@@ -121,7 +121,7 @@ void KeyboardLayout::resetLayout()
     loadShortcuts();
 
     initDBusInterface();
-    emit layoutsReconfigured();
+    Q_EMIT layoutsReconfigured();
 }
 
 void KeyboardLayout::loadShortcuts()
@@ -157,7 +157,7 @@ void KeyboardLayout::checkLayoutChange(uint previousLayout)
     if (m_layout != currentLayout || previousLayout != currentLayout) {
         m_layout = currentLayout;
         notifyLayoutChange();
-        emit layoutChanged(currentLayout);
+        Q_EMIT layoutChanged(currentLayout);
     }
 }
 

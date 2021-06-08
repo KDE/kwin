@@ -224,7 +224,7 @@ void KActionsOptions::save()
     mTitleBarActions->save();
     mWindowActions->save();
 
-    emit KCModule::changed(false);
+    Q_EMIT KCModule::changed(false);
     // Send signal to all kwin instances
     QDBusMessage message =
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
@@ -239,7 +239,7 @@ void KActionsOptions::defaults()
 
 void KActionsOptions::moduleChanged(bool state)
 {
-    emit KCModule::changed(state);
+    Q_EMIT KCModule::changed(state);
 }
 
 K_PLUGIN_FACTORY_DEFINITION(KWinOptionsFactory,

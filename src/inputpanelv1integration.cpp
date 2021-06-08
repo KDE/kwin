@@ -27,7 +27,7 @@ InputPanelV1Integration::InputPanelV1Integration(QObject *parent)
 
 void InputPanelV1Integration::createClient(InputPanelSurfaceV1Interface *shellSurface)
 {
-    emit clientCreated(new InputPanelV1Client(shellSurface));
+    Q_EMIT clientCreated(new InputPanelV1Client(shellSurface));
 }
 
 } // namespace KWin

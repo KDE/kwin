@@ -111,13 +111,13 @@ bool CubeEffect::supported()
 void CubeEffect::reconfigure(ReconfigureFlags)
 {
     CubeConfig::self()->read();
-    foreach (ElectricBorder border, borderActivate) {
+    Q_FOREACH (ElectricBorder border, borderActivate) {
         effects->unreserveElectricBorder(border, this);
     }
-    foreach (ElectricBorder border, borderActivateCylinder) {
+    Q_FOREACH (ElectricBorder border, borderActivateCylinder) {
         effects->unreserveElectricBorder(border, this);
     }
-    foreach (ElectricBorder border, borderActivateSphere) {
+    Q_FOREACH (ElectricBorder border, borderActivateSphere) {
         effects->unreserveElectricBorder(border, this);
     }
     borderActivate.clear();
@@ -126,21 +126,21 @@ void CubeEffect::reconfigure(ReconfigureFlags)
     QList<int> borderList = QList<int>();
     borderList.append(int(ElectricNone));
     borderList = CubeConfig::borderActivate();
-    foreach (int i, borderList) {
+    Q_FOREACH (int i, borderList) {
         borderActivate.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i), this);
     }
     borderList.clear();
     borderList.append(int(ElectricNone));
     borderList = CubeConfig::borderActivateCylinder();
-    foreach (int i, borderList) {
+    Q_FOREACH (int i, borderList) {
         borderActivateCylinder.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i), this);
     }
     borderList.clear();
     borderList.append(int(ElectricNone));
     borderList = CubeConfig::borderActivateSphere();
-    foreach (int i, borderList) {
+    Q_FOREACH (int i, borderList) {
         borderActivateSphere.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i), this);
     }
@@ -1129,7 +1129,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         if (w->isOnDesktop(prev_desktop) && (mask & PAINT_WINDOW_TRANSFORMED)) {
             QRect rect = effects->clientArea(FullArea, activeScreen, prev_desktop);
             WindowQuadList new_quads;
-            foreach (const WindowQuad & quad, data.quads) {
+            Q_FOREACH (const WindowQuad & quad, data.quads) {
                 if (quad.right() > rect.width() - w->x()) {
                     new_quads.append(quad);
                 }
@@ -1140,7 +1140,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         if (w->isOnDesktop(next_desktop) && (mask & PAINT_WINDOW_TRANSFORMED)) {
             QRect rect = effects->clientArea(FullArea, activeScreen, next_desktop);
             WindowQuadList new_quads;
-            foreach (const WindowQuad & quad, data.quads) {
+            Q_FOREACH (const WindowQuad & quad, data.quads) {
                 if (w->x() + quad.right() <= rect.x()) {
                     new_quads.append(quad);
                 }
@@ -1177,7 +1177,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
 
         if (w->isOnDesktop(painting_desktop) && w->x() < rect.x()) {
             WindowQuadList new_quads;
-            foreach (const WindowQuad & quad, data.quads) {
+            Q_FOREACH (const WindowQuad & quad, data.quads) {
                 if (quad.right() > -w->x()) {
                     new_quads.append(quad);
                 }
@@ -1186,7 +1186,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         }
         if (w->isOnDesktop(painting_desktop) && w->x() + w->width() > rect.x() + rect.width()) {
             WindowQuadList new_quads;
-            foreach (const WindowQuad & quad, data.quads) {
+            Q_FOREACH (const WindowQuad & quad, data.quads) {
                 if (quad.right() <= rect.width() - w->x()) {
                     new_quads.append(quad);
                 }
@@ -1195,7 +1195,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         }
         if (w->y() < rect.y()) {
             WindowQuadList new_quads;
-            foreach (const WindowQuad & quad, data.quads) {
+            Q_FOREACH (const WindowQuad & quad, data.quads) {
                 if (quad.bottom() > -w->y()) {
                     new_quads.append(quad);
                 }
@@ -1204,7 +1204,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         }
         if (w->y() + w->height() > rect.y() + rect.height()) {
             WindowQuadList new_quads;
-            foreach (const WindowQuad & quad, data.quads) {
+            Q_FOREACH (const WindowQuad & quad, data.quads) {
                 if (quad.bottom() <= rect.height() - w->y()) {
                     new_quads.append(quad);
                 }
@@ -1537,7 +1537,7 @@ void CubeEffect::rotateToDesktop(int desktop)
 
 void CubeEffect::setActive(bool active)
 {
-    foreach (CubeInsideEffect * inside, m_cubeInsideEffects) {
+    Q_FOREACH (CubeInsideEffect * inside, m_cubeInsideEffects) {
         inside->setActive(true);
     }
     if (active) {

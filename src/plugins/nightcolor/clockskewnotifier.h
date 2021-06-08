@@ -43,7 +43,7 @@ public:
      */
     void setActive(bool active);
 
-signals:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the active property is changed.
      */

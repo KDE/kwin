@@ -33,14 +33,14 @@ void DBusCall::call()
     connect(watcher, &QDBusPendingCallWatcher::finished, [this, watcher]() {
         watcher->deleteLater();
         if (watcher->isError()) {
-            emit failed();
+            Q_EMIT failed();
             return;
         }
         QVariantList reply = watcher->reply().arguments();
         std::for_each(reply.begin(), reply.end(), [](QVariant &variant) {
             variant = dbusToVariant(variant);
         });
-        emit finished(reply);
+        Q_EMIT finished(reply);
     });
 }
 

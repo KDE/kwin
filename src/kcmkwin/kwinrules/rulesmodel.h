@@ -75,7 +75,7 @@ public:
 
     Q_INVOKABLE void detectWindowProperties(int miliseconds);
 
-signals:
+Q_SIGNALS:
     void descriptionChanged();
     void warningMessagesChanged();
 
@@ -105,7 +105,7 @@ private:
     QList<OptionsModel::Data> focusModelData() const;
     QList<OptionsModel::Data> colorSchemesModelData() const;
 
-private slots:
+private Q_SLOTS:
     void selectX11Window();
 
 private:

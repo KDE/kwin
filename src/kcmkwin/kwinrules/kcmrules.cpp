@@ -116,7 +116,7 @@ void KCMKWinRules::load()
         createRuleFromProperties();
     } else {
         m_editIndex = QModelIndex();
-        emit editIndexChanged();
+        Q_EMIT editIndexChanged();
     }
 
     m_alreadyLoaded = true;
@@ -136,7 +136,7 @@ void KCMKWinRules::save()
 void KCMKWinRules::updateNeedsSave()
 {
     setNeedsSave(m_ruleBookModel->isSaveNeeded());
-    emit needsSaveChanged();
+    Q_EMIT needsSaveChanged();
 }
 
 void KCMKWinRules::createRuleFromProperties()
@@ -191,7 +191,7 @@ void KCMKWinRules::editRule(int index)
     }
 
     m_editIndex = m_ruleBookModel->index(index);
-    emit editIndexChanged();
+    Q_EMIT editIndexChanged();
 
     m_rulesModel->setSettings(m_ruleBookModel->ruleSettingsAt(m_editIndex.row()));
 
@@ -217,7 +217,7 @@ void KCMKWinRules::removeRule(int index)
 
     m_ruleBookModel->removeRow(index);
 
-    emit editIndexChanged();
+    Q_EMIT editIndexChanged();
     updateNeedsSave();
 }
 
@@ -232,7 +232,7 @@ void KCMKWinRules::moveRule(int sourceIndex, int destIndex)
 
     m_ruleBookModel->moveRow(QModelIndex(), sourceIndex, QModelIndex(), destIndex);
 
-    emit editIndexChanged();
+    Q_EMIT editIndexChanged();
     updateNeedsSave();
 }
 

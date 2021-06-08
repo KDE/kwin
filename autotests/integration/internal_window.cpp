@@ -126,10 +126,10 @@ void HelperWindow::paintEvent(QPaintEvent *event)
 bool HelperWindow::event(QEvent *event)
 {
     if (event->type() == QEvent::Enter) {
-        emit entered();
+        Q_EMIT entered();
     }
     if (event->type() == QEvent::Leave) {
-        emit left();
+        Q_EMIT left();
     }
     return QRasterWindow::event(event);
 }
@@ -137,39 +137,39 @@ bool HelperWindow::event(QEvent *event)
 void HelperWindow::mouseMoveEvent(QMouseEvent *event)
 {
     m_latestGlobalMousePos = event->globalPos();
-    emit mouseMoved(event->globalPos());
+    Q_EMIT mouseMoved(event->globalPos());
 }
 
 void HelperWindow::mousePressEvent(QMouseEvent *event)
 {
     m_latestGlobalMousePos = event->globalPos();
     m_pressedButtons = event->buttons();
-    emit mousePressed();
+    Q_EMIT mousePressed();
 }
 
 void HelperWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     m_latestGlobalMousePos = event->globalPos();
     m_pressedButtons = event->buttons();
-    emit mouseReleased();
+    Q_EMIT mouseReleased();
 }
 
 void HelperWindow::wheelEvent(QWheelEvent *event)
 {
     Q_UNUSED(event)
-    emit wheel();
+    Q_EMIT wheel();
 }
 
 void HelperWindow::keyPressEvent(QKeyEvent *event)
 {
     Q_UNUSED(event)
-    emit keyPressed();
+    Q_EMIT keyPressed();
 }
 
 void HelperWindow::keyReleaseEvent(QKeyEvent *event)
 {
     Q_UNUSED(event)
-    emit keyReleased();
+    Q_EMIT keyReleased();
 }
 
 void InternalWindowTest::initTestCase()

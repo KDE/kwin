@@ -51,7 +51,7 @@ void Outline::show()
     }
     m_visual->show();
     m_active = true;
-    emit activeChanged();
+    Q_EMIT activeChanged();
 }
 
 void Outline::hide()
@@ -60,7 +60,7 @@ void Outline::hide()
         return;
     }
     m_active = false;
-    emit activeChanged();
+    Q_EMIT activeChanged();
     if (m_visual.isNull()) {
         return;
     }
@@ -85,8 +85,8 @@ void Outline::setGeometry(const QRect& outlineGeometry)
         return;
     }
     m_outlineGeometry = outlineGeometry;
-    emit geometryChanged();
-    emit unifiedGeometryChanged();
+    Q_EMIT geometryChanged();
+    Q_EMIT unifiedGeometryChanged();
 }
 
 void Outline::setVisualParentGeometry(const QRect &visualParentGeometry)
@@ -95,8 +95,8 @@ void Outline::setVisualParentGeometry(const QRect &visualParentGeometry)
         return;
     }
     m_visualParentGeometry = visualParentGeometry;
-    emit visualParentGeometryChanged();
-    emit unifiedGeometryChanged();
+    Q_EMIT visualParentGeometryChanged();
+    Q_EMIT unifiedGeometryChanged();
 }
 
 QRect Outline::unifiedGeometry() const

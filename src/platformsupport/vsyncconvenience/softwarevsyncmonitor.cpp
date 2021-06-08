@@ -34,7 +34,7 @@ void SoftwareVsyncMonitor::setRefreshRate(int refreshRate)
 
 void SoftwareVsyncMonitor::handleSyntheticVsync()
 {
-    emit vblankOccurred(m_vblankTimestamp);
+    Q_EMIT vblankOccurred(m_vblankTimestamp);
 }
 
 template <typename T>

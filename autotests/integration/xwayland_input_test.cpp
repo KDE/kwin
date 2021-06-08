@@ -107,11 +107,11 @@ void X11EventReaderHelper::processXcbEvents()
         switch (eventType) {
             case XCB_ENTER_NOTIFY: {
                 auto enterEvent = reinterpret_cast<xcb_enter_notify_event_t *>(event);
-                emit entered(QPoint(enterEvent->event_x, enterEvent->event_y));
+                Q_EMIT entered(QPoint(enterEvent->event_x, enterEvent->event_y));
                 break; }
             case XCB_LEAVE_NOTIFY: {
                 auto leaveEvent = reinterpret_cast<xcb_leave_notify_event_t *>(event);
-                emit left(QPoint(leaveEvent->event_x, leaveEvent->event_y));
+                Q_EMIT left(QPoint(leaveEvent->event_x, leaveEvent->event_y));
                 break; }
         }
         free(event);

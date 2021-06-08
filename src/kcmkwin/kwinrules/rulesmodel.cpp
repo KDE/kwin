@@ -156,12 +156,12 @@ bool RulesModel::setData(const QModelIndex &index, const QVariant &value, int ro
 
     writeToSettings(rule);
 
-    emit dataChanged(index, index, QVector<int>{role});
+    Q_EMIT dataChanged(index, index, QVector<int>{role});
     if (rule->hasFlag(RuleItem::AffectsDescription)) {
-        emit descriptionChanged();
+        Q_EMIT descriptionChanged();
     }
     if (rule->hasFlag(RuleItem::AffectsWarning)) {
-        emit warningMessagesChanged();
+        Q_EMIT warningMessagesChanged();
     }
 
     return true;
@@ -325,8 +325,8 @@ void RulesModel::setSettings(RuleSettings *settings)
 
     endResetModel();
 
-    emit descriptionChanged();
-    emit warningMessagesChanged();
+    Q_EMIT descriptionChanged();
+    Q_EMIT warningMessagesChanged();
 }
 
 void RulesModel::writeToSettings(RuleItem *rule)
@@ -704,7 +704,7 @@ void RulesModel::setSuggestedProperties(const QVariantMap &info)
         m_rules[ruleKey]->setSuggestedValue(info.value(property));
     }
 
-    emit dataChanged(index(0), index(rowCount()-1), {RulesModel::SuggestedValueRole});
+    Q_EMIT dataChanged(index(0), index(rowCount()-1), {RulesModel::SuggestedValueRole});
 }
 
 
@@ -836,13 +836,13 @@ void RulesModel::selectX11Window()
                 self->deleteLater();
                 if (!reply.isValid()) {
                     if (reply.error().name() == QLatin1String("org.kde.KWin.Error.InvalidWindow")) {
-                        emit showErrorMessage(i18n("Could not detect window properties. The window is not managed by KWin."));
+                        Q_EMIT showErrorMessage(i18n("Could not detect window properties. The window is not managed by KWin."));
                     }
                     return;
                 }
                 const QVariantMap windowInfo = reply.value();
                 setSuggestedProperties(windowInfo);
-                emit showSuggestions();
+                Q_EMIT showSuggestions();
             }
     );
 }
@@ -869,7 +869,7 @@ void RulesModel::updateVirtualDesktops()
                     return;
                 }
                 m_virtualDesktops = qdbus_cast<KWin::DBusDesktopDataVector>(reply.value());
-                emit virtualDesktopsUpdated();
+                Q_EMIT virtualDesktopsUpdated();
             }
     );
 }

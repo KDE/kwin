@@ -39,7 +39,7 @@ void AbstractWaylandOutput::setCapabilityInternal(Capability capability, bool on
 {
     if (static_cast<bool>(m_capabilities & capability) != on) {
         m_capabilities.setFlag(capability, on);
-        emit capabilitiesChanged();
+        Q_EMIT capabilitiesChanged();
     }
 }
 
@@ -77,7 +77,7 @@ void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
 {
     if (m_position != pos) {
         m_position = pos;
-        emit geometryChanged();
+        Q_EMIT geometryChanged();
     }
 }
 
@@ -130,8 +130,8 @@ void AbstractWaylandOutput::setScale(qreal scale)
 {
     if (m_scale != scale) {
         m_scale = scale;
-        emit scaleChanged();
-        emit geometryChanged();
+        Q_EMIT scaleChanged();
+        Q_EMIT geometryChanged();
     }
 }
 
@@ -186,11 +186,11 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
 
     overallSizeCheckNeeded |= emitModeChanged;
     if (overallSizeCheckNeeded) {
-        emit screens()->changed();
+        Q_EMIT screens()->changed();
     }
 
     if (emitModeChanged) {
-        emit modeChanged();
+        Q_EMIT modeChanged();
     }
 }
 
@@ -204,7 +204,7 @@ void AbstractWaylandOutput::setEnabled(bool enable)
     if (m_isEnabled != enable) {
         m_isEnabled = enable;
         updateEnablement(enable);
-        emit enabledChanged();
+        Q_EMIT enabledChanged();
     }
 }
 
@@ -218,7 +218,7 @@ void AbstractWaylandOutput::setCurrentModeInternal(const QSize &size, int refres
     if (m_modeSize != size || m_refreshRate != refreshRate) {
         m_modeSize = size;
         m_refreshRate = refreshRate;
-        emit geometryChanged();
+        Q_EMIT geometryChanged();
     }
 }
 
@@ -268,8 +268,8 @@ void AbstractWaylandOutput::setTransformInternal(Transform transform)
 {
     if (m_transform != transform) {
         m_transform = transform;
-        emit transformChanged();
-        emit modeChanged();
+        Q_EMIT transformChanged();
+        Q_EMIT modeChanged();
     }
 }
 
@@ -282,7 +282,7 @@ void AbstractWaylandOutput::setDpmsModeInternal(DpmsMode dpmsMode)
 {
     if (m_dpmsMode != dpmsMode) {
         m_dpmsMode = dpmsMode;
-        emit dpmsModeChanged();
+        Q_EMIT dpmsModeChanged();
     }
 }
 
@@ -358,7 +358,7 @@ void AbstractWaylandOutput::setOverscanInternal(uint32_t overscan)
 {
     if (m_overscan != overscan) {
         m_overscan = overscan;
-        emit overscanChanged();
+        Q_EMIT overscanChanged();
     }
 }
 
@@ -376,7 +376,7 @@ void AbstractWaylandOutput::setVrrPolicy(RenderLoop::VrrPolicy policy)
 {
     if (renderLoop()->vrrPolicy() != policy && (m_capabilities & Capability::Vrr)) {
         renderLoop()->setVrrPolicy(policy);
-        emit vrrPolicyChanged();
+        Q_EMIT vrrPolicyChanged();
     }
 }
 

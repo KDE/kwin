@@ -276,7 +276,7 @@ SessionInfo* Workspace::takeSessionInfo(X11Client *c)
     // First search ``session''
     if (! sessionId.isEmpty()) {
         // look for a real session managed client (algorithm suggested by ICCCM)
-        foreach (SessionInfo * info, session) {
+        Q_FOREACH (SessionInfo * info, session) {
             if (realInfo)
                 break;
             if (info->sessionId == sessionId && sessionInfoWindowTypeMatch(c, info)) {
@@ -297,7 +297,7 @@ SessionInfo* Workspace::takeSessionInfo(X11Client *c)
         }
     } else {
         // look for a sessioninfo with matching features.
-        foreach (SessionInfo * info, session) {
+        Q_FOREACH (SessionInfo * info, session) {
             if (realInfo)
                 break;
             if (info->resourceName == resourceName
@@ -361,22 +361,22 @@ void SessionManager::setState(SessionState state)
         });
     }
     m_sessionState = state;
-    emit stateChanged();
+    Q_EMIT stateChanged();
 }
 
 void SessionManager::loadSession(const QString &name)
 {
-    emit loadSessionRequested(name);
+    Q_EMIT loadSessionRequested(name);
 }
 
 void SessionManager::aboutToSaveSession(const QString &name)
 {
-    emit prepareSessionSaveRequested(name);
+    Q_EMIT prepareSessionSaveRequested(name);
 }
 
 void SessionManager::finishSaveSession(const QString &name)
 {
-    emit finishSessionSaveRequested(name);
+    Q_EMIT finishSessionSaveRequested(name);
 }
 
 void SessionManager::quit()

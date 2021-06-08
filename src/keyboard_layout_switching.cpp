@@ -38,7 +38,7 @@ void Policy::setLayout(uint index)
     m_xkb->switchToLayout(index);
     const uint currentLayout = m_xkb->currentLayout();
     if (previousLayout != currentLayout) {
-        emit m_layout->layoutChanged(currentLayout);
+        Q_EMIT m_layout->layoutChanged(currentLayout);
     }
 }
 

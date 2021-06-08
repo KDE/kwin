@@ -178,7 +178,7 @@ void LayerShellV1Client::destroyClient()
     markAsZombie();
     cleanTabBox();
     Deleted *deleted = Deleted::create(this);
-    emit windowClosed(this, deleted);
+    Q_EMIT windowClosed(this, deleted);
     StackingUpdatesBlocker blocker(workspace());
     cleanGrouping();
     waylandServer()->removeClient(this);

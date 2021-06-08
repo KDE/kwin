@@ -87,7 +87,7 @@ void MockScreens::updateCount()
 {
     m_geometries = m_scheduledGeometries;
     setCount(m_geometries.size());
-    emit changed();
+    Q_EMIT changed();
 }
 
 void MockScreens::setGeometries(const QList< QRect > &geometries)

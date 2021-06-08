@@ -64,12 +64,12 @@ LayerSurfaceV1::~LayerSurfaceV1()
 
 void LayerSurfaceV1::zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height)
 {
-    emit configureRequested(serial, QSize(width, height));
+    Q_EMIT configureRequested(serial, QSize(width, height));
 }
 
 void LayerSurfaceV1::zwlr_layer_surface_v1_closed()
 {
-    emit closeRequested();
+    Q_EMIT closeRequested();
 }
 
 XdgShell::~XdgShell()
@@ -96,7 +96,7 @@ Surface *XdgSurface::surface() const
 
 void XdgSurface::xdg_surface_configure(uint32_t serial)
 {
-    emit configureRequested(serial);
+    Q_EMIT configureRequested(serial);
 }
 
 XdgToplevel::XdgToplevel(XdgSurface *surface, QObject *parent)
@@ -140,12 +140,12 @@ void XdgToplevel::xdg_toplevel_configure(int32_t width, int32_t height, wl_array
         }
     }
 
-    emit configureRequested(QSize(width, height), requestedStates);
+    Q_EMIT configureRequested(QSize(width, height), requestedStates);
 }
 
 void XdgToplevel::xdg_toplevel_close()
 {
-    emit closeRequested();
+    Q_EMIT closeRequested();
 }
 
 XdgPositioner::XdgPositioner(XdgShell *shell)
@@ -177,12 +177,12 @@ XdgSurface *XdgPopup::xdgSurface() const
 
 void XdgPopup::xdg_popup_configure(int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    emit configureRequested(QRect(x, y, width, height));
+    Q_EMIT configureRequested(QRect(x, y, width, height));
 }
 
 void XdgPopup::xdg_popup_popup_done()
 {
-    emit doneReceived();
+    Q_EMIT doneReceived();
 }
 
 XdgDecorationManagerV1::~XdgDecorationManagerV1()
@@ -204,7 +204,7 @@ XdgToplevelDecorationV1::~XdgToplevelDecorationV1()
 
 void XdgToplevelDecorationV1::zxdg_toplevel_decoration_v1_configure(uint32_t m)
 {
-    emit configureRequested(mode(m));
+    Q_EMIT configureRequested(mode(m));
 }
 
 IdleInhibitManagerV1::~IdleInhibitManagerV1()

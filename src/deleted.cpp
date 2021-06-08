@@ -91,7 +91,7 @@ void Deleted::copyToDeleted(Toplevel* c)
         m_minimized = client->isMinimized();
         m_modal = client->isModal();
         m_mainClients = client->mainClients();
-        foreach (AbstractClient *c, m_mainClients) {
+        Q_FOREACH (AbstractClient *c, m_mainClients) {
             connect(c, &AbstractClient::windowClosed, this, &Deleted::mainClientClosed);
         }
         m_fullscreen = client->isFullScreen();

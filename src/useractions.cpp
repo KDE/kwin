@@ -652,7 +652,7 @@ void UserActionsMenu::activityPopupAboutToShow()
     }
     m_activityMenu->addSeparator();
 
-    foreach (const QString &id, Activities::self()->running()) {
+    Q_FOREACH (const QString &id, Activities::self()->running()) {
         KActivities::Info activity(id);
         QString name = activity.name();
         name.replace('&', "&&");
@@ -853,7 +853,7 @@ void ShortcutDialog::accept()
 void ShortcutDialog::done(int r)
 {
     QDialog::done(r);
-    emit dialogDone(r == Accepted);
+    Q_EMIT dialogDone(r == Accepted);
 }
 
 void ShortcutDialog::keySequenceChanged()

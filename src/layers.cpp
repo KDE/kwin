@@ -105,7 +105,7 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
     if (changed || propagate_new_clients) {
         propagateClients(propagate_new_clients);
         markXStackingOrderAsDirty();
-        emit stackingOrderChanged();
+        Q_EMIT stackingOrderChanged();
         if (m_compositor) {
             m_compositor->addRepaintFull();
         }
@@ -255,7 +255,7 @@ AbstractClient* Workspace::findDesktop(bool topmost, int desktop) const
                 return c;
         }
     } else { // bottom-most
-        foreach (Toplevel * c, stacking_order) {
+        Q_FOREACH (Toplevel * c, stacking_order) {
             AbstractClient *client = qobject_cast<AbstractClient*>(c);
             if (client && c->isOnDesktop(desktop) && c->isDesktop()
                     && client->isShown(true))
@@ -349,7 +349,7 @@ void Workspace::raiseClient(AbstractClient* c, bool nogroup)
         AbstractClient *transient_parent = c;
         while ((transient_parent = transient_parent->transientFor()))
             transients << transient_parent;
-        foreach (transient_parent, transients)
+        Q_FOREACH (transient_parent, transients)
             raiseClient(transient_parent, true);
     }
 
@@ -726,7 +726,7 @@ void X11Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource
 
 bool X11Client::belongsToDesktop() const
 {
-    foreach (const X11Client *c, group()->members()) {
+    Q_FOREACH (const X11Client *c, group()->members()) {
         if (c->isDesktop())
             return true;
     }

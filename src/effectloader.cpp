@@ -158,7 +158,7 @@ bool BuiltInEffectLoader::loadEffect(const QString &name, BuiltInEffect effect, 
         }
     );
     qCDebug(KWIN_CORE) << "Successfully loaded built-in effect: " << name;
-    emit effectLoaded(e, name);
+    Q_EMIT effectLoaded(e, name);
     return true;
 }
 
@@ -248,7 +248,7 @@ bool ScriptedEffectLoader::loadEffect(const KPluginMetaData &effect, LoadEffectF
     );
 
     qCDebug(KWIN_CORE) << "Successfully loaded scripted effect: " << name;
-    emit effectLoaded(e, name);
+    Q_EMIT effectLoaded(e, name);
     m_loadedEffects << name;
     return true;
 }
@@ -428,7 +428,7 @@ bool PluginEffectLoader::loadEffect(const KPluginMetaData &info, LoadEffectFlags
         }
     );
     qCDebug(KWIN_CORE) << "Successfully loaded plugin effect: " << name;
-    emit effectLoaded(e, name);
+    Q_EMIT effectLoaded(e, name);
     return true;
 }
 

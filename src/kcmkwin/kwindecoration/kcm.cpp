@@ -115,7 +115,7 @@ void KCMKWinDecoration::load()
 
     setBorderSize(borderSizeIndexFromString(settings()->borderSize()));
 
-    emit themeChanged();
+    Q_EMIT themeChanged();
 }
 
 void KCMKWinDecoration::save()
@@ -225,7 +225,7 @@ void KCMKWinDecoration::setBorderSize(int index)
 {
     if (m_borderSizeIndex != index) {
         m_borderSizeIndex = index;
-        emit borderSizeChanged();
+        Q_EMIT borderSizeChanged();
     }
 }
 
@@ -240,7 +240,7 @@ void KCMKWinDecoration::setTheme(int index)
     if (dataIndex.isValid()) {
         settings()->setTheme(m_proxyThemesModel->data(dataIndex, KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString());
         settings()->setPluginName(m_proxyThemesModel->data(dataIndex, KDecoration2::Configuration::DecorationsModel::PluginNameRole).toString());
-        emit themeChanged();
+        Q_EMIT themeChanged();
     }
 }
 

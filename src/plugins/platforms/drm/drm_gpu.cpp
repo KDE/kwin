@@ -289,7 +289,7 @@ bool DrmGpu::updateOutputs()
                 qCDebug(KWIN_DRM) << "Found new output with uuid" << output->uuid() << "on gpu" << m_devNode;
 
                 connectedOutputs << output;
-                emit outputAdded(output);
+                Q_EMIT outputAdded(output);
                 outputDone = true;
                 break;
             }
@@ -427,7 +427,7 @@ void DrmGpu::dispatchEvents()
 void DrmGpu::removeOutput(DrmOutput *output)
 {
     m_outputs.removeOne(output);
-    emit outputRemoved(output);
+    Q_EMIT outputRemoved(output);
     output->teardown();
     output->m_crtc = nullptr;
     m_connectors.removeOne(output->m_conn);

@@ -162,7 +162,7 @@ Application::~Application()
 
 void Application::notifyStarted()
 {
-    emit started();
+    Q_EMIT started();
 }
 
 void Application::destroyAtoms()
@@ -278,7 +278,7 @@ void Application::createWorkspace()
 
     // create workspace.
     (void) new Workspace();
-    emit workspaceCreated();
+    Q_EMIT workspaceCreated();
 }
 
 void Application::createInput()
@@ -295,7 +295,7 @@ void Application::createScreens()
         return;
     }
     Screens::create(this);
-    emit screensCreated();
+    Q_EMIT screensCreated();
 }
 
 void Application::createAtoms()
@@ -597,7 +597,7 @@ void Application::initPlatform(const KPluginMetaData &plugin)
                 }
             }
         }
-        emit platformCreated();
+        Q_EMIT platformCreated();
     }
 }
 

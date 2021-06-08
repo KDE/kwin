@@ -35,7 +35,7 @@ void SurfaceItem::addDamage(const QRegion &region)
     scheduleRepaint(region);
 
     Toplevel *toplevel = window()->window();
-    emit toplevel->damaged(toplevel, region);
+    Q_EMIT toplevel->damaged(toplevel, region);
 }
 
 void SurfaceItem::resetDamage()

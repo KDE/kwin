@@ -304,7 +304,7 @@ void ColorDevice::setBrightness(uint brightness)
     d->brightness = brightness;
     d->dirtyCurves |= ColorDevicePrivate::DirtyBrightnessToneCurve;
     scheduleUpdate();
-    emit brightnessChanged();
+    Q_EMIT brightnessChanged();
 }
 
 uint ColorDevice::temperature() const
@@ -324,7 +324,7 @@ void ColorDevice::setTemperature(uint temperature)
     d->temperature = temperature;
     d->dirtyCurves |= ColorDevicePrivate::DirtyTemperatureToneCurve;
     scheduleUpdate();
-    emit temperatureChanged();
+    Q_EMIT temperatureChanged();
 }
 
 QString ColorDevice::profile() const
@@ -340,7 +340,7 @@ void ColorDevice::setProfile(const QString &profile)
     d->profile = profile;
     d->dirtyCurves |= ColorDevicePrivate::DirtyCalibrationToneCurve;
     scheduleUpdate();
-    emit profileChanged();
+    Q_EMIT profileChanged();
 }
 
 void ColorDevice::update()

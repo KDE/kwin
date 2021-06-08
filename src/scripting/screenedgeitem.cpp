@@ -36,7 +36,7 @@ void ScreenEdgeItem::setEnabled(bool enabled)
     disableEdge();
     m_enabled = enabled;
     enableEdge();
-    emit enabledChanged();
+    Q_EMIT enabledChanged();
 }
 
 void ScreenEdgeItem::setEdge(Edge edge)
@@ -47,7 +47,7 @@ void ScreenEdgeItem::setEdge(Edge edge)
     disableEdge();
     m_edge = edge;
     enableEdge();
-    emit edgeChanged();
+    Q_EMIT edgeChanged();
 }
 
 void ScreenEdgeItem::enableEdge()
@@ -89,7 +89,7 @@ bool ScreenEdgeItem::borderActivated(ElectricBorder edge)
     if (edge != static_cast<ElectricBorder>(m_edge) || !m_enabled) {
         return false;
     }
-    emit activated();
+    Q_EMIT activated();
     return true;
 }
 
@@ -101,7 +101,7 @@ void ScreenEdgeItem::setMode(Mode mode)
     disableEdge();
     m_mode = mode;
     enableEdge();
-    emit modeChanged();
+    Q_EMIT modeChanged();
 }
 
 } // namespace

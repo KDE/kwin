@@ -57,7 +57,7 @@ public:
         if (event->isAutoRepeat()) {
             return;
         }
-        emit m_input->keyStateChanged(event->nativeScanCode(), event->type() == QEvent::KeyPress ? InputRedirection::KeyboardKeyPressed : InputRedirection::KeyboardKeyReleased);
+        Q_EMIT m_input->keyStateChanged(event->nativeScanCode(), event->type() == QEvent::KeyPress ? InputRedirection::KeyboardKeyPressed : InputRedirection::KeyboardKeyReleased);
     }
 
 private:
@@ -86,7 +86,7 @@ public:
         if (mods == m_modifiers) {
             return;
         }
-        emit m_input->keyboardModifiersChanged(mods, m_modifiers);
+        Q_EMIT m_input->keyboardModifiersChanged(mods, m_modifiers);
         m_modifiers = mods;
     }
 

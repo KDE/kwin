@@ -99,7 +99,7 @@ void OnScreenNotification::setVisible(bool visible)
         return;
     }
     m_visible = visible;
-    emit visibleChanged();
+    Q_EMIT visibleChanged();
 }
 
 QString OnScreenNotification::message() const
@@ -113,7 +113,7 @@ void OnScreenNotification::setMessage(const QString &message)
         return;
     }
     m_message = message;
-    emit messageChanged();
+    Q_EMIT messageChanged();
 }
 
 QString OnScreenNotification::iconName() const
@@ -127,7 +127,7 @@ void OnScreenNotification::setIconName(const QString &iconName)
         return;
     }
     m_iconName = iconName;
-    emit iconNameChanged();
+    Q_EMIT iconNameChanged();
 }
 
 int OnScreenNotification::timeout() const
@@ -141,7 +141,7 @@ void OnScreenNotification::setTimeout(int timeout)
         return;
     }
     m_timer->setInterval(timeout);
-    emit timeoutChanged();
+    Q_EMIT timeoutChanged();
 }
 
 void OnScreenNotification::show()

@@ -192,13 +192,13 @@ void KWinScreenEdge::onChanged()
     for (auto it = m_reference.cbegin(); it != m_reference.cend(); ++it) {
         needSave |= it.value() != monitor()->selectedEdgeItem(KWinScreenEdge::electricBorderToMonitorEdge(it.key()));
     }
-    emit saveNeededChanged(needSave);
+    Q_EMIT saveNeededChanged(needSave);
 
     bool defaults = isDefault();
     for (auto it = m_default.cbegin(); it != m_default.cend(); ++it) {
         defaults &= it.value() == monitor()->selectedEdgeItem(KWinScreenEdge::electricBorderToMonitorEdge(it.key()));
     }
-    emit defaultChanged(defaults);
+    Q_EMIT defaultChanged(defaults);
 }
 
 void KWinScreenEdge::createConnection()

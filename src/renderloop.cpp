@@ -150,7 +150,7 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp)
         maybeScheduleRepaint();
     }
 
-    emit q->framePresented(q, timestamp);
+    Q_EMIT q->framePresented(q, timestamp);
 }
 
 void RenderLoopPrivate::dispatch()
@@ -159,7 +159,7 @@ void RenderLoopPrivate::dispatch()
     // the Compositor starts repainting.
     pendingRepaint = true;
 
-    emit q->frameRequested(q);
+    Q_EMIT q->frameRequested(q);
 
     // The Compositor may decide to not repaint when the frameRequested() signal is
     // emitted, in which case the pending repaint flag has to be reset manually.
@@ -225,7 +225,7 @@ void RenderLoop::setRefreshRate(int refreshRate)
         return;
     }
     d->refreshRate = refreshRate;
-    emit refreshRateChanged();
+    Q_EMIT refreshRateChanged();
 }
 
 void RenderLoop::scheduleRepaint()

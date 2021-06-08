@@ -331,12 +331,12 @@ void XdgSurfaceClient::destroyClient()
     markAsZombie();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
-        emit clientFinishUserMovedResized(this);
+        Q_EMIT clientFinishUserMovedResized(this);
     }
     m_configureTimer->stop();
     cleanTabBox();
     Deleted *deleted = Deleted::create(this);
-    emit windowClosed(this, deleted);
+    Q_EMIT windowClosed(this, deleted);
     StackingUpdatesBlocker blocker(workspace());
     RuleBook::self()->discardUsed(this, true);
     destroyDecoration();
@@ -740,7 +740,7 @@ void XdgToplevelClient::doMinimize()
     if (isMinimized()) {
         workspace()->clientHidden(this);
     } else {
-        emit windowShown(this);
+        Q_EMIT windowShown(this);
     }
     workspace()->updateMinimizedOfTransients(this);
 }
@@ -1211,8 +1211,8 @@ void XdgToplevelClient::updateMaximizeMode(MaximizeMode maximizeMode)
     }
     m_maximizeMode = maximizeMode;
     updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz);
-    emit clientMaximizedStateChanged(this, maximizeMode);
-    emit clientMaximizedStateChanged(this, maximizeMode & MaximizeHorizontal, maximizeMode & MaximizeVertical);
+    Q_EMIT clientMaximizedStateChanged(this, maximizeMode);
+    Q_EMIT clientMaximizedStateChanged(this, maximizeMode & MaximizeHorizontal, maximizeMode & MaximizeVertical);
 }
 
 void XdgToplevelClient::updateFullScreenMode(bool set)
@@ -1224,7 +1224,7 @@ void XdgToplevelClient::updateFullScreenMode(bool set)
     m_isFullScreen = set;
     updateLayer();
     updateWindowRules(Rules::Fullscreen);
-    emit fullScreenChanged();
+    Q_EMIT fullScreenChanged();
 }
 
 QString XdgToplevelClient::preferredColorScheme() const
@@ -1586,13 +1586,13 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
         changeMaximizeRecursion = true;
         const auto c = decoration()->client().toStrongRef();
         if ((m_requestedMaximizeMode & MaximizeVertical) != (oldMode & MaximizeVertical)) {
-            emit c->maximizedVerticallyChanged(m_requestedMaximizeMode & MaximizeVertical);
+            Q_EMIT c->maximizedVerticallyChanged(m_requestedMaximizeMode & MaximizeVertical);
         }
         if ((m_requestedMaximizeMode & MaximizeHorizontal) != (oldMode & MaximizeHorizontal)) {
-            emit c->maximizedHorizontallyChanged(m_requestedMaximizeMode & MaximizeHorizontal);
+            Q_EMIT c->maximizedHorizontallyChanged(m_requestedMaximizeMode & MaximizeHorizontal);
         }
         if ((m_requestedMaximizeMode == MaximizeFull) != (oldMode == MaximizeFull)) {
-            emit c->maximizedChanged(m_requestedMaximizeMode == MaximizeFull);
+            Q_EMIT c->maximizedChanged(m_requestedMaximizeMode == MaximizeFull);
         }
         changeMaximizeRecursion = false;
     }
@@ -1686,7 +1686,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
 
     if (oldQuickTileMode != quickTileMode()) {
         doSetQuickTileMode();
-        emit quickTileModeChanged();
+        Q_EMIT quickTileModeChanged();
     }
 
     doSetMaximized();

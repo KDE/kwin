@@ -196,7 +196,7 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
 {
     TabBoxClient *currentClient = q->client(index);
     if (config.isHighlightWindows() && q->isKWinCompositing()) {
-        foreach (const QWeakPointer<TabBoxClient> &clientPointer, q->stackingOrder()) {
+        Q_FOREACH (const QWeakPointer<TabBoxClient> &clientPointer, q->stackingOrder()) {
             if (QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef())
             if (client != currentClient) // to not mess up with wanted ShadeActive/ShadeHover state
                 q->shadeClient(client.data(), true);
@@ -361,7 +361,7 @@ const KWin::TabBox::TabBoxConfig& TabBoxHandler::config() const
 void TabBoxHandler::setConfig(const TabBoxConfig& config)
 {
     d->config = config;
-    emit configChanged();
+    Q_EMIT configChanged();
 }
 
 void TabBoxHandler::show()
@@ -387,7 +387,7 @@ void TabBoxHandler::show()
 void TabBoxHandler::initHighlightWindows()
 {
     if (isKWinCompositing()) {
-        foreach (const QWeakPointer<TabBoxClient> &clientPointer, stackingOrder()) {
+        Q_FOREACH (const QWeakPointer<TabBoxClient> &clientPointer, stackingOrder()) {
         if (QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef())
             shadeClient(client.data(), false);
         }
@@ -503,7 +503,7 @@ void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
             d->updateHighlightWindows();
         }
     }
-    emit selectedIndexChanged();
+    Q_EMIT selectedIndexChanged();
 }
 
 const QModelIndex& TabBoxHandler::currentIndex() const
@@ -561,7 +561,7 @@ void TabBoxHandler::createModel(bool partialReset)
         // TODO: C++11 use lambda function
         bool lastRaised = false;
         bool lastRaisedSucc = false;
-        foreach (const QWeakPointer<TabBoxClient> &clientPointer, stackingOrder()) {
+        Q_FOREACH (const QWeakPointer<TabBoxClient> &clientPointer, stackingOrder()) {
             QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef();
             if (!client) {
                 continue;

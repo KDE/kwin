@@ -369,21 +369,21 @@ VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDe
         [this](uint previousDesktop, uint newDesktop) {
             Q_UNUSED(previousDesktop);
             Q_UNUSED(newDesktop);
-            emit currentChanged(m_manager->currentDesktop()->id());
+            Q_EMIT currentChanged(m_manager->currentDesktop()->id());
         }
     );
 
     connect(m_manager, &VirtualDesktopManager::countChanged, this,
         [this](uint previousCount, uint newCount) {
             Q_UNUSED(previousCount);
-            emit countChanged(newCount);
-            emit desktopsChanged(desktops());
+            Q_EMIT countChanged(newCount);
+            Q_EMIT desktopsChanged(desktops());
         }
     );
 
     connect(m_manager, &VirtualDesktopManager::navigationWrappingAroundChanged, this,
         [this]() {
-            emit navigationWrappingAroundChanged(isNavigationWrappingAround());
+            Q_EMIT navigationWrappingAroundChanged(isNavigationWrappingAround());
         }
     );
 
@@ -393,15 +393,15 @@ VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDe
         connect(vd, &VirtualDesktop::x11DesktopNumberChanged, this,
             [this, vd]() {
                 DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-                emit desktopDataChanged(vd->id(), data);
-                emit desktopsChanged(desktops());
+                Q_EMIT desktopDataChanged(vd->id(), data);
+                Q_EMIT desktopsChanged(desktops());
             }
         );
         connect(vd, &VirtualDesktop::nameChanged, this,
             [this, vd]() {
                 DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-                emit desktopDataChanged(vd->id(), data);
-                emit desktopsChanged(desktops());
+                Q_EMIT desktopDataChanged(vd->id(), data);
+                Q_EMIT desktopsChanged(desktops());
             }
         );
     }
@@ -410,26 +410,26 @@ VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDe
             connect(vd, &VirtualDesktop::x11DesktopNumberChanged, this,
                 [this, vd]() {
                     DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-                    emit desktopDataChanged(vd->id(), data);
-                    emit desktopsChanged(desktops());
+                    Q_EMIT desktopDataChanged(vd->id(), data);
+                    Q_EMIT desktopsChanged(desktops());
                 }
             );
             connect(vd, &VirtualDesktop::nameChanged, this,
                 [this, vd]() {
                     DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-                    emit desktopDataChanged(vd->id(), data);
-                    emit desktopsChanged(desktops());
+                    Q_EMIT desktopDataChanged(vd->id(), data);
+                    Q_EMIT desktopsChanged(desktops());
                 }
             );
             DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-            emit desktopCreated(vd->id(), data);
-            emit desktopsChanged(desktops());
+            Q_EMIT desktopCreated(vd->id(), data);
+            Q_EMIT desktopsChanged(desktops());
         }
     );
     connect(m_manager, &VirtualDesktopManager::desktopRemoved, this,
         [this](VirtualDesktop *vd) {
-            emit desktopRemoved(vd->id());
-            emit desktopsChanged(desktops());
+            Q_EMIT desktopRemoved(vd->id());
+            Q_EMIT desktopsChanged(desktops());
         }
     );
 }

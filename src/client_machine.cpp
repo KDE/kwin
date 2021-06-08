@@ -142,7 +142,7 @@ void GetAddrInfo::compare()
                 ownAddress = ownAddress->ai_next;
             }
             if (localFound) {
-                emit local();
+                Q_EMIT local();
                 break;
             }
         }
@@ -220,7 +220,7 @@ void ClientMachine::checkForLocalhost()
 void ClientMachine::setLocal()
 {
     m_localhost = true;
-    emit localhostChanged();
+    Q_EMIT localhostChanged();
 }
 
 void ClientMachine::resolveFinished()

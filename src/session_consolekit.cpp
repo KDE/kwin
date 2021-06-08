@@ -302,7 +302,7 @@ void ConsoleKitSession::updateActive(bool active)
 {
     if (m_isActive != active) {
         m_isActive = active;
-        emit activeChanged(active);
+        Q_EMIT activeChanged(active);
     }
 }
 
@@ -331,7 +331,7 @@ void ConsoleKitSession::handlePropertiesChanged(const QString &interfaceName, co
 void ConsoleKitSession::handlePrepareForSleep(bool sleep)
 {
     if (!sleep) {
-        emit awoke();
+        Q_EMIT awoke();
     }
 }
 

@@ -81,13 +81,13 @@ public:
     using AnimationEffect::state;
     Q_INVOKABLE void sendTestResponse(const QString &out); //proxies triggers out from the tests
     QList<QAction*> actions(); //returns any QActions owned by the ScriptEngine
-signals:
+Q_SIGNALS:
     void testOutput(const QString &data);
 };
 
 void ScriptedEffectWithDebugSpy::sendTestResponse(const QString &out)
 {
-    emit testOutput(out);
+    Q_EMIT testOutput(out);
 }
 
 QList<QAction *> ScriptedEffectWithDebugSpy::actions()

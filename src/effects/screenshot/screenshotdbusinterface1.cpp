@@ -274,14 +274,14 @@ void ScreenShotSourceMulti1::marshal(ScreenShotSink1 *sink)
 
 void ScreenShotSourceMulti1::handleSourceCancelled()
 {
-    emit cancelled();
+    Q_EMIT cancelled();
 }
 
 void ScreenShotSourceMulti1::handleSourceCompleted()
 {
     // If all sources are complete now, emit the completed signal.
     if (isCompleted()) {
-        emit completed();
+        Q_EMIT completed();
     }
 }
 
@@ -446,7 +446,7 @@ static xcb_pixmap_t xpixmapFromImage(const QImage &image)
 void ScreenShotSinkXpixmap1::flush(const QImage &image)
 {
     const xcb_pixmap_t pixmap = xpixmapFromImage(image);
-    emit m_interface->screenshotCreated(pixmap);
+    Q_EMIT m_interface->screenshotCreated(pixmap);
 }
 
 ScreenShotSinkFile1::ScreenShotSinkFile1(ScreenShotDBusInterface1 *interface,

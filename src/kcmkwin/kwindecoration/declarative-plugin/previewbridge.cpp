@@ -76,7 +76,7 @@ void PreviewBridge::setPlugin(const QString &plugin)
         return;
     }
     m_plugin = plugin;
-    emit pluginChanged();
+    Q_EMIT pluginChanged();
 }
 
 QString PreviewBridge::theme() const
@@ -90,7 +90,7 @@ void PreviewBridge::setTheme(const QString &theme)
         return;
     }
     m_theme = theme;
-    emit themeChanged();
+    Q_EMIT themeChanged();
 }
 
 QString PreviewBridge::plugin() const
@@ -129,7 +129,7 @@ void PreviewBridge::setValid(bool valid)
         return;
     }
     m_valid = valid;
-    emit validChanged();
+    Q_EMIT validChanged();
 }
 
 Decoration *PreviewBridge::createDecoration(QObject *parent)
@@ -177,7 +177,7 @@ void PreviewBridge::configure(QQuickItem *ctx)
     auto save = [this,kcm] {
         kcm->save();
         if (m_lastCreatedSettings) {
-            emit m_lastCreatedSettings->decorationSettings()->reconfigured();
+            Q_EMIT m_lastCreatedSettings->decorationSettings()->reconfigured();
         }
         // Send signal to all kwin instances
         QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),

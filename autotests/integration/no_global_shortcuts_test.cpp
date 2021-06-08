@@ -83,7 +83,7 @@ Target::~Target()
 
 void Target::shortcut()
 {
-    emit shortcutTriggered();
+    Q_EMIT shortcutTriggered();
 }
 
 void NoGlobalShortcutsTest::initTestCase()

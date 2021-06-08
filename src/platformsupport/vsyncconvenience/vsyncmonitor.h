@@ -28,7 +28,7 @@ public:
 public Q_SLOTS:
     virtual void arm() = 0;
 
-signals:
+Q_SIGNALS:
     void errorOccurred();
     void vblankOccurred(std::chrono::nanoseconds timestamp);
 };

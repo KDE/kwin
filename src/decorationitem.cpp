@@ -56,7 +56,7 @@ QRegion DecorationRenderer::damage() const
 void DecorationRenderer::addDamage(const QRegion &region)
 {
     m_damage += region;
-    emit damaged(region);
+    Q_EMIT damaged(region);
 }
 
 void DecorationRenderer::resetDamage()

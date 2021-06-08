@@ -516,7 +516,7 @@ Workspace::~Workspace()
     }
 
     for (auto it = deleted.begin(); it != deleted.end();) {
-        emit deletedRemoved(*it);
+        Q_EMIT deletedRemoved(*it);
         it = deleted.erase(it);
     }
 
@@ -700,7 +700,7 @@ Unmanaged* Workspace::createUnmanaged(xcb_window_t w)
         return nullptr;
     }
     addUnmanaged(c);
-    emit unmanagedAdded(c);
+    Q_EMIT unmanagedAdded(c);
     return c;
 }
 
@@ -708,7 +708,7 @@ void Workspace::addClient(X11Client *c)
 {
     Group* grp = findGroup(c->window());
 
-    emit clientAdded(c);
+    Q_EMIT clientAdded(c);
 
     if (grp != nullptr)
         grp->gotLeader(c);
@@ -769,7 +769,7 @@ void Workspace::removeUnmanaged(Unmanaged* c)
 {
     Q_ASSERT(m_unmanaged.contains(c));
     m_unmanaged.removeAll(c);
-    emit unmanagedRemoved(c);
+    Q_EMIT unmanagedRemoved(c);
     markXStackingOrderAsDirty();
 }
 
@@ -784,7 +784,7 @@ void Workspace::addDeleted(Deleted* c, Toplevel *orig)
 void Workspace::removeDeleted(Deleted* c)
 {
     Q_ASSERT(deleted.contains(c));
-    emit deletedRemoved(c);
+    Q_EMIT deletedRemoved(c);
     deleted.removeAll(c);
     removeFromStack(c);
     markXStackingOrderAsDirty();
@@ -842,7 +842,7 @@ void Workspace::addShellClient(AbstractClient *client)
         updateStackingOrder(true);
         updateClientArea();
     });
-    emit clientAdded(client);
+    Q_EMIT clientAdded(client);
 }
 
 void Workspace::removeShellClient(AbstractClient *client)
@@ -873,7 +873,7 @@ void Workspace::removeAbstractClient(AbstractClient *client)
         clientShortcutUpdated(client);    // Needed, since this is otherwise delayed by setShortcut() and wouldn't run
     }
 
-    emit clientRemoved(client);
+    Q_EMIT clientRemoved(client);
     markXStackingOrderAsDirty();
 
     updateStackingOrder(true);
@@ -1001,7 +1001,7 @@ void Workspace::slotReconfigure()
     kwinApp()->config()->reparseConfiguration();
     options->updateSettings();
 
-    emit configChanged();
+    Q_EMIT configChanged();
     m_userActionsMenu->discard();
     updateToolWindows(true);
 
@@ -1036,7 +1036,7 @@ void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
     --block_focus;
 
     activateClientOnNewDesktop(newDesktop);
-    emit currentDesktopChanged(oldDesktop, movingClient);
+    Q_EMIT currentDesktopChanged(oldDesktop, movingClient);
 }
 
 void Workspace::updateClientVisibilityOnDesktopChange(uint newDesktop)
@@ -1394,7 +1394,7 @@ void Workspace::setShowingDesktop(bool showing)
                 if (!topDesk)
                     topDesk = c;
                 if (auto group = c->group()) {
-                    foreach (X11Client *cm, group->members()) {
+                    Q_FOREACH (X11Client *cm, group->members()) {
                         cm->updateLayer();
                     }
                 }
@@ -1412,7 +1412,7 @@ void Workspace::setShowingDesktop(bool showing)
         }
     }
     if (changed)
-        emit showingDesktopChanged(showing);
+        Q_EMIT showingDesktopChanged(showing);
 }
 
 void Workspace::disableGlobalShortcutsForClient(bool disable)
@@ -1737,17 +1737,17 @@ QString Workspace::supportInformation() const
         }
         support.append(QStringLiteral("\nLoaded Effects:\n"));
         support.append(QStringLiteral(  "---------------\n"));
-        foreach (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->loadedEffects()) {
+        Q_FOREACH (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->loadedEffects()) {
             support.append(effect + QStringLiteral("\n"));
         }
         support.append(QStringLiteral("\nCurrently Active Effects:\n"));
         support.append(QStringLiteral(  "-------------------------\n"));
-        foreach (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->activeEffects()) {
+        Q_FOREACH (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->activeEffects()) {
             support.append(effect + QStringLiteral("\n"));
         }
         support.append(QStringLiteral("\nEffect Settings:\n"));
         support.append(QStringLiteral(  "----------------\n"));
-        foreach (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->loadedEffects()) {
+        Q_FOREACH (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->loadedEffects()) {
             support.append(static_cast<EffectsHandlerImpl*>(effects)->supportInformation(effect));
             support.append(QStringLiteral("\n"));
         }
@@ -1947,7 +1947,7 @@ void Workspace::addInternalClient(InternalClient *client)
     updateStackingOrder(true);
     updateClientArea();
 
-    emit internalClientAdded(client);
+    Q_EMIT internalClientAdded(client);
 }
 
 void Workspace::removeInternalClient(InternalClient *client)
@@ -1958,7 +1958,7 @@ void Workspace::removeInternalClient(InternalClient *client)
     updateStackingOrder(true);
     updateClientArea();
 
-    emit internalClientRemoved(client);
+    Q_EMIT internalClientRemoved(client);
 }
 
 Group* Workspace::findGroup(xcb_window_t leader) const
@@ -2021,7 +2021,7 @@ void Workspace::updateMinimizedOfTransients(AbstractClient* c)
             }
         }
         if (c->isModal()) { // if a modal dialog is minimized, minimize its mainwindow too
-            foreach (AbstractClient * c2, c->mainClients())
+            Q_FOREACH (AbstractClient * c2, c->mainClients())
             c2->minimize();
         }
     } else {
@@ -2035,7 +2035,7 @@ void Workspace::updateMinimizedOfTransients(AbstractClient* c)
             }
         }
         if (c->isModal()) {
-            foreach (AbstractClient * c2, c->mainClients())
+            Q_FOREACH (AbstractClient * c2, c->mainClients())
             c2->unminimize();
         }
     }

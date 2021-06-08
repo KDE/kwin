@@ -744,7 +744,7 @@ bool KWin::Scripting::isScriptLoaded(const QString &pluginName) const
 KWin::AbstractScript *KWin::Scripting::findScript(const QString &pluginName) const
 {
     QMutexLocker locker(m_scriptsLock.data());
-    foreach (AbstractScript *script, scripts) {
+    Q_FOREACH (AbstractScript *script, scripts) {
         if (script->pluginName() == pluginName) {
             return script;
         }
@@ -755,7 +755,7 @@ KWin::AbstractScript *KWin::Scripting::findScript(const QString &pluginName) con
 bool KWin::Scripting::unloadScript(const QString &pluginName)
 {
     QMutexLocker locker(m_scriptsLock.data());
-    foreach (AbstractScript *script, scripts) {
+    Q_FOREACH (AbstractScript *script, scripts) {
         if (script->pluginName() == pluginName) {
             script->deleteLater();
             return true;

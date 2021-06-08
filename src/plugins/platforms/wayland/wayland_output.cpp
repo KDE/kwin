@@ -37,7 +37,7 @@ WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
 
     connect(surface, &Surface::frameRendered, [this] {
         m_rendered = true;
-        emit frameRendered();
+        Q_EMIT frameRendered();
     });
 }
 
@@ -116,7 +116,7 @@ void XdgShellOutput::handleConfigure(const QSize &size, XdgShellSurface::States 
     Q_UNUSED(states);
     if (size.width() > 0 && size.height() > 0) {
         setGeometry(geometry().topLeft(), size);
-        emit sizeChanged(size);
+        Q_EMIT sizeChanged(size);
     }
     m_xdgShellSurface->ackConfigure(serial);
 }
@@ -147,7 +147,7 @@ void XdgShellOutput::lockPointer(Pointer *pointer, bool lock)
         m_pointerLock = nullptr;
         m_hasPointerLock = false;
         if (surfaceWasLocked) {
-            emit backend()->pointerLockChanged(false);
+            Q_EMIT backend()->pointerLockChanged(false);
         }
         return;
     }
@@ -164,7 +164,7 @@ void XdgShellOutput::lockPointer(Pointer *pointer, bool lock)
     connect(m_pointerLock, &LockedPointer::locked, this,
         [this] {
             m_hasPointerLock = true;
-            emit backend()->pointerLockChanged(true);
+            Q_EMIT backend()->pointerLockChanged(true);
         }
     );
     connect(m_pointerLock, &LockedPointer::unlocked, this,
@@ -172,7 +172,7 @@ void XdgShellOutput::lockPointer(Pointer *pointer, bool lock)
             delete m_pointerLock;
             m_pointerLock = nullptr;
             m_hasPointerLock = false;
-            emit backend()->pointerLockChanged(false);
+            Q_EMIT backend()->pointerLockChanged(false);
         }
     );
 }

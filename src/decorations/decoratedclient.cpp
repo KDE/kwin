@@ -34,7 +34,7 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
     client->setDecoratedClient(QPointer<DecoratedClientImpl>(this));
     connect(client, &AbstractClient::activeChanged, this,
         [decoratedClient, client]() {
-            emit decoratedClient->activeChanged(client->isActive());
+            Q_EMIT decoratedClient->activeChanged(client->isActive());
         }
     );
     connect(client, &AbstractClient::clientGeometryChanged, this,
@@ -45,27 +45,27 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
             const auto oldSize = m_clientSize;
             m_clientSize = m_client->clientSize();
             if (oldSize.width() != m_clientSize.width()) {
-                emit decoratedClient->widthChanged(m_clientSize.width());
+                Q_EMIT decoratedClient->widthChanged(m_clientSize.width());
             }
             if (oldSize.height() != m_clientSize.height()) {
-                emit decoratedClient->heightChanged(m_clientSize.height());
+                Q_EMIT decoratedClient->heightChanged(m_clientSize.height());
             }
-            emit decoratedClient->sizeChanged(m_clientSize);
+            Q_EMIT decoratedClient->sizeChanged(m_clientSize);
         }
     );
     connect(client, &AbstractClient::desktopChanged, this,
         [decoratedClient, client]() {
-            emit decoratedClient->onAllDesktopsChanged(client->isOnAllDesktops());
+            Q_EMIT decoratedClient->onAllDesktopsChanged(client->isOnAllDesktops());
         }
     );
     connect(client, &AbstractClient::captionChanged, this,
         [decoratedClient, client]() {
-            emit decoratedClient->captionChanged(client->caption());
+            Q_EMIT decoratedClient->captionChanged(client->caption());
         }
     );
     connect(client, &AbstractClient::iconChanged, this,
         [decoratedClient, client]() {
-            emit decoratedClient->iconChanged(client->icon());
+            Q_EMIT decoratedClient->iconChanged(client->icon());
         }
     );
     connect(client, &AbstractClient::shadeChanged, this,
@@ -74,7 +74,7 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
     connect(client, &AbstractClient::keepBelowChanged, decoratedClient, &KDecoration2::DecoratedClient::keepBelowChanged);
     connect(client, &AbstractClient::quickTileModeChanged, decoratedClient,
         [this, decoratedClient]() {
-            emit decoratedClient->adjacentScreenEdgesChanged(adjacentScreenEdges());
+            Q_EMIT decoratedClient->adjacentScreenEdgesChanged(adjacentScreenEdges());
         }
     );
     connect(client, &AbstractClient::closeableChanged, decoratedClient, &KDecoration2::DecoratedClient::closeableChanged);
@@ -107,7 +107,7 @@ DecoratedClientImpl::~DecoratedClientImpl()
 }
 
 void DecoratedClientImpl::signalShadeChange() {
-    emit decoratedClient()->shadedChanged(m_client->isShade());
+    Q_EMIT decoratedClient()->shadedChanged(m_client->isShade());
 }
 
 #define DELEGATE(type, name, clientName) \

@@ -211,13 +211,13 @@ void SwitcherItem::setVisible(bool visible)
         return;
     }
     m_visible = visible;
-    emit visibleChanged();
+    Q_EMIT visibleChanged();
 }
 
 void SwitcherItem::setItem(QObject *item)
 {
     m_item = item;
-    emit itemChanged();
+    Q_EMIT itemChanged();
 }
 
 void SwitcherItem::setCurrentIndex(int index)
@@ -226,7 +226,7 @@ void SwitcherItem::setCurrentIndex(int index)
         return;
     }
     m_currentIndex = index;
-    emit currentIndexChanged(m_currentIndex);
+    Q_EMIT currentIndexChanged(m_currentIndex);
 }
 
 QRect SwitcherItem::screenGeometry() const

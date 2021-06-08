@@ -455,7 +455,7 @@ void AnimationEffect::clipWindow(const EffectWindow *w, const AniData &anim, Win
     WindowQuadList filtered;
     if (clip.left() != geo.left()) {
         quads = quads.splitAtX(clip.left());
-        foreach (const WindowQuad &quad, quads) {
+        Q_FOREACH (const WindowQuad &quad, quads) {
             if (quad.right() >= clip.left())
                 filtered << quad;
         }
@@ -464,7 +464,7 @@ void AnimationEffect::clipWindow(const EffectWindow *w, const AniData &anim, Win
     }
     if (clip.right() != geo.right()) {
         quads = quads.splitAtX(clip.left());
-        foreach (const WindowQuad &quad, quads) {
+        Q_FOREACH (const WindowQuad &quad, quads) {
             if (quad.right() <= clip.right())
                 filtered << quad;
         }
@@ -473,7 +473,7 @@ void AnimationEffect::clipWindow(const EffectWindow *w, const AniData &anim, Win
     }
     if (clip.top() != geo.top()) {
         quads = quads.splitAtY(clip.top());
-        foreach (const WindowQuad &quad, quads) {
+        Q_FOREACH (const WindowQuad &quad, quads) {
             if (quad.top() >= clip.top())
                 filtered << quad;
         }
@@ -482,7 +482,7 @@ void AnimationEffect::clipWindow(const EffectWindow *w, const AniData &anim, Win
     }
     if (clip.bottom() != geo.bottom()) {
         quads = quads.splitAtY(clip.bottom());
-        foreach (const WindowQuad &quad, quads) {
+        Q_FOREACH (const WindowQuad &quad, quads) {
             if (quad.bottom() <= clip.bottom())
                 filtered << quad;
         }

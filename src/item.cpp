@@ -53,7 +53,7 @@ void Item::setX(int x)
     m_x = x;
     scheduleRepaint(boundingRect());
     discardQuads();
-    emit xChanged();
+    Q_EMIT xChanged();
 }
 
 int Item::y() const
@@ -70,7 +70,7 @@ void Item::setY(int y)
     m_y = y;
     scheduleRepaint(boundingRect());
     discardQuads();
-    emit yChanged();
+    Q_EMIT yChanged();
 }
 
 int Item::width() const
@@ -88,7 +88,7 @@ void Item::setWidth(int width)
     updateBoundingRect();
     scheduleRepaint(rect());
     discardQuads();
-    emit widthChanged();
+    Q_EMIT widthChanged();
 }
 
 int Item::height() const
@@ -106,7 +106,7 @@ void Item::setHeight(int height)
     updateBoundingRect();
     scheduleRepaint(rect());
     discardQuads();
-    emit heightChanged();
+    Q_EMIT heightChanged();
 }
 
 Item *Item::parentItem() const
@@ -186,10 +186,10 @@ void Item::setPosition(const QPoint &point)
         discardQuads();
 
         if (xDirty) {
-            emit xChanged();
+            Q_EMIT xChanged();
         }
         if (yDirty) {
-            emit yChanged();
+            Q_EMIT yChanged();
         }
     }
 }
@@ -214,10 +214,10 @@ void Item::setSize(const QSize &size)
         discardQuads();
 
         if (widthDirty) {
-            emit widthChanged();
+            Q_EMIT widthChanged();
         }
         if (heightDirty) {
-            emit heightChanged();
+            Q_EMIT heightChanged();
         }
     }
 }
@@ -240,7 +240,7 @@ void Item::updateBoundingRect()
     }
     if (m_boundingRect != boundingRect) {
         m_boundingRect = boundingRect;
-        emit boundingRectChanged();
+        Q_EMIT boundingRectChanged();
     }
 }
 

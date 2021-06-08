@@ -380,7 +380,7 @@ void Xkb::updateModifiers()
     }
     if (m_leds != leds) {
         m_leds = leds;
-        emit ledsChanged(m_leds);
+        Q_EMIT ledsChanged(m_leds);
     }
 
     m_currentLayout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
