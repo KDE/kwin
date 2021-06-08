@@ -42,12 +42,14 @@ public:
         Flipped180,
         Flipped270
     };
+    Q_ENUM(Transform)
 
     enum class ModeFlag : uint {
         Current = 0x1,
         Preferred = 0x2,
     };
     Q_DECLARE_FLAGS(ModeFlags, ModeFlag)
+    Q_ENUM(ModeFlag)
 
     struct Mode
     {
@@ -63,6 +65,7 @@ public:
         Suspend,
         Off,
     };
+    Q_ENUM(DpmsMode)
 
     enum class Capability : uint {
         Dpms = 0x1,
@@ -79,6 +82,7 @@ public:
         Vertical_RGB,
         Vertical_BGR,
     };
+    Q_ENUM(SubPixel)
 
     explicit AbstractWaylandOutput(QObject *parent = nullptr);
 
