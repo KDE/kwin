@@ -779,13 +779,15 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
         !gbm_device_is_format_supported(m_gpu->gbmDevice(), dmabuf->format(), GBM_BO_USE_SCANOUT)) {
         return false;
     }
+    bool hasModifiers = dmabuf->planes()[0].modifier != DRM_FORMAT_MOD_INVALID
+                     || dmabuf->planes()[0].offset > 0;
+    if (hasModifiers && !m_gpu->addFB2ModifiersSupported()) {
+        return false;
+    } else if (!hasModifiers && m_gpu->addFB2ModifiersSupported()) {
+        return false;
+    }
     gbm_bo *importedBuffer;
-    if (dmabuf->planes()[0].modifier != DRM_FORMAT_MOD_INVALID
-        || dmabuf->planes()[0].offset > 0
-        || dmabuf->planes().size() > 1) {
-        if (!m_gpu->addFB2ModifiersSupported()) {
-            return false;
-        }
+    if (hasModifiers || dmabuf->planes().size() > 1) {
         gbm_import_fd_modifier_data data = {};
         data.format = dmabuf->format();
         data.width = (uint32_t) dmabuf->size().width();
