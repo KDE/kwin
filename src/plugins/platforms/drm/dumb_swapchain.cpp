@@ -8,9 +8,6 @@
 */
 
 #include "dumb_swapchain.h"
-#if HAVE_GBM
-#include <gbm.h>
-#endif
 #include "drm_gpu.h"
 #include "logging.h"
 
