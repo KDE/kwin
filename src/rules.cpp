@@ -1013,7 +1013,9 @@ void RuleBook::load()
     } else {
         m_config->reparseConfiguration();
     }
-    m_rules = RuleBookSettings(m_config).rules().toList();
+    RuleBookSettings book(m_config);
+    book.load();
+    m_rules = book.rules().toList();
 }
 
 void RuleBook::save()
