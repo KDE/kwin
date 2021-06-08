@@ -239,12 +239,8 @@ bool EglWaylandBackend::makeContextCurrent(EglWaylandOutput *output)
         return false;
     }
 
-    const QRect &v = output->m_waylandOutput->geometry();
-    const qreal scale = output->m_waylandOutput->scale();
-
-    const QSize overall = screens()->size();
-    glViewport(-v.x() * scale, (v.height() - overall.height() + v.y()) * scale,
-               overall.width() * scale, overall.height() * scale);
+    const QSize size = output->m_waylandOutput->pixelSize();
+    glViewport(0, 0, size.width(), size.height());
     return true;
 }
 

@@ -78,7 +78,7 @@ protected:
     void handleGraphicsReset(GLenum status);
 
     virtual void doPaintBackground(const QVector<float> &vertices) = 0;
-    virtual void updateProjectionMatrix() = 0;
+    virtual void updateProjectionMatrix(const QRect &geometry) = 0;
 
 protected:
     bool init_ok;
@@ -114,14 +114,12 @@ protected:
     void doPaintBackground(const QVector< float >& vertices) override;
     Scene::Window *createWindow(Toplevel *t) override;
     void finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data) override;
-    void updateProjectionMatrix() override;
+    void updateProjectionMatrix(const QRect &geometry) override;
     void paintCursor(const QRegion &region) override;
 
 private:
     void performPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
-    QMatrix4x4 createProjectionMatrix() const;
 
-private:
     LanczosFilter *m_lanczosFilter;
     QScopedPointer<GLTexture> m_cursorTexture;
     QMatrix4x4 m_projectionMatrix;

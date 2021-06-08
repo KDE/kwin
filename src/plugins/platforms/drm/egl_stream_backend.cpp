@@ -436,11 +436,8 @@ bool EglStreamBackend::makeContextCurrent(const Output &output)
         return false;
     }
 
-    const QSize &overall = screens()->size();
-    const QRect &v = output.output->geometry();
-    qreal scale = output.output->scale();
-    glViewport(-v.x() * scale, (v.height() - overall.height() + v.y()) * scale,
-               overall.width() * scale, overall.height() * scale);
+    const QSize size = output.output->pixelSize();
+    glViewport(0, 0, size.width(), size.height());
     return true;
 }
 

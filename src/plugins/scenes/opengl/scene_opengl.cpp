@@ -64,6 +64,7 @@
 #include <KLocalizedString>
 #include <KNotification>
 #include <KProcess>
+#include <QtMath>
 
 // HACK: workaround for libepoxy < 1.3
 #ifndef GL_GUILTY_CONTEXT_RESET
@@ -691,7 +692,7 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
             GLRenderTarget::setVirtualScreenScale(scaling);
 
             int mask = 0;
-            updateProjectionMatrix();
+            updateProjectionMatrix(geo);
 
             paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid,
                         renderLoop, projectionMatrix());   // call generic implementation
@@ -1012,41 +1013,29 @@ SceneOpenGL2::~SceneOpenGL2()
     }
 }
 
-QMatrix4x4 SceneOpenGL2::createProjectionMatrix() const
+void SceneOpenGL2::updateProjectionMatrix(const QRect &rect)
 {
     // Create a perspective projection with a 60° field-of-view,
     // and an aspect ratio of 1.0.
-    const float fovY   =   60.0f;
+    m_projectionMatrix.setToIdentity();
+    const float fovY   =   std::tan(qDegreesToRadians(60.0f) / 2);
     const float aspect =    1.0f;
     const float zNear  =    0.1f;
     const float zFar   =  100.0f;
 
-    const float yMax   =  zNear * std::tan(fovY * M_PI / 360.0f);
+    const float yMax   =  zNear * fovY;
     const float yMin   = -yMax;
     const float xMin   =  yMin * aspect;
     const float xMax   =  yMax * aspect;
 
-    QMatrix4x4 projection;
-    projection.frustum(xMin, xMax, yMin, yMax, zNear, zFar);
+    m_projectionMatrix.frustum(xMin, xMax, yMin, yMax, zNear, zFar);
 
-    // Create a second matrix that transforms screen coordinates
-    // to world coordinates.
-    const float scaleFactor = 1.1 * std::tan(fovY * M_PI / 360.0f) / yMax;
-    const QSize size = screens()->size();
-
-    QMatrix4x4 matrix;
-    matrix.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
-    matrix.scale( (xMax - xMin) * scaleFactor / size.width(),
-                 -(yMax - yMin) * scaleFactor / size.height(),
-                  0.001);
-
-    // Combine the matrices
-    return projection * matrix;
-}
-
-void SceneOpenGL2::updateProjectionMatrix()
-{
-    m_projectionMatrix = createProjectionMatrix();
+    const float scaleFactor = 1.1 * fovY / yMax;
+    m_projectionMatrix.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
+    m_projectionMatrix.scale( (xMax - xMin) * scaleFactor / rect.width(),
+                             -(yMax - yMin) * scaleFactor / rect.height(),
+                              0.001);
+    m_projectionMatrix.translate(-rect.x(), -rect.y());
 }
 
 void SceneOpenGL2::paintSimpleScreen(int mask, const QRegion &region)

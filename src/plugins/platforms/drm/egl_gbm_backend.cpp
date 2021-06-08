@@ -684,12 +684,8 @@ PlatformSurfaceTexture *EglGbmBackend::createPlatformSurfaceTextureWayland(Surfa
 
 void EglGbmBackend::setViewport(const Output &output) const
 {
-    const QSize &overall = screens()->size();
-    const QRect &v = output.output->geometry();
-    qreal scale = output.output->scale();
-
-    glViewport(-v.x() * scale, (v.height() - overall.height() + v.y()) * scale,
-               overall.width() * scale, overall.height() * scale);
+    const QSize size = output.output->pixelSize();
+    glViewport(0, 0, size.width(), size.height());
 }
 
 QRegion EglGbmBackend::beginFrame(int screenId)

@@ -70,13 +70,9 @@ QRegion EglX11Backend::beginFrame(int screenId)
 
 void EglX11Backend::setupViewport(int screenId)
 {
-    // TODO: ensure the viewport is set correctly each time
-    const QSize &overall = screens()->size();
-    const QRect &v = screens()->geometry(screenId);
-    // TODO: are the values correct?
-
     qreal scale = screens()->scale(screenId);
-    glViewport(-v.x(), v.height() - overall.height() + v.y(), overall.width() * scale, overall.height() * scale);
+    const QSize size = screens()->geometry(screenId).size() * scale;
+    glViewport(0, 0, size.width(), size.height());
 }
 
 void EglX11Backend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
