@@ -46,7 +46,15 @@ include(ECMOptionalAddSubdirectory)
 include(ECMConfiguredInstall)
 include(ECMQtDeclareLoggingCategory)
 
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -DQT_USE_QSTRINGBUILDER -DQT_NO_URL_CAST_FROM_STRING -DQT_NO_CAST_TO_ASCII)
+add_definitions(
+    -DQT_DISABLE_DEPRECATED_BEFORE=0
+
+    -DQT_NO_KEYWORDS
+
+    -DQT_USE_QSTRINGBUILDER
+    -DQT_NO_URL_CAST_FROM_STRING
+    -DQT_NO_CAST_TO_ASCII
+)
 
 # Prevent EGL headers from including platform headers, in particular Xlib.h.
 add_definitions(-DMESA_EGL_NO_X11_HEADERS)
