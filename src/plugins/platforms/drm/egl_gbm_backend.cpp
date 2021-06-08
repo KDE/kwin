@@ -783,6 +783,9 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
     if (dmabuf->planes()[0].modifier != DRM_FORMAT_MOD_INVALID
         || dmabuf->planes()[0].offset > 0
         || dmabuf->planes().size() > 1) {
+        if (!m_gpu->addFB2ModifiersSupported()) {
+            return false;
+        }
         gbm_import_fd_modifier_data data = {};
         data.format = dmabuf->format();
         data.width = (uint32_t) dmabuf->size().width();
