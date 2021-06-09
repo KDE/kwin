@@ -142,7 +142,7 @@ Kirigami.Page {
                         Layout.fillWidth: true
                         id: infoLabel
                         type: Kirigami.MessageType.Information
-                        text: i18nc("popup tip", "Close by double clicking: Keep the window's Menu button pressed until it appears.")
+                        text: i18nc("popup tip", "Click and hold on the menu button to show the menu.")
                         showCloseButton: true
                         visible: false
                     }
