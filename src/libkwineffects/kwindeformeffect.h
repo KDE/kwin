@@ -58,7 +58,6 @@ protected:
     virtual void deform(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads);
 
 private Q_SLOTS:
-    void handleWindowGeometryChanged(EffectWindow *window);
     void handleWindowDamaged(EffectWindow *window);
     void handleWindowDeleted(EffectWindow *window);
 

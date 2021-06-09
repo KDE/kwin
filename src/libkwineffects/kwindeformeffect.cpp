@@ -22,7 +22,6 @@ class DeformEffectPrivate
 {
 public:
     QHash<EffectWindow *, DeformOffscreenData *> windows;
-    QMetaObject::Connection windowExpandedGeometryChangedConnection;
     QMetaObject::Connection windowDamagedConnection;
     QMetaObject::Connection windowDeletedConnection;
 
@@ -48,26 +47,13 @@ bool DeformEffect::supported()
     return effects->isOpenGLCompositing();
 }
 
-static void allocateOffscreenData(EffectWindow *window, DeformOffscreenData *offscreenData)
-{
-    const QRect geometry = window->expandedGeometry();
-    offscreenData->texture.reset(new GLTexture(GL_RGBA8, geometry.size()));
-    offscreenData->texture->setFilter(GL_LINEAR);
-    offscreenData->texture->setWrapMode(GL_CLAMP_TO_EDGE);
-    offscreenData->renderTarget.reset(new GLRenderTarget(*offscreenData->texture));
-    offscreenData->isDirty = true;
-}
-
 void DeformEffect::redirect(EffectWindow *window)
 {
     DeformOffscreenData *&offscreenData = d->windows[window];
     if (offscreenData) {
         return;
     }
-
-    effects->makeOpenGLContextCurrent();
     offscreenData = new DeformOffscreenData;
-    allocateOffscreenData(window, offscreenData);
 
     if (d->windows.count() == 1) {
         setupConnections();
@@ -92,12 +78,26 @@ void DeformEffect::deform(EffectWindow *window, int mask, WindowPaintData &data,
 
 GLTexture *DeformEffectPrivate::maybeRender(EffectWindow *window, DeformOffscreenData *offscreenData)
 {
+    const QRect geometry = window->expandedGeometry();
+    QSize textureSize = geometry.size();
+
+    if (const EffectScreen *screen = effects->findScreen(window->screen())) {
+        textureSize *= screen->devicePixelRatio();
+    }
+
+    if (!offscreenData->texture || offscreenData->texture->size() != textureSize) {
+        offscreenData->texture.reset(new GLTexture(GL_RGBA8, textureSize));
+        offscreenData->texture->setFilter(GL_LINEAR);
+        offscreenData->texture->setWrapMode(GL_CLAMP_TO_EDGE);
+        offscreenData->renderTarget.reset(new GLRenderTarget(*offscreenData->texture));
+        offscreenData->isDirty = true;
+    }
+
     if (offscreenData->isDirty) {
         GLRenderTarget::pushRenderTarget(offscreenData->renderTarget.data());
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        const QRect geometry = window->expandedGeometry();
         QMatrix4x4 projectionMatrix;
         projectionMatrix.ortho(QRect(0, 0, geometry.width(), geometry.height()));
 
@@ -190,18 +190,6 @@ void DeformEffect::drawWindow(EffectWindow *window, int mask, const QRegion& reg
     d->paint(window, texture, region, data, quads);
 }
 
-void DeformEffect::handleWindowGeometryChanged(EffectWindow *window)
-{
-    DeformOffscreenData *offscreenData = d->windows.value(window);
-    if (offscreenData) {
-        const QRect geometry = window->expandedGeometry();
-        if (offscreenData->texture->size() != geometry.size()) {
-            effects->makeOpenGLContextCurrent();
-            allocateOffscreenData(window, offscreenData);
-        }
-    }
-}
-
 void DeformEffect::handleWindowDamaged(EffectWindow *window)
 {
     DeformOffscreenData *offscreenData = d->windows.value(window);
@@ -217,8 +205,6 @@ void DeformEffect::handleWindowDeleted(EffectWindow *window)
 
 void DeformEffect::setupConnections()
 {
-    d->windowExpandedGeometryChangedConnection =
-            connect(effects, &EffectsHandler::windowExpandedGeometryChanged, this, &DeformEffect::handleWindowGeometryChanged);
     d->windowDamagedConnection =
             connect(effects, &EffectsHandler::windowDamaged, this, &DeformEffect::handleWindowDamaged);
     d->windowDeletedConnection =
@@ -227,11 +213,9 @@ void DeformEffect::setupConnections()
 
 void DeformEffect::destroyConnections()
 {
-    disconnect(d->windowExpandedGeometryChangedConnection);
     disconnect(d->windowDamagedConnection);
     disconnect(d->windowDeletedConnection);
 
-    d->windowExpandedGeometryChangedConnection = {};
     d->windowDamagedConnection = {};
     d->windowDeletedConnection = {};
 }
