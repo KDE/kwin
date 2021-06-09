@@ -148,9 +148,7 @@ void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const 
     const qreal rgb = data.brightness() * data.opacity();
     const qreal a = data.opacity();
 
-    const QRect screenRect = effects->virtualScreenGeometry();
-    QMatrix4x4 mvp;
-    mvp.ortho(0, screenRect.width(), screenRect.height(), 0, 0, 65535);
+    QMatrix4x4 mvp = data.screenProjectionMatrix();
     mvp.translate(window->x(), window->y());
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
