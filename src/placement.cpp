@@ -458,6 +458,10 @@ void Placement::placeCentered(AbstractClient* c, const QRect& area, Policy /*nex
 {
     Q_ASSERT(area.isValid());
 
+    if (!c->frameGeometry().isValid()) {
+        return;
+    }
+
     const int xp = area.left() + (area.width() - c->width()) / 2;
     const int yp = area.top() + (area.height() - c->height()) / 2;
 
