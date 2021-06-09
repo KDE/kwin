@@ -456,7 +456,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                              rect.y() + rect.height() / 2);
                 winData->iconFrame->setAlignment(Qt::AlignCenter);
                 winData->iconFrame->setPosition(point);
-                if (effects->compositingType() == KWin::OpenGL2Compositing && data.shader) {
+                if (effects->compositingType() == KWin::OpenGLCompositing && data.shader) {
                     const float a = 0.9 * data.opacity() * m_decalOpacity * 0.75;
                     data.shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
                 }
@@ -467,7 +467,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 QPoint point(rect.x() + rect.width() / 2,
                              rect.y() + rect.height() / 2 + iconSize.height());
                 winData->textFrame->setPosition(point);
-                if (effects->compositingType() == KWin::OpenGL2Compositing && data.shader) {
+                if (effects->compositingType() == KWin::OpenGLCompositing && data.shader) {
                     const float a = 0.9 * data.opacity() * m_decalOpacity * 0.75;
                     data.shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
                 }

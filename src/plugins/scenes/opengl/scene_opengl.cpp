@@ -952,8 +952,8 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
     if (!backend->isDirectRendering()) {
         return false;
     }
-    if (GLPlatform::instance()->recommendedCompositor() < OpenGL2Compositing) {
-        qCDebug(KWIN_OPENGL) << "Driver does not recommend OpenGL 2 compositing";
+    if (GLPlatform::instance()->recommendedCompositor() < OpenGLCompositing) {
+        qCDebug(KWIN_OPENGL) << "Driver does not recommend OpenGL compositing";
         return false;
     }
     return true;

@@ -57,7 +57,7 @@ void DontCrashEmptyDecorationTest::initTestCase()
 
     auto scene = KWin::Compositor::self()->scene();
     QVERIFY(scene);
-    QCOMPARE(scene->compositingType(), KWin::OpenGL2Compositing);
+    QCOMPARE(scene->compositingType(), KWin::OpenGLCompositing);
 }
 
 void DontCrashEmptyDecorationTest::init()

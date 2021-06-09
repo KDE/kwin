@@ -142,7 +142,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
         m_type = BouncingFeedback;
     else if (busyBlinking) {
         m_type = BlinkingFeedback;
-        if (effects->compositingType() == OpenGL2Compositing) {
+        if (effects->compositingType() == OpenGLCompositing) {
             m_blinkingShader.reset(ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("blinking-startup-fragment.glsl")));
             if (m_blinkingShader->isValid()) {
                 qCDebug(KWINEFFECTS) << "Blinking Shader is valid";

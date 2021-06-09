@@ -32,14 +32,13 @@ enum CompositingType {
     /**
      * Used as a flag whether OpenGL based compositing is used.
      * The flag is or-ed to the enum values of the specific OpenGL types.
-     * The actual Compositors use the or @c OpenGL2Compositing
+     * The actual Compositors use the or @c OpenGLCompositing
      * flags. If you need to know whether OpenGL is used, either and the flag or
      * use EffectsHandler::isOpenGLCompositing().
      */
     OpenGLCompositing = 1,
     /* XRenderCompositing = 1<<1, */
     QPainterCompositing = 1<< 2,
-    OpenGL2Compositing = 1<<3 | OpenGLCompositing,
 };
 
 enum OpenGLPlatformInterface {
