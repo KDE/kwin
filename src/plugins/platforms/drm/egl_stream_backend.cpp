@@ -257,6 +257,10 @@ void EglStreamBackend::init()
             setFailed("Failed to initialize EGL api");
             return;
         }
+        if (!supportsSurfacelessContext()) {
+            setFailed("EGL_KHR_surfaceless_context extension is unavailable!");
+            return;
+        }
         if (!initRenderingContext()) {
             setFailed("Failed to initialize rendering context");
             return;
@@ -283,7 +287,7 @@ bool EglStreamBackend::initRenderingContext()
 {
     initBufferConfigs();
 
-    if (!createContext()) {
+    if (!createContext() || !makeCurrent()) {
         return false;
     }
 
@@ -291,14 +295,7 @@ bool EglStreamBackend::initRenderingContext()
     for (DrmOutput *drmOutput : outputs) {
         addOutput(drmOutput);
     }
-    if (m_outputs.isEmpty()) {
-        qCCritical(KWIN_DRM) << "Failed to create output surface";
-        return false;
-    }
-    // set our first surface as the one for the abstract backend
-    setSurface(m_outputs.first().eglSurface);
-
-    return makeContextCurrent(m_outputs.first());
+    return true;
 }
 
 bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
