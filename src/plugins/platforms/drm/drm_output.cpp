@@ -658,7 +658,7 @@ bool DrmOutput::presentAtomically(const QSharedPointer<DrmBuffer> &buffer)
 
     // EglStreamBackend queues normal page flips through EGL when used as the rendering backend,
     // modesets are still performed through DRM-KMS
-    if (m_gpu->useEglStreams() && !m_modesetRequested && m_gpu == m_backend->primaryGpu()) {
+    if (m_gpu->useEglStreams() && !m_modesetRequested && m_gpu == m_backend->primaryGpu() && m_gpu->eglBackend() != nullptr) {
         m_pageFlipPending = true;
         return true;
     }
@@ -814,8 +814,8 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
 
             // EglStreamBackend uses the NV_output_drm_flip_event EGL extension
             // to register the flip event through eglStreamConsumerAcquireAttribNV
-            // but only when used as the rendering GPU
-            if (!m_gpu->useEglStreams() || m_gpu != m_backend->primaryGpu()) {
+            // but only when used as the rendering backend
+            if (!m_gpu->useEglStreams() || m_gpu != m_backend->primaryGpu() || m_gpu->eglBackend() == nullptr) {
                 flags |= DRM_MODE_PAGE_FLIP_EVENT;
             }
         }
