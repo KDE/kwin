@@ -285,10 +285,7 @@ void Toplevel::finishCompositing(ReleaseReason)
 
 bool Toplevel::compositing() const
 {
-    if (!Workspace::self()) {
-        return false;
-    }
-    return Workspace::self()->compositing();
+    return Compositor::compositing();
 }
 
 void Toplevel::addRepaint(const QRect &rect)

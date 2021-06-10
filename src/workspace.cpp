@@ -1891,7 +1891,7 @@ Toplevel *Workspace::findInternal(QWindow *w) const
 
 bool Workspace::compositing() const
 {
-    return m_compositor && m_compositor->scene();
+    return Compositor::compositing();
 }
 
 void Workspace::markXStackingOrderAsDirty()
