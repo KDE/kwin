@@ -155,6 +155,7 @@ EglPixmapTexturePrivate::EglPixmapTexturePrivate(EglPixmapTexture *texture, EglB
     : q(texture)
     , m_backend(backend)
 {
+    m_target = GL_TEXTURE_2D;
 }
 
 EglPixmapTexturePrivate::~EglPixmapTexturePrivate()
