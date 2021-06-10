@@ -232,7 +232,7 @@ protected:
     // called after all effects had their paintWindow() called
     void finalPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
     // shared implementation, starts painting the window
-    virtual void paintWindow(Window* w, int mask, const QRegion &region, const WindowQuadList &quads);
+    virtual void paintWindow(Window* w, int mask, const QRegion &region);
     // called after all effects had their drawWindow() called
     virtual void finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
     // let the scene decide whether it's better to paint more of the screen, eg. in order to allow a buffer swap
@@ -248,7 +248,6 @@ protected:
         QRegion region;
         QRegion clip;
         int mask = 0;
-        WindowQuadList quads;
     };
     // The region which actually has been painted by paintScreen() and should be
     // copied from the buffer to the screen. I.e. the region returned from Scene::paintScreen().
@@ -339,7 +338,6 @@ public:
     bool isOpaque() const;
     QRegion decorationShape() const;
     void updateToplevel(Deleted *deleted);
-    WindowQuadList buildQuads() const;
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();
     void preprocess(Item *item);

@@ -2083,11 +2083,6 @@ EffectWindowList EffectWindowImpl::mainWindows() const
     return {};
 }
 
-WindowQuadList EffectWindowImpl::buildQuads() const
-{
-    return sceneWindow()->buildQuads();
-}
-
 void EffectWindowImpl::setData(int role, const QVariant &data)
 {
     if (!data.isNull())

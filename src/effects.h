@@ -488,8 +488,6 @@ public:
     EffectWindow* transientFor() override;
     EffectWindowList mainWindows() const override;
 
-    WindowQuadList buildQuads() const override;
-
     void minimize() override;
     void unminimize() override;
     void closeWindow() override;

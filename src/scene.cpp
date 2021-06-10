@@ -252,18 +252,12 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
         w->resetPaintingEnabled();
         data.paint = infiniteRegion(); // no clipping, so doesn't really matter
         data.clip = QRegion();
-        data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow(effectWindow(w), data, m_expectedPresentTimestamp);
-#if !defined(QT_NO_DEBUG)
-        if (data.quads.isTransformed()) {
-            qFatal("Pre-paint calls are not allowed to transform quads!");
-        }
-#endif
         if (!w->isPaintingEnabled()) {
             continue;
         }
-        phase2.append({w, infiniteRegion(), data.clip, data.mask, data.quads});
+        phase2.append({w, infiniteRegion(), data.clip, data.mask,});
     }
 
     damaged_region = QRegion(QRect {{}, screens()->size()});
@@ -279,7 +273,7 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
         paintBackground(infiniteRegion());
     }
     Q_FOREACH (const Phase2Data & d, phase2) {
-        paintWindow(d.window, d.mask, d.region, d.quads);
+        paintWindow(d.window, d.mask, d.region);
     }
 }
 
@@ -351,20 +345,14 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
             data.clip |= window->decorationShape().translated(window->pos());
         }
 
-        data.quads = window->buildQuads();
         // preparation step
         effects->prePaintWindow(effectWindow(window), data, m_expectedPresentTimestamp);
-#if !defined(QT_NO_DEBUG)
-        if (data.quads.isTransformed()) {
-            qFatal("Pre-paint calls are not allowed to transform quads!");
-        }
-#endif
         if (!window->isPaintingEnabled()) {
             continue;
         }
         dirtyArea |= data.paint;
         // Schedule the window for painting
-        phase2data.append({ window, data.paint, data.clip, data.mask, data.quads });
+        phase2data.append({ window, data.paint, data.clip, data.mask, });
     }
 
     // Save the part of the repaint region that's exclusively rendered to
@@ -434,7 +422,7 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
         paintedArea |= data->region;
         data->region = paintedArea;
 
-        paintWindow(data->window, data->mask, data->region, data->quads);
+        paintWindow(data->window, data->mask, data->region);
     }
 
     if (fullRepaint) {
@@ -504,7 +492,7 @@ void Scene::clearStackingOrder()
 
 static Scene::Window *s_recursionCheck = nullptr;
 
-void Scene::paintWindow(Window* w, int mask, const QRegion &_region, const WindowQuadList &quads)
+void Scene::paintWindow(Window* w, int mask, const QRegion &_region)
 {
     // no painting outside visible screen (and no transformations)
     const QRegion region = _region & QRect({0, 0}, screens()->size());
@@ -520,7 +508,6 @@ void Scene::paintWindow(Window* w, int mask, const QRegion &_region, const Windo
     }
 
     WindowPaintData data(w->window()->effectWindow(), screenProjectionMatrix());
-    data.quads = quads;
     effects->paintWindow(effectWindow(w), mask, region, data);
     // paint thumbnails on top of window
     paintWindowThumbnails(w, region, data.opacity(), data.brightness(), data.saturation());
@@ -870,25 +857,6 @@ void Scene::Window::enablePainting(int reason)
 void Scene::Window::disablePainting(int reason)
 {
     disable_painting |= reason;
-}
-
-static void buildQuadsHelper(const Item *item, WindowQuadList *ret)
-{
-    *ret += item->quads();
-
-    const QList<Item *> childItems = item->childItems();
-    for (const Item *childItem : childItems) {
-        if (childItem->isVisible()) {
-            buildQuadsHelper(childItem, ret);
-        }
-    }
-}
-
-WindowQuadList Scene::Window::buildQuads() const
-{
-    WindowQuadList ret;
-    buildQuadsHelper(windowItem(), &ret);
-    return ret;
 }
 
 void Scene::Window::preprocess(Item *item)

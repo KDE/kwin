@@ -206,7 +206,7 @@ WindowQuadList DecorationItem::buildQuads() const
             const int u1 = (x1 + offsets[i].x()) * textureScale;
             const int v1 = (y1 + offsets[i].y()) * textureScale;
 
-            WindowQuad quad(const_cast<DecorationItem *>(this));
+            WindowQuad quad;
             quad.setUVAxisSwapped(swap);
 
             if (swap) {

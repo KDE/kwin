@@ -147,7 +147,10 @@ public:
     struct RenderContext
     {
         QVector<RenderNode> renderNodes;
-        QHash<Item *, WindowQuadList> quads;
+        const int paintFlags;
+        const QRegion clip;
+        const WindowPaintData &paintData;
+        const bool hardwareClipping;
     };
 
     OpenGLWindow(Toplevel *toplevel, SceneOpenGL *scene);
@@ -160,12 +163,9 @@ private:
     QMatrix4x4 modelViewProjectionMatrix(int mask, const WindowPaintData &data) const;
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
-    void createRenderNode(Item *item, RenderContext *context, int mask, const WindowPaintData &data);
-    bool beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data);
-    void endRenderWindow();
+    void createRenderNode(Item *item, RenderContext *context);
 
     SceneOpenGL *m_scene;
-    bool m_hardwareClipping = false;
     bool m_blendingEnabled = false;
 };
 

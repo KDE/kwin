@@ -2412,11 +2412,6 @@ public:
      */
     virtual bool isSkipSwitcher() const = 0;
 
-    /**
-     * Returns the unmodified window quad list. Can also be used to force rebuilding.
-     */
-    virtual WindowQuadList buildQuads() const = 0;
-
     void setMinimized(bool minimize);
     virtual void minimize() = 0;
     virtual void unminimize() = 0;
@@ -2596,13 +2591,12 @@ private:
 class KWINEFFECTS_EXPORT WindowQuad
 {
 public:
-    explicit WindowQuad(void *userData = nullptr);
+    WindowQuad();
     WindowQuad makeSubQuad(double x1, double y1, double x2, double y2) const;
     WindowVertex& operator[](int index);
     const WindowVertex& operator[](int index) const;
     void setUVAxisSwapped(bool value) { uvSwapped = value; }
     bool uvAxisSwapped() const { return uvSwapped; }
-    void *userData() const;
     double left() const;
     double right() const;
     double top() const;
@@ -2616,7 +2610,6 @@ public:
 private:
     friend class WindowQuadList;
     WindowVertex verts[ 4 ];
-    void *m_userData;
     bool uvSwapped;
 };
 
@@ -2647,7 +2640,6 @@ public:
      * I.e. window will definitely cover it's clip region
      */
     QRegion clip;
-    WindowQuadList quads;
     /**
      * Simple helper that sets data to say the window will be painted as non-opaque.
      * Takes also care of changing the regions.
@@ -3008,8 +3000,6 @@ public:
      * @since 5.6
      */
     QMatrix4x4 screenProjectionMatrix() const;
-
-    WindowQuadList quads;
 
     /**
      * Shader to be used for rendering, if any.
@@ -3798,9 +3788,8 @@ void WindowVertex::setY(double y)
 ***************************************************************/
 
 inline
-WindowQuad::WindowQuad(void *userData)
-    : m_userData(userData)
-    , uvSwapped(false)
+WindowQuad::WindowQuad()
+    : uvSwapped(false)
 {
 }
 
@@ -3816,12 +3805,6 @@ const WindowVertex& WindowQuad::operator[](int index) const
 {
     Q_ASSERT(index >= 0 && index < 4);
     return verts[ index ];
-}
-
-inline
-void *WindowQuad::userData() const
-{
-    return m_userData;
 }
 
 inline

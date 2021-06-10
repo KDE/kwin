@@ -24,7 +24,6 @@ class MockEffectWindow : public EffectWindow
     Q_OBJECT
 public:
     MockEffectWindow(QObject *parent = nullptr);
-    WindowQuadList buildQuads() const override;
     QVariant data(int role) const override;
     QRect decorationInnerRect() const override;
     void deleteProperty(long int atom) const override;
@@ -271,11 +270,6 @@ private:
 MockEffectWindow::MockEffectWindow(QObject *parent)
     : EffectWindow(parent)
 {
-}
-
-WindowQuadList MockEffectWindow::buildQuads() const
-{
-    return WindowQuadList();
 }
 
 QVariant MockEffectWindow::data(int role) const

@@ -228,7 +228,6 @@ WindowPaintData::WindowPaintData(EffectWindow* w, const QMatrix4x4 &screenProjec
     , d(new WindowPaintDataPrivate())
 {
     d->screenProjectionMatrix = screenProjectionMatrix;
-    quads = w->buildQuads();
     setOpacity(w->opacity());
     setSaturation(1.0);
     setBrightness(1.0);
@@ -238,7 +237,6 @@ WindowPaintData::WindowPaintData(EffectWindow* w, const QMatrix4x4 &screenProjec
 
 WindowPaintData::WindowPaintData(const WindowPaintData &other)
     : PaintData()
-    , quads(other.quads)
     , shader(other.shader)
     , d(new WindowPaintDataPrivate())
 {

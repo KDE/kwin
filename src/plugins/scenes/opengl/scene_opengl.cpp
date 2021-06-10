@@ -1110,92 +1110,31 @@ OpenGLWindow::~OpenGLWindow()
 {
 }
 
-static QMatrix4x4 transformation(const QPoint &position, int mask, const WindowPaintData &data)
+static QMatrix4x4 transformation(const Item *item, const OpenGLWindow::RenderContext *context)
 {
+    const QPoint position = item->rootPosition();
     QMatrix4x4 matrix;
     matrix.translate(position.x(), position.y());
 
-    if (!(mask & Scene::PAINT_WINDOW_TRANSFORMED))
+    if (!(context->paintFlags & Scene::PAINT_WINDOW_TRANSFORMED))
         return matrix;
 
-    matrix.translate(data.translation());
-    const QVector3D scale = data.scale();
+    const WindowPaintData *data = &context->paintData;
+    matrix.translate(data->translation());
+    const QVector3D scale = data->scale();
     matrix.scale(scale.x(), scale.y(), scale.z());
 
-    if (data.rotationAngle() == 0.0)
+    if (data->rotationAngle() == 0.0)
         return matrix;
 
     // Apply the rotation
     // cannot use data.rotation.applyTo(&matrix) as QGraphicsRotation uses projectedRotate to map back to 2D
-    matrix.translate(data.rotationOrigin());
-    const QVector3D axis = data.rotationAxis();
-    matrix.rotate(data.rotationAngle(), axis.x(), axis.y(), axis.z());
-    matrix.translate(-data.rotationOrigin());
+    matrix.translate(data->rotationOrigin());
+    const QVector3D axis = data->rotationAxis();
+    matrix.rotate(data->rotationAngle(), axis.x(), axis.y(), axis.z());
+    matrix.translate(-data->rotationOrigin());
 
     return matrix;
-}
-
-bool OpenGLWindow::beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data)
-{
-    if (region.isEmpty())
-        return false;
-
-    m_hardwareClipping = region != infiniteRegion() && (mask & Scene::PAINT_WINDOW_TRANSFORMED) && !(mask & Scene::PAINT_SCREEN_TRANSFORMED);
-    if (region != infiniteRegion() && !m_hardwareClipping) {
-        WindowQuadList quads;
-        quads.reserve(data.quads.count());
-
-        // split all quads in bounding rect with the actual rects in the region
-        for (const WindowQuad &quad : qAsConst(data.quads)) {
-            const Item *item = static_cast<const Item *>(quad.userData());
-
-            const QPoint position = item->rootPosition();
-            for (const QRect &r : region) {
-                const QRectF rf(r.translated(-position));
-                const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
-                const QRectF &intersected = rf.intersected(quadRect);
-                if (intersected.isValid()) {
-                    if (quadRect == intersected) {
-                        // case 1: completely contains, include and do not check other rects
-                        quads << quad;
-                        break;
-                    }
-                    // case 2: intersection
-                    quads << quad.makeSubQuad(intersected.left(), intersected.top(), intersected.right(), intersected.bottom());
-                }
-            }
-        }
-        data.quads = quads;
-    }
-
-    if (data.quads.isEmpty())
-        return false;
-
-    if (surfaceItem() && !surfaceItem()->damage().isEmpty()) { // only relevant on X11
-        m_scene->insertWait();
-    }
-
-    if (m_hardwareClipping) {
-        glEnable(GL_SCISSOR_TEST);
-    }
-
-    const GLVertexAttrib attribs[] = {
-        { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
-        { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
-    };
-
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
-
-    return true;
-}
-
-void OpenGLWindow::endRenderWindow()
-{
-    if (m_hardwareClipping) {
-        glDisable(GL_SCISSOR_TEST);
-    }
 }
 
 QVector4D OpenGLWindow::modulate(float opacity, float brightness) const
@@ -1245,44 +1184,78 @@ static GLTexture *bindSurfaceTexture(SurfaceItem *surfaceItem)
     return platformSurfaceTexture->texture();
 }
 
-void OpenGLWindow::createRenderNode(Item *item, RenderContext *context, int mask, const WindowPaintData &data)
+static WindowQuadList clipQuads(const Item *item, const OpenGLWindow::RenderContext *context)
+{
+    const WindowQuadList quads = item->quads();
+    if (context->clip != infiniteRegion() && !context->hardwareClipping) {
+        const QPoint offset = item->rootPosition();
+
+        WindowQuadList ret;
+        ret.reserve(quads.count());
+
+        // split all quads in bounding rect with the actual rects in the region
+        for (const WindowQuad &quad : qAsConst(quads)) {
+            for (const QRect &r : qAsConst(context->clip)) {
+                const QRectF rf(r.translated(-offset));
+                const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
+                const QRectF &intersected = rf.intersected(quadRect);
+                if (intersected.isValid()) {
+                    if (quadRect == intersected) {
+                        // case 1: completely contains, include and do not check other rects
+                        ret << quad;
+                        break;
+                    }
+                    // case 2: intersection
+                    ret << quad.makeSubQuad(intersected.left(), intersected.top(), intersected.right(), intersected.bottom());
+                }
+            }
+        }
+        return ret;
+    }
+    return quads;
+}
+
+void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
 {
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
-        WindowQuadList quads = context->quads.value(item);
+        WindowQuadList quads = clipQuads(item, context);
         if (!quads.isEmpty()) {
             SceneOpenGLShadow *shadow = static_cast<SceneOpenGLShadow *>(shadowItem->shadow());
             context->renderNodes.append(RenderNode{
                 .texture = shadow->shadowTexture(),
                 .quads = quads,
-                .transformMatrix = transformation(item->rootPosition(), mask, data),
-                .opacity = data.opacity(),
+                .transformMatrix = transformation(item, context),
+                .opacity = context->paintData.opacity(),
                 .hasAlpha = true,
                 .coordinateType = NormalizedCoordinates,
             });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
-        WindowQuadList quads = context->quads.value(item);
+        WindowQuadList quads = clipQuads(item, context);
         if (!quads.isEmpty()) {
             auto renderer = static_cast<const SceneOpenGLDecorationRenderer *>(decorationItem->renderer());
             context->renderNodes.append(RenderNode{
                 .texture = renderer->texture(),
                 .quads = quads,
-                .transformMatrix = transformation(item->rootPosition(), mask, data),
-                .opacity = data.opacity(),
+                .transformMatrix = transformation(item, context),
+                .opacity = context->paintData.opacity(),
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
             });
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
-        WindowQuadList quads = context->quads.value(item);
+        WindowQuadList quads = clipQuads(item, context);
         if (!quads.isEmpty()) {
+            if (!surfaceItem->damage().isEmpty()) { // only relevant on X11
+                m_scene->insertWait();
+            }
             SurfacePixmap *pixmap = surfaceItem->pixmap();
             if (pixmap) {
                 context->renderNodes.append(RenderNode{
                     .texture = bindSurfaceTexture(surfaceItem),
                     .quads = quads,
-                    .transformMatrix = transformation(item->rootPosition(), mask, data),
-                    .opacity = data.opacity(),
+                    .transformMatrix = transformation(item, context),
+                    .opacity = context->paintData.opacity(),
                     .hasAlpha = pixmap->hasAlphaChannel(),
                     .coordinateType = UnnormalizedCoordinates,
                 });
@@ -1293,7 +1266,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context, int mask
     const QList<Item *> childItems = item->childItems();
     for (Item *childItem : childItems) {
         if (childItem->isVisible()) {
-            createRenderNode(childItem, context, mask ,data);
+            createRenderNode(childItem, context);
         }
     }
 }
@@ -1322,11 +1295,27 @@ QMatrix4x4 OpenGLWindow::modelViewProjectionMatrix(int mask, const WindowPaintDa
     return scene->projectionMatrix() * mvMatrix;
 }
 
-void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPaintData &_data)
+void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPaintData &data)
 {
-    WindowPaintData data = _data;
-    if (!beginRenderWindow(mask, region, data))
+    if (region.isEmpty()) {
         return;
+    }
+
+    RenderContext renderContext {
+        .paintFlags = mask,
+        .clip = region,
+        .paintData = data,
+        .hardwareClipping = region != infiniteRegion() && (mask & Scene::PAINT_WINDOW_TRANSFORMED) && !(mask & Scene::PAINT_SCREEN_TRANSFORMED),
+    };
+    createRenderNode(windowItem(), &renderContext);
+
+    int quadCount = 0;
+    for (const RenderNode &node : qAsConst(renderContext.renderNodes)) {
+        quadCount += node.quads.count();
+    }
+    if (!quadCount) {
+        return;
+    }
 
     GLShader *shader = data.shader;
     GLenum filter;
@@ -1356,22 +1345,24 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     }
     shader->setUniform(GLShader::Saturation, data.saturation());
 
-    RenderContext renderContext;
-    // TODO: This is somewhat inefficient, remove window quads from the public api.
-    for (const WindowQuad &quad : qAsConst(data.quads)) {
-        Item *item = static_cast<Item *>(quad.userData());
-        Q_ASSERT(item);
-        renderContext.quads[item].append(quad);
-    }
-    createRenderNode(windowItem(), &renderContext, mask, data);
-
     const bool indexedQuads = GLVertexBuffer::supportsIndexedQuads();
     const GLenum primitiveType = indexedQuads ? GL_QUADS : GL_TRIANGLES;
     const int verticesPerQuad = indexedQuads ? 4 : 6;
+    const size_t size = verticesPerQuad * quadCount * sizeof(GLVertex2D);
 
-    const size_t size = verticesPerQuad * data.quads.count() * sizeof(GLVertex2D);
+    if (renderContext.hardwareClipping) {
+        glEnable(GL_SCISSOR_TEST);
+    }
+
+    const GLVertexAttrib attribs[] = {
+        { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
+        { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
+    };
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
+
     GLVertex2D *map = (GLVertex2D *) vbo->map(size);
 
     for (int i = 0, v = 0; i < renderContext.renderNodes.count(); i++) {
@@ -1417,7 +1408,7 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
         renderNode.texture->bind();
 
         vbo->draw(region, primitiveType, renderNode.firstVertex,
-                  renderNode.vertexCount, m_hardwareClipping);
+                  renderNode.vertexCount, renderContext.hardwareClipping);
     }
 
     vbo->unbindArrays();
@@ -1427,7 +1418,9 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     if (!data.shader)
         ShaderManager::instance()->popShader();
 
-    endRenderWindow();
+    if (renderContext.hardwareClipping) {
+        glDisable(GL_SCISSOR_TEST);
+    }
 }
 
 QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
