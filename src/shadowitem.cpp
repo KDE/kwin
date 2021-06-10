@@ -160,7 +160,7 @@ WindowQuadList ShadowItem::buildQuads() const
         ty1 = 0.0;
         tx2 = topLeftRect.width() / width;
         ty2 = topLeftRect.height() / height;
-        WindowQuad topLeftQuad(WindowQuadShadow, tag);
+        WindowQuad topLeftQuad(tag);
         topLeftQuad[0] = WindowVertex(topLeftRect.left(),  topLeftRect.top(),    tx1, ty1);
         topLeftQuad[1] = WindowVertex(topLeftRect.right(), topLeftRect.top(),    tx2, ty1);
         topLeftQuad[2] = WindowVertex(topLeftRect.right(), topLeftRect.bottom(), tx2, ty2);
@@ -173,7 +173,7 @@ WindowQuadList ShadowItem::buildQuads() const
         ty1 = 0.0;
         tx2 = 1.0;
         ty2 = topRightRect.height() / height;
-        WindowQuad topRightQuad(WindowQuadShadow, tag);
+        WindowQuad topRightQuad(tag);
         topRightQuad[0] = WindowVertex(topRightRect.left(),  topRightRect.top(),    tx1, ty1);
         topRightQuad[1] = WindowVertex(topRightRect.right(), topRightRect.top(),    tx2, ty1);
         topRightQuad[2] = WindowVertex(topRightRect.right(), topRightRect.bottom(), tx2, ty2);
@@ -186,7 +186,7 @@ WindowQuadList ShadowItem::buildQuads() const
         tx2 = 1.0;
         ty1 = 1.0 - bottomRightRect.height() / height;
         ty2 = 1.0;
-        WindowQuad bottomRightQuad(WindowQuadShadow, tag);
+        WindowQuad bottomRightQuad(tag);
         bottomRightQuad[0] = WindowVertex(bottomRightRect.left(),  bottomRightRect.top(),    tx1, ty1);
         bottomRightQuad[1] = WindowVertex(bottomRightRect.right(), bottomRightRect.top(),    tx2, ty1);
         bottomRightQuad[2] = WindowVertex(bottomRightRect.right(), bottomRightRect.bottom(), tx2, ty2);
@@ -199,7 +199,7 @@ WindowQuadList ShadowItem::buildQuads() const
         tx2 = bottomLeftRect.width() / width;
         ty1 = 1.0 - bottomLeftRect.height() / height;
         ty2 = 1.0;
-        WindowQuad bottomLeftQuad(WindowQuadShadow, tag);
+        WindowQuad bottomLeftQuad(tag);
         bottomLeftQuad[0] = WindowVertex(bottomLeftRect.left(),  bottomLeftRect.top(),    tx1, ty1);
         bottomLeftQuad[1] = WindowVertex(bottomLeftRect.right(), bottomLeftRect.top(),    tx2, ty1);
         bottomLeftQuad[2] = WindowVertex(bottomLeftRect.right(), bottomLeftRect.bottom(), tx2, ty2);
@@ -232,7 +232,7 @@ WindowQuadList ShadowItem::buildQuads() const
         ty1 = 0.0;
         tx2 = tx1 + top.width() / width;
         ty2 = topRect.height() / height;
-        WindowQuad topQuad(WindowQuadShadow, tag);
+        WindowQuad topQuad(tag);
         topQuad[0] = WindowVertex(topRect.left(),  topRect.top(),    tx1, ty1);
         topQuad[1] = WindowVertex(topRect.right(), topRect.top(),    tx2, ty1);
         topQuad[2] = WindowVertex(topRect.right(), topRect.bottom(), tx2, ty2);
@@ -245,7 +245,7 @@ WindowQuadList ShadowItem::buildQuads() const
         ty1 = shadowMargins.top() / height;
         tx2 = 1.0;
         ty2 = ty1 + right.height() / height;
-        WindowQuad rightQuad(WindowQuadShadow, tag);
+        WindowQuad rightQuad(tag);
         rightQuad[0] = WindowVertex(rightRect.left(),  rightRect.top(),    tx1, ty1);
         rightQuad[1] = WindowVertex(rightRect.right(), rightRect.top(),    tx2, ty1);
         rightQuad[2] = WindowVertex(rightRect.right(), rightRect.bottom(), tx2, ty2);
@@ -258,7 +258,7 @@ WindowQuadList ShadowItem::buildQuads() const
         ty1 = 1.0 - bottomRect.height() / height;
         tx2 = tx1 + bottom.width() / width;
         ty2 = 1.0;
-        WindowQuad bottomQuad(WindowQuadShadow, tag);
+        WindowQuad bottomQuad(tag);
         bottomQuad[0] = WindowVertex(bottomRect.left(),  bottomRect.top(),    tx1, ty1);
         bottomQuad[1] = WindowVertex(bottomRect.right(), bottomRect.top(),    tx2, ty1);
         bottomQuad[2] = WindowVertex(bottomRect.right(), bottomRect.bottom(), tx2, ty2);
@@ -271,7 +271,7 @@ WindowQuadList ShadowItem::buildQuads() const
         ty1 = shadowMargins.top() / height;
         tx2 = leftRect.width() / width;
         ty2 = ty1 + left.height() / height;
-        WindowQuad leftQuad(WindowQuadShadow, tag);
+        WindowQuad leftQuad(tag);
         leftQuad[0] = WindowVertex(leftRect.left(),  leftRect.top(),    tx1, ty1);
         leftQuad[1] = WindowVertex(leftRect.right(), leftRect.top(),    tx2, ty1);
         leftQuad[2] = WindowVertex(leftRect.right(), leftRect.bottom(), tx2, ty2);

@@ -125,7 +125,7 @@ WindowQuadList SurfaceItem::buildQuads() const
     quads.reserve(region.rectCount());
 
     for (const QRectF rect : region) {
-        WindowQuad quad(WindowQuadContents, const_cast<SurfaceItem *>(this));
+        WindowQuad quad(const_cast<SurfaceItem *>(this));
 
         const QPointF windowTopLeft = mapToWindow(rect.topLeft());
         const QPointF windowTopRight = mapToWindow(rect.topRight());

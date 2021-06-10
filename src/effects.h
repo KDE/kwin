@@ -150,7 +150,6 @@ public:
     QSize virtualScreenSize() const override;
     QRect virtualScreenGeometry() const override;
     double animationTimeFactor() const override;
-    WindowQuadType newWindowQuadType() override;
 
     void defineCursor(Qt::CursorShape shape) override;
     bool checkInputWindowEvent(QMouseEvent *e);
@@ -334,7 +333,6 @@ protected:
     QList<EffectWindow*> elevated_windows;
     QMultiMap< int, EffectPair > effect_order;
     QHash< long, int > registered_atoms;
-    int next_window_quad_type;
 
 private:
     void registerPropertyType(long atom, bool reg);

@@ -199,7 +199,7 @@ void MagicLampEffect::deform(EffectWindow* w, int mask, WindowPaintData& data, W
         float offset[2] = {0,0};    // how far has a quad to be moved? Distance between icon and window multiplied by the progress and by the quadFactor
         float p_progress[2] = {0,0};  // the factor which defines how far the x values have to be changed
                             // factor is the current moved y value diveded by the distance between icon and window
-        WindowQuad lastQuad(WindowQuadError);
+        WindowQuad lastQuad;
         lastQuad[0].setX(-1);
         lastQuad[0].setY(-1);
         lastQuad[1].setX(-1);

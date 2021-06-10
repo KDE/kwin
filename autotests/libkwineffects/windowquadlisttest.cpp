@@ -26,7 +26,7 @@ private:
 
 KWin::WindowQuad WindowQuadListTest::makeQuad(const QRectF &r)
 {
-    KWin::WindowQuad quad(KWin::WindowQuadContents);
+    KWin::WindowQuad quad;
     quad[ 0 ] = KWin::WindowVertex(r.x(), r.y(), r.x(), r.y());
     quad[ 1 ] = KWin::WindowVertex(r.x() + r.width(), r.y(), r.x() + r.width(), r.y());
     quad[ 2 ] = KWin::WindowVertex(r.x() + r.width(), r.y() + r.height(), r.x() + r.width(), r.y() + r.height());

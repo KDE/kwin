@@ -176,7 +176,7 @@ void DeformEffect::drawWindow(EffectWindow *window, int mask, const QRegion& reg
 
     QRectF visibleRect = expandedGeometry;
     visibleRect.moveTopLeft(expandedGeometry.topLeft() - frameGeometry.topLeft());
-    WindowQuad quad(WindowQuadContents);
+    WindowQuad quad;
     quad[0] = WindowVertex(visibleRect.topLeft(), QPointF(0, 0));
     quad[1] = WindowVertex(visibleRect.topRight(), QPointF(1, 0));
     quad[2] = WindowVertex(visibleRect.bottomRight(), QPointF(1, 1));

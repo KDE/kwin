@@ -1255,36 +1255,6 @@ void WindowQuadList::makeArrays(float **vertices, float **texcoords, const QSize
     }
 }
 
-WindowQuadList WindowQuadList::select(WindowQuadType type) const
-{
-    Q_FOREACH (const WindowQuad & q, *this) {
-        if (q.type() != type) { // something else than ones to select, make a copy and filter
-            WindowQuadList ret;
-            Q_FOREACH (const WindowQuad & q, *this) {
-                if (q.type() == type)
-                    ret.append(q);
-            }
-            return ret;
-        }
-    }
-    return *this; // nothing to filter out
-}
-
-WindowQuadList WindowQuadList::filterOut(WindowQuadType type) const
-{
-    for (const WindowQuad & q : *this) {
-        if (q.type() == type) { // something to filter out, make a copy and filter
-            WindowQuadList ret;
-            Q_FOREACH (const WindowQuad & q, *this) {
-                if (q.type() != type)
-                    ret.append(q);
-            }
-            return ret;
-        }
-    }
-    return *this; // nothing to filter out
-}
-
 bool WindowQuadList::smoothNeeded() const
 {
     return std::any_of(constBegin(), constEnd(), [] (const WindowQuad & q) { return q.smoothNeeded(); });

@@ -178,23 +178,6 @@ X-KDE-Library=kwin4_effect_cooleffect
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
         KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
-enum WindowQuadType {
-    WindowQuadError, // for the stupid default ctor
-    WindowQuadContents,
-    WindowQuadDecoration,
-    // Shadow Quad types
-    WindowQuadShadow, // OpenGL only. The other shadow types are only used by Xrender
-    WindowQuadShadowTop,
-    WindowQuadShadowTopRight,
-    WindowQuadShadowRight,
-    WindowQuadShadowBottomRight,
-    WindowQuadShadowBottom,
-    WindowQuadShadowBottomLeft,
-    WindowQuadShadowLeft,
-    WindowQuadShadowTopLeft,
-    EFFECT_QUAD_TYPE_START = 100 ///< @internal
-};
-
 /**
  * EffectWindow::setData() and EffectWindow::data() global roles.
  * All values between 0 and 999 are reserved for global roles.
@@ -1072,7 +1055,6 @@ public:
      * if used manually.
      */
     virtual double animationTimeFactor() const = 0;
-    virtual WindowQuadType newWindowQuadType() = 0;
 
     Q_SCRIPTABLE virtual KWin::EffectWindow* findWindow(WId id) const = 0;
     Q_SCRIPTABLE virtual KWin::EffectWindow* findWindow(KWaylandServer::SurfaceInterface *surf) const = 0;
@@ -2614,16 +2596,13 @@ private:
 class KWINEFFECTS_EXPORT WindowQuad
 {
 public:
-    explicit WindowQuad(WindowQuadType type, void *userData = nullptr);
+    explicit WindowQuad(void *userData = nullptr);
     WindowQuad makeSubQuad(double x1, double y1, double x2, double y2) const;
     WindowVertex& operator[](int index);
     const WindowVertex& operator[](int index) const;
-    WindowQuadType type() const;
     void setUVAxisSwapped(bool value) { uvSwapped = value; }
     bool uvAxisSwapped() const { return uvSwapped; }
     void *userData() const;
-    bool decoration() const;
-    bool effect() const;
     double left() const;
     double right() const;
     double top() const;
@@ -2638,7 +2617,6 @@ private:
     friend class WindowQuadList;
     WindowVertex verts[ 4 ];
     void *m_userData;
-    WindowQuadType quadType; // 0 - contents, 1 - decoration
     bool uvSwapped;
 };
 
@@ -2650,8 +2628,6 @@ public:
     WindowQuadList splitAtY(double y) const;
     WindowQuadList makeGrid(int maxquadsize) const;
     WindowQuadList makeRegularGrid(int xSubdivisions, int ySubdivisions) const;
-    WindowQuadList select(WindowQuadType type) const;
-    WindowQuadList filterOut(WindowQuadType type) const;
     bool smoothNeeded() const;
     void makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const QMatrix4x4 &matrix) const;
     void makeArrays(float** vertices, float** texcoords, const QSizeF &size, bool yInverted) const;
@@ -3822,9 +3798,8 @@ void WindowVertex::setY(double y)
 ***************************************************************/
 
 inline
-WindowQuad::WindowQuad(WindowQuadType t, void *userData)
+WindowQuad::WindowQuad(void *userData)
     : m_userData(userData)
-    , quadType(t)
     , uvSwapped(false)
 {
 }
@@ -3844,30 +3819,9 @@ const WindowVertex& WindowQuad::operator[](int index) const
 }
 
 inline
-WindowQuadType WindowQuad::type() const
-{
-    Q_ASSERT(quadType != WindowQuadError);
-    return quadType;
-}
-
-inline
 void *WindowQuad::userData() const
 {
     return m_userData;
-}
-
-inline
-bool WindowQuad::decoration() const
-{
-    Q_ASSERT(quadType != WindowQuadError);
-    return quadType == WindowQuadDecoration;
-}
-
-inline
-bool WindowQuad::effect() const
-{
-    Q_ASSERT(quadType != WindowQuadError);
-    return quadType >= EFFECT_QUAD_TYPE_START;
 }
 
 inline

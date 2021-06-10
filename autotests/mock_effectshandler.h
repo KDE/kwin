@@ -149,9 +149,6 @@ public:
         return false;
     }
     void moveWindow(KWin::EffectWindow *, const QPoint &, bool, double) override {}
-    KWin::WindowQuadType newWindowQuadType() override {
-        return KWin::WindowQuadError;
-    }
     int numberOfDesktops() const override {
         return 0;
     }

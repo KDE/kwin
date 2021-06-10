@@ -113,7 +113,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     : EffectsHandler(scene->compositingType())
     , keyboard_grab_effect(nullptr)
     , fullscreen_effect(nullptr)
-    , next_window_quad_type(EFFECT_QUAD_TYPE_START)
     , m_compositor(compositor)
     , m_scene(scene)
     , m_desktopRendering(false)
@@ -1030,11 +1029,6 @@ bool EffectsHandlerImpl::optionRollOverDesktops() const
 double EffectsHandlerImpl::animationTimeFactor() const
 {
     return options->animationTimeFactor();
-}
-
-WindowQuadType EffectsHandlerImpl::newWindowQuadType()
-{
-    return WindowQuadType(next_window_quad_type++);
 }
 
 EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
