@@ -8,9 +8,14 @@
 */
 
 #include "egl_multi_backend.h"
+#include <config-kwin.h>
 #include "logging.h"
+#if HAVE_GBM
 #include "egl_gbm_backend.h"
+#endif
+#if HAVE_EGL_STREAMS
 #include "egl_stream_backend.h"
+#endif
 #include "drm_backend.h"
 #include "drm_gpu.h"
 
@@ -129,14 +134,20 @@ void EglMultiBackend::addGpu(DrmGpu *gpu)
 {
     AbstractEglDrmBackend *backend;
     if (gpu->useEglStreams()) {
+#if HAVE_EGL_STREAMS
         backend = new EglStreamBackend(m_platform, gpu);
+#endif
     } else {
+#if HAVE_GBM
         backend = new EglGbmBackend(m_platform, gpu);
+#endif
     }
-    if (m_initialized) {
-        backend->init();
+    if (backend) {
+        if (m_initialized) {
+            backend->init();
+        }
+        m_backends.append(backend);
     }
-    m_backends.append(backend);
 }
 
 void EglMultiBackend::removeGpu(DrmGpu *gpu)

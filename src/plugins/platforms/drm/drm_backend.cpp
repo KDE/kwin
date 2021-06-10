@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_backend.h"
+#include <config-kwin.h>
 #include "drm_output.h"
 #include "drm_object_connector.h"
 #include "drm_object_crtc.h"

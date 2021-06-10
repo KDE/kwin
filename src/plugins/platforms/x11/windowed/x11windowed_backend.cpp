@@ -8,6 +8,7 @@
 */
 #include "x11windowed_backend.h"
 #include "x11windowed_output.h"
+#include <config-kwin.h>
 #include "scene_qpainter_x11_backend.h"
 #include "logging.h"
 #include "wayland_server.h"
