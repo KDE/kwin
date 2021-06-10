@@ -447,49 +447,6 @@ QRect AnimationEffect::clipRect(const QRect &geo, const AniData &anim) const
     return clip;
 }
 
-void AnimationEffect::clipWindow(const EffectWindow *w, const AniData &anim, WindowQuadList &quads) const
-{
-    return;
-    const QRect geo = w->expandedGeometry();
-    QRect clip = AnimationEffect::clipRect(geo, anim);
-    WindowQuadList filtered;
-    if (clip.left() != geo.left()) {
-        quads = quads.splitAtX(clip.left());
-        Q_FOREACH (const WindowQuad &quad, quads) {
-            if (quad.right() >= clip.left())
-                filtered << quad;
-        }
-        quads = filtered;
-        filtered.clear();
-    }
-    if (clip.right() != geo.right()) {
-        quads = quads.splitAtX(clip.left());
-        Q_FOREACH (const WindowQuad &quad, quads) {
-            if (quad.right() <= clip.right())
-                filtered << quad;
-        }
-        quads = filtered;
-        filtered.clear();
-    }
-    if (clip.top() != geo.top()) {
-        quads = quads.splitAtY(clip.top());
-        Q_FOREACH (const WindowQuad &quad, quads) {
-            if (quad.top() >= clip.top())
-                filtered << quad;
-        }
-        quads = filtered;
-        filtered.clear();
-    }
-    if (clip.bottom() != geo.bottom()) {
-        quads = quads.splitAtY(clip.bottom());
-        Q_FOREACH (const WindowQuad &quad, quads) {
-            if (quad.bottom() <= clip.bottom())
-                filtered << quad;
-        }
-        quads = filtered;
-    }
-}
-
 void AnimationEffect::disconnectGeometryChanges()
 {
     disconnect(effects, &EffectsHandler::windowExpandedGeometryChanged,
@@ -513,8 +470,6 @@ void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
                 data.setTranslucent();
             else if (!(anim->attribute == Brightness || anim->attribute == Saturation)) {
                 data.setTransformed();
-                if (anim->attribute == Clip)
-                    clipWindow(w, *anim, data.quads);
             }
 
             paintDeleted |= anim->keepAlive;

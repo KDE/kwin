@@ -377,7 +377,6 @@ protected:
 private:
     quint64 p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive);
     QRect clipRect(const QRect &windowRect, const AniData&) const;
-    void clipWindow(const EffectWindow *, const AniData &, WindowQuadList &) const;
     float interpolated( const AniData&, int i = 0 ) const;
     float progress( const AniData& ) const;
     void disconnectGeometryChanges();
