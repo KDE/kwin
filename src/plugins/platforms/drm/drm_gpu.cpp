@@ -8,7 +8,7 @@
 */
 
 #include "drm_gpu.h"
-
+#include <config-kwin.h>
 #include "drm_backend.h"
 #include "drm_output.h"
 #include "drm_object_connector.h"
