@@ -340,7 +340,6 @@ public:
     void updateToplevel(Deleted *deleted);
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();
-    void preprocess(Item *item);
     WindowItem *windowItem() const;
     SurfaceItem *surfaceItem() const;
     ShadowItem *shadowItem() const;

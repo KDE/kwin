@@ -245,6 +245,7 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
 
 void SceneQPainter::Window::renderItem(QPainter *painter, Item *item) const
 {
+    item->preprocess();
     painter->save();
     painter->translate(item->position());
 

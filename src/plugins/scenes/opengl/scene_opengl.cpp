@@ -1217,6 +1217,8 @@ static WindowQuadList clipQuads(const Item *item, const OpenGLWindow::RenderCont
 
 void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
 {
+    item->preprocess();
+
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
         WindowQuadList quads = clipQuads(item, context);
         if (!quads.isEmpty()) {

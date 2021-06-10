@@ -239,9 +239,6 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
     QVector<Phase2Data> phase2;
     phase2.reserve(stacking_order.size());
     Q_FOREACH (Window * w, stacking_order) { // bottom to top
-        // Let the scene window update the window pixmap tree.
-        w->preprocess(w->windowItem());
-
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
         // the next frame within Effects::prePaintWindow.
@@ -310,9 +307,6 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
         window->resetPaintingEnabled();
         data.paint = region;
         accumulateRepaints(window->windowItem(), painted_screen, &data.paint);
-
-        // Let the scene window update the window pixmap tree.
-        window->preprocess(window->windowItem());
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
         opaqueFullscreen = false; // TODO: do we care about unmanged windows here (maybe input windows?)
@@ -857,16 +851,6 @@ void Scene::Window::enablePainting(int reason)
 void Scene::Window::disablePainting(int reason)
 {
     disable_painting |= reason;
-}
-
-void Scene::Window::preprocess(Item *item)
-{
-    item->preprocess();
-
-    const QList<Item *> children = item->childItems();
-    for (Item *child : children) {
-        preprocess(child);
-    }
 }
 
 WindowItem *Scene::Window::windowItem() const

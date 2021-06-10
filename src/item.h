@@ -100,6 +100,7 @@ public:
     void resetRepaints(int screen);
 
     WindowQuadList quads() const;
+    virtual void preprocess();
 
 Q_SIGNALS:
     /**
@@ -126,7 +127,6 @@ Q_SIGNALS:
     void boundingRectChanged();
 
 protected:
-    virtual void preprocess();
     virtual WindowQuadList buildQuads() const;
     void discardQuads();
 
@@ -153,8 +153,6 @@ private:
     QVector<QRegion> m_repaints;
     mutable WindowQuadList m_quads;
     mutable bool m_quadsValid = false;
-
-    friend class Scene::Window;
 };
 
 } // namespace KWin
