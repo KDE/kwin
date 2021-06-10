@@ -1110,10 +1110,10 @@ OpenGLWindow::~OpenGLWindow()
 {
 }
 
-QMatrix4x4 OpenGLWindow::transformation(int mask, const WindowPaintData &data) const
+static QMatrix4x4 transformation(const QPoint &position, int mask, const WindowPaintData &data)
 {
     QMatrix4x4 matrix;
-    matrix.translate(x(), y());
+    matrix.translate(position.x(), position.y());
 
     if (!(mask & Scene::PAINT_WINDOW_TRANSFORMED))
         return matrix;
@@ -1145,11 +1145,13 @@ bool OpenGLWindow::beginRenderWindow(int mask, const QRegion &region, WindowPain
         WindowQuadList quads;
         quads.reserve(data.quads.count());
 
-        const QRegion filterRegion = region.translated(-x(), -y());
         // split all quads in bounding rect with the actual rects in the region
         for (const WindowQuad &quad : qAsConst(data.quads)) {
-            for (const QRect &r : filterRegion) {
-                const QRectF rf(r);
+            const Item *item = static_cast<const Item *>(quad.userData());
+
+            const QPoint position = item->rootPosition();
+            for (const QRect &r : region) {
+                const QRectF rf(r.translated(-position));
                 const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
                 const QRectF &intersected = rf.intersected(quadRect);
                 if (intersected.isValid()) {
@@ -1243,7 +1245,7 @@ static GLTexture *bindSurfaceTexture(SurfaceItem *surfaceItem)
     return platformSurfaceTexture->texture();
 }
 
-void OpenGLWindow::createRenderNode(Item *item, RenderContext *context, const WindowPaintData &data)
+void OpenGLWindow::createRenderNode(Item *item, RenderContext *context, int mask, const WindowPaintData &data)
 {
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
         WindowQuadList quads = context->quads.value(item);
@@ -1252,6 +1254,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context, const Wi
             context->renderNodes.append(RenderNode{
                 .texture = shadow->shadowTexture(),
                 .quads = quads,
+                .transformMatrix = transformation(item->rootPosition(), mask, data),
                 .opacity = data.opacity(),
                 .hasAlpha = true,
                 .coordinateType = NormalizedCoordinates,
@@ -1264,6 +1267,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context, const Wi
             context->renderNodes.append(RenderNode{
                 .texture = renderer->texture(),
                 .quads = quads,
+                .transformMatrix = transformation(item->rootPosition(), mask, data),
                 .opacity = data.opacity(),
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
@@ -1277,6 +1281,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context, const Wi
                 context->renderNodes.append(RenderNode{
                     .texture = bindSurfaceTexture(surfaceItem),
                     .quads = quads,
+                    .transformMatrix = transformation(item->rootPosition(), mask, data),
                     .opacity = data.opacity(),
                     .hasAlpha = pixmap->hasAlphaChannel(),
                     .coordinateType = UnnormalizedCoordinates,
@@ -1288,7 +1293,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context, const Wi
     const QList<Item *> childItems = item->childItems();
     for (Item *childItem : childItems) {
         if (childItem->isVisible()) {
-            createRenderNode(childItem, context, data);
+            createRenderNode(childItem, context, mask ,data);
         }
     }
 }
@@ -1323,10 +1328,6 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     if (!beginRenderWindow(mask, region, data))
         return;
 
-    QMatrix4x4 windowMatrix = transformation(mask, data);
-    const QMatrix4x4 modelViewProjection = modelViewProjectionMatrix(mask, data);
-    const QMatrix4x4 mvpMatrix = modelViewProjection * windowMatrix;
-
     GLShader *shader = data.shader;
     GLenum filter;
 
@@ -1353,8 +1354,6 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
         shader = ShaderManager::instance()->pushShader(traits);
     }
-    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
-
     shader->setUniform(GLShader::Saturation, data.saturation());
 
     RenderContext renderContext;
@@ -1364,7 +1363,7 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
         Q_ASSERT(item);
         renderContext.quads[item].append(quad);
     }
-    createRenderNode(windowItem(), &renderContext, data);
+    createRenderNode(windowItem(), &renderContext, mask, data);
 
     const bool indexedQuads = GLVertexBuffer::supportsIndexedQuads();
     const GLenum primitiveType = indexedQuads ? GL_QUADS : GL_TRIANGLES;
@@ -1397,6 +1396,7 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
     float opacity = -1.0;
 
+    const QMatrix4x4 modelViewProjection = modelViewProjectionMatrix(mask, data);
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
         if (renderNode.vertexCount == 0)
@@ -1404,6 +1404,8 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
         setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
 
+        shader->setUniform(GLShader::ModelViewProjectionMatrix,
+                           modelViewProjection * renderNode.transformMatrix);
         if (opacity != renderNode.opacity) {
             shader->setUniform(GLShader::ModulationConstant,
                                modulate(renderNode.opacity, data.brightness()));

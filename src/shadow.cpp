@@ -176,11 +176,11 @@ bool Shadow::init(const QVector< uint32_t > &data)
         m_shadowElements[i] = QPixmap::fromImage(image);
         free(reply);
     }
-    m_topOffset = data[ShadowElementsCount];
-    m_rightOffset = data[ShadowElementsCount+1];
-    m_bottomOffset = data[ShadowElementsCount+2];
-    m_leftOffset = data[ShadowElementsCount+3];
-    updateShadowRegion();
+    m_offset = QMargins(data[ShadowElementsCount + 3],
+                        data[ShadowElementsCount],
+                        data[ShadowElementsCount + 1],
+                        data[ShadowElementsCount + 2]);
+    Q_EMIT offsetChanged();
     if (!prepareBackend()) {
         return false;
     }
@@ -205,12 +205,8 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
     connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::updateShadow);
     connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged,       m_topLevel, &Toplevel::updateShadow);
 
-    const QMargins &p = m_decorationShadow->padding();
-    m_topOffset    = p.top();
-    m_rightOffset  = p.right();
-    m_bottomOffset = p.bottom();
-    m_leftOffset   = p.left();
-    updateShadowRegion();
+    m_offset = m_decorationShadow->padding();
+    Q_EMIT offsetChanged();
     if (!prepareBackend()) {
         return false;
     }
@@ -233,12 +229,8 @@ bool Shadow::init(const QPointer< KWaylandServer::ShadowInterface > &shadow)
     m_shadowElements[ShadowElementLeft] = shadow->left() ? QPixmap::fromImage(shadow->left()->data().copy()) : QPixmap();
     m_shadowElements[ShadowElementTopLeft] = shadow->topLeft() ? QPixmap::fromImage(shadow->topLeft()->data().copy()) : QPixmap();
 
-    const QMarginsF &p = shadow->offset();
-    m_topOffset    = p.top();
-    m_rightOffset  = p.right();
-    m_bottomOffset = p.bottom();
-    m_leftOffset   = p.left();
-    updateShadowRegion();
+    m_offset = shadow->offset().toMargins();
+    Q_EMIT offsetChanged();
     if (!prepareBackend()) {
         return false;
     }
@@ -271,30 +263,14 @@ bool Shadow::init(const QWindow *window)
     m_shadowElements[ShadowElementBottom] = QPixmap::fromImage(bottomTile);
     m_shadowElements[ShadowElementBottomLeft] = QPixmap::fromImage(bottomLeftTile);
 
-    const QMargins padding = window->property("kwin_shadow_padding").value<QMargins>();
-
-    m_leftOffset = padding.left();
-    m_topOffset = padding.top();
-    m_rightOffset = padding.right();
-    m_bottomOffset = padding.bottom();
-
-    updateShadowRegion();
+    m_offset = window->property("kwin_shadow_padding").value<QMargins>();
+    Q_EMIT offsetChanged();
 
     if (!prepareBackend()) {
         return false;
     }
     Q_EMIT textureChanged();
     return true;
-}
-
-void Shadow::updateShadowRegion()
-{
-    const QRect top(0, - m_topOffset, m_topLevel->width(), m_topOffset);
-    const QRect right(m_topLevel->width(), - m_topOffset, m_rightOffset, m_topLevel->height() + m_topOffset + m_bottomOffset);
-    const QRect bottom(0, m_topLevel->height(), m_topLevel->width(), m_bottomOffset);
-    const QRect left(- m_leftOffset, - m_topOffset, m_leftOffset, m_topLevel->height() + m_topOffset + m_bottomOffset);
-    m_shadowRegion = QRegion(top).united(right).united(bottom).united(left);
-    Q_EMIT regionChanged();
 }
 
 bool Shadow::updateShadow()
@@ -351,7 +327,7 @@ void Shadow::geometryChanged()
         return;
     }
     m_cachedSize = m_topLevel->size();
-    updateShadowRegion();
+    Q_EMIT rectChanged();
 }
 
 QImage Shadow::decorationShadowImage() const

@@ -51,13 +51,6 @@ public:
     ~Shadow() override;
 
     /**
-     * @return Region of the shadow.
-     */
-    const QRegion &shadowRegion() const {
-        return m_shadowRegion;
-    };
-
-    /**
      * This method updates the Shadow when the property has been changed.
      * It is the responsibility of the owner of the Shadow to call this method
      * whenever the owner receives a PropertyNotify event.
@@ -109,21 +102,16 @@ public:
     };
     QSize elementSize(ShadowElements element) const;
 
-    int topOffset() const {
-        return m_topOffset;
-    };
-    int rightOffset() const {
-        return m_rightOffset;
-    };
-    int bottomOffset() const {
-        return m_bottomOffset;
-    };
-    int leftOffset() const {
-        return m_leftOffset;
-    };
+    QRect rect() const {
+        return QRect(QPoint(0, 0), m_cachedSize);
+    }
+    QMargins offset() const {
+        return m_offset;
+    }
 
 Q_SIGNALS:
-    void regionChanged();
+    void offsetChanged();
+    void rectChanged();
     void textureChanged();
 
 public Q_SLOTS:
@@ -136,7 +124,6 @@ protected:
         return m_shadowElements[element];
     };
 
-    void updateShadowRegion();
     virtual bool prepareBackend() = 0;
     void setShadowElement(const QPixmap &shadow, ShadowElements element);
 
@@ -154,12 +141,8 @@ private:
     // shadow pixmaps
     QPixmap m_shadowElements[ShadowElementsCount];
     // shadow offsets
-    int m_topOffset;
-    int m_rightOffset;
-    int m_bottomOffset;
-    int m_leftOffset;
+    QMargins m_offset;
     // caches
-    QRegion m_shadowRegion;
     QSize m_cachedSize;
     // Decoration based shadows
     QSharedPointer<KDecoration2::DecorationShadow> m_decorationShadow;

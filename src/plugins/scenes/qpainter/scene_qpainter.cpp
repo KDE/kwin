@@ -195,14 +195,13 @@ SceneQPainter::Window::~Window()
 void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const WindowPaintData &data)
 {
     QRegion region = _region;
+
+    const QRect boundingRect = windowItem()->mapToGlobal(windowItem()->boundingRect());
     if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
-        region &= toplevel->visibleGeometry();
+        region &= boundingRect;
 
     if (region.isEmpty())
         return;
-    if (!surfaceItem()) {
-        return;
-    }
 
     QPainter *scenePainter = m_scene->scenePainter();
     QPainter *painter = scenePainter;
@@ -210,7 +209,6 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     painter->setClipRegion(region);
     painter->setClipping(true);
 
-    painter->translate(x(), y());
     if (mask & PAINT_WINDOW_TRANSFORMED) {
         painter->translate(data.xTranslation(), data.yTranslation());
         painter->scale(data.xScale(), data.yScale());
@@ -221,11 +219,11 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     QPainter tempPainter;
     if (!opaque) {
         // need a temp render target which we later on blit to the screen
-        tempImage = QImage(toplevel->visibleGeometry().size(), QImage::Format_ARGB32_Premultiplied);
+        tempImage = QImage(boundingRect.size(), QImage::Format_ARGB32_Premultiplied);
         tempImage.fill(Qt::transparent);
         tempPainter.begin(&tempImage);
         tempPainter.save();
-        tempPainter.translate(toplevel->frameGeometry().topLeft() - toplevel->visibleGeometry().topLeft());
+        tempPainter.translate(-boundingRect.topLeft());
         painter = &tempPainter;
     }
 
@@ -236,10 +234,10 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
         tempPainter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
         QColor translucent(Qt::transparent);
         translucent.setAlphaF(data.opacity());
-        tempPainter.fillRect(QRect(QPoint(0, 0), toplevel->visibleGeometry().size()), translucent);
+        tempPainter.fillRect(QRect(QPoint(0, 0), boundingRect.size()), translucent);
         tempPainter.end();
         painter = scenePainter;
-        painter->drawImage(toplevel->visibleGeometry().topLeft() - toplevel->frameGeometry().topLeft(), tempImage);
+        painter->drawImage(boundingRect.topLeft(), tempImage);
     }
 
     painter->restore();
@@ -247,6 +245,9 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
 
 void SceneQPainter::Window::renderItem(QPainter *painter, Item *item) const
 {
+    painter->save();
+    painter->translate(item->position());
+
     if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
         renderSurfaceItem(painter, surfaceItem);
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
@@ -259,6 +260,8 @@ void SceneQPainter::Window::renderItem(QPainter *painter, Item *item) const
             renderItem(painter, childItem);
         }
     }
+
+    painter->restore();
 }
 
 void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const
@@ -279,14 +282,10 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
 
     const QRegion shape = surfaceItem->shape();
     for (const QRectF rect : shape) {
-        const QPointF windowTopLeft = surfaceItem->mapToWindow(rect.topLeft());
-        const QPointF windowBottomRight = surfaceItem->mapToWindow(rect.bottomRight());
-
         const QPointF bufferTopLeft = surfaceItem->mapToBuffer(rect.topLeft());
         const QPointF bufferBottomRight = surfaceItem->mapToBuffer(rect.bottomRight());
 
-        painter->drawImage(QRectF(windowTopLeft, windowBottomRight),
-                           platformSurfaceTexture->image(),
+        painter->drawImage(rect, platformSurfaceTexture->image(),
                            QRectF(bufferTopLeft, bufferBottomRight));
     }
 }

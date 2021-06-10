@@ -21,7 +21,6 @@ class KWIN_EXPORT SurfaceItem : public Item
     Q_OBJECT
 
 public:
-    QPointF mapToWindow(const QPointF &point) const;
     virtual QPointF mapToBuffer(const QPointF &point) const = 0;
 
     virtual QRegion shape() const;

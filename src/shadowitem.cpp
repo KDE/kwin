@@ -14,10 +14,11 @@ ShadowItem::ShadowItem(Shadow *shadow, Scene::Window *window, Item *parent)
     : Item(window, parent)
     , m_shadow(shadow)
 {
-    connect(shadow, &Shadow::regionChanged, this, &ShadowItem::handleRegionChanged);
+    connect(shadow, &Shadow::offsetChanged, this, &ShadowItem::updateGeometry);
+    connect(shadow, &Shadow::rectChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::textureChanged, this, &ShadowItem::handleTextureChanged);
 
-    handleRegionChanged();
+    updateGeometry();
     handleTextureChanged();
 }
 
@@ -30,9 +31,9 @@ Shadow *ShadowItem::shadow() const
     return m_shadow.data();
 }
 
-void ShadowItem::handleRegionChanged()
+void ShadowItem::updateGeometry()
 {
-    const QRect rect = shadow()->shadowRegion().boundingRect();
+    const QRect rect = m_shadow->rect() + m_shadow->offset();
 
     setPosition(rect.topLeft());
     setSize(rect.size());
@@ -91,9 +92,7 @@ WindowQuadList ShadowItem::buildQuads() const
             std::max({topRight.width(), right.width(), bottomRight.width()}),
             std::max({bottomRight.height(), bottom.height(), bottomLeft.height()}));
 
-    const QRectF outerRect(QPointF(-m_shadow->leftOffset(), -m_shadow->topOffset()),
-                           QPointF(toplevel->width() + m_shadow->rightOffset(),
-                                   toplevel->height() + m_shadow->bottomOffset()));
+    const QRectF outerRect = rect();
 
     const int width = shadowMargins.left() + std::max(top.width(), bottom.width()) + shadowMargins.right();
     const int height = shadowMargins.top() + std::max(left.height(), right.height()) + shadowMargins.bottom();

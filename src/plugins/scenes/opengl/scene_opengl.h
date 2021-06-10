@@ -136,6 +136,7 @@ public:
     {
         GLTexture *texture = nullptr;
         WindowQuadList quads;
+        QMatrix4x4 transformMatrix;
         int firstVertex = 0;
         int vertexCount = 0;
         qreal opacity = 1;
@@ -156,11 +157,10 @@ public:
     QSharedPointer<GLTexture> windowTexture() override;
 
 private:
-    QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     QMatrix4x4 modelViewProjectionMatrix(int mask, const WindowPaintData &data) const;
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
-    void createRenderNode(Item *item, RenderContext *context, const WindowPaintData &data);
+    void createRenderNode(Item *item, RenderContext *context, int mask, const WindowPaintData &data);
     bool beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data);
     void endRenderWindow();
 

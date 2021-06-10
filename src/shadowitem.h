@@ -29,7 +29,7 @@ protected:
 
 private Q_SLOTS:
     void handleTextureChanged();
-    void handleRegionChanged();
+    void updateGeometry();
 
 private:
     QScopedPointer<Shadow> m_shadow;

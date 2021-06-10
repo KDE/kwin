@@ -14,11 +14,6 @@ SurfaceItem::SurfaceItem(Scene::Window *window, Item *parent)
 {
 }
 
-QPointF SurfaceItem::mapToWindow(const QPointF &point) const
-{
-    return rootPosition() + point - window()->pos();
-}
-
 QRegion SurfaceItem::shape() const
 {
     return QRegion();
@@ -127,20 +122,15 @@ WindowQuadList SurfaceItem::buildQuads() const
     for (const QRectF rect : region) {
         WindowQuad quad(const_cast<SurfaceItem *>(this));
 
-        const QPointF windowTopLeft = mapToWindow(rect.topLeft());
-        const QPointF windowTopRight = mapToWindow(rect.topRight());
-        const QPointF windowBottomRight = mapToWindow(rect.bottomRight());
-        const QPointF windowBottomLeft = mapToWindow(rect.bottomLeft());
-
         const QPointF bufferTopLeft = mapToBuffer(rect.topLeft());
         const QPointF bufferTopRight = mapToBuffer(rect.topRight());
         const QPointF bufferBottomRight = mapToBuffer(rect.bottomRight());
         const QPointF bufferBottomLeft = mapToBuffer(rect.bottomLeft());
 
-        quad[0] = WindowVertex(windowTopLeft, bufferTopLeft);
-        quad[1] = WindowVertex(windowTopRight, bufferTopRight);
-        quad[2] = WindowVertex(windowBottomRight, bufferBottomRight);
-        quad[3] = WindowVertex(windowBottomLeft, bufferBottomLeft);
+        quad[0] = WindowVertex(rect.topLeft(), bufferTopLeft);
+        quad[1] = WindowVertex(rect.topRight(), bufferTopRight);
+        quad[2] = WindowVertex(rect.bottomRight(), bufferBottomRight);
+        quad[3] = WindowVertex(rect.bottomLeft(), bufferBottomLeft);
 
         quads << quad;
     }
