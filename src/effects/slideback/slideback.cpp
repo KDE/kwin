@@ -177,8 +177,6 @@ void SlideBackEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
         region = region.intersected(r);
     }
     effects->paintWindow(w, mask, region, data);
-    for (int i = clippedRegions.count() - 1; i > -1; --i)
-        PaintClipper::pop(clippedRegions.at(i));
     clippedRegions.clear();
 }
 

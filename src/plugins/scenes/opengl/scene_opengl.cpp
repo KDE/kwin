@@ -761,25 +761,23 @@ QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) co
 
 void SceneOpenGL::paintBackground(const QRegion &region)
 {
-    PaintClipper pc(region);
-    if (!PaintClipper::clip()) {
+    if (region == infiniteRegion()) {
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
-        return;
+    } else if (!region.isEmpty()) {
+        QVector<float> verts;
+        verts.reserve(region.rectCount() * 6 * 2);
+
+        for (const QRect &r : region) {
+            verts << r.x() + r.width() << r.y();
+            verts << r.x() << r.y();
+            verts << r.x() << r.y() + r.height();
+            verts << r.x() << r.y() + r.height();
+            verts << r.x() + r.width() << r.y() + r.height();
+            verts << r.x() + r.width() << r.y();
+        }
+        doPaintBackground(verts);
     }
-    if (pc.clip() && pc.paintArea().isEmpty())
-        return; // no background to paint
-    QVector<float> verts;
-    for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
-        QRect r = iterator.boundingRect();
-        verts << r.x() + r.width() << r.y();
-        verts << r.x() << r.y();
-        verts << r.x() << r.y() + r.height();
-        verts << r.x() << r.y() + r.height();
-        verts << r.x() + r.width() << r.y() + r.height();
-        verts << r.x() + r.width() << r.y();
-    }
-    doPaintBackground(verts);
 }
 
 void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)

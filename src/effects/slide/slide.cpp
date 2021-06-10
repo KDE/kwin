@@ -165,12 +165,6 @@ void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &
         }
     }
 
-    // If screen is painted with either PAINT_SCREEN_TRANSFORMED or
-    // PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS there is no clipping!!
-    // Push the screen geometry to the paint clipper so everything outside
-    // of the screen geometry is clipped.
-    PaintClipper pc(QRegion(effects->virtualScreenGeometry()));
-
     // Screen is painted in several passes. Each painting pass paints
     // a single virtual desktop. There could be either 2 or 4 painting
     // passes, depending how an user moves between virtual desktops.

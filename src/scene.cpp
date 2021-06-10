@@ -210,9 +210,6 @@ void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint
     damaged_region = QRegion();
 
     m_paintScreenCount = 0;
-
-    // make sure all clipping is restored
-    Q_ASSERT(!PaintClipper::clip());
 }
 
 // the function that'll be eventually called by paintScreen() above
