@@ -673,7 +673,10 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
             glEnable(GL_FRAMEBUFFER_SRGB);
         }
 
-        copyScreenSampleTexture(vbo, blurRectCount, shape.translated(xTranslate, yTranslate), screenProjection);
+        const QRect screenRect = effects->virtualScreenGeometry();
+        QMatrix4x4 mvp;
+        mvp.ortho(0, screenRect.width(), screenRect.height(), 0, 0, 65535);
+        copyScreenSampleTexture(vbo, blurRectCount, shape.translated(xTranslate, yTranslate), mvp);
     } else {
         m_renderTargets.first()->blitFromFramebuffer(sourceRect, destRect);
 
