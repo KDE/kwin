@@ -330,6 +330,8 @@ void Compositor::startupWithWorkspace()
         registerRenderLoop(platform->renderLoop(), nullptr);
     }
 
+    m_state = State::On;
+
     // Sets also the 'effects' pointer.
     kwinApp()->platform()->createEffectsHandler(this, m_scene);
     connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::removeToplevel);
@@ -356,7 +358,6 @@ void Compositor::startupWithWorkspace()
         }
     }
 
-    m_state = State::On;
     Q_EMIT compositingToggled(true);
 
     if (m_releaseSelectionTimer.isActive()) {
