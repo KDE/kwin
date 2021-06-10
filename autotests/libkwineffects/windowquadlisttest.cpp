@@ -100,10 +100,6 @@ void WindowQuadListTest::testMakeGrid()
                 if (actualVertex.y() != expectedVertex.y()) return false;
                 if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u())) return false;
                 if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v())) return false;
-                if (actualVertex.originalX() != expectedVertex.originalX()) return false;
-                if (actualVertex.originalY() != expectedVertex.originalY()) return false;
-                if (!qFuzzyIsNull(actualVertex.textureX() - expectedVertex.textureX())) return false;
-                if (!qFuzzyIsNull(actualVertex.textureY() - expectedVertex.textureY())) return false;
                 return true;
             };
             found = vertexTest(0) && vertexTest(1) && vertexTest(2) && vertexTest(3);
@@ -187,10 +183,6 @@ void WindowQuadListTest::testMakeRegularGrid()
                 if (actualVertex.y() != expectedVertex.y()) return false;
                 if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u())) return false;
                 if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v())) return false;
-                if (actualVertex.originalX() != expectedVertex.originalX()) return false;
-                if (actualVertex.originalY() != expectedVertex.originalY()) return false;
-                if (!qFuzzyIsNull(actualVertex.textureX() - expectedVertex.textureX())) return false;
-                if (!qFuzzyIsNull(actualVertex.textureY() - expectedVertex.textureY())) return false;
                 return true;
             };
             found = vertexTest(0) && vertexTest(1) && vertexTest(2) && vertexTest(3);

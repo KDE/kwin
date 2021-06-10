@@ -2566,10 +2566,6 @@ public:
     double y() const { return py; }
     double u() const { return tx; }
     double v() const { return ty; }
-    double originalX() const { return ox; }
-    double originalY() const { return oy; }
-    double textureX() const { return tx; }
-    double textureY() const { return ty; }
     void move(double x, double y);
     void setX(double x);
     void setY(double y);
@@ -2578,7 +2574,6 @@ private:
     friend class WindowQuad;
     friend class WindowQuadList;
     double px, py; // position
-    double ox, oy; // origional position
     double tx, ty; // texture coords
 };
 
@@ -2601,12 +2596,6 @@ public:
     double right() const;
     double top() const;
     double bottom() const;
-    double originalLeft() const;
-    double originalRight() const;
-    double originalTop() const;
-    double originalBottom() const;
-    bool smoothNeeded() const;
-    bool isTransformed() const;
 private:
     friend class WindowQuadList;
     WindowVertex verts[ 4 ];
@@ -2621,10 +2610,8 @@ public:
     WindowQuadList splitAtY(double y) const;
     WindowQuadList makeGrid(int maxquadsize) const;
     WindowQuadList makeRegularGrid(int xSubdivisions, int ySubdivisions) const;
-    bool smoothNeeded() const;
     void makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const QMatrix4x4 &matrix) const;
     void makeArrays(float** vertices, float** texcoords, const QSizeF &size, bool yInverted) const;
-    bool isTransformed() const;
 };
 
 class KWINEFFECTS_EXPORT WindowPrePaintData
@@ -3747,20 +3734,20 @@ extern KWINEFFECTS_EXPORT EffectsHandler* effects;
 
 inline
 WindowVertex::WindowVertex()
-    : px(0), py(0), ox(0), oy(0), tx(0), ty(0)
+    : px(0), py(0), tx(0), ty(0)
 {
 }
 
 inline
 WindowVertex::WindowVertex(double _x, double _y, double _tx, double _ty)
-    : px(_x), py(_y), ox(_x), oy(_y), tx(_tx), ty(_ty)
+    : px(_x), py(_y), tx(_tx), ty(_ty)
 {
 }
 
 
 inline
 WindowVertex::WindowVertex(const QPointF &position, const QPointF &texturePosition)
-    : px(position.x()), py(position.y()), ox(position.x()), oy(position.y()), tx(texturePosition.x()), ty(texturePosition.y())
+    : px(position.x()), py(position.y()), tx(texturePosition.x()), ty(texturePosition.y())
 {
 }
 
@@ -3808,15 +3795,6 @@ const WindowVertex& WindowQuad::operator[](int index) const
 }
 
 inline
-bool WindowQuad::isTransformed() const
-{
-    return !(verts[ 0 ].px == verts[ 0 ].ox && verts[ 0 ].py == verts[ 0 ].oy
-             && verts[ 1 ].px == verts[ 1 ].ox && verts[ 1 ].py == verts[ 1 ].oy
-             && verts[ 2 ].px == verts[ 2 ].ox && verts[ 2 ].py == verts[ 2 ].oy
-             && verts[ 3 ].px == verts[ 3 ].ox && verts[ 3 ].py == verts[ 3 ].oy);
-}
-
-inline
 double WindowQuad::left() const
 {
     return qMin(verts[ 0 ].px, qMin(verts[ 1 ].px, qMin(verts[ 2 ].px, verts[ 3 ].px)));
@@ -3838,30 +3816,6 @@ inline
 double WindowQuad::bottom() const
 {
     return qMax(verts[ 0 ].py, qMax(verts[ 1 ].py, qMax(verts[ 2 ].py, verts[ 3 ].py)));
-}
-
-inline
-double WindowQuad::originalLeft() const
-{
-    return verts[ 0 ].ox;
-}
-
-inline
-double WindowQuad::originalRight() const
-{
-    return verts[ 2 ].ox;
-}
-
-inline
-double WindowQuad::originalTop() const
-{
-    return verts[ 0 ].oy;
-}
-
-inline
-double WindowQuad::originalBottom() const
-{
-    return verts[ 2 ].oy;
 }
 
 /***************************************************************

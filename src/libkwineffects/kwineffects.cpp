@@ -843,10 +843,6 @@ EffectWindowGroup::~EffectWindowGroup()
 WindowQuad WindowQuad::makeSubQuad(double x1, double y1, double x2, double y2) const
 {
     Q_ASSERT(x1 < x2 && y1 < y2 && x1 >= left() && x2 <= right() && y1 >= top() && y2 <= bottom());
-#if !defined(QT_NO_DEBUG)
-    if (isTransformed())
-        qFatal("Splitting quads is allowed only in pre-paint calls!");
-#endif
     WindowQuad ret(*this);
     // vertices are clockwise starting from topleft
     ret.verts[ 0 ].px = x1;
@@ -857,15 +853,6 @@ WindowQuad WindowQuad::makeSubQuad(double x1, double y1, double x2, double y2) c
     ret.verts[ 1 ].py = y1;
     ret.verts[ 2 ].py = y2;
     ret.verts[ 3 ].py = y2;
-    // original x/y are supposed to be the same, no transforming is done here
-    ret.verts[ 0 ].ox = x1;
-    ret.verts[ 3 ].ox = x1;
-    ret.verts[ 1 ].ox = x2;
-    ret.verts[ 2 ].ox = x2;
-    ret.verts[ 0 ].oy = y1;
-    ret.verts[ 1 ].oy = y1;
-    ret.verts[ 2 ].oy = y2;
-    ret.verts[ 3 ].oy = y2;
 
     const double xOrigin = left();
     const double yOrigin = top();
@@ -907,15 +894,6 @@ WindowQuad WindowQuad::makeSubQuad(double x1, double y1, double x2, double y2) c
     return ret;
 }
 
-bool WindowQuad::smoothNeeded() const
-{
-    // smoothing is needed if the width or height of the quad does not match the original size
-    double width = verts[ 1 ].ox - verts[ 0 ].ox;
-    double height = verts[ 2 ].oy - verts[ 1 ].oy;
-    return(verts[ 1 ].px - verts[ 0 ].px != width || verts[ 2 ].px - verts[ 3 ].px != width
-           || verts[ 2 ].py - verts[ 1 ].py != height || verts[ 3 ].py - verts[ 0 ].py != height);
-}
-
 /***************************************************************
  WindowQuadList
 ***************************************************************/
@@ -925,10 +903,6 @@ WindowQuadList WindowQuadList::splitAtX(double x) const
     WindowQuadList ret;
     ret.reserve(count());
     for (const WindowQuad & quad : *this) {
-#if !defined(QT_NO_DEBUG)
-        if (quad.isTransformed())
-            qFatal("Splitting quads is allowed only in pre-paint calls!");
-#endif
         bool wholeleft = true;
         bool wholeright = true;
         for (int i = 0;
@@ -958,10 +932,6 @@ WindowQuadList WindowQuadList::splitAtY(double y) const
     WindowQuadList ret;
     ret.reserve(count());
     for (const WindowQuad & quad : *this) {
-#if !defined(QT_NO_DEBUG)
-        if (quad.isTransformed())
-            qFatal("Splitting quads is allowed only in pre-paint calls!");
-#endif
         bool wholetop = true;
         bool wholebottom = true;
         for (int i = 0;
@@ -998,10 +968,6 @@ WindowQuadList WindowQuadList::makeGrid(int maxQuadSize) const
     double bottom = first().bottom();
 
     Q_FOREACH (const WindowQuad &quad, *this) {
-#if !defined(QT_NO_DEBUG)
-        if (quad.isTransformed())
-            qFatal("Splitting quads is allowed only in pre-paint calls!");
-#endif
         left   = qMin(left,   quad.left());
         right  = qMax(right,  quad.right());
         top    = qMin(top,    quad.top());
@@ -1055,10 +1021,6 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
     double bottom = first().bottom();
 
     for (const WindowQuad &quad : *this) {
-#if !defined(QT_NO_DEBUG)
-        if (quad.isTransformed())
-            qFatal("Splitting quads is allowed only in pre-paint calls!");
-#endif
         left   = qMin(left,   quad.left());
         right  = qMax(right,  quad.right());
         top    = qMin(top,    quad.top());
@@ -1251,16 +1213,6 @@ void WindowQuadList::makeArrays(float **vertices, float **texcoords, const QSize
             *tpos++ = yInverted ? (wv.v() / size.height()) : (1.0 - wv.v() / size.height());
         }
     }
-}
-
-bool WindowQuadList::smoothNeeded() const
-{
-    return std::any_of(constBegin(), constEnd(), [] (const WindowQuad & q) { return q.smoothNeeded(); });
-}
-
-bool WindowQuadList::isTransformed() const
-{
-    return std::any_of(constBegin(), constEnd(), [] (const WindowQuad & q) { return q.isTransformed(); });
 }
 
 /***************************************************************
