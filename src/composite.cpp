@@ -27,6 +27,7 @@
 #include "utils.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11syncmanager.h"
 #include "xcbutils.h"
 
 #include <kwingltexture.h>
@@ -694,6 +695,11 @@ X11Compositor::~X11Compositor()
     stop(); // this can't be called in the destructor of Compositor
 }
 
+X11SyncManager *X11Compositor::syncManager() const
+{
+    return m_syncManager.data();
+}
+
 void X11Compositor::toggleCompositing()
 {
     if (m_suspended) {
@@ -773,6 +779,13 @@ void X11Compositor::start()
         return;
     }
     startupWithWorkspace();
+    m_syncManager.reset(X11SyncManager::create());
+}
+
+void X11Compositor::stop()
+{
+    m_syncManager.reset();
+    Compositor::stop();
 }
 
 void X11Compositor::composite(RenderLoop *renderLoop)
@@ -795,7 +808,9 @@ void X11Compositor::composite(RenderLoop *renderLoop)
     }
 
     if (dirtyItems.count() > 0) {
-        scene()->triggerFence();
+        if (m_syncManager) {
+            m_syncManager->triggerFence();
+        }
         xcb_flush(kwinApp()->x11Connection());
     }
 
@@ -809,6 +824,14 @@ void X11Compositor::composite(RenderLoop *renderLoop)
     }
 
     Compositor::composite(renderLoop);
+
+    if (m_syncManager) {
+        if (!m_syncManager->endFrame()) {
+            qCDebug(KWIN_CORE) << "Aborting explicit synchronization with the X command stream.";
+            qCDebug(KWIN_CORE) << "Future frames will be rendered unsynchronized.";
+            m_syncManager.reset();
+        }
+    }
 
     if (m_framesToTestForSafety > 0) {
         if (scene()->compositingType() & OpenGLCompositing) {

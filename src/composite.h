@@ -23,6 +23,7 @@ class CompositorSelectionOwner;
 class RenderLoop;
 class Scene;
 class X11Client;
+class X11SyncManager;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -96,7 +97,7 @@ protected:
     explicit Compositor(QObject *parent = nullptr);
 
     virtual void start() = 0;
-    void stop();
+    virtual void stop();
 
     /**
      * @brief Prepares start.
@@ -177,6 +178,8 @@ public:
     static X11Compositor *create(QObject *parent = nullptr);
     ~X11Compositor() override;
 
+    X11SyncManager *syncManager() const;
+
     /**
      * @brief Suspends the Compositor if it is currently active.
      *
@@ -229,10 +232,12 @@ public:
 
 protected:
     void start() override;
+    void stop() override;
     void composite(RenderLoop *renderLoop) override;
 
 private:
     explicit X11Compositor(QObject *parent);
+    QScopedPointer<X11SyncManager> m_syncManager;
     /**
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
      */

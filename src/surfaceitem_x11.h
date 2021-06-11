@@ -22,6 +22,8 @@ public:
     explicit SurfaceItemX11(Scene::Window *window, Item *parent = nullptr);
     ~SurfaceItemX11() override;
 
+    void preprocess() override;
+
     void processDamage();
     bool fetchDamage();
     void waitForDamage();

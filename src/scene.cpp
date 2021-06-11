@@ -681,10 +681,6 @@ bool Scene::supportsNativeFence() const
     return false;
 }
 
-void Scene::triggerFence()
-{
-}
-
 QMatrix4x4 Scene::screenProjectionMatrix() const
 {
     return QMatrix4x4();

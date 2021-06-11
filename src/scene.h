@@ -153,8 +153,6 @@ public:
 
     virtual QMatrix4x4 screenProjectionMatrix() const;
 
-    virtual void triggerFence();
-
     virtual DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *) = 0;
 
     /**

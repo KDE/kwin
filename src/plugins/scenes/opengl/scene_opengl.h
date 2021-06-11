@@ -23,8 +23,6 @@ namespace KWin
 {
 class LanczosFilter;
 class OpenGLBackend;
-class SyncManager;
-class SyncObject;
 
 class KWIN_EXPORT SceneOpenGL
     : public Scene
@@ -45,14 +43,11 @@ public:
     bool supportsSurfacelessContext() const override;
     bool supportsNativeFence() const override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
-    void triggerFence() override;
     virtual QMatrix4x4 projectionMatrix() const = 0;
     bool animationsSupported() const override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
-
-    void insertWait();
 
     bool debug() const { return m_debug; }
     void initDebugOutput();
@@ -89,8 +84,6 @@ private:
     bool m_resetOccurred = false;
     bool m_debug;
     OpenGLBackend *m_backend;
-    SyncManager *m_syncManager;
-    SyncObject *m_currentFence;
 };
 
 class SceneOpenGL2 : public SceneOpenGL

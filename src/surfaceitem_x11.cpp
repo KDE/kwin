@@ -7,6 +7,7 @@
 #include "surfaceitem_x11.h"
 #include "composite.h"
 #include "scene.h"
+#include "x11syncmanager.h"
 
 namespace KWin
 {
@@ -32,6 +33,17 @@ SurfaceItemX11::SurfaceItemX11(Scene::Window *window, Item *parent)
 
 SurfaceItemX11::~SurfaceItemX11()
 {
+}
+
+void SurfaceItemX11::preprocess()
+{
+    if (!damage().isEmpty()) {
+        X11Compositor *compositor = X11Compositor::self();
+        if (X11SyncManager *syncManager = compositor->syncManager()) {
+            syncManager->insertWait();
+        }
+    }
+    SurfaceItem::preprocess();
 }
 
 void SurfaceItemX11::processDamage()
