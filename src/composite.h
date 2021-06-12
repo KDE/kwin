@@ -143,11 +143,12 @@ private:
     QMap<RenderLoop *, AbstractOutput *> m_renderLoops;
 };
 
-class KWIN_EXPORT WaylandCompositor : public Compositor
+class KWIN_EXPORT WaylandCompositor final : public Compositor
 {
     Q_OBJECT
 public:
     static WaylandCompositor *create(QObject *parent = nullptr);
+    ~WaylandCompositor() override;
 
     void toggleCompositing() override;
 
@@ -158,7 +159,7 @@ private:
     explicit WaylandCompositor(QObject *parent);
 };
 
-class KWIN_EXPORT X11Compositor : public Compositor
+class KWIN_EXPORT X11Compositor final : public Compositor
 {
     Q_OBJECT
 public:
@@ -174,6 +175,7 @@ public:
     Q_FLAG(SuspendReasons)
 
     static X11Compositor *create(QObject *parent = nullptr);
+    ~X11Compositor() override;
 
     /**
      * @brief Suspends the Compositor if it is currently active.

@@ -152,8 +152,6 @@ Compositor::Compositor(QObject* workspace)
 
 Compositor::~Compositor()
 {
-    Q_EMIT aboutToDestroy();
-    stop();
     deleteUnusedSupportProperties();
     destroyCompositorSelection();
     s_compositor = nullptr;
@@ -655,6 +653,12 @@ WaylandCompositor::WaylandCompositor(QObject *parent)
             this, &WaylandCompositor::destroyCompositorSelection);
 }
 
+WaylandCompositor::~WaylandCompositor()
+{
+    Q_EMIT aboutToDestroy();
+    stop(); // this can't be called in the destructor of Compositor
+}
+
 void WaylandCompositor::toggleCompositing()
 {
     // For the shortcut. Not possible on Wayland because we always composite.
@@ -682,6 +686,12 @@ X11Compositor::X11Compositor(QObject *parent)
     if (qEnvironmentVariableIsSet("KWIN_MAX_FRAMES_TESTED")) {
         m_framesToTestForSafety = qEnvironmentVariableIntValue("KWIN_MAX_FRAMES_TESTED");
     }
+}
+
+X11Compositor::~X11Compositor()
+{
+    Q_EMIT aboutToDestroy();
+    stop(); // this can't be called in the destructor of Compositor
 }
 
 void X11Compositor::toggleCompositing()
