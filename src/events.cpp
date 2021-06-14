@@ -351,7 +351,7 @@ bool X11Client::windowEvent(xcb_generic_event_t *e)
         if ((dirtyProperties2 & NET::WM2StartupId) != 0)
             startupIdChanged();
         if (dirtyProperties2 & NET::WM2Opacity) {
-            if (compositing()) {
+            if (Compositor::compositing()) {
                 setOpacity(info->opacityF());
             } else {
                 // forward to the frame if there's possibly another compositing manager running
@@ -1183,7 +1183,7 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
     NET::Properties2 dirtyProperties2;
     info->event(e, &dirtyProperties, &dirtyProperties2);   // pass through the NET stuff
     if (dirtyProperties2 & NET::WM2Opacity) {
-        if (compositing()) {
+        if (Compositor::compositing()) {
             setOpacity(info->opacityF());
         }
     }

@@ -839,7 +839,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         workspace()->restoreSessionStackingOrder(this);
     }
 
-    if (compositing())
+    if (Compositor::compositing())
         // Sending ConfigureNotify is done when setting mapping state below,
         // Getting the first sync response means window is ready for compositing
         sendSyncRequest();
@@ -1135,7 +1135,7 @@ void X11Client::destroyDecoration()
         maybeDestroyX11DecorationRenderer();
         resize(adjustedSize());
         move(grav);
-        if (compositing())
+        if (Compositor::compositing())
             discardWindowPixmap();
         if (!isZombie()) {
             Q_EMIT geometryShapeChanged(this, oldgeom);
@@ -1149,7 +1149,7 @@ void X11Client::maybeCreateX11DecorationRenderer()
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         return;
     }
-    if (!compositing() && decoratedClient()) {
+    if (!Compositor::compositing() && decoratedClient()) {
         m_decorationRenderer.reset(new X11DecorationRenderer(decoratedClient()));
         decoration()->update();
     }
@@ -1170,7 +1170,7 @@ void X11Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRe
     NETStrut strut = info->frameOverlap();
 
     // Ignore the overlap strut when compositing is disabled
-    if (!compositing())
+    if (!Compositor::compositing())
         strut.left = strut.top = strut.right = strut.bottom = 0;
     else if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1) {
         top = QRect(r.x(), r.y(), r.width(), r.height() / 3);
@@ -1196,7 +1196,7 @@ QRect X11Client::transparentRect() const
 
     NETStrut strut = info->frameOverlap();
     // Ignore the strut when compositing is disabled or the decoration doesn't support it
-    if (!compositing())
+    if (!Compositor::compositing())
         strut.left = strut.top = strut.right = strut.bottom = 0;
     else if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1)
         return QRect();
@@ -1374,7 +1374,7 @@ void X11Client::updateShape()
     // Decoration mask (i.e. 'else' here) setting is done in setMask()
     // when the decoration calls it or when the decoration is created/destroyed
     updateInputShape();
-    if (compositing()) {
+    if (Compositor::compositing()) {
         addRepaintFull();
         addWorkspaceRepaint(visibleGeometry());   // In case shape change removes part of this window
     }
@@ -1592,7 +1592,7 @@ void X11Client::updateVisibility()
     if (hidden) {
         info->setState(NET::Hidden, NET::Hidden);
         setSkipTaskbar(true);   // Also hide from taskbar
-        if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
+        if (Compositor::compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
             internalKeep();
         else
             internalHide();
@@ -1601,7 +1601,7 @@ void X11Client::updateVisibility()
     setSkipTaskbar(originalSkipTaskbar());   // Reset from 'hidden'
     if (isMinimized()) {
         info->setState(NET::Hidden, NET::Hidden);
-        if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
+        if (Compositor::compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
             internalKeep();
         else
             internalHide();
@@ -1609,14 +1609,14 @@ void X11Client::updateVisibility()
     }
     info->setState(NET::States(), NET::Hidden);
     if (!isOnCurrentDesktop()) {
-        if (compositing() && options->hiddenPreviews() != HiddenPreviewsNever)
+        if (Compositor::compositing() && options->hiddenPreviews() != HiddenPreviewsNever)
             internalKeep();
         else
             internalHide();
         return;
     }
     if (!isOnCurrentActivity()) {
-        if (compositing() && options->hiddenPreviews() != HiddenPreviewsNever)
+        if (Compositor::compositing() && options->hiddenPreviews() != HiddenPreviewsNever)
             internalKeep();
         else
             internalHide();
@@ -1678,7 +1678,7 @@ void X11Client::internalHide()
 
 void X11Client::internalKeep()
 {
-    Q_ASSERT(compositing());
+    Q_ASSERT(Compositor::compositing());
     if (mapping_state == Kept)
         return;
     MappingState old = mapping_state;
@@ -1703,7 +1703,7 @@ void X11Client::map()
     // XComposite invalidates backing pixmaps on unmap (minimize, different
     // virtual desktop, etc.).  We kept the last known good pixmap around
     // for use in effects, but now we want to have access to the new pixmap
-    if (compositing())
+    if (Compositor::compositing())
         discardWindowPixmap();
     m_frame.map();
     if (!isShade()) {
@@ -4133,7 +4133,7 @@ void X11Client::updateServerGeometry()
         updateShape();
     } else {
         if (isInteractiveMoveResize()) {
-            if (compositing()) { // Defer the X update until we leave this mode
+            if (Compositor::compositing()) { // Defer the X update until we leave this mode
                 needsXWindowMove = true;
             } else {
                 m_frame.move(m_bufferGeometry.topLeft()); // sendSyntheticConfigureNotify() on finish shall be sufficient

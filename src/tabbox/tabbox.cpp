@@ -23,6 +23,7 @@
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "composite.h"
 #include "x11client.h"
 #include "effects.h"
 #include "input.h"
@@ -282,8 +283,9 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
     return ret;
 }
 
-bool TabBoxHandlerImpl::isKWinCompositing() const {
-    return Workspace::self()->compositing();
+bool TabBoxHandlerImpl::isKWinCompositing() const
+{
+    return Compositor::compositing();
 }
 
 void TabBoxHandlerImpl::raiseClient(TabBoxClient* c) const

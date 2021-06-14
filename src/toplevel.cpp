@@ -255,7 +255,7 @@ void Toplevel::setOpacity(qreal opacity)
     }
     const qreal oldOpacity = m_opacity;
     m_opacity = opacity;
-    if (compositing()) {
+    if (Compositor::compositing()) {
         addRepaintFull();
         Q_EMIT opacityChanged(this, oldOpacity);
     }
@@ -263,7 +263,7 @@ void Toplevel::setOpacity(qreal opacity)
 
 bool Toplevel::setupCompositing()
 {
-    if (!compositing())
+    if (!Compositor::compositing())
         return false;
 
     effect_window = new EffectWindowImpl(this);
@@ -281,11 +281,6 @@ void Toplevel::finishCompositing(ReleaseReason)
     if (effect_window && effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
         deleteEffectWindow();
     }
-}
-
-bool Toplevel::compositing() const
-{
-    return Compositor::compositing();
 }
 
 void Toplevel::addRepaint(const QRect &rect)
@@ -332,14 +327,14 @@ void Toplevel::addWorkspaceRepaint(int x, int y, int w, int h)
 
 void Toplevel::addWorkspaceRepaint(const QRect& r2)
 {
-    if (!compositing())
+    if (!Compositor::compositing())
         return;
     Compositor::self()->addRepaint(r2);
 }
 
 void Toplevel::addWorkspaceRepaint(const QRegion &region)
 {
-    if (compositing()) {
+    if (Compositor::compositing()) {
         Compositor::self()->addRepaint(region);
     }
 }
@@ -348,7 +343,7 @@ void Toplevel::setReadyForPainting()
 {
     if (!ready_for_painting) {
         ready_for_painting = true;
-        if (compositing()) {
+        if (Compositor::compositing()) {
             addRepaintFull();
             Q_EMIT windowShown(this);
         }

@@ -40,10 +40,6 @@ public:
     void registerEventFilter(X11EventFilter *filter);
     void unregisterEventFilter(X11EventFilter *filter);
 
-    bool compositing() const {
-        return false;
-    }
-
     static Workspace *self();
 
 Q_SIGNALS:

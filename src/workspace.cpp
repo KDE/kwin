@@ -1214,7 +1214,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 
     //if ( effects != NULL && old_desktop != 0 && old_desktop != new_desktop )
     //    static_cast<EffectsHandlerImpl*>( effects )->desktopChanged( old_desktop );
-    if (compositing() && m_compositor)
+    if (Compositor::compositing() && m_compositor)
         m_compositor->addRepaintFull();
 #else
     Q_UNUSED(new_activity)
@@ -1887,11 +1887,6 @@ Toplevel *Workspace::findInternal(QWindow *w) const
         }
     }
     return nullptr;
-}
-
-bool Workspace::compositing() const
-{
-    return Compositor::compositing();
 }
 
 void Workspace::markXStackingOrderAsDirty()

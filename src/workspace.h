@@ -369,10 +369,6 @@ public:
         return movingClient;
     }
 
-    /**
-     * @returns Whether we have a Compositor and it is active (Scene created)
-     */
-    bool compositing() const;
     void markXStackingOrderAsDirty();
 
     void quickTileWindow(QuickTileMode mode);

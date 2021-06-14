@@ -671,10 +671,6 @@ protected:
     void readWmClientLeader(Xcb::Property &p);
     void getWmClientLeader();
     void getWmClientMachine();
-    /**
-     * @returns Whether there is a compositor and it is active.
-     */
-    bool compositing() const;
 
     /**
      * This function fetches the opaque region from this Toplevel.
