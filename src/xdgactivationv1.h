@@ -30,6 +30,7 @@ public:
 
     struct ActivationToken {
         const QString token;
+        const KWaylandServer::ClientConnection *client;
         const KWaylandServer::SurfaceInterface *surface;
         const uint serial;
         const KWaylandServer::SeatInterface *seat;

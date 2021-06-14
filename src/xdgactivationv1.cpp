@@ -21,6 +21,13 @@ using namespace KWaylandServer;
 
 namespace KWin
 {
+
+static bool isPrivilegedInWindowManagement(const ClientConnection *client)
+{
+    auto requestedInterfaces = client->property("requestedInterfaces").toStringList();
+    return requestedInterfaces.contains(QLatin1String("org_kde_plasma_window_management"));
+}
+
 XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface *activation, QObject *parent)
     : QObject(parent)
 {
@@ -31,11 +38,11 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
         }
         clear();
     });
-    activation->setActivationTokenCreator([this](SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId) -> QString {
+    activation->setActivationTokenCreator([this](ClientConnection *client, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId) -> QString {
         Workspace *ws = Workspace::self();
-        if (ws->activeClient()->surface() != surface) {
-            qCWarning(KWIN_CORE) << "Inactive surfaces cannot be granted a token";
-            return {};
+        if (ws->activeClient() && ws->activeClient()->surface() != surface && !isPrivilegedInWindowManagement(client)) {
+            qCWarning(KWIN_CORE) << "Cannot grant a token to" << client;
+            return QStringLiteral("not-granted-666");
         }
 
         static int i = 0;
@@ -44,7 +51,7 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
         if (m_currentActivationToken) {
             clear();
         }
-        m_currentActivationToken.reset(new ActivationToken{newToken, surface, serial, seat, appId});
+        m_currentActivationToken.reset(new ActivationToken{newToken, client, surface, serial, seat, appId});
         const auto icon = QIcon::fromTheme(AbstractClient::iconFromDesktopFile(appId), QIcon::fromTheme(QStringLiteral("system-run")));
         Q_EMIT effects->startupAdded(m_currentActivationToken->token, icon);
 
@@ -69,9 +76,8 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
     }
 
     auto ownerSurfaceClient = waylandServer()->findClient(m_currentActivationToken->surface);
-
     qCDebug(KWIN_CORE) << "activating" << client << surface << "on behalf of" << m_currentActivationToken->surface << "into" << ownerSurfaceClient;
-    if (ws->activeClient() == ownerSurfaceClient || m_currentActivationToken->applicationId.isEmpty() || ownerSurfaceClient->desktopFileName().isEmpty()) {
+    if (ws->activeClient() == ownerSurfaceClient || isPrivilegedInWindowManagement(m_currentActivationToken->client)) {
         ws->activateClient(client);
     } else {
         qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << ownerSurfaceClient->desktopFileName()
