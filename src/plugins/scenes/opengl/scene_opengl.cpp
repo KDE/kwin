@@ -42,18 +42,11 @@
 #include "windowitem.h"
 #include <logging.h>
 
-#include <KWaylandServer/buffer_interface.h>
-#include <KWaylandServer/subcompositor_interface.h>
-#include <KWaylandServer/surface_interface.h>
-
 #include <array>
 #include <cmath>
 #include <cstddef>
 #include <unistd.h>
 
-#include <QDBusConnection>
-#include <QDBusConnectionInterface>
-#include <QDBusInterface>
 #include <QGraphicsScale>
 #include <QPainter>
 #include <QStringList>
