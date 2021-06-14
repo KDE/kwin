@@ -21,9 +21,8 @@
 #include <kwineffectquickview.h>
 
 #include "utils.h"
-#include "x11client.h"
+#include "abstract_client.h"
 #include "composite.h"
-#include "deleted.h"
 #include "effects.h"
 #include "lanczosfilter.h"
 #include "main.h"
@@ -37,7 +36,6 @@
 #include "windowitem.h"
 #include <logging.h>
 
-#include <array>
 #include <cmath>
 #include <cstddef>
 #include <unistd.h>
