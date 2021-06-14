@@ -7,6 +7,7 @@
 #include "xdgactivation_v1_interface.h"
 #include "display.h"
 #include "logging.h"
+#include "display.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
 
@@ -19,9 +20,10 @@ static const int s_version = 1;
 class XdgActivationTokenV1Interface : public QtWaylandServer::xdg_activation_token_v1
 {
 public:
-    XdgActivationTokenV1Interface(XdgActivationV1Interface::CreatorFunction creator, wl_client *client, uint32_t newId)
-        : QtWaylandServer::xdg_activation_token_v1(client, newId, s_version)
+    XdgActivationTokenV1Interface(XdgActivationV1Interface::CreatorFunction creator, ClientConnection *client, uint32_t newId)
+        : QtWaylandServer::xdg_activation_token_v1(*client, newId, s_version)
         , m_creator(creator)
+        , m_client(client)
     {
     }
 
@@ -39,6 +41,7 @@ protected:
     struct ::wl_resource *m_seat = nullptr;
     QString m_appId;
     bool m_committed = false;
+    ClientConnection *const m_client;
 };
 
 void XdgActivationTokenV1Interface::xdg_activation_token_v1_set_serial(Resource *resource, uint32_t serial, struct ::wl_resource *seat)
@@ -64,7 +67,7 @@ void XdgActivationTokenV1Interface::xdg_activation_token_v1_commit(Resource *res
 {
     QString token;
     if (m_creator) {
-        token = m_creator(m_surface, m_serial, SeatInterface::get(m_seat), m_appId);
+        token = m_creator(m_client, m_surface, m_serial, SeatInterface::get(m_seat), m_appId);
     }
 
     m_committed = true;
@@ -108,11 +111,12 @@ public:
 
 void XdgActivationV1InterfacePrivate::xdg_activation_v1_get_activation_token(Resource *resource, uint32_t id)
 {
-    new XdgActivationTokenV1Interface(m_creator, resource->client(), id);
+    new XdgActivationTokenV1Interface(m_creator, m_display->getConnection(resource->client()), id);
 }
 
 void XdgActivationV1InterfacePrivate::xdg_activation_v1_activate(Resource *resource, const QString &token, struct ::wl_resource *surface)
 {
+    Q_UNUSED(resource);
     Q_EMIT q->activateRequested(SurfaceInterface::get(surface), token);
 }
 

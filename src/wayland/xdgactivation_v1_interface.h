@@ -32,7 +32,7 @@ public:
     explicit XdgActivationV1Interface(Display *display, QObject *parent = nullptr);
     ~XdgActivationV1Interface() override;
 
-    using CreatorFunction = std::function<QString(SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId)>;
+    using CreatorFunction = std::function<QString(ClientConnection *client, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId)>;
 
     /// Provide the @p creator function that will be used to create a token given its parameters
     void setActivationTokenCreator(const CreatorFunction &creator);
