@@ -213,9 +213,7 @@ KCM.ScrollViewKCM {
 
                 QQC2.CheckBox {
                     id: animationEnabled
-                    // Let it elide but don't make it push the ComboBox away from it
                     Layout.fillWidth: true
-                    Layout.maximumWidth: implicitWidth
 
                     text: i18n("Show animation when switching:")
 
