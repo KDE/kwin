@@ -630,9 +630,9 @@ void BlurEffect::generateNoiseTexture()
     // The noise texture looks distorted when not scaled with integer
     noiseImage = noiseImage.scaled(noiseImage.size() * m_scalingFactor);
 
-    m_noiseTexture = GLTexture(noiseImage);
-    m_noiseTexture.setFilter(GL_NEAREST);
-    m_noiseTexture.setWrapMode(GL_REPEAT);
+    m_noiseTexture.reset(new GLTexture(noiseImage));
+    m_noiseTexture->setFilter(GL_NEAREST);
+    m_noiseTexture->setWrapMode(GL_REPEAT);
 }
 
 void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock, QRect windowRect)
@@ -726,11 +726,11 @@ void BlurEffect::upscaleRenderToScreen(GLVertexBuffer *vbo, int vboStart, int bl
     if (m_noiseStrength > 0) {
         m_shader->bind(BlurShader::NoiseSampleType);
         m_shader->setTargetTextureSize(m_renderTextures[0].size() * GLRenderTarget::virtualScreenScale());
-        m_shader->setNoiseTextureSize(m_noiseTexture.size() * GLRenderTarget::virtualScreenScale());
+        m_shader->setNoiseTextureSize(m_noiseTexture->size() * GLRenderTarget::virtualScreenScale());
         m_shader->setTexturePosition(windowPosition * GLRenderTarget::virtualScreenScale());
 
         glActiveTexture(GL_TEXTURE1);
-        m_noiseTexture.bind();
+        m_noiseTexture->bind();
     } else {
         m_shader->bind(BlurShader::UpSampleType);
         m_shader->setTargetTextureSize(m_renderTextures[0].size() * GLRenderTarget::virtualScreenScale());

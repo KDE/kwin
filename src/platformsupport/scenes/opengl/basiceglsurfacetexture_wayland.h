@@ -50,7 +50,6 @@ private:
 
     EGLImageKHR m_image = EGL_NO_IMAGE_KHR;
     BufferType m_bufferType = BufferType::None;
-    GLuint m_textureId = 0;
 };
 
 } // namespace KWin

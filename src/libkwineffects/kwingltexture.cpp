@@ -40,9 +40,11 @@ uint GLTexturePrivate::s_textureObjectCounter = 0;
 uint GLTexturePrivate::s_fbo = 0;
 
 
-GLTexture::GLTexture()
+GLTexture::GLTexture(GLenum target)
     : d_ptr(new GLTexturePrivate())
 {
+    Q_D(GLTexture);
+    d->m_target = target;
 }
 
 GLTexture::GLTexture(GLTexturePrivate& dd)
@@ -80,7 +82,7 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
 
     d->updateMatrix();
 
-    glGenTextures(1, &d->m_texture);
+    create();
     bind();
 
     if (!GLPlatform::instance()->isGLES()) {
@@ -193,7 +195,7 @@ GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels, b
 
     d->updateMatrix();
 
-    glGenTextures(1, &d->m_texture);
+    create();
     bind();
 
     if (!GLPlatform::instance()->isGLES()) {
@@ -247,6 +249,16 @@ GLTexture::GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size,
 
 GLTexture::~GLTexture()
 {
+}
+
+bool GLTexture::create()
+{
+    Q_D(GLTexture);
+    if (!isNull()) {
+        return true;
+    }
+    glGenTextures(1, &d->m_texture);
+    return d->m_texture != GL_NONE;
 }
 
 GLTexture& GLTexture::operator = (const GLTexture& tex)
@@ -334,6 +346,16 @@ QSize GLTexture::size() const
     return d->m_size;
 }
 
+void GLTexture::setSize(const QSize &size)
+{
+    Q_D(GLTexture);
+    if (!isNull()) {
+        return;
+    }
+    d->m_size = size;
+    d->updateMatrix();
+}
+
 void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &src)
 {
     if (image.isNull() || isNull())
@@ -397,6 +419,7 @@ void GLTexture::discard()
 void GLTexture::bind()
 {
     Q_D(GLTexture);
+    Q_ASSERT(d->m_texture);
 
     glBindTexture(d->m_target, d->m_texture);
 

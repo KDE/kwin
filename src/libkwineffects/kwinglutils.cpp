@@ -1093,19 +1093,15 @@ GLRenderTarget* GLRenderTarget::popRenderTarget()
 }
 
 GLRenderTarget::GLRenderTarget()
+    : mValid(false)
+    , mTexture(GL_TEXTURE_2D)
 {
-    // Reset variables
-    mValid = false;
-    mTexture = GLTexture();
 }
 
 GLRenderTarget::GLRenderTarget(const GLTexture& color)
+    : mValid(false)
+    , mTexture(color)
 {
-    // Reset variables
-    mValid = false;
-
-    mTexture = color;
-
     // Make sure FBO is supported
     if (sSupported && !mTexture.isNull()) {
         initFBO();

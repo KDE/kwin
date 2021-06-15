@@ -41,13 +41,20 @@ enum TextureCoordinateType {
 class KWINGLUTILS_EXPORT GLTexture
 {
 public:
-    GLTexture();
+    explicit GLTexture(GLenum target);
     GLTexture(const GLTexture& tex);
     explicit GLTexture(const QImage& image, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QString& fileName);
     GLTexture(GLenum internalFormat, int width, int height, int levels = 1, bool needsMutability = false);
     explicit GLTexture(GLenum internalFormat, const QSize &size, int levels = 1, bool needsMutability = false);
+
+    /**
+     * Creates the underlying texture object. Returns @c true if the texture has been created
+     * successfully; otherwise returns @c false. Note that this does not allocate any storage
+     * for the texture.
+     */
+    bool create();
 
     /**
      * Create a GLTexture wrapper around an existing texture.
@@ -61,6 +68,7 @@ public:
 
     bool isNull() const;
     QSize size() const;
+    void setSize(const QSize &size);
     int width() const;
     int height() const;
     /**
