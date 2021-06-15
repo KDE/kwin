@@ -283,7 +283,7 @@ bool EglStreamBackend::initRenderingContext()
 {
     initBufferConfigs();
 
-    if (!createContext() || !makeCurrent()) {
+    if (!createContext()) {
         return false;
     }
 
@@ -291,7 +291,7 @@ bool EglStreamBackend::initRenderingContext()
     for (DrmOutput *drmOutput : outputs) {
         addOutput(drmOutput);
     }
-    return true;
+    return !m_outputs.isEmpty() && makeContextCurrent(m_outputs.first());
 }
 
 bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)

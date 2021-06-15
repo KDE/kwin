@@ -212,6 +212,10 @@ bool DrmBackend::initialize()
     }
 
     initCursor();
+    // workaround for BUG 438363: something goes wrong in scene initialization without a surface being current in EglStreamBackend
+    if (m_gpus[0]->useEglStreams()) {
+        updateOutputs();
+    }
 
     // setup udevMonitor
     if (m_udevMonitor) {
