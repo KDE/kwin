@@ -266,7 +266,7 @@ void DrmBackend::handleUdevEvent()
                 gpu = addGpu(device->devNode());
             }
             if (gpu) {
-                qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device" << gpu->devNode();
+                qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->devNode();
                 updateOutputs();
                 updateCursor();
             }

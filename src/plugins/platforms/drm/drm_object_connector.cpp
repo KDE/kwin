@@ -95,11 +95,11 @@ bool DrmConnector::init()
 
 bool DrmConnector::isConnected()
 {
-    DrmScopedPointer<drmModeConnector> con(drmModeGetConnector(gpu()->fd(), id()));
-    if (!con) {
+    m_conn.reset(drmModeGetConnector(gpu()->fd(), id()));
+    if (!m_conn) {
         return false;
     }
-    return con->connection == DRM_MODE_CONNECTED;
+    return m_conn->connection == DRM_MODE_CONNECTED;
 }
 
 static QHash<int, QByteArray> s_connectorNames = {
@@ -174,6 +174,20 @@ bool DrmConnector::vrrCapable() const
         return prop->value();
     }
     return false;
+}
+
+QVector<DrmConnector::Mode> DrmConnector::modes() const
+{
+    QVector<Mode> modes;
+    for (int i = 0; i < m_conn->count_modes; i++) {
+        auto mode = m_conn->modes[i];
+        Mode m;
+        m.mode = mode;
+        m.size = QSize(mode.hdisplay, mode.vdisplay);
+        m.refreshRate = mode.vrefresh;
+        modes << m;
+    }
+    return modes;
 }
 
 }

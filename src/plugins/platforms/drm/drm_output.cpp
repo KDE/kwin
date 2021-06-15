@@ -207,19 +207,19 @@ void DrmOutput::moveCursor()
 }
 
 namespace {
-quint64 refreshRateForMode(_drmModeModeInfo *m)
+quint64 refreshRateForMode(const _drmModeModeInfo &m)
 {
     // Calculate higher precision (mHz) refresh rate
     // logic based on Weston, see compositor-drm.c
-    quint64 refreshRate = (m->clock * 1000000LL / m->htotal + m->vtotal / 2) / m->vtotal;
-    if (m->flags & DRM_MODE_FLAG_INTERLACE) {
+    quint64 refreshRate = (m.clock * 1000000LL / m.htotal + m.vtotal / 2) / m.vtotal;
+    if (m.flags & DRM_MODE_FLAG_INTERLACE) {
         refreshRate *= 2;
     }
-    if (m->flags & DRM_MODE_FLAG_DBLSCAN) {
+    if (m.flags & DRM_MODE_FLAG_DBLSCAN) {
         refreshRate /= 2;
     }
-    if (m->vscan > 1) {
-        refreshRate /= m->vscan;
+    if (m.vscan > 1) {
+        refreshRate /= m.vscan;
     }
     return refreshRate;
 }
@@ -262,7 +262,7 @@ bool DrmOutput::init(drmModeConnector *connector)
         setCapabilityInternal(Capability::Vrr);
         setVrrPolicy(RenderLoop::VrrPolicy::Automatic);
     }
-    initOutputDevice(connector);
+    initOutputDevice();
 
     if (!m_gpu->atomicModeSetting() && !m_crtc->blank(this)) {
         // We use legacy mode and the initial output blank failed.
@@ -273,53 +273,66 @@ bool DrmOutput::init(drmModeConnector *connector)
     return true;
 }
 
-void DrmOutput::initOutputDevice(drmModeConnector *connector)
+QVector<AbstractWaylandOutput::Mode> DrmOutput::getModes()
 {
     // read in mode information
+    bool modeFound = false;
     QVector<Mode> modes;
-    modes.reserve(connector->count_modes);
-    for (int i = 0; i < connector->count_modes; ++i) {
+    int i = 0;
+    const auto connModes = m_conn->modes();
+
+    for (const DrmConnector::Mode &m: connModes) {
         // TODO: in AMS here we could read and store for later every mode's blob_id
         // would simplify isCurrentMode(..) and presentAtomically(..) in case of mode set
-        auto *m = &connector->modes[i];
 
         Mode mode;
-        if (isCurrentMode(m)) {
+        if (isCurrentMode(m.mode)) {
             mode.flags |= ModeFlag::Current;
+            modeFound = true;
         }
-        if (m->type & DRM_MODE_TYPE_PREFERRED) {
+        if (m.mode.type & DRM_MODE_TYPE_PREFERRED) {
             mode.flags |= ModeFlag::Preferred;
         }
 
         mode.id = i;
-        mode.size = QSize(m->hdisplay, m->vdisplay);
-        mode.refreshRate = refreshRateForMode(m);
+        mode.size = m.size;
+        mode.refreshRate = refreshRateForMode(m.mode);
         modes << mode;
-    }
 
+        ++i;
+    }
+    if (!modeFound) {
+        // select first mode by default
+        modes[0].flags |= ModeFlag::Current;
+    }
+    return modes;
+}
+
+void DrmOutput::initOutputDevice()
+{
     setName(m_conn->connectorName());
     initialize(m_conn->modelName(), m_conn->edid()->manufacturerString(),
                m_conn->edid()->eisaId(), m_conn->edid()->serialNumber(),
-               m_conn->physicalSize(), modes, m_conn->edid()->raw());
+               m_conn->physicalSize(), getModes(), m_conn->edid()->raw());
 }
 
-bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
+bool DrmOutput::isCurrentMode(const drmModeModeInfo mode) const
 {
-    return mode->clock       == m_mode.clock
-        && mode->hdisplay    == m_mode.hdisplay
-        && mode->hsync_start == m_mode.hsync_start
-        && mode->hsync_end   == m_mode.hsync_end
-        && mode->htotal      == m_mode.htotal
-        && mode->hskew       == m_mode.hskew
-        && mode->vdisplay    == m_mode.vdisplay
-        && mode->vsync_start == m_mode.vsync_start
-        && mode->vsync_end   == m_mode.vsync_end
-        && mode->vtotal      == m_mode.vtotal
-        && mode->vscan       == m_mode.vscan
-        && mode->vrefresh    == m_mode.vrefresh
-        && mode->flags       == m_mode.flags
-        && mode->type        == m_mode.type
-        && qstrcmp(mode->name, m_mode.name) == 0;
+    return mode.clock       == m_mode.clock
+        && mode.hdisplay    == m_mode.hdisplay
+        && mode.hsync_start == m_mode.hsync_start
+        && mode.hsync_end   == m_mode.hsync_end
+        && mode.htotal      == m_mode.htotal
+        && mode.hskew       == m_mode.hskew
+        && mode.vdisplay    == m_mode.vdisplay
+        && mode.vsync_start == m_mode.vsync_start
+        && mode.vsync_end   == m_mode.vsync_end
+        && mode.vtotal      == m_mode.vtotal
+        && mode.vscan       == m_mode.vscan
+        && mode.vrefresh    == m_mode.vrefresh
+        && mode.flags       == m_mode.flags
+        && mode.type        == m_mode.type
+        && qstrcmp(mode.name, m_mode.name) == 0;
 }
 
 bool DrmOutput::initCursor(const QSize &cursorSize)
@@ -540,16 +553,39 @@ void DrmOutput::updateTransform(Transform transform)
     }
 }
 
+void DrmOutput::updateModes()
+{
+    const auto modes = getModes();
+    setModes(modes);
+
+    auto it = std::find_if(modes.constBegin(), modes.constEnd(),
+        [](const AbstractWaylandOutput::Mode &mode){
+            return mode.flags.testFlag(ModeFlag::Current);
+        }
+    );
+    Q_ASSERT(it != modes.constEnd());
+    AbstractWaylandOutput::Mode mode = *it;
+
+    // mode changed
+    if (QSize(m_mode.hdisplay, m_mode.vdisplay) != mode.size || m_mode.vrefresh != (uint)mode.refreshRate) {
+        updateMode(mode.id);
+    }
+}
+
+void DrmOutput::updateMode(QSize size, int refreshRate) {
+    updateMode(size.width(), size.height(), refreshRate);
+}
+
 void DrmOutput::updateMode(uint32_t width, uint32_t height, uint32_t refreshRate)
 {
-    if (m_mode.hdisplay == width && m_mode.vdisplay == height && refreshRateForMode(&m_mode) == refreshRate) {
+    if (m_mode.hdisplay == width && m_mode.vdisplay == height && refreshRateForMode(m_mode) == refreshRate) {
         return;
     }
     // try to find a fitting mode
     DrmScopedPointer<drmModeConnector> connector(drmModeGetConnectorCurrent(m_gpu->fd(), m_conn->id()));
     for (int i = 0; i < connector->count_modes; i++) {
         auto mode = connector->modes[i];
-        if (mode.hdisplay == width && mode.vdisplay == height && refreshRateForMode(&mode) == refreshRate) {
+        if (mode.hdisplay == width && mode.vdisplay == height && refreshRateForMode(mode) == refreshRate) {
             updateMode(i);
             return;
         }
@@ -566,7 +602,7 @@ void DrmOutput::updateMode(int modeIndex)
         // TODO: error?
         return;
     }
-    if (isCurrentMode(&connector->modes[modeIndex])) {
+    if (isCurrentMode(connector->modes[modeIndex])) {
         // nothing to do
         return;
     }
@@ -578,7 +614,7 @@ void DrmOutput::updateMode(int modeIndex)
 void DrmOutput::setCurrentModeInternal()
 {
     AbstractWaylandOutput::setCurrentModeInternal(QSize(m_mode.hdisplay, m_mode.vdisplay),
-                                          refreshRateForMode(&m_mode));
+                                          refreshRateForMode(m_mode));
 }
 
 void DrmOutput::pageFlipped()
@@ -705,7 +741,7 @@ bool DrmOutput::presentAtomically(const QSharedPointer<DrmBuffer> &buffer)
             m_lastWorkingState.planeTransformations = m_primaryPlane->transformation();
         }
         m_lastWorkingState.valid = true;
-        m_renderLoop->setRefreshRate(refreshRateForMode(&m_mode));
+        m_renderLoop->setRefreshRate(refreshRateForMode(m_mode));
     }
     m_pageFlipPending = true;
     return true;

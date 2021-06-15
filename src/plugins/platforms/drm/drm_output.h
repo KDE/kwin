@@ -104,9 +104,10 @@ private:
 
     bool presentLegacy(const QSharedPointer<DrmBuffer> &buffer);
     bool setModeLegacy(DrmBuffer *buffer);
-    void initOutputDevice(drmModeConnector *connector);
+    void initOutputDevice();
+    QVector<AbstractWaylandOutput::Mode> getModes();
 
-    bool isCurrentMode(const drmModeModeInfo *mode) const;
+    bool isCurrentMode(const drmModeModeInfo mode) const;
 
     void atomicEnable();
     void atomicDisable();
@@ -122,6 +123,9 @@ private:
     void setDpmsMode(DpmsMode mode) override;
     void updateMode(int modeIndex) override;
     void updateMode(uint32_t width, uint32_t height, uint32_t refreshRate);
+    void updateMode(QSize size, int refreshRate) override;
+    void updateModes();
+
     void setCurrentModeInternal();
 
     void updateTransform(Transform transform) override;
