@@ -797,10 +797,10 @@ GlxSurfaceTextureX11::GlxSurfaceTextureX11(GlxBackend *backend, SurfacePixmapX11
 bool GlxSurfaceTextureX11::create()
 {
     auto texture = new GlxPixmapTexture(static_cast<GlxBackend *>(m_backend));
-    texture->create(m_pixmap);
-
-    m_texture.reset(texture);
-    return !m_texture->isNull();
+    if (texture->create(m_pixmap)) {
+        m_texture.reset(texture);
+    }
+    return !m_texture.isNull();
 }
 
 void GlxSurfaceTextureX11::update(const QRegion &region)

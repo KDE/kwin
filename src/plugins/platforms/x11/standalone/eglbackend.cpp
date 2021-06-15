@@ -127,10 +127,10 @@ EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11
 bool EglSurfaceTextureX11::create()
 {
     auto texture = new EglPixmapTexture(static_cast<EglBackend *>(m_backend));
-    texture->create(m_pixmap);
-
-    m_texture.reset(texture);
-    return !m_texture->isNull();
+    if (texture->create(m_pixmap)) {
+        m_texture.reset(texture);
+    }
+    return !m_texture.isNull();
 }
 
 void EglSurfaceTextureX11::update(const QRegion &region)
@@ -186,7 +186,6 @@ bool EglPixmapTexturePrivate::create(SurfacePixmapX11 *pixmap)
     if (EGL_NO_IMAGE_KHR == m_image) {
         qCDebug(KWIN_CORE) << "failed to create egl image";
         q->unbind();
-        q->discard();
         return false;
     }
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(m_image));
