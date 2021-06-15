@@ -11,7 +11,7 @@
 #include "screens.h"
 
 // KWayland
-#include <KWaylandServer/outputchangeset.h>
+#include <KWaylandServer/outputchangeset_v2.h>
 // KF5
 #include <KLocalizedString>
 
@@ -20,7 +20,7 @@
 namespace KWin
 {
 
-static AbstractWaylandOutput::Transform outputDeviceTransformToKWinTransform(KWaylandServer::OutputDeviceInterface::Transform transform)
+static AbstractWaylandOutput::Transform outputDeviceTransformToKWinTransform(KWaylandServer::OutputDeviceV2Interface::Transform transform)
 {
     return static_cast<AbstractWaylandOutput::Transform>(transform);
 }
@@ -116,9 +116,21 @@ QByteArray AbstractWaylandOutput::edid() const
     return m_edid;
 }
 
+bool AbstractWaylandOutput::Mode::operator==(const Mode &other) const {
+    return id == other.id && other.flags == flags && size == other.size && refreshRate == other.refreshRate;
+}
+
 QVector<AbstractWaylandOutput::Mode> AbstractWaylandOutput::modes() const
 {
     return m_modes;
+}
+
+void AbstractWaylandOutput::setModes(const QVector<Mode> &modes)
+{
+    if (m_modes != modes) {
+        m_modes = modes;
+        Q_EMIT modesChanged();
+    }
 }
 
 qreal AbstractWaylandOutput::scale() const
@@ -145,16 +157,16 @@ void AbstractWaylandOutput::setSubPixelInternal(SubPixel subPixel)
     m_subPixel = subPixel;
 }
 
-void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *changeSet)
+void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSetV2 *changeSet)
 {
     qCDebug(KWIN_CORE) << "Apply changes to the Wayland output.";
     bool emitModeChanged = false;
     bool overallSizeCheckNeeded = false;
 
     // Enablement changes are handled by platform.
-    if (changeSet->modeChanged()) {
-        qCDebug(KWIN_CORE) << "Setting new mode:" << changeSet->mode();
-        updateMode(changeSet->mode());
+    if (changeSet->sizeChanged() || changeSet->refreshRateChanged()) {
+        qCDebug(KWIN_CORE) << "Setting new mode:" << changeSet->size() << changeSet->refreshRate();
+        updateMode(changeSet->size(), changeSet->refreshRate());
         emitModeChanged = true;
     }
     if (changeSet->transformChanged()) {
@@ -171,8 +183,8 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
         overallSizeCheckNeeded = true;
     }
     if (changeSet->scaleChanged()) {
-        qCDebug(KWIN_CORE) << "Setting scale:" << changeSet->scaleF();
-        setScale(changeSet->scaleF());
+        qCDebug(KWIN_CORE) << "Setting scale:" << changeSet->scale();
+        setScale(changeSet->scale());
         emitModeChanged = true;
     }
     if (changeSet->overscanChanged()) {
@@ -190,7 +202,7 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
     }
 
     if (emitModeChanged) {
-        Q_EMIT modeChanged();
+        Q_EMIT currentModeChanged();
     }
 }
 
@@ -215,10 +227,15 @@ QString AbstractWaylandOutput::description() const
 
 void AbstractWaylandOutput::setCurrentModeInternal(const QSize &size, int refreshRate)
 {
-    if (m_modeSize != size || m_refreshRate != refreshRate) {
+    bool sizeChanged = m_modeSize != size;
+    if (sizeChanged || m_refreshRate != refreshRate) {
         m_modeSize = size;
         m_refreshRate = refreshRate;
-        Q_EMIT geometryChanged();
+
+        if (sizeChanged) {
+            Q_EMIT geometryChanged();
+        }
+        Q_EMIT currentModeChanged();
     }
 }
 
@@ -269,7 +286,7 @@ void AbstractWaylandOutput::setTransformInternal(Transform transform)
     if (m_transform != transform) {
         m_transform = transform;
         Q_EMIT transformChanged();
-        Q_EMIT modeChanged();
+        Q_EMIT currentModeChanged();
     }
 }
 

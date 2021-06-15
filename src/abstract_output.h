@@ -20,7 +20,7 @@
 
 namespace KWaylandServer
 {
-class OutputChangeSet;
+class OutputChangeSetV2;
 }
 
 namespace KWin
@@ -122,7 +122,7 @@ public:
      *
      * Default implementation does nothing
      */
-    virtual void applyChanges(const KWaylandServer::OutputChangeSet *changeSet);
+    virtual void applyChanges(const KWaylandServer::OutputChangeSetV2 *changeSet);
 
     /**
      * Returns geometry of this output in device independent pixels.

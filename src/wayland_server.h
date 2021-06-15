@@ -49,8 +49,7 @@ class OutputInterface;
 class PlasmaShellInterface;
 class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
-class OutputManagementInterface;
-class OutputConfigurationInterface;
+class OutputManagementV2Interface;
 class XdgForeignV2Interface;
 class XdgOutputManagerV1Interface;
 class KeyStateInterface;
@@ -282,7 +281,7 @@ private:
     KWaylandServer::PlasmaWindowManagementInterface *m_windowManagement = nullptr;
     KWaylandServer::PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     KWaylandServer::ServerSideDecorationManagerInterface *m_decorationManager = nullptr;
-    KWaylandServer::OutputManagementInterface *m_outputManagement = nullptr;
+    KWaylandServer::OutputManagementV2Interface *m_outputManagement = nullptr;
     KWaylandServer::AppMenuManagerInterface *m_appMenuManager = nullptr;
     KWaylandServer::ServerSideDecorationPaletteManagerInterface *m_paletteManager = nullptr;
     KWaylandServer::IdleInterface *m_idle = nullptr;

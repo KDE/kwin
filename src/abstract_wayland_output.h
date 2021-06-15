@@ -16,6 +16,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QSize>
 
 namespace KWaylandServer
 {
@@ -57,6 +58,8 @@ public:
         int refreshRate;
         ModeFlags flags;
         int id;
+
+        inline bool operator==(const Mode &other) const;
     };
 
     enum class DpmsMode {
@@ -122,7 +125,7 @@ public:
     void setGlobalPos(const QPoint &pos);
     void setScale(qreal scale);
 
-    void applyChanges(const KWaylandServer::OutputChangeSet *changeSet) override;
+    void applyChanges(const KWaylandServer::OutputChangeSetV2 *changeSet) override;
 
     bool isEnabled() const override;
     void setEnabled(bool enable) override;
@@ -132,6 +135,7 @@ public:
     Capabilities capabilities() const;
     QByteArray edid() const;
     QVector<Mode> modes() const;
+    void setModes(const QVector <Mode> &modes);
     DpmsMode dpmsMode() const;
     virtual void setDpmsMode(DpmsMode mode);
 
@@ -152,7 +156,8 @@ public:
     RenderLoop::VrrPolicy vrrPolicy() const;
 
 Q_SIGNALS:
-    void modeChanged();
+    void currentModeChanged();
+    void modesChanged();
     void outputChange(const QRegion &damagedRegion);
     void scaleChanged();
     void transformChanged();
@@ -181,6 +186,10 @@ protected:
 
     virtual void updateEnablement(bool enable) {
         Q_UNUSED(enable);
+    }
+    virtual void updateMode(QSize size, int refreshRate) {
+        Q_UNUSED(size);
+        Q_UNUSED(refreshRate);
     }
     virtual void updateMode(int modeIndex) {
         Q_UNUSED(modeIndex);

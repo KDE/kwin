@@ -22,8 +22,8 @@
 #include "screenedge.h"
 #include "wayland_server.h"
 
-#include <KWaylandServer/outputconfiguration_interface.h>
-#include <KWaylandServer/outputchangeset.h>
+#include <KWaylandServer/outputconfiguration_v2_interface.h>
+#include <KWaylandServer/outputchangeset_v2.h>
 
 #include <QX11Info>
 
@@ -94,7 +94,7 @@ void Platform::createPlatformCursor(QObject *parent)
     new InputRedirectionCursor(parent);
 }
 
-void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface *config)
+void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interface *config)
 {
     if (!m_supportsOutputChanges) {
         qCWarning(KWIN_CORE) << "This backend does not support configuration changes.";
@@ -102,13 +102,11 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface
         return;
     }
 
-    using Enablement = KWaylandServer::OutputDeviceInterface::Enablement;
-
     const auto changes = config->changes();
 
     //process all non-disabling changes
     for (auto it = changes.begin(); it != changes.end(); it++) {
-        const KWaylandServer::OutputChangeSet *changeset = it.value();
+        const KWaylandServer::OutputChangeSetV2 *changeset = it.value();
 
         AbstractOutput* output = findOutput(it.key()->uuid());
         if (!output) {
@@ -116,10 +114,10 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface
             continue;
         }
 
-        qDebug(KWIN_CORE) << "Platform::requestOutputsChange enabling" << changeset << it.key()->uuid() << changeset->enabledChanged() << (changeset->enabled() == Enablement::Enabled);
+        qDebug(KWIN_CORE) << "Platform::requestOutputsChange enabling" << changeset << it.key()->uuid() << changeset->enabledChanged() << changeset->enabled();
 
         if (changeset->enabledChanged() &&
-                changeset->enabled() == Enablement::Enabled) {
+                changeset->enabled()) {
             output->setEnabled(true);
         }
 
@@ -128,10 +126,9 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface
 
     //process any disable requests
     for (auto it = changes.begin(); it != changes.end(); it++) {
-        const KWaylandServer::OutputChangeSet *changeset = it.value();
+        const KWaylandServer::OutputChangeSetV2 *changeset = it.value();
 
-        if (changeset->enabledChanged() &&
-                changeset->enabled() == Enablement::Disabled) {
+        if (changeset->enabledChanged() && !changeset->enabled()) {
             if (enabledOutputs().count() == 1) {
                 // TODO: check beforehand this condition and set failed otherwise
                 // TODO: instead create a dummy output?

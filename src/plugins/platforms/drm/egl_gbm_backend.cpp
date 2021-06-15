@@ -215,7 +215,7 @@ bool EglGbmBackend::addOutput(DrmOutput *drmOutput)
         Output newOutput;
         if (resetOutput(newOutput, drmOutput)) {
             QVector<Output> &outputs = drmOutput->gpu() == m_gpu ? m_outputs : m_secondaryGpuOutputs;
-            connect(drmOutput, &DrmOutput::modeChanged, this,
+            connect(drmOutput, &DrmOutput::currentModeChanged, this,
                 [drmOutput, &outputs, this] {
                     auto it = std::find_if(outputs.begin(), outputs.end(),
                         [drmOutput] (const auto &output) {

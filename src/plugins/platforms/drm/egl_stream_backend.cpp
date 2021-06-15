@@ -394,7 +394,7 @@ bool EglStreamBackend::addOutput(DrmOutput *drmOutput)
         return false;
     }
 
-    connect(drmOutput, &DrmOutput::modeChanged, this,
+    connect(drmOutput, &DrmOutput::currentModeChanged, this,
         [drmOutput, this] {
             auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
                 [drmOutput] (const auto &o) {
