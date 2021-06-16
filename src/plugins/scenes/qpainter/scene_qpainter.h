@@ -35,6 +35,9 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
+    KrkTexture *createSceneTexture(const QImage &image,
+                                   KrkNative::KrkNativeTexture::CreateTextureOptions options) override;
+
     bool animationsSupported() const override {
         return false;
     }
