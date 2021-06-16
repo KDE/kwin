@@ -36,7 +36,7 @@ class GLTexture;
 class Item;
 class KrkTexture;
 class OverlayWindow;
-class PlatformSurfaceTexture;
+class SurfaceTextureProvider;
 class RenderLoop;
 class Shadow;
 class ShadowItem;
@@ -191,9 +191,9 @@ public:
         return {};
     }
 
-    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
-    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap);
-    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
+    virtual SurfaceTextureProvider *createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap);
+    virtual SurfaceTextureProvider *createSurfaceTextureProviderX11(SurfacePixmapX11 *pixmap);
+    virtual SurfaceTextureProvider *createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap);
 
     virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
 

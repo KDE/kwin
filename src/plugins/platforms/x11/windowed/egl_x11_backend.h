@@ -24,8 +24,8 @@ public:
     explicit EglX11Backend(X11WindowedBackend *backend);
     ~EglX11Backend() override;
 
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap) override;
     void init() override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;

@@ -150,7 +150,7 @@ SurfacePixmap *SurfaceItemX11::createPixmap()
 }
 
 SurfacePixmapX11::SurfacePixmapX11(SurfaceItemX11 *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->scene()->createPlatformSurfaceTextureX11(this), parent)
+    : SurfacePixmap(Compositor::self()->scene()->createSurfaceTextureProviderX11(this), parent)
     , m_item(item)
 {
 }

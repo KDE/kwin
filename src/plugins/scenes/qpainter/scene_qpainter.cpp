@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_qpainter.h"
-#include "platformqpaintersurfacetexture.h"
+#include "qpaintersurfacetextureprovider.h"
 // KWin
 #include "abstract_client.h"
 #include "composite.h"
@@ -287,15 +287,15 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
         return;
     }
 
-    const PlatformQPainterSurfaceTexture *platformSurfaceTexture =
-            static_cast<PlatformQPainterSurfaceTexture *>(surfaceTexture->platformTexture());
+    const QPainterSurfaceTextureProvider *textureProvider =
+            static_cast<QPainterSurfaceTextureProvider *>(surfaceTexture->textureProvider());
 
     const QRegion shape = surfaceItem->shape();
     for (const QRectF rect : shape) {
         const QPointF bufferTopLeft = surfaceItem->mapToBuffer(rect.topLeft());
         const QPointF bufferBottomRight = surfaceItem->mapToBuffer(rect.bottomRight());
 
-        painter->drawImage(rect, platformSurfaceTexture->image(),
+        painter->drawImage(rect, textureProvider->image(),
                            QRectF(bufferTopLeft, bufferBottomRight));
     }
 }
@@ -323,14 +323,14 @@ DecorationRenderer *SceneQPainter::createDecorationRenderer(Decoration::Decorate
     return new SceneQPainterDecorationRenderer(impl);
 }
 
-PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTextureProvider *SceneQPainter::createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureInternal(pixmap);
+    return m_backend->createSurfaceTextureProviderInternal(pixmap);
 }
 
-PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTextureProvider *SceneQPainter::createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureWayland(pixmap);
+    return m_backend->createSurfaceTextureProviderWayland(pixmap);
 }
 
 KrkTexture *SceneQPainter::createSceneTexture(const QImage &image, KrkNative::KrkNativeTexture::CreateTextureOptions options)

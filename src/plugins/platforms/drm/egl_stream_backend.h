@@ -9,7 +9,7 @@
 #ifndef KWIN_EGL_STREAM_BACKEND_H
 #define KWIN_EGL_STREAM_BACKEND_H
 #include "abstract_egl_drm_backend.h"
-#include "basiceglsurfacetexture_wayland.h"
+#include "basiceglsurfacetextureprovider_wayland.h"
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/eglstream_controller_interface.h>
 #include <wayland-server-core.h>
@@ -31,8 +31,8 @@ class EglStreamBackend : public AbstractEglDrmBackend
 public:
     EglStreamBackend(DrmBackend *b, DrmGpu *gpu);
     ~EglStreamBackend() override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;
@@ -85,7 +85,7 @@ private:
     friend class EglStreamSurfaceTextureWayland;
 };
 
-class EglStreamSurfaceTextureWayland : public BasicEGLSurfaceTextureWayland
+class EglStreamSurfaceTextureWayland : public BasicEGLSurfaceTextureProviderWayland
 {
 public:
     EglStreamSurfaceTextureWayland(EglStreamBackend *backend, SurfacePixmapWayland *pixmap);

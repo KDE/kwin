@@ -47,9 +47,9 @@ EglBackend::~EglBackend()
     RenderLoopPrivate::get(kwinApp()->platform()->renderLoop())->invalidate();
 }
 
-PlatformSurfaceTexture *EglBackend::createPlatformSurfaceTextureX11(SurfacePixmapX11 *texture)
+SurfaceTextureProvider *EglBackend::createSurfaceTextureProviderX11(SurfacePixmapX11 *texture)
 {
-    return new EglSurfaceTextureX11(this, texture);
+    return new EglSurfaceTextureProviderX11(this, texture);
 }
 
 void EglBackend::init()
@@ -150,12 +150,12 @@ void EglBackend::vblank(std::chrono::nanoseconds timestamp)
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
-EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture)
-    : PlatformOpenGLSurfaceTextureX11(backend, texture)
+EglSurfaceTextureProviderX11::EglSurfaceTextureProviderX11(EglBackend *backend, SurfacePixmapX11 *texture)
+    : OpenGLSurfaceTextureProviderX11(backend, texture)
 {
 }
 
-bool EglSurfaceTextureX11::create()
+bool EglSurfaceTextureProviderX11::create()
 {
     auto texture = new EglPixmapTexture(static_cast<EglBackend *>(m_backend));
     if (texture->create(m_pixmap)) {
@@ -164,7 +164,7 @@ bool EglSurfaceTextureX11::create()
     return !m_texture.isNull();
 }
 
-void EglSurfaceTextureX11::update(const QRegion &region)
+void EglSurfaceTextureProviderX11::update(const QRegion &region)
 {
     Q_UNUSED(region)
     // mipmaps need to be updated

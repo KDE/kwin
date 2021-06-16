@@ -8,8 +8,8 @@
 */
 #include "egl_x11_backend.h"
 // kwin
-#include "basiceglsurfacetexture_internal.h"
-#include "basiceglsurfacetexture_wayland.h"
+#include "basiceglsurfacetextureprovider_internal.h"
+#include "basiceglsurfacetextureprovider_wayland.h"
 #include "main.h"
 #include "screens.h"
 #include "softwarevsyncmonitor.h"
@@ -109,14 +109,14 @@ void EglX11Backend::screenGeometryChanged(const QSize &size)
     Q_UNUSED(size)
 }
 
-PlatformSurfaceTexture *EglX11Backend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTextureProvider *EglX11Backend::createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap)
 {
-    return new BasicEGLSurfaceTextureWayland(this, pixmap);
+    return new BasicEGLSurfaceTextureProviderWayland(this, pixmap);
 }
 
-PlatformSurfaceTexture *EglX11Backend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTextureProvider *EglX11Backend::createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap)
 {
-    return new BasicEGLSurfaceTextureInternal(this, pixmap);
+    return new BasicEGLSurfaceTextureProviderInternal(this, pixmap);
 }
 
 } // namespace

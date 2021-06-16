@@ -111,14 +111,14 @@ void SurfaceItem::preprocess()
     updatePixmap();
 
     if (m_pixmap && m_pixmap->isValid()) {
-        PlatformSurfaceTexture *platformSurfaceTexture = m_pixmap->platformTexture();
-        if (platformSurfaceTexture->isValid()) {
+        SurfaceTextureProvider *textureProvider = m_pixmap->textureProvider();
+        if (textureProvider->isValid()) {
             if (!damage().isEmpty()) {
-                platformSurfaceTexture->update(damage());
+                textureProvider->update(damage());
                 resetDamage();
             }
         } else {
-            if (platformSurfaceTexture->create()) {
+            if (textureProvider->create()) {
                 resetDamage();
             }
         }
@@ -151,11 +151,11 @@ WindowQuadList SurfaceItem::buildQuads() const
     return quads;
 }
 
-PlatformSurfaceTexture::~PlatformSurfaceTexture()
+SurfaceTextureProvider::~SurfaceTextureProvider()
 {
 }
 
-SurfacePixmap::SurfacePixmap(PlatformSurfaceTexture *platformTexture, QObject *parent)
+SurfacePixmap::SurfacePixmap(SurfaceTextureProvider *platformTexture, QObject *parent)
     : QObject(parent)
     , m_platformTexture(platformTexture)
 {
@@ -165,7 +165,7 @@ void SurfacePixmap::update()
 {
 }
 
-PlatformSurfaceTexture *SurfacePixmap::platformTexture() const
+SurfaceTextureProvider *SurfacePixmap::textureProvider() const
 {
     return m_platformTexture.data();
 }

@@ -33,6 +33,8 @@ public:
     Shadow *createShadow(Toplevel *toplevel) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     void screenGeometryChanged(const QSize &size) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap) override;
 
     KrkTexture *createSceneTexture(const QImage &image,
                                    KrkNative::KrkNativeTexture::CreateTextureOptions options) override;

@@ -6,15 +6,15 @@
 
 #pragma once
 
-#include "platformopenglsurfacetexture_internal.h"
+#include "openglsurfacetextureprovider_internal.h"
 
 namespace KWin
 {
 
-class KWIN_EXPORT BasicEGLSurfaceTextureInternal : public PlatformOpenGLSurfaceTextureInternal
+class KWIN_EXPORT BasicEGLSurfaceTextureProviderInternal : public OpenGLSurfaceTextureProviderInternal
 {
 public:
-    BasicEGLSurfaceTextureInternal(OpenGLBackend *backend, SurfacePixmapInternal *pixmap);
+    BasicEGLSurfaceTextureProviderInternal(OpenGLBackend *backend, SurfacePixmapInternal *pixmap);
 
     bool create() override;
     void update(const QRegion &region) override;

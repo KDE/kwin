@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "basiceglsurfacetexture_wayland.h"
+#include "basiceglsurfacetextureprovider_wayland.h"
 #include "egl_dmabuf.h"
 #include "kwineglext.h"
 #include "kwingltexture.h"
@@ -18,23 +18,23 @@
 namespace KWin
 {
 
-BasicEGLSurfaceTextureWayland::BasicEGLSurfaceTextureWayland(OpenGLBackend *backend,
-                                                             SurfacePixmapWayland *pixmap)
-    : PlatformOpenGLSurfaceTextureWayland(backend, pixmap)
+BasicEGLSurfaceTextureProviderWayland::BasicEGLSurfaceTextureProviderWayland(OpenGLBackend *backend,
+                                                                             SurfacePixmapWayland *pixmap)
+    : OpenGLSurfaceTextureProviderWayland(backend, pixmap)
 {
 }
 
-BasicEGLSurfaceTextureWayland::~BasicEGLSurfaceTextureWayland()
+BasicEGLSurfaceTextureProviderWayland::~BasicEGLSurfaceTextureProviderWayland()
 {
     destroy();
 }
 
-AbstractEglBackend *BasicEGLSurfaceTextureWayland::backend() const
+AbstractEglBackend *BasicEGLSurfaceTextureProviderWayland::backend() const
 {
     return static_cast<AbstractEglBackend *>(m_backend);
 }
 
-bool BasicEGLSurfaceTextureWayland::create()
+bool BasicEGLSurfaceTextureProviderWayland::create()
 {
     KWaylandServer::BufferInterface *buffer = m_pixmap->buffer();
     if (Q_UNLIKELY(!buffer)) {
@@ -49,7 +49,7 @@ bool BasicEGLSurfaceTextureWayland::create()
     }
 }
 
-void BasicEGLSurfaceTextureWayland::destroy()
+void BasicEGLSurfaceTextureProviderWayland::destroy()
 {
     if (m_image != EGL_NO_IMAGE_KHR) {
         eglDestroyImageKHR(backend()->eglDisplay(), m_image);
@@ -59,7 +59,7 @@ void BasicEGLSurfaceTextureWayland::destroy()
     m_bufferType = BufferType::None;
 }
 
-void BasicEGLSurfaceTextureWayland::update(const QRegion &region)
+void BasicEGLSurfaceTextureProviderWayland::update(const QRegion &region)
 {
     KWaylandServer::BufferInterface *buffer = m_pixmap->buffer();
     if (Q_UNLIKELY(!buffer)) {
@@ -74,7 +74,7 @@ void BasicEGLSurfaceTextureWayland::update(const QRegion &region)
     }
 }
 
-bool BasicEGLSurfaceTextureWayland::loadShmTexture(KWaylandServer::BufferInterface *buffer)
+bool BasicEGLSurfaceTextureProviderWayland::loadShmTexture(KWaylandServer::BufferInterface *buffer)
 {
     const QImage &image = buffer->data();
     if (Q_UNLIKELY(image.isNull())) {
@@ -90,7 +90,7 @@ bool BasicEGLSurfaceTextureWayland::loadShmTexture(KWaylandServer::BufferInterfa
     return true;
 }
 
-void BasicEGLSurfaceTextureWayland::updateShmTexture(KWaylandServer::BufferInterface *buffer, const QRegion &region)
+void BasicEGLSurfaceTextureProviderWayland::updateShmTexture(KWaylandServer::BufferInterface *buffer, const QRegion &region)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::Shm)) {
         destroy();
@@ -114,7 +114,7 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(KWaylandServer::BufferInter
     }
 }
 
-bool BasicEGLSurfaceTextureWayland::loadEglTexture(KWaylandServer::BufferInterface *buffer)
+bool BasicEGLSurfaceTextureProviderWayland::loadEglTexture(KWaylandServer::BufferInterface *buffer)
 {
     const AbstractEglBackendFunctions *funcs = backend()->functions();
     if (Q_UNLIKELY(!funcs->eglQueryWaylandBufferWL)) {
@@ -143,7 +143,7 @@ bool BasicEGLSurfaceTextureWayland::loadEglTexture(KWaylandServer::BufferInterfa
     return true;
 }
 
-void BasicEGLSurfaceTextureWayland::updateEglTexture(KWaylandServer::BufferInterface *buffer)
+void BasicEGLSurfaceTextureProviderWayland::updateEglTexture(KWaylandServer::BufferInterface *buffer)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::Egl)) {
         destroy();
@@ -162,7 +162,7 @@ void BasicEGLSurfaceTextureWayland::updateEglTexture(KWaylandServer::BufferInter
     }
 }
 
-bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(KWaylandServer::BufferInterface *buffer)
+bool BasicEGLSurfaceTextureProviderWayland::loadDmabufTexture(KWaylandServer::BufferInterface *buffer)
 {
     auto dmabuf = static_cast<EglDmabufBuffer *>(buffer->linuxDmabufBuffer());
     if (Q_UNLIKELY(dmabuf->images().constFirst() == EGL_NO_IMAGE_KHR)) {
@@ -184,7 +184,7 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(KWaylandServer::BufferInte
     return true;
 }
 
-void BasicEGLSurfaceTextureWayland::updateDmabufTexture(KWaylandServer::BufferInterface *buffer)
+void BasicEGLSurfaceTextureProviderWayland::updateDmabufTexture(KWaylandServer::BufferInterface *buffer)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::DmaBuf)) {
         destroy();
@@ -201,7 +201,7 @@ void BasicEGLSurfaceTextureWayland::updateDmabufTexture(KWaylandServer::BufferIn
     m_texture->setYInverted(!(dmabuf->flags() & KWaylandServer::LinuxDmabufUnstableV1Interface::YInverted));
 }
 
-EGLImageKHR BasicEGLSurfaceTextureWayland::attach(KWaylandServer::BufferInterface *buffer)
+EGLImageKHR BasicEGLSurfaceTextureProviderWayland::attach(KWaylandServer::BufferInterface *buffer)
 {
     const AbstractEglBackendFunctions *funcs = backend()->functions();
 

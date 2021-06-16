@@ -54,10 +54,10 @@ protected:
     friend class Scene::Window;
 };
 
-class KWIN_EXPORT PlatformSurfaceTexture
+class KWIN_EXPORT SurfaceTextureProvider
 {
 public:
-    virtual ~PlatformSurfaceTexture();
+    virtual ~SurfaceTextureProvider();
 
     virtual bool isValid() const = 0;
 
@@ -70,9 +70,9 @@ class KWIN_EXPORT SurfacePixmap : public QObject
     Q_OBJECT
 
 public:
-    explicit SurfacePixmap(PlatformSurfaceTexture *platformTexture, QObject *parent = nullptr);
+    explicit SurfacePixmap(SurfaceTextureProvider *platformTexture, QObject *parent = nullptr);
 
-    PlatformSurfaceTexture *platformTexture() const;
+    SurfaceTextureProvider *textureProvider() const;
 
     bool hasAlphaChannel() const;
     QSize size() const;
@@ -87,7 +87,7 @@ protected:
     bool m_hasAlphaChannel = false;
 
 private:
-    QScopedPointer<PlatformSurfaceTexture> m_platformTexture;
+    QScopedPointer<SurfaceTextureProvider> m_platformTexture;
 };
 
 } // namespace KWin

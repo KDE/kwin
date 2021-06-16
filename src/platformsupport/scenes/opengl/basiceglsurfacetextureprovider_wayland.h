@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "platformopenglsurfacetexture_wayland.h"
+#include "openglsurfacetextureprovider_wayland.h"
 
 #include <epoxy/egl.h>
 
@@ -20,11 +20,11 @@ namespace KWin
 
 class AbstractEglBackend;
 
-class KWIN_EXPORT BasicEGLSurfaceTextureWayland : public PlatformOpenGLSurfaceTextureWayland
+class KWIN_EXPORT BasicEGLSurfaceTextureProviderWayland : public OpenGLSurfaceTextureProviderWayland
 {
 public:
-    BasicEGLSurfaceTextureWayland(OpenGLBackend *backend, SurfacePixmapWayland *pixmap);
-    ~BasicEGLSurfaceTextureWayland() override;
+    BasicEGLSurfaceTextureProviderWayland(OpenGLBackend *backend, SurfacePixmapWayland *pixmap);
+    ~BasicEGLSurfaceTextureProviderWayland() override;
 
     AbstractEglBackend *backend() const;
 

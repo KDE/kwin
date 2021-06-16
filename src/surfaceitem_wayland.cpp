@@ -131,7 +131,7 @@ SurfacePixmap *SurfaceItemWayland::createPixmap()
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->scene()->createPlatformSurfaceTextureWayland(this), parent)
+    : SurfacePixmap(Compositor::self()->scene()->createSurfaceTextureProviderWayland(this), parent)
     , m_item(item)
 {
 }
@@ -168,7 +168,7 @@ bool SurfacePixmapWayland::isValid() const
 {
     // Referenced buffers get destroyed under our nose, check also the platform texture
     // to work around BufferInterface's weird api.
-    return m_buffer || platformTexture()->isValid();
+    return m_buffer || textureProvider()->isValid();
 }
 
 void SurfacePixmapWayland::clearBuffer()

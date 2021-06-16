@@ -12,7 +12,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_opengl.h"
-#include "platformopenglsurfacetexture.h"
+#include "openglsurfacetextureprovider.h"
 
 #include "platform.h"
 #include "wayland_server.h"
@@ -643,19 +643,19 @@ QSharedPointer<GLTexture> SceneOpenGL::textureForOutput(AbstractOutput* output) 
     return m_backend->textureForOutput(output);
 }
 
-PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTextureProvider *SceneOpenGL::createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureInternal(pixmap);
+    return m_backend->createSurfaceTextureProviderInternal(pixmap);
 }
 
-PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTextureProvider *SceneOpenGL::createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureWayland(pixmap);
+    return m_backend->createSurfaceTextureProviderWayland(pixmap);
 }
 
-PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap)
+SurfaceTextureProvider *SceneOpenGL::createSurfaceTextureProviderX11(SurfacePixmapX11 *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureX11(pixmap);
+    return m_backend->createSurfaceTextureProviderX11(pixmap);
 }
 
 KrkTexture *SceneOpenGL::createSceneTexture(GLTexture *texture, KrkNative::KrkNativeTexture::CreateTextureOptions options)
@@ -973,7 +973,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
         if (!quads.isEmpty()) {
             SurfacePixmap *pixmap = surfaceItem->pixmap();
             if (pixmap) {
-                auto textureProvider = static_cast<PlatformOpenGLSurfaceTexture *>(pixmap->platformTexture());
+                auto textureProvider = static_cast<OpenGLSurfaceTextureProvider *>(pixmap->textureProvider());
                 context->renderNodes.append(RenderNode{
                     .texture = textureProvider->texture(),
                     .quads = quads,
@@ -1136,11 +1136,11 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
 QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
 {
-    PlatformOpenGLSurfaceTexture *frame = nullptr;
+    OpenGLSurfaceTextureProvider *frame = nullptr;
     const SurfaceItem *item = surfaceItem();
 
     if (item) {
-        frame = static_cast<PlatformOpenGLSurfaceTexture *>(item->pixmap()->platformTexture());
+        frame = static_cast<OpenGLSurfaceTextureProvider *>(item->pixmap()->textureProvider());
     }
 
     if (frame && item->childItems().isEmpty() && frame->texture()) {

@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "egl_stream_backend.h"
-#include "basiceglsurfacetexture_internal.h"
+#include "basiceglsurfacetextureprovider_internal.h"
 #include "composite.h"
 #include "drm_backend.h"
 #include "drm_output.h"
@@ -480,12 +480,12 @@ bool EglStreamBackend::initBufferConfigs()
     return true;
 }
 
-PlatformSurfaceTexture *EglStreamBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTextureProvider *EglStreamBackend::createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap)
 {
-    return new BasicEGLSurfaceTextureInternal(this, pixmap);
+    return new BasicEGLSurfaceTextureProviderInternal(this, pixmap);
 }
 
-PlatformSurfaceTexture *EglStreamBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTextureProvider *EglStreamBackend::createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap)
 {
     return new EglStreamSurfaceTextureWayland(this, pixmap);
 }
@@ -577,7 +577,7 @@ QSharedPointer<DrmBuffer> EglStreamBackend::renderTestFrame(DrmOutput *drmOutput
 
 EglStreamSurfaceTextureWayland::EglStreamSurfaceTextureWayland(EglStreamBackend *backend,
                                                                SurfacePixmapWayland *pixmap)
-    : BasicEGLSurfaceTextureWayland(backend, pixmap)
+    : BasicEGLSurfaceTextureProviderWayland(backend, pixmap)
     , m_backend(backend)
 {
 }
@@ -733,7 +733,7 @@ bool EglStreamSurfaceTextureWayland::create()
         return true;
     } else {
         // Not an EGLStream surface
-        return BasicEGLSurfaceTextureWayland::create();
+        return BasicEGLSurfaceTextureProviderWayland::create();
     }
 }
 
@@ -756,7 +756,7 @@ void EglStreamSurfaceTextureWayland::update(const QRegion &region)
         }
     } else {
         // Not an EGLStream surface
-        BasicEGLSurfaceTextureWayland::update(region);
+        BasicEGLSurfaceTextureProviderWayland::update(region);
     }
 }
 

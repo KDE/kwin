@@ -68,8 +68,8 @@ public:
     EglWaylandBackend(WaylandBackend *b);
     ~EglWaylandBackend() override;
 
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap) override;
 
     void screenGeometryChanged(const QSize &size) override;
     QRegion beginFrame(int screenId) override;

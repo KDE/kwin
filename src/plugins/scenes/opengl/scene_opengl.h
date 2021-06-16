@@ -45,9 +45,9 @@ public:
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     virtual QMatrix4x4 projectionMatrix() const = 0;
     bool animationsSupported() const override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderX11(SurfacePixmapX11 *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap) override;
 
     KrkTexture *createSceneTexture(GLTexture *texture,
                                    KrkNative::KrkNativeTexture::CreateTextureOptions options) override;

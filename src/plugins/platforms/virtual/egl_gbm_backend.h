@@ -25,8 +25,8 @@ public:
     EglGbmBackend(VirtualBackend *b);
     ~EglGbmBackend() override;
     void screenGeometryChanged(const QSize &size) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void init() override;

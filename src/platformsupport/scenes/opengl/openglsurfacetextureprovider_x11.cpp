@@ -4,14 +4,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "platformopenglsurfacetexture_x11.h"
+#include "openglsurfacetextureprovider_x11.h"
 
 namespace KWin
 {
 
-PlatformOpenGLSurfaceTextureX11::PlatformOpenGLSurfaceTextureX11(OpenGLBackend *backend,
+OpenGLSurfaceTextureProviderX11::OpenGLSurfaceTextureProviderX11(OpenGLBackend *backend,
                                                                  SurfacePixmapX11 *pixmap)
-    : PlatformOpenGLSurfaceTexture(backend)
+    : OpenGLSurfaceTextureProvider(backend)
     , m_pixmap(pixmap)
 {
 }

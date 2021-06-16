@@ -1,13 +1,13 @@
 set(SCENE_OPENGL_BACKEND_SRCS
     abstract_egl_backend.cpp
-    basiceglsurfacetexture_internal.cpp
-    basiceglsurfacetexture_wayland.cpp
+    basiceglsurfacetextureprovider_internal.cpp
+    basiceglsurfacetextureprovider_wayland.cpp
     egl_dmabuf.cpp
     openglbackend.cpp
-    platformopenglsurfacetexture.cpp
-    platformopenglsurfacetexture_internal.cpp
-    platformopenglsurfacetexture_wayland.cpp
-    platformopenglsurfacetexture_x11.cpp
+    openglsurfacetextureprovider.cpp
+    openglsurfacetextureprovider_internal.cpp
+    openglsurfacetextureprovider_wayland.cpp
+    openglsurfacetextureprovider_x11.cpp
 )
 
 include(ECMQtDeclareLoggingCategory)

@@ -6,15 +6,15 @@
 
 #pragma once
 
-#include "platformopenglsurfacetexture.h"
+#include "openglsurfacetextureprovider.h"
 
 namespace KWin
 {
 
-class KWIN_EXPORT PlatformOpenGLSurfaceTextureWayland : public PlatformOpenGLSurfaceTexture
+class KWIN_EXPORT OpenGLSurfaceTextureProviderWayland : public OpenGLSurfaceTextureProvider
 {
 public:
-    PlatformOpenGLSurfaceTextureWayland(OpenGLBackend *backend, SurfacePixmapWayland *pixmap);
+    OpenGLSurfaceTextureProviderWayland(OpenGLBackend *backend, SurfacePixmapWayland *pixmap);
 
 protected:
     SurfacePixmapWayland *m_pixmap;

@@ -8,8 +8,8 @@
 */
 #include "egl_gbm_backend.h"
 // kwin
-#include "basiceglsurfacetexture_internal.h"
-#include "basiceglsurfacetexture_wayland.h"
+#include "basiceglsurfacetextureprovider_internal.h"
+#include "basiceglsurfacetextureprovider_wayland.h"
 #include "composite.h"
 #include "virtual_backend.h"
 #include "options.h"
@@ -151,14 +151,14 @@ void EglGbmBackend::screenGeometryChanged(const QSize &size)
     // TODO, create new buffer?
 }
 
-PlatformSurfaceTexture *EglGbmBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTextureProvider *EglGbmBackend::createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap)
 {
-    return new BasicEGLSurfaceTextureInternal(this, pixmap);
+    return new BasicEGLSurfaceTextureProviderInternal(this, pixmap);
 }
 
-PlatformSurfaceTexture *EglGbmBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTextureProvider *EglGbmBackend::createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap)
 {
-    return new BasicEGLSurfaceTextureWayland(this, pixmap);
+    return new BasicEGLSurfaceTextureProviderWayland(this, pixmap);
 }
 
 QRegion EglGbmBackend::beginFrame(int screenId)

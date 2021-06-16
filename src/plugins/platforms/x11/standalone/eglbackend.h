@@ -7,7 +7,7 @@
 #pragma once
 
 #include "eglonxbackend.h"
-#include "platformopenglsurfacetexture_x11.h"
+#include "openglsurfacetextureprovider_x11.h"
 
 #include <kwingltexture.h>
 #include <kwingltexture_p.h>
@@ -29,7 +29,7 @@ public:
 
     void init() override;
 
-    PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *texture) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderX11(SurfacePixmapX11 *texture) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     void screenGeometryChanged(const QSize &size) override;
@@ -71,10 +71,10 @@ private:
     EGLImageKHR m_image = EGL_NO_IMAGE_KHR;
 };
 
-class EglSurfaceTextureX11 : public PlatformOpenGLSurfaceTextureX11
+class EglSurfaceTextureProviderX11 : public OpenGLSurfaceTextureProviderX11
 {
 public:
-    EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture);
+    EglSurfaceTextureProviderX11(EglBackend *backend, SurfacePixmapX11 *texture);
 
     bool create() override;
     void update(const QRegion &region) override;

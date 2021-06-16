@@ -4,14 +4,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "platformopenglsurfacetexture_wayland.h"
+#include "openglsurfacetextureprovider_wayland.h"
 
 namespace KWin
 {
 
-PlatformOpenGLSurfaceTextureWayland::PlatformOpenGLSurfaceTextureWayland(OpenGLBackend *backend,
+OpenGLSurfaceTextureProviderWayland::OpenGLSurfaceTextureProviderWayland(OpenGLBackend *backend,
                                                                          SurfacePixmapWayland *pixmap)
-    : PlatformOpenGLSurfaceTexture(backend)
+    : OpenGLSurfaceTextureProvider(backend)
     , m_pixmap(pixmap)
 {
 }

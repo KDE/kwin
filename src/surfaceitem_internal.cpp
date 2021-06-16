@@ -46,7 +46,7 @@ void SurfaceItemInternal::handleBufferGeometryChanged(Toplevel *toplevel, const 
 }
 
 SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->scene()->createPlatformSurfaceTextureInternal(this), parent)
+    : SurfacePixmap(Compositor::self()->scene()->createSurfaceTextureProviderInternal(this), parent)
     , m_item(item)
 {
 }
