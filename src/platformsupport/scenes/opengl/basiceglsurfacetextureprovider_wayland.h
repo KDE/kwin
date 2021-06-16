@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "openglsurfacetextureprovider_wayland.h"
+#include "openglsurfacetextureprovider.h"
 
 #include <epoxy/egl.h>
 
@@ -22,7 +22,7 @@ namespace KWin
 
 class AbstractEglBackend;
 
-class KWIN_EXPORT BasicEGLSurfaceTextureProviderWayland : public OpenGLSurfaceTextureProviderWayland
+class KWIN_EXPORT BasicEGLSurfaceTextureProviderWayland : public OpenGLSurfaceTextureProvider
 {
 public:
     BasicEGLSurfaceTextureProviderWayland(OpenGLBackend *backend, SurfacePixmapWayland *pixmap);
@@ -32,6 +32,9 @@ public:
 
     bool create() override;
     void update(const QRegion &region) override;
+
+protected:
+    SurfacePixmapWayland *m_pixmap;
 
 private:
     bool loadShmTexture(KWaylandServer::ShmClientBuffer *buffer);

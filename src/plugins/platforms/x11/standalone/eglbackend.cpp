@@ -150,8 +150,9 @@ void EglBackend::vblank(std::chrono::nanoseconds timestamp)
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
-EglSurfaceTextureProviderX11::EglSurfaceTextureProviderX11(EglBackend *backend, SurfacePixmapX11 *texture)
-    : OpenGLSurfaceTextureProviderX11(backend, texture)
+EglSurfaceTextureProviderX11::EglSurfaceTextureProviderX11(EglBackend *backend, SurfacePixmapX11 *pixmap)
+    : OpenGLSurfaceTextureProvider(backend)
+    , m_pixmap(pixmap)
 {
 }
 
