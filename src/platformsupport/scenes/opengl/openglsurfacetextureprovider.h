@@ -14,11 +14,11 @@ namespace KWin
 class GLTexture;
 class OpenGLBackend;
 
-class KWIN_EXPORT PlatformOpenGLSurfaceTexture : public PlatformSurfaceTexture
+class KWIN_EXPORT OpenGLSurfaceTextureProvider : public SurfaceTextureProvider
 {
 public:
-    explicit PlatformOpenGLSurfaceTexture(OpenGLBackend *backend);
-    ~PlatformOpenGLSurfaceTexture() override;
+    explicit OpenGLSurfaceTextureProvider(OpenGLBackend *backend);
+    ~OpenGLSurfaceTextureProvider() override;
 
     bool isValid() const override;
 

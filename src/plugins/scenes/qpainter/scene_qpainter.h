@@ -32,8 +32,8 @@ public:
     EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap) override;
 
     KrkTexture *createSceneTexture(const QImage &image,
                                    KrkNative::KrkNativeTexture::CreateTextureOptions options) override;

@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "basiceglsurfacetexture_wayland.h"
+#include "basiceglsurfacetextureprovider_wayland.h"
 #include "egl_dmabuf.h"
 #include "kwineglext.h"
 #include "kwingltexture.h"
@@ -18,23 +18,23 @@
 namespace KWin
 {
 
-BasicEGLSurfaceTextureWayland::BasicEGLSurfaceTextureWayland(OpenGLBackend *backend,
-                                                             SurfacePixmapWayland *pixmap)
-    : PlatformOpenGLSurfaceTextureWayland(backend, pixmap)
+BasicEGLSurfaceTextureProviderWayland::BasicEGLSurfaceTextureProviderWayland(OpenGLBackend *backend,
+                                                                             SurfacePixmapWayland *pixmap)
+    : OpenGLSurfaceTextureProviderWayland(backend, pixmap)
 {
 }
 
-BasicEGLSurfaceTextureWayland::~BasicEGLSurfaceTextureWayland()
+BasicEGLSurfaceTextureProviderWayland::~BasicEGLSurfaceTextureProviderWayland()
 {
     destroy();
 }
 
-AbstractEglBackend *BasicEGLSurfaceTextureWayland::backend() const
+AbstractEglBackend *BasicEGLSurfaceTextureProviderWayland::backend() const
 {
     return static_cast<AbstractEglBackend *>(m_backend);
 }
 
-bool BasicEGLSurfaceTextureWayland::create()
+bool BasicEGLSurfaceTextureProviderWayland::create()
 {
     if (auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(m_pixmap->buffer())) {
         return loadDmabufTexture(buffer);
@@ -47,7 +47,7 @@ bool BasicEGLSurfaceTextureWayland::create()
     }
 }
 
-void BasicEGLSurfaceTextureWayland::destroy()
+void BasicEGLSurfaceTextureProviderWayland::destroy()
 {
     if (m_image != EGL_NO_IMAGE_KHR) {
         eglDestroyImageKHR(backend()->eglDisplay(), m_image);
@@ -57,7 +57,7 @@ void BasicEGLSurfaceTextureWayland::destroy()
     m_bufferType = BufferType::None;
 }
 
-void BasicEGLSurfaceTextureWayland::update(const QRegion &region)
+void BasicEGLSurfaceTextureProviderWayland::update(const QRegion &region)
 {
     if (auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(m_pixmap->buffer())) {
         updateDmabufTexture(buffer);
@@ -68,7 +68,7 @@ void BasicEGLSurfaceTextureWayland::update(const QRegion &region)
     }
 }
 
-bool BasicEGLSurfaceTextureWayland::loadShmTexture(KWaylandServer::ShmClientBuffer *buffer)
+bool BasicEGLSurfaceTextureProviderWayland::loadShmTexture(KWaylandServer::ShmClientBuffer *buffer)
 {
     const QImage &image = buffer->data();
     if (Q_UNLIKELY(image.isNull())) {
@@ -84,7 +84,7 @@ bool BasicEGLSurfaceTextureWayland::loadShmTexture(KWaylandServer::ShmClientBuff
     return true;
 }
 
-void BasicEGLSurfaceTextureWayland::updateShmTexture(KWaylandServer::ShmClientBuffer *buffer, const QRegion &region)
+void BasicEGLSurfaceTextureProviderWayland::updateShmTexture(KWaylandServer::ShmClientBuffer *buffer, const QRegion &region)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::Shm)) {
         destroy();
@@ -103,7 +103,7 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(KWaylandServer::ShmClientBu
     }
 }
 
-bool BasicEGLSurfaceTextureWayland::loadEglTexture(KWaylandServer::DrmClientBuffer *buffer)
+bool BasicEGLSurfaceTextureProviderWayland::loadEglTexture(KWaylandServer::DrmClientBuffer *buffer)
 {
     const AbstractEglBackendFunctions *funcs = backend()->functions();
     if (Q_UNLIKELY(!funcs->eglQueryWaylandBufferWL)) {
@@ -132,7 +132,7 @@ bool BasicEGLSurfaceTextureWayland::loadEglTexture(KWaylandServer::DrmClientBuff
     return true;
 }
 
-void BasicEGLSurfaceTextureWayland::updateEglTexture(KWaylandServer::DrmClientBuffer *buffer)
+void BasicEGLSurfaceTextureProviderWayland::updateEglTexture(KWaylandServer::DrmClientBuffer *buffer)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::Egl)) {
         destroy();
@@ -154,7 +154,7 @@ void BasicEGLSurfaceTextureWayland::updateEglTexture(KWaylandServer::DrmClientBu
     }
 }
 
-bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
+bool BasicEGLSurfaceTextureProviderWayland::loadDmabufTexture(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
 {
     auto dmabuf = static_cast<EglDmabufBuffer *>(buffer);
     if (Q_UNLIKELY(dmabuf->images().constFirst() == EGL_NO_IMAGE_KHR)) {
@@ -176,7 +176,7 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(KWaylandServer::LinuxDmaBu
     return true;
 }
 
-void BasicEGLSurfaceTextureWayland::updateDmabufTexture(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
+void BasicEGLSurfaceTextureProviderWayland::updateDmabufTexture(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::DmaBuf)) {
         destroy();
@@ -193,7 +193,7 @@ void BasicEGLSurfaceTextureWayland::updateDmabufTexture(KWaylandServer::LinuxDma
     m_texture->setYInverted(dmabuf->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft);
 }
 
-EGLImageKHR BasicEGLSurfaceTextureWayland::attach(KWaylandServer::DrmClientBuffer *buffer)
+EGLImageKHR BasicEGLSurfaceTextureProviderWayland::attach(KWaylandServer::DrmClientBuffer *buffer)
 {
     if (buffer->textureFormat() != EGL_TEXTURE_RGB && buffer->textureFormat() != EGL_TEXTURE_RGBA) {
         qCDebug(KWIN_OPENGL) << "Unsupported texture format: " << buffer->textureFormat();

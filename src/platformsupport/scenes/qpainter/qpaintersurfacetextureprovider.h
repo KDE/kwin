@@ -15,10 +15,10 @@ namespace KWin
 
 class QPainterBackend;
 
-class KWIN_EXPORT PlatformQPainterSurfaceTexture : public PlatformSurfaceTexture
+class KWIN_EXPORT QPainterSurfaceTextureProvider : public SurfaceTextureProvider
 {
 public:
-    explicit PlatformQPainterSurfaceTexture(QPainterBackend *backend);
+    explicit QPainterSurfaceTextureProvider(QPainterBackend *backend);
 
     bool isValid() const override;
 

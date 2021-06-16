@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "egl_gbm_backend.h"
-#include "basiceglsurfacetexture_internal.h"
-#include "basiceglsurfacetexture_wayland.h"
+#include "basiceglsurfacetextureprovider_internal.h"
+#include "basiceglsurfacetextureprovider_wayland.h"
 // kwin
 #include "composite.h"
 #include "drm_backend.h"
@@ -462,14 +462,14 @@ void EglGbmBackend::aboutToStartPainting(int screenId, const QRegion &damagedReg
     }
 }
 
-PlatformSurfaceTexture *EglGbmBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTextureProvider *EglGbmBackend::createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap)
 {
-    return new BasicEGLSurfaceTextureInternal(this, pixmap);
+    return new BasicEGLSurfaceTextureProviderInternal(this, pixmap);
 }
 
-PlatformSurfaceTexture *EglGbmBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTextureProvider *EglGbmBackend::createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap)
 {
-    return new BasicEGLSurfaceTextureWayland(this, pixmap);
+    return new BasicEGLSurfaceTextureProviderWayland(this, pixmap);
 }
 
 void EglGbmBackend::setViewport(const Output &output) const

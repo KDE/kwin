@@ -734,9 +734,9 @@ void GlxBackend::screenGeometryChanged()
     m_bufferAge = 0;
 }
 
-PlatformSurfaceTexture *GlxBackend::createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap)
+SurfaceTextureProvider *GlxBackend::createSurfaceTextureProviderX11(SurfacePixmapX11 *pixmap)
 {
-    return new GlxSurfaceTextureX11(this, pixmap);
+    return new GlxSurfaceTextureProviderX11(this, pixmap);
 }
 
 QRegion GlxBackend::beginFrame(int screenId)
@@ -805,12 +805,12 @@ OverlayWindow* GlxBackend::overlayWindow() const
     return m_overlayWindow;
 }
 
-GlxSurfaceTextureX11::GlxSurfaceTextureX11(GlxBackend *backend, SurfacePixmapX11 *texture)
-    : PlatformOpenGLSurfaceTextureX11(backend, texture)
+GlxSurfaceTextureProviderX11::GlxSurfaceTextureProviderX11(GlxBackend *backend, SurfacePixmapX11 *texture)
+    : OpenGLSurfaceTextureProviderX11(backend, texture)
 {
 }
 
-bool GlxSurfaceTextureX11::create()
+bool GlxSurfaceTextureProviderX11::create()
 {
     auto texture = new GlxPixmapTexture(static_cast<GlxBackend *>(m_backend));
     if (texture->create(m_pixmap)) {
@@ -819,7 +819,7 @@ bool GlxSurfaceTextureX11::create()
     return !m_texture.isNull();
 }
 
-void GlxSurfaceTextureX11::update(const QRegion &region)
+void GlxSurfaceTextureProviderX11::update(const QRegion &region)
 {
     Q_UNUSED(region)
     // mipmaps need to be updated

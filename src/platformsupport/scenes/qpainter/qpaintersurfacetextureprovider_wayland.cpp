@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "platformqpaintersurfacetexture_wayland.h"
+#include "qpaintersurfacetextureprovider_wayland.h"
 #include "surfaceitem_wayland.h"
 
 #include <KWaylandServer/shmclientbuffer.h>
@@ -15,14 +15,14 @@
 namespace KWin
 {
 
-PlatformQPainterSurfaceTextureWayland::PlatformQPainterSurfaceTextureWayland(QPainterBackend *backend,
+QPainterSurfaceTextureProviderWayland::QPainterSurfaceTextureProviderWayland(QPainterBackend *backend,
                                                                              SurfacePixmapWayland *pixmap)
-    : PlatformQPainterSurfaceTexture(backend)
+    : QPainterSurfaceTextureProvider(backend)
     , m_pixmap(pixmap)
 {
 }
 
-bool PlatformQPainterSurfaceTextureWayland::create()
+bool QPainterSurfaceTextureProviderWayland::create()
 {
     auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_pixmap->buffer());
     if (Q_LIKELY(buffer)) {
@@ -33,7 +33,7 @@ bool PlatformQPainterSurfaceTextureWayland::create()
     return !m_image.isNull();
 }
 
-void PlatformQPainterSurfaceTextureWayland::update(const QRegion &region)
+void QPainterSurfaceTextureProviderWayland::update(const QRegion &region)
 {
     auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_pixmap->buffer());
     if (Q_UNLIKELY(!buffer)) {

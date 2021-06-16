@@ -19,7 +19,7 @@ class QString;
 namespace KWin
 {
 
-class PlatformSurfaceTexture;
+class SurfaceTextureProvider;
 class SurfacePixmapInternal;
 class SurfacePixmapWayland;
 
@@ -30,8 +30,8 @@ class QPainterBackend : public QObject
 public:
     virtual ~QPainterBackend();
 
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
+    SurfaceTextureProvider *createSurfaceTextureProviderInternal(SurfacePixmapInternal *pixmap);
+    SurfaceTextureProvider *createSurfaceTextureProviderWayland(SurfacePixmapWayland *pixmap);
 
     virtual void endFrame(int screenId, const QRegion &damage) = 0;
     virtual QRegion beginFrame(int screenId) = 0;

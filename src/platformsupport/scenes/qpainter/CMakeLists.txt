@@ -1,7 +1,7 @@
 set(SCENE_QPAINTER_BACKEND_SRCS
-    platformqpaintersurfacetexture.cpp
-    platformqpaintersurfacetexture_internal.cpp
-    platformqpaintersurfacetexture_wayland.cpp
+    qpaintersurfacetextureprovider.cpp
+    qpaintersurfacetextureprovider_internal.cpp
+    qpaintersurfacetextureprovider_wayland.cpp
     qpainterbackend.cpp
 )
 

@@ -9,7 +9,7 @@
 #ifndef KWIN_GLX_BACKEND_H
 #define KWIN_GLX_BACKEND_H
 #include "openglbackend.h"
-#include "platformopenglsurfacetexture_x11.h"
+#include "openglsurfacetextureprovider_x11.h"
 #include "x11eventfilter.h"
 
 #include <xcb/glx.h>
@@ -70,7 +70,7 @@ class GlxBackend : public OpenGLBackend
 public:
     GlxBackend(Display *display, X11StandalonePlatform *backend);
     ~GlxBackend() override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
+    SurfaceTextureProvider *createSurfaceTextureProviderX11(SurfacePixmapX11 *pixmap) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     bool makeCurrent() override;
@@ -146,10 +146,10 @@ private:
     GLXPixmap m_glxPixmap;
 };
 
-class GlxSurfaceTextureX11 final : public PlatformOpenGLSurfaceTextureX11
+class GlxSurfaceTextureProviderX11 final : public OpenGLSurfaceTextureProviderX11
 {
 public:
-    GlxSurfaceTextureX11(GlxBackend *backend, SurfacePixmapX11 *pixmap);
+    GlxSurfaceTextureProviderX11(GlxBackend *backend, SurfacePixmapX11 *pixmap);
 
     bool create() override;
     void update(const QRegion &region) override;

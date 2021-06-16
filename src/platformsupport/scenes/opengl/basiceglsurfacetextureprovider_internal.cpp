@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "basiceglsurfacetexture_internal.h"
+#include "basiceglsurfacetextureprovider_internal.h"
 #include "kwingltexture.h"
 #include "logging.h"
 #include "surfaceitem_internal.h"
@@ -14,13 +14,14 @@
 namespace KWin
 {
 
-BasicEGLSurfaceTextureInternal::BasicEGLSurfaceTextureInternal(OpenGLBackend *backend,
-                                                               SurfacePixmapInternal *pixmap)
-    : PlatformOpenGLSurfaceTextureInternal(backend, pixmap)
+BasicEGLSurfaceTextureProviderInternal::BasicEGLSurfaceTextureProviderInternal(
+        OpenGLBackend *backend,
+        SurfacePixmapInternal *pixmap)
+    : OpenGLSurfaceTextureProviderInternal(backend, pixmap)
 {
 }
 
-bool BasicEGLSurfaceTextureInternal::create()
+bool BasicEGLSurfaceTextureProviderInternal::create()
 {
     if (updateFromFramebuffer()) {
         return true;
@@ -32,7 +33,7 @@ bool BasicEGLSurfaceTextureInternal::create()
     }
 }
 
-void BasicEGLSurfaceTextureInternal::update(const QRegion &region)
+void BasicEGLSurfaceTextureProviderInternal::update(const QRegion &region)
 {
     if (updateFromFramebuffer()) {
         return;
@@ -43,7 +44,7 @@ void BasicEGLSurfaceTextureInternal::update(const QRegion &region)
     }
 }
 
-bool BasicEGLSurfaceTextureInternal::updateFromFramebuffer()
+bool BasicEGLSurfaceTextureProviderInternal::updateFromFramebuffer()
 {
     const QOpenGLFramebufferObject *fbo = m_pixmap->fbo();
     if (!fbo) {
@@ -69,7 +70,7 @@ static QRegion scale(const QRegion &region, qreal scaleFactor)
     return scaled;
 }
 
-bool BasicEGLSurfaceTextureInternal::updateFromImage(const QRegion &region)
+bool BasicEGLSurfaceTextureProviderInternal::updateFromImage(const QRegion &region)
 {
     const QImage image = m_pixmap->image();
     if (image.isNull()) {
