@@ -878,35 +878,6 @@ void OpenGLWindow::setBlendEnabled(bool enabled)
     m_blendingEnabled = enabled;
 }
 
-static GLTexture *bindSurfaceTexture(SurfaceItem *surfaceItem)
-{
-    SurfacePixmap *surfacePixmap = surfaceItem->pixmap();
-    auto platformSurfaceTexture =
-            static_cast<PlatformOpenGLSurfaceTexture *>(surfacePixmap->platformTexture());
-    if (surfacePixmap->isDiscarded()) {
-        return platformSurfaceTexture->texture();
-    }
-
-    if (platformSurfaceTexture->texture()) {
-        const QRegion region = surfaceItem->damage();
-        if (!region.isEmpty()) {
-            platformSurfaceTexture->update(region);
-            surfaceItem->resetDamage();
-        }
-    } else {
-        if (!surfacePixmap->isValid()) {
-            return nullptr;
-        }
-        if (!platformSurfaceTexture->create()) {
-            qCDebug(KWIN_OPENGL) << "Failed to bind window";
-            return nullptr;
-        }
-        surfaceItem->resetDamage();
-    }
-
-    return platformSurfaceTexture->texture();
-}
-
 static WindowQuadList clipQuads(const Item *item, const OpenGLWindow::RenderContext *context)
 {
     const WindowQuadList quads = item->quads();
@@ -983,8 +954,9 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
         if (!quads.isEmpty()) {
             SurfacePixmap *pixmap = surfaceItem->pixmap();
             if (pixmap) {
+                auto textureProvider = static_cast<PlatformOpenGLSurfaceTexture *>(pixmap->platformTexture());
                 context->renderNodes.append(RenderNode{
-                    .texture = bindSurfaceTexture(surfaceItem),
+                    .texture = textureProvider->texture(),
                     .quads = quads,
                     .transformMatrix = transformation(item, context),
                     .opacity = context->paintData.opacity(),

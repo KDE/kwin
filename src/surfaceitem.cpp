@@ -110,6 +110,20 @@ void SurfaceItem::discardPixmap()
 void SurfaceItem::preprocess()
 {
     updatePixmap();
+
+    if (m_pixmap && m_pixmap->isValid()) {
+        PlatformSurfaceTexture *platformSurfaceTexture = m_pixmap->platformTexture();
+        if (platformSurfaceTexture->isValid()) {
+            if (!damage().isEmpty()) {
+                platformSurfaceTexture->update(damage());
+                resetDamage();
+            }
+        } else {
+            if (platformSurfaceTexture->create()) {
+                resetDamage();
+            }
+        }
+    }
 }
 
 WindowQuadList SurfaceItem::buildQuads() const

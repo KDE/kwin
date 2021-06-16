@@ -285,14 +285,8 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
         return;
     }
 
-    PlatformQPainterSurfaceTexture *platformSurfaceTexture =
+    const PlatformQPainterSurfaceTexture *platformSurfaceTexture =
             static_cast<PlatformQPainterSurfaceTexture *>(surfaceTexture->platformTexture());
-    if (!platformSurfaceTexture->isValid()) {
-        platformSurfaceTexture->create();
-    } else {
-        platformSurfaceTexture->update(surfaceItem->damage());
-    }
-    surfaceItem->resetDamage();
 
     const QRegion shape = surfaceItem->shape();
     for (const QRectF rect : shape) {

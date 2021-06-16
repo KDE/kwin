@@ -25,9 +25,6 @@ public:
     OpenGLBackend *backend() const;
     GLTexture *texture() const;
 
-    virtual bool create() = 0;
-    virtual void update(const QRegion &region) = 0;
-
 protected:
     OpenGLBackend *m_backend;
     QScopedPointer<GLTexture> m_texture;
