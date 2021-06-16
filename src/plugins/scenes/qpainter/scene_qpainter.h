@@ -33,8 +33,9 @@ public:
     Shadow *createShadow(Toplevel *toplevel) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     void screenGeometryChanged(const QSize &size) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+
+    KrkTexture *createSceneTexture(const QImage &image,
+                                   KrkNative::KrkNativeTexture::CreateTextureOptions options) override;
 
     bool animationsSupported() const override {
         return false;

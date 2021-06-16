@@ -596,6 +596,20 @@ PlatformSurfaceTexture *Scene::createPlatformSurfaceTextureWayland(SurfacePixmap
     return nullptr;
 }
 
+KrkTexture *Scene::createSceneTexture(const QImage &image, KrkNative::KrkNativeTexture::CreateTextureOptions options)
+{
+    Q_UNUSED(image)
+    Q_UNUSED(options)
+    return nullptr;
+}
+
+KrkTexture *Scene::createSceneTexture(GLTexture *texture, KrkNative::KrkNativeTexture::CreateTextureOptions options)
+{
+    Q_UNUSED(texture)
+    Q_UNUSED(options)
+    return nullptr;
+}
+
 //****************************************
 // Scene::Window
 //****************************************

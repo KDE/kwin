@@ -49,6 +49,11 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
+    KrkTexture *createSceneTexture(GLTexture *texture,
+                                   KrkNative::KrkNativeTexture::CreateTextureOptions options) override;
+    KrkTexture *createSceneTexture(const QImage &image,
+                                   KrkNative::KrkNativeTexture::CreateTextureOptions options) override;
+
     bool debug() const { return m_debug; }
     void initDebugOutput();
 

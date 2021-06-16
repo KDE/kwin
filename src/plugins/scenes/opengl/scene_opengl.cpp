@@ -17,6 +17,8 @@
 #include "platform.h"
 #include "wayland_server.h"
 
+#include "krkplaintexture_p.h"
+
 #include <kwinglplatform.h>
 #include <kwineffectquickview.h>
 
@@ -654,6 +656,23 @@ PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureWayland(Surface
 PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap)
 {
     return m_backend->createPlatformSurfaceTextureX11(pixmap);
+}
+
+KrkTexture *SceneOpenGL::createSceneTexture(GLTexture *texture, KrkNative::KrkNativeTexture::CreateTextureOptions options)
+{
+    auto sceneTexture = new KrkPlainTextureOpenGL(texture);
+    sceneTexture->setOwnsTexture(options & KrkNative::KrkNativeTexture::TextureOwnsGLTexture);
+    sceneTexture->setHasAlphaChannel(options & KrkNative::KrkNativeTexture::TextureHasAlpha);
+    return sceneTexture;
+}
+
+KrkTexture *SceneOpenGL::createSceneTexture(const QImage &image, KrkNative::KrkNativeTexture::CreateTextureOptions options)
+{
+    Q_UNUSED(options)
+    auto texture = new KrkPlainTextureOpenGL(new GLTexture(image));
+    texture->setOwnsTexture(true);
+    texture->setHasAlphaChannel(image.hasAlphaChannel());
+    return texture;
 }
 
 //****************************************

@@ -23,6 +23,8 @@
 #include "platform.h"
 #include "windowitem.h"
 
+#include "krkplaintexture_p.h"
+
 #include <kwineffectquickview.h>
 // Qt
 #include <QDebug>
@@ -329,6 +331,12 @@ PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureInternal(Surf
 PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return m_backend->createPlatformSurfaceTextureWayland(pixmap);
+}
+
+KrkTexture *SceneQPainter::createSceneTexture(const QImage &image, KrkNative::KrkNativeTexture::CreateTextureOptions options)
+{
+    Q_UNUSED(options)
+    return new KrkPlainTextureSoftware(image);
 }
 
 QPainterEffectFrame::QPainterEffectFrame(EffectFrameImpl *frame, SceneQPainter *scene)

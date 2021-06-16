@@ -20,6 +20,11 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 set(kwin_SRCS
+    rendergraph/krknativetexture.cpp
+    rendergraph/krkplaintexture.cpp
+    rendergraph/krktexture.cpp
+    rendergraph/krktextureprovider.cpp
+
     3rdparty/xcursor.c
     abstract_client.cpp
     abstract_opengl_context_attribute_builder.cpp
@@ -181,6 +186,8 @@ set_target_properties(kwin PROPERTIES
    VERSION ${PROJECT_VERSION}
    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
+
+target_include_directories(kwin PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/rendergraph)
 
 target_link_libraries(kwin
     kwin4_effect_builtins

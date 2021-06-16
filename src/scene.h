@@ -14,6 +14,8 @@
 #include "utils.h"
 #include "kwineffects.h"
 
+#include "krknativetexture.h"
+
 #include <QElapsedTimer>
 #include <QMatrix4x4>
 
@@ -32,6 +34,7 @@ class EffectFrameImpl;
 class EffectWindowImpl;
 class GLTexture;
 class Item;
+class KrkTexture;
 class OverlayWindow;
 class PlatformSurfaceTexture;
 class RenderLoop;
@@ -193,6 +196,11 @@ public:
     virtual PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
     virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
+
+    virtual KrkTexture *createSceneTexture(const QImage &image,
+                                           KrkNative::KrkNativeTexture::CreateTextureOptions options);
+    virtual KrkTexture *createSceneTexture(GLTexture *texture,
+                                           KrkNative::KrkNativeTexture::CreateTextureOptions options);
 
 Q_SIGNALS:
     void frameRendered();
