@@ -218,7 +218,6 @@ void SurfacePixmapX11::create()
     m_pixmap = pixmap;
     m_hasAlphaChannel = toplevel->hasAlpha();
     m_size = bufferGeometry.size();
-    m_contentsRect = QRect(toplevel->clientPos(), toplevel->clientSize());
 }
 
 } // namespace KWin

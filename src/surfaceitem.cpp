@@ -61,14 +61,14 @@ SurfacePixmap *SurfaceItem::previousPixmap() const
 
 void SurfaceItem::referencePreviousPixmap()
 {
-    if (m_previousPixmap && m_previousPixmap->isDiscarded()) {
+    if (m_previousPixmap) {
         m_referencePixmapCounter++;
     }
 }
 
 void SurfaceItem::unreferencePreviousPixmap()
 {
-    if (!m_previousPixmap || !m_previousPixmap->isDiscarded()) {
+    if (!m_previousPixmap) {
         return;
     }
     m_referencePixmapCounter--;
@@ -98,7 +98,6 @@ void SurfaceItem::discardPixmap()
     if (!m_pixmap.isNull()) {
         if (m_pixmap->isValid()) {
             m_previousPixmap.reset(m_pixmap.take());
-            m_previousPixmap->markAsDiscarded();
             m_referencePixmapCounter++;
         } else {
             m_pixmap.reset();
@@ -179,21 +178,6 @@ bool SurfacePixmap::hasAlphaChannel() const
 QSize SurfacePixmap::size() const
 {
     return m_size;
-}
-
-QRect SurfacePixmap::contentsRect() const
-{
-    return m_contentsRect;
-}
-
-bool SurfacePixmap::isDiscarded() const
-{
-    return m_isDiscarded;
-}
-
-void SurfacePixmap::markAsDiscarded()
-{
-    m_isDiscarded = true;
 }
 
 } // namespace KWin
