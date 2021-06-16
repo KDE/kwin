@@ -17,7 +17,8 @@ namespace KWin
 BasicEGLSurfaceTextureProviderInternal::BasicEGLSurfaceTextureProviderInternal(
         OpenGLBackend *backend,
         SurfacePixmapInternal *pixmap)
-    : OpenGLSurfaceTextureProviderInternal(backend, pixmap)
+    : OpenGLSurfaceTextureProvider(backend)
+    , m_pixmap(pixmap)
 {
 }
 

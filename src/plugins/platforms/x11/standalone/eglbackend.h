@@ -7,7 +7,7 @@
 #pragma once
 
 #include "eglonxbackend.h"
-#include "openglsurfacetextureprovider_x11.h"
+#include "openglsurfacetextureprovider.h"
 
 #include <kwingltexture.h>
 #include <kwingltexture_p.h>
@@ -71,13 +71,16 @@ private:
     EGLImageKHR m_image = EGL_NO_IMAGE_KHR;
 };
 
-class EglSurfaceTextureProviderX11 : public OpenGLSurfaceTextureProviderX11
+class EglSurfaceTextureProviderX11 : public OpenGLSurfaceTextureProvider
 {
 public:
     EglSurfaceTextureProviderX11(EglBackend *backend, SurfacePixmapX11 *texture);
 
     bool create() override;
     void update(const QRegion &region) override;
+
+private:
+    SurfacePixmapX11 *m_pixmap;
 };
 
 } // namespace KWin

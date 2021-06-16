@@ -20,7 +20,8 @@ namespace KWin
 
 BasicEGLSurfaceTextureProviderWayland::BasicEGLSurfaceTextureProviderWayland(OpenGLBackend *backend,
                                                                              SurfacePixmapWayland *pixmap)
-    : OpenGLSurfaceTextureProviderWayland(backend, pixmap)
+    : OpenGLSurfaceTextureProvider(backend)
+    , m_pixmap(pixmap)
 {
 }
 

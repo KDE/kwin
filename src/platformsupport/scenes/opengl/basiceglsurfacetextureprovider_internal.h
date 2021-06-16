@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include "openglsurfacetextureprovider_internal.h"
+#include "openglsurfacetextureprovider.h"
 
 namespace KWin
 {
 
-class KWIN_EXPORT BasicEGLSurfaceTextureProviderInternal : public OpenGLSurfaceTextureProviderInternal
+class KWIN_EXPORT BasicEGLSurfaceTextureProviderInternal : public OpenGLSurfaceTextureProvider
 {
 public:
     BasicEGLSurfaceTextureProviderInternal(OpenGLBackend *backend, SurfacePixmapInternal *pixmap);
@@ -22,6 +22,8 @@ public:
 private:
     bool updateFromFramebuffer();
     bool updateFromImage(const QRegion &region);
+
+    SurfacePixmapInternal *m_pixmap;
 };
 
 } // namespace KWin

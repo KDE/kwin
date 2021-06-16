@@ -800,8 +800,9 @@ OverlayWindow* GlxBackend::overlayWindow() const
     return m_overlayWindow;
 }
 
-GlxSurfaceTextureProviderX11::GlxSurfaceTextureProviderX11(GlxBackend *backend, SurfacePixmapX11 *texture)
-    : OpenGLSurfaceTextureProviderX11(backend, texture)
+GlxSurfaceTextureProviderX11::GlxSurfaceTextureProviderX11(GlxBackend *backend, SurfacePixmapX11 *pixmap)
+    : OpenGLSurfaceTextureProvider(backend)
+    , m_pixmap(pixmap)
 {
 }
 

@@ -9,7 +9,7 @@
 #ifndef KWIN_GLX_BACKEND_H
 #define KWIN_GLX_BACKEND_H
 #include "openglbackend.h"
-#include "openglsurfacetextureprovider_x11.h"
+#include "openglsurfacetextureprovider.h"
 #include "x11eventfilter.h"
 
 #include <xcb/glx.h>
@@ -145,13 +145,16 @@ private:
     GLXPixmap m_glxPixmap;
 };
 
-class GlxSurfaceTextureProviderX11 final : public OpenGLSurfaceTextureProviderX11
+class GlxSurfaceTextureProviderX11 final : public OpenGLSurfaceTextureProvider
 {
 public:
     GlxSurfaceTextureProviderX11(GlxBackend *backend, SurfacePixmapX11 *pixmap);
 
     bool create() override;
     void update(const QRegion &region) override;
+
+private:
+    SurfacePixmapX11 *m_pixmap;
 };
 
 } // namespace

@@ -5,9 +5,6 @@ set(SCENE_OPENGL_BACKEND_SRCS
     egl_dmabuf.cpp
     openglbackend.cpp
     openglsurfacetextureprovider.cpp
-    openglsurfacetextureprovider_internal.cpp
-    openglsurfacetextureprovider_wayland.cpp
-    openglsurfacetextureprovider_x11.cpp
 )
 
 include(ECMQtDeclareLoggingCategory)
