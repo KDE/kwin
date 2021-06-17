@@ -116,10 +116,8 @@ public:
      * Make the texture fully transparent
      */
     void clear();
-    bool isDirty() const;
     void setFilter(GLenum filter);
     void setWrapMode(GLenum mode);
-    void setDirty();
 
     void generateMipmaps();
 

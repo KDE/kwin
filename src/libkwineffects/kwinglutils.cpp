@@ -1080,7 +1080,6 @@ void GLRenderTarget::pushRenderTargets(QStack <GLRenderTarget*> targets)
 GLRenderTarget* GLRenderTarget::popRenderTarget()
 {
     GLRenderTarget* ret = s_renderTargets.pop();
-    ret->setTextureDirty();
 
     if (!s_renderTargets.isEmpty()) {
         s_renderTargets.top()->enable();
@@ -1129,7 +1128,6 @@ bool GLRenderTarget::enable()
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glViewport(0, 0, mTexture.width(), mTexture.height());
-    mTexture.setDirty();
 
     return true;
 }
@@ -1146,7 +1144,6 @@ bool GLRenderTarget::disable()
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, s_kwinFramebuffer);
-    mTexture.setDirty();
 
     return true;
 }

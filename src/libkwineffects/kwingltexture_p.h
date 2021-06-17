@@ -34,8 +34,6 @@ public:
     GLTexturePrivate();
     virtual ~GLTexturePrivate();
 
-    virtual void onDamage();
-
     void updateMatrix();
 
     GLuint m_texture;
@@ -48,7 +46,6 @@ public:
     QMatrix4x4 m_matrix[2];
     bool m_yInverted; // texture is y-inverted
     bool m_canUseMipmaps;
-    bool m_markedDirty;
     bool m_filterChanged;
     bool m_wrapModeChanged;
     bool m_immutable;
