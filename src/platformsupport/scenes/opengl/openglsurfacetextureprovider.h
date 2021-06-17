@@ -16,17 +16,20 @@ class OpenGLBackend;
 
 class KWIN_EXPORT OpenGLSurfaceTextureProvider : public SurfaceTextureProvider
 {
+    Q_OBJECT
+
 public:
     explicit OpenGLSurfaceTextureProvider(OpenGLBackend *backend);
     ~OpenGLSurfaceTextureProvider() override;
 
     bool isValid() const override;
+    KrkTexture *texture() const override;
 
     OpenGLBackend *backend() const;
-    GLTexture *texture() const;
 
 protected:
     OpenGLBackend *m_backend;
+    QScopedPointer<KrkTexture> m_sceneTexture;
     QScopedPointer<GLTexture> m_texture;
 };
 

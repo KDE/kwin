@@ -7,6 +7,7 @@
 #pragma once
 
 #include "item.h"
+#include "krktextureprovider.h"
 
 namespace KWin
 {
@@ -54,11 +55,11 @@ protected:
     int m_referencePixmapCounter = 0;
 };
 
-class KWIN_EXPORT SurfaceTextureProvider
+class KWIN_EXPORT SurfaceTextureProvider : public KrkTextureProvider
 {
-public:
-    virtual ~SurfaceTextureProvider();
+    Q_OBJECT
 
+public:
     virtual bool isValid() const = 0;
 
     virtual bool create() = 0;

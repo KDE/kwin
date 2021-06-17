@@ -17,10 +17,14 @@ class QPainterBackend;
 
 class KWIN_EXPORT QPainterSurfaceTextureProvider : public SurfaceTextureProvider
 {
+    Q_OBJECT
+
 public:
     explicit QPainterSurfaceTextureProvider(QPainterBackend *backend);
+    ~QPainterSurfaceTextureProvider() override;
 
     bool isValid() const override;
+    KrkTexture *texture() const override;
 
     QPainterBackend *backend() const;
     QImage image() const;
@@ -28,6 +32,7 @@ public:
 protected:
     QPainterBackend *m_backend;
     QImage m_image;
+    QScopedPointer<KrkTexture> m_sceneTexture;
 };
 
 } // namespace KWin

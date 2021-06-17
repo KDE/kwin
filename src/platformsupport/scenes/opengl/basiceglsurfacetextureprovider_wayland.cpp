@@ -6,6 +6,8 @@
 
 #include "basiceglsurfacetextureprovider_wayland.h"
 #include "egl_dmabuf.h"
+#include "krknativetexture.h"
+#include "krktexture.h"
 #include "kwineglext.h"
 #include "kwingltexture.h"
 #include "logging.h"
@@ -82,6 +84,12 @@ bool BasicEGLSurfaceTextureProviderWayland::loadShmTexture(KWaylandServer::ShmCl
     m_texture->setYInverted(true);
     m_bufferType = BufferType::Shm;
 
+    KrkNative::KrkNativeTexture::CreateTextureOptions options;
+    if (m_pixmap->hasAlphaChannel()) {
+        options |= KrkNative::KrkNativeTexture::TextureHasAlpha;
+    }
+    m_sceneTexture.reset(KrkNative::KrkOpenGLTexture::fromNative(m_texture.data(), options));
+
     return true;
 }
 
@@ -123,6 +131,12 @@ bool BasicEGLSurfaceTextureProviderWayland::loadEglTexture(KWaylandServer::DrmCl
     m_image = attach(buffer);
     m_texture->unbind();
     m_bufferType = BufferType::Egl;
+
+    KrkNative::KrkNativeTexture::CreateTextureOptions options;
+    if (m_pixmap->hasAlphaChannel()) {
+        options |= KrkNative::KrkNativeTexture::TextureHasAlpha;
+    }
+    m_sceneTexture.reset(KrkNative::KrkOpenGLTexture::fromNative(m_texture.data(), options));
 
     if (EGL_NO_IMAGE_KHR == m_image) {
         qCDebug(KWIN_OPENGL) << "failed to create egl image";
@@ -173,6 +187,12 @@ bool BasicEGLSurfaceTextureProviderWayland::loadDmabufTexture(KWaylandServer::Li
     m_texture->unbind();
     m_texture->setYInverted(dmabuf->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft);
     m_bufferType = BufferType::DmaBuf;
+
+    KrkNative::KrkNativeTexture::CreateTextureOptions options;
+    if (m_pixmap->hasAlphaChannel()) {
+        options |= KrkNative::KrkNativeTexture::TextureHasAlpha;
+    }
+    m_sceneTexture.reset(KrkNative::KrkOpenGLTexture::fromNative(m_texture.data(), options));
 
     return true;
 }

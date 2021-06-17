@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_qpainter.h"
-#include "qpaintersurfacetextureprovider.h"
 // KWin
 #include "abstract_client.h"
 #include "composite.h"
@@ -267,13 +266,14 @@ void SceneQPainter::Window::renderItem(QPainter *painter, Item *item) const
 
 void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const
 {
-    const SurfacePixmap *surfaceTexture = surfaceItem->pixmap();
-    if (!surfaceTexture || !surfaceTexture->isValid()) {
+    const SurfacePixmap *surfacePixmap = surfaceItem->pixmap();
+    if (!surfacePixmap || !surfacePixmap->isValid()) {
         return;
     }
 
-    const QPainterSurfaceTextureProvider *textureProvider =
-            static_cast<QPainterSurfaceTextureProvider *>(surfaceTexture->textureProvider());
+    const KrkTexture *sceneTexture = surfacePixmap->textureProvider()->texture();
+    const KrkNative::KrkSoftwareTexture *texture =
+            static_cast<KrkNative::KrkSoftwareTexture *>(sceneTexture->nativeTexture());
 
     const QRegion shape = surfaceItem->shape();
     for (const QRectF rect : shape) {
@@ -281,8 +281,7 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
         const QPointF bufferTopLeft = matrix.map(rect.topLeft());
         const QPointF bufferBottomRight = matrix.map(rect.bottomRight());
 
-        painter->drawImage(rect, textureProvider->image(),
-                           QRectF(bufferTopLeft, bufferBottomRight));
+        painter->drawImage(rect, texture->image, QRectF(bufferTopLeft, bufferBottomRight));
     }
 }
 

@@ -5,6 +5,7 @@
 */
 
 #include "openglsurfacetextureprovider.h"
+#include "krktexture.h"
 #include "kwingltexture.h"
 
 namespace KWin
@@ -24,14 +25,14 @@ bool OpenGLSurfaceTextureProvider::isValid() const
     return m_texture;
 }
 
+KrkTexture *OpenGLSurfaceTextureProvider::texture() const
+{
+    return m_sceneTexture.data();
+}
+
 OpenGLBackend *OpenGLSurfaceTextureProvider::backend() const
 {
     return m_backend;
-}
-
-GLTexture *OpenGLSurfaceTextureProvider::texture() const
-{
-    return m_texture.data();
 }
 
 } // namespace KWin

@@ -5,6 +5,8 @@
 */
 
 #include "basiceglsurfacetextureprovider_internal.h"
+#include "krknativetexture.h"
+#include "krktexture.h"
 #include "kwingltexture.h"
 #include "logging.h"
 #include "surfaceitem_internal.h"
@@ -55,6 +57,12 @@ bool BasicEGLSurfaceTextureProviderInternal::updateFromFramebuffer()
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_texture->setFilter(GL_LINEAR);
     m_texture->setYInverted(false);
+
+    KrkNative::KrkNativeTexture::CreateTextureOptions options;
+    if (m_pixmap->hasAlphaChannel()) {
+        options |= KrkNative::KrkNativeTexture::TextureHasAlpha;
+    }
+    m_sceneTexture.reset(KrkNative::KrkOpenGLTexture::fromNative(m_texture.data(), options));
     return true;
 }
 
@@ -80,6 +88,11 @@ bool BasicEGLSurfaceTextureProviderInternal::updateFromImage(const QRegion &regi
 
     if (!m_texture) {
         m_texture.reset(new GLTexture(image));
+        KrkNative::KrkNativeTexture::CreateTextureOptions options;
+        if (image.hasAlphaChannel()) {
+            options |= KrkNative::KrkNativeTexture::TextureHasAlpha;
+        }
+        m_sceneTexture.reset(KrkNative::KrkOpenGLTexture::fromNative(m_texture.data(), options));
     } else {
         const QRegion nativeRegion = scale(region, image.devicePixelRatio());
         for (const QRect &rect : nativeRegion) {

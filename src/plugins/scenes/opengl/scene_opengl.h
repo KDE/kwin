@@ -17,6 +17,7 @@
 #include "scene.h"
 #include "shadow.h"
 
+#include "krktexture.h"
 #include "kwinglutils.h"
 
 namespace KWin
@@ -132,13 +133,12 @@ class OpenGLWindow final : public Scene::Window
 public:
     struct RenderNode
     {
-        GLTexture *texture = nullptr;
+        KrkTexture *texture = nullptr;
         WindowQuadList quads;
         QMatrix4x4 transformMatrix;
         int firstVertex = 0;
         int vertexCount = 0;
         qreal opacity = 1;
-        bool hasAlpha = false;
         TextureCoordinateType coordinateType = UnnormalizedCoordinates;
     };
 
@@ -218,13 +218,15 @@ public:
     explicit SceneOpenGLShadow(Toplevel *toplevel);
     ~SceneOpenGLShadow() override;
 
-    GLTexture *shadowTexture() {
-        return m_texture.data();
+    KrkTexture *texture() const {
+        return m_sceneTexture.data();
     }
+
 protected:
     bool prepareBackend() override;
 private:
     QSharedPointer<GLTexture> m_texture;
+    QScopedPointer<KrkTexture> m_sceneTexture;
 };
 
 class SceneOpenGLDecorationRenderer : public DecorationRenderer
@@ -243,16 +245,14 @@ public:
 
     void render(const QRegion &region) override;
 
-    GLTexture *texture() {
-        return m_texture.data();
-    }
-    GLTexture *texture() const {
-        return m_texture.data();
+    KrkTexture *texture() const {
+        return m_sceneTexture.data();
     }
 
 private:
     void resizeTexture();
     QScopedPointer<GLTexture> m_texture;
+    QScopedPointer<KrkTexture> m_sceneTexture;
 };
 
 class KWIN_EXPORT OpenGLFactory : public SceneFactory

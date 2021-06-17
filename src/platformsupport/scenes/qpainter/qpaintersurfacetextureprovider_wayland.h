@@ -13,6 +13,8 @@ namespace KWin
 
 class KWIN_EXPORT QPainterSurfaceTextureProviderWayland : public QPainterSurfaceTextureProvider
 {
+    Q_OBJECT
+
 public:
     QPainterSurfaceTextureProviderWayland(QPainterBackend *backend, SurfacePixmapWayland *pixmap);
 

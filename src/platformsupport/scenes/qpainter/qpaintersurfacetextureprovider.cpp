@@ -5,6 +5,7 @@
 */
 
 #include "qpaintersurfacetextureprovider.h"
+#include "krktexture.h"
 
 namespace KWin
 {
@@ -14,9 +15,18 @@ QPainterSurfaceTextureProvider::QPainterSurfaceTextureProvider(QPainterBackend *
 {
 }
 
+QPainterSurfaceTextureProvider::~QPainterSurfaceTextureProvider()
+{
+}
+
 bool QPainterSurfaceTextureProvider::isValid() const
 {
     return !m_image.isNull();
+}
+
+KrkTexture *QPainterSurfaceTextureProvider::texture() const
+{
+    return m_sceneTexture.data();
 }
 
 QPainterBackend *QPainterSurfaceTextureProvider::backend() const

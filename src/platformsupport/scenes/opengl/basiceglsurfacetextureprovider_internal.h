@@ -13,6 +13,8 @@ namespace KWin
 
 class KWIN_EXPORT BasicEGLSurfaceTextureProviderInternal : public OpenGLSurfaceTextureProvider
 {
+    Q_OBJECT
+
 public:
     BasicEGLSurfaceTextureProviderInternal(OpenGLBackend *backend, SurfacePixmapInternal *pixmap);
 
