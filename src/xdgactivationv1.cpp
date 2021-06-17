@@ -52,8 +52,10 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
             clear();
         }
         m_currentActivationToken.reset(new ActivationToken{newToken, client, surface, serial, seat, appId});
-        const auto icon = QIcon::fromTheme(AbstractClient::iconFromDesktopFile(appId), QIcon::fromTheme(QStringLiteral("system-run")));
-        Q_EMIT effects->startupAdded(m_currentActivationToken->token, icon);
+        if (!appId.isEmpty()) {
+            const auto icon = QIcon::fromTheme(AbstractClient::iconFromDesktopFile(appId), QIcon::fromTheme(QStringLiteral("system-run")));
+            Q_EMIT effects->startupAdded(m_currentActivationToken->token, icon);
+        }
 
         return newToken;
     });
@@ -90,7 +92,9 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
 void XdgActivationV1Integration::clear()
 {
     Q_ASSERT(m_currentActivationToken);
-    Q_EMIT effects->startupRemoved(m_currentActivationToken->token);
+    if (!m_currentActivationToken->applicationId.isEmpty()) {
+        Q_EMIT effects->startupRemoved(m_currentActivationToken->token);
+    }
     m_currentActivationToken.reset();
 }
 
