@@ -22,6 +22,8 @@ class AbstractEglBackend;
 
 class KWIN_EXPORT BasicEGLSurfaceTextureProviderWayland : public OpenGLSurfaceTextureProvider
 {
+    Q_OBJECT
+
 public:
     BasicEGLSurfaceTextureProviderWayland(OpenGLBackend *backend, SurfacePixmapWayland *pixmap);
     ~BasicEGLSurfaceTextureProviderWayland() override;

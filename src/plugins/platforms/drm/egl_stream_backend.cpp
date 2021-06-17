@@ -28,6 +28,9 @@
 #include "shadowbuffer.h"
 #include "drm_pipeline.h"
 
+#include "krknativetexture.h"
+#include "krktexture.h"
+
 #include <QOpenGLContext>
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/display.h>
@@ -640,7 +643,7 @@ void EglStreamSurfaceTextureWayland::copyExternalTexture(GLuint tex)
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, tex);
     glEnable(GL_TEXTURE_EXTERNAL_OES);
 
-    GLfloat yTop = texture()->isYInverted() ? 0 : 1;
+    GLfloat yTop = m_texture->isYInverted() ? 0 : 1;
     glBegin(GL_QUADS);
     glTexCoord2f(0, yTop);
     glVertex2f(-1, 1);
@@ -652,9 +655,9 @@ void EglStreamSurfaceTextureWayland::copyExternalTexture(GLuint tex)
     glVertex2f(1, 1);
     glEnd();
 
-    texture()->bind();
+    m_texture->bind();
     glCopyTexImage2D(m_texture->target(), 0, m_format, 0, 0, m_texture->width(), m_texture->height(), 0);
-    texture()->unbind();
+    m_texture->unbind();
 
     glDisable(GL_TEXTURE_EXTERNAL_OES);
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, 0);
@@ -669,13 +672,13 @@ bool EglStreamSurfaceTextureWayland::attachBuffer(KWaylandServer::BufferInterfac
     GLenum oldFormat = m_format;
     m_format = buffer->hasAlphaChannel() ? GL_RGBA : GL_RGB;
 
-    EGLint yInverted, wasYInverted = texture()->isYInverted();
+    EGLint yInverted, wasYInverted = m_texture->isYInverted();
     if (!pEglQueryWaylandBufferWL(m_backend->eglDisplay(), buffer->resource(), EGL_WAYLAND_Y_INVERTED_WL, &yInverted)) {
         yInverted = EGL_TRUE;
     }
-    texture()->setYInverted(yInverted);
+    m_texture->setYInverted(yInverted);
 
-    return oldFormat != m_format || wasYInverted != texture()->isYInverted();
+    return oldFormat != m_format || wasYInverted != m_texture->isYInverted();
 }
 
 bool EglStreamSurfaceTextureWayland::checkBuffer(KWaylandServer::SurfaceInterface *surface,
@@ -720,6 +723,7 @@ bool EglStreamSurfaceTextureWayland::create()
         m_texture.reset(new GLTexture(m_textureId, 0, m_pixmap->buffer()->size()));
         m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_texture->setFilter(GL_LINEAR);
+        m_sceneTexture.reset(KrkNative::KrkOpenGLTexture::fromNative(m_texture.data()));
 
         attachBuffer(surface->buffer());
         createFbo();

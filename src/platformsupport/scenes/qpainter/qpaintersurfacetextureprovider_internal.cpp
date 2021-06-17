@@ -5,6 +5,8 @@
 */
 
 #include "qpaintersurfacetextureprovider_internal.h"
+#include "krknativetexture.h"
+#include "krktexture.h"
 #include "surfaceitem_internal.h"
 
 namespace KWin
@@ -27,6 +29,7 @@ void QPainterSurfaceTextureProviderInternal::update(const QRegion &region)
 {
     Q_UNUSED(region)
     m_image = m_pixmap->image();
+    m_sceneTexture.reset(KrkNative::KrkSoftwareTexture::fromNative(m_image));
 }
 
 } // namespace KWin

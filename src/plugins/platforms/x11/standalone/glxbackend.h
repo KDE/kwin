@@ -16,6 +16,9 @@
 #include <epoxy/glx.h>
 #include <fixx11h.h>
 
+#include "krknativetexture.h"
+#include "krktexture.h"
+
 #include <kwingltexture.h>
 #include <kwingltexture_p.h>
 
@@ -114,41 +117,40 @@ private:
     Display *m_x11Display;
     X11StandalonePlatform *m_backend;
     VsyncMonitor *m_vsyncMonitor = nullptr;
-    friend class GlxPixmapTexturePrivate;
+    friend class GlxSurfaceTextureProviderX11;
 };
 
-class GlxPixmapTexture final : public GLTexture
+class GlxSurfaceTextureX11 final : public KrkTexture
 {
+    Q_OBJECT
+
 public:
-    explicit GlxPixmapTexture(GlxBackend *backend);
+    GlxSurfaceTextureX11(GlxBackend *glxBackend, GLXPixmap glxPixmap, GLTexture *texture,
+                         bool hasAlphaChannel);
+    ~GlxSurfaceTextureX11() override;
 
-    bool create(SurfacePixmapX11 *texture);
+    void bind() override;
+    void setDirty();
 
-private:
-    Q_DECLARE_PRIVATE(GlxPixmapTexture)
-};
-
-class GlxPixmapTexturePrivate final : public GLTexturePrivate
-{
-public:
-    GlxPixmapTexturePrivate(GlxPixmapTexture *texture, GlxBackend *backend);
-    ~GlxPixmapTexturePrivate() override;
-
-    bool create(SurfacePixmapX11 *texture);
-
-protected:
-    void onDamage() override;
+    bool hasAlphaChannel() const override;
+    KrkNative::KrkNativeTexture *nativeTexture() const override;
 
 private:
     GlxBackend *m_backend;
-    GlxPixmapTexture *q;
     GLXPixmap m_glxPixmap;
+    KrkNative::KrkOpenGLTexture m_nativeTexture;
+    bool m_hasAlphaChannel;
+    bool m_dirty = true;
 };
 
 class GlxSurfaceTextureProviderX11 final : public OpenGLSurfaceTextureProvider
 {
+    Q_OBJECT
+
 public:
     GlxSurfaceTextureProviderX11(GlxBackend *backend, SurfacePixmapX11 *pixmap);
+
+    GlxBackend *backend() const;
 
     bool create() override;
     void update(const QRegion &region) override;

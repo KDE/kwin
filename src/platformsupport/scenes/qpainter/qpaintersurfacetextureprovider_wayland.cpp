@@ -5,6 +5,8 @@
 */
 
 #include "qpaintersurfacetextureprovider_wayland.h"
+#include "krknativetexture.h"
+#include "krktexture.h"
 #include "surfaceitem_wayland.h"
 
 #include <KWaylandServer/buffer_interface.h>
@@ -30,6 +32,9 @@ bool QPainterSurfaceTextureProviderWayland::create()
         // which doesn't own the data of the underlying wl_shm_buffer object.
         m_image = buffer->data().copy();
     }
+    if (!m_image.isNull()) {
+        m_sceneTexture.reset(KrkNative::KrkSoftwareTexture::fromNative(m_image));
+    }
     return !m_image.isNull();
 }
 
@@ -50,6 +55,8 @@ void QPainterSurfaceTextureProviderWayland::update(const QRegion &region)
     for (const QRect &rect : dirtyRegion) {
         painter.drawImage(rect, image, rect);
     }
+
+    m_sceneTexture.reset(KrkNative::KrkSoftwareTexture::fromNative(m_image));
 }
 
 } // namespace KWin

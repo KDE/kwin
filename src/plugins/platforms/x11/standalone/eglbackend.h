@@ -9,6 +9,9 @@
 #include "eglonxbackend.h"
 #include "openglsurfacetextureprovider.h"
 
+#include "krknativetexture.h"
+#include "krktexture.h"
+
 #include <kwingltexture.h>
 #include <kwingltexture_p.h>
 
@@ -43,38 +46,37 @@ private:
     int m_bufferAge = 0;
 };
 
-class EglPixmapTexture : public GLTexture
+class EglSurfaceTextureX11 final : public KrkTexture
 {
+    Q_OBJECT
+
 public:
-    explicit EglPixmapTexture(EglBackend *backend);
+    EglSurfaceTextureX11(EglBackend *eglBackend, EGLImageKHR eglImage, GLTexture *texture,
+                         bool hasAlphaChannel);
+    ~EglSurfaceTextureX11() override;
 
-    bool create(SurfacePixmapX11 *texture);
+    void bind() override;
+    void setDirty();
 
-private:
-    Q_DECLARE_PRIVATE(EglPixmapTexture)
-};
-
-class EglPixmapTexturePrivate : public GLTexturePrivate
-{
-public:
-    EglPixmapTexturePrivate(EglPixmapTexture *texture, EglBackend *backend);
-    ~EglPixmapTexturePrivate() override;
-
-    bool create(SurfacePixmapX11 *texture);
-
-protected:
-    void onDamage() override;
+    bool hasAlphaChannel() const override;
+    KrkNative::KrkNativeTexture *nativeTexture() const override;
 
 private:
     EglBackend *m_backend;
-    EglPixmapTexture *q;
-    EGLImageKHR m_image = EGL_NO_IMAGE_KHR;
+    EGLImageKHR m_image;
+    KrkNative::KrkOpenGLTexture m_nativeTexture;
+    bool m_hasAlphaChannel;
+    bool m_dirty = true;
 };
 
-class EglSurfaceTextureProviderX11 : public OpenGLSurfaceTextureProvider
+class EglSurfaceTextureProviderX11 final : public OpenGLSurfaceTextureProvider
 {
+    Q_OBJECT
+
 public:
     EglSurfaceTextureProviderX11(EglBackend *backend, SurfacePixmapX11 *texture);
+
+    EglBackend *backend() const;
 
     bool create() override;
     void update(const QRegion &region) override;

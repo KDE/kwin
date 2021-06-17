@@ -12,7 +12,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_opengl.h"
-#include "openglsurfacetextureprovider.h"
 
 #include "platform.h"
 #include "wayland_server.h"
@@ -928,6 +927,12 @@ static WindowQuadList clipQuads(const Item *item, const OpenGLWindow::RenderCont
     return quads;
 }
 
+static GLTexture *sceneTextureToGLTexture(KrkTexture *texture)
+{
+    auto nativeTexture = static_cast<KrkNative::KrkOpenGLTexture *>(texture->nativeTexture());
+    return nativeTexture->texture;
+}
+
 void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
 {
     const QList<Item *> sortedChildItems = item->sortedChildItems();
@@ -947,11 +952,10 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
         if (!quads.isEmpty()) {
             SceneOpenGLShadow *shadow = static_cast<SceneOpenGLShadow *>(shadowItem->shadow());
             context->renderNodes.append(RenderNode{
-                .texture = shadow->shadowTexture(),
+                .texture = shadow->texture(),
                 .quads = quads,
                 .transformMatrix = transformation(item, context),
                 .opacity = context->paintData.opacity(),
-                .hasAlpha = true,
                 .coordinateType = NormalizedCoordinates,
             });
         }
@@ -964,7 +968,6 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
                 .quads = quads,
                 .transformMatrix = transformation(item, context),
                 .opacity = context->paintData.opacity(),
-                .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
             });
         }
@@ -973,13 +976,11 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
         if (!quads.isEmpty()) {
             SurfacePixmap *pixmap = surfaceItem->pixmap();
             if (pixmap) {
-                auto textureProvider = static_cast<OpenGLSurfaceTextureProvider *>(pixmap->textureProvider());
                 context->renderNodes.append(RenderNode{
-                    .texture = textureProvider->texture(),
+                    .texture = pixmap->textureProvider()->texture(),
                     .quads = quads,
                     .transformMatrix = transformation(item, context),
                     .opacity = context->paintData.opacity(),
-                    .hasAlpha = pixmap->hasAlphaChannel(),
                     .coordinateType = UnnormalizedCoordinates,
                 });
             }
@@ -1084,7 +1085,8 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
         renderNode.firstVertex = v;
         renderNode.vertexCount = renderNode.quads.count() * verticesPerQuad;
 
-        const QMatrix4x4 matrix = renderNode.texture->matrix(renderNode.coordinateType);
+        const GLTexture *nativeTexture = sceneTextureToGLTexture(renderNode.texture);
+        const QMatrix4x4 matrix = nativeTexture->matrix(renderNode.coordinateType);
 
         renderNode.quads.makeInterleavedArrays(primitiveType, &map[v], matrix);
         v += renderNode.quads.count() * verticesPerQuad;
@@ -1104,7 +1106,8 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
         if (renderNode.vertexCount == 0)
             continue;
 
-        setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
+        KrkTexture *texture = renderNode.texture;
+        setBlendEnabled(texture->hasAlphaChannel() || renderNode.opacity < 1.0);
 
         shader->setUniform(GLShader::ModelViewProjectionMatrix,
                            modelViewProjection * renderNode.transformMatrix);
@@ -1114,9 +1117,9 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
             opacity = renderNode.opacity;
         }
 
-        renderNode.texture->setFilter(GL_LINEAR);
-        renderNode.texture->setWrapMode(GL_CLAMP_TO_EDGE);
-        renderNode.texture->bind();
+        texture->setFiltering(KrkTexture::Linear);
+        texture->setWrapMode(KrkTexture::ClampToEdge);
+        texture->bind();
 
         vbo->draw(region, primitiveType, renderNode.firstVertex,
                   renderNode.vertexCount, renderContext.hardwareClipping);
@@ -1136,15 +1139,15 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
 QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
 {
-    OpenGLSurfaceTextureProvider *frame = nullptr;
+    KrkTextureProvider *frame = nullptr;
     const SurfaceItem *item = surfaceItem();
 
     if (item) {
-        frame = static_cast<OpenGLSurfaceTextureProvider *>(item->pixmap()->textureProvider());
+        frame = item->pixmap()->textureProvider();
     }
 
     if (frame && item->childItems().isEmpty() && frame->texture()) {
-        return QSharedPointer<GLTexture>(new GLTexture(*frame->texture()));
+        return QSharedPointer<GLTexture>(new GLTexture(*sceneTextureToGLTexture(frame->texture())));
     } else {
         auto effectWindow = window()->effectWindow();
         const QRect virtualGeometry = window()->bufferGeometry();
@@ -1700,6 +1703,9 @@ bool SceneOpenGLShadow::prepareBackend()
         scene->makeOpenGLContextCurrent();
         m_texture = DecorationShadowTextureCache::instance().getTexture(this);
 
+        auto options = KrkNative::KrkNativeTexture::TextureHasAlpha;
+        m_sceneTexture.reset(KrkNative::KrkOpenGLTexture::fromNative(m_texture.data(), options));
+
         return true;
     }
     const QSize top(shadowPixmap(ShadowElementTop).size());
@@ -1769,6 +1775,9 @@ bool SceneOpenGLShadow::prepareBackend()
     Scene *scene = Compositor::self()->scene();
     scene->makeOpenGLContextCurrent();
     m_texture = QSharedPointer<GLTexture>::create(image);
+
+    auto options = KrkNative::KrkNativeTexture::TextureHasAlpha;
+    m_sceneTexture.reset(KrkNative::KrkOpenGLTexture::fromNative(m_texture.data(), options));
 
     if (m_texture->internalFormat() == GL_R8) {
         // Swizzle red to alpha and all other channels to zero
@@ -1978,8 +1987,12 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
         m_texture->setYInverted(true);
         m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_texture->clear();
+
+        auto options = KrkNative::KrkNativeTexture::TextureHasAlpha;
+        m_sceneTexture.reset(KrkNative::KrkOpenGLTexture::fromNative(m_texture.data(), options));
     } else {
         m_texture.reset();
+        m_sceneTexture.reset();
     }
 }
 

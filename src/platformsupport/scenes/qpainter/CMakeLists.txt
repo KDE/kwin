@@ -19,4 +19,4 @@ ecm_qt_declare_logging_category(SCENE_QPAINTER_BACKEND_SRCS
 
 add_library(SceneQPainterBackend STATIC ${SCENE_QPAINTER_BACKEND_SRCS})
 target_link_libraries(SceneQPainterBackend Qt::Core Qt::Widgets KF5::CoreAddons KF5::ConfigCore KF5::WindowSystem Plasma::KWaylandServer)
-target_include_directories(SceneQPainterBackend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(SceneQPainterBackend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/src/rendergraph)

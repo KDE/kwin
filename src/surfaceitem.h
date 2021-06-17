@@ -7,6 +7,7 @@
 #pragma once
 
 #include "item.h"
+#include "krktextureprovider.h"
 
 namespace KWin
 {
@@ -54,8 +55,10 @@ protected:
     friend class Scene::Window;
 };
 
-class KWIN_EXPORT SurfaceTextureProvider
+class KWIN_EXPORT SurfaceTextureProvider : public KrkTextureProvider
 {
+    Q_OBJECT
+
 public:
     virtual ~SurfaceTextureProvider();
 

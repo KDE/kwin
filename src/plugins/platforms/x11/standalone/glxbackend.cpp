@@ -800,109 +800,114 @@ OverlayWindow* GlxBackend::overlayWindow() const
     return m_overlayWindow;
 }
 
+GlxSurfaceTextureX11::GlxSurfaceTextureX11(GlxBackend *glxBackend, GLXPixmap glxPixmap, GLTexture *texture,
+                                           bool hasAlphaChannel)
+    : m_backend(glxBackend)
+    , m_glxPixmap(glxPixmap)
+    , m_nativeTexture(texture)
+    , m_hasAlphaChannel(hasAlphaChannel)
+{
+}
+
+GlxSurfaceTextureX11::~GlxSurfaceTextureX11()
+{
+    if (!options->isGlStrictBinding()) {
+        glXReleaseTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT);
+    }
+    glXDestroyPixmap(m_backend->display(), m_glxPixmap);
+    m_glxPixmap = None;
+}
+
+void GlxSurfaceTextureX11::bind()
+{
+    m_nativeTexture.texture->setFilter(filtering() == Linear ? GL_LINEAR : GL_NEAREST);
+    m_nativeTexture.texture->setWrapMode(wrapMode() == Repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
+    m_nativeTexture.texture->bind();
+
+    if (options->isGlStrictBinding() && m_dirty) {
+        glXReleaseTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT);
+        glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
+    }
+
+    m_dirty = false;
+}
+
+void GlxSurfaceTextureX11::setDirty()
+{
+    m_dirty = true;
+}
+
+bool GlxSurfaceTextureX11::hasAlphaChannel() const
+{
+    return m_hasAlphaChannel;
+}
+
+KrkNative::KrkNativeTexture *GlxSurfaceTextureX11::nativeTexture() const
+{
+    return const_cast<KrkNative::KrkOpenGLTexture *>(&m_nativeTexture);
+}
+
 GlxSurfaceTextureProviderX11::GlxSurfaceTextureProviderX11(GlxBackend *backend, SurfacePixmapX11 *pixmap)
     : OpenGLSurfaceTextureProvider(backend)
     , m_pixmap(pixmap)
 {
 }
 
+GlxBackend *GlxSurfaceTextureProviderX11::backend() const
+{
+    return static_cast<GlxBackend *>(OpenGLSurfaceTextureProvider::backend());
+}
+
 bool GlxSurfaceTextureProviderX11::create()
 {
-    auto texture = new GlxPixmapTexture(static_cast<GlxBackend *>(m_backend));
-    if (texture->create(m_pixmap)) {
-        m_texture.reset(texture);
+    if (m_pixmap->pixmap() == XCB_NONE || m_pixmap->size().isEmpty() || m_pixmap->visual() == XCB_NONE) {
+        return false;
     }
-    return !m_texture.isNull();
+
+    const FBConfigInfo *info = backend()->infoForVisual(m_pixmap->visual());
+    if (!info || info->fbconfig == nullptr) {
+        return false;
+    }
+
+    QScopedPointer<GLTexture> texture;
+    if (info->texture_targets & GLX_TEXTURE_2D_BIT_EXT) {
+        texture.reset(new GLTexture(GL_TEXTURE_2D));
+    } else {
+        Q_ASSERT(info->texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT);
+        texture.reset(new GLTexture(GL_TEXTURE_RECTANGLE));
+    }
+    texture->setSize(m_pixmap->size());
+    texture->setYInverted(info->y_inverted);
+
+    const int attrs[] = {
+        GLX_TEXTURE_FORMAT_EXT, info->bind_texture_format,
+        GLX_MIPMAP_TEXTURE_EXT, false,
+        GLX_TEXTURE_TARGET_EXT, texture->target() == GL_TEXTURE_2D ? GLX_TEXTURE_2D_EXT : GLX_TEXTURE_RECTANGLE_EXT,
+        0
+    };
+
+    const GLXPixmap glxPixmap = glXCreatePixmap(backend()->display(), info->fbconfig, m_pixmap->pixmap(), attrs);
+    if (glxPixmap == None) {
+        return false;
+    }
+
+    texture->create();
+    texture->setFilter(GL_NEAREST);
+    texture->bind();
+    glXBindTexImageEXT(backend()->display(), glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
+    texture->unbind();
+
+    m_texture.reset(texture.take());
+    m_sceneTexture.reset(new GlxSurfaceTextureX11(backend(), glxPixmap, m_texture.data(),
+                                                  m_pixmap->hasAlphaChannel()));
+    return true;
 }
 
 void GlxSurfaceTextureProviderX11::update(const QRegion &region)
 {
     Q_UNUSED(region)
-    // mipmaps need to be updated
-    m_texture->setDirty();
-}
-
-GlxPixmapTexture::GlxPixmapTexture(GlxBackend *backend)
-    : GLTexture(*new GlxPixmapTexturePrivate(this, backend))
-{
-}
-
-bool GlxPixmapTexture::create(SurfacePixmapX11 *texture)
-{
-    Q_D(GlxPixmapTexture);
-    return d->create(texture);
-}
-
-GlxPixmapTexturePrivate::GlxPixmapTexturePrivate(GlxPixmapTexture *texture, GlxBackend *backend)
-    : m_backend(backend)
-    , q(texture)
-    , m_glxPixmap(None)
-{
-}
-
-GlxPixmapTexturePrivate::~GlxPixmapTexturePrivate()
-{
-    if (m_glxPixmap != None) {
-        if (!options->isGlStrictBinding()) {
-            glXReleaseTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT);
-        }
-        glXDestroyPixmap(m_backend->display(), m_glxPixmap);
-        m_glxPixmap = None;
-    }
-}
-
-void GlxPixmapTexturePrivate::onDamage()
-{
-    if (options->isGlStrictBinding() && m_glxPixmap) {
-        glXReleaseTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT);
-        glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
-    }
-    GLTexturePrivate::onDamage();
-}
-
-bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
-{
-    if (texture->pixmap() == XCB_NONE || texture->size().isEmpty() || texture->visual() == XCB_NONE)
-        return false;
-
-    const FBConfigInfo *info = m_backend->infoForVisual(texture->visual());
-    if (!info || info->fbconfig == nullptr)
-        return false;
-
-    if (info->texture_targets & GLX_TEXTURE_2D_BIT_EXT) {
-        m_target = GL_TEXTURE_2D;
-        m_scale.setWidth(1.0f / m_size.width());
-        m_scale.setHeight(1.0f / m_size.height());
-    } else {
-        Q_ASSERT(info->texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT);
-
-        m_target = GL_TEXTURE_RECTANGLE;
-        m_scale.setWidth(1.0f);
-        m_scale.setHeight(1.0f);
-    }
-
-    const int attrs[] = {
-        GLX_TEXTURE_FORMAT_EXT, info->bind_texture_format,
-        GLX_MIPMAP_TEXTURE_EXT, false,
-        GLX_TEXTURE_TARGET_EXT, m_target == GL_TEXTURE_2D ? GLX_TEXTURE_2D_EXT : GLX_TEXTURE_RECTANGLE_EXT,
-        0
-    };
-
-    m_glxPixmap     = glXCreatePixmap(m_backend->display(), info->fbconfig, texture->pixmap(), attrs);
-    m_size          = texture->size();
-    m_yInverted     = info->y_inverted ? true : false;
-    m_canUseMipmaps = false;
-
-    glGenTextures(1, &m_texture);
-
-    q->setDirty();
-    q->setFilter(GL_NEAREST);
-
-    glBindTexture(m_target, m_texture);
-    glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
-
-    updateMatrix();
-    return true;
+    auto glxTexture = static_cast<GlxSurfaceTextureX11 *>(m_sceneTexture.data());
+    glxTexture->setDirty();
 }
 
 } // namespace
