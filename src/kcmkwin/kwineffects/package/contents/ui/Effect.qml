@@ -17,7 +17,13 @@ Kirigami.SwipeListItem {
     id: listItem
     hoverEnabled: true
     onClicked: {
-        view.currentIndex = index;
+        if (view.currentIndex == index) {
+            // Collapse list item
+            view.currentIndex = -1;
+        } else {
+            // Expand list item
+            view.currentIndex = index;
+        }
     }
     contentItem: RowLayout {
         id: row
