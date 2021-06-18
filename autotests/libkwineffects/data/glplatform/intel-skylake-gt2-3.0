@@ -16,4 +16,4 @@ MesaVersion=11,2,0
 DriverVersion=11,2,0
 Driver=7
 ChipClass=2999
-Compositor=9
+Compositor=1

@@ -13,4 +13,4 @@ GLES=true
 Adreno=true
 Driver=15
 ChipClass=3002
-Compositor=9
+Compositor=1

@@ -18,4 +18,4 @@ GalliumVersion=0,4
 DriverVersion=11,2,2
 Driver=16
 ChipClass=10
-Compositor=9
+Compositor=1
