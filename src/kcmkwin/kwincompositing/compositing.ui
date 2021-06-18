@@ -179,13 +179,6 @@ you can reset this protection but be aware that this might result in an immediat
      </item>
     </layout>
    </item>
-   <item row="7" column="0" colspan="2">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
    <item row="8" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
@@ -195,13 +188,6 @@ you can reset this protection but be aware that this might result in an immediat
    </item>
    <item row="8" column="1">
     <widget class="QComboBox" name="backend"/>
-   </item>
-   <item row="9" column="0" colspan="2">
-    <widget class="Line" name="line_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
    </item>
    <item row="12" column="0">
     <widget class="QLabel" name="label_5">
