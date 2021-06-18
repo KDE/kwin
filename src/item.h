@@ -62,6 +62,9 @@ public:
     Item *parentItem() const;
     void setParentItem(Item *parent);
     QList<Item *> childItems() const;
+    bool hasChildren() const {
+        return !m_childItems.isEmpty();
+    }
 
     Scene::Window *window() const;
     QPoint rootPosition() const;

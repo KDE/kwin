@@ -1150,11 +1150,11 @@ QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
     PlatformOpenGLSurfaceTexture *frame = nullptr;
     const SurfaceItem *item = surfaceItem();
 
-    if (item) {
+    if (item && !item->hasChildren() && item->pixmap()) {
         frame = static_cast<PlatformOpenGLSurfaceTexture *>(item->pixmap()->platformTexture());
     }
 
-    if (frame && item->childItems().isEmpty() && frame->texture()) {
+    if (frame && frame->texture()) {
         return QSharedPointer<GLTexture>(new GLTexture(*frame->texture()));
     } else {
         auto effectWindow = window()->effectWindow();
