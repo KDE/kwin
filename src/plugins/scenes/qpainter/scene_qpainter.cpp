@@ -245,18 +245,31 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
 
 void SceneQPainter::Window::renderItem(QPainter *painter, Item *item) const
 {
-    item->preprocess();
+    const QList<Item *> sortedChildItems = item->sortedChildItems();
+
     painter->save();
     painter->translate(item->position());
 
+    for (Item *childItem : sortedChildItems) {
+        if (childItem->z() >= 0) {
+            break;
+        }
+        if (childItem->isVisible()) {
+            renderItem(painter, childItem);
+        }
+    }
+
+    item->preprocess();
     if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
         renderSurfaceItem(painter, surfaceItem);
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
         renderDecorationItem(painter, decorationItem);
     }
 
-    const QList<Item *> childItems = item->childItems();
-    for (Item *childItem : childItems) {
+    for (Item *childItem : sortedChildItems) {
+        if (childItem->z() < 0) {
+            continue;
+        }
         if (childItem->isVisible()) {
             renderItem(painter, childItem);
         }

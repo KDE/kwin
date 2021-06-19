@@ -39,6 +39,23 @@ Item::~Item()
     }
 }
 
+int Item::z() const
+{
+    return m_z;
+}
+
+void Item::setZ(int z)
+{
+    if (m_z == z) {
+        return;
+    }
+    m_z = z;
+    if (m_parentItem) {
+        m_parentItem->markSortedChildItemsDirty();
+    }
+    scheduleRepaint(boundingRect());
+}
+
 Item *Item::parentItem() const
 {
     return m_parentItem;
@@ -64,6 +81,8 @@ void Item::addChild(Item *item)
     Q_ASSERT(!m_childItems.contains(item));
 
     m_childItems.append(item);
+    markSortedChildItemsDirty();
+
     updateBoundingRect();
     scheduleRepaint(item->boundingRect().translated(item->position()));
 }
@@ -74,6 +93,7 @@ void Item::removeChild(Item *item)
     scheduleRepaint(item->boundingRect().translated(item->position()));
 
     m_childItems.removeOne(item);
+    markSortedChildItemsDirty();
 
     updateBoundingRect();
 }
@@ -191,6 +211,7 @@ void Item::stackBefore(Item *sibling)
     }
 
     m_parentItem->m_childItems.move(selfIndex, selfIndex > siblingIndex ? siblingIndex : siblingIndex - 1);
+    markSortedChildItemsDirty();
 
     scheduleRepaint(boundingRect());
     sibling->scheduleRepaint(sibling->boundingRect());
@@ -218,6 +239,7 @@ void Item::stackAfter(Item *sibling)
     }
 
     m_parentItem->m_childItems.move(selfIndex, selfIndex > siblingIndex ? siblingIndex + 1 : siblingIndex);
+    markSortedChildItemsDirty();
 
     scheduleRepaint(boundingRect());
     sibling->scheduleRepaint(sibling->boundingRect());
@@ -237,6 +259,8 @@ void Item::stackChildren(const QList<Item *> &children)
 #endif
 
     m_childItems = children;
+    discardQuads();
+    markSortedChildItemsDirty();
 }
 
 void Item::scheduleRepaint(const QRegion &region)
@@ -367,6 +391,26 @@ void Item::updateEffectiveVisibility()
     for (Item *childItem : qAsConst(m_childItems)) {
         childItem->updateEffectiveVisibility();
     }
+}
+
+static bool compareZ(const Item *a, const Item *b)
+{
+    return a->z() < b->z();
+}
+
+QList<Item *> Item::sortedChildItems() const
+{
+    if (!m_sortedChildItems.has_value()) {
+        QList<Item *> items = m_childItems;
+        std::stable_sort(items.begin(), items.end(), compareZ);
+        m_sortedChildItems = items;
+    }
+    return m_sortedChildItems.value();
+}
+
+void Item::markSortedChildItemsDirty()
+{
+    m_sortedChildItems.reset();
 }
 
 } // namespace KWin

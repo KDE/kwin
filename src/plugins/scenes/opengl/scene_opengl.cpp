@@ -940,8 +940,18 @@ static WindowQuadList clipQuads(const Item *item, const OpenGLWindow::RenderCont
 
 void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
 {
-    item->preprocess();
+    const QList<Item *> sortedChildItems = item->sortedChildItems();
 
+    for (Item *childItem : sortedChildItems) {
+        if (childItem->z() >= 0) {
+            break;
+        }
+        if (childItem->isVisible()) {
+            createRenderNode(childItem, context);
+        }
+    }
+
+    item->preprocess();
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
         WindowQuadList quads = clipQuads(item, context);
         if (!quads.isEmpty()) {
@@ -985,8 +995,10 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
         }
     }
 
-    const QList<Item *> childItems = item->childItems();
-    for (Item *childItem : childItems) {
+    for (Item *childItem : sortedChildItems) {
+        if (childItem->z() < 0) {
+            continue;
+        }
         if (childItem->isVisible()) {
             createRenderNode(childItem, context);
         }

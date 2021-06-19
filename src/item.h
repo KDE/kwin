@@ -30,6 +30,9 @@ public:
     QSize size() const;
     void setSize(const QSize &size);
 
+    int z() const;
+    void setZ(int z);
+
     /**
      * Returns the enclosing rectangle of the item. The rect equals QRect(0, 0, width(), height()).
      */
@@ -46,6 +49,7 @@ public:
     Item *parentItem() const;
     void setParentItem(Item *parent);
     QList<Item *> childItems() const;
+    QList<Item *> sortedChildItems() const;
 
     Scene::Window *window() const;
     QPoint rootPosition() const;
@@ -112,6 +116,7 @@ private:
     void updateBoundingRect();
     void scheduleRepaintInternal(const QRegion &region);
     void reallocRepaints();
+    void markSortedChildItemsDirty();
 
     bool computeEffectiveVisibility() const;
     void updateEffectiveVisibility();
@@ -122,10 +127,12 @@ private:
     QRect m_boundingRect;
     QPoint m_position;
     QSize m_size = QSize(0, 0);
+    int m_z = 0;
     bool m_visible = true;
     bool m_effectiveVisible = true;
     QVector<QRegion> m_repaints;
     mutable std::optional<WindowQuadList> m_quads;
+    mutable std::optional<QList<Item *>> m_sortedChildItems;
 };
 
 } // namespace KWin
