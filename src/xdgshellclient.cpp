@@ -18,6 +18,9 @@
 #include "subsurfacemonitor.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#if KWIN_BUILD_ACTIVITIES
+#include "activities.h"
+#endif
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
@@ -353,6 +356,11 @@ XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)
     setupWindowManagementIntegration();
     setupPlasmaShellIntegration();
     setDesktop(VirtualDesktopManager::self()->current());
+#if KWIN_BUILD_ACTIVITIES
+    if (auto a = Activities::self()) {
+        setOnActivities({a->current()});
+    }
+#endif
 
     if (waylandServer()->inputMethodConnection() == surface()->client()) {
         m_windowType = NET::OnScreenDisplay;
@@ -1341,6 +1349,9 @@ void XdgToplevelClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *s
         case NET::CriticalNotification:
         case NET::Tooltip:
             setOnAllDesktops(true);
+#if KWIN_BUILD_ACTIVITIES
+            setOnAllActivities(true);
+#endif
             break;
         default:
             break;
@@ -1697,6 +1708,11 @@ XdgPopupClient::XdgPopupClient(XdgPopupInterface *shellSurface)
     , m_shellSurface(shellSurface)
 {
     setDesktop(VirtualDesktopManager::self()->current());
+#if KWIN_BUILD_ACTIVITIES
+    if (auto a = Activities::self()) {
+        setOnActivities({a->current()});
+    }
+#endif
 
     connect(shellSurface, &XdgPopupInterface::grabRequested,
             this, &XdgPopupClient::handleGrabRequested);
