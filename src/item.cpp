@@ -245,24 +245,6 @@ void Item::stackAfter(Item *sibling)
     sibling->scheduleRepaint(sibling->boundingRect());
 }
 
-void Item::stackChildren(const QList<Item *> &children)
-{
-    if (m_childItems.count() != children.count()) {
-        qCWarning(KWIN_CORE) << Q_FUNC_INFO << "invalid child list";
-        return;
-    }
-
-#if !defined(QT_NO_DEBUG)
-    for (const Item *item : children) {
-        Q_ASSERT_X(item->parentItem() == this, Q_FUNC_INFO, "invalid parent");
-    }
-#endif
-
-    m_childItems = children;
-    discardQuads();
-    markSortedChildItemsDirty();
-}
-
 void Item::scheduleRepaint(const QRegion &region)
 {
     if (isVisible()) {

@@ -36,8 +36,6 @@ SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface
             this, &SurfaceItemWayland::handleSurfaceCommitted);
     connect(surface, &KWaylandServer::SurfaceInterface::damaged,
             this, &SurfaceItemWayland::addDamage);
-    connect(surface, &KWaylandServer::SurfaceInterface::childSubSurfaceAdded,
-            this, &SurfaceItemWayland::handleChildSubSurfaceAdded);
     connect(surface, &KWaylandServer::SurfaceInterface::childSubSurfaceRemoved,
             this, &SurfaceItemWayland::handleChildSubSurfaceRemoved);
 
@@ -48,16 +46,7 @@ SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface
         setPosition(subsurface->position());
     }
 
-    const QList<KWaylandServer::SubSurfaceInterface *> below = surface->below();
-    for (KWaylandServer::SubSurfaceInterface *subsurface : below) {
-        handleChildSubSurfaceAdded(subsurface);
-    }
-
-    const QList<KWaylandServer::SubSurfaceInterface *> above = surface->above();
-    for (KWaylandServer::SubSurfaceInterface *subsurface : above) {
-        handleChildSubSurfaceAdded(subsurface);
-    }
-
+    handleChildSubSurfacesChanged();
     setSize(surface->size());
 }
 
@@ -99,13 +88,15 @@ void SurfaceItemWayland::handleSurfaceCommitted()
     }
 }
 
-void SurfaceItemWayland::handleChildSubSurfaceAdded(KWaylandServer::SubSurfaceInterface *child)
+SurfaceItemWayland *SurfaceItemWayland::getOrCreateSubSurfaceItem(KWaylandServer::SubSurfaceInterface *child)
 {
-    SurfaceItemWayland *subsurfaceItem = new SurfaceItemWayland(child->surface(), window());
-    subsurfaceItem->setParent(this);
-    subsurfaceItem->setParentItem(this);
-
-    m_subsurfaces.insert(child, subsurfaceItem);
+    SurfaceItemWayland *&item = m_subsurfaces[child];
+    if (!item) {
+        item = new SurfaceItemWayland(child->surface(), window());
+        item->setParent(this);
+        item->setParentItem(this);
+    }
+    return item;
 }
 
 void SurfaceItemWayland::handleChildSubSurfaceRemoved(KWaylandServer::SubSurfaceInterface *child)
@@ -118,17 +109,15 @@ void SurfaceItemWayland::handleChildSubSurfacesChanged()
     const QList<KWaylandServer::SubSurfaceInterface *> below = m_surface->below();
     const QList<KWaylandServer::SubSurfaceInterface *> above = m_surface->above();
 
-    QList<Item *> items;
-    items.reserve(below.count() + above.count());
-
-    for (KWaylandServer::SubSurfaceInterface *subsurface : below) {
-        items.append(m_subsurfaces[subsurface]);
+    for (int i = 0; i < below.count(); ++i) {
+        SurfaceItemWayland *subsurfaceItem = getOrCreateSubSurfaceItem(below[i]);
+        subsurfaceItem->setZ(i - below.count());
     }
-    for (KWaylandServer::SubSurfaceInterface *subsurface : above) {
-        items.append(m_subsurfaces[subsurface]);
+ 
+    for (int i = 0; i < above.count(); ++i) {
+        SurfaceItemWayland *subsurfaceItem = getOrCreateSubSurfaceItem(above[i]);
+        subsurfaceItem->setZ(i);
     }
-
-    stackChildren(items);
 }
 
 void SurfaceItemWayland::handleSubSurfacePositionChanged()

@@ -73,11 +73,6 @@ public:
      * Moves this item right after the specified @a sibling in the parent's children list.
      */
     void stackAfter(Item *sibling);
-    /**
-     * Restacks the child items in the specified order. Note that the specified stacking order
-     * must be a permutation of childItems().
-     */
-    void stackChildren(const QList<Item *> &children);
 
     bool isVisible() const;
     void setVisible(bool visible);
