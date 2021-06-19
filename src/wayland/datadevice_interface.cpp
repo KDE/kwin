@@ -238,7 +238,6 @@ void DataDeviceInterface::drop()
     disconnect(d->drag.destroyConnection);
     d->drag.destroyConnection = QMetaObject::Connection();
     d->drag.surface = nullptr;
-    wl_client_flush(d->resource()->client());
 }
 
 void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 serial)
@@ -288,7 +287,6 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
                 const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
                 d->send_motion(d->seat->timestamp(),
                                         wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-                wl_client_flush(d->resource()->client());
             }
         );
     } else if (d->seat->isDragTouch()) {
@@ -302,7 +300,6 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
                 const QPointF pos = d->seat->dragSurfaceTransformation().map(globalPosition);
                 d->send_motion(d->seat->timestamp(),
                                wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-                wl_client_flush(d->resource()->client());
             }
         );
     }
@@ -344,7 +341,6 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         d->drag.targetActionConnection = connect(offer, &DataOfferInterface::dragAndDropActionsChanged, source, matchOffers);
         d->drag.sourceActionConnection = connect(source, &DataSourceInterface::supportedDragAndDropActionsChanged, source, matchOffers);
     }
-    wl_client_flush(d->resource()->client());
 }
 
 quint32 DataDeviceInterface::dragImplicitGrabSerial() const
