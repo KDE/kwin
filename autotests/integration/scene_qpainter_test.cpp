@@ -285,6 +285,27 @@ struct XcbConnectionDeleter
     }
 };
 
+static bool waitForXwaylandBuffer(Toplevel *window, const QSize &size)
+{
+    // Usually, when an Xwayland surface is created, it has a buffer of size 1x1,
+    // a buffer with the correct size will be committed a bit later.
+    KWaylandServer::SurfaceInterface *surface = window->surface();
+    int attemptCount = 0;
+    do {
+        if (surface->buffer() && surface->buffer()->size() == size) {
+            return true;
+        }
+        QSignalSpy committedSpy(surface, &KWaylandServer::SurfaceInterface::committed);
+        if (!committedSpy.wait()) {
+            return false;
+        }
+
+        ++attemptCount;
+    } while (attemptCount <= 3);
+
+    return false;
+}
+
 void SceneQPainterTest::testX11Window()
 {
     // this test verifies the condition of BUG: 382748
@@ -323,8 +344,7 @@ void SceneQPainterTest::testX11Window()
     QCOMPARE(client->window(), w);
     QCOMPARE(client->clientSize(), QSize(100, 200));
     QVERIFY(Test::waitForWaylandSurface(client));
-    QTRY_VERIFY(client->surface()->buffer());
-    QTRY_COMPARE(client->surface()->buffer()->data().size(), client->size());
+    QVERIFY(waitForXwaylandBuffer(client, client->size()));
     QImage compareImage(client->clientSize(), QImage::Format_RGB32);
     compareImage.fill(Qt::white);
     QCOMPARE(client->surface()->buffer()->data().copy(QRect(client->clientPos(), client->clientSize())), compareImage);
