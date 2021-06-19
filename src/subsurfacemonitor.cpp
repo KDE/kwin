@@ -67,8 +67,13 @@ void SubSurfaceMonitor::registerSurface(SurfaceInterface *surface)
     connect(surface, &SurfaceInterface::childSubSurfaceRemoved,
             this, &SubSurfaceMonitor::unregisterSubSurface);
 
-    const QList<SubSurfaceInterface *> childSubSurfaces = surface->childSubSurfaces();
-    for (SubSurfaceInterface *childSubSurface : childSubSurfaces) {
+    const QList<SubSurfaceInterface *> below = surface->below();
+    for (SubSurfaceInterface *childSubSurface : below) {
+        registerSubSurface(childSubSurface);
+    }
+
+    const QList<SubSurfaceInterface *> above = surface->above();
+    for (SubSurfaceInterface *childSubSurface : above) {
         registerSubSurface(childSubSurface);
     }
 }

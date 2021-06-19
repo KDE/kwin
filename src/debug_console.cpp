@@ -1304,8 +1304,7 @@ int SurfaceTreeModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid()) {
         using namespace KWaylandServer;
         if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(parent.internalPointer())) {
-            const auto &children = surface->childSubSurfaces();
-            return children.count();
+            return surface->below().count() + surface->above().count();
         }
         return 0;
     }
@@ -1324,9 +1323,16 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
     if (parent.isValid()) {
         using namespace KWaylandServer;
         if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(parent.internalPointer())) {
-            const auto &children = surface->childSubSurfaces();
-            if (row < children.count()) {
-                return createIndex(row, column, children.at(row)->surface());
+            int reference = 0;
+            const auto &below = surface->below();
+            if (row < reference + below.count()) {
+                return createIndex(row, column, below.at(row - reference)->surface());
+            }
+            reference += below.count();
+
+            const auto &above = surface->above();
+            if (row < reference + above.count()) {
+                return createIndex(row, column, above.at(row - reference)->surface());
             }
         }
         return QModelIndex();
@@ -1368,10 +1374,18 @@ QModelIndex SurfaceTreeModel::parent(const QModelIndex &child) const
                 // something is wrong
                 return QModelIndex();
             }
-            const auto &children = grandParent->childSubSurfaces();
-            for (int row = 0; row < children.count(); row++) {
-                if (children.at(row) == parent->subSurface()) {
-                    return createIndex(row, 0, parent);
+            int row = 0;
+            const auto &below = grandParent->below();
+            for (int i = 0; i < below.count(); i++) {
+                if (below.at(i) == parent->subSurface()) {
+                    return createIndex(row + i, 0, parent);
+                }
+            }
+            row += below.count();
+            const auto &above = grandParent->above();
+            for (int i = 0; i < above.count(); i++) {
+                if (above.at(i) == parent->subSurface()) {
+                    return createIndex(row + i, 0, parent);
                 }
             }
             return QModelIndex();

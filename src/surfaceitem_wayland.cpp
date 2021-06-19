@@ -48,8 +48,13 @@ SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface
         setPosition(subsurface->position());
     }
 
-    const QList<KWaylandServer::SubSurfaceInterface *> children = surface->childSubSurfaces();
-    for (KWaylandServer::SubSurfaceInterface *subsurface : children) {
+    const QList<KWaylandServer::SubSurfaceInterface *> below = surface->below();
+    for (KWaylandServer::SubSurfaceInterface *subsurface : below) {
+        handleChildSubSurfaceAdded(subsurface);
+    }
+
+    const QList<KWaylandServer::SubSurfaceInterface *> above = surface->above();
+    for (KWaylandServer::SubSurfaceInterface *subsurface : above) {
         handleChildSubSurfaceAdded(subsurface);
     }
 
@@ -110,11 +115,16 @@ void SurfaceItemWayland::handleChildSubSurfaceRemoved(KWaylandServer::SubSurface
 
 void SurfaceItemWayland::handleChildSubSurfacesChanged()
 {
-    const QList<KWaylandServer::SubSurfaceInterface *> stackingOrder = m_surface->childSubSurfaces();
-    QList<Item *> items;
-    items.reserve(stackingOrder.count());
+    const QList<KWaylandServer::SubSurfaceInterface *> below = m_surface->below();
+    const QList<KWaylandServer::SubSurfaceInterface *> above = m_surface->above();
 
-    for (KWaylandServer::SubSurfaceInterface *subsurface : stackingOrder) {
+    QList<Item *> items;
+    items.reserve(below.count() + above.count());
+
+    for (KWaylandServer::SubSurfaceInterface *subsurface : below) {
+        items.append(m_subsurfaces[subsurface]);
+    }
+    for (KWaylandServer::SubSurfaceInterface *subsurface : above) {
         items.append(m_subsurfaces[subsurface]);
     }
 
