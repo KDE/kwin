@@ -401,17 +401,15 @@ WindowQuadList Item::buildQuads() const
 
 void Item::discardQuads()
 {
-    m_quads = WindowQuadList();
-    m_quadsValid = false;
+    m_quads.reset();
 }
 
 WindowQuadList Item::quads() const
 {
-    if (!m_quadsValid) {
+    if (!m_quads.has_value()) {
         m_quads = buildQuads();
-        m_quadsValid = true;
     }
-    return m_quads;
+    return m_quads.value();
 }
 
 QRegion Item::repaints(int screen) const

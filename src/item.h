@@ -8,6 +8,8 @@
 
 #include "scene.h"
 
+#include <optional>
+
 namespace KWin
 {
 
@@ -151,8 +153,7 @@ private:
     bool m_visible = true;
     bool m_effectiveVisible = true;
     QVector<QRegion> m_repaints;
-    mutable WindowQuadList m_quads;
-    mutable bool m_quadsValid = false;
+    mutable std::optional<WindowQuadList> m_quads;
 };
 
 } // namespace KWin
