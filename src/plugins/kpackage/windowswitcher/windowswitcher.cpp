@@ -43,7 +43,7 @@ void SwitcherPackage::pathChanged(KPackage::Package *package)
     }
 }
 
-K_EXPORT_KPACKAGE_PACKAGE_WITH_JSON(SwitcherPackage, "kwin-packagestructure-windowswitcher.json")
+K_PLUGIN_CLASS_WITH_JSON(SwitcherPackage, "kwin-packagestructure-windowswitcher.json")
 
 #include "windowswitcher.moc"
 

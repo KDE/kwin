@@ -66,7 +66,7 @@ void AuroraePackage::pathChanged(KPackage::Package *package)
     }
 }
 
-K_EXPORT_KPACKAGE_PACKAGE_WITH_JSON(AuroraePackage, "kwin-packagestructure-aurorae.json")
+K_PLUGIN_CLASS_WITH_JSON(AuroraePackage, "kwin-packagestructure-aurorae.json")
 
 #include "aurorae.moc"
 

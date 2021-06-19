@@ -45,6 +45,6 @@ void EffectPackageStructure::pathChanged(KPackage::Package *package)
     package->addFileDefinition("mainscript", mainScript, i18n("Main Script File"));
 }
 
-K_EXPORT_KPACKAGE_PACKAGE_WITH_JSON(EffectPackageStructure, "kwin-packagestructure-effect.json")
+K_PLUGIN_CLASS_WITH_JSON(EffectPackageStructure, "kwin-packagestructure-effect.json")
 
 #include "effect.moc"
