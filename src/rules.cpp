@@ -11,7 +11,7 @@
 
 #include <kconfig.h>
 #include <KXMessages>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QTemporaryFile>
 #include <QFile>
 #include <QFileInfo>
@@ -335,7 +335,7 @@ bool Rules::matchWMClass(const QByteArray& match_class, const QByteArray& match_
         // TODO optimize?
         QByteArray cwmclass = wmclasscomplete
                               ? match_name + ' ' + match_class : match_class;
-        if (wmclassmatch == RegExpMatch && QRegExp(QString::fromUtf8(wmclass)).indexIn(QString::fromUtf8(cwmclass)) == -1)
+        if (wmclassmatch == RegExpMatch && !QRegularExpression(QString::fromUtf8(wmclass)).match(QString::fromUtf8(cwmclass)).hasMatch())
             return false;
         if (wmclassmatch == ExactMatch && wmclass != cwmclass)
             return false;
@@ -348,7 +348,7 @@ bool Rules::matchWMClass(const QByteArray& match_class, const QByteArray& match_
 bool Rules::matchRole(const QByteArray& match_role) const
 {
     if (windowrolematch != UnimportantMatch) {
-        if (windowrolematch == RegExpMatch && QRegExp(QString::fromUtf8(windowrole)).indexIn(QString::fromUtf8(match_role)) == -1)
+        if (windowrolematch == RegExpMatch && !QRegularExpression(QString::fromUtf8(windowrole)).match(QString::fromUtf8(match_role)).hasMatch())
             return false;
         if (windowrolematch == ExactMatch && windowrole != match_role)
             return false;
@@ -361,7 +361,7 @@ bool Rules::matchRole(const QByteArray& match_role) const
 bool Rules::matchTitle(const QString& match_title) const
 {
     if (titlematch != UnimportantMatch) {
-        if (titlematch == RegExpMatch && QRegExp(title).indexIn(match_title) == -1)
+        if (titlematch == RegExpMatch && !QRegularExpression(title).match(match_title).hasMatch())
             return false;
         if (titlematch == ExactMatch && title != match_title)
             return false;
@@ -379,7 +379,7 @@ bool Rules::matchClientMachine(const QByteArray& match_machine, bool local) cons
                 && matchClientMachine("localhost", true))
             return true;
         if (clientmachinematch == RegExpMatch
-                && QRegExp(QString::fromUtf8(clientmachine)).indexIn(QString::fromUtf8(match_machine)) == -1)
+                && !QRegularExpression(QString::fromUtf8(clientmachine)).match(QString::fromUtf8(match_machine)).hasMatch())
             return false;
         if (clientmachinematch == ExactMatch
                 && clientmachine != match_machine)

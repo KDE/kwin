@@ -50,8 +50,8 @@
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <kconfig.h>
-#include <QRegExp>
 #include <QMenu>
+#include <QRegularExpression>
 #include <QWidgetAction>
 #include <kauthorized.h>
 
@@ -1740,15 +1740,16 @@ void AbstractClient::setShortcut(const QString& _cut)
             updateShortcut();
         return;
     }
+    const QRegularExpression reg(QStringLiteral("(.*\\+)\\((.*)\\)"));
     QList< QKeySequence > keys;
     QStringList groups = cut.split(QStringLiteral(" - "));
     for (QStringList::ConstIterator it = groups.constBegin();
             it != groups.constEnd();
             ++it) {
-        QRegExp reg(QStringLiteral("(.*\\+)\\((.*)\\)"));
-        if (reg.indexIn(*it) > -1) {
-            QString base = reg.cap(1);
-            QString list = reg.cap(2);
+        const QRegularExpressionMatch match = reg.match(*it);
+        if (match.hasMatch()) {
+            const QString base = match.captured(1);
+            const QString list = match.captured(2);
             for (int i = 0;
                     i < list.length();
                     ++i) {
