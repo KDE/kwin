@@ -21,6 +21,7 @@
 #include "drm_gpu.h"
 #include "linux_dmabuf.h"
 #include "dumb_swapchain.h"
+#include "kwineglutils_p.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwineglimagetexture.h>
@@ -171,7 +172,7 @@ EGLSurface EglGbmBackend::createEglSurface(QSharedPointer<GbmSurface> gbmSurface
     auto eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(),
                                                         (void *)(gbmSurface->surface()), nullptr);
     if (eglSurface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_DRM) << "Creating EGL surface failed";
+        qCCritical(KWIN_DRM) << "Creating EGL surface failed:" << getEglErrorString();
         return EGL_NO_SURFACE;
     }
     return eglSurface;
@@ -193,7 +194,7 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
                                                          GBM_FORMAT_XRGB8888,
                                                          flags);
     if (!gbmSurface) {
-        qCCritical(KWIN_DRM) << "Creating GBM surface failed";
+        qCCritical(KWIN_DRM) << "Creating GBM surface failed" << strerror(errno);
         return false;
     }
     auto eglSurface = createEglSurface(gbmSurface);
@@ -328,7 +329,7 @@ int EglGbmBackend::exportFramebufferAsDmabuf(DrmOutput *output, uint32_t *format
     }
     int fd = gbm_bo_get_fd(it->secondaryBuffer->getBo());
     if (fd == -1) {
-        qCDebug(KWIN_DRM) << "failed to export gbm_bo as dma-buf!";
+        qCWarning(KWIN_DRM) << "failed to export gbm_bo as dma-buf:" << strerror(errno);
         return -1;
     }
     *format = gbm_bo_get_format(it->secondaryBuffer->getBo());
@@ -541,7 +542,7 @@ bool EglGbmBackend::makeContextCurrent(const Output &output) const
         return false;
     }
     if (eglMakeCurrent(eglDisplay(), surface, surface, context()) == EGL_FALSE) {
-        qCCritical(KWIN_DRM) << "Make Context Current failed" << eglGetError();
+        qCCritical(KWIN_DRM) << "eglMakeCurrent failed:" << getEglErrorString();
         return false;
     }
     return true;
@@ -565,7 +566,7 @@ bool EglGbmBackend::initBufferConfigs()
     if (!eglChooseConfig(eglDisplay(), config_attribs, configs,
                          sizeof(configs) / sizeof(EGLConfig),
                          &count)) {
-        qCCritical(KWIN_DRM) << "choose config failed";
+        qCCritical(KWIN_DRM) << "eglChooseConfig failed:" << getEglErrorString();
         return false;
     }
 
@@ -636,7 +637,7 @@ void EglGbmBackend::aboutToStartPainting(int screenId, const QRegion &damagedReg
         const bool correct = eglSetDamageRegionKHR(eglDisplay(), output.eglSurface,
                                                    rects.data(), rects.count()/4);
         if (!correct) {
-            qCWarning(KWIN_DRM) << "failed eglSetDamageRegionKHR" << eglGetError();
+            qCWarning(KWIN_DRM) << "eglSetDamageRegionKHR failed:" << getEglErrorString();
         }
     }
 }
@@ -648,12 +649,12 @@ bool EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion
             QVector<EGLint> rects = regionToRects(damagedRegion, output.output);
             if (!eglSwapBuffersWithDamageEXT(eglDisplay(), output.eglSurface,
                                              rects.data(), rects.count() / 4)) {
-                qCCritical(KWIN_DRM, "eglSwapBuffersWithDamageEXT() failed: %x", eglGetError());
+                qCCritical(KWIN_DRM) << "eglSwapBuffersWithDamageEXT() failed:" << getEglErrorString();
                 return false;
             }
         } else {
             if (!eglSwapBuffers(eglDisplay(), output.eglSurface)) {
-                qCCritical(KWIN_DRM, "eglSwapBuffers() failed: %x", eglGetError());
+                qCCritical(KWIN_DRM) << "eglSwapBuffers() failed:" << getEglErrorString();
                 return false;
             }
         }
@@ -813,7 +814,7 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
     }
     if (!importedBuffer) {
         if (errno != EINVAL) {
-            qCWarning(KWIN_DRM) << "Importing buffer for direct scanout failed!" << strerror(errno);
+            qCWarning(KWIN_DRM) << "Importing buffer for direct scanout failed:" << strerror(errno);
         }
         return false;
     }

@@ -38,7 +38,7 @@ DrmDumbBuffer::DrmDumbBuffer(DrmGpu *gpu, const QSize &size)
     createArgs.width = size.width();
     createArgs.height = size.height();
     if (drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_CREATE_DUMB, &createArgs) != 0) {
-        qCWarning(KWIN_DRM) << "DRM_IOCTL_MODE_CREATE_DUMB failed";
+        qCWarning(KWIN_DRM) << "DRM_IOCTL_MODE_CREATE_DUMB failed" << strerror(errno);
         return;
     }
     m_handle = createArgs.handle;
@@ -46,7 +46,7 @@ DrmDumbBuffer::DrmDumbBuffer(DrmGpu *gpu, const QSize &size)
     m_stride = createArgs.pitch;
     if (drmModeAddFB(m_gpu->fd(), size.width(), size.height(), 24, 32,
                      m_stride, createArgs.handle, &m_bufferId) != 0) {
-        qCWarning(KWIN_DRM) << "drmModeAddFB failed with errno" << errno;
+        qCWarning(KWIN_DRM) << "drmModeAddFB failed!" << strerror(errno);
     }
 }
 

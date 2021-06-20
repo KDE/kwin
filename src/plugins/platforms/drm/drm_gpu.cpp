@@ -67,7 +67,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
 
     if (!qEnvironmentVariableIsSet("KWIN_DRM_NO_MODIFIERS")) {
         m_addFB2ModifiersSupported = drmGetCap(fd, DRM_CAP_ADDFB2_MODIFIERS, &capability) == 0 && capability == 1;
-        qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported");
+        qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << m_devNode;
     }
 
     // find out if this GPU is using the NVidia proprietary driver
@@ -277,7 +277,6 @@ bool DrmGpu::updateOutputs()
                 output->m_primaryPlane = primary;
                 output->m_mode = connector->modes[0];
 
-                qCDebug(KWIN_DRM) << "For new output use mode " << output->m_mode.name << output->m_mode.hdisplay << output->m_mode.vdisplay;
                 if (!output->init(connector.data())) {
                     qCWarning(KWIN_DRM) << "Failed to create output for connector " << con->id();
                     delete output;
@@ -286,7 +285,7 @@ bool DrmGpu::updateOutputs()
                 if (!output->initCursor(m_cursorSize)) {
                     m_backend->setSoftwareCursorForced(true);
                 }
-                qCDebug(KWIN_DRM) << "Found new output with uuid" << output->uuid() << "on gpu" << m_devNode;
+                qCDebug(KWIN_DRM, "For new output %s on GPU %s use mode %dx%d@%d", qPrintable(output->name()), qPrintable(m_devNode), output->m_mode.hdisplay, output->m_mode.vdisplay, output->refreshRate());
 
                 connectedOutputs << output;
                 emit outputAdded(output);
