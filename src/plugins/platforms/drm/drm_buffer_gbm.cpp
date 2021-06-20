@@ -137,7 +137,7 @@ void DrmGbmBuffer::initialize()
             modifiers[i] = gbm_bo_get_modifier(m_bo);
         }
     } else {
-        handles[0] = gbm_bo_get_format(m_bo);
+        handles[0] = gbm_bo_get_handle(m_bo).u32;
         strides[0] = gbm_bo_get_stride(m_bo);
         modifiers[0] = DRM_FORMAT_MOD_INVALID;
     }
