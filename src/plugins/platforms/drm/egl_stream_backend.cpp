@@ -24,6 +24,7 @@
 #include <kwingltexture.h>
 #include "drm_gpu.h"
 #include "dumb_swapchain.h"
+#include "kwineglutils_p.h"
 
 #include <QOpenGLContext>
 #include <KWaylandServer/buffer_interface.h>
@@ -209,7 +210,7 @@ void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *su
 
     EGLStreamKHR stream = pEglCreateStreamAttribNV(eglDisplay(), streamAttribs.data());
     if (stream == EGL_NO_STREAM_KHR) {
-        qCWarning(KWIN_DRM) << "Failed to create EGL stream";
+        qCWarning(KWIN_DRM) << "Failed to create EGL stream:" << getEglErrorString();
         return;
     }
 
@@ -236,7 +237,7 @@ void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *su
 
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, texture);
     if (!pEglStreamConsumerGLTextureExternalKHR(eglDisplay(), stream)) {
-        qCWarning(KWIN_DRM) << "Failed to bind EGL stream to texture";
+        qCWarning(KWIN_DRM) << "Failed to bind EGL stream to texture:" << getEglErrorString();
     }
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, 0);
 }
@@ -308,7 +309,7 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
         };
         EGLStreamKHR stream = pEglCreateStreamAttribNV(eglDisplay(), streamAttribs);
         if (stream == EGL_NO_STREAM_KHR) {
-            qCCritical(KWIN_DRM) << "Failed to create EGL stream for output";
+            qCCritical(KWIN_DRM) << "Failed to create EGL stream for output:" << getEglErrorString();
             return false;
         }
 
@@ -338,7 +339,7 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
         EGLSurface eglSurface = pEglCreateStreamProducerSurfaceKHR(eglDisplay(), config(), stream,
                                                                 streamProducerAttribs);
         if (eglSurface == EGL_NO_SURFACE) {
-            qCCritical(KWIN_DRM) << "Failed to create EGL surface for output";
+            qCCritical(KWIN_DRM) << "Failed to create EGL surface for output:" << getEglErrorString();
             return false;
         }
 
@@ -419,13 +420,13 @@ bool EglStreamBackend::makeContextCurrent(const Output &output)
     }
 
     if (eglMakeCurrent(eglDisplay(), surface, surface, context()) == EGL_FALSE) {
-        qCCritical(KWIN_DRM) << "Failed to make EGL context current";
+        qCCritical(KWIN_DRM) << "Failed to make EGL context current:" << getEglErrorString();
         return false;
     }
 
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_DRM) << "Error occurred while making EGL context current" << error;
+        qCWarning(KWIN_DRM) << "Error occurred while making EGL context current:" << getEglErrorString(error);
         return false;
     }
 
@@ -449,7 +450,7 @@ bool EglStreamBackend::initBufferConfigs()
     EGLint count;
     EGLConfig config;
     if (!eglChooseConfig(eglDisplay(), configAttribs, &config, 1, &count)) {
-        qCCritical(KWIN_DRM) << "Failed to query available EGL configs";
+        qCCritical(KWIN_DRM) << "Failed to query available EGL configs:" << getEglErrorString();
         return false;
     }
     if (count == 0) {
@@ -496,7 +497,7 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
     if (isPrimary()) {
         buffer = renderOutput.buffer;
         if (!eglSwapBuffers(eglDisplay(), renderOutput.eglSurface)) {
-            qCCritical(KWIN_DRM, "eglSwapBuffers() failed: %x", eglGetError());
+            qCCritical(KWIN_DRM) << "eglSwapBuffers() failed:" << getEglErrorString();
             frameFailed = true;
         }
     } else {
@@ -523,7 +524,7 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
             EGL_NONE,
         };
         if (!pEglStreamConsumerAcquireAttribNV(eglDisplay(), renderOutput.eglStream, acquireAttribs)) {
-            qCWarning(KWIN_DRM) << "Failed to acquire output EGL stream frame";
+            qCWarning(KWIN_DRM) << "Failed to acquire output EGL stream frame:" << getEglErrorString();
         }
     }
 }
@@ -551,7 +552,7 @@ bool EglStreamSurfaceTextureWayland::acquireStreamFrame(EGLStreamKHR stream)
     EGLAttrib streamState;
     if (!pEglQueryStreamAttribNV(m_backend->eglDisplay(), stream,
                                  EGL_STREAM_STATE_KHR, &streamState)) {
-        qCWarning(KWIN_DRM) << "Failed to query EGL stream state";
+        qCWarning(KWIN_DRM) << "Failed to query EGL stream state:" << getEglErrorString();
         return false;
     }
 
@@ -559,7 +560,7 @@ bool EglStreamSurfaceTextureWayland::acquireStreamFrame(EGLStreamKHR stream)
         if (pEglStreamConsumerAcquireAttribNV(m_backend->eglDisplay(), stream, nullptr)) {
             return true;
         } else {
-            qCWarning(KWIN_DRM) << "Failed to acquire EGL stream frame";
+            qCWarning(KWIN_DRM) << "Failed to acquire EGL stream frame:" << getEglErrorString();
         }
     }
 
@@ -653,7 +654,7 @@ bool EglStreamSurfaceTextureWayland::create()
         if (acquireStreamFrame(st->stream)) {
             copyExternalTexture(st->texture);
             if (!pEglStreamConsumerReleaseKHR(m_backend->eglDisplay(), st->stream)) {
-                qCWarning(KWIN_DRM) << "Failed to release EGL stream";
+                qCWarning(KWIN_DRM) << "Failed to release EGL stream:" << getEglErrorString();
             }
         }
         return true;
@@ -677,7 +678,7 @@ void EglStreamSurfaceTextureWayland::update(const QRegion &region)
         if (acquireStreamFrame(st->stream)) {
             copyExternalTexture(st->texture);
             if (!pEglStreamConsumerReleaseKHR(m_backend->eglDisplay(), st->stream)) {
-                qCWarning(KWIN_DRM) << "Failed to release EGL stream";
+                qCWarning(KWIN_DRM) << "Failed to release EGL stream:" << getEglErrorString();
             }
         }
     } else {
