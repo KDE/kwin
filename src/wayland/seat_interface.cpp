@@ -760,13 +760,6 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
     }
 
     d->pointer->sendButton(button, state, serial);
-
-    if (focusedPointerSurface() == focusedKeyboardSurface() &&
-            state == PointerButtonState::Pressed) {
-        if (d->keyboard) {
-            d->keyboard->setFocusedSurface(d->pointer->focusedSurface(), serial);
-        }
-    }
 }
 
 void SeatInterface::notifyPointerFrame()
