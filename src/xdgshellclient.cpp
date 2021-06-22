@@ -1211,6 +1211,7 @@ void XdgToplevelClient::initialize()
         }
         maximize(rules()->checkMaximize(initialMaximizeMode(), true));
         setFullScreen(rules()->checkFullScreen(initialFullScreenMode(), true), false);
+        setOnActivities(rules()->checkActivity(activities(), true));
         setDesktop(rules()->checkDesktop(desktop(), true));
         setDesktopFileName(rules()->checkDesktopFile(desktopFileName(), true).toUtf8());
         if (rules()->checkMinimize(isMinimized(), true)) {
