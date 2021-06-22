@@ -1667,9 +1667,6 @@ SceneOpenGL::EffectFrame::EffectFrame(EffectFrameImpl* frame, SceneOpenGL *scene
     , m_unstyledVBO(nullptr)
     , m_scene(scene)
 {
-    if (m_effectFrame->style() == EffectFrameUnstyled && !m_unstyledTexture) {
-        updateUnstyledTexture();
-    }
 }
 
 SceneOpenGL::EffectFrame::~EffectFrame()
@@ -1765,6 +1762,10 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
 
     // Render the actual frame
     if (m_effectFrame->style() == EffectFrameUnstyled) {
+        if (!m_unstyledTexture) {
+            updateUnstyledTexture();
+        }
+
         if (!m_unstyledVBO) {
             m_unstyledVBO = new GLVertexBuffer(GLVertexBuffer::Static);
             QRect area = m_effectFrame->geometry();
