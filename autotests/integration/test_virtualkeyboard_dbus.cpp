@@ -36,6 +36,7 @@ private Q_SLOTS:
     void testEnabled();
     void testRequestEnabled_data();
     void testRequestEnabled();
+    void init();
     void cleanup();
 };
 
@@ -57,6 +58,11 @@ void VirtualKeyboardDBusTest::initTestCase()
                                    AdditionalWaylandInterface::InputMethodV1 |
                                    AdditionalWaylandInterface::TextInputManagerV2 |
                                    AdditionalWaylandInterface::TextInputManagerV3));
+}
+
+void VirtualKeyboardDBusTest::init()
+{
+    InputMethod::self()->setEnabled(false);
 }
 
 void VirtualKeyboardDBusTest::cleanup()
@@ -116,13 +122,10 @@ void VirtualKeyboardDBusTest::testRequestEnabled()
     QFETCH(bool, expectedResult);
 
     VirtualKeyboardDBus dbus(KWin::InputMethod::self());
-    QSignalSpy activateRequestedSpy(&dbus, &VirtualKeyboardDBus::enabledChanged);
-    QVERIFY(activateRequestedSpy.isValid());
     OrgKdeKwinVirtualKeyboardInterface iface(QStringLiteral("org.kde.kwin.testvirtualkeyboard"), QStringLiteral("/VirtualKeyboard"), QDBusConnection::sessionBus());
-    
+
     iface.setEnabled(expectedResult);
-    QCOMPARE(activateRequestedSpy.count(), 1);
-    QCOMPARE(iface.enabled(), expectedResult);
+    QTRY_COMPARE(iface.enabled(), expectedResult);
 }
 
 WAYLANDTEST_MAIN(VirtualKeyboardDBusTest)
