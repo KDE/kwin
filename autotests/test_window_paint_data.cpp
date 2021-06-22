@@ -42,7 +42,6 @@ public:
     QByteArray readProperty(long int atom, long int type, int format) const override;
     void refWindow() override;
     void unrefWindow() override;
-    QRegion shape() const override;
     void setData(int role, const QVariant &data) override;
     void minimize() override;
     void unminimize() override;
@@ -108,9 +107,6 @@ public:
     }
     int screen() const override {
         return 0;
-    }
-    bool hasOwnShape() const override {
-        return false;
     }
     QPoint pos() const override {
         return QPoint();
@@ -381,11 +377,6 @@ void MockEffectWindow::unminimize()
 
 void MockEffectWindow::closeWindow()
 {
-}
-
-QRegion MockEffectWindow::shape() const
-{
-    return QRegion();
 }
 
 void MockEffectWindow::unrefWindow()

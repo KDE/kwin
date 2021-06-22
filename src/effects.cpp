@@ -16,7 +16,6 @@
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
-#include "decorationitem.h"
 #include "deleted.h"
 #include "x11client.h"
 #include "cursor.h"
@@ -32,11 +31,9 @@
 #include "scripting/scriptedeffect.h"
 #include "screens.h"
 #include "screenlockerwatcher.h"
-#include "surfaceitem.h"
 #include "thumbnailitem.h"
 #include "virtualdesktops.h"
 #include "window_property_notify_x11_filter.h"
-#include "windowitem.h"
 #include "workspace.h"
 #include "kwinglutils.h"
 #include "kwineffectquickview.h"
@@ -1886,7 +1883,6 @@ TOPLEVEL_HELPER(bool, isOnScreenDisplay, isOnScreenDisplay)
 TOPLEVEL_HELPER(bool, isComboBox, isComboBox)
 TOPLEVEL_HELPER(bool, isDNDIcon, isDNDIcon)
 TOPLEVEL_HELPER(bool, isDeleted, isDeleted)
-TOPLEVEL_HELPER(bool, hasOwnShape, shape)
 TOPLEVEL_HELPER(QString, windowRole, windowRole)
 TOPLEVEL_HELPER(QStringList, activities, activities)
 TOPLEVEL_HELPER(bool, skipsCloseAnimation, skipsCloseAnimation)
@@ -1985,19 +1981,6 @@ void EffectWindowImpl::setWindow(Toplevel* w)
 void EffectWindowImpl::setSceneWindow(Scene::Window* w)
 {
     sw = w;
-}
-
-QRegion EffectWindowImpl::shape() const
-{
-    if (isX11Client()) {
-        const WindowItem *windowItem = sceneWindow()->windowItem();
-        if (DecorationItem *item = windowItem->decorationItem()) {
-            return item->rect();
-        } else if (SurfaceItem *item = windowItem->surfaceItem()) {
-            return item->shape();
-        }
-    }
-    return toplevel->rect();
 }
 
 QRect EffectWindowImpl::decorationInnerRect() const

@@ -420,9 +420,7 @@ public:
     QString caption() const override;
 
     QRect expandedGeometry() const override;
-    QRegion shape() const override;
     int screen() const override;
-    bool hasOwnShape() const override; // only for shadow effect, for now
     QPoint pos() const override;
     QSize size() const override;
     QRect rect() const override;

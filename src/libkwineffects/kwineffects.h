@@ -1975,14 +1975,6 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      */
     Q_PROPERTY(bool deleted READ isDeleted)
     /**
-     * Whether the window has an own shape
-     */
-    Q_PROPERTY(bool shaped READ hasOwnShape)
-    /**
-     * The Window's shape
-     */
-    Q_PROPERTY(QRegion shape READ shape)
-    /**
      * The Caption of the window. Read from WM_NAME property together with a suffix for hostname and shortcut.
      */
     Q_PROPERTY(QString caption READ caption)
@@ -2255,10 +2247,7 @@ public:
      * @since 4.9
      */
     virtual QRect expandedGeometry() const = 0;
-    virtual QRegion shape() const = 0;
     virtual int screen() const = 0;
-    /** @internal Do not use */
-    virtual bool hasOwnShape() const = 0; // only for shadow effect, for now
     virtual QPoint pos() const = 0;
     virtual QSize size() const = 0;
     virtual QRect rect() const = 0;
