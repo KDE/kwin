@@ -11,8 +11,6 @@
 #include "logging.h"
 #include "surfaceitem_wayland.h"
 
-#include <epoxy/gl.h>
-
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/linuxdmabuf_v1_interface.h>
 #include <KWaylandServer/surface_interface.h>
