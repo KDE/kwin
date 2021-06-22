@@ -572,6 +572,8 @@ void DrmOutput::updateMode(int modeIndex)
     }
     m_mode = connector->modes[modeIndex];
     m_modesetRequested = true;
+    // aspect ratio might need to be adjusted
+    m_conn->setOverscan(m_conn->overscan(), modeSize());
     setCurrentModeInternal();
 }
 
@@ -685,6 +687,8 @@ bool DrmOutput::presentAtomically(const QSharedPointer<DrmBuffer> &buffer)
                 updateCursor();
                 showCursor();
             }
+            // aspect ratio might need to be adjusted
+            m_conn->setOverscan(m_conn->overscan(), modeSize());
             setCurrentModeInternal();
             Q_EMIT screens()->changed();
         }
@@ -909,8 +913,8 @@ bool DrmOutput::setGammaRamp(const GammaRamp &gamma)
 void DrmOutput::setOverscan(uint32_t overscan)
 {
     if (m_conn->hasOverscan() && overscan <= 100) {
-        m_conn->setOverscan(overscan);
-        setOverscanInternal(overscan);
+        m_conn->setOverscan(overscan, modeSize());
+        setOverscanInternal(m_conn->overscan());
     }
 }
 

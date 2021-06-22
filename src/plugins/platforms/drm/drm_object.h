@@ -122,6 +122,14 @@ protected:
         bool hasEnum(uint64_t value) const {
             return m_enumMap.contains(value);
         }
+        template <typename T>
+        bool setEnum(T index) {
+            if (hasEnum(static_cast<uint64_t>(index))) {
+                setValue(m_enumMap[static_cast<uint32_t>(index)]);
+                return true;
+            }
+            return false;
+        }
 
         uint32_t propId() const {
             return m_propId;

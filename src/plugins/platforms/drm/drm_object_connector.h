@@ -32,7 +32,16 @@ public:
         Edid = 3,
         Overscan = 4,
         VrrCapable = 5,
+        Underscan = 6,
+        Underscan_vborder = 7,
+        Underscan_hborder = 8,
         Count
+    };
+
+    enum class UnderscanOptions : uint32_t {
+        Off = 0,
+        On = 1,
+        Auto = 2,
     };
 
     QVector<uint32_t> encoders() {
@@ -65,7 +74,7 @@ public:
 
     bool hasOverscan() const;
     uint32_t overscan() const;
-    void setOverscan(uint32_t overscan);
+    void setOverscan(uint32_t overscan, const QSize &modeSize);
 
     bool vrrCapable() const;
 

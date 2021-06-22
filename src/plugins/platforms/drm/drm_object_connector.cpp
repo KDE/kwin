@@ -49,6 +49,13 @@ bool DrmConnector::init()
             PropertyDefinition(QByteArrayLiteral("EDID")),
             PropertyDefinition(QByteArrayLiteral("overscan")),
             PropertyDefinition(QByteArrayLiteral("vrr_capable")),
+            PropertyDefinition(QByteArrayLiteral("underscan")),
+            PropertyDefinition(QByteArrayLiteral("underscan vborder")),
+            PropertyDefinition(QByteArrayLiteral("underscan hborder"), {
+                QByteArrayLiteral("off"),
+                QByteArrayLiteral("on"),
+                QByteArrayLiteral("auto")
+            }),
         }, DRM_MODE_OBJECT_CONNECTOR)) {
         return false;
     }
@@ -57,6 +64,17 @@ bool DrmConnector::init()
         dpmsProp->setLegacy();
     } else {
         qCDebug(KWIN_DRM) << "Could not find DPMS property!";
+    }
+
+    auto underscan = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)];
+    auto vborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_vborder)];
+    auto hborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_hborder)];
+    if (underscan && vborder && hborder) {
+        underscan->setEnum(vborder->value() > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
+    } else {
+        deleteProp(PropertyIndex::Underscan);
+        deleteProp(PropertyIndex::Underscan_vborder);
+        deleteProp(PropertyIndex::Underscan_hborder);
     }
 
     // parse edid
@@ -152,20 +170,35 @@ QSize DrmConnector::physicalSize() const
 
 bool DrmConnector::hasOverscan() const
 {
-    return m_props[static_cast<uint32_t>(PropertyIndex::Overscan)];
+    return m_props[static_cast<uint32_t>(PropertyIndex::Overscan)] || m_props[static_cast<uint32_t>(PropertyIndex::Underscan)];
 }
 
 uint32_t DrmConnector::overscan() const
 {
     if (const auto &prop = m_props[static_cast<uint32_t>(PropertyIndex::Overscan)]) {
         return prop->value();
+    } else if (const auto &prop = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_vborder)]) {
+        return prop->value();
     }
     return 0;
 }
 
-void DrmConnector::setOverscan(uint32_t overscan)
+void DrmConnector::setOverscan(uint32_t overscan, const QSize &modeSize)
 {
-    setValue(PropertyIndex::Overscan, overscan);
+    if (auto prop = m_props[static_cast<uint32_t>(PropertyIndex::Overscan)]) {
+        prop->setValue(overscan);
+    } else if (auto prop = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)]) {
+        float aspectRatio = modeSize.width() / static_cast<float>(modeSize.height());
+        prop->setEnum(overscan > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
+        uint32_t hborder = overscan / aspectRatio;
+        if (hborder > 128) {
+            hborder = 128;
+            overscan = 128 * aspectRatio;
+        }
+        // overscan only goes from 0-100 so we cut off the 101-128 value range of underscan_vborder
+        setValue(PropertyIndex::Underscan_vborder, overscan);
+        setValue(PropertyIndex::Underscan_hborder, hborder);
+    }
 }
 
 bool DrmConnector::vrrCapable() const
