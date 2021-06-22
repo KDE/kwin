@@ -14,6 +14,7 @@ set(DRM_SOURCES
     egl_multi_backend.cpp
     abstract_egl_drm_backend.cpp
     dumb_swapchain.cpp
+    shadowbuffer.cpp
 )
 
 if (HAVE_GBM)

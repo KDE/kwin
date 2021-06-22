@@ -25,6 +25,7 @@
 #include "drm_gpu.h"
 #include "dumb_swapchain.h"
 #include "kwineglutils_p.h"
+#include "shadowbuffer.h"
 
 #include <QOpenGLContext>
 #include <KWaylandServer/buffer_interface.h>
@@ -88,13 +89,13 @@ EglStreamBackend::~EglStreamBackend()
 
 void EglStreamBackend::cleanupSurfaces()
 {
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
         cleanupOutput(*it);
     }
     m_outputs.clear();
 }
 
-void EglStreamBackend::cleanupOutput(const Output &o)
+void EglStreamBackend::cleanupOutput(Output &o)
 {
     if (o.eglSurface != EGL_NO_SURFACE) {
         eglDestroySurface(eglDisplay(), o.eglSurface);
@@ -102,6 +103,7 @@ void EglStreamBackend::cleanupOutput(const Output &o)
     if (o.eglStream != EGL_NO_STREAM_KHR) {
         pEglDestroyStreamKHR(eglDisplay(), o.eglStream);
     }
+    o.shadowBuffer = nullptr;
 }
 
 bool EglStreamBackend::initializeEgl()
@@ -356,6 +358,15 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
 
         o.eglStream = stream;
         o.eglSurface = eglSurface;
+
+        if (!drmOutput->hardwareTransforms()) {
+            makeContextCurrent(o);
+            o.shadowBuffer = QSharedPointer<ShadowBuffer>::create(o.output->pixelSize());
+            if (!o.shadowBuffer->isComplete()) {
+                cleanupOutput(o);
+                return false;
+            }
+        }
     } else {
         QSize size = drmOutput->hardwareTransforms() ? drmOutput->pixelSize() : drmOutput->modeSize();
         o.dumbSwapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, size);
@@ -477,6 +488,9 @@ QRegion EglStreamBackend::beginFrame(int screenId)
     const Output &o = m_outputs.at(screenId);
     if (isPrimary()) {
         makeContextCurrent(o);
+        if (o.shadowBuffer) {
+            o.shadowBuffer->bind();
+        }
         return o.output->geometry();
     } else {
         return renderingBackend()->beginFrameForSecondaryGpu(o.output);
@@ -496,6 +510,9 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
     QSharedPointer<DrmDumbBuffer> buffer;
     if (isPrimary()) {
         buffer = renderOutput.buffer;
+        if (renderOutput.shadowBuffer) {
+            renderOutput.shadowBuffer->render(renderOutput.output);
+        }
         if (!eglSwapBuffers(eglDisplay(), renderOutput.eglSurface)) {
             qCCritical(KWIN_DRM) << "eglSwapBuffers() failed:" << getEglErrorString();
             frameFailed = true;

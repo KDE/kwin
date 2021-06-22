@@ -24,6 +24,7 @@
 #include "linux_dmabuf.h"
 #include "dumb_swapchain.h"
 #include "kwineglutils_p.h"
+#include "shadowbuffer.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwineglimagetexture.h>
@@ -60,21 +61,12 @@ void EglGbmBackend::cleanupSurfaces()
     m_outputs.clear();
 }
 
-void EglGbmBackend::cleanupFramebuffer(Output &output)
-{
-    if (!output.render.framebuffer) {
-        return;
-    }
-    makeContextCurrent(output);
-    glDeleteTextures(1, &output.render.texture);
-    output.render.texture = 0;
-    glDeleteFramebuffers(1, &output.render.framebuffer);
-    output.render.framebuffer = 0;
-}
-
 void EglGbmBackend::cleanupOutput(Output &output)
 {
-    cleanupFramebuffer(output);
+    if (output.shadowBuffer) {
+        makeContextCurrent(output);
+        output.shadowBuffer = nullptr;
+    }
 
     if (output.eglSurface != EGL_NO_SURFACE) {
         // gbm buffers have to be released before destroying the egl surface
@@ -205,7 +197,15 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
     output.eglSurface = eglSurface;
     output.gbmSurface = gbmSurface;
 
-    resetFramebuffer(output);
+    if (output.output->hardwareTransforms()) {
+        output.shadowBuffer = nullptr;
+    } else {
+        makeContextCurrent(output);
+        output.shadowBuffer = QSharedPointer<ShadowBuffer>::create(output.output->pixelSize());
+        if (!output.shadowBuffer->isComplete()) {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -393,138 +393,14 @@ void EglGbmBackend::importFramebuffer(Output &output) const
     // TODO turn off output?
 }
 
-const float vertices[] = {
-   -1.0f,  1.0f,
-   -1.0f, -1.0f,
-    1.0f, -1.0f,
-
-   -1.0f,  1.0f,
-    1.0f, -1.0f,
-    1.0f,  1.0f,
-};
-
-const float texCoords[] = {
-    0.0f,  1.0f,
-    0.0f,  0.0f,
-    1.0f,  0.0f,
-
-    0.0f,  1.0f,
-    1.0f,  0.0f,
-    1.0f,  1.0f
-};
-
-bool EglGbmBackend::resetFramebuffer(Output &output)
-{
-    cleanupFramebuffer(output);
-
-    if (output.output->hardwareTransforms()) {
-        // No need for an extra render target.
-        return true;
-    }
-
-    makeContextCurrent(output);
-
-    glGenFramebuffers(1, &output.render.framebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, output.render.framebuffer);
-    GLRenderTarget::setKWinFramebuffer(output.render.framebuffer);
-
-    glGenTextures(1, &output.render.texture);
-    glBindTexture(GL_TEXTURE_2D, output.render.texture);
-
-    const QSize texSize = output.output->pixelSize();
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texSize.width(), texSize.height(),
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                           output.render.texture, 0);
-
-    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        qCWarning(KWIN_DRM) << "Error: framebuffer not complete";
-        return false;
-    }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    GLRenderTarget::setKWinFramebuffer(0);
-
-    return true;
-}
-
-void EglGbmBackend::initRenderTarget(Output &output)
-{
-    if (output.render.vbo) {
-        // Already initialized.
-        return;
-    }
-    QSharedPointer<GLVertexBuffer> vbo(new GLVertexBuffer(KWin::GLVertexBuffer::Static));
-    vbo->setData(6, 2, vertices, texCoords);
-    output.render.vbo = vbo;
-}
-
 void EglGbmBackend::renderFramebufferToSurface(Output &output)
 {
-    if (!output.render.framebuffer) {
+    if (!output.shadowBuffer) {
         // No additional render target.
         return;
     }
     makeContextCurrent(output);
-
-    const auto size = output.output->modeSize();
-    glViewport(0, 0, size.width(), size.height());
-
-    auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-
-    QMatrix4x4 mvpMatrix;
-
-    const DrmOutput *drmOutput = output.output;
-    switch (drmOutput->transform()) {
-    case DrmOutput::Transform::Normal:
-    case DrmOutput::Transform::Flipped:
-        break;
-    case DrmOutput::Transform::Rotated90:
-    case DrmOutput::Transform::Flipped90:
-        mvpMatrix.rotate(90, 0, 0, 1);
-        break;
-    case DrmOutput::Transform::Rotated180:
-    case DrmOutput::Transform::Flipped180:
-        mvpMatrix.rotate(180, 0, 0, 1);
-        break;
-    case DrmOutput::Transform::Rotated270:
-    case DrmOutput::Transform::Flipped270:
-        mvpMatrix.rotate(270, 0, 0, 1);
-        break;
-    }
-    switch (drmOutput->transform()) {
-    case DrmOutput::Transform::Flipped:
-    case DrmOutput::Transform::Flipped90:
-    case DrmOutput::Transform::Flipped180:
-    case DrmOutput::Transform::Flipped270:
-        mvpMatrix.scale(-1, 1);
-        break;
-    default:
-        break;
-    }
-
-    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
-
-    initRenderTarget(output);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    GLRenderTarget::setKWinFramebuffer(0);
-    glBindTexture(GL_TEXTURE_2D, output.render.texture);
-    output.render.vbo->render(GL_TRIANGLES);
-    ShaderManager::instance()->popShader();
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void EglGbmBackend::prepareRenderFramebuffer(const Output &output) const
-{
-    // When render.framebuffer is 0 we may just reset to the screen framebuffer.
-    glBindFramebuffer(GL_FRAMEBUFFER, output.render.framebuffer);
-    GLRenderTarget::setKWinFramebuffer(output.render.framebuffer);
+    output.shadowBuffer->render(output.output);
 }
 
 bool EglGbmBackend::makeContextCurrent(const Output &output) const
@@ -706,7 +582,9 @@ QRegion EglGbmBackend::beginFrame(int screenId)
 QRegion EglGbmBackend::prepareRenderingForOutput(Output &output) const
 {
     makeContextCurrent(output);
-    prepareRenderFramebuffer(output);
+    if (output.shadowBuffer) {
+        output.shadowBuffer->bind();
+    }
     setViewport(output);
 
     if (supportsBufferAge()) {
@@ -861,8 +739,8 @@ QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *abstra
     }
 
     DrmOutput *drmOutput = itOutput->output;
-    if (!drmOutput->hardwareTransforms()) {
-        const auto glTexture = QSharedPointer<KWin::GLTexture>::create(itOutput->render.texture, GL_RGBA8, drmOutput->pixelSize());
+    if (itOutput->shadowBuffer) {
+        const auto glTexture = QSharedPointer<KWin::GLTexture>::create(itOutput->shadowBuffer->texture(), GL_RGBA8, drmOutput->pixelSize());
         glTexture->setYInverted(true);
         return glTexture;
     }

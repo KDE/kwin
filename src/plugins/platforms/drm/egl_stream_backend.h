@@ -20,6 +20,7 @@ namespace KWin
 class DrmOutput;
 class DrmDumbBuffer;
 class DumbSwapchain;
+class ShadowBuffer;
 
 /**
  * @brief OpenGL Backend using Egl with an EGLDevice.
@@ -65,13 +66,14 @@ private:
         QSharedPointer<DrmDumbBuffer> buffer;
         EGLSurface eglSurface = EGL_NO_SURFACE;
         EGLStreamKHR eglStream = EGL_NO_STREAM_KHR;
+        QSharedPointer<ShadowBuffer> shadowBuffer;
 
         // for operation as secondary GPU
         QSharedPointer<DumbSwapchain> dumbSwapchain;
     };
     bool resetOutput(Output &output, DrmOutput *drmOutput);
     bool makeContextCurrent(const Output &output);
-    void cleanupOutput(const Output &output);
+    void cleanupOutput(Output &output);
 
     QVector<Output> m_outputs;
     KWaylandServer::EglStreamControllerInterface *m_eglStreamControllerInterface;

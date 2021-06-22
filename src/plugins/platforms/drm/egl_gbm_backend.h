@@ -32,6 +32,7 @@ class DrmOutput;
 class GbmSurface;
 class GbmBuffer;
 class DumbSwapchain;
+class ShadowBuffer;
 
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
@@ -91,11 +92,7 @@ private:
          */
         QList<QRegion> damageHistory;
 
-        struct {
-            GLuint framebuffer = 0;
-            GLuint texture = 0;
-            QSharedPointer<GLVertexBuffer> vbo;
-        } render;
+        QSharedPointer<ShadowBuffer> shadowBuffer;
 
         KWaylandServer::SurfaceInterface *surfaceInterface = nullptr;
         ImportMode importMode = ImportMode::Dmabuf;
@@ -107,9 +104,6 @@ private:
 
     bool makeContextCurrent(const Output &output) const;
     void setViewport(const Output &output) const;
-
-    bool resetFramebuffer(Output &output);
-    void initRenderTarget(Output &output);
 
     void prepareRenderFramebuffer(const Output &output) const;
     void renderFramebufferToSurface(Output &output);
