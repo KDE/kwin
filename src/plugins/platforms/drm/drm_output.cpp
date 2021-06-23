@@ -408,4 +408,9 @@ QSize DrmOutput::sourceSize() const
     }
 }
 
+void DrmOutput::setPipeline(DrmPipeline *pipeline)
+{
+    m_pipeline = pipeline;
+}
+
 }

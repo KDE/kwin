@@ -70,6 +70,8 @@ public:
 
     QSize sourceSize() const;
 
+    void setPipeline(DrmPipeline *pipeline);
+
 private:
     friend class DrmGpu;
     friend class DrmBackend;

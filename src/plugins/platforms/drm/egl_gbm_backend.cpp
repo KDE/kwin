@@ -492,7 +492,7 @@ bool EglGbmBackend::doesRenderFit(DrmOutput *output, const Output::RenderData &r
     if (!render.gbmSurface) {
         return false;
     }
-    QSize surfaceSize = output->pipeline()->sourceSize();
+    QSize surfaceSize = output->sourceSize();
     if (surfaceSize != render.gbmSurface->size()) {
         return false;
     }

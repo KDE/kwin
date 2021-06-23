@@ -39,23 +39,32 @@ DrmPipeline::DrmPipeline(DrmGpu *gpu, DrmConnector *conn, DrmCrtc *crtc, DrmPlan
     , m_crtc(crtc)
     , m_primaryPlane(primaryPlane)
 {
-    if (m_gpu->atomicModeSetting()) {
-        m_connector->findCurrentMode(m_crtc->queryCurrentMode());
-        m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, m_crtc->id());
-        auto mode = m_connector->currentMode();
-        m_crtc->setPending(DrmCrtc::PropertyIndex::Active, 1);
-        m_crtc->setPendingBlob(DrmCrtc::PropertyIndex::ModeId, &mode.mode, sizeof(drmModeModeInfo));
-    }
     m_allObjects << m_connector << m_crtc;
     if (m_primaryPlane) {
-        m_primaryPlane->setPending(DrmPlane::PropertyIndex::CrtcId, m_crtc->id());
-        m_primaryPlane->set(QPoint(0, 0), sourceSize(), QPoint(0, 0), m_connector->currentMode().size);
         m_allObjects << m_primaryPlane;
     }
 }
 
 DrmPipeline::~DrmPipeline()
 {
+}
+
+void DrmPipeline::setup()
+{
+    if (!m_gpu->atomicModeSetting()) {
+        return;
+    }
+    m_connector->findCurrentMode(m_crtc->queryCurrentMode());
+    m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, m_crtc->id());
+    m_crtc->setPending(DrmCrtc::PropertyIndex::Active, 1);
+    auto mode = m_connector->currentMode();
+    m_crtc->setPendingBlob(DrmCrtc::PropertyIndex::ModeId, &mode.mode, sizeof(drmModeModeInfo));
+    if (m_primaryPlane) {
+        m_primaryPlane->setPending(DrmPlane::PropertyIndex::CrtcId, m_crtc->id());
+        m_primaryPlane->set(QPoint(0, 0), sourceSize(), QPoint(0, 0), mode.size);
+        m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate0);
+    }
+    checkTestBuffer();
 }
 
 bool DrmPipeline::test(const QVector<DrmPipeline*> &pipelines)
@@ -114,8 +123,10 @@ bool DrmPipeline::atomicCommit()
     return result;
 }
 
-bool DrmPipeline::atomicTest(const QVector<DrmPipeline*> &pipelines)
+bool DrmPipeline::testPipelines(const QVector<DrmPipeline*> &pipelines)
 {
+    Q_ASSERT(!pipelines.isEmpty());
+
     drmModeAtomicReq *req = drmModeAtomicAlloc();
     if (!req) {
         qCDebug(KWIN_DRM) << "Failed to allocate drmModeAtomicReq!" << strerror(errno);
@@ -123,17 +134,27 @@ bool DrmPipeline::atomicTest(const QVector<DrmPipeline*> &pipelines)
     }
     uint32_t flags = 0;
     bool result = true;
-    // the whole batch needs to be tested in one atomic commit to consider not-yet-applied changes of other pipelines
     for (const auto &pipeline : pipelines) {
-        if (pipeline != this) {
-            result &= pipeline->populateAtomicValues(req, flags);
-            if (!result) {
-                break;
-            }
+        if (!pipeline->checkTestBuffer() || !pipeline->populateAtomicValues(req, flags)) {
+            result = false;
+            break;
         }
     }
     if (result) {
-        result &= doAtomicCommit(req, flags, true);
+        result = drmModeAtomicCommit(pipelines[0]->m_gpu->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, nullptr) == 0;
+    }
+    drmModeAtomicFree(req);
+    return result;
+}
+
+bool DrmPipeline::atomicTest(const QVector<DrmPipeline*> &pipelines)
+{
+    if (testPipelines(pipelines)) {
+        m_oldTestBuffer = nullptr;
+        for (const auto &obj : qAsConst(m_allObjects)) {
+            obj->commitPending();
+        }
+        return true;
     } else {
         if (m_oldTestBuffer) {
             m_primaryBuffer = m_oldTestBuffer;
@@ -142,9 +163,8 @@ bool DrmPipeline::atomicTest(const QVector<DrmPipeline*> &pipelines)
         for (const auto &obj : qAsConst(m_allObjects)) {
             obj->rollbackPending();
         }
+        return false;
     }
-    drmModeAtomicFree(req);
-    return result;
 }
 
 bool DrmPipeline::doAtomicCommit(drmModeAtomicReq *req, uint32_t flags, bool testOnly)
@@ -269,6 +289,9 @@ bool DrmPipeline::modeset(int modeIndex)
 bool DrmPipeline::checkTestBuffer()
 {
     if (m_primaryBuffer && m_primaryBuffer->size() == sourceSize()) {
+        return true;
+    }
+    if (!m_active) {
         return true;
     }
 #if HAVE_GBM
@@ -528,6 +551,16 @@ void DrmPipeline::updateProperties()
     // with legacy we don't know what happened to the cursor after VT switch
     // so make sure it gets set again
     m_cursor.dirty = true;
+}
+
+bool DrmPipeline::isConnected() const
+{
+    if (m_primaryPlane) {
+        return m_connector->getProp(DrmConnector::PropertyIndex::CrtcId)->current() == m_crtc->id()
+            && m_primaryPlane->getProp(DrmPlane::PropertyIndex::CrtcId)->current() == m_crtc->id();
+    } else {
+        return false;
+    }
 }
 
 static void printProps(DrmObject *object)

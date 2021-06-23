@@ -148,14 +148,16 @@ void DrmGpu::tryAMS()
 
 bool DrmGpu::updateOutputs()
 {
-    auto oldConnectors = m_connectors;
-    auto oldCrtcs = m_crtcs;
     DrmScopedPointer<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed";
         return false;
     }
 
+    QVector<DrmConnector*> removedConnectors = m_connectors;
+    QVector<DrmConnector*> unusedConnectors;
+    QVector<DrmCrtc*> removedCrtcs = m_crtcs;
+    QVector<DrmCrtc*> unusedCrtcs;
     for (int i = 0; i < resources->count_connectors; ++i) {
         const uint32_t currentConnector = resources->connectors[i];
         auto it = std::find_if(m_connectors.constBegin(), m_connectors.constEnd(), [currentConnector] (DrmConnector *c) { return c->id() == currentConnector; });
@@ -173,9 +175,9 @@ bool DrmGpu::updateOutputs()
                 delete c;
                 continue;
             }
-            m_connectors << c;
-        } else {
-            oldConnectors.removeOne(*it);
+            unusedConnectors << c;
+        } else if ((*it)->isConnected()) {
+            removedConnectors.removeOne(*it);
         }
     }
 
@@ -188,132 +190,169 @@ bool DrmGpu::updateOutputs()
                 delete c;
                 continue;
             }
-            m_crtcs << c;
+            unusedCrtcs << c;
         } else {
-            oldCrtcs.removeOne(*it);
+            removedCrtcs.removeOne(*it);
         }
     }
 
-    for (auto c : qAsConst(oldConnectors)) {
-        m_connectors.removeOne(c);
-    }
-    for (auto c : qAsConst(oldCrtcs)) {
-        m_crtcs.removeOne(c);
-    }
-
-    QVector<DrmOutput*> connectedOutputs;
-    QVector<DrmConnector*> pendingConnectors;
-
-    // split up connected connectors in already or not yet assigned ones
-    for (DrmConnector *con : qAsConst(m_connectors)) {
-        if (!con->isConnected()) {
-            continue;
-        }
-
-        if (DrmOutput *o = findOutput(con->id())) {
-            connectedOutputs << o;
-        } else {
-            pendingConnectors << con;
+    for (const auto &connector : qAsConst(removedConnectors)) {
+        m_connectors.removeOne(connector);
+        if (auto output = findOutput(connector->id())) {
+            unusedCrtcs << output->pipeline()->crtc();
+            removeOutput(output);
         }
     }
-
-    // check for outputs which got removed
-    QVector<DrmOutput*> removedOutputs;
-    auto it = m_outputs.begin();
-    while (it != m_outputs.end()) {
-        if (connectedOutputs.contains(*it)) {
-            it++;
-            continue;
+    for (const auto &crtc : qAsConst(removedCrtcs)) {
+        auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [crtc](auto output){return output->pipeline()->crtc() == crtc;});
+        if (it != m_outputs.constEnd()) {
+            unusedConnectors << (*it)->pipeline()->connector();
+            removeOutput(*it);
         }
-        DrmOutput *removed = *it;
-        it = m_outputs.erase(it);
-        removedOutputs.append(removed);
+        m_crtcs.removeOne(crtc);
     }
 
-    // before testing output configurations, update all the plane properties as they might have changed
-    for (const auto &plane : qAsConst(m_planes)) {
-        plane->updateProperties();
-    }
-
-    for (DrmConnector *con : qAsConst(pendingConnectors)) {
-        DrmScopedPointer<drmModeConnector> connector(drmModeGetConnector(m_fd, con->id()));
-        if (!connector) {
-            continue;
+    if (!unusedConnectors.isEmpty()) {
+        // before testing output configurations update all the plane properties as they might have changed
+        for (const auto &plane : qAsConst(m_planes)) {
+            plane->updateProperties();
         }
-        if (connector->count_modes == 0) {
-            continue;
-        }
-        bool outputDone = false;
 
-        QVector<uint32_t> encoders = con->encoders();
-        for (auto encId : qAsConst(encoders)) {
-            DrmScopedPointer<drmModeEncoder> encoder(drmModeGetEncoder(m_fd, encId));
-            if (!encoder) {
-                continue;
+        QVector<DrmOutput*> config = findWorkingCombination({}, unusedConnectors, unusedCrtcs, m_unusedPlanes);
+        if (config.count() < unusedConnectors.count() && unusedCrtcs.count() >= unusedConnectors.count()) {
+            for (const auto &output : qAsConst(config)) {
+                Q_EMIT outputDisabled(output);
+                qDeleteAll(config);
             }
-            for (DrmCrtc *crtc : qAsConst(m_crtcs)) {
-                if (!(encoder->possible_crtcs & (1 << crtc->pipeIndex()))) {
-                    continue;
-                }
 
-                // check if crtc isn't used yet -- currently we don't allow multiple outputs on one crtc (cloned mode)
-                auto it = std::find_if(connectedOutputs.constBegin(), connectedOutputs.constEnd(),
-                    [crtc] (DrmOutput *o) {
-                        return o->m_pipeline->crtc() == crtc;
-                    }
-                );
-                if (it != connectedOutputs.constEnd()) {
-                    continue;
-                }
+            // try to find a working configuration again, this time including the resources of currently active outputs
+            QVector<DrmConnector*> allConnectors = unusedConnectors;
+            allConnectors << m_connectors;
+            QVector<DrmCrtc*> allCrtcs = m_crtcs;
+            allCrtcs << unusedCrtcs;
 
-                auto primary = getCompatiblePlane(DrmPlane::TypeIndex::Primary, crtc);
-                if (m_atomicModeSetting && !primary) {
-                    continue;
-                }
-
-                auto pipeline = new DrmPipeline(this, con, crtc, primary);
-                DrmOutput *output = new DrmOutput(m_backend, this, pipeline);
-
-                // outputEnabled only adds it to the render backend but not to the platform
-                // this is necessary for accurate pipeline tests
-                Q_EMIT outputEnabled(output);
-
-                // test
-                if (!pipeline->test(m_pipelines)) {
-                    Q_EMIT outputDisabled(output);
-                    delete output;
-                    delete pipeline;
-                    continue;
-                }
-                m_pipelines << pipeline;
-
-                // add the output to the platform and create wayland objects
-                Q_EMIT outputAdded(output);
-
-                if (!output->initCursor(m_cursorSize)) {
-                    m_backend->setSoftwareCursorForced(true);
-                }
-                qCDebug(KWIN_DRM, "For new output %s on GPU %s use mode %dx%d@%d", qPrintable(output->name()), qPrintable(m_devNode), output->modeSize().width(), output->modeSize().height(), output->refreshRate());
-
-                connectedOutputs << output;
-                outputDone = true;
-                break;
+            // as we don't apply output configurations with a single atomic modeset we need to turn
+            // the old configuration off first to make sure it doesn't interfere
+            for (const auto &output : qAsConst(m_outputs)) {
+                output->pipeline()->setActive(false);
             }
-            if (outputDone) {
-                break;
-            }
+
+            config = findWorkingCombination(m_outputs, allConnectors, allCrtcs, m_planes);
         }
+        for (const auto &output : qAsConst(config)) {
+            if (!output->initCursor(m_cursorSize)) {
+                m_backend->setSoftwareCursorForced(true);
+            }
+            unusedConnectors.removeOne(output->pipeline()->connector());
+            unusedCrtcs.removeOne(output->pipeline()->crtc());
+            m_connectors << output->pipeline()->connector();
+            m_crtcs << output->pipeline()->crtc();
+            m_unusedPlanes.removeOne(output->pipeline()->primaryPlane());
+            m_pipelines << output->pipeline();
+            Q_EMIT outputAdded(output);
+        }
+        m_outputs << config;
     }
-    std::sort(connectedOutputs.begin(), connectedOutputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_pipeline->connector()->id() < b->m_pipeline->connector()->id(); });
-    m_outputs = connectedOutputs;
 
-    for(DrmOutput *removedOutput : removedOutputs) {
-        removeOutput(removedOutput);
-    }
-
-    qDeleteAll(oldConnectors);
-    qDeleteAll(oldCrtcs);
+    qDeleteAll(unusedConnectors);
+    qDeleteAll(unusedCrtcs);
     return true;
+}
+
+QVector<DrmOutput*> DrmGpu::findWorkingCombination(QVector<DrmOutput*> outputs, QVector<DrmConnector*> connectors, QVector<DrmCrtc*> crtcs, QVector<DrmPlane*> planes)
+{
+    QVector<DrmOutput*> config;
+    const auto lists = constructAllCombinations(connectors, crtcs, planes);
+    for (auto it = lists.constBegin(); it < lists.constEnd(); it++) {
+        for (const auto &pipeline : qAsConst(*it)) {
+            auto outputIt = std::find_if(outputs.constBegin(), outputs.constEnd(), [pipeline](auto output){return output->pipeline()->connector() == pipeline->connector();});
+            if (outputIt == outputs.constEnd()) {
+                DrmOutput *output = new DrmOutput(m_backend, this, pipeline);
+                Q_EMIT outputEnabled(output);// create render resources for the test
+                config << output;
+                pipeline->setup();
+            } else {
+                (*outputIt)->setPipeline(pipeline);
+                pipeline->setUserData(*outputIt);
+            }
+        }
+
+        if (DrmPipeline::testPipelines(*it)) {
+            it++;
+            for (; it < lists.constEnd(); it++) {
+                qDeleteAll(*it);
+            }
+            break;
+        } else {
+            for (const auto &output : qAsConst(config)) {
+                Q_EMIT outputDisabled(output);
+            }
+            qDeleteAll(config);
+            qDeleteAll(*it);
+            config.clear();
+        }
+    }
+    return config;
+}
+
+QVector<QVector<DrmPipeline*>> DrmGpu::constructAllCombinations(QVector<DrmConnector*> connectors, QVector<DrmCrtc*> crtcs, QVector<DrmPlane*> planes)
+{
+    if (connectors.isEmpty()) {
+        return {};
+    }
+    auto connector = connectors.takeFirst();
+    const auto encoders = connector->encoders();
+
+    QVector<QVector<DrmPipeline*>> ret;
+    auto recurse = [this, &ret, connector, connectors, crtcs, planes] (DrmCrtc *crtc, DrmPlane *primaryPlane) {
+        auto crtcsLeft = crtcs;
+        crtcsLeft.removeOne(crtc);
+        auto planesLeft = planes;
+        planesLeft.removeOne(primaryPlane);
+        const auto otherPipelines = constructAllCombinations(connectors, crtcsLeft, planesLeft);
+        for (auto list : otherPipelines) {
+            // prepend instead of append, to keep the order the same as the old algorithm
+            list.prepend(new DrmPipeline(this, connector, crtc, primaryPlane));
+            ret << list;
+        }
+        if (otherPipelines.isEmpty()) {
+            QVector<DrmPipeline*> list = {new DrmPipeline(this, connector, crtc, primaryPlane)};
+            ret << list;
+        }
+    };
+    for (const auto &encoderId : encoders) {
+        DrmScopedPointer<drmModeEncoder> encoder(drmModeGetEncoder(m_fd, encoderId));
+        for (const auto &crtc : qAsConst(crtcs)) {
+            if (m_atomicModeSetting) {
+                for (const auto &plane : qAsConst(planes)) {
+                    if (plane->type() == DrmPlane::TypeIndex::Primary
+                        && plane->isCrtcSupported(crtc->pipeIndex())) {
+                        recurse(crtc, plane);
+                    }
+                }
+            } else {
+                recurse(crtc, nullptr);
+            }
+        }
+    }
+    // sort by relevance
+    std::sort(ret.begin(), ret.end(), [](const QVector<DrmPipeline*> &combination0, const QVector<DrmPipeline*> &combination1) {
+        // favor combinations with the most working outputs
+        if (combination0.count() > combination1.count()) {
+            return true;
+        }
+        // favor combinations that are already set by the driver (or the last drm master)
+        auto isConnected = [](DrmPipeline *pipeline){return pipeline->isConnected();};
+        int count0 = std::count_if(combination0.begin(), combination0.end(), isConnected);
+        int count1 = std::count_if(combination1.begin(), combination1.end(), isConnected);
+        return count0 > count1;
+    });
+    return ret;
+}
+
+DrmPipeline *checkCombination()
+{
+    return nullptr;
 }
 
 DrmOutput *DrmGpu::findOutput(quint32 connector)

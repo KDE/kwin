@@ -114,6 +114,9 @@ private:
     void removeOutput(DrmOutput *output);
     void tryAMS();
 
+    QVector<DrmOutput*> findWorkingCombination(QVector<DrmOutput*> outputs, QVector<DrmConnector*> connectors, QVector<DrmCrtc*> crtcs, QVector<DrmPlane*> planes);
+    QVector<QVector<DrmPipeline*>> constructAllCombinations(QVector<DrmConnector*> connectors, QVector<DrmCrtc*> crtcs, QVector<DrmPlane*> planes);
+
     DrmBackend* const m_backend;
     QPointer<AbstractEglDrmBackend> m_eglBackend;
 
