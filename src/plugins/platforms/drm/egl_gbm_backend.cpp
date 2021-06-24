@@ -149,7 +149,7 @@ bool EglGbmBackend::initRenderingContext()
 bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
 {
     output.output = drmOutput;
-    const QSize size = drmOutput->pipeline()->sourceSize();
+    const QSize size = drmOutput->sourceSize();
     int flags = GBM_BO_USE_RENDERING;
     if (drmOutput->gpu() == m_gpu) {
         flags |= GBM_BO_USE_SCANOUT;

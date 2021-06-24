@@ -68,6 +68,8 @@ public:
         return m_gpu;
     }
 
+    QSize sourceSize() const;
+
 private:
     friend class DrmGpu;
     friend class DrmBackend;

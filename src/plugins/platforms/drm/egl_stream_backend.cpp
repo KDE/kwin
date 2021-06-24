@@ -311,6 +311,8 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
     if (isPrimary()) {
         // dumb buffer used for modesetting
         o.buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, sourceSize);
+        o.targetPlane = drmOutput->pipeline()->primaryPlane();
+        o.targetCrtc = o.targetPlane ? nullptr : drmOutput->pipeline()->crtc();
 
         EGLAttrib streamAttribs[] = {
             EGL_STREAM_FIFO_LENGTH_KHR, 0, // mailbox mode
@@ -324,12 +326,12 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
         }
 
         EGLAttrib outputAttribs[3];
-        if (drmOutput->pipeline()->primaryPlane()) {
+        if (o.targetPlane) {
             outputAttribs[0] = EGL_DRM_PLANE_EXT;
-            outputAttribs[1] = drmOutput->pipeline()->primaryPlane()->id();
+            outputAttribs[1] = o.targetPlane->id();
         } else {
             outputAttribs[0] = EGL_DRM_CRTC_EXT;
-            outputAttribs[1] = drmOutput->pipeline()->crtc()->id();
+            outputAttribs[1] = o.targetCrtc->id();
         }
         outputAttribs[2] = EGL_NONE;
         EGLint numLayers;
@@ -394,20 +396,6 @@ bool EglStreamBackend::addOutput(DrmOutput *drmOutput)
     if (!isPrimary() && !renderingBackend()->addOutput(drmOutput)) {
         return false;
     }
-
-    connect(drmOutput, &DrmOutput::modeChanged, this,
-        [drmOutput, this] {
-            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                [drmOutput] (const auto &o) {
-                    return o.output == drmOutput;
-                }
-            );
-            if (it == m_outputs.end()) {
-                return;
-            }
-            resetOutput(*it, drmOutput);
-        }
-    );
     m_outputs << o;
     return true;
 }
@@ -490,10 +478,33 @@ PlatformSurfaceTexture *EglStreamBackend::createPlatformSurfaceTextureWayland(Su
     return new EglStreamSurfaceTextureWayland(this, pixmap);
 }
 
+bool EglStreamBackend::isOutputCorrect(const Output &o) const
+{
+    if (o.targetCrtc != o.output->pipeline()->crtc() || o.targetPlane != o.output->pipeline()->primaryPlane()) {
+        return false;
+    }
+    QSize surfaceSize = o.dumbSwapchain ? o.dumbSwapchain->size() : o.buffer->size();
+    if (surfaceSize != o.output->sourceSize()) {
+        return false;
+    }
+    bool needsTexture = surfaceSize != o.output->pixelSize();
+    if (needsTexture) {
+        return o.shadowBuffer && o.shadowBuffer->textureSize() == o.output->pixelSize();
+    } else {
+        return o.shadowBuffer == nullptr;
+    }
+}
+
 QRegion EglStreamBackend::beginFrame(int screenId)
 {
-    const Output &o = m_outputs.at(screenId);
+    Output &o = m_outputs[screenId];
     if (isPrimary()) {
+        if (!isOutputCorrect(o)) {
+            if (!resetOutput(o, o.output)) {
+                // handle this better?
+                return {};
+            }
+        }
         makeContextCurrent(o);
         if (o.shadowBuffer) {
             o.shadowBuffer->bind();

@@ -21,6 +21,8 @@ class DrmOutput;
 class DrmDumbBuffer;
 class DumbSwapchain;
 class ShadowBuffer;
+class DrmCrtc;
+class DrmPlane;
 
 /**
  * @brief OpenGL Backend using Egl with an EGLDevice.
@@ -71,12 +73,17 @@ private:
         EGLStreamKHR eglStream = EGL_NO_STREAM_KHR;
         QSharedPointer<ShadowBuffer> shadowBuffer;
 
+        DrmPlane *targetPlane = nullptr;
+        DrmCrtc *targetCrtc = nullptr;
+
         // for operation as secondary GPU
         QSharedPointer<DumbSwapchain> dumbSwapchain;
     };
     bool resetOutput(Output &output, DrmOutput *drmOutput);
+    bool createEglSurface(Output &o);
     bool makeContextCurrent(const Output &output);
     void cleanupOutput(Output &output);
+    bool isOutputCorrect(const Output &o) const;
 
     QVector<Output> m_outputs;
     KWaylandServer::EglStreamControllerInterface *m_eglStreamControllerInterface;

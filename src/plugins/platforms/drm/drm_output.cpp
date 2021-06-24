@@ -399,4 +399,13 @@ bool DrmOutput::isDpmsEnabled() const
     return m_pipeline->isActive();
 }
 
+QSize DrmOutput::sourceSize() const
+{
+    if (m_pipeline) {
+        return m_pipeline->sourceSize();
+    } else {
+        return modeSize();
+    }
+}
+
 }
