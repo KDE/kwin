@@ -302,10 +302,11 @@ bool EglStreamBackend::initRenderingContext()
 bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
 {
     o.output = drmOutput;
-    // dumb buffer used for modesetting
-    o.buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, drmOutput->pixelSize());
 
     if (isPrimary()) {
+        // dumb buffer used for modesetting
+        o.buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, drmOutput->pixelSize());
+
         EGLAttrib streamAttribs[] = {
             EGL_STREAM_FIFO_LENGTH_KHR, 0, // mailbox mode
             EGL_CONSUMER_AUTO_ACQUIRE_EXT, EGL_FALSE,
