@@ -197,6 +197,13 @@ EglStreamBackend::StreamTexture *EglStreamBackend::lookupStreamTexture(KWaylandS
            nullptr;
 }
 
+void EglStreamBackend::destroyStreamTexture(KWaylandServer::SurfaceInterface *surface)
+{
+    const StreamTexture &st = m_streamTextures.take(surface);
+    pEglDestroyStreamKHR(eglDisplay(), st.stream);
+    glDeleteTextures(1, &st.texture);
+}
+
 void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *surface,
                                             void *eglStream,
                                             wl_array *attribs)
@@ -231,9 +238,7 @@ void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *su
         connect(surface, &KWaylandServer::SurfaceInterface::destroyed, this,
             [surface, this]() {
                 makeCurrent();
-                const StreamTexture &st = m_streamTextures.take(surface);
-                pEglDestroyStreamKHR(eglDisplay(), st.stream);
-                glDeleteTextures(1, &st.texture);
+                destroyStreamTexture(surface);
             });
     }
 
@@ -654,12 +659,43 @@ bool EglStreamSurfaceTextureWayland::attachBuffer(KWaylandServer::BufferInterfac
     return oldFormat != m_format || wasYInverted != texture()->isYInverted();
 }
 
+bool EglStreamSurfaceTextureWayland::checkBuffer(KWaylandServer::SurfaceInterface *surface,
+                                                 KWaylandServer::BufferInterface *buffer)
+{
+    EGLAttrib attribs[] = {
+        EGL_WAYLAND_EGLSTREAM_WL, (EGLAttrib)buffer->resource(),
+        EGL_NONE
+    };
+    EGLStreamKHR stream = pEglCreateStreamAttribNV(m_backend->eglDisplay(), attribs);
+    if (stream == EGL_NO_STREAM_KHR) {
+        // eglCreateStreamAttribNV generates EGL_BAD_ACCESS if the
+        // provided buffer is not a wl_eglstream. In that case, clean up
+        // the old stream and fall back to the dmabuf or shm attach
+        // paths.
+        EGLint err = eglGetError();
+        if (err == EGL_BAD_ACCESS) {
+            m_backend->destroyStreamTexture(surface);
+            return false;
+        }
+        // Otherwise it should have generated EGL_BAD_STREAM_KHR since
+        // we've already created an EGLStream for it.
+        Q_ASSERT(err == EGL_BAD_STREAM_KHR);
+    } else {
+        // If eglCreateStreamAttribNV *didn't* fail, that means the
+        // buffer is a wl_eglstream but it hasn't been attached to a
+        // consumer for some reason. Not much we can do here.
+        qCCritical(KWIN_DRM) << "Untracked wl_eglstream attached to surface";
+        pEglDestroyStreamKHR(m_backend->eglDisplay(), stream);
+    }
+    return true;
+}
+
 bool EglStreamSurfaceTextureWayland::create()
 {
     using namespace KWaylandServer;
     SurfaceInterface *surface = m_pixmap->surface();
     const EglStreamBackend::StreamTexture *st = m_backend->lookupStreamTexture(surface);
-    if (m_pixmap->buffer() && st != nullptr) {
+    if (m_pixmap->buffer() && st != nullptr && checkBuffer(surface, m_pixmap->buffer())) {
 
         glGenTextures(1, &m_textureId);
         m_texture.reset(new GLTexture(m_textureId, 0, m_pixmap->buffer()->size()));
@@ -687,7 +723,7 @@ void EglStreamSurfaceTextureWayland::update(const QRegion &region)
     using namespace KWaylandServer;
     SurfaceInterface *surface = m_pixmap->surface();
     const EglStreamBackend::StreamTexture *st = m_backend->lookupStreamTexture(surface);
-    if (m_pixmap->buffer() && st != nullptr) {
+    if (m_pixmap->buffer() && st != nullptr && checkBuffer(surface, m_pixmap->buffer())) {
 
         if (attachBuffer(surface->buffer())) {
             createFbo();
