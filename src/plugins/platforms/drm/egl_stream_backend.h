@@ -54,6 +54,7 @@ private:
         GLuint texture;
     };
     StreamTexture *lookupStreamTexture(KWaylandServer::SurfaceInterface *surface);
+    void destroyStreamTexture(KWaylandServer::SurfaceInterface *surface);
     void attachStreamConsumer(KWaylandServer::SurfaceInterface *surface,
                               void *eglStream,
                               wl_array *attribs);
@@ -94,6 +95,9 @@ private:
     void createFbo();
     void copyExternalTexture(GLuint tex);
     bool attachBuffer(KWaylandServer::BufferInterface *buffer);
+    bool checkBuffer(KWaylandServer::SurfaceInterface *surface,
+                     KWaylandServer::BufferInterface *buffer);
+
     EglStreamBackend *m_backend;
     GLuint m_fbo, m_rbo;
     GLenum m_format;
