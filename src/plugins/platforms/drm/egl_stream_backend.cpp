@@ -300,8 +300,9 @@ bool EglStreamBackend::initRenderingContext()
 bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
 {
     o.output = drmOutput;
+    QSize sourceSize = drmOutput->hardwareTransforms() ? drmOutput->pixelSize() : drmOutput->modeSize();
     // dumb buffer used for modesetting
-    o.buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, drmOutput->pixelSize());
+    o.buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, sourceSize);
 
     if (isPrimary()) {
         EGLAttrib streamAttribs[] = {
@@ -334,8 +335,8 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
 
         pEglStreamConsumerOutputEXT(eglDisplay(), stream, outputLayer);
         EGLint streamProducerAttribs[] = {
-            EGL_WIDTH, drmOutput->pixelSize().width(),
-            EGL_HEIGHT, drmOutput->pixelSize().height(),
+            EGL_WIDTH, sourceSize.width(),
+            EGL_HEIGHT, sourceSize.height(),
             EGL_NONE
         };
         EGLSurface eglSurface = pEglCreateStreamProducerSurfaceKHR(eglDisplay(), config(), stream,
@@ -368,8 +369,7 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
             }
         }
     } else {
-        QSize size = drmOutput->hardwareTransforms() ? drmOutput->pixelSize() : drmOutput->modeSize();
-        o.dumbSwapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, size);
+        o.dumbSwapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, sourceSize);
         if (o.dumbSwapchain->isEmpty()) {
             return false;
         }
