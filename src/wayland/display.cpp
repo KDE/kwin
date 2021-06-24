@@ -7,10 +7,12 @@
 #include "display.h"
 #include "display_p.h"
 #include "logging.h"
+#include "output_interface.h"
 
+#include <QAbstractEventDispatcher>
 #include <QCoreApplication>
 #include <QDebug>
-#include <QAbstractEventDispatcher>
+#include <QRect>
 
 namespace KWaylandServer
 {
@@ -153,6 +155,21 @@ QList< OutputInterface* > Display::outputs() const
 QList< OutputDeviceInterface* > Display::outputDevices() const
 {
     return d->outputdevices;
+}
+
+QVector<OutputInterface *> Display::outputsIntersecting(const QRect &rect) const
+{
+    QVector<OutputInterface *> outputs;
+    for (auto *output : qAsConst(d->outputs)) {
+        if (!output->isEnabled()) {
+            continue;
+        }
+        const QRect outputGeometry(output->globalPosition(), output->pixelSize() / output->scale());
+        if (rect.intersects(outputGeometry)) {
+            outputs << output;
+        }
+    }
+    return outputs;
 }
 
 QVector<SeatInterface*> Display::seats() const

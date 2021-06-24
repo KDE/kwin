@@ -113,6 +113,7 @@ public:
     QVector<SeatInterface*> seats() const;
     QList<OutputDeviceInterface *> outputDevices() const;
     QList<OutputInterface *> outputs() const;
+    QVector<OutputInterface *> outputsIntersecting(const QRect &rect) const;
 
     /**
      * Gets the ClientConnection for the given @p client.
