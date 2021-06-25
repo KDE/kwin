@@ -122,6 +122,19 @@ void DrmGbmBuffer::releaseGbm()
     releaseBuffer();
 }
 
+static QByteArray parseFourcc(quint32 value)
+{
+    QByteArray ret;
+    ret.resize(4);
+
+    ret[0] = value & 0xff;
+    ret[1] = (value >> 8) & 0xff;
+    ret[2] = (value >> 16) & 0xff;
+    ret[3] = (value >> 24) & 0xff;
+
+    return ret;
+}
+
 void DrmGbmBuffer::initialize()
 {
     m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
@@ -146,17 +159,13 @@ void DrmGbmBuffer::initialize()
 
     if (modifiers[0] != DRM_FORMAT_MOD_INVALID && m_gpu->addFB2ModifiersSupported()) {
         if (drmModeAddFB2WithModifiers(m_gpu->fd(), m_size.width(), m_size.height(), format, handles, strides, offsets, modifiers, &m_bufferId, DRM_MODE_FB_MODIFIERS)) {
-            gbm_format_name_desc name;
-            gbm_format_get_name(format, &name);
-            qCCritical(KWIN_DRM) << "drmModeAddFB2WithModifiers on GPU" << m_gpu->devNode() << "failed for a buffer with format" << name.name << "and modifier" << modifiers[0] << strerror(errno);
+            qCCritical(KWIN_DRM) << "drmModeAddFB2WithModifiers on GPU" << m_gpu->devNode() << "failed for a buffer with format" << parseFourcc(format) << "and modifier" << modifiers[0] << strerror(errno);
         }
     } else {
         if (drmModeAddFB2(m_gpu->fd(), m_size.width(), m_size.height(), format, handles, strides, offsets, &m_bufferId, 0)) {
             // fallback
             if (drmModeAddFB(m_gpu->fd(), m_size.width(), m_size.height(), 24, 32, strides[0], handles[0], &m_bufferId) != 0) {
-                gbm_format_name_desc name;
-                gbm_format_get_name(format, &name);
-                qCCritical(KWIN_DRM) << "drmModeAddFB2 and drmModeAddFB both failed on GPU" << m_gpu->devNode() << "for a buffer with format" << name.name << "and modifier" << modifiers[0] << strerror(errno);
+                qCCritical(KWIN_DRM) << "drmModeAddFB2 and drmModeAddFB both failed on GPU" << m_gpu->devNode() << "for a buffer with format" << parseFourcc(format) << "and modifier" << modifiers[0] << strerror(errno);
             }
         }
     }
