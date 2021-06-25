@@ -661,7 +661,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         partial_keep_in_area = true;
         area = workspace()->clientArea(FullArea, geom.center(), desktop());
     }
-    if (!placementDone) {
+    if (!placementDone && area.isValid()) {
         // Placement needs to be after setting size
         Placement::self()->place(this, area);
         // The client may have been moved to another screen, update placement area.
