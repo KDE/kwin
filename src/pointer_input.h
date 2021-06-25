@@ -73,6 +73,7 @@ public:
     void removeWindowSelectionCursor();
 
     void updatePointerConstraints();
+    void updateCursorOutputs();
 
     void setEnableConstraints(bool set);
 

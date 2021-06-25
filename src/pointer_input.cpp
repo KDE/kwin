@@ -118,6 +118,7 @@ void PointerInputRedirection::init()
     connect(m_cursor, &CursorImage::changed, Cursors::self()->mouse(), [this] {
         auto cursor = Cursors::self()->mouse();
         cursor->updateCursor(m_cursor->image(), m_cursor->hotSpot());
+        updateCursorOutputs();
     });
     Q_EMIT m_cursor->changed();
 
@@ -825,8 +826,33 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
     if (!screenContainsPos(p)) {
         return;
     }
+
     m_pos = p;
+
+    updateCursorOutputs();
+
     Q_EMIT input()->globalPointerChanged(m_pos);
+}
+
+void PointerInputRedirection::updateCursorOutputs()
+{
+    KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
+    if (!pointer) {
+        return;
+    }
+
+    KWaylandServer::Cursor *cursor = pointer->cursor();
+    if (!cursor) {
+        return;
+    }
+
+    KWaylandServer::SurfaceInterface *surface = cursor->surface();
+    if (!surface) {
+        return;
+    }
+
+    const QRectF cursorGeometry(m_pos - m_cursor->hotSpot(), surface->size());
+    surface->setOutputs(waylandServer()->display()->outputsIntersecting(cursorGeometry.toAlignedRect()));
 }
 
 void PointerInputRedirection::updateButton(uint32_t button, InputRedirection::PointerButtonState state)
