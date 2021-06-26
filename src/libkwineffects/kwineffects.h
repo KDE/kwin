@@ -2579,8 +2579,6 @@ public:
     WindowQuad makeSubQuad(double x1, double y1, double x2, double y2) const;
     WindowVertex& operator[](int index);
     const WindowVertex& operator[](int index) const;
-    void setUVAxisSwapped(bool value) { uvSwapped = value; }
-    bool uvAxisSwapped() const { return uvSwapped; }
     double left() const;
     double right() const;
     double top() const;
@@ -2588,7 +2586,6 @@ public:
 private:
     friend class WindowQuadList;
     WindowVertex verts[ 4 ];
-    bool uvSwapped;
 };
 
 class KWINEFFECTS_EXPORT WindowQuadList
@@ -3765,7 +3762,6 @@ void WindowVertex::setY(double y)
 
 inline
 WindowQuad::WindowQuad()
-    : uvSwapped(false)
 {
 }
 

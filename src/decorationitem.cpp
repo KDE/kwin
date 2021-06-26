@@ -194,8 +194,6 @@ WindowQuadList DecorationItem::buildQuads() const
                 continue;
             }
 
-            const bool swap = orientations[i] == Qt::Vertical;
-
             const int x0 = r.x();
             const int y0 = r.y();
             const int x1 = r.x() + r.width();
@@ -207,9 +205,8 @@ WindowQuadList DecorationItem::buildQuads() const
             const int v1 = (y1 + offsets[i].y()) * textureScale;
 
             WindowQuad quad;
-            quad.setUVAxisSwapped(swap);
 
-            if (swap) {
+            if (orientations[i] == Qt::Vertical) {
                 quad[0] = WindowVertex(x0, y0, v0, u0); // Top-left
                 quad[1] = WindowVertex(x1, y0, v0, u1); // Top-right
                 quad[2] = WindowVertex(x1, y1, v1, u1); // Bottom-right

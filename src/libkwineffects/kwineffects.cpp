@@ -860,36 +860,18 @@ WindowQuad WindowQuad::makeSubQuad(double x1, double y1, double x2, double y2) c
     const double widthReciprocal  = 1 / (right() - xOrigin);
     const double heightReciprocal = 1 / (bottom() - yOrigin);
 
-    if (!uvAxisSwapped()) {
-        for (int i = 0; i < 4; ++i) {
-            const double w1 = (ret.verts[i].px - xOrigin) * widthReciprocal;
-            const double w2 = (ret.verts[i].py - yOrigin) * heightReciprocal;
+    for (int i = 0; i < 4; ++i) {
+        const double w1 = (ret.verts[i].px - xOrigin) * widthReciprocal;
+        const double w2 = (ret.verts[i].py - yOrigin) * heightReciprocal;
 
-            // Use bilinear interpolation to compute the texture coords.
-            ret.verts[i].tx = (1 - w1) * (1 - w2) * verts[0].tx +
-                    w1 * (1 - w2) * verts[1].tx +
-                    w1 * w2 * verts[2].tx + (1 - w1) * w2 * verts[3].tx;
-            ret.verts[i].ty = (1 - w1) * (1 - w2) * verts[0].ty +
-                    w1 * (1 - w2) * verts[1].ty +
-                    w1 * w2 * verts[2].ty + (1 - w1) * w2 * verts[3].ty;
-        }
-    } else {
-        // Same as above, with just verts[1] and verts[3] being swapped.
-        for (int i = 0; i < 4; ++i) {
-            const double w1 = (ret.verts[i].py - yOrigin) * heightReciprocal;
-            const double w2 = (ret.verts[i].px - xOrigin) * widthReciprocal;
-
-            // Use bilinear interpolation to compute the texture coords.
-            ret.verts[i].tx = (1 - w1) * (1 - w2) * verts[0].tx +
-                    w1 * (1 - w2) * verts[3].tx +
-                    w1 * w2 * verts[2].tx + (1 - w1) * w2 * verts[1].tx;
-            ret.verts[i].ty = (1 - w1) * (1 - w2) * verts[0].ty +
-                    w1 * (1 - w2) * verts[3].ty +
-                    w1 * w2 * verts[2].ty + (1 - w1) * w2 * verts[1].ty;
-        }
+        // Use bilinear interpolation to compute the texture coords.
+        ret.verts[i].tx = (1 - w1) * (1 - w2) * verts[0].tx +
+                w1 * (1 - w2) * verts[1].tx +
+                w1 * w2 * verts[2].tx + (1 - w1) * w2 * verts[3].tx;
+        ret.verts[i].ty = (1 - w1) * (1 - w2) * verts[0].ty +
+                w1 * (1 - w2) * verts[1].ty +
+                w1 * w2 * verts[2].ty + (1 - w1) * w2 * verts[3].ty;
     }
-
-    ret.setUVAxisSwapped(uvAxisSwapped());
 
     return ret;
 }
