@@ -39,6 +39,7 @@
         "Description[zh_TW]": "成像到執行中的 Wayland 的巢狀視窗。",
         "Id": "KWinWaylandWaylandBackend",
         "Name": "wayland",
+        "Name[ar]": "ويلاند",
         "Name[az]": "wayland",
         "Name[ca@valencia]": "Wayland",
         "Name[ca]": "Wayland",
