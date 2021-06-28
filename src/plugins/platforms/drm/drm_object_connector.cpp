@@ -22,8 +22,12 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
     : DrmObject(gpu, connectorId)
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
-    for (int i = 0; i < m_conn->count_encoders; ++i) {
-        m_encoders << m_conn->encoders[i];
+    if (m_conn) {
+        for (int i = 0; i < m_conn->count_encoders; ++i) {
+            m_encoders << m_conn->encoders[i];
+        }
+    } else {
+        qCWarning(KWIN_DRM) << "drmModeGetConnector failed!" << strerror(errno);
     }
 }
 
@@ -31,6 +35,9 @@ DrmConnector::~DrmConnector() = default;
 
 bool DrmConnector::init()
 {
+    if (!m_conn || !m_conn->count_modes) {
+        return false;
+    }
     qCDebug(KWIN_DRM) << "Creating connector" << id();
 
     if (!initProps({
