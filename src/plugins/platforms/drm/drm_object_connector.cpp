@@ -15,6 +15,8 @@
 // frameworks
 #include <KConfigGroup>
 
+#include <cerrno>
+
 namespace KWin
 {
 
