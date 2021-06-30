@@ -21,6 +21,7 @@
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "touch_input.h"
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
@@ -993,7 +994,13 @@ void XdgToplevelClient::handleMoveRequested(SeatInterface *seat, quint32 serial)
         return;
     }
     if (isMovable()) {
-        performMouseCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
+        QPoint cursorPos;
+        if (seat->hasImplicitPointerGrab(serial)) {
+            cursorPos = Cursors::self()->mouse()->pos();
+        } else {
+            cursorPos = input()->touch()->position().toPoint();
+        }
+        performMouseCommand(Options::MouseMove, cursorPos);
     } else {
         qCDebug(KWIN_CORE) << this << "is immovable, ignoring the move request";
     }
@@ -1011,7 +1018,13 @@ void XdgToplevelClient::handleResizeRequested(SeatInterface *seat, Qt::Edges edg
         finishMoveResize(false);
     }
     setMoveResizePointerButtonDown(true);
-    setMoveOffset(Cursors::self()->mouse()->pos() - pos());  // map from global
+    QPoint cursorPos;
+    if (seat->hasImplicitPointerGrab(serial)) {
+        cursorPos = Cursors::self()->mouse()->pos();
+    } else {
+        cursorPos = input()->touch()->position().toPoint();
+    }
+    setMoveOffset(cursorPos - pos());  // map from global
     setInvertedMoveOffset(rect().bottomRight() - moveOffset());
     setUnrestrictedMoveResize(false);
     auto toPosition = [edges] {
