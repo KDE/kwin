@@ -7,6 +7,7 @@ X-KDE-Library=kcm_kwin_scripts
 X-KDE-ParentApp=kcontrol
 
 X-KDE-Keywords=kwin script
+X-KDE-Keywords[ar]=سكربت كوين
 X-KDE-Keywords[az]=kwin skripti
 X-KDE-Keywords[bs]=kwin skripta
 X-KDE-Keywords[ca]=script del KWin
@@ -60,6 +61,7 @@ X-KDE-System-Settings-Parent-Category=windowmanagement
 X-KDE-Weight=70
 
 Name=KWin Scripts
+Name[ar]=سكرِبتات نوافذك
 Name[az]=KWin Skriptləri
 Name[bs]=KWin skripte
 Name[ca]=Scripts del KWin

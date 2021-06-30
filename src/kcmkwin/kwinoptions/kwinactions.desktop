@@ -9,6 +9,7 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinactions
 
 Name=Window Actions
+Name[ar]=اجراءات النوافذ
 Name[az]=Pəncərə fəaliyyətləri
 Name[ca]=Accions de la finestra
 Name[cs]=Činnosti oken
