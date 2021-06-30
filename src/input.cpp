@@ -1223,6 +1223,12 @@ public:
         Q_UNUSED(time);
         auto decoration = input()->touch()->decoration();
         if (!decoration) {
+            // can happen when quick tiling
+            if (input()->touch()->decorationPressId() == id) {
+                m_lastGlobalTouchPos = QPointF();
+                m_lastLocalTouchPos = QPointF();
+                input()->touch()->setDecorationPressId(-1);
+            }
             return false;
         }
         if (input()->touch()->decorationPressId() == -1) {
