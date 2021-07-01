@@ -145,6 +145,9 @@ QSGTextureProvider *ThumbnailItemBase::textureProvider() const
 
 void ThumbnailItemBase::handleCompositingToggled()
 {
+    if (!Compositor::self()) {
+        return;
+    }
     Scene *scene = Compositor::self()->scene();
     if (scene && scene->compositingType() == OpenGLCompositing) {
         connect(scene, &Scene::frameRendered, this, &ThumbnailItemBase::updateOffscreenTexture);
@@ -167,6 +170,9 @@ void ThumbnailItemBase::setSourceSize(const QSize &sourceSize)
 
 void ThumbnailItemBase::destroyOffscreenTexture()
 {
+    if (!Compositor::self()) {
+        return;
+    }
     Scene *scene = Compositor::self()->scene();
     if (!scene || scene->compositingType() != OpenGLCompositing) {
         return;
