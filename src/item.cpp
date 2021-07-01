@@ -52,7 +52,6 @@ void Item::setX(int x)
     scheduleRepaint(boundingRect());
     m_x = x;
     scheduleRepaint(boundingRect());
-    discardQuads();
     Q_EMIT xChanged();
 }
 
@@ -69,7 +68,6 @@ void Item::setY(int y)
     scheduleRepaint(boundingRect());
     m_y = y;
     scheduleRepaint(boundingRect());
-    discardQuads();
     Q_EMIT yChanged();
 }
 
@@ -183,8 +181,6 @@ void Item::setPosition(const QPoint &point)
         m_x = point.x();
         m_y = point.y();
         scheduleRepaint(boundingRect());
-
-        discardQuads();
 
         if (xDirty) {
             Q_EMIT xChanged();
