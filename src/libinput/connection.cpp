@@ -571,20 +571,22 @@ void Connection::processEvents()
                     break;
                 }
 
+                if (workspace()) {
 #ifndef KWIN_BUILD_TESTING
-                auto client = workspace()->activeClient();
-                const auto *output = static_cast<AbstractWaylandOutput*>(
-                            kwinApp()->platform()->enabledOutputs()[client ? client->screen() : tte->device()->screenId()]);
-                const QPointF globalPos =
-                        devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),
-                                                    output);
+                    auto client = workspace()->activeClient();
+                    const auto *output = static_cast<AbstractWaylandOutput*>(
+                                kwinApp()->platform()->enabledOutputs()[client ? client->screen() : tte->device()->screenId()]);
+                    const QPointF globalPos =
+                            devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),
+                                                        output);
 #else
-                const QPointF globalPos;
+                    const QPointF globalPos;
 #endif
-                Q_EMIT tabletToolEvent(tabletEventType,
-                                     globalPos, tte->pressure(),
-                                     tte->xTilt(), tte->yTilt(), tte->rotation(),
-                                     tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()->groupUserData()), tte->time());
+                    Q_EMIT tabletToolEvent(tabletEventType,
+                                        globalPos, tte->pressure(),
+                                        tte->xTilt(), tte->yTilt(), tte->rotation(),
+                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()->groupUserData()), tte->time());
+                }
                 break;
             }
             case LIBINPUT_EVENT_TABLET_TOOL_BUTTON: {
