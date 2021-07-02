@@ -1570,6 +1570,45 @@ static KWaylandServer::SeatInterface *findSeat()
     return server->seat();
 }
 
+class SurfaceCursor : public Cursor
+{
+public:
+    explicit SurfaceCursor(QObject *parent) : Cursor(parent)
+    {}
+
+    void updateCursorSurface(KWaylandServer::SurfaceInterface *surface, const QPoint &hotspot) {
+        if (m_surface == surface && hotspot == m_hotspot) {
+            return;
+        }
+
+        if (m_surface) {
+            disconnect(m_surface, nullptr, this, nullptr);
+        }
+        m_surface = surface;
+        connect(m_surface, &KWaylandServer::SurfaceInterface::committed, this, &SurfaceCursor::refresh);
+
+        refresh();
+    }
+
+private:
+    void refresh()
+    {
+        auto buffer = m_surface->buffer();
+        if (!buffer) {
+            updateCursor({}, {});
+            return;
+        }
+
+        QImage cursorImage;
+        cursorImage = buffer->data().copy();
+        cursorImage.setDevicePixelRatio(m_surface->bufferScale());
+        updateCursor(cursorImage, m_hotspot);
+    }
+
+    QPointer<KWaylandServer::SurfaceInterface> m_surface;
+    QPoint m_hotspot;
+};
+
 /**
  * Handles input coming from a tablet device (e.g. wacom) often with a pen
  */
@@ -1690,7 +1729,7 @@ public:
 
         TabletToolV2Interface *tool = tabletSeat->addTool(getType(tabletToolId), tabletToolId.m_serialId, tabletToolId.m_uniqueId, ifaceCapabilities);
 
-        const auto cursor = new Cursor(tool);
+        const auto cursor = new SurfaceCursor(tool);
         Cursors::self()->addCursor(cursor);
         m_cursorByTool[tool] = cursor;
 
@@ -1711,17 +1750,8 @@ public:
                 cursor->updateCursor({}, {});
                 return;
             }
-            auto buffer = cursorSurface->buffer();
-            if (!buffer) {
-                cursor->updateCursor({}, {});
-                return;
-            }
 
-            QImage cursorImage;
-            cursorImage = buffer->data().copy();
-            cursorImage.setDevicePixelRatio(cursorSurface->bufferScale());
-
-            cursor->updateCursor(cursorImage, tcursor->hotspot());
+            cursor->updateCursorSurface(cursorSurface, tcursor->hotspot());
         });
         Q_EMIT cursor->cursorChanged();
         return tool;
