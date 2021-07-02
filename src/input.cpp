@@ -1694,7 +1694,6 @@ public:
         Cursors::self()->addCursor(cursor);
         m_cursorByTool[tool] = cursor;
 
-        connect(tool, &TabletToolV2Interface::cursorChanged, cursor, &Cursor::cursorChanged);
         connect(tool, &TabletToolV2Interface::cursorChanged, cursor, [cursor] (TabletCursorV2 *tcursor) {
             static const auto createDefaultCursor = [] {
                 WaylandCursorImage defaultCursor;
