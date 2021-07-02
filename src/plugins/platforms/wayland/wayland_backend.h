@@ -91,7 +91,6 @@ protected:
 
 private:
     WaylandBackend *m_backend;
-    KWayland::Client::Pointer *m_pointer;
     KWayland::Client::Surface *m_surface = nullptr;
 };
 
