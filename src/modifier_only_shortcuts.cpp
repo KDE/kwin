@@ -39,7 +39,7 @@ void ModifierOnlyShortcuts::keyEvent(KeyEvent *event)
         m_pressedKeys.insert(event->nativeScanCode());
         if (wasEmpty && m_pressedKeys.size() == 1 &&
             !ScreenLockerWatcher::self()->isLocked() &&
-            m_buttonPressCount == 0 &&
+            m_pressedButtons == Qt::NoButton &&
             m_cachedMods == Qt::NoModifier) {
             m_modifier = Qt::KeyboardModifier(int(event->modifiersRelevantForGlobalShortcuts()));
         } else {
@@ -77,11 +77,7 @@ void ModifierOnlyShortcuts::pointerEvent(MouseEvent *event)
     if (event->type() == QEvent::MouseMove) {
         return;
     }
-    if (event->type() == QEvent::MouseButtonPress) {
-        m_buttonPressCount++;
-    } else if (event->type() == QEvent::MouseButtonRelease) {
-        m_buttonPressCount--;
-    }
+    m_pressedButtons = event->buttons();
     reset();
 }
 

@@ -36,7 +36,7 @@ public:
 private:
     Qt::KeyboardModifier m_modifier = Qt::NoModifier;
     Qt::KeyboardModifiers m_cachedMods;
-    uint m_buttonPressCount = 0;
+    Qt::MouseButtons m_pressedButtons;
     QSet<quint32> m_pressedKeys;
 };
 
