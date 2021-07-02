@@ -1701,8 +1701,8 @@ public:
                 defaultCursor.loadThemeCursor(CursorShape(Qt::CrossCursor), &ret);
                 return ret;
             };
-            static const auto defaultCursor = createDefaultCursor();
             if (!tcursor || tcursor->enteredSerial() == 0) {
+                static const auto defaultCursor = createDefaultCursor();
                 cursor->updateCursor(defaultCursor.image, defaultCursor.hotspot);
                 return;
             }
