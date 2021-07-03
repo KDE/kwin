@@ -76,7 +76,7 @@ static void convertFromGLImage(QImage &img, int w, int h)
 
 bool ScreenShotEffect::supported()
 {
-    return effects->isOpenGLCompositing() && GLRenderTarget::supported();
+    return effects->isOpenGLCompositing();
 }
 
 ScreenShotEffect::ScreenShotEffect()
@@ -360,7 +360,7 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, qreal devicePixel
     if (effects->isOpenGLCompositing()) {
         const QSize nativeSize = geometry.size() * devicePixelRatio;
 
-        if (GLRenderTarget::blitSupported() && !GLPlatform::instance()->isGLES()) {
+        if (!GLPlatform::instance()->isGLES()) {
             image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
             GLTexture texture(GL_RGBA8, nativeSize.width(), nativeSize.height());
             GLRenderTarget target(texture);

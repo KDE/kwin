@@ -30,12 +30,9 @@ namespace KWin
 // GLTexture
 //****************************************
 
-bool GLTexturePrivate::s_supportsFramebufferObjects = false;
 bool GLTexturePrivate::s_supportsARGB32 = false;
 bool GLTexturePrivate::s_supportsUnpack = false;
 bool GLTexturePrivate::s_supportsTextureStorage = false;
-bool GLTexturePrivate::s_supportsTextureSwizzle = false;
-bool GLTexturePrivate::s_supportsTextureFormatRG = false;
 uint GLTexturePrivate::s_textureObjectCounter = 0;
 uint GLTexturePrivate::s_fbo = 0;
 
@@ -304,20 +301,11 @@ GLTexturePrivate::~GLTexturePrivate()
 void GLTexturePrivate::initStatic()
 {
     if (!GLPlatform::instance()->isGLES()) {
-        s_supportsFramebufferObjects = hasGLVersion(3, 0) ||
-            hasGLExtension("GL_ARB_framebuffer_object") || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
         s_supportsTextureStorage = hasGLVersion(4, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_storage"));
-        s_supportsTextureSwizzle = hasGLVersion(3, 3) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_swizzle"));
-        // see https://www.opengl.org/registry/specs/ARB/texture_rg.txt
-        s_supportsTextureFormatRG = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_rg"));
         s_supportsARGB32 = true;
         s_supportsUnpack = true;
     } else {
-        s_supportsFramebufferObjects = true;
-        s_supportsTextureStorage = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_texture_storage"));
-        s_supportsTextureSwizzle = hasGLVersion(3, 0);
-        // see https://www.khronos.org/registry/gles/extensions/EXT/EXT_texture_rg.txt
-        s_supportsTextureFormatRG = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_texture_rg"));
+        s_supportsTextureStorage = true;
 
         // QImage::Format_ARGB32_Premultiplied is a packed-pixel format, so it's only
         // equivalent to GL_BGRA/GL_UNSIGNED_BYTE on little-endian systems.
@@ -330,7 +318,6 @@ void GLTexturePrivate::initStatic()
 
 void GLTexturePrivate::cleanup()
 {
-    s_supportsFramebufferObjects = false;
     s_supportsARGB32 = false;
 }
 
@@ -468,7 +455,7 @@ void GLTexture::generateMipmaps()
 {
     Q_D(GLTexture);
 
-    if (d->m_canUseMipmaps && d->s_supportsFramebufferObjects)
+    if (d->m_canUseMipmaps)
         glGenerateMipmap(d->m_target);
 }
 
@@ -542,7 +529,7 @@ void GLTexture::clear()
 {
     Q_D(GLTexture);
     Q_ASSERT(!d->m_foreign);
-    if (!GLTexturePrivate::s_fbo && GLRenderTarget::supported() &&
+    if (!GLTexturePrivate::s_fbo &&
         GLPlatform::instance()->driver() != Driver_Catalyst) // fail. -> bug #323065
         glGenFramebuffers(1, &GLTexturePrivate::s_fbo);
 
@@ -677,21 +664,6 @@ QMatrix4x4 GLTexture::matrix(TextureCoordinateType type) const
 {
     Q_D(const GLTexture);
     return d->m_matrix[type];
-}
-
-bool GLTexture::framebufferObjectSupported()
-{
-    return GLTexturePrivate::s_supportsFramebufferObjects;
-}
-
-bool GLTexture::supportsSwizzle()
-{
-    return GLTexturePrivate::s_supportsTextureSwizzle;
-}
-
-bool GLTexture::supportsFormatRG()
-{
-    return GLTexturePrivate::s_supportsTextureFormatRG;
 }
 
 QImage GLTexture::toImage() const

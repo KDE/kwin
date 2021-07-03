@@ -132,8 +132,6 @@ void SceneOpenGL::initDebugOutput()
                 // empirical data shows extension doesn't work
                 return;
             }
-        } else if (!hasGLVersion(3, 0)) {
-            return;
         }
         // can only be queried with either OpenGL >= 3.0 or OpenGL ES of at least 3.1
         GLint value = 0;
@@ -687,13 +685,6 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
 {
     if (!init_ok) {
         // base ctor already failed
-        return;
-    }
-
-    // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
-    if (!hasGLVersion(2, 0)) {
-        qCDebug(KWIN_OPENGL) << "OpenGL 2.0 is not supported";
-        init_ok = false;
         return;
     }
 
@@ -1756,7 +1747,7 @@ bool SceneOpenGLShadow::prepareBackend()
     p.end();
 
     // Check if the image is alpha-only in practice, and if so convert it to an 8-bpp format
-    if (!GLPlatform::instance()->isGLES() && GLTexture::supportsSwizzle() && GLTexture::supportsFormatRG()) {
+    if (!GLPlatform::instance()->isGLES()) {
         QImage alphaImage(image.size(), QImage::Format_Indexed8); // Change to Format_Alpha8 w/ Qt 5.5
         bool alphaOnly = true;
 

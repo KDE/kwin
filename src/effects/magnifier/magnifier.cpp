@@ -67,7 +67,7 @@ MagnifierEffect::~MagnifierEffect()
 
 bool MagnifierEffect::supported()
 {
-    return effects->isOpenGLCompositing() && GLRenderTarget::blitSupported();
+    return effects->isOpenGLCompositing();
 }
 
 void MagnifierEffect::reconfigure(ReconfigureFlags)

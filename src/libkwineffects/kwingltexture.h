@@ -123,26 +123,6 @@ public:
 
     void generateMipmaps();
 
-    static bool framebufferObjectSupported();
-
-    /**
-     * Returns true if texture swizzle is supported, and false otherwise
-     *
-     * Texture swizzle requires OpenGL 3.3, GL_ARB_texture_swizzle, or OpenGL ES 3.0.
-     *
-     * @since 5.2
-     */
-    static bool supportsSwizzle();
-
-    /**
-     * Returns @c true if texture formats R* are supported, and @c false otherwise.
-     *
-     * This requires OpenGL 3.0, GL_ARB_texture_rg or OpenGL ES 3.0 or GL_EXT_texture_rg.
-     *
-     * @since 5.2.1
-     */
-    static bool supportsFormatRG();
-
 protected:
     QExplicitlySharedDataPointer<GLTexturePrivate> d_ptr;
     GLTexture(GLTexturePrivate& dd);

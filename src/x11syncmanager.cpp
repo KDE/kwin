@@ -147,12 +147,7 @@ X11SyncManager *X11SyncManager::create()
         return nullptr;
     }
 
-    GLPlatform *glPlatform = GLPlatform::instance();
-    const bool haveSyncObjects = glPlatform->isGLES()
-        ? hasGLVersion(3, 0)
-        : hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
-
-    if (hasGLExtension("GL_EXT_x11_sync_object") && haveSyncObjects) {
+    if (hasGLExtension("GL_EXT_x11_sync_object")) {
         const QString useExplicitSync = qEnvironmentVariable("KWIN_EXPLICIT_SYNC");
 
         if (useExplicitSync != QLatin1String("0")) {

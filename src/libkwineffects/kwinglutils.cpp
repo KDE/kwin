@@ -53,16 +53,13 @@ static QList<QByteArray> glExtensions;
 void initGL(const std::function<resolveFuncPtr(const char*)> &resolveFunction)
 {
     // Get list of supported OpenGL extensions
-    if (hasGLVersion(3, 0)) {
-        int count;
-        glGetIntegerv(GL_NUM_EXTENSIONS, &count);
+    int count;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &count);
 
-        for (int i = 0; i < count; i++) {
-            const QByteArray name = (const char *) glGetStringi(GL_EXTENSIONS, i);
-            glExtensions << name;
-        }
-    } else
-        glExtensions = QByteArray((const char*)glGetString(GL_EXTENSIONS)).split(' ');
+    for (int i = 0; i < count; i++) {
+        const QByteArray name = (const char *) glGetStringi(GL_EXTENSIONS, i);
+        glExtensions << name;
+    }
 
     // handle OpenGL extensions functions
     glResolveFunctions(resolveFunction);
@@ -300,7 +297,7 @@ void GLShader::bindAttributeLocation(const char *name, int index)
 
 void GLShader::bindFragDataLocation(const char *name, int index)
 {
-    if (!GLPlatform::instance()->isGLES() && (hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_gpu_shader4"))))
+    if (!GLPlatform::instance()->isGLES())
         glBindFragDataLocation(mProgram, index, name);
 }
 
@@ -591,10 +588,6 @@ bool ShaderManager::selfTest()
 {
     bool pass = true;
 
-    if (!GLRenderTarget::supported()) {
-        qCWarning(LIBKWINGLUTILS) << "Framebuffer objects not supported - skipping shader tests";
-        return true;
-    }
     if (GLPlatform::instance()->isNvidia() && GLPlatform::instance()->glRendererString().contains("Quadro")) {
         qCDebug(LIBKWINGLUTILS) << "Skipping self test as it is reported to return false positive results on Quadro hardware";
         return true;
@@ -1017,8 +1010,6 @@ GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, cons
 }
 
 /***  GLRenderTarget  ***/
-bool GLRenderTarget::sSupported = false;
-bool GLRenderTarget::s_blitSupported = false;
 QStack<GLRenderTarget*> GLRenderTarget::s_renderTargets = QStack<GLRenderTarget*>();
 QSize GLRenderTarget::s_virtualScreenSize;
 QRect GLRenderTarget::s_virtualScreenGeometry;
@@ -1028,35 +1019,16 @@ GLuint GLRenderTarget::s_kwinFramebuffer = 0;
 
 void GLRenderTarget::initStatic()
 {
-    if (GLPlatform::instance()->isGLES()) {
-        sSupported = true;
-        s_blitSupported = hasGLVersion(3, 0);
-    } else {
-        sSupported = hasGLVersion(3, 0) ||
-            hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) ||
-            hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
-
-        s_blitSupported = hasGLVersion(3, 0) ||
-            hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) ||
-            hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_blit"));
-    }
 }
 
 void GLRenderTarget::cleanup()
 {
     Q_ASSERT(s_renderTargets.isEmpty());
-    sSupported = false;
-    s_blitSupported = false;
 }
 
 bool GLRenderTarget::isRenderTargetBound()
 {
     return !s_renderTargets.isEmpty();
-}
-
-bool GLRenderTarget::blitSupported()
-{
-    return s_blitSupported;
 }
 
 void GLRenderTarget::pushRenderTarget(GLRenderTarget* target)
@@ -1103,7 +1075,7 @@ GLRenderTarget::GLRenderTarget(const GLTexture& color)
     , mTexture(color)
 {
     // Make sure FBO is supported
-    if (sSupported && !mTexture.isNull()) {
+    if (!mTexture.isNull()) {
         initFBO();
     } else
         qCCritical(LIBKWINGLUTILS) << "Render targets aren't supported!";
@@ -1241,10 +1213,6 @@ void GLRenderTarget::initFBO()
 
 void GLRenderTarget::blitFromFramebuffer(const QRect &source, const QRect &destination, GLenum filter)
 {
-    if (!GLRenderTarget::blitSupported()) {
-        return;
-    }
-
     if (!mValid) {
         initFBO();
     }
@@ -1750,7 +1718,6 @@ public:
     int vertexCount;
     static GLVertexBuffer *streamingBuffer;
     static bool haveBufferStorage;
-    static bool haveSyncFences;
     static bool hasMapBufferRange;
     static bool supportsIndexedQuads;
     QByteArray dataStore;
@@ -1775,7 +1742,6 @@ bool GLVertexBufferPrivate::hasMapBufferRange = false;
 bool GLVertexBufferPrivate::supportsIndexedQuads = false;
 GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = nullptr;
 bool GLVertexBufferPrivate::haveBufferStorage = false;
-bool GLVertexBufferPrivate::haveSyncFences = false;
 IndexBuffer *GLVertexBufferPrivate::s_indexBuffer = nullptr;
 
 void GLVertexBufferPrivate::interleaveArrays(float *dst, int dim,
@@ -2243,27 +2209,20 @@ void GLVertexBuffer::initStatic()
 {
     if (GLPlatform::instance()->isGLES()) {
         bool haveBaseVertex     = hasGLExtension(QByteArrayLiteral("GL_OES_draw_elements_base_vertex"));
-        bool haveCopyBuffer     = hasGLVersion(3, 0);
         bool haveMapBufferRange = hasGLExtension(QByteArrayLiteral("GL_EXT_map_buffer_range"));
 
         GLVertexBufferPrivate::hasMapBufferRange = haveMapBufferRange;
-        GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
+        GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveMapBufferRange;
         GLVertexBufferPrivate::haveBufferStorage = hasGLExtension("GL_EXT_buffer_storage");
-        GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 0);
     } else {
-        bool haveBaseVertex     = hasGLVersion(3, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_draw_elements_base_vertex"));
-        bool haveCopyBuffer     = hasGLVersion(3, 1) || hasGLExtension(QByteArrayLiteral("GL_ARB_copy_buffer"));
-        bool haveMapBufferRange = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_map_buffer_range"));
-
-        GLVertexBufferPrivate::hasMapBufferRange = haveMapBufferRange;
-        GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
+        GLVertexBufferPrivate::hasMapBufferRange = true;
+        GLVertexBufferPrivate::supportsIndexedQuads = true;
         GLVertexBufferPrivate::haveBufferStorage = hasGLVersion(4, 4) || hasGLExtension("GL_ARB_buffer_storage");
-        GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
     }
     GLVertexBufferPrivate::s_indexBuffer = nullptr;
     GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
 
-    if (GLVertexBufferPrivate::haveBufferStorage && GLVertexBufferPrivate::haveSyncFences) {
+    if (GLVertexBufferPrivate::haveBufferStorage) {
         if (qgetenv("KWIN_PERSISTENT_VBO") != QByteArrayLiteral("0")) {
             GLVertexBufferPrivate::streamingBuffer->d->persistent = true;
         }

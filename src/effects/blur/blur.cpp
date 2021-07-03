@@ -369,7 +369,7 @@ bool BlurEffect::enabledByDefault()
 
 bool BlurEffect::supported()
 {
-    bool supported = effects->isOpenGLCompositing() && GLRenderTarget::supported() && GLRenderTarget::blitSupported();
+    bool supported = effects->isOpenGLCompositing();
 
     if (supported) {
         int maxTexSize;

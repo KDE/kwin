@@ -445,9 +445,6 @@ public:
     }
 
     static void initStatic();
-    static bool supported()  {
-        return sSupported;
-    }
 
     /**
      * Pushes the render target stack of the input parameter in reverse order.
@@ -459,24 +456,13 @@ public:
     static void pushRenderTarget(GLRenderTarget *target);
     static GLRenderTarget *popRenderTarget();
     static bool isRenderTargetBound();
-    /**
-     * Whether the GL_EXT_framebuffer_blit extension is supported.
-     * This functionality is not available in OpenGL ES 2.0.
-     *
-     * @returns whether framebuffer blitting is supported.
-     * @since 4.8
-     */
-    static bool blitSupported();
 
     /**
      * Blits the content of the current draw framebuffer into the texture attached to this FBO.
      *
-     * Be aware that framebuffer blitting may not be supported on all hardware. Use blitSupported to check whether
-     * it is supported.
      * @param source Geometry in screen coordinates which should be blitted, if not specified complete framebuffer is used
      * @param destination Geometry in attached texture, if not specified complete texture is used as destination
      * @param filter The filter to use if blitted content needs to be scaled.
-     * @see blitSupported
      * @since 4.8
      */
     void blitFromFramebuffer(const QRect &source = QRect(), const QRect &destination = QRect(), GLenum filter = GL_LINEAR);
@@ -542,8 +528,6 @@ protected:
 private:
     friend void KWin::cleanupGL();
     static void cleanup();
-    static bool sSupported;
-    static bool s_blitSupported;
     static QStack<GLRenderTarget*> s_renderTargets;
     static QSize s_virtualScreenSize;
     static QRect s_virtualScreenGeometry;

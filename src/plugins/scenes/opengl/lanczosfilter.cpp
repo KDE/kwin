@@ -62,8 +62,6 @@ void LanczosFilter::init()
 
     if (!force && options->glSmoothScale() != 2)
         return; // disabled by config
-    if (!GLRenderTarget::supported())
-        return;
 
     GLPlatform *gl = GLPlatform::instance();
     if (!force) {
