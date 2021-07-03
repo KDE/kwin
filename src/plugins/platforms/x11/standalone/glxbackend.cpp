@@ -380,9 +380,6 @@ bool GlxBackend::initRenderingContext()
         }
     }
 
-    if (!ctx)
-        ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, globalShareContext, direct);
-
     if (!ctx) {
         qCDebug(KWIN_X11STANDALONE) << "Failed to create an OpenGL context.";
         return false;
