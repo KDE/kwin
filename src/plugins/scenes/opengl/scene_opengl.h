@@ -141,9 +141,7 @@ public:
     {
         QVector<RenderNode> renderNodes;
         const int paintFlags;
-        const QRegion clip;
         const WindowPaintData &paintData;
-        const bool hardwareClipping;
     };
 
     OpenGLWindow(Toplevel *toplevel, SceneOpenGL *scene);

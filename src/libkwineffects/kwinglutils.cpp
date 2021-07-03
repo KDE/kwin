@@ -765,14 +765,26 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     if (traits & ShaderTrait::MapTexture) {
         stream << attribute << " vec4 texcoord;\n\n";
         stream << varying << " vec2 texcoord0;\n\n";
-    } else
-        stream << "\n";
+    }
+    if (traits & ShaderTrait::Clip) {
+        stream << attribute << " vec4 clipRect;\n\n";
+        stream << "uniform mat4 modelMatrix;\n\n";
+    }
 
     stream << "uniform mat4 modelViewProjectionMatrix;\n\n";
 
     stream << "void main()\n{\n";
-    if (traits & ShaderTrait::MapTexture)
+    if (traits & ShaderTrait::Clip) {
+        stream << "    vec4 worldPosition = modelMatrix * position;\n";
+        stream << "    gl_ClipDistance[0] = worldPosition.x - clipRect[0];\n";
+        stream << "    gl_ClipDistance[1] = clipRect[1] - worldPosition.x;\n";
+        stream << "    gl_ClipDistance[2] = worldPosition.y - clipRect[2];\n";
+        stream << "    gl_ClipDistance[3] = clipRect[3] - worldPosition.y;\n";
+        stream << "\n";
+    }
+    if (traits & ShaderTrait::MapTexture) {
         stream << "    texcoord0 = texcoord.st;\n";
+    }
 
     stream << "    gl_Position = modelViewProjectionMatrix * position;\n";
     stream << "}\n";
@@ -865,6 +877,7 @@ GLShader *ShaderManager::generateCustomShader(ShaderTraits traits, const QByteAr
 
     shader->bindAttributeLocation("position", VA_Position);
     shader->bindAttributeLocation("texcoord", VA_TexCoord);
+    shader->bindAttributeLocation("clipRect", VA_ClipRect);
     shader->bindFragDataLocation("fragColor", 0);
 
     shader->link();
@@ -965,6 +978,7 @@ void ShaderManager::bindAttributeLocations(GLShader *shader) const
 {
     shader->bindAttributeLocation("vertex",   VA_Position);
     shader->bindAttributeLocation("texCoord", VA_TexCoord);
+    shader->bindAttributeLocation("clipRect", VA_ClipRect);
 }
 
 GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, const QByteArray &fragmentSource)
@@ -1566,6 +1580,7 @@ struct VertexAttrib
     int size;
     GLenum type;
     int offset;
+    int divisor;
 };
 
 
@@ -1685,6 +1700,7 @@ public:
     int stride;
     int vertexCount;
     static GLVertexBuffer *streamingBuffer;
+    static GLVertexBuffer *clipRectBuffer;
     static bool haveBufferStorage;
     static bool hasMapBufferRange;
     static bool supportsIndexedQuads;
@@ -1709,6 +1725,7 @@ public:
 bool GLVertexBufferPrivate::hasMapBufferRange = false;
 bool GLVertexBufferPrivate::supportsIndexedQuads = false;
 GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = nullptr;
+GLVertexBuffer *GLVertexBufferPrivate::clipRectBuffer = nullptr;
 bool GLVertexBufferPrivate::haveBufferStorage = false;
 IndexBuffer *GLVertexBufferPrivate::s_indexBuffer = nullptr;
 
@@ -1767,6 +1784,7 @@ void GLVertexBufferPrivate::bindArrays()
         const int index = it.next();
         glVertexAttribPointer(index, attrib[index].size, attrib[index].type, GL_FALSE, stride,
                                 (const GLvoid *) (baseAddress + attrib[index].offset));
+        glVertexAttribDivisor(index, attrib[index].divisor);
         glEnableVertexAttribArray(index);
     }
 }
@@ -2024,6 +2042,7 @@ void GLVertexBuffer::setAttribLayout(const GLVertexAttrib *attribs, int count, i
         d->attrib[index].size   = attribs[i].size;
         d->attrib[index].type   = attribs[i].type;
         d->attrib[index].offset = attribs[i].relativeOffset;
+        d->attrib[index].divisor = attribs[i].divisor;
 
         d->enabledArrays[index] = true;
     }
@@ -2097,6 +2116,26 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
                       r.height() * s_virtualScreenScale);
             glDrawArrays(primitiveMode, first, count);
         }
+    }
+}
+
+void GLVertexBuffer::drawInstanced(GLenum primitiveMode, int first, int count, int instanceCount)
+{
+    if (primitiveMode == GL_QUADS) {
+        IndexBuffer *&indexBuffer = GLVertexBufferPrivate::s_indexBuffer;
+
+        if (!indexBuffer) {
+            indexBuffer = new IndexBuffer;
+        }
+
+        indexBuffer->bind();
+        indexBuffer->accommodate(count / 4);
+
+        count = count * 6 / 4;
+
+        glDrawElementsInstancedBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr, instanceCount, first);
+    } else {
+        glDrawArraysInstanced(primitiveMode, first, count, instanceCount);
     }
 }
 
@@ -2189,10 +2228,12 @@ void GLVertexBuffer::initStatic()
     }
     GLVertexBufferPrivate::s_indexBuffer = nullptr;
     GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
+    GLVertexBufferPrivate::clipRectBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
 
     if (GLVertexBufferPrivate::haveBufferStorage) {
         if (qgetenv("KWIN_PERSISTENT_VBO") != QByteArrayLiteral("0")) {
             GLVertexBufferPrivate::streamingBuffer->d->persistent = true;
+            GLVertexBufferPrivate::clipRectBuffer->d->persistent = true;
         }
     }
 }
@@ -2205,11 +2246,18 @@ void GLVertexBuffer::cleanup()
     GLVertexBufferPrivate::supportsIndexedQuads = false;
     delete GLVertexBufferPrivate::streamingBuffer;
     GLVertexBufferPrivate::streamingBuffer = nullptr;
+    delete GLVertexBufferPrivate::clipRectBuffer;
+    GLVertexBufferPrivate::clipRectBuffer = nullptr;
 }
 
 GLVertexBuffer *GLVertexBuffer::streamingBuffer()
 {
     return GLVertexBufferPrivate::streamingBuffer;
+}
+
+GLVertexBuffer *GLVertexBuffer::clipRectBuffer()
+{
+    return GLVertexBufferPrivate::clipRectBuffer;
 }
 
 } // namespace
