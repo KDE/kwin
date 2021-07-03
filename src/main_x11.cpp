@@ -423,6 +423,8 @@ int main(int argc, char * argv[])
     QSurfaceFormat format = QSurfaceFormat::defaultFormat();
     // shared opengl contexts must have the same reset notification policy
     format.setOptions(QSurfaceFormat::ResetNotification);
+    // we use opengl only with the core profile
+    format.setProfile(QSurfaceFormat::CoreProfile);
     // disables vsync for any QtQuick windows we create (BUG 406180)
     format.setSwapInterval(0);
     QSurfaceFormat::setDefaultFormat(format);
