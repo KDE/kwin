@@ -1,13 +1,16 @@
+#version 330 core
 uniform sampler2D sampler;
 uniform vec4 geometryColor;
 
-varying vec2 texcoord0;
+in vec2 texcoord0;
+
+out vec4 fragColor;
 
 void main()
 {
-    vec4 tex = texture2D(sampler, texcoord0);
+    vec4 tex = texture(sampler, texcoord0);
     if (tex.a != 1.0) {
         tex = geometryColor;
     }
-    gl_FragColor = tex;
+    fragColor = tex;
 }

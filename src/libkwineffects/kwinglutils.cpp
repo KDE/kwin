@@ -208,13 +208,9 @@ const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &so
 {
     Q_UNUSED(shaderType)
     // Prepare the source code
-    QByteArray ba;
-    if (GLPlatform::instance()->isGLES() && GLPlatform::instance()->glslVersion() < kVersionNumber(3, 0)) {
-        ba.append("precision highp float;\n");
-    }
-    ba.append(source);
-    if (GLPlatform::instance()->isGLES() && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0)) {
-        ba.replace("#version 140", "#version 300 es\n\nprecision highp float;\n");
+    QByteArray ba = source;
+    if (GLPlatform::instance()->isGLES()) {
+        ba.replace("#version 330 core", "#version 300 es\n\nprecision highp float;\n");
     }
 
     return ba;
@@ -532,13 +528,8 @@ void ShaderManager::cleanup()
 }
 
 ShaderManager::ShaderManager()
+    : m_resourcePath(QStringLiteral(":/effect-shaders-3.30/"))
 {
-    const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
-    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber) {
-        m_resourcePath = QStringLiteral(":/effect-shaders-1.40/");
-    } else {
-        m_resourcePath = QStringLiteral(":/effect-shaders-1.10/");
-    }
 }
 
 ShaderManager::~ShaderManager()
@@ -762,24 +753,14 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     QTextStream stream(&source);
 
     GLPlatform * const gl = GLPlatform::instance();
-    QByteArray attribute, varying;
+
+    const QByteArray attribute = "in";
+    const QByteArray varying = "out";
 
     if (!gl->isGLES()) {
-        const bool glsl_140 = gl->glslVersion() >= kVersionNumber(1, 40);
-
-        attribute = glsl_140 ? QByteArrayLiteral("in")  : QByteArrayLiteral("attribute");
-        varying   = glsl_140 ? QByteArrayLiteral("out") : QByteArrayLiteral("varying");
-
-        if (glsl_140)
-            stream << "#version 140\n\n";
+        stream << "#version 330 core\n\n";
     } else {
-        const bool glsl_es_300 = gl->glslVersion() >= kVersionNumber(3, 0);
-
-        attribute = glsl_es_300 ? QByteArrayLiteral("in")  : QByteArrayLiteral("attribute");
-        varying   = glsl_es_300 ? QByteArrayLiteral("out") : QByteArrayLiteral("varying");
-
-        if (glsl_es_300)
-            stream << "#version 300 es\n\n";
+        stream << "#version 300 es\n\n";
     }
 
     stream << attribute << " vec4 position;\n";
@@ -808,31 +789,20 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     QTextStream stream(&source);
 
     GLPlatform * const gl = GLPlatform::instance();
-    QByteArray varying, output, textureLookup;
+
+    const QByteArray varying = "in";
+    const QByteArray textureLookup = "texture";
+    const QByteArray output = "fragColor";
 
     if (!gl->isGLES()) {
-        const bool glsl_140 = gl->glslVersion() >= kVersionNumber(1, 40);
-
-        if (glsl_140)
-            stream << "#version 140\n\n";
-
-        varying       = glsl_140 ? QByteArrayLiteral("in")         : QByteArrayLiteral("varying");
-        textureLookup = glsl_140 ? QByteArrayLiteral("texture")    : QByteArrayLiteral("texture2D");
-        output        = glsl_140 ? QByteArrayLiteral("fragColor")  : QByteArrayLiteral("gl_FragColor");
+        stream << "#version 330 core\n\n";
     } else {
-        const bool glsl_es_300 = GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0);
-
-        if (glsl_es_300)
-            stream << "#version 300 es\n\n";
+        stream << "#version 300 es\n\n";
 
         // From the GLSL ES specification:
         //
         //     "The fragment language has no default precision qualifier for floating point types."
         stream << "precision highp float;\n\n";
-
-        varying       = glsl_es_300 ? QByteArrayLiteral("in")         : QByteArrayLiteral("varying");
-        textureLookup = glsl_es_300 ? QByteArrayLiteral("texture")    : QByteArrayLiteral("texture2D");
-        output        = glsl_es_300 ? QByteArrayLiteral("fragColor")  : QByteArrayLiteral("gl_FragColor");
     }
 
     if (traits & ShaderTrait::MapTexture) {

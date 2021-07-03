@@ -20,8 +20,6 @@ BlurShader::BlurShader(QObject *parent)
     : QObject(parent)
 {
     const bool gles = GLPlatform::instance()->isGLES();
-    const bool glsl_140 = !gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
-    const bool core = glsl_140 || (gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0));
 
     QByteArray vertexSource;
     QByteArray fragmentDownSource;
@@ -29,30 +27,24 @@ BlurShader::BlurShader(QObject *parent)
     QByteArray fragmentCopySource;
     QByteArray fragmentNoiseSource;
 
-    const QByteArray attribute = core ? "in"        : "attribute";
-    const QByteArray texture2D = core ? "texture"   : "texture2D";
-    const QByteArray fragColor = core ? "fragColor" : "gl_FragColor";
+    const QByteArray attribute = "in";
+    const QByteArray texture2D = "texture";
+    const QByteArray fragColor = "fragColor";
 
     QString glHeaderString;
 
     if (gles) {
-        if (core) {
-            glHeaderString += "#version 300 es\n\n";
-        }
-
+        glHeaderString += "#version 300 es\n\n";
         glHeaderString += "precision highp float;\n";
-    } else if (glsl_140) {
-        glHeaderString += "#version 140\n\n";
+    } else {
+        glHeaderString += "#version 330 core\n\n";
     }
 
     QString glUniformString = "uniform sampler2D texUnit;\n"
         "uniform float offset;\n"
         "uniform vec2 renderTextureSize;\n"
-        "uniform vec2 halfpixel;\n";
-
-    if (core) {
-        glUniformString += "out vec4 fragColor;\n\n";
-    }
+        "uniform vec2 halfpixel;\n"
+        "out vec4 fragColor;\n\n";
 
     // Vertex shader
     QTextStream streamVert(&vertexSource);
@@ -120,10 +112,7 @@ BlurShader::BlurShader(QObject *parent)
     streamFragCopy << "uniform sampler2D texUnit;\n";
     streamFragCopy << "uniform vec2 renderTextureSize;\n";
     streamFragCopy << "uniform vec4 blurRect;\n";
-
-    if (core) {
-        streamFragCopy << "out vec4 fragColor;\n\n";
-    }
+    streamFragCopy << "out vec4 fragColor;\n\n";
 
     streamFragCopy << "void main(void)\n";
     streamFragCopy << "{\n";
