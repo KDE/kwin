@@ -55,6 +55,7 @@ PlatformSurfaceTexture *EglBackend::createPlatformSurfaceTextureX11(SurfacePixma
 void EglBackend::init()
 {
     QOpenGLContext *qtShareContext = QOpenGLContext::globalShareContext();
+    EGLDisplay shareDisplay = EGL_NO_DISPLAY;
     EGLContext shareContext = EGL_NO_CONTEXT;
     if (qtShareContext) {
         qDebug(KWIN_X11STANDALONE) << "Global share context format:" << qtShareContext->format();
@@ -65,6 +66,7 @@ void EglBackend::init()
         } else {
             QEGLNativeContext handle = qvariant_cast<QEGLNativeContext>(nativeHandle);
             shareContext = handle.context();
+            shareDisplay = handle.display();
         }
     }
     if (shareContext == EGL_NO_CONTEXT) {
@@ -72,6 +74,7 @@ void EglBackend::init()
         return;
     }
 
+    kwinApp()->platform()->setSceneEglDisplay(shareDisplay);
     kwinApp()->platform()->setSceneEglGlobalShareContext(shareContext);
     EglOnXBackend::init();
 }
