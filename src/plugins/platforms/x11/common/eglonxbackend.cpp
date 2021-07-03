@@ -142,12 +142,7 @@ bool EglOnXBackend::initRenderingContext()
                 return false;
             }
 
-            const int attribs[] = {
-                EGL_PLATFORM_X11_SCREEN_EXT, m_x11ScreenNumber,
-                EGL_NONE
-            };
-
-            dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, m_x11Display, attribs);
+            dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, m_x11Display, nullptr);
         } else {
             dpy = eglGetDisplay(m_x11Display);
         }
