@@ -27,6 +27,7 @@ target_link_libraries(kwincompositing
     KF5::CoreAddons
     KF5::I18n
     KF5::KCMUtils
+    KF5::WindowSystem
 )
 
 install(TARGETS kwincompositing DESTINATION ${KDE_INSTALL_PLUGINDIR})

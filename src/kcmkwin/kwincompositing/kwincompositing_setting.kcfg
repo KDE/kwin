@@ -52,6 +52,7 @@
            <default>OpenGL</default>
            <choices>
                <choice name="OpenGL" />
+               <choice name="QPainter" />
            </choices>
        </entry>
 
