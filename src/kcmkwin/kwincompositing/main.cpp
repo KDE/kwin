@@ -12,6 +12,8 @@
 #include "ui_compositing.h"
 #include <kwin_compositing_interface.h>
 
+#include <KWindowSystem>
+
 #include <QAction>
 #include <QApplication>
 #include <QLayout>
@@ -36,6 +38,7 @@ class KWinCompositingKCM : public KCModule
 public:
     enum CompositingTypeIndex {
         OPENGL_INDEX = 0,
+        QPAINTER_INDEX = 1,
     };
 
     explicit KWinCompositingKCM(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
@@ -159,6 +162,12 @@ void KWinCompositingKCM::init()
 
     // compositing type
     m_form.backend->addItem(i18n("OpenGL"), CompositingTypeIndex::OPENGL_INDEX);
+    if (KWindowSystem::isPlatformWayland()) {
+        m_form.backend->addItem(i18n("QPainter"), CompositingTypeIndex::QPAINTER_INDEX);
+    }
+
+    // don't show the rendering backend combobox if there's only one item.
+    m_form.backend->setVisible(m_form.backend->count() > 1);
 
     connect(m_form.backend, currentIndexChangedSignal, this, &KWinCompositingKCM::onBackendChanged);
 
@@ -182,6 +191,10 @@ void KWinCompositingKCM::updateUnmanagedItemStatus()
     switch (m_form.backend->currentData().toInt()) {
     case CompositingTypeIndex::OPENGL_INDEX:
         backend = KWinCompositingSetting::EnumBackend::OpenGL;
+        break;
+
+    case CompositingTypeIndex::QPAINTER_INDEX:
+        backend = KWinCompositingSetting::EnumBackend::QPainter;
         break;
 
     default:
@@ -224,6 +237,8 @@ void KWinCompositingKCM::load()
 
     if (m_settings->backend() == KWinCompositingSetting::EnumBackend::OpenGL) {
         m_form.backend->setCurrentIndex(CompositingTypeIndex::OPENGL_INDEX);
+    } else if (m_settings->backend() == KWinCompositingSetting::EnumBackend::QPainter) {
+        m_form.backend->setCurrentIndex(CompositingTypeIndex::QPAINTER_INDEX);
     }
     m_form.backend->setDisabled(m_settings->isBackendImmutable());
 
@@ -245,6 +260,10 @@ void KWinCompositingKCM::save()
     switch (m_form.backend->currentData().toInt()) {
     case CompositingTypeIndex::OPENGL_INDEX:
         m_settings->setBackend(KWinCompositingSetting::EnumBackend::OpenGL);
+        break;
+
+    case CompositingTypeIndex::QPAINTER_INDEX:
+        m_settings->setBackend(KWinCompositingSetting::EnumBackend::QPainter);
         break;
     }
 
