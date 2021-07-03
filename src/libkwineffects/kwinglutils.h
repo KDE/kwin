@@ -106,8 +106,6 @@ public:
         ProjectionMatrix,
         ModelViewMatrix,
         ModelViewProjectionMatrix,
-        WindowTransformation,
-        ScreenTransformation,
         MatrixCount
     };
 
