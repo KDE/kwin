@@ -314,7 +314,7 @@ void GLShader::resolveLocations()
 
     mMatrixLocation[TextureMatrix]              = uniformLocation("textureMatrix");
     mMatrixLocation[ProjectionMatrix]           = uniformLocation("projection");
-    mMatrixLocation[ModelViewMatrix]            = uniformLocation("modelview");
+    mMatrixLocation[ModelMatrix]            = uniformLocation("modelMatrix");
     mMatrixLocation[ModelViewProjectionMatrix]  = uniformLocation("modelViewProjectionMatrix");
 
     mVec2Location[Offset] = uniformLocation("offset");

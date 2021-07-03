@@ -104,7 +104,7 @@ public:
     enum MatrixUniform {
         TextureMatrix = 0,
         ProjectionMatrix,
-        ModelViewMatrix,
+        ModelMatrix,
         ModelViewProjectionMatrix,
         MatrixCount
     };
