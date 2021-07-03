@@ -338,37 +338,39 @@ bool GlxBackend::initRenderingContext()
             if (have_robustness) {
                 if (haveVideoMemoryPurge) {
                     GlxContextAttributeBuilder purgeMemoryCore;
-                    purgeMemoryCore.setVersion(3, 2);
+                    purgeMemoryCore.setVersion(3, 3);
                     purgeMemoryCore.setRobust(true);
                     purgeMemoryCore.setCoreProfile(true);
                     purgeMemoryCore.setResetOnVideoMemoryPurge(true);
                     candidates.emplace_back(std::move(purgeMemoryCore));
                 }
                 GlxContextAttributeBuilder robustCore;
-                robustCore.setVersion(3, 2);
+                robustCore.setVersion(3, 3);
                 robustCore.setRobust(true);
                 robustCore.setCoreProfile(true);
                 candidates.emplace_back(std::move(robustCore));
             }
             GlxContextAttributeBuilder core;
-            core.setVersion(3, 2);
+            core.setVersion(3, 3);
             core.setCoreProfile(true);
             candidates.emplace_back(std::move(core));
         } else {
             if (have_robustness) {
                 if (haveVideoMemoryPurge) {
-                    GlxContextAttributeBuilder purgeMemoryLegacy;
-                    purgeMemoryLegacy.setRobust(true);
-                    purgeMemoryLegacy.setResetOnVideoMemoryPurge(true);
-                    candidates.emplace_back(std::move(purgeMemoryLegacy));
+                    GlxContextAttributeBuilder purgeMemoryCompatible;
+                    purgeMemoryCompatible.setVersion(3, 3);
+                    purgeMemoryCompatible.setRobust(true);
+                    purgeMemoryCompatible.setResetOnVideoMemoryPurge(true);
+                    candidates.emplace_back(std::move(purgeMemoryCompatible));
                 }
-                GlxContextAttributeBuilder robustLegacy;
-                robustLegacy.setRobust(true);
-                candidates.emplace_back(std::move(robustLegacy));
+                GlxContextAttributeBuilder robustCompatible;
+                robustCompatible.setVersion(3, 3);
+                robustCompatible.setRobust(true);
+                candidates.emplace_back(std::move(robustCompatible));
             }
-            GlxContextAttributeBuilder legacy;
-            legacy.setVersion(2, 1);
-            candidates.emplace_back(std::move(legacy));
+            GlxContextAttributeBuilder compatible;
+            compatible.setVersion(3, 3);
+            candidates.emplace_back(std::move(compatible));
         }
         for (auto it = candidates.begin(); it != candidates.end(); it++) {
             const auto attribs = it->build();

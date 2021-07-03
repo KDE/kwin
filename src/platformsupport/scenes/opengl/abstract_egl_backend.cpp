@@ -53,6 +53,7 @@ static EGLContext ensureGlobalShareContext()
         attribs = builder.build();
     } else {
         EglContextAttributeBuilder builder;
+        builder.setVersion(3, 3);
         attribs = builder.build();
     }
 
@@ -291,7 +292,7 @@ bool AbstractEglBackend::createContext()
         if (options->glCoreProfile() && haveCreateContext) {
             if (haveRobustness && haveContextPriority) {
                 auto robustCorePriority = std::make_unique<EglContextAttributeBuilder>();
-                robustCorePriority->setVersion(3, 1);
+                robustCorePriority->setVersion(3, 3);
                 robustCorePriority->setRobust(true);
                 robustCorePriority->setHighPriority(true);
                 candidates.push_back(std::move(robustCorePriority));
@@ -304,22 +305,24 @@ bool AbstractEglBackend::createContext()
             }
             if (haveContextPriority) {
                 auto corePriority = std::make_unique<EglContextAttributeBuilder>();
-                corePriority->setVersion(3, 1);
+                corePriority->setVersion(3, 3);
                 corePriority->setHighPriority(true);
                 candidates.push_back(std::move(corePriority));
             }
             auto core = std::make_unique<EglContextAttributeBuilder>();
-            core->setVersion(3, 1);
+            core->setVersion(3, 3);
             candidates.push_back(std::move(core));
         }
         if (haveRobustness && haveCreateContext && haveContextPriority) {
             auto robustPriority = std::make_unique<EglContextAttributeBuilder>();
+            robustPriority->setVersion(3, 3);
             robustPriority->setRobust(true);
             robustPriority->setHighPriority(true);
             candidates.push_back(std::move(robustPriority));
         }
         if (haveRobustness && haveCreateContext) {
             auto robust = std::make_unique<EglContextAttributeBuilder>();
+            robust->setVersion(3, 3);
             robust->setRobust(true);
             candidates.push_back(std::move(robust));
         }

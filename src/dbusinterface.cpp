@@ -281,7 +281,7 @@ QString CompositorDBusInterface::compositingType() const
         if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
             return QStringLiteral("gles");
         } else {
-            return QStringLiteral("gl2");
+            return QStringLiteral("gl");
         }
     case QPainterCompositing:
         return QStringLiteral("qpainter");

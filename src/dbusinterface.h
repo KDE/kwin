@@ -97,8 +97,7 @@ class CompositorDBusInterface : public QObject
     /**
      * The type of the currently used Scene:
      * @li @c none No Compositing
-     * @li @c gl1 OpenGL 1
-     * @li @c gl2 OpenGL 2
+     * @li @c gl OpenGL
      * @li @c gles OpenGL ES 2
      */
     Q_PROPERTY(QString compositingType READ compositingType)

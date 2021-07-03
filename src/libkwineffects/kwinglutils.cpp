@@ -300,7 +300,7 @@ void GLShader::bindAttributeLocation(const char *name, int index)
 
 void GLShader::bindFragDataLocation(const char *name, int index)
 {
-    if (!GLPlatform::instance()->isGLES() && (hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_gpu_shader4"))))
+    if (!GLPlatform::instance()->isGLES())
         glBindFragDataLocation(mProgram, index, name);
 }
 
@@ -1032,13 +1032,8 @@ void GLRenderTarget::initStatic()
         sSupported = true;
         s_blitSupported = hasGLVersion(3, 0);
     } else {
-        sSupported = hasGLVersion(3, 0) ||
-            hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) ||
-            hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
-
-        s_blitSupported = hasGLVersion(3, 0) ||
-            hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) ||
-            hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_blit"));
+        sSupported = true;
+        s_blitSupported = true;
     }
 }
 
@@ -2251,14 +2246,10 @@ void GLVertexBuffer::initStatic()
         GLVertexBufferPrivate::haveBufferStorage = hasGLExtension("GL_EXT_buffer_storage");
         GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 0);
     } else {
-        bool haveBaseVertex     = hasGLVersion(3, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_draw_elements_base_vertex"));
-        bool haveCopyBuffer     = hasGLVersion(3, 1) || hasGLExtension(QByteArrayLiteral("GL_ARB_copy_buffer"));
-        bool haveMapBufferRange = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_map_buffer_range"));
-
-        GLVertexBufferPrivate::hasMapBufferRange = haveMapBufferRange;
-        GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
+        GLVertexBufferPrivate::hasMapBufferRange = true;
+        GLVertexBufferPrivate::supportsIndexedQuads = true;
         GLVertexBufferPrivate::haveBufferStorage = hasGLVersion(4, 4) || hasGLExtension("GL_ARB_buffer_storage");
-        GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
+        GLVertexBufferPrivate::haveSyncFences = true;
     }
     GLVertexBufferPrivate::s_indexBuffer = nullptr;
     GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
