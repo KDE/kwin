@@ -748,7 +748,7 @@ public:
         return true;
     }
     static bool defaultGLCoreProfile() {
-        return false;
+        return true;
     }
     static GlSwapStrategy defaultGlPreferBufferSwap() {
         return AutoSwapStrategy;
