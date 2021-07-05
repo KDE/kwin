@@ -19,8 +19,6 @@ SurfaceItemX11::SurfaceItemX11(Scene::Window *window, Item *parent)
 
     connect(toplevel, &Toplevel::bufferGeometryChanged,
             this, &SurfaceItemX11::handleBufferGeometryChanged);
-    connect(toplevel, &Toplevel::markedAsZombie,
-            this, &SurfaceItemX11::destroyDamage);
     connect(toplevel, &Toplevel::geometryShapeChanged,
             this, &SurfaceItemX11::discardQuads);
 
@@ -33,6 +31,7 @@ SurfaceItemX11::SurfaceItemX11(Scene::Window *window, Item *parent)
 
 SurfaceItemX11::~SurfaceItemX11()
 {
+    // destroyDamage() will be called by the associated Toplevel.
 }
 
 void SurfaceItemX11::preprocess()

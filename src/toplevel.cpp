@@ -20,6 +20,7 @@
 #include "screens.h"
 #include "shadow.h"
 #include "shadowitem.h"
+#include "surfaceitem_x11.h"
 #include "windowitem.h"
 #include "workspace.h"
 
@@ -276,8 +277,14 @@ bool Toplevel::setupCompositing()
     return true;
 }
 
-void Toplevel::finishCompositing(ReleaseReason)
+void Toplevel::finishCompositing(ReleaseReason releaseReason)
 {
+    // If the X11 window has been destroyed, avoid calling XDamageDestroy.
+    if (releaseReason != ReleaseReason::Destroyed) {
+        if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
+            item->destroyDamage();
+        }
+    }
     if (effect_window && effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
         deleteEffectWindow();
     }
