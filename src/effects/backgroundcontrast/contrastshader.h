@@ -40,6 +40,9 @@ public:
     void setOpacity(float opacity);
     float opacity() const;
 
+    void setFrost(bool frost);
+    bool frost();
+
 protected:
     void setIsValid(bool value) {
         mValid = value;
@@ -54,6 +57,7 @@ private:
     int colorMatrixLocation;
     int opacityLocation;
     float m_opacity;
+    bool m_frost = true;
 };
 
 

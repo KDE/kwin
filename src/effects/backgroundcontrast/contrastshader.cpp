@@ -57,6 +57,21 @@ float ContrastShader::opacity() const
     return m_opacity;
 }
 
+void ContrastShader::setFrost(bool frost)
+{
+    if (m_frost == frost) {
+        return;
+    }
+
+    m_frost = frost;
+
+    reset();
+}
+bool ContrastShader::frost()
+{
+    return m_frost;
+}
+
 void ContrastShader::setColorMatrix(const QMatrix4x4 &matrix)
 {
     if (!isValid())
@@ -164,11 +179,35 @@ void ContrastShader::init()
     stream2 << "{\n";
     stream2 << "    vec4 tex = " << texture2D << "(sampler, varyingTexCoords.st);\n";
 
-    stream2 << "    if (opacity >= 1.0) {\n";
-    stream2 << "        " << fragColor << " = tex * colorMatrix;\n";
-    stream2 << "    } else {\n";
-    stream2 << "        " << fragColor << " = tex * (opacity * colorMatrix + (1.0 - opacity) * mat4(1.0));\n";
-    stream2 << "    }\n";
+    if (m_frost) {
+        stream2 << R"(
+    float backgroundAlpha = tex.a;
+    vec3 background = tex.rgb * backgroundAlpha;
+
+    float foregroundAlpha = 0.4;
+    vec3 foreground = (vec3(35.0, 38.0, 41.0) / 255.0) * foregroundAlpha; // TODO: hardcoded
+
+    float finalAlpha = backgroundAlpha + foregroundAlpha - backgroundAlpha * foregroundAlpha;
+    vec3 final;
+
+    if ( foreground.r == 1.0 || foreground.g == 1.0 || foreground.b == 1.0 ) {
+        float finalR = foreground.r == 1.0 ? foreground.r : clamp( ( background.r / (1.0 - foreground.r) ) , 0.0 , 1.0 );
+        float finalG = foreground.g == 1.0 ? foreground.g : clamp( ( background.g / (1.0 - foreground.g) ) , 0.0 , 1.0 );
+        float finalB = foreground.b == 1.0 ? foreground.b : clamp( ( background.b / (1.0 - foreground.b) ) , 0.0 , 1.0 );
+        final = vec3(finalR, finalG, finalB);
+    } else {
+        final = clamp((background / (1.0 - foreground)) / finalAlpha, 0.0, 1.0);
+    }
+
+    )" << fragColor << "= vec4(final, finalAlpha);\n";
+    } else {
+        stream2 << "    if (opacity >= 1.0) {\n";
+        stream2 << "        " << fragColor << " = tex * colorMatrix;\n";
+        stream2 << "    } else {\n";
+        stream2 << "        " << fragColor << " = tex * (opacity * colorMatrix + (1.0 - opacity) * mat4(1.0));\n";
+        stream2 << "    }\n";
+    }
+
 
     stream2 << "}\n";
     stream2.flush();
