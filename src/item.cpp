@@ -51,6 +51,7 @@ void Item::setX(int x)
     }
     scheduleRepaint(boundingRect());
     m_x = x;
+    updateBoundingRect();
     scheduleRepaint(boundingRect());
     Q_EMIT xChanged();
 }
@@ -67,6 +68,7 @@ void Item::setY(int y)
     }
     scheduleRepaint(boundingRect());
     m_y = y;
+    updateBoundingRect();
     scheduleRepaint(boundingRect());
     Q_EMIT yChanged();
 }
@@ -131,10 +133,6 @@ void Item::addChild(Item *item)
 {
     Q_ASSERT(!m_childItems.contains(item));
 
-    connect(item, &Item::xChanged, this, &Item::updateBoundingRect);
-    connect(item, &Item::yChanged, this, &Item::updateBoundingRect);
-    connect(item, &Item::boundingRectChanged, this, &Item::updateBoundingRect);
-
     m_childItems.append(item);
     updateBoundingRect();
     scheduleRepaint(item->boundingRect().translated(item->position()));
@@ -146,10 +144,6 @@ void Item::removeChild(Item *item)
     scheduleRepaint(item->boundingRect().translated(item->position()));
 
     m_childItems.removeOne(item);
-
-    disconnect(item, &Item::xChanged, this, &Item::updateBoundingRect);
-    disconnect(item, &Item::yChanged, this, &Item::updateBoundingRect);
-    disconnect(item, &Item::boundingRectChanged, this, &Item::updateBoundingRect);
 
     updateBoundingRect();
 }
@@ -178,6 +172,7 @@ void Item::setPosition(const QPoint &point)
         scheduleRepaint(boundingRect());
         m_x = point.x();
         m_y = point.y();
+        updateBoundingRect();
         scheduleRepaint(boundingRect());
 
         if (xDirty) {
@@ -236,6 +231,9 @@ void Item::updateBoundingRect()
     if (m_boundingRect != boundingRect) {
         m_boundingRect = boundingRect;
         Q_EMIT boundingRectChanged();
+        if (m_parentItem) {
+            m_parentItem->updateBoundingRect();
+        }
     }
 }
 
