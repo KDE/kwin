@@ -138,7 +138,6 @@ void Item::addChild(Item *item)
     m_childItems.append(item);
     updateBoundingRect();
     scheduleRepaint(item->boundingRect().translated(item->position()));
-    discardQuads();
 }
 
 void Item::removeChild(Item *item)
@@ -153,7 +152,6 @@ void Item::removeChild(Item *item)
     disconnect(item, &Item::boundingRectChanged, this, &Item::updateBoundingRect);
 
     updateBoundingRect();
-    discardQuads();
 }
 
 QList<Item *> Item::childItems() const
@@ -289,8 +287,6 @@ void Item::stackBefore(Item *sibling)
 
     scheduleRepaint(boundingRect());
     sibling->scheduleRepaint(sibling->boundingRect());
-
-    discardQuads();
 }
 
 void Item::stackAfter(Item *sibling)
@@ -318,8 +314,6 @@ void Item::stackAfter(Item *sibling)
 
     scheduleRepaint(boundingRect());
     sibling->scheduleRepaint(sibling->boundingRect());
-
-    discardQuads();
 }
 
 void Item::stackChildren(const QList<Item *> &children)
@@ -336,7 +330,6 @@ void Item::stackChildren(const QList<Item *> &children)
 #endif
 
     m_childItems = children;
-    discardQuads();
 }
 
 void Item::scheduleRepaint(const QRegion &region)
