@@ -66,7 +66,7 @@ QPointF SurfaceItemWayland::mapToBuffer(const QPointF &point) const
 
 QRegion SurfaceItemWayland::shape() const
 {
-    return QRegion(0, 0, width(), height());
+    return QRegion(rect());
 }
 
 QRegion SurfaceItemWayland::opaque() const

@@ -29,7 +29,7 @@ QPointF SurfaceItemInternal::mapToBuffer(const QPointF &point) const
 
 QRegion SurfaceItemInternal::shape() const
 {
-    return QRegion(0, 0, width(), height());
+    return QRegion(rect());
 }
 
 SurfacePixmap *SurfaceItemInternal::createPixmap()

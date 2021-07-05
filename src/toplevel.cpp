@@ -270,8 +270,7 @@ bool Toplevel::setupCompositing()
     effect_window = new EffectWindowImpl(this);
     Compositor::self()->scene()->addToplevel(this);
 
-    connect(windowItem(), &WindowItem::xChanged, this, &Toplevel::visibleGeometryChanged);
-    connect(windowItem(), &WindowItem::yChanged, this, &Toplevel::visibleGeometryChanged);
+    connect(windowItem(), &WindowItem::positionChanged, this, &Toplevel::visibleGeometryChanged);
     connect(windowItem(), &WindowItem::boundingRectChanged, this, &Toplevel::visibleGeometryChanged);
 
     return true;

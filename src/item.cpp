@@ -39,76 +39,6 @@ Item::~Item()
     }
 }
 
-int Item::x() const
-{
-    return m_x;
-}
-
-void Item::setX(int x)
-{
-    if (m_x == x) {
-        return;
-    }
-    scheduleRepaint(boundingRect());
-    m_x = x;
-    updateBoundingRect();
-    scheduleRepaint(boundingRect());
-    Q_EMIT xChanged();
-}
-
-int Item::y() const
-{
-    return m_y;
-}
-
-void Item::setY(int y)
-{
-    if (m_y == y) {
-        return;
-    }
-    scheduleRepaint(boundingRect());
-    m_y = y;
-    updateBoundingRect();
-    scheduleRepaint(boundingRect());
-    Q_EMIT yChanged();
-}
-
-int Item::width() const
-{
-    return m_width;
-}
-
-void Item::setWidth(int width)
-{
-    if (m_width == width) {
-        return;
-    }
-    scheduleRepaint(rect());
-    m_width = width;
-    updateBoundingRect();
-    scheduleRepaint(rect());
-    discardQuads();
-    Q_EMIT widthChanged();
-}
-
-int Item::height() const
-{
-    return m_height;
-}
-
-void Item::setHeight(int height)
-{
-    if (m_height == height) {
-        return;
-    }
-    scheduleRepaint(rect());
-    m_height = height;
-    updateBoundingRect();
-    scheduleRepaint(rect());
-    discardQuads();
-    Q_EMIT heightChanged();
-}
-
 Item *Item::parentItem() const
 {
     return m_parentItem;
@@ -160,55 +90,34 @@ Scene::Window *Item::window() const
 
 QPoint Item::position() const
 {
-    return QPoint(x(), y());
+    return m_position;
 }
 
 void Item::setPosition(const QPoint &point)
 {
-    const bool xDirty = (x() != point.x());
-    const bool yDirty = (y() != point.y());
-
-    if (xDirty || yDirty) {
+    if (m_position != point) {
         scheduleRepaint(boundingRect());
-        m_x = point.x();
-        m_y = point.y();
+        m_position = point;
         updateBoundingRect();
         scheduleRepaint(boundingRect());
-
-        if (xDirty) {
-            Q_EMIT xChanged();
-        }
-        if (yDirty) {
-            Q_EMIT yChanged();
-        }
+        Q_EMIT positionChanged();
     }
 }
 
 QSize Item::size() const
 {
-    return QSize(width(), height());
+    return m_size;
 }
 
 void Item::setSize(const QSize &size)
 {
-    const bool widthDirty = (width() != size.width());
-    const bool heightDirty = (height() != size.height());
-
-    if (widthDirty || heightDirty) {
+    if (m_size != size) {
         scheduleRepaint(rect());
-        m_width = size.width();
-        m_height = size.height();
+        m_size = size;
         updateBoundingRect();
         scheduleRepaint(rect());
-
         discardQuads();
-
-        if (widthDirty) {
-            Q_EMIT widthChanged();
-        }
-        if (heightDirty) {
-            Q_EMIT heightChanged();
-        }
+        Q_EMIT sizeChanged();
     }
 }
 

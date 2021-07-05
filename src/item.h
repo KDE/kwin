@@ -24,24 +24,6 @@ public:
     explicit Item(Scene::Window *window, Item *parent = nullptr);
     ~Item() override;
 
-    /**
-     * Returns the x coordinate relative to the top left corner of the parent item.
-     */
-    int x() const;
-    void setX(int x);
-
-    /**
-     * Returns the y coordinate relative to the top left corner of the parent item.
-     */
-    int y() const;
-    void setY(int y);
-
-    int width() const;
-    void setWidth(int width);
-
-    int height() const;
-    void setHeight(int height);
-
     QPoint position() const;
     void setPosition(const QPoint &point);
 
@@ -106,21 +88,13 @@ public:
 
 Q_SIGNALS:
     /**
-     * This signal is emitted when the x coordinate of this item has changed.
+     * This signal is emitted when the position of this item has changed.
      */
-    void xChanged();
+    void positionChanged();
     /**
-     * This signal is emitted when the y coordinate of this item has changed.
+     * This signal is emitted when the size of this item has changed.
      */
-    void yChanged();
-    /**
-     * This signal is emitted when the width of this item has changed.
-     */
-    void widthChanged();
-    /**
-     * This signal is emitted when the height of this item has changed.
-     */
-    void heightChanged();
+    void sizeChanged();
 
     /**
      * This signal is emitted when the rectangle that encloses this item and all of its children
@@ -146,10 +120,8 @@ private:
     QPointer<Item> m_parentItem;
     QList<Item *> m_childItems;
     QRect m_boundingRect;
-    int m_x = 0;
-    int m_y = 0;
-    int m_width = 0;
-    int m_height = 0;
+    QPoint m_position;
+    QSize m_size = QSize(0, 0);
     bool m_visible = true;
     bool m_effectiveVisible = true;
     QVector<QRegion> m_repaints;
