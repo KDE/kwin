@@ -211,7 +211,8 @@ bool Compositor::setupStart()
             qCDebug(KWIN_CORE) << "Attempting to load the QPainter scene";
             break;
         case NoCompositing:
-            Q_UNREACHABLE();
+            qCDebug(KWIN_CORE) << "Starting without compositing...";
+            break;
         }
         const auto pluginIt = std::find_if(availablePlugins.begin(), availablePlugins.end(),
             [type] (const auto &plugin) {
