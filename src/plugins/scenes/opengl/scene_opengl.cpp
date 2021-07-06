@@ -916,7 +916,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
                 .transformMatrix = context->transforms.top(),
                 .opacity = context->paintData.opacity(),
                 .hasAlpha = true,
-                .coordinateType = NormalizedCoordinates,
+                .coordinateType = UnnormalizedCoordinates,
             });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
