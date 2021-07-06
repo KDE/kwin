@@ -100,7 +100,7 @@ public:
     QMatrix4x4 matrix(TextureCoordinateType type) const;
 
     void update(const QImage& image, const QPoint &offset = QPoint(0, 0), const QRect &src = QRect());
-    virtual void discard();
+    void discard();
     void bind();
     void unbind();
     void render(const QRegion &region, const QRect& rect, bool hardwareClipping = false);
