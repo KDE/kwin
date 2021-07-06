@@ -6,6 +6,9 @@
 */
 #pragma once
 
+#include <optional>
+
+#include <QColor>
 #include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
@@ -62,6 +65,7 @@ public:
     qreal contrast() const;
     qreal intensity() const;
     qreal saturation() const;
+    QColor frost() const;
 
 private:
     explicit ContrastInterface(wl_resource *resource);

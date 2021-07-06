@@ -13,7 +13,7 @@
 
 namespace KWaylandServer
 {
-static const quint32 s_version = 1;
+static const quint32 s_version = 2;
 
 class ContrastManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_contrast_manager
 {
@@ -96,6 +96,8 @@ public:
     qreal currentIntensity;
     qreal pendingSaturation;
     qreal currentSaturation;
+    QColor currentFrost;
+    QColor pendingFrost;
     ContrastInterface *q;
 
 protected:
@@ -104,6 +106,8 @@ protected:
     void org_kde_kwin_contrast_set_contrast(Resource *resource, wl_fixed_t contrast) override;
     void org_kde_kwin_contrast_set_intensity(Resource *resource, wl_fixed_t intensity) override;
     void org_kde_kwin_contrast_set_saturation(Resource *resource, wl_fixed_t saturation) override;
+    void org_kde_kwin_contrast_set_frost(Resource *resource, int r, int g, int b, int a) override;
+    void org_kde_kwin_contrast_unset_frost(Resource *resource) override;
     void org_kde_kwin_contrast_release(Resource *resource) override;
     void org_kde_kwin_contrast_destroy_resource(Resource *resource) override;
 };
@@ -115,6 +119,7 @@ void ContrastInterfacePrivate::org_kde_kwin_contrast_commit(Resource *resource)
     currentContrast = pendingContrast;
     currentIntensity = pendingIntensity;
     currentSaturation = pendingSaturation;
+    currentFrost = pendingFrost;
 }
 
 void ContrastInterfacePrivate::org_kde_kwin_contrast_set_region(Resource *resource, wl_resource *region)
@@ -144,6 +149,20 @@ void ContrastInterfacePrivate::org_kde_kwin_contrast_set_saturation(Resource *re
 {
     Q_UNUSED(resource)
     pendingSaturation = wl_fixed_to_double(saturation);
+}
+
+void ContrastInterfacePrivate::org_kde_kwin_contrast_set_frost(Resource *resource, int r, int g, int b, int a)
+{
+    Q_UNUSED(resource)
+
+    pendingFrost = QColor(r, g, b, a);
+}
+
+void ContrastInterfacePrivate::org_kde_kwin_contrast_unset_frost(Resource *resource)
+{
+    Q_UNUSED(resource)
+
+    pendingFrost = {};
 }
 
 void ContrastInterfacePrivate::org_kde_kwin_contrast_release(Resource *resource)
@@ -189,6 +208,11 @@ qreal ContrastInterface::intensity() const
 qreal ContrastInterface::saturation() const
 {
     return d->currentSaturation;
+}
+
+QColor ContrastInterface::frost() const
+{
+    return d->currentFrost;
 }
 
 }
