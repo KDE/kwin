@@ -564,7 +564,7 @@ public:
         return m_hiddenPreviews;
     }
     // OpenGL
-    // 0 = no, 1 = yes when transformed,
+    // 1 = yes,
     // 2 = try trilinear when transformed; else 1,
     // -1 = auto
     int glSmoothScale() const {

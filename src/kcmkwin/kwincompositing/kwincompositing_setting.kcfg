@@ -22,8 +22,12 @@
            </choices>
        </entry>
 
-       <entry name="glTextureFilter" key="GLTextureFilter" type="Int">
-           <default>2</default>
+       <entry name="glTextureFilter" key="GLTextureFilter" type="Enum">
+           <default>Accurate</default>
+           <choices>
+               <choice name="Smooth" value="1"/>
+               <choice name="Accurate" value="2"/>
+           </choices>
        </entry>
 
        <entry name="Enabled" type="Bool">

@@ -162,11 +162,6 @@ you can reset this protection but be aware that this might result in an immediat
       <widget class="QComboBox" name="kcfg_glTextureFilter">
        <item>
         <property name="text">
-         <string>Crisp</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
          <string>Smooth</string>
         </property>
        </item>
