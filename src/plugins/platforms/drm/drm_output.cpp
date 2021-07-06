@@ -275,36 +275,36 @@ bool DrmOutput::init(drmModeConnector *connector)
 
 QVector<AbstractWaylandOutput::Mode> DrmOutput::getModes()
 {
-    // read in mode information
+    auto conn = drmModeGetConnector(gpu()->fd(), m_conn->id());
+    
     bool modeFound = false;
     QVector<Mode> modes;
     int i = 0;
-    const auto connModes = m_conn->modes();
-
-    for (const DrmConnector::Mode &m: connModes) {
-        // TODO: in AMS here we could read and store for later every mode's blob_id
-        // would simplify isCurrentMode(..) and presentAtomically(..) in case of mode set
-
-        Mode mode;
-        if (isCurrentMode(m.mode)) {
-            mode.flags |= ModeFlag::Current;
+    for (int i = 0; i < conn->count_modes; i++) {
+        auto mode = conn->modes[i];
+        
+        Mode newMode;
+        if (isCurrentMode(mode)) {
+            newMode.flags |= ModeFlag::Current;
             modeFound = true;
         }
-        if (m.mode.type & DRM_MODE_TYPE_PREFERRED) {
-            mode.flags |= ModeFlag::Preferred;
+        if (mode.type & DRM_MODE_TYPE_PREFERRED) {
+            newMode.flags |= ModeFlag::Preferred;
         }
 
-        mode.id = i;
-        mode.size = m.size;
-        mode.refreshRate = refreshRateForMode(m.mode);
-        modes << mode;
+        newMode.id = i;
+        newMode.size = QSize(mode.hdisplay, mode.vdisplay);
+        newMode.refreshRate = refreshRateForMode(mode);
+        modes << newMode;
 
         ++i;
     }
+
     if (!modeFound) {
         // select first mode by default
         modes[0].flags |= ModeFlag::Current;
     }
+
     return modes;
 }
 

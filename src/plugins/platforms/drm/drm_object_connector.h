@@ -63,13 +63,6 @@ public:
     bool isInternal() const;
     QSize physicalSize() const;
 
-    struct Mode {
-        drmModeModeInfo mode;
-        QSize size;
-        uint32_t refreshRate;
-    };
-    QVector<Mode> modes() const;
-
     bool hasOverscan() const;
     uint32_t overscan() const;
     void setOverscan(uint32_t overscan);

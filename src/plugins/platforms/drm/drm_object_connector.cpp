@@ -176,18 +176,4 @@ bool DrmConnector::vrrCapable() const
     return false;
 }
 
-QVector<DrmConnector::Mode> DrmConnector::modes() const
-{
-    QVector<Mode> modes;
-    for (int i = 0; i < m_conn->count_modes; i++) {
-        auto mode = m_conn->modes[i];
-        Mode m;
-        m.mode = mode;
-        m.size = QSize(mode.hdisplay, mode.vdisplay);
-        m.refreshRate = mode.vrefresh;
-        modes << m;
-    }
-    return modes;
-}
-
 }
