@@ -182,7 +182,7 @@
     <entry name="type" type="Int">
       <label>Set window type to</label>
       <min code="true">NET::Normal</min>
-      <max code="true">NET::Splash</max>
+      <max code="true">NET::CriticalNotification</max>
       <default code="true">NET::Unknown</default>
     </entry>
     <entry name="typerule" type="Int">

@@ -721,7 +721,8 @@ QList<OptionsModel::Data> RulesModel::windowTypesModelData() const
         { NET::Splash,  i18n("Splash Screen")     , QIcon::fromTheme("embosstool")               },
         { NET::Desktop, i18n("Desktop")           , QIcon::fromTheme("desktop")                  },
         // { NET::Override, i18n("Unmanaged Window")   },  deprecated
-        { NET::TopMenu, i18n("Standalone Menubar"), QIcon::fromTheme("open-menu-symbolic")       }
+        { NET::TopMenu, i18n("Standalone Menubar"), QIcon::fromTheme("open-menu-symbolic")       },
+        { NET::OnScreenDisplay, i18n("On Screen Display"), QIcon::fromTheme("osd-duplicate")     }
     };
     return modelData;
 }

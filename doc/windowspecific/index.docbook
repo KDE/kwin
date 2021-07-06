@@ -497,6 +497,7 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
 <listitem><para>Splash Screen</para></listitem>
 <listitem><para>Desktop</para></listitem>
 <listitem><para>Standalone Menubar</para></listitem>
+<listitem><para>On Screen Display</para></listitem>
 </itemizedlist>
 
      </listitem>
