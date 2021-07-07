@@ -230,6 +230,11 @@ bool DrmGpu::updateOutputs()
         removedOutputs.append(removed);
     }
 
+    // before testing output configurations, update all the plane properties as they might have changed
+    for (const auto &plane : qAsConst(m_planes)) {
+        plane->updateProperties();
+    }
+
     for (DrmConnector *con : qAsConst(pendingConnectors)) {
         DrmScopedPointer<drmModeConnector> connector(drmModeGetConnector(m_fd, con->id()));
         if (!connector) {
