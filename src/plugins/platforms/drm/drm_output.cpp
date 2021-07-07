@@ -429,7 +429,9 @@ void DrmOutput::dpmsFinishOn()
     if (Compositor *compositor = Compositor::self()) {
         compositor->addRepaintFull();
     }
-    showCursor();
+    if (!m_backend->isCursorHidden()) {
+        showCursor();
+    }
 }
 
 void DrmOutput::dpmsFinishOff()
