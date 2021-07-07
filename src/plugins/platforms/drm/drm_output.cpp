@@ -794,12 +794,14 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
                 return false;
             }
         }
-        if (!atomicReqModesetPopulate(req, m_dpmsModePending == DpmsMode::On)){
-            qCWarning(KWIN_DRM) << "Failed to populate Atomic Modeset";
-            errorHandler();
-            return false;
-        }
+        setModesetValues(m_dpmsModePending == DpmsMode::On);
         flags |= DRM_MODE_ATOMIC_ALLOW_MODESET;
+    }
+
+    if (!m_conn->atomicPopulate(req)) {
+        qCWarning(KWIN_DRM) << "Failed to populate connector. Abort atomic commit!";
+        errorHandler();
+        return false;
     }
 
     if (!m_crtc->atomicPopulate(req)) {
@@ -855,7 +857,7 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
     return true;
 }
 
-bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
+void DrmOutput::setModesetValues(bool enable)
 {
     if (enable) {
         const QSize mSize = modeSize();
@@ -894,8 +896,6 @@ bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
     m_conn->setValue(DrmConnector::PropertyIndex::CrtcId, enable ? m_crtc->id() : 0);
     m_crtc->setValue(DrmCrtc::PropertyIndex::ModeId, enable ? m_blobId : 0);
     m_crtc->setValue(DrmCrtc::PropertyIndex::Active, enable);
-
-    return m_conn->atomicPopulate(req);
 }
 
 int DrmOutput::gammaRampSize() const

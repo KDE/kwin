@@ -118,7 +118,7 @@ private:
     void dpmsFinishOn();
     void dpmsFinishOff();
 
-    bool atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
+    void setModesetValues(bool enable);
     void setDpmsMode(DpmsMode mode) override;
     void updateMode(int modeIndex) override;
     void updateMode(uint32_t width, uint32_t height, uint32_t refreshRate);
