@@ -49,13 +49,13 @@ bool DrmConnector::init()
             PropertyDefinition(QByteArrayLiteral("EDID")),
             PropertyDefinition(QByteArrayLiteral("overscan")),
             PropertyDefinition(QByteArrayLiteral("vrr_capable")),
-            PropertyDefinition(QByteArrayLiteral("underscan")),
-            PropertyDefinition(QByteArrayLiteral("underscan vborder")),
-            PropertyDefinition(QByteArrayLiteral("underscan hborder"), {
+            PropertyDefinition(QByteArrayLiteral("underscan"), {
                 QByteArrayLiteral("off"),
                 QByteArrayLiteral("on"),
                 QByteArrayLiteral("auto")
             }),
+            PropertyDefinition(QByteArrayLiteral("underscan vborder")),
+            PropertyDefinition(QByteArrayLiteral("underscan hborder")),
         }, DRM_MODE_OBJECT_CONNECTOR)) {
         return false;
     }
@@ -190,10 +190,10 @@ void DrmConnector::setOverscan(uint32_t overscan, const QSize &modeSize)
     } else if (auto prop = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)]) {
         float aspectRatio = modeSize.width() / static_cast<float>(modeSize.height());
         prop->setEnum(overscan > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
-        uint32_t hborder = overscan / aspectRatio;
+        uint32_t hborder = overscan * aspectRatio;
         if (hborder > 128) {
             hborder = 128;
-            overscan = 128 * aspectRatio;
+            overscan = 128 / aspectRatio;
         }
         // overscan only goes from 0-100 so we cut off the 101-128 value range of underscan_vborder
         setValue(PropertyIndex::Underscan_vborder, overscan);
