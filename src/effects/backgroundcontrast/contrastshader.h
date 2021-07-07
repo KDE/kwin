@@ -30,6 +30,7 @@ public:
     }
 
     void setColorMatrix(const QMatrix4x4 &matrix);
+    void setFrostColor(const QColor &color);
 
     void setTextureMatrix(const QMatrix4x4 &matrix);
     void setModelViewProjectionMatrix(const QMatrix4x4 &matrix);
@@ -55,9 +56,10 @@ private:
     int mvpMatrixLocation;
     int textureMatrixLocation;
     int colorMatrixLocation;
+    int frostColorLocation;
     int opacityLocation;
     float m_opacity;
-    bool m_frost = true;
+    bool m_frost = false;
 };
 
 

@@ -45,6 +45,9 @@ void ContrastShader::reset()
 
 void ContrastShader::setOpacity(float opacity)
 {
+    if (!isValid())
+        return;
+
     m_opacity = opacity;
 
     ShaderManager::instance()->pushShader(shader);
@@ -65,7 +68,7 @@ void ContrastShader::setFrost(bool frost)
 
     m_frost = frost;
 
-    reset();
+    init();
 }
 bool ContrastShader::frost()
 {
@@ -79,6 +82,16 @@ void ContrastShader::setColorMatrix(const QMatrix4x4 &matrix)
 
     ShaderManager::instance()->pushShader(shader);
     shader->setUniform(colorMatrixLocation, matrix);
+    ShaderManager::instance()->popShader();
+}
+
+void ContrastShader::setFrostColor(const QColor &color)
+{
+    if (!isValid())
+        return;
+
+    ShaderManager::instance()->pushShader(shader);
+    shader->setUniform(frostColorLocation, color);
     ShaderManager::instance()->popShader();
 }
 
@@ -168,6 +181,7 @@ void ContrastShader::init()
     }
 
     stream2 << "uniform mat4 colorMatrix;\n";
+    stream2 << "uniform vec4 frostColor;\n";
     stream2 << "uniform sampler2D sampler;\n";
     stream2 << "uniform float opacity;\n";
     stream2 << varying_in << " vec4 varyingTexCoords;\n";
@@ -184,8 +198,8 @@ void ContrastShader::init()
     float backgroundAlpha = tex.a;
     vec3 background = tex.rgb * backgroundAlpha;
 
-    float foregroundAlpha = 0.4;
-    vec3 foreground = (vec3(35.0, 38.0, 41.0) / 255.0) * foregroundAlpha; // TODO: hardcoded
+    float foregroundAlpha = frostColor.a;
+    vec3 foreground = frostColor.rgb * foregroundAlpha; // TODO: hardcoded
 
     float finalAlpha = backgroundAlpha + foregroundAlpha - backgroundAlpha * foregroundAlpha;
     vec3 final;
@@ -216,6 +230,7 @@ void ContrastShader::init()
 
     if (shader->isValid()) {
         colorMatrixLocation = shader->uniformLocation("colorMatrix");
+        frostColorLocation = shader->uniformLocation("frostColor");
         textureMatrixLocation = shader->uniformLocation("textureMatrix");
         mvpMatrixLocation     = shader->uniformLocation("modelViewProjectionMatrix");
         opacityLocation       = shader->uniformLocation("opacity");
@@ -225,6 +240,7 @@ void ContrastShader::init()
         modelViewProjection.ortho(0, screenSize.width(), screenSize.height(), 0, 0, 65535);
         ShaderManager::instance()->pushShader(shader);
         shader->setUniform(colorMatrixLocation, QMatrix4x4());
+        shader->setUniform(frostColorLocation, QColor());
         shader->setUniform(textureMatrixLocation, QMatrix4x4());
         shader->setUniform(mvpMatrixLocation, modelViewProjection);
         shader->setUniform(opacityLocation, (float)1.0);
