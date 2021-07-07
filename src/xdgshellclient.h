@@ -185,6 +185,8 @@ private:
     void handlePingTimeout(quint32 serial);
     void handlePingDelayed(quint32 serial);
     void handlePongReceived(quint32 serial);
+    void handleMaximumSizeChanged();
+    void handleMinimumSizeChanged();
     void initialize();
     void updateMaximizeMode(MaximizeMode maximizeMode);
     void updateFullScreenMode(bool set);

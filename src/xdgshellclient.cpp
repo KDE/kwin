@@ -393,6 +393,10 @@ XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)
             this, &XdgToplevelClient::initialize);
     connect(shellSurface, &XdgToplevelInterface::destroyed,
             this, &XdgToplevelClient::destroyClient);
+    connect(shellSurface, &XdgToplevelInterface::maximumSizeChanged,
+            this, &XdgToplevelClient::handleMaximumSizeChanged);
+    connect(shellSurface, &XdgToplevelInterface::minimumSizeChanged,
+            this, &XdgToplevelClient::handleMinimumSizeChanged);
     connect(shellSurface->shell(), &XdgShellInterface::pingTimeout,
             this, &XdgToplevelClient::handlePingTimeout);
     connect(shellSurface->shell(), &XdgShellInterface::pingDelayed,
@@ -1146,6 +1150,16 @@ void XdgToplevelClient::handlePongReceived(quint32 serial)
 {
     m_pings.remove(serial);
     setUnresponsive(false);
+}
+
+void XdgToplevelClient::handleMaximumSizeChanged()
+{
+    Q_EMIT maximizeableChanged(isMaximizable());
+}
+
+void XdgToplevelClient::handleMinimumSizeChanged()
+{
+    Q_EMIT maximizeableChanged(isMaximizable());
 }
 
 void XdgToplevelClient::sendPing(PingReason reason)
