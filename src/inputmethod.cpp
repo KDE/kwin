@@ -50,6 +50,7 @@ KWIN_SINGLETON_FACTORY(InputMethod)
 InputMethod::InputMethod(QObject *parent)
     : QObject(parent)
 {
+    m_enabled = kwinApp()->config()->group("Wayland").readEntry("VirtualKeyboardEnabled", true);
     // this is actually too late. Other processes are started before init,
     // so might miss the availability of text input
     // but without Workspace we don't have the window listed at all
@@ -320,6 +321,9 @@ void InputMethod::setEnabled(bool enabled)
     } else {
         startInputMethod();
     }
+    // save value into config
+    kwinApp()->config()->group("Wayland").writeEntry("VirtualKeyboardEnabled", m_enabled);
+    kwinApp()->config()->sync();
 }
 
 static quint32 keysymToKeycode(quint32 sym)
