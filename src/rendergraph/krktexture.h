@@ -47,8 +47,6 @@ public:
     WrapMode wrapMode() const;
     void setWrapMode(WrapMode wrapMode);
 
-    virtual void bind() = 0;
-
     virtual bool hasAlphaChannel() const = 0;
     virtual KrkNative::KrkNativeTexture *nativeTexture() const = 0;
 

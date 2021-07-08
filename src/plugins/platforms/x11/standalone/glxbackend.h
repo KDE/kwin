@@ -130,7 +130,6 @@ public:
                          bool hasAlphaChannel);
     ~GlxSurfaceTextureX11() override;
 
-    void bind() override;
     void reattach();
 
     bool hasAlphaChannel() const override;
