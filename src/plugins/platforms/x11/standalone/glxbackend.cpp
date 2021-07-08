@@ -823,18 +823,14 @@ void GlxSurfaceTextureX11::bind()
     m_nativeTexture.texture->setFilter(filtering() == Linear ? GL_LINEAR : GL_NEAREST);
     m_nativeTexture.texture->setWrapMode(wrapMode() == Repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
     m_nativeTexture.texture->bind();
-
-    if (options->isGlStrictBinding() && m_dirty) {
-        glXReleaseTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT);
-        glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
-    }
-
-    m_dirty = false;
 }
 
-void GlxSurfaceTextureX11::setDirty()
+void GlxSurfaceTextureX11::reattach()
 {
-    m_dirty = true;
+    m_nativeTexture.texture->bind();
+
+    glXReleaseTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT);
+    glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
 }
 
 bool GlxSurfaceTextureX11::hasAlphaChannel() const
@@ -905,9 +901,10 @@ bool GlxSurfaceTextureProviderX11::create()
 
 void GlxSurfaceTextureProviderX11::update(const QRegion &region)
 {
-    Q_UNUSED(region)
-    auto glxTexture = static_cast<GlxSurfaceTextureX11 *>(m_sceneTexture.data());
-    glxTexture->setDirty();
+    if (options->isGlStrictBinding() && !region.isEmpty()) {
+        auto glxTexture = static_cast<GlxSurfaceTextureX11 *>(m_sceneTexture.data());
+        glxTexture->reattach();
+    }
 }
 
 } // namespace

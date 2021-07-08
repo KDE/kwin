@@ -171,20 +171,16 @@ void EglSurfaceTextureX11::bind()
     m_nativeTexture.texture->setFilter(filtering() == Linear ? GL_LINEAR : GL_NEAREST);
     m_nativeTexture.texture->setWrapMode(wrapMode() == Repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
     m_nativeTexture.texture->bind();
-
-    if (options->isGlStrictBinding() && m_dirty) {
-        // This is just implemented to be consistent with the example in
-        // mesa/demos/src/egl/opengles1/texture_from_pixmap.c
-        eglWaitNative(EGL_CORE_NATIVE_ENGINE);
-        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(m_image));
-    }
-
-    m_dirty = false;
 }
 
-void EglSurfaceTextureX11::setDirty()
+void EglSurfaceTextureX11::reattach()
 {
-    m_dirty = true;
+    m_nativeTexture.texture->bind();
+
+    // This is just implemented to be consistent with the example in
+    // mesa/demos/src/egl/opengles1/texture_from_pixmap.c
+    eglWaitNative(EGL_CORE_NATIVE_ENGINE);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(m_image));
 }
 
 bool EglSurfaceTextureX11::hasAlphaChannel() const
@@ -242,9 +238,10 @@ bool EglSurfaceTextureProviderX11::create()
 
 void EglSurfaceTextureProviderX11::update(const QRegion &region)
 {
-    Q_UNUSED(region)
-    auto eglTexture = static_cast<EglSurfaceTextureX11 *>(m_sceneTexture.data());
-    eglTexture->setDirty();
+    if (options->isGlStrictBinding() && !region.isEmpty()) {
+        auto eglTexture = static_cast<EglSurfaceTextureX11 *>(m_sceneTexture.data());
+        eglTexture->reattach();
+    }
 }
 
 } // namespace KWin

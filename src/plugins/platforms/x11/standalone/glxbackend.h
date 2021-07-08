@@ -130,7 +130,7 @@ public:
     ~GlxSurfaceTextureX11() override;
 
     void bind() override;
-    void setDirty();
+    void reattach();
 
     bool hasAlphaChannel() const override;
     KrkNative::KrkNativeTexture *nativeTexture() const override;
@@ -140,7 +140,6 @@ private:
     GLXPixmap m_glxPixmap;
     KrkNative::KrkOpenGLTexture m_nativeTexture;
     bool m_hasAlphaChannel;
-    bool m_dirty = true;
 };
 
 class GlxSurfaceTextureProviderX11 final : public OpenGLSurfaceTextureProvider
