@@ -34,13 +34,6 @@ void KrkPlainTextureOpenGL::setOwnsTexture(bool owns)
     m_ownsTexture = owns;
 }
 
-void KrkPlainTextureOpenGL::bind()
-{
-    m_nativeTexture.texture->setFilter(filtering() == Linear ? GL_LINEAR : GL_NEAREST);
-    m_nativeTexture.texture->setWrapMode(wrapMode() == Repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
-    m_nativeTexture.texture->bind();
-}
-
 bool KrkPlainTextureOpenGL::hasAlphaChannel() const
 {
     return m_hasAlphaChannel;
@@ -59,11 +52,6 @@ KrkNative::KrkNativeTexture *KrkPlainTextureOpenGL::nativeTexture() const
 KrkPlainTextureSoftware::KrkPlainTextureSoftware(const QImage &image)
     : m_nativeTexture(image)
 {
-}
-
-void KrkPlainTextureSoftware::bind()
-{
-    // Software textures cannot be bound.
 }
 
 bool KrkPlainTextureSoftware::hasAlphaChannel() const

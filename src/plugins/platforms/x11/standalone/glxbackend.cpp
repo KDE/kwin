@@ -818,13 +818,6 @@ GlxSurfaceTextureX11::~GlxSurfaceTextureX11()
     m_glxPixmap = None;
 }
 
-void GlxSurfaceTextureX11::bind()
-{
-    m_nativeTexture.texture->setFilter(filtering() == Linear ? GL_LINEAR : GL_NEAREST);
-    m_nativeTexture.texture->setWrapMode(wrapMode() == Repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
-    m_nativeTexture.texture->bind();
-}
-
 void GlxSurfaceTextureX11::reattach()
 {
     m_nativeTexture.texture->bind();

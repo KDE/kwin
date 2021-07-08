@@ -55,7 +55,6 @@ public:
                          bool hasAlphaChannel);
     ~EglSurfaceTextureX11() override;
 
-    void bind() override;
     void reattach();
 
     bool hasAlphaChannel() const override;

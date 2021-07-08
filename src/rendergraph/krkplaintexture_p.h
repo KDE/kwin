@@ -25,8 +25,6 @@ public:
     bool ownsTexture() const;
     void setOwnsTexture(bool owns);
 
-    void bind() override;
-
     bool hasAlphaChannel() const override;
     void setHasAlphaChannel(bool has);
     KrkNative::KrkNativeTexture *nativeTexture() const override;
@@ -43,8 +41,6 @@ class KWIN_EXPORT KrkPlainTextureSoftware : public KrkTexture
 
 public:
     explicit KrkPlainTextureSoftware(const QImage &image);
-
-    void bind() override;
 
     bool hasAlphaChannel() const override;
     KrkNative::KrkNativeTexture *nativeTexture() const override;

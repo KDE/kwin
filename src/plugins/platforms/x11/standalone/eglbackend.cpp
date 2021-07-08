@@ -166,13 +166,6 @@ EglSurfaceTextureX11::~EglSurfaceTextureX11()
     }
 }
 
-void EglSurfaceTextureX11::bind()
-{
-    m_nativeTexture.texture->setFilter(filtering() == Linear ? GL_LINEAR : GL_NEAREST);
-    m_nativeTexture.texture->setWrapMode(wrapMode() == Repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
-    m_nativeTexture.texture->bind();
-}
-
 void EglSurfaceTextureX11::reattach()
 {
     m_nativeTexture.texture->bind();
