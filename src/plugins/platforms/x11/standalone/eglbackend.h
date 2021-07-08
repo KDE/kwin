@@ -57,7 +57,7 @@ public:
     ~EglSurfaceTextureX11() override;
 
     void bind() override;
-    void setDirty();
+    void reattach();
 
     bool hasAlphaChannel() const override;
     KrkNative::KrkNativeTexture *nativeTexture() const override;
@@ -67,7 +67,6 @@ private:
     EGLImageKHR m_image;
     KrkNative::KrkOpenGLTexture m_nativeTexture;
     bool m_hasAlphaChannel;
-    bool m_dirty = true;
 };
 
 class EglSurfaceTextureProviderX11 final : public OpenGLSurfaceTextureProvider
