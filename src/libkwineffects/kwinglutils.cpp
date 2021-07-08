@@ -217,7 +217,7 @@ const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &so
     }
     ba.append(source);
     if (GLPlatform::instance()->isGLES() && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0)) {
-        ba.replace("#version 140", "#version 300 es\n\nprecision highp float;\n");
+        ba.replace("#version 330 core", "#version 300 es\n\nprecision highp float;\n");
     }
 
     return ba;
@@ -536,9 +536,9 @@ void ShaderManager::cleanup()
 
 ShaderManager::ShaderManager()
 {
-    const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
+    const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(3, 30);
     if (GLPlatform::instance()->glslVersion() >= coreVersionNumber) {
-        m_resourcePath = QStringLiteral(":/effect-shaders-1.40/");
+        m_resourcePath = QStringLiteral(":/effect-shaders-3.30/");
     } else {
         m_resourcePath = QStringLiteral(":/effect-shaders-1.10/");
     }
@@ -772,13 +772,10 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     QByteArray attribute, varying;
 
     if (!gl->isGLES()) {
-        const bool glsl_140 = gl->glslVersion() >= kVersionNumber(1, 40);
+        attribute = QByteArrayLiteral("in");
+        varying   = QByteArrayLiteral("out");
 
-        attribute = glsl_140 ? QByteArrayLiteral("in")  : QByteArrayLiteral("attribute");
-        varying   = glsl_140 ? QByteArrayLiteral("out") : QByteArrayLiteral("varying");
-
-        if (glsl_140)
-            stream << "#version 140\n\n";
+        stream << "#version 330 core\n\n";
     } else {
         const bool glsl_es_300 = gl->glslVersion() >= kVersionNumber(3, 0);
 
@@ -818,14 +815,11 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     QByteArray varying, output, textureLookup;
 
     if (!gl->isGLES()) {
-        const bool glsl_140 = gl->glslVersion() >= kVersionNumber(1, 40);
+        stream << "#version 330 core\n\n";
 
-        if (glsl_140)
-            stream << "#version 140\n\n";
-
-        varying       = glsl_140 ? QByteArrayLiteral("in")         : QByteArrayLiteral("varying");
-        textureLookup = glsl_140 ? QByteArrayLiteral("texture")    : QByteArrayLiteral("texture2D");
-        output        = glsl_140 ? QByteArrayLiteral("fragColor")  : QByteArrayLiteral("gl_FragColor");
+        varying       = QByteArrayLiteral("in");
+        textureLookup = QByteArrayLiteral("texture");
+        output        = QByteArrayLiteral("fragColor");
     } else {
         const bool glsl_es_300 = GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0);
 

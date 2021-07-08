@@ -20,8 +20,7 @@ BlurShader::BlurShader(QObject *parent)
     : QObject(parent)
 {
     const bool gles = GLPlatform::instance()->isGLES();
-    const bool glsl_140 = !gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
-    const bool core = glsl_140 || (gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0));
+    const bool core = !gles || (gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0));
 
     QByteArray vertexSource;
     QByteArray fragmentDownSource;
@@ -41,8 +40,8 @@ BlurShader::BlurShader(QObject *parent)
         }
 
         glHeaderString += "precision highp float;\n";
-    } else if (glsl_140) {
-        glHeaderString += "#version 140\n\n";
+    } else {
+        glHeaderString += "#version 330 core\n\n";
     }
 
     QString glUniformString = "uniform sampler2D texUnit;\n"

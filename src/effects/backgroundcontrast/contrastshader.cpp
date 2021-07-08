@@ -101,8 +101,7 @@ void ContrastShader::init()
     reset();
 
     const bool gles = GLPlatform::instance()->isGLES();
-    const bool glsl_140 = !gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
-    const bool core = glsl_140 || (gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0));
+    const bool core = !gles || (gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0));
 
     QByteArray vertexSource;
     QByteArray fragmentSource;
@@ -122,8 +121,8 @@ void ContrastShader::init()
             stream << "#version 300 es\n\n";
         }
         stream << "precision highp float;\n";
-    } else if (glsl_140) {
-        stream << "#version 140\n\n";
+    } else {
+        stream << "#version 330 core\n\n";
     }
 
     stream << "uniform mat4 modelViewProjectionMatrix;\n";
@@ -148,8 +147,8 @@ void ContrastShader::init()
             stream2 << "#version 300 es\n\n";
         }
         stream2 << "precision highp float;\n";
-    } else if (glsl_140) {
-        stream2 << "#version 140\n\n";
+    } else {
+        stream2 << "#version 330 core\n\n";
     }
 
     stream2 << "uniform mat4 colorMatrix;\n";

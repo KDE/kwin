@@ -1,4 +1,4 @@
-#version 140
+#version 330 core
 uniform sampler2D sampler;
 uniform vec2 u_cursor;
 uniform float u_zoom;
