@@ -10,7 +10,7 @@
 #define KWIN_DRM_BACKEND_H
 #include "platform.h"
 
-#include "drm_inputeventfilter.h"
+#include "dpmsinputeventfilter.h"
 
 #include <QPointer>
 #include <QSize>

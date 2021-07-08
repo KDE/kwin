@@ -6,7 +6,6 @@ set(DRM_SOURCES
     drm_object_plane.cpp
     drm_output.cpp
     drm_buffer.cpp
-    drm_inputeventfilter.cpp
     edid.cpp
     logging.cpp
     scene_qpainter_drm_backend.cpp

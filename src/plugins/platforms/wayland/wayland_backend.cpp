@@ -30,6 +30,7 @@
 #include "screens.h"
 #include "pointer_input.h"
 #include "wayland_server.h"
+#include "dpmsinputeventfilter.h"
 
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
@@ -858,6 +859,21 @@ DmaBufTexture *WaylandBackend::createDmaBufTexture(const QSize& size)
 #else
     return nullptr;
 #endif
+}
+
+void WaylandBackend::createDpmsFilter()
+{
+    if (m_dpmsFilter) {
+        // already another output is off
+        return;
+    }
+    m_dpmsFilter.reset(new DpmsInputEventFilter);
+    input()->prependInputEventFilter(m_dpmsFilter.data());
+}
+
+void WaylandBackend::clearDpmsFilter()
+{
+    m_dpmsFilter.reset();
 }
 
 }

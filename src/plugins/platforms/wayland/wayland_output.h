@@ -71,6 +71,9 @@ public:
         m_rendered = false;
     }
 
+    void updateEnablement(bool enable) override;
+    void setDpmsMode(KWin::AbstractWaylandOutput::DpmsMode mode) override;
+
 Q_SIGNALS:
     void sizeChanged(const QSize &size);
     void frameRendered();

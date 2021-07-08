@@ -94,7 +94,7 @@ void DrmBackend::createDpmsFilter()
         // already another output is off
         return;
     }
-    m_dpmsFilter.reset(new DpmsInputEventFilter(this));
+    m_dpmsFilter.reset(new DpmsInputEventFilter);
     input()->prependInputEventFilter(m_dpmsFilter.data());
 }
 
@@ -384,6 +384,10 @@ namespace KWinKScreenIntegration
     QMap<DrmOutput*, QJsonObject> outputsConfig(const QVector<DrmOutput*> &outputs)
     {
         const QString kscreenJsonPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/") % connectedOutputsHash(outputs));
+        if (kscreenJsonPath.isEmpty()) {
+            return {};
+        }
+
         QFile f(kscreenJsonPath);
         if (!f.open(QIODevice::ReadOnly)) {
             qCWarning(KWIN_DRM) << "Could not open file" << kscreenJsonPath;

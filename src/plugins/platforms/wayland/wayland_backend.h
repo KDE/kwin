@@ -56,6 +56,8 @@ class XdgShell;
 
 namespace KWin
 {
+class DpmsInputEventFilter;
+
 namespace Wayland
 {
 
@@ -198,6 +200,8 @@ public:
     QVector<WaylandOutput*> waylandOutputs() const {
         return m_outputs;
     }
+    void createDpmsFilter();
+    void clearDpmsFilter();
 
 Q_SIGNALS:
     void systemCompositorDied();
@@ -233,6 +237,8 @@ private:
     QVector<WaylandOutput*> m_outputs;
 
     WaylandCursor *m_waylandCursor = nullptr;
+
+    QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
 
     bool m_pointerLockRequested = false;
 #if HAVE_GBM && HAVE_WAYLAND_EGL

@@ -6,21 +6,23 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DRM_INPUTEVENTFILTER_H
-#define KWIN_DRM_INPUTEVENTFILTER_H
+#ifndef KWIN_DPMSINPUTEVENTFILTER_H
+#define KWIN_DPMSINPUTEVENTFILTER_H
 #include "input.h"
 
 #include <QElapsedTimer>
+
+#include <kwin_export.h>
 
 namespace KWin
 {
 
 class DrmBackend;
 
-class DpmsInputEventFilter : public InputEventFilter
+class KWIN_EXPORT DpmsInputEventFilter : public InputEventFilter
 {
 public:
-    DpmsInputEventFilter(DrmBackend *backend);
+    DpmsInputEventFilter();
     ~DpmsInputEventFilter() override;
 
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
@@ -32,7 +34,6 @@ public:
 
 private:
     void notify();
-    DrmBackend *m_backend;
     QElapsedTimer m_doubleTapTimer;
     QVector<qint32> m_touchPoints;
     bool m_secondTap = false;

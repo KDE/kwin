@@ -6,12 +6,13 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "drm_inputeventfilter.h"
-#include "drm_backend.h"
+#include "dpmsinputeventfilter.h"
+#include "platform.h"
+#include "abstract_wayland_output.h"
 #include "wayland_server.h"
 #include "main.h"
 
-#include <QApplication>
+#include <QGuiApplication>
 #include <QKeyEvent>
 
 #include <KWaylandServer/seat_interface.h>
@@ -19,9 +20,8 @@
 namespace KWin
 {
 
-DpmsInputEventFilter::DpmsInputEventFilter(DrmBackend *backend)
+DpmsInputEventFilter::DpmsInputEventFilter()
     : InputEventFilter()
-    , m_backend(backend)
 {
     KSharedConfig::Ptr kwinSettings = kwinApp()->config();
     m_enableDoubleTap = kwinSettings->group("Wayland").readEntry<bool>("DoubleTapWakeup", true);
@@ -106,8 +106,11 @@ bool DpmsInputEventFilter::touchMotion(qint32 id, const QPointF &pos, quint32 ti
 
 void DpmsInputEventFilter::notify()
 {
-    // queued to not modify the list of event filters while filtering
-    QMetaObject::invokeMethod(m_backend, &DrmBackend::turnOutputsOn, Qt::QueuedConnection);
+    const QVector<AbstractOutput *> enabledOutputs = kwinApp()->platform()->enabledOutputs();
+    for (auto it = enabledOutputs.constBegin(), end = enabledOutputs.constEnd(); it != end; it++) {
+        auto waylandOutput = static_cast<AbstractWaylandOutput *>(*it);
+        waylandOutput->setDpmsMode(AbstractWaylandOutput::DpmsMode::On);
+    }
 }
 
 }

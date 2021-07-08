@@ -35,6 +35,7 @@ WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
     identifier++;
     setName("WL-" + QString::number(identifier));
 
+    setCapabilityInternal(Capability::Dpms);
     connect(surface, &Surface::frameRendered, [this] {
         m_rendered = true;
         Q_EMIT frameRendered();
@@ -73,6 +74,21 @@ void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixe
     Q_UNUSED(pixelSize)
 
     setGlobalPos(logicalPosition);
+}
+
+void WaylandOutput::updateEnablement(bool enable)
+{
+    setDpmsMode(enable ? DpmsMode::On : DpmsMode::Off);
+}
+
+void WaylandOutput::setDpmsMode(KWin::AbstractWaylandOutput::DpmsMode mode)
+{
+    setDpmsModeInternal(mode);
+    if (mode == DpmsMode::Off) {
+        m_backend->createDpmsFilter();
+    } else {
+        m_backend->clearDpmsFilter();
+    }
 }
 
 XdgShellOutput::XdgShellOutput(Surface *surface, XdgShell *xdgShell, WaylandBackend *backend, int number)

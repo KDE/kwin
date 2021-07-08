@@ -41,6 +41,7 @@ set(kwin_SRCS
     decorations/settings.cpp
     deleted.cpp
     dmabuftexture.cpp
+    dpmsinputeventfilter.cpp
     effectloader.cpp
     effects.cpp
     egl_context_attribute_builder.cpp
