@@ -445,9 +445,6 @@ public:
     }
 
     static void initStatic();
-    static bool supported()  {
-        return sSupported;
-    }
 
     /**
      * Pushes the render target stack of the input parameter in reverse order.
@@ -542,7 +539,6 @@ protected:
 private:
     friend void KWin::cleanupGL();
     static void cleanup();
-    static bool sSupported;
     static bool s_blitSupported;
     static QStack<GLRenderTarget*> s_renderTargets;
     static QSize s_virtualScreenSize;

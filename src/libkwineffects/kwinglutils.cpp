@@ -591,10 +591,6 @@ bool ShaderManager::selfTest()
 {
     bool pass = true;
 
-    if (!GLRenderTarget::supported()) {
-        qCWarning(LIBKWINGLUTILS) << "Framebuffer objects not supported - skipping shader tests";
-        return true;
-    }
     if (GLPlatform::instance()->isNvidia() && GLPlatform::instance()->glRendererString().contains("Quadro")) {
         qCDebug(LIBKWINGLUTILS) << "Skipping self test as it is reported to return false positive results on Quadro hardware";
         return true;
@@ -1011,7 +1007,6 @@ GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, cons
 }
 
 /***  GLRenderTarget  ***/
-bool GLRenderTarget::sSupported = false;
 bool GLRenderTarget::s_blitSupported = false;
 QStack<GLRenderTarget*> GLRenderTarget::s_renderTargets = QStack<GLRenderTarget*>();
 QSize GLRenderTarget::s_virtualScreenSize;
@@ -1023,10 +1018,8 @@ GLuint GLRenderTarget::s_kwinFramebuffer = 0;
 void GLRenderTarget::initStatic()
 {
     if (GLPlatform::instance()->isGLES()) {
-        sSupported = true;
         s_blitSupported = hasGLVersion(3, 0);
     } else {
-        sSupported = true;
         s_blitSupported = true;
     }
 }
@@ -1034,7 +1027,6 @@ void GLRenderTarget::initStatic()
 void GLRenderTarget::cleanup()
 {
     Q_ASSERT(s_renderTargets.isEmpty());
-    sSupported = false;
     s_blitSupported = false;
 }
 
@@ -1092,7 +1084,7 @@ GLRenderTarget::GLRenderTarget(const GLTexture& color)
     , mTexture(color)
 {
     // Make sure FBO is supported
-    if (sSupported && !mTexture.isNull()) {
+    if (!mTexture.isNull()) {
         initFBO();
     } else
         qCCritical(LIBKWINGLUTILS) << "Render targets aren't supported!";

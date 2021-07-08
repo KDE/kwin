@@ -542,7 +542,7 @@ void GLTexture::clear()
 {
     Q_D(GLTexture);
     Q_ASSERT(!d->m_foreign);
-    if (!GLTexturePrivate::s_fbo && GLRenderTarget::supported() &&
+    if (!GLTexturePrivate::s_fbo &&
         GLPlatform::instance()->driver() != Driver_Catalyst) // fail. -> bug #323065
         glGenFramebuffers(1, &GLTexturePrivate::s_fbo);
 
