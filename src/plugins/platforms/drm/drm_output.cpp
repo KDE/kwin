@@ -40,6 +40,11 @@ DrmOutput::DrmOutput(DrmBackend *backend, DrmGpu *gpu)
     , m_gpu(gpu)
     , m_renderLoop(new RenderLoop(this))
 {
+    m_turnOffTimer.setSingleShot(true);
+    m_turnOffTimer.setInterval(dimAnimationTime());
+    connect(&m_turnOffTimer, &QTimer::timeout, this, [this] {
+        setDrmDpmsMode(DpmsMode::Off);
+    });
 }
 
 DrmOutput::~DrmOutput()
@@ -389,6 +394,23 @@ void DrmOutput::atomicDisable()
 }
 
 void DrmOutput::setDpmsMode(DpmsMode mode)
+{
+    if (mode == DpmsMode::Off) {
+        if (!m_turnOffTimer.isActive()) {
+            Q_EMIT aboutToTurnOff(std::chrono::milliseconds(m_turnOffTimer.interval()));
+            m_turnOffTimer.start();
+        }
+        if (isEnabled()) {
+            m_backend->createDpmsFilter();
+        }
+    } else {
+        m_turnOffTimer.stop();
+        setDrmDpmsMode(mode);
+        Q_EMIT wakeUp();
+    }
+}
+
+void DrmOutput::setDrmDpmsMode(DpmsMode mode)
 {
     if (!m_conn->dpms() || !isEnabled()) {
         return;

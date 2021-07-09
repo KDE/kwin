@@ -119,6 +119,7 @@ private:
     void dpmsFinishOff();
 
     void setModesetValues(bool enable);
+    void setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
     void updateMode(int modeIndex) override;
     void updateMode(uint32_t width, uint32_t height, uint32_t refreshRate);
@@ -162,6 +163,7 @@ private:
     int m_cursorIndex = 0;
     bool m_hasNewCursor = false;
     bool m_deleted = false;
+    QTimer m_turnOffTimer;
 };
 
 }

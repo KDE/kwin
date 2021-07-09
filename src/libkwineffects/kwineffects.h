@@ -1849,6 +1849,17 @@ public:
      * Returns the screen's geometry in the device-independent pixels.
      */
     virtual QRect geometry() const = 0;
+
+Q_SIGNALS:
+    /**
+     * Notifies that the display will be dimmed in @p time ms.
+     */
+    void aboutToTurnOff(std::chrono::milliseconds time);
+
+    /**
+     * Notifies that the output has been turned on and the wake can be decorated.
+     */
+    void wakeUp();
 };
 
 /**

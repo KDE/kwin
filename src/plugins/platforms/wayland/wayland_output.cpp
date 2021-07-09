@@ -40,6 +40,11 @@ WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
         m_rendered = true;
         Q_EMIT frameRendered();
     });
+    m_turnOffTimer.setSingleShot(true);
+    m_turnOffTimer.setInterval(dimAnimationTime());
+    connect(&m_turnOffTimer, &QTimer::timeout, this, [this] {
+        setDpmsModeInternal(DpmsMode::Off);
+    });
 }
 
 WaylandOutput::~WaylandOutput()
@@ -83,11 +88,17 @@ void WaylandOutput::updateEnablement(bool enable)
 
 void WaylandOutput::setDpmsMode(KWin::AbstractWaylandOutput::DpmsMode mode)
 {
-    setDpmsModeInternal(mode);
     if (mode == DpmsMode::Off) {
+        if (!m_turnOffTimer.isActive()) {
+            Q_EMIT aboutToTurnOff(std::chrono::milliseconds(m_turnOffTimer.interval()));
+            m_turnOffTimer.start();
+        }
         m_backend->createDpmsFilter();
     } else {
+        m_turnOffTimer.stop();
         m_backend->clearDpmsFilter();
+        setDpmsModeInternal(mode);
+        Q_EMIT wakeUp();
     }
 }
 

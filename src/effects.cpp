@@ -1727,6 +1727,8 @@ EffectScreenImpl::EffectScreenImpl(AbstractOutput *output, QObject *parent)
     : EffectScreen(parent)
     , m_platformOutput(output)
 {
+    connect(output, &AbstractOutput::wakeUp, this, &EffectScreen::wakeUp);
+    connect(output, &AbstractOutput::aboutToTurnOff, this, &EffectScreen::aboutToTurnOff);
 }
 
 AbstractOutput *EffectScreenImpl::platformOutput() const

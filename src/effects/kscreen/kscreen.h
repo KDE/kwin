@@ -43,8 +43,12 @@ private:
         StateNormal,
         StateFadingOut,
         StateFadedOut,
-        StateFadingIn
+        StateFadingIn,
+        LastState
     };
+    void setState(FadeOutState state);
+    void addScreen(EffectScreen *screen);
+
     TimeLine m_timeLine;
     std::chrono::milliseconds m_lastPresentTime;
     FadeOutState m_state;

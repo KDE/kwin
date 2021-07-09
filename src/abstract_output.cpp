@@ -8,6 +8,8 @@
 */
 
 #include "abstract_output.h"
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 namespace KWin
 {
@@ -161,6 +163,12 @@ void AbstractOutput::uninhibitDirectScanout()
 bool AbstractOutput::directScanoutInhibited() const
 {
     return m_directScanoutCount;
+}
+
+std::chrono::milliseconds AbstractOutput::dimAnimationTime()
+{
+    // See kscreen.kcfg
+    return std::chrono::milliseconds (KSharedConfig::openConfig()->group("Effect-Kscreen").readEntry("Duration", 250));
 }
 
 } // namespace KWin

@@ -87,6 +87,7 @@ private:
     RenderLoop *m_renderLoop;
     KWayland::Client::Surface *m_surface;
     WaylandBackend *m_backend;
+    QTimer m_turnOffTimer;
 
     bool m_rendered = false;
 };

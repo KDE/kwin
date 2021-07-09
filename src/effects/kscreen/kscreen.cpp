@@ -10,6 +10,7 @@
 #include "kscreen.h"
 // KConfigSkeleton
 #include "kscreenconfig.h"
+#include <QDebug>
 
 /**
  * How this effect works:
@@ -53,10 +54,27 @@ KscreenEffect::KscreenEffect()
         }
     );
     reconfigure(ReconfigureAll);
+
+    const QList<EffectScreen *> screens = effects->screens();
+    for (auto screen : screens) {
+        addScreen(screen);
+    }
+    connect(effects, &EffectsHandler::screenAdded, this, &KscreenEffect::addScreen);
 }
 
 KscreenEffect::~KscreenEffect()
 {
+}
+
+void KscreenEffect::addScreen(EffectScreen *screen)
+{
+    connect(screen, &EffectScreen::wakeUp, this, [this] {
+        setState(StateFadingIn);
+    });
+    connect(screen, &EffectScreen::aboutToTurnOff, this, [this] (std::chrono::milliseconds dimmingIn) {
+        m_timeLine.setDuration(dimmingIn);
+        setState(StateFadingOut);
+    });
 }
 
 void KscreenEffect::reconfigure(ReconfigureFlags flags)
@@ -129,46 +147,34 @@ void KscreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Windo
     effects->paintWindow(w, mask, region, data);
 }
 
+void KscreenEffect::setState(FadeOutState state)
+{
+    if (m_state == state) {
+        return;
+    }
+
+    m_state = state;
+    m_timeLine.reset();
+    m_lastPresentTime = std::chrono::milliseconds::zero();
+    effects->addRepaintFull();
+}
+
 void KscreenEffect::propertyNotify(EffectWindow *window, long int atom)
 {
     if (window || atom != m_atom || m_atom == XCB_ATOM_NONE) {
         return;
     }
-    QByteArray byteData = effects->readRootProperty(m_atom, XCB_ATOM_CARDINAL, 32);
+    const QByteArray byteData = effects->readRootProperty(m_atom, XCB_ATOM_CARDINAL, 32);
     const uint32_t *data = byteData.isEmpty() ? nullptr : reinterpret_cast<const uint32_t *>(byteData.data());
-    if (!data // Property was deleted
-        || data[0] == 0) { // normal state - KWin should have switched to it
-        if (m_state != StateNormal) {
-            m_state = StateNormal;
-            effects->addRepaintFull();
+    if (!data || data[0] >= LastState) { // Property was deleted
+        if (data) {
+            qCDebug(KWINEFFECTS) << "Incorrect Property state, immediate stop: " << data[0];
         }
+        setState(StateNormal);
         return;
     }
-    if (data[0] == 2) {
-        // faded out state - KWin should have switched to it
-        if (m_state != StateFadedOut) {
-            m_state = StateFadedOut;
-            effects->addRepaintFull();
-        }
-        return;
-    }
-    if (data[0] == 1) {
-        // kscreen wants KWin to fade out all windows
-        m_state = StateFadingOut;
-        m_timeLine.reset();
-        effects->addRepaintFull();
-        return;
-    }
-    if (data[0] == 3) {
-        // kscreen wants KWin to fade in again
-        m_state = StateFadingIn;
-        m_timeLine.reset();
-        effects->addRepaintFull();
-        return;
-    }
-    qCDebug(KWINEFFECTS) << "Incorrect Property state, immediate stop: " << data[0];
-    m_state = StateNormal;
-    effects->addRepaintFull();
+
+    setState(FadeOutState(data[0]));
 }
 
 void KscreenEffect::switchState()

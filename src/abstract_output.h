@@ -197,6 +197,16 @@ public:
 
     bool directScanoutInhibited() const;
 
+    /**
+     * @returns the configured time for an output to dim
+     *
+     * This allows the backends to coordinate with the front-end the time they
+     * allow to decorate the dimming until the display is turned off
+     *
+     * @see aboutToTurnOff
+     */
+    static std::chrono::milliseconds dimAnimationTime();
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.
@@ -206,6 +216,17 @@ Q_SIGNALS:
      * This signal is emitted when the output has been enabled or disabled.
      */
     void enabledChanged();
+
+    /**
+     * Notifies that the display will be dimmed in @p time ms. This allows
+     * effects to plan for it and hopefully animate it
+     */
+    void aboutToTurnOff(std::chrono::milliseconds time);
+
+    /**
+     * Notifies that the output has been turned on and the wake can be decorated.
+     */
+    void wakeUp();
 
 private:
     Q_DISABLE_COPY(AbstractOutput)
