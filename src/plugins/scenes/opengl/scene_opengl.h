@@ -115,6 +115,7 @@ private:
 
     LanczosFilter *m_lanczosFilter;
     QScopedPointer<GLTexture> m_cursorTexture;
+    bool m_cursorTextureDirty = false;
     QMatrix4x4 m_projectionMatrix;
     QMatrix4x4 m_screenProjectionMatrix;
     GLuint vao;

@@ -82,7 +82,8 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
 
     d->updateMatrix();
 
-    create();
+    const bool created = create();
+    Q_ASSERT(created);
     bind();
 
     if (!GLPlatform::instance()->isGLES()) {

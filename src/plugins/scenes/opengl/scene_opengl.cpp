@@ -296,23 +296,33 @@ void SceneOpenGL2::paintCursor(const QRegion &rendered)
         return;
     }
 
+    auto newTexture = [this] {
+        const QImage img = Cursors::self()->currentCursor()->image();
+        if (img.isNull()) {
+            m_cursorTextureDirty = false;
+            return;
+        }
+        m_cursorTexture.reset(new GLTexture(img));
+        m_cursorTexture->setWrapMode(GL_CLAMP_TO_EDGE);
+        m_cursorTextureDirty = false;
+    };
+
     // lazy init texture cursor only in case we need software rendering
     if (!m_cursorTexture) {
-        auto updateCursorTexture = [this] {
-            // don't paint if no image for cursor is set
-            const QImage img = Cursors::self()->currentCursor()->image();
-            if (img.isNull()) {
-                return;
-            }
-            m_cursorTexture.reset(new GLTexture(img));
-            m_cursorTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        };
-
-        // init now
-        updateCursorTexture();
+        newTexture();
 
         // handle shape update on case cursor image changed
-        connect(Cursors::self(), &Cursors::currentCursorChanged, this, updateCursorTexture);
+        connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this] {
+            m_cursorTextureDirty = true;
+        });
+    } else if (m_cursorTextureDirty) {
+        const QImage image = Cursors::self()->currentCursor()->image();
+        if (image.size() == m_cursorTexture->size()) {
+            m_cursorTexture->update(image);
+            m_cursorTextureDirty = false;
+        } else {
+            newTexture();
+        }
     }
 
     // get cursor position in projection coordinates
