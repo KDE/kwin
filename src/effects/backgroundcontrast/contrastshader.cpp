@@ -199,7 +199,7 @@ void ContrastShader::init()
     vec3 background = tex.rgb * backgroundAlpha;
 
     float foregroundAlpha = frostColor.a;
-    vec3 foreground = frostColor.rgb * foregroundAlpha; // TODO: hardcoded
+    vec3 foreground = frostColor.rgb * foregroundAlpha;
 
     float finalAlpha = backgroundAlpha + foregroundAlpha - backgroundAlpha * foregroundAlpha;
     vec3 final;
@@ -213,15 +213,16 @@ void ContrastShader::init()
         final = clamp((background / (1.0 - foreground)) / finalAlpha, 0.0, 1.0);
     }
 
-    )" << fragColor << "= vec4(final, finalAlpha);\n";
+    )" << fragColor << "= vec4(final, finalAlpha * opacity);\n";
     } else {
         stream2 << "    if (opacity >= 1.0) {\n";
         stream2 << "        " << fragColor << " = tex * colorMatrix;\n";
         stream2 << "    } else {\n";
         stream2 << "        " << fragColor << " = tex * (opacity * colorMatrix + (1.0 - opacity) * mat4(1.0));\n";
         stream2 << "    }\n";
-    }
 
+        stream2 << "    " << fragColor << " = tex * colorMatrix;\n";
+    }
 
     stream2 << "}\n";
     stream2.flush();

@@ -131,15 +131,15 @@ void WindowEffects::enableBackgroundContrast(WId window, bool enable, qreal cont
     }
 }
 
-void WindowEffects::setBackgroundFrost(QWindow *window, std::optional<QColor> color, const QRegion &region)
+void WindowEffects::setBackgroundFrost(QWindow *window, QColor color, const QRegion &region)
 {
-    if (!color.has_value()) {
+    if (!color.isValid()) {
         window->setProperty("kwin_background_frost", {});
         return;
     }
 
     window->setProperty("kwin_background_region", region);
-    window->setProperty("kwin_background_frost", *color);
+    window->setProperty("kwin_background_frost", color);
 }
 
 #if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 67)

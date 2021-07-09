@@ -175,8 +175,8 @@ std::optional<QRegion> ContrastEffect::updateContrastRegionWayland(EffectWindow 
 
     region = surf->contrast()->region();
 
-    if (surf->contrast()->frost()) {
-        m_contrastData[w] = *surf->contrast()->frost();
+    if (surf->contrast()->frost().isValid()) {
+        m_contrastData[w] = surf->contrast()->frost();
     } else {
         m_contrastData[w] = colorMatrix(surf->contrast()->contrast(), surf->contrast()->intensity(), surf->contrast()->saturation());
     }
