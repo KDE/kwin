@@ -74,6 +74,27 @@ enum GLFeature {
     LimitedNPOT,
 };
 
+/**
+ * This enum type is used to specify how geometry data is clipped.
+ */
+enum class GLClipMode : uint {
+    None = 0,
+    /**
+     * The geometry will be clipped using the CPU.
+     */
+    Software = 0x1,
+    /**
+     * The geometry will be clipped using the scissor test.
+     */
+    ScissorTest = 0x2,
+    /**
+     * The geometry will be clipped in the vertex shader. This mode may not be
+     * supported on all OpenGL platforms.
+     */
+    VertexShader = 0x4,
+};
+Q_DECLARE_FLAGS(GLClipModes, GLClipMode)
+
 enum Driver {
     Driver_R100,  // Technically "Radeon"
     Driver_R200,
@@ -367,6 +388,11 @@ public:
     OpenGLPlatformInterface platformInterface() const;
 
     /**
+     * Returns the supported clip methods for this GLPlatform.
+     */
+    GLClipModes clipModes() const;
+
+    /**
      * @returns a human readable form of the @p version as a QString.
      * @since 4.9
      * @see glVersion
@@ -432,6 +458,7 @@ private:
     Driver m_driver;
     ChipClass m_chipClass;
     CompositingType m_recommendedCompositor;
+    GLClipModes m_clipModes;
     qint64 m_glVersion;
     qint64 m_glslVersion;
     qint64 m_mesaVersion;
@@ -460,6 +487,8 @@ inline GLPlatform *GLPlatform::instance()
 }
 
 } // namespace KWin
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::GLClipModes)
 
 #endif // KWIN_GLPLATFORM_H
 

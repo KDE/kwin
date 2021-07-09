@@ -796,11 +796,25 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     } else
         stream << "\n";
 
+    if (traits & ShaderTrait::Clip) {
+        stream << attribute << " vec4 clipRect;\n\n";
+        stream << "uniform mat4 modelview;\n\n";
+    }
+
     stream << "uniform mat4 modelViewProjectionMatrix;\n\n";
 
     stream << "void main()\n{\n";
-    if (traits & ShaderTrait::MapTexture)
+    if (traits & ShaderTrait::Clip) {
+        stream << "    vec4 worldPosition = modelview * position;\n";
+        stream << "    gl_ClipDistance[0] = worldPosition.x - clipRect[0];\n";
+        stream << "    gl_ClipDistance[1] = clipRect[1] - worldPosition.x;\n";
+        stream << "    gl_ClipDistance[2] = worldPosition.y - clipRect[2];\n";
+        stream << "    gl_ClipDistance[3] = clipRect[3] - worldPosition.y;\n";
+        stream << "\n";
+    }
+    if (traits & ShaderTrait::MapTexture) {
         stream << "    texcoord0 = texcoord.st;\n";
+    }
 
     stream << "    gl_Position = modelViewProjectionMatrix * position;\n";
     stream << "}\n";
@@ -904,6 +918,7 @@ GLShader *ShaderManager::generateCustomShader(ShaderTraits traits, const QByteAr
 
     shader->bindAttributeLocation("position", VA_Position);
     shader->bindAttributeLocation("texcoord", VA_TexCoord);
+    shader->bindAttributeLocation("clipRect", VA_ClipRect);
     shader->bindFragDataLocation("fragColor", 0);
 
     shader->link();
@@ -1004,6 +1019,7 @@ void ShaderManager::bindAttributeLocations(GLShader *shader) const
 {
     shader->bindAttributeLocation("vertex",   VA_Position);
     shader->bindAttributeLocation("texCoord", VA_TexCoord);
+    shader->bindAttributeLocation("clipRect", VA_ClipRect);
 }
 
 GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, const QByteArray &fragmentSource)
@@ -1630,6 +1646,7 @@ struct VertexAttrib
     int size;
     GLenum type;
     int offset;
+    int divisor;
 };
 
 
@@ -1749,10 +1766,12 @@ public:
     int stride;
     int vertexCount;
     static GLVertexBuffer *streamingBuffer;
+    static GLVertexBuffer *clipRectBuffer;
     static bool haveBufferStorage;
     static bool haveSyncFences;
     static bool hasMapBufferRange;
     static bool supportsIndexedQuads;
+    static bool supportsInstancedRendering;
     QByteArray dataStore;
     bool persistent;
     bool useColor;
@@ -1771,9 +1790,11 @@ public:
     static IndexBuffer *s_indexBuffer;
 };
 
+bool GLVertexBufferPrivate::supportsInstancedRendering = false;
 bool GLVertexBufferPrivate::hasMapBufferRange = false;
 bool GLVertexBufferPrivate::supportsIndexedQuads = false;
 GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = nullptr;
+GLVertexBuffer *GLVertexBufferPrivate::clipRectBuffer = nullptr;
 bool GLVertexBufferPrivate::haveBufferStorage = false;
 bool GLVertexBufferPrivate::haveSyncFences = false;
 IndexBuffer *GLVertexBufferPrivate::s_indexBuffer = nullptr;
@@ -1833,6 +1854,9 @@ void GLVertexBufferPrivate::bindArrays()
         const int index = it.next();
         glVertexAttribPointer(index, attrib[index].size, attrib[index].type, GL_FALSE, stride,
                                 (const GLvoid *) (baseAddress + attrib[index].offset));
+        if (supportsInstancedRendering) {
+            glVertexAttribDivisor(index, attrib[index].divisor);
+        }
         glEnableVertexAttribArray(index);
     }
 }
@@ -2090,6 +2114,7 @@ void GLVertexBuffer::setAttribLayout(const GLVertexAttrib *attribs, int count, i
         d->attrib[index].size   = attribs[i].size;
         d->attrib[index].type   = attribs[i].type;
         d->attrib[index].offset = attribs[i].relativeOffset;
+        d->attrib[index].divisor = attribs[i].divisor;
 
         d->enabledArrays[index] = true;
     }
@@ -2163,6 +2188,26 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
                       r.height() * s_virtualScreenScale);
             glDrawArrays(primitiveMode, first, count);
         }
+    }
+}
+
+void GLVertexBuffer::drawInstanced(GLenum primitiveMode, int first, int count, int instanceCount)
+{
+    if (primitiveMode == GL_QUADS) {
+        IndexBuffer *&indexBuffer = GLVertexBufferPrivate::s_indexBuffer;
+
+        if (!indexBuffer) {
+            indexBuffer = new IndexBuffer;
+        }
+
+        indexBuffer->bind();
+        indexBuffer->accommodate(count / 4);
+
+        count = count * 6 / 4;
+
+        glDrawElementsInstancedBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr, instanceCount, first);
+    } else {
+        glDrawArraysInstanced(primitiveMode, first, count, instanceCount);
     }
 }
 
@@ -2241,7 +2286,9 @@ void GLVertexBuffer::framePosted()
 
 void GLVertexBuffer::initStatic()
 {
-    if (GLPlatform::instance()->isGLES()) {
+    GLPlatform *glPlatform = GLPlatform::instance();
+
+    if (glPlatform->isGLES()) {
         bool haveBaseVertex     = hasGLExtension(QByteArrayLiteral("GL_OES_draw_elements_base_vertex"));
         bool haveCopyBuffer     = hasGLVersion(3, 0);
         bool haveMapBufferRange = hasGLExtension(QByteArrayLiteral("GL_EXT_map_buffer_range"));
@@ -2250,6 +2297,7 @@ void GLVertexBuffer::initStatic()
         GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
         GLVertexBufferPrivate::haveBufferStorage = hasGLExtension("GL_EXT_buffer_storage");
         GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 0);
+        GLVertexBufferPrivate::supportsInstancedRendering = hasGLVersion(3, 0);
     } else {
         bool haveBaseVertex     = hasGLVersion(3, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_draw_elements_base_vertex"));
         bool haveCopyBuffer     = hasGLVersion(3, 1) || hasGLExtension(QByteArrayLiteral("GL_ARB_copy_buffer"));
@@ -2259,13 +2307,20 @@ void GLVertexBuffer::initStatic()
         GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
         GLVertexBufferPrivate::haveBufferStorage = hasGLVersion(4, 4) || hasGLExtension("GL_ARB_buffer_storage");
         GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
+        GLVertexBufferPrivate::supportsInstancedRendering = hasGLVersion(3, 1);
     }
     GLVertexBufferPrivate::s_indexBuffer = nullptr;
     GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
+    if (glPlatform->clipModes() & GLClipMode::VertexShader) {
+        GLVertexBufferPrivate::clipRectBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
+    }
 
     if (GLVertexBufferPrivate::haveBufferStorage && GLVertexBufferPrivate::haveSyncFences) {
         if (qgetenv("KWIN_PERSISTENT_VBO") != QByteArrayLiteral("0")) {
             GLVertexBufferPrivate::streamingBuffer->d->persistent = true;
+            if (GLVertexBufferPrivate::clipRectBuffer) {
+                GLVertexBufferPrivate::clipRectBuffer->d->persistent = true;
+            }
         }
     }
 }
@@ -2275,14 +2330,22 @@ void GLVertexBuffer::cleanup()
     delete GLVertexBufferPrivate::s_indexBuffer;
     GLVertexBufferPrivate::s_indexBuffer = nullptr;
     GLVertexBufferPrivate::hasMapBufferRange = false;
+    GLVertexBufferPrivate::supportsInstancedRendering = false;
     GLVertexBufferPrivate::supportsIndexedQuads = false;
     delete GLVertexBufferPrivate::streamingBuffer;
     GLVertexBufferPrivate::streamingBuffer = nullptr;
+    delete GLVertexBufferPrivate::clipRectBuffer;
+    GLVertexBufferPrivate::clipRectBuffer = nullptr;
 }
 
 GLVertexBuffer *GLVertexBuffer::streamingBuffer()
 {
     return GLVertexBufferPrivate::streamingBuffer;
+}
+
+GLVertexBuffer *GLVertexBuffer::clipRectBuffer()
+{
+    return GLVertexBufferPrivate::clipRectBuffer;
 }
 
 } // namespace

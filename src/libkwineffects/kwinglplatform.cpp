@@ -1139,6 +1139,19 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_supportsGLSL = true;
         m_limitedGLSL = false;
     }
+
+    m_clipModes = GLClipMode::Software | GLClipMode::ScissorTest;
+    if (isGLES()) {
+        // GLES2 doesn't support instanced rendering and gl_ClipDistance.
+        if (m_glVersion >= kVersionNumber(3, 0)) {
+            m_clipModes |= GLClipMode::VertexShader;
+        }
+    } else {
+        // GLSL 1.40 supports gl_ClipDistance and instanced rendering is available since 3.1.
+        if (m_glVersion >= kVersionNumber(3, 1)) {
+            m_clipModes |= GLClipMode::VertexShader;
+        }
+    }
 }
 
 static void print(const QByteArray &label, const QByteArray &setting)
@@ -1351,6 +1364,11 @@ bool GLPlatform::preferBufferSubData() const
 OpenGLPlatformInterface GLPlatform::platformInterface() const
 {
     return m_platformInterface;
+}
+
+GLClipModes GLPlatform::clipModes() const
+{
+    return m_clipModes;
 }
 
 bool GLPlatform::isGLES() const

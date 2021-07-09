@@ -449,8 +449,16 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
             renderLoop->endFrame();
 
             GLVertexBuffer::streamingBuffer()->endOfFrame();
+            if (GLVertexBuffer::clipRectBuffer()) {
+                GLVertexBuffer::clipRectBuffer()->endOfFrame();
+            }
+
             m_backend->endFrame(screenId, valid, update);
+
             GLVertexBuffer::streamingBuffer()->framePosted();
+            if (GLVertexBuffer::clipRectBuffer()) {
+                GLVertexBuffer::clipRectBuffer()->framePosted();
+            }
         }
     }
 
@@ -910,7 +918,7 @@ static GLTexture *bindSurfaceTexture(SurfaceItem *surfaceItem)
 static WindowQuadList clipQuads(const Item *item, const OpenGLWindow::RenderContext *context)
 {
     const WindowQuadList quads = item->quads();
-    if (context->clip != infiniteRegion() && !context->hardwareClipping) {
+    if (context->clipMode == GLClipMode::Software) {
         const QPoint offset = item->rootPosition();
 
         WindowQuadList ret;
@@ -1035,11 +1043,22 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
         return;
     }
 
+    GLClipMode clipMode = GLClipMode::None;
+    if (region != infiniteRegion()) {
+        if (GLPlatform::instance()->clipModes() & GLClipMode::VertexShader) {
+            clipMode = GLClipMode::VertexShader;
+        } else if ((mask & Scene::PAINT_WINDOW_TRANSFORMED) && !(mask & Scene::PAINT_SCREEN_TRANSFORMED)) {
+            clipMode = GLClipMode::ScissorTest;
+        } else {
+            clipMode = GLClipMode::Software;
+        }
+    }
+
     RenderContext renderContext {
         .paintFlags = mask,
         .clip = region,
         .paintData = data,
-        .hardwareClipping = region != infiniteRegion() && (mask & Scene::PAINT_WINDOW_TRANSFORMED) && !(mask & Scene::PAINT_SCREEN_TRANSFORMED),
+        .clipMode = clipMode,
     };
     createRenderNode(windowItem(), &renderContext);
 
@@ -1061,6 +1080,9 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
         if (data.saturation() != 1.0)
             traits |= ShaderTrait::AdjustSaturation;
 
+        if (renderContext.clipMode == GLClipMode::VertexShader)
+            traits |= ShaderTrait::Clip;
+
         shader = ShaderManager::instance()->pushShader(traits);
     }
     shader->setUniform(GLShader::Saturation, data.saturation());
@@ -1070,21 +1092,29 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     const int verticesPerQuad = indexedQuads ? 4 : 6;
     const size_t size = verticesPerQuad * quadCount * sizeof(GLVertex2D);
 
-    if (renderContext.hardwareClipping) {
-        glEnable(GL_SCISSOR_TEST);
-    }
-
-    const GLVertexAttrib attribs[] = {
-        { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
-        { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
+    const GLVertexAttrib vboAttribs[] = {
+        {
+            .index = VA_Position,
+            .size = 2,
+            .type = GL_FLOAT,
+            .relativeOffset = offsetof(GLVertex2D, position),
+            .divisor = 0,
+        }, {
+            .index = VA_TexCoord,
+            .size = 2,
+            .type = GL_FLOAT,
+            .relativeOffset = offsetof(GLVertex2D, texcoord),
+            .divisor = 0,
+        },
     };
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    GLVertexBuffer *clip = GLVertexBuffer::clipRectBuffer();
+
     vbo->reset();
-    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
+    vbo->setAttribLayout(vboAttribs, 2, sizeof(GLVertex2D));
 
     GLVertex2D *map = (GLVertex2D *) vbo->map(size);
-
     for (int i = 0, v = 0; i < renderContext.renderNodes.count(); i++) {
         RenderNode &renderNode = renderContext.renderNodes[i];
         if (renderNode.quads.isEmpty() || !renderNode.texture)
@@ -1102,8 +1132,51 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     vbo->unmap();
     vbo->bindArrays();
 
+    if (renderContext.clipMode == GLClipMode::VertexShader) {
+        const GLVertexAttrib clipAttribs[] = {
+            {
+                .index = VA_ClipRect,
+                .size = 4,
+                .type = GL_INT,
+                .relativeOffset = 0,
+                .divisor = 1,
+            },
+        };
+
+        clip->reset();
+        clip->setAttribLayout(clipAttribs, 1, sizeof(QRect));
+
+        // Upload the clip region to the GPU.
+        int *clipMap = static_cast<int *>(clip->map(4 * region.rectCount() * sizeof(int)));
+        for (const QRect &rect : region) {
+            *(clipMap++) = rect.x();
+            *(clipMap++) = rect.x() + rect.width();
+            *(clipMap++) = rect.y();
+            *(clipMap++) = rect.y() + rect.height();
+        }
+        clip->unmap();
+        clip->bindArrays();
+    }
+
     // Make sure the blend function is set up correctly in case we will be doing blending
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+    switch (renderContext.clipMode) {
+    case GLClipMode::Software:
+    case GLClipMode::None:
+        break;
+
+    case GLClipMode::ScissorTest:
+        glEnable(GL_SCISSOR_TEST);
+        break;
+
+    case GLClipMode::VertexShader:
+        glEnable(GL_CLIP_DISTANCE0);
+        glEnable(GL_CLIP_DISTANCE1);
+        glEnable(GL_CLIP_DISTANCE2);
+        glEnable(GL_CLIP_DISTANCE3);
+        break;
+    }
 
     float opacity = -1.0;
 
@@ -1127,20 +1200,41 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
         renderNode.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         renderNode.texture->bind();
 
-        vbo->draw(region, primitiveType, renderNode.firstVertex,
-                  renderNode.vertexCount, renderContext.hardwareClipping);
+        if (renderContext.clipMode != GLClipMode::VertexShader) {
+            vbo->draw(region, primitiveType, renderNode.firstVertex,
+                      renderNode.vertexCount,
+                      renderContext.clipMode == GLClipMode::ScissorTest);
+        } else {
+            shader->setUniform(GLShader::ModelViewMatrix, renderNode.transformMatrix);
+            vbo->drawInstanced(primitiveType, renderNode.firstVertex,
+                               renderNode.vertexCount, region.rectCount());
+        }
     }
 
     vbo->unbindArrays();
+
+    switch (renderContext.clipMode) {
+    case GLClipMode::Software:
+    case GLClipMode::None:
+        break;
+
+    case GLClipMode::ScissorTest:
+        glDisable(GL_SCISSOR_TEST);
+        break;
+
+    case GLClipMode::VertexShader:
+        clip->unbindArrays();
+        glDisable(GL_CLIP_DISTANCE0);
+        glDisable(GL_CLIP_DISTANCE1);
+        glDisable(GL_CLIP_DISTANCE2);
+        glDisable(GL_CLIP_DISTANCE3);
+        break;
+    }
 
     setBlendEnabled(false);
 
     if (!data.shader)
         ShaderManager::instance()->popShader();
-
-    if (renderContext.hardwareClipping) {
-        glDisable(GL_SCISSOR_TEST);
-    }
 }
 
 QSharedPointer<GLTexture> OpenGLWindow::windowTexture()

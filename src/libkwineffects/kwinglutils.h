@@ -175,6 +175,7 @@ enum class ShaderTrait {
     UniformColor     = (1 << 1),
     Modulate         = (1 << 2),
     AdjustSaturation = (1 << 3),
+    Clip             = (1 << 4),
 };
 
 Q_DECLARE_FLAGS(ShaderTraits, ShaderTrait)
@@ -560,7 +561,8 @@ private:
 enum VertexAttributeType {
     VA_Position = 0,
     VA_TexCoord = 1,
-    VertexAttributeCount = 2,
+    VA_ClipRect = 2,
+    VertexAttributeCount,
 };
 
 /**
@@ -576,6 +578,7 @@ struct GLVertexAttrib
     int size;             /** The number of components [1..4] */
     GLenum type;          /** The type (e.g. GL_FLOAT) */
     int relativeOffset;   /** The relative offset of the attribute */
+    int divisor;          /** The rate at which vertex indices advance with instanced rendering */
 };
 
 /**
@@ -692,6 +695,7 @@ public:
      * Draws count vertices beginning with first.
      */
     void draw(GLenum primitiveMode, int first, int count);
+    void drawInstanced(GLenum primitiveMode, int first, int count, int instanceCount);
 
     /**
      * Draws count vertices beginning with first.
@@ -779,6 +783,7 @@ public:
      * @since 4.7
      */
     static GLVertexBuffer *streamingBuffer();
+    static GLVertexBuffer *clipRectBuffer();
 
     /**
      * Sets the virtual screen geometry to @p g.

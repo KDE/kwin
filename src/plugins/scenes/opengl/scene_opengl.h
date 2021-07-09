@@ -17,6 +17,7 @@
 #include "scene.h"
 #include "shadow.h"
 
+#include "kwinglplatform.h"
 #include "kwinglutils.h"
 
 namespace KWin
@@ -143,7 +144,7 @@ public:
         const int paintFlags;
         const QRegion clip;
         const WindowPaintData &paintData;
-        const bool hardwareClipping;
+        const GLClipMode clipMode;
     };
 
     OpenGLWindow(Toplevel *toplevel, SceneOpenGL *scene);
