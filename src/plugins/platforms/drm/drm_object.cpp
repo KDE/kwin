@@ -7,9 +7,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_object.h"
+
+#include <errno.h>
+
 #include "drm_gpu.h"
 #include "drm_pointer.h"
-
 #include "logging.h"
 
 namespace KWin
