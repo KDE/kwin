@@ -429,8 +429,6 @@ void DrmGpu::removeOutput(DrmOutput *output)
     emit outputRemoved(output);
     output->teardown();
     output->m_crtc = nullptr;
-    m_connectors.removeOne(output->m_conn);
-    delete output->m_conn;
     output->m_conn = nullptr;
     if (output->m_primaryPlane) {
         m_unusedPlanes << output->m_primaryPlane;
