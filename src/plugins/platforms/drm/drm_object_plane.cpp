@@ -140,7 +140,11 @@ void DrmPlane::setBuffer(DrmBuffer *buffer)
 
 bool DrmPlane::needsModeset() const
 {
-    return getProp(PropertyIndex::CrtcId)->needsCommit() || getProp(PropertyIndex::Rotation)->needsCommit();
+    auto rotation = getProp(PropertyIndex::Rotation);
+    if (rotation && rotation->needsCommit()) {
+        return true;
+    }
+    return getProp(PropertyIndex::CrtcId)->needsCommit();
 }
 
 }
