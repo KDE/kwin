@@ -459,6 +459,7 @@ public:
     void setFocus(Toplevel *toplevel);
     void setDecoration(Decoration::DecoratedClientImpl *decoration);
     void setInternalWindow(QWindow *window);
+    void updateFocus();
 
 Q_SIGNALS:
     void atChanged(Toplevel *old, Toplevel *now);
@@ -493,7 +494,6 @@ protected:
 
 private:
     bool setAt(Toplevel *toplevel);
-    void updateFocus();
     bool updateDecoration();
     void updateInternalWindow(QWindow *window);
 

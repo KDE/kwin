@@ -18,6 +18,7 @@
 #include "decorations/decorationbridge.h"
 #include "effects.h"
 #include "focuschain.h"
+#include "pointer_input.h"
 #include "outline.h"
 #include "screens.h"
 #ifdef KWIN_BUILD_TABBOX
@@ -2332,6 +2333,8 @@ void AbstractClient::destroyDecoration()
     delete m_decoration.decoration;
     setDecoration(nullptr);
     m_decoration.inputRegion = QRegion();
+
+    input()->pointer()->updateFocus();
 }
 
 void AbstractClient::setDecoration(KDecoration2::Decoration *decoration)
