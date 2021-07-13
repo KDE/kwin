@@ -566,7 +566,7 @@ void InternalWindowTest::testSkipCloseAnimation()
     win.setOpacity(0.5);
     win.setGeometry(0, 0, 100, 100);
     QFETCH(bool, initial);
-    win.setProperty("KWIN_SKIP_CLOSE_ANIMATION", initial);
+    win.setProperty("skipCloseAnimation", initial);
     win.show();
     QTRY_COMPARE(clientAddedSpy.count(), 1);
     auto internalClient = clientAddedSpy.first().first().value<InternalClient *>();
@@ -574,10 +574,10 @@ void InternalWindowTest::testSkipCloseAnimation()
     QCOMPARE(internalClient->skipsCloseAnimation(), initial);
     QSignalSpy skipCloseChangedSpy(internalClient, &Toplevel::skipCloseAnimationChanged);
     QVERIFY(skipCloseChangedSpy.isValid());
-    win.setProperty("KWIN_SKIP_CLOSE_ANIMATION", !initial);
+    win.setProperty("skipCloseAnimation", !initial);
     QCOMPARE(skipCloseChangedSpy.count(), 1);
     QCOMPARE(internalClient->skipsCloseAnimation(), !initial);
-    win.setProperty("KWIN_SKIP_CLOSE_ANIMATION", initial);
+    win.setProperty("skipCloseAnimation", initial);
     QCOMPARE(skipCloseChangedSpy.count(), 2);
     QCOMPARE(internalClient->skipsCloseAnimation(), initial);
 }

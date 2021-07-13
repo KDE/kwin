@@ -226,7 +226,7 @@ void OnScreenNotification::setContainsPointer(bool contains)
 void OnScreenNotification::setSkipCloseAnimation(bool skip)
 {
     if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
-        w->setProperty("KWIN_SKIP_CLOSE_ANIMATION", skip);
+        w->setProperty("skipCloseAnimation", skip);
     }
 }
 
