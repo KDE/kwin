@@ -570,9 +570,10 @@ QVariant KWin::JSEngineGlobalMethodsWrapper::readConfig(const QString &key, QVar
 
 void KWin::JSEngineGlobalMethodsWrapper::registerWindow(QQuickWindow *window)
 {
-    connect(window, &QWindow::visibilityChanged, this, [window](QWindow::Visibility visibility) {
-        if (visibility == QWindow::Hidden) {
-            window->destroy();
+    QPointer<QQuickWindow> guard = window;
+    connect(window, &QWindow::visibilityChanged, this, [guard](QWindow::Visibility visibility) {
+        if (guard && visibility == QWindow::Hidden) {
+            guard->destroy();
         }
     }, Qt::QueuedConnection);
 }
