@@ -524,7 +524,7 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
             frameFailed = true;
         }
     } else {
-        if (!renderingBackend()->swapBuffers(drmOutput)) {
+        if (!renderingBackend()->swapBuffers(drmOutput, damagedRegion.intersected(drmOutput->geometry()))) {
             qCCritical(KWIN_DRM) << "swapping buffers on render backend for" << drmOutput << "failed!";
             frameFailed = true;
         }
