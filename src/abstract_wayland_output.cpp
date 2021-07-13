@@ -270,6 +270,7 @@ void AbstractWaylandOutput::setTransformInternal(Transform transform)
         m_transform = transform;
         Q_EMIT transformChanged();
         Q_EMIT modeChanged();
+        Q_EMIT geometryChanged();
     }
 }
 
