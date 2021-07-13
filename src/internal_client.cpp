@@ -22,6 +22,7 @@
 Q_DECLARE_METATYPE(NET::WindowType)
 
 static const QByteArray s_skipClosePropertyName = QByteArrayLiteral("KWIN_SKIP_CLOSE_ANIMATION");
+static const QByteArray s_skipOpenPropertyName = QByteArrayLiteral("skipOpenAnimation");
 static const QByteArray s_shadowEnabledPropertyName = QByteArrayLiteral("kwin_shadow_enabled");
 
 namespace KWin
@@ -48,6 +49,7 @@ InternalClient::InternalClient(QWindow *window)
     setIcon(QIcon::fromTheme(QStringLiteral("kwin")));
     setOnAllDesktops(true);
     setOpacity(m_internalWindow->opacity());
+    setSkipOpenAnimation(m_internalWindow->property(s_skipOpenPropertyName).toBool());
     setSkipCloseAnimation(m_internalWindow->property(s_skipClosePropertyName).toBool());
 
     // Create scene window, effect window, and update server-side shadow.

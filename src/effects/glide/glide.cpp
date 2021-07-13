@@ -198,7 +198,7 @@ bool GlideEffect::supported()
 
 void GlideEffect::windowAdded(EffectWindow *w)
 {
-    if (effects->activeFullScreenEffect()) {
+    if (effects->activeFullScreenEffect() || w->skipsOpenAnimation()) {
         return;
     }
 

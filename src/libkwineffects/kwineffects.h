@@ -2082,6 +2082,12 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
     Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation)
 
     /**
+     * Whether the window does not want to be animated when it's mapped
+     * @since 5.23
+     */
+    Q_PROPERTY(bool skipsOpenAnimation READ skipsOpenAnimation)
+
+    /**
      * Interface to the corresponding wayland surface.
      * relevant only in Wayland, on X11 it will be nullptr
      */
@@ -2429,6 +2435,11 @@ public:
      * @since 5.0
      */
     virtual bool skipsCloseAnimation() const = 0;
+
+    /**
+     * @since 5.23
+     */
+    virtual bool skipsOpenAnimation() const = 0;
 
     /**
      * @since 5.5

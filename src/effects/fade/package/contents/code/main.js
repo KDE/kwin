@@ -59,7 +59,7 @@ class FadeEffect {
     }
 
     onWindowAdded(window) {
-        if (effects.hasActiveFullScreenEffect) {
+        if (effects.hasActiveFullScreenEffect || window.skipsOpenAnimation) {
             return;
         }
         if (!this.fadeWindows || !FadeEffect.isFadeWindow(window)) {

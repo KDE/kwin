@@ -222,6 +222,9 @@ public:
     bool isCurrentTab() const override {
         return true;
     }
+    bool skipsOpenAnimation() const override {
+        return false;
+    }
     bool skipsCloseAnimation() const override {
         return false;
     }

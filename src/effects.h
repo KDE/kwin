@@ -444,6 +444,7 @@ public:
     bool isComboBox() const override;
     bool isDNDIcon() const override;
     bool skipsCloseAnimation() const override;
+    bool skipsOpenAnimation() const override;
 
     bool acceptsFocus() const override;
     bool keepAbove() const override;

@@ -89,7 +89,7 @@ class ScaleEffect {
     }
 
     slotWindowAdded(window) {
-        if (effects.hasActiveFullScreenEffect) {
+        if (effects.hasActiveFullScreenEffect || window.skipsOpenAnimation) {
             return;
         }
         if (!ScaleEffect.isScaleWindow(window)) {

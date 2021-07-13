@@ -122,6 +122,7 @@ bool Unmanaged::track(xcb_window_t w)
     setupCompositing();
     if (QWindow *internalWindow = findInternalWindow()) {
         m_outline = internalWindow->property("__kwin_outline").toBool();
+        setSkipOpenAnimation(internalWindow->property("skipOpenAnimation").toBool());
     }
     if (effects)
         static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowStacking();

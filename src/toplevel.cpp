@@ -43,6 +43,7 @@ Toplevel::Toplevel()
     , m_clientMachine(new ClientMachine(this))
     , m_wmClientLeader(XCB_WINDOW_NONE)
     , m_screen(0)
+    , m_skipOpenAnimation(false)
     , m_skipCloseAnimation(false)
 {
     connect(screens(), &Screens::changed, this, &Toplevel::checkScreen);
@@ -125,6 +126,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     m_wmClientLeader = c->wmClientLeader();
     opaque_region = c->opaqueRegion();
     m_screen = c->m_screen;
+    m_skipOpenAnimation = c->m_skipOpenAnimation;
     m_skipCloseAnimation = c->m_skipCloseAnimation;
     m_internalFBO = c->m_internalFBO;
     m_internalImage = c->m_internalImage;
@@ -589,6 +591,20 @@ void Toplevel::setSkipCloseAnimation(bool set)
     }
     m_skipCloseAnimation = set;
     Q_EMIT skipCloseAnimationChanged();
+}
+
+bool Toplevel::skipsOpenAnimation() const
+{
+    return m_skipOpenAnimation;
+}
+
+void Toplevel::setSkipOpenAnimation(bool set)
+{
+    if (set == m_skipOpenAnimation) {
+        return;
+    }
+    m_skipOpenAnimation = set;
+    Q_EMIT skipOpenAnimationChanged();
 }
 
 void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)

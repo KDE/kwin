@@ -259,6 +259,11 @@ class KWIN_EXPORT Toplevel : public QObject
     Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation WRITE setSkipCloseAnimation NOTIFY skipCloseAnimationChanged)
 
     /**
+     * Whether the window does not want to be animated when it's mapped.
+     */
+    Q_PROPERTY(bool skipsOpenAnimation READ skipsOpenAnimation WRITE setSkipOpenAnimation NOTIFY skipOpenAnimationChanged)
+
+    /**
      * The Id of the Wayland Surface associated with this Toplevel.
      * On X11 only setups the value is @c 0.
      */
@@ -484,6 +489,9 @@ public:
 
     virtual Layer layer() const = 0;
 
+    bool skipsOpenAnimation() const;
+    void setSkipOpenAnimation(bool set);
+
     bool skipsCloseAnimation() const;
     void setSkipCloseAnimation(bool set);
 
@@ -594,6 +602,7 @@ Q_SIGNALS:
      * @since 4.11
      */
     void screenChanged();
+    void skipOpenAnimationChanged();
     void skipCloseAnimationChanged();
     /**
      * Emitted whenever the window role of the window changes.
@@ -715,6 +724,7 @@ private:
     mutable QRegion m_shapeRegion;
     mutable bool m_shapeRegionIsValid = false;
     int m_screen;
+    bool m_skipOpenAnimation;
     bool m_skipCloseAnimation;
     quint32 m_surfaceId = 0;
     KWaylandServer::SurfaceInterface *m_surface = nullptr;
