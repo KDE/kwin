@@ -28,8 +28,9 @@ public:
     virtual int screenCount() const = 0;
     virtual bool addOutput(DrmOutput *output) = 0;
     virtual void removeOutput(DrmOutput *output) = 0;
-    virtual bool swapBuffers(DrmOutput *output) {
+    virtual bool swapBuffers(DrmOutput *output, const QRegion &dirty) {
         Q_UNUSED(output)
+        Q_UNUSED(dirty)
         return false;
     }
     virtual bool exportFramebuffer(DrmOutput *output, void *data, const QSize &size, uint32_t stride) {

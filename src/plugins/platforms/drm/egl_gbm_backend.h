@@ -60,7 +60,7 @@ public:
 
     bool addOutput(DrmOutput *output) override;
     void removeOutput(DrmOutput *output) override;
-    bool swapBuffers(DrmOutput *output) override;
+    bool swapBuffers(DrmOutput *output, const QRegion &dirty) override;
     bool exportFramebuffer(DrmOutput *output, void *data, const QSize &size, uint32_t stride) override;
     int exportFramebufferAsDmabuf(DrmOutput *output, uint32_t *format, uint32_t *stride) override;
     QRegion beginFrameForSecondaryGpu(DrmOutput *output) override;
@@ -109,8 +109,9 @@ private:
 
     void renderFramebufferToSurface(Output &output);
     QRegion prepareRenderingForOutput(Output &output);
-    QSharedPointer<DrmBuffer> importFramebuffer(Output &output) const;
-    QSharedPointer<DrmBuffer> endFrameWithBuffer(int screenId);
+    QSharedPointer<DrmBuffer> importFramebuffer(Output &output, const QRegion &dirty) const;
+    QSharedPointer<DrmBuffer> endFrameWithBuffer(int screenId, const QRegion &dirty);
+    void updateBufferAge(Output &output, const QRegion &dirty);
 
     void cleanupRenderData(Output::RenderData &output);
 

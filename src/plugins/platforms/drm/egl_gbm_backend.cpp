@@ -221,7 +221,7 @@ void EglGbmBackend::removeOutput(DrmOutput *drmOutput)
     outputs.erase(it);
 }
 
-bool EglGbmBackend::swapBuffers(DrmOutput *drmOutput)
+bool EglGbmBackend::swapBuffers(DrmOutput *drmOutput, const QRegion &dirty)
 {
     auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
         [drmOutput] (const Output &output) {
@@ -231,8 +231,15 @@ bool EglGbmBackend::swapBuffers(DrmOutput *drmOutput)
     if (it == m_secondaryGpuOutputs.end()) {
         return false;
     }
-    renderFramebufferToSurface(*it);
-    return it->current.gbmSurface->swapBuffers() != nullptr;
+    Output &output = *it;
+    renderFramebufferToSurface(output);
+    if (output.current.gbmSurface->swapBuffers()) {
+        cleanupRenderData(output.old);
+        updateBufferAge(output, dirty);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool EglGbmBackend::exportFramebuffer(DrmOutput *drmOutput, void *data, const QSize &size, uint32_t stride)
@@ -291,9 +298,9 @@ QRegion EglGbmBackend::beginFrameForSecondaryGpu(DrmOutput *drmOutput)
     return prepareRenderingForOutput(*it);
 }
 
-QSharedPointer<DrmBuffer> EglGbmBackend::importFramebuffer(Output &output) const
+QSharedPointer<DrmBuffer> EglGbmBackend::importFramebuffer(Output &output, const QRegion &dirty) const
 {
-    if (!renderingBackend()->swapBuffers(output.output)) {
+    if (!renderingBackend()->swapBuffers(output.output, dirty)) {
         qCWarning(KWIN_DRM) << "swapping buffers failed on output" << output.output;
         return nullptr;
     }
@@ -539,14 +546,18 @@ QRegion EglGbmBackend::prepareRenderingForOutput(Output &output)
     return output.output->geometry();
 }
 
-QSharedPointer<DrmBuffer> EglGbmBackend::endFrameWithBuffer(int screenId)
+QSharedPointer<DrmBuffer> EglGbmBackend::endFrameWithBuffer(int screenId, const QRegion &dirty)
 {
     Output &output = m_outputs[screenId];
     if (isPrimary()) {
         renderFramebufferToSurface(output);
-        return output.current.gbmSurface->swapBuffersForDrm();
+        auto buffer = output.current.gbmSurface->swapBuffersForDrm();
+        if (buffer) {
+            updateBufferAge(output, dirty);
+        }
+        return buffer;
     } else {
-        return importFramebuffer(output);
+        return importFramebuffer(output, dirty);
     }
 }
 
@@ -559,16 +570,17 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion,
     DrmOutput *drmOutput = output.output;
     cleanupRenderData(output.old);
 
-    QSharedPointer<DrmBuffer> buffer = endFrameWithBuffer(screenId);
-
     const QRegion dirty = damagedRegion.intersected(output.output->geometry());
+    QSharedPointer<DrmBuffer> buffer = endFrameWithBuffer(screenId, dirty);
     if (!buffer || !output.output->present(buffer, dirty)) {
-        output.current.damageHistory.clear();
         RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
         renderLoopPrivate->notifyFrameFailed();
         return;
     }
+}
 
+void EglGbmBackend::updateBufferAge(Output &output, const QRegion &dirty)
+{
     if (supportsBufferAge()) {
         eglQuerySurface(eglDisplay(), output.current.gbmSurface->eglSurface(), EGL_BUFFER_AGE_EXT, &output.current.bufferAge);
         if (output.current.damageHistory.count() > 10) {
@@ -670,7 +682,7 @@ QSharedPointer<DrmBuffer> EglGbmBackend::renderTestFrame(DrmOutput *output)
         if (m_outputs[i].output == output) {
             beginFrame(i);
             glClear(GL_COLOR_BUFFER_BIT);
-            return endFrameWithBuffer(i);
+            return endFrameWithBuffer(i, output->geometry());
         }
     }
     return nullptr;
