@@ -95,22 +95,22 @@ class KWIN_EXPORT Toplevel : public QObject
     /**
      * This property holds the x position of the Toplevel's frame geometry.
      */
-    Q_PROPERTY(int x READ x)
+    Q_PROPERTY(int x READ x NOTIFY frameGeometryChanged)
 
     /**
      * This property holds the y position of the Toplevel's frame geometry.
      */
-    Q_PROPERTY(int y READ y)
+    Q_PROPERTY(int y READ y NOTIFY frameGeometryChanged)
 
     /**
      * This property holds the width of the Toplevel's frame geometry.
      */
-    Q_PROPERTY(int width READ width)
+    Q_PROPERTY(int width READ width NOTIFY frameGeometryChanged)
 
     /**
      * This property holds the height of the Toplevel's frame geometry.
      */
-    Q_PROPERTY(int height READ height)
+    Q_PROPERTY(int height READ height NOTIFY frameGeometryChanged)
 
     Q_PROPERTY(QRect visibleRect READ visibleGeometry)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
