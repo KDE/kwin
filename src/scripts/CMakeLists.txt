@@ -12,3 +12,5 @@ add_kwin_script(videowall)
 add_kwin_script(synchronizeskipswitcher)
 add_kwin_script(desktopchangeosd)
 add_kwin_script(minimizeall)
+
+add_subdirectory(expo)

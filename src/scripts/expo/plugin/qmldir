@@ -1,0 +1,2 @@
+module org.kde.kwin.scripts.expo
+plugin kwin_script_expoplugin

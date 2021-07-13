@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Expo
+Comment=WIP
+Icon=preferences-system-windows-script-test
+
+X-Plasma-API=declarativescript
+X-Plasma-MainScript=ui/main.qml
+
+X-KDE-PluginInfo-Author=Vlad Zahorodnii
+X-KDE-PluginInfo-Email=vlad.zahorodnii@kde.org
+X-KDE-PluginInfo-Name=expo
+X-KDE-PluginInfo-Version=1.0
+
+X-KDE-PluginInfo-License=GPL
+X-KDE-ServiceTypes=KWin/Script
+Type=Service
