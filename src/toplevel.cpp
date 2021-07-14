@@ -131,6 +131,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     m_opacity = c->m_opacity;
     m_shapeRegionIsValid = c->m_shapeRegionIsValid;
     m_shapeRegion = c->m_shapeRegion;
+    m_stackingOrder = c->m_stackingOrder;
 }
 
 // before being deleted, remove references to everything that's now
@@ -605,6 +606,19 @@ void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
     });
     m_surfaceId = surface->id();
     Q_EMIT surfaceChanged();
+}
+
+int Toplevel::stackingOrder() const
+{
+    return m_stackingOrder;
+}
+
+void Toplevel::setStackingOrder(int order)
+{
+    if (m_stackingOrder != order) {
+        m_stackingOrder = order;
+        Q_EMIT stackingOrderChanged();
+    }
 }
 
 QByteArray Toplevel::windowRole() const

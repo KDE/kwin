@@ -105,6 +105,11 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
     if (changed || propagate_new_clients) {
         propagateClients(propagate_new_clients);
         markXStackingOrderAsDirty();
+
+        for (int i = 0; i < stacking_order.size(); ++i) {
+            stacking_order[i]->setStackingOrder(i);
+        }
+
         Q_EMIT stackingOrderChanged();
         if (m_compositor) {
             m_compositor->addRepaintFull();
@@ -502,7 +507,7 @@ static Layer computeLayer(const Toplevel *toplevel)
  * Returns a stacking order based upon \a list that fulfills certain contained.
  */
 QList<Toplevel *> Workspace::constrainedStackingOrder()
-{ 
+{
     // Sort the windows based on their layers while preserving their relative order in the
     // unconstrained stacking order.
     std::array<QList<Toplevel *>, NumLayers> windows;
