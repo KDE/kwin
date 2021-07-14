@@ -1212,7 +1212,9 @@ void XdgToplevelClient::initialize()
 
     bool needsPlacement = isPlaceable();
 
-    updateDecoration(false, false);
+    // Decoration update is forced so an xdg_toplevel_decoration.configure event
+    // is sent if the client has called the set_mode() request with csd mode.
+    updateDecoration(false, true);
 
     if (supportsWindowRules()) {
         setupWindowRules(false);
