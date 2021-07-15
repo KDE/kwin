@@ -53,6 +53,7 @@
 #include <KScreenLocker/KsldApp>
 // Qt
 #include <QKeyEvent>
+#include <qpa/qwindowsysteminterface.h>
 
 #include <xkbcommon/xkbcommon.h>
 
@@ -964,14 +965,9 @@ class InternalWindowEventFilter : public InputEventFilter {
         return e.isAccepted();
     }
     bool keyEvent(QKeyEvent *event) override {
-        const QList<InternalClient *> &internalClients = workspace()->internalClients();
-        if (internalClients.isEmpty()) {
-            return false;
-        }
+        const QList<InternalClient *> &clients = workspace()->internalClients();
         QWindow *found = nullptr;
-        auto it = internalClients.end();
-        do {
-            it--;
+        for (auto it = clients.crbegin(); it != clients.crend(); ++it) {
             if (QWindow *w = (*it)->internalWindow()) {
                 if (!w->isVisible()) {
                     continue;
@@ -991,7 +987,11 @@ class InternalWindowEventFilter : public InputEventFilter {
                 found = w;
                 break;
             }
-        } while (it != internalClients.begin());
+        }
+        if (m_lastFocus != found) {
+            m_lastFocus = found;
+            QWindowSystemInterface::handleWindowActivated(found);
+        }
         if (!found) {
             return false;
         }
@@ -1096,6 +1096,7 @@ private:
     QSet<qint32> m_pressedIds;
     QPointF m_lastGlobalTouchPos;
     QPointF m_lastLocalTouchPos;
+    QPointer<QWindow> m_lastFocus;
 };
 
 class DecorationEventFilter : public InputEventFilter {
