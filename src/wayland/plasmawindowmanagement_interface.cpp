@@ -23,7 +23,7 @@
 namespace KWaylandServer
 {
 
-static const quint32 s_version = 14;
+static const quint32 s_version = 15;
 
 class PlasmaWindowManagementInterfacePrivate : public QtWaylandServer::org_kde_plasma_window_management
 {
@@ -1020,4 +1020,51 @@ QString PlasmaWindowInterface::uuid() const
     return d->uuid;
 }
 
+class PlasmaWindowActivationInterfacePrivate : public QtWaylandServer::org_kde_plasma_activation
+{
+public:
+    PlasmaWindowActivationInterfacePrivate(PlasmaWindowActivationInterface *q)
+        : QtWaylandServer::org_kde_plasma_activation()
+        , q(q)
+    {
+    }
+
+    PlasmaWindowActivationInterface *const q;
+};
+
+PlasmaWindowActivationInterface::PlasmaWindowActivationInterface()
+    : d(new PlasmaWindowActivationInterfacePrivate(this))
+{
+}
+
+PlasmaWindowActivationInterface::~PlasmaWindowActivationInterface()
+{
+    const auto clientResources = d->resourceMap();
+    for (auto resource : clientResources) {
+        d->send_finished(resource->handle);
+    }
+}
+
+void PlasmaWindowActivationInterface::sendAppId(const QString &appid)
+{
+    const auto clientResources = d->resourceMap();
+    for (auto resource : clientResources) {
+        d->send_app_id(resource->handle, appid);
+    }
+}
+
+KWaylandServer::PlasmaWindowActivationInterface *PlasmaWindowManagementInterface::createActivation(const QString &appid)
+{
+    auto activation = new PlasmaWindowActivationInterface;
+    const auto resources = d->resourceMap();
+    for (auto resource : resources) {
+        if (resource->version() < ORG_KDE_PLASMA_WINDOW_MANAGEMENT_ACTIVATION_SINCE_VERSION) {
+            continue;
+        }
+        auto connection = activation->d->add(resource->client(), resource->version());
+        d->send_activation(resource->handle, connection->handle);
+    }
+    activation->sendAppId(appid);
+    return activation;
+}
 }

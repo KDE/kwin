@@ -18,12 +18,24 @@ class Display;
 class PlasmaWindowInterface;
 class SurfaceInterface;
 class PlasmaVirtualDesktopManagementInterface;
+class PlasmaWindowActivationInterfacePrivate;
 class PlasmaWindowManagementInterfacePrivate;
 class PlasmaWindowInterfacePrivate;
 
-/**
- * @todo Add documentation
- */
+class KWAYLANDSERVER_EXPORT PlasmaWindowActivationInterface
+{
+public:
+    ~PlasmaWindowActivationInterface();
+
+    void sendAppId(const QString &id);
+
+private:
+    friend class PlasmaWindowManagementInterface;
+    explicit PlasmaWindowActivationInterface();
+
+    QScopedPointer<PlasmaWindowActivationInterfacePrivate> d;
+};
+
 class KWAYLANDSERVER_EXPORT PlasmaWindowManagementInterface : public QObject
 {
     Q_OBJECT
@@ -59,6 +71,14 @@ public:
     void setStackingOrder(const QVector<quint32> &stackingOrder);
 
     void setStackingOrderUuids(const QVector<QString> &stackingOrderUuids);
+
+    /**
+     * Notify about a new application with @p app_id being started
+     *
+     * @returns an instance of @class PlasmaWindowActivationInterface to
+     * be destroyed as the activation process ends.
+     */
+    PlasmaWindowActivationInterface *createActivation(const QString &app_id);
 
 Q_SIGNALS:
     void requestChangeShowingDesktop(ShowingDesktopState requestedState);
