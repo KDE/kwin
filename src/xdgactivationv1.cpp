@@ -15,6 +15,7 @@
 #include "workspace.h"
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/surface_interface.h>
+#include <KWaylandServer/plasmawindowmanagement_interface.h>
 #include <KWaylandServer/xdgactivation_v1_interface.h>
 
 using namespace KWaylandServer;
@@ -51,7 +52,8 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
         if (m_currentActivationToken) {
             clear();
         }
-        m_currentActivationToken.reset(new ActivationToken{newToken, client, surface, serial, seat, appId});
+        QSharedPointer<PlasmaWindowActivationInterface> pwActivation(waylandServer()->windowManagement()->createActivation(appId));
+        m_currentActivationToken.reset(new ActivationToken{newToken, client, surface, serial, seat, appId, pwActivation});
         if (!appId.isEmpty()) {
             const auto icon = QIcon::fromTheme(AbstractClient::iconFromDesktopFile(appId), QIcon::fromTheme(QStringLiteral("system-run")));
             Q_EMIT effects->startupAdded(m_currentActivationToken->token, icon);
@@ -97,5 +99,7 @@ void XdgActivationV1Integration::clear()
     }
     m_currentActivationToken.reset();
 }
+
+XdgActivationV1Integration::ActivationToken::~ActivationToken() = default;
 
 }
