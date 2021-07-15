@@ -162,6 +162,7 @@ private:
     QMetaObject::Connection m_confinedPointerRegionConnection;
     QMetaObject::Connection m_lockedPointerAboutToBeUnboundConnection;
     QMetaObject::Connection m_decorationGeometryConnection;
+    QMetaObject::Connection m_decorationDestroyedConnection;
     bool m_confined = false;
     bool m_locked = false;
     bool m_enableConstraints = true;

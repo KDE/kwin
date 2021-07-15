@@ -479,6 +479,9 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
     disconnect(m_decorationGeometryConnection);
     m_decorationGeometryConnection = QMetaObject::Connection();
 
+    disconnect(m_decorationDestroyedConnection);
+    m_decorationDestroyedConnection = QMetaObject::Connection();
+
     if (old) {
         // send leave event to old decoration
         QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
@@ -512,6 +515,9 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
                 QCoreApplication::instance()->sendEvent(decoration()->decoration(), &event);
             }
         }, Qt::QueuedConnection);
+
+    // if our decoration gets destroyed whilst it has focus, we pass focus on to the same client
+    m_decorationDestroyedConnection = connect(now, &QObject::destroyed, this, &PointerInputRedirection::update, Qt::QueuedConnection);
 }
 
 static bool s_cursorUpdateBlocking = false;
