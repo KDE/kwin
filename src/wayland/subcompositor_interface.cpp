@@ -174,37 +174,17 @@ void SubSurfaceInterfacePrivate::subsurface_set_desync(Resource *)
     }
     mode = SubSurfaceInterface::Mode::Desynchronized;
     if (!q->isSynchronized()) {
-        synchronizedCommit();
+        auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
+        surfacePrivate->commitFromCache();
     }
     Q_EMIT q->modeChanged(SubSurfaceInterface::Mode::Desynchronized);
 }
 
 void SubSurfaceInterfacePrivate::commit()
 {
-    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
-
-    if (q->isSynchronized()) {
-        commitToCache();
-    } else {
-        if (hasCacheState) {
-            commitToCache();
-            commitFromCache();
-        } else {
-            surfacePrivate->swapStates(&surfacePrivate->pending, &surfacePrivate->current, true);
-        }
-
-        for (SubSurfaceInterface *subsurface : qAsConst(surfacePrivate->current.below)) {
-            SubSurfaceInterfacePrivate *subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
-            subsurfacePrivate->parentCommit();
-        }
-        for (SubSurfaceInterface *subsurface : qAsConst(surfacePrivate->current.above)) {
-            SubSurfaceInterfacePrivate *subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
-            subsurfacePrivate->parentCommit();
-        }
-    }
 }
 
-void SubSurfaceInterfacePrivate::parentCommit(bool synchronized)
+void SubSurfaceInterfacePrivate::parentCommit()
 {
     if (hasPendingPosition) {
         hasPendingPosition = false;
@@ -212,38 +192,10 @@ void SubSurfaceInterfacePrivate::parentCommit(bool synchronized)
         Q_EMIT q->positionChanged(position);
     }
 
-    if (synchronized || mode == SubSurfaceInterface::Mode::Synchronized) {
-        synchronizedCommit();
+    if (mode == SubSurfaceInterface::Mode::Synchronized) {
+        auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
+        surfacePrivate->commitFromCache();
     }
-}
-
-void SubSurfaceInterfacePrivate::synchronizedCommit()
-{
-    const SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
-    commitFromCache();
-
-    for (SubSurfaceInterface *subsurface : qAsConst(surfacePrivate->current.below)) {
-        SubSurfaceInterfacePrivate *subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
-        subsurfacePrivate->parentCommit(true);
-    }
-    for (SubSurfaceInterface *subsurface : qAsConst(surfacePrivate->current.above)) {
-        SubSurfaceInterfacePrivate *subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
-        subsurfacePrivate->parentCommit(true);
-    }
-}
-
-void SubSurfaceInterfacePrivate::commitToCache()
-{
-    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
-    surfacePrivate->swapStates(&surfacePrivate->pending, &surfacePrivate->cached, false);
-    hasCacheState = true;
-}
-
-void SubSurfaceInterfacePrivate::commitFromCache()
-{
-    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
-    surfacePrivate->swapStates(&surfacePrivate->cached, &surfacePrivate->current, true);
-    hasCacheState = false;
 }
 
 SubSurfaceInterface::SubSurfaceInterface(SurfaceInterface *surface, SurfaceInterface *parent,

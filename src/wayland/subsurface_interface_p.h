@@ -41,12 +41,7 @@ public:
                                SurfaceInterface *parent, ::wl_resource *resource);
 
     void commit() override;
-
-    void parentCommit(bool synchronized = false);
-    void synchronizedCommit();
-
-    void commitToCache();
-    void commitFromCache();
+    void parentCommit();
 
     SubSurfaceInterface *q;
     QPoint position = QPoint(0, 0);
@@ -54,7 +49,6 @@ public:
     SubSurfaceInterface::Mode mode = SubSurfaceInterface::Mode::Synchronized;
     QPointer<SurfaceInterface> surface;
     QPointer<SurfaceInterface> parent;
-    bool hasCacheState = false;
     bool hasPendingPosition = false;
 
 protected:

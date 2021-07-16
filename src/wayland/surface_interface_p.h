@@ -95,7 +95,11 @@ public:
     void installPointerConstraint(ConfinedPointerV1Interface *confinement);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
 
+    void commitToCache();
+    void commitFromCache();
+
     void commit();
+    void commitSubSurface();
     QMatrix4x4 buildSurfaceToBufferMatrix(const SurfaceState *state);
     void swapStates(SurfaceState *source, SurfaceState *target, bool emitChanged);
 
@@ -110,6 +114,7 @@ public:
     QMatrix4x4 bufferToSurfaceMatrix;
     QSize bufferSize;
     QRegion inputRegion;
+    bool hasCacheState = false;
 
     // workaround for https://bugreports.qt.io/browse/QTBUG-52192
     // A subsurface needs to be considered mapped even if it doesn't have a buffer attached
