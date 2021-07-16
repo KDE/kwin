@@ -113,36 +113,36 @@ bool DrmObject::updateProperties()
         qCWarning(KWIN_DRM) << "Failed to get properties for object" << m_id;
         return false;
     }
-    for (int i = 0; i < m_propertyDefinitions.count(); i++) {
-        const PropertyDefinition &def = m_propertyDefinitions[i];
+    for (int propIndex = 0; propIndex < m_propertyDefinitions.count(); propIndex++) {
+        const PropertyDefinition &def = m_propertyDefinitions[propIndex];
         bool found = false;
-        for (uint32_t j = 0; j < properties->count_props; j++) {
-            DrmScopedPointer<drmModePropertyRes> prop(drmModeGetProperty(m_gpu->fd(), properties->props[j]));
+        for (uint32_t drmPropIndex = 0; drmPropIndex < properties->count_props; drmPropIndex++) {
+            DrmScopedPointer<drmModePropertyRes> prop(drmModeGetProperty(m_gpu->fd(), properties->props[drmPropIndex]));
             if (!prop) {
-                qCWarning(KWIN_DRM, "Getting property %d of object %d failed!", j, m_id);
+                qCWarning(KWIN_DRM, "Getting property %d of object %d failed!", drmPropIndex, m_id);
                 continue;
             }
             if (def.name == prop->name) {
                 drmModePropertyBlobRes *blob = nullptr;
                 if (prop->flags & DRM_MODE_PROP_BLOB) {
-                    blob = drmModeGetPropertyBlob(m_gpu->fd(), properties->prop_values[j]);
+                    blob = drmModeGetPropertyBlob(m_gpu->fd(), properties->prop_values[drmPropIndex]);
                 }
-                if (m_props[i]) {
+                if (m_props[propIndex]) {
                     if (prop->flags & DRM_MODE_PROP_BLOB) {
-                        m_props[i]->setCurrentBlob(blob);
+                        m_props[propIndex]->setCurrentBlob(blob);
                     } else {
-                        m_props[i]->setCurrent(properties->prop_values[i]);
+                        m_props[propIndex]->setCurrent(properties->prop_values[drmPropIndex]);
                     }
                 } else {
-                    qCDebug(KWIN_DRM, "Found property %s with value %lu", def.name.data(), properties->prop_values[j]);
-                    m_props[i] = new Property(m_gpu, prop.data(), properties->prop_values[j], def.enumNames, blob);
+                    qCDebug(KWIN_DRM, "Found property %s with value %lu", def.name.data(), properties->prop_values[drmPropIndex]);
+                    m_props[propIndex] = new Property(m_gpu, prop.data(), properties->prop_values[drmPropIndex], def.enumNames, blob);
                 }
                 found = true;
                 break;
             }
         }
         if (!found) {
-            deleteProp(i);
+            deleteProp(propIndex);
         }
     }
     return true;
