@@ -36,6 +36,12 @@ public:
     ~DrmPipeline();
 
     /**
+     * checks if the connector(s) and plane(s) are set to the CRTC(s)
+     * always returns false in legacy mode
+     */
+    bool isConnected() const;
+
+    /**
      * tests the pending commit first and commits it if the test passes
      * if the test fails, there is a guarantee for no lasting changes
      */

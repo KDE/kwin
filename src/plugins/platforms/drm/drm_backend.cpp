@@ -144,11 +144,17 @@ void DrmBackend::reactivate()
     for (const auto &output : qAsConst(m_outputs)) {
         output->pipeline()->updateProperties();
         if (output->isEnabled()) {
+            if (output->gpu()->atomicModeSetting() && !output->pipeline()->isConnected()) {
+                output->pipeline()->setActive(false);
+            }
             output->renderLoop()->uninhibit();
             output->showCursor();
         } else {
             output->pipeline()->setActive(false);
         }
+    }
+    for (const auto &output : qAsConst(m_outputs)) {
+        output->pipeline()->setActive(output->isEnabled());
     }
 
     if (Compositor *compositor = Compositor::self()) {

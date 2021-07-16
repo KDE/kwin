@@ -530,6 +530,16 @@ void DrmPipeline::updateProperties()
     m_cursor.dirty = true;
 }
 
+bool DrmPipeline::isConnected() const
+{
+    if (m_primaryPlane) {
+        return m_connector->getProp(DrmConnector::PropertyIndex::CrtcId)->current() == m_crtc->id()
+            && m_primaryPlane->getProp(DrmPlane::PropertyIndex::CrtcId)->current() == m_crtc->id();
+    } else {
+        return false;
+    }
+}
+
 static void printProps(DrmObject *object)
 {
     auto list = object->properties();
