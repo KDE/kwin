@@ -77,6 +77,7 @@ protected:
     QSharedPointer<GLTexture> m_offscreenTexture;
     QScopedPointer<GLRenderTarget> m_offscreenTarget;
     GLsync m_acquireFence = 0;
+    qreal m_devicePixelRatio = 1;
 
 private:
     void handleCompositingToggled();
