@@ -4,6 +4,7 @@ add_subdirectory(libkwineffects)
 add_subdirectory(integration)
 add_subdirectory(libinput)
 add_subdirectory(tabbox)
+add_subdirectory(drm)
 
 ########################################################
 # Test WindowPaintData

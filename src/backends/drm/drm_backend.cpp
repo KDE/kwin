@@ -33,6 +33,7 @@
 // Qt
 #include <QCoreApplication>
 #include <QSocketNotifier>
+#include <QStringBuilder>
 // system
 #include <algorithm>
 #include <cerrno>
