@@ -92,6 +92,11 @@ void KWin::AbstractScript::stop()
     deleteLater();
 }
 
+KWin::ScriptTimer::ScriptTimer(QObject *parent)
+    : QTimer(parent)
+{
+}
+
 KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject* parent)
     : AbstractScript(id, scriptName, pluginName, parent)
     , m_engine(new QJSEngine(this))
@@ -167,7 +172,7 @@ void KWin::Script::slotScriptLoadedFromFile()
     m_engine->installExtensions(QJSEngine::ConsoleExtension);
 
     // Make the timer visible to QJSEngine.
-    QJSValue timerMetaObject = m_engine->newQMetaObject(&QTimer::staticMetaObject);
+    QJSValue timerMetaObject = m_engine->newQMetaObject(&ScriptTimer::staticMetaObject);
     m_engine->globalObject().setProperty("QTimer", timerMetaObject);
 
     // Expose enums.
