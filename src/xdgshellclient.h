@@ -72,6 +72,7 @@ protected:
     void sendConfigure();
 
     QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
+    QRect m_windowGeometry;
 
 private:
     void handleConfigureAcknowledged(quint32 serial);
@@ -89,7 +90,6 @@ private:
     XdgSurfaceConfigure::ConfigureFlags m_configureFlags;
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
     QScopedPointer<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
-    QRect m_windowGeometry;
     bool m_haveNextWindowGeometry = false;
 };
 
@@ -123,6 +123,8 @@ public:
     bool isRequestedFullScreen() const override;
     bool isMovableAcrossScreens() const override;
     bool isMovable() const override;
+    bool isShadeable() const override;
+    void doSetShade(ShadeMode previousShadeMode) override;
     bool isResizable() const override;
     bool isCloseable() const override;
     bool isFullScreenable() const override;

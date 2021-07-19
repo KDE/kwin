@@ -229,6 +229,10 @@ void XdgSurfaceClient::handleNextWindowGeometry()
         maybeUpdateMoveResizeGeometry(frameGeometry);
     }
 
+    if (isShade()) {
+        frameGeometry.setHeight(borderTop() + borderBottom());
+    }
+
     updateGeometry(frameGeometry);
 
     if (isInteractiveResize()) {
@@ -282,10 +286,45 @@ QRect XdgSurfaceClient::adjustMoveResizeGeometry(const QRect &rect) const
     return geometry;
 }
 
+bool XdgToplevelClient::isShadeable() const
+{
+    return !noBorder();
+}
+
+void XdgToplevelClient::doSetShade(ShadeMode previousShadeMode)
+{
+    Q_UNUSED(previousShadeMode)
+
+    QRect frameGeometry(pos(), clientSizeToFrameSize(clientSize()));
+
+    switch (shadeMode()) {
+    case ShadeMode::ShadeNormal:
+        frameGeometry.setHeight(borderTop() + borderBottom());
+        resize(frameGeometry.size());
+        break;
+    case ShadeMode::ShadeNone:
+    case ShadeMode::ShadeActivated:
+    case ShadeMode::ShadeHover:
+        resize(frameGeometry.size());
+        break;
+    }
+}
+
 void XdgSurfaceClient::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
 {
     if (areGeometryUpdatesBlocked()) {
         setPendingMoveResizeMode(mode);
+        return;
+    }
+
+    if (isShade()) {
+        auto frameGeometry = rect;
+        if (frameGeometry.height() == borderTop() + borderBottom()) {
+            return;
+        }
+
+        frameGeometry.setHeight(borderTop() + borderBottom());
+        updateGeometry(frameGeometry);
         return;
     }
 
@@ -1207,6 +1246,7 @@ void XdgToplevelClient::initialize()
         setKeepBelow(rules()->checkKeepBelow(keepBelow(), true));
         setShortcut(rules()->checkShortcut(shortcut().toString(), true));
         setNoBorder(rules()->checkNoBorder(noBorder(), true));
+        setShade(rules()->checkShade(shadeMode(), true));
 
         // Don't place the client if its position is set by a rule.
         if (rules()->checkPosition(invalidPoint, true) != invalidPoint) {

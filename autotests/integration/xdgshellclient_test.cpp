@@ -101,10 +101,72 @@ private Q_SLOTS:
     void testXdgWindowGeometryMaximize();
     void testXdgWindowReactive();
     void testXdgWindowRepositioning();
+    void testShading();
     void testPointerInputTransform();
     void testReentrantSetFrameGeometry();
     void testDoubleMaximize();
 };
+
+void TestXdgShellClient::testShading()
+{
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevelDecorationV1> deco(Test::createXdgToplevelDecorationV1(shellSurface.data()));
+
+    QSignalSpy decorationConfigureRequestedSpy(deco.data(), &Test::XdgToplevelDecorationV1::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+    //request a mode
+    deco->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
+
+    //kwin will send a configure
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    QCOMPARE(decorationConfigureRequestedSpy.count(), 1);
+    QCOMPARE(decorationConfigureRequestedSpy.last()[0].value<Test::XdgToplevelDecorationV1::mode>(), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(decorationConfigureRequestedSpy.count() > 0);
+
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last()[0].toInt());
+
+    AbstractClient* client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    // let's make sure we can shade, first of all
+    QVERIFY(client->isShadeable());
+
+    // fetch the geometry before the shade to compare later
+    const QRect geometryBeforeShade = client->frameGeometry();
+
+    // make sure it's not barf
+    QVERIFY(geometryBeforeShade.isValid());
+    QVERIFY(!geometryBeforeShade.isEmpty());
+
+    // switch into shaded mode
+    client->setShade(true);
+
+    // make sure it's shaded
+    QVERIFY(client->isShade());
+
+    // if we're truly shaded, then the window's size should be different
+    // from before, because it's just the titlebar instead of the whole
+    // window.
+    QVERIFY(client->frameGeometry() != geometryBeforeShade);
+
+    const auto shadeGeometry = client->frameGeometry();
+
+    // ok, we made sure going into shaded works. now let's
+    // try going back.
+    client->setShade(false);
+
+    // make sure it's not shaded
+    QVERIFY(!client->isShade());
+
+    // let's make sure we've changed geometry, since we
+    // should be fully opened now
+    QVERIFY(client->frameGeometry() != shadeGeometry);
+
+    // we should be back where we were before
+    QCOMPARE(client->frameGeometry(), geometryBeforeShade);
+}
 
 void TestXdgShellClient::testXdgWindowReactive()
 {
