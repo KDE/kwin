@@ -205,7 +205,7 @@ SurfaceItemXwayland::SurfaceItemXwayland(Scene::Window *window, Item *parent)
 QRegion SurfaceItemXwayland::shape() const
 {
     const Toplevel *toplevel = window()->window();
-    const QRect clipRect = toplevel->clientGeometry().translated(-toplevel->bufferGeometry().topLeft());
+    const QRect clipRect = rect() & toplevel->clientGeometry().translated(-toplevel->bufferGeometry().topLeft());
     const QRegion shape = toplevel->shapeRegion();
 
     return shape & clipRect;
