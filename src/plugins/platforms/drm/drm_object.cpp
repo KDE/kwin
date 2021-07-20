@@ -234,6 +234,7 @@ bool DrmObject::Property::setPendingBlob(void *blob, size_t length)
     }
     if (m_pending && m_pending != m_current && m_pending != m_next) {
         drmModeDestroyPropertyBlob(m_gpu->fd(), m_pending);
+        drmModeFreePropertyBlob(m_pendingBlob);
     }
     m_pending = id;
     m_pendingBlob = drmModeGetPropertyBlob(m_gpu->fd(), m_pending);
@@ -260,9 +261,29 @@ void DrmObject::Property::setCurrentBlob(drmModePropertyBlobRes *blob)
     if (!blob && !m_currentBlob) {
         return;
     }
+    if (!blob && m_pending == m_current) {
+        // the current blob might have been created by the prior drm master
+        // if it is, then the kernel has destroyed the blob and we must not continue using it
+        // -> simply create a copy
+        bool commit = m_pending == m_next;
+        setPendingBlob(m_currentBlob->data, m_currentBlob->length);
+        if (commit) {
+            commitPending();
+        }
+    }
+    if (!blob && m_next == m_current) {
+        // same as above, for the "next" blob
+        uint32_t id = 0;
+        if (drmModeCreatePropertyBlob(m_gpu->fd(), m_currentBlob->data, m_currentBlob->length, &id) != 0) {
+            qCWarning(KWIN_DRM) << "Creating property blob failed!" << strerror(errno);
+        }
+        m_next = id;
+        m_nextBlob = drmModeGetPropertyBlob(m_gpu->fd(), id);
+    }
     uint32_t blobId = blob ? blob->id : 0;
     if (m_current && m_current != m_pending && m_current != m_next && m_current != blobId) {
         drmModeDestroyPropertyBlob(m_gpu->fd(), m_current);
+        drmModeFreePropertyBlob(m_currentBlob);
     }
     m_currentBlob = blob;
     m_current = blobId;
@@ -293,6 +314,7 @@ void DrmObject::Property::commitPending()
     if (m_pendingBlob || m_nextBlob) {
         if (m_next && m_next != m_current) {
             drmModeDestroyPropertyBlob(m_gpu->fd(), m_next);
+            drmModeFreePropertyBlob(m_nextBlob);
         }
         m_next = m_pending;
         m_nextBlob = m_pendingBlob;
@@ -309,6 +331,7 @@ void DrmObject::Property::rollbackPending()
     if (m_pendingBlob || m_nextBlob) {
         if (m_pending && m_pending != m_current) {
             drmModeDestroyPropertyBlob(m_gpu->fd(), m_pending);
+            drmModeFreePropertyBlob(m_pendingBlob);
         }
         m_pending = m_next;
         m_pendingBlob = m_nextBlob;
