@@ -99,7 +99,6 @@ public:
     void commitToCache();
     void commitFromCache();
 
-    void commit();
     void commitSubSurface();
     QMatrix4x4 buildSurfaceToBufferMatrix(const SurfaceState *state);
     void applyState(SurfaceState *next);

@@ -317,7 +317,11 @@ void SurfaceInterfacePrivate::surface_set_input_region(Resource *resource, struc
 void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 {
     Q_UNUSED(resource)
-    commit();
+    if (subSurface) {
+        commitSubSurface();
+    } else {
+        applyState(&pending);
+    }
 }
 
 void SurfaceInterfacePrivate::surface_set_buffer_transform(Resource *resource, int32_t transform)
@@ -665,15 +669,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         role->commit();
     }
     Q_EMIT q->committed();
-}
-
-void SurfaceInterfacePrivate::commit()
-{
-    if (subSurface) {
-        commitSubSurface();
-    } else {
-        applyState(&pending);
-    }
 }
 
 void SurfaceInterfacePrivate::commitSubSurface()
