@@ -10,7 +10,7 @@
 
 namespace KWaylandServer
 {
-class BufferInterface;
+class ClientBuffer;
 class SubSurfaceInterface;
 class SurfaceInterface;
 }
@@ -63,18 +63,17 @@ public:
 
     SurfaceItemWayland *item() const;
     KWaylandServer::SurfaceInterface *surface() const;
-    KWaylandServer::BufferInterface *buffer() const;
+    KWaylandServer::ClientBuffer *buffer() const;
 
     void create() override;
     void update() override;
     bool isValid() const override;
 
 private:
-    void clearBuffer();
-    void setBuffer(KWaylandServer::BufferInterface *buffer);
+    void setBuffer(KWaylandServer::ClientBuffer *buffer);
 
     SurfaceItemWayland *m_item;
-    KWaylandServer::BufferInterface *m_buffer = nullptr;
+    KWaylandServer::ClientBuffer *m_buffer = nullptr;
 };
 
 /**

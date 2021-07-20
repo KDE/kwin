@@ -20,7 +20,7 @@
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationShadow>
 
-#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/shadow_interface.h>
 #include <KWaylandServer/surface_interface.h>
 
@@ -214,20 +214,29 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
     return true;
 }
 
+static QPixmap shadowTileForBuffer(KWaylandServer::ClientBuffer *buffer)
+{
+    auto shmBuffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer);
+    if (shmBuffer) {
+        return QPixmap::fromImage(shmBuffer->data().copy());
+    }
+    return QPixmap();
+}
+
 bool Shadow::init(const QPointer< KWaylandServer::ShadowInterface > &shadow)
 {
     if (!shadow) {
         return false;
     }
 
-    m_shadowElements[ShadowElementTop] = shadow->top() ? QPixmap::fromImage(shadow->top()->data().copy()) : QPixmap();
-    m_shadowElements[ShadowElementTopRight] = shadow->topRight() ? QPixmap::fromImage(shadow->topRight()->data().copy()) : QPixmap();
-    m_shadowElements[ShadowElementRight] = shadow->right() ? QPixmap::fromImage(shadow->right()->data().copy()) : QPixmap();
-    m_shadowElements[ShadowElementBottomRight] = shadow->bottomRight() ? QPixmap::fromImage(shadow->bottomRight()->data().copy()) : QPixmap();
-    m_shadowElements[ShadowElementBottom] = shadow->bottom() ? QPixmap::fromImage(shadow->bottom()->data().copy()) : QPixmap();
-    m_shadowElements[ShadowElementBottomLeft] = shadow->bottomLeft() ? QPixmap::fromImage(shadow->bottomLeft()->data().copy()) : QPixmap();
-    m_shadowElements[ShadowElementLeft] = shadow->left() ? QPixmap::fromImage(shadow->left()->data().copy()) : QPixmap();
-    m_shadowElements[ShadowElementTopLeft] = shadow->topLeft() ? QPixmap::fromImage(shadow->topLeft()->data().copy()) : QPixmap();
+    m_shadowElements[ShadowElementTop] = shadowTileForBuffer(shadow->top());
+    m_shadowElements[ShadowElementTopRight] = shadowTileForBuffer(shadow->topRight());
+    m_shadowElements[ShadowElementRight] = shadowTileForBuffer(shadow->right());
+    m_shadowElements[ShadowElementBottomRight] = shadowTileForBuffer(shadow->bottomRight());
+    m_shadowElements[ShadowElementBottom] = shadowTileForBuffer(shadow->bottom());
+    m_shadowElements[ShadowElementBottomLeft] = shadowTileForBuffer(shadow->bottomLeft());
+    m_shadowElements[ShadowElementLeft] = shadowTileForBuffer(shadow->left());
+    m_shadowElements[ShadowElementTopLeft] = shadowTileForBuffer(shadow->topLeft());
 
     m_offset = shadow->offset().toMargins();
     Q_EMIT offsetChanged();

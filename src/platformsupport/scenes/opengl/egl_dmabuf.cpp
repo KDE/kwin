@@ -122,10 +122,10 @@ YuvFormat yuvFormats[] = {
 };
 
 EglDmabufBuffer::EglDmabufBuffer(EGLImage image,
-                                 const QVector<Plane> &planes,
+                                 const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
                                  uint32_t format,
                                  const QSize &size,
-                                 Flags flags,
+                                 quint32 flags,
                                  EglDmabuf *interfaceImpl)
     : EglDmabufBuffer(planes, format, size, flags, interfaceImpl)
 {
@@ -134,12 +134,12 @@ EglDmabufBuffer::EglDmabufBuffer(EGLImage image,
 }
 
 
-EglDmabufBuffer::EglDmabufBuffer(const QVector<Plane> &planes,
+EglDmabufBuffer::EglDmabufBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
                                  uint32_t format,
                                  const QSize &size,
-                                 Flags flags,
+                                 quint32 flags,
                                  EglDmabuf *interfaceImpl)
-    : DmabufBuffer(planes, format, size, flags)
+    : LinuxDmaBufV1ClientBuffer(planes, format, size, flags)
     , m_interfaceImpl(interfaceImpl)
 {
     m_importType = ImportType::Conversion;
@@ -168,10 +168,7 @@ void EglDmabufBuffer::removeImages()
     m_images.clear();
 }
 
-using Plane = KWaylandServer::LinuxDmabufUnstableV1Interface::Plane;
-using Flags = KWaylandServer::LinuxDmabufUnstableV1Interface::Flags;
-
-EGLImage EglDmabuf::createImage(const QVector<Plane> &planes,
+EGLImage EglDmabuf::createImage(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
                                 uint32_t format,
                                 const QSize &size)
 {
@@ -248,10 +245,10 @@ EGLImage EglDmabuf::createImage(const QVector<Plane> &planes,
     return image;
 }
 
-KWaylandServer::LinuxDmabufUnstableV1Buffer* EglDmabuf::importBuffer(const QVector<Plane> &planes,
-                                                                       uint32_t format,
-                                                                       const QSize &size,
-                                                                       Flags flags)
+KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::importBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
+                                                                   quint32 format,
+                                                                   const QSize &size,
+                                                                   quint32 flags)
 {
     Q_ASSERT(planes.count() > 0);
 
@@ -268,10 +265,10 @@ KWaylandServer::LinuxDmabufUnstableV1Buffer* EglDmabuf::importBuffer(const QVect
     return nullptr;
 }
 
-KWaylandServer::LinuxDmabufUnstableV1Buffer* EglDmabuf::yuvImport(const QVector<Plane> &planes,
-                                                                    uint32_t format,
-                                                                    const QSize &size,
-                                                                    Flags flags)
+KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::yuvImport(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
+                                                                quint32 format,
+                                                                const QSize &size,
+                                                                quint32 flags)
 {
     YuvFormat yuvFormat;
     for (YuvFormat f : yuvFormats) {
@@ -291,7 +288,7 @@ KWaylandServer::LinuxDmabufUnstableV1Buffer* EglDmabuf::yuvImport(const QVector<
 
     for (int i = 0; i < yuvFormat.outputPlanes; i++) {
         int planeIndex = yuvFormat.planes[i].planeIndex;
-        Plane plane = {
+        KWaylandServer::LinuxDmaBufV1Plane plane = {
             planes[planeIndex].fd,
             planes[planeIndex].offset,
             planes[planeIndex].stride,
@@ -300,7 +297,7 @@ KWaylandServer::LinuxDmabufUnstableV1Buffer* EglDmabuf::yuvImport(const QVector<
         const auto planeFormat = yuvFormat.planes[i].format;
         const auto planeSize = QSize(size.width() / yuvFormat.planes[i].widthDivisor,
                                      size.height() / yuvFormat.planes[i].heightDivisor);
-        auto *image = createImage(QVector<Plane>(1, plane),
+        auto *image = createImage(QVector<KWaylandServer::LinuxDmaBufV1Plane>(1, plane),
                                   planeFormat,
                                   planeSize);
         if (!image) {
@@ -332,8 +329,7 @@ EglDmabuf* EglDmabuf::factory(AbstractEglBackend *backend)
 }
 
 EglDmabuf::EglDmabuf(AbstractEglBackend *backend)
-    : LinuxDmabuf()
-    , m_backend(backend)
+    : m_backend(backend)
 {
     auto prevBuffersSet = waylandServer()->linuxDmabufBuffers();
     for (auto *buffer : prevBuffersSet) {
@@ -439,7 +435,7 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
         set.insert(format, QSet<uint64_t>());
     }
 
-    LinuxDmabuf::setSupportedFormatsAndModifiers(set);
+    LinuxDmaBufV1RendererInterface::setSupportedFormatsAndModifiers(set);
 }
 
 }

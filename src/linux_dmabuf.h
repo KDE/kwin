@@ -10,54 +10,34 @@
 
 #include <kwin_export.h>
 
-#include <KWaylandServer/linuxdmabuf_v1_interface.h>
-
-#include <QVector>
+#include <KWaylandServer/linuxdmabufv1clientbuffer.h>
 
 namespace KWin
 {
 
-class KWIN_EXPORT DmabufBuffer : public KWaylandServer::LinuxDmabufUnstableV1Buffer
+class KWIN_EXPORT LinuxDmaBufV1ClientBuffer : public KWaylandServer::LinuxDmaBufV1ClientBuffer
 {
 public:
-    using Plane = KWaylandServer::LinuxDmabufUnstableV1Interface::Plane;
-    using Flags = KWaylandServer::LinuxDmabufUnstableV1Interface::Flags;
-
-    DmabufBuffer(const QVector<Plane> &planes,
-                 uint32_t format,
-                 const QSize &size,
-                 Flags flags);
-
-    ~DmabufBuffer() override;
-
-    const QVector<Plane> &planes() const { return m_planes; }
-    uint32_t format() const { return m_format; }
-    QSize size() const { return m_size; }
-    Flags flags() const { return m_flags; }
-
-private:
-    QVector<Plane> m_planes;
-    uint32_t m_format;
-    QSize m_size;
-    Flags m_flags;
+    LinuxDmaBufV1ClientBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
+                              quint32 format,
+                              const QSize &size,
+                              quint32 flags);
+    ~LinuxDmaBufV1ClientBuffer() override;
 };
 
-class KWIN_EXPORT LinuxDmabuf : public KWaylandServer::LinuxDmabufUnstableV1Interface::Impl
+class KWIN_EXPORT LinuxDmaBufV1RendererInterface : public KWaylandServer::LinuxDmaBufV1ClientBufferIntegration::RendererInterface
 {
 public:
-    using Plane = KWaylandServer::LinuxDmabufUnstableV1Interface::Plane;
-    using Flags = KWaylandServer::LinuxDmabufUnstableV1Interface::Flags;
+    explicit LinuxDmaBufV1RendererInterface();
+    ~LinuxDmaBufV1RendererInterface() override;
 
-    explicit LinuxDmabuf();
-    ~LinuxDmabuf() override;
-
-    KWaylandServer::LinuxDmabufUnstableV1Buffer *importBuffer(const QVector<Plane> &planes,
-                                                                uint32_t format,
-                                                                const QSize &size,
-                                                                Flags flags) override;
+    KWaylandServer::LinuxDmaBufV1ClientBuffer *importBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
+                                                            quint32 format,
+                                                            const QSize &size,
+                                                            quint32 flags) override;
 
 protected:
-    void setSupportedFormatsAndModifiers(QHash<uint32_t, QSet<uint64_t> > &set);
+    void setSupportedFormatsAndModifiers(const QHash<uint32_t, QSet<uint64_t>> &set);
 };
 
 }

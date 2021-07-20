@@ -18,7 +18,7 @@ struct gbm_bo;
 
 namespace KWaylandServer
 {
-class BufferInterface;
+class ClientBuffer;
 }
 
 namespace KWin
@@ -31,7 +31,7 @@ class GbmBuffer : public QObject
     Q_OBJECT
 public:
     GbmBuffer(GbmSurface *surface, gbm_bo *bo);
-    GbmBuffer(gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface);
+    GbmBuffer(gbm_bo *buffer, KWaylandServer::ClientBuffer *clientBuffer);
     virtual ~GbmBuffer();
 
     gbm_bo* getBo() const {
@@ -51,20 +51,18 @@ public:
 protected:
     GbmSurface *m_surface = nullptr;
     gbm_bo *m_bo = nullptr;
-    KWaylandServer::BufferInterface *m_bufferInterface = nullptr;
+    KWaylandServer::ClientBuffer *m_clientBuffer = nullptr;
 
     void *m_data = nullptr;
     void *m_mapping = nullptr;
     uint32_t m_stride = 0;
-
-    void clearBufferInterface();
 };
 
 class DrmGbmBuffer : public DrmBuffer, public GbmBuffer
 {
 public:
     DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo);
-    DrmGbmBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface);
+    DrmGbmBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::ClientBuffer *clientBuffer);
     ~DrmGbmBuffer() override;
 
     bool needsModeChange(DrmBuffer *b) const override {

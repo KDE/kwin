@@ -12,7 +12,9 @@
 
 namespace KWaylandServer
 {
-class BufferInterface;
+class DrmClientBuffer;
+class ShmClientBuffer;
+class LinuxDmaBufV1ClientBuffer;
 }
 
 namespace KWin
@@ -32,13 +34,13 @@ public:
     void update(const QRegion &region) override;
 
 private:
-    bool loadShmTexture(KWaylandServer::BufferInterface *buffer);
-    void updateShmTexture(KWaylandServer::BufferInterface *buffer, const QRegion &region);
-    bool loadEglTexture(KWaylandServer::BufferInterface *buffer);
-    void updateEglTexture(KWaylandServer::BufferInterface *buffer);
-    bool loadDmabufTexture(KWaylandServer::BufferInterface *buffer);
-    void updateDmabufTexture(KWaylandServer::BufferInterface *buffer);
-    EGLImageKHR attach(KWaylandServer::BufferInterface *buffer);
+    bool loadShmTexture(KWaylandServer::ShmClientBuffer *buffer);
+    void updateShmTexture(KWaylandServer::ShmClientBuffer *buffer, const QRegion &region);
+    bool loadEglTexture(KWaylandServer::DrmClientBuffer *buffer);
+    void updateEglTexture(KWaylandServer::DrmClientBuffer *buffer);
+    bool loadDmabufTexture(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer);
+    void updateDmabufTexture(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer);
+    EGLImageKHR attach(KWaylandServer::DrmClientBuffer *buffer);
     void destroy();
 
     enum class BufferType {

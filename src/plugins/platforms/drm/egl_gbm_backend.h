@@ -19,7 +19,6 @@ struct gbm_bo;
 
 namespace KWaylandServer
 {
-class BufferInterface;
 class SurfaceInterface;
 }
 

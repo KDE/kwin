@@ -22,7 +22,7 @@
 #include <xf86drmMode.h>
 #include <gbm.h>
 // KWaylandServer
-#include "KWaylandServer/buffer_interface.h"
+#include "KWaylandServer/clientbuffer.h"
 #include <drm_fourcc.h>
 
 namespace KWin
@@ -35,14 +35,13 @@ GbmBuffer::GbmBuffer(GbmSurface *surface, gbm_bo *bo)
     m_stride = gbm_bo_get_stride(m_bo);
 }
 
-GbmBuffer::GbmBuffer(gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface)
+GbmBuffer::GbmBuffer(gbm_bo *buffer, KWaylandServer::ClientBuffer *clientBuffer)
     : m_bo(buffer)
-    , m_bufferInterface(bufferInterface)
+    , m_clientBuffer(clientBuffer)
     , m_stride(gbm_bo_get_stride(m_bo))
 {
-    if (m_bufferInterface) {
-        m_bufferInterface->ref();
-        connect(m_bufferInterface, &KWaylandServer::BufferInterface::aboutToBeDestroyed, this, &GbmBuffer::clearBufferInterface);
+    if (m_clientBuffer) {
+        m_clientBuffer->ref();
     }
 }
 
@@ -53,8 +52,9 @@ GbmBuffer::~GbmBuffer()
 
 void GbmBuffer::releaseBuffer()
 {
-    if (m_bufferInterface) {
-        clearBufferInterface();
+    if (m_clientBuffer) {
+        m_clientBuffer->unref();
+        m_clientBuffer = nullptr;
     }
     if (!m_bo) {
         return;
@@ -83,12 +83,6 @@ bool GbmBuffer::map(uint32_t flags)
     return m_data;
 }
 
-void GbmBuffer::clearBufferInterface()
-{
-    disconnect(m_bufferInterface, &KWaylandServer::BufferInterface::aboutToBeDestroyed, this, &DrmGbmBuffer::clearBufferInterface);
-    m_bufferInterface->unref();
-    m_bufferInterface = nullptr;
-}
 
 DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
     : DrmBuffer(gpu), GbmBuffer(surface, bo)
@@ -96,8 +90,8 @@ DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
     initialize();
 }
 
-DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface)
-    : DrmBuffer(gpu), GbmBuffer(buffer, bufferInterface)
+DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::ClientBuffer *clientBuffer)
+    : DrmBuffer(gpu), GbmBuffer(buffer, clientBuffer)
 {
     initialize();
 }

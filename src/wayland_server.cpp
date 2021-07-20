@@ -42,7 +42,7 @@
 #include <KWaylandServer/dpms_interface.h>
 #include <KWaylandServer/idle_interface.h>
 #include <KWaylandServer/idleinhibit_v1_interface.h>
-#include <KWaylandServer/linuxdmabuf_v1_interface.h>
+#include <KWaylandServer/linuxdmabufv1clientbuffer.h>
 #include <KWaylandServer/output_interface.h>
 #include <KWaylandServer/plasmashell_interface.h>
 #include <KWaylandServer/plasmavirtualdesktop_interface.h>
@@ -537,11 +537,10 @@ bool WaylandServer::init(InitializationFlags flags)
     return true;
 }
 
-KWaylandServer::LinuxDmabufUnstableV1Interface *WaylandServer::linuxDmabuf()
+KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *WaylandServer::linuxDmabuf()
 {
     if (!m_linuxDmabuf) {
-        m_linuxDmabuf = new LinuxDmabufUnstableV1Interface(m_display, m_display);
-        m_linuxDmabuf->create();
+        m_linuxDmabuf = new LinuxDmaBufV1ClientBufferIntegration(m_display);
     }
     return m_linuxDmabuf;
 }

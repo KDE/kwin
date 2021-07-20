@@ -19,28 +19,25 @@ namespace KWin
 {
 class EglDmabuf;
 
-class EglDmabufBuffer : public DmabufBuffer
+class EglDmabufBuffer : public LinuxDmaBufV1ClientBuffer
 {
 public:
-    using Plane = KWaylandServer::LinuxDmabufUnstableV1Interface::Plane;
-    using Flags = KWaylandServer::LinuxDmabufUnstableV1Interface::Flags;
-
     enum class ImportType {
         Direct,
         Conversion
     };
 
     EglDmabufBuffer(EGLImage image,
-                    const QVector<Plane> &planes,
-                    uint32_t format,
+                    const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
+                    quint32 format,
                     const QSize &size,
-                    Flags flags,
+                    quint32 flags,
                     EglDmabuf *interfaceImpl);
 
-    EglDmabufBuffer(const QVector<Plane> &planes,
-                    uint32_t format,
+    EglDmabufBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
+                    quint32 format,
                     const QSize &size,
-                    Flags flags,
+                    quint32 flags,
                     EglDmabuf *interfaceImpl);
 
     ~EglDmabufBuffer() override;
@@ -57,31 +54,28 @@ private:
     ImportType m_importType;
 };
 
-class EglDmabuf : public LinuxDmabuf
+class EglDmabuf : public LinuxDmaBufV1RendererInterface
 {
 public:
-    using Plane = KWaylandServer::LinuxDmabufUnstableV1Interface::Plane;
-    using Flags = KWaylandServer::LinuxDmabufUnstableV1Interface::Flags;
-
     static EglDmabuf* factory(AbstractEglBackend *backend);
 
     explicit EglDmabuf(AbstractEglBackend *backend);
     ~EglDmabuf() override;
 
-    KWaylandServer::LinuxDmabufUnstableV1Buffer *importBuffer(const QVector<Plane> &planes,
-                                                                uint32_t format,
-                                                                const QSize &size,
-                                                                Flags flags) override;
+    KWaylandServer::LinuxDmaBufV1ClientBuffer *importBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
+                                                            quint32 format,
+                                                            const QSize &size,
+                                                            quint32 flags) override;
 
 private:
-    EGLImage createImage(const QVector<Plane> &planes,
+    EGLImage createImage(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
                          uint32_t format,
                          const QSize &size);
 
-    KWaylandServer::LinuxDmabufUnstableV1Buffer *yuvImport(const QVector<Plane> &planes,
-                                                             uint32_t format,
-                                                             const QSize &size,
-                                                             Flags flags);
+    KWaylandServer::LinuxDmaBufV1ClientBuffer *yuvImport(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
+                                                         quint32 format,
+                                                         const QSize &size,
+                                                         quint32 flags);
 
     void setSupportedFormatsAndModifiers();
 

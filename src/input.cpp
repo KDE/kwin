@@ -43,7 +43,7 @@
 #include <KWaylandServer/fakeinput_interface.h>
 #include <KWaylandServer/relativepointer_v1_interface.h>
 #include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/tablet_v2_interface.h>
 #include <KWaylandServer/keyboard_interface.h>
@@ -1594,7 +1594,7 @@ public:
 private:
     void refresh()
     {
-        auto buffer = m_surface->buffer();
+        auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_surface->buffer());
         if (!buffer) {
             updateCursor({}, {});
             return;

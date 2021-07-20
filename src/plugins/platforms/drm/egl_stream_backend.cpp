@@ -29,7 +29,7 @@
 #include "drm_pipeline.h"
 
 #include <QOpenGLContext>
-#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/clientbuffer.h>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/eglstream_controller_interface.h>
 #include <KWaylandServer/resource.h>
@@ -664,7 +664,7 @@ void EglStreamSurfaceTextureWayland::copyExternalTexture(GLuint tex)
     glViewport(oldViewport[0], oldViewport[1], oldViewport[2], oldViewport[3]);
 }
 
-bool EglStreamSurfaceTextureWayland::attachBuffer(KWaylandServer::BufferInterface *buffer)
+bool EglStreamSurfaceTextureWayland::attachBuffer(KWaylandServer::ClientBuffer *buffer)
 {
     GLenum oldFormat = m_format;
     m_format = buffer->hasAlphaChannel() ? GL_RGBA : GL_RGB;
@@ -679,7 +679,7 @@ bool EglStreamSurfaceTextureWayland::attachBuffer(KWaylandServer::BufferInterfac
 }
 
 bool EglStreamSurfaceTextureWayland::checkBuffer(KWaylandServer::SurfaceInterface *surface,
-                                                 KWaylandServer::BufferInterface *buffer)
+                                                 KWaylandServer::ClientBuffer *buffer)
 {
     EGLAttrib attribs[] = {
         EGL_WAYLAND_EGLSTREAM_WL, (EGLAttrib)buffer->resource(),

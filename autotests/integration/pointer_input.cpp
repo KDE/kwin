@@ -31,7 +31,6 @@
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
-#include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/seat_interface.h>
 

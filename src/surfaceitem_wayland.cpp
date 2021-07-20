@@ -8,7 +8,7 @@
 #include "composite.h"
 #include "scene.h"
 
-#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/clientbuffer.h>
 #include <KWaylandServer/subcompositor_interface.h>
 #include <KWaylandServer/surface_interface.h>
 
@@ -111,7 +111,7 @@ void SurfaceItemWayland::handleChildSubSurfacesChanged()
         SurfaceItemWayland *subsurfaceItem = getOrCreateSubSurfaceItem(below[i]);
         subsurfaceItem->setZ(i - below.count());
     }
- 
+
     for (int i = 0; i < above.count(); ++i) {
         SurfaceItemWayland *subsurfaceItem = getOrCreateSubSurfaceItem(above[i]);
         subsurfaceItem->setZ(i);
@@ -149,7 +149,7 @@ KWaylandServer::SurfaceInterface *SurfacePixmapWayland::surface() const
     return m_item->surface();
 }
 
-KWaylandServer::BufferInterface *SurfacePixmapWayland::buffer() const
+KWaylandServer::ClientBuffer *SurfacePixmapWayland::buffer() const
 {
     return m_buffer;
 }
@@ -169,31 +169,20 @@ void SurfacePixmapWayland::update()
 
 bool SurfacePixmapWayland::isValid() const
 {
-    // Referenced buffers get destroyed under our nose, check also the platform texture
-    // to work around BufferInterface's weird api.
-    return m_buffer || platformTexture()->isValid();
+    return m_buffer;
 }
 
-void SurfacePixmapWayland::clearBuffer()
-{
-    setBuffer(nullptr);
-}
-
-void SurfacePixmapWayland::setBuffer(KWaylandServer::BufferInterface *buffer)
+void SurfacePixmapWayland::setBuffer(KWaylandServer::ClientBuffer *buffer)
 {
     if (m_buffer == buffer) {
         return;
     }
     if (m_buffer) {
-        disconnect(m_buffer, &KWaylandServer::BufferInterface::aboutToBeDestroyed,
-                   this, &SurfacePixmapWayland::clearBuffer);
         m_buffer->unref();
     }
     m_buffer = buffer;
     if (m_buffer) {
         m_buffer->ref();
-        connect(m_buffer, &KWaylandServer::BufferInterface::aboutToBeDestroyed,
-                this, &SurfacePixmapWayland::clearBuffer);
         m_hasAlphaChannel = m_buffer->hasAlphaChannel();
     }
 }

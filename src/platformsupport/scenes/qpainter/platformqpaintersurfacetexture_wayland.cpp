@@ -7,7 +7,7 @@
 #include "platformqpaintersurfacetexture_wayland.h"
 #include "surfaceitem_wayland.h"
 
-#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/surface_interface.h>
 
 #include <QPainter>
@@ -24,7 +24,7 @@ PlatformQPainterSurfaceTextureWayland::PlatformQPainterSurfaceTextureWayland(QPa
 
 bool PlatformQPainterSurfaceTextureWayland::create()
 {
-    KWaylandServer::BufferInterface *buffer = m_pixmap->buffer();
+    auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_pixmap->buffer());
     if (Q_LIKELY(buffer)) {
         // The buffer data is copied as the buffer interface returns a QImage
         // which doesn't own the data of the underlying wl_shm_buffer object.
@@ -35,7 +35,7 @@ bool PlatformQPainterSurfaceTextureWayland::create()
 
 void PlatformQPainterSurfaceTextureWayland::update(const QRegion &region)
 {
-    KWaylandServer::BufferInterface *buffer = m_pixmap->buffer();
+    auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_pixmap->buffer());
     if (Q_UNLIKELY(!buffer)) {
         return;
     }

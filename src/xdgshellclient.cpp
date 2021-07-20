@@ -26,7 +26,6 @@
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 #include <KWaylandServer/appmenu_interface.h>
-#include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/output_interface.h>
 #include <KWaylandServer/plasmashell_interface.h>
 #include <KWaylandServer/seat_interface.h>

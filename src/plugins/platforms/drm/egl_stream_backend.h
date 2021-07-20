@@ -98,9 +98,9 @@ private:
     bool acquireStreamFrame(EGLStreamKHR stream);
     void createFbo();
     void copyExternalTexture(GLuint tex);
-    bool attachBuffer(KWaylandServer::BufferInterface *buffer);
+    bool attachBuffer(KWaylandServer::ClientBuffer *buffer);
     bool checkBuffer(KWaylandServer::SurfaceInterface *surface,
-                     KWaylandServer::BufferInterface *buffer);
+                     KWaylandServer::ClientBuffer *buffer);
 
     EglStreamBackend *m_backend;
     GLuint m_fbo, m_rbo, m_textureId;

@@ -12,9 +12,9 @@
 #include "workspace.h"
 
 #include <KWaylandServer/display.h>
+#include <KWaylandServer/clientbuffer.h>
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/buffer_interface.h>
 
 #include <QFileInfo>
 
