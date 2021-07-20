@@ -84,6 +84,14 @@ protected:
     void xdg_positioner_set_parent_configure(Resource *resource, uint32_t serial) override;
 };
 
+struct XdgSurfaceState
+{
+    QRect windowGeometry;
+    quint32 acknowledgedConfigure;
+    bool acknowledgedConfigureIsSet : 1 = false;
+    bool windowGeometryIsSet : 1 = false;
+};
+
 class XdgSurfaceInterfacePrivate : public QtWaylandServer::xdg_surface
 {
 public:
@@ -100,13 +108,8 @@ public:
     bool isMapped = false;
     bool isConfigured = false;
 
-    struct State
-    {
-        QRect windowGeometry;
-    };
-
-    State next;
-    State current;
+    XdgSurfaceState next;
+    XdgSurfaceState current;
 
     static XdgSurfaceInterfacePrivate *get(XdgSurfaceInterface *surface);
 

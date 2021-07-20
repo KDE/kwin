@@ -544,6 +544,7 @@ void XdgShellTest::testConfigureStates()
     QVERIFY(ackSpy.isValid());
 
     xdgSurface->ackConfigure(configureSpy.first().at(2).value<quint32>());
+    surface->commit(Surface::CommitFlag::None);
     QVERIFY(ackSpy.wait());
     QCOMPARE(ackSpy.count(), 1);
     QCOMPARE(ackSpy.first().first().value<quint32>(), configureSpy.first().at(2).value<quint32>());
@@ -590,6 +591,7 @@ void XdgShellTest::testConfigureMultipleAcks()
     QCOMPARE(xdgSurface->size(), QSize(30, 40));
 
     xdgSurface->ackConfigure(serial3);
+    surface->commit(Surface::CommitFlag::None);
     QVERIFY(ackSpy.wait());
     QCOMPARE(ackSpy.count(), 1);
     QCOMPARE(ackSpy.last().first().value<quint32>(), serial3);

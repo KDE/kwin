@@ -151,17 +151,26 @@ XdgSurfaceInterfacePrivate::XdgSurfaceInterfacePrivate(XdgSurfaceInterface *xdgS
 
 void XdgSurfaceInterfacePrivate::commit()
 {
-    if (current.windowGeometry != next.windowGeometry) {
+    if (next.acknowledgedConfigureIsSet) {
+        current.acknowledgedConfigure = next.acknowledgedConfigure;
+        next.acknowledgedConfigureIsSet = false;
+        Q_EMIT q->configureAcknowledged(current.acknowledgedConfigure);
+    }
+
+    if (next.windowGeometryIsSet) {
         current.windowGeometry = next.windowGeometry;
+        next.windowGeometryIsSet = false;
         Q_EMIT q->windowGeometryChanged(current.windowGeometry);
     }
+
     isMapped = surface->buffer();
 }
 
 void XdgSurfaceInterfacePrivate::reset()
 {
     isConfigured = false;
-    current = next = State();
+    current = XdgSurfaceState{};
+    next = XdgSurfaceState{};
     Q_EMIT q->resetOccurred();
 }
 
@@ -253,12 +262,14 @@ void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resou
     }
 
     next.windowGeometry = QRect(x, y, width, height);
+    next.windowGeometryIsSet = true;
 }
 
 void XdgSurfaceInterfacePrivate::xdg_surface_ack_configure(Resource *resource, uint32_t serial)
 {
     Q_UNUSED(resource)
-    Q_EMIT q->configureAcknowledged(serial);
+    next.acknowledgedConfigure = serial;
+    next.acknowledgedConfigureIsSet = true;
 }
 
 XdgSurfaceInterface::XdgSurfaceInterface(XdgShellInterface *shell, SurfaceInterface *surface,
