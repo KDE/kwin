@@ -6,7 +6,7 @@
 */
 #include "surface_interface.h"
 #include "surface_interface_p.h"
-#include "buffer_interface.h"
+#include "clientbuffer.h"
 #include "clientconnection.h"
 #include "compositor_interface.h"
 #include "display.h"
@@ -278,7 +278,7 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
         pending.bufferDamage = QRegion();
         return;
     }
-    pending.buffer = BufferInterface::get(compositor->display(), buffer);
+    pending.buffer = compositor->display()->clientBufferForResource(buffer);
 }
 
 void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
@@ -429,18 +429,18 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
         break;
     case OutputInterface::Transform::Rotated90:
     case OutputInterface::Transform::Flipped90:
-        surfaceToBufferMatrix.translate(0, current.buffer->height() / current.bufferScale);
+        surfaceToBufferMatrix.translate(0, bufferSize.height() / current.bufferScale);
         surfaceToBufferMatrix.rotate(-90, 0, 0, 1);
         break;
     case OutputInterface::Transform::Rotated180:
     case OutputInterface::Transform::Flipped180:
-        surfaceToBufferMatrix.translate(current.buffer->width() / current.bufferScale,
-                                        current.buffer->height() / current.bufferScale);
+        surfaceToBufferMatrix.translate(bufferSize.width() / current.bufferScale,
+                                        bufferSize.height() / current.bufferScale);
         surfaceToBufferMatrix.rotate(-180, 0, 0, 1);
         break;
     case OutputInterface::Transform::Rotated270:
     case OutputInterface::Transform::Flipped270:
-        surfaceToBufferMatrix.translate(current.buffer->width() / current.bufferScale, 0);
+        surfaceToBufferMatrix.translate(bufferSize.width() / current.bufferScale, 0);
         surfaceToBufferMatrix.rotate(-270, 0, 0, 1);
         break;
     }
@@ -448,12 +448,12 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
     switch (current.bufferTransform) {
     case OutputInterface::Transform::Flipped:
     case OutputInterface::Transform::Flipped180:
-        surfaceToBufferMatrix.translate(current.buffer->width() / current.bufferScale, 0);
+        surfaceToBufferMatrix.translate(bufferSize.width() / current.bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
     case OutputInterface::Transform::Flipped90:
     case OutputInterface::Transform::Flipped270:
-        surfaceToBufferMatrix.translate(current.buffer->height() / current.bufferScale, 0);
+        surfaceToBufferMatrix.translate(bufferSize.height() / current.bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
     default:
@@ -562,13 +562,11 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     if (bufferRef != current.buffer) {
         if (bufferRef) {
-            QObject::disconnect(bufferRef, &BufferInterface::aboutToBeDestroyed, q, &SurfaceInterface::handleBufferRemoved);
             bufferRef->unref();
         }
         bufferRef = current.buffer;
         if (bufferRef) {
             bufferRef->ref();
-            QObject::connect(bufferRef, &BufferInterface::aboutToBeDestroyed, q, &SurfaceInterface::handleBufferRemoved);
         }
     }
 
@@ -722,7 +720,7 @@ OutputInterface::Transform SurfaceInterface::bufferTransform() const
     return d->current.bufferTransform;
 }
 
-BufferInterface *SurfaceInterface::buffer()
+ClientBuffer *SurfaceInterface::buffer()
 {
     return d->bufferRef;
 }
@@ -991,14 +989,6 @@ QRegion SurfaceInterface::mapFromBuffer(const QRegion &region) const
 QMatrix4x4 SurfaceInterface::surfaceToBufferMatrix() const
 {
     return d->surfaceToBufferMatrix;
-}
-
-void SurfaceInterface::handleBufferRemoved()
-{
-    if (d->bufferRef) {
-        d->bufferRef->unref();
-        d->bufferRef = nullptr;
-    }
 }
 
 QPointF SurfaceInterface::mapToChild(SurfaceInterface *child, const QPointF &point) const

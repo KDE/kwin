@@ -33,6 +33,7 @@ namespace KWaylandServer
  * @see Display
  */
 
+class ClientBuffer;
 class ClientConnection;
 class DisplayPrivate;
 class OutputInterface;
@@ -138,6 +139,12 @@ public:
      * @see setEglDisplay
      */
     void *eglDisplay() const;
+
+    /**
+     * Returns the client buffer with the specified @a resource. Returns @c null if there's
+     * no such a buffer.
+     */
+    ClientBuffer *clientBufferForResource(wl_resource *resource) const;
 
 private Q_SLOTS:
     void flush();

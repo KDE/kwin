@@ -18,7 +18,7 @@
 namespace KWaylandServer
 {
 class BlurInterface;
-class BufferInterface;
+class ClientBuffer;
 class ConfinedPointerV1Interface;
 class ContrastInterface;
 class CompositorInterface;
@@ -40,13 +40,13 @@ class SurfaceInterfacePrivate;
  * This should make interacting from the server easier, it only needs to monitor the SurfaceInterface
  * and does not need to track each specific interface.
  *
- * The SurfaceInterface takes care of reference/unreferencing the BufferInterface attached to it.
- * As long as a BufferInterface is attached, the released signal won't be sent. If the BufferInterface
+ * The SurfaceInterface takes care of reference/unreferencing the ClientBuffer attached to it.
+ * As long as a ClientBuffer is attached, the released signal won't be sent. If the ClientBuffer
  * is no longer needed by the SurfaceInterface, it will get unreferenced and might be automatically
  * deleted (if it's no longer referenced).
  *
  * @see CompositorInterface
- * @see BufferInterface
+ * @see ClientBuffer
  * @see SubSurfaceInterface
  * @see BlurInterface
  * @see ContrastInterface
@@ -176,9 +176,9 @@ public:
      */
     OutputInterface::Transform bufferTransform() const;
     /**
-     * @returns the current BufferInterface, might be @c nullptr.
+     * @returns the current ClientBuffer, might be @c nullptr.
      */
-    BufferInterface *buffer();
+    ClientBuffer *buffer();
     QPoint offset() const;
     /**
      * Returns the current size of the surface, in surface coordinates.
@@ -237,9 +237,9 @@ public:
 
     /**
      * Whether the SurfaceInterface is currently considered to be mapped.
-     * A SurfaceInterface is mapped if it has a non-null BufferInterface attached.
+     * A SurfaceInterface is mapped if it has a non-null ClientBuffer attached.
      * If the SurfaceInterface references a SubSurfaceInterface it is only considered
-     * mapped if it has a BufferInterface attached and the parent SurfaceInterface is mapped.
+     * mapped if it has a ClientBuffer attached and the parent SurfaceInterface is mapped.
      *
      * @returns Whether the SurfaceInterface is currently mapped
      */
@@ -351,7 +351,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever the SurfaceInterface got damaged.
      * The signal is only emitted during the commit of state.
-     * A damage means that a new BufferInterface got attached.
+     * A damage means that a new ClientBuffer got attached.
      *
      * @see buffer
      * @see damage
@@ -426,8 +426,6 @@ Q_SIGNALS:
     void committed();
 
 private:
-    void handleBufferRemoved();
-
     QScopedPointer<SurfaceInterfacePrivate> d;
     friend class SurfaceInterfacePrivate;
 };

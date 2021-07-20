@@ -14,7 +14,7 @@
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
 // server
-#include "../../src/server/buffer_interface.h"
+#include "../../src/server/shmclientbuffer.h"
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/shadow_interface.h"
@@ -175,6 +175,15 @@ void ShadowTest::testCreateShadow()
     QVERIFY(!serverSurface->shadow());
 }
 
+static QImage bufferToImage(ClientBuffer *clientBuffer)
+{
+    auto shmBuffer = qobject_cast<ShmClientBuffer *>(clientBuffer);
+    if (shmBuffer) {
+        return shmBuffer->data();
+    }
+    return QImage();
+}
+
 void ShadowTest::testShadowElements()
 {
     // this test verifies that all shadow elements are correctly passed to the server
@@ -222,35 +231,14 @@ void ShadowTest::testShadowElements()
     auto serverShadow = serverSurface->shadow();
     QVERIFY(serverShadow);
     QCOMPARE(serverShadow->offset(), QMarginsF(1, 2, 3, 4));
-    QCOMPARE(serverShadow->topLeft()->data(), topLeftImage);
-    QCOMPARE(serverShadow->top()->data(), topImage);
-    QCOMPARE(serverShadow->topRight()->data(), topRightImage);
-    QCOMPARE(serverShadow->right()->data(), rightImage);
-    QCOMPARE(serverShadow->bottomRight()->data(), bottomRightImage);
-    QCOMPARE(serverShadow->bottom()->data(), bottomImage);
-    QCOMPARE(serverShadow->bottomLeft()->data(), bottomLeftImage);
-    QCOMPARE(serverShadow->left()->data(), leftImage);
-
-    // try to destroy the buffer
-    // first attach one buffer
-    shadow->attachTopLeft(m_shm->createBuffer(topLeftImage));
-    // create a destroyed signal
-    QSignalSpy destroyedSpy(serverShadow->topLeft(), &BufferInterface::aboutToBeDestroyed);
-    QVERIFY(destroyedSpy.isValid());
-    delete m_shm;
-    m_shm = nullptr;
-    QVERIFY(destroyedSpy.wait());
-
-    // now all buffers should be gone
-    // TODO: does that need a signal?
-    QVERIFY(!serverShadow->topLeft());
-    QVERIFY(!serverShadow->top());
-    QVERIFY(!serverShadow->topRight());
-    QVERIFY(!serverShadow->right());
-    QVERIFY(!serverShadow->bottomRight());
-    QVERIFY(!serverShadow->bottom());
-    QVERIFY(!serverShadow->bottomLeft());
-    QVERIFY(!serverShadow->left());
+    QCOMPARE(bufferToImage(serverShadow->topLeft()), topLeftImage);
+    QCOMPARE(bufferToImage(serverShadow->top()), topImage);
+    QCOMPARE(bufferToImage(serverShadow->topRight()), topRightImage);
+    QCOMPARE(bufferToImage(serverShadow->right()), rightImage);
+    QCOMPARE(bufferToImage(serverShadow->bottomRight()), bottomRightImage);
+    QCOMPARE(bufferToImage(serverShadow->bottom()), bottomImage);
+    QCOMPARE(bufferToImage(serverShadow->bottomLeft()), bottomLeftImage);
+    QCOMPARE(bufferToImage(serverShadow->left()), leftImage);
 }
 
 void ShadowTest::testSurfaceDestroy()

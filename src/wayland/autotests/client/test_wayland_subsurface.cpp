@@ -15,7 +15,6 @@
 #include "KWayland/Client/subcompositor.h"
 #include "KWayland/Client/subsurface.h"
 #include "KWayland/Client/surface.h"
-#include "../../src/server/buffer_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/subcompositor_interface.h"
@@ -641,8 +640,6 @@ void TestSubSurface::testSyncMode()
     parent->commit();
     QVERIFY(childDamagedSpy.wait());
     QCOMPARE(childDamagedSpy.count(), 1);
-    QCOMPARE(childSurface->buffer()->data(), image);
-    QCOMPARE(parentSurface->buffer()->data(), image2);
     QVERIFY(childSurface->isMapped());
     QVERIFY(parentSurface->isMapped());
 
@@ -692,7 +689,6 @@ void TestSubSurface::testDeSyncMode()
     // setting to desync should apply the state directly
     subSurface->setMode(SubSurface::Mode::Desynchronized);
     QVERIFY(childDamagedSpy.wait());
-    QCOMPARE(childSurface->buffer()->data(), image);
     QVERIFY(!childSurface->isMapped());
     QVERIFY(!parentSurface->isMapped());
 
@@ -702,7 +698,6 @@ void TestSubSurface::testDeSyncMode()
     surface->damage(QRect(0, 0, 200, 200));
     surface->commit(Surface::CommitFlag::None);
     QVERIFY(childDamagedSpy.wait());
-    QCOMPARE(childSurface->buffer()->data(), image);
 }
 
 

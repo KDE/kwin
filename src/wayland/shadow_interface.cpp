@@ -4,7 +4,7 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "shadow_interface.h"
-#include "buffer_interface.h"
+#include "clientbuffer.h"
 #include "display.h"
 #include "surface_interface_p.h"
 
@@ -105,14 +105,14 @@ public:
             BottomLeftBuffer = 1 << 7,
             Offset = 1 << 8,
         };
-        BufferInterface *left = nullptr;
-        BufferInterface *topLeft = nullptr;
-        BufferInterface *top = nullptr;
-        BufferInterface *topRight = nullptr;
-        BufferInterface *right = nullptr;
-        BufferInterface *bottomRight = nullptr;
-        BufferInterface *bottom = nullptr;
-        BufferInterface *bottomLeft = nullptr;
+        QPointer<ClientBuffer> left;
+        QPointer<ClientBuffer> topLeft;
+        QPointer<ClientBuffer> top;
+        QPointer<ClientBuffer> topRight;
+        QPointer<ClientBuffer> right;
+        QPointer<ClientBuffer> bottomRight;
+        QPointer<ClientBuffer> bottom;
+        QPointer<ClientBuffer> bottomLeft;
         QMarginsF offset;
         Flags flags  = Flags::None;
     };
@@ -175,41 +175,7 @@ void ShadowInterfacePrivate::org_kde_kwin_shadow_commit(Resource *resource)
 
 void ShadowInterfacePrivate::attach(ShadowInterfacePrivate::State::Flags flag, wl_resource *buffer)
 {
-    BufferInterface *b = BufferInterface::get(manager->display(), buffer);
-    if (b) {
-        QObject::connect(b, &BufferInterface::aboutToBeDestroyed, q,
-            [this](BufferInterface *buffer) {
-    #define PENDING( __PART__ ) \
-                if (pending.__PART__ == buffer) { \
-                    pending.__PART__ = nullptr; \
-                }
-                PENDING(left)
-                PENDING(topLeft)
-                PENDING(top)
-                PENDING(topRight)
-                PENDING(right)
-                PENDING(bottomRight)
-                PENDING(bottom)
-                PENDING(bottomLeft)
-    #undef PENDING
-
-    #define CURRENT( __PART__ ) \
-                if (current.__PART__ == buffer) { \
-                    current.__PART__->unref(); \
-                    current.__PART__ = nullptr; \
-                }
-                CURRENT(left)
-                CURRENT(topLeft)
-                CURRENT(top)
-                CURRENT(topRight)
-                CURRENT(right)
-                CURRENT(bottomRight)
-                CURRENT(bottom)
-                CURRENT(bottomLeft)
-    #undef CURRENT
-            }
-        );
-    }
+    ClientBuffer *b = manager->display()->clientBufferForResource(buffer);
     switch (flag) {
     case State::LeftBuffer:
         pending.left = b;
@@ -367,7 +333,7 @@ QMarginsF ShadowInterface::offset() const
 }
 
 #define BUFFER( __PART__ ) \
-BufferInterface *ShadowInterface::__PART__() const \
+ClientBuffer *ShadowInterface::__PART__() const \
 { \
     return d->current.__PART__; \
 }

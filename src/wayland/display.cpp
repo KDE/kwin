@@ -5,9 +5,12 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "display.h"
+#include "clientbufferintegration.h"
 #include "display_p.h"
+#include "drmclientbuffer.h"
 #include "logging.h"
 #include "output_interface.h"
+#include "shmclientbuffer.h"
 
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
@@ -119,7 +122,7 @@ void Display::flush()
 void Display::createShm()
 {
     Q_ASSERT(d->display);
-    wl_display_init_shm(d->display);
+    new ShmClientBufferIntegration(this);
 }
 
 quint32 Display::nextSerial()
@@ -227,11 +230,77 @@ void Display::setEglDisplay(void *display)
         return;
     }
     d->eglDisplay = (EGLDisplay)display;
+    new DrmClientBufferIntegration(this);
 }
 
 void *Display::eglDisplay() const
 {
     return d->eglDisplay;
+}
+
+struct ClientBufferDestroyListener : wl_listener
+{
+    ClientBufferDestroyListener(Display *display, ClientBuffer *buffer);
+    ~ClientBufferDestroyListener();
+
+    Display *display;
+};
+
+void bufferDestroyCallback(wl_listener *listener, void *data)
+{
+    ClientBufferDestroyListener *destroyListener = static_cast<ClientBufferDestroyListener *>(listener);
+    DisplayPrivate *displayPrivate = DisplayPrivate::get(destroyListener->display);
+
+    ClientBuffer *buffer = displayPrivate->q->clientBufferForResource(static_cast<wl_resource *>(data));
+    displayPrivate->unregisterClientBuffer(buffer);
+
+    buffer->markAsDestroyed();
+}
+
+ClientBufferDestroyListener::ClientBufferDestroyListener(Display *display, ClientBuffer *buffer)
+    : display(display)
+{
+    notify = bufferDestroyCallback;
+
+    link.prev = nullptr;
+    link.next = nullptr;
+
+    wl_resource_add_destroy_listener(buffer->resource(), this);
+}
+
+ClientBufferDestroyListener::~ClientBufferDestroyListener()
+{
+    wl_list_remove(&link);
+}
+
+ClientBuffer *Display::clientBufferForResource(wl_resource *resource) const
+{
+    ClientBuffer *buffer = d->resourceToBuffer.value(resource);
+    if (buffer) {
+        return buffer;
+    }
+
+    for (ClientBufferIntegration *integration : qAsConst(d->bufferIntegrations)) {
+        ClientBuffer *buffer = integration->createBuffer(resource);
+        if (buffer) {
+            d->registerClientBuffer(buffer);
+            return buffer;
+        }
+    }
+    return nullptr;
+}
+
+void DisplayPrivate::registerClientBuffer(ClientBuffer *buffer)
+{
+    resourceToBuffer.insert(buffer->resource(), buffer);
+    bufferToListener.insert(buffer, new ClientBufferDestroyListener(q, buffer));
+}
+
+void DisplayPrivate::unregisterClientBuffer(ClientBuffer *buffer)
+{
+    Q_ASSERT_X(buffer->resource(), "unregisterClientBuffer", "buffer must have valid resource");
+    resourceToBuffer.remove(buffer->resource());
+    delete bufferToListener.take(buffer);
 }
 
 }

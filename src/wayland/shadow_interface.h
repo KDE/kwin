@@ -15,7 +15,7 @@ struct wl_resource;
 namespace KWaylandServer
 {
 
-class BufferInterface;
+class ClientBuffer;
 class Display;
 class ShadowManagerInterfacePrivate;
 class ShadowInterfacePrivate;
@@ -40,14 +40,14 @@ class KWAYLANDSERVER_EXPORT ShadowInterface : public QObject
 public:
     ~ShadowInterface() override;
 
-    BufferInterface *left() const;
-    BufferInterface *topLeft() const;
-    BufferInterface *top() const;
-    BufferInterface *topRight() const;
-    BufferInterface *right() const;
-    BufferInterface *bottomRight() const;
-    BufferInterface *bottom() const;
-    BufferInterface *bottomLeft() const;
+    ClientBuffer *left() const;
+    ClientBuffer *topLeft() const;
+    ClientBuffer *top() const;
+    ClientBuffer *topRight() const;
+    ClientBuffer *right() const;
+    ClientBuffer *bottomRight() const;
+    ClientBuffer *bottom() const;
+    ClientBuffer *bottomLeft() const;
 
     QMarginsF offset() const;
 

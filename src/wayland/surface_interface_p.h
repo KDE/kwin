@@ -56,7 +56,7 @@ struct SurfaceState
     OutputInterface::Transform bufferTransform = OutputInterface::Transform::Normal;
     QList<KWaylandFrameCallback *> frameCallbacks;
     QPoint offset = QPoint();
-    QPointer<BufferInterface> buffer;
+    QPointer<ClientBuffer> buffer;
     QPointer<ShadowInterface> shadow;
     QPointer<BlurInterface> blur;
     QPointer<ContrastInterface> contrast;
@@ -115,7 +115,7 @@ public:
     QSize bufferSize;
     QSize surfaceSize;
     QRegion inputRegion;
-    BufferInterface *bufferRef = nullptr;
+    ClientBuffer *bufferRef = nullptr;
     bool hasCacheState = false;
 
     // workaround for https://bugreports.qt.io/browse/QTBUG-52192

@@ -2,7 +2,8 @@ set(SERVER_LIB_SRCS
     abstract_data_source.cpp
     appmenu_interface.cpp
     blur_interface.cpp
-    buffer_interface.cpp
+    clientbuffer.cpp
+    clientbufferintegration.cpp
     clientconnection.cpp
     compositor_interface.cpp
     contrast_interface.cpp
@@ -16,6 +17,7 @@ set(SERVER_LIB_SRCS
     datasource_interface.cpp
     display.cpp
     dpms_interface.cpp
+    drmclientbuffer.cpp
     eglstream_controller_interface.cpp
     fakeinput_interface.cpp
     filtered_display.cpp
@@ -27,7 +29,7 @@ set(SERVER_LIB_SRCS
     keyboard_shortcuts_inhibit_v1_interface.cpp
     keystate_interface.cpp
     layershell_v1_interface.cpp
-    linuxdmabuf_v1_interface.cpp
+    linuxdmabufv1clientbuffer.cpp
     output_interface.cpp
     outputchangeset.cpp
     outputconfiguration_interface.cpp
@@ -51,6 +53,7 @@ set(SERVER_LIB_SRCS
     server_decoration_interface.cpp
     server_decoration_palette_interface.cpp
     shadow_interface.cpp
+    shmclientbuffer.cpp
     slide_interface.cpp
     subcompositor_interface.cpp
     surface_interface.cpp
@@ -226,7 +229,7 @@ ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     BASENAME keystate
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/linux-dmabuf/linux-dmabuf-unstable-v1.xml
     BASENAME linux-dmabuf-unstable-v1
 )
@@ -320,7 +323,8 @@ set(SERVER_LIB_HEADERS
   abstract_data_source.h
   appmenu_interface.h
   blur_interface.h
-  buffer_interface.h
+  clientbuffer.h
+  clientbufferintegration.h
   clientconnection.h
   compositor_interface.h
   contrast_interface.h
@@ -334,6 +338,7 @@ set(SERVER_LIB_HEADERS
   datasource_interface.h
   display.h
   dpms_interface.h
+  drmclientbuffer.h
   eglstream_controller_interface.h
   fakeinput_interface.h
   filtered_display.h
@@ -345,7 +350,7 @@ set(SERVER_LIB_HEADERS
   keyboard_shortcuts_inhibit_v1_interface.h
   keystate_interface.h
   layershell_v1_interface.h
-  linuxdmabuf_v1_interface.h
+  linuxdmabufv1clientbuffer.h
   output_interface.h
   outputchangeset.h
   outputconfiguration_interface.h
@@ -365,6 +370,7 @@ set(SERVER_LIB_HEADERS
   server_decoration_interface.h
   server_decoration_palette_interface.h
   shadow_interface.h
+  shmclientbuffer.h
   slide_interface.h
   subcompositor_interface.h
   surface_interface.h

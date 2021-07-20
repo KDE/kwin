@@ -17,11 +17,12 @@
 #include "KWayland/Client/region.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/shm_pool.h"
-#include "../../src/server/buffer_interface.h"
+#include "../../src/server/clientbuffer.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/idleinhibit_v1_interface.h"
 #include "../../src/server/surface_interface.h"
+#include "../../src/server/shmclientbuffer.h"
 // Wayland
 #include <wayland-client-protocol.h>
 
@@ -405,11 +406,13 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(unmappedSpy.isEmpty());
 
     // now the ServerSurface should have the black image attached as a buffer
-    KWaylandServer::BufferInterface *buffer = serverSurface->buffer();
+    KWaylandServer::ClientBuffer *buffer = serverSurface->buffer();
     buffer->ref();
-    QVERIFY(buffer->shmBuffer());
-    QCOMPARE(buffer->data(), black);
-    QCOMPARE(buffer->data().format(), QImage::Format_RGB32);
+    auto shmBuffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer);
+    QVERIFY(shmBuffer);
+    QCOMPARE(shmBuffer->data(), black);
+    QCOMPARE(shmBuffer->data().format(), QImage::Format_RGB32);
+    QCOMPARE(shmBuffer->size(), QSize(24, 24));
 
     // render another frame
     s->attachBuffer(redBuffer);
@@ -419,16 +422,16 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(damageSpy.wait());
     QCOMPARE(mappedSpy.count(), 1);
     QVERIFY(unmappedSpy.isEmpty());
-    KWaylandServer::BufferInterface *buffer2 = serverSurface->buffer();
+    KWaylandServer::ClientBuffer *buffer2 = serverSurface->buffer();
     buffer2->ref();
-    QVERIFY(buffer2->shmBuffer());
-    QCOMPARE(buffer2->data().format(), QImage::Format_ARGB32_Premultiplied);
-    QCOMPARE(buffer2->data().width(), 24);
-    QCOMPARE(buffer2->data().height(), 24);
+    auto shmBuffer2 = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer2);
+    QVERIFY(shmBuffer2);
+    QCOMPARE(shmBuffer2->data().format(), QImage::Format_ARGB32_Premultiplied);
+    QCOMPARE(shmBuffer2->size(), QSize(24, 24));
     for (int i = 0; i < 24; ++i) {
         for (int j = 0; j < 24; ++j) {
             // it's premultiplied in the format
-            QCOMPARE(buffer2->data().pixel(i, j), qRgba(128, 0, 0, 128));
+            QCOMPARE(shmBuffer2->data().pixel(i, j), qRgba(128, 0, 0, 128));
         }
     }
     buffer2->unref();
@@ -448,7 +451,6 @@ void TestWaylandSurface::testAttachBuffer()
     QCOMPARE(mappedSpy.count(), 1);
     QVERIFY(unmappedSpy.isEmpty());
     QVERIFY(!buffer2->isReferenced());
-    delete buffer2;
     // TODO: we should have a signal on when the Buffer gets released
     QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
     if (!redBuffer.data()->isReleased()) {
@@ -456,16 +458,16 @@ void TestWaylandSurface::testAttachBuffer()
     }
     QVERIFY(redBuffer.data()->isReleased());
 
-    KWaylandServer::BufferInterface *buffer3 = serverSurface->buffer();
+    KWaylandServer::ClientBuffer *buffer3 = serverSurface->buffer();
     buffer3->ref();
-    QVERIFY(buffer3->shmBuffer());
-    QCOMPARE(buffer3->data().format(), QImage::Format_ARGB32_Premultiplied);
-    QCOMPARE(buffer3->data().width(), 24);
-    QCOMPARE(buffer3->data().height(), 24);
+    auto shmBuffer3 = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer3);
+    QVERIFY(shmBuffer3);
+    QCOMPARE(shmBuffer3->data().format(), QImage::Format_ARGB32_Premultiplied);
+    QCOMPARE(shmBuffer3->size(), QSize(24, 24));
     for (int i = 0; i < 24; ++i) {
         for (int j = 0; j < 24; ++j) {
             // it's premultiplied in the format
-            QCOMPARE(buffer3->data().pixel(i, j), qRgba(0, 0, 128, 128));
+            QCOMPARE(shmBuffer3->data().pixel(i, j), qRgba(0, 0, 128, 128));
         }
     }
     buffer3->unref();
@@ -555,12 +557,12 @@ void TestWaylandSurface::testMultipleSurfaces()
     QVERIFY(damageSpy1.wait());
 
     // now the ServerSurface should have the black image attached as a buffer
-    BufferInterface *buffer1 = serverSurface1->buffer();
+    ClientBuffer *buffer1 = serverSurface1->buffer();
     QVERIFY(buffer1);
-    QImage buffer1Data = buffer1->data();
+    QImage buffer1Data = qobject_cast<ShmClientBuffer *>(buffer1)->data();
     QCOMPARE(buffer1Data, black);
     // accessing the same buffer is OK
-    QImage buffer1Data2 = buffer1->data();
+    QImage buffer1Data2 = qobject_cast<ShmClientBuffer *>(buffer1)->data();
     QCOMPARE(buffer1Data2, buffer1Data);
     buffer1Data = QImage();
     QVERIFY(buffer1Data.isNull());
@@ -575,13 +577,13 @@ void TestWaylandSurface::testMultipleSurfaces()
     QVERIFY(damageSpy2.isValid());
     QVERIFY(damageSpy2.wait());
 
-    BufferInterface *buffer2 = serverSurface2->buffer();
+    ClientBuffer *buffer2 = serverSurface2->buffer();
     QVERIFY(buffer2);
-    QImage buffer2Data = buffer2->data();
+    QImage buffer2Data = qobject_cast<ShmClientBuffer *>(buffer2)->data();
     QCOMPARE(buffer2Data, red);
 
     // while buffer2 is accessed we cannot access buffer1
-    buffer1Data = buffer1->data();
+    buffer1Data = qobject_cast<ShmClientBuffer *>(buffer1)->data();
     QVERIFY(buffer1Data.isNull());
 
     // a deep copy can be kept around
@@ -592,7 +594,7 @@ void TestWaylandSurface::testMultipleSurfaces()
     QCOMPARE(deepCopy, red);
 
     // now that buffer2Data is destroyed we can access buffer1 again
-    buffer1Data = buffer1->data();
+    buffer1Data = qobject_cast<ShmClientBuffer *>(buffer1)->data();
     QVERIFY(!buffer1Data.isNull());
     QCOMPARE(buffer1Data, black);
 }
@@ -931,14 +933,9 @@ void TestWaylandSurface::testDestroyAttachedBuffer()
     m_connection->flush();
 
     // Let's try to destroy it
-    QSignalSpy destroySpy(serverSurface->buffer(), &BufferInterface::aboutToBeDestroyed);
-    QVERIFY(destroySpy.isValid());
     delete m_shm;
     m_shm = nullptr;
-    QVERIFY(destroySpy.wait());
-
-    // TODO: should this emit unmapped?
-    QVERIFY(!serverSurface->buffer());
+    QTRY_VERIFY(serverSurface->buffer()->isDestroyed());
 }
 
 

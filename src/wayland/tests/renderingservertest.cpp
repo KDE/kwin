@@ -3,7 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "../src/server/buffer_interface.h"
+#include "../src/server/shmclientbuffer.h"
 #include "../src/server/compositor_interface.h"
 #include "../src/server/datadevicemanager_interface.h"
 #include "../src/server/display.h"
@@ -154,8 +154,10 @@ void CompositorWindow::paintEvent(QPaintEvent *event)
         if (!surface || !surface->isMapped()) {
             continue;
         }
-        KWaylandServer::BufferInterface *buffer = surface->buffer();
-        p.drawImage(QPoint(0, 0), buffer->data());
+        auto clientBuffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(surface->buffer());
+        if (clientBuffer) {
+            p.drawImage(QPoint(0, 0), clientBuffer->data());
+        }
         surface->frameRendered(QDateTime::currentMSecsSinceEpoch());
     }
 }

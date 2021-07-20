@@ -11,7 +11,6 @@
 #include "KWayland/Client/surface.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/shm_pool.h"
-#include "../../src/server/buffer_interface.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/surface_interface.h"

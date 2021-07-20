@@ -9,6 +9,7 @@
 
 #include <wayland-server-core.h>
 
+#include <QHash>
 #include <QList>
 #include <QSocketNotifier>
 #include <QString>
@@ -16,14 +17,19 @@
 
 #include <EGL/egl.h>
 
+struct wl_resource;
+
 namespace KWaylandServer
 {
 
+class ClientBufferIntegration;
+class ClientBuffer;
 class ClientConnection;
 class Display;
 class OutputInterface;
 class OutputDeviceInterface;
 class SeatInterface;
+struct ClientBufferDestroyListener;
 
 class DisplayPrivate
 {
@@ -32,6 +38,9 @@ public:
     DisplayPrivate(Display *q);
 
     void registerSocketName(const QString &socketName);
+
+    void registerClientBuffer(ClientBuffer *clientBuffer);
+    void unregisterClientBuffer(ClientBuffer *clientBuffer);
 
     Display *q;
     QSocketNotifier *socketNotifier = nullptr;
@@ -44,6 +53,9 @@ public:
     QVector<ClientConnection *> clients;
     QStringList socketNames;
     EGLDisplay eglDisplay = EGL_NO_DISPLAY;
+    QHash<::wl_resource *, ClientBuffer *> resourceToBuffer;
+    QHash<ClientBuffer *, ClientBufferDestroyListener *> bufferToListener;
+    QList<ClientBufferIntegration *> bufferIntegrations;
 };
 
 } // namespace KWaylandServer
