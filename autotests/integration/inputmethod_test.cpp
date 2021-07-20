@@ -27,10 +27,12 @@
 #include <QDBusPendingReply>
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/display.h>
+#include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/output.h>
+#include <KWayland/Client/region.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/textinput.h>
 #include <KWayland/Client/seat.h>
@@ -51,6 +53,7 @@ private Q_SLOTS:
 
     void testOpenClose();
     void testEnableDisableV3();
+    void testEnableActive();
 };
 
 
@@ -179,6 +182,57 @@ void InputMethodTest::testEnableDisableV3()
     textInputV3->commit();
     QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
     QVERIFY(!InputMethod::self()->isActive());
+}
+
+void InputMethodTest::testEnableActive()
+{
+    QVERIFY(!InputMethod::self()->isActive());
+
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy clientRemovedSpy(workspace(), &Workspace::clientRemoved);
+
+    QSignalSpy activateSpy(InputMethod::self(), &InputMethod::activeChanged);
+
+    // Create an xdg_toplevel surface and wait for the compositor to catch up.
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QCOMPARE(client->frameGeometry().size(), QSize(1280, 1024));
+    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+    QScopedPointer<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+
+    QVERIFY(!textInput.isNull());
+    textInput->enable(surface.data());
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+
+    // Show the keyboard
+    textInput->showInputPanel();
+    QVERIFY(clientAddedSpy.wait());
+
+    QCOMPARE(workspace()->activeClient(), client);
+
+    activateSpy.clear();
+    textInput->enable(surface.get());
+    textInput->showInputPanel();
+    activateSpy.wait(200);
+    QVERIFY(activateSpy.isEmpty());
+    QVERIFY(InputMethod::self()->isActive());
+    auto keyboardClient = Test::inputPanelClient();
+    QVERIFY(keyboardClient);
+    textInput->enable(surface.get());
+
+    QVERIFY(InputMethod::self()->isActive());
+
+    // Destroy the test client.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)

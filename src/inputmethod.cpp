@@ -118,15 +118,21 @@ void InputMethod::hide()
 
 void InputMethod::setActive(bool active)
 {
-    bool wasActive = waylandServer()->inputMethod()->context();
-    waylandServer()->inputMethod()->sendDeactivate();
+    const bool wasActive = waylandServer()->inputMethod()->context();
+    if (wasActive && !active) {
+        waylandServer()->inputMethod()->sendDeactivate();
+    }
 
     if (active) {
         if (!m_enabled) {
             return;
         }
 
-        waylandServer()->inputMethod()->sendActivate();
+        if (!wasActive) {
+            waylandServer()->inputMethod()->sendActivate();
+        } else {
+            waylandServer()->inputMethod()->context()->sendReset();
+        }
         adoptInputMethodContext();
     } else {
         updateInputPanelState();
@@ -144,7 +150,7 @@ void InputMethod::clientAdded(AbstractClient *_client)
     }
 
     if (m_inputClient) {
-        qCWarning(KWIN_VIRTUALKEYBOARD) << "Replacing input client" << m_inputClient;
+        qCWarning(KWIN_VIRTUALKEYBOARD) << "Replacing input client" << m_inputClient << "with" << _client;
         disconnect(m_inputClient, nullptr, this, nullptr);
     }
 
