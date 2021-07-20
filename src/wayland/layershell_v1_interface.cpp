@@ -45,6 +45,8 @@ public:
     QMargins margins;
     QSize desiredSize = QSize(0, 0);
     int exclusiveZone = 0;
+    quint32 acknowledgedConfigure;
+    bool acknowledgedConfigureIsSet = false;
     bool acceptsFocus = false;
 };
 
@@ -241,7 +243,8 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_ack_configure(Resourc
         }
     }
     if (!isClosed) {
-        Q_EMIT q->configureAcknowledged(serial);
+        pending.acknowledgedConfigure = serial;
+        pending.acknowledgedConfigureIsSet = true;
     }
 }
 
@@ -264,6 +267,12 @@ void LayerSurfaceV1InterfacePrivate::commit()
 {
     if (isClosed) {
         return;
+    }
+
+    if (pending.acknowledgedConfigureIsSet) {
+        current.acknowledgedConfigure = pending.acknowledgedConfigure;
+        pending.acknowledgedConfigureIsSet = false;
+        Q_EMIT q->configureAcknowledged(pending.acknowledgedConfigure);
     }
 
     if (Q_UNLIKELY(surface->isMapped() && !isConfigured)) {
