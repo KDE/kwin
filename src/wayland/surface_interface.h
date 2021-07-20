@@ -426,7 +426,7 @@ Q_SIGNALS:
     void committed();
 
 private:
-    void handleBufferRemoved(BufferInterface *buffer);
+    void handleBufferRemoved();
 
     QScopedPointer<SurfaceInterfacePrivate> d;
     friend class SurfaceInterfacePrivate;

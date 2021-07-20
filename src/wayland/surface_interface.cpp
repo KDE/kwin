@@ -279,7 +279,6 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
         return;
     }
     pending.buffer = BufferInterface::get(compositor->display(), buffer);
-    QObject::connect(pending.buffer, &BufferInterface::aboutToBeDestroyed, q, &SurfaceInterface::handleBufferRemoved,  Qt::UniqueConnection);
 }
 
 void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
@@ -459,97 +458,95 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix(const SurfaceStat
 
     if (state->viewport.sourceGeometry.isValid()) {
         surfaceToBufferMatrix.translate(state->viewport.sourceGeometry.x(), state->viewport.sourceGeometry.y());
-        surfaceToBufferMatrix.scale(state->viewport.sourceGeometry.width() / state->size.width(),
-                                    state->viewport.sourceGeometry.height() / state->size.height());
+        surfaceToBufferMatrix.scale(state->viewport.sourceGeometry.width() / surfaceSize.width(),
+                                    state->viewport.sourceGeometry.height() / surfaceSize.height());
     }
 
     return surfaceToBufferMatrix;
 }
 
-void SurfaceInterfacePrivate::swapStates(SurfaceState *source, SurfaceState *target, bool emitChanged)
+void SurfaceState::mergeInto(SurfaceState *target)
 {
-    const bool bufferChanged = source->bufferIsSet;
-    const bool opaqueRegionChanged = source->opaqueIsSet;
-    const bool inputRegionChanged = source->inputIsSet;
-    const bool scaleFactorChanged = source->bufferScaleIsSet && (target->bufferScale != source->bufferScale);
-    const bool transformChanged = source->bufferTransformIsSet && (target->bufferTransform != source->bufferTransform);
-    const bool shadowChanged = source->shadowIsSet;
-    const bool blurChanged = source->blurIsSet;
-    const bool contrastChanged = source->contrastIsSet;
-    const bool slideChanged = source->slideIsSet;
-    const bool childrenChanged = source->childrenChanged;
-    const bool visibilityChanged = bufferChanged && (bool(source->buffer) != bool(target->buffer));
-    const QSize oldSize = target->size;
-    const QSize oldBufferSize = bufferSize;
-    const QMatrix4x4 oldSurfaceToBufferMatrix = surfaceToBufferMatrix;
-    const QRegion oldInputRegion = inputRegion;
-    if (bufferChanged) {
-        // TODO: is the reffing correct for subsurfaces?
-        if (target->buffer) {
-            if (emitChanged) {
-                target->buffer->unref();
-            } else {
-                target->buffer = nullptr;
-            }
-        }
-        if (source->buffer) {
-            if (emitChanged) {
-                source->buffer->ref();
-            }
-        }
-        target->buffer = source->buffer;
-        target->offset = source->offset;
-        target->damage = source->damage;
-        target->bufferDamage = source->bufferDamage;
-        target->bufferIsSet = source->bufferIsSet;
+    if (bufferIsSet) {
+        target->buffer = buffer;
+        target->offset = offset;
+        target->damage = damage;
+        target->bufferDamage = bufferDamage;
+        target->bufferIsSet = bufferIsSet;
     }
-    if (source->viewport.sourceGeometryIsSet) {
-        target->viewport.sourceGeometry = source->viewport.sourceGeometry;
+    if (viewport.sourceGeometryIsSet) {
+        target->viewport.sourceGeometry = viewport.sourceGeometry;
         target->viewport.sourceGeometryIsSet = true;
     }
-    if (source->viewport.destinationSizeIsSet) {
-        target->viewport.destinationSize = source->viewport.destinationSize;
+    if (viewport.destinationSizeIsSet) {
+        target->viewport.destinationSize = viewport.destinationSize;
         target->viewport.destinationSizeIsSet = true;
     }
     if (childrenChanged) {
-        target->childrenChanged = source->childrenChanged;
-        target->below = source->below;
-        target->above = source->above;
+        target->below = below;
+        target->above = above;
+        target->childrenChanged = true;
     }
-    target->frameCallbacks.append(source->frameCallbacks);
+    target->frameCallbacks.append(frameCallbacks);
 
-    if (shadowChanged) {
-        target->shadow = source->shadow;
+    if (shadowIsSet) {
+        target->shadow = shadow;
         target->shadowIsSet = true;
     }
-    if (blurChanged) {
-        target->blur = source->blur;
+    if (blurIsSet) {
+        target->blur = blur;
         target->blurIsSet = true;
     }
-    if (contrastChanged) {
-        target->contrast = source->contrast;
+    if (contrastIsSet) {
+        target->contrast = contrast;
         target->contrastIsSet = true;
     }
-    if (slideChanged) {
-        target->slide = source->slide;
+    if (slideIsSet) {
+        target->slide = slide;
         target->slideIsSet = true;
     }
-    if (inputRegionChanged) {
-        target->input = source->input;
+    if (inputIsSet) {
+        target->input = input;
         target->inputIsSet = true;
     }
-    if (opaqueRegionChanged) {
-        target->opaque = source->opaque;
+    if (opaqueIsSet) {
+        target->opaque = opaque;
         target->opaqueIsSet = true;
     }
-    if (scaleFactorChanged) {
-        target->bufferScale = source->bufferScale;
+    if (bufferScaleIsSet) {
+        target->bufferScale = bufferScale;
         target->bufferScaleIsSet = true;
     }
-    if (transformChanged) {
-        target->bufferTransform = source->bufferTransform;
+    if (bufferTransformIsSet) {
+        target->bufferTransform = bufferTransform;
         target->bufferTransformIsSet = true;
     }
+
+    *this = SurfaceState{};
+    below = target->below;
+    above = target->above;
+}
+
+void SurfaceInterfacePrivate::applyState(SurfaceState *next)
+{
+    const bool bufferChanged = next->bufferIsSet;
+    const bool opaqueRegionChanged = next->opaqueIsSet;
+    const bool scaleFactorChanged = next->bufferScaleIsSet && (current.bufferScale != next->bufferScale);
+    const bool transformChanged = next->bufferTransformIsSet && (current.bufferTransform != next->bufferTransform);
+    const bool shadowChanged = next->shadowIsSet;
+    const bool blurChanged = next->blurIsSet;
+    const bool contrastChanged = next->contrastIsSet;
+    const bool slideChanged = next->slideIsSet;
+    const bool childrenChanged = next->childrenChanged;
+    const bool visibilityChanged = bufferChanged && bool(current.buffer) != bool(next->buffer);
+
+    const QSize oldSurfaceSize = surfaceSize;
+    const QSize oldBufferSize = bufferSize;
+    const QMatrix4x4 oldSurfaceToBufferMatrix = surfaceToBufferMatrix;
+    const QRegion oldInputRegion = inputRegion;
+
+    next->mergeInto(&current);
+
     if (lockedPointer) {
         auto lockedPointerPrivate = LockedPointerV1InterfacePrivate::get(lockedPointer);
         lockedPointerPrivate->commit();
@@ -559,28 +556,33 @@ void SurfaceInterfacePrivate::swapStates(SurfaceState *source, SurfaceState *tar
         confinedPointerPrivate->commit();
     }
 
-    *source = SurfaceState{};
-    source->below = target->below;
-    source->above = target->above;
-
-    if (!emitChanged) {
-        return;
+    if (bufferRef != current.buffer) {
+        if (bufferRef) {
+            QObject::disconnect(bufferRef, &BufferInterface::aboutToBeDestroyed, q, &SurfaceInterface::handleBufferRemoved);
+            bufferRef->unref();
+        }
+        bufferRef = current.buffer;
+        if (bufferRef) {
+            bufferRef->ref();
+            QObject::connect(bufferRef, &BufferInterface::aboutToBeDestroyed, q, &SurfaceInterface::handleBufferRemoved);
+        }
     }
+
     // TODO: Refactor the state management code because it gets more clumsy.
-    if (target->buffer) {
-        bufferSize = target->buffer->size();
-        if (target->viewport.destinationSize.isValid()) {
-            target->size = target->viewport.destinationSize;
-        } else if (target->viewport.sourceGeometry.isValid()) {
-            target->size = target->viewport.sourceGeometry.size().toSize();
+    if (current.buffer) {
+        bufferSize = current.buffer->size();
+        if (current.viewport.destinationSize.isValid()) {
+            surfaceSize = current.viewport.destinationSize;
+        } else if (current.viewport.sourceGeometry.isValid()) {
+            surfaceSize = current.viewport.sourceGeometry.size().toSize();
         } else {
-            target->size = target->buffer->size() / target->bufferScale;
-            switch (target->bufferTransform) {
+            surfaceSize = current.buffer->size() / current.bufferScale;
+            switch (current.bufferTransform) {
             case OutputInterface::Transform::Rotated90:
             case OutputInterface::Transform::Rotated270:
             case OutputInterface::Transform::Flipped90:
             case OutputInterface::Transform::Flipped270:
-                target->size.transpose();
+                surfaceSize.transpose();
                 break;
             case OutputInterface::Transform::Normal:
             case OutputInterface::Transform::Rotated180:
@@ -590,26 +592,27 @@ void SurfaceInterfacePrivate::swapStates(SurfaceState *source, SurfaceState *tar
             }
         }
     } else {
-        target->size = QSize();
+        surfaceSize = QSize();
         bufferSize = QSize();
     }
-    surfaceToBufferMatrix = buildSurfaceToBufferMatrix(target);
+
+    surfaceToBufferMatrix = buildSurfaceToBufferMatrix(&current);
     bufferToSurfaceMatrix = surfaceToBufferMatrix.inverted();
-    inputRegion = target->input & QRect(QPoint(0, 0), target->size);
+    inputRegion = current.input & QRect(QPoint(0, 0), surfaceSize);
     if (opaqueRegionChanged) {
-        Q_EMIT q->opaqueChanged(target->opaque);
+        Q_EMIT q->opaqueChanged(current.opaque);
     }
     if (oldInputRegion != inputRegion) {
         Q_EMIT q->inputChanged(inputRegion);
     }
     if (scaleFactorChanged) {
-        Q_EMIT q->bufferScaleChanged(target->bufferScale);
+        Q_EMIT q->bufferScaleChanged(current.bufferScale);
     }
     if (transformChanged) {
-        Q_EMIT q->bufferTransformChanged(target->bufferTransform);
+        Q_EMIT q->bufferTransformChanged(current.bufferTransform);
     }
     if (visibilityChanged) {
-        if (target->buffer) {
+        if (bufferRef) {
             subSurfaceIsMapped = true;
             Q_EMIT q->mapped();
         } else {
@@ -618,11 +621,11 @@ void SurfaceInterfacePrivate::swapStates(SurfaceState *source, SurfaceState *tar
         }
     }
     if (bufferChanged) {
-        if (target->buffer && (!target->damage.isEmpty() || !target->bufferDamage.isEmpty())) {
+        if (current.buffer && (!current.damage.isEmpty() || !current.bufferDamage.isEmpty())) {
             const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
-            const QRegion bufferDamage = q->mapFromBuffer(target->bufferDamage);
-            target->damage = windowRegion.intersected(target->damage.united(bufferDamage));
-            Q_EMIT q->damaged(target->damage);
+            const QRegion bufferDamage = q->mapFromBuffer(current.bufferDamage);
+            current.damage = windowRegion.intersected(current.damage.united(bufferDamage));
+            Q_EMIT q->damaged(current.damage);
         }
     }
     if (surfaceToBufferMatrix != oldSurfaceToBufferMatrix) {
@@ -631,7 +634,7 @@ void SurfaceInterfacePrivate::swapStates(SurfaceState *source, SurfaceState *tar
     if (bufferSize != oldBufferSize) {
         Q_EMIT q->bufferSizeChanged();
     }
-    if (target->size != oldSize) {
+    if (surfaceSize != oldSurfaceSize) {
         Q_EMIT q->sizeChanged();
     }
     if (shadowChanged) {
@@ -669,7 +672,7 @@ void SurfaceInterfacePrivate::commit()
     if (subSurface) {
         commitSubSurface();
     } else {
-        swapStates(&pending, &current, true);
+        applyState(&pending);
     }
 }
 
@@ -682,20 +685,20 @@ void SurfaceInterfacePrivate::commitSubSurface()
             commitToCache();
             commitFromCache();
         } else {
-            swapStates(&pending, &current, true);
+            applyState(&pending);
         }
     }
 }
 
 void SurfaceInterfacePrivate::commitToCache()
 {
-    swapStates(&pending, &cached, false);
+    pending.mergeInto(&cached);
     hasCacheState = true;
 }
 
 void SurfaceInterfacePrivate::commitFromCache()
 {
-    swapStates(&cached, &current, true);
+    applyState(&cached);
     hasCacheState = false;
 }
 
@@ -726,7 +729,7 @@ OutputInterface::Transform SurfaceInterface::bufferTransform() const
 
 BufferInterface *SurfaceInterface::buffer()
 {
-    return d->current.buffer;
+    return d->bufferRef;
 }
 
 QPoint SurfaceInterface::offset() const
@@ -770,7 +773,7 @@ SubSurfaceInterface *SurfaceInterface::subSurface() const
 
 QSize SurfaceInterface::size() const
 {
-    return d->current.size;
+    return d->surfaceSize;
 }
 
 QRect SurfaceInterface::boundingRect() const
@@ -995,17 +998,11 @@ QMatrix4x4 SurfaceInterface::surfaceToBufferMatrix() const
     return d->surfaceToBufferMatrix;
 }
 
-void SurfaceInterface::handleBufferRemoved(BufferInterface *buffer)
+void SurfaceInterface::handleBufferRemoved()
 {
-    if (d->pending.buffer == buffer) {
-        d->pending.buffer = nullptr;
-    }
-    if (d->cached.buffer == buffer) {
-        d->cached.buffer = nullptr;
-    }
-    if (d->current.buffer == buffer) {
-        d->current.buffer->unref();
-        d->current.buffer = nullptr;
+    if (d->bufferRef) {
+        d->bufferRef->unref();
+        d->bufferRef = nullptr;
     }
 }
 

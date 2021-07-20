@@ -36,11 +36,12 @@ protected:
 
 struct SurfaceState
 {
+    void mergeInto(SurfaceState *target);
+
     QRegion damage = QRegion();
     QRegion bufferDamage = QRegion();
     QRegion opaque = QRegion();
     QRegion input = infiniteRegion();
-    QSize size = QSize();
     bool inputIsSet = false;
     bool opaqueIsSet = false;
     bool bufferIsSet = false;
@@ -55,7 +56,7 @@ struct SurfaceState
     OutputInterface::Transform bufferTransform = OutputInterface::Transform::Normal;
     QList<KWaylandFrameCallback *> frameCallbacks;
     QPoint offset = QPoint();
-    BufferInterface *buffer = nullptr;
+    QPointer<BufferInterface> buffer;
     QPointer<ShadowInterface> shadow;
     QPointer<BlurInterface> blur;
     QPointer<ContrastInterface> contrast;
@@ -101,7 +102,7 @@ public:
     void commit();
     void commitSubSurface();
     QMatrix4x4 buildSurfaceToBufferMatrix(const SurfaceState *state);
-    void swapStates(SurfaceState *source, SurfaceState *target, bool emitChanged);
+    void applyState(SurfaceState *next);
 
     CompositorInterface *compositor;
     SurfaceInterface *q;
@@ -113,7 +114,9 @@ public:
     QMatrix4x4 surfaceToBufferMatrix;
     QMatrix4x4 bufferToSurfaceMatrix;
     QSize bufferSize;
+    QSize surfaceSize;
     QRegion inputRegion;
+    BufferInterface *bufferRef = nullptr;
     bool hasCacheState = false;
 
     // workaround for https://bugreports.qt.io/browse/QTBUG-52192
