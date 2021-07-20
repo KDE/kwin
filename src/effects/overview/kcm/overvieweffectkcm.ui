@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+-->
+<ui version="4.0">
+ <class>OverviewEffectConfig</class>
+ <widget class="QWidget" name="OverviewEffectConfig">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>455</width>
+    <height>177</height>
+   </rect>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label_LayoutMode">
+     <property name="text">
+      <string>Layout mode:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="kcfg_LayoutMode">
+     <item>
+      <property name="text">
+       <string>Closest</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Kompose</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Natural</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

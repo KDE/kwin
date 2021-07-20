@@ -83,6 +83,7 @@ void KWinScreenEdgesConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                              QStringLiteral("/Effects"),
                                              QDBusConnection::sessionBus());
+    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::Overview));
     interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::PresentWindows));
     interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::DesktopGrid));
 
@@ -136,6 +137,8 @@ void KWinScreenEdgesConfig::monitorInit()
     m_form->monitorAddItem(i18n("Toggle window switching"));
     m_form->monitorAddItem(i18n("Toggle alternative window switching"));
 
+    m_form->monitorAddItem(i18n("Toggle Overview"));
+
     const QString scriptFolder = QStringLiteral("kwin/scripts/");
     const auto scripts = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
 
@@ -181,6 +184,9 @@ void KWinScreenEdgesConfig::monitorLoadSettings()
     // Alternative TabBox
     m_form->monitorChangeEdge(m_data->settings()->touchBorderAlternativeActivate(), TabBoxAlternative);
 
+    // Overview
+    m_form->monitorChangeEdge(m_data->settings()->touchBorderActivateOverview(), Overview);
+
     // Scripts
     for (int i=0; i < m_scripts.size(); i++) {
         int index = EffectCount + i;
@@ -209,6 +215,9 @@ void KWinScreenEdgesConfig::monitorLoadDefaultSettings()
     m_form->monitorChangeDefaultEdge(m_data->settings()->defaultTouchBorderActivateTabBoxValue(), TabBox);
     // Alternative TabBox
     m_form->monitorChangeDefaultEdge(m_data->settings()->defaultTouchBorderAlternativeActivateValue(), TabBoxAlternative);
+
+    // Overview
+    m_form->monitorChangeDefaultEdge(m_data->settings()->defaultTouchBorderActivateOverviewValue(), Overview);
 }
 
 void KWinScreenEdgesConfig::monitorSaveSettings()
@@ -233,6 +242,9 @@ void KWinScreenEdgesConfig::monitorSaveSettings()
     m_data->settings()->setTouchBorderActivateTabBox(m_form->monitorCheckEffectHasEdge(TabBox));
     m_data->settings()->setTouchBorderAlternativeActivate(m_form->monitorCheckEffectHasEdge(TabBoxAlternative));
 
+    // Overview
+    m_data->settings()->setTouchBorderActivateOverview(m_form->monitorCheckEffectHasEdge(Overview));
+
     // Scripts
     for (int i = 0; i < m_scripts.size(); i++) {
         int index = EffectCount + i;
@@ -253,6 +265,10 @@ void KWinScreenEdgesConfig::monitorShowEvent()
     // Desktop Grid
     enabled = effectEnabled(BuiltInEffect::DesktopGrid, config);
     m_form->monitorItemSetEnabled(DesktopGrid, enabled);
+
+    // Overview
+    enabled = effectEnabled(BuiltInEffect::Overview, config);
+    m_form->monitorItemSetEnabled(Overview, enabled);
 
     // tabbox, depends on reasonable focus policy.
     KConfigGroup config2(m_config, "Windows");

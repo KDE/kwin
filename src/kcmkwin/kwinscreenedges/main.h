@@ -55,6 +55,7 @@ private:
         DesktopGrid,
         TabBox,
         TabBoxAlternative,
+        Overview,
         EffectCount
     };
 

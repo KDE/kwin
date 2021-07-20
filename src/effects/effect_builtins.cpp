@@ -13,6 +13,7 @@
 #include "blur/blur.h"
 #include "colorpicker/colorpicker.h"
 #include "kscreen/kscreen.h"
+#include "overview/overvieweffect.h"
 #include "presentwindows/presentwindows.h"
 #include "screenedge/screenedgeeffect.h"
 #include "screenshot/screenshot.h"
@@ -323,6 +324,22 @@ EFFECT_FALLBACK
 #endif
 EFFECT_FALLBACK
         QStringLiteral("kwin_mousemark_config")
+    }, {
+        QStringLiteral("overview"),
+        i18ndc("kwin_effects", "Name of a KWin Effect", "Overview"),
+        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Allows you to overview virtual desktops and windows (WIP)"),
+        QStringLiteral("Window Management"),
+        QString(),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/present_windows.mp4")),
+        false,
+        false,
+#ifdef EFFECT_BUILTINS
+        &createHelper<OverviewEffect>,
+        &OverviewEffect::supported,
+        nullptr,
+#endif
+EFFECT_FALLBACK
+        QStringLiteral("kwin_overview_config")
     }, {
         QStringLiteral("presentwindows"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Present Windows"),

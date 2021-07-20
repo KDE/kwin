@@ -135,6 +135,7 @@ void TestBuiltInEffectLoader::testKnownEffects()
                     << QStringLiteral("magnifier")
                     << QStringLiteral("mouseclick")
                     << QStringLiteral("mousemark")
+                    << QStringLiteral("overview")
                     << QStringLiteral("presentwindows")
                     << QStringLiteral("resize")
                     << QStringLiteral("screenedge")
@@ -201,6 +202,8 @@ void TestBuiltInEffectLoader::testSupported_data()
     QTest::newRow("Magnifier")                      << QStringLiteral("magnifier")         << false << qc << false;
     QTest::newRow("MouseClick")                     << QStringLiteral("mouseclick")        << true  << qc << true;
     QTest::newRow("MouseMark")                      << QStringLiteral("mousemark")         << true  << qc << true;
+    QTest::newRow("Overview")                       << QStringLiteral("overview")          << false << qc << false;
+    QTest::newRow("OverviewGL")                     << QStringLiteral("overview")          << true  << oc << true;
     QTest::newRow("PresentWindows")                 << QStringLiteral("presentwindows")    << true  << qc << true;
     QTest::newRow("Resize")                         << QStringLiteral("resize")            << true  << qc << true;
     QTest::newRow("ScreenEdge")                     << QStringLiteral("screenedge")        << true  << qc << true;
@@ -278,6 +281,8 @@ void TestBuiltInEffectLoader::testLoadEffect_data()
     QTest::newRow("Magnifier")                      << QStringLiteral("magnifier")         << false << qc;
     QTest::newRow("MouseClick")                     << QStringLiteral("mouseclick")        << true  << qc;
     QTest::newRow("MouseMark")                      << QStringLiteral("mousemark")         << true  << qc;
+    QTest::newRow("Overview")                       << QStringLiteral("overview")          << false << qc;
+    QTest::newRow("OverviewGL")                     << QStringLiteral("overview")          << true  << oc;
     QTest::newRow("PresentWindows")                 << QStringLiteral("presentwindows")    << true  << qc;
     QTest::newRow("Resize")                         << QStringLiteral("resize")            << true  << qc;
     QTest::newRow("ScreenEdge")                     << QStringLiteral("screenedge")        << true  << qc;
