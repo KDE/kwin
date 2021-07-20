@@ -257,15 +257,28 @@ public:
     MockInputMethod(struct wl_registry *registry, int id, int version);
     ~MockInputMethod();
 
+    AbstractClient *client() const { return m_client; }
+    Surface *inputPanelSurface() const { return m_inputSurface; }
+
 protected:
     void zwp_input_method_v1_activate(struct ::zwp_input_method_context_v1 *context) override;
     void zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context) override;
 
 private:
-    Surface *m_inputSurface = nullptr;
+    QPointer<Surface> m_inputSurface;
     QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
-    AbstractClient *m_client = nullptr;
+    QPointer<AbstractClient> m_client;
 };
+
+AbstractClient *inputPanelClient()
+{
+    return s_waylandConnection.inputMethodV1->client();
+}
+
+Surface *inputPanelSurface()
+{
+    return s_waylandConnection.inputMethodV1->inputPanelSurface();
+}
 
 MockInputMethod::MockInputMethod(struct wl_registry *registry, int id, int version)
     : QtWayland::zwp_input_method_v1(registry, id, version)

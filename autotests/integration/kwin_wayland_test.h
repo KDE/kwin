@@ -391,6 +391,9 @@ bool unlockScreen();
 
 void initWaylandWorkspace();
 
+AbstractClient *inputPanelClient();
+KWayland::Client::Surface *inputPanelSurface();
+
 }
 
 }
