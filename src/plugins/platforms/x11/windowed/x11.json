@@ -39,6 +39,7 @@
         "Description[zh_TW]": "成像到 X11 視窗系統的巢狀視窗。",
         "Id": "KWinWaylandX11Backend",
         "Name": "x11",
+        "Name[ar]": "اكس ١١",
         "Name[az]": "x11",
         "Name[ca@valencia]": "X11",
         "Name[ca]": "X11",

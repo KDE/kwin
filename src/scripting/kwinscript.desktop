@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/Script
 
 Comment=KWin Script
+Comment[ar]=سكربت كوين
 Comment[az]=Kwin skripti
 Comment[bs]=KWin skripta
 Comment[ca]=Script del KWin
