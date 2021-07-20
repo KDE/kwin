@@ -100,7 +100,7 @@ public:
     void commitFromCache();
 
     void commitSubSurface();
-    QMatrix4x4 buildSurfaceToBufferMatrix(const SurfaceState *state);
+    QMatrix4x4 buildSurfaceToBufferMatrix();
     void applyState(SurfaceState *next);
 
     CompositorInterface *compositor;

@@ -411,59 +411,59 @@ bool SurfaceInterface::hasFrameCallbacks() const
     return !d->current.frameCallbacks.isEmpty();
 }
 
-QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix(const SurfaceState *state)
+QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
 {
     // The order of transforms is reversed, i.e. the viewport transform is the first one.
 
     QMatrix4x4 surfaceToBufferMatrix;
 
-    if (!state->buffer) {
+    if (!current.buffer) {
         return surfaceToBufferMatrix;
     }
 
-    surfaceToBufferMatrix.scale(state->bufferScale, state->bufferScale);
+    surfaceToBufferMatrix.scale(current.bufferScale, current.bufferScale);
 
-    switch (state->bufferTransform) {
+    switch (current.bufferTransform) {
     case OutputInterface::Transform::Normal:
     case OutputInterface::Transform::Flipped:
         break;
     case OutputInterface::Transform::Rotated90:
     case OutputInterface::Transform::Flipped90:
-        surfaceToBufferMatrix.translate(0, state->buffer->height() / state->bufferScale);
+        surfaceToBufferMatrix.translate(0, current.buffer->height() / current.bufferScale);
         surfaceToBufferMatrix.rotate(-90, 0, 0, 1);
         break;
     case OutputInterface::Transform::Rotated180:
     case OutputInterface::Transform::Flipped180:
-        surfaceToBufferMatrix.translate(state->buffer->width() / state->bufferScale,
-                                        state->buffer->height() / state->bufferScale);
+        surfaceToBufferMatrix.translate(current.buffer->width() / current.bufferScale,
+                                        current.buffer->height() / current.bufferScale);
         surfaceToBufferMatrix.rotate(-180, 0, 0, 1);
         break;
     case OutputInterface::Transform::Rotated270:
     case OutputInterface::Transform::Flipped270:
-        surfaceToBufferMatrix.translate(state->buffer->width() / state->bufferScale, 0);
+        surfaceToBufferMatrix.translate(current.buffer->width() / current.bufferScale, 0);
         surfaceToBufferMatrix.rotate(-270, 0, 0, 1);
         break;
     }
 
-    switch (state->bufferTransform) {
+    switch (current.bufferTransform) {
     case OutputInterface::Transform::Flipped:
     case OutputInterface::Transform::Flipped180:
-        surfaceToBufferMatrix.translate(state->buffer->width() / state->bufferScale, 0);
+        surfaceToBufferMatrix.translate(current.buffer->width() / current.bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
     case OutputInterface::Transform::Flipped90:
     case OutputInterface::Transform::Flipped270:
-        surfaceToBufferMatrix.translate(state->buffer->height() / state->bufferScale, 0);
+        surfaceToBufferMatrix.translate(current.buffer->height() / current.bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
     default:
         break;
     }
 
-    if (state->viewport.sourceGeometry.isValid()) {
-        surfaceToBufferMatrix.translate(state->viewport.sourceGeometry.x(), state->viewport.sourceGeometry.y());
-        surfaceToBufferMatrix.scale(state->viewport.sourceGeometry.width() / surfaceSize.width(),
-                                    state->viewport.sourceGeometry.height() / surfaceSize.height());
+    if (current.viewport.sourceGeometry.isValid()) {
+        surfaceToBufferMatrix.translate(current.viewport.sourceGeometry.x(), current.viewport.sourceGeometry.y());
+        surfaceToBufferMatrix.scale(current.viewport.sourceGeometry.width() / surfaceSize.width(),
+                                    current.viewport.sourceGeometry.height() / surfaceSize.height());
     }
 
     return surfaceToBufferMatrix;
@@ -600,7 +600,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         bufferSize = QSize();
     }
 
-    surfaceToBufferMatrix = buildSurfaceToBufferMatrix(&current);
+    surfaceToBufferMatrix = buildSurfaceToBufferMatrix();
     bufferToSurfaceMatrix = surfaceToBufferMatrix.inverted();
     inputRegion = current.input & QRect(QPoint(0, 0), surfaceSize);
     if (opaqueRegionChanged) {
