@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+#
+# SPDX-License-Identifier: CC-0
+
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-Library=kwin_overview_config
+X-KDE-ParentComponents=overview
+
+Name=overview

@@ -86,6 +86,8 @@ set(kwin4_effect_builtins_sources
     magnifier/magnifier.cpp
     mouseclick/mouseclick.cpp
     mousemark/mousemark.cpp
+    overview/expolayout.cpp
+    overview/overvieweffect.cpp
     presentwindows/presentwindows.cpp
     presentwindows/presentwindows_proxy.cpp
     resize/resize.cpp
@@ -121,6 +123,7 @@ kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     magnifier/magnifierconfig.kcfgc
     mouseclick/mouseclickconfig.kcfgc
     mousemark/mousemarkconfig.kcfgc
+    overview/overviewconfig.kcfgc
     presentwindows/presentwindowsconfig.kcfgc
     resize/resizeconfig.kcfgc
     showfps/showfpsconfig.kcfgc
@@ -168,6 +171,7 @@ include(fallapart/CMakeLists.txt)
 include(highlightwindow/CMakeLists.txt)
 include(kscreen/CMakeLists.txt)
 add_subdirectory(magiclamp)
+add_subdirectory(overview)
 add_subdirectory(presentwindows)
 add_subdirectory(resize)
 include(screenedge/CMakeLists.txt)

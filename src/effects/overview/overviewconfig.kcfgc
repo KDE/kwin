@@ -1,0 +1,9 @@
+# SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+#
+# SPDX-License-Identifier: CC-0
+
+File=overviewconfig.kcfg
+ClassName=OverviewConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

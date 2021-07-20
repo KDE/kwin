@@ -38,6 +38,7 @@ enum class BuiltInEffect
     Magnifier,
     MouseClick,
     MouseMark,
+    Overview,
     PresentWindows,
     Resize,
     ScreenEdge,
