@@ -21,17 +21,16 @@
  */
 
 #include <QCoreApplication>
-#include <QProcess>
 #include <QDebug>
+#include <QProcess>
 
 #include "wl-socket.h"
 
 #define WAYLAND_ENV_NAME "WAYLAND_DISPLAY"
 
-
 class KWinWrapper : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     KWinWrapper(QObject *parent);
     ~KWinWrapper();
@@ -43,7 +42,7 @@ private:
     QString m_oldWaylandEnv;
 };
 
-KWinWrapper::KWinWrapper(QObject* parent)
+KWinWrapper::KWinWrapper(QObject *parent)
     : QObject(parent)
 {
     m_socket = wl_socket_create();
@@ -73,25 +72,24 @@ void KWinWrapper::run()
             qputenv("KWIN_RESTART_COUNT", QByteArray::number(crashCount));
         }
 
-       int exitStatus = runKwin();
+        int exitStatus = runKwin();
 
         if (exitStatus == 133) {
-            crashCount = 0;
-            qDebug() << "Compositor restarted, respawning" << Qt::endl;
+            crashCount = 1;
+            qDebug() << "Compositor restarted, respawning";
         } else if (exitStatus == -1) {
             // kwin_crashed, lets go again
-            qWarning() << "Compositor crashed, respawning" << Qt::endl;
+            qWarning() << "Compositor crashed, respawning";
         } else {
-            qWarning() << "Compositor exited with code" << exitStatus << Qt::endl;
+            qWarning() << "Compositor exited with code: " << exit;
             break;
         }
     }
-
 }
 
 int KWinWrapper::runKwin()
 {
-    qDebug() << "Launching kwin\n";
+    qDebug() << "Launching kwin";
 
     auto process = new QProcess(qApp);
     process->setProgram("kwin_wayland");
