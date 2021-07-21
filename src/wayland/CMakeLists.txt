@@ -21,7 +21,6 @@ set(SERVER_LIB_SRCS
     eglstream_controller_interface.cpp
     fakeinput_interface.cpp
     filtered_display.cpp
-    global.cpp
     idle_interface.cpp
     idleinhibit_v1_interface.cpp
     inputmethod_v1_interface.cpp
@@ -47,7 +46,6 @@ set(SERVER_LIB_SRCS
     primaryselectionsource_v1_interface.cpp
     region_interface.cpp
     relativepointer_v1_interface.cpp
-    resource.cpp
     screencast_v1_interface.cpp
     seat_interface.cpp
     server_decoration_interface.cpp
@@ -342,7 +340,6 @@ set(SERVER_LIB_HEADERS
   eglstream_controller_interface.h
   fakeinput_interface.h
   filtered_display.h
-  global.h
   idle_interface.h
   idleinhibit_v1_interface.h
   inputmethod_v1_interface.h
@@ -364,7 +361,6 @@ set(SERVER_LIB_HEADERS
   pointergestures_v1_interface.h
   primaryselectiondevicemanager_v1_interface.h
   relativepointer_v1_interface.h
-  resource.h
   screencast_v1_interface.h
   seat_interface.h
   server_decoration_interface.h

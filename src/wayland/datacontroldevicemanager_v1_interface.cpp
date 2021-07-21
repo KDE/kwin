@@ -7,7 +7,6 @@
 #include "datacontroldevicemanager_v1_interface.h"
 #include "datacontroldevice_v1_interface.h"
 #include "datacontrolsource_v1_interface.h"
-#include "global_p.h"
 #include "display.h"
 #include "seat_interface_p.h"
 // Wayland

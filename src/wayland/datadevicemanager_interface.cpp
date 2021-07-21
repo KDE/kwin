@@ -6,7 +6,6 @@
 */
 #include "datadevicemanager_interface.h"
 #include "datasource_interface.h"
-#include "global_p.h"
 #include "display.h"
 #include "seat_interface_p.h"
 // Wayland
