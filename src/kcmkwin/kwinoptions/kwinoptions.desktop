@@ -5,7 +5,6 @@ X-KDE-ServiceTypes=KCModule
 X-DocPath=kcontrol/windowbehaviour/index.html
 
 X-KDE-Library=kcm_kwinoptions
-X-KDE-PluginKeyword=kwinoptions
 X-KDE-ParentApp=kcontrol
 
 X-KDE-System-Settings-Parent-Category=windowmanagement

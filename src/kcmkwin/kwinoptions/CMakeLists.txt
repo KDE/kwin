@@ -37,10 +37,6 @@ install(TARGETS kcm_kwinoptions DESTINATION ${KDE_INSTALL_PLUGINDIR})
 
 install(
     FILES
-        kwinactions.desktop
-        kwinadvanced.desktop
-        kwinfocus.desktop
-        kwinmoving.desktop
         kwinoptions.desktop
     DESTINATION
         ${KDE_INSTALL_KSERVICES5DIR}
