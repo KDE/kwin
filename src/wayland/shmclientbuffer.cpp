@@ -20,11 +20,53 @@ static int s_accessCounter = 0;
 class ShmClientBufferPrivate : public ClientBufferPrivate
 {
 public:
+    ShmClientBufferPrivate(ShmClientBuffer *q);
+
+    static void buffer_destroy_callback(wl_listener *listener, void *data);
+
+    ShmClientBuffer *q;
     QImage::Format format = QImage::Format_Invalid;
     uint32_t width = 0;
     uint32_t height = 0;
     bool hasAlphaChannel = false;
+    QImage savedData;
+
+    struct DestroyListener
+    {
+        wl_listener listener;
+        ShmClientBufferPrivate *receiver;
+    };
+    DestroyListener destroyListener;
 };
+
+ShmClientBufferPrivate::ShmClientBufferPrivate(ShmClientBuffer *q)
+    : q(q)
+{
+}
+
+static void cleanupShmPool(void *poolHandle)
+{
+    wl_shm_pool_unref(static_cast<wl_shm_pool *>(poolHandle));
+}
+
+void ShmClientBufferPrivate::buffer_destroy_callback(wl_listener *listener, void *data)
+{
+    Q_UNUSED(data)
+
+    auto bufferPrivate = reinterpret_cast<ShmClientBufferPrivate::DestroyListener *>(listener)->receiver;
+    wl_shm_buffer *buffer = wl_shm_buffer_get(bufferPrivate->q->resource());
+    wl_shm_pool *pool = wl_shm_buffer_ref_pool(buffer);
+
+    wl_list_remove(&bufferPrivate->destroyListener.listener.link);
+    wl_list_init(&bufferPrivate->destroyListener.listener.link);
+
+    bufferPrivate->savedData = QImage(static_cast<const uchar *>(wl_shm_buffer_get_data(buffer)),
+                                      bufferPrivate->width,
+                                      bufferPrivate->height,
+                                      wl_shm_buffer_get_stride(buffer),
+                                      bufferPrivate->format,
+                                      cleanupShmPool, pool);
+}
 
 static bool alphaChannelFromFormat(uint32_t format)
 {
@@ -50,7 +92,7 @@ static QImage::Format imageFormatForShmFormat(uint32_t format)
 }
 
 ShmClientBuffer::ShmClientBuffer(wl_resource *resource)
-    : ClientBuffer(resource, *new ShmClientBufferPrivate)
+    : ClientBuffer(resource, *new ShmClientBufferPrivate(this))
 {
     Q_D(ShmClientBuffer);
 
@@ -59,6 +101,12 @@ ShmClientBuffer::ShmClientBuffer(wl_resource *resource)
     d->height = wl_shm_buffer_get_height(buffer);
     d->hasAlphaChannel = alphaChannelFromFormat(wl_shm_buffer_get_format(buffer));
     d->format = imageFormatForShmFormat(wl_shm_buffer_get_format(buffer));
+
+    // The underlying shm pool will be referenced if the wl_shm_buffer is destroyed so the
+    // compositor can access buffer data even after the buffer is gone.
+    d->destroyListener.receiver = d;
+    d->destroyListener.listener.notify = ShmClientBufferPrivate::buffer_destroy_callback;
+    wl_resource_add_destroy_listener(resource, &d->destroyListener.listener);
 }
 
 QSize ShmClientBuffer::size() const
@@ -104,7 +152,7 @@ QImage ShmClientBuffer::data() const
         const uint32_t format = wl_shm_buffer_get_format(buffer);
         return QImage(data, d->width, d->height, stride, d->format, cleanupShmData, buffer);
     }
-    return QImage();
+    return d->savedData;
 }
 
 ShmClientBufferIntegration::ShmClientBufferIntegration(Display *display)
