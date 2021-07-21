@@ -30,18 +30,17 @@ QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parent
     Q_UNUSED(iface)
     Q_UNUSED(parent)
     if (keyword.startsWith(QLatin1String("kwin4_effect_"))) {
-        return new ScriptedEffectConfig(QStringLiteral("kcm_kwin4_genericscripted"), keyword, parentWidget, args);
+        return new ScriptedEffectConfig(keyword, parentWidget, args);
     } else {
-        return new ScriptingConfig(QStringLiteral("kcm_kwin4_genericscripted"), keyword, parentWidget, args);
+        return new ScriptingConfig(keyword, parentWidget, args);
     }
 }
 
-GenericScriptedConfig::GenericScriptedConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args)
+GenericScriptedConfig::GenericScriptedConfig(const QString &keyword, QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
     , m_packageName(keyword)
     , m_translator(new KLocalizedTranslator(this))
 {
-    Q_UNUSED(componentName);
     QCoreApplication::instance()->installTranslator(m_translator);
 }
 
@@ -109,8 +108,8 @@ void GenericScriptedConfig::reload()
 {
 }
 
-ScriptedEffectConfig::ScriptedEffectConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args)
-    : GenericScriptedConfig(componentName, keyword, parent, args)
+ScriptedEffectConfig::ScriptedEffectConfig(const QString &keyword, QWidget *parent, const QVariantList &args)
+    : GenericScriptedConfig(keyword, parent, args)
 {
     createUi();
 }
@@ -137,8 +136,8 @@ void ScriptedEffectConfig::reload()
     interface.reconfigureEffect(packageName());
 }
 
-ScriptingConfig::ScriptingConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args)
-    : GenericScriptedConfig(componentName, keyword, parent, args)
+ScriptingConfig::ScriptingConfig(const QString &keyword, QWidget *parent, const QVariantList &args)
+    : GenericScriptedConfig(keyword, parent, args)
 {
     createUi();
 }
