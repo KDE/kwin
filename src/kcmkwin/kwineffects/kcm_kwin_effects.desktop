@@ -5,7 +5,6 @@ X-KDE-ServiceTypes=KCModule
 X-DocPath=kcontrol/kwineffects/index.html
 
 X-KDE-Library=kcm_kwin_effects
-X-KDE-PluginKeyword=effects
 X-KDE-ParentApp=kcontrol
 
 X-KDE-System-Settings-Parent-Category=desktopbehavior
