@@ -74,7 +74,7 @@ bool EglWaylandOutput::init(EglWaylandBackend *backend)
     m_eglSurface = eglSurface;
 
     connect(m_waylandOutput, &WaylandOutput::sizeChanged, this, &EglWaylandOutput::updateSize);
-    connect(m_waylandOutput, &WaylandOutput::modeChanged, this, &EglWaylandOutput::updateSize);
+    connect(m_waylandOutput, &WaylandOutput::currentModeChanged, this, &EglWaylandOutput::updateSize);
     connect(m_waylandOutput, &WaylandOutput::geometryChanged, this, &EglWaylandOutput::resetBufferAge);
 
     return true;

@@ -393,7 +393,7 @@ bool EglStreamBackend::addOutput(DrmAbstractOutput *output)
             return false;
         }
 
-        connect(drmOutput, &DrmOutput::modeChanged, this,
+        connect(drmOutput, &DrmOutput::currentModeChanged, this,
             [drmOutput, this] {
                 resetOutput(m_outputs[drmOutput]);
             }

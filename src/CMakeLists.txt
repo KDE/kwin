@@ -137,7 +137,7 @@ set(kwin_SRCS
     wayland_server.cpp
     waylandclient.cpp
     waylandoutput.cpp
-    waylandoutputdevice.cpp
+    waylandoutputdevicev2.cpp
     waylandshellintegration.cpp
     window_property_notify_x11_filter.cpp
     windowitem.cpp

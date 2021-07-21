@@ -45,11 +45,6 @@ protected:
     friend class DrmGpu;
     DrmAbstractOutput(DrmGpu *gpu);
 
-    virtual void updateMode(int modeIndex) override {
-        Q_UNUSED(modeIndex)
-    }
-    virtual void updateMode(uint32_t width, uint32_t height, uint32_t refreshRate) = 0;
-
     RenderLoop *m_renderLoop;
     DrmGpu *m_gpu;
 };

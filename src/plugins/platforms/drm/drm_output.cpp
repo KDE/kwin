@@ -178,17 +178,19 @@ bool DrmOutput::moveCursor()
     return true;
 }
 
-void DrmOutput::initOutputDevice()
+QVector<AbstractWaylandOutput::Mode> DrmOutput::getModes() const
 {
+    bool modeFound = false;
+    QVector<Mode> modes;
     auto conn = m_pipeline->connector();
     auto modelist = conn->modes();
 
-    QVector<Mode> modes;
     modes.reserve(modelist.count());
     for (int i = 0; i < modelist.count(); ++i) {
         Mode mode;
         if (i == conn->currentModeIndex()) {
             mode.flags |= ModeFlag::Current;
+            modeFound = true;
         }
         if (modelist[i].mode.type & DRM_MODE_TYPE_PREFERRED) {
             mode.flags |= ModeFlag::Preferred;
@@ -199,11 +201,20 @@ void DrmOutput::initOutputDevice()
         mode.refreshRate = modelist[i].refreshRate;
         modes << mode;
     }
+    if (!modeFound) {
+        // select first mode by default
+        modes[0].flags |= ModeFlag::Current;
+    }
+    return modes;
+}
 
+void DrmOutput::initOutputDevice()
+{
+    const auto conn = m_pipeline->connector();
     setName(conn->connectorName());
     initialize(conn->modelName(), conn->edid()->manufacturerString(),
                conn->edid()->eisaId(), conn->edid()->serialNumber(),
-               conn->physicalSize(), modes, conn->edid()->raw());
+               conn->physicalSize(), getModes(), conn->edid()->raw());
 }
 
 void DrmOutput::updateEnablement(bool enable)
@@ -306,29 +317,53 @@ void DrmOutput::updateTransform(Transform transform)
     }
 }
 
-void DrmOutput::updateMode(uint32_t width, uint32_t height, uint32_t refreshRate)
+void DrmOutput::updateModes()
 {
     auto conn = m_pipeline->connector();
-    if (conn->currentMode().size == QSize(width, height) && conn->currentMode().refreshRate == refreshRate) {
+    conn->updateModes();
+
+    const auto modes = getModes();
+    setModes(modes);
+
+    auto it = std::find_if(modes.constBegin(), modes.constEnd(),
+        [](const AbstractWaylandOutput::Mode &mode){
+            return mode.flags.testFlag(ModeFlag::Current);
+        }
+    );
+    Q_ASSERT(it != modes.constEnd());
+    AbstractWaylandOutput::Mode mode = *it;
+
+    // mode changed
+    if (mode.size != modeSize() || mode.refreshRate != refreshRate()) {
+        applyMode(mode.id);
+    }
+}
+
+void DrmOutput::updateMode(const QSize &size, int refreshRate)
+{
+    auto conn = m_pipeline->connector();
+    if (conn->currentMode().size == size && conn->currentMode().refreshRate == refreshRate) {
         return;
     }
+    // try to find a fitting mode
     auto modelist = conn->modes();
     for (int i = 0; i < modelist.size(); i++) {
-        if (modelist[i].size == QSize(width, height) && modelist[i].refreshRate == refreshRate) {
-            updateMode(i);
+        if (modelist[i].size == size && modelist[i].refreshRate == refreshRate) {
+            applyMode(i);
             return;
         }
     }
     qCWarning(KWIN_DRM, "Could not find a fitting mode with size=%dx%d and refresh rate %d for output %s",
-              width, height, refreshRate, qPrintable(name()));
+              size.width(), size.height(), refreshRate, qPrintable(name()));
 }
 
-void DrmOutput::updateMode(int modeIndex)
+void DrmOutput::applyMode(int modeIndex)
 {
-    m_pipeline->modeset(modeIndex);
-    auto mode = m_pipeline->connector()->currentMode();
-    AbstractWaylandOutput::setCurrentModeInternal(mode.size, mode.refreshRate);
-    m_renderLoop->setRefreshRate(mode.refreshRate);
+    if (m_pipeline->modeset(modeIndex)) {
+        auto mode = m_pipeline->connector()->currentMode();
+        AbstractWaylandOutput::setCurrentModeInternal(mode.size, mode.refreshRate);
+        m_renderLoop->setRefreshRate(mode.refreshRate);
+    }
 }
 
 void DrmOutput::pageFlipped()

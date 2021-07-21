@@ -19,9 +19,9 @@
 #include <KWayland/Client/outputconfiguration.h>
 #include <KWayland/Client/outputdevice.h>
 
-#include <KWaylandServer/outputmanagement_interface.h>
-#include <KWaylandServer/outputconfiguration_interface.h>
-#include <KWaylandServer/outputdevice_interface.h>
+#include <KWaylandServer/outputmanagement_v2_interface.h>
+#include <KWaylandServer/outputconfiguration_v2_interface.h>
+#include <KWaylandServer/outputdevice_v2_interface.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/outputdevice.h>
 #include <KWayland/Client/server_decoration.h>
@@ -54,9 +54,6 @@ void TestOutputManagement::initTestCase()
     qRegisterMetaType<AbstractOutput *>();
     qRegisterMetaType<KWin::AbstractOutput*>("AbstractOutput *");
     qRegisterMetaType<KWayland::Client::Output*>();
-    qRegisterMetaType<KWayland::Client::OutputDevice::Enablement>();
-    qRegisterMetaType<OutputDevice::Enablement>("OutputDevice::Enablement");
-    qRegisterMetaType<KWaylandServer::OutputDeviceInterface::Enablement>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());

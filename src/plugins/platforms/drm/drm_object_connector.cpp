@@ -128,14 +128,7 @@ bool DrmConnector::init()
     }
 
     // init modes
-    for (int i = 0; i < m_conn->count_modes; i++) {
-        auto mode = m_conn->modes[i];
-        Mode m;
-        m.mode = mode;
-        m.size = QSize(mode.hdisplay, mode.vdisplay);
-        m.refreshRate = refreshRateForMode(&mode);
-        m_modes << m;
-    }
+    updateModes();
 
     return true;
 }
@@ -309,5 +302,21 @@ bool DrmConnector::needsModeset() const
 {
     return getProp(PropertyIndex::CrtcId)->needsCommit();
 }
+
+void DrmConnector::updateModes()
+{
+    m_modes.clear();
+
+    // reload modes
+    for (int i = 0; i < m_conn->count_modes; i++) {
+        auto mode = m_conn->modes[i];
+        Mode m;
+        m.mode = mode;
+        m.size = QSize(mode.hdisplay, mode.vdisplay);
+        m.refreshRate = refreshRateForMode(&mode);
+        m_modes << m;
+    }
+}
+
 
 }

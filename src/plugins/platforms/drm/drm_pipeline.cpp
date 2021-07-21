@@ -250,7 +250,7 @@ bool DrmPipeline::modeset(int modeIndex)
             works = test();
         }
         if (!works) {
-            qCDebug(KWIN_DRM) << "Modeset failed!" << strerror(errno);
+            qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
             m_connector->setModeIndex(oldModeIndex);
             return false;
         }

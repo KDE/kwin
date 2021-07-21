@@ -216,6 +216,8 @@ bool DrmGpu::updateOutputs()
 
         if (DrmOutput *o = findOutput(con->id())) {
             connectedOutputs << o;
+
+            o->updateModes();
         } else {
             pendingConnectors << con;
         }

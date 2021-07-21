@@ -46,7 +46,7 @@ void DrmQPainterBackend::initOutput(DrmAbstractOutput *output)
     o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize());
     o.output = output;
     m_outputs.insert(output, o);
-    connect(output, &DrmOutput::modeChanged, this,
+    connect(output, &DrmOutput::currentModeChanged, this,
         [output, this] {
             auto &o = m_outputs[output];
             o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize());

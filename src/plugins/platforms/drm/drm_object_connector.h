@@ -90,6 +90,8 @@ public:
 
     AbstractWaylandOutput::SubPixel subpixel() const;
 
+    void updateModes();
+
     bool hasOverscan() const;
     uint32_t overscan() const;
     void setOverscan(uint32_t overscan, const QSize &modeSize);

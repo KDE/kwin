@@ -284,7 +284,7 @@ void DrmBackend::handleUdevEvent()
                 gpu = addGpu(device->devNode());
             }
             if (gpu) {
-                qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device" << gpu->devNode();
+                qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->devNode();
                 updateOutputs();
                 updateCursor();
             }
@@ -506,7 +506,7 @@ void DrmBackend::readOutputsConfiguration()
 
             if (const QJsonObject mode = outputInfo["mode"].toObject(); !mode.isEmpty()) {
                 const QJsonObject size = mode["size"].toObject();
-                (*it)->updateMode(size["width"].toInt(), size["height"].toInt(), mode["refresh"].toDouble() * 1000);
+                (*it)->updateMode(QSize(size["width"].toInt(), size["height"].toInt()), mode["refresh"].toDouble() * 1000);
             }
         } else {
             (*it)->moveTo(pos);

@@ -62,13 +62,16 @@ private:
     DrmOutput(DrmGpu* gpu, DrmPipeline *pipeline);
 
     void initOutputDevice();
-    bool isCurrentMode(const drmModeModeInfo *mode) const;
 
     void updateEnablement(bool enable) override;
     void setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
-    void updateMode(int modeIndex) override;
-    void updateMode(uint32_t width, uint32_t height, uint32_t refreshRate) override;
+    void applyMode(int modeIndex) override;
+    void updateMode(const QSize &size, int refreshRate) override;
+    void updateModes();
+
+    QVector<AbstractWaylandOutput::Mode> getModes() const;
+
     void updateTransform(Transform transform) override;
 
     int gammaRampSize() const override;

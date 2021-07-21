@@ -23,7 +23,7 @@
 #include "service_utils.h"
 #include "unmanaged.h"
 #include "waylandoutput.h"
-#include "waylandoutputdevice.h"
+#include "waylandoutputdevicev2.h"
 #include "virtualdesktops.h"
 
 // Client
@@ -56,8 +56,8 @@
 #include <KWaylandServer/shadow_interface.h>
 #include <KWaylandServer/subcompositor_interface.h>
 #include <KWaylandServer/blur_interface.h>
-#include <KWaylandServer/outputmanagement_interface.h>
-#include <KWaylandServer/outputconfiguration_interface.h>
+#include <KWaylandServer/outputmanagement_v2_interface.h>
+#include <KWaylandServer/outputconfiguration_v2_interface.h>
 #include <KWaylandServer/xdgactivation_v1_interface.h>
 #include <KWaylandServer/xdgdecoration_v1_interface.h>
 #include <KWaylandServer/xdgshell_interface.h>
@@ -532,9 +532,9 @@ bool WaylandServer::init(InitializationFlags flags)
         }
     );
 
-    m_outputManagement = new OutputManagementInterface(m_display, m_display);
-    connect(m_outputManagement, &OutputManagementInterface::configurationChangeRequested,
-            this, [](KWaylandServer::OutputConfigurationInterface *config) {
+    m_outputManagement = new OutputManagementV2Interface(m_display, m_display);
+    connect(m_outputManagement, &OutputManagementV2Interface::configurationChangeRequested,
+            this, [](KWaylandServer::OutputConfigurationV2Interface *config) {
                 kwinApp()->platform()->requestOutputsChange(config);
     });
 

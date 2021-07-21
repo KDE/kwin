@@ -21,7 +21,7 @@
 class QAction;
 
 namespace KWaylandServer {
-class OutputConfigurationInterface;
+class OutputConfigurationV2Interface;
 }
 
 namespace KWin
@@ -116,7 +116,7 @@ public:
      * Base implementation warns that the current backend does not implement this
      * functionality.
      */
-    void requestOutputsChange(KWaylandServer::OutputConfigurationInterface *config);
+    void requestOutputsChange(KWaylandServer::OutputConfigurationV2Interface *config);
 
     /**
      * Whether the Platform requires compositing for rendering.
