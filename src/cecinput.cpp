@@ -18,8 +18,11 @@
 #include <linux/input.h>
 #include "platform.h"
 #include "main.h"
+#include "cec_logging.h"
 
-void handle_keypress(void* data, const CEC::cec_keypress* key)
+using namespace CEC;
+
+void handleCecKeypress(void* data, const CEC::cec_keypress* key)
 {
     Q_UNUSED(data);
     static const QHash<int, int> keyCodeTranslation = {
@@ -67,13 +70,72 @@ void handle_keypress(void* data, const CEC::cec_keypress* key)
     }
 }
 
+
+void handleCecLogMessage(void *param, const cec_log_message* message)
+{
+    Q_UNUSED(param);
+
+    std::string strLevel;
+    switch (message->level)
+    {
+    case CEC_LOG_ERROR:
+        qCCritical(KWIN_CEC) << message->message;
+        break;
+    case CEC_LOG_WARNING:
+        qCWarning(KWIN_CEC) << message->message;
+        break;
+    case CEC_LOG_NOTICE:
+    case CEC_LOG_TRAFFIC:
+        qCInfo(KWIN_CEC) << message->message;
+        break;
+        break;
+    case CEC_LOG_DEBUG:
+        qCDebug(KWIN_CEC) << message->message;
+        break;
+    default:
+        break;
+    }
+}
+
+void handleCecKeyPress(void *param, const cec_keypress* key)
+{
+    Q_UNUSED(param)
+    Q_UNUSED(key)
+}
+
+void handleCecCommand(void *param, const cec_command* command)
+{
+    Q_UNUSED(param)
+    Q_UNUSED(command)
+}
+
+void handleCecAlert(void *param, const libcec_alert type, const libcec_parameter cecparam)
+{
+    Q_UNUSED(param)
+    Q_UNUSED(cecparam)
+    switch (type)
+    {
+    case CEC_ALERT_CONNECTION_LOST:
+        qCWarning(KWIN_CEC) << "Connection lost!";
+        break;
+    default:
+        break;
+    }
+}
+
 CECInput::CECInput(QObject *p)
     : QObject(p)
 {
     CEC::ICECCallbacks cec_callbacks;
-    cec_callbacks.keyPress = &handle_keypress;
+    cec_callbacks.Clear();
+    cec_callbacks.keyPress        = &handleCecKeypress;
+    cec_callbacks.logMessage      = &handleCecLogMessage;
+    cec_callbacks.keyPress        = &handleCecKeyPress;
+    cec_callbacks.commandReceived = &handleCecCommand;
+    cec_callbacks.alert           = &handleCecAlert;
 
     CEC::libcec_configuration cec_config;
+    cec_config.clientVersion = LIBCEC_VERSION_CURRENT;
     cec_config.callbacks = &cec_callbacks;
     cec_config.deviceTypes.Add(CEC::CEC_DEVICE_TYPE_RECORDING_DEVICE);
 

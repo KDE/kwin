@@ -19,6 +19,17 @@ if (KWIN_BUILD_KCMS)
     add_subdirectory(kcmkwin)
 endif()
 
+ecm_qt_declare_logging_category(ceclogging_SOURCES
+    HEADER
+        cec_logging.h
+    IDENTIFIER
+        KWIN_CEC
+    CATEGORY_NAME
+        kwin_cec
+    DEFAULT_SEVERITY
+        Debug
+)
+
 set(kwin_SRCS
     3rdparty/xcursor.c
     abstract_client.cpp
@@ -154,6 +165,7 @@ set(kwin_SRCS
     xkb.cpp
     xwaylandclient.cpp
     xwl/xwayland_interface.cpp
+    ${ceclogging_SOURCES}
 )
 
 qt_add_dbus_adaptor(kwin_SRCS scripting/org.kde.kwin.Script.xml scripting/scripting.h KWin::AbstractScript)
