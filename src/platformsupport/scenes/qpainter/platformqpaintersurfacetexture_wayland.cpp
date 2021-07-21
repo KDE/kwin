@@ -36,13 +36,12 @@ bool PlatformQPainterSurfaceTextureWayland::create()
 void PlatformQPainterSurfaceTextureWayland::update(const QRegion &region)
 {
     KWaylandServer::BufferInterface *buffer = m_pixmap->buffer();
-    KWaylandServer::SurfaceInterface *surface = m_pixmap->surface();
-    if (Q_UNLIKELY(!buffer || !surface)) {
+    if (Q_UNLIKELY(!buffer)) {
         return;
     }
 
     const QImage image = buffer->data();
-    const QRegion dirtyRegion = surface->mapToBuffer(region);
+    const QRegion dirtyRegion = mapRegion(m_pixmap->item()->surfaceToBufferMatrix(), region);
     QPainter painter(&m_image);
 
     // The buffer data is copied as the buffer interface returns a QImage

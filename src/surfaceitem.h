@@ -21,7 +21,8 @@ class KWIN_EXPORT SurfaceItem : public Item
     Q_OBJECT
 
 public:
-    virtual QPointF mapToBuffer(const QPointF &point) const = 0;
+    QMatrix4x4 surfaceToBufferMatrix() const;
+    void setSurfaceToBufferMatrix(const QMatrix4x4 &matrix);
 
     virtual QRegion shape() const;
     virtual QRegion opaque() const;
@@ -49,6 +50,7 @@ protected:
     QRegion m_damage;
     QScopedPointer<SurfacePixmap> m_pixmap;
     QScopedPointer<SurfacePixmap> m_previousPixmap;
+    QMatrix4x4 m_surfaceToBufferMatrix;
     int m_referencePixmapCounter = 0;
 
     friend class Scene::Window;

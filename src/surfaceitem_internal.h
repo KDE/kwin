@@ -21,7 +21,6 @@ class KWIN_EXPORT SurfaceItemInternal : public SurfaceItem
 public:
     explicit SurfaceItemInternal(Scene::Window *window, Item *parent = nullptr);
 
-    QPointF mapToBuffer(const QPointF &point) const override;
     QRegion shape() const override;
 
 private Q_SLOTS:

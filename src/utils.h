@@ -19,6 +19,7 @@
 // Qt
 #include <QLoggingCategory>
 #include <QList>
+#include <QMatrix4x4>
 #include <QPoint>
 #include <QRect>
 #include <QScopedPointer>
@@ -129,6 +130,15 @@ void KWIN_EXPORT ungrabXKeyboard();
  * to determine the effective device pixel ratio by which the window rect has to be scaled.
  */
 qreal KWIN_EXPORT qPainterEffectiveDevicePixelRatio(const QPainter *painter);
+
+static inline QRegion KWIN_EXPORT mapRegion(const QMatrix4x4 &matrix, const QRegion &region)
+{
+    QRegion result;
+    for (const QRect &rect : region) {
+        result += matrix.mapRect(rect);
+    }
+    return result;
+}
 
 /**
  * Small helper class which performs grabXServer in the ctor and

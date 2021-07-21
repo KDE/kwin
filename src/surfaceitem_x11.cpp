@@ -125,11 +125,6 @@ void SurfaceItemX11::handleBufferGeometryChanged(Toplevel *toplevel, const QRect
     setSize(toplevel->bufferGeometry().size());
 }
 
-QPointF SurfaceItemX11::mapToBuffer(const QPointF &point) const
-{
-    return point;
-}
-
 QRegion SurfaceItemX11::shape() const
 {
     const Toplevel *toplevel = window()->window();

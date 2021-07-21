@@ -21,9 +21,7 @@ SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface
     , m_surface(surface)
 {
     connect(surface, &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged,
-            this, &SurfaceItemWayland::discardQuads);
-    connect(surface, &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged,
-            this, &SurfaceItemWayland::discardPixmap);
+            this, &SurfaceItemWayland::handleSurfaceToBufferMatrixChanged);
 
     connect(surface, &KWaylandServer::SurfaceInterface::sizeChanged,
             this, &SurfaceItemWayland::handleSurfaceSizeChanged);
@@ -48,14 +46,7 @@ SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface
 
     handleChildSubSurfacesChanged();
     setSize(surface->size());
-}
-
-QPointF SurfaceItemWayland::mapToBuffer(const QPointF &point) const
-{
-    if (m_surface) {
-        return m_surface->mapToBuffer(point);
-    }
-    return point;
+    setSurfaceToBufferMatrix(surface->surfaceToBufferMatrix());
 }
 
 QRegion SurfaceItemWayland::shape() const
@@ -74,6 +65,13 @@ QRegion SurfaceItemWayland::opaque() const
 KWaylandServer::SurfaceInterface *SurfaceItemWayland::surface() const
 {
     return m_surface;
+}
+
+void SurfaceItemWayland::handleSurfaceToBufferMatrixChanged()
+{
+    setSurfaceToBufferMatrix(m_surface->surfaceToBufferMatrix());
+    discardQuads();
+    discardPixmap();
 }
 
 void SurfaceItemWayland::handleSurfaceSizeChanged()
@@ -139,6 +137,11 @@ SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *pa
 SurfacePixmapWayland::~SurfacePixmapWayland()
 {
     setBuffer(nullptr);
+}
+
+SurfaceItemWayland *SurfacePixmapWayland::item() const
+{
+    return m_item;
 }
 
 KWaylandServer::SurfaceInterface *SurfacePixmapWayland::surface() const

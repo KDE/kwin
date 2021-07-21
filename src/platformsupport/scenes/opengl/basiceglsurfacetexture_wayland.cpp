@@ -13,7 +13,6 @@
 
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/linuxdmabuf_v1_interface.h>
-#include <KWaylandServer/surface_interface.h>
 
 namespace KWin
 {
@@ -98,17 +97,12 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(KWaylandServer::BufferInter
         return;
     }
 
-    KWaylandServer::SurfaceInterface *surface = m_pixmap->surface();
-    if (Q_UNLIKELY(!surface)) {
-        return;
-    }
-
     const QImage &image = buffer->data();
     if (Q_UNLIKELY(image.isNull())) {
         return;
     }
 
-    const QRegion damage = surface->mapToBuffer(region);
+    const QRegion damage = mapRegion(m_pixmap->item()->surfaceToBufferMatrix(), region);
     for (const QRect &rect : damage) {
         m_texture->update(image, rect.topLeft(), rect);
     }

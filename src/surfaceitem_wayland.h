@@ -29,13 +29,13 @@ public:
     explicit SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface,
                                 Scene::Window *window, Item *parent = nullptr);
 
-    QPointF mapToBuffer(const QPointF &point) const override;
     QRegion shape() const override;
     QRegion opaque() const override;
 
     KWaylandServer::SurfaceInterface *surface() const;
 
 private Q_SLOTS:
+    void handleSurfaceToBufferMatrixChanged();
     void handleSurfaceCommitted();
     void handleSurfaceSizeChanged();
 
@@ -61,6 +61,7 @@ public:
     explicit SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent = nullptr);
     ~SurfacePixmapWayland() override;
 
+    SurfaceItemWayland *item() const;
     KWaylandServer::SurfaceInterface *surface() const;
     KWaylandServer::BufferInterface *buffer() const;
 

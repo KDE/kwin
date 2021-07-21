@@ -14,6 +14,16 @@ SurfaceItem::SurfaceItem(Scene::Window *window, Item *parent)
 {
 }
 
+QMatrix4x4 SurfaceItem::surfaceToBufferMatrix() const
+{
+    return m_surfaceToBufferMatrix;
+}
+
+void SurfaceItem::setSurfaceToBufferMatrix(const QMatrix4x4 &matrix)
+{
+    m_surfaceToBufferMatrix = matrix;
+}
+
 QRegion SurfaceItem::shape() const
 {
     return QRegion();
@@ -122,10 +132,10 @@ WindowQuadList SurfaceItem::buildQuads() const
     for (const QRectF rect : region) {
         WindowQuad quad;
 
-        const QPointF bufferTopLeft = mapToBuffer(rect.topLeft());
-        const QPointF bufferTopRight = mapToBuffer(rect.topRight());
-        const QPointF bufferBottomRight = mapToBuffer(rect.bottomRight());
-        const QPointF bufferBottomLeft = mapToBuffer(rect.bottomLeft());
+        const QPointF bufferTopLeft = m_surfaceToBufferMatrix.map(rect.topLeft());
+        const QPointF bufferTopRight = m_surfaceToBufferMatrix.map(rect.topRight());
+        const QPointF bufferBottomRight = m_surfaceToBufferMatrix.map(rect.bottomRight());
+        const QPointF bufferBottomLeft = m_surfaceToBufferMatrix.map(rect.bottomLeft());
 
         quad[0] = WindowVertex(rect.topLeft(), bufferTopLeft);
         quad[1] = WindowVertex(rect.topRight(), bufferTopRight);

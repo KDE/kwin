@@ -29,7 +29,6 @@ public:
     void waitForDamage();
     void destroyDamage();
 
-    QPointF mapToBuffer(const QPointF &point) const override;
     QRegion shape() const override;
     QRegion opaque() const override;
 

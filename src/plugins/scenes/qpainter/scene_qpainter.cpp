@@ -296,8 +296,9 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
 
     const QRegion shape = surfaceItem->shape();
     for (const QRectF rect : shape) {
-        const QPointF bufferTopLeft = surfaceItem->mapToBuffer(rect.topLeft());
-        const QPointF bufferBottomRight = surfaceItem->mapToBuffer(rect.bottomRight());
+        const QMatrix4x4 matrix = surfaceItem->surfaceToBufferMatrix();
+        const QPointF bufferTopLeft = matrix.map(rect.topLeft());
+        const QPointF bufferBottomRight = matrix.map(rect.bottomRight());
 
         painter->drawImage(rect, platformSurfaceTexture->image(),
                            QRectF(bufferTopLeft, bufferBottomRight));

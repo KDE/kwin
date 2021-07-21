@@ -20,11 +20,11 @@ SurfaceItemInternal::SurfaceItemInternal(Scene::Window *window, Item *parent)
             this, &SurfaceItemInternal::handleBufferGeometryChanged);
 
     setSize(toplevel->bufferGeometry().size());
-}
 
-QPointF SurfaceItemInternal::mapToBuffer(const QPointF &point) const
-{
-    return point * window()->window()->bufferScale();
+    // The device pixel ratio of the internal window is static.
+    QMatrix4x4 surfaceToBufferMatrix;
+    surfaceToBufferMatrix.scale(toplevel->bufferScale());
+    setSurfaceToBufferMatrix(surfaceToBufferMatrix);
 }
 
 QRegion SurfaceItemInternal::shape() const
