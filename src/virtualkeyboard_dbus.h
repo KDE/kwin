@@ -20,11 +20,13 @@ class KWIN_EXPORT VirtualKeyboardDBus : public QObject
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.VirtualKeyboard")
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
+    Q_PROPERTY(bool visible READ isVisible NOTIFY visibleChanged)
 public:
     explicit VirtualKeyboardDBus(InputMethod *inputMethod);
     ~VirtualKeyboardDBus() override;
     bool isEnabled() const;
 
+    bool isVisible() const;
     bool isActive() const;
     void setEnabled(bool enabled);
     void setActive(bool active);
@@ -32,6 +34,7 @@ public:
 Q_SIGNALS:
     Q_SCRIPTABLE void enabledChanged();
     Q_SCRIPTABLE void activeChanged();
+    Q_SCRIPTABLE void visibleChanged();
 
 private:
     InputMethod *const m_inputMethod;

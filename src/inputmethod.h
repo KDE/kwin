@@ -51,12 +51,14 @@ public:
     void setActive(bool active);
     void hide();
     void show();
+    bool isVisible() const;
 
     void setInputMethodCommand(const QString &path);
 
 Q_SIGNALS:
     void activeChanged(bool active);
     void enabledChanged(bool enabled);
+    void visibleChanged();
 
 private Q_SLOTS:
     void clientAdded(AbstractClient* client);

@@ -165,6 +165,10 @@ void InputMethod::clientAdded(AbstractClient *_client)
     connect(m_inputClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
     connect(m_inputClient, &AbstractClient::windowHidden, this, &InputMethod::updateInputPanelState);
     connect(m_inputClient, &AbstractClient::windowClosed, this, &InputMethod::updateInputPanelState);
+    connect(m_inputClient, &AbstractClient::windowShown, this, &InputMethod::visibleChanged);
+    connect(m_inputClient, &AbstractClient::windowHidden, this, &InputMethod::visibleChanged);
+    connect(m_inputClient, &AbstractClient::windowClosed, this, &InputMethod::visibleChanged);
+    Q_EMIT visibleChanged();
     updateInputPanelState();
 }
 
@@ -688,5 +692,9 @@ void InputMethod::installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboar
     });
 }
 
+bool InputMethod::isVisible() const
+{
+    return m_inputClient && m_inputClient->isShown(false);
 }
 
+}

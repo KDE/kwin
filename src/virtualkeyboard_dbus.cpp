@@ -22,6 +22,7 @@ VirtualKeyboardDBus::VirtualKeyboardDBus(InputMethod *parent)
                                                  QDBusConnection::ExportAllSlots);
     connect(parent, &InputMethod::activeChanged, this, &VirtualKeyboardDBus::activeChanged);
     connect(parent, &InputMethod::enabledChanged, this, &VirtualKeyboardDBus::enabledChanged);
+    connect(parent, &InputMethod::visibleChanged, this, &VirtualKeyboardDBus::visibleChanged);
 }
 
 VirtualKeyboardDBus::~VirtualKeyboardDBus() = default;
@@ -44,6 +45,11 @@ void VirtualKeyboardDBus::setActive(bool active)
 bool VirtualKeyboardDBus::isEnabled() const
 {
     return m_inputMethod->isEnabled();
+}
+
+bool VirtualKeyboardDBus::isVisible() const
+{
+    return m_inputMethod->isVisible();
 }
 
 }
