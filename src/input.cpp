@@ -2277,7 +2277,6 @@ void InputRedirection::setupInputFilters()
         }
         installInputEventFilter(new DragAndDropInputFilter);
         installInputEventFilter(new LockScreenFilter);
-        installInputEventFilter(new PopupInputFilter);
         m_windowSelector = new WindowSelectorFilter;
         installInputEventFilter(m_windowSelector);
     }
@@ -2291,6 +2290,9 @@ void InputRedirection::setupInputFilters()
 #endif
     if (hasGlobalShortcutSupport) {
         installInputEventFilter(new GlobalShortcutFilter);
+    }
+    if (waylandServer()) {
+        installInputEventFilter(new PopupInputFilter);
     }
     installInputEventFilter(new DecorationEventFilter);
     installInputEventFilter(new InternalWindowEventFilter);
