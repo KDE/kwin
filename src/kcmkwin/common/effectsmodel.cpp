@@ -619,14 +619,7 @@ static KCModule *loadBinaryConfig(const QString &configModule, QObject *parent)
 
 static KCModule *findScriptedConfig(const QString &pluginId, QObject *parent)
 {
-    const QVector<KPluginMetaData> offers = KPluginLoader::findPluginsById(QStringLiteral("kwin/effects/configs/"), QStringLiteral("kcm_kwin4_genericscripted"));
-
-    if (offers.isEmpty()) {
-        return nullptr;
-    }
-
-    const KPluginMetaData &generic = offers.first();
-    KPluginLoader loader(generic.fileName());
+    KPluginLoader loader(QStringLiteral("kwin/effects/configs/kcm_kwin4_genericscripted"));
     KPluginFactory *factory = loader.factory();
     if (!factory) {
         return nullptr;
