@@ -73,10 +73,6 @@ void InputMethod::init()
     });
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &InputMethod::hide);
 
-    updateSni();
-
-    connect(this, &InputMethod::enabledChanged, this, &InputMethod::updateSni);
-
     new VirtualKeyboardDBus(this);
     qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the DBus interface";
 
@@ -509,46 +505,6 @@ void InputMethod::adoptInputMethodContext()
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::keyboardGrabRequested, this, &InputMethod::installKeyboardGrab, Qt::UniqueConnection);
 }
 
-void InputMethod::updateSni()
-{
-    if (m_inputMethodCommand.isEmpty()) {
-        m_sni.reset();
-        return;
-    }
-    if (!m_sni) {
-        qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the SNI";
-        m_sni.reset(new KStatusNotifierItem(QStringLiteral("kwin-virtual-keyboard"), this));
-
-        connect(m_sni.get(), &KStatusNotifierItem::activateRequested, this,
-            [this] {
-                setEnabled(!m_enabled);
-            }
-        );
-
-        QMenu *sniMenu = new QMenu;
-        sniMenu->addAction(i18n("Configure virtual keyboards..."), this, [] {
-            QProcess::startDetached("systemsettings5", {"kcm_virtualkeyboard"});
-        });
-
-        m_sni->setContextMenu(sniMenu);
-    }
-    m_sni->setStandardActionsEnabled(false);
-    m_sni->setCategory(KStatusNotifierItem::Hardware);
-    m_sni->setStatus(KStatusNotifierItem::Passive);
-    m_sni->setTitle(i18n("Virtual Keyboard"));
-    m_sni->setToolTipTitle(i18n("Whether to show the virtual keyboard on demand."));
-
-    if (m_enabled) {
-        m_sni->setIconByName(QStringLiteral("input-keyboard-virtual-on"));
-        m_sni->setTitle(i18n("Virtual Keyboard: enabled"));
-        m_sni->setOverlayIconByName({});
-    } else {
-        m_sni->setIconByName(QStringLiteral("input-keyboard-virtual-off"));
-        m_sni->setTitle(i18n("Virtual Keyboard: disabled"));
-        m_sni->setOverlayIconByName({});
-    }
-}
-
 void InputMethod::updateInputPanelState()
 {
     if (!waylandServer()) {
@@ -585,7 +541,6 @@ void InputMethod::setInputMethodCommand(const QString &command)
     if (m_enabled) {
         startInputMethod();
     }
-    updateSni();
     Q_EMIT availableChanged();
 }
 

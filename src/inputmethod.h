@@ -81,7 +81,6 @@ private Q_SLOTS:
     void modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group);
 
 private:
-    void updateSni();
     void updateInputPanelState();
     void adoptInputMethodContext();
     void commitString(qint32 serial, const QString &text);
@@ -103,7 +102,6 @@ private:
 
     bool m_enabled = true;
     quint32 m_serial = 0;
-    QScopedPointer<KStatusNotifierItem> m_sni;
     QPointer<InputPanelV1Client> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;
 
