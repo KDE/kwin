@@ -586,6 +586,7 @@ void InputMethod::setInputMethodCommand(const QString &command)
         startInputMethod();
     }
     updateSni();
+    Q_EMIT availableChanged();
 }
 
 void InputMethod::stopInputMethod()
@@ -605,7 +606,6 @@ void InputMethod::stopInputMethod()
     }
     m_inputMethodProcess->deleteLater();
     m_inputMethodProcess = nullptr;
-    Q_EMIT availableChanged();
 }
 
 void InputMethod::startInputMethod()
@@ -658,7 +658,6 @@ void InputMethod::startInputMethod()
             }
         }
     });
-    Q_EMIT availableChanged();
 }
 bool InputMethod::isActive() const
 {
@@ -701,7 +700,7 @@ bool InputMethod::isVisible() const
 
 bool InputMethod::isAvailable() const
 {
-    return m_inputMethodProcess;
+    return !m_inputMethodCommand.isEmpty();
 }
 
 }
