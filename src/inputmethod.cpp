@@ -605,6 +605,7 @@ void InputMethod::stopInputMethod()
     }
     m_inputMethodProcess->deleteLater();
     m_inputMethodProcess = nullptr;
+    Q_EMIT availableChanged();
 }
 
 void InputMethod::startInputMethod()
@@ -657,6 +658,7 @@ void InputMethod::startInputMethod()
             }
         }
     });
+    Q_EMIT availableChanged();
 }
 bool InputMethod::isActive() const
 {
@@ -695,6 +697,11 @@ void InputMethod::installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboar
 bool InputMethod::isVisible() const
 {
     return m_inputClient && m_inputClient->isShown(false);
+}
+
+bool InputMethod::isAvailable() const
+{
+    return m_inputMethodProcess;
 }
 
 }

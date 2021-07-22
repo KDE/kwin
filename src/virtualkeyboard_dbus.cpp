@@ -23,6 +23,7 @@ VirtualKeyboardDBus::VirtualKeyboardDBus(InputMethod *parent)
     connect(parent, &InputMethod::activeChanged, this, &VirtualKeyboardDBus::activeChanged);
     connect(parent, &InputMethod::enabledChanged, this, &VirtualKeyboardDBus::enabledChanged);
     connect(parent, &InputMethod::visibleChanged, this, &VirtualKeyboardDBus::visibleChanged);
+    connect(parent, &InputMethod::availableChanged, this, &VirtualKeyboardDBus::availableChanged);
 }
 
 VirtualKeyboardDBus::~VirtualKeyboardDBus() = default;
@@ -50,6 +51,11 @@ bool VirtualKeyboardDBus::isEnabled() const
 bool VirtualKeyboardDBus::isVisible() const
 {
     return m_inputMethod->isVisible();
+}
+
+bool VirtualKeyboardDBus::isAvailable() const
+{
+    return m_inputMethod->isAvailable();
 }
 
 }
