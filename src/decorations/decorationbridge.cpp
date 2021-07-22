@@ -137,13 +137,13 @@ void DecorationBridge::init()
 
 void DecorationBridge::initPlugin()
 {
-    const auto offers = KPluginLoader::findPluginsById(s_pluginName, m_plugin);
-    if (offers.isEmpty()) {
-        qCWarning(KWIN_DECORATIONS) << "Could not locate decoration plugin";
+    const KPluginMetaData metaData = KPluginMetaData::findPluginById(s_pluginName, m_plugin);
+    if (!metaData.isValid()) {
+        qCWarning(KWIN_DECORATIONS) << "Could not locate decoration plugin" << m_plugin;
         return;
     }
-    qCDebug(KWIN_DECORATIONS) << "Trying to load decoration plugin: " << offers.first().fileName();
-    KPluginLoader loader(offers.first().fileName());
+    qCDebug(KWIN_DECORATIONS) << "Trying to load decoration plugin: " << metaData.fileName();
+    KPluginLoader loader(metaData.fileName());
     KPluginFactory *factory = loader.factory();
     if (!factory) {
         qCWarning(KWIN_DECORATIONS) << "Error loading plugin:" << loader.errorString();

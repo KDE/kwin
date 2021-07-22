@@ -62,12 +62,12 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     removeLibraryPath(ownPath);
     addLibraryPath(ownPath);
 
-    const auto plugins = KPluginLoader::findPluginsById(QStringLiteral("org.kde.kwin.waylandbackends"), "KWinWaylandVirtualBackend");
-    if (plugins.empty()) {
+    const KPluginMetaData plugin = KPluginMetaData::findPluginById(QStringLiteral("org.kde.kwin.waylandbackends"), "KWinWaylandVirtualBackend");
+    if (!plugin.isValid()) {
         quit();
         return;
     }
-    initPlatform(plugins.first());
+    initPlatform(plugin);
     WaylandServer::create(this);
     setProcessStartupEnvironment(QProcessEnvironment::systemEnvironment());
 }

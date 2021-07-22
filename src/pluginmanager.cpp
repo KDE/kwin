@@ -127,8 +127,8 @@ bool PluginManager::loadStaticPlugin(const QString &pluginId)
 
 bool PluginManager::loadDynamicPlugin(const QString &pluginId)
 {
-    const auto offers = KPluginLoader::findPluginsById(s_pluginDirectory, pluginId);
-    for (const KPluginMetaData &metadata : offers) {
+    const KPluginMetaData metadata = KPluginMetaData::findPluginById(s_pluginDirectory, pluginId);
+    if (metadata.isValid()) {
         if (loadDynamicPlugin(metadata)) {
             return true;
         }

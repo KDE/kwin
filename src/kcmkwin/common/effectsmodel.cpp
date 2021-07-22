@@ -605,13 +605,13 @@ QModelIndex EffectsModel::findByPluginId(const QString &pluginId) const
 
 static KCModule *loadBinaryConfig(const QString &configModule, QObject *parent)
 {
-    const QVector<KPluginMetaData> offers = KPluginLoader::findPluginsById(QStringLiteral("kwin/effects/configs/"), configModule);
+    const KPluginMetaData metaData = KPluginMetaData::findPluginById(QStringLiteral("kwin/effects/configs/"), configModule);
 
-    if (offers.isEmpty()) {
+    if (!metaData.isValid()) {
         return nullptr;
     }
 
-    KPluginLoader loader(offers.first().fileName());
+    KPluginLoader loader(metaData.fileName());
     KPluginFactory *factory = loader.factory();
 
     return factory->create<KCModule>(parent);
