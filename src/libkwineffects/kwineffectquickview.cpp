@@ -101,7 +101,8 @@ EffectQuickView::EffectQuickView(QObject *parent, ExportMode exportMode)
         d->m_renderControl->initialize(d->m_glcontext.data());
         d->m_glcontext->doneCurrent();
 
-        if (!d->m_glcontext->shareContext()) {
+        // On Wayland, opengl contexts are implicitly shared.
+        if (!effects->waylandDisplay() && !d->m_glcontext->shareContext()) {
             qCDebug(LIBKWINEFFECTS) << "Failed to create a shared context, falling back to raster rendering";
             // still render via GL, but blit for presentation
             d->m_useBlit = true;
