@@ -1017,6 +1017,10 @@ void TabBox::navigatingThroughWindows(bool forward, const QKeySequence &shortcut
         // CDE style raise / lower
         CDEWalkThroughWindows(forward);
     } else {
+        workspace()->forEachAbstractClient([](Toplevel *toplevel) {
+            if (toplevel->isPopupWindow())
+                toplevel->popupDone();
+        });
         if (areModKeysDepressed(shortcut)) {
             if (startKDEWalkThroughWindows(mode))
                 KDEWalkThroughWindows(forward);
