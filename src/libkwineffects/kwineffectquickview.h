@@ -104,6 +104,9 @@ public:
     void show();
     void hide();
 
+    bool automaticRepaint() const;
+    void setAutomaticRepaint(bool set);
+
     /**
      * Returns the current output of the scene graph
      * @note The render context must valid at the time of calling
@@ -133,8 +136,13 @@ Q_SIGNALS:
      */
     void repaintNeeded();
     void geometryChanged(const QRect &oldGeometry, const QRect &newGeometry);
+    void renderRequested();
+    void sceneChanged();
 
 private:
+    void handleRenderRequested();
+    void handleSceneChanged();
+
     class Private;
     QScopedPointer<Private> d;
 };

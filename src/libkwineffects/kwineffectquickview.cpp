@@ -38,12 +38,14 @@ public:
     QScopedPointer<QOffscreenSurface> m_offscreenSurface;
     QScopedPointer<QOpenGLFramebufferObject> m_fbo;
 
+    QTimer *m_repaintTimer;
     QImage m_image;
     QScopedPointer<GLTexture> m_textureExport;
     // if we should capture a QImage after rendering into our BO.
     // Used for either software QtQuick rendering and nonGL kwin rendering
     bool m_useBlit = false;
     bool m_visible = true;
+    bool m_automaticRepaint = true;
 
     void releaseResources();
 };
@@ -111,13 +113,13 @@ EffectQuickView::EffectQuickView(QObject *parent, ExportMode exportMode)
     connect(d->m_view, &QWindow::widthChanged, this, updateSize);
     connect(d->m_view, &QWindow::heightChanged, this, updateSize);
 
-    QTimer *t = new QTimer(this);
-    t->setSingleShot(true);
-    t->setInterval(10);
+    d->m_repaintTimer = new QTimer(this);
+    d->m_repaintTimer->setSingleShot(true);
+    d->m_repaintTimer->setInterval(10);
 
-    connect(t, &QTimer::timeout, this, &EffectQuickView::update);
-    connect(d->m_renderControl, &QQuickRenderControl::renderRequested, t, [t]() { t->start(); });
-    connect(d->m_renderControl, &QQuickRenderControl::sceneChanged, t, [t]() { t->start(); });
+    connect(d->m_repaintTimer, &QTimer::timeout, this, &EffectQuickView::update);
+    connect(d->m_renderControl, &QQuickRenderControl::renderRequested, this, &EffectQuickView::handleRenderRequested);
+    connect(d->m_renderControl, &QQuickRenderControl::sceneChanged, this, &EffectQuickView::handleSceneChanged);
 }
 
 EffectQuickView::~EffectQuickView()
@@ -130,6 +132,39 @@ EffectQuickView::~EffectQuickView()
         d->m_renderControl->invalidate();
         d->m_glcontext->doneCurrent();
     }
+}
+
+bool EffectQuickView::automaticRepaint() const
+{
+    return d->m_automaticRepaint;
+}
+
+void EffectQuickView::setAutomaticRepaint(bool set)
+{
+    if (d->m_automaticRepaint != set) {
+        d->m_automaticRepaint = set;
+
+        // If there's an in-flight update, disable it.
+        if (!d->m_automaticRepaint) {
+            d->m_repaintTimer->stop();
+        }
+    }
+}
+
+void EffectQuickView::handleSceneChanged()
+{
+    if (d->m_automaticRepaint) {
+        d->m_repaintTimer->start();
+    }
+    Q_EMIT sceneChanged();
+}
+
+void EffectQuickView::handleRenderRequested()
+{
+    if (d->m_automaticRepaint) {
+        d->m_repaintTimer->start();
+    }
+    Q_EMIT renderRequested();
 }
 
 void EffectQuickView::update()
