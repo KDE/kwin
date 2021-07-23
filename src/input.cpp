@@ -990,8 +990,7 @@ class InternalWindowEventFilter : public InputEventFilter {
                 break;
             }
         }
-        if (m_lastFocus != found) {
-            m_lastFocus = found;
+        if (QGuiApplication::focusWindow() != found) {
             QWindowSystemInterface::handleWindowActivated(found);
         }
         if (!found) {
@@ -1098,7 +1097,6 @@ private:
     QSet<qint32> m_pressedIds;
     QPointF m_lastGlobalTouchPos;
     QPointF m_lastLocalTouchPos;
-    QPointer<QWindow> m_lastFocus;
 };
 
 class DecorationEventFilter : public InputEventFilter {
