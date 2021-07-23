@@ -25,7 +25,6 @@
 #include <QStandardItemModel>
 
 // KDE
-#include <KCModuleProxy>
 #include <KLocalizedString>
 #include <KPluginFactory>
 #include <KTitleWidget>
