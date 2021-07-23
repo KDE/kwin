@@ -78,9 +78,8 @@ void DrmQPainterBackend::beginFrame(int screenId)
     m_outputs[screenId].swapchain->acquireBuffer();
 }
 
-void DrmQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
+void DrmQPainterBackend::endFrame(int screenId, const QRegion &damage)
 {
-    Q_UNUSED(mask)
     Q_UNUSED(damage)
 
     const Output &rendererOutput = m_outputs[screenId];

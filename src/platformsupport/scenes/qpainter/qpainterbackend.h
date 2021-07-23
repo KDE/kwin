@@ -29,7 +29,7 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
-    virtual void endFrame(int screenId, int mask, const QRegion &damage) = 0;
+    virtual void endFrame(int screenId, const QRegion &damage) = 0;
     virtual void beginFrame(int screenId) = 0;
     /**
      * @brief React on screen geometry changes.

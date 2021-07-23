@@ -110,7 +110,7 @@ void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<Topl
 
         m_painter->end();
         renderLoop->endFrame();
-        m_backend->endFrame(screenId, mask, updateRegion);
+        m_backend->endFrame(screenId, updateRegion);
     }
 
     // do cleanup

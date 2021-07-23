@@ -53,9 +53,8 @@ void VirtualQPainterBackend::createOutputs()
     }
 }
 
-void VirtualQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
+void VirtualQPainterBackend::endFrame(int screenId, const QRegion &damage)
 {
-    Q_UNUSED(mask)
     Q_UNUSED(damage)
 
     VirtualOutput *output = static_cast<VirtualOutput *>(m_backend->findOutput(screenId));

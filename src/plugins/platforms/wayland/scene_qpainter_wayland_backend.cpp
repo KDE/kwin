@@ -166,10 +166,8 @@ void WaylandQPainterBackend::createOutput(AbstractOutput *waylandOutput)
     m_outputs << output;
 }
 
-void WaylandQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
+void WaylandQPainterBackend::endFrame(int screenId, const QRegion &damage)
 {
-    Q_UNUSED(mask)
-
     WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
     Q_ASSERT(rendererOutput);
 

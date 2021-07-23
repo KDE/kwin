@@ -61,9 +61,8 @@ void X11WindowedQPainterBackend::beginFrame(int screenId)
     Q_UNUSED(screenId)
 }
 
-void X11WindowedQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
+void X11WindowedQPainterBackend::endFrame(int screenId, const QRegion &damage)
 {
-    Q_UNUSED(mask)
     Q_UNUSED(damage)
 
     X11WindowedOutput *output = static_cast<X11WindowedOutput *>(kwinApp()->platform()->findOutput(screenId));

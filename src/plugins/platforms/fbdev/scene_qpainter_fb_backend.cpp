@@ -82,10 +82,9 @@ void FramebufferQPainterBackend::beginFrame(int screenId)
     m_needsFullRepaint = true;
 }
 
-void FramebufferQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
+void FramebufferQPainterBackend::endFrame(int screenId, const QRegion &damage)
 {
     Q_UNUSED(screenId)
-    Q_UNUSED(mask)
     Q_UNUSED(damage)
 
     if (!kwinApp()->platform()->session()->isActive()) {
