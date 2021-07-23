@@ -32,7 +32,6 @@
 #include <KWaylandServer/clientbuffer.h>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/eglstream_controller_interface.h>
-#include <KWaylandServer/resource.h>
 
 namespace KWin
 {
