@@ -614,13 +614,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         Q_EMIT q->bufferTransformChanged(current.bufferTransform);
     }
     if (visibilityChanged) {
-        if (bufferRef) {
-            subSurfaceIsMapped = true;
-            Q_EMIT q->mapped();
-        } else {
-            subSurfaceIsMapped = false;
-            Q_EMIT q->unmapped();
-        }
+        updateEffectiveMapped();
     }
     if (bufferChanged) {
         if (current.buffer && (!current.damage.isEmpty() || !current.bufferDamage.isEmpty())) {
@@ -693,6 +687,36 @@ void SurfaceInterfacePrivate::commitFromCache()
 {
     applyState(&cached);
     hasCacheState = false;
+}
+
+bool SurfaceInterfacePrivate::computeEffectiveMapped() const
+{
+    return bufferRef && (!subSurface || subSurface->parentSurface()->isMapped());
+}
+
+void SurfaceInterfacePrivate::updateEffectiveMapped()
+{
+    const bool effectiveMapped = computeEffectiveMapped();
+    if (mapped == effectiveMapped) {
+        return;
+    }
+
+    mapped = effectiveMapped;
+
+    if (mapped) {
+        Q_EMIT q->mapped();
+    } else {
+        Q_EMIT q->unmapped();
+    }
+
+    for (SubSurfaceInterface *subsurface : qAsConst(current.below)) {
+        auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
+        surfacePrivate->updateEffectiveMapped();
+    }
+    for (SubSurfaceInterface *subsurface : qAsConst(current.above)) {
+        auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
+        surfacePrivate->updateEffectiveMapped();
+    }
 }
 
 QRegion SurfaceInterface::damage() const
@@ -807,12 +831,7 @@ QPointer< SlideInterface > SurfaceInterface::slideOnShowHide() const
 
 bool SurfaceInterface::isMapped() const
 {
-    if (d->subSurface) {
-        // from spec:
-        // "A sub-surface becomes mapped, when a non-NULL wl_buffer is applied and the parent surface is mapped."
-        return d->subSurfaceIsMapped && d->subSurface->parentSurface() && d->subSurface->parentSurface()->isMapped();
-    }
-    return d->current.buffer != nullptr;
+    return d->mapped;
 }
 
 QVector<OutputInterface *> SurfaceInterface::outputs() const

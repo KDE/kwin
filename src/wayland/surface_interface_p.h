@@ -103,6 +103,9 @@ public:
     QMatrix4x4 buildSurfaceToBufferMatrix();
     void applyState(SurfaceState *next);
 
+    bool computeEffectiveMapped() const;
+    void updateEffectiveMapped();
+
     CompositorInterface *compositor;
     SurfaceInterface *q;
     SurfaceRole *role = nullptr;
@@ -116,13 +119,8 @@ public:
     QSize surfaceSize;
     QRegion inputRegion;
     ClientBuffer *bufferRef = nullptr;
+    bool mapped = false;
     bool hasCacheState = false;
-
-    // workaround for https://bugreports.qt.io/browse/QTBUG-52192
-    // A subsurface needs to be considered mapped even if it doesn't have a buffer attached
-    // Otherwise Qt's sub-surfaces will never be visible and the client will freeze due to
-    // waiting on the frame callback of the never visible surface
-    bool subSurfaceIsMapped = true;
 
     QVector<OutputInterface *> outputs;
 

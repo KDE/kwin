@@ -869,11 +869,8 @@ void TestSubSurface::testMappingOfSurfaceTree()
     QVERIFY(parentSpy.wait());
     QVERIFY(parentServerSurface->isMapped());
     // children should not yet be mapped
-    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child->surface()->isMapped());
-    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child2->surface()->isMapped());
-    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child3->surface()->isMapped());
 
     // next level
@@ -885,11 +882,8 @@ void TestSubSurface::testMappingOfSurfaceTree()
     QVERIFY(child2DamageSpy.wait());
     QVERIFY(parentServerSurface->isMapped());
     // children should not yet be mapped
-    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child->surface()->isMapped());
-    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child2->surface()->isMapped());
-    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child3->surface()->isMapped());
 
     // last but not least the first child level, which should map all our subsurfaces
@@ -937,13 +931,21 @@ void TestSubSurface::testSurfaceAt()
     QVERIFY(serverSurfaceCreated.wait());
     SurfaceInterface *parentServerSurface = serverSurfaceCreated.last().first().value<KWaylandServer::SurfaceInterface*>();
 
-    // create two child sub surfaces, those won't be mapped, just added to the parent
-    // this is to simulate the behavior of QtWayland
+    // directChild1 occupies the top-left quarter of the parent surface
+    QImage directImage(QSize(50, 50), QImage::Format_ARGB32_Premultiplied);
     QScopedPointer<Surface> directChild1(m_compositor->createSurface());
+    directChild1->attachBuffer(m_shm->createBuffer(directImage));
+    directChild1->damage(QRect(0, 0, 50, 50));
+    directChild1->commit(Surface::CommitFlag::None);
     QVERIFY(serverSurfaceCreated.wait());
     SurfaceInterface *directChild1ServerSurface = serverSurfaceCreated.last().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(directChild1ServerSurface);
+
+    // directChild2 occupies the bottom-right quarter of the parent surface
     QScopedPointer<Surface> directChild2(m_compositor->createSurface());
+    directChild2->attachBuffer(m_shm->createBuffer(directImage));
+    directChild2->damage(QRect(0, 0, 50, 50));
+    directChild2->commit(Surface::CommitFlag::None);
     QVERIFY(serverSurfaceCreated.wait());
     SurfaceInterface *directChild2ServerSurface = serverSurfaceCreated.last().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(directChild2ServerSurface);
@@ -953,6 +955,20 @@ void TestSubSurface::testSurfaceAt()
     directChild1SubSurface->setMode(SubSurface::Mode::Desynchronized);
     QScopedPointer<SubSurface> directChild2SubSurface(m_subCompositor->createSubSurface(directChild2.data(), parent.data()));
     directChild2SubSurface->setMode(SubSurface::Mode::Desynchronized);
+    directChild2SubSurface->setPosition(QPoint(50, 50));
+
+    // unset input regions for direct children
+    QSignalSpy directChild1CommittedSpy(directChild1ServerSurface, &SurfaceInterface::committed);
+    directChild1->setInputRegion(m_compositor->createRegion(QRegion()).get());
+    directChild1->commit(Surface::CommitFlag::None);
+    parent->commit(Surface::CommitFlag::None);
+    QVERIFY(directChild1CommittedSpy.wait());
+
+    QSignalSpy directChild2CommittedSpy(directChild2ServerSurface, &SurfaceInterface::committed);
+    directChild2->setInputRegion(m_compositor->createRegion(QRegion()).get());
+    directChild2->commit(Surface::CommitFlag::None);
+    parent->commit(Surface::CommitFlag::None);
+    QVERIFY(directChild2CommittedSpy.wait());
 
     // each of the children gets a child
     QScopedPointer<Surface> childFor1(m_compositor->createSurface());
@@ -967,12 +983,6 @@ void TestSubSurface::testSurfaceAt()
     childFor1SubSurface->setMode(SubSurface::Mode::Desynchronized);
     QScopedPointer<SubSurface> childFor2SubSurface(m_subCompositor->createSubSurface(childFor2.data(), directChild2.data()));
     childFor2SubSurface->setMode(SubSurface::Mode::Desynchronized);
-
-    // both get a quarter of the grand-parent surface
-    childFor2SubSurface->setPosition(QPoint(50, 50));
-    childFor2->commit(Surface::CommitFlag::None);
-    directChild2->commit(Surface::CommitFlag::None);
-    parent->commit(Surface::CommitFlag::None);
 
     // now let's render both grand children
     QImage partImage(QSize(50, 50), QImage::Format_ARGB32_Premultiplied);
