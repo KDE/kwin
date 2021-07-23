@@ -154,7 +154,6 @@ public:
 Q_SIGNALS:
     void modeChanged();
     void outputChange(const QRegion &damagedRegion);
-    void scaleChanged();
     void transformChanged();
     void dpmsModeChanged();
     void capabilitiesChanged();
