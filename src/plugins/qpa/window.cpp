@@ -63,6 +63,11 @@ QSurfaceFormat Window::format() const
     return m_format;
 }
 
+void Window::requestActivateWindow()
+{
+    QWindowSystemInterface::handleWindowActivated(window());
+}
+
 void Window::setGeometry(const QRect &rect)
 {
     const QRect &oldRect = geometry();

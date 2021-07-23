@@ -36,6 +36,7 @@ public:
     void setGeometry(const QRect &rect) override;
     WId winId() const override;
     qreal devicePixelRatio() const override;
+    void requestActivateWindow() override;
 
     void bindContentFBO();
     const QSharedPointer<QOpenGLFramebufferObject> &contentFBO() const;
