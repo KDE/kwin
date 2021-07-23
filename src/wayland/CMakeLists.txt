@@ -30,10 +30,10 @@ set(SERVER_LIB_SRCS
     layershell_v1_interface.cpp
     linuxdmabufv1clientbuffer.cpp
     output_interface.cpp
-    outputchangeset.cpp
-    outputconfiguration_interface.cpp
-    outputdevice_interface.cpp
-    outputmanagement_interface.cpp
+    outputdevice_v2_interface.cpp
+    outputconfiguration_v2_interface.cpp
+    outputmanagement_v2_interface.cpp
+    outputchangeset_v2.cpp
     plasmashell_interface.cpp
     plasmavirtualdesktop_interface.cpp
     plasmawindowmanagement_interface.cpp
@@ -84,13 +84,13 @@ ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
 )
 
 ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
-    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/output-management.xml
-    BASENAME outputmanagement
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
+    BASENAME kde-output-device-v2
 )
 
 ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
-    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/outputdevice.xml
-    BASENAME org-kde-kwin-outputdevice
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
+    BASENAME kde-output-management-v2
 )
 
 ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
@@ -349,10 +349,10 @@ set(SERVER_LIB_HEADERS
   layershell_v1_interface.h
   linuxdmabufv1clientbuffer.h
   output_interface.h
-  outputchangeset.h
-  outputconfiguration_interface.h
-  outputdevice_interface.h
-  outputmanagement_interface.h
+  outputchangeset_v2.h
+  outputconfiguration_v2_interface.h
+  outputdevice_v2_interface.h
+  outputmanagement_v2_interface.h
   plasmashell_interface.h
   plasmavirtualdesktop_interface.h
   plasmawindowmanagement_interface.h

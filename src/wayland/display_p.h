@@ -26,7 +26,7 @@ class ClientBuffer;
 class ClientConnection;
 class Display;
 class OutputInterface;
-class OutputDeviceInterface;
+class OutputDeviceV2Interface;
 class SeatInterface;
 struct ClientBufferDestroyListener;
 
@@ -47,7 +47,7 @@ public:
     wl_event_loop *loop = nullptr;
     bool running = false;
     QList<OutputInterface *> outputs;
-    QList<OutputDeviceInterface *> outputdevices;
+    QList<OutputDeviceV2Interface *> outputdevicesV2;
     QVector<SeatInterface *> seats;
     QVector<ClientConnection *> clients;
     QStringList socketNames;

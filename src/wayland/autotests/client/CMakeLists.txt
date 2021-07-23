@@ -45,28 +45,6 @@ add_test(NAME kwayland-testShmPool COMMAND testShmPool)
 ecm_mark_as_test(testShmPool)
 
 ########################################################
-# Test KWin OutputManagement
-########################################################
-set( test_wayland_outputmanagement_SRCS
-        test_wayland_outputmanagement.cpp
-    )
-add_executable(testWaylandOutputManagement ${test_wayland_outputmanagement_SRCS})
-target_link_libraries( testWaylandOutputManagement Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer Wayland::Client)
-add_test(NAME kwayland-testWaylandOutputManagement COMMAND testWaylandOutputManagement)
-ecm_mark_as_test(testWaylandOutputManagement)
-
-########################################################
-# Test KWin OutputDevice
-########################################################
-set( test_wayland_outputdevice_SRCS
-        test_wayland_outputdevice.cpp
-    )
-add_executable(testWaylandOutputDevice ${test_wayland_outputdevice_SRCS})
-target_link_libraries( testWaylandOutputDevice Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer Wayland::Client)
-add_test(NAME kwayland-testWaylandOutputDevice COMMAND testWaylandOutputDevice)
-ecm_mark_as_test(testWaylandOutputDevice)
-
-########################################################
 # Test Compositor
 ########################################################
 set( testCompositor_SRCS

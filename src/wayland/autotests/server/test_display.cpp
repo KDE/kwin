@@ -10,6 +10,7 @@
 #include "../../src/server/display.h"
 #include "../../src/server/output_interface.h"
 #include "../../src/server/outputmanagement_interface.h"
+#include "../../src/server/outputmanagement_v2_interface.h"
 // Wayland
 #include <wayland-server.h>
 // system
@@ -183,7 +184,7 @@ void TestWaylandServerDisplay::testOutputManagement()
     Display display;
     display.addSocketName("kwayland-test-0");
     display.start();
-    new OutputManagementInterface(&display, this);
+    new OutputManagementV2Interface(&display, this);
 }
 
 void TestWaylandServerDisplay::testAutoSocketName()

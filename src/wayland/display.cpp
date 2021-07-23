@@ -157,9 +157,9 @@ QList<OutputInterface *> Display::outputs() const
     return d->outputs;
 }
 
-QList<OutputDeviceInterface *> Display::outputDevices() const
+QList< OutputDeviceV2Interface* > Display::outputDevices() const
 {
-    return d->outputdevices;
+    return d->outputdevicesV2;
 }
 
 QVector<OutputInterface *> Display::outputsIntersecting(const QRect &rect) const
