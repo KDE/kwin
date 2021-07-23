@@ -69,6 +69,7 @@ protected:
     void releaseResources() override;
 
     virtual QImage fallbackImage() const = 0;
+    virtual QRectF paintedRect() const = 0;
     virtual void invalidateOffscreenTexture() = 0;
     virtual void updateOffscreenTexture() = 0;
     void destroyOffscreenTexture();
@@ -107,6 +108,7 @@ Q_SIGNALS:
 
 protected:
     QImage fallbackImage() const override;
+    QRectF paintedRect() const override;
     void invalidateOffscreenTexture() override;
     void updateOffscreenTexture() override;
 
@@ -132,6 +134,7 @@ Q_SIGNALS:
 
 protected:
     QImage fallbackImage() const override;
+    QRectF paintedRect() const override;
     void invalidateOffscreenTexture() override;
     void updateOffscreenTexture() override;
 

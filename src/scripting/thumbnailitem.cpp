@@ -238,11 +238,7 @@ QSGNode *ThumbnailItemBase::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
         node->setTextureCoordinatesTransform(QSGImageNode::NoTransform);
     }
 
-    const QSizeF size = QSizeF(node->texture()->textureSize() / m_devicePixelRatio)
-            .scaled(boundingRect().size(), Qt::KeepAspectRatio);
-    const qreal x = boundingRect().x() + (boundingRect().width() - size.width()) / 2;
-    const qreal y = boundingRect().y() + (boundingRect().height() - size.height()) / 2;
-    node->setRect(QRectF(QPointF(x, y), size));
+    node->setRect(paintedRect());
 
     return node;
 }
@@ -328,6 +324,39 @@ QImage WindowThumbnailItem::fallbackImage() const
     return QImage();
 }
 
+static QRectF centeredSize(const QRectF &boundingRect, const QSizeF &size)
+{
+    const QSizeF scaled = size.scaled(boundingRect.size(), Qt::KeepAspectRatio);
+    const qreal x = boundingRect.x() + (boundingRect.width() - scaled.width()) / 2;
+    const qreal y = boundingRect.y() + (boundingRect.height() - scaled.height()) / 2;
+    return QRectF(QPointF(x, y), scaled);
+}
+
+QRectF WindowThumbnailItem::paintedRect() const
+{
+    if (!m_offscreenTexture) {
+        const QSizeF iconSize = m_client->icon().actualSize(window(), boundingRect().size().toSize());
+        return centeredSize(boundingRect(), iconSize);
+    }
+
+    const QRect visibleGeometry = m_client->visibleGeometry();
+    const QRect frameGeometry = m_client->frameGeometry();
+    const QSizeF scaled = QSizeF(frameGeometry.size()).scaled(boundingRect().size(), Qt::KeepAspectRatio);
+
+    const qreal xScale = scaled.width() / frameGeometry.width();
+    const qreal yScale = scaled.height() / frameGeometry.height();
+
+    QRectF paintedRect(boundingRect().x() + (boundingRect().width() - scaled.width()) / 2,
+                       boundingRect().y() + (boundingRect().height() - scaled.height()) / 2,
+                       visibleGeometry.width() * xScale,
+                       visibleGeometry.height() * yScale);
+
+    paintedRect.moveLeft(paintedRect.x() + (visibleGeometry.x() - frameGeometry.x()) * xScale);
+    paintedRect.moveTop(paintedRect.y() + (visibleGeometry.y() - frameGeometry.y()) * yScale);
+
+    return paintedRect;
+}
+
 void WindowThumbnailItem::invalidateOffscreenTexture()
 {
     m_dirty = true;
@@ -341,7 +370,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     }
     Q_ASSERT(window());
 
-    const QRect geometry = m_client->frameGeometry();
+    const QRect geometry = m_client->visibleGeometry();
     QSize textureSize = geometry.size();
     if (sourceSize().width() > 0) {
         textureSize.setWidth(sourceSize().width());
@@ -411,6 +440,11 @@ void DesktopThumbnailItem::setDesktop(int desktop)
 QImage DesktopThumbnailItem::fallbackImage() const
 {
     return QImage();
+}
+
+QRectF DesktopThumbnailItem::paintedRect() const
+{
+    return centeredSize(boundingRect(), screens()->size());
 }
 
 void DesktopThumbnailItem::invalidateOffscreenTexture()
