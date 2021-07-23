@@ -29,6 +29,29 @@
 namespace KWin
 {
 
+class EffectQuickRenderControl : public QQuickRenderControl
+{
+    Q_OBJECT
+
+public:
+    explicit EffectQuickRenderControl(QWindow *renderWindow, QObject *parent = nullptr)
+        : QQuickRenderControl(parent)
+        , m_renderWindow(renderWindow)
+    {
+    }
+
+    QWindow *renderWindow(QPoint *offset) override
+    {
+        if (offset) {
+            *offset = QPoint(0, 0);
+        }
+        return m_renderWindow;
+    }
+
+private:
+    QPointer<QWindow> m_renderWindow;
+};
+
 class Q_DECL_HIDDEN EffectQuickView::Private
 {
 public:
@@ -62,10 +85,20 @@ EffectQuickView::EffectQuickView(QObject *parent)
 }
 
 EffectQuickView::EffectQuickView(QObject *parent, ExportMode exportMode)
+    : EffectQuickView(parent, nullptr, exportMode)
+{
+}
+
+EffectQuickView::EffectQuickView(QObject *parent, QWindow *renderWindow)
+    : EffectQuickView(parent, renderWindow, effects->isOpenGLCompositing() ? ExportMode::Texture : ExportMode::Image)
+{
+}
+
+EffectQuickView::EffectQuickView(QObject *parent, QWindow *renderWindow, ExportMode exportMode)
     : QObject(parent)
     , d(new EffectQuickView::Private)
 {
-    d->m_renderControl = new QQuickRenderControl(this);
+    d->m_renderControl = new EffectQuickRenderControl(renderWindow, this);
 
     d->m_view = new QQuickWindow(d->m_renderControl);
     d->m_view->setFlags(Qt::FramelessWindowHint);
@@ -365,6 +398,20 @@ EffectQuickScene::EffectQuickScene(QObject *parent)
     d->qmlObject = new KDeclarative::QmlObjectSharedEngine(this);
 }
 
+EffectQuickScene::EffectQuickScene(QObject *parent, QWindow *renderWindow)
+    : EffectQuickView(parent, renderWindow)
+    , d(new EffectQuickScene::Private)
+{
+    d->qmlObject = new KDeclarative::QmlObjectSharedEngine(this);
+}
+
+EffectQuickScene::EffectQuickScene(QObject *parent, QWindow *renderWindow, ExportMode exportMode)
+    : EffectQuickView(parent, renderWindow, exportMode)
+    , d(new EffectQuickScene::Private)
+{
+    d->qmlObject = new KDeclarative::QmlObjectSharedEngine(this);
+}
+
 EffectQuickScene::EffectQuickScene(QObject *parent, EffectQuickView::ExportMode exportMode)
     : EffectQuickView(parent, exportMode)
     , d(new EffectQuickScene::Private)
@@ -405,3 +452,5 @@ QQuickItem *EffectQuickScene::rootItem() const
 }
 
 } // namespace KWin
+
+#include "kwineffectquickview.moc"
