@@ -62,6 +62,20 @@ public:
     EffectQuickView(QObject *parent);
 
     /**
+     * Construct a new EffectQuickView with the specified @a parent and the
+     * render window @a renderWindow. The render window can be used by QtQuick
+     * to compute the scale factor.
+     */
+    EffectQuickView(QObject *parent, QWindow *renderWindow);
+
+    /**
+     * Construct a new EffectQuickView with the specified @a parent and the
+     * render window @a renderWindow. The render window can be used by QtQuick
+     * to compute the scale factor.
+     */
+    EffectQuickView(QObject *parent, QWindow *renderWindow, ExportMode exportMode);
+
+    /**
      * Construct a new KWinQuickView explicitly stating an export mode
      */
     EffectQuickView(QObject *parent, ExportMode exportMode);
@@ -157,6 +171,8 @@ class KWINEFFECTS_EXPORT EffectQuickScene : public EffectQuickView
 public:
     EffectQuickScene(QObject *parent);
     EffectQuickScene(QObject *parent, ExportMode exportMode);
+    EffectQuickScene(QObject *parent, QWindow *renderWindow);
+    EffectQuickScene(QObject *parent, QWindow *renderWindow, ExportMode exportMode);
     ~EffectQuickScene();
 
     QQmlContext *rootContext() const;
