@@ -178,7 +178,7 @@ public:
     /**
      * @returns the current ClientBuffer, might be @c nullptr.
      */
-    ClientBuffer *buffer();
+    ClientBuffer *buffer() const;
     QPoint offset() const;
     /**
      * Returns the current size of the surface, in surface coordinates.

@@ -720,7 +720,7 @@ OutputInterface::Transform SurfaceInterface::bufferTransform() const
     return d->current.bufferTransform;
 }
 
-ClientBuffer *SurfaceInterface::buffer()
+ClientBuffer *SurfaceInterface::buffer() const
 {
     return d->bufferRef;
 }
