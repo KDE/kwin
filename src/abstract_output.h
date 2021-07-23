@@ -216,6 +216,10 @@ Q_SIGNALS:
      * This signal is emitted when the output has been enabled or disabled.
      */
     void enabledChanged();
+    /**
+     * This signal is emitted when the device pixel ratio of the output has changed.
+     */
+    void scaleChanged();
 
     /**
      * Notifies that the display will be dimmed in @p time ms. This allows

@@ -1728,6 +1728,8 @@ EffectScreenImpl::EffectScreenImpl(AbstractOutput *output, QObject *parent)
 {
     connect(output, &AbstractOutput::wakeUp, this, &EffectScreen::wakeUp);
     connect(output, &AbstractOutput::aboutToTurnOff, this, &EffectScreen::aboutToTurnOff);
+    connect(output, &AbstractOutput::scaleChanged, this, &EffectScreen::devicePixelRatioChanged);
+    connect(output, &AbstractOutput::geometryChanged, this, &EffectScreen::geometryChanged);
 }
 
 AbstractOutput *EffectScreenImpl::platformOutput() const
