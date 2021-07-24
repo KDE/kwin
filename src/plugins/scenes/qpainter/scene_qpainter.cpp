@@ -114,9 +114,8 @@ void SceneQPainter::paint(int screenId, const QRegion &damage, const QList<Tople
 
 void SceneQPainter::paintBackground(const QRegion &region)
 {
-    m_painter->setBrush(Qt::black);
     for (const QRect &rect : region) {
-        m_painter->drawRect(rect);
+        m_painter->fillRect(rect, Qt::black);
     }
 }
 
