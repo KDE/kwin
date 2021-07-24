@@ -24,22 +24,32 @@ class DumbSwapchain
 public:
     DumbSwapchain(DrmGpu *gpu, const QSize &size);
 
-    QSharedPointer<DrmDumbBuffer> acquireBuffer();
+    QSharedPointer<DrmDumbBuffer> acquireBuffer(int *age = nullptr);
     QSharedPointer<DrmDumbBuffer> currentBuffer() const;
+    void releaseBuffer(QSharedPointer<DrmDumbBuffer> buffer);
+
+    qsizetype slotCount() const {
+        return m_slots.count();
+    }
 
     QSize size() const {
         return m_size;
     }
 
     bool isEmpty() const {
-        return m_buffers.isEmpty();
+        return m_slots.isEmpty();
     }
 
 private:
-    QSize m_size;
+    struct Slot
+    {
+        QSharedPointer<DrmDumbBuffer> buffer;
+        int age = 0;
+    };
 
+    QSize m_size;
     int index = 0;
-    QVector<QSharedPointer<DrmDumbBuffer>> m_buffers;
+    QVector<Slot> m_slots;
 };
 
 }

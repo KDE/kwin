@@ -26,26 +26,42 @@ DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size)
             break;
         }
         buffer->image()->fill(Qt::black);
-        m_buffers << buffer;
+        m_slots.append(Slot{.buffer = buffer, .age = 0,});
     }
-    if (m_buffers.count() < 2) {
+    if (m_slots.count() < 2) {
         qCWarning(KWIN_DRM) << "Failed to create dumb buffers for swapchain!";
-        m_buffers.clear();
+        m_slots.clear();
     }
 }
 
-QSharedPointer<DrmDumbBuffer> DumbSwapchain::acquireBuffer()
+QSharedPointer<DrmDumbBuffer> DumbSwapchain::acquireBuffer(int *age)
 {
-    if (m_buffers.isEmpty()) {
+    if (m_slots.isEmpty()) {
         return nullptr;
     }
-    index = (index + 1) % m_buffers.count();
-    return m_buffers[index];
+    index = (index + 1) % m_slots.count();
+    if (age) {
+        *age = m_slots[index].age;
+    }
+    return m_slots[index].buffer;
 }
 
 QSharedPointer<DrmDumbBuffer> DumbSwapchain::currentBuffer() const
 {
-    return m_buffers[index];
+    return m_slots[index].buffer;
+}
+
+void DumbSwapchain::releaseBuffer(QSharedPointer<DrmDumbBuffer> buffer)
+{
+    Q_ASSERT(m_slots[index].buffer == buffer);
+
+    for (qsizetype i = 0; i < m_slots.count(); ++i) {
+        if (m_slots[i].buffer == buffer) {
+            m_slots[i].age = 1;
+        } else if (m_slots[i].age > 0) {
+            m_slots[i].age++;
+        }
+    }
 }
 
 }

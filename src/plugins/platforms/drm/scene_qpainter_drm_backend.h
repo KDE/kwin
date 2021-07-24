@@ -9,6 +9,7 @@
 #ifndef KWIN_SCENE_QPAINTER_DRM_BACKEND_H
 #define KWIN_SCENE_QPAINTER_DRM_BACKEND_H
 #include "qpainterbackend.h"
+#include "utils.h"
 
 #include <QObject>
 #include <QVector>
@@ -39,6 +40,7 @@ private:
     struct Output {
         DrmOutput *output;
         QSharedPointer<DumbSwapchain> swapchain;
+        DamageJournal damageJournal;
     };
     QVector<Output> m_outputs;
     DrmBackend *m_backend;
