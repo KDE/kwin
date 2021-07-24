@@ -87,8 +87,6 @@ void SceneQPainter::paint(int screenId, const QRegion &damage, const QList<Tople
 
     createStackingOrder(toplevels);
 
-    int mask = 0;
-
     const QRegion repaint = m_backend->beginFrame(screenId);
     const QRect geometry = screens()->geometry(screenId);
 
@@ -99,8 +97,7 @@ void SceneQPainter::paint(int screenId, const QRegion &damage, const QList<Tople
         m_painter->setWindow(geometry);
 
         QRegion updateRegion, validRegion;
-        paintScreen(&mask, damage.intersected(geometry), repaint, &updateRegion, &validRegion,
-                    renderLoop);
+        paintScreen(damage.intersected(geometry), repaint, &updateRegion, &validRegion, renderLoop);
         paintCursor(updateRegion);
 
         m_painter->end();

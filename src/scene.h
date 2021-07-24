@@ -206,7 +206,7 @@ protected:
     void createStackingOrder(const QList<Toplevel *> &toplevels);
     void clearStackingOrder();
     // shared implementation, starts painting the screen
-    void paintScreen(int *mask, const QRegion &damage, const QRegion &repaint,
+    void paintScreen(const QRegion &damage, const QRegion &repaint,
                      QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop,
                      const QMatrix4x4 &projection = QMatrix4x4());
     // Render cursor texture in case hardware cursor is disabled/non-applicable

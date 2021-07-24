@@ -143,13 +143,12 @@ void Scene::reallocRepaints()
 }
 
 // returns mask and possibly modified region
-void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint,
+void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
                         QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop,
                         const QMatrix4x4 &projection)
 {
     const QSize &screenSize = screens()->size();
     const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
-    *mask = (damage == displayRegion) ? 0 : PAINT_SCREEN_REGION;
 
     const std::chrono::milliseconds presentTime =
             std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
@@ -167,19 +166,19 @@ void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint
     QRegion region = damage;
 
     ScreenPrePaintData pdata;
-    pdata.mask = *mask;
+    pdata.mask = (damage == displayRegion) ? 0 : PAINT_SCREEN_REGION;
     pdata.paint = region;
 
     effects->prePaintScreen(pdata, m_expectedPresentTimestamp);
-    *mask = pdata.mask;
     region = pdata.paint;
 
-    if (*mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
+    int mask = pdata.mask;
+    if (mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
         // Region painting is not possible with transformations,
         // because screen damage doesn't match transformed positions.
-        *mask &= ~PAINT_SCREEN_REGION;
+        mask &= ~PAINT_SCREEN_REGION;
         region = infiniteRegion();
-    } else if (*mask & PAINT_SCREEN_REGION) {
+    } else if (mask & PAINT_SCREEN_REGION) {
         // make sure not to go outside visible screen
         region &= displayRegion;
     } else {
@@ -191,7 +190,7 @@ void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint
     repaint_region = repaint;
 
     ScreenPaintData data(projection, effects->findScreen(painted_screen));
-    effects->paintScreen(*mask, region, data);
+    effects->paintScreen(mask, region, data);
 
     Q_EMIT frameRendered();
 
