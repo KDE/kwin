@@ -22,6 +22,8 @@ class DrmBuffer;
 
 class AbstractEglDrmBackend : public AbstractEglBackend
 {
+    Q_OBJECT
+
 public:
     void screenGeometryChanged(const QSize &size) override;
 

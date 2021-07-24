@@ -22,7 +22,7 @@ namespace KWin
 
 class X11WindowedBackend;
 
-class X11WindowedQPainterBackend : public QObject, public QPainterBackend
+class X11WindowedQPainterBackend : public QPainterBackend
 {
     Q_OBJECT
 public:

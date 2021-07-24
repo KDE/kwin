@@ -16,8 +16,7 @@ namespace KWin
 {
 
 DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu)
-    : QObject()
-    , QPainterBackend()
+    : QPainterBackend()
     , m_backend(backend)
     , m_gpu(gpu)
 {

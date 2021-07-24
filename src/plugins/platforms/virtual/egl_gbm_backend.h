@@ -21,6 +21,8 @@ class GLRenderTarget;
  */
 class EglGbmBackend : public AbstractEglBackend
 {
+    Q_OBJECT
+
 public:
     EglGbmBackend(VirtualBackend *b);
     ~EglGbmBackend() override;

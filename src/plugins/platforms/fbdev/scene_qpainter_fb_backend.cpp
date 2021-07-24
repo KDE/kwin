@@ -21,8 +21,7 @@
 namespace KWin
 {
 FramebufferQPainterBackend::FramebufferQPainterBackend(FramebufferBackend *backend)
-    : QObject()
-    , QPainterBackend()
+    : QPainterBackend()
     , m_renderBuffer(backend->screenSize(), QImage::Format_RGB32)
     , m_backend(backend)
     , m_needsFullRepaint(true)

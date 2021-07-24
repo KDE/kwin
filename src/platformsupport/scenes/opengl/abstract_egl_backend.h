@@ -33,7 +33,7 @@ struct AbstractEglBackendFunctions
 class EglDmabuf;
 class AbstractOutput;
 
-class KWIN_EXPORT AbstractEglBackend : public QObject, public OpenGLBackend
+class KWIN_EXPORT AbstractEglBackend : public OpenGLBackend
 {
     Q_OBJECT
 public:

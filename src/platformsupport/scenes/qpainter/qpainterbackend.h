@@ -9,6 +9,8 @@
 #ifndef KWIN_SCENE_QPAINTER_BACKEND_H
 #define KWIN_SCENE_QPAINTER_BACKEND_H
 
+#include <QObject>
+
 class QImage;
 class QRegion;
 class QSize;
@@ -21,8 +23,10 @@ class PlatformSurfaceTexture;
 class SurfacePixmapInternal;
 class SurfacePixmapWayland;
 
-class QPainterBackend
+class QPainterBackend : public QObject
 {
+    Q_OBJECT
+
 public:
     virtual ~QPainterBackend();
 

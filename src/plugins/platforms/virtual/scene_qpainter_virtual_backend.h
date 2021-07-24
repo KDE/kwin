@@ -19,7 +19,7 @@ namespace KWin
 
 class VirtualBackend;
 
-class VirtualQPainterBackend : public QObject, public QPainterBackend
+class VirtualQPainterBackend : public QPainterBackend
 {
     Q_OBJECT
 public:

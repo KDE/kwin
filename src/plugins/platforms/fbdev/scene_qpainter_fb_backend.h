@@ -17,7 +17,7 @@ namespace KWin
 {
 class FramebufferBackend;
 
-class FramebufferQPainterBackend : public QObject, public QPainterBackend
+class FramebufferQPainterBackend : public QPainterBackend
 {
     Q_OBJECT
 public:

@@ -63,7 +63,7 @@ private:
 /**
  * @brief OpenGL Backend using GLX over an X overlay window.
  */
-class GlxBackend : public QObject, public OpenGLBackend
+class GlxBackend : public OpenGLBackend
 {
     Q_OBJECT
 

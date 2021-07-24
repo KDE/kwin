@@ -24,7 +24,7 @@ class DrmDumbBuffer;
 class DrmOutput;
 class DrmGpu;
 
-class DrmQPainterBackend : public QObject, public QPainterBackend
+class DrmQPainterBackend : public QPainterBackend
 {
     Q_OBJECT
 public:

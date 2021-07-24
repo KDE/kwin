@@ -15,7 +15,7 @@
 namespace KWin
 {
 
-class EglMultiBackend : public QObject, public OpenGLBackend
+class EglMultiBackend : public OpenGLBackend
 {
     Q_OBJECT
 public:

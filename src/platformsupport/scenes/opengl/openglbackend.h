@@ -10,6 +10,7 @@
 #ifndef KWIN_SCENE_OPENGL_BACKEND_H
 #define KWIN_SCENE_OPENGL_BACKEND_H
 
+#include <QObject>
 #include <QRegion>
 
 #include <kwin_export.h>
@@ -40,8 +41,10 @@ class GLTexture;
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  */
-class KWIN_EXPORT OpenGLBackend
+class KWIN_EXPORT OpenGLBackend : public QObject
 {
+    Q_OBJECT
+
 public:
     OpenGLBackend();
     virtual ~OpenGLBackend();

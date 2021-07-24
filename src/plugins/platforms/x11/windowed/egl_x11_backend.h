@@ -20,6 +20,8 @@ class X11WindowedBackend;
  */
 class EglX11Backend : public EglOnXBackend
 {
+    Q_OBJECT
+
 public:
     explicit EglX11Backend(X11WindowedBackend *backend);
     ~EglX11Backend() override;

@@ -23,6 +23,8 @@ namespace KWin
  */
 class KWIN_EXPORT EglOnXBackend : public AbstractEglBackend
 {
+    Q_OBJECT
+
 public:
     EglOnXBackend(Display *display);
     explicit EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, int screenNumber, xcb_window_t renderingWindow);

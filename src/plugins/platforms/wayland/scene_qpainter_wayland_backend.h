@@ -64,7 +64,7 @@ private:
     friend class WaylandQPainterBackend;
 };
 
-class WaylandQPainterBackend : public QObject, public QPainterBackend
+class WaylandQPainterBackend : public QPainterBackend
 {
     Q_OBJECT
 public:
