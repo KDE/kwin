@@ -66,15 +66,10 @@ QImage *DrmQPainterBackend::bufferForScreen(int screenId)
     return m_outputs[screenId].swapchain->currentBuffer()->image();
 }
 
-bool DrmQPainterBackend::needsFullRepaint(int screenId) const
-{
-    Q_UNUSED(screenId)
-    return true;
-}
-
-void DrmQPainterBackend::beginFrame(int screenId)
+QRegion DrmQPainterBackend::beginFrame(int screenId)
 {
     m_outputs[screenId].swapchain->acquireBuffer();
+    return m_outputs[screenId].output->geometry();
 }
 
 void DrmQPainterBackend::endFrame(int screenId, const QRegion &damage)

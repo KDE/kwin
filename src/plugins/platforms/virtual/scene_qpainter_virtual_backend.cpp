@@ -32,15 +32,9 @@ QImage *VirtualQPainterBackend::bufferForScreen(int screen)
     return &m_backBuffers[screen];
 }
 
-bool VirtualQPainterBackend::needsFullRepaint(int screenId) const
+QRegion VirtualQPainterBackend::beginFrame(int screenId)
 {
-    Q_UNUSED(screenId)
-    return true;
-}
-
-void VirtualQPainterBackend::beginFrame(int screenId)
-{
-    Q_UNUSED(screenId)
+    return screens()->geometry(screenId);
 }
 
 void VirtualQPainterBackend::createOutputs()

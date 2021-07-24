@@ -30,8 +30,7 @@ public:
     ~X11WindowedQPainterBackend() override;
 
     QImage *bufferForScreen(int screenId) override;
-    bool needsFullRepaint(int screenId) const override;
-    void beginFrame(int screenId) override;
+    QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage) override;
 
 private:
@@ -41,7 +40,6 @@ private:
     struct Output {
         xcb_window_t window;
         QImage buffer;
-        bool needsFullRepaint = true;
     };
     QVector<Output*> m_outputs;
 };

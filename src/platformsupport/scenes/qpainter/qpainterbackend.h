@@ -34,7 +34,7 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
     virtual void endFrame(int screenId, const QRegion &damage) = 0;
-    virtual void beginFrame(int screenId) = 0;
+    virtual QRegion beginFrame(int screenId) = 0;
     /**
      * @brief React on screen geometry changes.
      *
@@ -61,7 +61,6 @@ public:
      * @todo Get a better identifier for screen then a counter variable
      */
     virtual QImage *bufferForScreen(int screenId) = 0;
-    virtual bool needsFullRepaint(int screenId) const = 0;
 
 protected:
     QPainterBackend();

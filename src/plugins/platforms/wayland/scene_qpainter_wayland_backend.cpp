@@ -38,16 +38,6 @@ WaylandQPainterOutput::~WaylandQPainterOutput()
     }
 }
 
-bool WaylandQPainterOutput::needsFullRepaint() const
-{
-    return m_needsFullRepaint;
-}
-
-void WaylandQPainterOutput::setNeedsFullRepaint(bool set)
-{
-    m_needsFullRepaint = set;
-}
-
 bool WaylandQPainterOutput::init(KWayland::Client::ShmPool *pool)
 {
     m_pool = pool;
@@ -171,7 +161,6 @@ void WaylandQPainterBackend::endFrame(int screenId, const QRegion &damage)
     WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
     Q_ASSERT(rendererOutput);
 
-    rendererOutput->setNeedsFullRepaint(false);
     rendererOutput->present(rendererOutput->mapToLocal(damage));
 }
 
@@ -181,20 +170,13 @@ QImage *WaylandQPainterBackend::bufferForScreen(int screenId)
     return &output->m_backBuffer;
 }
 
-void WaylandQPainterBackend::beginFrame(int screenId)
+QRegion WaylandQPainterBackend::beginFrame(int screenId)
 {
     WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
     Q_ASSERT(rendererOutput);
 
     rendererOutput->prepareRenderingFrame();
-    rendererOutput->setNeedsFullRepaint(true);
-}
-
-bool WaylandQPainterBackend::needsFullRepaint(int screenId) const
-{
-    const WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
-    Q_ASSERT(rendererOutput);
-    return rendererOutput->needsFullRepaint();
+    return rendererOutput->m_waylandOutput->geometry();
 }
 
 }

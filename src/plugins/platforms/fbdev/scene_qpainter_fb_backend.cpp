@@ -13,6 +13,7 @@
 #include "main.h"
 #include "platform.h"
 #include "renderloop.h"
+#include "screens.h"
 #include "session.h"
 #include "vsyncmonitor.h"
 // Qt
@@ -24,7 +25,6 @@ FramebufferQPainterBackend::FramebufferQPainterBackend(FramebufferBackend *backe
     : QPainterBackend()
     , m_renderBuffer(backend->screenSize(), QImage::Format_RGB32)
     , m_backend(backend)
-    , m_needsFullRepaint(true)
 {
     m_renderBuffer.fill(Qt::black);
     m_backend->map();
@@ -69,16 +69,9 @@ QImage* FramebufferQPainterBackend::bufferForScreen(int screenId)
     return &m_renderBuffer;
 }
 
-bool FramebufferQPainterBackend::needsFullRepaint(int screenId) const
+QRegion FramebufferQPainterBackend::beginFrame(int screenId)
 {
-    Q_UNUSED(screenId)
-    return m_needsFullRepaint;
-}
-
-void FramebufferQPainterBackend::beginFrame(int screenId)
-{
-    Q_UNUSED(screenId)
-    m_needsFullRepaint = true;
+    return screens()->geometry(screenId);
 }
 
 void FramebufferQPainterBackend::endFrame(int screenId, const QRegion &damage)
@@ -89,7 +82,6 @@ void FramebufferQPainterBackend::endFrame(int screenId, const QRegion &damage)
     if (!kwinApp()->platform()->session()->isActive()) {
         return;
     }
-    m_needsFullRepaint = false;
 
     FramebufferOutput *output = static_cast<FramebufferOutput *>(m_backend->findOutput(screenId));
     output->vsyncMonitor()->arm();
