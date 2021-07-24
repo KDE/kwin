@@ -746,8 +746,9 @@ QRegion GlxBackend::beginFrame(int screenId)
     const QSize size = screens()->size();
     glViewport(0, 0, size.width(), size.height());
 
-    if (supportsBufferAge())
-        repaint = accumulatedDamageHistory(m_bufferAge);
+    if (supportsBufferAge()) {
+        repaint = m_damageJournal.accumulate(m_bufferAge, screens()->geometry());
+    }
 
     glXWaitX();
 
@@ -770,8 +771,9 @@ void GlxBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRe
         overlayWindow()->show();   // since that pass may take long
 
     // Save the damaged region to history
-    if (supportsBufferAge())
-        addToDamageHistory(damagedRegion);
+    if (supportsBufferAge()) {
+        m_damageJournal.add(damagedRegion);
+    }
 }
 
 void GlxBackend::vblank(std::chrono::nanoseconds timestamp)

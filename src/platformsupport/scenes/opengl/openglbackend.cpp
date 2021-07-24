@@ -35,30 +35,6 @@ void OpenGLBackend::setFailed(const QString &reason)
     m_failed = true;
 }
 
-void OpenGLBackend::addToDamageHistory(const QRegion &region)
-{
-    if (m_damageHistory.count() > 10)
-        m_damageHistory.removeLast();
-
-    m_damageHistory.prepend(region);
-}
-
-QRegion OpenGLBackend::accumulatedDamageHistory(int bufferAge) const
-{
-    QRegion region;
-
-    // Note: An age of zero means the buffer contents are undefined
-    if (bufferAge > 0 && bufferAge <= m_damageHistory.count()) {
-        for (int i = 0; i < bufferAge - 1; i++)
-            region |= m_damageHistory[i];
-    } else {
-        const QSize &s = screens()->size();
-        region = QRegion(0, 0, s.width(), s.height());
-    }
-
-    return region;
-}
-
 OverlayWindow* OpenGLBackend::overlayWindow() const
 {
     return nullptr;

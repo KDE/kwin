@@ -98,8 +98,9 @@ QRegion EglBackend::beginFrame(int screenId)
     glViewport(0, 0, size.width(), size.height());
 
     QRegion repaint;
-    if (supportsBufferAge())
-        repaint = accumulatedDamageHistory(m_bufferAge);
+    if (supportsBufferAge()) {
+        repaint = m_damageJournal.accumulate(m_bufferAge, screens()->geometry());
+    }
 
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
@@ -122,7 +123,7 @@ void EglBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRe
 
     // Save the damaged region to history
     if (supportsBufferAge()) {
-        addToDamageHistory(damagedRegion);
+        m_damageJournal.add(damagedRegion);
     }
 }
 

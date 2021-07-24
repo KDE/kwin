@@ -528,20 +528,13 @@ QRegion EglGbmBackend::prepareRenderingForOutput(Output &output)
     }
     setViewport(output);
 
+    const QRect geometry = output.output->geometry();
     if (supportsBufferAge()) {
-        QRegion region;
-
-        // Note: An age of zero means the buffer contents are undefined
-        if (output.current.bufferAge > 0 && output.current.bufferAge <= output.current.damageHistory.count()) {
-            for (int i = 0; i < output.current.bufferAge - 1; i++)
-                region |= output.current.damageHistory[i];
-        } else {
-            region = output.output->geometry();
-        }
-
-        return region;
+        auto current = &output.current;
+        return current->damageJournal.accumulate(current->bufferAge, geometry);
     }
-    return output.output->geometry();
+
+    return geometry;
 }
 
 QSharedPointer<DrmBuffer> EglGbmBackend::endFrameWithBuffer(int screenId, const QRegion &dirty)
@@ -581,10 +574,7 @@ void EglGbmBackend::updateBufferAge(Output &output, const QRegion &dirty)
 {
     if (supportsBufferAge()) {
         eglQuerySurface(eglDisplay(), output.current.gbmSurface->eglSurface(), EGL_BUFFER_AGE_EXT, &output.current.bufferAge);
-        if (output.current.damageHistory.count() > 10) {
-            output.current.damageHistory.removeLast();
-        }
-        output.current.damageHistory.prepend(dirty);
+        output.current.damageJournal.add(dirty);
     }
 }
 
@@ -665,7 +655,7 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
     // ensure that a context is current like with normal presentation
     makeCurrent();
     if (output.output->present(bo, damage)) {
-        output.current.damageHistory.clear();
+        output.current.damageJournal.clear();
         if (output.surfaceInterface != surface) {
             auto path = surface->client()->executablePath();
             qCDebug(KWIN_DRM).nospace() << "Direct scanout starting on output " << output.output->name() << " for application \"" << path << "\"";

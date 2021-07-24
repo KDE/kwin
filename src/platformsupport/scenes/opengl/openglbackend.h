@@ -130,16 +130,6 @@ public:
     virtual bool directScanoutAllowed(int screen) const;
 
     /**
-     * Returns the damage that has accumulated since a buffer of the given age was presented.
-     */
-    QRegion accumulatedDamageHistory(int bufferAge) const;
-
-    /**
-     * Saves the given region to damage history.
-     */
-    void addToDamageHistory(const QRegion &region);
-
-    /**
      * The backend specific extensions (e.g. EGL/GLX extensions).
      *
      * Not the OpenGL (ES) extension!
@@ -244,10 +234,6 @@ private:
      * @brief Whether the initialization failed, of course default to @c false.
      */
     bool m_failed;
-    /**
-     * @brief The damage history for the past 10 frames.
-     */
-    QList<QRegion> m_damageHistory;
     QList<QByteArray> m_extensions;
 };
 

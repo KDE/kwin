@@ -40,6 +40,7 @@ private:
 
     X11StandalonePlatform *m_backend;
     SoftwareVsyncMonitor *m_vsyncMonitor;
+    DamageJournal m_damageJournal;
     int m_bufferAge = 0;
 };
 

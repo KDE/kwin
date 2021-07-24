@@ -9,6 +9,7 @@
 #ifndef KWIN_EGL_GBM_BACKEND_H
 #define KWIN_EGL_GBM_BACKEND_H
 #include "abstract_egl_drm_backend.h"
+#include "utils.h"
 
 #include <kwinglutils.h>
 
@@ -87,10 +88,7 @@ private:
             QSharedPointer<ShadowBuffer> shadowBuffer;
             QSharedPointer<GbmSurface> gbmSurface;
             int bufferAge = 0;
-            /**
-            * @brief The damage history for the past 10 frames.
-            */
-            QList<QRegion> damageHistory;
+            DamageJournal damageJournal;
 
             // for secondary GPU import
             ImportMode importMode = ImportMode::Dmabuf;
