@@ -25,6 +25,18 @@ namespace KWin
 namespace Wayland
 {
 
+WaylandQPainterBufferSlot::WaylandQPainterBufferSlot(QSharedPointer<KWayland::Client::Buffer> buffer)
+    : buffer(buffer)
+    , image(buffer->address(), buffer->size().width(), buffer->size().height(), QImage::Format_RGB32)
+{
+    buffer->setUsed(true);
+}
+
+WaylandQPainterBufferSlot::~WaylandQPainterBufferSlot()
+{
+    buffer->setUsed(false);
+}
+
 WaylandQPainterOutput::WaylandQPainterOutput(WaylandOutput *output, QObject *parent)
     : QObject(parent)
     , m_waylandOutput(output)
@@ -33,15 +45,13 @@ WaylandQPainterOutput::WaylandQPainterOutput(WaylandOutput *output, QObject *par
 
 WaylandQPainterOutput::~WaylandQPainterOutput()
 {
-    if (m_buffer) {
-        m_buffer.toStrongRef()->setUsed(false);
-    }
+    qDeleteAll(m_slots);
+    m_slots.clear();
 }
 
 bool WaylandQPainterOutput::init(KWayland::Client::ShmPool *pool)
 {
     m_pool = pool;
-    m_backBuffer = QImage(QSize(), QImage::Format_RGB32);
 
     connect(pool, &KWayland::Client::ShmPool::poolResized, this, &WaylandQPainterOutput::remapBuffer);
     connect(m_waylandOutput, &WaylandOutput::sizeChanged, this, &WaylandQPainterOutput::updateSize);
@@ -51,67 +61,73 @@ bool WaylandQPainterOutput::init(KWayland::Client::ShmPool *pool)
 
 void WaylandQPainterOutput::remapBuffer()
 {
-    if (!m_buffer) {
-        return;
-    }
-    auto b = m_buffer.toStrongRef();
-    if (!b->isUsed()){
-        return;
-    }
-    const QSize size = m_backBuffer.size();
-    m_backBuffer = QImage(b->address(), size.width(), size.height(), QImage::Format_RGB32);
     qCDebug(KWIN_WAYLAND_BACKEND) << "Remapped back buffer of surface" << m_waylandOutput->surface();
+
+    const QSize nativeSize(m_waylandOutput->geometry().size() * m_waylandOutput->scale());
+    for (WaylandQPainterBufferSlot *slot : qAsConst(m_slots)) {
+        slot->image = QImage(slot->buffer->address(), nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
+    }
 }
 
 void WaylandQPainterOutput::updateSize(const QSize &size)
 {
     Q_UNUSED(size)
-    if (!m_buffer) {
-        return;
-    }
-    m_buffer.toStrongRef()->setUsed(false);
-    m_buffer.clear();
+    m_back = nullptr;
+    qDeleteAll(m_slots);
+    m_slots.clear();
 }
 
 void WaylandQPainterOutput::present(const QRegion &damage)
 {
+    for (WaylandQPainterBufferSlot *slot : qAsConst(m_slots)) {
+        if (slot == m_back) {
+            slot->age = 1;
+        } else if (slot->age > 0) {
+            slot->age++;
+        }
+    }
+
     auto s = m_waylandOutput->surface();
-    s->attachBuffer(m_buffer);
+    s->attachBuffer(m_back->buffer);
     s->damage(damage);
     s->setScale(std::ceil(m_waylandOutput->scale()));
     s->commit();
+
+    m_damageJournal.add(damage);
 }
 
-void WaylandQPainterOutput::prepareRenderingFrame()
+WaylandQPainterBufferSlot *WaylandQPainterOutput::back() const
 {
-    if (m_buffer) {
-        auto b = m_buffer.toStrongRef();
-        if (b->isReleased()) {
-            // we can re-use this buffer
-            b->setReleased(false);
-            return;
-        } else {
-            // buffer is still in use, get a new one
-            b->setUsed(false);
+    return m_back;
+}
+
+WaylandQPainterBufferSlot *WaylandQPainterOutput::acquire()
+{
+    for (WaylandQPainterBufferSlot *slot : qAsConst(m_slots)) {
+        if (slot->buffer->isReleased()) {
+            m_back = slot;
+            slot->buffer->setReleased(false);
+            return m_back;
         }
     }
-    m_buffer.clear();
 
     const QSize nativeSize(m_waylandOutput->geometry().size() * m_waylandOutput->scale());
-
-    m_buffer = m_pool->getBuffer(nativeSize, nativeSize.width() * 4);
-    if (!m_buffer) {
+    auto buffer = m_pool->getBuffer(nativeSize, nativeSize.width() * 4).toStrongRef();
+    if (!buffer) {
         qCDebug(KWIN_WAYLAND_BACKEND) << "Did not get a new Buffer from Shm Pool";
-        m_backBuffer = QImage();
-        return;
+        return nullptr;
     }
 
-    auto b = m_buffer.toStrongRef();
-    b->setUsed(true);
+    m_back = new WaylandQPainterBufferSlot(buffer);
+    m_slots.append(m_back);
 
-    m_backBuffer = QImage(b->address(), nativeSize.width(), nativeSize.height(), QImage::Format_RGB32);
-    m_backBuffer.fill(Qt::transparent);
 //    qCDebug(KWIN_WAYLAND_BACKEND) << "Created a new back buffer for output surface" << m_waylandOutput->surface();
+    return m_back;
+}
+
+QRegion WaylandQPainterOutput::accumulateDamage(int bufferAge) const
+{
+    return m_damageJournal.accumulate(bufferAge, m_waylandOutput->geometry());
 }
 
 QRegion WaylandQPainterOutput::mapToLocal(const QRegion &region) const
@@ -166,8 +182,7 @@ void WaylandQPainterBackend::endFrame(int screenId, const QRegion &damage)
 
 QImage *WaylandQPainterBackend::bufferForScreen(int screenId)
 {
-    auto *output = m_outputs[screenId];
-    return &output->m_backBuffer;
+    return &m_outputs[screenId]->back()->image;
 }
 
 QRegion WaylandQPainterBackend::beginFrame(int screenId)
@@ -175,8 +190,8 @@ QRegion WaylandQPainterBackend::beginFrame(int screenId)
     WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
     Q_ASSERT(rendererOutput);
 
-    rendererOutput->prepareRenderingFrame();
-    return rendererOutput->m_waylandOutput->geometry();
+    WaylandQPainterBufferSlot *slot = rendererOutput->acquire();
+    return rendererOutput->accumulateDamage(slot->age);
 }
 
 }

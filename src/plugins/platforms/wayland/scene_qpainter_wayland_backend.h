@@ -11,6 +11,7 @@
 #define KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
 
 #include "qpainterbackend.h"
+#include "utils.h"
 
 #include <QObject>
 #include <QImage>
@@ -34,6 +35,17 @@ class WaylandBackend;
 class WaylandOutput;
 class WaylandQPainterBackend;
 
+class WaylandQPainterBufferSlot
+{
+public:
+    WaylandQPainterBufferSlot(QSharedPointer<KWayland::Client::Buffer> buffer);
+    ~WaylandQPainterBufferSlot();
+
+    QSharedPointer<KWayland::Client::Buffer> buffer;
+    QImage image;
+    int age = 0;
+};
+
 class WaylandQPainterOutput : public QObject
 {
     Q_OBJECT
@@ -45,17 +57,21 @@ public:
     void updateSize(const QSize &size);
     void remapBuffer();
 
-    void prepareRenderingFrame();
+    WaylandQPainterBufferSlot *back() const;
+
+    WaylandQPainterBufferSlot *acquire();
     void present(const QRegion &damage);
 
+    QRegion accumulateDamage(int bufferAge) const;
     QRegion mapToLocal(const QRegion &region) const;
 
 private:
     WaylandOutput *m_waylandOutput;
     KWayland::Client::ShmPool *m_pool;
+    DamageJournal m_damageJournal;
 
-    QWeakPointer<KWayland::Client::Buffer> m_buffer;
-    QImage m_backBuffer;
+    QVector<WaylandQPainterBufferSlot *> m_slots;
+    WaylandQPainterBufferSlot *m_back = nullptr;
 
     friend class WaylandQPainterBackend;
 };

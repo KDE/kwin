@@ -10,6 +10,7 @@
 #ifndef KWIN_EGL_WAYLAND_BACKEND_H
 #define KWIN_EGL_WAYLAND_BACKEND_H
 #include "abstract_egl_backend.h"
+#include "utils.h"
 // wayland
 #include <wayland-egl.h>
 
@@ -41,10 +42,7 @@ private:
     wl_egl_window *m_overlay = nullptr;
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     int m_bufferAge = 0;
-    /**
-    * @brief The damage history for the past 10 frames.
-    */
-    QVector<QRegion> m_damageHistory;
+    DamageJournal m_damageJournal;
 
     friend class EglWaylandBackend;
 };
