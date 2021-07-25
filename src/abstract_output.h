@@ -122,7 +122,7 @@ public:
      *
      * Default implementation does nothing
      */
-    virtual void applyChanges(const KWaylandServer::OutputChangeSet *changeSet);
+    virtual void applyChanges(QSharedPointer<KWaylandServer::OutputChangeSet> changeSet);
 
     /**
      * Returns geometry of this output in device independent pixels.
@@ -198,6 +198,15 @@ public:
     bool directScanoutInhibited() const;
 
     /**
+     * Notifies about @m applyChanges being done performing its changes
+     *
+     * It allows for applyChanges to act asynchronously
+     *
+     * @param overallSizeChanged tells if screens()->changed() is needed
+     */
+    void changesApplied(bool overallSizeChanged);
+
+    /**
      * @returns the configured time for an output to dim
      *
      * This allows the backends to coordinate with the front-end the time they
@@ -227,6 +236,24 @@ Q_SIGNALS:
      * Notifies that the output has been turned on and the wake can be decorated.
      */
     void wakeUp();
+
+    /**
+     * Notifies that the display will change in @p time
+     *
+     * Be it because it gets a transformation or moved around.
+     *
+     * Only to be used for effects
+     */
+    void aboutToChange(std::chrono::milliseconds time);
+
+    /**
+     * Notifies that the output changed
+     *
+     * Be it because it gets a transformation or moved around.
+     *
+     * Only to be used for effects
+     */
+    void changed();
 
 private:
     Q_DISABLE_COPY(AbstractOutput)

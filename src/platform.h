@@ -15,6 +15,7 @@
 
 #include <QImage>
 #include <QObject>
+#include <QSet>
 
 #include <functional>
 
@@ -455,6 +456,8 @@ public Q_SLOTS:
     void cursorRendered(const QRect &geometry);
     virtual void sceneInitialized() {};
 
+    void pendingOutputApplied(AbstractOutput* output, bool sizeChanged);
+
 Q_SIGNALS:
     void screensQueried();
     void readyChanged(bool);
@@ -535,6 +538,7 @@ protected:
 
 private:
     void triggerCursorRepaint();
+
     bool m_softwareCursor = false;
     bool m_softwareCursorForced = false;
     struct {
@@ -555,6 +559,11 @@ private:
     bool m_supportsOutputChanges = false;
     bool m_isPerScreenRenderingEnabled = false;
     CompositingType m_selectedCompositor = NoCompositing;
+    QSet<AbstractOutput *> m_pendingOutputs;
+
+    bool m_processingScreenChanged = false;
+    bool m_pendingScreensChanged = false;
+    QVector<QPointer<KWaylandServer::OutputConfigurationInterface>> m_pendingConfigs;
 };
 
 }

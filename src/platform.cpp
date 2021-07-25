@@ -102,13 +102,14 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface
         return;
     }
 
+    m_processingScreenChanged = true;
     using Enablement = KWaylandServer::OutputDeviceInterface::Enablement;
 
     const auto changes = config->changes();
 
     //process all non-disabling changes
     for (auto it = changes.begin(); it != changes.end(); it++) {
-        const KWaylandServer::OutputChangeSet *changeset = it.value();
+        QSharedPointer<KWaylandServer::OutputChangeSet> changeset = it.value();
 
         AbstractOutput* output = findOutput(it.key()->uuid());
         if (!output) {
@@ -123,12 +124,13 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface
             output->setEnabled(true);
         }
 
+        m_pendingOutputs << output;
         output->applyChanges(changeset);
     }
 
     //process any disable requests
     for (auto it = changes.begin(); it != changes.end(); it++) {
-        const KWaylandServer::OutputChangeSet *changeset = it.value();
+        auto changeset = it.value();
 
         if (changeset->enabledChanged() &&
                 changeset->enabled() == Enablement::Disabled) {
@@ -147,9 +149,28 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface
             output->setEnabled(false);
         }
     }
+    m_pendingConfigs << config;
+    m_processingScreenChanged = false;
+    pendingOutputApplied(nullptr, false);
+}
 
-    Q_EMIT screens()->changed();
-    config->setApplied();
+void Platform::pendingOutputApplied(AbstractOutput* output, bool sizeChanged)
+{
+    m_pendingScreensChanged |= sizeChanged;
+    m_pendingOutputs.remove(output);
+    if (!m_processingScreenChanged && m_pendingOutputs.isEmpty()) {
+        if (m_pendingScreensChanged) {
+            Q_EMIT screens()->changed();
+        }
+        for (auto config : m_pendingConfigs) {
+            if (config) {
+                config->setApplied();
+            }
+        }
+
+        m_pendingScreensChanged = false;
+        m_pendingConfigs.clear();
+    }
 }
 
 AbstractOutput *Platform::findOutput(int screenId) const

@@ -122,7 +122,7 @@ public:
     void setGlobalPos(const QPoint &pos);
     void setScale(qreal scale);
 
-    void applyChanges(const KWaylandServer::OutputChangeSet *changeSet) override;
+    void applyChanges(QSharedPointer<KWaylandServer::OutputChangeSet> changeSet) override;
 
     bool isEnabled() const override;
     void setEnabled(bool enable) override;
@@ -162,6 +162,7 @@ Q_SIGNALS:
     void vrrPolicyChanged();
 
 protected:
+    void performChanges(const QSharedPointer<KWaylandServer::OutputChangeSet> &changeSet);
     void initialize(const QString &model, const QString &manufacturer,
                     const QString &eisaId, const QString &serialNumber,
                     const QSize &physicalSize,

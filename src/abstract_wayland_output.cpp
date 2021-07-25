@@ -145,7 +145,23 @@ void AbstractWaylandOutput::setSubPixelInternal(SubPixel subPixel)
     m_subPixel = subPixel;
 }
 
-void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *changeSet)
+void AbstractWaylandOutput::applyChanges(QSharedPointer<KWaylandServer::OutputChangeSet> changeSet)
+{
+    const bool animate = changeSet->transformChanged() || changeSet->scaleChanged();
+
+    if (animate) {
+        auto delay = dimAnimationTime();
+        Q_EMIT aboutToChange(delay);
+        QTimer::singleShot(delay, [this, changeSet] {
+            performChanges(changeSet);
+            Q_EMIT changed();
+        });
+    } else {
+        performChanges(changeSet);
+    }
+}
+
+void AbstractWaylandOutput::performChanges(const QSharedPointer<KWaylandServer::OutputChangeSet> &changeSet)
 {
     qCDebug(KWIN_CORE) << "Apply changes to the Wayland output.";
     bool emitModeChanged = false;
@@ -158,7 +174,7 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
         emitModeChanged = true;
     }
     if (changeSet->transformChanged()) {
-        qCDebug(KWIN_CORE) << "Server setting transform: " << (int)(changeSet->transform());
+        qCDebug(KWIN_CORE) << "Server setting transform: " << changeSet->transform();
         auto transform = outputDeviceTransformToKWinTransform(changeSet->transform());
         setTransformInternal(transform);
         updateTransform(transform);
@@ -184,14 +200,11 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
         setVrrPolicy(static_cast<RenderLoop::VrrPolicy>(changeSet->vrrPolicy()));
     }
 
-    overallSizeCheckNeeded |= emitModeChanged;
-    if (overallSizeCheckNeeded) {
-        Q_EMIT screens()->changed();
-    }
-
     if (emitModeChanged) {
         Q_EMIT modeChanged();
     }
+
+    changesApplied(overallSizeCheckNeeded | emitModeChanged);
 }
 
 bool AbstractWaylandOutput::isEnabled() const

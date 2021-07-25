@@ -8,6 +8,8 @@
 */
 
 #include "abstract_output.h"
+#include "platform.h"
+#include "main.h"
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -100,9 +102,11 @@ void AbstractOutput::setEnabled(bool enable)
     Q_UNUSED(enable)
 }
 
-void AbstractOutput::applyChanges(const KWaylandServer::OutputChangeSet *changeSet)
+void AbstractOutput::applyChanges(QSharedPointer<KWaylandServer::OutputChangeSet> changeSet)
 {
     Q_UNUSED(changeSet)
+
+    changesApplied(false);
 }
 
 bool AbstractOutput::isInternal() const
@@ -169,6 +173,11 @@ std::chrono::milliseconds AbstractOutput::dimAnimationTime()
 {
     // See kscreen.kcfg
     return std::chrono::milliseconds (KSharedConfig::openConfig()->group("Effect-Kscreen").readEntry("Duration", 250));
+}
+
+void AbstractOutput::changesApplied(bool overallSizeChanged)
+{
+    kwinApp()->platform()->pendingOutputApplied(this, overallSizeChanged);
 }
 
 } // namespace KWin

@@ -1860,6 +1860,20 @@ Q_SIGNALS:
      * Notifies that the output has been turned on and the wake can be decorated.
      */
     void wakeUp();
+
+    /**
+     * Notifies that the display will change
+     *
+     * Be it because it gets a transformation or moved around.
+     */
+    void aboutToChange(std::chrono::milliseconds time);
+
+    /**
+     * Notifies that the output changed
+     *
+     * Be it because it gets a transformation or moved around.
+     */
+    void changed();
 };
 
 /**

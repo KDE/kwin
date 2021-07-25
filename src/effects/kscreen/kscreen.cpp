@@ -68,13 +68,21 @@ KscreenEffect::~KscreenEffect()
 
 void KscreenEffect::addScreen(EffectScreen *screen)
 {
-    connect(screen, &EffectScreen::wakeUp, this, [this] {
-        setState(StateFadingIn);
-    });
-    connect(screen, &EffectScreen::aboutToTurnOff, this, [this] (std::chrono::milliseconds dimmingIn) {
-        m_timeLine.setDuration(dimmingIn);
-        setState(StateFadingOut);
-    });
+    connect(screen, &EffectScreen::wakeUp, this, &KscreenEffect::startFadingIn);
+    connect(screen, &EffectScreen::aboutToTurnOff, this, &KscreenEffect::startFadingOut);
+    connect(screen, &EffectScreen::changed, this, &KscreenEffect::startFadingIn);
+    connect(screen, &EffectScreen::aboutToChange, this, &KscreenEffect::startFadingOut);
+}
+
+void KscreenEffect::startFadingIn()
+{
+    setState(StateFadingOut);
+}
+
+void KscreenEffect::startFadingOut(std::chrono::milliseconds time)
+{
+    m_timeLine.setDuration(time);
+    setState(StateFadingOut);
 }
 
 void KscreenEffect::reconfigure(ReconfigureFlags flags)

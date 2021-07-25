@@ -38,6 +38,9 @@ private Q_SLOTS:
     void propertyNotify(KWin::EffectWindow *window, long atom);
 
 private:
+    void startFadingIn();
+    void startFadingOut(std::chrono::milliseconds time);
+
     void switchState();
     enum FadeOutState {
         StateNormal,
