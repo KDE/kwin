@@ -29,7 +29,6 @@ class DrmOutput;
 class DrmCrtc;
 class DrmConnector;
 class DrmBackend;
-class AbstractEglDrmBackend;
 class DrmPipeline;
 class Renderer;
 
@@ -72,9 +71,6 @@ public:
     EGLDisplay eglDisplay() const {
         return m_eglDisplay;
     }
-
-    AbstractEglDrmBackend *eglBackend() const;
-    void setEglBackend(AbstractEglDrmBackend *eglBackend);
 
     Renderer *renderer() const;
     void setRenderer(Renderer *renderer);
@@ -119,7 +115,6 @@ private:
     void tryAMS();
 
     DrmBackend* const m_backend;
-    QPointer<AbstractEglDrmBackend> m_eglBackend;
     QPointer<Renderer> m_renderer;
 
     const QString m_devNode;

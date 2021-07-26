@@ -13,7 +13,6 @@
 #include "drm_output.h"
 #include "drm_object_connector.h"
 #include "drm_object_crtc.h"
-#include "abstract_egl_backend.h"
 #include "logging.h"
 #include "session.h"
 #include "renderer.h"
@@ -463,16 +462,6 @@ void DrmGpu::removeOutput(DrmOutput *output)
     }
     m_pipelines.removeOne(pipeline);
     delete pipeline;
-}
-
-AbstractEglDrmBackend *DrmGpu::eglBackend() const
-{
-    return m_eglBackend;
-}
-
-void DrmGpu::setEglBackend(AbstractEglDrmBackend *eglBackend)
-{
-    m_eglBackend = eglBackend;
 }
 
 Renderer *DrmGpu::renderer() const

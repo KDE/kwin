@@ -27,7 +27,8 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t
         qCCritical(KWIN_DRM) << "Could not create gbm surface!" << strerror(errno);
         return;
     }
-    m_eglSurface = eglCreatePlatformWindowSurfaceEXT(m_gpu->eglDisplay(), m_gpu->eglBackend()->config(), (void *)(m_surface), nullptr);
+    auto renderer = static_cast<AbstractEglDrmBackend *>(m_gpu->renderer());
+    m_eglSurface = eglCreatePlatformWindowSurfaceEXT(m_gpu->eglDisplay(), renderer->config(), (void *)(m_surface), nullptr);
     if (m_eglSurface == EGL_NO_SURFACE) {
         qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << eglGetError();
     }

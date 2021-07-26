@@ -674,8 +674,9 @@ QString DrmBackend::supportInformation() const
 DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
 {
 #if HAVE_GBM
-    if (primaryGpu()->eglBackend() && primaryGpu()->gbmDevice()) {
-        primaryGpu()->eglBackend()->makeCurrent();
+    auto renderer = qobject_cast<AbstractEglDrmBackend *>(primaryGpu()->renderer());
+    if (renderer && primaryGpu()->gbmDevice()) {
+        renderer->makeCurrent();
         return GbmDmaBuf::createBuffer(size, primaryGpu()->gbmDevice());
     }
 #endif

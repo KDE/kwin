@@ -75,7 +75,7 @@ bool DrmPipeline::test()
 bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
 {
     m_primaryBuffer = buffer;
-    if (m_gpu->useEglStreams() && m_gpu->eglBackend() != nullptr && m_gpu == m_gpu->platform()->primaryGpu()) {
+    if (m_gpu->useEglStreams() && qobject_cast<AbstractEglDrmBackend *>(m_gpu->renderer()) && m_gpu == m_gpu->platform()->primaryGpu()) {
         // EglStreamBackend queues normal page flips through EGL,
         // modesets etc are performed through DRM-KMS
         bool needsCommit = std::any_of(m_allObjects.constBegin(), m_allObjects.constEnd(), [](auto obj){return obj->needsCommit();});
@@ -188,7 +188,7 @@ bool DrmPipeline::doAtomicCommit(drmModeAtomicReq *req, uint32_t flags, bool tes
 
 bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
 {
-    bool usesEglStreams = m_gpu->useEglStreams() && m_gpu->eglBackend() != nullptr && m_gpu == m_gpu->platform()->primaryGpu();
+    bool usesEglStreams = m_gpu->useEglStreams() && qobject_cast<AbstractEglDrmBackend *>(m_gpu->renderer()) && m_gpu == m_gpu->platform()->primaryGpu();
     if (!usesEglStreams && m_active) {
         flags |= DRM_MODE_PAGE_FLIP_EVENT;
     }
@@ -272,7 +272,7 @@ bool DrmPipeline::checkTestBuffer()
         return true;
     }
 #if HAVE_GBM
-    auto backend = m_gpu->eglBackend();
+    auto backend = qobject_cast<AbstractEglDrmBackend *>(m_gpu->renderer());
     if (backend && m_pageflipUserData) {
         auto buffer = backend->renderTestFrame(m_pageflipUserData);
         if (buffer && buffer->bufferId()) {
