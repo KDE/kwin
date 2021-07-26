@@ -71,8 +71,9 @@ typedef struct xcb_glx_buffer_swap_complete_event_t {
 namespace KWin
 {
 
-SwapEventFilter::SwapEventFilter(xcb_drawable_t drawable, xcb_glx_drawable_t glxDrawable)
+SwapEventFilter::SwapEventFilter(GlxBackend *backend, xcb_drawable_t drawable, xcb_glx_drawable_t glxDrawable)
     : X11EventFilter(Xcb::Extensions::self()->glxEventBase() + XCB_GLX_BUFFER_SWAP_COMPLETE),
+      m_backend(backend),
       m_drawable(drawable),
       m_glxDrawable(glxDrawable)
 {
@@ -91,7 +92,7 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
     const std::chrono::microseconds timestamp((uint64_t(swapEvent->ust_hi) << 32) | swapEvent->ust_lo);
 
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(kwinApp()->platform()->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    renderLoopPrivate->notifyFrameCompleted(timestamp, m_backend->renderTime(nullptr));
 
     return true;
 }
@@ -127,6 +128,10 @@ GlxBackend::~GlxBackend()
     if (isFailed()) {
         m_overlayWindow->destroy();
     }
+
+    makeCurrent();
+    m_profiler.reset();
+
     // TODO: cleanup in error case
     // do cleanup after initBuffer()
     cleanupGL();
@@ -261,7 +266,7 @@ void GlxBackend::init()
     if (supportsSwapEvent && !forceSoftwareVsync) {
         // Nice, the GLX_INTEL_swap_event extension is available. We are going to receive
         // the presentation timestamp (UST) after glXSwapBuffers() via the X command stream.
-        m_swapEventFilter = std::make_unique<SwapEventFilter>(window, glxWindow);
+        m_swapEventFilter = std::make_unique<SwapEventFilter>(this, window, glxWindow);
         glXSelectEvent(display(), glxWindow, GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK);
     } else {
         // If the GLX_INTEL_swap_event extension is unavailble, we are going to wait for
@@ -290,6 +295,7 @@ void GlxBackend::init()
         connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &GlxBackend::vblank);
     }
 
+    m_profiler.reset(new OpenGLFrameProfiler);
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
 
     qCDebug(KWIN_X11STANDALONE) << "Direct rendering:" << isDirectRendering();
@@ -745,6 +751,7 @@ QRegion GlxBackend::beginFrame(int screenId)
 
     QRegion repaint;
     makeCurrent();
+    m_profiler->begin();
 
     const QSize size = screens()->size();
     glViewport(0, 0, size.width(), size.height());
@@ -761,6 +768,7 @@ QRegion GlxBackend::beginFrame(int screenId)
 void GlxBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(screenId)
+    m_profiler->end();
 
     // If the GLX_INTEL_swap_event extension is not used for getting presentation feedback,
     // assume that the frame will be presented at the next vblank event, this is racy.
@@ -782,7 +790,7 @@ void GlxBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRe
 void GlxBackend::vblank(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_backend->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    renderLoopPrivate->notifyFrameCompleted(timestamp, renderTime(nullptr));
 }
 
 bool GlxBackend::makeCurrent()
@@ -803,6 +811,12 @@ void GlxBackend::doneCurrent()
 OverlayWindow* GlxBackend::overlayWindow() const
 {
     return m_overlayWindow;
+}
+
+std::chrono::nanoseconds GlxBackend::renderTime(AbstractOutput *)
+{
+    makeCurrent();
+    return m_profiler->result();
 }
 
 GlxSurfaceTextureX11::GlxSurfaceTextureX11(GlxBackend *backend, SurfacePixmapX11 *texture)

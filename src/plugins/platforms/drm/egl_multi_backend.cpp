@@ -18,6 +18,7 @@
 #endif
 #include "drm_backend.h"
 #include "drm_gpu.h"
+#include "drm_output.h"
 
 namespace KWin
 {
@@ -128,6 +129,13 @@ bool EglMultiBackend::directScanoutAllowed(int screenId) const
     AbstractEglBackend *backend = findBackend(screenId, internalScreenId);
     Q_ASSERT(backend != nullptr);
     return backend->directScanoutAllowed(internalScreenId);
+}
+
+std::chrono::nanoseconds EglMultiBackend::renderTime(AbstractOutput *output)
+{
+    Q_ASSERT(qobject_cast<DrmOutput *>(output));
+    DrmOutput *drmOutput = static_cast<DrmOutput *>(output);
+    return drmOutput->gpu()->renderer()->renderTime(output);
 }
 
 void EglMultiBackend::addGpu(DrmGpu *gpu)

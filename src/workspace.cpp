@@ -1720,6 +1720,12 @@ QString Workspace::supportInformation() const
             } else {
                 support.append(QStringLiteral(" no\n"));
             }
+            support.append(QStringLiteral("Timer query support: "));
+            if (platform->supports(GLFeature::TimerQuery)) {
+                support.append(QStringLiteral("yes\n"));
+            } else {
+                support.append(QStringLiteral("no\n"));
+            }
 
             support.append(QStringLiteral("OpenGL 2 Shaders are used\n"));
             break;

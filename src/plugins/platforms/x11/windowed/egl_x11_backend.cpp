@@ -104,6 +104,11 @@ void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, co
     }
 }
 
+std::chrono::nanoseconds EglX11Backend::renderTime(AbstractOutput *output)
+{
+    return std::chrono::nanoseconds::zero();
+}
+
 PlatformSurfaceTexture *EglX11Backend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return new BasicEGLSurfaceTextureWayland(this, pixmap);

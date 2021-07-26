@@ -27,6 +27,7 @@
 #include "cursor.h"
 #include "input.h"
 #include "main.h"
+#include "scene.h"
 #include "screens.h"
 #include "pointer_input.h"
 #include "wayland_server.h"
@@ -731,11 +732,14 @@ void WaylandBackend::createOutputs()
         connect(waylandOutput, &WaylandOutput::frameRendered, this, [waylandOutput]() {
             waylandOutput->resetRendered();
 
+            const std::chrono::nanoseconds renderTime =
+                    Compositor::self()->scene()->renderer()->renderTime(waylandOutput);
+
             // The current time of the monotonic clock is a pretty good estimate when the frame
             // has been presented, however it will be much better if we check whether the host
             // compositor supports the wp_presentation protocol.
             RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(waylandOutput->renderLoop());
-            renderLoopPrivate->notifyFrameCompleted(std::chrono::steady_clock::now().time_since_epoch());
+            renderLoopPrivate->notifyFrameCompleted(std::chrono::steady_clock::now().time_since_epoch(), renderTime);
         });
 
         logicalWidthSum += logicalWidth;

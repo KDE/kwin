@@ -9,6 +9,7 @@
 #ifndef KWIN_GLX_BACKEND_H
 #define KWIN_GLX_BACKEND_H
 #include "openglbackend.h"
+#include "openglframeprofiler.h"
 #include "platformopenglsurfacetexture_x11.h"
 #include "x11eventfilter.h"
 
@@ -26,6 +27,7 @@
 namespace KWin
 {
 
+class GlxBackend;
 class GlxPixmapTexturePrivate;
 class VsyncMonitor;
 class X11StandalonePlatform;
@@ -51,10 +53,11 @@ public:
 class SwapEventFilter : public X11EventFilter
 {
 public:
-    SwapEventFilter(xcb_drawable_t drawable, xcb_glx_drawable_t glxDrawable);
+    SwapEventFilter(GlxBackend *backend, xcb_drawable_t drawable, xcb_glx_drawable_t glxDrawable);
     bool event(xcb_generic_event_t *event) override;
 
 private:
+    GlxBackend *m_backend;
     xcb_drawable_t m_drawable;
     xcb_glx_drawable_t m_glxDrawable;
 };
@@ -77,6 +80,7 @@ public:
     void doneCurrent() override;
     OverlayWindow* overlayWindow() const override;
     void init() override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
     Display *display() const { return m_x11Display; }
 
@@ -99,6 +103,7 @@ private:
      * @brief The OverlayWindow used by this Backend.
      */
     OverlayWindow *m_overlayWindow;
+    QScopedPointer<OpenGLFrameProfiler> m_profiler;
     Window window;
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;

@@ -71,6 +71,7 @@ QImage* FramebufferQPainterBackend::bufferForScreen(int screenId)
 
 QRegion FramebufferQPainterBackend::beginFrame(int screenId)
 {
+    m_profiler.begin();
     return screens()->geometry(screenId);
 }
 
@@ -88,6 +89,14 @@ void FramebufferQPainterBackend::endFrame(int screenId, const QRegion &damage)
 
     QPainter p(&m_backBuffer);
     p.drawImage(QPoint(0, 0), m_backend->isBGR() ? m_renderBuffer.rgbSwapped() : m_renderBuffer);
+
+    m_profiler.end();
+}
+
+std::chrono::nanoseconds FramebufferQPainterBackend::renderTime(AbstractOutput *output)
+{
+    Q_UNUSED(output)
+    return m_profiler.result();
 }
 
 }

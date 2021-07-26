@@ -16,6 +16,7 @@
 #include "abstract_egl_backend.h"
 #include "logging.h"
 #include "session.h"
+#include "renderer.h"
 #include "renderloop_p.h"
 #include "main.h"
 #include "drm_pipeline.h"
@@ -412,12 +413,12 @@ static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsign
         return;
     }
 
-    // The static_cast<> here are for a 32-bit environment where 
+    // The static_cast<> here are for a 32-bit environment where
     // sizeof(time_t) == sizeof(unsigned int) == 4 . Putting @p sec
     // into a time_t cuts off the most-significant bit (after the
     // year 2038), similarly long can't hold all the bits of an
     // unsigned multiplication.
-    std::chrono::nanoseconds timestamp = convertTimestamp(output->gpu()->presentationClock(),
+    std::chrono::nanoseconds timestamp = convertTimestamp(gpu->presentationClock(),
                                                           CLOCK_MONOTONIC,
                                                           { static_cast<time_t>(sec), static_cast<long>(usec * 1000) });
     if (timestamp == std::chrono::nanoseconds::zero()) {
@@ -426,9 +427,16 @@ static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsign
         timestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
 
+    // If a graphics reset occurs after committing a framebuffer but before the pageflip,
+    // the renderer will return a render time of 0, which the renderloop will ignore.
+    std::chrono::nanoseconds renderTime = std::chrono::nanoseconds::zero();
+    if (Q_LIKELY(gpu->renderer())) {
+        renderTime = gpu->renderer()->renderTime(output);
+    }
+
     output->pageFlipped();
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(output->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    renderLoopPrivate->notifyFrameCompleted(timestamp, renderTime);
 }
 
 void DrmGpu::dispatchEvents()
@@ -465,6 +473,16 @@ AbstractEglDrmBackend *DrmGpu::eglBackend() const
 void DrmGpu::setEglBackend(AbstractEglDrmBackend *eglBackend)
 {
     m_eglBackend = eglBackend;
+}
+
+Renderer *DrmGpu::renderer() const
+{
+    return m_renderer;
+}
+
+void DrmGpu::setRenderer(Renderer *renderer)
+{
+    m_renderer = renderer;
 }
 
 DrmBackend *DrmGpu::platform() const {

@@ -11,6 +11,7 @@
 #define KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
 
 #include "qpainterbackend.h"
+#include "qpainterframeprofiler.h"
 #include "utils.h"
 
 #include <QObject>
@@ -65,6 +66,9 @@ public:
     QRegion accumulateDamage(int bufferAge) const;
     QRegion mapToLocal(const QRegion &region) const;
 
+    WaylandOutput *platformOutput() const;
+    QPainterFrameProfiler *profiler() const;
+
 private:
     WaylandOutput *m_waylandOutput;
     KWayland::Client::ShmPool *m_pool;
@@ -72,6 +76,7 @@ private:
 
     QVector<WaylandQPainterBufferSlot *> m_slots;
     WaylandQPainterBufferSlot *m_back = nullptr;
+    QScopedPointer<QPainterFrameProfiler> m_profiler;
 
     friend class WaylandQPainterBackend;
 };
@@ -87,6 +92,8 @@ public:
 
     void endFrame(int screenId, const QRegion& damage) override;
     QRegion beginFrame(int screenId) override;
+
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
 private:
     void createOutput(AbstractOutput *waylandOutput);

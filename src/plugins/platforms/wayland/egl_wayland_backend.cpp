@@ -80,6 +80,16 @@ bool EglWaylandOutput::init(EglWaylandBackend *backend)
     return true;
 }
 
+OpenGLFrameProfiler *EglWaylandOutput::profiler() const
+{
+    return m_profiler.data();
+}
+
+void EglWaylandOutput::setProfiler(OpenGLFrameProfiler *profiler)
+{
+    m_profiler.reset(profiler);
+}
+
 void EglWaylandOutput::updateSize()
 {
     const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
@@ -145,12 +155,19 @@ bool EglWaylandBackend::createEglWaylandOutput(AbstractOutput *waylandOutput)
     if (!output->init(this)) {
         return false;
     }
+    if (!makeContextCurrent(output)) {
+        delete output;
+        return false;
+    }
+    output->setProfiler(new OpenGLFrameProfiler);
     m_outputs << output;
     return true;
 }
 
 void EglWaylandBackend::cleanupOutput(EglWaylandOutput *output)
 {
+    makeContextCurrent(output);
+    output->setProfiler(nullptr);
     wl_egl_window_destroy(output->m_overlay);
 }
 
@@ -350,12 +367,25 @@ PlatformSurfaceTexture *EglWaylandBackend::createPlatformSurfaceTextureWayland(S
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
+std::chrono::nanoseconds EglWaylandBackend::renderTime(AbstractOutput *output)
+{
+    for (EglWaylandOutput *needle : qAsConst(m_outputs)) {
+        if (needle->m_waylandOutput == output) {
+            makeContextCurrent(needle);
+            return needle->profiler()->result();
+        }
+    }
+    return std::chrono::nanoseconds::zero();
+}
+
 QRegion EglWaylandBackend::beginFrame(int screenId)
 {
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
     auto *output = m_outputs.at(screenId);
     makeContextCurrent(output);
+    output->profiler()->begin();
+
     if (supportsBufferAge()) {
         return output->m_damageJournal.accumulate(output->m_bufferAge, output->m_waylandOutput->geometry());
     }
@@ -366,6 +396,8 @@ void EglWaylandBackend::endFrame(int screenId, const QRegion &renderedRegion, co
 {
     Q_UNUSED(renderedRegion);
     EglWaylandOutput *output = m_outputs[screenId];
+    output->profiler()->end();
+
     QRegion damage = damagedRegion.intersected(output->m_waylandOutput->geometry());
     presentOnSurface(output, damage);
 

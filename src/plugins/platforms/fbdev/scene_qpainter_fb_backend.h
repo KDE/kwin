@@ -9,6 +9,7 @@
 #ifndef KWIN_SCENE_QPAINTER_FB_BACKEND_H
 #define KWIN_SCENE_QPAINTER_FB_BACKEND_H
 #include "qpainterbackend.h"
+#include "qpainterframeprofiler.h"
 
 #include <QObject>
 #include <QImage>
@@ -27,6 +28,7 @@ public:
     QImage *bufferForScreen(int screenId) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage) override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
 private:
     void reactivate();
@@ -42,6 +44,7 @@ private:
     QImage m_backBuffer;
 
     FramebufferBackend *m_backend;
+    QPainterFrameProfiler m_profiler;
 };
 
 }

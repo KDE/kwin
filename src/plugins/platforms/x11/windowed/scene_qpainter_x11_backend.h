@@ -10,6 +10,7 @@
 #define KWIN_SCENE_QPAINTER_X11_BACKEND_H
 
 #include "qpainterbackend.h"
+#include "qpainterframeprofiler.h"
 
 #include <QObject>
 #include <QImage>
@@ -32,12 +33,14 @@ public:
     QImage *bufferForScreen(int screenId) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage) override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
 private:
     void createOutputs();
     xcb_gcontext_t m_gc = XCB_NONE;
     X11WindowedBackend *m_backend;
     struct Output {
+        QPainterFrameProfiler profiler;
         xcb_window_t window;
         QImage buffer;
     };

@@ -9,6 +9,7 @@
 #ifndef KWIN_SCENE_QPAINTER_DRM_BACKEND_H
 #define KWIN_SCENE_QPAINTER_DRM_BACKEND_H
 #include "qpainterbackend.h"
+#include "qpainterframeprofiler.h"
 #include "utils.h"
 
 #include <QObject>
@@ -34,6 +35,7 @@ public:
     QImage *bufferForScreen(int screenId) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage) override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
 private:
     void initOutput(DrmOutput *output);
@@ -41,6 +43,7 @@ private:
         DrmOutput *output;
         QSharedPointer<DumbSwapchain> swapchain;
         DamageJournal damageJournal;
+        QPainterFrameProfiler profiler;
     };
     QVector<Output> m_outputs;
     DrmBackend *m_backend;

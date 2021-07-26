@@ -46,6 +46,9 @@ EglBackend::~EglBackend()
     // render loop. We need to ensure that the render loop is back to its initial state
     // if the render backend is about to be destroyed.
     RenderLoopPrivate::get(kwinApp()->platform()->renderLoop())->invalidate();
+
+    makeCurrent();
+    m_profiler.reset();
 }
 
 PlatformSurfaceTexture *EglBackend::createPlatformSurfaceTextureX11(SurfacePixmapX11 *texture)
@@ -78,6 +81,11 @@ void EglBackend::init()
     kwinApp()->platform()->setSceneEglDisplay(shareDisplay);
     kwinApp()->platform()->setSceneEglGlobalShareContext(shareContext);
     EglOnXBackend::init();
+
+    if (!isFailed()) {
+        makeCurrent();
+        m_profiler.reset(new OpenGLFrameProfiler);
+    }
 }
 
 void EglBackend::screenGeometryChanged()
@@ -92,6 +100,7 @@ QRegion EglBackend::beginFrame(int screenId)
 {
     Q_UNUSED(screenId)
     makeCurrent();
+    m_profiler->begin();
 
     const QSize size = screens()->size();
     glViewport(0, 0, size.width(), size.height());
@@ -109,6 +118,7 @@ QRegion EglBackend::beginFrame(int screenId)
 void EglBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(screenId)
+    m_profiler->end();
 
     // Start the software vsync monitor. There is no any reliable way to determine when
     // eglSwapBuffers() or eglSwapBuffersWithDamageEXT() completes.
@@ -146,8 +156,15 @@ void EglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const
 
 void EglBackend::vblank(std::chrono::nanoseconds timestamp)
 {
+    makeCurrent();
+
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_backend->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    renderLoopPrivate->notifyFrameCompleted(timestamp, m_profiler->result());
+}
+
+std::chrono::nanoseconds EglBackend::renderTime(AbstractOutput *)
+{
+    return m_profiler->result();
 }
 
 EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture)

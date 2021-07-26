@@ -34,8 +34,8 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
-
     bool directScanoutAllowed(int screen) const override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
 public Q_SLOTS:
     void addGpu(DrmGpu *gpu);

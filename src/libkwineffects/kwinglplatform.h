@@ -72,6 +72,11 @@ enum GLFeature {
      * - GL_CLAMP_TO_BORDER
      */
     LimitedNPOT,
+
+    /**
+     * Set if the driver supports GL_ARB_timer_query extension or OpenGL 3.3.
+     */
+    TimerQuery,
 };
 
 enum Driver {
@@ -444,6 +449,7 @@ private:
     bool m_limitedGLSL: 1;
     bool m_textureNPOT: 1;
     bool m_limitedNPOT: 1;
+    bool m_supportsTimerQuery: 1;
     bool m_virtualMachine: 1;
     bool m_preferBufferSubData: 1;
     OpenGLPlatformInterface m_platformInterface;
