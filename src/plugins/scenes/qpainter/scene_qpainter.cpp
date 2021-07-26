@@ -91,7 +91,6 @@ void SceneQPainter::paint(int screenId, const QRegion &damage, const QList<Tople
 
     QImage *buffer = renderer()->bufferForScreen(screenId);
     if (buffer && !buffer->isNull()) {
-        renderLoop->beginFrame();
         m_painter->begin(buffer);
         m_painter->setWindow(geometry);
 
@@ -100,7 +99,6 @@ void SceneQPainter::paint(int screenId, const QRegion &damage, const QList<Tople
         paintCursor(updateRegion);
 
         m_painter->end();
-        renderLoop->endFrame();
         renderer()->endFrame(screenId, updateRegion);
     }
 
