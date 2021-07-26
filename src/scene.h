@@ -35,6 +35,7 @@ class Item;
 class OverlayWindow;
 class PlatformSurfaceTexture;
 class RenderLoop;
+class Renderer;
 class Shadow;
 class ShadowItem;
 class SurfaceItem;
@@ -48,8 +49,9 @@ class KWIN_EXPORT Scene : public QObject
 {
     Q_OBJECT
 public:
-    explicit Scene(QObject *parent = nullptr);
-    ~Scene() override = 0;
+    explicit Scene(Renderer *renderer, QObject *parent = nullptr);
+    ~Scene() override;
+
     class EffectFrame;
     class Window;
 
@@ -132,6 +134,7 @@ public:
         // PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS = 1 << 9 has been removed
     };
     virtual OverlayWindow* overlayWindow() const = 0;
+    Renderer *renderer() const;
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
@@ -251,6 +254,7 @@ protected:
     // windows in their stacking order
     QVector< Window* > stacking_order;
 private:
+    QScopedPointer<Renderer> m_renderer;
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     void reallocRepaints();
     QHash< Toplevel*, Window* > m_windows;

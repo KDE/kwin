@@ -50,8 +50,7 @@ SceneQPainter *SceneQPainter::createScene(QObject *parent)
 }
 
 SceneQPainter::SceneQPainter(QPainterBackend *backend, QObject *parent)
-    : Scene(parent)
-    , m_backend(backend)
+    : Scene(backend, parent)
     , m_painter(new QPainter())
 {
 }
@@ -87,10 +86,10 @@ void SceneQPainter::paint(int screenId, const QRegion &damage, const QList<Tople
 
     createStackingOrder(toplevels);
 
-    const QRegion repaint = m_backend->beginFrame(screenId);
+    const QRegion repaint = renderer()->beginFrame(screenId);
     const QRect geometry = screens()->geometry(screenId);
 
-    QImage *buffer = m_backend->bufferForScreen(screenId);
+    QImage *buffer = renderer()->bufferForScreen(screenId);
     if (buffer && !buffer->isNull()) {
         renderLoop->beginFrame();
         m_painter->begin(buffer);
@@ -102,7 +101,7 @@ void SceneQPainter::paint(int screenId, const QRegion &damage, const QList<Tople
 
         m_painter->end();
         renderLoop->endFrame();
-        m_backend->endFrame(screenId, updateRegion);
+        renderer()->endFrame(screenId, updateRegion);
     }
 
     // do cleanup
@@ -161,7 +160,7 @@ Shadow *SceneQPainter::createShadow(Toplevel *toplevel)
 
 QImage *SceneQPainter::qpainterRenderBuffer(int screenId) const
 {
-    return m_backend->bufferForScreen(screenId);
+    return renderer()->bufferForScreen(screenId);
 }
 
 //****************************************
@@ -315,12 +314,12 @@ DecorationRenderer *SceneQPainter::createDecorationRenderer(Decoration::Decorate
 
 PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureInternal(pixmap);
+    return renderer()->createPlatformSurfaceTextureInternal(pixmap);
 }
 
 PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureWayland(pixmap);
+    return renderer()->createPlatformSurfaceTextureWayland(pixmap);
 }
 
 QPainterEffectFrame::QPainterEffectFrame(EffectFrameImpl *frame, SceneQPainter *scene)

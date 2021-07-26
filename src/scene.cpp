@@ -56,6 +56,7 @@
 #include "abstract_output.h"
 #include "internal_client.h"
 #include "platform.h"
+#include "renderer.h"
 #include "shadowitem.h"
 #include "surfaceitem.h"
 #include "unmanaged.h"
@@ -82,8 +83,9 @@ namespace KWin
 // Scene
 //****************************************
 
-Scene::Scene(QObject *parent)
+Scene::Scene(Renderer *renderer, QObject *parent)
     : QObject(parent)
+    , m_renderer(renderer)
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         connect(kwinApp()->platform(), &Platform::outputEnabled, this, &Scene::reallocRepaints);
@@ -95,6 +97,11 @@ Scene::Scene(QObject *parent)
 Scene::~Scene()
 {
     Q_ASSERT(m_windows.isEmpty());
+}
+
+Renderer *Scene::renderer() const
+{
+    return m_renderer.data();
 }
 
 void Scene::addRepaint(const QRegion &region)

@@ -71,11 +71,10 @@ namespace KWin
  ***********************************************/
 
 SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
-    : Scene(parent)
+    : Scene(backend, parent)
     , init_ok(true)
-    , m_backend(backend)
 {
-    if (m_backend->isFailed()) {
+    if (backend->isFailed()) {
         init_ok = false;
         return;
     }
@@ -111,9 +110,6 @@ SceneOpenGL::~SceneOpenGL()
         makeOpenGLContextCurrent();
     }
     SceneOpenGL::EffectFrame::cleanup();
-
-    // backend might be still needed for a different scene
-    delete m_backend;
 }
 
 
@@ -228,7 +224,7 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
 
 OverlayWindow *SceneOpenGL::overlayWindow() const
 {
-    return m_backend->overlayWindow();
+    return renderer()->overlayWindow();
 }
 
 bool SceneOpenGL::initFailed() const
@@ -344,7 +340,7 @@ void SceneOpenGL2::paintCursor(const QRegion &rendered)
 
 void SceneOpenGL::aboutToStartPainting(int screenId, const QRegion &damage)
 {
-    m_backend->aboutToStartPainting(screenId, damage);
+    renderer()->aboutToStartPainting(screenId, damage);
 }
 
 static SurfaceItem *findTopMostSurface(SurfaceItem *item)
@@ -420,14 +416,14 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
         renderLoop->setFullscreenSurface(fullscreenSurface);
 
         bool directScanout = false;
-        if (m_backend->directScanoutAllowed(screenId) && !static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
-            directScanout = m_backend->scanout(screenId, fullscreenSurface);
+        if (renderer()->directScanoutAllowed(screenId) && !static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
+            directScanout = renderer()->scanout(screenId, fullscreenSurface);
         }
         if (directScanout) {
             renderLoop->endFrame();
         } else {
             // prepare rendering makescontext current on the output
-            repaint = m_backend->beginFrame(screenId);
+            repaint = renderer()->beginFrame(screenId);
 
             GLVertexBuffer::setVirtualScreenGeometry(geo);
             GLRenderTarget::setVirtualScreenGeometry(geo);
@@ -445,11 +441,11 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
                 const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
 
                 // copy dirty parts from front to backbuffer
-                if (!m_backend->supportsBufferAge() &&
+                if (!renderer()->supportsBufferAge() &&
                     options->glPreferBufferSwap() == Options::CopyFrontBuffer &&
                     valid != displayRegion) {
                     glReadBuffer(GL_FRONT);
-                    m_backend->copyPixels(displayRegion - valid);
+                    renderer()->copyPixels(displayRegion - valid);
                     glReadBuffer(GL_BACK);
                     valid = displayRegion;
                 }
@@ -458,7 +454,7 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
             renderLoop->endFrame();
 
             GLVertexBuffer::streamingBuffer()->endOfFrame();
-            m_backend->endFrame(screenId, valid, update);
+            renderer()->endFrame(screenId, valid, update);
             GLVertexBuffer::streamingBuffer()->framePosted();
         }
     }
@@ -514,7 +510,7 @@ void SceneOpenGL::paintBackground(const QRegion &region)
 
 void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
 {
-    if (m_backend->supportsBufferAge())
+    if (renderer()->supportsBufferAge())
         return;
 
     const QSize &screenSize = screens()->size();
@@ -593,22 +589,22 @@ void SceneOpenGL::paintEffectQuickView(EffectQuickView *w)
 
 bool SceneOpenGL::makeOpenGLContextCurrent()
 {
-    return m_backend->makeCurrent();
+    return renderer()->makeCurrent();
 }
 
 void SceneOpenGL::doneOpenGLContextCurrent()
 {
-    m_backend->doneCurrent();
+    renderer()->doneCurrent();
 }
 
 bool SceneOpenGL::supportsSurfacelessContext() const
 {
-    return m_backend->supportsSurfacelessContext();
+    return renderer()->supportsSurfacelessContext();
 }
 
 bool SceneOpenGL::supportsNativeFence() const
 {
-    return m_backend->supportsNativeFence();
+    return renderer()->supportsNativeFence();
 }
 
 Scene::EffectFrame *SceneOpenGL::createEffectFrame(EffectFrameImpl *frame)
@@ -633,27 +629,27 @@ bool SceneOpenGL::animationsSupported() const
 
 QVector<QByteArray> SceneOpenGL::openGLPlatformInterfaceExtensions() const
 {
-    return m_backend->extensions().toVector();
+    return renderer()->extensions().toVector();
 }
 
 QSharedPointer<GLTexture> SceneOpenGL::textureForOutput(AbstractOutput* output) const
 {
-    return m_backend->textureForOutput(output);
+    return renderer()->textureForOutput(output);
 }
 
 PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureInternal(pixmap);
+    return renderer()->createPlatformSurfaceTextureInternal(pixmap);
 }
 
 PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureWayland(pixmap);
+    return renderer()->createPlatformSurfaceTextureWayland(pixmap);
 }
 
 PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureX11(pixmap);
+    return renderer()->createPlatformSurfaceTextureX11(pixmap);
 }
 
 //****************************************

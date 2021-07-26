@@ -42,8 +42,8 @@ public:
     QPainter *scenePainter() const override;
     QImage *qpainterRenderBuffer(int screenId) const override;
 
-    QPainterBackend *backend() const {
-        return m_backend.data();
+    QPainterBackend *renderer() const {
+        return static_cast<QPainterBackend *>(Scene::renderer());
     }
 
     static SceneQPainter *createScene(QObject *parent);
@@ -56,7 +56,6 @@ protected:
 
 private:
     explicit SceneQPainter(QPainterBackend *backend, QObject *parent = nullptr);
-    QScopedPointer<QPainterBackend> m_backend;
     QScopedPointer<QPainter> m_painter;
     class Window;
 };
