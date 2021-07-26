@@ -144,10 +144,10 @@ bool EglGbmBackend::initRenderingContext()
     }
     return true;
 }
-bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
+bool EglGbmBackend::resetOutput(Output &output, DrmAbstractOutput *drmOutput)
 {
     output.output = drmOutput;
-    const QSize size = drmOutput->pipeline()->sourceSize();
+    const QSize size = drmOutput->sourceSize();
     int flags = GBM_BO_USE_RENDERING;
     if (drmOutput->gpu() == m_gpu) {
         flags |= GBM_BO_USE_SCANOUT;
@@ -164,7 +164,7 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
     output.current = {};
     output.current.gbmSurface = gbmSurface;
 
-    if (output.output->hardwareTransforms()) {
+    if (size == drmOutput->pixelSize()) {
         output.current.shadowBuffer = nullptr;
     } else {
         makeContextCurrent(output.current);
@@ -176,7 +176,7 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
     return true;
 }
 
-bool EglGbmBackend::addOutput(DrmOutput *drmOutput)
+bool EglGbmBackend::addOutput(DrmAbstractOutput *drmOutput)
 {
     if (isPrimary()) {
         Output newOutput;
@@ -199,7 +199,7 @@ bool EglGbmBackend::addOutput(DrmOutput *drmOutput)
     return true;
 }
 
-void EglGbmBackend::removeOutput(DrmOutput *drmOutput)
+void EglGbmBackend::removeOutput(DrmAbstractOutput *drmOutput)
 {
     QVector<Output> &outputs = drmOutput->gpu() == m_gpu ? m_outputs : m_secondaryGpuOutputs;
     auto it = std::find_if(outputs.begin(), outputs.end(),
@@ -219,7 +219,7 @@ void EglGbmBackend::removeOutput(DrmOutput *drmOutput)
     outputs.erase(it);
 }
 
-bool EglGbmBackend::swapBuffers(DrmOutput *drmOutput, const QRegion &dirty)
+bool EglGbmBackend::swapBuffers(DrmAbstractOutput *drmOutput, const QRegion &dirty)
 {
     auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
         [drmOutput] (const Output &output) {
@@ -240,7 +240,7 @@ bool EglGbmBackend::swapBuffers(DrmOutput *drmOutput, const QRegion &dirty)
     }
 }
 
-bool EglGbmBackend::exportFramebuffer(DrmOutput *drmOutput, void *data, const QSize &size, uint32_t stride)
+bool EglGbmBackend::exportFramebuffer(DrmAbstractOutput *drmOutput, void *data, const QSize &size, uint32_t stride)
 {
     auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
         [drmOutput] (const Output &output) {
@@ -261,9 +261,8 @@ bool EglGbmBackend::exportFramebuffer(DrmOutput *drmOutput, void *data, const QS
     return memcpy(data, bo->mappedData(), size.height() * stride);
 }
 
-int EglGbmBackend::exportFramebufferAsDmabuf(DrmOutput *output, uint32_t *format, uint32_t *stride)
+int EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, uint32_t *format, uint32_t *stride)
 {
-    DrmOutput *drmOutput = static_cast<DrmOutput*>(output);
     auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
         [drmOutput] (const Output &output) {
             return output.output == drmOutput;
@@ -283,7 +282,7 @@ int EglGbmBackend::exportFramebufferAsDmabuf(DrmOutput *output, uint32_t *format
     return fd;
 }
 
-QRegion EglGbmBackend::beginFrameForSecondaryGpu(DrmOutput *drmOutput)
+QRegion EglGbmBackend::beginFrameForSecondaryGpu(DrmAbstractOutput *drmOutput)
 {
     auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
         [drmOutput] (const Output &output) {
@@ -492,12 +491,12 @@ QRegion EglGbmBackend::beginFrame(int screenId)
     }
 }
 
-bool EglGbmBackend::doesRenderFit(DrmOutput *output, const Output::RenderData &render)
+bool EglGbmBackend::doesRenderFit(DrmAbstractOutput *output, const Output::RenderData &render)
 {
     if (!render.gbmSurface) {
         return false;
     }
-    QSize surfaceSize = output->pipeline()->sourceSize();
+    QSize surfaceSize = output->sourceSize();
     if (surfaceSize != render.gbmSurface->size()) {
         return false;
     }
@@ -558,13 +557,12 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion,
     Q_UNUSED(renderedRegion)
 
     Output &output = m_outputs[screenId];
-    DrmOutput *drmOutput = output.output;
     cleanupRenderData(output.old);
 
     const QRegion dirty = damagedRegion.intersected(output.output->geometry());
     QSharedPointer<DrmBuffer> buffer = endFrameWithBuffer(screenId, dirty);
     if (!buffer || !output.output->present(buffer, dirty)) {
-        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
+        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(output.output->renderLoop());
         renderLoopPrivate->notifyFrameFailed();
         return;
     }
@@ -667,7 +665,7 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
     }
 }
 
-QSharedPointer<DrmBuffer> EglGbmBackend::renderTestFrame(DrmOutput *output)
+QSharedPointer<DrmBuffer> EglGbmBackend::renderTestFrame(DrmAbstractOutput *output)
 {
     for (int i = 0; i < m_outputs.count(); i++) {
         if (m_outputs[i].output == output) {
@@ -697,7 +695,7 @@ QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *abstra
         }
     }
 
-    DrmOutput *drmOutput = itOutput->output;
+    DrmAbstractOutput *drmOutput = itOutput->output;
     if (itOutput->current.shadowBuffer) {
         const auto glTexture = QSharedPointer<KWin::GLTexture>::create(itOutput->current.shadowBuffer->texture(), GL_RGBA8, drmOutput->pixelSize());
         glTexture->setYInverted(true);

@@ -19,7 +19,7 @@
 #include "drm_buffer.h"
 #include "cursor.h"
 #include "session.h"
-#include "abstract_output.h"
+#include "drm_output.h"
 #include "drm_backend.h"
 
 #if HAVE_GBM

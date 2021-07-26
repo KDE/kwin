@@ -14,7 +14,7 @@
 namespace KWin
 {
 
-class DrmOutput;
+class DrmAbstractOutput;
 
 class ShadowBuffer
 {
@@ -25,7 +25,7 @@ public:
     bool isComplete() const;
 
     void bind();
-    void render(DrmOutput *output);
+    void render(DrmAbstractOutput *output);
 
     int texture() const;
 

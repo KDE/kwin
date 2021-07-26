@@ -15,6 +15,8 @@ set(DRM_SOURCES
     dumb_swapchain.cpp
     shadowbuffer.cpp
     drm_pipeline.cpp
+    drm_abstract_output.cpp
+    drm_virtual_output.cpp
 )
 
 if (HAVE_GBM)
@@ -34,7 +36,7 @@ endif()
 
 add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})
 set_target_properties(KWinWaylandDrmBackend PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.waylandbackends/")
-target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm SceneQPainterBackend SceneOpenGLBackend)
+target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm SceneQPainterBackend SceneOpenGLBackend VsyncSupport)
 
 if (HAVE_GBM)
     target_link_libraries(KWinWaylandDrmBackend gbm::gbm)

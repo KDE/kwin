@@ -9,7 +9,7 @@
 #ifndef KWIN_DRM_OUTPUT_H
 #define KWIN_DRM_OUTPUT_H
 
-#include "abstract_wayland_output.h"
+#include "drm_abstract_output.h"
 #include "drm_pointer.h"
 #include "drm_object.h"
 #include "drm_object_plane.h"
@@ -34,44 +34,31 @@ class Cursor;
 class DrmGpu;
 class DrmPipeline;
 
-class KWIN_EXPORT DrmOutput : public AbstractWaylandOutput
+class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
     Q_OBJECT
 public:
     ///deletes the output, calling this whilst a page flip is pending will result in an error
     ~DrmOutput() override;
 
-    RenderLoop *renderLoop() const override;
+    bool initCursor(const QSize &cursorSize) override;
+    bool showCursor() override;
+    bool hideCursor() override;
+    bool updateCursor() override;
+    bool moveCursor() override;
 
-    bool showCursor();
-    bool hideCursor();
-    bool updateCursor();
-    bool moveCursor();
-    bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion);
+    bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) override;
     void pageFlipped();
-    bool isDpmsEnabled() const;
+    bool isDpmsEnabled() const override;
 
     DrmPipeline *pipeline() const;
-    DrmBuffer *currentBuffer() const;
-
-    bool initCursor(const QSize &cursorSize);
-
-    /**
-     * Drm planes might be capable of realizing the current output transform without usage
-     * of compositing. This is a getter to query the current state of that
-     *
-     * @return true if the hardware realizes the transform without further assistance
-     */
-    bool hardwareTransforms() const;
-
-    DrmGpu *gpu() {
-        return m_gpu;
-    }
+    GbmBuffer *currentBuffer() const override;
+    QSize sourceSize() const override;
 
 private:
     friend class DrmGpu;
     friend class DrmBackend;
-    DrmOutput(DrmBackend *backend, DrmGpu* gpu, DrmPipeline *pipeline);
+    DrmOutput(DrmGpu* gpu, DrmPipeline *pipeline);
 
     void initOutputDevice();
     bool isCurrentMode(const drmModeModeInfo *mode) const;
@@ -80,17 +67,14 @@ private:
     void setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
     void updateMode(int modeIndex) override;
-    void updateMode(uint32_t width, uint32_t height, uint32_t refreshRate);
+    void updateMode(uint32_t width, uint32_t height, uint32_t refreshRate) override;
     void updateTransform(Transform transform) override;
 
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
     void setOverscan(uint32_t overscan) override;
 
-    DrmBackend *m_backend;
-    DrmGpu *m_gpu;
     DrmPipeline *m_pipeline;
-    RenderLoop *m_renderLoop;
 
     QSharedPointer<DrmDumbBuffer> m_cursor;
     bool m_pageFlipPending = false;

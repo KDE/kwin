@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-class DrmOutput;
+class DrmAbstractOutput;
 class DrmDumbBuffer;
 class DumbSwapchain;
 class ShadowBuffer;
@@ -41,10 +41,10 @@ public:
         return m_outputs.count();
     }
 
-    bool addOutput(DrmOutput *output) override;
-    void removeOutput(DrmOutput *output) override;
+    bool addOutput(DrmAbstractOutput *output) override;
+    void removeOutput(DrmAbstractOutput *output) override;
 
-    QSharedPointer<DrmBuffer> renderTestFrame(DrmOutput *output) override;
+    QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output) override;
 
 protected:
     void cleanupSurfaces() override;

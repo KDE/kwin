@@ -26,7 +26,7 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu)
     }
     connect(m_gpu, &DrmGpu::outputEnabled, this, &DrmQPainterBackend::initOutput);
     connect(m_gpu, &DrmGpu::outputDisabled, this,
-        [this] (DrmOutput *o) {
+        [this] (DrmAbstractOutput *o) {
             auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
                 [o] (const Output &output) {
                     return output.output == o;
@@ -40,7 +40,7 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu)
     );
 }
 
-void DrmQPainterBackend::initOutput(DrmOutput *output)
+void DrmQPainterBackend::initOutput(DrmAbstractOutput *output)
 {
     Output o;
     o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize());
@@ -80,7 +80,7 @@ QRegion DrmQPainterBackend::beginFrame(int screenId)
 void DrmQPainterBackend::endFrame(int screenId, const QRegion &damage)
 {
     Output &rendererOutput = m_outputs[screenId];
-    DrmOutput *drmOutput = rendererOutput.output;
+    DrmAbstractOutput *drmOutput = rendererOutput.output;
 
     QSharedPointer<DrmDumbBuffer> back = rendererOutput.swapchain->currentBuffer();
     rendererOutput.swapchain->releaseBuffer(back);

@@ -325,23 +325,33 @@ void WaylandServer::initPlatform()
 void WaylandServer::handleOutputAdded(AbstractOutput *output)
 {
     auto o = static_cast<AbstractWaylandOutput *>(output);
-    m_waylandOutputDevices.insert(o, new WaylandOutputDevice(o));
+    if (!o->isPlaceholder()) {
+        m_waylandOutputDevices.insert(o, new WaylandOutputDevice(o));
+    }
 }
 
 void WaylandServer::handleOutputRemoved(AbstractOutput *output)
 {
-    delete m_waylandOutputDevices.take(static_cast<AbstractWaylandOutput *>(output));
+    auto o = static_cast<AbstractWaylandOutput *>(output);
+    if (!o->isPlaceholder()) {
+        delete m_waylandOutputDevices.take(o);
+    }
 }
 
 void WaylandServer::handleOutputEnabled(AbstractOutput *output)
 {
     auto o = static_cast<AbstractWaylandOutput *>(output);
-    m_waylandOutputs.insert(o, new WaylandOutput(o));
+    if (!o->isPlaceholder()) {
+        m_waylandOutputs.insert(o, new WaylandOutput(o));
+    }
 }
 
 void WaylandServer::handleOutputDisabled(AbstractOutput *output)
 {
-    delete m_waylandOutputs.take(static_cast<AbstractWaylandOutput *>(output));
+    auto o = static_cast<AbstractWaylandOutput *>(output);
+    if (!o->isPlaceholder()) {
+        delete m_waylandOutputs.take(o);
+    }
 }
 
 AbstractWaylandOutput *WaylandServer::findOutput(KWaylandServer::OutputInterface *outputIface) const

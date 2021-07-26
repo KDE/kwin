@@ -151,6 +151,8 @@ public:
     void setVrrPolicy(RenderLoop::VrrPolicy policy);
     RenderLoop::VrrPolicy vrrPolicy() const;
 
+    bool isPlaceholder() const;
+
 Q_SIGNALS:
     void modeChanged();
     void outputChange(const QRegion &damagedRegion);
@@ -195,6 +197,7 @@ protected:
     void setCapabilityInternal(Capability capability, bool on = true);
     void setSubPixelInternal(SubPixel subPixel);
     void setOverscanInternal(uint32_t overscan);
+    void setPlaceholder(bool isPlaceholder);
 
     QSize orientateSize(const QSize &size) const;
 
@@ -219,6 +222,7 @@ private:
     int m_recorders = 0;
     bool m_isEnabled = true;
     bool m_internal = false;
+    bool m_isPlaceholder = false;
     uint32_t m_overscan = 0;
 };
 

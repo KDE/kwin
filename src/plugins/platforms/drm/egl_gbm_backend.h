@@ -58,16 +58,16 @@ public:
         return m_outputs.count();
     }
 
-    bool addOutput(DrmOutput *output) override;
-    void removeOutput(DrmOutput *output) override;
-    bool swapBuffers(DrmOutput *output, const QRegion &dirty) override;
-    bool exportFramebuffer(DrmOutput *output, void *data, const QSize &size, uint32_t stride) override;
-    int exportFramebufferAsDmabuf(DrmOutput *output, uint32_t *format, uint32_t *stride) override;
-    QRegion beginFrameForSecondaryGpu(DrmOutput *output) override;
+    bool addOutput(DrmAbstractOutput *output) override;
+    void removeOutput(DrmAbstractOutput *output) override;
+    bool swapBuffers(DrmAbstractOutput *output, const QRegion &dirty) override;
+    bool exportFramebuffer(DrmAbstractOutput *output, void *data, const QSize &size, uint32_t stride) override;
+    int exportFramebufferAsDmabuf(DrmAbstractOutput *output, uint32_t *format, uint32_t *stride) override;
+    QRegion beginFrameForSecondaryGpu(DrmAbstractOutput *output) override;
 
     bool directScanoutAllowed(int screen) const override;
 
-    QSharedPointer<DrmBuffer> renderTestFrame(DrmOutput *output) override;
+    QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output) override;
 
 protected:
     void cleanupSurfaces() override;
@@ -83,7 +83,7 @@ private:
         DumbBuffer
     };
     struct Output {
-        DrmOutput *output = nullptr;
+        DrmAbstractOutput *output = nullptr;
         struct RenderData {
             QSharedPointer<ShadowBuffer> shadowBuffer;
             QSharedPointer<GbmSurface> gbmSurface;
@@ -98,8 +98,8 @@ private:
         KWaylandServer::SurfaceInterface *surfaceInterface = nullptr;
     };
 
-    bool doesRenderFit(DrmOutput *output, const Output::RenderData &render);
-    bool resetOutput(Output &output, DrmOutput *drmOutput);
+    bool doesRenderFit(DrmAbstractOutput *output, const Output::RenderData &render);
+    bool resetOutput(Output &output, DrmAbstractOutput *drmOutput);
 
     bool makeContextCurrent(const Output::RenderData &output) const;
     void setViewport(const Output &output) const;

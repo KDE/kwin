@@ -21,6 +21,10 @@
 #include "session.h"
 #include "udev.h"
 #include "wayland_server.h"
+#include "drm_gpu.h"
+#include "egl_multi_backend.h"
+#include "drm_pipeline.h"
+#include "drm_virtual_output.h"
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
 #include <gbm.h>
@@ -142,19 +146,23 @@ void DrmBackend::reactivate()
     m_active = true;
 
     for (const auto &output : qAsConst(m_outputs)) {
-        output->pipeline()->updateProperties();
-        if (output->isEnabled()) {
-            if (output->gpu()->atomicModeSetting() && !output->pipeline()->isConnected()) {
-                output->pipeline()->setActive(false);
+        if (auto drmOutput = qobject_cast<DrmOutput *>(output)) {
+            drmOutput->pipeline()->updateProperties();
+            if (drmOutput->isEnabled()) {
+                if (drmOutput->gpu()->atomicModeSetting() && !drmOutput->pipeline()->isConnected()) {
+                    drmOutput->pipeline()->setActive(false);
+                }
+                drmOutput->showCursor();
+            } else {
+                drmOutput->pipeline()->setActive(false);
             }
-            output->renderLoop()->uninhibit();
-            output->showCursor();
-        } else {
-            output->pipeline()->setActive(false);
         }
+        output->renderLoop()->uninhibit();
     }
     for (const auto &output : qAsConst(m_outputs)) {
-        output->pipeline()->setActive(output->isEnabled());
+        if (auto drmOutput = qobject_cast<DrmOutput *>(output)) {
+            drmOutput->pipeline()->setActive(output->isEnabled());
+        }
     }
 
     if (Compositor *compositor = Compositor::self()) {
@@ -173,9 +181,8 @@ void DrmBackend::deactivate()
         return;
     }
 
-    for (DrmOutput *output : qAsConst(m_outputs)) {
+    for (const auto &output : qAsConst(m_outputs)) {
         if (output->isEnabled()) {
-            output->hideCursor();
             output->renderLoop()->inhibit();
         }
     }
@@ -318,7 +325,7 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
     return gpu;
 }
 
-void DrmBackend::addOutput(DrmOutput *o)
+void DrmBackend::addOutput(DrmAbstractOutput *o)
 {
     m_outputs.append(o);
     m_enabledOutputs.append(o);
@@ -326,7 +333,7 @@ void DrmBackend::addOutput(DrmOutput *o)
     Q_EMIT outputEnabled(o);
 }
 
-void DrmBackend::removeOutput(DrmOutput *o)
+void DrmBackend::removeOutput(DrmAbstractOutput *o)
 {
     if (m_enabledOutputs.removeOne(o)) {
         Q_EMIT outputDisabled(o);
@@ -351,19 +358,38 @@ void DrmBackend::updateOutputs()
         }
     }
 
-    std::sort(m_outputs.begin(), m_outputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->pipeline()->connector()->id() < b->pipeline()->connector()->id(); });
+    if (m_outputs.isEmpty()) {
+        qCDebug(KWIN_DRM) << "adding placeholder output";
+        m_placeHolderOutput = primaryGpu()->createVirtualOutput();
+        // placeholder doesn't actually need to render anything
+        m_placeHolderOutput->renderLoop()->inhibit();
+    } else if (m_placeHolderOutput && m_outputs.count() > 1) {
+        qCDebug(KWIN_DRM) << "removing placeholder output";
+        primaryGpu()->removeVirtualOutput(m_placeHolderOutput);
+        m_placeHolderOutput = nullptr;
+    }
+
+    std::sort(m_outputs.begin(), m_outputs.end(), [] (DrmAbstractOutput *a, DrmAbstractOutput *b) {
+        auto da = qobject_cast<DrmOutput *>(a);
+        auto db = qobject_cast<DrmOutput *>(b);
+        if (da && !db) {
+            return true;
+        } else if (da && db) {
+            return da->pipeline()->connector()->id() < db->pipeline()->connector()->id();
+        } else {
+            return false;
+        }
+    });
     if (oldOutputs != m_outputs) {
         readOutputsConfiguration();
     }
-    if (!m_outputs.isEmpty()) {
-        Q_EMIT screensQueried();
-    }
+    Q_EMIT screensQueried();
 }
 
 namespace KWinKScreenIntegration
 {
     /// See KScreen::Output::hashMd5
-    QString outputHash(DrmOutput *output)
+    QString outputHash(DrmAbstractOutput *output)
     {
         QCryptographicHash hash(QCryptographicHash::Md5);
         if (!output->edid().isEmpty()) {
@@ -375,7 +401,7 @@ namespace KWinKScreenIntegration
     }
 
     /// See KScreen::Config::connectedOutputsHash in libkscreen
-    QString connectedOutputsHash(const QVector<DrmOutput*> &outputs)
+    QString connectedOutputsHash(const QVector<DrmAbstractOutput*> &outputs)
     {
         QStringList hashedOutputs;
         hashedOutputs.reserve(outputs.count());
@@ -387,7 +413,7 @@ namespace KWinKScreenIntegration
         return QString::fromLatin1(hash.toHex());
     }
 
-    QMap<DrmOutput*, QJsonObject> outputsConfig(const QVector<DrmOutput*> &outputs)
+    QMap<DrmAbstractOutput*, QJsonObject> outputsConfig(const QVector<DrmAbstractOutput*> &outputs)
     {
         const QString kscreenJsonPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/") % connectedOutputsHash(outputs));
         if (kscreenJsonPath.isEmpty()) {
@@ -407,7 +433,7 @@ namespace KWinKScreenIntegration
             return {};
         }
 
-        QMap<DrmOutput*, QJsonObject> ret;
+        QMap<DrmAbstractOutput*, QJsonObject> ret;
         const auto outputsJson = doc.array();
         for (const auto &outputJson : outputsJson) {
             const auto outputObject = outputJson.toObject();
@@ -479,7 +505,7 @@ void DrmBackend::readOutputsConfiguration()
     }
 }
 
-void DrmBackend::enableOutput(DrmOutput *output, bool enable)
+void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
 {
     if (enable) {
         Q_ASSERT(!m_enabledOutputs.contains(output));
@@ -547,7 +573,7 @@ void DrmBackend::updateCursor()
 
     bool success = true;
 
-    for (DrmOutput *output : qAsConst(m_outputs)) {
+    for (DrmAbstractOutput *output : qAsConst(m_outputs)) {
         success = output->updateCursor();
         if (!success) {
             qCDebug(KWIN_DRM) << "Failed to update cursor on output" << output->name();

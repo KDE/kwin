@@ -25,9 +25,10 @@ class Udev;
 class UdevMonitor;
 class UdevDevice;
 
-class DrmOutput;
+class DrmAbstractOutput;
 class Cursor;
 class DrmGpu;
+class DrmVirtualOutput;
 
 class KWIN_EXPORT DrmBackend : public Platform
 {
@@ -46,14 +47,14 @@ public:
 
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
-    QVector<DrmOutput*> drmOutputs() const {
+    QVector<DrmAbstractOutput*> drmOutputs() const {
         return m_outputs;
     }
-    QVector<DrmOutput*> drmEnabledOutputs() const {
+    QVector<DrmAbstractOutput*> drmEnabledOutputs() const {
         return m_enabledOutputs;
     }
 
-    void enableOutput(DrmOutput *output, bool enable);
+    void enableOutput(DrmAbstractOutput *output, bool enable);
 
     void createDpmsFilter();
     void checkOutputsAreOn();
@@ -81,8 +82,8 @@ protected:
 
 private:
     friend class DrmGpu;
-    void addOutput(DrmOutput* output);
-    void removeOutput(DrmOutput* output);
+    void addOutput(DrmAbstractOutput* output);
+    void removeOutput(DrmAbstractOutput* output);
     void activate(bool active);
     void reactivate();
     void deactivate();
@@ -97,10 +98,11 @@ private:
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;
     Session *m_session = nullptr;
-    // active output pipelines (planes + crtc + encoder + connector)
-    QVector<DrmOutput*> m_outputs;
-    // active and enabled pipelines (above + wl_output)
-    QVector<DrmOutput*> m_enabledOutputs;
+    // all outputs, enabled and disabled
+    QVector<DrmAbstractOutput*> m_outputs;
+    // only enabled outputs
+    QVector<DrmAbstractOutput*> m_enabledOutputs;
+    DrmVirtualOutput *m_placeHolderOutput = nullptr;
 
     bool m_active = false;
     QVector<DrmGpu*> m_gpus;

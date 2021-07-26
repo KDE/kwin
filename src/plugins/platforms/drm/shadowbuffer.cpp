@@ -67,7 +67,7 @@ ShadowBuffer::~ShadowBuffer()
     glDeleteFramebuffers(1, &m_framebuffer);
 }
 
-void ShadowBuffer::render(DrmOutput *output)
+void ShadowBuffer::render(DrmAbstractOutput *output)
 {
     const auto size = output->modeSize();
     glViewport(0, 0, size.width(), size.height());

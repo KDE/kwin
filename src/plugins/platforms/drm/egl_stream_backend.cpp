@@ -281,7 +281,7 @@ void EglStreamBackend::init()
     } else {
         // secondary NVidia GPUs only import dumb buffers
         const auto outputs = m_gpu->outputs();
-        for (DrmOutput *drmOutput : outputs) {
+        for (DrmAbstractOutput *drmOutput : outputs) {
             addOutput(drmOutput);
         }
     }
@@ -296,7 +296,7 @@ bool EglStreamBackend::initRenderingContext()
     }
 
     const auto outputs = m_gpu->outputs();
-    for (DrmOutput *drmOutput : outputs) {
+    for (DrmAbstractOutput *drmOutput : outputs) {
         addOutput(drmOutput);
     }
     return !m_outputs.isEmpty() && makeContextCurrent(m_outputs.first());
@@ -305,7 +305,7 @@ bool EglStreamBackend::initRenderingContext()
 bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
 {
     o.output = drmOutput;
-    QSize sourceSize = drmOutput->pipeline()->sourceSize();
+    QSize sourceSize = drmOutput->sourceSize();
 
     if (isPrimary()) {
         // dumb buffer used for modesetting
@@ -366,7 +366,7 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
         o.eglStream = stream;
         o.eglSurface = eglSurface;
 
-        if (!drmOutput->hardwareTransforms()) {
+        if (sourceSize != drmOutput->pixelSize()) {
             makeContextCurrent(o);
             o.shadowBuffer = QSharedPointer<ShadowBuffer>::create(o.output->pixelSize());
             if (!o.shadowBuffer->isComplete()) {
@@ -383,35 +383,40 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
     return true;
 }
 
-bool EglStreamBackend::addOutput(DrmOutput *drmOutput)
+bool EglStreamBackend::addOutput(DrmAbstractOutput *output)
 {
-    Q_ASSERT(drmOutput->gpu() == m_gpu);
-    Output o;
-    if (!resetOutput(o, drmOutput)) {
-        return false;
-    }
-    if (!isPrimary() && !renderingBackend()->addOutput(drmOutput)) {
-        return false;
-    }
-
-    connect(drmOutput, &DrmOutput::modeChanged, this,
-        [drmOutput, this] {
-            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                [drmOutput] (const auto &o) {
-                    return o.output == drmOutput;
-                }
-            );
-            if (it == m_outputs.end()) {
-                return;
-            }
-            resetOutput(*it, drmOutput);
+    Q_ASSERT(output->gpu() == m_gpu);
+    DrmOutput *drmOutput = qobject_cast<DrmOutput *>(output);
+    if (drmOutput) {
+        Output o;
+        if (!resetOutput(o, drmOutput)) {
+            return false;
         }
-    );
-    m_outputs << o;
-    return true;
+        if (!isPrimary() && !renderingBackend()->addOutput(drmOutput)) {
+            return false;
+        }
+
+        connect(drmOutput, &DrmOutput::modeChanged, this,
+            [drmOutput, this] {
+                auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+                    [drmOutput] (const auto &o) {
+                        return o.output == drmOutput;
+                    }
+                );
+                if (it == m_outputs.end()) {
+                    return;
+                }
+                resetOutput(*it, drmOutput);
+            }
+        );
+        m_outputs << o;
+        return true;
+    } else {
+        return false;
+    }
 }
 
-void EglStreamBackend::removeOutput(DrmOutput *drmOutput)
+void EglStreamBackend::removeOutput(DrmAbstractOutput *drmOutput)
 {
     Q_ASSERT(drmOutput->gpu() == m_gpu);
     auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
@@ -551,7 +556,7 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
     }
 }
 
-QSharedPointer<DrmBuffer> EglStreamBackend::renderTestFrame(DrmOutput *drmOutput)
+QSharedPointer<DrmBuffer> EglStreamBackend::renderTestFrame(DrmAbstractOutput *drmOutput)
 {
     auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
         [drmOutput] (const Output &o) {
@@ -562,7 +567,7 @@ QSharedPointer<DrmBuffer> EglStreamBackend::renderTestFrame(DrmOutput *drmOutput
         return nullptr;
     }
     auto buffer = (*it).dumbSwapchain ? (*it).dumbSwapchain->currentBuffer() : (*it).buffer;
-    auto size = drmOutput->pipeline()->sourceSize();
+    auto size = drmOutput->sourceSize();
     if (buffer->size() == size) {
         return buffer;
     } else {

@@ -19,6 +19,7 @@
 #include "renderloop_p.h"
 #include "main.h"
 #include "drm_pipeline.h"
+#include "drm_virtual_output.h"
 
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
@@ -91,7 +92,11 @@ DrmGpu::~DrmGpu()
     waitIdle();
     const auto outputs = m_outputs;
     for (const auto &output : outputs) {
-        removeOutput(output);
+        if (auto drmOutput = qobject_cast<DrmOutput *>(output)) {
+            removeOutput(drmOutput);
+        } else {
+            removeVirtualOutput(dynamic_cast<DrmVirtualOutput*>(output));
+        }
     }
     if (m_eglDisplay != EGL_NO_DISPLAY) {
         eglTerminate(m_eglDisplay);
@@ -219,14 +224,14 @@ bool DrmGpu::updateOutputs()
 
     // check for outputs which got removed
     QVector<DrmOutput*> removedOutputs;
-    auto it = m_outputs.begin();
-    while (it != m_outputs.end()) {
+    auto it = m_drmOutputs.begin();
+    while (it != m_drmOutputs.end()) {
         if (connectedOutputs.contains(*it)) {
             it++;
             continue;
         }
         DrmOutput *removed = *it;
-        it = m_outputs.erase(it);
+        it = m_drmOutputs.erase(it);
         removedOutputs.append(removed);
     }
 
@@ -272,7 +277,7 @@ bool DrmGpu::updateOutputs()
                 }
 
                 auto pipeline = new DrmPipeline(this, con, crtc, primary);
-                DrmOutput *output = new DrmOutput(m_backend, this, pipeline);
+                DrmOutput *output = new DrmOutput(this, pipeline);
 
                 // outputEnabled only adds it to the render backend but not to the platform
                 // this is necessary for accurate pipeline tests
@@ -296,6 +301,7 @@ bool DrmGpu::updateOutputs()
                 qCDebug(KWIN_DRM, "For new output %s on GPU %s use mode %dx%d@%d", qPrintable(output->name()), qPrintable(m_devNode), output->modeSize().width(), output->modeSize().height(), output->refreshRate());
 
                 connectedOutputs << output;
+                m_outputs << output;
                 outputDone = true;
                 break;
             }
@@ -304,8 +310,7 @@ bool DrmGpu::updateOutputs()
             }
         }
     }
-    std::sort(connectedOutputs.begin(), connectedOutputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_pipeline->connector()->id() < b->m_pipeline->connector()->id(); });
-    m_outputs = connectedOutputs;
+    m_drmOutputs = connectedOutputs;
 
     for(DrmOutput *removedOutput : removedOutputs) {
         removeOutput(removedOutput);
@@ -318,10 +323,10 @@ bool DrmGpu::updateOutputs()
 
 DrmOutput *DrmGpu::findOutput(quint32 connector)
 {
-    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [connector] (DrmOutput *o) {
+    auto it = std::find_if(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [connector] (DrmOutput *o) {
         return o->m_pipeline->connector()->id() == connector;
     });
-    if (it != m_outputs.constEnd()) {
+    if (it != m_drmOutputs.constEnd()) {
         return *it;
     }
     return nullptr;
@@ -345,7 +350,7 @@ void DrmGpu::waitIdle()
 {
     m_socketNotifier->setEnabled(false);
     while (true) {
-        const bool idle = std::all_of(m_outputs.constBegin(), m_outputs.constEnd(), [](DrmOutput *output){
+        const bool idle = std::all_of(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [](DrmOutput *output){
             return !output->m_pageFlipPending;
         });
         if (idle) {
@@ -397,7 +402,6 @@ static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsign
 {
     Q_UNUSED(fd)
     Q_UNUSED(frame)
-
     auto backend = dynamic_cast<DrmBackend*>(kwinApp()->platform());
     if (!backend) {
         return;
@@ -444,6 +448,7 @@ void DrmGpu::dispatchEvents()
 
 void DrmGpu::removeOutput(DrmOutput *output)
 {
+    m_drmOutputs.removeOne(output);
     m_outputs.removeOne(output);
     Q_EMIT outputDisabled(output);
     Q_EMIT outputRemoved(output);
@@ -474,6 +479,25 @@ DrmBackend *DrmGpu::platform() const {
 const QVector<DrmPipeline*> DrmGpu::pipelines() const
 {
     return m_pipelines;
+}
+
+DrmVirtualOutput *DrmGpu::createVirtualOutput()
+{
+    auto output = new DrmVirtualOutput(this);
+    output->setPlaceholder(true);
+    m_outputs << output;
+    Q_EMIT outputEnabled(output);
+    Q_EMIT outputAdded(output);
+    return output;
+}
+
+void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
+{
+    if (m_outputs.removeOne(output)) {
+        Q_EMIT outputDisabled(output);
+        Q_EMIT outputRemoved(output);
+        delete output;
+    }
 }
 
 }

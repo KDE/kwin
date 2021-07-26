@@ -386,4 +386,14 @@ RenderLoop::VrrPolicy AbstractWaylandOutput::vrrPolicy() const
     return renderLoop()->vrrPolicy();
 }
 
+bool AbstractWaylandOutput::isPlaceholder() const
+{
+    return m_isPlaceholder;
+}
+
+void AbstractWaylandOutput::setPlaceholder(bool isPlaceholder)
+{
+    m_isPlaceholder = isPlaceholder;
+}
+
 }

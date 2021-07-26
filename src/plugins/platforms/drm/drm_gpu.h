@@ -31,6 +31,8 @@ class DrmConnector;
 class DrmBackend;
 class AbstractEglDrmBackend;
 class DrmPipeline;
+class DrmAbstractOutput;
+class DrmVirtualOutput;
 
 class DrmGpu : public QObject
 {
@@ -40,7 +42,7 @@ public:
     ~DrmGpu();
 
     // getters
-    QVector<DrmOutput*> outputs() const {
+    QVector<DrmAbstractOutput*> outputs() const {
         return m_outputs;
     }
 
@@ -97,11 +99,14 @@ public:
     DrmBackend *platform() const;
     const QVector<DrmPipeline*> pipelines() const;
 
+    DrmVirtualOutput *createVirtualOutput();
+    void removeVirtualOutput(DrmVirtualOutput *output);
+
 Q_SIGNALS:
-    void outputAdded(DrmOutput *output);
-    void outputRemoved(DrmOutput *output);
-    void outputEnabled(DrmOutput *output);
-    void outputDisabled(DrmOutput *output);
+    void outputAdded(DrmAbstractOutput *output);
+    void outputRemoved(DrmAbstractOutput *output);
+    void outputEnabled(DrmAbstractOutput *output);
+    void outputDisabled(DrmAbstractOutput *output);
 
 protected:
     friend class DrmBackend;
@@ -138,7 +143,9 @@ private:
     QVector<DrmConnector*> m_connectors;
     // pipelines
     QVector<DrmPipeline*> m_pipelines;
-    QVector<DrmOutput*> m_outputs;
+    QVector<DrmOutput*> m_drmOutputs;
+    // includes virtual outputs
+    QVector<DrmAbstractOutput*> m_outputs;
 };
 
 }

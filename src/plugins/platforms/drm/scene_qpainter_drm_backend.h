@@ -22,7 +22,7 @@ namespace KWin
 
 class DrmBackend;
 class DrmDumbBuffer;
-class DrmOutput;
+class DrmAbstractOutput;
 class DrmGpu;
 
 class DrmQPainterBackend : public QPainterBackend
@@ -36,9 +36,9 @@ public:
     void endFrame(int screenId, const QRegion &damage) override;
 
 private:
-    void initOutput(DrmOutput *output);
+    void initOutput(DrmAbstractOutput *output);
     struct Output {
-        DrmOutput *output;
+        DrmAbstractOutput *output;
         QSharedPointer<DumbSwapchain> swapchain;
         DamageJournal damageJournal;
     };

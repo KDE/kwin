@@ -12,6 +12,9 @@
 #include "drm_object_connector.h"
 #include "drm_gpu.h"
 #include "drm_pipeline.h"
+#if HAVE_GBM
+#include "drm_buffer_gbm.h"
+#endif
 
 #include "composite.h"
 #include "cursor.h"
@@ -34,12 +37,9 @@
 namespace KWin
 {
 
-DrmOutput::DrmOutput(DrmBackend *backend, DrmGpu *gpu, DrmPipeline *pipeline)
-    : AbstractWaylandOutput(backend)
-    , m_backend(backend)
-    , m_gpu(gpu)
+DrmOutput::DrmOutput(DrmGpu *gpu, DrmPipeline *pipeline)
+    : DrmAbstractOutput(gpu)
     , m_pipeline(pipeline)
-    , m_renderLoop(new RenderLoop(this))
 {
     m_pipeline->setUserData(this);
     auto conn = m_pipeline->connector();
@@ -70,11 +70,6 @@ DrmOutput::~DrmOutput()
     if (m_pageFlipPending) {
         pageFlipped();
     }
-}
-
-RenderLoop *DrmOutput::renderLoop() const
-{
-    return m_renderLoop;
 }
 
 bool DrmOutput::initCursor(const QSize &cursorSize)
@@ -214,7 +209,7 @@ void DrmOutput::initOutputDevice()
 void DrmOutput::updateEnablement(bool enable)
 {
     if (m_pipeline->setActive(enable)) {
-        m_backend->enableOutput(this, enable);
+        m_gpu->platform()->enableOutput(this, enable);
     } else {
         qCCritical(KWIN_DRM) << "failed to update enablement to" << enable;
     }
@@ -228,7 +223,7 @@ void DrmOutput::setDpmsMode(DpmsMode mode)
             m_turnOffTimer.start();
         }
         if (isEnabled()) {
-            m_backend->createDpmsFilter();
+            m_gpu->platform()->createDpmsFilter();
         }
     } else {
         m_turnOffTimer.stop();
@@ -255,13 +250,13 @@ void DrmOutput::setDrmDpmsMode(DpmsMode mode)
         setDpmsModeInternal(mode);
         if (active) {
             m_renderLoop->uninhibit();
-            m_backend->checkOutputsAreOn();
+            m_gpu->platform()->checkOutputsAreOn();
             if (Compositor *compositor = Compositor::self()) {
                 compositor->addRepaintFull();
             }
         } else {
             m_renderLoop->inhibit();
-            m_backend->createDpmsFilter();
+            m_gpu->platform()->createDpmsFilter();
         }
     } else {
         qCCritical(KWIN_DRM) << "failed to set active to" << active;
@@ -293,11 +288,6 @@ DrmPlane::Transformations outputToPlaneTransform(DrmOutput::Transform transform)
     }
 }
 
-bool DrmOutput::hardwareTransforms() const
-{
-    return m_pipeline->transformation() == outputToPlaneTransform(transform());
-}
-
 void DrmOutput::updateTransform(Transform transform)
 {
     const auto planeTransform = outputToPlaneTransform(transform);
@@ -309,7 +299,7 @@ void DrmOutput::updateTransform(Transform transform)
     }
 
     // show cursor only if is enabled, i.e if pointer device is present
-    if (!m_backend->isCursorHidden() && !m_backend->usesSoftwareCursor()) {
+    if (!m_gpu->platform()->isCursorHidden() && !m_gpu->platform()->usesSoftwareCursor()) {
         // the cursor might need to get rotated
         showCursor();
         updateCursor();
@@ -394,14 +384,23 @@ DrmPipeline *DrmOutput::pipeline() const
     return m_pipeline;
 }
 
-DrmBuffer *DrmOutput::currentBuffer() const
+GbmBuffer *DrmOutput::currentBuffer() const
 {
-    return m_pipeline->currentBuffer();
+#if HAVE_GBM
+    return dynamic_cast<GbmBuffer*>(m_pipeline->currentBuffer());
+#else
+    return nullptr;
+#endif
 }
 
 bool DrmOutput::isDpmsEnabled() const
 {
     return m_pipeline->isActive();
+}
+
+QSize DrmOutput::sourceSize() const
+{
+    return m_pipeline->sourceSize();
 }
 
 }
