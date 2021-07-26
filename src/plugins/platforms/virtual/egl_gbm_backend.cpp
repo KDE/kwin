@@ -215,4 +215,10 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion, const 
     eglSwapBuffers(eglDisplay(), surface());
 }
 
+std::chrono::nanoseconds EglGbmBackend::renderTime(AbstractOutput *output)
+{
+    Q_UNUSED(output)
+    return std::chrono::nanoseconds::zero();
+}
+
 } // namespace

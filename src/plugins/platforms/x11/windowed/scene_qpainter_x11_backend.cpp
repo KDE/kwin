@@ -51,7 +51,7 @@ QImage *X11WindowedQPainterBackend::bufferForScreen(int screen)
 
 QRegion X11WindowedQPainterBackend::beginFrame(int screenId)
 {
-    Q_UNUSED(screenId)
+    m_outputs[screenId]->profiler.begin();
     return screens()->geometry(screenId);
 }
 
@@ -77,6 +77,15 @@ void X11WindowedQPainterBackend::endFrame(int screenId, const QRegion &damage)
     xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, rendererOutput->window,
                   m_gc, buffer.width(), buffer.height(), 0, 0, 0, 24,
                   buffer.sizeInBytes(), buffer.constBits());
+
+    rendererOutput->profiler.end();
+}
+
+std::chrono::nanoseconds X11WindowedQPainterBackend::renderTime(AbstractOutput *output)
+{
+    const int screenId = kwinApp()->platform()->enabledOutputs().indexOf(output);
+    Q_ASSERT(screenId != -1);
+    return m_outputs[screenId]->profiler.result();
 }
 
 }

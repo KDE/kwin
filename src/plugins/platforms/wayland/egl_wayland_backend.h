@@ -10,6 +10,7 @@
 #ifndef KWIN_EGL_WAYLAND_BACKEND_H
 #define KWIN_EGL_WAYLAND_BACKEND_H
 #include "abstract_egl_backend.h"
+#include "openglframeprofiler.h"
 #include "utils.h"
 // wayland
 #include <wayland-egl.h>
@@ -37,10 +38,14 @@ public:
     bool init(EglWaylandBackend *backend);
     void updateSize();
 
+    OpenGLFrameProfiler *profiler() const;
+    void setProfiler(OpenGLFrameProfiler *profiler);
+
 private:
     void resetBufferAge();
 
     WaylandOutput *m_waylandOutput;
+    QScopedPointer<OpenGLFrameProfiler> m_profiler;
     wl_egl_window *m_overlay = nullptr;
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     int m_bufferAge = 0;
@@ -80,6 +85,7 @@ public:
     }
 
     void aboutToStartPainting(int screenId, const QRegion &damage) override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output);
 
 private:
     bool initializeEgl();

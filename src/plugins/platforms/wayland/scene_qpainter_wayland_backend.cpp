@@ -40,6 +40,7 @@ WaylandQPainterBufferSlot::~WaylandQPainterBufferSlot()
 WaylandQPainterOutput::WaylandQPainterOutput(WaylandOutput *output, QObject *parent)
     : QObject(parent)
     , m_waylandOutput(output)
+    , m_profiler(new QPainterFrameProfiler)
 {
 }
 
@@ -47,6 +48,16 @@ WaylandQPainterOutput::~WaylandQPainterOutput()
 {
     qDeleteAll(m_slots);
     m_slots.clear();
+}
+
+WaylandOutput *WaylandQPainterOutput::platformOutput() const
+{
+    return m_waylandOutput;
+}
+
+QPainterFrameProfiler *WaylandQPainterOutput::profiler() const
+{
+    return m_profiler.data();
 }
 
 bool WaylandQPainterOutput::init(KWayland::Client::ShmPool *pool)
@@ -192,6 +203,16 @@ QRegion WaylandQPainterBackend::beginFrame(int screenId)
 
     WaylandQPainterBufferSlot *slot = rendererOutput->acquire();
     return rendererOutput->accumulateDamage(slot->age);
+}
+
+std::chrono::nanoseconds WaylandQPainterBackend::renderTime(AbstractOutput *output)
+{
+    for (WaylandQPainterOutput *rendererOutput : qAsConst(m_outputs)) {
+        if (rendererOutput->platformOutput() == output) {
+            return rendererOutput->profiler()->result();
+        }
+    }
+    return std::chrono::nanoseconds::zero();
 }
 
 }

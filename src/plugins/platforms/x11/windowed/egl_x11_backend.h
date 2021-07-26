@@ -31,6 +31,7 @@ public:
     void init() override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
 protected:
     void cleanupSurfaces() override;

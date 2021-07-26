@@ -31,6 +31,7 @@ public:
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void init() override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
 private:
     bool initializeEgl();

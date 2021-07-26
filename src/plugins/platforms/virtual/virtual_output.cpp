@@ -70,7 +70,7 @@ void VirtualOutput::setGeometry(const QRect &geo)
 void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    renderLoopPrivate->notifyFrameCompleted(timestamp, std::chrono::nanoseconds::zero());
 }
 
 void VirtualOutput::updateEnablement(bool enable)

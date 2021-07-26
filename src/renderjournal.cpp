@@ -13,14 +13,8 @@ RenderJournal::RenderJournal()
 {
 }
 
-void RenderJournal::beginFrame()
+void RenderJournal::add(std::chrono::nanoseconds duration)
 {
-    m_timer.start();
-}
-
-void RenderJournal::endFrame()
-{
-    std::chrono::nanoseconds duration(m_timer.nsecsElapsed());
     if (m_log.count() >= m_size) {
         m_log.dequeue();
     }

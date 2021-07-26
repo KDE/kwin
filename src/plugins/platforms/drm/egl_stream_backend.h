@@ -10,6 +10,8 @@
 #define KWIN_EGL_STREAM_BACKEND_H
 #include "abstract_egl_drm_backend.h"
 #include "basiceglsurfacetexture_wayland.h"
+#include "openglframeprofiler.h"
+
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/eglstream_controller_interface.h>
 #include <wayland-server-core.h>
@@ -36,6 +38,7 @@ public:
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
     int screenCount() const override {
         return m_outputs.count();
@@ -70,6 +73,7 @@ private:
         EGLSurface eglSurface = EGL_NO_SURFACE;
         EGLStreamKHR eglStream = EGL_NO_STREAM_KHR;
         QSharedPointer<ShadowBuffer> shadowBuffer;
+        QSharedPointer<OpenGLFrameProfiler> profiler;
 
         // for operation as secondary GPU
         QSharedPointer<DumbSwapchain> dumbSwapchain;

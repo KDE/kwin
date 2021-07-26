@@ -7,6 +7,7 @@
 #pragma once
 
 #include "eglonxbackend.h"
+#include "openglframeprofiler.h"
 #include "platformopenglsurfacetexture_x11.h"
 
 #include <kwingltexture.h>
@@ -32,6 +33,7 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *texture) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
 private:
     void screenGeometryChanged();
@@ -40,6 +42,7 @@ private:
 
     X11StandalonePlatform *m_backend;
     SoftwareVsyncMonitor *m_vsyncMonitor;
+    QScopedPointer<OpenGLFrameProfiler> m_profiler;
     DamageJournal m_damageJournal;
     int m_bufferAge = 0;
 };

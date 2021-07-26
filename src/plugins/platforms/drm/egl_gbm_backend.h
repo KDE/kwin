@@ -9,6 +9,7 @@
 #ifndef KWIN_EGL_GBM_BACKEND_H
 #define KWIN_EGL_GBM_BACKEND_H
 #include "abstract_egl_drm_backend.h"
+#include "openglframeprofiler.h"
 #include "utils.h"
 
 #include <kwinglutils.h>
@@ -66,6 +67,7 @@ public:
     QRegion beginFrameForSecondaryGpu(DrmAbstractOutput *output) override;
 
     bool directScanoutAllowed(int screen) const override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
     QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output) override;
 
@@ -87,6 +89,7 @@ private:
         struct RenderData {
             QSharedPointer<ShadowBuffer> shadowBuffer;
             QSharedPointer<GbmSurface> gbmSurface;
+            QSharedPointer<OpenGLFrameProfiler> profiler;
             int bufferAge = 0;
             DamageJournal damageJournal;
 
@@ -100,12 +103,13 @@ private:
 
     bool doesRenderFit(DrmAbstractOutput *output, const Output::RenderData &render);
     bool resetOutput(Output &output, DrmAbstractOutput *drmOutput);
+    const Output *findOutput(AbstractOutput *output) const;
 
     bool makeContextCurrent(const Output::RenderData &output) const;
     void setViewport(const Output &output) const;
 
-    void renderFramebufferToSurface(Output &output);
     QRegion prepareRenderingForOutput(Output &output);
+    void finishRenderingForOutput(Output &output);
     QSharedPointer<DrmBuffer> importFramebuffer(Output &output, const QRegion &dirty) const;
     QSharedPointer<DrmBuffer> endFrameWithBuffer(int screenId, const QRegion &dirty);
     void updateBufferAge(Output &output, const QRegion &dirty);

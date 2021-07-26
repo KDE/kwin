@@ -38,6 +38,8 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu)
             m_outputs.erase(it);
         }
     );
+
+    m_gpu->setRenderer(this);
 }
 
 void DrmQPainterBackend::initOutput(DrmAbstractOutput *output)
@@ -70,6 +72,7 @@ QImage *DrmQPainterBackend::bufferForScreen(int screenId)
 QRegion DrmQPainterBackend::beginFrame(int screenId)
 {
     Output *rendererOutput = &m_outputs[screenId];
+    rendererOutput->profiler.begin();
 
     int bufferAge;
     rendererOutput->swapchain->acquireBuffer(&bufferAge);
@@ -91,6 +94,14 @@ void DrmQPainterBackend::endFrame(int screenId, const QRegion &damage)
     }
 
     rendererOutput.damageJournal.add(damage);
+    rendererOutput.profiler.end();
+}
+
+std::chrono::nanoseconds DrmQPainterBackend::renderTime(AbstractOutput *output)
+{
+    const int screenId = m_backend->enabledOutputs().indexOf(output);
+    Q_ASSERT(screenId != -1);
+    return m_outputs[screenId].profiler.result();
 }
 
 }

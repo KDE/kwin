@@ -29,6 +29,7 @@ public:
     QImage *bufferForScreen(int screenId) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage) override;
+    std::chrono::nanoseconds renderTime(AbstractOutput *output) override;
 
 private:
     void createOutputs();

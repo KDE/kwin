@@ -33,6 +33,7 @@ class AbstractEglDrmBackend;
 class DrmPipeline;
 class DrmAbstractOutput;
 class DrmVirtualOutput;
+class Renderer;
 
 class DrmGpu : public QObject
 {
@@ -76,6 +77,9 @@ public:
 
     AbstractEglDrmBackend *eglBackend() const;
     void setEglBackend(AbstractEglDrmBackend *eglBackend);
+
+    Renderer *renderer() const;
+    void setRenderer(Renderer *renderer);
 
     void setGbmDevice(gbm_device *d) {
         m_gbmDevice = d;
@@ -121,6 +125,7 @@ private:
 
     DrmBackend* const m_backend;
     QPointer<AbstractEglDrmBackend> m_eglBackend;
+    QPointer<Renderer> m_renderer;
 
     const QString m_devNode;
     QSize m_cursorSize;

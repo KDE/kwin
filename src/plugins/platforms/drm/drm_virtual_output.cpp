@@ -59,7 +59,7 @@ void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
     if (m_pageFlipPending) {
         RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
-        renderLoopPrivate->notifyFrameCompleted(timestamp);
+        renderLoopPrivate->notifyFrameCompleted(timestamp, std::chrono::nanoseconds::zero());
     }
 }
 

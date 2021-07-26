@@ -3,6 +3,7 @@ set(SCENE_QPAINTER_BACKEND_SRCS
     platformqpaintersurfacetexture_internal.cpp
     platformqpaintersurfacetexture_wayland.cpp
     qpainterbackend.cpp
+    qpainterframeprofiler.cpp
 )
 
 include(ECMQtDeclareLoggingCategory)

@@ -8,7 +8,10 @@
 */
 #include "x11windowed_output.h"
 #include <config-kwin.h>
+#include "composite.h"
+#include "renderer.h"
 #include "renderloop_p.h"
+#include "scene.h"
 #include "softwarevsyncmonitor.h"
 #include "x11windowed_backend.h"
 
@@ -176,8 +179,10 @@ QPointF X11WindowedOutput::mapFromGlobal(const QPointF &pos) const
 
 void X11WindowedOutput::vblank(std::chrono::nanoseconds timestamp)
 {
+    Renderer *renderer = Compositor::self()->scene()->renderer();
+
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    renderLoopPrivate->notifyFrameCompleted(timestamp, renderer->renderTime(this));
 }
 
 }

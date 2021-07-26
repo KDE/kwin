@@ -12,7 +12,9 @@
 #include "logging.h"
 #include "main.h"
 #include "platform.h"
+#include "renderer.h"
 #include "renderloop_p.h"
+#include "scene.h"
 #include "scene_qpainter_fb_backend.h"
 #include "session.h"
 #include "softwarevsyncmonitor.h"
@@ -70,8 +72,10 @@ void FramebufferOutput::init(const QSize &pixelSize, const QSize &physicalSize)
 
 void FramebufferOutput::vblank(std::chrono::nanoseconds timestamp)
 {
+    Renderer *renderer = Compositor::self()->scene()->renderer();
+
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    renderLoopPrivate->notifyFrameCompleted(timestamp, renderer->renderTime(this));
 }
 
 FramebufferBackend::FramebufferBackend(QObject *parent)

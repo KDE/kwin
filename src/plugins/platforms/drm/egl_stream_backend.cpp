@@ -103,6 +103,7 @@ void EglStreamBackend::cleanupOutput(Output &o)
     if (o.eglStream != EGL_NO_STREAM_KHR) {
         pEglDestroyStreamKHR(eglDisplay(), o.eglStream);
     }
+    o.profiler = nullptr;
     o.shadowBuffer = nullptr;
 }
 
@@ -366,8 +367,10 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
         o.eglStream = stream;
         o.eglSurface = eglSurface;
 
+        makeContextCurrent(o);
+        o.profiler.reset(new OpenGLFrameProfiler);
+
         if (sourceSize != drmOutput->pixelSize()) {
-            makeContextCurrent(o);
             o.shadowBuffer = QSharedPointer<ShadowBuffer>::create(o.output->pixelSize());
             if (!o.shadowBuffer->isComplete()) {
                 cleanupOutput(o);
@@ -499,6 +502,7 @@ QRegion EglStreamBackend::beginFrame(int screenId)
     const Output &o = m_outputs.at(screenId);
     if (isPrimary()) {
         makeContextCurrent(o);
+        o.profiler->begin();
         if (o.shadowBuffer) {
             o.shadowBuffer->bind();
         }
@@ -523,6 +527,7 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
         if (renderOutput.shadowBuffer) {
             renderOutput.shadowBuffer->render(renderOutput.output);
         }
+        renderOutput.profiler->end();
         if (!eglSwapBuffers(eglDisplay(), renderOutput.eglSurface)) {
             qCCritical(KWIN_DRM) << "eglSwapBuffers() failed:" << getEglErrorString();
             frameFailed = true;
@@ -573,6 +578,21 @@ QSharedPointer<DrmBuffer> EglStreamBackend::renderTestFrame(DrmAbstractOutput *d
     } else {
         return QSharedPointer<DrmDumbBuffer>::create(m_gpu, size);
     }
+}
+
+std::chrono::nanoseconds EglStreamBackend::renderTime(AbstractOutput *output)
+{
+    if (!isPrimary()) {
+        return renderingBackend()->renderTime(output);
+    }
+
+    for (const Output &rendererData : qAsConst(m_outputs)) {
+        if (rendererData.output == output) {
+            makeContextCurrent(rendererData);
+            return rendererData.profiler->result();
+        }
+    }
+    return std::chrono::nanoseconds::zero();
 }
 
 /************************************************

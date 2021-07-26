@@ -59,4 +59,10 @@ void VirtualQPainterBackend::endFrame(int screenId, const QRegion &damage)
     }
 }
 
+std::chrono::nanoseconds VirtualQPainterBackend::renderTime(AbstractOutput *output)
+{
+    Q_UNUSED(output)
+    return std::chrono::nanoseconds::zero();
+}
+
 }
