@@ -232,7 +232,11 @@ void DrmOutput::setDpmsMode(DpmsMode mode)
     } else {
         m_turnOffTimer.stop();
         setDrmDpmsMode(mode);
-        Q_EMIT wakeUp();
+
+        if (mode != dpmsMode()) {
+            setDpmsModeInternal(mode);
+            Q_EMIT wakeUp();
+        }
     }
 }
 

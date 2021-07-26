@@ -68,7 +68,8 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     mode.size = pixelSize;
     mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;
-    initialize("model_TODO", "manufacturer_TODO", "eisa_TODO", "serial_TODO", pixelSize, { mode }, {});
+    static uint i = 0;
+    initialize(QStringLiteral("model_%1").arg(i++), "manufacturer_TODO", "eisa_TODO", "serial_TODO", pixelSize, { mode }, {});
     setGeometry(logicalPosition, pixelSize);
     setScale(backend()->initialOutputScale());
 }
@@ -97,8 +98,11 @@ void WaylandOutput::setDpmsMode(KWin::AbstractWaylandOutput::DpmsMode mode)
     } else {
         m_turnOffTimer.stop();
         m_backend->clearDpmsFilter();
-        setDpmsModeInternal(mode);
-        Q_EMIT wakeUp();
+
+        if (mode != dpmsMode()) {
+            setDpmsModeInternal(mode);
+            Q_EMIT wakeUp();
+        }
     }
 }
 

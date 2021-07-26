@@ -38,7 +38,6 @@ private Q_SLOTS:
     void propertyNotify(KWin::EffectWindow *window, long atom);
 
 private:
-    void switchState();
     enum FadeOutState {
         StateNormal,
         StateFadingOut,
@@ -46,12 +45,20 @@ private:
         StateFadingIn,
         LastState
     };
-    void setState(FadeOutState state);
-    void addScreen(EffectScreen *screen);
+    struct ScreenState {
+        TimeLine m_timeLine;
+        std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
+        FadeOutState m_state = StateNormal;
+    };
 
-    TimeLine m_timeLine;
-    std::chrono::milliseconds m_lastPresentTime;
-    FadeOutState m_state;
+    void switchState(ScreenState &state);
+    void setState(ScreenState &state, FadeOutState newState);
+    void addScreen(EffectScreen *screen);
+    bool isScreenActive(EffectScreen *screen) const;
+
+    QHash<EffectScreen *, ScreenState> m_waylandStates;
+    ScreenState m_xcbState;
+    EffectScreen *m_currentScreen = nullptr;
     xcb_atom_t m_atom;
 };
 

@@ -164,9 +164,11 @@ void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
 
     QRegion region = damage;
 
+    auto screen = effects->findScreen(painted_screen);
     ScreenPrePaintData pdata;
     pdata.mask = (damage == displayRegion) ? 0 : PAINT_SCREEN_REGION;
     pdata.paint = region;
+    pdata.screen = screen;
 
     effects->prePaintScreen(pdata, m_expectedPresentTimestamp);
     region = pdata.paint;
@@ -188,7 +190,7 @@ void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
     painted_region = region;
     repaint_region = repaint;
 
-    ScreenPaintData data(projection, effects->findScreen(painted_screen));
+    ScreenPaintData data(projection, screen);
     effects->paintScreen(mask, region, data);
 
     Q_EMIT frameRendered();

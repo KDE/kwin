@@ -3066,6 +3066,7 @@ class KWINEFFECTS_EXPORT ScreenPrePaintData
 public:
     int mask;
     QRegion paint;
+    EffectScreen *screen = nullptr;
 };
 
 /**
