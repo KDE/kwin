@@ -39,6 +39,7 @@
 #include "cursor.h"
 #include <KDecoration2/Decoration>
 #include <KGlobalAccel>
+#include <KLocalizedString>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/fakeinput_interface.h>
 #include <KWaylandServer/relativepointer_v1_interface.h>
@@ -2480,12 +2481,17 @@ void InputRedirection::setupTouchpadShortcuts()
     QAction *touchpadOnAction = new QAction(this);
     QAction *touchpadOffAction = new QAction(this);
 
+    const QString touchpadDisplayName = i18n("Touchpad");
+
     touchpadToggleAction->setObjectName(QStringLiteral("Toggle Touchpad"));
     touchpadToggleAction->setProperty("componentName", s_touchpadComponent);
+    touchpadToggleAction->setProperty("componentDisplayName", touchpadDisplayName);
     touchpadOnAction->setObjectName(QStringLiteral("Enable Touchpad"));
     touchpadOnAction->setProperty("componentName", s_touchpadComponent);
+    touchpadOnAction->setProperty("componentDisplayName", touchpadDisplayName);
     touchpadOffAction->setObjectName(QStringLiteral("Disable Touchpad"));
     touchpadOffAction->setProperty("componentName", s_touchpadComponent);
+    touchpadOffAction->setProperty("componentDisplayName", touchpadDisplayName);
     KGlobalAccel::self()->setDefaultShortcut(touchpadToggleAction, QList<QKeySequence>{Qt::Key_TouchpadToggle});
     KGlobalAccel::self()->setShortcut(touchpadToggleAction, QList<QKeySequence>{Qt::Key_TouchpadToggle});
     KGlobalAccel::self()->setDefaultShortcut(touchpadOnAction, QList<QKeySequence>{Qt::Key_TouchpadOn});
