@@ -81,9 +81,7 @@ void EglBackend::init()
 
 void EglBackend::screenGeometryChanged(const QSize &size)
 {
-    Q_UNUSED(size)
-
-    // TODO: base implementation in OpenGLBackend
+    overlayWindow()->resize(size);
 
     // The back buffer contents are now undefined
     m_bufferAge = 0;

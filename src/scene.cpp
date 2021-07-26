@@ -69,7 +69,6 @@
 #include "x11client.h"
 #include "deleted.h"
 #include "effects.h"
-#include "overlaywindow.h"
 #include "renderloop.h"
 #include "screens.h"
 #include "shadow.h"
@@ -531,10 +530,7 @@ void Scene::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
 
 void Scene::screenGeometryChanged(const QSize &size)
 {
-    if (!overlayWindow()) {
-        return;
-    }
-    overlayWindow()->resize(size);
+    Q_UNUSED(size)
 }
 
 bool Scene::makeOpenGLContextCurrent()
