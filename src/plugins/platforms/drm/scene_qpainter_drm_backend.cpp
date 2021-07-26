@@ -79,8 +79,6 @@ QRegion DrmQPainterBackend::beginFrame(int screenId)
 
 void DrmQPainterBackend::endFrame(int screenId, const QRegion &damage)
 {
-    Q_UNUSED(damage)
-
     Output &rendererOutput = m_outputs[screenId];
     DrmOutput *drmOutput = rendererOutput.output;
 
