@@ -109,13 +109,6 @@ public:
      * @param toplevel The Toplevel for which the Shadow needs to be created.
      */
     virtual Shadow *createShadow(Toplevel *toplevel) = 0;
-    /**
-     * Method invoked when the screen geometry is changed.
-     * Reimplementing classes should also invoke the parent method
-     * as it takes care of resizing the overlay window.
-     * @param size The new screen geometry size
-     */
-    virtual void screenGeometryChanged(const QSize &size);
     // Flags controlling how painting is done.
     enum {
         // Window (or at least part of it) will be painted opaque.

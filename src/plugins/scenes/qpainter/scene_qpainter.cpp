@@ -159,12 +159,6 @@ Shadow *SceneQPainter::createShadow(Toplevel *toplevel)
     return new SceneQPainterShadow(toplevel);
 }
 
-void SceneQPainter::screenGeometryChanged(const QSize &size)
-{
-    Scene::screenGeometryChanged(size);
-    m_backend->screenGeometryChanged(size);
-}
-
 QImage *SceneQPainter::qpainterRenderBuffer(int screenId) const
 {
     return m_backend->bufferForScreen(screenId);

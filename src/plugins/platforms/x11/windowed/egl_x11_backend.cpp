@@ -104,11 +104,6 @@ void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, co
     }
 }
 
-void EglX11Backend::screenGeometryChanged(const QSize &size)
-{
-    Q_UNUSED(size)
-}
-
 PlatformSurfaceTexture *EglX11Backend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return new BasicEGLSurfaceTextureWayland(this, pixmap);

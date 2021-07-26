@@ -111,6 +111,8 @@ GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
      // to make it call XESetWireToEvent callbacks, which is required
      // by Mesa when using DRI2.
      QOpenGLContext::supportsThreadedOpenGL();
+
+     connect(screens(), &Screens::sizeChanged, this, &GlxBackend::screenGeometryChanged);
 }
 
 GlxBackend::~GlxBackend()
@@ -719,8 +721,9 @@ void GlxBackend::present(const QRegion &damage)
     }
 }
 
-void GlxBackend::screenGeometryChanged(const QSize &size)
+void GlxBackend::screenGeometryChanged()
 {
+    const QSize size = screens()->size();
     doneCurrent();
 
     XMoveResizeWindow(display(), window, 0, 0, size.width(), size.height());

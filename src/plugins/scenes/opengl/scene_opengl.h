@@ -36,7 +36,6 @@ public:
                RenderLoop *renderLoop) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
-    void screenGeometryChanged(const QSize &size) override;
     OverlayWindow *overlayWindow() const override;
     bool makeOpenGLContextCurrent() override;
     void doneOpenGLContextCurrent() override;

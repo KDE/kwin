@@ -70,7 +70,6 @@ class GlxBackend : public OpenGLBackend
 public:
     GlxBackend(Display *display, X11StandalonePlatform *backend);
     ~GlxBackend() override;
-    void screenGeometryChanged(const QSize &size) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
@@ -91,6 +90,7 @@ private:
     bool initFbConfig();
     void initVisualDepthHashTable();
     void setSwapInterval(int interval);
+    void screenGeometryChanged();
 
     int visualDepth(xcb_visualid_t visual) const;
     FBConfigInfo *infoForVisual(xcb_visualid_t visual);

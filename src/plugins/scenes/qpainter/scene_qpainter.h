@@ -32,7 +32,6 @@ public:
     EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
-    void screenGeometryChanged(const QSize &size) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 

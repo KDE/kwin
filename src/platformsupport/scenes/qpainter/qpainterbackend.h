@@ -36,14 +36,6 @@ public:
     virtual void endFrame(int screenId, const QRegion &damage) = 0;
     virtual QRegion beginFrame(int screenId) = 0;
     /**
-     * @brief React on screen geometry changes.
-     *
-     * Default implementation does nothing. Override if specific functionality is required.
-     *
-     * @param size The new screen size
-     */
-    virtual void screenGeometryChanged(const QSize &size);
-    /**
      * @brief Whether the creation of the Backend failed.
      *
      * The SceneQPainter should test whether the Backend got constructed correctly. If this method

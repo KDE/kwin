@@ -145,12 +145,6 @@ bool EglGbmBackend::initBufferConfigs()
     return true;
 }
 
-void EglGbmBackend::screenGeometryChanged(const QSize &size)
-{
-    Q_UNUSED(size)
-    // TODO, create new buffer?
-}
-
 PlatformSurfaceTexture *EglGbmBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return new BasicEGLSurfaceTextureInternal(this, pixmap);

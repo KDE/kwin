@@ -38,6 +38,8 @@ public:
     void updateSize();
 
 private:
+    void resetBufferAge();
+
     WaylandOutput *m_waylandOutput;
     wl_egl_window *m_overlay = nullptr;
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
@@ -69,7 +71,6 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
-    void screenGeometryChanged(const QSize &size) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;

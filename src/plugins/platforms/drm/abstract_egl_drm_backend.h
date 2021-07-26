@@ -25,8 +25,6 @@ class AbstractEglDrmBackend : public AbstractEglBackend
     Q_OBJECT
 
 public:
-    void screenGeometryChanged(const QSize &size) override;
-
     virtual int screenCount() const = 0;
     virtual bool addOutput(DrmOutput *output) = 0;
     virtual void removeOutput(DrmOutput *output) = 0;

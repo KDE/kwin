@@ -51,8 +51,6 @@ public:
 
     virtual void init() = 0;
 
-    virtual void screenGeometryChanged(const QSize &size) = 0;
-
     virtual PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
     virtual PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap);
     virtual PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);

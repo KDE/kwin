@@ -75,6 +75,7 @@ bool EglWaylandOutput::init(EglWaylandBackend *backend)
 
     connect(m_waylandOutput, &WaylandOutput::sizeChanged, this, &EglWaylandOutput::updateSize);
     connect(m_waylandOutput, &WaylandOutput::modeChanged, this, &EglWaylandOutput::updateSize);
+    connect(m_waylandOutput, &WaylandOutput::geometryChanged, this, &EglWaylandOutput::resetBufferAge);
 
     return true;
 }
@@ -83,6 +84,12 @@ void EglWaylandOutput::updateSize()
 {
     const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
     wl_egl_window_resize(m_overlay, nativeSize.width(), nativeSize.height(), 0, 0);
+    resetBufferAge();
+}
+
+void EglWaylandOutput::resetBufferAge()
+{
+    m_bufferAge = 0;
 }
 
 EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
@@ -331,18 +338,6 @@ void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output, const QRegion
         eglQuerySurface(eglDisplay(), output->m_eglSurface, EGL_BUFFER_AGE_EXT, &output->m_bufferAge);
     }
 
-}
-
-void EglWaylandBackend::screenGeometryChanged(const QSize &size)
-{
-    Q_UNUSED(size)
-    // no backend specific code needed
-    // TODO: base implementation in OpenGLBackend
-
-    // The back buffer contents are now undefined
-    for (auto *output : qAsConst(m_outputs)) {
-        output->m_bufferAge = 0;
-    }
 }
 
 PlatformSurfaceTexture *EglWaylandBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)

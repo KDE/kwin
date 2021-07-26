@@ -558,15 +558,6 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
     return true;
 }
 
-void SceneOpenGL::screenGeometryChanged(const QSize &size)
-{
-    if (!viewportLimitsMatched(size))
-        return;
-    Scene::screenGeometryChanged(size);
-    m_backend->screenGeometryChanged(size);
-    GLRenderTarget::setVirtualScreenSize(size);
-}
-
 void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
 {
     const QRect r = region.boundingRect();

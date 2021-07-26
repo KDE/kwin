@@ -37,6 +37,7 @@ EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
     m_vsyncMonitor->setRefreshRate(backend->renderLoop()->refreshRate());
 
     connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &EglBackend::vblank);
+    connect(screens(), &Screens::sizeChanged, this, &EglBackend::screenGeometryChanged);
 }
 
 EglBackend::~EglBackend()
@@ -79,9 +80,9 @@ void EglBackend::init()
     EglOnXBackend::init();
 }
 
-void EglBackend::screenGeometryChanged(const QSize &size)
+void EglBackend::screenGeometryChanged()
 {
-    overlayWindow()->resize(size);
+    overlayWindow()->resize(screens()->size());
 
     // The back buffer contents are now undefined
     m_bufferAge = 0;

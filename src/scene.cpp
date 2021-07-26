@@ -528,11 +528,6 @@ void Scene::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
     Q_UNUSED(opaqueFullscreen);
 }
 
-void Scene::screenGeometryChanged(const QSize &size)
-{
-    Q_UNUSED(size)
-}
-
 bool Scene::makeOpenGLContextCurrent()
 {
     return false;

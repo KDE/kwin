@@ -108,11 +108,6 @@ QSharedPointer<GLTexture> EglMultiBackend::textureForOutput(AbstractOutput *requ
     return m_backends[0]->textureForOutput(requestedOutput);
 }
 
-void EglMultiBackend::screenGeometryChanged(const QSize &size)
-{
-    Q_UNUSED(size)
-}
-
 AbstractEglDrmBackend *EglMultiBackend::findBackend(int screenId, int& internalScreenId) const
 {
     int screens = 0;

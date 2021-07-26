@@ -26,7 +26,6 @@ class EglGbmBackend : public AbstractEglBackend
 public:
     EglGbmBackend(VirtualBackend *b);
     ~EglGbmBackend() override;
-    void screenGeometryChanged(const QSize &size) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     QRegion beginFrame(int screenId) override;

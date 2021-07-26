@@ -32,9 +32,9 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *texture) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
-    void screenGeometryChanged(const QSize &size) override;
 
 private:
+    void screenGeometryChanged();
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
     void vblank(std::chrono::nanoseconds timestamp);
 

@@ -35,8 +35,6 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
-    void screenGeometryChanged(const QSize &size) override;
-
     bool directScanoutAllowed(int screen) const override;
 
 public Q_SLOTS:
