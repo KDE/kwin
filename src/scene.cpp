@@ -593,7 +593,6 @@ PlatformSurfaceTexture *Scene::createPlatformSurfaceTextureWayland(SurfacePixmap
 Scene::Window::Window(Toplevel *client, QObject *parent)
     : QObject(parent)
     , toplevel(client)
-    , filter(ImageFilterFast)
     , disable_painting(0)
 {
     if (qobject_cast<WaylandClient *>(client)) {

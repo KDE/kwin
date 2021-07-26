@@ -131,11 +131,6 @@ public:
         PAINT_WINDOW_LANCZOS = 1 << 8
         // PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS = 1 << 9 has been removed
     };
-    // types of filtering available
-    enum ImageFilterType {
-        ImageFilterFast,
-        ImageFilterGood,
-    };
     virtual OverlayWindow* overlayWindow() const = 0;
 
     virtual bool makeOpenGLContextCurrent();
@@ -339,7 +334,6 @@ public:
 
 protected:
     Toplevel* toplevel;
-    ImageFilterType filter;
 private:
     void referencePreviousPixmap_helper(SurfaceItem *item);
     void unreferencePreviousPixmap_helper(SurfaceItem *item);
