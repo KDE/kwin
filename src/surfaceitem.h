@@ -52,8 +52,6 @@ protected:
     QScopedPointer<SurfacePixmap> m_previousPixmap;
     QMatrix4x4 m_surfaceToBufferMatrix;
     int m_referencePixmapCounter = 0;
-
-    friend class Scene::Window;
 };
 
 class KWIN_EXPORT PlatformSurfaceTexture
