@@ -617,7 +617,9 @@ void Compositor::composite(RenderLoop *renderLoop)
     const QRegion repaints = m_scene->repaints(screenId);
     m_scene->resetRepaints(screenId);
 
+    renderLoop->beginFrame();
     m_scene->paint(screenId, repaints, windows, renderLoop);
+    renderLoop->endFrame();
 
     if (waylandServer()) {
         const std::chrono::milliseconds frameTime =

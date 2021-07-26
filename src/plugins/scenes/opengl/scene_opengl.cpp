@@ -381,8 +381,6 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
     if (status != GL_NO_ERROR) {
         handleGraphicsReset(status);
     } else {
-        renderLoop->beginFrame();
-
         SurfaceItem *fullscreenSurface = nullptr;
         for (int i = stacking_order.count() - 1; i >=0; i--) {
             Window *window = stacking_order[i];
@@ -419,9 +417,7 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
         if (renderer()->directScanoutAllowed(screenId) && !static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
             directScanout = renderer()->scanout(screenId, fullscreenSurface);
         }
-        if (directScanout) {
-            renderLoop->endFrame();
-        } else {
+        if (!directScanout) {
             // prepare rendering makescontext current on the output
             repaint = renderer()->beginFrame(screenId);
 
@@ -450,8 +446,6 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
                     valid = displayRegion;
                 }
             }
-
-            renderLoop->endFrame();
 
             GLVertexBuffer::streamingBuffer()->endOfFrame();
             renderer()->endFrame(screenId, valid, update);
