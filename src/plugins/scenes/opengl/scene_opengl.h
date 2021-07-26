@@ -51,8 +51,8 @@ public:
     bool debug() const { return m_debug; }
     void initDebugOutput();
 
-    OpenGLBackend *backend() const {
-        return m_backend;
+    OpenGLBackend *renderer() const {
+        return static_cast<OpenGLBackend *>(Scene::renderer());
     }
 
     QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
@@ -82,7 +82,6 @@ private:
 private:
     bool m_resetOccurred = false;
     bool m_debug;
-    OpenGLBackend *m_backend;
 };
 
 class SceneOpenGL2 : public SceneOpenGL

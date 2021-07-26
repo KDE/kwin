@@ -9,7 +9,7 @@
 #ifndef KWIN_SCENE_QPAINTER_BACKEND_H
 #define KWIN_SCENE_QPAINTER_BACKEND_H
 
-#include <QObject>
+#include "renderer.h"
 
 class QImage;
 class QRegion;
@@ -23,7 +23,7 @@ class PlatformSurfaceTexture;
 class SurfacePixmapInternal;
 class SurfacePixmapWayland;
 
-class QPainterBackend : public QObject
+class QPainterBackend : public Renderer
 {
     Q_OBJECT
 
