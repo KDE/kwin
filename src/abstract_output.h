@@ -232,6 +232,25 @@ Q_SIGNALS:
      */
     void wakeUp();
 
+    /**
+     * Notifies that the output is about to change configuration based on a
+     * user interaction.
+     *
+     * Be it because it gets a transformation or moved around.
+     *
+     * Only to be used for effects
+     */
+    void aboutToChange();
+
+    /**
+     * Notifies that the output changed based on a user interaction.
+     *
+     * Be it because it gets a transformation or moved around.
+     *
+     * Only to be used for effects
+     */
+    void changed();
+
 private:
     Q_DISABLE_COPY(AbstractOutput)
     int m_directScanoutCount = 0;

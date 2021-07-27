@@ -1873,6 +1873,21 @@ Q_SIGNALS:
      * This signal is emitted when the device pixel ratio of this screen changes.
      */
     void devicePixelRatioChanged();
+
+    /**
+     * Notifies that the output is about to change configuration based on a
+     * user interaction.
+     *
+     * Be it because it gets a transformation or moved around.
+     */
+    void aboutToChange();
+
+    /**
+     * Notifies that the output changed based on a user interaction.
+     *
+     * Be it because it gets a transformation or moved around.
+     */
+    void changed();
 };
 
 /**

@@ -147,6 +147,8 @@ void AbstractWaylandOutput::setSubPixelInternal(SubPixel subPixel)
 
 void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *changeSet)
 {
+    Q_EMIT aboutToChange();
+
     qCDebug(KWIN_CORE) << "Apply changes to the Wayland output.";
     bool emitModeChanged = false;
     bool overallSizeCheckNeeded = false;
@@ -183,6 +185,7 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
         qCDebug(KWIN_CORE) << "Setting VRR Policy:" << changeSet->vrrPolicy();
         setVrrPolicy(static_cast<RenderLoop::VrrPolicy>(changeSet->vrrPolicy()));
     }
+    Q_EMIT changed();
 
     overallSizeCheckNeeded |= emitModeChanged;
     if (overallSizeCheckNeeded) {
