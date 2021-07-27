@@ -74,7 +74,7 @@
 #include "shadow.h"
 #include "wayland_server.h"
 #include "composite.h"
-#include <qmath.h>
+#include <QtMath>
 
 namespace KWin
 {

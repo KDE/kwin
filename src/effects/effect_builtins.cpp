@@ -17,6 +17,7 @@
 #include "presentwindows/presentwindows.h"
 #include "screenedge/screenedgeeffect.h"
 #include "screenshot/screenshot.h"
+#include "screentransform/screentransform.h"
 #include "slidingpopups/slidingpopups.h"
 // Common effects only relevant to desktop
 #include "desktopgrid/desktopgrid.h"
@@ -404,6 +405,21 @@ EFFECT_FALLBACK
 #endif
 EFFECT_FALLBACK
         QString()
+    }, {
+        QStringLiteral("screentransform"),
+        i18ndc("kwin_effects", "Name of a KWin Effect", "Transform"),
+        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Animates display transformations"),
+        QStringLiteral("Appearance"),
+        QString(),
+        QUrl(),
+        true,
+        true,
+#ifdef EFFECT_BUILTINS
+        &createHelper<ScreenTransformEffect>,
+        &ScreenTransformEffect::supported,
+        nullptr,
+#endif
+        EFFECT_FALLBACK QString()
     }, {
         QStringLiteral("sheet"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Sheet"),

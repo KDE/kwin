@@ -43,6 +43,7 @@ enum class BuiltInEffect
     Resize,
     ScreenEdge,
     ScreenShot,
+    ScreenTransform,
     Sheet,
     ShowFps,
     ShowPaint,
