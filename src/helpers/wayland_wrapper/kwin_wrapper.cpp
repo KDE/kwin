@@ -81,7 +81,7 @@ void KWinWrapper::run()
             // kwin_crashed, lets go again
             qWarning() << "Compositor crashed, respawning";
         } else {
-            qWarning() << "Compositor exited with code: " << exit;
+            qWarning() << "Compositor exited with code: " << exitStatus;
             break;
         }
     }
