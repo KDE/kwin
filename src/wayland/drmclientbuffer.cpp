@@ -86,8 +86,8 @@ ClientBuffer *DrmClientBufferIntegration::createBuffer(::wl_resource *resource)
         resolved = true;
     }
 
-    EGLint format;
-    if (eglQueryWaylandBufferWL(eglDisplay, resource, EGL_TEXTURE_FORMAT, &format)) {
+    EGLint height;
+    if (eglQueryWaylandBufferWL(eglDisplay, resource, EGL_HEIGHT, &height)) {
         return new DrmClientBuffer(resource, this);
     }
     return nullptr;
