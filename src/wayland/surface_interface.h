@@ -93,11 +93,6 @@ public:
     CompositorInterface *compositor() const;
 
     /**
-     * Returns a list with all created Wayland surfaces.
-     */
-    static QList<SurfaceInterface *> surfaces();
-
-    /**
      * Maps the specified @a point from the surface-local coordinates to buffer pixel coordinates.
      *
      * Note that there is no direct connection between points in the surface-local coordinates

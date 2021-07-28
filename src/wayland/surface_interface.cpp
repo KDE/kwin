@@ -23,8 +23,6 @@
 namespace KWaylandServer
 {
 
-QList<SurfaceInterface *> SurfaceInterfacePrivate::surfaces;
-
 KWaylandFrameCallback::KWaylandFrameCallback(wl_resource *resource, SurfaceInterface *surface)
     : QtWaylandServer::wl_callback(resource)
     , surface(surface)
@@ -50,7 +48,6 @@ void KWaylandFrameCallback::callback_destroy_resource(Resource *)
 SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q)
     : q(q)
 {
-    surfaces.append(q);
 }
 
 SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
@@ -74,7 +71,6 @@ SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
     if (current.buffer) {
         current.buffer->unref();
     }
-    surfaces.removeOne(q);
 }
 
 void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
@@ -383,11 +379,6 @@ wl_resource *SurfaceInterface::resource() const
 CompositorInterface *SurfaceInterface::compositor() const
 {
     return d->compositor;
-}
-
-QList<SurfaceInterface *> SurfaceInterface::surfaces()
-{
-    return SurfaceInterfacePrivate::surfaces;
 }
 
 void SurfaceInterface::frameRendered(quint32 msec)
@@ -764,11 +755,8 @@ SurfaceInterface *SurfaceInterface::get(wl_resource *native)
 
 SurfaceInterface *SurfaceInterface::get(quint32 id, const ClientConnection *client)
 {
-    const QList<SurfaceInterface *> candidates = surfaces();
-    for (SurfaceInterface *surface : candidates) {
-        if (surface->client() == client && surface->id() == id) {
-            return surface;
-        }
+    if (client) {
+        return get(client->getResource(id));
     }
     return nullptr;
 }

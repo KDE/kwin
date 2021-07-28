@@ -42,7 +42,7 @@ public:
     /**
      * Get the wl_resource associated with the given @p id.
      */
-    wl_resource *getResource(quint32 id);
+    wl_resource *getResource(quint32 id) const;
 
     /**
      * @returns the native wl_client this ClientConnection represents.

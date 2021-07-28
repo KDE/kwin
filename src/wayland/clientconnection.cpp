@@ -99,7 +99,7 @@ void ClientConnection::destroy()
     wl_client_destroy(d->client);
 }
 
-wl_resource *ClientConnection::getResource(quint32 id)
+wl_resource *ClientConnection::getResource(quint32 id) const
 {
     if (!d->client) {
         return nullptr;
