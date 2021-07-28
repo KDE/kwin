@@ -15,7 +15,6 @@
 
 struct wl_client;
 struct wl_display;
-struct wl_event_loop;
 
 namespace KWaylandServer
 {
