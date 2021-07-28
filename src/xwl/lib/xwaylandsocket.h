@@ -15,7 +15,12 @@ namespace KWin
 class XwaylandSocket
 {
 public:
-    XwaylandSocket();
+    enum class OperationMode {
+        CloseFdsOnExec,
+        TransferFdsOnExec
+    };
+
+    XwaylandSocket(OperationMode operationMode);
     ~XwaylandSocket();
 
     bool isValid() const;

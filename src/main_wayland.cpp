@@ -198,6 +198,9 @@ void ApplicationWayland::continueStartupWithScreens()
     }
 
     m_xwayland = new Xwl::Xwayland(this);
+    m_xwayland->setListenFDs(m_xwaylandListenFds);
+    m_xwayland->setDisplayName(m_xwaylandDisplay);
+    m_xwayland->setXauthority(m_xwaylandXauthority);
     connect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
     connect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
     m_xwayland->start();
@@ -469,6 +472,18 @@ int main(int argc, char * argv[])
                                     i18n("Wayland socket to use for incoming connections. This can be combined with --socket to name the socket"),
                                     QStringLiteral("wayland_fd"));
 
+    QCommandLineOption xwaylandListenFdOption(QStringLiteral("xwayland-fd"),
+                                    i18n("XWayland socket to use for Xwayland's incoming connections. This can be set multiple times"),
+                                    QStringLiteral("xwayland-fds"));
+
+    QCommandLineOption xwaylandDisplayOption(QStringLiteral("xwayland-display"),
+                                             i18n("Name of the xwayland display that has been pre-set up"),
+                                             "xwayland-display");
+
+    QCommandLineOption xwaylandXAuthorityOption(QStringLiteral("xwayland-xauthority"),
+                                             i18n("Name of the xauthority file "),
+                                             "xwayland-xauthority");
+
     QCommandLineOption replaceOption(QStringLiteral("replace"),
                                     i18n("Exits this instance so it can be restarted by kwin_wayland_wrapper."));
 
@@ -477,6 +492,9 @@ int main(int argc, char * argv[])
     parser.addOption(xwaylandOption);
     parser.addOption(waylandSocketOption);
     parser.addOption(waylandSocketFdOption);
+    parser.addOption(xwaylandListenFdOption);
+    parser.addOption(xwaylandDisplayOption);
+    parser.addOption(xwaylandXAuthorityOption);
     parser.addOption(replaceOption);
 
     if (hasX11Option) {
@@ -701,7 +719,33 @@ int main(int argc, char * argv[])
         environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->socketName());
     }
     a.setProcessStartupEnvironment(environment);
-    a.setStartXwayland(parser.isSet(xwaylandOption));
+
+    if (parser.isSet(xwaylandOption)) {
+        a.setStartXwayland(true);
+
+        if (parser.isSet(xwaylandListenFdOption)) {
+            const QStringList fdStrings = parser.values(xwaylandListenFdOption);
+            for (const QString &fdString: fdStrings){
+                bool ok;
+                int fd = fdString.toInt(&ok);
+                if (ok ) {
+                    // make sure we don't leak this FD to children
+                    fcntl(fd, F_SETFD, O_CLOEXEC);
+                    a.addXwaylandSocketFileDescriptor(fd);
+                }
+            }
+            if (parser.isSet(xwaylandDisplayOption)) {
+                a.setXwaylandDisplay(parser.value(xwaylandDisplayOption));
+            } else {
+                std::cerr << "Using xwayland-fd without xwayland-display is undefined" << std::endl;
+                return 1;
+            }
+            if (parser.isSet(xwaylandXAuthorityOption)) {
+                a.setXwaylandXauthority(parser.value(xwaylandDisplayOption));
+            }
+        }
+    }
+
     a.setApplicationsToStart(parser.positionalArguments());
     a.setInputMethodServerToStart(parser.value(inputMethodOption));
     a.start();

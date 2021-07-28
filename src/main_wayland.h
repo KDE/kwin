@@ -30,6 +30,15 @@ public:
     void setStartXwayland(bool start) {
         m_startXWayland = start;
     }
+    void addXwaylandSocketFileDescriptor(int fd) {
+        m_xwaylandListenFds << fd;
+    }
+    void setXwaylandDisplay(const QString &display) {
+        m_xwaylandDisplay = display;
+    }
+    void setXwaylandXauthority(const QString &xauthority) {
+        m_xwaylandXauthority= xauthority;
+    }
     void setApplicationsToStart(const QStringList &applications) {
         m_applicationsToStart = applications;
     }
@@ -64,6 +73,9 @@ private:
     QString m_sessionArgument;
 
     Xwl::Xwayland *m_xwayland = nullptr;
+    QVector<int> m_xwaylandListenFds;
+    QString m_xwaylandDisplay;
+    QString m_xwaylandXauthority;
     KConfigWatcher::Ptr m_settingsWatcher;
 };
 

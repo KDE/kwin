@@ -24,7 +24,12 @@
 #include <QDebug>
 #include <QProcess>
 
+#include <QTemporaryFile>
+
 #include "wl-socket.h"
+#include "xwaylandsocket.h"
+#include "xauthority.h"
+#include "wrapper_logging.h"
 
 class KWinWrapper : public QObject
 {
@@ -37,6 +42,9 @@ public:
 
 private:
     wl_socket *m_socket;
+
+    QScopedPointer<KWin::XwaylandSocket> m_xwlSocket;
+    QTemporaryFile m_xauthorityFile;
 };
 
 KWinWrapper::KWinWrapper(QObject *parent)
@@ -45,6 +53,21 @@ KWinWrapper::KWinWrapper(QObject *parent)
     m_socket = wl_socket_create();
     if (!m_socket) {
         qFatal("Could not create wayland socket");
+    }
+
+    if (qApp->arguments().contains(QLatin1String("--xwayland"))) {
+        m_xwlSocket.reset(new KWin::XwaylandSocket(KWin::XwaylandSocket::OperationMode::TransferFdsOnExec));
+        if (!m_xwlSocket->isValid()) {
+            qCWarning(KWIN_WRAPPER) << "Failed to create Xwayland connection sockets";
+            m_xwlSocket.reset();
+        }
+        if (m_xwlSocket) {
+            if (!qEnvironmentVariableIsSet("KWIN_WAYLAND_NO_XAUTHORITY")) {
+                if (!generateXauthorityFile(m_xwlSocket->display(), &m_xauthorityFile)) {
+                    qCWarning(KWIN_WRAPPER) << "Failed to create an Xauthority file";
+                }
+            }
+        }
     }
 }
 
@@ -66,12 +89,12 @@ void KWinWrapper::run()
 
         if (exitStatus == 133) {
             crashCount = 1;
-            qDebug() << "Compositor restarted, respawning";
+            qCDebug(KWIN_WRAPPER) << "Compositor restarted, respawning";
         } else if (exitStatus == -1) {
             // kwin_crashed, lets go again
-            qWarning() << "Compositor crashed, respawning";
+            qWarning(KWIN_WRAPPER) << "Compositor crashed, respawning";
         } else {
-            qWarning() << "Compositor exited with code: " << exitStatus;
+            qWarning(KWIN_WRAPPER) << "Compositor exited with code: " << exitStatus;
             break;
         }
     }
@@ -79,14 +102,25 @@ void KWinWrapper::run()
 
 int KWinWrapper::runKwin()
 {
-    qDebug() << "Launching kwin";
+    qCDebug(KWIN_WRAPPER) << "Launching kwin";
 
     auto process = new QProcess(qApp);
     process->setProgram("kwin_wayland");
 
     QStringList args;
+
     args << "--wayland_fd" << QString::number(wl_socket_get_fd(m_socket));
     args << "--socket" << QString::fromUtf8(wl_socket_get_display_name(m_socket));
+
+    if (m_xwlSocket) {
+        args << "--xwayland-fd" << QString::number(m_xwlSocket->abstractFileDescriptor());
+        args << "--xwayland-fd" << QString::number(m_xwlSocket->unixFileDescriptor());
+        args << "--xwayland-display" << m_xwlSocket->name();
+        if (m_xauthorityFile.open()) {
+            args << "--xwayland-xauthority" << m_xauthorityFile.fileName();
+        }
+
+    }
 
     // attach our main process arguments
     // the first entry is dropped as it will be our program name
