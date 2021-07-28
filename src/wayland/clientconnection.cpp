@@ -99,14 +99,6 @@ void ClientConnection::destroy()
     wl_client_destroy(d->client);
 }
 
-wl_resource *ClientConnection::createResource(const wl_interface *interface, quint32 version, quint32 id)
-{
-    if (!d->client) {
-        return nullptr;
-    }
-    return wl_resource_create(d->client, interface, version, id);
-}
-
 wl_resource *ClientConnection::getResource(quint32 id)
 {
     if (!d->client) {

@@ -12,7 +12,6 @@
 #include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_client;
-struct wl_interface;
 struct wl_resource;
 
 namespace KWaylandServer
@@ -40,17 +39,6 @@ public:
      * Flushes the connection to this client. Ensures that all events are pushed to the client.
      */
     void flush();
-    /**
-     * Creates a new wl_resource for the provided @p interface.
-     *
-     * Thus a convenient wrapper around wl_resource_create
-     *
-     * @param interface
-     * @param version
-     * @param id
-     * @returns the created native wl_resource
-     */
-    wl_resource *createResource(const wl_interface *interface, quint32 version, quint32 id);
     /**
      * Get the wl_resource associated with the given @p id.
      */
