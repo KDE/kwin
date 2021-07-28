@@ -1,0 +1,58 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "notmart@gmail.com",
+                "Name": "Marco Martin"
+            }
+        ],
+        "Id": "KWin/Script",
+        "Name": "KWin Script",
+        "Name[ar]": "سكربت كوين",
+        "Name[az]": "Kwin skripti",
+        "Name[ca@valencia]": "Script de KWin",
+        "Name[ca]": "Script del KWin",
+        "Name[cs]": "Skript KWinu",
+        "Name[da]": "KWin-script",
+        "Name[de]": "KWin-Skript",
+        "Name[el]": "Σενάριο KWin",
+        "Name[en_GB]": "KWin Script",
+        "Name[es]": "Guion de KWin",
+        "Name[et]": "KWini skript",
+        "Name[eu]": "KWin scripta",
+        "Name[fi]": "KWin-skripti",
+        "Name[fr]": "Script KWin",
+        "Name[gl]": "Script de KWin",
+        "Name[hu]": "KWin szkript",
+        "Name[ia]": "Script de KWin",
+        "Name[id]": "Skrip KWin",
+        "Name[it]": "Script di KWin",
+        "Name[ko]": "KWin 스크립트",
+        "Name[lt]": "KWin scenarijus",
+        "Name[nl]": "KWin-script",
+        "Name[nn]": "KWin-skript",
+        "Name[pa]": "KWin ਸਕ੍ਰਿਪਟ",
+        "Name[pl]": "Skrypt KWin",
+        "Name[pt]": "Programa do KWin",
+        "Name[pt_BR]": "Script do KWin",
+        "Name[ro]": "Script KWin",
+        "Name[ru]": "Сценарий KWin",
+        "Name[sk]": "KWin skript",
+        "Name[sl]": "Skript KWin",
+        "Name[sr@ijekavian]": "К‑винова скрипта",
+        "Name[sr@ijekavianlatin]": "KWinova skripta",
+        "Name[sr@latin]": "KWinova skripta",
+        "Name[sr]": "К‑винова скрипта",
+        "Name[sv]": "Kwin-skript",
+        "Name[tr]": "KWin Betiği",
+        "Name[uk]": "Скрипт KWin",
+        "Name[vi]": "Kịch bản KWin",
+        "Name[x-test]": "xxKWin Scriptxx",
+        "Name[zh_CN]": "KWin 脚本",
+        "Name[zh_TW]": "KWin 指令稿",
+        "ServiceTypes": [
+            "KPackage/PackageStructure"
+        ],
+        "Version": "1"
+    }
+}

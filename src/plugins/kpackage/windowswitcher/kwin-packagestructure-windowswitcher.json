@@ -1,0 +1,57 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "notmart@gmail.com",
+                "Name": "Marco Martin"
+            }
+        ],
+        "Id": "KWin/WindowSwitcher",
+        "Name": "KWin Window Switcher",
+        "Name[az]": "KWin pəncərə dəyişdiricisi",
+        "Name[ca@valencia]": "Commutador de finestres de KWin",
+        "Name[ca]": "Commutador de finestres del KWin",
+        "Name[cs]": "Přepínač oken KWin",
+        "Name[da]": "KWin vinduesskifter",
+        "Name[de]": "KWin-Fensterwechsler",
+        "Name[el]": "Εφαρμογή εναλλαγής παραθύρων Kwin",
+        "Name[en_GB]": "KWin Window Switcher",
+        "Name[es]": "Cambiador de ventanas de KWin",
+        "Name[et]": "KWini aknavahetaja",
+        "Name[eu]": "KWin leiho-aldatzailea",
+        "Name[fi]": "KWin-ikkunanvalitsin",
+        "Name[fr]": "Sélecteur de fenêtres de KWin",
+        "Name[gl]": "Selector de xanela de KWin",
+        "Name[hu]": "KWin ablakváltó",
+        "Name[ia]": "Commutator de fenestra de KWin",
+        "Name[id]": "Pengalih Window KWin",
+        "Name[it]": "Scambiafinestre di KWin",
+        "Name[ko]": "KWin 창 전환기",
+        "Name[lt]": "KWin langų perjungiklis",
+        "Name[nl]": "KWin-vensterwisselaar",
+        "Name[nn]": "KWin-vindaugsbytar",
+        "Name[pa]": "KWin ਵਿੰਡੋ ਸਵਿੱਚਰ",
+        "Name[pl]": "Przełącznik okien KWin",
+        "Name[pt]": "Mudança de Janelas do KWin",
+        "Name[pt_BR]": "Layout do seletor de janelas do KWin",
+        "Name[ro]": "Comutator de ferestre KWin",
+        "Name[ru]": "Переключатель окон для KWin",
+        "Name[sk]": "Prepínač okien KWin",
+        "Name[sl]": "Preklopnik oken KWin",
+        "Name[sr@ijekavian]": "К‑винов мењач прозора",
+        "Name[sr@ijekavianlatin]": "KWinov menjač prozora",
+        "Name[sr@latin]": "KWinov menjač prozora",
+        "Name[sr]": "К‑винов мењач прозора",
+        "Name[sv]": "Kwin-fönsterbyte",
+        "Name[tr]": "KWin Pencere Değiştirici",
+        "Name[uk]": "Перемикач вікон KWin",
+        "Name[vi]": "Trình chuyển cửa sổ KWin",
+        "Name[x-test]": "xxKWin Window Switcherxx",
+        "Name[zh_CN]": "KWin 窗口切换器",
+        "Name[zh_TW]": "KWin 視窗切換器",
+        "ServiceTypes": [
+            "KPackage/PackageStructure"
+        ],
+        "Version": "1"
+    }
+}

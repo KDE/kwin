@@ -1,0 +1,52 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "vlad.zahorodnii@kde.org",
+                "Name": "Vlad Zahorodnii"
+            }
+        ],
+        "Id": "KWin/Effect",
+        "Name": "KWin Effect",
+        "Name[ar]": "تأثيرات كوين",
+        "Name[az]": "KWin Effekti",
+        "Name[ca@valencia]": "Efecte de KWin",
+        "Name[ca]": "Efecte del KWin",
+        "Name[cs]": "Efekt KWinu",
+        "Name[da]": "KWin-effekt",
+        "Name[de]": "KWin-Effekt",
+        "Name[el]": "Εφέ KWin",
+        "Name[en_GB]": "KWin Effect",
+        "Name[es]": "Efecto de KWin",
+        "Name[et]": "KWini efekt",
+        "Name[eu]": "KWin efektua",
+        "Name[fi]": "KWin-tehoste",
+        "Name[fr]": "Effet KWin",
+        "Name[gl]": "Efecto de KWin",
+        "Name[hu]": "KWin effektus",
+        "Name[ia]": "Effecto de KWin",
+        "Name[id]": "Efek KWin",
+        "Name[it]": "Effetto di KWin",
+        "Name[ko]": "KWin 효과",
+        "Name[lt]": "KWin efektas",
+        "Name[nl]": "KWin-effect",
+        "Name[nn]": "KWin-effekt",
+        "Name[pl]": "Efekt KWin",
+        "Name[pt]": "Efeito do KWin",
+        "Name[pt_BR]": "Efeito do KWin",
+        "Name[ro]": "Efect KWin",
+        "Name[ru]": "Эффект диспетчера окон",
+        "Name[sk]": "Efekty KWin",
+        "Name[sl]": "Učinek KWin",
+        "Name[sv]": "Kwin-effekt",
+        "Name[uk]": "Ефект KWin",
+        "Name[vi]": "Hiệu ứng KWin",
+        "Name[x-test]": "xxKWin Effectxx",
+        "Name[zh_CN]": "KWin 特效",
+        "Name[zh_TW]": "KWin 效果",
+        "ServiceTypes": [
+            "KPackage/PackageStructure"
+        ],
+        "Version": "1"
+    }
+}

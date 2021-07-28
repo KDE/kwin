@@ -11,6 +11,4 @@ target_link_libraries(kwin_packagestructure_effect
    KF5::Package
 )
 
-kcoreaddons_desktop_to_json(kwin_packagestructure_effect kwin-packagestructure-effect.desktop)
-
 install(TARGETS kwin_packagestructure_effect DESTINATION ${KDE_INSTALL_PLUGINDIR}/kpackage/packagestructure)

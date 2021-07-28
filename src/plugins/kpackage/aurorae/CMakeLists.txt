@@ -11,7 +11,5 @@ target_link_libraries(kwin_packagestructure_aurorae
    KF5::Package
 )
 
-kcoreaddons_desktop_to_json(kwin_packagestructure_aurorae kwin-packagestructure-aurorae.desktop)
-
 install(TARGETS kwin_packagestructure_aurorae DESTINATION ${KDE_INSTALL_PLUGINDIR}/kpackage/packagestructure)
 

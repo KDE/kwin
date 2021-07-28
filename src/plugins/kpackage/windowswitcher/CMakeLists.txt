@@ -11,6 +11,4 @@ target_link_libraries(kwin_packagestructure_windowswitcher
    KF5::Package
 )
 
-kcoreaddons_desktop_to_json(kwin_packagestructure_windowswitcher kwin-packagestructure-windowswitcher.desktop)
-
 install(TARGETS kwin_packagestructure_windowswitcher DESTINATION ${KDE_INSTALL_PLUGINDIR}/kpackage/packagestructure)

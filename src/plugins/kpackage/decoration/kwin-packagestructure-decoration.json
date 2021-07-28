@@ -1,0 +1,57 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "demitriusbelai@gmail.com",
+                "Name": "Demitrius Belai"
+            }
+        ],
+        "Id": "KWin/Decoration",
+        "Name": "KWin Decoration",
+        "Name[az]": "KWin Dekorasiyası",
+        "Name[ca@valencia]": "Decoració de KWin",
+        "Name[ca]": "Decoració del KWin",
+        "Name[cs]": "Dekorace KWin",
+        "Name[da]": "KWin-dekoration",
+        "Name[de]": "KWin-Dekoration",
+        "Name[el]": "Διακοσμήσεις KWin",
+        "Name[en_GB]": "KWin Decoration",
+        "Name[es]": "Decoración de KWin",
+        "Name[et]": "KWini dekoratsioon",
+        "Name[eu]": "KWin apainketa",
+        "Name[fi]": "KWin-ikkunakehykset",
+        "Name[fr]": "Décorations KWin",
+        "Name[gl]": "Decoración de KWin",
+        "Name[hu]": "KWin dekoráció",
+        "Name[ia]": "Decorationes de KWin",
+        "Name[id]": "Dekorasi KWin",
+        "Name[it]": "Decorazioni di KWin",
+        "Name[ko]": "KWin 장식",
+        "Name[lt]": "KWin dekoracijos",
+        "Name[nl]": "KWin-decoraties",
+        "Name[nn]": "KWin-dekorasjon",
+        "Name[pa]": "KWin ਸਜਾਵਟ",
+        "Name[pl]": "Wygląd KWin",
+        "Name[pt]": "Decorações do KWin",
+        "Name[pt_BR]": "Decoração do KWin",
+        "Name[ro]": "Decorație KWin",
+        "Name[ru]": "Оформление окон для KWin",
+        "Name[sk]": "Dekorácie KWin",
+        "Name[sl]": "Okraski KWin",
+        "Name[sr@ijekavian]": "К‑винова декорација",
+        "Name[sr@ijekavianlatin]": "KWinova dekoracija",
+        "Name[sr@latin]": "KWinova dekoracija",
+        "Name[sr]": "К‑винова декорација",
+        "Name[sv]": "Kwin-dekoration",
+        "Name[tr]": "KWin Dekorasyonu",
+        "Name[uk]": "Обрамлення вікон KWin",
+        "Name[vi]": "Trang trí KWin",
+        "Name[x-test]": "xxKWin Decorationxx",
+        "Name[zh_CN]": "KWin 装饰元素",
+        "Name[zh_TW]": "KWin 裝飾",
+        "ServiceTypes": [
+            "KPackage/PackageStructure"
+        ],
+        "Version": "1"
+    }
+}
