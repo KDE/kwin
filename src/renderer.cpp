@@ -14,4 +14,22 @@ Renderer::Renderer(QObject *parent)
 {
 }
 
+PlatformSurfaceTexture *Renderer::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+{
+    Q_UNUSED(pixmap)
+    return nullptr;
+}
+
+PlatformSurfaceTexture *Renderer::createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap)
+{
+    Q_UNUSED(pixmap)
+    return nullptr;
+}
+
+PlatformSurfaceTexture *Renderer::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+{
+    Q_UNUSED(pixmap)
+    return nullptr;
+}
+
 } // namespace KWin

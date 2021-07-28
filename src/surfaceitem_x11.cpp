@@ -6,6 +6,7 @@
 
 #include "surfaceitem_x11.h"
 #include "composite.h"
+#include "renderer.h"
 #include "scene.h"
 #include "x11syncmanager.h"
 
@@ -145,7 +146,7 @@ SurfacePixmap *SurfaceItemX11::createPixmap()
 }
 
 SurfacePixmapX11::SurfacePixmapX11(SurfaceItemX11 *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->scene()->createPlatformSurfaceTextureX11(this), parent)
+    : SurfacePixmap(Compositor::self()->scene()->renderer()->createPlatformSurfaceTextureX11(this), parent)
     , m_item(item)
 {
 }

@@ -631,21 +631,6 @@ QSharedPointer<GLTexture> SceneOpenGL::textureForOutput(AbstractOutput* output) 
     return renderer()->textureForOutput(output);
 }
 
-PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    return renderer()->createPlatformSurfaceTextureInternal(pixmap);
-}
-
-PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
-{
-    return renderer()->createPlatformSurfaceTextureWayland(pixmap);
-}
-
-PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap)
-{
-    return renderer()->createPlatformSurfaceTextureX11(pixmap);
-}
-
 //****************************************
 // SceneOpenGL2
 //****************************************

@@ -310,16 +310,6 @@ DecorationRenderer *SceneQPainter::createDecorationRenderer(Decoration::Decorate
     return new SceneQPainterDecorationRenderer(impl);
 }
 
-PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    return renderer()->createPlatformSurfaceTextureInternal(pixmap);
-}
-
-PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
-{
-    return renderer()->createPlatformSurfaceTextureWayland(pixmap);
-}
-
 QPainterEffectFrame::QPainterEffectFrame(EffectFrameImpl *frame, SceneQPainter *scene)
     : Scene::EffectFrame(frame)
     , m_scene(scene)

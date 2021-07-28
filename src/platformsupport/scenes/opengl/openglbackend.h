@@ -19,11 +19,7 @@ namespace KWin
 class AbstractOutput;
 class OpenGLBackend;
 class OverlayWindow;
-class PlatformSurfaceTexture;
 class SurfaceItem;
-class SurfacePixmapInternal;
-class SurfacePixmapX11;
-class SurfacePixmapWayland;
 class GLTexture;
 
 /**
@@ -49,10 +45,6 @@ public:
     virtual ~OpenGLBackend();
 
     virtual void init() = 0;
-
-    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
-    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap);
-    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
     /**
      * Notifies about starting to paint.

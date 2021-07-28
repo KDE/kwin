@@ -79,22 +79,4 @@ bool OpenGLBackend::directScanoutAllowed(int screen) const
     return false;
 }
 
-PlatformSurfaceTexture *OpenGLBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    Q_UNUSED(pixmap)
-    return nullptr;
-}
-
-PlatformSurfaceTexture *OpenGLBackend::createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap)
-{
-    Q_UNUSED(pixmap)
-    return nullptr;
-}
-
-PlatformSurfaceTexture *OpenGLBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
-{
-    Q_UNUSED(pixmap)
-    return nullptr;
-}
-
 }

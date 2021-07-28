@@ -33,15 +33,11 @@ class EffectWindowImpl;
 class GLTexture;
 class Item;
 class OverlayWindow;
-class PlatformSurfaceTexture;
 class RenderLoop;
 class Renderer;
 class Shadow;
 class ShadowItem;
 class SurfaceItem;
-class SurfacePixmapInternal;
-class SurfacePixmapWayland;
-class SurfacePixmapX11;
 class WindowItem;
 
 // The base class for compositing backends.
@@ -178,10 +174,6 @@ public:
         Q_UNUSED(output);
         return {};
     }
-
-    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
-    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap);
-    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
     virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
 

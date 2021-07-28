@@ -575,24 +575,6 @@ QVector<QByteArray> Scene::openGLPlatformInterfaceExtensions() const
     return QVector<QByteArray>{};
 }
 
-PlatformSurfaceTexture *Scene::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    Q_UNUSED(pixmap)
-    return nullptr;
-}
-
-PlatformSurfaceTexture *Scene::createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap)
-{
-    Q_UNUSED(pixmap)
-    return nullptr;
-}
-
-PlatformSurfaceTexture *Scene::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
-{
-    Q_UNUSED(pixmap)
-    return nullptr;
-}
-
 //****************************************
 // Scene::Window
 //****************************************

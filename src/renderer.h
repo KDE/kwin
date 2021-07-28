@@ -16,6 +16,10 @@ namespace KWin
 {
 
 class AbstractOutput;
+class PlatformSurfaceTexture;
+class SurfacePixmapInternal;
+class SurfacePixmapX11;
+class SurfacePixmapWayland;
 
 /**
  * The Renderer class is the base class for all renderers.
@@ -24,6 +28,10 @@ class KWIN_EXPORT Renderer : public QObject
 {
 public:
     explicit Renderer(QObject *parent = nullptr);
+
+    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
+    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap);
+    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
     /**
      * Queries the render time of the last frame for the given @a output.
