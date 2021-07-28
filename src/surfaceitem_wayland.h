@@ -42,6 +42,7 @@ private Q_SLOTS:
     void handleChildSubSurfaceRemoved(KWaylandServer::SubSurfaceInterface *child);
     void handleChildSubSurfacesChanged();
     void handleSubSurfacePositionChanged();
+    void handleSubSurfaceMappedChanged();
 
 protected:
     SurfacePixmap *createPixmap() override;

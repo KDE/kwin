@@ -39,8 +39,13 @@ SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface
 
     KWaylandServer::SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
+        connect(surface, &KWaylandServer::SurfaceInterface::mapped,
+                this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
+        connect(surface, &KWaylandServer::SurfaceInterface::unmapped,
+                this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
         connect(subsurface, &KWaylandServer::SubSurfaceInterface::positionChanged,
                 this, &SurfaceItemWayland::handleSubSurfacePositionChanged);
+        setVisible(surface->isMapped());
         setPosition(subsurface->position());
     }
 
@@ -121,6 +126,11 @@ void SurfaceItemWayland::handleChildSubSurfacesChanged()
 void SurfaceItemWayland::handleSubSurfacePositionChanged()
 {
     setPosition(m_surface->subSurface()->position());
+}
+
+void SurfaceItemWayland::handleSubSurfaceMappedChanged()
+{
+    setVisible(m_surface->isMapped());
 }
 
 SurfacePixmap *SurfaceItemWayland::createPixmap()
