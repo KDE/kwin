@@ -106,11 +106,15 @@ static bool tryLockFile(const QString &lockFileName)
     return false;
 }
 
-static int listen_helper(const QString &filePath, UnixSocketAddress::Type type)
+static int listen_helper(const QString &filePath, UnixSocketAddress::Type type, XwaylandSocket::OperationMode mode)
 {
     const UnixSocketAddress socketAddress(filePath, type);
 
-    int fileDescriptor = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
+    int socketFlags = SOCK_STREAM;
+    if (mode == XwaylandSocket::OperationMode::CloseFdsOnExec) {
+        socketFlags |= SOCK_CLOEXEC;
+    }
+    int fileDescriptor = socket(AF_UNIX, socketFlags, 0);
     if (fileDescriptor == -1) {
         return -1;
     }
@@ -159,7 +163,7 @@ static bool checkSocketsDirectory()
     return true;
 }
 
-XwaylandSocket::XwaylandSocket()
+XwaylandSocket::XwaylandSocket(OperationMode mode)
 {
     if (!checkSocketsDirectory()) {
         return;
@@ -173,13 +177,13 @@ XwaylandSocket::XwaylandSocket()
             continue;
         }
 
-        const int unixFileDescriptor = listen_helper(socketFilePath, UnixSocketAddress::Type::Unix);
+        const int unixFileDescriptor = listen_helper(socketFilePath, UnixSocketAddress::Type::Unix, mode);
         if (unixFileDescriptor == -1) {
             QFile::remove(lockFilePath);
             continue;
         }
 
-        const int abstractFileDescriptor = listen_helper(socketFilePath, UnixSocketAddress::Type::Abstract);
+        const int abstractFileDescriptor = listen_helper(socketFilePath, UnixSocketAddress::Type::Abstract, mode);
         if (abstractFileDescriptor == -1) {
             QFile::remove(lockFilePath);
             QFile::remove(socketFilePath);

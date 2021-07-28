@@ -39,6 +39,27 @@ public:
      */
     QProcess *process() const override;
 
+    /**
+     * Set file descriptors that xwayland should use for listening
+     * This is to be used in conjuction with kwin_wayland_wrapper which creates a socket externally
+     * That external process is responsible for setting up the DISPLAY env with a valid value.
+     * Ownership of the file descriptor is not transferrred.
+     */
+    void setListenFDs(const QVector<int> &listenFds);
+
+    /**
+     * Sets the display name used by XWayland (i.e ':0')
+     * This is to be used in conjuction with kwin_wayland_wrapper to provide the name of the socket
+     * created externally
+     */
+    void setDisplayName(const QString &displayName);
+
+    /**
+     * Sets the xauthority file to be used by XWayland
+     * This is to be used in conjuction with kwin_wayland_wrapper
+     */
+    void setXauthority(const QString &xauthority);
+
 public Q_SLOTS:
     /**
      * Starts the Xwayland server.
@@ -111,8 +132,13 @@ private:
     QTimer *m_resetCrashCountTimer = nullptr;
     ApplicationWaylandAbstract *m_app;
     QScopedPointer<KSelectionOwner> m_selectionOwner;
-    QTemporaryFile m_authorityFile;
+    // this is only used when kwin is run without kwin_wayland_wrapper
     QScopedPointer<XwaylandSocket> m_socket;
+
+    QVector<int> m_listenFds;
+    QString m_displayName;
+    QString m_xAuthority;
+
     int m_crashCount = 0;
 
     Q_DISABLE_COPY(Xwayland)

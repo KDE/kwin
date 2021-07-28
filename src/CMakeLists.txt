@@ -270,32 +270,7 @@ target_link_libraries(kwin_x11 kwin KF5::Crash Qt::X11Extras)
 install(TARGETS kwin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-ecm_qt_declare_logging_category(xwaylandlogging_SOURCES
-    HEADER
-        xwayland_logging.h
-    IDENTIFIER
-        KWIN_XWL
-    CATEGORY_NAME
-        kwin_xwl
-    DEFAULT_SEVERITY
-        Warning
-)
-add_library(KWinXwaylandServerModule OBJECT
-    xwl/clipboard.cpp
-    xwl/databridge.cpp
-    xwl/dnd.cpp
-    xwl/drag.cpp
-    xwl/drag_wl.cpp
-    xwl/drag_x.cpp
-    xwl/selection.cpp
-    xwl/selection_source.cpp
-    xwl/transfer.cpp
-    xwl/xwayland.cpp
-    xwl/xwaylandsocket.cpp
-
-    ${xwaylandlogging_SOURCES}
-)
-target_link_libraries(KWinXwaylandServerModule PUBLIC kwin)
+add_subdirectory(xwl)
 
 add_executable(kwin_wayland
     main_wayland.cpp

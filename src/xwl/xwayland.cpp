@@ -10,7 +10,6 @@
 */
 #include "xwayland.h"
 #include "databridge.h"
-#include "xwaylandsocket.h"
 
 #include "main_wayland.h"
 #include "options.h"
@@ -18,6 +17,8 @@
 #include "wayland_server.h"
 #include "xcbutils.h"
 #include "xwayland_logging.h"
+
+#include "xwaylandsocket.h"
 
 #include <KLocalizedString>
 #include <KNotification>
@@ -68,119 +69,50 @@ QProcess *Xwayland::process() const
     return m_xwaylandProcess;
 }
 
-static void writeXauthorityEntry(QDataStream &stream, quint16 family,
-                                 const QByteArray &address, const QByteArray &display,
-                                 const QByteArray &name, const QByteArray &cookie)
-{
-    stream << quint16(family);
-
-    auto writeArray = [&stream](const QByteArray &str) {
-        stream << quint16(str.size());
-        stream.writeRawData(str.constData(), str.size());
-    };
-
-    writeArray(address);
-    writeArray(display);
-    writeArray(name);
-    writeArray(cookie);
-}
-
-static QByteArray generateXauthorityCookie()
-{
-    QByteArray cookie;
-    cookie.resize(16); // Cookie must be 128bits
-
-    QRandomGenerator *generator = QRandomGenerator::system();
-    for (int i = 0; i < cookie.size(); ++i) {
-        cookie[i] = uint8_t(generator->bounded(256));
-    }
-    return cookie;
-}
-
-static bool generateXauthorityFile(int display, QTemporaryFile *authorityFile)
-{
-    const QString runtimeDirectory = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
-
-    authorityFile->setFileTemplate(runtimeDirectory + QStringLiteral("/xauth_XXXXXX"));
-    if (!authorityFile->open()) {
-        return false;
-    }
-
-    const QByteArray hostname = QHostInfo::localHostName().toUtf8();
-    const QByteArray displayName = QByteArray::number(display);
-    const QByteArray name = QByteArrayLiteral("MIT-MAGIC-COOKIE-1");
-    const QByteArray cookie = generateXauthorityCookie();
-
-    QDataStream stream(authorityFile);
-    stream.setByteOrder(QDataStream::BigEndian);
-
-    // Write entry with FamilyLocal and the host name as address
-    writeXauthorityEntry(stream, 256 /* FamilyLocal */, hostname, displayName, name, cookie);
-
-    // Write entry with FamilyWild, no address
-    writeXauthorityEntry(stream, 65535 /* FamilyWild */, QByteArray{}, displayName, name, cookie);
-
-    if (stream.status() != QDataStream::Ok || !authorityFile->flush()) {
-        authorityFile->remove();
-        return false;
-    }
-
-    return true;
-}
-
 void Xwayland::start()
 {
     if (m_xwaylandProcess) {
         return;
     }
 
-    QScopedPointer<XwaylandSocket> socket(new XwaylandSocket());
-    if (!socket->isValid()) {
-        qCWarning(KWIN_XWL) << "Failed to create Xwayland connection sockets";
-        Q_EMIT errorOccurred();
-        return;
-    }
-
-    if (!qEnvironmentVariableIsSet("KWIN_WAYLAND_NO_XAUTHORITY")) {
-        if (!generateXauthorityFile(socket->display(), &m_authorityFile)) {
-            qCWarning(KWIN_XWL) << "Failed to create an Xauthority file";
-            Q_EMIT errorOccurred();
-            return;
+    if (!m_listenFds.isEmpty()) {
+        Q_ASSERT(!m_displayName.isEmpty());
+    } else {
+        m_socket.reset(new XwaylandSocket(XwaylandSocket::OperationMode::CloseFdsOnExec));
+        if (!m_socket->isValid()) {
+            qFatal("Failed to establish X11 socket");
         }
+        setListenFDs({m_socket->unixFileDescriptor(), m_socket->abstractFileDescriptor()});
+        m_displayName = m_socket->name();
     }
 
-    m_socket.reset(socket.take());
+    startInternal();
+}
 
-    if (!startInternal()) {
-        m_authorityFile.remove();
-        m_socket.reset();
-    }
+void Xwayland::setListenFDs(const QVector<int> &listenFds)
+{
+    m_listenFds = listenFds;
+}
+
+void Xwayland::setDisplayName(const QString &displayName)
+{
+    m_displayName = displayName;
+}
+
+void Xwayland::setXauthority(const QString &xauthority)
+{
+    m_xAuthority = xauthority;
 }
 
 bool Xwayland::startInternal()
 {
     Q_ASSERT(!m_xwaylandProcess);
 
-    // The abstract socket file descriptor will be passed to Xwayland and closed by us.
-    const int abstractSocket = dup(m_socket->abstractFileDescriptor());
-    if (abstractSocket == -1) {
-        qCWarning(KWIN_XWL, "Failed to duplicate file descriptor: %s", strerror(errno));
-        Q_EMIT errorOccurred();
-        return false;
-    }
-    auto abstractSocketCleanup = qScopeGuard([&abstractSocket]() {
-        close(abstractSocket);
-    });
-
-    // The unix socket file descriptor will be passed to Xwayland and closed by us.
-    const int unixSocket = dup(m_socket->unixFileDescriptor());
-    if (unixSocket == -1) {
-        qCWarning(KWIN_XWL, "Failed to duplicate file descriptor: %s", strerror(errno));
-        Q_EMIT errorOccurred();
-        return false;
-    }
-    auto unixSocketCleanup = qScopeGuard([&unixSocket]() {
-        close(unixSocket);
+    QVector<int> fdsToClose;
+    auto cleanup = qScopeGuard([&fdsToClose] {
+        for (const int fd : qAsConst(fdsToClose)) {
+            close(fd);
+        }
     });
 
     int pipeFds[2];
@@ -189,6 +121,8 @@ bool Xwayland::startInternal()
         Q_EMIT errorOccurred();
         return false;
     }
+    fdsToClose << pipeFds[1];
+
     int sx[2];
     if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
         qCWarning(KWIN_XWL, "Failed to open socket for XCB connection: %s", strerror(errno));
@@ -217,24 +151,30 @@ bool Xwayland::startInternal()
 
     m_xcbConnectionFd = sx[0];
 
-    QStringList arguments {
-        m_socket->name(),
-        QStringLiteral("-displayfd"), QString::number(pipeFds[1]),
-        QStringLiteral("-rootless"),
-        QStringLiteral("-wm"), QString::number(fd),
-    };
+    QStringList arguments;
 
-    if (m_authorityFile.isOpen()) {
-        arguments << QStringLiteral("-auth") << m_authorityFile.fileName();
+    arguments << m_displayName;
+
+    if (!m_listenFds.isEmpty()) {
+        // xauthority externally set and managed
+        if (!m_xAuthority.isEmpty()) {
+            arguments << QStringLiteral("-auth") << m_xAuthority;
+        }
+
+        for (int socket : qAsConst(m_listenFds)) {
+            int dupSocket = dup(socket);
+            fdsToClose << dupSocket;
+            #if defined(HAVE_XWAYLAND_LISTENFD)
+                arguments << QStringLiteral("-listenfd") << QString::number(dupSocket);
+            #else
+                arguments << QStringLiteral("-listen") << QString::number(dupSocket)
+            #endif
+        }
     }
 
-#if defined(HAVE_XWAYLAND_LISTENFD)
-    arguments << QStringLiteral("-listenfd") << QString::number(abstractSocket)
-              << QStringLiteral("-listenfd") << QString::number(unixSocket);
-#else
-    arguments << QStringLiteral("-listen") << QString::number(abstractSocket)
-              << QStringLiteral("-listen") << QString::number(unixSocket);
-#endif
+    arguments << QStringLiteral("-displayfd") << QString::number(pipeFds[1]);
+    arguments << QStringLiteral("-rootless");
+    arguments << QStringLiteral("-wm") << QString::number(fd);
 
     m_xwaylandProcess = new Process(this);
     m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
@@ -257,7 +197,6 @@ bool Xwayland::startInternal()
     connect(m_readyNotifier, &QSocketNotifier::activated, this, &Xwayland::handleXwaylandReady);
 
     m_xwaylandProcess->start();
-    close(pipeFds[1]);
 
     return true;
 }
@@ -269,9 +208,6 @@ void Xwayland::stop()
     }
 
     stopInternal();
-
-    m_socket.reset();
-    m_authorityFile.remove();
 }
 
 void Xwayland::stopInternal()
@@ -435,13 +371,7 @@ void Xwayland::handleXwaylandReady()
         return;
     }
 
-    const QByteArray displayName = ':' + QByteArray::number(m_socket->display());
-
-    qCInfo(KWIN_XWL) << "Xwayland server started on display" << displayName;
-    qputenv("DISPLAY", displayName);
-    if (m_authorityFile.isOpen()) {
-        qputenv("XAUTHORITY", m_authorityFile.fileName().toUtf8());
-    }
+    qCInfo(KWIN_XWL) << "Xwayland server started on display" << m_displayName;
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
     m_selectionOwner.reset(new KSelectionOwner("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow()));
@@ -456,10 +386,8 @@ void Xwayland::handleXwaylandReady()
     DataBridge::create(this);
 
     auto env = m_app->processStartupEnvironment();
-    env.insert(QStringLiteral("DISPLAY"), displayName);
-    if (m_authorityFile.isOpen()) {
-        env.insert(QStringLiteral("XAUTHORITY"), m_authorityFile.fileName());
-    }
+    env.insert(QStringLiteral("DISPLAY"), m_displayName);
+    env.insert(QStringLiteral("XAUTHORITY"), m_xAuthority);
     m_app->setProcessStartupEnvironment(env);
 
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort
