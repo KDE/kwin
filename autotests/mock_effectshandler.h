@@ -282,6 +282,9 @@ public:
         return nullptr;
     }
 
+    void renderScreen(KWin::EffectScreen *screen) override {
+        Q_UNUSED(screen);
+    }
 private:
     bool m_animationsSuported = true;
 };

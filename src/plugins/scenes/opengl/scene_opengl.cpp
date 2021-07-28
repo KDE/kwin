@@ -732,27 +732,7 @@ SceneOpenGL2::~SceneOpenGL2()
 
 void SceneOpenGL2::updateProjectionMatrix(const QRect &rect)
 {
-    // Create a perspective projection with a 60° field-of-view,
-    // and an aspect ratio of 1.0.
-    m_projectionMatrix.setToIdentity();
-    const float fovY   =   std::tan(qDegreesToRadians(60.0f) / 2);
-    const float aspect =    1.0f;
-    const float zNear  =    0.1f;
-    const float zFar   =  100.0f;
-
-    const float yMax   =  zNear * fovY;
-    const float yMin   = -yMax;
-    const float xMin   =  yMin * aspect;
-    const float xMax   =  yMax * aspect;
-
-    m_projectionMatrix.frustum(xMin, xMax, yMin, yMax, zNear, zFar);
-
-    const float scaleFactor = 1.1 * fovY / yMax;
-    m_projectionMatrix.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
-    m_projectionMatrix.scale( (xMax - xMin) * scaleFactor / rect.width(),
-                             -(yMax - yMin) * scaleFactor / rect.height(),
-                              0.001);
-    m_projectionMatrix.translate(-rect.x(), -rect.y());
+    m_projectionMatrix = Scene::createProjectionMatrix(rect);
 }
 
 void SceneOpenGL2::paintSimpleScreen(int mask, const QRegion &region)

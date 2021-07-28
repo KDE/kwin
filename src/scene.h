@@ -75,6 +75,9 @@ public:
     virtual void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows,
                        RenderLoop *renderLoop) = 0;
 
+
+    void paintScreen(AbstractOutput *output, const QList<Toplevel *> &toplevels);
+
     /**
      * Adds the Toplevel to the Scene.
      *
@@ -180,6 +183,8 @@ public:
     virtual PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
     virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
+
+    static QMatrix4x4 createProjectionMatrix(const QRect &rect);
 
 Q_SIGNALS:
     void frameRendered();

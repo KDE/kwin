@@ -265,6 +265,7 @@ public:
     EffectScreen *screenAt(const QPoint &point) const override;
     EffectScreen *findScreen(const QString &name) const override;
     EffectScreen *findScreen(int screenId) const override;
+    void renderScreen(EffectScreen *screen) override;
 
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);

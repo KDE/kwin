@@ -1360,6 +1360,11 @@ public:
     virtual EffectScreen *findScreen(const QString &name) const = 0;
     virtual EffectScreen *findScreen(int screenId) const = 0;
 
+    /**
+     * Renders @p screen in the current render target
+     */
+    virtual void renderScreen(EffectScreen *screen) = 0;
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever a new @a screen is added to the system.

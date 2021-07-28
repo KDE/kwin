@@ -22,6 +22,7 @@ class AbstractOutput;
 class CompositorSelectionOwner;
 class RenderLoop;
 class Scene;
+class Toplevel;
 class X11Client;
 class X11SyncManager;
 
@@ -86,6 +87,7 @@ public:
     // for delayed supportproperty management of effects
     void keepSupportProperty(xcb_atom_t atom);
     void removeSupportProperty(xcb_atom_t atom);
+    QList<Toplevel *> windowsToRender() const;
 
 Q_SIGNALS:
     void compositingToggled(bool active);

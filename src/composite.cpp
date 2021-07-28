@@ -573,12 +573,8 @@ void Compositor::handleFrameRequested(RenderLoop *renderLoop)
     composite(renderLoop);
 }
 
-void Compositor::composite(RenderLoop *renderLoop)
+QList<Toplevel *> Compositor::windowsToRender() const
 {
-    const auto &output = m_renderLoops[renderLoop];
-
-    fTraceDuration("Paint (", output ? output->name() : QStringLiteral("screens"), ")");
-
     // Create a list of all windows in the stacking order
     QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
 
@@ -606,6 +602,16 @@ void Compositor::composite(RenderLoop *renderLoop)
             }
         }
     }
+    return windows;
+}
+
+void Compositor::composite(RenderLoop *renderLoop)
+{
+    const auto &output = m_renderLoops[renderLoop];
+
+    fTraceDuration("Paint (", output ? output->name() : QStringLiteral("screens"), ")");
+
+    const auto windows = windowsToRender();
 
     const QRegion repaints = m_scene->repaints(output);
     m_scene->resetRepaints(output);
@@ -616,7 +622,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         const std::chrono::milliseconds frameTime =
                 std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->lastPresentationTimestamp());
 
-        for (Toplevel *window : qAsConst(windows)) {
+        for (Toplevel *window : windows) {
             if (!window->readyForPainting()) {
                 continue;
             }
