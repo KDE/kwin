@@ -169,6 +169,17 @@ bool DrmPipeline::doAtomicCommit(drmModeAtomicReq *req, uint32_t flags, bool tes
             obj->commitPending();
         }
         if (!testOnly) {
+            if (KWIN_DRM().isDebugEnabled()) {
+                auto fbProp = m_primaryPlane->getProp(DrmPlane::PropertyIndex::FbId);
+                fbProp->commitPending();
+                fbProp->commit();
+                bool needsCommit = std::any_of(m_allObjects.constBegin(), m_allObjects.constEnd(), [](auto obj){return obj->needsCommit();});
+                if (needsCommit) {
+                    // normal presentation only changes the FbId prop -> if needsCommit is still true then we changed more
+                    qCDebug(KWIN_DRM) << "Applied changes:";
+                    printDebugInfo();
+                }
+            }
             for (const auto &obj : qAsConst(m_allObjects)) {
                 obj->commit();
             }
@@ -545,10 +556,12 @@ static void printProps(DrmObject *object)
     auto list = object->properties();
     for (const auto &prop : list) {
         if (prop) {
+            auto current = prop->name().startsWith("SRC") ? prop->current() >> 16 : prop->current();
             if (prop->isImmutable() || !prop->needsCommit()) {
-                qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << prop->current();
+                qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current;
             } else {
-                qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << prop->current() << "->" << prop->pending();
+                auto pending = prop->name().startsWith("SRC") ? prop->pending() >> 16 : prop->pending();
+                qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current << "->" << pending;
             }
         }
     }
