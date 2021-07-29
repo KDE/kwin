@@ -32,18 +32,6 @@ class KWIN_EXPORT AbstractWaylandOutput : public AbstractOutput
 {
     Q_OBJECT
 public:
-    enum class Transform {
-        Normal,
-        Rotated90,
-        Rotated180,
-        Rotated270,
-        Flipped,
-        Flipped90,
-        Flipped180,
-        Flipped270
-    };
-    Q_ENUM(Transform)
-
     enum class ModeFlag : uint {
         Current = 0x1,
         Preferred = 0x2,
@@ -106,7 +94,7 @@ public:
      * - Rotated 270° and flipped along the horizontal axis is inv. portrait + inv. landscape +
      *   portrait
      */
-    Transform transform() const;
+    Transform transform() const override;
 
     int refreshRate() const override;
 

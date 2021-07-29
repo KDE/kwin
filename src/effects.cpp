@@ -1754,6 +1754,11 @@ QRect EffectScreenImpl::geometry() const
     return m_platformOutput->geometry();
 }
 
+EffectScreen::Transform EffectScreenImpl::transform() const
+{
+    return EffectScreen::Transform(m_platformOutput->transform());
+}
+
 //****************************************
 // EffectWindowImpl
 //****************************************

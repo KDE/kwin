@@ -369,6 +369,7 @@ public:
     QString name() const override;
     qreal devicePixelRatio() const override;
     QRect geometry() const override;
+    Transform transform() const override;
 
 private:
     AbstractOutput *m_platformOutput;

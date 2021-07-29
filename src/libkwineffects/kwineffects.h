@@ -1853,6 +1853,20 @@ public:
      */
     virtual QRect geometry() const = 0;
 
+
+    enum class Transform {
+        Normal,
+        Rotated90,
+        Rotated180,
+        Rotated270,
+        Flipped,
+        Flipped90,
+        Flipped180,
+        Flipped270
+    };
+    Q_ENUM(Transform)
+    virtual Transform transform() const = 0;
+
 Q_SIGNALS:
     /**
      * Notifies that the display will be dimmed in @p time ms.
