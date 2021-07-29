@@ -3755,7 +3755,11 @@ public:
 
     TimeLine &operator=(const TimeLine &other);
 
-private:
+    /**
+     * @returns a value between 0 and 1 defining the progress of the timeline
+     *
+     * @since 5.23
+     */
     qreal progress() const;
 
 private:
