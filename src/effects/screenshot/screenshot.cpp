@@ -361,15 +361,10 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, qreal devicePixel
         const QSize nativeSize = geometry.size() * devicePixelRatio;
 
         if (GLRenderTarget::blitSupported() && !GLPlatform::instance()->isGLES()) {
-            image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
             GLTexture texture(GL_RGBA8, nativeSize.width(), nativeSize.height());
             GLRenderTarget target(texture);
             target.blitFromFramebuffer(geometry);
-            // copy content from framebuffer into image
-            texture.bind();
-            glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                          static_cast<GLvoid *>(image.bits()));
-            texture.unbind();
+            image = texture.toImage();
         } else {
             image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
             glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA,
