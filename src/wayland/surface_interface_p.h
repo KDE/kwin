@@ -21,19 +21,6 @@ class IdleInhibitorV1Interface;
 class SurfaceRole;
 class ViewportInterface;
 
-class KWaylandFrameCallback : public QtWaylandServer::wl_callback
-{
-public:
-    KWaylandFrameCallback(wl_resource *resource, SurfaceInterface *surface);
-
-    void destroy();
-
-    QPointer<SurfaceInterface> surface;
-
-protected:
-    void callback_destroy_resource(Resource *resource) override;
-};
-
 struct SurfaceState
 {
     void mergeInto(SurfaceState *target);
@@ -54,7 +41,7 @@ struct SurfaceState
     bool bufferTransformIsSet = false;
     qint32 bufferScale = 1;
     OutputInterface::Transform bufferTransform = OutputInterface::Transform::Normal;
-    QList<KWaylandFrameCallback *> frameCallbacks;
+    wl_list frameCallbacks;
     QPoint offset = QPoint();
     QPointer<ClientBuffer> buffer;
     QPointer<ShadowInterface> shadow;

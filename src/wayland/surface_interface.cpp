@@ -23,49 +23,27 @@
 namespace KWaylandServer
 {
 
-KWaylandFrameCallback::KWaylandFrameCallback(wl_resource *resource, SurfaceInterface *surface)
-    : QtWaylandServer::wl_callback(resource)
-    , surface(surface)
-{
-}
-
-void KWaylandFrameCallback::destroy()
-{
-    wl_resource_destroy(resource()->handle);
-}
-
-void KWaylandFrameCallback::callback_destroy_resource(Resource *)
-{
-    if (surface) {
-        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
-        surfacePrivate->current.frameCallbacks.removeOne(this);
-        surfacePrivate->pending.frameCallbacks.removeOne(this);
-        surfacePrivate->cached.frameCallbacks.removeOne(this);
-    }
-    delete this;
-}
-
 SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q)
     : q(q)
 {
+    wl_list_init(&current.frameCallbacks);
+    wl_list_init(&pending.frameCallbacks);
+    wl_list_init(&cached.frameCallbacks);
 }
 
 SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
 {
-    // Need a copy to avoid hitting invalidated iterators in the for loop.
-    const QList<KWaylandFrameCallback *> currentFrameCallbacks = current.frameCallbacks;
-    for (KWaylandFrameCallback *frameCallback : currentFrameCallbacks) {
-        frameCallback->destroy();
-    }
+    wl_resource *resource;
+    wl_resource *tmp;
 
-    const QList<KWaylandFrameCallback *> pendingFrameCallbacks = pending.frameCallbacks;
-    for (KWaylandFrameCallback *frameCallback : pendingFrameCallbacks) {
-        frameCallback->destroy();
+    wl_resource_for_each_safe(resource, tmp, &current.frameCallbacks) {
+        wl_resource_destroy(resource);
     }
-
-    const QList<KWaylandFrameCallback *> cachedFrameCallbacks = cached.frameCallbacks;
-    for (KWaylandFrameCallback *frameCallback : cachedFrameCallbacks) {
-        frameCallback->destroy();
+    wl_resource_for_each_safe(resource, tmp, &pending.frameCallbacks) {
+        wl_resource_destroy(resource);
+    }
+    wl_resource_for_each_safe(resource, tmp, &cached.frameCallbacks) {
+        wl_resource_destroy(resource);
     }
 
     if (current.buffer) {
@@ -290,7 +268,12 @@ void SurfaceInterfacePrivate::surface_frame(Resource *resource, uint32_t callbac
         wl_resource_post_no_memory(resource->handle);
         return;
     }
-    pending.frameCallbacks.append(new KWaylandFrameCallback(callbackResource, q));
+
+    wl_resource_set_implementation(callbackResource, nullptr, nullptr, [](wl_resource *resource) {
+        wl_list_remove(wl_resource_get_link(resource));
+    });
+
+    wl_list_insert(pending.frameCallbacks.prev, wl_resource_get_link(callbackResource));
 }
 
 void SurfaceInterfacePrivate::surface_set_opaque_region(Resource *resource, struct ::wl_resource *region)
@@ -384,11 +367,14 @@ CompositorInterface *SurfaceInterface::compositor() const
 void SurfaceInterface::frameRendered(quint32 msec)
 {
     // notify all callbacks
-    while (!d->current.frameCallbacks.isEmpty()) {
-        KWaylandFrameCallback *frameCallback = d->current.frameCallbacks.takeFirst();
-        frameCallback->send_done(msec);
-        frameCallback->destroy();
+    wl_resource *resource;
+    wl_resource *tmp;
+
+    wl_resource_for_each_safe(resource, tmp, &d->current.frameCallbacks) {
+        wl_callback_send_done(resource, msec);
+        wl_resource_destroy(resource);
     }
+
     for (SubSurfaceInterface *subsurface : qAsConst(d->current.below)) {
         subsurface->surface()->frameRendered(msec);
     }
@@ -399,7 +385,7 @@ void SurfaceInterface::frameRendered(quint32 msec)
 
 bool SurfaceInterface::hasFrameCallbacks() const
 {
-    return !d->current.frameCallbacks.isEmpty();
+    return !wl_list_empty(&d->current.frameCallbacks);
 }
 
 QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
@@ -482,7 +468,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->above = above;
         target->childrenChanged = true;
     }
-    target->frameCallbacks.append(frameCallbacks);
+    wl_list_insert_list(&target->frameCallbacks, &frameCallbacks);
 
     if (shadowIsSet) {
         target->shadow = shadow;
@@ -520,6 +506,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
     *this = SurfaceState{};
     below = target->below;
     above = target->above;
+    wl_list_init(&frameCallbacks);
 }
 
 void SurfaceInterfacePrivate::applyState(SurfaceState *next)
