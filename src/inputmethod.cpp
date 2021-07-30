@@ -196,6 +196,12 @@ void InputMethod::handleFocusedSurfaceChanged()
     setTrackedClient(waylandServer()->findClient(focusedSurface));
     if (!focusedSurface) {
         setActive(false);
+    } else {
+        auto t2 = waylandServer()->seat()->textInputV2();
+        auto t3 = waylandServer()->seat()->textInputV3();
+        if ((t2 && t2->isEnabled()) || (t3 && t3->isEnabled())) {
+            setActive(true);
+        }
     }
 }
 
