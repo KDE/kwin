@@ -2657,9 +2657,6 @@ Toplevel *InputRedirection::findManagedToplevel(const QPoint &pos)
         if (!t->readyForPainting()) {
             continue;
         }
-        if (!t->effectWindow()->isPaintingEnabled()) {
-            continue;
-        }
         if (isScreenLocked) {
             if (!t->isLockScreen() && !t->isInputMethod()) {
                 continue;
