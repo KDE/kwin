@@ -3,11 +3,27 @@
         "Authors": [
             {
                 "Email": "demitriusbelai@gmail.com",
-                "Name": "Demitrius Belai"
+                "Name": "Demitrius Belai",
+                "Name[az]": "Demitrius Belai",
+                "Name[ca]": "Demitrius Belai",
+                "Name[cs]": "Demitrius Belai",
+                "Name[es]": "Demitrius Belai",
+                "Name[nl]": "Demitrius Belai",
+                "Name[sv]": "Demitrius Belai",
+                "Name[uk]": "Demitrius Belai",
+                "Name[x-test]": "xxDemitrius Belaixx"
             }
         ],
         "Id": "KWin/Decoration",
         "Name": "KWin Decoration",
+        "Name[az]": "KWin Dekorasiyası",
+        "Name[ca]": "Decoració del KWin",
+        "Name[cs]": "Dekorace KWin",
+        "Name[es]": "Decoración de KWin",
+        "Name[nl]": "KWin-decoraties",
+        "Name[sv]": "Kwin-dekoration",
+        "Name[uk]": "Обрамлення вікон KWin",
+        "Name[x-test]": "xxKWin Decorationxx",
         "ServiceTypes": [
             "KPackage/PackageStructure"
         ],

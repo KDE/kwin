@@ -3,11 +3,27 @@
         "Authors": [
             {
                 "Email": "notmart@gmail.com",
-                "Name": "Marco Martin"
+                "Name": "Marco Martin",
+                "Name[az]": "Marco Martin",
+                "Name[ca]": "Marco Martin",
+                "Name[cs]": "Marco Martin",
+                "Name[es]": "Marco Martin",
+                "Name[nl]": "Marco Martin",
+                "Name[sv]": "Marco Martin",
+                "Name[uk]": "Marco Martin",
+                "Name[x-test]": "xxMarco Martinxx"
             }
         ],
         "Id": "KWin/Script",
         "Name": "KWin Script",
+        "Name[az]": "Kwin skripti",
+        "Name[ca]": "Script del KWin",
+        "Name[cs]": "Skript KWinu",
+        "Name[es]": "Guion de KWin",
+        "Name[nl]": "KWin-script",
+        "Name[sv]": "Kwin-skript",
+        "Name[uk]": "Скрипт KWin",
+        "Name[x-test]": "xxKWin Scriptxx",
         "ServiceTypes": [
             "KPackage/PackageStructure"
         ],

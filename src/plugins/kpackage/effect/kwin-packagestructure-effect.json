@@ -3,11 +3,27 @@
         "Authors": [
             {
                 "Email": "vlad.zahorodnii@kde.org",
-                "Name": "Vlad Zahorodnii"
+                "Name": "Vlad Zahorodnii",
+                "Name[az]": "Vlad Zahorodnii",
+                "Name[ca]": "Vlad Zahorodnii",
+                "Name[cs]": "Vlad Zahorodnii",
+                "Name[es]": "Vlad Zahorodnii",
+                "Name[nl]": "Vlad Zahorodnii",
+                "Name[sv]": "Vlad Zahorodnii",
+                "Name[uk]": "Влад Загородній",
+                "Name[x-test]": "xxVlad Zahorodniixx"
             }
         ],
         "Id": "KWin/Effect",
         "Name": "KWin Effect",
+        "Name[az]": "KWin effekti",
+        "Name[ca]": "Efecte del KWin",
+        "Name[cs]": "Efekt KWinu",
+        "Name[es]": "Efecto de KWin",
+        "Name[nl]": "KWin-effect",
+        "Name[sv]": "Kwin-effekt",
+        "Name[uk]": "Ефект KWin",
+        "Name[x-test]": "xxKWin Effectxx",
         "ServiceTypes": [
             "KPackage/PackageStructure"
         ],

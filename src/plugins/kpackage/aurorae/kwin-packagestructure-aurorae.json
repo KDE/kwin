@@ -3,11 +3,27 @@
         "Authors": [
             {
                 "Email": "demitriusbelai@gmail.com",
-                "Name": "Demitrius Belai"
+                "Name": "Demitrius Belai",
+                "Name[az]": "Demitrius Belai",
+                "Name[ca]": "Demitrius Belai",
+                "Name[cs]": "Demitrius Belai",
+                "Name[es]": "Demitrius Belai",
+                "Name[nl]": "Demitrius Belai",
+                "Name[sv]": "Demitrius Belai",
+                "Name[uk]": "Demitrius Belai",
+                "Name[x-test]": "xxDemitrius Belaixx"
             }
         ],
         "Id": "KWin/Aurorae",
         "Name": "KWin Aurorae",
+        "Name[az]": "KWin Aurorae",
+        "Name[ca]": "Aurorae del KWin",
+        "Name[cs]": "KWin Aurorae",
+        "Name[es]": "KWin Aurorae",
+        "Name[nl]": "KWin Aurorae",
+        "Name[sv]": "KWin Aurorae",
+        "Name[uk]": "KWin Aurorae",
+        "Name[x-test]": "xxKWin Auroraexx",
         "ServiceTypes": [
             "KPackage/PackageStructure"
         ],
