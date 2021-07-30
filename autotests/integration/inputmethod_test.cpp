@@ -55,6 +55,7 @@ private Q_SLOTS:
     void testEnableDisableV3();
     void testEnableActive();
     void testHidePanel();
+    void testSwitchFocusedSurfaces();
 };
 
 
@@ -274,6 +275,57 @@ void InputMethodTest::testHidePanel()
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
 
+}
+
+void InputMethodTest::testSwitchFocusedSurfaces()
+{
+    QVERIFY(!InputMethod::self()->isActive());
+
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy clientRemovedSpy(workspace(), &Workspace::clientRemoved);
+    QVERIFY(clientAddedSpy.isValid());
+
+    QSignalSpy activateSpy(InputMethod::self(), &InputMethod::activeChanged);
+    QScopedPointer<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    textInput->showInputPanel();
+    QVERIFY(clientAddedSpy.wait(10000));
+
+    QVector<AbstractClient *> clients;
+    QVector<Surface *> surfaces;
+    QVector<Test::XdgToplevel *> toplevels;
+    // We create 3 surfaces
+    for (int i = 0; i < 3; ++i) {
+        auto surface = Test::createSurface();
+        auto shellSurface = Test::createXdgToplevelSurface(surface);
+        clients += Test::renderAndWaitForShown(surface, QSize(1280, 1024), Qt::red);
+        QCOMPARE(workspace()->activeClient(), clients.constLast());
+        surfaces += surface;
+        toplevels += shellSurface;
+    }
+    waylandServer()->seat()->setFocusedTextInputSurface(clients.constFirst()->surface());
+
+    QCOMPARE(clientAddedSpy.count(), 4);
+    QVERIFY(activateSpy.count() || activateSpy.wait());
+    QVERIFY(!InputMethod::self()->isActive());
+    textInput->enable(surfaces.last());
+    QVERIFY(!InputMethod::self()->isActive());
+    waylandServer()->seat()->setFocusedTextInputSurface(clients.first()->surface());
+    QVERIFY(!InputMethod::self()->isActive());
+    activateSpy.clear();
+    waylandServer()->seat()->setFocusedTextInputSurface(clients.last()->surface());
+    QVERIFY(activateSpy.count() || activateSpy.wait());
+    QVERIFY(InputMethod::self()->isActive());
+
+    activateSpy.clear();
+    waylandServer()->seat()->setFocusedTextInputSurface(clients.first()->surface());
+    QVERIFY(activateSpy.count() || activateSpy.wait());
+    QVERIFY(!InputMethod::self()->isActive());
+
+    // Destroy the test client.
+    for (int i = 0; i < clients.count(); ++i) {
+        delete toplevels[i];
+        QVERIFY(Test::waitForWindowDestroyed(clients[i]));
+    }
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)
