@@ -546,6 +546,16 @@ bool DrmPipeline::isConnected() const
     }
 }
 
+bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const
+{
+    return m_primaryPlane->formats().contains(drmFormat);
+}
+
+QVector<uint64_t> DrmPipeline::supportedModifiers(uint32_t drmFormat) const
+{
+    return m_primaryPlane->formats()[drmFormat];
+}
+
 static void printProps(DrmObject *object)
 {
     auto list = object->properties();

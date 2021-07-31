@@ -114,6 +114,7 @@ private:
 
     QVector<Output> m_outputs;
     QVector<Output> m_secondaryGpuOutputs;
+    uint32_t m_gbmFormat;
 
     friend class EglGbmTexture;
 };

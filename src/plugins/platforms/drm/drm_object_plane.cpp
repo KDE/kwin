@@ -11,6 +11,11 @@
 #include "drm_gpu.h"
 #include "drm_pointer.h"
 #include "logging.h"
+#include "config-kwin.h"
+
+#if HAVE_GBM
+#include <gbm.h>
+#endif
 
 namespace KWin
 {
@@ -38,6 +43,7 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
             QByteArrayLiteral("rotate-270"),
             QByteArrayLiteral("reflect-x"),
             QByteArrayLiteral("reflect-y")}),
+        PropertyDefinition(QByteArrayLiteral("IN_FORMATS")),
         }, DRM_MODE_OBJECT_PLANE)
 {
 }
@@ -54,12 +60,6 @@ bool DrmPlane::init()
 
     m_possibleCrtcs = p->possible_crtcs;
 
-    int count_formats = p->count_formats;
-    m_formats.resize(count_formats);
-    for (int i = 0; i < count_formats; i++) {
-        m_formats[i] = p->formats[i];
-    }
-
     bool success = initProps();
     if (success) {
         m_supportedTransformations = Transformations();
@@ -74,6 +74,42 @@ bool DrmPlane::init()
         checkSupport(3, Transformation::Rotate270);
         checkSupport(4, Transformation::ReflectX);
         checkSupport(5, Transformation::ReflectY);
+
+        // read formats from blob if available and if modifiers are supported, and from the plane object if not
+        if (auto formatProp = getProp(PropertyIndex::In_Formats); formatProp && qEnvironmentVariableIsSet("KWIN_DRM_NO_MODIFIERS") && gpu()->addFB2ModifiersSupported()) {
+            auto blob = static_cast<drm_format_modifier_blob*>(formatProp->currentBlob()->data);
+            auto modifiers = reinterpret_cast<drm_format_modifier*>(reinterpret_cast<uint8_t*>(blob) + blob->modifiers_offset);
+            uint32_t *formatarr = reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(blob) + blob->formats_offset);
+
+            for (uint32_t f = 0; f < blob->count_formats; f++) {
+                auto format = formatarr[f];
+                QVector<uint64_t> mods;
+                for (uint32_t m = 0; m < blob->count_modifiers; m++) {
+                    auto modifier = &modifiers[m];
+                    // The modifier advertisement blob is partitioned into groups of 64 formats
+                    if (m < modifier->offset || m > modifier->offset + 63) {
+                        continue;
+                    }
+                    if (!(modifier->formats & (1 << (f - modifier->offset)))) {
+                        continue;
+                    }
+                    mods << modifier->modifier;
+                }
+                m_supportedFormats.insert(format, mods);
+            }
+        } else {
+            for (uint32_t i = 0; i < p->count_formats; i++) {
+                m_supportedFormats.insert(p->formats[i], {});
+            }
+        }
+#if HAVE_GBM
+        if (m_supportedFormats.isEmpty()) {
+            qCWarning(KWIN_DRM) << "Driver doesn't advertise any formats for this plane. Falling back to XRGB8888 and ARGB8888 without modifiers";
+            m_supportedFormats.insert(GBM_BO_FORMAT_XRGB8888, {});
+            m_supportedFormats.insert(GBM_BO_FORMAT_ARGB8888, {});
+        }
+#endif
+
     }
     return success;
 }

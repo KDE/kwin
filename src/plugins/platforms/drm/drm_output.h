@@ -54,6 +54,8 @@ public:
     DrmPipeline *pipeline() const;
     GbmBuffer *currentBuffer() const override;
     QSize sourceSize() const override;
+    bool isFormatSupported(uint32_t drmFormat) const override;
+    QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
 
 private:
     friend class DrmGpu;

@@ -105,4 +105,17 @@ GbmBuffer *DrmVirtualOutput::currentBuffer() const
 #endif
 }
 
+bool DrmVirtualOutput::isFormatSupported(uint32_t drmFormat) const
+{
+    Q_UNUSED(drmFormat);
+    return true;
+}
+
+QVector<uint64_t> DrmVirtualOutput::supportedModifiers(uint32_t drmFormat) const
+{
+    Q_UNUSED(drmFormat);
+    // empty list -> implicit modifiers are used / modifier is freely chosen by gbm
+    return {};
+}
+
 }

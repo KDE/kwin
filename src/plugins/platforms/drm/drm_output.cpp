@@ -403,4 +403,14 @@ QSize DrmOutput::sourceSize() const
     return m_pipeline->sourceSize();
 }
 
+bool DrmOutput::isFormatSupported(uint32_t drmFormat) const
+{
+    return m_pipeline->isFormatSupported(drmFormat);
+}
+
+QVector<uint64_t> DrmOutput::supportedModifiers(uint32_t drmFormat) const
+{
+    return m_pipeline->supportedModifiers(drmFormat);
+}
+
 }

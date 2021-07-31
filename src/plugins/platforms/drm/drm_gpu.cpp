@@ -68,10 +68,8 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
         m_presentationClock = CLOCK_REALTIME;
     }
 
-    if (!qEnvironmentVariableIsSet("KWIN_DRM_NO_MODIFIERS")) {
-        m_addFB2ModifiersSupported = drmGetCap(fd, DRM_CAP_ADDFB2_MODIFIERS, &capability) == 0 && capability == 1;
-        qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << m_devNode;
-    }
+    m_addFB2ModifiersSupported = drmGetCap(fd, DRM_CAP_ADDFB2_MODIFIERS, &capability) == 0 && capability == 1;
+    qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << m_devNode;
 
     // find out if this GPU is using the NVidia proprietary driver
     DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
@@ -497,6 +495,20 @@ void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
         Q_EMIT outputDisabled(output);
         Q_EMIT outputRemoved(output);
         delete output;
+    }
+}
+
+bool DrmGpu::isFormatSupported(uint32_t gbmFormat) const
+{
+    if (!m_atomicModeSetting) {
+        return gbmFormat == GBM_BO_FORMAT_XRGB8888 || gbmFormat == GBM_BO_FORMAT_ARGB8888;
+    } else {
+        for (const auto &plane : qAsConst(m_planes)) {
+            if (plane->type() == DrmPlane::TypeIndex::Primary && !plane->formats().contains(gbmFormat)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 

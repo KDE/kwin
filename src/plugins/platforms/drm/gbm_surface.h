@@ -25,6 +25,7 @@ class GbmSurface
 {
 public:
     explicit GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags);
+    explicit GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers);
     ~GbmSurface();
 
     QSharedPointer<DrmGbmBuffer> swapBuffersForDrm();

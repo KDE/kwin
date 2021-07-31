@@ -32,6 +32,9 @@ public:
     QSize sourceSize() const override;
     bool isDpmsEnabled() const override;
 
+    bool isFormatSupported(uint32_t drmFormat) const override;
+    QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
+
     int gammaRampSize() const override {
         return 200;
     }
@@ -39,7 +42,6 @@ public:
         Q_UNUSED(gamma);
         return true;
     }
-
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);

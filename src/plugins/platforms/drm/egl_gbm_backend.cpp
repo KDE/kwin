@@ -139,18 +139,32 @@ bool EglGbmBackend::initRenderingContext()
     }
     return true;
 }
+
 bool EglGbmBackend::resetOutput(Output &output, DrmAbstractOutput *drmOutput)
 {
     output.output = drmOutput;
     const QSize size = drmOutput->sourceSize();
-    int flags = GBM_BO_USE_RENDERING;
-    if (drmOutput->gpu() == m_gpu) {
-        flags |= GBM_BO_USE_SCANOUT;
+    QVector<uint64_t> modifiers = drmOutput->supportedModifiers(m_gbmFormat);
+
+    QSharedPointer<GbmSurface> gbmSurface;
+    if (modifiers.isEmpty()) {
+        int flags = GBM_BO_USE_RENDERING;
+        if (drmOutput->gpu() == m_gpu) {
+            flags |= GBM_BO_USE_SCANOUT;
+        } else {
+            flags |= GBM_BO_USE_LINEAR;
+        }
+        gbmSurface = QSharedPointer<GbmSurface>::create(m_gpu, size, m_gbmFormat, flags);
     } else {
-        flags |= GBM_BO_USE_LINEAR;
+        gbmSurface = QSharedPointer<GbmSurface>::create(m_gpu, size, m_gbmFormat, modifiers);
+        if (!gbmSurface->isValid()) {
+            // the egl / gbm implementation may reject the modifier list from another gpu
+            // as a fallback use linear, to at least make CPU copy more efficient
+            modifiers = {DRM_FORMAT_MOD_LINEAR};
+            gbmSurface = QSharedPointer<GbmSurface>::create(m_gpu, size, m_gbmFormat, modifiers);
+        }
     }
-    auto gbmSurface = QSharedPointer<GbmSurface>::create(m_gpu, size, GBM_FORMAT_XRGB8888, flags);
-    if (!gbmSurface) {
+    if (!gbmSurface->isValid()) {
         qCCritical(KWIN_DRM) << "Creating GBM surface failed:" << strerror(errno);
         return false;
     }
@@ -386,32 +400,49 @@ bool EglGbmBackend::initBufferConfigs()
 
     qCDebug(KWIN_DRM) << "EGL buffer configs count:" << count;
 
+    uint32_t fallbackFormat;
+    EGLConfig fallbackConfig = nullptr;
+
     // Loop through all configs, choosing the first one that has suitable format.
     for (EGLint i = 0; i < count; i++) {
         EGLint gbmFormat;
         // Query some configuration parameters, to show in debug log.
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
 
+        // Query number of bits for color channel
+        EGLint blueSize, redSize, greenSize, alphaSize;
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_RED_SIZE, &redSize);
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_GREEN_SIZE, &greenSize);
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_BLUE_SIZE, &blueSize);
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
+
         if (KWIN_DRM().isDebugEnabled()) {
             // GBM formats are declared as FOURCC code (integer from ASCII chars, so use this fact).
             char gbmFormatStr[sizeof(EGLint) + 1] = {0};
             memcpy(gbmFormatStr, &gbmFormat, sizeof(EGLint));
-
-            // Query number of bits for color channel.
-            EGLint blueSize, redSize, greenSize, alphaSize;
-            eglGetConfigAttrib(eglDisplay(), configs[i], EGL_RED_SIZE, &redSize);
-            eglGetConfigAttrib(eglDisplay(), configs[i], EGL_GREEN_SIZE, &greenSize);
-            eglGetConfigAttrib(eglDisplay(), configs[i], EGL_BLUE_SIZE, &blueSize);
-            eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
             qCDebug(KWIN_DRM) << "  EGL config #" << i << " has GBM FOURCC format:" << gbmFormatStr
                               << "; color sizes (RGBA order):"
                               << redSize << greenSize << blueSize << alphaSize;
         }
 
-        if ((gbmFormat == GBM_FORMAT_XRGB8888) || (gbmFormat == GBM_FORMAT_ARGB8888)) {
+        if (!m_gpu->isFormatSupported(gbmFormat)) {
+            continue;
+        }
+        // prefer XRGB8888 as it's most likely to be supported by secondary GPUs as well
+        if (gbmFormat == GBM_BO_FORMAT_XRGB8888) {
+            m_gbmFormat = gbmFormat;
             setConfig(configs[i]);
             return true;
+        } else if (!fallbackConfig && blueSize >= 8 && redSize >= 8 && greenSize >= 8) {
+            fallbackFormat = gbmFormat;
+            fallbackConfig = configs[i];
         }
+    }
+
+    if (fallbackConfig) {
+        m_gbmFormat = fallbackFormat;
+        setConfig(fallbackConfig);
+        return true;
     }
 
     qCCritical(KWIN_DRM) << "Choosing EGL config did not return a suitable config. There were"
@@ -591,15 +622,18 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
     if (buffer->size() != output.output->modeSize()) {
         return false;
     }
-    if (!buffer->planes().count() ||
-        !gbm_device_is_format_supported(m_gpu->gbmDevice(), buffer->format(), GBM_BO_USE_SCANOUT)) {
+    if (!buffer->planes().count()) {
         return false;
     }
+    if (!output.output->isFormatSupported(buffer->format())) {
+        return false;
+    }
+
     gbm_bo *importedBuffer;
     if (buffer->planes()[0].modifier != DRM_FORMAT_MOD_INVALID
         || buffer->planes()[0].offset > 0
         || buffer->planes().size() > 1) {
-        if (!m_gpu->addFB2ModifiersSupported()) {
+        if (!m_gpu->addFB2ModifiersSupported() || !output.output->supportedModifiers(buffer->format()).contains(buffer->planes()[0].modifier)) {
             return false;
         }
         gbm_import_fd_modifier_data data = {};

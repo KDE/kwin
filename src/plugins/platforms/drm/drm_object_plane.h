@@ -11,8 +11,8 @@
 #include "drm_object.h"
 
 #include <qobjectdefs.h>
-#include <xf86drmMode.h>
 #include <QSharedPointer>
+#include <QMap>
 
 namespace KWin
 {
@@ -38,6 +38,7 @@ public:
         FbId,
         CrtcId,
         Rotation,
+        In_Formats,
         Count
     };
     Q_ENUM(PropertyIndex)
@@ -67,8 +68,8 @@ public:
     bool isCrtcSupported(int pipeIndex) const {
         return (m_possibleCrtcs & (1 << pipeIndex));
     }
-    QVector<uint32_t> formats() const {
-        return m_formats;
+    QMap<uint32_t, QVector<uint64_t>> formats() const {
+        return m_supportedFormats;
     }
 
     QSharedPointer<DrmBuffer> current() const {
@@ -99,12 +100,8 @@ private:
     QSharedPointer<DrmBuffer> m_current;
     QSharedPointer<DrmBuffer> m_next;
 
-    // TODO: See weston drm_output_check_plane_format for future use of these member variables
-    QVector<uint32_t> m_formats;        // Possible formats, which can be presented on this plane
-
-    // TODO: when using overlay planes in the future: restrict possible screens / crtcs of planes
+    QMap<uint32_t, QVector<uint64_t>> m_supportedFormats;
     uint32_t m_possibleCrtcs;
-
     Transformations m_supportedTransformations = Transformation::Rotate0;
 };
 
