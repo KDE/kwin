@@ -20,7 +20,6 @@
                 "Name[x-test]": "xxVlad Zahorodniixx"
             }
         ],
-        "Id": "KWin/Effect",
         "Name": "KWin Effect",
         "Name[az]": "KWin effekti",
         "Name[ca]": "Efecte del KWin",
@@ -37,5 +36,6 @@
         "Name[vi]": "Hiệu ứng KWin",
         "Name[x-test]": "xxKWin Effectxx",
         "Version": "1"
-    }
+    },
+    "KPackageStructure": "KWin/Effect"
 }
