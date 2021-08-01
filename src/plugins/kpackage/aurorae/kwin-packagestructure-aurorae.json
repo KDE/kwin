@@ -7,10 +7,13 @@
                 "Name[az]": "Demitrius Belai",
                 "Name[ca]": "Demitrius Belai",
                 "Name[cs]": "Demitrius Belai",
+                "Name[en_GB]": "Demitrius Belai",
                 "Name[es]": "Demitrius Belai",
+                "Name[ko]": "Demitrius Belai",
                 "Name[nl]": "Demitrius Belai",
                 "Name[sv]": "Demitrius Belai",
                 "Name[uk]": "Demitrius Belai",
+                "Name[vi]": "Demitrius Belai",
                 "Name[x-test]": "xxDemitrius Belaixx"
             }
         ],
@@ -19,10 +22,13 @@
         "Name[az]": "KWin Aurorae",
         "Name[ca]": "Aurorae del KWin",
         "Name[cs]": "KWin Aurorae",
+        "Name[en_GB]": "KWin Aurorae",
         "Name[es]": "KWin Aurorae",
+        "Name[ko]": "KWin Aurorae",
         "Name[nl]": "KWin Aurorae",
         "Name[sv]": "KWin Aurorae",
         "Name[uk]": "KWin Aurorae",
+        "Name[vi]": "Aurorae của KWin",
         "Name[x-test]": "xxKWin Auroraexx",
         "ServiceTypes": [
             "KPackage/PackageStructure"

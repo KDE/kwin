@@ -7,10 +7,13 @@
                 "Name[az]": "Marco Martin",
                 "Name[ca]": "Marco Martin",
                 "Name[cs]": "Marco Martin",
+                "Name[en_GB]": "Marco Martin",
                 "Name[es]": "Marco Martin",
+                "Name[ko]": "Marco Martin",
                 "Name[nl]": "Marco Martin",
                 "Name[sv]": "Marco Martin",
                 "Name[uk]": "Marco Martin",
+                "Name[vi]": "Marco Martin",
                 "Name[x-test]": "xxMarco Martinxx"
             }
         ],
@@ -19,10 +22,13 @@
         "Name[az]": "Kwin skripti",
         "Name[ca]": "Script del KWin",
         "Name[cs]": "Skript KWinu",
+        "Name[en_GB]": "KWin Script",
         "Name[es]": "Guion de KWin",
+        "Name[ko]": "KWin 스크립트",
         "Name[nl]": "KWin-script",
         "Name[sv]": "Kwin-skript",
         "Name[uk]": "Скрипт KWin",
+        "Name[vi]": "Kịch bản KWin",
         "Name[x-test]": "xxKWin Scriptxx",
         "ServiceTypes": [
             "KPackage/PackageStructure"

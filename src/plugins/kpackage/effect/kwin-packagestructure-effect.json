@@ -7,10 +7,13 @@
                 "Name[az]": "Vlad Zahorodnii",
                 "Name[ca]": "Vlad Zahorodnii",
                 "Name[cs]": "Vlad Zahorodnii",
+                "Name[en_GB]": "Vlad Zahorodnii",
                 "Name[es]": "Vlad Zahorodnii",
+                "Name[ko]": "Vlad Zahorodnii",
                 "Name[nl]": "Vlad Zahorodnii",
                 "Name[sv]": "Vlad Zahorodnii",
                 "Name[uk]": "Влад Загородній",
+                "Name[vi]": "Vlad Zahorodnii",
                 "Name[x-test]": "xxVlad Zahorodniixx"
             }
         ],
@@ -19,10 +22,13 @@
         "Name[az]": "KWin effekti",
         "Name[ca]": "Efecte del KWin",
         "Name[cs]": "Efekt KWinu",
+        "Name[en_GB]": "KWin Effect",
         "Name[es]": "Efecto de KWin",
+        "Name[ko]": "KWin 효과",
         "Name[nl]": "KWin-effect",
         "Name[sv]": "Kwin-effekt",
         "Name[uk]": "Ефект KWin",
+        "Name[vi]": "Hiệu ứng KWin",
         "Name[x-test]": "xxKWin Effectxx",
         "ServiceTypes": [
             "KPackage/PackageStructure"

@@ -7,10 +7,13 @@
                 "Name[az]": "Marco Martin",
                 "Name[ca]": "Marco Martin",
                 "Name[cs]": "Marco Martin",
+                "Name[en_GB]": "Marco Martin",
                 "Name[es]": "Marco Martin",
+                "Name[ko]": "Marco Martin",
                 "Name[nl]": "Marco Martin",
                 "Name[sv]": "Marco Martin",
                 "Name[uk]": "Marco Martin",
+                "Name[vi]": "Marco Martin",
                 "Name[x-test]": "xxMarco Martinxx"
             }
         ],
@@ -19,10 +22,13 @@
         "Name[az]": "KWin pəncərə dəyişdiricisi",
         "Name[ca]": "Commutador de finestres del KWin",
         "Name[cs]": "Přepínač oken KWin",
+        "Name[en_GB]": "KWin Window Switcher",
         "Name[es]": "Selector de ventanas de KWin",
+        "Name[ko]": "KWin 창 전환기",
         "Name[nl]": "KWin-vensterwisselaar",
         "Name[sv]": "Kwin-fönsterbyte",
         "Name[uk]": "Перемикач вікон KWin",
+        "Name[vi]": "Trình chuyển cửa sổ KWin",
         "Name[x-test]": "xxKWin Window Switcherxx",
         "ServiceTypes": [
             "KPackage/PackageStructure"

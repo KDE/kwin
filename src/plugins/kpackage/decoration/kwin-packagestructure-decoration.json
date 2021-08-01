@@ -7,10 +7,13 @@
                 "Name[az]": "Demitrius Belai",
                 "Name[ca]": "Demitrius Belai",
                 "Name[cs]": "Demitrius Belai",
+                "Name[en_GB]": "Demitrius Belai",
                 "Name[es]": "Demitrius Belai",
+                "Name[ko]": "Demitrius Belai",
                 "Name[nl]": "Demitrius Belai",
                 "Name[sv]": "Demitrius Belai",
                 "Name[uk]": "Demitrius Belai",
+                "Name[vi]": "Demitrius Belai",
                 "Name[x-test]": "xxDemitrius Belaixx"
             }
         ],
@@ -19,10 +22,13 @@
         "Name[az]": "KWin Dekorasiyası",
         "Name[ca]": "Decoració del KWin",
         "Name[cs]": "Dekorace KWin",
+        "Name[en_GB]": "KWin Decoration",
         "Name[es]": "Decoración de KWin",
+        "Name[ko]": "KWin 장식",
         "Name[nl]": "KWin-decoraties",
         "Name[sv]": "Kwin-dekoration",
         "Name[uk]": "Обрамлення вікон KWin",
+        "Name[vi]": "Trang trí KWin",
         "Name[x-test]": "xxKWin Decorationxx",
         "ServiceTypes": [
             "KPackage/PackageStructure"
