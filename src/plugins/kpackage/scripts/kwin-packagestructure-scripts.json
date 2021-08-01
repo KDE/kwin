@@ -36,9 +36,6 @@
         "Name[uk]": "Скрипт KWin",
         "Name[vi]": "Kịch bản KWin",
         "Name[x-test]": "xxKWin Scriptxx",
-        "ServiceTypes": [
-            "KPackage/PackageStructure"
-        ],
         "Version": "1"
     }
 }

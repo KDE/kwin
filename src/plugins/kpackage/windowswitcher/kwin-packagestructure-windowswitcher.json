@@ -36,9 +36,6 @@
         "Name[uk]": "Перемикач вікон KWin",
         "Name[vi]": "Trình chuyển cửa sổ KWin",
         "Name[x-test]": "xxKWin Window Switcherxx",
-        "ServiceTypes": [
-            "KPackage/PackageStructure"
-        ],
         "Version": "1"
     }
 }

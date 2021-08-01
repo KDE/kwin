@@ -36,9 +36,6 @@
         "Name[uk]": "KWin Aurorae",
         "Name[vi]": "Aurorae của KWin",
         "Name[x-test]": "xxKWin Auroraexx",
-        "ServiceTypes": [
-            "KPackage/PackageStructure"
-        ],
         "Version": "1"
     }
 }

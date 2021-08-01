@@ -36,9 +36,6 @@
         "Name[uk]": "Обрамлення вікон KWin",
         "Name[vi]": "Trang trí KWin",
         "Name[x-test]": "xxKWin Decorationxx",
-        "ServiceTypes": [
-            "KPackage/PackageStructure"
-        ],
         "Version": "1"
     }
 }

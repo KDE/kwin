@@ -36,9 +36,6 @@
         "Name[uk]": "Ефект KWin",
         "Name[vi]": "Hiệu ứng KWin",
         "Name[x-test]": "xxKWin Effectxx",
-        "ServiceTypes": [
-            "KPackage/PackageStructure"
-        ],
         "Version": "1"
     }
 }
