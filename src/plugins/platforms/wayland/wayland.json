@@ -34,6 +34,7 @@
         "Description[sv]": "Återge till ett nästlat fönster på Wayland-sammansättare som kör.",
         "Description[tr]": "Wayland birleştirici çalıştıran iç içe geçmiş bir pencerede gerçekle.",
         "Description[uk]": "Обробляти у вкладене вікно запущеного засобу композиції Wayland.",
+        "Description[vi]": "Kết xuất vào một cửa sổ lồng trong trình kết hợp Wayland đang chạy.",
         "Description[x-test]": "xxRender to a nested window on running Wayland compositor.xx",
         "Description[zh_CN]": "渲染到 Wayland 显示特效混合器的嵌套窗口中",
         "Description[zh_TW]": "成像到執行中的 Wayland 的巢狀視窗。",
@@ -76,6 +77,7 @@
         "Name[sv]": "Wayland",
         "Name[tr]": "wayland",
         "Name[uk]": "wayland",
+        "Name[vi]": "wayland",
         "Name[x-test]": "xxwaylandxx",
         "Name[zh_CN]": "wayland",
         "Name[zh_TW]": "wayland"
