@@ -1,14 +1,9 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"kwin_package_windowswitcher\")
 
-set(windowswitcher_SRCS
-    windowswitcher.cpp
-)
-
-add_library(kwin_packagestructure_windowswitcher MODULE ${windowswitcher_SRCS})
+kcoreaddons_add_plugin(kwin_packagestructure_windowswitcher SOURCES windowswitcher.cpp INSTALL_NAMESPACE "kpackage/packagestructure")
 
 target_link_libraries(kwin_packagestructure_windowswitcher
    KF5::I18n
    KF5::Package
 )
-
-install(TARGETS kwin_packagestructure_windowswitcher DESTINATION ${KDE_INSTALL_PLUGINDIR}/kpackage/packagestructure)
+set_target_properties(kwin_packagestructure_windowswitcher PROPERTIES OUTPUT_NAME kwin_windowswitcher)
