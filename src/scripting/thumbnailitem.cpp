@@ -96,12 +96,14 @@ ThumbnailItemBase::ThumbnailItemBase(QQuickItem *parent)
     : QQuickItem(parent)
 {
     setFlag(ItemHasContents);
-    handleCompositingToggled();
+    updateFrameRenderingConnection();
 
     connect(Compositor::self(), &Compositor::aboutToToggleCompositing,
             this, &ThumbnailItemBase::destroyOffscreenTexture);
     connect(Compositor::self(), &Compositor::compositingToggled,
-            this, &ThumbnailItemBase::handleCompositingToggled);
+            this, &ThumbnailItemBase::updateFrameRenderingConnection);
+    connect(this, &QQuickItem::windowChanged,
+            this, &ThumbnailItemBase::updateFrameRenderingConnection);
 }
 
 ThumbnailItemBase::~ThumbnailItemBase()
@@ -143,14 +145,21 @@ QSGTextureProvider *ThumbnailItemBase::textureProvider() const
     return m_provider;
 }
 
-void ThumbnailItemBase::handleCompositingToggled()
+void ThumbnailItemBase::updateFrameRenderingConnection()
 {
+    disconnect(m_frameRenderingConnection);
+
     if (!Compositor::self()) {
         return;
     }
     Scene *scene = Compositor::self()->scene();
+
+    if (!window()) {
+        return;
+    }
+
     if (scene && scene->compositingType() == OpenGLCompositing) {
-        connect(scene, &Scene::frameRendered, this, &ThumbnailItemBase::updateOffscreenTexture);
+        m_frameRenderingConnection = connect(scene, &Scene::frameRendered, this, &ThumbnailItemBase::updateOffscreenTexture);
     }
 }
 
@@ -329,6 +338,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     if (m_acquireFence || !m_dirty || !m_client) {
         return;
     }
+    Q_ASSERT(window());
 
     const QRect geometry = m_client->frameGeometry();
     QSize textureSize = geometry.size();

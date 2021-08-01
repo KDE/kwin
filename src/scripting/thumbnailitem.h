@@ -80,7 +80,8 @@ protected:
     qreal m_devicePixelRatio = 1;
 
 private:
-    void handleCompositingToggled();
+    void updateFrameRenderingConnection();
+    QMetaObject::Connection m_frameRenderingConnection;
 
     QSize m_sourceSize;
 };
