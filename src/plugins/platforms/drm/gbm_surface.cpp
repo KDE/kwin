@@ -14,6 +14,7 @@
 #include "abstract_egl_drm_backend.h"
 #include "drm_gpu.h"
 #include "logging.h"
+#include "kwineglutils_p.h"
 
 namespace KWin
 {
@@ -29,7 +30,7 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t
     }
     m_eglSurface = eglCreatePlatformWindowSurfaceEXT(m_gpu->eglDisplay(), m_gpu->eglBackend()->config(), (void *)(m_surface), nullptr);
     if (m_eglSurface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << eglGetError();
+        qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
     }
 }
 
@@ -51,7 +52,7 @@ QSharedPointer<DrmGbmBuffer> GbmSurface::swapBuffersForDrm()
 {
     auto error = eglSwapBuffers(m_gpu->eglDisplay(), m_eglSurface);
     if (error != EGL_TRUE) {
-        qCCritical(KWIN_DRM) << "an error occurred while swapping buffers" << error;
+        qCCritical(KWIN_DRM) << "an error occurred while swapping buffers" << getEglErrorString();
         return nullptr;
     }
     auto bo = gbm_surface_lock_front_buffer(m_surface);
@@ -72,7 +73,7 @@ QSharedPointer<GbmBuffer> GbmSurface::swapBuffers()
 {
     auto error = eglSwapBuffers(m_gpu->eglDisplay(), m_eglSurface);
     if (error != EGL_TRUE) {
-        qCCritical(KWIN_DRM) << "an error occurred while swapping buffers" << error;
+        qCCritical(KWIN_DRM) << "an error occurred while swapping buffers" << getEglErrorString();
         return nullptr;
     }
     auto bo = gbm_surface_lock_front_buffer(m_surface);
