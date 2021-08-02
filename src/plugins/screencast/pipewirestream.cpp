@@ -30,6 +30,8 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+#include <libdrm/drm_fourcc.h>
+
 namespace KWin
 {
 
@@ -245,7 +247,7 @@ bool PipeWireStream::createStream()
     const QByteArray objname = "kwin-screencast-" + objectName().toUtf8();
     pwStream = pw_stream_new(pwCore->pwCore, objname, nullptr);
 
-    uint8_t buffer[1024];
+    uint8_t buffer[2048];
     spa_pod_builder podBuilder = SPA_POD_BUILDER_INIT(buffer, sizeof(buffer));
     spa_fraction minFramerate = SPA_FRACTION(1, 1);
     spa_fraction maxFramerate = SPA_FRACTION(25, 1);
@@ -253,17 +255,29 @@ bool PipeWireStream::createStream()
 
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
 
+    uint64_t modifier = DRM_FORMAT_MOD_INVALID;
+
+    const spa_pod *params[2];
+    int n_params;
+
     auto canCreateDmaBuf = [this] () -> bool {
         return QSharedPointer<DmaBufTexture>(kwinApp()->platform()->createDmaBufTexture(m_resolution));
     };
     const auto format = m_hasAlpha || canCreateDmaBuf() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
 
-    const spa_pod *param = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
+    if (canCreateDmaBuf()) {
+      params[0] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, &modifier, 1);
+      params[1] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
+      n_params = 2;
+    } else {
+      params[0] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
+      n_params = 1;
+    }
 
     pw_stream_add_listener(pwStream, &streamListener, &pwStreamEvents, this);
     auto flags = pw_stream_flags(PW_STREAM_FLAG_DRIVER | PW_STREAM_FLAG_ALLOC_BUFFERS);
 
-    if (pw_stream_connect(pwStream, PW_DIRECTION_OUTPUT, SPA_ID_INVALID, flags, &param, 1) != 0) {
+    if (pw_stream_connect(pwStream, PW_DIRECTION_OUTPUT, SPA_ID_INVALID, flags, params, n_params) != 0) {
         qCWarning(KWIN_SCREENCAST) << "Could not connect to stream";
         pw_stream_destroy(pwStream);
         pwStream = nullptr;
