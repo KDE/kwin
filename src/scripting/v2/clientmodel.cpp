@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "scripting_model.h"
+#include "clientmodel.h"
 #include <config-kwin.h>
 #include "abstract_client.h"
 #ifdef KWIN_BUILD_ACTIVITIES
@@ -16,8 +16,7 @@
 #include "virtualdesktops.h"
 #include "workspace.h"
 
-namespace KWin {
-namespace ScriptingClientModel {
+namespace KWin::ScriptingModels::V2 {
 
 static quint32 nextId() {
     static quint32 counter = 0;
@@ -904,5 +903,4 @@ bool ClientFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     return false;
 }
 
-} // namespace Scripting
 } // namespace KWin

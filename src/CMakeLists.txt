@@ -99,12 +99,12 @@ set(kwin_SRCS
     screenedge.cpp
     screenlockerwatcher.cpp
     screens.cpp
+    scripting/v2/clientmodel.cpp
     scripting/dbuscall.cpp
     scripting/screenedgeitem.cpp
     scripting/scriptedeffect.cpp
     scripting/scripting.cpp
     scripting/scripting_logging.cpp
-    scripting/scripting_model.cpp
     scripting/scriptingutils.cpp
     scripting/thumbnailitem.cpp
     scripting/workspace_wrapper.cpp
