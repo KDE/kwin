@@ -72,6 +72,9 @@ private:
     void newStreamParams();
     void tryEnqueue(pw_buffer *buffer);
     void enqueue();
+    spa_pod* buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
+                         struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
+                         uint64_t *modifiers, int modifier_count);
 
     QSharedPointer<PipeWireCore> pwCore;
     struct pw_stream *pwStream = nullptr;

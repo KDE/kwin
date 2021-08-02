@@ -258,15 +258,7 @@ bool PipeWireStream::createStream()
     };
     const auto format = m_hasAlpha || canCreateDmaBuf() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
 
-    const spa_pod *param = (spa_pod*)spa_pod_builder_add_object(&podBuilder,
-                                        SPA_TYPE_OBJECT_Format, SPA_PARAM_EnumFormat,
-                                        SPA_FORMAT_mediaType, SPA_POD_Id(SPA_MEDIA_TYPE_video),
-                                        SPA_FORMAT_mediaSubtype, SPA_POD_Id(SPA_MEDIA_SUBTYPE_raw),
-                                        SPA_FORMAT_VIDEO_format, SPA_POD_CHOICE_ENUM_Id(format == SPA_VIDEO_FORMAT_BGRA ? 3 : 2,
-                                                                                        format, format, format == SPA_VIDEO_FORMAT_BGRA ? SPA_VIDEO_FORMAT_BGRx : SPA_VIDEO_FORMAT_UNKNOWN),
-                                        SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(&resolution),
-                                        SPA_FORMAT_VIDEO_framerate, SPA_POD_Fraction(&defaultFramerate),
-                                        SPA_FORMAT_VIDEO_maxFramerate, SPA_POD_CHOICE_RANGE_Fraction(&maxFramerate, &minFramerate, &maxFramerate));
+    const spa_pod *param = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
 
     pw_stream_add_listener(pwStream, &streamListener, &pwStreamEvents, this);
     auto flags = pw_stream_flags(PW_STREAM_FLAG_DRIVER | PW_STREAM_FLAG_ALLOC_BUFFERS);
@@ -486,6 +478,55 @@ void PipeWireStream::enqueue()
     m_pendingBuffer = nullptr;
     m_pendingFence = nullptr;
     m_pendingNotifier = nullptr;
+}
+
+spa_pod *PipeWireStream::buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
+             struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
+             uint64_t *modifiers, int modifierCount)
+{
+    struct spa_pod_frame f[2];
+    int i, c;
+
+    spa_pod_builder_push_object(b, &f[0], SPA_TYPE_OBJECT_Format, SPA_PARAM_EnumFormat);
+    spa_pod_builder_add(b, SPA_FORMAT_mediaType, SPA_POD_Id(SPA_MEDIA_TYPE_video), 0);
+    spa_pod_builder_add(b, SPA_FORMAT_mediaSubtype, SPA_POD_Id(SPA_MEDIA_SUBTYPE_raw), 0);
+
+    /* format */
+    if (format == SPA_VIDEO_FORMAT_BGRA) {
+        /* announce equivalent format without alpha */
+        spa_pod_builder_add(b, SPA_FORMAT_VIDEO_format, SPA_POD_CHOICE_ENUM_Id(3, format, format, SPA_VIDEO_FORMAT_BGRx), 0);
+    } else {
+        spa_pod_builder_add(b, SPA_FORMAT_VIDEO_format, SPA_POD_Id(format), 0);
+    }
+    /* modifiers */
+    if (modifierCount > 0) {
+        // build an enumeration of modifiers
+        spa_pod_builder_prop(b, SPA_FORMAT_VIDEO_modifier, SPA_POD_PROP_FLAG_MANDATORY);
+        spa_pod_builder_push_choice(b, &f[1], SPA_CHOICE_Enum, 0);
+        // modifiers from the array
+        for (i = 0, c = 0; i < modifierCount; i++) {
+            spa_pod_builder_long(b, modifiers[i]);
+            if (c++ == 0) {
+                spa_pod_builder_long(b, modifiers[i]);
+            }
+        }
+        spa_pod_builder_pop(b, &f[1]);
+    }
+
+    /* frame size */
+    spa_pod_builder_add(b, SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(resolution), 0);
+
+    /* variable framerate */
+    spa_pod_builder_add(b, SPA_FORMAT_VIDEO_framerate, SPA_POD_Fraction(defaultFramerate), 0);
+
+    /* maximal framerate */
+    spa_pod_builder_add(b, SPA_FORMAT_VIDEO_maxFramerate,
+        SPA_POD_CHOICE_RANGE_Fraction(
+            SPA_POD_Fraction(maxFramerate),
+            SPA_POD_Fraction(minFramerate),
+            SPA_POD_Fraction(maxFramerate)),
+      0);
+    return (spa_pod*)spa_pod_builder_pop(b, &f[0]);
 }
 
 QRect PipeWireStream::cursorGeometry(Cursor *cursor) const
