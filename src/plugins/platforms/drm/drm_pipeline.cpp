@@ -305,18 +305,24 @@ bool DrmPipeline::checkTestBuffer()
     return false;
 }
 
-bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer)
+bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot)
 {
-    if (!m_cursor.dirty && m_cursor.buffer == buffer) {
+    if (!m_cursor.dirty && m_cursor.buffer == buffer && m_cursor.hotspot == hotspot) {
         return true;
     }
     const QSize &s = buffer ? buffer->size() : QSize(64, 64);
-    if (drmModeSetCursor(m_gpu->fd(), m_crtc->id(), buffer ? buffer->handle() : 0, s.width(), s.height()) != 0) {
+    int ret = drmModeSetCursor2(m_gpu->fd(), m_crtc->id(), buffer ? buffer->handle() : 0, s.width(), s.height(), hotspot.x(), hotspot.y());
+    if (ret == ENOTSUP) {
+        // for NVIDIA case that does not support drmModeSetCursor2
+        ret = drmModeSetCursor(m_gpu->fd(), m_crtc->id(), buffer ? buffer->handle() : 0, s.width(), s.height());
+    }
+    if (ret != 0) {
         qCWarning(KWIN_DRM) << "Could not set cursor:" << strerror(errno);
         return false;
     }
     m_cursor.buffer = buffer;
     m_cursor.dirty = false;
+    m_cursor.hotspot = hotspot;
     return true;
 }
 
@@ -374,7 +380,7 @@ bool DrmPipeline::setActive(bool active)
     }
     if (m_active) {
         // enable cursor (again)
-        setCursor(m_cursor.buffer);
+        setCursor(m_cursor.buffer, m_cursor.hotspot);
     }
     return success;
 }

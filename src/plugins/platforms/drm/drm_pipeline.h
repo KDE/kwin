@@ -54,7 +54,7 @@ public:
     bool test(const QVector<DrmPipeline*> &pipelines);
 
     bool modeset(int modeIndex);
-    bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer);
+    bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot = QPoint());
     bool setActive(bool enable);
     bool setGammaRamp(const GammaRamp &ramp);
     bool setTransformation(const DrmPlane::Transformations &transform);
@@ -103,6 +103,7 @@ private:
     bool m_legacyNeedsModeset = true;
     struct {
         QPoint pos = QPoint(100, 100);
+        QPoint hotspot;
         QSharedPointer<DrmDumbBuffer> buffer;
         bool dirty = true;// we don't know what the current state is
     } m_cursor;

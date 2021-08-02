@@ -103,7 +103,8 @@ bool DrmOutput::hideCursor()
 bool DrmOutput::showCursor()
 {
     bool visibleBefore = m_pipeline->isCursorVisible();
-    if (m_pipeline->setCursor(m_cursor)) {
+    const Cursor * const cursor = Cursors::self()->currentCursor();
+    if (m_pipeline->setCursor(m_cursor, logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()) )) {
         if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
             && !visibleBefore
             && m_pipeline->isCursorVisible()) {
@@ -149,7 +150,7 @@ bool DrmOutput::updateCursor()
     p.setWorldTransform(logicalToNativeMatrix(cursor->rect(), 1, transform()).toTransform());
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
-    if (m_pipeline->setCursor(m_cursor)) {
+    if (m_pipeline->setCursor(m_cursor, logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()) )) {
         if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
             && m_pipeline->isCursorVisible()) {
             m_renderLoop->scheduleRepaint();
