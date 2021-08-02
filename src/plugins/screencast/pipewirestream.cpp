@@ -72,9 +72,16 @@ void PipeWireStream::newStreamParams()
 
     uint8_t paramsBuffer[1024];
     spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT (paramsBuffer, sizeof (paramsBuffer));
+    int buffertypes;
 
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
     const int cursorSize = Cursors::self()->currentCursor()->themeSize() * m_cursor.scale;
+    if (m_hasModifier) {
+        buffertypes = (1<<SPA_DATA_DmaBuf);
+    } else {
+        buffertypes = (1<<SPA_DATA_MemFd);
+    }
+
     const spa_pod *params[] = {
         (spa_pod*) spa_pod_builder_add_object(&pod_builder,
                                               SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers,
@@ -83,12 +90,14 @@ void PipeWireStream::newStreamParams()
                                               SPA_PARAM_BUFFERS_blocks, SPA_POD_Int (1),
                                               SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
                                               SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
-                                              SPA_PARAM_BUFFERS_align, SPA_POD_Int(16)),
+                                              SPA_PARAM_BUFFERS_align, SPA_POD_Int(16),
+                                              SPA_PARAM_BUFFERS_dataType, SPA_POD_CHOICE_FLAGS_Int(buffertypes)),
         (spa_pod*) spa_pod_builder_add_object (&pod_builder,
                                                SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
                                                SPA_PARAM_META_type, SPA_POD_Id (SPA_META_Cursor),
                                                SPA_PARAM_META_size, SPA_POD_Int (CURSOR_META_SIZE (cursorSize, cursorSize)))
     };
+
     pw_stream_update_params(pwStream, params, 2);
 }
 
@@ -100,6 +109,7 @@ void PipeWireStream::onStreamParamChanged(void *data, uint32_t id, const struct 
 
     PipeWireStream *pw = static_cast<PipeWireStream *>(data);
     spa_format_video_raw_parse (format, &pw->videoFormat);
+    pw->m_hasModifier = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier) != nullptr;
     qCDebug(KWIN_SCREENCAST) << "Stream format changed" << pw << pw->videoFormat.format;
     pw->newStreamParams();
 }

@@ -84,6 +84,7 @@ private:
     bool m_stopped = false;
 
     spa_video_info_raw videoFormat;
+    bool m_hasModifier = false;
     QString m_error;
     const bool m_hasAlpha;
 
