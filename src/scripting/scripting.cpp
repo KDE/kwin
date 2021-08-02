@@ -19,6 +19,7 @@
 #include "thumbnailitem.h"
 
 #include "v2/clientmodel.h"
+#include "v3/clientmodel.h"
 
 #include "input.h"
 #include "options.h"
@@ -641,6 +642,12 @@ void KWin::Scripting::init()
     qmlRegisterType<ScriptingModels::V2::ClientModelByScreenAndDesktop>("org.kde.kwin", 2, 0, "ClientModelByScreenAndDesktop");
     qmlRegisterType<ScriptingModels::V2::ClientModelByScreenAndActivity>("org.kde.kwin", 2, 1, "ClientModelByScreenAndActivity");
     qmlRegisterType<ScriptingModels::V2::ClientFilterModel>("org.kde.kwin", 2, 0, "ClientFilterModel");
+
+    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnailItem");
+    qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
+    qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 3, 0, "ScreenEdgeItem");
+    qmlRegisterType<ScriptingModels::V3::ClientModel>("org.kde.kwin", 3, 0, "ClientModel");
+    qmlRegisterType<ScriptingModels::V3::ClientFilterModel>("org.kde.kwin", 3, 0, "ClientFilterModel");
 
     qmlRegisterType<KWin::AbstractClient>();
     qmlRegisterType<KWin::X11Client>();

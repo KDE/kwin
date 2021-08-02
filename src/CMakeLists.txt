@@ -100,6 +100,7 @@ set(kwin_SRCS
     screenlockerwatcher.cpp
     screens.cpp
     scripting/v2/clientmodel.cpp
+    scripting/v3/clientmodel.cpp
     scripting/dbuscall.cpp
     scripting/screenedgeitem.cpp
     scripting/scriptedeffect.cpp
