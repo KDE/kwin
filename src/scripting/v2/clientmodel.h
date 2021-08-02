@@ -17,7 +17,7 @@ namespace KWin {
 class AbstractClient;
 class Client;
 
-namespace ScriptingClientModel {
+namespace ScriptingModels::V2 {
 
 class AbstractLevel;
 
@@ -272,7 +272,7 @@ public:
 class ClientFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(KWin::ScriptingClientModel::ClientModel *clientModel READ clientModel WRITE setClientModel NOTIFY clientModelChanged)
+    Q_PROPERTY(KWin::ScriptingModels::V2::ClientModel *clientModel READ clientModel WRITE setClientModel NOTIFY clientModelChanged)
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
 public:
     ClientFilterModel(QObject *parent = nullptr);
@@ -371,7 +371,7 @@ const QString &ClientFilterModel::filter() const
 } // namespace Scripting
 } // namespace KWin
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::ScriptingClientModel::ClientModel::Exclusions)
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::ScriptingClientModel::ClientModel::LevelRestrictions)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::ScriptingModels::V2::ClientModel::Exclusions)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::ScriptingModels::V2::ClientModel::LevelRestrictions)
 
 #endif // KWIN_SCRIPTING_MODEL_H
