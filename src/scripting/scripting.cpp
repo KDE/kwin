@@ -20,10 +20,12 @@
 
 #include "v2/clientmodel.h"
 #include "v3/clientmodel.h"
+#include "v3/virtualdesktopmodel.h"
 
 #include "input.h"
 #include "options.h"
 #include "screenedge.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11client.h"
 // KDE
@@ -648,6 +650,7 @@ void KWin::Scripting::init()
     qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 3, 0, "ScreenEdgeItem");
     qmlRegisterType<ScriptingModels::V3::ClientModel>("org.kde.kwin", 3, 0, "ClientModel");
     qmlRegisterType<ScriptingModels::V3::ClientFilterModel>("org.kde.kwin", 3, 0, "ClientFilterModel");
+    qmlRegisterType<ScriptingModels::V3::VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");
 
     qmlRegisterSingletonType<QtScriptWorkspaceWrapper>("org.kde.kwin", 3, 0, "Workspace", [](QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
         Q_UNUSED(qmlEngine)
@@ -656,6 +659,7 @@ void KWin::Scripting::init()
     });
 
     qmlRegisterType<KWin::AbstractClient>();
+    qmlRegisterType<KWin::VirtualDesktop>();
     qmlRegisterType<KWin::X11Client>();
     qmlRegisterType<QAbstractItemModel>();
 
