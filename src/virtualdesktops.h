@@ -285,6 +285,7 @@ public:
      * @param id the string id of the desktop to remove
      */
     void removeVirtualDesktop(const QString &id);
+    void removeVirtualDesktop(VirtualDesktop *desktop);
 
     /**
      * Updates the net root info for new number of desktops

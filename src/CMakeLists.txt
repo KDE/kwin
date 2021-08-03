@@ -101,6 +101,7 @@ set(kwin_SRCS
     screens.cpp
     scripting/v2/clientmodel.cpp
     scripting/v3/clientmodel.cpp
+    scripting/v3/virtualdesktopmodel.cpp
     scripting/dbuscall.cpp
     scripting/screenedgeitem.cpp
     scripting/scriptedeffect.cpp

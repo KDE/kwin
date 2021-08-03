@@ -484,12 +484,16 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const
 
 void VirtualDesktopManager::removeVirtualDesktop(const QString &id)
 {
+    auto desktop = desktopForId(id);
+    if (desktop) {
+        removeVirtualDesktop(desktop);
+    }
+}
+
+void VirtualDesktopManager::removeVirtualDesktop(VirtualDesktop *desktop)
+{
     //don't end up without any desktop
     if (m_desktops.count() == 1) {
-        return;
-    }
-    auto desktop = desktopForId(id);
-    if (!desktop) {
         return;
     }
 
