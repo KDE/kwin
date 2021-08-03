@@ -221,7 +221,7 @@ EGLSurface EglOnXBackend::createSurface(xcb_window_t window)
         //       cannot be an xcb_window_t.
         surface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *) &window, nullptr);
     } else {
-        surface = eglCreateWindowSurface(eglDisplay(), config(), &window, nullptr);
+        surface = eglCreateWindowSurface(eglDisplay(), config(), window, nullptr);
     }
 
     return surface;
