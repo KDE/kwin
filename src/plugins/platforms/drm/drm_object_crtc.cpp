@@ -48,44 +48,6 @@ void DrmCrtc::flipBuffer()
     m_blackBuffer = nullptr;
 }
 
-bool DrmCrtc::setGammaRamp(const GammaRamp &gamma)
-{
-    uint16_t *red = const_cast<uint16_t *>(gamma.red());
-    uint16_t *green = const_cast<uint16_t *>(gamma.green());
-    uint16_t *blue = const_cast<uint16_t *>(gamma.blue());
-
-    const bool isError = drmModeCrtcSetGamma(gpu()->fd(), id(),
-        gamma.size(), red, green, blue);
-
-    return !isError;
-}
-
-bool DrmCrtc::setVrr(bool enable)
-{
-    if (const auto &prop = m_props[static_cast<int>(PropertyIndex::VrrEnabled)]) {
-        if (prop->pending() == enable) {
-            return false;
-        }
-        prop->setPending(enable);
-        if (!gpu()->atomicModeSetting() || gpu()->useEglStreams()) {
-            if (drmModeObjectSetProperty(gpu()->fd(), id(), DRM_MODE_OBJECT_CRTC, prop->propId(), enable) != 0) {
-                qCWarning(KWIN_DRM) << "drmModeObjectSetProperty(VRR_ENABLED) failed";
-                return false;
-            }
-        }
-        return true;
-    }
-    return false;
-}
-
-bool DrmCrtc::isVrrEnabled() const
-{
-    if (const auto &prop = m_props[static_cast<int>(PropertyIndex::VrrEnabled)]) {
-        return prop->pending();
-    }
-    return false;
-}
-
 drmModeModeInfo DrmCrtc::queryCurrentMode()
 {
     m_crtc.reset(drmModeGetCrtc(gpu()->fd(), id()));

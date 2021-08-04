@@ -63,10 +63,6 @@ public:
         }
         return m_crtc->gamma_size;
     }
-    bool setGammaRamp(const GammaRamp &gamma);
-
-    bool setVrr(bool enable);
-    bool isVrrEnabled() const;
 
     drmModeModeInfo queryCurrentMode();
 
