@@ -92,7 +92,9 @@ void SurfaceItem::updatePixmap()
     } else {
         m_windowPixmap->create();
         if (m_windowPixmap->isValid()) {
-            m_previousWindowPixmap.reset();
+            if (m_referencePixmapCounter == 0) {
+                m_previousWindowPixmap.reset();
+            }
             discardQuads();
         }
     }
