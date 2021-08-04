@@ -34,7 +34,6 @@ public:
         Active,
         VrrEnabled,
         Gamma_LUT,
-        Gamma_LUT_size,
         Count
     };
 
@@ -58,9 +57,6 @@ public:
     void flipBuffer();
 
     int gammaRampSize() const {
-        if (auto prop = getProp(PropertyIndex::Gamma_LUT_size)) {
-            return prop->current();
-        }
         return m_crtc->gamma_size;
     }
 

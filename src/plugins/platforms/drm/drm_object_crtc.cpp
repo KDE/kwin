@@ -23,7 +23,6 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex)
         PropertyDefinition(QByteArrayLiteral("ACTIVE")),
         PropertyDefinition(QByteArrayLiteral("VRR_ENABLED")),
         PropertyDefinition(QByteArrayLiteral("GAMMA_LUT")),
-        PropertyDefinition(QByteArrayLiteral("GAMMA_LUT_SIZE")),
     }, DRM_MODE_OBJECT_CRTC)
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
