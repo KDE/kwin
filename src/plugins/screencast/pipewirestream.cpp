@@ -90,6 +90,8 @@ void PipeWireStream::newStreamParams()
                                               SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(&resolution),
                                               SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(16, 2, 16),
                                               SPA_PARAM_BUFFERS_blocks, SPA_POD_Int (1),
+                                              // TODO[no_use_linear]: stride, size and align should be dropped for dmabufs,
+                                              // or queried via test allocation
                                               SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
                                               SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
                                               SPA_PARAM_BUFFERS_align, SPA_POD_Int(16),
@@ -111,6 +113,9 @@ void PipeWireStream::onStreamParamChanged(void *data, uint32_t id, const struct 
 
     PipeWireStream *pw = static_cast<PipeWireStream *>(data);
     spa_format_video_raw_parse (format, &pw->videoFormat);
+    // TODO[explicit_modifiers]: check if modifier list or single modifier,
+    // make test allocation, fixate format, ...
+    // depends on how flexible kwin will become in that regard.
     pw->m_hasModifier = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier) != nullptr;
     qCDebug(KWIN_SCREENCAST) << "Stream format changed" << pw << pw->videoFormat.format;
     pw->newStreamParams();
@@ -255,6 +260,7 @@ bool PipeWireStream::createStream()
 
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
 
+    // TODO[explicit_modifiers]: query modifiers supported/used by kwin
     uint64_t modifier = DRM_FORMAT_MOD_INVALID;
 
     const spa_pod *params[2];
@@ -515,6 +521,8 @@ spa_pod *PipeWireStream::buildFormat(struct spa_pod_builder *b, enum spa_video_f
     /* modifiers */
     if (modifierCount > 0) {
         // build an enumeration of modifiers
+        // TODO[explicit_modifiers]: Use SPA_POD_PROP_FLAG_DONT_FIXATE
+        // needs seperate fixateFormat method.
         spa_pod_builder_prop(b, SPA_FORMAT_VIDEO_modifier, SPA_POD_PROP_FLAG_MANDATORY);
         spa_pod_builder_push_choice(b, &f[1], SPA_CHOICE_Enum, 0);
         // modifiers from the array
