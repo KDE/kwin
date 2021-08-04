@@ -71,8 +71,12 @@ void ShmClientBufferPrivate::buffer_destroy_callback(wl_listener *listener, void
 static bool alphaChannelFromFormat(uint32_t format)
 {
     switch (format) {
+    case WL_SHM_FORMAT_ABGR2101010:
+    case WL_SHM_FORMAT_ARGB2101010:
     case WL_SHM_FORMAT_ARGB8888:
         return true;
+    case WL_SHM_FORMAT_XBGR2101010:
+    case WL_SHM_FORMAT_XRGB2101010:
     case WL_SHM_FORMAT_XRGB8888:
     default:
         return false;
@@ -82,6 +86,16 @@ static bool alphaChannelFromFormat(uint32_t format)
 static QImage::Format imageFormatForShmFormat(uint32_t format)
 {
     switch (format) {
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+    case WL_SHM_FORMAT_ARGB2101010:
+        return QImage::Format_A2RGB30_Premultiplied;
+    case WL_SHM_FORMAT_XRGB2101010:
+        return QImage::Format_RGB30;
+    case WL_SHM_FORMAT_ABGR2101010:
+        return QImage::Format_A2BGR30_Premultiplied;
+    case WL_SHM_FORMAT_XBGR2101010:
+        return QImage::Format_BGR30;
+#endif
     case WL_SHM_FORMAT_ARGB8888:
         return QImage::Format_ARGB32_Premultiplied;
     case WL_SHM_FORMAT_XRGB8888:
@@ -158,6 +172,12 @@ QImage ShmClientBuffer::data() const
 ShmClientBufferIntegration::ShmClientBufferIntegration(Display *display)
     : ClientBufferIntegration(display)
 {
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+    wl_display_add_shm_format(*display, WL_SHM_FORMAT_ARGB2101010);
+    wl_display_add_shm_format(*display, WL_SHM_FORMAT_XRGB2101010);
+    wl_display_add_shm_format(*display, WL_SHM_FORMAT_ABGR2101010);
+    wl_display_add_shm_format(*display, WL_SHM_FORMAT_XBGR2101010);
+#endif
     wl_display_init_shm(*display);
 }
 
