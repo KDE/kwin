@@ -126,6 +126,8 @@ void Toplevel::copyToDeleted(Toplevel* c)
     m_internalFBO = c->m_internalFBO;
     m_internalImage = c->m_internalImage;
     m_opacity = c->m_opacity;
+    m_shapeRegionIsValid = c->m_shapeRegionIsValid;
+    m_shapeRegion = c->m_shapeRegion;
 }
 
 // before being deleted, remove references to everything that's now
