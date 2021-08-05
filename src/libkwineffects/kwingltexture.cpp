@@ -366,58 +366,62 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
     Q_D(GLTexture);
     Q_ASSERT(!d->m_foreign);
 
-    bool useUnpack = !src.isNull() && d->s_supportsUnpack && d->s_supportsARGB32 && image.format() == QImage::Format_ARGB32_Premultiplied;
+    GLenum glFormat;
+    GLenum type;
+    QImage::Format uploadFormat;
+    if (!GLPlatform::instance()->isGLES()) {
+        const QImage::Format index = image.format();
+
+        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat) {
+            glFormat = formatTable[index].format;
+            type = formatTable[index].type;
+            uploadFormat = index;
+        } else {
+            glFormat = GL_BGRA;
+            type = GL_UNSIGNED_INT_8_8_8_8_REV;
+            uploadFormat = QImage::Format_ARGB32_Premultiplied;
+        }
+    } else {
+        if (d->s_supportsARGB32) {
+            glFormat = GL_BGRA_EXT;
+            type = GL_UNSIGNED_BYTE;
+            uploadFormat = QImage::Format_ARGB32_Premultiplied;
+        } else {
+            glFormat = GL_RGBA;
+            type = GL_UNSIGNED_BYTE;
+            uploadFormat = QImage::Format_RGBA8888_Premultiplied;
+        }
+    }
+    bool useUnpack = d->s_supportsUnpack && image.format() == uploadFormat && !src.isNull();
+
+    QImage im;
+    if (useUnpack) {
+        im = image;
+        Q_ASSERT(im.depth() % 8 == 0);
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, im.bytesPerLine() / (im.depth() / 8));
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, src.x());
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, src.y());
+    } else {
+        if (src.isNull()) {
+            im = image;
+        } else {
+            im = image.copy(src);
+        }
+        if (im.format() != uploadFormat) {
+            im.convertTo(uploadFormat);
+        }
+    }
 
     int width = image.width();
     int height = image.height();
-    QImage tmpImage;
-
     if (!src.isNull()) {
-        if (useUnpack) {
-            glPixelStorei(GL_UNPACK_ROW_LENGTH, image.width());
-            glPixelStorei(GL_UNPACK_SKIP_PIXELS, src.x());
-            glPixelStorei(GL_UNPACK_SKIP_ROWS, src.y());
-        } else {
-            tmpImage = image.copy(src);
-        }
         width = src.width();
         height = src.height();
     }
 
-    const QImage &img = tmpImage.isNull() ? image : tmpImage;
-
     bind();
 
-    if (!GLPlatform::instance()->isGLES()) {
-        QImage im;
-        GLenum format;
-        GLenum type;
-
-        const QImage::Format index = image.format();
-
-        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat) {
-            format = formatTable[index].format;
-            type = formatTable[index].type;
-            im = img;
-        } else {
-            format = GL_BGRA;
-            type = GL_UNSIGNED_INT_8_8_8_8_REV;
-            im = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-        }
-
-        glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
-                        format, type, im.constBits());
-    } else {
-        if (d->s_supportsARGB32) {
-            const QImage im = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-            glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
-                            GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.constBits());
-        } else {
-            const QImage im = img.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
-            glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
-                            GL_RGBA, GL_UNSIGNED_BYTE, im.constBits());
-        }
-    }
+    glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height, glFormat, type, im.constBits());
 
     unbind();
 
