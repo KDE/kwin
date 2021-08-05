@@ -20,6 +20,7 @@ class ExpoLayout : public QQuickItem
     Q_OBJECT
     Q_PROPERTY(LayoutMode mode READ mode WRITE setMode NOTIFY modeChanged)
     Q_PROPERTY(bool fillGaps READ fillGaps WRITE setFillGaps NOTIFY fillGapsChanged)
+    Q_PROPERTY(int spacing READ spacing WRITE setSpacing NOTIFY spacingChanged)
 
 public:
     enum LayoutMode : uint {
@@ -37,6 +38,9 @@ public:
     bool fillGaps() const;
     void setFillGaps(bool fill);
 
+    int spacing() const;
+    void setSpacing(int spacing);
+
     void addCell(ExpoCell *cell);
     void removeCell(ExpoCell *cell);
 
@@ -50,6 +54,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void modeChanged();
     void fillGapsChanged();
+    void spacingChanged();
 
 private:
     void calculateWindowTransformationsClosest();
@@ -60,6 +65,7 @@ private:
     LayoutMode m_mode = LayoutNatural;
     QTimer m_updateTimer;
     int m_accuracy = 20;
+    int m_spacing = 10;
     bool m_fillGaps = false;
 };
 

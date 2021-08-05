@@ -231,6 +231,20 @@ void ExpoLayout::setFillGaps(bool fill)
     }
 }
 
+int ExpoLayout::spacing() const
+{
+    return m_spacing;
+}
+
+void ExpoLayout::setSpacing(int spacing)
+{
+    if (m_spacing != spacing) {
+        m_spacing = spacing;
+        scheduleUpdate();
+        Q_EMIT spacingChanged();
+    }
+}
+
 void ExpoLayout::update()
 {
     if (m_cells.isEmpty()) {
@@ -340,7 +354,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         QRect target(area.x() + (slot % columns) * slotWidth,
                      area.y() + (slot / columns) * slotHeight,
                      slotWidth, slotHeight);
-        target.adjust(10, 10, -10, -10);   // Borders
+        target.adjust(m_spacing, m_spacing, -m_spacing, -m_spacing);   // Borders
 
         qreal scale;
         if (target.width() / qreal(cell->naturalWidth()) < target.height() / qreal(cell->naturalHeight())) {
@@ -393,7 +407,6 @@ void ExpoLayout::calculateWindowTransformationsKompose()
     });   // The location of the windows should not depend on the stacking order
 
     // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
-    int spacing = 10;
     int rows, columns;
     qreal parentRatio = availRect.width() / qreal(availRect.height());
     // Use more columns than rows when parent's width > parent's height
@@ -407,8 +420,8 @@ void ExpoLayout::calculateWindowTransformationsKompose()
     //qCDebug(KWINEFFECTS) << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
 
     // Calculate width & height
-    int w = (availRect.width() - (columns + 1) * spacing) / columns;
-    int h = (availRect.height() - (rows + 1) * spacing) / rows;
+    int w = (availRect.width() - (columns + 1) * m_spacing) / columns;
+    int h = (availRect.height() - (rows + 1) * m_spacing) / rows;
 
     QList<ExpoCell *>::iterator it(m_cells.begin());
     QList<QRect> geometryRects;
@@ -480,8 +493,8 @@ void ExpoLayout::calculateWindowTransformationsKompose()
             if (j == 0 && w > widgetWidth) {
                 alignmentXoffset = w - widgetWidth;
             }
-            QRect geom(availRect.x() + j *(w + spacing) + spacing + alignmentXoffset + xOffsetFromLastCol,
-                       availRect.y() + i *(h + spacing) + spacing + alignmentYoffset,
+            QRect geom(availRect.x() + j *(w + m_spacing) + m_spacing + alignmentXoffset + xOffsetFromLastCol,
+                       availRect.y() + i *(h + m_spacing) + m_spacing + alignmentYoffset,
                        widgetWidth, widgetHeight);
             geometryRects.append(geom);
 
@@ -523,7 +536,7 @@ void ExpoLayout::calculateWindowTransformationsKompose()
     }
 }
 
-static bool isOverlappingAny(ExpoCell *w, const QHash<ExpoCell *, QRect> &targets, const QRegion &border)
+static bool isOverlappingAny(ExpoCell *w, const QHash<ExpoCell *, QRect> &targets, const QRegion &border, int spacing)
 {
     QHash<ExpoCell *, QRect>::const_iterator winTarget = targets.find(w);
     if (winTarget == targets.constEnd()) {
@@ -532,6 +545,7 @@ static bool isOverlappingAny(ExpoCell *w, const QHash<ExpoCell *, QRect> &target
     if (border.intersects(*winTarget)) {
         return true;
     }
+    const QMargins halfSpacing(spacing / 2, spacing / 2, spacing / 2, spacing / 2);
 
     // Is there a better way to do this?
     QHash<ExpoCell *, QRect>::const_iterator target;
@@ -539,7 +553,7 @@ static bool isOverlappingAny(ExpoCell *w, const QHash<ExpoCell *, QRect> &target
         if (target == winTarget) {
             continue;
         }
-        if (winTarget->adjusted(-5, -5, 5, 5).intersects(target->adjusted(-5, -5, 5, 5))) {
+        if (winTarget->marginsAdded(halfSpacing).intersects(target->marginsAdded(halfSpacing))) {
             return true;
         }
     }
@@ -587,6 +601,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
 
     // Iterate over all windows, if two overlap push them apart _slightly_ as we try to
     // brute-force the most optimal positions over many iterations.
+    const int halfSpacing = m_spacing / 2;
     bool overlap;
     do {
         overlap = false;
@@ -598,7 +613,8 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                 }
 
                 QRect *target_e = &targets[e];
-                if (target_w->adjusted(-5, -5, 5, 5).intersects(target_e->adjusted(-5, -5, 5, 5))) {
+                if (target_w->adjusted(-halfSpacing, -halfSpacing, halfSpacing, halfSpacing)
+                        .intersects(target_e->adjusted(-halfSpacing, -halfSpacing, halfSpacing, halfSpacing))) {
                     overlap = true;
 
                     // Determine pushing direction
@@ -670,13 +686,13 @@ void ExpoLayout::calculateWindowTransformationsNatural()
     if (bounds == area) {
         scale = 1.0; // Don't add borders to the screen
     } else if (area.width() / qreal(bounds.width()) < area.height() / qreal(bounds.height())) {
-        scale = (area.width() - 20) / qreal(bounds.width());
+        scale = (area.width() - 2 * m_spacing) / qreal(bounds.width());
     } else {
-        scale = (area.height() - 20) / qreal(bounds.height());
+        scale = (area.height() - 2 * m_spacing) / qreal(bounds.height());
     }
     // Make bounding rect fill the screen size for later steps
-    bounds = QRect((bounds.x() * scale - (area.width() - 20 - bounds.width() * scale) / 2 - 10) / scale,
-                   (bounds.y() * scale - (area.height() - 20 - bounds.height() * scale) / 2 - 10) / scale,
+    bounds = QRect((bounds.x() * scale - (area.width() - 2 * m_spacing - bounds.width() * scale) / 2 - m_spacing) / scale,
+                   (bounds.y() * scale - (area.height() - 2 * m_spacing - bounds.height() * scale) / 2 - m_spacing) / scale,
                    area.width() / scale,
                    area.height() / scale);
 
@@ -694,7 +710,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
     if (m_fillGaps) {
         // Don't expand onto or over the border
         QRegion borderRegion(area.adjusted(-200, -200, 200, 200));
-        borderRegion ^= area.adjusted(10 / scale, 10 / scale, -10 / scale, -10 / scale);
+        borderRegion ^= area.adjusted(m_spacing / scale, m_spacing / scale, -m_spacing / scale, -m_spacing / scale);
 
         bool moved;
         do {
@@ -717,7 +733,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                                 target->y() - yDiff - heightDiff,
                                 target->width() + widthDiff,
                                 target->height() + heightDiff);
-                if (isOverlappingAny(cell, targets, borderRegion))
+                if (isOverlappingAny(cell, targets, borderRegion, m_spacing))
                     *target = oldRect;
                 else {
                     moved = true;
@@ -731,7 +747,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                                 target->y() + yDiff,
                                 target->width() + widthDiff,
                                 target->height() + heightDiff);
-                if (isOverlappingAny(cell, targets, borderRegion))
+                if (isOverlappingAny(cell, targets, borderRegion, m_spacing))
                     *target = oldRect;
                 else {
                     moved = true;
@@ -745,7 +761,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                                 target->y() + yDiff,
                                 target->width() + widthDiff,
                                 target->height() + heightDiff);
-                if (isOverlappingAny(cell, targets, borderRegion))
+                if (isOverlappingAny(cell, targets, borderRegion, m_spacing))
                     *target = oldRect;
                 else {
                     moved = true;
@@ -759,7 +775,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                                 target->y() - yDiff - heightDiff,
                                 target->width() + widthDiff,
                                 target->height() + heightDiff);
-                if (isOverlappingAny(cell, targets, borderRegion)) {
+                if (isOverlappingAny(cell, targets, borderRegion, m_spacing)) {
                     *target = oldRect;
                 } else {
                     moved = true;
