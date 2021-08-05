@@ -436,6 +436,42 @@ void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::L
     input()->processFilters(std::bind(&InputEventFilter::pinchGestureCancelled, std::placeholders::_1, time));
 }
 
+void PointerInputRedirection::processHoldGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device)
+{
+    Q_UNUSED(device)
+    if (!inited()) {
+        return;
+    }
+    update();
+
+    input()->processSpies(std::bind(&InputEventSpy::holdGestureBegin, std::placeholders::_1, fingerCount, time));
+    input()->processFilters(std::bind(&InputEventFilter::holdGestureBegin, std::placeholders::_1, fingerCount, time));
+}
+
+void PointerInputRedirection::processHoldGestureEnd(quint32 time, KWin::LibInput::Device *device)
+{
+    Q_UNUSED(device)
+    if (!inited()) {
+        return;
+    }
+    update();
+
+    input()->processSpies(std::bind(&InputEventSpy::holdGestureEnd, std::placeholders::_1, time));
+    input()->processFilters(std::bind(&InputEventFilter::holdGestureEnd, std::placeholders::_1, time));
+}
+
+void PointerInputRedirection::processHoldGestureCancelled(quint32 time, KWin::LibInput::Device *device)
+{
+    Q_UNUSED(device)
+    if (!inited()) {
+        return;
+    }
+    update();
+
+    input()->processSpies(std::bind(&InputEventSpy::holdGestureCancelled, std::placeholders::_1, time));
+    input()->processFilters(std::bind(&InputEventFilter::holdGestureCancelled, std::placeholders::_1, time));
+}
+
 bool PointerInputRedirection::areButtonsPressed() const
 {
     for (auto state : m_buttons) {

@@ -161,6 +161,14 @@ public:
     ~SwipeGestureEvent() override;
 };
 
+class HoldGestureEvent : public GestureEvent
+{
+public:
+    HoldGestureEvent(libinput_event *event, libinput_event_type type);
+    ~HoldGestureEvent() override;
+};
+
+
 class SwitchEvent : public Event
 {
 public:

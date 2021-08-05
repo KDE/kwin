@@ -407,6 +407,10 @@ public:
     virtual bool swipeGestureEnd(quint32 time);
     virtual bool swipeGestureCancelled(quint32 time);
 
+    virtual bool holdGestureBegin(int fingerCount, quint32 time);
+    virtual bool holdGestureEnd(quint32 time);
+    virtual bool holdGestureCancelled(quint32 time);
+
     virtual bool switchEvent(SwitchEvent *event);
 
     virtual bool tabletToolEvent(TabletEvent *event);

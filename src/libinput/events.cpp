@@ -46,6 +46,9 @@ Event *Event::create(libinput_event *event)
     case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE:
     case LIBINPUT_EVENT_GESTURE_PINCH_END:
         return new PinchGestureEvent(event, t);
+    case LIBINPUT_EVENT_GESTURE_HOLD_BEGIN:
+    case LIBINPUT_EVENT_GESTURE_HOLD_END:
+        return new HoldGestureEvent(event, t);
     case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
     case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
     case LIBINPUT_EVENT_TABLET_TOOL_TIP:
@@ -318,6 +321,13 @@ SwipeGestureEvent::SwipeGestureEvent(libinput_event *event, libinput_event_type 
 }
 
 SwipeGestureEvent::~SwipeGestureEvent() = default;
+
+HoldGestureEvent::HoldGestureEvent(libinput_event *event, libinput_event_type type)
+    : GestureEvent(event, type)
+{
+}
+
+HoldGestureEvent::~HoldGestureEvent() = default;
 
 SwitchEvent::SwitchEvent(libinput_event *event, libinput_event_type type)
     : Event(event, type)

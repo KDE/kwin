@@ -131,6 +131,18 @@ public:
      * @internal
      */
     void processPinchGestureCancelled(quint32 time, KWin::LibInput::Device *device = nullptr);
+    /**
+     * @internal
+     */
+    void processHoldGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device = nullptr);
+    /**
+     * @internal
+     */
+    void processHoldGestureEnd(quint32 time, KWin::LibInput::Device *device = nullptr);
+    /**
+     * @internal
+     */
+    void processHoldGestureCancelled(quint32 time, KWin::LibInput::Device *device = nullptr);
 
 private:
     void processMotionInternal(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device);

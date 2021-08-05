@@ -516,6 +516,20 @@ void Connection::processEvents()
                 }
                 break;
             }
+            case LIBINPUT_EVENT_GESTURE_HOLD_BEGIN: {
+                HoldGestureEvent *he = static_cast<HoldGestureEvent*>(event.data());
+                Q_EMIT holdGestureBegin(he->fingerCount(), he->time(), he->device());
+                break;
+            }
+            case LIBINPUT_EVENT_GESTURE_HOLD_END: {
+                HoldGestureEvent *he = static_cast<HoldGestureEvent*>(event.data());
+                if (he->isCancelled()) {
+                    Q_EMIT holdGestureCancelled(he->time(), he->device());
+                } else {
+                    Q_EMIT holdGestureEnd(he->time(), he->device());
+                }
+                break;
+            }
             case LIBINPUT_EVENT_SWITCH_TOGGLE: {
                 SwitchEvent *se = static_cast<SwitchEvent*>(event.data());
                 switch (se->state()) {

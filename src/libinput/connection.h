@@ -115,6 +115,9 @@ Q_SIGNALS:
     void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time, KWin::LibInput::Device *device);
     void pinchGestureEnd(quint32 time, KWin::LibInput::Device *device);
     void pinchGestureCancelled(quint32 time, KWin::LibInput::Device *device);
+    void holdGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device);
+    void holdGestureEnd(quint32 time, KWin::LibInput::Device *device);
+    void holdGestureCancelled(quint32 time, KWin::LibInput::Device *device);
     void switchToggledOn(quint32 time, quint64 timeMicroseconds, KWin::LibInput::Device *device);
     void switchToggledOff(quint32 time, quint64 timeMicroseconds, KWin::LibInput::Device *device);
 

@@ -206,7 +206,7 @@ set_package_properties(XKB PROPERTIES
 
 find_package(Qt5XkbCommonSupport REQUIRED)
 
-find_package(Libinput 1.14)
+find_package(Libinput 1.19)
 set_package_properties(Libinput PROPERTIES TYPE REQUIRED PURPOSE "Required for input handling on Wayland.")
 
 find_package(UDev)
