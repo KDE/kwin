@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "KWin/Script",
     "KPlugin": {
         "Authors": [
             {
@@ -36,6 +37,5 @@
         "Name[vi]": "Kịch bản KWin",
         "Name[x-test]": "xxKWin Scriptxx",
         "Version": "1"
-    },
-    "KPackageStructure": "KWin/Script"
+    }
 }

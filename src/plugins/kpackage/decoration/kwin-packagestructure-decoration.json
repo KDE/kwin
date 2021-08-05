@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "KWin/Decoration",
     "KPlugin": {
         "Authors": [
             {
@@ -36,6 +37,5 @@
         "Name[vi]": "Trang trí KWin",
         "Name[x-test]": "xxKWin Decorationxx",
         "Version": "1"
-    },
-    "KPackageStructure": "KWin/Decoration"
+    }
 }

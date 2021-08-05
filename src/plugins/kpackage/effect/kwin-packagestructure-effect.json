@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "KWin/Effect",
     "KPlugin": {
         "Authors": [
             {
@@ -36,6 +37,5 @@
         "Name[vi]": "Hiệu ứng KWin",
         "Name[x-test]": "xxKWin Effectxx",
         "Version": "1"
-    },
-    "KPackageStructure": "KWin/Effect"
+    }
 }

@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "KWin/Aurorae",
     "KPlugin": {
         "Authors": [
             {
@@ -36,6 +37,5 @@
         "Name[vi]": "Aurorae của KWin",
         "Name[x-test]": "xxKWin Auroraexx",
         "Version": "1"
-    },
-    "KPackageStructure": "KWin/Aurorae"
+    }
 }

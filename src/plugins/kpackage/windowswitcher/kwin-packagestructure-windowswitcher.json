@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "KWin/WindowSwitcher",
     "KPlugin": {
         "Authors": [
             {
@@ -36,6 +37,5 @@
         "Name[vi]": "Trình chuyển cửa sổ KWin",
         "Name[x-test]": "xxKWin Window Switcherxx",
         "Version": "1"
-    },
-    "KPackageStructure": "KWin/WindowSwitcher"
+    }
 }
