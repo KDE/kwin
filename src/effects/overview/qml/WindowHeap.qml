@@ -30,6 +30,7 @@ FocusScope {
         anchors.fill: parent
         mode: effect.layout
         focus: true
+        spacing: PlasmaCore.Units.largeSpacing
 
         // This assumes that the position of the WindowHeap is static.
         readonly property point scenePosition: mapToItem(null, 0, 0)
