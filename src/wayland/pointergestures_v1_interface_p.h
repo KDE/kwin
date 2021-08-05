@@ -26,6 +26,7 @@ public:
 protected:
     void zwp_pointer_gestures_v1_get_swipe_gesture(Resource *resource, uint32_t id, struct ::wl_resource *pointer_resource) override;
     void zwp_pointer_gestures_v1_get_pinch_gesture(Resource *resource, uint32_t id, struct ::wl_resource *pointer_resource) override;
+    void zwp_pointer_gestures_v1_get_hold_gesture(Resource *resource, uint32_t id, struct ::wl_resource *pointer_resource) override;
     void zwp_pointer_gestures_v1_release(Resource *resource) override;
 };
 
@@ -63,6 +64,26 @@ public:
 
 protected:
     void zwp_pointer_gesture_pinch_v1_destroy(Resource *resource) override;
+
+private:
+    PointerInterface *pointer;
+    QPointer<ClientConnection> focusedClient;
+};
+
+class PointerHoldGestureV1Interface : public QtWaylandServer::zwp_pointer_gesture_hold_v1
+{
+public:
+    explicit PointerHoldGestureV1Interface(PointerInterface *pointer);
+
+    static PointerHoldGestureV1Interface *get(PointerInterface *pointer);
+
+    void sendBegin(quint32 serial, quint32 fingerCount);
+    void sendUpdate(const QSizeF &delta, qreal scale, qreal rotation);
+    void sendEnd(quint32 serial);
+    void sendCancel(quint32 serial);
+
+protected:
+    void zwp_pointer_gesture_hold_v1_destroy(Resource *resource) override;
 
 private:
     PointerInterface *pointer;

@@ -422,7 +422,7 @@ public:
      * The precise conditions of when such a gesture is detected are
      * implementation-dependent.
      *
-     * Only one gesture (either swipe or pinch) can be active at a given time.
+     * Only one gesture (either swipe or pinch or hold) can be active at a given time.
      *
      * @param fingerCount The number of fingers involved in this multi-finger touchpad gesture
      *
@@ -472,7 +472,7 @@ public:
      * around a logical center of gravity. The precise conditions of when
      * such a gesture is detected are implementation-dependent.
      *
-     * Only one gesture (either swipe or pinch) can be active at a given time.
+     * Only one gesture (either swipe or pinch or hold) can be active at a given time.
      *
      * @param fingerCount The number of fingers involved in this multi-touch touchpad gesture
      *
@@ -513,6 +513,41 @@ public:
      * @see endPointerPinchGesture
      */
     void cancelPointerPinchGesture();
+
+    /**
+     * Starts a multi-finger hold gesture for the currently focused pointer surface.
+     *
+     * Such gestures are normally reported through dedicated input devices such as touchpads.
+     *
+     * The gesture is usually initiated by multiple fingers being held down on the touchpad.
+     * The precise conditions of when such a gesture is detected are
+     * implementation-dependent.
+     *
+     * Only one gesture (either swipe or pinch or hold) can be active at a given time.
+     *
+     * @param fingerCount The number of fingers involved in this multi-finger touchpad gesture
+     *
+     * @see PointerGesturesInterface
+     * @see focusedPointerSurface
+     * @see endPointerHoldeGesture
+     * @see cancelPointerHoldGesture
+     */
+    void startPointerHoldGesture(quint32 fingerCount);
+
+
+    /**
+     * The multi-finger hold gesture ended. This may happen when one or more fingers are lifted.
+     * @see startPointerHoldGesture
+     * @see cancelPointerHoldGesture
+     */
+    void endPointerHoldGesture();
+
+    /**
+     * The multi-finger swipe gestures ended and got cancelled by the Wayland compositor.
+     * @see startPointerHoldGesture
+     * @see endPointerHoldGesture
+     */
+    void cancelPointerHoldGesture();
     ///@}
 
     /**

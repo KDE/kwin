@@ -15,7 +15,7 @@
 
 namespace KWaylandServer
 {
-static const int s_version = 2;
+static const int s_version = 3;
 
 PointerGesturesV1InterfacePrivate::PointerGesturesV1InterfacePrivate(Display *display)
     : QtWaylandServer::zwp_pointer_gestures_v1(*display, s_version)
@@ -44,6 +44,19 @@ void PointerGesturesV1InterfacePrivate::zwp_pointer_gestures_v1_get_pinch_gestur
 
     PointerPinchGestureV1Interface *pinchGesture = PointerPinchGestureV1Interface::get(pointer);
     pinchGesture->add(resource->client(), id, resource->version());
+}
+
+void PointerGesturesV1InterfacePrivate::zwp_pointer_gestures_v1_get_hold_gesture(Resource *resource, uint32_t id, struct ::wl_resource *pointer_resource)
+{
+    PointerInterface *pointer = PointerInterface::get(pointer_resource);
+    if (!pointer) {
+        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
+                               "invalid pointer");
+        return;
+    }
+
+    PointerHoldGestureV1Interface *holdGesture = PointerHoldGestureV1Interface::get(pointer);
+    holdGesture->add(resource->client(), id, resource->version());
 }
 
 void PointerGesturesV1InterfacePrivate::zwp_pointer_gestures_v1_release(Resource *resource)
@@ -247,6 +260,84 @@ void PointerPinchGestureV1Interface::sendCancel(quint32 serial)
     for (Resource *pinchResource : pinchResources) {
         if (pinchResource->client() == focusedClient->client()) {
             send_end(pinchResource->handle, serial, seat->timestamp(), true);
+        }
+    }
+
+    // The gesture session has been just finished, reset the cached focused client.
+    focusedClient = nullptr;
+}
+
+PointerHoldGestureV1Interface::PointerHoldGestureV1Interface(PointerInterface *pointer)
+    : pointer(pointer)
+{
+}
+
+PointerHoldGestureV1Interface *PointerHoldGestureV1Interface::get(PointerInterface *pointer)
+{
+    if (pointer) {
+        PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer);
+        return pointerPrivate->holdGesturesV1.data();
+    }
+    return nullptr;
+}
+
+void PointerHoldGestureV1Interface::zwp_pointer_gesture_hold_v1_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+void PointerHoldGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCount)
+{
+    if (focusedClient) {
+        return; // gesture is already active
+    }
+    if (!pointer->focusedSurface()) {
+        return;
+    }
+
+    const SurfaceInterface *focusedSurface = pointer->focusedSurface();
+    focusedClient = focusedSurface->client();
+    SeatInterface *seat = pointer->seat();
+
+    const QList<Resource *> holdResources = resourceMap().values(*focusedClient);
+    for (Resource *holdResource : holdResources) {
+        if (holdResource->client() == focusedClient->client()) {
+            send_begin(holdResource->handle, serial, seat->timestamp(), focusedSurface->resource(), fingerCount);
+        }
+    }
+}
+
+void PointerHoldGestureV1Interface::sendEnd(quint32 serial)
+{
+    if (!focusedClient) {
+        return;
+    }
+
+    SeatInterface *seat = pointer->seat();
+
+    const QList<Resource *> holdResources = resourceMap().values(*focusedClient);
+    for (Resource *holdResource : holdResources) {
+        if (holdResource->client() == focusedClient->client()) {
+            send_end(holdResource->handle, serial, seat->timestamp(), false);
+        }
+    }
+
+    // The gesture session has been just finished, reset the cached focused client.
+    focusedClient = nullptr;
+}
+
+void PointerHoldGestureV1Interface::sendCancel(quint32 serial)
+{
+    if (!focusedClient) {
+        return;
+    }
+
+    SeatInterface *seat = pointer->seat();
+
+    const QList<Resource *> holdResources = resourceMap().values(*focusedClient);
+    for (Resource *holdResource : holdResources) {
+        if (holdResource->client() == holdResource->client()) {
+            send_end(holdResource->handle, serial, seat->timestamp(), true);
         }
     }
 

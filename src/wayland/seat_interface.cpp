@@ -854,6 +854,42 @@ void SeatInterface::cancelPointerPinchGesture()
     }
 }
 
+void SeatInterface::startPointerHoldGesture(quint32 fingerCount)
+{
+    if (!d->pointer) {
+        return;
+    }
+
+    auto holdGesture = PointerHoldGestureV1Interface::get(pointer());
+    if (holdGesture) {
+        holdGesture->sendBegin(d->display->nextSerial(), fingerCount);
+    }
+}
+
+void SeatInterface::endPointerHoldGesture()
+{
+    if (!d->pointer) {
+        return;
+    }
+
+    auto holdGesture = PointerHoldGestureV1Interface::get(pointer());
+    if (holdGesture) {
+        holdGesture->sendEnd(d->display->nextSerial());
+    }
+}
+
+void SeatInterface::cancelPointerHoldGesture()
+{
+    if (!d->pointer) {
+        return;
+    }
+
+    auto holdGesture = PointerHoldGestureV1Interface::get(pointer());
+    if (holdGesture) {
+        holdGesture->sendCancel(d->display->nextSerial());
+    }
+}
+
 SurfaceInterface *SeatInterface::focusedKeyboardSurface() const
 {
     return d->globalKeyboard.focus.surface;

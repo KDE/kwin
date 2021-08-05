@@ -27,6 +27,10 @@ if (HAVE_LINUX_INPUT_H)
     set( testWaylandSeat_SRCS
             test_wayland_seat.cpp
         )
+    ecm_add_qtwayland_client_protocol(testWaylandSeat_SRCS
+        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml
+        BASENAME pointer-gestures-unstable-v1
+    )
     add_executable(testWaylandSeat ${testWaylandSeat_SRCS})
     target_link_libraries( testWaylandSeat Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer Wayland::Client Wayland::Server)
     add_test(NAME kwayland-testWaylandSeat COMMAND testWaylandSeat)

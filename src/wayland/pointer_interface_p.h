@@ -20,6 +20,7 @@ namespace KWaylandServer
 class ClientConnection;
 class PointerPinchGestureV1Interface;
 class PointerSwipeGestureV1Interface;
+class PointerHoldGestureV1Interface;
 class RelativePointerV1Interface;
 
 class PointerInterfacePrivate : public QtWaylandServer::wl_pointer
@@ -40,6 +41,7 @@ public:
     QScopedPointer<RelativePointerV1Interface> relativePointersV1;
     QScopedPointer<PointerSwipeGestureV1Interface> swipeGesturesV1;
     QScopedPointer<PointerPinchGestureV1Interface> pinchGesturesV1;
+    QScopedPointer<PointerHoldGestureV1Interface> holdGesturesV1;
     QPointF lastPosition;
 
     void sendLeave(quint32 serial);

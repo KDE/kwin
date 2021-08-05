@@ -45,6 +45,7 @@ PointerInterfacePrivate::PointerInterfacePrivate(PointerInterface *q, SeatInterf
     , relativePointersV1(new RelativePointerV1Interface(q))
     , swipeGesturesV1(new PointerSwipeGestureV1Interface(q))
     , pinchGesturesV1(new PointerPinchGestureV1Interface(q))
+    , holdGesturesV1(new PointerHoldGestureV1Interface(q))
 {
 }
 
