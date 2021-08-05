@@ -39,13 +39,16 @@ bool GLTexturePrivate::s_supportsTextureFormatRG = false;
 uint GLTexturePrivate::s_textureObjectCounter = 0;
 uint GLTexturePrivate::s_fbo = 0;
 
-// Note: Blending is set up to expect premultiplied data, so non-premultiplied
-//       formats must always be converted.
+// Table of GL formats/types associated with different values of QImage::Format.
+// Zero values indicate a direct upload is not feasible.
+//
+// Note: Blending is set up to expect premultiplied data, so the non-premultiplied
+// Format_ARGB32 must be converted to Format_ARGB32_Premultiplied ahead of time.
 struct {
     GLenum internalFormat;
     GLenum format;
     GLenum type;
-} static const table[] = {
+} static const formatTable[] = {
     { 0,           0,       0                              }, // QImage::Format_Invalid
     { 0,           0,       0                              }, // QImage::Format_Mono
     { 0,           0,       0                              }, // QImage::Format_MonoLSB
@@ -127,11 +130,11 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
 
         const QImage::Format index = image.format();
 
-        if (index < sizeof(table) / sizeof(table[0]) && table[index].internalFormat &&
-            !(index == QImage::Format_Indexed8 && image.colorCount() > 0)) {
-            internalFormat = table[index].internalFormat;
-            format = table[index].format;
-            type = table[index].type;
+        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
+            && !(index == QImage::Format_Indexed8 && image.colorCount() > 0)) {
+            internalFormat = formatTable[index].internalFormat;
+            format = formatTable[index].format;
+            type = formatTable[index].type;
             im = image;
         } else {
             im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
@@ -393,10 +396,10 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
 
         const QImage::Format index = image.format();
 
-        if (index < sizeof(table) / sizeof(table[0]) && table[index].internalFormat &&
-            !(index == QImage::Format_Indexed8 && image.colorCount() > 0)) {
-            format = table[index].format;
-            type = table[index].type;
+        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
+            && !(index == QImage::Format_Indexed8 && image.colorCount() > 0)) {
+            format = formatTable[index].format;
+            type = formatTable[index].type;
             im = img;
         } else {
             format = GL_BGRA;
