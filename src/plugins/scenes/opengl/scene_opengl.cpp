@@ -983,12 +983,14 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
         if (!quads.isEmpty()) {
             SurfacePixmap *pixmap = surfaceItem->pixmap();
             if (pixmap) {
+                // Don't bother with blending if the entire surface is opaque
+                bool hasAlpha = pixmap->hasAlphaChannel() && !surfaceItem->shape().subtracted(surfaceItem->opaque()).isEmpty();
                 context->renderNodes.append(RenderNode{
                     .texture = bindSurfaceTexture(surfaceItem),
                     .quads = quads,
                     .transformMatrix = transformation(item, context),
                     .opacity = context->paintData.opacity(),
-                    .hasAlpha = pixmap->hasAlphaChannel(),
+                    .hasAlpha = hasAlpha,
                     .coordinateType = UnnormalizedCoordinates,
                 });
             }
