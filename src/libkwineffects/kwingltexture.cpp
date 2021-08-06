@@ -146,12 +146,12 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
         if (d->s_supportsTextureStorage) {
             glTexStorage2D(d->m_target, 1, internalFormat, im.width(), im.height());
             glTexSubImage2D(d->m_target, 0, 0, 0, im.width(), im.height(),
-                            format, type, im.bits());
+                            format, type, im.constBits());
             d->m_immutable = true;
         } else {
             glTexParameteri(d->m_target, GL_TEXTURE_MAX_LEVEL, d->m_mipLevels - 1);
             glTexImage2D(d->m_target, 0, internalFormat, im.width(), im.height(), 0,
-                         format, type, im.bits());
+                         format, type, im.constBits());
         }
     } else {
         d->m_internalFormat = GL_RGBA8;
@@ -159,11 +159,11 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
         if (d->s_supportsARGB32) {
             const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
             glTexImage2D(d->m_target, 0, GL_BGRA_EXT, im.width(), im.height(),
-                         0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.bits());
+                         0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.constBits());
         } else {
             const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
             glTexImage2D(d->m_target, 0, GL_RGBA, im.width(), im.height(),
-                         0, GL_RGBA, GL_UNSIGNED_BYTE, im.bits());
+                         0, GL_RGBA, GL_UNSIGNED_BYTE, im.constBits());
         }
     }
 
@@ -390,16 +390,16 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
     if (!GLPlatform::instance()->isGLES()) {
         const QImage im = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
         glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
-                        GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, im.bits());
+                        GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, im.constBits());
     } else {
         if (d->s_supportsARGB32) {
             const QImage im = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
             glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
-                            GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.bits());
+                            GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.constBits());
         } else {
             const QImage im = img.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
             glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
-                            GL_RGBA, GL_UNSIGNED_BYTE, im.bits());
+                            GL_RGBA, GL_UNSIGNED_BYTE, im.constBits());
         }
     }
 
