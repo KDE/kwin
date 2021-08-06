@@ -104,6 +104,9 @@ ThumbnailItemBase::ThumbnailItemBase(QQuickItem *parent)
             this, &ThumbnailItemBase::updateFrameRenderingConnection);
     connect(this, &QQuickItem::windowChanged,
             this, &ThumbnailItemBase::updateFrameRenderingConnection);
+
+    connect(this, &QQuickItem::widthChanged, this, &ThumbnailItemBase::paintedRectChanged);
+    connect(this, &QQuickItem::heightChanged, this, &ThumbnailItemBase::paintedRectChanged);
 }
 
 ThumbnailItemBase::~ThumbnailItemBase()
@@ -296,10 +299,8 @@ void WindowThumbnailItem::setClient(AbstractClient *client)
         return;
     }
     if (m_client) {
-        disconnect(m_client, &AbstractClient::frameGeometryChanged,
-                   this, &WindowThumbnailItem::invalidateOffscreenTexture);
-        disconnect(m_client, &AbstractClient::damaged,
-                   this, &WindowThumbnailItem::invalidateOffscreenTexture);
+        disconnect(m_client, nullptr,
+                   this, nullptr);
     }
     m_client = client;
     if (m_client) {
@@ -307,12 +308,19 @@ void WindowThumbnailItem::setClient(AbstractClient *client)
                 this, &WindowThumbnailItem::invalidateOffscreenTexture);
         connect(m_client, &AbstractClient::damaged,
                 this, &WindowThumbnailItem::invalidateOffscreenTexture);
+
+        connect(m_client, &AbstractClient::frameGeometryChanged,
+                this, &ThumbnailItemBase::paintedRectChanged);
+        connect(m_client, &AbstractClient::visibleGeometryChanged,
+                this, &ThumbnailItemBase::paintedRectChanged);
+
         setWId(m_client->internalId());
     } else {
         setWId(QUuid());
     }
     invalidateOffscreenTexture();
     Q_EMIT clientChanged();
+    Q_EMIT paintedRectChanged();
 }
 
 QImage WindowThumbnailItem::fallbackImage() const
@@ -333,6 +341,9 @@ static QRectF centeredSize(const QRectF &boundingRect, const QSizeF &size)
 
 QRectF WindowThumbnailItem::paintedRect() const
 {
+    if (!m_client) {
+        return QRectF();
+    }
     if (!m_offscreenTexture) {
         const QSizeF iconSize = m_client->icon().actualSize(window(), boundingRect().size().toSize());
         return centeredSize(boundingRect(), iconSize);
@@ -412,6 +423,8 @@ void WindowThumbnailItem::updateOffscreenTexture()
     m_dirty = false;
     m_acquireFence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 
+    Q_EMIT paintedRectChanged();
+
     // We know that the texture has changed, so schedule an item update.
     update();
 }
@@ -419,6 +432,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
 DesktopThumbnailItem::DesktopThumbnailItem(QQuickItem *parent)
     : ThumbnailItemBase(parent)
 {
+    connect(screens(), &Screens::sizeChanged, this, &ThumbnailItemBase::paintedRectChanged);
 }
 
 int DesktopThumbnailItem::desktop() const
@@ -496,6 +510,8 @@ void DesktopThumbnailItem::updateOffscreenTexture()
     // The fence is needed to avoid the case where qtquick renderer starts using
     // the texture while all rendering commands to it haven't completed yet.
     m_acquireFence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+
+    Q_EMIT paintedRectChanged();
 
     // We know that the texture has changed, so schedule an item update.
     update();

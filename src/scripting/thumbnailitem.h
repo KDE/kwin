@@ -39,6 +39,14 @@ class ThumbnailItemBase : public QQuickItem
      */
     Q_PROPERTY(QQuickItem *clipTo READ clipTo WRITE setClipTo NOTIFY clipToChanged)
 
+    /**
+     * The relative geometry of the rendered contents
+     * This may overflow the item geometry to contain shadows
+     *
+     * This value may update asynchronously as contents are loaded
+     */
+    Q_PROPERTY(QRectF paintedRect READ paintedRect NOTIFY paintedRectChanged)
+
 public:
     explicit ThumbnailItemBase(QQuickItem *parent = nullptr);
     ~ThumbnailItemBase() override;
@@ -64,6 +72,7 @@ Q_SIGNALS:
     void saturationChanged();
     void clipToChanged();
     void sourceSizeChanged();
+    void paintedRectChanged();
 
 protected:
     void releaseResources() override;

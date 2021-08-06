@@ -9,6 +9,7 @@ import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.overview 1.0
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.graphicaleffects 1.0
 
 FocusScope {
     id: heap
@@ -58,6 +59,17 @@ FocusScope {
                     id: thumbSource
                     anchors.fill: parent
                     wId: thumb.client.internalId
+                    visible: false
+                }
+
+                Lanczos {
+                    id: lanc
+                    source: thumbSource
+                    sourceSize: Qt.size(thumbSource.paintedRect.width, thumbSource.paintedRect.height)
+                    width: sourceSize.width
+                    height: sourceSize.height
+                    x: thumbSource.paintedRect.x
+                    y: thumbSource.paintedRect.y
                 }
 
                 ExpoCell {
