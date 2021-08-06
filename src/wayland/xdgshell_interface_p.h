@@ -88,8 +88,8 @@ struct XdgSurfaceState
 {
     QRect windowGeometry;
     quint32 acknowledgedConfigure;
-    bool acknowledgedConfigureIsSet : 1 = false;
-    bool windowGeometryIsSet : 1 = false;
+    bool acknowledgedConfigureIsSet = false;
+    bool windowGeometryIsSet = false;
 };
 
 class XdgSurfaceInterfacePrivate : public QtWaylandServer::xdg_surface
