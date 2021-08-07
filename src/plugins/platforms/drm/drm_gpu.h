@@ -114,6 +114,8 @@ private:
     void removeOutput(DrmOutput *output);
     void tryAMS();
 
+    static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data);
+
     DrmBackend* const m_backend;
     QPointer<AbstractEglDrmBackend> m_eglBackend;
 
@@ -123,6 +125,7 @@ private:
     const dev_t m_deviceId;
     bool m_atomicModeSetting;
     bool m_useEglStreams;
+    bool m_fakeVblankWait;
     gbm_device* m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     clockid_t m_presentationClock;

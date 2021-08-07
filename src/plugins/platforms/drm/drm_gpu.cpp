@@ -72,9 +72,18 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
         qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << m_devNode;
     }
 
-    // find out if this GPU is using the NVidia proprietary driver
     DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
+    qCDebug(KWIN_DRM) << m_devNode << "uses driver" << version->name;
+
+    // find out if this GPU is using the NVidia proprietary driver
     m_useEglStreams = strstr(version->name, "nvidia-drm");
+
+    // Some drivers don't have page flips synced to the refresh rate, do it ourselves
+    m_fakeVblankWait = strstr(version->name, "virtio") || strstr(version->name, "qxl")
+                       || strstr(version->name, "bochs");
+    if (m_fakeVblankWait) {
+        qCDebug(KWIN_DRM) << "Faking wait for Vblank on" << m_devNode;
+    }
 
     m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
     connect(m_socketNotifier, &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
@@ -393,7 +402,7 @@ static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_
     return convertTimestamp(targetCurrentTime) - delta;
 }
 
-static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data)
+void DrmGpu::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data)
 {
     Q_UNUSED(fd)
     Q_UNUSED(frame)
@@ -426,9 +435,20 @@ static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsign
         timestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
 
+    RenderLoop *renderLoop = output->renderLoop();
+
+    if (output->gpu()->m_fakeVblankWait) {
+        // Page flips don't wait for vblank, they complete as fast as possible.
+        // To avoid rendering at unlimited speed, make sure there's at least
+        // the vblank interval between consecutive presentations.
+        const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / renderLoop->refreshRate());
+        const auto fakePresented = renderLoop->lastPresentationTimestamp() + vblankInterval;
+        if (fakePresented > timestamp)
+            timestamp = fakePresented;
+    }
+
     output->pageFlipped();
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(output->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    RenderLoopPrivate::get(renderLoop)->notifyFrameCompleted(timestamp);
 }
 
 void DrmGpu::dispatchEvents()
