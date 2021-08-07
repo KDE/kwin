@@ -115,10 +115,12 @@ protected:
 
 private:
     void dispatchEvents();
-    DrmPlane *getCompatiblePlane(DrmPlane::TypeIndex typeIndex, DrmCrtc *crtc);
     DrmOutput *findOutput(quint32 connector);
     void removeOutput(DrmOutput *output);
-    void tryAMS();
+    void initDrmResources();
+
+    QVector<DrmPipeline *> findWorkingCombination(const QVector<DrmPipeline *> &pipelines, QVector<DrmConnector *> connectors, QVector<DrmCrtc *> crtcs, const QVector<DrmPlane *> &planes);
+    bool testCombination(const QVector<DrmPipeline *> &pipelines);
 
     DrmBackend* const m_backend;
     QPointer<AbstractEglDrmBackend> m_eglBackend;
@@ -135,15 +137,11 @@ private:
     QSocketNotifier *m_socketNotifier = nullptr;
     bool m_addFB2ModifiersSupported = false;
 
-    // all planes: primarys, cursors and overlays
     QVector<DrmPlane*> m_planes;
-    QVector<DrmPlane*> m_unusedPlanes;
-    // crtcs
     QVector<DrmCrtc*> m_crtcs;
-    // connectors
     QVector<DrmConnector*> m_connectors;
-    // pipelines
     QVector<DrmPipeline*> m_pipelines;
+
     QVector<DrmOutput*> m_drmOutputs;
     // includes virtual outputs
     QVector<DrmAbstractOutput*> m_outputs;

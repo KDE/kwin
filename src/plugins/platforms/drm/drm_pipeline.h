@@ -37,6 +37,11 @@ public:
     ~DrmPipeline();
 
     /**
+     * Sets the necessary initial drm properties for the pipeline to work
+     */
+    void setup();
+
+    /**
      * checks if the connector(s) and plane(s) are set to the CRTC(s)
      * always returns false in legacy mode
      */
@@ -86,13 +91,19 @@ public:
     void setOutput(DrmOutput *output);
     DrmOutput *output() const;
 
+    enum class CommitMode {
+        Test,
+        Commit,
+        CommitWithPageflipEvent
+    };
+
+    static bool commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode);
+
 private:
-    bool atomicCommit();
-    bool atomicTest(const QVector<DrmPipeline*> &pipelines);
-    bool doAtomicCommit(drmModeAtomicReq *req, uint32_t flags, bool testOnly);
     bool populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);
-    bool presentLegacy();
     bool test();
+    bool atomicCommit();
+    bool presentLegacy();
     bool checkTestBuffer();
 
     bool setPendingTransformation(const DrmPlane::Transformations &transformation);

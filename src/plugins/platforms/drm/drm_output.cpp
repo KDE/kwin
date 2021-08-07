@@ -40,6 +40,7 @@ namespace KWin
 DrmOutput::DrmOutput(DrmGpu *gpu, DrmPipeline *pipeline)
     : DrmAbstractOutput(gpu)
     , m_pipeline(pipeline)
+    , m_connector(pipeline->connector())
 {
     m_pipeline->setOutput(this);
     auto conn = m_pipeline->connector();
@@ -74,6 +75,7 @@ DrmOutput::~DrmOutput()
     if (m_pageFlipPending) {
         pageFlipped();
     }
+    m_pipeline->setOutput(nullptr);
 }
 
 bool DrmOutput::initCursor(const QSize &cursorSize)
@@ -417,6 +419,11 @@ void DrmOutput::setOverscan(uint32_t overscan)
     }
 }
 
+DrmConnector *DrmOutput::connector() const
+{
+    return m_connector;
+}
+
 DrmPipeline *DrmOutput::pipeline() const
 {
     return m_pipeline;
@@ -457,6 +464,12 @@ void DrmOutput::setRgbRange(RgbRange range)
         setRgbRangeInternal(range);
         m_renderLoop->scheduleRepaint();
     }
+}
+
+void DrmOutput::setPipeline(DrmPipeline *pipeline)
+{
+    Q_ASSERT_X(!pipeline || pipeline->connector() == m_connector, "DrmOutput::setPipeline", "Pipeline with wrong connector set!");
+    m_pipeline = pipeline;
 }
 
 }

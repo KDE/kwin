@@ -41,17 +41,8 @@ DrmPipeline::DrmPipeline(DrmGpu *gpu, DrmConnector *conn, DrmCrtc *crtc, DrmPlan
     , m_crtc(crtc)
     , m_primaryPlane(primaryPlane)
 {
-    if (m_gpu->atomicModeSetting()) {
-        m_connector->findCurrentMode(m_crtc->queryCurrentMode());
-        m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, m_crtc->id());
-        auto mode = m_connector->currentMode();
-        m_crtc->setPending(DrmCrtc::PropertyIndex::Active, 1);
-        m_crtc->setPendingBlob(DrmCrtc::PropertyIndex::ModeId, &mode.mode, sizeof(drmModeModeInfo));
-    }
     m_allObjects << m_connector << m_crtc;
     if (m_primaryPlane) {
-        m_primaryPlane->setPending(DrmPlane::PropertyIndex::CrtcId, m_crtc->id());
-        m_primaryPlane->set(QPoint(0, 0), sourceSize(), QPoint(0, 0), m_connector->currentMode().size);
         m_allObjects << m_primaryPlane;
     }
 }
@@ -60,12 +51,29 @@ DrmPipeline::~DrmPipeline()
 {
 }
 
+void DrmPipeline::setup()
+{
+    if (!m_gpu->atomicModeSetting()) {
+        return;
+    }
+    if (m_connector->getProp(DrmConnector::PropertyIndex::CrtcId)->current() == m_crtc->id()) {
+        m_connector->findCurrentMode(m_crtc->queryCurrentMode());
+    }
+    m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, m_crtc->id());
+    m_crtc->setPending(DrmCrtc::PropertyIndex::Active, 1);
+    auto mode = m_connector->currentMode();
+    m_crtc->setPendingBlob(DrmCrtc::PropertyIndex::ModeId, &mode.mode, sizeof(drmModeModeInfo));
+    m_primaryPlane->setPending(DrmPlane::PropertyIndex::CrtcId, m_crtc->id());
+    m_primaryPlane->set(QPoint(0, 0), sourceSize(), QPoint(0, 0), mode.size);
+    m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate0);
+}
+
 bool DrmPipeline::test(const QVector<DrmPipeline*> &pipelines)
 {
     if (m_gpu->atomicModeSetting()) {
-        return checkTestBuffer() && atomicTest(pipelines);
+        return checkTestBuffer() && commitPipelines(pipelines, CommitMode::Test);
     } else {
-        return m_legacyNeedsModeset ? modeset(0) : true;
+        return true;
     }
 }
 
@@ -106,86 +114,72 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
 
 bool DrmPipeline::atomicCommit()
 {
-    drmModeAtomicReq *req = drmModeAtomicAlloc();
-    if (!req) {
-        qCDebug(KWIN_DRM) << "Failed to allocate drmModeAtomicReq!" << strerror(errno);
-        return false;
-    }
-    bool result = doAtomicCommit(req, 0, false);
-    drmModeAtomicFree(req);
-    return result;
+    return commitPipelines({this}, CommitMode::CommitWithPageflipEvent);
 }
 
-bool DrmPipeline::atomicTest(const QVector<DrmPipeline*> &pipelines)
+bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode)
 {
-    drmModeAtomicReq *req = drmModeAtomicAlloc();
-    if (!req) {
-        qCDebug(KWIN_DRM) << "Failed to allocate drmModeAtomicReq!" << strerror(errno);
-        return false;
-    }
-    uint32_t flags = 0;
-    bool result = true;
-    // the whole batch needs to be tested in one atomic commit to consider not-yet-applied changes of other pipelines
-    for (const auto &pipeline : pipelines) {
-        if (pipeline != this) {
-            result &= pipeline->populateAtomicValues(req, flags);
-            if (!result) {
+    Q_ASSERT(!pipelines.isEmpty());
+
+    if (pipelines[0]->m_gpu->atomicModeSetting()) {
+        drmModeAtomicReq *req = drmModeAtomicAlloc();
+        if (!req) {
+            qCDebug(KWIN_DRM) << "Failed to allocate drmModeAtomicReq!" << strerror(errno);
+            return false;
+        }
+        uint32_t flags = 0;
+        bool result = true;
+        for (const auto &pipeline : pipelines) {
+            if (!pipeline->checkTestBuffer() || !pipeline->populateAtomicValues(req, flags)) {
+                result = false;
                 break;
             }
         }
-    }
-    if (result) {
-        result &= doAtomicCommit(req, flags, true);
-    } else {
-        if (m_oldTestBuffer) {
-            m_primaryBuffer = m_oldTestBuffer;
-            m_oldTestBuffer = nullptr;
+        if (mode != CommitMode::CommitWithPageflipEvent) {
+            flags &= ~DRM_MODE_PAGE_FLIP_EVENT;
         }
-        for (const auto &obj : qAsConst(m_allObjects)) {
-            obj->rollbackPending();
-        }
-    }
-    drmModeAtomicFree(req);
-    return result;
-}
-
-bool DrmPipeline::doAtomicCommit(drmModeAtomicReq *req, uint32_t flags, bool testOnly)
-{
-    bool result = populateAtomicValues(req, flags);
-
-    // test
-    if (result && drmModeAtomicCommit(m_gpu->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, m_output) != 0) {
-        qCWarning(KWIN_DRM) << "Atomic test failed!" << strerror(errno);
-        printDebugInfo();
-        result = false;
-    }
-    // commit
-    if (!testOnly && result && drmModeAtomicCommit(m_gpu->fd(), req, flags, m_output) != 0) {
-        qCCritical(KWIN_DRM) << "Atomic commit failed! This never should've happened!" << strerror(errno);
-        printDebugInfo();
-        result = false;
-    }
-    if (result) {
-        m_oldTestBuffer = nullptr;
-        for (const auto &obj : qAsConst(m_allObjects)) {
-            obj->commitPending();
-        }
-        if (!testOnly) {
-            for (const auto &obj : qAsConst(m_allObjects)) {
-                obj->commit();
+        if (result) {
+            result = drmModeAtomicCommit(pipelines[0]->m_gpu->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, pipelines[0]->m_output) == 0;
+            if (result && mode != CommitMode::Test) {
+                result = drmModeAtomicCommit(pipelines[0]->m_gpu->fd(), req, flags, pipelines[0]->m_output) == 0;
             }
-            m_primaryPlane->setNext(m_primaryBuffer);
         }
+        if (result) {
+            for (const auto &pipeline : pipelines) {
+                pipeline->m_oldTestBuffer = nullptr;
+                for (const auto &obj : qAsConst(pipeline->m_allObjects)) {
+                    obj->commitPending();
+                }
+                if (mode != CommitMode::Test) {
+                    pipeline->m_primaryPlane->setNext(pipeline->m_primaryBuffer);
+                    for (const auto &obj : qAsConst(pipeline->m_allObjects)) {
+                        obj->commit();
+                    }
+                }
+            }
+        } else {
+            qCWarning(KWIN_DRM) << (mode == CommitMode::Test ? "Atomic test" : "Atomic commit") << "failed!" << strerror(errno);
+            for (const auto &pipeline : pipelines) {
+                pipeline->printDebugInfo();
+                if (pipeline->m_oldTestBuffer) {
+                    pipeline->m_primaryBuffer = pipeline->m_oldTestBuffer;
+                    pipeline->m_oldTestBuffer = nullptr;
+                }
+                for (const auto &obj : qAsConst(pipeline->m_allObjects)) {
+                    obj->rollbackPending();
+                }
+            }
+        }
+        drmModeAtomicFree(req);
+        return result;
     } else {
-        if (m_oldTestBuffer) {
-            m_primaryBuffer = m_oldTestBuffer;
-            m_oldTestBuffer = nullptr;
+        for (const auto &pipeline : pipelines) {
+            if (pipeline->m_legacyNeedsModeset && !pipeline->modeset(0)) {
+                return false;
+            }
         }
-        for (const auto &obj : qAsConst(m_allObjects)) {
-            obj->rollbackPending();
-        }
+        return true;
     }
-    return result;
 }
 
 bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
@@ -264,6 +258,12 @@ bool DrmPipeline::modeset(int modeIndex)
         }
         m_oldTestBuffer = nullptr;
         m_legacyNeedsModeset = false;
+        // make sure the buffer gets kept alive, or the modeset gets reverted by the kernel
+        if (m_crtc->current()) {
+            m_crtc->setNext(m_primaryBuffer);
+        } else {
+            m_crtc->setCurrent(m_primaryBuffer);
+        }
     }
     return true;
 }
@@ -271,6 +271,9 @@ bool DrmPipeline::modeset(int modeIndex)
 bool DrmPipeline::checkTestBuffer()
 {
     if (m_primaryBuffer && m_primaryBuffer->size() == sourceSize()) {
+        return true;
+    }
+    if (!m_active) {
         return true;
     }
 #if HAVE_GBM

@@ -50,7 +50,10 @@ public:
     void pageFlipped();
     bool isDpmsEnabled() const override;
 
+    DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
+    void setPipeline(DrmPipeline *pipeline);
+
     GbmBuffer *currentBuffer() const override;
     QSize sourceSize() const override;
     bool isFormatSupported(uint32_t drmFormat) const override;
@@ -80,6 +83,7 @@ private:
     void setRgbRange(RgbRange range) override;
 
     DrmPipeline *m_pipeline;
+    DrmConnector *m_connector;
 
     QSharedPointer<DrmDumbBuffer> m_cursor;
     bool m_pageFlipPending = false;
