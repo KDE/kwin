@@ -35,7 +35,7 @@ namespace KWin
 {
 
 DrmPipeline::DrmPipeline(DrmGpu *gpu, DrmConnector *conn, DrmCrtc *crtc, DrmPlane *primaryPlane)
-    : m_pageflipUserData(nullptr)
+    : m_output(nullptr)
     , m_gpu(gpu)
     , m_connector(conn)
     , m_crtc(crtc)
@@ -154,13 +154,13 @@ bool DrmPipeline::doAtomicCommit(drmModeAtomicReq *req, uint32_t flags, bool tes
     bool result = populateAtomicValues(req, flags);
 
     // test
-    if (result && drmModeAtomicCommit(m_gpu->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, m_pageflipUserData) != 0) {
+    if (result && drmModeAtomicCommit(m_gpu->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, m_output) != 0) {
         qCWarning(KWIN_DRM) << "Atomic test failed!" << strerror(errno);
         printDebugInfo();
         result = false;
     }
     // commit
-    if (!testOnly && result && drmModeAtomicCommit(m_gpu->fd(), req, flags, m_pageflipUserData) != 0) {
+    if (!testOnly && result && drmModeAtomicCommit(m_gpu->fd(), req, flags, m_output) != 0) {
         qCCritical(KWIN_DRM) << "Atomic commit failed! This never should've happened!" << strerror(errno);
         printDebugInfo();
         result = false;
@@ -220,7 +220,7 @@ bool DrmPipeline::presentLegacy()
     }
     m_lastFlags = DRM_MODE_PAGE_FLIP_EVENT;
     m_crtc->setNext(m_primaryBuffer);
-    if (drmModePageFlip(m_gpu->fd(), m_crtc->id(), m_primaryBuffer ? m_primaryBuffer->bufferId() : 0, DRM_MODE_PAGE_FLIP_EVENT, m_pageflipUserData) != 0) {
+    if (drmModePageFlip(m_gpu->fd(), m_crtc->id(), m_primaryBuffer ? m_primaryBuffer->bufferId() : 0, DRM_MODE_PAGE_FLIP_EVENT, m_output) != 0) {
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno) << m_primaryBuffer;
         return false;
     }
@@ -275,8 +275,8 @@ bool DrmPipeline::checkTestBuffer()
     }
 #if HAVE_GBM
     auto backend = m_gpu->eglBackend();
-    if (backend && m_pageflipUserData) {
-        auto buffer = backend->renderTestFrame(m_pageflipUserData);
+    if (backend && m_output) {
+        auto buffer = backend->renderTestFrame(m_output);
         if (buffer && buffer->bufferId()) {
             m_oldTestBuffer = m_primaryBuffer;
             m_primaryBuffer = buffer;
@@ -534,9 +534,14 @@ void DrmPipeline::pageFlipped()
     }
 }
 
-void DrmPipeline::setUserData(DrmOutput *data)
+void DrmPipeline::setOutput(DrmOutput *output)
 {
-    m_pageflipUserData = data;
+    m_output = output;
+}
+
+DrmOutput *DrmPipeline::output() const
+{
+    return m_output;
 }
 
 void DrmPipeline::updateProperties()

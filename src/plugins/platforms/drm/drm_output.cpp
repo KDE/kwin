@@ -41,7 +41,7 @@ DrmOutput::DrmOutput(DrmGpu *gpu, DrmPipeline *pipeline)
     : DrmAbstractOutput(gpu)
     , m_pipeline(pipeline)
 {
-    m_pipeline->setUserData(this);
+    m_pipeline->setOutput(this);
     auto conn = m_pipeline->connector();
     m_renderLoop->setRefreshRate(conn->currentMode().refreshRate);
     setSubPixelInternal(conn->subpixel());

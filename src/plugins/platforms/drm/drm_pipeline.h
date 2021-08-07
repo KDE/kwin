@@ -77,12 +77,14 @@ public:
 
     void pageFlipped();
     void printDebugInfo() const;
-    void setUserData(DrmOutput *data);
     QSize sourceSize() const;
     void updateProperties();
 
     bool isFormatSupported(uint32_t drmFormat) const;
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const;
+
+    void setOutput(DrmOutput *output);
+    DrmOutput *output() const;
 
 private:
     bool atomicCommit();
@@ -95,7 +97,7 @@ private:
 
     bool setPendingTransformation(const DrmPlane::Transformations &transformation);
 
-    DrmOutput *m_pageflipUserData = nullptr;
+    DrmOutput *m_output = nullptr;
     DrmGpu *m_gpu = nullptr;
     DrmConnector *m_connector = nullptr;
     DrmCrtc *m_crtc = nullptr;
