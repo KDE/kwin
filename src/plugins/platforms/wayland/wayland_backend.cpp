@@ -739,12 +739,11 @@ void WaylandBackend::createOutputs()
         });
 
         logicalWidthSum += logicalWidth;
-        m_outputs << waylandOutput;
-        Q_EMIT outputAdded(waylandOutput);
-        Q_EMIT outputEnabled(waylandOutput);
+
+        // The output will only actually be added when it receives its first
+        // configure event, and buffers can start being attached
+        m_pendingInitialOutputs++;
     }
-    setReady(true);
-    Q_EMIT screensQueried();
 }
 
 void WaylandBackend::destroyOutputs()
@@ -850,6 +849,22 @@ Outputs WaylandBackend::enabledOutputs() const
 {
     // all outputs are enabled
     return m_outputs;
+}
+
+void WaylandBackend::addConfiguredOutput(WaylandOutput *output)
+{
+    m_outputs << output;
+    Q_EMIT outputAdded(output);
+    Q_EMIT outputEnabled(output);
+
+    m_pendingInitialOutputs--;
+    if (m_pendingInitialOutputs == 0) {
+        // Mark as ready once all the initial set of screens has arrived
+        // (i.e, received their first configure and it is now safe to commit
+        // buffers to them)
+        setReady(true);
+        Q_EMIT screensQueried();
+    }
 }
 
 DmaBufTexture *WaylandBackend::createDmaBufTexture(const QSize& size)

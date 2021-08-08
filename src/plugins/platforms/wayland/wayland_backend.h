@@ -200,6 +200,7 @@ public:
     QVector<WaylandOutput*> waylandOutputs() const {
         return m_outputs;
     }
+    void addConfiguredOutput(WaylandOutput *output);
     void createDpmsFilter();
     void clearDpmsFilter();
 
@@ -235,6 +236,7 @@ private:
 
     QThread *m_connectionThread;
     QVector<WaylandOutput*> m_outputs;
+    int m_pendingInitialOutputs = 0;
 
     WaylandCursor *m_waylandCursor = nullptr;
 

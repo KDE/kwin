@@ -110,6 +110,7 @@ private:
     int m_number;
     KWayland::Client::LockedPointer *m_pointerLock = nullptr;
     bool m_hasPointerLock = false;
+    bool m_hasBeenConfigured = false;
 };
 
 }
