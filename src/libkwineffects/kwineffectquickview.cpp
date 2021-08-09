@@ -124,6 +124,9 @@ EffectQuickView::~EffectQuickView()
 {
     if (d->m_glcontext) {
         d->m_glcontext->makeCurrent(d->m_offscreenSurface.data());
+        // close the view whilst we have an active GL context
+        delete d->m_view;
+        d->m_view = nullptr;
         d->m_renderControl->invalidate();
         d->m_glcontext->doneCurrent();
     }
@@ -335,6 +338,7 @@ EffectQuickScene::EffectQuickScene(QObject *parent, EffectQuickView::ExportMode 
 
 EffectQuickScene::~EffectQuickScene()
 {
+    delete d->qmlObject;
 }
 
 void EffectQuickScene::setSource(const QUrl &source)
