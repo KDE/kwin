@@ -26,6 +26,8 @@
 
 #include <QTemporaryFile>
 
+#include <signal.h>
+
 #include "wl-socket.h"
 #include "xwaylandsocket.h"
 #include "xauthority.h"
@@ -38,10 +40,12 @@ public:
     KWinWrapper(QObject *parent);
     ~KWinWrapper();
     void run();
-    int runKwin();
 
 private:
     wl_socket *m_socket;
+
+    int m_crashCount = 0;
+    QProcess *m_kwinProcess = nullptr;
 
     QScopedPointer<KWin::XwaylandSocket> m_xwlSocket;
     QTemporaryFile m_xauthorityFile;
@@ -49,6 +53,7 @@ private:
 
 KWinWrapper::KWinWrapper(QObject *parent)
     : QObject(parent)
+    , m_kwinProcess(new QProcess(this))
 {
     m_socket = wl_socket_create();
     if (!m_socket) {
@@ -74,38 +79,17 @@ KWinWrapper::KWinWrapper(QObject *parent)
 KWinWrapper::~KWinWrapper()
 {
     wl_socket_destroy(m_socket);
+    if (m_kwinProcess) {
+        m_kwinProcess->terminate();
+        m_kwinProcess->waitForFinished();
+        m_kwinProcess->kill();
+        m_kwinProcess->waitForFinished();
+    }
 }
 
 void KWinWrapper::run()
 {
-    int crashCount = 0;
-
-    while (crashCount < 10) {
-        if (crashCount > 0) {
-            qputenv("KWIN_RESTART_COUNT", QByteArray::number(crashCount));
-        }
-
-        int exitStatus = runKwin();
-
-        if (exitStatus == 133) {
-            crashCount = 1;
-            qCDebug(KWIN_WRAPPER) << "Compositor restarted, respawning";
-        } else if (exitStatus == -1) {
-            // kwin_crashed, lets go again
-            qWarning(KWIN_WRAPPER) << "Compositor crashed, respawning";
-        } else {
-            qWarning(KWIN_WRAPPER) << "Compositor exited with code: " << exitStatus;
-            break;
-        }
-    }
-}
-
-int KWinWrapper::runKwin()
-{
-    qCDebug(KWIN_WRAPPER) << "Launching kwin";
-
-    auto process = new QProcess(qApp);
-    process->setProgram("kwin_wayland");
+    m_kwinProcess->setProgram("kwin_wayland");
 
     QStringList args;
 
@@ -126,26 +110,46 @@ int KWinWrapper::runKwin()
     // the first entry is dropped as it will be our program name
     args << qApp->arguments().mid(1);
 
-    process->setProcessChannelMode(QProcess::ForwardedChannels);
-    process->setArguments(args);
-    process->start();
-    process->waitForFinished(-1);
+    m_kwinProcess->setProcessChannelMode(QProcess::ForwardedChannels);
+    m_kwinProcess->setArguments(args);
 
-    if (process->exitStatus() == QProcess::CrashExit) {
-        return -1;
-    }
+    connect(m_kwinProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this](int exitCode, QProcess::ExitStatus exitStatus) {
+        Q_UNUSED(exitStatus)
+        if (exitCode == 0) {
+            qApp->quit();
+            return;
+        } else if (exitCode == 133) {
+                m_crashCount = 0;
+        }
+        m_crashCount++;
 
-    return process->exitCode();
+        if (m_crashCount > 10) {
+            qApp->quit();
+            return;
+        }
+        qputenv("KWIN_RESTART_COUNT", QByteArray::number(m_crashCount));
+        // restart
+        m_kwinProcess->start();
+    });
+
+    m_kwinProcess->start();
+}
+
+void sigtermHandler(int)
+{
+    qApp->quit();
 }
 
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
 
+    signal(SIGTERM, sigtermHandler);
+
     KWinWrapper wrapper(&app);
     wrapper.run();
 
-    return 0;
+    return app.exec();
 }
 
 #include "kwin_wrapper.moc"
