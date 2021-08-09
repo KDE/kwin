@@ -169,7 +169,15 @@ void PreviewBridge::configure(QQuickItem *ctx)
     if (!m_theme.isNull()) {
         args.insert(QStringLiteral("theme"), m_theme);
     }
-    KCModule *kcm = m_factory->create<KCModule>(QStringLiteral("kcmodule"), dialog, QVariantList({args}));
+
+    KCModule *kcm = nullptr;
+
+    kcm = m_factory->create<KCModule>(dialog, QVariantList({args}));
+
+    if (!kcm) {
+        kcm = m_factory->create<KCModule>(QStringLiteral("kcmodule"), dialog, QVariantList({args}));
+    }
+
     if (!kcm) {
         return;
     }
