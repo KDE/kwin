@@ -577,7 +577,7 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         GLX_RENDER_TYPE,    GLX_RGBA_BIT,
         GLX_DRAWABLE_TYPE,  GLX_WINDOW_BIT | GLX_PIXMAP_BIT,
         GLX_X_VISUAL_TYPE,  GLX_TRUE_COLOR,
-        GLX_X_RENDERABLE,   True,
+        GLX_X_RENDERABLE,   true,
         GLX_CONFIG_CAVEAT,  int(GLX_DONT_CARE), // The ARGB32 visual is marked non-conformant in Catalyst
         GLX_FRAMEBUFFER_SRGB_CAPABLE_EXT,  int(GLX_DONT_CARE), // The ARGB32 visual is marked sRGB capable in mesa/i965
         GLX_BUFFER_SIZE,    red_bits + green_bits + blue_bits + alpha_bits,
