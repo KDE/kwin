@@ -36,13 +36,19 @@ public:
 
     SeatInterface *seat() const;
     DataControlSourceV1Interface *selection() const;
+    DataControlSourceV1Interface *primarySelection() const;
 
     void sendSelection(AbstractDataSource *other);
     void sendClearSelection();
 
+    void sendPrimarySelection(AbstractDataSource *other);
+    void sendClearPrimarySelection();
+
 Q_SIGNALS:
     void selectionChanged(KWaylandServer::DataControlSourceV1Interface *dataSource);
     void selectionCleared();
+
+    void primarySelectionChanged(KWaylandServer::DataControlSourceV1Interface *dataSource);
 
 private:
     friend class DataControlDeviceManagerV1InterfacePrivate;

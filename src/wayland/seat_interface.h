@@ -616,6 +616,7 @@ public:
      */
     void setSelection(AbstractDataSource *selection);
 
+    KWaylandServer::AbstractDataSource *primarySelection() const;
     void setPrimarySelection(AbstractDataSource *selection);
 
     static SeatInterface *get(wl_resource *native);

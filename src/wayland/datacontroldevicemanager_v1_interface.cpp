@@ -12,7 +12,7 @@
 // Wayland
 #include <qwayland-server-wlr-data-control-unstable-v1.h>
 
-static const int s_version = 1;
+static const int s_version = 2;
 namespace KWaylandServer
 {
 

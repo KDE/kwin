@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2021 David Redondo <kde@david-redondo.de>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -65,6 +66,7 @@ public:
 Q_SIGNALS:
     void dataControlOffer(DataControlOffer *offer); //our event receives a new ID, so we make a new object
     void selection(struct ::zwlr_data_control_offer_v1 *id);
+    void primary_selection(struct ::zwlr_data_control_offer_v1 *id);
 protected:
     void zwlr_data_control_device_v1_data_offer(struct ::zwlr_data_control_offer_v1 *id) override {
         auto offer = new DataControlOffer;
@@ -74,6 +76,11 @@ protected:
 
     void zwlr_data_control_device_v1_selection(struct ::zwlr_data_control_offer_v1 *id) override {
         Q_EMIT selection(id);
+    }
+
+    void zwlr_data_control_device_v1_primary_selection(struct ::zwlr_data_control_offer_v1 *id) override
+    {
+        Q_EMIT primary_selection(id);
     }
 };
 
@@ -119,7 +126,9 @@ private Q_SLOTS:
     void init();
     void cleanup();
     void testCopyToControl();
+    void testCopyToControlPrimarySelection();
     void testCopyFromControl();
+    void testCopyFromControlPrimarySelection();
     void testKlipperCase();
 
 private:
@@ -250,6 +259,32 @@ void DataControlInterfaceTest::testCopyToControl()
     QCOMPARE(offer->receivedOffers()[1], "text/test2");
 }
 
+void DataControlInterfaceTest::testCopyToControlPrimarySelection()
+{
+    // we set a dummy data source on the seat using abstract client directly
+    // then confirm we receive the offer despite not having a surface
+
+    QScopedPointer<DataControlDevice> dataControlDevice(new DataControlDevice);
+    dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
+
+    QSignalSpy newOfferSpy(dataControlDevice.data(), &DataControlDevice::dataControlOffer);
+    QSignalSpy selectionSpy(dataControlDevice.data(), &DataControlDevice::primary_selection);
+
+    QScopedPointer<TestDataSource> testSelection(new TestDataSource);
+    m_seat->setPrimarySelection(testSelection.data());
+
+    // selection will be sent after we've been sent a new offer object and the mimes have been sent to that object
+    selectionSpy.wait();
+
+    QCOMPARE(newOfferSpy.count(), 1);
+    QScopedPointer<DataControlOffer> offer(newOfferSpy.first().first().value<DataControlOffer*>());
+    QCOMPARE(selectionSpy.first().first().value<struct ::zwlr_data_control_offer_v1*>(), offer->object());
+
+    QCOMPARE(offer->receivedOffers().count(), 2);
+    QCOMPARE(offer->receivedOffers()[0], "text/test1");
+    QCOMPARE(offer->receivedOffers()[1], "text/test2");
+}
+
 void DataControlInterfaceTest::testCopyFromControl()
 {
     // we create a data device and set a selection
@@ -269,6 +304,27 @@ void DataControlInterfaceTest::testCopyFromControl()
     serverSelectionChangedSpy.wait();
     QVERIFY(m_seat->selection());
     QCOMPARE(m_seat->selection()->mimeTypes(), QStringList({"cheese/test1", "cheese/test2"}));
+}
+
+void DataControlInterfaceTest::testCopyFromControlPrimarySelection()
+{
+    // we create a data device and set a selection
+    // then confirm the server sees the new selection
+    QSignalSpy serverSelectionChangedSpy(m_seat, &SeatInterface::primarySelectionChanged);
+
+    QScopedPointer<DataControlDevice> dataControlDevice(new DataControlDevice);
+    dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
+
+    QScopedPointer<DataControlSource> source(new DataControlSource);
+    source->init(m_dataControlDeviceManager->create_data_source());
+    source->offer("cheese/test1");
+    source->offer("cheese/test2");
+
+    dataControlDevice->set_primary_selection(source->object());
+
+    serverSelectionChangedSpy.wait();
+    QVERIFY(m_seat->primarySelection());
+    QCOMPARE(m_seat->primarySelection()->mimeTypes(), QStringList({"cheese/test1", "cheese/test2"}));
 }
 
 void DataControlInterfaceTest::testKlipperCase()

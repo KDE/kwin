@@ -259,8 +259,26 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
             q->setSelection(nullptr);
         }
     );
+
+    QObject::connect(dataDevice, &DataControlDeviceV1Interface::primarySelectionChanged, q,
+                     [this, dataDevice] {
+        // Special klipper workaround to avoid a race
+        // If the mimetype x-kde-onlyReplaceEmpty is set, and we've had another update in the meantime, do nothing
+        // See https://github.com/swaywm/wlr-protocols/issues/92
+        if  (dataDevice->selection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty")) &&
+             currentPrimarySelection) {
+            dataDevice->primarySelection()->cancel();
+            return;
+        }
+        q->setPrimarySelection(dataDevice->primarySelection());
+    }
+    );
+
     if (currentSelection) {
         dataDevice->sendSelection(currentSelection);
+    }
+    if (currentPrimarySelection) {
+        dataDevice->sendPrimarySelection(currentPrimarySelection);
     }
 }
 
@@ -1273,6 +1291,11 @@ void SeatInterface::setSelection(AbstractDataSource *selection)
     Q_EMIT selectionChanged(selection);
 }
 
+AbstractDataSource *SeatInterface::primarySelection() const
+{
+    return d->currentPrimarySelection;
+}
+
 void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
 {
     if (d->currentPrimarySelection == selection) {
@@ -1297,6 +1320,13 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
             focussedSelection->sendSelection(selection);
         } else {
             focussedSelection->sendClearSelection();
+        }
+    }
+    for (auto control : qAsConst(d->dataControlDevices)) {
+        if (selection) {
+            control->sendPrimarySelection(selection);
+        } else {
+            control->sendClearPrimarySelection();
         }
     }
 
