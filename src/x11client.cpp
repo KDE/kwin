@@ -1745,6 +1745,10 @@ void X11Client::updateHiddenPreview()
 void X11Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, uint32_t data1, uint32_t data2, uint32_t data3)
 {
     xcb_client_message_event_t ev;
+    // Every X11 event is 32 bytes (see man xcb_send_event), so XCB will copy
+    // 32 unconditionally. Add a static_assert to ensure we don't disclose
+    // stack memory.
+    static_assert(sizeof(ev) == 32, "Would leak stack data otherwise");
     memset(&ev, 0, sizeof(ev));
     ev.response_type = XCB_CLIENT_MESSAGE;
     ev.window = w;
@@ -3650,19 +3654,26 @@ QSize X11Client::basicUnit() const
  */
 void X11Client::sendSyntheticConfigureNotify()
 {
-    xcb_configure_notify_event_t c;
-    memset(&c, 0, sizeof(c));
-    c.response_type = XCB_CONFIGURE_NOTIFY;
-    c.event = window();
-    c.window = window();
-    c.x = m_clientGeometry.x();
-    c.y = m_clientGeometry.y();
-    c.width = m_clientGeometry.width();
-    c.height = m_clientGeometry.height();
-    c.border_width = 0;
-    c.above_sibling = XCB_WINDOW_NONE;
-    c.override_redirect = 0;
-    xcb_send_event(connection(), true, c.event, XCB_EVENT_MASK_STRUCTURE_NOTIFY, reinterpret_cast<const char*>(&c));
+    // Every X11 event is 32 bytes (see man xcb_send_event), so XCB will copy
+    // 32 unconditionally. Use a union to ensure we don't disclose stack memory.
+    union {
+        xcb_configure_notify_event_t event;
+        char buffer[32];
+    } u;
+    static_assert(sizeof(u.event) < 32, "wouldn't need the union otherwise");
+    memset(&u, 0, sizeof(u));
+    xcb_configure_notify_event_t &c = u.event;
+    u.event.response_type = XCB_CONFIGURE_NOTIFY;
+    u.event.event = window();
+    u.event.window = window();
+    u.event.x = m_clientGeometry.x();
+    u.event.y = m_clientGeometry.y();
+    u.event.width = m_clientGeometry.width();
+    u.event.height = m_clientGeometry.height();
+    u.event.border_width = 0;
+    u.event.above_sibling = XCB_WINDOW_NONE;
+    u.event.override_redirect = 0;
+    xcb_send_event(connection(), true, c.event, XCB_EVENT_MASK_STRUCTURE_NOTIFY, reinterpret_cast<const char*>(&u));
     xcb_flush(connection());
 }
 

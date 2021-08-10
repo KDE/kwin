@@ -134,21 +134,24 @@ bool Selection::filterEvent(xcb_generic_event_t *event)
 
 void Selection::sendSelectionNotify(xcb_selection_request_event_t *event, bool success)
 {
-    xcb_selection_notify_event_t notify;
-    notify.response_type = XCB_SELECTION_NOTIFY;
-    notify.sequence = 0;
-    notify.time = event->time;
-    notify.requestor = event->requestor;
-    notify.selection = event->selection;
-    notify.target = event->target;
-    notify.property = success ? event->property : xcb_atom_t(XCB_ATOM_NONE);
+    // Every X11 event is 32 bytes (see man xcb_send_event), so XCB will copy
+    // 32 unconditionally. Use a union to ensure we don't disclose stack memory.
+    union {
+        xcb_selection_notify_event_t notify;
+        char buffer[32];
+    } u;
+    memset(&u, 0, sizeof(u));
+    static_assert(sizeof(u.notify) < 32, "wouldn't need the union otherwise");
+    u.notify.response_type = XCB_SELECTION_NOTIFY;
+    u.notify.sequence = 0;
+    u.notify.time = event->time;
+    u.notify.requestor = event->requestor;
+    u.notify.selection = event->selection;
+    u.notify.target = event->target;
+    u.notify.property = success ? event->property : xcb_atom_t(XCB_ATOM_NONE);
 
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
-    xcb_send_event(xcbConn,
-                   0,
-                   event->requestor,
-                   XCB_EVENT_MASK_NO_EVENT,
-                   (const char *)&notify);
+    xcb_send_event(xcbConn, 0, event->requestor, XCB_EVENT_MASK_NO_EVENT, (const char *)&u);
     xcb_flush(xcbConn);
 }
 
