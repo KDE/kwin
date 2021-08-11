@@ -54,6 +54,9 @@ public:
     Scene::Window *window() const;
     QPoint rootPosition() const;
 
+    QMatrix4x4 transform() const;
+    void setTransform(const QMatrix4x4 &transform);
+
     /**
      * Maps the given @a region from the item's coordinate system to the scene's coordinate
      * system.
@@ -119,6 +122,7 @@ private:
     Scene::Window *m_window;
     QPointer<Item> m_parentItem;
     QList<Item *> m_childItems;
+    QMatrix4x4 m_transform;
     QRect m_boundingRect;
     QPoint m_position;
     QSize m_size = QSize(0, 0);

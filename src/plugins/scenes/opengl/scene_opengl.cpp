@@ -833,33 +833,6 @@ OpenGLWindow::~OpenGLWindow()
 {
 }
 
-static QMatrix4x4 transformation(const Item *item, const OpenGLWindow::RenderContext *context)
-{
-    const QPoint position = item->rootPosition();
-    QMatrix4x4 matrix;
-    matrix.translate(position.x(), position.y());
-
-    if (!(context->paintFlags & Scene::PAINT_WINDOW_TRANSFORMED))
-        return matrix;
-
-    const WindowPaintData *data = &context->paintData;
-    matrix.translate(data->translation());
-    const QVector3D scale = data->scale();
-    matrix.scale(scale.x(), scale.y(), scale.z());
-
-    if (data->rotationAngle() == 0.0)
-        return matrix;
-
-    // Apply the rotation
-    // cannot use data.rotation.applyTo(&matrix) as QGraphicsRotation uses projectedRotate to map back to 2D
-    matrix.translate(data->rotationOrigin());
-    const QVector3D axis = data->rotationAxis();
-    matrix.rotate(data->rotationAngle(), axis.x(), axis.y(), axis.z());
-    matrix.translate(-data->rotationOrigin());
-
-    return matrix;
-}
-
 QVector4D OpenGLWindow::modulate(float opacity, float brightness) const
 {
     const float a = opacity;
@@ -911,7 +884,7 @@ static WindowQuadList clipQuads(const Item *item, const OpenGLWindow::RenderCont
 {
     const WindowQuadList quads = item->quads();
     if (context->clip != infiniteRegion() && !context->hardwareClipping) {
-        const QPoint offset = item->rootPosition();
+        const QPoint offset = context->transforms.top().map(QPoint(0, 0));
 
         WindowQuadList ret;
         ret.reserve(quads.count());
@@ -942,6 +915,11 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
 {
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
+    QMatrix4x4 matrix;
+    matrix.translate(item->position().x(), item->position().y());
+    matrix *= item->transform();
+    context->transforms.push(context->transforms.top() * matrix);
+
     for (Item *childItem : sortedChildItems) {
         if (childItem->z() >= 0) {
             break;
@@ -959,7 +937,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
             context->renderNodes.append(RenderNode{
                 .texture = shadow->shadowTexture(),
                 .quads = quads,
-                .transformMatrix = transformation(item, context),
+                .transformMatrix = context->transforms.top(),
                 .opacity = context->paintData.opacity(),
                 .hasAlpha = true,
                 .coordinateType = NormalizedCoordinates,
@@ -972,7 +950,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
             context->renderNodes.append(RenderNode{
                 .texture = renderer->texture(),
                 .quads = quads,
-                .transformMatrix = transformation(item, context),
+                .transformMatrix = context->transforms.top(),
                 .opacity = context->paintData.opacity(),
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
@@ -988,7 +966,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
                 context->renderNodes.append(RenderNode{
                     .texture = bindSurfaceTexture(surfaceItem),
                     .quads = quads,
-                    .transformMatrix = transformation(item, context),
+                    .transformMatrix = context->transforms.top(),
                     .opacity = context->paintData.opacity(),
                     .hasAlpha = hasAlpha,
                     .coordinateType = UnnormalizedCoordinates,
@@ -1005,6 +983,8 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
             createRenderNode(childItem, context);
         }
     }
+
+    context->transforms.pop();
 }
 
 QMatrix4x4 OpenGLWindow::modelViewProjectionMatrix(int mask, const WindowPaintData &data) const
@@ -1031,6 +1011,33 @@ QMatrix4x4 OpenGLWindow::modelViewProjectionMatrix(int mask, const WindowPaintDa
     return scene->projectionMatrix() * mvMatrix;
 }
 
+static QMatrix4x4 transformForPaintData(int mask, const WindowPaintData &data)
+{
+    // TODO: Switch to QTransform.
+    QMatrix4x4 matrix;
+
+    if (!(mask & Scene::PAINT_WINDOW_TRANSFORMED)) {
+        return matrix;
+    }
+
+    matrix.translate(data.translation());
+    const QVector3D scale = data.scale();
+    matrix.scale(scale.x(), scale.y(), scale.z());
+
+    if (data.rotationAngle() == 0.0) {
+        return matrix;
+    }
+
+    // Apply the rotation
+    // cannot use data.rotation.applyTo(&matrix) as QGraphicsRotation uses projectedRotate to map back to 2D
+    matrix.translate(data.rotationOrigin());
+    const QVector3D axis = data.rotationAxis();
+    matrix.rotate(data.rotationAngle(), axis.x(), axis.y(), axis.z());
+    matrix.translate(-data.rotationOrigin());
+
+    return matrix;
+}
+
 void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPaintData &data)
 {
     if (region.isEmpty()) {
@@ -1038,11 +1045,15 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     }
 
     RenderContext renderContext {
-        .paintFlags = mask,
         .clip = region,
         .paintData = data,
         .hardwareClipping = region != infiniteRegion() && (mask & Scene::PAINT_WINDOW_TRANSFORMED) && !(mask & Scene::PAINT_SCREEN_TRANSFORMED),
     };
+
+    renderContext.transforms.push(QMatrix4x4());
+
+    windowItem()->setTransform(transformForPaintData(mask, data));
+
     createRenderNode(windowItem(), &renderContext);
 
     int quadCount = 0;

@@ -179,6 +179,16 @@ QPoint Item::rootPosition() const
     return ret;
 }
 
+QMatrix4x4 Item::transform() const
+{
+    return m_transform;
+}
+
+void Item::setTransform(const QMatrix4x4 &transform)
+{
+    m_transform = transform;
+}
+
 QRegion Item::mapToGlobal(const QRegion &region) const
 {
     return region.translated(rootPosition());

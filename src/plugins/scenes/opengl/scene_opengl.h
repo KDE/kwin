@@ -140,7 +140,7 @@ public:
     struct RenderContext
     {
         QVector<RenderNode> renderNodes;
-        const int paintFlags;
+        QStack<QMatrix4x4> transforms;
         const QRegion clip;
         const WindowPaintData &paintData;
         const bool hardwareClipping;
