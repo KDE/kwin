@@ -693,11 +693,7 @@ QMargins Toplevel::frameMargins() const
 
 bool Toplevel::isOnDesktop(int d) const
 {
-    return (kwinApp()->operationMode() == Application::OperationModeWaylandOnly ||
-            kwinApp()->operationMode() == Application::OperationModeXwayland
-            ? desktops().contains(VirtualDesktopManager::self()->desktopForX11Id(d))
-            : desktop() == d
-           ) || isOnAllDesktops();
+    return isOnAllDesktops() || desktops().contains(VirtualDesktopManager::self()->desktopForX11Id(d));
 }
 
 bool Toplevel::isOnCurrentDesktop() const

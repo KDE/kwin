@@ -923,12 +923,7 @@ const EffectWindowImpl* Toplevel::effectWindow() const
 
 inline bool Toplevel::isOnAllDesktops() const
 {
-    return kwinApp()->operationMode() == Application::OperationModeWaylandOnly ||
-           kwinApp()->operationMode() == Application::OperationModeXwayland
-        //Wayland
-        ? desktops().isEmpty()
-        //X11
-        : desktop() == NET::OnAllDesktops;
+    return desktops().isEmpty();
 }
 
 inline bool Toplevel::isOnAllActivities() const
