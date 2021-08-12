@@ -8,6 +8,8 @@
 
 #include "surfaceitem.h"
 
+class QOpenGLFramebufferObject;
+
 namespace KWin
 {
 
@@ -19,7 +21,7 @@ class KWIN_EXPORT SurfaceItemInternal : public SurfaceItem
     Q_OBJECT
 
 public:
-    explicit SurfaceItemInternal(Scene::Window *window, Item *parent = nullptr);
+    explicit SurfaceItemInternal(Toplevel *window, Item *parent = nullptr);
 
     QRegion shape() const override;
 

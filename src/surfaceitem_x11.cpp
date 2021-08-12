@@ -12,21 +12,19 @@
 namespace KWin
 {
 
-SurfaceItemX11::SurfaceItemX11(Scene::Window *window, Item *parent)
+SurfaceItemX11::SurfaceItemX11(Toplevel *window, Item *parent)
     : SurfaceItem(window, parent)
 {
-    Toplevel *toplevel = window->window();
-
-    connect(toplevel, &Toplevel::bufferGeometryChanged,
+    connect(window, &Toplevel::bufferGeometryChanged,
             this, &SurfaceItemX11::handleBufferGeometryChanged);
-    connect(toplevel, &Toplevel::geometryShapeChanged,
+    connect(window, &Toplevel::geometryShapeChanged,
             this, &SurfaceItemX11::discardQuads);
 
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
-    xcb_damage_create(kwinApp()->x11Connection(), m_damageHandle, toplevel->frameId(),
+    xcb_damage_create(kwinApp()->x11Connection(), m_damageHandle, window->frameId(),
                       XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
 
-    setSize(toplevel->bufferGeometry().size());
+    setSize(window->bufferGeometry().size());
 }
 
 SurfaceItemX11::~SurfaceItemX11()
@@ -127,16 +125,15 @@ void SurfaceItemX11::handleBufferGeometryChanged(Toplevel *toplevel, const QRect
 
 QRegion SurfaceItemX11::shape() const
 {
-    const Toplevel *toplevel = window()->window();
-    const QRect clipRect = toplevel->clientGeometry().translated(-toplevel->bufferGeometry().topLeft());
-    const QRegion shape = toplevel->shapeRegion();
+    const QRect clipRect = window()->clientGeometry().translated(-window()->bufferGeometry().topLeft());
+    const QRegion shape = window()->shapeRegion();
 
     return shape & clipRect;
 }
 
 QRegion SurfaceItemX11::opaque() const
 {
-    return window()->window()->opaqueRegion();
+    return window()->opaqueRegion();
 }
 
 SurfacePixmap *SurfaceItemX11::createPixmap()
@@ -169,12 +166,12 @@ xcb_pixmap_t SurfacePixmapX11::pixmap() const
 
 xcb_visualid_t SurfacePixmapX11::visual() const
 {
-    return m_item->window()->window()->visual();
+    return m_item->window()->visual();
 }
 
 void SurfacePixmapX11::create()
 {
-    const Toplevel *toplevel = m_item->window()->window();
+    const Toplevel *toplevel = m_item->window();
     if (toplevel->isDeleted()) {
         return;
     }

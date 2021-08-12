@@ -11,6 +11,8 @@
 namespace KWin
 {
 
+class SurfacePixmapX11;
+
 class KWIN_EXPORT PlatformOpenGLSurfaceTextureX11 : public PlatformOpenGLSurfaceTexture
 {
 public:

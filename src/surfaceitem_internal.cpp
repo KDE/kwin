@@ -11,19 +11,17 @@
 namespace KWin
 {
 
-SurfaceItemInternal::SurfaceItemInternal(Scene::Window *window, Item *parent)
+SurfaceItemInternal::SurfaceItemInternal(Toplevel *window, Item *parent)
     : SurfaceItem(window, parent)
 {
-    Toplevel *toplevel = window->window();
-
-    connect(toplevel, &Toplevel::bufferGeometryChanged,
+    connect(window, &Toplevel::bufferGeometryChanged,
             this, &SurfaceItemInternal::handleBufferGeometryChanged);
 
-    setSize(toplevel->bufferGeometry().size());
+    setSize(window->bufferGeometry().size());
 
     // The device pixel ratio of the internal window is static.
     QMatrix4x4 surfaceToBufferMatrix;
-    surfaceToBufferMatrix.scale(toplevel->bufferScale());
+    surfaceToBufferMatrix.scale(window->bufferScale());
     setSurfaceToBufferMatrix(surfaceToBufferMatrix);
 }
 
@@ -68,13 +66,13 @@ void SurfacePixmapInternal::create()
 
 void SurfacePixmapInternal::update()
 {
-    const Toplevel *toplevel = m_item->window()->window();
+    const Toplevel *window = m_item->window();
 
-    if (toplevel->internalFramebufferObject()) {
-        m_fbo = toplevel->internalFramebufferObject();
+    if (window->internalFramebufferObject()) {
+        m_fbo = window->internalFramebufferObject();
         m_hasAlphaChannel = true;
-    } else if (!toplevel->internalImageObject().isNull()) {
-        m_rasterBuffer = toplevel->internalImageObject();
+    } else if (!window->internalImageObject().isNull()) {
+        m_rasterBuffer = window->internalImageObject();
         m_hasAlphaChannel = m_rasterBuffer.hasAlphaChannel();
     }
 }

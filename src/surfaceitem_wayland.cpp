@@ -16,7 +16,7 @@ namespace KWin
 {
 
 SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface,
-                                       Scene::Window *window, Item *parent)
+                                       Toplevel *window, Item *parent)
     : SurfaceItem(window, parent)
     , m_surface(surface)
 {
@@ -197,18 +197,16 @@ void SurfacePixmapWayland::setBuffer(KWaylandServer::ClientBuffer *buffer)
     }
 }
 
-SurfaceItemXwayland::SurfaceItemXwayland(Scene::Window *window, Item *parent)
-    : SurfaceItemWayland(window->window()->surface(), window, parent)
+SurfaceItemXwayland::SurfaceItemXwayland(Toplevel *window, Item *parent)
+    : SurfaceItemWayland(window->surface(), window, parent)
 {
-    const Toplevel *toplevel = window->window();
-    connect(toplevel, &Toplevel::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);
+    connect(window, &Toplevel::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);
 }
 
 QRegion SurfaceItemXwayland::shape() const
 {
-    const Toplevel *toplevel = window()->window();
-    const QRect clipRect = rect() & toplevel->clientGeometry().translated(-toplevel->bufferGeometry().topLeft());
-    const QRegion shape = toplevel->shapeRegion();
+    const QRect clipRect = rect() & window()->clientGeometry().translated(-window()->bufferGeometry().topLeft());
+    const QRegion shape = window()->shapeRegion();
 
     return shape & clipRect;
 }

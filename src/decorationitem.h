@@ -16,6 +16,10 @@ class Decoration;
 namespace KWin
 {
 
+class AbstractClient;
+class Deleted;
+class Toplevel;
+
 namespace Decoration
 {
 class DecoratedClientImpl;
@@ -65,18 +69,20 @@ class KWIN_EXPORT DecorationItem : public Item
     Q_OBJECT
 
 public:
-    explicit DecorationItem(KDecoration2::Decoration *decoration, Scene::Window *window, Item *parent = nullptr);
+    explicit DecorationItem(KDecoration2::Decoration *decoration, AbstractClient *window, Item *parent = nullptr);
 
     DecorationRenderer *renderer() const;
 
 private Q_SLOTS:
     void handleFrameGeometryChanged();
+    void handleWindowClosed(Toplevel *original, Deleted *deleted);
 
 protected:
     void preprocess() override;
     WindowQuadList buildQuads() const override;
 
 private:
+    Toplevel *m_window;
     QPointer<KDecoration2::Decoration> m_decoration;
     QScopedPointer<DecorationRenderer> m_renderer;
 };

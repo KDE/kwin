@@ -103,16 +103,18 @@ void DecorationRenderer::renderToPainter(QPainter *painter, const QRect &rect)
     client()->decoration()->paint(painter, rect);
 }
 
-DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Scene::Window *window, Item *parent)
-    : Item(window, parent)
+DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, AbstractClient *window, Item *parent)
+    : Item(parent)
+    , m_window(window)
 {
-    AbstractClient *client = qobject_cast<AbstractClient *>(window->window());
-    m_renderer.reset(Compositor::self()->scene()->createDecorationRenderer(client->decoratedClient()));
+    m_renderer.reset(Compositor::self()->scene()->createDecorationRenderer(window->decoratedClient()));
 
-    connect(client, &Toplevel::frameGeometryChanged,
+    connect(window, &Toplevel::frameGeometryChanged,
             this, &DecorationItem::handleFrameGeometryChanged);
+    connect(window, &Toplevel::windowClosed,
+            this, &DecorationItem::handleWindowClosed);
 
-    connect(client, &Toplevel::screenScaleChanged,
+    connect(window, &Toplevel::screenScaleChanged,
             this, &DecorationItem::discardQuads);
     connect(decoration, &KDecoration2::Decoration::bordersChanged,
             this, &DecorationItem::discardQuads);
@@ -120,10 +122,7 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Scene::Wind
     connect(renderer(), &DecorationRenderer::damaged,
             this, &DecorationItem::scheduleRepaint);
 
-    // If the decoration is about to be destroyed, render the decoration for the last time.
-    connect(client, &Toplevel::markedAsZombie, this, &DecorationItem::preprocess);
-
-    setSize(client->size());
+    setSize(window->size());
 }
 
 void DecorationItem::preprocess()
@@ -137,7 +136,16 @@ void DecorationItem::preprocess()
 
 void DecorationItem::handleFrameGeometryChanged()
 {
-    setSize(window()->size());
+    setSize(m_window->size());
+}
+
+void DecorationItem::handleWindowClosed(Toplevel *original, Deleted *deleted)
+{
+    Q_UNUSED(original)
+    m_window = deleted;
+
+    // If the decoration is about to be destroyed, render the decoration for the last time.
+    preprocess();
 }
 
 DecorationRenderer *DecorationItem::renderer() const
@@ -147,20 +155,19 @@ DecorationRenderer *DecorationItem::renderer() const
 
 WindowQuadList DecorationItem::buildQuads() const
 {
-    const Toplevel *toplevel = window()->window();
-    if (toplevel->frameMargins().isNull()) {
+    if (m_window->frameMargins().isNull()) {
         return WindowQuadList();
     }
 
     QRect rects[4];
 
-    if (const AbstractClient *client = qobject_cast<const AbstractClient *>(toplevel)) {
+    if (const AbstractClient *client = qobject_cast<const AbstractClient *>(m_window)) {
         client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
-    } else if (const Deleted *deleted = qobject_cast<const Deleted *>(toplevel)) {
+    } else if (const Deleted *deleted = qobject_cast<const Deleted *>(m_window)) {
         deleted->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
     }
 
-    const qreal textureScale = toplevel->screenScale();
+    const qreal textureScale = m_window->screenScale();
     const int padding = 1;
 
     const QPoint topSpritePosition(padding, padding);

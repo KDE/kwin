@@ -6,6 +6,7 @@
 
 #include "platformqpaintersurfacetexture_wayland.h"
 #include "surfaceitem_wayland.h"
+#include "utils.h"
 
 #include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/surface_interface.h>

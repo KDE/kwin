@@ -11,6 +11,8 @@
 namespace KWin
 {
 
+class SurfacePixmapWayland;
+
 class KWIN_EXPORT PlatformQPainterSurfaceTextureWayland : public PlatformQPainterSurfaceTexture
 {
 public:

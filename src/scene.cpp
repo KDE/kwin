@@ -598,11 +598,11 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
     , disable_painting(0)
 {
     if (qobject_cast<WaylandClient *>(client)) {
-        m_windowItem.reset(new WindowItemWayland(this));
+        m_windowItem.reset(new WindowItemWayland(toplevel));
     } else if (qobject_cast<X11Client *>(client) || qobject_cast<Unmanaged *>(client)) {
-        m_windowItem.reset(new WindowItemX11(this));
+        m_windowItem.reset(new WindowItemX11(toplevel));
     } else if (qobject_cast<InternalClient *>(client)) {
-        m_windowItem.reset(new WindowItemInternal(this));
+        m_windowItem.reset(new WindowItemInternal(toplevel));
     } else {
         Q_UNREACHABLE();
     }

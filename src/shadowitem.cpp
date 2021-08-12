@@ -5,15 +5,19 @@
 */
 
 #include "shadowitem.h"
+#include "deleted.h"
 #include "shadow.h"
 
 namespace KWin
 {
 
-ShadowItem::ShadowItem(Shadow *shadow, Scene::Window *window, Item *parent)
-    : Item(window, parent)
+ShadowItem::ShadowItem(Shadow *shadow, Toplevel *window, Item *parent)
+    : Item(parent)
+    , m_window(window)
     , m_shadow(shadow)
 {
+    connect(window, &Toplevel::windowClosed, this, &ShadowItem::handleWindowClosed);
+
     connect(shadow, &Shadow::offsetChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::rectChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::textureChanged, this, &ShadowItem::handleTextureChanged);
@@ -46,6 +50,12 @@ void ShadowItem::handleTextureChanged()
     discardQuads();
 }
 
+void ShadowItem::handleWindowClosed(Toplevel *original, Deleted *deleted)
+{
+    Q_UNUSED(original)
+    m_window = deleted;
+}
+
 static inline void distributeHorizontally(QRectF &leftRect, QRectF &rightRect)
 {
     if (leftRect.right() > rightRect.left()) {
@@ -70,10 +80,8 @@ static inline void distributeVertically(QRectF &topRect, QRectF &bottomRect)
 
 WindowQuadList ShadowItem::buildQuads() const
 {
-    const Toplevel *toplevel = window()->window();
-
     // Do not draw shadows if window width or window height is less than 5 px. 5 is an arbitrary choice.
-    if (!toplevel->wantsShadowToBeRendered() || toplevel->width() < 5 || toplevel->height() < 5) {
+    if (!m_window->wantsShadowToBeRendered() || m_window->width() < 5 || m_window->height() < 5) {
         return WindowQuadList();
     }
 

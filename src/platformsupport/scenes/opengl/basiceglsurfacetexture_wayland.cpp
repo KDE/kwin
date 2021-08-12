@@ -10,6 +10,7 @@
 #include "kwingltexture.h"
 #include "logging.h"
 #include "surfaceitem_wayland.h"
+#include "utils.h"
 
 #include <KWaylandServer/drmclientbuffer.h>
 #include <KWaylandServer/linuxdmabufv1clientbuffer.h>

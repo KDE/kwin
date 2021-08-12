@@ -6,7 +6,11 @@
 
 #pragma once
 
-#include "scene.h"
+#include "kwinglobals.h"
+#include "kwineffects.h"
+
+#include <QMatrix4x4>
+#include <QObject>
 
 #include <optional>
 
@@ -21,7 +25,7 @@ class KWIN_EXPORT Item : public QObject
     Q_OBJECT
 
 public:
-    explicit Item(Scene::Window *window, Item *parent = nullptr);
+    explicit Item(Item *parent = nullptr);
     ~Item() override;
 
     QPoint position() const;
@@ -51,7 +55,6 @@ public:
     QList<Item *> childItems() const;
     QList<Item *> sortedChildItems() const;
 
-    Scene::Window *window() const;
     QPoint rootPosition() const;
 
     QMatrix4x4 transform() const;
@@ -119,7 +122,6 @@ private:
     bool computeEffectiveVisibility() const;
     void updateEffectiveVisibility();
 
-    Scene::Window *m_window;
     QPointer<Item> m_parentItem;
     QList<Item *> m_childItems;
     QMatrix4x4 m_transform;

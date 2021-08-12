@@ -11,12 +11,12 @@
 #include "platform.h"
 #include "renderloop.h"
 #include "screens.h"
+#include "utils.h"
 
 namespace KWin
 {
 
-Item::Item(Scene::Window *window, Item *parent)
-    : m_window(window)
+Item::Item(Item *parent)
 {
     setParentItem(parent);
 
@@ -101,11 +101,6 @@ void Item::removeChild(Item *item)
 QList<Item *> Item::childItems() const
 {
     return m_childItems;
-}
-
-Scene::Window *Item::window() const
-{
-    return m_window;
 }
 
 QPoint Item::position() const
