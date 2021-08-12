@@ -15,6 +15,7 @@
 #include "effects.h"
 #include "platform.h"
 #include "scene.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 

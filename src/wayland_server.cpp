@@ -24,6 +24,7 @@
 #include "unmanaged.h"
 #include "waylandoutput.h"
 #include "waylandoutputdevice.h"
+#include "virtualdesktops.h"
 
 // Client
 #include <KWayland/Client/connection_thread.h>

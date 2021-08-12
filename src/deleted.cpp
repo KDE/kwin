@@ -14,6 +14,7 @@
 #include "group.h"
 #include "netinfo.h"
 #include "shadow.h"
+#include "virtualdesktops.h"
 
 #include <QDebug>
 

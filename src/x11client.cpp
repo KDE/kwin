@@ -23,11 +23,12 @@
 #include "geometrytip.h"
 #include "group.h"
 #include "netinfo.h"
+#include "screenedge.h"
 #include "screens.h"
 #include "shadow.h"
 #include "surfaceitem_x11.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
-#include "screenedge.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/decoratedclient.h"
 #include <KDecoration2/Decoration>

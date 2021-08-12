@@ -18,6 +18,7 @@
 #include "options.h"
 #include "rules.h"
 #include "screens.h"
+#include "virtualdesktops.h"
 #endif
 
 #include <QTextStream>

@@ -16,6 +16,7 @@
 #include "screenedge.h"
 #include "screens.h"
 #include "subsurfacemonitor.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #if KWIN_BUILD_ACTIVITIES

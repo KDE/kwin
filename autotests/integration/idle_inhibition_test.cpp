@@ -9,6 +9,7 @@
 #include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "platform.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 

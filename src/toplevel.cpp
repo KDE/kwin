@@ -21,6 +21,7 @@
 #include "shadow.h"
 #include "shadowitem.h"
 #include "surfaceitem_x11.h"
+#include "virtualdesktops.h"
 #include "windowitem.h"
 #include "workspace.h"
 
@@ -688,6 +689,20 @@ bool Toplevel::isLocalhost() const
 QMargins Toplevel::frameMargins() const
 {
     return QMargins();
+}
+
+bool Toplevel::isOnDesktop(int d) const
+{
+    return (kwinApp()->operationMode() == Application::OperationModeWaylandOnly ||
+            kwinApp()->operationMode() == Application::OperationModeXwayland
+            ? desktops().contains(VirtualDesktopManager::self()->desktopForX11Id(d))
+            : desktop() == d
+           ) || isOnAllDesktops();
+}
+
+bool Toplevel::isOnCurrentDesktop() const
+{
+    return isOnDesktop(VirtualDesktopManager::self()->current());
 }
 
 } // namespace

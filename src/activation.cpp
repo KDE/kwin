@@ -23,6 +23,7 @@
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "virtualdesktops.h"
 
 #include <kstartupinfo.h>
 #include <kstringhandler.h>

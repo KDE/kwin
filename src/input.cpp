@@ -33,6 +33,7 @@
 #include "screenedge.h"
 #include "screens.h"
 #include "unmanaged.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwl/xwayland_interface.h"

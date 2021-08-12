@@ -477,9 +477,7 @@ public:
      */
     void setDesktops(QVector<VirtualDesktop *> desktops);
 
-    int desktop() const override {
-        return m_desktops.isEmpty() ? (int)NET::OnAllDesktops : m_desktops.last()->x11DesktopNumber();
-    }
+    int desktop() const override;
     QVector<VirtualDesktop *> desktops() const override {
         return m_desktops;
     }

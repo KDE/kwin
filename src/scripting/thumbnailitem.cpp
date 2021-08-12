@@ -13,6 +13,7 @@
 #include "scene.h"
 #include "screens.h"
 #include "scripting_logging.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 
 #include <kwingltexture.h>

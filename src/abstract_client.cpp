@@ -25,6 +25,7 @@
 #endif
 #include "screenedge.h"
 #include "useractions.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 
 #include "wayland_server.h"
@@ -547,6 +548,11 @@ void AbstractClient::setOnAllDesktops(bool b)
         setDesktop(NET::OnAllDesktops);
     else
         setDesktop(VirtualDesktopManager::self()->current());
+}
+
+int AbstractClient::desktop() const
+{
+    return m_desktops.isEmpty() ? (int)NET::OnAllDesktops : m_desktops.last()->x11DesktopNumber();
 }
 
 QVector<uint> AbstractClient::x11DesktopIds() const

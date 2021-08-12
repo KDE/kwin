@@ -15,6 +15,7 @@
 #include <pwd.h>
 #include <kconfig.h>
 
+#include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11client.h"
 #include <QDebug>

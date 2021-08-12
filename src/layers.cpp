@@ -80,6 +80,7 @@
 #include "screenedge.h"
 #include "wayland_server.h"
 #include "internal_client.h"
+#include "virtualdesktops.h"
 
 #include <QDebug>
 #include <QQueue>
@@ -502,7 +503,7 @@ static Layer computeLayer(const Toplevel *toplevel)
  * Returns a stacking order based upon \a list that fulfills certain contained.
  */
 QList<Toplevel *> Workspace::constrainedStackingOrder()
-{ 
+{
     // Sort the windows based on their layers while preserving their relative order in the
     // unconstrained stacking order.
     std::array<QList<Toplevel *>, NumLayers> windows;

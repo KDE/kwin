@@ -12,7 +12,6 @@
 
 // kwin
 #include "utils.h"
-#include "virtualdesktops.h"
 #include "xcbutils.h"
 // KDE
 #include <NETWM>
@@ -43,6 +42,7 @@ class Deleted;
 class EffectWindowImpl;
 class Shadow;
 class SurfaceItem;
+class VirtualDesktop;
 class WindowItem;
 
 /**
@@ -940,23 +940,9 @@ inline bool Toplevel::isOnAllActivities() const
     return activities().isEmpty();
 }
 
-inline bool Toplevel::isOnDesktop(int d) const
-{
-    return (kwinApp()->operationMode() == Application::OperationModeWaylandOnly ||
-            kwinApp()->operationMode() == Application::OperationModeXwayland
-            ? desktops().contains(VirtualDesktopManager::self()->desktopForX11Id(d))
-            : desktop() == d
-           ) || isOnAllDesktops();
-}
-
 inline bool Toplevel::isOnActivity(const QString &activity) const
 {
     return activities().isEmpty() || activities().contains(activity);
-}
-
-inline bool Toplevel::isOnCurrentDesktop() const
-{
-    return isOnDesktop(VirtualDesktopManager::self()->current());
 }
 
 inline QByteArray Toplevel::resourceName() const

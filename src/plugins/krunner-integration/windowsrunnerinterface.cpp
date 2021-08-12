@@ -11,6 +11,7 @@
 #include "windowsrunnerinterface.h"
 
 #include "abstract_client.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 
 #include "krunner1adaptor.h"
