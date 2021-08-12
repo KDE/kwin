@@ -163,6 +163,11 @@ public:
 
 Q_SIGNALS:
     /**
+     * This signal is emitted when the xdg-surface is about to be destroyed.
+     */
+    void aboutToBeDestroyed();
+
+    /**
      * This signal is emitted when a configure event with serial \a serial has been acknowledged.
      */
     void configureAcknowledged(quint32 serial);
@@ -280,6 +285,11 @@ public:
     static XdgToplevelInterface *get(::wl_resource *resource);
 
 Q_SIGNALS:
+    /**
+     * This signal is emitted when the xdg-toplevel is about to be destroyed.
+     */
+    void aboutToBeDestroyed();
+
     /**
      * This signal is emitted when the xdg-toplevel has commited the initial state and wants to
      * be configured. After initializing the toplevel, you must send a configure event.
@@ -537,6 +547,11 @@ public:
     static XdgPopupInterface *get(::wl_resource *resource);
 
 Q_SIGNALS:
+    /**
+     * This signal is emitted when the xdg-popup is about to be destroyed.
+     */
+    void aboutToBeDestroyed();
+
     /**
      * This signal is emitted when the xdg-popup has commited the initial state and wants to
      * be configured. After initializing the popup, you must send a configure event.

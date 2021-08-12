@@ -182,6 +182,7 @@ XdgSurfaceInterfacePrivate *XdgSurfaceInterfacePrivate::get(XdgSurfaceInterface 
 void XdgSurfaceInterfacePrivate::xdg_surface_destroy_resource(Resource *resource)
 {
     Q_UNUSED(resource)
+    Q_EMIT q->aboutToBeDestroyed();
     XdgShellInterfacePrivate::get(shell)->unregisterXdgSurface(q);
     delete q;
 }
@@ -374,6 +375,7 @@ void XdgToplevelInterfacePrivate::reset()
 void XdgToplevelInterfacePrivate::xdg_toplevel_destroy_resource(Resource *resource)
 {
     Q_UNUSED(resource)
+    Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
@@ -695,6 +697,7 @@ void XdgPopupInterfacePrivate::reset()
 void XdgPopupInterfacePrivate::xdg_popup_destroy_resource(Resource *resource)
 {
     Q_UNUSED(resource)
+    Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
