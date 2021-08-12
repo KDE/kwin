@@ -132,7 +132,6 @@ bool Unmanaged::track(xcb_window_t w)
 void Unmanaged::release(ReleaseReason releaseReason)
 {
     addWorkspaceRepaint(visibleGeometry());
-    Q_EMIT markedAsZombie();
     Deleted* del = nullptr;
     if (releaseReason != ReleaseReason::KWinShutsDown) {
         del = Deleted::create(this);

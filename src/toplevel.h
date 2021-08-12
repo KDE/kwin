@@ -568,7 +568,6 @@ public:
 
 Q_SIGNALS:
     void shadeChanged();
-    void markedAsZombie();
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRegion& damage);
     void inputTransformationChanged();
