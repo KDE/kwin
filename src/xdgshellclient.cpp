@@ -54,6 +54,8 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
     connect(shellSurface->surface(), &SurfaceInterface::mapped,
             this, &XdgSurfaceClient::setReadyForPainting);
 #endif
+    connect(shellSurface, &XdgSurfaceInterface::aboutToBeDestroyed,
+            this, &XdgSurfaceClient::destroyClient);
     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
             this, &XdgSurfaceClient::destroyClient);
 
@@ -390,7 +392,7 @@ XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)
             this, &XdgToplevelClient::handleTransientForChanged);
     connect(shellSurface, &XdgToplevelInterface::initializeRequested,
             this, &XdgToplevelClient::initialize);
-    connect(shellSurface, &XdgToplevelInterface::destroyed,
+    connect(shellSurface, &XdgToplevelInterface::aboutToBeDestroyed,
             this, &XdgToplevelClient::destroyClient);
     connect(shellSurface, &XdgToplevelInterface::maximumSizeChanged,
             this, &XdgToplevelClient::handleMaximumSizeChanged);
@@ -1749,7 +1751,7 @@ XdgPopupClient::XdgPopupClient(XdgPopupInterface *shellSurface)
             this, &XdgPopupClient::initialize);
     connect(shellSurface, &XdgPopupInterface::repositionRequested,
             this, &XdgPopupClient::handleRepositionRequested);
-    connect(shellSurface, &XdgPopupInterface::destroyed,
+    connect(shellSurface, &XdgPopupInterface::aboutToBeDestroyed,
             this, &XdgPopupClient::destroyClient);
 }
 
