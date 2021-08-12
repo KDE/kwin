@@ -656,7 +656,8 @@ void Scene::Window::unreferencePreviousPixmap_helper(SurfaceItem *item)
 
 QRegion Scene::Window::decorationShape() const
 {
-    return QRegion(toplevel->rect()) - toplevel->transparentRect();
+    const QRect decorationInnerRect = toplevel->rect() - toplevel->frameMargins();
+    return QRegion(toplevel->rect()) - decorationInnerRect;
 }
 
 bool Scene::Window::isVisible() const

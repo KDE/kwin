@@ -1987,7 +1987,7 @@ void EffectWindowImpl::setSceneWindow(Scene::Window* w)
 
 QRect EffectWindowImpl::decorationInnerRect() const
 {
-    return toplevel->transparentRect();
+    return toplevel->rect() - toplevel->frameMargins();
 }
 
 QByteArray EffectWindowImpl::readProperty(long atom, long type, int format) const

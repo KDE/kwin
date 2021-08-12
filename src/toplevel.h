@@ -362,7 +362,6 @@ public:
      * Returns a rectangle that the window occupies on the screen, including drop-shadows.
      */
     QRect visibleGeometry() const;
-    QRect transparentRect() const;
     virtual bool isClient() const;
     virtual bool isDeleted() const;
 
@@ -787,11 +786,6 @@ inline int Toplevel::height() const
 inline QRect Toplevel::rect() const
 {
     return QRect(0, 0, width(), height());
-}
-
-inline QRect Toplevel::transparentRect() const
-{
-    return isShade() ? QRect() : QRect(clientPos(), clientSize());
 }
 
 inline bool Toplevel::readyForPainting() const
