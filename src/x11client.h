@@ -12,8 +12,6 @@
 
 // kwin
 #include "decorationitem.h"
-#include "options.h"
-#include "rules.h"
 #include "abstract_client.h"
 #include "xcbutils.h"
 // Qt
