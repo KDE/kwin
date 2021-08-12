@@ -1768,7 +1768,7 @@ bool SceneOpenGLShadow::prepareBackend()
 
     // Check if the image is alpha-only in practice, and if so convert it to an 8-bpp format
     if (!GLPlatform::instance()->isGLES() && GLTexture::supportsSwizzle() && GLTexture::supportsFormatRG()) {
-        QImage alphaImage(image.size(), QImage::Format_Indexed8); // Change to Format_Alpha8 w/ Qt 5.5
+        QImage alphaImage(image.size(), QImage::Format_Alpha8);
         bool alphaOnly = true;
 
         for (ptrdiff_t y = 0; alphaOnly && y < image.height(); y++) {

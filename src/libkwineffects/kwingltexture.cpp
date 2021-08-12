@@ -52,7 +52,7 @@ struct {
     { 0,           0,       0                              }, // QImage::Format_Invalid
     { 0,           0,       0                              }, // QImage::Format_Mono
     { 0,           0,       0                              }, // QImage::Format_MonoLSB
-    { GL_R8,       GL_RED,  GL_UNSIGNED_BYTE               }, // QImage::Format_Indexed8
+    { 0,           0,       0                              }, // QImage::Format_Indexed8
     { GL_RGB8,     GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV    }, // QImage::Format_RGB32
     { 0,           0,       0                              }, // QImage::Format_ARGB32
     { GL_RGBA8,    GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV    }, // QImage::Format_ARGB32_Premultiplied
@@ -130,8 +130,7 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
 
         const QImage::Format index = image.format();
 
-        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
-            && !(index == QImage::Format_Indexed8 && image.colorCount() > 0)) {
+        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat) {
             internalFormat = formatTable[index].internalFormat;
             format = formatTable[index].format;
             type = formatTable[index].type;
@@ -396,8 +395,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
 
         const QImage::Format index = image.format();
 
-        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
-            && !(index == QImage::Format_Indexed8 && image.colorCount() > 0)) {
+        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat) {
             format = formatTable[index].format;
             type = formatTable[index].type;
             im = img;
