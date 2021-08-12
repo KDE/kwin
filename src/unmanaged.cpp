@@ -181,11 +181,6 @@ QPoint Unmanaged::clientPos() const
     return QPoint(0, 0);   // unmanaged windows don't have decorations
 }
 
-QRect Unmanaged::transparentRect() const
-{
-    return QRect(clientPos(), clientSize());
-}
-
 NET::WindowType Unmanaged::windowType(bool direct, int supportedTypes) const
 {
     // for unmanaged windows the direct does not make any difference

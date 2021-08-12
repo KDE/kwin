@@ -65,11 +65,6 @@ QString WaylandClient::captionSuffix() const
     return m_captionSuffix;
 }
 
-QRect WaylandClient::transparentRect() const
-{
-    return QRect();
-}
-
 pid_t WaylandClient::pid() const
 {
     return surface()->client()->processId();

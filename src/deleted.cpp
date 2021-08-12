@@ -74,7 +74,6 @@ void Deleted::copyToDeleted(Toplevel* c)
     m_desktops = c->desktops();
     activityList = c->activities();
     contentsRect = QRect(c->clientPos(), c->clientSize());
-    transparent_rect = c->transparentRect();
     m_layer = c->layer();
     m_frame = c->frameId();
     m_type = c->windowType();
@@ -160,11 +159,6 @@ void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect
     top = decoration_top;
     right = decoration_right;
     bottom = decoration_bottom;
-}
-
-QRect Deleted::transparentRect() const
-{
-    return transparent_rect;
 }
 
 bool Deleted::isDeleted() const

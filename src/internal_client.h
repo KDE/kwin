@@ -29,7 +29,6 @@ public:
     QString captionSuffix() const override;
     QSize minSize() const override;
     QSize maxSize() const override;
-    QRect transparentRect() const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     void killWindow() override;
     bool isClient() const override;

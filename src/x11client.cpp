@@ -397,7 +397,6 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2ExtendedStrut |
         NET::WM2Opacity |
         NET::WM2FullscreenMonitors |
-        NET::WM2FrameOverlap |
         NET::WM2GroupLeader |
         NET::WM2Urgency |
         NET::WM2Input |
@@ -1158,55 +1157,6 @@ void X11Client::maybeCreateX11DecorationRenderer()
 void X11Client::maybeDestroyX11DecorationRenderer()
 {
     m_decorationRenderer.reset();
-}
-
-void X11Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const
-{
-    if (!isDecorated()) {
-        return;
-    }
-    QRect r = decoration()->rect();
-
-    NETStrut strut = info->frameOverlap();
-
-    // Ignore the overlap strut when compositing is disabled
-    if (!Compositor::compositing())
-        strut.left = strut.top = strut.right = strut.bottom = 0;
-    else if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1) {
-        top = QRect(r.x(), r.y(), r.width(), r.height() / 3);
-        left = QRect(r.x(), r.y() + top.height(), width() / 2, r.height() / 3);
-        right = QRect(r.x() + left.width(), r.y() + top.height(), r.width() - left.width(), left.height());
-        bottom = QRect(r.x(), r.y() + top.height() + left.height(), r.width(), r.height() - left.height() - top.height());
-        return;
-    }
-
-    top = QRect(r.x(), r.y(), r.width(), borderTop() + strut.top);
-    bottom = QRect(r.x(), r.y() + r.height() - borderBottom() - strut.bottom,
-                   r.width(), borderBottom() + strut.bottom);
-    left = QRect(r.x(), r.y() + top.height(),
-                 borderLeft() + strut.left, r.height() - top.height() - bottom.height());
-    right = QRect(r.x() + r.width() - borderRight() - strut.right, r.y() + top.height(),
-                  borderRight() + strut.right, r.height() - top.height() - bottom.height());
-}
-
-QRect X11Client::transparentRect() const
-{
-    if (isShade())
-        return QRect();
-
-    NETStrut strut = info->frameOverlap();
-    // Ignore the strut when compositing is disabled or the decoration doesn't support it
-    if (!Compositor::compositing())
-        strut.left = strut.top = strut.right = strut.bottom = 0;
-    else if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1)
-        return QRect();
-
-    const QRect r = QRect(clientPos(), clientSize())
-                    .adjusted(strut.left, strut.top, -strut.right, -strut.bottom);
-    if (r.isValid())
-        return r;
-
-    return QRect();
 }
 
 void X11Client::detectNoBorder()

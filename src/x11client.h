@@ -256,11 +256,7 @@ public:
      */
     void setClientShown(bool shown) override;
 
-    QRect transparentRect() const override;
-
     bool isClientSideDecorated() const;
-
-    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const override;
 
     Xcb::Property fetchFirstInTabBox() const;
     void readFirstInTabBox(Xcb::Property &property);

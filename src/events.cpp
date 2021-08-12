@@ -359,9 +359,6 @@ bool X11Client::windowEvent(xcb_generic_event_t *e)
                 i.setOpacity(info->opacity());
             }
         }
-        if (dirtyProperties2 & NET::WM2FrameOverlap) {
-            // ### Inform the decoration
-        }
         if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
             Q_EMIT windowRoleChanged();
         }

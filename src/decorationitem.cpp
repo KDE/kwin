@@ -182,44 +182,40 @@ WindowQuadList DecorationItem::buildQuads() const
         Qt::Horizontal, // Bottom
     };
 
-    const QRegion shape = QRegion(toplevel->rect()) - toplevel->transparentRect();
-
     WindowQuadList list;
-    list.reserve(shape.rectCount());
+    list.reserve(4);
 
-    for (int i = 0; i < 4; i++) {
-        const QRegion intersectedRegion = (shape & rects[i]);
-        for (const QRect &r : intersectedRegion) {
-            if (!r.isValid()) {
-                continue;
-            }
-
-            const int x0 = r.x();
-            const int y0 = r.y();
-            const int x1 = r.x() + r.width();
-            const int y1 = r.y() + r.height();
-
-            const int u0 = (x0 + offsets[i].x()) * textureScale;
-            const int v0 = (y0 + offsets[i].y()) * textureScale;
-            const int u1 = (x1 + offsets[i].x()) * textureScale;
-            const int v1 = (y1 + offsets[i].y()) * textureScale;
-
-            WindowQuad quad;
-
-            if (orientations[i] == Qt::Vertical) {
-                quad[0] = WindowVertex(x0, y0, v0, u0); // Top-left
-                quad[1] = WindowVertex(x1, y0, v0, u1); // Top-right
-                quad[2] = WindowVertex(x1, y1, v1, u1); // Bottom-right
-                quad[3] = WindowVertex(x0, y1, v1, u0); // Bottom-left
-            } else {
-                quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
-                quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
-                quad[2] = WindowVertex(x1, y1, u1, v1); // Bottom-right
-                quad[3] = WindowVertex(x0, y1, u0, v1); // Bottom-left
-            }
-
-            list.append(quad);
+    for (int i = 0; i < 4; ++i) {
+        const QRect &r = rects[i];
+        if (!r.isValid()) {
+            continue;
         }
+
+        const int x0 = r.x();
+        const int y0 = r.y();
+        const int x1 = r.x() + r.width();
+        const int y1 = r.y() + r.height();
+
+        const int u0 = (x0 + offsets[i].x()) * textureScale;
+        const int v0 = (y0 + offsets[i].y()) * textureScale;
+        const int u1 = (x1 + offsets[i].x()) * textureScale;
+        const int v1 = (y1 + offsets[i].y()) * textureScale;
+
+        WindowQuad quad;
+
+        if (orientations[i] == Qt::Vertical) {
+            quad[0] = WindowVertex(x0, y0, v0, u0); // Top-left
+            quad[1] = WindowVertex(x1, y0, v0, u1); // Top-right
+            quad[2] = WindowVertex(x1, y1, v1, u1); // Bottom-right
+            quad[3] = WindowVertex(x0, y1, v1, u0); // Bottom-left
+        } else {
+            quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
+            quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
+            quad[2] = WindowVertex(x1, y1, u1, v1); // Bottom-right
+            quad[3] = WindowVertex(x0, y1, u0, v1); // Bottom-left
+        }
+
+        list.append(quad);
     }
 
     return list;

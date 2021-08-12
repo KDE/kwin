@@ -135,11 +135,6 @@ QSize InternalClient::maxSize() const
     return m_internalWindow->maximumSize();
 }
 
-QRect InternalClient::transparentRect() const
-{
-    return QRect();
-}
-
 NET::WindowType InternalClient::windowType(bool direct, int supported_types) const
 {
     Q_UNUSED(direct)
