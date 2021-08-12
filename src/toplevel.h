@@ -409,6 +409,7 @@ public:
     virtual int desktop() const = 0;
     virtual QVector<VirtualDesktop *> desktops() const = 0;
     virtual QStringList activities() const = 0;
+    bool isOnDesktop(VirtualDesktop *desktop) const;
     bool isOnDesktop(int d) const;
     bool isOnActivity(const QString &activity) const;
     bool isOnCurrentDesktop() const;

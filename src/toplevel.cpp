@@ -691,14 +691,19 @@ QMargins Toplevel::frameMargins() const
     return QMargins();
 }
 
+bool Toplevel::isOnDesktop(VirtualDesktop *desktop) const
+{
+    return isOnAllDesktops() || desktops().contains(desktop);
+}
+
 bool Toplevel::isOnDesktop(int d) const
 {
-    return isOnAllDesktops() || desktops().contains(VirtualDesktopManager::self()->desktopForX11Id(d));
+    return isOnDesktop(VirtualDesktopManager::self()->desktopForX11Id(d));
 }
 
 bool Toplevel::isOnCurrentDesktop() const
 {
-    return isOnDesktop(VirtualDesktopManager::self()->current());
+    return isOnDesktop(VirtualDesktopManager::self()->currentDesktop());
 }
 
 } // namespace
