@@ -20,9 +20,6 @@
 #include <QMatrix4x4>
 #include <QRect>
 #include <QUuid>
-// xcb
-#include <xcb/damage.h>
-#include <xcb/xfixes.h>
 // c++
 #include <functional>
 
