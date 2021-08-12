@@ -11,7 +11,6 @@
 #define KWIN_TOPLEVEL_H
 
 // kwin
-#include "input.h"
 #include "utils.h"
 #include "virtualdesktops.h"
 #include "xcbutils.h"
@@ -20,6 +19,7 @@
 // Qt
 #include <QObject>
 #include <QMatrix4x4>
+#include <QRect>
 #include <QUuid>
 // xcb
 #include <xcb/damage.h>

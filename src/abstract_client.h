@@ -18,7 +18,11 @@
 #include <memory>
 
 #include <QElapsedTimer>
+#include <QIcon>
+#include <QKeySequence>
 #include <QPointer>
+
+class QMouseEvent;
 
 namespace KWaylandServer
 {

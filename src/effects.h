@@ -20,6 +20,9 @@
 
 #include <memory>
 
+class QMouseEvent;
+class QWheelEvent;
+
 namespace Plasma {
 class Theme;
 }

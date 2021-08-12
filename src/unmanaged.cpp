@@ -16,8 +16,9 @@
 #include "utils.h"
 #include "xcbutils.h"
 
-#include <QTimer>
 #include <QDebug>
+#include <QTimer>
+#include <QWidget>
 #include <QWindow>
 
 #include <xcb/shape.h>

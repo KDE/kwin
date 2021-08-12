@@ -19,6 +19,7 @@
 #include "scripting_logging.h"
 #include "thumbnailitem.h"
 
+#include "input.h"
 #include "options.h"
 #include "screenedge.h"
 #include "workspace.h"
