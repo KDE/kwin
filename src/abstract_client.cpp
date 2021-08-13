@@ -389,7 +389,7 @@ void AbstractClient::autoRaise()
 bool AbstractClient::isMostRecentlyRaised() const
 {
     // The last toplevel in the unconstrained stacking order is the most recently raised one.
-    return workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
+    return workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1, true, false) == this;
 }
 
 bool AbstractClient::wantsTabFocus() const
@@ -2525,7 +2525,7 @@ void AbstractClient::enterEvent(const QPoint &globalPos)
     if (options->isAutoRaise() && !isDesktop() &&
             !isDock() && workspace()->focusChangeEnabled() &&
             globalPos != workspace()->focusMousePosition() &&
-            workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(),
+            workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(),
                                             options->isSeparateScreenFocus() ? screen() : -1) != this) {
         startAutoRaise();
     }
