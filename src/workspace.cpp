@@ -447,7 +447,7 @@ void Workspace::initializeX11()
         if (new_active_client == nullptr)
             new_active_client = topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1);
         if (new_active_client == nullptr)
-            new_active_client = findDesktop(true, VirtualDesktopManager::self()->current());
+            new_active_client = findDesktop(true, VirtualDesktopManager::self()->currentDesktop());
     }
     if (new_active_client != nullptr)
         activateClient(new_active_client);
@@ -729,7 +729,7 @@ void Workspace::addClient(X11Client *c)
         raiseClient(c);
         // If there's no active client, make this desktop the active one
         if (activeClient() == nullptr && should_get_focus.count() == 0)
-            activateClient(findDesktop(true, VirtualDesktopManager::self()->current()));
+            activateClient(findDesktop(true, VirtualDesktopManager::self()->currentDesktop()));
     }
     c->checkActiveModal();
     checkTransients(c->window());   // SELI TODO: Does this really belong here?
@@ -1086,7 +1086,7 @@ void Workspace::activateClientOnNewDesktop(uint desktop)
         c = active_client;
 
     if (!c)
-        c = findDesktop(true, desktop);
+        c = findDesktop(true, VirtualDesktopManager::self()->desktopForX11Id(desktop));
 
     if (c != active_client)
         setActiveClient(nullptr);
@@ -1200,7 +1200,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         c = active_client;
 
     if (!c)
-        c = findDesktop(true, VirtualDesktopManager::self()->current());
+        c = findDesktop(true, VirtualDesktopManager::self()->currentDesktop());
 
     if (c != active_client)
         setActiveClient(nullptr);

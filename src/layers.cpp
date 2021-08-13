@@ -245,7 +245,7 @@ AbstractClient* Workspace::topClientOnDesktop(VirtualDesktop *desktop, int scree
     return nullptr;
 }
 
-AbstractClient* Workspace::findDesktop(bool topmost, int desktop) const
+AbstractClient *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop) const
 {
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if (topmost) {
