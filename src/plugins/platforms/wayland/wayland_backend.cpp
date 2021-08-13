@@ -569,7 +569,7 @@ bool WaylandBackend::initialize()
     }
     connect(Cursors::self(), &Cursors::currentCursorChanged, this,
         [this] {
-            if (!m_seat) {
+            if (!m_seat || !m_waylandCursor) {
                 return;
             }
             m_waylandCursor->installImage();
