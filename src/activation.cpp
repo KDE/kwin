@@ -458,7 +458,7 @@ bool Workspace::activateNextClient(AbstractClient* c)
 
     AbstractClient* get_focus = nullptr;
 
-    const int desktop = VirtualDesktopManager::self()->current();
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
     if (!get_focus && showingDesktop())
         get_focus = findDesktop(true, desktop); // to not break the state
@@ -482,7 +482,7 @@ bool Workspace::activateNextClient(AbstractClient* c)
         }
         if (!get_focus) {
             // nope, ask the focus chain for the next candidate
-            get_focus = FocusChain::self()->nextForDesktop(c, desktop);
+            get_focus = FocusChain::self()->nextForDesktop(c, desktop->x11DesktopNumber());
         }
     }
 
@@ -505,8 +505,8 @@ void Workspace::setCurrentScreen(int new_screen)
     if (!options->focusPolicyIsReasonable())
         return;
     closeActivePopup();
-    const int desktop = VirtualDesktopManager::self()->current();
-    AbstractClient *get_focus = FocusChain::self()->getForActivation(desktop, new_screen);
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
+    AbstractClient *get_focus = FocusChain::self()->getForActivation(desktop->x11DesktopNumber(), new_screen);
     if (get_focus == nullptr)
         get_focus = findDesktop(true, desktop);
     if (get_focus != nullptr && get_focus != mostRecentlyActivatedClient())
