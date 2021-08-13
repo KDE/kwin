@@ -50,7 +50,7 @@ Rules::Rules()
     , opacityactiverule(UnusedForceRule)
     , opacityinactiverule(UnusedForceRule)
     , ignoregeometryrule(UnusedSetRule)
-    , desktoprule(UnusedSetRule)
+    , desktopsrule(UnusedSetRule)
     , screenrule(UnusedSetRule)
     , activityrule(UnusedSetRule)
     , typerule(UnusedForceRule)
@@ -142,7 +142,7 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_FORCE_RULE(opacityactive,);
     READ_FORCE_RULE(opacityinactive,);
     READ_SET_RULE(ignoregeometry);
-    READ_SET_RULE(desktop);
+    READ_SET_RULE(desktops);
     READ_SET_RULE(screen);
     READ_SET_RULE(activity);
     READ_FORCE_RULE(type, static_cast<NET::WindowType>);
@@ -222,7 +222,7 @@ void Rules::write(RuleSettings *settings) const
     WRITE_FORCE_RULE(opacityactive, Opacityactive,);
     WRITE_FORCE_RULE(opacityinactive, Opacityinactive,);
     WRITE_SET_RULE(ignoregeometry, Ignoregeometry,);
-    WRITE_SET_RULE(desktop, Desktop,);
+    WRITE_SET_RULE(desktops, Desktops,);
     WRITE_SET_RULE(screen, Screen,);
     WRITE_SET_RULE(activity, Activity,);
     WRITE_FORCE_RULE(type, Type,);
@@ -274,7 +274,7 @@ bool Rules::isEmpty() const
            && opacityactiverule == UnusedForceRule
            && opacityinactiverule == UnusedForceRule
            && ignoregeometryrule == UnusedSetRule
-           && desktoprule == UnusedSetRule
+           && desktopsrule == UnusedSetRule
            && screenrule == UnusedSetRule
            && activityrule == UnusedSetRule
            && typerule == UnusedForceRule
@@ -445,9 +445,9 @@ bool Rules::update(AbstractClient* c, int selection)
             size = new_size;
         }
     }
-    if NOW_REMEMBER(Desktop, desktop) {
-        updated = updated || desktop != c->desktop();
-        desktop = c->desktop();
+    if NOW_REMEMBER(Desktops, desktops) {
+        updated = updated || desktops != c->desktopIds();
+        desktops = c->desktopIds();
     }
     if NOW_REMEMBER(Screen, screen) {
         updated = updated || screen != c->screen();
@@ -568,20 +568,17 @@ APPLY_RULE(screen, Screen, int)
 APPLY_RULE(activity, Activity, QStringList)
 APPLY_FORCE_RULE(type, Type, NET::WindowType)
 
-bool Rules::applyDesktops(QVector<VirtualDesktop *> &desktops, bool init) const
+bool Rules::applyDesktops(QVector<VirtualDesktop *> &vds, bool init) const
 {
-    if (checkSetRule(desktoprule, init)) {
-        if (desktop == NET::OnAllDesktops) {
-            desktops = {};
-        } else {
-            if (auto vd = VirtualDesktopManager::self()->desktopForX11Id(desktop)) {
-                desktops = {vd};
-            } else {
-                desktops = {VirtualDesktopManager::self()->currentDesktop()};
+    if (checkSetRule(desktopsrule, init)) {
+        vds.clear();
+        for (auto id : desktops) {
+            if (auto vd = VirtualDesktopManager::self()->desktopForId(id)) {
+                vds << vd;
             }
         }
     }
-    return checkSetStop(desktoprule);
+    return checkSetStop(desktopsrule);
 }
 
 bool Rules::applyMaximizeHoriz(MaximizeMode& mode, bool init) const
@@ -678,7 +675,7 @@ bool Rules::discardUsed(bool withdrawn)
     DISCARD_USED_FORCE_RULE(opacityactive);
     DISCARD_USED_FORCE_RULE(opacityinactive);
     DISCARD_USED_SET_RULE(ignoregeometry);
-    DISCARD_USED_SET_RULE(desktop);
+    DISCARD_USED_SET_RULE(desktops);
     DISCARD_USED_SET_RULE(screen);
     DISCARD_USED_SET_RULE(activity);
     DISCARD_USED_FORCE_RULE(type);

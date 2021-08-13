@@ -212,6 +212,9 @@ QVariant RuleItem::typedValue(const QVariant &value) const
         case Size:
             return value.toSize();
         case String:
+            if (value.type() == QVariant::StringList && !value.toStringList().isEmpty()) {
+                return value.toStringList().at(0).trimmed();
+            }
             return value.toString().trimmed();
         case Shortcut:
             return value.toString();

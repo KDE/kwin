@@ -497,7 +497,7 @@ void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
     doSetDesktop();
 
     FocusChain::self()->update(this, FocusChain::MakeFirst);
-    updateWindowRules(Rules::Desktop);
+    updateWindowRules(Rules::Desktops);
 
     Q_EMIT desktopChanged();
     if (wasOnCurrentDesktop != isOnCurrentDesktop())
@@ -571,6 +571,20 @@ QVector<uint> AbstractClient::x11DesktopIds() const
     );
     return x11Ids;
 }
+
+QStringList AbstractClient::desktopIds() const
+{
+    const auto desks = desktops();
+    QStringList ids;
+    ids.reserve(desks.count());
+    std::transform(desks.constBegin(), desks.constEnd(),
+                   std::back_inserter(ids),
+                   [] (const VirtualDesktop *vd) {
+                       return vd->id();
+                   }
+    );
+    return ids;
+};
 
 ShadeMode AbstractClient::shadeMode() const
 {

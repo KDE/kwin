@@ -491,6 +491,7 @@ public:
         return m_desktops;
     }
     QVector<uint> x11DesktopIds() const;
+    QStringList desktopIds() const;
 
     void setMinimized(bool set);
     /**

@@ -1783,24 +1783,24 @@ void TestXdgShellClientRules::testMaximizeForceTemporarily()
 
 void TestXdgShellClientRules::testDesktopDontAffect()
 {
+    // We need at least two virtual desktop for this test.
+    VirtualDesktopManager::self()->setCount(2);
+    QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+
     // Initialize RuleBook with the test rule.
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group("General").writeEntry("count", 1);
     KConfigGroup group = config->group("1");
-    group.writeEntry("desktop", 2);
-    group.writeEntry("desktoprule", int(Rules::DontAffect));
+    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
+    group.writeEntry("desktopsrule", int(Rules::DontAffect));
     group.writeEntry("wmclass", "org.kde.foo");
     group.writeEntry("wmclasscomplete", false);
     group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
     group.sync();
     RuleBook::self()->setConfig(config);
     workspace()->slotReconfigure();
-
-    // We need at least two virtual desktop for this test.
-    VirtualDesktopManager::self()->setCount(2);
-    QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // Create the test client.
     AbstractClient *client;
@@ -1821,24 +1821,24 @@ void TestXdgShellClientRules::testDesktopDontAffect()
 
 void TestXdgShellClientRules::testDesktopApply()
 {
+    // We need at least two virtual desktop for this test.
+    VirtualDesktopManager::self()->setCount(2);
+    QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+
     // Initialize RuleBook with the test rule.
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group("General").writeEntry("count", 1);
     KConfigGroup group = config->group("1");
-    group.writeEntry("desktop", 2);
-    group.writeEntry("desktoprule", int(Rules::Apply));
+    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
+    group.writeEntry("desktopsrule", int(Rules::Apply));
     group.writeEntry("wmclass", "org.kde.foo");
     group.writeEntry("wmclasscomplete", false);
     group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
     group.sync();
     RuleBook::self()->setConfig(config);
     workspace()->slotReconfigure();
-
-    // We need at least two virtual desktop for this test.
-    VirtualDesktopManager::self()->setCount(2);
-    QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // Create the test client.
     AbstractClient *client;
@@ -1875,24 +1875,24 @@ void TestXdgShellClientRules::testDesktopApply()
 
 void TestXdgShellClientRules::testDesktopRemember()
 {
+    // We need at least two virtual desktop for this test.
+    VirtualDesktopManager::self()->setCount(2);
+    QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+
     // Initialize RuleBook with the test rule.
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group("General").writeEntry("count", 1);
     KConfigGroup group = config->group("1");
-    group.writeEntry("desktop", 2);
-    group.writeEntry("desktoprule", int(Rules::Remember));
+    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
+    group.writeEntry("desktopsrule", int(Rules::Remember));
     group.writeEntry("wmclass", "org.kde.foo");
     group.writeEntry("wmclasscomplete", false);
     group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
     group.sync();
     RuleBook::self()->setConfig(config);
     workspace()->slotReconfigure();
-
-    // We need at least two virtual desktop for this test.
-    VirtualDesktopManager::self()->setCount(2);
-    QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // Create the test client.
     AbstractClient *client;
@@ -1925,12 +1925,18 @@ void TestXdgShellClientRules::testDesktopRemember()
 
 void TestXdgShellClientRules::testDesktopForce()
 {
+    // We need at least two virtual desktop for this test.
+    VirtualDesktopManager::self()->setCount(2);
+    QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+
     // Initialize RuleBook with the test rule.
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group("General").writeEntry("count", 1);
     KConfigGroup group = config->group("1");
-    group.writeEntry("desktop", 2);
-    group.writeEntry("desktoprule", int(Rules::Force));
+    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
+    group.writeEntry("desktopsrule", int(Rules::Force));
     group.writeEntry("wmclass", "org.kde.foo");
     group.writeEntry("wmclasscomplete", false);
     group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
@@ -1938,11 +1944,6 @@ void TestXdgShellClientRules::testDesktopForce()
     RuleBook::self()->setConfig(config);
     workspace()->slotReconfigure();
 
-    // We need at least two virtual desktop for this test.
-    VirtualDesktopManager::self()->setCount(2);
-    QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // Create the test client.
     AbstractClient *client;
@@ -1998,8 +1999,8 @@ void TestXdgShellClientRules::testDesktopApplyNow()
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group("General").writeEntry("count", 1);
     KConfigGroup group = config->group("1");
-    group.writeEntry("desktop", 2);
-    group.writeEntry("desktoprule", int(Rules::ApplyNow));
+    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
+    group.writeEntry("desktopsrule", int(Rules::ApplyNow));
     group.writeEntry("wmclass", "org.kde.foo");
     group.writeEntry("wmclasscomplete", false);
     group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
@@ -2029,24 +2030,24 @@ void TestXdgShellClientRules::testDesktopApplyNow()
 
 void TestXdgShellClientRules::testDesktopForceTemporarily()
 {
+    // We need at least two virtual desktop for this test.
+    VirtualDesktopManager::self()->setCount(2);
+    QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+
     // Initialize RuleBook with the test rule.
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group("General").writeEntry("count", 1);
     KConfigGroup group = config->group("1");
-    group.writeEntry("desktop", 2);
-    group.writeEntry("desktoprule", int(Rules::ForceTemporarily));
+    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
+    group.writeEntry("desktopsrule", int(Rules::ForceTemporarily));
     group.writeEntry("wmclass", "org.kde.foo");
     group.writeEntry("wmclasscomplete", false);
     group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
     group.sync();
     RuleBook::self()->setConfig(config);
     workspace()->slotReconfigure();
-
-    // We need at least two virtual desktop for this test.
-    VirtualDesktopManager::self()->setCount(2);
-    QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // Create the test client.
     AbstractClient *client;

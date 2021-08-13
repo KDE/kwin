@@ -95,7 +95,7 @@ public:
     explicit Rules(const RuleSettings*);
     Rules(const QString&, bool temporary);
     enum Type {
-        Position = 1<<0, Size = 1<<1, Desktop = 1<<2,
+        Position = 1<<0, Size = 1<<1, Desktops = 1<<2,
         MaximizeVert = 1<<3, MaximizeHoriz = 1<<4, Minimize = 1<<5,
         Shade = 1<<6, SkipTaskbar = 1<<7, SkipPager = 1<<8,
         SkipSwitcher = 1<<9, Above = 1<<10, Below = 1<<11, Fullscreen = 1<<12,
@@ -182,6 +182,9 @@ private:
     bool matchRole(const QByteArray& match_role) const;
     bool matchTitle(const QString& match_title) const;
     bool matchClientMachine(const QByteArray& match_machine, bool local) const;
+#ifdef KCMRULES
+private:
+#endif
     void readFromSettings(const RuleSettings *settings);
     static ForceRule convertForceRule(int v);
     static QString getDecoColor(const QString &themeName);
@@ -219,8 +222,8 @@ private:
     ForceRule opacityinactiverule;
     bool ignoregeometry;
     SetRule ignoregeometryrule;
-    int desktop;
-    SetRule desktoprule;
+    QStringList desktops;
+    SetRule desktopsrule;
     int screen;
     SetRule screenrule;
     QStringList activity;

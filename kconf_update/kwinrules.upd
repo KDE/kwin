@@ -5,3 +5,7 @@ Id=replace-placement-string-to-enum
 File=kwinrulesrc
 Script=kwinrules-5.19-placement.pl,perl
 
+# Replace the `desktop` x11id number to `desktops` list of desktop UUIDs
+Id=use-virtual-desktop-ids
+File=kwinrulesrc
+Script=kwinrules-5.23-virtual-desktop-ids.py,python3

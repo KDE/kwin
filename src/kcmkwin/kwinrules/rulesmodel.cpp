@@ -14,6 +14,7 @@
 #include <QIcon>
 #include <QQmlEngine>
 #include <QtDBus>
+#include <QX11Info>
 
 #include <KColorSchemeManager>
 #include <KConfig>
@@ -433,14 +434,26 @@ void RulesModel::populateRuleList()
                          i18n("Maximized vertically"), i18n("Size & Position"),
                          QIcon::fromTheme("resizerow")));
 
-    auto desktop = addRule(new RuleItem(QLatin1String("desktop"),
-                                        RulePolicy::SetRule, RuleItem::Option,
-                                        i18n("Virtual Desktop"), i18n("Size & Position"),
-                                        QIcon::fromTheme("virtual-desktops")));
-    desktop->setOptionsData(virtualDesktopsModelData());
+    RuleItem *desktops;
+    if (QX11Info::isPlatformX11()) {
+        // Single selection of Virtual Desktop on X11
+        desktops = new RuleItem(QLatin1String("desktops"),
+                                RulePolicy::SetRule, RuleItem::Option,
+                                i18n("Virtual Desktop"), i18n("Size & Position"),
+                                QIcon::fromTheme("virtual-desktops"));
+    } else {
+        // Multiple selection on Wayland
+        desktops = new RuleItem(QLatin1String("desktops"),
+                                RulePolicy::SetRule, RuleItem::OptionList,
+                                i18n("Virtual Desktops"), i18n("Size & Position"),
+                                QIcon::fromTheme("virtual-desktops"));
+    }
+    addRule(desktops);
+    desktops->setOptionsData(virtualDesktopsModelData());
 
     connect(this, &RulesModel::virtualDesktopsUpdated,
-            this, [this] { m_rules["desktop"]->setOptionsData(virtualDesktopsModelData()); });
+            this, [this] { m_rules["desktops"]->setOptionsData(virtualDesktopsModelData()); });
+
     updateVirtualDesktops();
 
 #ifdef KWIN_BUILD_ACTIVITIES
@@ -645,7 +658,6 @@ const QHash<QString, QString> RulesModel::x11PropertyHash()
         { "caption",            "title"         },
         { "role",               "windowrole"    },
         { "clientMachine",      "clientmachine" },
-        { "x11DesktopNumber",   "desktop"       },
         { "maximizeHorizontal", "maximizehoriz" },
         { "maximizeVertical",   "maximizevert"  },
         { "minimized",          "minimize"      },
@@ -686,6 +698,18 @@ void RulesModel::setSuggestedProperties(const QVariantMap &info)
 
     m_rules["wmclass"]->setSuggestedValue(wmsimpleclass);
     m_rules["wmclasshelper"]->setSuggestedValue(wmcompleteclass);
+
+    //TODO: Make the DBus method `queryWindowInfo` return the list of desktop IDs and use them directly
+    if (info.value("x11DesktopNumber").toInt() == NET::OnAllDesktops) {
+        m_rules["desktops"]->setSuggestedValue(QStringList());
+    } else {
+        for (const auto vd : qAsConst(m_virtualDesktops)) {
+            if (info.value("x11DesktopNumber").toUInt() == vd.position + 1) {
+                m_rules["desktops"]->setSuggestedValue(QStringList{ vd.id });
+                break;
+            }
+        }
+    }
 
 #ifdef KWIN_BUILD_ACTIVITIES
     const QStringList activities = info.value("activities").toStringList();
@@ -729,15 +753,14 @@ QList<OptionsModel::Data> RulesModel::windowTypesModelData() const
 
 QList<OptionsModel::Data> RulesModel::virtualDesktopsModelData() const
 {
-    QList<OptionsModel::Data> modelData;
+    QList<OptionsModel::Data> modelData = { {QString(), i18n("All Desktops"), QIcon::fromTheme("window-pin")} };
     for (const DBusDesktopDataStruct &desktop : m_virtualDesktops) {
         modelData << OptionsModel::Data{
-            desktop.position + 1,  // "desktop" setting uses the desktop position (int) starting at 1
+            desktop.id,
             QString::number(desktop.position + 1).rightJustified(2) + QStringLiteral(": ") + desktop.name,
             QIcon::fromTheme("virtual-desktops")
         };
     }
-    modelData << OptionsModel::Data{ NET::OnAllDesktops, i18n("All Desktops"), QIcon::fromTheme("window-pin") };
     return modelData;
 }
 

@@ -147,12 +147,12 @@
       <default code="true">Rules::UnusedSetRule</default>
     </entry>
 
-    <entry name="desktop" type="Int">
-      <label>Desktop number</label>
-      <default>0</default>
+    <entry name="desktops" type="StringList">
+      <label>List of Desktop Ids</label>
+      <default>{}</default>
     </entry>
-    <entry name="desktoprule" type="Int">
-      <label>Desktop number rule type</label>
+    <entry name="desktopsrule" type="Int">
+      <label>Desktop Ids rule type</label>
       <min code="true">Rules::UnusedSetRule</min>
       <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
       <default code="true">Rules::UnusedSetRule</default>
