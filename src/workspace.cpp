@@ -1264,7 +1264,7 @@ void Workspace::sendClientToDesktop(AbstractClient* c, int desk, bool dont_activ
         return;
     desk = c->desktop(); // Client did range checking
 
-    if (c->isOnDesktop(VirtualDesktopManager::self()->current())) {
+    if (c->isOnCurrentDesktop()) {
         if (c->wantsTabFocus() && options->focusPolicyIsReasonable() &&
                 !was_on_desktop && // for stickyness changes
                 !dont_activate)
@@ -2724,7 +2724,7 @@ QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int m
             deltaX = int(snap);
             deltaY = int(snap);
             for (auto l = m_allClients.constBegin(); l != m_allClients.constEnd(); ++l) {
-                if ((*l)->isOnDesktop(VirtualDesktopManager::self()->current()) &&
+                if ((*l)->isOnCurrentDesktop() &&
                         !(*l)->isMinimized()
                         && (*l) != c) {
                     lx = (*l)->x() - 1;
