@@ -548,7 +548,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
             if (info->desktop()) {
                 desktopId = info->desktop(); // Window had the initial desktop property, force it
             }
-            if (desktop() == 0 && asn_valid && asn_data.desktop() != 0) {
+            if (desktopId == 0 && asn_valid && asn_data.desktop() != 0) {
                 desktopId = asn_data.desktop();
             }
             if (desktopId) {
