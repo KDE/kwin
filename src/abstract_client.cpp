@@ -542,10 +542,11 @@ void AbstractClient::setOnAllDesktops(bool b)
     if ((b && isOnAllDesktops()) ||
             (!b && !isOnAllDesktops()))
         return;
-    if (b)
-        setDesktop(NET::OnAllDesktops);
-    else
-        setDesktop(VirtualDesktopManager::self()->current());
+    if (b) {
+        setDesktops({});
+    } else {
+        setDesktops({VirtualDesktopManager::self()->currentDesktop()});
+    }
 }
 
 int AbstractClient::desktop() const

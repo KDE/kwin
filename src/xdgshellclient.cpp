@@ -358,7 +358,7 @@ XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)
 {
     setupWindowManagementIntegration();
     setupPlasmaShellIntegration();
-    setDesktop(VirtualDesktopManager::self()->current());
+    setDesktops({VirtualDesktopManager::self()->currentDesktop()});
 #if KWIN_BUILD_ACTIVITIES
     if (auto a = Activities::self()) {
         setOnActivities({a->current()});
@@ -1739,7 +1739,7 @@ XdgPopupClient::XdgPopupClient(XdgPopupInterface *shellSurface)
     : XdgSurfaceClient(shellSurface->xdgSurface())
     , m_shellSurface(shellSurface)
 {
-    setDesktop(VirtualDesktopManager::self()->current());
+    setDesktops({VirtualDesktopManager::self()->currentDesktop()});
 #if KWIN_BUILD_ACTIVITIES
     if (auto a = Activities::self()) {
         setOnActivities({a->current()});
