@@ -38,22 +38,22 @@ void FocusChain::remove(AbstractClient *client)
     m_mostRecentlyUsed.removeAll(client);
 }
 
-void FocusChain::resize(uint previousSize, uint newSize)
+void FocusChain::addDesktop(VirtualDesktop *desktop)
 {
-    for (uint i = previousSize + 1; i <= newSize; ++i) {
-        m_desktopFocusChains.insert(i, Chain());
-    }
-    for (uint i = previousSize; i > newSize; --i) {
-        m_desktopFocusChains.remove(i);
-    }
+    m_desktopFocusChains.insert(desktop, Chain());
 }
 
-AbstractClient *FocusChain::getForActivation(uint desktop) const
+void FocusChain::removeDesktop(VirtualDesktop *desktop)
+{
+    m_desktopFocusChains.remove(desktop);
+}
+
+AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop) const
 {
     return getForActivation(desktop, screens()->current());
 }
 
-AbstractClient *FocusChain::getForActivation(uint desktop, int screen) const
+AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop, int screen) const
 {
     auto it = m_desktopFocusChains.constFind(desktop);
     if (it == m_desktopFocusChains.constEnd()) {
@@ -208,7 +208,7 @@ bool FocusChain::isUsableFocusCandidate(AbstractClient *c, AbstractClient *prev)
            (!m_separateScreenFocus || c->isOnScreen(prev ? prev->screen() : screens()->current()));
 }
 
-AbstractClient *FocusChain::nextForDesktop(AbstractClient *reference, uint desktop) const
+AbstractClient *FocusChain::nextForDesktop(AbstractClient *reference, VirtualDesktop *desktop) const
 {
     auto it = m_desktopFocusChains.constFind(desktop);
     if (it == m_desktopFocusChains.constEnd()) {
@@ -250,7 +250,7 @@ void FocusChain::makeLastInChain(AbstractClient *client, Chain &chain)
     chain.prepend(client);
 }
 
-bool FocusChain::contains(AbstractClient *client, uint desktop) const
+bool FocusChain::contains(AbstractClient *client, VirtualDesktop *desktop) const
 {
     auto it = m_desktopFocusChains.constFind(desktop);
     if (it == m_desktopFocusChains.constEnd()) {

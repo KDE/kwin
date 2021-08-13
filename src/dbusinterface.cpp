@@ -364,7 +364,7 @@ VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDe
     );
 
     connect(m_manager, &VirtualDesktopManager::currentChanged, this,
-        [this](uint previousDesktop, uint newDesktop) {
+        [this](VirtualDesktop *previousDesktop, VirtualDesktop *newDesktop) {
             Q_UNUSED(previousDesktop);
             Q_UNUSED(newDesktop);
             Q_EMIT currentChanged(m_manager->currentDesktop()->id());

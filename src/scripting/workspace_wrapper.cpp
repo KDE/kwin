@@ -28,7 +28,9 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     KWin::Workspace *ws = KWin::Workspace::self();
     KWin::VirtualDesktopManager *vds = KWin::VirtualDesktopManager::self();
     connect(ws, &Workspace::desktopPresenceChanged, this, &WorkspaceWrapper::desktopPresenceChanged);
-    connect(ws, &Workspace::currentDesktopChanged, this, &WorkspaceWrapper::currentDesktopChanged);
+    connect(ws, &Workspace::currentDesktopChanged, this, [this](VirtualDesktop *previousDesktop, AbstractClient *client) {
+        Q_EMIT currentDesktopChanged(previousDesktop ? previousDesktop->x11DesktopNumber() : 0, client);
+    });
     connect(ws, &Workspace::clientAdded, this, &WorkspaceWrapper::clientAdded);
     connect(ws, &Workspace::clientAdded, this, &WorkspaceWrapper::setupClientConnections);
     connect(ws, &Workspace::clientRemoved, this, &WorkspaceWrapper::clientRemoved);

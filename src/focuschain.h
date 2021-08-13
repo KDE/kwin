@@ -18,6 +18,7 @@ namespace KWin
 {
 // forward declarations
 class AbstractClient;
+class VirtualDesktop;
 
 /**
  * @brief Singleton class to handle the various focus chains.
@@ -87,7 +88,7 @@ public:
      * @param desktop The virtual desktop to look for a Client for activation
      * @return :X11Client *The Client which could be activated or @c null if there is none.
      */
-    AbstractClient *getForActivation(uint desktop) const;
+    AbstractClient *getForActivation(VirtualDesktop *desktop) const;
     /**
      * @brief Finds the best Client to become the new active Client in the focus chain for the given
      * virtual @p desktop on the given @p screen.
@@ -100,7 +101,7 @@ public:
      * @param screen The screen to constrain the search on with separate screen focus
      * @return :X11Client *The Client which could be activated or @c null if there is none.
      */
-    AbstractClient *getForActivation(uint desktop, int screen) const;
+    AbstractClient *getForActivation(VirtualDesktop *desktop, int screen) const;
 
     /**
      * @brief Checks whether the most recently used focus chain contains the given @p client.
@@ -119,7 +120,7 @@ public:
      * @param desktop The virtual desktop whose focus chain should be used
      * @return bool @c true if the focus chain for @p desktop contains @p client, @c false otherwise.
      */
-    bool contains(AbstractClient *client, uint desktop) const;
+    bool contains(AbstractClient *client, VirtualDesktop *desktop) const;
     /**
      * @brief Queries the most recently used focus chain for the next Client after the given
      * @p reference Client.
@@ -145,7 +146,7 @@ public:
      * @param desktop The virtual desktop whose focus chain should be used
      * @return :X11Client *The next usable Client or @c null if none can be found.
      */
-    AbstractClient *nextForDesktop(AbstractClient *reference, uint desktop) const;
+    AbstractClient *nextForDesktop(AbstractClient *reference, VirtualDesktop *desktop) const;
     /**
      * @brief Returns the first Client in the most recently used focus chain. First Client in this
      * case means really the first Client in the chain and not the most recently used Client.
@@ -158,16 +159,6 @@ public:
 
 public Q_SLOTS:
     /**
-     * @brief Resizes the per virtual desktop focus chains from @p previousSize to @p newSize.
-     * This means that for each virtual desktop between previous and new size a new focus chain is
-     * created and in case the number is reduced the focus chains are destroyed.
-     *
-     * @param previousSize The previous number of virtual desktops
-     * @param newSize The new number of virtual desktops
-     * @return void
-     */
-    void resize(uint previousSize, uint newSize);
-    /**
      * @brief Removes @p client from all focus chains.
      *
      * @param client The Client to remove from all focus chains.
@@ -176,7 +167,9 @@ public Q_SLOTS:
     void remove(KWin::AbstractClient *client);
     void setSeparateScreenFocus(bool enabled);
     void setActiveClient(KWin::AbstractClient *client);
-    void setCurrentDesktop(uint previous, uint newDesktop);
+    void addDesktop(VirtualDesktop *desktop);
+    void removeDesktop(VirtualDesktop *desktop);
+    void setCurrentDesktop(VirtualDesktop *previous, VirtualDesktop *newDesktop);
 
 private:
     using Chain = QList<AbstractClient*>;
@@ -206,10 +199,10 @@ private:
     void updateClientInChain(AbstractClient *client, Change change, Chain &chain);
     void insertClientIntoChain(AbstractClient *client, Chain &chain);
     Chain m_mostRecentlyUsed;
-    QHash<uint, Chain> m_desktopFocusChains;
+    QHash<VirtualDesktop *, Chain> m_desktopFocusChains;
     bool m_separateScreenFocus;
     AbstractClient *m_activeClient;
-    uint m_currentDesktop;
+    VirtualDesktop *m_currentDesktop;
 
     KWIN_SINGLETON_VARIABLE(FocusChain, s_manager)
 };
@@ -233,7 +226,7 @@ void FocusChain::setActiveClient(AbstractClient *client)
 }
 
 inline
-void FocusChain::setCurrentDesktop(uint previous, uint newDesktop)
+void FocusChain::setCurrentDesktop(VirtualDesktop *previous, VirtualDesktop *newDesktop)
 {
     Q_UNUSED(previous)
     m_currentDesktop = newDesktop;

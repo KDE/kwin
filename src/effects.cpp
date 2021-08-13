@@ -136,12 +136,12 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(ws, &Workspace::showingDesktopChanged,
             this, &EffectsHandlerImpl::showingDesktopChanged);
     connect(ws, &Workspace::currentDesktopChanged, this,
-        [this](int old, AbstractClient *c) {
-            const int newDesktop = VirtualDesktopManager::self()->current();
-            if (old != 0 && newDesktop != old) {
-                Q_EMIT desktopChanged(old, newDesktop, c ? c->effectWindow() : nullptr);
+        [this](VirtualDesktop *old, AbstractClient *c) {
+            VirtualDesktop *newDesktop = VirtualDesktopManager::self()->currentDesktop();
+            if (old && newDesktop != old) {
+                Q_EMIT desktopChanged(old->x11DesktopNumber(), newDesktop->x11DesktopNumber(), c ? c->effectWindow() : nullptr);
                 // TODO: remove in 4.10
-                Q_EMIT desktopChanged(old, newDesktop);
+                Q_EMIT desktopChanged(old->x11DesktopNumber(), newDesktop->x11DesktopNumber());
             }
         }
     );

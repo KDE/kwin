@@ -478,7 +478,7 @@ private Q_SLOTS:
     void updateCurrentActivity(const QString &new_activity);
     // virtual desktop handling
     void slotDesktopCountChanged(uint previousCount, uint newCount);
-    void slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop);
+    void slotCurrentDesktopChanged(VirtualDesktop *oldDesktop, VirtualDesktop *newDesktop);
 
 Q_SIGNALS:
     /**
@@ -489,7 +489,7 @@ Q_SIGNALS:
 
     //Signals required for the scripting interface
     void desktopPresenceChanged(KWin::AbstractClient*, int);
-    void currentDesktopChanged(int, KWin::AbstractClient*);
+    void currentDesktopChanged(KWin::VirtualDesktop *previousDesktop, KWin::AbstractClient*);
     void clientAdded(KWin::AbstractClient *);
     void clientRemoved(KWin::AbstractClient*);
     void clientActivated(KWin::AbstractClient*);
@@ -558,9 +558,9 @@ private:
     void closeActivePopup();
     void updateClientArea(bool force);
     void resetClientAreas(uint desktopCount);
-    void updateClientVisibilityOnDesktopChange(uint newDesktop);
-    void activateClientOnNewDesktop(uint desktop);
-    AbstractClient *findClientToActivateOnDesktop(uint desktop);
+    void updateClientVisibilityOnDesktopChange(VirtualDesktop *newDesktop);
+    void activateClientOnNewDesktop(VirtualDesktop *desktop);
+    AbstractClient *findClientToActivateOnDesktop(VirtualDesktop *desktop);
     void removeAbstractClient(AbstractClient *client);
 
     struct Constraint

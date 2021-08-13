@@ -220,16 +220,17 @@ void Workspace::init()
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::layoutChanged, screenEdges, &ScreenEdges::updateLayout);
     connect(this, &Workspace::clientActivated, screenEdges, &ScreenEdges::checkBlocking);
 
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
     FocusChain *focusChain = FocusChain::create(this);
     connect(this, &Workspace::clientRemoved, focusChain, &FocusChain::remove);
     connect(this, &Workspace::clientActivated, focusChain, &FocusChain::setActiveClient);
-    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, focusChain, &FocusChain::resize);
+    connect(vds, &VirtualDesktopManager::desktopCreated, focusChain, &FocusChain::addDesktop);
+    connect(vds, &VirtualDesktopManager::desktopRemoved, focusChain, &FocusChain::removeDesktop);
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, focusChain, &FocusChain::setCurrentDesktop);
     connect(options, &Options::separateScreenFocusChanged, focusChain, &FocusChain::setSeparateScreenFocus);
     focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
     // create VirtualDesktopManager and perform dependency injection
-    VirtualDesktopManager *vds = VirtualDesktopManager::self();
     connect(vds, &VirtualDesktopManager::desktopRemoved, this,
         [this](KWin::VirtualDesktop *desktop) {
             //Wayland
@@ -1026,7 +1027,7 @@ void Workspace::slotReconfigure()
     }
 }
 
-void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
+void Workspace::slotCurrentDesktopChanged(VirtualDesktop *oldDesktop, VirtualDesktop *newDesktop)
 {
     closeActivePopup();
     ++block_focus;
@@ -1039,7 +1040,7 @@ void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
     Q_EMIT currentDesktopChanged(oldDesktop, movingClient);
 }
 
-void Workspace::updateClientVisibilityOnDesktopChange(uint newDesktop)
+void Workspace::updateClientVisibilityOnDesktopChange(VirtualDesktop *newDesktop)
 {
     for (auto it = stacking_order.constBegin();
             it != stacking_order.constEnd();
@@ -1058,7 +1059,7 @@ void Workspace::updateClientVisibilityOnDesktopChange(uint newDesktop)
     }
 
     if (movingClient && !movingClient->isOnDesktop(newDesktop)) {
-        movingClient->setDesktop(newDesktop);
+        movingClient->setDesktops({newDesktop});
     }
 
     for (int i = stacking_order.size() - 1; i >= 0 ; --i) {
@@ -1073,7 +1074,7 @@ void Workspace::updateClientVisibilityOnDesktopChange(uint newDesktop)
         setShowingDesktop(false);
 }
 
-void Workspace::activateClientOnNewDesktop(uint desktop)
+void Workspace::activateClientOnNewDesktop(VirtualDesktop *desktop)
 {
     AbstractClient* c = nullptr;
     if (options->focusPolicyIsReasonable()) {
@@ -1086,7 +1087,7 @@ void Workspace::activateClientOnNewDesktop(uint desktop)
         c = active_client;
 
     if (!c)
-        c = findDesktop(true, VirtualDesktopManager::self()->desktopForX11Id(desktop));
+        c = findDesktop(true, desktop);
 
     if (c != active_client)
         setActiveClient(nullptr);
@@ -1097,7 +1098,7 @@ void Workspace::activateClientOnNewDesktop(uint desktop)
         focusToNull();
 }
 
-AbstractClient *Workspace::findClientToActivateOnDesktop(uint desktop)
+AbstractClient *Workspace::findClientToActivateOnDesktop(VirtualDesktop *desktop)
 {
     if (movingClient != nullptr && active_client == movingClient &&
         FocusChain::self()->contains(active_client, desktop) &&
@@ -1191,7 +1192,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     //FIXME below here is a lot of focuschain stuff, probably all wrong now
     if (options->focusPolicyIsReasonable()) {
         // Search in focus chain
-        c = FocusChain::self()->getForActivation(VirtualDesktopManager::self()->current());
+        c = FocusChain::self()->getForActivation(VirtualDesktopManager::self()->currentDesktop());
     }
     // If "unreasonable focus policy" and active_client is on_all_desktops and
     // under mouse (Hence == old_active_client), conserve focus.
@@ -1406,7 +1407,7 @@ void Workspace::setShowingDesktop(bool showing)
     if (showing_desktop && topDesk) {
         requestFocus(topDesk);
     } else if (!showing_desktop && changed) {
-        const auto client = FocusChain::self()->getForActivation(VirtualDesktopManager::self()->current());
+        const auto client = FocusChain::self()->getForActivation(VirtualDesktopManager::self()->currentDesktop());
         if (client) {
             activateClient(client);
         }

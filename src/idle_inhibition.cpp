@@ -10,6 +10,7 @@
 #include "idle_inhibition.h"
 #include "abstract_client.h"
 #include "deleted.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 
 #include <KWaylandServer/idle_interface.h>

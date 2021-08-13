@@ -499,7 +499,16 @@ void VirtualDesktopManager::removeVirtualDesktop(const QByteArray &id)
         return;
     }
 
-    const uint oldCurrent = m_current->x11DesktopNumber();
+    if (desktop == m_current) {
+        if (VirtualDesktop *newCurrent = next(m_current); newCurrent != m_current) {
+            setCurrent(newCurrent);
+        } else if (VirtualDesktop *newCurrent = previous(m_current); newCurrent != m_current) {
+            setCurrent(newCurrent);
+        } else {
+            Q_UNREACHABLE();
+        }
+    }
+
     const uint i = desktop->x11DesktopNumber() - 1;
     m_desktops.remove(i);
 
@@ -508,12 +517,6 @@ void VirtualDesktopManager::removeVirtualDesktop(const QByteArray &id)
         if (m_rootInfo) {
             m_rootInfo->setDesktopName(j + 1, m_desktops[j]->name().toUtf8().data());
         }
-    }
-
-    const uint newCurrent = qMin(oldCurrent, (uint)m_desktops.count());
-    m_current = m_desktops.at(newCurrent - 1);
-    if (oldCurrent != newCurrent) {
-        Q_EMIT currentChanged(oldCurrent, newCurrent);
     }
 
     save();
@@ -551,9 +554,9 @@ bool VirtualDesktopManager::setCurrent(VirtualDesktop *newDesktop)
     if (m_current == newDesktop) {
         return false;
     }
-    const uint oldDesktop = current();
+    VirtualDesktop *oldDesktop = currentDesktop();
     m_current = newDesktop;
-    Q_EMIT currentChanged(oldDesktop, newDesktop->x11DesktopNumber());
+    Q_EMIT currentChanged(oldDesktop, newDesktop);
     return true;
 }
 
@@ -571,11 +574,8 @@ void VirtualDesktopManager::setCount(uint count)
         const auto desktopsToRemove = m_desktops.mid(count);
         m_desktops.resize(count);
         if (m_current) {
-            uint oldCurrent = current();
-            uint newCurrent = qMin(oldCurrent, count);
-            m_current = m_desktops.at(newCurrent - 1);
-            if (oldCurrent != newCurrent) {
-                Q_EMIT currentChanged(oldCurrent, newCurrent);
+            if (count < current()) {
+                setCurrent(m_desktops[count - 1]);
             }
         }
         for (auto desktop : desktopsToRemove) {

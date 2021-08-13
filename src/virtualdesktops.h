@@ -393,7 +393,7 @@ Q_SIGNALS:
      * @param previousDesktop The virtual desktop changed from
      * @param newDesktop The virtual desktop changed to
      */
-    void currentChanged(uint previousDesktop, uint newDesktop);
+    void currentChanged(KWin::VirtualDesktop *previousDesktop, KWin::VirtualDesktop *newDesktop);
     /**
      * Signal emitted whenever the desktop layout changes.
      * @param columns The new number of columns in the layout
