@@ -230,31 +230,18 @@ void Workspace::init()
 
     // create VirtualDesktopManager and perform dependency injection
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    connect(vds, &VirtualDesktopManager::desktopRemoved, this,
-        [this](KWin::VirtualDesktop *desktop) {
-            //Wayland
-            if (kwinApp()->operationMode() == Application::OperationModeWaylandOnly ||
-                kwinApp()->operationMode() == Application::OperationModeXwayland) {
-                for (auto it = m_allClients.constBegin(); it != m_allClients.constEnd(); ++it) {
-                    if (!(*it)->desktops().contains(desktop)) {
-                        continue;
-                    }
-                    if ((*it)->desktops().count() > 1) {
-                        (*it)->leaveDesktop(desktop);
-                    } else {
-                        sendClientToDesktop(*it, qMin(desktop->x11DesktopNumber(), VirtualDesktopManager::self()->count()), true);
-                    }
-                }
-            //X11
+    connect(vds, &VirtualDesktopManager::desktopRemoved, this, [this](VirtualDesktop *desktop) {
+        for (auto it = m_allClients.constBegin(); it != m_allClients.constEnd(); ++it) {
+            if (!(*it)->desktops().contains(desktop)) {
+                continue;
+            }
+            if ((*it)->desktops().count() > 1) {
+                (*it)->leaveDesktop(desktop);
             } else {
-                for (auto it = m_allClients.constBegin(); it != m_allClients.constEnd(); ++it) {
-                    if (!(*it)->isOnAllDesktops() && ((*it)->desktop() > static_cast<int>(VirtualDesktopManager::self()->count()))) {
-                        sendClientToDesktop(*it, VirtualDesktopManager::self()->count(), true);
-                    }
-                }
+                sendClientToDesktop(*it, qMin(desktop->x11DesktopNumber(), VirtualDesktopManager::self()->count()), true);
             }
         }
-    );
+    });
 
     connect(vds, &VirtualDesktopManager::countChanged, this, &Workspace::slotDesktopCountChanged);
     connect(vds, &VirtualDesktopManager::currentChanged, this, &Workspace::slotCurrentDesktopChanged);
