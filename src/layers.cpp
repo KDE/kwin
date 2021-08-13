@@ -218,7 +218,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
  * doesn't accept focus it's excluded.
  */
 // TODO misleading name for this method, too many slightly different ways to use it
-AbstractClient* Workspace::topClientOnDesktop(int desktop, int screen, bool unconstrained, bool only_normal) const
+AbstractClient* Workspace::topClientOnDesktop(VirtualDesktop *desktop, int screen, bool unconstrained, bool only_normal) const
 {
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     QList<Toplevel *> list;
@@ -268,9 +268,12 @@ AbstractClient* Workspace::findDesktop(bool topmost, int desktop) const
 
 void Workspace::raiseOrLowerClient(AbstractClient *c)
 {
-    if (!c) return;
+    if (!c || !c->isOnCurrentDesktop()) {
+        return;
+    }
+
     const AbstractClient *topmost =
-            topClientOnDesktop(c->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : c->desktop(),
+            topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(),
                                options->isSeparateScreenFocus() ? c->screen() : -1);
 
     if (c == topmost)

@@ -52,6 +52,7 @@ class ShortcutDialog;
 class Toplevel;
 class Unmanaged;
 class UserActionsMenu;
+class VirtualDesktop;
 class X11Client;
 class X11EventFilter;
 enum class Predicate;
@@ -274,8 +275,8 @@ public:
     QList<X11Client *> ensureStackingOrder(const QList<X11Client *> &clients) const;
     QList<AbstractClient*> ensureStackingOrder(const QList<AbstractClient*> &clients) const;
 
-    AbstractClient* topClientOnDesktop(int desktop, int screen, bool unconstrained = false,
-                               bool only_normal = true) const;
+    AbstractClient *topClientOnDesktop(VirtualDesktop *desktop, int screen, bool unconstrained = false,
+                                       bool only_normal = true) const;
     AbstractClient* findDesktop(bool topmost, int desktop) const;
     void sendClientToDesktop(AbstractClient* c, int desktop, bool dont_activate);
     void windowToPreviousDesktop(AbstractClient* c);
