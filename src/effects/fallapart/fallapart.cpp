@@ -69,6 +69,7 @@ void FallApartEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, 
 void FallApartEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
     Q_UNUSED(w)
+    Q_UNUSED(mask)
     auto animationIt = windows.constFind(w);
     if (animationIt != windows.constEnd() && isRealWindow(w)) {
         const qreal t = animationIt->progress;

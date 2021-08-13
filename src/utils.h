@@ -131,7 +131,7 @@ void KWIN_EXPORT ungrabXKeyboard();
  */
 qreal KWIN_EXPORT qPainterEffectiveDevicePixelRatio(const QPainter *painter);
 
-static inline QRegion KWIN_EXPORT mapRegion(const QMatrix4x4 &matrix, const QRegion &region)
+static inline QRegion mapRegion(const QMatrix4x4 &matrix, const QRegion &region)
 {
     QRegion result;
     for (const QRect &rect : region) {

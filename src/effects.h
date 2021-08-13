@@ -551,13 +551,13 @@ public:
     void setText(const QString& text) override;
     EffectFrameStyle style() const override {
         return m_style;
-    };
+    }
     Plasma::FrameSvg& frame() {
         return m_frame;
     }
     bool isStatic() const {
         return m_static;
-    };
+    }
     void finalRender(QRegion region, double opacity, double frameOpacity) const;
     void setShader(GLShader* shader) override {
         m_shader = shader;
