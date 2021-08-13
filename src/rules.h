@@ -29,6 +29,7 @@ namespace KWin
 class AbstractClient;
 class Rules;
 class RuleSettings;
+class VirtualDesktop;
 
 #ifndef KCMRULES // only for kwin core
 
@@ -51,7 +52,7 @@ public:
     int checkOpacityActive(int s) const;
     int checkOpacityInactive(int s) const;
     bool checkIgnoreGeometry(bool ignore, bool init = false) const;
-    int checkDesktop(int desktop, bool init = false) const;
+    QVector<VirtualDesktop *> checkDesktops(QVector<VirtualDesktop *> desktops, bool init = false) const;
     int checkScreen(int screen, bool init = false) const;
     QStringList checkActivity(QStringList activity, bool init = false) const;
     NET::WindowType checkType(NET::WindowType type) const;
@@ -145,7 +146,7 @@ public:
     bool applyOpacityActive(int& s) const;
     bool applyOpacityInactive(int& s) const;
     bool applyIgnoreGeometry(bool& ignore, bool init) const;
-    bool applyDesktop(int& desktop, bool init) const;
+    bool applyDesktops(QVector<VirtualDesktop *> &desktops, bool init) const;
     bool applyScreen(int& desktop, bool init) const;
     bool applyActivity(QStringList& activity, bool init) const;
     bool applyType(NET::WindowType& type) const;

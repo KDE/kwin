@@ -499,11 +499,16 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     readActivities(activitiesCookie);
 
     // Initial desktop placement
-    int desk = 0;
+    std::optional<QVector<VirtualDesktop *>> initialDesktops;
     if (session) {
-        desk = session->desktop;
-        if (session->onAllDesktops)
-            desk = NET::OnAllDesktops;
+        if (session->onAllDesktops) {
+            initialDesktops = QVector<VirtualDesktop *>{};
+        } else {
+            VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(session->desktop);
+            if (desktop) {
+                initialDesktops = QVector<VirtualDesktop *>{desktop};
+            }
+        }
         setOnActivities(session->activities);
     } else {
         // If this window is transient, ensure that it is opened on the
@@ -528,20 +533,34 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
                 if ((*it)->isOnAllDesktops())
                     on_all = true;
             }
-            if (on_all)
-                desk = NET::OnAllDesktops;
-            else if (on_current)
-                desk = VirtualDesktopManager::self()->current();
-            else if (maincl != nullptr)
-                desk = maincl->desktop();
+            if (on_all) {
+                initialDesktops = QVector<VirtualDesktop *>{};
+            } else if (on_current) {
+                initialDesktops = QVector<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop()};
+            } else if (maincl) {
+                initialDesktops = maincl->desktops();
+            }
 
             if (maincl)
                 setOnActivities(maincl->activities());
         } else { // a transient shall appear on its leader and not drag that around
-            if (info->desktop())
-                desk = info->desktop(); // Window had the initial desktop property, force it
-            if (desktop() == 0 && asn_valid && asn_data.desktop() != 0)
-                desk = asn_data.desktop();
+            int desktopId = 0;
+            if (info->desktop()) {
+                desktopId = info->desktop(); // Window had the initial desktop property, force it
+            }
+            if (desktop() == 0 && asn_valid && asn_data.desktop() != 0) {
+                desktopId = asn_data.desktop();
+            }
+            if (desktopId) {
+                if (desktopId == NET::OnAllDesktops) {
+                    initialDesktops = QVector<VirtualDesktop *>{};
+                } else {
+                    VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId);
+                    if (desktop) {
+                        initialDesktops = QVector<VirtualDesktop *>{desktop};
+                    }
+                }
+            }
         }
 #ifdef KWIN_BUILD_ACTIVITIES
         if (Activities::self() && !isMapped && !skipTaskbar() && isNormalWindow() && !activitiesDefined) {
@@ -557,13 +576,17 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
 #endif
     }
 
-    if (desk == 0)   // Assume window wants to be visible on the current desktop
-        desk = isDesktop() ? static_cast<int>(NET::OnAllDesktops) : VirtualDesktopManager::self()->current();
-    desk = rules()->checkDesktop(desk, !isMapped);
-    if (desk != NET::OnAllDesktops)   // Do range check
-        desk = qBound(1, desk, static_cast<int>(VirtualDesktopManager::self()->count()));
-    setDesktop(desk);
-    info->setDesktop(desk);
+    // If initialDesktops has no value, it means that the client doesn't prefer any
+    // desktop so place it on the current virtual desktop.
+    if (!initialDesktops.has_value()) {
+        if (isDesktop()) {
+            initialDesktops = QVector<VirtualDesktop *>{};
+        } else {
+            initialDesktops = QVector<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop()};
+        }
+    }
+    setDesktops(rules()->checkDesktops(*initialDesktops, !isMapped));
+    info->setDesktop(desktop());
     workspace()->updateOnAllDesktopsOfTransients(this);   // SELI TODO
     //onAllDesktopsChange(); // Decoration doesn't exist here yet
 

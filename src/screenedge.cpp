@@ -398,41 +398,46 @@ void Edge::switchDesktop(const QPoint &cursorPos)
 {
     QPoint pos(cursorPos);
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    const uint oldDesktop = vds->current();
-    uint desktop = oldDesktop;
+    VirtualDesktop *oldDesktop = vds->currentDesktop();
+    VirtualDesktop *desktop = oldDesktop;
     const int OFFSET = 2;
     if (isLeft()) {
-        const uint interimDesktop = desktop;
+        const VirtualDesktop *interimDesktop = desktop;
         desktop = vds->toLeft(desktop, vds->isNavigationWrappingAround());
-        if (desktop != interimDesktop)
+        if (desktop != interimDesktop) {
             pos.setX(screens()->size().width() - 1 - OFFSET);
+        }
     } else if (isRight()) {
-        const uint interimDesktop = desktop;
+        const VirtualDesktop *interimDesktop = desktop;
         desktop = vds->toRight(desktop, vds->isNavigationWrappingAround());
-        if (desktop != interimDesktop)
+        if (desktop != interimDesktop) {
             pos.setX(OFFSET);
+        }
     }
     if (isTop()) {
-        const uint interimDesktop = desktop;
+        const VirtualDesktop *interimDesktop = desktop;
         desktop = vds->above(desktop, vds->isNavigationWrappingAround());
-        if (desktop != interimDesktop)
+        if (desktop != interimDesktop) {
             pos.setY(screens()->size().height() - 1 - OFFSET);
+        }
     } else if (isBottom()) {
-        const uint interimDesktop = desktop;
+        const VirtualDesktop *interimDesktop = desktop;
         desktop = vds->below(desktop, vds->isNavigationWrappingAround());
-        if (desktop != interimDesktop)
+        if (desktop != interimDesktop) {
             pos.setY(OFFSET);
+        }
     }
 #ifndef KWIN_UNIT_TEST
     if (AbstractClient *c = Workspace::self()->moveResizeClient()) {
-        if (c->rules()->checkDesktop(desktop) != int(desktop)) {
+        const QVector<VirtualDesktop *> desktops{desktop};
+        if (c->rules()->checkDesktops(desktops) != desktops) {
             // user attempts to move a client to another desktop where it is ruleforced to not be
             return;
         }
     }
 #endif
     vds->setCurrent(desktop);
-    if (vds->current() != oldDesktop) {
+    if (vds->currentDesktop() != oldDesktop) {
         m_pushBackBlocked = true;
         Cursors::self()->mouse()->setPos(pos);
         QSharedPointer<QMetaObject::Connection> me(new QMetaObject::Connection);

@@ -424,7 +424,6 @@ void AbstractClient::setDesktop(int desktop)
     const int numberOfDesktops = VirtualDesktopManager::self()->count();
     if (desktop != NET::OnAllDesktops)   // Do range check
         desktop = qMax(1, qMin(numberOfDesktops, desktop));
-    desktop = qMin(numberOfDesktops, rules()->checkDesktop(desktop));
 
     QVector<VirtualDesktop *> desktops;
     if (desktop != NET::OnAllDesktops) {
@@ -440,6 +439,7 @@ void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
         desktops = QVector<VirtualDesktop*>({desktops.last()});
     }
 
+    desktops = rules()->checkDesktops(desktops);
     if (desktops == m_desktops) {
         return;
     }

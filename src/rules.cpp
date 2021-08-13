@@ -22,6 +22,7 @@
 #include "x11client.h"
 #include "client_machine.h"
 #include "screens.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 #endif
 
@@ -561,10 +562,25 @@ APPLY_FORCE_RULE(opacityactive, OpacityActive, int)
 APPLY_FORCE_RULE(opacityinactive, OpacityInactive, int)
 APPLY_RULE(ignoregeometry, IgnoreGeometry, bool)
 
-APPLY_RULE(desktop, Desktop, int)
 APPLY_RULE(screen, Screen, int)
 APPLY_RULE(activity, Activity, QStringList)
 APPLY_FORCE_RULE(type, Type, NET::WindowType)
+
+bool Rules::applyDesktops(QVector<VirtualDesktop *> &desktops, bool init) const
+{
+    if (checkSetRule(desktoprule, init)) {
+        if (desktop == NET::OnAllDesktops) {
+            desktops = {};
+        } else {
+            if (auto vd = VirtualDesktopManager::self()->desktopForX11Id(desktop)) {
+                desktops = {vd};
+            } else {
+                desktops = {VirtualDesktopManager::self()->currentDesktop()};
+            }
+        }
+    }
+    return checkSetStop(desktoprule);
+}
 
 bool Rules::applyMaximizeHoriz(MaximizeMode& mode, bool init) const
 {
@@ -776,7 +792,7 @@ CHECK_FORCE_RULE(OpacityActive, int)
 CHECK_FORCE_RULE(OpacityInactive, int)
 CHECK_RULE(IgnoreGeometry, bool)
 
-CHECK_RULE(Desktop, int)
+CHECK_RULE(Desktops, QVector<VirtualDesktop *>)
 CHECK_RULE(Activity, QStringList)
 CHECK_FORCE_RULE(Type, NET::WindowType)
 CHECK_RULE(MaximizeVert, MaximizeMode)
@@ -852,7 +868,7 @@ void AbstractClient::applyWindowRules()
         moveResize(geom);
     // MinSize, MaxSize handled by Geometry
     // IgnoreGeometry
-    setDesktop(desktop());
+    setDesktops(desktops());
     workspace()->sendClientToScreen(this, screen());
     setOnActivities(activities());
     // Type
