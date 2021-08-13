@@ -539,9 +539,9 @@ void AbstractClient::leaveDesktop(VirtualDesktop *virtualDesktop)
 
 void AbstractClient::setOnAllDesktops(bool b)
 {
-    if ((b && isOnAllDesktops()) ||
-            (!b && !isOnAllDesktops()))
+    if (b == isOnAllDesktops()) {
         return;
+    }
     if (b) {
         setDesktops({});
     } else {
