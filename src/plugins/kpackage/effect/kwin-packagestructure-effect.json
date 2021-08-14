@@ -21,7 +21,8 @@
                 "Name[sv]": "Vlad Zahorodnii",
                 "Name[uk]": "Влад Загородній",
                 "Name[vi]": "Vlad Zahorodnii",
-                "Name[x-test]": "xxVlad Zahorodniixx"
+                "Name[x-test]": "xxVlad Zahorodniixx",
+                "Name[zh_CN]": "Vlad Zahorodnii"
             }
         ],
         "Name": "KWin Effect",
@@ -42,6 +43,7 @@
         "Name[uk]": "Ефект KWin",
         "Name[vi]": "Hiệu ứng KWin",
         "Name[x-test]": "xxKWin Effectxx",
+        "Name[zh_CN]": "KWin 特效",
         "Version": "1"
     }
 }
