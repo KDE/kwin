@@ -8,6 +8,16 @@ install(PROGRAMS kwin-5.21-desktop-grid-click-behavior.py
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
 install(PROGRAMS kwin-5.21-no-swap-encourage.py
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
+install(PROGRAMS kwin-5.23-disable-translucency-effect.sh
+        DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
+install(PROGRAMS kwin-5.23-remove-flip-switch.py
+        DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
+install(PROGRAMS kwin-5.23-remove-cover-switch.py
+        DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
+install(PROGRAMS kwin-5.23-remove-cubeslide.py
+        DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
+install(PROGRAMS kwin-5.23-remove-xrender-backend.py
+        DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
 
 install(FILES kwinrules.upd
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
