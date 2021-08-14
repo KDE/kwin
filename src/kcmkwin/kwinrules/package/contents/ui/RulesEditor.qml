@@ -59,7 +59,7 @@ ScrollViewKCM {
             Kirigami.PlaceholderMessage {
                 id: hintArea
                 anchors.centerIn: parent
-                width: parent.width - (units.largeSpacing * 4)
+                width: parent.width - (Kirigami.Units.largeSpacing * 4)
                 text: i18n("No window properties changed")
                 explanation: xi18nc("@info", "Click the <interface>Add Property...</interface> button below to add some window properties that will be affected by the rule")
             }
@@ -107,7 +107,7 @@ ScrollViewKCM {
         QQC2.SpinBox {
             id: delaySpin
             enabled: detectButton.enabled
-            Layout.preferredWidth: Math.max(metricsInstant.advanceWidth, metricsAfter.advanceWidth) + Kirigami.Units.gridUnit * 2
+            Layout.preferredWidth: Math.max(metricsInstant.advanceWidth, metricsAfter.advanceWidth) + Kirigami.Units.gridUnit * 4
             from: 0
             to: 30
             textFromValue: (value, locale) => {

@@ -57,7 +57,7 @@ ScrollViewKCM {
         Kirigami.PlaceholderMessage {
             visible: ruleBookView.count === 0
             anchors.centerIn: parent
-            width: parent.width - (units.largeSpacing * 4)
+            width: parent.width - (Kirigami.Units.largeSpacing * 4)
             text: i18n("No rules for specific windows are currently set");
             explanation: xi18nc("@info", "Click the <interface>Add New...</interface> button below to add some")
         }
