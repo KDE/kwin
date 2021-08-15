@@ -120,20 +120,6 @@ public:
     void setSceneEglGlobalShareContext(EGLContext context);
 
     /**
-     * The EglConfig used by the compositing scene.
-     */
-    EGLConfig sceneEglConfig() const {
-        return m_eglConfig;
-    }
-    /**
-     * Sets the @p config used by the compositing scene.
-     * @see sceneEglConfig
-     */
-    void setSceneEglConfig(EGLConfig config) {
-        m_eglConfig = config;
-    }
-
-    /**
      * Implementing subclasses should provide a size in case the backend represents
      * a basic screen and uses the BasicScreens.
      *
@@ -547,7 +533,6 @@ private:
     int m_initialOutputCount = 1;
     qreal m_initialOutputScale = 1;
     EGLDisplay m_eglDisplay;
-    EGLConfig m_eglConfig = nullptr;
     EGLContext m_context = EGL_NO_CONTEXT;
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
     int m_hideCursorCounter = 0;

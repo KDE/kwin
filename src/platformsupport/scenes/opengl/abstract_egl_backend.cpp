@@ -40,7 +40,6 @@ static bool isOpenGLES_helper()
 static EGLContext ensureGlobalShareContext()
 {
     const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
-    const EGLConfig eglConfig = kwinApp()->platform()->sceneEglConfig();
 
     if (kwinApp()->platform()->sceneEglGlobalShareContext() != EGL_NO_CONTEXT) {
         return kwinApp()->platform()->sceneEglGlobalShareContext();
@@ -56,7 +55,7 @@ static EGLContext ensureGlobalShareContext()
         attribs = builder.build();
     }
 
-    s_globalShareContext = eglCreateContext(eglDisplay, eglConfig, EGL_NO_CONTEXT, attribs.data());
+    s_globalShareContext = eglCreateContext(eglDisplay, EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT, attribs.data());
     if (s_globalShareContext == EGL_NO_CONTEXT) {
         qCWarning(KWIN_OPENGL, "Failed to create global share context: 0x%x", eglGetError());
     }
@@ -108,7 +107,6 @@ void AbstractEglBackend::cleanup()
         eglDestroyContext(m_display, m_context);
         eglReleaseThread();
         kwinApp()->platform()->setSceneEglContext(EGL_NO_CONTEXT);
-        kwinApp()->platform()->setSceneEglConfig(nullptr);
     }
 }
 
@@ -144,6 +142,17 @@ bool AbstractEglBackend::initEglAPI()
     qCDebug(KWIN_OPENGL) << "EGL version: " << major << "." << minor;
     const QByteArray eglExtensions = eglQueryString(m_display, EGL_EXTENSIONS);
     setExtensions(eglExtensions.split(' '));
+
+    const QByteArray requiredExtensions[] = {
+        QByteArrayLiteral("EGL_KHR_no_config_context"),
+    };
+    for (const QByteArray &extensionName : requiredExtensions) {
+        if (!hasExtension(extensionName)) {
+            qCWarning(KWIN_OPENGL) << extensionName << "extension is unsupported";
+            return false;
+        }
+    }
+
     setSupportsSurfacelessContext(hasExtension(QByteArrayLiteral("EGL_KHR_surfaceless_context")));
     setSupportsNativeFence(hasExtension(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")));
     return true;
@@ -355,9 +364,6 @@ void AbstractEglBackend::setEglDisplay(const EGLDisplay &display) {
 void AbstractEglBackend::setConfig(const EGLConfig &config)
 {
     m_config = config;
-    if (isPrimary()) {
-        kwinApp()->platform()->setSceneEglConfig(config);
-    }
 }
 
 void AbstractEglBackend::setSurface(const EGLSurface &surface)
