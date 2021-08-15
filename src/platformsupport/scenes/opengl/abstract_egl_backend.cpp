@@ -106,7 +106,6 @@ void AbstractEglBackend::cleanup()
         doneCurrent();
         eglDestroyContext(m_display, m_context);
         eglReleaseThread();
-        kwinApp()->platform()->setSceneEglContext(EGL_NO_CONTEXT);
     }
 }
 
@@ -348,9 +347,6 @@ bool AbstractEglBackend::createContext()
         return false;
     }
     m_context = ctx;
-    if (isPrimary()) {
-        kwinApp()->platform()->setSceneEglContext(m_context);
-    }
     return true;
 }
 

@@ -94,18 +94,6 @@ public:
     EGLDisplay sceneEglDisplay() const;
     void setSceneEglDisplay(EGLDisplay display);
     /**
-     * The EGLContext used by the compositing scene.
-     */
-    virtual EGLContext sceneEglContext() const {
-        return m_context;
-    }
-    /**
-     * Sets the @p context used by the compositing scene.
-     */
-    void setSceneEglContext(EGLContext context) {
-        m_context = context;
-    }
-    /**
      * Returns the compositor-wide shared EGL context. This function may return EGL_NO_CONTEXT
      * if the underlying rendering backend does not use EGL.
      *
@@ -533,7 +521,6 @@ private:
     int m_initialOutputCount = 1;
     qreal m_initialOutputScale = 1;
     EGLDisplay m_eglDisplay;
-    EGLContext m_context = EGL_NO_CONTEXT;
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
     int m_hideCursorCounter = 0;
     bool m_supportsGammaControl = false;
