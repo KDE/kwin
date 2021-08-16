@@ -294,19 +294,9 @@ static const QString s_fbdevPlugin = QStringLiteral("KWinWaylandFbdevBackend");
 static const QString s_drmPlugin = QStringLiteral("KWinWaylandDrmBackend");
 static const QString s_virtualPlugin = QStringLiteral("KWinWaylandVirtualBackend");
 
-
-enum SpawnMode {
-    Standalone,
-    ReusedSocket
-};
-
-static QString automaticBackendSelection(SpawnMode spawnMode)
+static QString automaticBackendSelection()
 {
-    /* WAYLAND_DISPLAY is set by the kwin_wayland_wrapper, so we can't use it for automatic detection.
-    * If kwin_wayland_wrapper is used nested on wayland, we won't be in this path as
-    * it explicitly sets '--socket' which means a backend is set and we won't be in this path anyway
-    */
-    if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY") && spawnMode == Standalone) {
+    if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY")) {
         return s_waylandPlugin;
     }
     if (qEnvironmentVariableIsSet("DISPLAY")) {
@@ -476,7 +466,7 @@ int main(int argc, char * argv[])
     outputCountOption.setDefaultValue(QString::number(1));
 
     QCommandLineOption waylandSocketFdOption(QStringLiteral("wayland_fd"),
-                                    i18n("Wayland socket to use for incoming connections."),
+                                    i18n("Wayland socket to use for incoming connections. This can be combined with --socket to name the socket"),
                                     QStringLiteral("wayland_fd"));
 
     QCommandLineOption replaceOption(QStringLiteral("replace"),
@@ -640,7 +630,7 @@ int main(int argc, char * argv[])
 
     if (pluginName.isEmpty()) {
         std::cerr << "No backend specified through command line argument, trying auto resolution" << std::endl;
-        pluginName = KWin::automaticBackendSelection(parser.isSet(waylandSocketFdOption) ? KWin::ReusedSocket : KWin::Standalone);
+        pluginName = KWin::automaticBackendSelection();
     }
 
     auto pluginIt = std::find_if(availablePlugins.begin(), availablePlugins.end(),
@@ -667,20 +657,20 @@ int main(int argc, char * argv[])
     }
 
 
+    const QString socketName = parser.value(waylandSocketOption);
     if (parser.isSet(waylandSocketFdOption)) {
         bool ok;
         int fd = parser.value(waylandSocketFdOption).toInt(&ok);
         if (ok ) {
             // make sure we don't leak this FD to children
             fcntl(fd, F_SETFD, O_CLOEXEC);
-            server->display()->addSocketFileDescriptor(fd);
+            server->display()->addSocketFileDescriptor(fd, socketName);
         } else {
             std::cerr << "FATAL ERROR: could not parse socket FD" << std::endl;
             return 1;
         }
     } else {
-        const QString socketName = parser.value(waylandSocketOption);
-        // being empty is fine here, addSocketName will automatically pick one
+        // socketName empty is fine here, addSocketName will automatically pick one
         if (!server->display()->addSocketName(socketName)) {
             std::cerr << "FATAL ERROR: could not add wayland socket " << qPrintable(socketName) << std::endl;
             return 1;

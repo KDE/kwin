@@ -8,8 +8,8 @@
 */
 
 /**
- * This tiny executable creates a socket, then starts kwin passing it the FD to the wayland socket.
- * The WAYLAND_DISPLAY environment variable gets set here and passed to all spawned kwin instances.
+ * This tiny executable creates a socket, then starts kwin passing it the FD to the wayland socket
+ * along with the name of the socket to use
  * On any non-zero kwin exit kwin gets restarted.
  *
  * After restart kwin is relaunched but now with the KWIN_RESTART_COUNT env set to an incrementing counter
@@ -26,8 +26,6 @@
 
 #include "wl-socket.h"
 
-#define WAYLAND_ENV_NAME "WAYLAND_DISPLAY"
-
 class KWinWrapper : public QObject
 {
     Q_OBJECT
@@ -39,7 +37,6 @@ public:
 
 private:
     wl_socket *m_socket;
-    QString m_oldWaylandEnv;
 };
 
 KWinWrapper::KWinWrapper(QObject *parent)
@@ -49,13 +46,6 @@ KWinWrapper::KWinWrapper(QObject *parent)
     if (!m_socket) {
         qFatal("Could not create wayland socket");
     }
-
-    // copy the old WAYLAND_DISPLAY as we are about to overwrite it and kwin may need it
-    if (qEnvironmentVariableIsSet(WAYLAND_ENV_NAME)) {
-        m_oldWaylandEnv = qgetenv(WAYLAND_ENV_NAME);
-    }
-
-    qputenv(WAYLAND_ENV_NAME, wl_socket_get_display_name(m_socket));
 }
 
 KWinWrapper::~KWinWrapper()
@@ -96,10 +86,8 @@ int KWinWrapper::runKwin()
 
     QStringList args;
     args << "--wayland_fd" << QString::number(wl_socket_get_fd(m_socket));
+    args << "--socket" << QString::fromUtf8(wl_socket_get_display_name(m_socket));
 
-    if (!m_oldWaylandEnv.isEmpty()) {
-        args << "--wayland-display" << m_oldWaylandEnv;
-    }
     // attach our main process arguments
     // the first entry is dropped as it will be our program name
     args << qApp->arguments().mid(1);
