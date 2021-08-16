@@ -63,11 +63,6 @@
 namespace KWin
 {
 
-struct ShowOnDesktopActionData {
-    uint desktop;
-    bool moveToSingle;
-};
-
 UserActionsMenu::UserActionsMenu(QObject *parent)
     : QObject(parent)
     , m_menu(nullptr)
@@ -447,7 +442,6 @@ void UserActionsMenu::initDesktopPopup()
         }
 
         m_multipleDesktopsMenu = new QMenu(m_menu);
-        connect(m_multipleDesktopsMenu, &QMenu::triggered, this,   &UserActionsMenu::slotToggleOnVirtualDesktop);
         connect(m_multipleDesktopsMenu, &QMenu::aboutToShow, this, &UserActionsMenu::multipleDesktopsPopupAboutToShow);
 
         QAction *action = m_multipleDesktopsMenu->menuAction();
@@ -555,7 +549,7 @@ void UserActionsMenu::multipleDesktopsPopupAboutToShow()
 {
     if (!m_multipleDesktopsMenu)
         return;
-    const VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
 
     m_multipleDesktopsMenu->clear();
     if (m_client) {
@@ -563,7 +557,11 @@ void UserActionsMenu::multipleDesktopsPopupAboutToShow()
     }
 
     QAction *action = m_multipleDesktopsMenu->addAction(i18n("&All Desktops"));
-    action->setData(QVariant::fromValue(ShowOnDesktopActionData{0, false}));
+    connect(action, &QAction::triggered, this, [this]() {
+        if (m_client) {
+            m_client->setOnAllDesktops(!m_client->isOnAllDesktops());
+        }
+    });
     action->setCheckable(true);
     if (m_client && m_client->isOnAllDesktops()) {
         action->setChecked(true);
@@ -573,39 +571,70 @@ void UserActionsMenu::multipleDesktopsPopupAboutToShow()
 
     const uint BASE = 10;
 
-    for (uint i = 1; i <= vds->count(); ++i) {
+    const auto desktops = vds->desktops();
+    for (VirtualDesktop *desktop : desktops) {
+        const uint legacyId = desktop->x11DesktopNumber();
+
         QString basic_name(QStringLiteral("%1  %2"));
-        if (i < BASE) {
+        if (legacyId < BASE) {
             basic_name.prepend(QLatin1Char('&'));
         }
 
-        QAction *action = m_multipleDesktopsMenu->addAction(basic_name.arg(i).arg(vds->name(i).replace(QLatin1Char('&'), QStringLiteral("&&"))));
-        action->setData(QVariant::fromValue(ShowOnDesktopActionData{i, false}));
+        QAction *action = m_multipleDesktopsMenu->addAction(basic_name.arg(legacyId).arg(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&"))));
+        connect(action, &QAction::triggered, this, [this, desktop]() {
+            if (m_client) {
+                if (m_client->desktops().contains(desktop)) {
+                    m_client->leaveDesktop(desktop);
+                } else {
+                    m_client->enterDesktop(desktop);
+                }
+            }
+        });
         action->setCheckable(true);
-        if (m_client && !m_client->isOnAllDesktops() && m_client->isOnDesktop(i)) {
+        if (m_client && !m_client->isOnAllDesktops() && m_client->isOnDesktop(desktop)) {
             action->setChecked(true);
         }
     }
 
     m_multipleDesktopsMenu->addSeparator();
 
-    for (uint i = 1; i <= vds->count(); ++i) {
-        QString name = i18n("Move to %1 %2", i, vds->name(i));
+    for (VirtualDesktop *desktop : desktops) {
+        const uint legacyId = desktop->x11DesktopNumber();
+        QString name = i18n("Move to %1 %2", legacyId, desktop->name());
         QAction *action = m_multipleDesktopsMenu->addAction(name);
-        action->setData(QVariant::fromValue(ShowOnDesktopActionData{i, true}));
+        connect(action, &QAction::triggered, this, [this, desktop]() {
+            if (m_client) {
+                m_client->setDesktops({desktop});
+            }
+        });
     }
 
     m_multipleDesktopsMenu->addSeparator();
 
     bool allowNewDesktops = vds->count() < vds->maximum();
-    uint countPlusOne = vds->count() + 1;
 
     action = m_multipleDesktopsMenu->addAction(i18nc("Create a new desktop and add the window to that desktop", "Add to &New Desktop"));
-    action->setData(QVariant::fromValue(ShowOnDesktopActionData{countPlusOne, false}));
+    connect(action, &QAction::triggered, this, [this, vds]() {
+        if (!m_client) {
+            return;
+        }
+        VirtualDesktop *desktop = vds->createVirtualDesktop(vds->count());
+        if (desktop) {
+            m_client->enterDesktop(desktop);
+        }
+    });
     action->setEnabled(allowNewDesktops);
 
     action = m_multipleDesktopsMenu->addAction(i18nc("Create a new desktop and move the window to that desktop", "Move to New Desktop"));
-    action->setData(QVariant::fromValue(ShowOnDesktopActionData{countPlusOne, true}));
+    connect(action, &QAction::triggered, this, [this, vds]() {
+        if (!m_client) {
+            return;
+        }
+        VirtualDesktop *desktop = vds->createVirtualDesktop(vds->count());
+        if (desktop) {
+            m_client->setDesktops({desktop});
+        }
+    });
     action->setEnabled(allowNewDesktops);
 }
 
@@ -741,38 +770,6 @@ void UserActionsMenu::slotSendToDesktop(QAction *action)
     }
 
     ws->sendClientToDesktop(m_client.data(), desk, false);
-}
-
-void UserActionsMenu::slotToggleOnVirtualDesktop(QAction *action)
-{
-    if (m_client.isNull()) {
-        return;
-    }
-
-    if (!action->data().canConvert<ShowOnDesktopActionData>()) {
-        return;
-    }
-    ShowOnDesktopActionData data = action->data().value<ShowOnDesktopActionData>();
-
-    VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    if (data.desktop == 0) {
-        // the 'on_all_desktops' menu entry
-        m_client->setOnAllDesktops(!m_client->isOnAllDesktops());
-        return;
-    } else if (data.desktop > vds->count()) {
-        vds->setCount(data.desktop);
-    }
-
-    if (data.moveToSingle) {
-        m_client->setDesktop(data.desktop);
-    } else {
-	VirtualDesktop *virtualDesktop = VirtualDesktopManager::self()->desktopForX11Id(data.desktop);
-        if (m_client->desktops().contains(virtualDesktop)) {
-            m_client->leaveDesktop(virtualDesktop);
-        } else {
-            m_client->enterDesktop(virtualDesktop);
-        }
-    }
 }
 
 void UserActionsMenu::slotSendToScreen(QAction *action)
@@ -1833,5 +1830,3 @@ bool Workspace::shortcutAvailable(const QKeySequence &cut, AbstractClient* ignor
 }
 
 } // namespace
-
-Q_DECLARE_METATYPE(KWin::ShowOnDesktopActionData);

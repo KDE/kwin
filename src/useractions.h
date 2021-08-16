@@ -135,12 +135,6 @@ private Q_SLOTS:
      */
     void slotSendToDesktop(QAction *action);
     /**
-     * Toggle whether the Client is on a desktop (Wayland only)
-     *
-     * @param action Invoked Action containing the Desktop as data element
-     */
-    void slotToggleOnVirtualDesktop(QAction *action);
-    /**
      * Sends the Client to screen \a screen
      *
      * @param action Invoked Action containing the Screen as data element
