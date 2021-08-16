@@ -46,7 +46,7 @@ private:
     void checkWlSource();
 
     /**
-     * Returns of dsi is managed by our data bridge
+     * Returns if dsi is managed by our data bridge
      */
     bool ownsSelection(KWaylandServer::AbstractDataSource *dsi) const;
 
