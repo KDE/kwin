@@ -482,7 +482,7 @@ bool Workspace::activateNextClient(AbstractClient* c)
         }
         if (!get_focus) {
             // nope, ask the focus chain for the next candidate
-            get_focus = FocusChain::self()->nextForDesktop(c, desktop->x11DesktopNumber());
+            get_focus = FocusChain::self()->nextForDesktop(c, desktop);
         }
     }
 
@@ -506,7 +506,7 @@ void Workspace::setCurrentScreen(int new_screen)
         return;
     closeActivePopup();
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-    AbstractClient *get_focus = FocusChain::self()->getForActivation(desktop->x11DesktopNumber(), new_screen);
+    AbstractClient *get_focus = FocusChain::self()->getForActivation(desktop, new_screen);
     if (get_focus == nullptr)
         get_focus = findDesktop(true, desktop);
     if (get_focus != nullptr && get_focus != mostRecentlyActivatedClient())

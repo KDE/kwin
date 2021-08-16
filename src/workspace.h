@@ -558,9 +558,9 @@ private:
     void closeActivePopup();
     void updateClientArea(bool force);
     void resetClientAreas(uint desktopCount);
-    void updateClientVisibilityOnDesktopChange(uint newDesktop);
-    void activateClientOnNewDesktop(uint desktop);
-    AbstractClient *findClientToActivateOnDesktop(uint desktop);
+    void updateClientVisibilityOnDesktopChange(VirtualDesktop *newDesktop);
+    void activateClientOnNewDesktop(VirtualDesktop *desktop);
+    AbstractClient *findClientToActivateOnDesktop(VirtualDesktop *desktop);
     void removeAbstractClient(AbstractClient *client);
 
     struct Constraint
