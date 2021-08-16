@@ -1637,7 +1637,7 @@ void AbstractClient::setupWindowManagementInterface()
     //show/hide when the window enters/exits from desktop
     connect(w, &PlasmaWindowInterface::enterPlasmaVirtualDesktopRequested, this,
         [this] (const QString &desktopId) {
-            VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForId(desktopId.toUtf8());
+            VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForId(desktopId);
             if (vd) {
                 enterDesktop(vd);
             }
@@ -1651,7 +1651,7 @@ void AbstractClient::setupWindowManagementInterface()
     );
     connect(w, &PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested, this,
         [this] (const QString &desktopId) {
-            VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForId(desktopId.toUtf8());
+            VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForId(desktopId);
             if (vd) {
                 leaveDesktop(vd);
             }

@@ -458,7 +458,7 @@ void VirtualDesktopManagerDBusInterface::setCurrent(const QString &id)
         return;
     }
 
-    auto *vd = m_manager->desktopForId(id.toUtf8());
+    auto *vd = m_manager->desktopForId(id);
     if (vd) {
         m_manager->setCurrent(vd);
     }
@@ -506,7 +506,7 @@ void VirtualDesktopManagerDBusInterface::createDesktop(uint position, const QStr
 
 void VirtualDesktopManagerDBusInterface::setDesktopName(const QString &id, const QString &name)
 {
-    VirtualDesktop *vd = m_manager->desktopForId(id.toUtf8());
+    VirtualDesktop *vd = m_manager->desktopForId(id);
     if (!vd) {
         return;
     }
@@ -520,7 +520,7 @@ void VirtualDesktopManagerDBusInterface::setDesktopName(const QString &id, const
 
 void VirtualDesktopManagerDBusInterface::removeDesktop(const QString &id)
 {
-    m_manager->removeVirtualDesktop(id.toUtf8());
+    m_manager->removeVirtualDesktop(id);
 }
 
 PluginManagerDBusInterface::PluginManagerDBusInterface(PluginManager *manager)

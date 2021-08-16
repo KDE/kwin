@@ -26,9 +26,9 @@ namespace KWin {
 
 static bool s_loadingDesktopSettings = false;
 
-static QByteArray generateDesktopId()
+static QString generateDesktopId()
 {
-    return QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+    return QUuid::createUuid().toString(QUuid::WithoutBraces);
 }
 
 VirtualDesktop::VirtualDesktop(QObject *parent)
@@ -93,7 +93,7 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWaylandServer::PlasmaVi
         [this](const QString &id) {
             //here there can be some nice kauthorized check?
             //remove only from VirtualDesktopManager, the other connections will remove it from m_virtualDesktopManagement as well
-            removeVirtualDesktop(id.toUtf8());
+            removeVirtualDesktop(id);
         }
     );
 
@@ -115,7 +115,7 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWaylandServer::PlasmaVi
     );
 }
 
-void VirtualDesktop::setId(const QByteArray &id)
+void VirtualDesktop::setId(const QString &id)
 {
     Q_ASSERT(m_id.isEmpty());
     m_id = id;
@@ -427,7 +427,7 @@ VirtualDesktop *VirtualDesktopManager::desktopForX11Id(uint id) const
     return m_desktops.at(id - 1);
 }
 
-VirtualDesktop *VirtualDesktopManager::desktopForId(const QByteArray &id) const
+VirtualDesktop *VirtualDesktopManager::desktopForId(const QString &id) const
 {
     auto desk = std::find_if(
         m_desktops.constBegin(),
@@ -488,7 +488,7 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const
     return vd;
 }
 
-void VirtualDesktopManager::removeVirtualDesktop(const QByteArray &id)
+void VirtualDesktopManager::removeVirtualDesktop(const QString &id)
 {
     //don't end up without any desktop
     if (m_desktops.count() == 1) {
@@ -699,14 +699,14 @@ void VirtualDesktopManager::load()
         if (m_rootInfo) {
             m_rootInfo->setDesktopName(i, s.toUtf8().data());
         }
-        m_desktops[i-1]->setName(s.toUtf8().data());
+        m_desktops[i-1]->setName(s);
 
         const QString sId = group.readEntry(QStringLiteral("Id_%1").arg(i), QString());
 
         if (m_desktops[i-1]->id().isEmpty()) {
-            m_desktops[i-1]->setId(sId.isEmpty() ? generateDesktopId() : sId.toUtf8());
+            m_desktops[i-1]->setId(sId.isEmpty() ? generateDesktopId() : sId);
         } else {
-            Q_ASSERT(sId.isEmpty() || m_desktops[i-1]->id() == sId.toUtf8().data());
+            Q_ASSERT(sId.isEmpty() || m_desktops[i-1]->id() == sId);
         }
 
         // TODO: update desktop focus chain, why?
