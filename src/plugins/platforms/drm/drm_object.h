@@ -211,4 +211,4 @@ private:
 
 }
 
-QDebug& operator<<(QDebug& stream, const KWin::DrmObject*);
+QDebug operator<<(QDebug stream, const KWin::DrmObject*);
