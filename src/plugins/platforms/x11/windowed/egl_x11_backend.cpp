@@ -27,7 +27,12 @@ EglX11Backend::EglX11Backend(X11WindowedBackend *backend)
 {
 }
 
-EglX11Backend::~EglX11Backend() = default;
+EglX11Backend::~EglX11Backend()
+{
+    for (auto it = m_surfaces.begin(); it != m_surfaces.end(); ++it) {
+        eglDestroySurface(eglDisplay(), *it);
+    }
+}
 
 void EglX11Backend::init()
 {
@@ -35,13 +40,6 @@ void EglX11Backend::init()
 
     if (!isFailed()) {
         initWayland();
-    }
-}
-
-void EglX11Backend::cleanupSurfaces()
-{
-    for (auto it = m_surfaces.begin(); it != m_surfaces.end(); ++it) {
-        eglDestroySurface(eglDisplay(), *it);
     }
 }
 

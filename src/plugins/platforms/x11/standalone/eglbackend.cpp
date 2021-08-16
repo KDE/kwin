@@ -91,7 +91,7 @@ void EglBackend::screenGeometryChanged()
 QRegion EglBackend::beginFrame(int screenId)
 {
     Q_UNUSED(screenId)
-    makeCurrent();
+    makeContextCurrent(surface());
 
     const QSize size = screens()->size();
     glViewport(0, 0, size.width(), size.height());

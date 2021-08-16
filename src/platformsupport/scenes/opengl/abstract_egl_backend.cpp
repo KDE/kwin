@@ -100,19 +100,11 @@ void AbstractEglBackend::teardown()
 
 void AbstractEglBackend::cleanup()
 {
-    cleanupSurfaces();
     if (isPrimary()) {
         cleanupGL();
         doneCurrent();
         eglDestroyContext(m_display, m_context);
         eglReleaseThread();
-    }
-}
-
-void AbstractEglBackend::cleanupSurfaces()
-{
-    if (m_surface != EGL_NO_SURFACE) {
-        eglDestroySurface(m_display, m_surface);
     }
 }
 
@@ -244,7 +236,7 @@ bool AbstractEglBackend::makeCurrent()
         // Workaround to tell Qt that no QOpenGLContext is current
         context->doneCurrent();
     }
-    const bool current = eglMakeCurrent(m_display, m_surface, m_surface, m_context);
+    const bool current = eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, m_context);
     return current;
 }
 
@@ -360,11 +352,6 @@ void AbstractEglBackend::setEglDisplay(const EGLDisplay &display) {
 void AbstractEglBackend::setConfig(const EGLConfig &config)
 {
     m_config = config;
-}
-
-void AbstractEglBackend::setSurface(const EGLSurface &surface)
-{
-    m_surface = surface;
 }
 
 QSharedPointer<GLTexture> AbstractEglBackend::textureForOutput(AbstractOutput *requestedOutput) const

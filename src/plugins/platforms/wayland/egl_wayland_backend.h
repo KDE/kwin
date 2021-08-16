@@ -88,7 +88,6 @@ private:
 
     bool createEglWaylandOutput(AbstractOutput *output);
 
-    void cleanupSurfaces() override;
     void cleanupOutput(EglWaylandOutput *output);
 
     bool makeContextCurrent(EglWaylandOutput *output);

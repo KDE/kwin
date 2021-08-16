@@ -53,6 +53,11 @@ EglOnXBackend::EglOnXBackend(xcb_connection_t *connection, Display *display, xcb
 
 EglOnXBackend::~EglOnXBackend()
 {
+    if (m_surface) {
+        eglDestroySurface(eglDisplay(), m_surface);
+        m_surface = EGL_NO_SURFACE;
+    }
+
     if (isFailed() && m_overlayWindow) {
         m_overlayWindow->destroy();
     }
@@ -225,6 +230,16 @@ EGLSurface EglOnXBackend::createSurface(xcb_window_t window)
     }
 
     return surface;
+}
+
+EGLSurface EglOnXBackend::surface() const
+{
+    return m_surface;
+}
+
+void EglOnXBackend::setSurface(EGLSurface surface)
+{
+    m_surface = surface;
 }
 
 bool EglOnXBackend::initBufferConfigs()

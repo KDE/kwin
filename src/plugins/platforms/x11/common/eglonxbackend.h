@@ -35,6 +35,8 @@ public:
 protected:
     virtual bool createSurfaces();
     EGLSurface createSurface(xcb_window_t window);
+    EGLSurface surface() const;
+    void setSurface(EGLSurface surface);
     void setHavePlatformBase(bool have) {
         m_havePlatformBase = have;
     }
@@ -53,6 +55,7 @@ private:
      * @brief The OverlayWindow used by this Backend.
      */
     OverlayWindow *m_overlayWindow;
+    EGLSurface m_surface = EGL_NO_SURFACE;
     int surfaceHasSubPost;
     xcb_connection_t *m_connection;
     Display *m_x11Display;

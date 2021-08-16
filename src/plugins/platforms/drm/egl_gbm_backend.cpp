@@ -49,14 +49,11 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu)
 
 EglGbmBackend::~EglGbmBackend()
 {
-    cleanup();
-}
-
-void EglGbmBackend::cleanupSurfaces()
-{
     // shadow buffer needs context current for destruction
     makeCurrent();
     m_outputs.clear();
+
+    cleanup();
 }
 
 void EglGbmBackend::cleanupRenderData(Output::RenderData &render)

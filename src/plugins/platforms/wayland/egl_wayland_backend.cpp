@@ -128,15 +128,11 @@ EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
 
 EglWaylandBackend::~EglWaylandBackend()
 {
-    cleanup();
-}
-
-void EglWaylandBackend::cleanupSurfaces()
-{
     for (auto o : qAsConst(m_outputs)) {
         cleanupOutput(o);
     }
     m_outputs.clear();
+    cleanup();
 }
 
 bool EglWaylandBackend::createEglWaylandOutput(AbstractOutput *waylandOutput)
@@ -223,8 +219,6 @@ bool EglWaylandBackend::initRenderingContext()
     }
 
     auto *firstOutput = m_outputs.first();
-    // set our first surface as the one for the abstract backend, just to make it happy
-    setSurface(firstOutput->m_eglSurface);
     return makeContextCurrent(firstOutput);
 }
 

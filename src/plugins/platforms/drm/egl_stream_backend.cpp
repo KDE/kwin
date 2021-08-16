@@ -84,15 +84,12 @@ EglStreamBackend::EglStreamBackend(DrmBackend *drmBackend, DrmGpu *gpu)
 
 EglStreamBackend::~EglStreamBackend()
 {
-    cleanup();
-}
-
-void EglStreamBackend::cleanupSurfaces()
-{
     for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
         cleanupOutput(*it);
     }
     m_outputs.clear();
+
+    cleanup();
 }
 
 void EglStreamBackend::cleanupOutput(Output &o)
@@ -349,9 +346,6 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
         }
 
         if (o.eglSurface != EGL_NO_SURFACE) {
-            if (surface() == o.eglSurface) {
-                setSurface(eglSurface);
-            }
             eglDestroySurface(eglDisplay(), o.eglSurface);
         }
 

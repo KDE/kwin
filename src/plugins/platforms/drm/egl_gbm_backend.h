@@ -70,7 +70,6 @@ public:
     QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output) override;
 
 protected:
-    void cleanupSurfaces() override;
     void aboutToStartPainting(int screenId, const QRegion &damage) override;
 
 private:

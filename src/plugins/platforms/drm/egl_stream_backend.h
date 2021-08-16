@@ -46,9 +46,6 @@ public:
 
     QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output) override;
 
-protected:
-    void cleanupSurfaces() override;
-
 private:
     bool initializeEgl();
     bool initBufferConfigs();

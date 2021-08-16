@@ -50,9 +50,6 @@ public:
     EGLContext context() const {
         return m_context;
     }
-    EGLSurface surface() const {
-        return m_surface;
-    }
     EGLConfig config() const {
         return m_config;
     }
@@ -73,10 +70,8 @@ public:
 protected:
     AbstractEglBackend();
     void setEglDisplay(const EGLDisplay &display);
-    void setSurface(const EGLSurface &surface);
     void setConfig(const EGLConfig &config);
     void cleanup();
-    virtual void cleanupSurfaces();
     bool initEglAPI();
     void initKWinGL();
     void initBufferAge();
@@ -91,7 +86,6 @@ private:
 
     AbstractEglBackendFunctions m_functions;
     EGLDisplay m_display = EGL_NO_DISPLAY;
-    EGLSurface m_surface = EGL_NO_SURFACE;
     EGLContext m_context = EGL_NO_CONTEXT;
     EGLConfig m_config = nullptr;
     // note: m_dmaBuf is nullptr if this is not the primary backend

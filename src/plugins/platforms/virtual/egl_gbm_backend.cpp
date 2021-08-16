@@ -206,8 +206,6 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion, const 
         img.save(QStringLiteral("%1/%2.png").arg(m_backend->saveFrames()).arg(QString::number(m_frameCounter++)));
     }
     GLRenderTarget::popRenderTarget();
-
-    eglSwapBuffers(eglDisplay(), surface());
 }
 
 } // namespace
