@@ -50,11 +50,14 @@ Display::~Display()
     wl_display_destroy(d->display);
 }
 
-bool Display::addSocketFileDescriptor(int fileDescriptor)
+bool Display::addSocketFileDescriptor(int fileDescriptor, const QString &name)
 {
     if (wl_display_add_socket_fd(d->display, fileDescriptor)) {
         qCWarning(KWAYLAND_SERVER, "Failed to add %d fd to display", fileDescriptor);
         return false;
+    }
+    if (!name.isEmpty()) {
+        d->registerSocketName(name);
     }
     return true;
 }

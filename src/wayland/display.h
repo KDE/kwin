@@ -57,10 +57,11 @@ public:
      * returns @c true if the socket has been added successfully; otherwise returns @c false.
      *
      * The compositor can call this function even after the display has been started.
+     * @arg socketName can optionally be parsed to store the socket name represented by the given file-descriptor
      *
      * @see start()
      */
-    bool addSocketFileDescriptor(int fileDescriptor);
+    bool addSocketFileDescriptor(int fileDescriptor, const QString &socketName = QString());
     /**
      * Adds a UNIX socket with the specified @p name to the Wayland display. This function
      * returns @c true if the socket has been added successfully; otherwise returns @c false.
