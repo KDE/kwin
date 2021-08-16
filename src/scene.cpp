@@ -539,11 +539,6 @@ void Scene::doneOpenGLContextCurrent()
 {
 }
 
-bool Scene::supportsSurfacelessContext() const
-{
-    return false;
-}
-
 bool Scene::supportsNativeFence() const
 {
     return false;

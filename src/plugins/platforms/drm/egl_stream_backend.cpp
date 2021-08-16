@@ -261,10 +261,6 @@ void EglStreamBackend::init()
             setFailed("Failed to initialize EGL api");
             return;
         }
-        if (!supportsSurfacelessContext()) {
-            setFailed("EGL_KHR_surfaceless_context extension is unavailable!");
-            return;
-        }
         if (!initRenderingContext()) {
             setFailed("Failed to initialize rendering context");
             return;

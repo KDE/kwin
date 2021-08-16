@@ -39,7 +39,6 @@ public:
     OverlayWindow *overlayWindow() const override;
     bool makeOpenGLContextCurrent() override;
     void doneOpenGLContextCurrent() override;
-    bool supportsSurfacelessContext() const override;
     bool supportsNativeFence() const override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     virtual QMatrix4x4 projectionMatrix() const = 0;

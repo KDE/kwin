@@ -80,11 +80,6 @@ public:
     virtual void createPlatformCursor(QObject *parent = nullptr);
     virtual void warpPointer(const QPointF &globalPos);
     /**
-     * Whether our Compositing EGL display allows a surface less context
-     * so that a sharing context could be created.
-     */
-    bool supportsSurfacelessContext() const;
-    /**
      * Whether our Compositing EGL display supports creating native EGL fences.
      */
     bool supportsNativeFence() const;

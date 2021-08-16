@@ -144,6 +144,7 @@ bool AbstractEglBackend::initEglAPI()
 
     const QByteArray requiredExtensions[] = {
         QByteArrayLiteral("EGL_KHR_no_config_context"),
+        QByteArrayLiteral("EGL_KHR_surfaceless_context"),
     };
     for (const QByteArray &extensionName : requiredExtensions) {
         if (!hasExtension(extensionName)) {
@@ -152,7 +153,6 @@ bool AbstractEglBackend::initEglAPI()
         }
     }
 
-    setSupportsSurfacelessContext(hasExtension(QByteArrayLiteral("EGL_KHR_surfaceless_context")));
     setSupportsNativeFence(hasExtension(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")));
     return true;
 }

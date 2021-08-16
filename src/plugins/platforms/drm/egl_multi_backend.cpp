@@ -47,7 +47,6 @@ void EglMultiBackend::init()
         b->init();
     }
     // we only care about the rendering GPU
-    setSupportsSurfacelessContext(m_backends[0]->supportsSurfacelessContext());
     setSupportsBufferAge(m_backends[0]->supportsBufferAge());
     setSupportsPartialUpdate(m_backends[0]->supportsPartialUpdate());
     setSupportsSwapBuffersWithDamage(m_backends[0]->supportsSwapBuffersWithDamage());

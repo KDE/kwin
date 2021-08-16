@@ -107,11 +107,6 @@ bool EglGbmBackend::initRenderingContext()
 {
     initBufferConfigs();
 
-    if (!supportsSurfacelessContext()) {
-        qCWarning(KWIN_VIRTUAL) << "EGL_KHR_surfaceless_context extension is unavailable";
-        return false;
-    }
-
     if (!createContext()) {
         return false;
     }

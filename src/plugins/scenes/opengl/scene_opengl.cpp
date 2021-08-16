@@ -601,11 +601,6 @@ void SceneOpenGL::doneOpenGLContextCurrent()
     m_backend->doneCurrent();
 }
 
-bool SceneOpenGL::supportsSurfacelessContext() const
-{
-    return m_backend->supportsSurfacelessContext();
-}
-
 bool SceneOpenGL::supportsNativeFence() const
 {
     return m_backend->supportsNativeFence();

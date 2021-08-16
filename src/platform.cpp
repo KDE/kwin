@@ -464,18 +464,6 @@ void Platform::warpPointer(const QPointF &globalPos)
     Q_UNUSED(globalPos)
 }
 
-bool Platform::supportsSurfacelessContext() const
-{
-    Compositor *compositor = Compositor::self();
-    if (Q_UNLIKELY(!compositor)) {
-        return false;
-    }
-    if (Scene *scene = compositor->scene()) {
-        return scene->supportsSurfacelessContext();
-    }
-    return false;
-}
-
 bool Platform::supportsNativeFence() const
 {
     if (Compositor *compositor = Compositor::self()) {

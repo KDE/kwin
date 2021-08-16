@@ -265,40 +265,13 @@ void EGLPlatformContext::create(const QSurfaceFormat &format, EGLContext shareCo
     updateFormatFromContext();
 }
 
-static EGLSurface createDummyPbufferSurface(EGLDisplay display, const QSurfaceFormat &format)
-{
-    const EGLConfig config = configFromFormat(display, format, EGL_PBUFFER_BIT);
-    if (config == EGL_NO_CONFIG_KHR) {
-        return EGL_NO_SURFACE;
-    }
-
-    const EGLint attribs[] = {
-        EGL_WIDTH, 16,
-        EGL_HEIGHT, 16,
-        EGL_NONE
-    };
-
-    return eglCreatePbufferSurface(display, config, attribs);
-}
-
 void EGLPlatformContext::updateFormatFromContext()
 {
     const EGLSurface oldDrawSurface = eglGetCurrentSurface(EGL_DRAW);
     const EGLSurface oldReadSurface = eglGetCurrentSurface(EGL_READ);
     const EGLContext oldContext = eglGetCurrentContext();
 
-    EGLSurface dummySurface;
-    if (!kwinApp()->platform()->supportsSurfacelessContext()) {
-        dummySurface = createDummyPbufferSurface(m_eglDisplay, m_format);
-        if (dummySurface == EGL_NO_SURFACE) {
-            qCWarning(KWIN_QPA, "Failed to create dummy surface: 0x%x", eglGetError());
-            return;
-        }
-    } else {
-        dummySurface = EGL_NO_SURFACE;
-    }
-
-    eglMakeCurrent(m_eglDisplay, dummySurface, dummySurface, m_context);
+    eglMakeCurrent(m_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, m_context);
 
     const char *version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
     int major, minor;
@@ -337,10 +310,6 @@ void EGLPlatformContext::updateFormatFromContext()
     }
 
     eglMakeCurrent(m_eglDisplay, oldDrawSurface, oldReadSurface, oldContext);
-
-    if (dummySurface != EGL_NO_SURFACE) {
-        eglDestroySurface(m_eglDisplay, dummySurface);
-    }
 }
 
 } // namespace QPA

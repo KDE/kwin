@@ -117,10 +117,6 @@ public:
         return m_haveSwapBuffersWithDamage;
     }
 
-    bool supportsSurfacelessContext() const
-    {
-        return m_haveSurfacelessContext;
-    }
     bool supportsNativeFence() const
     {
         return m_haveNativeFence;
@@ -187,11 +183,6 @@ protected:
         m_haveSwapBuffersWithDamage = value;
     }
 
-    void setSupportsSurfacelessContext(bool value)
-    {
-        m_haveSurfacelessContext = value;
-    }
-
     void setSupportsNativeFence(bool value)
     {
         m_haveNativeFence = value;
@@ -220,10 +211,6 @@ private:
      */
     bool m_havePartialUpdate = false;
     bool m_haveSwapBuffersWithDamage = false;
-    /**
-     * @brief Whether the backend supports EGL_KHR_surfaceless_context.
-     */
-    bool m_haveSurfacelessContext = false;
     /**
      * @brief Whether the backend supports EGL_ANDROID_native_fence_sync.
      */

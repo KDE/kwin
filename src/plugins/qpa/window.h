@@ -46,7 +46,6 @@ public:
 
 private:
     void createFBO();
-    void createPbuffer();
     void map();
     void unmap();
 
@@ -54,7 +53,6 @@ private:
     QPointer<InternalClient> m_handle;
     QSharedPointer<QOpenGLFramebufferObject> m_contentFBO;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
-    EGLSurface m_eglSurface = EGL_NO_SURFACE;
     quint32 m_windowId;
     bool m_resized = false;
     qreal m_scale = 1;
