@@ -1235,7 +1235,7 @@ void XdgToplevelClient::initialize()
         needsPlacement = false;
     }
     if (needsPlacement) {
-        const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
+        const QRect area = workspace()->clientArea(PlacementArea, this, Screens::self()->current());
         placeIn(area);
     }
 
@@ -1566,7 +1566,7 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
 
     if (set) {
         const int screen = m_fullScreenRequestedOutput ? kwinApp()->platform()->enabledOutputs().indexOf(m_fullScreenRequestedOutput) : screens()->number(moveResizeGeometry().center());
-        moveResize(workspace()->clientArea(FullScreenArea, screen, desktop()));
+        moveResize(workspace()->clientArea(FullScreenArea, this, screen));
     } else {
         m_fullScreenRequestedOutput.clear();
         if (fullscreenGeometryRestore().isValid()) {
@@ -1600,8 +1600,8 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
     }
 
     const QRect clientArea = isElectricBorderMaximizing() ?
-        workspace()->clientArea(MaximizeArea, Cursors::self()->mouse()->pos(), desktop()) :
-        workspace()->clientArea(MaximizeArea, moveResizeGeometry().center(), desktop());
+        workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos()) :
+        workspace()->clientArea(MaximizeArea, this, moveResizeGeometry().center());
 
     const MaximizeMode oldMode = m_requestedMaximizeMode;
     const QRect oldGeometry = moveResizeGeometry();
@@ -2058,7 +2058,7 @@ void XdgPopupClient::initialize()
 
     updateReactive();
 
-    const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
+    const QRect area = workspace()->clientArea(PlacementArea, this, Screens::self()->current());
     placeIn(area);
     scheduleConfigure();
 }

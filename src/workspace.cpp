@@ -792,7 +792,7 @@ void Workspace::addShellClient(AbstractClient *client)
     client->updateLayer();
 
     if (client->isPlaceable()) {
-        const QRect area = clientArea(PlacementArea, Screens::self()->current(), client->desktop());
+        const QRect area = clientArea(PlacementArea, client, Screens::self()->current());
         bool placementDone = false;
         if (client->isRequestedFullScreen()) {
             placementDone = true;
@@ -1920,7 +1920,7 @@ void Workspace::addInternalClient(InternalClient *client)
     client->updateLayer();
 
     if (client->isPlaceable()) {
-        const QRect area = clientArea(PlacementArea, screens()->current(), client->desktop());
+        const QRect area = clientArea(PlacementArea, client, screens()->current());
         client->placeIn(area);
     }
 
@@ -2387,6 +2387,21 @@ QRect Workspace::clientArea(clientAreaOption opt, const AbstractClient* c) const
     return clientArea(opt, c->frameGeometry().center(), c->desktop());
 }
 
+QRect Workspace::clientArea(clientAreaOption opt, const AbstractClient *client, const AbstractOutput *output) const
+{
+    return clientArea(opt, client, output->geometry().center());
+}
+
+QRect Workspace::clientArea(clientAreaOption opt, const AbstractClient *client, int screen) const
+{
+    return clientArea(opt, screen, client->desktop());
+}
+
+QRect Workspace::clientArea(clientAreaOption opt, const AbstractClient *client, const QPoint &pos) const
+{
+    return clientArea(opt, client, screens()->number(pos));
+}
+
 static QRegion strutsToRegion(int desktop, StrutAreas areas, const QVector<StrutRects> &struts)
 {
     if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
@@ -2446,7 +2461,7 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
     QRect maxRect;
     int guideMaximized = MaximizeRestore;
     if (c->maximizeMode() != MaximizeRestore) {
-        maxRect = clientArea(MaximizeArea, pos + c->rect().center(), c->desktop());
+        maxRect = clientArea(MaximizeArea, c, pos + c->rect().center());
         QRect geo = c->frameGeometry();
         if (c->maximizeMode() & MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
             guideMaximized |= MaximizeHorizontal;
@@ -2463,7 +2478,7 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
         const int screen = screens()->number(pos + c->rect().center());
         if (maxRect.isNull())
-            maxRect = clientArea(MovementArea, screen, c->desktop());
+            maxRect = clientArea(MovementArea, c, screen);
         const int xmin = maxRect.left();
         const int xmax = maxRect.right() + 1;             //desk size
         const int ymin = maxRect.top();
@@ -2633,7 +2648,7 @@ QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int m
     if (options->windowSnapZone() || options->borderSnapZone()) {  // || options->centerSnapZone )
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
 
-        const QRect maxRect = clientArea(MovementArea, c->rect().center(), c->desktop());
+        const QRect maxRect = clientArea(MovementArea, c, c->rect().center());
         const int xmin = maxRect.left();
         const int xmax = maxRect.right();               //desk size
         const int ymin = maxRect.top();

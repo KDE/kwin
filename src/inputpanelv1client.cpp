@@ -71,7 +71,7 @@ void KWin::InputPanelV1Client::reposition()
                 if (waylandServer()->isScreenLocked()) {
                     availableArea = m_output->geometry();
                 } else {
-                    availableArea = workspace()->clientArea(MaximizeArea, m_output, desktop());
+                    availableArea = workspace()->clientArea(MaximizeArea, this, m_output);
                 }
                 QRect geo(availableArea.topLeft(), panelSize);
                 geo.translate((availableArea.width() - panelSize.width())/2, availableArea.height() - panelSize.height());

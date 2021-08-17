@@ -364,7 +364,7 @@ void Placement::reinitCascading(int desktop)
 
 QPoint Workspace::cascadeOffset(const AbstractClient *c) const
 {
-    QRect area = clientArea(PlacementArea, c->frameGeometry().center(), c->desktop());
+    QRect area = clientArea(PlacementArea, c, c->frameGeometry().center());
     return QPoint(area.width()/48, area.height()/48);
 }
 
@@ -729,7 +729,8 @@ void AbstractClient::growHorizontal()
         // check that it hasn't grown outside of the area, due to size increments
         // TODO this may be wrong?
         if (workspace()->clientArea(MovementArea,
-                                   QPoint((x() + newright) / 2, moveResizeGeometry().center().y()), desktop()).right() >= newright)
+                                    this,
+                                    QPoint((x() + newright) / 2, moveResizeGeometry().center().y())).right() >= newright)
             geom.setRight(newright);
     }
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedW));
@@ -776,7 +777,8 @@ void AbstractClient::growVertical()
         int newbottom = workspace()->packPositionDown(this, geom.bottom() + resizeIncrements().height() - 1, true);
         // check that it hasn't grown outside of the area, due to size increments
         if (workspace()->clientArea(MovementArea,
-                                   QPoint(moveResizeGeometry().center().x(), (y() + newbottom) / 2), desktop()).bottom() >= newbottom)
+                                    this,
+                                    QPoint(moveResizeGeometry().center().x(), (y() + newbottom) / 2)).bottom() >= newbottom)
             geom.setBottom(newbottom);
     }
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
@@ -838,7 +840,8 @@ int Workspace::packPositionLeft(const AbstractClient *client, int oldX, bool lef
     int newX = clientArea(MaximizeArea, client).left();
     if (oldX <= newX) { // try another Xinerama screen
         newX = clientArea(MaximizeArea,
-                          QPoint(client->frameGeometry().left() - 1, client->frameGeometry().center().y()), client->desktop()).left();
+                          client,
+                          QPoint(client->frameGeometry().left() - 1, client->frameGeometry().center().y())).left();
     }
     if (client->titlebarPosition() != AbstractClient::PositionLeft) {
         const int right = newX - client->frameMargins().left();
@@ -871,7 +874,8 @@ int Workspace::packPositionRight(const AbstractClient *client, int oldX, bool ri
     int newX = clientArea(MaximizeArea, client).right();
     if (oldX >= newX) { // try another Xinerama screen
         newX = clientArea(MaximizeArea,
-                          QPoint(client->frameGeometry().right() + 1, client->frameGeometry().center().y()), client->desktop()).right();
+                          client,
+                          QPoint(client->frameGeometry().right() + 1, client->frameGeometry().center().y())).right();
     }
     if (client->titlebarPosition() != AbstractClient::PositionRight) {
         const int right = newX + client->frameMargins().right();
@@ -904,7 +908,8 @@ int Workspace::packPositionUp(const AbstractClient *client, int oldY, bool topEd
     int newY = clientArea(MaximizeArea, client).top();
     if (oldY <= newY) { // try another Xinerama screen
         newY = clientArea(MaximizeArea,
-                          QPoint(client->frameGeometry().center().x(), client->frameGeometry().top() - 1), client->desktop()).top();
+                          client,
+                          QPoint(client->frameGeometry().center().x(), client->frameGeometry().top() - 1)).top();
     }
     if (client->titlebarPosition() != AbstractClient::PositionTop) {
         const int top = newY - client->frameMargins().top();
@@ -937,7 +942,8 @@ int Workspace::packPositionDown(const AbstractClient *client, int oldY, bool bot
     int newY = clientArea(MaximizeArea, client).bottom();
     if (oldY >= newY) { // try another Xinerama screen
         newY = clientArea(MaximizeArea,
-                          QPoint(client->frameGeometry().center().x(), client->frameGeometry().bottom() + 1), client->desktop()).bottom();
+                          client,
+                          QPoint(client->frameGeometry().center().x(), client->frameGeometry().bottom() + 1)).bottom();
     }
     if (client->titlebarPosition() != AbstractClient::PositionBottom) {
         const int bottom = newY + client->frameMargins().bottom();

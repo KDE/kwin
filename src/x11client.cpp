@@ -604,12 +604,12 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     QRect area;
     bool partial_keep_in_area = isMapped || session;
     if (isMapped || session) {
-        area = workspace()->clientArea(FullArea, geom.center(), desktop());
+        area = workspace()->clientArea(FullArea, this, geom.center());
         checkOffscreenPosition(&geom, area);
     } else {
         int screen = asn_data.xinerama() == -1 ? screens()->current() : asn_data.xinerama();
         screen = rules()->checkScreen(screen, !isMapped);
-        area = workspace()->clientArea(PlacementArea, screens()->geometry(screen).center(), desktop());
+        area = workspace()->clientArea(PlacementArea, this, screens()->geometry(screen).center());
     }
 
     if (isDesktop())
@@ -648,7 +648,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         if (m_geometryHints.hasPosition()) {
             placementDone = true;
             // Disobey xinerama placement option for now (#70943)
-            area = workspace()->clientArea(PlacementArea, geom.center(), desktop());
+            area = workspace()->clientArea(PlacementArea, this, geom.center());
         }
     }
 
@@ -682,7 +682,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         placementDone = true;
         // Don't keep inside workarea if the window has specially configured position
         partial_keep_in_area = true;
-        area = workspace()->clientArea(FullArea, geom.center(), desktop());
+        area = workspace()->clientArea(FullArea, this, geom.center());
     }
     if (!placementDone) {
         // Placement needs to be after setting size
@@ -707,8 +707,8 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         if (isMaximizable() && (width() >= area.width() || height() >= area.height())) {
             // Window is too large for the screen, maximize in the
             // directions necessary
-            const QSize ss = workspace()->clientArea(ScreenArea, area.center(), desktop()).size();
-            const QRect fsa = workspace()->clientArea(FullArea, geom.center(), desktop());
+            const QSize ss = workspace()->clientArea(ScreenArea, this, area.center()).size();
+            const QRect fsa = workspace()->clientArea(FullArea, this, geom.center());
             const QSize cs = clientSize();
             int pseudo_max = ((info->state() & NET::MaxVert) ? MaximizeVertical : 0) |
                              ((info->state() & NET::MaxHoriz) ? MaximizeHorizontal : 0);
@@ -4132,7 +4132,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
 
     QRect clientArea;
     if (isElectricBorderMaximizing())
-        clientArea = workspace()->clientArea(MaximizeArea, Cursors::self()->mouse()->pos(), desktop());
+        clientArea = workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos());
     else
         clientArea = workspace()->clientArea(MaximizeArea, this);
 
@@ -4336,7 +4336,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
                 const bool overWidth  = r.width()  > clientArea.width();
                 if (closeWidth || closeHeight) {
                     Position titlePos = titlebarPosition();
-                    const QRect screenArea = workspace()->clientArea(ScreenArea, clientArea.center(), desktop());
+                    const QRect screenArea = workspace()->clientArea(ScreenArea, this, clientArea.center());
                     if (closeHeight) {
                         bool tryBottom = titlePos == PositionBottom;
                         if ((overHeight && titlePos == PositionTop) ||
