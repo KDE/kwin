@@ -455,8 +455,5 @@ configure_package_config_file(KWinDBusInterfaceConfig.cmake.in
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake
     DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 
-
-# plasma-kwin_wayland.service.in is currently disabled as plasma-workspace currently launches
-# kwin-wayland explicitly. Porting this is currently blocked on propogating DISPLAY
-ecm_install_configured_files(INPUT plasma-kwin_x11.service.in @ONLY
+ecm_install_configured_files(INPUT plasma-kwin_x11.service.in plasma-kwin_wayland.service.in @ONLY
             DESTINATION ${SYSTEMD_USER_UNIT_INSTALL_DIR})
