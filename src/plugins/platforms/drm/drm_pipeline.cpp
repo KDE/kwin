@@ -309,7 +309,7 @@ bool DrmPipeline::checkTestBuffer()
 
 bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot)
 {
-    if (!m_cursor.dirty && m_cursor.buffer == buffer && m_cursor.hotspot == hotspot) {
+    if (!m_cursor.dirtyBo && m_cursor.buffer == buffer && m_cursor.hotspot == hotspot) {
         return true;
     }
     const QSize &s = buffer ? buffer->size() : QSize(64, 64);
@@ -323,21 +323,21 @@ bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const Q
         return false;
     }
     m_cursor.buffer = buffer;
-    m_cursor.dirty = false;
+    m_cursor.dirtyBo = false;
     m_cursor.hotspot = hotspot;
     return true;
 }
 
 bool DrmPipeline::moveCursor(QPoint pos)
 {
-    if (!m_cursor.dirty && m_cursor.pos == pos) {
+    if (!m_cursor.dirtyPos && m_cursor.pos == pos) {
         return true;
     }
     if (drmModeMoveCursor(m_gpu->fd(), m_crtc->id(), pos.x(), pos.y()) != 0) {
         m_cursor.pos = pos;
         return false;
     }
-    m_cursor.dirty = false;
+    m_cursor.dirtyPos = false;
     return true;
 }
 
@@ -546,7 +546,8 @@ void DrmPipeline::updateProperties()
     }
     // with legacy we don't know what happened to the cursor after VT switch
     // so make sure it gets set again
-    m_cursor.dirty = true;
+    m_cursor.dirtyBo = true;
+    m_cursor.dirtyPos = true;
 }
 
 bool DrmPipeline::isConnected() const

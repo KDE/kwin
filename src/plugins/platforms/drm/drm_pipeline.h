@@ -107,10 +107,11 @@ private:
     bool m_active = true;
     bool m_legacyNeedsModeset = true;
     struct {
-        QPoint pos = QPoint(100, 100);
+        QPoint pos;
         QPoint hotspot;
         QSharedPointer<DrmDumbBuffer> buffer;
-        bool dirty = true;// we don't know what the current state is
+        bool dirtyBo = true;
+        bool dirtyPos = true;
     } m_cursor;
 
     QVector<DrmObject*> m_allObjects;
