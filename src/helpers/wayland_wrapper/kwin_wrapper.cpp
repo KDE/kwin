@@ -159,6 +159,7 @@ void sigtermHandler(int)
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
+    app.setQuitLockEnabled(false); // don't exit when the first KJob finishes
 
     signal(SIGTERM, sigtermHandler);
 
