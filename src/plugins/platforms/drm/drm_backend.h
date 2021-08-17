@@ -105,6 +105,7 @@ private:
     DrmVirtualOutput *m_placeHolderOutput = nullptr;
 
     bool m_active = false;
+    const QStringList m_explicitGpus;
     QVector<DrmGpu*> m_gpus;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
 };
