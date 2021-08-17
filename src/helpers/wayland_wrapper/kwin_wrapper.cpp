@@ -23,8 +23,8 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QProcess>
-
 #include <QTemporaryFile>
+#include <QDBusConnection>
 
 #include <signal.h>
 
@@ -32,6 +32,7 @@
 #include "xwaylandsocket.h"
 #include "xauthority.h"
 #include "wrapper_logging.h"
+#include "updatelaunchenvjob.h"
 
 class KWinWrapper : public QObject
 {
@@ -133,6 +134,21 @@ void KWinWrapper::run()
     });
 
     m_kwinProcess->start();
+
+    QProcessEnvironment env;
+    env.insert("WAYLAND_DISPLAY", QString::fromUtf8(wl_socket_get_display_name(m_socket)));
+    if (m_xwlSocket) {
+            env.insert("DISPLAY", m_xwlSocket->name());
+            if (m_xauthorityFile.open()) {
+                env.insert("XAUTHORITY", m_xauthorityFile.fileName());
+            }
+    }
+
+    auto envSyncJob = new UpdateLaunchEnvJob(env);
+    connect(envSyncJob, &KJob::finished, this, []() {
+        // The service name is merely there to indicate to the world that we're up and ready with all envs exported
+        QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWinWrapper"));
+    });
 }
 
 void sigtermHandler(int)
@@ -149,7 +165,7 @@ int main(int argc, char **argv)
     KWinWrapper wrapper(&app);
     wrapper.run();
 
-    return app.exec();;
+    return app.exec();
 }
 
 #include "kwin_wrapper.moc"
