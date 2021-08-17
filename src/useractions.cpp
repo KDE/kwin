@@ -1068,8 +1068,15 @@ void Workspace::initShortcuts()
     DEF2("Window On All Desktops", I18N_NOOP("Keep Window on All Desktops"),
         0, slotWindowOnAllDesktops);
 
-    for (int i = 1; i < 21; ++i) {
-        DEF5(I18N_NOOP("Window to Desktop %1"),        0, std::bind(&Workspace::slotWindowToDesktop, this, i), i);
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    for (uint i = 0; i < vds->maximum(); ++i) {
+        auto handler = [this, i]() {
+            const QVector<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
+            if (i < uint(desktops.count())) {
+                slotWindowToDesktop(desktops[i]);
+            }
+        };
+        DEF5(I18N_NOOP("Window to Desktop %1"),        0, handler, i + 1);
     }
     DEF(I18N_NOOP("Window to Next Desktop"),           0, slotWindowToNextDesktop);
     DEF(I18N_NOOP("Window to Previous Desktop"),       0, slotWindowToPreviousDesktop);
@@ -1105,7 +1112,7 @@ void Workspace::initShortcuts()
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox::self()->initShortcuts();
 #endif
-    VirtualDesktopManager::self()->initShortcuts();
+    vds->initShortcuts();
     m_userActionsMenu->discard(); // so that it's recreated next time
 }
 
@@ -1283,14 +1290,10 @@ static uint senderValue(QObject *sender)
 
 #define USABLE_ACTIVE_CLIENT (active_client && !(active_client->isDesktop() || active_client->isDock()))
 
-void Workspace::slotWindowToDesktop(uint i)
+void Workspace::slotWindowToDesktop(VirtualDesktop *desktop)
 {
     if (USABLE_ACTIVE_CLIENT) {
-        if (i < 1)
-            return;
-
-        if (i >= 1 && i <= VirtualDesktopManager::self()->count())
-            sendClientToDesktop(active_client, i, true);
+        sendClientToDesktop(active_client, desktop->x11DesktopNumber(), true);
     }
 }
 
@@ -1528,14 +1531,14 @@ void activeClientToDesktop()
 {
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     Workspace *ws = Workspace::self();
-    const int current = vds->current();
+    VirtualDesktop *current = vds->currentDesktop();
     Direction functor;
-    const int d = functor(current, options->isRollOverDesktops());
-    if (d == current) {
+    VirtualDesktop *newCurrent = functor(current, options->isRollOverDesktops());
+    if (newCurrent == current) {
         return;
     }
     ws->setMoveResizeClient(ws->activeClient());
-    vds->setCurrent(d);
+    vds->setCurrent(newCurrent);
     ws->setMoveResizeClient(nullptr);
 }
 

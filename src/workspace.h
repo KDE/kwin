@@ -413,7 +413,7 @@ public Q_SLOTS:
     void performWindowOperation(KWin::AbstractClient* c, Options::WindowOperation op);
     // Keybindings
     //void slotSwitchToWindow( int );
-    void slotWindowToDesktop(uint i);
+    void slotWindowToDesktop(VirtualDesktop *desktop);
 
     //void slotWindowToListPosition( int );
     void slotSwitchToScreen();
