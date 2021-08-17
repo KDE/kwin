@@ -23,8 +23,10 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QProcess>
-
 #include <QTemporaryFile>
+#include <QDBusConnection>
+
+#include <UpdateLaunchEnvironmentJob>
 
 #include <signal.h>
 
@@ -119,8 +121,6 @@ void KWinWrapper::run()
             qApp->quit();
             return;
         } else if (exitCode == 133) {
-            // Exit code 133 asks for kwin_wayland to restart itself,
-            // so we make sure the crash counter is fresh at 0.
             m_crashCount = 0;
         } else {
             m_crashCount++;
@@ -136,6 +136,21 @@ void KWinWrapper::run()
     });
 
     m_kwinProcess->start();
+
+    QProcessEnvironment env;
+    env.insert("WAYLAND_DISPLAY", QString::fromUtf8(wl_socket_get_display_name(m_socket)));
+    if (m_xwlSocket) {
+        env.insert("DISPLAY", m_xwlSocket->name());
+        if (m_xauthorityFile.open()) {
+            env.insert("XAUTHORITY", m_xauthorityFile.fileName());
+        }
+    }
+
+    auto envSyncJob = new UpdateLaunchEnvironmentJob(env);
+    connect(envSyncJob, &UpdateLaunchEnvironmentJob::finished, this, []() {
+        // The service name is merely there to indicate to the world that we're up and ready with all envs exported
+        QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWinWrapper"));
+    });
 }
 
 void sigtermHandler(int)
@@ -146,6 +161,7 @@ void sigtermHandler(int)
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
+    app.setQuitLockEnabled(false); // don't exit when the first KJob finishes
 
     signal(SIGTERM, sigtermHandler);
 
