@@ -167,7 +167,7 @@ bool Xwayland::startInternal()
             #if defined(HAVE_XWAYLAND_LISTENFD)
                 arguments << QStringLiteral("-listenfd") << QString::number(dupSocket);
             #else
-                arguments << QStringLiteral("-listen") << QString::number(dupSocket)
+                arguments << QStringLiteral("-listen") << QString::number(dupSocket);
             #endif
         }
     }
