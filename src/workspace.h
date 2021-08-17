@@ -531,7 +531,7 @@ private:
     template <typename T, typename Slot>
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, const QVariant &data = QVariant());
     void setupWindowShortcut(AbstractClient* c);
-    bool switchWindow(AbstractClient *c, Direction direction, QPoint curPos, int desktop);
+    bool switchWindow(AbstractClient *c, Direction direction, QPoint curPos, VirtualDesktop *desktop);
 
     void propagateClients(bool propagate_new_clients);   // Called only from updateStackingOrder
     QList<Toplevel *> constrainedStackingOrder();

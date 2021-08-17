@@ -1586,12 +1586,12 @@ void Workspace::switchWindow(Direction direction)
     if (!active_client)
         return;
     AbstractClient *c = active_client;
-    int desktopNumber = c->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : c->desktop();
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
     // Centre of the active window
     QPoint curPos(c->x() + c->width() / 2, c->y() + c->height() / 2);
 
-    if (!switchWindow(c, direction, curPos, desktopNumber)) {
+    if (!switchWindow(c, direction, curPos, desktop)) {
         auto opposite = [&] {
             switch(direction) {
             case DirectionNorth:
@@ -1607,11 +1607,11 @@ void Workspace::switchWindow(Direction direction)
             }
         };
 
-        switchWindow(c, direction, opposite(), desktopNumber);
+        switchWindow(c, direction, opposite(), desktop);
     }
 }
 
-bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curPos, int d)
+bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curPos, VirtualDesktop *desktop)
 {
     AbstractClient *switchTo = nullptr;
     int bestScore = 0;
@@ -1623,7 +1623,7 @@ bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curP
             continue;
         }
         if (client->wantsTabFocus() && *i != c &&
-                client->isOnDesktop(d) && !client->isMinimized() && (*i)->isOnCurrentActivity()) {
+                client->isOnDesktop(desktop) && !client->isMinimized() && (*i)->isOnCurrentActivity()) {
             // Centre of the other window
             const QPoint other(client->x() + client->width() / 2, client->y() + client->height() / 2);
 
