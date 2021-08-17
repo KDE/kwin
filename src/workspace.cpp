@@ -1261,7 +1261,7 @@ void Workspace::sendClientToDesktop(AbstractClient* c, int desk, bool dont_activ
     if ((desk < 1 && desk != NET::OnAllDesktops) || desk > static_cast<int>(VirtualDesktopManager::self()->count()))
         return;
     int old_desktop = c->desktop();
-    bool was_on_desktop = c->isOnDesktop(desk) || c->isOnAllDesktops();
+    const bool wasOnCurrent = c->isOnCurrentDesktop();
     c->setDesktop(desk);
     if (c->desktop() != desk)   // No change or desktop forced
         return;
@@ -1269,7 +1269,7 @@ void Workspace::sendClientToDesktop(AbstractClient* c, int desk, bool dont_activ
 
     if (c->isOnCurrentDesktop()) {
         if (c->wantsTabFocus() && options->focusPolicyIsReasonable() &&
-                !was_on_desktop && // for stickyness changes
+                !wasOnCurrent && // for stickyness changes
                 !dont_activate)
             requestFocus(c);
         else
