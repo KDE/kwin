@@ -59,6 +59,7 @@ DrmBackend::DrmBackend(QObject *parent)
     , m_udev(new Udev)
     , m_udevMonitor(m_udev->monitor())
     , m_session(Session::create(this))
+    , m_explicitGpus(qEnvironmentVariable("KWIN_DRM_DEVICES").split(':', Qt::SkipEmptyParts))
     , m_dpmsFilter()
 {
     setSupportsGammaControl(true);
@@ -179,9 +180,8 @@ bool DrmBackend::initialize()
     connect(session(), &Session::activeChanged, this, &DrmBackend::activate);
     connect(session(), &Session::awoke, this, &DrmBackend::turnOutputsOn);
 
-    const QStringList explicitGpus = qEnvironmentVariable("KWIN_DRM_DEVICES").split(':', Qt::SkipEmptyParts);
-    if (!explicitGpus.isEmpty()) {
-        for (const QString &fileName : explicitGpus) {
+    if (!m_explicitGpus.isEmpty()) {
+        for (const QString &fileName : m_explicitGpus) {
             addGpu(fileName);
         }
     } else {
@@ -240,6 +240,9 @@ void DrmBackend::handleUdevEvent()
         }
 
         if (device->action() == QStringLiteral("add")) {
+            if (!m_explicitGpus.isEmpty() && !m_explicitGpus.contains(device->devNode())) {
+                continue;
+            }
             qCDebug(KWIN_DRM) << "New gpu found:" << device->devNode();
             if (addGpu(device->devNode())) {
                 updateOutputs();

@@ -103,6 +103,7 @@ private:
     QVector<DrmOutput*> m_enabledOutputs;
 
     bool m_active = false;
+    const QStringList m_explicitGpus;
     QVector<DrmGpu*> m_gpus;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
 };
