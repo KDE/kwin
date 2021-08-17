@@ -349,8 +349,9 @@ bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
     if (flags & ActivityFocus) {
         AbstractClient* modal = c->findModal();
         if (modal != nullptr && modal != c) {
-            if (!modal->isOnDesktop(c->desktop()))
-                modal->setDesktop(c->desktop());
+            if (modal->desktops() != c->desktops()) {
+                modal->setDesktops(c->desktops());
+            }
             if (!modal->isShown(true) && !modal->isMinimized())  // forced desktop or utility window
                 activateClient(modal);   // activating a minimized blocked window will unminimize its modal implicitly
             // if the click was inside the window (i.e. handled is set),
