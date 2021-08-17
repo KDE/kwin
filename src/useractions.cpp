@@ -455,7 +455,6 @@ void UserActionsMenu::initDesktopPopup()
             return;
 
         m_desktopMenu = new QMenu(m_menu);
-        connect(m_desktopMenu, &QMenu::triggered,   this, &UserActionsMenu::slotSendToDesktop);
         connect(m_desktopMenu, &QMenu::aboutToShow, this, &UserActionsMenu::desktopPopupAboutToShow);
 
         QAction *action = m_desktopMenu->menuAction();
@@ -511,8 +510,15 @@ void UserActionsMenu::desktopPopupAboutToShow()
     }
     QActionGroup *group = new QActionGroup(m_desktopMenu);
     QAction *action = m_desktopMenu->addAction(i18n("&All Desktops"));
-    action->setData(0);
+    connect(action, &QAction::triggered, this, [this]() {
+        if (m_client) {
+            m_client->setOnAllDesktops(!m_client->isOnAllDesktops());
+        }
+    });
     action->setCheckable(true);
+    if (m_client && m_client->isOnAllDesktops()) {
+        action->setChecked(true);
+    }
     group->addAction(action);
 
     if (m_client && m_client->isOnAllDesktops()) {
@@ -522,27 +528,41 @@ void UserActionsMenu::desktopPopupAboutToShow()
 
     const uint BASE = 10;
 
-    for (uint i = 1; i <= vds->count(); ++i) {
+    const auto desktops = vds->desktops();
+    for (VirtualDesktop *desktop : desktops) {
+        const uint legacyId = desktop->x11DesktopNumber();
+
         QString basic_name(QStringLiteral("%1  %2"));
-        if (i < BASE) {
+        if (legacyId < BASE) {
             basic_name.prepend(QLatin1Char('&'));
         }
-        action = m_desktopMenu->addAction(basic_name.arg(i).arg(vds->name(i).replace(QLatin1Char('&'), QStringLiteral("&&"))));
-        action->setData(i);
+        action = m_desktopMenu->addAction(basic_name.arg(legacyId).arg(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&"))));
+        connect(action, &QAction::triggered, this, [this, desktop]() {
+            if (m_client) {
+                workspace()->sendClientToDesktop(m_client, desktop->x11DesktopNumber(), false);
+            }
+        });
         action->setCheckable(true);
         group->addAction(action);
 
-        if (m_client && !m_client->isOnAllDesktops() && m_client->isOnDesktop(i)) {
+        if (m_client && !m_client->isOnAllDesktops() && m_client->isOnDesktop(desktop)) {
             action->setChecked(true);
         }
     }
 
     m_desktopMenu->addSeparator();
     action = m_desktopMenu->addAction(i18nc("Create a new desktop and move the window there", "&New Desktop"));
-    action->setData(vds->count() + 1);
-
-    if (vds->count() >= vds->maximum())
-        action->setEnabled(false);
+    connect(action, &QAction::triggered, this, [this]() {
+        if (!m_client) {
+            return;
+        }
+        VirtualDesktopManager *vds = VirtualDesktopManager::self();
+        VirtualDesktop *desktop = vds->createVirtualDesktop(vds->count());
+        if (desktop) {
+            workspace()->sendClientToDesktop(m_client, desktop->x11DesktopNumber(), false);
+        }
+    });
+    action->setEnabled(vds->count() < vds->maximum());
 }
 
 void UserActionsMenu::multipleDesktopsPopupAboutToShow()
@@ -746,30 +766,6 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
                               Qt::QueuedConnection,
                               Q_ARG(KWin::AbstractClient*, c),
                               Q_ARG(Options::WindowOperation, op));
-}
-
-void UserActionsMenu::slotSendToDesktop(QAction *action)
-{
-    bool ok = false;
-    uint desk = action->data().toUInt(&ok);
-    if (!ok) {
-        return;
-    }
-    if (m_client.isNull())
-        return;
-    Workspace *ws = Workspace::self();
-    VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    if (desk == 0) {
-        // the 'on_all_desktops' menu entry
-        if (m_client) {
-            m_client->setOnAllDesktops(!m_client->isOnAllDesktops());
-        }
-        return;
-    } else if (desk > vds->count()) {
-        vds->setCount(desk);
-    }
-
-    ws->sendClientToDesktop(m_client.data(), desk, false);
 }
 
 void UserActionsMenu::slotSendToScreen(QAction *action)

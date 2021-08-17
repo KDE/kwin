@@ -129,12 +129,6 @@ private Q_SLOTS:
      */
     void activityPopupAboutToShow();
     /**
-     * Sends the client to desktop \a desk
-     *
-     * @param action Invoked Action containing the Desktop as data element
-     */
-    void slotSendToDesktop(QAction *action);
-    /**
      * Sends the Client to screen \a screen
      *
      * @param action Invoked Action containing the Screen as data element
