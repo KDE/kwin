@@ -36,6 +36,7 @@ namespace Xwl
 {
 class Clipboard;
 class Dnd;
+class Primary;
 enum class DragEventReply;
 
 /**
@@ -75,6 +76,7 @@ private:
 
     Clipboard *m_clipboard = nullptr;
     Dnd *m_dnd = nullptr;
+    Primary *m_primary = nullptr;
 
     /* Internal data device interface */
     KWayland::Client::DataDevice *m_dataDevice = nullptr;

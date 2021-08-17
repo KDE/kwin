@@ -142,13 +142,13 @@ public:
         setWindow(window);
     }
 
+    void startTransfer(const QString &mimeName, qint32 fd);
 Q_SIGNALS:
     void offersChanged(const QStringList &added, const QStringList &removed);
     void transferReady(xcb_atom_t target, qint32 fd);
 
 private:
     void handleTargets();
-    void startTransfer(const QString &mimeName, qint32 fd);
 
     xcb_window_t m_owner;
     KWayland::Client::DataSource *m_dataSource = nullptr;

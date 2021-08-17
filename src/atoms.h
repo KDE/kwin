@@ -77,6 +77,7 @@ public:
     Xcb::Atom delete_atom;
     Xcb::Atom incr;
     Xcb::Atom wl_selection;
+    Xcb::Atom primary;
 
     /**
      * @internal
