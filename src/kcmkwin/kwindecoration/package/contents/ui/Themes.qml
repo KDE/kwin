@@ -12,7 +12,7 @@ import org.kde.kwin.private.kdecoration 1.0 as KDecoration
 
 KCM.GridView {
     function updateDecoration(item, marginTopLeft, marginBottomRight) {
-        var mainMargin = units.largeSpacing
+        var mainMargin = Kirigami.Units.largeSpacing
         var shd = item.shadow
         item.anchors.leftMargin   = mainMargin + marginTopLeft     - (shd ? shd.paddingLeft   : 0)
         item.anchors.rightMargin  = mainMargin + marginBottomRight - (shd ? shd.paddingRight  : 0)
