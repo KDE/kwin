@@ -5,6 +5,7 @@
 */
 
 import QtQuick 2.12
+import org.kde.kirigami 2.12 as Kirigami
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.overview 1.0
 import org.kde.plasma.components 3.0 as PC3
@@ -30,9 +31,6 @@ FocusScope {
         mode: effect.layout
         focus: true
         spacing: PlasmaCore.Units.largeSpacing
-
-        // This assumes that the position of the WindowHeap is static.
-        readonly property point scenePosition: mapToItem(null, 0, 0)
 
         Repeater {
             id: windowsRepeater
@@ -62,8 +60,8 @@ FocusScope {
                 ExpoCell {
                     id: cell
                     layout: expoLayout
-                    naturalX: thumb.client.x - targetScreen.geometry.x - expoLayout.scenePosition.x
-                    naturalY: thumb.client.y - targetScreen.geometry.y - expoLayout.scenePosition.y
+                    naturalX: thumb.client.x - targetScreen.geometry.x - expoLayout.Kirigami.ScenePosition.x
+                    naturalY: thumb.client.y - targetScreen.geometry.y - expoLayout.Kirigami.ScenePosition.y
                     naturalWidth: thumb.client.width
                     naturalHeight: thumb.client.height
                     persistentKey: thumb.client.internalId
@@ -74,8 +72,8 @@ FocusScope {
                         name: "initial"
                         PropertyChanges {
                             target: thumb
-                            x: thumb.client.x - targetScreen.geometry.x - expoLayout.scenePosition.x
-                            y: thumb.client.y - targetScreen.geometry.y - expoLayout.scenePosition.y
+                            x: thumb.client.x - targetScreen.geometry.x - expoLayout.Kirigami.ScenePosition.x
+                            y: thumb.client.y - targetScreen.geometry.y - expoLayout.Kirigami.ScenePosition.y
                             width: thumb.client.width
                             height: thumb.client.height
                         }
