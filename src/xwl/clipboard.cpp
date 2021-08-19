@@ -8,21 +8,13 @@
 */
 #include "clipboard.h"
 
-#include "databridge.h"
+#include "datasource.h"
 #include "selection_source.h"
-#include "transfer.h"
-#include "xwayland.h"
 
 #include "x11client.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/datadevice.h>
-#include <KWayland/Client/datasource.h>
-
-#include <KWaylandServer/datadevice_interface.h>
-#include <KWaylandServer/datasource_interface.h>
 #include <KWaylandServer/seat_interface.h>
 
 #include <xcb/xcb_event.h>
@@ -58,10 +50,6 @@ Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
 
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::selectionChanged,
             this, &Clipboard::wlSelectionChanged);
-
-    connect(DataBridge::self()->dataDeviceIface(), &KWaylandServer::DataDeviceInterface::selectionChanged, this, [](KWaylandServer::DataSourceInterface *selection) {
-        waylandServer()->seat()->setSelection(selection);
-    });
 }
 
 void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
@@ -84,7 +72,7 @@ void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
 
 bool Clipboard::ownsSelection(KWaylandServer::AbstractDataSource *dsi) const
 {
-    return dsi && dsi->client() == DataBridge::self()->dataDeviceIface()->client();
+    return dsi && dsi == m_selectionSource.get();
 }
 
 void Clipboard::checkWlSource()
@@ -110,7 +98,7 @@ void Clipboard::checkWlSource()
     // Otherwise the Wayland source gets destroyed to shield
     // against snooping X clients.
 
-    if (!dsi || (DataBridge::self()->dataDeviceIface()->client() == dsi->client())) {
+    if (!dsi || ownsSelection(dsi)) {
         // Xwayland source or no source
         disconnect(m_checkConnection);
         m_checkConnection = QMetaObject::Connection();
@@ -169,25 +157,24 @@ void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &re
     const Mimes offers = source->offers();
 
     if (!offers.isEmpty()) {
-        // create new Wl DataSource if there is none or when types
-        // were removed (Wl Data Sources can only add types)
-        KWayland::Client::DataDeviceManager *dataDeviceManager =
-            waylandServer()->internalDataDeviceManager();
-        KWayland::Client::DataSource *dataSource =
-            dataDeviceManager->createDataSource(source);
-
-        // also offers directly the currently available types
-        source->setDataSource(dataSource);
-        DataBridge::self()->dataDevice()->setSelection(0, dataSource);
+        QStringList mimeTypes;
+        mimeTypes.reserve(offers.size());
+        std::transform(offers.begin(), offers.end(), std::back_inserter(mimeTypes), [](const Mimes::value_type &pair) {
+            return pair.first;
+        });
+        auto newSelection = std::make_unique<XwlDataSource>();
+        newSelection->setMimeTypes(mimeTypes);
+        connect(newSelection.get(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
+        // we keep the old selection around because setSelection needs it to be still alive
+        std::swap(m_selectionSource, newSelection);
+        waylandServer()->seat()->setSelection(m_selectionSource.get());
     } else {
         KWaylandServer::AbstractDataSource *currentSelection = waylandServer()->seat()->selection();
         if (!ownsSelection(currentSelection)) {
             waylandServer()->seat()->setSelection(nullptr);
+            m_selectionSource.reset();
         }
     }
-
-    waylandServer()->internalClientConection()->flush();
-    waylandServer()->dispatch();
 }
 
 } // namespace Xwl

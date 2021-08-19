@@ -3,6 +3,7 @@ add_subdirectory(lib)
 add_library(KWinXwaylandServerModule OBJECT
     clipboard.cpp
     databridge.cpp
+    datasource.cpp
     dnd.cpp
     drag.cpp
     drag_wl.cpp

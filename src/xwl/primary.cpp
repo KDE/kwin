@@ -9,13 +9,13 @@
 */
 #include "primary.h"
 
+#include "datasource.h"
 #include "selection_source.h"
 
 #include "x11client.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWaylandServer/abstract_data_source.h>
 #include <KWaylandServer/seat_interface.h>
 
 #include <xcb/xcb_event.h>
@@ -27,31 +27,6 @@ namespace KWin
 {
 namespace Xwl
 {
-
-class PrimarySelectionSource : public KWaylandServer::AbstractDataSource
-{
-    Q_OBJECT
-public:
-    void requestData(const QString & mimeType, qint32 fd) override
-    {
-        Q_EMIT dataRequested(mimeType, fd);
-    }
-    void cancel() override
-    {
-    }
-    QStringList mimeTypes() const override
-    {
-       return m_mimeTypes;
-    }
-    void setMimeTypes(const QStringList &mimeTypes)
-    {
-        m_mimeTypes = mimeTypes;
-    }
-Q_SIGNALS:
-    void dataRequested(const QString &mimeType, qint32 fd);
-private:
-    QStringList m_mimeTypes;
-};
 
 Primary::Primary(xcb_atom_t atom, QObject *parent)
     : Selection(atom, parent)
@@ -188,9 +163,9 @@ void Primary::x11OffersChanged(const QStringList &added, const QStringList &remo
         std::transform(offers.begin(), offers.end(), std::back_inserter(mimeTypes), [](const Mimes::value_type &pair) {
             return pair.first;
         });
-        auto newSelection = std::make_unique<PrimarySelectionSource>();
+        auto newSelection = std::make_unique<XwlDataSource>();
         newSelection->setMimeTypes(mimeTypes);
-        connect(newSelection.get(), &PrimarySelectionSource::dataRequested, source, &X11Source::startTransfer);
+        connect(newSelection.get(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
         // we keep the old selection around because setPrimarySelection needs it to be still alive
         std::swap(m_primarySelectionSource, newSelection);
         waylandServer()->seat()->setPrimarySelection(m_primarySelectionSource.get());
@@ -205,5 +180,3 @@ void Primary::x11OffersChanged(const QStringList &added, const QStringList &remo
 
 } // namespace Xwl
 } // namespace KWin
-
-#include "primary.moc"

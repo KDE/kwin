@@ -23,8 +23,7 @@ namespace KWin
 {
 namespace Xwl
 {
-
-class PrimarySelectionSource;
+class XwlDataSource;
 
 /**
  * Represents the X clipboard, which is on Wayland side just called
@@ -59,7 +58,7 @@ private:
 
     Q_DISABLE_COPY(Primary)
     bool m_waitingForTargets = false;
-    std::unique_ptr<PrimarySelectionSource> m_primarySelectionSource;
+    std::unique_ptr<XwlDataSource> m_primarySelectionSource;
 };
 
 } // namespace Xwl
