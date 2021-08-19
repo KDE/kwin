@@ -75,8 +75,15 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     /**
      * The desktop this Client is on. If the Client is on all desktops the property has value -1.
      * This is a legacy property, use x11DesktopIds instead
+     *
+     * @deprecated Use the desktops property instead.
      */
     Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
+
+    /**
+     * The virtual desktops this client is on. If it's on all desktops, the list is empty.
+     */
+    Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops WRITE setDesktops NOTIFY desktopChanged)
 
     /**
      * Whether the Client is on all desktops. That is desktop is -1.
@@ -90,6 +97,8 @@ class KWIN_EXPORT AbstractClient : public Toplevel
 
     /**
      * The x11 ids for all desktops this client is in. On X11 this list will always have a length of 1
+     *
+     * @deprecated prefer using apis that use VirtualDesktop objects
      */
     Q_PROPERTY(QVector<uint> x11DesktopIds READ x11DesktopIds NOTIFY x11DesktopIdsChanged)
 

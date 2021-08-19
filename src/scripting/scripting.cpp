@@ -24,6 +24,7 @@
 #include "input.h"
 #include "options.h"
 #include "screenedge.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11client.h"
 // KDE
@@ -656,6 +657,7 @@ void KWin::Scripting::init()
     });
 
     qmlRegisterType<KWin::AbstractClient>();
+    qmlRegisterType<KWin::VirtualDesktop>();
     qmlRegisterType<KWin::X11Client>();
     qmlRegisterType<QAbstractItemModel>();
 
