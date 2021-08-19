@@ -5,6 +5,7 @@
 */
 
 #include "overvieweffect.h"
+#include "expoarea.h"
 #include "expolayout.h"
 #include "overviewconfig.h"
 
@@ -64,6 +65,7 @@ void OverviewScreenView::stop()
 OverviewEffect::OverviewEffect()
     : m_shutdownTimer(new QTimer(this))
 {
+    qmlRegisterType<ExpoArea>("org.kde.kwin.private.overview", 1, 0, "ExpoArea");
     qmlRegisterType<ExpoLayout>("org.kde.kwin.private.overview", 1, 0, "ExpoLayout");
     qmlRegisterType<ExpoCell>("org.kde.kwin.private.overview", 1, 0, "ExpoCell");
 

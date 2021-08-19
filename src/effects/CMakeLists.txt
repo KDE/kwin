@@ -86,6 +86,7 @@ set(kwin4_effect_builtins_sources
     magnifier/magnifier.cpp
     mouseclick/mouseclick.cpp
     mousemark/mousemark.cpp
+    overview/expoarea.cpp
     overview/expolayout.cpp
     overview/overvieweffect.cpp
     presentwindows/presentwindows.cpp

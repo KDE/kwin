@@ -6,6 +6,7 @@
 
 import QtQuick 2.12
 import org.kde.kwin 3.0 as KWinComponents
+import org.kde.kwin.private.overview 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 FocusScope {
@@ -64,8 +65,16 @@ FocusScope {
         }
     }
 
+    ExpoArea {
+        id: heapArea
+        screen: targetScreen
+    }
+
     WindowHeap {
-        anchors.fill: parent
+        x: heapArea.x
+        y: heapArea.y
+        width: heapArea.width
+        height: heapArea.height
         focus: true
         organized: container.organized
         model: KWinComponents.ClientFilterModel {
