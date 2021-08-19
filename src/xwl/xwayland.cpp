@@ -388,6 +388,8 @@ void Xwayland::handleXwaylandReady()
     auto env = m_app->processStartupEnvironment();
     env.insert(QStringLiteral("DISPLAY"), m_displayName);
     env.insert(QStringLiteral("XAUTHORITY"), m_xAuthority);
+    qputenv("DISPLAY", m_displayName.toUtf8());
+    qputenv("XAUTHORITY", m_xAuthority.toUtf8());
     m_app->setProcessStartupEnvironment(env);
 
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort

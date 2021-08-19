@@ -717,6 +717,7 @@ int main(int argc, char * argv[])
     QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);
     if (!server->socketName().isEmpty()) {
         environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->socketName());
+        qputenv("WAYLAND_DISPLAY", server->socketName().toUtf8());
     }
     a.setProcessStartupEnvironment(environment);
 
