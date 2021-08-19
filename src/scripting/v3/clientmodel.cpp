@@ -7,6 +7,7 @@
 #include "clientmodel.h"
 #include "abstract_client.h"
 #include "screens.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 
 namespace KWin::ScriptingModels::V3
@@ -143,12 +144,12 @@ void ClientFilterModel::resetActivity()
     }
 }
 
-int ClientFilterModel::desktop() const
+VirtualDesktop *ClientFilterModel::desktop() const
 {
-    return m_desktop.value_or(0);
+    return m_desktop;
 }
 
-void ClientFilterModel::setDesktop(int desktop)
+void ClientFilterModel::setDesktop(VirtualDesktop *desktop)
 {
     if (m_desktop != desktop) {
         m_desktop = desktop;
@@ -159,11 +160,7 @@ void ClientFilterModel::setDesktop(int desktop)
 
 void ClientFilterModel::resetDesktop()
 {
-    if (m_desktop.has_value()) {
-        m_desktop.reset();
-        Q_EMIT desktopChanged();
-        invalidateFilter();
-    }
+    setDesktop(nullptr);
 }
 
 QString ClientFilterModel::filter() const
@@ -253,8 +250,8 @@ bool ClientFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
         }
     }
 
-    if (m_desktop.has_value()) {
-        if (!client->isOnDesktop(*m_desktop)) {
+    if (m_desktop) {
+        if (!client->isOnDesktop(m_desktop)) {
             return false;
         }
     }
