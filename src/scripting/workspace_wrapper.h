@@ -22,12 +22,17 @@ namespace KWin
 {
 // forward declarations
 class AbstractClient;
+class VirtualDesktop;
 class X11Client;
 
 class WorkspaceWrapper : public QObject
 {
     Q_OBJECT
+    /**
+     * @deprecated use the currentVirtualDesktop property instead
+     */
     Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
+    Q_PROPERTY(KWin::VirtualDesktop *currentVirtualDesktop READ currentVirtualDesktop WRITE setCurrentVirtualDesktop NOTIFY currentVirtualDesktopChanged)
     Q_PROPERTY(KWin::AbstractClient *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
     // TODO: write and notify?
     Q_PROPERTY(QSize desktopGridSize READ desktopGridSize NOTIFY desktopLayoutChanged)
@@ -153,6 +158,13 @@ Q_SIGNALS:
      */
     void virtualScreenGeometryChanged();
 
+    /**
+     * This signal is emitted when the current virtual desktop changes.
+     *
+     * @since 5.23
+     */
+    void currentVirtualDesktopChanged();
+
 public:
 //------------------------------------------------------------------
 //enums copy&pasted from kwinglobals.h because qtscript is evil
@@ -216,6 +228,9 @@ void setter( rettype val );
     QStringList activityList() const;
     QSize virtualScreenSize() const;
     QRect virtualScreenGeometry() const;
+
+    VirtualDesktop *currentVirtualDesktop() const;
+    void setCurrentVirtualDesktop(VirtualDesktop *desktop);
 
     /**
      * Returns the geometry a Client can use with the specified option.

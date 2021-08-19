@@ -35,6 +35,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(ws, &Workspace::clientActivated, this, &WorkspaceWrapper::clientActivated);
     connect(vds, &VirtualDesktopManager::countChanged, this, &WorkspaceWrapper::numberDesktopsChanged);
     connect(vds, &VirtualDesktopManager::layoutChanged, this, &WorkspaceWrapper::desktopLayoutChanged);
+    connect(vds, &VirtualDesktopManager::currentChanged, this, &WorkspaceWrapper::currentVirtualDesktopChanged);
     connect(ws, &Workspace::clientDemandsAttentionChanged, this, &WorkspaceWrapper::clientDemandsAttentionChanged);
 #ifdef KWIN_BUILD_ACTIVITIES
     if (KWin::Activities *activities = KWin::Activities::self()) {
@@ -67,12 +68,22 @@ int WorkspaceWrapper::currentDesktop() const
     return VirtualDesktopManager::self()->current();
 }
 
+VirtualDesktop *WorkspaceWrapper::currentVirtualDesktop() const
+{
+    return VirtualDesktopManager::self()->currentDesktop();
+}
+
 int WorkspaceWrapper::numberOfDesktops() const
 {
     return VirtualDesktopManager::self()->count();
 }
 
 void WorkspaceWrapper::setCurrentDesktop(int desktop)
+{
+    VirtualDesktopManager::self()->setCurrent(desktop);
+}
+
+void WorkspaceWrapper::setCurrentVirtualDesktop(VirtualDesktop *desktop)
 {
     VirtualDesktopManager::self()->setCurrent(desktop);
 }
