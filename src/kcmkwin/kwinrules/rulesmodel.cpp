@@ -420,7 +420,7 @@ void RulesModel::populateRuleList()
     auto size = addRule(new RuleItem(QLatin1String("size"),
                                      RulePolicy::SetRule, RuleItem::Size,
                                      i18n("Size"), i18n("Size & Position"),
-                                     QIcon::fromTheme("image-resize-symbolic")));
+                                     QIcon::fromTheme("transform-scale")));
     size->setFlag(RuleItem::AffectsWarning);
 
     addRule(new RuleItem(QLatin1String("maximizehoriz"),
@@ -500,12 +500,12 @@ void RulesModel::populateRuleList()
     addRule(new RuleItem(QLatin1String("minsize"),
                          RulePolicy::ForceRule, RuleItem::Size,
                          i18n("Minimum Size"), i18n("Size & Position"),
-                         QIcon::fromTheme("image-resize-symbolic")));
+                         QIcon::fromTheme("transform-scale")));
 
     addRule(new RuleItem(QLatin1String("maxsize"),
                          RulePolicy::ForceRule, RuleItem::Size,
                          i18n("Maximum Size"), i18n("Size & Position"),
-                         QIcon::fromTheme("image-resize-symbolic")));
+                         QIcon::fromTheme("transform-scale")));
 
     addRule(new RuleItem(QLatin1String("strictgeometry"),
                          RulePolicy::ForceRule, RuleItem::Boolean,
@@ -721,7 +721,7 @@ QList<OptionsModel::Data> RulesModel::windowTypesModelData() const
         { NET::Splash,  i18n("Splash Screen")     , QIcon::fromTheme("embosstool")               },
         { NET::Desktop, i18n("Desktop")           , QIcon::fromTheme("desktop")                  },
         // { NET::Override, i18n("Unmanaged Window")   },  deprecated
-        { NET::TopMenu, i18n("Standalone Menubar"), QIcon::fromTheme("open-menu-symbolic")       },
+        { NET::TopMenu, i18n("Standalone Menubar"), QIcon::fromTheme("application-menu")       },
         { NET::OnScreenDisplay, i18n("On Screen Display"), QIcon::fromTheme("osd-duplicate")     }
     };
     return modelData;

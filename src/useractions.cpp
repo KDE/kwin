@@ -338,7 +338,7 @@ void UserActionsMenu::init()
 
     action = m_menu->addMenu(advancedMenu);
     action->setText(i18n("&More Actions"));
-    action->setIcon(QIcon::fromTheme(QStringLiteral("view-more-symbolic")));
+    action->setIcon(QIcon::fromTheme(QStringLiteral("overflow-menu")));
 
     m_closeOperation = m_menu->addAction(i18n("&Close"));
     m_closeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));

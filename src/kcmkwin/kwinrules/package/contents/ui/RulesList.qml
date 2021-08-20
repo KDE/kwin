@@ -70,7 +70,7 @@ ScrollViewKCM {
         text: i18n("Select the rules to export")
         actions: [
             Kirigami.Action {
-                iconName: "object-select-symbolic"
+                iconName: "dialog-ok-apply"
                 text: checked ? i18n("Unselect All") : i18n("Select All")
                 checkable: true
                 checked: selectedIndexes.length === ruleBookView.count
@@ -97,7 +97,7 @@ ScrollViewKCM {
     footer: RowLayout {
         QQC2.Button {
             text: i18n("Add New...")
-            icon.name: "list-add-symbolic"
+            icon.name: "list-add"
             enabled: !exportInfo.visible
             onClicked: {
                 kcm.createRule();

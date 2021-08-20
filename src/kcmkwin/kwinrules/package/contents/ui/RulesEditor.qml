@@ -83,7 +83,7 @@ ScrollViewKCM {
     footer:  RowLayout {
         QQC2.Button {
             text: checked ? i18n("Close") : i18n("Add Property...")
-            icon.name: checked ? "dialog-close" : "list-add-symbolic"
+            icon.name: checked ? "dialog-close" : "list-add"
             checkable: true
             checked: propertySheet.sheetOpen
             onToggled: {
@@ -214,7 +214,7 @@ ScrollViewKCM {
                         }
                     }
                     QQC2.ToolButton {
-                        icon.name: (model.enabled) ? "dialog-ok-apply" : "list-add-symbolic"
+                        icon.name: (model.enabled) ? "dialog-ok-apply" : "list-add"
                         opacity: propertyDelegate.hovered ? 1 : 0
                         onClicked: propertyDelegate.clicked()
                         Layout.preferredWidth: implicitWidth
