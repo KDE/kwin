@@ -623,7 +623,7 @@ void BlurEffect::generateNoiseTexture()
         uint8_t *noiseImageLine = (uint8_t *) noiseImage.scanLine(y);
 
         for (int x = 0; x < noiseImage.width(); x++) {
-            noiseImageLine[x] = qrand() % m_noiseStrength + (128 - m_noiseStrength / 2);
+            noiseImageLine[x] = qrand() % m_noiseStrength;
         }
     }
 
@@ -715,34 +715,58 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
         glDisable(GL_BLEND);
     }
 
+    if (m_noiseStrength > 0) {
+        // Apply an additive noise onto the blurred image.
+        // The noise is useful to mask banding artifacts, which often happens due to the smooth color transitions in the
+        // blurred image.
+        // The noise is applied in perceptual space (i.e. after glDisable(GL_FRAMEBUFFER_SRGB)). This practice is also
+        // seen in other application of noise synthesis (films, image codecs), and makes the noise less visible overall
+        // (reduces graininess).
+        glEnable(GL_BLEND);
+        if (opacity < 1.0) {
+            // We need to modulate the opacity of the noise as well; otherwise a thin layer would appear when applying
+            // effects like fade out.
+            // glBlendColor should have been set above.
+            glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE);
+        } else {
+            // Add the shader's output directly to the pixels in framebuffer.
+            glBlendFunc(GL_ONE, GL_ONE);
+        }
+        applyNoise(vbo, blurRectCount * (m_downSampleIterations + 1), shape.rectCount() * 6, screenProjection, windowRect.topLeft());
+        glDisable(GL_BLEND);
+    }
+
     vbo->unbindArrays();
 }
 
 void BlurEffect::upscaleRenderToScreen(GLVertexBuffer *vbo, int vboStart, int blurRectCount, QMatrix4x4 screenProjection, QPoint windowPosition)
 {
-    glActiveTexture(GL_TEXTURE0);
     m_renderTextures[1].bind();
 
-    if (m_noiseStrength > 0) {
-        m_shader->bind(BlurShader::NoiseSampleType);
-        m_shader->setTargetTextureSize(m_renderTextures[0].size() * GLRenderTarget::virtualScreenScale());
-        m_shader->setNoiseTextureSize(m_noiseTexture->size() * GLRenderTarget::virtualScreenScale());
-        m_shader->setTexturePosition(windowPosition * GLRenderTarget::virtualScreenScale());
-
-        glActiveTexture(GL_TEXTURE1);
-        m_noiseTexture->bind();
-    } else {
-        m_shader->bind(BlurShader::UpSampleType);
-        m_shader->setTargetTextureSize(m_renderTextures[0].size() * GLRenderTarget::virtualScreenScale());
-    }
+    m_shader->bind(BlurShader::UpSampleType);
+    m_shader->setTargetTextureSize(m_renderTextures[0].size() * GLRenderTarget::virtualScreenScale());
 
     m_shader->setOffset(m_offset);
     m_shader->setModelViewProjectionMatrix(screenProjection);
 
     //Render to the screen
     vbo->draw(GL_TRIANGLES, vboStart, blurRectCount);
+    m_shader->unbind();
+}
 
-    glActiveTexture(GL_TEXTURE0);
+void BlurEffect::applyNoise(GLVertexBuffer *vbo, int vboStart, int blurRectCount, QMatrix4x4 screenProjection, QPoint windowPosition)
+{
+    m_shader->bind(BlurShader::NoiseSampleType);
+    m_shader->setTargetTextureSize(m_renderTextures[0].size() * GLRenderTarget::virtualScreenScale());
+    m_shader->setNoiseTextureSize(m_noiseTexture->size() * GLRenderTarget::virtualScreenScale());
+    m_shader->setTexturePosition(windowPosition * GLRenderTarget::virtualScreenScale());
+
+    m_noiseTexture->bind();
+
+    m_shader->setOffset(m_offset);
+    m_shader->setModelViewProjectionMatrix(screenProjection);
+
+    vbo->draw(GL_TRIANGLES, vboStart, blurRectCount);
     m_shader->unbind();
 }
 
