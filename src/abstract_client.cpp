@@ -1222,7 +1222,7 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
             // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
             // the other directions. If not visible enough, move the window to the closest valid
             // point. We bruteforce this by slowly moving the window back to its previous position
-            QRegion availableArea(workspace()->clientArea(FullArea, this, -1));   // On the screen
+            QRegion availableArea(workspace()->clientArea(FullArea, this, screens()->current()));
             availableArea -= workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
             bool transposed = false;
             int requiredPixels;
@@ -1350,7 +1350,7 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
 
             if (!isUnrestrictedInteractiveMoveResize()) {
                 const QRegion strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
-                QRegion availableArea(workspace()->clientArea(FullArea, this, -1));   // On the screen
+                QRegion availableArea(workspace()->clientArea(FullArea, this, screens()->current()));
                 availableArea -= strut;   // Strut areas
                 bool transposed = false;
                 int requiredPixels;

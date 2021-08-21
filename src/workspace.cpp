@@ -2341,9 +2341,6 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
         Q_ASSERT(virtualDesktop);
     }
 
-    if (screen == -1) {
-        screen = screens()->current();
-    }
     output = kwinApp()->platform()->findOutput(screen);
     Q_ASSERT(output);
 
