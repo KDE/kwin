@@ -209,7 +209,6 @@ void Workspace::init()
     KSharedConfigPtr config = kwinApp()->config();
     Screens *screens = Screens::self();
     // get screen support
-    connect(screens, &Screens::changed, this, &Workspace::desktopResized);
     screens->setConfig(config);
     screens->reconfigure();
     connect(options, &Options::configChanged, screens, &Screens::reconfigure);
@@ -223,30 +222,25 @@ void Workspace::init()
     FocusChain *focusChain = FocusChain::create(this);
     connect(this, &Workspace::clientRemoved, focusChain, &FocusChain::remove);
     connect(this, &Workspace::clientActivated, focusChain, &FocusChain::setActiveClient);
-    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::desktopCreated, focusChain, &FocusChain::addDesktop);
-    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::desktopRemoved, focusChain, &FocusChain::removeDesktop);
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, focusChain, [focusChain]() {
         focusChain->setCurrentDesktop(VirtualDesktopManager::self()->currentDesktop());
     });
     connect(options, &Options::separateScreenFocusChanged, focusChain, &FocusChain::setSeparateScreenFocus);
     focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
+    Platform *platform = kwinApp()->platform();
+    connect(platform, &Platform::outputEnabled, this, &Workspace::slotOutputEnabled);
+    connect(platform, &Platform::outputDisabled, this, &Workspace::slotOutputDisabled);
+
+    const QVector<AbstractOutput *> outputs = platform->enabledOutputs();
+    for (AbstractOutput *output : outputs) {
+        slotOutputEnabled(output);
+    }
+
     // create VirtualDesktopManager and perform dependency injection
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    connect(vds, &VirtualDesktopManager::desktopRemoved, this, [this](VirtualDesktop *desktop) {
-        for (auto it = m_allClients.constBegin(); it != m_allClients.constEnd(); ++it) {
-            if (!(*it)->desktops().contains(desktop)) {
-                continue;
-            }
-            if ((*it)->desktops().count() > 1) {
-                (*it)->leaveDesktop(desktop);
-            } else {
-                sendClientToDesktop(*it, qMin(desktop->x11DesktopNumber(), VirtualDesktopManager::self()->count()), true);
-            }
-        }
-    });
-
-    connect(vds, &VirtualDesktopManager::countChanged, this, &Workspace::slotDesktopCountChanged);
+    connect(vds, &VirtualDesktopManager::desktopCreated, this, &Workspace::slotDesktopAdded);
+    connect(vds, &VirtualDesktopManager::desktopRemoved, this, &Workspace::slotDesktopRemoved);
     connect(vds, &VirtualDesktopManager::currentChanged, this, &Workspace::slotCurrentDesktopChanged);
     vds->setNavigationWrappingAround(options->isRollOverDesktops());
     connect(options, &Options::rollOverDesktopsChanged, vds, &VirtualDesktopManager::setNavigationWrappingAround);
@@ -1211,24 +1205,42 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 #endif
 }
 
-void Workspace::slotDesktopCountChanged(uint previousCount, uint newCount)
+void Workspace::slotOutputEnabled(AbstractOutput *output)
 {
-    Q_UNUSED(previousCount)
-    Placement::self()->reinitCascading(0);
-
-    resetClientAreas(newCount);
+    connect(output, &AbstractOutput::geometryChanged, this, &Workspace::desktopResized);
+    desktopResized();
 }
 
-void Workspace::resetClientAreas(uint desktopCount)
+void Workspace::slotOutputDisabled(AbstractOutput *output)
 {
-    // Make it +1, so that it can be accessed as [1..numberofdesktops]
-    workarea.clear();
-    workarea.resize(desktopCount + 1);
-    restrictedmovearea.clear();
-    restrictedmovearea.resize(desktopCount + 1);
-    screenarea.clear();
+    // TODO: Send clients on the given output to other outputs.
+    disconnect(output, &AbstractOutput::geometryChanged, this, &Workspace::desktopResized);
+    desktopResized();
+}
 
-    updateClientArea(true);
+void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
+{
+    FocusChain::self()->addDesktop(desktop);
+    Placement::self()->reinitCascading(0);
+    updateClientArea();
+}
+
+void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
+{
+    for (auto it = m_allClients.constBegin(); it != m_allClients.constEnd(); ++it) {
+        if (!(*it)->desktops().contains(desktop)) {
+            continue;
+        }
+        if ((*it)->desktops().count() > 1) {
+            (*it)->leaveDesktop(desktop);
+        } else {
+            sendClientToDesktop(*it, qMin(desktop->x11DesktopNumber(), VirtualDesktopManager::self()->count()), true);
+        }
+    }
+
+    updateClientArea();
+    Placement::self()->reinitCascading(0);
+    FocusChain::self()->removeDesktop(desktop);
 }
 
 void Workspace::selectWmInputEventMask()
@@ -1277,7 +1289,7 @@ void Workspace::sendClientToDesktop(AbstractClient* c, int desk, bool dont_activ
     } else
         raiseClient(c);
 
-    c->checkWorkspacePosition( QRect(), old_desktop );
+    c->checkWorkspacePosition( QRect(), QRect(), VirtualDesktopManager::self()->desktopForX11Id(old_desktop) );
 
     auto transients_stacking_order = ensureStackingOrder(c->transients());
     for (auto it = transients_stacking_order.constBegin();
@@ -2156,42 +2168,34 @@ QRect Workspace::adjustClientArea(AbstractClient *client, const QRect &area) con
 /**
  * Updates the current client areas according to the current clients.
  *
- * If the area changes or force is @c true, the new areas are propagated to the world.
- *
  * The client area is the area that is available for clients (that
  * which is not taken by windows like panels, the top-of-screen menu
  * etc).
  *
  * @see clientArea()
  */
-void Workspace::updateClientArea(bool force)
+void Workspace::updateClientArea()
 {
-    const Screens *s = Screens::self();
-    int nscreens = s->count();
-    const int numberOfDesktops = VirtualDesktopManager::self()->count();
-    QVector< QRect > new_wareas(numberOfDesktops + 1);
-    QVector< StrutRects > new_rmoveareas(numberOfDesktops + 1);
-    QVector< QVector< QRect > > new_sareas(numberOfDesktops + 1);
-    QVector< QRect > screens(nscreens);
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
+
+    QHash<const VirtualDesktop *, QRect> workAreas;
+    QHash<const VirtualDesktop *, StrutRects> restrictedAreas;
+    QHash<const VirtualDesktop *, QHash<const AbstractOutput *, QRect>> screenAreas;
+
     QRect desktopArea;
-    for (int i = 0; i < nscreens; i++) {
-        desktopArea |= s->geometry(i);
+    for (const AbstractOutput *output : outputs) {
+        desktopArea |= output->geometry();
     }
-    for (int iS = 0;
-            iS < nscreens;
-            iS ++) {
-        screens [iS] = s->geometry(iS);
+
+    for (const VirtualDesktop *desktop : desktops) {
+        workAreas[desktop] = desktopArea;
+
+        for (const AbstractOutput *output : outputs) {
+            screenAreas[desktop][output] = output->geometry();
+        }
     }
-    for (int i = 1;
-            i <= numberOfDesktops;
-            ++i) {
-        new_wareas[ i ] = desktopArea;
-        new_sareas[ i ].resize(nscreens);
-        for (int iS = 0;
-                iS < nscreens;
-                iS ++)
-            new_sareas[ i ][ iS ] = screens[ iS ];
-    }
+
     for (AbstractClient *client : qAsConst(m_allClients)) {
         if (!client->hasStrut()) {
             continue;
@@ -2226,77 +2230,38 @@ void Workspace::updateClientArea(bool force)
         // or having some content appear offscreen (Relatively rare compared to other).
         bool hasOffscreenStrut = hasOffscreenXineramaStrut(client);
 
-        if (client->isOnAllDesktops()) {
-            for (int i = 1;
-                    i <= numberOfDesktops;
-                    ++i) {
-                if (!hasOffscreenStrut)
-                    new_wareas[ i ] = new_wareas[ i ].intersected(r);
-                new_rmoveareas[ i ] += strutRegion;
-                for (int iS = 0;
-                        iS < nscreens;
-                        iS ++) {
-                    const auto geo = new_sareas[ i ][ iS ].intersected(
-                                                adjustClientArea(client, screens[ iS ]));
-                    // ignore the geometry if it results in the screen getting removed completely
-                    if (!geo.isEmpty()) {
-                        new_sareas[ i ][ iS ] = geo;
-                    }
-                }
+        const auto vds = client->isOnAllDesktops() ? desktops : client->desktops();
+        for (VirtualDesktop *vd : vds) {
+            if (!hasOffscreenStrut) {
+                workAreas[vd] &= r;
             }
-        } else {
-            if (!hasOffscreenStrut)
-                new_wareas[client->desktop()] = new_wareas[client->desktop()].intersected(r);
-            new_rmoveareas[client->desktop()] += strutRegion;
-            for (int iS = 0;
-                    iS < nscreens;
-                    iS ++) {
-//                            qDebug() << "adjusting new_sarea: " << screens[ iS ];
-                const auto geo = new_sareas[client->desktop()][ iS ].intersected(
-                      adjustClientArea(client, screens[ iS ]));
+            restrictedAreas[vd] += strutRegion;
+            for (AbstractOutput *output : outputs) {
+                const auto geo = screenAreas[vd][output].intersected(adjustClientArea(client, output->geometry()));
                 // ignore the geometry if it results in the screen getting removed completely
                 if (!geo.isEmpty()) {
-                    new_sareas[client->desktop()][ iS ] = geo;
+                    screenAreas[vd][output] = geo;
                 }
             }
         }
     }
-#if 0
-    for (int i = 1;
-            i <= numberOfDesktops();
-            ++i) {
-        for (int iS = 0;
-                iS < nscreens;
-                iS ++)
-            qCDebug(KWIN_CORE) << "new_sarea: " << new_sareas[ i ][ iS ];
-    }
-#endif
 
-    bool changed = force || screenarea.isEmpty();
-    for (int i = 1;
-            !changed && i <= numberOfDesktops;
-            ++i) {
-        changed |= workarea[i] != new_wareas[i];
-        changed |= restrictedmovearea[i] != new_rmoveareas[i];
-        changed |= screenarea[i].size() != new_sareas[i].size();
-        for (int iS = 0; !changed && iS < nscreens; iS++) {
-            changed |= new_sareas[i][iS] != screenarea[i][iS];
-        }
-    }
+    if (m_workAreas != workAreas || m_restrictedAreas != restrictedAreas || m_screenAreas != screenAreas) {
+        m_workAreas = workAreas;
+        m_screenAreas = screenAreas;
 
-    if (changed) {
-        workarea = new_wareas;
-        oldrestrictedmovearea = restrictedmovearea;
-        restrictedmovearea = new_rmoveareas;
-        screenarea = new_sareas;
+        m_oldRestrictedAreas = m_restrictedAreas;
+        m_restrictedAreas = restrictedAreas;
+
         if (rootInfo()) {
             NETRect r;
-            for (int i = 1; i <= numberOfDesktops; i++) {
-                r.pos.x = workarea[ i ].x();
-                r.pos.y = workarea[ i ].y();
-                r.size.width = workarea[ i ].width();
-                r.size.height = workarea[ i ].height();
-                rootInfo()->setWorkArea(i, r);
+            for (VirtualDesktop *desktop : desktops) {
+                const QRect &workArea = m_workAreas[desktop];
+                r.pos.x = workArea.x();
+                r.pos.y = workArea.y();
+                r.size.width = workArea.width();
+                r.size.height = workArea.height();
+                rootInfo()->setWorkArea(desktop->x11DesktopNumber(), r);
             }
         }
 
@@ -2306,70 +2271,83 @@ void Workspace::updateClientArea(bool force)
             (*it)->checkWorkspacePosition();
         }
 
-        oldrestrictedmovearea.clear(); // reset, no longer valid or needed
+        m_oldRestrictedAreas.clear(); // reset, no longer valid or needed
     }
 }
-
-void Workspace::updateClientArea()
-{
-    updateClientArea(false);
-}
-
 
 /**
  * Returns the area available for clients. This is the desktop
  * geometry minus windows on the dock. Placement algorithms should
  * refer to this rather than Screens::geometry.
  */
-QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
+QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, const VirtualDesktop *desktop) const
 {
-    if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
-        desktop = VirtualDesktopManager::self()->current();
-    if (screen == -1)
-        screen = screens()->current();
     const QSize displaySize = screens()->displaySize();
+    QRect workArea;
 
-    QRect sarea, warea;
+    const AbstractOutput *effectiveOutput = output;
+    if (is_multihead) {
+        effectiveOutput = kwinApp()->platform()->findOutput(screen_number);
+    }
+
+    QRect screenArea = m_screenAreas[desktop][effectiveOutput];
+    if (screenArea.isNull()) { // screens may be missing during KWin initialization or screen config changes
+        screenArea = effectiveOutput->geometry();
+    }
 
     if (is_multihead) {
-        sarea = (!screenarea.isEmpty()
-                   && screen < screenarea[ desktop ].size()) // screens may be missing during KWin initialization or screen config changes
-                  ? screenarea[ desktop ][ screen_number ]
-                  : screens()->geometry(screen_number);
-        warea = workarea[ desktop ].isNull()
-                ? screens()->geometry(screen_number)
-                : workarea[ desktop ];
+        workArea = m_workAreas[desktop];
+        if (workArea.isNull()) {
+            workArea = effectiveOutput->geometry();
+        }
     } else {
-        sarea = (!screenarea.isEmpty()
-                && screen < screenarea[ desktop ].size()) // screens may be missing during KWin initialization or screen config changes
-                ? screenarea[ desktop ][ screen ]
-                : screens()->geometry(screen);
-        warea = workarea[ desktop ].isNull()
-                ? QRect(0, 0, displaySize.width(), displaySize.height())
-                : workarea[ desktop ];
+        workArea = m_workAreas[desktop];
+        if (workArea.isNull()) {
+            workArea = QRect(0, 0, displaySize.width(), displaySize.height());
+        }
     }
 
     switch(opt) {
     case MaximizeArea:
     case PlacementArea:
-            return sarea;
+        return screenArea;
     case MaximizeFullArea:
     case FullScreenArea:
     case MovementArea:
     case ScreenArea:
-        if (is_multihead)
-            return screens()->geometry(screen_number);
-        else
-            return screens()->geometry(screen);
+        return effectiveOutput->geometry();
     case WorkArea:
         if (is_multihead)
-            return sarea;
+            return screenArea;
         else
-            return warea;
+            return workArea;
     case FullArea:
         return QRect(0, 0, displaySize.width(), displaySize.height());
+
+    default:
+        Q_UNREACHABLE();
     }
-    abort();
+}
+
+QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
+{
+    VirtualDesktop *virtualDesktop;
+    AbstractOutput *output;
+
+    if (desktop == NETWinInfo::OnAllDesktops || desktop == 0) {
+        virtualDesktop = VirtualDesktopManager::self()->currentDesktop();
+    } else {
+        virtualDesktop = VirtualDesktopManager::self()->desktopForX11Id(desktop);
+        Q_ASSERT(virtualDesktop);
+    }
+
+    if (screen == -1) {
+        screen = screens()->current();
+    }
+    output = kwinApp()->platform()->findOutput(screen);
+    Q_ASSERT(output);
+
+    return clientArea(opt, output, virtualDesktop);
 }
 
 QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, int desktop) const
@@ -2402,13 +2380,10 @@ QRect Workspace::clientArea(clientAreaOption opt, const AbstractClient *client, 
     return clientArea(opt, client, screens()->number(pos));
 }
 
-static QRegion strutsToRegion(int desktop, StrutAreas areas, const QVector<StrutRects> &struts)
+static QRegion strutsToRegion(StrutAreas areas, const StrutRects &strut)
 {
-    if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
-        desktop = VirtualDesktopManager::self()->current();
     QRegion region;
-    const StrutRects &rects = struts[desktop];
-    for (const StrutRect &rect : rects) {
+    for (const StrutRect &rect : strut) {
         if (areas & rect.area()) {
             region += rect;
         }
@@ -2416,19 +2391,19 @@ static QRegion strutsToRegion(int desktop, StrutAreas areas, const QVector<Strut
     return region;
 }
 
-QRegion Workspace::restrictedMoveArea(int desktop, StrutAreas areas) const
+QRegion Workspace::restrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas) const
 {
-    return strutsToRegion(desktop, areas, restrictedmovearea);
+    return strutsToRegion(areas, m_restrictedAreas[desktop]);
 }
 
 bool Workspace::inUpdateClientArea() const
 {
-    return !oldrestrictedmovearea.isEmpty();
+    return !m_oldRestrictedAreas.isEmpty();
 }
 
-QRegion Workspace::previousRestrictedMoveArea(int desktop, StrutAreas areas) const
+QRegion Workspace::previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas) const
 {
-    return strutsToRegion(desktop, areas, oldrestrictedmovearea);
+    return strutsToRegion(areas, m_oldRestrictedAreas[desktop]);
 }
 
 QVector< QRect > Workspace::previousScreenSizes() const

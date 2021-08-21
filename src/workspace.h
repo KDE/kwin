@@ -140,6 +140,7 @@ public:
      */
     Toplevel *findInternal(QWindow *w) const;
 
+    QRect clientArea(clientAreaOption, const AbstractOutput *output, const VirtualDesktop *desktop) const;
     QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
     QRect clientArea(clientAreaOption, const AbstractClient* c) const;
     QRect clientArea(clientAreaOption, const AbstractClient *client, const AbstractOutput *output) const;
@@ -148,7 +149,7 @@ public:
     QRect clientArea(clientAreaOption, int screen, int desktop) const;
     QRect clientArea(clientAreaOption, const AbstractOutput *output, int desktop) const;
 
-    QRegion restrictedMoveArea(int desktop, StrutAreas areas = StrutAreaAll) const;
+    QRegion restrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
 
     bool initializing() const;
 
@@ -264,7 +265,7 @@ public:
     // True when performing Workspace::updateClientArea().
     // The calls below are valid only in that case.
     bool inUpdateClientArea() const;
-    QRegion previousRestrictedMoveArea(int desktop, StrutAreas areas = StrutAreaAll) const;
+    QRegion previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
     QVector< QRect > previousScreenSizes() const;
     int oldDisplayWidth() const;
     int oldDisplayHeight() const;
@@ -480,8 +481,11 @@ private Q_SLOTS:
     void slotReloadConfig();
     void updateCurrentActivity(const QString &new_activity);
     // virtual desktop handling
-    void slotDesktopCountChanged(uint previousCount, uint newCount);
     void slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop);
+    void slotDesktopAdded(VirtualDesktop *desktop);
+    void slotDesktopRemoved(VirtualDesktop *desktop);
+    void slotOutputEnabled(AbstractOutput *output);
+    void slotOutputDisabled(AbstractOutput *output);
 
 Q_SIGNALS:
     /**
@@ -559,8 +563,6 @@ private:
     //---------------------------------------------------------------------
 
     void closeActivePopup();
-    void updateClientArea(bool force);
-    void resetClientAreas(uint desktopCount);
     void updateClientVisibilityOnDesktopChange(VirtualDesktop *newDesktop);
     void activateClientOnNewDesktop(VirtualDesktop *desktop);
     AbstractClient *findClientToActivateOnDesktop(VirtualDesktop *desktop);
@@ -652,14 +654,13 @@ private:
     QScopedPointer<KStartupInfo> m_startup;
     QScopedPointer<ColorMapper> m_colorMapper;
 
-    QVector<QRect> workarea; // Array of workareas for virtual desktops
-    // Array of restricted areas that window cannot be moved into
-    QVector<StrutRects> restrictedmovearea;
-    // Array of the previous restricted areas that window cannot be moved into
-    QVector<StrutRects> oldrestrictedmovearea;
-    QVector< QVector<QRect> > screenarea; // Array of workareas per xinerama screen for all virtual desktops
+    QHash<const VirtualDesktop *, QRect> m_workAreas;
+    QHash<const VirtualDesktop *, StrutRects> m_restrictedAreas;
+    QHash<const VirtualDesktop *, QHash<const AbstractOutput *, QRect>> m_screenAreas;
+
     QVector< QRect > oldscreensizes; // array of previous sizes of xinerama screens
     QSize olddisplaysize; // previous sizes od displayWidth()/displayHeight()
+    QHash<const VirtualDesktop *, StrutRects> m_oldRestrictedAreas;
 
     int set_active_client_recursion;
     int block_stacking_updates; // When > 0, stacking updates are temporarily disabled

@@ -316,7 +316,7 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
     updateShadow();
 
     if (check_workspace_pos) {
-        checkWorkspacePosition(oldFrameGeometry, -2, oldClientGeometry);
+        checkWorkspacePosition(oldFrameGeometry, oldClientGeometry);
     }
 }
 

@@ -638,7 +638,7 @@ void XdgToplevelClient::updateDecoration(bool check_workspace_pos, bool force)
     if (check_workspace_pos) {
         const QRect oldGeometryRestore = geometryRestore();
         setGeometryRestore(frameGeometry());
-        checkWorkspacePosition(oldFrameGeometry, -2, oldClientGeometry);
+        checkWorkspacePosition(oldFrameGeometry, oldClientGeometry);
         setGeometryRestore(oldGeometryRestore);
     }
 }

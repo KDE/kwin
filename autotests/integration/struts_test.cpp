@@ -13,6 +13,7 @@
 #include "deleted.h"
 #include "screenedge.h"
 #include "screens.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <kwineffects.h>
@@ -132,6 +133,9 @@ void StrutsTest::testWaylandStruts()
 {
     // this test verifies that struts on Wayland panels are handled correctly
     using namespace KWayland::Client;
+
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
+
     // no, struts yet
     QVERIFY(waylandServer()->clients().isEmpty());
     // first screen
@@ -151,7 +155,7 @@ void StrutsTest::testWaylandStruts()
     // combined
     QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 2560, 1024));
     QCOMPARE(workspace()->clientArea(FullArea, 0, 1), QRect(0, 0, 2560, 1024));
-    QCOMPARE(workspace()->restrictedMoveArea(-1), QRegion());
+    QCOMPARE(workspace()->restrictedMoveArea(desktop), QRegion());
 
     QFETCH(QVector<QRect>, windowGeometries);
     // create the panels
@@ -201,7 +205,7 @@ void StrutsTest::testWaylandStruts()
     QTEST(workspace()->clientArea(PlacementArea, 1, 1), "screen1Maximized");
     QTEST(workspace()->clientArea(MaximizeArea, 1, 1), "screen1Maximized");
     QTEST(workspace()->clientArea(WorkArea, 0, 1), "workArea");
-    QTEST(workspace()->restrictedMoveArea(-1), "restrictedMoveArea");
+    QTEST(workspace()->restrictedMoveArea(desktop), "restrictedMoveArea");
 
     // delete all surfaces
     for (auto it = clients.begin(); it != clients.end(); it++) {
@@ -210,7 +214,7 @@ void StrutsTest::testWaylandStruts()
         delete it.key();
         QVERIFY(destroyedSpy.wait());
     }
-    QCOMPARE(workspace()->restrictedMoveArea(-1), QRegion());
+    QCOMPARE(workspace()->restrictedMoveArea(desktop), QRegion());
 }
 
 void StrutsTest::testMoveWaylandPanel()
@@ -535,6 +539,8 @@ void StrutsTest::testX11Struts()
 {
     // this test verifies that struts are applied correctly for X11 windows
 
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
+
     // no, struts yet
     // first screen
     QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), QRect(0, 0, 1280, 1024));
@@ -553,7 +559,7 @@ void StrutsTest::testX11Struts()
     // combined
     QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 2560, 1024));
     QCOMPARE(workspace()->clientArea(FullArea, 0, 1), QRect(0, 0, 2560, 1024));
-    QCOMPARE(workspace()->restrictedMoveArea(-1), QRegion());
+    QCOMPARE(workspace()->restrictedMoveArea(desktop), QRegion());
 
     // create an xcb window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -636,7 +642,7 @@ void StrutsTest::testX11Struts()
     QTEST(workspace()->clientArea(PlacementArea, 1, 1), "screen1Maximized");
     QTEST(workspace()->clientArea(MaximizeArea, 1, 1), "screen1Maximized");
     QTEST(workspace()->clientArea(WorkArea, 0, 1), "workArea");
-    QTEST(workspace()->restrictedMoveArea(-1), "restrictedMoveArea");
+    QTEST(workspace()->restrictedMoveArea(desktop), "restrictedMoveArea");
 
     // and destroy the window again
     xcb_unmap_window(c.data(), w);
@@ -665,7 +671,7 @@ void StrutsTest::testX11Struts()
     // combined
     QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 2560, 1024));
     QCOMPARE(workspace()->clientArea(FullArea, 0, 1), QRect(0, 0, 2560, 1024));
-    QCOMPARE(workspace()->restrictedMoveArea(-1), QRegion());
+    QCOMPARE(workspace()->restrictedMoveArea(desktop), QRegion());
 }
 
 void StrutsTest::test363804()
@@ -863,6 +869,8 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     // when moving a window with decorations in a restricted way it should pass from one screen
     // to the other even if there is a panel in between.
 
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
+
     // left screen must be smaller than right screen
     const QVector<QRect> geometries{QRect(0, 282, 1366, 768), QRect(1366, 0, 1680, 1050)};
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs",
@@ -926,7 +934,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(1390, 0, 1656, 1050));
     QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(1390, 0, 1656, 1050));
     QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 3046, 1050));
-    QCOMPARE(workspace()->restrictedMoveArea(-1), QRegion(1366, 0, 24, 1050));
+    QCOMPARE(workspace()->restrictedMoveArea(desktop), QRegion(1366, 0, 24, 1050));
 
     // create another window and try to move it
 

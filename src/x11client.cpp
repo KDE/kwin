@@ -1100,7 +1100,7 @@ void X11Client::updateDecoration(bool check_workspace_pos, bool force)
         destroyDecoration();
     updateShadow();
     if (check_workspace_pos)
-        checkWorkspacePosition(oldgeom, -2, oldClientGeom);
+        checkWorkspacePosition(oldgeom, oldClientGeom);
     updateInputWindow();
     blockGeometryUpdates(false);
     updateFrameExtents();
