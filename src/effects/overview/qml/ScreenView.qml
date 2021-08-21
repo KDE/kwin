@@ -63,6 +63,10 @@ FocusScope {
         Behavior on opacity {
             OpacityAnimator { duration: effect.animationDuration }
         }
+
+        TapHandler {
+            onTapped: effect.deactivate();
+        }
     }
 
     ExpoArea {
