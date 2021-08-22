@@ -452,7 +452,7 @@ bool WaylandServer::init(InitializationFlags flags)
     connect(this, &WaylandServer::shellClientAdded, idleInhibition, &IdleInhibition::registerClient);
     new IdleInhibitManagerV1Interface(m_display, m_display);
     m_plasmaShell = new PlasmaShellInterface(m_display, m_display);
-    connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated,
+    connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated, this,
         [this] (PlasmaShellSurfaceInterface *surface) {
             if (XdgSurfaceClient *client = findXdgSurfaceClient(surface->surface())) {
                 client->installPlasmaShellSurface(surface);
@@ -460,7 +460,7 @@ bool WaylandServer::init(InitializationFlags flags)
         }
     );
     m_appMenuManager = new AppMenuManagerInterface(m_display, m_display);
-    connect(m_appMenuManager, &AppMenuManagerInterface::appMenuCreated,
+    connect(m_appMenuManager, &AppMenuManagerInterface::appMenuCreated, this,
         [this] (AppMenuInterface *appMenu) {
             if (XdgToplevelClient *client = findXdgToplevelClient(appMenu->surface())) {
                 client->installAppMenu(appMenu);
@@ -468,7 +468,7 @@ bool WaylandServer::init(InitializationFlags flags)
         }
     );
     m_paletteManager = new ServerSideDecorationPaletteManagerInterface(m_display, m_display);
-    connect(m_paletteManager, &ServerSideDecorationPaletteManagerInterface::paletteCreated,
+    connect(m_paletteManager, &ServerSideDecorationPaletteManagerInterface::paletteCreated, this,
         [this] (ServerSideDecorationPaletteInterface *palette) {
             if (XdgToplevelClient *client = findXdgToplevelClient(palette->surface())) {
                 client->installPalette(palette);

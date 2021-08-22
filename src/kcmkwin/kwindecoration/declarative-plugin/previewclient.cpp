@@ -87,7 +87,7 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
             Q_EMIT onAllDesktopsChanged(isOnAllDesktops());
         }
     );
-    connect(&m_palette, &KWin::Decoration::DecorationPalette::changed, [this]() {
+    connect(&m_palette, &KWin::Decoration::DecorationPalette::changed, this, [this]() {
         Q_EMIT paletteChanged(m_palette.palette());
     });
     auto emitEdgesChanged = [this, c]() {

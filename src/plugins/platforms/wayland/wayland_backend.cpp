@@ -302,7 +302,7 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
             }
         }
     );
-    connect(m_seat, &Seat::hasTouchChanged,
+    connect(m_seat, &Seat::hasTouchChanged, this,
         [this] (bool hasTouch) {
             if (hasTouch && !m_touch) {
                 m_touch = m_seat->createTouch(this);

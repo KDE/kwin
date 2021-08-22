@@ -224,7 +224,7 @@ void UserActionsMenu::init()
     connect(m_menu, &QMenu::triggered, this, &UserActionsMenu::slotWindowOperation, Qt::QueuedConnection);
 
     QMenu *advancedMenu = new QMenu(m_menu);
-    connect(advancedMenu, &QMenu::aboutToShow, [this, advancedMenu]() {
+    connect(advancedMenu, &QMenu::aboutToShow, this, [this, advancedMenu]() {
         if (m_client) {
             advancedMenu->setPalette(m_client->palette());
         }
@@ -830,7 +830,7 @@ ShortcutDialog::ShortcutDialog(const QKeySequence& cut)
 
     // Listen to changed shortcuts
     connect(m_ui.keySequenceEdit, &QKeySequenceEdit::editingFinished, this, &ShortcutDialog::keySequenceChanged);
-    connect(m_ui.clearButton, &QToolButton::clicked, [this]{
+    connect(m_ui.clearButton, &QToolButton::clicked, this, [this]{
         _shortcut = QKeySequence();
     });
     m_ui.keySequenceEdit->setFocus();

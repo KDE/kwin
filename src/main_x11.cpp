@@ -226,7 +226,7 @@ void ApplicationX11::performStartup()
         ::exit(1);
     });
     connect(owner.data(), &KSelectionOwner::lostOwnership, this, &ApplicationX11::lostSelection);
-    connect(owner.data(), &KSelectionOwner::claimedOwnership, [this]{
+    connect(owner.data(), &KSelectionOwner::claimedOwnership, this, [this]{
         installNativeX11EventFilter();
         // first load options - done internally by a different thread
         createOptions();

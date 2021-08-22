@@ -36,7 +36,7 @@ WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
     setName("WL-" + QString::number(identifier));
 
     setCapabilityInternal(Capability::Dpms);
-    connect(surface, &Surface::frameRendered, [this] {
+    connect(surface, &Surface::frameRendered, this, [this] {
         m_rendered = true;
         Q_EMIT frameRendered();
     });

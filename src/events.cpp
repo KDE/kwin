@@ -1111,7 +1111,7 @@ void X11Client::focusOutEvent(xcb_focus_out_event_t *e)
         m_focusOutTimer = new QTimer(this);
         m_focusOutTimer->setSingleShot(true);
         m_focusOutTimer->setInterval(0);
-        connect(m_focusOutTimer, &QTimer::timeout, [this]() {
+        connect(m_focusOutTimer, &QTimer::timeout, this, [this]() {
             setActive(false);
         });
     }

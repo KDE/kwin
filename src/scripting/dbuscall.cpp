@@ -30,7 +30,7 @@ void DBusCall::call()
     msg.setArguments(m_arguments);
 
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(QDBusConnection::sessionBus().asyncCall(msg), this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, [this, watcher]() {
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, watcher]() {
         watcher->deleteLater();
         if (watcher->isError()) {
             Q_EMIT failed();

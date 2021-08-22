@@ -27,7 +27,7 @@ SwitcherItem::SwitcherItem(QObject *parent)
     , m_allDesktops(false)
     , m_currentIndex(0)
 {
-    m_selectedIndexConnection = connect(tabBox, &TabBoxHandler::selectedIndexChanged, [this] {
+    m_selectedIndexConnection = connect(tabBox, &TabBoxHandler::selectedIndexChanged, this, [this] {
         if (isVisible()) {
             setCurrentIndex(tabBox->currentIndex().row());
         }

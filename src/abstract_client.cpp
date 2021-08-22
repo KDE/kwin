@@ -2201,7 +2201,7 @@ void AbstractClient::checkQuickTilingMaximizationZones(int xroot, int yroot)
                 m_electricMaximizingDelay = new QTimer(this);
                 m_electricMaximizingDelay->setInterval(250);
                 m_electricMaximizingDelay->setSingleShot(true);
-                connect(m_electricMaximizingDelay, &QTimer::timeout, [this]() {
+                connect(m_electricMaximizingDelay, &QTimer::timeout, this, [this]() {
                     if (isInteractiveMove())
                         setElectricBorderMaximizing(electricBorderMode() != QuickTileMode(QuickTileFlag::None));
                 });
