@@ -50,7 +50,6 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
 
 bool DrmPlane::init()
 {
-    qCDebug(KWIN_DRM) << "Atomic init for plane:" << id();
     DrmScopedPointer<drmModePlane> p(drmModeGetPlane(gpu()->fd(), id()));
 
     if (!p) {
@@ -121,7 +120,7 @@ DrmPlane::TypeIndex DrmPlane::type()
         return TypeIndex::Overlay;
     }
     for (uint32_t i = 0; i < static_cast<uint32_t>(TypeIndex::Count); i++) {
-        if (property->enumMap(i) == property->current()) {
+        if (property->enumMap()[i] == property->current()) {
             return TypeIndex(i);
         }
     }

@@ -83,15 +83,11 @@ public:
 
         void initEnumMap(drmModePropertyRes *prop);
 
-        /**
-         * For properties of enum type the enum map identifies the kernel runtime values,
-         * which must be queried beforehand.
-         *
-         * @param n the index to the enum
-         * @return the runtime enum value corresponding with enum index @param n
-         */
-        uint64_t enumMap(int n) const {
-            return m_enumMap[n];    // TODO: test on index out of bounds?
+        QVector<QByteArray> enumNames() const {
+            return m_enumNames;
+        }
+        QVector<uint64_t> enumMap() const {
+            return m_enumMap;
         }
         bool hasEnum(uint64_t value) const {
             return m_enumMap.contains(value);

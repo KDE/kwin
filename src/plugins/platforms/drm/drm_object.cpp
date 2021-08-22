@@ -41,9 +41,39 @@ bool DrmObject::initProps()
         return false;
     }
     if (KWIN_DRM().isDebugEnabled() && m_gpu->atomicModeSetting()) {
-        for (int i = 0; i < m_propertyDefinitions.count(); i++) {
-            if (!m_props[i]) {
-                qCDebug(KWIN_DRM) << "Could not find property" << m_propertyDefinitions[i].name;
+        auto debug = QMessageLogger(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, KWIN_DRM().categoryName()).debug().nospace();
+        switch(m_objectType) {
+        case DRM_MODE_OBJECT_CONNECTOR:
+            debug << "Connector ";
+            break;
+        case DRM_MODE_OBJECT_CRTC:
+            debug << "Crtc ";
+            break;
+        case DRM_MODE_OBJECT_PLANE:
+            debug << "Plane ";
+            break;
+        default:
+            Q_UNREACHABLE();
+        }
+        debug << m_id << " has properties ";
+        for (int i = 0; i < m_props.count(); i++) {
+            if (i > 0) {
+                debug << ", ";
+            }
+            const auto &prop = m_props[i];
+            if (prop) {
+                debug << prop->name() << "=";
+                if (m_propertyDefinitions[i].enumNames.isEmpty()) {
+                    debug << prop->current();
+                } else {
+                    if (prop->current() < static_cast<uint64_t>(prop->enumMap().count())) {
+                        debug << prop->enumNames()[prop->enumMap()[prop->current()]];
+                    } else {
+                        debug << "invalid value: " << prop->current();
+                    }
+                }
+            } else {
+                debug << m_propertyDefinitions[i].name << " not found";
             }
         }
     }
@@ -134,7 +164,6 @@ bool DrmObject::updateProperties()
                         m_props[propIndex]->setCurrent(properties->prop_values[drmPropIndex]);
                     }
                 } else {
-                    qCDebug(KWIN_DRM, "Found property %s with value %lu", def.name.data(), properties->prop_values[drmPropIndex]);
                     m_props[propIndex] = new Property(m_gpu, prop.data(), properties->prop_values[drmPropIndex], def.enumNames, blob);
                 }
                 found = true;
@@ -165,7 +194,6 @@ DrmObject::Property::Property(DrmGpu *gpu, drmModePropertyRes *prop, uint64_t va
     , m_gpu(gpu)
 {
     if (!enumNames.isEmpty()) {
-        qCDebug(KWIN_DRM) << m_propName << " can have enums:" << enumNames;
         m_enumNames = enumNames;
         initEnumMap(prop);
     }
@@ -300,9 +328,6 @@ void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)
     const int nameCount = m_enumNames.size();
     m_enumMap.resize(nameCount);
 
-    qCDebug(KWIN_DRM).nospace() << "Available are " << prop->count_enums <<
-                         " enums. Query their runtime values:";
-
     for (int i = 0; i < prop->count_enums; i++) {
         struct drm_mode_property_enum *en = &prop->enums[i];
         int j = 0;
@@ -317,22 +342,7 @@ void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)
         }
 
         if (j < nameCount) {
-            qCDebug(KWIN_DRM).nospace() << "Enum '" << en->name
-                                        << "': runtime-value = " << en->value;
             m_enumMap[j] = en->value;
-        }
-    }
-
-    if (KWIN_DRM().isDebugEnabled()) {
-        for (int i = 0; i < m_enumMap.size(); i++) {
-            if (m_current == m_enumMap[i]) {
-                // TODO: This does not work with bitmask properties, because from kernel we get the
-                //       values for some reason as the shift distance instead of the full value.
-                //       See: https://github.com/torvalds/linux/blob/6794862a/drivers/
-                //            gpu/drm/drm_blend.c#L267
-                qCDebug(KWIN_DRM) << "=>" << m_propName
-                                  << "with mapped enum value" << m_enumNames[i];
-            }
         }
     }
 }

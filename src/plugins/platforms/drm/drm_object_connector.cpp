@@ -74,7 +74,6 @@ bool DrmConnector::init()
     if (!m_conn || !m_conn->count_modes) {
         return false;
     }
-    qCDebug(KWIN_DRM) << "Creating connector" << id();
 
     if (!initProps()) {
         return false;

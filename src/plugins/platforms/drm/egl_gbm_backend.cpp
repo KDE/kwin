@@ -409,6 +409,10 @@ bool EglGbmBackend::initBufferConfigs()
         // Query some configuration parameters, to show in debug log.
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
 
+        if (!m_gpu->isFormatSupported(gbmFormat)) {
+            continue;
+        }
+
         // Query number of bits for color channel
         EGLint blueSize, redSize, greenSize, alphaSize;
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_RED_SIZE, &redSize);
@@ -416,18 +420,6 @@ bool EglGbmBackend::initBufferConfigs()
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_BLUE_SIZE, &blueSize);
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
 
-        if (KWIN_DRM().isDebugEnabled()) {
-            // GBM formats are declared as FOURCC code (integer from ASCII chars, so use this fact).
-            char gbmFormatStr[sizeof(EGLint) + 1] = {0};
-            memcpy(gbmFormatStr, &gbmFormat, sizeof(EGLint));
-            qCDebug(KWIN_DRM) << "  EGL config #" << i << " has GBM FOURCC format:" << gbmFormatStr
-                              << "; color sizes (RGBA order):"
-                              << redSize << greenSize << blueSize << alphaSize;
-        }
-
-        if (!m_gpu->isFormatSupported(gbmFormat)) {
-            continue;
-        }
         // prefer XRGB8888 as it's most likely to be supported by secondary GPUs as well
         if (gbmFormat == GBM_BO_FORMAT_XRGB8888) {
             m_gbmFormat = gbmFormat;

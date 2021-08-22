@@ -34,7 +34,6 @@ bool DrmCrtc::init()
     if (!m_crtc) {
         return false;
     }
-    qCDebug(KWIN_DRM) << "Init for CRTC:" << pipeIndex() << "id:" << id();
     return initProps();
 }
 
