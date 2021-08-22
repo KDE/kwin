@@ -15,12 +15,13 @@ namespace KWaylandServer
 {
 
 class Display;
+class PlasmaWindowActivationFeedbackInterfacePrivate;
 class PlasmaWindowInterface;
-class SurfaceInterface;
 class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowActivationInterfacePrivate;
 class PlasmaWindowManagementInterfacePrivate;
 class PlasmaWindowInterfacePrivate;
+class SurfaceInterface;
 
 class KWAYLANDSERVER_EXPORT PlasmaWindowActivationInterface
 {
@@ -30,10 +31,30 @@ public:
     void sendAppId(const QString &id);
 
 private:
-    friend class PlasmaWindowManagementInterface;
+    friend class PlasmaWindowActivationFeedbackInterface;
     explicit PlasmaWindowActivationInterface();
 
     QScopedPointer<PlasmaWindowActivationInterfacePrivate> d;
+};
+
+class KWAYLANDSERVER_EXPORT PlasmaWindowActivationFeedbackInterface : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit PlasmaWindowActivationFeedbackInterface(Display *display, QObject *parent = nullptr);
+    ~PlasmaWindowActivationFeedbackInterface() override;
+
+    /**
+     * Notify about a new application with @p app_id being started
+     *
+     * @returns an instance of @class PlasmaWindowActivationInterface to
+     * be destroyed as the activation process ends.
+     */
+    PlasmaWindowActivationInterface *createActivation(const QString &app_id);
+
+private:
+    QScopedPointer<PlasmaWindowActivationFeedbackInterfacePrivate> d;
 };
 
 class KWAYLANDSERVER_EXPORT PlasmaWindowManagementInterface : public QObject
@@ -71,14 +92,6 @@ public:
     void setStackingOrder(const QVector<quint32> &stackingOrder);
 
     void setStackingOrderUuids(const QVector<QString> &stackingOrderUuids);
-
-    /**
-     * Notify about a new application with @p app_id being started
-     *
-     * @returns an instance of @class PlasmaWindowActivationInterface to
-     * be destroyed as the activation process ends.
-     */
-    PlasmaWindowActivationInterface *createActivation(const QString &app_id);
 
 Q_SIGNALS:
     void requestChangeShowingDesktop(ShowingDesktopState requestedState);
