@@ -694,14 +694,16 @@ void RulesModel::setSuggestedProperties(const QVariantMap &info)
 #endif
 
     const auto ruleForProperty = x11PropertyHash();
-    for (QString &property : info.keys()) {
+    for (auto it = info.cbegin(), end = info.cend(); it != end; ++it) {
+        const QString &property = it.key();
+
         if (!ruleForProperty.contains(property)) {
             continue;
         }
         const QString ruleKey = ruleForProperty.value(property, QString());
         Q_ASSERT(hasRule(ruleKey));
 
-        m_rules[ruleKey]->setSuggestedValue(info.value(property));
+        m_rules[ruleKey]->setSuggestedValue(it.value());
     }
 
     Q_EMIT dataChanged(index(0), index(rowCount()-1), {RulesModel::SuggestedValueRole});

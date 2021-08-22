@@ -43,31 +43,45 @@
 namespace KWin
 {
 
-static const QHash<uint32_t, Qt::MouseButton> s_buttonToQtMouseButton = {
-    { BTN_LEFT , Qt::LeftButton },
-    { BTN_MIDDLE , Qt::MiddleButton },
-    { BTN_RIGHT , Qt::RightButton },
-    // in QtWayland mapped like that
-    { BTN_SIDE , Qt::ExtraButton1 },
-    // in QtWayland mapped like that
-    { BTN_EXTRA , Qt::ExtraButton2 },
-    { BTN_BACK , Qt::BackButton },
-    { BTN_FORWARD , Qt::ForwardButton },
-    { BTN_TASK , Qt::TaskButton },
-    // mapped like that in QtWayland
-    { 0x118 , Qt::ExtraButton6 },
-    { 0x119 , Qt::ExtraButton7 },
-    { 0x11a , Qt::ExtraButton8 },
-    { 0x11b , Qt::ExtraButton9 },
-    { 0x11c , Qt::ExtraButton10 },
-    { 0x11d , Qt::ExtraButton11 },
-    { 0x11e , Qt::ExtraButton12 },
-    { 0x11f , Qt::ExtraButton13 },
-};
+using ButtonToQtMouseButtonMap = std::map<uint32_t, Qt::MouseButton>;
+
+static ButtonToQtMouseButtonMap buttonMap()
+{
+    static const ButtonToQtMouseButtonMap map = {
+        { BTN_LEFT , Qt::LeftButton },
+        { BTN_MIDDLE , Qt::MiddleButton },
+        { BTN_RIGHT , Qt::RightButton },
+        // in QtWayland mapped like that
+        { BTN_SIDE , Qt::ExtraButton1 },
+        // in QtWayland mapped like that
+        { BTN_EXTRA , Qt::ExtraButton2 },
+        { BTN_BACK , Qt::BackButton },
+        { BTN_FORWARD , Qt::ForwardButton },
+        { BTN_TASK , Qt::TaskButton },
+        // mapped like that in QtWayland
+        { 0x118 , Qt::ExtraButton6 },
+        { 0x119 , Qt::ExtraButton7 },
+        { 0x11a , Qt::ExtraButton8 },
+        { 0x11b , Qt::ExtraButton9 },
+        { 0x11c , Qt::ExtraButton10 },
+        { 0x11d , Qt::ExtraButton11 },
+        { 0x11e , Qt::ExtraButton12 },
+        { 0x11f , Qt::ExtraButton13 },
+    };
+
+    return map;
+}
 
 uint32_t qtMouseButtonToButton(Qt::MouseButton button)
 {
-    return s_buttonToQtMouseButton.key(button);
+    const ButtonToQtMouseButtonMap &map = buttonMap();
+    for (const auto [btnId, qtMouseButton] : map) {
+        if (button == qtMouseButton) {
+            return btnId;
+        }
+    }
+
+    return 0;
 }
 
 static Qt::MouseButton buttonToQtMouseButton(uint32_t button)
@@ -78,7 +92,10 @@ static Qt::MouseButton buttonToQtMouseButton(uint32_t button)
     // it's only needed for recognizing whether buttons are pressed
     // if multiple buttons are mapped to the value the evaluation whether
     // buttons are pressed is correct and that's all we care about.
-    return s_buttonToQtMouseButton.value(button, Qt::ExtraButton24);
+
+    const ButtonToQtMouseButtonMap &map = buttonMap();
+    const auto it = map.find(button);
+    return it != map.cend() ? it->second : Qt::ExtraButton24;
 }
 
 static bool screenContainsPos(const QPointF &pos)

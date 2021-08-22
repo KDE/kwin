@@ -149,32 +149,37 @@ bool DrmConnector::isConnected()
     return m_conn->connection == DRM_MODE_CONNECTED;
 }
 
-static QHash<int, QByteArray> s_connectorNames = {
-    {DRM_MODE_CONNECTOR_Unknown, QByteArrayLiteral("Unknown")},
-    {DRM_MODE_CONNECTOR_VGA, QByteArrayLiteral("VGA")},
-    {DRM_MODE_CONNECTOR_DVII, QByteArrayLiteral("DVI-I")},
-    {DRM_MODE_CONNECTOR_DVID, QByteArrayLiteral("DVI-D")},
-    {DRM_MODE_CONNECTOR_DVIA, QByteArrayLiteral("DVI-A")},
-    {DRM_MODE_CONNECTOR_Composite, QByteArrayLiteral("Composite")},
-    {DRM_MODE_CONNECTOR_SVIDEO, QByteArrayLiteral("SVIDEO")},
-    {DRM_MODE_CONNECTOR_LVDS, QByteArrayLiteral("LVDS")},
-    {DRM_MODE_CONNECTOR_Component, QByteArrayLiteral("Component")},
-    {DRM_MODE_CONNECTOR_9PinDIN, QByteArrayLiteral("DIN")},
-    {DRM_MODE_CONNECTOR_DisplayPort, QByteArrayLiteral("DP")},
-    {DRM_MODE_CONNECTOR_HDMIA, QByteArrayLiteral("HDMI-A")},
-    {DRM_MODE_CONNECTOR_HDMIB, QByteArrayLiteral("HDMI-B")},
-    {DRM_MODE_CONNECTOR_TV, QByteArrayLiteral("TV")},
-    {DRM_MODE_CONNECTOR_eDP, QByteArrayLiteral("eDP")},
-    {DRM_MODE_CONNECTOR_VIRTUAL, QByteArrayLiteral("Virtual")},
-    {DRM_MODE_CONNECTOR_DSI, QByteArrayLiteral("DSI")},
-#ifdef DRM_MODE_CONNECTOR_DPI
-    {DRM_MODE_CONNECTOR_DPI, QByteArrayLiteral("DPI")},
-#endif
-};
-
 QString DrmConnector::connectorName() const
 {
-    return s_connectorNames.value(m_conn->connector_type, QByteArrayLiteral("Unknown")) + QStringLiteral("-") + QString::number(m_conn->connector_type_id);
+    static const std::map<int, QLatin1String> connectorNames = {
+        {DRM_MODE_CONNECTOR_Unknown, QLatin1String("Unknown")},
+        {DRM_MODE_CONNECTOR_VGA, QLatin1String("VGA")},
+        {DRM_MODE_CONNECTOR_DVII, QLatin1String("DVI-I")},
+        {DRM_MODE_CONNECTOR_DVID, QLatin1String("DVI-D")},
+        {DRM_MODE_CONNECTOR_DVIA, QLatin1String("DVI-A")},
+        {DRM_MODE_CONNECTOR_Composite, QLatin1String("Composite")},
+        {DRM_MODE_CONNECTOR_SVIDEO, QLatin1String("SVIDEO")},
+        {DRM_MODE_CONNECTOR_LVDS, QLatin1String("LVDS")},
+        {DRM_MODE_CONNECTOR_Component, QLatin1String("Component")},
+        {DRM_MODE_CONNECTOR_9PinDIN, QLatin1String("DIN")},
+        {DRM_MODE_CONNECTOR_DisplayPort, QLatin1String("DP")},
+        {DRM_MODE_CONNECTOR_HDMIA, QLatin1String("HDMI-A")},
+        {DRM_MODE_CONNECTOR_HDMIB, QLatin1String("HDMI-B")},
+        {DRM_MODE_CONNECTOR_TV, QLatin1String("TV")},
+        {DRM_MODE_CONNECTOR_eDP, QLatin1String("eDP")},
+        {DRM_MODE_CONNECTOR_VIRTUAL, QLatin1String("Virtual")},
+        {DRM_MODE_CONNECTOR_DSI, QLatin1String("DSI")},
+#ifdef DRM_MODE_CONNECTOR_DPI
+        {DRM_MODE_CONNECTOR_DPI, QLatin1String("DPI")},
+#endif
+    };
+
+    const auto it = connectorNames.find(m_conn->connector_type);
+    if (it != connectorNames.cend()) {
+        return it->second + QLatin1Char('-') + QString::number(m_conn->connector_type_id);
+    } else {
+        return QLatin1String("Unknown") + QLatin1Char('-') + QString::number(m_conn->connector_type_id);
+    }
 }
 
 QString DrmConnector::modelName() const

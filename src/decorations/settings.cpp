@@ -22,6 +22,8 @@
 
 #include <QFontDatabase>
 
+#include <map>
+
 namespace KWin
 {
 namespace Decoration
@@ -68,33 +70,40 @@ bool SettingsImpl::isCloseOnDoubleClickOnMenu() const
     return m_closeDoubleClickMenu;
 }
 
-static QHash<KDecoration2::DecorationButtonType, QChar> s_buttonNames;
-static void initButtons()
+using ButtonsMap = std::map<KDecoration2::DecorationButtonType, QChar>;
+
+static ButtonsMap decorationButtons()
 {
-    if (!s_buttonNames.isEmpty()) {
-        return;
-    }
-    s_buttonNames[KDecoration2::DecorationButtonType::Menu]            = QChar('M');
-    s_buttonNames[KDecoration2::DecorationButtonType::ApplicationMenu] = QChar('N');
-    s_buttonNames[KDecoration2::DecorationButtonType::OnAllDesktops]   = QChar('S');
-    s_buttonNames[KDecoration2::DecorationButtonType::ContextHelp]     = QChar('H');
-    s_buttonNames[KDecoration2::DecorationButtonType::Minimize]        = QChar('I');
-    s_buttonNames[KDecoration2::DecorationButtonType::Maximize]        = QChar('A');
-    s_buttonNames[KDecoration2::DecorationButtonType::Close]           = QChar('X');
-    s_buttonNames[KDecoration2::DecorationButtonType::KeepAbove]       = QChar('F');
-    s_buttonNames[KDecoration2::DecorationButtonType::KeepBelow]       = QChar('B');
-    s_buttonNames[KDecoration2::DecorationButtonType::Shade]           = QChar('L');
+    using ButtonType = KDecoration2::DecorationButtonType;
+
+    static const ButtonsMap map = {
+        {ButtonType::Menu, QChar('M')},
+        {ButtonType::ApplicationMenu, QChar('N')},
+        {ButtonType::OnAllDesktops, QChar('S')},
+        {ButtonType::ContextHelp, QChar('H')},
+        {ButtonType::Minimize, QChar('I')},
+        {ButtonType::Maximize, QChar('A')},
+        {ButtonType::Close, QChar('X')},
+        {ButtonType::KeepAbove, QChar('F')},
+        {ButtonType::KeepBelow, QChar('B')},
+        {ButtonType::Shade, QChar('L')},
+    };
+
+    return map;
 }
 
 static QString buttonsToString(const QVector<KDecoration2::DecorationButtonType> &buttons)
 {
-    auto buttonToString = [](KDecoration2::DecorationButtonType button) -> QChar {
-        const auto it = s_buttonNames.constFind(button);
-        if (it != s_buttonNames.constEnd()) {
-            return it.value();
+    const ButtonsMap &map = decorationButtons();
+
+    auto buttonToString = [&map](KDecoration2::DecorationButtonType button) -> QChar {
+        const auto it = map.find(button);
+        if (it != map.cend()) {
+            return it->second;
         }
         return QChar();
     };
+
     QString ret;
     for (auto button : buttons) {
         ret.append(buttonToString(button));
@@ -106,18 +115,20 @@ QVector< KDecoration2::DecorationButtonType > SettingsImpl::readDecorationButton
                                                                                     const char *key,
                                                                                     const QVector< KDecoration2::DecorationButtonType > &defaultValue) const
 {
-    initButtons();
-    auto buttonsFromString = [](const QString &buttons) -> QVector<KDecoration2::DecorationButtonType> {
+    const ButtonsMap &btnMap = decorationButtons();
+
+    auto buttonsFromString = [&btnMap](const QString &buttons) -> QVector<KDecoration2::DecorationButtonType> {
         QVector<KDecoration2::DecorationButtonType> ret;
         for (auto it = buttons.begin(); it != buttons.end(); ++it) {
-            for (auto it2 = s_buttonNames.constBegin(); it2 != s_buttonNames.constEnd(); ++it2) {
-                if (it2.value() == (*it)) {
-                    ret << it2.key();
+            for (const auto [buttonType, associatedChar] : btnMap) {
+                if (associatedChar == (*it)) {
+                    ret << buttonType;
                 }
             }
         }
         return ret;
     };
+
     return buttonsFromString(config.readEntry(key, buttonsToString(defaultValue)));
 }
 

@@ -23,12 +23,6 @@
 namespace KWin
 {
 
-static const QSet<QString> s_blacklist {
-    QStringLiteral("ksmserver ksmserver"),
-    QStringLiteral("ksmserver-logout-greeter ksmserver-logout-greeter"),
-    QStringLiteral("ksplashqml ksplashqml"),
-};
-
 GlideEffect::GlideEffect()
 {
     initConfig<GlideConfig>();
@@ -286,18 +280,21 @@ void GlideEffect::windowDataChanged(EffectWindow *w, int role)
 
 bool GlideEffect::isGlideWindow(EffectWindow *w) const
 {
+    const QString wClass = w->windowClass();
     // We don't want to animate most of plasmashell's windows, yet, some
     // of them we want to, for example, Task Manager Settings window.
     // The problem is that all those window share single window class.
     // So, the only way to decide whether a window should be animated is
     // to use a heuristic: if a window has decoration, then it's most
     // likely a dialog or a settings window so we have to animate it.
-    if (w->windowClass() == QLatin1String("plasmashell plasmashell")
-            || w->windowClass() == QLatin1String("plasmashell org.kde.plasmashell")) {
+    if (wClass == QLatin1String("plasmashell plasmashell")
+            || wClass == QLatin1String("plasmashell org.kde.plasmashell")) {
         return w->hasDecoration();
     }
 
-    if (s_blacklist.contains(w->windowClass())) {
+    if (wClass == QLatin1String("ksmserver ksmserver")
+        || wClass == QLatin1String("ksmserver-logout-greeter ksmserver-logout-greeter")
+        || wClass == QLatin1String("ksplashqml ksplashqml")) {
         return false;
     }
 
