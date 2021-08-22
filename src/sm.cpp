@@ -40,7 +40,7 @@ static KConfig *sessionConfig(QString id, QString key)
     lastId = id;
     lastKey = key;
     if (!config) {
-        config = new KConfig(pattern.arg(id).arg(key), KConfig::SimpleConfig);
+        config = new KConfig(pattern.arg(id, key), KConfig::SimpleConfig);
     }
     return config;
 }

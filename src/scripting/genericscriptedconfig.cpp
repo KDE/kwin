@@ -78,8 +78,8 @@ void GenericScriptedConfig::createUi()
     loader->setLanguageChangeEnabled(true);
     QFile uiFile(uiPath);
     // try getting a translation domain
-    const QString metaDataPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                        QStringLiteral(KWIN_NAME"/%1/%2/metadata.desktop").arg(typeName()).arg(m_packageName));
+    const QString metaDataPath =
+        QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME "/%1/%2/metadata.desktop").arg(typeName(), m_packageName));
     if (!metaDataPath.isNull()) {
         KDesktopFile metaData(metaDataPath);
         m_translator->setTranslationDomain(metaData.desktopGroup().readEntry("X-KWin-Config-TranslationDomain", QString()));

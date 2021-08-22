@@ -1539,9 +1539,8 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral("Protocol Version/Revision: %1/%2\n").arg(x11setup->protocol_major_version).arg(x11setup->protocol_minor_version));
         const auto extensions = Xcb::Extensions::self()->extensions();
         for (const auto &e : extensions) {
-            support.append(QStringLiteral("%1: %2; Version: 0x%3\n").arg(QString::fromUtf8(e.name))
-                                                                    .arg(e.present ? yes.trimmed() : no.trimmed())
-                                                                    .arg(QString::number(e.version, 16)));
+            support.append(QStringLiteral("%1: %2; Version: 0x%3\n")
+                               .arg(QString::fromUtf8(e.name), e.present ? yes.trimmed() : no.trimmed(), QString::number(e.version, 16)));
         }
         support.append(QStringLiteral("\n"));
     }
@@ -1570,7 +1569,7 @@ QString Workspace::supportInformation() const
     auto printProperty = [] (const QVariant &variant) {
         if (variant.type() == QVariant::Size) {
             const QSize &s = variant.toSize();
-            return QStringLiteral("%1x%2").arg(QString::number(s.width())).arg(QString::number(s.height()));
+            return QStringLiteral("%1x%2").arg(s.width()).arg(s.height());
         }
         if (QLatin1String(variant.typeName()) == QLatin1String("KWin::OpenGLPlatformInterface") ||
                 QLatin1String(variant.typeName()) == QLatin1String("KWin::Options::WindowOperation")) {
@@ -1583,7 +1582,7 @@ QString Workspace::supportInformation() const
         if (QLatin1String(property.name()) == QLatin1String("objectName")) {
             continue;
         }
-        support.append(QStringLiteral("%1: %2\n").arg(property.name()).arg(printProperty(options->property(property.name()))));
+        support.append(QStringLiteral("%1: %2\n").arg(property.name(), printProperty(options->property(property.name()))));
     }
     support.append(QStringLiteral("\nScreen Edges\n"));
     support.append(QStringLiteral(  "============\n"));
@@ -1593,7 +1592,7 @@ QString Workspace::supportInformation() const
         if (QLatin1String(property.name()) == QLatin1String("objectName")) {
             continue;
         }
-        support.append(QStringLiteral("%1: %2\n").arg(property.name()).arg(printProperty(ScreenEdges::self()->property(property.name()))));
+        support.append(QStringLiteral("%1: %2\n").arg(property.name(), printProperty(ScreenEdges::self()->property(property.name()))));
     }
     support.append(QStringLiteral("\nScreens\n"));
     support.append(QStringLiteral(  "=======\n"));

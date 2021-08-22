@@ -159,8 +159,7 @@ void UserActionsMenu::helperDialog(const QString& message, AbstractClient* clien
         QAction* action = Workspace::self()->findChild<QAction*>(name);
         Q_ASSERT(action != nullptr);
         const auto shortcuts = KGlobalAccel::self()->shortcut(action);
-        return QStringLiteral("%1 (%2)").arg(action->text())
-                             .arg(shortcuts.isEmpty() ? QString() : shortcuts.first().toString(QKeySequence::NativeText));
+        return QStringLiteral("%1 (%2)").arg(action->text(), shortcuts.isEmpty() ? QString() : shortcuts.first().toString(QKeySequence::NativeText));
     };
     if (message == QStringLiteral("noborderaltf3")) {
         args << QStringLiteral("--msgbox") << i18n(

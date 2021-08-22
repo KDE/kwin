@@ -50,10 +50,10 @@ void GeometryTip::setGeometry(const QRect& geom)
 
     h = qMax(h, 0);   // in case of isShade() and PBaseSize
     const QString pos = QStringLiteral("%1,%2<br>(<b>%3&nbsp;x&nbsp;%4</b>)")
-        .arg(numberWithSign(geom.x()))
-        .arg(numberWithSign(geom.y()))
-        .arg(w)
-        .arg(h);
+                            .arg(numberWithSign(geom.x()), //
+                                 numberWithSign(geom.y()),
+                                 QString::number(w),
+                                 QString::number(h));
     setText(pos);
     adjustSize();
     move(geom.x() + ((geom.width()  - width())  / 2),

@@ -137,7 +137,7 @@ static QString deviceRow(LibInput::Device *device)
     if (!device) {
         return tableRow(i18n("Input Device"), i18nc("The input device of the event is not known", "Unknown"));
     }
-    return tableRow(i18n("Input Device"), QStringLiteral("%1 (%2)").arg(device->name()).arg(device->sysName()));
+    return tableRow(i18n("Input Device"), QStringLiteral("%1 (%2)").arg(device->name(), device->sysName()));
 }
 
 static QString buttonsToString(Qt::MouseButtons buttons)

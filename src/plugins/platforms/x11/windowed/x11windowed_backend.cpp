@@ -357,9 +357,9 @@ void X11WindowedBackend::grabKeyboard(xcb_timestamp_t time)
 void X11WindowedBackend::updateWindowTitle()
 {
     const QString grab = m_keyboardGrabbed ? i18n("Press right control to ungrab input") : i18n("Press right control key to grab input");
-    const QString title = QStringLiteral("%1 (%2) - %3").arg(i18n("KDE Wayland Compositor"))
-                                                        .arg(waylandServer()->socketName())
-                                                        .arg(grab);
+    const QString title = QStringLiteral("%1 (%2) - %3").arg(i18n("KDE Wayland Compositor"),
+                                                             waylandServer()->socketName(),
+                                                             grab);
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         (*it)->setWindowTitle(title);
     }

@@ -310,7 +310,7 @@ QString DecorationBridge::supportInformation() const
             if (QLatin1String(property.name()) == QLatin1String("objectName")) {
                 continue;
             }
-            b.append(QStringLiteral("%1: %2\n").arg(property.name()).arg(settingsProperty(m_settings->property(property.name()))));
+            b.append(QStringLiteral("%1: %2\n").arg(property.name(), settingsProperty(m_settings->property(property.name()))));
         }
     }
     return b;
