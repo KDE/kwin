@@ -179,7 +179,8 @@ void DesktopGridEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::mi
             finish();
     }
 
-    for (auto const &w : effects->stackingOrder()) {
+    const EffectWindowList windows = effects->stackingOrder();
+    for (auto *w : windows) {
         w->setData(WindowForceBlurRole, QVariant(true));
     }
 
@@ -1377,7 +1378,9 @@ QVector<int> DesktopGridEffect::desktopList(const EffectWindow *w) const
     QVector<int> desks;
     desks.resize(w->desktops().count());
     int i = 0;
-    for (const int desk : w->desktops()) {
+
+    const QVector<uint> allDesks = w->desktops();
+    for (const int desk : allDesks) {
         desks[i++] = desk-1;
     }
     return desks;

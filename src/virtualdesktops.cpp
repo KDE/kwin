@@ -104,7 +104,8 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWaylandServer::PlasmaVi
 
     connect(this, &VirtualDesktopManager::currentChanged, m_virtualDesktopManagement,
         [this]() {
-            for (auto *deskInt : m_virtualDesktopManagement->desktops()) {
+            const QList <PlasmaVirtualDesktopInterface *> deskIfaces = m_virtualDesktopManagement->desktops();
+            for (auto *deskInt : deskIfaces) {
                 if (deskInt->id() == currentDesktop()->id()) {
                     deskInt->setActive(true);
                 } else {

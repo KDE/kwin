@@ -139,7 +139,8 @@ void SlideBackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
         data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     }
 
-    for (auto const &w : effects->stackingOrder()) {
+    const EffectWindowList windows = effects->stackingOrder();
+    for (auto *w : windows) {
         w->setData(WindowForceBlurRole, QVariant(true));
     }
 

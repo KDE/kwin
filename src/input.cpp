@@ -2302,7 +2302,8 @@ void InputRedirection::setupInputFilters()
 
         if (m_libInput) {
             m_tabletSupport = new TabletInputFilter;
-            for (LibInput::Device *dev : m_libInput->devices()) {
+            const QVector<LibInput::Device *> devices = m_libInput->devices();
+            for (LibInput::Device *dev : devices) {
                 m_tabletSupport->integrateDevice(dev);
             }
             connect(m_libInput, &LibInput::Connection::deviceAdded, m_tabletSupport, &TabletInputFilter::integrateDevice);

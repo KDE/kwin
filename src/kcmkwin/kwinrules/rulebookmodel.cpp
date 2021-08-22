@@ -187,7 +187,8 @@ bool RuleBookModel::isSaveNeeded()
 void RuleBookModel::copySettingsTo(RuleSettings *dest, const RuleSettings &source)
 {
     dest->setDefaults();
-    for (const KConfigSkeletonItem *item : source.items()) {
+    const KConfigSkeletonItem::List itemList = source.items();
+    for (const KConfigSkeletonItem *item : itemList) {
         dest->findItem(item->name())->setProperty(item->property());
     }
 }

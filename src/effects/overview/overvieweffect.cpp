@@ -246,7 +246,7 @@ void OverviewEffect::activate()
 
 void OverviewEffect::deactivate()
 {
-    for (OverviewScreenView *screenView : m_screenViews) {
+    for (OverviewScreenView *screenView : std::as_const(m_screenViews)) {
         screenView->stop();
     }
     m_shutdownTimer->start(animationDuration());

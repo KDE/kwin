@@ -21,7 +21,9 @@ KWinCompositingData::KWinCompositingData(QObject *parent, const QVariantList &ar
 bool KWinCompositingData::isDefaults() const
 {
     bool defaults = true;
-    for (const auto &item : m_settings->items()) {
+
+    const KConfigSkeletonItem::List itemList = m_settings->items();
+    for (const auto &item : itemList) {
         if (item->key() != QStringLiteral("OpenGLIsUnsafe")) {
             defaults &= item->isDefault();
         }

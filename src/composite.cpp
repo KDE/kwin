@@ -455,10 +455,12 @@ void Compositor::stop()
     }
 
     if (waylandServer()) {
-        for (AbstractClient *c : waylandServer()->clients()) {
+        const QList<AbstractClient *> toRemoveTopLevel = waylandServer()->clients();
+        for (AbstractClient *c : toRemoveTopLevel) {
             m_scene->removeToplevel(c);
         }
-        for (AbstractClient *c : waylandServer()->clients()) {
+        const QList<AbstractClient *> toFinishCompositing = waylandServer()->clients();
+        for (AbstractClient *c : toFinishCompositing) {
             c->finishCompositing();
         }
     }
@@ -591,7 +593,8 @@ void Compositor::composite(RenderLoop *renderLoop)
     QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
 
     // Move elevated windows to the top of the stacking order
-    for (EffectWindow *c : static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows()) {
+    const QList<EffectWindow *> elevatedList = static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows();
+    for (EffectWindow *c : elevatedList) {
         Toplevel *t = static_cast<EffectWindowImpl *>(c)->window();
         windows.removeAll(t);
         windows.append(t);
