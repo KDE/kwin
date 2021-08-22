@@ -129,7 +129,14 @@ public:
         return KWin::fetchRequestedInterfaces(client->executablePath());
     }
 
-    const QSet<QByteArray> interfacesBlackList = {"org_kde_kwin_remote_access_manager", "org_kde_plasma_window_management", "org_kde_kwin_fake_input", "org_kde_kwin_keystate", "zkde_screencast_unstable_v1"};
+    const QSet<QByteArray> interfacesBlackList = {
+        QByteArrayLiteral("org_kde_kwin_remote_access_manager"),
+        QByteArrayLiteral("org_kde_plasma_window_management"),
+        QByteArrayLiteral("org_kde_kwin_fake_input"),
+        QByteArrayLiteral("org_kde_kwin_keystate"),
+        QByteArrayLiteral("zkde_screencast_unstable_v1"),
+        QByteArrayLiteral("org_kde_plasma_activation_feedback"),
+    };
 
     const QSet<QByteArray> inputmethodInterfaces = { "zwp_input_panel_v1", "zwp_input_method_v1" };
 
@@ -504,6 +511,8 @@ bool WaylandServer::init(InitializationFlags flags)
 
     m_virtualDesktopManagement = new PlasmaVirtualDesktopManagementInterface(m_display, m_display);
     m_windowManagement->setPlasmaVirtualDesktopManagementInterface(m_virtualDesktopManagement);
+
+    m_plasmaActivationFeedback = new PlasmaWindowActivationFeedbackInterface(m_display, m_display);
 
     new ShadowManagerInterface(m_display, m_display);
     new DpmsManagerInterface(m_display, m_display);

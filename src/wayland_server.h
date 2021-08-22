@@ -47,6 +47,7 @@ class ServerSideDecorationPaletteManagerInterface;
 class SurfaceInterface;
 class OutputInterface;
 class PlasmaShellInterface;
+class PlasmaWindowActivationFeedbackInterface;
 class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
 class OutputManagementInterface;
@@ -115,6 +116,10 @@ public:
     KWaylandServer::DataDeviceManagerInterface *dataDeviceManager() const
     {
         return m_dataDeviceManager;
+    }
+    KWaylandServer::PlasmaWindowActivationFeedbackInterface *plasmaActivationFeedback() const
+    {
+        return m_plasmaActivationFeedback;
     }
     KWaylandServer::PlasmaVirtualDesktopManagementInterface *virtualDesktopManagement() const
     {
@@ -279,6 +284,7 @@ private:
     KWaylandServer::TabletManagerV2Interface *m_tabletManagerV2 = nullptr;
     KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManager = nullptr;
     KWaylandServer::PlasmaShellInterface *m_plasmaShell = nullptr;
+    KWaylandServer::PlasmaWindowActivationFeedbackInterface *m_plasmaActivationFeedback = nullptr;
     KWaylandServer::PlasmaWindowManagementInterface *m_windowManagement = nullptr;
     KWaylandServer::PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     KWaylandServer::ServerSideDecorationManagerInterface *m_decorationManager = nullptr;
