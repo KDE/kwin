@@ -149,7 +149,16 @@ DecorationButton *PreviewBridge::createButton(KDecoration2::Decoration *decorati
     if (!m_valid) {
         return nullptr;
     }
-    return m_factory->create<KDecoration2::DecorationButton>(QStringLiteral("button"), parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
+    auto button = m_factory->create<KDecoration2::DecorationButton>(parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
+#if KCOREADDONS_BUILD_DEPRECATED_SINCE(5, 87)
+    if (!button) {
+        button = m_factory->create<KDecoration2::DecorationButton>(QStringLiteral("button"), parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
+        if (button) {
+            qWarning() << "Loading a KDecoration2::DecorationButton using the button keyword is deprecated in KWin 5.23, register the plugin without a keyword instead" << m_plugin;
+        }
+    }
+#endif
+    return button;
 }
 
 void PreviewBridge::configure(QQuickItem *ctx)
