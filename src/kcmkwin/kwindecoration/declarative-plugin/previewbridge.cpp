@@ -183,9 +183,14 @@ void PreviewBridge::configure(QQuickItem *ctx)
 
     kcm = m_factory->create<KCModule>(dialog, QVariantList({args}));
 
+#if KCOREADDONS_BUILD_DEPRECATED_SINCE(5, 87)
     if (!kcm) {
         kcm = m_factory->create<KCModule>(QStringLiteral("kcmodule"), dialog, QVariantList({args}));
+        if (kcm) {
+            qWarning() << "Loading a KCModule using the kcmodule keyword is deprecated in KWin 5.23, register the plugin without a keyword instead" << m_theme;
+        }
     }
+#endif
 
     if (!kcm) {
         return;
