@@ -625,7 +625,7 @@ static KCModule *findScriptedConfig(const QString &pluginId, QObject *parent)
         return nullptr;
     }
 
-    return factory->create<KCModule>(pluginId, parent);
+    return factory->create<KCModule>(parent, QVariantList{pluginId});
 }
 
 void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transientParent)

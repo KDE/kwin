@@ -29,10 +29,14 @@ QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parent
 {
     Q_UNUSED(iface)
     Q_UNUSED(parent)
-    if (keyword.startsWith(QLatin1String("kwin4_effect_"))) {
-        return new ScriptedEffectConfig(keyword, parentWidget, args);
+    Q_UNUSED(keyword)
+    Q_ASSERT(!args.isEmpty());
+
+    const QString pluginId = args.first().toString();
+    if (pluginId.startsWith(QLatin1String("kwin4_effect_"))) {
+        return new ScriptedEffectConfig(pluginId, parentWidget, args);
     } else {
-        return new ScriptingConfig(keyword, parentWidget, args);
+        return new ScriptingConfig(pluginId, parentWidget, args);
     }
 }
 
