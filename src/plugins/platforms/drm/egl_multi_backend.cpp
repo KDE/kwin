@@ -152,12 +152,12 @@ void EglMultiBackend::addGpu(DrmGpu *gpu)
 
 void EglMultiBackend::removeGpu(DrmGpu *gpu)
 {
-    auto it = std::find_if(m_backends.constBegin(), m_backends.constEnd(), [gpu](auto backend) {
+    auto it = std::find_if(m_backends.begin(), m_backends.end(), [gpu](const auto &backend) {
         return backend->gpu() == gpu;
     });
-    if (it != m_backends.constEnd()) {
-        m_backends.removeOne(*it);
+    if (it != m_backends.end()) {
         delete *it;
+        m_backends.erase(it);
     }
 }
 
