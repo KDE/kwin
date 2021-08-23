@@ -7,10 +7,12 @@
 #ifndef AURORAE_H
 #define AURORAE_H
 
+#include <KCModule>
 #include <KDecoration2/Decoration>
+#include <KDecoration2/DecorationThemeProvider>
+#include <KPluginMetaData>
 #include <QElapsedTimer>
 #include <QVariant>
-#include <KCModule>
 
 class QQmlComponent;
 class QQmlContext;
@@ -78,25 +80,24 @@ private:
     QElapsedTimer m_doubleClickTimer;
 };
 
-class ThemeFinder : public QObject
+class ThemeProvider : public KDecoration2::DecorationThemeProvider
 {
     Q_OBJECT
-    Q_PROPERTY(QVariantMap themes READ themes)
 public:
-    explicit ThemeFinder(QObject *parent = nullptr, const QVariantList &args = QVariantList());
+    explicit ThemeProvider(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
 
-    QVariantMap themes() const {
+    QList<KDecoration2::DecorationThemeMetaData> themes() const override
+    {
         return m_themes;
     }
-
-public Q_SLOTS:
-    bool hasConfiguration(const QString &theme) const;
 
 private:
     void init();
     void findAllQmlThemes();
     void findAllSvgThemes();
-    QVariantMap m_themes;
+    bool hasConfiguration(const QString &theme);
+    QList<KDecoration2::DecorationThemeMetaData> m_themes;
+    const KPluginMetaData m_data;
 };
 
 class ConfigurationModule : public KCModule

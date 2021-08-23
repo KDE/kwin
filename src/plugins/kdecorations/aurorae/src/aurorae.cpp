@@ -49,9 +49,10 @@
 K_PLUGIN_FACTORY_WITH_JSON(AuroraeDecoFactory,
                            "aurorae.json",
                            registerPlugin<Aurorae::Decoration>();
-                           registerPlugin<Aurorae::ThemeFinder>(QStringLiteral("themes"));
-                           registerPlugin<Aurorae::ConfigurationModule>(QStringLiteral("kcmodule"));
+                           registerPlugin<Aurorae::ThemeProvider>();
+                           registerPlugin<Aurorae::ConfigurationModule>();
                           )
+
 
 namespace Aurorae
 {
@@ -600,28 +601,33 @@ KDecoration2::DecoratedClient *Decoration::clientPointer() const
     return client().toStrongRef().data();
 }
 
-ThemeFinder::ThemeFinder(QObject *parent, const QVariantList &args)
-    : QObject(parent)
+ThemeProvider::ThemeProvider(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KDecoration2::DecorationThemeProvider(parent, data, args)
+    , m_data(data)
 {
-    Q_UNUSED(args)
     init();
 }
 
-void ThemeFinder::init()
+void ThemeProvider::init()
 {
     findAllQmlThemes();
     findAllSvgThemes();
 }
 
-void ThemeFinder::findAllQmlThemes()
+void ThemeProvider::findAllQmlThemes()
 {
     const auto offers = KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Decoration"), s_qmlPackageFolder);
     for (const auto &offer : offers) {
-        m_themes.insert(offer.name(), offer.pluginId());
+        KDecoration2::DecorationThemeMetaData data;
+        data.setPluginId(m_data.pluginId());
+        data.setThemeName(offer.pluginId());
+        data.setVisibleName(offer.name());
+        data.setHasConfiguration(hasConfiguration(offer.pluginId()));
+        m_themes.append(data);
     }
 }
 
-void ThemeFinder::findAllSvgThemes()
+void ThemeProvider::findAllSvgThemes()
 {
     QStringList themes;
     const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("aurorae/themes/"), QStandardPaths::LocateDirectory);
@@ -649,14 +655,19 @@ void ThemeFinder::findAllSvgThemes()
             name = packageName;
         }
 
-        m_themes.insert(name, QString(QLatin1String("__aurorae__svg__") + packageName));
+        KDecoration2::DecorationThemeMetaData data;
+        data.setPluginId(m_data.pluginId());
+        data.setThemeName(QLatin1String("__aurorae__svg__") + packageName);
+        data.setVisibleName(name);
+        data.setHasConfiguration(hasConfiguration(data.themeName()));
+        m_themes.append(data);
     }
 }
 
 static const QString s_configUiPath = QStringLiteral("kwin/decorations/%1/contents/ui/config.ui");
 static const QString s_configXmlPath = QStringLiteral("kwin/decorations/%1/contents/config/main.xml");
 
-bool ThemeFinder::hasConfiguration(const QString &theme) const
+bool ThemeProvider::hasConfiguration(const QString &theme)
 {
     if (theme.startsWith(QLatin1String("__aurorae__svg__"))) {
         return true;
