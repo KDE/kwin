@@ -583,7 +583,8 @@ QProcessEnvironment Application::processStartupEnvironment() const
 void Application::initPlatform(const KPluginMetaData &plugin)
 {
     Q_ASSERT(!m_platform);
-    m_platform = qobject_cast<Platform *>(plugin.instantiate());
+    QPluginLoader loader(plugin.fileName());
+    m_platform = qobject_cast<Platform *>(loader.instance());
     if (m_platform) {
         m_platform->setParent(this);
         // check whether it needs libinput
@@ -598,6 +599,8 @@ void Application::initPlatform(const KPluginMetaData &plugin)
             }
         }
         Q_EMIT platformCreated();
+    } else {
+        qCWarning(KWIN_CORE) << "Could not create plugin" << plugin.name() << "error:" << loader.errorString();
     }
 }
 
