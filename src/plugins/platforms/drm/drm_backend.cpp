@@ -210,8 +210,8 @@ bool DrmBackend::initialize()
 
     initCursor();
     // workaround for BUG 438363: something goes wrong in scene initialization without a surface being current in EglStreamBackend
-    if (m_gpus[0]->useEglStreams()) {
-        updateOutputs();
+    if (primaryGpu()->useEglStreams()) {
+        primaryGpu()->updateOutputs();
     }
 
     // setup udevMonitor
@@ -276,9 +276,6 @@ void DrmBackend::handleUdevEvent()
 
 DrmGpu *DrmBackend::addGpu(const QString &fileName)
 {
-    if (primaryGpu() && primaryGpu()->useEglStreams()) {
-        return nullptr;
-    }
     int fd = session()->openRestricted(fileName);
     if (fd < 0) {
         qCWarning(KWIN_DRM) << "failed to open drm device at" << fileName;
@@ -632,20 +629,10 @@ QPainterBackend *DrmBackend::createQPainterBackend()
 
 OpenGLBackend *DrmBackend::createOpenGLBackend()
 {
-#if HAVE_EGL_STREAMS
-    if (m_gpus.at(0)->useEglStreams()) {
-        auto backend = new EglStreamBackend(this, m_gpus.at(0));
-        AbstractEglBackend::setPrimaryBackend(backend);
-        return backend;
-    }
-#endif
-
-#if HAVE_GBM
-    auto primaryBackend = new EglGbmBackend(this, m_gpus.at(0));
-    AbstractEglBackend::setPrimaryBackend(primaryBackend);
-    EglMultiBackend *backend = new EglMultiBackend(this, primaryBackend);
-    for (int i = 1; i < m_gpus.count(); i++) {
-        backend->addGpu(m_gpus[i]);
+#if HAVE_GBM || HAVE_EGL_STREAMS
+    EglMultiBackend *backend = new EglMultiBackend(this);
+    for (const auto &gpu : qAsConst(m_gpus)) {
+        backend->addGpu(gpu);
     }
     return backend;
 #else

@@ -19,7 +19,7 @@ class EglMultiBackend : public OpenGLBackend
 {
     Q_OBJECT
 public:
-    EglMultiBackend(DrmBackend *backend, AbstractEglDrmBackend *primaryEglBackend);
+    EglMultiBackend(DrmBackend *backend);
     ~EglMultiBackend();
 
     void init() override;

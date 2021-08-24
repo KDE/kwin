@@ -105,8 +105,6 @@ void ShadowBuffer::render(DrmAbstractOutput *output)
 
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    GLRenderTarget::setKWinFramebuffer(0);
     glBindTexture(GL_TEXTURE_2D, m_texture);
     m_vbo->render(GL_TRIANGLES);
     ShaderManager::instance()->popShader();
@@ -117,6 +115,12 @@ void ShadowBuffer::bind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
     GLRenderTarget::setKWinFramebuffer(m_framebuffer);
+}
+
+void ShadowBuffer::unbind()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    GLRenderTarget::setKWinFramebuffer(0);
 }
 
 bool ShadowBuffer::isComplete() const

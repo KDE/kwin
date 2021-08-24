@@ -297,7 +297,7 @@ QSharedPointer<DrmBuffer> EglGbmBackend::importFramebuffer(Output &output, const
         qCWarning(KWIN_DRM) << "swapping buffers failed on output" << output.output;
         return nullptr;
     }
-    const auto size = output.output->modeSize();
+    const auto size = output.output->sourceSize();
     if (output.current.importMode == ImportMode::Dmabuf) {
         struct gbm_import_fd_modifier_data data;
         data.width = size.width();
@@ -353,6 +353,7 @@ void EglGbmBackend::renderFramebufferToSurface(Output &output)
         return;
     }
     makeContextCurrent(output.current);
+    output.current.shadowBuffer->unbind();
     output.current.shadowBuffer->render(output.output);
 }
 

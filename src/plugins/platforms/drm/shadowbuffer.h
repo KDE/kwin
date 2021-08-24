@@ -25,6 +25,7 @@ public:
     bool isComplete() const;
 
     void bind();
+    void unbind();
     void render(DrmAbstractOutput *output);
 
     int texture() const;

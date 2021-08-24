@@ -46,6 +46,10 @@ public:
     QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output) override;
     uint32_t drmFormat() const override;
 
+    bool swapBuffers(DrmAbstractOutput *output, const QRegion &dirty) override;
+    bool exportFramebuffer(DrmAbstractOutput *output, void *data, const QSize &size, uint32_t stride) override;
+    QRegion beginFrameForSecondaryGpu(DrmAbstractOutput *output) override;
+
 protected:
     void cleanupSurfaces() override;
 
@@ -75,6 +79,8 @@ private:
 
         // for operation as secondary GPU
         QSharedPointer<DumbSwapchain> dumbSwapchain;
+        // for outputs on secondary GPUs
+        QSharedPointer<ShadowBuffer> secondarySurface;
     };
     bool resetOutput(Output &output);
     bool createEglSurface(Output &o);

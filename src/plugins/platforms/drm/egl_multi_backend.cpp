@@ -22,13 +22,12 @@
 namespace KWin
 {
 
-EglMultiBackend::EglMultiBackend(DrmBackend *backend, AbstractEglDrmBackend *primaryEglBackend)
+EglMultiBackend::EglMultiBackend(DrmBackend *backend)
     : OpenGLBackend()
     , m_platform(backend)
 {
     connect(m_platform, &DrmBackend::gpuAdded, this, &EglMultiBackend::addGpu);
     connect(m_platform, &DrmBackend::gpuRemoved, this, &EglMultiBackend::removeGpu);
-    m_backends.append(primaryEglBackend);
     setIsDirectRendering(true);
 }
 
@@ -128,6 +127,9 @@ void EglMultiBackend::addGpu(DrmGpu *gpu)
     if (backend) {
         if (m_initialized) {
             backend->init();
+        }
+        if (m_backends.isEmpty()) {
+            AbstractEglBackend::setPrimaryBackend(backend);
         }
         m_backends.append(backend);
     }
