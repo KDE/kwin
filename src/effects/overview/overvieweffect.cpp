@@ -82,7 +82,11 @@ OverviewEffect::OverviewEffect()
     m_toggleShortcut = KGlobalAccel::self()->shortcut(m_toggleAction);
     effects->registerGlobalShortcut({defaultToggleShortcut}, m_toggleAction);
 
-    connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
+    connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
+        if (m_activated) {
+            realDeactivate();
+        }
+    });
 
     initConfig<OverviewConfig>();
     reconfigure(ReconfigureAll);
