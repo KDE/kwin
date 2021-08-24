@@ -270,7 +270,7 @@ bool EglGbmBackend::exportFramebuffer(DrmAbstractOutput *drmOutput, void *data, 
     return memcpy(data, bo->mappedData(), size.height() * stride);
 }
 
-int EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, uint32_t *format, uint32_t *stride)
+bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier)
 {
     auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
         [drmOutput] (const Output &output) {
@@ -281,14 +281,33 @@ int EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, uint3
         return -1;
     }
     auto bo = it->current.gbmSurface->currentBuffer()->getBo();
-    int fd = gbm_bo_get_fd(bo);
-    if (fd == -1) {
-        qCWarning(KWIN_DRM) << "failed to export gbm_bo as dma-buf:" << strerror(errno);
-        return -1;
+    if (gbm_bo_get_handle_for_plane(bo, 0).s32 != -1) {
+        *num_fds = gbm_bo_get_plane_count(bo);
+        for (uint32_t i = 0; i < *num_fds; i++) {
+            fds[i] = gbm_bo_get_fd_for_plane(bo, i);
+            if (fds[i] < 0) {
+                qCWarning(KWIN_DRM) << "failed to export gbm_bo as dma-buf:" << strerror(errno);
+                for (uint32_t f = 0; f < i; f++) {
+                    close(fds[f]);
+                }
+                return false;
+            }
+            strides[i] = gbm_bo_get_stride_for_plane(bo, i);
+            offsets[i] = gbm_bo_get_offset(bo, i);
+        }
+        *modifier = gbm_bo_get_modifier(bo);
+    } else {
+        fds[0] = gbm_bo_get_fd(bo);
+        if (fds[0] < 0) {
+            qCWarning(KWIN_DRM) << "failed to export gbm_bo as dma-buf:" << strerror(errno);
+            return false;
+        }
+        *num_fds = 1;
+        strides[0] = gbm_bo_get_stride(bo);
+        *modifier = DRM_FORMAT_MOD_INVALID;
     }
     *format = gbm_bo_get_format(bo);
-    *stride = gbm_bo_get_stride(bo);
-    return fd;
+    return true;
 }
 
 QRegion EglGbmBackend::beginFrameForSecondaryGpu(DrmAbstractOutput *drmOutput)
@@ -312,18 +331,25 @@ QSharedPointer<DrmBuffer> EglGbmBackend::importFramebuffer(Output &output, const
     }
     const auto size = output.output->modeSize();
     if (output.current.importMode == ImportMode::Dmabuf) {
-        uint32_t stride = 0;
-        uint32_t format = 0;
-        int fd = renderingBackend()->exportFramebufferAsDmabuf(output.output, &format, &stride);
-        if (fd != -1) {
-            struct gbm_import_fd_data data = {};
-            data.fd = fd;
-            data.width = (uint32_t) size.width();
-            data.height = (uint32_t) size.height();
-            data.stride = stride;
-            data.format = format;
-            gbm_bo *importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT | GBM_BO_USE_LINEAR);
-            close(fd);
+        struct gbm_import_fd_modifier_data data;
+        data.width = size.width();
+        data.height = size.height();
+        if (renderingBackend()->exportFramebufferAsDmabuf(output.output, data.fds, data.strides, data.offsets, &data.num_fds, &data.format, &data.modifier)) {
+            gbm_bo *importedBuffer = nullptr;
+            if (data.modifier == DRM_FORMAT_MOD_INVALID) {
+                struct gbm_import_fd_data data1;
+                data1.fd = data.fds[0];
+                data1.width = size.width();
+                data1.height = size.height();
+                data1.stride = data.strides[0];
+                data1.format = data.format;
+                importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data1, GBM_BO_USE_SCANOUT | GBM_BO_USE_LINEAR);
+            } else {
+                importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, 0);
+            }
+            for (uint32_t i = 0; i < data.num_fds; i++) {
+                close(data.fds[i]);
+            }
             if (importedBuffer) {
                 auto buffer = QSharedPointer<DrmGbmBuffer>::create(m_gpu, importedBuffer, nullptr);
                 if (buffer->bufferId() > 0) {

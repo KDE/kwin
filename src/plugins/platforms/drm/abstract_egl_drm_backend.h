@@ -41,11 +41,15 @@ public:
         Q_UNUSED(stride)
         return false;
     }
-    virtual int exportFramebufferAsDmabuf(DrmAbstractOutput *output, uint32_t *format, uint32_t *stride) {
+    virtual bool exportFramebufferAsDmabuf(DrmAbstractOutput *output, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier) {
         Q_UNUSED(output)
+        Q_UNUSED(fds)
+        Q_UNUSED(strides)
+        Q_UNUSED(offsets)
+        Q_UNUSED(num_fds)
         Q_UNUSED(format)
-        Q_UNUSED(stride)
-        return 0;
+        Q_UNUSED(modifier)
+        return false;
     }
     virtual QRegion beginFrameForSecondaryGpu(DrmAbstractOutput *output) {
         Q_UNUSED(output)
