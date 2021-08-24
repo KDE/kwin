@@ -140,16 +140,15 @@ bool EglGbmBackend::initRenderingContext()
     return true;
 }
 
-bool EglGbmBackend::resetOutput(Output &output, DrmAbstractOutput *drmOutput)
+bool EglGbmBackend::resetOutput(Output &output)
 {
-    output.output = drmOutput;
-    const QSize size = drmOutput->sourceSize();
-    QVector<uint64_t> modifiers = drmOutput->supportedModifiers(m_gbmFormat);
+    const QSize size = output.output->sourceSize();
+    QVector<uint64_t> modifiers = output.output->supportedModifiers(m_gbmFormat);
 
     QSharedPointer<GbmSurface> gbmSurface;
     if (modifiers.isEmpty()) {
         int flags = GBM_BO_USE_RENDERING;
-        if (drmOutput->gpu() == m_gpu) {
+        if (output.output->gpu() == m_gpu) {
             flags |= GBM_BO_USE_SCANOUT;
         } else {
             flags |= GBM_BO_USE_LINEAR;
@@ -173,7 +172,7 @@ bool EglGbmBackend::resetOutput(Output &output, DrmAbstractOutput *drmOutput)
     output.current = {};
     output.current.gbmSurface = gbmSurface;
 
-    if (size == drmOutput->pixelSize()) {
+    if (size == output.output->pixelSize()) {
         output.current.shadowBuffer = nullptr;
     } else {
         makeContextCurrent(output.current);
@@ -187,58 +186,37 @@ bool EglGbmBackend::resetOutput(Output &output, DrmAbstractOutput *drmOutput)
 
 bool EglGbmBackend::addOutput(DrmAbstractOutput *drmOutput)
 {
+    Output newOutput;
+    newOutput.output = drmOutput;
     if (isPrimary()) {
-        Output newOutput;
-        if (!resetOutput(newOutput, drmOutput)) {
+        if (!resetOutput(newOutput)) {
             return false;
         }
-        if (drmOutput->gpu() == m_gpu) {
-            m_outputs << newOutput;
-        } else {
-            m_secondaryGpuOutputs << newOutput;
-        }
     } else {
-        Output newOutput;
-        newOutput.output = drmOutput;
         if (!renderingBackend()->addOutput(drmOutput)) {
             return false;
         }
-        m_outputs << newOutput;
     }
+    m_outputs.insert(drmOutput, newOutput);
     return true;
 }
 
 void EglGbmBackend::removeOutput(DrmAbstractOutput *drmOutput)
 {
-    QVector<Output> &outputs = drmOutput->gpu() == m_gpu ? m_outputs : m_secondaryGpuOutputs;
-    auto it = std::find_if(outputs.begin(), outputs.end(),
-        [drmOutput] (const Output &output) {
-            return output.output == drmOutput;
-        }
-    );
-    if (it == outputs.end()) {
-        return;
-    }
+    Q_ASSERT(m_outputs.contains(drmOutput));
     if (isPrimary()) {
         // shadow buffer needs context current for destruction
         makeCurrent();
     } else {
-        renderingBackend()->removeOutput((*it).output);
+        renderingBackend()->removeOutput(drmOutput);
     }
-    outputs.erase(it);
+    m_outputs.remove(drmOutput);
 }
 
 bool EglGbmBackend::swapBuffers(DrmAbstractOutput *drmOutput, const QRegion &dirty)
 {
-    auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
-        [drmOutput] (const Output &output) {
-            return output.output == drmOutput;
-        }
-    );
-    if (it == m_secondaryGpuOutputs.end()) {
-        return false;
-    }
-    Output &output = *it;
+    Q_ASSERT(m_outputs.contains(drmOutput));
+    Output &output = m_outputs[drmOutput];
     renderFramebufferToSurface(output);
     if (output.current.gbmSurface->swapBuffers()) {
         cleanupRenderData(output.old);
@@ -251,15 +229,8 @@ bool EglGbmBackend::swapBuffers(DrmAbstractOutput *drmOutput, const QRegion &dir
 
 bool EglGbmBackend::exportFramebuffer(DrmAbstractOutput *drmOutput, void *data, const QSize &size, uint32_t stride)
 {
-    auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
-        [drmOutput] (const Output &output) {
-            return output.output == drmOutput;
-        }
-    );
-    if (it == m_secondaryGpuOutputs.end()) {
-        return false;
-    }
-    auto bo = it->current.gbmSurface->currentBuffer();
+    Q_ASSERT(m_outputs.contains(drmOutput));
+    auto bo = m_outputs[drmOutput].current.gbmSurface->currentBuffer();
     if (!bo->map(GBM_BO_TRANSFER_READ)) {
         return false;
     }
@@ -272,15 +243,8 @@ bool EglGbmBackend::exportFramebuffer(DrmAbstractOutput *drmOutput, void *data, 
 
 bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier)
 {
-    auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
-        [drmOutput] (const Output &output) {
-            return output.output == drmOutput;
-        }
-    );
-    if (it == m_secondaryGpuOutputs.end()) {
-        return -1;
-    }
-    auto bo = it->current.gbmSurface->currentBuffer()->getBo();
+    Q_ASSERT(m_outputs.contains(drmOutput));
+    auto bo = m_outputs[drmOutput].current.gbmSurface->currentBuffer()->getBo();
     if (gbm_bo_get_handle_for_plane(bo, 0).s32 != -1) {
         *num_fds = gbm_bo_get_plane_count(bo);
         for (uint32_t i = 0; i < *num_fds; i++) {
@@ -312,15 +276,8 @@ bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, int 
 
 QRegion EglGbmBackend::beginFrameForSecondaryGpu(DrmAbstractOutput *drmOutput)
 {
-    auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
-        [drmOutput] (const Output &output) {
-            return output.output == drmOutput;
-        }
-    );
-    if (it == m_secondaryGpuOutputs.end()) {
-        return QRegion();
-    }
-    return prepareRenderingForOutput(*it);
+    Q_ASSERT(m_outputs.contains(drmOutput));
+    return prepareRenderingForOutput(m_outputs[drmOutput]);
 }
 
 QSharedPointer<DrmBuffer> EglGbmBackend::importFramebuffer(Output &output, const QRegion &dirty) const
@@ -489,10 +446,11 @@ static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutpu
     return rects;
 }
 
-void EglGbmBackend::aboutToStartPainting(int screenId, const QRegion &damagedRegion)
+void EglGbmBackend::aboutToStartPainting(AbstractOutput *drmOutput, const QRegion &damagedRegion)
 {
-    Q_ASSERT_X(screenId != -1, "aboutToStartPainting", "not using per screen rendering");
-    const Output &output = m_outputs.at(screenId);
+    Q_ASSERT_X(drmOutput, "aboutToStartPainting", "not using per screen rendering");
+    Q_ASSERT(m_outputs.contains(drmOutput));
+    const Output &output = m_outputs[drmOutput];
     if (output.current.bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
         const QRegion region = damagedRegion & output.output->geometry();
 
@@ -521,9 +479,10 @@ void EglGbmBackend::setViewport(const Output &output) const
     glViewport(0, 0, size.width(), size.height());
 }
 
-QRegion EglGbmBackend::beginFrame(int screenId)
+QRegion EglGbmBackend::beginFrame(AbstractOutput *drmOutput)
 {
-    Output &output = m_outputs[screenId];
+    Q_ASSERT(m_outputs.contains(drmOutput));
+    Output &output = m_outputs[drmOutput];
     if (output.surfaceInterface) {
         qCDebug(KWIN_DRM) << "Direct scanout stopped on output" << output.output->name();
     }
@@ -562,7 +521,7 @@ QRegion EglGbmBackend::prepareRenderingForOutput(Output &output)
             output.current = output.old;
             output.old = {};
         } else {
-            resetOutput(output, output.output);
+            resetOutput(output);
         }
     }
     makeContextCurrent(output.current);
@@ -580,9 +539,10 @@ QRegion EglGbmBackend::prepareRenderingForOutput(Output &output)
     return geometry;
 }
 
-QSharedPointer<DrmBuffer> EglGbmBackend::endFrameWithBuffer(int screenId, const QRegion &dirty)
+QSharedPointer<DrmBuffer> EglGbmBackend::endFrameWithBuffer(AbstractOutput *drmOutput, const QRegion &dirty)
 {
-    Output &output = m_outputs[screenId];
+    Q_ASSERT(m_outputs.contains(drmOutput));
+    Output &output = m_outputs[drmOutput];
     if (isPrimary()) {
         renderFramebufferToSurface(output);
         auto buffer = output.current.gbmSurface->swapBuffersForDrm();
@@ -595,16 +555,17 @@ QSharedPointer<DrmBuffer> EglGbmBackend::endFrameWithBuffer(int screenId, const 
     }
 }
 
-void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion,
+void EglGbmBackend::endFrame(AbstractOutput *drmOutput, const QRegion &renderedRegion,
                              const QRegion &damagedRegion)
 {
+    Q_ASSERT(m_outputs.contains(drmOutput));
     Q_UNUSED(renderedRegion)
 
-    Output &output = m_outputs[screenId];
+    Output &output = m_outputs[drmOutput];
     cleanupRenderData(output.old);
 
     const QRegion dirty = damagedRegion.intersected(output.output->geometry());
-    QSharedPointer<DrmBuffer> buffer = endFrameWithBuffer(screenId, dirty);
+    QSharedPointer<DrmBuffer> buffer = endFrameWithBuffer(drmOutput, dirty);
     if (!buffer || !output.output->present(buffer, dirty)) {
         RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(output.output->renderLoop());
         renderLoopPrivate->notifyFrameFailed();
@@ -620,8 +581,9 @@ void EglGbmBackend::updateBufferAge(Output &output, const QRegion &dirty)
     }
 }
 
-bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
+bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
 {
+    Q_ASSERT(m_outputs.contains(drmOutput));
     SurfaceItemWayland *item = qobject_cast<SurfaceItemWayland *>(surfaceItem);
     if (!item) {
         return false;
@@ -636,7 +598,7 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
     if (!buffer) {
         return false;
     }
-    Output &output = m_outputs[screenId];
+    Output &output = m_outputs[drmOutput];
     if (buffer->size() != output.output->modeSize()) {
         return false;
     }
@@ -714,41 +676,21 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
 
 QSharedPointer<DrmBuffer> EglGbmBackend::renderTestFrame(DrmAbstractOutput *output)
 {
-    for (int i = 0; i < m_outputs.count(); i++) {
-        if (m_outputs[i].output == output) {
-            beginFrame(i);
-            glClear(GL_COLOR_BUFFER_BIT);
-            return endFrameWithBuffer(i, output->geometry());
-        }
-    }
-    return nullptr;
+    beginFrame(output);
+    glClear(GL_COLOR_BUFFER_BIT);
+    return endFrameWithBuffer(output, output->geometry());
 }
 
-QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *abstractOutput) const
+QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output) const
 {
-    auto itOutput = std::find_if(m_outputs.begin(), m_outputs.end(),
-        [abstractOutput] (const auto &output) {
-            return output.output == abstractOutput;
-        }
-    );
-    if (itOutput == m_outputs.end()) {
-        itOutput = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
-            [abstractOutput] (const auto &output) {
-                return output.output == abstractOutput;
-            }
-        );
-        if (itOutput == m_secondaryGpuOutputs.end()) {
-            return {};
-        }
-    }
-
-    DrmAbstractOutput *drmOutput = itOutput->output;
-    if (itOutput->current.shadowBuffer) {
-        const auto glTexture = QSharedPointer<KWin::GLTexture>::create(itOutput->current.shadowBuffer->texture(), GL_RGBA8, drmOutput->pixelSize());
+    Q_ASSERT(m_outputs.contains(output));
+    auto &renderOutput = m_outputs[output];
+    if (renderOutput.current.shadowBuffer) {
+        const auto glTexture = QSharedPointer<KWin::GLTexture>::create(renderOutput.current.shadowBuffer->texture(), GL_RGBA8, output->pixelSize());
         glTexture->setYInverted(true);
         return glTexture;
     }
-    GbmBuffer *gbmBuffer = itOutput->current.gbmSurface->currentBuffer().get();
+    GbmBuffer *gbmBuffer = renderOutput.current.gbmSurface->currentBuffer().get();
     if (!gbmBuffer) {
         qCWarning(KWIN_DRM) << "Failed to record frame: No gbm buffer!";
         return {};
@@ -759,12 +701,17 @@ QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *abstra
         return {};
     }
 
-    return QSharedPointer<EGLImageTexture>::create(eglDisplay(), image, GL_RGBA8, drmOutput->modeSize());
+    return QSharedPointer<EGLImageTexture>::create(eglDisplay(), image, GL_RGBA8, static_cast<DrmAbstractOutput*>(output)->modeSize());
 }
 
-bool EglGbmBackend::directScanoutAllowed(int screen) const
+bool EglGbmBackend::directScanoutAllowed(AbstractOutput *output) const
 {
-    return !m_backend->usesSoftwareCursor() && !m_outputs[screen].output->directScanoutInhibited();
+    return !m_backend->usesSoftwareCursor() && output->directScanoutInhibited();
+}
+
+bool EglGbmBackend::hasOutput(AbstractOutput *output) const
+{
+    return m_outputs.contains(output);
 }
 
 }

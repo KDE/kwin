@@ -32,7 +32,7 @@ public:
     class EffectFrame;
     ~SceneOpenGL() override;
     bool initFailed() const override;
-    void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
+    void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows,
                RenderLoop *renderLoop) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
@@ -62,7 +62,7 @@ public:
 protected:
     SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
     void paintBackground(const QRegion &region) override;
-    void aboutToStartPainting(int screenId, const QRegion &damage) override;
+    void aboutToStartPainting(AbstractOutput *output, const QRegion &damage) override;
     void extendPaintRegion(QRegion &region, bool opaqueFullscreen) override;
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
     void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;

@@ -525,12 +525,17 @@ void X11WindowedBackend::warpPointer(const QPointF &globalPos)
     xcb_flush(m_connection);
 }
 
-xcb_window_t X11WindowedBackend::windowForScreen(int screen) const
+xcb_window_t X11WindowedBackend::windowForScreen(AbstractOutput *output) const
 {
-    if (screen > m_outputs.count()) {
+    if (!output) {
         return XCB_WINDOW_NONE;
     }
-    return m_outputs.at(screen)->window();
+    return static_cast<X11WindowedOutput*>(output)->window();
+}
+
+xcb_window_t X11WindowedBackend::window() const
+{
+    return m_outputs.first()->window();
 }
 
 Outputs X11WindowedBackend::outputs() const

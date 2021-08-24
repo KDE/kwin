@@ -14,6 +14,7 @@
 #include <QObject>
 #include <QImage>
 #include <QVector>
+#include <QMap>
 
 #include <xcb/xcb.h>
 
@@ -29,9 +30,9 @@ public:
     X11WindowedQPainterBackend(X11WindowedBackend *backend);
     ~X11WindowedQPainterBackend() override;
 
-    QImage *bufferForScreen(int screenId) override;
-    QRegion beginFrame(int screenId) override;
-    void endFrame(int screenId, const QRegion &damage) override;
+    QImage *bufferForScreen(AbstractOutput *output) override;
+    QRegion beginFrame(AbstractOutput *output) override;
+    void endFrame(AbstractOutput *output, const QRegion &damage) override;
 
 private:
     void createOutputs();
@@ -41,7 +42,7 @@ private:
         xcb_window_t window;
         QImage buffer;
     };
-    QVector<Output*> m_outputs;
+    QMap<AbstractOutput *, Output*> m_outputs;
 };
 
 }

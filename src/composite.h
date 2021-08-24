@@ -130,7 +130,6 @@ private:
     void releaseCompositorSelection();
     void deleteUnusedSupportProperties();
 
-    int screenForRenderLoop(RenderLoop *renderLoop) const;
     void registerRenderLoop(RenderLoop *renderLoop, AbstractOutput *output);
     void unregisterRenderLoop(RenderLoop *renderLoop);
 

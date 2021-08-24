@@ -47,17 +47,14 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
-    QRegion beginFrame(int screenId) override;
-    void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
+    QRegion beginFrame(AbstractOutput *output) override;
+    void endFrame(AbstractOutput *output, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;
-    bool scanout(int screenId, SurfaceItem *surfaceItem) override;
+    bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem) override;
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
-    int screenCount() const override {
-        return m_outputs.count();
-    }
-
+    bool hasOutput(AbstractOutput *output) const override;
     bool addOutput(DrmAbstractOutput *output) override;
     void removeOutput(DrmAbstractOutput *output) override;
     bool swapBuffers(DrmAbstractOutput *output, const QRegion &dirty) override;
@@ -65,13 +62,13 @@ public:
     bool exportFramebufferAsDmabuf(DrmAbstractOutput *output, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier) override;
     QRegion beginFrameForSecondaryGpu(DrmAbstractOutput *output) override;
 
-    bool directScanoutAllowed(int screen) const override;
+    bool directScanoutAllowed(AbstractOutput *output) const override;
 
     QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output) override;
 
 protected:
     void cleanupSurfaces() override;
-    void aboutToStartPainting(int screenId, const QRegion &damage) override;
+    void aboutToStartPainting(AbstractOutput *output, const QRegion &damage) override;
 
 private:
     bool initializeEgl();
@@ -99,7 +96,7 @@ private:
     };
 
     bool doesRenderFit(DrmAbstractOutput *output, const Output::RenderData &render);
-    bool resetOutput(Output &output, DrmAbstractOutput *drmOutput);
+    bool resetOutput(Output &output);
 
     bool makeContextCurrent(const Output::RenderData &output) const;
     void setViewport(const Output &output) const;
@@ -107,13 +104,12 @@ private:
     void renderFramebufferToSurface(Output &output);
     QRegion prepareRenderingForOutput(Output &output);
     QSharedPointer<DrmBuffer> importFramebuffer(Output &output, const QRegion &dirty) const;
-    QSharedPointer<DrmBuffer> endFrameWithBuffer(int screenId, const QRegion &dirty);
+    QSharedPointer<DrmBuffer> endFrameWithBuffer(AbstractOutput *output, const QRegion &dirty);
     void updateBufferAge(Output &output, const QRegion &dirty);
 
     void cleanupRenderData(Output::RenderData &output);
 
-    QVector<Output> m_outputs;
-    QVector<Output> m_secondaryGpuOutputs;
+    QMap<AbstractOutput *, Output> m_outputs;
     uint32_t m_gbmFormat;
 
     friend class EglGbmTexture;

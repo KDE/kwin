@@ -88,9 +88,9 @@ void EglBackend::screenGeometryChanged()
     m_bufferAge = 0;
 }
 
-QRegion EglBackend::beginFrame(int screenId)
+QRegion EglBackend::beginFrame(AbstractOutput *output)
 {
-    Q_UNUSED(screenId)
+    Q_UNUSED(output)
     makeCurrent();
 
     const QSize size = screens()->size();
@@ -106,9 +106,9 @@ QRegion EglBackend::beginFrame(int screenId)
     return repaint;
 }
 
-void EglBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(screenId)
+    Q_UNUSED(output)
 
     // Start the software vsync monitor. There is no any reliable way to determine when
     // eglSwapBuffers() or eglSwapBuffersWithDamageEXT() completes.

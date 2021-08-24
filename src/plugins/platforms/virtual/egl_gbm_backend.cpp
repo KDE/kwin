@@ -150,9 +150,9 @@ PlatformSurfaceTexture *EglGbmBackend::createPlatformSurfaceTextureWayland(Surfa
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-QRegion EglGbmBackend::beginFrame(int screenId)
+QRegion EglGbmBackend::beginFrame(AbstractOutput *output)
 {
-    Q_UNUSED(screenId)
+    Q_UNUSED(output)
     if (!GLRenderTarget::isRenderTargetBound()) {
         GLRenderTarget::pushRenderTarget(m_fbo);
     }
@@ -190,14 +190,13 @@ static void convertFromGLImage(QImage &img, int w, int h)
     img = img.mirrored();
 }
 
-void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglGbmBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
     glFlush();
 
-    VirtualOutput *output = static_cast<VirtualOutput *>(m_backend->findOutput(screenId));
-    output->vsyncMonitor()->arm();
+    static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
 
     if (m_backend->saveFrames()) {
         QImage img = QImage(QSize(m_backBuffer->width(), m_backBuffer->height()), QImage::Format_ARGB32);

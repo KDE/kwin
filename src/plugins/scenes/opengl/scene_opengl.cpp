@@ -34,6 +34,7 @@
 #include "shadowitem.h"
 #include "surfaceitem.h"
 #include "windowitem.h"
+#include "abstract_output.h"
 #include <logging.h>
 
 #include <cmath>
@@ -342,9 +343,9 @@ void SceneOpenGL2::paintCursor(const QRegion &rendered)
     glDisable(GL_BLEND);
 }
 
-void SceneOpenGL::aboutToStartPainting(int screenId, const QRegion &damage)
+void SceneOpenGL::aboutToStartPainting(AbstractOutput *output, const QRegion &damage)
 {
-    m_backend->aboutToStartPainting(screenId, damage);
+    m_backend->aboutToStartPainting(output, damage);
 }
 
 static SurfaceItem *findTopMostSurface(SurfaceItem *item)
@@ -357,14 +358,14 @@ static SurfaceItem *findTopMostSurface(SurfaceItem *item)
     }
 }
 
-void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels,
+void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &toplevels,
                         RenderLoop *renderLoop)
 {
     if (m_resetOccurred) {
         return; // A graphics reset has occurred, do nothing.
     }
 
-    painted_screen = screenId;
+    painted_screen = output;
     // actually paint the frame, flushed with the NEXT frame
     createStackingOrder(toplevels);
 
@@ -373,9 +374,9 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
     QRegion repaint;
     QRect geo;
     qreal scaling;
-    if (screenId != -1) {
-        geo = screens()->geometry(screenId);
-        scaling = screens()->scale(screenId);
+    if (output) {
+        geo = output->geometry();
+        scaling = output->scale();
     } else {
         geo = screens()->geometry();
         scaling = 1;
@@ -391,7 +392,7 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
         for (int i = stacking_order.count() - 1; i >=0; i--) {
             Window *window = stacking_order[i];
             Toplevel *toplevel = window->window();
-            if (toplevel->isOnScreen(screenId) && window->isVisible() && toplevel->opacity() > 0) {
+            if (output && toplevel->isOnOutput(output) && window->isVisible() && toplevel->opacity() > 0) {
                 AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
                 if (!c || !c->isFullScreen()) {
                     break;
@@ -420,14 +421,14 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
         renderLoop->setFullscreenSurface(fullscreenSurface);
 
         bool directScanout = false;
-        if (m_backend->directScanoutAllowed(screenId) && !static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
-            directScanout = m_backend->scanout(screenId, fullscreenSurface);
+        if (m_backend->directScanoutAllowed(output) && !static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
+            directScanout = m_backend->scanout(output, fullscreenSurface);
         }
         if (directScanout) {
             renderLoop->endFrame();
         } else {
             // prepare rendering makescontext current on the output
-            repaint = m_backend->beginFrame(screenId);
+            repaint = m_backend->beginFrame(output);
 
             GLVertexBuffer::setVirtualScreenGeometry(geo);
             GLRenderTarget::setVirtualScreenGeometry(geo);
@@ -440,7 +441,7 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
                         renderLoop, projectionMatrix());   // call generic implementation
             paintCursor(valid);
 
-            if (!GLPlatform::instance()->isGLES() && screenId == -1) {
+            if (!GLPlatform::instance()->isGLES() && !output) {
                 const QSize &screenSize = screens()->size();
                 const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
 
@@ -458,7 +459,7 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
             renderLoop->endFrame();
 
             GLVertexBuffer::streamingBuffer()->endOfFrame();
-            m_backend->endFrame(screenId, valid, update);
+            m_backend->endFrame(output, valid, update);
             GLVertexBuffer::streamingBuffer()->framePosted();
         }
     }

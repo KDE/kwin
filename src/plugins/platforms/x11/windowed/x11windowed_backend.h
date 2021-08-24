@@ -47,10 +47,8 @@ public:
     int screenNumer() const {
         return m_screenNumber;
     }
-    xcb_window_t window() const {
-        return windowForScreen(0);
-    }
-    xcb_window_t windowForScreen(int screen) const;
+    xcb_window_t window() const;
+    xcb_window_t windowForScreen(AbstractOutput *output) const;
     Display *display() const {
         return m_display;
     }

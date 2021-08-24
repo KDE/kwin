@@ -169,25 +169,25 @@ void WaylandQPainterBackend::createOutput(AbstractOutput *waylandOutput)
 {
     auto *output = new WaylandQPainterOutput(static_cast<WaylandOutput *>(waylandOutput), this);
     output->init(m_backend->shmPool());
-    m_outputs << output;
+    m_outputs.insert(waylandOutput, output);
 }
 
-void WaylandQPainterBackend::endFrame(int screenId, const QRegion &damage)
+void WaylandQPainterBackend::endFrame(AbstractOutput *output, const QRegion &damage)
 {
-    WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
+    WaylandQPainterOutput *rendererOutput = m_outputs[output];
     Q_ASSERT(rendererOutput);
 
     rendererOutput->present(rendererOutput->mapToLocal(damage));
 }
 
-QImage *WaylandQPainterBackend::bufferForScreen(int screenId)
+QImage *WaylandQPainterBackend::bufferForScreen(AbstractOutput *output)
 {
-    return &m_outputs[screenId]->back()->image;
+    return &m_outputs[output]->back()->image;
 }
 
-QRegion WaylandQPainterBackend::beginFrame(int screenId)
+QRegion WaylandQPainterBackend::beginFrame(AbstractOutput *output)
 {
-    WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
+    WaylandQPainterOutput *rendererOutput = m_outputs[output];
     Q_ASSERT(rendererOutput);
 
     WaylandQPainterBufferSlot *slot = rendererOutput->acquire();

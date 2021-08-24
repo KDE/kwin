@@ -393,16 +393,6 @@ void Compositor::handleOutputDisabled(AbstractOutput *output)
     unregisterRenderLoop(output->renderLoop());
 }
 
-int Compositor::screenForRenderLoop(RenderLoop *renderLoop) const
-{
-    Q_ASSERT(m_renderLoops.contains(renderLoop));
-    AbstractOutput *output = m_renderLoops.value(renderLoop);
-    if (!output) {
-        return -1;
-    }
-    return kwinApp()->platform()->enabledOutputs().indexOf(output);
-}
-
 void Compositor::scheduleRepaint()
 {
     for (auto it = m_renderLoops.constBegin(); it != m_renderLoops.constEnd(); ++it) {
@@ -585,9 +575,9 @@ void Compositor::handleFrameRequested(RenderLoop *renderLoop)
 
 void Compositor::composite(RenderLoop *renderLoop)
 {
-    const int screenId = screenForRenderLoop(renderLoop);
+    const auto &output = m_renderLoops[renderLoop];
 
-    fTraceDuration("Paint (", screens()->name(screenId), ")");
+    fTraceDuration("Paint (", output ? output->name() : QStringLiteral("screens"), ")");
 
     // Create a list of all windows in the stacking order
     QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
@@ -617,10 +607,10 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
-    const QRegion repaints = m_scene->repaints(screenId);
-    m_scene->resetRepaints(screenId);
+    const QRegion repaints = m_scene->repaints(output);
+    m_scene->resetRepaints(output);
 
-    m_scene->paint(screenId, repaints, windows, renderLoop);
+    m_scene->paint(output, repaints, windows, renderLoop);
 
     if (waylandServer()) {
         const std::chrono::milliseconds frameTime =
@@ -634,7 +624,7 @@ void Compositor::composite(RenderLoop *renderLoop)
                     !(window->isLockScreen() || window->isInputMethod())) {
                 continue;
             }
-            if (!window->isOnScreen(screenId)) {
+            if (!window->isOnOutput(output)) {
                 continue;
             }
             if (auto surface = window->surface()) {

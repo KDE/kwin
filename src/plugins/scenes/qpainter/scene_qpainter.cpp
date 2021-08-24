@@ -22,6 +22,7 @@
 #include "toplevel.h"
 #include "platform.h"
 #include "windowitem.h"
+#include "abstract_output.h"
 
 #include <kwineffectquickview.h>
 // Qt
@@ -79,18 +80,18 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
     m_painter->restore();
 }
 
-void SceneQPainter::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels,
+void SceneQPainter::paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &toplevels,
                           RenderLoop *renderLoop)
 {
     Q_ASSERT(kwinApp()->platform()->isPerScreenRenderingEnabled());
-    painted_screen = screenId;
+    painted_screen = output;
 
     createStackingOrder(toplevels);
 
-    const QRegion repaint = m_backend->beginFrame(screenId);
-    const QRect geometry = screens()->geometry(screenId);
+    const QRegion repaint = m_backend->beginFrame(output);
+    const QRect geometry = output->geometry();
 
-    QImage *buffer = m_backend->bufferForScreen(screenId);
+    QImage *buffer = m_backend->bufferForScreen(output);
     if (buffer && !buffer->isNull()) {
         renderLoop->beginFrame();
         m_painter->begin(buffer);
@@ -102,7 +103,7 @@ void SceneQPainter::paint(int screenId, const QRegion &damage, const QList<Tople
 
         m_painter->end();
         renderLoop->endFrame();
-        m_backend->endFrame(screenId, updateRegion);
+        m_backend->endFrame(output, updateRegion);
     }
 
     // do cleanup
@@ -159,9 +160,9 @@ Shadow *SceneQPainter::createShadow(Toplevel *toplevel)
     return new SceneQPainterShadow(toplevel);
 }
 
-QImage *SceneQPainter::qpainterRenderBuffer(int screenId) const
+QImage *SceneQPainter::qpainterRenderBuffer(AbstractOutput *output) const
 {
-    return m_backend->bufferForScreen(screenId);
+    return m_backend->bufferForScreen(output);
 }
 
 //****************************************

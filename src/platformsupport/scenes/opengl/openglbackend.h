@@ -60,16 +60,16 @@ public:
      *
      * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
      */
-    virtual void aboutToStartPainting(int screenId, const QRegion &damage);
+    virtual void aboutToStartPainting(AbstractOutput *output, const QRegion &damage);
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
-    virtual QRegion beginFrame(int screenId) = 0;
-    virtual void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) = 0;
+    virtual QRegion beginFrame(AbstractOutput *output) = 0;
+    virtual void endFrame(AbstractOutput *output, const QRegion &damage, const QRegion &damagedRegion) = 0;
     /**
      * Tries to directly scan out a surface to the screen)
      * @return if the scanout fails (or is not supported on the specified screen)
      */
-    virtual bool scanout(int screenId, SurfaceItem *surfaceItem);
+    virtual bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem);
 
     /**
      * @brief Returns the OverlayWindow used by the backend.
@@ -121,7 +121,7 @@ public:
     {
         return m_haveNativeFence;
     }
-    virtual bool directScanoutAllowed(int screen) const;
+    virtual bool directScanoutAllowed(AbstractOutput *output) const;
 
     /**
      * The backend specific extensions (e.g. EGL/GLX extensions).

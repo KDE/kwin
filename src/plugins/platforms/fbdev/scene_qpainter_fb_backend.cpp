@@ -63,28 +63,26 @@ void FramebufferQPainterBackend::deactivate()
 
 FramebufferQPainterBackend::~FramebufferQPainterBackend() = default;
 
-QImage* FramebufferQPainterBackend::bufferForScreen(int screenId)
+QImage* FramebufferQPainterBackend::bufferForScreen(AbstractOutput *output)
 {
-    Q_UNUSED(screenId)
+    Q_UNUSED(output)
     return &m_renderBuffer;
 }
 
-QRegion FramebufferQPainterBackend::beginFrame(int screenId)
+QRegion FramebufferQPainterBackend::beginFrame(AbstractOutput *output)
 {
-    return screens()->geometry(screenId);
+    return output->geometry();
 }
 
-void FramebufferQPainterBackend::endFrame(int screenId, const QRegion &damage)
+void FramebufferQPainterBackend::endFrame(AbstractOutput *output, const QRegion &damage)
 {
-    Q_UNUSED(screenId)
     Q_UNUSED(damage)
 
     if (!kwinApp()->platform()->session()->isActive()) {
         return;
     }
 
-    FramebufferOutput *output = static_cast<FramebufferOutput *>(m_backend->findOutput(screenId));
-    output->vsyncMonitor()->arm();
+    static_cast<FramebufferOutput *>(output)->vsyncMonitor()->arm();
 
     QPainter p(&m_backBuffer);
     p.drawImage(QPoint(0, 0), m_backend->isBGR() ? m_renderBuffer.rgbSwapped() : m_renderBuffer);

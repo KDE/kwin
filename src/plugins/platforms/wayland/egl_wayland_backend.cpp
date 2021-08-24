@@ -141,11 +141,12 @@ void EglWaylandBackend::cleanupSurfaces()
 
 bool EglWaylandBackend::createEglWaylandOutput(AbstractOutput *waylandOutput)
 {
-    auto *output = new EglWaylandOutput(static_cast<WaylandOutput *>(waylandOutput), this);
+    const auto &output = new EglWaylandOutput(static_cast<WaylandOutput *>(waylandOutput), this);
     if (!output->init(this)) {
+        delete output;
         return false;
     }
-    m_outputs << output;
+    m_outputs.insert(waylandOutput, output);
     return true;
 }
 
@@ -298,15 +299,16 @@ static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutpu
     return rects;
 }
 
-void EglWaylandBackend::aboutToStartPainting(int screenId, const QRegion &damagedRegion)
+void EglWaylandBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &damagedRegion)
 {
-    Q_ASSERT_X(screenId != -1, "aboutToStartPainting", "not using per screen rendering");
-    EglWaylandOutput *output = m_outputs.at(screenId);
-    if (output->m_bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
-        const QRegion region = damagedRegion & output->m_waylandOutput->geometry();
+    Q_ASSERT_X(output, "aboutToStartPainting", "not using per screen rendering");
+    Q_ASSERT(m_outputs.contains(output));
+    const auto &eglOutput = m_outputs[output];
+    if (eglOutput->m_bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
+        const QRegion region = damagedRegion & eglOutput->m_waylandOutput->geometry();
 
-        QVector<EGLint> rects = regionToRects(region, output->m_waylandOutput);
-        const bool correct = eglSetDamageRegionKHR(eglDisplay(), output->m_eglSurface,
+        QVector<EGLint> rects = regionToRects(region, eglOutput->m_waylandOutput);
+        const bool correct = eglSetDamageRegionKHR(eglDisplay(), eglOutput->m_eglSurface,
                                                    rects.data(), rects.count()/4);
         if (!correct) {
             qCWarning(KWIN_WAYLAND_BACKEND) << "failed eglSetDamageRegionKHR" << eglGetError();
@@ -350,27 +352,29 @@ PlatformSurfaceTexture *EglWaylandBackend::createPlatformSurfaceTextureWayland(S
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-QRegion EglWaylandBackend::beginFrame(int screenId)
+QRegion EglWaylandBackend::beginFrame(AbstractOutput *output)
 {
+    Q_ASSERT(m_outputs.contains(output));
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
-    auto *output = m_outputs.at(screenId);
-    makeContextCurrent(output);
+    const auto &eglOutput = m_outputs[output];
+    makeContextCurrent(eglOutput);
     if (supportsBufferAge()) {
-        return output->m_damageJournal.accumulate(output->m_bufferAge, output->m_waylandOutput->geometry());
+        return eglOutput->m_damageJournal.accumulate(eglOutput->m_bufferAge, eglOutput->m_waylandOutput->geometry());
     }
     return QRegion();
 }
 
-void EglWaylandBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglWaylandBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_ASSERT(m_outputs.contains(output));
     Q_UNUSED(renderedRegion);
-    EglWaylandOutput *output = m_outputs[screenId];
-    QRegion damage = damagedRegion.intersected(output->m_waylandOutput->geometry());
-    presentOnSurface(output, damage);
+    const auto &eglOutput = m_outputs[output];
+    QRegion damage = damagedRegion.intersected(eglOutput->m_waylandOutput->geometry());
+    presentOnSurface(eglOutput, damage);
 
     if (supportsBufferAge()) {
-        output->m_damageJournal.add(damage);
+        eglOutput->m_damageJournal.add(damage);
     }
 }
 

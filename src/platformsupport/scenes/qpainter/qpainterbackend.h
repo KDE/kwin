@@ -22,6 +22,7 @@ namespace KWin
 class PlatformSurfaceTexture;
 class SurfacePixmapInternal;
 class SurfacePixmapWayland;
+class AbstractOutput;
 
 class QPainterBackend : public QObject
 {
@@ -33,8 +34,8 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
-    virtual void endFrame(int screenId, const QRegion &damage) = 0;
-    virtual QRegion beginFrame(int screenId) = 0;
+    virtual void endFrame(AbstractOutput *output, const QRegion &damage) = 0;
+    virtual QRegion beginFrame(AbstractOutput *output) = 0;
     /**
      * @brief Whether the creation of the Backend failed.
      *
@@ -52,7 +53,7 @@ public:
      * @param screenId The id of the screen as used in Screens
      * @todo Get a better identifier for screen then a counter variable
      */
-    virtual QImage *bufferForScreen(int screenId) = 0;
+    virtual QImage *bufferForScreen(AbstractOutput *output) = 0;
 
 protected:
     QPainterBackend();

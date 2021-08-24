@@ -10,6 +10,8 @@
 #define KWIN_EGL_X11_BACKEND_H
 #include "eglonxbackend.h"
 
+#include <QMap>
+
 namespace KWin
 {
 
@@ -29,18 +31,18 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     void init() override;
-    QRegion beginFrame(int screenId) override;
-    void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
+    QRegion beginFrame(AbstractOutput *output) override;
+    void endFrame(AbstractOutput *output, const QRegion &damage, const QRegion &damagedRegion) override;
 
 protected:
     void cleanupSurfaces() override;
     bool createSurfaces() override;
 
 private:
-    void setupViewport(int screenId);
+    void setupViewport(AbstractOutput *output);
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
 
-    QVector<EGLSurface> m_surfaces;
+    QMap<AbstractOutput *, EGLSurface> m_surfaces;
     X11WindowedBackend *m_backend;
 };
 

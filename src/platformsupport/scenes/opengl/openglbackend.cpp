@@ -40,9 +40,9 @@ OverlayWindow* OpenGLBackend::overlayWindow() const
     return nullptr;
 }
 
-bool OpenGLBackend::scanout(int screenId, SurfaceItem *surfaceItem)
+bool OpenGLBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)
 {
-    Q_UNUSED(screenId)
+    Q_UNUSED(output)
     Q_UNUSED(surfaceItem)
     return false;
 }
@@ -66,16 +66,16 @@ QSharedPointer<KWin::GLTexture> OpenGLBackend::textureForOutput(AbstractOutput* 
     return {};
 }
 
-void OpenGLBackend::aboutToStartPainting(int screenId, const QRegion &damage)
+void OpenGLBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &damage)
 {
-    Q_UNUSED(screenId)
+    Q_UNUSED(output)
     Q_UNUSED(damage)
 }
 
 
-bool OpenGLBackend::directScanoutAllowed(int screen) const
+bool OpenGLBackend::directScanoutAllowed(AbstractOutput *output) const
 {
-    Q_UNUSED(screen);
+    Q_UNUSED(output);
     return false;
 }
 

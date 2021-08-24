@@ -35,32 +35,31 @@ void X11WindowedQPainterBackend::createOutputs()
 {
     qDeleteAll(m_outputs);
     m_outputs.clear();
-    for (int i = 0; i < screens()->count(); ++i) {
+    const auto &outputs = m_backend->outputs();
+    for (const auto &x11Output : outputs) {
         Output *output = new Output;
-        output->window = m_backend->windowForScreen(i);
-        output->buffer = QImage(screens()->size(i) * screens()->scale(i), QImage::Format_RGB32);
+        output->window = m_backend->windowForScreen(x11Output);
+        output->buffer = QImage(x11Output->pixelSize() * x11Output->scale(), QImage::Format_RGB32);
         output->buffer.fill(Qt::black);
-        m_outputs << output;
+        m_outputs.insert(x11Output, output);
     }
 }
 
-QImage *X11WindowedQPainterBackend::bufferForScreen(int screen)
+QImage *X11WindowedQPainterBackend::bufferForScreen(AbstractOutput *output)
 {
-    return &m_outputs.at(screen)->buffer;
+    return &m_outputs[output]->buffer;
 }
 
-QRegion X11WindowedQPainterBackend::beginFrame(int screenId)
+QRegion X11WindowedQPainterBackend::beginFrame(AbstractOutput *output)
 {
-    Q_UNUSED(screenId)
-    return screens()->geometry(screenId);
+    return output->geometry();
 }
 
-void X11WindowedQPainterBackend::endFrame(int screenId, const QRegion &damage)
+void X11WindowedQPainterBackend::endFrame(AbstractOutput *output, const QRegion &damage)
 {
     Q_UNUSED(damage)
 
-    X11WindowedOutput *output = static_cast<X11WindowedOutput *>(kwinApp()->platform()->findOutput(screenId));
-    output->vsyncMonitor()->arm();
+    static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
 
     xcb_connection_t *c = m_backend->connection();
     const xcb_window_t window = m_backend->window();
@@ -69,7 +68,7 @@ void X11WindowedQPainterBackend::endFrame(int screenId, const QRegion &damage)
         xcb_create_gc(c, m_gc, window, 0, nullptr);
     }
 
-    Output *rendererOutput = m_outputs.value(screenId);
+    Output *rendererOutput = m_outputs[output];
     Q_ASSERT(rendererOutput);
 
     // TODO: only update changes?

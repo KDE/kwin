@@ -26,7 +26,7 @@ class AbstractEglDrmBackend : public AbstractEglBackend
     Q_OBJECT
 
 public:
-    virtual int screenCount() const = 0;
+    virtual bool hasOutput(AbstractOutput *output) const = 0;
     virtual bool addOutput(DrmAbstractOutput *output) = 0;
     virtual void removeOutput(DrmAbstractOutput *output) = 0;
     virtual bool swapBuffers(DrmAbstractOutput *output, const QRegion &dirty) {

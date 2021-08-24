@@ -24,9 +24,9 @@ public:
     FramebufferQPainterBackend(FramebufferBackend *backend);
     ~FramebufferQPainterBackend() override;
 
-    QImage *bufferForScreen(int screenId) override;
-    QRegion beginFrame(int screenId) override;
-    void endFrame(int screenId, const QRegion &damage) override;
+    QImage *bufferForScreen(AbstractOutput *output) override;
+    QRegion beginFrame(AbstractOutput *output) override;
+    void endFrame(AbstractOutput *output, const QRegion &damage) override;
 
 private:
     void reactivate();

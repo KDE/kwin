@@ -59,10 +59,10 @@ public:
     void addRepaint(const QRegion &region);
 
     /**
-     * Returns the repaints region for output with the specified @a screenId.
+     * Returns the repaints region for output with the specified @a output.
      */
-    QRegion repaints(int screenId) const;
-    void resetRepaints(int screenId);
+    QRegion repaints(AbstractOutput *output) const;
+    void resetRepaints(AbstractOutput *output);
 
     // Returns true if the ctor failed to properly initialize.
     virtual bool initFailed() const = 0;
@@ -72,7 +72,7 @@ public:
     // The entry point for the main part of the painting pass.
     // returns the time since the last vblank signal - if there's one
     // ie. "what of this frame is lost to painting"
-    virtual void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
+    virtual void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows,
                        RenderLoop *renderLoop) = 0;
 
     /**
@@ -159,7 +159,7 @@ public:
      * The render buffer used by a QPainter based compositor.
      * Default implementation returns @c nullptr.
      */
-    virtual QImage *qpainterRenderBuffer(int screenId) const;
+    virtual QImage *qpainterRenderBuffer(AbstractOutput *output) const;
 
     /**
      * The backend specific extensions (e.g. EGL/GLX extensions).
@@ -214,7 +214,7 @@ protected:
      *
      * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
      */
-    virtual void aboutToStartPainting(int screenId, const QRegion &damage);
+    virtual void aboutToStartPainting(AbstractOutput *output, const QRegion &damage);
     // called after all effects had their paintWindow() called
     void finalPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
     // shared implementation, starts painting the window
@@ -245,15 +245,15 @@ protected:
     // The dirty region before it was unioned with repaint_region
     QRegion damaged_region;
     // The screen that is being currently painted
-    int painted_screen = -1;
+    AbstractOutput *painted_screen = nullptr;
 
     // windows in their stacking order
     QVector< Window* > stacking_order;
 private:
+    void removeRepaints(AbstractOutput *output);
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
-    void reallocRepaints();
     QHash< Toplevel*, Window* > m_windows;
-    QVector<QRegion> m_repaints;
+    QMap<AbstractOutput *, QRegion> m_repaints;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
 };

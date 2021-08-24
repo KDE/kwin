@@ -45,31 +45,24 @@ void DrmQPainterBackend::initOutput(DrmAbstractOutput *output)
     Output o;
     o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize());
     o.output = output;
-    m_outputs << o;
+    m_outputs.insert(output, o);
     connect(output, &DrmOutput::modeChanged, this,
         [output, this] {
-            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                [output] (const auto &o) {
-                    return o.output == output;
-                }
-            );
-            if (it == m_outputs.end()) {
-                return;
-            }
-            it->swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize());
-            it->damageJournal.setCapacity(it->swapchain->slotCount());
+            auto &o = m_outputs[output];
+            o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize());
+            o.damageJournal.setCapacity(o.swapchain->slotCount());
         }
     );
 }
 
-QImage *DrmQPainterBackend::bufferForScreen(int screenId)
+QImage *DrmQPainterBackend::bufferForScreen(AbstractOutput *output)
 {
-    return m_outputs[screenId].swapchain->currentBuffer()->image();
+    return m_outputs[output].swapchain->currentBuffer()->image();
 }
 
-QRegion DrmQPainterBackend::beginFrame(int screenId)
+QRegion DrmQPainterBackend::beginFrame(AbstractOutput *output)
 {
-    Output *rendererOutput = &m_outputs[screenId];
+    Output *rendererOutput = &m_outputs[output];
 
     int bufferAge;
     rendererOutput->swapchain->acquireBuffer(&bufferAge);
@@ -77,9 +70,9 @@ QRegion DrmQPainterBackend::beginFrame(int screenId)
     return rendererOutput->damageJournal.accumulate(bufferAge, rendererOutput->output->geometry());
 }
 
-void DrmQPainterBackend::endFrame(int screenId, const QRegion &damage)
+void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &damage)
 {
-    Output &rendererOutput = m_outputs[screenId];
+    Output &rendererOutput = m_outputs[output];
     DrmAbstractOutput *drmOutput = rendererOutput.output;
 
     QSharedPointer<DrmDumbBuffer> back = rendererOutput.swapchain->currentBuffer();

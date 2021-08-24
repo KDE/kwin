@@ -71,15 +71,15 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
-    QRegion beginFrame(int screenId) override;
-    void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
+    QRegion beginFrame(AbstractOutput *output) override;
+    void endFrame(AbstractOutput *output, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;
 
     bool havePlatformBase() const {
         return m_havePlatformBase;
     }
 
-    void aboutToStartPainting(int screenId, const QRegion &damage) override;
+    void aboutToStartPainting(AbstractOutput *output, const QRegion &damage) override;
 
 private:
     bool initializeEgl();
@@ -95,7 +95,7 @@ private:
     void presentOnSurface(EglWaylandOutput *output, const QRegion &damagedRegion);
 
     WaylandBackend *m_backend;
-    QVector<EglWaylandOutput*> m_outputs;
+    QMap<AbstractOutput *, EglWaylandOutput*> m_outputs;
     bool m_havePlatformBase;
     friend class EglWaylandTexture;
 };

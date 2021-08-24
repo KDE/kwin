@@ -85,11 +85,7 @@ namespace KWin
 Scene::Scene(QObject *parent)
     : QObject(parent)
 {
-    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
-        connect(kwinApp()->platform(), &Platform::outputEnabled, this, &Scene::reallocRepaints);
-        connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Scene::reallocRepaints);
-    }
-    reallocRepaints();
+    connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Scene::removeRepaints);
 }
 
 Scene::~Scene()
@@ -101,14 +97,10 @@ void Scene::addRepaint(const QRegion &region)
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
-        if (m_repaints.count() != outputs.count()) {
-            return; // Repaints haven't been reallocated yet, do nothing.
-        }
-        for (int screenId = 0; screenId < m_repaints.count(); ++screenId) {
-            AbstractOutput *output = outputs[screenId];
+        for (const auto &output : outputs) {
             const QRegion dirtyRegion = region & output->geometry();
             if (!dirtyRegion.isEmpty()) {
-                m_repaints[screenId] += dirtyRegion;
+                m_repaints[output] += dirtyRegion;
                 output->renderLoop()->scheduleRepaint();
             }
         }
@@ -118,27 +110,19 @@ void Scene::addRepaint(const QRegion &region)
     }
 }
 
-QRegion Scene::repaints(int screenId) const
+QRegion Scene::repaints(AbstractOutput *output) const
 {
-    const int index = screenId == -1 ? 0 : screenId;
-    return m_repaints[index];
+    return m_repaints.value(output, infiniteRegion());
 }
 
-void Scene::resetRepaints(int screenId)
+void Scene::resetRepaints(AbstractOutput *output)
 {
-    const int index = screenId == -1 ? 0 : screenId;
-    m_repaints[index] = QRegion();
+    m_repaints.insert(output, QRegion());
 }
 
-void Scene::reallocRepaints()
+void Scene::removeRepaints(AbstractOutput *output)
 {
-    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
-        m_repaints.resize(kwinApp()->platform()->enabledOutputs().count());
-    } else {
-        m_repaints.resize(1);
-    }
-
-    m_repaints.fill(infiniteRegion());
+    m_repaints.remove(output);
 }
 
 // returns mask and possibly modified region
@@ -164,7 +148,7 @@ void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
 
     QRegion region = damage;
 
-    auto screen = effects->findScreen(painted_screen);
+    auto screen = effects->findScreen(kwinApp()->platform()->enabledOutputs().indexOf(painted_screen));
     ScreenPrePaintData pdata;
     pdata.mask = (damage == displayRegion) ? 0 : PAINT_SCREEN_REGION;
     pdata.paint = region;
@@ -221,13 +205,13 @@ void Scene::finalPaintScreen(int mask, const QRegion &region, ScreenPaintData& d
         paintSimpleScreen(mask, region);
 }
 
-static void resetRepaintsHelper(Item *item, int screen)
+static void resetRepaintsHelper(Item *item, AbstractOutput *output)
 {
-    item->resetRepaints(screen);
+    item->resetRepaints(output);
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {
-        resetRepaintsHelper(childItem, screen);
+        resetRepaintsHelper(childItem, output);
     }
 }
 
@@ -273,14 +257,14 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
     }
 }
 
-static void accumulateRepaints(Item *item, int screen, QRegion *repaints)
+static void accumulateRepaints(Item *item, AbstractOutput *output, QRegion *repaints)
 {
-    *repaints += item->repaints(screen);
-    item->resetRepaints(screen);
+    *repaints += item->repaints(output);
+    item->resetRepaints(output);
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {
-        accumulateRepaints(childItem, screen, repaints);
+        accumulateRepaints(childItem, output, repaints);
     }
 }
 
@@ -503,9 +487,9 @@ void Scene::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPai
     static_cast<EffectsHandlerImpl*>(effects)->paintDesktop(desktop, mask, region, data);
 }
 
-void Scene::aboutToStartPainting(int screenId, const QRegion &damage)
+void Scene::aboutToStartPainting(AbstractOutput *output, const QRegion &damage)
 {
-    Q_UNUSED(screenId)
+    Q_UNUSED(output)
     Q_UNUSED(damage)
 }
 
@@ -554,9 +538,9 @@ QPainter *Scene::scenePainter() const
     return nullptr;
 }
 
-QImage *Scene::qpainterRenderBuffer(int screenId) const
+QImage *Scene::qpainterRenderBuffer(AbstractOutput *output) const
 {
-    Q_UNUSED(screenId)
+    Q_UNUSED(output)
     return nullptr;
 }
 

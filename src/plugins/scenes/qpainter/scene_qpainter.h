@@ -24,7 +24,7 @@ class KWIN_EXPORT SceneQPainter : public Scene
 public:
     ~SceneQPainter() override;
     OverlayWindow* overlayWindow() const override;
-    void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
+    void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows,
                RenderLoop *renderLoop) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     CompositingType compositingType() const override;
@@ -40,7 +40,7 @@ public:
     }
 
     QPainter *scenePainter() const override;
-    QImage *qpainterRenderBuffer(int screenId) const override;
+    QImage *qpainterRenderBuffer(AbstractOutput *output) const override;
 
     QPainterBackend *backend() const {
         return m_backend.data();

@@ -24,9 +24,9 @@ public:
 
     void init() override;
 
-    QRegion beginFrame(int screenId) override;
-    void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
-    bool scanout(int screenId, SurfaceItem *surfaceItem) override;
+    QRegion beginFrame(AbstractOutput *output) override;
+    void endFrame(AbstractOutput *output, const QRegion &damage, const QRegion &damagedRegion) override;
+    bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem) override;
 
     bool makeCurrent() override;
     void doneCurrent() override;
@@ -35,7 +35,7 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
-    bool directScanoutAllowed(int screen) const override;
+    bool directScanoutAllowed(AbstractOutput *output) const override;
 
 public Q_SLOTS:
     void addGpu(DrmGpu *gpu);
@@ -46,7 +46,7 @@ private:
     QVector<AbstractEglDrmBackend*> m_backends;
     bool m_initialized = false;
 
-    AbstractEglDrmBackend *findBackend(int screenId, int& internalScreenId) const;
+    AbstractEglDrmBackend *findBackend(AbstractOutput *output) const;
 };
 
 }

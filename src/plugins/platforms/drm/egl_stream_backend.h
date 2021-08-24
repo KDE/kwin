@@ -33,14 +33,11 @@ public:
     ~EglStreamBackend() override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
-    QRegion beginFrame(int screenId) override;
-    void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
+    QRegion beginFrame(AbstractOutput *output) override;
+    void endFrame(AbstractOutput *output, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;
 
-    int screenCount() const override {
-        return m_outputs.count();
-    }
-
+    bool hasOutput(AbstractOutput *output) const override;
     bool addOutput(DrmAbstractOutput *output) override;
     void removeOutput(DrmAbstractOutput *output) override;
 
@@ -74,11 +71,11 @@ private:
         // for operation as secondary GPU
         QSharedPointer<DumbSwapchain> dumbSwapchain;
     };
-    bool resetOutput(Output &output, DrmOutput *drmOutput);
+    bool resetOutput(Output &output);
     bool makeContextCurrent(const Output &output);
     void cleanupOutput(Output &output);
 
-    QVector<Output> m_outputs;
+    QMap<AbstractOutput *, Output> m_outputs;
     KWaylandServer::EglStreamControllerInterface *m_eglStreamControllerInterface;
     QHash<KWaylandServer::SurfaceInterface *, StreamTexture> m_streamTextures;
 

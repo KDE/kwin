@@ -739,9 +739,9 @@ PlatformSurfaceTexture *GlxBackend::createPlatformSurfaceTextureX11(SurfacePixma
     return new GlxSurfaceTextureX11(this, pixmap);
 }
 
-QRegion GlxBackend::beginFrame(int screenId)
+QRegion GlxBackend::beginFrame(AbstractOutput *output)
 {
-    Q_UNUSED(screenId)
+    Q_UNUSED(output)
 
     QRegion repaint;
     makeCurrent();
@@ -758,9 +758,9 @@ QRegion GlxBackend::beginFrame(int screenId)
     return repaint;
 }
 
-void GlxBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void GlxBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(screenId)
+    Q_UNUSED(output)
 
     // If the GLX_INTEL_swap_event extension is not used for getting presentation feedback,
     // assume that the frame will be presented at the next vblank event, this is racy.

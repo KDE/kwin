@@ -13,6 +13,7 @@
 
 #include <QObject>
 #include <QVector>
+#include <QMap>
 
 namespace KWin
 {
@@ -26,14 +27,14 @@ public:
     VirtualQPainterBackend(VirtualBackend *backend);
     ~VirtualQPainterBackend() override;
 
-    QImage *bufferForScreen(int screenId) override;
-    QRegion beginFrame(int screenId) override;
-    void endFrame(int screenId, const QRegion &damage) override;
+    QImage *bufferForScreen(AbstractOutput *output) override;
+    QRegion beginFrame(AbstractOutput *output) override;
+    void endFrame(AbstractOutput *output, const QRegion &damage) override;
 
 private:
     void createOutputs();
 
-    QVector<QImage> m_backBuffers;
+    QMap<AbstractOutput *, QImage> m_backBuffers;
     VirtualBackend *m_backend;
     int m_frameCounter = 0;
 };

@@ -31,9 +31,9 @@ class DrmQPainterBackend : public QPainterBackend
 public:
     DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu);
 
-    QImage *bufferForScreen(int screenId) override;
-    QRegion beginFrame(int screenId) override;
-    void endFrame(int screenId, const QRegion &damage) override;
+    QImage *bufferForScreen(AbstractOutput *output) override;
+    QRegion beginFrame(AbstractOutput *output) override;
+    void endFrame(AbstractOutput *output, const QRegion &damage) override;
 
 private:
     void initOutput(DrmAbstractOutput *output);
@@ -42,7 +42,7 @@ private:
         QSharedPointer<DumbSwapchain> swapchain;
         DamageJournal damageJournal;
     };
-    QVector<Output> m_outputs;
+    QMap<AbstractOutput *, Output> m_outputs;
     DrmBackend *m_backend;
     DrmGpu *m_gpu;
 };

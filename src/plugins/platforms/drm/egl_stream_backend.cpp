@@ -298,9 +298,9 @@ bool EglStreamBackend::initRenderingContext()
     return !m_outputs.isEmpty() && makeContextCurrent(m_outputs.first());
 }
 
-bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
+bool EglStreamBackend::resetOutput(Output &o)
 {
-    o.output = drmOutput;
+    const auto &drmOutput = o.output;
     QSize sourceSize = drmOutput->sourceSize();
 
     if (isPrimary()) {
@@ -385,7 +385,8 @@ bool EglStreamBackend::addOutput(DrmAbstractOutput *output)
     DrmOutput *drmOutput = qobject_cast<DrmOutput *>(output);
     if (drmOutput) {
         Output o;
-        if (!resetOutput(o, drmOutput)) {
+        o.output = drmOutput;
+        if (!resetOutput(o)) {
             return false;
         }
         if (!isPrimary() && !renderingBackend()->addOutput(drmOutput)) {
@@ -394,18 +395,10 @@ bool EglStreamBackend::addOutput(DrmAbstractOutput *output)
 
         connect(drmOutput, &DrmOutput::modeChanged, this,
             [drmOutput, this] {
-                auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                    [drmOutput] (const auto &o) {
-                        return o.output == drmOutput;
-                    }
-                );
-                if (it == m_outputs.end()) {
-                    return;
-                }
-                resetOutput(*it, drmOutput);
+                resetOutput(m_outputs[drmOutput]);
             }
         );
-        m_outputs << o;
+        m_outputs.insert(output, o);
         return true;
     } else {
         return false;
@@ -490,9 +483,10 @@ PlatformSurfaceTexture *EglStreamBackend::createPlatformSurfaceTextureWayland(Su
     return new EglStreamSurfaceTextureWayland(this, pixmap);
 }
 
-QRegion EglStreamBackend::beginFrame(int screenId)
+QRegion EglStreamBackend::beginFrame(AbstractOutput *drmOutput)
 {
-    const Output &o = m_outputs.at(screenId);
+    Q_ASSERT(m_outputs.contains(drmOutput));
+    const Output &o = m_outputs[drmOutput];
     if (isPrimary()) {
         makeContextCurrent(o);
         if (o.shadowBuffer) {
@@ -504,13 +498,12 @@ QRegion EglStreamBackend::beginFrame(int screenId)
     }
 }
 
-void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglStreamBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_ASSERT(m_outputs.contains(output));
     Q_UNUSED(renderedRegion);
 
-    Output &renderOutput = m_outputs[screenId];
-    DrmOutput *drmOutput = renderOutput.output;
-
+    Output &renderOutput = m_outputs[output];
     bool frameFailed = false;
 
     QSharedPointer<DrmDumbBuffer> buffer;
@@ -524,13 +517,13 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
             frameFailed = true;
         }
     } else {
-        if (!renderingBackend()->swapBuffers(drmOutput, damagedRegion.intersected(drmOutput->geometry()))) {
-            qCCritical(KWIN_DRM) << "swapping buffers on render backend for" << drmOutput << "failed!";
+        if (!renderingBackend()->swapBuffers(static_cast<DrmOutput*>(output), damagedRegion.intersected(output->geometry()))) {
+            qCCritical(KWIN_DRM) << "swapping buffers on render backend for" << output << "failed!";
             frameFailed = true;
         }
         buffer = renderOutput.dumbSwapchain->acquireBuffer();
-        if (!frameFailed && !renderingBackend()->exportFramebuffer(drmOutput, buffer->data(), buffer->size(), buffer->stride())) {
-            qCCritical(KWIN_DRM) << "importing framebuffer from render backend for" << drmOutput << "failed!";
+        if (!frameFailed && !renderingBackend()->exportFramebuffer(static_cast<DrmOutput*>(output), buffer->data(), buffer->size(), buffer->stride())) {
+            qCCritical(KWIN_DRM) << "importing framebuffer from render backend for" << output << "failed!";
             frameFailed = true;
         }
     }
@@ -539,11 +532,11 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
     }
 
     if (frameFailed) {
-        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
+        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(output->renderLoop());
         renderLoopPrivate->notifyFrameFailed();
     } else if (isPrimary()) {
         EGLAttrib acquireAttribs[] = {
-            EGL_DRM_FLIP_EVENT_DATA_NV, (EGLAttrib)drmOutput,
+            EGL_DRM_FLIP_EVENT_DATA_NV, (EGLAttrib)output,
             EGL_NONE,
         };
         if (!pEglStreamConsumerAcquireAttribNV(eglDisplay(), renderOutput.eglStream, acquireAttribs)) {
@@ -554,21 +547,20 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
 
 QSharedPointer<DrmBuffer> EglStreamBackend::renderTestFrame(DrmAbstractOutput *drmOutput)
 {
-    auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-        [drmOutput] (const Output &o) {
-            return o.output == drmOutput;
-        }
-    );
-    if (it == m_outputs.end()) {
-        return nullptr;
-    }
-    auto buffer = (*it).dumbSwapchain ? (*it).dumbSwapchain->currentBuffer() : (*it).buffer;
+    Q_ASSERT(m_outputs.contains(drmOutput));
+    auto &output = m_outputs[drmOutput];
+    auto buffer = output.dumbSwapchain ? output.dumbSwapchain->currentBuffer() : output.buffer;
     auto size = drmOutput->sourceSize();
     if (buffer->size() == size) {
         return buffer;
     } else {
         return QSharedPointer<DrmDumbBuffer>::create(m_gpu, size);
     }
+}
+
+bool EglStreamBackend::hasOutput(AbstractOutput *output) const
+{
+    return m_outputs.contains(output);
 }
 
 /************************************************
