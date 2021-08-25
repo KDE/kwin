@@ -71,7 +71,6 @@ public:
     bool workspaceEvent(xcb_generic_event_t*);
     bool workspaceEvent(QEvent*);
 
-    bool hasClient(const X11Client *);
     bool hasClient(const AbstractClient*);
 
     /**
@@ -789,13 +788,6 @@ inline
 void Workspace::forEachUnmanaged(std::function< void (Unmanaged*) > func)
 {
     std::for_each(m_unmanaged.constBegin(), m_unmanaged.constEnd(), func);
-}
-
-inline bool Workspace::hasClient(const X11Client *c)
-{
-    return findClient([c](const X11Client *test) {
-        return test == c;
-    });
 }
 
 inline Workspace *workspace()

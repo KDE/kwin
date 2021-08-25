@@ -1859,14 +1859,9 @@ void Workspace::forEachToplevel(std::function<void (Toplevel *)> func)
 
 bool Workspace::hasClient(const AbstractClient *c)
 {
-    if (auto cc = dynamic_cast<const X11Client *>(c)) {
-        return hasClient(cc);
-    } else {
-        return findAbstractClient([c](const AbstractClient *test) {
-            return test == c;
-        }) != nullptr;
-    }
-    return false;
+    return findAbstractClient([&c](const AbstractClient *test) {
+        return test == c;
+    }) != nullptr;
 }
 
 void Workspace::forEachAbstractClient(std::function< void (AbstractClient*) > func)
