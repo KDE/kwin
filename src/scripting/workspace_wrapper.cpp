@@ -271,7 +271,8 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int screen, int desk
 
 QString WorkspaceWrapper::desktopName(int desktop) const
 {
-    return VirtualDesktopManager::self()->name(desktop);
+    const VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForX11Id(desktop);
+    return vd ? vd->name() : QString();
 }
 
 void WorkspaceWrapper::createDesktop(int position, const QString &name) const

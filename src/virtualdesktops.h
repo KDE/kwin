@@ -188,11 +188,6 @@ public:
     void moveTo(bool wrap = false);
 
     /**
-     * @returns The name of the @p desktop
-     */
-    QString name(uint desktop) const;
-
-    /**
      * @returns @c true if navigation at borders of layout wraps around, @c false otherwise
      * @see setNavigationWrappingAround
      * @see navigationWrappingAroundChanged

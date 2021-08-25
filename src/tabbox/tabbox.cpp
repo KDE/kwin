@@ -93,14 +93,15 @@ QString TabBoxHandlerImpl::desktopName(TabBoxClient* client) const
 {
     if (TabBoxClientImpl* c = static_cast< TabBoxClientImpl* >(client)) {
         if (!c->client()->isOnAllDesktops())
-            return VirtualDesktopManager::self()->name(c->client()->desktop());
+            return desktopName(c->client()->desktop());
     }
-    return VirtualDesktopManager::self()->name(VirtualDesktopManager::self()->current());
+    return desktopName(VirtualDesktopManager::self()->current());
 }
 
 QString TabBoxHandlerImpl::desktopName(int desktop) const
 {
-    return VirtualDesktopManager::self()->name(desktop);
+    const VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForX11Id(desktop);
+    return vd ? vd->name() : QString();
 }
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient* client) const

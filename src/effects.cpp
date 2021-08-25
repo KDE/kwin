@@ -1015,7 +1015,8 @@ int EffectsHandlerImpl::desktopToLeft(int desktop, bool wrap) const
 
 QString EffectsHandlerImpl::desktopName(int desktop) const
 {
-    return VirtualDesktopManager::self()->name(desktop);
+    const VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForX11Id(desktop);
+    return vd ? vd->name() : QString();
 }
 
 bool EffectsHandlerImpl::optionRollOverDesktops() const

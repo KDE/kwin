@@ -249,18 +249,6 @@ void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
     }
 }
 
-QString VirtualDesktopManager::name(uint desktop) const
-{
-    if (uint(m_desktops.length()) > desktop - 1) {
-        return m_desktops[desktop - 1]->name();
-    }
-
-    if (!m_rootInfo) {
-        return defaultName(desktop);
-    }
-    return QString::fromUtf8(m_rootInfo->desktopName(desktop));
-}
-
 uint VirtualDesktopManager::above(uint id, bool wrap) const
 {
     auto vd = above(desktopForX11Id(id), wrap);
@@ -736,25 +724,27 @@ void VirtualDesktopManager::save()
     }
 
     group.writeEntry("Number", count());
-    for (uint i = 1; i <= count(); ++i) {
-        QString s = name(i);
-        const QString defaultvalue = defaultName(i);
+    for (VirtualDesktop *desktop : qAsConst(m_desktops)) {
+        const uint position = desktop->x11DesktopNumber();
+
+        QString s = desktop->name();
+        const QString defaultvalue = defaultName(position);
         if (s.isEmpty()) {
             s = defaultvalue;
             if (m_rootInfo) {
-                m_rootInfo->setDesktopName(i, s.toUtf8().data());
+                m_rootInfo->setDesktopName(position, s.toUtf8().data());
             }
         }
 
         if (s != defaultvalue) {
-            group.writeEntry(QStringLiteral("Name_%1").arg(i), s);
+            group.writeEntry(QStringLiteral("Name_%1").arg(position), s);
         } else {
-            QString currentvalue = group.readEntry(QStringLiteral("Name_%1").arg(i), QString());
+            QString currentvalue = group.readEntry(QStringLiteral("Name_%1").arg(position), QString());
             if (currentvalue != defaultvalue) {
-                group.deleteEntry(QStringLiteral("Name_%1").arg(i));
+                group.deleteEntry(QStringLiteral("Name_%1").arg(position));
             }
         }
-        group.writeEntry(QStringLiteral("Id_%1").arg(i), m_desktops[i-1]->id());
+        group.writeEntry(QStringLiteral("Id_%1").arg(position), desktop->id());
     }
 
     group.writeEntry("Rows", m_rows);

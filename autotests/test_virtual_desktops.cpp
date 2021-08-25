@@ -556,7 +556,8 @@ void TestVirtualDesktops::name()
     vds->setCount(initCount);
     QFETCH(uint, desktop);
 
-    QTEST(vds->name(desktop), "desktopName");
+    const VirtualDesktop *vd = vds->desktopForX11Id(desktop);
+    QTEST(vd->name(), "desktopName");
 }
 
 void TestVirtualDesktops::switchToShortcuts()
