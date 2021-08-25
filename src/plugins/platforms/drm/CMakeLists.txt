@@ -40,6 +40,9 @@ target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm SceneQPainterBac
 
 if (HAVE_GBM)
     target_link_libraries(KWinWaylandDrmBackend gbm::gbm)
+    if (gbm_VERSION_STRING VERSION_GREATER 21.1)
+        target_compile_definitions(KWinWaylandDrmBackend PRIVATE -DGBM_HAS_FD_FOR_PLANE)
+    endif()
 endif()
 
 install(

@@ -245,6 +245,7 @@ bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, int 
 {
     Q_ASSERT(m_outputs.contains(drmOutput));
     auto bo = m_outputs[drmOutput].current.gbmSurface->currentBuffer()->getBo();
+#ifdef GBM_HAS_FD_FOR_PLANE
     if (gbm_bo_get_handle_for_plane(bo, 0).s32 != -1) {
         *num_fds = gbm_bo_get_plane_count(bo);
         for (uint32_t i = 0; i < *num_fds; i++) {
@@ -260,7 +261,9 @@ bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, int 
             offsets[i] = gbm_bo_get_offset(bo, i);
         }
         *modifier = gbm_bo_get_modifier(bo);
-    } else {
+    } else
+#endif
+    {
         fds[0] = gbm_bo_get_fd(bo);
         if (fds[0] < 0) {
             qCWarning(KWIN_DRM) << "failed to export gbm_bo as dma-buf:" << strerror(errno);
