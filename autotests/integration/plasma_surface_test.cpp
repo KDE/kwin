@@ -11,6 +11,7 @@
 #include "platform.h"
 #include "cursor.h"
 #include "screens.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <KWayland/Client/connection_thread.h>
@@ -267,12 +268,16 @@ void PlasmaSurfaceTest::testPanelTypeHasStrut()
     // now render and map the window
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
+    // the panel is on the first output and the current desktop
+    AbstractOutput *output = kwinApp()->platform()->enabledOutputs().constFirst();
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
+
     QVERIFY(c);
     QCOMPARE(c->windowType(), NET::Dock);
     QVERIFY(c->isDock());
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     QTEST(c->hasStrut(), "expectedStrut");
-    QTEST(workspace()->clientArea(MaximizeArea, 0, 0), "expectedMaxArea");
+    QTEST(workspace()->clientArea(MaximizeArea, output, desktop), "expectedMaxArea");
     QTEST(c->layer(), "expectedLayer");
 }
 
@@ -314,12 +319,16 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     // now render and map the window
     auto panel = Test::renderAndWaitForShown(surface.data(), panelGeometry.size(), Qt::blue);
 
+    // the panel is on the first output and the current desktop
+    AbstractOutput *output = kwinApp()->platform()->enabledOutputs().constFirst();
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
+
     QVERIFY(panel);
     QCOMPARE(panel->windowType(), NET::Dock);
     QVERIFY(panel->isDock());
     QCOMPARE(panel->frameGeometry(), panelGeometry);
     QCOMPARE(panel->hasStrut(), false);
-    QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 0), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, output, desktop), QRect(0, 0, 1280, 1024));
     QCOMPARE(panel->layer(), KWin::NormalLayer);
 
     // create a Window
