@@ -174,16 +174,6 @@ void ApplicationWayland::performStartup()
 void ApplicationWayland::continueStartupWithScene()
 {
     disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
-    if (!platform()->enabledOutputs().isEmpty()) {
-        continueStartupWithScreens();
-    } else {
-        connect(platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
-    }
-}
-
-void ApplicationWayland::continueStartupWithScreens()
-{
-    disconnect(platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
 
     // Note that we start accepting client connections after creating the Workspace.
     createWorkspace();
