@@ -2347,11 +2347,6 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
     return clientArea(opt, output, virtualDesktop);
 }
 
-QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, int desktop) const
-{
-    return clientArea(opt, output->geometry().center(), desktop);
-}
-
 QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop) const
 {
     return clientArea(opt, screens()->number(p), desktop);

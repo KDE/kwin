@@ -147,7 +147,6 @@ public:
     QRect clientArea(clientAreaOption, const AbstractClient *client, int screen) const;
     QRect clientArea(clientAreaOption, const AbstractClient *client, const QPoint &pos) const;
     QRect clientArea(clientAreaOption, int screen, int desktop) const;
-    QRect clientArea(clientAreaOption, const AbstractOutput *output, int desktop) const;
 
     QRegion restrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
 
