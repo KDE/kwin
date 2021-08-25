@@ -146,7 +146,12 @@ bool EglGbmBackend::resetOutput(Output &output)
     QVector<uint64_t> modifiers = output.output->supportedModifiers(m_gbmFormat);
 
     QSharedPointer<GbmSurface> gbmSurface;
+#if HAVE_GBM_BO_GET_FD_FOR_PLANE
     if (modifiers.isEmpty()) {
+#else
+    // modifiers have to be disabled with multi-gpu if gbm_bo_get_fd_for_plane is not available
+    if (modifiers.isEmpty() || output.output->gpu() != m_gpu) {
+#endif
         int flags = GBM_BO_USE_RENDERING;
         if (output.output->gpu() == m_gpu) {
             flags |= GBM_BO_USE_SCANOUT;
@@ -245,6 +250,7 @@ bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, int 
 {
     Q_ASSERT(m_outputs.contains(drmOutput));
     auto bo = m_outputs[drmOutput].current.gbmSurface->currentBuffer()->getBo();
+#if HAVE_GBM_BO_GET_FD_FOR_PLANE
     if (gbm_bo_get_handle_for_plane(bo, 0).s32 != -1) {
         *num_fds = gbm_bo_get_plane_count(bo);
         for (uint32_t i = 0; i < *num_fds; i++) {
@@ -261,6 +267,7 @@ bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, int 
         }
         *modifier = gbm_bo_get_modifier(bo);
     } else {
+#endif
         fds[0] = gbm_bo_get_fd(bo);
         if (fds[0] < 0) {
             qCWarning(KWIN_DRM) << "failed to export gbm_bo as dma-buf:" << strerror(errno);
@@ -269,7 +276,9 @@ bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, int 
         *num_fds = 1;
         strides[0] = gbm_bo_get_stride(bo);
         *modifier = DRM_FORMAT_MOD_INVALID;
+#if HAVE_GBM_BO_GET_FD_FOR_PLANE
     }
+#endif
     *format = gbm_bo_get_format(bo);
     return true;
 }

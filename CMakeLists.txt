@@ -217,6 +217,11 @@ set_package_properties(Libdrm PROPERTIES TYPE REQUIRED PURPOSE "Required for drm
 find_package(gbm)
 set_package_properties(gbm PROPERTIES TYPE OPTIONAL PURPOSE "Required for egl output of drm backend.")
 set(HAVE_GBM ${gbm_FOUND})
+if (${gbm_VERSION} GREATER_EQUAL 21.1)
+    set(HAVE_GBM_BO_GET_FD_FOR_PLANE 1)
+else()
+    set(HAVE_GBM_BO_GET_FD_FOR_PLANE 0)
+endif()
 
 option(KWIN_BUILD_EGL_STREAM_BACKEND "Enable building of EGLStream based DRM backend" ON)
 if (KWIN_BUILD_EGL_STREAM_BACKEND)
