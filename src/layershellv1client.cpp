@@ -40,7 +40,7 @@ LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface,
                                        AbstractOutput *output,
                                        LayerShellV1Integration *integration)
     : WaylandClient(shellSurface->surface())
-    , m_output(output)
+    , m_desiredOutput(output)
     , m_integration(integration)
     , m_shellSurface(shellSurface)
     , m_windowType(scopeToType(shellSurface->scope()))
@@ -87,9 +87,9 @@ LayerSurfaceV1Interface *LayerShellV1Client::shellSurface() const
     return m_shellSurface;
 }
 
-AbstractOutput *LayerShellV1Client::output() const
+AbstractOutput *LayerShellV1Client::desiredOutput() const
 {
-    return m_output;
+    return m_desiredOutput;
 }
 
 void LayerShellV1Client::scheduleRearrange()
@@ -273,7 +273,7 @@ void LayerShellV1Client::handleAcceptsFocusChanged()
 
 void LayerShellV1Client::handleOutputEnabledChanged()
 {
-    if (!m_output->isEnabled()) {
+    if (!m_desiredOutput->isEnabled()) {
         closeWindow();
         destroyClient();
     }

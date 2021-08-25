@@ -103,7 +103,7 @@ static void rearrangeLayer(const QList<LayerShellV1Client *> &clients, QRect *wo
 
         QRect bounds;
         if (shellSurface->exclusiveZone() == -1) {
-            bounds = client->output()->geometry();
+            bounds = client->desiredOutput()->geometry();
         } else {
             bounds = *workArea;
         }
@@ -173,7 +173,7 @@ static QList<LayerShellV1Client *> clientsForOutput(AbstractOutput *output)
     const QList<AbstractClient *> clients = waylandServer()->clients();
     for (AbstractClient *client : clients) {
         LayerShellV1Client *layerShellClient = qobject_cast<LayerShellV1Client *>(client);
-        if (!layerShellClient || layerShellClient->output() != output) {
+        if (!layerShellClient || layerShellClient->desiredOutput() != output) {
             continue;
         }
         if (layerShellClient->shellSurface()->isCommitted()) {

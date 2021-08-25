@@ -29,7 +29,7 @@ public:
                                 LayerShellV1Integration *integration);
 
     KWaylandServer::LayerSurfaceV1Interface *shellSurface() const;
-    AbstractOutput *output() const;
+    AbstractOutput *desiredOutput() const;
 
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool isPlaceable() const override;
@@ -59,7 +59,7 @@ private:
     void handleOutputDestroyed();
     void scheduleRearrange();
 
-    AbstractOutput *m_output;
+    AbstractOutput *m_desiredOutput;
     LayerShellV1Integration *m_integration;
     KWaylandServer::LayerSurfaceV1Interface *m_shellSurface;
     NET::WindowType m_windowType;
