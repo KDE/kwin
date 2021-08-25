@@ -37,7 +37,10 @@ QRect X11Output::geometry() const
 
 void X11Output::setGeometry(QRect set)
 {
-    m_geometry = set;
+    if (m_geometry != set) {
+        m_geometry = set;
+        Q_EMIT geometryChanged();
+    }
 }
 
 int X11Output::refreshRate() const

@@ -84,6 +84,7 @@ private:
      */
     static bool hasGlx();
 
+    X11Output *findX11Output(const QString &name) const;
     template <typename T>
     void doUpdateOutputs();
     void updateRefreshRate();

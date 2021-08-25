@@ -461,119 +461,135 @@ void X11StandalonePlatform::updateOutputs()
 template <typename T>
 void X11StandalonePlatform::doUpdateOutputs()
 {
-    auto fallback = [this]() {
-        X11PlaceholderOutput *dummyOutput = new X11PlaceholderOutput();
+    QVector<AbstractOutput *> changed;
+    QVector<AbstractOutput *> added;
+    QVector<AbstractOutput *> removed = m_outputs;
+
+    if (Xcb::Extensions::self()->isRandrAvailable()) {
+        T resources(rootWindow());
+        if (!resources.isNull()) {
+            xcb_randr_crtc_t *crtcs = resources.crtcs();
+            const xcb_randr_mode_info_t *modes = resources.modes();
+
+            QVector<Xcb::RandR::CrtcInfo> infos(resources->num_crtcs);
+            for (int i = 0; i < resources->num_crtcs; ++i) {
+                infos[i] = Xcb::RandR::CrtcInfo(crtcs[i], resources->config_timestamp);
+            }
+
+            for (int i = 0; i < resources->num_crtcs; ++i) {
+                Xcb::RandR::CrtcInfo info(infos.at(i));
+
+                const QRect geometry = info.rect();
+                if (!geometry.isValid()) {
+                    continue;
+                }
+
+                xcb_randr_output_t *outputs = info.outputs();
+                QVector<Xcb::RandR::OutputInfo> outputInfos(outputs ? resources->num_outputs : 0);
+                if (outputs) {
+                    for (int i = 0; i < resources->num_outputs; ++i) {
+                        outputInfos[i] = Xcb::RandR::OutputInfo(outputs[i], resources->config_timestamp);
+                    }
+                }
+
+                float refreshRate = -1.0f;
+                for (int j = 0; j < resources->num_modes; ++j) {
+                    if (info->mode == modes[j].id) {
+                        if (modes[j].htotal != 0 && modes[j].vtotal != 0) { // BUG 313996
+                            // refresh rate calculation - WTF was wikipedia 1998 when I needed it?
+                            int dotclock = modes[j].dot_clock,
+                                vtotal = modes[j].vtotal;
+                            if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_INTERLACE)
+                                dotclock *= 2;
+                            if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_DOUBLE_SCAN)
+                                vtotal *= 2;
+                            refreshRate = dotclock/float(modes[j].htotal*vtotal);
+                        }
+                        break; // found mode
+                    }
+                }
+
+                for (int j = 0; j < info->num_outputs; ++j) {
+                    Xcb::RandR::OutputInfo outputInfo(outputInfos.at(j));
+                    if (outputInfo->crtc != crtcs[i]) {
+                        continue;
+                    }
+
+                    X11Output *output = findX11Output(outputInfo.name());
+                    if (output) {
+                        changed.append(output);
+                        removed.removeOne(output);
+                    } else {
+                        output = new X11Output();
+                        output->setName(outputInfo.name());
+                        added.append(output);
+                    }
+
+                    // TODO: Perhaps the output has to save the inherited gamma ramp and
+                    // restore it during tear down. Currently neither standalone x11 nor
+                    // drm platform do this.
+                    Xcb::RandR::CrtcGamma gamma(crtcs[i]);
+
+                    output->setCrtc(crtcs[i]);
+                    output->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
+                    output->setGeometry(geometry);
+                    output->setRefreshRate(refreshRate * 1000);
+
+                    QSize physicalSize(outputInfo->mm_width, outputInfo->mm_height);
+                    switch (info->rotation) {
+                    case XCB_RANDR_ROTATION_ROTATE_0:
+                    case XCB_RANDR_ROTATION_ROTATE_180:
+                        break;
+                    case XCB_RANDR_ROTATION_ROTATE_90:
+                    case XCB_RANDR_ROTATION_ROTATE_270:
+                        physicalSize.transpose();
+                        break;
+                    case XCB_RANDR_ROTATION_REFLECT_X:
+                    case XCB_RANDR_ROTATION_REFLECT_Y:
+                        break;
+                    }
+                    output->setPhysicalSize(physicalSize);
+                    break;
+                }
+            }
+        }
+    }
+
+    // The workspace handles having no outputs poorly. If the last output is about to be
+    // removed, create a dummy output to avoid crashing.
+    if (changed.isEmpty() && added.isEmpty()) {
+        auto dummyOutput = new X11PlaceholderOutput();
         m_outputs << dummyOutput;
         Q_EMIT outputAdded(dummyOutput);
         Q_EMIT outputEnabled(dummyOutput);
-    };
+    }
 
-    // TODO: instead of resetting all outputs, check if new output is added/removed
-    //       or still available and leave still available outputs in m_outputs
-    //       untouched (like in DRM backend)
-    while (!m_outputs.isEmpty()) {
-        AbstractOutput *output = m_outputs.takeLast();
+    // Process new outputs. Note new outputs must be introduced before removing any other outputs.
+    for (AbstractOutput *output : qAsConst(added)) {
+        m_outputs.append(output);
+        Q_EMIT outputAdded(output);
+        Q_EMIT outputEnabled(output);
+    }
+
+    // Outputs have to be removed last to avoid the case where there are no enabled outputs.
+    for (AbstractOutput *output : qAsConst(removed)) {
+        m_outputs.removeOne(output);
         Q_EMIT outputDisabled(output);
         Q_EMIT outputRemoved(output);
         delete output;
     }
 
-    if (!Xcb::Extensions::self()->isRandrAvailable()) {
-        fallback();
-        Q_EMIT screensQueried();
-        return;
-    }
-    T resources(rootWindow());
-    if (resources.isNull()) {
-        fallback();
-        Q_EMIT screensQueried();
-        return;
-    }
-    xcb_randr_crtc_t *crtcs = resources.crtcs();
-    xcb_randr_mode_info_t *modes = resources.modes();
-
-    QVector<Xcb::RandR::CrtcInfo> infos(resources->num_crtcs);
-    for (int i = 0; i < resources->num_crtcs; ++i) {
-        infos[i] = Xcb::RandR::CrtcInfo(crtcs[i], resources->config_timestamp);
-    }
-
-    for (int i = 0; i < resources->num_crtcs; ++i) {
-        Xcb::RandR::CrtcInfo info(infos.at(i));
-
-        xcb_randr_output_t *outputs = info.outputs();
-        QVector<Xcb::RandR::OutputInfo> outputInfos(outputs ? resources->num_outputs : 0);
-        if (outputs) {
-            for (int i = 0; i < resources->num_outputs; ++i) {
-                outputInfos[i] = Xcb::RandR::OutputInfo(outputs[i], resources->config_timestamp);
-            }
-        }
-
-        float refreshRate = -1.0f;
-        for (int j = 0; j < resources->num_modes; ++j) {
-            if (info->mode == modes[j].id) {
-                if (modes[j].htotal != 0 && modes[j].vtotal != 0) { // BUG 313996
-                    // refresh rate calculation - WTF was wikipedia 1998 when I needed it?
-                    int dotclock = modes[j].dot_clock,
-                          vtotal = modes[j].vtotal;
-                    if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_INTERLACE)
-                        dotclock *= 2;
-                    if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_DOUBLE_SCAN)
-                        vtotal *= 2;
-                    refreshRate = dotclock/float(modes[j].htotal*vtotal);
-                }
-                break; // found mode
-            }
-        }
-
-        const QRect geo = info.rect();
-        if (geo.isValid()) {
-            xcb_randr_crtc_t crtc = crtcs[i];
-
-            // TODO: Perhaps the output has to save the inherited gamma ramp and
-            // restore it during tear down. Currently neither standalone x11 nor
-            // drm platform do this.
-            Xcb::RandR::CrtcGamma gamma(crtc);
-
-            auto *o = new X11Output(this);
-            o->setCrtc(crtc);
-            o->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
-            o->setGeometry(geo);
-            o->setRefreshRate(refreshRate * 1000);
-
-            for (int j = 0; j < info->num_outputs; ++j) {
-                Xcb::RandR::OutputInfo outputInfo(outputInfos.at(j));
-                if (outputInfo->crtc != crtc) {
-                    continue;
-                }
-                QSize physicalSize(outputInfo->mm_width, outputInfo->mm_height);
-                switch (info->rotation) {
-                case XCB_RANDR_ROTATION_ROTATE_0:
-                case XCB_RANDR_ROTATION_ROTATE_180:
-                    break;
-                case XCB_RANDR_ROTATION_ROTATE_90:
-                case XCB_RANDR_ROTATION_ROTATE_270:
-                    physicalSize.transpose();
-                    break;
-                case XCB_RANDR_ROTATION_REFLECT_X:
-                case XCB_RANDR_ROTATION_REFLECT_Y:
-                    break;
-                }
-                o->setName(outputInfo.name());
-                o->setPhysicalSize(physicalSize);
-                break;
-            }
-
-            m_outputs << o;
-            Q_EMIT outputAdded(o);
-            Q_EMIT outputEnabled(o);
-        }
-    }
-
-    if (m_outputs.isEmpty()) {
-        fallback();
-    }
-
     Q_EMIT screensQueried();
+}
+
+X11Output *X11StandalonePlatform::findX11Output(const QString &name) const
+{
+    for (AbstractOutput *output : m_outputs) {
+        if (output->name() == name) {
+            return qobject_cast<X11Output *>(output);
+        }
+    }
+    return nullptr;
 }
 
 Outputs X11StandalonePlatform::outputs() const
