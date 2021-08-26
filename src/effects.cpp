@@ -1206,11 +1206,7 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, int screen, int deskt
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow* c) const
 {
     const Toplevel* t = static_cast< const EffectWindowImpl* >(c)->window();
-    if (const auto *cl = qobject_cast<const AbstractClient *>(t)) {
-        return Workspace::self()->clientArea(opt, cl);
-    } else {
-        return Workspace::self()->clientArea(opt, t->frameGeometry().center(), VirtualDesktopManager::self()->current());
-    }
+    return Workspace::self()->clientArea(opt, t);
 }
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint& p, int desktop) const
