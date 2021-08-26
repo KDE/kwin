@@ -107,7 +107,7 @@ public:
     QString model() const override;
     QString serialNumber() const override;
 
-    void setGlobalPos(const QPoint &pos);
+    void moveTo(const QPoint &pos);
     void setScale(qreal scale);
 
     void applyChanges(const KWaylandServer::OutputChangeSet *changeSet) override;
@@ -155,8 +155,6 @@ protected:
                     const QString &eisaId, const QString &serialNumber,
                     const QSize &physicalSize,
                     const QVector<Mode> &modes, const QByteArray &edid);
-
-    QPoint globalPos() const;
 
     bool internal() const {
         return m_internal;

@@ -55,7 +55,7 @@ QUuid AbstractWaylandOutput::uuid() const
 
 QRect AbstractWaylandOutput::geometry() const
 {
-    return QRect(globalPos(), pixelSize() / scale());
+    return QRect(m_position, pixelSize() / scale());
 }
 
 QSize AbstractWaylandOutput::physicalSize() const
@@ -68,12 +68,7 @@ int AbstractWaylandOutput::refreshRate() const
     return m_refreshRate;
 }
 
-QPoint AbstractWaylandOutput::globalPos() const
-{
-    return m_position;
-}
-
-void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
+void AbstractWaylandOutput::moveTo(const QPoint &pos)
 {
     if (m_position != pos) {
         m_position = pos;
@@ -168,7 +163,7 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
     }
     if (changeSet->positionChanged()) {
         qCDebug(KWIN_CORE) << "Server setting position: " << changeSet->position();
-        setGlobalPos(changeSet->position());
+        moveTo(changeSet->position());
         // may just work already!
         overallSizeCheckNeeded = true;
     }

@@ -151,7 +151,7 @@ void X11WindowedOutput::setGeometry(const QPoint &logicalPosition, const QSize &
 {
     // TODO: set mode to have updated pixelSize
     Q_UNUSED(pixelSize);
-    setGlobalPos(logicalPosition);
+    moveTo(logicalPosition);
 }
 
 void X11WindowedOutput::setWindowTitle(const QString &title)

@@ -490,7 +490,7 @@ void DrmBackend::readOutputsConfiguration()
         qCDebug(KWIN_DRM) << "Reading output configuration for " << *it;
         if (!outputInfo.isEmpty()) {
             const QJsonObject pos = outputInfo["pos"].toObject();
-            (*it)->setGlobalPos({pos["x"].toInt(), pos["y"].toInt()});
+            (*it)->moveTo({pos["x"].toInt(), pos["y"].toInt()});
             if (const QJsonValue scale = outputInfo["scale"]; !scale.isUndefined()) {
                 (*it)->setScale(scale.toDouble(1.));
             }
@@ -501,7 +501,7 @@ void DrmBackend::readOutputsConfiguration()
                 (*it)->updateMode(size["width"].toInt(), size["height"].toInt(), mode["refresh"].toDouble() * 1000);
             }
         } else {
-            (*it)->setGlobalPos(pos);
+            (*it)->moveTo(pos);
             (*it)->setTransformInternal(DrmOutput::Transform::Normal);
         }
         pos.setX(pos.x() + (*it)->geometry().width());

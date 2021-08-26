@@ -64,7 +64,7 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 void VirtualOutput::setGeometry(const QRect &geo)
 {
     // TODO: set mode to have updated pixelSize
-    setGlobalPos(geo.topLeft());
+    moveTo(geo.topLeft());
 }
 
 void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)

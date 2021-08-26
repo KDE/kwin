@@ -79,7 +79,7 @@ void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixe
     // TODO: set mode to have updated pixelSize
     Q_UNUSED(pixelSize)
 
-    setGlobalPos(logicalPosition);
+    moveTo(logicalPosition);
 }
 
 void WaylandOutput::updateEnablement(bool enable)
