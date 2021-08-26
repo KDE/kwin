@@ -116,16 +116,8 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
     Q_ASSERT(geometries.size() == 0 || geometries.size() == count);
     Q_ASSERT(scales.size() == 0 || scales.size() == count);
 
-    while (!m_outputsEnabled.isEmpty()) {
-        VirtualOutput *output = m_outputsEnabled.takeLast();
-        Q_EMIT outputDisabled(output);
-    }
-
-    while (!m_outputs.isEmpty()) {
-        VirtualOutput *output = m_outputs.takeLast();
-        Q_EMIT outputRemoved(output);
-        delete output;
-    }
+    const QVector<VirtualOutput *> disabled = m_outputsEnabled;
+    const QVector<VirtualOutput *> removed = m_outputs;
 
     int sumWidth = 0;
     for (int i = 0; i < count; i++) {
@@ -144,6 +136,17 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
         m_outputsEnabled.append(vo);
         Q_EMIT outputAdded(vo);
         Q_EMIT outputEnabled(vo);
+    }
+
+    for (VirtualOutput *output : disabled) {
+        m_outputsEnabled.removeOne(output);
+        Q_EMIT outputDisabled(output);
+    }
+
+    for (VirtualOutput *output : removed) {
+        m_outputs.removeOne(output);
+        Q_EMIT outputRemoved(output);
+        delete output;
     }
 
     Q_EMIT screensQueried();
