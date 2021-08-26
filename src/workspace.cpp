@@ -209,6 +209,7 @@ void Workspace::init()
     KSharedConfigPtr config = kwinApp()->config();
     Screens *screens = Screens::self();
     // get screen support
+    connect(screens, &Screens::changed, this, &Workspace::desktopResized);
     screens->setConfig(config);
     screens->reconfigure();
     connect(options, &Options::configChanged, screens, &Screens::reconfigure);
@@ -227,15 +228,6 @@ void Workspace::init()
     });
     connect(options, &Options::separateScreenFocusChanged, focusChain, &FocusChain::setSeparateScreenFocus);
     focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
-
-    Platform *platform = kwinApp()->platform();
-    connect(platform, &Platform::outputEnabled, this, &Workspace::slotOutputEnabled);
-    connect(platform, &Platform::outputDisabled, this, &Workspace::slotOutputDisabled);
-
-    const QVector<AbstractOutput *> outputs = platform->enabledOutputs();
-    for (AbstractOutput *output : outputs) {
-        slotOutputEnabled(output);
-    }
 
     // create VirtualDesktopManager and perform dependency injection
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
@@ -1203,19 +1195,6 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 #else
     Q_UNUSED(new_activity)
 #endif
-}
-
-void Workspace::slotOutputEnabled(AbstractOutput *output)
-{
-    connect(output, &AbstractOutput::geometryChanged, this, &Workspace::desktopResized);
-    desktopResized();
-}
-
-void Workspace::slotOutputDisabled(AbstractOutput *output)
-{
-    // TODO: Send clients on the given output to other outputs.
-    disconnect(output, &AbstractOutput::geometryChanged, this, &Workspace::desktopResized);
-    desktopResized();
 }
 
 void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
