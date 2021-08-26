@@ -520,8 +520,7 @@ void X11StandalonePlatform::doUpdateOutputs()
                         changed.append(output);
                         removed.removeOne(output);
                     } else {
-                        output = new X11Output();
-                        output->setName(outputInfo.name());
+                        output = new X11Output(outputInfo.name());
                         added.append(output);
                     }
 

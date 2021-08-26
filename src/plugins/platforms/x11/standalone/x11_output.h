@@ -28,11 +28,9 @@ class KWIN_EXPORT X11Output : public AbstractOutput
     Q_OBJECT
 
 public:
-    explicit X11Output(QObject *parent = nullptr);
-    ~X11Output() override = default;
+    explicit X11Output(const QString &name, QObject *parent = nullptr);
 
     QString name() const override;
-    void setName(QString set);
 
     QRect geometry() const override;
     void setGeometry(QRect set);

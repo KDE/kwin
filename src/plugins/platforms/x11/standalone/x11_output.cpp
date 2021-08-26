@@ -12,19 +12,15 @@
 namespace KWin
 {
 
-X11Output::X11Output(QObject *parent)
+X11Output::X11Output(const QString &name, QObject *parent)
     : AbstractOutput(parent)
+    , m_name(name)
 {
 }
 
 QString X11Output::name() const
 {
     return m_name;
-}
-
-void X11Output::setName(QString set)
-{
-    m_name = set;
 }
 
 QRect X11Output::geometry() const
