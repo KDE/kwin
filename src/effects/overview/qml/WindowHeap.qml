@@ -23,6 +23,8 @@ FocusScope {
 
     property alias model: windowsRepeater.model
     property int selectedIndex: -1
+    property bool animationEnabled: false
+
     required property bool organized
 
     ExpoLayout {
@@ -99,6 +101,7 @@ FocusScope {
                 ]
 
                 component TweenBehavior : Behavior {
+                    enabled: heap.animationEnabled
                     NumberAnimation {
                         duration: effect.animationDuration
                         easing.type: Easing.InOutCubic

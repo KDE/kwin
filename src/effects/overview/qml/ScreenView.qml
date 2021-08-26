@@ -13,9 +13,11 @@ FocusScope {
     id: container
     focus: true
 
+    property bool animationEnabled: false
     property bool organized: false
 
     function start() {
+        container.animationEnabled = true;
         container.organized = true;
     }
 
@@ -84,6 +86,7 @@ FocusScope {
         width: heapArea.width
         height: heapArea.height
         focus: true
+        animationEnabled: container.animationEnabled
         organized: container.organized
         model: KWinComponents.ClientFilterModel {
             activity: KWinComponents.Workspace.currentActivity
