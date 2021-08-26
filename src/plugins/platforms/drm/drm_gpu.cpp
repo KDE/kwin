@@ -35,6 +35,7 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 #include <libdrm/drm_mode.h>
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -498,13 +499,13 @@ void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
     }
 }
 
-bool DrmGpu::isFormatSupported(uint32_t gbmFormat) const
+bool DrmGpu::isFormatSupported(uint32_t drmFormat) const
 {
     if (!m_atomicModeSetting) {
-        return gbmFormat == GBM_BO_FORMAT_XRGB8888 || gbmFormat == GBM_BO_FORMAT_ARGB8888;
+        return drmFormat == DRM_FORMAT_XRGB8888 || drmFormat == DRM_FORMAT_ARGB8888;
     } else {
         for (const auto &plane : qAsConst(m_planes)) {
-            if (plane->type() == DrmPlane::TypeIndex::Primary && !plane->formats().contains(gbmFormat)) {
+            if (plane->type() == DrmPlane::TypeIndex::Primary && !plane->formats().contains(drmFormat)) {
                 return false;
             }
         }

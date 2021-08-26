@@ -35,7 +35,7 @@ KWin::GbmDmaBuf *GbmDmaBuf::createBuffer(const QSize &size, gbm_device *device)
         return nullptr;
     }
 
-    auto bo = gbm_bo_create(device, size.width(), size.height(), GBM_BO_FORMAT_ARGB8888, GBM_BO_USE_RENDERING | GBM_BO_USE_LINEAR);
+    auto bo = gbm_bo_create(device, size.width(), size.height(), GBM_FORMAT_ARGB8888, GBM_BO_USE_RENDERING | GBM_BO_USE_LINEAR);
 
     if (!bo) {
         gbm_bo_destroy(bo);

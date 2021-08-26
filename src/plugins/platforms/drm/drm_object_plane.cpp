@@ -13,9 +13,7 @@
 #include "logging.h"
 #include "config-kwin.h"
 
-#if HAVE_GBM
-#include <gbm.h>
-#endif
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -101,14 +99,11 @@ bool DrmPlane::init()
                 m_supportedFormats.insert(p->formats[i], {});
             }
         }
-#if HAVE_GBM
         if (m_supportedFormats.isEmpty()) {
             qCWarning(KWIN_DRM) << "Driver doesn't advertise any formats for this plane. Falling back to XRGB8888 and ARGB8888 without modifiers";
-            m_supportedFormats.insert(GBM_BO_FORMAT_XRGB8888, {});
-            m_supportedFormats.insert(GBM_BO_FORMAT_ARGB8888, {});
+            m_supportedFormats.insert(DRM_FORMAT_XRGB8888, {});
+            m_supportedFormats.insert(DRM_FORMAT_ARGB8888, {});
         }
-#endif
-
     }
     return success;
 }

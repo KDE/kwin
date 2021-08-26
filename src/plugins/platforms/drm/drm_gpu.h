@@ -98,7 +98,7 @@ public:
     void waitIdle();
     DrmBackend *platform() const;
     const QVector<DrmPipeline*> pipelines() const;
-    bool isFormatSupported(uint32_t gbmFormat) const;
+    bool isFormatSupported(uint32_t drmFormat) const;
 
     DrmVirtualOutput *createVirtualOutput();
     void removeVirtualOutput(DrmVirtualOutput *output);

@@ -414,7 +414,7 @@ bool EglGbmBackend::initBufferConfigs()
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
 
         // prefer XRGB8888 as it's most likely to be supported by secondary GPUs as well
-        if (gbmFormat == GBM_BO_FORMAT_XRGB8888) {
+        if (gbmFormat == GBM_FORMAT_XRGB8888) {
             m_gbmFormat = gbmFormat;
             setConfig(configs[i]);
             return true;
