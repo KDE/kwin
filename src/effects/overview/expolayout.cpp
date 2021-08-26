@@ -687,13 +687,13 @@ void ExpoLayout::calculateWindowTransformationsNatural()
     if (bounds == area) {
         scale = 1.0; // Don't add borders to the screen
     } else if (area.width() / qreal(bounds.width()) < area.height() / qreal(bounds.height())) {
-        scale = (area.width() - 2 * m_spacing) / qreal(bounds.width());
+        scale = area.width() / qreal(bounds.width());
     } else {
-        scale = (area.height() - 2 * m_spacing) / qreal(bounds.height());
+        scale = area.height() / qreal(bounds.height());
     }
     // Make bounding rect fill the screen size for later steps
-    bounds = QRect((bounds.x() * scale - (area.width() - 2 * m_spacing - bounds.width() * scale) / 2 - m_spacing) / scale,
-                   (bounds.y() * scale - (area.height() - 2 * m_spacing - bounds.height() * scale) / 2 - m_spacing) / scale,
+    bounds = QRect(bounds.x() - (area.width() / scale - bounds.width()) / 2,
+                   bounds.y() - (area.height() / scale - bounds.height()) / 2,
                    area.width() / scale,
                    area.height() / scale);
 
@@ -711,7 +711,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
     if (m_fillGaps) {
         // Don't expand onto or over the border
         QRegion borderRegion(area.adjusted(-200, -200, 200, 200));
-        borderRegion ^= area.adjusted(m_spacing / scale, m_spacing / scale, -m_spacing / scale, -m_spacing / scale);
+        borderRegion ^= area;
 
         bool moved;
         do {

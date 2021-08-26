@@ -85,6 +85,7 @@ FocusScope {
         y: heapArea.y
         width: heapArea.width
         height: heapArea.height
+        padding: PlasmaCore.Units.largeSpacing
         focus: true
         animationEnabled: container.animationEnabled
         organized: container.organized

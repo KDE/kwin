@@ -24,12 +24,16 @@ FocusScope {
     property alias model: windowsRepeater.model
     property int selectedIndex: -1
     property bool animationEnabled: false
+    property real padding: 0
 
     required property bool organized
 
     ExpoLayout {
         id: expoLayout
-        anchors.fill: parent
+        x: heap.padding
+        y: heap.padding
+        width: parent.width - 2 * heap.padding
+        height: parent.height - 2 * heap.padding
         mode: effect.layout
         focus: true
         spacing: PlasmaCore.Units.largeSpacing
