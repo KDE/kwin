@@ -286,6 +286,7 @@ void ExpoLayout::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeo
     if (newGeometry.size() != oldGeometry.size()) {
         scheduleUpdate();
     }
+    QQuickItem::geometryChanged(newGeometry, oldGeometry);
 }
 
 static int distance(const QPoint &a, const QPoint &b)
