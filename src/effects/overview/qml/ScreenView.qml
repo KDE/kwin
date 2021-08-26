@@ -15,6 +15,10 @@ FocusScope {
 
     property bool organized: false
 
+    function start() {
+        container.organized = true;
+    }
+
     function stop() {
         container.organized = false;
     }
@@ -118,6 +122,7 @@ FocusScope {
     }
 
     Component.onCompleted: {
-        container.organized = true;
+        // Delay starting the effect to let the window heap arrange thumbnails.
+        Qt.callLater(container.start);
     }
 }
