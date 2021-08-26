@@ -29,6 +29,8 @@
 #include "drm_buffer_gbm.h"
 #endif
 
+#include <drm_fourcc.h>
+
 namespace KWin
 {
 
@@ -548,12 +550,20 @@ bool DrmPipeline::isConnected() const
 
 bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const
 {
-    return m_primaryPlane->formats().contains(drmFormat);
+    if (m_gpu->atomicModeSetting()) {
+        return m_primaryPlane->formats().contains(drmFormat);
+    } else {
+        return drmFormat == DRM_FORMAT_XRGB8888 || DRM_FORMAT_ARGB8888;
+    }
 }
 
 QVector<uint64_t> DrmPipeline::supportedModifiers(uint32_t drmFormat) const
 {
-    return m_primaryPlane->formats()[drmFormat];
+    if (m_gpu->atomicModeSetting()) {
+        return m_primaryPlane->formats()[drmFormat];
+    } else {
+        return {};
+    }
 }
 
 static void printProps(DrmObject *object)
