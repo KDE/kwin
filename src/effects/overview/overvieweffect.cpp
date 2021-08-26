@@ -105,7 +105,7 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
 {
     OverviewConfig::self()->read();
     setLayout(ExpoLayout::LayoutMode(OverviewConfig::layoutMode()));
-    setAnimationDuration(animationTime(300));
+    setAnimationDuration(animationTime(200));
 
     for (const ElectricBorder &border : qAsConst(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);

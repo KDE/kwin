@@ -87,7 +87,7 @@ private:
     QList<ElectricBorder> m_borderActivate;
     QList<ElectricBorder> m_touchBorderActivate;
     bool m_activated = false;
-    int m_animationDuration = 300;
+    int m_animationDuration = 200;
     ExpoLayout::LayoutMode m_layout = ExpoLayout::LayoutNatural;
 };
 
