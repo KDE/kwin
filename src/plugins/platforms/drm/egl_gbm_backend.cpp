@@ -127,7 +127,9 @@ void EglGbmBackend::init()
 
 bool EglGbmBackend::initRenderingContext()
 {
-    initBufferConfigs();
+    if (!initBufferConfigs()) {
+        return false;
+    }
     if (isPrimary()) {
         if (!createContext() || !makeCurrent()) {
             return false;
