@@ -398,7 +398,6 @@ bool EglGbmBackend::initBufferConfigs()
     // Loop through all configs, choosing the first one that has suitable format.
     for (EGLint i = 0; i < count; i++) {
         EGLint gbmFormat;
-        // Query some configuration parameters, to show in debug log.
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
 
         if (!m_gpu->isFormatSupported(gbmFormat)) {
@@ -430,7 +429,18 @@ bool EglGbmBackend::initBufferConfigs()
     }
 
     qCCritical(KWIN_DRM) << "Choosing EGL config did not return a suitable config. There were"
-                         << count << "configs.";
+                         << count << "configs:";
+    for (EGLint i = 0; i < count; i++) {
+        EGLint gbmFormat, blueSize, redSize, greenSize, alphaSize;
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_RED_SIZE, &redSize);
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_GREEN_SIZE, &greenSize);
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_BLUE_SIZE, &blueSize);
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
+        gbm_format_name_desc name;
+        gbm_format_get_name(gbmFormat, &name);
+        qCCritical(KWIN_DRM, "EGL config %d has format %s with %d,%d,%d,%d bits for r,g,b,a",  i, name.name, redSize, greenSize, blueSize, alphaSize);
+    }
     return false;
 }
 
