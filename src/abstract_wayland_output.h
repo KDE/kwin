@@ -156,9 +156,6 @@ protected:
                     const QSize &physicalSize,
                     const QVector<Mode> &modes, const QByteArray &edid);
 
-    bool internal() const {
-        return m_internal;
-    }
     void setName(const QString &name) {
         m_name = name;
     }
