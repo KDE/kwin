@@ -202,6 +202,11 @@ bool OverviewEffect::isActive() const
     return !m_screenViews.isEmpty() && !effects->isScreenLocked();
 }
 
+int OverviewEffect::requestedEffectChainPosition() const
+{
+    return 70;
+}
+
 bool OverviewEffect::borderActivated(ElectricBorder border)
 {
     if (m_borderActivate.contains(border)) {
