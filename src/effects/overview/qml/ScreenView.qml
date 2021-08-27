@@ -29,6 +29,7 @@ FocusScope {
     Repeater {
         model: KWinComponents.ClientFilterModel {
             activity: KWinComponents.Workspace.currentActivity
+            desktop: KWinComponents.Workspace.currentVirtualDesktop
             screenName: targetScreen.name
             clientModel: stackModel
             windowType: KWinComponents.ClientFilterModel.Desktop
@@ -147,6 +148,7 @@ FocusScope {
             organized: container.organized
             model: KWinComponents.ClientFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
+                desktop: KWinComponents.Workspace.currentVirtualDesktop
                 screenName: targetScreen.name
                 clientModel: stackModel
                 windowType: ~KWinComponents.ClientFilterModel.Dock &
