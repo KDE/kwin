@@ -3053,22 +3053,22 @@ void AbstractClient::setElectricBorderMaximizing(bool maximizing)
 {
     m_electricMaximizing = maximizing;
     if (maximizing)
-        outline()->show(electricBorderMaximizeGeometry(Cursors::self()->mouse()->pos(), desktop()), moveResizeGeometry());
+        outline()->show(electricBorderMaximizeGeometry(Cursors::self()->mouse()->pos()), moveResizeGeometry());
     else
         outline()->hide();
     elevate(maximizing);
 }
 
-QRect AbstractClient::electricBorderMaximizeGeometry(QPoint pos, int desktop)
+QRect AbstractClient::electricBorderMaximizeGeometry(const QPoint &pos) const
 {
     if (electricBorderMode() == QuickTileMode(QuickTileFlag::Maximize)) {
         if (maximizeMode() == MaximizeFull)
             return geometryRestore();
         else
-            return workspace()->clientArea(MaximizeArea, pos, desktop);
+            return workspace()->clientArea(MaximizeArea, this, pos);
     }
 
-    QRect ret = workspace()->clientArea(MaximizeArea, pos, desktop);
+    QRect ret = workspace()->clientArea(MaximizeArea, this, pos);
     if (electricBorderMode() & QuickTileFlag::Left)
         ret.setRight(ret.left()+ret.width()/2 - 1);
     else if (electricBorderMode() & QuickTileFlag::Right)
@@ -3129,7 +3129,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
             setMaximize(false, false);
 
-            moveResize(electricBorderMaximizeGeometry(keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos(), desktop()));
+            moveResize(electricBorderMaximizeGeometry(keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos()));
             // Store the mode change
             m_quickTileMode = mode;
         } else {
@@ -3198,7 +3198,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
             m_quickTileMode = mode;
             // Temporary, so the maximize code doesn't get all confused
             m_quickTileMode = int(QuickTileFlag::None);
-            moveResize(electricBorderMaximizeGeometry(whichScreen, desktop()));
+            moveResize(electricBorderMaximizeGeometry(whichScreen));
         }
 
         // Store the mode change
@@ -3349,7 +3349,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
     }
 
     if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-        moveResize(electricBorderMaximizeGeometry(moveResizeGeometry().center(), desktop()));
+        moveResize(electricBorderMaximizeGeometry(moveResizeGeometry().center()));
         return;
     }
 
