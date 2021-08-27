@@ -7,6 +7,7 @@
 import QtQuick 2.12
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.overview 1.0
+import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 FocusScope {
@@ -80,22 +81,75 @@ FocusScope {
         screen: targetScreen
     }
 
-    WindowHeap {
+    Column {
         x: heapArea.x
         y: heapArea.y
         width: heapArea.width
         height: heapArea.height
-        padding: PlasmaCore.Units.largeSpacing
-        focus: true
-        animationEnabled: container.animationEnabled
-        organized: container.organized
-        model: KWinComponents.ClientFilterModel {
-            activity: KWinComponents.Workspace.currentActivity
-            screenName: targetScreen.name
-            clientModel: stackModel
-            windowType: ~KWinComponents.ClientFilterModel.Dock &
-                    ~KWinComponents.ClientFilterModel.Desktop &
-                    ~KWinComponents.ClientFilterModel.Notification;
+
+        Item {
+            id: searchBar
+            width: parent.width
+            height: searchField.height + 2 * PlasmaCore.Units.largeSpacing
+            state: container.organized ? "visible" : "hidden"
+
+            PC3.TextField {
+                id: searchField
+                anchors.centerIn: parent
+                width: Math.min(parent.width, 20 * PlasmaCore.Units.gridUnit)
+                placeholderText: i18n("Search...")
+                clearButtonShown: true
+            }
+
+            states: [
+                State {
+                    name: "hidden"
+                    PropertyChanges {
+                        target: searchBar
+                        opacity: 0
+                    }
+                },
+                State {
+                    name: "visible"
+                    PropertyChanges {
+                        target: searchBar
+                        opacity: 1
+                    }
+                }
+            ]
+
+            transitions: [
+                Transition {
+                    from: "hidden"; to: "visible"
+                    OpacityAnimator {
+                        duration: effect.animationDuration; easing.type: Easing.OutCubic
+                    }
+                },
+                Transition {
+                    from: "visible"; to: "hidden"
+                    OpacityAnimator {
+                        duration: effect.animationDuration; easing.type: Easing.InCubic
+                    }
+                }
+            ]
+        }
+
+        WindowHeap {
+            width: parent.width
+            height: parent.height - searchBar.height
+            padding: PlasmaCore.Units.largeSpacing
+            focus: true
+            animationEnabled: container.animationEnabled
+            organized: container.organized
+            model: KWinComponents.ClientFilterModel {
+                activity: KWinComponents.Workspace.currentActivity
+                screenName: targetScreen.name
+                filter: searchField.text
+                clientModel: stackModel
+                windowType: ~KWinComponents.ClientFilterModel.Dock &
+                        ~KWinComponents.ClientFilterModel.Desktop &
+                        ~KWinComponents.ClientFilterModel.Notification;
+            }
         }
     }
 
