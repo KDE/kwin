@@ -25,6 +25,7 @@ FocusScope {
     property int selectedIndex: -1
     property bool animationEnabled: false
     property real padding: 0
+    property string filter: ""
 
     required property bool organized
     readonly property bool effectiveOrganized: expoLayout.ready && organized
@@ -36,7 +37,6 @@ FocusScope {
         width: parent.width - 2 * heap.padding
         height: parent.height - 2 * heap.padding
         mode: effect.layout
-        focus: true
         spacing: PlasmaCore.Units.largeSpacing
 
         Repeater {
@@ -49,13 +49,21 @@ FocusScope {
                 required property int index
 
                 readonly property bool selected: heap.selectedIndex == index
+                readonly property bool hidden: {
+                    if (heap.filter) {
+                        return !client.caption.toLowerCase().includes(heap.filter.toLowerCase());
+                    }
+                    return false;
+                }
 
                 state: {
                     if (heap.effectiveOrganized) {
-                        return "active";
+                        return hidden ? "active-hidden" : "active";
                     }
                     return client.minimized ? "initial-minimized" : "initial";
                 }
+
+                visible: opacity > 0
                 z: client.stackingOrder
 
                 KWinComponents.WindowThumbnailItem {
@@ -102,6 +110,14 @@ FocusScope {
                             width: cell.width
                             height: cell.height
                         }
+                    },
+                    State {
+                        name: "active-hidden"
+                        extend: "active"
+                        PropertyChanges {
+                            target: thumb
+                            opacity: 0
+                        }
                     }
                 ]
 
@@ -131,7 +147,7 @@ FocusScope {
                 HoverHandler {
                     id: hoverHandler
                     onHoveredChanged: if (hovered != selected) {
-                        heap.selectedIndex = -1;
+                        heap.resetSelected();
                     }
                 }
 
@@ -163,66 +179,26 @@ FocusScope {
 
                 Component.onDestruction: {
                     if (selected) {
-                        heap.selectedIndex = -1;
+                        heap.resetSelected();
                     }
                 }
             }
         }
+    }
 
-        Keys.onPressed: {
-            switch (event.key) {
-            case Qt.Key_Escape:
-                effect.deactivate();
-                break;
-            case Qt.Key_Up:
-                selectNextItem(WindowHeap.Direction.Up);
-                break;
-            case Qt.Key_Down:
-                selectNextItem(WindowHeap.Direction.Down);
-                break;
-            case Qt.Key_Left:
-                selectNextItem(WindowHeap.Direction.Left);
-                break;
-            case Qt.Key_Right:
-                selectNextItem(WindowHeap.Direction.Right);
-                break;
-            case Qt.Key_Home:
-                selectLastItem(WindowHeap.Direction.Left);
-                break;
-            case Qt.Key_End:
-                selectLastItem(WindowHeap.Direction.Right);
-                break;
-            case Qt.Key_PageUp:
-                selectLastItem(WindowHeap.Direction.Up);
-                break;
-            case Qt.Key_PageDown:
-                selectLastItem(WindowHeap.Direction.Down);
-                break;
-            case Qt.Key_Return:
-            case Qt.Key_Escape:
-            case Qt.Key_Space:
-                if (heap.selectedIndex != -1) {
-                    const selectedItem = windowsRepeater.itemAt(heap.selectedIndex);
-                    KWinComponents.Workspace.activeClient = selectedItem.client;
-                    effect.deactivate();
-                }
-                break;
-            default:
-                return;
+    function findFirstItem() {
+        for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
+            const candidateItem = windowsRepeater.itemAt(candidateIndex);
+            if (!candidateItem.hidden) {
+                return candidateIndex;
             }
-            event.accepted = true;
         }
-
-        onActiveFocusChanged: {
-            heap.selectedIndex = -1;
-        }
+        return -1;
     }
 
     function findNextItem(selectedIndex, direction) {
-        if (windowsRepeater.count == 0) {
-            return -1;
-        } else if (selectedIndex == -1) {
-            return 0;
+        if (selectedIndex == -1) {
+            return findFirstItem();
         }
 
         const selectedItem = windowsRepeater.itemAt(selectedIndex);
@@ -232,6 +208,9 @@ FocusScope {
         case WindowHeap.Direction.Left:
             for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
                 const candidateItem = windowsRepeater.itemAt(candidateIndex);
+                if (candidateItem.hidden) {
+                    continue;
+                }
 
                 if (candidateItem.y + candidateItem.height <= selectedItem.y) {
                     continue;
@@ -254,6 +233,9 @@ FocusScope {
         case WindowHeap.Direction.Right:
             for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
                 const candidateItem = windowsRepeater.itemAt(candidateIndex);
+                if (candidateItem.hidden) {
+                    continue;
+                }
 
                 if (candidateItem.y + candidateItem.height <= selectedItem.y) {
                     continue;
@@ -276,6 +258,9 @@ FocusScope {
         case WindowHeap.Direction.Up:
             for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
                 const candidateItem = windowsRepeater.itemAt(candidateIndex);
+                if (candidateItem.hidden) {
+                    continue;
+                }
 
                 if (candidateItem.x + candidateItem.width <= selectedItem.x) {
                     continue;
@@ -298,6 +283,9 @@ FocusScope {
         case WindowHeap.Direction.Down:
             for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
                 const candidateItem = windowsRepeater.itemAt(candidateIndex);
+                if (candidateItem.hidden) {
+                    continue;
+                }
 
                 if (candidateItem.x + candidateItem.width <= selectedItem.x) {
                     continue;
@@ -322,6 +310,10 @@ FocusScope {
         return nextIndex;
     }
 
+    function resetSelected() {
+        heap.selectedIndex = -1;
+    }
+
     function selectNextItem(direction) {
         const nextIndex = findNextItem(heap.selectedIndex, direction);
         if (nextIndex != -1) {
@@ -342,5 +334,52 @@ FocusScope {
         if (last != -1) {
             heap.selectedIndex = last;
         }
+    }
+
+    onActiveFocusChanged: resetSelected();
+    onFilterChanged: resetSelected();
+
+    Keys.onPressed: {
+        switch (event.key) {
+        case Qt.Key_Escape:
+            effect.deactivate();
+            break;
+        case Qt.Key_Up:
+            selectNextItem(WindowHeap.Direction.Up);
+            break;
+        case Qt.Key_Down:
+            selectNextItem(WindowHeap.Direction.Down);
+            break;
+        case Qt.Key_Left:
+            selectNextItem(WindowHeap.Direction.Left);
+            break;
+        case Qt.Key_Right:
+            selectNextItem(WindowHeap.Direction.Right);
+            break;
+        case Qt.Key_Home:
+            selectLastItem(WindowHeap.Direction.Left);
+            break;
+        case Qt.Key_End:
+            selectLastItem(WindowHeap.Direction.Right);
+            break;
+        case Qt.Key_PageUp:
+            selectLastItem(WindowHeap.Direction.Up);
+            break;
+        case Qt.Key_PageDown:
+            selectLastItem(WindowHeap.Direction.Down);
+            break;
+        case Qt.Key_Return:
+        case Qt.Key_Escape:
+        case Qt.Key_Space:
+            if (heap.selectedIndex != -1) {
+                const selectedItem = windowsRepeater.itemAt(heap.selectedIndex);
+                KWinComponents.Workspace.activeClient = selectedItem.client;
+                effect.deactivate();
+            }
+            break;
+        default:
+            return;
+        }
+        event.accepted = true;
     }
 }
