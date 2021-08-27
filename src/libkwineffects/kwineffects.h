@@ -1643,15 +1643,6 @@ Q_SIGNALS:
     void propertyNotify(KWin::EffectWindow* w, long atom);
 
     /**
-     * Signal emitted after the screen geometry changed (e.g. add of a monitor).
-     * Effects using displayWidth()/displayHeight() to cache information should
-     * react on this signal and update the caches.
-     * @param size The new screen size
-     * @since 4.8
-     */
-    void screenGeometryChanged(const QSize &size);
-
-    /**
      * This signal is emitted when the global
      * activity is changed
      * @param id id of the new current activity

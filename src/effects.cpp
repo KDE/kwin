@@ -191,9 +191,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(Screens::self(), &Screens::countChanged, this, &EffectsHandler::numberScreensChanged);
     connect(Screens::self(), &Screens::sizeChanged, this, &EffectsHandler::virtualScreenSizeChanged);
     connect(Screens::self(), &Screens::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
-    connect(Screens::self(), &Screens::geometryChanged, this, [this]() {
-        Q_EMIT screenGeometryChanged(Screens::self()->size());
-    });
 #ifdef KWIN_BUILD_ACTIVITIES
     if (Activities *activities = Activities::self()) {
         connect(activities, &Activities::added,          this, &EffectsHandler::activityAdded);
