@@ -289,7 +289,7 @@ void Workspace::activateClient(AbstractClient* c, bool force)
     raiseClient(c);
     if (!c->isOnCurrentDesktop()) {
         ++block_focus;
-        VirtualDesktopManager::self()->setCurrent(c->desktop());
+        VirtualDesktopManager::self()->setCurrent(c->desktops().constLast());
         --block_focus;
     }
 #ifdef KWIN_BUILD_ACTIVITIES
