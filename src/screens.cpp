@@ -295,24 +295,7 @@ int Screens::number(const QPoint &pos) const
     Q_UNUSED(pos)
     return -1;
 #else
-    int bestScreen = 0;
-    int minDistance = INT_MAX;
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
-    for (int i = 0; i < outputs.size(); ++i) {
-        const QRect &geo = outputs[i]->geometry();
-        if (geo.contains(pos)) {
-            return i;
-        }
-        int distance = QPoint(geo.topLeft() - pos).manhattanLength();
-        distance = qMin(distance, QPoint(geo.topRight() - pos).manhattanLength());
-        distance = qMin(distance, QPoint(geo.bottomRight() - pos).manhattanLength());
-        distance = qMin(distance, QPoint(geo.bottomLeft() - pos).manhattanLength());
-        if (distance < minDistance) {
-            minDistance = distance;
-            bestScreen = i;
-        }
-    }
-    return bestScreen;
+    return kwinApp()->platform()->enabledOutputs().indexOf(kwinApp()->platform()->outputAt(pos));
 #endif
 }
 

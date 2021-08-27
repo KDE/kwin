@@ -2433,9 +2433,9 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
     if (options->windowSnapZone() || !borderSnapZone.isNull() || options->centerSnapZone()) {
 
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
-        const int screen = screens()->number(pos + c->rect().center());
+        const AbstractOutput *output = kwinApp()->platform()->outputAt(pos + c->rect().center());
         if (maxRect.isNull())
-            maxRect = clientArea(MovementArea, c, screen);
+            maxRect = clientArea(MovementArea, c, output);
         const int xmin = maxRect.left();
         const int xmax = maxRect.right() + 1;             //desk size
         const int ymin = maxRect.top();

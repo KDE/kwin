@@ -170,6 +170,28 @@ AbstractOutput *Platform::findOutput(const QUuid &uuid) const
     return nullptr;
 }
 
+AbstractOutput *Platform::outputAt(const QPoint &pos) const
+{
+    AbstractOutput *bestOutput = nullptr;
+    int minDistance = INT_MAX;
+    const auto candidates = enabledOutputs();
+    for (AbstractOutput *output : candidates) {
+        const QRect &geo = output->geometry();
+        if (geo.contains(pos)) {
+            return output;
+        }
+        int distance = QPoint(geo.topLeft() - pos).manhattanLength();
+        distance = std::min(distance, QPoint(geo.topRight() - pos).manhattanLength());
+        distance = std::min(distance, QPoint(geo.bottomRight() - pos).manhattanLength());
+        distance = std::min(distance, QPoint(geo.bottomLeft() - pos).manhattanLength());
+        if (distance < minDistance) {
+            minDistance = distance;
+            bestOutput = output;
+        }
+    }
+    return bestOutput;
+}
+
 bool Platform::usesSoftwareCursor() const
 {
     return m_softwareCursor;

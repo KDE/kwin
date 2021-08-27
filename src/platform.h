@@ -352,6 +352,7 @@ public:
     }
     AbstractOutput *findOutput(int screenId) const;
     AbstractOutput *findOutput(const QUuid &uuid) const;
+    AbstractOutput *outputAt(const QPoint &pos) const;
 
     /**
      * A string of information to include in kwin debug output

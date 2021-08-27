@@ -9,6 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "pointer_input.h"
+#include "abstract_output.h"
 #include "platform.h"
 #include "x11client.h"
 #include "effects.h"
@@ -813,8 +814,8 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
         const QRectF unitedScreensGeometry = screens()->geometry();
         p = confineToBoundingBox(p, unitedScreensGeometry);
         if (!screenContainsPos(p)) {
-            const QRectF currentScreenGeometry = screens()->geometry(screens()->number(m_pos.toPoint()));
-            p = confineToBoundingBox(p, currentScreenGeometry);
+            const AbstractOutput *currentOutput = kwinApp()->platform()->outputAt(m_pos.toPoint());
+            p = confineToBoundingBox(p, currentOutput->geometry());
         }
     }
     p = applyPointerConfinement(p);
@@ -903,9 +904,9 @@ void PointerInputRedirection::updateAfterScreenChange()
         return;
     }
     // pointer no longer on a screen, reposition to closes screen
-    const QPointF pos = screens()->geometry(screens()->number(m_pos.toPoint())).center();
+    const AbstractOutput *output = kwinApp()->platform()->outputAt(m_pos.toPoint());
     // TODO: better way to get timestamps
-    processMotion(pos, waylandServer()->seat()->timestamp());
+    processMotion(output->geometry().center(), waylandServer()->seat()->timestamp());
 }
 
 QPointF PointerInputRedirection::position() const

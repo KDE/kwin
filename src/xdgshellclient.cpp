@@ -1565,8 +1565,8 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     updateDecoration(false, false);
 
     if (set) {
-        const int screen = m_fullScreenRequestedOutput ? kwinApp()->platform()->enabledOutputs().indexOf(m_fullScreenRequestedOutput) : screens()->number(moveResizeGeometry().center());
-        moveResize(workspace()->clientArea(FullScreenArea, this, screen));
+        const AbstractOutput *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : kwinApp()->platform()->outputAt(moveResizeGeometry().center());
+        moveResize(workspace()->clientArea(FullScreenArea, this, output));
     } else {
         m_fullScreenRequestedOutput.clear();
         if (fullscreenGeometryRestore().isValid()) {

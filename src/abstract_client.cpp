@@ -1327,11 +1327,11 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
         Q_ASSERT(mode == PositionCenter);
         if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
             // Special moving of maximized windows on Xinerama screens
-            int screen = screens()->number(globalPos);
+            AbstractOutput *output = kwinApp()->platform()->outputAt(globalPos);
             if (isFullScreen())
-                setMoveResizeGeometry(workspace()->clientArea(FullScreenArea, this, screen));
+                setMoveResizeGeometry(workspace()->clientArea(FullScreenArea, this, output));
             else {
-                QRect moveResizeGeom = workspace()->clientArea(MaximizeArea, this, screen);
+                QRect moveResizeGeom = workspace()->clientArea(MaximizeArea, this, output);
                 QSize adjSize = constrainFrameSize(moveResizeGeom.size(), SizeModeMax);
                 if (adjSize != moveResizeGeom.size()) {
                     QRect r(moveResizeGeom);
@@ -3382,8 +3382,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
             }
         }
     } else {
-        const int oldScreen = screens()->number(oldGeometry.center());
-        oldScreenArea = workspace()->clientArea(ScreenArea, kwinApp()->platform()->findOutput(oldScreen), oldDesktop);
+        oldScreenArea = workspace()->clientArea(ScreenArea, kwinApp()->platform()->outputAt(oldGeometry.center()), oldDesktop);
     }
     const QRect oldGeomTall = QRect(oldGeometry.x(), oldScreenArea.y(), oldGeometry.width(), oldScreenArea.height());   // Full screen height
     const QRect oldGeomWide = QRect(oldScreenArea.x(), oldGeometry.y(), oldScreenArea.width(), oldGeometry.height());   // Full screen width
