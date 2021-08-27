@@ -336,7 +336,7 @@ void Compositor::startupWithWorkspace()
     // Sets also the 'effects' pointer.
     kwinApp()->platform()->createEffectsHandler(this, m_scene);
     connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::removeToplevel);
-    connect(effects, &EffectsHandler::screenGeometryChanged, this, &Compositor::addRepaintFull);
+    connect(effects, &EffectsHandler::virtualScreenGeometryChanged, this, &Compositor::addRepaintFull);
 
     for (X11Client *c : Workspace::self()->clientList()) {
         c->setupCompositing();

@@ -23,13 +23,11 @@ namespace KWin
 EffectsHandlerImplX11::EffectsHandlerImplX11(Compositor *compositor, Scene *scene)
     : EffectsHandlerImpl(compositor, scene)
 {
-    connect(this, &EffectsHandlerImpl::screenGeometryChanged, this,
-        [this] (const QSize &size) {
-            if (m_mouseInterceptionWindow.isValid()) {
-                m_mouseInterceptionWindow.setGeometry(QRect(0, 0, size.width(), size.height()));
-            }
+    connect(this, &EffectsHandlerImpl::virtualScreenGeometryChanged, this, [this]() {
+        if (m_mouseInterceptionWindow.isValid()) {
+            m_mouseInterceptionWindow.setGeometry(virtualScreenGeometry());
         }
-    );
+    });
 }
 
 EffectsHandlerImplX11::~EffectsHandlerImplX11()

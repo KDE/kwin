@@ -42,7 +42,7 @@ ContrastEffect::ContrastEffect()
     connect(effects, &EffectsHandler::windowAdded, this, &ContrastEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &ContrastEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::propertyNotify, this, &ContrastEffect::slotPropertyNotify);
-    connect(effects, &EffectsHandler::screenGeometryChanged, this, &ContrastEffect::slotScreenGeometryChanged);
+    connect(effects, &EffectsHandler::virtualScreenGeometryChanged, this, &ContrastEffect::slotScreenGeometryChanged);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this,
         [this] {
             if (shader && shader->isValid()) {
