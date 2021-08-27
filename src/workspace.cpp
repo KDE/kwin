@@ -2069,10 +2069,6 @@ void Workspace::desktopResized()
 
     // TODO: emit a signal instead and remove the deep function calls into edges and effects
     ScreenEdges::self()->recreateEdges();
-
-    if (effects) {
-        static_cast<EffectsHandlerImpl*>(effects)->desktopResized(geom.size());
-    }
 }
 
 void Workspace::saveOldScreenSizes()

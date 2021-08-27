@@ -187,7 +187,6 @@ public:
     void startPaint();
     void grabbedKeyboardEvent(QKeyEvent* e);
     bool hasKeyboardGrab() const;
-    void desktopResized(const QSize &size);
 
     void reloadEffect(Effect *effect) override;
     QStringList loadedEffects() const;
