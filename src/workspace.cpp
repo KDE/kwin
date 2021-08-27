@@ -2355,12 +2355,21 @@ QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window) const
 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const AbstractOutput *output) const
 {
-    return clientArea(opt, window, output->geometry().center());
+    QVector<VirtualDesktop *> desktops = window->desktops();
+    if (desktops.isEmpty()) {
+        desktops = VirtualDesktopManager::self()->desktops();
+    }
+
+    QRect ret = clientArea(opt, output, desktops[0]);
+    for (int i = 1; i < desktops.count(); ++i) {
+        ret = ret.intersected(clientArea(opt, output, desktops[i]));
+    }
+    return ret;
 }
 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const QPoint &pos) const
 {
-    return clientArea(opt, screens()->number(pos), window->desktop());
+    return clientArea(opt, window, kwinApp()->platform()->outputAt(pos));
 }
 
 static QRegion strutsToRegion(StrutAreas areas, const StrutRects &strut)
