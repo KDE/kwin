@@ -175,13 +175,20 @@ public:
     virtual bool updateProperties();
 
 protected:
+    enum class Requirement {
+        Required,
+        Optional
+    };
     struct PropertyDefinition
     {
-        PropertyDefinition(const QByteArray &name, const QVector<QByteArray> &&enumNames = {})
-            : name(name), enumNames(enumNames)
+        PropertyDefinition(const QByteArray &name, Requirement requirement, const QVector<QByteArray> &&enumNames = {})
+            : name(name)
+            , requirement(requirement)
+            , enumNames(enumNames)
         {
         }
         QByteArray name;
+        Requirement requirement;
         QVector<QByteArray> enumNames;
     };
 

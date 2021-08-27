@@ -23,19 +23,19 @@ namespace KWin
 
 DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
     : DrmObject(gpu, connectorId, {
-            PropertyDefinition(QByteArrayLiteral("CRTC_ID")),
-            PropertyDefinition(QByteArrayLiteral("non-desktop")),
-            PropertyDefinition(QByteArrayLiteral("DPMS")),
-            PropertyDefinition(QByteArrayLiteral("EDID")),
-            PropertyDefinition(QByteArrayLiteral("overscan")),
-            PropertyDefinition(QByteArrayLiteral("vrr_capable")),
-            PropertyDefinition(QByteArrayLiteral("underscan"), {
+            PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
+            PropertyDefinition(QByteArrayLiteral("non-desktop"), Requirement::Optional),
+            PropertyDefinition(QByteArrayLiteral("DPMS"), Requirement::Optional),
+            PropertyDefinition(QByteArrayLiteral("EDID"), Requirement::Optional),
+            PropertyDefinition(QByteArrayLiteral("overscan"), Requirement::Optional),
+            PropertyDefinition(QByteArrayLiteral("vrr_capable"), Requirement::Optional),
+            PropertyDefinition(QByteArrayLiteral("underscan"), Requirement::Optional, {
                 QByteArrayLiteral("off"),
                 QByteArrayLiteral("on"),
                 QByteArrayLiteral("auto")
             }),
-            PropertyDefinition(QByteArrayLiteral("underscan vborder")),
-            PropertyDefinition(QByteArrayLiteral("underscan hborder")),
+            PropertyDefinition(QByteArrayLiteral("underscan vborder"), Requirement::Optional),
+            PropertyDefinition(QByteArrayLiteral("underscan hborder"), Requirement::Optional),
         }, DRM_MODE_OBJECT_CONNECTOR)
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
