@@ -1213,7 +1213,13 @@ void Workspace::slotOutputEnabled(AbstractOutput *output)
 
 void Workspace::slotOutputDisabled(AbstractOutput *output)
 {
-    // TODO: Send clients on the given output to other outputs.
+    const auto stack = xStackingOrder();
+    for (Toplevel *toplevel : stack) {
+        if (toplevel->output() == output) {
+            toplevel->setOutput(kwinApp()->platform()->outputAt(toplevel->frameGeometry().center()));
+        }
+    }
+
     disconnect(output, &AbstractOutput::geometryChanged, this, &Workspace::desktopResized);
     desktopResized();
 }

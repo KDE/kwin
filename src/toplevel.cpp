@@ -44,12 +44,10 @@ Toplevel::Toplevel()
     , effect_window(nullptr)
     , m_clientMachine(new ClientMachine(this))
     , m_wmClientLeader(XCB_WINDOW_NONE)
-    , m_screen(0)
     , m_skipCloseAnimation(false)
 {
-    connect(screens(), &Screens::changed, this, &Toplevel::checkScreen);
-    connect(screens(), &Screens::countChanged, this, &Toplevel::checkScreen);
-    setupCheckScreenConnection();
+    connect(screens(), &Screens::changed, this, &Toplevel::screenChanged);
+    setupCheckOutputConnection();
     connect(this, &Toplevel::bufferGeometryChanged, this, &Toplevel::inputTransformationChanged);
 
     // Only for compatibility reasons, drop in the next major release.
@@ -126,7 +124,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     m_clientMachine->setParent(this);
     m_wmClientLeader = c->wmClientLeader();
     opaque_region = c->opaqueRegion();
-    m_screen = c->m_screen;
+    m_output = c->m_output;
     m_skipCloseAnimation = c->m_skipCloseAnimation;
     m_internalFBO = c->m_internalFBO;
     m_internalImage = c->m_internalImage;
@@ -367,46 +365,44 @@ void Toplevel::deleteEffectWindow()
     effect_window = nullptr;
 }
 
-void Toplevel::checkScreen()
+void Toplevel::checkOutput()
 {
-    if (screens()->count() == 1) {
-        if (m_screen != 0) {
-            m_screen = 0;
-            Q_EMIT screenChanged();
-        }
-    } else {
-        const int s = screens()->number(frameGeometry().center());
-        if (s != m_screen) {
-            m_screen = s;
-            Q_EMIT screenChanged();
-        }
-    }
-    qreal newScale = screens()->scale(m_screen);
-    if (newScale != m_screenScale) {
-        m_screenScale = newScale;
-        Q_EMIT screenScaleChanged();
-    }
+    setOutput(kwinApp()->platform()->outputAt(frameGeometry().center()));
 }
 
-void Toplevel::setupCheckScreenConnection()
+void Toplevel::setupCheckOutputConnection()
 {
-    connect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::checkScreen);
-    checkScreen();
+    connect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::checkOutput);
+    checkOutput();
 }
 
-void Toplevel::removeCheckScreenConnection()
+void Toplevel::removeCheckOutputConnection()
 {
-    disconnect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::checkScreen);
+    disconnect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::checkOutput);
 }
 
 int Toplevel::screen() const
 {
-    return m_screen;
+    return kwinApp()->platform()->enabledOutputs().indexOf(m_output);
 }
 
 AbstractOutput *Toplevel::output() const
 {
-    return kwinApp()->platform()->findOutput(screen());
+    return m_output;
+}
+
+void Toplevel::setOutput(AbstractOutput *output)
+{
+    if (m_output != output) {
+        m_output = output;
+        Q_EMIT screenChanged();
+    }
+
+    qreal newScale = m_output->scale();
+    if (newScale != m_screenScale) {
+        m_screenScale = newScale;
+        Q_EMIT screenScaleChanged();
+    }
 }
 
 qreal Toplevel::screenScale() const

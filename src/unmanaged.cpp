@@ -102,7 +102,7 @@ bool Unmanaged::track(xcb_window_t w)
     m_bufferGeometry = geo.rect();
     m_frameGeometry = geo.rect();
     m_clientGeometry = geo.rect();
-    checkScreen();
+    checkOutput();
     m_visual = attr->visual;
     bit_depth = geo->depth;
     info = new NETWinInfo(connection(), w, rootWindow(),

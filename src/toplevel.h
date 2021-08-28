@@ -346,6 +346,7 @@ public:
     bool isOnActiveOutput() const;
     int screen() const; // the screen where the center is
     AbstractOutput *output() const;
+    void setOutput(AbstractOutput *output);
     /**
      * The scale of the screen this window is currently on
      * @note The buffer scale can be different.
@@ -662,9 +663,9 @@ protected Q_SLOTS:
      * Checks whether the screen number for this Toplevel changed and updates if needed.
      * Any method changing the geometry of the Toplevel should call this method.
      */
-    void checkScreen();
-    void setupCheckScreenConnection();
-    void removeCheckScreenConnection();
+    void checkOutput();
+    void setupCheckOutputConnection();
+    void removeCheckOutputConnection();
     void setReadyForPainting();
 
 protected:
@@ -720,7 +721,7 @@ private:
     QRegion opaque_region;
     mutable QRegion m_shapeRegion;
     mutable bool m_shapeRegionIsValid = false;
-    int m_screen;
+    AbstractOutput *m_output = nullptr;
     bool m_skipCloseAnimation;
     quint32 m_surfaceId = 0;
     KWaylandServer::SurfaceInterface *m_surface = nullptr;
