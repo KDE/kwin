@@ -52,10 +52,10 @@ void FocusChain::removeDesktop(VirtualDesktop *desktop)
 
 AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop) const
 {
-    return getForActivation(desktop, screens()->current());
+    return getForActivation(desktop, screens()->currentOutput());
 }
 
-AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop, int screen) const
+AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop, AbstractOutput *output) const
 {
     auto it = m_desktopFocusChains.constFind(desktop);
     if (it == m_desktopFocusChains.constEnd()) {
@@ -66,7 +66,7 @@ AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop, int screen
         auto tmp = chain.at(i);
         // TODO: move the check into Client
         if (tmp->isShown(false) && tmp->isOnCurrentActivity()
-            && ( !m_separateScreenFocus || tmp->screen() == screen)) {
+            && ( !m_separateScreenFocus || tmp->output() == output)) {
             return tmp;
         }
     }
@@ -207,7 +207,7 @@ bool FocusChain::isUsableFocusCandidate(AbstractClient *c, AbstractClient *prev)
 {
     return c != prev &&
            c->isShown(false) && c->isOnCurrentDesktop() && c->isOnCurrentActivity() &&
-           (!m_separateScreenFocus || c->isOnScreen(prev ? prev->screen() : screens()->current()));
+           (!m_separateScreenFocus || c->isOnOutput(prev ? prev->output() : screens()->currentOutput()));
 }
 
 AbstractClient *FocusChain::nextForDesktop(AbstractClient *reference, VirtualDesktop *desktop) const

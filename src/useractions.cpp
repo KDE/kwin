@@ -1307,27 +1307,44 @@ static bool screenSwitchImpossible()
     return true;
 }
 
+AbstractOutput *Workspace::nextOutput(AbstractOutput *reference) const
+{
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const int index = outputs.indexOf(reference);
+    Q_ASSERT(index != -1);
+    return outputs[(index + 1) % outputs.count()];
+}
+
+AbstractOutput *Workspace::previousOutput(AbstractOutput *reference) const
+{
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const int index = outputs.indexOf(reference);
+    Q_ASSERT(index != -1);
+    return outputs[(index + outputs.count() - 1) % outputs.count()];
+}
+
 void Workspace::slotSwitchToScreen()
 {
     if (screenSwitchImpossible())
         return;
-    const int i = senderValue(sender());
-    if (i > -1)
-        setCurrentScreen(i);
+    AbstractOutput *output = kwinApp()->platform()->findOutput(senderValue(sender()));
+    if (output) {
+        setCurrentOutput(output);
+    }
 }
 
 void Workspace::slotSwitchToNextScreen()
 {
     if (screenSwitchImpossible())
         return;
-    setCurrentScreen((screens()->current() + 1) % screens()->count());
+    setCurrentOutput(nextOutput(screens()->currentOutput()));
 }
 
 void Workspace::slotSwitchToPrevScreen()
 {
     if (screenSwitchImpossible())
         return;
-    setCurrentScreen((screens()->current() + screens()->count() - 1) % screens()->count());
+    setCurrentOutput(previousOutput(screens()->currentOutput()));
 }
 
 void Workspace::slotWindowToScreen()

@@ -500,20 +500,18 @@ bool Workspace::activateNextClient(AbstractClient* c)
 
 }
 
-void Workspace::setCurrentScreen(int new_screen)
+void Workspace::setCurrentOutput(AbstractOutput *output)
 {
-    if (new_screen < 0 || new_screen >= screens()->count())
-        return;
     if (!options->focusPolicyIsReasonable())
         return;
     closeActivePopup();
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-    AbstractClient *get_focus = FocusChain::self()->getForActivation(desktop, new_screen);
+    AbstractClient *get_focus = FocusChain::self()->getForActivation(desktop, output);
     if (get_focus == nullptr)
         get_focus = findDesktop(true, desktop);
     if (get_focus != nullptr && get_focus != mostRecentlyActivatedClient())
         requestFocus(get_focus);
-    screens()->setCurrent(new_screen);
+    screens()->setCurrent(output);
 }
 
 void Workspace::gotFocusIn(const AbstractClient* c)

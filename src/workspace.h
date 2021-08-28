@@ -317,7 +317,9 @@ public:
     // D-Bus interface
     QString supportInformation() const;
 
-    void setCurrentScreen(int new_screen);
+    AbstractOutput *nextOutput(AbstractOutput *reference) const;
+    AbstractOutput *previousOutput(AbstractOutput *reference) const;
+    void setCurrentOutput(AbstractOutput *output);
 
     void setShowingDesktop(bool showing);
     bool showingDesktop() const;

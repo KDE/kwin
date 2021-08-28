@@ -18,6 +18,7 @@ namespace KWin
 {
 // forward declarations
 class AbstractClient;
+class AbstractOutput;
 class VirtualDesktop;
 
 /**
@@ -98,10 +99,10 @@ public:
      * If no Client for activation is found @c null is returned.
      *
      * @param desktop The virtual desktop to look for a Client for activation
-     * @param screen The screen to constrain the search on with separate screen focus
+     * @param output The screen to constrain the search on with separate screen focus
      * @return :X11Client *The Client which could be activated or @c null if there is none.
      */
-    AbstractClient *getForActivation(VirtualDesktop *desktop, int screen) const;
+    AbstractClient *getForActivation(VirtualDesktop *desktop, AbstractOutput *output) const;
 
     /**
      * @brief Checks whether the most recently used focus chain contains the given @p client.
