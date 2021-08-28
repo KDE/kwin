@@ -172,7 +172,6 @@ set(testScriptedEffectLoader_SRCS
     ../src/scripting/scriptingutils.cpp
     mock_abstract_client.cpp
     mock_effectshandler.cpp
-    mock_screens.cpp
     mock_workspace.cpp
     test_scripted_effectloader.cpp
 )
@@ -236,56 +235,6 @@ target_link_libraries(fakeeffectplugin kwineffects)
 add_library(effectversionplugin MODULE fakeeffectplugin_version.cpp)
 set_target_properties(effectversionplugin PROPERTIES PREFIX "")
 target_link_libraries(effectversionplugin kwineffects)
-
-########################################################
-# Test ScreenEdges
-########################################################
-set(testScreenEdges_SRCS
-    ../src/atoms.cpp
-    ../src/gestures.cpp
-    ../src/plugins/platforms/x11/standalone/edge.cpp
-    ../src/screenedge.cpp
-    ../src/screens.cpp
-    ../src/virtualdesktops.cpp
-    ../src/cursor.cpp
-    ../src/xcbutils.cpp # init of extensions
-    mock_abstract_client.cpp
-    mock_screens.cpp
-    mock_workspace.cpp
-    mock_x11client.cpp
-    test_screen_edges.cpp
-)
-kconfig_add_kcfg_files(testScreenEdges_SRCS ../src/settings.kcfgc)
-qt_add_dbus_interface(testScreenEdges_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface )
-
-add_executable(testScreenEdges ${testScreenEdges_SRCS})
-set_target_properties(testScreenEdges PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
-target_include_directories(testScreenEdges BEFORE PRIVATE ./)
-target_link_libraries(testScreenEdges
-    Qt::DBus
-    Qt::Test
-    Qt::X11Extras
-
-    KF5::ConfigCore
-    KF5::ConfigGui
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::Notifications
-    Plasma::KWaylandServer
-    KF5::WindowSystem
-
-    XCB::COMPOSITE
-    XCB::DAMAGE
-    XCB::GLX
-    XCB::RANDR
-    XCB::SHM
-    XCB::SYNC
-    XCB::XCB
-    XCB::XFIXES
-)
-
-add_test(NAME kwin_testScreenEdges COMMAND testScreenEdges)
-ecm_mark_as_test(testScreenEdges)
 
 ########################################################
 # Test OnScreenNotification

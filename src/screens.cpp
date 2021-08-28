@@ -9,7 +9,6 @@
 #include "screens.h"
 #include <abstract_client.h>
 #include "abstract_output.h"
-#include <x11client.h>
 #include "cursor.h"
 #include "utils.h"
 #include "settings.h"
@@ -18,9 +17,6 @@
 #include "platform.h"
 #include "wayland_server.h"
 #include "abstract_wayland_output.h"
-#ifdef KWIN_UNIT_TEST
-#include <mock_screens.h>
-#endif
 
 namespace KWin
 {
@@ -29,11 +25,7 @@ Screens *Screens::s_self = nullptr;
 Screens *Screens::create(QObject *parent)
 {
     Q_ASSERT(!s_self);
-#ifdef KWIN_UNIT_TEST
-    s_self = new MockScreens(parent);
-#else
     s_self = new Screens(parent);
-#endif
     Q_ASSERT(s_self);
     s_self->init();
     return s_self;

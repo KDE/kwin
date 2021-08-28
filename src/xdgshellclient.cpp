@@ -705,16 +705,12 @@ bool XdgToplevelClient::hasStrut() const
 
 void XdgToplevelClient::showOnScreenEdge()
 {
-    if (!m_plasmaShellSurface) {
-        return;
-    }
-
     // ShowOnScreenEdge can be called by an Edge, and hideClient could destroy the Edge
     // Use the singleshot to avoid use-after-free
     QTimer::singleShot(0, this, [this](){
         hideClient(false);
         workspace()->raiseClient(this);
-        if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
+        if (m_plasmaShellSurface && m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
             m_plasmaShellSurface->showAutoHidingPanel();
         }
     });

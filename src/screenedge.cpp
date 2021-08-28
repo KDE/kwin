@@ -28,9 +28,6 @@
 #include "utils.h"
 #include <workspace.h>
 #include "virtualdesktops.h"
-#ifdef KWIN_UNIT_TEST
-#include "plugins/platforms/x11/standalone/edge.h"
-#endif
 // DBus generated
 #include "screenlocker_interface.h"
 // frameworks
@@ -1105,11 +1102,7 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
 
 Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, bool createAction)
 {
-#ifdef KWIN_UNIT_TEST
-    Edge *edge = new WindowBasedEdge(this);
-#else
     Edge *edge = kwinApp()->platform()->createScreenEdge(this);
-#endif
     // Edges can not have negative size.
     Q_ASSERT(width >= 0);
     Q_ASSERT(height >= 0);
