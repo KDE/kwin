@@ -807,24 +807,19 @@ MaximizeMode WindowRules::checkMaximize(MaximizeMode mode, bool init) const
     return static_cast< MaximizeMode >((vert ? MaximizeVertical : 0) | (horiz ? MaximizeHorizontal : 0));
 }
 
-int WindowRules::checkScreen(int screen, bool init) const
-{
-    if ( rules.count() == 0 )
-        return screen;
-    int ret = screen;
-    for ( QVector< Rules* >::ConstIterator it = rules.constBegin(); it != rules.constEnd(); ++it ) {
-        if ( (*it)->applyScreen( ret, init ))
-            break;
-    }
-    if (ret >= Screens::self()->count())
-        ret = screen;
-    return ret;
-}
-
 AbstractOutput *WindowRules::checkOutput(AbstractOutput *output, bool init) const
 {
-    int screenId = kwinApp()->platform()->enabledOutputs().indexOf(output);
-    return kwinApp()->platform()->findOutput(checkScreen(screenId, init));
+    if (rules.isEmpty()) {
+        return output;
+    }
+    int ret = kwinApp()->platform()->enabledOutputs().indexOf(output);
+    for (Rules *rule : rules) {
+        if (rule->applyScreen(ret, init)) {
+            break;
+        }
+    }
+    AbstractOutput *ruleOutput = kwinApp()->platform()->findOutput(ret);
+    return ruleOutput ? ruleOutput : output;
 }
 
 CHECK_RULE(Minimize, bool)

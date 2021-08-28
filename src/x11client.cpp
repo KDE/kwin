@@ -10,6 +10,7 @@
 // own
 #include "x11client.h"
 // kwin
+#include "abstract_output.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -23,6 +24,7 @@
 #include "geometrytip.h"
 #include "group.h"
 #include "netinfo.h"
+#include "platform.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "shadow.h"
@@ -607,9 +609,15 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         area = workspace()->clientArea(FullArea, this, geom.center());
         checkOffscreenPosition(&geom, area);
     } else {
-        int screen = asn_data.xinerama() == -1 ? screens()->current() : asn_data.xinerama();
-        screen = rules()->checkScreen(screen, !isMapped);
-        area = workspace()->clientArea(PlacementArea, this, screens()->geometry(screen).center());
+        AbstractOutput *output = nullptr;
+        if (asn_data.xinerama() != -1) {
+            output = kwinApp()->platform()->findOutput(asn_data.xinerama());
+        }
+        if (!output) {
+            output = screens()->currentOutput();
+        }
+        output = rules()->checkOutput(output, !isMapped);
+        area = workspace()->clientArea(PlacementArea, this, output->geometry().center());
     }
 
     if (isDesktop())
@@ -3809,9 +3817,11 @@ void X11Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
         QSize requestedFrameSize = clientSizeToFrameSize(requestedClientSize);
         requestedFrameSize = rules()->checkSize(requestedFrameSize);
         new_pos = rules()->checkPosition(new_pos);
-        int newScreen = screens()->number(QRect(new_pos, requestedFrameSize).center());
-        if (newScreen != rules()->checkScreen(newScreen))
+
+        AbstractOutput *newOutput = kwinApp()->platform()->outputAt(QRect(new_pos, requestedFrameSize).center());
+        if (newOutput != rules()->checkOutput(newOutput)) {
             return; // not allowed by rule
+        }
 
         QRect origClientGeometry = m_clientGeometry;
         GeometryUpdatesBlocker blocker(this);
