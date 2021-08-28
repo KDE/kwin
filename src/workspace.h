@@ -277,7 +277,7 @@ public:
     QList<X11Client *> ensureStackingOrder(const QList<X11Client *> &clients) const;
     QList<AbstractClient*> ensureStackingOrder(const QList<AbstractClient*> &clients) const;
 
-    AbstractClient *topClientOnDesktop(VirtualDesktop *desktop, int screen, bool unconstrained = false,
+    AbstractClient *topClientOnDesktop(VirtualDesktop *desktop, AbstractOutput *output = nullptr, bool unconstrained = false,
                                        bool only_normal = true) const;
     AbstractClient *findDesktop(bool topmost, VirtualDesktop *desktop) const;
     void sendClientToDesktop(AbstractClient* c, int desktop, bool dont_activate);

@@ -429,7 +429,7 @@ void Workspace::initializeX11()
             && activeClient() == nullptr && should_get_focus.count() == 0) {
         // No client activated in manage()
         if (new_active_client == nullptr)
-            new_active_client = topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1);
+            new_active_client = topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop());
         if (new_active_client == nullptr)
             new_active_client = findDesktop(true, VirtualDesktopManager::self()->currentDesktop());
     }

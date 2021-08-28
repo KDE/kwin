@@ -757,7 +757,7 @@ void PointerInputTest::testFocusFollowsMouse()
     AbstractClient *window2 = workspace()->activeClient();
     QVERIFY(window2);
     QVERIFY(window1 != window2);
-    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1), window2);
+    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window2);
     // geometry of the two windows should be overlapping
     QVERIFY(window1->frameGeometry().intersects(window2->frameGeometry()));
 
@@ -776,18 +776,18 @@ void PointerInputTest::testFocusFollowsMouse()
     Cursors::self()->mouse()->setPos(10, 10);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(stackingOrderChangedSpy.count(), 1);
-    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1), window1);
+    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window1);
     QTRY_VERIFY(window1->isActive());
 
     // move on second window, but move away before active window change delay hits
     Cursors::self()->mouse()->setPos(810, 810);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(stackingOrderChangedSpy.count(), 2);
-    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1), window2);
+    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window2);
     Cursors::self()->mouse()->setPos(10, 10);
     QVERIFY(!activeWindowChangedSpy.wait(250));
     QVERIFY(window1->isActive());
-    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1), window1);
+    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window1);
     // as we moved back on window 1 that should been raised in the mean time
     QCOMPARE(stackingOrderChangedSpy.count(), 3);
 
@@ -843,7 +843,7 @@ void PointerInputTest::testMouseActionInactiveWindow()
     AbstractClient *window2 = workspace()->activeClient();
     QVERIFY(window2);
     QVERIFY(window1 != window2);
-    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1), window2);
+    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window2);
     // geometry of the two windows should be overlapping
     QVERIFY(window1->frameGeometry().intersects(window2->frameGeometry()));
 
@@ -872,7 +872,7 @@ void PointerInputTest::testMouseActionInactiveWindow()
     // should raise window1 and activate it
     QCOMPARE(stackingOrderChangedSpy.count(), 1);
     QVERIFY(!activeWindowChangedSpy.isEmpty());
-    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1), window1);
+    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window1);
     QVERIFY(window1->isActive());
     QVERIFY(!window2->isActive());
 
@@ -937,12 +937,12 @@ void PointerInputTest::testMouseActionActiveWindow()
     QVERIFY(window1 != window2);
     QSignalSpy window2DestroyedSpy(window2, &QObject::destroyed);
     QVERIFY(window2DestroyedSpy.isValid());
-    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1), window2);
+    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window2);
     // geometry of the two windows should be overlapping
     QVERIFY(window1->frameGeometry().intersects(window2->frameGeometry()));
     // lower the currently active window
     workspace()->lowerClient(window2);
-    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1), window1);
+    QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window1);
 
     // signal spy for stacking order spy
     QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
@@ -960,11 +960,11 @@ void PointerInputTest::testMouseActionActiveWindow()
     QVERIFY(buttonSpy.wait());
     if (clickRaise) {
         QCOMPARE(stackingOrderChangedSpy.count(), 1);
-        QTRY_COMPARE_WITH_TIMEOUT(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1), window2, 200);
+        QTRY_COMPARE_WITH_TIMEOUT(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window2, 200);
     } else {
         QCOMPARE(stackingOrderChangedSpy.count(), 0);
         QVERIFY(!stackingOrderChangedSpy.wait(100));
-        QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), -1), window1);
+        QCOMPARE(workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop()), window1);
     }
 
     // release again
