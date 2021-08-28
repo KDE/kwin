@@ -31,32 +31,10 @@ class KWIN_EXPORT Screens : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
-    Q_PROPERTY(int current READ current WRITE setCurrent NOTIFY currentChanged)
-    Q_PROPERTY(bool currentFollowsMouse READ isCurrentFollowsMouse WRITE setCurrentFollowsMouse)
 
 public:
     ~Screens() override;
-    /**
-     * @internal
-     */
-    void setConfig(KSharedConfig::Ptr config);
     int count() const;
-    int current() const;
-    AbstractOutput *currentOutput() const;
-    void setCurrent(int current);
-    /**
-     * Called e.g. when a user clicks on a window, set current screen to be the screen
-     * where the click occurred
-     */
-    void setCurrent(const QPoint &pos);
-    void setCurrent(AbstractOutput *output);
-    /**
-     * Check whether a client moved completely out of what's considered the current screen,
-     * if yes, set a new active screen.
-     */
-    void setCurrent(const AbstractClient *c);
-    bool isCurrentFollowsMouse() const;
-    void setCurrentFollowsMouse(bool follows);
     virtual QRect geometry(int screen) const;
     /**
      * The bounding geometry of all screens combined. Overlapping areas
@@ -143,16 +121,12 @@ public:
      */
     RenderLoop::VrrPolicy vrrPolicy(int screen) const;
 
-public Q_SLOTS:
-    void reconfigure();
-
 Q_SIGNALS:
     void countChanged(int previousCount, int newCount);
     /**
      * Emitted whenever the screens are changed either count or geometry.
      */
     void changed();
-    void currentChanged();
     /**
      * Emitted when the geometry of all screens combined changes.
      * Not emitted when the geometry of an individual screen changes.
@@ -190,9 +164,6 @@ private:
     AbstractOutput *findOutput(int screenId) const;
 
     int m_count;
-    int m_current;
-    bool m_currentFollowsMouse;
-    KSharedConfig::Ptr m_config;
     QSize m_boundingSize;
     qreal m_maxScale;
 
@@ -203,12 +174,6 @@ inline
 int Screens::count() const
 {
     return m_count;
-}
-
-inline
-bool Screens::isCurrentFollowsMouse() const
-{
-    return m_currentFollowsMouse;
 }
 
 inline

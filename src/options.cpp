@@ -42,6 +42,7 @@ Options::Options(QObject *parent)
     , m_shadeHover(false)
     , m_shadeHoverInterval(0)
     , m_separateScreenFocus(false)
+    , m_activeMouseScreen(false)
     , m_placement(Placement::NoPlacement)
     , m_borderSnapZone(0)
     , m_windowSnapZone(0)
@@ -224,6 +225,15 @@ void Options::setSeparateScreenFocus(bool separateScreenFocus)
     }
     m_separateScreenFocus = separateScreenFocus;
     Q_EMIT separateScreenFocusChanged(m_separateScreenFocus);
+}
+
+void Options::setActiveMouseScreen(bool activeMouseScreen)
+{
+    if (m_activeMouseScreen == activeMouseScreen) {
+        return;
+    }
+    m_activeMouseScreen = activeMouseScreen;
+    Q_EMIT activeMouseScreenChanged();
 }
 
 void Options::setPlacement(int placement)
@@ -771,6 +781,7 @@ void Options::syncFromKcfgc()
     setFocusPolicy(m_settings->focusPolicy());
     setNextFocusPrefersMouse(m_settings->nextFocusPrefersMouse());
     setSeparateScreenFocus(m_settings->separateScreenFocus());
+    setActiveMouseScreen(m_settings->activeMouseScreen());
     setRollOverDesktops(m_settings->rollOverDesktops());
     setFocusStealingPreventionLevel(m_settings->focusStealingPreventionLevel());
     setXwaylandCrashPolicy(m_settings->xwaylandCrashPolicy());

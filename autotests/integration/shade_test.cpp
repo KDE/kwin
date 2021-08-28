@@ -55,7 +55,7 @@ void ShadeTest::initTestCase()
 
 void ShadeTest::init()
 {
-    screens()->setCurrent(QPoint(640, 512));
+    workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 

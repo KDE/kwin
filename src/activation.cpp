@@ -393,7 +393,7 @@ bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
         workspace()->raiseClient(c);
 
     if (!c->isOnActiveOutput()) {
-        screens()->setCurrent(c->output());
+        setActiveOutput(c->output());
     }
 
     return ret;
@@ -467,7 +467,7 @@ bool Workspace::activateNextClient(AbstractClient* c)
         get_focus = findDesktop(true, desktop); // to not break the state
 
     if (!get_focus && options->isNextFocusPrefersMouse()) {
-        get_focus = clientUnderMouse(c ? c->output() : screens()->currentOutput());
+        get_focus = clientUnderMouse(c ? c->output() : workspace()->activeOutput());
         if (get_focus && (get_focus == c || get_focus->isDesktop())) {
             // should rather not happen, but it cannot get the focus. rest of usability is tested above
             get_focus = nullptr;
@@ -512,7 +512,7 @@ void Workspace::switchToOutput(AbstractOutput *output)
         get_focus = findDesktop(true, desktop);
     if (get_focus != nullptr && get_focus != mostRecentlyActivatedClient())
         requestFocus(get_focus);
-    screens()->setCurrent(output);
+    setActiveOutput(output);
 }
 
 void Workspace::gotFocusIn(const AbstractClient* c)

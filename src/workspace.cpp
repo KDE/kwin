@@ -207,11 +207,6 @@ Workspace::Workspace()
 void Workspace::init()
 {
     KSharedConfigPtr config = kwinApp()->config();
-    Screens *screens = Screens::self();
-    // get screen support
-    screens->setConfig(config);
-    screens->reconfigure();
-    connect(options, &Options::configChanged, screens, &Screens::reconfigure);
     ScreenEdges *screenEdges = ScreenEdges::self();
     screenEdges->setConfig(config);
     screenEdges->init();
@@ -786,7 +781,7 @@ void Workspace::addShellClient(AbstractClient *client)
     client->updateLayer();
 
     if (client->isPlaceable()) {
-        const QRect area = clientArea(PlacementArea, client, Screens::self()->currentOutput());
+        const QRect area = clientArea(PlacementArea, client, activeOutput());
         bool placementDone = false;
         if (client->isRequestedFullScreen()) {
             placementDone = true;
@@ -1207,12 +1202,20 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 
 void Workspace::slotOutputEnabled(AbstractOutput *output)
 {
+    if (!m_activeOutput) {
+        m_activeOutput = output;
+    }
+
     connect(output, &AbstractOutput::geometryChanged, this, &Workspace::desktopResized);
     desktopResized();
 }
 
 void Workspace::slotOutputDisabled(AbstractOutput *output)
 {
+    if (m_activeOutput == output) {
+        m_activeOutput = kwinApp()->platform()->outputAt(output->geometry().center());
+    }
+
     const auto stack = xStackingOrder();
     for (Toplevel *toplevel : stack) {
         if (toplevel->output() == output) {
@@ -1610,7 +1613,7 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral("no\n"));
     }
     support.append(QStringLiteral("Active screen follows mouse: "));
-    if (screens()->isCurrentFollowsMouse())
+    if (options->activeMouseScreen())
         support.append(QStringLiteral(" yes\n"));
     else
         support.append(QStringLiteral(" no\n"));
@@ -1932,7 +1935,7 @@ void Workspace::addInternalClient(InternalClient *client)
     client->updateLayer();
 
     if (client->isPlaceable()) {
-        const QRect area = clientArea(PlacementArea, client, screens()->currentOutput());
+        const QRect area = clientArea(PlacementArea, client, workspace()->activeOutput());
         client->placeIn(area);
     }
 
@@ -2407,6 +2410,30 @@ int Workspace::oldDisplayWidth() const
 int Workspace::oldDisplayHeight() const
 {
     return olddisplaysize.height();
+}
+
+AbstractOutput *Workspace::activeOutput() const
+{
+    if (options->activeMouseScreen()) {
+        return kwinApp()->platform()->outputAt(Cursors::self()->mouse()->pos());
+    }
+
+    AbstractClient *client = Workspace::self()->activeClient();
+    if (active_client && !client->isOnOutput(m_activeOutput)) {
+        return client->output();
+    }
+
+    return m_activeOutput;
+}
+
+void Workspace::setActiveOutput(AbstractOutput *output)
+{
+    m_activeOutput = output;
+}
+
+void Workspace::setActiveOutput(const QPoint &pos)
+{
+    setActiveOutput(kwinApp()->platform()->outputAt(pos));
 }
 
 /**

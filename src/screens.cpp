@@ -42,8 +42,6 @@ Screens *Screens::create(QObject *parent)
 Screens::Screens(QObject *parent)
     : QObject(parent)
     , m_count(0)
-    , m_current(0)
-    , m_currentFollowsMouse(false)
     , m_maxScale(1.0)
 {
     // TODO: Do something about testScreens and other tests that use MockScreens.
@@ -66,9 +64,6 @@ void Screens::init()
     connect(this, &Screens::changed, this, &Screens::updateSize);
     connect(this, &Screens::sizeChanged, this, &Screens::geometryChanged);
 
-    Settings settings;
-    settings.setDefaults();
-    m_currentFollowsMouse = settings.activeMouseScreen();
     Q_EMIT changed();
 }
 
@@ -133,16 +128,6 @@ qreal Screens::maxScale() const
     return m_maxScale;
 }
 
-void Screens::reconfigure()
-{
-    if (!m_config) {
-        return;
-    }
-    Settings settings(m_config);
-    settings.read();
-    setCurrentFollowsMouse(settings.activeMouseScreen());
-}
-
 void Screens::updateSize()
 {
     QRect bounding;
@@ -176,68 +161,6 @@ void Screens::setCount(int count)
     Q_EMIT countChanged(previous, count);
 }
 
-void Screens::setCurrent(int current)
-{
-    if (m_current == current) {
-        return;
-    }
-    m_current = current;
-    Q_EMIT currentChanged();
-}
-
-void Screens::setCurrent(AbstractOutput *output)
-{
-#ifdef KWIN_UNIT_TEST
-    Q_UNUSED(output)
-#else
-    setCurrent(kwinApp()->platform()->enabledOutputs().indexOf(output));
-#endif
-}
-
-void Screens::setCurrent(const QPoint &pos)
-{
-    setCurrent(number(pos));
-}
-
-void Screens::setCurrent(const AbstractClient *c)
-{
-    if (!c->isActive()) {
-        return;
-    }
-    if (!c->isOnScreen(m_current)) {
-        setCurrent(c->screen());
-    }
-}
-
-void Screens::setCurrentFollowsMouse(bool follows)
-{
-    if (m_currentFollowsMouse == follows) {
-        return;
-    }
-    m_currentFollowsMouse = follows;
-}
-
-int Screens::current() const
-{
-    if (m_currentFollowsMouse) {
-        return number(Cursors::self()->mouse()->pos());
-    }
-    AbstractClient *client = Workspace::self()->activeClient();
-    if (client && !client->isOnScreen(m_current)) {
-        return client->screen();
-    }
-    return m_current;
-}
-
-AbstractOutput *Screens::currentOutput() const
-{
-#ifdef KWIN_UNIT_TEST
-    return nullptr;
-#else
-    return kwinApp()->platform()->findOutput(current());
-#endif
-}
-
 int Screens::intersecting(const QRect &r) const
 {
     int cnt = 0;
@@ -258,11 +181,6 @@ Qt::ScreenOrientation Screens::orientation(int screen) const
 {
     Q_UNUSED(screen)
     return Qt::PrimaryOrientation;
-}
-
-void Screens::setConfig(KSharedConfig::Ptr config)
-{
-    m_config = config;
 }
 
 int Screens::physicalDpiX(int screen) const

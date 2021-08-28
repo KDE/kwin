@@ -11,6 +11,7 @@
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
+#include "workspace.h"
 
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/xdgoutput.h>
@@ -49,7 +50,7 @@ void ScreenChangesTest::init()
 {
     QVERIFY(Test::setupWaylandConnection());
 
-    screens()->setCurrent(QPoint(640, 512));
+    workspace()->setActiveOutput(QPoint(640, 512));
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 

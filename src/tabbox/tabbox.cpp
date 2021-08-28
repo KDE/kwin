@@ -30,6 +30,7 @@
 #include "keyboard_input.h"
 #include "pointer_input.h"
 #include "focuschain.h"
+#include "platform.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "unmanaged.h"
@@ -81,7 +82,7 @@ TabBoxHandlerImpl::~TabBoxHandlerImpl()
 
 int TabBoxHandlerImpl::activeScreen() const
 {
-    return screens()->current();
+    return kwinApp()->platform()->enabledOutputs().indexOf(workspace()->activeOutput());
 }
 
 int TabBoxHandlerImpl::currentDesktop() const
@@ -235,9 +236,9 @@ bool TabBoxHandlerImpl::checkMultiScreen(TabBoxClient* client) const
     case TabBoxConfig::IgnoreMultiScreen:
         return true;
     case TabBoxConfig::ExcludeCurrentScreenClients:
-        return current->output() != screens()->currentOutput();
+        return current->output() != workspace()->activeOutput();
     default:       // TabBoxConfig::OnlyCurrentScreenClients
-        return current->output() == screens()->currentOutput();
+        return current->output() == workspace()->activeOutput();
     }
 }
 
@@ -322,7 +323,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
     Q_FOREACH (Toplevel *toplevel, Workspace::self()->stackingOrder()) {
         auto client = qobject_cast<AbstractClient*>(toplevel);
-        if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->output() == screens()->currentOutput()) {
+        if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->output() == workspace()->activeOutput()) {
             return client->tabBoxClient();
         }
     }

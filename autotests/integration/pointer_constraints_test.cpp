@@ -85,7 +85,7 @@ void TestPointerConstraints::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::PointerConstraints));
     QVERIFY(Test::waitForWaylandPointer());
 
-    screens()->setCurrent(QPoint(640, 512));
+    workspace()->setActiveOutput(QPoint(640, 512));
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 

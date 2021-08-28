@@ -8,9 +8,11 @@
 */
 #include "switcheritem.h"
 // KWin
+#include "abstract_output.h"
 #include "composite.h"
 #include "tabboxhandler.h"
 #include "screens.h"
+#include "workspace.h"
 // Qt
 #include <QAbstractItemModel>
 
@@ -69,7 +71,7 @@ void SwitcherItem::setVisible(bool visible)
 
 QRect SwitcherItem::screenGeometry() const
 {
-    return screens()->geometry(screens()->current());
+    return workspace()->activeOutput()->geometry();
 }
 
 void SwitcherItem::setCurrentIndex(int index)

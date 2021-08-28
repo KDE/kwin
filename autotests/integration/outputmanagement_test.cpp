@@ -13,6 +13,7 @@
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
+#include "workspace.h"
 
 #include <KWayland/Client/outputmanagement.h>
 #include <KWayland/Client/outputconfiguration.h>
@@ -76,7 +77,7 @@ void TestOutputManagement::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::OutputManagement |
                                          Test::AdditionalWaylandInterface::OutputDevice));
 
-    screens()->setCurrent(QPoint(640, 512));
+    workspace()->setActiveOutput(QPoint(640, 512));
     //put mouse in the middle of screen one
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }

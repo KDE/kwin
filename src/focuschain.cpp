@@ -8,7 +8,7 @@
 */
 #include "focuschain.h"
 #include "abstract_client.h"
-#include "screens.h"
+#include "workspace.h"
 
 namespace KWin
 {
@@ -52,7 +52,7 @@ void FocusChain::removeDesktop(VirtualDesktop *desktop)
 
 AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop) const
 {
-    return getForActivation(desktop, screens()->currentOutput());
+    return getForActivation(desktop, workspace()->activeOutput());
 }
 
 AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop, AbstractOutput *output) const
@@ -207,7 +207,7 @@ bool FocusChain::isUsableFocusCandidate(AbstractClient *c, AbstractClient *prev)
 {
     return c != prev &&
            c->isShown(false) && c->isOnCurrentDesktop() && c->isOnCurrentActivity() &&
-           (!m_separateScreenFocus || c->isOnOutput(prev ? prev->output() : screens()->currentOutput()));
+           (!m_separateScreenFocus || c->isOnOutput(prev ? prev->output() : workspace()->activeOutput()));
 }
 
 AbstractClient *FocusChain::nextForDesktop(AbstractClient *reference, VirtualDesktop *desktop) const

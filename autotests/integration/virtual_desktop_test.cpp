@@ -11,8 +11,9 @@
 #include "main.h"
 #include "platform.h"
 #include "screens.h"
-#include "wayland_server.h"
 #include "virtualdesktops.h"
+#include "wayland_server.h"
+#include "workspace.h"
 
 #include <KWayland/Client/surface.h>
 
@@ -65,7 +66,7 @@ void VirtualDesktopTest::initTestCase()
 void VirtualDesktopTest::init()
 {
     QVERIFY(Test::setupWaylandConnection());
-    screens()->setCurrent(QPoint(640, 512));
+    workspace()->setActiveOutput(QPoint(640, 512));
     VirtualDesktopManager::self()->setCount(1);
 }
 

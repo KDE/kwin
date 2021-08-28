@@ -363,7 +363,7 @@ int WorkspaceWrapper::numScreens() const
 
 int WorkspaceWrapper::activeScreen() const
 {
-    return screens()->current();
+    return kwinApp()->platform()->enabledOutputs().indexOf(workspace()->activeOutput());
 }
 
 QRect WorkspaceWrapper::virtualScreenGeometry() const

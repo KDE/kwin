@@ -422,7 +422,7 @@ bool Toplevel::isOnScreen(int screen) const
 
 bool Toplevel::isOnActiveOutput() const
 {
-    return isOnOutput(screens()->currentOutput());
+    return isOnOutput(workspace()->activeOutput());
 }
 
 bool Toplevel::isOnOutput(AbstractOutput *output) const

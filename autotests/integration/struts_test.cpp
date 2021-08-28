@@ -88,7 +88,7 @@ void StrutsTest::init()
     m_compositor = Test::waylandCompositor();
     m_plasmaShell = Test::waylandPlasmaShell();
 
-    screens()->setCurrent(QPoint(640, 512));
+    workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
     QVERIFY(waylandServer()->clients().isEmpty());
 }

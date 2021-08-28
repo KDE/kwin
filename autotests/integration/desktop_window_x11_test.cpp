@@ -60,7 +60,7 @@ void X11DesktopWindowTest::initTestCase()
 
 void X11DesktopWindowTest::init()
 {
-    screens()->setCurrent(QPoint(640, 512));
+    workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 

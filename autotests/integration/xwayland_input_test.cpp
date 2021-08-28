@@ -59,7 +59,7 @@ void XWaylandInputTest::initTestCase()
 
 void XWaylandInputTest::init()
 {
-    screens()->setCurrent(QPoint(640, 512));
+    workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
     xcb_warp_pointer(connection(), XCB_WINDOW_NONE, kwinApp()->x11RootWindow(), 0, 0, 0, 0, 640, 512);
     xcb_flush(connection());

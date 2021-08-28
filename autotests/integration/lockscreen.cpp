@@ -202,7 +202,7 @@ void LockScreenTest::init()
     m_shm = Test::waylandShmPool();
     m_seat = Test::waylandSeat();
 
-    screens()->setCurrent(QPoint(640, 512));
+    workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 

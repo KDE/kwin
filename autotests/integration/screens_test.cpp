@@ -30,9 +30,6 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
-    void testCurrentFollowsMouse();
-    void testReconfigure_data();
-    void testReconfigure();
     void testSize_data();
     void testSize();
     void testCount();
@@ -40,7 +37,6 @@ private Q_SLOTS:
     void testIntersecting();
     void testCurrent_data();
     void testCurrent();
-    void testCurrentClient();
     void testCurrentWithFollowsMouse_data();
     void testCurrentWithFollowsMouse();
     void testCurrentPoint_data();
@@ -56,6 +52,8 @@ void ScreensTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
+    kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
+
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 2);
@@ -66,7 +64,7 @@ void ScreensTest::initTestCase()
 
 void ScreensTest::init()
 {
-    screens()->setCurrent(QPoint(640, 512));
+    workspace()->setActiveOutput(QPoint(640, 512));
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 
     QVERIFY(Test::setupWaylandConnection());
@@ -86,56 +84,13 @@ void ScreensTest::cleanup()
     Test::destroyWaylandConnection();
 
     // Wipe the screens config clean.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    auto config = kwinApp()->config();
     purge(config.data());
     config->sync();
-    screens()->setConfig(config);
-    screens()->reconfigure();
+    workspace()->slotReconfigure();
 
     // Reset the screen layout of the test environment.
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
-}
-
-void ScreensTest::testCurrentFollowsMouse()
-{
-    QVERIFY(screens()->isCurrentFollowsMouse());
-    screens()->setCurrentFollowsMouse(false);
-    QVERIFY(!screens()->isCurrentFollowsMouse());
-    // setting to same should not do anything
-    screens()->setCurrentFollowsMouse(false);
-    QVERIFY(!screens()->isCurrentFollowsMouse());
-
-    // setting back to other value
-    screens()->setCurrentFollowsMouse(true);
-    QVERIFY(screens()->isCurrentFollowsMouse());
-    // setting to same should not do anything
-    screens()->setCurrentFollowsMouse(true);
-    QVERIFY(screens()->isCurrentFollowsMouse());
-}
-
-void ScreensTest::testReconfigure_data()
-{
-    QTest::addColumn<QString>("focusPolicy");
-    QTest::addColumn<bool>("expectedDefault");
-    QTest::addColumn<bool>("setting");
-
-    QTest::newRow("ClickToFocus")            << QStringLiteral("ClickToFocus")            << false << true;
-    QTest::newRow("FocusFollowsMouse")       << QStringLiteral("FocusFollowsMouse")       << true  << false;
-    QTest::newRow("FocusUnderMouse")         << QStringLiteral("FocusUnderMouse")         << true  << false;
-    QTest::newRow("FocusStrictlyUnderMouse") << QStringLiteral("FocusStrictlyUnderMouse") << true  << false;
-}
-
-void ScreensTest::testReconfigure()
-{
-    screens()->reconfigure();
-    QVERIFY(screens()->isCurrentFollowsMouse());
-
-    QFETCH(bool, setting);
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("Windows").writeEntry("ActiveMouseScreen", setting);
-    config->sync();
-    screens()->reconfigure();
-    QCOMPARE(screens()->isCurrentFollowsMouse(), setting);
 }
 
 void ScreensTest::testSize_data()
@@ -216,61 +171,25 @@ void ScreensTest::testIntersecting()
 
 void ScreensTest::testCurrent_data()
 {
-    QTest::addColumn<int>("current");
-    QTest::addColumn<bool>("signal");
+    QTest::addColumn<int>("currentId");
 
-    QTest::newRow("unchanged") << 0 << false;
-    QTest::newRow("changed") << 1 << true;
+    QTest::newRow("first") << 0;
+    QTest::newRow("second") << 1;
 }
 
 void ScreensTest::testCurrent()
 {
-    QSignalSpy currentChangedSpy(screens(), &KWin::Screens::currentChanged);
-    QVERIFY(currentChangedSpy.isValid());
+    QFETCH(int, currentId);
+    AbstractOutput *output = kwinApp()->platform()->findOutput(currentId);
 
-    QFETCH(int, current);
-    AbstractOutput *output = kwinApp()->platform()->findOutput(current);
+    // Disable "active screen follows mouse"
+    auto group = kwinApp()->config()->group("Windows");
+    group.writeEntry("ActiveMouseScreen", false);
+    group.sync();
+    workspace()->slotReconfigure();
 
-    screens()->setCurrentFollowsMouse(false);
-    screens()->setCurrent(output);
-    QCOMPARE(screens()->currentOutput(), output);
-    QTEST(!currentChangedSpy.isEmpty(), "signal");
-}
-
-void ScreensTest::testCurrentClient()
-{
-    QSignalSpy currentChangedSpy(screens(), &Screens::currentChanged);
-    QVERIFY(currentChangedSpy.isValid());
-
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
-    screens()->setCurrentFollowsMouse(false);
-
-    // create a test window
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(200, 100), Qt::red);
-    QVERIFY(client);
-    QVERIFY(client->isActive());
-
-    // if the window is sent to another screen, that screen will become current
-    client->sendToOutput(outputs[1]);
-    QCOMPARE(currentChangedSpy.count(), 1);
-    QCOMPARE(screens()->currentOutput(), outputs[1]);
-
-    // setting current with the same client again should not change
-    screens()->setCurrent(client);
-    QCOMPARE(currentChangedSpy.count(), 1);
-
-    // and it should even still be on screen 1 if we make the client non-current again
-    workspace()->setActiveClient(nullptr);
-    client->setActive(false);
-    QCOMPARE(screens()->currentOutput(), outputs[1]);
-
-    // it's not the active client, so changing won't work
-    screens()->setCurrent(client);
-    client->sendToOutput(outputs[0]);
-    QCOMPARE(currentChangedSpy.count(), 1);
-    QCOMPARE(screens()->currentOutput(), outputs[1]);
+    workspace()->setActiveOutput(output);
+    QCOMPARE(workspace()->activeOutput(), output);
 }
 
 void ScreensTest::testCurrentWithFollowsMouse_data()
@@ -290,7 +209,12 @@ void ScreensTest::testCurrentWithFollowsMouse()
 {
     QSignalSpy changedSpy(screens(), &Screens::changed);
     QVERIFY(changedSpy.isValid());
-    screens()->setCurrentFollowsMouse(true);
+
+    // Enable "active screen follows mouse"
+    auto group = kwinApp()->config()->group("Windows");
+    group.writeEntry("ActiveMouseScreen", true);
+    group.sync();
+    workspace()->slotReconfigure();
 
     QFETCH(QVector<QRect>, geometries);
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,
@@ -302,7 +226,7 @@ void ScreensTest::testCurrentWithFollowsMouse()
 
     QFETCH(int, expectedId);
     AbstractOutput *expected = kwinApp()->platform()->findOutput(expectedId);
-    QCOMPARE(screens()->currentOutput(), expected);
+    QCOMPARE(workspace()->activeOutput(), expected);
 }
 
 void ScreensTest::testCurrentPoint_data()
@@ -328,14 +252,18 @@ void ScreensTest::testCurrentPoint()
                               Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
     QVERIFY(changedSpy.wait());
 
-    screens()->setCurrentFollowsMouse(false);
+    // Disable "active screen follows mouse"
+    auto group = kwinApp()->config()->group("Windows");
+    group.writeEntry("ActiveMouseScreen", false);
+    group.sync();
+    workspace()->slotReconfigure();
 
     QFETCH(QPoint, cursorPos);
-    screens()->setCurrent(cursorPos);
+    workspace()->setActiveOutput(cursorPos);
 
     QFETCH(int, expectedId);
     AbstractOutput *expected = kwinApp()->platform()->findOutput(expectedId);
-    QCOMPARE(screens()->currentOutput(), expected);
+    QCOMPARE(workspace()->activeOutput(), expected);
 }
 
 } // namespace KWin

@@ -1289,7 +1289,7 @@ void Workspace::slotWindowToDesktop(VirtualDesktop *desktop)
 
 static bool screenSwitchImpossible()
 {
-    if (!screens()->isCurrentFollowsMouse())
+    if (!options->activeMouseScreen())
         return false;
     QStringList args;
     args << QStringLiteral("--passivepopup") << i18n("The window manager is configured to consider the screen with the mouse on it as active one.\n"
@@ -1328,14 +1328,14 @@ void Workspace::slotSwitchToNextScreen()
 {
     if (screenSwitchImpossible())
         return;
-    switchToOutput(nextOutput(screens()->currentOutput()));
+    switchToOutput(nextOutput(activeOutput()));
 }
 
 void Workspace::slotSwitchToPrevScreen()
 {
     if (screenSwitchImpossible())
         return;
-    switchToOutput(previousOutput(screens()->currentOutput()));
+    switchToOutput(previousOutput(activeOutput()));
 }
 
 void Workspace::slotWindowToScreen()

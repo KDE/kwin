@@ -41,7 +41,7 @@ void LayerShellV1Integration::createClient(LayerSurfaceV1Interface *shellSurface
 {
     AbstractOutput *output = waylandServer()->findOutput(shellSurface->output());
     if (!output) {
-        output = screens()->currentOutput();
+        output = workspace()->activeOutput();
     }
     if (!output) {
         qCWarning(KWIN_CORE) << "Could not find any suitable output for a layer surface";

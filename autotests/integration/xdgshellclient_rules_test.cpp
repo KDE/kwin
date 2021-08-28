@@ -155,7 +155,7 @@ void TestXdgShellClientRules::init()
     VirtualDesktopManager::self()->setCurrent(VirtualDesktopManager::self()->desktops().first());
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
 
-    screens()->setCurrent(QPoint(640, 512));
+    workspace()->setActiveOutput(QPoint(640, 512));
 }
 
 void TestXdgShellClientRules::cleanup()

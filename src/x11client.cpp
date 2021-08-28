@@ -614,7 +614,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
             output = kwinApp()->platform()->findOutput(asn_data.xinerama());
         }
         if (!output) {
-            output = screens()->currentOutput();
+            output = workspace()->activeOutput();
         }
         output = rules()->checkOutput(output, !isMapped);
         area = workspace()->clientArea(PlacementArea, this, output->geometry().center());
@@ -4069,7 +4069,9 @@ void X11Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
     m_lastFrameGeometry = m_frameGeometry;
     m_lastClientGeometry = m_clientGeometry;
 
-    screens()->setCurrent(this);
+    if (isActive()) {
+        workspace()->setActiveOutput(output());
+    }
     workspace()->updateStackingOrder();
 
     if (oldBufferGeometry != m_bufferGeometry) {

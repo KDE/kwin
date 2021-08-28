@@ -1190,7 +1190,7 @@ void EffectsHandlerImpl::addRepaint(int x, int y, int w, int h)
 
 int EffectsHandlerImpl::activeScreen() const
 {
-    return Screens::self()->current();
+    return kwinApp()->platform()->enabledOutputs().indexOf(workspace()->activeOutput());
 }
 
 int EffectsHandlerImpl::numScreens() const

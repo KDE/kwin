@@ -154,6 +154,10 @@ public:
 
     bool initializing() const;
 
+    AbstractOutput *activeOutput() const;
+    void setActiveOutput(AbstractOutput *output);
+    void setActiveOutput(const QPoint &pos);
+
     /**
      * Returns the active client, i.e. the client that has the focus (or None
      * if no client has the focus)
@@ -596,6 +600,7 @@ private:
     void updateXStackingOrder();
     void updateTabbox();
 
+    AbstractOutput *m_activeOutput = nullptr;
     AbstractClient* active_client;
     AbstractClient* last_active_client;
     AbstractClient* movingClient;
