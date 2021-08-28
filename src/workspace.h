@@ -143,7 +143,6 @@ public:
     QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
     QRect clientArea(clientAreaOption, const Toplevel *window) const;
     QRect clientArea(clientAreaOption, const Toplevel *window, const AbstractOutput *output) const;
-    QRect clientArea(clientAreaOption, const Toplevel *window, int screen) const;
     QRect clientArea(clientAreaOption, const Toplevel *window, const QPoint &pos) const;
     QRect clientArea(clientAreaOption, int screen, int desktop) const;
 

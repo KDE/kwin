@@ -2358,14 +2358,9 @@ QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const 
     return clientArea(opt, window, output->geometry().center());
 }
 
-QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, int screen) const
-{
-    return clientArea(opt, screen, window->desktop());
-}
-
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const QPoint &pos) const
 {
-    return clientArea(opt, window, screens()->number(pos));
+    return clientArea(opt, screens()->number(pos), window->desktop());
 }
 
 static QRegion strutsToRegion(StrutAreas areas, const StrutRects &strut)
