@@ -1748,7 +1748,7 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
         // used to be activateNextClient(this), then topClientOnDesktop
         // since this is a mouseOp it's however safe to use the client under the mouse instead
         if (isActive() && options->focusPolicyIsReasonable()) {
-            AbstractClient *next = workspace()->clientUnderMouse(screen());
+            AbstractClient *next = workspace()->clientUnderMouse(output());
             if (next && next != this)
                 workspace()->requestFocus(next, false);
         }

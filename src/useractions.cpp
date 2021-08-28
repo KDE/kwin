@@ -1419,7 +1419,7 @@ void Workspace::slotWindowLower()
         //activateNextClient( c ); // Doesn't work when we lower a child window
         if (active_client->isActive() && options->focusPolicyIsReasonable()) {
             if (options->isNextFocusPrefersMouse()) {
-                AbstractClient *next = clientUnderMouse(active_client->screen());
+                AbstractClient *next = clientUnderMouse(active_client->output());
                 if (next && next != active_client)
                     requestFocus(next, false);
             } else {

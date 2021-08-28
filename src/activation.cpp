@@ -411,7 +411,7 @@ void Workspace::clientHidden(AbstractClient* c)
     activateNextClient(c);
 }
 
-AbstractClient *Workspace::clientUnderMouse(int screen) const
+AbstractClient *Workspace::clientUnderMouse(AbstractOutput *output) const
 {
     auto it = stackingOrder().constEnd();
     while (it != stackingOrder().constBegin()) {
@@ -423,7 +423,7 @@ AbstractClient *Workspace::clientUnderMouse(int screen) const
         // rule out clients which are not really visible.
         // the screen test is rather superfluous for xrandr & twinview since the geometry would differ -> TODO: might be dropped
         if (!(client->isShown(false) && client->isOnCurrentDesktop() &&
-                client->isOnCurrentActivity() && client->isOnScreen(screen)))
+                client->isOnCurrentActivity() && client->isOnOutput(output)))
             continue;
 
         if (client->frameGeometry().contains(Cursors::self()->mouse()->pos())) {
@@ -466,7 +466,7 @@ bool Workspace::activateNextClient(AbstractClient* c)
         get_focus = findDesktop(true, desktop); // to not break the state
 
     if (!get_focus && options->isNextFocusPrefersMouse()) {
-        get_focus = clientUnderMouse(c ? c->screen() : screens()->current());
+        get_focus = clientUnderMouse(c ? c->output() : screens()->currentOutput());
         if (get_focus && (get_focus == c || get_focus->isDesktop())) {
             // should rather not happen, but it cannot get the focus. rest of usability is tested above
             get_focus = nullptr;
