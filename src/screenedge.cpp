@@ -19,6 +19,7 @@
 #include "screenedge.h"
 
 // KWin
+#include "abstract_output.h"
 #include "gestures.h"
 #include <x11client.h>
 #include "cursor.h"
@@ -516,8 +517,9 @@ void Edge::setGeometry(const QRect &geometry)
     doGeometryUpdate();
 
     if (isScreenEdge()) {
+        const AbstractOutput *output = kwinApp()->platform()->outputAt(m_geometry.center());
         m_gesture->setStartGeometry(m_geometry);
-        m_gesture->setMinimumDelta(screens()->size(screens()->number(m_geometry.center())) * 0.2);
+        m_gesture->setMinimumDelta(output->geometry().size() * 0.2);
     }
 }
 
