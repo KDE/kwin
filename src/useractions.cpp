@@ -23,6 +23,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "useractions.h"
+#include "abstract_output.h"
 #include "cursor.h"
 #include "x11client.h"
 #include "composite.h"
@@ -471,7 +472,6 @@ void UserActionsMenu::initScreenPopup()
     }
 
     m_screenMenu = new QMenu(m_menu);
-    connect(m_screenMenu, &QMenu::triggered,   this, &UserActionsMenu::slotSendToScreen);
     connect(m_screenMenu, &QMenu::aboutToShow, this, &UserActionsMenu::screenPopupAboutToShow);
 
     QAction *action = m_screenMenu->menuAction();
@@ -670,13 +670,17 @@ void UserActionsMenu::screenPopupAboutToShow()
     m_screenMenu->setPalette(m_client->palette());
     QActionGroup *group = new QActionGroup(m_screenMenu);
 
-    for (int i = 0; i<screens()->count(); ++i) {
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (int i = 0; i < outputs.count(); ++i) {
+        AbstractOutput *output = outputs[i];
         // assumption: there are not more than 9 screens attached.
         QAction *action = m_screenMenu->addAction(i18nc("@item:inmenu List of all Screens to send a window to. First argument is a number, second the output identifier. E.g. Screen 1 (HDMI1)",
-                                                        "Screen &%1 (%2)", (i+1), screens()->name(i)));
-        action->setData(i);
+                                                        "Screen &%1 (%2)", (i + 1), output->name()));
+        connect(action, &QAction::triggered, this, [this, output]() {
+            workspace()->sendClientToOutput(m_client, output);
+        });
         action->setCheckable(true);
-        if (m_client && i == m_client->screen()) {
+        if (m_client && output == m_client->output()) {
             action->setChecked(true);
         }
         group->addAction(action);
@@ -765,19 +769,6 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
                               Qt::QueuedConnection,
                               Q_ARG(KWin::AbstractClient*, c),
                               Q_ARG(Options::WindowOperation, op));
-}
-
-void UserActionsMenu::slotSendToScreen(QAction *action)
-{
-    const int screen = action->data().toInt();
-    if (m_client.isNull()) {
-        return;
-    }
-    if (screen >= screens()->count()) {
-        return;
-    }
-
-    Workspace::self()->sendClientToScreen(m_client.data(), screen);
 }
 
 void UserActionsMenu::slotToggleOnActivity(QAction *action)
@@ -1350,23 +1341,25 @@ void Workspace::slotSwitchToPrevScreen()
 void Workspace::slotWindowToScreen()
 {
     if (USABLE_ACTIVE_CLIENT) {
-        const int i = senderValue(sender());
-        if (i >= 0 && i <= screens()->count()) {
-            sendClientToScreen(active_client, i);
+        AbstractOutput *output = kwinApp()->platform()->findOutput(senderValue(sender()));
+        if (output) {
+            sendClientToOutput(active_client, output);
         }
     }
 }
 
 void Workspace::slotWindowToNextScreen()
 {
-    if (USABLE_ACTIVE_CLIENT)
-        sendClientToScreen(active_client, (active_client->screen() + 1) % screens()->count());
+    if (USABLE_ACTIVE_CLIENT) {
+        sendClientToOutput(active_client, nextOutput(active_client->output()));
+    }
 }
 
 void Workspace::slotWindowToPrevScreen()
 {
-    if (USABLE_ACTIVE_CLIENT)
-        sendClientToScreen(active_client, (active_client->screen() + screens()->count() - 1) % screens()->count());
+    if (USABLE_ACTIVE_CLIENT) {
+        sendClientToOutput(active_client, previousOutput(active_client->output()));
+    }
 }
 
 /**

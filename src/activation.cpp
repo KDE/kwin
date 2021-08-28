@@ -19,6 +19,7 @@
 #include "cursor.h"
 #include "focuschain.h"
 #include "netinfo.h"
+#include "platform.h"
 #include "workspace.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -829,8 +830,12 @@ void X11Client::startupIdChanged()
         desktop = asn_data.desktop();
     if (!isOnAllDesktops())
         workspace()->sendClientToDesktop(this, desktop, true);
-    if (asn_data.xinerama() != -1)
-        workspace()->sendClientToScreen(this, asn_data.xinerama());
+    if (asn_data.xinerama() != -1) {
+        AbstractOutput *output = kwinApp()->platform()->findOutput(asn_data.xinerama());
+        if (output) {
+            workspace()->sendClientToOutput(this, output);
+        }
+    }
     const xcb_timestamp_t timestamp = asn_id.timestamp();
     if (timestamp != 0) {
         bool activate = workspace()->allowClientActivation(this, timestamp);

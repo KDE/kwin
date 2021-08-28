@@ -129,12 +129,6 @@ private Q_SLOTS:
      */
     void activityPopupAboutToShow();
     /**
-     * Sends the Client to screen \a screen
-     *
-     * @param action Invoked Action containing the Screen as data element
-     */
-    void slotSendToScreen(QAction *action);
-    /**
      * Toggles whether the Client is on the \a activity
      *
      * @param action Invoked Action containing the Id of the Activity to toggle the Client on

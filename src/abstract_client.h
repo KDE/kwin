@@ -468,8 +468,8 @@ public:
      * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
      */
     bool isSpecialWindow() const;
-    void sendToScreen(int screen);
-    void updateGeometryRestoresForFullscreen(int screen);
+    void sendToOutput(AbstractOutput *output);
+    void updateGeometryRestoresForFullscreen(AbstractOutput *output);
     const QKeySequence &shortcut() const {
         return _shortcut;
     }
@@ -1139,8 +1139,8 @@ protected:
     void setInteractiveMoveResizePointerButtonDown(bool down) {
         m_interactiveMoveResize.buttonDown = down;
     }
-    int interactiveMoveResizeStartScreen() const {
-        return m_interactiveMoveResize.startScreen;
+    AbstractOutput *interactiveMoveResizeStartOutput() const {
+        return m_interactiveMoveResize.startOutput;
     }
     void checkUnrestrictedInteractiveMoveResize();
     /**
@@ -1318,7 +1318,7 @@ private:
         Position pointer = PositionCenter;
         bool buttonDown = false;
         CursorShape cursor = Qt::ArrowCursor;
-        int startScreen = 0;
+        AbstractOutput *startOutput = nullptr;
         QTimer *delayedTimer = nullptr;
     } m_interactiveMoveResize;
 

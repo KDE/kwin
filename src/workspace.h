@@ -283,7 +283,7 @@ public:
     void sendClientToDesktop(AbstractClient* c, int desktop, bool dont_activate);
     void windowToPreviousDesktop(AbstractClient* c);
     void windowToNextDesktop(AbstractClient* c);
-    void sendClientToScreen(AbstractClient* c, int screen);
+    void sendClientToOutput(AbstractClient *client, AbstractOutput *output);
 
     void addManualOverlay(xcb_window_t id) {
         manual_overlays << id;

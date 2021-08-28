@@ -899,9 +899,14 @@ void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &
 
 void EffectsHandlerImpl::windowToScreen(EffectWindow* w, int screen)
 {
+    AbstractOutput *output = kwinApp()->platform()->findOutput(screen);
+    if (!output) {
+        return;
+    }
     auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
-    if (cl && !cl->isDesktop() && !cl->isDock())
-        Workspace::self()->sendClientToScreen(cl, screen);
+    if (cl && !cl->isDesktop() && !cl->isDock()) {
+        Workspace::self()->sendClientToOutput(cl, output);
+    }
 }
 
 void EffectsHandlerImpl::setShowingDesktop(bool showing)

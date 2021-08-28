@@ -1327,9 +1327,9 @@ bool Workspace::isOnCurrentHead()
     return rootWindow() == geometry->root;
 }
 
-void Workspace::sendClientToScreen(AbstractClient* c, int screen)
+void Workspace::sendClientToOutput(AbstractClient *client, AbstractOutput *output)
 {
-    c->sendToScreen(screen);
+    client->sendToOutput(output);
 }
 
 /**

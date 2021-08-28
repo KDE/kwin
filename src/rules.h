@@ -27,6 +27,7 @@ namespace KWin
 {
 
 class AbstractClient;
+class AbstractOutput;
 class Rules;
 class RuleSettings;
 class VirtualDesktop;
@@ -54,6 +55,7 @@ public:
     bool checkIgnoreGeometry(bool ignore, bool init = false) const;
     QVector<VirtualDesktop *> checkDesktops(QVector<VirtualDesktop *> desktops, bool init = false) const;
     int checkScreen(int screen, bool init = false) const;
+    AbstractOutput *checkOutput(AbstractOutput *output, bool init = false) const;
     QStringList checkActivity(QStringList activity, bool init = false) const;
     NET::WindowType checkType(NET::WindowType type) const;
     MaximizeMode checkMaximize(MaximizeMode mode, bool init = false) const;

@@ -194,9 +194,10 @@ void QuickTilingTest::testQuickTiling()
     QCOMPARE(c->frameGeometry(), expectedGeometry);
 
     // send window to other screen
-    QCOMPARE(c->screen(), 0);
-    c->sendToScreen(1);
-    QCOMPARE(c->screen(), 1);
+    QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    QCOMPARE(c->output(), outputs[0]);
+    c->sendToOutput(outputs[1]);
+    QCOMPARE(c->output(), outputs[1]);
     // quick tile should not be changed
     QCOMPARE(c->quickTileMode(), mode);
     QTEST(c->frameGeometry(), "secondScreen");

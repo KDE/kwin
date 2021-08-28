@@ -21,6 +21,8 @@
 #ifndef KCMRULES
 #include "x11client.h"
 #include "client_machine.h"
+#include "main.h"
+#include "platform.h"
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -819,6 +821,12 @@ int WindowRules::checkScreen(int screen, bool init) const
     return ret;
 }
 
+AbstractOutput *WindowRules::checkOutput(AbstractOutput *output, bool init) const
+{
+    int screenId = kwinApp()->platform()->enabledOutputs().indexOf(output);
+    return kwinApp()->platform()->findOutput(checkScreen(screenId, init));
+}
+
 CHECK_RULE(Minimize, bool)
 CHECK_RULE(Shade, ShadeMode)
 CHECK_RULE(SkipTaskbar, bool)
@@ -869,7 +877,7 @@ void AbstractClient::applyWindowRules()
     // MinSize, MaxSize handled by Geometry
     // IgnoreGeometry
     setDesktops(desktops());
-    workspace()->sendClientToScreen(this, screen());
+    workspace()->sendClientToOutput(this, output());
     setOnActivities(activities());
     // Type
     maximize(maximizeMode());

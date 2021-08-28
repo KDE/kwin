@@ -982,11 +982,11 @@ void AbstractClient::finishInteractiveMoveResize(bool cancel)
         moveResize(moveResizeGeom);
     }
     checkScreen(); // needs to be done because clientFinishUserMovedResized has not yet re-activated online alignment
-    if (screen() != interactiveMoveResizeStartScreen()) {
+    if (output() != interactiveMoveResizeStartOutput()) {
         if (isFullScreen() || isElectricBorderMaximizing()) {
-            updateGeometryRestoresForFullscreen(screen());
+            updateGeometryRestoresForFullscreen(output());
         }
-        workspace()->sendClientToScreen(this, screen()); // checks rule validity
+        workspace()->sendClientToOutput(this, output()); // checks rule validity
         if (maximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
         }
@@ -2065,7 +2065,7 @@ BORDER(Top)
 void AbstractClient::updateInitialMoveResizeGeometry()
 {
     m_interactiveMoveResize.initialGeometry = frameGeometry();
-    m_interactiveMoveResize.startScreen = screen();
+    m_interactiveMoveResize.startOutput = output();
 }
 
 void AbstractClient::updateCursor()
@@ -3221,19 +3221,19 @@ void AbstractClient::doSetQuickTileMode()
 {
 }
 
-void AbstractClient::sendToScreen(int newScreen)
+void AbstractClient::sendToOutput(AbstractOutput *newOutput)
 {
-    newScreen = rules()->checkScreen(newScreen);
+    newOutput = rules()->checkOutput(newOutput);
     if (isActive()) {
-        screens()->setCurrent(newScreen);
+        screens()->setCurrent(newOutput);
         // might impact the layer of a fullscreen window
         Q_FOREACH (AbstractClient *cc, workspace()->allClientList()) {
-            if (cc->isFullScreen() && cc->screen() == newScreen) {
+            if (cc->isFullScreen() && cc->output() == newOutput) {
                 cc->updateLayer();
             }
         }
     }
-    if (screen() == newScreen && !isFullScreen())   // Don't use isOnScreen(), that's true even when only partially
+    if (output() == newOutput && !isFullScreen())   // Don't use isOnScreen(), that's true even when only partially
         return;
 
     GeometryUpdatesBlocker blocker(this);
@@ -3248,7 +3248,7 @@ void AbstractClient::sendToScreen(int newScreen)
         setQuickTileMode(QuickTileFlag::None, true);
 
     QRect oldScreenArea = workspace()->clientArea(MaximizeArea, this);
-    QRect screenArea = workspace()->clientArea(MaximizeArea, this, newScreen);
+    QRect screenArea = workspace()->clientArea(MaximizeArea, this, newOutput);
 
     // the window can have its center so that the position correction moves the new center onto
     // the old screen, what will tile it where it is. Ie. the screen is not changed
@@ -3276,7 +3276,7 @@ void AbstractClient::sendToScreen(int newScreen)
     }
 
     if (isFullScreen()) {
-        updateGeometryRestoresForFullscreen(newScreen);
+        updateGeometryRestoresForFullscreen(newOutput);
         checkWorkspacePosition(oldGeom);
     } else {
         // align geom_restore - checkWorkspacePosition operates on it
@@ -3297,12 +3297,12 @@ void AbstractClient::sendToScreen(int newScreen)
 
     auto tso = workspace()->ensureStackingOrder(transients());
     for (auto it = tso.constBegin(), end = tso.constEnd(); it != end; ++it)
-        (*it)->sendToScreen(newScreen);
+        (*it)->sendToOutput(newOutput);
 }
 
-void AbstractClient::updateGeometryRestoresForFullscreen(int screen)
+void AbstractClient::updateGeometryRestoresForFullscreen(AbstractOutput *output)
 {
-    QRect screenArea = workspace()->clientArea(MaximizeArea, this, screen);
+    QRect screenArea = workspace()->clientArea(MaximizeArea, this, output);
     QRect newFullScreenGeometryRestore = screenArea;
     if (!(maximizeMode() & MaximizeVertical)) {
         newFullScreenGeometryRestore.setHeight(geometryRestore().height());

@@ -240,6 +240,7 @@ void ScreensTest::testCurrentClient()
     QSignalSpy currentChangedSpy(screens(), &Screens::currentChanged);
     QVERIFY(currentChangedSpy.isValid());
 
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
     screens()->setCurrentFollowsMouse(false);
 
     // create a test window
@@ -250,7 +251,7 @@ void ScreensTest::testCurrentClient()
     QVERIFY(client->isActive());
 
     // if the window is sent to another screen, that screen will become current
-    client->sendToScreen(1);
+    client->sendToOutput(outputs[1]);
     QCOMPARE(currentChangedSpy.count(), 1);
     QCOMPARE(screens()->current(), 1);
 
@@ -265,7 +266,7 @@ void ScreensTest::testCurrentClient()
 
     // it's not the active client, so changing won't work
     screens()->setCurrent(client);
-    client->sendToScreen(0);
+    client->sendToOutput(outputs[0]);
     QCOMPARE(currentChangedSpy.count(), 1);
     QCOMPARE(screens()->current(), 1);
 }

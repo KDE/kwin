@@ -4431,10 +4431,10 @@ void X11Client::setFullScreen(bool set, bool user)
         }
     } else {
         Q_ASSERT(!fullscreenGeometryRestore().isNull());
-        const int currentScreen = screen();
+        AbstractOutput *currentOutput = output();
         moveResize(QRect(fullscreenGeometryRestore().topLeft(), constrainFrameSize(fullscreenGeometryRestore().size())));
-        if(currentScreen != screen()) {
-            workspace()->sendClientToScreen(this, currentScreen);
+        if (currentOutput != output()) {
+            workspace()->sendClientToOutput(this, currentOutput);
         }
     }
 

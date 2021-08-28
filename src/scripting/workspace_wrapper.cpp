@@ -11,6 +11,7 @@
 #include "workspace_wrapper.h"
 #include "x11client.h"
 #include "outline.h"
+#include "platform.h"
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -377,10 +378,10 @@ QSize WorkspaceWrapper::virtualScreenSize() const
 
 void WorkspaceWrapper::sendClientToScreen(AbstractClient *client, int screen)
 {
-    if (screen < 0 || screen >= screens()->count()) {
-        return;
+    AbstractOutput *output = kwinApp()->platform()->findOutput(screen);
+    if (output) {
+        workspace()->sendClientToOutput(client, output);
     }
-    workspace()->sendClientToScreen(client, screen);
 }
 
 QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject* parent)

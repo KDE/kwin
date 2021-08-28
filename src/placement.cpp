@@ -663,10 +663,10 @@ void AbstractClient::packTo(int left, int top)
 {
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
 
-    const int oldScreen = screen();
+    const AbstractOutput *oldOutput = output();
     move(QPoint(left, top));
-    if (screen() != oldScreen) {
-        workspace()->sendClientToScreen(this, screen()); // checks rule validity
+    if (output() != oldOutput) {
+        workspace()->sendClientToOutput(this, output()); // checks rule validity
         if (maximizeMode() != MaximizeRestore)
             checkWorkspacePosition();
     }

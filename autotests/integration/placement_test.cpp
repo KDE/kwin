@@ -347,13 +347,15 @@ void TestPlacement::testPlaceRandom()
 
 void TestPlacement::testFullscreen()
 {
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+
     setPlacementPolicy(Placement::Smart);
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
 
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
     QVERIFY(client);
-    client->sendToScreen(0);
+    client->sendToOutput(outputs[0]);
 
     // Wait for the configure event with the activated state.
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
@@ -370,7 +372,7 @@ void TestPlacement::testFullscreen()
     QCOMPARE(client->frameGeometry(), screens()->geometry(0));
 
     // this doesn't require a round trip, so should be immediate
-    client->sendToScreen(1);
+    client->sendToOutput(outputs[1]);
     QCOMPARE(client->frameGeometry(), screens()->geometry(1));
     QCOMPARE(geometryChangedSpy.count(), 2);
 }
