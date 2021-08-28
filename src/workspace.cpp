@@ -786,7 +786,7 @@ void Workspace::addShellClient(AbstractClient *client)
     client->updateLayer();
 
     if (client->isPlaceable()) {
-        const QRect area = clientArea(PlacementArea, client, Screens::self()->current());
+        const QRect area = clientArea(PlacementArea, client, Screens::self()->currentOutput());
         bool placementDone = false;
         if (client->isRequestedFullScreen()) {
             placementDone = true;
@@ -1099,7 +1099,7 @@ AbstractClient *Workspace::findClientToActivateOnDesktop(VirtualDesktop *desktop
             }
 
             if (!(client->isShown(false) && client->isOnDesktop(desktop) &&
-                client->isOnCurrentActivity() && client->isOnActiveScreen()))
+                client->isOnCurrentActivity() && client->isOnActiveOutput()))
                 continue;
 
             if (client->frameGeometry().contains(Cursors::self()->mouse()->pos())) {
@@ -1926,7 +1926,7 @@ void Workspace::addInternalClient(InternalClient *client)
     client->updateLayer();
 
     if (client->isPlaceable()) {
-        const QRect area = clientArea(PlacementArea, client, screens()->current());
+        const QRect area = clientArea(PlacementArea, client, screens()->currentOutput());
         client->placeIn(area);
     }
 

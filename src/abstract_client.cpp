@@ -85,7 +85,7 @@ AbstractClient::AbstractClient()
             Q_UNUSED(c)
             if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && isPlaceable()) {
                 GeometryUpdatesBlocker blocker(this);
-                placeIn(workspace()->clientArea(PlacementArea, this, Screens::self()->current()));
+                placeIn(workspace()->clientArea(PlacementArea, this, Screens::self()->currentOutput()));
             }
         }
     );
@@ -1222,7 +1222,7 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
             // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
             // the other directions. If not visible enough, move the window to the closest valid
             // point. We bruteforce this by slowly moving the window back to its previous position
-            QRegion availableArea(workspace()->clientArea(FullArea, this, screens()->current()));
+            QRegion availableArea(workspace()->clientArea(FullArea, this, screens()->currentOutput()));
             availableArea -= workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
             bool transposed = false;
             int requiredPixels;
@@ -1350,7 +1350,7 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
 
             if (!isUnrestrictedInteractiveMoveResize()) {
                 const QRegion strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
-                QRegion availableArea(workspace()->clientArea(FullArea, this, screens()->current()));
+                QRegion availableArea(workspace()->clientArea(FullArea, this, screens()->currentOutput()));
                 availableArea -= strut;   // Strut areas
                 bool transposed = false;
                 int requiredPixels;

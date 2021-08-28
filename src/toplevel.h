@@ -343,7 +343,7 @@ public:
     int height() const;
     bool isOnScreen(int screen) const;   // true if it's at least partially there
     bool isOnOutput(AbstractOutput *output) const;
-    bool isOnActiveScreen() const;
+    bool isOnActiveOutput() const;
     int screen() const; // the screen where the center is
     AbstractOutput *output() const;
     /**

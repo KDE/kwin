@@ -185,6 +185,15 @@ void Screens::setCurrent(int current)
     Q_EMIT currentChanged();
 }
 
+void Screens::setCurrent(AbstractOutput *output)
+{
+#ifdef KWIN_UNIT_TEST
+    Q_UNUSED(output)
+#else
+    setCurrent(kwinApp()->platform()->enabledOutputs().indexOf(output));
+#endif
+}
+
 void Screens::setCurrent(const QPoint &pos)
 {
     setCurrent(number(pos));
@@ -218,6 +227,15 @@ int Screens::current() const
         return client->screen();
     }
     return m_current;
+}
+
+AbstractOutput *Screens::currentOutput() const
+{
+#ifdef KWIN_UNIT_TEST
+    return nullptr;
+#else
+    return kwinApp()->platform()->findOutput(current());
+#endif
 }
 
 int Screens::intersecting(const QRect &r) const

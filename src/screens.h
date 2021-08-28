@@ -42,12 +42,14 @@ public:
     void setConfig(KSharedConfig::Ptr config);
     int count() const;
     int current() const;
+    AbstractOutput *currentOutput() const;
     void setCurrent(int current);
     /**
      * Called e.g. when a user clicks on a window, set current screen to be the screen
      * where the click occurred
      */
     void setCurrent(const QPoint &pos);
+    void setCurrent(AbstractOutput *output);
     /**
      * Check whether a client moved completely out of what's considered the current screen,
      * if yes, set a new active screen.

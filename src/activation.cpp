@@ -391,8 +391,9 @@ bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
     if (flags & ActivityRaise)
         workspace()->raiseClient(c);
 
-    if (!c->isOnActiveScreen())
-        screens()->setCurrent(c->screen());
+    if (!c->isOnActiveOutput()) {
+        screens()->setCurrent(c->output());
+    }
 
     return ret;
 }

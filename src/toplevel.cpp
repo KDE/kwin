@@ -424,9 +424,9 @@ bool Toplevel::isOnScreen(int screen) const
     return screens()->geometry(screen).intersects(frameGeometry());
 }
 
-bool Toplevel::isOnActiveScreen() const
+bool Toplevel::isOnActiveOutput() const
 {
-    return isOnScreen(screens()->current());
+    return isOnOutput(screens()->currentOutput());
 }
 
 bool Toplevel::isOnOutput(AbstractOutput *output) const

@@ -1235,7 +1235,7 @@ void XdgToplevelClient::initialize()
         needsPlacement = false;
     }
     if (needsPlacement) {
-        const QRect area = workspace()->clientArea(PlacementArea, this, Screens::self()->current());
+        const QRect area = workspace()->clientArea(PlacementArea, this, Screens::self()->currentOutput());
         placeIn(area);
     }
 
@@ -2058,7 +2058,7 @@ void XdgPopupClient::initialize()
 
     updateReactive();
 
-    const QRect area = workspace()->clientArea(PlacementArea, this, Screens::self()->current());
+    const QRect area = workspace()->clientArea(PlacementArea, this, Screens::self()->currentOutput());
     placeIn(area);
     scheduleConfigure();
 }

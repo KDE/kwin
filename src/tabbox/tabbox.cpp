@@ -235,9 +235,9 @@ bool TabBoxHandlerImpl::checkMultiScreen(TabBoxClient* client) const
     case TabBoxConfig::IgnoreMultiScreen:
         return true;
     case TabBoxConfig::ExcludeCurrentScreenClients:
-        return current->screen() != screens()->current();
+        return current->output() != screens()->currentOutput();
     default:       // TabBoxConfig::OnlyCurrentScreenClients
-        return current->screen() == screens()->current();
+        return current->output() == screens()->currentOutput();
     }
 }
 
@@ -322,7 +322,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
     Q_FOREACH (Toplevel *toplevel, Workspace::self()->stackingOrder()) {
         auto client = qobject_cast<AbstractClient*>(toplevel);
-        if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->screen() == screens()->current()) {
+        if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->output() == screens()->currentOutput()) {
             return client->tabBoxClient();
         }
     }
