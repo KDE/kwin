@@ -655,7 +655,7 @@ StrutRect XdgToplevelClient::strutRect(StrutArea area) const
     }
 
     const QRect windowRect = frameGeometry();
-    const QRect outputRect = screens()->geometry(screen());
+    const QRect outputRect = output()->geometry();
 
     const bool left = windowRect.left() == outputRect.left();
     const bool right = windowRect.right() == outputRect.right();

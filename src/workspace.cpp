@@ -2207,7 +2207,7 @@ void Workspace::updateClientArea()
             }
         }
         StrutRects strutRegion = client->strutRects();
-        const QRect clientsScreenRect = KWin::screens()->geometry(client->screen());
+        const QRect clientsScreenRect = client->output()->geometry();
         for (auto strut = strutRegion.begin(); strut != strutRegion.end(); strut++) {
             *strut = StrutRect((*strut).intersected(clientsScreenRect), (*strut).area());
         }
@@ -2344,7 +2344,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop) 
 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window) const
 {
-    return clientArea(opt, window->frameGeometry().center(), window->desktop());
+    return clientArea(opt, window, window->output());
 }
 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const AbstractOutput *output) const

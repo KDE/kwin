@@ -17,6 +17,7 @@
 #include "client_machine.h"
 #include "composite.h"
 #include "effects.h"
+#include "platform.h"
 #include "screens.h"
 #include "shadow.h"
 #include "shadowitem.h"
@@ -401,6 +402,11 @@ void Toplevel::removeCheckScreenConnection()
 int Toplevel::screen() const
 {
     return m_screen;
+}
+
+AbstractOutput *Toplevel::output() const
+{
+    return kwinApp()->platform()->findOutput(screen());
 }
 
 qreal Toplevel::screenScale() const

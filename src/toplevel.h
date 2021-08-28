@@ -345,6 +345,7 @@ public:
     bool isOnOutput(AbstractOutput *output) const;
     bool isOnActiveScreen() const;
     int screen() const; // the screen where the center is
+    AbstractOutput *output() const;
     /**
      * The scale of the screen this window is currently on
      * @note The buffer scale can be different.

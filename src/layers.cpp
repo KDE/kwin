@@ -486,7 +486,7 @@ static Layer layerForClient(const X11Client *client)
         for (const X11Client *member : members) {
             if (member == client) {
                 continue;
-            } else if (member->screen() != client->screen()) {
+            } else if (member->output() != client->output()) {
                 continue;
             }
             if (member->layer() == ActiveLayer) {
@@ -709,7 +709,7 @@ void X11Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource
             X11Client *c = qobject_cast<X11Client *>(*it);
 
             if (!c || !(  (*it)->isNormalWindow() && c->isShown(true) &&
-                    (*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->isOnScreen(screen()) ))
+                    (*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->isOnOutput(output()) ))
                 continue; // irrelevant clients
 
             if (*(it - 1) == other)

@@ -6,7 +6,7 @@
 
 #include "clientmodel.h"
 #include "abstract_client.h"
-#include "screens.h"
+#include "abstract_output.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 
@@ -257,7 +257,7 @@ bool ClientFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     }
 
     if (m_screenName.has_value()) {
-        if (screens()->name(client->screen()) != m_screenName) {
+        if (client->output()->name() != m_screenName) {
             return false;
         }
     }

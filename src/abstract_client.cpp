@@ -2047,7 +2047,7 @@ bool AbstractClient::isActiveFullScreen() const
     // according to NETWM spec implementation notes suggests
     // "focused windows having state _NET_WM_STATE_FULLSCREEN" to be on the highest layer.
     // we'll also take the screen into account
-    return ac && (ac == this || ac->screen() != screen()|| ac->allMainClients().contains(const_cast<AbstractClient*>(this)));
+    return ac && (ac == this || ac->output() != output()|| ac->allMainClients().contains(const_cast<AbstractClient*>(this)));
 }
 
 #define BORDER(which) \
