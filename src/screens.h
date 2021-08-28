@@ -35,7 +35,7 @@ class KWIN_EXPORT Screens : public QObject
 public:
     ~Screens() override;
     int count() const;
-    virtual QRect geometry(int screen) const;
+    QRect geometry(int screen) const;
     /**
      * The bounding geometry of all screens combined. Overlapping areas
      * are not counted multiple times.
@@ -45,18 +45,18 @@ public:
     /**
      * The output name of the screen (usually eg. LVDS-1, VGA-0 or DVI-I-1 etc.)
      */
-    virtual QString name(int screen) const;
+    QString name(int screen) const;
     /**
      * @returns current refreshrate of the @p screen.
      */
-    virtual float refreshRate(int screen) const;
+    float refreshRate(int screen) const;
     /**
      * @returns size of the @p screen.
      *
      * To get the size of all screens combined use size().
      * @see size()
      */
-    virtual QSize size(int screen) const;
+    QSize size(int screen) const;
 
     /**
      * The highest scale() of all connected screens
@@ -69,7 +69,7 @@ public:
     /**
      * The output scale for this display, for use by high DPI displays
      */
-    virtual qreal scale(int screen) const;
+    qreal scale(int screen) const;
     /**
      * The bounding size of all screens combined. Overlapping areas
      * are not counted multiple times.
@@ -78,7 +78,7 @@ public:
      * @see sizeChanged()
      */
     QSize size() const;
-    virtual int number(const QPoint &pos) const;
+    int number(const QPoint &pos) const;
 
     int intersecting(const QRect &r) const;
 
@@ -92,22 +92,21 @@ public:
      *
      * @see size
      */
-    virtual QSize displaySize() const;
-
+    QSize displaySize() const;
 
     /**
      * The physical size of @p screen in mm.
      * Default implementation returns a size derived from 96 DPI.
      */
-    virtual QSizeF physicalSize(int screen) const;
+    QSizeF physicalSize(int screen) const;
 
     /**
      * @returns @c true if the @p screen is connected through an internal display (e.g. LVDS).
      * Default implementation returns @c false.
      */
-    virtual bool isInternal(int screen) const;
+    bool isInternal(int screen) const;
 
-    virtual Qt::ScreenOrientation orientation(int screen) const;
+    Qt::ScreenOrientation orientation(int screen) const;
 
     int physicalDpiX(int screen) const;
     int physicalDpiY(int screen) const;
@@ -147,7 +146,7 @@ Q_SIGNALS:
 
 protected Q_SLOTS:
     void setCount(int count);
-    virtual void updateCount();
+    void updateCount();
 
 protected:
     /**
@@ -155,7 +154,7 @@ protected:
      * Any initialization code should go into this method. Overriding classes have to call
      * the base implementation first.
      */
-    virtual void init();
+    void init();
 
 private Q_SLOTS:
     void updateSize();
