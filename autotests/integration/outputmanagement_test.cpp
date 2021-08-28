@@ -76,9 +76,9 @@ void TestOutputManagement::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::OutputManagement |
                                          Test::AdditionalWaylandInterface::OutputDevice));
 
-    screens()->setCurrent(0);
+    screens()->setCurrent(QPoint(640, 512));
     //put mouse in the middle of screen one
-    KWin::Cursors::self()->mouse()->setPos(QPoint(512, 512));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void TestOutputManagement::cleanup()

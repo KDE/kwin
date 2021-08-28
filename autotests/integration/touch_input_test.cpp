@@ -71,8 +71,8 @@ void TouchInputTest::init()
     QVERIFY(m_touch);
     QVERIFY(m_touch->isValid());
 
-    screens()->setCurrent(0);
-    Cursors::self()->mouse()->setPos(QPoint(512, 512));
+    screens()->setCurrent(QPoint(640, 512));
+    Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void TouchInputTest::cleanup()

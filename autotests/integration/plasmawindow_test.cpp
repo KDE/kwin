@@ -79,7 +79,7 @@ void PlasmaWindowTest::init()
     m_windowManagement = Test::waylandWindowManagement();
     m_compositor = Test::waylandCompositor();
 
-    screens()->setCurrent(0);
+    screens()->setCurrent(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 

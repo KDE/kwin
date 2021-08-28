@@ -71,7 +71,7 @@ void LayerShellV1ClientTest::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1));
 
-    screens()->setCurrent(0);
+    screens()->setCurrent(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 

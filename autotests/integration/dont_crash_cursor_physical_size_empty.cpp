@@ -43,7 +43,7 @@ void DontCrashCursorPhysicalSizeEmpty::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
 
-    screens()->setCurrent(0);
+    screens()->setCurrent(QPoint(640, 512));
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 

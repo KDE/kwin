@@ -165,7 +165,7 @@ void PointerInputTest::init()
     m_compositor = Test::waylandCompositor();
     m_seat = Test::waylandSeat();
 
-    screens()->setCurrent(0);
+    screens()->setCurrent(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 

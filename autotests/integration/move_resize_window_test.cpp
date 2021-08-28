@@ -97,7 +97,7 @@ void MoveResizeWindowTest::init()
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
 
-    screens()->setCurrent(0);
+    screens()->setCurrent(QPoint(640, 512));
 }
 
 void MoveResizeWindowTest::cleanup()

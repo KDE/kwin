@@ -66,7 +66,7 @@ void ActivationTest::init()
 {
     QVERIFY(Test::setupWaylandConnection());
 
-    screens()->setCurrent(0);
+    screens()->setCurrent(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 

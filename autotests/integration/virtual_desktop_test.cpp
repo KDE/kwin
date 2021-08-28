@@ -65,7 +65,7 @@ void VirtualDesktopTest::initTestCase()
 void VirtualDesktopTest::init()
 {
     QVERIFY(Test::setupWaylandConnection());
-    screens()->setCurrent(0);
+    screens()->setCurrent(QPoint(640, 512));
     VirtualDesktopManager::self()->setCount(1);
 }
 

@@ -91,8 +91,8 @@ void InputMethodTest::init()
                                          Test::AdditionalWaylandInterface::TextInputManagerV3));
 
 
-    screens()->setCurrent(0);
-    KWin::Cursors::self()->mouse()->setPos(QPoint(512, 512));
+    screens()->setCurrent(QPoint(640, 512));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 
     InputMethod::self()->setEnabled(true);
 }

@@ -66,7 +66,7 @@ void ScreensTest::initTestCase()
 
 void ScreensTest::init()
 {
-    Screens::self()->setCurrent(0);
+    screens()->setCurrent(QPoint(640, 512));
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 
     QVERIFY(Test::setupWaylandConnection());
@@ -229,9 +229,11 @@ void ScreensTest::testCurrent()
     QVERIFY(currentChangedSpy.isValid());
 
     QFETCH(int, current);
+    AbstractOutput *output = kwinApp()->platform()->findOutput(current);
+
     screens()->setCurrentFollowsMouse(false);
-    screens()->setCurrent(current);
-    QCOMPARE(screens()->current(), current);
+    screens()->setCurrent(output);
+    QCOMPARE(screens()->currentOutput(), output);
     QTEST(!currentChangedSpy.isEmpty(), "signal");
 }
 
@@ -253,7 +255,7 @@ void ScreensTest::testCurrentClient()
     // if the window is sent to another screen, that screen will become current
     client->sendToOutput(outputs[1]);
     QCOMPARE(currentChangedSpy.count(), 1);
-    QCOMPARE(screens()->current(), 1);
+    QCOMPARE(screens()->currentOutput(), outputs[1]);
 
     // setting current with the same client again should not change
     screens()->setCurrent(client);
@@ -262,20 +264,20 @@ void ScreensTest::testCurrentClient()
     // and it should even still be on screen 1 if we make the client non-current again
     workspace()->setActiveClient(nullptr);
     client->setActive(false);
-    QCOMPARE(screens()->current(), 1);
+    QCOMPARE(screens()->currentOutput(), outputs[1]);
 
     // it's not the active client, so changing won't work
     screens()->setCurrent(client);
     client->sendToOutput(outputs[0]);
     QCOMPARE(currentChangedSpy.count(), 1);
-    QCOMPARE(screens()->current(), 1);
+    QCOMPARE(screens()->currentOutput(), outputs[1]);
 }
 
 void ScreensTest::testCurrentWithFollowsMouse_data()
 {
     QTest::addColumn<QVector<QRect>>("geometries");
     QTest::addColumn<QPoint>("cursorPos");
-    QTest::addColumn<int>("expected");
+    QTest::addColumn<int>("expectedId");
 
     QTest::newRow("empty") << QVector<QRect>{{QRect()}} << QPoint(100, 100) << 0;
     QTest::newRow("cloned") << QVector<QRect>{{QRect{0, 0, 200, 100}, QRect{0, 0, 200, 100}}} << QPoint(50, 50) << 0;
@@ -289,7 +291,6 @@ void ScreensTest::testCurrentWithFollowsMouse()
     QSignalSpy changedSpy(screens(), &Screens::changed);
     QVERIFY(changedSpy.isValid());
     screens()->setCurrentFollowsMouse(true);
-    QCOMPARE(screens()->current(), 0);
 
     QFETCH(QVector<QRect>, geometries);
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,
@@ -298,14 +299,17 @@ void ScreensTest::testCurrentWithFollowsMouse()
 
     QFETCH(QPoint, cursorPos);
     KWin::Cursors::self()->mouse()->setPos(cursorPos);
-    QTEST(screens()->current(), "expected");
+
+    QFETCH(int, expectedId);
+    AbstractOutput *expected = kwinApp()->platform()->findOutput(expectedId);
+    QCOMPARE(screens()->currentOutput(), expected);
 }
 
 void ScreensTest::testCurrentPoint_data()
 {
     QTest::addColumn<QVector<QRect>>("geometries");
     QTest::addColumn<QPoint>("cursorPos");
-    QTest::addColumn<int>("expected");
+    QTest::addColumn<int>("expectedId");
 
     QTest::newRow("empty") << QVector<QRect>{{QRect()}} << QPoint(100, 100) << 0;
     QTest::newRow("cloned") << QVector<QRect>{{QRect{0, 0, 200, 100}, QRect{0, 0, 200, 100}}} << QPoint(50, 50) << 0;
@@ -328,7 +332,10 @@ void ScreensTest::testCurrentPoint()
 
     QFETCH(QPoint, cursorPos);
     screens()->setCurrent(cursorPos);
-    QTEST(screens()->current(), "expected");
+
+    QFETCH(int, expectedId);
+    AbstractOutput *expected = kwinApp()->platform()->findOutput(expectedId);
+    QCOMPARE(screens()->currentOutput(), expected);
 }
 
 } // namespace KWin
