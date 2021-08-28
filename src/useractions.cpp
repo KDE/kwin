@@ -1320,7 +1320,7 @@ void Workspace::slotSwitchToScreen()
         return;
     AbstractOutput *output = kwinApp()->platform()->findOutput(senderValue(sender()));
     if (output) {
-        setCurrentOutput(output);
+        switchToOutput(output);
     }
 }
 
@@ -1328,14 +1328,14 @@ void Workspace::slotSwitchToNextScreen()
 {
     if (screenSwitchImpossible())
         return;
-    setCurrentOutput(nextOutput(screens()->currentOutput()));
+    switchToOutput(nextOutput(screens()->currentOutput()));
 }
 
 void Workspace::slotSwitchToPrevScreen()
 {
     if (screenSwitchImpossible())
         return;
-    setCurrentOutput(previousOutput(screens()->currentOutput()));
+    switchToOutput(previousOutput(screens()->currentOutput()));
 }
 
 void Workspace::slotWindowToScreen()

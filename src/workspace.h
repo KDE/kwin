@@ -322,7 +322,7 @@ public:
 
     AbstractOutput *nextOutput(AbstractOutput *reference) const;
     AbstractOutput *previousOutput(AbstractOutput *reference) const;
-    void setCurrentOutput(AbstractOutput *output);
+    void switchToOutput(AbstractOutput *output);
 
     void setShowingDesktop(bool showing);
     bool showingDesktop() const;

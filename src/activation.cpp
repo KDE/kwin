@@ -501,7 +501,7 @@ bool Workspace::activateNextClient(AbstractClient* c)
 
 }
 
-void Workspace::setCurrentOutput(AbstractOutput *output)
+void Workspace::switchToOutput(AbstractOutput *output)
 {
     if (!options->focusPolicyIsReasonable())
         return;
