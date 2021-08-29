@@ -84,7 +84,7 @@ FocusScope {
         Item {
             id: searchBar
             width: parent.width
-            height: searchField.height + 2 * PlasmaCore.Units.largeSpacing
+            height: searchField.implicitHeight + 2 * PlasmaCore.Units.largeSpacing
             state: container.organized ? "visible" : "hidden"
 
             PC3.TextField {
@@ -133,7 +133,6 @@ FocusScope {
             height: parent.height - searchBar.height
             padding: PlasmaCore.Units.largeSpacing
             focus: true
-            animationEnabled: container.animationEnabled
             organized: container.organized
             model: KWinComponents.ClientFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
@@ -174,6 +173,7 @@ FocusScope {
     }
 
     Component.onCompleted: {
+        console.log("Screenview ready")
         container.organized = true;
     }
 }

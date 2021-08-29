@@ -24,7 +24,9 @@ FocusScope {
     property alias model: windowsRepeater.model
     property int selectedIndex: -1
 
-    required property bool organized
+    property int padding: 5
+
+    property alias organized: expoLayout.organized
 
     ExpoLayout {
         id: expoLayout

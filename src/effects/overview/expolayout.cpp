@@ -58,6 +58,7 @@ void ExpoCell::setNaturalX(int x)
 {
     if (m_naturalX != x) {
         m_naturalX = x;
+        qDebug();
         update();
         Q_EMIT naturalXChanged();
 
@@ -96,6 +97,7 @@ void ExpoCell::setNaturalWidth(int width)
 {
     if (m_naturalWidth != width) {
         m_naturalWidth = width;
+        qDebug();
         update();
         Q_EMIT naturalWidthChanged();
 
@@ -199,8 +201,6 @@ void ExpoCell::setPersistentKey(const QString &key)
 ExpoLayout::ExpoLayout(QQuickItem *parent)
     : QQuickItem(parent)
 {
-    m_updateTimer.setSingleShot(true);
-    connect(&m_updateTimer, &QTimer::timeout, this, &ExpoLayout::update);
 }
 
 ExpoLayout::LayoutMode ExpoLayout::mode() const
@@ -245,11 +245,14 @@ void ExpoLayout::setSpacing(int spacing)
     }
 }
 
-void ExpoLayout::update()
+void ExpoLayout::updatePolish()
 {
     if (m_cells.isEmpty()) {
         return;
     }
+
+    qDebug() << "Do this only once";
+
     switch (m_mode) {
     case LayoutClosest:
         calculateWindowTransformationsClosest();
@@ -261,11 +264,13 @@ void ExpoLayout::update()
         calculateWindowTransformationsNatural();
         break;
     }
+    m_organized = true;
+    Q_EMIT organizedChanged();
 }
 
 void ExpoLayout::scheduleUpdate()
 {
-    m_updateTimer.start();
+    polish();
 }
 
 void ExpoLayout::addCell(ExpoCell *cell)
@@ -273,6 +278,7 @@ void ExpoLayout::addCell(ExpoCell *cell)
     Q_ASSERT(!m_cells.contains(cell));
     m_cells.append(cell);
     scheduleUpdate();
+    qDebug();
 }
 
 void ExpoLayout::removeCell(ExpoCell *cell)
@@ -285,6 +291,7 @@ void ExpoLayout::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeo
 {
     if (newGeometry.size() != oldGeometry.size()) {
         scheduleUpdate();
+        qDebug();
     }
     QQuickItem::geometryChanged(newGeometry, oldGeometry);
 }
