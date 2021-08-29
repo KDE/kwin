@@ -32,6 +32,9 @@ public:
 
     QString name() const override;
 
+    int xineramaNumber() const;
+    void setXineramaNumber(int number);
+
     QRect geometry() const override;
     void setGeometry(QRect set);
 
@@ -56,6 +59,7 @@ private:
     QSize m_physicalSize;
     int m_gammaRampSize;
     int m_refreshRate;
+    int m_xineramaNumber = 0;
 
     friend class X11StandalonePlatform;
 };

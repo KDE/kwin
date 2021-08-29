@@ -533,6 +533,7 @@ void X11StandalonePlatform::doUpdateOutputs()
                     output->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
                     output->setGeometry(geometry);
                     output->setRefreshRate(refreshRate * 1000);
+                    output->setXineramaNumber(i);
 
                     QSize physicalSize(outputInfo->mm_width, outputInfo->mm_height);
                     switch (info->rotation) {
@@ -577,6 +578,20 @@ void X11StandalonePlatform::doUpdateOutputs()
         Q_EMIT outputRemoved(output);
         delete output;
     }
+
+    // Make sure that the position of an output in m_outputs matches its xinerama index, there
+    // are X11 protocols that use xinerama indices to identify outputs.
+    std::sort(m_outputs.begin(), m_outputs.end(), [](const AbstractOutput *a, const AbstractOutput *b) {
+        const auto xa = qobject_cast<const X11Output *>(a);
+        if (!xa) {
+            return false;
+        }
+        const auto xb = qobject_cast<const X11Output *>(b);
+        if (!xb) {
+            return true;
+        }
+        return xa->xineramaNumber() < xb->xineramaNumber();
+    });
 
     Q_EMIT screensQueried();
 }

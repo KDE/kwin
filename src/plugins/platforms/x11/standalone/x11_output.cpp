@@ -23,6 +23,16 @@ QString X11Output::name() const
     return m_name;
 }
 
+int X11Output::xineramaNumber() const
+{
+    return m_xineramaNumber;
+}
+
+void X11Output::setXineramaNumber(int number)
+{
+    m_xineramaNumber = number;
+}
+
 QRect X11Output::geometry() const
 {
     return m_geometry;
