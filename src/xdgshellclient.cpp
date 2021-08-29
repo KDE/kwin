@@ -356,7 +356,6 @@ XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)
     : XdgSurfaceClient(shellSurface->xdgSurface())
     , m_shellSurface(shellSurface)
 {
-    setupWindowManagementIntegration();
     setupPlasmaShellIntegration();
     setDesktops({VirtualDesktopManager::self()->currentDesktop()});
 #if KWIN_BUILD_ACTIVITIES
@@ -1237,6 +1236,11 @@ void XdgToplevelClient::initialize()
 
     scheduleConfigure();
     updateColorScheme();
+
+    if (!isLockScreen()) {
+        setupWindowManagementInterface();
+    }
+
     m_isInitialized = true;
 }
 
@@ -1512,15 +1516,6 @@ void XdgToplevelClient::updateClientArea()
     if (hasStrut()) {
         workspace()->updateClientArea();
     }
-}
-
-void XdgToplevelClient::setupWindowManagementIntegration()
-{
-    if (isLockScreen()) {
-        return;
-    }
-    connect(surface(), &SurfaceInterface::mapped,
-            this, &XdgToplevelClient::setupWindowManagementInterface);
 }
 
 void XdgToplevelClient::setupPlasmaShellIntegration()
