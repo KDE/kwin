@@ -256,7 +256,7 @@ bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, int 
     if (gbm_bo_get_handle_for_plane(bo, 0).s32 != -1) {
         *num_fds = gbm_bo_get_plane_count(bo);
         for (uint32_t i = 0; i < *num_fds; i++) {
-            fds[i] = gbm_bo_get_fd_for_plane(bo, i);
+//             fds[i] = gbm_bo_get_fd_for_plane(bo, i);
             if (fds[i] < 0) {
                 qCWarning(KWIN_DRM) << "failed to export gbm_bo as dma-buf:" << strerror(errno);
                 for (uint32_t f = 0; f < i; f++) {
