@@ -14,11 +14,9 @@ FocusScope {
     id: container
     focus: true
 
-    property bool animationEnabled: false
     property bool organized: false
 
     function start() {
-        container.animationEnabled = true;
         container.organized = true;
     }
 
