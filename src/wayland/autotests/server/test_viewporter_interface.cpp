@@ -100,12 +100,10 @@ void TestViewporterInterface::initTestCase()
     registry->setup();
     QVERIFY(allAnnouncedSpy.wait());
 
-    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(),
-                                                    compositorSpy.first().last().value<quint32>(), this);
+    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
     QVERIFY(m_clientCompositor->isValid());
 
-    m_shm = registry->createShmPool(shmSpy.first().first().value<quint32>(),
-                                    shmSpy.first().last().value<quint32>(), this);
+    m_shm = registry->createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>(), this);
     QVERIFY(m_shm->isValid());
 }
 
@@ -168,8 +166,7 @@ void TestViewporterInterface::testCropScale()
     clientViewport->init(m_viewporter->get_viewport(*clientSurface));
 
     // Crop the surface.
-    clientViewport->set_source(wl_fixed_from_double(10), wl_fixed_from_double(10),
-                               wl_fixed_from_double(30), wl_fixed_from_double(20));
+    clientViewport->set_source(wl_fixed_from_double(10), wl_fixed_from_double(10), wl_fixed_from_double(30), wl_fixed_from_double(20));
     clientSurface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(serverSurfaceSizeChangedSpy.wait());
     QCOMPARE(surfaceToBufferMatrixChangedSpy.count(), 2);

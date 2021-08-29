@@ -9,7 +9,6 @@
 
 namespace KWaylandServer
 {
-
 RegionInterface::RegionInterface(wl_resource *resource)
     : QtWaylandServer::wl_region(resource)
 {

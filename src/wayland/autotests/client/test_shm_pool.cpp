@@ -4,17 +4,17 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QtTest>
 #include <QImage>
+#include <QtTest>
 // KWin
-#include "KWayland/Client/compositor.h"
-#include "KWayland/Client/connection_thread.h"
-#include "KWayland/Client/surface.h"
-#include "KWayland/Client/registry.h"
-#include "KWayland/Client/shm_pool.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/surface_interface.h"
+#include "KWayland/Client/compositor.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/shm_pool.h"
+#include "KWayland/Client/surface.h"
 
 class TestShmPool : public QObject
 {
@@ -152,7 +152,7 @@ void TestShmPool::testCreateBufferFromImageWithAlpha()
 {
     QVERIFY(m_shmPool->isValid());
     QImage img(24, 24, QImage::Format_ARGB32_Premultiplied);
-    img.fill(QColor(255,0,0,100)); //red with alpha
+    img.fill(QColor(255, 0, 0, 100)); // red with alpha
     QVERIFY(!img.isNull());
     auto buffer = m_shmPool->createBuffer(img).toStrongRef();
     QVERIFY(buffer);

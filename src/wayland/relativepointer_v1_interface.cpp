@@ -15,7 +15,6 @@
 
 namespace KWaylandServer
 {
-
 static const int s_version = 1;
 
 RelativePointerManagerV1InterfacePrivate::RelativePointerManagerV1InterfacePrivate(Display *display)
@@ -28,12 +27,13 @@ void RelativePointerManagerV1InterfacePrivate::zwp_relative_pointer_manager_v1_d
     wl_resource_destroy(resource->handle);
 }
 
-void RelativePointerManagerV1InterfacePrivate::zwp_relative_pointer_manager_v1_get_relative_pointer(Resource *resource, uint32_t id, struct ::wl_resource *pointer_resource)
+void RelativePointerManagerV1InterfacePrivate::zwp_relative_pointer_manager_v1_get_relative_pointer(Resource *resource,
+                                                                                                    uint32_t id,
+                                                                                                    struct ::wl_resource *pointer_resource)
 {
     PointerInterface *pointer = PointerInterface::get(pointer_resource);
     if (!pointer) {
-        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "invalid pointer");
+        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT, "invalid pointer");
         return;
     }
 
@@ -80,12 +80,13 @@ void RelativePointerV1Interface::sendRelativeMotion(const QSizeF &delta, const Q
     const QList<Resource *> pointerResources = resourceMap().values(focusedClient->client());
     for (Resource *pointerResource : pointerResources) {
         if (pointerResource->client() == focusedClient->client()) {
-            send_relative_motion(pointerResource->handle, microseconds >> 32, microseconds & 0xffffffff,
+            send_relative_motion(pointerResource->handle,
+                                 microseconds >> 32,
+                                 microseconds & 0xffffffff,
                                  wl_fixed_from_double(delta.width()),
                                  wl_fixed_from_double(delta.height()),
                                  wl_fixed_from_double(deltaNonAccelerated.width()),
                                  wl_fixed_from_double(deltaNonAccelerated.height()));
-
         }
     }
 }

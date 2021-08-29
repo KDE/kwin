@@ -3,13 +3,12 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "dpms_interface_p.h"
 #include "display.h"
+#include "dpms_interface_p.h"
 #include "output_interface.h"
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 DpmsManagerInterfacePrivate::DpmsManagerInterfacePrivate(DpmsManagerInterface *_q, Display *display)
@@ -47,18 +46,14 @@ DpmsInterface::DpmsInterface(OutputInterface *output, wl_resource *resource)
     , QtWaylandServer::org_kde_kwin_dpms(resource)
     , output(output)
 {
-    connect(output, &OutputInterface::dpmsSupportedChanged, this,
-        [this] {
-            sendSupported();
-            sendDone();
-        }
-    );
-    connect(output, &OutputInterface::dpmsModeChanged, this,
-        [this] {
-            sendMode();
-            sendDone();
-        }
-    );
+    connect(output, &OutputInterface::dpmsSupportedChanged, this, [this] {
+        sendSupported();
+        sendDone();
+    });
+    connect(output, &OutputInterface::dpmsModeChanged, this, [this] {
+        sendMode();
+        sendDone();
+    });
 }
 
 DpmsInterface::~DpmsInterface() = default;

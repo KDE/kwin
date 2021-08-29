@@ -30,37 +30,55 @@ using namespace KWaylandServer;
 class LayerShellV1 : public QtWayland::zwlr_layer_shell_v1
 {
 public:
-    ~LayerShellV1() override { destroy(); }
+    ~LayerShellV1() override
+    {
+        destroy();
+    }
 };
 
 class LayerSurfaceV1 : public QtWayland::zwlr_layer_surface_v1
 {
 public:
-    ~LayerSurfaceV1() override { destroy(); }
+    ~LayerSurfaceV1() override
+    {
+        destroy();
+    }
 };
 
 class XdgShell : public QtWayland::xdg_wm_base
 {
 public:
-    ~XdgShell() { destroy(); }
+    ~XdgShell()
+    {
+        destroy();
+    }
 };
 
 class XdgSurface : public QtWayland::xdg_surface
 {
 public:
-    ~XdgSurface() { destroy(); }
+    ~XdgSurface()
+    {
+        destroy();
+    }
 };
 
 class XdgPositioner : public QtWayland::xdg_positioner
 {
 public:
-    ~XdgPositioner() { destroy(); }
+    ~XdgPositioner()
+    {
+        destroy();
+    }
 };
 
 class XdgPopup : public QtWayland::xdg_popup
 {
 public:
-    ~XdgPopup() { destroy(); }
+    ~XdgPopup()
+    {
+        destroy();
+    }
 };
 
 class TestLayerShellV1Interface : public QObject
@@ -147,8 +165,7 @@ void TestLayerShellV1Interface::initTestCase()
     registry->setup();
     QVERIFY(allAnnouncedSpy.wait());
 
-    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(),
-                                                    compositorSpy.first().last().value<quint32>(), this);
+    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
     QVERIFY(m_clientCompositor->isValid());
 }
 
@@ -188,9 +205,7 @@ void TestLayerShellV1Interface::testDesiredSize()
 
     // Create a test wlr_layer_surface_v1 object.
     QScopedPointer<LayerSurfaceV1> clientShellSurface(new LayerSurfaceV1);
-    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr,
-                                                                   LayerShellV1::layer_top,
-                                                                   QStringLiteral("test")));
+    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr, LayerShellV1::layer_top, QStringLiteral("test")));
     QSignalSpy layerSurfaceCreatedSpy(m_serverLayerShell, &LayerShellV1Interface::surfaceCreated);
     QVERIFY(layerSurfaceCreatedSpy.isValid());
     QVERIFY(layerSurfaceCreatedSpy.wait());
@@ -219,9 +234,7 @@ void TestLayerShellV1Interface::testScope()
 
     // Create a test wlr_layer_surface_v1 object.
     QScopedPointer<LayerSurfaceV1> clientShellSurface(new LayerSurfaceV1);
-    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr,
-                                                                   LayerShellV1::layer_top,
-                                                                   QStringLiteral("foobar")));
+    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr, LayerShellV1::layer_top, QStringLiteral("foobar")));
     clientShellSurface->set_size(100, 50);
     QSignalSpy layerSurfaceCreatedSpy(m_serverLayerShell, &LayerShellV1Interface::surfaceCreated);
     QVERIFY(layerSurfaceCreatedSpy.isValid());
@@ -237,9 +250,9 @@ void TestLayerShellV1Interface::testAnchor_data()
     QTest::addColumn<int>("anchor");
     QTest::addColumn<Qt::Edge>("expected");
 
-    QTest::addRow("left")   << int(QtWayland::zwlr_layer_surface_v1::anchor_left)   << Qt::LeftEdge;
-    QTest::addRow("right")  << int(QtWayland::zwlr_layer_surface_v1::anchor_right)  << Qt::RightEdge;
-    QTest::addRow("top")    << int(QtWayland::zwlr_layer_surface_v1::anchor_top)    << Qt::TopEdge;
+    QTest::addRow("left") << int(QtWayland::zwlr_layer_surface_v1::anchor_left) << Qt::LeftEdge;
+    QTest::addRow("right") << int(QtWayland::zwlr_layer_surface_v1::anchor_right) << Qt::RightEdge;
+    QTest::addRow("top") << int(QtWayland::zwlr_layer_surface_v1::anchor_top) << Qt::TopEdge;
     QTest::addRow("bottom") << int(QtWayland::zwlr_layer_surface_v1::anchor_bottom) << Qt::BottomEdge;
 }
 
@@ -255,9 +268,7 @@ void TestLayerShellV1Interface::testAnchor()
 
     // Create a test wlr_layer_surface_v1 object.
     QScopedPointer<LayerSurfaceV1> clientShellSurface(new LayerSurfaceV1);
-    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr,
-                                                                   LayerShellV1::layer_top,
-                                                                   QStringLiteral("test")));
+    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr, LayerShellV1::layer_top, QStringLiteral("test")));
     QSignalSpy layerSurfaceCreatedSpy(m_serverLayerShell, &LayerShellV1Interface::surfaceCreated);
     QVERIFY(layerSurfaceCreatedSpy.isValid());
     QVERIFY(layerSurfaceCreatedSpy.wait());
@@ -290,9 +301,7 @@ void TestLayerShellV1Interface::testMargins()
 
     // Create a test wlr_layer_surface_v1 object.
     QScopedPointer<LayerSurfaceV1> clientShellSurface(new LayerSurfaceV1);
-    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr,
-                                                                   LayerShellV1::layer_top,
-                                                                   QStringLiteral("test")));
+    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr, LayerShellV1::layer_top, QStringLiteral("test")));
     QSignalSpy layerSurfaceCreatedSpy(m_serverLayerShell, &LayerShellV1Interface::surfaceCreated);
     QVERIFY(layerSurfaceCreatedSpy.isValid());
     QVERIFY(layerSurfaceCreatedSpy.wait());
@@ -322,9 +331,7 @@ void TestLayerShellV1Interface::testExclusiveZone()
 
     // Create a test wlr_layer_surface_v1 object.
     QScopedPointer<LayerSurfaceV1> clientShellSurface(new LayerSurfaceV1);
-    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr,
-                                                                   LayerShellV1::layer_top,
-                                                                   QStringLiteral("test")));
+    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr, LayerShellV1::layer_top, QStringLiteral("test")));
     QSignalSpy layerSurfaceCreatedSpy(m_serverLayerShell, &LayerShellV1Interface::surfaceCreated);
     QVERIFY(layerSurfaceCreatedSpy.isValid());
     QVERIFY(layerSurfaceCreatedSpy.wait());
@@ -347,43 +354,33 @@ void TestLayerShellV1Interface::testExclusiveEdge_data()
     QTest::addColumn<int>("anchor");
     QTest::addColumn<Qt::Edge>("expected");
 
-    QTest::addRow("left (singular)")   << int(QtWayland::zwlr_layer_surface_v1::anchor_left)
-                                       << Qt::LeftEdge;
+    QTest::addRow("left (singular)") << int(QtWayland::zwlr_layer_surface_v1::anchor_left) << Qt::LeftEdge;
 
-    QTest::addRow("left (triplet)")    << (QtWayland::zwlr_layer_surface_v1::anchor_bottom |
-                                           QtWayland::zwlr_layer_surface_v1::anchor_left |
-                                           QtWayland::zwlr_layer_surface_v1::anchor_top )
-                                       << Qt::LeftEdge;
+    QTest::addRow("left (triplet)") << (QtWayland::zwlr_layer_surface_v1::anchor_bottom | QtWayland::zwlr_layer_surface_v1::anchor_left
+                                        | QtWayland::zwlr_layer_surface_v1::anchor_top)
+                                    << Qt::LeftEdge;
 
-    QTest::addRow("right (singular)")  << int(QtWayland::zwlr_layer_surface_v1::anchor_right)
-                                       << Qt::RightEdge;
+    QTest::addRow("right (singular)") << int(QtWayland::zwlr_layer_surface_v1::anchor_right) << Qt::RightEdge;
 
-    QTest::addRow("right (triplet)")   << (QtWayland::zwlr_layer_surface_v1::anchor_top |
-                                           QtWayland::zwlr_layer_surface_v1::anchor_right |
-                                           QtWayland::zwlr_layer_surface_v1::anchor_bottom)
-                                       << Qt::RightEdge;
+    QTest::addRow("right (triplet)") << (QtWayland::zwlr_layer_surface_v1::anchor_top | QtWayland::zwlr_layer_surface_v1::anchor_right
+                                         | QtWayland::zwlr_layer_surface_v1::anchor_bottom)
+                                     << Qt::RightEdge;
 
-    QTest::addRow("top (singular)")    << int(QtWayland::zwlr_layer_surface_v1::anchor_top)
-                                       << Qt::TopEdge;
+    QTest::addRow("top (singular)") << int(QtWayland::zwlr_layer_surface_v1::anchor_top) << Qt::TopEdge;
 
-    QTest::addRow("top (triplet)")     << (QtWayland::zwlr_layer_surface_v1::anchor_left |
-                                           QtWayland::zwlr_layer_surface_v1::anchor_top |
-                                           QtWayland::zwlr_layer_surface_v1::anchor_right)
-                                       << Qt::TopEdge;
+    QTest::addRow("top (triplet)") << (QtWayland::zwlr_layer_surface_v1::anchor_left | QtWayland::zwlr_layer_surface_v1::anchor_top
+                                       | QtWayland::zwlr_layer_surface_v1::anchor_right)
+                                   << Qt::TopEdge;
 
-    QTest::addRow("bottom (singular)") << int(QtWayland::zwlr_layer_surface_v1::anchor_bottom)
-                                       << Qt::BottomEdge;
+    QTest::addRow("bottom (singular)") << int(QtWayland::zwlr_layer_surface_v1::anchor_bottom) << Qt::BottomEdge;
 
-    QTest::addRow("bottom (triplet)")  << (QtWayland::zwlr_layer_surface_v1::anchor_right |
-                                           QtWayland::zwlr_layer_surface_v1::anchor_bottom |
-                                           QtWayland::zwlr_layer_surface_v1::anchor_left)
-                                       << Qt::BottomEdge;
+    QTest::addRow("bottom (triplet)") << (QtWayland::zwlr_layer_surface_v1::anchor_right | QtWayland::zwlr_layer_surface_v1::anchor_bottom
+                                          | QtWayland::zwlr_layer_surface_v1::anchor_left)
+                                      << Qt::BottomEdge;
 
-    QTest::addRow("all")               << (QtWayland::zwlr_layer_surface_v1::anchor_left |
-                                           QtWayland::zwlr_layer_surface_v1::anchor_right |
-                                           QtWayland::zwlr_layer_surface_v1::anchor_top |
-                                           QtWayland::zwlr_layer_surface_v1::anchor_bottom)
-                                       << Qt::Edge();
+    QTest::addRow("all") << (QtWayland::zwlr_layer_surface_v1::anchor_left | QtWayland::zwlr_layer_surface_v1::anchor_right
+                             | QtWayland::zwlr_layer_surface_v1::anchor_top | QtWayland::zwlr_layer_surface_v1::anchor_bottom)
+                         << Qt::Edge();
 }
 
 void TestLayerShellV1Interface::testExclusiveEdge()
@@ -398,9 +395,7 @@ void TestLayerShellV1Interface::testExclusiveEdge()
 
     // Create a test wlr_layer_surface_v1 object.
     QScopedPointer<LayerSurfaceV1> clientShellSurface(new LayerSurfaceV1);
-    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr,
-                                                                   LayerShellV1::layer_top,
-                                                                   QStringLiteral("test")));
+    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr, LayerShellV1::layer_top, QStringLiteral("test")));
     QSignalSpy layerSurfaceCreatedSpy(m_serverLayerShell, &LayerShellV1Interface::surfaceCreated);
     QVERIFY(layerSurfaceCreatedSpy.isValid());
     QVERIFY(layerSurfaceCreatedSpy.wait());
@@ -427,14 +422,10 @@ void TestLayerShellV1Interface::testLayer_data()
     QTest::addColumn<int>("layer");
     QTest::addColumn<LayerSurfaceV1Interface::Layer>("expected");
 
-    QTest::addRow("overlay")    << int(QtWayland::zwlr_layer_shell_v1::layer_overlay)
-                                << LayerSurfaceV1Interface::OverlayLayer;
-    QTest::addRow("top")        << int(QtWayland::zwlr_layer_shell_v1::layer_top)
-                                << LayerSurfaceV1Interface::TopLayer;
-    QTest::addRow("bottom")     << int(QtWayland::zwlr_layer_shell_v1::layer_bottom)
-                                << LayerSurfaceV1Interface::BottomLayer;
-    QTest::addRow("background") << int(QtWayland::zwlr_layer_shell_v1::layer_background)
-                                << LayerSurfaceV1Interface::BackgroundLayer;
+    QTest::addRow("overlay") << int(QtWayland::zwlr_layer_shell_v1::layer_overlay) << LayerSurfaceV1Interface::OverlayLayer;
+    QTest::addRow("top") << int(QtWayland::zwlr_layer_shell_v1::layer_top) << LayerSurfaceV1Interface::TopLayer;
+    QTest::addRow("bottom") << int(QtWayland::zwlr_layer_shell_v1::layer_bottom) << LayerSurfaceV1Interface::BottomLayer;
+    QTest::addRow("background") << int(QtWayland::zwlr_layer_shell_v1::layer_background) << LayerSurfaceV1Interface::BackgroundLayer;
 }
 
 void TestLayerShellV1Interface::testLayer()
@@ -449,9 +440,7 @@ void TestLayerShellV1Interface::testLayer()
 
     // Create a test wlr_layer_surface_v1 object.
     QScopedPointer<LayerSurfaceV1> clientShellSurface(new LayerSurfaceV1);
-    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr,
-                                                                   LayerShellV1::layer_top,
-                                                                   QStringLiteral("test")));
+    clientShellSurface->init(m_clientLayerShell->get_layer_surface(*clientSurface, nullptr, LayerShellV1::layer_top, QStringLiteral("test")));
     QSignalSpy layerSurfaceCreatedSpy(m_serverLayerShell, &LayerShellV1Interface::surfaceCreated);
     QVERIFY(layerSurfaceCreatedSpy.isValid());
     QVERIFY(layerSurfaceCreatedSpy.wait());
@@ -484,9 +473,7 @@ void TestLayerShellV1Interface::testPopup()
 
     // Create a test wlr_layer_surface_v1 object for the panel..
     QScopedPointer<LayerSurfaceV1> clientPanelShellSurface(new LayerSurfaceV1);
-    clientPanelShellSurface->init(m_clientLayerShell->get_layer_surface(*clientPanelSurface, nullptr,
-                                                                        LayerShellV1::layer_top,
-                                                                        QStringLiteral("panel")));
+    clientPanelShellSurface->init(m_clientLayerShell->get_layer_surface(*clientPanelSurface, nullptr, LayerShellV1::layer_top, QStringLiteral("panel")));
     clientPanelShellSurface->set_size(100, 50);
     QSignalSpy layerSurfaceCreatedSpy(m_serverLayerShell, &LayerShellV1Interface::surfaceCreated);
     QVERIFY(layerSurfaceCreatedSpy.isValid());

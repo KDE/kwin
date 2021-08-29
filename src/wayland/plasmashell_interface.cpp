@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 6;
 static QList<PlasmaShellSurfaceInterface *> s_shellSurfaces;
 
@@ -23,7 +22,7 @@ public:
     PlasmaShellInterfacePrivate(PlasmaShellInterface *q, Display *display);
 
 private:
-    void org_kde_plasma_shell_get_surface(Resource * resource, uint32_t id, struct ::wl_resource *surface) override;
+    void org_kde_plasma_shell_get_surface(Resource *resource, uint32_t id, struct ::wl_resource *surface) override;
     PlasmaShellInterface *q;
 };
 
@@ -36,7 +35,7 @@ PlasmaShellInterfacePrivate::PlasmaShellInterfacePrivate(PlasmaShellInterface *_
 class PlasmaShellSurfaceInterfacePrivate : public QtWaylandServer::org_kde_plasma_surface
 {
 public:
-    PlasmaShellSurfaceInterfacePrivate(PlasmaShellSurfaceInterface *q, SurfaceInterface *surface, wl_resource * resource);
+    PlasmaShellSurfaceInterfacePrivate(PlasmaShellSurfaceInterface *q, SurfaceInterface *surface, wl_resource *resource);
 
     QPointer<SurfaceInterface> surface;
     PlasmaShellSurfaceInterface *q;
@@ -70,7 +69,9 @@ PlasmaShellInterface::PlasmaShellInterface(Display *display, QObject *parent)
 
 PlasmaShellInterface::~PlasmaShellInterface() = default;
 
-void PlasmaShellInterfacePrivate::org_kde_plasma_shell_get_surface(QtWaylandServer::org_kde_plasma_shell::Resource * resource, uint32_t id, struct ::wl_resource * surface)
+void PlasmaShellInterfacePrivate::org_kde_plasma_shell_get_surface(QtWaylandServer::org_kde_plasma_shell::Resource *resource,
+                                                                   uint32_t id,
+                                                                   struct ::wl_resource *surface)
 {
     SurfaceInterface *s = SurfaceInterface::get(surface);
     if (!s) {
@@ -112,7 +113,8 @@ PlasmaShellSurfaceInterface::PlasmaShellSurfaceInterface(SurfaceInterface *surfa
 
 PlasmaShellSurfaceInterface::~PlasmaShellSurfaceInterface() = default;
 
-SurfaceInterface *PlasmaShellSurfaceInterface::surface() const {
+SurfaceInterface *PlasmaShellSurfaceInterface::surface() const
+{
     return d->surface;
 }
 
@@ -226,7 +228,9 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_skip_switche
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_panel_auto_hide_hide(Resource *resource)
 {
-    if (m_role != PlasmaShellSurfaceInterface::Role::Panel || (m_panelBehavior != PlasmaShellSurfaceInterface::PanelBehavior::AutoHide && m_panelBehavior != PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover)) {
+    if (m_role != PlasmaShellSurfaceInterface::Role::Panel
+        || (m_panelBehavior != PlasmaShellSurfaceInterface::PanelBehavior::AutoHide
+            && m_panelBehavior != PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover)) {
         wl_resource_post_error(resource->handle, error_panel_not_auto_hide, "Not an auto hide panel");
         return;
     }

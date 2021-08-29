@@ -6,14 +6,14 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "KWayland/Client/connection_thread.h"
-#include "KWayland/Client/event_queue.h"
-#include "KWayland/Client/dpms.h"
-#include "KWayland/Client/output.h"
-#include "KWayland/Client/registry.h"
 #include "../../src/server/display.h"
 #include "../../src/server/dpms_interface.h"
 #include "../../src/server/output_interface.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/dpms.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/output.h"
+#include "KWayland/Client/registry.h"
 // Wayland
 #include <wayland-client-protocol.h>
 
@@ -338,11 +338,11 @@ void TestWaylandOutput::testTransform_data()
     QTest::addColumn<KWayland::Client::Output::Transform>("expected");
     QTest::addColumn<KWaylandServer::OutputInterface::Transform>("actual");
 
-    QTest::newRow("90")          << Output::Transform::Rotated90  << OutputInterface::Transform::Rotated90;
-    QTest::newRow("180")         << Output::Transform::Rotated180 << OutputInterface::Transform::Rotated180;
-    QTest::newRow("270")         << Output::Transform::Rotated270 << OutputInterface::Transform::Rotated270;
-    QTest::newRow("Flipped")     << Output::Transform::Flipped    << OutputInterface::Transform::Flipped;
-    QTest::newRow("Flipped 90")  << Output::Transform::Flipped90  << OutputInterface::Transform::Flipped90;
+    QTest::newRow("90") << Output::Transform::Rotated90 << OutputInterface::Transform::Rotated90;
+    QTest::newRow("180") << Output::Transform::Rotated180 << OutputInterface::Transform::Rotated180;
+    QTest::newRow("270") << Output::Transform::Rotated270 << OutputInterface::Transform::Rotated270;
+    QTest::newRow("Flipped") << Output::Transform::Flipped << OutputInterface::Transform::Flipped;
+    QTest::newRow("Flipped 90") << Output::Transform::Flipped90 << OutputInterface::Transform::Flipped90;
     QTest::newRow("Flipped 180") << Output::Transform::Flipped180 << OutputInterface::Transform::Flipped180;
     QTest::newRow("Flipped 280") << Output::Transform::Flipped270 << OutputInterface::Transform::Flipped270;
 }
@@ -433,9 +433,11 @@ void TestWaylandOutput::testDpms()
     QVERIFY(announced.wait());
     QCOMPARE(dpmsAnnouncedSpy.count(), 1);
 
-    Output *output = registry.createOutput(registry.interface(Registry::Interface::Output).name, registry.interface(Registry::Interface::Output).version, &registry);
+    Output *output =
+        registry.createOutput(registry.interface(Registry::Interface::Output).name, registry.interface(Registry::Interface::Output).version, &registry);
 
-    DpmsManager *dpmsManager = registry.createDpmsManager(dpmsAnnouncedSpy.first().first().value<quint32>(), dpmsAnnouncedSpy.first().last().value<quint32>(), &registry);
+    DpmsManager *dpmsManager =
+        registry.createDpmsManager(dpmsAnnouncedSpy.first().first().value<quint32>(), dpmsAnnouncedSpy.first().last().value<quint32>(), &registry);
     QVERIFY(dpmsManager->isValid());
 
     Dpms *dpms = dpmsManager->getDpms(output, &registry);
@@ -528,9 +530,11 @@ void TestWaylandOutput::testDpmsRequestMode()
     QVERIFY(announced.wait());
     QCOMPARE(dpmsAnnouncedSpy.count(), 1);
 
-    Output *output = registry.createOutput(registry.interface(Registry::Interface::Output).name, registry.interface(Registry::Interface::Output).version, &registry);
+    Output *output =
+        registry.createOutput(registry.interface(Registry::Interface::Output).name, registry.interface(Registry::Interface::Output).version, &registry);
 
-    DpmsManager *dpmsManager = registry.createDpmsManager(dpmsAnnouncedSpy.first().first().value<quint32>(), dpmsAnnouncedSpy.first().last().value<quint32>(), &registry);
+    DpmsManager *dpmsManager =
+        registry.createDpmsManager(dpmsAnnouncedSpy.first().first().value<quint32>(), dpmsAnnouncedSpy.first().last().value<quint32>(), &registry);
     QVERIFY(dpmsManager->isValid());
 
     Dpms *dpms = dpmsManager->getDpms(output, &registry);

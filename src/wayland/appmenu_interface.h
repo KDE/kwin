@@ -12,7 +12,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class Display;
 class SurfaceInterface;
 class AppMenuInterface;
@@ -37,13 +36,13 @@ public:
      * Returns any existing appMenu for a given surface
      * This returns a null pointer if no AppMenuInterface exists.
      */
-    AppMenuInterface* appMenuForSurface(SurfaceInterface *);
+    AppMenuInterface *appMenuForSurface(SurfaceInterface *);
 
 Q_SIGNALS:
     /**
      * Emitted whenever a new AppmenuInterface is created.
      */
-    void appMenuCreated(KWaylandServer::AppMenuInterface*);
+    void appMenuCreated(KWaylandServer::AppMenuInterface *);
 
 private:
     QScopedPointer<AppMenuManagerInterfacePrivate> d;
@@ -90,7 +89,6 @@ private:
     friend class AppMenuManagerInterfacePrivate;
 
     QScopedPointer<AppMenuInterfacePrivate> d;
-
 };
 
 }

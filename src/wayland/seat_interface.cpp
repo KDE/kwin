@@ -5,26 +5,26 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "abstract_data_source.h"
-#include "display_p.h"
 #include "seat_interface.h"
-#include "seat_interface_p.h"
-#include "display.h"
+#include "abstract_data_source.h"
+#include "datacontroldevice_v1_interface.h"
+#include "datacontrolsource_v1_interface.h"
 #include "datadevice_interface.h"
 #include "datadevice_interface_p.h"
 #include "datasource_interface.h"
-#include "datacontroldevice_v1_interface.h"
-#include "datacontrolsource_v1_interface.h"
+#include "display.h"
+#include "display_p.h"
 #include "keyboard_interface.h"
 #include "keyboard_interface_p.h"
 #include "logging.h"
-#include "pointerconstraints_v1_interface.h"
-#include "pointergestures_v1_interface_p.h"
 #include "pointer_interface.h"
 #include "pointer_interface_p.h"
+#include "pointerconstraints_v1_interface.h"
+#include "pointergestures_v1_interface_p.h"
 #include "primaryselectiondevice_v1_interface.h"
 #include "primaryselectionsource_v1_interface.h"
 #include "relativepointer_v1_interface_p.h"
+#include "seat_interface_p.h"
 #include "surface_interface.h"
 #include "textinput_v2_interface_p.h"
 #include "textinput_v3_interface_p.h"
@@ -40,7 +40,6 @@
 
 namespace KWaylandServer
 {
-
 static const int s_version = 7;
 
 SeatInterfacePrivate *SeatInterfacePrivate::get(SeatInterface *seat)
@@ -166,58 +165,48 @@ void SeatInterfacePrivate::registerDataDevice(DataDeviceInterface *dataDevice)
         globalKeyboard.focus.selections.removeOne(dataDevice);
     };
     QObject::connect(dataDevice, &QObject::destroyed, q, dataDeviceCleanup);
-    QObject::connect(dataDevice, &DataDeviceInterface::selectionChanged, q,
-        [this, dataDevice] {
-            updateSelection(dataDevice);
+    QObject::connect(dataDevice, &DataDeviceInterface::selectionChanged, q, [this, dataDevice] {
+        updateSelection(dataDevice);
+    });
+    QObject::connect(dataDevice, &DataDeviceInterface::selectionCleared, q, [this, dataDevice] {
+        updateSelection(dataDevice);
+    });
+    QObject::connect(dataDevice, &DataDeviceInterface::dragStarted, q, [this, dataDevice] {
+        const auto dragSerial = dataDevice->dragImplicitGrabSerial();
+        if (q->hasImplicitPointerGrab(dragSerial)) {
+            drag.mode = Drag::Mode::Pointer;
+            drag.transformation = globalPointer.focus.transformation;
+        } else if (q->hasImplicitTouchGrab(dragSerial)) {
+            drag.mode = Drag::Mode::Touch;
+            // TODO: touch transformation
+        } else {
+            // no implicit grab, abort drag
+            return;
         }
-    );
-    QObject::connect(dataDevice, &DataDeviceInterface::selectionCleared, q,
-        [this, dataDevice] {
-            updateSelection(dataDevice);
+        auto *originSurface = dataDevice->origin();
+        const bool proxied = originSurface->dataProxy();
+        if (!proxied) {
+            // origin surface
+            drag.target = dataDevice;
+            drag.surface = originSurface;
+            // TODO: transformation needs to be either pointer or touch
+            drag.transformation = globalPointer.focus.transformation;
         }
-    );
-    QObject::connect(dataDevice, &DataDeviceInterface::dragStarted, q,
-        [this, dataDevice] {
-            const auto dragSerial = dataDevice->dragImplicitGrabSerial();
-            if (q->hasImplicitPointerGrab(dragSerial)) {
-                drag.mode = Drag::Mode::Pointer;
-                drag.transformation = globalPointer.focus.transformation;
-            } else if (q->hasImplicitTouchGrab(dragSerial)) {
-                drag.mode = Drag::Mode::Touch;
-                // TODO: touch transformation
-            } else {
-                // no implicit grab, abort drag
-                return;
-            }
-            auto *originSurface = dataDevice->origin();
-            const bool proxied = originSurface->dataProxy();
-            if (!proxied) {
-                // origin surface
-                drag.target = dataDevice;
-                drag.surface = originSurface;
-                // TODO: transformation needs to be either pointer or touch
-                drag.transformation = globalPointer.focus.transformation;
-            }
-            drag.source = dataDevice;
-            drag.destroyConnection = QObject::connect(dataDevice, &DataDeviceInterface::aboutToBeDestroyed, q,
-                [this] {
-                    cancelDrag(display->nextSerial());
-                }
-            );
-            if (dataDevice->dragSource()) {
-                drag.dragSourceDestroyConnection = QObject::connect(dataDevice->dragSource(), &AbstractDataSource::aboutToBeDestroyed, q,
-                    [this] {
-                        cancelDrag(display->nextSerial());
-                    }
-                );
-            } else {
-                drag.dragSourceDestroyConnection = QMetaObject::Connection();
-            }
-            dataDevice->updateDragTarget(proxied ? nullptr : originSurface, dataDevice->dragImplicitGrabSerial());
-            Q_EMIT q->dragStarted();
-            Q_EMIT q->dragSurfaceChanged();
+        drag.source = dataDevice;
+        drag.destroyConnection = QObject::connect(dataDevice, &DataDeviceInterface::aboutToBeDestroyed, q, [this] {
+            cancelDrag(display->nextSerial());
+        });
+        if (dataDevice->dragSource()) {
+            drag.dragSourceDestroyConnection = QObject::connect(dataDevice->dragSource(), &AbstractDataSource::aboutToBeDestroyed, q, [this] {
+                cancelDrag(display->nextSerial());
+            });
+        } else {
+            drag.dragSourceDestroyConnection = QMetaObject::Connection();
         }
-    );
+        dataDevice->updateDragTarget(proxied ? nullptr : originSurface, dataDevice->dragImplicitGrabSerial());
+        Q_EMIT q->dragStarted();
+        Q_EMIT q->dragSurfaceChanged();
+    });
     // is the new DataDevice for the current keyoard focus?
     if (globalKeyboard.focus.surface) {
         // same client?
@@ -239,40 +228,33 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
     };
     QObject::connect(dataDevice, &QObject::destroyed, q, dataDeviceCleanup);
 
-    QObject::connect(dataDevice, &DataControlDeviceV1Interface::selectionChanged, q,
-                     [this, dataDevice] {
+    QObject::connect(dataDevice, &DataControlDeviceV1Interface::selectionChanged, q, [this, dataDevice] {
         // Special klipper workaround to avoid a race
         // If the mimetype x-kde-onlyReplaceEmpty is set, and we've had another update in the meantime, do nothing
         // See https://github.com/swaywm/wlr-protocols/issues/92
-        if  (dataDevice->selection() && dataDevice->selection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty")) &&
-             currentSelection) {
+        if (dataDevice->selection() && dataDevice->selection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty")) && currentSelection) {
             dataDevice->selection()->cancel();
             return;
         }
         q->setSelection(dataDevice->selection());
-    }
-    );
+    });
 
-    QObject::connect(dataDevice, &DataControlDeviceV1Interface::selectionCleared, q,
-        [this, dataDevice] {
-            Q_UNUSED(dataDevice);
-            q->setSelection(nullptr);
-        }
-    );
+    QObject::connect(dataDevice, &DataControlDeviceV1Interface::selectionCleared, q, [this, dataDevice] {
+        Q_UNUSED(dataDevice);
+        q->setSelection(nullptr);
+    });
 
-    QObject::connect(dataDevice, &DataControlDeviceV1Interface::primarySelectionChanged, q,
-                     [this, dataDevice] {
+    QObject::connect(dataDevice, &DataControlDeviceV1Interface::primarySelectionChanged, q, [this, dataDevice] {
         // Special klipper workaround to avoid a race
         // If the mimetype x-kde-onlyReplaceEmpty is set, and we've had another update in the meantime, do nothing
         // See https://github.com/swaywm/wlr-protocols/issues/92
-        if  (dataDevice->selection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty")) &&
-             currentPrimarySelection) {
+        if (dataDevice->selection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty"))
+            && currentPrimarySelection) {
             dataDevice->primarySelection()->cancel();
             return;
         }
         q->setPrimarySelection(dataDevice->primarySelection());
-    }
-    );
+    });
 
     if (currentSelection) {
         dataDevice->sendSelection(currentSelection);
@@ -292,16 +274,12 @@ void SeatInterfacePrivate::registerPrimarySelectionDevice(PrimarySelectionDevice
         globalKeyboard.focus.primarySelections.removeOne(primarySelectionDevice);
     };
     QObject::connect(primarySelectionDevice, &QObject::destroyed, q, dataDeviceCleanup);
-    QObject::connect(primarySelectionDevice, &PrimarySelectionDeviceV1Interface::selectionChanged, q,
-        [this, primarySelectionDevice] {
-            updatePrimarySelection(primarySelectionDevice);
-        }
-    );
-    QObject::connect(primarySelectionDevice, &PrimarySelectionDeviceV1Interface::selectionCleared, q,
-        [this, primarySelectionDevice] {
-            updatePrimarySelection(primarySelectionDevice);
-        }
-    );
+    QObject::connect(primarySelectionDevice, &PrimarySelectionDeviceV1Interface::selectionChanged, q, [this, primarySelectionDevice] {
+        updatePrimarySelection(primarySelectionDevice);
+    });
+    QObject::connect(primarySelectionDevice, &PrimarySelectionDeviceV1Interface::selectionCleared, q, [this, primarySelectionDevice] {
+        updatePrimarySelection(primarySelectionDevice);
+    });
     // is the new DataDevice for the current keyoard focus?
     if (globalKeyboard.focus.surface) {
         // same client?
@@ -338,8 +316,7 @@ void SeatInterfacePrivate::endDrag(quint32 serial)
             dragTargetDevice->drop();
             dragSource->dropPerformed();
         } else {
-            if (wl_resource_get_version(dragSource->resource()) >=
-                    WL_DATA_SOURCE_DND_FINISHED_SINCE_VERSION) {
+            if (wl_resource_get_version(dragSource->resource()) >= WL_DATA_SOURCE_DND_FINISHED_SINCE_VERSION) {
                 dragSource->cancel();
             }
         }
@@ -561,7 +538,6 @@ void SeatInterface::setDragTarget(SurfaceInterface *surface, const QPointF &glob
         d->drag.target->updateDragTarget(nullptr, serial);
     }
 
-
     // TODO: technically we can have mulitple data devices
     // and we should send the drag to all of them, but that seems overly complicated
     // in practice so far the only case for mulitple data devices is for clipboard overriding
@@ -573,8 +549,7 @@ void SeatInterface::setDragTarget(SurfaceInterface *surface, const QPointF &glob
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
         notifyPointerMotion(globalPosition);
         notifyPointerFrame();
-    } else if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch &&
-               d->globalTouch.focus.firstTouchPos != globalPosition) {
+    } else if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && d->globalTouch.focus.firstTouchPos != globalPosition) {
         notifyTouchMotion(d->globalTouch.ids.first(), globalPosition);
     }
     if (d->drag.target) {
@@ -596,7 +571,6 @@ void SeatInterface::setDragTarget(SurfaceInterface *surface, const QMatrix4x4 &i
         Q_ASSERT(d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch);
         setDragTarget(surface, d->globalTouch.focus.firstTouchPos, inputTransformation);
     }
-
 }
 
 SurfaceInterface *SeatInterface::focusedPointerSurface() const
@@ -693,11 +667,11 @@ static quint32 qtToWaylandButton(Qt::MouseButton button)
         {Qt::LeftButton, BTN_LEFT},
         {Qt::RightButton, BTN_RIGHT},
         {Qt::MiddleButton, BTN_MIDDLE},
-        {Qt::ExtraButton1, BTN_BACK},    // note: QtWayland maps BTN_SIDE
+        {Qt::ExtraButton1, BTN_BACK}, // note: QtWayland maps BTN_SIDE
         {Qt::ExtraButton2, BTN_FORWARD}, // note: QtWayland maps BTN_EXTRA
-        {Qt::ExtraButton3, BTN_TASK},    // note: QtWayland maps BTN_FORWARD
-        {Qt::ExtraButton4, BTN_EXTRA},   // note: QtWayland maps BTN_BACK
-        {Qt::ExtraButton5, BTN_SIDE},    // note: QtWayland maps BTN_TASK
+        {Qt::ExtraButton3, BTN_TASK}, // note: QtWayland maps BTN_FORWARD
+        {Qt::ExtraButton4, BTN_EXTRA}, // note: QtWayland maps BTN_BACK
+        {Qt::ExtraButton5, BTN_SIDE}, // note: QtWayland maps BTN_TASK
         {Qt::ExtraButton6, BTN_TASK + 1},
         {Qt::ExtraButton7, BTN_TASK + 2},
         {Qt::ExtraButton8, BTN_TASK + 3},
@@ -1125,8 +1099,7 @@ void SeatInterface::notifyTouchUp(qint32 id)
     }
     Q_ASSERT(d->globalTouch.ids.contains(id));
     const qint32 serial = d->display->nextSerial();
-    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch &&
-            d->drag.source->dragImplicitGrabSerial() == d->globalTouch.ids.value(id)) {
+    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && d->drag.source->dragImplicitGrabSerial() == d->globalTouch.ids.value(id)) {
         // the implicitly grabbing touch point has been upped
         d->endDrag(serial);
     }
@@ -1213,7 +1186,7 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
         disconnect(d->focusedSurfaceDestroyConnection);
     }
 
-    if (d->focusedTextInputSurface != surface){
+    if (d->focusedTextInputSurface != surface) {
         d->textInputV2->d->sendLeave(serial, d->focusedTextInputSurface);
         d->textInputV3->d->sendLeave(d->focusedTextInputSurface);
         d->focusedTextInputSurface = surface;
@@ -1221,11 +1194,9 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
     }
 
     if (d->focusedTextInputSurface) {
-        d->focusedSurfaceDestroyConnection = connect(surface, &SurfaceInterface::aboutToBeDestroyed, this,
-            [this] {
-                setFocusedTextInputSurface(nullptr);
-            }
-        );
+        d->focusedSurfaceDestroyConnection = connect(surface, &SurfaceInterface::aboutToBeDestroyed, this, [this] {
+            setFocusedTextInputSurface(nullptr);
+        });
     }
 
     d->textInputV2->d->sendEnter(surface, serial);
@@ -1272,7 +1243,7 @@ void SeatInterface::setSelection(AbstractDataSource *selection)
 
     d->currentSelection = selection;
 
-    for (auto focussedSelection: qAsConst(d->globalKeyboard.focus.selections)) {
+    for (auto focussedSelection : qAsConst(d->globalKeyboard.focus.selections)) {
         if (selection) {
             focussedSelection->sendSelection(selection);
         } else {
@@ -1315,7 +1286,7 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
 
     d->currentPrimarySelection = selection;
 
-    for (auto focussedSelection: qAsConst(d->globalKeyboard.focus.primarySelections)) {
+    for (auto focussedSelection : qAsConst(d->globalKeyboard.focus.primarySelections)) {
         if (selection) {
             focussedSelection->sendSelection(selection);
         } else {

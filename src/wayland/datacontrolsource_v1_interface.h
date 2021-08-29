@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 class DataControlSourceV1InterfacePrivate;
 
 /**
@@ -45,4 +44,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataControlSourceV1Interface*)
+Q_DECLARE_METATYPE(KWaylandServer::DataControlSourceV1Interface *)

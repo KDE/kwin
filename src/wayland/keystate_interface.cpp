@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 class KeyStateInterfacePrivate : public QtWaylandServer::org_kde_kwin_keystate
@@ -21,9 +20,11 @@ class KeyStateInterfacePrivate : public QtWaylandServer::org_kde_kwin_keystate
 public:
     KeyStateInterfacePrivate(Display *d)
         : QtWaylandServer::org_kde_kwin_keystate(*d, s_version)
-    {}
+    {
+    }
 
-    void org_kde_kwin_keystate_fetchStates(Resource *resource) override {
+    void org_kde_kwin_keystate_fetchStates(Resource *resource) override
+    {
         for (int i = 0; i < m_keyStates.count(); ++i) {
             send_stateChanged(resource->handle, i, m_keyStates[i]);
         }
@@ -32,10 +33,11 @@ public:
     QVector<KeyStateInterface::State> m_keyStates = QVector<KeyStateInterface::State>(3, KeyStateInterface::Unlocked);
 };
 
-KeyStateInterface::KeyStateInterface(Display* d, QObject* parent)
+KeyStateInterface::KeyStateInterface(Display *d, QObject *parent)
     : QObject(parent)
     , d(new KeyStateInterfacePrivate(d))
-{}
+{
+}
 
 KeyStateInterface::~KeyStateInterface() = default;
 

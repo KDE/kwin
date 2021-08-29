@@ -5,15 +5,14 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "contrast_interface.h"
-#include "region_interface_p.h"
 #include "display.h"
+#include "region_interface_p.h"
 #include "surface_interface_p.h"
 
 #include <qwayland-server-contrast.h>
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 class ContrastManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_contrast_manager
@@ -107,7 +106,6 @@ protected:
     void org_kde_kwin_contrast_set_saturation(Resource *resource, wl_fixed_t saturation) override;
     void org_kde_kwin_contrast_release(Resource *resource) override;
     void org_kde_kwin_contrast_destroy_resource(Resource *resource) override;
-
 };
 
 void ContrastInterfacePrivate::org_kde_kwin_contrast_commit(Resource *resource)

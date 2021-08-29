@@ -322,7 +322,7 @@ public:
      * Returns the data proxy of this SurfaceInterface or null if there
      * is none set.
      */
-    SurfaceInterface* dataProxy() const;
+    SurfaceInterface *dataProxy() const;
 
 Q_SIGNALS:
     /**
@@ -351,9 +351,9 @@ Q_SIGNALS:
      * @see buffer
      * @see damage
      */
-    void damaged(const QRegion&);
-    void opaqueChanged(const QRegion&);
-    void inputChanged(const QRegion&);
+    void damaged(const QRegion &);
+    void opaqueChanged(const QRegion &);
+    void inputChanged(const QRegion &);
     /**
      * This signal is emitted when the scale of the attached buffer has changed.
      */
@@ -427,4 +427,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::SurfaceInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::SurfaceInterface *)

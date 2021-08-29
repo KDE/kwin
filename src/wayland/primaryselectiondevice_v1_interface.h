@@ -14,7 +14,6 @@ struct wl_client;
 
 namespace KWaylandServer
 {
-
 class AbstractDataSource;
 class PrimarySelectionDeviceManagerV1Interface;
 class PrimarySelectionOfferV1Interface;
@@ -46,7 +45,7 @@ public:
     wl_client *client() const;
 
 Q_SIGNALS:
-    void selectionChanged(KWaylandServer::PrimarySelectionSourceV1Interface*);
+    void selectionChanged(KWaylandServer::PrimarySelectionSourceV1Interface *);
     void selectionCleared();
 
 private:
@@ -58,4 +57,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::PrimarySelectionDeviceV1Interface*)
+Q_DECLARE_METATYPE(KWaylandServer::PrimarySelectionDeviceV1Interface *)

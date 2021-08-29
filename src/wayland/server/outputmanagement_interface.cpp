@@ -5,17 +5,17 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "display.h"
+
 #include "outputmanagement_interface.h"
 #include "outputconfiguration_interface.h"
 
-#include <wayland-server.h>
 #include "qwayland-server-outputmanagement.h"
+#include <wayland-server.h>
 
 #include <QHash>
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 4;
 
 class OutputManagementInterfacePrivate : public QtWaylandServer::org_kde_kwin_outputmanagement

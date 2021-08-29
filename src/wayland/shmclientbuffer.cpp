@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 static const ShmClientBuffer *s_accessedBuffer = nullptr;
 static int s_accessCounter = 0;
 
@@ -31,8 +30,7 @@ public:
     bool hasAlphaChannel = false;
     QImage savedData;
 
-    struct DestroyListener
-    {
+    struct DestroyListener {
         wl_listener listener;
         ShmClientBufferPrivate *receiver;
     };
@@ -65,7 +63,8 @@ void ShmClientBufferPrivate::buffer_destroy_callback(wl_listener *listener, void
                                       bufferPrivate->height,
                                       wl_shm_buffer_get_stride(buffer),
                                       bufferPrivate->format,
-                                      cleanupShmPool, pool);
+                                      cleanupShmPool,
+                                      pool);
 }
 
 static bool alphaChannelFromFormat(uint32_t format)

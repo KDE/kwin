@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 3;
 
 class DataDeviceManagerInterfacePrivate : public QtWaylandServer::wl_data_device_manager
@@ -22,6 +21,7 @@ public:
     DataDeviceManagerInterfacePrivate(DataDeviceManagerInterface *q, Display *d);
 
     DataDeviceManagerInterface *q;
+
 private:
     void createDataSource(wl_client *client, wl_resource *resource, uint32_t id);
     void getDataDevice(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *seat);
@@ -30,7 +30,6 @@ protected:
     void data_device_manager_create_data_source(Resource *resource, uint32_t id) override;
     void data_device_manager_get_data_device(Resource *resource, uint32_t id, wl_resource *seat) override;
 };
-
 
 DataDeviceManagerInterfacePrivate::DataDeviceManagerInterfacePrivate(DataDeviceManagerInterface *q, Display *d)
     : QtWaylandServer::wl_data_device_manager(*d, s_version)

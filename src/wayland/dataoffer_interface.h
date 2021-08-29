@@ -14,7 +14,6 @@
 
 namespace KWaylandServer
 {
-
 class DataDeviceInterface;
 class AbstractDataSource;
 class DataOfferInterfacePrivate;
@@ -64,4 +63,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataOfferInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::DataOfferInterface *)

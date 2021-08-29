@@ -14,14 +14,14 @@
 // WaylandServer
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
-#include "../../src/server/seat_interface.h"
 #include "../../src/server/screencast_v1_interface.h"
+#include "../../src/server/seat_interface.h"
 
+#include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
-#include <KWayland/Client/compositor.h>
 
 #include "qwayland-zkde-screencast-unstable-v1.h"
 
@@ -34,10 +34,10 @@ public:
         : QObject(parent)
         , zkde_screencast_stream_unstable_v1(obj)
     {
-
     }
 
-    void zkde_screencast_stream_unstable_v1_created(uint32_t node) override {
+    void zkde_screencast_stream_unstable_v1_created(uint32_t node) override
+    {
         Q_EMIT created(node);
     }
 
@@ -55,7 +55,8 @@ public:
     {
     }
 
-    ScreencastStreamV1 *createWindowStream(const QString &uuid) {
+    ScreencastStreamV1 *createWindowStream(const QString &uuid)
+    {
         return new ScreencastStreamV1(stream_window(uuid, 2), this);
     }
 };
@@ -120,19 +121,25 @@ void TestScreencastV1Interface::initTestCase()
     QSignalSpy screencastSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     QVERIFY(screencastSpy.isValid());
     m_screencastInterface = new KWaylandServer::ScreencastV1Interface(m_display, this);
-    connect(m_screencastInterface, &KWaylandServer::ScreencastV1Interface::windowScreencastRequested, this, [this] (KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid) {
-        Q_UNUSED(winid);
-        stream->sendCreated(123);
-        m_triggered = stream;
-    });
+    connect(m_screencastInterface,
+            &KWaylandServer::ScreencastV1Interface::windowScreencastRequested,
+            this,
+            [this](KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid) {
+                Q_UNUSED(winid);
+                stream->sendCreated(123);
+                m_triggered = stream;
+            });
 
-    connect(&registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, &registry] (const QByteArray &interfaceName, quint32 name, quint32 version) {
-        if (interfaceName != "zkde_screencast_unstable_v1")
-            return;
-        Q_ASSERT(version == 1);
-        m_screencast = new ScreencastV1(this);
-        m_screencast->init(&*registry, name, version);
-    });
+    connect(&registry,
+            &KWayland::Client::Registry::interfaceAnnounced,
+            this,
+            [this, &registry](const QByteArray &interfaceName, quint32 name, quint32 version) {
+                if (interfaceName != "zkde_screencast_unstable_v1")
+                    return;
+                Q_ASSERT(version == 1);
+                m_screencast = new ScreencastV1(this);
+                m_screencast->init(&*registry, name, version);
+            });
     registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());

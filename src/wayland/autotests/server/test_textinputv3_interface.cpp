@@ -9,8 +9,8 @@
 
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
-#include "../../src/server/surface_interface.h"
 #include "../../src/server/seat_interface.h"
+#include "../../src/server/surface_interface.h"
 #include "../../src/server/textinput_v3_interface.h"
 
 #include "KWayland/Client/compositor.h"
@@ -33,37 +33,47 @@ class TextInputV3 : public QObject, public QtWayland::zwp_text_input_v3
 Q_SIGNALS:
     void surface_enter(wl_surface *surface);
     void surface_leave(wl_surface *surface);
-    void commit_string(const QString & text);
+    void commit_string(const QString &text);
     void delete_surrounding_text(quint32 before_length, quint32 after_length);
     void preedit_string(const QString &text, quint32 cursor_begin, quint32 cursor_end);
     void done(quint32 serial);
 
 public:
-    ~TextInputV3() override { destroy(); }
-    void zwp_text_input_v3_enter(struct ::wl_surface * surface) override {
+    ~TextInputV3() override
+    {
+        destroy();
+    }
+    void zwp_text_input_v3_enter(struct ::wl_surface *surface) override
+    {
         Q_EMIT surface_enter(surface);
     }
-    void zwp_text_input_v3_leave(struct ::wl_surface * surface) override {
+    void zwp_text_input_v3_leave(struct ::wl_surface *surface) override
+    {
         Q_EMIT surface_leave(surface);
     }
-    void zwp_text_input_v3_commit_string(const QString & text) override {
+    void zwp_text_input_v3_commit_string(const QString &text) override
+    {
         commitText = text;
     }
-    void zwp_text_input_v3_delete_surrounding_text(uint32_t before_length, uint32_t after_length) override {
+    void zwp_text_input_v3_delete_surrounding_text(uint32_t before_length, uint32_t after_length) override
+    {
         before = before_length;
         after = after_length;
     }
-    void zwp_text_input_v3_done(uint32_t serial) override {
+    void zwp_text_input_v3_done(uint32_t serial) override
+    {
         Q_EMIT commit_string(commitText);
         Q_EMIT preedit_string(preeditText, cursorBegin, cursorEnd);
         Q_EMIT delete_surrounding_text(before, after);
         Q_EMIT done(serial);
     }
-    void zwp_text_input_v3_preedit_string(const QString &text, int32_t cursor_begin, int32_t cursor_end) override {
+    void zwp_text_input_v3_preedit_string(const QString &text, int32_t cursor_begin, int32_t cursor_end) override
+    {
         preeditText = text;
         cursorBegin = cursor_begin;
         cursorEnd = cursor_end;
     }
+
 private:
     QString preeditText;
     QString commitText;
@@ -74,7 +84,10 @@ private:
 class TextInputManagerV3 : public QtWayland::zwp_text_input_manager_v3
 {
 public:
-    ~TextInputManagerV3() override { destroy(); }
+    ~TextInputManagerV3() override
+    {
+        destroy();
+    }
 };
 
 class TestTextInputV3Interface : public QObject
@@ -163,8 +176,7 @@ void TestTextInputV3Interface::initTestCase()
     registry->setup();
     QVERIFY(allAnnouncedSpy.wait());
 
-    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(),
-                                                    compositorSpy.first().last().value<quint32>(), this);
+    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
     QVERIFY(m_clientCompositor->isValid());
     // create a text input v3
     m_clientTextInputV3 = new TextInputV3();
@@ -423,18 +435,24 @@ void TestTextInputV3Interface::testContentHints_data()
     QTest::addColumn<quint32>("clientHint");
     QTest::addColumn<KWaylandServer::TextInputContentHints>("serverHints");
 
-    QTest::addRow("Spellcheck") << quint32(QtWayland::zwp_text_input_v3::content_hint_spellcheck) << TextInputContentHints(TextInputContentHint::AutoCorrection);
-    QTest::addRow("Completion") << quint32(QtWayland::zwp_text_input_v3::content_hint_completion) << TextInputContentHints(TextInputContentHint::AutoCompletion);
-    QTest::addRow("AutoCapital") << quint32(QtWayland::zwp_text_input_v3::content_hint_auto_capitalization) << TextInputContentHints(TextInputContentHint::AutoCapitalization);
+    QTest::addRow("Spellcheck") << quint32(QtWayland::zwp_text_input_v3::content_hint_spellcheck)
+                                << TextInputContentHints(TextInputContentHint::AutoCorrection);
+    QTest::addRow("Completion") << quint32(QtWayland::zwp_text_input_v3::content_hint_completion)
+                                << TextInputContentHints(TextInputContentHint::AutoCompletion);
+    QTest::addRow("AutoCapital") << quint32(QtWayland::zwp_text_input_v3::content_hint_auto_capitalization)
+                                 << TextInputContentHints(TextInputContentHint::AutoCapitalization);
     QTest::addRow("Lowercase") << quint32(QtWayland::zwp_text_input_v3::content_hint_lowercase) << TextInputContentHints(TextInputContentHint::LowerCase);
     QTest::addRow("Uppercase") << quint32(QtWayland::zwp_text_input_v3::content_hint_uppercase) << TextInputContentHints(TextInputContentHint::UpperCase);
     QTest::addRow("Titlecase") << quint32(QtWayland::zwp_text_input_v3::content_hint_titlecase) << TextInputContentHints(TextInputContentHint::TitleCase);
     QTest::addRow("HiddenText") << quint32(QtWayland::zwp_text_input_v3::content_hint_hidden_text) << TextInputContentHints(TextInputContentHint::HiddenText);
-    QTest::addRow("SensitiveData") << quint32(QtWayland::zwp_text_input_v3::content_hint_sensitive_data) << TextInputContentHints(TextInputContentHint::SensitiveData);
+    QTest::addRow("SensitiveData") << quint32(QtWayland::zwp_text_input_v3::content_hint_sensitive_data)
+                                   << TextInputContentHints(TextInputContentHint::SensitiveData);
     QTest::addRow("Latin") << quint32(QtWayland::zwp_text_input_v3::content_hint_latin) << TextInputContentHints(TextInputContentHint::Latin);
     QTest::addRow("Multiline") << quint32(QtWayland::zwp_text_input_v3::content_hint_multiline) << TextInputContentHints(TextInputContentHint::MultiLine);
-    QTest::addRow("Auto") << quint32(QtWayland::zwp_text_input_v3::content_hint_completion | QtWayland::zwp_text_input_v3::content_hint_spellcheck | QtWayland::zwp_text_input_v3::content_hint_auto_capitalization)
-                          << TextInputContentHints(TextInputContentHint::AutoCompletion | TextInputContentHint::AutoCorrection | TextInputContentHint::AutoCapitalization);
+    QTest::addRow("Auto") << quint32(QtWayland::zwp_text_input_v3::content_hint_completion | QtWayland::zwp_text_input_v3::content_hint_spellcheck
+                                     | QtWayland::zwp_text_input_v3::content_hint_auto_capitalization)
+                          << TextInputContentHints(TextInputContentHint::AutoCompletion | TextInputContentHint::AutoCorrection
+                                                   | TextInputContentHint::AutoCapitalization);
 }
 
 void TestTextInputV3Interface::testContentHints()
@@ -614,7 +632,6 @@ void TestTextInputV3Interface::testMultipleTextinputs()
         ti2 = nullptr;
     }
 }
-
 
 QTEST_GUILESS_MAIN(TestTextInputV3Interface)
 

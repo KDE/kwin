@@ -4,17 +4,17 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QtTest>
 #include <QMimeDatabase>
+#include <QtTest>
 // KWayland
-#include "KWayland/Client/connection_thread.h"
-#include "KWayland/Client/event_queue.h"
-#include "KWayland/Client/datadevicemanager.h"
-#include "KWayland/Client/datasource.h"
-#include "KWayland/Client/registry.h"
-#include "../../src/server/display.h"
 #include "../../src/server/datadevicemanager_interface.h"
 #include "../../src/server/datasource_interface.h"
+#include "../../src/server/display.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/datadevicemanager.h"
+#include "KWayland/Client/datasource.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/registry.h"
 // Wayland
 #include <wayland-client.h>
 
@@ -83,8 +83,8 @@ void TestDataSource::init()
     m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display, m_display);
 
     QVERIFY(dataDeviceManagerSpy.wait());
-    m_dataDeviceManager = registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(),
-                                                           dataDeviceManagerSpy.first().last().value<quint32>(), this);
+    m_dataDeviceManager =
+        registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(), dataDeviceManagerSpy.first().last().value<quint32>(), this);
 }
 
 void TestDataSource::cleanup()
@@ -115,7 +115,7 @@ void TestDataSource::testOffer()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
 
-    qRegisterMetaType<KWaylandServer::DataSourceInterface*>();
+    qRegisterMetaType<KWaylandServer::DataSourceInterface *>();
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
     QVERIFY(dataSourceCreatedSpy.isValid());
 
@@ -125,7 +125,7 @@ void TestDataSource::testOffer()
     QVERIFY(dataSourceCreatedSpy.wait());
     QCOMPARE(dataSourceCreatedSpy.count(), 1);
 
-    QPointer<DataSourceInterface> serverDataSource = dataSourceCreatedSpy.first().first().value<DataSourceInterface*>();
+    QPointer<DataSourceInterface> serverDataSource = dataSourceCreatedSpy.first().first().value<DataSourceInterface *>();
     QVERIFY(!serverDataSource.isNull());
     QCOMPARE(serverDataSource->mimeTypes().count(), 0);
 
@@ -187,7 +187,7 @@ void TestDataSource::testTargetAccepts()
     QCOMPARE(dataSourceCreatedSpy.count(), 1);
 
     QFETCH(QString, mimeType);
-    dataSourceCreatedSpy.first().first().value<DataSourceInterface*>()->accept(mimeType);
+    dataSourceCreatedSpy.first().first().value<DataSourceInterface *>()->accept(mimeType);
 
     QVERIFY(targetAcceptsSpy.wait());
     QCOMPARE(targetAcceptsSpy.count(), 1);
@@ -212,7 +212,7 @@ void TestDataSource::testRequestSend()
     QCOMPARE(dataSourceCreatedSpy.count(), 1);
     QTemporaryFile file;
     QVERIFY(file.open());
-    dataSourceCreatedSpy.first().first().value<DataSourceInterface*>()->requestData(plain, file.handle());
+    dataSourceCreatedSpy.first().first().value<DataSourceInterface *>()->requestData(plain, file.handle());
 
     QVERIFY(sendRequestedSpy.wait());
     QCOMPARE(sendRequestedSpy.count(), 1);
@@ -241,7 +241,7 @@ void TestDataSource::testCancel()
     QVERIFY(dataSourceCreatedSpy.wait());
 
     QCOMPARE(cancelledSpy.count(), 0);
-    dataSourceCreatedSpy.first().first().value<DataSourceInterface*>()->cancel();
+    dataSourceCreatedSpy.first().first().value<DataSourceInterface *>()->cancel();
 
     QVERIFY(cancelledSpy.wait());
     QCOMPARE(cancelledSpy.count(), 1);
@@ -260,7 +260,7 @@ void TestDataSource::testServerGet()
 
     QVERIFY(!DataSourceInterface::get(nullptr));
     QVERIFY(dataSourceCreatedSpy.wait());
-    auto d = dataSourceCreatedSpy.first().first().value<DataSourceInterface*>();
+    auto d = dataSourceCreatedSpy.first().first().value<DataSourceInterface *>();
 
     QCOMPARE(DataSourceInterface::get(d->resource()), d);
     QVERIFY(!DataSourceInterface::get(nullptr));

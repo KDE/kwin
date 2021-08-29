@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 class OutputChangeSetPrivate;
 
 /**
@@ -39,7 +38,7 @@ public:
      * @returns @c true if the enabled property of the outputdevice has changed.
      *    bool modeChanged() const;
      */
-     /** Whether the transform() property of the outputdevice changed. */
+    /** Whether the transform() property of the outputdevice changed. */
     bool transformChanged() const;
 
     /** Whether the currentModeId() property of the outputdevice changed.
@@ -88,7 +87,7 @@ public:
     /** The new value for scale.
      */
     qreal scaleF() const;
-    
+
     /** The new value for colorCurves. */
     OutputDeviceInterface::ColorCurves colorCurves() const;
 

@@ -9,19 +9,17 @@
 
 #include <qwayland-server-wayland.h>
 
-#include <QPointer>
 #include <QHash>
+#include <QPointer>
 
 namespace KWaylandServer
 {
-
 class ClientConnection;
 
 class KeyboardInterfacePrivate : public QtWaylandServer::wl_keyboard
 {
 public:
     KeyboardInterfacePrivate(SeatInterface *s);
-
 
     void sendKeymap(Resource *resource);
     void sendModifiers();
@@ -31,7 +29,10 @@ public:
     void sendLeave(SurfaceInterface *surface, quint32 serial);
     void sendEnter(SurfaceInterface *surface, quint32 serial);
 
-    static KeyboardInterfacePrivate *get(KeyboardInterface *keyboard) { return keyboard->d.data(); }
+    static KeyboardInterfacePrivate *get(KeyboardInterface *keyboard)
+    {
+        return keyboard->d.data();
+    }
 
     SeatInterface *seat;
     SurfaceInterface *focusedSurface = nullptr;

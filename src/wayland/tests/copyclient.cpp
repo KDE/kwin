@@ -68,7 +68,10 @@ CopyClient::~CopyClient()
 
 void CopyClient::init()
 {
-    connect(m_connectionThreadObject, &ConnectionThread::connected, this,
+    connect(
+        m_connectionThreadObject,
+        &ConnectionThread::connected,
+        this,
         [this] {
             m_eventQueue = new EventQueue(this);
             m_eventQueue->setup(m_connectionThreadObject);
@@ -76,8 +79,7 @@ void CopyClient::init()
             Registry *registry = new Registry(this);
             setupRegistry(registry);
         },
-        Qt::QueuedConnection
-    );
+        Qt::QueuedConnection);
     m_connectionThreadObject->moveToThread(m_connectionThread);
     m_connectionThread->start();
 
@@ -86,63 +88,47 @@ void CopyClient::init()
 
 void CopyClient::setupRegistry(Registry *registry)
 {
-    connect(registry, &Registry::compositorAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_compositor = registry->createCompositor(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shellAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shell = registry->createShell(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shmAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shm = registry->createShmPool(name, version, this);
-        }
-    );
-    connect(registry, &Registry::seatAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_seat = registry->createSeat(name, version, this);
-            connect(m_seat, &Seat::hasPointerChanged, this,
-                [this] {
-                    auto p = m_seat->createPointer(this);
-                    connect(p, &Pointer::entered, this,
-                        [this] (quint32 serial) {
-                            if (m_copySource) {
-                                m_dataDevice->setSelection(serial, m_copySource);
-                            }
-                        }
-                    );
+    connect(registry, &Registry::compositorAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_compositor = registry->createCompositor(name, version, this);
+    });
+    connect(registry, &Registry::shellAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shell = registry->createShell(name, version, this);
+    });
+    connect(registry, &Registry::shmAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shm = registry->createShmPool(name, version, this);
+    });
+    connect(registry, &Registry::seatAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_seat = registry->createSeat(name, version, this);
+        connect(m_seat, &Seat::hasPointerChanged, this, [this] {
+            auto p = m_seat->createPointer(this);
+            connect(p, &Pointer::entered, this, [this](quint32 serial) {
+                if (m_copySource) {
+                    m_dataDevice->setSelection(serial, m_copySource);
                 }
-            );
-        }
-    );
-    connect(registry, &Registry::dataDeviceManagerAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_dataDeviceManager = registry->createDataDeviceManager(name, version, this);
-        }
-    );
-    connect(registry, &Registry::interfacesAnnounced, this,
-        [this] {
-            Q_ASSERT(m_compositor);
-            Q_ASSERT(m_dataDeviceManager);
-            Q_ASSERT(m_seat);
-            Q_ASSERT(m_shell);
-            Q_ASSERT(m_shm);
-            m_surface = m_compositor->createSurface(this);
-            Q_ASSERT(m_surface);
-            m_shellSurface = m_shell->createSurface(m_surface, this);
-            Q_ASSERT(m_shellSurface);
-            m_shellSurface->setFullscreen();
-            connect(m_shellSurface, &ShellSurface::sizeChanged, this, &CopyClient::render);
+            });
+        });
+    });
+    connect(registry, &Registry::dataDeviceManagerAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_dataDeviceManager = registry->createDataDeviceManager(name, version, this);
+    });
+    connect(registry, &Registry::interfacesAnnounced, this, [this] {
+        Q_ASSERT(m_compositor);
+        Q_ASSERT(m_dataDeviceManager);
+        Q_ASSERT(m_seat);
+        Q_ASSERT(m_shell);
+        Q_ASSERT(m_shm);
+        m_surface = m_compositor->createSurface(this);
+        Q_ASSERT(m_surface);
+        m_shellSurface = m_shell->createSurface(m_surface, this);
+        Q_ASSERT(m_shellSurface);
+        m_shellSurface->setFullscreen();
+        connect(m_shellSurface, &ShellSurface::sizeChanged, this, &CopyClient::render);
 
-            m_dataDevice = m_dataDeviceManager->getDataDevice(m_seat, this);
-            m_copySource = m_dataDeviceManager->createDataSource(this);
-            m_copySource->offer(QStringLiteral("text/plain"));
-            connect(m_copySource, &DataSource::sendDataRequested, this, &CopyClient::copy);
-        }
-    );
+        m_dataDevice = m_dataDeviceManager->getDataDevice(m_seat, this);
+        m_copySource = m_dataDeviceManager->createDataSource(this);
+        m_copySource->offer(QStringLiteral("text/plain"));
+        connect(m_copySource, &DataSource::sendDataRequested, this, &CopyClient::copy);
+    });
     registry->setEventQueue(m_eventQueue);
     registry->create(m_connectionThreadObject);
     registry->setup();

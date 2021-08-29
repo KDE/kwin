@@ -3,6 +3,10 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
+#include "KWayland/Client/dpms.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/output.h"
+#include "KWayland/Client/registry.h"
 #include <QApplication>
 #include <QDialogButtonBox>
 #include <QFormLayout>
@@ -10,10 +14,6 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
-#include "KWayland/Client/connection_thread.h"
-#include "KWayland/Client/dpms.h"
-#include "KWayland/Client/registry.h"
-#include "KWayland/Client/output.h"
 
 using namespace KWayland::Client;
 
@@ -42,11 +42,14 @@ static QLayout *setupOutput(Registry::AnnouncedInterface outputInterface, Regist
 {
     Output *output = registry->createOutput(outputInterface.name, outputInterface.version, registry);
     QLabel *label = new QLabel(output->model());
-    QObject::connect(output, &Output::changed, label,
+    QObject::connect(
+        output,
+        &Output::changed,
+        label,
         [label, output] {
             label->setText(output->model());
-        }, Qt::QueuedConnection
-    );
+        },
+        Qt::QueuedConnection);
 
     Dpms *dpms = nullptr;
     if (manager) {
@@ -72,23 +75,35 @@ static QLayout *setupOutput(Registry::AnnouncedInterface outputInterface, Regist
     bg->addButton(offButton, QDialogButtonBox::ActionRole);
 
     if (dpms) {
-        QObject::connect(dpms, &Dpms::supportedChanged, supportedLabel,
+        QObject::connect(
+            dpms,
+            &Dpms::supportedChanged,
+            supportedLabel,
             [supportedLabel, dpms, standbyButton, suspendButton, offButton] {
                 const bool supported = dpms->isSupported();
                 supportedLabel->setText(supportedToString(supported));
                 standbyButton->setEnabled(supported);
                 suspendButton->setEnabled(supported);
                 offButton->setEnabled(supported);
-            }, Qt::QueuedConnection
-        );
-        QObject::connect(dpms, &Dpms::modeChanged, modeLabel,
+            },
+            Qt::QueuedConnection);
+        QObject::connect(
+            dpms,
+            &Dpms::modeChanged,
+            modeLabel,
             [modeLabel, dpms] {
                 modeLabel->setText(modeToString(dpms->mode()));
-            }, Qt::QueuedConnection
-        );
-        QObject::connect(standbyButton, &QPushButton::clicked, dpms, [dpms] { dpms->requestMode(Dpms::Mode::Standby);});
-        QObject::connect(suspendButton, &QPushButton::clicked, dpms, [dpms] { dpms->requestMode(Dpms::Mode::Suspend);});
-        QObject::connect(offButton, &QPushButton::clicked, dpms, [dpms] { dpms->requestMode(Dpms::Mode::Off);});
+            },
+            Qt::QueuedConnection);
+        QObject::connect(standbyButton, &QPushButton::clicked, dpms, [dpms] {
+            dpms->requestMode(Dpms::Mode::Standby);
+        });
+        QObject::connect(suspendButton, &QPushButton::clicked, dpms, [dpms] {
+            dpms->requestMode(Dpms::Mode::Suspend);
+        });
+        QObject::connect(offButton, &QPushButton::clicked, dpms, [dpms] {
+            dpms->requestMode(Dpms::Mode::Off);
+        });
     }
 
     QVBoxLayout *layout = new QVBoxLayout;
@@ -108,7 +123,10 @@ int main(int argc, char **argv)
     ConnectionThread *connection = ConnectionThread::fromApplication();
     Registry registry;
     registry.create(connection);
-    QObject::connect(&registry, &Registry::interfacesAnnounced, &app,
+    QObject::connect(
+        &registry,
+        &Registry::interfacesAnnounced,
+        &app,
         [&registry, &window] {
             const bool hasDpms = registry.hasInterface(Registry::Interface::Dpms);
             QLabel *hasDpmsLabel = new QLabel(&window);
@@ -141,8 +159,8 @@ int main(int argc, char **argv)
 
             window.setLayout(layout);
             window.show();
-        }, Qt::QueuedConnection
-    );
+        },
+        Qt::QueuedConnection);
     registry.setup();
 
     return app.exec();

@@ -11,17 +11,17 @@
 // WaylandServer
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
-#include "../../src/server/seat_interface.h"
 #include "../../src/server/inputmethod_v1_interface.h"
+#include "../../src/server/seat_interface.h"
 
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/keyboard.h"
+#include "KWayland/Client/output.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/seat.h"
 #include "KWayland/Client/surface.h"
-#include "KWayland/Client/keyboard.h"
-#include "KWayland/Client/output.h"
 
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-server-text-input-unstable-v1.h"
@@ -48,7 +48,8 @@ public:
     {
     }
 
-    InputPanelSurface* panelForSurface(KWayland::Client::Surface* surface) {
+    InputPanelSurface *panelForSurface(KWayland::Client::Surface *surface)
+    {
         auto panelSurface = new InputPanelSurface(get_input_panel_surface(*surface));
         QObject::connect(surface, &QObject::destroyed, panelSurface, &QObject::deleteLater);
         return panelSurface;
@@ -59,8 +60,14 @@ class InputMethodV1Context : public QObject, public QtWayland::zwp_input_method_
 {
     Q_OBJECT
 public:
-    quint32 contentPurpose() { return imPurpose; }
-    quint32 contentHints() { return imHint; }
+    quint32 contentPurpose()
+    {
+        return imPurpose;
+    }
+    quint32 contentHints()
+    {
+        return imHint;
+    }
 Q_SIGNALS:
     void content_type_changed();
     void invoke_action(quint32 button, quint32 index);
@@ -75,7 +82,7 @@ protected:
         imPurpose = purpose;
         Q_EMIT content_type_changed();
     }
-    void zwp_input_method_context_v1_invoke_action(uint32_t  button, uint32_t index) override
+    void zwp_input_method_context_v1_invoke_action(uint32_t button, uint32_t index) override
     {
         Q_EMIT invoke_action(button, index);
     }
@@ -91,6 +98,7 @@ protected:
     {
         Q_EMIT reset();
     }
+
 private:
     quint32 imHint = 0;
     quint32 imPurpose = 0;
@@ -104,7 +112,8 @@ public:
         : QtWayland::zwp_input_method_v1(registry, id, version)
     {
     }
-    InputMethodV1Context* context() {
+    InputMethodV1Context *context()
+    {
         return m_context;
     }
 
@@ -125,8 +134,8 @@ protected:
         delete m_context;
         m_context = nullptr;
         Q_EMIT deactivated();
-
     };
+
 private:
     InputMethodV1Context *m_context;
 };
@@ -151,22 +160,23 @@ private Q_SLOTS:
     void testContentPurpose_data();
     void testContentPurpose();
     void testKeyboardGrab();
+
 private:
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
     KWayland::Client::Compositor *m_clientCompositor;
     KWayland::Client::Seat *m_clientSeat = nullptr;
-    KWayland::Client::Output *m_output= nullptr;
+    KWayland::Client::Output *m_output = nullptr;
 
     InputMethodV1 *m_inputMethod;
-    InputPanel* m_inputPanel;
+    InputPanel *m_inputPanel;
     QThread *m_thread;
     Display m_display;
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
 
-    KWaylandServer::InputMethodV1Interface* m_inputMethodIface;
-    KWaylandServer::InputPanelV1Interface* m_inputPanelIface;
+    KWaylandServer::InputMethodV1Interface *m_inputMethodIface;
+    KWaylandServer::InputPanelV1Interface *m_inputPanelIface;
 
     QVector<SurfaceInterface *> m_surfaces;
 };
@@ -209,7 +219,7 @@ void TestInputMethodInterface::initTestCase()
 
     auto registry = new KWayland::Client::Registry(this);
     QSignalSpy interfacesSpy(registry, &KWayland::Client::Registry::interfacesAnnounced);
-    connect(registry, &KWayland::Client::Registry::outputAnnounced, this, [this, registry] (quint32 name, quint32 version) {
+    connect(registry, &KWayland::Client::Registry::outputAnnounced, this, [this, registry](quint32 name, quint32 version) {
         m_output = new KWayland::Client::Output(this);
         m_output->setup(registry->bindOutput(name, version));
     });
@@ -270,7 +280,7 @@ void TestInputMethodInterface::testAdd()
 {
     QSignalSpy panelSpy(m_inputPanelIface, &InputPanelV1Interface::inputPanelSurfaceAdded);
     QPointer<InputPanelSurfaceV1Interface> panelSurfaceIface;
-    connect(m_inputPanelIface, &InputPanelV1Interface::inputPanelSurfaceAdded, this, [&panelSurfaceIface] (InputPanelSurfaceV1Interface *surface) {
+    connect(m_inputPanelIface, &InputPanelV1Interface::inputPanelSurfaceAdded, this, [&panelSurfaceIface](InputPanelSurfaceV1Interface *surface) {
         panelSurfaceIface = surface;
     });
 
@@ -307,7 +317,6 @@ void TestInputMethodInterface::testActivate()
     QVERIFY(inputMethodDeactivateSpy.wait());
     QCOMPARE(inputMethodActivateSpy.count(), 1);
     QVERIFY(!m_inputMethodIface->context());
-
 }
 
 void TestInputMethodInterface::testContext()
@@ -467,10 +476,10 @@ void TestInputMethodInterface::testGrabkeyboard()
     QVERIFY(!modifierEventSpy.wait(200));
 
     // grab the keyboard
-    wl_keyboard* keyboard = imContext->grab_keyboard();
+    wl_keyboard *keyboard = imContext->grab_keyboard();
     QVERIFY(keyboard);
 
-    //TODO: add more tests about keyboard grab here
+    // TODO: add more tests about keyboard grab here
 
     // send deactivate and verify server interface resets context
     m_inputMethodIface->sendDeactivate();
@@ -484,17 +493,22 @@ void TestInputMethodInterface::testContentHints_data()
 {
     QTest::addColumn<KWaylandServer::TextInputContentHints>("serverHints");
     QTest::addColumn<quint32>("imHint");
-    QTest::addRow("Spellcheck") << TextInputContentHints(TextInputContentHint::AutoCorrection) << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_auto_correction);
-    QTest::addRow("AutoCapital") << TextInputContentHints(TextInputContentHint::AutoCapitalization) << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_auto_capitalization);
+    QTest::addRow("Spellcheck") << TextInputContentHints(TextInputContentHint::AutoCorrection)
+                                << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_auto_correction);
+    QTest::addRow("AutoCapital") << TextInputContentHints(TextInputContentHint::AutoCapitalization)
+                                 << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_auto_capitalization);
     QTest::addRow("Lowercase") << TextInputContentHints(TextInputContentHint::LowerCase) << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_lowercase);
     QTest::addRow("Uppercase") << TextInputContentHints(TextInputContentHint::UpperCase) << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_uppercase);
     QTest::addRow("Titlecase") << TextInputContentHints(TextInputContentHint::TitleCase) << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_titlecase);
-    QTest::addRow("HiddenText") << TextInputContentHints(TextInputContentHint::HiddenText) << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_hidden_text);
-    QTest::addRow("SensitiveData") << TextInputContentHints(TextInputContentHint::SensitiveData) << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_sensitive_data);
+    QTest::addRow("HiddenText") << TextInputContentHints(TextInputContentHint::HiddenText)
+                                << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_hidden_text);
+    QTest::addRow("SensitiveData") << TextInputContentHints(TextInputContentHint::SensitiveData)
+                                   << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_sensitive_data);
     QTest::addRow("Latin") << TextInputContentHints(TextInputContentHint::Latin) << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_latin);
     QTest::addRow("Multiline") << TextInputContentHints(TextInputContentHint::MultiLine) << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_multiline);
     QTest::addRow("Auto") << TextInputContentHints(TextInputContentHint::AutoCorrection | TextInputContentHint::AutoCapitalization)
-                          << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_auto_correction | QtWaylandServer::zwp_text_input_v1::content_hint_auto_capitalization);
+                          << quint32(QtWaylandServer::zwp_text_input_v1::content_hint_auto_correction
+                                     | QtWaylandServer::zwp_text_input_v1::content_hint_auto_capitalization);
 }
 
 void TestInputMethodInterface::testContentHints()

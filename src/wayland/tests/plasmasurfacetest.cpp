@@ -6,11 +6,11 @@
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/plasmashell.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/shell.h"
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
-#include "KWayland/Client/plasmashell.h"
 // Qt
 #include <QCommandLineParser>
 #include <QGuiApplication>
@@ -28,14 +28,17 @@ public:
 
     void init();
 
-    void setRole(PlasmaShellSurface::Role role) {
+    void setRole(PlasmaShellSurface::Role role)
+    {
         m_role = role;
     }
-    void setSkipTaskbar(bool set) {
+    void setSkipTaskbar(bool set)
+    {
         m_skipTaskbar = set;
     }
 
-    void setSkipSwitcher(bool set) {
+    void setSkipSwitcher(bool set)
+    {
         m_skipSwitcher = set;
     }
 
@@ -73,7 +76,10 @@ PlasmaSurfaceTest::~PlasmaSurfaceTest()
 
 void PlasmaSurfaceTest::init()
 {
-    connect(m_connectionThreadObject, &ConnectionThread::connected, this,
+    connect(
+        m_connectionThreadObject,
+        &ConnectionThread::connected,
+        this,
         [this] {
             m_eventQueue = new EventQueue(this);
             m_eventQueue->setup(m_connectionThreadObject);
@@ -81,8 +87,7 @@ void PlasmaSurfaceTest::init()
             Registry *registry = new Registry(this);
             setupRegistry(registry);
         },
-        Qt::QueuedConnection
-    );
+        Qt::QueuedConnection);
     m_connectionThreadObject->moveToThread(m_connectionThread);
     m_connectionThread->start();
 
@@ -91,47 +96,37 @@ void PlasmaSurfaceTest::init()
 
 void PlasmaSurfaceTest::setupRegistry(Registry *registry)
 {
-    connect(registry, &Registry::compositorAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_compositor = registry->createCompositor(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shellAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shell = registry->createShell(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shmAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shm = registry->createShmPool(name, version, this);
-        }
-    );
-    connect(registry, &Registry::plasmaShellAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_plasmaShell = registry->createPlasmaShell(name, version, this);
-            m_plasmaShell->setEventQueue(m_eventQueue);
-        }
-    );
-    connect(registry, &Registry::interfacesAnnounced, this,
-        [this] {
-            Q_ASSERT(m_compositor);
-            Q_ASSERT(m_shell);
-            Q_ASSERT(m_shm);
-            Q_ASSERT(m_plasmaShell);
-            m_surface = m_compositor->createSurface(this);
-            Q_ASSERT(m_surface);
-            m_shellSurface = m_shell->createSurface(m_surface, this);
-            Q_ASSERT(m_shellSurface);
-            m_shellSurface->setToplevel();
-            connect(m_shellSurface, &ShellSurface::sizeChanged, this, &PlasmaSurfaceTest::render);
-            m_plasmaShellSurface = m_plasmaShell->createSurface(m_surface, this);
-            Q_ASSERT(m_plasmaShellSurface);
-            m_plasmaShellSurface->setSkipTaskbar(m_skipTaskbar);
-            m_plasmaShellSurface->setSkipSwitcher(m_skipSwitcher);
-            m_plasmaShellSurface->setRole(m_role);
-            render();
-        }
-    );
+    connect(registry, &Registry::compositorAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_compositor = registry->createCompositor(name, version, this);
+    });
+    connect(registry, &Registry::shellAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shell = registry->createShell(name, version, this);
+    });
+    connect(registry, &Registry::shmAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shm = registry->createShmPool(name, version, this);
+    });
+    connect(registry, &Registry::plasmaShellAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_plasmaShell = registry->createPlasmaShell(name, version, this);
+        m_plasmaShell->setEventQueue(m_eventQueue);
+    });
+    connect(registry, &Registry::interfacesAnnounced, this, [this] {
+        Q_ASSERT(m_compositor);
+        Q_ASSERT(m_shell);
+        Q_ASSERT(m_shm);
+        Q_ASSERT(m_plasmaShell);
+        m_surface = m_compositor->createSurface(this);
+        Q_ASSERT(m_surface);
+        m_shellSurface = m_shell->createSurface(m_surface, this);
+        Q_ASSERT(m_shellSurface);
+        m_shellSurface->setToplevel();
+        connect(m_shellSurface, &ShellSurface::sizeChanged, this, &PlasmaSurfaceTest::render);
+        m_plasmaShellSurface = m_plasmaShell->createSurface(m_surface, this);
+        Q_ASSERT(m_plasmaShellSurface);
+        m_plasmaShellSurface->setSkipTaskbar(m_skipTaskbar);
+        m_plasmaShellSurface->setSkipSwitcher(m_skipSwitcher);
+        m_plasmaShellSurface->setRole(m_role);
+        render();
+    });
     registry->setEventQueue(m_eventQueue);
     registry->create(m_connectionThreadObject);
     registry->setup();

@@ -12,7 +12,6 @@
 
 namespace KWaylandServer
 {
-
 class ClientConnection;
 
 class TouchInterfacePrivate : public QtWaylandServer::wl_touch

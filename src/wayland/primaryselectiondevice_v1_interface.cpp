@@ -4,10 +4,10 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "primaryselectiondevice_v1_interface.h"
+#include "display.h"
 #include "primaryselectiondevicemanager_v1_interface.h"
 #include "primaryselectionoffer_v1_interface.h"
 #include "primaryselectionsource_v1_interface.h"
-#include "display.h"
 #include "seat_interface.h"
 #include "seat_interface_p.h"
 
@@ -16,8 +16,7 @@
 
 namespace KWaylandServer
 {
-
-class PrimarySelectionDeviceV1InterfacePrivate: public QtWaylandServer::zwp_primary_selection_device_v1
+class PrimarySelectionDeviceV1InterfacePrivate : public QtWaylandServer::zwp_primary_selection_device_v1
 {
 public:
     PrimarySelectionDeviceV1InterfacePrivate(PrimarySelectionDeviceV1Interface *q, SeatInterface *seat, wl_resource *resource);
@@ -37,10 +36,11 @@ protected:
     void zwp_primary_selection_device_v1_destroy(Resource *resource) override;
 };
 
-
-PrimarySelectionDeviceV1InterfacePrivate::PrimarySelectionDeviceV1InterfacePrivate(PrimarySelectionDeviceV1Interface *_q, SeatInterface *seat, wl_resource *resource)
+PrimarySelectionDeviceV1InterfacePrivate::PrimarySelectionDeviceV1InterfacePrivate(PrimarySelectionDeviceV1Interface *_q,
+                                                                                   SeatInterface *seat,
+                                                                                   wl_resource *resource)
     : QtWaylandServer::zwp_primary_selection_device_v1(resource)
-    ,  q(_q)
+    , q(_q)
     , seat(seat)
 {
 }
@@ -52,8 +52,8 @@ void PrimarySelectionDeviceV1InterfacePrivate::zwp_primary_selection_device_v1_s
     PrimarySelectionSourceV1Interface *dataSource = nullptr;
 
     if (source) {
-      dataSource = PrimarySelectionSourceV1Interface::get(source);
-      Q_ASSERT(dataSource);
+        dataSource = PrimarySelectionSourceV1Interface::get(source);
+        Q_ASSERT(dataSource);
     }
 
     if (selection == dataSource) {
@@ -92,7 +92,8 @@ PrimarySelectionOfferV1Interface *PrimarySelectionDeviceV1InterfacePrivate::crea
     return offer;
 }
 
-void PrimarySelectionDeviceV1InterfacePrivate::zwp_primary_selection_device_v1_destroy_resource(QtWaylandServer::zwp_primary_selection_device_v1::Resource *resource)
+void PrimarySelectionDeviceV1InterfacePrivate::zwp_primary_selection_device_v1_destroy_resource(
+    QtWaylandServer::zwp_primary_selection_device_v1::Resource *resource)
 {
     Q_UNUSED(resource)
     delete q;

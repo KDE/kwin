@@ -4,19 +4,18 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "outputdevice_interface.h"
-#include "display_p.h"
 #include "display.h"
+#include "display_p.h"
 #include "logging.h"
 #include "utils.h"
 
 #include "qwayland-server-org-kde-kwin-outputdevice.h"
 #include <QDebug>
-#include <QString>
 #include <QPointer>
+#include <QString>
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 4;
 
 class OutputDeviceInterfacePrivate : public QtWaylandServer::org_kde_kwin_outputdevice
@@ -98,23 +97,35 @@ OutputDeviceInterface::OutputDeviceInterface(Display *display, QObject *parent)
     : QObject(parent)
     , d(new OutputDeviceInterfacePrivate(this, display))
 {
-    connect(this, &OutputDeviceInterface::currentModeChanged, this,
-        [this] {
-            Q_ASSERT(d->currentMode.id >= 0);
-            const auto clientResources = d->resourceMap();
-            for (auto resource : clientResources) {
-                d->sendMode(resource, d->currentMode);
-                d->sendDone(resource);
-            }
+    connect(this, &OutputDeviceInterface::currentModeChanged, this, [this] {
+        Q_ASSERT(d->currentMode.id >= 0);
+        const auto clientResources = d->resourceMap();
+        for (auto resource : clientResources) {
+            d->sendMode(resource, d->currentMode);
+            d->sendDone(resource);
         }
-    );
-    connect(this, &OutputDeviceInterface::subPixelChanged,       this, [this] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::transformChanged,      this, [this] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::globalPositionChanged, this, [this] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::modelChanged,          this, [this] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::manufacturerChanged,   this, [this] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::scaleFChanged,         this, [this] { d->updateScale(); });
-    connect(this, &OutputDeviceInterface::colorCurvesChanged,    this, [this] { d->updateColorCurves(); });
+    });
+    connect(this, &OutputDeviceInterface::subPixelChanged, this, [this] {
+        d->updateGeometry();
+    });
+    connect(this, &OutputDeviceInterface::transformChanged, this, [this] {
+        d->updateGeometry();
+    });
+    connect(this, &OutputDeviceInterface::globalPositionChanged, this, [this] {
+        d->updateGeometry();
+    });
+    connect(this, &OutputDeviceInterface::modelChanged, this, [this] {
+        d->updateGeometry();
+    });
+    connect(this, &OutputDeviceInterface::manufacturerChanged, this, [this] {
+        d->updateGeometry();
+    });
+    connect(this, &OutputDeviceInterface::scaleFChanged, this, [this] {
+        d->updateScale();
+    });
+    connect(this, &OutputDeviceInterface::colorCurvesChanged, this, [this] {
+        d->updateColorCurves();
+    });
 
     DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
     displayPrivate->outputdevices.append(this);
@@ -160,11 +171,9 @@ void OutputDeviceInterface::addMode(Mode &mode)
     Q_ASSERT(mode.id >= 0);
     Q_ASSERT(mode.size.isValid());
 
-    auto currentModeIt = std::find_if(d->modes.begin(), d->modes.end(),
-        [](const Mode &mode) {
-            return mode.flags.testFlag(ModeFlag::Current);
-        }
-    );
+    auto currentModeIt = std::find_if(d->modes.begin(), d->modes.end(), [](const Mode &mode) {
+        return mode.flags.testFlag(ModeFlag::Current);
+    });
     if (currentModeIt == d->modes.end() && !mode.flags.testFlag(ModeFlag::Current)) {
         // no mode with current flag - enforce
         mode.flags |= ModeFlag::Current;
@@ -176,23 +185,17 @@ void OutputDeviceInterface::addMode(Mode &mode)
 
     if (mode.flags.testFlag(ModeFlag::Preferred)) {
         // remove from existing Preferred mode
-        auto preferredIt = std::find_if(d->modes.begin(), d->modes.end(),
-            [](const Mode &mode) {
-                return mode.flags.testFlag(ModeFlag::Preferred);
-            }
-        );
+        auto preferredIt = std::find_if(d->modes.begin(), d->modes.end(), [](const Mode &mode) {
+            return mode.flags.testFlag(ModeFlag::Preferred);
+        });
         if (preferredIt != d->modes.end()) {
             (*preferredIt).flags &= ~uint(ModeFlag::Preferred);
         }
     }
 
-    auto existingModeIt = std::find_if(d->modes.begin(), d->modes.end(),
-        [mode](const Mode &mode_it) {
-            return mode.size == mode_it.size &&
-                   mode.refreshRate == mode_it.refreshRate &&
-                   mode.id == mode_it.id;
-        }
-    );
+    auto existingModeIt = std::find_if(d->modes.begin(), d->modes.end(), [mode](const Mode &mode_it) {
+        return mode.size == mode_it.size && mode.refreshRate == mode_it.refreshRate && mode.id == mode_it.id;
+    });
     auto emitChanges = [this, mode] {
         Q_EMIT modesChanged();
         if (mode.flags.testFlag(ModeFlag::Current)) {
@@ -211,16 +214,13 @@ void OutputDeviceInterface::addMode(Mode &mode)
         emitChanges();
         return;
     } else {
-        auto idIt = std::find_if(d->modes.constBegin(), d->modes.constEnd(),
-                                        [mode](const Mode &mode_it) {
-                                            return mode.id == mode_it.id;
-                                        }
-        );
+        auto idIt = std::find_if(d->modes.constBegin(), d->modes.constEnd(), [mode](const Mode &mode_it) {
+            return mode.id == mode_it.id;
+        });
         if (idIt != d->modes.constEnd()) {
             qCWarning(KWAYLAND_SERVER) << "Duplicate Mode id" << mode.id << ": not adding mode" << mode.size << mode.refreshRate;
             return;
         }
-
     }
     d->modes << mode;
     emitChanges();
@@ -228,21 +228,17 @@ void OutputDeviceInterface::addMode(Mode &mode)
 
 void OutputDeviceInterface::setCurrentMode(const int modeId)
 {
-    auto currentModeIt = std::find_if(d->modes.begin(), d->modes.end(),
-        [](const Mode &mode) {
-            return mode.flags.testFlag(ModeFlag::Current);
-        }
-    );
+    auto currentModeIt = std::find_if(d->modes.begin(), d->modes.end(), [](const Mode &mode) {
+        return mode.flags.testFlag(ModeFlag::Current);
+    });
     if (currentModeIt != d->modes.end()) {
         // another mode has the current flag - remove
         (*currentModeIt).flags &= ~uint(ModeFlag::Current);
     }
 
-    auto existingModeIt = std::find_if(d->modes.begin(), d->modes.end(),
-        [modeId](const Mode &mode) {
-            return mode.id == modeId;
-        }
-    );
+    auto existingModeIt = std::find_if(d->modes.begin(), d->modes.end(), [modeId](const Mode &mode) {
+        return mode.id == modeId;
+    });
 
     Q_ASSERT(existingModeIt != d->modes.end());
     (*existingModeIt).flags |= ModeFlag::Current;
@@ -255,11 +251,9 @@ void OutputDeviceInterface::setCurrentMode(const int modeId)
 
 bool OutputDeviceInterface::setCurrentMode(const QSize &size, int refreshRate)
 {
-    auto mode = std::find_if(d->modes.constBegin(), d->modes.constEnd(),
-        [size, refreshRate](const Mode &mode) {
-            return mode.size == size && mode.refreshRate == refreshRate;
-        }
-    );
+    auto mode = std::find_if(d->modes.constBegin(), d->modes.constEnd(), [size, refreshRate](const Mode &mode) {
+        return mode.size == size && mode.refreshRate == refreshRate;
+    });
     if (mode == d->modes.constEnd()) {
         return false;
     }
@@ -350,26 +344,20 @@ void OutputDeviceInterfacePrivate::sendMode(Resource *resource, const OutputDevi
     if (mode.flags.testFlag(OutputDeviceInterface::ModeFlag::Preferred)) {
         flags |= WL_OUTPUT_MODE_PREFERRED;
     }
-    send_mode(resource->handle,
-                flags,
-                mode.size.width(),
-                mode.size.height(),
-                mode.refreshRate,
-                mode.id);
-
+    send_mode(resource->handle, flags, mode.size.width(), mode.size.height(), mode.refreshRate, mode.id);
 }
 
 void OutputDeviceInterfacePrivate::sendGeometry(Resource *resource)
 {
     send_geometry(resource->handle,
-                    globalPosition.x(),
-                    globalPosition.y(),
-                    physicalSize.width(),
-                    physicalSize.height(),
-                    toSubPixel(),
-                    manufacturer,
-                    model,
-                    toTransform());
+                  globalPosition.x(),
+                  globalPosition.y(),
+                  physicalSize.width(),
+                  physicalSize.height(),
+                  toSubPixel(),
+                  manufacturer,
+                  model,
+                  toTransform());
 }
 
 void OutputDeviceInterfacePrivate::sendScale(Resource *resource)
@@ -387,20 +375,11 @@ void OutputDeviceInterfacePrivate::sendColorCurves(Resource *resource)
         return;
     }
 
-    QByteArray red = QByteArray::fromRawData(
-        reinterpret_cast<const char *>(colorCurves.red.constData()),
-        sizeof(quint16) * colorCurves.red.size()
-    );
+    QByteArray red = QByteArray::fromRawData(reinterpret_cast<const char *>(colorCurves.red.constData()), sizeof(quint16) * colorCurves.red.size());
 
-    QByteArray green = QByteArray::fromRawData(
-        reinterpret_cast<const char *>(colorCurves.green.constData()),
-        sizeof(quint16) * colorCurves.green.size()
-    );
+    QByteArray green = QByteArray::fromRawData(reinterpret_cast<const char *>(colorCurves.green.constData()), sizeof(quint16) * colorCurves.green.size());
 
-    QByteArray blue = QByteArray::fromRawData(
-        reinterpret_cast<const char *>(colorCurves.blue.constData()),
-        sizeof(quint16) * colorCurves.blue.size()
-    );
+    QByteArray blue = QByteArray::fromRawData(reinterpret_cast<const char *>(colorCurves.blue.constData()), sizeof(quint16) * colorCurves.blue.size());
 
     send_colorcurves(resource->handle, red, green, blue);
 }
@@ -418,7 +397,6 @@ void KWaylandServer::OutputDeviceInterfacePrivate::sendEisaId(Resource *resource
         send_eisa_id(resource->handle, eisaId);
     }
 }
-
 
 void OutputDeviceInterfacePrivate::sendDone(Resource *resource)
 {
@@ -456,26 +434,27 @@ bool OutputDeviceInterface::ColorCurves::operator==(const ColorCurves &cc) const
 {
     return red == cc.red && green == cc.green && blue == cc.blue;
 }
-bool OutputDeviceInterface::ColorCurves::operator!=(const ColorCurves &cc) const {
+bool OutputDeviceInterface::ColorCurves::operator!=(const ColorCurves &cc) const
+{
     return !operator==(cc);
 }
 
-#define SETTER(setterName, type, argumentName) \
-    void OutputDeviceInterface::setterName(type arg) \
-    { \
-        if (d->argumentName == arg) { \
-            return; \
-        } \
-        d->argumentName = arg; \
-        Q_EMIT argumentName##Changed(d->argumentName); \
+#define SETTER(setterName, type, argumentName)                                                                                                                 \
+    void OutputDeviceInterface::setterName(type arg)                                                                                                           \
+    {                                                                                                                                                          \
+        if (d->argumentName == arg) {                                                                                                                          \
+            return;                                                                                                                                            \
+        }                                                                                                                                                      \
+        d->argumentName = arg;                                                                                                                                 \
+        Q_EMIT argumentName##Changed(d->argumentName);                                                                                                         \
     }
 
-SETTER(setPhysicalSize, const QSize&, physicalSize)
-SETTER(setGlobalPosition, const QPoint&, globalPosition)
-SETTER(setManufacturer, const QString&, manufacturer)
-SETTER(setModel, const QString&, model)
-SETTER(setSerialNumber, const QString&, serialNumber)
-SETTER(setEisaId, const QString&, eisaId)
+SETTER(setPhysicalSize, const QSize &, physicalSize)
+SETTER(setGlobalPosition, const QPoint &, globalPosition)
+SETTER(setManufacturer, const QString &, manufacturer)
+SETTER(setModel, const QString &, model)
+SETTER(setSerialNumber, const QString &, serialNumber)
+SETTER(setEisaId, const QString &, eisaId)
 SETTER(setSubPixel, SubPixel, subPixel)
 SETTER(setTransform, Transform, transform)
 
@@ -525,7 +504,6 @@ qreal OutputDeviceInterface::scaleF() const
     return d->scale;
 }
 
-
 OutputDeviceInterface::SubPixel OutputDeviceInterface::subPixel() const
 {
     return d->subPixel;
@@ -541,14 +519,14 @@ OutputDeviceInterface::ColorCurves OutputDeviceInterface::colorCurves() const
     return d->colorCurves;
 }
 
-QList< OutputDeviceInterface::Mode > OutputDeviceInterface::modes() const
+QList<OutputDeviceInterface::Mode> OutputDeviceInterface::modes() const
 {
     return d->modes;
 }
 
 int OutputDeviceInterface::currentModeId() const
 {
-    for (const Mode &m: d->modes) {
+    for (const Mode &m : d->modes) {
         if (m.flags.testFlag(OutputDeviceInterface::ModeFlag::Current)) {
             return m.id;
         }

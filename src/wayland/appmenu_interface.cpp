@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 class AppMenuManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_appmenu_manager
@@ -21,7 +20,7 @@ class AppMenuManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_appm
 public:
     AppMenuManagerInterfacePrivate(AppMenuManagerInterface *q, Display *d);
 
-    QVector<AppMenuInterface*> appmenus;
+    QVector<AppMenuInterface *> appmenus;
     AppMenuManagerInterface *q;
 
 protected:
@@ -63,6 +62,7 @@ public:
     AppMenuInterface *q;
     QPointer<SurfaceInterface> surface;
     AppMenuInterface::InterfaceAddress address;
+
 protected:
     void org_kde_kwin_appmenu_destroy_resource(Resource *resource) override;
     void org_kde_kwin_appmenu_set_address(Resource *resource, const QString &service_name, const QString &object_path) override;
@@ -85,8 +85,7 @@ void AppMenuInterfacePrivate::org_kde_kwin_appmenu_destroy_resource(QtWaylandSer
 void AppMenuInterfacePrivate::org_kde_kwin_appmenu_set_address(Resource *resource, const QString &service_name, const QString &object_path)
 {
     Q_UNUSED(resource)
-    if (address.serviceName == service_name &&
-            address.objectPath == object_path) {
+    if (address.serviceName == service_name && address.objectPath == object_path) {
         return;
     }
 
@@ -100,7 +99,6 @@ void AppMenuInterfacePrivate::org_kde_kwin_appmenu_release(QtWaylandServer::org_
     wl_resource_destroy(resource->handle);
 }
 
-
 AppMenuManagerInterface::AppMenuManagerInterface(Display *display, QObject *parent)
     : QObject(parent)
     , d(new AppMenuManagerInterfacePrivate(this, display))
@@ -111,9 +109,9 @@ AppMenuManagerInterface::~AppMenuManagerInterface()
 {
 }
 
-AppMenuInterface* AppMenuManagerInterface::appMenuForSurface(SurfaceInterface *surface)
+AppMenuInterface *AppMenuManagerInterface::appMenuForSurface(SurfaceInterface *surface)
 {
-    for (AppMenuInterface* menu: d->appmenus) {
+    for (AppMenuInterface *menu : d->appmenus) {
         if (menu->surface() == surface) {
             return menu;
         }
@@ -128,14 +126,17 @@ AppMenuInterface::AppMenuInterface(SurfaceInterface *surface, wl_resource *resou
 }
 
 AppMenuInterface::~AppMenuInterface()
-{}
+{
+}
 
-AppMenuInterface::InterfaceAddress AppMenuInterface::address() const {
+AppMenuInterface::InterfaceAddress AppMenuInterface::address() const
+{
     return d->address;
 }
 
-SurfaceInterface* AppMenuInterface::surface() const {
+SurfaceInterface *AppMenuInterface::surface() const
+{
     return d->surface.data();
 }
 
-}//namespace
+} // namespace

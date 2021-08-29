@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 class ClientConnection;
 class Display;
 class PointerInterface;
@@ -25,10 +24,8 @@ public:
     explicit PointerGesturesV1InterfacePrivate(Display *display);
 
 protected:
-    void zwp_pointer_gestures_v1_get_swipe_gesture(Resource *resource, uint32_t id,
-                                                   struct ::wl_resource *pointer_resource) override;
-    void zwp_pointer_gestures_v1_get_pinch_gesture(Resource *resource, uint32_t id,
-                                                   struct ::wl_resource *pointer_resource) override;
+    void zwp_pointer_gestures_v1_get_swipe_gesture(Resource *resource, uint32_t id, struct ::wl_resource *pointer_resource) override;
+    void zwp_pointer_gestures_v1_get_pinch_gesture(Resource *resource, uint32_t id, struct ::wl_resource *pointer_resource) override;
     void zwp_pointer_gestures_v1_release(Resource *resource) override;
 };
 

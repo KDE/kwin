@@ -7,15 +7,14 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
+#include <QVariant>
 #include <QtGlobal>
 #include <qobjectdefs.h>
-#include <QVariant>
 
 #include <inttypes.h>
 
 namespace KWaylandServer
 {
-
 Q_NAMESPACE_EXPORT(KWAYLANDSERVER_EXPORT)
 /**
  * ContentHint allows to modify the behavior of the text input.

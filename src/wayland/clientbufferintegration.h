@@ -12,7 +12,6 @@
 
 namespace KWaylandServer
 {
-
 class Display;
 
 class KWAYLANDSERVER_EXPORT ClientBufferIntegration : public QObject

@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 static const int s_version = 4;
 
 class CompositorInterfacePrivate : public QtWaylandServer::wl_compositor
@@ -38,8 +37,7 @@ CompositorInterfacePrivate::CompositorInterfacePrivate(CompositorInterface *q, D
 
 void CompositorInterfacePrivate::compositor_create_surface(Resource *resource, uint32_t id)
 {
-    wl_resource *surfaceResource = wl_resource_create(resource->client(), &wl_surface_interface,
-                                                      resource->version(), id);
+    wl_resource *surfaceResource = wl_resource_create(resource->client(), &wl_surface_interface, resource->version(), id);
     if (!surfaceResource) {
         wl_resource_post_no_memory(resource->handle);
         return;
@@ -49,8 +47,7 @@ void CompositorInterfacePrivate::compositor_create_surface(Resource *resource, u
 
 void CompositorInterfacePrivate::compositor_create_region(Resource *resource, uint32_t id)
 {
-    wl_resource *regionResource = wl_resource_create(resource->client(), &wl_region_interface,
-                                                     resource->version(), id);
+    wl_resource *regionResource = wl_resource_create(resource->client(), &wl_region_interface, resource->version(), id);
     if (!regionResource) {
         wl_resource_post_no_memory(resource->handle);
         return;

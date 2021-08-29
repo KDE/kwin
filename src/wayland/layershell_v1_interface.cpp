@@ -18,7 +18,6 @@
 
 namespace KWaylandServer
 {
-
 static const int s_version = 3;
 
 class LayerShellV1InterfacePrivate : public QtWaylandServer::zwlr_layer_shell_v1
@@ -30,10 +29,12 @@ public:
     Display *display;
 
 protected:
-    void zwlr_layer_shell_v1_get_layer_surface(Resource *resource, uint32_t id,
+    void zwlr_layer_shell_v1_get_layer_surface(Resource *resource,
+                                               uint32_t id,
                                                struct ::wl_resource *surface_resource,
                                                struct ::wl_resource *output_resource,
-                                               uint32_t layer, const QString &scope) override;
+                                               uint32_t layer,
+                                               const QString &scope) override;
     void zwlr_layer_shell_v1_destroy(Resource *resource) override;
 };
 
@@ -89,45 +90,39 @@ LayerShellV1InterfacePrivate::LayerShellV1InterfacePrivate(LayerShellV1Interface
 {
 }
 
-void LayerShellV1InterfacePrivate::zwlr_layer_shell_v1_get_layer_surface(Resource *resource, uint32_t id,
+void LayerShellV1InterfacePrivate::zwlr_layer_shell_v1_get_layer_surface(Resource *resource,
+                                                                         uint32_t id,
                                                                          wl_resource *surface_resource,
                                                                          wl_resource *output_resource,
-                                                                         uint32_t layer, const QString &scope)
+                                                                         uint32_t layer,
+                                                                         const QString &scope)
 {
     SurfaceInterface *surface = SurfaceInterface::get(surface_resource);
     OutputInterface *output = OutputInterface::get(output_resource);
 
     if (surface->buffer()) {
-        wl_resource_post_error(resource->handle, error_already_constructed,
-                               "the wl_surface already has a buffer attached");
+        wl_resource_post_error(resource->handle, error_already_constructed, "the wl_surface already has a buffer attached");
         return;
     }
 
     if (layer > layer_overlay) {
-        wl_resource_post_error(resource->handle, error_invalid_layer,
-                               "invalid layer %d", layer);
+        wl_resource_post_error(resource->handle, error_invalid_layer, "invalid layer %d", layer);
         return;
     }
 
     SurfaceRole *surfaceRole = SurfaceRole::get(surface);
     if (surfaceRole) {
-        wl_resource_post_error(resource->handle, error_role,
-                               "the wl_surface already has a role assigned %s",
-                               surfaceRole->name().constData());
+        wl_resource_post_error(resource->handle, error_role, "the wl_surface already has a role assigned %s", surfaceRole->name().constData());
         return;
     }
 
-    wl_resource *layerSurfaceResource = wl_resource_create(resource->client(),
-                                                           &zwlr_layer_surface_v1_interface,
-                                                           resource->version(), id);
+    wl_resource *layerSurfaceResource = wl_resource_create(resource->client(), &zwlr_layer_surface_v1_interface, resource->version(), id);
     if (!layerSurfaceResource) {
         wl_resource_post_no_memory(resource->handle);
         return;
     }
 
-    auto layerSurface = new LayerSurfaceV1Interface(q, surface, output,
-                                                    LayerSurfaceV1Interface::Layer(layer),
-                                                    scope, layerSurfaceResource);
+    auto layerSurface = new LayerSurfaceV1Interface(q, surface, output, LayerSurfaceV1Interface::Layer(layer), scope, layerSurfaceResource);
     Q_EMIT q->surfaceCreated(layerSurface);
 }
 
@@ -151,8 +146,7 @@ Display *LayerShellV1Interface::display() const
     return d->display;
 }
 
-LayerSurfaceV1InterfacePrivate::LayerSurfaceV1InterfacePrivate(LayerSurfaceV1Interface *q,
-                                                               SurfaceInterface *surface)
+LayerSurfaceV1InterfacePrivate::LayerSurfaceV1InterfacePrivate(LayerSurfaceV1Interface *q, SurfaceInterface *surface)
     : SurfaceRole(surface, QByteArrayLiteral("layer_surface_v1"))
     , q(q)
     , surface(surface)
@@ -221,8 +215,7 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_get_popup(Resource *r
     XdgPopupInterfacePrivate *popupPrivate = XdgPopupInterfacePrivate::get(popup);
 
     if (popup->isConfigured()) {
-        wl_resource_post_error(resource->handle, error_invalid_surface_state,
-                               "xdg_popup surface is already configured");
+        wl_resource_post_error(resource->handle, error_invalid_surface_state, "xdg_popup surface is already configured");
         return;
     }
 
@@ -232,8 +225,7 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_get_popup(Resource *r
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_ack_configure(Resource *resource, uint32_t serial)
 {
     if (!serials.contains(serial)) {
-        wl_resource_post_error(resource->handle, error_invalid_surface_state,
-                               "invalid configure serial %d", serial);
+        wl_resource_post_error(resource->handle, error_invalid_surface_state, "invalid configure serial %d", serial);
         return;
     }
     while (!serials.isEmpty()) {
@@ -256,8 +248,7 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_destroy(Resource *res
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_layer(Resource *resource, uint32_t layer)
 {
     if (Q_UNLIKELY(layer > LayerShellV1InterfacePrivate::layer_overlay)) {
-        wl_resource_post_error(resource->handle, LayerShellV1InterfacePrivate::error_invalid_layer,
-                               "invalid layer %d", layer);
+        wl_resource_post_error(resource->handle, LayerShellV1InterfacePrivate::error_invalid_layer, "invalid layer %d", layer);
         return;
     }
     pending.layer = LayerSurfaceV1Interface::Layer(layer);
@@ -276,23 +267,24 @@ void LayerSurfaceV1InterfacePrivate::commit()
     }
 
     if (Q_UNLIKELY(surface->isMapped() && !isConfigured)) {
-        wl_resource_post_error(resource()->handle, error_invalid_surface_state,
+        wl_resource_post_error(resource()->handle,
+                               error_invalid_surface_state,
                                "a buffer has been attached to a layer surface prior "
                                "to the first layer_surface.configure event");
         return;
     }
 
-    if (Q_UNLIKELY(pending.desiredSize.width() == 0 &&
-            (!(pending.anchor & Qt::LeftEdge) || !(pending.anchor & Qt::RightEdge)))) {
-        wl_resource_post_error(resource()->handle, error_invalid_size,
+    if (Q_UNLIKELY(pending.desiredSize.width() == 0 && (!(pending.anchor & Qt::LeftEdge) || !(pending.anchor & Qt::RightEdge)))) {
+        wl_resource_post_error(resource()->handle,
+                               error_invalid_size,
                                "the layer surface has a width of 0 but its anchor "
                                "doesn't include the left and the right screen edge");
         return;
     }
 
-    if (Q_UNLIKELY(pending.desiredSize.height() == 0 &&
-            (!(pending.anchor & Qt::TopEdge) || !(pending.anchor & Qt::BottomEdge)))) {
-        wl_resource_post_error(resource()->handle, error_invalid_size,
+    if (Q_UNLIKELY(pending.desiredSize.height() == 0 && (!(pending.anchor & Qt::TopEdge) || !(pending.anchor & Qt::BottomEdge)))) {
+        wl_resource_post_error(resource()->handle,
+                               error_invalid_size,
                                "the layer surface has a height of 0 but its anchor "
                                "doesn't include the top and the bottom screen edge");
         return;
@@ -334,8 +326,10 @@ void LayerSurfaceV1InterfacePrivate::commit()
 
 LayerSurfaceV1Interface::LayerSurfaceV1Interface(LayerShellV1Interface *shell,
                                                  SurfaceInterface *surface,
-                                                 OutputInterface *output, Layer layer,
-                                                 const QString &scope, wl_resource *resource)
+                                                 OutputInterface *output,
+                                                 Layer layer,
+                                                 const QString &scope,
+                                                 wl_resource *resource)
     : d(new LayerSurfaceV1InterfacePrivate(this, surface))
 {
     d->current.layer = layer;

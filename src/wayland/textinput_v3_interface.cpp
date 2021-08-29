@@ -5,14 +5,13 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-#include "textinput_v3_interface_p.h"
 #include "display.h"
 #include "seat_interface.h"
 #include "surface_interface_p.h"
+#include "textinput_v3_interface_p.h"
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 static TextInputContentHints convertContentHint(uint32_t hint)
@@ -125,7 +124,7 @@ void TextInputManagerV3InterfacePrivate::zwp_text_input_manager_v3_get_text_inpu
     textInputPrivate->add(resource->client(), id, resource->version());
 }
 
-TextInputManagerV3Interface::TextInputManagerV3Interface(Display* display, QObject* parent)
+TextInputManagerV3Interface::TextInputManagerV3Interface(Display *display, QObject *parent)
     : QObject(parent)
     , d(new TextInputManagerV3InterfacePrivate(this, display))
 {
@@ -312,7 +311,8 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
         }
     }
 
-    if (surroundingText != pending.surroundingText || surroundingTextCursorPosition != pending.surroundingTextCursorPosition || surroundingTextSelectionAnchor != pending.surroundingTextSelectionAnchor) {
+    if (surroundingText != pending.surroundingText || surroundingTextCursorPosition != pending.surroundingTextCursorPosition
+        || surroundingTextSelectionAnchor != pending.surroundingTextSelectionAnchor) {
         surroundingText = pending.surroundingText;
         surroundingTextCursorPosition = pending.surroundingTextCursorPosition;
         surroundingTextSelectionAnchor = pending.surroundingTextSelectionAnchor;

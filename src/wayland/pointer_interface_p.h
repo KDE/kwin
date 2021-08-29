@@ -17,7 +17,6 @@
 
 namespace KWaylandServer
 {
-
 class ClientConnection;
 class PointerPinchGestureV1Interface;
 class PointerSwipeGestureV1Interface;
@@ -48,9 +47,7 @@ public:
     void sendFrame();
 
 protected:
-    void pointer_set_cursor(Resource *resource, uint32_t serial,
-                            ::wl_resource *surface_resource,
-                            int32_t hotspot_x, int32_t hotspot_y) override;
+    void pointer_set_cursor(Resource *resource, uint32_t serial, ::wl_resource *surface_resource, int32_t hotspot_x, int32_t hotspot_y) override;
     void pointer_release(Resource *resource) override;
     void pointer_bind_resource(Resource *resource) override;
 };

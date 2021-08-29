@@ -10,13 +10,12 @@
 
 #include "qwayland-server-xdg-output-unstable-v1.h"
 
-#include <QHash>
 #include <QDebug>
+#include <QHash>
 #include <QPointer>
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 3;
 
 class XdgOutputManagerV1InterfacePrivate : public QtWaylandServer::zxdg_output_manager_v1
@@ -35,7 +34,10 @@ protected:
 class XdgOutputV1InterfacePrivate : public QtWaylandServer::zxdg_output_v1
 {
 public:
-    XdgOutputV1InterfacePrivate(OutputInterface *wlOutput) : output(wlOutput) {}
+    XdgOutputV1InterfacePrivate(OutputInterface *wlOutput)
+        : output(wlOutput)
+    {
+    }
 
     QPoint pos;
     QSize size;
@@ -50,7 +52,6 @@ protected:
     void zxdg_output_v1_destroy(Resource *resource) override;
 };
 
-
 XdgOutputManagerV1Interface::XdgOutputManagerV1Interface(Display *display, QObject *parent)
     : QObject(parent)
     , d(new XdgOutputManagerV1InterfacePrivate(this, display))
@@ -58,17 +59,18 @@ XdgOutputManagerV1Interface::XdgOutputManagerV1Interface(Display *display, QObje
 }
 
 XdgOutputManagerV1Interface::~XdgOutputManagerV1Interface()
-{}
+{
+}
 
-XdgOutputV1Interface * XdgOutputManagerV1Interface::createXdgOutput(OutputInterface *output, QObject *parent)
+XdgOutputV1Interface *XdgOutputManagerV1Interface::createXdgOutput(OutputInterface *output, QObject *parent)
 {
     Q_ASSERT_X(!d->outputs.contains(output), "createXdgOutput", "An XdgOuputInterface already exists for this output");
 
     auto xdgOutput = new XdgOutputV1Interface(output, parent);
     d->outputs[output] = xdgOutput;
 
-    //as XdgOutput lifespan is managed by user, delete our mapping when either
-    //it or the relevant Output gets deleted
+    // as XdgOutput lifespan is managed by user, delete our mapping when either
+    // it or the relevant Output gets deleted
     connect(output, &QObject::destroyed, this, [this, output]() {
         d->outputs.remove(output);
     });
@@ -78,7 +80,6 @@ XdgOutputV1Interface * XdgOutputManagerV1Interface::createXdgOutput(OutputInterf
 
     return xdgOutput;
 }
-
 
 XdgOutputManagerV1InterfacePrivate::XdgOutputManagerV1InterfacePrivate(XdgOutputManagerV1Interface *qptr, Display *d)
     : QtWaylandServer::zxdg_output_manager_v1(*d, s_version)
@@ -94,7 +95,7 @@ void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_get_xdg_output(R
     }
     auto xdgOutput = outputs.value(output);
     if (!xdgOutput) {
-        return;  // client is requesting XdgOutput for an Output that doesn't exist
+        return; // client is requesting XdgOutput for an Output that doesn't exist
     }
     xdgOutput->d->add(resource->client(), id, resource->version());
 }

@@ -8,12 +8,11 @@
 #include "surface_interface.h"
 
 #include <KWaylandServer/kwaylandserver_export.h>
-#include <wayland-util.h>
 #include <QObject>
+#include <wayland-util.h>
 
 namespace KWaylandServer
 {
-
 class Display;
 class EglStreamControllerInterfacePrivate;
 /**

@@ -19,9 +19,9 @@
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
 // Qt
-#include <QGuiApplication>
 #include <QDebug>
 #include <QFile>
+#include <QGuiApplication>
 #include <QImage>
 #include <QMimeType>
 #include <QThread>
@@ -83,7 +83,10 @@ PanelTest::~PanelTest()
 
 void PanelTest::init()
 {
-    connect(m_connectionThreadObject, &ConnectionThread::connected, this,
+    connect(
+        m_connectionThreadObject,
+        &ConnectionThread::connected,
+        this,
         [this] {
             m_eventQueue = new EventQueue(this);
             m_eventQueue->setup(m_connectionThreadObject);
@@ -91,8 +94,7 @@ void PanelTest::init()
             Registry *registry = new Registry(this);
             setupRegistry(registry);
         },
-        Qt::QueuedConnection
-    );
+        Qt::QueuedConnection);
     m_connectionThreadObject->moveToThread(m_connectionThread);
     m_connectionThread->start();
 
@@ -143,180 +145,124 @@ void PanelTest::moveTooltip(const QPointF &pos)
 
 void PanelTest::setupRegistry(Registry *registry)
 {
-    connect(registry, &Registry::compositorAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_compositor = registry->createCompositor(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shellAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shell = registry->createShell(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shmAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shm = registry->createShmPool(name, version, this);
-        }
-    );
-    connect(registry, &Registry::seatAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_seat = registry->createSeat(name, version, this);
-            connect(m_seat, &Seat::hasPointerChanged, this,
-                [this] (bool has) {
-                    if (!has) {
-                        return;
-                    }
-                    auto p = m_seat->createPointer(this);
-                    connect(p, &Pointer::buttonStateChanged, this,
-                        [this] (quint32 serial, quint32 time, quint32 button, KWayland::Client::Pointer::ButtonState state) {
-                            Q_UNUSED(time)
-                            Q_UNUSED(serial)
-                            if (!m_windowManagement) {
-                                return;
-                            }
-                            if (state == Pointer::ButtonState::Released) {
-                                return;
-                            }
-                            if (button == BTN_LEFT) {
-                                m_windowManagement->showDesktop();
-                            } else if (button == BTN_RIGHT) {
-                                m_windowManagement->hideDesktop();
-                            }
-                        }
-                    );
-                    connect(p, &Pointer::entered, this,
-                        [this, p] (quint32 serial, const QPointF &relativeToSurface) {
-                            Q_UNUSED(serial)
-                            if (p->enteredSurface() == m_surface) {
-                                showTooltip(relativeToSurface);
-                            }
-                        }
-                    );
-                    connect(p, &Pointer::motion, this,
-                        [this, p] (const QPointF &relativeToSurface) {
-                            if (p->enteredSurface() == m_surface) {
-                                moveTooltip(relativeToSurface);
-                            }
-                        }
-                    );
-                    connect(p, &Pointer::left, this,
-                        [this] {
-                            hideTooltip();
-                        }
-                    );
-                }
-            );
-        }
-    );
-    connect(registry, &Registry::plasmaShellAnnounced, this,
-        [this, registry] (quint32 name, quint32 version) {
-            m_plasmaShell = registry->createPlasmaShell(name, version, this);
-        }
-    );
-    connect(registry, &Registry::plasmaWindowManagementAnnounced, this,
-        [this, registry] (quint32 name, quint32 version) {
-            m_windowManagement = registry->createPlasmaWindowManagement(name, version, this);
-            connect(m_windowManagement, &PlasmaWindowManagement::showingDesktopChanged, this,
-                [] (bool set) {
-                    qDebug() << "Showing desktop changed, new state: " << set;
-                }
-            );
-            connect(m_windowManagement, &PlasmaWindowManagement::windowCreated, this,
-                [this] (PlasmaWindow *w) {
-                    connect(w, &PlasmaWindow::titleChanged, this,
-                        [w] {
-                            qDebug() << "Window title changed to: " << w->title();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::activeChanged, this,
-                        [w] {
-                            qDebug() << "Window active changed: " << w->isActive();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::maximizedChanged, this,
-                        [w] {
-                            qDebug() << "Window maximized changed: " << w->isMaximized();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::maximizedChanged, this,
-                        [w] {
-                            qDebug() << "Window minimized changed: " << w->isMinimized();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::keepAboveChanged, this,
-                        [w] {
-                            qDebug() << "Window keep above changed: " << w->isKeepAbove();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::keepBelowChanged, this,
-                        [w] {
-                            qDebug() << "Window keep below changed: " << w->isKeepBelow();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::onAllDesktopsChanged, this,
-                        [w] {
-                            qDebug() << "Window on all desktops changed: " << w->isOnAllDesktops();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::fullscreenChanged, this,
-                        [w] {
-                            qDebug() << "Window full screen changed: " << w->isFullscreen();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::demandsAttentionChanged, this,
-                        [w] {
-                            qDebug() << "Window demands attention changed: " << w->isDemandingAttention();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::closeableChanged, this,
-                        [w] {
-                            qDebug() << "Window is closeable changed: " << w->isCloseable();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::minimizeableChanged, this,
-                        [w] {
-                            qDebug() << "Window is minimizeable changed: " << w->isMinimizeable();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::maximizeableChanged, this,
-                        [w] {
-                            qDebug() << "Window is maximizeable changed: " << w->isMaximizeable();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::fullscreenableChanged, this,
-                        [w] {
-                            qDebug() << "Window is fullscreenable changed: " << w->isFullscreenable();
-                        }
-                    );
-                    connect(w, &PlasmaWindow::iconChanged, this,
-                        [w] {
-                            qDebug() << "Window icon changed: " << w->icon().name();
-                        }
-                    );
-                }
-            );
-        }
-    );
-    connect(registry, &Registry::interfacesAnnounced, this,
-        [this] {
-            Q_ASSERT(m_compositor);
-            Q_ASSERT(m_seat);
-            Q_ASSERT(m_shell);
-            Q_ASSERT(m_shm);
-            m_surface = m_compositor->createSurface(this);
-            Q_ASSERT(m_surface);
-            m_shellSurface = m_shell->createSurface(m_surface, this);
-            Q_ASSERT(m_shellSurface);
-            m_shellSurface->setToplevel();
-            connect(m_shellSurface, &ShellSurface::sizeChanged, this, &PanelTest::render);
-            if (m_plasmaShell) {
-                m_plasmaShellSurface = m_plasmaShell->createSurface(m_surface, this);
-                m_plasmaShellSurface->setPosition(QPoint(10, 0));
-                m_plasmaShellSurface->setRole(PlasmaShellSurface::Role::Panel);
+    connect(registry, &Registry::compositorAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_compositor = registry->createCompositor(name, version, this);
+    });
+    connect(registry, &Registry::shellAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shell = registry->createShell(name, version, this);
+    });
+    connect(registry, &Registry::shmAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shm = registry->createShmPool(name, version, this);
+    });
+    connect(registry, &Registry::seatAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_seat = registry->createSeat(name, version, this);
+        connect(m_seat, &Seat::hasPointerChanged, this, [this](bool has) {
+            if (!has) {
+                return;
             }
-            render();
+            auto p = m_seat->createPointer(this);
+            connect(p, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, KWayland::Client::Pointer::ButtonState state) {
+                Q_UNUSED(time)
+                Q_UNUSED(serial)
+                if (!m_windowManagement) {
+                    return;
+                }
+                if (state == Pointer::ButtonState::Released) {
+                    return;
+                }
+                if (button == BTN_LEFT) {
+                    m_windowManagement->showDesktop();
+                } else if (button == BTN_RIGHT) {
+                    m_windowManagement->hideDesktop();
+                }
+            });
+            connect(p, &Pointer::entered, this, [this, p](quint32 serial, const QPointF &relativeToSurface) {
+                Q_UNUSED(serial)
+                if (p->enteredSurface() == m_surface) {
+                    showTooltip(relativeToSurface);
+                }
+            });
+            connect(p, &Pointer::motion, this, [this, p](const QPointF &relativeToSurface) {
+                if (p->enteredSurface() == m_surface) {
+                    moveTooltip(relativeToSurface);
+                }
+            });
+            connect(p, &Pointer::left, this, [this] {
+                hideTooltip();
+            });
+        });
+    });
+    connect(registry, &Registry::plasmaShellAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_plasmaShell = registry->createPlasmaShell(name, version, this);
+    });
+    connect(registry, &Registry::plasmaWindowManagementAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_windowManagement = registry->createPlasmaWindowManagement(name, version, this);
+        connect(m_windowManagement, &PlasmaWindowManagement::showingDesktopChanged, this, [](bool set) {
+            qDebug() << "Showing desktop changed, new state: " << set;
+        });
+        connect(m_windowManagement, &PlasmaWindowManagement::windowCreated, this, [this](PlasmaWindow *w) {
+            connect(w, &PlasmaWindow::titleChanged, this, [w] {
+                qDebug() << "Window title changed to: " << w->title();
+            });
+            connect(w, &PlasmaWindow::activeChanged, this, [w] {
+                qDebug() << "Window active changed: " << w->isActive();
+            });
+            connect(w, &PlasmaWindow::maximizedChanged, this, [w] {
+                qDebug() << "Window maximized changed: " << w->isMaximized();
+            });
+            connect(w, &PlasmaWindow::maximizedChanged, this, [w] {
+                qDebug() << "Window minimized changed: " << w->isMinimized();
+            });
+            connect(w, &PlasmaWindow::keepAboveChanged, this, [w] {
+                qDebug() << "Window keep above changed: " << w->isKeepAbove();
+            });
+            connect(w, &PlasmaWindow::keepBelowChanged, this, [w] {
+                qDebug() << "Window keep below changed: " << w->isKeepBelow();
+            });
+            connect(w, &PlasmaWindow::onAllDesktopsChanged, this, [w] {
+                qDebug() << "Window on all desktops changed: " << w->isOnAllDesktops();
+            });
+            connect(w, &PlasmaWindow::fullscreenChanged, this, [w] {
+                qDebug() << "Window full screen changed: " << w->isFullscreen();
+            });
+            connect(w, &PlasmaWindow::demandsAttentionChanged, this, [w] {
+                qDebug() << "Window demands attention changed: " << w->isDemandingAttention();
+            });
+            connect(w, &PlasmaWindow::closeableChanged, this, [w] {
+                qDebug() << "Window is closeable changed: " << w->isCloseable();
+            });
+            connect(w, &PlasmaWindow::minimizeableChanged, this, [w] {
+                qDebug() << "Window is minimizeable changed: " << w->isMinimizeable();
+            });
+            connect(w, &PlasmaWindow::maximizeableChanged, this, [w] {
+                qDebug() << "Window is maximizeable changed: " << w->isMaximizeable();
+            });
+            connect(w, &PlasmaWindow::fullscreenableChanged, this, [w] {
+                qDebug() << "Window is fullscreenable changed: " << w->isFullscreenable();
+            });
+            connect(w, &PlasmaWindow::iconChanged, this, [w] {
+                qDebug() << "Window icon changed: " << w->icon().name();
+            });
+        });
+    });
+    connect(registry, &Registry::interfacesAnnounced, this, [this] {
+        Q_ASSERT(m_compositor);
+        Q_ASSERT(m_seat);
+        Q_ASSERT(m_shell);
+        Q_ASSERT(m_shm);
+        m_surface = m_compositor->createSurface(this);
+        Q_ASSERT(m_surface);
+        m_shellSurface = m_shell->createSurface(m_surface, this);
+        Q_ASSERT(m_shellSurface);
+        m_shellSurface->setToplevel();
+        connect(m_shellSurface, &ShellSurface::sizeChanged, this, &PanelTest::render);
+        if (m_plasmaShell) {
+            m_plasmaShellSurface = m_plasmaShell->createSurface(m_surface, this);
+            m_plasmaShellSurface->setPosition(QPoint(10, 0));
+            m_plasmaShellSurface->setRole(PlasmaShellSurface::Role::Panel);
         }
-    );
+        render();
+    });
     registry->setEventQueue(m_eventQueue);
     registry->create(m_connectionThreadObject);
     registry->setup();
@@ -346,4 +292,3 @@ int main(int argc, char **argv)
 }
 
 #include "paneltest.moc"
-

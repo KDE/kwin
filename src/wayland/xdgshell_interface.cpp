@@ -16,7 +16,6 @@
 
 namespace KWaylandServer
 {
-
 static const int s_version = 3;
 
 XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
@@ -73,8 +72,7 @@ XdgShellInterfacePrivate *XdgShellInterfacePrivate::get(XdgShellInterface *shell
 void XdgShellInterfacePrivate::xdg_wm_base_destroy(Resource *resource)
 {
     if (xdgSurfaces.contains(resource->client())) {
-        wl_resource_post_error(resource->handle, error_defunct_surfaces,
-                               "xdg_wm_base was destroyed before children");
+        wl_resource_post_error(resource->handle, error_defunct_surfaces, "xdg_wm_base was destroyed before children");
         return;
     }
     wl_resource_destroy(resource->handle);
@@ -82,24 +80,20 @@ void XdgShellInterfacePrivate::xdg_wm_base_destroy(Resource *resource)
 
 void XdgShellInterfacePrivate::xdg_wm_base_create_positioner(Resource *resource, uint32_t id)
 {
-    wl_resource *positionerResource = wl_resource_create(resource->client(), &xdg_positioner_interface,
-                                                         resource->version(), id);
+    wl_resource *positionerResource = wl_resource_create(resource->client(), &xdg_positioner_interface, resource->version(), id);
     new XdgPositionerPrivate(positionerResource);
 }
 
-void XdgShellInterfacePrivate::xdg_wm_base_get_xdg_surface(Resource *resource, uint32_t id,
-                                                           ::wl_resource *surfaceResource)
+void XdgShellInterfacePrivate::xdg_wm_base_get_xdg_surface(Resource *resource, uint32_t id, ::wl_resource *surfaceResource)
 {
     SurfaceInterface *surface = SurfaceInterface::get(surfaceResource);
 
     if (surface->buffer()) {
-        wl_resource_post_error(resource->handle, XDG_SURFACE_ERROR_UNCONFIGURED_BUFFER,
-                               "xdg_surface must not have a buffer at creation");
+        wl_resource_post_error(resource->handle, XDG_SURFACE_ERROR_UNCONFIGURED_BUFFER, "xdg_surface must not have a buffer at creation");
         return;
     }
 
-    wl_resource *xdgSurfaceResource = wl_resource_create(resource->client(), &xdg_surface_interface,
-                                                         resource->version(), id);
+    wl_resource *xdgSurfaceResource = wl_resource_create(resource->client(), &xdg_surface_interface, resource->version(), id);
 
     XdgSurfaceInterface *xdgSurface = new XdgSurfaceInterface(q, surface, xdgSurfaceResource);
     registerXdgSurface(xdgSurface);
@@ -199,28 +193,21 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_toplevel(Resource *resource, ui
 {
     const SurfaceRole *surfaceRole = SurfaceRole::get(surface);
     if (surfaceRole) {
-        wl_resource_post_error(resource->handle, error_already_constructed,
-                               "the surface already has a role assigned %s",
-                               surfaceRole->name().constData());
+        wl_resource_post_error(resource->handle, error_already_constructed, "the surface already has a role assigned %s", surfaceRole->name().constData());
         return;
     }
 
-    wl_resource *toplevelResource = wl_resource_create(resource->client(), &xdg_toplevel_interface,
-                                                       resource->version(), id);
+    wl_resource *toplevelResource = wl_resource_create(resource->client(), &xdg_toplevel_interface, resource->version(), id);
 
     toplevel = new XdgToplevelInterface(q, toplevelResource);
     Q_EMIT shell->toplevelCreated(toplevel);
 }
 
-void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint32_t id,
-                                                       ::wl_resource *parentResource,
-                                                       ::wl_resource *positionerResource)
+void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint32_t id, ::wl_resource *parentResource, ::wl_resource *positionerResource)
 {
     const SurfaceRole *surfaceRole = SurfaceRole::get(surface);
     if (surfaceRole) {
-        wl_resource_post_error(resource->handle, error_already_constructed,
-                               "the surface already has a role assigned %s",
-                               surfaceRole->name().constData());
+        wl_resource_post_error(resource->handle, error_already_constructed, "the surface already has a role assigned %s", surfaceRole->name().constData());
         return;
     }
 
@@ -239,26 +226,21 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint3
         parentSurface = parentXdgSurface->surface();
     }
 
-    wl_resource *popupResource = wl_resource_create(resource->client(), &xdg_popup_interface,
-                                                    resource->version(), id);
+    wl_resource *popupResource = wl_resource_create(resource->client(), &xdg_popup_interface, resource->version(), id);
 
     popup = new XdgPopupInterface(q, parentSurface, positioner, popupResource);
     Q_EMIT shell->popupCreated(popup);
 }
 
-void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resource,
-                                                                 int32_t x, int32_t y,
-                                                                 int32_t width, int32_t height)
+void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
     if (!toplevel && !popup) {
-        wl_resource_post_error(resource->handle, error_not_constructed,
-                               "xdg_surface must have a role");
+        wl_resource_post_error(resource->handle, error_not_constructed, "xdg_surface must have a role");
         return;
     }
 
     if (width < 1 || height < 1) {
-        wl_resource_post_error(resource->handle, -1, "invalid window geometry size (%dx%d)",
-                               width, height);
+        wl_resource_post_error(resource->handle, -1, "invalid window geometry size (%dx%d)", width, height);
         return;
     }
 
@@ -273,8 +255,7 @@ void XdgSurfaceInterfacePrivate::xdg_surface_ack_configure(Resource *resource, u
     next.acknowledgedConfigureIsSet = true;
 }
 
-XdgSurfaceInterface::XdgSurfaceInterface(XdgShellInterface *shell, SurfaceInterface *surface,
-                                         ::wl_resource *resource)
+XdgSurfaceInterface::XdgSurfaceInterface(XdgShellInterface *shell, SurfaceInterface *surface, ::wl_resource *resource)
     : d(new XdgSurfaceInterfacePrivate(this))
 {
     d->shell = shell;
@@ -324,8 +305,7 @@ XdgSurfaceInterface *XdgSurfaceInterface::get(::wl_resource *resource)
     return nullptr;
 }
 
-XdgToplevelInterfacePrivate::XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel,
-                                                         XdgSurfaceInterface *surface)
+XdgToplevelInterfacePrivate::XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel, XdgSurfaceInterface *surface)
     : SurfaceRole(surface->surface(), QByteArrayLiteral("xdg_toplevel"))
     , q(toplevel)
     , xdgSurface(surface)
@@ -384,8 +364,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_destroy(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-void XdgToplevelInterfacePrivate::xdg_toplevel_set_parent(Resource *resource,
-                                                          ::wl_resource *parentResource)
+void XdgToplevelInterfacePrivate::xdg_toplevel_set_parent(Resource *resource, ::wl_resource *parentResource)
 {
     Q_UNUSED(resource)
     XdgToplevelInterface *parent = XdgToplevelInterface::get(parentResource);
@@ -416,14 +395,12 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_app_id(Resource *resource, co
     Q_EMIT q->windowClassChanged(app_id);
 }
 
-void XdgToplevelInterfacePrivate::xdg_toplevel_show_window_menu(Resource *resource, ::wl_resource *seatResource,
-                                                                uint32_t serial, int32_t x, int32_t y)
+void XdgToplevelInterfacePrivate::xdg_toplevel_show_window_menu(Resource *resource, ::wl_resource *seatResource, uint32_t serial, int32_t x, int32_t y)
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
 
     if (!xdgSurfacePrivate->isConfigured) {
-        wl_resource_post_error(resource->handle, QtWaylandServer::xdg_surface::error_not_constructed,
-                               "surface has not been configured yet");
+        wl_resource_post_error(resource->handle, QtWaylandServer::xdg_surface::error_not_constructed, "surface has not been configured yet");
         return;
     }
 
@@ -436,8 +413,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_move(Resource *resource, ::wl_res
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
 
     if (!xdgSurfacePrivate->isConfigured) {
-        wl_resource_post_error(resource->handle, QtWaylandServer::xdg_surface::error_not_constructed,
-                               "surface has not been configured yet");
+        wl_resource_post_error(resource->handle, QtWaylandServer::xdg_surface::error_not_constructed, "surface has not been configured yet");
         return;
     }
 
@@ -445,14 +421,12 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_move(Resource *resource, ::wl_res
     Q_EMIT q->moveRequested(seat, serial);
 }
 
-void XdgToplevelInterfacePrivate::xdg_toplevel_resize(Resource *resource, ::wl_resource *seatResource,
-                                                      uint32_t serial, uint32_t xdgEdges)
+void XdgToplevelInterfacePrivate::xdg_toplevel_resize(Resource *resource, ::wl_resource *seatResource, uint32_t serial, uint32_t xdgEdges)
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
 
     if (!xdgSurfacePrivate->isConfigured) {
-        wl_resource_post_error(resource->handle, QtWaylandServer::xdg_surface::error_not_constructed,
-                               "surface has not been configured yet");
+        wl_resource_post_error(resource->handle, QtWaylandServer::xdg_surface::error_not_constructed, "surface has not been configured yet");
         return;
     }
 
@@ -593,7 +567,7 @@ quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &sta
 {
     // Note that the states listed in the configure event must be an array of uint32_t.
 
-    uint32_t statesData[8] = { 0 };
+    uint32_t statesData[8] = {0};
     int i = 0;
 
     if (states & State::MaximizedHorizontal && states & State::MaximizedVertical) {
@@ -624,8 +598,7 @@ quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &sta
         }
     }
 
-    const QByteArray xdgStates = QByteArray::fromRawData(reinterpret_cast<char *>(statesData),
-                                                         sizeof(uint32_t) * i);
+    const QByteArray xdgStates = QByteArray::fromRawData(reinterpret_cast<char *>(statesData), sizeof(uint32_t) * i);
     const quint32 serial = xdgSurface()->shell()->display()->nextSerial();
 
     d->send_configure(size.width(), size.height(), xdgStates);
@@ -655,8 +628,7 @@ XdgPopupInterfacePrivate *XdgPopupInterfacePrivate::get(XdgPopupInterface *popup
     return popup->d.data();
 }
 
-XdgPopupInterfacePrivate::XdgPopupInterfacePrivate(XdgPopupInterface *popup,
-                                                   XdgSurfaceInterface *surface)
+XdgPopupInterfacePrivate::XdgPopupInterfacePrivate(XdgPopupInterface *popup, XdgSurfaceInterface *surface)
     : SurfaceRole(surface->surface(), QByteArrayLiteral("xdg_popup"))
     , q(popup)
     , xdgSurface(surface)
@@ -712,8 +684,7 @@ void XdgPopupInterfacePrivate::xdg_popup_destroy(Resource *resource)
 void XdgPopupInterfacePrivate::xdg_popup_grab(Resource *resource, ::wl_resource *seatHandle, uint32_t serial)
 {
     if (xdgSurface->surface()->buffer()) {
-        wl_resource_post_error(resource->handle, error_invalid_grab,
-                               "xdg_surface is already mapped");
+        wl_resource_post_error(resource->handle, error_invalid_grab, "xdg_surface is already mapped");
         return;
     }
     SeatInterface *seat = SeatInterface::get(seatHandle);
@@ -727,10 +698,7 @@ void XdgPopupInterfacePrivate::xdg_popup_reposition(Resource *resource, ::wl_res
     Q_EMIT q->repositionRequested(token);
 }
 
-XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *surface,
-                                     SurfaceInterface *parentSurface,
-                                     const XdgPositioner &positioner,
-                                     ::wl_resource *resource)
+XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *surface, SurfaceInterface *parentSurface, const XdgPositioner &positioner, ::wl_resource *resource)
     : d(new XdgPopupInterfacePrivate(this, surface))
 {
     d->parentSurface = parentSurface;
@@ -824,19 +792,16 @@ void XdgPositionerPrivate::xdg_positioner_destroy(Resource *resource)
 void XdgPositionerPrivate::xdg_positioner_set_size(Resource *resource, int32_t width, int32_t height)
 {
     if (width < 1 || height < 1) {
-        wl_resource_post_error(resource->handle, error_invalid_input,
-                               "width and height must be positive and non-zero");
+        wl_resource_post_error(resource->handle, error_invalid_input, "width and height must be positive and non-zero");
         return;
     }
     data->size = QSize(width, height);
 }
 
-void XdgPositionerPrivate::xdg_positioner_set_anchor_rect(Resource *resource, int32_t x, int32_t y,
-                                                   int32_t width, int32_t height)
+void XdgPositionerPrivate::xdg_positioner_set_anchor_rect(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
     if (width < 1 || height < 1) {
-        wl_resource_post_error(resource->handle, error_invalid_input,
-                               "width and height must be positive and non-zero");
+        wl_resource_post_error(resource->handle, error_invalid_input, "width and height must be positive and non-zero");
         return;
     }
     data->anchorRect = QRect(x, y, width, height);
@@ -936,8 +901,7 @@ void XdgPositionerPrivate::xdg_positioner_set_gravity(Resource *resource, uint32
     }
 }
 
-void XdgPositionerPrivate::xdg_positioner_set_constraint_adjustment(Resource *resource,
-                                                                    uint32_t constraint_adjustment)
+void XdgPositionerPrivate::xdg_positioner_set_constraint_adjustment(Resource *resource, uint32_t constraint_adjustment)
 {
     Q_UNUSED(resource)
 

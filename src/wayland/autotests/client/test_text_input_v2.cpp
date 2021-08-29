@@ -106,9 +106,7 @@ void TextInputTest::init()
     registry.setup();
     QVERIFY(interfacesAnnouncedSpy.wait());
 
-    m_seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name,
-                                 registry.interface(Registry::Interface::Seat).version,
-                                 this);
+    m_seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version, this);
     QVERIFY(m_seat->isValid());
     QSignalSpy hasKeyboardSpy(m_seat, &Seat::hasKeyboardChanged);
     QVERIFY(hasKeyboardSpy.isValid());
@@ -116,12 +114,9 @@ void TextInputTest::init()
     m_keyboard = m_seat->createKeyboard(this);
     QVERIFY(m_keyboard->isValid());
 
-    m_compositor = registry.createCompositor(registry.interface(Registry::Interface::Compositor).name,
-                                             registry.interface(Registry::Interface::Compositor).version,
-                                             this);
+    m_compositor =
+        registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, this);
     QVERIFY(m_compositor->isValid());
-
-
 
     m_textInputManagerV2 = registry.createTextInputManager(registry.interface(Registry::Interface::TextInputManagerUnstableV2).name,
                                                            registry.interface(Registry::Interface::TextInputManagerUnstableV2).version,
@@ -131,10 +126,10 @@ void TextInputTest::init()
 
 void TextInputTest::cleanup()
 {
-#define CLEANUP(variable) \
-    if (variable) { \
-        delete variable; \
-        variable = nullptr; \
+#define CLEANUP(variable)                                                                                                                                      \
+    if (variable) {                                                                                                                                            \
+        delete variable;                                                                                                                                       \
+        variable = nullptr;                                                                                                                                    \
     }
     CLEANUP(m_textInputManagerV2)
     CLEANUP(m_keyboard)
@@ -173,13 +168,13 @@ SurfaceInterface *TextInputTest::waitForSurface()
     if (surfaceCreatedSpy.count() != 1) {
         return nullptr;
     }
-    return surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    return surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
 }
 
 TextInput *TextInputTest::createTextInput()
 {
-        return m_textInputManagerV2->createTextInput(m_seat);
-    }
+    return m_textInputManagerV2->createTextInput(m_seat);
+}
 
 void TextInputTest::testEnterLeave_data()
 {
@@ -260,11 +255,11 @@ void TextInputTest::testEnterLeave()
     QCOMPARE(textInputChangedSpy.count(), 3);
     // should still be the same text input
     QCOMPARE(m_seatInterface->textInputV2(), serverTextInput);
-    //reset
+    // reset
     textInput->enable(surface.data());
     QVERIFY(enabledChangedSpy.wait());
 
-    //delete the client and wait for the server to catch up
+    // delete the client and wait for the server to catch up
     QSignalSpy unboundSpy(serverSurface, &QObject::destroyed);
     surface.reset();
     QVERIFY(unboundSpy.wait());
@@ -421,42 +416,41 @@ void TextInputTest::testContentHints_data()
     QTest::addColumn<TextInput::ContentHints>("clientHints");
     QTest::addColumn<KWaylandServer::TextInputContentHints>("serverHints");
 
-    QTest::newRow("completion/v2")     << TextInput::ContentHints(TextInput::ContentHint::AutoCompletion) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCompletion);
-    QTest::newRow("Correction/v2")     << TextInput::ContentHints(TextInput::ContentHint::AutoCorrection) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCorrection);
-    QTest::newRow("Capitalization/v2") << TextInput::ContentHints(TextInput::ContentHint::AutoCapitalization) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCapitalization);
-    QTest::newRow("Lowercase/v2")      << TextInput::ContentHints(TextInput::ContentHint::LowerCase) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::LowerCase);
-    QTest::newRow("Uppercase/v2")      << TextInput::ContentHints(TextInput::ContentHint::UpperCase) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::UpperCase);
-    QTest::newRow("Titlecase/v2")      << TextInput::ContentHints(TextInput::ContentHint::TitleCase) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::TitleCase);
-    QTest::newRow("HiddenText/v2")     << TextInput::ContentHints(TextInput::ContentHint::HiddenText) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::HiddenText);
-    QTest::newRow("SensitiveData/v2")  << TextInput::ContentHints(TextInput::ContentHint::SensitiveData) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::SensitiveData);
-    QTest::newRow("Latin/v2")          << TextInput::ContentHints(TextInput::ContentHint::Latin) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::Latin);
-    QTest::newRow("Multiline/v2")      << TextInput::ContentHints(TextInput::ContentHint::MultiLine) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::MultiLine);
+    QTest::newRow("completion/v2") << TextInput::ContentHints(TextInput::ContentHint::AutoCompletion)
+                                   << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCompletion);
+    QTest::newRow("Correction/v2") << TextInput::ContentHints(TextInput::ContentHint::AutoCorrection)
+                                   << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCorrection);
+    QTest::newRow("Capitalization/v2") << TextInput::ContentHints(TextInput::ContentHint::AutoCapitalization)
+                                       << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCapitalization);
+    QTest::newRow("Lowercase/v2") << TextInput::ContentHints(TextInput::ContentHint::LowerCase)
+                                  << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::LowerCase);
+    QTest::newRow("Uppercase/v2") << TextInput::ContentHints(TextInput::ContentHint::UpperCase)
+                                  << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::UpperCase);
+    QTest::newRow("Titlecase/v2") << TextInput::ContentHints(TextInput::ContentHint::TitleCase)
+                                  << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::TitleCase);
+    QTest::newRow("HiddenText/v2") << TextInput::ContentHints(TextInput::ContentHint::HiddenText)
+                                   << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::HiddenText);
+    QTest::newRow("SensitiveData/v2") << TextInput::ContentHints(TextInput::ContentHint::SensitiveData)
+                                      << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::SensitiveData);
+    QTest::newRow("Latin/v2") << TextInput::ContentHints(TextInput::ContentHint::Latin)
+                              << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::Latin);
+    QTest::newRow("Multiline/v2") << TextInput::ContentHints(TextInput::ContentHint::MultiLine)
+                                  << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::MultiLine);
 
     QTest::newRow("autos/v2") << (TextInput::ContentHint::AutoCompletion | TextInput::ContentHint::AutoCorrection | TextInput::ContentHint::AutoCapitalization)
-                              << (KWaylandServer::TextInputContentHint::AutoCompletion | KWaylandServer::TextInputContentHint::AutoCorrection | KWaylandServer::TextInputContentHint::AutoCapitalization);
+                              << (KWaylandServer::TextInputContentHint::AutoCompletion | KWaylandServer::TextInputContentHint::AutoCorrection
+                                  | KWaylandServer::TextInputContentHint::AutoCapitalization);
 
     // all has combinations which don't make sense - what's both lowercase and uppercase?
-    QTest::newRow("all/v2") << (TextInput::ContentHint::AutoCompletion |
-                                TextInput::ContentHint::AutoCorrection |
-                                TextInput::ContentHint::AutoCapitalization |
-                                TextInput::ContentHint::LowerCase |
-                                TextInput::ContentHint::UpperCase |
-                                TextInput::ContentHint::TitleCase |
-                                TextInput::ContentHint::HiddenText |
-                                TextInput::ContentHint::SensitiveData |
-                                TextInput::ContentHint::Latin |
-                                TextInput::ContentHint::MultiLine)
-                            << (KWaylandServer::TextInputContentHint::AutoCompletion |
-                                KWaylandServer::TextInputContentHint::AutoCorrection |
-                                KWaylandServer::TextInputContentHint::AutoCapitalization |
-                                KWaylandServer::TextInputContentHint::LowerCase |
-                                KWaylandServer::TextInputContentHint::UpperCase |
-                                KWaylandServer::TextInputContentHint::TitleCase |
-                                KWaylandServer::TextInputContentHint::HiddenText |
-                                KWaylandServer::TextInputContentHint::SensitiveData |
-                                KWaylandServer::TextInputContentHint::Latin |
-                                KWaylandServer::TextInputContentHint::MultiLine);
-
+    QTest::newRow("all/v2") << (TextInput::ContentHint::AutoCompletion | TextInput::ContentHint::AutoCorrection | TextInput::ContentHint::AutoCapitalization
+                                | TextInput::ContentHint::LowerCase | TextInput::ContentHint::UpperCase | TextInput::ContentHint::TitleCase
+                                | TextInput::ContentHint::HiddenText | TextInput::ContentHint::SensitiveData | TextInput::ContentHint::Latin
+                                | TextInput::ContentHint::MultiLine)
+                            << (KWaylandServer::TextInputContentHint::AutoCompletion | KWaylandServer::TextInputContentHint::AutoCorrection
+                                | KWaylandServer::TextInputContentHint::AutoCapitalization | KWaylandServer::TextInputContentHint::LowerCase
+                                | KWaylandServer::TextInputContentHint::UpperCase | KWaylandServer::TextInputContentHint::TitleCase
+                                | KWaylandServer::TextInputContentHint::HiddenText | KWaylandServer::TextInputContentHint::SensitiveData
+                                | KWaylandServer::TextInputContentHint::Latin | KWaylandServer::TextInputContentHint::MultiLine);
 }
 
 void TextInputTest::testContentHints()
@@ -496,20 +490,19 @@ void TextInputTest::testContentHints()
 
 void TextInputTest::testContentPurpose_data()
 {
-
     QTest::addColumn<TextInput::ContentPurpose>("clientPurpose");
     QTest::addColumn<KWaylandServer::TextInputContentPurpose>("serverPurpose");
 
-    QTest::newRow("Alpha/v2")    << TextInput::ContentPurpose::Alpha    << KWaylandServer::TextInputContentPurpose::Alpha;
-    QTest::newRow("Digits/v2")   << TextInput::ContentPurpose::Digits   << KWaylandServer::TextInputContentPurpose::Digits;
-    QTest::newRow("Number/v2")   << TextInput::ContentPurpose::Number   << KWaylandServer::TextInputContentPurpose::Number;
-    QTest::newRow("Phone/v2")    << TextInput::ContentPurpose::Phone    << KWaylandServer::TextInputContentPurpose::Phone;
-    QTest::newRow("Url/v2")      << TextInput::ContentPurpose::Url      << KWaylandServer::TextInputContentPurpose::Url;
-    QTest::newRow("Email/v2")    << TextInput::ContentPurpose::Email    << KWaylandServer::TextInputContentPurpose::Email;
-    QTest::newRow("Name/v2")     << TextInput::ContentPurpose::Name     << KWaylandServer::TextInputContentPurpose::Name;
+    QTest::newRow("Alpha/v2") << TextInput::ContentPurpose::Alpha << KWaylandServer::TextInputContentPurpose::Alpha;
+    QTest::newRow("Digits/v2") << TextInput::ContentPurpose::Digits << KWaylandServer::TextInputContentPurpose::Digits;
+    QTest::newRow("Number/v2") << TextInput::ContentPurpose::Number << KWaylandServer::TextInputContentPurpose::Number;
+    QTest::newRow("Phone/v2") << TextInput::ContentPurpose::Phone << KWaylandServer::TextInputContentPurpose::Phone;
+    QTest::newRow("Url/v2") << TextInput::ContentPurpose::Url << KWaylandServer::TextInputContentPurpose::Url;
+    QTest::newRow("Email/v2") << TextInput::ContentPurpose::Email << KWaylandServer::TextInputContentPurpose::Email;
+    QTest::newRow("Name/v2") << TextInput::ContentPurpose::Name << KWaylandServer::TextInputContentPurpose::Name;
     QTest::newRow("Password/v2") << TextInput::ContentPurpose::Password << KWaylandServer::TextInputContentPurpose::Password;
-    QTest::newRow("Date/v2")     << TextInput::ContentPurpose::Date     << KWaylandServer::TextInputContentPurpose::Date;
-    QTest::newRow("Time/v2")     << TextInput::ContentPurpose::Time     << KWaylandServer::TextInputContentPurpose::Time;
+    QTest::newRow("Date/v2") << TextInput::ContentPurpose::Date << KWaylandServer::TextInputContentPurpose::Date;
+    QTest::newRow("Time/v2") << TextInput::ContentPurpose::Time << KWaylandServer::TextInputContentPurpose::Time;
     QTest::newRow("Datetime/v2") << TextInput::ContentPurpose::DateTime << KWaylandServer::TextInputContentPurpose::DateTime;
     QTest::newRow("Terminal/v2") << TextInput::ContentPurpose::Terminal << KWaylandServer::TextInputContentPurpose::Terminal;
 }
@@ -551,7 +544,6 @@ void TextInputTest::testContentPurpose()
 
 void TextInputTest::testTextDirection_data()
 {
-
     QTest::addColumn<Qt::LayoutDirection>("textDirection");
 
     QTest::newRow("ltr/v0") << Qt::LeftToRight;

@@ -5,9 +5,9 @@
 */
 #pragma once
 
+#include <QObject>
 #include <QPointF>
 #include <QSizeF>
-#include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
@@ -15,7 +15,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class Display;
 class FakeInputDevice;
 class FakeInputDevicePrivate;
@@ -135,7 +134,7 @@ Q_SIGNALS:
      * Requests a touch frame event.
      */
     void touchFrameRequested();
-     /**
+    /**
      * Requests a keyboard key pressed for @p key.
      */
     void keyboardKeyPressRequested(quint32 key);
@@ -152,4 +151,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::FakeInputDevice*)
+Q_DECLARE_METATYPE(KWaylandServer::FakeInputDevice *)

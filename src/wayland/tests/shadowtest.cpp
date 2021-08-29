@@ -3,11 +3,11 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
+#include "KWayland/Client/shadow.h"
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/registry.h"
-#include "KWayland/Client/shadow.h"
 #include "KWayland/Client/shell.h"
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
@@ -58,7 +58,10 @@ ShadowTest::~ShadowTest()
 
 void ShadowTest::init()
 {
-    connect(m_connectionThreadObject, &ConnectionThread::connected, this,
+    connect(
+        m_connectionThreadObject,
+        &ConnectionThread::connected,
+        this,
         [this] {
             m_eventQueue = new EventQueue(this);
             m_eventQueue->setup(m_connectionThreadObject);
@@ -66,8 +69,7 @@ void ShadowTest::init()
             Registry *registry = new Registry(this);
             setupRegistry(registry);
         },
-        Qt::QueuedConnection
-    );
+        Qt::QueuedConnection);
     m_connectionThreadObject->moveToThread(m_connectionThread);
     m_connectionThread->start();
 
@@ -76,42 +78,32 @@ void ShadowTest::init()
 
 void ShadowTest::setupRegistry(Registry *registry)
 {
-    connect(registry, &Registry::compositorAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_compositor = registry->createCompositor(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shellAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shell = registry->createShell(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shmAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shm = registry->createShmPool(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shadowAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shadowManager = registry->createShadowManager(name, version, this);
-            m_shadowManager->setEventQueue(m_eventQueue);
-        }
-    );
-    connect(registry, &Registry::interfacesAnnounced, this,
-        [this] {
-            Q_ASSERT(m_compositor);
-            Q_ASSERT(m_shell);
-            Q_ASSERT(m_shm);
-            m_surface = m_compositor->createSurface(this);
-            Q_ASSERT(m_surface);
-            setupShadow();
-            m_shellSurface = m_shell->createSurface(m_surface, this);
-            Q_ASSERT(m_shellSurface);
-            m_shellSurface->setToplevel();
-            connect(m_shellSurface, &ShellSurface::sizeChanged, this, &ShadowTest::render);
-            render();
-        }
-    );
+    connect(registry, &Registry::compositorAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_compositor = registry->createCompositor(name, version, this);
+    });
+    connect(registry, &Registry::shellAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shell = registry->createShell(name, version, this);
+    });
+    connect(registry, &Registry::shmAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shm = registry->createShmPool(name, version, this);
+    });
+    connect(registry, &Registry::shadowAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shadowManager = registry->createShadowManager(name, version, this);
+        m_shadowManager->setEventQueue(m_eventQueue);
+    });
+    connect(registry, &Registry::interfacesAnnounced, this, [this] {
+        Q_ASSERT(m_compositor);
+        Q_ASSERT(m_shell);
+        Q_ASSERT(m_shm);
+        m_surface = m_compositor->createSurface(this);
+        Q_ASSERT(m_surface);
+        setupShadow();
+        m_shellSurface = m_shell->createSurface(m_surface, this);
+        Q_ASSERT(m_shellSurface);
+        m_shellSurface->setToplevel();
+        connect(m_shellSurface, &ShellSurface::sizeChanged, this, &ShadowTest::render);
+        render();
+    });
     registry->setEventQueue(m_eventQueue);
     registry->create(m_connectionThreadObject);
     registry->setup();
@@ -123,7 +115,7 @@ void ShadowTest::setupShadow()
     Shadow *shadow = m_shadowManager->createShadow(m_surface, this);
     Q_ASSERT(shadow);
 
-    auto addElement = [this] (const QColor color) {
+    auto addElement = [this](const QColor color) {
         const QSize size = QSize(10, 10);
         auto buffer = m_shm->getBuffer(size, size.width() * 4).toStrongRef();
         buffer->setUsed(true);

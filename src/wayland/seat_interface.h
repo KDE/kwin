@@ -8,16 +8,15 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
+#include <QMatrix4x4>
 #include <QObject>
 #include <QPoint>
-#include <QMatrix4x4>
 
 struct wl_client;
 struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class AbstractDataSource;
 class DataDeviceInterface;
 class Display;
@@ -590,7 +589,7 @@ public:
      * @see focusedTextInputSurface
      */
     TextInputV2Interface *textInputV2() const;
-    
+
     TextInputV3Interface *textInputV3() const;
     ///@}
 
@@ -622,7 +621,7 @@ public:
     static SeatInterface *get(wl_resource *native);
 
 Q_SIGNALS:
-    void nameChanged(const QString&);
+    void nameChanged(const QString &);
     void hasPointerChanged(bool);
     void hasKeyboardChanged(bool);
     void hasTouchChanged(bool);
@@ -635,13 +634,13 @@ Q_SIGNALS:
      * @see selection
      * @see setSelection
      */
-    void selectionChanged(KWaylandServer::AbstractDataSource*);
+    void selectionChanged(KWaylandServer::AbstractDataSource *);
 
     /**
      * Emitted whenever the primary selection changes
      * @see primarySelection
      */
-    void primarySelectionChanged(KWaylandServer::AbstractDataSource*);
+    void primarySelectionChanged(KWaylandServer::AbstractDataSource *);
 
     /**
      * Emitted when a drag'n'drop operation is started
@@ -676,4 +675,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::SeatInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::SeatInterface *)

@@ -12,7 +12,6 @@
 
 namespace KWaylandServer
 {
-
 class RegionInterface : public QtWaylandServer::wl_region
 {
 public:

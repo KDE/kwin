@@ -9,12 +9,11 @@
 #include <QDebug>
 #include <QTimer>
 
-#include <wayland-server.h>
 #include <qwayland-server-org-kde-plasma-virtual-desktop.h>
+#include <wayland-server.h>
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 2;
 
 class PlasmaVirtualDesktopInterfacePrivate : public QtWaylandServer::org_kde_plasma_virtual_desktop
@@ -35,43 +34,43 @@ protected:
     void org_kde_plasma_virtual_desktop_request_activate(Resource *resource) override;
 };
 
-
 class PlasmaVirtualDesktopManagementInterfacePrivate : public QtWaylandServer::org_kde_plasma_virtual_desktop_management
 {
 public:
     PlasmaVirtualDesktopManagementInterfacePrivate(PlasmaVirtualDesktopManagementInterface *_q, Display *display);
 
-    QList<PlasmaVirtualDesktopInterface*> desktops;
+    QList<PlasmaVirtualDesktopInterface *> desktops;
     quint32 rows = 0;
     quint32 columns = 0;
     PlasmaVirtualDesktopManagementInterface *q;
 
-    inline QList<PlasmaVirtualDesktopInterface*>::const_iterator constFindDesktop(const QString &id);
-    inline QList<PlasmaVirtualDesktopInterface*>::iterator findDesktop(const QString &id);
+    inline QList<PlasmaVirtualDesktopInterface *>::const_iterator constFindDesktop(const QString &id);
+    inline QList<PlasmaVirtualDesktopInterface *>::iterator findDesktop(const QString &id);
 
 protected:
-
     void org_kde_plasma_virtual_desktop_management_get_virtual_desktop(Resource *resource, uint32_t id, const QString &desktop_id) override;
     void org_kde_plasma_virtual_desktop_management_request_create_virtual_desktop(Resource *resource, const QString &name, uint32_t position) override;
     void org_kde_plasma_virtual_desktop_management_request_remove_virtual_desktop(Resource *resource, const QString &desktop_id) override;
     void org_kde_plasma_virtual_desktop_management_bind_resource(Resource *resource) override;
 };
 
-inline QList<PlasmaVirtualDesktopInterface*>::const_iterator PlasmaVirtualDesktopManagementInterfacePrivate::constFindDesktop(const QString &id)
+inline QList<PlasmaVirtualDesktopInterface *>::const_iterator PlasmaVirtualDesktopManagementInterfacePrivate::constFindDesktop(const QString &id)
 {
-    return std::find_if( desktops.constBegin(),
-                         desktops.constEnd(),
-                         [id]( const PlasmaVirtualDesktopInterface *desk ){ return desk->id() == id; } );
+    return std::find_if(desktops.constBegin(), desktops.constEnd(), [id](const PlasmaVirtualDesktopInterface *desk) {
+        return desk->id() == id;
+    });
 }
 
-inline QList<PlasmaVirtualDesktopInterface*>::iterator PlasmaVirtualDesktopManagementInterfacePrivate::findDesktop(const QString &id)
+inline QList<PlasmaVirtualDesktopInterface *>::iterator PlasmaVirtualDesktopManagementInterfacePrivate::findDesktop(const QString &id)
 {
-    return std::find_if( desktops.begin(),
-                         desktops.end(),
-                         [id]( const PlasmaVirtualDesktopInterface *desk ){ return desk->id() == id; } );
+    return std::find_if(desktops.begin(), desktops.end(), [id](const PlasmaVirtualDesktopInterface *desk) {
+        return desk->id() == id;
+    });
 }
 
-void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desktop_management_get_virtual_desktop(Resource *resource, uint32_t id, const QString &desktop_id)
+void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desktop_management_get_virtual_desktop(Resource *resource,
+                                                                                                                   uint32_t id,
+                                                                                                                   const QString &desktop_id)
 {
     auto i = constFindDesktop(desktop_id);
     if (i == desktops.constEnd()) {
@@ -81,13 +80,16 @@ void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desk
     (*i)->d->add(resource->client(), id, resource->version());
 }
 
-void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desktop_management_request_create_virtual_desktop(Resource *resource, const QString &name, uint32_t position)
+void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desktop_management_request_create_virtual_desktop(Resource *resource,
+                                                                                                                              const QString &name,
+                                                                                                                              uint32_t position)
 {
     Q_UNUSED(resource)
     Q_EMIT q->desktopCreateRequested(name, qBound<quint32>(0, position, (quint32)desktops.count()));
 }
 
-void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desktop_management_request_remove_virtual_desktop(Resource *resource, const QString &desktop_id)
+void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desktop_management_request_remove_virtual_desktop(Resource *resource,
+                                                                                                                              const QString &desktop_id)
 {
     Q_UNUSED(resource)
     Q_EMIT q->desktopRemoveRequested(desktop_id);
@@ -167,7 +169,7 @@ PlasmaVirtualDesktopInterface *PlasmaVirtualDesktopManagementInterface::createDe
         desktop->d->send_desktop_id(resource->handle, id);
     }
 
-    //activate the first desktop TODO: to be done here?
+    // activate the first desktop TODO: to be done here?
     if (d->desktops.isEmpty()) {
         desktop->d->active = true;
     }
@@ -203,7 +205,7 @@ void PlasmaVirtualDesktopManagementInterface::removeDesktop(const QString &id)
     d->desktops.erase(deskIt);
 }
 
-QList <PlasmaVirtualDesktopInterface *> PlasmaVirtualDesktopManagementInterface::desktops() const
+QList<PlasmaVirtualDesktopInterface *> PlasmaVirtualDesktopManagementInterface::desktops() const
 {
     return d->desktops;
 }
@@ -254,8 +256,8 @@ void PlasmaVirtualDesktopInterfacePrivate::org_kde_plasma_virtual_desktop_bind_r
 }
 
 PlasmaVirtualDesktopInterface::PlasmaVirtualDesktopInterface(PlasmaVirtualDesktopManagementInterface *parent)
-    : QObject(),
-      d(new PlasmaVirtualDesktopInterfacePrivate(this, parent))
+    : QObject()
+    , d(new PlasmaVirtualDesktopInterfacePrivate(this, parent))
 {
 }
 
@@ -322,4 +324,3 @@ void PlasmaVirtualDesktopInterface::sendDone()
 }
 
 }
-

@@ -3,13 +3,12 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "idleinhibit_v1_interface_p.h"
 #include "display.h"
+#include "idleinhibit_v1_interface_p.h"
 #include "surface_interface_p.h"
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 IdleInhibitManagerV1InterfacePrivate::IdleInhibitManagerV1InterfacePrivate(IdleInhibitManagerV1Interface *_q, Display *display)

@@ -11,7 +11,6 @@
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 class SlideManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_slide_manager
@@ -157,4 +156,3 @@ qint32 SlideInterface::offset() const
 }
 
 }
-

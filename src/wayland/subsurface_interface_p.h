@@ -17,7 +17,6 @@
 
 namespace KWaylandServer
 {
-
 class SubCompositorInterfacePrivate : public QtWaylandServer::wl_subcompositor
 {
 public:
@@ -27,9 +26,7 @@ public:
 
 protected:
     void subcompositor_destroy(Resource *resource) override;
-    void subcompositor_get_subsurface(Resource *resource, uint32_t id,
-                                      struct ::wl_resource *surface_resource,
-                                      struct ::wl_resource *parent_resource) override;
+    void subcompositor_get_subsurface(Resource *resource, uint32_t id, struct ::wl_resource *surface_resource, struct ::wl_resource *parent_resource) override;
 };
 
 class SubSurfaceInterfacePrivate : public SurfaceRole, public QtWaylandServer::wl_subsurface
@@ -37,8 +34,7 @@ class SubSurfaceInterfacePrivate : public SurfaceRole, public QtWaylandServer::w
 public:
     static SubSurfaceInterfacePrivate *get(SubSurfaceInterface *subsurface);
 
-    SubSurfaceInterfacePrivate(SubSurfaceInterface *q, SurfaceInterface *surface,
-                               SurfaceInterface *parent, ::wl_resource *resource);
+    SubSurfaceInterfacePrivate(SubSurfaceInterface *q, SurfaceInterface *surface, SurfaceInterface *parent, ::wl_resource *resource);
 
     void commit() override;
     void parentCommit();

@@ -6,16 +6,16 @@
 // Qt
 #include <QtTest>
 // KWin
+#include "../../src/server/compositor_interface.h"
+#include "../../src/server/display.h"
+#include "../../src/server/plasmawindowmanagement_interface.h"
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/plasmawindowmanagement.h"
 #include "KWayland/Client/region.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/surface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/plasmawindowmanagement_interface.h"
-#include "KWayland/Client/plasmawindowmanagement.h"
 
 using namespace KWayland::Client;
 
@@ -106,7 +106,8 @@ void TestActivities::init()
     m_windowManagementInterface = new PlasmaWindowManagementInterface(m_display, m_display);
 
     QVERIFY(windowManagementSpy.wait());
-    m_windowManagement = registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
+    m_windowManagement =
+        registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
 
     QSignalSpy windowSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
     QVERIFY(windowSpy.isValid());
@@ -119,10 +120,10 @@ void TestActivities::init()
 
 void TestActivities::cleanup()
 {
-#define CLEANUP(variable) \
-    if (variable) { \
-        delete variable; \
-        variable = nullptr; \
+#define CLEANUP(variable)                                                                                                                                      \
+    if (variable) {                                                                                                                                            \
+        delete variable;                                                                                                                                       \
+        variable = nullptr;                                                                                                                                    \
     }
     CLEANUP(m_compositor)
     CLEANUP(m_windowInterface)
@@ -154,18 +155,18 @@ void TestActivities::testEnterLeaveActivity()
 
     QSignalSpy activityEnteredSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaActivityEntered);
 
-    //agree to the request
+    // agree to the request
     m_windowInterface->addPlasmaActivity(QStringLiteral("0-1"));
     QCOMPARE(m_windowInterface->plasmaActivities().length(), 1);
     QCOMPARE(m_windowInterface->plasmaActivities().first(), QStringLiteral("0-1"));
 
-    //check if the client received the enter
+    // check if the client received the enter
     activityEnteredSpy.wait();
     QCOMPARE(activityEnteredSpy.takeFirst().at(0).toString(), QStringLiteral("0-1"));
     QCOMPARE(m_window->plasmaActivities().length(), 1);
     QCOMPARE(m_window->plasmaActivities().first(), QStringLiteral("0-1"));
 
-    //add another activity, server side
+    // add another activity, server side
     m_windowInterface->addPlasmaActivity(QStringLiteral("0-3"));
     activityEnteredSpy.wait();
     QCOMPARE(activityEnteredSpy.takeFirst().at(0).toString(), QStringLiteral("0-3"));
@@ -173,8 +174,7 @@ void TestActivities::testEnterLeaveActivity()
     QCOMPARE(m_window->plasmaActivities().length(), 2);
     QCOMPARE(m_window->plasmaActivities()[1], QStringLiteral("0-3"));
 
-
-    //remove an activity
+    // remove an activity
     QSignalSpy leaveRequestedSpy(m_windowInterface, &KWaylandServer::PlasmaWindowInterface::leavePlasmaActivityRequested);
     m_window->requestLeaveActivity(QStringLiteral("0-1"));
     leaveRequestedSpy.wait();
@@ -183,12 +183,12 @@ void TestActivities::testEnterLeaveActivity()
 
     QSignalSpy activityLeftSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaActivityLeft);
 
-    //agree to the request
+    // agree to the request
     m_windowInterface->removePlasmaActivity(QStringLiteral("0-1"));
     QCOMPARE(m_windowInterface->plasmaActivities().length(), 1);
     QCOMPARE(m_windowInterface->plasmaActivities().first(), QStringLiteral("0-3"));
 
-    //check if the client received the leave
+    // check if the client received the leave
     activityLeftSpy.wait();
     QCOMPARE(activityLeftSpy.takeFirst().at(0).toString(), QStringLiteral("0-1"));
     QCOMPARE(m_window->plasmaActivities().length(), 1);

@@ -11,7 +11,6 @@
 
 namespace KWaylandServer
 {
-
 // TODO: We need to wait for an ack_configure either here or in xdgshellclient.cpp.
 
 XdgDecorationManagerV1InterfacePrivate::XdgDecorationManagerV1InterfacePrivate(XdgDecorationManagerV1Interface *manager)
@@ -30,9 +29,7 @@ void XdgDecorationManagerV1InterfacePrivate::zxdg_decoration_manager_v1_get_topl
 {
     XdgToplevelInterfacePrivate *toplevelPrivate = XdgToplevelInterfacePrivate::get(toplevelResource);
     if (!toplevelPrivate) {
-        wl_resource_post_error(resource->handle,
-                               QtWaylandServer::zxdg_toplevel_decoration_v1::error_orphaned,
-                               "no xdg-toplevel object");
+        wl_resource_post_error(resource->handle, QtWaylandServer::zxdg_toplevel_decoration_v1::error_orphaned, "no xdg-toplevel object");
         return;
     }
 
@@ -43,9 +40,7 @@ void XdgDecorationManagerV1InterfacePrivate::zxdg_decoration_manager_v1_get_topl
         return;
     }
 
-    wl_resource *decorationResource = wl_resource_create(resource->client(),
-                                                         &zxdg_toplevel_decoration_v1_interface,
-                                                         resource->version(), id);
+    wl_resource *decorationResource = wl_resource_create(resource->client(), &zxdg_toplevel_decoration_v1_interface, resource->version(), id);
 
     auto decoration = new XdgToplevelDecorationV1Interface(toplevelPrivate->q, decorationResource);
     toplevelPrivate->decoration = decoration;
@@ -106,8 +101,7 @@ void XdgToplevelDecorationV1InterfacePrivate::zxdg_toplevel_decoration_v1_unset_
     Q_EMIT q->preferredModeChanged(preferredMode);
 }
 
-XdgToplevelDecorationV1Interface::XdgToplevelDecorationV1Interface(XdgToplevelInterface *toplevel,
-                                                                   ::wl_resource *resource)
+XdgToplevelDecorationV1Interface::XdgToplevelDecorationV1Interface(XdgToplevelInterface *toplevel, ::wl_resource *resource)
     : d(new XdgToplevelDecorationV1InterfacePrivate(this))
 {
     d->toplevel = toplevel;

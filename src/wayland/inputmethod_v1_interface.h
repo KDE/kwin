@@ -8,8 +8,8 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
-#include <QVector>
 #include <QObject>
+#include <QVector>
 
 #include "textinput.h"
 
@@ -31,7 +31,7 @@ class InputKeyboardV1InterfacePrivate;
 
 enum class KeyboardKeyState : quint32;
 
-//This file's classes implment input_method_unstable_v1
+// This file's classes implment input_method_unstable_v1
 
 /**
  * Implements zwp_input_method_v1 and allows to activate and deactivate a context

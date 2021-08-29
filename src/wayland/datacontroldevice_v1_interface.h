@@ -13,7 +13,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class AbstractDataSource;
 class DataControlDeviceManagerV1Interface;
 class DataControlDeviceV1InterfacePrivate;
@@ -59,4 +58,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataControlDeviceV1Interface*)
+Q_DECLARE_METATYPE(KWaylandServer::DataControlDeviceV1Interface *)

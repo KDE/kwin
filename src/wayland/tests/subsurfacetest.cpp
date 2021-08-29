@@ -17,9 +17,9 @@
 #include "KWayland/Client/subcompositor.h"
 #include "KWayland/Client/surface.h"
 // Qt
-#include <QGuiApplication>
 #include <QDebug>
 #include <QFile>
+#include <QGuiApplication>
 #include <QImage>
 #include <QMimeType>
 #include <QThread>
@@ -71,7 +71,10 @@ SubSurfaceTest::~SubSurfaceTest()
 
 void SubSurfaceTest::init()
 {
-    connect(m_connectionThreadObject, &ConnectionThread::connected, this,
+    connect(
+        m_connectionThreadObject,
+        &ConnectionThread::connected,
+        this,
         [this] {
             m_eventQueue = new EventQueue(this);
             m_eventQueue->setup(m_connectionThreadObject);
@@ -79,91 +82,77 @@ void SubSurfaceTest::init()
             Registry *registry = new Registry(this);
             setupRegistry(registry);
         },
-        Qt::QueuedConnection
-    );
+        Qt::QueuedConnection);
     m_connectionThreadObject->moveToThread(m_connectionThread);
     m_connectionThread->start();
 
     m_connectionThreadObject->initConnection();
 }
 
-
 void SubSurfaceTest::setupRegistry(Registry *registry)
 {
-    connect(registry, &Registry::compositorAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_compositor = registry->createCompositor(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shellAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shell = registry->createShell(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shmAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shm = registry->createShmPool(name, version, this);
-        }
-    );
-    connect(registry, &Registry::seatAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_seat = registry->createSeat(name, version, this);
-        }
-    );
-    connect(registry, &Registry::interfacesAnnounced, this,
-        [this, registry] {
-            Q_ASSERT(m_compositor);
-            Q_ASSERT(m_seat);
-            Q_ASSERT(m_shell);
-            Q_ASSERT(m_shm);
-            m_surface = m_compositor->createSurface(this);
-            Q_ASSERT(m_surface);
-            m_shellSurface = m_shell->createSurface(m_surface, this);
-            Q_ASSERT(m_shellSurface);
-            m_shellSurface->setToplevel();
-            connect(m_shellSurface, &ShellSurface::sizeChanged, this, &SubSurfaceTest::render);
+    connect(registry, &Registry::compositorAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_compositor = registry->createCompositor(name, version, this);
+    });
+    connect(registry, &Registry::shellAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shell = registry->createShell(name, version, this);
+    });
+    connect(registry, &Registry::shmAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shm = registry->createShmPool(name, version, this);
+    });
+    connect(registry, &Registry::seatAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_seat = registry->createSeat(name, version, this);
+    });
+    connect(registry, &Registry::interfacesAnnounced, this, [this, registry] {
+        Q_ASSERT(m_compositor);
+        Q_ASSERT(m_seat);
+        Q_ASSERT(m_shell);
+        Q_ASSERT(m_shm);
+        m_surface = m_compositor->createSurface(this);
+        Q_ASSERT(m_surface);
+        m_shellSurface = m_shell->createSurface(m_surface, this);
+        Q_ASSERT(m_shellSurface);
+        m_shellSurface->setToplevel();
+        connect(m_shellSurface, &ShellSurface::sizeChanged, this, &SubSurfaceTest::render);
 
-            auto subInterface = registry->interface(Registry::Interface::SubCompositor);
-            if (subInterface.name != 0) {
-                m_subCompositor = registry->createSubCompositor(subInterface.name, subInterface.version, this);
-                Q_ASSERT(m_subCompositor);
-                // create the sub surface
-                auto surface = m_compositor->createSurface(this);
-                Q_ASSERT(surface);
-                auto subsurface = m_subCompositor->createSubSurface(surface, m_surface, this);
-                Q_ASSERT(subsurface);
-                QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
-                image.fill(Qt::red);
-                surface->attachBuffer(m_shm->createBuffer(image));
-                surface->damage(QRect(0, 0, 100, 100));
-                surface->commit(Surface::CommitFlag::None);
-                // and another sub-surface to the sub-surface
-                auto surface2 = m_compositor->createSurface(this);
-                Q_ASSERT(surface2);
-                auto subsurface2 = m_subCompositor->createSubSurface(surface2, surface, this);
-                Q_ASSERT(subsurface2);
-                QImage green(QSize(50, 50), QImage::Format_ARGB32_Premultiplied);
-                green.fill(Qt::green);
-                surface2->attachBuffer(m_shm->createBuffer(green));
+        auto subInterface = registry->interface(Registry::Interface::SubCompositor);
+        if (subInterface.name != 0) {
+            m_subCompositor = registry->createSubCompositor(subInterface.name, subInterface.version, this);
+            Q_ASSERT(m_subCompositor);
+            // create the sub surface
+            auto surface = m_compositor->createSurface(this);
+            Q_ASSERT(surface);
+            auto subsurface = m_subCompositor->createSubSurface(surface, m_surface, this);
+            Q_ASSERT(subsurface);
+            QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
+            image.fill(Qt::red);
+            surface->attachBuffer(m_shm->createBuffer(image));
+            surface->damage(QRect(0, 0, 100, 100));
+            surface->commit(Surface::CommitFlag::None);
+            // and another sub-surface to the sub-surface
+            auto surface2 = m_compositor->createSurface(this);
+            Q_ASSERT(surface2);
+            auto subsurface2 = m_subCompositor->createSubSurface(surface2, surface, this);
+            Q_ASSERT(subsurface2);
+            QImage green(QSize(50, 50), QImage::Format_ARGB32_Premultiplied);
+            green.fill(Qt::green);
+            surface2->attachBuffer(m_shm->createBuffer(green));
+            surface2->damage(QRect(0, 0, 50, 50));
+            surface2->commit(Surface::CommitFlag::None);
+            QTimer *timer = new QTimer(this);
+            connect(timer, &QTimer::timeout, surface2, [surface2, this] {
+                QImage yellow(QSize(50, 50), QImage::Format_ARGB32_Premultiplied);
+                yellow.fill(Qt::yellow);
+                surface2->attachBuffer(m_shm->createBuffer(yellow));
                 surface2->damage(QRect(0, 0, 50, 50));
                 surface2->commit(Surface::CommitFlag::None);
-                QTimer *timer = new QTimer(this);
-                connect(timer, &QTimer::timeout, surface2,
-                    [surface2, this] {
-                        QImage yellow(QSize(50, 50), QImage::Format_ARGB32_Premultiplied);
-                        yellow.fill(Qt::yellow);
-                        surface2->attachBuffer(m_shm->createBuffer(yellow));
-                        surface2->damage(QRect(0, 0, 50, 50));
-                        surface2->commit(Surface::CommitFlag::None);
-                        m_surface->commit(Surface::CommitFlag::None);
-                    }
-                );
-                timer->setSingleShot(true);
-                timer->start(5000);
-            }
-            render();
+                m_surface->commit(Surface::CommitFlag::None);
+            });
+            timer->setSingleShot(true);
+            timer->start(5000);
         }
-    );
+        render();
+    });
     registry->setEventQueue(m_eventQueue);
     registry->create(m_connectionThreadObject);
     registry->setup();

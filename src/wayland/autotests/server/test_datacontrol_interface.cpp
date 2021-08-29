@@ -12,11 +12,11 @@
 
 // WaylandServer
 #include "../../src/server/compositor_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/seat_interface.h"
 #include "../../src/server/datacontroldevice_v1_interface.h"
 #include "../../src/server/datacontroldevicemanager_v1_interface.h"
 #include "../../src/server/datacontrolsource_v1_interface.h"
+#include "../../src/server/display.h"
+#include "../../src/server/seat_interface.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -30,28 +30,33 @@ using namespace KWaylandServer;
 
 // Faux-client API for tests
 
-Q_DECLARE_OPAQUE_POINTER(::zwlr_data_control_offer_v1*)
-Q_DECLARE_METATYPE(::zwlr_data_control_offer_v1*)
+Q_DECLARE_OPAQUE_POINTER(::zwlr_data_control_offer_v1 *)
+Q_DECLARE_METATYPE(::zwlr_data_control_offer_v1 *)
 
 class DataControlDeviceManager : public QObject, public QtWayland::zwlr_data_control_manager_v1
 {
     Q_OBJECT
 };
 
-class DataControlOffer: public QObject, public QtWayland::zwlr_data_control_offer_v1
+class DataControlOffer : public QObject, public QtWayland::zwlr_data_control_offer_v1
 {
     Q_OBJECT
 public:
-    ~DataControlOffer() {
+    ~DataControlOffer()
+    {
         destroy();
     }
-    QStringList receivedOffers() {
+    QStringList receivedOffers()
+    {
         return m_receivedOffers;
     }
+
 protected:
-    virtual void zwlr_data_control_offer_v1_offer(const QString &mime_type) override {
+    virtual void zwlr_data_control_offer_v1_offer(const QString &mime_type) override
+    {
         m_receivedOffers << mime_type;
     }
+
 private:
     QStringList m_receivedOffers;
 };
@@ -60,21 +65,25 @@ class DataControlDevice : public QObject, public QtWayland::zwlr_data_control_de
 {
     Q_OBJECT
 public:
-    ~DataControlDevice() {
+    ~DataControlDevice()
+    {
         destroy();
     }
 Q_SIGNALS:
-    void dataControlOffer(DataControlOffer *offer); //our event receives a new ID, so we make a new object
+    void dataControlOffer(DataControlOffer *offer); // our event receives a new ID, so we make a new object
     void selection(struct ::zwlr_data_control_offer_v1 *id);
     void primary_selection(struct ::zwlr_data_control_offer_v1 *id);
+
 protected:
-    void zwlr_data_control_device_v1_data_offer(struct ::zwlr_data_control_offer_v1 *id) override {
+    void zwlr_data_control_device_v1_data_offer(struct ::zwlr_data_control_offer_v1 *id) override
+    {
         auto offer = new DataControlOffer;
         offer->init(id);
         Q_EMIT dataControlOffer(offer);
     }
 
-    void zwlr_data_control_device_v1_selection(struct ::zwlr_data_control_offer_v1 *id) override {
+    void zwlr_data_control_device_v1_selection(struct ::zwlr_data_control_offer_v1 *id) override
+    {
         Q_EMIT selection(id);
     }
 
@@ -84,37 +93,41 @@ protected:
     }
 };
 
-class DataControlSource: public QObject, public QtWayland::zwlr_data_control_source_v1
+class DataControlSource : public QObject, public QtWayland::zwlr_data_control_source_v1
 {
     Q_OBJECT
 public:
-    ~DataControlSource() {
+    ~DataControlSource()
+    {
         destroy();
     }
+
 public:
 };
-
 
 class TestDataSource : public AbstractDataSource
 {
     Q_OBJECT
 public:
-    TestDataSource() :
-        AbstractDataSource(nullptr)
-    {}
-    ~TestDataSource() {
+    TestDataSource()
+        : AbstractDataSource(nullptr)
+    {
+    }
+    ~TestDataSource()
+    {
         Q_EMIT aboutToBeDestroyed();
     }
-    void requestData(const QString &mimeType, qint32 fd) override {
+    void requestData(const QString &mimeType, qint32 fd) override
+    {
         Q_UNUSED(mimeType);
         Q_UNUSED(fd);
     };
-    void cancel() override {};
-    QStringList mimeTypes() const override {
+    void cancel() override{};
+    QStringList mimeTypes() const override
+    {
         return {"text/test1", "text/test2"};
     }
 };
-
 
 // The test itself
 
@@ -206,10 +219,10 @@ void DataControlInterfaceTest::init()
 
 void DataControlInterfaceTest::cleanup()
 {
-#define CLEANUP(variable) \
-    if (variable) { \
-        delete variable; \
-        variable = nullptr; \
+#define CLEANUP(variable)                                                                                                                                      \
+    if (variable) {                                                                                                                                            \
+        delete variable;                                                                                                                                       \
+        variable = nullptr;                                                                                                                                    \
     }
     CLEANUP(m_dataControlDeviceManager)
     CLEANUP(m_clientSeat)
@@ -251,8 +264,8 @@ void DataControlInterfaceTest::testCopyToControl()
     selectionSpy.wait();
 
     QCOMPARE(newOfferSpy.count(), 1);
-    QScopedPointer<DataControlOffer> offer(newOfferSpy.first().first().value<DataControlOffer*>());
-    QCOMPARE(selectionSpy.first().first().value<struct ::zwlr_data_control_offer_v1*>(), offer->object());
+    QScopedPointer<DataControlOffer> offer(newOfferSpy.first().first().value<DataControlOffer *>());
+    QCOMPARE(selectionSpy.first().first().value<struct ::zwlr_data_control_offer_v1 *>(), offer->object());
 
     QCOMPARE(offer->receivedOffers().count(), 2);
     QCOMPARE(offer->receivedOffers()[0], "text/test1");
@@ -277,8 +290,8 @@ void DataControlInterfaceTest::testCopyToControlPrimarySelection()
     selectionSpy.wait();
 
     QCOMPARE(newOfferSpy.count(), 1);
-    QScopedPointer<DataControlOffer> offer(newOfferSpy.first().first().value<DataControlOffer*>());
-    QCOMPARE(selectionSpy.first().first().value<struct ::zwlr_data_control_offer_v1*>(), offer->object());
+    QScopedPointer<DataControlOffer> offer(newOfferSpy.first().first().value<DataControlOffer *>());
+    QCOMPARE(selectionSpy.first().first().value<struct ::zwlr_data_control_offer_v1 *>(), offer->object());
 
     QCOMPARE(offer->receivedOffers().count(), 2);
     QCOMPARE(offer->receivedOffers()[0], "text/test1");
@@ -349,7 +362,7 @@ void DataControlInterfaceTest::testKlipperCase()
     // Client A deletes it
     testSelection.reset();
 
-    //klipper gets told
+    // klipper gets told
     selectionSpy.wait();
 
     // Client A sets something else
@@ -367,7 +380,6 @@ void DataControlInterfaceTest::testKlipperCase()
     QVERIFY(!serverSelectionChangedSpy.wait(10));
     QCOMPARE(m_seat->selection(), testSelection2.data());
 }
-
 
 QTEST_GUILESS_MAIN(DataControlInterfaceTest)
 

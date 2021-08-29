@@ -13,8 +13,8 @@
 
 struct wl_client;
 
-namespace KWaylandServer {
-
+namespace KWaylandServer
+{
 /**
  * @brief The AbstractDataSource class abstracts the data that
  * can be transferred to another client.
@@ -29,7 +29,8 @@ class KWAYLANDSERVER_EXPORT AbstractDataSource : public QObject
 {
     Q_OBJECT
 public:
-    virtual void accept(const QString &mimeType) {
+    virtual void accept(const QString &mimeType)
+    {
         Q_UNUSED(mimeType);
     };
     virtual void requestData(const QString &mimeType, qint32 fd) = 0;
@@ -40,33 +41,36 @@ public:
     /**
      * @returns The Drag and Drop actions supported by this DataSourceInterface.
      */
-    virtual DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const {
+    virtual DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const
+    {
         return {};
     };
     /**
      * The user performed the drop action during a drag and drop operation.
      */
-    virtual void dropPerformed() {};
+    virtual void dropPerformed(){};
     /**
      * The drop destination finished interoperating with this data source.
      */
-    virtual void dndFinished() {};
+    virtual void dndFinished(){};
     /**
      * This event indicates the @p action selected by the compositor after matching the
      * source/destination side actions. Only one action (or none) will be offered here.
      */
-    virtual void dndAction(DataDeviceManagerInterface::DnDAction action) {
+    virtual void dndAction(DataDeviceManagerInterface::DnDAction action)
+    {
         Q_UNUSED(action);
     };
 
-    virtual wl_client* client() const {
+    virtual wl_client *client() const
+    {
         return nullptr;
     };
 
 Q_SIGNALS:
     void aboutToBeDestroyed();
 
-    void mimeTypeOffered(const QString&);
+    void mimeTypeOffered(const QString &);
     void supportedDragAndDropActionsChanged();
 
 protected:

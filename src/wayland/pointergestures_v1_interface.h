@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 class Display;
 class PointerGesturesV1InterfacePrivate;
 

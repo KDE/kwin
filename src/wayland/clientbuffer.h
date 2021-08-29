@@ -16,7 +16,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class ClientBufferPrivate;
 
 /**

@@ -14,7 +14,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class Display;
 class XdgDecorationManagerV1InterfacePrivate;
 class XdgToplevelDecorationV1Interface;

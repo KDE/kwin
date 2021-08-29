@@ -8,12 +8,11 @@
 #include "display.h"
 #include "logging.h"
 
-#include <wayland-util.h>
 #include <qwayland-server-wl-eglstream-controller.h>
+#include <wayland-util.h>
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 class EglStreamControllerInterfacePrivate : public QtWaylandServer::wl_eglstream_controller
@@ -25,17 +24,20 @@ public:
 
 protected:
     void eglstream_controller_attach_eglstream_consumer(Resource *resource, wl_resource *wl_surface, wl_resource *eglStream) override;
-    void eglstream_controller_attach_eglstream_consumer_attribs(Resource *resource, wl_resource *wl_surface, wl_resource *eglStream, wl_array *attribs) override;
-
+    void
+    eglstream_controller_attach_eglstream_consumer_attribs(Resource *resource, wl_resource *wl_surface, wl_resource *eglStream, wl_array *attribs) override;
 };
 
 void EglStreamControllerInterfacePrivate::eglstream_controller_attach_eglstream_consumer(Resource *resource, wl_resource *wl_surface, wl_resource *eglStream)
 {
-    wl_array noAttribs = { 0, 0, nullptr };
+    wl_array noAttribs = {0, 0, nullptr};
     eglstream_controller_attach_eglstream_consumer_attribs(resource, wl_surface, eglStream, &noAttribs);
 }
 
-void EglStreamControllerInterfacePrivate::eglstream_controller_attach_eglstream_consumer_attribs(Resource *resource, wl_resource *wl_surface, wl_resource *eglStream, wl_array *attribs)
+void EglStreamControllerInterfacePrivate::eglstream_controller_attach_eglstream_consumer_attribs(Resource *resource,
+                                                                                                 wl_resource *wl_surface,
+                                                                                                 wl_resource *eglStream,
+                                                                                                 wl_array *attribs)
 {
     SurfaceInterface *surface = SurfaceInterface::get(wl_surface);
     if (!surface) {
@@ -46,7 +48,7 @@ void EglStreamControllerInterfacePrivate::eglstream_controller_attach_eglstream_
 }
 
 EglStreamControllerInterfacePrivate::EglStreamControllerInterfacePrivate(EglStreamControllerInterface *_q, Display *display)
-    : QtWaylandServer::wl_eglstream_controller(*display, s_version) 
+    : QtWaylandServer::wl_eglstream_controller(*display, s_version)
     , q(_q)
 {
 }

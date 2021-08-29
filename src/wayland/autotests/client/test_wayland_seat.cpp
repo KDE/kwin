@@ -6,23 +6,6 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "KWayland/Client/compositor.h"
-#include "KWayland/Client/connection_thread.h"
-#include "KWayland/Client/datadevice.h"
-#include "KWayland/Client/datadevicemanager.h"
-#include "KWayland/Client/datasource.h"
-#include "KWayland/Client/event_queue.h"
-#include "KWayland/Client/keyboard.h"
-#include "KWayland/Client/pointer.h"
-#include "KWayland/Client/pointergestures.h"
-#include "KWayland/Client/surface.h"
-#include "KWayland/Client/registry.h"
-#include "KWayland/Client/relativepointer.h"
-#include "KWayland/Client/seat.h"
-#include "KWayland/Client/shm_pool.h"
-#include "KWayland/Client/subcompositor.h"
-#include "KWayland/Client/subsurface.h"
-#include "KWayland/Client/touch.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/datadevicemanager_interface.h"
 #include "../../src/server/datasource_interface.h"
@@ -35,6 +18,23 @@
 #include "../../src/server/shmclientbuffer.h"
 #include "../../src/server/subcompositor_interface.h"
 #include "../../src/server/surface_interface.h"
+#include "KWayland/Client/compositor.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/datadevice.h"
+#include "KWayland/Client/datadevicemanager.h"
+#include "KWayland/Client/datasource.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/keyboard.h"
+#include "KWayland/Client/pointer.h"
+#include "KWayland/Client/pointergestures.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/relativepointer.h"
+#include "KWayland/Client/seat.h"
+#include "KWayland/Client/shm_pool.h"
+#include "KWayland/Client/subcompositor.h"
+#include "KWayland/Client/subsurface.h"
+#include "KWayland/Client/surface.h"
+#include "KWayland/Client/touch.h"
 // Wayland
 #include <wayland-client-protocol.h>
 
@@ -87,7 +87,7 @@ private:
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::Seat *m_seat;
     KWayland::Client::ShmPool *m_shm;
-    KWayland::Client::SubCompositor * m_subCompositor;
+    KWayland::Client::SubCompositor *m_subCompositor;
     KWayland::Client::RelativePointerManager *m_relativePointerManager;
     KWayland::Client::PointerGestures *m_pointerGestures;
     KWayland::Client::EventQueue *m_queue;
@@ -180,9 +180,10 @@ void TestWaylandSeat::init()
                                                    this);
     QVERIFY(m_subCompositor->isValid());
 
-    m_relativePointerManager = registry.createRelativePointerManager(registry.interface(KWayland::Client::Registry::Interface::RelativePointerManagerUnstableV1).name,
-                                                                     registry.interface(KWayland::Client::Registry::Interface::RelativePointerManagerUnstableV1).version,
-                                                                     this);
+    m_relativePointerManager =
+        registry.createRelativePointerManager(registry.interface(KWayland::Client::Registry::Interface::RelativePointerManagerUnstableV1).name,
+                                              registry.interface(KWayland::Client::Registry::Interface::RelativePointerManagerUnstableV1).version,
+                                              this);
     QVERIFY(m_relativePointerManager->isValid());
 
     m_pointerGestures = registry.createPointerGestures(registry.interface(KWayland::Client::Registry::Interface::PointerGesturesUnstableV1).name,
@@ -265,14 +266,14 @@ void TestWaylandSeat::testCapabilities_data()
     QTest::addColumn<bool>("keyboard");
     QTest::addColumn<bool>("touch");
 
-    QTest::newRow("none")             << false << false << false;
-    QTest::newRow("pointer")          << true  << false << false;
-    QTest::newRow("keyboard")         << false << true  << false;
-    QTest::newRow("touch")            << false << false << true;
-    QTest::newRow("pointer/keyboard") << true  << true  << false;
-    QTest::newRow("pointer/touch")    << true  << false << true;
-    QTest::newRow("keyboard/touch")   << false << true  << true;
-    QTest::newRow("all")              << true  << true  << true;
+    QTest::newRow("none") << false << false << false;
+    QTest::newRow("pointer") << true << false << false;
+    QTest::newRow("keyboard") << false << true << false;
+    QTest::newRow("touch") << false << false << true;
+    QTest::newRow("pointer/keyboard") << true << true << false;
+    QTest::newRow("pointer/touch") << true << false << true;
+    QTest::newRow("keyboard/touch") << false << true << true;
+    QTest::newRow("all") << true << true << true;
 }
 
 void TestWaylandSeat::testCapabilities()
@@ -338,7 +339,7 @@ void TestWaylandSeat::testPointer()
     QVERIFY(surfaceCreatedSpy.isValid());
     Surface *s = m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
@@ -547,7 +548,7 @@ void TestWaylandSeat::testPointerTransformation()
     QVERIFY(surfaceCreatedSpy.isValid());
     Surface *s = m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
@@ -628,27 +629,27 @@ void TestWaylandSeat::testPointerButton_data()
     QTest::addColumn<Qt::MouseButton>("qtButton");
     QTest::addColumn<quint32>("waylandButton");
 
-    QTest::newRow("left")    << Qt::LeftButton    << quint32(BTN_LEFT);
-    QTest::newRow("right")   << Qt::RightButton   << quint32(BTN_RIGHT);
-    //Deprecated in qt5.15
+    QTest::newRow("left") << Qt::LeftButton << quint32(BTN_LEFT);
+    QTest::newRow("right") << Qt::RightButton << quint32(BTN_RIGHT);
+    // Deprecated in qt5.15
 #if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
-    QTest::newRow("mid")     << Qt::MidButton     << quint32(BTN_MIDDLE);
+    QTest::newRow("mid") << Qt::MidButton << quint32(BTN_MIDDLE);
 #endif
-    QTest::newRow("middle")  << Qt::MiddleButton  << quint32(BTN_MIDDLE);
-    QTest::newRow("back")    << Qt::BackButton    << quint32(BTN_BACK);
-    QTest::newRow("x1")      << Qt::XButton1      << quint32(BTN_BACK);
-    QTest::newRow("extra1")  << Qt::ExtraButton1  << quint32(BTN_BACK);
+    QTest::newRow("middle") << Qt::MiddleButton << quint32(BTN_MIDDLE);
+    QTest::newRow("back") << Qt::BackButton << quint32(BTN_BACK);
+    QTest::newRow("x1") << Qt::XButton1 << quint32(BTN_BACK);
+    QTest::newRow("extra1") << Qt::ExtraButton1 << quint32(BTN_BACK);
     QTest::newRow("forward") << Qt::ForwardButton << quint32(BTN_FORWARD);
-    QTest::newRow("x2")      << Qt::XButton2      << quint32(BTN_FORWARD);
-    QTest::newRow("extra2")  << Qt::ExtraButton2  << quint32(BTN_FORWARD);
-    QTest::newRow("task")    << Qt::TaskButton    << quint32(BTN_TASK);
-    QTest::newRow("extra3")  << Qt::ExtraButton3  << quint32(BTN_TASK);
-    QTest::newRow("extra4")  << Qt::ExtraButton4  << quint32(BTN_EXTRA);
-    QTest::newRow("extra5")  << Qt::ExtraButton5  << quint32(BTN_SIDE);
-    QTest::newRow("extra6")  << Qt::ExtraButton6  << quint32(0x118);
-    QTest::newRow("extra7")  << Qt::ExtraButton7  << quint32(0x119);
-    QTest::newRow("extra8")  << Qt::ExtraButton8  << quint32(0x11a);
-    QTest::newRow("extra9")  << Qt::ExtraButton9  << quint32(0x11b);
+    QTest::newRow("x2") << Qt::XButton2 << quint32(BTN_FORWARD);
+    QTest::newRow("extra2") << Qt::ExtraButton2 << quint32(BTN_FORWARD);
+    QTest::newRow("task") << Qt::TaskButton << quint32(BTN_TASK);
+    QTest::newRow("extra3") << Qt::ExtraButton3 << quint32(BTN_TASK);
+    QTest::newRow("extra4") << Qt::ExtraButton4 << quint32(BTN_EXTRA);
+    QTest::newRow("extra5") << Qt::ExtraButton5 << quint32(BTN_SIDE);
+    QTest::newRow("extra6") << Qt::ExtraButton6 << quint32(0x118);
+    QTest::newRow("extra7") << Qt::ExtraButton7 << quint32(0x119);
+    QTest::newRow("extra8") << Qt::ExtraButton8 << quint32(0x11a);
+    QTest::newRow("extra9") << Qt::ExtraButton9 << quint32(0x11b);
     QTest::newRow("extra10") << Qt::ExtraButton10 << quint32(0x11c);
     QTest::newRow("extra11") << Qt::ExtraButton11 << quint32(0x11d);
     QTest::newRow("extra12") << Qt::ExtraButton12 << quint32(0x11e);
@@ -669,7 +670,7 @@ void TestWaylandSeat::testPointerButton()
     QVERIFY(surfaceCreatedSpy.isValid());
     KWayland::Client::Surface *s = m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
@@ -754,7 +755,7 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
     grandChild2SubSurface->setPosition(QPoint(0, 25));
 
     // let's map the surfaces
-    auto render = [this] (Surface *s, const QSize &size) {
+    auto render = [this](Surface *s, const QSize &size) {
         QImage image(size, QImage::Format_ARGB32_Premultiplied);
         image.fill(Qt::black);
         s->attachBuffer(m_shm->createBuffer(image));
@@ -767,7 +768,7 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
     render(parentSurface.data(), QSize(100, 100));
 
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface->isMapped());
 
     // send in pointer events
@@ -867,7 +868,7 @@ void TestWaylandSeat::testPointerSwipeGesture()
     QVERIFY(surfaceCreatedSpy.isValid());
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
@@ -992,7 +993,7 @@ void TestWaylandSeat::testPointerPinchGesture()
     QVERIFY(surfaceCreatedSpy.isValid());
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
@@ -1098,7 +1099,7 @@ void TestWaylandSeat::testPointerAxis()
     QVERIFY(surfaceCreatedSpy.isValid());
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
@@ -1203,7 +1204,7 @@ void TestWaylandSeat::testCursor()
     QVERIFY(surfaceCreatedSpy.isValid());
     KWayland::Client::Surface *surface = m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
@@ -1326,7 +1327,7 @@ void TestWaylandSeat::testCursorDamage()
     QVERIFY(surfaceCreatedSpy.isValid());
     KWayland::Client::Surface *surface = m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
@@ -1386,7 +1387,7 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(surfaceCreatedSpy.isValid());
     Surface *s = m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     Keyboard *keyboard = m_seat->createKeyboard(m_seat);
@@ -1510,7 +1511,7 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
     // TODO: get through API
-    QCOMPARE(leftSpy.first().first().value<quint32>(), m_display->serial() -1 );
+    QCOMPARE(leftSpy.first().first().value<quint32>(), m_display->serial() - 1);
 
     QVERIFY(!keyboard->enteredSurface());
     QVERIFY(!ckeyboard.enteredSurface());
@@ -1539,7 +1540,7 @@ void TestWaylandSeat::testKeyboard()
     QScopedPointer<Surface> s2(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     QCOMPARE(surfaceCreatedSpy.count(), 2);
-    serverSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    serverSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
@@ -1563,9 +1564,9 @@ void TestWaylandSeat::testCast()
     s.setup(wlSeat);
     QVERIFY(s.isValid());
 
-    QCOMPARE((wl_seat*)s, wlSeat);
+    QCOMPARE((wl_seat *)s, wlSeat);
     const Seat &s2(s);
-    QCOMPARE((wl_seat*)s2, wlSeat);
+    QCOMPARE((wl_seat *)s2, wlSeat);
 }
 
 void TestWaylandSeat::testDestroy()
@@ -1641,8 +1642,8 @@ void TestWaylandSeat::testSelection()
     registry.setup();
 
     QVERIFY(dataDeviceManagerSpy.wait());
-    QScopedPointer<DataDeviceManager> ddm(registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(),
-                                                                           dataDeviceManagerSpy.first().last().value<quint32>()));
+    QScopedPointer<DataDeviceManager> ddm(
+        registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(), dataDeviceManagerSpy.first().last().value<quint32>()));
     QVERIFY(ddm->isValid());
 
     QScopedPointer<DataDevice> dd1(ddm->getDataDevice(m_seat));
@@ -1657,7 +1658,7 @@ void TestWaylandSeat::testSelection()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     QVERIFY(surface->isValid());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(!m_seatInterface->selection());
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
@@ -1676,7 +1677,7 @@ void TestWaylandSeat::testSelection()
     QCOMPARE(selectionSpy.count(), 1);
     auto ddi = m_seatInterface->selection();
     QVERIFY(ddi);
-    auto df = selectionSpy.first().first().value<DataOffer*>();
+    auto df = selectionSpy.first().first().value<DataOffer *>();
     QCOMPARE(df->offeredMimeTypes().count(), 1);
     QCOMPARE(df->offeredMimeTypes().first().name(), QStringLiteral("text/plain"));
 
@@ -1771,8 +1772,8 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     registry->setup();
 
     QVERIFY(interfacesAnnouncedSpy.wait());
-    QScopedPointer<Seat> seat(registry->createSeat(registry->interface(Registry::Interface::Seat).name,
-                                                   registry->interface(Registry::Interface::Seat).version));
+    QScopedPointer<Seat> seat(
+        registry->createSeat(registry->interface(Registry::Interface::Seat).name, registry->interface(Registry::Interface::Seat).version));
     QVERIFY(seat->isValid());
     QScopedPointer<DataDeviceManager> ddm1(registry->createDataDeviceManager(registry->interface(Registry::Interface::DataDeviceManager).name,
                                                                              registry->interface(Registry::Interface::DataDeviceManager).version));
@@ -1781,7 +1782,7 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     // now create our first datadevice
     QScopedPointer<DataDevice> dd1(ddm1->getDataDevice(seat.data()));
     QVERIFY(ddiCreatedSpy.wait());
-    auto ddi = ddiCreatedSpy.first().first().value<DataDeviceInterface*>();
+    auto ddi = ddiCreatedSpy.first().first().value<DataDeviceInterface *>();
     QVERIFY(ddi);
     m_seatInterface->setSelection(ddi->selection());
 
@@ -1792,7 +1793,7 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     QVERIFY(surface->isValid());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
 
@@ -1806,8 +1807,8 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     registry2.setup();
 
     QVERIFY(dataDeviceManagerSpy.wait());
-    QScopedPointer<DataDeviceManager> ddm(registry2.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(),
-                                                                           dataDeviceManagerSpy.first().last().value<quint32>()));
+    QScopedPointer<DataDeviceManager> ddm(
+        registry2.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(), dataDeviceManagerSpy.first().last().value<quint32>()));
     QVERIFY(ddm->isValid());
 
     QScopedPointer<DataDevice> dd(ddm->getDataDevice(m_seat));
@@ -1845,7 +1846,7 @@ void TestWaylandSeat::testTouch()
     QVERIFY(surfaceCreatedSpy.isValid());
     Surface *s = m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     m_seatInterface->setFocusedTouchSurface(serverSurface);
@@ -1887,7 +1888,7 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(pointAddedSpy.count(), 0);
     QCOMPARE(pointMovedSpy.count(), 0);
     QCOMPARE(pointRemovedSpy.count(), 0);
-    TouchPoint *tp = sequenceStartedSpy.first().first().value<TouchPoint*>();
+    TouchPoint *tp = sequenceStartedSpy.first().first().value<TouchPoint *>();
     QVERIFY(tp);
     QCOMPARE(tp->downSerial(), m_seatInterface->display()->serial());
     QCOMPARE(tp->id(), 0);
@@ -1918,7 +1919,7 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(pointAddedSpy.count(), 0);
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(pointRemovedSpy.count(), 0);
-    QCOMPARE(pointMovedSpy.first().first().value<TouchPoint*>(), tp);
+    QCOMPARE(pointMovedSpy.first().first().value<TouchPoint *>(), tp);
 
     QCOMPARE(tp->id(), 0);
     QVERIFY(tp->isDown());
@@ -1943,7 +1944,7 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(pointRemovedSpy.count(), 0);
     QCOMPARE(touch->sequence().count(), 2);
     QCOMPARE(touch->sequence().first(), tp);
-    TouchPoint *tp2 = pointAddedSpy.first().first().value<TouchPoint*>();
+    TouchPoint *tp2 = pointAddedSpy.first().first().value<TouchPoint *>();
     QVERIFY(tp2);
     QCOMPARE(touch->sequence().last(), tp2);
     QCOMPARE(tp2->id(), 1);
@@ -1967,7 +1968,7 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(pointAddedSpy.count(), 1);
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(pointRemovedSpy.count(), 1);
-    QCOMPARE(pointRemovedSpy.first().first().value<TouchPoint*>(), tp2);
+    QCOMPARE(pointRemovedSpy.first().first().value<TouchPoint *>(), tp2);
     QCOMPARE(tp2->id(), 1);
     QVERIFY(!tp2->isDown());
     QCOMPARE(tp2->position(), QPointF(5, 6));
@@ -2035,7 +2036,7 @@ void TestWaylandSeat::testKeymap()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     QVERIFY(surface->isValid());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(!m_seatInterface->selection());
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
 
@@ -2049,7 +2050,7 @@ void TestWaylandSeat::testKeymap()
     QCOMPARE(keymapChangedSpy.first().last().value<quint32>(), 3u);
     QFile file;
     QVERIFY(file.open(fd, QIODevice::ReadOnly));
-    const char *address = reinterpret_cast<char*>(file.map(0, keymapChangedSpy.first().last().value<quint32>()));
+    const char *address = reinterpret_cast<char *>(file.map(0, keymapChangedSpy.first().last().value<quint32>()));
     QVERIFY(address);
     QCOMPARE(qstrcmp(address, "foo"), 0);
     file.close();
@@ -2061,7 +2062,8 @@ void TestWaylandSeat::testKeymap()
     fd = keymapChangedSpy.first().first().toInt();
     QVERIFY(fd != -1);
     QCOMPARE(keymapChangedSpy.first().last().value<quint32>(), 3u);
-    QVERIFY(file.open(fd, QIODevice::ReadWrite));address = reinterpret_cast<char*>(file.map(0, keymapChangedSpy.first().last().value<quint32>()));
+    QVERIFY(file.open(fd, QIODevice::ReadWrite));
+    address = reinterpret_cast<char *>(file.map(0, keymapChangedSpy.first().last().value<quint32>()));
     QVERIFY(address);
     QCOMPARE(qstrcmp(address, "bar"), 0);
 }

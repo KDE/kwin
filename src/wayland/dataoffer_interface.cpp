@@ -9,8 +9,8 @@
 #include "datasource_interface.h"
 
 // Qt
-#include <QStringList>
 #include <QPointer>
+#include <QStringList>
 // Wayland
 #include <qwayland-server-wayland.h>
 // system
@@ -18,7 +18,6 @@
 
 namespace KWaylandServer
 {
-
 class DataOfferInterfacePrivate : public QtWaylandServer::wl_data_offer
 {
 public:
@@ -38,7 +37,6 @@ protected:
     void data_offer_finish(Resource *resource) override;
     void data_offer_set_actions(Resource *resource, uint32_t dnd_actions, uint32_t preferred_action) override;
 };
-
 
 DataOfferInterfacePrivate::DataOfferInterfacePrivate(AbstractDataSource *_source, DataOfferInterface *_q, wl_resource *resource)
     : QtWaylandServer::wl_data_offer(resource)
@@ -86,17 +84,17 @@ void DataOfferInterfacePrivate::data_offer_set_actions(Resource *resource, uint3
 {
     // TODO: check it's drag and drop, otherwise send error
     // verify that the no other actions are sent
-    if (dnd_actions & ~(QtWaylandServer::wl_data_device_manager::dnd_action_copy |
-                        QtWaylandServer::wl_data_device_manager::dnd_action_move |
-                        QtWaylandServer::wl_data_device_manager::dnd_action_ask)) {
+    if (dnd_actions
+        & ~(QtWaylandServer::wl_data_device_manager::dnd_action_copy | QtWaylandServer::wl_data_device_manager::dnd_action_move
+            | QtWaylandServer::wl_data_device_manager::dnd_action_ask)) {
         wl_resource_post_error(resource->handle, error_invalid_action_mask, "Invalid action mask");
         return;
     }
 
-    if (preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_copy &&
-        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_move &&
-        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_ask &&
-        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_none) {
+    if (preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_copy
+        && preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_move
+        && preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_ask
+        && preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_none) {
         wl_resource_post_error(resource->handle, error_invalid_action, "Invalid preferred action");
         return;
     }
@@ -159,11 +157,9 @@ DataOfferInterface::DataOfferInterface(AbstractDataSource *source, wl_resource *
     , d(new DataOfferInterfacePrivate(source, this, resource))
 {
     Q_ASSERT(source);
-    connect(source, &DataSourceInterface::mimeTypeOffered, this,
-        [this](const QString &mimeType) {
-            d->send_offer(mimeType);
-        }
-    );
+    connect(source, &DataSourceInterface::mimeTypeOffered, this, [this](const QString &mimeType) {
+        d->send_offer(mimeType);
+    });
 }
 
 DataOfferInterface::~DataOfferInterface() = default;
@@ -198,7 +194,7 @@ void DataOfferInterface::dndAction(DataDeviceManagerInterface::DnDAction action)
     uint32_t wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_none;
     if (action == DataDeviceManagerInterface::DnDAction::Copy) {
         wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_copy;
-    } else if (action == DataDeviceManagerInterface::DnDAction::Move ) {
+    } else if (action == DataDeviceManagerInterface::DnDAction::Move) {
         wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_move;
     } else if (action == DataDeviceManagerInterface::DnDAction::Ask) {
         wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_ask;

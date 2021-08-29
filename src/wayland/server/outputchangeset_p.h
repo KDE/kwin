@@ -9,7 +9,6 @@
 
 namespace KWaylandServer
 {
-
 class OutputChangeSetPrivate
 {
 public:

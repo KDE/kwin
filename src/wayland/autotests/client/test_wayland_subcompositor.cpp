@@ -6,12 +6,12 @@
 // Qt
 #include <QtTest>
 // KWin
+#include "../../src/server/display.h"
+#include "../../src/server/subcompositor_interface.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/subcompositor.h"
-#include "../../src/server/display.h"
-#include "../../src/server/subcompositor_interface.h"
 
 class TestSubCompositor : public QObject
 {
@@ -147,10 +147,10 @@ void TestSubCompositor::testCast()
     SubCompositor c;
     auto wlSubComp = registry.bindSubCompositor(subCompositorSpy.first().first().value<quint32>(), subCompositorSpy.first().last().value<quint32>());
     c.setup(wlSubComp);
-    QCOMPARE((wl_subcompositor*)c, wlSubComp);
+    QCOMPARE((wl_subcompositor *)c, wlSubComp);
 
     const SubCompositor &c2(c);
-    QCOMPARE((wl_subcompositor*)c2, wlSubComp);
+    QCOMPARE((wl_subcompositor *)c2, wlSubComp);
 }
 
 QTEST_GUILESS_MAIN(TestSubCompositor)

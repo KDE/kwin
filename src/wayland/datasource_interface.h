@@ -14,7 +14,6 @@
 
 namespace KWaylandServer
 {
-
 class DataSourceInterfacePrivate;
 
 /**
@@ -59,4 +58,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataSourceInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::DataSourceInterface *)

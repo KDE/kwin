@@ -3,13 +3,12 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "idle_interface_p.h"
 #include "display.h"
+#include "idle_interface_p.h"
 #include "seat_interface.h"
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 IdleInterfacePrivate::IdleInterfacePrivate(IdleInterface *_q, Display *display)
@@ -80,27 +79,23 @@ IdleTimeoutInterface::IdleTimeoutInterface(SeatInterface *seat, IdleInterface *m
     , seat(seat)
     , manager(manager)
 {
-    connect(seat, &SeatInterface::timestampChanged, this,
-        [this] {
-            simulateUserActivity();
+    connect(seat, &SeatInterface::timestampChanged, this, [this] {
+        simulateUserActivity();
+    });
+    connect(manager, &IdleInterface::inhibitedChanged, this, [this, manager] {
+        if (!timer) {
+            // not yet configured
+            return;
         }
-    );
-    connect(manager, &IdleInterface::inhibitedChanged, this,
-        [this, manager] {
-            if (!timer) {
-                // not yet configured
-                return;
+        if (manager->isInhibited()) {
+            if (!timer->isActive()) {
+                send_resumed();
             }
-            if (manager->isInhibited()) {
-                if (!timer->isActive()) {
-                    send_resumed();
-                }
-                timer->stop();
-            } else {
-                timer->start();
-            }
+            timer->stop();
+        } else {
+            timer->start();
         }
-    );
+    });
 }
 
 IdleTimeoutInterface::~IdleTimeoutInterface() = default;
@@ -146,11 +141,9 @@ void IdleTimeoutInterface::setup(quint32 timeout)
     timer->setSingleShot(true);
     // less than 500 msec is not idle by definition
     timer->setInterval(qMax(timeout, 500u));
-    QObject::connect(timer, &QTimer::timeout, this,
-        [this] {
-            send_idle();
-        }
-    );
+    QObject::connect(timer, &QTimer::timeout, this, [this] {
+        send_idle();
+    });
     if (manager->isInhibited()) {
         // don't start if inhibited
         return;

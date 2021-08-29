@@ -103,15 +103,15 @@ public:
      */
     ClientConnection *createClient(int fd);
 
-    operator wl_display*();
-    operator wl_display*() const;
+    operator wl_display *();
+    operator wl_display *() const;
     bool isRunning() const;
 
     void createShm();
     /**
      * @returns All SeatInterface currently managed on the Display.
      */
-    QVector<SeatInterface*> seats() const;
+    QVector<SeatInterface *> seats() const;
     QList<OutputDeviceInterface *> outputDevices() const;
     QList<OutputInterface *> outputs() const;
     QVector<OutputInterface *> outputsIntersecting(const QRect &rect) const;
@@ -123,7 +123,7 @@ public:
      * @return The ClientConnection for the given native client
      */
     ClientConnection *getConnection(wl_client *client);
-    QVector<ClientConnection*> connections() const;
+    QVector<ClientConnection *> connections() const;
 
     /**
      * Set the EGL @p display for this Wayland display.
@@ -152,8 +152,8 @@ private Q_SLOTS:
 Q_SIGNALS:
     void socketNamesChanged();
     void runningChanged(bool);
-    void clientConnected(KWaylandServer::ClientConnection*);
-    void clientDisconnected(KWaylandServer::ClientConnection*);
+    void clientConnected(KWaylandServer::ClientConnection *);
+    void clientDisconnected(KWaylandServer::ClientConnection *);
 
 private:
     friend class DisplayPrivate;

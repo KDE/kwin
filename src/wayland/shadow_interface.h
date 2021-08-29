@@ -5,8 +5,8 @@
 */
 #pragma once
 
-#include <QObject>
 #include <QMarginsF>
+#include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
@@ -14,7 +14,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class ClientBuffer;
 class Display;
 class ShadowManagerInterfacePrivate;

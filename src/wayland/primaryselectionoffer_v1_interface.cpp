@@ -7,8 +7,8 @@
 #include "primaryselectiondevice_v1_interface.h"
 #include "primaryselectionsource_v1_interface.h"
 // Qt
-#include <QStringList>
 #include <QPointer>
+#include <QStringList>
 // Wayland
 #include <qwayland-server-wp-primary-selection-unstable-v1.h>
 // system
@@ -16,7 +16,6 @@
 
 namespace KWaylandServer
 {
-
 class PrimarySelectionOfferV1InterfacePrivate : public QtWaylandServer::zwp_primary_selection_offer_v1
 {
 public:
@@ -30,7 +29,9 @@ protected:
     void zwp_primary_selection_offer_v1_destroy_resource(Resource *resource) override;
 };
 
-PrimarySelectionOfferV1InterfacePrivate::PrimarySelectionOfferV1InterfacePrivate(PrimarySelectionOfferV1Interface *_q, AbstractDataSource *source, wl_resource *resource)
+PrimarySelectionOfferV1InterfacePrivate::PrimarySelectionOfferV1InterfacePrivate(PrimarySelectionOfferV1Interface *_q,
+                                                                                 AbstractDataSource *source,
+                                                                                 wl_resource *resource)
     : QtWaylandServer::zwp_primary_selection_offer_v1(resource)
     , q(_q)
     , source(source)
@@ -42,7 +43,8 @@ void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_des
     wl_resource_destroy(resource->handle);
 }
 
-void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_destroy_resource(QtWaylandServer::zwp_primary_selection_offer_v1::Resource *resource)
+void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_destroy_resource(
+    QtWaylandServer::zwp_primary_selection_offer_v1::Resource *resource)
 {
     Q_UNUSED(resource)
     delete q;
@@ -63,11 +65,9 @@ PrimarySelectionOfferV1Interface::PrimarySelectionOfferV1Interface(AbstractDataS
     , d(new PrimarySelectionOfferV1InterfacePrivate(this, source, resource))
 {
     Q_ASSERT(source);
-    connect(source, &AbstractDataSource::mimeTypeOffered, this,
-        [this](const QString &mimeType) {
-            d->send_offer(mimeType);
-        }
-    );
+    connect(source, &AbstractDataSource::mimeTypeOffered, this, [this](const QString &mimeType) {
+        d->send_offer(mimeType);
+    });
 }
 
 PrimarySelectionOfferV1Interface::~PrimarySelectionOfferV1Interface() = default;

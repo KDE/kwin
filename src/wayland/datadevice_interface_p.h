@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 class AbstractDataSource;
 class DataDeviceInterface;
 class DataOfferInterface;

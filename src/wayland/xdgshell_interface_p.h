@@ -6,15 +6,14 @@
 
 #pragma once
 
-#include "xdgshell_interface.h"
 #include "qwayland-server-xdg-shell.h"
+#include "xdgshell_interface.h"
 
 #include "surface_interface.h"
 #include "surfacerole_p.h"
 
 namespace KWaylandServer
 {
-
 class XdgToplevelDecorationV1Interface;
 
 class XdgShellInterfacePrivate : public QtWaylandServer::xdg_wm_base
@@ -84,8 +83,7 @@ protected:
     void xdg_positioner_set_parent_configure(Resource *resource, uint32_t serial) override;
 };
 
-struct XdgSurfaceState
-{
+struct XdgSurfaceState {
     QRect windowGeometry;
     quint32 acknowledgedConfigure;
     bool acknowledgedConfigureIsSet = false;
@@ -141,8 +139,7 @@ public:
     QString windowTitle;
     QString windowClass;
 
-    struct State
-    {
+    struct State {
         QSize minimumSize;
         QSize maximumSize;
     };

@@ -7,12 +7,12 @@
 // Qt
 #include <QtTest>
 // KWin
+#include "../../src/server/display.h"
+#include "../../src/server/outputdevice_interface.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/outputdevice.h"
 #include "KWayland/Client/registry.h"
-#include "../../src/server/display.h"
-#include "../../src/server/outputdevice_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
 
@@ -55,7 +55,6 @@ private:
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
-
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-output-0");
@@ -102,7 +101,10 @@ void TestWaylandOutputDevice::init()
 
     m_serverOutputDevice->setCurrentMode(1);
 
-    m_edid = QByteArray::fromBase64("AP///////wAQrBbwTExLQQ4WAQOANCB46h7Frk80sSYOUFSlSwCBgKlA0QBxTwEBAQEBAQEBKDyAoHCwI0AwIDYABkQhAAAaAAAA/wBGNTI1TTI0NUFLTEwKAAAA/ABERUxMIFUyNDEwCiAgAAAA/QA4TB5REQAKICAgICAgAToCAynxUJAFBAMCBxYBHxITFCAVEQYjCQcHZwMMABAAOC2DAQAA4wUDAQI6gBhxOC1AWCxFAAZEIQAAHgEdgBhxHBYgWCwlAAZEIQAAngEdAHJR0B4gbihVAAZEIQAAHowK0Iog4C0QED6WAAZEIQAAGAAAAAAAAAAAAAAAAAAAPg==");
+    m_edid = QByteArray::fromBase64(
+        "AP///////wAQrBbwTExLQQ4WAQOANCB46h7Frk80sSYOUFSlSwCBgKlA0QBxTwEBAQEBAQEBKDyAoHCwI0AwIDYABkQhAAAaAAAA/wBGNTI1TTI0NUFLTEwKAAAA/ABERUxMIFUyNDEwCiAgAAAA/"
+        "QA4TB5REQAKICAgICAgAToCAynxUJAFBAMCBxYBHxITFCAVEQYjCQcHZwMMABAAOC2DAQAA4wUDAQI6gBhxOC1AWCxFAAZEIQAAHgEdgBhxHBYgWCwlAAZEIQAAngEdAHJR0B4gbihVAAZEIQAAHow"
+        "K0Iog4C0QED6WAAZEIQAAGAAAAAAAAAAAAAAAAAAAPg==");
     m_serverOutputDevice->setEdid(m_edid);
 
     m_serialNumber = "23498723948723";
@@ -116,8 +118,8 @@ void TestWaylandOutputDevice::init()
     // 8 bit color ramps
     for (int i = 0; i < 256; i++) {
         quint16 val = (double)i / 255 * UINT16_MAX;
-        m_initColorCurves.red << val ;
-        m_initColorCurves.green << val ;
+        m_initColorCurves.red << val;
+        m_initColorCurves.green << val;
     }
     // 10 bit color ramp
     for (int i = 0; i < 320; i++) {
@@ -297,7 +299,8 @@ void TestWaylandOutputDevice::testModeChanges()
     // the one which got the current flag
     QCOMPARE(modeChangedSpy.last().first().value<OutputDevice::Mode>().size, QSize(800, 600));
     QCOMPARE(modeChangedSpy.last().first().value<OutputDevice::Mode>().refreshRate, 60000);
-    QCOMPARE(modeChangedSpy.last().first().value<OutputDevice::Mode>().flags, OutputDevice::Mode::Flags(OutputDevice::Mode::Flag::Current | OutputDevice::Mode::Flag::Preferred));
+    QCOMPARE(modeChangedSpy.last().first().value<OutputDevice::Mode>().flags,
+             OutputDevice::Mode::Flags(OutputDevice::Mode::Flag::Current | OutputDevice::Mode::Flag::Preferred));
     QVERIFY(!outputChanged.isEmpty());
     QCOMPARE(output.pixelSize(), QSize(800, 600));
     const QList<OutputDevice::Mode> &modes2 = output.modes();
@@ -465,11 +468,11 @@ void TestWaylandOutputDevice::testTransform_data()
     QTest::addColumn<KWayland::Client::OutputDevice::Transform>("expected");
     QTest::addColumn<KWaylandServer::OutputDeviceInterface::Transform>("actual");
 
-    QTest::newRow("90")          << OutputDevice::Transform::Rotated90  << OutputDeviceInterface::Transform::Rotated90;
-    QTest::newRow("180")         << OutputDevice::Transform::Rotated180 << OutputDeviceInterface::Transform::Rotated180;
-    QTest::newRow("270")         << OutputDevice::Transform::Rotated270 << OutputDeviceInterface::Transform::Rotated270;
-    QTest::newRow("Flipped")     << OutputDevice::Transform::Flipped    << OutputDeviceInterface::Transform::Flipped;
-    QTest::newRow("Flipped 90")  << OutputDevice::Transform::Flipped90  << OutputDeviceInterface::Transform::Flipped90;
+    QTest::newRow("90") << OutputDevice::Transform::Rotated90 << OutputDeviceInterface::Transform::Rotated90;
+    QTest::newRow("180") << OutputDevice::Transform::Rotated180 << OutputDeviceInterface::Transform::Rotated180;
+    QTest::newRow("270") << OutputDevice::Transform::Rotated270 << OutputDeviceInterface::Transform::Rotated270;
+    QTest::newRow("Flipped") << OutputDevice::Transform::Flipped << OutputDeviceInterface::Transform::Flipped;
+    QTest::newRow("Flipped 90") << OutputDevice::Transform::Flipped90 << OutputDeviceInterface::Transform::Flipped90;
     QTest::newRow("Flipped 180") << OutputDevice::Transform::Flipped180 << OutputDeviceInterface::Transform::Flipped180;
     QTest::newRow("Flipped 280") << OutputDevice::Transform::Flipped270 << OutputDeviceInterface::Transform::Flipped270;
 }
@@ -492,7 +495,8 @@ void TestWaylandOutputDevice::testTransform()
     wl_display_flush(m_connection->display());
     QVERIFY(interfacesAnnouncedSpy.wait());
 
-    KWayland::Client::OutputDevice *output = registry.createOutputDevice(announced.first().first().value<quint32>(), announced.first().last().value<quint32>(), &registry);
+    KWayland::Client::OutputDevice *output =
+        registry.createOutputDevice(announced.first().first().value<quint32>(), announced.first().last().value<quint32>(), &registry);
     QSignalSpy outputChanged(output, &KWayland::Client::OutputDevice::done);
     QVERIFY(outputChanged.isValid());
     wl_display_flush(m_connection->display());
@@ -627,7 +631,6 @@ void TestWaylandOutputDevice::testDone()
     wl_display_flush(m_connection->display());
     QVERIFY(outputDone.wait());
 }
-
 
 QTEST_GUILESS_MAIN(TestWaylandOutputDevice)
 #include "test_wayland_outputdevice.moc"

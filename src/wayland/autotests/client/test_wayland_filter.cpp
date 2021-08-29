@@ -6,17 +6,17 @@
 // Qt
 #include <QtTest>
 // KWin
+#include "../../src/server/blur_interface.h"
+#include "../../src/server/compositor_interface.h"
+#include "../../src/server/display.h"
+#include "../../src/server/filtered_display.h"
+#include "KWayland/Client/blur.h"
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/region.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/surface.h"
-#include "KWayland/Client/blur.h"
-#include "../../src/server/display.h"
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/blur_interface.h"
-#include "../../src/server/filtered_display.h"
 
 #include <wayland-server.h>
 
@@ -43,21 +43,22 @@ private:
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-blur-0");
 
-//The following non-realistic class allows only clients in the m_allowedClients list to access the blur interface
-//all other interfaces are allowed
+// The following non-realistic class allows only clients in the m_allowedClients list to access the blur interface
+// all other interfaces are allowed
 class TestDisplay : public KWaylandServer::FilteredDisplay
 {
 public:
     TestDisplay(QObject *parent);
-    bool allowInterface(KWaylandServer::ClientConnection * client, const QByteArray & interfaceName) override;
-    QList<wl_client*> m_allowedClients;
+    bool allowInterface(KWaylandServer::ClientConnection *client, const QByteArray &interfaceName) override;
+    QList<wl_client *> m_allowedClients;
 };
 
-TestDisplay::TestDisplay(QObject *parent):
-    KWaylandServer::FilteredDisplay(parent)
-{}
+TestDisplay::TestDisplay(QObject *parent)
+    : KWaylandServer::FilteredDisplay(parent)
+{
+}
 
-bool TestDisplay::allowInterface(KWaylandServer::ClientConnection* client, const QByteArray& interfaceName)
+bool TestDisplay::allowInterface(KWaylandServer::ClientConnection *client, const QByteArray &interfaceName)
 {
     if (interfaceName == "org_kde_kwin_blur_manager") {
         return m_allowedClients.contains(*client);
@@ -69,7 +70,8 @@ TestFilter::TestFilter(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
     , m_compositorInterface(nullptr)
-{}
+{
+}
 
 void TestFilter::init()
 {
@@ -93,14 +95,13 @@ void TestFilter::testFilter_data()
     QTest::addColumn<bool>("accessAllowed");
     QTest::newRow("granted") << true;
     QTest::newRow("denied") << false;
-
 }
 
 void TestFilter::testFilter()
 {
     QFETCH(bool, accessAllowed);
 
-  // setup connection
+    // setup connection
     QScopedPointer<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread());
     QSignalSpy connectedSpy(connection.data(), &ConnectionThread::connected);
     QVERIFY(connectedSpy.isValid());
@@ -113,11 +114,12 @@ void TestFilter::testFilter()
     connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    //use low level API as Server::Display::connections only lists connections which have
-    //been previous fetched via getConnection()
+    // use low level API as Server::Display::connections only lists connections which have
+    // been previous fetched via getConnection()
     if (accessAllowed) {
         wl_client *clientConnection;
-        wl_client_for_each(clientConnection, wl_display_get_client_list(*m_display)) {
+        wl_client_for_each(clientConnection, wl_display_get_client_list(*m_display))
+        {
             m_display->m_allowedClients << clientConnection;
         }
     }
@@ -142,7 +144,6 @@ void TestFilter::testFilter()
     thread->quit();
     thread->wait();
 }
-
 
 QTEST_GUILESS_MAIN(TestFilter)
 #include "test_wayland_filter.moc"

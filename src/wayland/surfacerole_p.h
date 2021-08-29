@@ -10,7 +10,6 @@
 
 namespace KWaylandServer
 {
-
 class SurfaceInterface;
 
 class SurfaceRole

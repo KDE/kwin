@@ -6,8 +6,8 @@
 // Qt
 #include <QtTest>
 // client
-#include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/compositor.h"
+#include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/datadevice.h"
 #include "KWayland/Client/datadevicemanager.h"
 #include "KWayland/Client/datasource.h"
@@ -24,7 +24,6 @@
 
 using namespace KWayland::Client;
 using namespace KWaylandServer;
-
 
 class SelectionTest : public QObject
 {
@@ -77,7 +76,7 @@ void SelectionTest::init()
     setupConnection(&m_client2);
 }
 
-bool SelectionTest::setupConnection(Connection* c)
+bool SelectionTest::setupConnection(Connection *c)
 {
     c->connection = new ConnectionThread;
     QSignalSpy connectedSpy(c->connection, &ConnectionThread::connected);
@@ -113,9 +112,8 @@ bool SelectionTest::setupConnection(Connection* c)
         return false;
     }
 
-    c->compositor = registry.createCompositor(registry.interface(Registry::Interface::Compositor).name,
-                                              registry.interface(Registry::Interface::Compositor).version,
-                                              this);
+    c->compositor =
+        registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, this);
     if (!c->compositor->isValid()) {
         return false;
     }
@@ -125,9 +123,7 @@ bool SelectionTest::setupConnection(Connection* c)
     if (!c->ddm->isValid()) {
         return false;
     }
-    c->seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name,
-                                  registry.interface(Registry::Interface::Seat).version,
-                                  this);
+    c->seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version, this);
     if (!c->seat->isValid()) {
         return false;
     }
@@ -157,9 +153,9 @@ void SelectionTest::cleanup()
 {
     cleanupConnection(&m_client1);
     cleanupConnection(&m_client2);
-#define CLEANUP(variable) \
-        delete variable; \
-        variable = nullptr;
+#define CLEANUP(variable)                                                                                                                                      \
+    delete variable;                                                                                                                                           \
+    variable = nullptr;
 
     CLEANUP(m_display)
 #undef CLEANUP
@@ -208,7 +204,7 @@ void SelectionTest::testClearOnEnter()
     QVERIFY(surfaceCreatedSpy.isValid());
     QScopedPointer<Surface> s1(m_client1.compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface1 = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface1 = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface1);
 
     // pass this surface keyboard focus
@@ -230,7 +226,7 @@ void SelectionTest::testClearOnEnter()
     QVERIFY(keyboardEnteredClient2Spy.isValid());
     QScopedPointer<Surface> s2(m_client2.compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface2 = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    auto serverSurface2 = surfaceCreatedSpy.last().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface2);
 
     // entering that surface should give a selection offer

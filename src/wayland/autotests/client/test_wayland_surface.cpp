@@ -4,25 +4,25 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QtTest>
 #include <QImage>
 #include <QPainter>
+#include <QtTest>
 // KWin
+#include "../../src/server/clientbuffer.h"
+#include "../../src/server/compositor_interface.h"
+#include "../../src/server/display.h"
+#include "../../src/server/idleinhibit_v1_interface.h"
+#include "../../src/server/shmclientbuffer.h"
+#include "../../src/server/surface_interface.h"
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/idleinhibit.h"
 #include "KWayland/Client/output.h"
-#include "KWayland/Client/surface.h"
 #include "KWayland/Client/region.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/shm_pool.h"
-#include "../../src/server/clientbuffer.h"
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/idleinhibit_v1_interface.h"
-#include "../../src/server/surface_interface.h"
-#include "../../src/server/shmclientbuffer.h"
+#include "KWayland/Client/surface.h"
 // Wayland
 #include <wayland-client-protocol.h>
 
@@ -138,7 +138,9 @@ void TestWaylandSurface::init()
     m_shm = registry.createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>(), this);
     QVERIFY(m_shm->isValid());
 
-    m_idleInhibitManager = registry.createIdleInhibitManager(registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).name, registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).version, this);
+    m_idleInhibitManager = registry.createIdleInhibitManager(registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).name,
+                                                             registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).version,
+                                                             this);
     QVERIFY(m_idleInhibitManager->isValid());
 }
 
@@ -191,7 +193,7 @@ void TestWaylandSurface::testStaticAccessor()
     QCOMPARE(KWayland::Client::Surface::all().first(), s1);
     QCOMPARE(KWayland::Client::Surface::get(*s1), s1);
     QVERIFY(serverSurfaceCreated.wait());
-    auto serverSurface1 = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    auto serverSurface1 = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface1);
     QCOMPARE(KWaylandServer::SurfaceInterface::get(serverSurface1->resource()), serverSurface1);
     QCOMPARE(KWaylandServer::SurfaceInterface::get(serverSurface1->id(), serverSurface1->client()), serverSurface1);
@@ -215,7 +217,7 @@ void TestWaylandSurface::testStaticAccessor()
     QCOMPARE(KWayland::Client::Surface::get(*s2), s2);
     serverSurfaceCreated.clear();
     QVERIFY(serverSurfaceCreated.wait());
-    auto serverSurface2 = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    auto serverSurface2 = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface2);
     QCOMPARE(KWaylandServer::SurfaceInterface::get(serverSurface1->resource()), serverSurface1);
     QCOMPARE(KWaylandServer::SurfaceInterface::get(serverSurface1->id(), serverSurface1->client()), serverSurface1);
@@ -250,7 +252,7 @@ void TestWaylandSurface::testDamage()
     KWayland::Client::Surface *s = m_compositor->createSurface();
     s->setScale(2);
     QVERIFY(serverSurfaceCreated.wait());
-    KWaylandServer::SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    KWaylandServer::SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
     QCOMPARE(serverSurface->damage(), QRegion());
     QVERIFY(!serverSurface->isMapped());
@@ -338,7 +340,7 @@ void TestWaylandSurface::testFrameCallback()
     QVERIFY(serverSurfaceCreated.isValid());
     KWayland::Client::Surface *s = m_compositor->createSurface();
     QVERIFY(serverSurfaceCreated.wait());
-    KWaylandServer::SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    KWaylandServer::SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     QSignalSpy damageSpy(serverSurface, &KWaylandServer::SurfaceInterface::damaged);
@@ -366,13 +368,13 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(serverSurfaceCreated.isValid());
     KWayland::Client::Surface *s = m_compositor->createSurface();
     QVERIFY(serverSurfaceCreated.wait());
-    KWaylandServer::SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    KWaylandServer::SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     // create three images
     QImage black(24, 24, QImage::Format_RGB32);
     black.fill(Qt::black);
-    QImage red(24, 24, QImage::Format_ARGB32); //Note - deliberately not premultiplied
+    QImage red(24, 24, QImage::Format_ARGB32); // Note - deliberately not premultiplied
     red.fill(QColor(255, 0, 0, 128));
     QImage blue(24, 24, QImage::Format_ARGB32_Premultiplied);
     blue.fill(QColor(0, 0, 255, 128));
@@ -494,7 +496,7 @@ void TestWaylandSurface::testAttachBuffer()
     s->attachBuffer(blackBuffer);
     s->damage(QRect(0, 0, 1, 1));
     // TODO: better method
-    s->attachBuffer((wl_buffer*)nullptr);
+    s->attachBuffer((wl_buffer *)nullptr);
     s->damage(QRect(0, 0, 10, 10));
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(unmappedSpy.wait());
@@ -531,12 +533,12 @@ void TestWaylandSurface::testMultipleSurfaces()
     QVERIFY(serverSurfaceCreated.isValid());
     QScopedPointer<Surface> s1(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
-    SurfaceInterface *serverSurface1 = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface1 = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface1);
-    //second surface
+    // second surface
     QScopedPointer<Surface> s2(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
-    SurfaceInterface *serverSurface2 = serverSurfaceCreated.last().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface2 = serverSurfaceCreated.last().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface2);
     QVERIFY(serverSurface1->resource() != serverSurface2->resource());
 
@@ -607,7 +609,7 @@ void TestWaylandSurface::testOpaque()
     QVERIFY(serverSurfaceCreated.isValid());
     Surface *s = m_compositor->createSurface();
     QVERIFY(serverSurfaceCreated.wait());
-    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
     QSignalSpy opaqueRegionChangedSpy(serverSurface, &KWaylandServer::SurfaceInterface::opaqueChanged);
     QVERIFY(opaqueRegionChangedSpy.isValid());
@@ -662,7 +664,7 @@ void TestWaylandSurface::testInput()
     QVERIFY(serverSurfaceCreated.isValid());
     Surface *s = m_compositor->createSurface();
     QVERIFY(serverSurfaceCreated.wait());
-    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
     QSignalSpy inputRegionChangedSpy(serverSurface, &KWaylandServer::SurfaceInterface::inputChanged);
     QVERIFY(inputRegionChangedSpy.isValid());
@@ -732,14 +734,14 @@ void TestWaylandSurface::testScale()
     QScopedPointer<Surface> s(m_compositor->createSurface());
     QCOMPARE(s->scale(), 1);
     QVERIFY(serverSurfaceCreated.wait());
-    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverSurface);
     QCOMPARE(serverSurface->bufferScale(), 1);
 
     // let's change the scale factor
     QSignalSpy bufferScaleChangedSpy(serverSurface, &SurfaceInterface::bufferScaleChanged);
 
-    //changing the scale implicitly changes the size
+    // changing the scale implicitly changes the size
     QSignalSpy sizeChangedSpy(serverSurface, &SurfaceInterface::sizeChanged);
 
     QVERIFY(bufferScaleChangedSpy.isValid());
@@ -753,8 +755,8 @@ void TestWaylandSurface::testScale()
     QCOMPARE(bufferScaleChangedSpy.first().first().toInt(), 2);
     QCOMPARE(serverSurface->bufferScale(), 2);
 
-    //even though we've changed the scale, if we don't have a buffer we
-    //don't have a size. If we don't have a size it can't have changed
+    // even though we've changed the scale, if we don't have a buffer we
+    // don't have a size. If we don't have a size it can't have changed
     QCOMPARE(sizeChangedSpy.count(), 0);
     QVERIFY(!serverSurface->size().isValid());
 
@@ -773,32 +775,32 @@ void TestWaylandSurface::testScale()
     QCOMPARE(serverSurface->bufferScale(), 4);
     bufferScaleChangedSpy.clear();
 
-    //attach a buffer of 100x100, our scale is 4, so this should be a size of 25x25
+    // attach a buffer of 100x100, our scale is 4, so this should be a size of 25x25
     QImage red(100, 100, QImage::Format_ARGB32_Premultiplied);
     red.fill(QColor(255, 0, 0, 128));
     QSharedPointer<Buffer> redBuffer = m_shm->createBuffer(red).toStrongRef();
     QVERIFY(redBuffer);
     s->attachBuffer(redBuffer.data());
-    s->damage(QRect(0,0, 25,25));
+    s->damage(QRect(0, 0, 25, 25));
     s->commit(Surface::CommitFlag::None);
     QVERIFY(sizeChangedSpy.wait());
     QCOMPARE(sizeChangedSpy.count(), 1);
-    QCOMPARE(serverSurface->size(), QSize(25,25));
+    QCOMPARE(serverSurface->size(), QSize(25, 25));
     sizeChangedSpy.clear();
     bufferScaleChangedSpy.clear();
 
-    //set the scale to 1, buffer is still 100x100 so size should change to 100x100
+    // set the scale to 1, buffer is still 100x100 so size should change to 100x100
     s->setScale(1);
     s->commit(Surface::CommitFlag::None);
     QVERIFY(sizeChangedSpy.wait());
     QCOMPARE(sizeChangedSpy.count(), 1);
     QCOMPARE(bufferScaleChangedSpy.count(), 1);
     QCOMPARE(serverSurface->bufferScale(), 1);
-    QCOMPARE(serverSurface->size(), QSize(100,100));
+    QCOMPARE(serverSurface->size(), QSize(100, 100));
     sizeChangedSpy.clear();
     bufferScaleChangedSpy.clear();
 
-    //set scale and size in one commit, buffer is 50x50 at scale 2 so size should be 25x25
+    // set scale and size in one commit, buffer is 50x50 at scale 2 so size should be 25x25
     QImage blue(50, 50, QImage::Format_ARGB32_Premultiplied);
     red.fill(QColor(255, 0, 0, 128));
     QSharedPointer<Buffer> blueBuffer = m_shm->createBuffer(blue).toStrongRef();
@@ -810,7 +812,7 @@ void TestWaylandSurface::testScale()
     QCOMPARE(sizeChangedSpy.count(), 1);
     QCOMPARE(bufferScaleChangedSpy.count(), 1);
     QCOMPARE(serverSurface->bufferScale(), 2);
-    QCOMPARE(serverSurface->size(), QSize(25,25));
+    QCOMPARE(serverSurface->size(), QSize(25, 25));
 }
 
 void TestWaylandSurface::testDestroy()
@@ -854,7 +856,7 @@ void TestWaylandSurface::testUnmapOfNotMappedSurface()
     QVERIFY(serverSurfaceCreated.isValid());
     QScopedPointer<Surface> s(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
-    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
 
     QSignalSpy unmappedSpy(serverSurface, &SurfaceInterface::unmapped);
     QVERIFY(unmappedSpy.isValid());
@@ -879,7 +881,7 @@ void TestWaylandSurface::testSurfaceAt()
     QVERIFY(serverSurfaceCreated.isValid());
     QScopedPointer<Surface> s(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
-    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
 
     // a newly created surface should not be mapped and not provide a surface at a position
     QVERIFY(!serverSurface->isMapped());
@@ -914,7 +916,7 @@ void TestWaylandSurface::testDestroyAttachedBuffer()
     QVERIFY(serverSurfaceCreated.isValid());
     QScopedPointer<Surface> s(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
-    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
 
     // let's damage this surface
     QSignalSpy damagedSpy(serverSurface, &SurfaceInterface::damaged);
@@ -938,7 +940,6 @@ void TestWaylandSurface::testDestroyAttachedBuffer()
     QTRY_VERIFY(serverSurface->buffer()->isDestroyed());
 }
 
-
 void TestWaylandSurface::testDestroyWithPendingCallback()
 {
     // this test tries to verify that destroying a surface with a pending callback works correctly
@@ -951,7 +952,7 @@ void TestWaylandSurface::testDestroyWithPendingCallback()
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QVERIFY(surfaceCreatedSpy.isValid());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     // now render to it
@@ -987,7 +988,7 @@ void TestWaylandSurface::testDisconnect()
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QVERIFY(surfaceCreatedSpy.isValid());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     // destroy client
@@ -1018,7 +1019,7 @@ void TestWaylandSurface::testOutput()
     // This test verifies that the enter/leave are sent correctly to the Client
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    qRegisterMetaType<KWayland::Client::Output*>();
+    qRegisterMetaType<KWayland::Client::Output *>();
     QScopedPointer<Surface> s(m_compositor->createSurface());
     QVERIFY(!s.isNull());
     QVERIFY(s->isValid());
@@ -1031,9 +1032,9 @@ void TestWaylandSurface::testOutput()
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QVERIFY(surfaceCreatedSpy.isValid());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface*>());
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>());
 
     // create another registry to get notified about added outputs
     Registry registry;
@@ -1049,46 +1050,47 @@ void TestWaylandSurface::testOutput()
 
     auto serverOutput = new OutputInterface(m_display, m_display);
     QVERIFY(outputAnnouncedSpy.wait());
-    QScopedPointer<Output> clientOutput(registry.createOutput(outputAnnouncedSpy.first().first().value<quint32>(), outputAnnouncedSpy.first().last().value<quint32>()));
+    QScopedPointer<Output> clientOutput(
+        registry.createOutput(outputAnnouncedSpy.first().first().value<quint32>(), outputAnnouncedSpy.first().last().value<quint32>()));
     QVERIFY(clientOutput->isValid());
     m_connection->flush();
     m_display->dispatchEvents();
 
     // now enter it
-    serverSurface->setOutputs(QVector<OutputInterface*>{serverOutput});
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface*>{serverOutput});
+    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput});
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>{serverOutput});
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
-    QCOMPARE(enteredSpy.first().first().value<Output*>(), clientOutput.data());
-    QCOMPARE(s->outputs(), QVector<Output*>{clientOutput.data()});
+    QCOMPARE(enteredSpy.first().first().value<Output *>(), clientOutput.data());
+    QCOMPARE(s->outputs(), QVector<Output *>{clientOutput.data()});
 
     // adding to same should not trigger
-    serverSurface->setOutputs(QVector<OutputInterface*>{serverOutput});
+    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput});
 
     // leave again
-    serverSurface->setOutputs(QVector<OutputInterface*>());
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface*>());
+    serverSurface->setOutputs(QVector<OutputInterface *>());
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>());
     QVERIFY(leftSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
     QCOMPARE(leftSpy.count(), 1);
-    QCOMPARE(leftSpy.first().first().value<Output*>(), clientOutput.data());
-    QCOMPARE(s->outputs(), QVector<Output*>());
+    QCOMPARE(leftSpy.first().first().value<Output *>(), clientOutput.data());
+    QCOMPARE(s->outputs(), QVector<Output *>());
 
     // leave again should not trigger
-    serverSurface->setOutputs(QVector<OutputInterface*>());
+    serverSurface->setOutputs(QVector<OutputInterface *>());
 
     // and enter again, just to verify
-    serverSurface->setOutputs(QVector<OutputInterface*>{serverOutput});
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface*>{serverOutput});
+    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput});
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>{serverOutput});
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(leftSpy.count(), 1);
 
-    //delete output client is on.
-    //client should get an exit and be left on no outputs (which is allowed)
+    // delete output client is on.
+    // client should get an exit and be left on no outputs (which is allowed)
     serverOutput->deleteLater();
     QVERIFY(leftSpy.wait());
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface*>());
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>());
 }
 
 void TestWaylandSurface::testInhibit()
@@ -1100,7 +1102,7 @@ void TestWaylandSurface::testInhibit()
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QVERIFY(surfaceCreatedSpy.isValid());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
     QCOMPARE(serverSurface->inhibitsIdle(), false);
 

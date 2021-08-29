@@ -13,13 +13,13 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/surface.h"
 // server
-#include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
+#include "../../src/server/display.h"
 #include "../../src/server/plasmashell_interface.h"
 
 #include <wayland-client-protocol.h>
 
-#include <cerrno>  // For EPROTO
+#include <cerrno> // For EPROTO
 
 using namespace KWayland::Client;
 using namespace KWaylandServer;
@@ -82,9 +82,8 @@ void ErrorTest::init()
     registry.setup();
     QVERIFY(interfacesAnnouncedSpy.wait());
 
-    m_compositor = registry.createCompositor(registry.interface(Registry::Interface::Compositor).name,
-                                             registry.interface(Registry::Interface::Compositor).version,
-                                             this);
+    m_compositor =
+        registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, this);
     QVERIFY(m_compositor);
     m_plasmaShell = registry.createPlasmaShell(registry.interface(Registry::Interface::PlasmaShell).name,
                                                registry.interface(Registry::Interface::PlasmaShell).version,
@@ -94,10 +93,10 @@ void ErrorTest::init()
 
 void ErrorTest::cleanup()
 {
-#define CLEANUP(variable) \
-    if (variable) { \
-        delete variable; \
-        variable = nullptr; \
+#define CLEANUP(variable)                                                                                                                                      \
+    if (variable) {                                                                                                                                            \
+        delete variable;                                                                                                                                       \
+        variable = nullptr;                                                                                                                                    \
     }
     CLEANUP(m_plasmaShell)
     CLEANUP(m_compositor)

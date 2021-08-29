@@ -11,7 +11,6 @@
 
 namespace KWaylandServer
 {
-
 ClientBuffer::ClientBuffer(ClientBufferPrivate &dd)
     : d_ptr(&dd)
 {

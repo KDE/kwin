@@ -11,7 +11,6 @@
 
 namespace KWaylandServer
 {
-
 class OutputInterface;
 
 class DpmsManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_dpms_manager
@@ -42,7 +41,6 @@ protected:
     void org_kde_kwin_dpms_destroy_resource(Resource *resource) override;
     void org_kde_kwin_dpms_set(Resource *resource, uint32_t mode) override;
     void org_kde_kwin_dpms_release(Resource *resource) override;
-
 };
 
 }

@@ -5,19 +5,18 @@
 */
 #pragma once
 
-#include "textinput_v3_interface.h"
 #include "clientconnection.h"
+#include "textinput_v3_interface.h"
 
+#include <QHash>
 #include <QPointer>
 #include <QRect>
 #include <QVector>
-#include <QHash>
 
 #include <qwayland-server-text-input-unstable-v3.h>
 
 namespace KWaylandServer
 {
-
 class TextInputManagerV3InterfacePrivate : public QtWaylandServer::zwp_text_input_manager_v3
 {
 public:
@@ -45,7 +44,10 @@ public:
 
     QList<TextInputV3InterfacePrivate::Resource *> textInputsForClient(ClientConnection *client) const;
 
-    static TextInputV3InterfacePrivate *get(TextInputV3Interface *inputInterface) { return inputInterface->d.data(); }
+    static TextInputV3InterfacePrivate *get(TextInputV3Interface *inputInterface)
+    {
+        return inputInterface->d.data();
+    }
 
     QRect cursorRectangle;
     TextInputContentHints contentHints = TextInputContentHint::None;
@@ -87,7 +89,7 @@ protected:
     void zwp_text_input_v3_set_content_type(Resource *resource, uint32_t hint, uint32_t purpose) override;
     void zwp_text_input_v3_set_text_change_cause(Resource *resource, uint32_t cause) override;
     void zwp_text_input_v3_set_cursor_rectangle(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
-    void zwp_text_input_v3_commit(Resource * resource) override;
+    void zwp_text_input_v3_commit(Resource *resource) override;
 };
 
 }

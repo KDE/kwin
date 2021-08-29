@@ -33,7 +33,6 @@ public:
         : QtWayland::zwp_keyboard_shortcuts_inhibit_manager_v1(registry, id, version)
     {
     }
-
 };
 
 class KeyboardShortcutsInhibitor : public QObject, public QtWayland::zwp_keyboard_shortcuts_inhibitor_v1
@@ -59,7 +58,6 @@ Q_SIGNALS:
     void inhibitorActive();
     void inhibitorInactive();
 };
-
 
 class TestKeyboardShortcutsInhibitorInterface : public QObject
 {

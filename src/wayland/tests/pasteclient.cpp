@@ -70,7 +70,10 @@ PasteClient::~PasteClient()
 
 void PasteClient::init()
 {
-    connect(m_connectionThreadObject, &ConnectionThread::connected, this,
+    connect(
+        m_connectionThreadObject,
+        &ConnectionThread::connected,
+        this,
         [this] {
             m_eventQueue = new EventQueue(this);
             m_eventQueue->setup(m_connectionThreadObject);
@@ -78,8 +81,7 @@ void PasteClient::init()
             Registry *registry = new Registry(this);
             setupRegistry(registry);
         },
-        Qt::QueuedConnection
-    );
+        Qt::QueuedConnection);
     m_connectionThreadObject->moveToThread(m_connectionThread);
     m_connectionThread->start();
 
@@ -88,80 +90,63 @@ void PasteClient::init()
 
 void PasteClient::setupRegistry(Registry *registry)
 {
-    connect(registry, &Registry::compositorAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_compositor = registry->createCompositor(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shellAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shell = registry->createShell(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shmAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shm = registry->createShmPool(name, version, this);
-        }
-    );
-    connect(registry, &Registry::seatAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_seat = registry->createSeat(name, version, this);
-        }
-    );
-    connect(registry, &Registry::dataDeviceManagerAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_dataDeviceManager = registry->createDataDeviceManager(name, version, this);
-        }
-    );
-    connect(registry, &Registry::interfacesAnnounced, this,
-        [this] {
-            Q_ASSERT(m_compositor);
-            Q_ASSERT(m_dataDeviceManager);
-            Q_ASSERT(m_seat);
-            Q_ASSERT(m_shell);
-            Q_ASSERT(m_shm);
-            m_surface = m_compositor->createSurface(this);
-            Q_ASSERT(m_surface);
-            m_shellSurface = m_shell->createSurface(m_surface, this);
-            Q_ASSERT(m_shellSurface);
-            m_shellSurface->setFullscreen();
-            connect(m_shellSurface, &ShellSurface::sizeChanged, this, &PasteClient::render);
+    connect(registry, &Registry::compositorAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_compositor = registry->createCompositor(name, version, this);
+    });
+    connect(registry, &Registry::shellAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shell = registry->createShell(name, version, this);
+    });
+    connect(registry, &Registry::shmAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shm = registry->createShmPool(name, version, this);
+    });
+    connect(registry, &Registry::seatAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_seat = registry->createSeat(name, version, this);
+    });
+    connect(registry, &Registry::dataDeviceManagerAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_dataDeviceManager = registry->createDataDeviceManager(name, version, this);
+    });
+    connect(registry, &Registry::interfacesAnnounced, this, [this] {
+        Q_ASSERT(m_compositor);
+        Q_ASSERT(m_dataDeviceManager);
+        Q_ASSERT(m_seat);
+        Q_ASSERT(m_shell);
+        Q_ASSERT(m_shm);
+        m_surface = m_compositor->createSurface(this);
+        Q_ASSERT(m_surface);
+        m_shellSurface = m_shell->createSurface(m_surface, this);
+        Q_ASSERT(m_shellSurface);
+        m_shellSurface->setFullscreen();
+        connect(m_shellSurface, &ShellSurface::sizeChanged, this, &PasteClient::render);
 
-            m_dataDevice = m_dataDeviceManager->getDataDevice(m_seat, this);
-            connect(m_dataDevice, &DataDevice::selectionOffered, this,
-                [this] {
-                    auto dataOffer = m_dataDevice->offeredSelection();
-                    if (!dataOffer) {
-                        return;
-                    }
-                    const auto &mimeTypes = dataOffer->offeredMimeTypes();
-                    auto it = std::find_if(mimeTypes.constBegin(), mimeTypes.constEnd(),
-                        [](const QMimeType &type) {
-                            return type.inherits(QStringLiteral("text/plain"));
-                        });
-                    if (it == mimeTypes.constEnd()) {
-                        return;
-                    }
-                    int pipeFds[2];
-                    if (pipe(pipeFds) != 0){
-                        return;
-                    }
-                    dataOffer->receive((*it).name(), pipeFds[1]);
-                    close(pipeFds[1]);
-                    QtConcurrent::run(
-                        [pipeFds] {
-                            QFile readPipe;
-                            if (readPipe.open(pipeFds[0], QIODevice::ReadOnly)) {
-                                qDebug() << "Pasted: " << readPipe.readLine();
-                            }
-                            close(pipeFds[0]);
-                            QCoreApplication::quit();
-                        }
-                    );
+        m_dataDevice = m_dataDeviceManager->getDataDevice(m_seat, this);
+        connect(m_dataDevice, &DataDevice::selectionOffered, this, [this] {
+            auto dataOffer = m_dataDevice->offeredSelection();
+            if (!dataOffer) {
+                return;
+            }
+            const auto &mimeTypes = dataOffer->offeredMimeTypes();
+            auto it = std::find_if(mimeTypes.constBegin(), mimeTypes.constEnd(), [](const QMimeType &type) {
+                return type.inherits(QStringLiteral("text/plain"));
+            });
+            if (it == mimeTypes.constEnd()) {
+                return;
+            }
+            int pipeFds[2];
+            if (pipe(pipeFds) != 0) {
+                return;
+            }
+            dataOffer->receive((*it).name(), pipeFds[1]);
+            close(pipeFds[1]);
+            QtConcurrent::run([pipeFds] {
+                QFile readPipe;
+                if (readPipe.open(pipeFds[0], QIODevice::ReadOnly)) {
+                    qDebug() << "Pasted: " << readPipe.readLine();
                 }
-            );
-        }
-    );
+                close(pipeFds[0]);
+                QCoreApplication::quit();
+            });
+        });
+    });
     registry->setEventQueue(m_eventQueue);
     registry->create(m_connectionThreadObject);
     registry->setup();

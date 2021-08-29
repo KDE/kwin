@@ -16,7 +16,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class ClientConnection;
 class Display;
 class OutputInterfacePrivate;
@@ -122,11 +121,11 @@ public:
     static OutputInterface *get(wl_resource *native);
 
 Q_SIGNALS:
-    void physicalSizeChanged(const QSize&);
-    void globalPositionChanged(const QPoint&);
-    void manufacturerChanged(const QString&);
-    void modelChanged(const QString&);
-    void pixelSizeChanged(const QSize&);
+    void physicalSizeChanged(const QSize &);
+    void globalPositionChanged(const QPoint &);
+    void manufacturerChanged(const QString &);
+    void modelChanged(const QString &);
+    void pixelSizeChanged(const QSize &);
     void refreshRateChanged(int);
     void scaleChanged(int);
     void subPixelChanged(SubPixel);
@@ -146,7 +145,7 @@ Q_SIGNALS:
      * Emitted when a client binds to a given output
      * @internal
      */
-    void bound(ClientConnection *client,  wl_resource *boundResource);
+    void bound(ClientConnection *client, wl_resource *boundResource);
 
 private:
     QScopedPointer<OutputInterfacePrivate> d;

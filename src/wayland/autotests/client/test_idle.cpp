@@ -82,22 +82,18 @@ void IdleTest::init()
     registry.setup();
     QVERIFY(interfacesAnnouncedSpy.wait());
 
-    m_seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name,
-                                 registry.interface(Registry::Interface::Seat).version,
-                                 this);
+    m_seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version, this);
     QVERIFY(m_seat->isValid());
-    m_idle = registry.createIdle(registry.interface(Registry::Interface::Idle).name,
-                                 registry.interface(Registry::Interface::Idle).version,
-                                 this);
+    m_idle = registry.createIdle(registry.interface(Registry::Interface::Idle).name, registry.interface(Registry::Interface::Idle).version, this);
     QVERIFY(m_idle->isValid());
 }
 
 void IdleTest::cleanup()
 {
-#define CLEANUP(variable) \
-    if (variable) { \
-        delete variable; \
-        variable = nullptr; \
+#define CLEANUP(variable)                                                                                                                                      \
+    if (variable) {                                                                                                                                            \
+        delete variable;                                                                                                                                       \
+        variable = nullptr;                                                                                                                                    \
     }
     CLEANUP(m_idle)
     CLEANUP(m_seat)

@@ -6,16 +6,16 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "KWayland/Client/connection_thread.h"
-#include "KWayland/Client/event_queue.h"
-#include "KWayland/Client/dpms.h"
-#include "KWayland/Client/output.h"
-#include "KWayland/Client/xdgoutput.h"
-#include "KWayland/Client/registry.h"
 #include "../../src/server/display.h"
 #include "../../src/server/dpms_interface.h"
 #include "../../src/server/output_interface.h"
 #include "../../src/server/xdgoutput_v1_interface.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/dpms.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/output.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/xdgoutput.h"
 
 // Wayland
 
@@ -28,6 +28,7 @@ private Q_SLOTS:
     void init();
     void cleanup();
     void testChanges();
+
 private:
     KWaylandServer::Display *m_display;
     KWaylandServer::OutputInterface *m_serverOutput;
@@ -62,9 +63,9 @@ void TestXdgOutput::init()
     m_serverOutput->setMode(QSize(1920, 1080));
 
     m_serverXdgOutputManager = new XdgOutputManagerV1Interface(m_display, this);
-    m_serverXdgOutput =  m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);
-    m_serverXdgOutput->setLogicalSize(QSize(1280, 720)); //a 1.5 scale factor
-    m_serverXdgOutput->setLogicalPosition(QPoint(11,12)); //not a sensible value for one monitor, but works for this test
+    m_serverXdgOutput = m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);
+    m_serverXdgOutput->setLogicalSize(QSize(1280, 720)); // a 1.5 scale factor
+    m_serverXdgOutput->setLogicalPosition(QPoint(11, 12)); // not a sensible value for one monitor, but works for this test
     m_serverXdgOutput->setName("testName");
     m_serverXdgOutput->setDescription("testDescription");
 
@@ -134,23 +135,23 @@ void TestXdgOutput::testChanges()
     output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
     QVERIFY(outputChanged.wait());
 
-    QScopedPointer<KWayland::Client::XdgOutputManager> xdgOutputManager(registry.createXdgOutputManager(xdgOutputAnnounced.first().first().value<quint32>(), xdgOutputAnnounced.first().last().value<quint32>(), this));
+    QScopedPointer<KWayland::Client::XdgOutputManager> xdgOutputManager(
+        registry.createXdgOutputManager(xdgOutputAnnounced.first().first().value<quint32>(), xdgOutputAnnounced.first().last().value<quint32>(), this));
 
     QScopedPointer<KWayland::Client::XdgOutput> xdgOutput(xdgOutputManager->getXdgOutput(&output, this));
     QSignalSpy xdgOutputChanged(xdgOutput.data(), &KWayland::Client::XdgOutput::changed);
 
-    //check details are sent on client bind
+    // check details are sent on client bind
     QVERIFY(xdgOutputChanged.wait());
     xdgOutputChanged.clear();
-    QCOMPARE(xdgOutput->logicalPosition(), QPoint(11,12));
-    QCOMPARE(xdgOutput->logicalSize(), QSize(1280,720));
+    QCOMPARE(xdgOutput->logicalPosition(), QPoint(11, 12));
+    QCOMPARE(xdgOutput->logicalSize(), QSize(1280, 720));
     QCOMPARE(xdgOutput->name(), "testName");
     QCOMPARE(xdgOutput->description(), "testDescription");
 
-
     // dynamic updates
     m_serverXdgOutput->setLogicalPosition(QPoint(1000, 2000));
-    m_serverXdgOutput->setLogicalSize(QSize(100,200));
+    m_serverXdgOutput->setLogicalSize(QSize(100, 200));
     // names cannot dynamically change according to the spec
 
     m_serverXdgOutput->done();
@@ -159,7 +160,7 @@ void TestXdgOutput::testChanges()
     QVERIFY(xdgOutputChanged.wait());
     QCOMPARE(xdgOutputChanged.count(), 1);
     QCOMPARE(xdgOutput->logicalPosition(), QPoint(1000, 2000));
-    QCOMPARE(xdgOutput->logicalSize(), QSize(100,200));
+    QCOMPARE(xdgOutput->logicalSize(), QSize(100, 200));
 }
 
 QTEST_GUILESS_MAIN(TestXdgOutput)

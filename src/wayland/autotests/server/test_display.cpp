@@ -6,15 +6,15 @@
 // Qt
 #include <QtTest>
 // WaylandServer
-#include "../../src/server/display.h"
 #include "../../src/server/clientconnection.h"
-#include "../../src/server/outputmanagement_interface.h"
+#include "../../src/server/display.h"
 #include "../../src/server/output_interface.h"
+#include "../../src/server/outputmanagement_interface.h"
 // Wayland
 #include <wayland-server.h>
 // system
-#include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 using namespace KWaylandServer;
@@ -40,7 +40,7 @@ void TestWaylandServerDisplay::testSocketName()
     QCOMPARE(display.socketNames(), QStringList());
     const QString testSName = QStringLiteral("fooBar");
     display.addSocketName(testSName);
-    QCOMPARE(display.socketNames(), QStringList { testSName });
+    QCOMPARE(display.socketNames(), QStringList{testSName});
     QCOMPARE(changedSpy.count(), 1);
 
     // changing to same name again should not emit signal
@@ -61,7 +61,7 @@ void TestWaylandServerDisplay::testStartStop()
     display->addSocketName(testSocketName);
     QVERIFY(!display->isRunning());
     display->start();
-//     QVERIFY(runningSpy.wait());
+    //     QVERIFY(runningSpy.wait());
     QCOMPARE(runningSpy.count(), 1);
     QVERIFY(runningSpy.first().first().toBool());
     QVERIFY(display->isRunning());
@@ -90,9 +90,9 @@ void TestWaylandServerDisplay::testClientConnection()
     Display display;
     display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-client-connection"));
     display.start();
-    QSignalSpy connectedSpy(&display, SIGNAL(clientConnected(KWaylandServer::ClientConnection*)));
+    QSignalSpy connectedSpy(&display, SIGNAL(clientConnected(KWaylandServer::ClientConnection *)));
     QVERIFY(connectedSpy.isValid());
-    QSignalSpy disconnectedSpy(&display, SIGNAL(clientDisconnected(KWaylandServer::ClientConnection*)));
+    QSignalSpy disconnectedSpy(&display, SIGNAL(clientDisconnected(KWaylandServer::ClientConnection *)));
     QVERIFY(disconnectedSpy.isValid());
 
     int sv[2];
@@ -117,11 +117,11 @@ void TestWaylandServerDisplay::testClientConnection()
     QVERIFY(connection->processId() != 0);
     QCOMPARE(connection->display(), &display);
     QCOMPARE(connection->executablePath(), QCoreApplication::applicationFilePath());
-    QCOMPARE((wl_client*)*connection, client);
+    QCOMPARE((wl_client *)*connection, client);
     const ClientConnection &constRef = *connection;
-    QCOMPARE((wl_client*)constRef, client);
+    QCOMPARE((wl_client *)constRef, client);
     QCOMPARE(connectedSpy.count(), 1);
-    QCOMPARE(connectedSpy.first().first().value<ClientConnection*>(), connection);
+    QCOMPARE(connectedSpy.first().first().value<ClientConnection *>(), connection);
     QCOMPARE(display.connections().count(), 1);
     QCOMPARE(display.connections().first(), connection);
 
@@ -137,9 +137,9 @@ void TestWaylandServerDisplay::testClientConnection()
     QVERIFY(connection2);
     QCOMPARE(connection2, client2);
     QCOMPARE(connectedSpy.count(), 2);
-    QCOMPARE(connectedSpy.first().first().value<ClientConnection*>(), connection);
-    QCOMPARE(connectedSpy.last().first().value<ClientConnection*>(), connection2);
-    QCOMPARE(connectedSpy.last().first().value<ClientConnection*>(), client2);
+    QCOMPARE(connectedSpy.first().first().value<ClientConnection *>(), connection);
+    QCOMPARE(connectedSpy.last().first().value<ClientConnection *>(), connection2);
+    QCOMPARE(connectedSpy.last().first().value<ClientConnection *>(), client2);
     QCOMPARE(display.connections().count(), 2);
     QCOMPARE(display.connections().first(), connection);
     QCOMPARE(display.connections().last(), connection2);
@@ -208,7 +208,6 @@ void TestWaylandServerDisplay::testAutoSocketName()
     QVERIFY(display1.isRunning());
     QCOMPARE(socketNameChangedSpy1.count(), 1);
 }
-
 
 QTEST_GUILESS_MAIN(TestWaylandServerDisplay)
 #include "test_display.moc"

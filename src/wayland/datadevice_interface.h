@@ -16,7 +16,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class DataDeviceManagerInterface;
 class DataOfferInterface;
 class DataSourceInterface;
@@ -116,7 +115,7 @@ public:
 Q_SIGNALS:
     void aboutToBeDestroyed();
     void dragStarted();
-    void selectionChanged(KWaylandServer::DataSourceInterface*);
+    void selectionChanged(KWaylandServer::DataSourceInterface *);
     void selectionCleared();
 
 private:
@@ -128,4 +127,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataDeviceInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::DataDeviceInterface *)

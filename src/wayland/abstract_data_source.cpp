@@ -10,4 +10,5 @@ using namespace KWaylandServer;
 
 AbstractDataSource::AbstractDataSource(QObject *parent)
     : QObject(parent)
-{}
+{
+}

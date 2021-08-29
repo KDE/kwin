@@ -6,14 +6,14 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "KWayland/Client/compositor.h"
-#include "KWayland/Client/connection_thread.h"
-#include "KWayland/Client/surface.h"
-#include "KWayland/Client/registry.h"
-#include "KWayland/Client/shm_pool.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/surface_interface.h"
+#include "KWayland/Client/compositor.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/shm_pool.h"
+#include "KWayland/Client/surface.h"
 
 class TestCompositor : public QObject
 {
@@ -132,10 +132,10 @@ void TestCompositor::testCast()
     Compositor c;
     auto wlComp = registry.bindCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>());
     c.setup(wlComp);
-    QCOMPARE((wl_compositor*)c, wlComp);
+    QCOMPARE((wl_compositor *)c, wlComp);
 
     const Compositor &c2(c);
-    QCOMPARE((wl_compositor*)c2, wlComp);
+    QCOMPARE((wl_compositor *)c2, wlComp);
 }
 
 QTEST_GUILESS_MAIN(TestCompositor)

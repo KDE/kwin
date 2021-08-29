@@ -14,7 +14,6 @@
 struct wl_resource;
 namespace KWaylandServer
 {
-
 class Display;
 class SeatInterface;
 class SurfaceInterface;

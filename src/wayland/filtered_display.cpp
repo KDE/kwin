@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 class FilteredDisplayPrivate
 {
 public:

@@ -12,7 +12,6 @@
 
 namespace KWaylandServer
 {
-
 class XdgDecorationManagerV1InterfacePrivate : public QtWaylandServer::zxdg_decoration_manager_v1
 {
 public:

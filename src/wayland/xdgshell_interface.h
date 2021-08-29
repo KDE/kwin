@@ -15,7 +15,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class Display;
 class OutputInterface;
 class SeatInterface;
@@ -113,8 +112,7 @@ public:
     /**
      * Constructs an XdgSurfaceInterface for the given \a shell and \a surface.
      */
-    XdgSurfaceInterface(XdgShellInterface *shell, SurfaceInterface *surface,
-                        ::wl_resource *resource);
+    XdgSurfaceInterface(XdgShellInterface *shell, SurfaceInterface *surface, ::wl_resource *resource);
     /**
      * Destructs the XdgSurfaceInterface object.
      */
@@ -491,8 +489,7 @@ class KWAYLANDSERVER_EXPORT XdgPopupInterface : public QObject
     Q_OBJECT
 
 public:
-    XdgPopupInterface(XdgSurfaceInterface *surface, SurfaceInterface *parentSurface,
-                      const XdgPositioner &positioner, ::wl_resource *resource);
+    XdgPopupInterface(XdgSurfaceInterface *surface, SurfaceInterface *parentSurface, const XdgPositioner &positioner, ::wl_resource *resource);
     /**
      * Destructs the XdgPopupInterface object.
      */

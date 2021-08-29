@@ -12,7 +12,6 @@
 
 namespace KWaylandServer
 {
-
 class Display;
 class ViewporterInterfacePrivate;
 

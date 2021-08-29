@@ -5,15 +5,14 @@
 */
 #pragma once
 
-#include "outputmanagement_interface.h"
-#include "outputdevice_interface.h"
 #include "outputchangeset.h"
+#include "outputdevice_interface.h"
+#include "outputmanagement_interface.h"
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
 namespace KWaylandServer
 {
-
 class OutputConfigurationInterfacePrivate;
 
 /** @class OutputConfigurationInterface
@@ -57,7 +56,7 @@ public:
      * @see OutputDeviceInterface
      * @see OutputManagement
      */
-    QHash<OutputDeviceInterface*, OutputChangeSet*> changes() const;
+    QHash<OutputDeviceInterface *, OutputChangeSet *> changes() const;
 
 public Q_SLOTS:
     /**
@@ -84,7 +83,6 @@ private:
     QScopedPointer<OutputConfigurationInterfacePrivate> d;
 };
 
-
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::OutputConfigurationInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::OutputConfigurationInterface *)

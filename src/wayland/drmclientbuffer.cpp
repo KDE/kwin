@@ -17,8 +17,7 @@
 
 namespace KWaylandServer
 {
-
-typedef GLboolean(*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
+typedef GLboolean (*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
 static eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
 
 class DrmClientBufferPrivate : public ClientBufferPrivate

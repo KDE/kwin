@@ -7,8 +7,8 @@
 #include "datacontroldevice_v1_interface.h"
 #include "datacontrolsource_v1_interface.h"
 // Qt
-#include <QStringList>
 #include <QPointer>
+#include <QStringList>
 // Wayland
 #include <qwayland-server-wlr-data-control-unstable-v1.h>
 // system
@@ -16,7 +16,6 @@
 
 namespace KWaylandServer
 {
-
 class DataControlOfferV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_offer_v1
 {
 public:
@@ -64,11 +63,9 @@ DataControlOfferV1Interface::DataControlOfferV1Interface(AbstractDataSource *sou
     , d(new DataControlOfferV1InterfacePrivate(this, source, resource))
 {
     Q_ASSERT(source);
-    connect(source, &AbstractDataSource::mimeTypeOffered, this,
-        [this](const QString &mimeType) {
-            d->send_offer(mimeType);
-        }
-    );
+    connect(source, &AbstractDataSource::mimeTypeOffered, this, [this](const QString &mimeType) {
+        d->send_offer(mimeType);
+    });
 }
 
 DataControlOfferV1Interface::~DataControlOfferV1Interface() = default;

@@ -6,19 +6,19 @@
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/pointer.h"
 #include "KWayland/Client/registry.h"
+#include "KWayland/Client/seat.h"
 #include "KWayland/Client/shadow.h"
 #include "KWayland/Client/shell.h"
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
 #include "KWayland/Client/xdgshell.h"
-#include "KWayland/Client/pointer.h"
-#include "KWayland/Client/seat.h"
 // Qt
 #include <QGuiApplication>
 #include <QImage>
-#include <QThread>
 #include <QPainter>
+#include <QThread>
 
 using namespace KWayland::Client;
 
@@ -64,7 +64,10 @@ XdgTest::~XdgTest()
 
 void XdgTest::init()
 {
-    connect(m_connectionThreadObject, &ConnectionThread::connected, this,
+    connect(
+        m_connectionThreadObject,
+        &ConnectionThread::connected,
+        this,
         [this] {
             m_eventQueue = new EventQueue(this);
             m_eventQueue->setup(m_connectionThreadObject);
@@ -72,8 +75,7 @@ void XdgTest::init()
             Registry *registry = new Registry(this);
             setupRegistry(registry);
         },
-        Qt::QueuedConnection
-    );
+        Qt::QueuedConnection);
     m_connectionThreadObject->moveToThread(m_connectionThread);
     m_connectionThread->start();
 
@@ -82,69 +84,59 @@ void XdgTest::init()
 
 void XdgTest::setupRegistry(Registry *registry)
 {
-    connect(registry, &Registry::compositorAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_compositor = registry->createCompositor(name, version, this);
-        }
-    );
-    connect(registry, &Registry::shmAnnounced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_shm = registry->createShmPool(name, version, this);
-        }
-    );
-    connect(registry, &Registry::xdgShellUnstableV6Announced, this,
-        [this, registry](quint32 name, quint32 version) {
-            m_xdgShell = registry->createXdgShell(name, version, this);
-            m_xdgShell->setEventQueue(m_eventQueue);
-        }
-    );
-    connect(registry, &Registry::interfacesAnnounced, this,
-        [this] {
-            Q_ASSERT(m_compositor);
-            Q_ASSERT(m_xdgShell);
-            Q_ASSERT(m_shm);
-            m_surface = m_compositor->createSurface(this);
-            Q_ASSERT(m_surface);
-            m_xdgShellSurface = m_xdgShell->createSurface(m_surface, this);
-            Q_ASSERT(m_xdgShellSurface);
-            connect(m_xdgShellSurface, &XdgShellSurface::configureRequested, this, [this](const QSize &size, KWayland::Client::XdgShellSurface::States states, int serial) {
-                Q_UNUSED(size);
-                Q_UNUSED(states);
-                m_xdgShellSurface->ackConfigure(serial);
-                render();
-            });
+    connect(registry, &Registry::compositorAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_compositor = registry->createCompositor(name, version, this);
+    });
+    connect(registry, &Registry::shmAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_shm = registry->createShmPool(name, version, this);
+    });
+    connect(registry, &Registry::xdgShellUnstableV6Announced, this, [this, registry](quint32 name, quint32 version) {
+        m_xdgShell = registry->createXdgShell(name, version, this);
+        m_xdgShell->setEventQueue(m_eventQueue);
+    });
+    connect(registry, &Registry::interfacesAnnounced, this, [this] {
+        Q_ASSERT(m_compositor);
+        Q_ASSERT(m_xdgShell);
+        Q_ASSERT(m_shm);
+        m_surface = m_compositor->createSurface(this);
+        Q_ASSERT(m_surface);
+        m_xdgShellSurface = m_xdgShell->createSurface(m_surface, this);
+        Q_ASSERT(m_xdgShellSurface);
+        connect(m_xdgShellSurface,
+                &XdgShellSurface::configureRequested,
+                this,
+                [this](const QSize &size, KWayland::Client::XdgShellSurface::States states, int serial) {
+                    Q_UNUSED(size);
+                    Q_UNUSED(states);
+                    m_xdgShellSurface->ackConfigure(serial);
+                    render();
+                });
 
-            m_xdgShellSurface->setTitle(QStringLiteral("Test Window"));
+        m_xdgShellSurface->setTitle(QStringLiteral("Test Window"));
 
-            m_surface->commit();
-        }
-    );
-    connect(registry, &Registry::seatAnnounced, this,
-        [this, registry](quint32 name) {
-            Seat *s = registry->createSeat(name, 2, this);
-            connect(s, &Seat::hasPointerChanged, this,
-                [this, s](bool has) {
-                    if (!has) {
-                        return;
+        m_surface->commit();
+    });
+    connect(registry, &Registry::seatAnnounced, this, [this, registry](quint32 name) {
+        Seat *s = registry->createSeat(name, 2, this);
+        connect(s, &Seat::hasPointerChanged, this, [this, s](bool has) {
+            if (!has) {
+                return;
+            }
+            Pointer *p = s->createPointer(this);
+            connect(p, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState state) {
+                Q_UNUSED(button)
+                Q_UNUSED(serial)
+                Q_UNUSED(time)
+                if (state == Pointer::ButtonState::Released) {
+                    if (m_popupSurface) {
+                        m_popupSurface->deleteLater();
+                        m_popupSurface = nullptr;
+                    } else {
+                        createPopup();
                     }
-                    Pointer *p = s->createPointer(this);
-                    connect(p, &Pointer::buttonStateChanged, this,
-                        [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState state) {
-                            Q_UNUSED(button)
-                            Q_UNUSED(serial)
-                            Q_UNUSED(time)
-                            if (state == Pointer::ButtonState::Released) {
-                                if (m_popupSurface) {
-                                    m_popupSurface->deleteLater();
-                                    m_popupSurface = nullptr;
-                                } else {
-                                    createPopup();
-                                }
-                            }
-                        }
-                    );
                 }
-            );
+            });
+        });
     });
 
     registry->setEventQueue(m_eventQueue);
@@ -160,7 +152,7 @@ void XdgTest::createPopup()
 
     m_popupSurface = m_compositor->createSurface(this);
 
-    XdgPositioner positioner(QSize(200,200), QRect(50, 50, 400, 400));
+    XdgPositioner positioner(QSize(200, 200), QRect(50, 50, 400, 400));
     positioner.setAnchorEdge(Qt::BottomEdge | Qt::RightEdge);
     positioner.setGravity(Qt::BottomEdge);
     positioner.setConstraints(XdgPositioner::Constraint::FlipX | XdgPositioner::Constraint::SlideY);
@@ -175,7 +167,7 @@ void XdgTest::render()
     buffer->setUsed(true);
     QImage image(buffer->address(), size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
     image.fill(QColor(255, 255, 255, 255));
-    //draw a red rectangle indicating the anchor of the top level
+    // draw a red rectangle indicating the anchor of the top level
     QPainter painter(&image);
     painter.setBrush(Qt::red);
     painter.setPen(Qt::black);
@@ -189,7 +181,7 @@ void XdgTest::render()
 
 void XdgTest::renderPopup()
 {
-    QSize size(200,200);
+    QSize size(200, 200);
     auto buffer = m_shm->getBuffer(size, size.width() * 4).toStrongRef();
     buffer->setUsed(true);
     QImage image(buffer->address(), size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);

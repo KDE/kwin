@@ -5,8 +5,8 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "datasource_interface.h"
-#include "datadevicemanager_interface.h"
 #include "clientconnection.h"
+#include "datadevicemanager_interface.h"
 #include "utils.h"
 // Qt
 #include <QStringList>
@@ -17,7 +17,6 @@
 
 namespace KWaylandServer
 {
-
 class DataSourceInterfacePrivate : public QtWaylandServer::wl_data_source
 {
 public:
@@ -72,9 +71,9 @@ void DataSourceInterfacePrivate::offer(const QString &mimeType)
 void DataSourceInterfacePrivate::data_source_set_actions(Resource *resource, uint32_t dnd_actions)
 {
     // verify that the no other actions are sent
-    if (dnd_actions & ~(QtWaylandServer::wl_data_device_manager::dnd_action_copy |
-                        QtWaylandServer::wl_data_device_manager::dnd_action_move |
-                        QtWaylandServer::wl_data_device_manager::dnd_action_ask)) {
+    if (dnd_actions
+        & ~(QtWaylandServer::wl_data_device_manager::dnd_action_copy | QtWaylandServer::wl_data_device_manager::dnd_action_move
+            | QtWaylandServer::wl_data_device_manager::dnd_action_ask)) {
         wl_resource_post_error(resource->handle, error_invalid_action_mask, "Invalid action mask");
         return;
     }
@@ -88,7 +87,7 @@ void DataSourceInterfacePrivate::data_source_set_actions(Resource *resource, uin
     if (dnd_actions & QtWaylandServer::wl_data_device_manager::dnd_action_ask) {
         supportedActions |= DataDeviceManagerInterface::DnDAction::Ask;
     }
-    if (supportedDnDActions!= supportedActions) {
+    if (supportedDnDActions != supportedActions) {
         supportedDnDActions = supportedActions;
         Q_EMIT q->supportedDragAndDropActionsChanged();
     }
@@ -164,7 +163,7 @@ void DataSourceInterface::dndAction(DataDeviceManagerInterface::DnDAction action
     uint32_t wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_none;
     if (action == DataDeviceManagerInterface::DnDAction::Copy) {
         wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_copy;
-    } else if (action == DataDeviceManagerInterface::DnDAction::Move ) {
+    } else if (action == DataDeviceManagerInterface::DnDAction::Move) {
         wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_move;
     } else if (action == DataDeviceManagerInterface::DnDAction::Ask) {
         wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_ask;

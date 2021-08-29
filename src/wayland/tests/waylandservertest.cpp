@@ -9,21 +9,19 @@
 #include "../src/server/seat_interface.h"
 #include "../src/server/xdgshell_interface.h"
 
-#include <QGuiApplication>
 #include <QFile>
+#include <QGuiApplication>
 #include <private/qeventdispatcher_glib_p.h>
 
-#include <unistd.h>
 #include <iostream>
+#include <unistd.h>
 
 static int startXServer()
 {
     const QByteArray process = QByteArrayLiteral("Xwayland");
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
-        std::cerr << "FATAL ERROR failed to create pipe to start X Server "
-                  << process.constData()
-                  << std::endl;
+        std::cerr << "FATAL ERROR failed to create pipe to start X Server " << process.constData() << std::endl;
         exit(1);
     }
 
@@ -54,7 +52,7 @@ static void readDisplayFromPipe(int pipe)
     QByteArray displayNumber = readPipe.readLine();
 
     displayNumber.prepend(QByteArray(":"));
-    displayNumber.remove(displayNumber.size() -1, 1);
+    displayNumber.remove(displayNumber.size() - 1, 1);
     std::cout << "X-Server started on display " << displayNumber.constData() << std::endl;
 
     setenv("DISPLAY", displayNumber.constData(), true);

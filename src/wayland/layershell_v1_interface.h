@@ -12,7 +12,6 @@
 
 namespace KWaylandServer
 {
-
 class LayerShellV1InterfacePrivate;
 class LayerSurfaceV1Interface;
 class LayerSurfaceV1InterfacePrivate;
@@ -62,8 +61,11 @@ class KWAYLANDSERVER_EXPORT LayerSurfaceV1Interface : public QObject
 public:
     enum Layer { BackgroundLayer, BottomLayer, TopLayer, OverlayLayer };
 
-    LayerSurfaceV1Interface(LayerShellV1Interface *shell, SurfaceInterface *surface,
-                            OutputInterface *output, Layer layer, const QString &scope,
+    LayerSurfaceV1Interface(LayerShellV1Interface *shell,
+                            SurfaceInterface *surface,
+                            OutputInterface *output,
+                            Layer layer,
+                            const QString &scope,
                             wl_resource *resource);
     ~LayerSurfaceV1Interface() override;
 

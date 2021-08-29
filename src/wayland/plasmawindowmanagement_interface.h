@@ -13,7 +13,6 @@ class QSize;
 
 namespace KWaylandServer
 {
-
 class Display;
 class PlasmaWindowActivationFeedbackInterfacePrivate;
 class PlasmaWindowInterface;
@@ -71,7 +70,7 @@ public:
     void setShowingDesktopState(ShowingDesktopState state);
 
     PlasmaWindowInterface *createWindow(QObject *parent, const QUuid &uuid);
-    QList<PlasmaWindowInterface*> windows() const;
+    QList<PlasmaWindowInterface *> windows() const;
 
     /**
      * Associate a PlasmaVirtualDesktopManagementInterface to this window management.
@@ -84,7 +83,6 @@ public:
      * @returns the PlasmaVirtualDesktopManagementInterface associated to this PlasmaWindowManagementInterface
      */
     PlasmaVirtualDesktopManagementInterface *plasmaVirtualDesktopManagementInterface() const;
-
 
     /**
      * Associate stacking order to this window management
@@ -116,7 +114,10 @@ public:
     /**
      * @deprecated Since 5.52, use addPlasmaVirtualDesktop and removePlasmaVirtualDesktop
      */
-    KWAYLANDSERVER_DEPRECATED_VERSION(5, 52, "Use PlasmaWindowManagementInterface::addPlasmaVirtualDesktop(const QString&) and PlasmaWindowManagementInterface::removePlasmaVirtualDesktop(const QString&)")
+    KWAYLANDSERVER_DEPRECATED_VERSION(5,
+                                      52,
+                                      "Use PlasmaWindowManagementInterface::addPlasmaVirtualDesktop(const QString&) and "
+                                      "PlasmaWindowManagementInterface::removePlasmaVirtualDesktop(const QString&)")
     void setVirtualDesktop(quint32 desktop);
 #endif
     void setActive(bool set);
@@ -161,7 +162,7 @@ public:
      * @returns Geometries of the taskbar entries, indicized by the
      *          surface of the panels
      */
-    QHash<SurfaceInterface*, QRect> minimizedGeometries() const;
+    QHash<SurfaceInterface *, QRect> minimizedGeometries() const;
 
     /**
      * Sets this PlasmaWindowInterface as a transient window to @p parentWindow.
@@ -248,7 +249,10 @@ Q_SIGNALS:
     /**
      * @deprecated Since 5.52, use enterPlasmaVirtualDesktopRequested and leavePlasmaVirtualDesktopRequested instead
      */
-    KWAYLANDSERVER_DEPRECATED_VERSION(5, 52, "Use PlasmaWindowManagementInterface::enterPlasmaVirtualDesktopRequested(const QString&) and PlasmaWindowManagementInterface::leavePlasmaVirtualDesktopRequested(const QString&)")
+    KWAYLANDSERVER_DEPRECATED_VERSION(5,
+                                      52,
+                                      "Use PlasmaWindowManagementInterface::enterPlasmaVirtualDesktopRequested(const QString&) and "
+                                      "PlasmaWindowManagementInterface::leavePlasmaVirtualDesktopRequested(const QString&)")
     void virtualDesktopRequested(quint32 desktop);
 #endif
     void activeRequested(bool set);

@@ -8,8 +8,8 @@
 #include "datadevice_interface.h"
 #include "datadevice_interface_p.h"
 #include "datadevicemanager_interface.h"
-#include "datasource_interface.h"
 #include "dataoffer_interface.h"
+#include "datasource_interface.h"
 #include "display.h"
 #include "pointer_interface.h"
 #include "seat_interface.h"
@@ -19,7 +19,6 @@
 
 namespace KWaylandServer
 {
-
 class DragAndDropIconPrivate : public SurfaceRole
 {
 public:
@@ -77,15 +76,17 @@ void DataDeviceInterfacePrivate::endDrag()
     icon.reset();
 }
 
-void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource, wl_resource *sourceResource, wl_resource *originResource, wl_resource *iconResource, uint32_t serial)
+void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
+                                                        wl_resource *sourceResource,
+                                                        wl_resource *originResource,
+                                                        wl_resource *iconResource,
+                                                        uint32_t serial)
 {
     SurfaceInterface *iconSurface = SurfaceInterface::get(iconResource);
 
     const SurfaceRole *surfaceRole = SurfaceRole::get(iconSurface);
     if (surfaceRole) {
-        wl_resource_post_error(resource->handle, error_role,
-                               "the icon surface already has a role assigned %s",
-                               surfaceRole->name().constData());
+        wl_resource_post_error(resource->handle, error_role, "the icon surface already has a role assigned %s", surfaceRole->name().constData());
         return;
     }
 
@@ -111,11 +112,15 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource, wl_r
     // TODO: source is allowed to be null, handled client internally!
     source = dataSource;
     if (dataSource) {
-        QObject::connect(dataSource, &AbstractDataSource::aboutToBeDestroyed, q, [this] { source = nullptr; });
+        QObject::connect(dataSource, &AbstractDataSource::aboutToBeDestroyed, q, [this] {
+            source = nullptr;
+        });
     }
     if (iconSurface) {
         icon.reset(new DragAndDropIcon(iconSurface));
-        QObject::connect(iconSurface, &SurfaceInterface::aboutToBeDestroyed, icon.data(), [this] { icon.reset(); });
+        QObject::connect(iconSurface, &SurfaceInterface::aboutToBeDestroyed, icon.data(), [this] {
+            icon.reset();
+        });
     }
     surface = focusSurface;
     drag.serial = serial;
@@ -151,7 +156,6 @@ void DataDeviceInterfacePrivate::data_device_release(QtWaylandServer::wl_data_de
 {
     wl_resource_destroy(resource->handle);
 }
-
 
 DataOfferInterface *DataDeviceInterfacePrivate::createDataOffer(AbstractDataSource *source)
 {
@@ -282,41 +286,32 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     DataOfferInterface *offer = d->createDataOffer(source);
     d->drag.surface = surface;
     if (d->seat->isDragPointer()) {
-        d->drag.posConnection = connect(d->seat, &SeatInterface::pointerPosChanged, this,
-            [this] {
-                const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
-                d->send_motion(d->seat->timestamp(),
-                                        wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-            }
-        );
+        d->drag.posConnection = connect(d->seat, &SeatInterface::pointerPosChanged, this, [this] {
+            const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
+            d->send_motion(d->seat->timestamp(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        });
     } else if (d->seat->isDragTouch()) {
-        d->drag.posConnection = connect(d->seat, &SeatInterface::touchMoved, this,
-            [this](qint32 id, quint32 serial, const QPointF &globalPosition) {
-                Q_UNUSED(id);
-                if (serial != d->drag.serial) {
-                    // different touch down has been moved
-                    return;
-                }
-                const QPointF pos = d->seat->dragSurfaceTransformation().map(globalPosition);
-                d->send_motion(d->seat->timestamp(),
-                               wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        d->drag.posConnection = connect(d->seat, &SeatInterface::touchMoved, this, [this](qint32 id, quint32 serial, const QPointF &globalPosition) {
+            Q_UNUSED(id);
+            if (serial != d->drag.serial) {
+                // different touch down has been moved
+                return;
             }
-        );
+            const QPointF pos = d->seat->dragSurfaceTransformation().map(globalPosition);
+            d->send_motion(d->seat->timestamp(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        });
     }
-    d->drag.destroyConnection = connect(d->drag.surface, &QObject::destroyed, this,
-        [this] {
-            d->send_leave();
-            if (d->drag.posConnection) {
-                disconnect(d->drag.posConnection);
-            }
-            d->drag = DataDeviceInterfacePrivate::Drag();
+    d->drag.destroyConnection = connect(d->drag.surface, &QObject::destroyed, this, [this] {
+        d->send_leave();
+        if (d->drag.posConnection) {
+            disconnect(d->drag.posConnection);
         }
-    );
+        d->drag = DataDeviceInterfacePrivate::Drag();
+    });
 
     // TODO: handle touch position
     const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
-    d->send_enter(serial, surface->resource(),
-                  wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
+    d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
     if (offer) {
         offer->sendSourceActions();
         auto matchOffers = [source, offer] {
@@ -324,14 +319,14 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
             if (source->supportedDragAndDropActions().testFlag(offer->preferredDragAndDropAction())) {
                 action = offer->preferredDragAndDropAction();
             } else {
-                if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy) &&
-                    offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy)) {
+                if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy)
+                    && offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy)) {
                     action = DataDeviceManagerInterface::DnDAction::Copy;
-                } else if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move) &&
-                    offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move)) {
+                } else if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move)
+                           && offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move)) {
                     action = DataDeviceManagerInterface::DnDAction::Move;
-                } else if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Ask) &&
-                    offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Ask)) {
+                } else if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Ask)
+                           && offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Ask)) {
                     action = DataDeviceManagerInterface::DnDAction::Ask;
                 }
             }

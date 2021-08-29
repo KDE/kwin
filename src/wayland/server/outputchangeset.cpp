@@ -9,7 +9,6 @@
 
 namespace KWaylandServer
 {
-
 OutputChangeSetPrivate::OutputChangeSetPrivate(OutputDeviceInterface *outputdevice, OutputChangeSet *parent)
     : q(parent)
     , outputDevice(outputdevice)

@@ -5,7 +5,6 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "surface_interface.h"
-#include "surface_interface_p.h"
 #include "clientbuffer.h"
 #include "clientconnection.h"
 #include "compositor_interface.h"
@@ -15,6 +14,7 @@
 #include "region_interface_p.h"
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
+#include "surface_interface_p.h"
 #include "surfacerole_p.h"
 #include "utils.h"
 // std
@@ -22,7 +22,6 @@
 
 namespace KWaylandServer
 {
-
 SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q)
     : q(q)
 {
@@ -36,13 +35,16 @@ SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
     wl_resource *resource;
     wl_resource *tmp;
 
-    wl_resource_for_each_safe(resource, tmp, &current.frameCallbacks) {
+    wl_resource_for_each_safe(resource, tmp, &current.frameCallbacks)
+    {
         wl_resource_destroy(resource);
     }
-    wl_resource_for_each_safe(resource, tmp, &pending.frameCallbacks) {
+    wl_resource_for_each_safe(resource, tmp, &pending.frameCallbacks)
+    {
         wl_resource_destroy(resource);
     }
-    wl_resource_for_each_safe(resource, tmp, &cached.frameCallbacks) {
+    wl_resource_for_each_safe(resource, tmp, &cached.frameCallbacks)
+    {
         wl_resource_destroy(resource);
     }
 
@@ -170,14 +172,12 @@ void SurfaceInterfacePrivate::installPointerConstraint(LockedPointerV1Interface 
     };
 
     if (lock->lifeTime() == LockedPointerV1Interface::LifeTime::OneShot) {
-        constrainsOneShotConnection = QObject::connect(lock, &LockedPointerV1Interface::lockedChanged, q,
-            [this, cleanUp] {
-                if (lockedPointer->isLocked()) {
-                    return;
-                }
-                cleanUp();
+        constrainsOneShotConnection = QObject::connect(lock, &LockedPointerV1Interface::lockedChanged, q, [this, cleanUp] {
+            if (lockedPointer->isLocked()) {
+                return;
             }
-        );
+            cleanUp();
+        });
     }
     constrainsUnboundConnection = QObject::connect(lock, &LockedPointerV1Interface::destroyed, q, cleanUp);
     Q_EMIT q->pointerConstraintsChanged();
@@ -200,14 +200,12 @@ void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerV1Interfac
     };
 
     if (confinement->lifeTime() == ConfinedPointerV1Interface::LifeTime::OneShot) {
-        constrainsOneShotConnection = QObject::connect(confinement, &ConfinedPointerV1Interface::confinedChanged, q,
-            [this, cleanUp] {
-                if (confinedPointer->isConfined()) {
-                    return;
-                }
-                cleanUp();
+        constrainsOneShotConnection = QObject::connect(confinement, &ConfinedPointerV1Interface::confinedChanged, q, [this, cleanUp] {
+            if (confinedPointer->isConfined()) {
+                return;
             }
-        );
+            cleanUp();
+        });
     }
     constrainsUnboundConnection = QObject::connect(confinement, &ConfinedPointerV1Interface::destroyed, q, cleanUp);
     Q_EMIT q->pointerConstraintsChanged();
@@ -216,14 +214,12 @@ void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerV1Interfac
 void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorV1Interface *inhibitor)
 {
     idleInhibitors << inhibitor;
-    QObject::connect(inhibitor, &IdleInhibitorV1Interface::destroyed, q,
-        [this, inhibitor] {
-            idleInhibitors.removeOne(inhibitor);
-            if (idleInhibitors.isEmpty()) {
-                Q_EMIT q->inhibitsIdleChanged();
-            }
+    QObject::connect(inhibitor, &IdleInhibitorV1Interface::destroyed, q, [this, inhibitor] {
+        idleInhibitors.removeOne(inhibitor);
+        if (idleInhibitors.isEmpty()) {
+            Q_EMIT q->inhibitsIdleChanged();
         }
-    );
+    });
     if (idleInhibitors.count() == 1) {
         Q_EMIT q->inhibitsIdleChanged();
     }
@@ -262,8 +258,10 @@ void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, i
 
 void SurfaceInterfacePrivate::surface_frame(Resource *resource, uint32_t callback)
 {
-    wl_resource *callbackResource = wl_resource_create(resource->client(), &wl_callback_interface,
-                                                       /* version */ 1, callback);
+    wl_resource *callbackResource = wl_resource_create(resource->client(),
+                                                       &wl_callback_interface,
+                                                       /* version */ 1,
+                                                       callback);
     if (!callbackResource) {
         wl_resource_post_no_memory(resource->handle);
         return;
@@ -282,7 +280,6 @@ void SurfaceInterfacePrivate::surface_set_opaque_region(Resource *resource, stru
     RegionInterface *r = RegionInterface::get(region);
     pending.opaque = r ? r->region() : QRegion();
     pending.opaqueIsSet = true;
-
 }
 
 void SurfaceInterfacePrivate::surface_set_input_region(Resource *resource, struct ::wl_resource *region)
@@ -306,8 +303,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 void SurfaceInterfacePrivate::surface_set_buffer_transform(Resource *resource, int32_t transform)
 {
     if (transform < 0 || transform > WL_OUTPUT_TRANSFORM_FLIPPED_270) {
-        wl_resource_post_error(resource->handle, error_invalid_transform,
-                               "buffer transform must be a valid transform (%d specified)", transform);
+        wl_resource_post_error(resource->handle, error_invalid_transform, "buffer transform must be a valid transform (%d specified)", transform);
         return;
     }
     pending.bufferTransform = OutputInterface::Transform(transform);
@@ -317,8 +313,7 @@ void SurfaceInterfacePrivate::surface_set_buffer_transform(Resource *resource, i
 void SurfaceInterfacePrivate::surface_set_buffer_scale(Resource *resource, int32_t scale)
 {
     if (scale < 1) {
-        wl_resource_post_error(resource->handle, error_invalid_scale,
-                               "buffer scale must be at least one (%d specified)", scale);
+        wl_resource_post_error(resource->handle, error_invalid_scale, "buffer scale must be at least one (%d specified)", scale);
         return;
     }
     pending.bufferScale = scale;
@@ -370,7 +365,8 @@ void SurfaceInterface::frameRendered(quint32 msec)
     wl_resource *resource;
     wl_resource *tmp;
 
-    wl_resource_for_each_safe(resource, tmp, &d->current.frameCallbacks) {
+    wl_resource_for_each_safe(resource, tmp, &d->current.frameCallbacks)
+    {
         wl_callback_send_done(resource, msec);
         wl_resource_destroy(resource);
     }
@@ -411,8 +407,7 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
         break;
     case OutputInterface::Transform::Rotated180:
     case OutputInterface::Transform::Flipped180:
-        surfaceToBufferMatrix.translate(bufferSize.width() / current.bufferScale,
-                                        bufferSize.height() / current.bufferScale);
+        surfaceToBufferMatrix.translate(bufferSize.width() / current.bufferScale, bufferSize.height() / current.bufferScale);
         surfaceToBufferMatrix.rotate(-180, 0, 0, 1);
         break;
     case OutputInterface::Transform::Rotated270:
@@ -784,22 +779,22 @@ QRect SurfaceInterface::boundingRect() const
     return rect;
 }
 
-QPointer< ShadowInterface > SurfaceInterface::shadow() const
+QPointer<ShadowInterface> SurfaceInterface::shadow() const
 {
     return d->current.shadow;
 }
 
-QPointer< BlurInterface > SurfaceInterface::blur() const
+QPointer<BlurInterface> SurfaceInterface::blur() const
 {
     return d->current.blur;
 }
 
-QPointer< ContrastInterface > SurfaceInterface::contrast() const
+QPointer<ContrastInterface> SurfaceInterface::contrast() const
 {
     return d->current.contrast;
 }
 
-QPointer< SlideInterface > SurfaceInterface::slideOnShowHide() const
+QPointer<SlideInterface> SurfaceInterface::slideOnShowHide() const
 {
     return d->current.slide;
 }
@@ -844,7 +839,8 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
             auto outputs = d->outputs;
             if (outputs.removeOne(o)) {
                 setOutputs(outputs);
-            }});
+            }
+        });
 
         Q_ASSERT(!d->outputBoundConnections.contains(o));
         d->outputBoundConnections[o] = connect(o, &OutputInterface::bound, this, [this](ClientConnection *c, wl_resource *outputResource) {
@@ -910,8 +906,7 @@ SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
     }
 
     // check whether the geometry and input region contain the pos
-    if (!size().isEmpty() && QRectF(QPoint(0, 0), size()).contains(position) &&
-            input().contains(position.toPoint())) {
+    if (!size().isEmpty() && QRectF(QPoint(0, 0), size()).contains(position) && input().contains(position.toPoint())) {
         return this;
     }
 
@@ -946,7 +941,7 @@ void SurfaceInterface::setDataProxy(SurfaceInterface *surface)
     d->dataProxy = surface;
 }
 
-SurfaceInterface* SurfaceInterface::dataProxy() const
+SurfaceInterface *SurfaceInterface::dataProxy() const
 {
     return d->dataProxy;
 }
@@ -1006,7 +1001,6 @@ QPointF SurfaceInterface::mapToChild(SurfaceInterface *child, const QPointF &poi
 
     return QPointF();
 }
-
 
 QSize SurfaceInterface::bufferSize() const
 {

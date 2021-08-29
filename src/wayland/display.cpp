@@ -19,7 +19,6 @@
 
 namespace KWaylandServer
 {
-
 DisplayPrivate *DisplayPrivate::get(Display *display)
 {
     return display->d.data();
@@ -143,22 +142,22 @@ bool Display::isRunning() const
     return d->running;
 }
 
-Display::operator wl_display*()
+Display::operator wl_display *()
 {
     return d->display;
 }
 
-Display::operator wl_display*() const
+Display::operator wl_display *() const
 {
     return d->display;
 }
 
-QList< OutputInterface* > Display::outputs() const
+QList<OutputInterface *> Display::outputs() const
 {
     return d->outputs;
 }
 
-QList< OutputDeviceInterface* > Display::outputDevices() const
+QList<OutputDeviceInterface *> Display::outputDevices() const
 {
     return d->outputdevices;
 }
@@ -175,7 +174,7 @@ QVector<OutputInterface *> Display::outputsIntersecting(const QRect &rect) const
     return outputs;
 }
 
-QVector<SeatInterface*> Display::seats() const
+QVector<SeatInterface *> Display::seats() const
 {
     return d->seats;
 }
@@ -183,31 +182,27 @@ QVector<SeatInterface*> Display::seats() const
 ClientConnection *Display::getConnection(wl_client *client)
 {
     Q_ASSERT(client);
-    auto it = std::find_if(d->clients.constBegin(), d->clients.constEnd(),
-        [client](ClientConnection *c) {
-            return c->client() == client;
-        }
-    );
+    auto it = std::find_if(d->clients.constBegin(), d->clients.constEnd(), [client](ClientConnection *c) {
+        return c->client() == client;
+    });
     if (it != d->clients.constEnd()) {
         return *it;
     }
     // no ConnectionData yet, create it
     auto c = new ClientConnection(client, this);
     d->clients << c;
-    connect(c, &ClientConnection::disconnected, this,
-        [this] (ClientConnection *c) {
-            const int index = d->clients.indexOf(c);
-            Q_ASSERT(index != -1);
-            d->clients.remove(index);
-            Q_ASSERT(d->clients.indexOf(c) == -1);
-            Q_EMIT clientDisconnected(c);
-        }
-    );
+    connect(c, &ClientConnection::disconnected, this, [this](ClientConnection *c) {
+        const int index = d->clients.indexOf(c);
+        Q_ASSERT(index != -1);
+        d->clients.remove(index);
+        Q_ASSERT(d->clients.indexOf(c) == -1);
+        Q_EMIT clientDisconnected(c);
+    });
     Q_EMIT clientConnected(c);
     return c;
 }
 
-QVector< ClientConnection* > Display::connections() const
+QVector<ClientConnection *> Display::connections() const
 {
     return d->clients;
 }
@@ -238,8 +233,7 @@ void *Display::eglDisplay() const
     return d->eglDisplay;
 }
 
-struct ClientBufferDestroyListener : wl_listener
-{
+struct ClientBufferDestroyListener : wl_listener {
     ClientBufferDestroyListener(Display *display, ClientBuffer *buffer);
     ~ClientBufferDestroyListener();
 

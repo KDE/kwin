@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "datacontrolsource_v1_interface.h"
-#include "datacontroldevicemanager_v1_interface.h"
 #include "clientconnection.h"
+#include "datacontroldevicemanager_v1_interface.h"
 #include "utils.h"
 // Qt
 #include <QStringList>
@@ -16,7 +16,6 @@
 
 namespace KWaylandServer
 {
-
 class DataControlSourceV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_source_v1
 {
 public:

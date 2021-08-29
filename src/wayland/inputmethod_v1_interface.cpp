@@ -5,14 +5,14 @@
 */
 
 #include "inputmethod_v1_interface.h"
-#include "seat_interface.h"
 #include "display.h"
 #include "keyboard_interface.h"
 #include "keyboard_interface_p.h"
-#include "surface_interface.h"
-#include "output_interface.h"
-#include "surfacerole_p.h"
 #include "logging.h"
+#include "output_interface.h"
+#include "seat_interface.h"
+#include "surface_interface.h"
+#include "surfacerole_p.h"
 
 #include <QHash>
 #include <QTemporaryFile>
@@ -25,20 +25,21 @@
 
 namespace KWaylandServer
 {
-
 static int s_version = 1;
 
 class InputKeyboardV1InterfacePrivate : public QtWaylandServer::wl_keyboard
 {
 public:
     InputKeyboardV1InterfacePrivate()
-    {}
+    {
+    }
 };
 
 InputMethodGrabV1::InputMethodGrabV1(QObject *parent)
     : QObject(parent)
     , d(new InputKeyboardV1InterfacePrivate)
-{}
+{
+}
 
 InputMethodGrabV1::~InputMethodGrabV1()
 {
@@ -98,7 +99,9 @@ public:
     {
     }
 
-    ~InputMethodContextV1InterfacePrivate() {}
+    ~InputMethodContextV1InterfacePrivate()
+    {
+    }
 
     void zwp_input_method_context_v1_commit_string(Resource *, uint32_t serial, const QString &text) override
     {
@@ -160,7 +163,12 @@ public:
     {
         Q_EMIT q->key(serial, time, key, state == WL_KEYBOARD_KEY_STATE_PRESSED);
     }
-    void zwp_input_method_context_v1_modifiers(Resource *, uint32_t serial, uint32_t mods_depressed, uint32_t mods_latched, uint32_t mods_locked, uint32_t group) override
+    void zwp_input_method_context_v1_modifiers(Resource *,
+                                               uint32_t serial,
+                                               uint32_t mods_depressed,
+                                               uint32_t mods_latched,
+                                               uint32_t mods_locked,
+                                               uint32_t group) override
     {
         Q_EMIT q->modifiers(serial, mods_depressed, mods_latched, mods_locked, group);
     }
@@ -345,6 +353,7 @@ InputMethodGrabV1 *InputMethodContextV1Interface::keyboardGrab() const
 class InputPanelSurfaceV1InterfacePrivate : public QtWaylandServer::zwp_input_panel_surface_v1, public SurfaceRole
 {
     friend class InputPanelSurfaceV1Interface;
+
 public:
     InputPanelSurfaceV1InterfacePrivate(SurfaceInterface *surface, quint32 id, InputPanelSurfaceV1Interface *q)
         : zwp_input_panel_surface_v1()
@@ -364,9 +373,12 @@ public:
         Q_EMIT q->topLevel(OutputInterface::get(output), InputPanelSurfaceV1Interface::Position(position));
     }
 
-    void commit() override {}
+    void commit() override
+    {
+    }
 
-    void zwp_input_panel_surface_v1_destroy_resource(Resource *) override {
+    void zwp_input_panel_surface_v1_destroy_resource(Resource *) override
+    {
         delete q;
     }
 
@@ -398,9 +410,7 @@ public:
 
         SurfaceRole *surfaceRole = SurfaceRole::get(surface);
         if (surfaceRole) {
-            wl_resource_post_error(resource->handle, 0,
-                                   "the surface already has a role assigned %s",
-                                   surfaceRole->name().constData());
+            wl_resource_post_error(resource->handle, 0, "the surface already has a role assigned %s", surfaceRole->name().constData());
             return;
         }
 
@@ -494,4 +504,3 @@ InputMethodContextV1Interface *InputMethodV1Interface::context() const
 }
 
 }
-

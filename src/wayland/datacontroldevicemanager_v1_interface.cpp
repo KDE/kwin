@@ -15,7 +15,6 @@
 static const int s_version = 2;
 namespace KWaylandServer
 {
-
 class DataControlDeviceManagerV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_manager_v1
 {
 public:
@@ -72,7 +71,6 @@ DataControlDeviceManagerV1Interface::DataControlDeviceManagerV1Interface(Display
     : QObject(parent)
     , d(new DataControlDeviceManagerV1InterfacePrivate(this, display))
 {
-
 }
 
 DataControlDeviceManagerV1Interface::~DataControlDeviceManagerV1Interface() = default;

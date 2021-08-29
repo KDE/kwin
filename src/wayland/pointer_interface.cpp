@@ -20,7 +20,6 @@
 
 namespace KWaylandServer
 {
-
 class CursorPrivate
 {
 public:
@@ -58,9 +57,7 @@ QList<PointerInterfacePrivate::Resource *> PointerInterfacePrivate::pointersForC
     return resourceMap().values(client->client());
 }
 
-void PointerInterfacePrivate::pointer_set_cursor(Resource *resource, uint32_t serial,
-                                                 ::wl_resource *surface_resource,
-                                                 int32_t hotspot_x, int32_t hotspot_y)
+void PointerInterfacePrivate::pointer_set_cursor(Resource *resource, uint32_t serial, ::wl_resource *surface_resource, int32_t hotspot_x, int32_t hotspot_y)
 {
     SurfaceInterface *surface = nullptr;
 
@@ -75,16 +72,13 @@ void PointerInterfacePrivate::pointer_set_cursor(Resource *resource, uint32_t se
     if (surface_resource) {
         surface = SurfaceInterface::get(surface_resource);
         if (!surface) {
-            wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                                   "invalid surface");
+            wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT, "invalid surface");
             return;
         }
 
         const SurfaceRole *surfaceRole = SurfaceRole::get(surface);
         if (surfaceRole) {
-            wl_resource_post_error(resource->handle, error_role,
-                                   "the wl_surface already has a role assigned %s",
-                                   surfaceRole->name().constData());
+            wl_resource_post_error(resource->handle, error_role, "the wl_surface already has a role assigned %s", surfaceRole->name().constData());
             return;
         }
     }
@@ -110,8 +104,7 @@ void PointerInterfacePrivate::pointer_bind_resource(Resource *resource)
 
     if (focusedClient && focusedClient->client() == resource->client()) {
         const quint32 serial = seat->display()->nextSerial();
-        send_enter(resource->handle, serial, focusedSurface->resource(),
-                   wl_fixed_from_double(lastPosition.x()), wl_fixed_from_double(lastPosition.y()));
+        send_enter(resource->handle, serial, focusedSurface->resource(), wl_fixed_from_double(lastPosition.x()), wl_fixed_from_double(lastPosition.y()));
         if (resource->version() >= WL_POINTER_FRAME_SINCE_VERSION) {
             send_frame(resource->handle);
         }
@@ -130,8 +123,7 @@ void PointerInterfacePrivate::sendEnter(const QPointF &position, quint32 serial)
 {
     const QList<Resource *> pointerResources = pointersForClient(focusedSurface->client());
     for (Resource *resource : pointerResources) {
-        send_enter(resource->handle, serial, focusedSurface->resource(),
-                   wl_fixed_from_double(position.x()), wl_fixed_from_double(position.y()));
+        send_enter(resource->handle, serial, focusedSurface->resource(), wl_fixed_from_double(position.x()), wl_fixed_from_double(position.y()));
     }
 }
 
@@ -212,9 +204,8 @@ void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
         const quint32 version = resource->version();
 
-        const auto wlOrientation = (orientation == Qt::Vertical)
-            ? PointerInterfacePrivate::axis_vertical_scroll
-            : PointerInterfacePrivate::axis_horizontal_scroll;
+        const auto wlOrientation =
+            (orientation == Qt::Vertical) ? PointerInterfacePrivate::axis_vertical_scroll : PointerInterfacePrivate::axis_horizontal_scroll;
 
         if (source != PointerAxisSource::Unknown && version >= WL_POINTER_AXIS_SOURCE_SINCE_VERSION) {
             PointerInterfacePrivate::axis_source wlSource;
@@ -259,8 +250,7 @@ void PointerInterface::sendMotion(const QPointF &position)
 
     const auto pointerResources = d->pointersForClient(d->focusedSurface->client());
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
-        d->send_motion(resource->handle, d->seat->timestamp(),
-                       wl_fixed_from_double(position.x()), wl_fixed_from_double(position.y()));
+        d->send_motion(resource->handle, d->seat->timestamp(), wl_fixed_from_double(position.x()), wl_fixed_from_double(position.y()));
     }
 }
 

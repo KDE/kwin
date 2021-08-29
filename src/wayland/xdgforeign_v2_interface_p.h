@@ -6,14 +6,13 @@
 */
 #pragma once
 
-#include "xdgforeign_v2_interface.h"
 #include "surface_interface_p.h"
+#include "xdgforeign_v2_interface.h"
 
 #include <qwayland-server-xdg-foreign-unstable-v2.h>
 
 namespace KWaylandServer
 {
-
 class XdgExportedV2Interface;
 class XdgImportedV2Interface;
 class XdgImporterV2Interface;
@@ -65,8 +64,8 @@ protected:
 
 private:
     XdgForeignV2Interface *m_foreign;
-    QHash<SurfaceInterface *, XdgImportedV2Interface *> m_parents; //child->parent hash
-    QHash<XdgImportedV2Interface *, SurfaceInterface *> m_children; //parent->child hash
+    QHash<SurfaceInterface *, XdgImportedV2Interface *> m_parents; // child->parent hash
+    QHash<XdgImportedV2Interface *, SurfaceInterface *> m_children; // parent->child hash
 };
 
 class XdgExportedV2Interface : public QObject, public QtWaylandServer::zxdg_exported_v2
@@ -74,7 +73,7 @@ class XdgExportedV2Interface : public QObject, public QtWaylandServer::zxdg_expo
     Q_OBJECT
 
 public:
-    explicit XdgExportedV2Interface(SurfaceInterface *surface, wl_resource *resource );
+    explicit XdgExportedV2Interface(SurfaceInterface *surface, wl_resource *resource);
 
     SurfaceInterface *surface();
 

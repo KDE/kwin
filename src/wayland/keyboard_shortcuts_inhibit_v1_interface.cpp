@@ -19,9 +19,11 @@ namespace KWaylandServer
 class KeyboardShortcutsInhibitorV1InterfacePrivate : public QtWaylandServer::zwp_keyboard_shortcuts_inhibitor_v1
 {
 public:
-    KeyboardShortcutsInhibitorV1InterfacePrivate(SurfaceInterface *surface, SeatInterface *seat,
+    KeyboardShortcutsInhibitorV1InterfacePrivate(SurfaceInterface *surface,
+                                                 SeatInterface *seat,
                                                  KeyboardShortcutsInhibitManagerV1Interface *manager,
-                                                 KeyboardShortcutsInhibitorV1Interface *q, wl_resource *resource);
+                                                 KeyboardShortcutsInhibitorV1Interface *q,
+                                                 wl_resource *resource);
 
     KeyboardShortcutsInhibitorV1Interface *q;
     QPointer<KeyboardShortcutsInhibitManagerV1Interface> m_manager;
@@ -35,13 +37,13 @@ protected:
     void zwp_keyboard_shortcuts_inhibitor_v1_destroy(Resource *resource) override;
 };
 
-class KeyboardShortcutsInhibitManagerV1InterfacePrivate
-    : public QtWaylandServer::zwp_keyboard_shortcuts_inhibit_manager_v1
+class KeyboardShortcutsInhibitManagerV1InterfacePrivate : public QtWaylandServer::zwp_keyboard_shortcuts_inhibit_manager_v1
 {
 public:
     KeyboardShortcutsInhibitManagerV1InterfacePrivate(Display *display, KeyboardShortcutsInhibitManagerV1Interface *q);
 
-    void zwp_keyboard_shortcuts_inhibit_manager_v1_inhibit_shortcuts(Resource *resource, uint32_t id,
+    void zwp_keyboard_shortcuts_inhibit_manager_v1_inhibit_shortcuts(Resource *resource,
+                                                                     uint32_t id,
                                                                      struct ::wl_resource *surface_resource,
                                                                      struct ::wl_resource *seat_resource) override;
 
@@ -62,8 +64,12 @@ KeyboardShortcutsInhibitorV1InterfacePrivate::KeyboardShortcutsInhibitorV1Interf
                                                                                            KeyboardShortcutsInhibitManagerV1Interface *manager,
                                                                                            KeyboardShortcutsInhibitorV1Interface *q,
                                                                                            wl_resource *resource)
-    : zwp_keyboard_shortcuts_inhibitor_v1(resource), q(q), m_manager(manager), m_surface(surface), m_seat(seat),
-      m_active(false)
+    : zwp_keyboard_shortcuts_inhibitor_v1(resource)
+    , q(q)
+    , m_manager(manager)
+    , m_surface(surface)
+    , m_seat(seat)
+    , m_active(false)
 {
 }
 
@@ -72,8 +78,7 @@ void KeyboardShortcutsInhibitorV1InterfacePrivate::zwp_keyboard_shortcuts_inhibi
     wl_resource_destroy(resource->handle);
 }
 
-void
-KeyboardShortcutsInhibitorV1InterfacePrivate::zwp_keyboard_shortcuts_inhibitor_v1_destroy_resource(Resource *resource)
+void KeyboardShortcutsInhibitorV1InterfacePrivate::zwp_keyboard_shortcuts_inhibitor_v1_destroy_resource(Resource *resource)
 {
     Q_UNUSED(resource)
     // Ensure manager don't track anymore this inhibitor
@@ -83,10 +88,12 @@ KeyboardShortcutsInhibitorV1InterfacePrivate::zwp_keyboard_shortcuts_inhibitor_v
     delete q;
 }
 
-KeyboardShortcutsInhibitorV1Interface::KeyboardShortcutsInhibitorV1Interface(SurfaceInterface *surface, SeatInterface *seat,
+KeyboardShortcutsInhibitorV1Interface::KeyboardShortcutsInhibitorV1Interface(SurfaceInterface *surface,
+                                                                             SeatInterface *seat,
                                                                              KeyboardShortcutsInhibitManagerV1Interface *manager,
                                                                              wl_resource *resource)
-    : QObject(nullptr), d(new KeyboardShortcutsInhibitorV1InterfacePrivate(surface, seat, manager, this, resource))
+    : QObject(nullptr)
+    , d(new KeyboardShortcutsInhibitorV1InterfacePrivate(surface, seat, manager, this, resource))
 {
 }
 
@@ -122,24 +129,25 @@ SurfaceInterface *KeyboardShortcutsInhibitorV1Interface::surface() const
 
 KeyboardShortcutsInhibitManagerV1InterfacePrivate::KeyboardShortcutsInhibitManagerV1InterfacePrivate(Display *display,
                                                                                                      KeyboardShortcutsInhibitManagerV1Interface *q)
-    : zwp_keyboard_shortcuts_inhibit_manager_v1(*display, s_version), q(q), m_display(display)
+    : zwp_keyboard_shortcuts_inhibit_manager_v1(*display, s_version)
+    , q(q)
+    , m_display(display)
 {
 }
 
-void KeyboardShortcutsInhibitManagerV1InterfacePrivate::zwp_keyboard_shortcuts_inhibit_manager_v1_inhibit_shortcuts(
-    Resource *resource, uint32_t id, wl_resource *surface_resource, wl_resource *seat_resource)
+void KeyboardShortcutsInhibitManagerV1InterfacePrivate::zwp_keyboard_shortcuts_inhibit_manager_v1_inhibit_shortcuts(Resource *resource,
+                                                                                                                    uint32_t id,
+                                                                                                                    wl_resource *surface_resource,
+                                                                                                                    wl_resource *seat_resource)
 {
     SeatInterface *seat = SeatInterface::get(seat_resource);
     SurfaceInterface *surface = SurfaceInterface::get(surface_resource);
     if (m_inhibitors.contains({surface, seat})) {
-        wl_resource_post_error(resource->handle, error::error_already_inhibited,
-                               "the shortcuts are already inhibited for this surface and seat");
+        wl_resource_post_error(resource->handle, error::error_already_inhibited, "the shortcuts are already inhibited for this surface and seat");
         return;
     }
 
-    wl_resource *inhibitorResource = wl_resource_create(resource->client(),
-                                                        &zwp_keyboard_shortcuts_inhibitor_v1_interface,
-                                                        resource->version(), id);
+    wl_resource *inhibitorResource = wl_resource_create(resource->client(), &zwp_keyboard_shortcuts_inhibitor_v1_interface, resource->version(), id);
     auto inhibitor = new KeyboardShortcutsInhibitorV1Interface(surface, seat, q, inhibitorResource);
     m_inhibitors[{surface, seat}] = inhibitor;
     Q_EMIT q->inhibitorCreated(inhibitor);
@@ -156,14 +164,14 @@ void KeyboardShortcutsInhibitManagerV1InterfacePrivate::zwp_keyboard_shortcuts_i
     wl_resource_destroy(resource->handle);
 }
 
-void KeyboardShortcutsInhibitManagerV1InterfacePrivate::removeInhibitor(SurfaceInterface *const surface,
-                                                                        SeatInterface *const seat)
+void KeyboardShortcutsInhibitManagerV1InterfacePrivate::removeInhibitor(SurfaceInterface *const surface, SeatInterface *const seat)
 {
     m_inhibitors.remove({surface, seat});
 }
 
 KeyboardShortcutsInhibitManagerV1Interface::KeyboardShortcutsInhibitManagerV1Interface(Display *display, QObject *parent)
-    : QObject(parent), d(new KeyboardShortcutsInhibitManagerV1InterfacePrivate(display, this))
+    : QObject(parent)
+    , d(new KeyboardShortcutsInhibitManagerV1InterfacePrivate(display, this))
 {
 }
 

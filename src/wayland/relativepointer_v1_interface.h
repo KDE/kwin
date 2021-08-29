@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 class Display;
 class RelativePointerManagerV1InterfacePrivate;
 

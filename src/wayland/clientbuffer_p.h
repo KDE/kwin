@@ -10,11 +10,12 @@
 
 namespace KWaylandServer
 {
-
 class ClientBufferPrivate
 {
 public:
-    virtual ~ClientBufferPrivate() {}
+    virtual ~ClientBufferPrivate()
+    {
+    }
 
     int refCount = 0;
     wl_resource *resource = nullptr;

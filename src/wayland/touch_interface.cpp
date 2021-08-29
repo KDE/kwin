@@ -14,7 +14,6 @@
 
 namespace KWaylandServer
 {
-
 TouchInterfacePrivate *TouchInterfacePrivate::get(TouchInterface *touch)
 {
     return touch->d.data();
@@ -87,8 +86,7 @@ void TouchInterface::sendMotion(qint32 id, const QPointF &localPos)
 
     const auto touchResources = d->touchesForClient(d->focusedSurface->client());
     for (TouchInterfacePrivate::Resource *resource : touchResources) {
-        d->send_motion(resource->handle, d->seat->timestamp(), id,
-                       wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
+        d->send_motion(resource->handle, d->seat->timestamp(), id, wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
     }
 }
 
@@ -112,8 +110,13 @@ void TouchInterface::sendDown(qint32 id, quint32 serial, const QPointF &localPos
 
     const auto touchResources = d->touchesForClient(d->focusedSurface->client());
     for (TouchInterfacePrivate::Resource *resource : touchResources) {
-        d->send_down(resource->handle, serial, d->seat->timestamp(), d->focusedSurface->resource(),
-                     id, wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
+        d->send_down(resource->handle,
+                     serial,
+                     d->seat->timestamp(),
+                     d->focusedSurface->resource(),
+                     id,
+                     wl_fixed_from_double(localPos.x()),
+                     wl_fixed_from_double(localPos.y()));
     }
 }
 

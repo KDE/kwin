@@ -112,7 +112,14 @@ Q_SIGNALS:
 private:
     friend class TabletSeatV2InterfacePrivate;
     friend class TabletSeatV2Interface;
-    explicit TabletToolV2Interface(Display *display, Type type, quint32 hsh, quint32 hsl, quint32 hih, quint32 hil, const QVector<Capability> &capability, QObject *parent);
+    explicit TabletToolV2Interface(Display *display,
+                                   Type type,
+                                   quint32 hsh,
+                                   quint32 hsl,
+                                   quint32 hih,
+                                   quint32 hil,
+                                   const QVector<Capability> &capability,
+                                   QObject *parent);
     QScopedPointer<TabletToolV2InterfacePrivate> d;
 };
 
@@ -123,7 +130,7 @@ public:
     ~TabletCursorV2() override;
     QPoint hotspot() const;
     quint32 enteredSerial() const;
-    SurfaceInterface* surface() const;
+    SurfaceInterface *surface() const;
 
 Q_SIGNALS:
     void changed();
@@ -153,7 +160,14 @@ Q_SIGNALS:
 private:
     friend class TabletSeatV2Interface;
     friend class TabletSeatV2InterfacePrivate;
-    explicit TabletPadV2Interface(const QString &path, quint32 buttons, quint32 rings, quint32 strips, quint32 modes, quint32 currentMode, Display *display, TabletSeatV2Interface *parent);
+    explicit TabletPadV2Interface(const QString &path,
+                                  quint32 buttons,
+                                  quint32 rings,
+                                  quint32 strips,
+                                  quint32 modes,
+                                  quint32 currentMode,
+                                  Display *display,
+                                  TabletSeatV2Interface *parent);
     QScopedPointer<TabletPadV2InterfacePrivate> d;
 };
 
@@ -249,8 +263,17 @@ public:
     virtual ~TabletSeatV2Interface();
 
     TabletV2Interface *addTablet(quint32 vendorId, quint32 productId, const QString &sysname, const QString &name, const QStringList &paths);
-    TabletPadV2Interface *addTabletPad(const QString &sysname, const QString &name, const QStringList &paths, quint32 buttons, quint32 rings, quint32 strips, quint32 modes, quint32 currentMode, TabletV2Interface *tablet);
-    TabletToolV2Interface *addTool(TabletToolV2Interface::Type type, quint64 hardwareSerial, quint64 hardwareId, const QVector<TabletToolV2Interface::Capability> &capabilities);
+    TabletPadV2Interface *addTabletPad(const QString &sysname,
+                                       const QString &name,
+                                       const QStringList &paths,
+                                       quint32 buttons,
+                                       quint32 rings,
+                                       quint32 strips,
+                                       quint32 modes,
+                                       quint32 currentMode,
+                                       TabletV2Interface *tablet);
+    TabletToolV2Interface *
+    addTool(TabletToolV2Interface::Type type, quint64 hardwareSerial, quint64 hardwareId, const QVector<TabletToolV2Interface::Capability> &capabilities);
 
     TabletToolV2Interface *toolByHardwareId(quint64 hardwareId) const;
     TabletToolV2Interface *toolByHardwareSerial(quint64 hardwareSerial, TabletToolV2Interface::Type type) const;

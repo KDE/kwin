@@ -11,10 +11,8 @@
 
 #include <QTimer>
 
-
 namespace KWaylandServer
 {
-
 class Display;
 class SeatInterface;
 class IdleTimeoutInterface;

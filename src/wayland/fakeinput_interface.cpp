@@ -6,23 +6,21 @@
 #include "fakeinput_interface.h"
 #include "display.h"
 
-#include <QSizeF>
 #include <QPointF>
+#include <QSizeF>
 
-#include <wayland-server.h>
 #include <qwayland-server-fake-input.h>
-
+#include <wayland-server.h>
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 4;
 
 class FakeInputInterfacePrivate : public QtWaylandServer::org_kde_kwin_fake_input
 {
 public:
     FakeInputInterfacePrivate(FakeInputInterface *_q, Display *display);
-    QList<FakeInputDevice*> devices;
+    QList<FakeInputDevice *> devices;
 
 private:
     FakeInputDevice *device(wl_resource *r);
@@ -66,7 +64,9 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_bind_resource(Resource *
 {
     FakeInputDevice *device = new FakeInputDevice(q, resource->handle);
     devices << device;
-    QObject::connect(device, &FakeInputDevice::destroyed, q, [device, this] { devices.removeAll(device); });
+    QObject::connect(device, &FakeInputDevice::destroyed, q, [device, this] {
+        devices.removeAll(device);
+    });
     Q_EMIT q->deviceCreated(device);
 }
 
@@ -79,7 +79,9 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_destroy_resource(Resourc
 
 FakeInputDevice *FakeInputInterfacePrivate::device(wl_resource *r)
 {
-    auto it = std::find_if(devices.constBegin(), devices.constEnd(), [r] (FakeInputDevice *device) { return device->resource() == r; } );
+    auto it = std::find_if(devices.constBegin(), devices.constEnd(), [r](FakeInputDevice *device) {
+        return device->resource() == r;
+    });
     if (it != devices.constEnd()) {
         return *it;
     }

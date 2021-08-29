@@ -11,7 +11,6 @@
 
 namespace KWaylandServer
 {
-
 class ClientConnection;
 class Display;
 class PointerInterface;
@@ -23,8 +22,7 @@ public:
 
 protected:
     void zwp_relative_pointer_manager_v1_destroy(Resource *resource) override;
-    void zwp_relative_pointer_manager_v1_get_relative_pointer(Resource *resource, uint32_t id,
-                                                              struct ::wl_resource *pointer_resource) override;
+    void zwp_relative_pointer_manager_v1_get_relative_pointer(Resource *resource, uint32_t id, struct ::wl_resource *pointer_resource) override;
 };
 
 class RelativePointerV1Interface : public QtWaylandServer::zwp_relative_pointer_v1

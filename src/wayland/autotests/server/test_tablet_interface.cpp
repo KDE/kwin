@@ -42,20 +42,24 @@ public:
     {
     }
 
-    void zwp_tablet_pad_v2_done() override {
+    void zwp_tablet_pad_v2_done() override
+    {
         Q_ASSERT(!doneCalled);
         doneCalled = true;
     }
 
-    void zwp_tablet_pad_v2_buttons(uint32_t buttons) override {
+    void zwp_tablet_pad_v2_buttons(uint32_t buttons) override
+    {
         Q_ASSERT(buttons == 1);
     }
 
-    void zwp_tablet_pad_v2_enter(uint32_t /*serial*/, struct ::zwp_tablet_v2 */*tablet*/, struct ::wl_surface *surface) override {
+    void zwp_tablet_pad_v2_enter(uint32_t /*serial*/, struct ::zwp_tablet_v2 * /*tablet*/, struct ::wl_surface *surface) override
+    {
         m_currentSurface = surface;
     }
 
-    void zwp_tablet_pad_v2_button(uint32_t /*time*/, uint32_t button, uint32_t state) override {
+    void zwp_tablet_pad_v2_button(uint32_t /*time*/, uint32_t button, uint32_t state) override
+    {
         buttonStates[m_currentSurface][button] = state;
         Q_EMIT buttonReceived();
     }
@@ -266,9 +270,9 @@ void TestTabletInterface::testAdd()
     QVERIFY(toolSpy.wait() || toolSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_tools.count(), 1);
 
-    QVERIFY(!m_tool->isClientSupported()); //There's no surface in it yet
+    QVERIFY(!m_tool->isClientSupported()); // There's no surface in it yet
     m_tool->setCurrentSurface(nullptr);
-    QVERIFY(!m_tool->isClientSupported()); //There's no surface in it
+    QVERIFY(!m_tool->isClientSupported()); // There's no surface in it
 
     QCOMPARE(m_surfaces.count(), 3);
     for (SurfaceInterface *surface : m_surfaces) {
@@ -283,7 +287,8 @@ void TestTabletInterface::testAddPad()
     QVERIFY(seatInterface);
 
     QSignalSpy tabletPadSpy(m_tabletSeatClient, &TabletSeat::padAdded);
-    m_tabletPad = seatInterface->addTabletPad(QStringLiteral("my tablet pad"), QStringLiteral("tabletpad"), {QStringLiteral("/test/event33")}, 1, 1, 1, 1, 0, m_tablet);
+    m_tabletPad =
+        seatInterface->addTabletPad(QStringLiteral("my tablet pad"), QStringLiteral("tabletpad"), {QStringLiteral("/test/event33")}, 1, 1, 1, 1, 0, m_tablet);
     QVERIFY(m_tabletPad);
     QVERIFY(tabletPadSpy.wait() || tabletPadSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_pads.count(), 1);

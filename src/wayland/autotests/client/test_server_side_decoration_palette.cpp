@@ -7,16 +7,16 @@
 // Qt
 #include <QtTest>
 // KWin
+#include "../../src/server/compositor_interface.h"
+#include "../../src/server/display.h"
+#include "../../src/server/server_decoration_palette_interface.h"
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/region.h"
 #include "KWayland/Client/registry.h"
-#include "KWayland/Client/surface.h"
 #include "KWayland/Client/server_decoration_palette.h"
-#include "../../src/server/display.h"
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/server_decoration_palette_interface.h"
+#include "KWayland/Client/surface.h"
 
 using namespace KWayland::Client;
 
@@ -103,15 +103,16 @@ void TestServerSideDecorationPalette::init()
     m_paletteManagerInterface = new ServerSideDecorationPaletteManagerInterface(m_display, m_display);
 
     QVERIFY(registrySpy.wait());
-    m_paletteManager = registry.createServerSideDecorationPaletteManager(registrySpy.first().first().value<quint32>(), registrySpy.first().last().value<quint32>(), this);
+    m_paletteManager =
+        registry.createServerSideDecorationPaletteManager(registrySpy.first().first().value<quint32>(), registrySpy.first().last().value<quint32>(), this);
 }
 
 void TestServerSideDecorationPalette::cleanup()
 {
-#define CLEANUP(variable) \
-    if (variable) { \
-        delete variable; \
-        variable = nullptr; \
+#define CLEANUP(variable)                                                                                                                                      \
+    if (variable) {                                                                                                                                            \
+        delete variable;                                                                                                                                       \
+        variable = nullptr;                                                                                                                                    \
     }
     CLEANUP(m_compositor)
     CLEANUP(m_paletteManager)
@@ -140,14 +141,14 @@ void TestServerSideDecorationPalette::testCreateAndSet()
     QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
-    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QSignalSpy paletteCreatedSpy(m_paletteManagerInterface, &KWaylandServer::ServerSideDecorationPaletteManagerInterface::paletteCreated);
 
     QVERIFY(!m_paletteManagerInterface->paletteForSurface(serverSurface));
 
     auto palette = m_paletteManager->create(surface.data(), surface.data());
     QVERIFY(paletteCreatedSpy.wait());
-    auto paletteInterface = paletteCreatedSpy.first().first().value<KWaylandServer::ServerSideDecorationPaletteInterface*>();
+    auto paletteInterface = paletteCreatedSpy.first().first().value<KWaylandServer::ServerSideDecorationPaletteInterface *>();
     QCOMPARE(m_paletteManagerInterface->paletteForSurface(serverSurface), paletteInterface);
 
     QCOMPARE(paletteInterface->palette(), QString());

@@ -15,7 +15,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class Display;
 class SurfaceInterface;
 class PlasmaShellSurfaceInterface;
@@ -45,7 +44,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever a PlasmaShellSurfaceInterface got created.
      */
-    void surfaceCreated(KWaylandServer::PlasmaShellSurfaceInterface*);
+    void surfaceCreated(KWaylandServer::PlasmaShellSurfaceInterface *);
 
 private:
     QScopedPointer<PlasmaShellInterfacePrivate> d;
@@ -146,7 +145,7 @@ public:
      * request that it wants to have focus. The compositor can use this information to
      * pass focus to the surface.
      */
-    //TODO KF6 rename to something generic
+    // TODO KF6 rename to something generic
     bool panelTakesFocus() const;
 
     /**

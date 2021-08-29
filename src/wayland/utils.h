@@ -17,10 +17,8 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
-template <typename T>
-struct SafeGlobalDeleter
-{
+template<typename T>
+struct SafeGlobalDeleter {
     static inline void cleanup(T *global)
     {
         if (global) {
@@ -29,7 +27,7 @@ struct SafeGlobalDeleter
     }
 };
 
-template <typename T>
+template<typename T>
 using ScopedGlobalPointer = QScopedPointer<T, SafeGlobalDeleter<T>>;
 
 /**
@@ -43,7 +41,7 @@ inline QRegion KWAYLANDSERVER_EXPORT infiniteRegion()
                    std::numeric_limits<int>::max());
 }
 
-template <typename T>
+template<typename T>
 T resource_cast(::wl_resource *resource)
 {
     using ObjectType = std::remove_pointer_t<std::remove_cv_t<T>>;

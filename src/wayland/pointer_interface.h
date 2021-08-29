@@ -15,7 +15,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class CursorPrivate;
 class Cursor;
 class PointerInterfacePrivate;

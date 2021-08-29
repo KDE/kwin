@@ -21,7 +21,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class ClientBufferIntegration;
 class ClientBuffer;
 class ClientConnection;

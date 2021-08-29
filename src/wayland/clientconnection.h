@@ -16,7 +16,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class ClientConnectionPrivate;
 class Display;
 
@@ -96,11 +95,11 @@ public:
     /**
      * Cast operator the native wl_client this ClientConnection represents.
      */
-    operator wl_client*();
+    operator wl_client *();
     /**
      * Cast operator the native wl_client this ClientConnection represents.
      */
-    operator wl_client*() const;
+    operator wl_client *() const;
 
     /**
      * Destroys this ClientConnection.
@@ -118,7 +117,7 @@ Q_SIGNALS:
     /**
      * Signal emitted when the ClientConnection got disconnected from the server.
      */
-    void disconnected(KWaylandServer::ClientConnection*);
+    void disconnected(KWaylandServer::ClientConnection *);
 
 private:
     friend class Display;
@@ -128,4 +127,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::ClientConnection*)
+Q_DECLARE_METATYPE(KWaylandServer::ClientConnection *)

@@ -14,7 +14,6 @@
 
 namespace KWaylandServer
 {
-
 static const int s_version = 1;
 
 PointerConstraintsV1InterfacePrivate::PointerConstraintsV1InterfacePrivate(Display *display)
@@ -37,41 +36,33 @@ void PointerConstraintsV1InterfacePrivate::zwp_pointer_constraints_v1_lock_point
 {
     PointerInterface *pointer = PointerInterface::get(pointer_resource);
     if (!pointer) {
-        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "invalid pointer");
+        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT, "invalid pointer");
         return;
     }
 
     SurfaceInterface *surface = SurfaceInterface::get(surface_resource);
     if (!surface) {
-        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "invalid surface");
+        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT, "invalid surface");
         return;
     }
 
     if (surface->lockedPointer() || surface->confinedPointer()) {
-        wl_resource_post_error(resource->handle, error_already_constrained,
-                               "the surface is already constrained");
+        wl_resource_post_error(resource->handle, error_already_constrained, "the surface is already constrained");
         return;
     }
 
     if (lifetime != lifetime_oneshot && lifetime != lifetime_persistent) {
-        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "unknown lifetime %d", lifetime);
+        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT, "unknown lifetime %d", lifetime);
         return;
     }
 
-    wl_resource *lockedPointerResource = wl_resource_create(resource->client(),
-                                                            &zwp_locked_pointer_v1_interface,
-                                                            resource->version(), id);
+    wl_resource *lockedPointerResource = wl_resource_create(resource->client(), &zwp_locked_pointer_v1_interface, resource->version(), id);
     if (!lockedPointerResource) {
         wl_resource_post_no_memory(resource->handle);
         return;
     }
 
-    auto lockedPointer = new LockedPointerV1Interface(LockedPointerV1Interface::LifeTime(lifetime),
-                                                      regionFromResource(region_resource),
-                                                      lockedPointerResource);
+    auto lockedPointer = new LockedPointerV1Interface(LockedPointerV1Interface::LifeTime(lifetime), regionFromResource(region_resource), lockedPointerResource);
 
     SurfaceInterfacePrivate::get(surface)->installPointerConstraint(lockedPointer);
 }
@@ -85,41 +76,34 @@ void PointerConstraintsV1InterfacePrivate::zwp_pointer_constraints_v1_confine_po
 {
     PointerInterface *pointer = PointerInterface::get(pointer_resource);
     if (!pointer) {
-        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "invalid pointer");
+        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT, "invalid pointer");
         return;
     }
 
     SurfaceInterface *surface = SurfaceInterface::get(surface_resource);
     if (!surface) {
-        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "invalid surface");
+        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT, "invalid surface");
         return;
     }
 
     if (lifetime != lifetime_oneshot && lifetime != lifetime_persistent) {
-        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "unknown lifetime %d", lifetime);
+        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT, "unknown lifetime %d", lifetime);
         return;
     }
 
     if (surface->lockedPointer() || surface->confinedPointer()) {
-        wl_resource_post_error(resource->handle, error_already_constrained,
-                               "the surface is already constrained");
+        wl_resource_post_error(resource->handle, error_already_constrained, "the surface is already constrained");
         return;
     }
 
-    wl_resource *confinedPointerResource = wl_resource_create(resource->client(),
-                                                              &zwp_confined_pointer_v1_interface,
-                                                              resource->version(), id);
+    wl_resource *confinedPointerResource = wl_resource_create(resource->client(), &zwp_confined_pointer_v1_interface, resource->version(), id);
     if (!confinedPointerResource) {
         wl_resource_post_no_memory(resource->handle);
         return;
     }
 
-    auto confinedPointer = new ConfinedPointerV1Interface(ConfinedPointerV1Interface::LifeTime(lifetime),
-                                                          regionFromResource(region_resource),
-                                                          confinedPointerResource);
+    auto confinedPointer =
+        new ConfinedPointerV1Interface(ConfinedPointerV1Interface::LifeTime(lifetime), regionFromResource(region_resource), confinedPointerResource);
 
     SurfaceInterfacePrivate::get(surface)->installPointerConstraint(confinedPointer);
 }
@@ -181,25 +165,21 @@ void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_destroy(Resource *re
     wl_resource_destroy(resource->handle);
 }
 
-void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_set_cursor_position_hint(Resource *resource,
-                                                                                     wl_fixed_t surface_x,
-                                                                                     wl_fixed_t surface_y)
+void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_set_cursor_position_hint(Resource *resource, wl_fixed_t surface_x, wl_fixed_t surface_y)
 {
     Q_UNUSED(resource)
     pendingHint = QPointF(wl_fixed_to_double(surface_x), wl_fixed_to_double(surface_y));
     hasPendingHint = true;
 }
 
-void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_set_region(Resource *resource,
-                                                                       ::wl_resource *region_resource)
+void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_set_region(Resource *resource, ::wl_resource *region_resource)
 {
     Q_UNUSED(resource)
     pendingRegion = regionFromResource(region_resource);
     hasPendingRegion = true;
 }
 
-LockedPointerV1Interface::LockedPointerV1Interface(LifeTime lifeTime, const QRegion &region,
-                                                   ::wl_resource *resource)
+LockedPointerV1Interface::LockedPointerV1Interface(LifeTime lifeTime, const QRegion &region, ::wl_resource *resource)
     : d(new LockedPointerV1InterfacePrivate(this, lifeTime, region, resource))
 {
 }
@@ -281,16 +261,14 @@ void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_destroy(Resource
     wl_resource_destroy(resource->handle);
 }
 
-void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_set_region(Resource *resource,
-                                                                           ::wl_resource *region_resource)
+void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_set_region(Resource *resource, ::wl_resource *region_resource)
 {
     Q_UNUSED(resource)
     pendingRegion = regionFromResource(region_resource);
     hasPendingRegion = true;
 }
 
-ConfinedPointerV1Interface::ConfinedPointerV1Interface(LifeTime lifeTime, const QRegion &region,
-                                                       ::wl_resource *resource)
+ConfinedPointerV1Interface::ConfinedPointerV1Interface(LifeTime lifeTime, const QRegion &region, ::wl_resource *resource)
     : d(new ConfinedPointerV1InterfacePrivate(this, lifeTime, region, resource))
 {
 }

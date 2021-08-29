@@ -13,7 +13,6 @@
 
 using namespace KWaylandServer;
 
-
 class TestWaylandServerSeat : public QObject
 {
     Q_OBJECT

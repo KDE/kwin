@@ -25,7 +25,6 @@
 
 namespace KWaylandServer
 {
-
 static const int s_version = 3;
 
 class LinuxDmaBufV1ClientBufferIntegrationPrivate : public QtWaylandServer::zwp_linux_dmabuf_v1
@@ -65,9 +64,16 @@ public:
 protected:
     void zwp_linux_buffer_params_v1_destroy_resource(Resource *resource) override;
     void zwp_linux_buffer_params_v1_destroy(Resource *resource) override;
-    void zwp_linux_buffer_params_v1_add(Resource *resource, int32_t fd, uint32_t plane_idx, uint32_t offset, uint32_t stride, uint32_t modifier_hi, uint32_t modifier_lo) override;
+    void zwp_linux_buffer_params_v1_add(Resource *resource,
+                                        int32_t fd,
+                                        uint32_t plane_idx,
+                                        uint32_t offset,
+                                        uint32_t stride,
+                                        uint32_t modifier_hi,
+                                        uint32_t modifier_lo) override;
     void zwp_linux_buffer_params_v1_create(Resource *resource, int32_t width, int32_t height, uint32_t format, uint32_t flags) override;
-    void zwp_linux_buffer_params_v1_create_immed(Resource *resource, uint32_t buffer_id, int32_t width, int32_t height, uint32_t format, uint32_t flags) override;
+    void
+    zwp_linux_buffer_params_v1_create_immed(Resource *resource, uint32_t buffer_id, int32_t width, int32_t height, uint32_t format, uint32_t flags) override;
 
 private:
     bool test(Resource *resource, uint32_t width, uint32_t height);
@@ -112,9 +118,7 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_destroy(Re
 
 void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_create_params(Resource *resource, uint32_t params_id)
 {
-    wl_resource *paramsResource = wl_resource_create(resource->client(),
-                                                     &zwp_linux_buffer_params_v1_interface,
-                                                     resource->version(), params_id);
+    wl_resource *paramsResource = wl_resource_create(resource->client(), &zwp_linux_buffer_params_v1_interface, resource->version(), params_id);
     if (!paramsResource) {
         wl_resource_post_no_memory(resource->handle);
         return;
@@ -149,18 +153,22 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_destroy(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_add(Resource *resource, int32_t fd, uint32_t plane_idx, uint32_t offset, uint32_t stride, uint32_t modifier_hi, uint32_t modifier_lo)
+void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_add(Resource *resource,
+                                                         int32_t fd,
+                                                         uint32_t plane_idx,
+                                                         uint32_t offset,
+                                                         uint32_t stride,
+                                                         uint32_t modifier_hi,
+                                                         uint32_t modifier_lo)
 {
     if (Q_UNLIKELY(m_isUsed)) {
-        wl_resource_post_error(resource->handle, error_already_used,
-                               "the params object has already been used to create a wl_buffer");
+        wl_resource_post_error(resource->handle, error_already_used, "the params object has already been used to create a wl_buffer");
         close(fd);
         return;
     }
 
     if (Q_UNLIKELY(plane_idx >= uint(m_planes.size()))) {
-        wl_resource_post_error(resource->handle, error_plane_idx,
-                               "plane index %d is out of bounds", plane_idx);
+        wl_resource_post_error(resource->handle, error_plane_idx, "plane index %d is out of bounds", plane_idx);
         close(fd);
         return;
     }
@@ -168,8 +176,7 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_add(Resource *resource, int
     LinuxDmaBufV1Plane &plane = m_planes[plane_idx];
 
     if (Q_UNLIKELY(plane.fd != -1)) {
-        wl_resource_post_error(resource->handle, error_plane_set,
-                               "the plane index %d was already set", plane_idx);
+        wl_resource_post_error(resource->handle, error_plane_set, "the plane index %d was already set", plane_idx);
         close(fd);
         return;
     }
@@ -185,8 +192,7 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_add(Resource *resource, int
 void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, int32_t width, int32_t height, uint32_t format, uint32_t flags)
 {
     if (Q_UNLIKELY(m_isUsed)) {
-        wl_resource_post_error(resource->handle, error_already_used,
-                               "the params object has already been used to create a wl_buffer");
+        wl_resource_post_error(resource->handle, error_already_used, "the params object has already been used to create a wl_buffer");
         return;
     }
 
@@ -197,8 +203,7 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
     m_isUsed = true;
     m_planes.resize(m_planeCount);
 
-    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(
-            m_planes, format, QSize(width, height), flags);
+    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(m_planes, format, QSize(width, height), flags);
     if (!clientBuffer) {
         send_failed(resource->handle);
         return;
@@ -220,11 +225,15 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
     displayPrivate->registerClientBuffer(clientBuffer);
 }
 
-void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *resource, uint32_t buffer_id, int32_t width, int32_t height, uint32_t format, uint32_t flags)
+void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *resource,
+                                                                  uint32_t buffer_id,
+                                                                  int32_t width,
+                                                                  int32_t height,
+                                                                  uint32_t format,
+                                                                  uint32_t flags)
 {
     if (Q_UNLIKELY(m_isUsed)) {
-        wl_resource_post_error(resource->handle, error_already_used,
-                               "the params object has already been used to create a wl_buffer");
+        wl_resource_post_error(resource->handle, error_already_used, "the params object has already been used to create a wl_buffer");
         return;
     }
 
@@ -235,11 +244,9 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
     m_isUsed = true;
     m_planes.resize(m_planeCount);
 
-    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(
-            m_planes, format, QSize(width, height), flags);
+    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(m_planes, format, QSize(width, height), flags);
     if (!clientBuffer) {
-        wl_resource_post_error(resource->handle, error_invalid_wl_buffer,
-                               "importing the supplied dmabufs failed");
+        wl_resource_post_error(resource->handle, error_invalid_wl_buffer, "importing the supplied dmabufs failed");
         return;
     }
 
@@ -268,15 +275,13 @@ bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t heig
     // Check for holes in the dmabuf set (e.g. [0, 1, 3]).
     for (int i = 0; i < m_planeCount; ++i) {
         if (m_planes[i].fd == -1) {
-            wl_resource_post_error(resource->handle, error_incomplete,
-                                   "no dmabuf has been added for plane %d", i);
+            wl_resource_post_error(resource->handle, error_incomplete, "no dmabuf has been added for plane %d", i);
             return false;
         }
     }
 
     if (Q_UNLIKELY(width == 0 || height == 0)) {
-        wl_resource_post_error(resource->handle, error_invalid_dimensions,
-                               "invalid width %d or height %d", width, height);
+        wl_resource_post_error(resource->handle, error_invalid_dimensions, "invalid width %d or height %d", width, height);
         return false;
     }
 
@@ -285,19 +290,16 @@ bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t heig
 
         // Check for overflows.
         if (Q_UNLIKELY(uint64_t(plane.offset) + plane.stride > UINT32_MAX)) {
-            wl_resource_post_error(resource->handle, error_out_of_bounds,
-                                   "size overflow for plane %d", i);
+            wl_resource_post_error(resource->handle, error_out_of_bounds, "size overflow for plane %d", i);
             return false;
         }
 
-        if (Q_UNLIKELY(i == 0 &&
-                uint64_t(plane.offset) + uint64_t(plane.stride) * height > UINT32_MAX)) {
-            wl_resource_post_error(resource->handle, error_out_of_bounds,
-                                   "size overflow for plane %d", i);
+        if (Q_UNLIKELY(i == 0 && uint64_t(plane.offset) + uint64_t(plane.stride) * height > UINT32_MAX)) {
+            wl_resource_post_error(resource->handle, error_out_of_bounds, "size overflow for plane %d", i);
             return false;
         }
 
-         // Don't report an error as it might be caused by the kernel not supporting
+        // Don't report an error as it might be caused by the kernel not supporting
         // seeking on dmabuf.
         const off_t size = lseek(plane.fd, 0, SEEK_END);
         if (size == -1) {
@@ -305,22 +307,19 @@ bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t heig
         }
 
         if (Q_UNLIKELY(plane.offset >= size)) {
-            wl_resource_post_error(resource->handle, error_out_of_bounds,
-                                   "invalid offset %i for plane %d", plane.offset, i);
+            wl_resource_post_error(resource->handle, error_out_of_bounds, "invalid offset %i for plane %d", plane.offset, i);
             return false;
         }
 
         if (Q_UNLIKELY(plane.offset + plane.stride > size)) {
-            wl_resource_post_error(resource->handle, error_out_of_bounds,
-                                   "invalid stride %i for plane %d", plane.stride, i);
+            wl_resource_post_error(resource->handle, error_out_of_bounds, "invalid stride %i for plane %d", plane.stride, i);
             return false;
         }
 
         // Only valid for first plane as other planes might be sub-sampled according to
         // fourcc format.
         if (Q_UNLIKELY(i == 0 && plane.offset + plane.stride * height > size)) {
-            wl_resource_post_error(resource->handle, error_out_of_bounds,
-                                   "invalid buffer stride of height for plane %d", i);
+            wl_resource_post_error(resource->handle, error_out_of_bounds, "invalid buffer stride of height for plane %d", i);
             return false;
         }
     }
@@ -395,10 +394,7 @@ void LinuxDmaBufV1ClientBufferPrivate::buffer_destroy(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(const QSize &size,
-                                                     quint32 format,
-                                                     quint32 flags,
-                                                     const QVector<LinuxDmaBufV1Plane> &planes)
+LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(const QSize &size, quint32 format, quint32 flags, const QVector<LinuxDmaBufV1Plane> &planes)
     : ClientBuffer(*new LinuxDmaBufV1ClientBufferPrivate)
 {
     Q_D(LinuxDmaBufV1ClientBuffer);

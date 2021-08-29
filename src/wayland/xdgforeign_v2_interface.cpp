@@ -5,14 +5,13 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-#include "xdgforeign_v2_interface_p.h"
 #include "display.h"
+#include "xdgforeign_v2_interface_p.h"
 
 #include <QUuid>
 
 namespace KWaylandServer
 {
-
 static const quint32 s_exporterVersion = 1;
 static const quint32 s_importerVersion = 1;
 
@@ -24,8 +23,8 @@ XdgForeignV2InterfacePrivate::XdgForeignV2InterfacePrivate(Display *display, Xdg
 }
 
 XdgForeignV2Interface::XdgForeignV2Interface(Display *display, QObject *parent)
-    : QObject(parent),
-      d(new XdgForeignV2InterfacePrivate(display, this))
+    : QObject(parent)
+    , d(new XdgForeignV2InterfacePrivate(display, this))
 {
 }
 
@@ -55,8 +54,7 @@ void XdgExporterV2Interface::zxdg_exporter_v2_destroy(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-void XdgExporterV2Interface::zxdg_exporter_v2_export_toplevel(Resource *resource, uint32_t id,
-                                                              wl_resource *surface_resource)
+void XdgExporterV2Interface::zxdg_exporter_v2_export_toplevel(Resource *resource, uint32_t id, wl_resource *surface_resource)
 {
     SurfaceInterface *surface = SurfaceInterface::get(surface_resource);
     if (!surface) {
@@ -64,9 +62,7 @@ void XdgExporterV2Interface::zxdg_exporter_v2_export_toplevel(Resource *resource
         return;
     }
 
-    wl_resource *exportedResource = wl_resource_create(resource->client(),
-                                                       &zxdg_exported_v2_interface,
-                                                       resource->version(), id);
+    wl_resource *exportedResource = wl_resource_create(resource->client(), &zxdg_exported_v2_interface, resource->version(), id);
     if (!exportedResource) {
         wl_client_post_no_memory(resource->client());
         return;
@@ -107,9 +103,7 @@ void XdgImporterV2Interface::zxdg_importer_v2_destroy(Resource *resource)
 
 void XdgImporterV2Interface::zxdg_importer_v2_import_toplevel(Resource *resource, uint32_t id, const QString &handle)
 {
-    wl_resource *importedResource = wl_resource_create(resource->client(),
-                                                       &zxdg_imported_v2_interface,
-                                                       resource->version(), id);
+    wl_resource *importedResource = wl_resource_create(resource->client(), &zxdg_imported_v2_interface, resource->version(), id);
     if (!importedResource) {
         wl_client_post_no_memory(resource->client());
         return;
@@ -181,7 +175,7 @@ void XdgImporterV2Interface::unlink(XdgImportedV2Interface *parent, SurfaceInter
     }
 }
 
-XdgExportedV2Interface::XdgExportedV2Interface(SurfaceInterface *surface, wl_resource *resource )
+XdgExportedV2Interface::XdgExportedV2Interface(SurfaceInterface *surface, wl_resource *resource)
     : QtWaylandServer::zxdg_exported_v2(resource)
     , m_surface(surface)
 {

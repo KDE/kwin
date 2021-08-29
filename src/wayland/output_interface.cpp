@@ -5,8 +5,8 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "output_interface.h"
-#include "display_p.h"
 #include "display.h"
+#include "display_p.h"
 #include "utils.h"
 
 #include "qwayland-server-wayland.h"
@@ -16,7 +16,6 @@
 
 namespace KWaylandServer
 {
-
 static const int s_version = 3;
 
 class OutputInterfacePrivate : public QtWaylandServer::wl_output
@@ -117,10 +116,14 @@ static quint32 kwaylandServerSubPixelToWaylandSubPixel(OutputInterface::SubPixel
 
 void OutputInterfacePrivate::sendGeometry(Resource *resource)
 {
-    send_geometry(resource->handle, globalPosition.x(), globalPosition.y(),
-                  physicalSize.width(), physicalSize.height(),
+    send_geometry(resource->handle,
+                  globalPosition.x(),
+                  globalPosition.y(),
+                  physicalSize.width(),
+                  physicalSize.height(),
                   kwaylandServerSubPixelToWaylandSubPixel(subPixel),
-                  manufacturer, model,
+                  manufacturer,
+                  model,
                   kwaylandServerTransformToWaylandTransform(transform));
 }
 

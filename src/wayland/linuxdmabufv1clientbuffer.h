@@ -15,15 +15,13 @@
 
 namespace KWaylandServer
 {
-
 class LinuxDmaBufV1ClientBufferPrivate;
 class LinuxDmaBufV1ClientBufferIntegrationPrivate;
 
 /**
  * The LinuxDmaBufV1Plane type represents a plane in a client buffer.
  */
-struct LinuxDmaBufV1Plane
-{
+struct LinuxDmaBufV1Plane {
     int fd = -1; ///< The dmabuf file descriptor
     quint32 offset = 0; ///< The offset from the start of buffer
     quint32 stride = 0; ///< The distance from the start of a row to the next row in bytes
@@ -42,10 +40,7 @@ class KWAYLANDSERVER_EXPORT LinuxDmaBufV1ClientBuffer : public ClientBuffer
     Q_DECLARE_PRIVATE(LinuxDmaBufV1ClientBuffer)
 
 public:
-    LinuxDmaBufV1ClientBuffer(const QSize &size,
-                              quint32 format,
-                              quint32 flags,
-                              const QVector<LinuxDmaBufV1Plane> &planes);
+    LinuxDmaBufV1ClientBuffer(const QSize &size, quint32 format, quint32 flags, const QVector<LinuxDmaBufV1Plane> &planes);
     ~LinuxDmaBufV1ClientBuffer() override;
 
     quint32 format() const;
@@ -75,7 +70,8 @@ public:
     /**
      * The Iface class provides an interface from the LinuxDmabufInterface into the compositor
      */
-    class RendererInterface {
+    class RendererInterface
+    {
     public:
         virtual ~RendererInterface() = default;
 
@@ -93,10 +89,7 @@ public:
          *
          * @return The imported buffer on success, and nullptr otherwise.
          */
-        virtual LinuxDmaBufV1ClientBuffer *importBuffer(const QVector<LinuxDmaBufV1Plane> &planes,
-                                                        quint32 format,
-                                                        const QSize &size,
-                                                        quint32 flags) = 0;
+        virtual LinuxDmaBufV1ClientBuffer *importBuffer(const QVector<LinuxDmaBufV1Plane> &planes, quint32 format, const QSize &size, quint32 flags) = 0;
     };
 
     RendererInterface *rendererInterface() const;

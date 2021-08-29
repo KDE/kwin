@@ -6,15 +6,14 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "blur_interface.h"
-#include "region_interface_p.h"
 #include "display.h"
+#include "region_interface_p.h"
 #include "surface_interface_p.h"
 
 #include "qwayland-server-blur.h"
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 class BlurManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_blur_manager
@@ -51,7 +50,6 @@ void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_unset(Resource *reso
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
     surfacePrivate->setBlur(QPointer<BlurInterface>());
 }
-
 
 void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
 {

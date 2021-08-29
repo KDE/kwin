@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "primaryselectionsource_v1_interface.h"
-#include "primaryselectiondevicemanager_v1_interface.h"
 #include "clientconnection.h"
+#include "primaryselectiondevicemanager_v1_interface.h"
 #include "utils.h"
 // Qt
 #include <QStringList>
@@ -16,7 +16,6 @@
 
 namespace KWaylandServer
 {
-
 class PrimarySelectionSourceV1InterfacePrivate : public QtWaylandServer::zwp_primary_selection_source_v1
 {
 public:
@@ -24,6 +23,7 @@ public:
 
     QStringList mimeTypes;
     PrimarySelectionSourceV1Interface *q;
+
 protected:
     void zwp_primary_selection_source_v1_destroy_resource(Resource *resource) override;
     void zwp_primary_selection_source_v1_offer(Resource *resource, const QString &mime_type) override;
@@ -36,7 +36,8 @@ PrimarySelectionSourceV1InterfacePrivate::PrimarySelectionSourceV1InterfacePriva
 {
 }
 
-void PrimarySelectionSourceV1InterfacePrivate::zwp_primary_selection_source_v1_destroy_resource(QtWaylandServer::zwp_primary_selection_source_v1::Resource *resource)
+void PrimarySelectionSourceV1InterfacePrivate::zwp_primary_selection_source_v1_destroy_resource(
+    QtWaylandServer::zwp_primary_selection_source_v1::Resource *resource)
 {
     Q_UNUSED(resource)
     Q_EMIT q->aboutToBeDestroyed();

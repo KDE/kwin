@@ -14,7 +14,6 @@
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 class ServerSideDecorationManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_server_decoration_manager
@@ -29,7 +28,6 @@ public:
 protected:
     void org_kde_kwin_server_decoration_manager_bind_resource(Resource *resource) override;
     void org_kde_kwin_server_decoration_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
-
 };
 
 static uint32_t modeWayland(ServerSideDecorationManagerInterface::Mode mode)
@@ -86,7 +84,6 @@ void ServerSideDecorationManagerInterfacePrivate::org_kde_kwin_server_decoration
     send_default_mode(resource->handle, modeWayland(defaultMode));
 }
 
-
 ServerSideDecorationManagerInterface::ServerSideDecorationManagerInterface(Display *display, QObject *parent)
     : QObject(parent)
     , d(new ServerSideDecorationManagerInterfacePrivate(this, display))
@@ -108,7 +105,7 @@ ServerSideDecorationManagerInterface::Mode ServerSideDecorationManagerInterface:
 class ServerSideDecorationInterfacePrivate : public QtWaylandServer::org_kde_kwin_server_decoration
 {
 public:
-    ServerSideDecorationInterfacePrivate(ServerSideDecorationInterface *_q, SurfaceInterface *surface,  wl_resource *resource);
+    ServerSideDecorationInterfacePrivate(ServerSideDecorationInterface *_q, SurfaceInterface *surface, wl_resource *resource);
     ~ServerSideDecorationInterfacePrivate();
 
     static ServerSideDecorationInterface *get(SurfaceInterface *surface);
@@ -119,7 +116,7 @@ public:
 
 private:
     ServerSideDecorationInterface *q;
-    static QVector<ServerSideDecorationInterfacePrivate*> s_all;
+    static QVector<ServerSideDecorationInterfacePrivate *> s_all;
 
 protected:
     void org_kde_kwin_server_decoration_destroy_resource(Resource *resource) override;
@@ -127,7 +124,7 @@ protected:
     void org_kde_kwin_server_decoration_request_mode(Resource *resource, uint32_t mode) override;
 };
 
-QVector<ServerSideDecorationInterfacePrivate*> ServerSideDecorationInterfacePrivate::s_all;
+QVector<ServerSideDecorationInterfacePrivate *> ServerSideDecorationInterfacePrivate::s_all;
 
 void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_request_mode(Resource *resource, uint32_t mode)
 {

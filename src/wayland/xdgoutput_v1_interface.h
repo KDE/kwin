@@ -11,7 +11,6 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
-
 /*
  * In terms of protocol XdgOutputInterface are a resource
  * but for the sake of sanity, we should treat XdgOutputs as globals like Output is
@@ -20,7 +19,6 @@
 
 namespace KWaylandServer
 {
-
 class Display;
 class OutputInterface;
 class XdgOutputV1Interface;
@@ -45,7 +43,8 @@ public:
      * @arg output the wl_output interface this XDG output is for
      * @parent the parent of the newly created object
      */
-    XdgOutputV1Interface* createXdgOutput(OutputInterface *output, QObject *parent);
+    XdgOutputV1Interface *createXdgOutput(OutputInterface *output, QObject *parent);
+
 private:
     QScopedPointer<XdgOutputManagerV1InterfacePrivate> d;
 };
@@ -118,7 +117,6 @@ private:
 
     QScopedPointer<XdgOutputV1InterfacePrivate> d;
 };
-
 
 }
 

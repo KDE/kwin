@@ -3,16 +3,13 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "textinput_v2_interface_p.h"
 #include "display.h"
 #include "seat_interface_p.h"
 #include "surface_interface_p.h"
-
-
+#include "textinput_v2_interface_p.h"
 
 namespace KWaylandServer
 {
-
 static const quint32 s_version = 1;
 
 // helpers
@@ -90,24 +87,27 @@ static TextInputContentPurpose convertContentPurpose(uint32_t purpose)
     }
 }
 
-
 TextInputManagerV2InterfacePrivate::TextInputManagerV2InterfacePrivate(TextInputManagerV2Interface *_q, Display *display)
     : QtWaylandServer::zwp_text_input_manager_v2(*display, s_version)
     , q(_q)
 {
 }
 
-class EnabledEmitter {
+class EnabledEmitter
+{
 public:
     EnabledEmitter(TextInputV2Interface *q)
         : q(q)
         , m_wasEnabled(q->isEnabled())
-    {}
-    ~EnabledEmitter() {
+    {
+    }
+    ~EnabledEmitter()
+    {
         if (m_wasEnabled != q->isEnabled()) {
             Q_EMIT q->enabledChanged();
         }
     }
+
 private:
     TextInputV2Interface *q;
     const bool m_wasEnabled;
@@ -281,8 +281,12 @@ void TextInputV2InterfacePrivate::sendInputPanelState()
     }
     const QList<Resource *> textInputs = textInputsForClient(surface->client());
     for (auto resource : textInputs) {
-        send_input_panel_state(resource->handle,inputPanelVisible ? ZWP_TEXT_INPUT_V2_INPUT_PANEL_VISIBILITY_VISIBLE : ZWP_TEXT_INPUT_V2_INPUT_PANEL_VISIBILITY_HIDDEN,
-                               overlappedSurfaceArea.x(), overlappedSurfaceArea.y(), overlappedSurfaceArea.width(), overlappedSurfaceArea.height());
+        send_input_panel_state(resource->handle,
+                               inputPanelVisible ? ZWP_TEXT_INPUT_V2_INPUT_PANEL_VISIBILITY_VISIBLE : ZWP_TEXT_INPUT_V2_INPUT_PANEL_VISIBILITY_HIDDEN,
+                               overlappedSurfaceArea.x(),
+                               overlappedSurfaceArea.y(),
+                               overlappedSurfaceArea.width(),
+                               overlappedSurfaceArea.height());
     }
 }
 

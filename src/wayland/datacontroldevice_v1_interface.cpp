@@ -10,16 +10,15 @@
 #include "datacontrolsource_v1_interface.h"
 #include "display.h"
 #include "seat_interface.h"
-#include "surface_interface.h"
 #include "seat_interface_p.h"
+#include "surface_interface.h"
 
 // Wayland
 #include <qwayland-server-wlr-data-control-unstable-v1.h>
 
 namespace KWaylandServer
 {
-
-class DataControlDeviceV1InterfacePrivate: public QtWaylandServer::zwlr_data_control_device_v1
+class DataControlDeviceV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_device_v1
 {
 public:
     DataControlDeviceV1InterfacePrivate(DataControlDeviceV1Interface *q, SeatInterface *seat, wl_resource *resource);
@@ -34,14 +33,13 @@ public:
 protected:
     void zwlr_data_control_device_v1_destroy_resource(Resource *resource) override;
     void zwlr_data_control_device_v1_set_selection(Resource *resource, wl_resource *source) override;
-    void zwlr_data_control_device_v1_set_primary_selection(Resource * resource, struct ::wl_resource *source) override;
+    void zwlr_data_control_device_v1_set_primary_selection(Resource *resource, struct ::wl_resource *source) override;
     void zwlr_data_control_device_v1_destroy(Resource *resource) override;
 };
 
-
 DataControlDeviceV1InterfacePrivate::DataControlDeviceV1InterfacePrivate(DataControlDeviceV1Interface *_q, SeatInterface *seat, wl_resource *resource)
     : QtWaylandServer::zwlr_data_control_device_v1(resource)
-    ,  q(_q)
+    , q(_q)
     , seat(seat)
 {
 }
@@ -52,10 +50,9 @@ void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_set_select
 
     if (source) {
         dataSource = DataControlSourceV1Interface::get(source);
-         Q_ASSERT(dataSource);
-         if (dataSource == seat->selection() || dataSource == seat->primarySelection()) {
-            wl_resource_post_error(resource->handle, error::error_used_source,
-                                   "source given to set_selection was already used before");
+        Q_ASSERT(dataSource);
+        if (dataSource == seat->selection() || dataSource == seat->primarySelection()) {
+            wl_resource_post_error(resource->handle, error::error_used_source, "source given to set_selection was already used before");
             return;
         }
     }
@@ -72,10 +69,9 @@ void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_set_primar
 
     if (source) {
         dataSource = DataControlSourceV1Interface::get(source);
-         Q_ASSERT(dataSource);
-         if (dataSource == seat->selection() || dataSource == seat->primarySelection()) {
-            wl_resource_post_error(resource->handle, error::error_used_source,
-                                   "source given to set_primary_selection was already used before");
+        Q_ASSERT(dataSource);
+        if (dataSource == seat->selection() || dataSource == seat->primarySelection()) {
+            wl_resource_post_error(resource->handle, error::error_used_source, "source given to set_primary_selection was already used before");
             return;
         }
     }

@@ -7,12 +7,11 @@
 
 struct wl_resource;
 
-#include <QObject>
 #include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 namespace KWaylandServer
 {
-
 class Display;
 class SurfaceInterface;
 class ServerSideDecorationPaletteInterface;
@@ -36,13 +35,13 @@ public:
      * Returns any existing palette for a given surface
      * This returns a null pointer if no ServerSideDecorationPaletteInterface exists.
      */
-    ServerSideDecorationPaletteInterface* paletteForSurface(SurfaceInterface *);
+    ServerSideDecorationPaletteInterface *paletteForSurface(SurfaceInterface *);
 
 Q_SIGNALS:
     /**
      * Emitted whenever a new ServerSideDecorationPaletteInterface is created.
      */
-    void paletteCreated(KWaylandServer::ServerSideDecorationPaletteInterface*);
+    void paletteCreated(KWaylandServer::ServerSideDecorationPaletteInterface *);
 
 private:
     QScopedPointer<ServerSideDecorationPaletteManagerInterfacePrivate> d;

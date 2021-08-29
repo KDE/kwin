@@ -5,9 +5,9 @@
 */
 
 #include "primaryselectiondevicemanager_v1_interface.h"
+#include "display.h"
 #include "primaryselectiondevice_v1_interface.h"
 #include "primaryselectionsource_v1_interface.h"
-#include "display.h"
 #include "seat_interface_p.h"
 // Wayland
 #include <qwayland-server-wp-primary-selection-unstable-v1.h>
@@ -15,13 +15,13 @@
 static const int s_version = 1;
 namespace KWaylandServer
 {
-
 class PrimarySelectionDeviceManagerV1InterfacePrivate : public QtWaylandServer::zwp_primary_selection_device_manager_v1
 {
 public:
     PrimarySelectionDeviceManagerV1InterfacePrivate(PrimarySelectionDeviceManagerV1Interface *q, Display *d);
 
     PrimarySelectionDeviceManagerV1Interface *q;
+
 protected:
     void zwp_primary_selection_device_manager_v1_create_source(Resource *resource, uint32_t id) override;
     void zwp_primary_selection_device_manager_v1_get_device(Resource *resource, uint32_t id, wl_resource *seat) override;

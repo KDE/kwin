@@ -5,19 +5,18 @@
 */
 #pragma once
 
-#include "textinput_v2_interface.h"
 #include "clientconnection.h"
+#include "textinput_v2_interface.h"
 
 #include <QPointer>
 #include <QRect>
-#include <QVector>
 #include <QSet>
+#include <QVector>
 
 #include <qwayland-server-text-input-unstable-v2.h>
 
 namespace KWaylandServer
 {
-
 class TextInputManagerV2InterfacePrivate : public QtWaylandServer::zwp_text_input_manager_v2
 {
 public:
@@ -49,7 +48,10 @@ public:
     void sendLanguage();
 
     QList<Resource *> textInputsForClient(ClientConnection *client) const;
-    static TextInputV2InterfacePrivate *get(TextInputV2Interface *inputInterface) { return inputInterface->d.data(); }
+    static TextInputV2InterfacePrivate *get(TextInputV2Interface *inputInterface)
+    {
+        return inputInterface->d.data();
+    }
 
     QString preferredLanguage;
     QRect cursorRectangle;
@@ -64,7 +66,7 @@ public:
     QRect overlappedSurfaceArea;
     QString language;
     TextInputV2Interface *q;
-    QSet<SurfaceInterface*> m_enabledSurfaces;
+    QSet<SurfaceInterface *> m_enabledSurfaces;
 
 protected:
     void zwp_text_input_v2_enable(Resource *resource, wl_resource *surface) override;

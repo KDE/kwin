@@ -16,7 +16,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class ConfinedPointerV1InterfacePrivate;
 class Display;
 class LockedPointerV1InterfacePrivate;

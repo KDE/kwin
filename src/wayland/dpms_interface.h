@@ -11,7 +11,6 @@
 
 namespace KWaylandServer
 {
-
 class Display;
 class DpmsManagerInterfacePrivate;
 

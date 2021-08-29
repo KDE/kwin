@@ -15,7 +15,6 @@
 
 namespace KWaylandServer
 {
-
 static const int s_version = 2;
 
 PointerGesturesV1InterfacePrivate::PointerGesturesV1InterfacePrivate(Display *display)
@@ -27,8 +26,7 @@ void PointerGesturesV1InterfacePrivate::zwp_pointer_gestures_v1_get_swipe_gestur
 {
     PointerInterface *pointer = PointerInterface::get(pointer_resource);
     if (!pointer) {
-        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "invalid pointer");
+        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT, "invalid pointer");
         return;
     }
 
@@ -40,8 +38,7 @@ void PointerGesturesV1InterfacePrivate::zwp_pointer_gestures_v1_get_pinch_gestur
 {
     PointerInterface *pointer = PointerInterface::get(pointer_resource);
     if (!pointer) {
-        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "invalid pointer");
+        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT, "invalid pointer");
         return;
     }
 
@@ -115,8 +112,7 @@ void PointerSwipeGestureV1Interface::sendUpdate(const QSizeF &delta)
     const QList<Resource *> swipeResources = resourceMap().values(focusedClient->client());
     for (Resource *swipeResource : swipeResources) {
         if (swipeResource->client() == focusedClient->client()) {
-            send_update(swipeResource->handle, seat->timestamp(),
-                        wl_fixed_from_double(delta.width()), wl_fixed_from_double(delta.height()));
+            send_update(swipeResource->handle, seat->timestamp(), wl_fixed_from_double(delta.width()), wl_fixed_from_double(delta.height()));
         }
     }
 }
@@ -210,9 +206,12 @@ void PointerPinchGestureV1Interface::sendUpdate(const QSizeF &delta, qreal scale
     const QList<Resource *> pinchResources = resourceMap().values(*focusedClient);
     for (Resource *pinchResource : pinchResources) {
         if (pinchResource->client() == focusedClient->client()) {
-            send_update(pinchResource->handle, seat->timestamp(),
-                        wl_fixed_from_double(delta.width()), wl_fixed_from_double(delta.height()),
-                        wl_fixed_from_double(scale), wl_fixed_from_double(rotation));
+            send_update(pinchResource->handle,
+                        seat->timestamp(),
+                        wl_fixed_from_double(delta.width()),
+                        wl_fixed_from_double(delta.height()),
+                        wl_fixed_from_double(scale),
+                        wl_fixed_from_double(rotation));
         }
     }
 }

@@ -7,7 +7,6 @@
 #include "xdgactivation_v1_interface.h"
 #include "display.h"
 #include "logging.h"
-#include "display.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
 

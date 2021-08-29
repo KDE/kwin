@@ -18,7 +18,6 @@
 
 namespace KWaylandServer
 {
-
 class AbstractDataSource;
 class DataDeviceInterface;
 class DataSourceInterface;
@@ -50,9 +49,9 @@ public:
     QScopedPointer<KeyboardInterface> keyboard;
     QScopedPointer<PointerInterface> pointer;
     QScopedPointer<TouchInterface> touch;
-    QVector<DataDeviceInterface*> dataDevices;
-    QVector<PrimarySelectionDeviceV1Interface*> primarySelectionDevices;
-    QVector<DataControlDeviceV1Interface*> dataControlDevices;
+    QVector<DataDeviceInterface *> dataDevices;
+    QVector<PrimarySelectionDeviceV1Interface *> primarySelectionDevices;
+    QVector<DataControlDeviceV1Interface *> dataControlDevices;
 
     // TextInput v2
     QPointer<TextInputV2Interface> textInputV2;

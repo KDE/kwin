@@ -13,7 +13,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class Display;
 class SlideManagerInterfacePrivate;
 class SlideInterfacePrivate;

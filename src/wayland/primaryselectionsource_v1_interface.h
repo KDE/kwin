@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 class PrimarySelectionSourceV1InterfacePrivate;
 
 /**
@@ -43,4 +42,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::PrimarySelectionSourceV1Interface*)
+Q_DECLARE_METATYPE(KWaylandServer::PrimarySelectionSourceV1Interface *)

@@ -11,11 +11,9 @@
 
 namespace KWaylandServer
 {
-
 static const int s_version = 1;
 
-SubCompositorInterfacePrivate::SubCompositorInterfacePrivate(Display *display,
-                                                             SubCompositorInterface *q)
+SubCompositorInterfacePrivate::SubCompositorInterfacePrivate(Display *display, SubCompositorInterface *q)
     : QtWaylandServer::wl_subcompositor(*display, s_version)
     , q(q)
 {
@@ -26,7 +24,8 @@ void SubCompositorInterfacePrivate::subcompositor_destroy(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-void SubCompositorInterfacePrivate::subcompositor_get_subsurface(Resource *resource, uint32_t id,
+void SubCompositorInterfacePrivate::subcompositor_get_subsurface(Resource *resource,
+                                                                 uint32_t id,
                                                                  ::wl_resource *surface_resource,
                                                                  ::wl_resource *parent_resource)
 {
@@ -44,27 +43,20 @@ void SubCompositorInterfacePrivate::subcompositor_get_subsurface(Resource *resou
 
     const SurfaceRole *surfaceRole = SurfaceRole::get(surface);
     if (surfaceRole) {
-        wl_resource_post_error(resource->handle, error_bad_surface,
-                               "the surface already has a role assigned %s",
-                               surfaceRole->name().constData());
+        wl_resource_post_error(resource->handle, error_bad_surface, "the surface already has a role assigned %s", surfaceRole->name().constData());
         return;
     }
 
     if (surface == parent) {
-        wl_resource_post_error(resource->handle, error_bad_surface,
-                               "wl_surface@%d cannot be its own parent",
-                               wl_resource_get_id(surface_resource));
+        wl_resource_post_error(resource->handle, error_bad_surface, "wl_surface@%d cannot be its own parent", wl_resource_get_id(surface_resource));
         return;
     }
     if (parent->subSurface() && parent->subSurface()->mainSurface() == surface) {
-        wl_resource_post_error(resource->handle, error_bad_surface,
-                               "wl_surface@%d is an ancestor of parent",
-                               wl_resource_get_id(surface_resource));
+        wl_resource_post_error(resource->handle, error_bad_surface, "wl_surface@%d is an ancestor of parent", wl_resource_get_id(surface_resource));
         return;
     }
 
-    wl_resource *subsurfaceResource = wl_resource_create(resource->client(), &wl_subsurface_interface,
-                                                         resource->version(), id);
+    wl_resource *subsurfaceResource = wl_resource_create(resource->client(), &wl_subsurface_interface, resource->version(), id);
     if (!subsurfaceResource) {
         wl_resource_post_no_memory(resource->handle);
         return;
@@ -89,10 +81,7 @@ SubSurfaceInterfacePrivate *SubSurfaceInterfacePrivate::get(SubSurfaceInterface 
     return subsurface->d.data();
 }
 
-SubSurfaceInterfacePrivate::SubSurfaceInterfacePrivate(SubSurfaceInterface *q,
-                                                       SurfaceInterface *surface,
-                                                       SurfaceInterface *parent,
-                                                       ::wl_resource *resource)
+SubSurfaceInterfacePrivate::SubSurfaceInterfacePrivate(SubSurfaceInterface *q, SurfaceInterface *surface, SurfaceInterface *parent, ::wl_resource *resource)
     : SurfaceRole(surface, QByteArrayLiteral("wl_subsurface"))
     , QtWaylandServer::wl_subsurface(resource)
     , q(q)
@@ -198,8 +187,7 @@ void SubSurfaceInterfacePrivate::parentCommit()
     }
 }
 
-SubSurfaceInterface::SubSurfaceInterface(SurfaceInterface *surface, SurfaceInterface *parent,
-                                         wl_resource *resource)
+SubSurfaceInterface::SubSurfaceInterface(SurfaceInterface *surface, SurfaceInterface *parent, wl_resource *resource)
     : d(new SubSurfaceInterfacePrivate(this, surface, parent, resource))
 {
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
@@ -207,7 +195,9 @@ SubSurfaceInterface::SubSurfaceInterface(SurfaceInterface *surface, SurfaceInter
     surfacePrivate->subSurface = this;
     parentPrivate->addChild(this);
 
-    connect(surface, &SurfaceInterface::destroyed, this, [this]() { delete this; });
+    connect(surface, &SurfaceInterface::destroyed, this, [this]() {
+        delete this;
+    });
 }
 
 SubSurfaceInterface::~SubSurfaceInterface()

@@ -3,8 +3,8 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "keyboard_interface_p.h"
 #include "display.h"
+#include "keyboard_interface_p.h"
 #include "logging.h"
 #include "seat_interface.h"
 #include "seat_interface_p.h"
@@ -17,7 +17,6 @@
 
 namespace KWaylandServer
 {
-
 KeyboardInterfacePrivate::KeyboardInterfacePrivate(SeatInterface *s)
     : seat(s)
 {
@@ -41,13 +40,11 @@ void KeyboardInterfacePrivate::keyboard_bind_resource(Resource *resource)
 
     if (focusedClient && focusedClient->client() == resource->client()) {
         const QVector<quint32> keys = pressedKeys();
-        const QByteArray keysData = QByteArray::fromRawData(reinterpret_cast<const char *>(keys.data()),
-                                                            sizeof(quint32) * keys.count());
+        const QByteArray keysData = QByteArray::fromRawData(reinterpret_cast<const char *>(keys.data()), sizeof(quint32) * keys.count());
         const quint32 serial = seat->display()->nextSerial();
 
         send_enter(resource->handle, serial, focusedSurface->resource(), keysData);
-        send_modifiers(resource->handle, serial, modifiers.depressed, modifiers.latched,
-                       modifiers.locked, modifiers.group);
+        send_modifiers(resource->handle, serial, modifiers.depressed, modifiers.latched, modifiers.locked, modifiers.group);
     }
 }
 
@@ -67,10 +64,7 @@ void KeyboardInterfacePrivate::sendLeave(SurfaceInterface *surface, quint32 seri
 void KeyboardInterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 serial)
 {
     const auto states = pressedKeys();
-    QByteArray data = QByteArray::fromRawData(
-        reinterpret_cast<const char*>(states.constData()),
-        sizeof(quint32) * states.size()
-    );
+    QByteArray data = QByteArray::fromRawData(reinterpret_cast<const char *>(states.constData()), sizeof(quint32) * states.size());
 
     const QList<Resource *> keyboards = keyboardsForClient(surface->client());
     for (Resource *keyboardResource : keyboards) {
@@ -187,7 +181,6 @@ QVector<quint32> KeyboardInterfacePrivate::pressedKeys() const
     return keys;
 }
 
-
 void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
 {
     if (!d->updateKey(key, state)) {
@@ -208,10 +201,10 @@ void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
 void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
 {
     bool changed = false;
-#define UPDATE( value ) \
-    if (d->modifiers.value != value) { \
-        d->modifiers.value = value; \
-        changed = true; \
+#define UPDATE(value)                                                                                                                                          \
+    if (d->modifiers.value != value) {                                                                                                                         \
+        d->modifiers.value = value;                                                                                                                            \
+        changed = true;                                                                                                                                        \
     }
     UPDATE(depressed)
     UPDATE(latched)

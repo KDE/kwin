@@ -14,7 +14,6 @@
 struct wl_resource;
 namespace KWaylandServer
 {
-
 class AbstractDataSource;
 class PrimarySelectionDeviceV1Interface;
 class PrimarySelectionSourceV1Interface;
@@ -42,4 +41,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::PrimarySelectionOfferV1Interface*)
+Q_DECLARE_METATYPE(KWaylandServer::PrimarySelectionOfferV1Interface *)

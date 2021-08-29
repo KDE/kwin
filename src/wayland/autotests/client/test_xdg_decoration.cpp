@@ -6,17 +6,17 @@
 // Qt
 #include <QtTest>
 // KWin
+#include "../../src/server/compositor_interface.h"
+#include "../../src/server/display.h"
+#include "../../src/server/xdgdecoration_v1_interface.h"
+#include "../../src/server/xdgshell_interface.h"
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/registry.h"
-#include "KWayland/Client/xdgshell.h"
-#include "KWayland/Client/xdgdecoration.h"
 #include "KWayland/Client/surface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/xdgshell_interface.h"
-#include "../../src/server/xdgdecoration_v1_interface.h"
+#include "KWayland/Client/xdgdecoration.h"
+#include "KWayland/Client/xdgshell.h"
 
 class TestXdgDecoration : public QObject
 {
@@ -103,14 +103,14 @@ void TestXdgDecoration::init()
 
     m_xdgShellInterface = new XdgShellInterface(m_display, m_display);
     QVERIFY(xdgShellSpy.wait());
-    m_xdgShell = m_registry->createXdgShell(xdgShellSpy.first().first().value<quint32>(),
-                                            xdgShellSpy.first().last().value<quint32>(), this);
+    m_xdgShell = m_registry->createXdgShell(xdgShellSpy.first().first().value<quint32>(), xdgShellSpy.first().last().value<quint32>(), this);
 
     m_xdgDecorationManagerInterface = new XdgDecorationManagerV1Interface(m_display, m_display);
 
     QVERIFY(xdgDecorationManagerSpy.wait());
     m_xdgDecorationManager = m_registry->createXdgDecorationManager(xdgDecorationManagerSpy.first().first().value<quint32>(),
-                                                                    xdgDecorationManagerSpy.first().last().value<quint32>(), this);
+                                                                    xdgDecorationManagerSpy.first().last().value<quint32>(),
+                                                                    this);
 }
 
 void TestXdgDecoration::cleanup()
@@ -147,7 +147,6 @@ void TestXdgDecoration::cleanup()
     delete m_display;
     m_display = nullptr;
 }
-
 
 void TestXdgDecoration::testDecoration_data()
 {
@@ -188,7 +187,7 @@ void TestXdgDecoration::testDecoration()
     QScopedPointer<XdgShellSurface> shellSurface(m_xdgShell->createSurface(surface.data()));
     QScopedPointer<XdgDecoration> decoration(m_xdgDecorationManager->getToplevelDecoration(shellSurface.data()));
 
-    //and receive all these on the "server"
+    // and receive all these on the "server"
     QVERIFY(surfaceCreatedSpy.count() || surfaceCreatedSpy.wait());
     QVERIFY(shellSurfaceCreatedSpy.count() || shellSurfaceCreatedSpy.wait());
     QVERIFY(decorationCreatedSpy.count() || decorationCreatedSpy.wait());
@@ -204,7 +203,7 @@ void TestXdgDecoration::testDecoration()
     QSignalSpy clientConfiguredSpy(decoration.data(), &XdgDecoration::modeChanged);
     QSignalSpy modeRequestedSpy(decorationIface, &XdgToplevelDecorationV1Interface::preferredModeChanged);
 
-    //server configuring a client
+    // server configuring a client
     decorationIface->sendConfigure(configuredMode);
     quint32 serial = shellSurfaceIface->sendConfigure(QSize(0, 0), {});
     QVERIFY(clientConfiguredSpy.wait());
@@ -212,7 +211,7 @@ void TestXdgDecoration::testDecoration()
 
     shellSurface->ackConfigure(serial);
 
-    //client requesting another mode
+    // client requesting another mode
     decoration->setMode(setMode);
     QVERIFY(modeRequestedSpy.wait());
     QCOMPARE(modeRequestedSpy.first().first().value<XdgToplevelDecorationV1Interface::Mode>(), setModeExp);
@@ -221,8 +220,7 @@ void TestXdgDecoration::testDecoration()
 
     decoration->unsetMode();
     QVERIFY(modeRequestedSpy.wait());
-    QCOMPARE(modeRequestedSpy.first().first().value<XdgToplevelDecorationV1Interface::Mode>(),
-             XdgToplevelDecorationV1Interface::Mode::Undefined);
+    QCOMPARE(modeRequestedSpy.first().first().value<XdgToplevelDecorationV1Interface::Mode>(), XdgToplevelDecorationV1Interface::Mode::Undefined);
 }
 
 QTEST_GUILESS_MAIN(TestXdgDecoration)

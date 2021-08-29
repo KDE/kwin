@@ -31,13 +31,7 @@
 
 using namespace KWayland::Client;
 
-static Qt::GlobalColor s_colors[] = {
-    Qt::white,
-    Qt::red,
-    Qt::green,
-    Qt::blue,
-    Qt::black
-};
+static Qt::GlobalColor s_colors[] = {Qt::white, Qt::red, Qt::green, Qt::blue, Qt::black};
 static int s_colorIndex = 0;
 
 WaylandClientTest::WaylandClientTest(QObject *parent)
@@ -63,7 +57,10 @@ WaylandClientTest::~WaylandClientTest()
 
 void WaylandClientTest::init()
 {
-    connect(m_connectionThreadObject, &ConnectionThread::connected, this,
+    connect(
+        m_connectionThreadObject,
+        &ConnectionThread::connected,
+        this,
         [this]() {
             // create the event queue for the main gui thread
             m_eventQueue = new EventQueue(this);
@@ -79,134 +76,98 @@ void WaylandClientTest::init()
 
     m_connectionThreadObject->initConnection();
 
-    connect(m_timer, &QTimer::timeout, this,
-        [this]() {
-            s_colorIndex = (s_colorIndex + 1) % 5;
-            render();
-        }
-    );
+    connect(m_timer, &QTimer::timeout, this, [this]() {
+        s_colorIndex = (s_colorIndex + 1) % 5;
+        render();
+    });
     m_timer->setInterval(1000);
     m_timer->start();
 }
 
 void WaylandClientTest::setupRegistry(Registry *registry)
 {
-    connect(registry, &Registry::compositorAnnounced, this,
-        [this, registry](quint32 name) {
-            m_compositor = registry->createCompositor(name, 1, this);
-            m_surface = m_compositor->createSurface(this);
+    connect(registry, &Registry::compositorAnnounced, this, [this, registry](quint32 name) {
+        m_compositor = registry->createCompositor(name, 1, this);
+        m_surface = m_compositor->createSurface(this);
+    });
+    connect(registry, &Registry::shellAnnounced, this, [this, registry](quint32 name) {
+        Shell *shell = registry->createShell(name, 1, this);
+        ShellSurface *shellSurface = shell->createSurface(m_surface, m_surface);
+        shellSurface->setToplevel();
+        render(QSize(400, 200));
+    });
+    connect(registry, &Registry::outputAnnounced, this, [this, registry](quint32 name) {
+        if (m_output) {
+            return;
         }
-    );
-    connect(registry, &Registry::shellAnnounced, this,
-        [this, registry](quint32 name) {
-            Shell *shell = registry->createShell(name, 1, this);
-            ShellSurface *shellSurface = shell->createSurface(m_surface, m_surface);
-            shellSurface->setToplevel();
-            render(QSize(400, 200));
-        }
-    );
-    connect(registry, &Registry::outputAnnounced, this,
-        [this, registry](quint32 name) {
-            if (m_output) {
+        m_output = registry->createOutput(name, 2, this);
+    });
+    connect(registry, &Registry::shmAnnounced, this, [this, registry](quint32 name) {
+        m_shm = registry->createShmPool(name, 1, this);
+    });
+    connect(registry, &Registry::seatAnnounced, this, [this, registry](quint32 name) {
+        Seat *s = registry->createSeat(name, 2, this);
+        connect(s, &Seat::hasKeyboardChanged, this, [this, s](bool has) {
+            if (!has) {
                 return;
             }
-            m_output = registry->createOutput(name, 2, this);
-        }
-    );
-    connect(registry, &Registry::shmAnnounced, this,
-        [this, registry](quint32 name) {
-            m_shm = registry->createShmPool(name, 1, this);
-        }
-    );
-    connect(registry, &Registry::seatAnnounced, this,
-        [this, registry](quint32 name) {
-            Seat *s = registry->createSeat(name, 2, this);
-            connect(s, &Seat::hasKeyboardChanged, this,
-                [this, s](bool has) {
-                    if (!has) {
-                        return;
-                    }
-                    Keyboard *k = s->createKeyboard(this);
-                    connect(k, &Keyboard::keyChanged, this,
-                        [] (quint32 key, Keyboard::KeyState state) {
-                            if (key == KEY_Q && state == Keyboard::KeyState::Released) {
-                                QCoreApplication::instance()->quit();
-                            }
-                        }
-                    );
+            Keyboard *k = s->createKeyboard(this);
+            connect(k, &Keyboard::keyChanged, this, [](quint32 key, Keyboard::KeyState state) {
+                if (key == KEY_Q && state == Keyboard::KeyState::Released) {
+                    QCoreApplication::instance()->quit();
                 }
-            );
-            connect(s, &Seat::hasPointerChanged, this,
-                [this, s](bool has) {
-                    if (!has) {
-                        return;
+            });
+        });
+        connect(s, &Seat::hasPointerChanged, this, [this, s](bool has) {
+            if (!has) {
+                return;
+            }
+            Pointer *p = s->createPointer(this);
+            connect(p, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState state) {
+                Q_UNUSED(serial)
+                Q_UNUSED(time)
+                if (state == Pointer::ButtonState::Released) {
+                    if (button == BTN_LEFT) {
+                        if (m_timer->isActive()) {
+                            m_timer->stop();
+                        } else {
+                            m_timer->start();
+                        }
                     }
-                    Pointer *p = s->createPointer(this);
-                    connect(p, &Pointer::buttonStateChanged, this,
-                        [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState state) {
-                            Q_UNUSED(serial)
-                            Q_UNUSED(time)
-                            if (state == Pointer::ButtonState::Released) {
-                                if (button == BTN_LEFT) {
-                                    if (m_timer->isActive()) {
-                                        m_timer->stop();
-                                    } else {
-                                        m_timer->start();
-                                    }
-                                }
-                                if (button == BTN_RIGHT) {
-                                    QCoreApplication::instance()->quit();
-                                }
-                            }
-                        }
-                    );
-                }
-            );
-            connect(s, &Seat::hasTouchChanged, this,
-                [this, s](bool has) {
-                    if (!has) {
-                        return;
+                    if (button == BTN_RIGHT) {
+                        QCoreApplication::instance()->quit();
                     }
-                    Touch *t = s->createTouch(this);
-                    connect(t, &Touch::sequenceStarted, this,
-                        [] (KWayland::Client::TouchPoint *startPoint) {
-                            qDebug() << "Touch sequence started at" << startPoint->position() << "with id" << startPoint->id();
-                        }
-                    );
-                    connect(t, &Touch::sequenceCanceled, this,
-                        [] () {
-                            qDebug() << "Touch sequence canceled";
-                        }
-                    );
-                    connect(t, &Touch::sequenceEnded, this,
-                        [] () {
-                            qDebug() << "Touch sequence finished";
-                        }
-                    );
-                    connect(t, &Touch::frameEnded, this,
-                        [] () {
-                            qDebug() << "End of touch contact point list";
-                        }
-                    );
-                    connect(t, &Touch::pointAdded, this,
-                        [] (KWayland::Client::TouchPoint *point) {
-                            qDebug() << "Touch point added at" << point->position() << "with id" << point->id();
-                        }
-                    );
-                    connect(t, &Touch::pointRemoved, this,
-                        [] (KWayland::Client::TouchPoint *point) {
-                            qDebug() << "Touch point " << point->id() << " removed at" << point->position();
-                        }
-                    );
-                    connect(t, &Touch::pointMoved, this,
-                        [] (KWayland::Client::TouchPoint *point) {
-                            qDebug() << "Touch point " << point->id() << " moved to" << point->position();
-                        }
-                    );
                 }
-            );
-        }
-    );
+            });
+        });
+        connect(s, &Seat::hasTouchChanged, this, [this, s](bool has) {
+            if (!has) {
+                return;
+            }
+            Touch *t = s->createTouch(this);
+            connect(t, &Touch::sequenceStarted, this, [](KWayland::Client::TouchPoint *startPoint) {
+                qDebug() << "Touch sequence started at" << startPoint->position() << "with id" << startPoint->id();
+            });
+            connect(t, &Touch::sequenceCanceled, this, []() {
+                qDebug() << "Touch sequence canceled";
+            });
+            connect(t, &Touch::sequenceEnded, this, []() {
+                qDebug() << "Touch sequence finished";
+            });
+            connect(t, &Touch::frameEnded, this, []() {
+                qDebug() << "End of touch contact point list";
+            });
+            connect(t, &Touch::pointAdded, this, [](KWayland::Client::TouchPoint *point) {
+                qDebug() << "Touch point added at" << point->position() << "with id" << point->id();
+            });
+            connect(t, &Touch::pointRemoved, this, [](KWayland::Client::TouchPoint *point) {
+                qDebug() << "Touch point " << point->id() << " removed at" << point->position();
+            });
+            connect(t, &Touch::pointMoved, this, [](KWayland::Client::TouchPoint *point) {
+                qDebug() << "Touch point " << point->id() << " moved to" << point->position();
+            });
+        });
+    });
     registry->create(m_connectionThreadObject->display());
     registry->setEventQueue(m_eventQueue);
     registry->setup();

@@ -14,7 +14,6 @@
 
 namespace KWaylandServer
 {
-
 class CompositorInterfacePrivate;
 class Display;
 

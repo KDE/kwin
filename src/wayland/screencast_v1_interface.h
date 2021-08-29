@@ -6,15 +6,14 @@
 
 #pragma once
 
+#include <KWaylandServer/kwaylandserver_export.h>
 #include <QObject>
 #include <QScopedPointer>
-#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class Display;
 class OutputInterface;
 class ScreencastV1InterfacePrivate;

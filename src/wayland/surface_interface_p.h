@@ -16,13 +16,11 @@
 
 namespace KWaylandServer
 {
-
 class IdleInhibitorV1Interface;
 class SurfaceRole;
 class ViewportInterface;
 
-struct SurfaceState
-{
+struct SurfaceState {
     void mergeInto(SurfaceState *target);
 
     QRegion damage = QRegion();
@@ -66,7 +64,10 @@ struct SurfaceState
 class SurfaceInterfacePrivate : public QtWaylandServer::wl_surface
 {
 public:
-    static SurfaceInterfacePrivate *get(SurfaceInterface *surface) { return surface->d.data(); }
+    static SurfaceInterfacePrivate *get(SurfaceInterface *surface)
+    {
+        return surface->d.data();
+    }
 
     explicit SurfaceInterfacePrivate(SurfaceInterface *q);
     ~SurfaceInterfacePrivate() override;
@@ -113,10 +114,10 @@ public:
 
     LockedPointerV1Interface *lockedPointer = nullptr;
     ConfinedPointerV1Interface *confinedPointer = nullptr;
-    QHash<OutputInterface*, QMetaObject::Connection> outputDestroyedConnections;
-    QHash<OutputInterface*, QMetaObject::Connection> outputBoundConnections;
+    QHash<OutputInterface *, QMetaObject::Connection> outputDestroyedConnections;
+    QHash<OutputInterface *, QMetaObject::Connection> outputBoundConnections;
 
-    QVector<IdleInhibitorV1Interface*> idleInhibitors;
+    QVector<IdleInhibitorV1Interface *> idleInhibitors;
     ViewportInterface *viewportExtension = nullptr;
     SurfaceInterface *dataProxy = nullptr;
     ClientConnection *client = nullptr;

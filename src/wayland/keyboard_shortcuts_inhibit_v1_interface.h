@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
-#include <QObject>
 #include "seat_interface.h"
 #include "surface_interface.h"
+#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 namespace KWaylandServer
 {
@@ -24,7 +24,6 @@ class KeyboardShortcutsInhibitManagerV1Interface;
 class KeyboardShortcutsInhibitorV1InterfacePrivate;
 class KeyboardShortcutsInhibitManagerV1InterfacePrivate;
 
-
 class KWAYLANDSERVER_EXPORT KeyboardShortcutsInhibitorV1Interface : public QObject
 {
     Q_OBJECT
@@ -36,9 +35,13 @@ public:
     SeatInterface *seat() const;
     void setActive(bool active);
     bool isActive() const;
+
 private:
     friend class KeyboardShortcutsInhibitManagerV1InterfacePrivate;
-    explicit KeyboardShortcutsInhibitorV1Interface(SurfaceInterface *surface, SeatInterface *seat, KeyboardShortcutsInhibitManagerV1Interface *manager, wl_resource *resource);
+    explicit KeyboardShortcutsInhibitorV1Interface(SurfaceInterface *surface,
+                                                   SeatInterface *seat,
+                                                   KeyboardShortcutsInhibitManagerV1Interface *manager,
+                                                   wl_resource *resource);
     QScopedPointer<KeyboardShortcutsInhibitorV1InterfacePrivate> d;
 };
 

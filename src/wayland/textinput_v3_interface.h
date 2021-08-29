@@ -8,13 +8,12 @@
 
 #include <QObject>
 
-#include <KWaylandServer/kwaylandserver_export.h>
 #include "textinput.h"
+#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_resource;
 namespace KWaylandServer
 {
-
 class Display;
 class SeatInterface;
 class SurfaceInterface;
@@ -120,7 +119,7 @@ public:
      * @see commit
      */
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength);
-    
+
     /**
      * Send preEditString to the client
      *
@@ -129,7 +128,7 @@ public:
      * @param cursorEnd
      */
     void sendPreEditString(const QString &text, quint32 cursorBegin, quint32 cursorEnd);
-    
+
     /**
      * Notify when @p text should be inserted into the editor widget.
      * The text to commit could be either just a single character after a key press or the
@@ -143,13 +142,12 @@ public:
      * @see deleteSurroundingText
      */
     void commitString(const QString &text);
-    
+
     /**
      * Notify when changes and state requested by sendPreEditString, commitString and deleteSurroundingText
      * should be applied.
      */
     void done();
-
 
 Q_SIGNALS:
 

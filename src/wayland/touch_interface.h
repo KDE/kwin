@@ -13,7 +13,6 @@
 
 namespace KWaylandServer
 {
-
 class SeatInterface;
 class SurfaceInterface;
 class TouchInterfacePrivate;

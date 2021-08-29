@@ -13,7 +13,6 @@ static const int s_version = 1;
 
 namespace KWaylandServer
 {
-
 class ViewporterInterfacePrivate : public QtWaylandServer::wp_viewporter
 {
 protected:
@@ -32,13 +31,11 @@ void ViewporterInterfacePrivate::wp_viewporter_get_viewport(Resource *resource, 
     ViewportInterface *viewport = ViewportInterface::get(surface);
 
     if (viewport) {
-        wl_resource_post_error(resource->handle, error_viewport_exists,
-                               "the specified surface already has a viewport");
+        wl_resource_post_error(resource->handle, error_viewport_exists, "the specified surface already has a viewport");
         return;
     }
 
-    wl_resource *viewportResource = wl_resource_create(resource->client(), &wp_viewport_interface,
-                                                       resource->version(), id);
+    wl_resource *viewportResource = wl_resource_create(resource->client(), &wp_viewport_interface, resource->version(), id);
 
     new ViewportInterface(surface, viewportResource);
 }
@@ -86,8 +83,7 @@ void ViewportInterface::wp_viewport_destroy(Resource *resource)
 void ViewportInterface::wp_viewport_set_source(Resource *resource, wl_fixed_t x_fixed, wl_fixed_t y_fixed, wl_fixed_t width_fixed, wl_fixed_t height_fixed)
 {
     if (!surface) {
-        wl_resource_post_error(resource->handle, error_no_surface,
-                               "the wl_surface for this viewport no longer exists");
+        wl_resource_post_error(resource->handle, error_no_surface, "the wl_surface for this viewport no longer exists");
         return;
     }
 
@@ -116,8 +112,7 @@ void ViewportInterface::wp_viewport_set_source(Resource *resource, wl_fixed_t x_
 void ViewportInterface::wp_viewport_set_destination(Resource *resource, int32_t width, int32_t height)
 {
     if (!surface) {
-        wl_resource_post_error(resource->handle, error_no_surface,
-                               "the wl_surface for this viewport no longer exists");
+        wl_resource_post_error(resource->handle, error_no_surface, "the wl_surface for this viewport no longer exists");
         return;
     }
 

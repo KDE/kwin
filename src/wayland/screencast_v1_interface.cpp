@@ -14,7 +14,6 @@
 
 namespace KWaylandServer
 {
-
 static int s_version = 1;
 
 class ScreencastStreamV1InterfacePrivate : public QtWaylandServer::zkde_screencast_stream_unstable_v1
@@ -22,7 +21,8 @@ class ScreencastStreamV1InterfacePrivate : public QtWaylandServer::zkde_screenca
 public:
     ScreencastStreamV1InterfacePrivate(ScreencastStreamV1Interface *q)
         : q(q)
-    {}
+    {
+    }
 
     void zkde_screencast_stream_unstable_v1_destroy_resource(Resource *resource) override
     {

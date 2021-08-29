@@ -17,7 +17,6 @@ struct wl_resource;
 
 namespace KWaylandServer
 {
-
 class Display;
 class OutputDeviceInterfacePrivate;
 
@@ -95,11 +94,7 @@ public:
     };
     Q_ENUM(Capability)
     Q_DECLARE_FLAGS(Capabilities, Capability)
-    enum class VrrPolicy {
-        Never = 0,
-        Always = 1,
-        Automatic = 2
-    };
+    enum class VrrPolicy { Never = 0, Always = 1, Automatic = 2 };
     Q_ENUM(VrrPolicy)
 
     explicit OutputDeviceInterface(Display *display, QObject *parent = nullptr);
@@ -166,16 +161,16 @@ public:
     void setVrrPolicy(VrrPolicy policy);
 
     static OutputDeviceInterface *get(wl_resource *native);
-    static QList<OutputDeviceInterface *>list();
+    static QList<OutputDeviceInterface *> list();
 
 Q_SIGNALS:
-    void physicalSizeChanged(const QSize&);
-    void globalPositionChanged(const QPoint&);
-    void manufacturerChanged(const QString&);
-    void modelChanged(const QString&);
-    void serialNumberChanged(const QString&);
+    void physicalSizeChanged(const QSize &);
+    void globalPositionChanged(const QPoint &);
+    void manufacturerChanged(const QString &);
+    void modelChanged(const QString &);
+    void serialNumberChanged(const QString &);
     void eisaIdChanged(const QString &);
-    void pixelSizeChanged(const QSize&);
+    void pixelSizeChanged(const QSize &);
     void refreshRateChanged(int);
 
     void scaleFChanged(qreal);
