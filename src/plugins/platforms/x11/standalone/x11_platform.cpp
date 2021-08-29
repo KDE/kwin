@@ -231,9 +231,10 @@ bool X11StandalonePlatform::compositingPossible() const
     KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
     const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") &&
-        gl_workaround_group.readEntry(unsafeKey, false))
+        gl_workaround_group.readEntry(unsafeKey, false)) {
+        qCDebug(KWIN_X11STANDALONE) << "kwinrc :: [Compositing] :: " << unsafeKey  << " is true";
         return false;
-
+    }
 
     if (!Xcb::Extensions::self()->isCompositeAvailable()) {
         qCDebug(KWIN_X11STANDALONE) << "No composite extension available";
