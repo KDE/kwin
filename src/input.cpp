@@ -1923,6 +1923,20 @@ public:
             const auto eventPos = event->globalPos();
             // TODO: use InputDeviceHandler::at() here and check isClient()?
             Toplevel *t = input()->findManagedToplevel(eventPos);
+            const auto dragTarget = qobject_cast<AbstractClient*>(t);
+            if (dragTarget) {
+                if (dragTarget != m_dragTarget) {
+                    workspace()->takeActivity(dragTarget, Workspace::ActivityFlag::ActivityFocus);
+                    m_raiseTimer.start();
+                }
+                if ((pos - m_lastPos).manhattanLength() > 10) {
+                    m_lastPos = pos;
+                    // reset timer to delay raising the window
+                    m_raiseTimer.start();
+                }
+            }
+            m_dragTarget = dragTarget;
+
             if (auto *xwl = xwayland()) {
                 const auto ret = xwl->dragMoveFilter(t, eventPos);
                 if (ret == Xwl::DragEventReply::Ignore) {
@@ -1935,16 +1949,7 @@ public:
             if (t) {
                 // TODO: consider decorations
                 if (t->surface() != seat->dragSurface()) {
-                    if ((m_dragTarget = qobject_cast<AbstractClient*>(t))) {
-                        workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
-                        m_raiseTimer.start();
-                    }
                     seat->setDragTarget(t->surface(), t->inputTransformation());
-                }
-                if ((pos - m_lastPos).manhattanLength() > 10) {
-                    m_lastPos = pos;
-                    // reset timer to delay raising the window
-                    m_raiseTimer.start();
                 }
             } else {
                 // no window at that place, if we have a surface we need to reset
@@ -1959,6 +1964,7 @@ public:
             break;
         case QEvent::MouseButtonRelease:
             raiseDragTarget();
+            m_dragTarget = nullptr;
             seat->notifyPointerButton(nativeButton, KWaylandServer::PointerButtonState::Released);
             seat->notifyPointerFrame();
             break;

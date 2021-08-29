@@ -59,7 +59,6 @@ DragEventReply WlToXDrag::moveFilter(Toplevel *target, const QPoint &pos)
         return DragEventReply::Wayland;
     }
     // new target
-    workspace()->activateClient(ac, false);
     seat->setDragTarget(DataBridge::self()->dnd()->surfaceIface(), pos, ac->inputTransformation());
     m_visit = new Xvisit(this, ac);
     return DragEventReply::Take;

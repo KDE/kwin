@@ -160,11 +160,6 @@ DragEventReply XToWlDrag::moveFilter(Toplevel *target, const QPoint &pos)
             target->surface()->client() == waylandServer()->xWaylandConnection()) {
         // currently there is no target or target is an Xwayland window
         // handled here and by X directly
-        if (AbstractClient *ac = qobject_cast<AbstractClient*>(target)) {
-            if (workspace()->activeClient() != ac) {
-                workspace()->activateClient(ac);
-            }
-        }
         if (hasCurrent) {
             // last received enter event is now void,
             // wait for the next one
@@ -246,7 +241,6 @@ void XToWlDrag::offerCallback(const QString &mime)
 void XToWlDrag::setDragTarget()
 {
     auto *ac = m_visit->target();
-    workspace()->activateClient(ac);
     waylandServer()->seat()->setDragTarget(ac->surface(), ac->inputTransformation());
 }
 
