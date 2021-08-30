@@ -100,13 +100,12 @@ QSharedPointer<GLTexture> EglMultiBackend::textureForOutput(AbstractOutput *requ
 
 AbstractEglDrmBackend *EglMultiBackend::findBackend(AbstractOutput *output) const
 {
-    for (const auto &backend : qAsConst(m_backends)) {
-        if (backend->hasOutput(output)) {
-            return backend;
+    for (int i = 1; i < m_backends.count(); i++) {
+        if (m_backends[i]->hasOutput(output)) {
+            return m_backends[i];
         }
     }
-    Q_UNREACHABLE();
-    return nullptr;
+    return m_backends[0];
 }
 
 bool EglMultiBackend::directScanoutAllowed(AbstractOutput *output) const
