@@ -4617,7 +4617,7 @@ NETExtendedStrut X11Client::strut() const
 {
     NETExtendedStrut ext = info->extendedStrut();
     NETStrut str = info->strut();
-    const QSize displaySize = screens()->displaySize();
+    const QSize displaySize = workspace()->geometry().size();
     if (ext.left_width == 0 && ext.right_width == 0 && ext.top_width == 0 && ext.bottom_width == 0
             && (str.left != 0 || str.right != 0 || str.top != 0 || str.bottom != 0)) {
         // build extended from simple
@@ -4648,7 +4648,7 @@ NETExtendedStrut X11Client::strut() const
 StrutRect X11Client::strutRect(StrutArea area) const
 {
     Q_ASSERT(area != StrutAreaAll);   // Not valid
-    const QSize displaySize = screens()->displaySize();
+    const QSize displaySize = workspace()->geometry().size();
     NETExtendedStrut strutArea = strut();
     switch(area) {
     case StrutAreaTop:

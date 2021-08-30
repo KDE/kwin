@@ -1607,13 +1607,13 @@ void Workspace::switchWindow(Direction direction)
         auto opposite = [&] {
             switch(direction) {
             case DirectionNorth:
-                return QPoint(curPos.x(), screens()->geometry().height());
+                return QPoint(curPos.x(), geometry().height());
             case DirectionSouth:
                 return QPoint(curPos.x(), 0);
             case DirectionEast:
                 return QPoint(0, curPos.y());
             case DirectionWest:
-                return QPoint(screens()->geometry().width(), curPos.y());
+                return QPoint(geometry().width(), curPos.y());
             default:
                 Q_UNREACHABLE();
             }

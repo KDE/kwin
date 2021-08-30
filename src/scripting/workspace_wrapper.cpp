@@ -237,7 +237,7 @@ QSize WorkspaceWrapper::workspaceSize() const
 
 QSize WorkspaceWrapper::displaySize() const
 {
-    return screens()->displaySize();
+    return workspace()->geometry().size();
 }
 
 int WorkspaceWrapper::displayWidth() const
@@ -368,12 +368,12 @@ int WorkspaceWrapper::activeScreen() const
 
 QRect WorkspaceWrapper::virtualScreenGeometry() const
 {
-    return screens()->geometry();
+    return workspace()->geometry();
 }
 
 QSize WorkspaceWrapper::virtualScreenSize() const
 {
-    return screens()->size();
+    return workspace()->geometry().size();
 }
 
 void WorkspaceWrapper::sendClientToScreen(AbstractClient *client, int screen)

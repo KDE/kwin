@@ -157,7 +157,7 @@ void PointerInputRedirection::init()
     connect(workspace(), &Workspace::clientAdded, this, setupMoveResizeConnection);
 
     // warp the cursor to center of screen
-    warp(screens()->geometry().center());
+    warp(workspace()->geometry().center());
     updateAfterScreenChange();
 }
 
@@ -811,7 +811,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
     // verify that at least one screen contains the pointer position
     QPointF p = pos;
     if (!screenContainsPos(p)) {
-        const QRectF unitedScreensGeometry = screens()->geometry();
+        const QRectF unitedScreensGeometry = workspace()->geometry();
         p = confineToBoundingBox(p, unitedScreensGeometry);
         if (!screenContainsPos(p)) {
             const AbstractOutput *currentOutput = kwinApp()->platform()->outputAt(m_pos.toPoint());

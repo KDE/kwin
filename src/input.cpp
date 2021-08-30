@@ -974,7 +974,7 @@ class InternalWindowEventFilter : public InputEventFilter {
                 if (!w->isVisible()) {
                     continue;
                 }
-                if (!screens()->geometry().contains(w->geometry())) {
+                if (!workspace()->geometry().contains(w->geometry())) {
                     continue;
                 }
                 if (w->property("_q_showWithoutActivating").toBool()) {
