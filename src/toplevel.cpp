@@ -415,11 +415,6 @@ qreal Toplevel::bufferScale() const
     return surface() ? surface()->bufferScale() : 1;
 }
 
-bool Toplevel::isOnScreen(int screen) const
-{
-    return screens()->geometry(screen).intersects(frameGeometry());
-}
-
 bool Toplevel::isOnActiveOutput() const
 {
     return isOnOutput(workspace()->activeOutput());
