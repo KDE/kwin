@@ -349,8 +349,9 @@ void DrmBackend::removeOutput(DrmAbstractOutput *o)
         // placeholder doesn't actually need to render anything
         m_placeHolderOutput->renderLoop()->inhibit();
     }
-    if (m_enabledOutputs.removeOne(o)) {
+    if (m_enabledOutputs.contains(o)) {
         Q_EMIT outputDisabled(o);
+        m_enabledOutputs.removeOne(o);
     }
     m_outputs.removeOne(o);
     Q_EMIT outputRemoved(o);
