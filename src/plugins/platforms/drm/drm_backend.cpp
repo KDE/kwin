@@ -334,10 +334,21 @@ void DrmBackend::addOutput(DrmAbstractOutput *o)
     m_enabledOutputs.append(o);
     Q_EMIT outputAdded(o);
     Q_EMIT outputEnabled(o);
+    if (m_placeHolderOutput) {
+        qCDebug(KWIN_DRM) << "removing placeholder output";
+        primaryGpu()->removeVirtualOutput(m_placeHolderOutput);
+        m_placeHolderOutput = nullptr;
+    }
 }
 
 void DrmBackend::removeOutput(DrmAbstractOutput *o)
 {
+    if (m_outputs.count() == 1 && !kwinApp()->isTerminating()) {
+        qCDebug(KWIN_DRM) << "adding placeholder output";
+        m_placeHolderOutput = primaryGpu()->createVirtualOutput();
+        // placeholder doesn't actually need to render anything
+        m_placeHolderOutput->renderLoop()->inhibit();
+    }
     if (m_enabledOutputs.removeOne(o)) {
         Q_EMIT outputDisabled(o);
     }
@@ -366,10 +377,6 @@ void DrmBackend::updateOutputs()
         m_placeHolderOutput = primaryGpu()->createVirtualOutput();
         // placeholder doesn't actually need to render anything
         m_placeHolderOutput->renderLoop()->inhibit();
-    } else if (m_placeHolderOutput && m_outputs.count() > 1) {
-        qCDebug(KWIN_DRM) << "removing placeholder output";
-        primaryGpu()->removeVirtualOutput(m_placeHolderOutput);
-        m_placeHolderOutput = nullptr;
     }
 
     std::sort(m_outputs.begin(), m_outputs.end(), [] (DrmAbstractOutput *a, DrmAbstractOutput *b) {

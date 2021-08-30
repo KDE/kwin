@@ -38,7 +38,6 @@ class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
     Q_OBJECT
 public:
-    ///deletes the output, calling this whilst a page flip is pending will result in an error
     ~DrmOutput() override;
 
     bool initCursor(const QSize &cursorSize) override;
