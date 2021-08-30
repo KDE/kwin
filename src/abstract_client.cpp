@@ -9,6 +9,7 @@
 */
 #include "abstract_client.h"
 
+#include "abstract_output.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -3149,38 +3150,42 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen if it exists, otherwise toggle the mode (set QuickTileFlag::None)
         if (quickTileMode() == mode) {
-            const int numScreens = screens()->count();
-            const int curScreen = screen();
-            int nextScreen = curScreen;
-            QVarLengthArray<QRect> screens(numScreens);
-            for (int i = 0; i < numScreens; ++i)   // Cache
-                screens[i] = Screens::self()->geometry(i);
-            for (int i = 0; i < numScreens; ++i) {
+            const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+            const AbstractOutput *currentOutput = output();
+            const AbstractOutput *nextOutput = currentOutput;
 
-                if (i == curScreen)
+            for (const AbstractOutput *output : outputs) {
+                if (output == currentOutput) {
                     continue;
-
-                if (screens[i].bottom() <= screens[curScreen].top() || screens[i].top() >= screens[curScreen].bottom())
-                    continue; // not in horizontal line
-
-                const int x = screens[i].center().x();
-                if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Left)) {
-                    if (x >= screens[curScreen].center().x() || (curScreen != nextScreen && x <= screens[nextScreen].center().x()))
-                        continue; // not left of current or more left then found next
-                } else if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Right)) {
-                    if (x <= screens[curScreen].center().x() || (curScreen != nextScreen && x >= screens[nextScreen].center().x()))
-                        continue; // not right of current or more right then found next
                 }
 
-                nextScreen = i;
+                if (output->geometry().bottom() <= currentOutput->geometry().top()
+                    || output->geometry().top() >= currentOutput->geometry().bottom()) {
+                    continue; // not in horizontal line
+                }
+
+                const int x = output->geometry().center().x();
+                if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Left)) {
+                    if (x >= currentOutput->geometry().center().x()
+                        || (currentOutput != nextOutput && x <= nextOutput->geometry().center().x())) {
+                        continue; // not left of current or more left then found next
+                    }
+                } else if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Right)) {
+                    if (x <= currentOutput->geometry().center().x()
+                        || (currentOutput != nextOutput && x >= nextOutput->geometry().center().x())) {
+                        continue; // not right of current or more right then found next
+                    }
+                }
+
+                nextOutput = output;
             }
 
-            if (nextScreen == curScreen) {
+            if (nextOutput == currentOutput) {
                 mode = QuickTileFlag::None; // No other screens, toggle tiling
             } else {
                 // Move to other screen
-                moveResize(geometryRestore().translated(screens[nextScreen].topLeft() - screens[curScreen].topLeft()));
-                whichScreen = screens[nextScreen].center();
+                moveResize(geometryRestore().translated(nextOutput->geometry().topLeft() - currentOutput->geometry().topLeft()));
+                whichScreen = nextOutput->geometry().center();
 
                 // Swap sides
                 if (mode & QuickTileFlag::Horizontal) {
