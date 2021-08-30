@@ -10,6 +10,7 @@
 #include "abstract_client.h"
 
 #include "abstract_output.h"
+#include "abstract_wayland_output.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -32,6 +33,7 @@
 
 #include "wayland_server.h"
 #include <KWaylandServer/plasmawindowmanagement_interface.h>
+#include <KWaylandServer/output_interface.h>
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
@@ -1690,6 +1692,11 @@ void AbstractClient::setupWindowManagementInterface()
     connect(w, &PlasmaWindowInterface::leavePlasmaActivityRequested, this,
         [this] (const QString &activityId) {
             setOnActivity(activityId, false);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::sendToOutput, this,
+        [this] (KWaylandServer::OutputInterface *output) {
+            sendToOutput(waylandServer()->findOutput(output));
         }
     );
 
