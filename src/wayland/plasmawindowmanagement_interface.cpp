@@ -108,6 +108,7 @@ protected:
     void org_kde_plasma_window_request_leave_virtual_desktop(Resource *resource, const QString &id) override;
     void org_kde_plasma_window_request_enter_activity(Resource *resource, const QString &id) override;
     void org_kde_plasma_window_request_leave_activity(Resource *resource, const QString &id) override;
+    void org_kde_plasma_window_send_to_output(Resource *resource, struct wl_resource *output) override;
 };
 
 PlasmaWindowManagementInterfacePrivate::PlasmaWindowManagementInterfacePrivate(PlasmaWindowManagementInterface *_q, Display *display)
@@ -475,6 +476,12 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_leave_activity(
 {
     Q_UNUSED(resource)
     Q_EMIT q->leavePlasmaActivityRequested(id);
+}
+
+void PlasmaWindowInterfacePrivate::org_kde_plasma_window_send_to_output(Resource *resource, struct wl_resource *output)
+{
+    Q_UNUSED(resource)
+    Q_EMIT q->sendToOutput(KWaylandServer::OutputInterface::get(output));
 }
 
 void PlasmaWindowInterfacePrivate::setTitle(const QString &title)

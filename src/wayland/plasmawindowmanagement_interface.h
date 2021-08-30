@@ -14,6 +14,7 @@ class QSize;
 namespace KWaylandServer
 {
 class Display;
+class OutputInterface;
 class PlasmaWindowActivationFeedbackInterfacePrivate;
 class PlasmaWindowInterface;
 class PlasmaVirtualDesktopManagementInterface;
@@ -308,6 +309,11 @@ Q_SIGNALS:
      * The server will decide whether to consent this request
      */
     void leavePlasmaActivityRequested(const QString &activity);
+
+    /**
+     * Requests sending the window to @p output
+     */
+    void sendToOutput(KWaylandServer::OutputInterface *output);
 
 private:
     friend class PlasmaWindowManagementInterface;
