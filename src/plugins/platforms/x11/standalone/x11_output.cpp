@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_output.h"
-#include "kwinglobals.h"
+#include "main.h"
 
 namespace KWin
 {
@@ -57,7 +57,7 @@ bool X11Output::setGammaRamp(const GammaRamp &gamma)
         return false;
     }
 
-    xcb_randr_set_crtc_gamma(connection(), m_crtc, gamma.size(), gamma.red(),
+    xcb_randr_set_crtc_gamma(kwinApp()->x11Connection(), m_crtc, gamma.size(), gamma.red(),
         gamma.green(), gamma.blue());
 
     return true;
