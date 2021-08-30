@@ -2062,11 +2062,17 @@ void Workspace::checkTransients(xcb_window_t w)
  */
 void Workspace::desktopResized()
 {
-    QRect geom = screens()->geometry();
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+
+    m_geometry = QRect();
+    for (const AbstractOutput *output : outputs) {
+        m_geometry = m_geometry.united(output->geometry());
+    }
+
     if (rootInfo()) {
         NETSize desktop_geometry;
-        desktop_geometry.width = geom.width();
-        desktop_geometry.height = geom.height();
+        desktop_geometry.width = m_geometry.width();
+        desktop_geometry.height = m_geometry.height();
         rootInfo()->setDesktopGeometry(desktop_geometry);
     }
 
@@ -2079,7 +2085,7 @@ void Workspace::desktopResized()
 
 void Workspace::saveOldScreenSizes()
 {
-    olddisplaysize = screens()->displaySize();
+    olddisplaysize = m_geometry.size();
     oldscreensizes.clear();
     for( int i = 0;
          i < screens()->count();
@@ -2122,7 +2128,7 @@ QRect Workspace::adjustClientArea(AbstractClient *client, const QRect &area) con
     // HACK: workarea handling is not xinerama aware, so if this strut
     // reserves place at a xinerama edge that's inside the virtual screen,
     // ignore the strut for workspace setting.
-    if (area == QRect(QPoint(0, 0), screens()->displaySize())) {
+    if (area == QRect(QPoint(0, 0), m_geometry.size())) {
         if (strutLeft.left() < screenArea.left()) {
             strutLeft = QRect();
         }
@@ -2179,13 +2185,8 @@ void Workspace::updateClientArea()
     QHash<const VirtualDesktop *, StrutRects> restrictedAreas;
     QHash<const VirtualDesktop *, QHash<const AbstractOutput *, QRect>> screenAreas;
 
-    QRect desktopArea;
-    for (const AbstractOutput *output : outputs) {
-        desktopArea |= output->geometry();
-    }
-
     for (const VirtualDesktop *desktop : desktops) {
-        workAreas[desktop] = desktopArea;
+        workAreas[desktop] = m_geometry;
 
         for (const AbstractOutput *output : outputs) {
             screenAreas[desktop][output] = output->geometry();
@@ -2196,7 +2197,7 @@ void Workspace::updateClientArea()
         if (!client->hasStrut()) {
             continue;
         }
-        QRect r = adjustClientArea(client, desktopArea);
+        QRect r = adjustClientArea(client, m_geometry);
 
         // This happens sometimes when the workspace size changes and the
         // struted clients haven't repositioned yet
@@ -2208,7 +2209,7 @@ void Workspace::updateClientArea()
         for (const AbstractOutput *output : outputs) {
             if (!r.intersects(output->geometry())) {
                 qCDebug(KWIN_CORE) << "Adjusted client area would exclude a complete screen, ignore";
-                r = desktopArea;
+                r = m_geometry;
                 break;
             }
         }
@@ -2278,7 +2279,6 @@ void Workspace::updateClientArea()
  */
 QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, const VirtualDesktop *desktop) const
 {
-    const QSize displaySize = screens()->displaySize();
     QRect workArea;
 
     const AbstractOutput *effectiveOutput = output;
@@ -2299,7 +2299,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, 
     } else {
         workArea = m_workAreas[desktop];
         if (workArea.isNull()) {
-            workArea = QRect(0, 0, displaySize.width(), displaySize.height());
+            workArea = QRect(QPoint(0, 0), m_geometry.size());
         }
     }
 
@@ -2318,7 +2318,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, 
         else
             return workArea;
     case FullArea:
-        return QRect(0, 0, displaySize.width(), displaySize.height());
+        return QRect(QPoint(0, 0), m_geometry.size());
 
     default:
         Q_UNREACHABLE();
@@ -2361,6 +2361,11 @@ QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const QPoint &pos) const
 {
     return clientArea(opt, screens()->number(pos), window->desktop());
+}
+
+QRect Workspace::geometry() const
+{
+    return m_geometry;
 }
 
 static QRegion strutsToRegion(StrutAreas areas, const StrutRects &strut)

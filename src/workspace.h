@@ -146,6 +146,10 @@ public:
     QRect clientArea(clientAreaOption, const Toplevel *window, const QPoint &pos) const;
     QRect clientArea(clientAreaOption, int screen, int desktop) const;
 
+    /**
+     * Returns the geometry of this Workspace, i.e. the bounding rectangle of all outputs.
+     */
+    QRect geometry() const;
     QRegion restrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
 
     bool initializing() const;
@@ -656,6 +660,7 @@ private:
     QHash<const VirtualDesktop *, QRect> m_workAreas;
     QHash<const VirtualDesktop *, StrutRects> m_restrictedAreas;
     QHash<const VirtualDesktop *, QHash<const AbstractOutput *, QRect>> m_screenAreas;
+    QRect m_geometry;
 
     QVector< QRect > oldscreensizes; // array of previous sizes of xinerama screens
     QSize olddisplaysize; // previous sizes od displayWidth()/displayHeight()
