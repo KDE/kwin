@@ -2205,8 +2205,8 @@ void Workspace::updateClientArea()
         }
         // sanity check that a strut doesn't exclude a complete screen geometry
         // this is a violation to EWMH, as KWin just ignores the strut
-        for (int i = 0; i < Screens::self()->count(); i++) {
-            if (!r.intersects(Screens::self()->geometry(i))) {
+        for (const AbstractOutput *output : outputs) {
+            if (!r.intersects(output->geometry())) {
                 qCDebug(KWIN_CORE) << "Adjusted client area would exclude a complete screen, ignore";
                 r = desktopArea;
                 break;
