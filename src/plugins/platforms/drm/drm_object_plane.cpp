@@ -73,7 +73,7 @@ bool DrmPlane::init()
         checkSupport(5, Transformation::ReflectY);
 
         // read formats from blob if available and if modifiers are supported, and from the plane object if not
-        if (auto formatProp = getProp(PropertyIndex::In_Formats); formatProp && qEnvironmentVariableIsSet("KWIN_DRM_NO_MODIFIERS") && gpu()->addFB2ModifiersSupported()) {
+        if (auto formatProp = getProp(PropertyIndex::In_Formats); formatProp && gpu()->addFB2ModifiersSupported() && qEnvironmentVariableIntValue("KWIN_DRM_NO_MODIFIERS") == 0) {
             auto blob = static_cast<drm_format_modifier_blob*>(formatProp->currentBlob()->data);
             auto modifiers = reinterpret_cast<drm_format_modifier*>(reinterpret_cast<uint8_t*>(blob) + blob->modifiers_offset);
             uint32_t *formatarr = reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(blob) + blob->formats_offset);
