@@ -1212,14 +1212,18 @@ void Workspace::slotOutputEnabled(AbstractOutput *output)
 
 void Workspace::slotOutputDisabled(AbstractOutput *output)
 {
+    const auto next = nextOutput(output);
     if (m_activeOutput == output) {
-        m_activeOutput = kwinApp()->platform()->outputAt(output->geometry().center());
+        m_activeOutput = next;
     }
 
     const auto stack = xStackingOrder();
     for (Toplevel *toplevel : stack) {
         if (toplevel->output() == output) {
-            toplevel->setOutput(kwinApp()->platform()->outputAt(toplevel->frameGeometry().center()));
+            if (auto ac = qobject_cast<AbstractClient*>(toplevel)) {
+                ac->sendToOutput(next);
+            }
+            toplevel->setOutput(next);
         }
     }
 
