@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_output.h"
-#include "screens.h"
+#include "kwinglobals.h"
 
 namespace KWin
 {
@@ -25,10 +25,7 @@ QString X11Output::name() const
 
 QRect X11Output::geometry() const
 {
-    if (m_geometry.isValid()) {
-        return m_geometry;
-    }
-    return QRect(QPoint(0, 0), Screens::self()->displaySize()); // xinerama, lacks RandR
+    return m_geometry;
 }
 
 void X11Output::setGeometry(QRect set)
