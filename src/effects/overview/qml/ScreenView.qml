@@ -125,8 +125,5 @@ FocusScope {
         id: stackModel
     }
 
-    Component.onCompleted: {
-        // Delay starting the effect to let the window heap arrange thumbnails.
-        Qt.callLater(container.start);
-    }
+    Component.onCompleted: start();
 }

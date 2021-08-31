@@ -9,7 +9,6 @@
 #include <QObject>
 #include <QQuickItem>
 #include <QRect>
-#include <QTimer>
 
 #include <optional>
 
@@ -21,6 +20,7 @@ class ExpoLayout : public QQuickItem
     Q_PROPERTY(LayoutMode mode READ mode WRITE setMode NOTIFY modeChanged)
     Q_PROPERTY(bool fillGaps READ fillGaps WRITE setFillGaps NOTIFY fillGapsChanged)
     Q_PROPERTY(int spacing READ spacing WRITE setSpacing NOTIFY spacingChanged)
+    Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
 
 public:
     enum LayoutMode : uint {
@@ -44,17 +44,18 @@ public:
     void addCell(ExpoCell *cell);
     void removeCell(ExpoCell *cell);
 
+    bool isReady() const;
+    void setReady();
+
 protected:
     void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;
-
-public Q_SLOTS:
-    void update();
-    void scheduleUpdate();
+    void updatePolish() override;
 
 Q_SIGNALS:
     void modeChanged();
     void fillGapsChanged();
     void spacingChanged();
+    void readyChanged();
 
 private:
     void calculateWindowTransformationsClosest();
@@ -63,9 +64,9 @@ private:
 
     QList<ExpoCell *> m_cells;
     LayoutMode m_mode = LayoutNatural;
-    QTimer m_updateTimer;
     int m_accuracy = 20;
     int m_spacing = 10;
+    bool m_ready = false;
     bool m_fillGaps = false;
 };
 

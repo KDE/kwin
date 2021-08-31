@@ -45,7 +45,7 @@ void ExpoCell::setLayout(ExpoLayout *layout)
 void ExpoCell::update()
 {
     if (m_layout) {
-        m_layout->scheduleUpdate();
+        m_layout->polish();
     }
 }
 
@@ -199,8 +199,6 @@ void ExpoCell::setPersistentKey(const QString &key)
 ExpoLayout::ExpoLayout(QQuickItem *parent)
     : QQuickItem(parent)
 {
-    m_updateTimer.setSingleShot(true);
-    connect(&m_updateTimer, &QTimer::timeout, this, &ExpoLayout::update);
 }
 
 ExpoLayout::LayoutMode ExpoLayout::mode() const
@@ -212,7 +210,7 @@ void ExpoLayout::setMode(LayoutMode mode)
 {
     if (m_mode != mode) {
         m_mode = mode;
-        scheduleUpdate();
+        polish();
         Q_EMIT modeChanged();
     }
 }
@@ -226,7 +224,7 @@ void ExpoLayout::setFillGaps(bool fill)
 {
     if (m_fillGaps != fill) {
         m_fillGaps = fill;
-        scheduleUpdate();
+        polish();
         Q_EMIT fillGapsChanged();
     }
 }
@@ -240,51 +238,60 @@ void ExpoLayout::setSpacing(int spacing)
 {
     if (m_spacing != spacing) {
         m_spacing = spacing;
-        scheduleUpdate();
+        polish();
         Q_EMIT spacingChanged();
     }
 }
 
-void ExpoLayout::update()
+bool ExpoLayout::isReady() const
 {
-    if (m_cells.isEmpty()) {
-        return;
-    }
-    switch (m_mode) {
-    case LayoutClosest:
-        calculateWindowTransformationsClosest();
-        break;
-    case LayoutKompose:
-        calculateWindowTransformationsKompose();
-        break;
-    case LayoutNatural:
-        calculateWindowTransformationsNatural();
-        break;
+    return m_ready;
+}
+
+void ExpoLayout::setReady()
+{
+    if (!m_ready) {
+        m_ready = true;
+        Q_EMIT readyChanged();
     }
 }
 
-void ExpoLayout::scheduleUpdate()
+void ExpoLayout::updatePolish()
 {
-    m_updateTimer.start();
+    if (!m_cells.isEmpty()) {
+        switch (m_mode) {
+        case LayoutClosest:
+            calculateWindowTransformationsClosest();
+            break;
+        case LayoutKompose:
+            calculateWindowTransformationsKompose();
+            break;
+        case LayoutNatural:
+            calculateWindowTransformationsNatural();
+            break;
+        }
+    }
+
+    setReady();
 }
 
 void ExpoLayout::addCell(ExpoCell *cell)
 {
     Q_ASSERT(!m_cells.contains(cell));
     m_cells.append(cell);
-    scheduleUpdate();
+    polish();
 }
 
 void ExpoLayout::removeCell(ExpoCell *cell)
 {
     m_cells.removeOne(cell);
-    scheduleUpdate();
+    polish();
 }
 
 void ExpoLayout::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
     if (newGeometry.size() != oldGeometry.size()) {
-        scheduleUpdate();
+        polish();
     }
     QQuickItem::geometryChanged(newGeometry, oldGeometry);
 }

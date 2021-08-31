@@ -27,6 +27,7 @@ FocusScope {
     property real padding: 0
 
     required property bool organized
+    readonly property bool effectiveOrganized: expoLayout.ready && organized
 
     ExpoLayout {
         id: expoLayout
@@ -50,7 +51,7 @@ FocusScope {
                 readonly property bool selected: heap.selectedIndex == index
 
                 state: {
-                    if (heap.organized) {
+                    if (heap.effectiveOrganized) {
                         return "active";
                     }
                     return client.minimized ? "initial-minimized" : "initial";
