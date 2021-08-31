@@ -369,7 +369,6 @@ FocusScope {
             selectLastItem(WindowHeap.Direction.Down);
             break;
         case Qt.Key_Return:
-        case Qt.Key_Escape:
         case Qt.Key_Space:
             let selectedItem = null;
             if (heap.selectedIndex != -1) {
