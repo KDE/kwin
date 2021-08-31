@@ -371,8 +371,23 @@ FocusScope {
         case Qt.Key_Return:
         case Qt.Key_Escape:
         case Qt.Key_Space:
+            let selectedItem = null;
             if (heap.selectedIndex != -1) {
-                const selectedItem = windowsRepeater.itemAt(heap.selectedIndex);
+                selectedItem = windowsRepeater.itemAt(heap.selectedIndex);
+            } else {
+                // If the window heap has only one visible window, activate it.
+                for (let i = 0; i < windowsRepeater.count; ++i) {
+                    const candidateItem = windowsRepeater.itemAt(i);
+                    if (candidateItem.hidden) {
+                        continue;
+                    } else if (selectedItem) {
+                        selectedItem = null;
+                        break;
+                    }
+                    selectedItem = candidateItem;
+                }
+            }
+            if (selectedItem) {
                 KWinComponents.Workspace.activeClient = selectedItem.client;
                 effect.deactivate();
             }
