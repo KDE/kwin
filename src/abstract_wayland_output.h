@@ -62,6 +62,7 @@ public:
         Dpms = 0x1,
         Overscan = 0x2,
         Vrr = 0x4,
+        RgbRange = 0x8,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -74,6 +75,13 @@ public:
         Vertical_BGR,
     };
     Q_ENUM(SubPixel)
+
+    enum class RgbRange {
+        Automatic = 0,
+        Full = 1,
+        Limited = 2,
+    };
+    Q_ENUM(RgbRange)
 
     explicit AbstractWaylandOutput(QObject *parent = nullptr);
 
@@ -143,6 +151,9 @@ public:
     void setVrrPolicy(RenderLoop::VrrPolicy policy);
     RenderLoop::VrrPolicy vrrPolicy() const;
 
+    virtual void setRgbRange(RgbRange range);
+    RgbRange rgbRange() const;
+
     bool isPlaceholder() const;
 
 Q_SIGNALS:
@@ -154,6 +165,7 @@ Q_SIGNALS:
     void capabilitiesChanged();
     void overscanChanged();
     void vrrPolicyChanged();
+    void rgbRangeChanged();
 
 protected:
     void initialize(const QString &model, const QString &manufacturer,
@@ -190,6 +202,7 @@ protected:
     void setSubPixelInternal(SubPixel subPixel);
     void setOverscanInternal(uint32_t overscan);
     void setPlaceholder(bool isPlaceholder);
+    void setRgbRangeInternal(RgbRange range);
 
     QSize orientateSize(const QSize &size) const;
 
@@ -216,6 +229,7 @@ private:
     bool m_internal = false;
     bool m_isPlaceholder = false;
     uint32_t m_overscan = 0;
+    RgbRange m_rgbRange = RgbRange::Automatic;
 };
 
 }

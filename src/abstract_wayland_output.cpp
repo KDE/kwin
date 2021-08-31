@@ -192,6 +192,10 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSetV2
         qCDebug(KWIN_CORE) << "Setting VRR Policy:" << changeSet->vrrPolicy();
         setVrrPolicy(static_cast<RenderLoop::VrrPolicy>(changeSet->vrrPolicy()));
     }
+    if (changeSet->rgbRangeChanged()) {
+        qDebug(KWIN_CORE) << "Setting rgb range:" << changeSet->rgbRange();
+        setRgbRange(static_cast<AbstractWaylandOutput::RgbRange>(changeSet->rgbRange()));
+    }
     Q_EMIT changed();
 
     overallSizeCheckNeeded |= emitModeChanged;
@@ -408,6 +412,24 @@ bool AbstractWaylandOutput::isPlaceholder() const
 void AbstractWaylandOutput::setPlaceholder(bool isPlaceholder)
 {
     m_isPlaceholder = isPlaceholder;
+}
+
+AbstractWaylandOutput::RgbRange AbstractWaylandOutput::rgbRange() const
+{
+    return m_rgbRange;
+}
+
+void AbstractWaylandOutput::setRgbRange(RgbRange range)
+{
+    Q_UNUSED(range)
+}
+
+void AbstractWaylandOutput::setRgbRangeInternal(RgbRange range)
+{
+    if (m_rgbRange != range) {
+        m_rgbRange = range;
+        Q_EMIT rgbRangeChanged();
+    }
 }
 
 }

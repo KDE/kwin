@@ -18,6 +18,7 @@
 
 #include "drm_object_plane.h"
 #include "renderloop_p.h"
+#include "abstract_wayland_output.h"
 
 namespace KWin
 {
@@ -61,6 +62,7 @@ public:
     bool moveCursor(QPoint pos);
     bool setSyncMode(RenderLoopPrivate::SyncMode syncMode);
     bool setOverscan(uint32_t overscan);
+    bool setRgbRange(AbstractWaylandOutput::RgbRange rgbRange);
 
     DrmPlane::Transformations transformation() const;
     bool isActive() const;

@@ -466,6 +466,17 @@ bool DrmPipeline::setOverscan(uint32_t overscan)
     return test();
 }
 
+bool DrmPipeline::setRgbRange(AbstractWaylandOutput::RgbRange rgbRange)
+{
+    const auto &prop = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB);
+    if (prop) {
+        prop->setEnum(rgbRange);
+        return test();
+    } else {
+        return false;
+    }
+}
+
 QSize DrmPipeline::sourceSize() const
 {
     auto mode = m_connector->currentMode();

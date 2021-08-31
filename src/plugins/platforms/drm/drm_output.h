@@ -77,6 +77,7 @@ private:
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
     void setOverscan(uint32_t overscan) override;
+    void setRgbRange(RgbRange range) override;
 
     DrmPipeline *m_pipeline;
 

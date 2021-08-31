@@ -32,6 +32,7 @@ private Q_SLOTS:
     void handleOverscanChanged();
     void handleVrrPolicyChanged();
     void handleModesChanged();
+    void handleRgbRangeChanged();
 
 private:
     void updateModes(AbstractWaylandOutput *output);

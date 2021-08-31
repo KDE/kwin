@@ -55,6 +55,10 @@ DrmOutput::DrmOutput(DrmGpu *gpu, DrmPipeline *pipeline)
         setCapabilityInternal(Capability::Vrr);
         setVrrPolicy(RenderLoop::VrrPolicy::Automatic);
     }
+    if (conn->hasRgbRange()) {
+        setCapabilityInternal(Capability::RgbRange);
+        setRgbRange(conn->rgbRange());
+    }
     initOutputDevice();
 
     m_turnOffTimer.setSingleShot(true);
@@ -446,6 +450,14 @@ bool DrmOutput::isFormatSupported(uint32_t drmFormat) const
 QVector<uint64_t> DrmOutput::supportedModifiers(uint32_t drmFormat) const
 {
     return m_pipeline->supportedModifiers(drmFormat);
+}
+
+void DrmOutput::setRgbRange(RgbRange range)
+{
+    if (m_pipeline->setRgbRange(range)) {
+        setRgbRangeInternal(range);
+        m_renderLoop->scheduleRepaint();
+    }
 }
 
 }

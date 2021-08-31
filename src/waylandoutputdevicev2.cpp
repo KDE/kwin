@@ -32,12 +32,20 @@ static KWaylandServer::OutputDeviceV2Interface::Capabilities kwinCapabilitiesToO
     if (caps & AbstractWaylandOutput::Capability::Vrr) {
         ret |= KWaylandServer::OutputDeviceV2Interface::Capability::Vrr;
     }
+    if (caps & AbstractWaylandOutput::Capability::RgbRange) {
+        ret |= KWaylandServer::OutputDeviceV2Interface::Capability::RgbRange;
+    }
     return ret;
 }
 
 static KWaylandServer::OutputDeviceV2Interface::VrrPolicy kwinVrrPolicyToOutputDeviceVrrPolicy(RenderLoop::VrrPolicy policy)
 {
     return static_cast<KWaylandServer::OutputDeviceV2Interface::VrrPolicy>(policy);
+}
+
+static KWaylandServer::OutputDeviceV2Interface::RgbRange kwinRgbRangeToOutputDeviceRgbRange(AbstractWaylandOutput::RgbRange range)
+{
+    return static_cast<KWaylandServer::OutputDeviceV2Interface::RgbRange>(range);
 }
 
 WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject *parent)
@@ -59,6 +67,7 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
     m_outputDeviceV2->setOverscan(output->overscan());
     m_outputDeviceV2->setCapabilities(kwinCapabilitiesToOutputDeviceCapabilities(output->capabilities()));
     m_outputDeviceV2->setVrrPolicy(kwinVrrPolicyToOutputDeviceVrrPolicy(output->vrrPolicy()));
+    m_outputDeviceV2->setRgbRange(kwinRgbRangeToOutputDeviceRgbRange(output->rgbRange()));
 
     updateModes(output);
 
@@ -80,6 +89,8 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
             this, &WaylandOutputDevice::handleVrrPolicyChanged);
     connect(output, &AbstractWaylandOutput::modesChanged,
             this, &WaylandOutputDevice::handleModesChanged);
+    connect(output, &AbstractWaylandOutput::rgbRangeChanged,
+            this, &WaylandOutputDevice::handleRgbRangeChanged);
 }
 
 void WaylandOutputDevice::updateModes(AbstractWaylandOutput *output)
@@ -147,6 +158,11 @@ void WaylandOutputDevice::handleOverscanChanged()
 void WaylandOutputDevice::handleVrrPolicyChanged()
 {
     m_outputDeviceV2->setVrrPolicy(kwinVrrPolicyToOutputDeviceVrrPolicy(m_platformOutput->vrrPolicy()));
+}
+
+void WaylandOutputDevice::handleRgbRangeChanged()
+{
+    m_outputDeviceV2->setRgbRange(kwinRgbRangeToOutputDeviceRgbRange(m_platformOutput->rgbRange()));
 }
 
 } // namespace KWin

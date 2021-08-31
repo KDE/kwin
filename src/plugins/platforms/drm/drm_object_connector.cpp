@@ -36,6 +36,11 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
             }),
             PropertyDefinition(QByteArrayLiteral("underscan vborder"), Requirement::Optional),
             PropertyDefinition(QByteArrayLiteral("underscan hborder"), Requirement::Optional),
+            PropertyDefinition(QByteArrayLiteral("Broadcast RGB"), Requirement::Optional, {
+                QByteArrayLiteral("Automatic"),
+                QByteArrayLiteral("Full"),
+                QByteArrayLiteral("Limited 16:235")
+            }),
         }, DRM_MODE_OBJECT_CONNECTOR)
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
@@ -318,5 +323,16 @@ void DrmConnector::updateModes()
     }
 }
 
+bool DrmConnector::hasRgbRange() const
+{
+    const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
+    return rgb && rgb->hasAllEnums();
+}
+
+AbstractWaylandOutput::RgbRange DrmConnector::rgbRange() const
+{
+    const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
+    return rgb->enumForValue<AbstractWaylandOutput::RgbRange>(rgb->pending());
+}
 
 }

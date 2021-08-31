@@ -40,6 +40,7 @@ public:
         Underscan = 6,
         Underscan_vborder = 7,
         Underscan_hborder = 8,
+        Broadcast_RGB = 9,
         Count
     };
 
@@ -97,6 +98,9 @@ public:
     void setOverscan(uint32_t overscan, const QSize &modeSize);
 
     bool vrrCapable() const;
+
+    bool hasRgbRange() const;
+    AbstractWaylandOutput::RgbRange rgbRange() const;
 
     bool needsModeset() const override;
 
