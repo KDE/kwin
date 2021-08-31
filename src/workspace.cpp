@@ -402,13 +402,10 @@ void Workspace::initializeX11()
         NETPoint* viewports = new NETPoint[VirtualDesktopManager::self()->count()];
         rootInfo->setDesktopViewport(VirtualDesktopManager::self()->count(), *viewports);
         delete[] viewports;
-        QRect geom;
-        for (int i = 0; i < screens()->count(); i++) {
-            geom |= screens()->geometry(i);
-        }
+
         NETSize desktop_geometry;
-        desktop_geometry.width = geom.width();
-        desktop_geometry.height = geom.height();
+        desktop_geometry.width = m_geometry.width();
+        desktop_geometry.height = m_geometry.height();
         rootInfo->setDesktopGeometry(desktop_geometry);
         setShowingDesktop(false);
 
