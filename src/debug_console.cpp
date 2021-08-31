@@ -8,41 +8,55 @@
 */
 #include "debug_console.h"
 #include "composite.h"
-#include "x11client.h"
 #include "input_event.h"
 #include "internal_client.h"
-#include "main.h"
-#include "scene.h"
-#include "unmanaged.h"
-#include "waylandclient.h"
-#include "workspace.h"
 #include "keyboard_input.h"
-#include "input_event.h"
-#include "subsurfacemonitor.h"
 #include "libinput/connection.h"
 #include "libinput/device.h"
+#include "main.h"
+#include "scene.h"
+#include "subsurfacemonitor.h"
+#include "unmanaged.h"
+#include "wayland_server.h"
+#include "waylandclient.h"
+#include "workspace.h"
+#include "x11client.h"
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 
 #include "ui_debug_console.h"
 
 // KWayland
-#include <KWaylandServer/shmclientbuffer.h>
+#include <KWaylandServer/abstract_data_source.h>
 #include <KWaylandServer/clientconnection.h>
+#include <KWaylandServer/datacontrolsource_v1_interface.h>
+#include <KWaylandServer/datasource_interface.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/primaryselectionsource_v1_interface.h>
+#include <KWaylandServer/seat_interface.h>
+#include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/subcompositor_interface.h>
 #include <KWaylandServer/surface_interface.h>
 // frameworks
 #include <KLocalizedString>
 #include <NETWM>
 // Qt
-#include <QMouseEvent>
+#include <QFutureWatcher>
 #include <QMetaProperty>
 #include <QMetaType>
+#include <QMouseEvent>
+#include <QScopeGuard>
+#include <QtConcurrentRun>
+
+#include <wayland-server-core.h>
 
 // xkb
 #include <xkbcommon/xkbcommon.h>
 
+#include <fcntl.h>
 #include <functional>
+#include <sys/poll.h>
+#include <unistd.h>
 
 namespace KWin
 {
@@ -552,6 +566,28 @@ void DebugConsoleFilter::tabletPadRingEvent(int number, int position, bool isFin
     m_textEdit->ensureCursorVisible();
 }
 
+static QString sourceString(const KWaylandServer::AbstractDataSource *const source)
+{
+    if (!source) {
+        return QString();
+    }
+
+    if (!source->client()) {
+        return QStringLiteral("XWayland source");
+    }
+
+    const QString executable = waylandServer()->display()->getConnection(source->client())->executablePath();
+
+    if (auto dataSource = qobject_cast<const KWaylandServer::DataSourceInterface *const>(source)) {
+        return QStringLiteral("wl_data_source@%1 of %2").arg(wl_resource_get_id(dataSource->resource())).arg(executable);
+    } else if (qobject_cast<const KWaylandServer::PrimarySelectionSourceV1Interface *const>(source)) {
+        return QStringLiteral("zwp_primary_selection_source_v1 of %2").arg(executable);
+    } else if (qobject_cast<const KWaylandServer::DataControlSourceV1Interface *const>(source)) {
+        return QStringLiteral("data control by %1").arg(executable);
+    }
+    return QStringLiteral("unknown source of").arg(executable);
+}
+
 DebugConsole::DebugConsole()
     : QWidget()
     , m_ui(new Ui::DebugConsole)
@@ -561,6 +597,8 @@ DebugConsole::DebugConsole()
     m_ui->windowsView->setItemDelegate(new DebugConsoleDelegate(this));
     m_ui->windowsView->setModel(new DebugConsoleModel(this));
     m_ui->surfacesView->setModel(new SurfaceTreeModel(this));
+    m_ui->clipboardContent->setModel(new DataSourceModel(this));
+    m_ui->primaryContent->setModel(new DataSourceModel(this));
     if (kwinApp()->usesLibinput()) {
         m_ui->inputDevicesView->setModel(new InputDeviceModel(this));
         m_ui->inputDevicesView->setItemDelegate(new DebugConsoleDelegate(this));
@@ -572,6 +610,7 @@ DebugConsole::DebugConsole()
     if (kwinApp()->operationMode() == Application::OperationMode::OperationModeX11) {
         m_ui->tabWidget->setTabEnabled(1, false);
         m_ui->tabWidget->setTabEnabled(2, false);
+        m_ui->tabWidget->setTabEnabled(6, false);
     }
     if (!kwinApp()->usesLibinput()) {
         m_ui->tabWidget->setTabEnabled(3, false);
@@ -588,6 +627,20 @@ DebugConsole::DebugConsole()
             if (index == 5) {
                 updateKeyboardTab();
                 connect(input(), &InputRedirection::keyStateChanged, this, &DebugConsole::updateKeyboardTab);
+            }
+            if (index == 6) {
+                static_cast<DataSourceModel *>(m_ui->clipboardContent->model())->setSource(waylandServer()->seat()->selection());
+                m_ui->clipboardSource->setText(sourceString(waylandServer()->seat()->selection()));
+                connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::selectionChanged, this, [this](KWaylandServer::AbstractDataSource *source) {
+                    static_cast<DataSourceModel *>(m_ui->clipboardContent->model())->setSource(source);
+                    m_ui->clipboardSource->setText(sourceString(source));
+                });
+                static_cast<DataSourceModel *>(m_ui->primaryContent->model())->setSource(waylandServer()->seat()->primarySelection());
+                m_ui->primarySource->setText(sourceString(waylandServer()->seat()->primarySelection()));
+                connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::primarySelectionChanged, this, [this](KWaylandServer::AbstractDataSource *source) {
+                    static_cast<DataSourceModel *>(m_ui->primaryContent->model())->setSource(source);
+                    m_ui->primarySource->setText(sourceString(source));
+                });
             }
         }
     );
@@ -1562,4 +1615,119 @@ void InputDeviceModel::setupDeviceConnections(LibInput::Device *device)
     );
 }
 
+QModelIndex DataSourceModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (!m_source || parent.isValid() || column >= 2 || row >= m_source->mimeTypes().size()) {
+        return QModelIndex();
+    }
+    return createIndex(row, column, nullptr);
+}
+
+QModelIndex DataSourceModel::parent(const QModelIndex &child) const
+{
+    return QModelIndex();
+}
+
+int DataSourceModel::rowCount(const QModelIndex &parent) const
+{
+    if (!parent.isValid()) {
+        return m_source ? m_source->mimeTypes().count() : 0;
+    }
+    return 0;
+}
+
+QVariant DataSourceModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role != Qt::DisplayRole || orientation != Qt::Horizontal || section >= 2) {
+        return QVariant();
+    }
+    return section == 0 ? QStringLiteral("Mime type") : QStringLiteral("Content");
+}
+
+QVariant DataSourceModel::data(const QModelIndex &index, int role) const
+{
+    if (!checkIndex(index, CheckIndexOption::ParentIsInvalid | CheckIndexOption::IndexIsValid)) {
+        return QVariant();
+    }
+    const QString mimeType = m_source->mimeTypes().at(index.row());
+    ;
+    if (index.column() == 0 && role == Qt::DisplayRole) {
+        return mimeType;
+    } else if (index.column() == 1) {
+        const QByteArray &data = m_data.at(index.row());
+        if (mimeType.contains(QLatin1String("image"))) {
+            if (role == Qt::DecorationRole) {
+                return QImage::fromData(data);
+            }
+        } else if (role == Qt::DisplayRole) {
+            return data;
+        }
+    }
+    return QVariant();
+}
+
+static QByteArray readData(int fd)
+{
+    pollfd pfd;
+    pfd.fd = fd;
+    pfd.events = POLLIN;
+    auto closeFd = qScopeGuard([fd] {
+        close(fd);
+    });
+    QByteArray data;
+    while (true) {
+        const int ready = poll(&pfd, 1, 1000);
+        if (ready < 0) {
+            if (errno != EINTR) {
+                return QByteArrayLiteral("poll() failed: ") + strerror(errno);
+            }
+        } else if (ready == 0) {
+            return QByteArrayLiteral("timeout reading from pipe");
+        } else {
+            char buf[4096];
+            int n = read(fd, buf, sizeof buf);
+
+            if (n < 0) {
+                return QByteArrayLiteral("read failed: ") + strerror(errno);
+            } else if (n == 0) {
+                return data;
+            } else if (n > 0) {
+                data.append(buf, n);
+            }
+        }
+    }
+}
+
+void DataSourceModel::setSource(KWaylandServer::AbstractDataSource *source)
+{
+    beginResetModel();
+    m_source = source;
+    m_data.clear();
+    if (source) {
+        const auto client = source->client();
+        m_data.resize(m_source->mimeTypes().size());
+        for (auto type = m_source->mimeTypes().cbegin(); type != m_source->mimeTypes().cend(); ++type) {
+            int pipeFds[2];
+            if (pipe2(pipeFds, O_CLOEXEC) != 0) {
+                continue;
+            }
+            source->requestData(*type, pipeFds[1]);
+            if (client && client != waylandServer()->internalConnection()->client()) {
+                close(pipeFds[1]);
+            }
+            QFuture<QByteArray> data = QtConcurrent::run(readData, pipeFds[0]);
+            auto watcher = new QFutureWatcher<QByteArray>(this);
+            watcher->setFuture(data);
+            const int index = type - m_source->mimeTypes().cbegin();
+            connect(watcher, &QFutureWatcher<QByteArray>::finished, this, [this, watcher, index, source = QPointer(source)] {
+                watcher->deleteLater();
+                if (source && source == m_source) {
+                    m_data[index] = watcher->result();
+                    Q_EMIT dataChanged(this->index(index, 1), this->index(index, 1), {Qt::DecorationRole | Qt::DisplayRole});
+                }
+            });
+        }
+    }
+    endResetModel();
+}
 }

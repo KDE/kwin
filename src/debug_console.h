@@ -21,6 +21,11 @@
 
 class QTextEdit;
 
+namespace KWaylandServer
+{
+class AbstractDataSource;
+}
+
 namespace Ui
 {
 class DebugConsole;
@@ -181,6 +186,27 @@ private:
     QVector<LibInput::Device*> m_devices;
 };
 
+class DataSourceModel : public QAbstractItemModel
+{
+public:
+    using QAbstractItemModel::QAbstractItemModel;
+
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+    int rowCount(const QModelIndex &parent) const override;
+    int columnCount(const QModelIndex &parent) const override
+    {
+        return parent.isValid() ? 0 : 2;
+    }
+    QVariant data(const QModelIndex &index, int role) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+
+    void setSource(KWaylandServer::AbstractDataSource *source);
+
+private:
+    KWaylandServer::AbstractDataSource *m_source = nullptr;
+    QVector<QByteArray> m_data;
+};
 }
 
 #endif

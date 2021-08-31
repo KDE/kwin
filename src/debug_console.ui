@@ -420,10 +420,98 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="clipboard">
+      <attribute name="title">
+       <string>Clipboard</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item alignment="Qt::AlignBottom">
+          <widget class="KTitleWidget" name="ktitlewidget">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Clipboard</string>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignBottom">
+          <widget class="QLabel" name="clipboardSource">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTableView" name="clipboardContent">
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item alignment="Qt::AlignBottom">
+          <widget class="KTitleWidget" name="ktitlewidget_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Primary Selection</string>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignBottom">
+          <widget class="QLabel" name="primarySource">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTableView" name="primaryContent">
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KTitleWidget</class>
+   <extends>QWidget</extends>
+   <header>ktitlewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>quitButton</tabstop>
  </tabstops>
