@@ -173,16 +173,6 @@ Qt::ScreenOrientation Screens::orientation(int screen) const
     return Qt::PrimaryOrientation;
 }
 
-int Screens::physicalDpiX(int screen) const
-{
-    return size(screen).width() / physicalSize(screen).width() * qreal(25.4);
-}
-
-int Screens::physicalDpiY(int screen) const
-{
-    return size(screen).height() / physicalSize(screen).height() * qreal(25.4);
-}
-
 int Screens::number(const QPoint &pos) const
 {
     // TODO: Do something about testScreens and other tests that use MockScreens.

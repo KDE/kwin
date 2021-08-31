@@ -107,9 +107,6 @@ public:
 
     Qt::ScreenOrientation orientation(int screen) const;
 
-    int physicalDpiX(int screen) const;
-    int physicalDpiY(int screen) const;
-
 Q_SIGNALS:
     void countChanged(int previousCount, int newCount);
     /**

@@ -25,7 +25,6 @@
 #include "cursor.h"
 #include "main.h"
 #include "platform.h"
-#include "screens.h"
 #include "utils.h"
 #include <workspace.h>
 #include "virtualdesktops.h"
@@ -403,7 +402,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
         const VirtualDesktop *interimDesktop = desktop;
         desktop = vds->toLeft(desktop, vds->isNavigationWrappingAround());
         if (desktop != interimDesktop) {
-            pos.setX(screens()->size().width() - 1 - OFFSET);
+            pos.setX(workspace()->geometry().width() - 1 - OFFSET);
         }
     } else if (isRight()) {
         const VirtualDesktop *interimDesktop = desktop;
@@ -416,7 +415,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
         const VirtualDesktop *interimDesktop = desktop;
         desktop = vds->above(desktop, vds->isNavigationWrappingAround());
         if (desktop != interimDesktop) {
-            pos.setY(screens()->size().height() - 1 - OFFSET);
+            pos.setY(workspace()->geometry().height() - 1 - OFFSET);
         }
     } else if (isBottom()) {
         const VirtualDesktop *interimDesktop = desktop;
@@ -719,7 +718,17 @@ ScreenEdges::ScreenEdges(QObject *parent)
     , m_actionLeft(ElectricActionNone)
     , m_gestureRecognizer(new GestureRecognizer(this))
 {
-    m_cornerOffset = (Screens::self()->physicalDpiX(0) + Screens::self()->physicalDpiY(0) + 5) / 6;
+    // TODO: Maybe calculate the corner offset based on font metrics instead?
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    if (!outputs.isEmpty()) {
+        const QSize size = outputs[0]->geometry().size();
+        const QSizeF physicalSize = outputs[0]->physicalSize();
+
+        const int physicalDpiX = size.width() / physicalSize.width() * qreal(25.4);
+        const int physicalDpiY = size.height() / physicalSize.height() * qreal(25.4);
+
+        m_cornerOffset = (physicalDpiX + physicalDpiY + 5) / 6;
+    }
 
     connect(workspace(), &Workspace::clientRemoved, this, &ScreenEdges::deleteEdgeForClient);
 }
@@ -892,7 +901,8 @@ void ScreenEdges::updateLayout()
 
 static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
 {
-    if (screens()->count() == 1) {
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    if (outputs.count() == 1) {
         return true;
     }
     if (screen.x() == fullArea.x()) {
@@ -900,8 +910,8 @@ static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
     }
     // the screen is also on the left in case of a vertical layout with a second screen
     // more to the left. In that case no screen ends left of screen's x coord
-    for (int i=0; i<screens()->count(); ++i) {
-        const QRect otherGeo = screens()->geometry(i);
+    for (const AbstractOutput *output : outputs) {
+        const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -917,7 +927,8 @@ static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
 
 static bool isRightScreen(const QRect &screen, const QRect &fullArea)
 {
-    if (screens()->count() == 1) {
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    if (outputs.count() == 1) {
         return true;
     }
     if (screen.x() + screen.width() == fullArea.x() + fullArea.width()) {
@@ -925,8 +936,8 @@ static bool isRightScreen(const QRect &screen, const QRect &fullArea)
     }
     // the screen is also on the right in case of a vertical layout with a second screen
     // more to the right. In that case no screen starts right of this screen
-    for (int i=0; i<screens()->count(); ++i) {
-        const QRect otherGeo = screens()->geometry(i);
+    for (const AbstractOutput *output : outputs) {
+        const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -942,7 +953,8 @@ static bool isRightScreen(const QRect &screen, const QRect &fullArea)
 
 static bool isTopScreen(const QRect &screen, const QRect &fullArea)
 {
-    if (screens()->count() == 1) {
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    if (outputs.count() == 1) {
         return true;
     }
     if (screen.y() == fullArea.y()) {
@@ -950,8 +962,8 @@ static bool isTopScreen(const QRect &screen, const QRect &fullArea)
     }
     // the screen is also top most in case of a horizontal layout with a second screen
     // more to the top. In that case no screen ends above screen's y coord
-    for (int i=0; i<screens()->count(); ++i) {
-        const QRect otherGeo = screens()->geometry(i);
+    for (const AbstractOutput *output : outputs) {
+        const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -967,7 +979,8 @@ static bool isTopScreen(const QRect &screen, const QRect &fullArea)
 
 static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
 {
-    if (screens()->count() == 1) {
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    if (outputs.count() == 1) {
         return true;
     }
     if (screen.y() + screen.height() == fullArea.y() + fullArea.height()) {
@@ -975,8 +988,8 @@ static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
     }
     // the screen is also bottom most in case of a horizontal layout with a second screen
     // more below. In that case no screen starts below screen's y coord + height
-    for (int i=0; i<screens()->count(); ++i) {
-        const QRect otherGeo = screens()->geometry(i);
+    for (const AbstractOutput *output : outputs) {
+        const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -994,10 +1007,12 @@ void ScreenEdges::recreateEdges()
 {
     QList<Edge*> oldEdges(m_edges);
     m_edges.clear();
-    const QRect fullArea = screens()->geometry();
+    const QRect fullArea = workspace()->geometry();
     QRegion processedRegion;
-    for (int i=0; i<screens()->count(); ++i) {
-        const QRegion screen = QRegion(screens()->geometry(i)).subtracted(processedRegion);
+
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (const AbstractOutput *output : outputs) {
+        const QRegion screen = QRegion(output->geometry()).subtracted(processedRegion);
         processedRegion += screen;
         for (const QRect &screenPart : screen) {
             if (isLeftScreen(screenPart, fullArea)) {
@@ -1261,9 +1276,11 @@ void ScreenEdges::createEdgeForClient(AbstractClient *client, ElectricBorder bor
     int width = 0;
     int height = 0;
     const QRect geo = client->frameGeometry();
-    const QRect fullArea = workspace()->clientArea(FullArea, 0, 1);
-    for (int i = 0; i < screens()->count(); ++i) {
-        const QRect screen = screens()->geometry(i);
+    const QRect fullArea = workspace()->geometry();
+
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (const AbstractOutput *output : outputs) {
+        const QRect screen = output->geometry();
         if (!screen.contains(geo)) {
             // ignoring Clients having a geometry overlapping with multiple screens
             // this would make the code more complex. If it's needed in future it can be added
