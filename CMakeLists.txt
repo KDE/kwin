@@ -396,6 +396,9 @@ add_feature_info("SCHED_RESET_ON_FORK"
 pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=0.3.29)
 add_feature_info(PipeWire PipeWire_FOUND "Required for Wayland screencasting")
 
+pkg_check_modules(WLCS IMPORTED_TARGET wlcs)
+add_feature_info(WLCS WLCS_FOUND "Required for WLCS test suite")
+
 ########### global ###############
 
 include_directories(BEFORE
