@@ -13,7 +13,7 @@
 // kwin libs
 #include <kwinglplatform.h>
 // kwin
-#include "abstract_output.h"
+#include "abstract_wayland_output.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -1614,23 +1614,26 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral(" yes\n"));
     else
         support.append(QStringLiteral(" no\n"));
-    support.append(QStringLiteral("Number of Screens: %1\n\n").arg(screens()->count()));
-    for (int i=0; i<screens()->count(); ++i) {
-        const QRect geo = screens()->geometry(i);
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
+    for (int i = 0; i < outputs.count(); ++i) {
+        const auto output = outputs[i];
+        const QRect geo = outputs[i]->geometry();
         support.append(QStringLiteral("Screen %1:\n").arg(i));
         support.append(QStringLiteral("---------\n"));
-        support.append(QStringLiteral("Name: %1\n").arg(screens()->name(i)));
+        support.append(QStringLiteral("Name: %1\n").arg(output->name()));
         support.append(QStringLiteral("Geometry: %1,%2,%3x%4\n")
                               .arg(geo.x())
                               .arg(geo.y())
                               .arg(geo.width())
                               .arg(geo.height()));
-        support.append(QStringLiteral("Scale: %1\n").arg(screens()->scale(i)));
-        support.append(QStringLiteral("Refresh Rate: %1\n").arg(screens()->refreshRate(i)));
-        if (waylandServer()) {
+        support.append(QStringLiteral("Scale: %1\n").arg(output->scale()));
+        support.append(QStringLiteral("Refresh Rate: %1\n").arg(output->refreshRate()));
+        const auto waylandOutput = qobject_cast<AbstractWaylandOutput *>(output);
+        if (waylandOutput) {
             QString vrr = QStringLiteral("incapable");
-            if (screens()->isVrrCapable(i)) {
-                switch(screens()->vrrPolicy(i)) {
+            if (waylandOutput->capabilities() & AbstractWaylandOutput::Capability::Vrr) {
+                switch (waylandOutput->vrrPolicy()) {
                 case RenderLoop::VrrPolicy::Never:
                     vrr = QStringLiteral("never");
                     break;

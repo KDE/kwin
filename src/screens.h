@@ -11,7 +11,6 @@
 
 // KWin includes
 #include <kwinglobals.h>
-#include <renderloop.h>
 // KDE includes
 #include <KConfig>
 #include <KSharedConfig>
@@ -110,15 +109,6 @@ public:
 
     int physicalDpiX(int screen) const;
     int physicalDpiY(int screen) const;
-
-    /**
-     * @returns @c true if the @p screen is capable of variable refresh rate and if the platform can use it
-     */
-    bool isVrrCapable(int screen) const;
-    /**
-     * @returns the vrr policy of the @p screen
-     */
-    RenderLoop::VrrPolicy vrrPolicy(int screen) const;
 
 Q_SIGNALS:
     void countChanged(int previousCount, int newCount);
