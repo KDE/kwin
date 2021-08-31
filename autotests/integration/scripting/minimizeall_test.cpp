@@ -10,6 +10,7 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
+#include "abstract_output.h"
 #include "platform.h"
 #include "screens.h"
 #include "scripting/scripting.h"
@@ -53,9 +54,10 @@ void MinimizeAllScriptTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    QCOMPARE(screens()->count(), 2);
-    QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
-    QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    QCOMPARE(outputs.count(), 2);
+    QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
     Test::initWaylandWorkspace();
 }
 
