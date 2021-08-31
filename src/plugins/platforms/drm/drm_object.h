@@ -10,6 +10,7 @@
 
 #include <QVector>
 #include <QByteArray>
+#include <QMap>
 
 // drm
 #include <xf86drmMode.h>
@@ -86,13 +87,16 @@ public:
         QVector<QByteArray> enumNames() const {
             return m_enumNames;
         }
-        QVector<uint64_t> enumMap() const {
-            return m_enumMap;
-        }
         bool hasEnum(uint64_t value) const {
             return m_enumMap.contains(value);
         }
-
+        bool hasAllEnums() const {
+            return m_enumMap.count() == m_enumNames.count();
+        }
+        template <typename T>
+        T enumForValue(uint64_t value) const {
+            return static_cast<T>(m_enumMap[value]);
+        }
         template <typename T>
         bool setEnum(T index) {
             if (hasEnum(static_cast<uint64_t>(index))) {
@@ -152,7 +156,7 @@ public:
         uint64_t m_current = 0;
         drmModePropertyBlobRes *m_currentBlob = nullptr;
 
-        QVector<uint64_t> m_enumMap;
+        QMap<uint32_t, uint64_t> m_enumMap;
         QVector<QByteArray> m_enumNames;
         const bool m_immutable;
         bool m_legacy = false;

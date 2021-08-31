@@ -110,16 +110,8 @@ bool DrmPlane::init()
 
 DrmPlane::TypeIndex DrmPlane::type()
 {
-    auto property = getProp(PropertyIndex::Type);
-    if (!property) {
-        return TypeIndex::Overlay;
-    }
-    for (uint32_t i = 0; i < static_cast<uint32_t>(TypeIndex::Count); i++) {
-        if (property->enumMap()[i] == property->current()) {
-            return TypeIndex(i);
-        }
-    }
-    return TypeIndex::Overlay;
+    const auto &prop = getProp(PropertyIndex::Type);
+    return prop->enumForValue<DrmPlane::TypeIndex>(prop->current());
 }
 
 void DrmPlane::setNext(const QSharedPointer<DrmBuffer> &b)

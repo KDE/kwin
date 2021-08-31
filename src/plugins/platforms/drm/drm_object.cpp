@@ -66,8 +66,8 @@ bool DrmObject::initProps()
                 if (m_propertyDefinitions[i].enumNames.isEmpty()) {
                     debug << prop->current();
                 } else {
-                    if (prop->current() < static_cast<uint64_t>(prop->enumMap().count())) {
-                        debug << prop->enumNames()[prop->enumMap()[prop->current()]];
+                    if (prop->hasEnum(prop->current())) {
+                        debug << prop->enumNames()[prop->enumForValue<uint32_t>(prop->current())];
                     } else {
                         debug << "invalid value: " << prop->current();
                     }
@@ -331,24 +331,13 @@ void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)
         return;
     }
 
-    const int nameCount = m_enumNames.size();
-    m_enumMap.resize(nameCount);
-
     for (int i = 0; i < prop->count_enums; i++) {
         struct drm_mode_property_enum *en = &prop->enums[i];
-        int j = 0;
-
-        while (QByteArray(en->name) != m_enumNames[j]) {
-            j++;
-            if (j == nameCount) {
-                qCWarning(KWIN_DRM).nospace() << m_propName << " has unrecognized enum '"
-                                              << en->name << "'";
-                break;
-            }
-        }
-
-        if (j < nameCount) {
+        int j = m_enumNames.indexOf(QByteArray(en->name));
+        if (j >= 0) {
             m_enumMap[j] = en->value;
+        } else {
+            qCWarning(KWIN_DRM, "%s has unrecognized enum '%s'", qPrintable(m_propName), en->name);
         }
     }
 }
