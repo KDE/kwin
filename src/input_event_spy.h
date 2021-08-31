@@ -83,7 +83,6 @@ public:
     virtual void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
 };
 
-
 } // namespace KWin
 
 #endif

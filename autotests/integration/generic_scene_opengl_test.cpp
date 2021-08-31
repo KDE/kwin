@@ -9,12 +9,12 @@
 #include "generic_scene_opengl_test.h"
 #include "abstract_client.h"
 #include "composite.h"
-#include "effectloader.h"
 #include "cursor.h"
+#include "effect_builtins.h"
+#include "effectloader.h"
 #include "platform.h"
 #include "scene.h"
 #include "wayland_server.h"
-#include "effect_builtins.h"
 
 #include <KConfigGroup>
 
@@ -38,7 +38,7 @@ void GenericSceneOpenGLTest::cleanup()
 
 void GenericSceneOpenGLTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

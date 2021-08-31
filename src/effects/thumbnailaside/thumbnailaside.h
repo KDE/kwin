@@ -23,9 +23,7 @@
 
 namespace KWin
 {
-
-class ThumbnailAsideEffect
-    : public Effect
+class ThumbnailAsideEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(int maxWidth READ configuredMaxWidth)
@@ -35,20 +33,24 @@ class ThumbnailAsideEffect
 public:
     ThumbnailAsideEffect();
     void reconfigure(ReconfigureFlags) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     // for properties
-    int configuredMaxWidth() const {
+    int configuredMaxWidth() const
+    {
         return maxwidth;
     }
-    int configuredSpacing() const {
+    int configuredSpacing() const
+    {
         return spacing;
     }
-    qreal configuredOpacity() const {
+    qreal configuredOpacity() const
+    {
         return opacity;
     }
-    int configuredScreen() const {
+    int configuredScreen() const
+    {
         return screen;
     }
     bool isActive() const override;
@@ -57,18 +59,19 @@ private Q_SLOTS:
     void toggleCurrentThumbnail();
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowFrameGeometryChanged(KWin::EffectWindow *w, const QRect &old);
-    void slotWindowDamaged(KWin::EffectWindow* w, const QRegion& damage);
+    void slotWindowDamaged(KWin::EffectWindow *w, const QRegion &damage);
     void repaintAll();
+
 private:
-    void addThumbnail(EffectWindow* w);
-    void removeThumbnail(EffectWindow* w);
+    void addThumbnail(EffectWindow *w);
+    void removeThumbnail(EffectWindow *w);
     void arrange();
     struct Data {
-        EffectWindow* window; // the same like the key in the hash (makes code simpler)
+        EffectWindow *window; // the same like the key in the hash (makes code simpler)
         int index;
         QRect rect;
     };
-    QHash< EffectWindow*, Data > windows;
+    QHash<EffectWindow *, Data> windows;
     int maxwidth;
     int spacing;
     double opacity;

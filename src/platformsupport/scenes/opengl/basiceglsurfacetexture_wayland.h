@@ -19,7 +19,6 @@ class LinuxDmaBufV1ClientBuffer;
 
 namespace KWin
 {
-
 class AbstractEglBackend;
 
 class KWIN_EXPORT BasicEGLSurfaceTextureWayland : public PlatformOpenGLSurfaceTextureWayland

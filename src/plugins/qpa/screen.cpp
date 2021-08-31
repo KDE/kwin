@@ -17,7 +17,6 @@ namespace KWin
 {
 namespace QPA
 {
-
 static int forcedDpi()
 {
     return qEnvironmentVariableIsSet("QT_WAYLAND_FORCE_DPI") ? qEnvironmentVariableIntValue("QT_WAYLAND_FORCE_DPI") : -1;

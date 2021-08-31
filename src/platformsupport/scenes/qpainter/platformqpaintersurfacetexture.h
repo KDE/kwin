@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 class QPainterBackend;
 
 class KWIN_EXPORT PlatformQPainterSurfaceTexture : public PlatformSurfaceTexture

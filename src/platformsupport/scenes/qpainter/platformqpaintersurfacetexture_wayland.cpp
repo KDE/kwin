@@ -15,9 +15,7 @@
 
 namespace KWin
 {
-
-PlatformQPainterSurfaceTextureWayland::PlatformQPainterSurfaceTextureWayland(QPainterBackend *backend,
-                                                                             SurfacePixmapWayland *pixmap)
+PlatformQPainterSurfaceTextureWayland::PlatformQPainterSurfaceTextureWayland(QPainterBackend *backend, SurfacePixmapWayland *pixmap)
     : PlatformQPainterSurfaceTexture(backend)
     , m_pixmap(pixmap)
 {

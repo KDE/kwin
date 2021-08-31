@@ -21,7 +21,6 @@
 
 namespace KWin
 {
-
 WindowBasedEdge::WindowBasedEdge(ScreenEdges *parent)
     : Edge(parent)
     , m_window(XCB_WINDOW_NONE)
@@ -52,16 +51,12 @@ void WindowBasedEdge::createWindow()
         return;
     }
     const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
-    const uint32_t values[] = {
-        true,
-        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_POINTER_MOTION
-    };
+    const uint32_t values[] = {true, XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_POINTER_MOTION};
     m_window.create(geometry(), XCB_WINDOW_CLASS_INPUT_ONLY, mask, values);
     m_window.map();
     // Set XdndAware on the windows, so that DND enter events are received (#86998)
     xcb_atom_t version = 4; // XDND version
-    xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, m_window,
-                        atoms->xdnd_aware, XCB_ATOM_ATOM, 32, 1, (unsigned char*)(&version));
+    xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, m_window, atoms->xdnd_aware, XCB_ATOM_ATOM, 32, 1, (unsigned char *)(&version));
 }
 
 void WindowBasedEdge::createApproachWindow()
@@ -76,10 +71,7 @@ void WindowBasedEdge::createApproachWindow()
         return;
     }
     const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
-    const uint32_t values[] = {
-        true,
-        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_POINTER_MOTION
-    };
+    const uint32_t values[] = {true, XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_POINTER_MOTION};
     m_approachWindow.create(approachGeometry(), XCB_WINDOW_CLASS_INPUT_ONLY, mask, values);
     m_approachWindow.map();
 }

@@ -9,18 +9,17 @@
 
 #include "deleted.h"
 
-#include "workspace.h"
 #include "abstract_client.h"
 #include "group.h"
 #include "netinfo.h"
 #include "shadow.h"
 #include "virtualdesktops.h"
+#include "workspace.h"
 
 #include <QDebug>
 
 namespace KWin
 {
-
 Deleted::Deleted()
     : Toplevel()
     , delete_refcount(1)
@@ -50,9 +49,9 @@ Deleted::~Deleted()
     deleteEffectWindow();
 }
 
-Deleted* Deleted::create(Toplevel* c)
+Deleted *Deleted::create(Toplevel *c)
 {
-    Deleted* d = new Deleted();
+    Deleted *d = new Deleted();
     d->copyToDeleted(c);
     workspace()->addDeleted(d, c);
     return d;
@@ -65,9 +64,9 @@ void Deleted::discard()
     delete this;
 }
 
-void Deleted::copyToDeleted(Toplevel* c)
+void Deleted::copyToDeleted(Toplevel *c)
 {
-    Q_ASSERT(dynamic_cast< Deleted* >(c) == nullptr);
+    Q_ASSERT(dynamic_cast<Deleted *>(c) == nullptr);
     Toplevel::copyToDeleted(c);
     m_frameMargins = c->frameMargins();
     m_bufferScale = c->bufferScale();
@@ -80,14 +79,11 @@ void Deleted::copyToDeleted(Toplevel* c)
     m_type = c->windowType();
     m_windowRole = c->windowRole();
     m_shade = c->isShade();
-    if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
+    if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info))
         cinfo->disable();
-    if (AbstractClient *client = dynamic_cast<AbstractClient*>(c)) {
+    if (AbstractClient *client = dynamic_cast<AbstractClient *>(c)) {
         if (client->isDecorated()) {
-            client->layoutDecorationRects(decoration_left,
-                                          decoration_top,
-                                          decoration_right,
-                                          decoration_bottom);
+            client->layoutDecorationRects(decoration_left, decoration_top, decoration_right, decoration_bottom);
         }
         m_wasClient = true;
         m_minimized = client->isMinimized();
@@ -154,7 +150,7 @@ QPoint Deleted::clientPos() const
     return contentsRect.topLeft();
 }
 
-void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect& bottom) const
+void Deleted::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const
 {
     left = decoration_left;
     top = decoration_top;
@@ -176,7 +172,7 @@ NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
 
 void Deleted::mainClientClosed(Toplevel *client)
 {
-    if (AbstractClient *c = dynamic_cast<AbstractClient*>(client))
+    if (AbstractClient *c = dynamic_cast<AbstractClient *>(client))
         m_mainClients.removeAll(c);
 }
 
@@ -195,14 +191,10 @@ QVector<uint> Deleted::x11DesktopIds() const
     const auto desks = desktops();
     QVector<uint> x11Ids;
     x11Ids.reserve(desks.count());
-    std::transform(desks.constBegin(), desks.constEnd(),
-        std::back_inserter(x11Ids),
-        [] (const VirtualDesktop *vd) {
-            return vd->x11DesktopNumber();
-        }
-    );
+    std::transform(desks.constBegin(), desks.constEnd(), std::back_inserter(x11Ids), [](const VirtualDesktop *vd) {
+        return vd->x11DesktopNumber();
+    });
     return x11Ids;
 }
 
 } // namespace
-

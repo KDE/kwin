@@ -19,16 +19,13 @@
 
 namespace KWin
 {
-
-struct ScreenShotWindowData
-{
+struct ScreenShotWindowData {
     QFutureInterface<QImage> promise;
     ScreenShotFlags flags;
     EffectWindow *window = nullptr;
 };
 
-struct ScreenShotAreaData
-{
+struct ScreenShotAreaData {
     QFutureInterface<QImage> promise;
     ScreenShotFlags flags;
     QRect area;
@@ -36,8 +33,7 @@ struct ScreenShotAreaData
     QList<EffectScreen *> screens;
 };
 
-struct ScreenShotScreenData
-{
+struct ScreenShotScreenData {
     QFutureInterface<QImage> promise;
     ScreenShotFlags flags;
     EffectScreen *screen = nullptr;
@@ -63,13 +59,11 @@ static void convertFromGLImage(QImage &img, int w, int h)
             uint *q = reinterpret_cast<uint *>(img.scanLine(y));
             for (int x = 0; x < w; ++x) {
                 const uint pixel = *q;
-                *q = ((pixel << 16) & 0xff0000) | ((pixel >> 16) & 0xff)
-                     | (pixel & 0xff00ff00);
+                *q = ((pixel << 16) & 0xff0000) | ((pixel >> 16) & 0xff) | (pixel & 0xff00ff00);
 
                 q++;
             }
         }
-
     }
     img = img.mirrored();
 }
@@ -249,8 +243,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
             // copy content from framebuffer into image
             img = QImage(offscreenTexture->size(), QImage::Format_ARGB32);
             img.setDevicePixelRatio(devicePixelRatio);
-            glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
-                          static_cast<GLvoid *>(img.bits()));
+            glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(), static_cast<GLvoid *>(img.bits()));
             GLRenderTarget::popRenderTarget();
             convertFromGLImage(img, img.width(), img.height());
         }
@@ -289,8 +282,7 @@ bool ScreenShotEffect::takeScreenShot(ScreenShotAreaData *screenshot)
         }
 
         const QImage snapshot = blitScreenshot(sourceRect, sourceDevicePixelRatio);
-        const QRect nativeArea(screenshot->area.topLeft(),
-                               screenshot->area.size() * screenshot->result.devicePixelRatio());
+        const QRect nativeArea(screenshot->area.topLeft(), screenshot->area.size() * screenshot->result.devicePixelRatio());
 
         QPainter painter(&screenshot->result);
         painter.setWindow(nativeArea);
@@ -367,13 +359,11 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, qreal devicePixel
             target.blitFromFramebuffer(geometry);
             // copy content from framebuffer into image
             texture.bind();
-            glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                          static_cast<GLvoid *>(image.bits()));
+            glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, static_cast<GLvoid *>(image.bits()));
             texture.unbind();
         } else {
             image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
-            glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA,
-                         GL_UNSIGNED_BYTE, static_cast<GLvoid *>(image.bits()));
+            glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA, GL_UNSIGNED_BYTE, static_cast<GLvoid *>(image.bits()));
         }
         convertFromGLImage(image, nativeSize.width(), nativeSize.height());
     }
@@ -395,8 +385,7 @@ void ScreenShotEffect::grabPointerImage(QImage &snapshot, int xOffset, int yOffs
 
 bool ScreenShotEffect::isActive() const
 {
-    return (!m_windowScreenShots.isEmpty() || !m_areaScreenShots.isEmpty() || !m_screenScreenShots.isEmpty())
-            && !effects->isScreenLocked();
+    return (!m_windowScreenShots.isEmpty() || !m_areaScreenShots.isEmpty() || !m_screenScreenShots.isEmpty()) && !effects->isScreenLocked();
 }
 
 int ScreenShotEffect::requestedEffectChainPosition() const

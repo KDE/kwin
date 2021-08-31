@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 QDebug AbstractOpenGLContextAttributeBuilder::operator<<(QDebug dbg) const
 {
     QDebugStateSaver saver(dbg);

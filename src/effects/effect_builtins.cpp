@@ -59,11 +59,9 @@
 
 namespace KWin
 {
-
 namespace BuiltInEffects
 {
-
-template <class T>
+template<class T>
 inline Effect *createHelper()
 {
     return new T();
@@ -72,580 +70,499 @@ inline Effect *createHelper()
 static const QVector<EffectData> &effectData()
 {
     static const QVector<EffectData> s_effectData = {
-    {
-        QString(),
-        QString(),
-        QString(),
-        QString(),
-        QString(),
-        QUrl(),
-        false,
-        false,
-        nullptr,
-        nullptr,
-        nullptr,
-        QString()
-    }, {
-        QStringLiteral("blur"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Blur"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Blurs the background behind semi-transparent windows"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        true,
-        false,
+        {QString(), QString(), QString(), QString(), QString(), QUrl(), false, false, nullptr, nullptr, nullptr, QString()},
+        {QStringLiteral("blur"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Blur"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Blurs the background behind semi-transparent windows"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         true,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<BlurEffect>,
-        &BlurEffect::supported,
-        &BlurEffect::enabledByDefault,
+         &createHelper<BlurEffect>,
+         &BlurEffect::supported,
+         &BlurEffect::enabledByDefault,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_blur_config")
-    }, {
-        QStringLiteral("colorpicker"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Color Picker"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Supports picking a color"),
-        QStringLiteral("Accessibility"),
-        QString(),
-        QUrl(),
-        true,
-        true,
+         EFFECT_FALLBACK QStringLiteral("kwin_blur_config")},
+        {QStringLiteral("colorpicker"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Color Picker"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Supports picking a color"),
+         QStringLiteral("Accessibility"),
+         QString(),
+         QUrl(),
+         true,
+         true,
 #ifdef EFFECT_BUILTINS
-        &createHelper<ColorPickerEffect>,
-        &ColorPickerEffect::supported,
-        nullptr,
+         &createHelper<ColorPickerEffect>,
+         &ColorPickerEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("contrast"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Background contrast"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Improve contrast and readability behind semi-transparent windows"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        true,
-        false,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("contrast"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Background contrast"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Improve contrast and readability behind semi-transparent windows"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         true,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<ContrastEffect>,
-        &ContrastEffect::supported,
-        &ContrastEffect::enabledByDefault,
+         &createHelper<ContrastEffect>,
+         &ContrastEffect::supported,
+         &ContrastEffect::enabledByDefault,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("desktopgrid"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Desktop Grid"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Zoom out so all desktops are displayed side-by-side in a grid"),
-        QStringLiteral("Window Management"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/desktop_grid.mp4")),
-        true,
-        false,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("desktopgrid"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Desktop Grid"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Zoom out so all desktops are displayed side-by-side in a grid"),
+         QStringLiteral("Window Management"),
+         QString(),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/desktop_grid.mp4")),
+         true,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<DesktopGridEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<DesktopGridEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_desktopgrid_config")
-    }, {
-        QStringLiteral("diminactive"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Dim Inactive"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Darken inactive windows"),
-        QStringLiteral("Focus"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/dim_inactive.mp4")),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_desktopgrid_config")},
+        {QStringLiteral("diminactive"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Dim Inactive"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Darken inactive windows"),
+         QStringLiteral("Focus"),
+         QString(),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/dim_inactive.mp4")),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<DimInactiveEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<DimInactiveEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_diminactive_config")
-    }, {
-        QStringLiteral("fallapart"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Fall Apart"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Closed windows fall into pieces"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_diminactive_config")},
+        {QStringLiteral("fallapart"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Fall Apart"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Closed windows fall into pieces"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<FallApartEffect>,
-        &FallApartEffect::supported,
-        nullptr,
+         &createHelper<FallApartEffect>,
+         &FallApartEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("glide"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Glide"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Glide windows as they appear or disappear"),
-        QStringLiteral("Window Open/Close Animation"),
-        QStringLiteral("toplevel-open-close-animation"),
-        QUrl(),
-        false,
-        false,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("glide"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Glide"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Glide windows as they appear or disappear"),
+         QStringLiteral("Window Open/Close Animation"),
+         QStringLiteral("toplevel-open-close-animation"),
+         QUrl(),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<GlideEffect>,
-        &GlideEffect::supported,
-        nullptr,
+         &createHelper<GlideEffect>,
+         &GlideEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_glide_config")
-    }, {
-        QStringLiteral("highlightwindow"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Highlight Window"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Highlight the appropriate window when hovering over taskbar entries"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        true,
-        true,
+         EFFECT_FALLBACK QStringLiteral("kwin_glide_config")},
+        {QStringLiteral("highlightwindow"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Highlight Window"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Highlight the appropriate window when hovering over taskbar entries"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         true,
+         true,
 #ifdef EFFECT_BUILTINS
-        &createHelper<HighlightWindowEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<HighlightWindowEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("invert"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Invert"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Inverts the color of the desktop and windows"),
-        QStringLiteral("Accessibility"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/invert.mp4")),
-        false,
-        false,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("invert"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Invert"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Inverts the color of the desktop and windows"),
+         QStringLiteral("Accessibility"),
+         QString(),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/invert.mp4")),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<InvertEffect>,
-        &InvertEffect::supported,
-        nullptr,
+         &createHelper<InvertEffect>,
+         &InvertEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_invert_config")
-    }, {
-        QStringLiteral("kscreen"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Kscreen"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Helper Effect for KScreen"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        true,
-        true,
+         EFFECT_FALLBACK QStringLiteral("kwin_invert_config")},
+        {QStringLiteral("kscreen"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Kscreen"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Helper Effect for KScreen"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         true,
+         true,
 #ifdef EFFECT_BUILTINS
-        &createHelper<KscreenEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<KscreenEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("lookingglass"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Looking Glass"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "A screen magnifier that looks like a fisheye lens"),
-        QStringLiteral("Accessibility"),
-        QStringLiteral("magnifiers"),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/looking_glass.ogv")),
-        false,
-        false,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("lookingglass"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Looking Glass"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "A screen magnifier that looks like a fisheye lens"),
+         QStringLiteral("Accessibility"),
+         QStringLiteral("magnifiers"),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/looking_glass.ogv")),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<LookingGlassEffect>,
-        &LookingGlassEffect::supported,
-        nullptr,
+         &createHelper<LookingGlassEffect>,
+         &LookingGlassEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_lookingglass_config")
-    }, {
-        QStringLiteral("magiclamp"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Magic Lamp"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Simulate a magic lamp when minimizing windows"),
-        QStringLiteral("Appearance"),
-        QStringLiteral("minimize"),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/magic_lamp.ogv")),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_lookingglass_config")},
+        {QStringLiteral("magiclamp"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Magic Lamp"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Simulate a magic lamp when minimizing windows"),
+         QStringLiteral("Appearance"),
+         QStringLiteral("minimize"),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/magic_lamp.ogv")),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<MagicLampEffect>,
-        &MagicLampEffect::supported,
-        nullptr,
+         &createHelper<MagicLampEffect>,
+         &MagicLampEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_magiclamp_config")
-    }, {
-        QStringLiteral("magnifier"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Magnifier"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Magnify the section of the screen that is near the mouse cursor"),
-        QStringLiteral("Accessibility"),
-        QStringLiteral("magnifiers"),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/magnifier.ogv")),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_magiclamp_config")},
+        {QStringLiteral("magnifier"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Magnifier"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Magnify the section of the screen that is near the mouse cursor"),
+         QStringLiteral("Accessibility"),
+         QStringLiteral("magnifiers"),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/magnifier.ogv")),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<MagnifierEffect>,
-        &MagnifierEffect::supported,
-        nullptr,
+         &createHelper<MagnifierEffect>,
+         &MagnifierEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_magnifier_config")
-    }, {
-        QStringLiteral("mouseclick"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Mouse Click Animation"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Creates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations"),
-        QStringLiteral("Accessibility"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/mouse_click.mp4")),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_magnifier_config")},
+        {QStringLiteral("mouseclick"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Mouse Click Animation"),
+         i18ndc("kwin_effects",
+                "Comment describing the KWin Effect",
+                "Creates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations"),
+         QStringLiteral("Accessibility"),
+         QString(),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/mouse_click.mp4")),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<MouseClickEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<MouseClickEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_mouseclick_config")
-    }, {
-        QStringLiteral("mousemark"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Mouse Mark"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Allows you to draw lines on the desktop"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_mouseclick_config")},
+        {QStringLiteral("mousemark"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Mouse Mark"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Allows you to draw lines on the desktop"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<MouseMarkEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<MouseMarkEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_mousemark_config")
-    }, {
-        QStringLiteral("overview"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Overview"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Allows you to overview virtual desktops and windows (WIP)"),
-        QStringLiteral("Window Management"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/present_windows.mp4")),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_mousemark_config")},
+        {QStringLiteral("overview"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Overview"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Allows you to overview virtual desktops and windows (WIP)"),
+         QStringLiteral("Window Management"),
+         QString(),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/present_windows.mp4")),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<OverviewEffect>,
-        &OverviewEffect::supported,
-        nullptr,
+         &createHelper<OverviewEffect>,
+         &OverviewEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_overview_config")
-    }, {
-        QStringLiteral("presentwindows"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Present Windows"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Zoom out until all opened windows can be displayed side-by-side"),
-        QStringLiteral("Window Management"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/present_windows.mp4")),
-        true,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_overview_config")},
+        {QStringLiteral("presentwindows"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Present Windows"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Zoom out until all opened windows can be displayed side-by-side"),
+         QStringLiteral("Window Management"),
+         QString(),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/present_windows.mp4")),
+         true,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<PresentWindowsEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<PresentWindowsEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_presentwindows_config")
-    }, {
-        QStringLiteral("resize"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Resize Window"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Resizes windows with a fast texture scale instead of updating contents"),
-        QStringLiteral("Window Management"),
-        QString(),
-        QUrl(),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_presentwindows_config")},
+        {QStringLiteral("resize"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Resize Window"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Resizes windows with a fast texture scale instead of updating contents"),
+         QStringLiteral("Window Management"),
+         QString(),
+         QUrl(),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<ResizeEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<ResizeEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_resize_config")
-    }, {
-        QStringLiteral("screenedge"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Screen Edge"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Highlights a screen edge when approaching"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        true,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_resize_config")},
+        {QStringLiteral("screenedge"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Screen Edge"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Highlights a screen edge when approaching"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         true,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<ScreenEdgeEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<ScreenEdgeEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("screenshot"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Screenshot"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Helper effect for screenshot tools"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        true,
-        true,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("screenshot"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Screenshot"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Helper effect for screenshot tools"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         true,
+         true,
 #ifdef EFFECT_BUILTINS
-        &createHelper<ScreenShotEffect>,
-        &ScreenShotEffect::supported,
-        nullptr,
+         &createHelper<ScreenShotEffect>,
+         &ScreenShotEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("screentransform"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Transform"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Animates display transformations"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        true,
-        true,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("screentransform"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Transform"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Animates display transformations"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         true,
+         true,
 #ifdef EFFECT_BUILTINS
-        &createHelper<ScreenTransformEffect>,
-        &ScreenTransformEffect::supported,
-        nullptr,
+         &createHelper<ScreenTransformEffect>,
+         &ScreenTransformEffect::supported,
+         nullptr,
 #endif
-        EFFECT_FALLBACK QString()
-    }, {
-        QStringLiteral("sheet"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Sheet"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Make modal dialogs smoothly fly in and out when they are shown or hidden"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        false,
-        false,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("sheet"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Sheet"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Make modal dialogs smoothly fly in and out when they are shown or hidden"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<SheetEffect>,
-        &SheetEffect::supported,
-        nullptr,
+         &createHelper<SheetEffect>,
+         &SheetEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("showfps"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Show FPS"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display KWin's performance in the corner of the screen"),
-        QStringLiteral("Tools"),
-        QString(),
-        QUrl(),
-        false,
-        false,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("showfps"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Show FPS"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display KWin's performance in the corner of the screen"),
+         QStringLiteral("Tools"),
+         QString(),
+         QUrl(),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<ShowFpsEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<ShowFpsEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_showfps_config")
-    }, {
-        QStringLiteral("showpaint"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Show Paint"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Highlight areas of the desktop that have been recently updated"),
-        QStringLiteral("Tools"),
-        QString(),
-        QUrl(),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_showfps_config")},
+        {QStringLiteral("showpaint"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Show Paint"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Highlight areas of the desktop that have been recently updated"),
+         QStringLiteral("Tools"),
+         QString(),
+         QUrl(),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<ShowPaintEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<ShowPaintEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_showpaint_config")
-    }, {
-        QStringLiteral("slide"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Slide"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Slide desktops when switching virtual desktops"),
-        QStringLiteral("Virtual Desktop Switching Animation"),
-        QStringLiteral("desktop-animations"),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/slide.ogv")),
-        true,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_showpaint_config")},
+        {QStringLiteral("slide"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Slide"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Slide desktops when switching virtual desktops"),
+         QStringLiteral("Virtual Desktop Switching Animation"),
+         QStringLiteral("desktop-animations"),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/slide.ogv")),
+         true,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<SlideEffect>,
-        &SlideEffect::supported,
-        nullptr,
+         &createHelper<SlideEffect>,
+         &SlideEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_slide_config")
-    }, {
-        QStringLiteral("slideback"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Slide Back"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Slide back windows when another window is raised"),
-        QStringLiteral("Focus"),
-        QString(),
-        QUrl(),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_slide_config")},
+        {QStringLiteral("slideback"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Slide Back"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Slide back windows when another window is raised"),
+         QStringLiteral("Focus"),
+         QString(),
+         QUrl(),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<SlideBackEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<SlideBackEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("slidingpopups"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Sliding popups"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Sliding animation for Plasma popups"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/sliding_popups.mp4")),
-        true,
-        false,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("slidingpopups"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Sliding popups"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Sliding animation for Plasma popups"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/sliding_popups.mp4")),
+         true,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<SlidingPopupsEffect>,
-        &SlidingPopupsEffect::supported,
-        nullptr,
+         &createHelper<SlidingPopupsEffect>,
+         &SlidingPopupsEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("snaphelper"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Snap Helper"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Help you locate the center of the screen when moving a window"),
-        QStringLiteral("Accessibility"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/snap_helper.mp4")),
-        false,
-        false,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("snaphelper"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Snap Helper"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Help you locate the center of the screen when moving a window"),
+         QStringLiteral("Accessibility"),
+         QString(),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/snap_helper.mp4")),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<SnapHelperEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<SnapHelperEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("startupfeedback"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Startup Feedback"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Helper effect for startup feedback"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        true,
-        true,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("startupfeedback"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Startup Feedback"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Helper effect for startup feedback"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         true,
+         true,
 #ifdef EFFECT_BUILTINS
-        &createHelper<StartupFeedbackEffect>,
-        &StartupFeedbackEffect::supported,
-        nullptr,
+         &createHelper<StartupFeedbackEffect>,
+         &StartupFeedbackEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("thumbnailaside"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Thumbnail Aside"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display window thumbnails on the edge of the screen"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        false,
-        false,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("thumbnailaside"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Thumbnail Aside"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display window thumbnails on the edge of the screen"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<ThumbnailAsideEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<ThumbnailAsideEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_thumbnailaside_config")
-    }, {
-        QStringLiteral("touchpoints"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Touch Points"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Visualize touch points"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_thumbnailaside_config")},
+        {QStringLiteral("touchpoints"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Touch Points"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Visualize touch points"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<TouchPointsEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<TouchPointsEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QString()
-    }, {
-        QStringLiteral("trackmouse"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Track Mouse"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display a mouse cursor locating effect when activated"),
-        QStringLiteral("Accessibility"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/track_mouse.mp4")),
-        false,
-        false,
+         EFFECT_FALLBACK QString()},
+        {QStringLiteral("trackmouse"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Track Mouse"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display a mouse cursor locating effect when activated"),
+         QStringLiteral("Accessibility"),
+         QString(),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/track_mouse.mp4")),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<TrackMouseEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<TrackMouseEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_trackmouse_config")
-    }, {
-        QStringLiteral("windowgeometry"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Window Geometry"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display window geometries on move/resize"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        false,
-        true,
+         EFFECT_FALLBACK QStringLiteral("kwin_trackmouse_config")},
+        {QStringLiteral("windowgeometry"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Window Geometry"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display window geometries on move/resize"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(),
+         false,
+         true,
 #ifdef EFFECT_BUILTINS
-        &createHelper<WindowGeometry>,
-        nullptr,
-        nullptr,
+         &createHelper<WindowGeometry>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_windowgeometry_config")
-    }, {
-        QStringLiteral("wobblywindows"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Wobbly Windows"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Deform windows while they are moving"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/wobbly_windows.ogv")),
-        false,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_windowgeometry_config")},
+        {QStringLiteral("wobblywindows"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Wobbly Windows"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Deform windows while they are moving"),
+         QStringLiteral("Appearance"),
+         QString(),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/wobbly_windows.ogv")),
+         false,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<WobblyWindowsEffect>,
-        &WobblyWindowsEffect::supported,
-        nullptr,
+         &createHelper<WobblyWindowsEffect>,
+         &WobblyWindowsEffect::supported,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_wobblywindows_config")
-    }, {
-        QStringLiteral("zoom"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Zoom"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Magnify the entire desktop"),
-        QStringLiteral("Accessibility"),
-        QStringLiteral("magnifiers"),
-        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/zoom.ogv")),
-        true,
-        false,
+         EFFECT_FALLBACK QStringLiteral("kwin_wobblywindows_config")},
+        {QStringLiteral("zoom"),
+         i18ndc("kwin_effects", "Name of a KWin Effect", "Zoom"),
+         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Magnify the entire desktop"),
+         QStringLiteral("Accessibility"),
+         QStringLiteral("magnifiers"),
+         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/zoom.ogv")),
+         true,
+         false,
 #ifdef EFFECT_BUILTINS
-        &createHelper<ZoomEffect>,
-        nullptr,
-        nullptr,
+         &createHelper<ZoomEffect>,
+         nullptr,
+         nullptr,
 #endif
-EFFECT_FALLBACK
-        QStringLiteral("kwin_zoom_config")
-    }
-    };
+         EFFECT_FALLBACK QStringLiteral("kwin_zoom_config")}};
     return s_effectData;
 }
 
@@ -665,11 +582,9 @@ Effect *create(BuiltInEffect effect)
 
 bool available(const QString &name)
 {
-    auto it = std::find_if(effectData().begin(), effectData().end(),
-        [name](const EffectData &data) {
-            return data.name == name;
-        }
-    );
+    auto it = std::find_if(effectData().begin(), effectData().end(), [name](const EffectData &data) {
+        return data.name == name;
+    });
     return it != effectData().end();
 }
 
@@ -714,7 +629,7 @@ QStringList availableEffectNames()
     return result;
 }
 
-QList< BuiltInEffect > availableEffects()
+QList<BuiltInEffect> availableEffects()
 {
     QList<BuiltInEffect> result;
     for (int i = index(BuiltInEffect::Invalid) + 1; i <= index(BuiltInEffect::Zoom); ++i) {
@@ -725,11 +640,9 @@ QList< BuiltInEffect > availableEffects()
 
 BuiltInEffect builtInForName(const QString &name)
 {
-    auto it = std::find_if(effectData().begin(), effectData().end(),
-        [name](const EffectData &data) {
-            return data.name == name;
-        }
-    );
+    auto it = std::find_if(effectData().begin(), effectData().end(), [name](const EffectData &data) {
+        return data.name == name;
+    });
     if (it == effectData().end()) {
         return BuiltInEffect::Invalid;
     }

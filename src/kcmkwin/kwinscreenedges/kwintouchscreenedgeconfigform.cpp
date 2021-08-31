@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 KWinTouchScreenEdgeConfigForm::KWinTouchScreenEdgeConfigForm(QWidget *parent)
     : KWinScreenEdge(parent)
     , ui(new Ui::KWinTouchScreenConfigUi)

@@ -16,8 +16,8 @@
 // KDE
 #include <NETWM>
 // Qt
-#include <QObject>
 #include <QMatrix4x4>
+#include <QObject>
 #include <QRect>
 #include <QUuid>
 // c++
@@ -32,7 +32,6 @@ class SurfaceInterface;
 
 namespace KWin
 {
-
 class AbstractOutput;
 class ClientMachine;
 class Deleted;
@@ -433,7 +432,7 @@ public:
     virtual bool isLocalhost() const;
     xcb_window_t wmClientLeader() const;
     virtual pid_t pid() const;
-    static bool resourceMatch(const Toplevel* c1, const Toplevel* c2);
+    static bool resourceMatch(const Toplevel *c1, const Toplevel *c2);
 
     bool readyForPainting() const; // true if the window has been already painted its contents
     xcb_visualid_t visual() const;
@@ -445,19 +444,19 @@ public:
     bool hasAlpha() const;
     virtual bool setupCompositing();
     virtual void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release);
-    Q_INVOKABLE void addRepaint(const QRect& r);
-    Q_INVOKABLE void addRepaint(const QRegion& r);
+    Q_INVOKABLE void addRepaint(const QRect &r);
+    Q_INVOKABLE void addRepaint(const QRegion &r);
     Q_INVOKABLE void addRepaint(int x, int y, int w, int h);
-    Q_INVOKABLE void addLayerRepaint(const QRect& r);
-    Q_INVOKABLE void addLayerRepaint(const QRegion& r);
+    Q_INVOKABLE void addLayerRepaint(const QRect &r);
+    Q_INVOKABLE void addLayerRepaint(const QRegion &r);
     Q_INVOKABLE void addLayerRepaint(int x, int y, int w, int h);
     Q_INVOKABLE virtual void addRepaintFull();
     // these call workspace->addRepaint(), but first transform the damage if needed
-    void addWorkspaceRepaint(const QRect& r);
+    void addWorkspaceRepaint(const QRect &r);
     void addWorkspaceRepaint(int x, int y, int w, int h);
     void addWorkspaceRepaint(const QRegion &region);
-    EffectWindowImpl* effectWindow();
-    const EffectWindowImpl* effectWindow() const;
+    EffectWindowImpl *effectWindow();
+    const EffectWindowImpl *effectWindow() const;
     SurfaceItem *surfaceItem() const;
     WindowItem *windowItem() const;
     /**
@@ -482,7 +481,7 @@ public:
      * It is supposed to only provide valuable information if hasAlpha is @c true .
      * @see hasAlpha
      */
-    const QRegion& opaqueRegion() const;
+    const QRegion &opaqueRegion() const;
     QRegion shapeRegion() const;
 
     virtual Layer layer() const = 0;
@@ -523,7 +522,8 @@ public:
      * @see popupDone
      * @since 5.10
      */
-    virtual bool hasPopupGrab() const {
+    virtual bool hasPopupGrab() const
+    {
         return false;
     }
     /**
@@ -534,7 +534,7 @@ public:
      * @see hasPopupGrab
      * @since 5.10
      */
-    virtual void popupDone() {};
+    virtual void popupDone(){};
 
     /**
      * @brief Finds the Toplevel matching the condition expressed in @p func in @p list.
@@ -545,8 +545,8 @@ public:
      * @param func The condition function (compare std::find_if)
      * @return T* The found Toplevel or @c null if there is no matching Toplevel
      */
-    template <class T, class U>
-    static T *findInList(const QList<T*> &list, std::function<bool (const U*)> func);
+    template<class T, class U>
+    static T *findInList(const QList<T *> &list, std::function<bool(const U *)> func);
 
     /**
      * Whether the window is a popup.
@@ -568,7 +568,10 @@ public:
     /**
      * Returns @c true if the window is shaded; otherwise returns @c false.
      */
-    virtual bool isShade() const { return false; }
+    virtual bool isShade() const
+    {
+        return false;
+    }
 
     int stackingOrder() const;
     void setStackingOrder(int order); ///< @internal
@@ -576,18 +579,18 @@ public:
 Q_SIGNALS:
     void stackingOrderChanged();
     void shadeChanged();
-    void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
-    void damaged(KWin::Toplevel* toplevel, const QRegion& damage);
+    void opacityChanged(KWin::Toplevel *toplevel, qreal oldOpacity);
+    void damaged(KWin::Toplevel *toplevel, const QRegion &damage);
     void inputTransformationChanged();
     /**
      * This signal is emitted when the Toplevel's frame geometry changes.
      * @deprecated since 5.19, use frameGeometryChanged instead
      */
     void geometryChanged();
-    void geometryShapeChanged(KWin::Toplevel* toplevel, const QRect& old);
-    void windowClosed(KWin::Toplevel* toplevel, KWin::Deleted* deleted);
-    void windowShown(KWin::Toplevel* toplevel);
-    void windowHidden(KWin::Toplevel* toplevel);
+    void geometryShapeChanged(KWin::Toplevel *toplevel, const QRect &old);
+    void windowClosed(KWin::Toplevel *toplevel, KWin::Deleted *deleted);
+    void windowShown(KWin::Toplevel *toplevel);
+    void windowHidden(KWin::Toplevel *toplevel);
     /**
      * Signal emitted when the window's shape state changed. That is if it did not have a shape
      * and received one or if the shape was withdrawn. Think of Chromium enabling/disabling KWin's
@@ -690,7 +693,7 @@ protected:
     Xcb::Property fetchSkipCloseAnimation() const;
     void readSkipCloseAnimation(Xcb::Property &prop);
     void getSkipCloseAnimation();
-    void copyToDeleted(Toplevel* c);
+    void copyToDeleted(Toplevel *c);
     void disownDataPassedToDeleted();
     void deleteEffectWindow();
     void setDepth(int depth);
@@ -699,7 +702,7 @@ protected:
     QRect m_bufferGeometry;
     xcb_visualid_t m_visual;
     int bit_depth;
-    NETWinInfo* info;
+    NETWinInfo *info;
     bool ready_for_painting;
     /**
      * An FBO object KWin internal windows might render to.
@@ -712,7 +715,7 @@ private:
     QUuid m_internalId;
     Xcb::Window m_client;
     bool is_shape;
-    EffectWindowImpl* effect_window;
+    EffectWindowImpl *effect_window;
     QByteArray resource_name;
     QByteArray resource_class;
     ClientMachine *m_clientMachine;
@@ -916,19 +919,17 @@ inline bool Toplevel::hasAlpha() const
     return depth() == 32;
 }
 
-inline const QRegion& Toplevel::opaqueRegion() const
+inline const QRegion &Toplevel::opaqueRegion() const
 {
     return opaque_region;
 }
 
-inline
-EffectWindowImpl* Toplevel::effectWindow()
+inline EffectWindowImpl *Toplevel::effectWindow()
 {
     return effect_window;
 }
 
-inline
-const EffectWindowImpl* Toplevel::effectWindow() const
+inline const EffectWindowImpl *Toplevel::effectWindow() const
 {
     return effect_window;
 }
@@ -983,11 +984,10 @@ inline QImage Toplevel::internalImageObject() const
     return m_internalImage;
 }
 
-template <class T, class U>
-inline T *Toplevel::findInList(const QList<T*> &list, std::function<bool (const U*)> func)
+template<class T, class U>
+inline T *Toplevel::findInList(const QList<T *> &list, std::function<bool(const U *)> func)
 {
-    static_assert(std::is_base_of<U, T>::value,
-                 "U must be derived from T");
+    static_assert(std::is_base_of<U, T>::value, "U must be derived from T");
     const auto it = std::find_if(list.begin(), list.end(), func);
     if (it == list.end()) {
         return nullptr;
@@ -1012,6 +1012,6 @@ inline bool Toplevel::isPopupWindow() const
 KWIN_EXPORT QDebug operator<<(QDebug debug, const Toplevel *toplevel);
 
 } // namespace
-Q_DECLARE_METATYPE(KWin::Toplevel*)
+Q_DECLARE_METATYPE(KWin::Toplevel *)
 
 #endif

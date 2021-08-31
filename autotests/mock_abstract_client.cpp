@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 AbstractClient::AbstractClient(QObject *parent)
     : QObject(parent)
     , m_active(false)

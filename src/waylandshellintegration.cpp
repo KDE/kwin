@@ -8,7 +8,6 @@
 
 namespace KWin
 {
-
 WaylandShellIntegration::WaylandShellIntegration(QObject *parent)
     : QObject(parent)
 {

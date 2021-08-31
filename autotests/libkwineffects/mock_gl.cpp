@@ -18,15 +18,15 @@ static const GLubyte *mock_glGetString(GLenum name)
     }
     switch (name) {
     case GL_VENDOR:
-        return (const GLubyte*)s_gl->getString.vendor.constData();
+        return (const GLubyte *)s_gl->getString.vendor.constData();
     case GL_RENDERER:
-        return (const GLubyte*)s_gl->getString.renderer.constData();
+        return (const GLubyte *)s_gl->getString.renderer.constData();
     case GL_VERSION:
-        return (const GLubyte*)s_gl->getString.version.constData();
+        return (const GLubyte *)s_gl->getString.version.constData();
     case GL_EXTENSIONS:
-        return (const GLubyte*)s_gl->getString.extensionsString.constData();
+        return (const GLubyte *)s_gl->getString.extensionsString.constData();
     case GL_SHADING_LANGUAGE_VERSION:
-        return (const GLubyte*)s_gl->getString.shadingLanguageVersion.constData();
+        return (const GLubyte *)s_gl->getString.shadingLanguageVersion.constData();
     default:
         return nullptr;
     }
@@ -38,7 +38,7 @@ static const GLubyte *mock_glGetStringi(GLenum name, GLuint index)
         return nullptr;
     }
     if (name == GL_EXTENSIONS && index < uint(s_gl->getString.extensions.count())) {
-        return (const GLubyte*)s_gl->getString.extensions.at(index).constData();
+        return (const GLubyte *)s_gl->getString.extensions.at(index).constData();
     }
     return nullptr;
 }

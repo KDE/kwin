@@ -9,12 +9,12 @@
 */
 #include "touch_input.h"
 #include "abstract_client.h"
-#include "pointer_input.h"
+#include "decorations/decoratedclient.h"
 #include "input_event_spy.h"
+#include "pointer_input.h"
 #include "toplevel.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "decorations/decoratedclient.h"
 // KDecoration
 #include <KDecoration2/Decoration>
 // KWayland
@@ -27,7 +27,6 @@
 
 namespace KWin
 {
-
 TouchInputRedirection::TouchInputRedirection(InputRedirection *parent)
     : InputDeviceHandler(parent)
 {
@@ -42,16 +41,18 @@ void TouchInputRedirection::init()
     InputDeviceHandler::init();
 
     if (waylandServer()->hasScreenLockerIntegration()) {
-        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
-            [this] {
-                cancel();
-                // position doesn't matter
-                update();
-            }
-        );
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, [this] {
+            cancel();
+            // position doesn't matter
+            update();
+        });
     }
-    connect(workspace(), &QObject::destroyed, this, [this] { setInited(false); });
-    connect(waylandServer(), &QObject::destroyed, this, [this] { setInited(false); });
+    connect(workspace(), &QObject::destroyed, this, [this] {
+        setInited(false);
+    });
+    connect(waylandServer(), &QObject::destroyed, this, [this] {
+        setInited(false);
+    });
 }
 
 bool TouchInputRedirection::focusUpdatesBlocked()
@@ -83,13 +84,13 @@ void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
 {
     // TODO: handle pointer grab aka popups
 
-    if (AbstractClient *ac = qobject_cast<AbstractClient*>(focusOld)) {
+    if (AbstractClient *ac = qobject_cast<AbstractClient *>(focusOld)) {
         ac->leaveEvent();
     }
     disconnect(m_focusGeometryConnection);
     m_focusGeometryConnection = QMetaObject::Connection();
 
-    if (AbstractClient *ac = qobject_cast<AbstractClient*>(focusNow)) {
+    if (AbstractClient *ac = qobject_cast<AbstractClient *>(focusNow)) {
         ac->enterEvent(m_lastPosition.toPoint());
         workspace()->updateFocusMousePosition(m_lastPosition.toPoint());
     }
@@ -105,18 +106,16 @@ void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
 
     // FIXME: add input transformation API to KWaylandServer::SeatInterface for touch input
     seat->setFocusedTouchSurface(focusNow->surface(), -1 * focusNow->inputTransformation().map(focusNow->pos()) + focusNow->pos());
-    m_focusGeometryConnection = connect(focusNow, &Toplevel::frameGeometryChanged, this,
-        [this] {
-            if (!focus()) {
-                return;
-            }
-            auto seat = waylandServer()->seat();
-            if (focus()->surface() != seat->focusedTouchSurface()) {
-                return;
-            }
-            seat->setFocusedTouchSurfacePosition(-1 * focus()->inputTransformation().map(focus()->pos()) + focus()->pos());
+    m_focusGeometryConnection = connect(focusNow, &Toplevel::frameGeometryChanged, this, [this] {
+        if (!focus()) {
+            return;
         }
-    );
+        auto seat = waylandServer()->seat();
+        if (focus()->surface() != seat->focusedTouchSurface()) {
+            return;
+        }
+        seat->setFocusedTouchSurfacePosition(-1 * focus()->inputTransformation().map(focus()->pos()) + focus()->pos());
+    });
 }
 
 void TouchInputRedirection::cleanupInternalWindow(QWindow *old, QWindow *now)

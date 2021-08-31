@@ -17,7 +17,6 @@
 
 namespace KWin
 {
-
 class FramebufferBackend;
 class VsyncMonitor;
 
@@ -57,36 +56,43 @@ public:
     Session *session() const override;
 
     int fileDescriptor() const;
-    bool isValid() const {
+    bool isValid() const
+    {
         return m_fd >= 0;
     }
 
     void map();
     void unmap();
-    void *mappedMemory() const {
+    void *mappedMemory() const
+    {
         return m_memory;
     }
-    int bytesPerLine() const {
+    int bytesPerLine() const
+    {
         return m_bytesPerLine;
     }
-    int bufferSize() const {
+    int bufferSize() const
+    {
         return m_bufferLength;
     }
-    quint32 bitsPerPixel() const {
+    quint32 bitsPerPixel() const
+    {
         return m_bitsPerPixel;
     }
     QImage::Format imageFormat() const;
     /**
      * @returns whether the imageFormat is BGR instead of RGB.
      */
-    bool isBGR() const {
+    bool isBGR() const
+    {
         return m_bgr;
     }
 
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
 
-    QVector<CompositingType> supportedCompositors() const override {
+    QVector<CompositingType> supportedCompositors() const override
+    {
         return QVector<CompositingType>{QPainterCompositing};
     }
 
@@ -94,7 +100,7 @@ private:
     bool handleScreenInfo();
     void initImageFormat();
 
-    QVector<FramebufferOutput*> m_outputs;
+    QVector<FramebufferOutput *> m_outputs;
     Session *m_session;
     QByteArray m_id;
     struct Color {

@@ -7,23 +7,23 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
+#include "abstract_client.h"
 #include "abstract_output.h"
 #include "atoms.h"
-#include "platform.h"
-#include "abstract_client.h"
-#include "x11client.h"
 #include "cursor.h"
+#include "deleted.h"
 #include "effects.h"
+#include "kwin_wayland_test.h"
+#include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "deleted.h"
+#include "x11client.h"
 
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/pointer.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/plasmashell.h>
+#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
 
@@ -35,7 +35,6 @@ Q_DECLARE_METATYPE(KWin::MaximizeMode)
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_quick_tiling-0");
 
 class MoveResizeWindowTest : public QObject
@@ -194,8 +193,7 @@ void MoveResizeWindowTest::testResize()
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(
-        surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QVERIFY(!shellSurface.isNull());
 
     // Wait for the initial configure event.
@@ -323,10 +321,10 @@ void MoveResizeWindowTest::testPackTo_data()
     QTest::addColumn<QString>("methodCall");
     QTest::addColumn<QRect>("expectedGeometry");
 
-    QTest::newRow("left")  << QStringLiteral("slotWindowPackLeft")  << QRect(0, 487, 100, 50);
-    QTest::newRow("up")    << QStringLiteral("slotWindowPackUp")    << QRect(590, 0, 100, 50);
+    QTest::newRow("left") << QStringLiteral("slotWindowPackLeft") << QRect(0, 487, 100, 50);
+    QTest::newRow("up") << QStringLiteral("slotWindowPackUp") << QRect(590, 0, 100, 50);
     QTest::newRow("right") << QStringLiteral("slotWindowPackRight") << QRect(1180, 487, 100, 50);
-    QTest::newRow("down")  << QStringLiteral("slotWindowPackDown")  << QRect(590, 974, 100, 50);
+    QTest::newRow("down") << QStringLiteral("slotWindowPackDown") << QRect(590, 974, 100, 50);
 }
 
 void MoveResizeWindowTest::testPackTo()
@@ -361,10 +359,10 @@ void MoveResizeWindowTest::testPackAgainstClient_data()
     QTest::addColumn<QString>("methodCall");
     QTest::addColumn<QRect>("expectedGeometry");
 
-    QTest::newRow("left")  << QStringLiteral("slotWindowPackLeft")  << QRect(10, 487, 100, 50);
-    QTest::newRow("up")    << QStringLiteral("slotWindowPackUp")    << QRect(590, 10, 100, 50);
+    QTest::newRow("left") << QStringLiteral("slotWindowPackLeft") << QRect(10, 487, 100, 50);
+    QTest::newRow("up") << QStringLiteral("slotWindowPackUp") << QRect(590, 10, 100, 50);
     QTest::newRow("right") << QStringLiteral("slotWindowPackRight") << QRect(1170, 487, 100, 50);
-    QTest::newRow("down")  << QStringLiteral("slotWindowPackDown")  << QRect(590, 964, 100, 50);
+    QTest::newRow("down") << QStringLiteral("slotWindowPackDown") << QRect(590, 964, 100, 50);
 }
 
 void MoveResizeWindowTest::testPackAgainstClient()
@@ -388,7 +386,7 @@ void MoveResizeWindowTest::testPackAgainstClient()
     QVERIFY(!shellSurface3.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface4(Test::createXdgToplevelSurface(surface4.data()));
     QVERIFY(!shellSurface4.isNull());
-    auto renderWindow = [] (Surface *surface, const QString &methodCall, const QRect &expectedGeometry) {
+    auto renderWindow = [](Surface *surface, const QString &methodCall, const QRect &expectedGeometry) {
         // let's render
         auto c = Test::renderAndWaitForShown(surface, QSize(10, 10), Qt::blue);
 
@@ -401,10 +399,10 @@ void MoveResizeWindowTest::testPackAgainstClient()
         QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
         QCOMPARE(c->frameGeometry(), expectedGeometry);
     };
-    renderWindow(surface1.data(), QStringLiteral("slotWindowPackLeft"),  QRect(0, 507, 10, 10));
-    renderWindow(surface2.data(), QStringLiteral("slotWindowPackUp"),    QRect(635, 0, 10, 10));
+    renderWindow(surface1.data(), QStringLiteral("slotWindowPackLeft"), QRect(0, 507, 10, 10));
+    renderWindow(surface2.data(), QStringLiteral("slotWindowPackUp"), QRect(635, 0, 10, 10));
     renderWindow(surface3.data(), QStringLiteral("slotWindowPackRight"), QRect(1270, 507, 10, 10));
-    renderWindow(surface4.data(), QStringLiteral("slotWindowPackDown"),  QRect(635, 1014, 10, 10));
+    renderWindow(surface4.data(), QStringLiteral("slotWindowPackDown"), QRect(635, 1014, 10, 10));
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
@@ -428,9 +426,9 @@ void MoveResizeWindowTest::testGrowShrink_data()
     QTest::addColumn<QString>("methodCall");
     QTest::addColumn<QRect>("expectedGeometry");
 
-    QTest::newRow("grow vertical")     << QStringLiteral("slotWindowGrowVertical")     << QRect(590, 487, 100, 537);
-    QTest::newRow("grow horizontal")   << QStringLiteral("slotWindowGrowHorizontal")   << QRect(590, 487, 690, 50);
-    QTest::newRow("shrink vertical")   << QStringLiteral("slotWindowShrinkVertical")   << QRect(590, 487, 100, 23);
+    QTest::newRow("grow vertical") << QStringLiteral("slotWindowGrowVertical") << QRect(590, 487, 100, 537);
+    QTest::newRow("grow horizontal") << QStringLiteral("slotWindowGrowHorizontal") << QRect(590, 487, 690, 50);
+    QTest::newRow("shrink vertical") << QStringLiteral("slotWindowShrinkVertical") << QRect(590, 487, 100, 23);
     QTest::newRow("shrink horizontal") << QStringLiteral("slotWindowShrinkHorizontal") << QRect(590, 487, 40, 50);
 }
 
@@ -484,14 +482,14 @@ void MoveResizeWindowTest::testPointerMoveEnd_data()
 {
     QTest::addColumn<int>("additionalButton");
 
-    QTest::newRow("BTN_RIGHT")   << BTN_RIGHT;
-    QTest::newRow("BTN_MIDDLE")  << BTN_MIDDLE;
-    QTest::newRow("BTN_SIDE")    << BTN_SIDE;
-    QTest::newRow("BTN_EXTRA")   << BTN_EXTRA;
+    QTest::newRow("BTN_RIGHT") << BTN_RIGHT;
+    QTest::newRow("BTN_MIDDLE") << BTN_MIDDLE;
+    QTest::newRow("BTN_SIDE") << BTN_SIDE;
+    QTest::newRow("BTN_EXTRA") << BTN_EXTRA;
     QTest::newRow("BTN_FORWARD") << BTN_FORWARD;
-    QTest::newRow("BTN_BACK")    << BTN_BACK;
-    QTest::newRow("BTN_TASK")    << BTN_TASK;
-    for (int i=BTN_TASK + 1; i < BTN_JOYSTICK; i++) {
+    QTest::newRow("BTN_BACK") << BTN_BACK;
+    QTest::newRow("BTN_TASK") << BTN_TASK;
+    for (int i = BTN_TASK + 1; i < BTN_JOYSTICK; i++) {
         QTest::newRow(QByteArray::number(i, 16).constData()) << i;
     }
 }
@@ -592,10 +590,10 @@ void MoveResizeWindowTest::testPlasmaShellSurfaceMovable_data()
     QTest::addColumn<bool>("movableAcrossScreens");
     QTest::addColumn<bool>("resizable");
 
-    QTest::newRow("normal")  << KWayland::Client::PlasmaShellSurface::Role::Normal          << true  << true  << true;
-    QTest::newRow("desktop") << KWayland::Client::PlasmaShellSurface::Role::Desktop         << false << false << false;
-    QTest::newRow("panel")   << KWayland::Client::PlasmaShellSurface::Role::Panel           << false << false << false;
-    QTest::newRow("osd")     << KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay << false << false << false;
+    QTest::newRow("normal") << KWayland::Client::PlasmaShellSurface::Role::Normal << true << true << true;
+    QTest::newRow("desktop") << KWayland::Client::PlasmaShellSurface::Role::Desktop << false << false << false;
+    QTest::newRow("panel") << KWayland::Client::PlasmaShellSurface::Role::Panel << false << false << false;
+    QTest::newRow("osd") << KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay << false << false << false;
 }
 
 void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
@@ -623,8 +621,7 @@ void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
     QVERIFY(Test::waitForWindowDestroyed(c));
 }
 
-struct XcbConnectionDeleter
-{
+struct XcbConnectionDeleter {
     static inline void cleanup(xcb_connection_t *pointer)
     {
         xcb_disconnect(pointer);
@@ -639,9 +636,7 @@ void MoveResizeWindowTest::testNetMove()
     QVERIFY(!xcb_connection_has_error(c.data()));
 
     xcb_window_t w = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
-                      0, 0, 100, 100,
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(), 0, 0, 100, 100, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, 0, 0);
@@ -713,7 +708,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel_data()
     QTest::addColumn<quint32>("hideLocation");
 
     QTest::newRow("top") << QRect(0, 0, 100, 20) << QPoint(50, 25) << QPoint(50, 20) << 0u;
-    QTest::newRow("bottom") << QRect(0, 1024-20, 100, 20) << QPoint(50, 1024 - 25 - 50) << QPoint(50, 1024 - 20 - 50) << 2u;
+    QTest::newRow("bottom") << QRect(0, 1024 - 20, 100, 20) << QPoint(50, 1024 - 25 - 50) << QPoint(50, 1024 - 20 - 50) << 2u;
     QTest::newRow("left") << QRect(0, 0, 20, 100) << QPoint(25, 50) << QPoint(20, 50) << 3u;
     QTest::newRow("right") << QRect(1280 - 20, 0, 20, 100) << QPoint(1280 - 25 - 100, 50) << QPoint(1280 - 20 - 100, 50) << 1u;
 }
@@ -729,9 +724,19 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel()
 
     xcb_window_t w = xcb_generate_id(c.data());
     QFETCH(QRect, panelGeometry);
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
-                      panelGeometry.x(), panelGeometry.y(), panelGeometry.width(), panelGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_create_window(c.data(),
+                      XCB_COPY_FROM_PARENT,
+                      w,
+                      rootWindow(),
+                      panelGeometry.x(),
+                      panelGeometry.y(),
+                      panelGeometry.width(),
+                      panelGeometry.height(),
+                      0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      XCB_COPY_FROM_PARENT,
+                      0,
+                      nullptr);
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, panelGeometry.x(), panelGeometry.y());
@@ -805,7 +810,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel_data
     QTest::addColumn<QPoint>("expectedAdjustedPoint");
 
     QTest::newRow("top") << QRect(0, 0, 100, 20) << QPoint(50, 25) << QPoint(50, 20);
-    QTest::newRow("bottom") << QRect(0, 1024-20, 100, 20) << QPoint(50, 1024 - 25 - 50) << QPoint(50, 1024 - 20 - 50);
+    QTest::newRow("bottom") << QRect(0, 1024 - 20, 100, 20) << QPoint(50, 1024 - 25 - 50) << QPoint(50, 1024 - 20 - 50);
     QTest::newRow("left") << QRect(0, 0, 20, 100) << QPoint(25, 50) << QPoint(20, 50);
     QTest::newRow("right") << QRect(1280 - 20, 0, 20, 100) << QPoint(1280 - 25 - 100, 50) << QPoint(1280 - 20 - 100, 50);
 }

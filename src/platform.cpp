@@ -9,21 +9,21 @@
 #include "platform.h"
 
 #include "abstract_output.h"
-#include <config-kwin.h>
 #include "composite.h"
 #include "cursor.h"
 #include "effects.h"
-#include <KCoreAddons>
-#include "overlaywindow.h"
 #include "outline.h"
+#include "overlaywindow.h"
 #include "pointer_input.h"
 #include "scene.h"
-#include "screens.h"
 #include "screenedge.h"
+#include "screens.h"
 #include "wayland_server.h"
+#include <KCoreAddons>
+#include <config-kwin.h>
 
-#include <KWaylandServer/outputconfiguration_interface.h>
 #include <KWaylandServer/outputchangeset.h>
+#include <KWaylandServer/outputconfiguration_interface.h>
 
 #include <QX11Info>
 
@@ -31,7 +31,6 @@
 
 namespace KWin
 {
-
 Platform::Platform(QObject *parent)
     : QObject(parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
@@ -46,7 +45,7 @@ Platform::~Platform()
 
 PlatformCursorImage Platform::cursorImage() const
 {
-    Cursor* cursor = Cursors::self()->currentCursor();
+    Cursor *cursor = Cursors::self()->currentCursor();
     return PlatformCursorImage(cursor->image(), cursor->hotspot());
 }
 
@@ -106,32 +105,31 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface
 
     const auto changes = config->changes();
 
-    //process all non-disabling changes
+    // process all non-disabling changes
     for (auto it = changes.begin(); it != changes.end(); it++) {
         const KWaylandServer::OutputChangeSet *changeset = it.value();
 
-        AbstractOutput* output = findOutput(it.key()->uuid());
+        AbstractOutput *output = findOutput(it.key()->uuid());
         if (!output) {
             qCWarning(KWIN_CORE) << "Could NOT find output matching " << it.key()->uuid();
             continue;
         }
 
-        qDebug(KWIN_CORE) << "Platform::requestOutputsChange enabling" << changeset << it.key()->uuid() << changeset->enabledChanged() << (changeset->enabled() == Enablement::Enabled);
+        qDebug(KWIN_CORE) << "Platform::requestOutputsChange enabling" << changeset << it.key()->uuid() << changeset->enabledChanged()
+                          << (changeset->enabled() == Enablement::Enabled);
 
-        if (changeset->enabledChanged() &&
-                changeset->enabled() == Enablement::Enabled) {
+        if (changeset->enabledChanged() && changeset->enabled() == Enablement::Enabled) {
             output->setEnabled(true);
         }
 
         output->applyChanges(changeset);
     }
 
-    //process any disable requests
+    // process any disable requests
     for (auto it = changes.begin(); it != changes.end(); it++) {
         const KWaylandServer::OutputChangeSet *changeset = it.value();
 
-        if (changeset->enabledChanged() &&
-                changeset->enabled() == Enablement::Disabled) {
+        if (changeset->enabledChanged() && changeset->enabled() == Enablement::Disabled) {
             if (enabledOutputs().count() == 1) {
                 // TODO: check beforehand this condition and set failed otherwise
                 // TODO: instead create a dummy output?
@@ -160,10 +158,9 @@ AbstractOutput *Platform::findOutput(int screenId) const
 AbstractOutput *Platform::findOutput(const QUuid &uuid) const
 {
     const auto outs = outputs();
-    auto it = std::find_if(outs.constBegin(), outs.constEnd(),
-        [uuid](AbstractOutput *output) {
-            return output->uuid() == uuid; }
-    );
+    auto it = std::find_if(outs.constBegin(), outs.constEnd(), [uuid](AbstractOutput *output) {
+        return output->uuid() == uuid;
+    });
     if (it != outs.constEnd()) {
         return *it;
     }
@@ -534,7 +531,7 @@ void Platform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
     Q_UNUSED(safePoint)
 }
 
-void Platform::startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
+void Platform::startInteractiveWindowSelection(std::function<void(KWin::Toplevel *)> callback, const QByteArray &cursorName)
 {
     if (!input()) {
         callback(nullptr);
@@ -593,7 +590,7 @@ void Platform::updateXTime()
 OutlineVisual *Platform::createOutline(Outline *outline)
 {
     if (Compositor::compositing()) {
-       return new CompositedOutlineVisual(outline);
+        return new CompositedOutlineVisual(outline);
     }
     return nullptr;
 }
@@ -601,7 +598,7 @@ OutlineVisual *Platform::createOutline(Outline *outline)
 void Platform::invertScreen()
 {
     if (effects) {
-        if (Effect *inverter = static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::ScreenInversion)) {
+        if (Effect *inverter = static_cast<EffectsHandlerImpl *>(effects)->provides(Effect::ScreenInversion)) {
             qCDebug(KWIN_CORE) << "inverting screen using Effect plugin";
             QMetaObject::invokeMethod(inverter, "toggleScreenInversion", Qt::DirectConnection);
         }

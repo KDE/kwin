@@ -15,7 +15,9 @@
 
 using namespace KWin;
 
-AbstractEglDrmBackend::AbstractEglDrmBackend(DrmBackend *drmBackend, DrmGpu *gpu) : m_backend(drmBackend), m_gpu(gpu)
+AbstractEglDrmBackend::AbstractEglDrmBackend(DrmBackend *drmBackend, DrmGpu *gpu)
+    : m_backend(drmBackend)
+    , m_gpu(gpu)
 {
     m_gpu->setEglBackend(this);
     // Egl is always direct rendering.

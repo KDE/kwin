@@ -6,10 +6,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "cursor.h"
 #include "input.h"
 #include "keyboard_input.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -115,14 +115,22 @@ void ModifierOnlyShortcutTest::testTrigger_data()
     const QStringList trigger = QStringList{s_serviceName, s_path, s_serviceName, QStringLiteral("shortcut")};
     const QStringList e = QStringList();
 
-    QTest::newRow("leftMeta") << trigger << e << e << e << KEY_LEFTMETA << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("rightMeta") << trigger << e << e << e << KEY_RIGHTMETA << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("leftAlt") << e << trigger << e << e << KEY_LEFTALT << QList<int>{KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("rightAlt") << e << trigger << e << e << KEY_RIGHTALT << QList<int>{KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("leftControl") << e << e << trigger << e << KEY_LEFTCTRL << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("rightControl") << e << e << trigger << e << KEY_RIGHTCTRL << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("leftShift") << e << e << e << trigger << KEY_LEFTSHIFT << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTMETA, KEY_RIGHTMETA};
-    QTest::newRow("rightShift") << e << e <<  e << trigger <<KEY_RIGHTSHIFT << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTMETA, KEY_RIGHTMETA};
+    QTest::newRow("leftMeta") << trigger << e << e << e << KEY_LEFTMETA
+                              << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("rightMeta") << trigger << e << e << e << KEY_RIGHTMETA
+                               << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("leftAlt") << e << trigger << e << e << KEY_LEFTALT
+                             << QList<int>{KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("rightAlt") << e << trigger << e << e << KEY_RIGHTALT
+                              << QList<int>{KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("leftControl") << e << e << trigger << e << KEY_LEFTCTRL
+                                 << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("rightControl") << e << e << trigger << e << KEY_RIGHTCTRL
+                                  << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("leftShift") << e << e << e << trigger << KEY_LEFTSHIFT
+                               << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTMETA, KEY_RIGHTMETA};
+    QTest::newRow("rightShift") << e << e << e << trigger << KEY_RIGHTSHIFT
+                                << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTMETA, KEY_RIGHTMETA};
 }
 
 void ModifierOnlyShortcutTest::testTrigger()
@@ -320,7 +328,7 @@ void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled_data()
     QTest::newRow("leftControl") << e << e << trigger << e << KEY_LEFTCTRL;
     QTest::newRow("rightControl") << e << e << trigger << e << KEY_RIGHTCTRL;
     QTest::newRow("leftShift") << e << e << e << trigger << KEY_LEFTSHIFT;
-    QTest::newRow("rightShift") << e << e <<  e << trigger <<KEY_RIGHTSHIFT;
+    QTest::newRow("rightShift") << e << e << e << trigger << KEY_RIGHTSHIFT;
 }
 
 void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled()

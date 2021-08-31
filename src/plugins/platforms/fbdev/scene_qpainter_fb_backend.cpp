@@ -7,9 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_qpainter_fb_backend.h"
-#include "fb_backend.h"
 #include "composite.h"
 #include "cursor.h"
+#include "fb_backend.h"
 #include "main.h"
 #include "platform.h"
 #include "renderloop.h"
@@ -29,10 +29,11 @@ FramebufferQPainterBackend::FramebufferQPainterBackend(FramebufferBackend *backe
     m_renderBuffer.fill(Qt::black);
     m_backend->map();
 
-    m_backBuffer = QImage((uchar*)m_backend->mappedMemory(),
+    m_backBuffer = QImage((uchar *)m_backend->mappedMemory(),
                           m_backend->bytesPerLine() / (m_backend->bitsPerPixel() / 8),
                           m_backend->bufferSize() / m_backend->bytesPerLine(),
-                          m_backend->bytesPerLine(), m_backend->imageFormat());
+                          m_backend->bytesPerLine(),
+                          m_backend->imageFormat());
     m_backBuffer.fill(Qt::black);
 
     connect(kwinApp()->platform()->session(), &Session::activeChanged, this, [this](bool active) {
@@ -63,7 +64,7 @@ void FramebufferQPainterBackend::deactivate()
 
 FramebufferQPainterBackend::~FramebufferQPainterBackend() = default;
 
-QImage* FramebufferQPainterBackend::bufferForScreen(AbstractOutput *output)
+QImage *FramebufferQPainterBackend::bufferForScreen(AbstractOutput *output)
 {
     Q_UNUSED(output)
     return &m_renderBuffer;

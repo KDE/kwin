@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 class KWIN_EXPORT EglContextAttributeBuilder : public AbstractOpenGLContextAttributeBuilder
 {
 public:

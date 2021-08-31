@@ -12,7 +12,9 @@
 class SwitcherPackage : public KPackage::PackageStructure
 {
 public:
-    SwitcherPackage(QObject*, const QVariantList &) {}
+    SwitcherPackage(QObject *, const QVariantList &)
+    {
+    }
     void initPackage(KPackage::Package *package) override;
     void pathChanged(KPackage::Package *package) override;
 };

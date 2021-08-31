@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 /**
  * The Session class represents the session controlled by the compositor.
  *

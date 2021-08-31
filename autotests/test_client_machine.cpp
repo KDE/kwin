@@ -12,15 +12,15 @@
 #include "xcbutils.h"
 // Qt
 #include <QApplication>
-#include <QtTest>
 #include <QX11Info>
+#include <QtTest>
 // xcb
 #include <xcb/xcb.h>
 // system
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 #include <netdb.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
 
@@ -44,9 +44,7 @@ private:
 
 void TestClientMachine::setClientMachineProperty(xcb_window_t window, const QByteArray &hostname)
 {
-    xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, window,
-                        XCB_ATOM_WM_CLIENT_MACHINE, XCB_ATOM_STRING, 8,
-                        hostname.length(), hostname.constData());
+    xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, window, XCB_ATOM_WM_CLIENT_MACHINE, XCB_ATOM_STRING, 8, hostname.length(), hostname.constData());
 }
 
 void TestClientMachine::initTestCase()
@@ -57,7 +55,7 @@ void TestClientMachine::initTestCase()
     char hostnamebuf[256];
 #endif
     if (gethostname(hostnamebuf, sizeof hostnamebuf) >= 0) {
-        hostnamebuf[sizeof(hostnamebuf)-1] = 0;
+        hostnamebuf[sizeof(hostnamebuf) - 1] = 0;
         m_hostName = hostnamebuf;
     }
     addrinfo *res;
@@ -74,7 +72,7 @@ void TestClientMachine::initTestCase()
     freeaddrinfo(res);
 
     qApp->setProperty("x11RootWindow", QVariant::fromValue<quint32>(QX11Info::appRootWindow()));
-    qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+    qApp->setProperty("x11Connection", QVariant::fromValue<void *>(QX11Info::connection()));
 }
 
 void TestClientMachine::cleanupTestCase()
@@ -87,26 +85,26 @@ void TestClientMachine::hostName_data()
     QTest::addColumn<QByteArray>("expectedHost");
     QTest::addColumn<bool>("local");
 
-    QTest::newRow("empty")     << QByteArray()            << QByteArray("localhost") << true;
+    QTest::newRow("empty") << QByteArray() << QByteArray("localhost") << true;
     QTest::newRow("localhost") << QByteArray("localhost") << QByteArray("localhost") << true;
-    QTest::newRow("hostname")  << m_hostName              << m_hostName              << true;
-    QTest::newRow("HOSTNAME")  << m_hostName.toUpper()    << m_hostName.toUpper()    << true;
+    QTest::newRow("hostname") << m_hostName << m_hostName << true;
+    QTest::newRow("HOSTNAME") << m_hostName.toUpper() << m_hostName.toUpper() << true;
     QByteArray cutted(m_hostName);
     cutted.remove(0, 1);
-    QTest::newRow("ostname")   << cutted << cutted << false;
+    QTest::newRow("ostname") << cutted << cutted << false;
     QByteArray domain("random.name.not.exist.tld");
-    QTest::newRow("domain")    << domain << domain << false;
-    QTest::newRow("fqdn")      << m_fqdn << m_fqdn << true;
-    QTest::newRow("FQDN")      << m_fqdn.toUpper() << m_fqdn.toUpper() << true;
+    QTest::newRow("domain") << domain << domain << false;
+    QTest::newRow("fqdn") << m_fqdn << m_fqdn << true;
+    QTest::newRow("FQDN") << m_fqdn.toUpper() << m_fqdn.toUpper() << true;
     cutted = m_fqdn;
     cutted.remove(0, 1);
-    QTest::newRow("qdn")       << cutted << cutted << false;
+    QTest::newRow("qdn") << cutted << cutted << false;
 }
 
 void TestClientMachine::hostName()
 {
     const QRect geometry(0, 0, 10, 10);
-    const uint32_t values[] = { true };
+    const uint32_t values[] = {true};
     Xcb::Window window(geometry, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     QFETCH(QByteArray, hostName);
     QFETCH(bool, local);
@@ -117,7 +115,7 @@ void TestClientMachine::hostName()
     clientMachine.resolve(window, XCB_WINDOW_NONE);
     QTEST(clientMachine.hostName(), "expectedHost");
 
-    int i=0;
+    int i = 0;
     while (clientMachine.isResolving() && i++ < 50) {
         // name is being resolved in an external thread, so let's wait a little bit
         QTest::qWait(250);
@@ -130,7 +128,7 @@ void TestClientMachine::hostName()
 void TestClientMachine::emptyHostName()
 {
     const QRect geometry(0, 0, 10, 10);
-    const uint32_t values[] = { true };
+    const uint32_t values[] = {true};
     Xcb::Window window(geometry, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     ClientMachine clientMachine;
     QSignalSpy spy(&clientMachine, &ClientMachine::localhostChanged);

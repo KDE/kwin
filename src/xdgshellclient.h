@@ -34,7 +34,9 @@ class AbstractOutput;
 class XdgSurfaceConfigure
 {
 public:
-    virtual ~XdgSurfaceConfigure() {}
+    virtual ~XdgSurfaceConfigure()
+    {
+    }
 
     enum ConfigureFlag {
         ConfigurePosition = 0x1,
@@ -170,8 +172,7 @@ protected:
 private:
     void handleWindowTitleChanged();
     void handleWindowClassChanged();
-    void handleWindowMenuRequested(KWaylandServer::SeatInterface *seat,
-                                   const QPoint &surfacePos, quint32 serial);
+    void handleWindowMenuRequested(KWaylandServer::SeatInterface *seat, const QPoint &surfacePos, quint32 serial);
     void handleMoveRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
     void handleResizeRequested(KWaylandServer::SeatInterface *seat, Qt::Edges, quint32 serial);
     void handleStatesAcknowledged(const KWaylandServer::XdgToplevelInterface::States &states);

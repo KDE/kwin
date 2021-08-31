@@ -21,7 +21,6 @@
 
 namespace KWin
 {
-
 class KWIN_EXPORT EffectsModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -217,11 +216,7 @@ Q_SIGNALS:
     void loaded();
 
 protected:
-    enum class Kind {
-        BuiltIn,
-        Binary,
-        Scripted
-    };
+    enum class Kind { BuiltIn, Binary, Scripted };
 
     struct EffectData {
         QString name;

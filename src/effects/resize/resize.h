@@ -14,9 +14,7 @@
 
 namespace KWin
 {
-
-class ResizeEffect
-    : public AnimationEffect
+class ResizeEffect : public AnimationEffect
 {
     Q_OBJECT
     Q_PROPERTY(bool textureScale READ isTextureScale)
@@ -24,23 +22,30 @@ class ResizeEffect
 public:
     ResizeEffect();
     ~ResizeEffect() override;
-    inline bool provides(Effect::Feature ef) override {
+    inline bool provides(Effect::Feature ef) override
+    {
         return ef == Effect::Resize;
     }
-    inline bool isActive() const override { return m_active || AnimationEffect::isActive(); }
-    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    inline bool isActive() const override
+    {
+        return m_active || AnimationEffect::isActive();
+    }
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
     void reconfigure(ReconfigureFlags) override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 60;
     }
 
-    bool isTextureScale() const {
+    bool isTextureScale() const
+    {
         return m_features & TextureScale;
     }
-    bool isOutline() const {
+    bool isOutline() const
+    {
         return m_features & Outline;
     }
 
@@ -56,7 +61,7 @@ private:
     };
     bool m_active;
     int m_features;
-    EffectWindow* m_resizeWindow;
+    EffectWindow *m_resizeWindow;
     QRect m_currentGeometry, m_originalGeometry;
 };
 

@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class SurfacePixmapInternal;
 
 class KWIN_EXPORT PlatformOpenGLSurfaceTextureInternal : public PlatformOpenGLSurfaceTexture

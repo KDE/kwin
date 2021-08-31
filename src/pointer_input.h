@@ -11,14 +11,14 @@
 #ifndef KWIN_POINTER_INPUT_H
 #define KWIN_POINTER_INPUT_H
 
-#include "input.h"
 #include "cursor.h"
+#include "input.h"
 #include "xcursortheme.h"
 
 #include <QElapsedTimer>
 #include <QObject>
-#include <QPointer>
 #include <QPointF>
+#include <QPointer>
 
 class QWindow;
 
@@ -59,10 +59,12 @@ public:
     bool supportsWarping() const;
     void warp(const QPointF &pos);
 
-    QPointF pos() const {
+    QPointF pos() const
+    {
         return m_pos;
     }
-    Qt::MouseButtons buttons() const {
+    Qt::MouseButtons buttons() const
+    {
         return m_qtButtons;
     }
     bool areButtonsPressed() const;
@@ -77,7 +79,8 @@ public:
 
     void setEnableConstraints(bool set);
 
-    bool isConstrained() const {
+    bool isConstrained() const
+    {
         return m_confined || m_locked;
     }
 
@@ -98,7 +101,12 @@ public:
     /**
      * @internal
      */
-    void processAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 discreteDelta, InputRedirection::PointerAxisSource source, uint32_t time, LibInput::Device *device = nullptr);
+    void processAxis(InputRedirection::PointerAxis axis,
+                     qreal delta,
+                     qint32 discreteDelta,
+                     InputRedirection::PointerAxisSource source,
+                     uint32_t time,
+                     LibInput::Device *device = nullptr);
     /**
      * @internal
      */
@@ -226,16 +234,7 @@ private:
     void loadThemeCursor(CursorShape shape, WaylandCursorImage::Image *image);
     void loadThemeCursor(const QByteArray &shape, WaylandCursorImage::Image *image);
 
-    enum class CursorSource {
-        LockScreen,
-        EffectsOverride,
-        MoveResize,
-        PointerSurface,
-        Decoration,
-        DragAndDrop,
-        Fallback,
-        WindowSelector
-    };
+    enum class CursorSource { LockScreen, EffectsOverride, MoveResize, PointerSurface, Decoration, DragAndDrop, Fallback, WindowSelector };
     void setSource(CursorSource source);
 
     PointerInputRedirection *m_pointer;
@@ -270,6 +269,7 @@ class InputRedirectionCursor : public KWin::Cursor
 public:
     explicit InputRedirectionCursor(QObject *parent);
     ~InputRedirectionCursor() override;
+
 protected:
     void doSetPos() override;
     void doStartCursorTracking() override;
@@ -278,6 +278,7 @@ private Q_SLOTS:
     void slotPosChanged(const QPointF &pos);
     void slotPointerButtonChanged();
     void slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods);
+
 private:
     Qt::MouseButtons m_currentButtons;
 };

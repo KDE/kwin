@@ -12,16 +12,16 @@
 // KF5
 #include <NETWM>
 // Qt
-#include <QtConcurrentRun>
 #include <QFutureWatcher>
+#include <QtConcurrentRun>
 // system
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 #include <netdb.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-namespace KWin {
-
+namespace KWin
+{
 static QByteArray getHostName()
 {
 #ifdef HOST_NAME_MAX
@@ -30,7 +30,7 @@ static QByteArray getHostName()
     char hostnamebuf[256];
 #endif
     if (gethostname(hostnamebuf, sizeof hostnamebuf) >= 0) {
-        hostnamebuf[sizeof(hostnamebuf)-1] = 0;
+        hostnamebuf[sizeof(hostnamebuf) - 1] = 0;
         return QByteArray(hostnamebuf);
     }
     return QByteArray();
@@ -110,7 +110,7 @@ void GetAddrInfo::slotOwnAddressResolved()
     }
 }
 
-bool GetAddrInfo::resolved(QFutureWatcher< int >* watcher)
+bool GetAddrInfo::resolved(QFutureWatcher<int> *watcher)
 {
     if (!watcher->isFinished()) {
         return false;
@@ -135,7 +135,7 @@ void GetAddrInfo::compare()
             addrinfo *ownAddress = m_ownAddress;
             bool localFound = false;
             while (ownAddress) {
-                if (ownAddress->ai_canonname  && QByteArray(ownAddress->ai_canonname).toLower() == m_hostName) {
+                if (ownAddress->ai_canonname && QByteArray(ownAddress->ai_canonname).toLower() == m_hostName) {
                     localFound = true;
                     break;
                 }
@@ -150,7 +150,6 @@ void GetAddrInfo::compare()
     }
     deleteLater();
 }
-
 
 ClientMachine::ClientMachine(QObject *parent)
     : QObject(parent)

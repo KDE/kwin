@@ -6,17 +6,17 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_output.h"
 #include "cursor.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
 #include <KWayland/Client/output.h>
-#include <KWayland/Client/xdgoutput.h>
 #include <KWayland/Client/registry.h>
+#include <KWayland/Client/xdgoutput.h>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -90,10 +90,7 @@ void ScreenChangesTest::testScreenAddRemove()
     QSignalSpy screensChangedSpy(screens(), &Screens::changed);
     QVERIFY(screensChangedSpy.isValid());
     const QVector<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs",
-                              Qt::DirectConnection,
-                              Q_ARG(int, 2),
-                              Q_ARG(QVector<QRect>, geometries));
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2), Q_ARG(QVector<QRect>, geometries));
     QVERIFY(screensChangedSpy.wait());
     QCOMPARE(screensChangedSpy.count(), 2);
     const auto outputs = kwinApp()->platform()->enabledOutputs();
@@ -133,7 +130,7 @@ void ScreenChangesTest::testScreenAddRemove()
     QVERIFY(o2ChangedSpy.wait());
     QCOMPARE(o2->geometry(), geometries.at(1));
 
-    //and check XDGOutput is synced
+    // and check XDGOutput is synced
     QScopedPointer<XdgOutput> xdgO1(xdgOutputManager->getXdgOutput(o1.data()));
     QSignalSpy xdgO1ChangedSpy(xdgO1.data(), &XdgOutput::changed);
     QVERIFY(xdgO1ChangedSpy.isValid());
@@ -162,10 +159,7 @@ void ScreenChangesTest::testScreenAddRemove()
     QVERIFY(o2RemovedSpy.isValid());
 
     const QVector<QRect> geometries2{QRect(0, 0, 1280, 1024)};
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs",
-                              Qt::DirectConnection,
-                              Q_ARG(int, 1),
-                              Q_ARG(QVector<QRect>, geometries2));
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 1), Q_ARG(QVector<QRect>, geometries2));
     QVERIFY(screensChangedSpy.wait());
     QCOMPARE(screensChangedSpy.count(), 2);
     QCOMPARE(screens()->count(), 1);

@@ -11,12 +11,12 @@
 
 #include <QObject>
 
-#include <kwinglobals.h>
 #include <kwin_export.h>
+#include <kwinglobals.h>
 
+#include <KWaylandServer/textinput_v2_interface.h>
 #include <QPointer>
 #include <QTimer>
-#include <KWaylandServer/textinput_v2_interface.h>
 
 class KStatusNotifierItem;
 class QProcess;
@@ -28,7 +28,6 @@ class InputMethodGrabV1;
 
 namespace KWin
 {
-
 class AbstractClient;
 class InputPanelV1Client;
 
@@ -44,7 +43,8 @@ public:
 
     void init();
     void setEnabled(bool enable);
-    bool isEnabled() const {
+    bool isEnabled() const
+    {
         return m_enabled;
     }
     bool isActive() const;
@@ -63,7 +63,7 @@ Q_SIGNALS:
     void availableChanged();
 
 private Q_SLOTS:
-    void clientAdded(AbstractClient* client);
+    void clientAdded(AbstractClient *client);
 
     // textinput interface slots
     void handleFocusedSurfaceChanged();

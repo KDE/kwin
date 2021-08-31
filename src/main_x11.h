@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 class KWinSelectionOwner;
 
 class ApplicationX11 : public Application

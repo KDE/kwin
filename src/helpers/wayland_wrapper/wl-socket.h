@@ -13,7 +13,6 @@
 extern "C" {
 #endif
 
-
 /**
  * Allocate and create a socket
  * It is bound and accepted

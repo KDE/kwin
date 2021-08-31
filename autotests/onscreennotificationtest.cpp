@@ -7,11 +7,11 @@
 
 #include "onscreennotificationtest.h"
 
-#include "onscreennotification.h"
 #include "input.h"
+#include "onscreennotification.h"
 
-#include <KSharedConfig>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include <QQmlEngine>
 #include <QSignalSpy>
@@ -21,7 +21,6 @@ QTEST_MAIN(OnScreenNotificationTest);
 
 namespace KWin
 {
-
 void InputRedirection::installInputEventSpy(InputEventSpy *spy)
 {
     Q_UNUSED(spy);

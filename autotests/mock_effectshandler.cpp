@@ -13,7 +13,6 @@ MockEffectsHandler::MockEffectsHandler(KWin::CompositingType type)
 {
 }
 
-
 KSharedConfigPtr MockEffectsHandler::config() const
 {
     static const KSharedConfigPtr s_config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);

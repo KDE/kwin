@@ -27,32 +27,41 @@ public:
     ApplicationWayland(int &argc, char **argv);
     ~ApplicationWayland() override;
 
-    void setStartXwayland(bool start) {
+    void setStartXwayland(bool start)
+    {
         m_startXWayland = start;
     }
-    void addXwaylandSocketFileDescriptor(int fd) {
+    void addXwaylandSocketFileDescriptor(int fd)
+    {
         m_xwaylandListenFds << fd;
     }
-    void setXwaylandDisplay(const QString &display) {
+    void setXwaylandDisplay(const QString &display)
+    {
         m_xwaylandDisplay = display;
     }
-    void setXwaylandXauthority(const QString &xauthority) {
-        m_xwaylandXauthority= xauthority;
+    void setXwaylandXauthority(const QString &xauthority)
+    {
+        m_xwaylandXauthority = xauthority;
     }
-    void setApplicationsToStart(const QStringList &applications) {
+    void setApplicationsToStart(const QStringList &applications)
+    {
         m_applicationsToStart = applications;
     }
-    void setInputMethodServerToStart(const QString &inputMethodServer) {
+    void setInputMethodServerToStart(const QString &inputMethodServer)
+    {
         m_inputMethodServerToStart = inputMethodServer;
     }
-    void setProcessStartupEnvironment(const QProcessEnvironment &environment) override {
+    void setProcessStartupEnvironment(const QProcessEnvironment &environment) override
+    {
         m_environment = environment;
     }
-    void setSessionArgument(const QString &session) {
+    void setSessionArgument(const QString &session)
+    {
         m_sessionArgument = session;
     }
 
-    QProcessEnvironment processStartupEnvironment() const override {
+    QProcessEnvironment processStartupEnvironment() const override
+    {
         return m_environment;
     }
 

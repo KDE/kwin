@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 class ShowPaintEffect : public Effect
 {
     Q_OBJECT

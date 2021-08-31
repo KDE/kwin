@@ -15,8 +15,8 @@
 #include <QtTest>
 
 #include "qwayland-idle-inhibit-unstable-v1.h"
-#include "qwayland-wlr-layer-shell-unstable-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
+#include "qwayland-wlr-layer-shell-unstable-v1.h"
 #include "qwayland-xdg-decoration-unstable-v1.h"
 #include "qwayland-xdg-shell.h"
 
@@ -67,9 +67,11 @@ public:
     WaylandTestApplication(OperationMode mode, int &argc, char **argv);
     ~WaylandTestApplication() override;
 
-    void setInputMethodServerToStart(const QString &inputMethodServer) {
+    void setInputMethodServerToStart(const QString &inputMethodServer)
+    {
         m_inputMethodServerToStart = inputMethodServer;
     }
+
 protected:
     void performStartup() override;
 
@@ -84,18 +86,23 @@ private:
 
 namespace Test
 {
-
 class MockInputMethod;
 
 class TextInputManagerV3 : public QtWayland::zwp_text_input_manager_v3
 {
 public:
-    ~TextInputManagerV3() override { destroy(); }
+    ~TextInputManagerV3() override
+    {
+        destroy();
+    }
 };
 
 class TextInputV3 : public QtWayland::zwp_text_input_v3
 {
-    ~TextInputV3() override { destroy(); }
+    ~TextInputV3() override
+    {
+        destroy();
+    }
 };
 
 class LayerShellV1 : public QtWayland::zwlr_layer_shell_v1
@@ -165,12 +172,7 @@ class XdgToplevel : public QObject, public QtWayland::xdg_toplevel
     Q_OBJECT
 
 public:
-    enum class State {
-        Maximized  = 1 << 0,
-        Fullscreen = 1 << 1,
-        Resizing   = 1 << 2,
-        Activated  = 1 << 3
-    };
+    enum class State { Maximized = 1 << 0, Fullscreen = 1 << 1, Resizing = 1 << 2, Activated = 1 << 3 };
     Q_DECLARE_FLAGS(States, State)
 
     explicit XdgToplevel(XdgSurface *surface, QObject *parent = nullptr);
@@ -319,8 +321,7 @@ bool waitForWaylandKeyboard();
 void flushWaylandConnection();
 
 KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
-KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,
-                                               KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);
+KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface, KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);
 
 LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface,
                                      const QString &scope,
@@ -334,21 +335,21 @@ enum class CreationSetup {
     CreateAndConfigure, /// commit and wait for the configure event, making this surface ready to commit buffers
 };
 
-QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface,
-                                                                 KWayland::Client::Output *output);
+QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface, KWayland::Client::Output *output);
 
-XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr,
-                                      CreationSetup configureMode = CreationSetup::CreateAndConfigure);
+XdgToplevel *
+createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr, CreationSetup configureMode = CreationSetup::CreateAndConfigure);
 
 XdgPositioner *createXdgPositioner();
 
-XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface,
-                                XdgPositioner *positioner, QObject *parent = nullptr,
+XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface,
+                                XdgSurface *parentSurface,
+                                XdgPositioner *positioner,
+                                QObject *parent = nullptr,
                                 CreationSetup configureMode = CreationSetup::CreateAndConfigure);
 
 XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QObject *parent = nullptr);
 IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface);
-
 
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.
@@ -370,7 +371,11 @@ AbstractClient *waitForWaylandWindowShown(int timeout = 5000);
 /**
  * Combination of @link{render} and @link{waitForWaylandWindowShown}.
  */
-AbstractClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
+AbstractClient *renderAndWaitForShown(KWayland::Client::Surface *surface,
+                                      const QSize &size,
+                                      const QColor &color,
+                                      const QImage::Format &format = QImage::Format_ARGB32,
+                                      int timeout = 5000);
 
 /**
  * Waits for the @p client to be destroyed.
@@ -402,27 +407,29 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
 Q_DECLARE_METATYPE(KWin::Test::XdgToplevel::States)
 Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
 
-#define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode) \
-int main(int argc, char *argv[]) \
-{ \
-    setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true); \
-    setenv("QT_QPA_PLATFORM_PLUGIN_PATH", QFileInfo(QString::fromLocal8Bit(argv[0])).absolutePath().toLocal8Bit().constData(), true); \
-    setenv("KWIN_FORCE_OWN_QPA", "1", true); \
-    qunsetenv("KDE_FULL_SESSION"); \
-    qunsetenv("KDE_SESSION_VERSION"); \
-    qunsetenv("XDG_SESSION_DESKTOP"); \
-    qunsetenv("XDG_CURRENT_DESKTOP"); \
-    DPI; \
-    KWin::WaylandTestApplication app(OperationMode, argc, argv); \
-    app.setAttribute(Qt::AA_Use96Dpi, true); \
-    TestObject tc; \
-    return QTest::qExec(&tc, argc, argv); \
-}
+#define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode)                                                                                                \
+    int main(int argc, char *argv[])                                                                                                                           \
+    {                                                                                                                                                          \
+        setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);                                                                                           \
+        setenv("QT_QPA_PLATFORM_PLUGIN_PATH", QFileInfo(QString::fromLocal8Bit(argv[0])).absolutePath().toLocal8Bit().constData(), true);                      \
+        setenv("KWIN_FORCE_OWN_QPA", "1", true);                                                                                                               \
+        qunsetenv("KDE_FULL_SESSION");                                                                                                                         \
+        qunsetenv("KDE_SESSION_VERSION");                                                                                                                      \
+        qunsetenv("XDG_SESSION_DESKTOP");                                                                                                                      \
+        qunsetenv("XDG_CURRENT_DESKTOP");                                                                                                                      \
+        DPI;                                                                                                                                                   \
+        KWin::WaylandTestApplication app(OperationMode, argc, argv);                                                                                           \
+        app.setAttribute(Qt::AA_Use96Dpi, true);                                                                                                               \
+        TestObject tc;                                                                                                                                         \
+        return QTest::qExec(&tc, argc, argv);                                                                                                                  \
+    }
 
 #ifdef NO_XWAYLAND
-#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps), KWin::Application::OperationModeWaylandOnly)
+#define WAYLANDTEST_MAIN(TestObject)                                                                                                                           \
+    WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps), KWin::Application::OperationModeWaylandOnly)
 #else
-#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps), KWin::Application::OperationModeXwayland)
+#define WAYLANDTEST_MAIN(TestObject)                                                                                                                           \
+    WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps), KWin::Application::OperationModeXwayland)
 #endif
 
 #endif

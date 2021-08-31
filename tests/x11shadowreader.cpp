@@ -6,10 +6,10 @@
 #include "xcbutils.h"
 
 #include <QApplication>
-#include <QDebug>
 #include <QCommandLineParser>
-#include <QLabel>
+#include <QDebug>
 #include <QFormLayout>
+#include <QLabel>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QX11Info>
@@ -20,10 +20,10 @@ static QVector<uint32_t> readShadow(quint32 windowId)
     QVector<uint32_t> ret;
     if (windowId != XCB_WINDOW) {
         KWin::Xcb::Property property(false, windowId, atom, XCB_ATOM_CARDINAL, 0, 12);
-        uint32_t *shadow = property.value<uint32_t*>();
+        uint32_t *shadow = property.value<uint32_t *>();
         if (shadow) {
             ret.reserve(12);
-            for (int i=0; i<12; ++i) {
+            for (int i = 0; i < 12; ++i) {
                 ret << shadow[i];
             }
         } else {
@@ -56,13 +56,12 @@ static QVector<QPixmap> getPixmaps(const QVector<uint32_t> &data)
             discardReplies(0);
             return QVector<QPixmap>();
         }
-        getImageCookies[i] = xcb_get_image_unchecked(c, XCB_IMAGE_FORMAT_Z_PIXMAP, data[i],
-                                                     0, 0, geo->width, geo->height, ~0);
+        getImageCookies[i] = xcb_get_image_unchecked(c, XCB_IMAGE_FORMAT_Z_PIXMAP, data[i], 0, 0, geo->width, geo->height, ~0);
     }
     for (int i = 0; i < ShadowElementsCount; ++i) {
         auto *reply = xcb_get_image_reply(c, getImageCookies.at(i), nullptr);
         if (!reply) {
-            discardReplies(i+1);
+            discardReplies(i + 1);
             return QVector<QPixmap>();
         }
         auto &geo = pixmapGeometries[i];
@@ -77,7 +76,7 @@ int main(int argc, char **argv)
 {
     qputenv("QT_QPA_PLATFORM", "xcb");
     QApplication app(argc, argv);
-    app.setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+    app.setProperty("x11Connection", QVariant::fromValue<void *>(QX11Info::connection()));
 
     QCommandLineParser parser;
     parser.addPositionalArgument(QStringLiteral("windowId"), QStringLiteral("The X11 windowId from which to read the shadow"));

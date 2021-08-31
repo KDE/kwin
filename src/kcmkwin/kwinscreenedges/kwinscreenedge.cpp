@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 KWinScreenEdge::KWinScreenEdge(QWidget *parent)
     : QWidget(parent)
 {
@@ -139,7 +138,7 @@ void KWinScreenEdge::setDefaults()
 
 int KWinScreenEdge::electricBorderToMonitorEdge(ElectricBorder border)
 {
-    switch(border) {
+    switch (border) {
     case ElectricTop:
         return Monitor::Top;
     case ElectricTopRight:
@@ -203,10 +202,7 @@ void KWinScreenEdge::onChanged()
 
 void KWinScreenEdge::createConnection()
 {
-        connect(monitor(),
-                &Monitor::changed,
-                this,
-                &KWinScreenEdge::onChanged);
+    connect(monitor(), &Monitor::changed, this, &KWinScreenEdge::onChanged);
 }
 
 bool KWinScreenEdge::isSaveNeeded() const

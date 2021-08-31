@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 #define PluginFactory_iid "org.kde.kwin.PluginFactoryInterface" KWIN_PLUGIN_VERSION_STRING
 
 /**

@@ -11,34 +11,36 @@
 // KConfigSkeleton
 #include "windowgeometryconfig.h"
 
+#include <KGlobalAccel>
+#include <KLocalizedString>
 #include <QAction>
 #include <QLocale>
 #include <QStringBuilder>
-#include <kwinconfig.h>
 #include <kconfiggroup.h>
-#include <KGlobalAccel>
-#include <KLocalizedString>
+#include <kwinconfig.h>
 
 namespace KWin
 {
-
 WindowGeometry::WindowGeometry()
 {
     initConfig<WindowGeometryConfiguration>();
     iAmActivated = true;
     iAmActive = false;
     myResizeWindow = nullptr;
-#define myResizeString "Window geometry display, %1 and %2 are the new size," \
-                       " %3 and %4 are pixel increments - avoid reformatting or suffixes like 'px'", \
-                       "Width: %1 (%3)\nHeight: %2 (%4)"
-#define myCoordString_0 "Window geometry display, %1 and %2 are the cartesian x and y coordinates" \
-                        " - avoid reformatting or suffixes like 'px'", \
-                        "X: %1\nY: %2"
-#define myCoordString_1 "Window geometry display, %1 and %2 are the cartesian x and y coordinates," \
-                        " %3 and %4 are the resp. increments - avoid reformatting or suffixes like 'px'", \
-                        "X: %1 (%3)\nY: %2 (%4)"
+#define myResizeString                                                                                                                                         \
+    "Window geometry display, %1 and %2 are the new size,"                                                                                                     \
+    " %3 and %4 are pixel increments - avoid reformatting or suffixes like 'px'",                                                                              \
+        "Width: %1 (%3)\nHeight: %2 (%4)"
+#define myCoordString_0                                                                                                                                        \
+    "Window geometry display, %1 and %2 are the cartesian x and y coordinates"                                                                                 \
+    " - avoid reformatting or suffixes like 'px'",                                                                                                             \
+        "X: %1\nY: %2"
+#define myCoordString_1                                                                                                                                        \
+    "Window geometry display, %1 and %2 are the cartesian x and y coordinates,"                                                                                \
+    " %3 and %4 are the resp. increments - avoid reformatting or suffixes like 'px'",                                                                          \
+        "X: %1 (%3)\nY: %2 (%4)"
     reconfigure(ReconfigureAll);
-    QAction* a = new QAction(this);
+    QAction *a = new QAction(this);
     a->setObjectName(QStringLiteral("WindowGeometry"));
     a->setText(i18n("Toggle window geometry display (effect only)"));
 
@@ -64,7 +66,9 @@ void WindowGeometry::createFrames()
     if (myMeasure[0]) {
         return;
     }
-    QFont fnt; fnt.setBold(true); fnt.setPointSize(12);
+    QFont fnt;
+    fnt.setBold(true);
+    fnt.setPointSize(12);
     for (int i = 0; i < 3; ++i) {
         myMeasure[i] = effects->effectFrame(EffectFrameUnstyled, false);
         myMeasure[i]->setFont(fnt);
@@ -72,7 +76,6 @@ void WindowGeometry::createFrames()
     myMeasure[0]->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     myMeasure[1]->setAlignment(Qt::AlignCenter);
     myMeasure[2]->setAlignment(Qt::AlignRight | Qt::AlignBottom);
-
 }
 
 void WindowGeometry::reconfigure(ReconfigureFlags)
@@ -132,16 +135,16 @@ static inline QString number(int n)
     QString sign;
     if (n >= 0) {
         sign = locale.positiveSign();
-        if (sign.isEmpty()) sign = QStringLiteral("+");
-    }
-    else {
+        if (sign.isEmpty())
+            sign = QStringLiteral("+");
+    } else {
         n = -n;
         sign = locale.negativeSign();
-        if (sign.isEmpty()) sign = QStringLiteral("-");
+        if (sign.isEmpty())
+            sign = QStringLiteral("-");
     }
-    return  sign + QString::number(n);
+    return sign + QString::number(n);
 }
-
 
 void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect &geometry)
 {
@@ -168,12 +171,12 @@ void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect
 
         // upper left ----------------------
         if (w->isUserResize())
-            myMeasure[0]->setText( i18nc(myCoordString_1, r.x(), r.y(), number(dx), number(dy) ) );
+            myMeasure[0]->setText(i18nc(myCoordString_1, r.x(), r.y(), number(dx), number(dy)));
         else
-            myMeasure[0]->setText( i18nc(myCoordString_0, r.x(), r.y() ) );
+            myMeasure[0]->setText(i18nc(myCoordString_0, r.x(), r.y()));
         QPoint pos = expandedGeometry.topLeft();
         pos = QPoint(qMax(pos.x(), screen.x()), qMax(pos.y(), screen.y()));
-        myMeasure[0]->setPosition(pos + QPoint(6,6)); // "6" is magic number because the unstyled effectframe has 5px padding
+        myMeasure[0]->setPosition(pos + QPoint(6, 6)); // "6" is magic number because the unstyled effectframe has 5px padding
 
         // center ----------------------
         if (w->isUserResize()) {
@@ -182,39 +185,41 @@ void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect
             dy = r.height() - r2.height();
 
             const QSize baseInc = w->basicUnit();
-            if (baseInc != QSize(1,1)) {
+            if (baseInc != QSize(1, 1)) {
                 Q_ASSERT(baseInc.width() && baseInc.height());
                 const QSize csz = w->contentsRect().size();
-                myMeasure[1]->setText( i18nc(myResizeString, csz.width()/baseInc.width(), csz.height()/baseInc.height(), number(dx/baseInc.width()), number(dy/baseInc.height()) ) );
+                myMeasure[1]->setText(i18nc(myResizeString,
+                                            csz.width() / baseInc.width(),
+                                            csz.height() / baseInc.height(),
+                                            number(dx / baseInc.width()),
+                                            number(dy / baseInc.height())));
             } else
-                myMeasure[1]->setText( i18nc(myResizeString, r.width(), r.height(), number(dx), number(dy) ) );
+                myMeasure[1]->setText(i18nc(myResizeString, r.width(), r.height(), number(dx), number(dy)));
 
             // calc width for bottomright element, superfluous otherwise
             dx = r.right() - r2.right();
             dy = r.bottom() - r2.bottom();
         } else
-            myMeasure[1]->setText( i18nc(myCoordString_0, number(dx), number(dy) ) );
+            myMeasure[1]->setText(i18nc(myCoordString_0, number(dx), number(dy)));
         const int cdx = myMeasure[1]->geometry().width() / 2 + 3; // "3" = 6/2 is magic number because
         const int cdy = myMeasure[1]->geometry().height() / 2 + 3; // the unstyled effectframe has 5px padding
-        center = QPoint(qMax(center.x(), screen.x() + cdx),
-                        qMax(center.y(), screen.y() + cdy));
-        center = QPoint(qMin(center.x(), screen.right() - cdx),
-                        qMin(center.y(), screen.bottom() - cdy));
+        center = QPoint(qMax(center.x(), screen.x() + cdx), qMax(center.y(), screen.y() + cdy));
+        center = QPoint(qMin(center.x(), screen.right() - cdx), qMin(center.y(), screen.bottom() - cdy));
         myMeasure[1]->setPosition(center);
 
         // lower right ----------------------
         if (w->isUserResize())
-            myMeasure[2]->setText( i18nc(myCoordString_1, r.right(), r.bottom(), number(dx), number(dy) ) );
+            myMeasure[2]->setText(i18nc(myCoordString_1, r.right(), r.bottom(), number(dx), number(dy)));
         else
-            myMeasure[2]->setText( i18nc(myCoordString_0, r.right(), r.bottom() ) );
+            myMeasure[2]->setText(i18nc(myCoordString_0, r.right(), r.bottom()));
         pos = expandedGeometry.bottomRight();
         pos = QPoint(qMin(pos.x(), screen.right()), qMin(pos.y(), screen.bottom()));
-        myMeasure[2]->setPosition(pos - QPoint(6,6));  // "6" is magic number because the unstyled effectframe has 5px padding
+        myMeasure[2]->setPosition(pos - QPoint(6, 6)); // "6" is magic number because the unstyled effectframe has 5px padding
 
         myExtraDirtyArea |= myMeasure[0]->geometry();
         myExtraDirtyArea |= myMeasure[1]->geometry();
         myExtraDirtyArea |= myMeasure[2]->geometry();
-        myExtraDirtyArea.adjust(-6,-6,6,6);
+        myExtraDirtyArea.adjust(-6, -6, 6, 6);
 
         if (myExtraDirtyArea.isValid())
             effects->addRepaint(myExtraDirtyArea);

@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 QVariant dbusToVariant(const QVariant &variant);
 
 } // namespace KWin

@@ -15,7 +15,6 @@
 
 namespace KWin
 {
-
 QVariant dbusToVariant(const QVariant &variant)
 {
     if (variant.canConvert<QDBusArgument>()) {
@@ -33,7 +32,8 @@ QVariant dbusToVariant(const QVariant &variant)
                 array.append(dbusToVariant(value));
             }
             argument.endArray();
-            return array; }
+            return array;
+        }
         case QDBusArgument::StructureType: {
             QVariantList structure;
             argument.beginStructure();
@@ -42,7 +42,8 @@ QVariant dbusToVariant(const QVariant &variant)
                 structure.append(dbusToVariant(value));
             }
             argument.endStructure();
-            return structure; }
+            return structure;
+        }
         case QDBusArgument::MapType: {
             QVariantMap map;
             argument.beginMap();
@@ -54,7 +55,8 @@ QVariant dbusToVariant(const QVariant &variant)
                 map.insert(key.toString(), dbusToVariant(value));
             }
             argument.endMap();
-            return map; }
+            return map;
+        }
         default:
             qCWarning(KWIN_SCRIPTING) << "Couldn't unwrap QDBusArgument of type" << argument.currentType();
             return variant;

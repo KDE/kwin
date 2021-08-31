@@ -9,13 +9,12 @@
 
 #pragma once
 
-#include <QVector>
-#include <QSize>
 #include <QSharedPointer>
+#include <QSize>
+#include <QVector>
 
 namespace KWin
 {
-
 class DrmDumbBuffer;
 class DrmGpu;
 
@@ -28,21 +27,23 @@ public:
     QSharedPointer<DrmDumbBuffer> currentBuffer() const;
     void releaseBuffer(QSharedPointer<DrmDumbBuffer> buffer);
 
-    qsizetype slotCount() const {
+    qsizetype slotCount() const
+    {
         return m_slots.count();
     }
 
-    QSize size() const {
+    QSize size() const
+    {
         return m_size;
     }
 
-    bool isEmpty() const {
+    bool isEmpty() const
+    {
         return m_slots.isEmpty();
     }
 
 private:
-    struct Slot
-    {
+    struct Slot {
         QSharedPointer<DrmDumbBuffer> buffer;
         int age = 0;
     };

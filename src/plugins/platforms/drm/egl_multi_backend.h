@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 class EglMultiBackend : public OpenGLBackend
 {
     Q_OBJECT
@@ -43,7 +42,7 @@ public Q_SLOTS:
 
 private:
     DrmBackend *m_platform;
-    QVector<AbstractEglDrmBackend*> m_backends;
+    QVector<AbstractEglDrmBackend *> m_backends;
     bool m_initialized = false;
 
     AbstractEglDrmBackend *findBackend(AbstractOutput *output) const;

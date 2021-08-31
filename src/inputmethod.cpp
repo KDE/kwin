@@ -8,43 +8,42 @@
 */
 #include "inputmethod.h"
 #include "abstract_client.h"
-#include "virtualkeyboard_dbus.h"
+#include "deleted.h"
 #include "input.h"
 #include "inputpanelv1client.h"
 #include "keyboard_input.h"
-#include "utils.h"
+#include "screenlockerwatcher.h"
 #include "screens.h"
+#include "utils.h"
+#include "virtualkeyboard_dbus.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "screenlockerwatcher.h"
-#include "deleted.h"
 
 #include <KWaylandServer/display.h>
+#include <KWaylandServer/inputmethod_v1_interface.h>
 #include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/textinput_v3_interface.h>
 #include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/inputmethod_v1_interface.h>
+#include <KWaylandServer/textinput_v3_interface.h>
 
+#include <KLocalizedString>
 #include <KShell>
 #include <KStatusNotifierItem>
-#include <KLocalizedString>
 
 #include <QDBusConnection>
-#include <QDBusPendingCall>
 #include <QDBusMessage>
-#include <QMenu>
+#include <QDBusPendingCall>
 #include <QKeyEvent>
+#include <QMenu>
 
 #include <linux/input-event-codes.h>
-#include <xkbcommon/xkbcommon-keysyms.h>
 #include <unistd.h>
+#include <xkbcommon/xkbcommon-keysyms.h>
 
 using namespace KWaylandServer;
 
 namespace KWin
 {
-
 KWIN_SINGLETON_FACTORY(InputMethod)
 
 InputMethod::InputMethod(QObject *parent)
@@ -168,7 +167,7 @@ void InputMethod::clientAdded(AbstractClient *_client)
     updateInputPanelState();
 }
 
-void InputMethod::setTrackedClient(AbstractClient* trackedClient)
+void InputMethod::setTrackedClient(AbstractClient *trackedClient)
 {
     // Reset the old client virtual keybaord geom if necessary
     // Old and new clients could be the same if focus moves between subsurfaces
@@ -313,12 +312,10 @@ void InputMethod::setEnabled(bool enabled)
     Q_EMIT enabledChanged(m_enabled);
 
     // send OSD message
-    QDBusMessage msg = QDBusMessage::createMethodCall(
-        QStringLiteral("org.kde.plasmashell"),
-        QStringLiteral("/org/kde/osdService"),
-        QStringLiteral("org.kde.osdService"),
-        QStringLiteral("virtualKeyboardEnabledChanged")
-    );
+    QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
+                                                      QStringLiteral("/org/kde/osdService"),
+                                                      QStringLiteral("org.kde.osdService"),
+                                                      QStringLiteral("virtualKeyboardEnabledChanged"));
     msg.setArguments({enabled});
     QDBusConnection::sessionBus().asyncCall(msg);
     if (!m_enabled) {
@@ -334,7 +331,7 @@ void InputMethod::setEnabled(bool enabled)
 
 static quint32 keysymToKeycode(quint32 sym)
 {
-    switch(sym) {
+    switch (sym) {
     case XKB_KEY_BackSpace:
         return KEY_BACKSPACE;
     case XKB_KEY_Return:
@@ -446,7 +443,6 @@ void InputMethod::setPreeditCursor(qint32 index)
     }
 }
 
-
 void InputMethod::setPreeditString(uint32_t serial, const QString &text, const QString &commit)
 {
     Q_UNUSED(serial)
@@ -498,7 +494,11 @@ void InputMethod::adoptInputMethodContext()
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::key, this, &InputMethod::key, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::modifiers, this, &InputMethod::modifiers, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::commitString, this, &InputMethod::commitString, Qt::UniqueConnection);
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::deleteSurroundingText, this, &InputMethod::deleteSurroundingText, Qt::UniqueConnection);
+    connect(inputContext,
+            &KWaylandServer::InputMethodContextV1Interface::deleteSurroundingText,
+            this,
+            &InputMethod::deleteSurroundingText,
+            Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::cursorPosition, this, &InputMethod::setCursorPosition, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditString, this, &InputMethod::setPreeditString, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditCursor, this, &InputMethod::setPreeditCursor, Qt::UniqueConnection);
@@ -619,14 +619,16 @@ bool InputMethod::isActive() const
     return waylandServer()->inputMethod()->context();
 }
 
-class InputKeyboardFilter : public InputEventFilter {
+class InputKeyboardFilter : public InputEventFilter
+{
 public:
     InputKeyboardFilter(KWaylandServer::InputMethodGrabV1 *grab)
         : m_keyboardGrab(grab)
     {
     }
 
-    bool keyEvent(QKeyEvent *event) override {
+    bool keyEvent(QKeyEvent *event) override
+    {
         if (event->isAutoRepeat()) {
             return true;
         }

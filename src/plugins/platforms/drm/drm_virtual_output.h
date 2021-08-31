@@ -16,7 +16,6 @@
 
 namespace KWin
 {
-
 class SoftwareVsyncMonitor;
 class VirtualBackend;
 
@@ -35,10 +34,12 @@ public:
     bool isFormatSupported(uint32_t drmFormat) const override;
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
 
-    int gammaRampSize() const override {
+    int gammaRampSize() const override
+    {
         return 200;
     }
-    bool setGammaRamp(const GammaRamp &gamma) override {
+    bool setGammaRamp(const GammaRamp &gamma) override
+    {
         Q_UNUSED(gamma);
         return true;
     }

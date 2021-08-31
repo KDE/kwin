@@ -9,16 +9,15 @@
 #ifndef KWIN_COLORPICKER_H
 #define KWIN_COLORPICKER_H
 
-#include <kwineffects.h>
+#include <QColor>
 #include <QDBusContext>
 #include <QDBusMessage>
 #include <QDBusUnixFileDescriptor>
 #include <QObject>
-#include <QColor>
+#include <kwineffects.h>
 
 namespace KWin
 {
-
 class ColorPickerEffect : public Effect, protected QDBusContext
 {
     Q_OBJECT
@@ -30,7 +29,8 @@ public:
     void postPaintScreen() override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 50;
     }
 

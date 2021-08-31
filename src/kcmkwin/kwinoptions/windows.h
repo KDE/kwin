@@ -37,7 +37,7 @@ class KWinFocusConfigForm : public QWidget, public Ui::KWinFocusConfigForm
     Q_OBJECT
 
 public:
-    explicit KWinFocusConfigForm(QWidget* parent);
+    explicit KWinFocusConfigForm(QWidget *parent);
 };
 
 class KWinMovingConfigForm : public QWidget, public Ui::KWinMovingConfigForm
@@ -45,7 +45,7 @@ class KWinMovingConfigForm : public QWidget, public Ui::KWinMovingConfigForm
     Q_OBJECT
 
 public:
-    explicit KWinMovingConfigForm(QWidget* parent);
+    explicit KWinMovingConfigForm(QWidget *parent);
 };
 
 class KWinAdvancedConfigForm : public QWidget, public Ui::KWinAdvancedConfigForm
@@ -53,7 +53,7 @@ class KWinAdvancedConfigForm : public QWidget, public Ui::KWinAdvancedConfigForm
     Q_OBJECT
 
 public:
-    explicit KWinAdvancedConfigForm(QWidget* parent);
+    explicit KWinAdvancedConfigForm(QWidget *parent);
 };
 
 class KFocusConfig : public KCModule
@@ -79,7 +79,7 @@ private Q_SLOTS:
     void updateDefaultIndicator();
 
 private:
-    bool     standAlone;
+    bool standAlone;
     bool m_unmanagedChangeState = false;
     bool m_unmanagedDefaultState = true;
 
@@ -104,7 +104,7 @@ protected:
 
 private:
     KWinOptionsSettings *m_settings;
-    bool     standAlone;
+    bool standAlone;
     KWinMovingConfigForm *m_ui;
 };
 
@@ -124,8 +124,7 @@ protected:
     void showEvent(QShowEvent *ev) override;
 
 private:
-
-    bool     standAlone;
+    bool standAlone;
     KWinAdvancedConfigForm *m_ui;
     KWinOptionsSettings *m_settings;
 };

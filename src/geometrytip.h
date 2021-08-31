@@ -15,17 +15,16 @@
 
 namespace KWin
 {
-
-class GeometryTip: public QLabel
+class GeometryTip : public QLabel
 {
     Q_OBJECT
 public:
-    GeometryTip(const Xcb::GeometryHints* xSizeHints);
+    GeometryTip(const Xcb::GeometryHints *xSizeHints);
     ~GeometryTip() override;
-    void setGeometry(const QRect& geom);
+    void setGeometry(const QRect &geom);
 
 private:
-    const Xcb::GeometryHints* sizeHints;
+    const Xcb::GeometryHints *sizeHints;
 };
 
 } // namespace

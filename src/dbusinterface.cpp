@@ -18,31 +18,30 @@
 #include "atoms.h"
 #include "composite.h"
 #include "debug_console.h"
+#include "kwinadaptor.h"
 #include "main.h"
 #include "placement.h"
 #include "platform.h"
 #include "pluginmanager.h"
-#include "kwinadaptor.h"
 #include "scene.h"
 #include "unmanaged.h"
-#include "workspace.h"
 #include "virtualdesktops.h"
+#include "workspace.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 
 // Qt
-#include <QOpenGLContext>
 #include <QDBusServiceWatcher>
+#include <QOpenGLContext>
 
 namespace KWin
 {
-
 DBusInterface::DBusInterface(QObject *parent)
     : QObject(parent)
     , m_serviceName(QStringLiteral("org.kde.KWin"))
 {
-    (void) new KWinAdaptor(this);
+    (void)new KWinAdaptor(this);
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject(QStringLiteral("/KWin"), this);
@@ -56,8 +55,12 @@ DBusInterface::DBusInterface(QObject *parent)
     } else {
         announceService();
     }
-    dbus.connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
-                 Workspace::self(), SLOT(slotReloadConfig()));
+    dbus.connect(QString(),
+                 QStringLiteral("/KWin"),
+                 QStringLiteral("org.kde.KWin"),
+                 QStringLiteral("reloadConfig"),
+                 Workspace::self(),
+                 SLOT(slotReloadConfig()));
     connect(kwinApp(), &Application::x11ConnectionChanged, this, &DBusInterface::announceService);
 }
 
@@ -87,16 +90,22 @@ void DBusInterface::announceService()
         return;
     }
     const QByteArray service = m_serviceName.toUtf8();
-    xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, kwinApp()->x11RootWindow(), atoms->kwin_dbus_service,
-                        atoms->utf8_string, 8, service.size(), service.constData());
+    xcb_change_property(kwinApp()->x11Connection(),
+                        XCB_PROP_MODE_REPLACE,
+                        kwinApp()->x11RootWindow(),
+                        atoms->kwin_dbus_service,
+                        atoms->utf8_string,
+                        8,
+                        service.size(),
+                        service.constData());
 }
 
 // wrap void methods with no arguments to Workspace
-#define WRAP(name) \
-void DBusInterface::name() \
-{\
-    Workspace::self()->name();\
-}
+#define WRAP(name)                                                                                                                                             \
+    void DBusInterface::name()                                                                                                                                 \
+    {                                                                                                                                                          \
+        Workspace::self()->name();                                                                                                                             \
+    }
 
 WRAP(reconfigure)
 
@@ -107,11 +116,11 @@ void DBusInterface::killWindow()
     Workspace::self()->slotKillWindow();
 }
 
-#define WRAP(name) \
-void DBusInterface::name() \
-{\
-    Placement::self()->name();\
-}
+#define WRAP(name)                                                                                                                                             \
+    void DBusInterface::name()                                                                                                                                 \
+    {                                                                                                                                                          \
+        Placement::self()->name();                                                                                                                             \
+    }
 
 WRAP(cascadeDesktop)
 WRAP(unclutterDesktop)
@@ -119,11 +128,11 @@ WRAP(unclutterDesktop)
 #undef WRAP
 
 // wrap returning methods with no arguments to Workspace
-#define WRAP( rettype, name ) \
-rettype DBusInterface::name( ) \
-{\
-    return Workspace::self()->name(); \
-}
+#define WRAP(rettype, name)                                                                                                                                    \
+    rettype DBusInterface::name()                                                                                                                              \
+    {                                                                                                                                                          \
+        return Workspace::self()->name();                                                                                                                      \
+    }
 
 WRAP(QString, supportInformation)
 
@@ -186,7 +195,8 @@ void DBusInterface::replace()
     QCoreApplication::exit(133);
 }
 
-namespace {
+namespace
+{
 QVariantMap clientToVariantMap(const AbstractClient *c)
 {
     return {
@@ -225,28 +235,26 @@ QVariantMap DBusInterface::queryWindowInfo()
 {
     m_replyQueryWindowInfo = message();
     setDelayedReply(true);
-    kwinApp()->platform()->startInteractiveWindowSelection(
-        [this] (Toplevel *t) {
-            if (auto c = qobject_cast<AbstractClient*>(t)) {
-                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createReply(clientToVariantMap(c)));
-            } else if (qobject_cast<Unmanaged*>(t)) {
-                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
-                    QStringLiteral("org.kde.KWin.Error.InvalidWindow"),
-                    QStringLiteral("Tried to query information about an unmanaged window")));
-            } else {
-                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
-                    QStringLiteral("org.kde.KWin.Error.UserCancel"),
-                    QStringLiteral("User cancelled the query")));
-            }
+    kwinApp()->platform()->startInteractiveWindowSelection([this](Toplevel *t) {
+        if (auto c = qobject_cast<AbstractClient *>(t)) {
+            QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createReply(clientToVariantMap(c)));
+        } else if (qobject_cast<Unmanaged *>(t)) {
+            QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(QStringLiteral("org.kde.KWin.Error.InvalidWindow"),
+                                                                                       QStringLiteral("Tried to query information about an unmanaged window")));
+        } else {
+            QDBusConnection::sessionBus().send(
+                m_replyQueryWindowInfo.createErrorReply(QStringLiteral("org.kde.KWin.Error.UserCancel"), QStringLiteral("User cancelled the query")));
         }
-    );
+    });
     return QVariantMap{};
 }
 
 QVariantMap DBusInterface::getWindowInfo(const QString &uuid)
 {
     const auto id = QUuid::fromString(uuid);
-    const auto client = workspace()->findAbstractClient([&id] (const AbstractClient *c) { return c->internalId() == id; });
+    const auto client = workspace()->findAbstractClient([&id](const AbstractClient *c) {
+        return c->internalId() == id;
+    });
     if (client) {
         return clientToVariantMap(client);
     } else {
@@ -262,8 +270,7 @@ CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)
     new CompositingAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject(QStringLiteral("/Compositor"), this);
-    dbus.connect(QString(), QStringLiteral("/Compositor"), QStringLiteral("org.kde.kwin.Compositing"),
-                 QStringLiteral("reinit"), this, SLOT(reinitialize()));
+    dbus.connect(QString(), QStringLiteral("/Compositor"), QStringLiteral("org.kde.kwin.Compositing"), QStringLiteral("reinit"), this, SLOT(reinitialize()));
 }
 
 QString CompositorDBusInterface::compositingNotPossibleReason() const
@@ -314,14 +321,14 @@ bool CompositorDBusInterface::platformRequiresCompositing() const
 void CompositorDBusInterface::resume()
 {
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        static_cast<X11Compositor*>(m_compositor)->resume(X11Compositor::ScriptSuspend);
+        static_cast<X11Compositor *>(m_compositor)->resume(X11Compositor::ScriptSuspend);
     }
 }
 
 void CompositorDBusInterface::suspend()
 {
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        static_cast<X11Compositor*>(m_compositor)->suspend(X11Compositor::ScriptSuspend);
+        static_cast<X11Compositor *>(m_compositor)->suspend(X11Compositor::ScriptSuspend);
     }
 }
 
@@ -347,9 +354,6 @@ QStringList CompositorDBusInterface::supportedOpenGLPlatformInterfaces() const
     return interfaces;
 }
 
-
-
-
 VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDesktopManager *parent)
     : QObject(parent)
     , m_manager(parent)
@@ -358,79 +362,58 @@ VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDe
     qDBusRegisterMetaType<KWin::DBusDesktopDataVector>();
 
     new VirtualDesktopManagerAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/VirtualDesktopManager"),
-        QStringLiteral("org.kde.KWin.VirtualDesktopManager"),
-        this
-    );
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/VirtualDesktopManager"), QStringLiteral("org.kde.KWin.VirtualDesktopManager"), this);
 
-    connect(m_manager, &VirtualDesktopManager::currentChanged, this,
-        [this](uint previousDesktop, uint newDesktop) {
-            Q_UNUSED(previousDesktop);
-            Q_UNUSED(newDesktop);
-            Q_EMIT currentChanged(m_manager->currentDesktop()->id());
-        }
-    );
+    connect(m_manager, &VirtualDesktopManager::currentChanged, this, [this](uint previousDesktop, uint newDesktop) {
+        Q_UNUSED(previousDesktop);
+        Q_UNUSED(newDesktop);
+        Q_EMIT currentChanged(m_manager->currentDesktop()->id());
+    });
 
-    connect(m_manager, &VirtualDesktopManager::countChanged, this,
-        [this](uint previousCount, uint newCount) {
-            Q_UNUSED(previousCount);
-            Q_EMIT countChanged(newCount);
-            Q_EMIT desktopsChanged(desktops());
-        }
-    );
+    connect(m_manager, &VirtualDesktopManager::countChanged, this, [this](uint previousCount, uint newCount) {
+        Q_UNUSED(previousCount);
+        Q_EMIT countChanged(newCount);
+        Q_EMIT desktopsChanged(desktops());
+    });
 
-    connect(m_manager, &VirtualDesktopManager::navigationWrappingAroundChanged, this,
-        [this]() {
-            Q_EMIT navigationWrappingAroundChanged(isNavigationWrappingAround());
-        }
-    );
+    connect(m_manager, &VirtualDesktopManager::navigationWrappingAroundChanged, this, [this]() {
+        Q_EMIT navigationWrappingAroundChanged(isNavigationWrappingAround());
+    });
 
     connect(m_manager, &VirtualDesktopManager::rowsChanged, this, &VirtualDesktopManagerDBusInterface::rowsChanged);
 
     const QVector<VirtualDesktop *> allDesks = m_manager->desktops();
     for (auto *vd : allDesks) {
-        connect(vd, &VirtualDesktop::x11DesktopNumberChanged, this,
-            [this, vd]() {
-                DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-                Q_EMIT desktopDataChanged(vd->id(), data);
-                Q_EMIT desktopsChanged(desktops());
-            }
-        );
-        connect(vd, &VirtualDesktop::nameChanged, this,
-            [this, vd]() {
-                DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-                Q_EMIT desktopDataChanged(vd->id(), data);
-                Q_EMIT desktopsChanged(desktops());
-            }
-        );
-    }
-    connect(m_manager, &VirtualDesktopManager::desktopCreated, this,
-        [this](VirtualDesktop *vd) {
-            connect(vd, &VirtualDesktop::x11DesktopNumberChanged, this,
-                [this, vd]() {
-                    DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-                    Q_EMIT desktopDataChanged(vd->id(), data);
-                    Q_EMIT desktopsChanged(desktops());
-                }
-            );
-            connect(vd, &VirtualDesktop::nameChanged, this,
-                [this, vd]() {
-                    DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-                    Q_EMIT desktopDataChanged(vd->id(), data);
-                    Q_EMIT desktopsChanged(desktops());
-                }
-            );
+        connect(vd, &VirtualDesktop::x11DesktopNumberChanged, this, [this, vd]() {
             DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-            Q_EMIT desktopCreated(vd->id(), data);
+            Q_EMIT desktopDataChanged(vd->id(), data);
             Q_EMIT desktopsChanged(desktops());
-        }
-    );
-    connect(m_manager, &VirtualDesktopManager::desktopRemoved, this,
-        [this](VirtualDesktop *vd) {
-            Q_EMIT desktopRemoved(vd->id());
+        });
+        connect(vd, &VirtualDesktop::nameChanged, this, [this, vd]() {
+            DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+            Q_EMIT desktopDataChanged(vd->id(), data);
             Q_EMIT desktopsChanged(desktops());
-        }
-    );
+        });
+    }
+    connect(m_manager, &VirtualDesktopManager::desktopCreated, this, [this](VirtualDesktop *vd) {
+        connect(vd, &VirtualDesktop::x11DesktopNumberChanged, this, [this, vd]() {
+            DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+            Q_EMIT desktopDataChanged(vd->id(), data);
+            Q_EMIT desktopsChanged(desktops());
+        });
+        connect(vd, &VirtualDesktop::nameChanged, this, [this, vd]() {
+            DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+            Q_EMIT desktopDataChanged(vd->id(), data);
+            Q_EMIT desktopsChanged(desktops());
+        });
+        DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+        Q_EMIT desktopCreated(vd->id(), data);
+        Q_EMIT desktopsChanged(desktops());
+    });
+    connect(m_manager, &VirtualDesktopManager::desktopRemoved, this, [this](VirtualDesktop *vd) {
+        Q_EMIT desktopRemoved(vd->id());
+        Q_EMIT desktopsChanged(desktops());
+    });
 }
 
 uint VirtualDesktopManagerDBusInterface::count() const
@@ -490,12 +473,9 @@ DBusDesktopDataVector VirtualDesktopManagerDBusInterface::desktops() const
     DBusDesktopDataVector desktopVect;
     desktopVect.reserve(m_manager->count());
 
-    std::transform(desks.constBegin(), desks.constEnd(),
-        std::back_inserter(desktopVect),
-        [] (const VirtualDesktop *vd) {
-            return DBusDesktopDataStruct{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-        }
-    );
+    std::transform(desks.constBegin(), desks.constEnd(), std::back_inserter(desktopVect), [](const VirtualDesktop *vd) {
+        return DBusDesktopDataStruct{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+    });
 
     return desktopVect;
 }
@@ -530,9 +510,7 @@ PluginManagerDBusInterface::PluginManagerDBusInterface(PluginManager *manager)
 {
     new PluginsAdaptor(this);
 
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Plugins"),
-                                                 QStringLiteral("org.kde.KWin.Plugins"),
-                                                 this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Plugins"), QStringLiteral("org.kde.KWin.Plugins"), this);
 }
 
 QStringList PluginManagerDBusInterface::loadedPlugins() const

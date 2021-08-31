@@ -14,8 +14,8 @@
 #include "wayland_server.h"
 
 #include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/datadevice.h>
+#include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/datasource.h>
 
 #include <KWaylandServer/datadevice_interface.h>
@@ -30,7 +30,6 @@ namespace KWin
 {
 namespace Xwl
 {
-
 SelectionSource::SelectionSource(Selection *selection)
     : QObject(selection)
     , m_selection(selection)
@@ -51,9 +50,7 @@ void WlSource::setDataSourceIface(KWaylandServer::AbstractDataSource *dsi)
     for (const auto &mime : dsi->mimeTypes()) {
         m_offers << mime;
     }
-    m_offerConnection = connect(dsi,
-                         &KWaylandServer::DataSourceInterface::mimeTypeOffered,
-                         this, &WlSource::receiveOffer);
+    m_offerConnection = connect(dsi, &KWaylandServer::DataSourceInterface::mimeTypeOffered, this, &WlSource::receiveOffer);
     m_dsi = dsi;
 }
 
@@ -97,24 +94,14 @@ void WlSource::sendTargets(xcb_selection_request_event_t *event)
         cnt++;
     }
 
-    xcb_change_property(kwinApp()->x11Connection(),
-                        XCB_PROP_MODE_REPLACE,
-                        event->requestor,
-                        event->property,
-                        XCB_ATOM_ATOM,
-                        32, cnt, targets.data());
+    xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, event->requestor, event->property, XCB_ATOM_ATOM, 32, cnt, targets.data());
     sendSelectionNotify(event, true);
 }
 
 void WlSource::sendTimestamp(xcb_selection_request_event_t *event)
 {
     const xcb_timestamp_t time = timestamp();
-    xcb_change_property(kwinApp()->x11Connection(),
-                        XCB_PROP_MODE_REPLACE,
-                        event->requestor,
-                        event->property,
-                        XCB_ATOM_INTEGER,
-                        32, 1, &time);
+    xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, event->requestor, event->property, XCB_ATOM_INTEGER, 32, 1, &time);
 
     sendSelectionNotify(event, true);
 }
@@ -172,12 +159,7 @@ void X11Source::getTargets()
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     /* will lead to a selection request event for the new owner */
-    xcb_convert_selection(xcbConn,
-                          window(),
-                          selection()->atom(),
-                          atoms->targets,
-                          atoms->wl_selection,
-                          timestamp());
+    xcb_convert_selection(xcbConn, window(), selection()->atom(), atoms->targets, atoms->wl_selection, timestamp());
     xcb_flush(xcbConn);
 }
 
@@ -187,14 +169,7 @@ void X11Source::handleTargets()
 {
     // receive targets
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
-    xcb_get_property_cookie_t cookie = xcb_get_property(xcbConn,
-                                                        1,
-                                                        window(),
-                                                        atoms->wl_selection,
-                                                        XCB_GET_PROPERTY_TYPE_ANY,
-                                                        0,
-                                                        4096
-                                                        );
+    xcb_get_property_cookie_t cookie = xcb_get_property(xcbConn, 1, window(), atoms->wl_selection, XCB_GET_PROPERTY_TYPE_ANY, 0, 4096);
     auto *reply = xcb_get_property_reply(xcbConn, cookie, nullptr);
     if (!reply) {
         qCDebug(KWIN_XWL) << "Failed to get selection property";
@@ -222,12 +197,9 @@ void X11Source::handleTargets()
             continue;
         }
 
-
-        const auto mimeIt = std::find_if(m_offers.begin(), m_offers.end(),
-            [value, i](const Mime &mime) {
-                return mime.second == value[i];
-            }
-        );
+        const auto mimeIt = std::find_if(m_offers.begin(), m_offers.end(), [value, i](const Mime &mime) {
+            return mime.second == value[i];
+        });
 
         auto mimePair = Mime(mimeStrings[0], value[i]);
         if (mimeIt == m_offers.end()) {
@@ -263,8 +235,7 @@ void X11Source::setDataSource(KWayland::Client::DataSource *dataSource)
         dataSource->offer(offer.first);
     }
 
-    connect(dataSource, &KWayland::Client::DataSource::sendDataRequested,
-        this, &X11Source::startTransfer);
+    connect(dataSource, &KWayland::Client::DataSource::sendDataRequested, this, &X11Source::startTransfer);
 }
 
 void X11Source::setOffers(const Mimes &offers)
@@ -294,11 +265,9 @@ bool X11Source::handleSelectionNotify(xcb_selection_notify_event_t *event)
 
 void X11Source::startTransfer(const QString &mimeName, qint32 fd)
 {
-    const auto mimeIt = std::find_if(m_offers.begin(), m_offers.end(),
-        [mimeName](const Mime &mime) {
-            return mime.first == mimeName;
-        }
-    );
+    const auto mimeIt = std::find_if(m_offers.begin(), m_offers.end(), [mimeName](const Mime &mime) {
+        return mime.first == mimeName;
+    });
     if (mimeIt == m_offers.end()) {
         qCDebug(KWIN_XWL) << "Sending X11 clipboard to Wayland failed: unsupported MIME.";
         close(fd);

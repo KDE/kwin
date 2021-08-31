@@ -14,14 +14,14 @@
 #include "lookingglassconfig.h"
 
 #include <QAction>
-#include <kwinglutils.h>
 #include <kwinglplatform.h>
+#include <kwinglutils.h>
 
-#include <KStandardAction>
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <QVector2D>
+#include <KStandardAction>
 #include <QFile>
+#include <QVector2D>
 
 #include <kmessagebox.h>
 
@@ -29,7 +29,6 @@
 
 namespace KWin
 {
-
 LookingGlassEffect::LookingGlassEffect()
     : zoom(1.0f)
     , target_zoom(1.0f)
@@ -43,7 +42,7 @@ LookingGlassEffect::LookingGlassEffect()
     , m_valid(false)
 {
     initConfig<LookingGlassConfig>();
-    QAction* a;
+    QAction *a;
     a = KStandardAction::zoomIn(this, SLOT(zoomIn()), this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
@@ -186,7 +185,7 @@ QRect LookingGlassEffect::magnifierArea() const
     return QRect(cursorPos().x() - radius, cursorPos().y() - radius, 2 * radius, 2 * radius);
 }
 
-void LookingGlassEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
+void LookingGlassEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     const int time = m_lastPresentTime.count() ? (presentTime - m_lastPresentTime).count() : 0;
     if (zoom != target_zoom) {
@@ -218,8 +217,12 @@ void LookingGlassEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::m
     effects->prePaintScreen(data, presentTime);
 }
 
-void LookingGlassEffect::slotMouseChanged(const QPoint& pos, const QPoint& old, Qt::MouseButtons,
-                                      Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
+void LookingGlassEffect::slotMouseChanged(const QPoint &pos,
+                                          const QPoint &old,
+                                          Qt::MouseButtons,
+                                          Qt::MouseButtons,
+                                          Qt::KeyboardModifiers,
+                                          Qt::KeyboardModifiers)
 {
     if (pos != old && m_enabled) {
         effects->addRepaint(pos.x() - radius, pos.y() - radius, 2 * radius, 2 * radius);
@@ -240,7 +243,7 @@ void LookingGlassEffect::paintScreen(int mask, const QRegion &region, ScreenPain
     effects->paintScreen(mask, region, data);
     if (m_valid && m_enabled) {
         // Disable render texture
-        GLRenderTarget* target = GLRenderTarget::popRenderTarget();
+        GLRenderTarget *target = GLRenderTarget::popRenderTarget();
         Q_ASSERT(target == m_fbo);
         Q_UNUSED(target);
         m_texture->bind();
@@ -263,4 +266,3 @@ bool LookingGlassEffect::isActive() const
 }
 
 } // namespace
-

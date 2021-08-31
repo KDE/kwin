@@ -11,7 +11,6 @@
 
 namespace KWin
 {
-
 MockTabBoxClient::MockTabBoxClient(QString caption)
     : TabBoxClient()
     , m_caption(caption)
@@ -20,7 +19,7 @@ MockTabBoxClient::MockTabBoxClient(QString caption)
 
 void MockTabBoxClient::close()
 {
-    static_cast<MockTabBoxHandler*>(TabBox::tabBox)->closeWindow(this);
+    static_cast<MockTabBoxHandler *>(TabBox::tabBox)->closeWindow(this);
 }
 
 } // namespace KWin

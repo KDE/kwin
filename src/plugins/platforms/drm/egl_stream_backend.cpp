@@ -10,32 +10,31 @@
 #include "basiceglsurfacetexture_internal.h"
 #include "composite.h"
 #include "drm_backend.h"
-#include "drm_output.h"
+#include "drm_gpu.h"
 #include "drm_object_crtc.h"
 #include "drm_object_plane.h"
+#include "drm_output.h"
+#include "drm_pipeline.h"
+#include "dumb_swapchain.h"
+#include "kwineglutils_p.h"
 #include "logging.h"
 #include "options.h"
 #include "renderloop_p.h"
 #include "scene.h"
 #include "screens.h"
+#include "shadowbuffer.h"
 #include "surfaceitem_wayland.h"
 #include "wayland_server.h"
 #include <kwinglplatform.h>
 #include <kwingltexture.h>
-#include "drm_gpu.h"
-#include "dumb_swapchain.h"
-#include "kwineglutils_p.h"
-#include "shadowbuffer.h"
-#include "drm_pipeline.h"
 
-#include <QOpenGLContext>
 #include <KWaylandServer/clientbuffer.h>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/eglstream_controller_interface.h>
+#include <QOpenGLContext>
 
 namespace KWin
 {
-
 typedef EGLStreamKHR (*PFNEGLCREATESTREAMATTRIBNV)(EGLDisplay, EGLAttrib *);
 typedef EGLBoolean (*PFNEGLGETOUTPUTLAYERSEXT)(EGLDisplay, EGLAttrib *, EGLOutputLayerEXT *, EGLint, EGLint *);
 typedef EGLBoolean (*PFNEGLSTREAMCONSUMEROUTPUTEXT)(EGLDisplay, EGLStreamKHR, EGLOutputLayerEXT);
@@ -111,12 +110,12 @@ bool EglStreamBackend::initializeEgl()
     initClientExtensions();
     EGLDisplay display = m_gpu->eglDisplay();
     if (display == EGL_NO_DISPLAY) {
-        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_device_base")) &&
-            !(hasClientExtension(QByteArrayLiteral("EGL_EXT_device_query")) &&
-              hasClientExtension(QByteArrayLiteral("EGL_EXT_device_enumeration")))) {
-            setFailed("Missing required EGL client extension: "
-                      "EGL_EXT_device_base or "
-                      "EGL_EXT_device_query and EGL_EXT_device_enumeration");
+        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_device_base"))
+            && !(hasClientExtension(QByteArrayLiteral("EGL_EXT_device_query")) && hasClientExtension(QByteArrayLiteral("EGL_EXT_device_enumeration")))) {
+            setFailed(
+                "Missing required EGL client extension: "
+                "EGL_EXT_device_base or "
+                "EGL_EXT_device_query and EGL_EXT_device_enumeration");
             return false;
         }
 
@@ -132,16 +131,12 @@ bool EglStreamBackend::initializeEgl()
             }
 
             const char *deviceExtensionCString = eglQueryDeviceStringEXT(device, EGL_EXTENSIONS);
-            QByteArray deviceExtensions = QByteArray::fromRawData(deviceExtensionCString,
-                                                                  qstrlen(deviceExtensionCString));
+            QByteArray deviceExtensions = QByteArray::fromRawData(deviceExtensionCString, qstrlen(deviceExtensionCString));
             if (!deviceExtensions.split(' ').contains(QByteArrayLiteral("EGL_EXT_device_drm"))) {
                 continue;
             }
 
-            EGLint platformAttribs[] = {
-                EGL_DRM_MASTER_FD_EXT, m_gpu->fd(),
-                EGL_NONE
-            };
+            EGLint platformAttribs[] = {EGL_DRM_MASTER_FD_EXT, m_gpu->fd(), EGL_NONE};
             display = eglGetPlatformDisplayEXT(EGL_PLATFORM_DEVICE_EXT, device, platformAttribs);
             break;
         }
@@ -158,17 +153,15 @@ bool EglStreamBackend::initializeEgl()
         return false;
     }
 
-    const QVector<QByteArray> requiredExtensions = {
-        QByteArrayLiteral("EGL_EXT_output_base"),
-        QByteArrayLiteral("EGL_EXT_output_drm"),
-        QByteArrayLiteral("EGL_KHR_stream"),
-        QByteArrayLiteral("EGL_KHR_stream_producer_eglsurface"),
-        QByteArrayLiteral("EGL_EXT_stream_consumer_egloutput"),
-        QByteArrayLiteral("EGL_NV_stream_attrib"),
-        QByteArrayLiteral("EGL_EXT_stream_acquire_mode"),
-        QByteArrayLiteral("EGL_KHR_stream_consumer_gltexture"),
-        QByteArrayLiteral("EGL_WL_wayland_eglstream")
-    };
+    const QVector<QByteArray> requiredExtensions = {QByteArrayLiteral("EGL_EXT_output_base"),
+                                                    QByteArrayLiteral("EGL_EXT_output_drm"),
+                                                    QByteArrayLiteral("EGL_KHR_stream"),
+                                                    QByteArrayLiteral("EGL_KHR_stream_producer_eglsurface"),
+                                                    QByteArrayLiteral("EGL_EXT_stream_consumer_egloutput"),
+                                                    QByteArrayLiteral("EGL_NV_stream_attrib"),
+                                                    QByteArrayLiteral("EGL_EXT_stream_acquire_mode"),
+                                                    QByteArrayLiteral("EGL_KHR_stream_consumer_gltexture"),
+                                                    QByteArrayLiteral("EGL_WL_wayland_eglstream")};
     for (const QByteArray &ext : requiredExtensions) {
         if (!hasExtension(ext)) {
             setFailed(QStringLiteral("Missing required EGL extension: ") + ext);
@@ -192,9 +185,7 @@ bool EglStreamBackend::initializeEgl()
 EglStreamBackend::StreamTexture *EglStreamBackend::lookupStreamTexture(KWaylandServer::SurfaceInterface *surface)
 {
     auto it = m_streamTextures.find(surface);
-    return it != m_streamTextures.end() ?
-           &it.value() :
-           nullptr;
+    return it != m_streamTextures.end() ? &it.value() : nullptr;
 }
 
 void EglStreamBackend::destroyStreamTexture(KWaylandServer::SurfaceInterface *surface)
@@ -204,9 +195,7 @@ void EglStreamBackend::destroyStreamTexture(KWaylandServer::SurfaceInterface *su
     glDeleteTextures(1, &st.texture);
 }
 
-void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *surface,
-                                            void *eglStream,
-                                            wl_array *attribs)
+void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *surface, void *eglStream, wl_array *attribs)
 {
     makeCurrent();
     QVector<EGLAttrib> streamAttribs;
@@ -230,16 +219,15 @@ void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *su
         st->stream = stream;
         texture = st->texture;
     } else {
-        StreamTexture newSt = { stream, 0 };
+        StreamTexture newSt = {stream, 0};
         glGenTextures(1, &newSt.texture);
         m_streamTextures.insert(surface, newSt);
         texture = newSt.texture;
 
-        connect(surface, &KWaylandServer::SurfaceInterface::destroyed, this,
-            [surface, this]() {
-                makeCurrent();
-                destroyStreamTexture(surface);
-            });
+        connect(surface, &KWaylandServer::SurfaceInterface::destroyed, this, [surface, this]() {
+            makeCurrent();
+            destroyStreamTexture(surface);
+        });
     }
 
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, texture);
@@ -272,8 +260,7 @@ void EglStreamBackend::init()
 
         using namespace KWaylandServer;
         m_eglStreamControllerInterface = new EglStreamControllerInterface(waylandServer()->display());
-        connect(m_eglStreamControllerInterface, &EglStreamControllerInterface::streamConsumerAttached, this,
-                &EglStreamBackend::attachStreamConsumer);
+        connect(m_eglStreamControllerInterface, &EglStreamControllerInterface::streamConsumerAttached, this, &EglStreamBackend::attachStreamConsumer);
     } else {
         // secondary NVidia GPUs only import dumb buffers
         const auto outputs = m_gpu->outputs();
@@ -307,11 +294,11 @@ bool EglStreamBackend::resetOutput(Output &o)
         // dumb buffer used for modesetting
         o.buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, sourceSize);
 
-        EGLAttrib streamAttribs[] = {
-            EGL_STREAM_FIFO_LENGTH_KHR, 0, // mailbox mode
-            EGL_CONSUMER_AUTO_ACQUIRE_EXT, EGL_FALSE,
-            EGL_NONE
-        };
+        EGLAttrib streamAttribs[] = {EGL_STREAM_FIFO_LENGTH_KHR,
+                                     0, // mailbox mode
+                                     EGL_CONSUMER_AUTO_ACQUIRE_EXT,
+                                     EGL_FALSE,
+                                     EGL_NONE};
         EGLStreamKHR stream = pEglCreateStreamAttribNV(eglDisplay(), streamAttribs);
         if (stream == EGL_NO_STREAM_KHR) {
             qCCritical(KWIN_DRM) << "Failed to create EGL stream for output:" << getEglErrorString();
@@ -336,13 +323,8 @@ bool EglStreamBackend::resetOutput(Output &o)
         }
 
         pEglStreamConsumerOutputEXT(eglDisplay(), stream, outputLayer);
-        EGLint streamProducerAttribs[] = {
-            EGL_WIDTH, sourceSize.width(),
-            EGL_HEIGHT, sourceSize.height(),
-            EGL_NONE
-        };
-        EGLSurface eglSurface = pEglCreateStreamProducerSurfaceKHR(eglDisplay(), config(), stream,
-                                                                streamProducerAttribs);
+        EGLint streamProducerAttribs[] = {EGL_WIDTH, sourceSize.width(), EGL_HEIGHT, sourceSize.height(), EGL_NONE};
+        EGLSurface eglSurface = pEglCreateStreamProducerSurfaceKHR(eglDisplay(), config(), stream, streamProducerAttribs);
         if (eglSurface == EGL_NO_SURFACE) {
             qCCritical(KWIN_DRM) << "Failed to create EGL surface for output:" << getEglErrorString();
             return false;
@@ -393,11 +375,9 @@ bool EglStreamBackend::addOutput(DrmAbstractOutput *output)
             return false;
         }
 
-        connect(drmOutput, &DrmOutput::modeChanged, this,
-            [drmOutput, this] {
-                resetOutput(m_outputs[drmOutput]);
-            }
-        );
+        connect(drmOutput, &DrmOutput::modeChanged, this, [drmOutput, this] {
+            resetOutput(m_outputs[drmOutput]);
+        });
         m_outputs.insert(output, o);
         return true;
     } else {
@@ -408,11 +388,9 @@ bool EglStreamBackend::addOutput(DrmAbstractOutput *output)
 void EglStreamBackend::removeOutput(DrmAbstractOutput *drmOutput)
 {
     Q_ASSERT(drmOutput->gpu() == m_gpu);
-    auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-        [drmOutput] (const Output &o) {
-            return o.output == drmOutput;
-        }
-    );
+    auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [drmOutput](const Output &o) {
+        return o.output == drmOutput;
+    });
     if (it == m_outputs.end()) {
         return;
     }
@@ -449,13 +427,20 @@ bool EglStreamBackend::makeContextCurrent(const Output &output)
 bool EglStreamBackend::initBufferConfigs()
 {
     const EGLint configAttribs[] = {
-        EGL_SURFACE_TYPE,         EGL_STREAM_BIT_KHR,
-        EGL_RED_SIZE,             1,
-        EGL_GREEN_SIZE,           1,
-        EGL_BLUE_SIZE,            1,
-        EGL_ALPHA_SIZE,           0,
-        EGL_RENDERABLE_TYPE,      isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
-        EGL_CONFIG_CAVEAT,        EGL_NONE,
+        EGL_SURFACE_TYPE,
+        EGL_STREAM_BIT_KHR,
+        EGL_RED_SIZE,
+        1,
+        EGL_GREEN_SIZE,
+        1,
+        EGL_BLUE_SIZE,
+        1,
+        EGL_ALPHA_SIZE,
+        0,
+        EGL_RENDERABLE_TYPE,
+        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
+        EGL_CONFIG_CAVEAT,
+        EGL_NONE,
         EGL_NONE,
     };
     EGLint count;
@@ -517,12 +502,12 @@ void EglStreamBackend::endFrame(AbstractOutput *output, const QRegion &renderedR
             frameFailed = true;
         }
     } else {
-        if (!renderingBackend()->swapBuffers(static_cast<DrmOutput*>(output), damagedRegion.intersected(output->geometry()))) {
+        if (!renderingBackend()->swapBuffers(static_cast<DrmOutput *>(output), damagedRegion.intersected(output->geometry()))) {
             qCCritical(KWIN_DRM) << "swapping buffers on render backend for" << output << "failed!";
             frameFailed = true;
         }
         buffer = renderOutput.dumbSwapchain->acquireBuffer();
-        if (!frameFailed && !renderingBackend()->exportFramebuffer(static_cast<DrmOutput*>(output), buffer->data(), buffer->size(), buffer->stride())) {
+        if (!frameFailed && !renderingBackend()->exportFramebuffer(static_cast<DrmOutput *>(output), buffer->data(), buffer->size(), buffer->stride())) {
             qCCritical(KWIN_DRM) << "importing framebuffer from render backend for" << output << "failed!";
             frameFailed = true;
         }
@@ -536,7 +521,8 @@ void EglStreamBackend::endFrame(AbstractOutput *output, const QRegion &renderedR
         renderLoopPrivate->notifyFrameFailed();
     } else if (isPrimary()) {
         EGLAttrib acquireAttribs[] = {
-            EGL_DRM_FLIP_EVENT_DATA_NV, (EGLAttrib)output,
+            EGL_DRM_FLIP_EVENT_DATA_NV,
+            (EGLAttrib)output,
             EGL_NONE,
         };
         if (!pEglStreamConsumerAcquireAttribNV(eglDisplay(), renderOutput.eglStream, acquireAttribs)) {
@@ -567,8 +553,7 @@ bool EglStreamBackend::hasOutput(AbstractOutput *output) const
  * EglTexture
  ************************************************/
 
-EglStreamSurfaceTextureWayland::EglStreamSurfaceTextureWayland(EglStreamBackend *backend,
-                                                               SurfacePixmapWayland *pixmap)
+EglStreamSurfaceTextureWayland::EglStreamSurfaceTextureWayland(EglStreamBackend *backend, SurfacePixmapWayland *pixmap)
     : BasicEGLSurfaceTextureWayland(backend, pixmap)
     , m_backend(backend)
 {
@@ -584,8 +569,7 @@ EglStreamSurfaceTextureWayland::~EglStreamSurfaceTextureWayland()
 bool EglStreamSurfaceTextureWayland::acquireStreamFrame(EGLStreamKHR stream)
 {
     EGLAttrib streamState;
-    if (!pEglQueryStreamAttribNV(m_backend->eglDisplay(), stream,
-                                 EGL_STREAM_STATE_KHR, &streamState)) {
+    if (!pEglQueryStreamAttribNV(m_backend->eglDisplay(), stream, EGL_STREAM_STATE_KHR, &streamState)) {
         qCWarning(KWIN_DRM) << "Failed to query EGL stream state:" << getEglErrorString();
         return false;
     }
@@ -670,13 +654,9 @@ bool EglStreamSurfaceTextureWayland::attachBuffer(KWaylandServer::ClientBuffer *
     return oldFormat != m_format || wasYInverted != texture()->isYInverted();
 }
 
-bool EglStreamSurfaceTextureWayland::checkBuffer(KWaylandServer::SurfaceInterface *surface,
-                                                 KWaylandServer::ClientBuffer *buffer)
+bool EglStreamSurfaceTextureWayland::checkBuffer(KWaylandServer::SurfaceInterface *surface, KWaylandServer::ClientBuffer *buffer)
 {
-    EGLAttrib attribs[] = {
-        EGL_WAYLAND_EGLSTREAM_WL, (EGLAttrib)buffer->resource(),
-        EGL_NONE
-    };
+    EGLAttrib attribs[] = {EGL_WAYLAND_EGLSTREAM_WL, (EGLAttrib)buffer->resource(), EGL_NONE};
     EGLStreamKHR stream = pEglCreateStreamAttribNV(m_backend->eglDisplay(), attribs);
     if (stream == EGL_NO_STREAM_KHR) {
         // eglCreateStreamAttribNV generates EGL_BAD_ACCESS if the
@@ -707,7 +687,6 @@ bool EglStreamSurfaceTextureWayland::create()
     SurfaceInterface *surface = m_pixmap->surface();
     const EglStreamBackend::StreamTexture *st = m_backend->lookupStreamTexture(surface);
     if (m_pixmap->buffer() && st != nullptr && checkBuffer(surface, m_pixmap->buffer())) {
-
         glGenTextures(1, &m_textureId);
         m_texture.reset(new GLTexture(m_textureId, 0, m_pixmap->buffer()->size()));
         m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
@@ -735,7 +714,6 @@ void EglStreamSurfaceTextureWayland::update(const QRegion &region)
     SurfaceInterface *surface = m_pixmap->surface();
     const EglStreamBackend::StreamTexture *st = m_backend->lookupStreamTexture(surface);
     if (m_pixmap->buffer() && st != nullptr && checkBuffer(surface, m_pixmap->buffer())) {
-
         if (attachBuffer(surface->buffer())) {
             createFbo();
         }

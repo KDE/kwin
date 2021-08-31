@@ -8,7 +8,6 @@
 
 namespace KWin
 {
-
 VsyncMonitor::VsyncMonitor(QObject *parent)
     : QObject(parent)
 {

@@ -12,12 +12,12 @@
 #include "kwinglutils.h"
 #include "logging_p.h"
 
+#include <QQmlComponent>
+#include <QQmlContext>
 #include <QQmlEngine>
 #include <QQuickItem>
-#include <QQmlContext>
-#include <QQmlComponent>
-#include <QQuickView>
 #include <QQuickRenderControl>
+#include <QQuickView>
 
 #include <QOffscreenSurface>
 #include <QOpenGLContext>
@@ -28,7 +28,6 @@
 
 namespace KWin
 {
-
 class EffectQuickRenderControl : public QQuickRenderControl
 {
     Q_OBJECT
@@ -142,7 +141,9 @@ EffectQuickView::EffectQuickView(QObject *parent, QWindow *renderWindow, ExportM
         }
     }
 
-    auto updateSize = [this]() { contentItem()->setSize(d->m_view->size()); };
+    auto updateSize = [this]() {
+        contentItem()->setSize(d->m_view->size());
+    };
     updateSize();
     connect(d->m_view, &QWindow::widthChanged, this, updateSize);
     connect(d->m_view, &QWindow::heightChanged, this, updateSize);
@@ -259,8 +260,7 @@ void EffectQuickView::forwardMouseEvent(QEvent *e)
     case QEvent::MouseMove:
     case QEvent::MouseButtonPress:
     case QEvent::MouseButtonRelease:
-    case QEvent::MouseButtonDblClick:
-    {
+    case QEvent::MouseButtonDblClick: {
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
         const QPoint widgetPos = d->m_view->mapFromGlobal(me->pos());
         QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
@@ -270,8 +270,7 @@ void EffectQuickView::forwardMouseEvent(QEvent *e)
     }
     case QEvent::HoverEnter:
     case QEvent::HoverLeave:
-    case QEvent::HoverMove:
-    {
+    case QEvent::HoverMove: {
         QHoverEvent *he = static_cast<QHoverEvent *>(e);
         const QPointF widgetPos = d->m_view->mapFromGlobal(he->pos());
         const QPointF oldWidgetPos = d->m_view->mapFromGlobal(he->oldPos());
@@ -280,12 +279,10 @@ void EffectQuickView::forwardMouseEvent(QEvent *e)
         e->setAccepted(cloneEvent.isAccepted());
         return;
     }
-    case QEvent::Wheel:
-    {
+    case QEvent::Wheel: {
         QWheelEvent *we = static_cast<QWheelEvent *>(e);
         const QPointF widgetPos = d->m_view->mapFromGlobal(we->pos());
-        QWheelEvent cloneEvent(widgetPos, we->globalPosF(), we->pixelDelta(), we->angleDelta(), we->buttons(),
-                               we->modifiers(), we->phase(), we->inverted());
+        QWheelEvent cloneEvent(widgetPos, we->globalPosF(), we->pixelDelta(), we->angleDelta(), we->buttons(), we->modifiers(), we->phase(), we->inverted());
         QCoreApplication::sendEvent(d->m_view, &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
         return;
@@ -320,7 +317,7 @@ void EffectQuickView::setVisible(bool visible)
     }
     d->m_visible = visible;
 
-    if (visible){
+    if (visible) {
         Q_EMIT d->m_renderControl->renderRequested();
     } else {
         // deferred to not change GL context
@@ -435,7 +432,9 @@ void EffectQuickScene::setSource(const QUrl &source)
     }
     item->setParentItem(contentItem());
 
-    auto updateSize = [item, this]() { item->setSize(contentItem()->size()); };
+    auto updateSize = [item, this]() {
+        item->setSize(contentItem()->size());
+    };
     updateSize();
     connect(contentItem(), &QQuickItem::widthChanged, item, updateSize);
     connect(contentItem(), &QQuickItem::heightChanged, item, updateSize);

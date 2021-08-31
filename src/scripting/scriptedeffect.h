@@ -53,14 +53,14 @@ public:
         WindowBackgroundContrastRole, ///< For single windows to enable Background contrast
         LanczosCacheRole
     };
-    enum EasingCurve {
-        GaussianCurve = 128
-    };
-    const QString &scriptFile() const {
+    enum EasingCurve { GaussianCurve = 128 };
+    const QString &scriptFile() const
+    {
         return m_scriptFile;
     }
     void reconfigure(ReconfigureFlags flags) override;
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return m_chainPosition;
     }
     QString activeConfig() const;
@@ -111,34 +111,41 @@ public:
     Q_SCRIPTABLE int displayHeight() const;
     Q_SCRIPTABLE int animationTime(int defaultTime) const;
 
-    Q_SCRIPTABLE void registerShortcut(const QString &objectName, const QString &text,
-                                       const QString &keySequence, const QJSValue &callback);
+    Q_SCRIPTABLE void registerShortcut(const QString &objectName, const QString &text, const QString &keySequence, const QJSValue &callback);
     Q_SCRIPTABLE bool registerScreenEdge(int edge, const QJSValue &callback);
     Q_SCRIPTABLE bool unregisterScreenEdge(int edge);
     Q_SCRIPTABLE bool registerTouchScreenEdge(int edge, const QJSValue &callback);
     Q_SCRIPTABLE bool unregisterTouchScreenEdge(int edge);
 
-    Q_SCRIPTABLE quint64 animate(KWin::EffectWindow *window, Attribute attribute, int ms,
-                                 const QJSValue &to, const QJSValue &from = QJSValue(),
-                                 uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0,
-                                 bool fullScreen = false, bool keepAlive = true);
+    Q_SCRIPTABLE quint64 animate(KWin::EffectWindow *window,
+                                 Attribute attribute,
+                                 int ms,
+                                 const QJSValue &to,
+                                 const QJSValue &from = QJSValue(),
+                                 uint metaData = 0,
+                                 int curve = QEasingCurve::Linear,
+                                 int delay = 0,
+                                 bool fullScreen = false,
+                                 bool keepAlive = true);
     Q_SCRIPTABLE QJSValue animate(const QJSValue &object);
 
-    Q_SCRIPTABLE quint64 set(KWin::EffectWindow *window, Attribute attribute, int ms,
-                             const QJSValue &to, const QJSValue &from = QJSValue(),
-                             uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0,
-                             bool fullScreen = false, bool keepAlive = true);
+    Q_SCRIPTABLE quint64 set(KWin::EffectWindow *window,
+                             Attribute attribute,
+                             int ms,
+                             const QJSValue &to,
+                             const QJSValue &from = QJSValue(),
+                             uint metaData = 0,
+                             int curve = QEasingCurve::Linear,
+                             int delay = 0,
+                             bool fullScreen = false,
+                             bool keepAlive = true);
     Q_SCRIPTABLE QJSValue set(const QJSValue &object);
 
-    Q_SCRIPTABLE bool retarget(quint64 animationId, const QJSValue &newTarget,
-                               int newRemainingTime = -1);
-    Q_SCRIPTABLE bool retarget(const QList<quint64> &animationIds, const QJSValue &newTarget,
-                               int newRemainingTime = -1);
+    Q_SCRIPTABLE bool retarget(quint64 animationId, const QJSValue &newTarget, int newRemainingTime = -1);
+    Q_SCRIPTABLE bool retarget(const QList<quint64> &animationIds, const QJSValue &newTarget, int newRemainingTime = -1);
 
-    Q_SCRIPTABLE bool redirect(quint64 animationId, Direction direction,
-                               TerminationFlags terminationFlags = TerminateAtSource);
-    Q_SCRIPTABLE bool redirect(const QList<quint64> &animationIds, Direction direction,
-                               TerminationFlags terminationFlags = TerminateAtSource);
+    Q_SCRIPTABLE bool redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags = TerminateAtSource);
+    Q_SCRIPTABLE bool redirect(const QList<quint64> &animationIds, Direction direction, TerminationFlags terminationFlags = TerminateAtSource);
 
     Q_SCRIPTABLE bool complete(quint64 animationId);
     Q_SCRIPTABLE bool complete(const QList<quint64> &animationIds);
@@ -146,7 +153,8 @@ public:
     Q_SCRIPTABLE bool cancel(quint64 animationId);
     Q_SCRIPTABLE bool cancel(const QList<quint64> &animationIds);
 
-    QHash<int, QJSValueList> &screenEdgeCallbacks() {
+    QHash<int, QJSValueList> &screenEdgeCallbacks()
+    {
         return m_screenEdgeCallbacks;
     }
 
@@ -171,10 +179,7 @@ protected:
     void animationEnded(KWin::EffectWindow *w, Attribute a, uint meta) override;
 
 private:
-    enum class AnimationType {
-        Animate,
-        Set
-    };
+    enum class AnimationType { Animate, Set };
 
     QJSValue animate_helper(const QJSValue &object, AnimationType animationType);
 
@@ -184,7 +189,7 @@ private:
     QHash<int, QJSValueList> m_screenEdgeCallbacks;
     KConfigLoader *m_config;
     int m_chainPosition;
-    QHash<int, QAction*> m_touchScreenEdgeCallbacks;
+    QHash<int, QAction *> m_touchScreenEdgeCallbacks;
     Effect *m_activeFullScreenEffect = nullptr;
 };
 

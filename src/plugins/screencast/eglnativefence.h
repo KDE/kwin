@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 class EGLNativeFence
 {
 public:

@@ -11,7 +11,6 @@
 
 namespace KWin
 {
-
 ClockSkewNotifierEngine *ClockSkewNotifierEngine::create(QObject *parent)
 {
 #if defined(Q_OS_LINUX)

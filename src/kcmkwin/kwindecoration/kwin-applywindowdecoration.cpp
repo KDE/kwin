@@ -10,11 +10,11 @@
 
 #include <KLocalizedString>
 
-#include <QCoreApplication>
 #include <QCommandLineParser>
-#include <QDebug>
-#include <QDBusMessage>
+#include <QCoreApplication>
 #include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDebug>
 #include <QFileInfo>
 #include <QTimer>
 
@@ -29,8 +29,12 @@ int main(int argc, char **argv)
 
     QCommandLineParser *parser = new QCommandLineParser;
     parser->addHelpOption();
-    parser->setApplicationDescription(i18n("This tool allows you to set the window decoration theme for the currently active session, without accidentally setting it to one that is either not available, or which is already set."));
-    parser->addPositionalArgument(QStringLiteral("theme"), i18n("The name of the window decoration theme you wish to set for KWin. Passing a full path will attempt to find a theme in that directory, and then apply that if one can be deduced."));
+    parser->setApplicationDescription(
+        i18n("This tool allows you to set the window decoration theme for the currently active session, without accidentally setting it to one that is either "
+             "not available, or which is already set."));
+    parser->addPositionalArgument(QStringLiteral("theme"),
+                                  i18n("The name of the window decoration theme you wish to set for KWin. Passing a full path will attempt to find a theme in "
+                                       "that directory, and then apply that if one can be deduced."));
     parser->addOption(QCommandLineOption(QStringLiteral("list-themes"), i18n("Show all the themes available on the system (and which is the current theme)")));
     parser->process(app);
 
@@ -55,7 +59,8 @@ int main(int argc, char **argv)
                 // Since this is the name of a directory, let's do a bit of checking to see
                 // if we know enough about it to deduce that this is, in fact, a theme.
                 QStringList splitTheme = requestedTheme.split(QStringLiteral("/"), Qt::SkipEmptyParts);
-                if (splitTheme.count() > 3 && splitTheme[splitTheme.count() - 3] == QStringLiteral("aurorae") && splitTheme[splitTheme.count() - 2] == QStringLiteral("themes")) {
+                if (splitTheme.count() > 3 && splitTheme[splitTheme.count() - 3] == QStringLiteral("aurorae")
+                    && splitTheme[splitTheme.count() - 2] == QStringLiteral("themes")) {
                     // We think this is an aurorae theme, but let's just make a little more certain...
                     QString file(QStringLiteral("aurorae/themes/%1/metadata.desktop").arg(splitTheme.last()));
                     QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
@@ -68,7 +73,9 @@ int main(int argc, char **argv)
                     }
                 }
             } else {
-                ts << i18n("You attempted to pass a file path, but this could not be resolved to a theme, and we will have to abort, due to having no theme to set") << endl;
+                ts << i18n(
+                    "You attempted to pass a file path, but this could not be resolved to a theme, and we will have to abort, due to having no theme to set")
+                   << endl;
                 exitCode = -1;
             }
         }
@@ -79,7 +86,7 @@ int main(int argc, char **argv)
         } else if (themeResolved) {
             int index{-1};
             QStringList availableThemes;
-            for (int i = 0 ; i < model->rowCount(); ++i) {
+            for (int i = 0; i < model->rowCount(); ++i) {
                 const QString themeName = model->data(model->index(i), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString();
                 if (requestedTheme == themeName) {
                     index = i;
@@ -92,24 +99,28 @@ int main(int argc, char **argv)
                 settings->setPluginName(model->data(model->index(index), KDecoration2::Configuration::DecorationsModel::PluginNameRole).toString());
                 if (settings->save()) {
                     // Send a signal to all kwin instances
-                    QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),
-                                                                    QStringLiteral("org.kde.KWin"),
-                                                                    QStringLiteral("reloadConfig"));
+                    QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"));
                     QDBusConnection::sessionBus().send(message);
                     ts << i18n("Successfully applied the cursor theme %1 to your current Plasma session",
-                                model->data(model->index(index), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString()) << endl;
+                               model->data(model->index(index), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString())
+                       << endl;
                 } else {
-                    ts << i18n("Failed to save your theme settings - the reason is unknown, but this is an unrecoverable error. You may find that simply trying again will work.");
+                    ts << i18n(
+                        "Failed to save your theme settings - the reason is unknown, but this is an unrecoverable error. You may find that simply trying again "
+                        "will work.");
                     exitCode = -1;
                 }
             } else {
-                ts << i18n("Could not find theme \"%1\". The theme should be one of the following options: %2", requestedTheme, availableThemes.join(QStringLiteral(", "))) << endl;
+                ts << i18n("Could not find theme \"%1\". The theme should be one of the following options: %2",
+                           requestedTheme,
+                           availableThemes.join(QStringLiteral(", ")))
+                   << endl;
                 exitCode = -1;
             }
         }
     } else if (parser->isSet(QStringLiteral("list-themes"))) {
         ts << i18n("You have the following KWin window decoration themes on your system:") << endl;
-        for (int i = 0 ; i < model->rowCount(); ++i) {
+        for (int i = 0; i < model->rowCount(); ++i) {
             const QString displayName = model->data(model->index(i), Qt::DisplayRole).toString();
             const QString themeName = model->data(model->index(i), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString();
             if (settings->theme() == themeName) {
@@ -121,7 +132,9 @@ int main(int argc, char **argv)
     } else {
         parser->showHelp();
     }
-    QTimer::singleShot(0, &app, [&app,&exitCode](){ app.exit(exitCode); });
+    QTimer::singleShot(0, &app, [&app, &exitCode]() {
+        app.exit(exitCode);
+    });
 
     return app.exec();
 }

@@ -17,7 +17,6 @@
 
 namespace KWin
 {
-
 X11SyncObject::X11SyncObject()
 {
     m_state = Ready;
@@ -38,7 +37,7 @@ X11SyncObject::~X11SyncObject()
     // deadlocks waiting for the fence to be signalled.
     // To avoid this, make sure the fence is signalled before
     // deleting the sync.
-    if (m_state == Resetting || m_state == Ready){
+    if (m_state == Resetting || m_state == Ready) {
         trigger();
         // The flush is necessary!
         // The trigger command needs to be sent to the X server.
@@ -148,9 +147,7 @@ X11SyncManager *X11SyncManager::create()
     }
 
     GLPlatform *glPlatform = GLPlatform::instance();
-    const bool haveSyncObjects = glPlatform->isGLES()
-        ? hasGLVersion(3, 0)
-        : hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
+    const bool haveSyncObjects = glPlatform->isGLES() ? hasGLVersion(3, 0) : hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
 
     if (hasGLExtension("GL_EXT_x11_sync_object") && haveSyncObjects) {
         const QString useExplicitSync = qEnvironmentVariable("KWIN_EXPLICIT_SYNC");

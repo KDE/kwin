@@ -43,13 +43,22 @@ public:
     explicit ThumbnailItemBase(QQuickItem *parent = nullptr);
     ~ThumbnailItemBase() override;
 
-    qreal brightness() const { return 1; }
+    qreal brightness() const
+    {
+        return 1;
+    }
     void setBrightness(qreal brightness);
 
-    qreal saturation() const { return 1; }
+    qreal saturation() const
+    {
+        return 1;
+    }
     void setSaturation(qreal saturation);
 
-    QQuickItem *clipTo() const { return nullptr; }
+    QQuickItem *clipTo() const
+    {
+        return nullptr;
+    }
     void setClipTo(QQuickItem *clip);
 
     QSize sourceSize() const;

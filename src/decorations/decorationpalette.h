@@ -12,12 +12,12 @@
 #ifndef KWIN_DECORATION_PALETTE_H
 #define KWIN_DECORATION_PALETTE_H
 
-#include <KDecoration2/DecorationSettings>
-#include <QFileSystemWatcher>
-#include <QPalette>
-#include <KSharedConfig>
 #include <KColorScheme>
 #include <KConfigWatcher>
+#include <KDecoration2/DecorationSettings>
+#include <KSharedConfig>
+#include <QFileSystemWatcher>
+#include <QPalette>
 
 #include <optional>
 
@@ -25,7 +25,6 @@ namespace KWin
 {
 namespace Decoration
 {
-
 class DecorationPalette : public QObject
 {
     Q_OBJECT
@@ -39,6 +38,7 @@ public:
 
 Q_SIGNALS:
     void changed();
+
 private:
     void update();
 

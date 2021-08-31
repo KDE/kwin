@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size)
     : m_size(size)
 {
@@ -26,7 +25,10 @@ DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size)
             break;
         }
         buffer->image()->fill(Qt::black);
-        m_slots.append(Slot{.buffer = buffer, .age = 0,});
+        m_slots.append(Slot{
+            .buffer = buffer,
+            .age = 0,
+        });
     }
     if (m_slots.count() < 2) {
         qCWarning(KWIN_DRM) << "Failed to create dumb buffers for swapchain!";

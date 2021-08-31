@@ -11,18 +11,14 @@
 
 namespace KWin
 {
-
 SurfaceItemX11::SurfaceItemX11(Toplevel *window, Item *parent)
     : SurfaceItem(window, parent)
 {
-    connect(window, &Toplevel::bufferGeometryChanged,
-            this, &SurfaceItemX11::handleBufferGeometryChanged);
-    connect(window, &Toplevel::geometryShapeChanged,
-            this, &SurfaceItemX11::discardQuads);
+    connect(window, &Toplevel::bufferGeometryChanged, this, &SurfaceItemX11::handleBufferGeometryChanged);
+    connect(window, &Toplevel::geometryShapeChanged, this, &SurfaceItemX11::discardQuads);
 
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
-    xcb_damage_create(kwinApp()->x11Connection(), m_damageHandle, window->frameId(),
-                      XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
+    xcb_damage_create(kwinApp()->x11Connection(), m_damageHandle, window->frameId(), XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
 
     setSize(window->bufferGeometry().size());
 }
@@ -79,8 +75,7 @@ void SurfaceItemX11::waitForDamage()
     }
     m_havePendingDamageRegion = false;
 
-    xcb_xfixes_fetch_region_reply_t *reply =
-            xcb_xfixes_fetch_region_reply(kwinApp()->x11Connection(), m_damageCookie, nullptr);
+    xcb_xfixes_fetch_region_reply_t *reply = xcb_xfixes_fetch_region_reply(kwinApp()->x11Connection(), m_damageCookie, nullptr);
     if (!reply) {
         qCDebug(KWIN_CORE) << "Failed to check damage region";
         return;
@@ -180,29 +175,24 @@ void SurfacePixmapX11::create()
     xcb_connection_t *connection = kwinApp()->x11Connection();
     xcb_window_t frame = toplevel->frameId();
     xcb_pixmap_t pixmap = xcb_generate_id(connection);
-    xcb_void_cookie_t namePixmapCookie = xcb_composite_name_window_pixmap_checked(connection,
-                                                                                  frame,
-                                                                                  pixmap);
+    xcb_void_cookie_t namePixmapCookie = xcb_composite_name_window_pixmap_checked(connection, frame, pixmap);
     Xcb::WindowAttributes windowAttributes(frame);
     Xcb::WindowGeometry windowGeometry(frame);
     if (xcb_generic_error_t *error = xcb_request_check(connection, namePixmapCookie)) {
-        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (error code %d)",
-                toplevel->window(), error->error_code);
+        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (error code %d)", toplevel->window(), error->error_code);
         free(error);
         return;
     }
     // check that the received pixmap is valid and actually matches what we
     // know about the window (i.e. size)
     if (!windowAttributes || windowAttributes->map_state != XCB_MAP_STATE_VIEWABLE) {
-        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (not viewable)",
-                toplevel->window());
+        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (not viewable)", toplevel->window());
         xcb_free_pixmap(connection, pixmap);
         return;
     }
     const QRect bufferGeometry = toplevel->bufferGeometry();
     if (windowGeometry.size() != bufferGeometry.size()) {
-        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (mismatched geometry)",
-                toplevel->window());
+        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (mismatched geometry)", toplevel->window());
         xcb_free_pixmap(connection, pixmap);
         return;
     }

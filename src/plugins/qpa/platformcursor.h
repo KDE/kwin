@@ -15,7 +15,6 @@ namespace KWin
 {
 namespace QPA
 {
-
 class PlatformCursor : public QPlatformCursor
 {
 public:

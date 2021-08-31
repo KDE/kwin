@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 XFixesCursorEventFilter::XFixesCursorEventFilter(X11Cursor *cursor)
     : X11EventFilter(QVector<int>{Xcb::Extensions::self()->fixesCursorNotifyEvent()})
     , m_cursor(cursor)

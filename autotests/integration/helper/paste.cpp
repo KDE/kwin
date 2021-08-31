@@ -40,13 +40,11 @@ void Window::paintEvent(QPaintEvent *event)
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-    QObject::connect(app.clipboard(), &QClipboard::changed, &app,
-        [] {
-            if (qApp->clipboard()->text() == QLatin1String("test")) {
-                QTimer::singleShot(100, qApp, &QCoreApplication::quit);
-            }
+    QObject::connect(app.clipboard(), &QClipboard::changed, &app, [] {
+        if (qApp->clipboard()->text() == QLatin1String("test")) {
+            QTimer::singleShot(100, qApp, &QCoreApplication::quit);
         }
-    );
+    });
     QScopedPointer<Window> w(new Window);
     w->setGeometry(QRect(0, 0, 100, 200));
     w->show();

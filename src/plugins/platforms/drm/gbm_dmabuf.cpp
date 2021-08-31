@@ -13,12 +13,12 @@
 
 namespace KWin
 {
-
 GbmDmaBuf::GbmDmaBuf(GLTexture *texture, gbm_bo *bo, int fd)
     : DmaBufTexture(texture)
     , m_bo(bo)
     , m_fd(fd)
-{}
+{
+}
 
 GbmDmaBuf::~GbmDmaBuf()
 {
@@ -27,7 +27,6 @@ GbmDmaBuf::~GbmDmaBuf()
     close(m_fd);
     gbm_bo_destroy(m_bo);
 }
-
 
 KWin::GbmDmaBuf *GbmDmaBuf::createBuffer(const QSize &size, gbm_device *device)
 {
@@ -48,15 +47,19 @@ KWin::GbmDmaBuf *GbmDmaBuf::createBuffer(const QSize &size, gbm_device *device)
         return nullptr;
     }
 
-    EGLint importAttributes[] = {
-        EGL_WIDTH, EGLint(gbm_bo_get_width(bo)),
-        EGL_HEIGHT, EGLint(gbm_bo_get_height(bo)),
-        EGL_LINUX_DRM_FOURCC_EXT, DRM_FORMAT_ARGB8888,
-        EGL_DMA_BUF_PLANE0_FD_EXT, fd,
-        EGL_DMA_BUF_PLANE0_OFFSET_EXT, EGLint(gbm_bo_get_offset(bo, 0)),
-        EGL_DMA_BUF_PLANE0_PITCH_EXT, EGLint(gbm_bo_get_stride(bo)),
-        EGL_NONE
-    };
+    EGLint importAttributes[] = {EGL_WIDTH,
+                                 EGLint(gbm_bo_get_width(bo)),
+                                 EGL_HEIGHT,
+                                 EGLint(gbm_bo_get_height(bo)),
+                                 EGL_LINUX_DRM_FOURCC_EXT,
+                                 DRM_FORMAT_ARGB8888,
+                                 EGL_DMA_BUF_PLANE0_FD_EXT,
+                                 fd,
+                                 EGL_DMA_BUF_PLANE0_OFFSET_EXT,
+                                 EGLint(gbm_bo_get_offset(bo, 0)),
+                                 EGL_DMA_BUF_PLANE0_PITCH_EXT,
+                                 EGLint(gbm_bo_get_stride(bo)),
+                                 EGL_NONE};
 
     EGLDisplay display = kwinApp()->platform()->sceneEglDisplay();
     EGLImageKHR destinationImage = eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, importAttributes);
@@ -68,4 +71,3 @@ KWin::GbmDmaBuf *GbmDmaBuf::createBuffer(const QSize &size, gbm_device *device)
 }
 
 }
-

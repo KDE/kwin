@@ -9,12 +9,11 @@
 #include "gestures.h"
 
 #include <QRect>
-#include <functional>
 #include <cmath>
+#include <functional>
 
 namespace KWin
 {
-
 Gesture::Gesture(QObject *parent)
     : QObject(parent)
 {
@@ -69,7 +68,7 @@ GestureRecognizer::GestureRecognizer(QObject *parent)
 
 GestureRecognizer::~GestureRecognizer() = default;
 
-void GestureRecognizer::registerGesture(KWin::Gesture* gesture)
+void GestureRecognizer::registerGesture(KWin::Gesture *gesture)
 {
     Q_ASSERT(!m_gestures.contains(gesture));
     auto connection = connect(gesture, &QObject::destroyed, this, std::bind(&GestureRecognizer::unregisterGesture, this, gesture));
@@ -77,7 +76,7 @@ void GestureRecognizer::registerGesture(KWin::Gesture* gesture)
     m_gestures << gesture;
 }
 
-void GestureRecognizer::unregisterGesture(KWin::Gesture* gesture)
+void GestureRecognizer::unregisterGesture(KWin::Gesture *gesture)
 {
     auto it = m_destroyConnections.find(gesture);
     if (it != m_destroyConnections.end()) {
@@ -95,7 +94,7 @@ int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startP
     int count = 0;
     // TODO: verify that no gesture is running
     for (Gesture *gesture : qAsConst(m_gestures)) {
-        SwipeGesture *swipeGesture = qobject_cast<SwipeGesture*>(gesture);
+        SwipeGesture *swipeGesture = qobject_cast<SwipeGesture *>(gesture);
         if (!gesture) {
             continue;
         }
@@ -169,7 +168,7 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
     }
     const QSizeF combinedDelta = std::accumulate(m_swipeUpdates.constBegin(), m_swipeUpdates.constEnd(), QSizeF(0, 0));
     for (auto it = m_activeSwipeGestures.begin(); it != m_activeSwipeGestures.end();) {
-        auto g = qobject_cast<SwipeGesture*>(*it);
+        auto g = qobject_cast<SwipeGesture *>(*it);
         if (g->direction() == direction) {
             if (g->isMinimumDeltaRelevant()) {
                 Q_EMIT g->progress(g->minimumDeltaReachedProgress(combinedDelta));
@@ -204,7 +203,7 @@ void GestureRecognizer::endSwipeGesture()
 {
     const QSizeF delta = std::accumulate(m_swipeUpdates.constBegin(), m_swipeUpdates.constEnd(), QSizeF(0, 0));
     for (auto g : qAsConst(m_activeSwipeGestures)) {
-        if (static_cast<SwipeGesture*>(g)->minimumDeltaReached(delta)) {
+        if (static_cast<SwipeGesture *>(g)->minimumDeltaReached(delta)) {
             Q_EMIT g->triggered();
         } else {
             Q_EMIT g->cancelled();

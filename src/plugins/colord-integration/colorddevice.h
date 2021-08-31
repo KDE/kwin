@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 class AbstractOutput;
 
 class ColordDevice : public QObject

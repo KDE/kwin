@@ -23,8 +23,8 @@
 #include <KWayland/Client/surface.h>
 
 #include <KWaylandServer/compositor_interface.h>
-#include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/datasource_interface.h>
+#include <KWaylandServer/seat_interface.h>
 
 #include <QMouseEvent>
 
@@ -34,7 +34,6 @@ namespace KWin
 {
 namespace Xwl
 {
-
 // version of DnD support in X
 const static uint32_t s_version = 5;
 uint32_t Dnd::version()
@@ -47,14 +46,15 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
-    const uint32_t dndValues[] = { XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
-                                   XCB_EVENT_MASK_PROPERTY_CHANGE };
+    const uint32_t dndValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE};
     xcb_create_window(xcbConn,
                       XCB_COPY_FROM_PARENT,
                       window(),
                       kwinApp()->x11RootWindow(),
-                      0, 0,
-                      8192, 8192,           // TODO: get current screen size and connect to changes
+                      0,
+                      0,
+                      8192,
+                      8192, // TODO: get current screen size and connect to changes
                       0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT,
                       XCB_COPY_FROM_PARENT,
@@ -62,12 +62,7 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
                       dndValues);
     registerXfixes();
 
-    xcb_change_property(xcbConn,
-                        XCB_PROP_MODE_REPLACE,
-                        window(),
-                        atoms->xdnd_aware,
-                        XCB_ATOM_ATOM,
-                        32, 1, &s_version);
+    xcb_change_property(xcbConn, XCB_PROP_MODE_REPLACE, window(), atoms->xdnd_aware, XCB_ATOM_ATOM, 32, 1, &s_version);
     xcb_flush(xcbConn);
 
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragStarted, this, &Dnd::startDrag);
@@ -78,37 +73,33 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
     m_surface->setInputRegion(nullptr);
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
     auto *dc = new QMetaObject::Connection();
-    *dc = connect(comp, &KWaylandServer::CompositorInterface::surfaceCreated, this,
-                 [this, dc](KWaylandServer::SurfaceInterface *si) {
-                    // TODO: how to make sure that it is the iface of m_surface?
-                    if (m_surfaceIface || si->client() != waylandServer()->internalConnection()) {
-                        return;
+    *dc = connect(comp, &KWaylandServer::CompositorInterface::surfaceCreated, this, [this, dc](KWaylandServer::SurfaceInterface *si) {
+        // TODO: how to make sure that it is the iface of m_surface?
+        if (m_surfaceIface || si->client() != waylandServer()->internalConnection()) {
+            return;
+        }
+        QObject::disconnect(*dc);
+        delete dc;
+        m_surfaceIface = si;
+        connect(workspace(), &Workspace::clientActivated, this, [this](AbstractClient *ac) {
+            if (!ac || !ac->inherits("KWin::X11Client")) {
+                return;
+            }
+            auto *surface = ac->surface();
+            if (surface) {
+                surface->setDataProxy(m_surfaceIface);
+            } else {
+                auto *dc = new QMetaObject::Connection();
+                *dc = connect(ac, &AbstractClient::surfaceChanged, this, [this, ac, dc] {
+                    if (auto *surface = ac->surface()) {
+                        surface->setDataProxy(m_surfaceIface);
+                        QObject::disconnect(*dc);
+                        delete dc;
                     }
-                    QObject::disconnect(*dc);
-                    delete dc;
-                    m_surfaceIface = si;
-                    connect(workspace(), &Workspace::clientActivated, this,
-                        [this](AbstractClient *ac) {
-                            if (!ac || !ac->inherits("KWin::X11Client")) {
-                                return;
-                            }
-                            auto *surface = ac->surface();
-                            if (surface) {
-                                surface->setDataProxy(m_surfaceIface);
-                            } else {
-                                auto *dc = new QMetaObject::Connection();
-                                *dc = connect(ac, &AbstractClient::surfaceChanged, this, [this, ac, dc] {
-                                        if (auto *surface = ac->surface()) {
-                                            surface->setDataProxy(m_surfaceIface);
-                                            QObject::disconnect(*dc);
-                                            delete dc;
-                                        }
-                                      }
-                                );
-                            }
-                    });
-                }
-    );
+                });
+            }
+        });
+    });
     waylandServer()->dispatch();
 }
 

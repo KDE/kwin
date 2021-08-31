@@ -11,7 +11,6 @@
 
 #include <KQuickAddons/ManagedConfigModule>
 
-
 class QAbstractItemModel;
 class QSortFilterProxyModel;
 class QQuickItem;

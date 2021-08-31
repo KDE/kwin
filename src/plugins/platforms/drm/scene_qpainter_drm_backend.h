@@ -12,14 +12,13 @@
 #include "utils.h"
 
 #include <QObject>
-#include <QVector>
 #include <QSharedPointer>
+#include <QVector>
 
 #include "dumb_swapchain.h"
 
 namespace KWin
 {
-
 class DrmBackend;
 class DrmDumbBuffer;
 class DrmAbstractOutput;

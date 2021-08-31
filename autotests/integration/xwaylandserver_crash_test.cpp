@@ -4,9 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwin_wayland_test.h"
 #include "abstract_output.h"
 #include "composite.h"
+#include "kwin_wayland_test.h"
 #include "main.h"
 #include "platform.h"
 #include "scene.h"
@@ -21,9 +21,7 @@
 
 namespace KWin
 {
-
-struct XcbConnectionDeleter
-{
+struct XcbConnectionDeleter {
     static inline void cleanup(xcb_connection_t *pointer)
     {
         xcb_disconnect(pointer);
@@ -75,12 +73,19 @@ void XwaylandServerCrashTest::testCrash()
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t window1 = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, window1, rootWindow(),
+    xcb_create_window(c.data(),
+                      XCB_COPY_FROM_PARENT,
+                      window1,
+                      rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
                       windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+                      0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      XCB_COPY_FROM_PARENT,
+                      0,
+                      nullptr);
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
@@ -99,12 +104,20 @@ void XwaylandServerCrashTest::testCrash()
 
     // Create an override-redirect window.
     xcb_window_t window2 = xcb_generate_id(c.data());
-    const uint32_t values[] = { true };
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, window2, rootWindow(),
-                      windowGeometry.x(), windowGeometry.y(),
-                      windowGeometry.width(), windowGeometry.height(), 0,
-                      XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT,
-                      XCB_CW_OVERRIDE_REDIRECT, values);
+    const uint32_t values[] = {true};
+    xcb_create_window(c.data(),
+                      XCB_COPY_FROM_PARENT,
+                      window2,
+                      rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      XCB_COPY_FROM_PARENT,
+                      XCB_CW_OVERRIDE_REDIRECT,
+                      values);
     xcb_map_window(c.data(), window2);
     xcb_flush(c.data());
 

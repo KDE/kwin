@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class WaylandClient : public AbstractClient
 {
     Q_OBJECT

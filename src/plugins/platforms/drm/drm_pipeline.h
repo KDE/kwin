@@ -10,9 +10,9 @@
 #pragma once
 
 #include <QPoint>
+#include <QSharedPointer>
 #include <QSize>
 #include <QVector>
-#include <QSharedPointer>
 
 #include <xf86drmMode.h>
 
@@ -21,7 +21,6 @@
 
 namespace KWin
 {
-
 class DrmGpu;
 class DrmConnector;
 class DrmCrtc;
@@ -51,7 +50,7 @@ public:
      * tests the pending commit
      * always returns true in legacy mode!
      */
-    bool test(const QVector<DrmPipeline*> &pipelines);
+    bool test(const QVector<DrmPipeline *> &pipelines);
 
     bool modeset(int modeIndex);
     bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot = QPoint());
@@ -84,7 +83,7 @@ public:
 
 private:
     bool atomicCommit();
-    bool atomicTest(const QVector<DrmPipeline*> &pipelines);
+    bool atomicTest(const QVector<DrmPipeline *> &pipelines);
     bool doAtomicCommit(drmModeAtomicReq *req, uint32_t flags, bool testOnly);
     bool populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);
     bool presentLegacy();
@@ -108,10 +107,10 @@ private:
         QPoint pos = QPoint(100, 100);
         QPoint hotspot;
         QSharedPointer<DrmDumbBuffer> buffer;
-        bool dirty = true;// we don't know what the current state is
+        bool dirty = true; // we don't know what the current state is
     } m_cursor;
 
-    QVector<DrmObject*> m_allObjects;
+    QVector<DrmObject *> m_allObjects;
 
     int m_lastFlags = 0;
 };

@@ -16,7 +16,6 @@
 
 namespace KWin
 {
-
 class Plugin;
 class PluginFactory;
 

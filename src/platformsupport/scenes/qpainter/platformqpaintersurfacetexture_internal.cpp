@@ -9,9 +9,7 @@
 
 namespace KWin
 {
-
-PlatformQPainterSurfaceTextureInternal::PlatformQPainterSurfaceTextureInternal(QPainterBackend *backend,
-                                                                               SurfacePixmapInternal *pixmap)
+PlatformQPainterSurfaceTextureInternal::PlatformQPainterSurfaceTextureInternal(QPainterBackend *backend, SurfacePixmapInternal *pixmap)
     : PlatformQPainterSurfaceTexture(backend)
     , m_pixmap(pixmap)
 {

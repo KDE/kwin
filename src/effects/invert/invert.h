@@ -15,22 +15,20 @@
 
 namespace KWin
 {
-
 class GLShader;
 
 /**
  * Inverts desktop's colors
  */
-class InvertEffect
-    : public Effect
+class InvertEffect : public Effect
 {
     Q_OBJECT
 public:
     InvertEffect();
     ~InvertEffect() override;
 
-    void drawWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data) override;
-    void paintEffectFrame(KWin::EffectFrame* frame, const QRegion &region, double opacity, double frameOpacity) override;
+    void drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
+    void paintEffectFrame(KWin::EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity) override;
     bool isActive() const override;
     bool provides(Feature) override;
 
@@ -49,9 +47,9 @@ protected:
 private:
     bool m_inited;
     bool m_valid;
-    GLShader* m_shader;
+    GLShader *m_shader;
     bool m_allWindows;
-    QList<EffectWindow*> m_windows;
+    QList<EffectWindow *> m_windows;
 };
 
 inline int InvertEffect::requestedEffectChainPosition() const

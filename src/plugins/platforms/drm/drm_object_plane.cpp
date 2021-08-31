@@ -7,42 +7,44 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_object_plane.h"
+#include "config-kwin.h"
 #include "drm_buffer.h"
 #include "drm_gpu.h"
 #include "drm_pointer.h"
 #include "logging.h"
-#include "config-kwin.h"
 
 #include <drm_fourcc.h>
 
 namespace KWin
 {
-
 DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
-    : DrmObject(gpu, planeId, {
-        PropertyDefinition(QByteArrayLiteral("type"), Requirement::Required, {
-            QByteArrayLiteral("Overlay"),
-            QByteArrayLiteral("Primary"),
-            QByteArrayLiteral("Cursor")}),
-        PropertyDefinition(QByteArrayLiteral("SRC_X"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("SRC_Y"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("SRC_W"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("SRC_H"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("CRTC_X"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("CRTC_Y"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("CRTC_W"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("CRTC_H"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("FB_ID"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("rotation"), Requirement::Optional, {
-            QByteArrayLiteral("rotate-0"),
-            QByteArrayLiteral("rotate-90"),
-            QByteArrayLiteral("rotate-180"),
-            QByteArrayLiteral("rotate-270"),
-            QByteArrayLiteral("reflect-x"),
-            QByteArrayLiteral("reflect-y")}),
-        PropertyDefinition(QByteArrayLiteral("IN_FORMATS"), Requirement::Optional),
-        }, DRM_MODE_OBJECT_PLANE)
+    : DrmObject(gpu,
+                planeId,
+                {
+                    PropertyDefinition(QByteArrayLiteral("type"),
+                                       Requirement::Required,
+                                       {QByteArrayLiteral("Overlay"), QByteArrayLiteral("Primary"), QByteArrayLiteral("Cursor")}),
+                    PropertyDefinition(QByteArrayLiteral("SRC_X"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("SRC_Y"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("SRC_W"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("SRC_H"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("CRTC_X"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("CRTC_Y"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("CRTC_W"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("CRTC_H"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("FB_ID"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("rotation"),
+                                       Requirement::Optional,
+                                       {QByteArrayLiteral("rotate-0"),
+                                        QByteArrayLiteral("rotate-90"),
+                                        QByteArrayLiteral("rotate-180"),
+                                        QByteArrayLiteral("rotate-270"),
+                                        QByteArrayLiteral("reflect-x"),
+                                        QByteArrayLiteral("reflect-y")}),
+                    PropertyDefinition(QByteArrayLiteral("IN_FORMATS"), Requirement::Optional),
+                },
+                DRM_MODE_OBJECT_PLANE)
 {
 }
 
@@ -60,7 +62,7 @@ bool DrmPlane::init()
     bool success = initProps();
     if (success) {
         m_supportedTransformations = Transformations();
-        auto checkSupport = [this] (uint64_t value, Transformation t) {
+        auto checkSupport = [this](uint64_t value, Transformation t) {
             if (propHasEnum(PropertyIndex::Rotation, value)) {
                 m_supportedTransformations |= t;
             }
@@ -73,10 +75,11 @@ bool DrmPlane::init()
         checkSupport(5, Transformation::ReflectY);
 
         // read formats from blob if available and if modifiers are supported, and from the plane object if not
-        if (auto formatProp = getProp(PropertyIndex::In_Formats); formatProp && qEnvironmentVariableIsSet("KWIN_DRM_NO_MODIFIERS") && gpu()->addFB2ModifiersSupported()) {
-            auto blob = static_cast<drm_format_modifier_blob*>(formatProp->currentBlob()->data);
-            auto modifiers = reinterpret_cast<drm_format_modifier*>(reinterpret_cast<uint8_t*>(blob) + blob->modifiers_offset);
-            uint32_t *formatarr = reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(blob) + blob->formats_offset);
+        if (auto formatProp = getProp(PropertyIndex::In_Formats);
+            formatProp && qEnvironmentVariableIsSet("KWIN_DRM_NO_MODIFIERS") && gpu()->addFB2ModifiersSupported()) {
+            auto blob = static_cast<drm_format_modifier_blob *>(formatProp->currentBlob()->data);
+            auto modifiers = reinterpret_cast<drm_format_modifier *>(reinterpret_cast<uint8_t *>(blob) + blob->modifiers_offset);
+            uint32_t *formatarr = reinterpret_cast<uint32_t *>(reinterpret_cast<uint8_t *>(blob) + blob->formats_offset);
 
             for (uint32_t f = 0; f < blob->count_formats; f++) {
                 auto format = formatarr[f];

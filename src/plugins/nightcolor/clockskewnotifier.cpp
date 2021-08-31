@@ -9,7 +9,6 @@
 
 namespace KWin
 {
-
 class ClockSkewNotifier::Private
 {
 public:

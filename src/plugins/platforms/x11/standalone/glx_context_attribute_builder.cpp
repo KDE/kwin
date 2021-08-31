@@ -15,7 +15,6 @@
 
 namespace KWin
 {
-
 std::vector<int> GlxContextAttributeBuilder::build() const
 {
     std::vector<int> attribs;

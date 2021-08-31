@@ -18,27 +18,26 @@ class KActionCollection;
 
 namespace KWin
 {
-
 class LookingGlassEffectConfigForm : public QWidget, public Ui::LookingGlassEffectConfigForm
 {
     Q_OBJECT
 public:
-    explicit LookingGlassEffectConfigForm(QWidget* parent);
+    explicit LookingGlassEffectConfigForm(QWidget *parent);
 };
 
 class LookingGlassEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit LookingGlassEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
+    explicit LookingGlassEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
     ~LookingGlassEffectConfig() override;
 
     void save() override;
     void defaults() override;
 
 private:
-    LookingGlassEffectConfigForm* m_ui;
-    KActionCollection* m_actionCollection;
+    LookingGlassEffectConfigForm *m_ui;
+    KActionCollection *m_actionCollection;
 };
 
 } // namespace

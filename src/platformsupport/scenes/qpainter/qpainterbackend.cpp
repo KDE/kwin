@@ -15,7 +15,6 @@
 
 namespace KWin
 {
-
 QPainterBackend::QPainterBackend()
     : m_failed(false)
 {

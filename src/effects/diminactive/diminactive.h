@@ -17,7 +17,6 @@
 
 namespace KWin
 {
-
 class DimInactiveEffect : public Effect
 {
     Q_OBJECT
@@ -75,8 +74,8 @@ private:
 
     EffectWindow *m_activeWindow = nullptr;
     const EffectWindowGroup *m_activeWindowGroup;
-    QHash<EffectWindow*, TimeLine> m_transitions;
-    QHash<EffectWindow*, qreal> m_forceDim;
+    QHash<EffectWindow *, TimeLine> m_transitions;
+    QHash<EffectWindow *, qreal> m_forceDim;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
     struct {

@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class ExpoArea : public QObject
 {
     Q_OBJECT

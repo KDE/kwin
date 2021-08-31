@@ -15,23 +15,22 @@
 
 namespace KWin
 {
-
-class SlideBackEffect
-    : public Effect
+class SlideBackEffect : public Effect
 {
     Q_OBJECT
 public:
     SlideBackEffect();
 
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
-    void postPaintWindow(EffectWindow* w) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void postPaintWindow(EffectWindow *w) override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 50;
     }
 
@@ -44,7 +43,6 @@ public Q_SLOTS:
     void slotTabBoxClosed();
 
 private:
-
     WindowMotionManager motionManager;
     EffectWindowList usableOldStackingOrder;
     EffectWindowList oldStackingOrder;
@@ -53,7 +51,7 @@ private:
     EffectWindow *m_justMapped, *m_upmostWindow;
     QHash<EffectWindow *, QRect> destinationList;
     int m_tabboxActive;
-    QList <QRegion> clippedRegions;
+    QList<QRegion> clippedRegions;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
     QRect getSlideDestination(const QRect &windowUnderGeometry, const QRect &windowOverGeometry);
@@ -62,7 +60,6 @@ private:
     EffectWindowList usableWindows(const EffectWindowList &allWindows);
     QRect getModalGroupGeometry(EffectWindow *w);
     void windowRaised(EffectWindow *w);
-
 };
 
 } // namespace

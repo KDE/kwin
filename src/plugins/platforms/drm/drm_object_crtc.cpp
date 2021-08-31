@@ -8,22 +8,24 @@
 */
 #include "drm_object_crtc.h"
 #include "drm_backend.h"
-#include "drm_output.h"
 #include "drm_buffer.h"
+#include "drm_gpu.h"
+#include "drm_output.h"
 #include "drm_pointer.h"
 #include "logging.h"
-#include "drm_gpu.h"
 
 namespace KWin
 {
-
 DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex)
-    : DrmObject(gpu, crtcId, {
-        PropertyDefinition(QByteArrayLiteral("MODE_ID"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("ACTIVE"), Requirement::Required),
-        PropertyDefinition(QByteArrayLiteral("VRR_ENABLED"), Requirement::Optional),
-        PropertyDefinition(QByteArrayLiteral("GAMMA_LUT"), Requirement::Optional),
-    }, DRM_MODE_OBJECT_CRTC)
+    : DrmObject(gpu,
+                crtcId,
+                {
+                    PropertyDefinition(QByteArrayLiteral("MODE_ID"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("ACTIVE"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("VRR_ENABLED"), Requirement::Optional),
+                    PropertyDefinition(QByteArrayLiteral("GAMMA_LUT"), Requirement::Optional),
+                },
+                DRM_MODE_OBJECT_CRTC)
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
 {
@@ -54,8 +56,7 @@ drmModeModeInfo DrmCrtc::queryCurrentMode()
 
 bool DrmCrtc::needsModeset() const
 {
-    return getProp(PropertyIndex::Active)->needsCommit()
-        || getProp(PropertyIndex::ModeId)->needsCommit();
+    return getProp(PropertyIndex::Active)->needsCommit() || getProp(PropertyIndex::ModeId)->needsCommit();
 }
 
 }

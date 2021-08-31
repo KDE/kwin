@@ -27,8 +27,8 @@
 #include <QDBusConnection>
 #include <QTimer>
 
-namespace KWin {
-
+namespace KWin
+{
 static const int QUICK_ADJUST_DURATION = 2000;
 static const int TEMPERATURE_STEP = 50;
 static NightColorManager *s_instance = nullptr;
@@ -54,20 +54,16 @@ NightColorManager::NightColorManager(QObject *parent)
     // Display a message when Night Color is (un)inhibited.
     connect(this, &NightColorManager::inhibitedChanged, this, [this] {
         // TODO: Maybe use different icons?
-        const QString iconName = isInhibited()
-            ? QStringLiteral("preferences-desktop-display-nightcolor-off")
-            : QStringLiteral("preferences-desktop-display-nightcolor-on");
+        const QString iconName =
+            isInhibited() ? QStringLiteral("preferences-desktop-display-nightcolor-off") : QStringLiteral("preferences-desktop-display-nightcolor-on");
 
-        const QString text = isInhibited()
-            ? i18nc("Night Color was disabled", "Night Color Off")
-            : i18nc("Night Color was enabled", "Night Color On");
+        const QString text = isInhibited() ? i18nc("Night Color was disabled", "Night Color Off") : i18nc("Night Color was enabled", "Night Color On");
 
-        QDBusMessage message = QDBusMessage::createMethodCall(
-            QStringLiteral("org.kde.plasmashell"),
-            QStringLiteral("/org/kde/osdService"),
-            QStringLiteral("org.kde.osdService"),
-            QStringLiteral("showText"));
-        message.setArguments({ iconName, text });
+        QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
+                                                              QStringLiteral("/org/kde/osdService"),
+                                                              QStringLiteral("org.kde.osdService"),
+                                                              QStringLiteral("showText"));
+        message.setArguments({iconName, text});
 
         QDBusConnection::sessionBus().asyncCall(message);
     });
@@ -123,10 +119,8 @@ void NightColorManager::init()
         // check if we're resuming from suspend - in this case do a hard reset
         // Note: We're using the time clock to detect a suspend phase instead of connecting to the
         //       provided logind dbus signal, because this signal would be received way too late.
-        QDBusMessage message = QDBusMessage::createMethodCall("org.freedesktop.login1",
-                                                              "/org/freedesktop/login1",
-                                                              "org.freedesktop.DBus.Properties",
-                                                              QStringLiteral("Get"));
+        QDBusMessage message =
+            QDBusMessage::createMethodCall("org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.DBus.Properties", QStringLiteral("Get"));
         message.setArguments(QVariantList({"org.freedesktop.login1.Manager", QStringLiteral("PreparingForSleep")}));
         QDBusReply<QVariant> reply = QDBusConnection::systemBus().call(message);
         bool comingFromSuspend;
@@ -301,8 +295,8 @@ void NightColorManager::readConfig()
     int diffME = mrB.msecsTo(evB);
     if (diffME <= 0) {
         // morning not strictly before evening - use defaults
-        mrB = QTime(6,0);
-        evB = QTime(18,0);
+        mrB = QTime(6, 0);
+        evB = QTime(18, 0);
         diffME = mrB.msecsTo(evB);
     }
     int diffMin = qMin(diffME, MSC_DAY - diffME);
@@ -310,8 +304,8 @@ void NightColorManager::readConfig()
     int trTime = s->transitionTime() * 1000 * 60;
     if (trTime < 0 || diffMin <= trTime) {
         // transition time too long - use defaults
-        mrB = QTime(6,0);
-        evB = QTime(18,0);
+        mrB = QTime(6, 0);
+        evB = QTime(18, 0);
         trTime = FALLBACK_SLOW_UPDATE_TIME;
     }
     m_morning = mrB;
@@ -444,9 +438,13 @@ void NightColorManager::resetSlowUpdateTimer()
         m_slowUpdateTimer = new QTimer(this);
         m_slowUpdateTimer->setSingleShot(false);
         if (isDay) {
-            connect(m_slowUpdateTimer, &QTimer::timeout, this, [this]() {slowUpdate(m_dayTargetTemp);});
+            connect(m_slowUpdateTimer, &QTimer::timeout, this, [this]() {
+                slowUpdate(m_dayTargetTemp);
+            });
         } else {
-            connect(m_slowUpdateTimer, &QTimer::timeout, this, [this]() {slowUpdate(m_nightTargetTemp);});
+            connect(m_slowUpdateTimer, &QTimer::timeout, this, [this]() {
+                slowUpdate(m_nightTargetTemp);
+            });
         }
 
         // calculate interval such as temperature is changed by TEMPERATURE_STEP K per timer timeout
@@ -577,16 +575,16 @@ DateTimes NightColorManager::getSunTimings(const QDateTime &dateTime, double lat
     const bool endDefined = !dateTimes.second.isNull();
     if (!beginDefined || !endDefined) {
         if (beginDefined) {
-            dateTimes.second = dateTimes.first.addMSecs( FALLBACK_SLOW_UPDATE_TIME );
+            dateTimes.second = dateTimes.first.addMSecs(FALLBACK_SLOW_UPDATE_TIME);
         } else if (endDefined) {
-            dateTimes.first = dateTimes.second.addMSecs( - FALLBACK_SLOW_UPDATE_TIME );
+            dateTimes.first = dateTimes.second.addMSecs(-FALLBACK_SLOW_UPDATE_TIME);
         } else {
             // Just use default values for morning and evening, but the user
             // will probably deactivate Night Color anyway if he is living
             // in a region without clear sun rise and set.
             const QTime referenceTime = morning ? QTime(6, 0) : QTime(18, 0);
             dateTimes.first = QDateTime(dateTime.date(), referenceTime);
-            dateTimes.second = dateTimes.first.addMSecs( FALLBACK_SLOW_UPDATE_TIME );
+            dateTimes.second = dateTimes.first.addMSecs(FALLBACK_SLOW_UPDATE_TIME);
         }
     }
     return dateTimes;
@@ -594,11 +592,9 @@ DateTimes NightColorManager::getSunTimings(const QDateTime &dateTime, double lat
 
 bool NightColorManager::checkAutomaticSunTimings() const
 {
-    if (m_prev.first.isValid() && m_prev.second.isValid() &&
-            m_next.first.isValid() && m_next.second.isValid()) {
+    if (m_prev.first.isValid() && m_prev.second.isValid() && m_next.first.isValid() && m_next.second.isValid()) {
         const QDateTime todayNow = QDateTime::currentDateTime();
-        return m_prev.first <= todayNow && todayNow < m_next.first &&
-                m_prev.first.msecsTo(m_next.first) < MSC_DAY * 23./24;
+        return m_prev.first <= todayNow && todayNow < m_next.first && m_prev.first.msecsTo(m_next.first) < MSC_DAY * 23. / 24;
     }
     return false;
 }
@@ -615,7 +611,7 @@ int NightColorManager::currentTargetTemp() const
     }
 
     if (m_mode == NightColorMode::Constant) {
-       return m_nightTargetTemp;
+        return m_nightTargetTemp;
     }
 
     const QDateTime todayNow = QDateTime::currentDateTime();
@@ -652,32 +648,32 @@ void NightColorManager::commitGammaRamps(int temperature)
 
 QHash<QString, QVariant> NightColorManager::info() const
 {
-    return QHash<QString, QVariant> {
-        { QStringLiteral("Available"), isAvailable() },
+    return QHash<QString, QVariant>{
+        {QStringLiteral("Available"), isAvailable()},
 
-        { QStringLiteral("ActiveEnabled"), true},
-        { QStringLiteral("Active"), m_active},
+        {QStringLiteral("ActiveEnabled"), true},
+        {QStringLiteral("Active"), m_active},
 
-        { QStringLiteral("ModeEnabled"), true},
-        { QStringLiteral("Mode"), (int)m_mode},
+        {QStringLiteral("ModeEnabled"), true},
+        {QStringLiteral("Mode"), (int)m_mode},
 
-        { QStringLiteral("NightTemperatureEnabled"), true},
-        { QStringLiteral("NightTemperature"), m_nightTargetTemp},
+        {QStringLiteral("NightTemperatureEnabled"), true},
+        {QStringLiteral("NightTemperature"), m_nightTargetTemp},
 
-        { QStringLiteral("Running"), m_running},
-        { QStringLiteral("CurrentColorTemperature"), m_currentTemp},
+        {QStringLiteral("Running"), m_running},
+        {QStringLiteral("CurrentColorTemperature"), m_currentTemp},
 
-        { QStringLiteral("LatitudeAuto"), m_latAuto},
-        { QStringLiteral("LongitudeAuto"), m_lngAuto},
+        {QStringLiteral("LatitudeAuto"), m_latAuto},
+        {QStringLiteral("LongitudeAuto"), m_lngAuto},
 
-        { QStringLiteral("LocationEnabled"), true},
-        { QStringLiteral("LatitudeFixed"), m_latFixed},
-        { QStringLiteral("LongitudeFixed"), m_lngFixed},
+        {QStringLiteral("LocationEnabled"), true},
+        {QStringLiteral("LatitudeFixed"), m_latFixed},
+        {QStringLiteral("LongitudeFixed"), m_lngFixed},
 
-        { QStringLiteral("TimingsEnabled"), true},
-        { QStringLiteral("MorningBeginFixed"), m_morning.toString(Qt::ISODate)},
-        { QStringLiteral("EveningBeginFixed"), m_evening.toString(Qt::ISODate)},
-        { QStringLiteral("TransitionTime"), m_trTime},
+        {QStringLiteral("TimingsEnabled"), true},
+        {QStringLiteral("MorningBeginFixed"), m_morning.toString(Qt::ISODate)},
+        {QStringLiteral("EveningBeginFixed"), m_evening.toString(Qt::ISODate)},
+        {QStringLiteral("TransitionTime"), m_trTime},
     };
 }
 
@@ -720,18 +716,18 @@ bool NightColorManager::changeConfiguration(QHash<QString, QVariant> data)
         }
         NightColorMode moM;
         switch (mo) {
-            case 0:
-                moM = NightColorMode::Automatic;
-                break;
-            case 1:
-                moM = NightColorMode::Location;
-                break;
-            case 2:
-                moM = NightColorMode::Timings;
-                break;
-            case 3:
-                moM = NightColorMode::Constant;
-                break;
+        case 0:
+            moM = NightColorMode::Automatic;
+            break;
+        case 1:
+            moM = NightColorMode::Location;
+            break;
+        case 2:
+            moM = NightColorMode::Timings;
+            break;
+        case 3:
+            moM = NightColorMode::Constant;
+            break;
         }
         modeUpdate = m_mode != moM;
         mode = moM;
@@ -796,9 +792,8 @@ bool NightColorManager::changeConfiguration(QHash<QString, QVariant> data)
         return true;
     }
 
-    bool resetNeeded = activeUpdate || modeUpdate || tempUpdate ||
-            (locUpdate && mode == NightColorMode::Location) ||
-            (timeUpdate && mode == NightColorMode::Timings);
+    bool resetNeeded =
+        activeUpdate || modeUpdate || tempUpdate || (locUpdate && mode == NightColorMode::Location) || (timeUpdate && mode == NightColorMode::Timings);
 
     if (resetNeeded) {
         cancelAllTimers();

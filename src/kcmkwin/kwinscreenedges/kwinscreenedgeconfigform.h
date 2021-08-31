@@ -20,7 +20,6 @@ class KWinScreenEdgesConfigUI;
 
 namespace KWin
 {
-
 class KWinScreenEdgesConfigForm : public KWinScreenEdge
 {
     Q_OBJECT

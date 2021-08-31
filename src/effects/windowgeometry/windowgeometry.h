@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 class WindowGeometry : public Effect
 {
     Q_OBJECT
@@ -24,22 +23,26 @@ public:
     WindowGeometry();
     ~WindowGeometry() override;
 
-    inline bool provides(Effect::Feature ef) override {
+    inline bool provides(Effect::Feature ef) override
+    {
         return ef == Effect::GeometryTip;
     }
     void reconfigure(ReconfigureFlags) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 90;
     }
 
     // for properties
-    bool isHandlesMoves() const {
+    bool isHandlesMoves() const
+    {
         return iHandleMoves;
     }
-    bool isHandlesResizes() const {
+    bool isHandlesResizes() const
+    {
         return iHandleResizes;
     }
 private Q_SLOTS:
@@ -47,6 +50,7 @@ private Q_SLOTS:
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
     void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
     void slotWindowStepUserMovedResized(KWin::EffectWindow *w, const QRect &geometry);
+
 private:
     void createFrames();
     EffectWindow *myResizeWindow;

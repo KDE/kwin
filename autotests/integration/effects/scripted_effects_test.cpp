@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "scripting/scriptedeffect.h"
 #include "libkwineffects/anidata_p.h"
+#include "scripting/scriptedeffect.h"
 
 #include "abstract_client.h"
 #include "composite.h"
@@ -79,8 +79,8 @@ public:
     bool load(const QString &name);
     using AnimationEffect::AniMap;
     using AnimationEffect::state;
-    Q_INVOKABLE void sendTestResponse(const QString &out); //proxies triggers out from the tests
-    QList<QAction*> actions(); //returns any QActions owned by the ScriptEngine
+    Q_INVOKABLE void sendTestResponse(const QString &out); // proxies triggers out from the tests
+    QList<QAction *> actions(); // returns any QActions owned by the ScriptEngine
 Q_SIGNALS:
     void testOutput(const QString &data);
 };
@@ -106,7 +106,7 @@ bool ScriptedEffectWithDebugSpy::load(const QString &name)
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     const QString path = QFINDTESTDATA("./scripts/" + name + ".js");
     engine()->globalObject().setProperty("sendTestResponse", selfContext.property("sendTestResponse"));
-        if (!init(name, path)) {
+    if (!init(name, path)) {
         return false;
     }
 
@@ -118,18 +118,18 @@ bool ScriptedEffectWithDebugSpy::load(const QString &name)
         if (qstrcmp((*it)->metaObject()->className(), "KWin::EffectLoader") != 0) {
             continue;
         }
-        QMetaObject::invokeMethod(*it, "effectLoaded", Q_ARG(KWin::Effect*, this), Q_ARG(QString, name));
+        QMetaObject::invokeMethod(*it, "effectLoaded", Q_ARG(KWin::Effect *, this), Q_ARG(QString, name));
         break;
     }
 
-    return (static_cast<EffectsHandlerImpl*>(effects)->isEffectLoaded(name));
+    return (static_cast<EffectsHandlerImpl *>(effects)->isEffectLoaded(name));
 }
 
 void ScriptedEffectsTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Deleted*>();
-    qRegisterMetaType<KWin::Effect*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
+    qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -254,7 +254,7 @@ void ScriptedEffectsTest::testAnimations_data()
     QTest::addColumn<int>("animationCount");
 
     QTest::newRow("single") << "animationTest" << 1;
-    QTest::newRow("multi")  << "animationTestMulti" << 2;
+    QTest::newRow("multi") << "animationTestMulti" << 2;
 }
 
 void ScriptedEffectsTest::testAnimations()
@@ -291,15 +291,13 @@ void ScriptedEffectsTest::testAnimations()
         QCOMPARE(animationsForWindow[0].to, FPx2(1.4));
         QCOMPARE(animationsForWindow[0].attribute, AnimationEffect::Scale);
         QCOMPARE(animationsForWindow[0].timeLine.easingCurve().type(), QEasingCurve::OutCubic);
-        QCOMPARE(animationsForWindow[0].terminationFlags,
-                 AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
+        QCOMPARE(animationsForWindow[0].terminationFlags, AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
 
         if (animationCount == 2) {
             QCOMPARE(animationsForWindow[1].timeLine.duration(), 100ms);
             QCOMPARE(animationsForWindow[1].to, FPx2(0.0));
             QCOMPARE(animationsForWindow[1].attribute, AnimationEffect::Opacity);
-            QCOMPARE(animationsForWindow[1].terminationFlags,
-                     AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
+            QCOMPARE(animationsForWindow[1].terminationFlags, AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
         }
     }
     QCOMPARE(effectOutputSpy[0].first(), "true");
@@ -315,14 +313,12 @@ void ScriptedEffectsTest::testAnimations()
         QCOMPARE(animationsForWindow[0].timeLine.duration(), 200ms);
         QCOMPARE(animationsForWindow[0].to, FPx2(1.5));
         QCOMPARE(animationsForWindow[0].attribute, AnimationEffect::Scale);
-        QCOMPARE(animationsForWindow[0].terminationFlags,
-                 AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
+        QCOMPARE(animationsForWindow[0].terminationFlags, AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
         if (animationCount == 2) {
             QCOMPARE(animationsForWindow[1].timeLine.duration(), 200ms);
             QCOMPARE(animationsForWindow[1].to, FPx2(1.5));
             QCOMPARE(animationsForWindow[1].attribute, AnimationEffect::Opacity);
-            QCOMPARE(animationsForWindow[1].terminationFlags,
-                     AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
+            QCOMPARE(animationsForWindow[1].terminationFlags, AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
         }
     }
     c->setMinimized(false);
@@ -357,7 +353,7 @@ void ScriptedEffectsTest::testFullScreenEffect_data()
     QTest::addColumn<QString>("file");
 
     QTest::newRow("single") << "fullScreenEffectTest";
-    QTest::newRow("multi")  << "fullScreenEffectTestMulti";
+    QTest::newRow("multi") << "fullScreenEffectTestMulti";
     QTest::newRow("global") << "fullScreenEffectTestGlobal";
 }
 
@@ -372,8 +368,8 @@ void ScriptedEffectsTest::testFullScreenEffect()
 
     QVERIFY(effectMain->load(file));
 
-    //load any random effect from another test to confirm fullscreen effect state is correctly
-    //shown as being someone else
+    // load any random effect from another test to confirm fullscreen effect state is correctly
+    // shown as being someone else
     auto effectOther = new ScriptedEffectWithDebugSpy();
     QVERIFY(effectOther->load("screenEdgeTouchTest"));
     QSignalSpy isActiveFullScreenEffectSpyOther(effectOther, &ScriptedEffect::isActiveFullScreenEffectChanged);
@@ -391,7 +387,7 @@ void ScriptedEffectsTest::testFullScreenEffect()
     QCOMPARE(effects->hasActiveFullScreenEffect(), false);
     QCOMPARE(effectMain->isActiveFullScreenEffect(), false);
 
-    //trigger animation
+    // trigger animation
     KWin::VirtualDesktopManager::self()->setCurrent(2);
 
     QCOMPARE(effects->activeFullScreenEffect(), effectMain);
@@ -404,18 +400,18 @@ void ScriptedEffectsTest::testFullScreenEffect()
     QCOMPARE(effectOther->isActiveFullScreenEffect(), false);
     QCOMPARE(isActiveFullScreenEffectSpyOther.count(), 0);
 
-    //after 500ms trigger another full screen animation
+    // after 500ms trigger another full screen animation
     QTest::qWait(500);
     KWin::VirtualDesktopManager::self()->setCurrent(1);
     QCOMPARE(effects->activeFullScreenEffect(), effectMain);
 
-    //after 1000ms (+a safety margin for time based tests) we should still be the active full screen effect
-    //despite first animation expiring
-    QTest::qWait(500+100);
+    // after 1000ms (+a safety margin for time based tests) we should still be the active full screen effect
+    // despite first animation expiring
+    QTest::qWait(500 + 100);
     QCOMPARE(effects->activeFullScreenEffect(), effectMain);
 
-    //after 1500ms (+a safetey margin) we should have no full screen effect
-    QTest::qWait(500+100);
+    // after 1500ms (+a safetey margin) we should have no full screen effect
+    QTest::qWait(500 + 100);
     QCOMPARE(effects->activeFullScreenEffect(), nullptr);
 }
 
@@ -424,8 +420,8 @@ void ScriptedEffectsTest::testKeepAlive_data()
     QTest::addColumn<QString>("file");
     QTest::addColumn<bool>("keepAlive");
 
-    QTest::newRow("keep")        << "keepAliveTest"         << true;
-    QTest::newRow("don't keep")  << "keepAliveTestDontKeep" << false;
+    QTest::newRow("keep") << "keepAliveTest" << true;
+    QTest::newRow("don't keep") << "keepAliveTestDontKeep" << false;
 }
 
 void ScriptedEffectsTest::testKeepAlive()
@@ -617,9 +613,9 @@ void ScriptedEffectsTest::testRedirect_data()
     QTest::addColumn<QString>("file");
     QTest::addColumn<bool>("shouldTerminate");
     QTest::newRow("animate/DontTerminateAtSource") << "redirectAnimateDontTerminateTest" << false;
-    QTest::newRow("animate/TerminateAtSource")     << "redirectAnimateTerminateTest"     << true;
-    QTest::newRow("set/DontTerminate")             << "redirectSetDontTerminateTest"     << false;
-    QTest::newRow("set/Terminate")                 << "redirectSetTerminateTest"         << true;
+    QTest::newRow("animate/TerminateAtSource") << "redirectAnimateTerminateTest" << true;
+    QTest::newRow("set/DontTerminate") << "redirectSetDontTerminateTest" << false;
+    QTest::newRow("set/Terminate") << "redirectSetTerminateTest" << true;
 }
 
 void ScriptedEffectsTest::testRedirect()
@@ -641,9 +637,7 @@ void ScriptedEffectsTest::testRedirect()
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
-    auto around = [] (std::chrono::milliseconds elapsed,
-                      std::chrono::milliseconds pivot,
-                      std::chrono::milliseconds margin) {
+    auto around = [](std::chrono::milliseconds elapsed, std::chrono::milliseconds pivot, std::chrono::milliseconds margin) {
         return qAbs(elapsed.count() - pivot.count()) < margin.count();
     };
 
@@ -719,9 +713,7 @@ void ScriptedEffectsTest::testComplete()
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
-    auto around = [] (std::chrono::milliseconds elapsed,
-                      std::chrono::milliseconds pivot,
-                      std::chrono::milliseconds margin) {
+    auto around = [](std::chrono::milliseconds elapsed, std::chrono::milliseconds pivot, std::chrono::milliseconds margin) {
         return qAbs(elapsed.count() - pivot.count()) < margin.count();
     };
 

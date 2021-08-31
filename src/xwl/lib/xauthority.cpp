@@ -11,14 +11,17 @@
 #include "xauthority.h"
 
 #include <QDataStream>
-#include <QRandomGenerator>
 #include <QHostInfo>
-#include <QTemporaryFile>
+#include <QRandomGenerator>
 #include <QStandardPaths>
+#include <QTemporaryFile>
 
-static void writeXauthorityEntry(QDataStream &stream, quint16 family,
-                                 const QByteArray &address, const QByteArray &display,
-                                 const QByteArray &name, const QByteArray &cookie)
+static void writeXauthorityEntry(QDataStream &stream,
+                                 quint16 family,
+                                 const QByteArray &address,
+                                 const QByteArray &display,
+                                 const QByteArray &name,
+                                 const QByteArray &cookie)
 {
     stream << quint16(family);
 

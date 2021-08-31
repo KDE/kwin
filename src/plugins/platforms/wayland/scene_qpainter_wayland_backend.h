@@ -13,8 +13,8 @@
 #include "qpainterbackend.h"
 #include "utils.h"
 
-#include <QObject>
 #include <QImage>
+#include <QObject>
 #include <QWeakPointer>
 
 namespace KWayland
@@ -85,7 +85,7 @@ public:
 
     QImage *bufferForScreen(AbstractOutput *output) override;
 
-    void endFrame(AbstractOutput *output, const QRegion& damage) override;
+    void endFrame(AbstractOutput *output, const QRegion &damage) override;
     QRegion beginFrame(AbstractOutput *output) override;
 
 private:
@@ -93,7 +93,7 @@ private:
     void frameRendered();
 
     WaylandBackend *m_backend;
-    QMap<AbstractOutput *, WaylandQPainterOutput*> m_outputs;
+    QMap<AbstractOutput *, WaylandQPainterOutput *> m_outputs;
 };
 
 }

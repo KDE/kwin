@@ -12,7 +12,9 @@
 class DecorationPackage : public KPackage::PackageStructure
 {
 public:
-    DecorationPackage(QObject*, const QVariantList &) {}
+    DecorationPackage(QObject *, const QVariantList &)
+    {
+    }
     void initPackage(KPackage::Package *package) override;
     void pathChanged(KPackage::Package *package) override;
 };

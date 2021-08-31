@@ -8,9 +8,9 @@
 */
 #include "drm_output.h"
 #include "drm_backend.h"
-#include "drm_object_crtc.h"
-#include "drm_object_connector.h"
 #include "drm_gpu.h"
+#include "drm_object_connector.h"
+#include "drm_object_crtc.h"
 #include "drm_pipeline.h"
 #if HAVE_GBM
 #include "drm_buffer_gbm.h"
@@ -25,18 +25,17 @@
 #include "screens.h"
 #include "session.h"
 // Qt
-#include <QMatrix4x4>
 #include <QCryptographicHash>
+#include <QMatrix4x4>
 #include <QPainter>
 // c++
 #include <cerrno>
 // drm
-#include <xf86drm.h>
 #include <libdrm/drm_mode.h>
+#include <xf86drm.h>
 
 namespace KWin
 {
-
 DrmOutput::DrmOutput(DrmGpu *gpu, DrmPipeline *pipeline)
     : DrmAbstractOutput(gpu)
     , m_pipeline(pipeline)
@@ -85,8 +84,7 @@ bool DrmOutput::hideCursor()
 {
     bool visibleBefore = m_pipeline->isCursorVisible();
     if (m_pipeline->setCursor(nullptr)) {
-        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
-            && visibleBefore) {
+        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive && visibleBefore) {
             m_renderLoop->scheduleRepaint();
         }
         return true;
@@ -98,11 +96,9 @@ bool DrmOutput::hideCursor()
 bool DrmOutput::showCursor()
 {
     bool visibleBefore = m_pipeline->isCursorVisible();
-    const Cursor * const cursor = Cursors::self()->currentCursor();
-    if (m_pipeline->setCursor(m_cursor, logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()) )) {
-        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
-            && !visibleBefore
-            && m_pipeline->isCursorVisible()) {
+    const Cursor *const cursor = Cursors::self()->currentCursor();
+    if (m_pipeline->setCursor(m_cursor, logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()))) {
+        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive && !visibleBefore && m_pipeline->isCursorVisible()) {
             m_renderLoop->scheduleRepaint();
         }
         return true;
@@ -145,9 +141,8 @@ bool DrmOutput::updateCursor()
     p.setWorldTransform(logicalToNativeMatrix(cursor->rect(), 1, transform()).toTransform());
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
-    if (m_pipeline->setCursor(m_cursor, logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()) )) {
-        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
-            && m_pipeline->isCursorVisible()) {
+    if (m_pipeline->setCursor(m_cursor, logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()))) {
+        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive && m_pipeline->isCursorVisible()) {
             m_renderLoop->scheduleRepaint();
         }
         return true;
@@ -170,8 +165,7 @@ bool DrmOutput::moveCursor()
         if (!m_pipeline->moveCursor(pos)) {
             return false;
         }
-        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
-            && (visibleBefore || m_pipeline->isCursorVisible())) {
+        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive && (visibleBefore || m_pipeline->isCursorVisible())) {
             m_renderLoop->scheduleRepaint();
         }
     }
@@ -201,9 +195,13 @@ void DrmOutput::initOutputDevice()
     }
 
     setName(conn->connectorName());
-    initialize(conn->modelName(), conn->edid()->manufacturerString(),
-               conn->edid()->eisaId(), conn->edid()->serialNumber(),
-               conn->physicalSize(), modes, conn->edid()->raw());
+    initialize(conn->modelName(),
+               conn->edid()->manufacturerString(),
+               conn->edid()->eisaId(),
+               conn->edid()->serialNumber(),
+               conn->physicalSize(),
+               modes,
+               conn->edid()->raw());
 }
 
 void DrmOutput::updateEnablement(bool enable)
@@ -291,8 +289,7 @@ DrmPlane::Transformations outputToPlaneTransform(DrmOutput::Transform transform)
 void DrmOutput::updateTransform(Transform transform)
 {
     const auto planeTransform = outputToPlaneTransform(transform);
-    if (!qEnvironmentVariableIsSet("KWIN_DRM_SW_ROTATIONS_ONLY")
-        && !m_pipeline->setTransformation(planeTransform)) {
+    if (!qEnvironmentVariableIsSet("KWIN_DRM_SW_ROTATIONS_ONLY") && !m_pipeline->setTransformation(planeTransform)) {
         qCDebug(KWIN_DRM) << "setting transformation to" << planeTransform << "failed!";
         // just in case, if we had any rotation before, clear it
         m_pipeline->setTransformation(DrmPlane::Transformation::Rotate0);
@@ -319,8 +316,7 @@ void DrmOutput::updateMode(uint32_t width, uint32_t height, uint32_t refreshRate
             return;
         }
     }
-    qCWarning(KWIN_DRM, "Could not find a fitting mode with size=%dx%d and refresh rate %d for output %s",
-              width, height, refreshRate, qPrintable(name()));
+    qCWarning(KWIN_DRM, "Could not find a fitting mode with size=%dx%d and refresh rate %d for output %s", width, height, refreshRate, qPrintable(name()));
 }
 
 void DrmOutput::updateMode(int modeIndex)
@@ -387,7 +383,7 @@ DrmPipeline *DrmOutput::pipeline() const
 GbmBuffer *DrmOutput::currentBuffer() const
 {
 #if HAVE_GBM
-    return dynamic_cast<GbmBuffer*>(m_pipeline->currentBuffer());
+    return dynamic_cast<GbmBuffer *>(m_pipeline->currentBuffer());
 #else
     return nullptr;
 #endif

@@ -10,9 +10,7 @@
 
 namespace KWin
 {
-
-struct DeformOffscreenData
-{
+struct DeformOffscreenData {
     QScopedPointer<GLTexture> texture;
     QScopedPointer<GLRenderTarget> renderTarget;
     bool isDirty = true;
@@ -25,8 +23,7 @@ public:
     QMetaObject::Connection windowDamagedConnection;
     QMetaObject::Connection windowDeletedConnection;
 
-    void paint(EffectWindow *window, GLTexture *texture, const QRegion &region,
-               const WindowPaintData &data, const WindowQuadList &quads);
+    void paint(EffectWindow *window, GLTexture *texture, const QRegion &region, const WindowPaintData &data, const WindowQuadList &quads);
 
     GLTexture *maybeRender(EffectWindow *window, DeformOffscreenData *offscreenData);
 };
@@ -117,8 +114,7 @@ GLTexture *DeformEffectPrivate::maybeRender(EffectWindow *window, DeformOffscree
     return offscreenData->texture.data();
 }
 
-void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const QRegion &region,
-                                const WindowPaintData &data, const WindowQuadList &quads)
+void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const QRegion &region, const WindowPaintData &data, const WindowQuadList &quads)
 {
     ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
     GLShader *shader = binder.shader();
@@ -128,8 +124,8 @@ void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const 
     const int verticesPerQuad = indexedQuads ? 4 : 6;
 
     const GLVertexAttrib attribs[] = {
-        { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
-        { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
+        {VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position)},
+        {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord)},
     };
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -163,7 +159,7 @@ void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const 
     vbo->unbindArrays();
 }
 
-void DeformEffect::drawWindow(EffectWindow *window, int mask, const QRegion& region, WindowPaintData &data)
+void DeformEffect::drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)
 {
     DeformOffscreenData *offscreenData = d->windows.value(window);
     if (!offscreenData) {
@@ -205,10 +201,8 @@ void DeformEffect::handleWindowDeleted(EffectWindow *window)
 
 void DeformEffect::setupConnections()
 {
-    d->windowDamagedConnection =
-            connect(effects, &EffectsHandler::windowDamaged, this, &DeformEffect::handleWindowDamaged);
-    d->windowDeletedConnection =
-            connect(effects, &EffectsHandler::windowDeleted, this, &DeformEffect::handleWindowDeleted);
+    d->windowDamagedConnection = connect(effects, &EffectsHandler::windowDamaged, this, &DeformEffect::handleWindowDamaged);
+    d->windowDeletedConnection = connect(effects, &EffectsHandler::windowDeleted, this, &DeformEffect::handleWindowDeleted);
 }
 
 void DeformEffect::destroyConnections()

@@ -10,13 +10,12 @@
 #define KWIN_EGL_STREAM_BACKEND_H
 #include "abstract_egl_drm_backend.h"
 #include "basiceglsurfacetexture_wayland.h"
-#include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/eglstream_controller_interface.h>
+#include <KWaylandServer/surface_interface.h>
 #include <wayland-server-core.h>
 
 namespace KWin
 {
-
 class DrmAbstractOutput;
 class DrmDumbBuffer;
 class DumbSwapchain;
@@ -50,18 +49,14 @@ private:
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
-    struct StreamTexture
-    {
+    struct StreamTexture {
         EGLStreamKHR stream;
         GLuint texture;
     };
     StreamTexture *lookupStreamTexture(KWaylandServer::SurfaceInterface *surface);
     void destroyStreamTexture(KWaylandServer::SurfaceInterface *surface);
-    void attachStreamConsumer(KWaylandServer::SurfaceInterface *surface,
-                              void *eglStream,
-                              wl_array *attribs);
-    struct Output
-    {
+    void attachStreamConsumer(KWaylandServer::SurfaceInterface *surface, void *eglStream, wl_array *attribs);
+    struct Output {
         DrmOutput *output = nullptr;
         QSharedPointer<DrmDumbBuffer> buffer;
         EGLSurface eglSurface = EGL_NO_SURFACE;
@@ -96,8 +91,7 @@ private:
     void createFbo();
     void copyExternalTexture(GLuint tex);
     bool attachBuffer(KWaylandServer::ClientBuffer *buffer);
-    bool checkBuffer(KWaylandServer::SurfaceInterface *surface,
-                     KWaylandServer::ClientBuffer *buffer);
+    bool checkBuffer(KWaylandServer::SurfaceInterface *surface, KWaylandServer::ClientBuffer *buffer);
 
     EglStreamBackend *m_backend;
     GLuint m_fbo, m_rbo, m_textureId;

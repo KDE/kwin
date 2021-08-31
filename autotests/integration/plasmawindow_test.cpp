@@ -6,22 +6,22 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_output.h"
-#include "platform.h"
-#include "x11client.h"
 #include "cursor.h"
+#include "kwin_wayland_test.h"
+#include "platform.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 #include <kwineffects.h>
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
 #include <KWayland/Client/surface.h>
 #include <KWaylandServer/seat_interface.h>
-//screenlocker
+// screenlocker
 #include <KScreenLocker/KsldApp>
 
 #include <QPainter>
@@ -34,7 +34,6 @@ using namespace KWayland::Client;
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_plasma-window-0");
 
 class PlasmaWindowTest : public QObject
@@ -57,7 +56,7 @@ private:
 
 void PlasmaWindowTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -97,8 +96,7 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     QVERIFY(plasmaWindowCreatedSpy.isValid());
 
     // create an xcb window
-    struct XcbConnectionDeleter
-    {
+    struct XcbConnectionDeleter {
         static inline void cleanup(xcb_connection_t *pointer)
         {
             xcb_disconnect(pointer);
@@ -108,12 +106,19 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t w = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_create_window(c.data(),
+                      XCB_COPY_FROM_PARENT,
+                      w,
+                      rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
                       windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+                      0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      XCB_COPY_FROM_PARENT,
+                      0,
+                      nullptr);
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
@@ -303,7 +308,7 @@ void PlasmaWindowTest::testDestroyedButNotUnmapped()
     // this should create a plasma window
     QVERIFY(plasmaWindowCreatedSpy.wait());
     QCOMPARE(plasmaWindowCreatedSpy.count(), 1);
-    auto window = plasmaWindowCreatedSpy.first().first().value<PlasmaWindow*>();
+    auto window = plasmaWindowCreatedSpy.first().first().value<PlasmaWindow *>();
     QVERIFY(window);
     QSignalSpy destroyedSpy(window, &QObject::destroyed);
     QVERIFY(destroyedSpy.isValid());

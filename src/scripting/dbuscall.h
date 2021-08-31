@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 /**
  * @brief Qml export for providing a wrapper for sending a message over the DBus
  * session bus.
@@ -70,7 +69,7 @@ class DBusCall : public QObject
     Q_PROPERTY(QString method READ method WRITE setMethod NOTIFY methodChanged)
     Q_PROPERTY(QVariantList arguments READ arguments WRITE setArguments NOTIFY argumentsChanged)
 public:
-    explicit DBusCall(QObject* parent = nullptr);
+    explicit DBusCall(QObject *parent = nullptr);
     ~DBusCall() override;
 
     const QString &service() const;
@@ -106,21 +105,20 @@ private:
     QVariantList m_arguments;
 };
 
-#define GENERIC_WRAPPER(type, name, upperName) \
-inline type DBusCall::name() const \
-{ \
-    return m_##name; \
-}\
-inline void DBusCall::set##upperName(type name) \
-{\
-    if (m_##name == name) { \
-        return; \
-    } \
-    m_##name = name; \
-    Q_EMIT name##Changed(); \
-}
-#define WRAPPER(name, upperName) \
-GENERIC_WRAPPER(const QString&, name, upperName)
+#define GENERIC_WRAPPER(type, name, upperName)                                                                                                                 \
+    inline type DBusCall::name() const                                                                                                                         \
+    {                                                                                                                                                          \
+        return m_##name;                                                                                                                                       \
+    }                                                                                                                                                          \
+    inline void DBusCall::set##upperName(type name)                                                                                                            \
+    {                                                                                                                                                          \
+        if (m_##name == name) {                                                                                                                                \
+            return;                                                                                                                                            \
+        }                                                                                                                                                      \
+        m_##name = name;                                                                                                                                       \
+        Q_EMIT name##Changed();                                                                                                                                \
+    }
+#define WRAPPER(name, upperName) GENERIC_WRAPPER(const QString &, name, upperName)
 
 WRAPPER(interface, Interface)
 WRAPPER(method, Method)

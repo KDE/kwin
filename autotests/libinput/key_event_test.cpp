@@ -62,10 +62,10 @@ void TestLibinputKeyEvent::testCreate()
     QCOMPARE(event->type(), LIBINPUT_EVENT_KEYBOARD_KEY);
     QCOMPARE(event->device(), m_device);
     QCOMPARE(event->nativeDevice(), m_nativeDevice);
-    QCOMPARE((libinput_event*)(*event.data()), keyEvent);
+    QCOMPARE((libinput_event *)(*event.data()), keyEvent);
     // verify it's a key event
-    QVERIFY(dynamic_cast<KeyEvent*>(event.data()));
-    QCOMPARE((libinput_event_keyboard*)(*dynamic_cast<KeyEvent*>(event.data())), keyEvent);
+    QVERIFY(dynamic_cast<KeyEvent *>(event.data()));
+    QCOMPARE((libinput_event_keyboard *)(*dynamic_cast<KeyEvent *>(event.data())), keyEvent);
 
     // verify that a nullptr passed to Event::create returns a nullptr
     QVERIFY(!Event::create(nullptr));
@@ -95,7 +95,7 @@ void TestLibinputKeyEvent::testEvent()
     keyEvent->time = time;
 
     QScopedPointer<Event> event(Event::create(keyEvent));
-    auto ke = dynamic_cast<KeyEvent*>(event.data());
+    auto ke = dynamic_cast<KeyEvent *>(event.data());
     QVERIFY(ke);
     QTEST(ke->state(), "expectedKeyState");
     QCOMPARE(ke->key(), key);

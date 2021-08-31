@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 struct DBusDesktopDataStruct {
     uint position;
     QString id;

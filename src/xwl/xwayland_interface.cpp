@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 XwaylandInterface *s_self = nullptr;
 
 XwaylandInterface *XwaylandInterface::self()

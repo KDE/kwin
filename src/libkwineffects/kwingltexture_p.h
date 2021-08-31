@@ -16,10 +16,10 @@
 #include "kwinglutils.h"
 #include <kwinglutils_export.h>
 
-#include <QSize>
-#include <QSharedData>
 #include <QImage>
 #include <QMatrix4x4>
+#include <QSharedData>
+#include <QSize>
 #include <epoxy/gl.h>
 
 namespace KWin
@@ -27,8 +27,7 @@ namespace KWin
 // forward declarations
 class GLVertexBuffer;
 
-class KWINGLUTILS_EXPORT GLTexturePrivate
-    : public QSharedData
+class KWINGLUTILS_EXPORT GLTexturePrivate : public QSharedData
 {
 public:
     GLTexturePrivate();
@@ -57,7 +56,7 @@ public:
 
     int m_unnormalizeActive; // 0 - no, otherwise refcount
     int m_normalizeActive; // 0 - no, otherwise refcount
-    GLVertexBuffer* m_vbo;
+    GLVertexBuffer *m_vbo;
     QSize m_cachedSize;
 
     static void initStatic();
@@ -70,6 +69,7 @@ public:
     static bool s_supportsTextureFormatRG;
     static GLuint s_fbo;
     static uint s_textureObjectCounter;
+
 private:
     friend void KWin::cleanupGL();
     static void cleanup();

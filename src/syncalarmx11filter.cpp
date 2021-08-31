@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 SyncAlarmX11Filter::SyncAlarmX11Filter()
     : X11EventFilter(QVector<int>{Xcb::Extensions::self()->syncAlarmNotifyEvent()})
 {
@@ -25,7 +24,8 @@ bool SyncAlarmX11Filter::event(xcb_generic_event_t *event)
     auto alarmEvent = reinterpret_cast<xcb_sync_alarm_notify_event_t *>(event);
     auto client = workspace()->findClient([alarmEvent](const X11Client *client) {
         const auto syncRequest = client->syncRequest();
-        return alarmEvent->alarm == syncRequest.alarm && alarmEvent->counter_value.hi == syncRequest.value.hi && alarmEvent->counter_value.lo == syncRequest.value.lo;
+        return alarmEvent->alarm == syncRequest.alarm && alarmEvent->counter_value.hi == syncRequest.value.hi
+            && alarmEvent->counter_value.lo == syncRequest.value.lo;
     });
     if (client) {
         client->handleSync();

@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class SurfacePixmapWayland;
 
 class KWIN_EXPORT PlatformOpenGLSurfaceTextureWayland : public PlatformOpenGLSurfaceTexture

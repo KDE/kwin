@@ -10,31 +10,30 @@
 #include "platformqpaintersurfacetexture.h"
 // KWin
 #include "abstract_client.h"
+#include "abstract_output.h"
 #include "composite.h"
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
 #include "effects.h"
 #include "main.h"
+#include "platform.h"
 #include "renderloop.h"
 #include "screens.h"
 #include "surfaceitem.h"
 #include "toplevel.h"
-#include "platform.h"
 #include "windowitem.h"
-#include "abstract_output.h"
 
 #include <kwineffectquickview.h>
 // Qt
+#include <KDecoration2/Decoration>
 #include <QDebug>
 #include <QPainter>
-#include <KDecoration2/Decoration>
 
 #include <cmath>
 
 namespace KWin
 {
-
 //****************************************
 // SceneQPainter
 //****************************************
@@ -80,8 +79,7 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
     m_painter->restore();
 }
 
-void SceneQPainter::paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &toplevels,
-                          RenderLoop *renderLoop)
+void SceneQPainter::paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &toplevels, RenderLoop *renderLoop)
 {
     Q_ASSERT(kwinApp()->platform()->isPerScreenRenderingEnabled());
     painted_screen = output;
@@ -123,7 +121,7 @@ void SceneQPainter::paintCursor(const QRegion &rendered)
         return;
     }
 
-    Cursor* cursor = Cursors::self()->currentCursor();
+    Cursor *cursor = Cursors::self()->currentCursor();
     const QImage img = cursor->image();
     if (img.isNull()) {
         return;
@@ -271,8 +269,7 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
         return;
     }
 
-    PlatformQPainterSurfaceTexture *platformSurfaceTexture =
-            static_cast<PlatformQPainterSurfaceTexture *>(surfaceTexture->platformTexture());
+    PlatformQPainterSurfaceTexture *platformSurfaceTexture = static_cast<PlatformQPainterSurfaceTexture *>(surfaceTexture->platformTexture());
     if (!platformSurfaceTexture->isValid()) {
         platformSurfaceTexture->create();
     } else {
@@ -286,8 +283,7 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
         const QPointF bufferTopLeft = matrix.map(rect.topLeft());
         const QPointF bufferBottomRight = matrix.map(rect.bottomRight());
 
-        painter->drawImage(rect, platformSurfaceTexture->image(),
-                           QRectF(bufferTopLeft, bufferBottomRight));
+        painter->drawImage(rect, platformSurfaceTexture->image(), QRectF(bufferTopLeft, bufferBottomRight));
     }
 }
 
@@ -344,7 +340,6 @@ void QPainterEffectFrame::render(const QRegion &region, double opacity, double f
     }
     QPainter *painter = m_scene->scenePainter();
 
-
     // Render the actual frame
     if (m_effectFrame->style() == EffectFrameUnstyled) {
         painter->save();
@@ -357,7 +352,7 @@ void QPainterEffectFrame::render(const QRegion &region, double opacity, double f
         painter->restore();
     } else if (m_effectFrame->style() == EffectFrameStyled) {
         qreal left, top, right, bottom;
-        m_effectFrame->frame().getMargins(left, top, right, bottom);   // m_geometry is the inner geometry
+        m_effectFrame->frame().getMargins(left, top, right, bottom); // m_geometry is the inner geometry
         QRect geom = m_effectFrame->geometry().adjusted(-left, -top, right, bottom);
         painter->drawPixmap(geom, m_effectFrame->frame().framePixmap());
     }
@@ -367,8 +362,7 @@ void QPainterEffectFrame::render(const QRegion &region, double opacity, double f
 
     // Render icon
     if (!m_effectFrame->icon().isNull() && !m_effectFrame->iconSize().isEmpty()) {
-        const QPoint topLeft(m_effectFrame->geometry().x(),
-                             m_effectFrame->geometry().center().y() - m_effectFrame->iconSize().height() / 2);
+        const QPoint topLeft(m_effectFrame->geometry().x(), m_effectFrame->geometry().center().y() - m_effectFrame->iconSize().height() / 2);
 
         const QRect geom = QRect(topLeft, m_effectFrame->iconSize());
         painter->drawPixmap(geom, m_effectFrame->icon().pixmap(m_effectFrame->iconSize()));
@@ -405,7 +399,7 @@ void QPainterEffectFrame::render(const QRegion &region, double opacity, double f
 //****************************************
 // QPainterShadow
 //****************************************
-SceneQPainterShadow::SceneQPainterShadow(Toplevel* toplevel)
+SceneQPainterShadow::SceneQPainterShadow(Toplevel *toplevel)
     : Shadow(toplevel)
 {
 }
@@ -479,9 +473,7 @@ void SceneQPainterDecorationRenderer::resizeImages()
 
     auto checkAndCreate = [this](int index, const QSize &size) {
         auto dpr = client()->client()->screenScale();
-        if (m_images[index].size() != size * dpr ||
-            m_images[index].devicePixelRatio() != dpr)
-        {
+        if (m_images[index].size() != size * dpr || m_images[index].devicePixelRatio() != dpr) {
             m_images[index] = QImage(size * dpr, QImage::Format_ARGB32_Premultiplied);
             m_images[index].setDevicePixelRatio(dpr);
             m_images[index].fill(Qt::transparent);

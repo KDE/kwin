@@ -6,26 +6,26 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "abstract_wayland_output.h"
 #include "deleted.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/outputmanagement.h>
 #include <KWayland/Client/outputconfiguration.h>
 #include <KWayland/Client/outputdevice.h>
+#include <KWayland/Client/outputmanagement.h>
 
-#include <KWaylandServer/outputmanagement_interface.h>
-#include <KWaylandServer/outputconfiguration_interface.h>
-#include <KWaylandServer/outputdevice_interface.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/outputdevice.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
+#include <KWaylandServer/outputconfiguration_interface.h>
+#include <KWaylandServer/outputdevice_interface.h>
+#include <KWaylandServer/outputmanagement_interface.h>
 
 #include <KWaylandServer/display.h>
 
@@ -48,12 +48,12 @@ private Q_SLOTS:
 
 void TestOutputManagement::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted*>();
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::AbstractOutput*>();
+    qRegisterMetaType<KWin::Deleted *>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::AbstractOutput *>();
     qRegisterMetaType<AbstractOutput *>();
-    qRegisterMetaType<KWin::AbstractOutput*>("AbstractOutput *");
-    qRegisterMetaType<KWayland::Client::Output*>();
+    qRegisterMetaType<KWin::AbstractOutput *>("AbstractOutput *");
+    qRegisterMetaType<KWayland::Client::Output *>();
     qRegisterMetaType<KWayland::Client::OutputDevice::Enablement>();
     qRegisterMetaType<OutputDevice::Enablement>("OutputDevice::Enablement");
     qRegisterMetaType<KWaylandServer::OutputDeviceInterface::Enablement>();
@@ -75,11 +75,10 @@ void TestOutputManagement::initTestCase()
 
 void TestOutputManagement::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::OutputManagement |
-                                         Test::AdditionalWaylandInterface::OutputDevice));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::OutputManagement | Test::AdditionalWaylandInterface::OutputDevice));
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    //put mouse in the middle of screen one
+    // put mouse in the middle of screen one
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
@@ -95,7 +94,7 @@ void TestOutputManagement::testOutputDeviceDisabled()
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto size = QSize(200,200);
+    auto size = QSize(200, 200);
 
     QSignalSpy outputEnteredSpy(surface.data(), &Surface::outputEntered);
     QSignalSpy outputLeftSpy(surface.data(), &Surface::outputLeft);
@@ -104,17 +103,17 @@ void TestOutputManagement::testOutputDeviceDisabled()
     QSignalSpy outputDisabledSpy(kwinApp()->platform(), &Platform::outputDisabled);
 
     auto c = Test::renderAndWaitForShown(surface.data(), size, Qt::blue);
-    //move to be in the first screen
-    c->moveResize(QRect(QPoint(100,100), size));
-    //we don't don't know where the compositor first placed this window,
-    //this might fire, it might not
+    // move to be in the first screen
+    c->moveResize(QRect(QPoint(100, 100), size));
+    // we don't don't know where the compositor first placed this window,
+    // this might fire, it might not
     outputEnteredSpy.wait(5);
     outputEnteredSpy.clear();
     QCOMPARE(waylandServer()->display()->outputs().count(), 2);
 
     QCOMPARE(surface->outputs().count(), 1);
     Output *firstOutput = surface->outputs().first();
-    QCOMPARE(firstOutput->globalPosition(), QPoint(0,0));
+    QCOMPARE(firstOutput->globalPosition(), QPoint(0, 0));
     QSignalSpy modesChangedSpy(firstOutput, &Output::modeChanged);
 
     QSignalSpy screenChangedSpy(screens(), &KWin::Screens::changed);
@@ -131,7 +130,7 @@ void TestOutputManagement::testOutputDeviceDisabled()
 
     // Disables an output
     config = outManagement->createConfiguration();
-    QSignalSpy configAppliedSpy (config, &OutputConfiguration::applied);
+    QSignalSpy configAppliedSpy(config, &OutputConfiguration::applied);
     config->setEnabled(device, OutputDevice::Enablement::Disabled);
     config->apply();
     QVERIFY(configAppliedSpy.wait());
@@ -156,7 +155,7 @@ void TestOutputManagement::testOutputDeviceDisabled()
 
     // Enable the disabled output
     config = outManagement->createConfiguration();
-    QSignalSpy configAppliedSpy2 (config, &OutputConfiguration::applied);
+    QSignalSpy configAppliedSpy2(config, &OutputConfiguration::applied);
     config->setEnabled(device, OutputDevice::Enablement::Enabled);
     config->apply();
     QVERIFY(configAppliedSpy2.wait());
@@ -182,7 +181,7 @@ void TestOutputManagement::testOutputDeviceRemoved()
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto size = QSize(200,200);
+    auto size = QSize(200, 200);
 
     QSignalSpy outputEnteredSpy(surface.data(), &Surface::outputEntered);
     QSignalSpy outputLeftSpy(surface.data(), &Surface::outputLeft);
@@ -192,17 +191,17 @@ void TestOutputManagement::testOutputDeviceRemoved()
     QSignalSpy outputRemovedSpy(kwinApp()->platform(), &Platform::outputRemoved);
 
     auto c = Test::renderAndWaitForShown(surface.data(), size, Qt::blue);
-    //move to be in the first screen
-    c->move(QPoint(100,100));
-    //we don't don't know where the compositor first placed this window,
-    //this might fire, it might not
+    // move to be in the first screen
+    c->move(QPoint(100, 100));
+    // we don't don't know where the compositor first placed this window,
+    // this might fire, it might not
     outputEnteredSpy.wait(5);
     outputEnteredSpy.clear();
     QCOMPARE(waylandServer()->display()->outputs().count(), 2);
 
     QCOMPARE(surface->outputs().count(), 1);
     Output *firstOutput = surface->outputs().first();
-    QCOMPARE(firstOutput->globalPosition(), QPoint(0,0));
+    QCOMPARE(firstOutput->globalPosition(), QPoint(0, 0));
     QSignalSpy modesChangedSpy(firstOutput, &Output::modeChanged);
 
     QSignalSpy screenChangedSpy(screens(), &KWin::Screens::changed);

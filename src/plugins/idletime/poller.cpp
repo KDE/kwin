@@ -16,16 +16,14 @@
 KWinIdleTimePoller::KWinIdleTimePoller(QObject *parent)
     : AbstractSystemPoller(parent)
 {
-    connect(KWin::waylandServer(), &KWin::WaylandServer::terminatingInternalClientConnection, this,
-        [this] {
-            qDeleteAll(m_timeouts);
-            m_timeouts.clear();
-            delete m_seat;
-            m_seat = nullptr;
-            delete m_idle;
-            m_idle = nullptr;
-        }
-    );
+    connect(KWin::waylandServer(), &KWin::WaylandServer::terminatingInternalClientConnection, this, [this] {
+        qDeleteAll(m_timeouts);
+        m_timeouts.clear();
+        delete m_seat;
+        m_seat = nullptr;
+        delete m_idle;
+        m_idle = nullptr;
+    });
 }
 
 KWinIdleTimePoller::~KWinIdleTimePoller() = default;
@@ -63,11 +61,9 @@ void KWinIdleTimePoller::addTimeout(int nextTimeout)
     }
     auto timeout = m_idle->getTimeout(nextTimeout, m_seat, this);
     m_timeouts.insert(nextTimeout, timeout);
-    connect(timeout, &KWayland::Client::IdleTimeout::idle, this,
-        [this, nextTimeout] {
-            Q_EMIT timeoutReached(nextTimeout);
-        }
-    );
+    connect(timeout, &KWayland::Client::IdleTimeout::idle, this, [this, nextTimeout] {
+        Q_EMIT timeoutReached(nextTimeout);
+    });
     connect(timeout, &KWayland::Client::IdleTimeout::resumeFromIdle, this, &KWinIdleTimePoller::resumingFromIdle);
 }
 
@@ -81,7 +77,7 @@ void KWinIdleTimePoller::removeTimeout(int nextTimeout)
     m_timeouts.erase(it);
 }
 
-QList< int > KWinIdleTimePoller::timeouts() const
+QList<int> KWinIdleTimePoller::timeouts() const
 {
     return QList<int>();
 }
@@ -96,12 +92,10 @@ void KWinIdleTimePoller::catchIdleEvent()
         return;
     }
     m_catchResumeTimeout = m_idle->getTimeout(0, m_seat, this);
-    connect(m_catchResumeTimeout, &KWayland::Client::IdleTimeout::resumeFromIdle, this,
-        [this] {
-            stopCatchingIdleEvents();
-            Q_EMIT resumingFromIdle();
-        }
-    );
+    connect(m_catchResumeTimeout, &KWayland::Client::IdleTimeout::resumeFromIdle, this, [this] {
+        stopCatchingIdleEvents();
+        Q_EMIT resumingFromIdle();
+    });
 }
 
 void KWinIdleTimePoller::stopCatchingIdleEvents()

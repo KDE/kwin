@@ -19,9 +19,9 @@
 #include "udev.h"
 // system
 #include <fcntl.h>
-#include <unistd.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
+#include <unistd.h>
 // Linux
 #include <linux/fb.h>
 
@@ -65,7 +65,7 @@ void FramebufferOutput::init(const QSize &pixelSize, const QSize &physicalSize)
     mode.size = pixelSize;
     mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;
-    initialize("model_TODO", "manufacturer_TODO", "eisa_TODO", "serial_TODO", physicalSize, { mode }, {});
+    initialize("model_TODO", "manufacturer_TODO", "eisa_TODO", "serial_TODO", physicalSize, {mode}, {});
 }
 
 void FramebufferOutput::vblank(std::chrono::nanoseconds timestamp)
@@ -228,51 +228,29 @@ void FramebufferBackend::initImageFormat()
     qCDebug(KWIN_FB) << "Buffer Length: " << m_bufferLength;
     qCDebug(KWIN_FB) << "Bytes Per Line: " << m_bytesPerLine;
     qCDebug(KWIN_FB) << "Alpha Length: " << m_alpha.length;
-    qCDebug(KWIN_FB) << "Red Length: "   << m_red.length;
+    qCDebug(KWIN_FB) << "Red Length: " << m_red.length;
     qCDebug(KWIN_FB) << "Green Length: " << m_green.length;
-    qCDebug(KWIN_FB) << "Blue Length: "  << m_blue.length;
-    qCDebug(KWIN_FB) << "Blue Offset: "  << m_blue.offset;
+    qCDebug(KWIN_FB) << "Blue Length: " << m_blue.length;
+    qCDebug(KWIN_FB) << "Blue Offset: " << m_blue.offset;
     qCDebug(KWIN_FB) << "Green Offset: " << m_green.offset;
-    qCDebug(KWIN_FB) << "Red Offset: "   << m_red.offset;
+    qCDebug(KWIN_FB) << "Red Offset: " << m_red.offset;
     qCDebug(KWIN_FB) << "Alpha Offset: " << m_alpha.offset;
 
-    if (m_bitsPerPixel == 32 &&
-            m_red.length == 8 &&
-            m_green.length == 8 &&
-            m_blue.length == 8 &&
-            m_blue.offset == 0 &&
-            m_green.offset == 8 &&
-            m_red.offset == 16) {
+    if (m_bitsPerPixel == 32 && m_red.length == 8 && m_green.length == 8 && m_blue.length == 8 && m_blue.offset == 0 && m_green.offset == 8
+        && m_red.offset == 16) {
         qCDebug(KWIN_FB) << "Framebuffer format is RGB32";
         m_imageFormat = QImage::Format_RGB32;
-    } else if (m_bitsPerPixel == 32 &&
-            m_red.length == 8 &&
-            m_green.length == 8 &&
-            m_blue.length == 8 &&
-            m_alpha.length == 8 &&
-            m_red.offset == 0 &&
-            m_green.offset == 8 &&
-            m_blue.offset == 16 &&
-            m_alpha.offset == 24) {
+    } else if (m_bitsPerPixel == 32 && m_red.length == 8 && m_green.length == 8 && m_blue.length == 8 && m_alpha.length == 8 && m_red.offset == 0
+               && m_green.offset == 8 && m_blue.offset == 16 && m_alpha.offset == 24) {
         qCDebug(KWIN_FB) << "Framebuffer format is RGBA8888";
         m_imageFormat = QImage::Format_RGBA8888;
-    } else if (m_bitsPerPixel == 24 &&
-            m_red.length == 8 &&
-            m_green.length == 8 &&
-            m_blue.length == 8 &&
-            m_blue.offset == 0 &&
-            m_green.offset == 8 &&
-            m_red.offset == 16) {
+    } else if (m_bitsPerPixel == 24 && m_red.length == 8 && m_green.length == 8 && m_blue.length == 8 && m_blue.offset == 0 && m_green.offset == 8
+               && m_red.offset == 16) {
         qCDebug(KWIN_FB) << "Framebuffer Format is RGB888";
         m_bgr = true;
         m_imageFormat = QImage::Format_RGB888;
-    } else if (m_bitsPerPixel == 16 &&
-            m_red.length == 5 &&
-            m_green.length == 6 &&
-            m_blue.length == 5 &&
-            m_blue.offset == 0 &&
-            m_green.offset == 5 &&
-            m_red.offset == 11) {
+    } else if (m_bitsPerPixel == 16 && m_red.length == 5 && m_green.length == 6 && m_blue.length == 5 && m_blue.offset == 0 && m_green.offset == 5
+               && m_red.offset == 11) {
         qCDebug(KWIN_FB) << "Framebuffer Format is RGB16";
         m_imageFormat = QImage::Format_RGB16;
     } else {

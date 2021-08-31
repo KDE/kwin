@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-
 #include "wobblywindows.h"
 #include "wobblywindowsconfig.h"
 
@@ -21,14 +20,13 @@
 //#define VERBOSE_MODE
 
 #if defined COMPUTE_STATS && !defined VERBOSE_MODE
-#   ifdef __GNUC__
-#       warning "You enable COMPUTE_STATS without VERBOSE_MODE, computed stats will not be printed."
-#   endif
+#ifdef __GNUC__
+#warning "You enable COMPUTE_STATS without VERBOSE_MODE, computed stats will not be printed."
+#endif
 #endif
 
 namespace KWin
 {
-
 struct ParameterSet {
     qreal stiffness;
     qreal drag;
@@ -115,7 +113,7 @@ static const ParameterSet set_4 = {
     0.5,
 };
 
-static const ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
+static const ParameterSet pset[5] = {set_0, set_1, set_2, set_3, set_4};
 
 WobblyWindowsEffect::WobblyWindowsEffect()
 {
@@ -133,7 +131,7 @@ WobblyWindowsEffect::~WobblyWindowsEffect()
         // we should be empty at this point...
         // emit a warning and clean the list.
         qCDebug(KWINEFFECTS) << "Windows list not empty. Left items : " << windows.count();
-        QHash< const EffectWindow*,  WindowWobblyInfos >::iterator i;
+        QHash<const EffectWindow *, WindowWobblyInfos>::iterator i;
         for (i = windows.begin(); i != windows.end(); ++i) {
             freeWobblyInfo(i.value());
         }
@@ -178,11 +176,11 @@ void WobblyWindowsEffect::reconfigure(ReconfigureFlags)
     m_resizeWobble = WobblyWindowsConfig::resizeWobble();
 
 #if defined VERBOSE_MODE
-    qCDebug(KWINEFFECTS) << "Parameters :\n" <<
-                 "grid(" << m_stiffness << ", " << m_drag << ", " << m_move_factor << ")\n" <<
-                 "velocity(" << m_minVelocity << ", " << m_maxVelocity << ", " << m_stopVelocity << ")\n" <<
-                 "acceleration(" << m_minAcceleration << ", " << m_maxAcceleration << ", " << m_stopAcceleration << ")\n" <<
-                 "tesselation(" << m_xTesselation <<  ", " << m_yTesselation << ")";
+    qCDebug(KWINEFFECTS) << "Parameters :\n"
+                         << "grid(" << m_stiffness << ", " << m_drag << ", " << m_move_factor << ")\n"
+                         << "velocity(" << m_minVelocity << ", " << m_maxVelocity << ", " << m_stopVelocity << ")\n"
+                         << "acceleration(" << m_minAcceleration << ", " << m_maxAcceleration << ", " << m_stopAcceleration << ")\n"
+                         << "tesselation(" << m_xTesselation << ", " << m_yTesselation << ")";
 #endif
 }
 
@@ -191,7 +189,7 @@ bool WobblyWindowsEffect::supported()
     return DeformEffect::supported() && effects->animationsSupported();
 }
 
-void WobblyWindowsEffect::setParameterSet(const ParameterSet& pset)
+void WobblyWindowsEffect::setParameterSet(const ParameterSet &pset)
 {
     m_stiffness = pset.stiffness;
     m_drag = pset.drag;
@@ -200,12 +198,12 @@ void WobblyWindowsEffect::setParameterSet(const ParameterSet& pset)
     m_xTesselation = pset.xTesselation;
     m_yTesselation = pset.yTesselation;
 
-    m_minVelocity =  pset.minVelocity;
-    m_maxVelocity =  pset.maxVelocity;
-    m_stopVelocity =  pset.stopVelocity;
-    m_minAcceleration =  pset.minAcceleration;
-    m_maxAcceleration =  pset.maxAcceleration;
-    m_stopAcceleration =  pset.stopAcceleration;
+    m_minVelocity = pset.minVelocity;
+    m_maxVelocity = pset.maxVelocity;
+    m_stopVelocity = pset.stopVelocity;
+    m_minAcceleration = pset.minAcceleration;
+    m_maxAcceleration = pset.maxAcceleration;
+    m_stopAcceleration = pset.stopAcceleration;
 }
 
 void WobblyWindowsEffect::setVelocityThreshold(qreal m_minVelocity)
@@ -228,7 +226,7 @@ void WobblyWindowsEffect::setDrag(qreal drag)
     m_drag = drag;
 }
 
-void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
+void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     // We need to mark the screen windows as transformed. Otherwise the whole
     // screen won't be repainted, resulting in artefacts.
@@ -242,7 +240,7 @@ void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::
 
 static const std::chrono::milliseconds integrationStep(10);
 
-void WobblyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
+void WobblyWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     auto infoIt = windows.find(w);
     if (infoIt != windows.end()) {
@@ -270,7 +268,7 @@ void WobblyWindowsEffect::deform(EffectWindow *w, int mask, WindowPaintData &dat
     if (!(mask & PAINT_SCREEN_TRANSFORMED) && windows.contains(w)) {
         quads = quads.makeRegularGrid(m_xTesselation, m_yTesselation);
 
-        WindowWobblyInfos& wwi = windows[w];
+        WindowWobblyInfos &wwi = windows[w];
         int tx = w->frameGeometry().x();
         int ty = w->frameGeometry().y();
         int width = w->frameGeometry().width();
@@ -281,21 +279,20 @@ void WobblyWindowsEffect::deform(EffectWindow *w, int mask, WindowPaintData &dat
         double bottom = w->height();
         for (int i = 0; i < quads.count(); ++i) {
             for (int j = 0; j < 4; ++j) {
-                WindowVertex& v = quads[i][j];
+                WindowVertex &v = quads[i][j];
                 Pair uv = {v.x() / width, v.y() / height};
                 Pair newPos = computeBezierPoint(wwi, uv);
                 v.move(newPos.x - tx, newPos.y - ty);
             }
-            left   = qMin(left,   quads[i].left());
-            top    = qMin(top,    quads[i].top());
-            right  = qMax(right,  quads[i].right());
+            left = qMin(left, quads[i].left());
+            top = qMin(top, quads[i].top());
+            right = qMax(right, quads[i].right());
             bottom = qMax(bottom, quads[i].bottom());
         }
-        QRectF dirtyRect(
-            left * data.xScale() + w->x() + data.xTranslation(),
-            top * data.yScale() + w->y() + data.yTranslation(),
-            (right - left + 1.0) * data.xScale(),
-            (bottom - top + 1.0) * data.yScale());
+        QRectF dirtyRect(left * data.xScale() + w->x() + data.xTranslation(),
+                         top * data.yScale() + w->y() + data.yTranslation(),
+                         (right - left + 1.0) * data.xScale(),
+                         (bottom - top + 1.0) * data.yScale());
         // Expand the dirty region by 1px to fix potential round/floor issues.
         dirtyRect.adjust(-1.0, -1.0, 1.0, 1.0);
         m_updateRegion = m_updateRegion.united(dirtyRect.toRect());
@@ -327,25 +324,33 @@ void WobblyWindowsEffect::slotWindowStepUserMovedResized(EffectWindow *w, const 
 {
     Q_UNUSED(geometry)
     if (windows.contains(w)) {
-        WindowWobblyInfos& wwi = windows[w];
+        WindowWobblyInfos &wwi = windows[w];
         const QRect rect = w->frameGeometry();
-        if (rect.y() != wwi.resize_original_rect.y()) wwi.can_wobble_top = true;
-        if (rect.x() != wwi.resize_original_rect.x()) wwi.can_wobble_left = true;
-        if (rect.right() != wwi.resize_original_rect.right()) wwi.can_wobble_right = true;
-        if (rect.bottom() != wwi.resize_original_rect.bottom()) wwi.can_wobble_bottom = true;
+        if (rect.y() != wwi.resize_original_rect.y())
+            wwi.can_wobble_top = true;
+        if (rect.x() != wwi.resize_original_rect.x())
+            wwi.can_wobble_left = true;
+        if (rect.right() != wwi.resize_original_rect.right())
+            wwi.can_wobble_right = true;
+        if (rect.bottom() != wwi.resize_original_rect.bottom())
+            wwi.can_wobble_bottom = true;
     }
 }
 
 void WobblyWindowsEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
 {
     if (windows.contains(w)) {
-        WindowWobblyInfos& wwi = windows[w];
+        WindowWobblyInfos &wwi = windows[w];
         wwi.status = Free;
         const QRect rect = w->frameGeometry();
-        if (rect.y() != wwi.resize_original_rect.y()) wwi.can_wobble_top = true;
-        if (rect.x() != wwi.resize_original_rect.x()) wwi.can_wobble_left = true;
-        if (rect.right() != wwi.resize_original_rect.right()) wwi.can_wobble_right = true;
-        if (rect.bottom() != wwi.resize_original_rect.bottom()) wwi.can_wobble_bottom = true;
+        if (rect.y() != wwi.resize_original_rect.y())
+            wwi.can_wobble_top = true;
+        if (rect.x() != wwi.resize_original_rect.x())
+            wwi.can_wobble_left = true;
+        if (rect.right() != wwi.resize_original_rect.right())
+            wwi.can_wobble_right = true;
+        if (rect.bottom() != wwi.resize_original_rect.bottom())
+            wwi.can_wobble_bottom = true;
     }
 }
 
@@ -362,16 +367,20 @@ void WobblyWindowsEffect::slotWindowMaximizeStateChanged(EffectWindow *w, bool h
     }
 
     if (windows.contains(w)) {
-        WindowWobblyInfos& wwi = windows[w];
+        WindowWobblyInfos &wwi = windows[w];
         const QRect rect = w->frameGeometry();
-        if (rect.y() != wwi.resize_original_rect.y()) wwi.can_wobble_top = true;
-        if (rect.x() != wwi.resize_original_rect.x()) wwi.can_wobble_left = true;
-        if (rect.right() != wwi.resize_original_rect.right()) wwi.can_wobble_right = true;
-        if (rect.bottom() != wwi.resize_original_rect.bottom()) wwi.can_wobble_bottom = true;
+        if (rect.y() != wwi.resize_original_rect.y())
+            wwi.can_wobble_top = true;
+        if (rect.x() != wwi.resize_original_rect.x())
+            wwi.can_wobble_left = true;
+        if (rect.right() != wwi.resize_original_rect.right())
+            wwi.can_wobble_right = true;
+        if (rect.bottom() != wwi.resize_original_rect.bottom())
+            wwi.can_wobble_bottom = true;
     }
 }
 
-void WobblyWindowsEffect::startMovedResized(EffectWindow* w)
+void WobblyWindowsEffect::startMovedResized(EffectWindow *w)
 {
     if (!windows.contains(w)) {
         WindowWobblyInfos new_wwi;
@@ -380,9 +389,9 @@ void WobblyWindowsEffect::startMovedResized(EffectWindow* w)
         redirect(w);
     }
 
-    WindowWobblyInfos& wwi = windows[w];
+    WindowWobblyInfos &wwi = windows[w];
     wwi.status = Moving;
-    const QRectF& rect = w->frameGeometry();
+    const QRectF &rect = w->frameGeometry();
 
     qreal x_increment = rect.width() / (wwi.width - 1.0);
     qreal y_increment = rect.height() / (wwi.height - 1.0);
@@ -413,7 +422,7 @@ void WobblyWindowsEffect::startMovedResized(EffectWindow* w)
     }
 }
 
-void WobblyWindowsEffect::stepMovedResized(EffectWindow* w)
+void WobblyWindowsEffect::stepMovedResized(EffectWindow *w)
 {
     QRect new_geometry = w->frameGeometry();
     if (!windows.contains(w)) {
@@ -422,29 +431,29 @@ void WobblyWindowsEffect::stepMovedResized(EffectWindow* w)
         windows[w] = new_wwi;
     }
 
-    WindowWobblyInfos& wwi = windows[w];
+    WindowWobblyInfos &wwi = windows[w];
     wwi.status = Free;
 
     QRect maximized_area = effects->clientArea(MaximizeArea, w);
-    bool throb_direction_out = (new_geometry.top() == maximized_area.top() && new_geometry.bottom() == maximized_area.bottom()) ||
-                               (new_geometry.left() == maximized_area.left() && new_geometry.right() == maximized_area.right());
+    bool throb_direction_out = (new_geometry.top() == maximized_area.top() && new_geometry.bottom() == maximized_area.bottom())
+        || (new_geometry.left() == maximized_area.left() && new_geometry.right() == maximized_area.right());
     qreal magnitude = throb_direction_out ? 10 : -30; // a small throb out when maximized, a larger throb inwards when restored
     for (unsigned int j = 0; j < wwi.height; ++j) {
         for (unsigned int i = 0; i < wwi.width; ++i) {
-            Pair v = { magnitude*(i / qreal(wwi.width - 1) - 0.5), magnitude*(j / qreal(wwi.height - 1) - 0.5) };
-            wwi.velocity[j*wwi.width+i] = v;
+            Pair v = {magnitude * (i / qreal(wwi.width - 1) - 0.5), magnitude * (j / qreal(wwi.height - 1) - 0.5)};
+            wwi.velocity[j * wwi.width + i] = v;
         }
     }
 
     // constrain the middle of the window, so that any asymetry wont cause it to drift off-center
     for (unsigned int j = 1; j < wwi.height - 1; ++j) {
         for (unsigned int i = 1; i < wwi.width - 1; ++i) {
-            wwi.constraint[j*wwi.width+i] = true;
+            wwi.constraint[j * wwi.width + i] = true;
         }
     }
 }
 
-void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry) const
+void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos &wwi, QRect geometry) const
 {
     wwi.count = 4 * 4;
     wwi.width = 4;
@@ -464,8 +473,7 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry)
     wwi.bezierSurface = new Pair[wwi.bezierCount];
 
     wwi.status = Moving;
-    wwi.clock = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::steady_clock::now().time_since_epoch());
+    wwi.clock = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch());
 
     qreal x = geometry.x(), y = geometry.y();
     qreal width = geometry.width(), height = geometry.height();
@@ -501,7 +509,7 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry)
     }
 }
 
-void WobblyWindowsEffect::freeWobblyInfo(WindowWobblyInfos& wwi) const
+void WobblyWindowsEffect::freeWobblyInfo(WindowWobblyInfos &wwi) const
 {
     delete[] wwi.origin;
     delete[] wwi.position;
@@ -513,7 +521,7 @@ void WobblyWindowsEffect::freeWobblyInfo(WindowWobblyInfos& wwi) const
     delete[] wwi.bezierSurface;
 }
 
-WobblyWindowsEffect::Pair WobblyWindowsEffect::computeBezierPoint(const WindowWobblyInfos& wwi, Pair point) const
+WobblyWindowsEffect::Pair WobblyWindowsEffect::computeBezierPoint(const WindowWobblyInfos &wwi, Pair point) const
 {
     const qreal tx = point.x;
     const qreal ty = point.y;
@@ -547,8 +555,7 @@ WobblyWindowsEffect::Pair WobblyWindowsEffect::computeBezierPoint(const WindowWo
 
 namespace
 {
-
-static inline void fixVectorBounds(WobblyWindowsEffect::Pair& vec, qreal min, qreal max)
+static inline void fixVectorBounds(WobblyWindowsEffect::Pair &vec, qreal min, qreal max)
 {
     if (fabs(vec.x) < min) {
         vec.x = 0.0;
@@ -572,7 +579,7 @@ static inline void fixVectorBounds(WobblyWindowsEffect::Pair& vec, qreal min, qr
 }
 
 #if defined COMPUTE_STATS
-static inline void computeVectorBounds(WobblyWindowsEffect::Pair& vec, WobblyWindowsEffect::Pair& bound)
+static inline void computeVectorBounds(WobblyWindowsEffect::Pair &vec, WobblyWindowsEffect::Pair &bound)
 {
     if (fabs(vec.x) < bound.x) {
         bound.x = fabs(vec.x);
@@ -589,24 +596,24 @@ static inline void computeVectorBounds(WobblyWindowsEffect::Pair& vec, WobblyWin
 
 } // close the anonymous namespace
 
-bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
+bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow *w, qreal time)
 {
     QRectF rect = w->frameGeometry();
-    WindowWobblyInfos& wwi = windows[w];
+    WindowWobblyInfos &wwi = windows[w];
 
     qreal x_length = rect.width() / (wwi.width - 1.0);
     qreal y_length = rect.height() / (wwi.height - 1.0);
 
 #if defined VERBOSE_MODE
     qCDebug(KWINEFFECTS) << "time " << time;
-    qCDebug(KWINEFFECTS) << "increment x " << x_length << " // y" <<  y_length;
+    qCDebug(KWINEFFECTS) << "increment x " << x_length << " // y" << y_length;
 #endif
 
     Pair origine = {rect.x(), rect.y()};
 
     for (unsigned int j = 0; j < wwi.height; ++j) {
         for (unsigned int i = 0; i < wwi.width; ++i) {
-            wwi.origin[wwi.width*j + i] = origine;
+            wwi.origin[wwi.width * j + i] = origine;
             if (i != wwi.width - 2) {
                 origine.x += x_length;
             } else {
@@ -637,10 +644,10 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         Pair window_pos = wwi.origin[0];
         Pair current_pos = wwi.position[0];
         Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-        Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
+        Pair accel = {move.x * m_stiffness, move.y * m_stiffness};
         wwi.acceleration[0] = accel;
     } else {
-        Pair& pos = wwi.position[0];
+        Pair &pos = wwi.position[0];
         neibourgs[0] = wwi.position[1];
         neibourgs[1] = wwi.position[wwi.width];
 
@@ -655,16 +662,16 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
 
     // top-right
 
-    if (wwi.constraint[wwi.width-1]) {
-        Pair window_pos = wwi.origin[wwi.width-1];
-        Pair current_pos = wwi.position[wwi.width-1];
+    if (wwi.constraint[wwi.width - 1]) {
+        Pair window_pos = wwi.origin[wwi.width - 1];
+        Pair current_pos = wwi.position[wwi.width - 1];
         Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-        Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
-        wwi.acceleration[wwi.width-1] = accel;
+        Pair accel = {move.x * m_stiffness, move.y * m_stiffness};
+        wwi.acceleration[wwi.width - 1] = accel;
     } else {
-        Pair& pos = wwi.position[wwi.width-1];
-        neibourgs[0] = wwi.position[wwi.width-2];
-        neibourgs[1] = wwi.position[2*wwi.width-1];
+        Pair &pos = wwi.position[wwi.width - 1];
+        neibourgs[0] = wwi.position[wwi.width - 2];
+        neibourgs[1] = wwi.position[2 * wwi.width - 1];
 
         acceleration.x = (x_length - (pos.x - neibourgs[0].x)) * m_stiffness + (neibourgs[1].x - pos.x) * m_stiffness;
         acceleration.y = ((neibourgs[1].y - pos.y) - y_length) * m_stiffness + (neibourgs[0].y - pos.y) * m_stiffness;
@@ -672,21 +679,21 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         acceleration.x /= 2;
         acceleration.y /= 2;
 
-        wwi.acceleration[wwi.width-1] = acceleration;
+        wwi.acceleration[wwi.width - 1] = acceleration;
     }
 
     // bottom-left
 
-    if (wwi.constraint[wwi.width*(wwi.height-1)]) {
-        Pair window_pos = wwi.origin[wwi.width*(wwi.height-1)];
-        Pair current_pos = wwi.position[wwi.width*(wwi.height-1)];
+    if (wwi.constraint[wwi.width * (wwi.height - 1)]) {
+        Pair window_pos = wwi.origin[wwi.width * (wwi.height - 1)];
+        Pair current_pos = wwi.position[wwi.width * (wwi.height - 1)];
         Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-        Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
-        wwi.acceleration[wwi.width*(wwi.height-1)] = accel;
+        Pair accel = {move.x * m_stiffness, move.y * m_stiffness};
+        wwi.acceleration[wwi.width * (wwi.height - 1)] = accel;
     } else {
-        Pair& pos = wwi.position[wwi.width*(wwi.height-1)];
-        neibourgs[0] = wwi.position[wwi.width*(wwi.height-1)+1];
-        neibourgs[1] = wwi.position[wwi.width*(wwi.height-2)];
+        Pair &pos = wwi.position[wwi.width * (wwi.height - 1)];
+        neibourgs[0] = wwi.position[wwi.width * (wwi.height - 1) + 1];
+        neibourgs[1] = wwi.position[wwi.width * (wwi.height - 2)];
 
         acceleration.x = ((neibourgs[0].x - pos.x) - x_length) * m_stiffness + (neibourgs[1].x - pos.x) * m_stiffness;
         acceleration.y = (y_length - (pos.y - neibourgs[1].y)) * m_stiffness + (neibourgs[0].y - pos.y) * m_stiffness;
@@ -694,21 +701,21 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         acceleration.x /= 2;
         acceleration.y /= 2;
 
-        wwi.acceleration[wwi.width*(wwi.height-1)] = acceleration;
+        wwi.acceleration[wwi.width * (wwi.height - 1)] = acceleration;
     }
 
     // bottom-right
 
-    if (wwi.constraint[wwi.count-1]) {
-        Pair window_pos = wwi.origin[wwi.count-1];
-        Pair current_pos = wwi.position[wwi.count-1];
+    if (wwi.constraint[wwi.count - 1]) {
+        Pair window_pos = wwi.origin[wwi.count - 1];
+        Pair current_pos = wwi.position[wwi.count - 1];
         Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-        Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
-        wwi.acceleration[wwi.count-1] = accel;
+        Pair accel = {move.x * m_stiffness, move.y * m_stiffness};
+        wwi.acceleration[wwi.count - 1] = accel;
     } else {
-        Pair& pos = wwi.position[wwi.count-1];
-        neibourgs[0] = wwi.position[wwi.count-2];
-        neibourgs[1] = wwi.position[wwi.width*(wwi.height-1)-1];
+        Pair &pos = wwi.position[wwi.count - 1];
+        neibourgs[0] = wwi.position[wwi.count - 2];
+        neibourgs[1] = wwi.position[wwi.width * (wwi.height - 1) - 1];
 
         acceleration.x = (x_length - (pos.x - neibourgs[0].x)) * m_stiffness + (neibourgs[1].x - pos.x) * m_stiffness;
         acceleration.y = (y_length - (pos.y - neibourgs[1].y)) * m_stiffness + (neibourgs[0].y - pos.y) * m_stiffness;
@@ -716,9 +723,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         acceleration.x /= 2;
         acceleration.y /= 2;
 
-        wwi.acceleration[wwi.count-1] = acceleration;
+        wwi.acceleration[wwi.count - 1] = acceleration;
     }
-
 
     // for borders
 
@@ -728,16 +734,18 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             Pair window_pos = wwi.origin[i];
             Pair current_pos = wwi.position[i];
             Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-            Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
+            Pair accel = {move.x * m_stiffness, move.y * m_stiffness};
             wwi.acceleration[i] = accel;
         } else {
-            Pair& pos = wwi.position[i];
-            neibourgs[0] = wwi.position[i-1];
-            neibourgs[1] = wwi.position[i+1];
-            neibourgs[2] = wwi.position[i+wwi.width];
+            Pair &pos = wwi.position[i];
+            neibourgs[0] = wwi.position[i - 1];
+            neibourgs[1] = wwi.position[i + 1];
+            neibourgs[2] = wwi.position[i + wwi.width];
 
-            acceleration.x = (x_length - (pos.x - neibourgs[0].x)) * m_stiffness + ((neibourgs[1].x - pos.x) - x_length) * m_stiffness + (neibourgs[2].x - pos.x) * m_stiffness;
-            acceleration.y = ((neibourgs[2].y - pos.y) - y_length) * m_stiffness + (neibourgs[0].y - pos.y) * m_stiffness + (neibourgs[1].y - pos.y) * m_stiffness;
+            acceleration.x = (x_length - (pos.x - neibourgs[0].x)) * m_stiffness + ((neibourgs[1].x - pos.x) - x_length) * m_stiffness
+                + (neibourgs[2].x - pos.x) * m_stiffness;
+            acceleration.y =
+                ((neibourgs[2].y - pos.y) - y_length) * m_stiffness + (neibourgs[0].y - pos.y) * m_stiffness + (neibourgs[1].y - pos.y) * m_stiffness;
 
             acceleration.x /= 3;
             acceleration.y /= 3;
@@ -752,16 +760,18 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             Pair window_pos = wwi.origin[i];
             Pair current_pos = wwi.position[i];
             Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-            Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
+            Pair accel = {move.x * m_stiffness, move.y * m_stiffness};
             wwi.acceleration[i] = accel;
         } else {
-            Pair& pos = wwi.position[i];
-            neibourgs[0] = wwi.position[i-1];
-            neibourgs[1] = wwi.position[i+1];
-            neibourgs[2] = wwi.position[i-wwi.width];
+            Pair &pos = wwi.position[i];
+            neibourgs[0] = wwi.position[i - 1];
+            neibourgs[1] = wwi.position[i + 1];
+            neibourgs[2] = wwi.position[i - wwi.width];
 
-            acceleration.x = (x_length - (pos.x - neibourgs[0].x)) * m_stiffness + ((neibourgs[1].x - pos.x) - x_length) * m_stiffness + (neibourgs[2].x - pos.x) * m_stiffness;
-            acceleration.y = (y_length - (pos.y - neibourgs[2].y)) * m_stiffness + (neibourgs[0].y - pos.y) * m_stiffness + (neibourgs[1].y - pos.y) * m_stiffness;
+            acceleration.x = (x_length - (pos.x - neibourgs[0].x)) * m_stiffness + ((neibourgs[1].x - pos.x) - x_length) * m_stiffness
+                + (neibourgs[2].x - pos.x) * m_stiffness;
+            acceleration.y =
+                (y_length - (pos.y - neibourgs[2].y)) * m_stiffness + (neibourgs[0].y - pos.y) * m_stiffness + (neibourgs[1].y - pos.y) * m_stiffness;
 
             acceleration.x /= 3;
             acceleration.y /= 3;
@@ -771,21 +781,23 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
     }
 
     // left border
-    for (unsigned int i = wwi.width; i < wwi.width*(wwi.height - 1); i += wwi.width) {
+    for (unsigned int i = wwi.width; i < wwi.width * (wwi.height - 1); i += wwi.width) {
         if (wwi.constraint[i]) {
             Pair window_pos = wwi.origin[i];
             Pair current_pos = wwi.position[i];
             Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-            Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
+            Pair accel = {move.x * m_stiffness, move.y * m_stiffness};
             wwi.acceleration[i] = accel;
         } else {
-            Pair& pos = wwi.position[i];
-            neibourgs[0] = wwi.position[i+1];
-            neibourgs[1] = wwi.position[i-wwi.width];
-            neibourgs[2] = wwi.position[i+wwi.width];
+            Pair &pos = wwi.position[i];
+            neibourgs[0] = wwi.position[i + 1];
+            neibourgs[1] = wwi.position[i - wwi.width];
+            neibourgs[2] = wwi.position[i + wwi.width];
 
-            acceleration.x = ((neibourgs[0].x - pos.x) - x_length) * m_stiffness + (neibourgs[1].x - pos.x) * m_stiffness + (neibourgs[2].x - pos.x) * m_stiffness;
-            acceleration.y = (y_length - (pos.y - neibourgs[1].y)) * m_stiffness + ((neibourgs[2].y - pos.y) - y_length) * m_stiffness + (neibourgs[0].y - pos.y) * m_stiffness;
+            acceleration.x =
+                ((neibourgs[0].x - pos.x) - x_length) * m_stiffness + (neibourgs[1].x - pos.x) * m_stiffness + (neibourgs[2].x - pos.x) * m_stiffness;
+            acceleration.y = (y_length - (pos.y - neibourgs[1].y)) * m_stiffness + ((neibourgs[2].y - pos.y) - y_length) * m_stiffness
+                + (neibourgs[0].y - pos.y) * m_stiffness;
 
             acceleration.x /= 3;
             acceleration.y /= 3;
@@ -800,16 +812,18 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             Pair window_pos = wwi.origin[i];
             Pair current_pos = wwi.position[i];
             Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-            Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
+            Pair accel = {move.x * m_stiffness, move.y * m_stiffness};
             wwi.acceleration[i] = accel;
         } else {
-            Pair& pos = wwi.position[i];
-            neibourgs[0] = wwi.position[i-1];
-            neibourgs[1] = wwi.position[i-wwi.width];
-            neibourgs[2] = wwi.position[i+wwi.width];
+            Pair &pos = wwi.position[i];
+            neibourgs[0] = wwi.position[i - 1];
+            neibourgs[1] = wwi.position[i - wwi.width];
+            neibourgs[2] = wwi.position[i + wwi.width];
 
-            acceleration.x = (x_length - (pos.x - neibourgs[0].x)) * m_stiffness + (neibourgs[1].x - pos.x) * m_stiffness + (neibourgs[2].x - pos.x) * m_stiffness;
-            acceleration.y = (y_length - (pos.y - neibourgs[1].y)) * m_stiffness + ((neibourgs[2].y - pos.y) - y_length) * m_stiffness + (neibourgs[0].y - pos.y) * m_stiffness;
+            acceleration.x =
+                (x_length - (pos.x - neibourgs[0].x)) * m_stiffness + (neibourgs[1].x - pos.x) * m_stiffness + (neibourgs[2].x - pos.x) * m_stiffness;
+            acceleration.y = (y_length - (pos.y - neibourgs[1].y)) * m_stiffness + ((neibourgs[2].y - pos.y) - y_length) * m_stiffness
+                + (neibourgs[0].y - pos.y) * m_stiffness;
 
             acceleration.x /= 3;
             acceleration.y /= 3;
@@ -827,23 +841,19 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
                 Pair window_pos = wwi.origin[index];
                 Pair current_pos = wwi.position[index];
                 Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-                Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
+                Pair accel = {move.x * m_stiffness, move.y * m_stiffness};
                 wwi.acceleration[index] = accel;
             } else {
-                Pair& pos = wwi.position[index];
-                neibourgs[0] = wwi.position[index-1];
-                neibourgs[1] = wwi.position[index+1];
-                neibourgs[2] = wwi.position[index-wwi.width];
-                neibourgs[3] = wwi.position[index+wwi.width];
+                Pair &pos = wwi.position[index];
+                neibourgs[0] = wwi.position[index - 1];
+                neibourgs[1] = wwi.position[index + 1];
+                neibourgs[2] = wwi.position[index - wwi.width];
+                neibourgs[3] = wwi.position[index + wwi.width];
 
-                acceleration.x = ((neibourgs[0].x - pos.x) - x_length) * m_stiffness +
-                                 (x_length - (pos.x - neibourgs[1].x)) * m_stiffness +
-                                 (neibourgs[2].x - pos.x) * m_stiffness +
-                                 (neibourgs[3].x - pos.x) * m_stiffness;
-                acceleration.y = (y_length - (pos.y - neibourgs[2].y)) * m_stiffness +
-                                 ((neibourgs[3].y - pos.y) - y_length) * m_stiffness +
-                                 (neibourgs[0].y - pos.y) * m_stiffness +
-                                 (neibourgs[1].y - pos.y) * m_stiffness;
+                acceleration.x = ((neibourgs[0].x - pos.x) - x_length) * m_stiffness + (x_length - (pos.x - neibourgs[1].x)) * m_stiffness
+                    + (neibourgs[2].x - pos.x) * m_stiffness + (neibourgs[3].x - pos.x) * m_stiffness;
+                acceleration.y = (y_length - (pos.y - neibourgs[2].y)) * m_stiffness + ((neibourgs[3].y - pos.y) - y_length) * m_stiffness
+                    + (neibourgs[0].y - pos.y) * m_stiffness + (neibourgs[1].y - pos.y) * m_stiffness;
 
                 acceleration.x /= 4;
                 acceleration.y /= 4;
@@ -869,7 +879,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         computeVectorBounds(acc, accBound);
 #endif
 
-        Pair& vel = wwi.velocity[i];
+        Pair &vel = wwi.velocity[i];
         vel.x = acc.x * time + vel.x * m_drag;
         vel.y = acc.y * time + vel.y * m_drag;
 
@@ -880,8 +890,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
 
     // compute the new pos of each vertex.
     for (unsigned int i = 0; i < wwi.count; ++i) {
-        Pair& pos = wwi.position[i];
-        Pair& vel = wwi.velocity[i];
+        Pair &pos = wwi.position[i];
+        Pair &vel = wwi.velocity[i];
 
         fixVectorBounds(vel, m_minVelocity, m_maxVelocity);
 #if defined COMPUTE_STATS
@@ -895,7 +905,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
 
 #if defined VERBOSE_MODE
         if (wwi.constraint[i]) {
-            qCDebug(KWINEFFECTS) << "Constraint point ** vel : " << vel.x << "," << vel.y << " ** move : " << vel.x*time << "," << vel.y*time;
+            qCDebug(KWINEFFECTS) << "Constraint point ** vel : " << vel.x << "," << vel.y << " ** move : " << vel.x * time << "," << vel.y * time;
         }
 #endif
     }
@@ -903,29 +913,29 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
     if (!wwi.can_wobble_top) {
         for (unsigned int i = 0; i < wwi.width; ++i)
             for (unsigned j = 0; j < wwi.width - 1; ++j)
-                wwi.position[i+wwi.width*j].y = wwi.origin[i+wwi.width*j].y;
+                wwi.position[i + wwi.width * j].y = wwi.origin[i + wwi.width * j].y;
     }
     if (!wwi.can_wobble_bottom) {
         for (unsigned int i = wwi.width * (wwi.height - 1); i < wwi.count; ++i)
             for (unsigned j = 0; j < wwi.width - 1; ++j)
-                wwi.position[i-wwi.width*j].y = wwi.origin[i-wwi.width*j].y;
+                wwi.position[i - wwi.width * j].y = wwi.origin[i - wwi.width * j].y;
     }
     if (!wwi.can_wobble_left) {
         for (unsigned int i = 0; i < wwi.count; i += wwi.width)
             for (unsigned j = 0; j < wwi.width - 1; ++j)
-                wwi.position[i+j].x = wwi.origin[i+j].x;
+                wwi.position[i + j].x = wwi.origin[i + j].x;
     }
     if (!wwi.can_wobble_right) {
         for (unsigned int i = wwi.width - 1; i < wwi.count; i += wwi.width)
             for (unsigned j = 0; j < wwi.width - 1; ++j)
-                wwi.position[i-j].x = wwi.origin[i-j].x;
+                wwi.position[i - j].x = wwi.origin[i - j].x;
     }
 
 #if defined VERBOSE_MODE
-#   if defined COMPUTE_STATS
+#if defined COMPUTE_STATS
     qCDebug(KWINEFFECTS) << "Acceleration bounds (" << accBound.x << ", " << accBound.y << ")";
     qCDebug(KWINEFFECTS) << "Velocity bounds (" << velBound.x << ", " << velBound.y << ")";
-#   endif
+#endif
     qCDebug(KWINEFFECTS) << "sum_acc : " << acc_sum << "  ***  sum_vel :" << vel_sum;
 #endif
 
@@ -941,76 +951,72 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
     return true;
 }
 
-void WobblyWindowsEffect::heightRingLinearMean(Pair** data_pointer, WindowWobblyInfos& wwi)
+void WobblyWindowsEffect::heightRingLinearMean(Pair **data_pointer, WindowWobblyInfos &wwi)
 {
-    Pair* data = *data_pointer;
+    Pair *data = *data_pointer;
     Pair neibourgs[8];
 
     // for corners
 
     // top-left
     {
-        Pair& res = wwi.buffer[0];
+        Pair &res = wwi.buffer[0];
         Pair vit = data[0];
         neibourgs[0] = data[1];
         neibourgs[1] = data[wwi.width];
-        neibourgs[2] = data[wwi.width+1];
+        neibourgs[2] = data[wwi.width + 1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0 * vit.x) / 6.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0 * vit.y) / 6.0;
     }
-
 
     // top-right
     {
-        Pair& res = wwi.buffer[wwi.width-1];
-        Pair vit = data[wwi.width-1];
-        neibourgs[0] = data[wwi.width-2];
-        neibourgs[1] = data[2*wwi.width-1];
-        neibourgs[2] = data[2*wwi.width-2];
+        Pair &res = wwi.buffer[wwi.width - 1];
+        Pair vit = data[wwi.width - 1];
+        neibourgs[0] = data[wwi.width - 2];
+        neibourgs[1] = data[2 * wwi.width - 1];
+        neibourgs[2] = data[2 * wwi.width - 2];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0 * vit.x) / 6.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0 * vit.y) / 6.0;
     }
-
 
     // bottom-left
     {
-        Pair& res = wwi.buffer[wwi.width*(wwi.height-1)];
-        Pair vit = data[wwi.width*(wwi.height-1)];
-        neibourgs[0] = data[wwi.width*(wwi.height-1)+1];
-        neibourgs[1] = data[wwi.width*(wwi.height-2)];
-        neibourgs[2] = data[wwi.width*(wwi.height-2)+1];
+        Pair &res = wwi.buffer[wwi.width * (wwi.height - 1)];
+        Pair vit = data[wwi.width * (wwi.height - 1)];
+        neibourgs[0] = data[wwi.width * (wwi.height - 1) + 1];
+        neibourgs[1] = data[wwi.width * (wwi.height - 2)];
+        neibourgs[2] = data[wwi.width * (wwi.height - 2) + 1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0 * vit.x) / 6.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0 * vit.y) / 6.0;
     }
-
 
     // bottom-right
     {
-        Pair& res = wwi.buffer[wwi.count-1];
-        Pair vit = data[wwi.count-1];
-        neibourgs[0] = data[wwi.count-2];
-        neibourgs[1] = data[wwi.width*(wwi.height-1)-1];
-        neibourgs[2] = data[wwi.width*(wwi.height-1)-2];
+        Pair &res = wwi.buffer[wwi.count - 1];
+        Pair vit = data[wwi.count - 1];
+        neibourgs[0] = data[wwi.count - 2];
+        neibourgs[1] = data[wwi.width * (wwi.height - 1) - 1];
+        neibourgs[2] = data[wwi.width * (wwi.height - 1) - 2];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0 * vit.x) / 6.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0 * vit.y) / 6.0;
     }
-
 
     // for borders
 
     // top border
     for (unsigned int i = 1; i < wwi.width - 1; ++i) {
-        Pair& res = wwi.buffer[i];
+        Pair &res = wwi.buffer[i];
         Pair vit = data[i];
-        neibourgs[0] = data[i-1];
-        neibourgs[1] = data[i+1];
-        neibourgs[2] = data[i+wwi.width];
-        neibourgs[3] = data[i+wwi.width-1];
-        neibourgs[4] = data[i+wwi.width+1];
+        neibourgs[0] = data[i - 1];
+        neibourgs[1] = data[i + 1];
+        neibourgs[2] = data[i + wwi.width];
+        neibourgs[3] = data[i + wwi.width - 1];
+        neibourgs[4] = data[i + wwi.width + 1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0 * vit.x) / 10.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0 * vit.y) / 10.0;
@@ -1018,27 +1024,27 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** data_pointer, WindowWobbly
 
     // bottom border
     for (unsigned int i = wwi.width * (wwi.height - 1) + 1; i < wwi.count - 1; ++i) {
-        Pair& res = wwi.buffer[i];
+        Pair &res = wwi.buffer[i];
         Pair vit = data[i];
-        neibourgs[0] = data[i-1];
-        neibourgs[1] = data[i+1];
-        neibourgs[2] = data[i-wwi.width];
-        neibourgs[3] = data[i-wwi.width-1];
-        neibourgs[4] = data[i-wwi.width+1];
+        neibourgs[0] = data[i - 1];
+        neibourgs[1] = data[i + 1];
+        neibourgs[2] = data[i - wwi.width];
+        neibourgs[3] = data[i - wwi.width - 1];
+        neibourgs[4] = data[i - wwi.width + 1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0 * vit.x) / 10.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0 * vit.y) / 10.0;
     }
 
     // left border
-    for (unsigned int i = wwi.width; i < wwi.width*(wwi.height - 1); i += wwi.width) {
-        Pair& res = wwi.buffer[i];
+    for (unsigned int i = wwi.width; i < wwi.width * (wwi.height - 1); i += wwi.width) {
+        Pair &res = wwi.buffer[i];
         Pair vit = data[i];
-        neibourgs[0] = data[i+1];
-        neibourgs[1] = data[i-wwi.width];
-        neibourgs[2] = data[i+wwi.width];
-        neibourgs[3] = data[i-wwi.width+1];
-        neibourgs[4] = data[i+wwi.width+1];
+        neibourgs[0] = data[i + 1];
+        neibourgs[1] = data[i - wwi.width];
+        neibourgs[2] = data[i + wwi.width];
+        neibourgs[3] = data[i - wwi.width + 1];
+        neibourgs[4] = data[i + wwi.width + 1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0 * vit.x) / 10.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0 * vit.y) / 10.0;
@@ -1046,13 +1052,13 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** data_pointer, WindowWobbly
 
     // right border
     for (unsigned int i = 2 * wwi.width - 1; i < wwi.count - 1; i += wwi.width) {
-        Pair& res = wwi.buffer[i];
+        Pair &res = wwi.buffer[i];
         Pair vit = data[i];
-        neibourgs[0] = data[i-1];
-        neibourgs[1] = data[i-wwi.width];
-        neibourgs[2] = data[i+wwi.width];
-        neibourgs[3] = data[i-wwi.width-1];
-        neibourgs[4] = data[i+wwi.width-1];
+        neibourgs[0] = data[i - 1];
+        neibourgs[1] = data[i - wwi.width];
+        neibourgs[2] = data[i + wwi.width];
+        neibourgs[3] = data[i - wwi.width - 1];
+        neibourgs[4] = data[i + wwi.width - 1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0 * vit.x) / 10.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0 * vit.y) / 10.0;
@@ -1063,23 +1069,27 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** data_pointer, WindowWobbly
         for (unsigned int i = 1; i < wwi.width - 1; ++i) {
             unsigned int index = i + j * wwi.width;
 
-            Pair& res = wwi.buffer[index];
-            Pair& vit = data[index];
-            neibourgs[0] = data[index-1];
-            neibourgs[1] = data[index+1];
-            neibourgs[2] = data[index-wwi.width];
-            neibourgs[3] = data[index+wwi.width];
-            neibourgs[4] = data[index-wwi.width-1];
-            neibourgs[5] = data[index-wwi.width+1];
-            neibourgs[6] = data[index+wwi.width-1];
-            neibourgs[7] = data[index+wwi.width+1];
+            Pair &res = wwi.buffer[index];
+            Pair &vit = data[index];
+            neibourgs[0] = data[index - 1];
+            neibourgs[1] = data[index + 1];
+            neibourgs[2] = data[index - wwi.width];
+            neibourgs[3] = data[index + wwi.width];
+            neibourgs[4] = data[index - wwi.width - 1];
+            neibourgs[5] = data[index - wwi.width + 1];
+            neibourgs[6] = data[index + wwi.width - 1];
+            neibourgs[7] = data[index + wwi.width + 1];
 
-            res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + neibourgs[5].x + neibourgs[6].x + neibourgs[7].x + 8.0 * vit.x) / 16.0;
-            res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + neibourgs[5].y + neibourgs[6].y + neibourgs[7].y + 8.0 * vit.y) / 16.0;
+            res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + neibourgs[5].x + neibourgs[6].x + neibourgs[7].x
+                     + 8.0 * vit.x)
+                / 16.0;
+            res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + neibourgs[5].y + neibourgs[6].y + neibourgs[7].y
+                     + 8.0 * vit.y)
+                / 16.0;
         }
     }
 
-    Pair* tmp = data;
+    Pair *tmp = data;
     *data_pointer = wwi.buffer;
     wwi.buffer = tmp;
 }

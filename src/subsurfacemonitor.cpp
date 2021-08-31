@@ -16,7 +16,6 @@ using namespace KWaylandServer;
 
 namespace KWin
 {
-
 SubSurfaceMonitor::SubSurfaceMonitor(SurfaceInterface *surface, QObject *parent)
     : QObject(parent)
 {
@@ -27,20 +26,15 @@ void SubSurfaceMonitor::registerSubSurface(SubSurfaceInterface *subSurface)
 {
     SurfaceInterface *surface = subSurface->surface();
 
-    connect(subSurface, &SubSurfaceInterface::positionChanged,
-            this, &SubSurfaceMonitor::subSurfaceMoved);
-    connect(surface, &SurfaceInterface::sizeChanged,
-            this, &SubSurfaceMonitor::subSurfaceResized);
-    connect(surface, &SurfaceInterface::mapped,
-            this, &SubSurfaceMonitor::subSurfaceMapped);
-    connect(surface, &SurfaceInterface::unmapped,
-            this, &SubSurfaceMonitor::subSurfaceUnmapped);
-    connect(surface, &SurfaceInterface::surfaceToBufferMatrixChanged,
-            this, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged);
-    connect(surface, &SurfaceInterface::bufferSizeChanged,
-            this, &SubSurfaceMonitor::subSurfaceBufferSizeChanged);
-    connect(surface, &SurfaceInterface::committed,
-            this, [this, subSurface]() { Q_EMIT subSurfaceCommitted(subSurface); });
+    connect(subSurface, &SubSurfaceInterface::positionChanged, this, &SubSurfaceMonitor::subSurfaceMoved);
+    connect(surface, &SurfaceInterface::sizeChanged, this, &SubSurfaceMonitor::subSurfaceResized);
+    connect(surface, &SurfaceInterface::mapped, this, &SubSurfaceMonitor::subSurfaceMapped);
+    connect(surface, &SurfaceInterface::unmapped, this, &SubSurfaceMonitor::subSurfaceUnmapped);
+    connect(surface, &SurfaceInterface::surfaceToBufferMatrixChanged, this, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged);
+    connect(surface, &SurfaceInterface::bufferSizeChanged, this, &SubSurfaceMonitor::subSurfaceBufferSizeChanged);
+    connect(surface, &SurfaceInterface::committed, this, [this, subSurface]() {
+        Q_EMIT subSurfaceCommitted(subSurface);
+    });
 
     registerSurface(surface);
 }
@@ -58,14 +52,10 @@ void SubSurfaceMonitor::unregisterSubSurface(SubSurfaceInterface *subSurface)
 
 void SubSurfaceMonitor::registerSurface(SurfaceInterface *surface)
 {
-    connect(surface, &SurfaceInterface::childSubSurfaceAdded,
-            this, &SubSurfaceMonitor::subSurfaceAdded);
-    connect(surface, &SurfaceInterface::childSubSurfaceRemoved,
-            this, &SubSurfaceMonitor::subSurfaceRemoved);
-    connect(surface, &SurfaceInterface::childSubSurfaceAdded,
-            this, &SubSurfaceMonitor::registerSubSurface);
-    connect(surface, &SurfaceInterface::childSubSurfaceRemoved,
-            this, &SubSurfaceMonitor::unregisterSubSurface);
+    connect(surface, &SurfaceInterface::childSubSurfaceAdded, this, &SubSurfaceMonitor::subSurfaceAdded);
+    connect(surface, &SurfaceInterface::childSubSurfaceRemoved, this, &SubSurfaceMonitor::subSurfaceRemoved);
+    connect(surface, &SurfaceInterface::childSubSurfaceAdded, this, &SubSurfaceMonitor::registerSubSurface);
+    connect(surface, &SurfaceInterface::childSubSurfaceRemoved, this, &SubSurfaceMonitor::unregisterSubSurface);
 
     const QList<SubSurfaceInterface *> below = surface->below();
     for (SubSurfaceInterface *childSubSurface : below) {

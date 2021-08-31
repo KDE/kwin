@@ -8,36 +8,31 @@
 */
 #include "scene_qpainter_drm_backend.h"
 #include "drm_backend.h"
-#include "drm_output.h"
 #include "drm_gpu.h"
+#include "drm_output.h"
 #include "renderloop_p.h"
 
 namespace KWin
 {
-
 DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu)
     : QPainterBackend()
     , m_backend(backend)
     , m_gpu(gpu)
 {
     const auto outputs = m_backend->drmOutputs();
-    for (auto output: outputs) {
+    for (auto output : outputs) {
         initOutput(output);
     }
     connect(m_gpu, &DrmGpu::outputEnabled, this, &DrmQPainterBackend::initOutput);
-    connect(m_gpu, &DrmGpu::outputDisabled, this,
-        [this] (DrmAbstractOutput *o) {
-            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                [o] (const Output &output) {
-                    return output.output == o;
-                }
-            );
-            if (it == m_outputs.end()) {
-                return;
-            }
-            m_outputs.erase(it);
+    connect(m_gpu, &DrmGpu::outputDisabled, this, [this](DrmAbstractOutput *o) {
+        auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [o](const Output &output) {
+            return output.output == o;
+        });
+        if (it == m_outputs.end()) {
+            return;
         }
-    );
+        m_outputs.erase(it);
+    });
 }
 
 void DrmQPainterBackend::initOutput(DrmAbstractOutput *output)
@@ -46,13 +41,11 @@ void DrmQPainterBackend::initOutput(DrmAbstractOutput *output)
     o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize());
     o.output = output;
     m_outputs.insert(output, o);
-    connect(output, &DrmOutput::modeChanged, this,
-        [output, this] {
-            auto &o = m_outputs[output];
-            o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize());
-            o.damageJournal.setCapacity(o.swapchain->slotCount());
-        }
-    );
+    connect(output, &DrmOutput::modeChanged, this, [output, this] {
+        auto &o = m_outputs[output];
+        o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize());
+        o.damageJournal.setCapacity(o.swapchain->slotCount());
+    });
 }
 
 QImage *DrmQPainterBackend::bufferForScreen(AbstractOutput *output)

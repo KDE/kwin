@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class X11PlaceholderOutput : public AbstractOutput
 {
     Q_OBJECT

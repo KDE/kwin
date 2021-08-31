@@ -37,7 +37,6 @@ Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
 Q_LOGGING_CATEGORY(KWIN_VIRTUALKEYBOARD, "kwin_virtualkeyboard", QtWarningMsg)
 namespace KWin
 {
-
 #ifndef KCMRULES
 
 //************************************
@@ -56,7 +55,7 @@ StrutRect::StrutRect(int x, int y, int width, int height, StrutArea area)
 {
 }
 
-StrutRect::StrutRect(const StrutRect& other)
+StrutRect::StrutRect(const StrutRect &other)
     : QRect(other)
     , m_area(other.area())
 {
@@ -115,8 +114,7 @@ bool grabXKeyboard(xcb_window_t w)
         return false;
     if (w == XCB_WINDOW_NONE)
         w = rootWindow();
-    const xcb_grab_keyboard_cookie_t c = xcb_grab_keyboard_unchecked(connection(), false, w, xTime(),
-                                                                     XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
+    const xcb_grab_keyboard_cookie_t c = xcb_grab_keyboard_unchecked(connection(), false, w, xTime(), XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
     ScopedCPointer<xcb_grab_keyboard_reply_t> grab(xcb_grab_keyboard_reply(connection(), c, nullptr));
     if (grab.isNull()) {
         return false;

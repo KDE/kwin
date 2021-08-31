@@ -21,7 +21,8 @@ Q_DECLARE_LOGGING_CATEGORY(AURORAE)
 
 class KConfig;
 
-namespace Aurorae {
+namespace Aurorae
+{
 class AuroraeThemePrivate;
 class ThemeConfig;
 
@@ -103,7 +104,7 @@ class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
     Q_PROPERTY(Qt::Alignment horizontalAlignment READ alignment NOTIFY themeChanged)
     Q_PROPERTY(Qt::Alignment verticalAlignment READ verticalAlignment NOTIFY themeChanged)
 public:
-    explicit AuroraeTheme(QObject* parent = nullptr);
+    explicit AuroraeTheme(QObject *parent = nullptr);
     ~AuroraeTheme() override;
     // TODO: KSharedConfigPtr
     void loadTheme(const QString &name, const KConfig &config);
@@ -209,7 +210,7 @@ private:
      */
     void padding(int &left, int &top, int &right, int &bottom) const;
 
-    AuroraeThemePrivate* const d;
+    AuroraeThemePrivate *const d;
 };
 
 } // namespace

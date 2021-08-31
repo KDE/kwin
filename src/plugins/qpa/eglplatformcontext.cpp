@@ -29,7 +29,6 @@ namespace KWin
 {
 namespace QPA
 {
-
 EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EGLDisplay display)
     : m_eglDisplay(display)
 {

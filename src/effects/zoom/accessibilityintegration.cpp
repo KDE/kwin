@@ -13,7 +13,6 @@ using namespace QAccessibleClient; // Whatever, sue me...
 
 namespace KWin
 {
-
 ZoomAccessibilityIntegration::ZoomAccessibilityIntegration(QObject *parent)
     : QObject(parent)
 {
@@ -73,10 +72,8 @@ void ZoomAccessibilityIntegration::createAccessibilityRegistry()
 {
     m_accessibilityRegistry = new Registry(this);
 
-    connect(m_accessibilityRegistry, &Registry::textCaretMoved,
-            this, &ZoomAccessibilityIntegration::slotFocusChanged);
-    connect(m_accessibilityRegistry, &Registry::focusChanged,
-            this, &ZoomAccessibilityIntegration::slotFocusChanged);
+    connect(m_accessibilityRegistry, &Registry::textCaretMoved, this, &ZoomAccessibilityIntegration::slotFocusChanged);
+    connect(m_accessibilityRegistry, &Registry::focusChanged, this, &ZoomAccessibilityIntegration::slotFocusChanged);
 }
 
 void ZoomAccessibilityIntegration::destroyAccessibilityRegistry()

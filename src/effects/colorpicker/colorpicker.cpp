@@ -7,15 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpicker.h"
+#include <KLocalizedString>
+#include <QDBusConnection>
+#include <QDBusMetaType>
 #include <kwinglutils.h>
 #include <kwinglutils_funcs.h>
-#include <QDBusConnection>
-#include <KLocalizedString>
-#include <QDBusMetaType>
 
 Q_DECLARE_METATYPE(QColor)
 
-QDBusArgument &operator<< (QDBusArgument &argument, const QColor &color)
+QDBusArgument &operator<<(QDBusArgument &argument, const QColor &color)
 {
     argument.beginStructure();
     argument << color.rgba();
@@ -35,7 +35,6 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, QColor &color)
 
 namespace KWin
 {
-
 bool ColorPickerEffect::supported()
 {
     return effects->isOpenGLCompositing();
@@ -64,7 +63,8 @@ void ColorPickerEffect::postPaintScreen()
         uint8_t data[3];
         const QRect geo = GLRenderTarget::virtualScreenGeometry();
         const QPoint screenPosition(m_scheduledPosition.x() - geo.x(), m_scheduledPosition.y() - geo.y());
-        const QPoint texturePosition(screenPosition.x() * GLRenderTarget::virtualScreenScale(), (geo.height() - screenPosition.y()) * GLRenderTarget::virtualScreenScale());
+        const QPoint texturePosition(screenPosition.x() * GLRenderTarget::virtualScreenScale(),
+                                     (geo.height() - screenPosition.y()) * GLRenderTarget::virtualScreenScale());
 
         glReadnPixels(texturePosition.x(), texturePosition.y(), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, 3, data);
         QDBusConnection::sessionBus().send(m_replyMessage.createReply(QColor(data[0], data[1], data[2])));
@@ -86,25 +86,25 @@ QColor ColorPickerEffect::pick()
     m_replyMessage = message();
     setDelayedReply(true);
     showInfoMessage();
-    effects->startInteractivePositionSelection(
-        [this] (const QPoint &p) {
-            hideInfoMessage();
-            if (p == QPoint(-1, -1)) {
-                // error condition
-                QDBusConnection::sessionBus().send(m_replyMessage.createErrorReply(QStringLiteral("org.kde.kwin.ColorPicker.Error.Cancelled"), "Color picking got cancelled"));
-                m_picking = false;
-            } else {
-                m_scheduledPosition = p;
-                effects->addRepaintFull();
-            }
+    effects->startInteractivePositionSelection([this](const QPoint &p) {
+        hideInfoMessage();
+        if (p == QPoint(-1, -1)) {
+            // error condition
+            QDBusConnection::sessionBus().send(
+                m_replyMessage.createErrorReply(QStringLiteral("org.kde.kwin.ColorPicker.Error.Cancelled"), "Color picking got cancelled"));
+            m_picking = false;
+        } else {
+            m_scheduledPosition = p;
+            effects->addRepaintFull();
         }
-    );
+    });
     return QColor();
 }
 
 void ColorPickerEffect::showInfoMessage()
 {
-    effects->showOnScreenMessage(i18n("Select a position for color picking with left click or enter.\nEscape or right click to cancel."), QStringLiteral("color-picker"));
+    effects->showOnScreenMessage(i18n("Select a position for color picking with left click or enter.\nEscape or right click to cancel."),
+                                 QStringLiteral("color-picker"));
 }
 
 void ColorPickerEffect::hideInfoMessage()

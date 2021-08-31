@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class EffectsFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT

@@ -9,7 +9,6 @@
 
 namespace KWin
 {
-
 X11PlaceholderOutput::X11PlaceholderOutput(QObject *parent)
     : AbstractOutput(parent)
 {

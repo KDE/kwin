@@ -14,12 +14,12 @@
 #include "input.h"
 #include "keyboard_input.h"
 
+#include <QMutex>
 #include <QObject>
 #include <QPointer>
 #include <QSize>
-#include <QMutex>
-#include <QVector>
 #include <QStringList>
+#include <QVector>
 
 class QSocketNotifier;
 class QThread;
@@ -28,7 +28,6 @@ namespace KWin
 {
 namespace LibInput
 {
-
 class Event;
 class Device;
 class Context;
@@ -40,7 +39,8 @@ class KWIN_EXPORT Connection : public QObject
 public:
     ~Connection() override;
 
-    void setInputConfig(const KSharedConfigPtr &config) {
+    void setInputConfig(const KSharedConfigPtr &config)
+    {
         m_config = config;
     }
 
@@ -53,19 +53,24 @@ public:
 
     void updateScreens();
 
-    bool hasKeyboard() const {
+    bool hasKeyboard() const
+    {
         return m_keyboard > 0;
     }
-    bool hasAlphaNumericKeyboard() const {
+    bool hasAlphaNumericKeyboard() const
+    {
         return m_alphaNumericKeyboard > 0;
     }
-    bool hasTouch() const {
+    bool hasTouch() const
+    {
         return m_touch > 0;
     }
-    bool hasPointer() const {
+    bool hasPointer() const
+    {
         return m_pointer > 0;
     }
-    bool hasTabletModeSwitch() const {
+    bool hasTabletModeSwitch() const
+    {
         return m_tabletModeSwitch > 0;
     }
 
@@ -79,7 +84,8 @@ public:
     void enableTouchpads();
     void disableTouchpads();
 
-    QVector<Device*> devices() const {
+    QVector<Device *> devices() const
+    {
         return m_devices;
     }
 
@@ -94,8 +100,12 @@ Q_SIGNALS:
     void pointerButtonChanged(quint32 button, KWin::InputRedirection::PointerButtonState state, quint32 time, KWin::LibInput::Device *device);
     void pointerMotionAbsolute(QPointF orig, QPointF screen, quint32 time, KWin::LibInput::Device *device);
     void pointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint32 time, quint64 timeMicroseconds, KWin::LibInput::Device *device);
-    void pointerAxisChanged(KWin::InputRedirection::PointerAxis axis, qreal delta, qint32 discreteDelta,
-        KWin::InputRedirection::PointerAxisSource source, quint32 time, KWin::LibInput::Device *device);
+    void pointerAxisChanged(KWin::InputRedirection::PointerAxis axis,
+                            qreal delta,
+                            qint32 discreteDelta,
+                            KWin::InputRedirection::PointerAxisSource source,
+                            quint32 time,
+                            KWin::LibInput::Device *device);
     void touchFrame(KWin::LibInput::Device *device);
     void touchCanceled(KWin::LibInput::Device *device);
     void touchDown(qint32 id, const QPointF &absolutePos, quint32 time, KWin::LibInput::Device *device);
@@ -121,9 +131,16 @@ Q_SIGNALS:
     void switchToggledOn(quint32 time, quint64 timeMicroseconds, KWin::LibInput::Device *device);
     void switchToggledOff(quint32 time, quint64 timeMicroseconds, KWin::LibInput::Device *device);
 
-    void tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
-                         qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
-                         bool tipNear, const TabletToolId &tabletToolId, quint32 time);
+    void tabletToolEvent(KWin::InputRedirection::TabletEventType type,
+                         const QPointF &pos,
+                         qreal pressure,
+                         int xTilt,
+                         int yTilt,
+                         qreal rotation,
+                         bool tipDown,
+                         bool tipNear,
+                         const TabletToolId &tabletToolId,
+                         quint32 time);
     void tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &tabletToolId);
 
     void tabletPadButtonEvent(uint button, bool isPressed, const TabletPadId &tabletPadId);
@@ -155,9 +172,9 @@ private:
     bool m_touchBeforeSuspend = false;
     bool m_tabletModeSwitchBeforeSuspend = false;
     QMutex m_mutex;
-    QVector<Event*> m_eventQueue;
+    QVector<Event *> m_eventQueue;
     bool wasSuspended = false;
-    QVector<Device*> m_devices;
+    QVector<Device *> m_devices;
     KSharedConfigPtr m_config;
     bool m_touchpadsEnabled = true;
     Xkb::LEDs m_leds;

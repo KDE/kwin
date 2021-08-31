@@ -8,8 +8,8 @@
 */
 #pragma once
 
-#include <QVector>
 #include <QByteArray>
+#include <QVector>
 
 // drm
 #include <xf86drmMode.h>
@@ -18,7 +18,6 @@
 
 namespace KWin
 {
-
 class DrmBackend;
 class DrmGpu;
 class DrmOutput;
@@ -34,11 +33,13 @@ public:
      */
     virtual bool init() = 0;
 
-    uint32_t id() const {
+    uint32_t id() const
+    {
         return m_id;
     }
 
-    DrmGpu *gpu() const {
+    DrmGpu *gpu() const
+    {
         return m_gpu;
     }
 
@@ -49,7 +50,7 @@ public:
      */
     bool atomicPopulate(drmModeAtomicReq *req) const;
 
-    template <typename T>
+    template<typename T>
     bool setPending(T prop, uint64_t new_value)
     {
         if (auto &property = m_props.at(static_cast<uint32_t>(prop))) {
@@ -59,7 +60,7 @@ public:
         return false;
     }
 
-    template <typename T>
+    template<typename T>
     bool setPendingBlob(T prop, void *data, size_t length)
     {
         if (auto &property = m_props.at(static_cast<uint32_t>(prop))) {
@@ -68,7 +69,7 @@ public:
         return false;
     }
 
-    template <typename T>
+    template<typename T>
     bool propHasEnum(T prop, uint64_t value) const
     {
         const auto &property = m_props.at(static_cast<uint32_t>(prop));
@@ -83,18 +84,22 @@ public:
 
         void initEnumMap(drmModePropertyRes *prop);
 
-        QVector<QByteArray> enumNames() const {
+        QVector<QByteArray> enumNames() const
+        {
             return m_enumNames;
         }
-        QVector<uint64_t> enumMap() const {
+        QVector<uint64_t> enumMap() const
+        {
             return m_enumMap;
         }
-        bool hasEnum(uint64_t value) const {
+        bool hasEnum(uint64_t value) const
+        {
             return m_enumMap.contains(value);
         }
 
-        template <typename T>
-        bool setEnum(T index) {
+        template<typename T>
+        bool setEnum(T index)
+        {
             if (hasEnum(static_cast<uint64_t>(index))) {
                 setPending(m_enumMap[static_cast<uint32_t>(index)]);
                 return true;
@@ -102,22 +107,27 @@ public:
             return false;
         }
 
-        uint32_t propId() const {
+        uint32_t propId() const
+        {
             return m_propId;
         }
-        const QByteArray &name() const {
+        const QByteArray &name() const
+        {
             return m_propName;
         }
-        bool isImmutable() const {
+        bool isImmutable() const
+        {
             return m_immutable;
         }
-        bool isLegacy() const {
+        bool isLegacy() const
+        {
             return m_legacy;
         }
         /**
          * Makes this property be ignored by DrmObject::atomicPopulate
          */
-        void setLegacy() {
+        void setLegacy()
+        {
             m_legacy = true;
         }
 
@@ -159,12 +169,13 @@ public:
         const DrmGpu *m_gpu;
     };
 
-    template <typename T>
-    Property *getProp(T propIndex) const {
+    template<typename T>
+    Property *getProp(T propIndex) const
+    {
         return m_props[static_cast<uint32_t>(propIndex)];
     }
 
-    QVector<Property*> properties();
+    QVector<Property *> properties();
     void commit();
     void commitPending();
     void rollbackPending();
@@ -175,12 +186,8 @@ public:
     virtual bool updateProperties();
 
 protected:
-    enum class Requirement {
-        Required,
-        Optional
-    };
-    struct PropertyDefinition
-    {
+    enum class Requirement { Required, Optional };
+    struct PropertyDefinition {
         PropertyDefinition(const QByteArray &name, Requirement requirement, const QVector<QByteArray> &&enumNames = {})
             : name(name)
             , requirement(requirement)
@@ -196,7 +203,7 @@ protected:
 
     bool initProps();
 
-    template <typename T>
+    template<typename T>
     void deleteProp(T prop)
     {
         delete m_props[static_cast<uint32_t>(prop)];
@@ -214,4 +221,4 @@ private:
 
 }
 
-QDebug operator<<(QDebug stream, const KWin::DrmObject*);
+QDebug operator<<(QDebug stream, const KWin::DrmObject *);

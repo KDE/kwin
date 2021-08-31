@@ -16,7 +16,6 @@
 
 namespace KWin
 {
-
 class ScreenShotEffect;
 class ScreenShotSinkPipe2;
 class ScreenShotSource2;
@@ -37,15 +36,10 @@ public:
     ~ScreenShotDBusInterface2() override;
 
 public Q_SLOTS:
-    QVariantMap CaptureWindow(const QString &handle, const QVariantMap &options,
-                              QDBusUnixFileDescriptor pipe);
-    QVariantMap CaptureArea(int x, int y, int width, int height,
-                            const QVariantMap &options,
-                            QDBusUnixFileDescriptor pipe);
-    QVariantMap CaptureScreen(const QString &name, const QVariantMap &options,
-                              QDBusUnixFileDescriptor pipe);
-    QVariantMap CaptureInteractive(uint kind, const QVariantMap &options,
-                                   QDBusUnixFileDescriptor pipe);
+    QVariantMap CaptureWindow(const QString &handle, const QVariantMap &options, QDBusUnixFileDescriptor pipe);
+    QVariantMap CaptureArea(int x, int y, int width, int height, const QVariantMap &options, QDBusUnixFileDescriptor pipe);
+    QVariantMap CaptureScreen(const QString &name, const QVariantMap &options, QDBusUnixFileDescriptor pipe);
+    QVariantMap CaptureInteractive(uint kind, const QVariantMap &options, QDBusUnixFileDescriptor pipe);
 
 private:
     void takeScreenShot(EffectScreen *screen, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);

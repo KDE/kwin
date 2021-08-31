@@ -16,7 +16,6 @@
 
 namespace KWin
 {
-
 NonCompositedOutlineVisual::NonCompositedOutlineVisual(Outline *outline)
     : OutlineVisual(outline)
     , m_initialized(false)
@@ -37,7 +36,7 @@ void NonCompositedOutlineVisual::show()
         m_rightOutline.create(geo, XCB_CW_OVERRIDE_REDIRECT, values);
         m_topOutline.create(geo, XCB_CW_OVERRIDE_REDIRECT, values);
         m_bottomOutline.create(geo, XCB_CW_OVERRIDE_REDIRECT, values);
-        m_initialized   = true;
+        m_initialized = true;
     }
 
     const int defaultDepth = Xcb::defaultDepth();
@@ -55,12 +54,7 @@ void NonCompositedOutlineVisual::show()
 
     const xcb_render_color_t white = {0xffff, 0xffff, 0xffff, 0xffff};
     QColor qGray(Qt::gray);
-    const xcb_render_color_t gray = {
-        uint16_t(0xffff * qGray.redF()),
-        uint16_t(0xffff * qGray.greenF()),
-        uint16_t(0xffff * qGray.blueF()),
-        0xffff
-    };
+    const xcb_render_color_t gray = {uint16_t(0xffff * qGray.redF()), uint16_t(0xffff * qGray.greenF()), uint16_t(0xffff * qGray.blueF()), 0xffff};
     const xcb_render_color_t black = {0, 0, 0, 0xffff};
     {
         xcb_pixmap_t xpix = xcb_generate_id(connection());
@@ -88,17 +82,9 @@ void NonCompositedOutlineVisual::show()
 
         xcb_rectangle_t rect = {0, 0, horizontalWidth, horizontalHeight};
         xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, pic, white, 1, &rect);
-        xcb_rectangle_t grayRects[] = {
-            {1, 1, uint16_t(horizontalWidth -2), 3},
-            {1, 4, 3, 1},
-            {int16_t(horizontalWidth - 4), 4, 3, 1}
-        };
+        xcb_rectangle_t grayRects[] = {{1, 1, uint16_t(horizontalWidth - 2), 3}, {1, 4, 3, 1}, {int16_t(horizontalWidth - 4), 4, 3, 1}};
         xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, pic, gray, 3, grayRects);
-        xcb_rectangle_t blackRects[] = {
-            {2, 2, uint16_t(horizontalWidth -4), 1},
-            {2, 3, 1, 2},
-            {int16_t(horizontalWidth - 3), 3, 1, 2}
-        };
+        xcb_rectangle_t blackRects[] = {{2, 2, uint16_t(horizontalWidth - 4), 1}, {2, 3, 1, 2}, {int16_t(horizontalWidth - 3), 3, 1, 2}};
         xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, pic, black, 3, blackRects);
         m_topOutline.setBackgroundPixmap(xpix);
         // According to the XSetWindowBackgroundPixmap documentation the pixmap can be freed.
@@ -111,17 +97,9 @@ void NonCompositedOutlineVisual::show()
 
         xcb_rectangle_t rect = {0, 0, horizontalWidth, horizontalHeight};
         xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, pic, white, 1, &rect);
-        xcb_rectangle_t grayRects[] = {
-            {1, 1, uint16_t(horizontalWidth -2), 3},
-            {1, 0, 3, 1},
-            {int16_t(horizontalWidth - 4), 0, 3, 1}
-        };
+        xcb_rectangle_t grayRects[] = {{1, 1, uint16_t(horizontalWidth - 2), 3}, {1, 0, 3, 1}, {int16_t(horizontalWidth - 4), 0, 3, 1}};
         xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, pic, gray, 3, grayRects);
-        xcb_rectangle_t blackRects[] = {
-            {2, 2, uint16_t(horizontalWidth -4), 1},
-            {2, 0, 1, 2},
-            {int16_t(horizontalWidth - 3), 0, 1, 2}
-        };
+        xcb_rectangle_t blackRects[] = {{2, 2, uint16_t(horizontalWidth - 4), 1}, {2, 0, 1, 2}, {int16_t(horizontalWidth - 3), 0, 1, 2}};
         xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, pic, black, 3, blackRects);
         m_bottomOutline.setBackgroundPixmap(xpix);
         // According to the XSetWindowBackgroundPixmap documentation the pixmap can be freed.

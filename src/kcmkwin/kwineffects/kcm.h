@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 class EffectsModel;
 
 class DesktopEffectsKCM : public KQuickAddons::ConfigModule

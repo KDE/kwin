@@ -14,37 +14,25 @@
 
 namespace KWin
 {
-
-SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface,
-                                       Toplevel *window, Item *parent)
+SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface, Toplevel *window, Item *parent)
     : SurfaceItem(window, parent)
     , m_surface(surface)
 {
-    connect(surface, &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged,
-            this, &SurfaceItemWayland::handleSurfaceToBufferMatrixChanged);
+    connect(surface, &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged, this, &SurfaceItemWayland::handleSurfaceToBufferMatrixChanged);
 
-    connect(surface, &KWaylandServer::SurfaceInterface::sizeChanged,
-            this, &SurfaceItemWayland::handleSurfaceSizeChanged);
-    connect(surface, &KWaylandServer::SurfaceInterface::bufferSizeChanged,
-            this, &SurfaceItemWayland::discardPixmap);
+    connect(surface, &KWaylandServer::SurfaceInterface::sizeChanged, this, &SurfaceItemWayland::handleSurfaceSizeChanged);
+    connect(surface, &KWaylandServer::SurfaceInterface::bufferSizeChanged, this, &SurfaceItemWayland::discardPixmap);
 
-    connect(surface, &KWaylandServer::SurfaceInterface::childSubSurfacesChanged,
-            this, &SurfaceItemWayland::handleChildSubSurfacesChanged);
-    connect(surface, &KWaylandServer::SurfaceInterface::committed,
-            this, &SurfaceItemWayland::handleSurfaceCommitted);
-    connect(surface, &KWaylandServer::SurfaceInterface::damaged,
-            this, &SurfaceItemWayland::addDamage);
-    connect(surface, &KWaylandServer::SurfaceInterface::childSubSurfaceRemoved,
-            this, &SurfaceItemWayland::handleChildSubSurfaceRemoved);
+    connect(surface, &KWaylandServer::SurfaceInterface::childSubSurfacesChanged, this, &SurfaceItemWayland::handleChildSubSurfacesChanged);
+    connect(surface, &KWaylandServer::SurfaceInterface::committed, this, &SurfaceItemWayland::handleSurfaceCommitted);
+    connect(surface, &KWaylandServer::SurfaceInterface::damaged, this, &SurfaceItemWayland::addDamage);
+    connect(surface, &KWaylandServer::SurfaceInterface::childSubSurfaceRemoved, this, &SurfaceItemWayland::handleChildSubSurfaceRemoved);
 
     KWaylandServer::SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
-        connect(surface, &KWaylandServer::SurfaceInterface::mapped,
-                this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
-        connect(surface, &KWaylandServer::SurfaceInterface::unmapped,
-                this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
-        connect(subsurface, &KWaylandServer::SubSurfaceInterface::positionChanged,
-                this, &SurfaceItemWayland::handleSubSurfacePositionChanged);
+        connect(surface, &KWaylandServer::SurfaceInterface::mapped, this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
+        connect(surface, &KWaylandServer::SurfaceInterface::unmapped, this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
+        connect(subsurface, &KWaylandServer::SubSurfaceInterface::positionChanged, this, &SurfaceItemWayland::handleSubSurfacePositionChanged);
         setVisible(surface->isMapped());
         setPosition(subsurface->position());
     }

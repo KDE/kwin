@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 class DrmGpu;
 
 class DrmBuffer
@@ -23,17 +22,24 @@ public:
     DrmBuffer(DrmGpu *gpu);
     virtual ~DrmBuffer() = default;
 
-    virtual bool needsModeChange(DrmBuffer *b) const {Q_UNUSED(b) return false;}
+    virtual bool needsModeChange(DrmBuffer *b) const
+    {
+        Q_UNUSED(b)
+        return false;
+    }
 
-    quint32 bufferId() const {
+    quint32 bufferId() const
+    {
         return m_bufferId;
     }
 
-    const QSize &size() const {
+    const QSize &size() const
+    {
         return m_size;
     }
 
-    DrmGpu *gpu() const {
+    DrmGpu *gpu() const
+    {
         return m_gpu;
     }
 
@@ -52,16 +58,20 @@ public:
     bool needsModeChange(DrmBuffer *b) const override;
 
     bool map(QImage::Format format = QImage::Format_RGB32);
-    quint32 handle() const {
+    quint32 handle() const
+    {
         return m_handle;
     }
-    QImage *image() const {
+    QImage *image() const
+    {
         return m_image;
     }
-    void *data() const {
+    void *data() const
+    {
         return m_memory;
     }
-    quint32 stride() const {
+    quint32 stride() const
+    {
         return m_stride;
     }
 
@@ -76,4 +86,3 @@ private:
 }
 
 #endif
-

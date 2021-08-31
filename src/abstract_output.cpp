@@ -8,12 +8,11 @@
 */
 
 #include "abstract_output.h"
-#include <KSharedConfig>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 namespace KWin
 {
-
 GammaRamp::GammaRamp(uint32_t size)
     : m_table(3 * size)
     , m_size(size)
@@ -168,7 +167,7 @@ bool AbstractOutput::directScanoutInhibited() const
 std::chrono::milliseconds AbstractOutput::dimAnimationTime()
 {
     // See kscreen.kcfg
-    return std::chrono::milliseconds (KSharedConfig::openConfig()->group("Effect-Kscreen").readEntry("Duration", 250));
+    return std::chrono::milliseconds(KSharedConfig::openConfig()->group("Effect-Kscreen").readEntry("Duration", 250));
 }
 
 } // namespace KWin

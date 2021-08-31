@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 class DrmBackend;
 class DrmGpu;
 class DrmOutput;
@@ -29,19 +28,23 @@ public:
     virtual bool hasOutput(AbstractOutput *output) const = 0;
     virtual bool addOutput(DrmAbstractOutput *output) = 0;
     virtual void removeOutput(DrmAbstractOutput *output) = 0;
-    virtual bool swapBuffers(DrmAbstractOutput *output, const QRegion &dirty) {
+    virtual bool swapBuffers(DrmAbstractOutput *output, const QRegion &dirty)
+    {
         Q_UNUSED(output)
         Q_UNUSED(dirty)
         return false;
     }
-    virtual bool exportFramebuffer(DrmAbstractOutput *output, void *data, const QSize &size, uint32_t stride) {
+    virtual bool exportFramebuffer(DrmAbstractOutput *output, void *data, const QSize &size, uint32_t stride)
+    {
         Q_UNUSED(output)
         Q_UNUSED(data)
         Q_UNUSED(size)
         Q_UNUSED(stride)
         return false;
     }
-    virtual bool exportFramebufferAsDmabuf(DrmAbstractOutput *output, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier) {
+    virtual bool
+    exportFramebufferAsDmabuf(DrmAbstractOutput *output, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier)
+    {
         Q_UNUSED(output)
         Q_UNUSED(fds)
         Q_UNUSED(strides)
@@ -51,19 +54,22 @@ public:
         Q_UNUSED(modifier)
         return false;
     }
-    virtual QRegion beginFrameForSecondaryGpu(DrmAbstractOutput *output) {
+    virtual QRegion beginFrameForSecondaryGpu(DrmAbstractOutput *output)
+    {
         Q_UNUSED(output)
         return QRegion();
     }
 
-    DrmGpu *gpu() const {
+    DrmGpu *gpu() const
+    {
         return m_gpu;
     }
 
     virtual QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output) = 0;
 
-    static AbstractEglDrmBackend *renderingBackend() {
-        return static_cast<AbstractEglDrmBackend*>(primaryBackend());
+    static AbstractEglDrmBackend *renderingBackend()
+    {
+        return static_cast<AbstractEglDrmBackend *>(primaryBackend());
     }
 
 protected:
@@ -71,7 +77,6 @@ protected:
 
     DrmBackend *m_backend;
     DrmGpu *m_gpu;
-
 };
 
 }

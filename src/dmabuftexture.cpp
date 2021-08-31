@@ -11,7 +11,6 @@
 
 namespace KWin
 {
-
 DmaBufTexture::DmaBufTexture(KWin::GLTexture *texture)
     : m_texture(texture)
     , m_framebuffer(new KWin::GLRenderTarget(*m_texture))

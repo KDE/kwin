@@ -19,7 +19,6 @@
 
 namespace KWin
 {
-
 static AbstractWaylandOutput::Transform outputDeviceTransformToKWinTransform(KWaylandServer::OutputDeviceInterface::Transform transform)
 {
     return static_cast<AbstractWaylandOutput::Transform>(transform);
@@ -220,8 +219,7 @@ void AbstractWaylandOutput::setCurrentModeInternal(const QSize &size, int refres
     }
 }
 
-static QUuid generateOutputId(const QString &eisaId, const QString &model,
-                              const QString &serialNumber, const QString &name)
+static QUuid generateOutputId(const QString &eisaId, const QString &model, const QString &serialNumber, const QString &name)
 {
     static const QUuid urlNs = QUuid("6ba7b811-9dad-11d1-80b4-00c04fd430c8"); // NameSpace_URL
     static const QUuid kwinNs = QUuid::createUuidV5(urlNs, QStringLiteral("https://kwin.kde.org/o/"));
@@ -230,10 +228,13 @@ static QUuid generateOutputId(const QString &eisaId, const QString &model,
     return QUuid::createUuidV5(kwinNs, payload);
 }
 
-void AbstractWaylandOutput::initialize(const QString &model, const QString &manufacturer,
-                                       const QString &eisaId, const QString &serialNumber,
+void AbstractWaylandOutput::initialize(const QString &model,
+                                       const QString &manufacturer,
+                                       const QString &eisaId,
+                                       const QString &serialNumber,
                                        const QSize &physicalSize,
-                                       const QVector<Mode> &modes, const QByteArray &edid)
+                                       const QVector<Mode> &modes,
+                                       const QByteArray &edid)
 {
     m_serialNumber = serialNumber;
     m_eisaId = eisaId;
@@ -255,8 +256,8 @@ void AbstractWaylandOutput::initialize(const QString &model, const QString &manu
 
 QSize AbstractWaylandOutput::orientateSize(const QSize &size) const
 {
-    if (m_transform == Transform::Rotated90 || m_transform == Transform::Rotated270 ||
-            m_transform == Transform::Flipped90 || m_transform == Transform::Flipped270) {
+    if (m_transform == Transform::Rotated90 || m_transform == Transform::Rotated270 || m_transform == Transform::Flipped90
+        || m_transform == Transform::Flipped270) {
         return size.transposed();
     }
     return size;

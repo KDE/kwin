@@ -16,7 +16,6 @@ using namespace KWaylandServer;
 
 namespace KWin
 {
-
 /**
  * The WaylandXdgShellIntegration class is a factory class for xdg-shell clients.
  *
@@ -34,10 +33,8 @@ XdgShellIntegration::XdgShellIntegration(QObject *parent)
 {
     XdgShellInterface *shell = new XdgShellInterface(waylandServer()->display(), this);
 
-    connect(shell, &XdgShellInterface::toplevelCreated,
-            this, &XdgShellIntegration::registerXdgToplevel);
-    connect(shell, &XdgShellInterface::popupCreated,
-            this, &XdgShellIntegration::registerXdgPopup);
+    connect(shell, &XdgShellInterface::toplevelCreated, this, &XdgShellIntegration::registerXdgToplevel);
+    connect(shell, &XdgShellInterface::popupCreated, this, &XdgShellIntegration::registerXdgPopup);
 }
 
 void XdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)
@@ -46,8 +43,9 @@ void XdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)
     // underlying surface is unmapped. XdgToplevelClient is re-created right away since
     // we don't want too loose any client requests that are allowed to be sent prior to
     // the first initial commit, e.g. set_maximized or set_fullscreen.
-    connect(toplevel, &XdgToplevelInterface::resetOccurred,
-            this, [this, toplevel] { createXdgToplevelClient(toplevel); });
+    connect(toplevel, &XdgToplevelInterface::resetOccurred, this, [this, toplevel] {
+        createXdgToplevelClient(toplevel);
+    });
 
     createXdgToplevelClient(toplevel);
 }
@@ -55,7 +53,8 @@ void XdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)
 void XdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *toplevel)
 {
     if (!workspace()) {
-        qCWarning(KWIN_CORE, "An xdg-toplevel surface has been created while the compositor "
+        qCWarning(KWIN_CORE,
+                  "An xdg-toplevel surface has been created while the compositor "
                   "is still not fully initialized. That is a compositor bug!");
         return;
     }
@@ -66,7 +65,8 @@ void XdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *toplevel
 void XdgShellIntegration::registerXdgPopup(XdgPopupInterface *popup)
 {
     if (!workspace()) {
-        qCWarning(KWIN_CORE, "An xdg-popup surface has been created while the compositor is "
+        qCWarning(KWIN_CORE,
+                  "An xdg-popup surface has been created while the compositor is "
                   "still not fully initialized. That is a compositor bug!");
         return;
     }

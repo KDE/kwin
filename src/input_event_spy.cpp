@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 InputEventSpy::InputEventSpy() = default;
 
 InputEventSpy::~InputEventSpy()

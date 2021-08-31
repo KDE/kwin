@@ -14,15 +14,14 @@
 // KWin
 #include <kwinglobals.h>
 // Qt
+#include <QList>
 #include <QPoint>
 #include <QRect>
-#include <QList>
 
 class QObject;
 
 namespace KWin
 {
-
 class AbstractClient;
 
 class KWIN_EXPORT Placement
@@ -51,9 +50,9 @@ public:
     };
 
     void place(AbstractClient *c, const QRect &area);
-    void placeSmart(AbstractClient* c, const QRect& area, Policy next = Unknown);
+    void placeSmart(AbstractClient *c, const QRect &area, Policy next = Unknown);
 
-    void placeCentered(AbstractClient* c, const QRect& area, Policy next = Unknown);
+    void placeCentered(AbstractClient *c, const QRect &area, Policy next = Unknown);
 
     void reinitCascading(int desktop);
 
@@ -66,7 +65,7 @@ public:
      */
     void unclutterDesktop();
 
-    static const char* policyToString(Policy policy);
+    static const char *policyToString(Policy policy);
 
 private:
     void place(AbstractClient *c, const QRect &area, Policy policy, Policy nextPlacement = Unknown);
@@ -74,15 +73,15 @@ private:
     void placeOnMainWindow(AbstractClient *c, const QRect &area, Policy next = Unknown);
     void placeTransient(AbstractClient *c);
 
-    void placeAtRandom(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeCascaded(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeMaximizing(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeZeroCornered(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeDialog(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeUtility(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeOnScreenDisplay(AbstractClient* c, const QRect& area);
+    void placeAtRandom(AbstractClient *c, const QRect &area, Policy next = Unknown);
+    void placeCascaded(AbstractClient *c, const QRect &area, Policy next = Unknown);
+    void placeMaximizing(AbstractClient *c, const QRect &area, Policy next = Unknown);
+    void placeZeroCornered(AbstractClient *c, const QRect &area, Policy next = Unknown);
+    void placeDialog(AbstractClient *c, const QRect &area, Policy next = Unknown);
+    void placeUtility(AbstractClient *c, const QRect &area, Policy next = Unknown);
+    void placeOnScreenDisplay(AbstractClient *c, const QRect &area);
 
-    //CT needed for cascading+
+    // CT needed for cascading+
     struct DesktopCascadingInfo {
         QPoint pos;
         int col;

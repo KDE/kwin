@@ -16,35 +16,33 @@
 
 #include <QAction>
 
+#include <KAboutData>
+#include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <kconfiggroup.h>
-#include <KActionCollection>
-#include <KAboutData>
 #include <KPluginFactory>
+#include <kconfiggroup.h>
 
 #include <QDebug>
-#include <QWidget>
 #include <QVBoxLayout>
+#include <QWidget>
 
-K_PLUGIN_FACTORY_WITH_JSON(LookingGlassEffectConfigFactory,
-                           "lookingglass_config.json",
-                           registerPlugin<KWin::LookingGlassEffectConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(LookingGlassEffectConfigFactory, "lookingglass_config.json", registerPlugin<KWin::LookingGlassEffectConfig>();)
 
 namespace KWin
 {
-
-LookingGlassEffectConfigForm::LookingGlassEffectConfigForm(QWidget* parent) : QWidget(parent)
+LookingGlassEffectConfigForm::LookingGlassEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     m_ui = new LookingGlassEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->addWidget(m_ui);
 
@@ -59,7 +57,7 @@ LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVaria
     m_actionCollection->setConfigGroup(QStringLiteral("LookingGlass"));
     m_actionCollection->setConfigGlobal(true);
 
-    QAction* a;
+    QAction *a;
     a = m_actionCollection->addAction(KStandardAction::ZoomIn);
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
@@ -86,14 +84,12 @@ LookingGlassEffectConfig::~LookingGlassEffectConfig()
 
 void LookingGlassEffectConfig::save()
 {
-    qDebug() << "Saving config of LookingGlass" ;
+    qDebug() << "Saving config of LookingGlass";
     KCModule::save();
 
-    m_ui->editor->save();   // undo() will restore to this state from now on
+    m_ui->editor->save(); // undo() will restore to this state from now on
 
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("lookingglass"));
 }
 

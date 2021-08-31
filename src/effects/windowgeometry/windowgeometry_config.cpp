@@ -13,37 +13,35 @@
 #include <config-kwin.h>
 #include <kwineffects_interface.h>
 
-#include <QAction>
+#include <KAboutData>
 #include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <kconfiggroup.h>
-#include <KAboutData>
 #include <KPluginFactory>
+#include <QAction>
+#include <kconfiggroup.h>
 
-K_PLUGIN_FACTORY_WITH_JSON(WindowGeometryEffectConfigFactory,
-                           "windowgeometry_config.json",
-                           registerPlugin<KWin::WindowGeometryConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(WindowGeometryEffectConfigFactory, "windowgeometry_config.json", registerPlugin<KWin::WindowGeometryConfig>();)
 
 namespace KWin
 {
-
-WindowGeometryConfigForm::WindowGeometryConfigForm(QWidget* parent) : QWidget(parent)
+WindowGeometryConfigForm::WindowGeometryConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& args)
+WindowGeometryConfig::WindowGeometryConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
 {
     WindowGeometryConfiguration::instance(KWIN_CONFIG);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(myUi = new WindowGeometryConfigForm(this));
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     myActionCollection = new KActionCollection(this, QStringLiteral("kwin"));
     myActionCollection->setComponentDisplayName(i18n("KWin"));
-    QAction* a = myActionCollection->addAction(QStringLiteral("WindowGeometry"));
+    QAction *a = myActionCollection->addAction(QStringLiteral("WindowGeometry"));
     a->setText(i18n("Toggle KWin composited geometry display"));
     a->setProperty("isConfigurationAction", true);
 
@@ -67,10 +65,8 @@ WindowGeometryConfig::~WindowGeometryConfig()
 void WindowGeometryConfig::save()
 {
     KCModule::save();
-    myUi->shortcuts->save();   // undo() will restore to this state from now on
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    myUi->shortcuts->save(); // undo() will restore to this state from now on
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("windowgeometry"));
 }
 
@@ -80,5 +76,5 @@ void WindowGeometryConfig::defaults()
     Q_EMIT changed(true);
 }
 
-} //namespace
+} // namespace
 #include "windowgeometry_config.moc"

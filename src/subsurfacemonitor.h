@@ -19,7 +19,6 @@ class SubSurfaceInterface;
 
 namespace KWin
 {
-
 /**
  * The SubSurfaceMonitor class provides a convenient way for monitoring changes in
  * sub-surface trees, e.g. addition or removal of sub-surfaces, etc.

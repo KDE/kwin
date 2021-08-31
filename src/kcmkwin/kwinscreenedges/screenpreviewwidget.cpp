@@ -6,9 +6,9 @@
 
 #include "screenpreviewwidget.h"
 
-#include <QResizeEvent>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QResizeEvent>
 
 #include <QDebug>
 #include <QMimeData>
@@ -16,19 +16,20 @@
 #include <Plasma/FrameSvg>
 #include <kurlmimedata.h>
 
-
 class ScreenPreviewWidgetPrivate
 {
 public:
     ScreenPreviewWidgetPrivate(ScreenPreviewWidget *screen)
-          : q(screen),
-            ratio(1)
-    {}
+        : q(screen)
+        , ratio(1)
+    {
+    }
 
     ~ScreenPreviewWidgetPrivate()
-    {}
+    {
+    }
 
-    void updateRect(const QRectF& rect)
+    void updateRect(const QRectF &rect)
     {
         q->update(rect.toRect());
     }
@@ -36,16 +37,16 @@ public:
     void updateScreenGraphics()
     {
         int bottomElements = screenGraphics->elementSize("base").height() + screenGraphics->marginSize(Plasma::Types::BottomMargin);
-        QRect bounds(QPoint(0,0), QSize(q->size().width(), q->height() - bottomElements));
+        QRect bounds(QPoint(0, 0), QSize(q->size().width(), q->height() - bottomElements));
 
-        QSize monitorSize(q->size().width(), q->size().width()/ratio);
+        QSize monitorSize(q->size().width(), q->size().width() / ratio);
         monitorSize.scale(bounds.size(), Qt::KeepAspectRatio);
 
         if (monitorSize.isEmpty()) {
             return;
         }
 
-        monitorRect = QRect(QPoint(0,0), monitorSize);
+        monitorRect = QRect(QPoint(0, 0), monitorSize);
         monitorRect.moveCenter(bounds.center());
 
         screenGraphics->resizeFrame(monitorRect.size());
@@ -63,8 +64,8 @@ public:
 };
 
 ScreenPreviewWidget::ScreenPreviewWidget(QWidget *parent)
-    : QWidget(parent),
-      d(new ScreenPreviewWidgetPrivate(this))
+    : QWidget(parent)
+    , d(new ScreenPreviewWidgetPrivate(this))
 {
     d->screenGraphics = new Plasma::FrameSvg(this);
     d->screenGraphics->setImagePath("widgets/monitor");
@@ -73,7 +74,7 @@ ScreenPreviewWidget::ScreenPreviewWidget(QWidget *parent)
 
 ScreenPreviewWidget::~ScreenPreviewWidget()
 {
-   delete d;
+    delete d;
 }
 
 void ScreenPreviewWidget::setPreview(const QPixmap &preview)
@@ -118,7 +119,7 @@ void ScreenPreviewWidget::paintEvent(QPaintEvent *event)
     }
 
     QPainter painter(this);
-    QPoint standPosition(d->monitorRect.center().x() - d->screenGraphics->elementSize("base").width()/2, d->previewRect.bottom());
+    QPoint standPosition(d->monitorRect.center().x() - d->screenGraphics->elementSize("base").width() / 2, d->previewRect.bottom());
 
     d->screenGraphics->paint(&painter, QRect(standPosition, d->screenGraphics->elementSize("base")), "base");
     d->screenGraphics->paintFrame(&painter, d->monitorRect.topLeft());
@@ -142,7 +143,7 @@ void ScreenPreviewWidget::dropEvent(QDropEvent *e)
     if (!uris.isEmpty()) {
         // TODO: Download remote file
         if (uris.first().isLocalFile())
-           Q_EMIT imageDropped(uris.first().path());
+            Q_EMIT imageDropped(uris.first().path());
     }
 }
 

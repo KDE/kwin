@@ -18,14 +18,16 @@
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_buffer_size_change-0");
 
 class BufferSizeChangeTest : public GenericSceneOpenGLTest
 {
     Q_OBJECT
 public:
-    BufferSizeChangeTest() : GenericSceneOpenGLTest(QByteArrayLiteral("O2")) {}
+    BufferSizeChangeTest()
+        : GenericSceneOpenGLTest(QByteArrayLiteral("O2"))
+    {
+    }
 private Q_SLOTS:
     void init();
     void testShmBufferSizeChange();

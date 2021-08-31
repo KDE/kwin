@@ -18,15 +18,15 @@
 
 namespace KWin
 {
-
 static bool verifyHeader(const uint8_t *data)
 {
     if (data[0] != 0x0 || data[7] != 0x0) {
         return false;
     }
 
-    return std::all_of(data + 1, data + 7,
-        [](uint8_t byte) { return byte == 0xff; });
+    return std::all_of(data + 1, data + 7, [](uint8_t byte) {
+        return byte == 0xff;
+    });
 }
 
 static QSize parsePhysicalSize(const uint8_t *data)
@@ -58,7 +58,6 @@ static QByteArray parsePnpId(const uint8_t *data)
 
     return QByteArray(pnpId);
 }
-
 
 static QByteArray parseEisaId(const uint8_t *data)
 {

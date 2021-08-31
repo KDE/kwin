@@ -15,7 +15,6 @@
 
 namespace KWin
 {
-
 BlurShader::BlurShader(QObject *parent)
     : QObject(parent)
 {
@@ -29,8 +28,8 @@ BlurShader::BlurShader(QObject *parent)
     QByteArray fragmentCopySource;
     QByteArray fragmentNoiseSource;
 
-    const QByteArray attribute = core ? "in"        : "attribute";
-    const QByteArray texture2D = core ? "texture"   : "texture2D";
+    const QByteArray attribute = core ? "in" : "attribute";
+    const QByteArray texture2D = core ? "texture" : "texture2D";
     const QByteArray fragColor = core ? "fragColor" : "gl_FragColor";
 
     QString glHeaderString;
@@ -45,7 +44,8 @@ BlurShader::BlurShader(QObject *parent)
         glHeaderString += "#version 140\n\n";
     }
 
-    QString glUniformString = "uniform sampler2D texUnit;\n"
+    QString glUniformString =
+        "uniform sampler2D texUnit;\n"
         "uniform float offset;\n"
         "uniform vec2 renderTextureSize;\n"
         "uniform vec2 halfpixel;\n";
@@ -167,10 +167,7 @@ BlurShader::BlurShader(QObject *parent)
     m_shaderCopysample.reset(ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentCopySource));
     m_shaderNoisesample.reset(ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentNoiseSource));
 
-    m_valid = m_shaderDownsample->isValid() &&
-        m_shaderUpsample->isValid() &&
-        m_shaderCopysample->isValid() &&
-        m_shaderNoisesample->isValid();
+    m_valid = m_shaderDownsample->isValid() && m_shaderUpsample->isValid() && m_shaderCopysample->isValid() && m_shaderNoisesample->isValid();
 
     if (m_valid) {
         m_mvpMatrixLocationDownsample = m_shaderDownsample->uniformLocation("modelViewProjectionMatrix");
@@ -198,7 +195,7 @@ BlurShader::BlurShader(QObject *parent)
         const QSize screenSize = effects->virtualScreenSize();
         modelViewProjection.ortho(0, screenSize.width(), screenSize.height(), 0, 0, 65535);
 
-        //Add default values to the uniforms of the shaders
+        // Add default values to the uniforms of the shaders
         ShaderManager::instance()->pushShader(m_shaderDownsample.data());
         m_shaderDownsample->setUniform(m_mvpMatrixLocationDownsample, modelViewProjection);
         m_shaderDownsample->setUniform(m_offsetLocationDownsample, float(1.0));
@@ -382,12 +379,10 @@ void BlurShader::setBlurRect(const QRect &blurRect, const QSize &screenSize)
         return;
     }
 
-    const QVector4D rect(
-        blurRect.left()         / float(screenSize.width()),
-        1.0 - blurRect.bottom() / float(screenSize.height()),
-        blurRect.right()        / float(screenSize.width()),
-        1.0 - blurRect.top()    / float(screenSize.height())
-    );
+    const QVector4D rect(blurRect.left() / float(screenSize.width()),
+                         1.0 - blurRect.bottom() / float(screenSize.height()),
+                         blurRect.right() / float(screenSize.width()),
+                         1.0 - blurRect.top() / float(screenSize.height()));
 
     m_shaderCopysample->setUniform(m_blurRectLocationCopysample, rect);
 }

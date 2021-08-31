@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class ConsoleKitSession : public Session
 {
     Q_OBJECT

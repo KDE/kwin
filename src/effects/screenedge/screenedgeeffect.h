@@ -11,11 +11,13 @@
 #include <kwineffects.h>
 
 class QTimer;
-namespace Plasma {
-    class Svg;
+namespace Plasma
+{
+class Svg;
 }
 
-namespace KWin {
+namespace KWin
+{
 class Glow;
 class GLTexture;
 
@@ -29,23 +31,25 @@ public:
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 90;
     }
 
 private Q_SLOTS:
     void edgeApproaching(ElectricBorder border, qreal factor, const QRect &geometry);
     void cleanup();
+
 private:
     void ensureGlowSvg();
     Glow *createGlow(ElectricBorder border, qreal factor, const QRect &geometry);
-    template <typename T>
+    template<typename T>
     T *createCornerGlow(ElectricBorder border);
-    template <typename T>
+    template<typename T>
     T *createEdgeGlow(ElectricBorder border, const QSize &size);
     QSize cornerGlowSize(ElectricBorder border);
     Plasma::Svg *m_glow = nullptr;
-    QHash<ElectricBorder, Glow*> m_borders;
+    QHash<ElectricBorder, Glow *> m_borders;
     QTimer *m_cleanupTimer;
 };
 

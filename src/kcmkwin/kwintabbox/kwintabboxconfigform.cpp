@@ -17,10 +17,8 @@
 #include <KGlobalAccel>
 #include <KShortcutsEditor>
 
-
 namespace KWin
 {
-
 using namespace TabBox;
 
 KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, QWidget *parent)

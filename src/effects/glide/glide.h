@@ -18,9 +18,7 @@
 
 namespace KWin
 {
-
-struct GlideAnimation
-{
+struct GlideAnimation {
     TimeLine timeLine;
     std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
 };
@@ -54,12 +52,7 @@ public:
 
     static bool supported();
 
-    enum RotationEdge {
-        Top    = 0,
-        Right  = 1,
-        Bottom = 2,
-        Left   = 3
-    };
+    enum RotationEdge { Top = 0, Right = 1, Bottom = 2, Left = 3 };
     Q_ENUM(RotationEdge)
 
     int duration() const;

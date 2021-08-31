@@ -15,7 +15,6 @@ namespace KWin
 {
 namespace OSD
 {
-
 void show(const QString &message, const QString &iconName = QString());
 void show(const QString &message, int timeout);
 void show(const QString &message, const QString &iconName, int timeout);

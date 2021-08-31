@@ -16,7 +16,6 @@
 
 namespace KWin
 {
-
 class PipeWireCore : public QObject
 {
     Q_OBJECT

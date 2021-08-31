@@ -8,7 +8,6 @@
 
 namespace KWin
 {
-
 RenderJournal::RenderJournal()
 {
 }

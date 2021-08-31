@@ -23,7 +23,6 @@ class ClientBuffer;
 
 namespace KWin
 {
-
 class GbmSurface;
 
 class GbmBuffer : public QObject
@@ -34,17 +33,20 @@ public:
     GbmBuffer(gbm_bo *buffer, KWaylandServer::ClientBuffer *clientBuffer);
     virtual ~GbmBuffer();
 
-    gbm_bo* getBo() const {
+    gbm_bo *getBo() const
+    {
         return m_bo;
     }
 
     void releaseBuffer();
 
     bool map(uint32_t flags);
-    void *mappedData() const {
+    void *mappedData() const
+    {
         return m_data;
     }
-    uint32_t stride() const {
+    uint32_t stride() const
+    {
         return m_stride;
     }
 
@@ -65,15 +67,17 @@ public:
     DrmGbmBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::ClientBuffer *clientBuffer);
     ~DrmGbmBuffer() override;
 
-    bool needsModeChange(DrmBuffer *b) const override {
-        if (DrmGbmBuffer *sb = dynamic_cast<DrmGbmBuffer*>(b)) {
+    bool needsModeChange(DrmBuffer *b) const override
+    {
+        if (DrmGbmBuffer *sb = dynamic_cast<DrmGbmBuffer *>(b)) {
             return hasBo() != sb->hasBo();
         } else {
             return true;
         }
     }
 
-    bool hasBo() const {
+    bool hasBo() const
+    {
         return m_bo != nullptr;
     }
 
@@ -84,4 +88,3 @@ private:
 }
 
 #endif
-

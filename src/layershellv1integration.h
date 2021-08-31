@@ -15,7 +15,6 @@ class LayerSurfaceV1Interface;
 
 namespace KWin
 {
-
 class LayerShellV1Integration : public WaylandShellIntegration
 {
     Q_OBJECT

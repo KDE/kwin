@@ -12,12 +12,12 @@
 #include <config-kwin.h>
 
 #include <QPropertyAnimation>
-#include <QStandardPaths>
-#include <QTimer>
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQuickWindow>
+#include <QStandardPaths>
+#include <QTimer>
 
 #include <KConfigGroup>
 
@@ -25,13 +25,13 @@
 
 namespace KWin
 {
-
 class OnScreenNotificationInputEventSpy : public InputEventSpy
 {
 public:
     explicit OnScreenNotificationInputEventSpy(OnScreenNotification *parent);
 
     void pointerEvent(MouseEvent *event) override;
+
 private:
     OnScreenNotification *m_parent;
 };
@@ -50,29 +50,26 @@ void OnScreenNotificationInputEventSpy::pointerEvent(MouseEvent *event)
     m_parent->setContainsPointer(m_parent->geometry().contains(event->globalPos()));
 }
 
-
 OnScreenNotification::OnScreenNotification(QObject *parent)
     : QObject(parent)
     , m_timer(new QTimer(this))
 {
     m_timer->setSingleShot(true);
     connect(m_timer, &QTimer::timeout, this, std::bind(&OnScreenNotification::setVisible, this, false));
-    connect(this, &OnScreenNotification::visibleChanged, this,
-        [this] {
-            if (m_visible) {
-                show();
-            } else {
-                m_timer->stop();
-                m_spy.reset();
-                m_containsPointer = false;
-            }
+    connect(this, &OnScreenNotification::visibleChanged, this, [this] {
+        if (m_visible) {
+            show();
+        } else {
+            m_timer->stop();
+            m_spy.reset();
+            m_containsPointer = false;
         }
-    );
+    });
 }
 
 OnScreenNotification::~OnScreenNotification()
 {
-    if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
+    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
         w->hide();
         w->destroy();
     }
@@ -173,8 +170,9 @@ void OnScreenNotification::ensureQmlComponent()
         return;
     }
     m_qmlComponent.reset(new QQmlComponent(m_qmlEngine));
-    const QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                m_config->group(QStringLiteral("OnScreenNotification")).readEntry("QmlPath", QStringLiteral(KWIN_NAME "/onscreennotification/plasma/main.qml")));
+    const QString fileName = QStandardPaths::locate(
+        QStandardPaths::GenericDataLocation,
+        m_config->group(QStringLiteral("OnScreenNotification")).readEntry("QmlPath", QStringLiteral(KWIN_NAME "/onscreennotification/plasma/main.qml")));
     if (fileName.isEmpty()) {
         return;
     }
@@ -189,7 +187,7 @@ void OnScreenNotification::ensureQmlComponent()
 void OnScreenNotification::createInputSpy()
 {
     Q_ASSERT(m_spy.isNull());
-    if (auto w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
+    if (auto w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
         m_spy.reset(new OnScreenNotificationInputEventSpy(this));
         input()->installInputEventSpy(m_spy.data());
         if (!m_animation) {
@@ -204,7 +202,7 @@ void OnScreenNotification::createInputSpy()
 
 QRect OnScreenNotification::geometry() const
 {
-    if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
+    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
         return w->geometry();
     }
     return QRect();
@@ -225,7 +223,7 @@ void OnScreenNotification::setContainsPointer(bool contains)
 
 void OnScreenNotification::setSkipCloseAnimation(bool skip)
 {
-    if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
+    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
         w->setProperty("KWIN_SKIP_CLOSE_ANIMATION", skip);
     }
 }

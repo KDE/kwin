@@ -11,7 +11,6 @@
 
 namespace KWin
 {
-
 X11Output::X11Output(const QString &name, QObject *parent)
     : AbstractOutput(parent)
     , m_name(name)
@@ -67,8 +66,7 @@ bool X11Output::setGammaRamp(const GammaRamp &gamma)
         return false;
     }
 
-    xcb_randr_set_crtc_gamma(kwinApp()->x11Connection(), m_crtc, gamma.size(), gamma.red(),
-        gamma.green(), gamma.blue());
+    xcb_randr_set_crtc_gamma(kwinApp()->x11Connection(), m_crtc, gamma.size(), gamma.red(), gamma.green(), gamma.blue());
 
     return true;
 }

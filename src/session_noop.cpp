@@ -8,7 +8,6 @@
 
 namespace KWin
 {
-
 NoopSession *NoopSession::create(QObject *parent)
 {
     return new NoopSession(parent);

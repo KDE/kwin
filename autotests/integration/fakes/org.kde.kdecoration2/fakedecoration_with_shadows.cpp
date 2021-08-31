@@ -12,23 +12,28 @@
 #include <KDecoration2/Decoration>
 #include <KPluginFactory>
 
-
 class FakeDecoWithShadows : public KDecoration2::Decoration
 {
     Q_OBJECT
 
 public:
     explicit FakeDecoWithShadows(QObject *parent = nullptr, const QVariantList &args = QVariantList())
-        : Decoration(parent, args) {}
-    ~FakeDecoWithShadows() override {}
+        : Decoration(parent, args)
+    {
+    }
+    ~FakeDecoWithShadows() override
+    {
+    }
 
-    void paint(QPainter *painter, const QRect &repaintRegion) override {
+    void paint(QPainter *painter, const QRect &repaintRegion) override
+    {
         Q_UNUSED(painter)
         Q_UNUSED(repaintRegion)
     }
 
 public Q_SLOTS:
-    void init() override {
+    void init() override
+    {
         const int shadowSize = 128;
         const int offsetTop = 64;
         const int offsetLeft = 48;
@@ -37,11 +42,7 @@ public Q_SLOTS:
         QImage shadowTexture(shadowRect.size(), QImage::Format_ARGB32_Premultiplied);
         shadowTexture.fill(Qt::transparent);
 
-        const QMargins padding(
-            shadowSize - offsetLeft,
-            shadowSize - offsetTop,
-            shadowSize + offsetLeft,
-            shadowSize + offsetTop);
+        const QMargins padding(shadowSize - offsetLeft, shadowSize - offsetTop, shadowSize + offsetLeft, shadowSize + offsetTop);
 
         auto decoShadow = QSharedPointer<KDecoration2::DecorationShadow>::create();
         decoShadow->setPadding(padding);
@@ -52,10 +53,6 @@ public Q_SLOTS:
     }
 };
 
-K_PLUGIN_FACTORY_WITH_JSON(
-    FakeDecoWithShadowsFactory,
-    "fakedecoration_with_shadows.json",
-    registerPlugin<FakeDecoWithShadows>();
-)
+K_PLUGIN_FACTORY_WITH_JSON(FakeDecoWithShadowsFactory, "fakedecoration_with_shadows.json", registerPlugin<FakeDecoWithShadows>();)
 
 #include "fakedecoration_with_shadows.moc"

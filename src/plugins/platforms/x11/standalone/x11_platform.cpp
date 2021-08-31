@@ -7,11 +7,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_platform.h"
-#include "x11cursor.h"
-#include "x11placeholderoutput.h"
 #include "edge.h"
 #include "session.h"
 #include "windowselector.h"
+#include "x11cursor.h"
+#include "x11placeholderoutput.h"
 #include <config-kwin.h>
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
@@ -25,28 +25,27 @@
 #include "eglbackend.h"
 #include "keyboard_input.h"
 #include "logging.h"
-#include "screenedges_filter.h"
+#include "non_composited_outline.h"
 #include "options.h"
 #include "overlaywindow_x11.h"
-#include "non_composited_outline.h"
+#include "renderloop.h"
+#include "screenedges_filter.h"
 #include "workspace.h"
 #include "x11_output.h"
 #include "xcbutils.h"
-#include "renderloop.h"
 
 #include <kwinxrenderutils.h>
 
 #include <KConfigGroup>
-#include <KLocalizedString>
 #include <KCrash>
+#include <KLocalizedString>
 
-#include <QThread>
 #include <QOpenGLContext>
+#include <QThread>
 #include <QX11Info>
 
 namespace KWin
 {
-
 class XrandrEventFilter : public X11EventFilter
 {
 public:
@@ -71,7 +70,7 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
     m_backend->scheduleUpdateOutputs();
 
     // update default screen
-    auto *xrrEvent = reinterpret_cast<xcb_randr_screen_change_notify_event_t*>(event);
+    auto *xrrEvent = reinterpret_cast<xcb_randr_screen_change_notify_event_t *>(event);
     xcb_screen_t *screen = kwinApp()->x11DefaultScreen();
     if (xrrEvent->rotation & (XCB_RANDR_ROTATION_ROTATE_90 | XCB_RANDR_ROTATION_ROTATE_270)) {
         screen->width_in_pixels = xrrEvent->height;
@@ -209,12 +208,12 @@ QString X11StandalonePlatform::compositingNotPossibleReason() const
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
     const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
-    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") &&
-        gl_workaround_group.readEntry(unsafeKey, false))
-        return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
-                    "This was most likely due to a driver bug."
-                    "<p>If you think that you have meanwhile upgraded to a stable driver,<br>"
-                    "you can reset this protection but <b>be aware that this might result in an immediate crash!</b></p>");
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && gl_workaround_group.readEntry(unsafeKey, false))
+        return i18n(
+            "<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
+            "This was most likely due to a driver bug."
+            "<p>If you think that you have meanwhile upgraded to a stable driver,<br>"
+            "you can reset this protection but <b>be aware that this might result in an immediate crash!</b></p>");
 
     if (!Xcb::Extensions::self()->isCompositeAvailable() || !Xcb::Extensions::self()->isDamageAvailable()) {
         return i18n("Required X extensions (XComposite and XDamage) are not available.");
@@ -230,10 +229,8 @@ bool X11StandalonePlatform::compositingPossible() const
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
     const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
-    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") &&
-        gl_workaround_group.readEntry(unsafeKey, false))
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && gl_workaround_group.readEntry(unsafeKey, false))
         return false;
-
 
     if (!Xcb::Extensions::self()->isCompositeAvailable()) {
         qCDebug(KWIN_X11STANDALONE) << "No composite extension available";
@@ -281,15 +278,20 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
             m_openGLFreezeProtection->start();
             const QString configName = kwinApp()->config()->name();
             m_openGLFreezeProtection->moveToThread(m_openGLFreezeProtectionThread);
-            connect(m_openGLFreezeProtection, &QTimer::timeout, m_openGLFreezeProtection,
+            connect(
+                m_openGLFreezeProtection,
+                &QTimer::timeout,
+                m_openGLFreezeProtection,
                 [configName] {
-                    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
+                    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe")
+                                            + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
                     auto group = KConfigGroup(KSharedConfig::openConfig(configName), "Compositing");
                     group.writeEntry(unsafeKey, true);
                     group.sync();
                     KCrash::setDrKonqiEnabled(false);
                     qFatal("Freeze in OpenGL initialization detected");
-                }, Qt::DirectConnection);
+                },
+                Qt::DirectConnection);
         } else {
             Q_ASSERT(m_openGLFreezeProtection);
             QMetaObject::invokeMethod(m_openGLFreezeProtection, "start", Qt::QueuedConnection);
@@ -318,15 +320,12 @@ PlatformCursorImage X11StandalonePlatform::cursorImage() const
 {
     auto c = kwinApp()->x11Connection();
     QScopedPointer<xcb_xfixes_get_cursor_image_reply_t, QScopedPointerPodDeleter> cursor(
-        xcb_xfixes_get_cursor_image_reply(c,
-                                          xcb_xfixes_get_cursor_image_unchecked(c),
-                                          nullptr));
+        xcb_xfixes_get_cursor_image_reply(c, xcb_xfixes_get_cursor_image_unchecked(c), nullptr));
     if (cursor.isNull()) {
         return PlatformCursorImage();
     }
 
-    QImage qcursorimg((uchar *) xcb_xfixes_get_cursor_image_cursor_image(cursor.data()), cursor->width, cursor->height,
-                      QImage::Format_ARGB32_Premultiplied);
+    QImage qcursorimg((uchar *)xcb_xfixes_get_cursor_image_cursor_image(cursor.data()), cursor->width, cursor->height, QImage::Format_ARGB32_Premultiplied);
     // deep copy of image as the data is going to be freed
     return PlatformCursorImage(qcursorimg.copy(), QPoint(cursor->xhot, cursor->yhot));
 }
@@ -341,7 +340,7 @@ void X11StandalonePlatform::doShowCursor()
     xcb_xfixes_show_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
 }
 
-void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
+void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::Toplevel *)> callback, const QByteArray &cursorName)
 {
     if (m_windowSelector.isNull()) {
         m_windowSelector.reset(new WindowSelector);
@@ -349,7 +348,7 @@ void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(K
     m_windowSelector->start(callback, cursorName);
 }
 
-void X11StandalonePlatform::startInteractivePositionSelection(std::function<void (const QPoint &)> callback)
+void X11StandalonePlatform::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
 {
     if (m_windowSelector.isNull()) {
         m_windowSelector.reset(new WindowSelector);
@@ -458,7 +457,7 @@ void X11StandalonePlatform::updateOutputs()
     updateRefreshRate();
 }
 
-template <typename T>
+template<typename T>
 void X11StandalonePlatform::doUpdateOutputs()
 {
     QVector<AbstractOutput *> changed;
@@ -497,13 +496,12 @@ void X11StandalonePlatform::doUpdateOutputs()
                     if (info->mode == modes[j].id) {
                         if (modes[j].htotal != 0 && modes[j].vtotal != 0) { // BUG 313996
                             // refresh rate calculation - WTF was wikipedia 1998 when I needed it?
-                            int dotclock = modes[j].dot_clock,
-                                vtotal = modes[j].vtotal;
+                            int dotclock = modes[j].dot_clock, vtotal = modes[j].vtotal;
                             if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_INTERLACE)
                                 dotclock *= 2;
                             if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_DOUBLE_SCAN)
                                 vtotal *= 2;
-                            refreshRate = dotclock/float(modes[j].htotal*vtotal);
+                            refreshRate = dotclock / float(modes[j].htotal * vtotal);
                         }
                         break; // found mode
                     }

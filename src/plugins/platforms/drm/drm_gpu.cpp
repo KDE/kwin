@@ -8,23 +8,23 @@
 */
 
 #include "drm_gpu.h"
-#include <config-kwin.h>
+#include "abstract_egl_backend.h"
 #include "drm_backend.h"
-#include "drm_output.h"
 #include "drm_object_connector.h"
 #include "drm_object_crtc.h"
-#include "abstract_egl_backend.h"
-#include "logging.h"
-#include "session.h"
-#include "renderloop_p.h"
-#include "main.h"
+#include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
+#include "logging.h"
+#include "main.h"
+#include "renderloop_p.h"
+#include "session.h"
+#include <config-kwin.h>
 
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
-#include <gbm.h>
 #include "gbm_dmabuf.h"
+#include <gbm.h>
 #endif
 // system
 #include <algorithm>
@@ -32,14 +32,13 @@
 #include <poll.h>
 #include <unistd.h>
 // drm
+#include <drm_fourcc.h>
+#include <libdrm/drm_mode.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
-#include <libdrm/drm_mode.h>
-#include <drm_fourcc.h>
 
 namespace KWin
 {
-
 DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t deviceId)
     : m_backend(backend)
     , m_devNode(devNode)
@@ -94,7 +93,7 @@ DrmGpu::~DrmGpu()
         if (auto drmOutput = qobject_cast<DrmOutput *>(output)) {
             removeOutput(drmOutput);
         } else {
-            removeVirtualOutput(dynamic_cast<DrmVirtualOutput*>(output));
+            removeVirtualOutput(dynamic_cast<DrmVirtualOutput *>(output));
         }
     }
     if (m_eglDisplay != EGL_NO_DISPLAY) {
@@ -162,7 +161,9 @@ bool DrmGpu::updateOutputs()
 
     for (int i = 0; i < resources->count_connectors; ++i) {
         const uint32_t currentConnector = resources->connectors[i];
-        auto it = std::find_if(m_connectors.constBegin(), m_connectors.constEnd(), [currentConnector] (DrmConnector *c) { return c->id() == currentConnector; });
+        auto it = std::find_if(m_connectors.constBegin(), m_connectors.constEnd(), [currentConnector](DrmConnector *c) {
+            return c->id() == currentConnector;
+        });
         if (it == m_connectors.constEnd()) {
             auto c = new DrmConnector(this, currentConnector);
             if (!c->init()) {
@@ -185,7 +186,9 @@ bool DrmGpu::updateOutputs()
 
     for (int i = 0; i < resources->count_crtcs; ++i) {
         const uint32_t currentCrtc = resources->crtcs[i];
-        auto it = std::find_if(m_crtcs.constBegin(), m_crtcs.constEnd(), [currentCrtc] (DrmCrtc *c) { return c->id() == currentCrtc; });
+        auto it = std::find_if(m_crtcs.constBegin(), m_crtcs.constEnd(), [currentCrtc](DrmCrtc *c) {
+            return c->id() == currentCrtc;
+        });
         if (it == m_crtcs.constEnd()) {
             auto c = new DrmCrtc(this, currentCrtc, i);
             if (!c->init()) {
@@ -205,8 +208,8 @@ bool DrmGpu::updateOutputs()
         m_crtcs.removeOne(c);
     }
 
-    QVector<DrmOutput*> connectedOutputs;
-    QVector<DrmConnector*> pendingConnectors;
+    QVector<DrmOutput *> connectedOutputs;
+    QVector<DrmConnector *> pendingConnectors;
 
     // split up connected connectors in already or not yet assigned ones
     for (DrmConnector *con : qAsConst(m_connectors)) {
@@ -222,7 +225,7 @@ bool DrmGpu::updateOutputs()
     }
 
     // check for outputs which got removed
-    QVector<DrmOutput*> removedOutputs;
+    QVector<DrmOutput *> removedOutputs;
     auto it = m_drmOutputs.begin();
     while (it != m_drmOutputs.end()) {
         if (connectedOutputs.contains(*it)) {
@@ -261,11 +264,9 @@ bool DrmGpu::updateOutputs()
                 }
 
                 // check if crtc isn't used yet -- currently we don't allow multiple outputs on one crtc (cloned mode)
-                auto it = std::find_if(connectedOutputs.constBegin(), connectedOutputs.constEnd(),
-                    [crtc] (DrmOutput *o) {
-                        return o->m_pipeline->crtc() == crtc;
-                    }
-                );
+                auto it = std::find_if(connectedOutputs.constBegin(), connectedOutputs.constEnd(), [crtc](DrmOutput *o) {
+                    return o->m_pipeline->crtc() == crtc;
+                });
                 if (it != connectedOutputs.constEnd()) {
                     continue;
                 }
@@ -297,7 +298,13 @@ bool DrmGpu::updateOutputs()
                 if (!output->initCursor(m_cursorSize)) {
                     m_backend->setSoftwareCursorForced(true);
                 }
-                qCDebug(KWIN_DRM, "For new output %s on GPU %s use mode %dx%d@%d", qPrintable(output->name()), qPrintable(m_devNode), output->modeSize().width(), output->modeSize().height(), output->refreshRate());
+                qCDebug(KWIN_DRM,
+                        "For new output %s on GPU %s use mode %dx%d@%d",
+                        qPrintable(output->name()),
+                        qPrintable(m_devNode),
+                        output->modeSize().width(),
+                        output->modeSize().height(),
+                        output->refreshRate());
 
                 connectedOutputs << output;
                 m_outputs << output;
@@ -311,7 +318,7 @@ bool DrmGpu::updateOutputs()
     }
     m_drmOutputs = connectedOutputs;
 
-    for(DrmOutput *removedOutput : removedOutputs) {
+    for (DrmOutput *removedOutput : removedOutputs) {
         removeOutput(removedOutput);
     }
 
@@ -322,7 +329,7 @@ bool DrmGpu::updateOutputs()
 
 DrmOutput *DrmGpu::findOutput(quint32 connector)
 {
-    auto it = std::find_if(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [connector] (DrmOutput *o) {
+    auto it = std::find_if(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [connector](DrmOutput *o) {
         return o->m_pipeline->connector()->id() == connector;
     });
     if (it != m_drmOutputs.constEnd()) {
@@ -349,7 +356,7 @@ void DrmGpu::waitIdle()
 {
     m_socketNotifier->setEnabled(false);
     while (true) {
-        const bool idle = std::all_of(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [](DrmOutput *output){
+        const bool idle = std::all_of(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [](DrmOutput *output) {
             return !output->m_pageFlipPending;
         });
         if (idle) {
@@ -380,8 +387,7 @@ static std::chrono::nanoseconds convertTimestamp(const timespec &timestamp)
     return std::chrono::seconds(timestamp.tv_sec) + std::chrono::nanoseconds(timestamp.tv_nsec);
 }
 
-static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_t targetClock,
-                                                 const timespec &timestamp)
+static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_t targetClock, const timespec &timestamp)
 {
     if (sourceClock == targetClock) {
         return convertTimestamp(timestamp);
@@ -401,7 +407,7 @@ static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsign
 {
     Q_UNUSED(fd)
     Q_UNUSED(frame)
-    auto backend = dynamic_cast<DrmBackend*>(kwinApp()->platform());
+    auto backend = dynamic_cast<DrmBackend *>(kwinApp()->platform());
     if (!backend) {
         return;
     }
@@ -415,17 +421,15 @@ static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsign
         return;
     }
 
-    // The static_cast<> here are for a 32-bit environment where 
+    // The static_cast<> here are for a 32-bit environment where
     // sizeof(time_t) == sizeof(unsigned int) == 4 . Putting @p sec
     // into a time_t cuts off the most-significant bit (after the
     // year 2038), similarly long can't hold all the bits of an
     // unsigned multiplication.
-    std::chrono::nanoseconds timestamp = convertTimestamp(output->gpu()->presentationClock(),
-                                                          CLOCK_MONOTONIC,
-                                                          { static_cast<time_t>(sec), static_cast<long>(usec * 1000) });
+    std::chrono::nanoseconds timestamp =
+        convertTimestamp(output->gpu()->presentationClock(), CLOCK_MONOTONIC, {static_cast<time_t>(sec), static_cast<long>(usec * 1000)});
     if (timestamp == std::chrono::nanoseconds::zero()) {
-        qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on output %s",
-                sec, usec, qPrintable(output->name()));
+        qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on output %s", sec, usec, qPrintable(output->name()));
         timestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
 
@@ -471,11 +475,12 @@ void DrmGpu::setEglBackend(AbstractEglDrmBackend *eglBackend)
     m_eglBackend = eglBackend;
 }
 
-DrmBackend *DrmGpu::platform() const {
+DrmBackend *DrmGpu::platform() const
+{
     return m_backend;
 }
 
-const QVector<DrmPipeline*> DrmGpu::pipelines() const
+const QVector<DrmPipeline *> DrmGpu::pipelines() const
 {
     return m_pipelines;
 }

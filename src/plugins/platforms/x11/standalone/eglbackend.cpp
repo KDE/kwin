@@ -22,7 +22,6 @@
 
 namespace KWin
 {
-
 EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
     : EglOnXBackend(display)
     , m_backend(backend)
@@ -117,7 +116,7 @@ void EglBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
     presentSurface(surface(), renderedRegion, screens()->geometry());
 
     if (overlayWindow() && overlayWindow()->window()) { // show the window only after the first pass,
-        overlayWindow()->show();   // since that pass may take long
+        overlayWindow()->show(); // since that pass may take long
     }
 
     // Save the damaged region to history
@@ -207,12 +206,8 @@ bool EglPixmapTexturePrivate::create(SurfacePixmapX11 *pixmap)
     q->setWrapMode(GL_CLAMP_TO_EDGE);
     q->setFilter(GL_LINEAR);
     q->bind();
-    const EGLint attribs[] = {
-        EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
-        EGL_NONE
-    };
-    m_image = eglCreateImageKHR(m_backend->eglDisplay(), EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
-                                reinterpret_cast<EGLClientBuffer>(nativePixmap), attribs);
+    const EGLint attribs[] = {EGL_IMAGE_PRESERVED_KHR, EGL_TRUE, EGL_NONE};
+    m_image = eglCreateImageKHR(m_backend->eglDisplay(), EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR, reinterpret_cast<EGLClientBuffer>(nativePixmap), attribs);
 
     if (EGL_NO_IMAGE_KHR == m_image) {
         qCDebug(KWIN_CORE) << "failed to create egl image";

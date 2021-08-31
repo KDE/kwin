@@ -12,11 +12,9 @@
 
 namespace KWin
 {
-
 OMLSyncControlVsyncMonitor *OMLSyncControlVsyncMonitor::create(QObject *parent)
 {
-    const char *extensions = glXQueryExtensionsString(QX11Info::display(),
-                                                      QX11Info::appScreen());
+    const char *extensions = glXQueryExtensionsString(QX11Info::display(), QX11Info::appScreen());
     if (!strstr(extensions, "GLX_OML_sync_control")) {
         return nullptr; // GLX_OML_sync_control is unsupported.
     }
@@ -41,11 +39,7 @@ OMLSyncControlVsyncMonitorHelper::OMLSyncControlVsyncMonitorHelper(QObject *pare
 
     Window rootWindow = DefaultRootWindow(m_display);
 
-    const int attribs[] = {
-        GLX_RENDER_TYPE, GLX_RGBA_BIT,
-        GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
-        0
-    };
+    const int attribs[] = {GLX_RENDER_TYPE, GLX_RGBA_BIT, GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT, 0};
 
     GLXFBConfig config = chooseGlxFbConfig(m_display, attribs);
     if (!config) {
@@ -66,8 +60,7 @@ OMLSyncControlVsyncMonitorHelper::OMLSyncControlVsyncMonitorHelper(QObject *pare
     XSetWindowAttributes attributes;
     attributes.colormap = colormap;
 
-    m_dummyWindow = XCreateWindow(m_display, rootWindow, 0, 0, 1, 1, 0, depth,
-                                  InputOutput, visual, CWColormap, &attributes);
+    m_dummyWindow = XCreateWindow(m_display, rootWindow, 0, 0, 1, 1, 0, depth, InputOutput, visual, CWColormap, &attributes);
     XFreeColormap(m_display, colormap);
     if (!m_dummyWindow) {
         qCDebug(KWIN_X11STANDALONE) << "Failed to create a dummy window for vsync monitor";
@@ -130,10 +123,8 @@ OMLSyncControlVsyncMonitor::OMLSyncControlVsyncMonitor(QObject *parent)
 {
     m_helper->moveToThread(m_thread);
 
-    connect(m_helper, &OMLSyncControlVsyncMonitorHelper::errorOccurred,
-            this, &OMLSyncControlVsyncMonitor::errorOccurred);
-    connect(m_helper, &OMLSyncControlVsyncMonitorHelper::vblankOccurred,
-            this, &OMLSyncControlVsyncMonitor::vblankOccurred);
+    connect(m_helper, &OMLSyncControlVsyncMonitorHelper::errorOccurred, this, &OMLSyncControlVsyncMonitor::errorOccurred);
+    connect(m_helper, &OMLSyncControlVsyncMonitorHelper::vblankOccurred, this, &OMLSyncControlVsyncMonitor::vblankOccurred);
 
     m_thread->setObjectName(QStringLiteral("vsync event monitor"));
     m_thread->start();

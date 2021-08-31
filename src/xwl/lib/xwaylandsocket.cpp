@@ -19,7 +19,6 @@
 
 namespace KWin
 {
-
 class UnixSocketAddress
 {
 public:

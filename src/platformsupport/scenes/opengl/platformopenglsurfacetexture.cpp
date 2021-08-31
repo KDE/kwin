@@ -9,7 +9,6 @@
 
 namespace KWin
 {
-
 PlatformOpenGLSurfaceTexture::PlatformOpenGLSurfaceTexture(OpenGLBackend *backend)
     : m_backend(backend)
 {

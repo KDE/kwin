@@ -53,10 +53,12 @@ public:
 
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos);
 
-    KWaylandServer::SurfaceInterface *surfaceIface() const {
+    KWaylandServer::SurfaceInterface *surfaceIface() const
+    {
         return m_surfaceIface;
     }
-    KWayland::Client::Surface *surface() const {
+    KWayland::Client::Surface *surface() const
+    {
         return m_surface;
     }
 

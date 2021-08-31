@@ -15,8 +15,8 @@
 #include <QFontMetrics>
 #include <QWindow>
 
-#include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/display.h>
+#include <KWaylandServer/surface_interface.h>
 
 #include <KWindowEffects>
 
@@ -24,7 +24,6 @@ Q_DECLARE_METATYPE(KWindowEffects::SlideFromLocation)
 
 namespace KWin
 {
-
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
     initConfig<SlidingPopupsConfig>();
@@ -42,15 +41,11 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     connect(effects, &EffectsHandler::propertyNotify, this, &SlidingPopupsEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::windowShown, this, &SlidingPopupsEffect::slideIn);
     connect(effects, &EffectsHandler::windowHidden, this, &SlidingPopupsEffect::slideOut);
-    connect(effects, &EffectsHandler::xcbConnectionChanged, this,
-        [this] {
-            m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_SLIDE"), this);
-        }
-    );
-    connect(effects, qOverload<int, int, EffectWindow *>(&EffectsHandler::desktopChanged),
-            this, &SlidingPopupsEffect::stopAnimations);
-    connect(effects, &EffectsHandler::activeFullScreenEffectChanged,
-            this, &SlidingPopupsEffect::stopAnimations);
+    connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this] {
+        m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_SLIDE"), this);
+    });
+    connect(effects, qOverload<int, int, EffectWindow *>(&EffectsHandler::desktopChanged), this, &SlidingPopupsEffect::stopAnimations);
+    connect(effects, &EffectsHandler::activeFullScreenEffectChanged, this, &SlidingPopupsEffect::stopAnimations);
 
     reconfigure(ReconfigureAll);
 }
@@ -61,23 +56,21 @@ SlidingPopupsEffect::~SlidingPopupsEffect()
 
 bool SlidingPopupsEffect::supported()
 {
-     return effects->animationsSupported();
+    return effects->animationsSupported();
 }
 
 void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
     SlidingPopupsConfig::self()->read();
-    m_slideInDuration = std::chrono::milliseconds(
-        static_cast<int>(animationTime(SlidingPopupsConfig::slideInTime() != 0 ? SlidingPopupsConfig::slideInTime() : 150)));
-    m_slideOutDuration = std::chrono::milliseconds(
-        static_cast<int>(animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? SlidingPopupsConfig::slideOutTime() : 250)));
+    m_slideInDuration =
+        std::chrono::milliseconds(static_cast<int>(animationTime(SlidingPopupsConfig::slideInTime() != 0 ? SlidingPopupsConfig::slideInTime() : 150)));
+    m_slideOutDuration =
+        std::chrono::milliseconds(static_cast<int>(animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? SlidingPopupsConfig::slideOutTime() : 250)));
 
     auto animationIt = m_animations.begin();
     while (animationIt != m_animations.end()) {
-        const auto duration = ((*animationIt).kind == AnimationKind::In)
-            ? m_slideInDuration
-            : m_slideOutDuration;
+        const auto duration = ((*animationIt).kind == AnimationKind::In) ? m_slideInDuration : m_slideOutDuration;
         (*animationIt).timeLine.setDuration(duration);
         ++animationIt;
     }
@@ -186,12 +179,12 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
 
 void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 {
-    //X11
+    // X11
     if (m_atom != XCB_ATOM_NONE) {
         slotPropertyNotify(w, m_atom);
     }
 
-    //Wayland
+    // Wayland
     if (auto surf = w->surface()) {
         slotWaylandSlideOnShowChanged(w);
         connect(surf, &KWaylandServer::SurfaceInterface::slideOnShowHideChanged, this, [this, surf] {
@@ -330,19 +323,15 @@ void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
         break;
     }
 
-    animData.slideInDuration = (animData.slideInDuration.count() != 0)
-        ? animData.slideInDuration
-        : m_slideInDuration;
+    animData.slideInDuration = (animData.slideInDuration.count() != 0) ? animData.slideInDuration : m_slideInDuration;
 
-    animData.slideOutDuration = (animData.slideOutDuration.count() != 0)
-        ? animData.slideOutDuration
-        : m_slideOutDuration;
+    animData.slideOutDuration = (animData.slideOutDuration.count() != 0) ? animData.slideOutDuration : m_slideOutDuration;
 
     // Grab the window, so other windowClosed effects will ignore it
-    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
 }
 
-void SlidingPopupsEffect::slotWaylandSlideOnShowChanged(EffectWindow* w)
+void SlidingPopupsEffect::slotWaylandSlideOnShowChanged(EffectWindow *w)
 {
     if (!w) {
         return;
@@ -427,9 +416,9 @@ void SlidingPopupsEffect::setupInternalWindowSlide(EffectWindow *w)
 
 bool SlidingPopupsEffect::eventFilter(QObject *watched, QEvent *event)
 {
-    auto internal = qobject_cast<QWindow*>(watched);
+    auto internal = qobject_cast<QWindow *>(watched);
     if (internal && event->type() == QEvent::DynamicPropertyChange) {
-        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
+        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent *>(event);
         if (pe->propertyName() == "kwin_slide" || pe->propertyName() == "kwin_slide_offset") {
             if (auto w = effects->findWindow(internal)) {
                 setupInternalWindowSlide(w);
@@ -467,7 +456,7 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
         animation.timeLine.reset();
     }
 
-    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
     w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     w->setData(WindowForceBlurRole, QVariant(true));
 
@@ -507,7 +496,7 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
         animation.timeLine.reset();
     }
 
-    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
     w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     w->setData(WindowForceBlurRole, QVariant(true));
 

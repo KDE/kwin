@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 class DrmAbstractOutput;
 
 class ShadowBuffer

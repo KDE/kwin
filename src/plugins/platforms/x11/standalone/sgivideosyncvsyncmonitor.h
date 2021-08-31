@@ -8,15 +8,14 @@
 
 #include "vsyncmonitor.h"
 
-#include <epoxy/glx.h>
-#include <GL/glxext.h>
 #include "fixx11h.h"
+#include <GL/glxext.h>
+#include <epoxy/glx.h>
 
 #include <QThread>
 
 namespace KWin
 {
-
 /**
  * The SGIVideoSyncVsyncMonitorHelper class is responsible for waiting for vsync events on the
  * root window. Note that the helper runs on a separate thread.

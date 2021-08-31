@@ -16,12 +16,11 @@ class KShortcutsEditor;
 
 namespace KWin
 {
-
 class InvertEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit InvertEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
+    explicit InvertEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
     ~InvertEffectConfig() override;
 
 public Q_SLOTS:
@@ -30,7 +29,7 @@ public Q_SLOTS:
     void defaults() override;
 
 private:
-    KShortcutsEditor* mShortcutEditor;
+    KShortcutsEditor *mShortcutEditor;
 };
 
 } // namespace

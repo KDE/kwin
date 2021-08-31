@@ -8,7 +8,6 @@
 
 namespace KWin
 {
-
 Plugin::Plugin(QObject *parent)
     : QObject(parent)
 {

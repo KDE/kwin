@@ -14,19 +14,16 @@
 #include <config-kwin.h>
 #include <kwineffects_interface.h>
 
-#include <KLocalizedString>
 #include <KAboutData>
+#include <KLocalizedString>
 #include <KPluginFactory>
 
-K_PLUGIN_FACTORY_WITH_JSON(ShowFpsEffectConfigFactory,
-                           "showfps_config.json",
-                           registerPlugin<KWin::ShowFpsEffectConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(ShowFpsEffectConfigFactory, "showfps_config.json", registerPlugin<KWin::ShowFpsEffectConfig>();)
 
 namespace KWin
 {
-
-ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     m_ui = new Ui::ShowFpsEffectConfigForm;
     m_ui->setupUi(this);
@@ -45,9 +42,7 @@ ShowFpsEffectConfig::~ShowFpsEffectConfig()
 void ShowFpsEffectConfig::save()
 {
     KCModule::save();
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("showfps"));
 }
 

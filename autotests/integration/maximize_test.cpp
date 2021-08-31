@@ -6,22 +6,22 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/plasmashell.h>
+#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/server_decoration.h>
-#include <KWayland/Client/plasmashell.h>
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
@@ -48,7 +48,7 @@ private Q_SLOTS:
 
 void TestMaximized::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -68,9 +68,8 @@ void TestMaximized::initTestCase()
 
 void TestMaximized::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration |
-                                         Test::AdditionalWaylandInterface::XdgDecorationV1 |
-                                         Test::AdditionalWaylandInterface::PlasmaShell));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration | Test::AdditionalWaylandInterface::XdgDecorationV1
+                                         | Test::AdditionalWaylandInterface::PlasmaShell));
 
     workspace()->setActiveOutput(QPoint(640, 512));
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
@@ -179,8 +178,7 @@ void TestMaximized::testInitiallyMaximizedBorderless()
 
     // Create the test client.
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(
-        Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
 
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
@@ -208,8 +206,7 @@ void TestMaximized::testInitiallyMaximizedBorderless()
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
     QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
     QCOMPARE(client->frameGeometry(), QRect(0, 0, 1280, 1024));
-    QCOMPARE(decorationConfigureRequestedSpy.last().at(0).value<Test::XdgToplevelDecorationV1::mode>(),
-             Test::XdgToplevelDecorationV1::mode_server_side);
+    QCOMPARE(decorationConfigureRequestedSpy.last().at(0).value<Test::XdgToplevelDecorationV1::mode>(), Test::XdgToplevelDecorationV1::mode_server_side);
 
     // Destroy the client.
     shellSurface.reset();
@@ -230,8 +227,7 @@ void TestMaximized::testBorderlessMaximizedWindow()
 
     // Create the test client.
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(
-        Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
 
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);

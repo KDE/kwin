@@ -9,7 +9,6 @@
 
 namespace KWin
 {
-
 static KWaylandServer::OutputDeviceInterface::Transform kwinTransformToOutputDeviceTransform(AbstractWaylandOutput::Transform transform)
 {
     return static_cast<KWaylandServer::OutputDeviceInterface::Transform>(transform);
@@ -74,22 +73,14 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
         m_outputDevice->addMode(deviceMode);
     }
 
-    connect(output, &AbstractWaylandOutput::geometryChanged,
-            this, &WaylandOutputDevice::handleGeometryChanged);
-    connect(output, &AbstractWaylandOutput::scaleChanged,
-            this, &WaylandOutputDevice::handleScaleChanged);
-    connect(output, &AbstractWaylandOutput::enabledChanged,
-            this, &WaylandOutputDevice::handleEnabledChanged);
-    connect(output, &AbstractWaylandOutput::transformChanged,
-            this, &WaylandOutputDevice::handleTransformChanged);
-    connect(output, &AbstractWaylandOutput::modeChanged,
-            this, &WaylandOutputDevice::handleModeChanged);
-    connect(output, &AbstractWaylandOutput::capabilitiesChanged,
-            this, &WaylandOutputDevice::handleCapabilitiesChanged);
-    connect(output, &AbstractWaylandOutput::overscanChanged,
-            this, &WaylandOutputDevice::handleOverscanChanged);
-    connect(output, &AbstractWaylandOutput::vrrPolicyChanged,
-            this, &WaylandOutputDevice::handleVrrPolicyChanged);
+    connect(output, &AbstractWaylandOutput::geometryChanged, this, &WaylandOutputDevice::handleGeometryChanged);
+    connect(output, &AbstractWaylandOutput::scaleChanged, this, &WaylandOutputDevice::handleScaleChanged);
+    connect(output, &AbstractWaylandOutput::enabledChanged, this, &WaylandOutputDevice::handleEnabledChanged);
+    connect(output, &AbstractWaylandOutput::transformChanged, this, &WaylandOutputDevice::handleTransformChanged);
+    connect(output, &AbstractWaylandOutput::modeChanged, this, &WaylandOutputDevice::handleModeChanged);
+    connect(output, &AbstractWaylandOutput::capabilitiesChanged, this, &WaylandOutputDevice::handleCapabilitiesChanged);
+    connect(output, &AbstractWaylandOutput::overscanChanged, this, &WaylandOutputDevice::handleOverscanChanged);
+    connect(output, &AbstractWaylandOutput::vrrPolicyChanged, this, &WaylandOutputDevice::handleVrrPolicyChanged);
 }
 
 void WaylandOutputDevice::handleGeometryChanged()

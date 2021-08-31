@@ -15,7 +15,6 @@
 
 namespace KWin
 {
-
 Item::Item(Item *parent)
 {
     setParentItem(parent);

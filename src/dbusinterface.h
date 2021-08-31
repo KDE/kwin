@@ -17,7 +17,6 @@
 
 namespace KWin
 {
-
 class Compositor;
 class PluginManager;
 class VirtualDesktopManager;
@@ -36,7 +35,7 @@ class VirtualDesktopManager;
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  */
-class DBusInterface: public QObject, protected QDBusContext
+class DBusInterface : public QObject, protected QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin")
@@ -169,7 +168,7 @@ private:
     Compositor *m_compositor;
 };
 
-//TODO: disable all of this in case of kiosk?
+// TODO: disable all of this in case of kiosk?
 
 class VirtualDesktopManagerDBusInterface : public QObject
 {

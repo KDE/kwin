@@ -12,7 +12,6 @@ namespace KWin
 {
 namespace TabBox
 {
-
 DesktopChain::DesktopChain(uint initialSize)
     : m_chain(initialSize)
 {
@@ -30,7 +29,7 @@ uint DesktopChain::next(uint indexDesktop) const
 {
     const int i = m_chain.indexOf(indexDesktop);
     if (i >= 0 && i + 1 < m_chain.size()) {
-        return m_chain[i+1];
+        return m_chain[i + 1];
     } else if (m_chain.size() > 0) {
         return m_chain[0];
     } else {
@@ -68,7 +67,7 @@ void DesktopChain::add(uint desktop)
         index = m_chain.size() - 1;
     }
     for (int i = index; i > 0; --i) {
-        m_chain[i] = m_chain[i-1];
+        m_chain[i] = m_chain[i - 1];
     }
     m_chain[0] = desktop;
 }
@@ -122,7 +121,7 @@ void DesktopChainManager::createFirstChain(const QString &identifier)
     m_currentChain = m_chains.insert(identifier, value);
 }
 
-QHash< QString, DesktopChain >::Iterator DesktopChainManager::addNewChain(const QString &identifier)
+QHash<QString, DesktopChain>::Iterator DesktopChainManager::addNewChain(const QString &identifier)
 {
     return m_chains.insert(identifier, DesktopChain(m_maxChainSize));
 }

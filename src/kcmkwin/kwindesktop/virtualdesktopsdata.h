@@ -14,7 +14,6 @@ class VirtualDesktopsSettings;
 
 namespace KWin
 {
-
 class AnimationsModel;
 class DesktopsModel;
 

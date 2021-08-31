@@ -15,14 +15,12 @@ using namespace KWaylandServer;
 
 namespace KWin
 {
-
 InputPanelV1Integration::InputPanelV1Integration(QObject *parent)
     : WaylandShellIntegration(parent)
 {
     InputPanelV1Interface *shell = new InputPanelV1Interface(waylandServer()->display(), this);
 
-    connect(shell, &InputPanelV1Interface::inputPanelSurfaceAdded,
-            this, &InputPanelV1Integration::createClient);
+    connect(shell, &InputPanelV1Interface::inputPanelSurfaceAdded, this, &InputPanelV1Integration::createClient);
 }
 
 void InputPanelV1Integration::createClient(InputPanelSurfaceV1Interface *shellSurface)

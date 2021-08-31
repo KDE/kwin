@@ -15,7 +15,6 @@ class InputPanelSurfaceV1Interface;
 
 namespace KWin
 {
-
 class InputPanelV1Integration : public WaylandShellIntegration
 {
     Q_OBJECT

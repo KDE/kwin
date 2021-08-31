@@ -16,10 +16,8 @@
 
 namespace KWin
 {
-
 namespace TabBox
 {
-
 class SwitcherItem;
 
 class LayoutPreview : public QObject
@@ -30,6 +28,7 @@ public:
     ~LayoutPreview() override;
 
     bool eventFilter(QObject *object, QEvent *event) override;
+
 private:
     SwitcherItem *m_item;
 };
@@ -38,13 +37,7 @@ class ExampleClientModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    enum {
-        CaptionRole = Qt::UserRole + 1,
-        MinimizedRole,
-        DesktopNameRole,
-        IconRole,
-        WindowIdRole
-    };
+    enum { CaptionRole = Qt::UserRole + 1, MinimizedRole, DesktopNameRole, IconRole, WindowIdRole };
 
     explicit ExampleClientModel(QObject *parent = nullptr);
     ~ExampleClientModel() override;
@@ -62,7 +55,6 @@ private:
     KService::Ptr m_email;
     KService::Ptr m_systemSettings;
 };
-
 
 class SwitcherItem : public QObject
 {

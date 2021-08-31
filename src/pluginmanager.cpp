@@ -17,7 +17,6 @@
 
 namespace KWin
 {
-
 KWIN_SINGLETON_FACTORY(PluginManager)
 
 static const QString s_pluginDirectory = QStringLiteral("kwin/plugins");

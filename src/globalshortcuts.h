@@ -107,16 +107,14 @@ private:
     GestureRecognizer *m_gestureRecognizer;
 };
 
-struct KeyboardShortcut
-{
+struct KeyboardShortcut {
     QKeySequence sequence;
     bool operator==(const KeyboardShortcut &rhs) const
     {
         return sequence == rhs.sequence;
     }
 };
-struct PointerButtonShortcut
-{
+struct PointerButtonShortcut {
     Qt::KeyboardModifiers pointerModifiers;
     Qt::MouseButtons pointerButtons;
     bool operator==(const PointerButtonShortcut &rhs) const
@@ -124,8 +122,7 @@ struct PointerButtonShortcut
         return pointerModifiers == rhs.pointerModifiers && pointerButtons == rhs.pointerButtons;
     }
 };
-struct PointerAxisShortcut
-{
+struct PointerAxisShortcut {
     Qt::KeyboardModifiers axisModifiers;
     PointerAxisDirection axisDirection;
     bool operator==(const PointerAxisShortcut &rhs) const
@@ -133,8 +130,7 @@ struct PointerAxisShortcut
         return axisModifiers == rhs.axisModifiers && axisDirection == rhs.axisDirection;
     }
 };
-struct FourFingerSwipeShortcut
-{
+struct FourFingerSwipeShortcut {
     SwipeDirection swipeDirection;
     bool operator==(const FourFingerSwipeShortcut &rhs) const
     {

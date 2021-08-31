@@ -12,15 +12,14 @@
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 
-#include <QVector>
 #include <QVector2D>
+#include <QVector>
 
 #include <KWaylandServer/contrast_interface.h>
 #include <KWaylandServer/utils.h>
 
 namespace KWin
 {
-
 class ContrastShader;
 
 class ContrastEffect : public KWin::Effect
@@ -43,7 +42,8 @@ public:
     bool provides(Feature feature) override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 76;
     }
 
@@ -70,13 +70,12 @@ private:
     long net_wm_contrast_region;
     QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
     QRegion m_currentContrast; // keeps track of the currently contrasted area of non-caching windows(from bottom to top)
-    QHash< const EffectWindow*, QMatrix4x4> m_colorMatrices;
-    QHash< const EffectWindow*, QMetaObject::Connection > m_contrastChangedConnections; // used only in Wayland to keep track of effect changed
+    QHash<const EffectWindow *, QMatrix4x4> m_colorMatrices;
+    QHash<const EffectWindow *, QMetaObject::Connection> m_contrastChangedConnections; // used only in Wayland to keep track of effect changed
     KWaylandServer::ScopedGlobalPointer<KWaylandServer::ContrastManagerInterface> m_contrastManager;
 };
 
-inline
-bool ContrastEffect::provides(Effect::Feature feature)
+inline bool ContrastEffect::provides(Effect::Feature feature)
 {
     if (feature == Contrast) {
         return true;
@@ -84,8 +83,6 @@ bool ContrastEffect::provides(Effect::Feature feature)
     return KWin::Effect::provides(feature);
 }
 
-
 } // namespace KWin
 
 #endif
-

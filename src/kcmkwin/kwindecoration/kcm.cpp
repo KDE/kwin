@@ -6,15 +6,15 @@
 */
 
 #include "kcm.h"
-#include "decorationmodel.h"
 #include "declarative-plugin/buttonsmodel.h"
+#include "decorationmodel.h"
 #include <config-kwin.h>
 
 #include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KPluginFactory>
 #include <KNSCore/Engine>
+#include <KPluginFactory>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -26,10 +26,9 @@
 #include "kwindecorationdata.h"
 #include "kwindecorationsettings.h"
 
-K_PLUGIN_FACTORY_WITH_JSON(KCMKWinDecorationFactory, "kwindecoration.json", registerPlugin<KCMKWinDecoration>();registerPlugin<KWinDecorationData>();)
+K_PLUGIN_FACTORY_WITH_JSON(KCMKWinDecorationFactory, "kwindecoration.json", registerPlugin<KCMKWinDecoration>(); registerPlugin<KWinDecorationData>();)
 
 Q_DECLARE_METATYPE(KDecoration2::BorderSize)
-
 
 namespace
 {
@@ -45,14 +44,8 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     , m_availableButtonsModel(new KDecoration2::Preview::ButtonsModel(this))
     , m_data(new KWinDecorationData(this))
 {
-    auto about = new KAboutData(QStringLiteral("kcm_kwindecoration"),
-                                i18n("Window Decorations"),
-                                QStringLiteral("1.0"),
-                                QString(),
-                                KAboutLicense::GPL);
-    about->addAuthor(i18n("Valerio Pilo"),
-                     i18n("Author"),
-                     QStringLiteral("vpilo@coldshock.net"));
+    auto about = new KAboutData(QStringLiteral("kcm_kwindecoration"), i18n("Window Decorations"), QStringLiteral("1.0"), QString(), KAboutLicense::GPL);
+    about->addAuthor(i18n("Valerio Pilo"), i18n("Author"), QStringLiteral("vpilo@coldshock.net"));
     setAboutData(about);
     setButtons(Apply | Default | Help);
     qmlRegisterAnonymousType<QAbstractListModel>("org.kde.kwin.KWinDecoration", 1);
@@ -70,7 +63,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     connect(this, &KCMKWinDecoration::borderSizeChanged, this, &KCMKWinDecoration::borderIndexChanged);
     connect(this, &KCMKWinDecoration::themeChanged, this, &KCMKWinDecoration::borderIndexChanged);
 
-    connect(this, &KCMKWinDecoration::themeChanged, this, [=](){
+    connect(this, &KCMKWinDecoration::themeChanged, this, [=]() {
         if (m_data->settings()->borderSizeAuto()) {
             setBorderSize(recommendedBorderSize());
         }
@@ -90,8 +83,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
 
     // Update the themes when the color scheme or a theme's settings change
     QDBusConnection::sessionBus()
-        .connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
-            this, SLOT(reloadKWinSettings()));
+        .connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"), this, SLOT(reloadKWinSettings()));
 
     QMetaObject::invokeMethod(m_themesModel, "init", Qt::QueuedConnection);
 }
@@ -129,9 +121,7 @@ void KCMKWinDecoration::save()
     ManagedConfigModule::save();
 
     // Send a signal to all kwin instances
-    QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),
-                                                      QStringLiteral("org.kde.KWin"),
-                                                      QStringLiteral("reloadConfig"));
+    QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"));
     QDBusConnection::sessionBus().send(message);
 }
 
@@ -180,8 +170,7 @@ QStringList KCMKWinDecoration::borderSizesModel() const
     // Use index 0 for borderSizeAuto == true
     // The rest of indexes get offset by 1
     QStringList model = Utils::getBorderSizeNames().values();
-    model.insert(0, i18nc("%1 is the name of a border size",
-                          "Theme's default (%1)", model.at(recommendedBorderSize())));
+    model.insert(0, i18nc("%1 is the name of a border size", "Theme's default (%1)", model.at(recommendedBorderSize())));
     return model;
 }
 

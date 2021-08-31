@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 class WasUserInteractionX11Filter : public X11EventFilter
 {
 public:

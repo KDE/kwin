@@ -22,7 +22,6 @@
 
 namespace KWin
 {
-
 class WindowBasedEdge : public Edge
 {
     Q_OBJECT

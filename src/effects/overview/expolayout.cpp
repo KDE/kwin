@@ -321,8 +321,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
     slotCenters.resize(rows * columns);
     for (int x = 0; x < columns; ++x)
         for (int y = 0; y < rows; ++y) {
-            slotCenters[x + y * columns] = QPoint(area.x() + slotWidth * x + slotWidth / 2,
-                                                  area.y() + slotHeight * y + slotHeight / 2);
+            slotCenters[x + y * columns] = QPoint(area.x() + slotWidth * x + slotWidth / 2, area.y() + slotHeight * y + slotHeight / 2);
         }
 
     // Assign each window to the closest available slot
@@ -332,7 +331,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         int slotCandidate = -1, slotCandidateDistance = INT_MAX;
         const QPoint pos = cell->naturalRect().center();
 
-        for (int i = 0; i < columns*rows; ++i) { // all slots
+        for (int i = 0; i < columns * rows; ++i) { // all slots
             const int dist = distance(pos, slotCenters[i]);
             if (dist < slotCandidateDistance) { // window is interested in this slot
                 ExpoCell *occupier = takenSlots[i];
@@ -359,10 +358,8 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         }
 
         // Work out where the slot is
-        QRect target(area.x() + (slot % columns) * slotWidth,
-                     area.y() + (slot / columns) * slotHeight,
-                     slotWidth, slotHeight);
-        target.adjust(m_spacing, m_spacing, -m_spacing, -m_spacing);   // Borders
+        QRect target(area.x() + (slot % columns) * slotWidth, area.y() + (slot / columns) * slotHeight, slotWidth, slotHeight);
+        target.adjust(m_spacing, m_spacing, -m_spacing, -m_spacing); // Borders
 
         qreal scale;
         if (target.width() / qreal(cell->naturalWidth()) < target.height() / qreal(cell->naturalHeight())) {
@@ -379,10 +376,10 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         // Don't scale the windows too much
         if (scale > 2.0 || (scale > 1.0 && (cell->naturalWidth() > 300 || cell->naturalHeight() > 300))) {
             scale = (cell->naturalWidth() > 300 || cell->naturalHeight() > 300) ? 1.0 : 2.0;
-            target = QRect(
-                         target.center().x() - int(cell->naturalWidth() * scale) / 2,
-                         target.center().y() - int(cell->naturalHeight() * scale) / 2,
-                         scale * cell->naturalWidth(), scale * cell->naturalHeight());
+            target = QRect(target.center().x() - int(cell->naturalWidth() * scale) / 2,
+                           target.center().y() - int(cell->naturalHeight() * scale) / 2,
+                           scale * cell->naturalWidth(),
+                           scale * cell->naturalHeight());
         }
 
         cell->setX(target.x());
@@ -412,7 +409,7 @@ void ExpoLayout::calculateWindowTransformationsKompose()
     const QRect availRect = QRect(0, 0, width(), height());
     std::sort(m_cells.begin(), m_cells.end(), [](const ExpoCell *a, const ExpoCell *b) {
         return a->persistentKey() < b->persistentKey();
-    });   // The location of the windows should not depend on the stacking order
+    }); // The location of the windows should not depend on the stacking order
 
     // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
     int rows, columns;
@@ -425,7 +422,7 @@ void ExpoLayout::calculateWindowTransformationsKompose()
         rows = std::ceil(sqrt(qreal(m_cells.count())));
         columns = std::ceil(qreal(m_cells.count()) / rows);
     }
-    //qCDebug(KWINEFFECTS) << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
+    // qCDebug(KWINEFFECTS) << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
 
     // Calculate width & height
     int w = (availRect.width() - (columns + 1) * m_spacing) / columns;
@@ -475,12 +472,10 @@ void ExpoLayout::calculateWindowTransformationsKompose()
             } else {
                 qreal widthByHeight = widthForHeight(cell, usableHeight);
                 qreal heightByWidth = heightForWidth(cell, usableWidth);
-                if ((ratio >= 1.0 && heightByWidth <= usableHeight) ||
-                        (ratio < 1.0 && widthByHeight > usableWidth)) {
+                if ((ratio >= 1.0 && heightByWidth <= usableHeight) || (ratio < 1.0 && widthByHeight > usableWidth)) {
                     widgetWidth = usableWidth;
                     widgetHeight = (int)heightByWidth;
-                } else if ((ratio < 1.0 && widthByHeight <= usableWidth) ||
-                           (ratio >= 1.0 && heightByWidth > usableHeight)) {
+                } else if ((ratio < 1.0 && widthByHeight <= usableWidth) || (ratio >= 1.0 && heightByWidth > usableHeight)) {
                     widgetHeight = usableHeight;
                     widgetWidth = (int)widthByHeight;
                 }
@@ -501,9 +496,10 @@ void ExpoLayout::calculateWindowTransformationsKompose()
             if (j == 0 && w > widgetWidth) {
                 alignmentXoffset = w - widgetWidth;
             }
-            QRect geom(availRect.x() + j *(w + m_spacing) + m_spacing + alignmentXoffset + xOffsetFromLastCol,
-                       availRect.y() + i *(h + m_spacing) + m_spacing + alignmentYoffset,
-                       widgetWidth, widgetHeight);
+            QRect geom(availRect.x() + j * (w + m_spacing) + m_spacing + alignmentXoffset + xOffsetFromLastCol,
+                       availRect.y() + i * (h + m_spacing) + m_spacing + alignmentYoffset,
+                       widgetWidth,
+                       widgetHeight);
             geometryRects.append(geom);
 
             // Set the x offset for the next column
@@ -529,9 +525,9 @@ void ExpoLayout::calculateWindowTransformationsKompose()
             QRect target = geometryRects[pos];
             target.setY(target.y() + topOffset);
             // @Marrtin: any idea what this is good for?
-//             DataHash::iterator winData = m_windowData.find(window);
-//             if (winData != m_windowData.end())
-//                 winData->slot = pos;
+            //             DataHash::iterator winData = m_windowData.find(window);
+            //             if (winData != m_windowData.end())
+            //                 winData->slot = pos;
 
             cell->setX(target.x());
             cell->setY(target.y());
@@ -632,9 +628,9 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                         diff.setX(1);
                     }
                     // Try to keep screen aspect ratio
-                    //if (bounds.height() / bounds.width() > area.height() / area.width())
+                    // if (bounds.height() / bounds.width() > area.height() / area.width())
                     //    diff.setY(diff.y() / 2);
-                    //else
+                    // else
                     //    diff.setX(diff.x() / 2);
                     // Approximate a vector of between 10px and 20px in magnitude in the same direction
                     diff *= m_accuracy / qreal(diff.manhattanLength());
@@ -729,7 +725,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                 // This may cause some slight distortion if the windows are enlarged a large amount
                 int widthDiff = m_accuracy;
                 int heightDiff = heightForWidth(cell, target->width() + widthDiff) - target->height();
-                int xDiff = widthDiff / 2;  // Also move a bit in the direction of the enlarge, allows the
+                int xDiff = widthDiff / 2; // Also move a bit in the direction of the enlarge, allows the
                 int yDiff = heightDiff / 2; // center windows to be enlarged if there is gaps on the side.
 
                 // heightDiff (and yDiff) will be re-computed after each successful enlargement attempt
@@ -737,10 +733,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
 
                 // Attempt enlarging to the top-right
                 oldRect = *target;
-                target->setRect(target->x() + xDiff,
-                                target->y() - yDiff - heightDiff,
-                                target->width() + widthDiff,
-                                target->height() + heightDiff);
+                target->setRect(target->x() + xDiff, target->y() - yDiff - heightDiff, target->width() + widthDiff, target->height() + heightDiff);
                 if (isOverlappingAny(cell, targets, borderRegion, m_spacing))
                     *target = oldRect;
                 else {
@@ -751,10 +744,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
 
                 // Attempt enlarging to the bottom-right
                 oldRect = *target;
-                target->setRect(target->x() + xDiff,
-                                target->y() + yDiff,
-                                target->width() + widthDiff,
-                                target->height() + heightDiff);
+                target->setRect(target->x() + xDiff, target->y() + yDiff, target->width() + widthDiff, target->height() + heightDiff);
                 if (isOverlappingAny(cell, targets, borderRegion, m_spacing))
                     *target = oldRect;
                 else {
@@ -765,10 +755,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
 
                 // Attempt enlarging to the bottom-left
                 oldRect = *target;
-                target->setRect(target->x() - xDiff - widthDiff,
-                                target->y() + yDiff,
-                                target->width() + widthDiff,
-                                target->height() + heightDiff);
+                target->setRect(target->x() - xDiff - widthDiff, target->y() + yDiff, target->width() + widthDiff, target->height() + heightDiff);
                 if (isOverlappingAny(cell, targets, borderRegion, m_spacing))
                     *target = oldRect;
                 else {
@@ -779,10 +766,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
 
                 // Attempt enlarging to the top-left
                 oldRect = *target;
-                target->setRect(target->x() - xDiff - widthDiff,
-                                target->y() - yDiff - heightDiff,
-                                target->width() + widthDiff,
-                                target->height() + heightDiff);
+                target->setRect(target->x() - xDiff - widthDiff, target->y() - yDiff - heightDiff, target->width() + widthDiff, target->height() + heightDiff);
                 if (isOverlappingAny(cell, targets, borderRegion, m_spacing)) {
                     *target = oldRect;
                 } else {

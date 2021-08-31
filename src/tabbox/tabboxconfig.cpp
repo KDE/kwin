@@ -28,9 +28,11 @@ public:
         , clientMultiScreenMode(TabBoxConfig::defaultMultiScreenMode())
         , clientSwitchingMode(TabBoxConfig::defaultSwitchingMode())
         , desktopSwitchingMode(TabBoxConfig::MostRecentlyUsedDesktopSwitching)
-        , layoutName(TabBoxConfig::defaultLayoutName()) {
+        , layoutName(TabBoxConfig::defaultLayoutName())
+    {
     }
-    ~TabBoxConfigPrivate() {
+    ~TabBoxConfigPrivate()
+    {
     }
     bool showTabBox;
     bool highlightWindows;
@@ -57,7 +59,7 @@ TabBoxConfig::~TabBoxConfig()
     delete d;
 }
 
-TabBoxConfig& TabBoxConfig::operator=(const KWin::TabBox::TabBoxConfig& object)
+TabBoxConfig &TabBoxConfig::operator=(const KWin::TabBox::TabBoxConfig &object)
 {
     d->showTabBox = object.isShowTabBox();
     d->highlightWindows = object.isHighlightWindows();
@@ -184,12 +186,12 @@ void TabBoxConfig::setDesktopSwitchingMode(DesktopSwitchingMode switchingMode)
     d->desktopSwitchingMode = switchingMode;
 }
 
-QString& TabBoxConfig::layoutName() const
+QString &TabBoxConfig::layoutName() const
 {
     return d->layoutName;
 }
 
-void TabBoxConfig::setLayoutName(const QString& name)
+void TabBoxConfig::setLayoutName(const QString &name)
 {
     d->layoutName = name;
 }

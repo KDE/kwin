@@ -10,29 +10,31 @@
 
 namespace KWin
 {
-
 class FakeEffect : public Effect
 {
     Q_OBJECT
 public:
-    FakeEffect() {}
-    ~FakeEffect() override {}
+    FakeEffect()
+    {
+    }
+    ~FakeEffect() override
+    {
+    }
 
-    static bool supported() {
+    static bool supported()
+    {
         return effects->isOpenGLCompositing();
     }
 
-    static bool enabledByDefault() {
+    static bool enabledByDefault()
+    {
         return effects->property("testEnabledByDefault").toBool();
     }
 };
 
 } // namespace
 
-KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED( FakeEffectPluginFactory,
-                                       KWin::FakeEffect,
-                                       "fakeeffectplugin.json",
-                                       return KWin::FakeEffect::supported();,
-                                       return KWin::FakeEffect::enabledByDefault();)
+KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED(FakeEffectPluginFactory, KWin::FakeEffect, "fakeeffectplugin.json", return KWin::FakeEffect::supported();
+                                      , return KWin::FakeEffect::enabledByDefault();)
 
 #include "fakeeffectplugin.moc"

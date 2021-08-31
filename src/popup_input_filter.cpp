@@ -16,7 +16,6 @@
 
 namespace KWin
 {
-
 PopupInputFilter::PopupInputFilter()
     : QObject()
 {
@@ -48,8 +47,8 @@ bool PopupInputFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
         return false;
     }
     if (event->type() == QMouseEvent::MouseButtonPress) {
-        auto pointerFocus = qobject_cast<AbstractClient*>(input()->findToplevel(event->globalPos()));
-        if (!pointerFocus || !AbstractClient::belongToSameApplication(pointerFocus, qobject_cast<AbstractClient*>(m_popupClients.constLast()))) {
+        auto pointerFocus = qobject_cast<AbstractClient *>(input()->findToplevel(event->globalPos()));
+        if (!pointerFocus || !AbstractClient::belongToSameApplication(pointerFocus, qobject_cast<AbstractClient *>(m_popupClients.constLast()))) {
             // a press on a window (or no window) not belonging to the popup window
             cancelPopups();
             // filter out this press

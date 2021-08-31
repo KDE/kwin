@@ -82,10 +82,8 @@ struct libinput_device {
     enum libinput_config_accel_profile defaultPointerAccelerationProfile = LIBINPUT_CONFIG_ACCEL_PROFILE_NONE;
     enum libinput_config_accel_profile pointerAccelerationProfile = LIBINPUT_CONFIG_ACCEL_PROFILE_NONE;
     bool setPointerAccelerationProfileReturnValue = 0;
-    std::array<float, 6> defaultCalibrationMatrix{{1.0f, 0.0f, 0.0f,
-                                                   0.0f, 1.0f, 0.0f}};
-    std::array<float, 6> calibrationMatrix{{1.0f, 0.0f, 0.0f,
-                                            0.0f, 1.0f, 0.0f}};
+    std::array<float, 6> defaultCalibrationMatrix{{1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f}};
+    std::array<float, 6> calibrationMatrix{{1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f}};
     bool defaultCalibrationMatrixIsIdentity = true;
 
     bool lidSwitch = false;
@@ -100,14 +98,17 @@ struct libinput_device {
 };
 
 struct libinput_event {
-    virtual ~libinput_event() {}
+    virtual ~libinput_event()
+    {
+    }
     libinput_device *device = nullptr;
     libinput_event_type type = LIBINPUT_EVENT_NONE;
     quint32 time = 0;
 };
 
 struct libinput_event_keyboard : libinput_event {
-    libinput_event_keyboard() {
+    libinput_event_keyboard()
+    {
         type = LIBINPUT_EVENT_KEYBOARD_KEY;
     }
     libinput_key_state state = LIBINPUT_KEY_STATE_RELEASED;
@@ -142,10 +143,7 @@ struct libinput_event_gesture : libinput_event {
 };
 
 struct libinput_event_switch : libinput_event {
-    enum class State {
-        Off,
-        On
-    };
+    enum class State { Off, On };
     State state = State::Off;
     quint64 timeMicroseconds = 0;
 };

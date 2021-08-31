@@ -8,8 +8,8 @@
 */
 #include "mock_libinput.h"
 
-#include "libinput/device.h"
 #include "input_event.h"
+#include "libinput/device.h"
 
 #include <QtTest>
 
@@ -51,8 +51,16 @@ void InputEventsTest::testInitMouseEvent()
 
     QFETCH(QEvent::Type, type);
     // now create our own event
-    MouseEvent event(type, QPointF(100, 200), Qt::LeftButton, Qt::LeftButton | Qt::RightButton,
-                     Qt::ShiftModifier | Qt::ControlModifier, 300, QSizeF(1, 2), QSizeF(3, 4), quint64(-1), &d);
+    MouseEvent event(type,
+                     QPointF(100, 200),
+                     Qt::LeftButton,
+                     Qt::LeftButton | Qt::RightButton,
+                     Qt::ShiftModifier | Qt::ControlModifier,
+                     300,
+                     QSizeF(1, 2),
+                     QSizeF(3, 4),
+                     quint64(-1),
+                     &d);
     // and verify the contract of QMouseEvent
     QCOMPARE(event.type(), type);
     QCOMPARE(event.globalPos(), QPoint(100, 200));
@@ -90,8 +98,7 @@ void InputEventsTest::testInitKeyEvent()
     // setup event
     QFETCH(QEvent::Type, type);
     QFETCH(bool, autorepeat);
-    KeyEvent event(type, Qt::Key_Space, Qt::ShiftModifier | Qt::ControlModifier, 200, 300,
-                   QStringLiteral(" "), autorepeat, 400, &d);
+    KeyEvent event(type, Qt::Key_Space, Qt::ShiftModifier | Qt::ControlModifier, 200, 300, QStringLiteral(" "), autorepeat, 400, &d);
     // and verify the contract of QKeyEvent
     QCOMPARE(event.type(), type);
     QCOMPARE(event.isAutoRepeat(), autorepeat);
@@ -115,7 +122,7 @@ void InputEventsTest::testInitWheelEvent_data()
     QTest::addColumn<QPoint>("expectedAngleDelta");
 
     QTest::newRow("horiz") << Qt::Horizontal << 3.3 << 1 << QPoint(3, 0);
-    QTest::newRow("vert")  << Qt::Vertical   << 2.4 << 2 << QPoint(0, 2);
+    QTest::newRow("vert") << Qt::Vertical << 2.4 << 2 << QPoint(0, 2);
 }
 
 void InputEventsTest::testInitWheelEvent()
@@ -130,8 +137,15 @@ void InputEventsTest::testInitWheelEvent()
     QFETCH(Qt::Orientation, orientation);
     QFETCH(qreal, delta);
     QFETCH(qint32, discreteDelta);
-    WheelEvent event(QPointF(100, 200), delta, discreteDelta, orientation, Qt::LeftButton | Qt::RightButton,
-                     Qt::ShiftModifier | Qt::ControlModifier, InputRedirection::PointerAxisSourceWheel, 300, &d);
+    WheelEvent event(QPointF(100, 200),
+                     delta,
+                     discreteDelta,
+                     orientation,
+                     Qt::LeftButton | Qt::RightButton,
+                     Qt::ShiftModifier | Qt::ControlModifier,
+                     InputRedirection::PointerAxisSourceWheel,
+                     300,
+                     &d);
     // compare QWheelEvent contract
     QCOMPARE(event.type(), QEvent::Wheel);
     QCOMPARE(event.posF(), QPointF(100, 200));
@@ -146,7 +160,6 @@ void InputEventsTest::testInitWheelEvent()
     QCOMPARE(event.axisSource(), InputRedirection::PointerAxisSourceWheel);
     // and our custom argument
     QCOMPARE(event.device(), &d);
-
 }
 
 void InputEventsTest::testInitSwitchEvent_data()

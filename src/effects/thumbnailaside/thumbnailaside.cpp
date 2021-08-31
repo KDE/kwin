@@ -20,11 +20,10 @@
 
 namespace KWin
 {
-
 ThumbnailAsideEffect::ThumbnailAsideEffect()
 {
     initConfig<ThumbnailAsideConfig>();
-    QAction* a = new QAction(this);
+    QAction *a = new QAction(this);
     a->setObjectName(QStringLiteral("ToggleCurrentThumbnail"));
     a->setText(i18n("Toggle Thumbnail for Current Window"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_T);
@@ -44,25 +43,24 @@ void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
     ThumbnailAsideConfig::self()->read();
     maxwidth = ThumbnailAsideConfig::maxWidth();
     spacing = ThumbnailAsideConfig::spacing();
-    opacity = ThumbnailAsideConfig::opacity()/100.0;
+    opacity = ThumbnailAsideConfig::opacity() / 100.0;
     screen = ThumbnailAsideConfig::screen(); // Xinerama screen TODO add gui option
     arrange();
 }
 
-void ThumbnailAsideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
+void ThumbnailAsideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     painted = QRegion();
     effects->paintScreen(mask, region, data);
 
     const QMatrix4x4 projectionMatrix = data.projectionMatrix();
-    Q_FOREACH (const Data & d, windows) {
+    Q_FOREACH (const Data &d, windows) {
         if (painted.intersects(d.rect)) {
             WindowPaintData data(d.window, projectionMatrix);
             data.multiplyOpacity(opacity);
             QRect region;
             setPositionTransformations(data, region, d.window, d.rect, Qt::KeepAspectRatio);
-            effects->drawWindow(d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS,
-                                region, data);
+            effects->drawWindow(d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS, region, data);
         }
     }
 }
@@ -73,17 +71,17 @@ void ThumbnailAsideEffect::paintWindow(EffectWindow *w, int mask, QRegion region
     painted |= region;
 }
 
-void ThumbnailAsideEffect::slotWindowDamaged(EffectWindow* w, const QRegion&)
+void ThumbnailAsideEffect::slotWindowDamaged(EffectWindow *w, const QRegion &)
 {
-    Q_FOREACH (const Data & d, windows) {
+    Q_FOREACH (const Data &d, windows) {
         if (d.window == w)
             effects->addRepaint(d.rect);
     }
 }
 
-void ThumbnailAsideEffect::slotWindowFrameGeometryChanged(EffectWindow* w, const QRect& old)
+void ThumbnailAsideEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const QRect &old)
 {
-    Q_FOREACH (const Data & d, windows) {
+    Q_FOREACH (const Data &d, windows) {
         if (d.window == w) {
             if (w->size() == old.size())
                 effects->addRepaint(d.rect);
@@ -94,14 +92,14 @@ void ThumbnailAsideEffect::slotWindowFrameGeometryChanged(EffectWindow* w, const
     }
 }
 
-void ThumbnailAsideEffect::slotWindowClosed(EffectWindow* w)
+void ThumbnailAsideEffect::slotWindowClosed(EffectWindow *w)
 {
     removeThumbnail(w);
 }
 
 void ThumbnailAsideEffect::toggleCurrentThumbnail()
 {
-    EffectWindow* active = effects->activeWindow();
+    EffectWindow *active = effects->activeWindow();
     if (active == nullptr)
         return;
     if (windows.contains(active))
@@ -110,27 +108,25 @@ void ThumbnailAsideEffect::toggleCurrentThumbnail()
         addThumbnail(active);
 }
 
-void ThumbnailAsideEffect::addThumbnail(EffectWindow* w)
+void ThumbnailAsideEffect::addThumbnail(EffectWindow *w)
 {
     repaintAll(); // repaint old areas
     Data d;
     d.window = w;
     d.index = windows.count();
-    windows[ w ] = d;
+    windows[w] = d;
     arrange();
 }
 
-void ThumbnailAsideEffect::removeThumbnail(EffectWindow* w)
+void ThumbnailAsideEffect::removeThumbnail(EffectWindow *w)
 {
     if (!windows.contains(w))
         return;
     repaintAll(); // repaint old areas
-    int index = windows[ w ].index;
+    int index = windows[w].index;
     windows.remove(w);
-    for (QHash< EffectWindow*, Data >::Iterator it = windows.begin();
-            it != windows.end();
-            ++it) {
-        Data& d = *it;
+    for (QHash<EffectWindow *, Data>::Iterator it = windows.begin(); it != windows.end(); ++it) {
+        Data &d = *it;
         if (d.index > index)
             --d.index;
     }
@@ -142,38 +138,34 @@ void ThumbnailAsideEffect::arrange()
     if (windows.size() == 0)
         return;
     int height = 0;
-    QVector< int > pos(windows.size());
+    QVector<int> pos(windows.size());
     int mwidth = 0;
-    Q_FOREACH (const Data & d, windows) {
+    Q_FOREACH (const Data &d, windows) {
         height += d.window->height();
         mwidth = qMax(mwidth, d.window->width());
-        pos[ d.index ] = d.window->height();
+        pos[d.index] = d.window->height();
     }
     QRect area = effects->clientArea(MaximizeArea, screen, effects->currentDesktop());
     double scale = area.height() / double(height);
-    scale = qMin(scale, maxwidth / double(mwidth));    // don't be wider than maxwidth pixels
+    scale = qMin(scale, maxwidth / double(mwidth)); // don't be wider than maxwidth pixels
     int add = 0;
-    for (int i = 0;
-            i < windows.size();
-            ++i) {
-        pos[ i ] = int(pos[ i ] * scale);
-        pos[ i ] += spacing + add; // compute offset of each item
-        add = pos[ i ];
+    for (int i = 0; i < windows.size(); ++i) {
+        pos[i] = int(pos[i] * scale);
+        pos[i] += spacing + add; // compute offset of each item
+        add = pos[i];
     }
-    for (QHash< EffectWindow*, Data >::Iterator it = windows.begin();
-            it != windows.end();
-            ++it) {
-        Data& d = *it;
+    for (QHash<EffectWindow *, Data>::Iterator it = windows.begin(); it != windows.end(); ++it) {
+        Data &d = *it;
         int width = int(d.window->width() * scale);
-        d.rect = QRect(area.right() - width, area.bottom() - pos[ d.index ], width, int(d.window->height() * scale));
+        d.rect = QRect(area.right() - width, area.bottom() - pos[d.index], width, int(d.window->height() * scale));
     }
     repaintAll();
 }
 
 void ThumbnailAsideEffect::repaintAll()
 {
-    Q_FOREACH (const Data & d, windows)
-    effects->addRepaint(d.rect);
+    Q_FOREACH (const Data &d, windows)
+        effects->addRepaint(d.rect);
 }
 
 bool ThumbnailAsideEffect::isActive() const
@@ -182,4 +174,3 @@ bool ThumbnailAsideEffect::isActive() const
 }
 
 } // namespace
-

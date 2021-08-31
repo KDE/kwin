@@ -11,9 +11,10 @@
 
 #include <xcb/xcb.h>
 
-namespace KWayland {
-namespace Client {
-
+namespace KWayland
+{
+namespace Client
+{
 class ConnectionThread;
 class Registry;
 class Compositor;
@@ -32,26 +33,34 @@ class Backend : public QObject
 {
     Q_OBJECT
 public:
-    Backend(QObject *parent = nullptr) : QObject(parent) {}
+    Backend(QObject *parent = nullptr)
+        : QObject(parent)
+    {
+    }
 
     Q_PROPERTY(int mode READ mode CONSTANT)
     Q_PROPERTY(bool lockHint MEMBER m_lockHint NOTIFY lockHintChanged)
     Q_PROPERTY(bool errorsAllowed READ errorsAllowed WRITE setErrorsAllowed NOTIFY errorsAllowedChanged)
 
-    virtual void init(QQuickView *view) {
+    virtual void init(QQuickView *view)
+    {
         m_view = view;
     }
-    int mode() const {
+    int mode() const
+    {
         return (int)m_mode;
     }
 
-    bool lockHint() const {
+    bool lockHint() const
+    {
         return m_lockHint;
     }
-    bool errorsAllowed() const {
+    bool errorsAllowed() const
+    {
         return m_errorsAllowed;
     }
-    void setErrorsAllowed(bool set) {
+    void setErrorsAllowed(bool set)
+    {
         if (m_errorsAllowed == set) {
             return;
         }
@@ -59,21 +68,30 @@ public:
         Q_EMIT errorsAllowedChanged();
     }
 
-    Q_INVOKABLE virtual void lockRequest(bool persistent = true, QRect region = QRect()) {
+    Q_INVOKABLE virtual void lockRequest(bool persistent = true, QRect region = QRect())
+    {
         Q_UNUSED(persistent);
         Q_UNUSED(region);
     }
-    Q_INVOKABLE virtual void unlockRequest() {}
+    Q_INVOKABLE virtual void unlockRequest()
+    {
+    }
 
-    Q_INVOKABLE virtual void confineRequest(bool persistent = true, QRect region = QRect()) {
+    Q_INVOKABLE virtual void confineRequest(bool persistent = true, QRect region = QRect())
+    {
         Q_UNUSED(persistent);
         Q_UNUSED(region);
     }
-    Q_INVOKABLE virtual void unconfineRequest() {}
-    Q_INVOKABLE virtual void hideAndConfineRequest(bool confineBeforeHide = false) {
+    Q_INVOKABLE virtual void unconfineRequest()
+    {
+    }
+    Q_INVOKABLE virtual void hideAndConfineRequest(bool confineBeforeHide = false)
+    {
         Q_UNUSED(confineBeforeHide);
     }
-    Q_INVOKABLE virtual void undoHideRequest() {}
+    Q_INVOKABLE virtual void undoHideRequest()
+    {
+    }
 
 Q_SIGNALS:
     void confineChanged(bool confined);
@@ -83,15 +101,14 @@ Q_SIGNALS:
     void forceSurfaceCommit();
 
 protected:
-    enum class Mode {
-        Wayland = 0,
-        X = 1
-    };
+    enum class Mode { Wayland = 0, X = 1 };
 
-    QQuickView* view() const {
+    QQuickView *view() const
+    {
         return m_view;
     }
-    void setMode(Mode set) {
+    void setMode(Mode set)
+    {
         m_mode = set;
     }
 
@@ -158,7 +175,6 @@ public:
 private:
     bool tryConfine(int &error);
     xcb_connection_t *m_xcbConn = nullptr;
-
 };
 
 #endif

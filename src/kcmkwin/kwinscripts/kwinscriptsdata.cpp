@@ -6,12 +6,11 @@
 
 #include "kwinscriptsdata.h"
 
-#include <KPluginFactory>
-#include <KPackage/PackageLoader>
-#include <KPackage/Package>
-#include <KPackage/PackageStructure>
 #include "kpluginselector.h"
-
+#include <KPackage/Package>
+#include <KPackage/PackageLoader>
+#include <KPackage/PackageStructure>
+#include <KPluginFactory>
 
 KWinScriptsData::KWinScriptsData(QObject *parent, const QVariantList &args)
     : KCModuleData(parent, args)
@@ -21,7 +20,7 @@ KWinScriptsData::KWinScriptsData(QObject *parent, const QVariantList &args)
 
 QList<KPluginInfo> KWinScriptsData::pluginInfoList() const
 {
-    auto filter =  [](const KPluginMetaData &md) {
+    auto filter = [](const KPluginMetaData &md) {
         return md.isValid() && !md.rawData().value("X-KWin-Exclude-Listing").toBool();
     };
 

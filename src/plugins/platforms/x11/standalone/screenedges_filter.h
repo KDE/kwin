@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 class ScreenEdgesFilter : public X11EventFilter
 {
 public:

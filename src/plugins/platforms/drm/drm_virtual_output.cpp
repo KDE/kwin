@@ -9,18 +9,17 @@
 */
 #include "drm_virtual_output.h"
 
+#include "drm_backend.h"
+#include "drm_gpu.h"
+#include "logging.h"
 #include "renderloop_p.h"
 #include "softwarevsyncmonitor.h"
-#include "drm_gpu.h"
-#include "drm_backend.h"
-#include "logging.h"
 #if HAVE_GBM
 #include "drm_buffer_gbm.h"
 #endif
 
 namespace KWin
 {
-
 DrmVirtualOutput::DrmVirtualOutput(DrmGpu *gpu)
     : DrmAbstractOutput(gpu)
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
@@ -31,12 +30,15 @@ DrmVirtualOutput::DrmVirtualOutput(DrmGpu *gpu)
     m_identifier = s_serial++;
     setName("Virtual-" + QString::number(m_identifier));
     m_modeIndex = 0;
-    QVector<Mode> modes = {{{1920, 1080}, 60000, AbstractWaylandOutput::ModeFlags(AbstractWaylandOutput::ModeFlag::Current) | AbstractWaylandOutput::ModeFlag::Preferred, 0}};
+    QVector<Mode> modes = {
+        {{1920, 1080}, 60000, AbstractWaylandOutput::ModeFlags(AbstractWaylandOutput::ModeFlag::Current) | AbstractWaylandOutput::ModeFlag::Preferred, 0}};
     initialize(QByteArray("model_").append(QByteArray::number(m_identifier)),
                QByteArray("manufacturer_").append(QByteArray::number(m_identifier)),
                QByteArray("eisa_").append(QByteArray::number(m_identifier)),
                QByteArray("serial_").append(QByteArray::number(m_identifier)),
-               modes[m_modeIndex].size, modes, QByteArray("EDID_").append(QByteArray::number(m_identifier)));
+               modes[m_modeIndex].size,
+               modes,
+               QByteArray("EDID_").append(QByteArray::number(m_identifier)));
     m_renderLoop->setRefreshRate(modes[m_modeIndex].refreshRate);
 }
 
@@ -99,7 +101,7 @@ QSize DrmVirtualOutput::sourceSize() const
 GbmBuffer *DrmVirtualOutput::currentBuffer() const
 {
 #if HAVE_GBM
-    return dynamic_cast<GbmBuffer*>(m_currentBuffer.get());
+    return dynamic_cast<GbmBuffer *>(m_currentBuffer.get());
 #else
     return nullptr;
 #endif

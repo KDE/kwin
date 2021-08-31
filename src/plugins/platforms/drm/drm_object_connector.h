@@ -14,14 +14,13 @@
 
 #include <QSize>
 
-#include "drm_object.h"
-#include "edid.h"
-#include "drm_pointer.h"
 #include "abstract_wayland_output.h"
+#include "drm_object.h"
+#include "drm_pointer.h"
+#include "edid.h"
 
 namespace KWin
 {
-
 class DrmConnector : public DrmObject
 {
 public:
@@ -49,13 +48,15 @@ public:
         Auto = 2,
     };
 
-    QVector<uint32_t> encoders() {
+    QVector<uint32_t> encoders()
+    {
         return m_encoders;
     }
 
     bool isConnected();
 
-    bool isNonDesktop() const {
+    bool isNonDesktop() const
+    {
         auto prop = m_props.at(static_cast<uint32_t>(PropertyIndex::NonDesktop));
         if (!prop) {
             return false;
@@ -63,11 +64,13 @@ public:
         return prop->pending();
     }
 
-    Property *dpms() const {
+    Property *dpms() const
+    {
         return m_props[static_cast<uint32_t>(PropertyIndex::Dpms)];
     }
 
-    const Edid *edid() const {
+    const Edid *edid() const
+    {
         return &m_edid;
     }
 
@@ -105,7 +108,6 @@ private:
     QSize m_physicalSize = QSize(-1, -1);
     QVector<Mode> m_modes;
     int m_modeIndex = 0;
-
 };
 
 }

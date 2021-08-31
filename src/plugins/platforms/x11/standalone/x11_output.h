@@ -19,7 +19,6 @@
 
 namespace KWin
 {
-
 /**
  * X11 output representation
  */

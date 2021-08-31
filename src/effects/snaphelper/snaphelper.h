@@ -15,7 +15,6 @@
 
 namespace KWin
 {
-
 class SnapHelperEffect : public Effect
 {
     Q_OBJECT

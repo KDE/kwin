@@ -19,9 +19,9 @@
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPackage/PackageLoader>
-#include <KPluginLoader>
 #include <KPluginFactory>
 #include <KPluginInfo>
+#include <KPluginLoader>
 #include <KPluginMetaData>
 
 #include <QDBusConnection>
@@ -35,30 +35,25 @@
 
 namespace KWin
 {
-
 static QString translatedCategory(const QString &category)
 {
-    static const QVector<QString> knownCategories = {
-        QStringLiteral("Accessibility"),
-        QStringLiteral("Appearance"),
-        QStringLiteral("Focus"),
-        QStringLiteral("Show Desktop Animation"),
-        QStringLiteral("Tools"),
-        QStringLiteral("Virtual Desktop Switching Animation"),
-        QStringLiteral("Window Management"),
-        QStringLiteral("Window Open/Close Animation")
-    };
+    static const QVector<QString> knownCategories = {QStringLiteral("Accessibility"),
+                                                     QStringLiteral("Appearance"),
+                                                     QStringLiteral("Focus"),
+                                                     QStringLiteral("Show Desktop Animation"),
+                                                     QStringLiteral("Tools"),
+                                                     QStringLiteral("Virtual Desktop Switching Animation"),
+                                                     QStringLiteral("Window Management"),
+                                                     QStringLiteral("Window Open/Close Animation")};
 
-    static const QVector<QString> translatedCategories = {
-        i18nc("Category of Desktop Effects, used as section header", "Accessibility"),
-        i18nc("Category of Desktop Effects, used as section header", "Appearance"),
-        i18nc("Category of Desktop Effects, used as section header", "Focus"),
-        i18nc("Category of Desktop Effects, used as section header", "Show Desktop Animation"),
-        i18nc("Category of Desktop Effects, used as section header", "Tools"),
-        i18nc("Category of Desktop Effects, used as section header", "Virtual Desktop Switching Animation"),
-        i18nc("Category of Desktop Effects, used as section header", "Window Management"),
-        i18nc("Category of Desktop Effects, used as section header", "Window Open/Close Animation")
-    };
+    static const QVector<QString> translatedCategories = {i18nc("Category of Desktop Effects, used as section header", "Accessibility"),
+                                                          i18nc("Category of Desktop Effects, used as section header", "Appearance"),
+                                                          i18nc("Category of Desktop Effects, used as section header", "Focus"),
+                                                          i18nc("Category of Desktop Effects, used as section header", "Show Desktop Animation"),
+                                                          i18nc("Category of Desktop Effects, used as section header", "Tools"),
+                                                          i18nc("Category of Desktop Effects, used as section header", "Virtual Desktop Switching Animation"),
+                                                          i18nc("Category of Desktop Effects, used as section header", "Window Management"),
+                                                          i18nc("Category of Desktop Effects, used as section header", "Window Open/Close Animation")};
 
     const int index = knownCategories.indexOf(category);
     if (index == -1) {
@@ -268,10 +263,7 @@ void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig)
 
 void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 {
-    const auto plugins = KPackage::PackageLoader::self()->listPackages(
-        QStringLiteral("KWin/Effect"),
-        QStringLiteral("kwin/effects")
-    );
+    const auto plugins = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Effect"), QStringLiteral("kwin/effects"));
     for (const KPluginMetaData &metaData : plugins) {
         KPluginInfo plugin(metaData);
         EffectData effect;
@@ -299,8 +291,8 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 
         const QString pluginKeyword = plugin.property(QStringLiteral("X-KDE-PluginKeyword")).toString();
         if (!pluginKeyword.isEmpty()) {
-             // scripted effects have their pluginName() as the keyword
-             effect.configurable = plugin.property(QStringLiteral("X-KDE-ParentComponents")).toString() == pluginKeyword;
+            // scripted effects have their pluginName() as the keyword
+            effect.configurable = plugin.property(QStringLiteral("X-KDE-ParentComponents")).toString() == pluginKeyword;
         } else {
             effect.configurable = false;
         }
@@ -313,12 +305,9 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 
 void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
 {
-    const auto pluginEffects = KPluginLoader::findPlugins(
-        QStringLiteral("kwin/effects/plugins/"),
-        [](const KPluginMetaData &data) {
-            return data.serviceTypes().contains(QStringLiteral("KWin/Effect"));
-        }
-    );
+    const auto pluginEffects = KPluginLoader::findPlugins(QStringLiteral("kwin/effects/plugins/"), [](const KPluginMetaData &data) {
+        return data.serviceTypes().contains(QStringLiteral("KWin/Effect"));
+    });
     for (const KPluginMetaData &pluginEffect : pluginEffects) {
         if (!pluginEffect.isValid()) {
             continue;
@@ -342,9 +331,7 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
         // Compatibility with plugins that don't have ConfigModule in their metadata
         // TODO KF6 remove
         if (effect.configModule.isEmpty()) {
-
-            auto filter = [pluginEffect](const KPluginMetaData &md) -> bool
-            {
+            auto filter = [pluginEffect](const KPluginMetaData &md) -> bool {
                 const QStringList parentComponents = KPluginMetaData::readStringList(md.rawData(), QStringLiteral("X-KDE-ParentComponents"));
                 return parentComponents.contains(pluginEffect.pluginId());
             };
@@ -359,7 +346,7 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
         for (int i = 0; i < pluginEffect.authors().count(); ++i) {
             effect.authorName.append(pluginEffect.authors().at(i).name());
             effect.authorEmail.append(pluginEffect.authors().at(i).emailAddress());
-            if (i+1 < pluginEffect.authors().count()) {
+            if (i + 1 < pluginEffect.authors().count()) {
                 effect.authorName.append(", ");
                 effect.authorEmail.append(", ");
             }
@@ -402,17 +389,15 @@ void EffectsModel::load(LoadOptions options)
     loadJavascriptEffects(kwinConfig);
     loadPluginEffects(kwinConfig);
 
-    std::sort(m_pendingEffects.begin(), m_pendingEffects.end(),
-        [](const EffectData &a, const EffectData &b) {
-            if (a.category == b.category) {
-                if (a.exclusiveGroup == b.exclusiveGroup) {
-                    return a.name < b.name;
-                }
-                return a.exclusiveGroup < b.exclusiveGroup;
+    std::sort(m_pendingEffects.begin(), m_pendingEffects.end(), [](const EffectData &a, const EffectData &b) {
+        if (a.category == b.category) {
+            if (a.exclusiveGroup == b.exclusiveGroup) {
+                return a.name < b.name;
             }
-            return a.category < b.category;
+            return a.exclusiveGroup < b.exclusiveGroup;
         }
-    );
+        return a.category < b.category;
+    });
 
     auto commit = [this, options] {
         if (options == LoadOptions::KeepDirty) {
@@ -420,11 +405,9 @@ void EffectsModel::load(LoadOptions options)
                 if (!oldEffect.changed) {
                     continue;
                 }
-                auto effectIt = std::find_if(m_pendingEffects.begin(), m_pendingEffects.end(),
-                    [oldEffect](const EffectData &data) {
-                        return data.serviceName == oldEffect.serviceName;
-                    }
-                );
+                auto effectIt = std::find_if(m_pendingEffects.begin(), m_pendingEffects.end(), [oldEffect](const EffectData &data) {
+                    return data.serviceName == oldEffect.serviceName;
+                });
                 if (effectIt == m_pendingEffects.end()) {
                     continue;
                 }
@@ -441,9 +424,7 @@ void EffectsModel::load(LoadOptions options)
         Q_EMIT loaded();
     };
 
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
 
     if (interface.isValid()) {
         QStringList effectNames;
@@ -455,46 +436,42 @@ void EffectsModel::load(LoadOptions options)
         const int serial = ++m_lastSerial;
 
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(interface.areEffectsSupported(effectNames), this);
-        connect(watcher, &QDBusPendingCallWatcher::finished, this,
-            [=](QDBusPendingCallWatcher *self) {
-                self->deleteLater();
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, [=](QDBusPendingCallWatcher *self) {
+            self->deleteLater();
 
-                if (m_lastSerial != serial) {
-                    return;
-                }
-
-                const QDBusPendingReply<QList<bool > > reply = *self;
-                if (reply.isError()) {
-                    commit();
-                    return;
-                }
-
-                const QList<bool> supportedValues = reply.value();
-                if (supportedValues.count() != effectNames.count()) {
-                    return;
-                }
-
-                for (int i = 0; i < effectNames.size(); ++i) {
-                    const bool supported = supportedValues.at(i);
-                    const QString effectName = effectNames.at(i);
-
-                    auto it = std::find_if(m_pendingEffects.begin(), m_pendingEffects.end(),
-                        [effectName](const EffectData &data) {
-                            return data.serviceName == effectName;
-                        }
-                    );
-                    if (it == m_pendingEffects.end()) {
-                        continue;
-                    }
-
-                    if ((*it).supported != supported) {
-                        (*it).supported = supported;
-                    }
-                }
-
-                commit();
+            if (m_lastSerial != serial) {
+                return;
             }
-        );
+
+            const QDBusPendingReply<QList<bool>> reply = *self;
+            if (reply.isError()) {
+                commit();
+                return;
+            }
+
+            const QList<bool> supportedValues = reply.value();
+            if (supportedValues.count() != effectNames.count()) {
+                return;
+            }
+
+            for (int i = 0; i < effectNames.size(); ++i) {
+                const bool supported = supportedValues.at(i);
+                const QString effectName = effectNames.at(i);
+
+                auto it = std::find_if(m_pendingEffects.begin(), m_pendingEffects.end(), [effectName](const EffectData &data) {
+                    return data.serviceName == effectName;
+                });
+                if (it == m_pendingEffects.end()) {
+                    continue;
+                }
+
+                if ((*it).supported != supported) {
+                    (*it).supported = supported;
+                }
+            }
+
+            commit();
+        });
     } else {
         commit();
     }
@@ -521,9 +498,7 @@ void EffectsModel::save()
 
         const QString key = effect.serviceName + QStringLiteral("Enabled");
         const bool shouldEnable = (effect.status != Status::Disabled);
-        const bool restoreToDefault = effect.enabledByDefaultFunction
-            ? effect.status == Status::EnabledUndeterminded
-            : shouldEnable == effect.enabledByDefault;
+        const bool restoreToDefault = effect.enabledByDefaultFunction ? effect.status == Status::EnabledUndeterminded : shouldEnable == effect.enabledByDefault;
         if (restoreToDefault) {
             kwinConfig.deleteEntry(key);
         } else {
@@ -539,9 +514,7 @@ void EffectsModel::save()
 
     kwinConfig.sync();
 
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
 
     if (!interface.isValid()) {
         return;
@@ -583,20 +556,16 @@ bool EffectsModel::isDefaults() const
 
 bool EffectsModel::needsSave() const
 {
-    return std::any_of(m_effects.constBegin(), m_effects.constEnd(),
-        [](const EffectData &data) {
-            return data.changed;
-        }
-    );
+    return std::any_of(m_effects.constBegin(), m_effects.constEnd(), [](const EffectData &data) {
+        return data.changed;
+    });
 }
 
 QModelIndex EffectsModel::findByPluginId(const QString &pluginId) const
 {
-    auto it = std::find_if(m_effects.constBegin(), m_effects.constEnd(),
-        [pluginId](const EffectData &data) {
-            return data.serviceName == pluginId;
-        }
-    );
+    auto it = std::find_if(m_effects.constBegin(), m_effects.constEnd(), [pluginId](const EffectData &data) {
+        return data.serviceName == pluginId;
+    });
     if (it == m_effects.constEnd()) {
         return {};
     }
@@ -656,16 +625,10 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
     dialog->winId();
     dialog->windowHandle()->setTransientParent(transientParent);
 
-    auto buttons = new QDialogButtonBox(
-        QDialogButtonBox::Ok |
-        QDialogButtonBox::Cancel |
-        QDialogButtonBox::RestoreDefaults,
-        dialog
-    );
+    auto buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults, dialog);
     connect(buttons, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
     connect(buttons, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
-    connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked,
-        module, &KCModule::defaults);
+    connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, module, &KCModule::defaults);
     connect(module, &KCModule::defaulted, this, [=](bool defaulted) {
         buttons->button(QDialogButtonBox::RestoreDefaults)->setEnabled(!defaulted);
     });

@@ -14,9 +14,7 @@
 
 namespace KWin
 {
-
-struct MagicLampAnimation
-{
+struct MagicLampAnimation {
     TimeLine timeLine;
     std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
 };
@@ -29,12 +27,13 @@ public:
     MagicLampEffect();
 
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 50;
     }
 
@@ -52,12 +51,7 @@ private:
     std::chrono::milliseconds m_duration;
     QHash<EffectWindow *, MagicLampAnimation> m_animations;
 
-    enum IconPosition {
-        Top,
-        Bottom,
-        Left,
-        Right
-    };
+    enum IconPosition { Top, Bottom, Left, Right };
 };
 
 } // namespace

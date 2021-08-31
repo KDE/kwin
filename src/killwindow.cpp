@@ -11,15 +11,14 @@
 #include "killwindow.h"
 #include "abstract_client.h"
 #include "main.h"
-#include "platform.h"
 #include "osd.h"
+#include "platform.h"
 #include "unmanaged.h"
 
 #include <KLocalizedString>
 
 namespace KWin
 {
-
 KillWindow::KillWindow()
 {
 }
@@ -30,21 +29,20 @@ KillWindow::~KillWindow()
 
 void KillWindow::start()
 {
-    OSD::show(i18n("Select window to force close with left click or enter.\nEscape or right click to cancel."),
-              QStringLiteral("window-close"));
+    OSD::show(i18n("Select window to force close with left click or enter.\nEscape or right click to cancel."), QStringLiteral("window-close"));
     kwinApp()->platform()->startInteractiveWindowSelection(
-        [] (KWin::Toplevel *t) {
+        [](KWin::Toplevel *t) {
             OSD::hide();
             if (!t) {
                 return;
             }
-            if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
+            if (AbstractClient *c = qobject_cast<AbstractClient *>(t)) {
                 c->killWindow();
-            } else if (Unmanaged *u = qobject_cast<Unmanaged*>(t)) {
+            } else if (Unmanaged *u = qobject_cast<Unmanaged *>(t)) {
                 xcb_kill_client(connection(), u->window());
             }
-        }, QByteArrayLiteral("pirate")
-    );
+        },
+        QByteArrayLiteral("pirate"));
 }
 
 } // namespace

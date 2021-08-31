@@ -7,13 +7,12 @@
 #pragma once
 
 #include "dmabuftexture.h"
-#include <gbm.h>
 #include <QSize>
 #include <epoxy/egl.h>
+#include <gbm.h>
 
 namespace KWin
 {
-
 class GbmDmaBuf : public DmaBufTexture
 {
 public:
@@ -23,7 +22,8 @@ public:
     {
         return m_fd;
     }
-    quint32 stride() const override {
+    quint32 stride() const override
+    {
         return gbm_bo_get_stride(m_bo);
     }
 

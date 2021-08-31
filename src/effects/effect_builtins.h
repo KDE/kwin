@@ -8,10 +8,10 @@
 */
 #ifndef KWIN_EFFECT_BUILTINS_H
 #define KWIN_EFFECT_BUILTINS_H
-#include <kwineffects_export.h>
 #include <QStringList>
 #include <QUrl>
 #include <functional>
+#include <kwineffects_export.h>
 
 namespace KWin
 {
@@ -20,8 +20,7 @@ class Effect;
 /**
  * Defines all the built in effects.
  */
-enum class BuiltInEffect
-{
+enum class BuiltInEffect {
     Invalid, ///< not a valid Effect
     Blur,
     ColorPicker,
@@ -62,7 +61,6 @@ enum class BuiltInEffect
 
 namespace BuiltInEffects
 {
-
 struct EffectData {
     QString name;
     QString displayName;
@@ -72,7 +70,7 @@ struct EffectData {
     QUrl video;
     bool enabled;
     bool internal;
-    std::function<Effect*()> createFunction;
+    std::function<Effect *()> createFunction;
     std::function<bool()> supportedFunction;
     std::function<bool()> enabledFunction;
     QString configModule;

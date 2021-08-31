@@ -17,7 +17,6 @@
 
 namespace KWin
 {
-
 class DimInactiveEffectConfig : public KCModule
 {
     Q_OBJECT

@@ -14,20 +14,20 @@
 // xcb
 #include <xcb/composite.h>
 #include <xcb/damage.h>
+#include <xcb/glx.h>
 #include <xcb/randr.h>
 #include <xcb/render.h>
 #include <xcb/shape.h>
 #include <xcb/sync.h>
 #include <xcb/xfixes.h>
-#include <xcb/glx.h>
 // system
 #include <sys/shm.h>
 #include <sys/types.h>
 
-namespace KWin {
-
-namespace Xcb {
-
+namespace KWin
+{
+namespace Xcb
+{
 static const int COMPOSITE_MAX_MAJOR = 0;
 static const int COMPOSITE_MAX_MINOR = 4;
 static const int DAMAGE_MAX_MAJOR = 1;
@@ -108,10 +108,7 @@ QVector<QByteArray> randrErrorCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/randrproto/randrproto.txt
     // extracted from <xcb/randr.h>
-    return QVector<QByteArray>({QByteArrayLiteral("BadOutput"),
-                                QByteArrayLiteral("BadCrtc"),
-                                QByteArrayLiteral("BadMode"),
-                                QByteArrayLiteral("BadProvider")});
+    return QVector<QByteArray>({QByteArrayLiteral("BadOutput"), QByteArrayLiteral("BadCrtc"), QByteArrayLiteral("BadMode"), QByteArrayLiteral("BadProvider")});
 }
 
 QVector<QByteArray> damageOpCodes()
@@ -234,26 +231,13 @@ QVector<QByteArray> syncOpCodes()
 {
     // see https://www.x.org/releases/X11R7.7/doc/xextproto/sync.html
     // extracted from <xcb/sync.h>
-    return QVector<QByteArray>({QByteArrayLiteral("Initialize"),
-                                QByteArrayLiteral("ListSystemCounters"),
-                                QByteArrayLiteral("CreateCounter"),
-                                QByteArrayLiteral("DestroyCounter"),
-                                QByteArrayLiteral("QueryCounter"),
-                                QByteArrayLiteral("Await"),
-                                QByteArrayLiteral("ChangeCounter"),
-                                QByteArrayLiteral("SetCounter"),
-                                QByteArrayLiteral("CreateAlarm"),
-                                QByteArrayLiteral("ChangeAlarm"),
-                                QByteArrayLiteral("DestroyAlarm"),
-                                QByteArrayLiteral("QueryAlarm"),
-                                QByteArrayLiteral("SetPriority"),
-                                QByteArrayLiteral("GetPriority"),
-                                QByteArrayLiteral("CreateFence"),
-                                QByteArrayLiteral("TriggerFence"),
-                                QByteArrayLiteral("ResetFence"),
-                                QByteArrayLiteral("DestroyFence"),
-                                QByteArrayLiteral("QueryFence"),
-                                QByteArrayLiteral("AwaitFence")});
+    return QVector<QByteArray>({QByteArrayLiteral("Initialize"),     QByteArrayLiteral("ListSystemCounters"), QByteArrayLiteral("CreateCounter"),
+                                QByteArrayLiteral("DestroyCounter"), QByteArrayLiteral("QueryCounter"),       QByteArrayLiteral("Await"),
+                                QByteArrayLiteral("ChangeCounter"),  QByteArrayLiteral("SetCounter"),         QByteArrayLiteral("CreateAlarm"),
+                                QByteArrayLiteral("ChangeAlarm"),    QByteArrayLiteral("DestroyAlarm"),       QByteArrayLiteral("QueryAlarm"),
+                                QByteArrayLiteral("SetPriority"),    QByteArrayLiteral("GetPriority"),        QByteArrayLiteral("CreateFence"),
+                                QByteArrayLiteral("TriggerFence"),   QByteArrayLiteral("ResetFence"),         QByteArrayLiteral("DestroyFence"),
+                                QByteArrayLiteral("QueryFence"),     QByteArrayLiteral("AwaitFence")});
 }
 
 static QVector<QByteArray> glxOpCodes()
@@ -302,22 +286,20 @@ static QVector<QByteArray> glxOpCodes()
 
 static QVector<QByteArray> glxErrorCodes()
 {
-    return QVector<QByteArray>{
-        QByteArrayLiteral("BadContext"),
-        QByteArrayLiteral("BadContextState"),
-        QByteArrayLiteral("BadDrawable"),
-        QByteArrayLiteral("BadPixmap"),
-        QByteArrayLiteral("BadContextTag"),
-        QByteArrayLiteral("BadCurrentWindow"),
-        QByteArrayLiteral("BadRenderRequest"),
-        QByteArrayLiteral("BadLargeRequest"),
-        QByteArrayLiteral("UnsupportedPrivateRequest"),
-        QByteArrayLiteral("BadFBConfig"),
-        QByteArrayLiteral("BadPbuffer"),
-        QByteArrayLiteral("BadCurrentDrawable"),
-        QByteArrayLiteral("BadWindow"),
-        QByteArrayLiteral("GLXBadProfileARB")
-    };
+    return QVector<QByteArray>{QByteArrayLiteral("BadContext"),
+                               QByteArrayLiteral("BadContextState"),
+                               QByteArrayLiteral("BadDrawable"),
+                               QByteArrayLiteral("BadPixmap"),
+                               QByteArrayLiteral("BadContextTag"),
+                               QByteArrayLiteral("BadCurrentWindow"),
+                               QByteArrayLiteral("BadRenderRequest"),
+                               QByteArrayLiteral("BadLargeRequest"),
+                               QByteArrayLiteral("UnsupportedPrivateRequest"),
+                               QByteArrayLiteral("BadFBConfig"),
+                               QByteArrayLiteral("BadPbuffer"),
+                               QByteArrayLiteral("BadCurrentDrawable"),
+                               QByteArrayLiteral("BadWindow"),
+                               QByteArrayLiteral("GLXBadProfileARB")};
 }
 
 ExtensionData::ExtensionData()
@@ -373,28 +355,28 @@ void Extensions::init()
     xcb_prefetch_extension_data(c, &xcb_sync_id);
     xcb_prefetch_extension_data(c, &xcb_glx_id);
 
-    m_shape.name     = QByteArray("SHAPE");
-    m_randr.name     = QByteArray("RANDR");
-    m_damage.name    = QByteArray("DAMAGE");
+    m_shape.name = QByteArray("SHAPE");
+    m_randr.name = QByteArray("RANDR");
+    m_damage.name = QByteArray("DAMAGE");
     m_composite.name = QByteArray("Composite");
-    m_fixes.name     = QByteArray("XFIXES");
-    m_render.name    = QByteArray("RENDER");
-    m_sync.name      = QByteArray("SYNC");
-    m_glx.name       = QByteArray("GLX");
+    m_fixes.name = QByteArray("XFIXES");
+    m_render.name = QByteArray("RENDER");
+    m_sync.name = QByteArray("SYNC");
+    m_glx.name = QByteArray("GLX");
 
-    m_shape.opCodes     = shapeOpCodes();
-    m_randr.opCodes     = randrOpCodes();
-    m_damage.opCodes    = damageOpCodes();
+    m_shape.opCodes = shapeOpCodes();
+    m_randr.opCodes = randrOpCodes();
+    m_damage.opCodes = damageOpCodes();
     m_composite.opCodes = compositeOpCodes();
-    m_fixes.opCodes     = fixesOpCodes();
-    m_render.opCodes    = renderOpCodes();
-    m_sync.opCodes      = syncOpCodes();
-    m_glx.opCodes       = glxOpCodes();
+    m_fixes.opCodes = fixesOpCodes();
+    m_render.opCodes = renderOpCodes();
+    m_sync.opCodes = syncOpCodes();
+    m_glx.opCodes = glxOpCodes();
 
-    m_randr.errorCodes  = randrErrorCodes();
+    m_randr.errorCodes = randrErrorCodes();
     m_damage.errorCodes = damageErrorCodes();
-    m_fixes.errorCodes  = fixesErrorCodes();
-    m_glx.errorCodes    = glxErrorCodes();
+    m_fixes.errorCodes = fixesErrorCodes();
+    m_glx.errorCodes = glxErrorCodes();
 
     extensionQueryReply(xcb_get_extension_data(c, &xcb_shape_id), &m_shape);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_randr_id), &m_randr);
@@ -457,13 +439,10 @@ void Extensions::init()
     if (m_sync.present) {
         initVersion<xcb_sync_initialize_reply_t>(syncVersion, &xcb_sync_initialize_reply, &m_sync);
     }
-    qCDebug(KWIN_CORE) << "Extensions: shape: 0x" << QString::number(m_shape.version, 16)
-                 << " composite: 0x" << QString::number(m_composite.version, 16)
-                 << " render: 0x" << QString::number(m_render.version, 16)
-                 << " fixes: 0x" << QString::number(m_fixes.version, 16)
-                 << " randr: 0x" << QString::number(m_randr.version, 16)
-                 << " sync: 0x" << QString::number(m_sync.version, 16)
-                 << " damage: 0x " << QString::number(m_damage.version, 16);
+    qCDebug(KWIN_CORE) << "Extensions: shape: 0x" << QString::number(m_shape.version, 16) << " composite: 0x" << QString::number(m_composite.version, 16)
+                       << " render: 0x" << QString::number(m_render.version, 16) << " fixes: 0x" << QString::number(m_fixes.version, 16) << " randr: 0x"
+                       << QString::number(m_randr.version, 16) << " sync: 0x" << QString::number(m_sync.version, 16) << " damage: 0x "
+                       << QString::number(m_damage.version, 16);
 }
 
 void Extensions::extensionQueryReply(const xcb_query_extension_reply_t *extension, ExtensionData *dataToFill)
@@ -487,8 +466,8 @@ bool Extensions::hasShape(xcb_window_t w) const
     if (!isShapeAvailable()) {
         return false;
     }
-    ScopedCPointer<xcb_shape_query_extents_reply_t> extents(xcb_shape_query_extents_reply(
-        connection(), xcb_shape_query_extents_unchecked(connection(), w), nullptr));
+    ScopedCPointer<xcb_shape_query_extents_reply_t> extents(
+        xcb_shape_query_extents_reply(connection(), xcb_shape_query_extents_unchecked(connection(), w), nullptr));
     if (extents.isNull()) {
         return false;
     }
@@ -537,16 +516,7 @@ int Extensions::syncAlarmNotifyEvent() const
 
 QVector<ExtensionData> Extensions::extensions() const
 {
-    return {
-        m_shape,
-        m_randr,
-        m_damage,
-        m_composite,
-        m_render,
-        m_fixes,
-        m_sync,
-        m_glx
-    };
+    return {m_shape, m_randr, m_damage, m_composite, m_render, m_fixes, m_sync, m_glx};
 }
 
 //****************************************
@@ -577,8 +547,7 @@ bool Shm::init()
         qCDebug(KWIN_CORE) << "SHM extension not available";
         return false;
     }
-    ScopedCPointer<xcb_shm_query_version_reply_t> version(xcb_shm_query_version_reply(connection(),
-        xcb_shm_query_version_unchecked(connection()), nullptr));
+    ScopedCPointer<xcb_shm_query_version_reply_t> version(xcb_shm_query_version_reply(connection(), xcb_shm_query_version_unchecked(connection()), nullptr));
     if (version.isNull()) {
         qCDebug(KWIN_CORE) << "Failed to get SHM extension version information";
         return false;

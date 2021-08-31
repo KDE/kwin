@@ -16,7 +16,6 @@
 
 namespace KWin
 {
-
 class EffectWindowGroupImpl;
 class X11Client;
 
@@ -38,16 +37,17 @@ public:
     xcb_timestamp_t userTime() const;
     void ref();
     void deref();
-    EffectWindowGroupImpl* effectGroup();
+    EffectWindowGroupImpl *effectGroup();
+
 private:
     void startupIdChanged();
     QList<X11Client *> _members;
     X11Client *leader_client;
     xcb_window_t leader_wid;
-    NETWinInfo* leader_info;
+    NETWinInfo *leader_info;
     xcb_timestamp_t user_time;
     int refcount;
-    EffectWindowGroupImpl* effect_group;
+    EffectWindowGroupImpl *effect_group;
 };
 
 inline xcb_window_t Group::leader() const
@@ -75,8 +75,7 @@ inline xcb_timestamp_t Group::userTime() const
     return user_time;
 }
 
-inline
-EffectWindowGroupImpl* Group::effectGroup()
+inline EffectWindowGroupImpl *Group::effectGroup()
 {
     return effect_group;
 }

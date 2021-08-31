@@ -10,10 +10,10 @@
 #ifndef DRM_GPU_H
 #define DRM_GPU_H
 
-#include <qobject.h>
-#include <QVector>
-#include <QSocketNotifier>
 #include <QPointer>
+#include <QSocketNotifier>
+#include <QVector>
+#include <qobject.h>
 
 #include <epoxy/egl.h>
 
@@ -24,7 +24,6 @@ struct gbm_device;
 
 namespace KWin
 {
-
 class DrmOutput;
 class DrmCrtc;
 class DrmConnector;
@@ -42,46 +41,56 @@ public:
     ~DrmGpu();
 
     // getters
-    QVector<DrmAbstractOutput*> outputs() const {
+    QVector<DrmAbstractOutput *> outputs() const
+    {
         return m_outputs;
     }
 
-    int fd() const {
+    int fd() const
+    {
         return m_fd;
     }
 
-    dev_t deviceId() const {
+    dev_t deviceId() const
+    {
         return m_deviceId;
     }
 
-    bool atomicModeSetting() const {
+    bool atomicModeSetting() const
+    {
         return m_atomicModeSetting;
     }
 
-    bool useEglStreams() const {
+    bool useEglStreams() const
+    {
         return m_useEglStreams;
     }
 
-    QString devNode() const {
+    QString devNode() const
+    {
         return m_devNode;
     }
 
-    gbm_device *gbmDevice() const {
+    gbm_device *gbmDevice() const
+    {
         return m_gbmDevice;
     }
 
-    EGLDisplay eglDisplay() const {
+    EGLDisplay eglDisplay() const
+    {
         return m_eglDisplay;
     }
 
     AbstractEglDrmBackend *eglBackend() const;
     void setEglBackend(AbstractEglDrmBackend *eglBackend);
 
-    void setGbmDevice(gbm_device *d) {
+    void setGbmDevice(gbm_device *d)
+    {
         m_gbmDevice = d;
     }
 
-    void setEglDisplay(EGLDisplay display) {
+    void setEglDisplay(EGLDisplay display)
+    {
         m_eglDisplay = display;
     }
 
@@ -91,13 +100,14 @@ public:
      */
     clockid_t presentationClock() const;
 
-    bool addFB2ModifiersSupported() const {
+    bool addFB2ModifiersSupported() const
+    {
         return m_addFB2ModifiersSupported;
     }
 
     void waitIdle();
     DrmBackend *platform() const;
-    const QVector<DrmPipeline*> pipelines() const;
+    const QVector<DrmPipeline *> pipelines() const;
     bool isFormatSupported(uint32_t drmFormat) const;
 
     DrmVirtualOutput *createVirtualOutput();
@@ -120,7 +130,7 @@ private:
     void removeOutput(DrmOutput *output);
     void tryAMS();
 
-    DrmBackend* const m_backend;
+    DrmBackend *const m_backend;
     QPointer<AbstractEglDrmBackend> m_eglBackend;
 
     const QString m_devNode;
@@ -129,24 +139,24 @@ private:
     const dev_t m_deviceId;
     bool m_atomicModeSetting;
     bool m_useEglStreams;
-    gbm_device* m_gbmDevice;
+    gbm_device *m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     clockid_t m_presentationClock;
     QSocketNotifier *m_socketNotifier = nullptr;
     bool m_addFB2ModifiersSupported = false;
 
     // all planes: primarys, cursors and overlays
-    QVector<DrmPlane*> m_planes;
-    QVector<DrmPlane*> m_unusedPlanes;
+    QVector<DrmPlane *> m_planes;
+    QVector<DrmPlane *> m_unusedPlanes;
     // crtcs
-    QVector<DrmCrtc*> m_crtcs;
+    QVector<DrmCrtc *> m_crtcs;
     // connectors
-    QVector<DrmConnector*> m_connectors;
+    QVector<DrmConnector *> m_connectors;
     // pipelines
-    QVector<DrmPipeline*> m_pipelines;
-    QVector<DrmOutput*> m_drmOutputs;
+    QVector<DrmPipeline *> m_pipelines;
+    QVector<DrmOutput *> m_drmOutputs;
     // includes virtual outputs
-    QVector<DrmAbstractOutput*> m_outputs;
+    QVector<DrmAbstractOutput *> m_outputs;
 };
 
 }

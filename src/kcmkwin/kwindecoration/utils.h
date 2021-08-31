@@ -11,12 +11,10 @@
 
 #include <QVector>
 
-
 using DecorationButtonsList = QVector<KDecoration2::DecorationButtonType>;
 
 namespace Utils
 {
-
 QString buttonsToString(const DecorationButtonsList &buttons);
 DecorationButtonsList buttonsFromString(const QString &buttons);
 DecorationButtonsList readDecorationButtons(const KConfigGroup &config, const QString &key, const DecorationButtonsList &defaultValue);

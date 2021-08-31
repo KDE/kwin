@@ -9,8 +9,8 @@
 #ifndef KWIN_XWL_DRAG
 #define KWIN_XWL_DRAG
 
-#include <QPoint>
 #include <QObject>
+#include <QPoint>
 
 #include <xcb/xcb.h>
 

@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 /**
  * The SurfaceItemX11 class represents an X11 surface in the scene.
  */

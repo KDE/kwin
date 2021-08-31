@@ -18,7 +18,6 @@
 
 namespace KWin
 {
-
 class X11TestApplication : public Application
 {
     Q_OBJECT
@@ -28,7 +27,6 @@ public:
 
 protected:
     void performStartup() override;
-
 };
 
 X11TestApplication::X11TestApplication(int &argc, char **argv)
@@ -43,8 +41,7 @@ X11TestApplication::X11TestApplication(int &argc, char **argv)
     removeLibraryPath(ownPath);
     addLibraryPath(ownPath);
 
-    const KPluginMetaData plugin = KPluginMetaData::findPluginById(QStringLiteral("org.kde.kwin.platforms"),
-                                                        QStringLiteral("KWinX11Platform"));
+    const KPluginMetaData plugin = KPluginMetaData::findPluginById(QStringLiteral("org.kde.kwin.platforms"), QStringLiteral("KWinX11Platform"));
     if (!plugin.isValid()) {
         quit();
         return;

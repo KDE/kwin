@@ -14,15 +14,14 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include <KWaylandServer/display.h>
-#include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/plasmawindowmanagement_interface.h>
+#include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/xdgactivation_v1_interface.h>
 
 using namespace KWaylandServer;
 
 namespace KWin
 {
-
 static bool isPrivilegedInWindowManagement(const ClientConnection *client)
 {
     auto requestedInterfaces = client->property("requestedInterfaces").toStringList();
@@ -39,28 +38,29 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
         }
         clear();
     });
-    activation->setActivationTokenCreator([this](ClientConnection *client, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId) -> QString {
-        Workspace *ws = Workspace::self();
-        if (ws->activeClient() && ws->activeClient()->surface() != surface && !isPrivilegedInWindowManagement(client)) {
-            qCWarning(KWIN_CORE) << "Cannot grant a token to" << client;
-            return QStringLiteral("not-granted-666");
-        }
+    activation->setActivationTokenCreator(
+        [this](ClientConnection *client, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId) -> QString {
+            Workspace *ws = Workspace::self();
+            if (ws->activeClient() && ws->activeClient()->surface() != surface && !isPrivilegedInWindowManagement(client)) {
+                qCWarning(KWIN_CORE) << "Cannot grant a token to" << client;
+                return QStringLiteral("not-granted-666");
+            }
 
-        static int i = 0;
-        const auto newToken = QStringLiteral("kwin-%1").arg(++i);
+            static int i = 0;
+            const auto newToken = QStringLiteral("kwin-%1").arg(++i);
 
-        if (m_currentActivationToken) {
-            clear();
-        }
-        QSharedPointer<PlasmaWindowActivationInterface> pwActivation(waylandServer()->plasmaActivationFeedback()->createActivation(appId));
-        m_currentActivationToken.reset(new ActivationToken{newToken, client, surface, serial, seat, appId, pwActivation});
-        if (!appId.isEmpty()) {
-            const auto icon = QIcon::fromTheme(AbstractClient::iconFromDesktopFile(appId), QIcon::fromTheme(QStringLiteral("system-run")));
-            Q_EMIT effects->startupAdded(m_currentActivationToken->token, icon);
-        }
+            if (m_currentActivationToken) {
+                clear();
+            }
+            QSharedPointer<PlasmaWindowActivationInterface> pwActivation(waylandServer()->plasmaActivationFeedback()->createActivation(appId));
+            m_currentActivationToken.reset(new ActivationToken{newToken, client, surface, serial, seat, appId, pwActivation});
+            if (!appId.isEmpty()) {
+                const auto icon = QIcon::fromTheme(AbstractClient::iconFromDesktopFile(appId), QIcon::fromTheme(QStringLiteral("system-run")));
+                Q_EMIT effects->startupAdded(m_currentActivationToken->token, icon);
+            }
 
-        return newToken;
-    });
+            return newToken;
+        });
 
     connect(activation, &XdgActivationV1Interface::activateRequested, this, &XdgActivationV1Integration::activateSurface);
 }
@@ -75,7 +75,8 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
     }
 
     if (!m_currentActivationToken || m_currentActivationToken->token != token) {
-        qCDebug(KWIN_CORE) << "Refusing to activate " << client << " (provided token: " << token << ", current token:" << (m_currentActivationToken ? m_currentActivationToken->token : QStringLiteral("null")) << ")";
+        qCDebug(KWIN_CORE) << "Refusing to activate " << client << " (provided token: " << token
+                           << ", current token:" << (m_currentActivationToken ? m_currentActivationToken->token : QStringLiteral("null")) << ")";
         return;
     }
 
@@ -85,7 +86,7 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
         ws->activateClient(client);
     } else {
         qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << ownerSurfaceClient->desktopFileName()
-                                      << m_currentActivationToken->applicationId;
+                             << m_currentActivationToken->applicationId;
         client->demandAttention();
         clear();
     }

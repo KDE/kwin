@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class ClockSkewNotifierEngine : public QObject
 {
     Q_OBJECT

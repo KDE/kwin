@@ -13,30 +13,25 @@
 
 namespace KWin
 {
-
 AnimationsModel::AnimationsModel(QObject *parent)
     : EffectsModel(parent)
 {
-    connect(this, &EffectsModel::loaded, this,
-        [this] {
-            setAnimationEnabled(modelAnimationEnabled());
-            setAnimationIndex(modelAnimationIndex());
-            loadDefaults();
+    connect(this, &EffectsModel::loaded, this, [this] {
+        setAnimationEnabled(modelAnimationEnabled());
+        setAnimationIndex(modelAnimationIndex());
+        loadDefaults();
+    });
+    connect(this, &AnimationsModel::animationIndexChanged, this, [this] {
+        const QModelIndex index_ = index(m_animationIndex, 0);
+        if (!index_.isValid()) {
+            return;
         }
-    );
-    connect(this, &AnimationsModel::animationIndexChanged, this,
-        [this] {
-            const QModelIndex index_ = index(m_animationIndex, 0);
-            if (!index_.isValid()) {
-                return;
-            }
-            const bool configurable = index_.data(ConfigurableRole).toBool();
-            if (configurable != m_currentConfigurable) {
-                m_currentConfigurable = configurable;
-                Q_EMIT currentConfigurableChanged();
-            }
+        const bool configurable = index_.data(ConfigurableRole).toBool();
+        if (configurable != m_currentConfigurable) {
+            m_currentConfigurable = configurable;
+            Q_EMIT currentConfigurableChanged();
         }
-    );
+    });
 }
 
 bool AnimationsModel::animationEnabled() const
@@ -82,8 +77,7 @@ int AnimationsModel::defaultAnimationIndex() const
 
 bool AnimationsModel::shouldStore(const EffectData &data) const
 {
-    return data.untranslatedCategory.contains(
-        QStringLiteral("Virtual Desktop Switching Animation"), Qt::CaseInsensitive);
+    return data.untranslatedCategory.contains(QStringLiteral("Virtual Desktop Switching Animation"), Qt::CaseInsensitive);
 }
 
 EffectsModel::Status AnimationsModel::status(int row) const
@@ -135,9 +129,7 @@ void AnimationsModel::load()
 void AnimationsModel::save()
 {
     for (int i = 0; i < rowCount(); ++i) {
-        const auto status = (m_animationEnabled && i == m_animationIndex)
-            ? EffectsModel::Status::Enabled
-            : EffectsModel::Status::Disabled;
+        const auto status = (m_animationEnabled && i == m_animationIndex) ? EffectsModel::Status::Enabled : EffectsModel::Status::Disabled;
         updateEffectStatus(index(i, 0), status);
     }
 
@@ -164,10 +156,8 @@ bool AnimationsModel::needsSave() const
 
     for (int i = 0; i < rowCount(); ++i) {
         const QModelIndex index_ = index(i, 0);
-        const bool enabledConfig = kwinConfig.readEntry(
-            index_.data(ServiceNameRole).toString() + QLatin1String("Enabled"),
-            index_.data(EnabledByDefaultRole).toBool()
-        );
+        const bool enabledConfig =
+            kwinConfig.readEntry(index_.data(ServiceNameRole).toString() + QLatin1String("Enabled"), index_.data(EnabledByDefaultRole).toBool());
         const bool enabled = (m_animationEnabled && i == m_animationIndex);
 
         if (enabled != enabledConfig) {

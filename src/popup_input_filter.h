@@ -23,13 +23,14 @@ public:
     explicit PopupInputFilter();
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
     bool keyEvent(QKeyEvent *event) override;
+
 private:
     void handleClientAdded(Toplevel *client);
     void handleClientRemoved(Toplevel *client);
     void disconnectClient(Toplevel *client);
     void cancelPopups();
 
-    QVector<Toplevel*> m_popupClients;
+    QVector<Toplevel *> m_popupClients;
 };
 }
 

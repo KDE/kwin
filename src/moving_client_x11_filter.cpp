@@ -7,14 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "moving_client_x11_filter.h"
-#include "x11client.h"
 #include "workspace.h"
+#include "x11client.h"
 #include <KKeyServer>
 #include <xcb/xcb.h>
 
 namespace KWin
 {
-
 MovingClientX11Filter::MovingClientX11Filter()
     : X11EventFilter(QVector<int>{XCB_KEY_PRESS, XCB_MOTION_NOTIFY, XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE})
 {
@@ -26,7 +25,7 @@ bool MovingClientX11Filter::event(xcb_generic_event_t *event)
     if (!client) {
         return false;
     }
-    auto testWindow = [client, event] (xcb_window_t window) {
+    auto testWindow = [client, event](xcb_window_t window) {
         return client->moveResizeGrabWindow() == window && client->windowEvent(event);
     };
 
@@ -34,16 +33,16 @@ bool MovingClientX11Filter::event(xcb_generic_event_t *event)
     switch (eventType) {
     case XCB_KEY_PRESS: {
         int keyQt;
-        xcb_key_press_event_t *keyEvent = reinterpret_cast<xcb_key_press_event_t*>(event);
+        xcb_key_press_event_t *keyEvent = reinterpret_cast<xcb_key_press_event_t *>(event);
         KKeyServer::xcbKeyPressEventToQt(keyEvent, &keyQt);
         client->keyPressEvent(keyQt, keyEvent->time);
         return true;
     }
     case XCB_BUTTON_PRESS:
     case XCB_BUTTON_RELEASE:
-        return testWindow(reinterpret_cast<xcb_button_press_event_t*>(event)->event);
+        return testWindow(reinterpret_cast<xcb_button_press_event_t *>(event)->event);
     case XCB_MOTION_NOTIFY:
-        return testWindow(reinterpret_cast<xcb_motion_notify_event_t*>(event)->event);
+        return testWindow(reinterpret_cast<xcb_motion_notify_event_t *>(event)->event);
     }
     return false;
 }

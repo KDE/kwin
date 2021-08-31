@@ -16,30 +16,23 @@
 #include <KLocalizedString>
 #include <KPluginFactory>
 
-
 namespace KWin
 {
-
 KCMKWinRules::KCMKWinRules(QObject *parent, const QVariantList &arguments)
     : KQuickAddons::ConfigModule(parent, arguments)
     , m_ruleBookModel(new RuleBookModel(this))
     , m_rulesModel(new RulesModel(this))
 {
-    auto about = new KAboutData(QStringLiteral("kcm_kwinrules"),
-                                i18n("Window Rules"),
-                                QStringLiteral("1.0"),
-                                QString(),
-                                KAboutLicense::GPL);
-    about->addAuthor(i18n("Ismael Asensio"),
-                     i18n("Author"),
-                     QStringLiteral("isma.af@gmail.com"));
+    auto about = new KAboutData(QStringLiteral("kcm_kwinrules"), i18n("Window Rules"), QStringLiteral("1.0"), QString(), KAboutLicense::GPL);
+    about->addAuthor(i18n("Ismael Asensio"), i18n("Author"), QStringLiteral("isma.af@gmail.com"));
     setAboutData(about);
 
-    setQuickHelp(i18n("<p><h1>Window-specific Settings</h1> Here you can customize window settings specifically only"
-                      " for some windows.</p>"
-                      " <p>Please note that this configuration will not take effect if you do not use"
-                      " KWin as your window manager. If you do use a different window manager, please refer to its documentation"
-                      " for how to customize window behavior.</p>"));
+    setQuickHelp(
+        i18n("<p><h1>Window-specific Settings</h1> Here you can customize window settings specifically only"
+             " for some windows.</p>"
+             " <p>Please note that this configuration will not take effect if you do not use"
+             " KWin as your window manager. If you do use a different window manager, please refer to its documentation"
+             " for how to customize window behavior.</p>"));
 
     QStringList argList;
     for (const QVariant &arg : arguments) {
@@ -47,14 +40,14 @@ KCMKWinRules::KCMKWinRules(QObject *parent, const QVariantList &arguments)
     }
     parseArguments(argList);
 
-    connect(m_rulesModel, &RulesModel::descriptionChanged, this, [this]{
+    connect(m_rulesModel, &RulesModel::descriptionChanged, this, [this] {
         if (m_editIndex.isValid()) {
             m_ruleBookModel->setDescriptionAt(m_editIndex.row(), m_rulesModel->description());
         }
-    } );
-    connect(m_rulesModel, &RulesModel::dataChanged, this, [this]{
+    });
+    connect(m_rulesModel, &RulesModel::dataChanged, this, [this] {
         Q_EMIT m_ruleBookModel->dataChanged(m_editIndex, m_editIndex, {});
-    } );
+    });
     connect(m_ruleBookModel, &RuleBookModel::dataChanged, this, &KCMKWinRules::updateNeedsSave);
 }
 
@@ -167,7 +160,6 @@ int KCMKWinRules::editIndex() const
     return m_editIndex.row();
 }
 
-
 void KCMKWinRules::setRuleDescription(int index, const QString &description)
 {
     if (index < 0 || index >= m_ruleBookModel->rowCount()) {
@@ -182,7 +174,6 @@ void KCMKWinRules::setRuleDescription(int index, const QString &description)
 
     updateNeedsSave();
 }
-
 
 void KCMKWinRules::editRule(int index)
 {
@@ -224,9 +215,7 @@ void KCMKWinRules::removeRule(int index)
 void KCMKWinRules::moveRule(int sourceIndex, int destIndex)
 {
     const int lastIndex = m_ruleBookModel->rowCount() - 1;
-    if (sourceIndex == destIndex
-            || (sourceIndex < 0 || sourceIndex > lastIndex)
-            || (destIndex < 0 || destIndex > lastIndex)) {
+    if (sourceIndex == destIndex || (sourceIndex < 0 || sourceIndex > lastIndex) || (destIndex < 0 || destIndex > lastIndex)) {
         return;
     }
 

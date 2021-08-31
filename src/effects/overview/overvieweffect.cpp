@@ -21,7 +21,6 @@
 
 namespace KWin
 {
-
 OverviewScreenView::OverviewScreenView(EffectScreen *screen, QWindow *renderWindow, OverviewEffect *effect)
     : EffectQuickScene(effect, renderWindow)
 {

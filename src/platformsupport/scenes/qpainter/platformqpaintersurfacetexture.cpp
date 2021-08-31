@@ -8,7 +8,6 @@
 
 namespace KWin
 {
-
 PlatformQPainterSurfaceTexture::PlatformQPainterSurfaceTexture(QPainterBackend *backend)
     : m_backend(backend)
 {

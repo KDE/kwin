@@ -15,17 +15,16 @@
 #include "scene.h"
 #include "shadow.h"
 
-namespace KWin {
-
+namespace KWin
+{
 class KWIN_EXPORT SceneQPainter : public Scene
 {
     Q_OBJECT
 
 public:
     ~SceneQPainter() override;
-    OverlayWindow* overlayWindow() const override;
-    void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows,
-               RenderLoop *renderLoop) override;
+    OverlayWindow *overlayWindow() const override;
+    void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows, RenderLoop *renderLoop) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     CompositingType compositingType() const override;
     bool initFailed() const override;
@@ -35,14 +34,16 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
-    bool animationsSupported() const override {
+    bool animationsSupported() const override
+    {
         return false;
     }
 
     QPainter *scenePainter() const override;
     QImage *qpainterRenderBuffer(AbstractOutput *output) const override;
 
-    QPainterBackend *backend() const {
+    QPainterBackend *backend() const
+    {
         return m_backend.data();
     }
 
@@ -69,6 +70,7 @@ public:
     Window(SceneQPainter *scene, Toplevel *c);
     ~Window() override;
     void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
+
 private:
     void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const;
     void renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const;
@@ -81,13 +83,26 @@ class QPainterEffectFrame : public Scene::EffectFrame
 public:
     QPainterEffectFrame(EffectFrameImpl *frame, SceneQPainter *scene);
     ~QPainterEffectFrame() override;
-    void crossFadeIcon() override {}
-    void crossFadeText() override {}
-    void free() override {}
-    void freeIconFrame() override {}
-    void freeTextFrame() override {}
-    void freeSelection() override {}
+    void crossFadeIcon() override
+    {
+    }
+    void crossFadeText() override
+    {
+    }
+    void free() override
+    {
+    }
+    void freeIconFrame() override
+    {
+    }
+    void freeTextFrame() override
+    {
+    }
+    void freeSelection() override
+    {
+    }
     void render(const QRegion &region, double opacity, double frameOpacity) override;
+
 private:
     SceneQPainter *m_scene;
 };
@@ -95,7 +110,7 @@ private:
 class SceneQPainterShadow : public Shadow
 {
 public:
-    SceneQPainterShadow(Toplevel* toplevel);
+    SceneQPainterShadow(Toplevel *toplevel);
     ~SceneQPainterShadow() override;
 
 protected:
@@ -106,13 +121,7 @@ class SceneQPainterDecorationRenderer : public DecorationRenderer
 {
     Q_OBJECT
 public:
-    enum class DecorationPart : int {
-        Left,
-        Top,
-        Right,
-        Bottom,
-        Count
-    };
+    enum class DecorationPart : int { Left, Top, Right, Bottom, Count };
     explicit SceneQPainterDecorationRenderer(Decoration::DecoratedClientImpl *client);
 
     void render(const QRegion &region) override;
@@ -137,14 +146,12 @@ public:
     Scene *create(QObject *parent = nullptr) const override;
 };
 
-inline
-OverlayWindow* SceneQPainter::overlayWindow() const
+inline OverlayWindow *SceneQPainter::overlayWindow() const
 {
     return nullptr;
 }
 
-inline
-QPainter* SceneQPainter::scenePainter() const
+inline QPainter *SceneQPainter::scenePainter() const
 {
     return m_painter.data();
 }

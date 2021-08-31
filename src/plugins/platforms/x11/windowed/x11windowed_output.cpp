@@ -7,10 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11windowed_output.h"
-#include <config-kwin.h>
 #include "renderloop_p.h"
 #include "softwarevsyncmonitor.h"
 #include "x11windowed_backend.h"
+#include <config-kwin.h>
 
 #include <NETWM>
 
@@ -22,7 +22,6 @@
 
 namespace KWin
 {
-
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     : AbstractWaylandOutput(backend)
     , m_renderLoop(new RenderLoop(this))
@@ -71,44 +70,38 @@ void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSi
     // Physicial size must be adjusted, such that QPA calculates correct sizes of
     // internal elements.
     const QSize physicalSize = pixelSize / 96.0 * 25.4 / m_backend->initialOutputScale();
-    initialize("model_TODO", "manufacturer_TODO", "eisa_TODO", "serial_TODO", physicalSize, { mode }, {});
+    initialize("model_TODO", "manufacturer_TODO", "eisa_TODO", "serial_TODO", physicalSize, {mode}, {});
     setGeometry(logicalPosition, pixelSize);
     setScale(m_backend->initialOutputScale());
 
     uint32_t mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
-    const uint32_t values[] = {
-        m_backend->screen()->black_pixel,
-        XCB_EVENT_MASK_KEY_PRESS |
-        XCB_EVENT_MASK_KEY_RELEASE |
-        XCB_EVENT_MASK_BUTTON_PRESS |
-        XCB_EVENT_MASK_BUTTON_RELEASE |
-        XCB_EVENT_MASK_POINTER_MOTION |
-        XCB_EVENT_MASK_ENTER_WINDOW |
-        XCB_EVENT_MASK_LEAVE_WINDOW |
-        XCB_EVENT_MASK_STRUCTURE_NOTIFY |
-        XCB_EVENT_MASK_EXPOSURE
-    };
+    const uint32_t values[] = {m_backend->screen()->black_pixel,
+                               XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE
+                                   | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+                                   | XCB_EVENT_MASK_EXPOSURE};
     xcb_create_window(m_backend->connection(),
                       XCB_COPY_FROM_PARENT,
                       m_window,
                       m_backend->screen()->root,
-                      0, 0,
-                      pixelSize.width(), pixelSize.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT,
-                      mask, values);
+                      0,
+                      0,
+                      pixelSize.width(),
+                      pixelSize.height(),
+                      0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      XCB_COPY_FROM_PARENT,
+                      mask,
+                      values);
 
     // select xinput 2 events
     initXInputForWindow();
 
-    m_winInfo = new NETWinInfo(m_backend->connection(),
-                               m_window,
-                               m_backend->screen()->root,
-                               NET::WMWindowType, NET::Properties2());
+    m_winInfo = new NETWinInfo(m_backend->connection(), m_window, m_backend->screen()->root, NET::WMWindowType, NET::Properties2());
 
     m_winInfo->setWindowType(NET::Normal);
     m_winInfo->setPid(QCoreApplication::applicationPid());
     QIcon windowIcon = QIcon::fromTheme(QStringLiteral("kwin"));
-    auto addIcon = [&windowIcon, this] (const QSize &size) {
+    auto addIcon = [&windowIcon, this](const QSize &size) {
         if (windowIcon.actualSize(size) != size) {
             return;
         }

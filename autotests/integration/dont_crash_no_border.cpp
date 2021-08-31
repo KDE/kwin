@@ -7,17 +7,17 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_output.h"
-#include "platform.h"
-#include "x11client.h"
 #include "composite.h"
 #include "cursor.h"
+#include "kwin_wayland_test.h"
+#include "platform.h"
 #include "scene.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 #include <kwineffects.h>
 
 #include <KWayland/Client/server_decoration.h>
@@ -29,7 +29,6 @@
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_dont_crash_no_border-0");
 
 class DontCrashNoBorder : public QObject
@@ -44,7 +43,7 @@ private Q_SLOTS:
 
 void DontCrashNoBorder::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -88,7 +87,7 @@ void DontCrashNoBorder::cleanup()
 void DontCrashNoBorder::testCreateWindow()
 {
     // create a window and ensure that this doesn't crash
-        using namespace KWayland::Client;
+    using namespace KWayland::Client;
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());

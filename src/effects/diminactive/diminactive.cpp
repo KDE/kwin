@@ -17,7 +17,6 @@
 
 namespace KWin
 {
-
 /**
  * Checks if two windows belong to the same window group
  *
@@ -38,18 +37,12 @@ DimInactiveEffect::DimInactiveEffect()
     initConfig<DimInactiveConfig>();
     reconfigure(ReconfigureAll);
 
-    connect(effects, &EffectsHandler::windowActivated,
-            this, &DimInactiveEffect::windowActivated);
-    connect(effects, &EffectsHandler::windowClosed,
-            this, &DimInactiveEffect::windowClosed);
-    connect(effects, &EffectsHandler::windowDeleted,
-            this, &DimInactiveEffect::windowDeleted);
-    connect(effects, &EffectsHandler::activeFullScreenEffectChanged,
-            this, &DimInactiveEffect::activeFullScreenEffectChanged);
-    connect(effects, &EffectsHandler::windowKeepAboveChanged,
-            this, &DimInactiveEffect::updateActiveWindow);
-    connect(effects, &EffectsHandler::windowFullScreenChanged,
-            this, &DimInactiveEffect::updateActiveWindow);
+    connect(effects, &EffectsHandler::windowActivated, this, &DimInactiveEffect::windowActivated);
+    connect(effects, &EffectsHandler::windowClosed, this, &DimInactiveEffect::windowClosed);
+    connect(effects, &EffectsHandler::windowDeleted, this, &DimInactiveEffect::windowDeleted);
+    connect(effects, &EffectsHandler::activeFullScreenEffectChanged, this, &DimInactiveEffect::activeFullScreenEffectChanged);
+    connect(effects, &EffectsHandler::windowKeepAboveChanged, this, &DimInactiveEffect::updateActiveWindow);
+    connect(effects, &EffectsHandler::windowFullScreenChanged, this, &DimInactiveEffect::updateActiveWindow);
 }
 
 DimInactiveEffect::~DimInactiveEffect()
@@ -72,12 +65,9 @@ void DimInactiveEffect::reconfigure(ReconfigureFlags flags)
 
     updateActiveWindow(effects->activeWindow());
 
-    m_activeWindowGroup = (m_dimByGroup && m_activeWindow)
-        ? m_activeWindow->group()
-        : nullptr;
+    m_activeWindowGroup = (m_dimByGroup && m_activeWindow) ? m_activeWindow->group() : nullptr;
 
-    m_fullScreenTransition.timeLine.setDuration(
-        std::chrono::milliseconds(static_cast<int>(animationTime(250))));
+    m_fullScreenTransition.timeLine.setDuration(std::chrono::milliseconds(static_cast<int>(animationTime(250))));
 
     effects->addRepaintFull();
 }
@@ -204,18 +194,13 @@ bool DimInactiveEffect::canDimWindow(const EffectWindow *w) const
         return false;
     }
 
-    return w->isNormalWindow()
-        || w->isDialog()
-        || w->isUtility()
-        || w->isDock()
-        || w->isDesktop();
+    return w->isNormalWindow() || w->isDialog() || w->isUtility() || w->isDock() || w->isDesktop();
 }
 
 void DimInactiveEffect::scheduleInTransition(EffectWindow *w)
 {
     TimeLine &timeLine = m_transitions[w];
-    timeLine.setDuration(
-        std::chrono::milliseconds(static_cast<int>(animationTime(160))));
+    timeLine.setDuration(std::chrono::milliseconds(static_cast<int>(animationTime(160))));
     if (timeLine.done()) {
         // If the Out animation is still active, then we're trucating
         // duration of the timeline(from 250ms to 160ms). If the timeline
@@ -249,8 +234,7 @@ void DimInactiveEffect::scheduleGroupInTransition(EffectWindow *w)
 void DimInactiveEffect::scheduleOutTransition(EffectWindow *w)
 {
     TimeLine &timeLine = m_transitions[w];
-    timeLine.setDuration(
-        std::chrono::milliseconds(static_cast<int>(animationTime(250))));
+    timeLine.setDuration(std::chrono::milliseconds(static_cast<int>(animationTime(250))));
     if (timeLine.done()) {
         timeLine.reset();
     }
@@ -323,9 +307,7 @@ void DimInactiveEffect::windowActivated(EffectWindow *w)
     EffectWindow *previousActiveWindow = m_activeWindow;
     m_activeWindow = canDimWindow(w) ? w : nullptr;
 
-    m_activeWindowGroup = (m_dimByGroup && m_activeWindow)
-        ? m_activeWindow->group()
-        : nullptr;
+    m_activeWindowGroup = (m_dimByGroup && m_activeWindow) ? m_activeWindow->group() : nullptr;
 
     if (previousActiveWindow) {
         scheduleGroupOutTransition(previousActiveWindow);
@@ -388,11 +370,7 @@ void DimInactiveEffect::activeFullScreenEffectChanged()
     if (m_fullScreenTransition.timeLine.done()) {
         m_fullScreenTransition.timeLine.reset();
     }
-    m_fullScreenTransition.timeLine.setDirection(
-        effects->activeFullScreenEffect()
-            ? TimeLine::Forward
-            : TimeLine::Backward
-    );
+    m_fullScreenTransition.timeLine.setDirection(effects->activeFullScreenEffect() ? TimeLine::Forward : TimeLine::Backward);
     m_fullScreenTransition.active = true;
 
     effects->addRepaintFull();

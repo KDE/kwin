@@ -21,7 +21,6 @@ using namespace KWaylandServer;
 
 namespace KWin
 {
-
 static const Qt::Edges AnchorHorizontal = Qt::LeftEdge | Qt::RightEdge;
 static const Qt::Edges AnchorVertical = Qt::TopEdge | Qt::BottomEdge;
 
@@ -29,8 +28,7 @@ LayerShellV1Integration::LayerShellV1Integration(QObject *parent)
     : WaylandShellIntegration(parent)
 {
     LayerShellV1Interface *shell = new LayerShellV1Interface(waylandServer()->display(), this);
-    connect(shell, &KWaylandServer::LayerShellV1Interface::surfaceCreated,
-            this, &LayerShellV1Integration::createClient);
+    connect(shell, &KWaylandServer::LayerShellV1Interface::surfaceCreated, this, &LayerShellV1Integration::createClient);
 
     m_rearrangeTimer = new QTimer(this);
     m_rearrangeTimer->setSingleShot(true);
@@ -88,8 +86,7 @@ static void adjustWorkArea(const LayerSurfaceV1Interface *shellSurface, QRect *w
     }
 }
 
-static void rearrangeLayer(const QList<LayerShellV1Client *> &clients, QRect *workArea,
-                           LayerSurfaceV1Interface::Layer layer, bool exclusive)
+static void rearrangeLayer(const QList<LayerShellV1Client *> &clients, QRect *workArea, LayerSurfaceV1Interface::Layer layer, bool exclusive)
 {
     for (LayerShellV1Client *client : clients) {
         LayerSurfaceV1Interface *shellSurface = client->shellSurface();

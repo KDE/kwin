@@ -6,16 +6,16 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "composite.h"
-#include "effects.h"
-#include "effectloader.h"
 #include "cursor.h"
+#include "effect_builtins.h"
+#include "effectloader.h"
+#include "effects.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "effect_builtins.h"
 
 #include <KConfigGroup>
 
@@ -28,7 +28,7 @@ static const QString s_socketName = QStringLiteral("wayland_test_effects_windowg
 
 class WindowGeometryTest : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
     void init();
@@ -39,8 +39,8 @@ private Q_SLOTS:
 
 void WindowGeometryTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Effect*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -78,7 +78,7 @@ void WindowGeometryTest::cleanup()
 void WindowGeometryTest::testStartup()
 {
     // just a test to load the effect to verify it doesn't crash
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl*>(effects);
+    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
     QVERIFY(e->isEffectLoaded(BuiltInEffects::nameForEffect(BuiltInEffect::WindowGeometry)));
 }
 

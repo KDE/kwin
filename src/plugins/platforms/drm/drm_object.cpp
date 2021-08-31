@@ -16,7 +16,6 @@
 
 namespace KWin
 {
-
 /*
  * Definitions for class DrmObject
  */
@@ -42,7 +41,7 @@ bool DrmObject::initProps()
     }
     if (KWIN_DRM().isDebugEnabled() && m_gpu->atomicModeSetting()) {
         auto debug = QMessageLogger(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, KWIN_DRM().categoryName()).debug().nospace();
-        switch(m_objectType) {
+        switch (m_objectType) {
         case DRM_MODE_OBJECT_CONNECTOR:
             debug << "Connector ";
             break;
@@ -85,8 +84,8 @@ bool DrmObject::atomicPopulate(drmModeAtomicReq *req) const
     for (const auto &property : qAsConst(m_props)) {
         if (property && !property->isImmutable() && !property->isLegacy() && property->needsCommit()) {
             if (drmModeAtomicAddProperty(req, m_id, property->propId(), property->pending()) <= 0) {
-                qCWarning(KWIN_DRM) << "Adding property" << property->name() << "->" << property->pending()
-                                    << "to atomic commit failed for object" << this << "with error" << strerror(errno);
+                qCWarning(KWIN_DRM) << "Adding property" << property->name() << "->" << property->pending() << "to atomic commit failed for object" << this
+                                    << "with error" << strerror(errno);
                 return false;
             }
         }
@@ -94,7 +93,7 @@ bool DrmObject::atomicPopulate(drmModeAtomicReq *req) const
     return true;
 }
 
-QVector<DrmObject::Property*> DrmObject::properties()
+QVector<DrmObject::Property *> DrmObject::properties()
 {
     return m_props;
 }
@@ -324,10 +323,8 @@ bool DrmObject::Property::needsCommit() const
 
 void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)
 {
-    if ( ( !(prop->flags & DRM_MODE_PROP_ENUM) && !(prop->flags & DRM_MODE_PROP_BITMASK) )
-            || prop->count_enums < 1 ) {
-        qCWarning(KWIN_DRM) << "Property '" << prop->name << "' ( id ="
-                          << m_propId << ") should be enum valued, but it is not.";
+    if ((!(prop->flags & DRM_MODE_PROP_ENUM) && !(prop->flags & DRM_MODE_PROP_BITMASK)) || prop->count_enums < 1) {
+        qCWarning(KWIN_DRM) << "Property '" << prop->name << "' ( id =" << m_propId << ") should be enum valued, but it is not.";
         return;
     }
 
@@ -341,8 +338,7 @@ void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)
         while (QByteArray(en->name) != m_enumNames[j]) {
             j++;
             if (j == nameCount) {
-                qCWarning(KWIN_DRM).nospace() << m_propName << " has unrecognized enum '"
-                                              << en->name << "'";
+                qCWarning(KWIN_DRM).nospace() << m_propName << " has unrecognized enum '" << en->name << "'";
                 break;
             }
         }
@@ -359,7 +355,7 @@ QDebug operator<<(QDebug s, const KWin::DrmObject *obj)
 {
     QDebugStateSaver saver(s);
     if (obj) {
-        s.nospace() << "DrmObject(id=" << obj->id() << ", gpu="<< obj->gpu() << ')';
+        s.nospace() << "DrmObject(id=" << obj->id() << ", gpu=" << obj->gpu() << ')';
     } else {
         s << "DrmObject(0x0)";
     }

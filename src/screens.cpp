@@ -7,18 +7,17 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "screens.h"
-#include <abstract_client.h>
 #include "abstract_output.h"
 #include "cursor.h"
-#include "utils.h"
-#include "settings.h"
-#include <workspace.h>
-#include <config-kwin.h>
 #include "platform.h"
+#include "settings.h"
+#include "utils.h"
+#include <abstract_client.h>
+#include <config-kwin.h>
+#include <workspace.h>
 
 namespace KWin
 {
-
 Screens *Screens::s_self = nullptr;
 Screens *Screens::create(QObject *parent)
 {

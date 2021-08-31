@@ -16,10 +16,8 @@ class QDBusArgument;
 class QDBusMessage;
 class QDBusServiceWatcher;
 
-
 namespace KWin
 {
-
 /**
  * @short An item model around KWin's D-Bus API for virtual desktops.
  *
@@ -115,10 +113,10 @@ private:
     bool m_userModified;
     bool m_serverModified;
     QStringList m_serverSideDesktops;
-    QHash<QString,QString> m_serverSideNames;
+    QHash<QString, QString> m_serverSideNames;
     int m_serverSideRows;
     QStringList m_desktops;
-    QHash<QString,QString> m_names;
+    QHash<QString, QString> m_names;
     int m_rows;
     int m_pendingCalls = 0;
 };

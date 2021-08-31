@@ -15,32 +15,30 @@
 
 #include <QAction>
 
-#include <KActionCollection>
 #include <KAboutData>
+#include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KPluginFactory>
 
 #include <QWidget>
 
-K_PLUGIN_FACTORY_WITH_JSON(MouseClickEffectConfigFactory,
-                           "mouseclick_config.json",
-                           registerPlugin<KWin::MouseClickEffectConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(MouseClickEffectConfigFactory, "mouseclick_config.json", registerPlugin<KWin::MouseClickEffectConfig>();)
 
 namespace KWin
 {
-
-MouseClickEffectConfigForm::MouseClickEffectConfigForm(QWidget* parent) : QWidget(parent)
+MouseClickEffectConfigForm::MouseClickEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+MouseClickEffectConfig::MouseClickEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     m_ui = new MouseClickEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
     connect(m_ui->editor, &KShortcutsEditor::keyChange, this, &MouseClickEffectConfig::markAsChanged);
@@ -49,7 +47,7 @@ MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantLi
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
     m_actionCollection->setComponentDisplayName(i18n("KWin"));
 
-    QAction* a = m_actionCollection->addAction(QStringLiteral("ToggleMouseClick"));
+    QAction *a = m_actionCollection->addAction(QStringLiteral("ToggleMouseClick"));
     a->setText(i18n("Toggle Mouse Click Effect"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
@@ -71,10 +69,8 @@ MouseClickEffectConfig::~MouseClickEffectConfig()
 void MouseClickEffectConfig::save()
 {
     KCModule::save();
-    m_ui->editor->save();   // undo() will restore to this state from now on
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    m_ui->editor->save(); // undo() will restore to this state from now on
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("mouseclick"));
 }
 

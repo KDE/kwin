@@ -41,13 +41,23 @@ void TabletInputRedirection::init()
     setInited(true);
     InputDeviceHandler::init();
 
-    connect(workspace(), &QObject::destroyed, this, [this] { setInited(false); });
-    connect(waylandServer(), &QObject::destroyed, this, [this] { setInited(false); });
+    connect(workspace(), &QObject::destroyed, this, [this] {
+        setInited(false);
+    });
+    connect(waylandServer(), &QObject::destroyed, this, [this] {
+        setInited(false);
+    });
 }
 
-void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
-                                             qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
-                                             bool tipNear, const TabletToolId &tabletToolId,
+void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type,
+                                             const QPointF &pos,
+                                             qreal pressure,
+                                             int xTilt,
+                                             int yTilt,
+                                             qreal rotation,
+                                             bool tipDown,
+                                             bool tipNear,
+                                             const TabletToolId &tabletToolId,
                                              quint32 time)
 {
     if (!inited()) {
@@ -69,60 +79,56 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     }
 
     const auto button = m_tipDown ? Qt::LeftButton : Qt::NoButton;
-    TabletEvent ev(t, pos, pos, QTabletEvent::Stylus, QTabletEvent::Pen, pressure,
-                    xTilt, yTilt,
-                    0, // tangentialPressure
-                    rotation,
-                    0, // z
-                    Qt::NoModifier, tabletToolId.m_uniqueId, button, button, tabletToolId);
+    TabletEvent ev(t,
+                   pos,
+                   pos,
+                   QTabletEvent::Stylus,
+                   QTabletEvent::Pen,
+                   pressure,
+                   xTilt,
+                   yTilt,
+                   0, // tangentialPressure
+                   rotation,
+                   0, // z
+                   Qt::NoModifier,
+                   tabletToolId.m_uniqueId,
+                   button,
+                   button,
+                   tabletToolId);
 
     ev.setTimestamp(time);
     input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
-    input()->processFilters(
-        std::bind(&InputEventFilter::tabletToolEvent, std::placeholders::_1, &ev));
+    input()->processFilters(std::bind(&InputEventFilter::tabletToolEvent, std::placeholders::_1, &ev));
 
     m_tipDown = tipDown;
     m_tipNear = tipNear;
 }
 
-void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed,
-                                                         const TabletToolId &tabletToolId)
+void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &tabletToolId)
 {
-    input()->processSpies(std::bind(&InputEventSpy::tabletToolButtonEvent,
-                                    std::placeholders::_1, button, isPressed, tabletToolId));
-    input()->processFilters(std::bind( &InputEventFilter::tabletToolButtonEvent,
-                                      std::placeholders::_1, button, isPressed, tabletToolId));
+    input()->processSpies(std::bind(&InputEventSpy::tabletToolButtonEvent, std::placeholders::_1, button, isPressed, tabletToolId));
+    input()->processFilters(std::bind(&InputEventFilter::tabletToolButtonEvent, std::placeholders::_1, button, isPressed, tabletToolId));
 }
 
-void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed,
-                                                        const TabletPadId &tabletPadId)
+void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed, const TabletPadId &tabletPadId)
 {
-    input()->processSpies(std::bind( &InputEventSpy::tabletPadButtonEvent,
-                                     std::placeholders::_1, button, isPressed, tabletPadId));
-    input()->processFilters(std::bind( &InputEventFilter::tabletPadButtonEvent,
-                                       std::placeholders::_1, button, isPressed, tabletPadId));
+    input()->processSpies(std::bind(&InputEventSpy::tabletPadButtonEvent, std::placeholders::_1, button, isPressed, tabletPadId));
+    input()->processFilters(std::bind(&InputEventFilter::tabletPadButtonEvent, std::placeholders::_1, button, isPressed, tabletPadId));
 }
 
-void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger,
-                                                       const TabletPadId &tabletPadId)
+void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
 {
-    input()->processSpies(std::bind( &InputEventSpy::tabletPadStripEvent,
-                                     std::placeholders::_1, number, position, isFinger, tabletPadId));
-    input()->processFilters(std::bind( &InputEventFilter::tabletPadStripEvent,
-                                       std::placeholders::_1, number, position, isFinger, tabletPadId));
+    input()->processSpies(std::bind(&InputEventSpy::tabletPadStripEvent, std::placeholders::_1, number, position, isFinger, tabletPadId));
+    input()->processFilters(std::bind(&InputEventFilter::tabletPadStripEvent, std::placeholders::_1, number, position, isFinger, tabletPadId));
 }
 
-void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger,
-                                                      const TabletPadId &tabletPadId)
+void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
 {
-    input()->processSpies(std::bind( &InputEventSpy::tabletPadRingEvent,
-                                     std::placeholders::_1, number, position, isFinger, tabletPadId));
-    input()->processFilters(std::bind( &InputEventFilter::tabletPadRingEvent,
-                                       std::placeholders::_1, number, position, isFinger, tabletPadId));
+    input()->processSpies(std::bind(&InputEventSpy::tabletPadRingEvent, std::placeholders::_1, number, position, isFinger, tabletPadId));
+    input()->processFilters(std::bind(&InputEventFilter::tabletPadRingEvent, std::placeholders::_1, number, position, isFinger, tabletPadId));
 }
 
-void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old,
-                                               Decoration::DecoratedClientImpl *now)
+void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now)
 {
     Q_UNUSED(old)
     Q_UNUSED(now)

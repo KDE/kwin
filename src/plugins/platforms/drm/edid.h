@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 /**
  * Helper class that can be used for parsing EDID blobs.
  *

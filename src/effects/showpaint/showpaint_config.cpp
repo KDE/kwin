@@ -18,13 +18,10 @@
 
 #include <QAction>
 
-K_PLUGIN_FACTORY_WITH_JSON(ShowPaintEffectConfigFactory,
-                           "showpaint_config.json",
-                           registerPlugin<KWin::ShowPaintEffectConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(ShowPaintEffectConfigFactory, "showpaint_config.json", registerPlugin<KWin::ShowPaintEffectConfig>();)
 
 namespace KWin
 {
-
 ShowPaintEffectConfig::ShowPaintEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
     , m_ui(new Ui::ShowPaintEffectConfig)
@@ -45,8 +42,7 @@ ShowPaintEffectConfig::ShowPaintEffectConfig(QWidget *parent, const QVariantList
 
     m_ui->shortcutsEditor->addCollection(actionCollection);
 
-    connect(m_ui->shortcutsEditor, &KShortcutsEditor::keyChange,
-            this, &ShowPaintEffectConfig::markAsChanged);
+    connect(m_ui->shortcutsEditor, &KShortcutsEditor::keyChange, this, &ShowPaintEffectConfig::markAsChanged);
 
     load();
 }

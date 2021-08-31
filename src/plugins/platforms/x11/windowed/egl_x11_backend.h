@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 class X11WindowedBackend;
 
 /**

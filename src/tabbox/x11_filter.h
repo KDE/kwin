@@ -14,7 +14,6 @@ namespace KWin
 {
 namespace TabBox
 {
-
 class X11Filter : public X11EventFilter
 {
 public:
@@ -34,5 +33,3 @@ private:
 }
 
 #endif
-
-

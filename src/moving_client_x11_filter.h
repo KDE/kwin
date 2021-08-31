@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 class MovingClientX11Filter : public X11EventFilter
 {
 public:
@@ -24,4 +23,3 @@ public:
 }
 
 #endif
-

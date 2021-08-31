@@ -19,18 +19,12 @@ class VirtualDesktop;
 
 namespace ScriptingModels::V3
 {
-
 class ClientModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    enum Roles {
-        ClientRole = Qt::UserRole + 1,
-        ScreenRole,
-        DesktopRole,
-        ActivityRole
-    };
+    enum Roles { ClientRole = Qt::UserRole + 1, ScreenRole, DesktopRole, ActivityRole };
 
     explicit ClientModel(QObject *parent = nullptr);
 

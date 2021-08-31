@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 class NightColorManager;
 
 class NightColorDBusInterface : public QObject, public QDBusContext

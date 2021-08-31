@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class KWIN_EXPORT BasicEGLSurfaceTextureInternal : public PlatformOpenGLSurfaceTextureInternal
 {
 public:

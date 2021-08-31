@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 /**
  * The SoftwareVsyncMonitor class provides synthetic vblank events with constant interval.
  *

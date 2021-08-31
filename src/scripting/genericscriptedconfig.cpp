@@ -9,22 +9,22 @@
 
 #include "genericscriptedconfig.h"
 #include "config-kwin.h"
-#include <kwineffects_interface.h>
 #include <KAboutData>
+#include <kwineffects_interface.h>
 #define TRANSLATION_DOMAIN "kwin_scripting"
+#include <KDesktopFile>
 #include <KLocalizedString>
 #include <KLocalizedTranslator>
 #include <kconfigloader.h>
-#include <KDesktopFile>
 
 #include <QFile>
 #include <QLabel>
+#include <QStandardPaths>
 #include <QUiLoader>
 #include <QVBoxLayout>
-#include <QStandardPaths>
 
-namespace KWin {
-
+namespace KWin
+{
 QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword)
 {
     Q_UNUSED(iface)
@@ -50,22 +50,14 @@ GenericScriptedConfig::~GenericScriptedConfig()
 
 void GenericScriptedConfig::createUi()
 {
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     const QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                        QLatin1String(KWIN_NAME) +
-                                                        QLatin1Char('/') +
-                                                        typeName() +
-                                                        QLatin1Char('/') +
-                                                        m_packageName +
-                                                        QLatin1String("/contents/config/main.xml"));
+                                                         QLatin1String(KWIN_NAME) + QLatin1Char('/') + typeName() + QLatin1Char('/') + m_packageName
+                                                             + QLatin1String("/contents/config/main.xml"));
     const QString uiPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                 QLatin1String(KWIN_NAME) +
-                                                 QLatin1Char('/') +
-                                                 typeName() +
-                                                 QLatin1Char('/') +
-                                                 m_packageName +
-                                                 QLatin1String("/contents/ui/config.ui"));
+                                                  QLatin1String(KWIN_NAME) + QLatin1Char('/') + typeName() + QLatin1Char('/') + m_packageName
+                                                      + QLatin1String("/contents/ui/config.ui"));
     if (kconfigXTFile.isEmpty() || uiPath.isEmpty()) {
         layout->addWidget(new QLabel(i18nc("Error message", "Plugin does not provide configuration file in expected location")));
         return;
@@ -130,9 +122,7 @@ KConfigGroup ScriptedEffectConfig::configGroup()
 
 void ScriptedEffectConfig::reload()
 {
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(packageName());
 }
 
@@ -160,6 +150,5 @@ void ScriptingConfig::reload()
 {
     // TODO: what to call
 }
-
 
 } // namespace

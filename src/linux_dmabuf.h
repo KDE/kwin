@@ -14,14 +14,10 @@
 
 namespace KWin
 {
-
 class KWIN_EXPORT LinuxDmaBufV1ClientBuffer : public KWaylandServer::LinuxDmaBufV1ClientBuffer
 {
 public:
-    LinuxDmaBufV1ClientBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
-                              quint32 format,
-                              const QSize &size,
-                              quint32 flags);
+    LinuxDmaBufV1ClientBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes, quint32 format, const QSize &size, quint32 flags);
     ~LinuxDmaBufV1ClientBuffer() override;
 };
 
@@ -31,10 +27,8 @@ public:
     explicit LinuxDmaBufV1RendererInterface();
     ~LinuxDmaBufV1RendererInterface() override;
 
-    KWaylandServer::LinuxDmaBufV1ClientBuffer *importBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
-                                                            quint32 format,
-                                                            const QSize &size,
-                                                            quint32 flags) override;
+    KWaylandServer::LinuxDmaBufV1ClientBuffer *
+    importBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes, quint32 format, const QSize &size, quint32 flags) override;
 
 protected:
     void setSupportedFormatsAndModifiers(const QHash<uint32_t, QSet<uint64_t>> &set);

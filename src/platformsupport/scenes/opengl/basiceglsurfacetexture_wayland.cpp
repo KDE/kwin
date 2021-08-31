@@ -18,9 +18,7 @@
 
 namespace KWin
 {
-
-BasicEGLSurfaceTextureWayland::BasicEGLSurfaceTextureWayland(OpenGLBackend *backend,
-                                                             SurfacePixmapWayland *pixmap)
+BasicEGLSurfaceTextureWayland::BasicEGLSurfaceTextureWayland(OpenGLBackend *backend, SurfacePixmapWayland *pixmap)
     : PlatformOpenGLSurfaceTextureWayland(backend, pixmap)
 {
 }
@@ -201,13 +199,9 @@ EGLImageKHR BasicEGLSurfaceTextureWayland::attach(KWaylandServer::DrmClientBuffe
         return EGL_NO_IMAGE_KHR;
     }
 
-    const EGLint attribs[] = {
-        EGL_WAYLAND_PLANE_WL, 0,
-        EGL_NONE
-    };
-    EGLImageKHR image = eglCreateImageKHR(backend()->eglDisplay(), EGL_NO_CONTEXT,
-                                          EGL_WAYLAND_BUFFER_WL,
-                                          static_cast<EGLClientBuffer>(buffer->resource()), attribs);
+    const EGLint attribs[] = {EGL_WAYLAND_PLANE_WL, 0, EGL_NONE};
+    EGLImageKHR image =
+        eglCreateImageKHR(backend()->eglDisplay(), EGL_NO_CONTEXT, EGL_WAYLAND_BUFFER_WL, static_cast<EGLClientBuffer>(buffer->resource()), attribs);
     if (image != EGL_NO_IMAGE_KHR) {
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(image));
         m_texture->setYInverted(buffer->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft);

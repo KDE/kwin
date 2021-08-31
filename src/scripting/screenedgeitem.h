@@ -16,7 +16,6 @@ class QAction;
 
 namespace KWin
 {
-
 /**
  * @brief Qml export for reserving a Screen Edge.
  *
@@ -48,32 +47,19 @@ class ScreenEdgeItem : public QObject
      */
     Q_PROPERTY(Mode mode READ mode WRITE setMode NOTIFY modeChanged)
 public:
-    enum Edge {
-        TopEdge,
-        TopRightEdge,
-        RightEdge,
-        BottomRightEdge,
-        BottomEdge,
-        BottomLeftEdge,
-        LeftEdge,
-        TopLeftEdge,
-        EDGE_COUNT,
-        NoEdge
-    };
+    enum Edge { TopEdge, TopRightEdge, RightEdge, BottomRightEdge, BottomEdge, BottomLeftEdge, LeftEdge, TopLeftEdge, EDGE_COUNT, NoEdge };
     Q_ENUM(Edge)
     /**
      * Enum describing the operation modes of the edge.
      */
-    enum class Mode {
-        Pointer,
-        Touch
-    };
+    enum class Mode { Pointer, Touch };
     Q_ENUM(Mode)
     explicit ScreenEdgeItem(QObject *parent = nullptr);
     ~ScreenEdgeItem() override;
     bool isEnabled() const;
     Edge edge() const;
-    Mode mode() const {
+    Mode mode() const
+    {
         return m_mode;
     }
 
@@ -91,6 +77,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     bool borderActivated(ElectricBorder edge);
+
 private:
     void enableEdge();
     void disableEdge();

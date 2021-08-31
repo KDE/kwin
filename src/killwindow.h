@@ -14,11 +14,9 @@
 
 namespace KWin
 {
-
 class KillWindow
 {
 public:
-
     KillWindow();
     ~KillWindow();
 

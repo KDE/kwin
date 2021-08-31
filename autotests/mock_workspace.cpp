@@ -11,7 +11,6 @@
 
 namespace KWin
 {
-
 Workspace *MockWorkspace::s_self = nullptr;
 
 MockWorkspace::MockWorkspace(QObject *parent)
@@ -76,4 +75,3 @@ void MockWorkspace::unregisterEventFilter(X11EventFilter *filter)
 }
 
 }
-

@@ -11,7 +11,6 @@
 
 namespace KWin
 {
-
 class TouchHideCursorSpy : public InputEventSpy
 {
 public:

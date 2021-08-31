@@ -6,14 +6,13 @@
 
 #pragma once
 
-#include "renderloop.h"
 #include "renderjournal.h"
+#include "renderloop.h"
 
 #include <QTimer>
 
 namespace KWin
 {
-
 class KWIN_EXPORT RenderLoopPrivate
 {
 public:

@@ -8,10 +8,10 @@
 */
 #ifndef KWIN_PLATFORM_H
 #define KWIN_PLATFORM_H
+#include "input.h"
+#include <epoxy/egl.h>
 #include <kwin_export.h>
 #include <kwinglobals.h>
-#include <epoxy/egl.h>
-#include "input.h"
 
 #include <QImage>
 #include <QObject>
@@ -20,13 +20,13 @@
 
 class QAction;
 
-namespace KWaylandServer {
+namespace KWaylandServer
+{
 class OutputConfigurationInterface;
 }
 
 namespace KWin
 {
-
 class AbstractOutput;
 class Edge;
 class Compositor;
@@ -42,12 +42,13 @@ class ScreenEdges;
 class Session;
 class Toplevel;
 
-class KWIN_EXPORT Outputs : public QVector<AbstractOutput*>
+class KWIN_EXPORT Outputs : public QVector<AbstractOutput *>
 {
 public:
     Outputs(){};
-    template <typename T>
-    Outputs(const QVector<T> &other) {
+    template<typename T>
+    Outputs(const QVector<T> &other)
+    {
         resize(other.size());
         std::copy(other.constBegin(), other.constEnd(), begin());
     }
@@ -63,7 +64,8 @@ public:
     virtual bool initialize() = 0;
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
-    virtual DmaBufTexture *createDmaBufTexture(const QSize &size) {
+    virtual DmaBufTexture *createDmaBufTexture(const QSize &size)
+    {
         Q_UNUSED(size);
         return nullptr;
     }
@@ -149,13 +151,7 @@ public:
      * @see createOpenGLSafePoint
      */
     virtual bool openGLCompositingIsBroken() const;
-    enum class OpenGLSafePoint {
-        PreInit,
-        PostInit,
-        PreFrame,
-        PostFrame,
-        PostLastGuardedFrame
-    };
+    enum class OpenGLSafePoint { PreInit, PostInit, PreFrame, PostFrame, PostLastGuardedFrame };
     /**
      * This method is invoked before and after creating the OpenGL rendering Scene.
      * An implementing Platform can use it to detect crashes triggered by the OpenGL implementation.
@@ -182,7 +178,7 @@ public:
      * @param callback The function to invoke once the interactive window selection ends
      * @param cursorName The optional name of the cursor shape to use, default is crosshair
      */
-    virtual void startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName = QByteArray());
+    virtual void startInteractiveWindowSelection(std::function<void(KWin::Toplevel *)> callback, const QByteArray &cursorName = QByteArray());
 
     /**
      * Starts an interactive position selection process.
@@ -271,31 +267,40 @@ public:
      * @see hideCursor
      * @since 5.9
      */
-    bool isCursorHidden() const {
+    bool isCursorHidden() const
+    {
         return m_hideCursorCounter > 0;
     }
-    bool isReady() const {
+    bool isReady() const
+    {
         return m_ready;
     }
-    void setInitialWindowSize(const QSize &size) {
+    void setInitialWindowSize(const QSize &size)
+    {
         m_initialWindowSize = size;
     }
-    void setDeviceIdentifier(const QByteArray &identifier) {
+    void setDeviceIdentifier(const QByteArray &identifier)
+    {
         m_deviceIdentifier = identifier;
     }
-    bool supportsPointerWarping() const {
+    bool supportsPointerWarping() const
+    {
         return m_pointerWarping;
     }
-    int initialOutputCount() const {
+    int initialOutputCount() const
+    {
         return m_initialOutputCount;
     }
-    void setInitialOutputCount(int count) {
+    void setInitialOutputCount(int count)
+    {
         m_initialOutputCount = count;
     }
-    qreal initialOutputScale() const {
+    qreal initialOutputScale() const
+    {
         return m_initialOutputScale;
     }
-    void setInitialOutputScale(qreal scale) {
+    void setInitialOutputScale(qreal scale)
+    {
         m_initialOutputScale = scale;
     }
 
@@ -338,16 +343,19 @@ public:
      * Whether gamma control is supported by the backend.
      * @since 5.12
      */
-    bool supportsGammaControl() const {
+    bool supportsGammaControl() const
+    {
         return m_supportsGammaControl;
     }
 
     // outputs with connections (org_kde_kwin_outputdevice)
-    virtual Outputs outputs() const {
+    virtual Outputs outputs() const
+    {
         return Outputs();
     }
     // actively compositing outputs (wl_output)
-    virtual Outputs enabledOutputs() const {
+    virtual Outputs enabledOutputs() const
+    {
         return Outputs();
     }
     AbstractOutput *findOutput(int screenId) const;
@@ -397,10 +405,14 @@ public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);
     void pointerButtonReleased(quint32 button, quint32 time);
-    void pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta = 0,
-        InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
-    void pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta = 0,
-        InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+    void pointerAxisHorizontal(qreal delta,
+                               quint32 time,
+                               qint32 discreteDelta = 0,
+                               InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+    void pointerAxisVertical(qreal delta,
+                             quint32 time,
+                             qint32 discreteDelta = 0,
+                             InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
     void keyboardKeyPressed(quint32 key, quint32 time);
     void keyboardKeyReleased(quint32 key, quint32 time);
     void keyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
@@ -423,7 +435,7 @@ public Q_SLOTS:
     void processPinchGestureCancelled(quint32 time);
 
     void cursorRendered(const QRect &geometry);
-    virtual void sceneInitialized() {};
+    virtual void sceneInitialized(){};
 
 Q_SIGNALS:
     void screensQueried();
@@ -458,23 +470,28 @@ protected:
     void repaint(const QRect &rect);
     void setReady(bool ready);
     void setPerScreenRenderingEnabled(bool enabled);
-    QSize initialWindowSize() const {
+    QSize initialWindowSize() const
+    {
         return m_initialWindowSize;
     }
-    QByteArray deviceIdentifier() const {
+    QByteArray deviceIdentifier() const
+    {
         return m_deviceIdentifier;
     }
-    void setSupportsPointerWarping(bool set) {
+    void setSupportsPointerWarping(bool set)
+    {
         m_pointerWarping = set;
     }
-    void setSupportsGammaControl(bool set) {
+    void setSupportsGammaControl(bool set)
+    {
         m_supportsGammaControl = set;
     }
 
     /**
      * Whether the backend is supposed to change the configuration of outputs.
      */
-    void supportsOutputChanges() {
+    void supportsOutputChanges()
+    {
         m_supportsOutputChanges = true;
     }
 

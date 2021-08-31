@@ -50,7 +50,7 @@ private:
     KWayland::Client::Seat *m_seat = nullptr;
     KWayland::Client::Idle *m_idle = nullptr;
     KWayland::Client::IdleTimeout *m_catchResumeTimeout = nullptr;
-    QHash<int, KWayland::Client::IdleTimeout*> m_timeouts;
+    QHash<int, KWayland::Client::IdleTimeout *> m_timeouts;
 };
 
 #endif

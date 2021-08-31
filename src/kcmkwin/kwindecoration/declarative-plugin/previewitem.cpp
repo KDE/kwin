@@ -5,12 +5,12 @@
 */
 #include "previewitem.h"
 #include "previewbridge.h"
-#include "previewsettings.h"
 #include "previewclient.h"
+#include "previewsettings.h"
+#include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
 #include <KDecoration2/DecorationShadow>
-#include <KDecoration2/DecoratedClient>
 #include <QCoreApplication>
 #include <QCursor>
 #include <QPainter>
@@ -25,7 +25,6 @@ namespace KDecoration2
 {
 namespace Preview
 {
-
 PreviewItem::PreviewItem(QQuickItem *parent)
     : QQuickPaintedItem(parent)
     , m_decoration(nullptr)
@@ -43,7 +42,7 @@ PreviewItem::PreviewItem(QQuickItem *parent)
 PreviewItem::~PreviewItem()
 {
     m_decoration->deleteLater();
-    if (m_bridge){
+    if (m_bridge) {
         m_bridge->unregisterPreviewItem(this);
     }
 }
@@ -85,7 +84,9 @@ void PreviewItem::setDecoration(Decoration *deco)
     connect(m_decoration, &Decoration::bordersChanged, this, &PreviewItem::syncSize);
     connect(m_decoration, &Decoration::shadowChanged, this, &PreviewItem::syncSize);
     connect(m_decoration, &Decoration::shadowChanged, this, &PreviewItem::shadowChanged);
-    connect(m_decoration, &Decoration::damaged, this, [this]() { update(); });
+    connect(m_decoration, &Decoration::damaged, this, [this]() {
+        update();
+    });
     Q_EMIT decorationChanged(m_decoration);
 }
 
@@ -109,30 +110,31 @@ void PreviewItem::paint(QPainter *painter)
     if (!m_decoration) {
         return;
     }
-    int paddingLeft   = 0;
-    int paddingTop    = 0;
-    int paddingRight  = 0;
+    int paddingLeft = 0;
+    int paddingTop = 0;
+    int paddingRight = 0;
     int paddingBottom = 0;
     paintShadow(painter, paddingLeft, paddingRight, paddingTop, paddingBottom);
     m_decoration->paint(painter, QRect(0, 0, width(), height()));
     if (m_drawBackground) {
-        painter->fillRect(m_decoration->borderLeft(), m_decoration->borderTop(),
-                        width() - m_decoration->borderLeft() - m_decoration->borderRight() - paddingLeft - paddingRight,
-                        height() - m_decoration->borderTop() - m_decoration->borderBottom() - paddingTop - paddingBottom,
-                        m_windowColor);
+        painter->fillRect(m_decoration->borderLeft(),
+                          m_decoration->borderTop(),
+                          width() - m_decoration->borderLeft() - m_decoration->borderRight() - paddingLeft - paddingRight,
+                          height() - m_decoration->borderTop() - m_decoration->borderBottom() - paddingTop - paddingBottom,
+                          m_windowColor);
     }
 }
 
 void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingRight, int &paddingTop, int &paddingBottom)
 {
-    const auto &shadow = ((const Decoration*)(m_decoration))->shadow();
+    const auto &shadow = ((const Decoration *)(m_decoration))->shadow();
     if (!shadow) {
         return;
     }
 
-    paddingLeft   = shadow->paddingLeft();
-    paddingTop    = shadow->paddingTop();
-    paddingRight  = shadow->paddingRight();
+    paddingLeft = shadow->paddingLeft();
+    paddingTop = shadow->paddingTop();
+    paddingRight = shadow->paddingRight();
     paddingBottom = shadow->paddingBottom();
 
     const QImage shadowPixmap = shadow->shadow();
@@ -144,27 +146,17 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
     const QRect shadowRect(shadowPixmap.rect());
 
     const QSize topLeftSize(shadow->topLeftGeometry().size());
-    QRect topLeftTarget(
-        QPoint(outerRect.x(), outerRect.y()),
-        topLeftSize);
+    QRect topLeftTarget(QPoint(outerRect.x(), outerRect.y()), topLeftSize);
 
     const QSize topRightSize(shadow->topRightGeometry().size());
-    QRect topRightTarget(
-        QPoint(outerRect.x() + outerRect.width() - topRightSize.width(),
-               outerRect.y()),
-        topRightSize);
+    QRect topRightTarget(QPoint(outerRect.x() + outerRect.width() - topRightSize.width(), outerRect.y()), topRightSize);
 
     const QSize bottomRightSize(shadow->bottomRightGeometry().size());
-    QRect bottomRightTarget(
-        QPoint(outerRect.x() + outerRect.width() - bottomRightSize.width(),
-               outerRect.y() + outerRect.height() - bottomRightSize.height()),
-        bottomRightSize);
+    QRect bottomRightTarget(QPoint(outerRect.x() + outerRect.width() - bottomRightSize.width(), outerRect.y() + outerRect.height() - bottomRightSize.height()),
+                            bottomRightSize);
 
     const QSize bottomLeftSize(shadow->bottomLeftGeometry().size());
-    QRect bottomLeftTarget(
-        QPoint(outerRect.x(),
-               outerRect.y() + outerRect.height() - bottomLeftSize.height()),
-        bottomLeftSize);
+    QRect bottomLeftTarget(QPoint(outerRect.x(), outerRect.y() + outerRect.height() - bottomLeftSize.height()), bottomLeftSize);
 
     // Re-distribute the corner tiles so no one of them is overlapping with others.
     // By doing this, we assume that shadow's corner tiles are symmetric
@@ -207,21 +199,16 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
 
     painter->translate(paddingLeft, paddingTop);
 
-    painter->drawImage(topLeftTarget, shadowPixmap,
-                       QRect(QPoint(0, 0), topLeftTarget.size()));
+    painter->drawImage(topLeftTarget, shadowPixmap, QRect(QPoint(0, 0), topLeftTarget.size()));
 
-    painter->drawImage(topRightTarget, shadowPixmap,
-                      QRect(QPoint(shadowRect.width() - topRightTarget.width(), 0),
-                            topRightTarget.size()));
+    painter->drawImage(topRightTarget, shadowPixmap, QRect(QPoint(shadowRect.width() - topRightTarget.width(), 0), topRightTarget.size()));
 
-    painter->drawImage(bottomRightTarget, shadowPixmap,
-                       QRect(QPoint(shadowRect.width() - bottomRightTarget.width(),
-                                    shadowRect.height() - bottomRightTarget.height()),
-                             bottomRightTarget.size()));
+    painter->drawImage(
+        bottomRightTarget,
+        shadowPixmap,
+        QRect(QPoint(shadowRect.width() - bottomRightTarget.width(), shadowRect.height() - bottomRightTarget.height()), bottomRightTarget.size()));
 
-    painter->drawImage(bottomLeftTarget, shadowPixmap,
-                       QRect(QPoint(0, shadowRect.height() - bottomLeftTarget.height()),
-                             bottomLeftTarget.size()));
+    painter->drawImage(bottomLeftTarget, shadowPixmap, QRect(QPoint(0, shadowRect.height() - bottomLeftTarget.height()), bottomLeftTarget.size()));
 
     if (drawTop) {
         QRect topTarget(topLeftTarget.x() + topLeftTarget.width(),
@@ -257,10 +244,10 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
     }
 
     if (drawLeft) {
-       QRect leftTarget(topLeftTarget.x(),
-                        topLeftTarget.y() + topLeftTarget.height(),
-                        topLeftTarget.width(),
-                        bottomLeftTarget.y() - topLeftTarget.y() - topLeftTarget.height());
+        QRect leftTarget(topLeftTarget.x(),
+                         topLeftTarget.y() + topLeftTarget.height(),
+                         topLeftTarget.width(),
+                         bottomLeftTarget.y() - topLeftTarget.y() - topLeftTarget.height());
         QRect leftSource(shadow->leftGeometry());
         leftSource.setWidth(leftTarget.width());
         leftSource.moveLeft(shadowRect.left());

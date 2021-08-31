@@ -25,7 +25,6 @@
 
 namespace KWin
 {
-
 static const QString s_serviceName(QStringLiteral("org.kde.KWin"));
 static const QString s_virtualDesktopsInterface(QStringLiteral("org.kde.KWin.VirtualDesktopManager"));
 static const QString s_virtDesktopsPath(QStringLiteral("/VirtualDesktopManager"));
@@ -41,48 +40,33 @@ DesktopsModel::DesktopsModel(QObject *parent)
     qDBusRegisterMetaType<KWin::DBusDesktopDataStruct>();
     qDBusRegisterMetaType<KWin::DBusDesktopDataVector>();
 
-    m_serviceWatcher = new QDBusServiceWatcher(s_serviceName,
-        QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForOwnerChange);
+    m_serviceWatcher = new QDBusServiceWatcher(s_serviceName, QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForOwnerChange);
 
-    QObject::connect(m_serviceWatcher, &QDBusServiceWatcher::serviceRegistered,
-        this, [this]() { reset(); });
+    QObject::connect(m_serviceWatcher, &QDBusServiceWatcher::serviceRegistered, this, [this]() {
+        reset();
+    });
 
-    QObject::connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered,
-        this, [this]() {
-            QDBusConnection::sessionBus().disconnect(
-                s_serviceName,
-                s_virtDesktopsPath,
-                s_virtualDesktopsInterface,
-                QStringLiteral("desktopCreated"),
-                this,
-                SLOT(desktopCreated(QString,KWin::DBusDesktopDataStruct)));
+    QObject::connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, [this]() {
+        QDBusConnection::sessionBus().disconnect(s_serviceName,
+                                                 s_virtDesktopsPath,
+                                                 s_virtualDesktopsInterface,
+                                                 QStringLiteral("desktopCreated"),
+                                                 this,
+                                                 SLOT(desktopCreated(QString, KWin::DBusDesktopDataStruct)));
 
-            QDBusConnection::sessionBus().disconnect(
-                s_serviceName,
-                s_virtDesktopsPath,
-                s_virtualDesktopsInterface,
-                QStringLiteral("desktopRemoved"),
-                this,
-                SLOT(desktopRemoved(QString)));
+        QDBusConnection::sessionBus()
+            .disconnect(s_serviceName, s_virtDesktopsPath, s_virtualDesktopsInterface, QStringLiteral("desktopRemoved"), this, SLOT(desktopRemoved(QString)));
 
-            QDBusConnection::sessionBus().disconnect(
-                s_serviceName,
-                s_virtDesktopsPath,
-                s_virtualDesktopsInterface,
-                QStringLiteral("desktopDataChanged"),
-                this,
-                SLOT(desktopDataChanged(QString,KWin::DBusDesktopDataStruct)));
+        QDBusConnection::sessionBus().disconnect(s_serviceName,
+                                                 s_virtDesktopsPath,
+                                                 s_virtualDesktopsInterface,
+                                                 QStringLiteral("desktopDataChanged"),
+                                                 this,
+                                                 SLOT(desktopDataChanged(QString, KWin::DBusDesktopDataStruct)));
 
-
-            QDBusConnection::sessionBus().disconnect(
-                s_serviceName,
-                s_virtDesktopsPath,
-                s_virtualDesktopsInterface,
-                QStringLiteral("rowsChanged"),
-                this,
-                SLOT(desktopRowsChanged(uint)));
-            }
-    );
+        QDBusConnection::sessionBus()
+            .disconnect(s_serviceName, s_virtDesktopsPath, s_virtualDesktopsInterface, QStringLiteral("rowsChanged"), this, SLOT(desktopRowsChanged(uint)));
+    });
 
     reset();
 }
@@ -251,11 +235,7 @@ void DesktopsModel::syncWithServer()
     };
 
     if (m_desktops.count() > m_serverSideDesktops.count()) {
-        auto call = QDBusMessage::createMethodCall(
-            s_serviceName,
-            s_virtDesktopsPath,
-            s_virtualDesktopsInterface,
-            QStringLiteral("createDesktop"));
+        auto call = QDBusMessage::createMethodCall(s_serviceName, s_virtDesktopsPath, s_virtualDesktopsInterface, QStringLiteral("createDesktop"));
 
         const int newIndex = m_serverSideDesktops.count();
 
@@ -280,11 +260,7 @@ void DesktopsModel::syncWithServer()
             const QString &previous = i.previous();
 
             if (!m_desktops.contains(previous)) {
-                auto call = QDBusMessage::createMethodCall(
-                    s_serviceName,
-                    s_virtDesktopsPath,
-                    s_virtualDesktopsInterface,
-                    QStringLiteral("removeDesktop"));
+                auto call = QDBusMessage::createMethodCall(s_serviceName, s_virtDesktopsPath, s_virtualDesktopsInterface, QStringLiteral("removeDesktop"));
 
                 call.setArguments({previous});
 
@@ -318,11 +294,7 @@ void DesktopsModel::syncWithServer()
             i.next();
 
             if (i.value() != m_serverSideNames.value(i.key())) {
-                auto call = QDBusMessage::createMethodCall(
-                    s_serviceName,
-                    s_virtDesktopsPath,
-                    s_virtualDesktopsInterface,
-                    QStringLiteral("setDesktopName"));
+                auto call = QDBusMessage::createMethodCall(s_serviceName, s_virtDesktopsPath, s_virtualDesktopsInterface, QStringLiteral("setDesktopName"));
 
                 call.setArguments({i.key(), i.value()});
 
@@ -342,14 +314,9 @@ void DesktopsModel::syncWithServer()
 
     // Sync rows.
     if (m_rows != m_serverSideRows) {
-        auto call = QDBusMessage::createMethodCall(
-            s_serviceName,
-            s_virtDesktopsPath,
-            s_fdoPropertiesInterface,
-            QStringLiteral("Set"));
+        auto call = QDBusMessage::createMethodCall(s_serviceName, s_virtDesktopsPath, s_fdoPropertiesInterface, QStringLiteral("Set"));
 
-        call.setArguments({s_virtualDesktopsInterface,
-            QStringLiteral("rows"), QVariant::fromValue(QDBusVariant(QVariant((uint)m_rows)))});
+        call.setArguments({s_virtualDesktopsInterface, QStringLiteral("rows"), QVariant::fromValue(QDBusVariant(QVariant((uint)m_rows)))});
 
         ++m_pendingCalls;
         QDBusPendingCall pending = QDBusConnection::sessionBus().asyncCall(call);
@@ -361,19 +328,11 @@ void DesktopsModel::syncWithServer()
 
 void DesktopsModel::reset()
 {
-    auto getAllAndConnectCall = QDBusMessage::createMethodCall(
-        s_serviceName,
-        s_virtDesktopsPath,
-        s_fdoPropertiesInterface,
-        QStringLiteral("GetAll"));
+    auto getAllAndConnectCall = QDBusMessage::createMethodCall(s_serviceName, s_virtDesktopsPath, s_fdoPropertiesInterface, QStringLiteral("GetAll"));
 
     getAllAndConnectCall.setArguments({s_virtualDesktopsInterface});
 
-    QDBusConnection::sessionBus().callWithCallback(
-        getAllAndConnectCall,
-        this,
-        SLOT(getAllAndConnect(QDBusMessage)),
-        SLOT(handleCallError()));
+    QDBusConnection::sessionBus().callWithCallback(getAllAndConnectCall, this, SLOT(getAllAndConnect(QDBusMessage)), SLOT(handleCallError()));
 }
 
 bool DesktopsModel::needsSave() const
@@ -419,13 +378,11 @@ void DesktopsModel::getAllAndConnect(const QDBusMessage &msg)
 {
     const QVariantMap &data = qdbus_cast<QVariantMap>(msg.arguments().at(0).value<QDBusArgument>());
 
-    const KWin::DBusDesktopDataVector &desktops = qdbus_cast<KWin::DBusDesktopDataVector>(
-        data.value(QStringLiteral("desktops")).value<QDBusArgument>()
-    );
+    const KWin::DBusDesktopDataVector &desktops = qdbus_cast<KWin::DBusDesktopDataVector>(data.value(QStringLiteral("desktops")).value<QDBusArgument>());
 
     const int newServerSideRows = data.value(QStringLiteral("rows")).toUInt();
     QStringList newServerSideDesktops;
-    QHash<QString,QString> newServerSideNames;
+    QHash<QString, QString> newServerSideNames;
 
     for (const KWin::DBusDesktopDataStruct &d : desktops) {
         newServerSideDesktops.append(d.id);
@@ -435,9 +392,7 @@ void DesktopsModel::getAllAndConnect(const QDBusMessage &msg)
     // If the server-side state changed during a KWin restart, and the
     // user had made notifications, the model should notify about the
     // change.
-    if (m_serverSideDesktops != newServerSideDesktops
-        || m_serverSideNames != newServerSideNames
-        || m_serverSideRows != newServerSideRows) {
+    if (m_serverSideDesktops != newServerSideDesktops || m_serverSideNames != newServerSideNames || m_serverSideRows != newServerSideRows) {
         if (!m_serverSideDesktops.isEmpty() || m_userModified) {
             m_serverModified = true;
             Q_EMIT serverModifiedChanged();
@@ -467,13 +422,12 @@ void DesktopsModel::getAllAndConnect(const QDBusMessage &msg)
         Q_EMIT errorChanged();
     };
 
-    bool connected = QDBusConnection::sessionBus().connect(
-        s_serviceName,
-        s_virtDesktopsPath,
-        s_virtualDesktopsInterface,
-        QStringLiteral("desktopCreated"),
-        this,
-        SLOT(desktopCreated(QString,KWin::DBusDesktopDataStruct)));
+    bool connected = QDBusConnection::sessionBus().connect(s_serviceName,
+                                                           s_virtDesktopsPath,
+                                                           s_virtualDesktopsInterface,
+                                                           QStringLiteral("desktopCreated"),
+                                                           this,
+                                                           SLOT(desktopCreated(QString, KWin::DBusDesktopDataStruct)));
 
     if (!connected) {
         handleConnectionError();
@@ -481,13 +435,12 @@ void DesktopsModel::getAllAndConnect(const QDBusMessage &msg)
         return;
     }
 
-    connected = QDBusConnection::sessionBus().connect(
-        s_serviceName,
-        s_virtDesktopsPath,
-        s_virtualDesktopsInterface,
-        QStringLiteral("desktopRemoved"),
-        this,
-        SLOT(desktopRemoved(QString)));
+    connected = QDBusConnection::sessionBus().connect(s_serviceName,
+                                                      s_virtDesktopsPath,
+                                                      s_virtualDesktopsInterface,
+                                                      QStringLiteral("desktopRemoved"),
+                                                      this,
+                                                      SLOT(desktopRemoved(QString)));
 
     if (!connected) {
         handleConnectionError();
@@ -495,13 +448,12 @@ void DesktopsModel::getAllAndConnect(const QDBusMessage &msg)
         return;
     }
 
-    connected = QDBusConnection::sessionBus().connect(
-        s_serviceName,
-        s_virtDesktopsPath,
-        s_virtualDesktopsInterface,
-        QStringLiteral("desktopDataChanged"),
-        this,
-        SLOT(desktopDataChanged(QString,KWin::DBusDesktopDataStruct)));
+    connected = QDBusConnection::sessionBus().connect(s_serviceName,
+                                                      s_virtDesktopsPath,
+                                                      s_virtualDesktopsInterface,
+                                                      QStringLiteral("desktopDataChanged"),
+                                                      this,
+                                                      SLOT(desktopDataChanged(QString, KWin::DBusDesktopDataStruct)));
 
     if (!connected) {
         handleConnectionError();
@@ -509,13 +461,12 @@ void DesktopsModel::getAllAndConnect(const QDBusMessage &msg)
         return;
     }
 
-    connected = QDBusConnection::sessionBus().connect(
-        s_serviceName,
-        s_virtDesktopsPath,
-        s_virtualDesktopsInterface,
-        QStringLiteral("rowsChanged"),
-        this,
-        SLOT(desktopRowsChanged(uint)));
+    connected = QDBusConnection::sessionBus().connect(s_serviceName,
+                                                      s_virtDesktopsPath,
+                                                      s_virtualDesktopsInterface,
+                                                      QStringLiteral("rowsChanged"),
+                                                      this,
+                                                      SLOT(desktopRowsChanged(uint)));
 
     if (!connected) {
         handleConnectionError();
@@ -617,9 +568,7 @@ void DesktopsModel::updateModifiedState(bool server)
     // no changes to send to the server because number and names
     // have remained the same. In that case we can just clean
     // that up here.
-    if (m_desktops.count() == m_serverSideDesktops.count()
-        && m_desktops != m_serverSideDesktops) {
-
+    if (m_desktops.count() == m_serverSideDesktops.count() && m_desktops != m_serverSideDesktops) {
         for (int i = 0; i < m_serverSideDesktops.count(); ++i) {
             const QString oldId = m_desktops.at(i);
             const QString &newId = m_serverSideDesktops.at(i);
@@ -630,10 +579,7 @@ void DesktopsModel::updateModifiedState(bool server)
         Q_EMIT dataChanged(index(0, 0), index(rowCount() - 1, 0), QVector<int>{Qt::DisplayRole});
     }
 
-    if (m_desktops == m_serverSideDesktops
-        && m_names == m_serverSideNames
-        && m_rows == m_serverSideRows) {
-
+    if (m_desktops == m_serverSideDesktops && m_names == m_serverSideNames && m_rows == m_serverSideRows) {
         m_userModified = false;
         Q_EMIT userModifiedChanged();
 
@@ -658,7 +604,6 @@ void DesktopsModel::updateModifiedState(bool server)
 void DesktopsModel::handleCallError()
 {
     if (m_pendingCalls > 0) {
-
         m_serverModified = false;
         Q_EMIT serverModifiedChanged();
 

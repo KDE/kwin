@@ -22,7 +22,6 @@ using KWaylandServer::SurfaceInterface;
 
 namespace KWin
 {
-
 IdleInhibition::IdleInhibition(IdleInterface *idle)
     : QObject(idle)
     , m_idle(idle)
@@ -45,16 +44,14 @@ void IdleInhibition::registerClient(AbstractClient *client)
     connect(client, &AbstractClient::clientUnminimized, this, updateInhibit);
     connect(client, &AbstractClient::windowHidden, this, updateInhibit);
     connect(client, &AbstractClient::windowShown, this, updateInhibit);
-    connect(client, &AbstractClient::windowClosed, this,
-        [this, client] {
-            uninhibit(client);
-            auto it = m_connections.find(client);
-            if (it != m_connections.end()) {
-                disconnect(it.value());
-                m_connections.erase(it);
-            }
+    connect(client, &AbstractClient::windowClosed, this, [this, client] {
+        uninhibit(client);
+        auto it = m_connections.find(client);
+        if (it != m_connections.end()) {
+            disconnect(it.value());
+            m_connections.erase(it);
         }
-    );
+    });
 
     updateInhibit();
 }
@@ -104,7 +101,9 @@ void IdleInhibition::slotWorkspaceCreated()
 
 void IdleInhibition::slotDesktopChanged()
 {
-    workspace()->forEachAbstractClient([this] (AbstractClient *c) { update(c); });
+    workspace()->forEachAbstractClient([this](AbstractClient *c) {
+        update(c);
+    });
 }
 
 }

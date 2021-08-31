@@ -23,7 +23,8 @@ public:
     X11Cursor(QObject *parent, bool xInputSupport = false);
     ~X11Cursor() override;
 
-    void schedulePoll() {
+    void schedulePoll()
+    {
         m_needsPoll = true;
     }
 
@@ -53,9 +54,10 @@ private Q_SLOTS:
     void resetTimeStamp();
     void mousePolled();
     void aboutToBlock();
+
 private:
     xcb_cursor_t createCursor(const QByteArray &name);
-    QHash<QByteArray, xcb_cursor_t > m_cursors;
+    QHash<QByteArray, xcb_cursor_t> m_cursors;
     xcb_timestamp_t m_timeStamp;
     uint16_t m_buttonMask;
     QTimer *m_resetTimeStampTimer;
@@ -67,7 +69,6 @@ private:
 
     friend class Cursor;
 };
-
 
 }
 

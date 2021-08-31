@@ -18,13 +18,11 @@ struct wl_resource;
 
 namespace KWin
 {
+typedef GLboolean (*eglBindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
+typedef GLboolean (*eglUnbindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
+typedef GLboolean (*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
 
-typedef GLboolean(*eglBindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
-typedef GLboolean(*eglUnbindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
-typedef GLboolean(*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
-
-struct AbstractEglBackendFunctions
-{
+struct AbstractEglBackendFunctions {
     eglBindWaylandDisplayWL_func eglBindWaylandDisplayWL = nullptr;
     eglUnbindWaylandDisplayWL_func eglUnbindWaylandDisplayWL = nullptr;
     eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
@@ -41,32 +39,40 @@ public:
     bool makeCurrent() override;
     void doneCurrent() override;
 
-    const AbstractEglBackendFunctions *functions() const {
+    const AbstractEglBackendFunctions *functions() const
+    {
         return &m_functions;
     }
-    EGLDisplay eglDisplay() const {
+    EGLDisplay eglDisplay() const
+    {
         return m_display;
     }
-    EGLContext context() const {
+    EGLContext context() const
+    {
         return m_context;
     }
-    EGLSurface surface() const {
+    EGLSurface surface() const
+    {
         return m_surface;
     }
-    EGLConfig config() const {
+    EGLConfig config() const
+    {
         return m_config;
     }
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const override;
 
-    static void setPrimaryBackend(AbstractEglBackend *primaryBackend) {
+    static void setPrimaryBackend(AbstractEglBackend *primaryBackend)
+    {
         s_primaryBackend = primaryBackend;
     }
-    static AbstractEglBackend *primaryBackend() {
+    static AbstractEglBackend *primaryBackend()
+    {
         return s_primaryBackend;
     }
 
-    bool isPrimary() const {
+    bool isPrimary() const
+    {
         return this == s_primaryBackend;
     }
 
@@ -98,7 +104,7 @@ private:
     EglDmabuf *m_dmaBuf = nullptr;
     QList<QByteArray> m_clientExtensions;
 
-    static AbstractEglBackend * s_primaryBackend;
+    static AbstractEglBackend *s_primaryBackend;
 };
 
 }

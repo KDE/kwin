@@ -14,8 +14,8 @@
 #include "cursor.h"
 #include "effectloader.h"
 #include "main.h"
-#include "screenedge.h"
 #include "platform.h"
+#include "screenedge.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -28,7 +28,6 @@ Q_DECLARE_METATYPE(KWin::ElectricBorder)
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_screen-edges-0");
 
 class TestObject : public QObject

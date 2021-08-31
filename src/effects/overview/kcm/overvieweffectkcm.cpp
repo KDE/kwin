@@ -18,13 +18,10 @@
 
 #include <QAction>
 
-K_PLUGIN_FACTORY_WITH_JSON(OverviewEffectConfigFactory,
-                           "overvieweffectkcm.json",
-                           registerPlugin<KWin::OverviewEffectConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(OverviewEffectConfigFactory, "overvieweffectkcm.json", registerPlugin<KWin::OverviewEffectConfig>();)
 
 namespace KWin
 {
-
 OverviewEffectConfig::OverviewEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
 {
@@ -62,9 +59,7 @@ void OverviewEffectConfig::save()
     KCModule::save();
     ui.shortcutsEditor->save();
 
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("overview"));
 }
 

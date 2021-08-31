@@ -9,7 +9,6 @@
 
 namespace KWin
 {
-
 SurfaceItem::SurfaceItem(Toplevel *window, Item *parent)
     : Item(parent)
     , m_window(window)

@@ -12,7 +12,6 @@ Q_DECLARE_METATYPE(QMargins)
 
 namespace KWin
 {
-
 bool WindowShadowTile::create()
 {
     return true;

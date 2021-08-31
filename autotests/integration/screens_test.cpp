@@ -6,10 +6,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "cursor.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -20,7 +20,6 @@
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_screens-0");
 
 class ScreensTest : public QObject
@@ -113,8 +112,11 @@ void ScreensTest::testSize()
     QVERIFY(sizeChangedSpy.isValid());
 
     QFETCH(QVector<QRect>, geometries);
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,
-                              Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
+    QMetaObject::invokeMethod(kwinApp()->platform(),
+                              "setVirtualOutputs",
+                              Qt::QueuedConnection,
+                              Q_ARG(int, geometries.count()),
+                              Q_ARG(QVector<QRect>, geometries));
 
     QVERIFY(sizeChangedSpy.wait());
     QTEST(screens()->size(), "expectedSize");
@@ -153,7 +155,8 @@ void ScreensTest::testIntersecting_data()
     QTest::newRow("in-between") << QVector<QRect>{{QRect{0, 0, 10, 20}, QRect{20, 40, 10, 20}}} << QRect(15, 0, 2, 2) << 0;
     QTest::newRow("gap-overlapping") << QVector<QRect>{{QRect{0, 0, 10, 20}, QRect{20, 40, 10, 20}}} << QRect(9, 10, 200, 200) << 2;
     QTest::newRow("larger") << QVector<QRect>{{QRect{0, 0, 100, 100}}} << QRect(-10, -10, 200, 200) << 1;
-    QTest::newRow("several") << QVector<QRect>{{QRect{0, 0, 100, 100}, QRect{100, 0, 100, 100}, QRect{200, 100, 100, 100}, QRect{300, 100, 100, 100}}} << QRect(0, 0, 300, 300) << 3;
+    QTest::newRow("several") << QVector<QRect>{{QRect{0, 0, 100, 100}, QRect{100, 0, 100, 100}, QRect{200, 100, 100, 100}, QRect{300, 100, 100, 100}}}
+                             << QRect(0, 0, 300, 300) << 3;
 }
 
 void ScreensTest::testIntersecting()
@@ -162,8 +165,11 @@ void ScreensTest::testIntersecting()
     QVERIFY(changedSpy.isValid());
 
     QFETCH(QVector<QRect>, geometries);
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,
-                              Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
+    QMetaObject::invokeMethod(kwinApp()->platform(),
+                              "setVirtualOutputs",
+                              Qt::QueuedConnection,
+                              Q_ARG(int, geometries.count()),
+                              Q_ARG(QVector<QRect>, geometries));
     QVERIFY(changedSpy.wait());
 
     QFETCH(QRect, testGeometry);
@@ -219,8 +225,11 @@ void ScreensTest::testCurrentWithFollowsMouse()
     workspace()->slotReconfigure();
 
     QFETCH(QVector<QRect>, geometries);
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,
-                              Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
+    QMetaObject::invokeMethod(kwinApp()->platform(),
+                              "setVirtualOutputs",
+                              Qt::QueuedConnection,
+                              Q_ARG(int, geometries.count()),
+                              Q_ARG(QVector<QRect>, geometries));
     QVERIFY(changedSpy.wait());
 
     QFETCH(QPoint, cursorPos);
@@ -250,8 +259,11 @@ void ScreensTest::testCurrentPoint()
     QVERIFY(changedSpy.isValid());
 
     QFETCH(QVector<QRect>, geometries);
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,
-                              Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
+    QMetaObject::invokeMethod(kwinApp()->platform(),
+                              "setVirtualOutputs",
+                              Qt::QueuedConnection,
+                              Q_ARG(int, geometries.count()),
+                              Q_ARG(QVector<QRect>, geometries));
     QVERIFY(changedSpy.wait());
 
     // Disable "active screen follows mouse"

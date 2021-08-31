@@ -15,9 +15,9 @@
 #include <kwinglobals.h>
 
 #include <QHash>
-#include <QStringList>
 #include <QJSEngine>
 #include <QJSValue>
+#include <QStringList>
 #include <QTimer>
 
 #include <QDBusContext>
@@ -33,7 +33,7 @@ class QQuickWindow;
 class KConfigGroup;
 
 /// @c true == javascript, @c false == qml
-typedef QList< QPair<bool, QPair<QString, QString > > > LoadScriptList;
+typedef QList<QPair<bool, QPair<QString, QString>>> LoadScriptList;
 
 namespace KWin
 {
@@ -46,16 +46,20 @@ class KWIN_EXPORT AbstractScript : public QObject
 public:
     AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
     ~AbstractScript() override;
-    int scriptId() const {
+    int scriptId() const
+    {
         return m_scriptId;
     }
-    QString fileName() const {
+    QString fileName() const
+    {
         return m_fileName;
     }
-    const QString &pluginName() {
+    const QString &pluginName()
+    {
         return m_pluginName;
     }
-    bool running() const {
+    bool running() const
+    {
         return m_running;
     }
 
@@ -69,7 +73,8 @@ Q_SIGNALS:
     void runningChanged(bool);
 
 protected:
-    void setRunning(bool running) {
+    void setRunning(bool running)
+    {
         if (m_running == running) {
             return;
         }
@@ -105,8 +110,10 @@ public:
 
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
-    Q_INVOKABLE void callDBus(const QString &service, const QString &path,
-                              const QString &interface, const QString &method,
+    Q_INVOKABLE void callDBus(const QString &service,
+                              const QString &path,
+                              const QString &interface,
+                              const QString &method,
                               const QJSValue &arg1 = QJSValue(),
                               const QJSValue &arg2 = QJSValue(),
                               const QJSValue &arg3 = QJSValue(),
@@ -117,8 +124,7 @@ public:
                               const QJSValue &arg8 = QJSValue(),
                               const QJSValue &arg9 = QJSValue());
 
-    Q_INVOKABLE bool registerShortcut(const QString &objectName, const QString &text,
-                                      const QString &keySequence, const QJSValue &callback);
+    Q_INVOKABLE bool registerShortcut(const QString &objectName, const QString &text, const QString &keySequence, const QJSValue &callback);
 
     Q_INVOKABLE bool registerScreenEdge(int edge, const QJSValue &callback);
     Q_INVOKABLE bool unregisterScreenEdge(int edge);
@@ -267,8 +273,8 @@ class JSEngineGlobalMethodsWrapper : public QObject
 {
     Q_OBJECT
 public:
-//------------------------------------------------------------------
-//enums copy&pasted from kwinglobals.h for exporting
+    //------------------------------------------------------------------
+    // enums copy&pasted from kwinglobals.h for exporting
 
     enum ClientAreaOption {
         ///< geometry where a window will be initially placed after being mapped
@@ -295,7 +301,7 @@ public:
 public Q_SLOTS:
     QVariant readConfig(const QString &key, QVariant defaultValue = QVariant());
     void registerWindow(QQuickWindow *window);
-    bool registerShortcut(const QString &name, const QString &text, const QKeySequence& keys, QJSValue function);
+    bool registerShortcut(const QString &name, const QString &text, const QKeySequence &keys, QJSValue function);
 
 private:
     DeclarativeScript *m_script;
@@ -311,7 +317,7 @@ class KWIN_EXPORT Scripting : public QObject
 private:
     explicit Scripting(QObject *parent);
     QStringList scriptList;
-    QList<KWin::AbstractScript*> scripts;
+    QList<KWin::AbstractScript *> scripts;
     /**
      * Lock to protect the scripts member variable.
      */
@@ -334,7 +340,7 @@ public:
      * @param parent The parent menu to which to add created child menus and items
      * @return QList< QAction* > List of all actions aggregated from all scripts.
      */
-    QList<QAction*> actionsForUserActionMenu(AbstractClient *c, QMenu *parent);
+    QList<QAction *> actionsForUserActionMenu(AbstractClient *c, QMenu *parent);
 
     QQmlEngine *qmlEngine() const;
     QQmlEngine *qmlEngine();
@@ -363,38 +369,32 @@ private:
     QtScriptWorkspaceWrapper *m_workspaceWrapper;
 };
 
-inline
-QQmlEngine *Scripting::qmlEngine() const
+inline QQmlEngine *Scripting::qmlEngine() const
 {
     return m_qmlEngine;
 }
 
-inline
-QQmlEngine *Scripting::qmlEngine()
+inline QQmlEngine *Scripting::qmlEngine()
 {
     return m_qmlEngine;
 }
 
-inline
-QQmlContext *Scripting::declarativeScriptSharedContext() const
+inline QQmlContext *Scripting::declarativeScriptSharedContext() const
 {
     return m_declarativeScriptSharedContext;
 }
 
-inline
-QQmlContext *Scripting::declarativeScriptSharedContext()
+inline QQmlContext *Scripting::declarativeScriptSharedContext()
 {
     return m_declarativeScriptSharedContext;
 }
 
-inline
-QtScriptWorkspaceWrapper *Scripting::workspaceWrapper() const
+inline QtScriptWorkspaceWrapper *Scripting::workspaceWrapper() const
 {
     return m_workspaceWrapper;
 }
 
-inline
-Scripting *Scripting::self()
+inline Scripting *Scripting::self()
 {
     return s_self;
 }

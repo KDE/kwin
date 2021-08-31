@@ -7,8 +7,8 @@
 #ifndef KWINSCRIPTSDATA_H
 #define KWINSCRIPTSDATA_H
 
-#include <QObject>
 #include <QList>
+#include <QObject>
 
 #include <KCModuleData>
 #include <KPluginInfo>

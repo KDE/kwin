@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class WaylandShellIntegration : public QObject
 {
     Q_OBJECT

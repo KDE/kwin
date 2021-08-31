@@ -13,12 +13,12 @@
 #include "xwayland.h"
 
 #include "atoms.h"
-#include "x11client.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
-#include <KWaylandServer/datasource_interface.h>
 #include <KWaylandServer/datadevice_interface.h>
+#include <KWaylandServer/datasource_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
 
@@ -29,7 +29,6 @@ namespace KWin
 {
 namespace Xwl
 {
-
 using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;
 using DnDActions = KWaylandServer::DataDeviceManagerInterface::DnDActions;
 
@@ -42,7 +41,7 @@ static DnDAction atomToClientAction(xcb_atom_t atom)
     } else if (atom == atoms->xdnd_action_ask) {
         // we currently do not support it - need some test client first
         return DnDAction::None;
-//        return DnDAction::Ask;
+        //        return DnDAction::Ask;
     }
     return DnDAction::None;
 }
@@ -56,7 +55,7 @@ static xcb_atom_t clientActionToAtom(DnDAction action)
     } else if (action == DnDAction::Ask) {
         // we currently do not support it - need some test client first
         return XCB_ATOM_NONE;
-//        return atoms->xdnd_action_ask;
+        //        return atoms->xdnd_action_ask;
     }
     return XCB_ATOM_NONE;
 }
@@ -124,18 +123,13 @@ KWaylandServer::DataSourceInterface *WlToXDrag::dataSourceIface() const
 }
 
 Xvisit::Xvisit(WlToXDrag *drag, AbstractClient *target)
-    : QObject(drag),
-      m_drag(drag),
-      m_target(target)
+    : QObject(drag)
+    , m_drag(drag)
+    , m_target(target)
 {
     // first check supported DND version
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
-    xcb_get_property_cookie_t cookie = xcb_get_property(xcbConn,
-                                                        0,
-                                                        m_target->window(),
-                                                        atoms->xdnd_aware,
-                                                        XCB_GET_PROPERTY_TYPE_ANY,
-                                                        0, 1);
+    xcb_get_property_cookie_t cookie = xcb_get_property(xcbConn, 0, m_target->window(), atoms->xdnd_aware, XCB_GET_PROPERTY_TYPE_ANY, 0, 1);
     auto *reply = xcb_get_property_reply(xcbConn, cookie, nullptr);
     if (!reply) {
         doFinish();
@@ -224,12 +218,11 @@ bool Xvisit::handleFinished(xcb_client_message_event_t *event)
     }
 
     const bool success = m_version > 4 ? data->data32[1] & 1 : true;
-    const xcb_atom_t usedActionAtom = m_version > 4 ? data->data32[2] :
-                                                      static_cast<uint32_t>(XCB_ATOM_NONE);
+    const xcb_atom_t usedActionAtom = m_version > 4 ? data->data32[2] : static_cast<uint32_t>(XCB_ATOM_NONE);
     Q_UNUSED(success);
     Q_UNUSED(usedActionAtom);
 
-    if (auto dataSource = m_drag->dataSourceIface())  {
+    if (auto dataSource = m_drag->dataSourceIface()) {
         dataSource->dndFinished();
     }
     doFinish();
@@ -278,8 +271,7 @@ void Xvisit::receiveOffer()
 {
     retrieveSupportedActions();
     auto dragSource = m_drag->dataSourceIface();
-    connect(dragSource, &KWaylandServer::AbstractDataSource::supportedDragAndDropActionsChanged,
-                          this, &Xvisit::retrieveSupportedActions);
+    connect(dragSource, &KWaylandServer::AbstractDataSource::supportedDragAndDropActionsChanged, this, &Xvisit::retrieveSupportedActions);
     enter();
 }
 
@@ -291,9 +283,7 @@ void Xvisit::enter()
     sendPosition(waylandServer()->seat()->pointerPos());
 
     // proxy future pointer position changes
-    m_motionConnection = connect(waylandServer()->seat(),
-                          &KWaylandServer::SeatInterface::pointerPosChanged,
-                          this, &Xvisit::sendPosition);
+    m_motionConnection = connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::pointerPosChanged, this, &Xvisit::sendPosition);
 }
 
 void Xvisit::sendEnter()
@@ -349,7 +339,9 @@ void Xvisit::sendEnter()
                             DataBridge::self()->dnd()->window(),
                             atoms->xdnd_type_list,
                             XCB_ATOM_ATOM,
-                            32, cnt, targets.data());
+                            32,
+                            cnt,
+                            targets.data());
     }
     Drag::sendClientMessage(m_target->window(), atoms->xdnd_enter, &data);
 }
@@ -399,8 +391,7 @@ void Xvisit::determineProposedAction()
 
 void Xvisit::requestDragAndDropAction()
 {
-    DnDAction action = m_preferredAction != DnDAction::None ? m_preferredAction:
-                                                           DnDAction::Copy;
+    DnDAction action = m_preferredAction != DnDAction::None ? m_preferredAction : DnDAction::Copy;
     // we assume the X client supports Move, but this might be wrong - then
     // the drag just cancels, if the user tries to force it.
 

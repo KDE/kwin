@@ -12,40 +12,38 @@
 #include <config-kwin.h>
 #include <kwineffects_interface.h>
 
-#include <KLocalizedString>
-#include <KActionCollection>
 #include <KAboutData>
+#include <KActionCollection>
 #include <KGlobalAccel>
+#include <KLocalizedString>
 #include <KPluginFactory>
 
-#include <QVBoxLayout>
 #include <QLabel>
+#include <QVBoxLayout>
 
 #include "trackmouse_config.h"
 
 // KConfigSkeleton
 #include "trackmouseconfig.h"
 
-K_PLUGIN_FACTORY_WITH_JSON(TrackMouseEffectConfigFactory,
-                           "trackmouse_config.json",
-                           registerPlugin<KWin::TrackMouseEffectConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(TrackMouseEffectConfigFactory, "trackmouse_config.json", registerPlugin<KWin::TrackMouseEffectConfig>();)
 
 namespace KWin
 {
-
 static const QString s_toggleTrackMouseActionName = QStringLiteral("TrackMouse");
 
-TrackMouseEffectConfigForm::TrackMouseEffectConfigForm(QWidget* parent) : QWidget(parent)
+TrackMouseEffectConfigForm::TrackMouseEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     TrackMouseConfig::instance(KWIN_CONFIG);
     m_ui = new TrackMouseEffectConfigForm(this);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
     addConfig(TrackMouseConfig::self(), m_ui);
@@ -62,8 +60,7 @@ TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantLi
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>());
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
 
-    connect(m_ui->shortcut, &KKeySequenceWidget::keySequenceChanged,
-            this, &TrackMouseEffectConfig::shortcutChanged);
+    connect(m_ui->shortcut, &KKeySequenceWidget::keySequenceChanged, this, &TrackMouseEffectConfig::shortcutChanged);
 
     load();
 }
@@ -88,9 +85,7 @@ void TrackMouseEffectConfig::save()
 {
     KCModule::save();
     m_actionCollection->writeSettings();
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("trackmouse"));
 }
 

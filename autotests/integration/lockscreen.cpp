@@ -6,12 +6,12 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
-#include "abstract_output.h"
-#include "platform.h"
 #include "abstract_client.h"
+#include "abstract_output.h"
 #include "composite.h"
 #include "cursor.h"
+#include "kwin_wayland_test.h"
+#include "platform.h"
 #include "scene.h"
 #include "screenedge.h"
 #include "screens.h"
@@ -19,11 +19,11 @@
 #include "workspace.h"
 #include <kwineffects.h>
 
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/keyboard.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/pointer.h>
+#include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
@@ -31,7 +31,7 @@
 #include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
 
-//screenlocker
+// screenlocker
 #include <KScreenLocker/KsldApp>
 
 #include <KGlobalAccel>
@@ -42,7 +42,6 @@ Q_DECLARE_METATYPE(Qt::Orientation)
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_lock_screen-0");
 
 class LockScreenTest : public QObject
@@ -81,56 +80,57 @@ class HelperEffect : public Effect
 {
     Q_OBJECT
 public:
-    HelperEffect() {}
-    ~HelperEffect() override {}
+    HelperEffect()
+    {
+    }
+    ~HelperEffect() override
+    {
+    }
 
-    void windowInputMouseEvent(QEvent*) override {
+    void windowInputMouseEvent(QEvent *) override
+    {
         Q_EMIT inputEvent();
     }
-    void grabbedKeyboardEvent(QKeyEvent *e) override {
+    void grabbedKeyboardEvent(QKeyEvent *e) override
+    {
         Q_EMIT keyEvent(e->text());
     }
 
 Q_SIGNALS:
     void inputEvent();
-    void keyEvent(const QString&);
+    void keyEvent(const QString &);
 };
 
-#define LOCK \
-    QVERIFY(!waylandServer()->isScreenLocked()); \
-    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged); \
-    QVERIFY(lockStateChangedSpy.isValid()); \
-    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate); \
-    QCOMPARE(lockStateChangedSpy.count(), 1); \
+#define LOCK                                                                                                                                                   \
+    QVERIFY(!waylandServer()->isScreenLocked());                                                                                                               \
+    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);                                                   \
+    QVERIFY(lockStateChangedSpy.isValid());                                                                                                                    \
+    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);                                                                               \
+    QCOMPARE(lockStateChangedSpy.count(), 1);                                                                                                                  \
     QVERIFY(waylandServer()->isScreenLocked());
 
-#define UNLOCK \
-    int expectedLockCount = 1; \
-    if (ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked) { \
-        expectedLockCount = 2; \
-    } \
-    QCOMPARE(lockStateChangedSpy.count(), expectedLockCount); \
-    unlock(); \
-    if (lockStateChangedSpy.count() < expectedLockCount + 1) { \
-        QVERIFY(lockStateChangedSpy.wait()); \
-    } \
-    QCOMPARE(lockStateChangedSpy.count(), expectedLockCount + 1); \
+#define UNLOCK                                                                                                                                                 \
+    int expectedLockCount = 1;                                                                                                                                 \
+    if (ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked) {                                                                         \
+        expectedLockCount = 2;                                                                                                                                 \
+    }                                                                                                                                                          \
+    QCOMPARE(lockStateChangedSpy.count(), expectedLockCount);                                                                                                  \
+    unlock();                                                                                                                                                  \
+    if (lockStateChangedSpy.count() < expectedLockCount + 1) {                                                                                                 \
+        QVERIFY(lockStateChangedSpy.wait());                                                                                                                   \
+    }                                                                                                                                                          \
+    QCOMPARE(lockStateChangedSpy.count(), expectedLockCount + 1);                                                                                              \
     QVERIFY(!waylandServer()->isScreenLocked());
 
-#define MOTION(target) \
-    kwinApp()->platform()->pointerMotion(target, timestamp++)
+#define MOTION(target) kwinApp()->platform()->pointerMotion(target, timestamp++)
 
-#define PRESS \
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++)
+#define PRESS kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++)
 
-#define RELEASE \
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++)
+#define RELEASE kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++)
 
-#define KEYPRESS( key ) \
-    kwinApp()->platform()->keyboardKeyPressed(key, timestamp++)
+#define KEYPRESS(key) kwinApp()->platform()->keyboardKeyPressed(key, timestamp++)
 
-#define KEYRELEASE( key ) \
-    kwinApp()->platform()->keyboardKeyReleased(key, timestamp++)
+#define KEYRELEASE(key) kwinApp()->platform()->keyboardKeyReleased(key, timestamp++)
 
 void LockScreenTest::unlock()
 {
@@ -148,11 +148,11 @@ void LockScreenTest::unlock()
 AbstractClient *LockScreenTest::showWindow()
 {
     using namespace KWayland::Client;
-#define VERIFY(statement) \
-    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))\
+#define VERIFY(statement)                                                                                                                                      \
+    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))                                                                                      \
         return nullptr;
-#define COMPARE(actual, expected) \
-    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
+#define COMPARE(actual, expected)                                                                                                                              \
+    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))                                                                            \
         return nullptr;
 
     Surface *surface = Test::createSurface(m_compositor);
@@ -173,7 +173,7 @@ AbstractClient *LockScreenTest::showWindow()
 
 void LockScreenTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -220,8 +220,7 @@ void LockScreenTest::testStackingOrder()
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
 
-    LOCK
-    QVERIFY(clientAddedSpy.wait());
+    LOCK QVERIFY(clientAddedSpy.wait());
 
     AbstractClient *client = clientAddedSpy.first().first().value<AbstractClient *>();
     QVERIFY(client);
@@ -252,7 +251,7 @@ void LockScreenTest::testPointer()
 
     LOCK
 
-    QVERIFY(leftSpy.wait());
+        QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
 
     // simulate moving out in and out again
@@ -304,8 +303,8 @@ void LockScreenTest::testPointerButton()
 
     LOCK
 
-    // and simulate a click
-    PRESS;
+        // and simulate a click
+        PRESS;
     QVERIFY(!buttonChangedSpy.wait());
     RELEASE;
     QVERIFY(!buttonChangedSpy.wait());
@@ -346,7 +345,9 @@ void LockScreenTest::testPointerAxis()
     LOCK
 
     // and simulate axis
-    kwinApp()->platform()->pointerAxisHorizontal(5.0, timestamp++);
+    kwinApp()
+        ->platform()
+        ->pointerAxisHorizontal(5.0, timestamp++);
     QVERIFY(!axisChangedSpy.wait(100));
     kwinApp()->platform()->pointerAxisVertical(5.0, timestamp++);
     QVERIFY(!axisChangedSpy.wait(100));
@@ -395,8 +396,7 @@ void LockScreenTest::testKeyboard()
     QCOMPARE(keyChangedSpy.at(1).at(1).value<Keyboard::KeyState>(), Keyboard::KeyState::Released);
     QCOMPARE(keyChangedSpy.at(1).at(2).value<quint32>(), quint32(2));
 
-    LOCK
-    QVERIFY(leftSpy.wait());
+    LOCK QVERIFY(leftSpy.wait());
     KEYPRESS(KEY_B);
     KEYRELEASE(KEY_B);
     QCOMPARE(leftSpy.count(), 1);
@@ -432,7 +432,7 @@ void LockScreenTest::testScreenEdge()
 
     LOCK
 
-    MOTION(QPoint(4, 4));
+        MOTION(QPoint(4, 4));
     QCOMPARE(screenEdgeSpy.count(), 1);
 
     // and unlock
@@ -461,7 +461,7 @@ void LockScreenTest::testEffects()
 
     LOCK
 
-    MOTION(QPoint(6, 6));
+        MOTION(QPoint(6, 6));
     QCOMPARE(inputSpy.count(), 3);
     // simlate click
     PRESS;
@@ -498,8 +498,7 @@ void LockScreenTest::testEffectsKeyboard()
     QCOMPARE(inputSpy.first().first().toString(), QStringLiteral("a"));
     QCOMPARE(inputSpy.at(1).first().toString(), QStringLiteral("a"));
 
-    LOCK
-    KEYPRESS(KEY_B);
+    LOCK KEYPRESS(KEY_B);
     QCOMPARE(inputSpy.count(), 2);
     KEYRELEASE(KEY_B);
     QCOMPARE(inputSpy.count(), 2);
@@ -549,8 +548,7 @@ void LockScreenTest::testEffectsKeyboardAutorepeat()
     QCOMPARE(inputSpy.count(), 1);
 
     // while locked key repeat should not pass any events to the Effect
-    LOCK
-    KEYPRESS(KEY_B);
+    LOCK KEYPRESS(KEY_B);
     QVERIFY(!inputSpy.wait(200));
     KEYRELEASE(KEY_B);
     QVERIFY(!inputSpy.wait(200));
@@ -584,8 +582,7 @@ void LockScreenTest::testMoveWindow()
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
 
     // while locking our window should continue to be in move resize
-    LOCK
-    QCOMPARE(workspace()->moveResizeClient(), c);
+    LOCK QCOMPARE(workspace()->moveResizeClient(), c);
     QVERIFY(c->isInteractiveMove());
     kwinApp()->platform()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
@@ -612,28 +609,25 @@ void LockScreenTest::testPointerShortcut()
 
     // try to trigger the shortcut
     quint32 timestamp = 1;
-#define PERFORM(expectedCount) \
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++); \
-    PRESS; \
-    QCoreApplication::instance()->processEvents(); \
-    QCOMPARE(actionSpy.count(), expectedCount); \
-    RELEASE; \
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++); \
-    QCoreApplication::instance()->processEvents(); \
+#define PERFORM(expectedCount)                                                                                                                                 \
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);                                                                                      \
+    PRESS;                                                                                                                                                     \
+    QCoreApplication::instance()->processEvents();                                                                                                             \
+    QCOMPARE(actionSpy.count(), expectedCount);                                                                                                                \
+    RELEASE;                                                                                                                                                   \
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);                                                                                     \
+    QCoreApplication::instance()->processEvents();                                                                                                             \
     QCOMPARE(actionSpy.count(), expectedCount);
 
     PERFORM(1)
 
     // now the same thing with a locked screen
-    LOCK
-    PERFORM(1)
+    LOCK PERFORM(1)
 
-    // and as unlocked
-    UNLOCK
-    PERFORM(2)
+        // and as unlocked
+        UNLOCK PERFORM(2)
 #undef PERFORM
 }
-
 
 void LockScreenTest::testAxisShortcut_data()
 {
@@ -664,27 +658,25 @@ void LockScreenTest::testAxisShortcut()
 
     // try to trigger the shortcut
     quint32 timestamp = 1;
-#define PERFORM(expectedCount) \
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++); \
-    if (direction == Qt::Vertical) \
-        kwinApp()->platform()->pointerAxisVertical(sign * 5.0, timestamp++); \
-    else \
-        kwinApp()->platform()->pointerAxisHorizontal(sign * 5.0, timestamp++); \
-    QCoreApplication::instance()->processEvents(); \
-    QCOMPARE(actionSpy.count(), expectedCount); \
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++); \
-    QCoreApplication::instance()->processEvents(); \
+#define PERFORM(expectedCount)                                                                                                                                 \
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);                                                                                      \
+    if (direction == Qt::Vertical)                                                                                                                             \
+        kwinApp()->platform()->pointerAxisVertical(sign * 5.0, timestamp++);                                                                                   \
+    else                                                                                                                                                       \
+        kwinApp()->platform()->pointerAxisHorizontal(sign * 5.0, timestamp++);                                                                                 \
+    QCoreApplication::instance()->processEvents();                                                                                                             \
+    QCOMPARE(actionSpy.count(), expectedCount);                                                                                                                \
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);                                                                                     \
+    QCoreApplication::instance()->processEvents();                                                                                                             \
     QCOMPARE(actionSpy.count(), expectedCount);
 
     PERFORM(1)
 
     // now the same thing with a locked screen
-    LOCK
-    PERFORM(1)
+    LOCK PERFORM(1)
 
-    // and as unlocked
-    UNLOCK
-    PERFORM(2)
+        // and as unlocked
+        UNLOCK PERFORM(2)
 #undef PERFORM
 }
 
@@ -697,8 +689,7 @@ void LockScreenTest::testKeyboardShortcut()
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
     action->setObjectName("LockScreenTest::testKeyboardShortcut");
     KGlobalAccel::self()->setDefaultShortcut(action.data(), QList<QKeySequence>{Qt::CTRL + Qt::META + Qt::ALT + Qt::Key_Space});
-    KGlobalAccel::self()->setShortcut(action.data(), QList<QKeySequence>{Qt::CTRL + Qt::META + Qt::ALT + Qt::Key_Space},
-                                          KGlobalAccel::NoAutoloading);
+    KGlobalAccel::self()->setShortcut(action.data(), QList<QKeySequence>{Qt::CTRL + Qt::META + Qt::ALT + Qt::Key_Space}, KGlobalAccel::NoAutoloading);
 
     // try to trigger the shortcut
     quint32 timestamp = 1;
@@ -712,8 +703,7 @@ void LockScreenTest::testKeyboardShortcut()
     QVERIFY(!actionSpy.wait());
     QCOMPARE(actionSpy.count(), 1);
 
-    LOCK
-    KEYPRESS(KEY_SPACE);
+    LOCK KEYPRESS(KEY_SPACE);
     QVERIFY(!actionSpy.wait());
     QCOMPARE(actionSpy.count(), 1);
     KEYRELEASE(KEY_SPACE);
@@ -752,8 +742,7 @@ void LockScreenTest::testTouch()
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
 
-    LOCK
-    QVERIFY(cancelSpy.wait());
+    LOCK QVERIFY(cancelSpy.wait());
 
     kwinApp()->platform()->touchUp(1, timestamp++);
     QVERIFY(!pointRemovedSpy.wait(100));

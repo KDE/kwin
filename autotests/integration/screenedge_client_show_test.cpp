@@ -6,16 +6,16 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_output.h"
-#include "platform.h"
-#include "x11client.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "kwin_wayland_test.h"
+#include "platform.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 #include <kwineffects.h>
 
 #include <netwm.h>
@@ -23,7 +23,6 @@
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_screenedge_client_show-0");
 
 class ScreenEdgeClientShowTest : public QObject
@@ -40,8 +39,8 @@ private Q_SLOTS:
 
 void ScreenEdgeClientShowTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Deleted*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -73,9 +72,7 @@ void ScreenEdgeClientShowTest::init()
     QVERIFY(waylandServer()->clients().isEmpty());
 }
 
-
-struct XcbConnectionDeleter
-{
+struct XcbConnectionDeleter {
     static inline void cleanup(xcb_connection_t *pointer)
     {
         xcb_disconnect(pointer);
@@ -110,12 +107,19 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
 
     xcb_window_t w = xcb_generate_id(c.data());
     QFETCH(QRect, windowGeometry);
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_create_window(c.data(),
+                      XCB_COPY_FROM_PARENT,
+                      w,
+                      rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
                       windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+                      0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      XCB_COPY_FROM_PARENT,
+                      0,
+                      nullptr);
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
@@ -164,16 +168,16 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     // go into event loop to trigger xcb_flush
     QTest::qWait(1);
 
-    //hide window again
+    // hide window again
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
     xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w, atom, XCB_ATOM_CARDINAL, 32, 1, &location);
     xcb_flush(c.data());
     QVERIFY(clientHiddenSpy.wait());
     QVERIFY(client->isHiddenInternal());
     QFETCH(QRect, resizedWindowGeometry);
-    //resizewhile hidden
+    // resizewhile hidden
     client->moveResize(resizedWindowGeometry);
-    //triggerPos shouldn't be valid anymore
+    // triggerPos shouldn't be valid anymore
     Cursors::self()->mouse()->setPos(triggerPos);
     QVERIFY(client->isHiddenInternal());
 
@@ -214,12 +218,19 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
 
     xcb_window_t w = xcb_generate_id(c.data());
     QFETCH(QRect, windowGeometry);
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_create_window(c.data(),
+                      XCB_COPY_FROM_PARENT,
+                      w,
+                      rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
                       windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+                      0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      XCB_COPY_FROM_PARENT,
+                      0,
+                      nullptr);
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());

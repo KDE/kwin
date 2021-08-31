@@ -19,9 +19,10 @@
 
 namespace KWin
 {
-
 ContrastShader::ContrastShader()
-    : mValid(false), shader(nullptr), m_opacity(1)
+    : mValid(false)
+    , shader(nullptr)
+    , m_opacity(1)
 {
 }
 
@@ -107,11 +108,11 @@ void ContrastShader::init()
     QByteArray vertexSource;
     QByteArray fragmentSource;
 
-    const QByteArray attribute   = core ? "in"                : "attribute";
-    const QByteArray varying_in  = core ? (gles ? "in" : "noperspective in") : "varying";
+    const QByteArray attribute = core ? "in" : "attribute";
+    const QByteArray varying_in = core ? (gles ? "in" : "noperspective in") : "varying";
     const QByteArray varying_out = core ? (gles ? "out" : "noperspective out") : "varying";
-    const QByteArray texture2D   = core ? "texture"           : "texture2D";
-    const QByteArray fragColor   = core ? "fragColor"         : "gl_FragColor";
+    const QByteArray texture2D = core ? "texture" : "texture2D";
+    const QByteArray fragColor = core ? "fragColor" : "gl_FragColor";
 
     // Vertex shader
     // ===================================================================
@@ -137,7 +138,6 @@ void ContrastShader::init()
     stream << "    gl_Position = modelViewProjectionMatrix * vertex;\n";
     stream << "}\n";
     stream.flush();
-
 
     // Fragment shader
     // ===================================================================
@@ -178,8 +178,8 @@ void ContrastShader::init()
     if (shader->isValid()) {
         colorMatrixLocation = shader->uniformLocation("colorMatrix");
         textureMatrixLocation = shader->uniformLocation("textureMatrix");
-        mvpMatrixLocation     = shader->uniformLocation("modelViewProjectionMatrix");
-        opacityLocation       = shader->uniformLocation("opacity");
+        mvpMatrixLocation = shader->uniformLocation("modelViewProjectionMatrix");
+        opacityLocation = shader->uniformLocation("opacity");
 
         QMatrix4x4 modelViewProjection;
         const QSize screenSize = effects->virtualScreenSize();

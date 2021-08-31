@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 EffectsMouseInterceptionX11Filter::EffectsMouseInterceptionX11Filter(xcb_window_t window, EffectsHandlerImpl *effects)
     : X11EventFilter(QVector<int>{XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE, XCB_MOTION_NOTIFY})
     , m_effects(effects)
@@ -26,7 +25,7 @@ bool EffectsMouseInterceptionX11Filter::event(xcb_generic_event_t *event)
 {
     const uint8_t eventType = event->response_type & ~0x80;
     if (eventType == XCB_BUTTON_PRESS || eventType == XCB_BUTTON_RELEASE) {
-        auto *me = reinterpret_cast<xcb_button_press_event_t*>(event);
+        auto *me = reinterpret_cast<xcb_button_press_event_t *>(event);
         if (m_window == me->event) {
             const bool isWheel = me->detail >= 4 && me->detail <= 7;
             if (isWheel) {
@@ -78,15 +77,18 @@ bool EffectsMouseInterceptionX11Filter::event(xcb_generic_event_t *event)
             } else {
                 buttons &= ~button;
             }
-            QMouseEvent ev(type, QPoint(me->event_x, me->event_y), QPoint(me->root_x, me->root_y),
-                           button, buttons, x11ToQtKeyboardModifiers(me->state));
+            QMouseEvent ev(type, QPoint(me->event_x, me->event_y), QPoint(me->root_x, me->root_y), button, buttons, x11ToQtKeyboardModifiers(me->state));
             return m_effects->checkInputWindowEvent(&ev);
         }
     } else if (eventType == XCB_MOTION_NOTIFY) {
-        const auto *me = reinterpret_cast<xcb_motion_notify_event_t*>(event);
+        const auto *me = reinterpret_cast<xcb_motion_notify_event_t *>(event);
         if (m_window == me->event) {
-            QMouseEvent ev(QEvent::MouseMove, QPoint(me->event_x, me->event_y), QPoint(me->root_x, me->root_y),
-                           Qt::NoButton, x11ToQtMouseButtons(me->state), x11ToQtKeyboardModifiers(me->state));
+            QMouseEvent ev(QEvent::MouseMove,
+                           QPoint(me->event_x, me->event_y),
+                           QPoint(me->root_x, me->root_y),
+                           Qt::NoButton,
+                           x11ToQtMouseButtons(me->state),
+                           x11ToQtKeyboardModifiers(me->state));
             return m_effects->checkInputWindowEvent(&ev);
         }
     }

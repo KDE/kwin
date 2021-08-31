@@ -13,7 +13,6 @@
 
 namespace Aurorae
 {
-
 ThemeConfig::ThemeConfig()
     : m_activeTextColor(defaultActiveTextColor())
     , m_activeFocusedTextColor(defaultActiveFocusedTextColor())
@@ -93,21 +92,17 @@ void ThemeConfig::load(const KConfig &conf)
     QString alignment = (general.readEntry("TitleAlignment", "Left")).toLower();
     if (alignment == QStringLiteral("left")) {
         m_alignment = Qt::AlignLeft;
-    }
-    else if (alignment == QStringLiteral("center")) {
+    } else if (alignment == QStringLiteral("center")) {
         m_alignment = Qt::AlignHCenter;
-    }
-    else {
+    } else {
         m_alignment = Qt::AlignRight;
     }
     alignment = (general.readEntry("TitleVerticalAlignment", "Center")).toLower();
     if (alignment == QStringLiteral("top")) {
         m_verticalAlignment = Qt::AlignTop;
-    }
-    else if (alignment == QStringLiteral("center")) {
+    } else if (alignment == QStringLiteral("center")) {
         m_verticalAlignment = Qt::AlignVCenter;
-    }
-    else {
+    } else {
         m_verticalAlignment = Qt::AlignBottom;
     }
     m_animationTime = general.readEntry("Animation", defaultAnimationTime());
@@ -187,4 +182,4 @@ QColor ThemeConfig::inactiveTextColor(bool useTabs, bool focused) const
     }
 }
 
-} //namespace
+} // namespace

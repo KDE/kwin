@@ -13,27 +13,22 @@
 #include "scene.h"
 #include "utils.h"
 
-#include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
+#include <KDecoration2/Decoration>
 
 #include <QPainter>
 
 namespace KWin
 {
-
 DecorationRenderer::DecorationRenderer(Decoration::DecoratedClientImpl *client)
     : m_client(client)
     , m_imageSizesDirty(true)
 {
-    connect(client->decoration(), &KDecoration2::Decoration::damaged,
-            this, &DecorationRenderer::addDamage);
+    connect(client->decoration(), &KDecoration2::Decoration::damaged, this, &DecorationRenderer::addDamage);
 
-    connect(client->client(), &AbstractClient::screenScaleChanged,
-            this, &DecorationRenderer::invalidate);
-    connect(client->decoration(), &KDecoration2::Decoration::bordersChanged,
-            this, &DecorationRenderer::invalidate);
-    connect(client->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
-            this, &DecorationRenderer::invalidate);
+    connect(client->client(), &AbstractClient::screenScaleChanged, this, &DecorationRenderer::invalidate);
+    connect(client->decoration(), &KDecoration2::Decoration::bordersChanged, this, &DecorationRenderer::invalidate);
+    connect(client->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, &DecorationRenderer::invalidate);
 
     invalidate();
 }
@@ -109,18 +104,13 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, AbstractCli
 {
     m_renderer.reset(Compositor::self()->scene()->createDecorationRenderer(window->decoratedClient()));
 
-    connect(window, &Toplevel::frameGeometryChanged,
-            this, &DecorationItem::handleFrameGeometryChanged);
-    connect(window, &Toplevel::windowClosed,
-            this, &DecorationItem::handleWindowClosed);
+    connect(window, &Toplevel::frameGeometryChanged, this, &DecorationItem::handleFrameGeometryChanged);
+    connect(window, &Toplevel::windowClosed, this, &DecorationItem::handleWindowClosed);
 
-    connect(window, &Toplevel::screenScaleChanged,
-            this, &DecorationItem::discardQuads);
-    connect(decoration, &KDecoration2::Decoration::bordersChanged,
-            this, &DecorationItem::discardQuads);
+    connect(window, &Toplevel::screenScaleChanged, this, &DecorationItem::discardQuads);
+    connect(decoration, &KDecoration2::Decoration::bordersChanged, this, &DecorationItem::discardQuads);
 
-    connect(renderer(), &DecorationRenderer::damaged,
-            this, &DecorationItem::scheduleRepaint);
+    connect(renderer(), &DecorationRenderer::damaged, this, &DecorationItem::scheduleRepaint);
 
     setSize(window->size());
 }
@@ -183,9 +173,9 @@ WindowQuadList DecorationItem::buildQuads() const
     };
 
     const Qt::Orientation orientations[4] = {
-        Qt::Vertical,   // Left
+        Qt::Vertical, // Left
         Qt::Horizontal, // Top
-        Qt::Vertical,   // Right
+        Qt::Vertical, // Right
         Qt::Horizontal, // Bottom
     };
 

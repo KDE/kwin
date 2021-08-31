@@ -10,8 +10,8 @@
 // KWin
 #include "abstract_output.h"
 #include "composite.h"
-#include "tabboxhandler.h"
 #include "screens.h"
+#include "tabboxhandler.h"
 #include "workspace.h"
 // Qt
 #include <QAbstractItemModel>
@@ -20,7 +20,6 @@ namespace KWin
 {
 namespace TabBox
 {
-
 SwitcherItem::SwitcherItem(QObject *parent)
     : QObject(parent)
     , m_model(nullptr)

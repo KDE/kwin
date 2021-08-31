@@ -6,8 +6,8 @@
 #ifndef KDECOARTIONS_PREVIEW_ITEM_H
 #define KDECOARTIONS_PREVIEW_ITEM_H
 
-#include <QQuickPaintedItem>
 #include <QPointer>
+#include <QQuickPaintedItem>
 
 namespace KDecoration2
 {

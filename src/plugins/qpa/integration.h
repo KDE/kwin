@@ -12,17 +12,15 @@
 
 #include <epoxy/egl.h>
 
-#include <qpa/qplatformintegration.h>
 #include <QObject>
+#include <qpa/qplatformintegration.h>
 
 namespace KWin
 {
-
 class AbstractOutput;
 
 namespace QPA
 {
-
 class Screen;
 
 class Integration : public QObject, public QPlatformIntegration

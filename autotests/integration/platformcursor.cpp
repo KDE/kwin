@@ -6,14 +6,13 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "cursor.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "wayland_server.h"
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_platform_cursor-0");
 
 class PlatformCursorTest : public QObject

@@ -7,18 +7,18 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "abstract_egl_backend.h"
-#include "egl_dmabuf.h"
+#include "abstract_wayland_output.h"
 #include "composite.h"
 #include "egl_context_attribute_builder.h"
+#include "egl_dmabuf.h"
 #include "options.h"
 #include "platform.h"
 #include "wayland_server.h"
-#include "abstract_wayland_output.h"
 #include <KWaylandServer/display.h>
 // kwin libs
-#include <logging.h>
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
+#include <logging.h>
 // Qt
 #include <QOpenGLContext>
 
@@ -26,7 +26,6 @@
 
 namespace KWin
 {
-
 static EGLContext s_globalShareContext = EGL_NO_CONTEXT;
 
 static bool isOpenGLES_helper()
@@ -158,7 +157,7 @@ bool AbstractEglBackend::initEglAPI()
 }
 
 typedef void (*eglFuncPtr)();
-static eglFuncPtr getProcAddress(const char* name)
+static eglFuncPtr getProcAddress(const char *name)
 {
     return eglGetProcAddress(name);
 }
@@ -222,12 +221,12 @@ void AbstractEglBackend::initWayland()
 void AbstractEglBackend::initClientExtensions()
 {
     // Get the list of client extensions
-    const char* clientExtensionsCString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+    const char *clientExtensionsCString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
     const QByteArray clientExtensionsString = QByteArray::fromRawData(clientExtensionsCString, qstrlen(clientExtensionsCString));
     if (clientExtensionsString.isEmpty()) {
         // If eglQueryString() returned NULL, the implementation doesn't support
         // EGL_EXT_client_extensions. Expect an EGL_BAD_DISPLAY error.
-        (void) eglGetError();
+        (void)eglGetError();
     }
 
     m_clientExtensions = clientExtensionsString.split(' ');
@@ -350,7 +349,8 @@ bool AbstractEglBackend::createContext()
     return true;
 }
 
-void AbstractEglBackend::setEglDisplay(const EGLDisplay &display) {
+void AbstractEglBackend::setEglDisplay(const EGLDisplay &display)
+{
     m_display = display;
     if (isPrimary()) {
         kwinApp()->platform()->setSceneEglDisplay(display);

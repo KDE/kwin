@@ -13,7 +13,6 @@ namespace KWin
 {
 namespace QPA
 {
-
 PlatformCursor::PlatformCursor()
     : QPlatformCursor()
 {

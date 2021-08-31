@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 KWinScreenEdgesConfigForm::KWinScreenEdgesConfigForm(QWidget *parent)
     : KWinScreenEdge(parent)
     , ui(new Ui::KWinScreenEdgesConfigUI)
@@ -112,7 +111,8 @@ void KWinScreenEdgesConfigForm::groupChanged()
 
 void KWinScreenEdgesConfigForm::updateDefaultIndicators()
 {
-    ui->electricBorderCornerRatioSpin->setProperty("_kde_highlight_neutral", m_defaultIndicatorVisible && (electricBorderCornerRatio() != m_defaultCornerRatio));
+    ui->electricBorderCornerRatioSpin->setProperty("_kde_highlight_neutral",
+                                                   m_defaultIndicatorVisible && (electricBorderCornerRatio() != m_defaultCornerRatio));
     ui->electricBorderCornerRatioSpin->update();
 }
 

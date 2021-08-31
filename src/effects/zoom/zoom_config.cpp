@@ -16,33 +16,31 @@
 
 #include <QAction>
 
+#include <KAboutData>
+#include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <KActionCollection>
-#include <KAboutData>
 #include <KPluginFactory>
 
 #include <QVBoxLayout>
 
-K_PLUGIN_FACTORY_WITH_JSON(ZoomEffectConfigFactory,
-                           "zoom_config.json",
-                           registerPlugin<KWin::ZoomEffectConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(ZoomEffectConfigFactory, "zoom_config.json", registerPlugin<KWin::ZoomEffectConfig>();)
 
 namespace KWin
 {
-
-ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget* parent) : QWidget(parent)
+ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+ZoomEffectConfig::ZoomEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     ZoomConfig::instance(KWIN_CONFIG);
     m_ui = new ZoomEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
     addConfig(ZoomConfig::self(), m_ui);
@@ -60,7 +58,7 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
     actionCollection->setConfigGroup(QStringLiteral("Zoom"));
     actionCollection->setConfigGlobal(true);
 
-    QAction* a;
+    QAction *a;
     a = actionCollection->addAction(KStandardAction::ZoomIn);
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
@@ -133,9 +131,7 @@ void ZoomEffectConfig::save()
 {
     m_ui->editor->save(); // undo() will restore to this state from now on
     KCModule::save();
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("zoom"));
 }
 

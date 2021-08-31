@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 /**
  * The XwaylandClient class represents a managed Xwayland client.
  */

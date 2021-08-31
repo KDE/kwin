@@ -12,8 +12,7 @@
 
 namespace KWin
 {
-
-PresentWindowsEffectProxy::PresentWindowsEffectProxy(PresentWindowsEffect* effect)
+PresentWindowsEffectProxy::PresentWindowsEffectProxy(PresentWindowsEffect *effect)
     : m_effect(effect)
 {
 }
@@ -22,8 +21,7 @@ PresentWindowsEffectProxy::~PresentWindowsEffectProxy()
 {
 }
 
-void PresentWindowsEffectProxy::calculateWindowTransformations(EffectWindowList windows, int screen,
-        WindowMotionManager& manager)
+void PresentWindowsEffectProxy::calculateWindowTransformations(EffectWindowList windows, int screen, WindowMotionManager &manager)
 {
     return m_effect->calculateWindowTransformations(windows, screen, manager, true);
 }

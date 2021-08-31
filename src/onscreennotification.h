@@ -18,8 +18,8 @@ class QQmlContext;
 class QQmlComponent;
 class QQmlEngine;
 
-namespace KWin {
-
+namespace KWin
+{
 class OnScreenNotificationInputEventSpy;
 
 class OnScreenNotification : public QObject

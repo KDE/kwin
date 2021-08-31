@@ -16,29 +16,28 @@
 #include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KPluginFactory>
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
-#include <QtDBus>
+#include <KPluginFactory>
 #include <QVBoxLayout>
+#include <QtDBus>
 
-#include "kwintouchscreenedgeconfigform.h"
 #include "kwintouchscreendata.h"
-#include "kwintouchscreensettings.h"
+#include "kwintouchscreenedgeconfigform.h"
 #include "kwintouchscreenscriptsettings.h"
+#include "kwintouchscreensettings.h"
 
 K_PLUGIN_FACTORY(KWinScreenEdgesConfigFactory, registerPlugin<KWin::KWinScreenEdgesConfig>(); registerPlugin<KWin::KWinTouchScreenData>();)
 
 namespace KWin
 {
-
 KWinScreenEdgesConfig::KWinScreenEdgesConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
     , m_form(new KWinTouchScreenEdgeConfigForm(this))
     , m_config(KSharedConfig::openConfig("kwinrc"))
     , m_data(new KWinTouchScreenData(this))
 {
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_form);
 
     monitorInit();
@@ -80,9 +79,7 @@ void KWinScreenEdgesConfig::save()
     QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
     // and reconfigure the effects
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                             QStringLiteral("/Effects"),
-                                             QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::Overview));
     interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::PresentWindows));
     interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::DesktopGrid));
@@ -97,7 +94,7 @@ void KWinScreenEdgesConfig::defaults()
     KCModule::defaults();
 }
 
-void KWinScreenEdgesConfig::showEvent(QShowEvent* e)
+void KWinScreenEdgesConfig::showEvent(QShowEvent *e)
 {
     KCModule::showEvent(e);
 
@@ -105,7 +102,7 @@ void KWinScreenEdgesConfig::showEvent(QShowEvent* e)
 }
 
 // Copied from kcmkwin/kwincompositing/main.cpp
-bool KWinScreenEdgesConfig::effectEnabled(const BuiltInEffect& effect, const KConfigGroup& cfg) const
+bool KWinScreenEdgesConfig::effectEnabled(const BuiltInEffect &effect, const KConfigGroup &cfg) const
 {
     return cfg.readEntry(BuiltInEffects::nameForEffect(effect) + "Enabled", BuiltInEffects::enabledByDefault(effect));
 }
@@ -143,7 +140,7 @@ void KWinScreenEdgesConfig::monitorInit()
     const auto scripts = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
 
     KConfigGroup config(m_config, "Plugins");
-    for (const KPluginMetaData &script: scripts) {
+    for (const KPluginMetaData &script : scripts) {
         if (script.value(QStringLiteral("X-KWin-Border-Activate")) != QLatin1String("true")) {
             continue;
         }
@@ -188,7 +185,7 @@ void KWinScreenEdgesConfig::monitorLoadSettings()
     m_form->monitorChangeEdge(m_data->settings()->touchBorderActivateOverview(), Overview);
 
     // Scripts
-    for (int i=0; i < m_scripts.size(); i++) {
+    for (int i = 0; i < m_scripts.size(); i++) {
         int index = EffectCount + i;
         m_form->monitorChangeEdge(m_scriptSettings[m_scripts[i]]->touchBorderActivate(), index);
     }

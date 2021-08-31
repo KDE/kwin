@@ -18,7 +18,6 @@ namespace KWin
 {
 namespace QPA
 {
-
 OffscreenSurface::OffscreenSurface(QOffscreenSurface *surface)
     : QPlatformOffscreenSurface(surface)
     , m_eglDisplay(kwinApp()->platform()->sceneEglDisplay())
@@ -30,11 +29,7 @@ OffscreenSurface::OffscreenSurface(QOffscreenSurface *surface)
         return;
     }
 
-    const EGLint attributes[] = {
-        EGL_WIDTH, size.width(),
-        EGL_HEIGHT, size.height(),
-        EGL_NONE
-    };
+    const EGLint attributes[] = {EGL_WIDTH, size.width(), EGL_HEIGHT, size.height(), EGL_NONE};
 
     m_surface = eglCreatePbufferSurface(m_eglDisplay, config, attributes);
     if (m_surface == EGL_NO_SURFACE) {

@@ -13,34 +13,33 @@
 
 // TODO: Make it compile also in testing environment
 #ifndef KWIN_BUILD_TESTING
+#include "abstract_client.h"
 #include "abstract_wayland_output.h"
 #include "main.h"
 #include "platform.h"
-#include "workspace.h"
-#include "abstract_client.h"
 #include "screens.h"
+#include "workspace.h"
 #endif
 
 #include "input_event.h"
+#include "libinput_logging.h"
 #include "session.h"
 #include "udev.h"
-#include "libinput_logging.h"
 
-#include <QDBusMessage>
 #include <QDBusConnection>
+#include <QDBusMessage>
 #include <QDBusPendingCall>
 #include <QMutexLocker>
 #include <QSocketNotifier>
 #include <QThread>
 
-#include <libinput.h>
 #include <cmath>
+#include <libinput.h>
 
 namespace KWin
 {
 namespace LibInput
 {
-
 class ConnectionAdaptor : public QObject
 {
     Q_OBJECT
@@ -60,15 +59,16 @@ public:
         QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice"),
                                                      QStringLiteral("org.kde.KWin.InputDeviceManager"),
                                                      this,
-                                                     QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals
-        );
+                                                     QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals);
     }
 
-    ~ConnectionAdaptor() override {
+    ~ConnectionAdaptor() override
+    {
         QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/org/kde/KWin/InputDeviceManager"));
     }
 
-    QStringList devicesSysNames() {
+    QStringList devicesSysNames()
+    {
         // TODO: is this allowed? directly calling function of object in another thread!?
         //       otherwise use signal-slot mechanism
         return m_con->devicesSysNames();
@@ -77,7 +77,6 @@ public:
 Q_SIGNALS:
     void deviceAdded(QString sysName);
     void deviceRemoved(QString sysName);
-
 };
 
 Connection *Connection::s_self = nullptr;
@@ -154,7 +153,6 @@ Connection *Connection::create(QObject *parent)
     return s_self;
 }
 
-
 Connection::Connection(Context *input, QObject *parent)
     : QObject(parent)
     , m_input(input)
@@ -164,8 +162,12 @@ Connection::Connection(Context *input, QObject *parent)
 {
     Q_ASSERT(m_input);
     // need to connect to KGlobalSettings as the mouse KCM does not emit a dedicated signal
-    QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
-                                          QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));
+    QDBusConnection::sessionBus().connect(QString(),
+                                          QStringLiteral("/KGlobalSettings"),
+                                          QStringLiteral("org.kde.KGlobalSettings"),
+                                          QStringLiteral("notifyChange"),
+                                          this,
+                                          SLOT(slotKGlobalSettingsNotifyChange(int, int)));
 }
 
 Connection::~Connection()
@@ -184,12 +186,12 @@ void Connection::setup()
 
 void Connection::doSetup()
 {
-    connect(s_self, &Connection::deviceAdded, s_self, [](Device* device) {
-                Q_EMIT s_self->deviceAddedSysName(device->sysName());
-            });
-    connect(s_self, &Connection::deviceRemoved, s_self, [](Device* device) {
-                Q_EMIT s_self->deviceRemovedSysName(device->sysName());
-            });
+    connect(s_self, &Connection::deviceAdded, s_self, [](Device *device) {
+        Q_EMIT s_self->deviceAddedSysName(device->sysName());
+    });
+    connect(s_self, &Connection::deviceRemoved, s_self, [](Device *device) {
+        Q_EMIT s_self->deviceRemovedSysName(device->sysName());
+    });
 
     Q_ASSERT(!m_notifier);
     m_notifier = new QSocketNotifier(m_input->fileDescriptor(), QSocketNotifier::Read, this);
@@ -257,8 +259,7 @@ QPointF devicePointToGlobalPosition(const QPointF &devicePos, const AbstractWayl
         break;
     case Transform::Rotated180:
     case Transform::Flipped180:
-        pos = QPointF(output->modeSize().width() - devicePos.x(),
-                      output->modeSize().height() - devicePos.y());
+        pos = QPointF(output->modeSize().width() - devicePos.x(), output->modeSize().height() - devicePos.y());
         break;
     case Transform::Rotated270:
     case Transform::Flipped270:
@@ -331,298 +332,295 @@ void Connection::processEvents()
     while (!m_eventQueue.isEmpty()) {
         QScopedPointer<Event> event(m_eventQueue.takeFirst());
         switch (event->type()) {
-            case LIBINPUT_EVENT_DEVICE_ADDED: {
-                auto device = new Device(event->nativeDevice());
-                device->moveToThread(s_thread);
-                m_devices << device;
-                if (device->isKeyboard()) {
-                    m_keyboard++;
-                    if (device->isAlphaNumericKeyboard()) {
-                        m_alphaNumericKeyboard++;
-                        if (m_alphaNumericKeyboard == 1) {
-                            Q_EMIT hasAlphaNumericKeyboardChanged(true);
-                        }
-                    }
-                    if (m_keyboard == 1) {
-                        Q_EMIT hasKeyboardChanged(true);
+        case LIBINPUT_EVENT_DEVICE_ADDED: {
+            auto device = new Device(event->nativeDevice());
+            device->moveToThread(s_thread);
+            m_devices << device;
+            if (device->isKeyboard()) {
+                m_keyboard++;
+                if (device->isAlphaNumericKeyboard()) {
+                    m_alphaNumericKeyboard++;
+                    if (m_alphaNumericKeyboard == 1) {
+                        Q_EMIT hasAlphaNumericKeyboardChanged(true);
                     }
                 }
-                if (device->isPointer()) {
-                    m_pointer++;
-                    if (m_pointer == 1) {
-                        Q_EMIT hasPointerChanged(true);
-                    }
+                if (m_keyboard == 1) {
+                    Q_EMIT hasKeyboardChanged(true);
                 }
-                if (device->isTouch()) {
-                    m_touch++;
-                    if (m_touch == 1) {
-                        Q_EMIT hasTouchChanged(true);
-                    }
+            }
+            if (device->isPointer()) {
+                m_pointer++;
+                if (m_pointer == 1) {
+                    Q_EMIT hasPointerChanged(true);
                 }
-                if (device->isTabletModeSwitch()) {
-                    m_tabletModeSwitch++;
-                    if (m_tabletModeSwitch == 1) {
-                        Q_EMIT hasTabletModeSwitchChanged(true);
-                    }
+            }
+            if (device->isTouch()) {
+                m_touch++;
+                if (m_touch == 1) {
+                    Q_EMIT hasTouchChanged(true);
                 }
-                applyDeviceConfig(device);
-                applyScreenToDevice(device);
+            }
+            if (device->isTabletModeSwitch()) {
+                m_tabletModeSwitch++;
+                if (m_tabletModeSwitch == 1) {
+                    Q_EMIT hasTabletModeSwitchChanged(true);
+                }
+            }
+            applyDeviceConfig(device);
+            applyScreenToDevice(device);
 
-                // enable possible leds
-                libinput_device_led_update(device->device(), static_cast<libinput_led>(toLibinputLEDS(m_leds)));
+            // enable possible leds
+            libinput_device_led_update(device->device(), static_cast<libinput_led>(toLibinputLEDS(m_leds)));
 
-                Q_EMIT deviceAdded(device);
+            Q_EMIT deviceAdded(device);
+            break;
+        }
+        case LIBINPUT_EVENT_DEVICE_REMOVED: {
+            auto it = std::find_if(m_devices.begin(), m_devices.end(), [&event](Device *d) {
+                return event->device() == d;
+            });
+            if (it == m_devices.end()) {
+                // we don't know this device
                 break;
             }
-            case LIBINPUT_EVENT_DEVICE_REMOVED: {
-                auto it = std::find_if(m_devices.begin(), m_devices.end(), [&event] (Device *d) { return event->device() == d; } );
-                if (it == m_devices.end()) {
-                    // we don't know this device
-                    break;
-                }
-                auto device = *it;
-                m_devices.erase(it);
-                Q_EMIT deviceRemoved(device);
+            auto device = *it;
+            m_devices.erase(it);
+            Q_EMIT deviceRemoved(device);
 
-                if (device->isKeyboard()) {
-                    m_keyboard--;
-                    if (device->isAlphaNumericKeyboard()) {
-                        m_alphaNumericKeyboard--;
-                        if (m_alphaNumericKeyboard == 0) {
-                            Q_EMIT hasAlphaNumericKeyboardChanged(false);
-                        }
-                    }
-                    if (m_keyboard == 0) {
-                        Q_EMIT hasKeyboardChanged(false);
+            if (device->isKeyboard()) {
+                m_keyboard--;
+                if (device->isAlphaNumericKeyboard()) {
+                    m_alphaNumericKeyboard--;
+                    if (m_alphaNumericKeyboard == 0) {
+                        Q_EMIT hasAlphaNumericKeyboardChanged(false);
                     }
                 }
-                if (device->isPointer()) {
-                    m_pointer--;
-                    if (m_pointer == 0) {
-                        Q_EMIT hasPointerChanged(false);
-                    }
+                if (m_keyboard == 0) {
+                    Q_EMIT hasKeyboardChanged(false);
                 }
-                if (device->isTouch()) {
-                    m_touch--;
-                    if (m_touch == 0) {
-                        Q_EMIT hasTouchChanged(false);
-                    }
+            }
+            if (device->isPointer()) {
+                m_pointer--;
+                if (m_pointer == 0) {
+                    Q_EMIT hasPointerChanged(false);
                 }
-                if (device->isTabletModeSwitch()) {
-                    m_tabletModeSwitch--;
-                    if (m_tabletModeSwitch == 0) {
-                        Q_EMIT hasTabletModeSwitchChanged(false);
-                    }
+            }
+            if (device->isTouch()) {
+                m_touch--;
+                if (m_touch == 0) {
+                    Q_EMIT hasTouchChanged(false);
                 }
-                device->deleteLater();
-                break;
             }
-            case LIBINPUT_EVENT_KEYBOARD_KEY: {
-                KeyEvent *ke = static_cast<KeyEvent*>(event.data());
-                Q_EMIT keyChanged(ke->key(), ke->state(), ke->time(), ke->device());
-                break;
-            }
-            case LIBINPUT_EVENT_POINTER_AXIS: {
-                PointerEvent *pe = static_cast<PointerEvent*>(event.data());
-                const auto axes = pe->axis();
-                for (const InputRedirection::PointerAxis &axis : axes) {
-                    Q_EMIT pointerAxisChanged(axis, pe->axisValue(axis), pe->discreteAxisValue(axis),
-                        pe->axisSource(), pe->time(), pe->device());
+            if (device->isTabletModeSwitch()) {
+                m_tabletModeSwitch--;
+                if (m_tabletModeSwitch == 0) {
+                    Q_EMIT hasTabletModeSwitchChanged(false);
                 }
-                break;
             }
-            case LIBINPUT_EVENT_POINTER_BUTTON: {
-                PointerEvent *pe = static_cast<PointerEvent*>(event.data());
-                Q_EMIT pointerButtonChanged(pe->button(), pe->buttonState(), pe->time(), pe->device());
-                break;
+            device->deleteLater();
+            break;
+        }
+        case LIBINPUT_EVENT_KEYBOARD_KEY: {
+            KeyEvent *ke = static_cast<KeyEvent *>(event.data());
+            Q_EMIT keyChanged(ke->key(), ke->state(), ke->time(), ke->device());
+            break;
+        }
+        case LIBINPUT_EVENT_POINTER_AXIS: {
+            PointerEvent *pe = static_cast<PointerEvent *>(event.data());
+            const auto axes = pe->axis();
+            for (const InputRedirection::PointerAxis &axis : axes) {
+                Q_EMIT pointerAxisChanged(axis, pe->axisValue(axis), pe->discreteAxisValue(axis), pe->axisSource(), pe->time(), pe->device());
             }
-            case LIBINPUT_EVENT_POINTER_MOTION: {
-                PointerEvent *pe = static_cast<PointerEvent*>(event.data());
-                auto delta = pe->delta();
-                auto deltaNonAccel = pe->deltaUnaccelerated();
-                quint32 latestTime = pe->time();
-                quint64 latestTimeUsec = pe->timeMicroseconds();
-                auto it = m_eventQueue.begin();
-                while (it != m_eventQueue.end()) {
-                    if ((*it)->type() == LIBINPUT_EVENT_POINTER_MOTION) {
-                        QScopedPointer<PointerEvent> p(static_cast<PointerEvent*>(*it));
-                        delta += p->delta();
-                        deltaNonAccel += p->deltaUnaccelerated();
-                        latestTime = p->time();
-                        latestTimeUsec = p->timeMicroseconds();
-                        it = m_eventQueue.erase(it);
-                    } else {
-                        break;
-                    }
-                }
-                Q_EMIT pointerMotion(delta, deltaNonAccel, latestTime, latestTimeUsec, pe->device());
-                break;
-            }
-            case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE: {
-                PointerEvent *pe = static_cast<PointerEvent*>(event.data());
-                Q_EMIT pointerMotionAbsolute(pe->absolutePos(), pe->absolutePos(m_size), pe->time(), pe->device());
-                break;
-            }
-            case LIBINPUT_EVENT_TOUCH_DOWN: {
-#ifndef KWIN_BUILD_TESTING
-                TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                const auto *output = static_cast<AbstractWaylandOutput*>(
-                            kwinApp()->platform()->enabledOutputs()[te->device()->screenId()]);
-                const QPointF globalPos =
-                        devicePointToGlobalPosition(te->absolutePos(output->modeSize()),
-                                                    output);
-                Q_EMIT touchDown(te->id(), globalPos, te->time(), te->device());
-                break;
-#endif
-            }
-            case LIBINPUT_EVENT_TOUCH_UP: {
-                TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                Q_EMIT touchUp(te->id(), te->time(), te->device());
-                break;
-            }
-            case LIBINPUT_EVENT_TOUCH_MOTION: {
-#ifndef KWIN_BUILD_TESTING
-                TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                const auto *output = static_cast<AbstractWaylandOutput*>(
-                            kwinApp()->platform()->enabledOutputs()[te->device()->screenId()]);
-                const QPointF globalPos =
-                        devicePointToGlobalPosition(te->absolutePos(output->modeSize()),
-                                                    output);
-                Q_EMIT touchMotion(te->id(), globalPos, te->time(), te->device());
-                break;
-#endif
-            }
-            case LIBINPUT_EVENT_TOUCH_CANCEL: {
-                Q_EMIT touchCanceled(event->device());
-                break;
-            }
-            case LIBINPUT_EVENT_TOUCH_FRAME: {
-                Q_EMIT touchFrame(event->device());
-                break;
-            }
-            case LIBINPUT_EVENT_GESTURE_PINCH_BEGIN: {
-                PinchGestureEvent *pe = static_cast<PinchGestureEvent*>(event.data());
-                Q_EMIT pinchGestureBegin(pe->fingerCount(), pe->time(), pe->device());
-                break;
-            }
-            case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE: {
-                PinchGestureEvent *pe = static_cast<PinchGestureEvent*>(event.data());
-                Q_EMIT pinchGestureUpdate(pe->scale(), pe->angleDelta(), pe->delta(), pe->time(), pe->device());
-                break;
-            }
-            case LIBINPUT_EVENT_GESTURE_PINCH_END: {
-                PinchGestureEvent *pe = static_cast<PinchGestureEvent*>(event.data());
-                if (pe->isCancelled()) {
-                    Q_EMIT pinchGestureCancelled(pe->time(), pe->device());
+            break;
+        }
+        case LIBINPUT_EVENT_POINTER_BUTTON: {
+            PointerEvent *pe = static_cast<PointerEvent *>(event.data());
+            Q_EMIT pointerButtonChanged(pe->button(), pe->buttonState(), pe->time(), pe->device());
+            break;
+        }
+        case LIBINPUT_EVENT_POINTER_MOTION: {
+            PointerEvent *pe = static_cast<PointerEvent *>(event.data());
+            auto delta = pe->delta();
+            auto deltaNonAccel = pe->deltaUnaccelerated();
+            quint32 latestTime = pe->time();
+            quint64 latestTimeUsec = pe->timeMicroseconds();
+            auto it = m_eventQueue.begin();
+            while (it != m_eventQueue.end()) {
+                if ((*it)->type() == LIBINPUT_EVENT_POINTER_MOTION) {
+                    QScopedPointer<PointerEvent> p(static_cast<PointerEvent *>(*it));
+                    delta += p->delta();
+                    deltaNonAccel += p->deltaUnaccelerated();
+                    latestTime = p->time();
+                    latestTimeUsec = p->timeMicroseconds();
+                    it = m_eventQueue.erase(it);
                 } else {
-                    Q_EMIT pinchGestureEnd(pe->time(), pe->device());
-                }
-                break;
-            }
-            case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN: {
-                SwipeGestureEvent *se = static_cast<SwipeGestureEvent*>(event.data());
-                Q_EMIT swipeGestureBegin(se->fingerCount(), se->time(), se->device());
-                break;
-            }
-            case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE: {
-                SwipeGestureEvent *se = static_cast<SwipeGestureEvent*>(event.data());
-                Q_EMIT swipeGestureUpdate(se->delta(), se->time(), se->device());
-                break;
-            }
-            case LIBINPUT_EVENT_GESTURE_SWIPE_END: {
-                SwipeGestureEvent *se = static_cast<SwipeGestureEvent*>(event.data());
-                if (se->isCancelled()) {
-                    Q_EMIT swipeGestureCancelled(se->time(), se->device());
-                } else {
-                    Q_EMIT swipeGestureEnd(se->time(), se->device());
-                }
-                break;
-            }
-            case LIBINPUT_EVENT_SWITCH_TOGGLE: {
-                SwitchEvent *se = static_cast<SwitchEvent*>(event.data());
-                switch (se->state()) {
-                case SwitchEvent::State::Off:
-                    Q_EMIT switchToggledOff(se->time(), se->timeMicroseconds(), se->device());
-                    break;
-                case SwitchEvent::State::On:
-                    Q_EMIT switchToggledOn(se->time(), se->timeMicroseconds(), se->device());
-                    break;
-                default:
-                    Q_UNREACHABLE();
-                }
-                break;
-            }
-            case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
-            case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
-            case LIBINPUT_EVENT_TABLET_TOOL_TIP: {
-                auto *tte = static_cast<TabletToolEvent *>(event.data());
-
-                KWin::InputRedirection::TabletEventType tabletEventType;
-                switch (event->type()) {
-                case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
-                    tabletEventType = KWin::InputRedirection::Axis;
-                    break;
-                case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
-                    tabletEventType = KWin::InputRedirection::Proximity;
-                    break;
-                case LIBINPUT_EVENT_TABLET_TOOL_TIP:
-                default:
-                    tabletEventType = KWin::InputRedirection::Tip;
                     break;
                 }
-
-                if (workspace()) {
+            }
+            Q_EMIT pointerMotion(delta, deltaNonAccel, latestTime, latestTimeUsec, pe->device());
+            break;
+        }
+        case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE: {
+            PointerEvent *pe = static_cast<PointerEvent *>(event.data());
+            Q_EMIT pointerMotionAbsolute(pe->absolutePos(), pe->absolutePos(m_size), pe->time(), pe->device());
+            break;
+        }
+        case LIBINPUT_EVENT_TOUCH_DOWN: {
 #ifndef KWIN_BUILD_TESTING
-                    auto client = workspace()->activeClient();
-                    const auto *output = static_cast<AbstractWaylandOutput*>(
-                                kwinApp()->platform()->enabledOutputs()[client ? client->screen() : tte->device()->screenId()]);
-                    const QPointF globalPos =
-                            devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),
-                                                        output);
-#else
-                    const QPointF globalPos;
+            TouchEvent *te = static_cast<TouchEvent *>(event.data());
+            const auto *output = static_cast<AbstractWaylandOutput *>(kwinApp()->platform()->enabledOutputs()[te->device()->screenId()]);
+            const QPointF globalPos = devicePointToGlobalPosition(te->absolutePos(output->modeSize()), output);
+            Q_EMIT touchDown(te->id(), globalPos, te->time(), te->device());
+            break;
 #endif
-                    Q_EMIT tabletToolEvent(tabletEventType,
-                                        globalPos, tte->pressure(),
-                                        tte->xTilt(), tte->yTilt(), tte->rotation(),
-                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()->groupUserData()), tte->time());
-                }
-                break;
+        }
+        case LIBINPUT_EVENT_TOUCH_UP: {
+            TouchEvent *te = static_cast<TouchEvent *>(event.data());
+            Q_EMIT touchUp(te->id(), te->time(), te->device());
+            break;
+        }
+        case LIBINPUT_EVENT_TOUCH_MOTION: {
+#ifndef KWIN_BUILD_TESTING
+            TouchEvent *te = static_cast<TouchEvent *>(event.data());
+            const auto *output = static_cast<AbstractWaylandOutput *>(kwinApp()->platform()->enabledOutputs()[te->device()->screenId()]);
+            const QPointF globalPos = devicePointToGlobalPosition(te->absolutePos(output->modeSize()), output);
+            Q_EMIT touchMotion(te->id(), globalPos, te->time(), te->device());
+            break;
+#endif
+        }
+        case LIBINPUT_EVENT_TOUCH_CANCEL: {
+            Q_EMIT touchCanceled(event->device());
+            break;
+        }
+        case LIBINPUT_EVENT_TOUCH_FRAME: {
+            Q_EMIT touchFrame(event->device());
+            break;
+        }
+        case LIBINPUT_EVENT_GESTURE_PINCH_BEGIN: {
+            PinchGestureEvent *pe = static_cast<PinchGestureEvent *>(event.data());
+            Q_EMIT pinchGestureBegin(pe->fingerCount(), pe->time(), pe->device());
+            break;
+        }
+        case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE: {
+            PinchGestureEvent *pe = static_cast<PinchGestureEvent *>(event.data());
+            Q_EMIT pinchGestureUpdate(pe->scale(), pe->angleDelta(), pe->delta(), pe->time(), pe->device());
+            break;
+        }
+        case LIBINPUT_EVENT_GESTURE_PINCH_END: {
+            PinchGestureEvent *pe = static_cast<PinchGestureEvent *>(event.data());
+            if (pe->isCancelled()) {
+                Q_EMIT pinchGestureCancelled(pe->time(), pe->device());
+            } else {
+                Q_EMIT pinchGestureEnd(pe->time(), pe->device());
             }
-            case LIBINPUT_EVENT_TABLET_TOOL_BUTTON: {
-                auto *tabletEvent = static_cast<TabletToolButtonEvent *>(event.data());
-                Q_EMIT tabletToolButtonEvent(tabletEvent->buttonId(),
-                                           tabletEvent->isButtonPressed(),
-                                           createTabletId(tabletEvent->tool(), event->device()->groupUserData()));
-                break;
+            break;
+        }
+        case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN: {
+            SwipeGestureEvent *se = static_cast<SwipeGestureEvent *>(event.data());
+            Q_EMIT swipeGestureBegin(se->fingerCount(), se->time(), se->device());
+            break;
+        }
+        case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE: {
+            SwipeGestureEvent *se = static_cast<SwipeGestureEvent *>(event.data());
+            Q_EMIT swipeGestureUpdate(se->delta(), se->time(), se->device());
+            break;
+        }
+        case LIBINPUT_EVENT_GESTURE_SWIPE_END: {
+            SwipeGestureEvent *se = static_cast<SwipeGestureEvent *>(event.data());
+            if (se->isCancelled()) {
+                Q_EMIT swipeGestureCancelled(se->time(), se->device());
+            } else {
+                Q_EMIT swipeGestureEnd(se->time(), se->device());
             }
-            case LIBINPUT_EVENT_TABLET_PAD_BUTTON: {
-                auto *tabletEvent = static_cast<TabletPadButtonEvent *>(event.data());
-                Q_EMIT tabletPadButtonEvent(tabletEvent->buttonId(),
-                                          tabletEvent->isButtonPressed(),
-                                          { event->device()->groupUserData() });
+            break;
+        }
+        case LIBINPUT_EVENT_SWITCH_TOGGLE: {
+            SwitchEvent *se = static_cast<SwitchEvent *>(event.data());
+            switch (se->state()) {
+            case SwitchEvent::State::Off:
+                Q_EMIT switchToggledOff(se->time(), se->timeMicroseconds(), se->device());
                 break;
-            }
-            case LIBINPUT_EVENT_TABLET_PAD_RING: {
-                auto *tabletEvent = static_cast<TabletPadRingEvent *>(event.data());
-                tabletEvent->position();
-                Q_EMIT tabletPadRingEvent(tabletEvent->number(),
-                                        tabletEvent->position(),
-                                        tabletEvent->source() == LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER,
-                                        { event->device()->groupUserData() });
+            case SwitchEvent::State::On:
+                Q_EMIT switchToggledOn(se->time(), se->timeMicroseconds(), se->device());
                 break;
-            }
-            case LIBINPUT_EVENT_TABLET_PAD_STRIP: {
-                auto *tabletEvent = static_cast<TabletPadStripEvent *>(event.data());
-                Q_EMIT tabletPadStripEvent(tabletEvent->number(),
-                                         tabletEvent->position(),
-                                         tabletEvent->source() == LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER,
-                                         { event->device()->groupUserData() });
-                break;
-            }
             default:
-                // nothing
+                Q_UNREACHABLE();
+            }
+            break;
+        }
+        case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
+        case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
+        case LIBINPUT_EVENT_TABLET_TOOL_TIP: {
+            auto *tte = static_cast<TabletToolEvent *>(event.data());
+
+            KWin::InputRedirection::TabletEventType tabletEventType;
+            switch (event->type()) {
+            case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
+                tabletEventType = KWin::InputRedirection::Axis;
                 break;
+            case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
+                tabletEventType = KWin::InputRedirection::Proximity;
+                break;
+            case LIBINPUT_EVENT_TABLET_TOOL_TIP:
+            default:
+                tabletEventType = KWin::InputRedirection::Tip;
+                break;
+            }
+
+            if (workspace()) {
+#ifndef KWIN_BUILD_TESTING
+                auto client = workspace()->activeClient();
+                const auto *output =
+                    static_cast<AbstractWaylandOutput *>(kwinApp()->platform()->enabledOutputs()[client ? client->screen() : tte->device()->screenId()]);
+                const QPointF globalPos = devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()), output);
+#else
+                const QPointF globalPos;
+#endif
+                Q_EMIT tabletToolEvent(tabletEventType,
+                                       globalPos,
+                                       tte->pressure(),
+                                       tte->xTilt(),
+                                       tte->yTilt(),
+                                       tte->rotation(),
+                                       tte->isTipDown(),
+                                       tte->isNearby(),
+                                       createTabletId(tte->tool(), event->device()->groupUserData()),
+                                       tte->time());
+            }
+            break;
+        }
+        case LIBINPUT_EVENT_TABLET_TOOL_BUTTON: {
+            auto *tabletEvent = static_cast<TabletToolButtonEvent *>(event.data());
+            Q_EMIT tabletToolButtonEvent(tabletEvent->buttonId(),
+                                         tabletEvent->isButtonPressed(),
+                                         createTabletId(tabletEvent->tool(), event->device()->groupUserData()));
+            break;
+        }
+        case LIBINPUT_EVENT_TABLET_PAD_BUTTON: {
+            auto *tabletEvent = static_cast<TabletPadButtonEvent *>(event.data());
+            Q_EMIT tabletPadButtonEvent(tabletEvent->buttonId(), tabletEvent->isButtonPressed(), {event->device()->groupUserData()});
+            break;
+        }
+        case LIBINPUT_EVENT_TABLET_PAD_RING: {
+            auto *tabletEvent = static_cast<TabletPadRingEvent *>(event.data());
+            tabletEvent->position();
+            Q_EMIT tabletPadRingEvent(tabletEvent->number(),
+                                      tabletEvent->position(),
+                                      tabletEvent->source() == LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER,
+                                      {event->device()->groupUserData()});
+            break;
+        }
+        case LIBINPUT_EVENT_TABLET_PAD_STRIP: {
+            auto *tabletEvent = static_cast<TabletPadStripEvent *>(event.data());
+            Q_EMIT tabletPadStripEvent(tabletEvent->number(),
+                                       tabletEvent->position(),
+                                       tabletEvent->source() == LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER,
+                                       {event->device()->groupUserData()});
+            break;
+        }
+        default:
+            // nothing
+            break;
         }
     }
     if (wasSuspended) {
@@ -653,11 +651,10 @@ void Connection::setScreenSize(const QSize &size)
 void Connection::updateScreens()
 {
     QMutexLocker locker(&m_mutex);
-    for (auto device: qAsConst(m_devices)) {
+    for (auto device : qAsConst(m_devices)) {
         applyScreenToDevice(device);
     }
 }
-
 
 void Connection::applyScreenToDevice(Device *device)
 {
@@ -689,11 +686,10 @@ void Connection::applyScreenToDevice(Device *device)
                 break;
             }
         }
-        auto testScreenMatches = [device] (int id) {
+        auto testScreenMatches = [device](int id) {
             const auto &size = device->size();
             const auto &screenSize = screens()->physicalSize(id);
-            return std::round(size.width()) == std::round(screenSize.width())
-                && std::round(size.height()) == std::round(screenSize.height());
+            return std::round(size.width()) == std::round(screenSize.width()) && std::round(size.height()) == std::round(screenSize.height());
         };
         if (internalId != -1 && testScreenMatches(internalId)) {
             id = internalId;
@@ -769,12 +765,10 @@ void Connection::toggleTouchpads()
     }
     if (changed) {
         // send OSD message
-        QDBusMessage msg = QDBusMessage::createMethodCall(
-            QStringLiteral("org.kde.plasmashell"),
-            QStringLiteral("/org/kde/osdService"),
-            QStringLiteral("org.kde.osdService"),
-            QStringLiteral("touchpadEnabledChanged")
-        );
+        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
+                                                          QStringLiteral("/org/kde/osdService"),
+                                                          QStringLiteral("org.kde.osdService"),
+                                                          QStringLiteral("touchpadEnabledChanged"));
         msg.setArguments({m_touchpadsEnabled});
         QDBusConnection::sessionBus().asyncCall(msg);
     }
@@ -809,7 +803,8 @@ void Connection::updateLEDs(Xkb::LEDs leds)
     }
 }
 
-QStringList Connection::devicesSysNames() const {
+QStringList Connection::devicesSysNames() const
+{
     QStringList sl;
     Q_FOREACH (Device *d, m_devices) {
         sl.append(d->sysName());

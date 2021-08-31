@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 class KWIN_EXPORT InternalClient : public AbstractClient
 {
     Q_OBJECT

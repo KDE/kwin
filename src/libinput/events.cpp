@@ -15,7 +15,6 @@ namespace KWin
 {
 namespace LibInput
 {
-
 Event *Event::create(libinput_event *event)
 {
     if (!event) {
@@ -133,8 +132,7 @@ PointerEvent::~PointerEvent() = default;
 QPointF PointerEvent::absolutePos() const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE);
-    return QPointF(libinput_event_pointer_get_absolute_x(m_pointerEvent),
-                   libinput_event_pointer_get_absolute_y(m_pointerEvent));
+    return QPointF(libinput_event_pointer_get_absolute_x(m_pointerEvent), libinput_event_pointer_get_absolute_y(m_pointerEvent));
 }
 
 QPointF PointerEvent::absolutePos(const QSize &size) const
@@ -200,18 +198,16 @@ QVector<InputRedirection::PointerAxis> PointerEvent::axis() const
 qreal PointerEvent::axisValue(InputRedirection::PointerAxis axis) const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_AXIS);
-    const libinput_pointer_axis a = axis == InputRedirection::PointerAxisHorizontal
-                                          ? LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL
-                                          : LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL;
+    const libinput_pointer_axis a =
+        axis == InputRedirection::PointerAxisHorizontal ? LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL : LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL;
     return libinput_event_pointer_get_axis_value(m_pointerEvent, a) * device()->scrollFactor();
 }
 
 qint32 PointerEvent::discreteAxisValue(InputRedirection::PointerAxis axis) const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_AXIS);
-    const libinput_pointer_axis a = (axis == InputRedirection::PointerAxisHorizontal)
-        ? LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL
-        : LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL;
+    const libinput_pointer_axis a =
+        (axis == InputRedirection::PointerAxisHorizontal) ? LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL : LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL;
     return libinput_event_pointer_get_axis_value_discrete(m_pointerEvent, a) * device()->scrollFactor();
 }
 
@@ -248,15 +244,13 @@ quint32 TouchEvent::time() const
 QPointF TouchEvent::absolutePos() const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_TOUCH_DOWN || type() == LIBINPUT_EVENT_TOUCH_MOTION);
-    return QPointF(libinput_event_touch_get_x(m_touchEvent),
-                   libinput_event_touch_get_y(m_touchEvent));
+    return QPointF(libinput_event_touch_get_x(m_touchEvent), libinput_event_touch_get_y(m_touchEvent));
 }
 
 QPointF TouchEvent::absolutePos(const QSize &size) const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_TOUCH_DOWN || type() == LIBINPUT_EVENT_TOUCH_MOTION);
-    return QPointF(libinput_event_touch_get_x_transformed(m_touchEvent, size.width()),
-                   libinput_event_touch_get_y_transformed(m_touchEvent, size.height()));
+    return QPointF(libinput_event_touch_get_x_transformed(m_touchEvent, size.width()), libinput_event_touch_get_y_transformed(m_touchEvent, size.height()));
 }
 
 qint32 TouchEvent::id() const
@@ -286,8 +280,7 @@ int GestureEvent::fingerCount() const
 
 QSizeF GestureEvent::delta() const
 {
-    return QSizeF(libinput_event_gesture_get_dx(m_gestureEvent),
-                  libinput_event_gesture_get_dy(m_gestureEvent));
+    return QSizeF(libinput_event_gesture_get_dx(m_gestureEvent), libinput_event_gesture_get_dy(m_gestureEvent));
 }
 
 bool GestureEvent::isCancelled() const
@@ -329,8 +322,7 @@ SwitchEvent::~SwitchEvent() = default;
 
 SwitchEvent::State SwitchEvent::state() const
 {
-    switch (libinput_event_switch_get_switch_state(m_switchEvent))
-    {
+    switch (libinput_event_switch_get_switch_state(m_switchEvent)) {
     case LIBINPUT_SWITCH_STATE_OFF:
         return State::Off;
     case LIBINPUT_SWITCH_STATE_ON:

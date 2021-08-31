@@ -19,7 +19,6 @@
 
 namespace KWin
 {
-
 class SlidingPopupsEffect : public Effect
 {
     Q_OBJECT
@@ -36,7 +35,8 @@ public:
     void reconfigure(ReconfigureFlags flags) override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 40;
     }
 
@@ -68,10 +68,7 @@ private:
     std::chrono::milliseconds m_slideInDuration;
     std::chrono::milliseconds m_slideOutDuration;
 
-    enum class AnimationKind {
-        In,
-        Out
-    };
+    enum class AnimationKind { In, Out };
 
     struct Animation {
         AnimationKind kind;
@@ -80,12 +77,7 @@ private:
     };
     QHash<EffectWindow *, Animation> m_animations;
 
-    enum class Location {
-        Left,
-        Top,
-        Right,
-        Bottom
-    };
+    enum class Location { Left, Top, Right, Bottom };
 
     struct AnimationData {
         int offset;
@@ -94,7 +86,7 @@ private:
         std::chrono::milliseconds slideOutDuration;
         int slideLength;
     };
-    QHash<const EffectWindow*, AnimationData> m_animationsData;
+    QHash<const EffectWindow *, AnimationData> m_animationsData;
 };
 
 inline int SlidingPopupsEffect::slideInDuration() const

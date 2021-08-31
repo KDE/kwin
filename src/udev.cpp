@@ -13,16 +13,15 @@
 #include "utils.h"
 // Qt
 #include <QByteArray>
-#include <QScopedPointer>
 #include <QDebug>
+#include <QScopedPointer>
 // system
-#include <libudev.h>
-#include <functional>
 #include <cerrno>
+#include <functional>
+#include <libudev.h>
 
 namespace KWin
 {
-
 Udev::Udev()
     : m_udev(udev_new())
 {
@@ -41,10 +40,7 @@ public:
     UdevEnumerate(Udev *udev);
     ~UdevEnumerate();
 
-    enum class Match {
-        SubSystem,
-        SysName
-    };
+    enum class Match { SubSystem, SysName };
     void addMatch(Match match, const char *name);
     void scan();
     std::vector<UdevDevice::Ptr> find();
@@ -52,8 +48,7 @@ public:
 private:
     Udev *m_udev;
 
-    struct EnumerateDeleter
-    {
+    struct EnumerateDeleter {
         static inline void cleanup(udev_enumerate *e)
         {
             udev_enumerate_unref(e);
@@ -228,7 +223,8 @@ QMap<QByteArray, QByteArray> UdevDevice::properties() const
     QMap<QByteArray, QByteArray> r;
     auto it = udev_device_get_properties_list_entry(m_device);
     auto current = it;
-    udev_list_entry_foreach (current, it) {
+    udev_list_entry_foreach(current, it)
+    {
         r.insert(udev_list_entry_get_name(current), udev_list_entry_get_value(current));
     }
     return r;

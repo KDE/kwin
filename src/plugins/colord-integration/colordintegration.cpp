@@ -16,7 +16,6 @@
 
 namespace KWin
 {
-
 ColordIntegration::ColordIntegration(QObject *parent)
     : Plugin(parent)
 {
@@ -24,8 +23,8 @@ ColordIntegration::ColordIntegration(QObject *parent)
 
     auto watcher = new QDBusServiceWatcher(QStringLiteral("org.freedesktop.ColorManager"),
                                            QDBusConnection::systemBus(),
-                                           QDBusServiceWatcher::WatchForRegistration |
-                                           QDBusServiceWatcher::WatchForUnregistration, this);
+                                           QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration,
+                                           this);
 
     connect(watcher, &QDBusServiceWatcher::serviceRegistered, this, &ColordIntegration::initialize);
     connect(watcher, &QDBusServiceWatcher::serviceUnregistered, this, &ColordIntegration::teardown);
@@ -40,9 +39,8 @@ void ColordIntegration::initialize()
 {
     const Platform *platform = kwinApp()->platform();
 
-    m_colordInterface = new CdInterface(QStringLiteral("org.freedesktop.ColorManager"),
-                                        QStringLiteral("/org/freedesktop/ColorManager"),
-                                        QDBusConnection::systemBus(), this);
+    m_colordInterface =
+        new CdInterface(QStringLiteral("org.freedesktop.ColorManager"), QStringLiteral("/org/freedesktop/ColorManager"), QDBusConnection::systemBus(), this);
 
     const QVector<AbstractOutput *> outputs = platform->outputs();
     for (AbstractOutput *output : outputs) {
@@ -96,8 +94,7 @@ void ColordIntegration::handleOutputAdded(AbstractOutput *output)
         properties.insert(QStringLiteral("Embedded"), QString());
     }
 
-    QDBusPendingReply<QDBusObjectPath> reply =
-            m_colordInterface->CreateDevice(output->name(), QStringLiteral("temp"), properties);
+    QDBusPendingReply<QDBusObjectPath> reply = m_colordInterface->CreateDevice(output->name(), QStringLiteral("temp"), properties);
 
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, device, watcher]() {

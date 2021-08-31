@@ -7,10 +7,10 @@
 #ifndef AURORAE_H
 #define AURORAE_H
 
+#include <KCModule>
 #include <KDecoration2/Decoration>
 #include <QElapsedTimer>
 #include <QVariant>
-#include <KCModule>
 
 class QQmlComponent;
 class QQmlContext;
@@ -27,11 +27,10 @@ class EffectQuickView;
 
 namespace Aurorae
 {
-
 class Decoration : public KDecoration2::Decoration
 {
     Q_OBJECT
-    Q_PROPERTY(KDecoration2::DecoratedClient* client READ clientPointer CONSTANT)
+    Q_PROPERTY(KDecoration2::DecoratedClient *client READ clientPointer CONSTANT)
 public:
     explicit Decoration(QObject *parent = nullptr, const QVariantList &args = QVariantList());
     ~Decoration() override;
@@ -65,7 +64,7 @@ private:
     void updateBuffer();
     void updateExtendedBorders();
 
-    QRect m_contentRect; //the geometry of the part of the buffer that is not a shadow when buffer was created.
+    QRect m_contentRect; // the geometry of the part of the buffer that is not a shadow when buffer was created.
     QQuickItem *m_item = nullptr;
     QQmlContext *m_qmlContext = nullptr;
     KWin::Borders *m_borders;
@@ -85,7 +84,8 @@ class ThemeFinder : public QObject
 public:
     explicit ThemeFinder(QObject *parent = nullptr, const QVariantList &args = QVariantList());
 
-    QVariantMap themes() const {
+    QVariantMap themes() const
+    {
         return m_themes;
     }
 

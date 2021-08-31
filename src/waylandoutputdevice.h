@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 class WaylandOutputDevice : public QObject
 {
     Q_OBJECT

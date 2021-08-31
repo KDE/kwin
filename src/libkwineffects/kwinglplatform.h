@@ -10,8 +10,8 @@
 #ifndef KWIN_GLPLATFORM_H
 #define KWIN_GLPLATFORM_H
 
-#include <kwinglutils_export.h>
 #include <kwinglobals.h>
+#include <kwinglutils_export.h>
 
 #include <QByteArray>
 #include <QSet>
@@ -75,7 +75,7 @@ enum GLFeature {
 };
 
 enum Driver {
-    Driver_R100,  // Technically "Radeon"
+    Driver_R100, // Technically "Radeon"
     Driver_R200,
     Driver_R300C,
     Driver_R300G,
@@ -167,7 +167,6 @@ enum ChipClass {
     UnknownChipClass = 99999,
 };
 // clang-format on
-
 
 class KWINGLUTILS_EXPORT GLPlatform
 {
@@ -309,7 +308,7 @@ public:
      **/
     bool isVirgl() const;
 
-     /**
+    /**
      * @returns @c true if the "GPU" is a Panfrost Mali GPU
      * @since 5.21.5
      **/
@@ -439,15 +438,15 @@ private:
     qint64 m_galliumVersion;
     qint64 m_serverVersion;
     qint64 m_kernelVersion;
-    bool m_looseBinding: 1;
-    bool m_supportsGLSL: 1;
-    bool m_limitedGLSL: 1;
-    bool m_textureNPOT: 1;
-    bool m_limitedNPOT: 1;
-    bool m_virtualMachine: 1;
-    bool m_preferBufferSubData: 1;
+    bool m_looseBinding : 1;
+    bool m_supportsGLSL : 1;
+    bool m_limitedGLSL : 1;
+    bool m_textureNPOT : 1;
+    bool m_limitedNPOT : 1;
+    bool m_virtualMachine : 1;
+    bool m_preferBufferSubData : 1;
     OpenGLPlatformInterface m_platformInterface;
-    bool m_gles: 1;
+    bool m_gles : 1;
     static GLPlatform *s_platform;
 };
 
@@ -462,4 +461,3 @@ inline GLPlatform *GLPlatform::instance()
 } // namespace KWin
 
 #endif // KWIN_GLPLATFORM_H
-

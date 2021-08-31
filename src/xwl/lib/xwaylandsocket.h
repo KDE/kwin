@@ -11,14 +11,10 @@
 
 namespace KWin
 {
-
 class XwaylandSocket
 {
 public:
-    enum class OperationMode {
-        CloseFdsOnExec,
-        TransferFdsOnExec
-    };
+    enum class OperationMode { CloseFdsOnExec, TransferFdsOnExec };
 
     XwaylandSocket(OperationMode operationMode);
     ~XwaylandSocket();

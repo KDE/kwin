@@ -11,7 +11,6 @@
 
 namespace KWin
 {
-
 class GlxContextAttributeBuilder : public AbstractOpenGLContextAttributeBuilder
 {
 public:

@@ -24,16 +24,14 @@ namespace KWin
 class LanczosFilter;
 class OpenGLBackend;
 
-class KWIN_EXPORT SceneOpenGL
-    : public Scene
+class KWIN_EXPORT SceneOpenGL : public Scene
 {
     Q_OBJECT
 public:
     class EffectFrame;
     ~SceneOpenGL() override;
     bool initFailed() const override;
-    void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows,
-               RenderLoop *renderLoop) override;
+    void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows, RenderLoop *renderLoop) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     OverlayWindow *overlayWindow() const override;
@@ -47,10 +45,14 @@ public:
     PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
-    bool debug() const { return m_debug; }
+    bool debug() const
+    {
+        return m_debug;
+    }
     void initDebugOutput();
 
-    OpenGLBackend *backend() const {
+    OpenGLBackend *backend() const
+    {
         return m_backend;
     }
 
@@ -75,6 +77,7 @@ protected:
 
 protected:
     bool init_ok;
+
 private:
     bool viewportLimitsMatched(const QSize &size) const;
 
@@ -90,26 +93,33 @@ class SceneOpenGL2 : public SceneOpenGL
 public:
     explicit SceneOpenGL2(OpenGLBackend *backend, QObject *parent = nullptr);
     ~SceneOpenGL2() override;
-    CompositingType compositingType() const override {
+    CompositingType compositingType() const override
+    {
         return OpenGLCompositing;
     }
 
     static bool supported(OpenGLBackend *backend);
 
-    QMatrix4x4 projectionMatrix() const override { return m_projectionMatrix; }
-    QMatrix4x4 screenProjectionMatrix() const override { return m_screenProjectionMatrix; }
+    QMatrix4x4 projectionMatrix() const override
+    {
+        return m_projectionMatrix;
+    }
+    QMatrix4x4 screenProjectionMatrix() const override
+    {
+        return m_screenProjectionMatrix;
+    }
 
 protected:
     void paintSimpleScreen(int mask, const QRegion &region) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
-    void doPaintBackground(const QVector< float >& vertices) override;
+    void doPaintBackground(const QVector<float> &vertices) override;
     Scene::Window *createWindow(Toplevel *t) override;
-    void finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data) override;
+    void finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data) override;
     void updateProjectionMatrix(const QRect &geometry) override;
     void paintCursor(const QRegion &region) override;
 
 private:
-    void performPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
+    void performPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
 
     LanczosFilter *m_lanczosFilter;
     QScopedPointer<GLTexture> m_cursorTexture;
@@ -124,8 +134,7 @@ class OpenGLWindow final : public Scene::Window
     Q_OBJECT
 
 public:
-    struct RenderNode
-    {
+    struct RenderNode {
         GLTexture *texture = nullptr;
         WindowQuadList quads;
         QMatrix4x4 transformMatrix;
@@ -136,8 +145,7 @@ public:
         TextureCoordinateType coordinateType = UnnormalizedCoordinates;
     };
 
-    struct RenderContext
-    {
+    struct RenderContext {
         QVector<RenderNode> renderNodes;
         QStack<QMatrix4x4> transforms;
         const QRegion clip;
@@ -161,11 +169,10 @@ private:
     bool m_blendingEnabled = false;
 };
 
-class SceneOpenGL::EffectFrame
-    : public Scene::EffectFrame
+class SceneOpenGL::EffectFrame : public Scene::EffectFrame
 {
 public:
-    EffectFrame(EffectFrameImpl* frame, SceneOpenGL *scene);
+    EffectFrame(EffectFrameImpl *frame, SceneOpenGL *scene);
     ~EffectFrame() override;
 
     void free() override;
@@ -194,8 +201,8 @@ private:
     GLVertexBuffer *m_unstyledVBO;
     SceneOpenGL *m_scene;
 
-    static GLTexture* m_unstyledTexture;
-    static QPixmap* m_unstyledPixmap; // need to keep the pixmap around to workaround some driver problems
+    static GLTexture *m_unstyledTexture;
+    static QPixmap *m_unstyledPixmap; // need to keep the pixmap around to workaround some driver problems
     static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
 };
 
@@ -205,18 +212,20 @@ private:
  * This class extends Shadow by the Elements required for OpenGL rendering.
  * @author Martin Gräßlin <mgraesslin@kde.org>
  */
-class SceneOpenGLShadow
-    : public Shadow
+class SceneOpenGLShadow : public Shadow
 {
 public:
     explicit SceneOpenGLShadow(Toplevel *toplevel);
     ~SceneOpenGLShadow() override;
 
-    GLTexture *shadowTexture() {
+    GLTexture *shadowTexture()
+    {
         return m_texture.data();
     }
+
 protected:
     bool prepareBackend() override;
+
 private:
     QSharedPointer<GLTexture> m_texture;
 };
@@ -225,22 +234,18 @@ class SceneOpenGLDecorationRenderer : public DecorationRenderer
 {
     Q_OBJECT
 public:
-    enum class DecorationPart : int {
-        Left,
-        Top,
-        Right,
-        Bottom,
-        Count
-    };
+    enum class DecorationPart : int { Left, Top, Right, Bottom, Count };
     explicit SceneOpenGLDecorationRenderer(Decoration::DecoratedClientImpl *client);
     ~SceneOpenGLDecorationRenderer() override;
 
     void render(const QRegion &region) override;
 
-    GLTexture *texture() {
+    GLTexture *texture()
+    {
         return m_texture.data();
     }
-    GLTexture *texture() const {
+    GLTexture *texture() const
+    {
         return m_texture.data();
     }
 

@@ -14,22 +14,21 @@
 #include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
 // Qt
-#include <QTemporaryFile>
 #include <QKeyEvent>
+#include <QTemporaryFile>
 #include <QtXkbCommonSupport/private/qxkbcommon_p.h>
 // xkbcommon
 #include <xkbcommon/xkbcommon-compose.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
 // system
+#include <bitset>
 #include <sys/mman.h>
 #include <unistd.h>
-#include <bitset>
 
 Q_LOGGING_CATEGORY(KWIN_XKB, "kwin_xkbcommon", QtWarningMsg)
 
 namespace KWin
 {
-
 static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const char *format, va_list args)
 {
     Q_UNUSED(context)
@@ -114,11 +113,13 @@ Xkb::~Xkb()
     xkb_context_unref(m_context);
 }
 
-void Xkb::setConfig(const KSharedConfigPtr &config) {
+void Xkb::setConfig(const KSharedConfigPtr &config)
+{
     m_configGroup = config->group("Layout");
 }
 
-void Xkb::setNumLockConfig(const KSharedConfigPtr &config) {
+void Xkb::setNumLockConfig(const KSharedConfigPtr &config)
+{
     m_numLockConfig = config;
 }
 
@@ -152,7 +153,7 @@ static bool stringIsEmptyOrNull(const char *str)
  * libxkbcommon uses secure_getenv to read the XKB_DEFAULT_* variables.
  * As kwin_wayland may have the CAP_SET_NICE capability, it returns nullptr
  * so we need to do it ourselves (see xkb_context_sanitize_rule_names).
-**/
+ **/
 void Xkb::applyEnvironmentRules(xkb_rule_names &ruleNames)
 {
     if (stringIsEmptyOrNull(ruleNames.rules)) {
@@ -186,13 +187,11 @@ xkb_keymap *Xkb::loadKeymapFromConfig()
     const QByteArray variant = m_configGroup.readEntry("VariantList").toLatin1();
     const QByteArray options = m_configGroup.readEntry("Options").toLatin1();
 
-    xkb_rule_names ruleNames = {
-        .rules = nullptr,
-        .model = model.constData(),
-        .layout = layout.constData(),
-        .variant = variant.constData(),
-        .options = options.constData()
-    };
+    xkb_rule_names ruleNames = {.rules = nullptr,
+                                .model = model.constData(),
+                                .layout = layout.constData(),
+                                .variant = variant.constData(),
+                                .options = options.constData()};
     applyEnvironmentRules(ruleNames);
 
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
@@ -210,7 +209,7 @@ void Xkb::installKeymap(int fd, uint32_t size)
     if (!m_context) {
         return;
     }
-    char *map = reinterpret_cast<char*>(mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
+    char *map = reinterpret_cast<char *>(mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
     if (map == MAP_FAILED) {
         return;
     }
@@ -240,16 +239,16 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     m_keymap = keymap;
     m_state = state;
 
-    m_shiftModifier   = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_SHIFT);
-    m_capsModifier    = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CAPS);
+    m_shiftModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_SHIFT);
+    m_capsModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CAPS);
     m_controlModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CTRL);
-    m_altModifier     = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_ALT);
-    m_metaModifier    = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_LOGO);
-    m_numModifier     = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_NUM);
+    m_altModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_ALT);
+    m_metaModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_LOGO);
+    m_numModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_NUM);
 
-    m_numLock         = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_NUM);
-    m_capsLock        = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_CAPS);
-    m_scrollLock      = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_SCROLL);
+    m_numLock = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_NUM);
+    m_capsLock = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_CAPS);
+    m_scrollLock = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_SCROLL);
 
     m_currentLayout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
 
@@ -266,7 +265,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
             const auto setting = config.readEntry("NumLock", 2);
             const bool numLockIsOn = xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_LOCKED);
             if ((setting == 0 && !numLockIsOn) || (setting == 1 && numLockIsOn)) {
-                std::bitset<sizeof(xkb_mod_mask_t)*8> mask{m_modifierState.locked};
+                std::bitset<sizeof(xkb_mod_mask_t) * 8> mask{m_modifierState.locked};
                 if (mask.size() > m_numModifier) {
                     mask[m_numModifier] = (setting == 0);
                     m_modifierState.locked = mask.to_ulong();
@@ -349,8 +348,8 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
 void Xkb::updateModifiers()
 {
     Qt::KeyboardModifiers mods = Qt::NoModifier;
-    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1 ||
-        xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1
+        || xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
         mods |= Qt::ShiftModifier;
     }
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
@@ -394,10 +393,7 @@ void Xkb::forwardModifiers()
     if (!m_seat || !m_seat->keyboard()) {
         return;
     }
-    m_seat->notifyKeyboardModifiers(m_modifierState.depressed,
-                                    m_modifierState.latched,
-                                    m_modifierState.locked,
-                                    m_currentLayout);
+    m_seat->notifyKeyboardModifiers(m_modifierState.depressed, m_modifierState.latched, m_modifierState.locked, m_currentLayout);
 }
 
 QString Xkb::layoutName(xkb_layout_index_t index) const
@@ -490,13 +486,10 @@ QString Xkb::toString(xkb_keysym_t keysym)
     return QString::fromUtf8(byteArray.constData());
 }
 
-Qt::Key Xkb::toQtKey(xkb_keysym_t keySym,
-                     uint32_t scanCode,
-                     Qt::KeyboardModifiers modifiers,
-                     bool superAsMeta) const
+Qt::Key Xkb::toQtKey(xkb_keysym_t keySym, uint32_t scanCode, Qt::KeyboardModifiers modifiers, bool superAsMeta) const
 {
     // FIXME: passing superAsMeta doesn't have impact due to bug in the Qt function, so handle it below
-    Qt::Key qtKey = Qt::Key( QXkbCommon::keysymToQtKey(keySym, modifiers, m_state, scanCode + 8, superAsMeta) );
+    Qt::Key qtKey = Qt::Key(QXkbCommon::keysymToQtKey(keySym, modifiers, m_state, scanCode + 8, superAsMeta));
 
     // FIXME: workarounds for symbols currently wrong/not mappable via keysymToQtKey()
     if (superAsMeta && (qtKey == Qt::Key_Super_L || qtKey == Qt::Key_Super_R)) {
@@ -505,7 +498,7 @@ Qt::Key Xkb::toQtKey(xkb_keysym_t keySym,
     } else if (qtKey > 0xff && keySym <= 0xff) {
         // XKB_KEY_mu, XKB_KEY_ydiaeresis go here
         qtKey = Qt::Key(keySym);
-#if QT_VERSION_MAJOR < 6	// since Qt 5 LTS is frozen
+#if QT_VERSION_MAJOR < 6 // since Qt 5 LTS is frozen
     } else if (keySym == XKB_KEY_Sys_Req) {
         // fixed in QTBUG-92087
         qtKey = Qt::Key_SysReq;
@@ -537,7 +530,7 @@ void Xkb::switchToPreviousLayout()
     if (!m_keymap || !m_state) {
         return;
     }
-    const xkb_layout_index_t previousLayout = m_currentLayout == 0 ? numberOfLayouts() - 1 : m_currentLayout -1;
+    const xkb_layout_index_t previousLayout = m_currentLayout == 0 ? numberOfLayouts() - 1 : m_currentLayout - 1;
     switchToLayout(previousLayout);
 }
 

@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class GLTexture;
 class OpenGLBackend;
 

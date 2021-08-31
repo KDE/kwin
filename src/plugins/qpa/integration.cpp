@@ -32,10 +32,8 @@
 
 namespace KWin
 {
-
 namespace QPA
 {
-
 Integration::Integration()
     : QObject()
     , QPlatformIntegration()
@@ -146,10 +144,8 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
 
 void Integration::handlePlatformCreated()
 {
-    connect(kwinApp()->platform(), &Platform::outputEnabled,
-            this, &Integration::handleOutputEnabled);
-    connect(kwinApp()->platform(), &Platform::outputDisabled,
-            this, &Integration::handleOutputDisabled);
+    connect(kwinApp()->platform(), &Platform::outputEnabled, this, &Integration::handleOutputEnabled);
+    connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Integration::handleOutputDisabled);
 
     const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
     for (AbstractOutput *output : outputs) {

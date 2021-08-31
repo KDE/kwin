@@ -13,9 +13,7 @@
 
 namespace KWin
 {
-
-BasicEGLSurfaceTextureInternal::BasicEGLSurfaceTextureInternal(OpenGLBackend *backend,
-                                                               SurfacePixmapInternal *pixmap)
+BasicEGLSurfaceTextureInternal::BasicEGLSurfaceTextureInternal(OpenGLBackend *backend, SurfacePixmapInternal *pixmap)
     : PlatformOpenGLSurfaceTextureInternal(backend, pixmap)
 {
 }

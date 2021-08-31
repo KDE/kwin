@@ -14,22 +14,20 @@
 
 #include "ui_windowgeometry_config.h"
 
-
 namespace KWin
 {
-
 class WindowGeometryConfigForm : public QWidget, public Ui::WindowGeometryConfigForm
 {
     Q_OBJECT
 public:
-    explicit WindowGeometryConfigForm(QWidget* parent);
+    explicit WindowGeometryConfigForm(QWidget *parent);
 };
 
 class WindowGeometryConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit WindowGeometryConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
+    explicit WindowGeometryConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
     ~WindowGeometryConfig() override;
 
 public Q_SLOTS:
@@ -37,8 +35,8 @@ public Q_SLOTS:
     void defaults() override;
 
 private:
-    WindowGeometryConfigForm* myUi;
-    KActionCollection* myActionCollection;
+    WindowGeometryConfigForm *myUi;
+    KActionCollection *myActionCollection;
 };
 
 } // namespace

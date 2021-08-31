@@ -26,7 +26,6 @@
 
 namespace KWin
 {
-
 class Cursor;
 class DmaBufTexture;
 class EGLNativeFence;
@@ -43,7 +42,8 @@ public:
     bool init();
     uint framerate();
     uint nodeId();
-    QString error() const {
+    QString error() const
+    {
         return m_error;
     }
 

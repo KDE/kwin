@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 class AnimationsModel : public EffectsModel
 {
     Q_OBJECT

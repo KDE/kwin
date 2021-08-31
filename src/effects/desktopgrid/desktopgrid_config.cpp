@@ -16,33 +16,31 @@
 
 #include <QAction>
 
-#include <kconfiggroup.h>
-#include <KActionCollection>
 #include <KAboutData>
+#include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KPluginFactory>
+#include <kconfiggroup.h>
 
 #include <QVBoxLayout>
 
-K_PLUGIN_FACTORY_WITH_JSON(DesktopGridEffectConfigFactory,
-                           "desktopgrid_config.json",
-                           registerPlugin<KWin::DesktopGridEffectConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(DesktopGridEffectConfigFactory, "desktopgrid_config.json", registerPlugin<KWin::DesktopGridEffectConfig>();)
 
 namespace KWin
 {
-
-DesktopGridEffectConfigForm::DesktopGridEffectConfigForm(QWidget* parent) : QWidget(parent)
+DesktopGridEffectConfigForm::DesktopGridEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariantList& args)
-    :   KCModule(parent, args)
+DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     m_ui = new DesktopGridEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->addWidget(m_ui);
 
@@ -53,14 +51,13 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     m_actionCollection->setConfigGroup(QStringLiteral("DesktopGrid"));
     m_actionCollection->setConfigGlobal(true);
 
-    QAction* a = m_actionCollection->addAction(QStringLiteral("ShowDesktopGrid"));
+    QAction *a = m_actionCollection->addAction(QStringLiteral("ShowDesktopGrid"));
     a->setText(i18n("Show Desktop Grid"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
 
     m_ui->shortcutEditor->addCollection(m_actionCollection);
-
 
     m_ui->desktopNameAlignmentCombo->addItem(i18nc("Desktop name alignment:", "Disabled"), QVariant(Qt::Alignment()));
     m_ui->desktopNameAlignmentCombo->addItem(i18n("Top"), QVariant(Qt::AlignHCenter | Qt::AlignTop));
@@ -100,9 +97,7 @@ void DesktopGridEffectConfig::save()
     DesktopGridConfig::setClickBehavior(m_ui->clickBehaviorButtonGroup->checkedId());
     KCModule::save();
 
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("desktopgrid"));
 }
 

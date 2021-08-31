@@ -8,8 +8,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "effects_x11.h"
-#include "effects_mouse_interception_x11_filter.h"
 #include "cursor.h"
+#include "effects_mouse_interception_x11_filter.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "utils.h"
@@ -19,7 +19,6 @@
 
 namespace KWin
 {
-
 EffectsHandlerImplX11::EffectsHandlerImplX11(Compositor *compositor, Scene *scene)
     : EffectsHandlerImpl(compositor, scene)
 {
@@ -68,10 +67,7 @@ void EffectsHandlerImplX11::doStartMouseInterception(Qt::CursorShape shape)
         const QSize &s = Screens::self()->size();
         const QRect geo(0, 0, s.width(), s.height());
         const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
-        const uint32_t values[] = {
-            true,
-            XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION
-        };
+        const uint32_t values[] = {true, XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION};
         m_mouseInterceptionWindow.reset(Xcb::createInputWindow(geo, mask, values));
         defineCursor(shape);
     } else {

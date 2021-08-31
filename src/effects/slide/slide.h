@@ -17,7 +17,6 @@
 
 namespace KWin
 {
-
 class SlideEffect : public Effect
 {
     Q_OBJECT
@@ -40,11 +39,13 @@ public:
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
-    bool isActive() const override {
+    bool isActive() const override
+    {
         return m_active;
     }
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 50;
     }
 

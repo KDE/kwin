@@ -27,13 +27,13 @@ class Toplevel;
 class WindowSelector : public X11EventFilter
 {
 public:
-
     WindowSelector();
     ~WindowSelector() override;
 
-    void start(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName);
-    void start(std::function<void (const QPoint &)> callback);
-    bool isActive() const {
+    void start(std::function<void(KWin::Toplevel *)> callback, const QByteArray &cursorName);
+    void start(std::function<void(const QPoint &)> callback);
+    bool isActive() const
+    {
         return m_active;
     }
     void processEvent(xcb_generic_event_t *event);
@@ -50,7 +50,7 @@ private:
     bool activate(const QByteArray &cursorName = QByteArray());
     void cancelCallback();
     bool m_active;
-    std::function<void(KWin::Toplevel*)> m_callback;
+    std::function<void(KWin::Toplevel *)> m_callback;
     std::function<void(const QPoint &)> m_pointSelectionFallback;
 };
 

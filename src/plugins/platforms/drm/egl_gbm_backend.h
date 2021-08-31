@@ -59,7 +59,8 @@ public:
     void removeOutput(DrmAbstractOutput *output) override;
     bool swapBuffers(DrmAbstractOutput *output, const QRegion &dirty) override;
     bool exportFramebuffer(DrmAbstractOutput *output, void *data, const QSize &size, uint32_t stride) override;
-    bool exportFramebufferAsDmabuf(DrmAbstractOutput *output, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier) override;
+    bool exportFramebufferAsDmabuf(DrmAbstractOutput *output, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier)
+        override;
     QRegion beginFrameForSecondaryGpu(DrmAbstractOutput *output) override;
 
     bool directScanoutAllowed(AbstractOutput *output) const override;
@@ -75,10 +76,7 @@ private:
     bool initBufferConfigs();
     bool initRenderingContext();
 
-    enum class ImportMode {
-        Dmabuf,
-        DumbBuffer
-    };
+    enum class ImportMode { Dmabuf, DumbBuffer };
     struct Output {
         DrmAbstractOutput *output = nullptr;
         struct RenderData {

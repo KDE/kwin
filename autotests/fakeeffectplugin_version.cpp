@@ -10,13 +10,16 @@
 
 namespace KWin
 {
-
 class FakeVersionEffect : public Effect
 {
     Q_OBJECT
 public:
-    FakeVersionEffect() {}
-    ~FakeVersionEffect() override {}
+    FakeVersionEffect()
+    {
+    }
+    ~FakeVersionEffect() override
+    {
+    }
 };
 
 } // namespace
@@ -27,12 +30,16 @@ class FakeEffectPluginFactory : public KWin::EffectPluginFactory
     Q_PLUGIN_METADATA(IID "not_a_valid_version" FILE "fakeeffectplugin_version.json")
     Q_INTERFACES(KPluginFactory)
 public:
-    FakeEffectPluginFactory() {}
-    ~FakeEffectPluginFactory() override {}
-    KWin::Effect *createEffect() const override {
+    FakeEffectPluginFactory()
+    {
+    }
+    ~FakeEffectPluginFactory() override
+    {
+    }
+    KWin::Effect *createEffect() const override
+    {
         return new KWin::FakeVersionEffect();
     }
 };
-
 
 #include "fakeeffectplugin_version.moc"

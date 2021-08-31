@@ -27,24 +27,25 @@
 namespace KWin
 {
 Cursors *Cursors::s_self = nullptr;
-Cursors *Cursors::self() {
+Cursors *Cursors::self()
+{
     if (!s_self)
         s_self = new Cursors;
     return s_self;
 }
 
-void Cursors::addCursor(Cursor* cursor)
+void Cursors::addCursor(Cursor *cursor)
 {
     Q_ASSERT(!m_cursors.contains(cursor));
     m_cursors += cursor;
 
-    connect(cursor, &Cursor::posChanged, this, [this, cursor] (const QPoint &pos) {
+    connect(cursor, &Cursor::posChanged, this, [this, cursor](const QPoint &pos) {
         setCurrentCursor(cursor);
         Q_EMIT positionChanged(cursor, pos);
     });
 }
 
-void Cursors::removeCursor(Cursor* cursor)
+void Cursors::removeCursor(Cursor *cursor)
 {
     m_cursors.removeOne(cursor);
     if (m_currentCursor == cursor) {
@@ -58,7 +59,7 @@ void Cursors::removeCursor(Cursor* cursor)
     }
 }
 
-void Cursors::setCurrentCursor(Cursor* cursor)
+void Cursors::setCurrentCursor(Cursor *cursor)
 {
     if (m_currentCursor == cursor)
         return;
@@ -89,8 +90,12 @@ Cursor::Cursor(QObject *parent)
     , m_themeSize(defaultThemeSize())
 {
     loadThemeSettings();
-    QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
-                                          QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));
+    QDBusConnection::sessionBus().connect(QString(),
+                                          QStringLiteral("/KGlobalSettings"),
+                                          QStringLiteral("org.kde.KGlobalSettings"),
+                                          QStringLiteral("notifyChange"),
+                                          this,
+                                          SLOT(slotKGlobalSettingsNotifyChange(int, int)));
 }
 
 Cursor::~Cursor()
@@ -131,7 +136,7 @@ void Cursor::updateTheme(const QString &name, int size)
 
 void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
 {
-// #endif
+    // #endif
     Q_UNUSED(arg)
     if (type == 5 /*CursorChanged*/) {
         InputConfig::self()->inputConfig()->reparseConfiguration();
@@ -273,128 +278,135 @@ void Cursor::doStopCursorTracking()
 QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
 {
     static const QHash<QByteArray, QVector<QByteArray>> alternatives = {
-        {QByteArrayLiteral("left_ptr"),       {QByteArrayLiteral("arrow"),
-                                                QByteArrayLiteral("dnd-none"),
-                                                QByteArrayLiteral("op_left_arrow")}},
-        {QByteArrayLiteral("cross"),          {QByteArrayLiteral("crosshair"),
-                                                QByteArrayLiteral("diamond-cross"),
-                                                QByteArrayLiteral("cross-reverse")}},
-        {QByteArrayLiteral("up_arrow"),       {QByteArrayLiteral("center_ptr"),
-                                                QByteArrayLiteral("sb_up_arrow"),
-                                                QByteArrayLiteral("centre_ptr")}},
-        {QByteArrayLiteral("wait"),           {QByteArrayLiteral("watch"),
-                                                QByteArrayLiteral("progress")}},
-        {QByteArrayLiteral("ibeam"),          {QByteArrayLiteral("xterm"),
-                                                QByteArrayLiteral("text")}},
-        {QByteArrayLiteral("size_all"),       {QByteArrayLiteral("fleur")}},
-        {QByteArrayLiteral("pointing_hand"),  {QByteArrayLiteral("hand2"),
-                                                QByteArrayLiteral("hand"),
-                                                QByteArrayLiteral("hand1"),
-                                                QByteArrayLiteral("pointer"),
-                                                QByteArrayLiteral("e29285e634086352946a0e7090d73106"),
-                                                QByteArrayLiteral("9d800788f1b08800ae810202380a0822")}},
-        {QByteArrayLiteral("size_ver"),       {QByteArrayLiteral("00008160000006810000408080010102"),
-                                                QByteArrayLiteral("sb_v_double_arrow"),
-                                                QByteArrayLiteral("v_double_arrow"),
-                                                QByteArrayLiteral("n-resize"),
-                                                QByteArrayLiteral("s-resize"),
-                                                QByteArrayLiteral("col-resize"),
-                                                QByteArrayLiteral("top_side"),
-                                                QByteArrayLiteral("bottom_side"),
-                                                QByteArrayLiteral("base_arrow_up"),
-                                                QByteArrayLiteral("base_arrow_down"),
-                                                QByteArrayLiteral("based_arrow_down"),
-                                                QByteArrayLiteral("based_arrow_up")}},
-        {QByteArrayLiteral("size_hor"),       {QByteArrayLiteral("028006030e0e7ebffc7f7070c0600140"),
-                                                QByteArrayLiteral("sb_h_double_arrow"),
-                                                QByteArrayLiteral("h_double_arrow"),
-                                                QByteArrayLiteral("e-resize"),
-                                                QByteArrayLiteral("w-resize"),
-                                                QByteArrayLiteral("row-resize"),
-                                                QByteArrayLiteral("right_side"),
-                                                QByteArrayLiteral("left_side")}},
-        {QByteArrayLiteral("size_bdiag"),     {QByteArrayLiteral("fcf1c3c7cd4491d801f1e1c78f100000"),
-                                                QByteArrayLiteral("fd_double_arrow"),
-                                                QByteArrayLiteral("bottom_left_corner"),
-                                                QByteArrayLiteral("top_right_corner")}},
-        {QByteArrayLiteral("size_fdiag"),     {QByteArrayLiteral("c7088f0f3e6c8088236ef8e1e3e70000"),
-                                                QByteArrayLiteral("bd_double_arrow"),
-                                                QByteArrayLiteral("bottom_right_corner"),
-                                                QByteArrayLiteral("top_left_corner")}},
-        {QByteArrayLiteral("whats_this"),     {QByteArrayLiteral("d9ce0ab605698f320427677b458ad60b"),
-                                                QByteArrayLiteral("left_ptr_help"),
-                                                QByteArrayLiteral("help"),
-                                                QByteArrayLiteral("question_arrow"),
-                                                QByteArrayLiteral("dnd-ask"),
-                                                QByteArrayLiteral("5c6cd98b3f3ebcb1f9c7f1c204630408")}},
-        {QByteArrayLiteral("split_h"),        {QByteArrayLiteral("14fef782d02440884392942c11205230"),
-                                                QByteArrayLiteral("size_hor")}},
-        {QByteArrayLiteral("split_v"),        {QByteArrayLiteral("2870a09082c103050810ffdffffe0204"),
-                                                QByteArrayLiteral("size_ver")}},
-        {QByteArrayLiteral("forbidden"),      {QByteArrayLiteral("03b6e0fcb3499374a867c041f52298f0"),
-                                                QByteArrayLiteral("circle"),
-                                                QByteArrayLiteral("dnd-no-drop"),
-                                                QByteArrayLiteral("not-allowed")}},
-        {QByteArrayLiteral("left_ptr_watch"), {QByteArrayLiteral("3ecb610c1bf2410f44200f48c40d3599"),
-                                                QByteArrayLiteral("00000000000000020006000e7e9ffc3f"),
-                                                QByteArrayLiteral("08e8e1c95fe2fc01f976f1e063a24ccd")}},
-        {QByteArrayLiteral("openhand"),       {QByteArrayLiteral("9141b49c8149039304290b508d208c40"),
-                                                QByteArrayLiteral("all_scroll"),
-                                                QByteArrayLiteral("all-scroll")}},
-        {QByteArrayLiteral("closedhand"),     {QByteArrayLiteral("05e88622050804100c20044008402080"),
-                                                QByteArrayLiteral("4498f0e0c1937ffe01fd06f973665830"),
-                                                QByteArrayLiteral("9081237383d90e509aa00f00170e968f"),
-                                                QByteArrayLiteral("fcf21c00b30f7e3f83fe0dfd12e71cff")}},
-        {QByteArrayLiteral("dnd-link"),       {QByteArrayLiteral("link"),
-                                                QByteArrayLiteral("alias"),
-                                                QByteArrayLiteral("3085a0e285430894940527032f8b26df"),
-                                                QByteArrayLiteral("640fb0e74195791501fd1ed57b41487f"),
-                                                QByteArrayLiteral("a2a266d0498c3104214a47bd64ab0fc8")}},
-        {QByteArrayLiteral("dnd-copy"),       {QByteArrayLiteral("copy"),
-                                                QByteArrayLiteral("1081e37283d90000800003c07f3ef6bf"),
-                                                QByteArrayLiteral("6407b0e94181790501fd1e167b474872"),
-                                                QByteArrayLiteral("b66166c04f8c3109214a4fbd64a50fc8")}},
-        {QByteArrayLiteral("dnd-move"),       {QByteArrayLiteral("move")}},
-        {QByteArrayLiteral("sw-resize"),        {QByteArrayLiteral("size_bdiag"),
-                                                QByteArrayLiteral("fcf1c3c7cd4491d801f1e1c78f100000"),
-                                                QByteArrayLiteral("fd_double_arrow"),
-                                                QByteArrayLiteral("bottom_left_corner")}},
-        {QByteArrayLiteral("se-resize"),         {QByteArrayLiteral("size_fdiag"),
-                                                QByteArrayLiteral("c7088f0f3e6c8088236ef8e1e3e70000"),
-                                                QByteArrayLiteral("bd_double_arrow"),
-                                                QByteArrayLiteral("bottom_right_corner")}},
-        {QByteArrayLiteral("ne-resize"),         {QByteArrayLiteral("size_bdiag"),
-                                                QByteArrayLiteral("fcf1c3c7cd4491d801f1e1c78f100000"),
-                                                QByteArrayLiteral("fd_double_arrow"),
-                                                QByteArrayLiteral("top_right_corner")}},
-        {QByteArrayLiteral("nw-resize"),         {QByteArrayLiteral("size_fdiag"),
-                                                QByteArrayLiteral("c7088f0f3e6c8088236ef8e1e3e70000"),
-                                                QByteArrayLiteral("bd_double_arrow"),
-                                                QByteArrayLiteral("top_left_corner")}},
-        {QByteArrayLiteral("n-resize"),       {QByteArrayLiteral("size_ver"),
-                                                QByteArrayLiteral("00008160000006810000408080010102"),
-                                                QByteArrayLiteral("sb_v_double_arrow"),
-                                                QByteArrayLiteral("v_double_arrow"),
-                                                QByteArrayLiteral("col-resize"),
-                                               QByteArrayLiteral("top_side")}},
-        {QByteArrayLiteral("e-resize"),       {QByteArrayLiteral("size_hor"),
-                                                QByteArrayLiteral("028006030e0e7ebffc7f7070c0600140"),
-                                                QByteArrayLiteral("sb_h_double_arrow"),
-                                                QByteArrayLiteral("h_double_arrow"),
-                                                QByteArrayLiteral("row-resize"),
-                                                QByteArrayLiteral("left_side")}},
-        {QByteArrayLiteral("s-resize"),       {QByteArrayLiteral("size_ver"),
-                                                QByteArrayLiteral("00008160000006810000408080010102"),
-                                                QByteArrayLiteral("sb_v_double_arrow"),
-                                                QByteArrayLiteral("v_double_arrow"),
-                                                QByteArrayLiteral("col-resize"),
-                                                QByteArrayLiteral("bottom_side")}},
-         {QByteArrayLiteral("w-resize"),       {QByteArrayLiteral("size_hor"),
-                                                QByteArrayLiteral("028006030e0e7ebffc7f7070c0600140"),
-                                                QByteArrayLiteral("sb_h_double_arrow"),
-                                                QByteArrayLiteral("h_double_arrow"),
-                                                QByteArrayLiteral("right_side")}}
-    };
+        {QByteArrayLiteral("left_ptr"), {QByteArrayLiteral("arrow"), QByteArrayLiteral("dnd-none"), QByteArrayLiteral("op_left_arrow")}},
+        {QByteArrayLiteral("cross"), {QByteArrayLiteral("crosshair"), QByteArrayLiteral("diamond-cross"), QByteArrayLiteral("cross-reverse")}},
+        {QByteArrayLiteral("up_arrow"), {QByteArrayLiteral("center_ptr"), QByteArrayLiteral("sb_up_arrow"), QByteArrayLiteral("centre_ptr")}},
+        {QByteArrayLiteral("wait"), {QByteArrayLiteral("watch"), QByteArrayLiteral("progress")}},
+        {QByteArrayLiteral("ibeam"), {QByteArrayLiteral("xterm"), QByteArrayLiteral("text")}},
+        {QByteArrayLiteral("size_all"), {QByteArrayLiteral("fleur")}},
+        {QByteArrayLiteral("pointing_hand"),
+         {QByteArrayLiteral("hand2"),
+          QByteArrayLiteral("hand"),
+          QByteArrayLiteral("hand1"),
+          QByteArrayLiteral("pointer"),
+          QByteArrayLiteral("e29285e634086352946a0e7090d73106"),
+          QByteArrayLiteral("9d800788f1b08800ae810202380a0822")}},
+        {QByteArrayLiteral("size_ver"),
+         {QByteArrayLiteral("00008160000006810000408080010102"),
+          QByteArrayLiteral("sb_v_double_arrow"),
+          QByteArrayLiteral("v_double_arrow"),
+          QByteArrayLiteral("n-resize"),
+          QByteArrayLiteral("s-resize"),
+          QByteArrayLiteral("col-resize"),
+          QByteArrayLiteral("top_side"),
+          QByteArrayLiteral("bottom_side"),
+          QByteArrayLiteral("base_arrow_up"),
+          QByteArrayLiteral("base_arrow_down"),
+          QByteArrayLiteral("based_arrow_down"),
+          QByteArrayLiteral("based_arrow_up")}},
+        {QByteArrayLiteral("size_hor"),
+         {QByteArrayLiteral("028006030e0e7ebffc7f7070c0600140"),
+          QByteArrayLiteral("sb_h_double_arrow"),
+          QByteArrayLiteral("h_double_arrow"),
+          QByteArrayLiteral("e-resize"),
+          QByteArrayLiteral("w-resize"),
+          QByteArrayLiteral("row-resize"),
+          QByteArrayLiteral("right_side"),
+          QByteArrayLiteral("left_side")}},
+        {QByteArrayLiteral("size_bdiag"),
+         {QByteArrayLiteral("fcf1c3c7cd4491d801f1e1c78f100000"),
+          QByteArrayLiteral("fd_double_arrow"),
+          QByteArrayLiteral("bottom_left_corner"),
+          QByteArrayLiteral("top_right_corner")}},
+        {QByteArrayLiteral("size_fdiag"),
+         {QByteArrayLiteral("c7088f0f3e6c8088236ef8e1e3e70000"),
+          QByteArrayLiteral("bd_double_arrow"),
+          QByteArrayLiteral("bottom_right_corner"),
+          QByteArrayLiteral("top_left_corner")}},
+        {QByteArrayLiteral("whats_this"),
+         {QByteArrayLiteral("d9ce0ab605698f320427677b458ad60b"),
+          QByteArrayLiteral("left_ptr_help"),
+          QByteArrayLiteral("help"),
+          QByteArrayLiteral("question_arrow"),
+          QByteArrayLiteral("dnd-ask"),
+          QByteArrayLiteral("5c6cd98b3f3ebcb1f9c7f1c204630408")}},
+        {QByteArrayLiteral("split_h"), {QByteArrayLiteral("14fef782d02440884392942c11205230"), QByteArrayLiteral("size_hor")}},
+        {QByteArrayLiteral("split_v"), {QByteArrayLiteral("2870a09082c103050810ffdffffe0204"), QByteArrayLiteral("size_ver")}},
+        {QByteArrayLiteral("forbidden"),
+         {QByteArrayLiteral("03b6e0fcb3499374a867c041f52298f0"),
+          QByteArrayLiteral("circle"),
+          QByteArrayLiteral("dnd-no-drop"),
+          QByteArrayLiteral("not-allowed")}},
+        {QByteArrayLiteral("left_ptr_watch"),
+         {QByteArrayLiteral("3ecb610c1bf2410f44200f48c40d3599"),
+          QByteArrayLiteral("00000000000000020006000e7e9ffc3f"),
+          QByteArrayLiteral("08e8e1c95fe2fc01f976f1e063a24ccd")}},
+        {QByteArrayLiteral("openhand"),
+         {QByteArrayLiteral("9141b49c8149039304290b508d208c40"), QByteArrayLiteral("all_scroll"), QByteArrayLiteral("all-scroll")}},
+        {QByteArrayLiteral("closedhand"),
+         {QByteArrayLiteral("05e88622050804100c20044008402080"),
+          QByteArrayLiteral("4498f0e0c1937ffe01fd06f973665830"),
+          QByteArrayLiteral("9081237383d90e509aa00f00170e968f"),
+          QByteArrayLiteral("fcf21c00b30f7e3f83fe0dfd12e71cff")}},
+        {QByteArrayLiteral("dnd-link"),
+         {QByteArrayLiteral("link"),
+          QByteArrayLiteral("alias"),
+          QByteArrayLiteral("3085a0e285430894940527032f8b26df"),
+          QByteArrayLiteral("640fb0e74195791501fd1ed57b41487f"),
+          QByteArrayLiteral("a2a266d0498c3104214a47bd64ab0fc8")}},
+        {QByteArrayLiteral("dnd-copy"),
+         {QByteArrayLiteral("copy"),
+          QByteArrayLiteral("1081e37283d90000800003c07f3ef6bf"),
+          QByteArrayLiteral("6407b0e94181790501fd1e167b474872"),
+          QByteArrayLiteral("b66166c04f8c3109214a4fbd64a50fc8")}},
+        {QByteArrayLiteral("dnd-move"), {QByteArrayLiteral("move")}},
+        {QByteArrayLiteral("sw-resize"),
+         {QByteArrayLiteral("size_bdiag"),
+          QByteArrayLiteral("fcf1c3c7cd4491d801f1e1c78f100000"),
+          QByteArrayLiteral("fd_double_arrow"),
+          QByteArrayLiteral("bottom_left_corner")}},
+        {QByteArrayLiteral("se-resize"),
+         {QByteArrayLiteral("size_fdiag"),
+          QByteArrayLiteral("c7088f0f3e6c8088236ef8e1e3e70000"),
+          QByteArrayLiteral("bd_double_arrow"),
+          QByteArrayLiteral("bottom_right_corner")}},
+        {QByteArrayLiteral("ne-resize"),
+         {QByteArrayLiteral("size_bdiag"),
+          QByteArrayLiteral("fcf1c3c7cd4491d801f1e1c78f100000"),
+          QByteArrayLiteral("fd_double_arrow"),
+          QByteArrayLiteral("top_right_corner")}},
+        {QByteArrayLiteral("nw-resize"),
+         {QByteArrayLiteral("size_fdiag"),
+          QByteArrayLiteral("c7088f0f3e6c8088236ef8e1e3e70000"),
+          QByteArrayLiteral("bd_double_arrow"),
+          QByteArrayLiteral("top_left_corner")}},
+        {QByteArrayLiteral("n-resize"),
+         {QByteArrayLiteral("size_ver"),
+          QByteArrayLiteral("00008160000006810000408080010102"),
+          QByteArrayLiteral("sb_v_double_arrow"),
+          QByteArrayLiteral("v_double_arrow"),
+          QByteArrayLiteral("col-resize"),
+          QByteArrayLiteral("top_side")}},
+        {QByteArrayLiteral("e-resize"),
+         {QByteArrayLiteral("size_hor"),
+          QByteArrayLiteral("028006030e0e7ebffc7f7070c0600140"),
+          QByteArrayLiteral("sb_h_double_arrow"),
+          QByteArrayLiteral("h_double_arrow"),
+          QByteArrayLiteral("row-resize"),
+          QByteArrayLiteral("left_side")}},
+        {QByteArrayLiteral("s-resize"),
+         {QByteArrayLiteral("size_ver"),
+          QByteArrayLiteral("00008160000006810000408080010102"),
+          QByteArrayLiteral("sb_v_double_arrow"),
+          QByteArrayLiteral("v_double_arrow"),
+          QByteArrayLiteral("col-resize"),
+          QByteArrayLiteral("bottom_side")}},
+        {QByteArrayLiteral("w-resize"),
+         {QByteArrayLiteral("size_hor"),
+          QByteArrayLiteral("028006030e0e7ebffc7f7070c0600140"),
+          QByteArrayLiteral("sb_h_double_arrow"),
+          QByteArrayLiteral("h_double_arrow"),
+          QByteArrayLiteral("right_side")}}};
     auto it = alternatives.find(name);
     if (it != alternatives.end()) {
         return it.value();
@@ -458,7 +470,7 @@ QByteArray CursorShape::name() const
     case Qt::DragLinkCursor:
         return QByteArrayLiteral("dnd-link");
     case KWin::ExtendedCursor::SizeNorthEast:
-       return QByteArrayLiteral("ne-resize");
+        return QByteArrayLiteral("ne-resize");
     case KWin::ExtendedCursor::SizeNorth:
         return QByteArrayLiteral("n-resize");
     case KWin::ExtendedCursor::SizeNorthWest:
@@ -479,7 +491,8 @@ QByteArray CursorShape::name() const
 }
 
 InputConfig *InputConfig::s_self = nullptr;
-InputConfig *InputConfig::self() {
+InputConfig *InputConfig::self()
+{
     if (!s_self)
         s_self = new InputConfig;
     return s_self;

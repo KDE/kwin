@@ -22,7 +22,6 @@ class NETWinInfo;
 
 namespace KWin
 {
-
 class SoftwareVsyncMonitor;
 class X11WindowedBackend;
 
@@ -41,12 +40,14 @@ public:
 
     void init(const QPoint &logicalPosition, const QSize &pixelSize);
 
-    xcb_window_t window() const {
+    xcb_window_t window() const
+    {
         return m_window;
     }
 
     QPoint internalPosition() const;
-    QPoint hostPosition() const {
+    QPoint hostPosition() const
+    {
         return m_hostPosition;
     }
     void setHostPosition(const QPoint &pos);

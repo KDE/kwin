@@ -17,7 +17,6 @@
 
 namespace KWin
 {
-
 class Monitor;
 
 class KWinScreenEdge : public QWidget

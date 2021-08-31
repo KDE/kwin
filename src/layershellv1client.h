@@ -15,7 +15,6 @@ class LayerSurfaceV1Interface;
 
 namespace KWin
 {
-
 class AbstractOutput;
 class LayerShellV1Integration;
 
@@ -24,9 +23,7 @@ class LayerShellV1Client : public WaylandClient
     Q_OBJECT
 
 public:
-    explicit LayerShellV1Client(KWaylandServer::LayerSurfaceV1Interface *shellSurface,
-                                AbstractOutput *output,
-                                LayerShellV1Integration *integration);
+    explicit LayerShellV1Client(KWaylandServer::LayerSurfaceV1Interface *shellSurface, AbstractOutput *output, LayerShellV1Integration *integration);
 
     KWaylandServer::LayerSurfaceV1Interface *shellSurface() const;
     AbstractOutput *desiredOutput() const;

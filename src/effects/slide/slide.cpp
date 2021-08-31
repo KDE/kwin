@@ -17,7 +17,6 @@
 
 namespace KWin
 {
-
 SlideEffect::SlideEffect()
 {
     initConfig<SlideConfig>();
@@ -25,16 +24,11 @@ SlideEffect::SlideEffect()
 
     m_timeLine.setEasingCurve(QEasingCurve::OutCubic);
 
-    connect(effects, QOverload<int, int, EffectWindow *>::of(&EffectsHandler::desktopChanged),
-            this, &SlideEffect::desktopChanged);
-    connect(effects, &EffectsHandler::windowAdded,
-            this, &SlideEffect::windowAdded);
-    connect(effects, &EffectsHandler::windowDeleted,
-            this, &SlideEffect::windowDeleted);
-    connect(effects, &EffectsHandler::numberDesktopsChanged,
-            this, &SlideEffect::stop);
-    connect(effects, &EffectsHandler::numberScreensChanged,
-            this, &SlideEffect::stop);
+    connect(effects, QOverload<int, int, EffectWindow *>::of(&EffectsHandler::desktopChanged), this, &SlideEffect::desktopChanged);
+    connect(effects, &EffectsHandler::windowAdded, this, &SlideEffect::windowAdded);
+    connect(effects, &EffectsHandler::windowDeleted, this, &SlideEffect::windowDeleted);
+    connect(effects, &EffectsHandler::numberDesktopsChanged, this, &SlideEffect::stop);
+    connect(effects, &EffectsHandler::numberScreensChanged, this, &SlideEffect::stop);
 }
 
 SlideEffect::~SlideEffect()
@@ -51,8 +45,7 @@ void SlideEffect::reconfigure(ReconfigureFlags)
 {
     SlideConfig::self()->read();
 
-    m_timeLine.setDuration(
-        std::chrono::milliseconds(animationTime<SlideConfig>(500)));
+    m_timeLine.setDuration(std::chrono::milliseconds(animationTime<SlideConfig>(500)));
 
     m_hGap = SlideConfig::horizontalGap();
     m_vGap = SlideConfig::verticalGap();
@@ -70,8 +63,7 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
 
     m_timeLine.update(delta);
 
-    data.mask |= PAINT_SCREEN_TRANSFORMED
-              |  PAINT_SCREEN_BACKGROUND_FIRST;
+    data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
 
     effects->prePaintScreen(data, presentTime);
 }
@@ -89,15 +81,15 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
  */
 inline void wrapDiff(QPoint &diff, int w, int h)
 {
-    if (diff.x() > w/2) {
+    if (diff.x() > w / 2) {
         diff.setX(diff.x() - w);
-    } else if (diff.x() < -w/2) {
+    } else if (diff.x() < -w / 2) {
         diff.setX(diff.x() + w);
     }
 
-    if (diff.y() > h/2) {
+    if (diff.y() > h / 2) {
         diff.setY(diff.y() - h);
-    } else if (diff.y() < -h/2) {
+    } else if (diff.y() < -h / 2) {
         diff.setY(diff.y() + h);
     }
 }
@@ -107,11 +99,11 @@ inline QRegion buildClipRegion(const QPoint &pos, int w, int h)
     const QSize screenSize = effects->virtualScreenSize();
     QRegion r = QRect(pos, screenSize);
     if (effects->optionRollOverDesktops()) {
-        r |= (r & QRect(-w, 0, w, h)).translated(w, 0);  // W
-        r |= (r & QRect(w, 0, w, h)).translated(-w, 0);  // E
+        r |= (r & QRect(-w, 0, w, h)).translated(w, 0); // W
+        r |= (r & QRect(w, 0, w, h)).translated(-w, 0); // E
 
-        r |= (r & QRect(0, -h, w, h)).translated(0, h);  // N
-        r |= (r & QRect(0, h, w, h)).translated(0, -h);  // S
+        r |= (r & QRect(0, -h, w, h)).translated(0, h); // N
+        r |= (r & QRect(0, h, w, h)).translated(0, -h); // S
 
         r |= (r & QRect(-w, -h, w, h)).translated(w, h); // NW
         r |= (r & QRect(w, -h, w, h)).translated(-w, h); // NE
@@ -218,8 +210,7 @@ bool SlideEffect::isPainted(const EffectWindow *w) const
                 return m_paintCtx.lastPass;
             }
             for (const EffectWindow *fw : qAsConst(m_paintCtx.fullscreenWindows)) {
-                if (fw->isOnDesktop(m_paintCtx.desktop)
-                    && fw->screen() == w->screen()) {
+                if (fw->isOnDesktop(m_paintCtx.desktop) && fw->screen() == w->screen()) {
                     return false;
                 }
             }

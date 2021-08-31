@@ -18,7 +18,6 @@ namespace KWin
 {
 namespace QPA
 {
-
 BackingStore::BackingStore(QWindow *window)
     : QPlatformBackingStore(window)
 {

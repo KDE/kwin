@@ -13,14 +13,16 @@
 // XCB
 #include <xcb/xcb.h>
 
-namespace {
-    static void forceXcb() {
-        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("xcb"));
-    }
+namespace
+{
+static void forceXcb()
+{
+    qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("xcb"));
+}
 }
 
-namespace KWin {
-
+namespace KWin
+{
 /**
  * Wrapper to create an 0,0x10,10 input only window for testing purposes
  */
@@ -28,11 +30,8 @@ namespace KWin {
 static xcb_window_t createWindow()
 {
     xcb_window_t w = xcb_generate_id(connection());
-    const uint32_t values[] = { true };
-    xcb_create_window(connection(), 0, w, rootWindow(),
-                      0, 0, 10, 10,
-                      0, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_COPY_FROM_PARENT,
-                      XCB_CW_OVERRIDE_REDIRECT, values);
+    const uint32_t values[] = {true};
+    xcb_create_window(connection(), 0, w, rootWindow(), 0, 0, 10, 10, 0, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_COPY_FROM_PARENT, XCB_CW_OVERRIDE_REDIRECT, values);
     return w;
 }
 #endif

@@ -17,7 +17,6 @@ class SurfaceInterface;
 
 namespace KWin
 {
-
 /**
  * The SurfaceItemWayland class represents a Wayland surface in the scene.
  */
@@ -26,8 +25,7 @@ class KWIN_EXPORT SurfaceItemWayland : public SurfaceItem
     Q_OBJECT
 
 public:
-    explicit SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface,
-                                Toplevel *window, Item *parent = nullptr);
+    explicit SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface, Toplevel *window, Item *parent = nullptr);
 
     QRegion shape() const override;
     QRegion opaque() const override;

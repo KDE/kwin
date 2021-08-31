@@ -16,7 +16,6 @@
 
 namespace KWin
 {
-
 class KXcursorSpritePrivate;
 class KXcursorThemePrivate;
 
@@ -39,8 +38,7 @@ public:
     /**
      * Constructs an XcursorSprite with the specified @a data, @a hotspot, and @a delay.
      */
-    KXcursorSprite(const QImage &data, const QPoint &hotspot,
-                   const std::chrono::milliseconds &delay);
+    KXcursorSprite(const QImage &data, const QPoint &hotspot, const std::chrono::milliseconds &delay);
 
     /**
      * Destructs the KXcursorSprite object.

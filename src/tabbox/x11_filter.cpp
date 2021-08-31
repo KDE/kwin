@@ -20,7 +20,6 @@ namespace KWin
 {
 namespace TabBox
 {
-
 X11Filter::X11Filter()
     : X11EventFilter(QVector<int>{XCB_KEY_PRESS, XCB_KEY_RELEASE, XCB_MOTION_NOTIFY, XCB_BUTTON_PRESS, XCB_BUTTON_RELEASE})
 {
@@ -35,11 +34,11 @@ bool X11Filter::event(xcb_generic_event_t *event)
     switch (eventType) {
     case XCB_BUTTON_PRESS:
     case XCB_BUTTON_RELEASE: {
-        auto e = reinterpret_cast<xcb_button_press_event_t*>(event);
+        auto e = reinterpret_cast<xcb_button_press_event_t *>(event);
         xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, XCB_CURRENT_TIME);
         const auto tab = TabBox::TabBox::self();
         if (!tab->isShown() && tab->isDisplayed()) {
-            if (effects && static_cast<EffectsHandlerImpl*>(effects)->isMouseInterception()) {
+            if (effects && static_cast<EffectsHandlerImpl *>(effects)->isMouseInterception()) {
                 // pass on to effects, effects will filter out the event
                 return false;
             }
@@ -69,9 +68,8 @@ bool X11Filter::buttonPress(xcb_button_press_event_t *event)
     const auto tab = TabBox::TabBox::self();
     QPoint pos(event->root_x, event->root_y);
     if ((!tab->isShown() && tab->isDisplayed())
-            || (!tabBox->containsPos(pos) &&
-                (event->detail == XCB_BUTTON_INDEX_1 || event->detail == XCB_BUTTON_INDEX_2 || event->detail == XCB_BUTTON_INDEX_3))) {
-        tab->close();  // click outside closes tab
+        || (!tabBox->containsPos(pos) && (event->detail == XCB_BUTTON_INDEX_1 || event->detail == XCB_BUTTON_INDEX_2 || event->detail == XCB_BUTTON_INDEX_3))) {
+        tab->close(); // click outside closes tab
         return true;
     }
     if (event->detail == XCB_BUTTON_INDEX_5 || event->detail == XCB_BUTTON_INDEX_4) {
@@ -87,7 +85,7 @@ bool X11Filter::buttonPress(xcb_button_press_event_t *event)
 
 void X11Filter::motion(xcb_generic_event_t *event)
 {
-    auto *mouseEvent = reinterpret_cast<xcb_motion_notify_event_t*>(event);
+    auto *mouseEvent = reinterpret_cast<xcb_motion_notify_event_t *>(event);
     const QPoint rootPos(mouseEvent->root_x, mouseEvent->root_y);
     // TODO: this should be in ScreenEdges directly
     ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC), true);
@@ -97,27 +95,21 @@ void X11Filter::motion(xcb_generic_event_t *event)
 void X11Filter::keyPress(xcb_generic_event_t *event)
 {
     int keyQt;
-    xcb_key_press_event_t *keyEvent = reinterpret_cast<xcb_key_press_event_t*>(event);
+    xcb_key_press_event_t *keyEvent = reinterpret_cast<xcb_key_press_event_t *>(event);
     KKeyServer::xcbKeyPressEventToQt(keyEvent, &keyQt);
     TabBox::TabBox::self()->keyPress(keyQt);
 }
 
 void X11Filter::keyRelease(xcb_generic_event_t *event)
 {
-    const auto ev = reinterpret_cast<xcb_key_release_event_t*>(event);
-    unsigned int mk = ev->state &
-                      (KKeyServer::modXShift() |
-                       KKeyServer::modXCtrl() |
-                       KKeyServer::modXAlt() |
-                       KKeyServer::modXMeta());
+    const auto ev = reinterpret_cast<xcb_key_release_event_t *>(event);
+    unsigned int mk = ev->state & (KKeyServer::modXShift() | KKeyServer::modXCtrl() | KKeyServer::modXAlt() | KKeyServer::modXMeta());
     // ev.state is state before the key release, so just checking mk being 0 isn't enough
     // using XQueryPointer() also doesn't seem to work well, so the check that all
     // modifiers are released: only one modifier is active and the currently released
     // key is this modifier - if yes, release the grab
     int mod_index = -1;
-    for (int i = XCB_MAP_INDEX_SHIFT;
-            i <= XCB_MAP_INDEX_5;
-            ++i)
+    for (int i = XCB_MAP_INDEX_SHIFT; i <= XCB_MAP_INDEX_5; ++i)
         if ((mk & (1 << i)) != 0) {
             if (mod_index >= 0)
                 return;

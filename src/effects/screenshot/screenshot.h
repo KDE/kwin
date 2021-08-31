@@ -19,7 +19,6 @@
 
 namespace KWin
 {
-
 /**
  * This enum type is used to specify how a screenshot needs to be taken.
  */

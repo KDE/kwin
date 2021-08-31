@@ -11,13 +11,12 @@
 
 #include "qpainterbackend.h"
 
+#include <QMap>
 #include <QObject>
 #include <QVector>
-#include <QMap>
 
 namespace KWin
 {
-
 class VirtualBackend;
 
 class VirtualQPainterBackend : public QPainterBackend

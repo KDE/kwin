@@ -9,9 +9,9 @@
 #ifndef KWIN_DRM_GBM_SURFACE_H
 #define KWIN_DRM_GBM_SURFACE_H
 
+#include <QVector>
 #include <cstdint>
 #include <epoxy/egl.h>
-#include <QVector>
 
 #include "drm_buffer_gbm.h"
 
@@ -20,7 +20,6 @@ struct gbm_surface;
 
 namespace KWin
 {
-
 class GbmSurface
 {
 public:
@@ -36,15 +35,18 @@ public:
     QSharedPointer<GbmBuffer> currentBuffer() const;
     QSharedPointer<DrmGbmBuffer> currentDrmBuffer() const;
 
-    EGLSurface eglSurface() const {
+    EGLSurface eglSurface() const
+    {
         return m_eglSurface;
     }
 
-    QSize size() const {
+    QSize size() const
+    {
         return m_size;
     }
 
-    bool isValid() const {
+    bool isValid() const
+    {
         return m_surface != nullptr && m_eglSurface != EGL_NO_SURFACE;
     }
 
@@ -56,7 +58,7 @@ private:
 
     QSharedPointer<GbmBuffer> m_currentBuffer;
     QSharedPointer<DrmGbmBuffer> m_currentDrmBuffer;
-    QVector<GbmBuffer*> m_lockedBuffers;
+    QVector<GbmBuffer *> m_lockedBuffers;
 };
 
 }

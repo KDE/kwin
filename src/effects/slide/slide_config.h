@@ -7,16 +7,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-
 #ifndef SLIDE_CONFIG_H
 #define SLIDE_CONFIG_H
 
-#include <KCModule>
 #include "ui_slide_config.h"
+#include <KCModule>
 
 namespace KWin
 {
-
 class SlideEffectConfig : public KCModule
 {
     Q_OBJECT

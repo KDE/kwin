@@ -8,7 +8,6 @@
 
 namespace KWin
 {
-
 SoftwareVsyncMonitor *SoftwareVsyncMonitor::create(QObject *parent)
 {
     return new SoftwareVsyncMonitor(parent);
@@ -37,7 +36,7 @@ void SoftwareVsyncMonitor::handleSyntheticVsync()
     Q_EMIT vblankOccurred(m_vblankTimestamp);
 }
 
-template <typename T>
+template<typename T>
 T alignTimestamp(const T &timestamp, const T &alignment)
 {
     return timestamp + ((alignment - (timestamp % alignment)) % alignment);

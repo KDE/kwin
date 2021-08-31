@@ -8,12 +8,11 @@
 */
 #pragma once
 
-#include <QObject>
 #include "inputmethod.h"
+#include <QObject>
 
 namespace KWin
 {
-
 class KWIN_EXPORT VirtualKeyboardDBus : public QObject
 {
     Q_OBJECT

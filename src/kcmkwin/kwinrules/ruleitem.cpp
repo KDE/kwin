@@ -6,10 +6,8 @@
 
 #include "ruleitem.h"
 
-
 namespace KWin
 {
-
 RuleItem::RuleItem(const QString &key,
                    const RulePolicy::Type policyType,
                    const RuleItem::Type type,
@@ -190,36 +188,35 @@ QString RuleItem::policyKey() const
 QVariant RuleItem::typedValue(const QVariant &value) const
 {
     switch (type()) {
-        case Undefined:
-        case Option:
-            return value;
-        case Boolean:
-            return value.toBool();
-        case Integer:
-        case Percentage:
-            return value.toInt();
-        case NetTypes: {
-            const uint typesMask = value.toUInt() & optionsMask();  // filter by the allowed mask in the model
-            if (typesMask == 0 || typesMask == optionsMask()) {     // if no types or all of them are selected
-                return 0U - 1;                                      // return an all active mask (NET:AllTypesMask)
-            }
-            return typesMask;
+    case Undefined:
+    case Option:
+        return value;
+    case Boolean:
+        return value.toBool();
+    case Integer:
+    case Percentage:
+        return value.toInt();
+    case NetTypes: {
+        const uint typesMask = value.toUInt() & optionsMask(); // filter by the allowed mask in the model
+        if (typesMask == 0 || typesMask == optionsMask()) { // if no types or all of them are selected
+            return 0U - 1; // return an all active mask (NET:AllTypesMask)
         }
-        case Point: {
-            const QPoint point = value.toPoint();
-            return (point == invalidPoint) ? QPoint(0, 0) : point;
-        }
-        case Size:
-            return value.toSize();
-        case String:
-            return value.toString().trimmed();
-        case Shortcut:
-            return value.toString();
-        case OptionList:
-            return value.toStringList();
+        return typesMask;
+    }
+    case Point: {
+        const QPoint point = value.toPoint();
+        return (point == invalidPoint) ? QPoint(0, 0) : point;
+    }
+    case Size:
+        return value.toSize();
+    case String:
+        return value.toString().trimmed();
+    case Shortcut:
+        return value.toString();
+    case OptionList:
+        return value.toStringList();
     }
     return value;
 }
 
-}   //namespace
-
+} // namespace

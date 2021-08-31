@@ -27,7 +27,8 @@ KWinActionsConfigForm::KWinActionsConfigForm(QWidget *parent)
 }
 
 KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent), standAlone(_standAlone)
+    : KCModule(parent)
+    , standAlone(_standAlone)
     , m_ui(new KWinMouseConfigForm(this))
 {
     if (settings) {
@@ -62,8 +63,7 @@ void KTitleBarActionsConfig::save()
 
     if (standAlone) {
         // Send signal to all kwin instances
-        QDBusMessage message =
-            QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+        QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
     }
 }
@@ -79,7 +79,8 @@ bool KTitleBarActionsConfig::isSaveNeeded() const
 }
 
 KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent), standAlone(_standAlone)
+    : KCModule(parent)
+    , standAlone(_standAlone)
     , m_ui(new KWinActionsConfigForm(this))
 {
     if (settings) {
@@ -108,8 +109,7 @@ void KWindowActionsConfig::save()
 
     if (standAlone) {
         // Send signal to all kwin instances
-        QDBusMessage message =
-            QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+        QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
     }
 }

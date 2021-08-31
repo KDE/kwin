@@ -6,8 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
@@ -41,7 +41,7 @@ private Q_SLOTS:
 
 void TestIdleInhibition::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -57,7 +57,6 @@ void TestIdleInhibition::initTestCase()
 void TestIdleInhibition::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::IdleInhibitV1));
-
 }
 
 void TestIdleInhibition::cleanup()
@@ -70,7 +69,7 @@ void TestIdleInhibition::cleanup()
 
 void TestIdleInhibition::testInhibit()
 {
-    auto idle = waylandServer()->display()->findChild<IdleInterface*>();
+    auto idle = waylandServer()->display()->findChild<IdleInterface *>();
     QVERIFY(idle);
     QVERIFY(!idle->isInhibited());
     QSignalSpy inhibitedSpy(idle, &IdleInterface::inhibitedChanged);
@@ -172,7 +171,7 @@ void TestIdleInhibition::testDontInhibitWhenMinimized()
     // This test verifies that the idle inhibitor object is not honored when the
     // associated surface is minimized.
 
-     // Get reference to the idle interface.
+    // Get reference to the idle interface.
     auto idle = waylandServer()->display()->findChild<IdleInterface *>();
     QVERIFY(idle);
     QVERIFY(!idle->isInhibited());

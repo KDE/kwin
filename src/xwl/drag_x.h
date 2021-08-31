@@ -36,7 +36,7 @@ class X11Source;
 enum class DragEventReply;
 class WlVisit;
 
-using Mimes = QVector<QPair<QString, xcb_atom_t> >;
+using Mimes = QVector<QPair<QString, xcb_atom_t>>;
 
 class XToWlDrag : public Drag
 {
@@ -52,10 +52,12 @@ public:
     void setDragAndDropAction(KWayland::Client::DataDeviceManager::DnDAction action);
     KWayland::Client::DataDeviceManager::DnDAction selectedDragAndDropAction();
 
-    bool end() override {
+    bool end() override
+    {
         return false;
     }
-    X11Source *x11Source() const {
+    X11Source *x11Source() const
+    {
         return m_source;
     }
 
@@ -72,7 +74,7 @@ private:
     Mimes m_offersPending;
 
     X11Source *m_source;
-    QVector<QPair<xcb_timestamp_t, bool> > m_dataRequests;
+    QVector<QPair<xcb_timestamp_t, bool>> m_dataRequests;
 
     WlVisit *m_visit = nullptr;
     QVector<WlVisit *> m_oldVisits;
@@ -94,19 +96,24 @@ public:
     bool handleClientMessage(xcb_client_message_event_t *event);
     bool leave();
 
-    AbstractClient *target() const {
+    AbstractClient *target() const
+    {
         return m_target;
     }
-    xcb_window_t window() const {
+    xcb_window_t window() const
+    {
         return m_window;
     }
-    bool entered() const {
+    bool entered() const
+    {
         return m_entered;
     }
-    bool dropHandled() const {
+    bool dropHandled() const
+    {
         return m_dropHandled;
     }
-    bool finished() const {
+    bool finished() const
+    {
         return m_finished;
     }
     void sendFinished();

@@ -15,21 +15,20 @@
 #include <KConfig>
 #include <KConfigGroup>
 // Qt
-#include <QtTest>
-#include <QStringList>
 #include <QScopedPointer>
+#include <QStringList>
+#include <QtTest>
 Q_DECLARE_METATYPE(KWin::CompositingType)
 Q_DECLARE_METATYPE(KWin::LoadEffectFlag)
 Q_DECLARE_METATYPE(KWin::LoadEffectFlags)
 Q_DECLARE_METATYPE(KWin::BuiltInEffect)
-Q_DECLARE_METATYPE(KWin::Effect*)
+Q_DECLARE_METATYPE(KWin::Effect *)
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
 
 namespace KWin
 {
-
-ScriptedEffect *ScriptedEffect::create(const KPluginMetaData&)
+ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &)
 {
     return nullptr;
 }
@@ -60,7 +59,7 @@ private Q_SLOTS:
 
 void TestBuiltInEffectLoader::initTestCase()
 {
-    qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+    qApp->setProperty("x11Connection", QVariant::fromValue<void *>(QX11Info::connection()));
 }
 
 void TestBuiltInEffectLoader::testHasEffect_data()
@@ -68,43 +67,43 @@ void TestBuiltInEffectLoader::testHasEffect_data()
     QTest::addColumn<QString>("name");
     QTest::addColumn<bool>("expected");
 
-    QTest::newRow("blur")                           << QStringLiteral("blur")              << true;
-    QTest::newRow("with kwin4_effect_ prefix")      << QStringLiteral("kwin4_effect_blur") << false;
-    QTest::newRow("case sensitive")                 << QStringLiteral("BlUR")              << true;
-    QTest::newRow("Colorpicker")                    << QStringLiteral("colorpicker")       << true;
-    QTest::newRow("Contrast")                       << QStringLiteral("contrast")          << true;
-    QTest::newRow("DesktopGrid")                    << QStringLiteral("desktopgrid")       << true;
-    QTest::newRow("DimInactive")                    << QStringLiteral("diminactive")       << true;
-    QTest::newRow("FallApart")                      << QStringLiteral("fallapart")         << true;
-    QTest::newRow("Glide")                          << QStringLiteral("glide")             << true;
-    QTest::newRow("HighlightWindow")                << QStringLiteral("highlightwindow")   << true;
-    QTest::newRow("Invert")                         << QStringLiteral("invert")            << true;
-    QTest::newRow("Kscreen")                        << QStringLiteral("kscreen")           << true;
-    QTest::newRow("LookingGlass")                   << QStringLiteral("lookingglass")      << true;
-    QTest::newRow("MagicLamp")                      << QStringLiteral("magiclamp")         << true;
-    QTest::newRow("Magnifier")                      << QStringLiteral("magnifier")         << true;
-    QTest::newRow("MouseClick")                     << QStringLiteral("mouseclick")        << true;
-    QTest::newRow("MouseMark")                      << QStringLiteral("mousemark")         << true;
-    QTest::newRow("PresentWindows")                 << QStringLiteral("presentwindows")    << true;
-    QTest::newRow("Resize")                         << QStringLiteral("resize")            << true;
-    QTest::newRow("ScreenEdge")                     << QStringLiteral("screenedge")        << true;
-    QTest::newRow("ScreenShot")                     << QStringLiteral("screenshot")        << true;
-    QTest::newRow("Sheet")                          << QStringLiteral("sheet")             << true;
-    QTest::newRow("ShowFps")                        << QStringLiteral("showfps")           << true;
-    QTest::newRow("ShowPaint")                      << QStringLiteral("showpaint")         << true;
-    QTest::newRow("Slide")                          << QStringLiteral("slide")             << true;
-    QTest::newRow("SlideBack")                      << QStringLiteral("slideback")         << true;
-    QTest::newRow("SlidingPopups")                  << QStringLiteral("slidingpopups")     << true;
-    QTest::newRow("SnapHelper")                     << QStringLiteral("snaphelper")        << true;
-    QTest::newRow("StartupFeedback")                << QStringLiteral("startupfeedback")   << true;
-    QTest::newRow("ThumbnailAside")                 << QStringLiteral("thumbnailaside")    << true;
-    QTest::newRow("Touchpoints")                    << QStringLiteral("touchpoints")       << true;
-    QTest::newRow("TrackMouse")                     << QStringLiteral("trackmouse")        << true;
-    QTest::newRow("WindowGeometry")                 << QStringLiteral("windowgeometry")    << true;
-    QTest::newRow("WobblyWindows")                  << QStringLiteral("wobblywindows")     << true;
-    QTest::newRow("Zoom")                           << QStringLiteral("zoom")              << true;
-    QTest::newRow("Non Existing")                   << QStringLiteral("InvalidName")       << false;
-    QTest::newRow("Fade - Scripted")                << QStringLiteral("fade")              << false;
+    QTest::newRow("blur") << QStringLiteral("blur") << true;
+    QTest::newRow("with kwin4_effect_ prefix") << QStringLiteral("kwin4_effect_blur") << false;
+    QTest::newRow("case sensitive") << QStringLiteral("BlUR") << true;
+    QTest::newRow("Colorpicker") << QStringLiteral("colorpicker") << true;
+    QTest::newRow("Contrast") << QStringLiteral("contrast") << true;
+    QTest::newRow("DesktopGrid") << QStringLiteral("desktopgrid") << true;
+    QTest::newRow("DimInactive") << QStringLiteral("diminactive") << true;
+    QTest::newRow("FallApart") << QStringLiteral("fallapart") << true;
+    QTest::newRow("Glide") << QStringLiteral("glide") << true;
+    QTest::newRow("HighlightWindow") << QStringLiteral("highlightwindow") << true;
+    QTest::newRow("Invert") << QStringLiteral("invert") << true;
+    QTest::newRow("Kscreen") << QStringLiteral("kscreen") << true;
+    QTest::newRow("LookingGlass") << QStringLiteral("lookingglass") << true;
+    QTest::newRow("MagicLamp") << QStringLiteral("magiclamp") << true;
+    QTest::newRow("Magnifier") << QStringLiteral("magnifier") << true;
+    QTest::newRow("MouseClick") << QStringLiteral("mouseclick") << true;
+    QTest::newRow("MouseMark") << QStringLiteral("mousemark") << true;
+    QTest::newRow("PresentWindows") << QStringLiteral("presentwindows") << true;
+    QTest::newRow("Resize") << QStringLiteral("resize") << true;
+    QTest::newRow("ScreenEdge") << QStringLiteral("screenedge") << true;
+    QTest::newRow("ScreenShot") << QStringLiteral("screenshot") << true;
+    QTest::newRow("Sheet") << QStringLiteral("sheet") << true;
+    QTest::newRow("ShowFps") << QStringLiteral("showfps") << true;
+    QTest::newRow("ShowPaint") << QStringLiteral("showpaint") << true;
+    QTest::newRow("Slide") << QStringLiteral("slide") << true;
+    QTest::newRow("SlideBack") << QStringLiteral("slideback") << true;
+    QTest::newRow("SlidingPopups") << QStringLiteral("slidingpopups") << true;
+    QTest::newRow("SnapHelper") << QStringLiteral("snaphelper") << true;
+    QTest::newRow("StartupFeedback") << QStringLiteral("startupfeedback") << true;
+    QTest::newRow("ThumbnailAside") << QStringLiteral("thumbnailaside") << true;
+    QTest::newRow("Touchpoints") << QStringLiteral("touchpoints") << true;
+    QTest::newRow("TrackMouse") << QStringLiteral("trackmouse") << true;
+    QTest::newRow("WindowGeometry") << QStringLiteral("windowgeometry") << true;
+    QTest::newRow("WobblyWindows") << QStringLiteral("wobblywindows") << true;
+    QTest::newRow("Zoom") << QStringLiteral("zoom") << true;
+    QTest::newRow("Non Existing") << QStringLiteral("InvalidName") << false;
+    QTest::newRow("Fade - Scripted") << QStringLiteral("fade") << false;
     QTest::newRow("Fade - Scripted + kwin4_effect") << QStringLiteral("kwin4_effect_fade") << false;
 }
 
@@ -120,41 +119,15 @@ void TestBuiltInEffectLoader::testHasEffect()
 void TestBuiltInEffectLoader::testKnownEffects()
 {
     QStringList expectedEffects;
-    expectedEffects << QStringLiteral("blur")
-                    << QStringLiteral("colorpicker")
-                    << QStringLiteral("contrast")
-                    << QStringLiteral("desktopgrid")
-                    << QStringLiteral("diminactive")
-                    << QStringLiteral("fallapart")
-                    << QStringLiteral("glide")
-                    << QStringLiteral("highlightwindow")
-                    << QStringLiteral("invert")
-                    << QStringLiteral("kscreen")
-                    << QStringLiteral("lookingglass")
-                    << QStringLiteral("magiclamp")
-                    << QStringLiteral("magnifier")
-                    << QStringLiteral("mouseclick")
-                    << QStringLiteral("mousemark")
-                    << QStringLiteral("overview")
-                    << QStringLiteral("presentwindows")
-                    << QStringLiteral("resize")
-                    << QStringLiteral("screenedge")
-                    << QStringLiteral("screenshot")
-                    << QStringLiteral("screentransform")
-                    << QStringLiteral("sheet")
-                    << QStringLiteral("showfps")
-                    << QStringLiteral("showpaint")
-                    << QStringLiteral("slide")
-                    << QStringLiteral("slideback")
-                    << QStringLiteral("slidingpopups")
-                    << QStringLiteral("snaphelper")
-                    << QStringLiteral("startupfeedback")
-                    << QStringLiteral("thumbnailaside")
-                    << QStringLiteral("touchpoints")
-                    << QStringLiteral("trackmouse")
-                    << QStringLiteral("windowgeometry")
-                    << QStringLiteral("wobblywindows")
-                    << QStringLiteral("zoom");
+    expectedEffects << QStringLiteral("blur") << QStringLiteral("colorpicker") << QStringLiteral("contrast") << QStringLiteral("desktopgrid")
+                    << QStringLiteral("diminactive") << QStringLiteral("fallapart") << QStringLiteral("glide") << QStringLiteral("highlightwindow")
+                    << QStringLiteral("invert") << QStringLiteral("kscreen") << QStringLiteral("lookingglass") << QStringLiteral("magiclamp")
+                    << QStringLiteral("magnifier") << QStringLiteral("mouseclick") << QStringLiteral("mousemark") << QStringLiteral("overview")
+                    << QStringLiteral("presentwindows") << QStringLiteral("resize") << QStringLiteral("screenedge") << QStringLiteral("screenshot")
+                    << QStringLiteral("screentransform") << QStringLiteral("sheet") << QStringLiteral("showfps") << QStringLiteral("showpaint")
+                    << QStringLiteral("slide") << QStringLiteral("slideback") << QStringLiteral("slidingpopups") << QStringLiteral("snaphelper")
+                    << QStringLiteral("startupfeedback") << QStringLiteral("thumbnailaside") << QStringLiteral("touchpoints") << QStringLiteral("trackmouse")
+                    << QStringLiteral("windowgeometry") << QStringLiteral("wobblywindows") << QStringLiteral("zoom");
 
     KWin::BuiltInEffectLoader loader;
     QStringList result = loader.listOfKnownEffects();
@@ -175,61 +148,61 @@ void TestBuiltInEffectLoader::testSupported_data()
     const KWin::CompositingType qc = KWin::QPainterCompositing;
     const KWin::CompositingType oc = KWin::OpenGLCompositing;
 
-    QTest::newRow("blur")                           << QStringLiteral("blur")              << false << qc << true;
+    QTest::newRow("blur") << QStringLiteral("blur") << false << qc << true;
     // fails for GL as it does proper tests on what's supported and doesn't just check whether it's GL
-    QTest::newRow("blur-GL")                        << QStringLiteral("blur")              << false << oc << true;
-    QTest::newRow("Colorpicker")                    << QStringLiteral("colorpicker")       << false << qc << true;
-    QTest::newRow("Colorpicker-GL")                 << QStringLiteral("colorpicker")       << true  << oc << true;
-    QTest::newRow("Contrast")                       << QStringLiteral("contrast")          << false << qc << true;
+    QTest::newRow("blur-GL") << QStringLiteral("blur") << false << oc << true;
+    QTest::newRow("Colorpicker") << QStringLiteral("colorpicker") << false << qc << true;
+    QTest::newRow("Colorpicker-GL") << QStringLiteral("colorpicker") << true << oc << true;
+    QTest::newRow("Contrast") << QStringLiteral("contrast") << false << qc << true;
     // fails for GL as it does proper tests on what's supported and doesn't just check whether it's GL
-    QTest::newRow("Contrast-GL")                    << QStringLiteral("contrast")          << false << oc << true;
-    QTest::newRow("DesktopGrid")                    << QStringLiteral("desktopgrid")       << true  << qc << true;
-    QTest::newRow("DimInactive")                    << QStringLiteral("diminactive")       << true  << qc << true;
-    QTest::newRow("FallApart")                      << QStringLiteral("fallapart")         << false << qc << true;
-    QTest::newRow("FallApart-GL")                   << QStringLiteral("fallapart")         << true  << oc << true;
-    QTest::newRow("Glide")                          << QStringLiteral("glide")             << false << qc << true;
-    QTest::newRow("Glide-GL")                       << QStringLiteral("glide")             << true  << oc << true;
-    QTest::newRow("Glide-GL-no-anim")               << QStringLiteral("glide")             << false << oc << false;
-    QTest::newRow("HighlightWindow")                << QStringLiteral("highlightwindow")   << true  << qc << true;
-    QTest::newRow("Invert")                         << QStringLiteral("invert")            << false << qc << true;
-    QTest::newRow("Invert-GL")                      << QStringLiteral("invert")            << true  << oc << true;
-    QTest::newRow("Kscreen")                        << QStringLiteral("kscreen")           << true  << qc << true;
-    QTest::newRow("LookingGlass")                   << QStringLiteral("lookingglass")      << false << qc << true;
+    QTest::newRow("Contrast-GL") << QStringLiteral("contrast") << false << oc << true;
+    QTest::newRow("DesktopGrid") << QStringLiteral("desktopgrid") << true << qc << true;
+    QTest::newRow("DimInactive") << QStringLiteral("diminactive") << true << qc << true;
+    QTest::newRow("FallApart") << QStringLiteral("fallapart") << false << qc << true;
+    QTest::newRow("FallApart-GL") << QStringLiteral("fallapart") << true << oc << true;
+    QTest::newRow("Glide") << QStringLiteral("glide") << false << qc << true;
+    QTest::newRow("Glide-GL") << QStringLiteral("glide") << true << oc << true;
+    QTest::newRow("Glide-GL-no-anim") << QStringLiteral("glide") << false << oc << false;
+    QTest::newRow("HighlightWindow") << QStringLiteral("highlightwindow") << true << qc << true;
+    QTest::newRow("Invert") << QStringLiteral("invert") << false << qc << true;
+    QTest::newRow("Invert-GL") << QStringLiteral("invert") << true << oc << true;
+    QTest::newRow("Kscreen") << QStringLiteral("kscreen") << true << qc << true;
+    QTest::newRow("LookingGlass") << QStringLiteral("lookingglass") << false << qc << true;
     // Tries to create an opengl texture and crashes.
-//    QTest::newRow("LookingGlass-GL")                << QStringLiteral("lookingglass")      << true  << oc << true;
-    QTest::newRow("MagicLamp")                      << QStringLiteral("magiclamp")         << false << qc << true;
-    QTest::newRow("MagicLamp-GL")                   << QStringLiteral("magiclamp")         << true  << oc << true;
-    QTest::newRow("MagicLamp-GL-no-anim")           << QStringLiteral("magiclamp")         << false << oc << false;
-    QTest::newRow("Magnifier")                      << QStringLiteral("magnifier")         << false << qc << false;
-    QTest::newRow("MouseClick")                     << QStringLiteral("mouseclick")        << true  << qc << true;
-    QTest::newRow("MouseMark")                      << QStringLiteral("mousemark")         << true  << qc << true;
-    QTest::newRow("Overview")                       << QStringLiteral("overview")          << false << qc << false;
-    QTest::newRow("OverviewGL")                     << QStringLiteral("overview")          << true  << oc << true;
-    QTest::newRow("PresentWindows")                 << QStringLiteral("presentwindows")    << true  << qc << true;
-    QTest::newRow("Resize")                         << QStringLiteral("resize")            << true  << qc << true;
-    QTest::newRow("ScreenEdge")                     << QStringLiteral("screenedge")        << true  << qc << true;
-    QTest::newRow("ScreenShot")                     << QStringLiteral("screenshot")        << false << qc << false;
-    QTest::newRow("Sheet")                          << QStringLiteral("sheet")             << false << qc << true;
-    QTest::newRow("Sheet-GL")                       << QStringLiteral("sheet")             << true  << oc << true;
-    QTest::newRow("Sheet-GL-no-anim")               << QStringLiteral("sheet")             << false << oc << false;
-    QTest::newRow("ShowFps")                        << QStringLiteral("showfps")           << true  << qc << true;
-    QTest::newRow("ShowPaint")                      << QStringLiteral("showpaint")         << true  << qc << true;
-    QTest::newRow("Slide")                          << QStringLiteral("slide")             << true  << qc << true;
-    QTest::newRow("SlideBack")                      << QStringLiteral("slideback")         << true  << qc << true;
-    QTest::newRow("SlidingPopups")                  << QStringLiteral("slidingpopups")     << true  << qc << true;
-    QTest::newRow("SnapHelper")                     << QStringLiteral("snaphelper")        << true  << qc << true;
-    QTest::newRow("StartupFeedback")                << QStringLiteral("startupfeedback")   << false << qc << true;
-    QTest::newRow("StartupFeedback-GL")             << QStringLiteral("startupfeedback")   << true  << oc << true;
-    QTest::newRow("ThumbnailAside")                 << QStringLiteral("thumbnailaside")    << true  << qc << true;
-    QTest::newRow("TouchPoints")                    << QStringLiteral("touchpoints")       << true  << qc << true;
-    QTest::newRow("TrackMouse")                     << QStringLiteral("trackmouse")        << true  << qc << true;
-    QTest::newRow("WindowGeometry")                 << QStringLiteral("windowgeometry")    << true  << qc << true;
-    QTest::newRow("WobblyWindows")                  << QStringLiteral("wobblywindows")     << false << qc << true;
-    QTest::newRow("WobblyWindows-GL")               << QStringLiteral("wobblywindows")     << true  << oc << true;
-    QTest::newRow("WobblyWindows-GL-no-anim")       << QStringLiteral("wobblywindows")     << false << oc << false;
-    QTest::newRow("Zoom")                           << QStringLiteral("zoom")              << true  << qc << true;
-    QTest::newRow("Non Existing")                   << QStringLiteral("InvalidName")       << false << qc << true;
-    QTest::newRow("Fade - Scripted")                << QStringLiteral("fade")              << false << qc << true;
+    //    QTest::newRow("LookingGlass-GL")                << QStringLiteral("lookingglass")      << true  << oc << true;
+    QTest::newRow("MagicLamp") << QStringLiteral("magiclamp") << false << qc << true;
+    QTest::newRow("MagicLamp-GL") << QStringLiteral("magiclamp") << true << oc << true;
+    QTest::newRow("MagicLamp-GL-no-anim") << QStringLiteral("magiclamp") << false << oc << false;
+    QTest::newRow("Magnifier") << QStringLiteral("magnifier") << false << qc << false;
+    QTest::newRow("MouseClick") << QStringLiteral("mouseclick") << true << qc << true;
+    QTest::newRow("MouseMark") << QStringLiteral("mousemark") << true << qc << true;
+    QTest::newRow("Overview") << QStringLiteral("overview") << false << qc << false;
+    QTest::newRow("OverviewGL") << QStringLiteral("overview") << true << oc << true;
+    QTest::newRow("PresentWindows") << QStringLiteral("presentwindows") << true << qc << true;
+    QTest::newRow("Resize") << QStringLiteral("resize") << true << qc << true;
+    QTest::newRow("ScreenEdge") << QStringLiteral("screenedge") << true << qc << true;
+    QTest::newRow("ScreenShot") << QStringLiteral("screenshot") << false << qc << false;
+    QTest::newRow("Sheet") << QStringLiteral("sheet") << false << qc << true;
+    QTest::newRow("Sheet-GL") << QStringLiteral("sheet") << true << oc << true;
+    QTest::newRow("Sheet-GL-no-anim") << QStringLiteral("sheet") << false << oc << false;
+    QTest::newRow("ShowFps") << QStringLiteral("showfps") << true << qc << true;
+    QTest::newRow("ShowPaint") << QStringLiteral("showpaint") << true << qc << true;
+    QTest::newRow("Slide") << QStringLiteral("slide") << true << qc << true;
+    QTest::newRow("SlideBack") << QStringLiteral("slideback") << true << qc << true;
+    QTest::newRow("SlidingPopups") << QStringLiteral("slidingpopups") << true << qc << true;
+    QTest::newRow("SnapHelper") << QStringLiteral("snaphelper") << true << qc << true;
+    QTest::newRow("StartupFeedback") << QStringLiteral("startupfeedback") << false << qc << true;
+    QTest::newRow("StartupFeedback-GL") << QStringLiteral("startupfeedback") << true << oc << true;
+    QTest::newRow("ThumbnailAside") << QStringLiteral("thumbnailaside") << true << qc << true;
+    QTest::newRow("TouchPoints") << QStringLiteral("touchpoints") << true << qc << true;
+    QTest::newRow("TrackMouse") << QStringLiteral("trackmouse") << true << qc << true;
+    QTest::newRow("WindowGeometry") << QStringLiteral("windowgeometry") << true << qc << true;
+    QTest::newRow("WobblyWindows") << QStringLiteral("wobblywindows") << false << qc << true;
+    QTest::newRow("WobblyWindows-GL") << QStringLiteral("wobblywindows") << true << oc << true;
+    QTest::newRow("WobblyWindows-GL-no-anim") << QStringLiteral("wobblywindows") << false << oc << false;
+    QTest::newRow("Zoom") << QStringLiteral("zoom") << true << qc << true;
+    QTest::newRow("Non Existing") << QStringLiteral("InvalidName") << false << qc << true;
+    QTest::newRow("Fade - Scripted") << QStringLiteral("fade") << false << qc << true;
     QTest::newRow("Fade - Scripted + kwin4_effect") << QStringLiteral("kwin4_effect_fade") << false << qc << true;
 }
 
@@ -256,60 +229,60 @@ void TestBuiltInEffectLoader::testLoadEffect_data()
     const KWin::CompositingType qc = KWin::QPainterCompositing;
     const KWin::CompositingType oc = KWin::OpenGLCompositing;
 
-    QTest::newRow("blur")                           << QStringLiteral("blur")              << false << qc;
+    QTest::newRow("blur") << QStringLiteral("blur") << false << qc;
     // fails for GL as it does proper tests on what's supported and doesn't just check whether it's GL
-    QTest::newRow("blur-GL")                        << QStringLiteral("blur")              << false << oc;
-    QTest::newRow("Colorpicker")                    << QStringLiteral("colorpicker")       << false << qc;
-    QTest::newRow("Colorpicker-GL")                 << QStringLiteral("colorpicker")       << true  << oc;
-    QTest::newRow("Contrast")                       << QStringLiteral("contrast")          << false << qc;
+    QTest::newRow("blur-GL") << QStringLiteral("blur") << false << oc;
+    QTest::newRow("Colorpicker") << QStringLiteral("colorpicker") << false << qc;
+    QTest::newRow("Colorpicker-GL") << QStringLiteral("colorpicker") << true << oc;
+    QTest::newRow("Contrast") << QStringLiteral("contrast") << false << qc;
     // fails for GL as it does proper tests on what's supported and doesn't just check whether it's GL
-    QTest::newRow("Contrast-GL")                    << QStringLiteral("contrast")          << false << oc;
-    QTest::newRow("DesktopGrid")                    << QStringLiteral("desktopgrid")       << true  << qc;
-    QTest::newRow("DimInactive")                    << QStringLiteral("diminactive")       << true  << qc;
-    QTest::newRow("FallApart")                      << QStringLiteral("fallapart")         << false << qc;
-    QTest::newRow("FallApart-GL")                   << QStringLiteral("fallapart")         << true  << oc;
-    QTest::newRow("Glide")                          << QStringLiteral("glide")             << false << qc;
-    QTest::newRow("Glide-GL")                       << QStringLiteral("glide")             << true  << oc;
-    QTest::newRow("HighlightWindow")                << QStringLiteral("highlightwindow")   << true  << qc;
-    QTest::newRow("Invert")                         << QStringLiteral("invert")            << false << qc;
-    QTest::newRow("Invert-GL")                      << QStringLiteral("invert")            << true  << oc;
-    QTest::newRow("Kscreen")                        << QStringLiteral("kscreen")           << true  << qc;
-    QTest::newRow("LookingGlass")                   << QStringLiteral("lookingglass")      << false << qc;
+    QTest::newRow("Contrast-GL") << QStringLiteral("contrast") << false << oc;
+    QTest::newRow("DesktopGrid") << QStringLiteral("desktopgrid") << true << qc;
+    QTest::newRow("DimInactive") << QStringLiteral("diminactive") << true << qc;
+    QTest::newRow("FallApart") << QStringLiteral("fallapart") << false << qc;
+    QTest::newRow("FallApart-GL") << QStringLiteral("fallapart") << true << oc;
+    QTest::newRow("Glide") << QStringLiteral("glide") << false << qc;
+    QTest::newRow("Glide-GL") << QStringLiteral("glide") << true << oc;
+    QTest::newRow("HighlightWindow") << QStringLiteral("highlightwindow") << true << qc;
+    QTest::newRow("Invert") << QStringLiteral("invert") << false << qc;
+    QTest::newRow("Invert-GL") << QStringLiteral("invert") << true << oc;
+    QTest::newRow("Kscreen") << QStringLiteral("kscreen") << true << qc;
+    QTest::newRow("LookingGlass") << QStringLiteral("lookingglass") << false << qc;
     // Tries to create an opengl texture and crashes.
-//    QTest::newRow("LookingGlass-GL")                << QStringLiteral("lookingglass")      << true  << oc;
-    QTest::newRow("MagicLamp")                      << QStringLiteral("magiclamp")         << false << qc;
-    QTest::newRow("MagicLamp-GL")                   << QStringLiteral("magiclamp")         << true  << oc;
-    QTest::newRow("Magnifier")                      << QStringLiteral("magnifier")         << false << qc;
-    QTest::newRow("MouseClick")                     << QStringLiteral("mouseclick")        << true  << qc;
-    QTest::newRow("MouseMark")                      << QStringLiteral("mousemark")         << true  << qc;
-    QTest::newRow("Overview")                       << QStringLiteral("overview")          << false << qc;
-    QTest::newRow("OverviewGL")                     << QStringLiteral("overview")          << true  << oc;
-    QTest::newRow("PresentWindows")                 << QStringLiteral("presentwindows")    << true  << qc;
-    QTest::newRow("Resize")                         << QStringLiteral("resize")            << true  << qc;
-    QTest::newRow("ScreenEdge")                     << QStringLiteral("screenedge")        << true  << qc;
-    QTest::newRow("ScreenShot")                     << QStringLiteral("screenshot")        << false << qc;
-    QTest::newRow("Sheet")                          << QStringLiteral("sheet")             << false << qc;
-    QTest::newRow("Sheet-GL")                       << QStringLiteral("sheet")             << true  << oc;
+    //    QTest::newRow("LookingGlass-GL")                << QStringLiteral("lookingglass")      << true  << oc;
+    QTest::newRow("MagicLamp") << QStringLiteral("magiclamp") << false << qc;
+    QTest::newRow("MagicLamp-GL") << QStringLiteral("magiclamp") << true << oc;
+    QTest::newRow("Magnifier") << QStringLiteral("magnifier") << false << qc;
+    QTest::newRow("MouseClick") << QStringLiteral("mouseclick") << true << qc;
+    QTest::newRow("MouseMark") << QStringLiteral("mousemark") << true << qc;
+    QTest::newRow("Overview") << QStringLiteral("overview") << false << qc;
+    QTest::newRow("OverviewGL") << QStringLiteral("overview") << true << oc;
+    QTest::newRow("PresentWindows") << QStringLiteral("presentwindows") << true << qc;
+    QTest::newRow("Resize") << QStringLiteral("resize") << true << qc;
+    QTest::newRow("ScreenEdge") << QStringLiteral("screenedge") << true << qc;
+    QTest::newRow("ScreenShot") << QStringLiteral("screenshot") << false << qc;
+    QTest::newRow("Sheet") << QStringLiteral("sheet") << false << qc;
+    QTest::newRow("Sheet-GL") << QStringLiteral("sheet") << true << oc;
     // TODO: Accesses EffectFrame and crashes
-//     QTest::newRow("ShowFps")                        << QStringLiteral("showfps")           << true  << xc;
-    QTest::newRow("ShowPaint")                      << QStringLiteral("showpaint")         << true  << qc;
-    QTest::newRow("Slide")                          << QStringLiteral("slide")             << true  << qc;
-    QTest::newRow("SlideBack")                      << QStringLiteral("slideback")         << true  << qc;
-    QTest::newRow("SlidingPopups")                  << QStringLiteral("slidingpopups")     << true  << qc;
-    QTest::newRow("SnapHelper")                     << QStringLiteral("snaphelper")        << true  << qc;
-    QTest::newRow("StartupFeedback")                << QStringLiteral("startupfeedback")   << false << qc;
+    //     QTest::newRow("ShowFps")                        << QStringLiteral("showfps")           << true  << xc;
+    QTest::newRow("ShowPaint") << QStringLiteral("showpaint") << true << qc;
+    QTest::newRow("Slide") << QStringLiteral("slide") << true << qc;
+    QTest::newRow("SlideBack") << QStringLiteral("slideback") << true << qc;
+    QTest::newRow("SlidingPopups") << QStringLiteral("slidingpopups") << true << qc;
+    QTest::newRow("SnapHelper") << QStringLiteral("snaphelper") << true << qc;
+    QTest::newRow("StartupFeedback") << QStringLiteral("startupfeedback") << false << qc;
     // Tries to load shader and makes our test abort
-//     QTest::newRow("StartupFeedback-GL")             << QStringLiteral("startupfeedback")   << true  << oc;
-    QTest::newRow("ThumbnailAside")                 << QStringLiteral("thumbnailaside")    << true  << qc;
-    QTest::newRow("Touchpoints")                    << QStringLiteral("touchpoints")       << true  << qc;
-    QTest::newRow("TrackMouse")                     << QStringLiteral("trackmouse")        << true  << qc;
+    //     QTest::newRow("StartupFeedback-GL")             << QStringLiteral("startupfeedback")   << true  << oc;
+    QTest::newRow("ThumbnailAside") << QStringLiteral("thumbnailaside") << true << qc;
+    QTest::newRow("Touchpoints") << QStringLiteral("touchpoints") << true << qc;
+    QTest::newRow("TrackMouse") << QStringLiteral("trackmouse") << true << qc;
     // TODO: Accesses EffectFrame and crashes
-//     QTest::newRow("WindowGeometry")                 << QStringLiteral("windowgeometry")    << true  << xc;
-    QTest::newRow("WobblyWindows")                  << QStringLiteral("wobblywindows")     << false << qc;
-    QTest::newRow("WobblyWindows-GL")               << QStringLiteral("wobblywindows")     << true  << oc;
-    QTest::newRow("Zoom")                           << QStringLiteral("zoom")              << true  << qc;
-    QTest::newRow("Non Existing")                   << QStringLiteral("InvalidName")       << false << qc;
-    QTest::newRow("Fade - Scripted")                << QStringLiteral("fade")              << false << qc;
+    //     QTest::newRow("WindowGeometry")                 << QStringLiteral("windowgeometry")    << true  << xc;
+    QTest::newRow("WobblyWindows") << QStringLiteral("wobblywindows") << false << qc;
+    QTest::newRow("WobblyWindows-GL") << QStringLiteral("wobblywindows") << true << oc;
+    QTest::newRow("Zoom") << QStringLiteral("zoom") << true << qc;
+    QTest::newRow("Non Existing") << QStringLiteral("InvalidName") << false << qc;
+    QTest::newRow("Fade - Scripted") << QStringLiteral("fade") << false << qc;
     QTest::newRow("Fade - Scripted + kwin4_effect") << QStringLiteral("kwin4_effect_fade") << false << qc;
 }
 
@@ -324,15 +297,13 @@ void TestBuiltInEffectLoader::testLoadEffect()
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     loader.setConfig(config);
 
-    qRegisterMetaType<KWin::Effect*>();
+    qRegisterMetaType<KWin::Effect *>();
     QSignalSpy spy(&loader, &KWin::BuiltInEffectLoader::effectLoaded);
     // connect to signal to ensure that we delete the Effect again as the Effect doesn't have a parent
-    connect(&loader, &KWin::BuiltInEffectLoader::effectLoaded,
-        [&name](KWin::Effect *effect, const QString &effectName) {
-            QCOMPARE(effectName, name);
-            effect->deleteLater();
-        }
-    );
+    connect(&loader, &KWin::BuiltInEffectLoader::effectLoaded, [&name](KWin::Effect *effect, const QString &effectName) {
+        QCOMPARE(effectName, name);
+        effect->deleteLater();
+    });
     // try to load the Effect
     QCOMPARE(loader.loadEffect(name), expected);
     // loading again should fail
@@ -381,22 +352,22 @@ void TestBuiltInEffectLoader::testLoadBuiltInEffect_data()
     const KWin::LoadEffectFlags dontLoadFlags = KWin::LoadEffectFlags();
 
     // enabled by default, but not supported
-    QTest::newRow("blur")                     << KWin::BuiltInEffect::Blur << QStringLiteral("blur")            << false << oc << checkDefault;
+    QTest::newRow("blur") << KWin::BuiltInEffect::Blur << QStringLiteral("blur") << false << oc << checkDefault;
     // enabled by default
-    QTest::newRow("HighlightWindow")          << KWin::BuiltInEffect::HighlightWindow << QStringLiteral("highlightwindow") << true  << qc << checkDefault;
+    QTest::newRow("HighlightWindow") << KWin::BuiltInEffect::HighlightWindow << QStringLiteral("highlightwindow") << true << qc << checkDefault;
     // supported but not enabled by default
-    QTest::newRow("LookingGlass")             << KWin::BuiltInEffect::LookingGlass << QStringLiteral("lookingglass")    << false << qc << checkDefault;
+    QTest::newRow("LookingGlass") << KWin::BuiltInEffect::LookingGlass << QStringLiteral("lookingglass") << false << qc << checkDefault;
     // not enabled by default
-    QTest::newRow("MouseClick")               << KWin::BuiltInEffect::MouseClick << QStringLiteral("mouseclick")      << true << qc << checkDefault;
+    QTest::newRow("MouseClick") << KWin::BuiltInEffect::MouseClick << QStringLiteral("mouseclick") << true << qc << checkDefault;
     // Force an Effect which will load
-    QTest::newRow("MouseClick-Force")         << KWin::BuiltInEffect::MouseClick << QStringLiteral("mouseclick")      << true  << qc << forceFlags;
+    QTest::newRow("MouseClick-Force") << KWin::BuiltInEffect::MouseClick << QStringLiteral("mouseclick") << true << qc << forceFlags;
     // Force an Effect which is not supported
-    QTest::newRow("LookingGlass-Force")       << KWin::BuiltInEffect::LookingGlass << QStringLiteral("lookingglass")    << false << qc << forceFlags;
+    QTest::newRow("LookingGlass-Force") << KWin::BuiltInEffect::LookingGlass << QStringLiteral("lookingglass") << false << qc << forceFlags;
     // Force the Effect as supported
     // Enforce no load of effect which is enabled by default
     QTest::newRow("HighlightWindow-DontLoad") << KWin::BuiltInEffect::HighlightWindow << QStringLiteral("highlightwindow") << false << qc << dontLoadFlags;
     // Enforce no load of effect which is not enabled by default, but enforced
-    QTest::newRow("MouseClick-DontLoad")      << KWin::BuiltInEffect::MouseClick << QStringLiteral("mouseclick")      << false << qc << dontLoadFlags;
+    QTest::newRow("MouseClick-DontLoad") << KWin::BuiltInEffect::MouseClick << QStringLiteral("mouseclick") << false << qc << dontLoadFlags;
 }
 
 void TestBuiltInEffectLoader::testLoadBuiltInEffect()
@@ -412,15 +383,13 @@ void TestBuiltInEffectLoader::testLoadBuiltInEffect()
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     loader.setConfig(config);
 
-    qRegisterMetaType<KWin::Effect*>();
+    qRegisterMetaType<KWin::Effect *>();
     QSignalSpy spy(&loader, &KWin::BuiltInEffectLoader::effectLoaded);
     // connect to signal to ensure that we delete the Effect again as the Effect doesn't have a parent
-    connect(&loader, &KWin::BuiltInEffectLoader::effectLoaded,
-        [&name](KWin::Effect *effect, const QString &effectName) {
-            QCOMPARE(effectName, name);
-            effect->deleteLater();
-        }
-    );
+    connect(&loader, &KWin::BuiltInEffectLoader::effectLoaded, [&name](KWin::Effect *effect, const QString &effectName) {
+        QCOMPARE(effectName, name);
+        effect->deleteLater();
+    });
     // try to load the Effect
     QCOMPARE(loader.loadEffect(effect, loadFlags), expected);
     // loading again should fail
@@ -454,7 +423,7 @@ void TestBuiltInEffectLoader::testLoadBuiltInEffect()
 
 void TestBuiltInEffectLoader::testLoadAllEffects()
 {
-    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater>mockHandler(new MockEffectsHandler(KWin::QPainterCompositing));
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::QPainterCompositing));
     KWin::BuiltInEffectLoader loader;
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -477,14 +446,12 @@ void TestBuiltInEffectLoader::testLoadAllEffects()
 
     loader.setConfig(config);
 
-    qRegisterMetaType<KWin::Effect*>();
+    qRegisterMetaType<KWin::Effect *>();
     QSignalSpy spy(&loader, &KWin::BuiltInEffectLoader::effectLoaded);
     // connect to signal to ensure that we delete the Effect again as the Effect doesn't have a parent
-    connect(&loader, &KWin::BuiltInEffectLoader::effectLoaded,
-        [](KWin::Effect *effect) {
-            effect->deleteLater();
-        }
-    );
+    connect(&loader, &KWin::BuiltInEffectLoader::effectLoaded, [](KWin::Effect *effect) {
+        effect->deleteLater();
+    });
 
     // the config is prepared so that no Effect gets loaded!
     loader.queryAndLoadAll();

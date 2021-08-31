@@ -13,35 +13,34 @@
 #include "composite.h"
 #include "drm_backend.h"
 #include "drm_buffer_gbm.h"
+#include "drm_gpu.h"
 #include "drm_output.h"
+#include "drm_pipeline.h"
+#include "dumb_swapchain.h"
 #include "gbm_surface.h"
+#include "kwineglutils_p.h"
+#include "linux_dmabuf.h"
 #include "logging.h"
 #include "options.h"
 #include "renderloop_p.h"
 #include "screens.h"
-#include "surfaceitem_wayland.h"
-#include "drm_gpu.h"
-#include "linux_dmabuf.h"
-#include "dumb_swapchain.h"
-#include "kwineglutils_p.h"
 #include "shadowbuffer.h"
-#include "drm_pipeline.h"
+#include "surfaceitem_wayland.h"
 // kwin libs
-#include <kwinglplatform.h>
 #include <kwineglimagetexture.h>
+#include <kwinglplatform.h>
 // system
+#include <drm_fourcc.h>
+#include <errno.h>
 #include <gbm.h>
 #include <unistd.h>
-#include <errno.h>
-#include <drm_fourcc.h>
 // kwayland server
-#include "KWaylandServer/surface_interface.h"
-#include "KWaylandServer/linuxdmabufv1clientbuffer.h"
 #include "KWaylandServer/clientconnection.h"
+#include "KWaylandServer/linuxdmabufv1clientbuffer.h"
+#include "KWaylandServer/surface_interface.h"
 
 namespace KWin
 {
-
 EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu)
     : AbstractEglDrmBackend(drmBackend, gpu)
 {
@@ -81,10 +80,10 @@ bool EglGbmBackend::initializeEgl()
         const bool hasKHRGBM = hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_gbm"));
         const GLenum platform = hasMesaGBM ? EGL_PLATFORM_GBM_MESA : EGL_PLATFORM_GBM_KHR;
 
-        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base")) ||
-                (!hasMesaGBM && !hasKHRGBM)) {
-            setFailed("Missing one or more extensions between EGL_EXT_platform_base, "
-                      "EGL_MESA_platform_gbm, EGL_KHR_platform_gbm");
+        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base")) || (!hasMesaGBM && !hasKHRGBM)) {
+            setFailed(
+                "Missing one or more extensions between EGL_EXT_platform_base, "
+                "EGL_MESA_platform_gbm, EGL_KHR_platform_gbm");
             return false;
         }
 
@@ -248,7 +247,13 @@ bool EglGbmBackend::exportFramebuffer(DrmAbstractOutput *drmOutput, void *data, 
     return memcpy(data, bo->mappedData(), size.height() * stride);
 }
 
-bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier)
+bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput,
+                                              int *fds,
+                                              int *strides,
+                                              int *offsets,
+                                              uint32_t *num_fds,
+                                              uint32_t *format,
+                                              uint64_t *modifier)
 {
     Q_ASSERT(m_outputs.contains(drmOutput));
     auto bo = m_outputs[drmOutput].current.gbmSurface->currentBuffer()->getBo();
@@ -373,21 +378,26 @@ bool EglGbmBackend::makeContextCurrent(const Output::RenderData &render) const
 bool EglGbmBackend::initBufferConfigs()
 {
     const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT,
-        EGL_RED_SIZE,             1,
-        EGL_GREEN_SIZE,           1,
-        EGL_BLUE_SIZE,            1,
-        EGL_ALPHA_SIZE,           0,
-        EGL_RENDERABLE_TYPE,      isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
-        EGL_CONFIG_CAVEAT,        EGL_NONE,
+        EGL_SURFACE_TYPE,
+        EGL_WINDOW_BIT,
+        EGL_RED_SIZE,
+        1,
+        EGL_GREEN_SIZE,
+        1,
+        EGL_BLUE_SIZE,
+        1,
+        EGL_ALPHA_SIZE,
+        0,
+        EGL_RENDERABLE_TYPE,
+        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
+        EGL_CONFIG_CAVEAT,
+        EGL_NONE,
         EGL_NONE,
     };
 
     EGLint count;
     EGLConfig configs[1024];
-    if (!eglChooseConfig(eglDisplay(), config_attribs, configs,
-                         sizeof(configs) / sizeof(EGLConfig),
-                         &count)) {
+    if (!eglChooseConfig(eglDisplay(), config_attribs, configs, sizeof(configs) / sizeof(EGLConfig), &count)) {
         qCCritical(KWIN_DRM) << "eglChooseConfig failed:" << getEglErrorString();
         return false;
     }
@@ -430,8 +440,7 @@ bool EglGbmBackend::initBufferConfigs()
         return true;
     }
 
-    qCCritical(KWIN_DRM) << "Choosing EGL config did not return a suitable config. There were"
-                         << count << "configs:";
+    qCCritical(KWIN_DRM) << "Choosing EGL config did not return a suitable config. There were" << count << "configs:";
     for (EGLint i = 0; i < count; i++) {
         EGLint gbmFormat, blueSize, redSize, greenSize, alphaSize;
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
@@ -441,7 +450,7 @@ bool EglGbmBackend::initBufferConfigs()
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
         gbm_format_name_desc name;
         gbm_format_get_name(gbmFormat, &name);
-        qCCritical(KWIN_DRM, "EGL config %d has format %s with %d,%d,%d,%d bits for r,g,b,a",  i, name.name, redSize, greenSize, blueSize, alphaSize);
+        qCCritical(KWIN_DRM, "EGL config %d has format %s with %d,%d,%d,%d bits for r,g,b,a", i, name.name, redSize, greenSize, blueSize, alphaSize);
     }
     return false;
 }
@@ -450,9 +459,7 @@ static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutpu
 {
     const int height = output->modeSize().height();
 
-    const QMatrix4x4 matrix = DrmOutput::logicalToNativeMatrix(output->geometry(),
-                                                               output->scale(),
-                                                               output->transform());
+    const QMatrix4x4 matrix = DrmOutput::logicalToNativeMatrix(output->geometry(), output->scale(), output->transform());
 
     QVector<EGLint> rects;
     rects.reserve(region.rectCount() * 4);
@@ -476,8 +483,7 @@ void EglGbmBackend::aboutToStartPainting(AbstractOutput *drmOutput, const QRegio
         const QRegion region = damagedRegion & output.output->geometry();
 
         QVector<EGLint> rects = regionToRects(region, output.output);
-        const bool correct = eglSetDamageRegionKHR(eglDisplay(), output.current.gbmSurface->eglSurface(),
-                                                   rects.data(), rects.count()/4);
+        const bool correct = eglSetDamageRegionKHR(eglDisplay(), output.current.gbmSurface->eglSurface(), rects.data(), rects.count() / 4);
         if (!correct) {
             qCWarning(KWIN_DRM) << "eglSetDamageRegionKHR failed:" << getEglErrorString();
         }
@@ -576,8 +582,7 @@ QSharedPointer<DrmBuffer> EglGbmBackend::endFrameWithBuffer(AbstractOutput *drmO
     }
 }
 
-void EglGbmBackend::endFrame(AbstractOutput *drmOutput, const QRegion &renderedRegion,
-                             const QRegion &damagedRegion)
+void EglGbmBackend::endFrame(AbstractOutput *drmOutput, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_ASSERT(m_outputs.contains(drmOutput));
     Q_UNUSED(renderedRegion)
@@ -631,16 +636,14 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
     }
 
     gbm_bo *importedBuffer;
-    if (buffer->planes()[0].modifier != DRM_FORMAT_MOD_INVALID
-        || buffer->planes()[0].offset > 0
-        || buffer->planes().size() > 1) {
+    if (buffer->planes()[0].modifier != DRM_FORMAT_MOD_INVALID || buffer->planes()[0].offset > 0 || buffer->planes().size() > 1) {
         if (!m_gpu->addFB2ModifiersSupported() || !output.output->supportedModifiers(buffer->format()).contains(buffer->planes()[0].modifier)) {
             return false;
         }
         gbm_import_fd_modifier_data data = {};
         data.format = buffer->format();
-        data.width = (uint32_t) buffer->size().width();
-        data.height = (uint32_t) buffer->size().height();
+        data.width = (uint32_t)buffer->size().width();
+        data.height = (uint32_t)buffer->size().height();
         data.num_fds = buffer->planes().count();
         data.modifier = buffer->planes()[0].modifier;
         for (int i = 0; i < buffer->planes().count(); i++) {
@@ -654,8 +657,8 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
         auto plane = buffer->planes()[0];
         gbm_import_fd_data data = {};
         data.fd = plane.fd;
-        data.width = (uint32_t) buffer->size().width();
-        data.height = (uint32_t) buffer->size().height();
+        data.width = (uint32_t)buffer->size().width();
+        data.height = (uint32_t)buffer->size().height();
         data.stride = plane.stride;
         data.format = buffer->format();
         importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT);
@@ -722,7 +725,7 @@ QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output
         return {};
     }
 
-    return QSharedPointer<EGLImageTexture>::create(eglDisplay(), image, GL_RGBA8, static_cast<DrmAbstractOutput*>(output)->modeSize());
+    return QSharedPointer<EGLImageTexture>::create(eglDisplay(), image, GL_RGBA8, static_cast<DrmAbstractOutput *>(output)->modeSize());
 }
 
 bool EglGbmBackend::directScanoutAllowed(AbstractOutput *output) const

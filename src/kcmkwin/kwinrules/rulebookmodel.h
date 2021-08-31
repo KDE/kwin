@@ -11,10 +11,8 @@
 
 #include <QAbstractListModel>
 
-
 namespace KWin
 {
-
 class RuleBookModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -34,8 +32,7 @@ public:
 
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
-    bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
-                  const QModelIndex &destinationParent, int destinationChild) override;
+    bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild) override;
 
     QString descriptionAt(int row) const;
     void setDescriptionAt(int row, const QString &description);

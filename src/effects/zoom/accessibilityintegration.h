@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 class ZoomAccessibilityIntegration : public QObject
 {
     Q_OBJECT

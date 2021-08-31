@@ -12,7 +12,6 @@ namespace KDecoration2
 {
 namespace Preview
 {
-
 class Plugin : public QQmlExtensionPlugin
 {
     Q_PLUGIN_METADATA(IID "org.kde.kdecoration2")

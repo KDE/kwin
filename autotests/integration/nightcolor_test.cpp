@@ -10,8 +10,8 @@
 #include "platform.h"
 #include "wayland_server.h"
 
-#include "plugins/nightcolor/nightcolormanager.h"
 #include "plugins/nightcolor/constants.h"
+#include "plugins/nightcolor/nightcolormanager.h"
 
 #include <KConfigGroup>
 
@@ -74,12 +74,18 @@ void NightColorTest::testConfigRead_data()
     QTest::addColumn<int>("transitionTime");
     QTest::addColumn<bool>("success");
 
-    QTest::newRow("activeMode0") << "true" << 0 << 4500 << 45.5 << 35.1 << "0600" << "1800" << 30 << true;
-    QTest::newRow("activeMode1") << "true" << 1 << 2500 << -10.5 << -8. << "0020" << "2000" << 60 << true;
-    QTest::newRow("activeMode2") << "true" << 3 << 3500 << 45.5 << 35.1 << "0600" << "1800" << 60 << true;
-    QTest::newRow("notActiveMode2") << "false" << 2 << 5000 << 90. << -180. << "0600" << "1800" << 1 << true;
-    QTest::newRow("wrongData1") << "fa" << 4 << 7000 << 91. << -181. << "060" << "800" << 999999 << false;
-    QTest::newRow("wrongData2") << "fa" << 4 << 7000 << 91. << -181. << "060" << "800" << -2 << false;
+    QTest::newRow("activeMode0") << "true" << 0 << 4500 << 45.5 << 35.1 << "0600"
+                                 << "1800" << 30 << true;
+    QTest::newRow("activeMode1") << "true" << 1 << 2500 << -10.5 << -8. << "0020"
+                                 << "2000" << 60 << true;
+    QTest::newRow("activeMode2") << "true" << 3 << 3500 << 45.5 << 35.1 << "0600"
+                                 << "1800" << 60 << true;
+    QTest::newRow("notActiveMode2") << "false" << 2 << 5000 << 90. << -180. << "0600"
+                                    << "1800" << 1 << true;
+    QTest::newRow("wrongData1") << "fa" << 4 << 7000 << 91. << -181. << "060"
+                                << "800" << 999999 << false;
+    QTest::newRow("wrongData2") << "fa" << 4 << 7000 << 91. << -181. << "060"
+                                << "800" << -2 << false;
 }
 
 void NightColorTest::testConfigRead()
@@ -99,8 +105,8 @@ void NightColorTest::testConfigRead()
     const int nightTemperatureUpperEnd = NEUTRAL_TEMPERATURE;
     const double latitudeFixedDefault = 0;
     const double longitudeFixedDefault = 0;
-    const QTime morningBeginFixedDefault = QTime(6,0,0);
-    const QTime eveningBeginFixedDefault = QTime(18,0,0);
+    const QTime morningBeginFixedDefault = QTime(6, 0, 0);
+    const QTime eveningBeginFixedDefault = QTime(18, 0, 0);
     const int transitionTimeDefault = 30;
 
     KConfigGroup cfgGroup = kwinApp()->config()->group("NightColor");
@@ -174,19 +180,19 @@ void NightColorTest::testChangeConfiguration_data()
     QTest::addColumn<int>("transitionTimeReadIn");
     QTest::addColumn<bool>("successReadIn");
 
-    QTest::newRow("data0") << true << 0 << 4500 << 45.5 << 35.1 << QTime(6,0,0) << QTime(18,0,0) << 30 << true;
-    QTest::newRow("data1") << true << 1 << 2500 << -10.5 << -8. << QTime(0,2,0) << QTime(20,0,0) << 60 << true;
-    QTest::newRow("data2") << false << 2 << 5000 << 90. << -180. << QTime(6,0,0) << QTime(19,1,1) << 1 << true;
-    QTest::newRow("data3") << false << 3 << 2000 << 90. << -180. << QTime(6,0,0) << QTime(18,0,0) << 1 << true;
-    QTest::newRow("wrongData0") << true << 4 << 4500 << 0. << 0. << QTime(6,0,0) << QTime(18,0,0) << 30 << false;
-    QTest::newRow("wrongData1") << true << 0 << 500 << 0. << 0. << QTime(6,0,0) << QTime(18,0,0) << 30 << false;
-    QTest::newRow("wrongData2") << true << 0 << 7000 << 0. << 0. << QTime(6,0,0) << QTime(18,0,0) << 30 << false;
-    QTest::newRow("wrongData3") << true << 0 << 4500 << 91. << -181. << QTime(6,0,0) << QTime(18,0,0) << 30 << false;
-    QTest::newRow("wrongData4") << true << 0 << 4500 << 0. << 0. << QTime(18,0,0) << QTime(6,0,0) << 30 << false;
-    QTest::newRow("wrongData5") << true << 0 << 4500 << 0. << 0. << QTime(6,0,0) << QTime(18,0,0) << 0 << false;
-    QTest::newRow("wrongData6") << true << 0 << 4500 << 0. << 0. << QTime(6,0,0) << QTime(18,0,0) << -1 << false;
-    QTest::newRow("wrongData7") << true << 0 << 4500 << 0. << 0. << QTime(12,0,0) << QTime(12,30,0) << 30 << false;
-    QTest::newRow("wrongData8") << true << 0 << 4500 << 0. << 0. << QTime(1,0,0) << QTime(23,30,0) << 90 << false;
+    QTest::newRow("data0") << true << 0 << 4500 << 45.5 << 35.1 << QTime(6, 0, 0) << QTime(18, 0, 0) << 30 << true;
+    QTest::newRow("data1") << true << 1 << 2500 << -10.5 << -8. << QTime(0, 2, 0) << QTime(20, 0, 0) << 60 << true;
+    QTest::newRow("data2") << false << 2 << 5000 << 90. << -180. << QTime(6, 0, 0) << QTime(19, 1, 1) << 1 << true;
+    QTest::newRow("data3") << false << 3 << 2000 << 90. << -180. << QTime(6, 0, 0) << QTime(18, 0, 0) << 1 << true;
+    QTest::newRow("wrongData0") << true << 4 << 4500 << 0. << 0. << QTime(6, 0, 0) << QTime(18, 0, 0) << 30 << false;
+    QTest::newRow("wrongData1") << true << 0 << 500 << 0. << 0. << QTime(6, 0, 0) << QTime(18, 0, 0) << 30 << false;
+    QTest::newRow("wrongData2") << true << 0 << 7000 << 0. << 0. << QTime(6, 0, 0) << QTime(18, 0, 0) << 30 << false;
+    QTest::newRow("wrongData3") << true << 0 << 4500 << 91. << -181. << QTime(6, 0, 0) << QTime(18, 0, 0) << 30 << false;
+    QTest::newRow("wrongData4") << true << 0 << 4500 << 0. << 0. << QTime(18, 0, 0) << QTime(6, 0, 0) << 30 << false;
+    QTest::newRow("wrongData5") << true << 0 << 4500 << 0. << 0. << QTime(6, 0, 0) << QTime(18, 0, 0) << 0 << false;
+    QTest::newRow("wrongData6") << true << 0 << 4500 << 0. << 0. << QTime(6, 0, 0) << QTime(18, 0, 0) << -1 << false;
+    QTest::newRow("wrongData7") << true << 0 << 4500 << 0. << 0. << QTime(12, 0, 0) << QTime(12, 30, 0) << 30 << false;
+    QTest::newRow("wrongData8") << true << 0 << 4500 << 0. << 0. << QTime(1, 0, 0) << QTime(23, 30, 0) << 90 << false;
 }
 
 void NightColorTest::testChangeConfiguration()
@@ -206,8 +212,8 @@ void NightColorTest::testChangeConfiguration()
     const int nightTemperatureDefault = DEFAULT_NIGHT_TEMPERATURE;
     const double latitudeFixedDefault = 0;
     const double longitudeFixedDefault = 0;
-    const QTime morningBeginFixedDefault = QTime(6,0,0);
-    const QTime eveningBeginFixedDefault = QTime(18,0,0);
+    const QTime morningBeginFixedDefault = QTime(6, 0, 0);
+    const QTime eveningBeginFixedDefault = QTime(18, 0, 0);
     const int transitionTimeDefault = 30;
 
     // init with default values
@@ -231,10 +237,7 @@ void NightColorTest::testChangeConfiguration()
 
     QHash<QString, QVariant> data;
 
-    auto setData = [&active, &mode, &nightTemperature,
-            &latitudeFixed, &longitudeFixed,
-            &morningBeginFixed, &eveningBeginFixed, &transitionTime,
-            &data]() {
+    auto setData = [&active, &mode, &nightTemperature, &latitudeFixed, &longitudeFixed, &morningBeginFixed, &eveningBeginFixed, &transitionTime, &data]() {
         data["Active"] = active;
         data["Mode"] = mode;
         data["NightTemperature"] = nightTemperature;
@@ -247,10 +250,14 @@ void NightColorTest::testChangeConfiguration()
         data["TransitionTime"] = transitionTime;
     };
 
-    auto compareValues = [&activeExpect, &modeExpect, &nightTemperatureExpect,
-            &latitudeFixedExpect, &longitudeFixedExpect,
-            &morningBeginFixedExpect, &eveningBeginFixedExpect,
-            &transitionTimeExpect](QHash<QString, QVariant> info) {
+    auto compareValues = [&activeExpect,
+                          &modeExpect,
+                          &nightTemperatureExpect,
+                          &latitudeFixedExpect,
+                          &longitudeFixedExpect,
+                          &morningBeginFixedExpect,
+                          &eveningBeginFixedExpect,
+                          &transitionTimeExpect](QHash<QString, QVariant> info) {
         QCOMPARE(info.value("Active").toBool(), activeExpect);
         QCOMPARE(info.value("Mode").toInt(), modeExpect);
         QCOMPARE(info.value("NightTemperature").toInt(), nightTemperatureExpect);

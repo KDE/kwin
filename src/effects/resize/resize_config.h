@@ -14,28 +14,26 @@
 
 #include "ui_resize_config.h"
 
-
 namespace KWin
 {
-
 class ResizeEffectConfigForm : public QWidget, public Ui::ResizeEffectConfigForm
 {
     Q_OBJECT
 public:
-    explicit ResizeEffectConfigForm(QWidget* parent = nullptr);
+    explicit ResizeEffectConfigForm(QWidget *parent = nullptr);
 };
 
 class ResizeEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit ResizeEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
+    explicit ResizeEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
 
 public Q_SLOTS:
     void save() override;
 
 private:
-    ResizeEffectConfigForm* m_ui;
+    ResizeEffectConfigForm *m_ui;
 };
 
 } // namespace

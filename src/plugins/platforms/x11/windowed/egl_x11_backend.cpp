@@ -20,7 +20,6 @@
 
 namespace KWin
 {
-
 EglX11Backend::EglX11Backend(X11WindowedBackend *backend)
     : EglOnXBackend(backend->connection(), backend->display(), backend->rootWindow(), backend->screenNumer(), XCB_WINDOW_NONE)
     , m_backend(backend)

@@ -6,16 +6,16 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "cursor.h"
 #include "internal_client.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "pointer_input.h"
-#include "touch_input.h"
 #include "screenedge.h"
 #include "screens.h"
+#include "touch_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <kwineffects.h>
@@ -24,12 +24,12 @@
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
 
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointer.h>
-#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/seat.h>
+#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
@@ -42,7 +42,6 @@ Q_DECLARE_METATYPE(Qt::WindowFrameSection)
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_decoration_input-0");
 
 class DecorationInputTest : public QObject
@@ -76,23 +75,20 @@ private:
     AbstractClient *showWindow();
 };
 
-#define MOTION(target) \
-    kwinApp()->platform()->pointerMotion(target, timestamp++)
+#define MOTION(target) kwinApp()->platform()->pointerMotion(target, timestamp++)
 
-#define PRESS \
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++)
+#define PRESS kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++)
 
-#define RELEASE \
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++)
+#define RELEASE kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++)
 
 AbstractClient *DecorationInputTest::showWindow()
 {
     using namespace KWayland::Client;
-#define VERIFY(statement) \
-    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))\
+#define VERIFY(statement)                                                                                                                                      \
+    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))                                                                                      \
         return nullptr;
-#define COMPARE(actual, expected) \
-    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
+#define COMPARE(actual, expected)                                                                                                                              \
+    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))                                                                            \
         return nullptr;
 
     Surface *surface = Test::createSurface(Test::waylandCompositor());
@@ -365,10 +361,10 @@ void DecorationInputTest::testPressToMove_data()
     QTest::addColumn<QPoint>("offset2");
     QTest::addColumn<QPoint>("offset3");
 
-    QTest::newRow("To right")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0);
-    QTest::newRow("To left")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0);
-    QTest::newRow("To bottom") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30);
-    QTest::newRow("To top")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30);
+    QTest::newRow("To right") << QPoint(10, 0) << QPoint(20, 0) << QPoint(30, 0);
+    QTest::newRow("To left") << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0);
+    QTest::newRow("To bottom") << QPoint(0, 10) << QPoint(0, 20) << QPoint(0, 30);
+    QTest::newRow("To top") << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30);
 }
 
 void DecorationInputTest::testPressToMove()
@@ -377,7 +373,7 @@ void DecorationInputTest::testPressToMove()
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
-    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    c->move(screens()->geometry(0).center() - QPoint(c->width() / 2, c->height() / 2));
     QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(startMoveResizedSpy.isValid());
     QSignalSpy clientFinishUserMovedResizedSpy(c, &AbstractClient::clientFinishUserMovedResized);
@@ -424,10 +420,10 @@ void DecorationInputTest::testTapToMove_data()
     QTest::addColumn<QPoint>("offset2");
     QTest::addColumn<QPoint>("offset3");
 
-    QTest::newRow("To right")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0);
-    QTest::newRow("To left")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0);
-    QTest::newRow("To bottom") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30);
-    QTest::newRow("To top")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30);
+    QTest::newRow("To right") << QPoint(10, 0) << QPoint(20, 0) << QPoint(30, 0);
+    QTest::newRow("To left") << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0);
+    QTest::newRow("To bottom") << QPoint(0, 10) << QPoint(0, 20) << QPoint(0, 30);
+    QTest::newRow("To top") << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30);
 }
 
 void DecorationInputTest::testTapToMove()
@@ -436,7 +432,7 @@ void DecorationInputTest::testTapToMove()
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
-    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    c->move(screens()->geometry(0).center() - QPoint(c->width() / 2, c->height() / 2));
     QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(startMoveResizedSpy.isValid());
     QSignalSpy clientFinishUserMovedResizedSpy(c, &AbstractClient::clientFinishUserMovedResized);
@@ -502,7 +498,7 @@ void DecorationInputTest::testResizeOutsideWindow()
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
-    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    c->move(screens()->geometry(0).center() - QPoint(c->width() / 2, c->height() / 2));
     QVERIFY(c->frameGeometry() != c->inputGeometry());
     QVERIFY(c->inputGeometry().contains(c->frameGeometry()));
     QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
@@ -513,10 +509,10 @@ void DecorationInputTest::testResizeOutsideWindow()
     QFETCH(Qt::Edge, edge);
     switch (edge) {
     case Qt::LeftEdge:
-        MOTION(QPoint(c->frameGeometry().x() -1, c->frameGeometry().center().y()));
+        MOTION(QPoint(c->frameGeometry().x() - 1, c->frameGeometry().center().y()));
         break;
     case Qt::RightEdge:
-        MOTION(QPoint(c->frameGeometry().x() + c->frameGeometry().width() +1, c->frameGeometry().center().y()));
+        MOTION(QPoint(c->frameGeometry().x() + c->frameGeometry().width() + 1, c->frameGeometry().center().y()));
         break;
     case Qt::BottomEdge:
         MOTION(QPoint(c->frameGeometry().center().x(), c->frameGeometry().y() + c->frameGeometry().height() + 1));
@@ -546,33 +542,33 @@ void DecorationInputTest::testModifierClickUnrestrictedMove_data()
     const QString alt = QStringLiteral("Alt");
     const QString meta = QStringLiteral("Meta");
 
-    QTest::newRow("Left Alt + Left Click")    << KEY_LEFTALT  << BTN_LEFT   << alt << false;
-    QTest::newRow("Left Alt + Right Click")   << KEY_LEFTALT  << BTN_RIGHT  << alt << false;
-    QTest::newRow("Left Alt + Middle Click")  << KEY_LEFTALT  << BTN_MIDDLE << alt << false;
-    QTest::newRow("Right Alt + Left Click")   << KEY_RIGHTALT << BTN_LEFT   << alt << false;
-    QTest::newRow("Right Alt + Right Click")  << KEY_RIGHTALT << BTN_RIGHT  << alt << false;
+    QTest::newRow("Left Alt + Left Click") << KEY_LEFTALT << BTN_LEFT << alt << false;
+    QTest::newRow("Left Alt + Right Click") << KEY_LEFTALT << BTN_RIGHT << alt << false;
+    QTest::newRow("Left Alt + Middle Click") << KEY_LEFTALT << BTN_MIDDLE << alt << false;
+    QTest::newRow("Right Alt + Left Click") << KEY_RIGHTALT << BTN_LEFT << alt << false;
+    QTest::newRow("Right Alt + Right Click") << KEY_RIGHTALT << BTN_RIGHT << alt << false;
     QTest::newRow("Right Alt + Middle Click") << KEY_RIGHTALT << BTN_MIDDLE << alt << false;
     // now everything with meta
-    QTest::newRow("Left Meta + Left Click")    << KEY_LEFTMETA  << BTN_LEFT   << meta << false;
-    QTest::newRow("Left Meta + Right Click")   << KEY_LEFTMETA  << BTN_RIGHT  << meta << false;
-    QTest::newRow("Left Meta + Middle Click")  << KEY_LEFTMETA  << BTN_MIDDLE << meta << false;
-    QTest::newRow("Right Meta + Left Click")   << KEY_RIGHTMETA << BTN_LEFT   << meta << false;
-    QTest::newRow("Right Meta + Right Click")  << KEY_RIGHTMETA << BTN_RIGHT  << meta << false;
+    QTest::newRow("Left Meta + Left Click") << KEY_LEFTMETA << BTN_LEFT << meta << false;
+    QTest::newRow("Left Meta + Right Click") << KEY_LEFTMETA << BTN_RIGHT << meta << false;
+    QTest::newRow("Left Meta + Middle Click") << KEY_LEFTMETA << BTN_MIDDLE << meta << false;
+    QTest::newRow("Right Meta + Left Click") << KEY_RIGHTMETA << BTN_LEFT << meta << false;
+    QTest::newRow("Right Meta + Right Click") << KEY_RIGHTMETA << BTN_RIGHT << meta << false;
     QTest::newRow("Right Meta + Middle Click") << KEY_RIGHTMETA << BTN_MIDDLE << meta << false;
 
     // and with capslock
-    QTest::newRow("Left Alt + Left Click/CapsLock")    << KEY_LEFTALT  << BTN_LEFT   << alt << true;
-    QTest::newRow("Left Alt + Right Click/CapsLock")   << KEY_LEFTALT  << BTN_RIGHT  << alt << true;
-    QTest::newRow("Left Alt + Middle Click/CapsLock")  << KEY_LEFTALT  << BTN_MIDDLE << alt << true;
-    QTest::newRow("Right Alt + Left Click/CapsLock")   << KEY_RIGHTALT << BTN_LEFT   << alt << true;
-    QTest::newRow("Right Alt + Right Click/CapsLock")  << KEY_RIGHTALT << BTN_RIGHT  << alt << true;
+    QTest::newRow("Left Alt + Left Click/CapsLock") << KEY_LEFTALT << BTN_LEFT << alt << true;
+    QTest::newRow("Left Alt + Right Click/CapsLock") << KEY_LEFTALT << BTN_RIGHT << alt << true;
+    QTest::newRow("Left Alt + Middle Click/CapsLock") << KEY_LEFTALT << BTN_MIDDLE << alt << true;
+    QTest::newRow("Right Alt + Left Click/CapsLock") << KEY_RIGHTALT << BTN_LEFT << alt << true;
+    QTest::newRow("Right Alt + Right Click/CapsLock") << KEY_RIGHTALT << BTN_RIGHT << alt << true;
     QTest::newRow("Right Alt + Middle Click/CapsLock") << KEY_RIGHTALT << BTN_MIDDLE << alt << true;
     // now everything with meta
-    QTest::newRow("Left Meta + Left Click/CapsLock")    << KEY_LEFTMETA  << BTN_LEFT   << meta << true;
-    QTest::newRow("Left Meta + Right Click/CapsLock")   << KEY_LEFTMETA  << BTN_RIGHT  << meta << true;
-    QTest::newRow("Left Meta + Middle Click/CapsLock")  << KEY_LEFTMETA  << BTN_MIDDLE << meta << true;
-    QTest::newRow("Right Meta + Left Click/CapsLock")   << KEY_RIGHTMETA << BTN_LEFT   << meta << true;
-    QTest::newRow("Right Meta + Right Click/CapsLock")  << KEY_RIGHTMETA << BTN_RIGHT  << meta << true;
+    QTest::newRow("Left Meta + Left Click/CapsLock") << KEY_LEFTMETA << BTN_LEFT << meta << true;
+    QTest::newRow("Left Meta + Right Click/CapsLock") << KEY_LEFTMETA << BTN_RIGHT << meta << true;
+    QTest::newRow("Left Meta + Middle Click/CapsLock") << KEY_LEFTMETA << BTN_MIDDLE << meta << true;
+    QTest::newRow("Right Meta + Left Click/CapsLock") << KEY_RIGHTMETA << BTN_LEFT << meta << true;
+    QTest::newRow("Right Meta + Right Click/CapsLock") << KEY_RIGHTMETA << BTN_RIGHT << meta << true;
     QTest::newRow("Right Meta + Middle Click/CapsLock") << KEY_RIGHTMETA << BTN_MIDDLE << meta << true;
 }
 
@@ -599,7 +595,7 @@ void DecorationInputTest::testModifierClickUnrestrictedMove()
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
-    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    c->move(screens()->geometry(0).center() - QPoint(c->width() / 2, c->height() / 2));
     // move cursor on window
     Cursors::self()->mouse()->setPos(QPoint(c->frameGeometry().center().x(), c->y() + c->clientPos().y() / 2));
 
@@ -635,13 +631,13 @@ void DecorationInputTest::testModifierScrollOpacity_data()
     const QString alt = QStringLiteral("Alt");
     const QString meta = QStringLiteral("Meta");
 
-    QTest::newRow("Left Alt")   << KEY_LEFTALT  << alt << false;
-    QTest::newRow("Right Alt")  << KEY_RIGHTALT << alt << false;
-    QTest::newRow("Left Meta")  << KEY_LEFTMETA  << meta << false;
+    QTest::newRow("Left Alt") << KEY_LEFTALT << alt << false;
+    QTest::newRow("Right Alt") << KEY_RIGHTALT << alt << false;
+    QTest::newRow("Left Meta") << KEY_LEFTMETA << meta << false;
     QTest::newRow("Right Meta") << KEY_RIGHTMETA << meta << false;
-    QTest::newRow("Left Alt/CapsLock")   << KEY_LEFTALT  << alt << true;
-    QTest::newRow("Right Alt/CapsLock")  << KEY_RIGHTALT << alt << true;
-    QTest::newRow("Left Meta/CapsLock")  << KEY_LEFTMETA  << meta << true;
+    QTest::newRow("Left Alt/CapsLock") << KEY_LEFTALT << alt << true;
+    QTest::newRow("Right Alt/CapsLock") << KEY_RIGHTALT << alt << true;
+    QTest::newRow("Left Meta/CapsLock") << KEY_LEFTMETA << meta << true;
     QTest::newRow("Right Meta/CapsLock") << KEY_RIGHTMETA << meta << true;
 }
 
@@ -661,7 +657,7 @@ void DecorationInputTest::testModifierScrollOpacity()
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
-    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    c->move(screens()->geometry(0).center() - QPoint(c->width() / 2, c->height() / 2));
     // move cursor on window
     Cursors::self()->mouse()->setPos(QPoint(c->frameGeometry().center().x(), c->y() + c->clientPos().y() / 2));
     // set the opacity to 0.5
@@ -690,7 +686,10 @@ class EventHelper : public QObject
 {
     Q_OBJECT
 public:
-    EventHelper() : QObject() {}
+    EventHelper()
+        : QObject()
+    {
+    }
     ~EventHelper() override = default;
 
     bool eventFilter(QObject *watched, QEvent *event) override

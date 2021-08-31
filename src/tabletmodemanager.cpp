@@ -10,15 +10,14 @@
 #include "input_event.h"
 #include "input_event_spy.h"
 
-#include "libinput/device.h"
 #include "libinput/connection.h"
+#include "libinput/device.h"
 
-#include <QTimer>
 #include <QDBusConnection>
+#include <QTimer>
 
 namespace KWin
 {
-
 KWIN_SINGLETON_FACTORY_VARIABLE(TabletModeManager, s_manager)
 
 class TabletModeSwitchEventSpy : public QObject, public InputEventSpy
@@ -49,9 +48,8 @@ public:
     }
 
 private:
-    TabletModeManager * const m_parent;
+    TabletModeManager *const m_parent;
 };
-
 
 class TabletModeTouchpadRemovedSpy : public QObject
 {
@@ -70,26 +68,32 @@ public:
         check();
     }
 
-    void refresh(LibInput::Device* d) {
+    void refresh(LibInput::Device *d)
+    {
         if (!d->isTouch() && !d->isPointer())
             return;
         check();
     }
 
-    void check() {
+    void check()
+    {
         if (!LibInput::Connection::self()) {
             return;
         }
         const auto devices = LibInput::Connection::self()->devices();
-        const bool hasTouch = std::any_of(devices.constBegin(), devices.constEnd(), [](LibInput::Device* device){ return device->isTouch(); });
+        const bool hasTouch = std::any_of(devices.constBegin(), devices.constEnd(), [](LibInput::Device *device) {
+            return device->isTouch();
+        });
         m_parent->setTabletModeAvailable(hasTouch);
 
-        const bool hasPointer = std::any_of(devices.constBegin(), devices.constEnd(), [](LibInput::Device* device){ return device->isPointer(); });
+        const bool hasPointer = std::any_of(devices.constBegin(), devices.constEnd(), [](LibInput::Device *device) {
+            return device->isPointer();
+        });
         m_parent->setIsTablet(hasTouch && !hasPointer);
     }
 
 private:
-    TabletModeManager * const m_parent;
+    TabletModeManager *const m_parent;
 };
 
 TabletModeManager::TabletModeManager(QObject *parent)
@@ -104,8 +108,7 @@ TabletModeManager::TabletModeManager(QObject *parent)
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin"),
                                                  QStringLiteral("org.kde.KWin.TabletModeManager"),
                                                  this,
-                                                 QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals
-    );
+                                                 QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals);
 
     connect(input(), &InputRedirection::hasTabletModeSwitchChanged, this, &TabletModeManager::hasTabletModeInputChanged);
 }
@@ -118,7 +121,7 @@ void KWin::TabletModeManager::hasTabletModeInputChanged(bool set)
     } else {
         auto setupDetector = [this] {
             auto spy = new TabletModeTouchpadRemovedSpy(this);
-            connect(input(), &InputRedirection::hasTabletModeSwitchChanged, spy, [spy](bool set){
+            connect(input(), &InputRedirection::hasTabletModeSwitchChanged, spy, [spy](bool set) {
                 if (set)
                     spy->deleteLater();
             });

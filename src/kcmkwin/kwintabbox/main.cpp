@@ -12,68 +12,66 @@
 #include <kwin_effects_interface.h>
 
 // Qt
-#include <QtDBus>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QSpacerItem>
-#include <QTabWidget>
-#include <QStandardPaths>
 #include <QPointer>
+#include <QPushButton>
+#include <QSpacerItem>
 #include <QStandardItemModel>
+#include <QStandardPaths>
+#include <QTabWidget>
+#include <QVBoxLayout>
+#include <QtDBus>
 
 // KDE
 #include <KLocalizedString>
+#include <KNewStuff3/KNS3/QtQuickDialogWrapper>
 #include <KPluginFactory>
 #include <KTitleWidget>
-#include <KNewStuff3/KNS3/QtQuickDialogWrapper>
 // Plasma
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
 
 // own
+#include "kwinpluginssettings.h"
+#include "kwinswitcheffectsettings.h"
 #include "kwintabboxconfigform.h"
-#include "layoutpreview.h"
 #include "kwintabboxdata.h"
 #include "kwintabboxsettings.h"
-#include "kwinswitcheffectsettings.h"
-#include "kwinpluginssettings.h"
+#include "layoutpreview.h"
 
 K_PLUGIN_FACTORY(KWinTabBoxConfigFactory, registerPlugin<KWin::KWinTabBoxConfig>(); registerPlugin<KWin::TabBox::KWinTabboxData>();)
 
 namespace KWin
 {
-
 using namespace TabBox;
 
-KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
+KWinTabBoxConfig::KWinTabBoxConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
     , m_config(KSharedConfig::openConfig("kwinrc"))
     , m_data(new KWinTabboxData(this))
 {
-    QTabWidget* tabWidget = new QTabWidget(this);
+    QTabWidget *tabWidget = new QTabWidget(this);
     m_primaryTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Main, tabWidget);
     m_alternativeTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Alternative, tabWidget);
     tabWidget->addTab(m_primaryTabBoxUi, i18n("Main"));
     tabWidget->addTab(m_alternativeTabBoxUi, i18n("Alternative"));
 
-    QPushButton* ghnsButton = new QPushButton(QIcon::fromTheme(QStringLiteral("get-hot-new-stuff")), i18n("Get New Task Switchers..."));
+    QPushButton *ghnsButton = new QPushButton(QIcon::fromTheme(QStringLiteral("get-hot-new-stuff")), i18n("Get New Task Switchers..."));
     connect(ghnsButton, &QAbstractButton::clicked, this, &KWinTabBoxConfig::slotGHNS);
 
-    QHBoxLayout* buttonBar = new QHBoxLayout();
-    QSpacerItem* buttonBarSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    QHBoxLayout *buttonBar = new QHBoxLayout();
+    QSpacerItem *buttonBarSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
     buttonBar->addItem(buttonBarSpacer);
     buttonBar->addWidget(ghnsButton);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
-    KTitleWidget* infoLabel = new KTitleWidget(tabWidget);
-    infoLabel->setText(i18n("Focus policy settings limit the functionality of navigating through windows."),
-                       KTitleWidget::InfoMessage);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    KTitleWidget *infoLabel = new KTitleWidget(tabWidget);
+    infoLabel->setText(i18n("Focus policy settings limit the functionality of navigating through windows."), KTitleWidget::InfoMessage);
     infoLabel->setIcon(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
-    layout->addWidget(infoLabel,0);
-    layout->addWidget(tabWidget,1);
+    layout->addWidget(infoLabel, 0);
+    layout->addWidget(tabWidget, 1);
     layout->addLayout(buttonBar);
     setLayout(layout);
 
@@ -151,14 +149,13 @@ void KWinTabBoxConfig::initLayoutLists()
         if (offer.value("X-Plasma-API") != "declarativeappletscript") {
             continue;
         }
-        //we don't have a proper servicetype
+        // we don't have a proper servicetype
         if (offer.value("X-KWin-Exclude-Listing") == QStringLiteral("true")) {
             continue;
         }
         const QString scriptName = offer.value("X-Plasma-MainScript");
-        const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                          QLatin1String("kwin/tabbox/") + pluginName + QLatin1String("/contents/")
-                                                          + scriptName);
+        const QString scriptFile =
+            QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/tabbox/") + pluginName + QLatin1String("/contents/") + scriptName);
         if (scriptFile.isNull()) {
             continue;
         }
@@ -168,9 +165,8 @@ void KWinTabBoxConfig::initLayoutLists()
         layoutPaths << scriptFile;
     }
 
-
-    KWinTabBoxConfigForm *ui[2] = { m_primaryTabBoxUi, m_alternativeTabBoxUi };
-    for (int i=0; i<2; ++i) {
+    KWinTabBoxConfigForm *ui[2] = {m_primaryTabBoxUi, m_alternativeTabBoxUi};
+    for (int i = 0; i < 2; ++i) {
         QStandardItemModel *model = new QStandardItemModel;
 
         for (int j = 0; j < layoutNames.count(); ++j) {
@@ -286,7 +282,7 @@ void KWinTabBoxConfig::load()
     m_data->tabBoxAlternativeConfig()->load();
 
     updateUiFromConfig(m_primaryTabBoxUi, m_data->tabBoxConfig());
-    updateUiFromConfig(m_alternativeTabBoxUi , m_data->tabBoxAlternativeConfig());
+    updateUiFromConfig(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 
     m_data->pluginsConfig()->load();
 
@@ -380,14 +376,13 @@ void KWinTabBoxConfig::configureEffectClicked()
         QPointer<QDialog> configDialog = new QDialog(this);
         configDialog->setLayout(new QVBoxLayout);
         configDialog->setWindowTitle(form->effectComboCurrentData(Qt::DisplayRole).toString());
-        QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults, configDialog);
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults, configDialog);
         connect(buttonBox, &QDialogButtonBox::accepted, configDialog.data(), &QDialog::accept);
         connect(buttonBox, &QDialogButtonBox::rejected, configDialog.data(), &QDialog::reject);
 
         const QString name = form->effectComboCurrentData().toString();
 
-        auto filter = [name](const KPluginMetaData &md) -> bool
-        {
+        auto filter = [name](const KPluginMetaData &md) -> bool {
             const QStringList parentComponents = KPluginMetaData::readStringList(md.rawData(), QStringLiteral("X-KDE-ParentComponents"));
             return parentComponents.contains(name);
         };

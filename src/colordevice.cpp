@@ -16,16 +16,14 @@
 
 namespace KWin
 {
-
-template <typename T>
+template<typename T>
 struct CmsDeleter;
 
-template <typename T>
+template<typename T>
 using CmsScopedPointer = QScopedPointer<T, CmsDeleter<T>>;
 
-template <>
-struct CmsDeleter<cmsPipeline>
-{
+template<>
+struct CmsDeleter<cmsPipeline> {
     static inline void cleanup(cmsPipeline *pipeline)
     {
         if (pipeline) {
@@ -34,9 +32,8 @@ struct CmsDeleter<cmsPipeline>
     }
 };
 
-template <>
-struct CmsDeleter<cmsStage>
-{
+template<>
+struct CmsDeleter<cmsStage> {
     static inline void cleanup(cmsStage *stage)
     {
         if (stage) {
@@ -45,9 +42,8 @@ struct CmsDeleter<cmsStage>
     }
 };
 
-template <>
-struct CmsDeleter<cmsToneCurve>
-{
+template<>
+struct CmsDeleter<cmsToneCurve> {
     static inline void cleanup(cmsToneCurve *toneCurve)
     {
         if (toneCurve) {
@@ -153,19 +149,13 @@ void ColorDevicePrivate::updateTemperatureToneCurves()
     const int blackBodyColorIndex = ((temperature - 1000) / 100) * 3;
     const qreal blendFactor = (temperature % 100) / 100.0;
 
-    const qreal xWhitePoint = interpolate(blackbodyColor[blackBodyColorIndex + 0],
-                                          blackbodyColor[blackBodyColorIndex + 3],
-                                          blendFactor);
-    const qreal yWhitePoint = interpolate(blackbodyColor[blackBodyColorIndex + 1],
-                                          blackbodyColor[blackBodyColorIndex + 4],
-                                          blendFactor);
-    const qreal zWhitePoint = interpolate(blackbodyColor[blackBodyColorIndex + 2],
-                                          blackbodyColor[blackBodyColorIndex + 5],
-                                          blendFactor);
+    const qreal xWhitePoint = interpolate(blackbodyColor[blackBodyColorIndex + 0], blackbodyColor[blackBodyColorIndex + 3], blendFactor);
+    const qreal yWhitePoint = interpolate(blackbodyColor[blackBodyColorIndex + 1], blackbodyColor[blackBodyColorIndex + 4], blendFactor);
+    const qreal zWhitePoint = interpolate(blackbodyColor[blackBodyColorIndex + 2], blackbodyColor[blackBodyColorIndex + 5], blendFactor);
 
-    const double redCurveParams[] = { 1.0, xWhitePoint, 0.0 };
-    const double greenCurveParams[] = { 1.0, yWhitePoint, 0.0 };
-    const double blueCurveParams[] = { 1.0, zWhitePoint, 0.0 };
+    const double redCurveParams[] = {1.0, xWhitePoint, 0.0};
+    const double greenCurveParams[] = {1.0, yWhitePoint, 0.0};
+    const double blueCurveParams[] = {1.0, zWhitePoint, 0.0};
 
     CmsScopedPointer<cmsToneCurve> redCurve(cmsBuildParametricToneCurve(nullptr, 2, redCurveParams));
     if (!redCurve) {
@@ -184,7 +174,7 @@ void ColorDevicePrivate::updateTemperatureToneCurves()
     }
 
     // The ownership of the tone curves will be moved to the pipeline stage.
-    cmsToneCurve *toneCurves[] = { redCurve.take(), greenCurve.take(), blueCurve.take() };
+    cmsToneCurve *toneCurves[] = {redCurve.take(), greenCurve.take(), blueCurve.take()};
 
     temperatureStage.reset(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
     if (!temperatureStage) {
@@ -200,7 +190,7 @@ void ColorDevicePrivate::updateBrightnessToneCurves()
         return;
     }
 
-    const double curveParams[] = { 1.0, brightness / 100.0, 0.0 };
+    const double curveParams[] = {1.0, brightness / 100.0, 0.0};
 
     CmsScopedPointer<cmsToneCurve> redCurve(cmsBuildParametricToneCurve(nullptr, 2, curveParams));
     if (!redCurve) {
@@ -221,7 +211,7 @@ void ColorDevicePrivate::updateBrightnessToneCurves()
     }
 
     // The ownership of the tone curves will be moved to the pipeline stage.
-    cmsToneCurve *toneCurves[] = { redCurve.take(), greenCurve.take(), blueCurve.take() };
+    cmsToneCurve *toneCurves[] = {redCurve.take(), greenCurve.take(), blueCurve.take()};
 
     brightnessStage.reset(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
     if (!brightnessStage) {
@@ -355,8 +345,8 @@ void ColorDevice::update()
     for (uint32_t i = 0; i < gammaRamp.size(); ++i) {
         const uint16_t index = (i * 0xffff) / (gammaRamp.size() - 1);
 
-        const uint16_t in[3] = { index, index, index };
-        uint16_t out[3] = { 0 };
+        const uint16_t in[3] = {index, index, index};
+        uint16_t out[3] = {0};
         cmsPipelineEval16(in, out, d->pipeline.data());
 
         redChannel[i] = out[0];

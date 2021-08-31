@@ -10,13 +10,12 @@
 
 #include "drm_object.h"
 
-#include <qobjectdefs.h>
-#include <QSharedPointer>
 #include <QMap>
+#include <QSharedPointer>
+#include <qobjectdefs.h>
 
 namespace KWin
 {
-
 class DrmBuffer;
 
 class DrmPlane : public DrmObject
@@ -25,60 +24,38 @@ class DrmPlane : public DrmObject
 public:
     DrmPlane(DrmGpu *gpu, uint32_t planeId);
 
-    enum class PropertyIndex : uint32_t {
-        Type = 0,
-        SrcX,
-        SrcY,
-        SrcW,
-        SrcH,
-        CrtcX,
-        CrtcY,
-        CrtcW,
-        CrtcH,
-        FbId,
-        CrtcId,
-        Rotation,
-        In_Formats,
-        Count
-    };
+    enum class PropertyIndex : uint32_t { Type = 0, SrcX, SrcY, SrcW, SrcH, CrtcX, CrtcY, CrtcW, CrtcH, FbId, CrtcId, Rotation, In_Formats, Count };
     Q_ENUM(PropertyIndex)
 
-    enum class TypeIndex : uint32_t {
-        Overlay = 0,
-        Primary,
-        Cursor,
-        Count
-    };
+    enum class TypeIndex : uint32_t { Overlay = 0, Primary, Cursor, Count };
     Q_ENUM(TypeIndex)
 
-    enum class Transformation : uint32_t {
-        Rotate0     = 1 << 0,
-        Rotate90    = 1 << 1,
-        Rotate180   = 1 << 2,
-        Rotate270   = 1 << 3,
-        ReflectX    = 1 << 4,
-        ReflectY    = 1 << 5
-    };
+    enum class Transformation : uint32_t { Rotate0 = 1 << 0, Rotate90 = 1 << 1, Rotate180 = 1 << 2, Rotate270 = 1 << 3, ReflectX = 1 << 4, ReflectY = 1 << 5 };
     Q_ENUM(Transformation)
     Q_DECLARE_FLAGS(Transformations, Transformation);
 
     bool init() override;
     TypeIndex type();
 
-    bool isCrtcSupported(int pipeIndex) const {
+    bool isCrtcSupported(int pipeIndex) const
+    {
         return (m_possibleCrtcs & (1 << pipeIndex));
     }
-    QMap<uint32_t, QVector<uint64_t>> formats() const {
+    QMap<uint32_t, QVector<uint64_t>> formats() const
+    {
         return m_supportedFormats;
     }
 
-    QSharedPointer<DrmBuffer> current() const {
+    QSharedPointer<DrmBuffer> current() const
+    {
         return m_current;
     }
-    QSharedPointer<DrmBuffer> next() const {
+    QSharedPointer<DrmBuffer> next() const
+    {
         return m_next;
     }
-    void setCurrent(const QSharedPointer<DrmBuffer> &b) {
+    void setCurrent(const QSharedPointer<DrmBuffer> &b)
+    {
         m_current = b;
     }
     void setNext(const QSharedPointer<DrmBuffer> &b);
@@ -87,7 +64,8 @@ public:
 
     void flipBuffer();
 
-    Transformations supportedTransformations() const {
+    Transformations supportedTransformations() const
+    {
         return m_supportedTransformations;
     }
 
@@ -108,4 +86,3 @@ private:
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::DrmPlane::Transformations)
-

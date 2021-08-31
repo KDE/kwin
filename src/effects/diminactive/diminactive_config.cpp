@@ -19,13 +19,10 @@
 #include <KAboutData>
 #include <KPluginFactory>
 
-K_PLUGIN_FACTORY_WITH_JSON(DimInactiveEffectConfigFactory,
-                           "diminactive_config.json",
-                           registerPlugin<KWin::DimInactiveEffectConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(DimInactiveEffectConfigFactory, "diminactive_config.json", registerPlugin<KWin::DimInactiveEffectConfig>();)
 
 namespace KWin
 {
-
 DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
 {
@@ -43,9 +40,7 @@ void DimInactiveEffectConfig::save()
 {
     KCModule::save();
 
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("diminactive"));
 }
 

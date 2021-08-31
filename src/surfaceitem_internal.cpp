@@ -10,12 +10,10 @@
 
 namespace KWin
 {
-
 SurfaceItemInternal::SurfaceItemInternal(Toplevel *window, Item *parent)
     : SurfaceItem(window, parent)
 {
-    connect(window, &Toplevel::bufferGeometryChanged,
-            this, &SurfaceItemInternal::handleBufferGeometryChanged);
+    connect(window, &Toplevel::bufferGeometryChanged, this, &SurfaceItemInternal::handleBufferGeometryChanged);
 
     setSize(window->bufferGeometry().size());
 

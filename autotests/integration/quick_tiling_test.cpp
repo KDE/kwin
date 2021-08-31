@@ -6,25 +6,25 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
-#include "abstract_output.h"
-#include "platform.h"
 #include "abstract_client.h"
-#include "x11client.h"
+#include "abstract_output.h"
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
+#include "kwin_wayland_test.h"
+#include "platform.h"
 #include "screens.h"
+#include "scripting/scripting.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "scripting/scripting.h"
+#include "x11client.h"
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
 
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
 
@@ -44,7 +44,6 @@ Q_DECLARE_METATYPE(KWin::MaximizeMode)
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_quick_tiling-0");
 
 class QuickTilingTest : public QObject
@@ -80,7 +79,7 @@ private:
 
 void QuickTilingTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -131,14 +130,14 @@ void QuickTilingTest::testQuickTiling_data()
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
-    QTest::newRow("left")   << FLAG(Left)   << QRect(0, 0, 640, 1024)   << QRect(1280, 0, 640, 1024) << FLAG(Right);
-    QTest::newRow("top")    << FLAG(Top)    << QRect(0, 0, 1280, 512)   << QRect(1280, 0, 1280, 512) << FLAG(Top);
-    QTest::newRow("right")  << FLAG(Right)  << QRect(640, 0, 640, 1024) << QRect(1920, 0, 640, 1024) << QuickTileMode();
+    QTest::newRow("left") << FLAG(Left) << QRect(0, 0, 640, 1024) << QRect(1280, 0, 640, 1024) << FLAG(Right);
+    QTest::newRow("top") << FLAG(Top) << QRect(0, 0, 1280, 512) << QRect(1280, 0, 1280, 512) << FLAG(Top);
+    QTest::newRow("right") << FLAG(Right) << QRect(640, 0, 640, 1024) << QRect(1920, 0, 640, 1024) << QuickTileMode();
     QTest::newRow("bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512) << QRect(1280, 512, 1280, 512) << FLAG(Bottom);
 
-    QTest::newRow("top left")     << (FLAG(Left)  | FLAG(Top))    << QRect(0, 0, 640, 512)     << QRect(1280, 0, 640, 512) << (FLAG(Right) | FLAG(Top));
-    QTest::newRow("top right")    << (FLAG(Right) | FLAG(Top))    << QRect(640, 0, 640, 512)   << QRect(1920, 0, 640, 512) << QuickTileMode();
-    QTest::newRow("bottom left")  << (FLAG(Left)  | FLAG(Bottom)) << QRect(0, 512, 640, 512)   << QRect(1280, 512, 640, 512) << (FLAG(Right)  | FLAG(Bottom));
+    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRect(0, 0, 640, 512) << QRect(1280, 0, 640, 512) << (FLAG(Right) | FLAG(Top));
+    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRect(640, 0, 640, 512) << QRect(1920, 0, 640, 512) << QuickTileMode();
+    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRect(0, 512, 640, 512) << QRect(1280, 512, 640, 512) << (FLAG(Right) | FLAG(Bottom));
     QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512) << QRect(1920, 512, 640, 512) << QuickTileMode();
 
     QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024) << QuickTileMode();
@@ -280,10 +279,10 @@ void QuickTilingTest::testQuickMaximizing()
 
     // client is now set to maximised
     QCOMPARE(maximizeChangedSpy1.count(), 1);
-    QCOMPARE(maximizeChangedSpy1.first().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy1.first().first().value<KWin::AbstractClient *>(), c);
     QCOMPARE(maximizeChangedSpy1.first().last().value<KWin::MaximizeMode>(), MaximizeFull);
     QCOMPARE(maximizeChangedSpy2.count(), 1);
-    QCOMPARE(maximizeChangedSpy2.first().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy2.first().first().value<KWin::AbstractClient *>(), c);
     QCOMPARE(maximizeChangedSpy2.first().at(1).toBool(), true);
     QCOMPARE(maximizeChangedSpy2.first().at(2).toBool(), true);
     QCOMPARE(c->maximizeMode(), MaximizeFull);
@@ -310,10 +309,10 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
     QCOMPARE(maximizeChangedSpy1.count(), 2);
-    QCOMPARE(maximizeChangedSpy1.last().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy1.last().first().value<KWin::AbstractClient *>(), c);
     QCOMPARE(maximizeChangedSpy1.last().last().value<KWin::MaximizeMode>(), MaximizeRestore);
     QCOMPARE(maximizeChangedSpy2.count(), 2);
-    QCOMPARE(maximizeChangedSpy2.last().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy2.last().first().value<KWin::AbstractClient *>(), c);
     QCOMPARE(maximizeChangedSpy2.last().at(1).toBool(), false);
     QCOMPARE(maximizeChangedSpy2.last().at(2).toBool(), false);
 }
@@ -405,8 +404,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(
-        surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QVERIFY(!shellSurface.isNull());
 
     // wait for the initial configure event
@@ -479,8 +477,7 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QVERIFY(!surface.isNull());
     QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
 
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(
-        surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QVERIFY(!shellSurface.isNull());
 
     // wait for the initial configure event
@@ -500,9 +497,11 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QVERIFY(c->isDecorated());
     const auto decoration = c->decoration();
     QCOMPARE(workspace()->activeClient(), c);
-    QCOMPARE(c->frameGeometry(), QRect(-decoration->borderLeft(), 0,
-                                       1000 + decoration->borderLeft() + decoration->borderRight(),
-                                       50 + decoration->borderTop() + decoration->borderBottom()));
+    QCOMPARE(c->frameGeometry(),
+             QRect(-decoration->borderLeft(),
+                   0,
+                   1000 + decoration->borderLeft() + decoration->borderRight(),
+                   50 + decoration->borderTop() + decoration->borderBottom()));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
 
@@ -524,7 +523,6 @@ void QuickTilingTest::testQuickTilingTouchMove()
     kwinApp()->platform()->touchUp(0, timestamp++);
     QVERIFY(!workspace()->moveResizeClient());
 
-
     // When there are no borders, there is no change to them when quick-tiling.
     // TODO: we should test both cases with fixed fake decoration for autotests.
     const bool hasBorders = Decoration::DecorationBridge::self()->settings()->borderSize() != KDecoration2::BorderSize::None;
@@ -536,8 +534,7 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QCOMPARE(false, toplevelConfigureRequestedSpy.last().first().toSize().isEmpty());
 }
 
-struct XcbConnectionDeleter
-{
+struct XcbConnectionDeleter {
     static inline void cleanup(xcb_connection_t *pointer)
     {
         xcb_disconnect(pointer);
@@ -553,14 +550,14 @@ void QuickTilingTest::testX11QuickTiling_data()
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
-    QTest::newRow("left")   << FLAG(Left)   << QRect(0, 0, 640, 1024) << 0 << QuickTileMode();
-    QTest::newRow("top")    << FLAG(Top)    << QRect(0, 0, 1280, 512) << 1 << FLAG(Top);
-    QTest::newRow("right")  << FLAG(Right)  << QRect(640, 0, 640, 1024) << 1 << FLAG(Left);
+    QTest::newRow("left") << FLAG(Left) << QRect(0, 0, 640, 1024) << 0 << QuickTileMode();
+    QTest::newRow("top") << FLAG(Top) << QRect(0, 0, 1280, 512) << 1 << FLAG(Top);
+    QTest::newRow("right") << FLAG(Right) << QRect(640, 0, 640, 1024) << 1 << FLAG(Left);
     QTest::newRow("bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512) << 1 << FLAG(Bottom);
 
-    QTest::newRow("top left")     << (FLAG(Left)  | FLAG(Top))    << QRect(0, 0, 640, 512) << 0 << QuickTileMode();
-    QTest::newRow("top right")    << (FLAG(Right) | FLAG(Top))    << QRect(640, 0, 640, 512) << 1 << (FLAG(Left) | FLAG(Top));
-    QTest::newRow("bottom left")  << (FLAG(Left)  | FLAG(Bottom)) << QRect(0, 512, 640, 512) << 0 << QuickTileMode();
+    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRect(0, 0, 640, 512) << 0 << QuickTileMode();
+    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRect(640, 0, 640, 512) << 1 << (FLAG(Left) | FLAG(Top));
+    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRect(0, 512, 640, 512) << 0 << QuickTileMode();
     QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512) << 1 << (FLAG(Left) | FLAG(Bottom));
 
     QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024) << 0 << QuickTileMode();
@@ -573,12 +570,19 @@ void QuickTilingTest::testX11QuickTiling()
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t w = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_create_window(c.data(),
+                      XCB_COPY_FROM_PARENT,
+                      w,
+                      rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
                       windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+                      0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      XCB_COPY_FROM_PARENT,
+                      0,
+                      nullptr);
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
@@ -632,14 +636,14 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize_data()
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
-    QTest::newRow("left")   << FLAG(Left)   << QRect(0, 0, 640, 1024);
-    QTest::newRow("top")    << FLAG(Top)    << QRect(0, 0, 1280, 512);
-    QTest::newRow("right")  << FLAG(Right)  << QRect(640, 0, 640, 1024);
+    QTest::newRow("left") << FLAG(Left) << QRect(0, 0, 640, 1024);
+    QTest::newRow("top") << FLAG(Top) << QRect(0, 0, 1280, 512);
+    QTest::newRow("right") << FLAG(Right) << QRect(640, 0, 640, 1024);
     QTest::newRow("bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512);
 
-    QTest::newRow("top left")     << (FLAG(Left)  | FLAG(Top))    << QRect(0, 0, 640, 512);
-    QTest::newRow("top right")    << (FLAG(Right) | FLAG(Top))    << QRect(640, 0, 640, 512);
-    QTest::newRow("bottom left")  << (FLAG(Left)  | FLAG(Bottom)) << QRect(0, 512, 640, 512);
+    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRect(0, 0, 640, 512);
+    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRect(640, 0, 640, 512);
+    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRect(0, 512, 640, 512);
     QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512);
 
     QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024);
@@ -653,12 +657,19 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t w = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_create_window(c.data(),
+                      XCB_COPY_FROM_PARENT,
+                      w,
+                      rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
                       windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+                      0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      XCB_COPY_FROM_PARENT,
+                      0,
+                      nullptr);
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
@@ -721,10 +732,14 @@ void QuickTilingTest::testShortcut_data()
     QTest::newRow("right") << QStringList{QStringLiteral("Window Quick Tile Right")} << FLAG(Right) << QRect(640, 0, 640, 1024);
 
     // Test combined actions for corner tiling
-    QTest::newRow("top left combined") << QStringList{QStringLiteral("Window Quick Tile Left"), QStringLiteral("Window Quick Tile Top")} << (FLAG(Top) | FLAG(Left)) << QRect(0, 0, 640, 512);
-    QTest::newRow("top right combined") << QStringList{QStringLiteral("Window Quick Tile Right"), QStringLiteral("Window Quick Tile Top")} << (FLAG(Top) | FLAG(Right)) << QRect(640, 0, 640, 512);
-    QTest::newRow("bottom left combined") << QStringList{QStringLiteral("Window Quick Tile Left"), QStringLiteral("Window Quick Tile Bottom")} << (FLAG(Bottom) | FLAG(Left)) << QRect(0, 512, 640, 512);
-    QTest::newRow("bottom right combined") << QStringList{QStringLiteral("Window Quick Tile Right"), QStringLiteral("Window Quick Tile Bottom")} << (FLAG(Bottom) | FLAG(Right)) << QRect(640, 512, 640, 512);
+    QTest::newRow("top left combined") << QStringList{QStringLiteral("Window Quick Tile Left"), QStringLiteral("Window Quick Tile Top")}
+                                       << (FLAG(Top) | FLAG(Left)) << QRect(0, 0, 640, 512);
+    QTest::newRow("top right combined") << QStringList{QStringLiteral("Window Quick Tile Right"), QStringLiteral("Window Quick Tile Top")}
+                                        << (FLAG(Top) | FLAG(Right)) << QRect(640, 0, 640, 512);
+    QTest::newRow("bottom left combined") << QStringList{QStringLiteral("Window Quick Tile Left"), QStringLiteral("Window Quick Tile Bottom")}
+                                          << (FLAG(Bottom) | FLAG(Left)) << QRect(0, 512, 640, 512);
+    QTest::newRow("bottom right combined") << QStringList{QStringLiteral("Window Quick Tile Right"), QStringLiteral("Window Quick Tile Bottom")}
+                                           << (FLAG(Bottom) | FLAG(Right)) << QRect(640, 512, 640, 512);
 #undef FLAG
 }
 
@@ -763,11 +778,10 @@ void QuickTilingTest::testShortcut()
 
     for (QString shortcut : shortcutList) {
         // invoke global shortcut through dbus
-        auto msg = QDBusMessage::createMethodCall(
-            QStringLiteral("org.kde.kglobalaccel"),
-            QStringLiteral("/component/kwin"),
-            QStringLiteral("org.kde.kglobalaccel.Component"),
-            QStringLiteral("invokeShortcut"));
+        auto msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kglobalaccel"),
+                                                  QStringLiteral("/component/kwin"),
+                                                  QStringLiteral("org.kde.kglobalaccel.Component"),
+                                                  QStringLiteral("invokeShortcut"));
         msg.setArguments(QList<QVariant>{shortcut});
         QDBusConnection::sessionBus().asyncCall(msg);
     }

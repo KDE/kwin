@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 Atoms::Atoms()
     : kwin_running(QByteArrayLiteral("KWIN_RUNNING"))
     , activities(QByteArrayLiteral("_KDE_NET_WM_ACTIVITIES"))

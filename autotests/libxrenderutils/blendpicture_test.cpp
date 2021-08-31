@@ -6,9 +6,9 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include <QtTest>
 #include <QLoggingCategory>
 #include <QX11Info>
+#include <QtTest>
 
 #include "../testutils.h"
 

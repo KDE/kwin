@@ -6,18 +6,18 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "cursor.h"
 #include "input.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "screens.h"
 #include "tabbox/tabbox.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/surface.h>
 #include <KConfigGroup>
+#include <KWayland/Client/surface.h>
 
 #include <linux/input.h>
 
@@ -41,7 +41,7 @@ private Q_SLOTS:
 
 void TabBoxTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

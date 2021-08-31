@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 class SyncAlarmX11Filter : public X11EventFilter
 {
 public:

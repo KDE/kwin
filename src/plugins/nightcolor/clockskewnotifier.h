@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 /**
  * The ClockSkewNotifier class provides a way for monitoring system clock changes.
  *

@@ -13,12 +13,10 @@
 
 namespace KWin
 {
-
 class Udev;
 
 namespace LibInput
 {
-
 class Event;
 
 class Context
@@ -27,10 +25,12 @@ public:
     Context(const Udev &udev);
     ~Context();
     bool assignSeat(const char *seat);
-    bool isValid() const {
+    bool isValid() const
+    {
         return m_libinput != nullptr;
     }
-    bool isSuspended() const {
+    bool isSuspended() const
+    {
         return m_suspended;
     }
 
@@ -39,10 +39,12 @@ public:
     void suspend();
     void resume();
 
-    operator libinput*() {
+    operator libinput *()
+    {
         return m_libinput;
     }
-    operator libinput*() const {
+    operator libinput *() const
+    {
         return m_libinput;
     }
 

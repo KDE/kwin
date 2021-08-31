@@ -6,14 +6,13 @@
 
 #pragma once
 
-#include <kwineffects.h>
 #include <kwineffectquickview.h>
+#include <kwineffects.h>
 
 #include "expolayout.h"
 
 namespace KWin
 {
-
 class OverviewEffect;
 
 class OverviewScreenView : public EffectQuickScene

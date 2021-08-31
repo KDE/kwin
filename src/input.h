@@ -10,12 +10,12 @@
 */
 #ifndef KWIN_INPUT_H
 #define KWIN_INPUT_H
-#include <kwinglobals.h>
 #include <QAction>
 #include <QObject>
 #include <QPoint>
 #include <QPointer>
 #include <config-kwin.h>
+#include <kwinglobals.h>
 
 #include <KConfigWatcher>
 #include <KSharedConfig>
@@ -53,8 +53,8 @@ class DecoratedClientImpl;
 
 namespace LibInput
 {
-    class Connection;
-    class Device;
+class Connection;
+class Device;
 }
 
 /**
@@ -69,14 +69,8 @@ class KWIN_EXPORT InputRedirection : public QObject
 {
     Q_OBJECT
 public:
-    enum PointerButtonState {
-        PointerButtonReleased,
-        PointerButtonPressed
-    };
-    enum PointerAxis {
-        PointerAxisVertical,
-        PointerAxisHorizontal
-    };
+    enum PointerButtonState { PointerButtonReleased, PointerButtonPressed };
+    enum PointerAxis { PointerAxisVertical, PointerAxisHorizontal };
     enum PointerAxisSource {
         PointerAxisSourceUnknown,
         PointerAxisSourceWheel,
@@ -84,16 +78,8 @@ public:
         PointerAxisSourceContinuous,
         PointerAxisSourceWheelTilt
     };
-    enum KeyboardKeyState {
-        KeyboardKeyReleased,
-        KeyboardKeyPressed,
-        KeyboardKeyAutoRepeat
-    };
-    enum TabletEventType {
-        Axis,
-        Proximity,
-        Tip
-    };
+    enum KeyboardKeyState { KeyboardKeyReleased, KeyboardKeyPressed, KeyboardKeyAutoRepeat };
+    enum TabletEventType { Axis, Proximity, Tip };
     enum TabletToolType {
         Pen,
         Eraser,
@@ -134,7 +120,7 @@ public:
      * to the @p slot being invoked. If not using this overload it's required to ensure that
      * registerShortcut is called before connecting to QAction's triggered signal.
      */
-    template <typename T, typename Slot>
+    template<typename T, typename Slot>
     void registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, Slot slot);
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
@@ -202,7 +188,8 @@ public:
 
     Toplevel *findToplevel(const QPoint &pos);
     Toplevel *findManagedToplevel(const QPoint &pos);
-    GlobalShortcutsManager *shortcuts() const {
+    GlobalShortcutsManager *shortcuts() const
+    {
         return m_shortcuts;
     }
 
@@ -220,8 +207,9 @@ public:
      * The intended usage is to std::bind the method to invoke on the filter with all arguments
      * bind.
      */
-    template <class UnaryPredicate>
-    void processFilters(UnaryPredicate function) {
+    template<class UnaryPredicate>
+    void processFilters(UnaryPredicate function)
+    {
         std::any_of(m_filters.constBegin(), m_filters.constEnd(), function);
     }
 
@@ -238,28 +226,33 @@ public:
      * The intended usage is to std::bind the method to invoke on the spies with all arguments
      * bind.
      */
-    template <class UnaryFunction>
-    void processSpies(UnaryFunction function) {
+    template<class UnaryFunction>
+    void processSpies(UnaryFunction function)
+    {
         std::for_each(m_spies.constBegin(), m_spies.constEnd(), function);
     }
 
-    KeyboardInputRedirection *keyboard() const {
+    KeyboardInputRedirection *keyboard() const
+    {
         return m_keyboard;
     }
-    PointerInputRedirection *pointer() const {
+    PointerInputRedirection *pointer() const
+    {
         return m_pointer;
     }
-    TabletInputRedirection *tablet() const {
+    TabletInputRedirection *tablet() const
+    {
         return m_tablet;
     }
-    TouchInputRedirection *touch() const {
+    TouchInputRedirection *touch() const
+    {
         return m_touch;
     }
 
     bool hasAlphaNumericKeyboard();
     bool hasTabletModeSwitch();
 
-    void startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName);
+    void startInteractiveWindowSelection(std::function<void(KWin::Toplevel *)> callback, const QByteArray &cursorName);
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
     bool isSelectingWindow() const;
 
@@ -328,8 +321,8 @@ private:
 
     WindowSelectorFilter *m_windowSelector = nullptr;
 
-    QVector<InputEventFilter*> m_filters;
-    QVector<InputEventSpy*> m_spies;
+    QVector<InputEventFilter *> m_filters;
+    QVector<InputEventSpy *> m_spies;
     KConfigWatcher::Ptr m_inputConfigWatcher;
 
     KWIN_SINGLETON(InputRedirection)
@@ -477,17 +470,21 @@ protected:
      * position. An example are touch screens when no finger/pen
      * is resting on the surface (no touch point).
      */
-    virtual bool positionValid() const {
+    virtual bool positionValid() const
+    {
         return true;
     }
-    virtual bool focusUpdatesBlocked() {
+    virtual bool focusUpdatesBlocked()
+    {
         return false;
     }
 
-    inline bool inited() const {
+    inline bool inited() const
+    {
         return m_inited;
     }
-    inline void setInited(bool set) {
+    inline void setInited(bool set)
+    {
         m_inited = set;
     }
 
@@ -511,15 +508,14 @@ private:
     bool m_inited = false;
 };
 
-inline
-InputRedirection *input()
+inline InputRedirection *input()
 {
     return InputRedirection::s_self;
 }
 
-template <typename T, typename Slot>
-inline
-void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, Slot slot) {
+template<typename T, typename Slot>
+inline void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, Slot slot)
+{
     registerShortcut(shortcut, action);
     connect(action, &QAction::triggered, receiver, slot);
 }

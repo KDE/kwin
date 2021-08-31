@@ -15,7 +15,6 @@ class Decoration;
 
 namespace KWin
 {
-
 class AbstractClient;
 class Deleted;
 class Toplevel;
@@ -46,10 +45,12 @@ protected:
 
     Decoration::DecoratedClientImpl *client() const;
 
-    bool areImageSizesDirty() const {
+    bool areImageSizesDirty() const
+    {
         return m_imageSizesDirty;
     }
-    void resetImageSizesDirty() {
+    void resetImageSizesDirty()
+    {
         m_imageSizesDirty = false;
     }
     QImage renderToImage(const QRect &geo);

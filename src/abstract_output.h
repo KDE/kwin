@@ -25,7 +25,6 @@ class OutputChangeSet;
 
 namespace KWin
 {
-
 class RenderLoop;
 
 class KWIN_EXPORT GammaRamp
@@ -207,18 +206,12 @@ public:
      */
     static std::chrono::milliseconds dimAnimationTime();
 
-    enum class Transform {
-        Normal,
-        Rotated90,
-        Rotated180,
-        Rotated270,
-        Flipped,
-        Flipped90,
-        Flipped180,
-        Flipped270
-    };
+    enum class Transform { Normal, Rotated90, Rotated180, Rotated270, Flipped, Flipped90, Flipped180, Flipped270 };
     Q_ENUM(Transform)
-    virtual Transform transform() const { return Transform::Normal; }
+    virtual Transform transform() const
+    {
+        return Transform::Normal;
+    }
 
 Q_SIGNALS:
     /**

@@ -6,37 +6,37 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "cursor.h"
-#include "effects.h"
 #include "deleted.h"
-#include "platform.h"
-#include "screens.h"
-#include "wayland_server.h"
-#include "workspace.h"
+#include "effects.h"
 #include "inputmethod.h"
-#include "virtualkeyboard_dbus.h"
+#include "kwin_wayland_test.h"
+#include "platform.h"
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
+#include "screens.h"
+#include "virtualkeyboard_dbus.h"
+#include "wayland_server.h"
+#include "workspace.h"
 
-#include <QTest>
-#include <QSignalSpy>
-#include <QDBusConnection>
-#include <QDBusMessage>
-#include <QDBusPendingReply>
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingReply>
+#include <QSignalSpy>
+#include <QTest>
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/region.h>
+#include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/textinput.h>
-#include <KWayland/Client/seat.h>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -58,7 +58,6 @@ private Q_SLOTS:
     void testHidePanel();
     void testSwitchFocusedSurfaces();
 };
-
 
 void InputMethodTest::initTestCase()
 {
@@ -82,16 +81,12 @@ void InputMethodTest::initTestCase()
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
     Test::initWaylandWorkspace();
-
 }
 
 void InputMethodTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat |
-                                         Test::AdditionalWaylandInterface::TextInputManagerV2 |
-                                         Test::AdditionalWaylandInterface::InputMethodV1 |
-                                         Test::AdditionalWaylandInterface::TextInputManagerV3));
-
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::TextInputManagerV2
+                                         | Test::AdditionalWaylandInterface::InputMethodV1 | Test::AdditionalWaylandInterface::TextInputManagerV3));
 
     workspace()->setActiveOutput(QPoint(640, 512));
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
@@ -276,7 +271,6 @@ void InputMethodTest::testHidePanel()
     // Destroy the test client.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
-
 }
 
 void InputMethodTest::testSwitchFocusedSurfaces()

@@ -12,11 +12,9 @@
 
 namespace KWin
 {
-
 SGIVideoSyncVsyncMonitor *SGIVideoSyncVsyncMonitor::create(QObject *parent)
 {
-    const char *extensions = glXQueryExtensionsString(QX11Info::display(),
-                                                      QX11Info::appScreen());
+    const char *extensions = glXQueryExtensionsString(QX11Info::display(), QX11Info::appScreen());
     if (!strstr(extensions, "GLX_SGI_video_sync")) {
         return nullptr; // GLX_SGI_video_sync is unsupported.
     }
@@ -41,11 +39,7 @@ SGIVideoSyncVsyncMonitorHelper::SGIVideoSyncVsyncMonitorHelper(QObject *parent)
 
     Window rootWindow = DefaultRootWindow(m_display);
 
-    const int attribs[] = {
-        GLX_RENDER_TYPE, GLX_RGBA_BIT,
-        GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
-        0
-    };
+    const int attribs[] = {GLX_RENDER_TYPE, GLX_RGBA_BIT, GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT, 0};
 
     GLXFBConfig config = chooseGlxFbConfig(m_display, attribs);
     if (!config) {
@@ -66,8 +60,7 @@ SGIVideoSyncVsyncMonitorHelper::SGIVideoSyncVsyncMonitorHelper(QObject *parent)
     XSetWindowAttributes attributes;
     attributes.colormap = colormap;
 
-    m_dummyWindow = XCreateWindow(m_display, rootWindow, 0, 0, 1, 1, 0, depth,
-                                  InputOutput, visual, CWColormap, &attributes);
+    m_dummyWindow = XCreateWindow(m_display, rootWindow, 0, 0, 1, 1, 0, depth, InputOutput, visual, CWColormap, &attributes);
     XFreeColormap(m_display, colormap);
     if (!m_dummyWindow) {
         qCDebug(KWIN_X11STANDALONE) << "Failed to create a dummy window for vsync monitor";
@@ -132,10 +125,8 @@ SGIVideoSyncVsyncMonitor::SGIVideoSyncVsyncMonitor(QObject *parent)
 {
     m_helper->moveToThread(m_thread);
 
-    connect(m_helper, &SGIVideoSyncVsyncMonitorHelper::errorOccurred,
-            this, &SGIVideoSyncVsyncMonitor::errorOccurred);
-    connect(m_helper, &SGIVideoSyncVsyncMonitorHelper::vblankOccurred,
-            this, &SGIVideoSyncVsyncMonitor::vblankOccurred);
+    connect(m_helper, &SGIVideoSyncVsyncMonitorHelper::errorOccurred, this, &SGIVideoSyncVsyncMonitor::errorOccurred);
+    connect(m_helper, &SGIVideoSyncVsyncMonitorHelper::vblankOccurred, this, &SGIVideoSyncVsyncMonitor::vblankOccurred);
 
     m_thread->setObjectName(QStringLiteral("vsync event monitor"));
     m_thread->start();

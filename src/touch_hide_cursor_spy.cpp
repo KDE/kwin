@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 void TouchHideCursorSpy::pointerEvent(MouseEvent *event)
 {
     Q_UNUSED(event)

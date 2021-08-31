@@ -14,9 +14,7 @@
 
 namespace KWin
 {
-
-struct FallApartAnimation
-{
+struct FallApartAnimation {
     std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
     qreal progress = 0;
 };
@@ -28,17 +26,19 @@ class FallApartEffect : public DeformEffect
 public:
     FallApartEffect();
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 70;
     }
 
     // for properties
-    int configuredBlockSize() const {
+    int configuredBlockSize() const
+    {
         return blockSize;
     }
 
@@ -53,8 +53,8 @@ public Q_SLOTS:
     void slotWindowDataChanged(KWin::EffectWindow *w, int role);
 
 private:
-    QHash< EffectWindow*, FallApartAnimation > windows;
-    bool isRealWindow(EffectWindow* w);
+    QHash<EffectWindow *, FallApartAnimation> windows;
+    bool isRealWindow(EffectWindow *w);
     int blockSize;
 };
 

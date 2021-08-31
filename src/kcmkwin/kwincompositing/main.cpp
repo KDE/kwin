@@ -8,7 +8,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-
 #include "ui_compositing.h"
 #include <kwin_compositing_interface.h>
 
@@ -70,7 +69,8 @@ bool KWinCompositingKCM::compositingRequired() const
 
 KWinCompositingKCM::KWinCompositingKCM(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
-    , m_compositingInterface(new OrgKdeKwinCompositingInterface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Compositor"), QDBusConnection::sessionBus(), this))
+    , m_compositingInterface(
+          new OrgKdeKwinCompositingInterface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Compositor"), QDBusConnection::sessionBus(), this))
     , m_settings(new KWinCompositingSetting(this))
 {
     m_form.setupUi(this);
@@ -101,7 +101,7 @@ void KWinCompositingKCM::reenableGl()
 
 void KWinCompositingKCM::init()
 {
-    auto currentIndexChangedSignal = static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
+    auto currentIndexChangedSignal = static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
 
     // animation speed
     m_form.animationDurationFactor->setMaximum(s_animationMultipliers.size() - 1);
@@ -116,47 +116,41 @@ void KWinCompositingKCM::init()
     }
 
     // gl scale filter
-    connect(m_form.kcfg_glTextureFilter, currentIndexChangedSignal, this,
-        [this](int index) {
-            if (index == 2) {
-                m_form.scaleWarning->animatedShow();
-            } else {
-                m_form.scaleWarning->animatedHide();
-            }
+    connect(m_form.kcfg_glTextureFilter, currentIndexChangedSignal, this, [this](int index) {
+        if (index == 2) {
+            m_form.scaleWarning->animatedShow();
+        } else {
+            m_form.scaleWarning->animatedHide();
         }
-    );
+    });
 
     // tearing prevention
-    connect(m_form.kcfg_glPreferBufferSwap, currentIndexChangedSignal, this,
-        [this](int index) {
-            if (index == 1) {
-                // only when cheap - tearing
-                m_form.tearingWarning->setText(i18n("\"Only when cheap\" only prevents tearing for full screen changes like a video."));
-                m_form.tearingWarning->animatedShow();
-            } else if (index == 2) {
-                // full screen repaints
-                m_form.tearingWarning->setText(i18n("\"Full screen repaints\" can cause performance problems."));
-                m_form.tearingWarning->animatedShow();
-            } else if (index == 3) {
-                // re-use screen content
-                m_form.tearingWarning->setText(i18n("\"Re-use screen content\" causes severe performance problems on MESA drivers."));
-                m_form.tearingWarning->animatedShow();
-            } else {
-                m_form.tearingWarning->animatedHide();
-            }
+    connect(m_form.kcfg_glPreferBufferSwap, currentIndexChangedSignal, this, [this](int index) {
+        if (index == 1) {
+            // only when cheap - tearing
+            m_form.tearingWarning->setText(i18n("\"Only when cheap\" only prevents tearing for full screen changes like a video."));
+            m_form.tearingWarning->animatedShow();
+        } else if (index == 2) {
+            // full screen repaints
+            m_form.tearingWarning->setText(i18n("\"Full screen repaints\" can cause performance problems."));
+            m_form.tearingWarning->animatedShow();
+        } else if (index == 3) {
+            // re-use screen content
+            m_form.tearingWarning->setText(i18n("\"Re-use screen content\" causes severe performance problems on MESA drivers."));
+            m_form.tearingWarning->animatedShow();
+        } else {
+            m_form.tearingWarning->animatedHide();
         }
-    );
+    });
 
     // windowThumbnail
-    connect(m_form.kcfg_HiddenPreviews, currentIndexChangedSignal, this,
-        [this](int index) {
-            if (index == 2) {
-                m_form.windowThumbnailWarning->animatedShow();
-            } else {
-                m_form.windowThumbnailWarning->animatedHide();
-            }
+    connect(m_form.kcfg_HiddenPreviews, currentIndexChangedSignal, this, [this](int index) {
+        if (index == 2) {
+            m_form.windowThumbnailWarning->animatedShow();
+        } else {
+            m_form.windowThumbnailWarning->animatedHide();
         }
-    );
+    });
 
     // compositing type
     m_form.backend->addItem(i18n("OpenGL 3.1"), CompositingTypeIndex::OPENGL31_INDEX);
@@ -173,8 +167,7 @@ void KWinCompositingKCM::onBackendChanged()
 {
     const int currentType = m_form.backend->currentData().toInt();
 
-    m_form.kcfg_glTextureFilter->setVisible(currentType == CompositingTypeIndex::OPENGL31_INDEX ||
-            currentType == CompositingTypeIndex::OPENGL20_INDEX);
+    m_form.kcfg_glTextureFilter->setVisible(currentType == CompositingTypeIndex::OPENGL31_INDEX || currentType == CompositingTypeIndex::OPENGL20_INDEX);
 
     updateUnmanagedItemStatus();
 }
@@ -199,7 +192,7 @@ void KWinCompositingKCM::updateUnmanagedItemStatus()
     bool changed = glCore != m_settings->glCore();
     changed |= backend != m_settings->backend();
     if (!inPlasma) {
-      changed |= (animationDuration != m_settings->animationDurationFactor());
+        changed |= (animationDuration != m_settings->animationDurationFactor());
     }
     unmanagedWidgetChangeState(changed);
 
@@ -209,7 +202,8 @@ void KWinCompositingKCM::updateUnmanagedItemStatus()
         defaulted &= animationDuration == m_settings->defaultAnimationDurationFactorValue();
     }
 
-    m_form.backend->setProperty("_kde_highlight_neutral", defaultsIndicatorsVisible() && (backend != m_settings->defaultBackendValue() || glCore != m_settings->defaultGlCoreValue()));
+    m_form.backend->setProperty("_kde_highlight_neutral",
+                                defaultsIndicatorsVisible() && (backend != m_settings->defaultBackendValue() || glCore != m_settings->defaultGlCoreValue()));
     m_form.backend->update();
 
     unmanagedWidgetDefaultState(defaulted);
@@ -276,15 +270,10 @@ void KWinCompositingKCM::save()
     KCModule::save();
 
     // Send signal to all kwin instances
-    QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/Compositor"),
-                                                      QStringLiteral("org.kde.kwin.Compositing"),
-                                                      QStringLiteral("reinit"));
+    QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/Compositor"), QStringLiteral("org.kde.kwin.Compositing"), QStringLiteral("reinit"));
     QDBusConnection::sessionBus().send(message);
 }
 
-K_PLUGIN_FACTORY(KWinCompositingConfigFactory,
-                 registerPlugin<KWinCompositingKCM>();
-                 registerPlugin<KWinCompositingData>();
-                )
+K_PLUGIN_FACTORY(KWinCompositingConfigFactory, registerPlugin<KWinCompositingKCM>(); registerPlugin<KWinCompositingData>();)
 
 #include "main.moc"

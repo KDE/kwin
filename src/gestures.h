@@ -11,20 +11,20 @@
 
 #include <kwin_export.h>
 
+#include <QMap>
 #include <QObject>
 #include <QPointF>
 #include <QSizeF>
-#include <QMap>
 #include <QVector>
 
 namespace KWin
 {
-
 class Gesture : public QObject
 {
     Q_OBJECT
 public:
     ~Gesture() override;
+
 protected:
     explicit Gesture(QObject *parent);
 
@@ -49,96 +49,114 @@ class SwipeGesture : public Gesture
 {
     Q_OBJECT
 public:
-    enum class Direction {
-        Down,
-        Left,
-        Up,
-        Right
-    };
+    enum class Direction { Down, Left, Up, Right };
 
     explicit SwipeGesture(QObject *parent = nullptr);
     ~SwipeGesture() override;
 
-    bool minimumFingerCountIsRelevant() const {
+    bool minimumFingerCountIsRelevant() const
+    {
         return m_minimumFingerCountRelevant;
     }
-    void setMinimumFingerCount(uint count) {
+    void setMinimumFingerCount(uint count)
+    {
         m_minimumFingerCount = count;
         m_minimumFingerCountRelevant = true;
     }
-    uint minimumFingerCount() const {
+    uint minimumFingerCount() const
+    {
         return m_minimumFingerCount;
     }
 
-    bool maximumFingerCountIsRelevant() const {
+    bool maximumFingerCountIsRelevant() const
+    {
         return m_maximumFingerCountRelevant;
     }
-    void setMaximumFingerCount(uint count) {
+    void setMaximumFingerCount(uint count)
+    {
         m_maximumFingerCount = count;
         m_maximumFingerCountRelevant = true;
     }
-    uint maximumFingerCount() const {
+    uint maximumFingerCount() const
+    {
         return m_maximumFingerCount;
     }
 
-    Direction direction() const {
+    Direction direction() const
+    {
         return m_direction;
     }
-    void setDirection(Direction direction) {
+    void setDirection(Direction direction)
+    {
         m_direction = direction;
     }
 
-    void setMinimumX(int x) {
+    void setMinimumX(int x)
+    {
         m_minimumX = x;
         m_minimumXRelevant = true;
     }
-    int minimumX() const {
+    int minimumX() const
+    {
         return m_minimumX;
     }
-    bool minimumXIsRelevant() const {
+    bool minimumXIsRelevant() const
+    {
         return m_minimumXRelevant;
     }
-    void setMinimumY(int y) {
+    void setMinimumY(int y)
+    {
         m_minimumY = y;
         m_minimumYRelevant = true;
     }
-    int minimumY() const {
+    int minimumY() const
+    {
         return m_minimumY;
     }
-    bool minimumYIsRelevant() const {
+    bool minimumYIsRelevant() const
+    {
         return m_minimumYRelevant;
     }
 
-    void setMaximumX(int x) {
+    void setMaximumX(int x)
+    {
         m_maximumX = x;
         m_maximumXRelevant = true;
     }
-    int maximumX() const {
+    int maximumX() const
+    {
         return m_maximumX;
     }
-    bool maximumXIsRelevant() const {
+    bool maximumXIsRelevant() const
+    {
         return m_maximumXRelevant;
     }
-    void setMaximumY(int y) {
+    void setMaximumY(int y)
+    {
         m_maximumY = y;
         m_maximumYRelevant = true;
     }
-    int maximumY() const {
+    int maximumY() const
+    {
         return m_maximumY;
     }
-    bool maximumYIsRelevant() const {
+    bool maximumYIsRelevant() const
+    {
         return m_maximumYRelevant;
     }
     void setStartGeometry(const QRect &geometry);
 
-    QSizeF minimumDelta() const {
+    QSizeF minimumDelta() const
+    {
         return m_minimumDelta;
     }
-    void setMinimumDelta(const QSizeF &delta) {
+    void setMinimumDelta(const QSizeF &delta)
+    {
         m_minimumDelta = delta;
         m_minimumDeltaRelevant = true;
     }
-    bool isMinimumDeltaRelevant() const {
+    bool isMinimumDeltaRelevant() const
+    {
         return m_minimumDeltaRelevant;
     }
 
@@ -180,10 +198,12 @@ public:
     void registerGesture(Gesture *gesture);
     void unregisterGesture(Gesture *gesture);
 
-    int startSwipeGesture(uint fingerCount) {
+    int startSwipeGesture(uint fingerCount)
+    {
         return startSwipeGesture(fingerCount, QPointF(), StartPositionBehavior::Irrelevant);
     }
-    int startSwipeGesture(const QPointF &startPos) {
+    int startSwipeGesture(const QPointF &startPos)
+    {
         return startSwipeGesture(1, startPos, StartPositionBehavior::Relevant);
     }
     void updateSwipeGesture(const QSizeF &delta);
@@ -192,14 +212,11 @@ public:
 
 private:
     void cancelActiveSwipeGestures();
-    enum class StartPositionBehavior {
-        Relevant,
-        Irrelevant
-    };
+    enum class StartPositionBehavior { Relevant, Irrelevant };
     int startSwipeGesture(uint fingerCount, const QPointF &startPos, StartPositionBehavior startPosBehavior);
-    QVector<Gesture*> m_gestures;
-    QVector<Gesture*> m_activeSwipeGestures;
-    QMap<Gesture*, QMetaObject::Connection> m_destroyConnections;
+    QVector<Gesture *> m_gestures;
+    QVector<Gesture *> m_activeSwipeGestures;
+    QMap<Gesture *, QMetaObject::Connection> m_destroyConnections;
     QVector<QSizeF> m_swipeUpdates;
     QSizeF m_lastDelta = QSizeF(0, 0);
     QSizeF m_currentDelta = QSizeF(0, 0);

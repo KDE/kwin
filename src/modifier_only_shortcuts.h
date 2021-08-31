@@ -17,7 +17,6 @@
 
 namespace KWin
 {
-
 class KWIN_EXPORT ModifierOnlyShortcuts : public QObject, public InputEventSpy
 {
     Q_OBJECT
@@ -29,7 +28,8 @@ public:
     void pointerEvent(MouseEvent *event) override;
     void wheelEvent(WheelEvent *event) override;
 
-    void reset() {
+    void reset()
+    {
         m_modifier = Qt::NoModifier;
     }
 

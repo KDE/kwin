@@ -11,7 +11,6 @@
 
 namespace KWin
 {
-
 class WindowSystem : public QObject, public KWindowSystemPrivate
 {
     Q_OBJECT
@@ -51,9 +50,19 @@ public:
     bool showingDesktop() override;
     void setShowingDesktop(bool showing) override;
     void setUserTime(WId win, long time) override;
-    void setExtendedStrut(WId win, int left_width, int left_start, int left_end,
-                          int right_width, int right_start, int right_end, int top_width, int top_start, int top_end,
-                          int bottom_width, int bottom_start, int bottom_end) override;
+    void setExtendedStrut(WId win,
+                          int left_width,
+                          int left_start,
+                          int left_end,
+                          int right_width,
+                          int right_start,
+                          int right_end,
+                          int top_width,
+                          int top_start,
+                          int top_end,
+                          int bottom_width,
+                          int bottom_start,
+                          int bottom_end) override;
     void setStrut(WId win, int left, int right, int top, int bottom) override;
     bool allowedActionsSupported() override;
     QString readNameProperty(WId window, unsigned long atom) override;

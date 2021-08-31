@@ -16,12 +16,12 @@ class GLTexture;
 class KWIN_EXPORT DmaBufTexture
 {
 public:
-    explicit DmaBufTexture(KWin::GLTexture* texture);
+    explicit DmaBufTexture(KWin::GLTexture *texture);
     virtual ~DmaBufTexture();
 
     virtual quint32 stride() const = 0;
     virtual int fd() const = 0;
-    KWin::GLRenderTarget* framebuffer() const;
+    KWin::GLRenderTarget *framebuffer() const;
 
 protected:
     QScopedPointer<KWin::GLTexture> m_texture;

@@ -20,13 +20,13 @@ class QDBusPendingCallWatcher;
 
 namespace KWin
 {
-
 class KWIN_EXPORT ScreenLockerWatcher : public QObject
 {
     Q_OBJECT
 public:
     ~ScreenLockerWatcher() override;
-    bool isLocked() const {
+    bool isLocked() const
+    {
         return m_locked;
     }
 Q_SIGNALS:
@@ -38,6 +38,7 @@ private Q_SLOTS:
     void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
     void serviceRegisteredQueried();
     void serviceOwnerQueried();
+
 private:
     void initialize();
     OrgFreedesktopScreenSaverInterface *m_interface = nullptr;

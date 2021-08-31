@@ -11,29 +11,28 @@
 
 #include <errno.h>
 
-#include "logging.h"
+#include "cursor.h"
+#include "drm_backend.h"
+#include "drm_buffer.h"
 #include "drm_gpu.h"
 #include "drm_object_connector.h"
 #include "drm_object_crtc.h"
 #include "drm_object_plane.h"
-#include "drm_buffer.h"
-#include "cursor.h"
-#include "session.h"
 #include "drm_output.h"
-#include "drm_backend.h"
+#include "logging.h"
+#include "session.h"
 
 #if HAVE_GBM
 #include <gbm.h>
 
-#include "egl_gbm_backend.h"
 #include "drm_buffer_gbm.h"
+#include "egl_gbm_backend.h"
 #endif
 
 #include <drm_fourcc.h>
 
 namespace KWin
 {
-
 DrmPipeline::DrmPipeline(DrmGpu *gpu, DrmConnector *conn, DrmCrtc *crtc, DrmPlane *primaryPlane)
     : m_pageflipUserData(nullptr)
     , m_gpu(gpu)
@@ -60,7 +59,7 @@ DrmPipeline::~DrmPipeline()
 {
 }
 
-bool DrmPipeline::test(const QVector<DrmPipeline*> &pipelines)
+bool DrmPipeline::test(const QVector<DrmPipeline *> &pipelines)
 {
     if (m_gpu->atomicModeSetting()) {
         return checkTestBuffer() && atomicTest(pipelines);
@@ -80,7 +79,9 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
     if (m_gpu->useEglStreams() && m_gpu->eglBackend() != nullptr && m_gpu == m_gpu->platform()->primaryGpu()) {
         // EglStreamBackend queues normal page flips through EGL,
         // modesets etc are performed through DRM-KMS
-        bool needsCommit = std::any_of(m_allObjects.constBegin(), m_allObjects.constEnd(), [](auto obj){return obj->needsCommit();});
+        bool needsCommit = std::any_of(m_allObjects.constBegin(), m_allObjects.constEnd(), [](auto obj) {
+            return obj->needsCommit();
+        });
         if (!needsCommit) {
             return true;
         }
@@ -116,7 +117,7 @@ bool DrmPipeline::atomicCommit()
     return result;
 }
 
-bool DrmPipeline::atomicTest(const QVector<DrmPipeline*> &pipelines)
+bool DrmPipeline::atomicTest(const QVector<DrmPipeline *> &pipelines)
 {
     drmModeAtomicReq *req = drmModeAtomicAlloc();
     if (!req) {
@@ -194,7 +195,9 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
     if (!usesEglStreams && m_active) {
         flags |= DRM_MODE_PAGE_FLIP_EVENT;
     }
-    bool needsModeset = std::any_of(m_allObjects.constBegin(), m_allObjects.constEnd(), [](auto obj){return obj->needsModeset();});
+    bool needsModeset = std::any_of(m_allObjects.constBegin(), m_allObjects.constEnd(), [](auto obj) {
+        return obj->needsModeset();
+    });
     if (needsModeset) {
         flags |= DRM_MODE_ATOMIC_ALLOW_MODESET;
     } else {
@@ -239,8 +242,7 @@ bool DrmPipeline::modeset(int modeIndex)
         }
         bool works = test();
         // hardware rotation could fail in some modes, try again with soft rotation if possible
-        if (!works
-            && transformation() != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0)
+        if (!works && transformation() != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0)
             && setPendingTransformation(DrmPlane::Transformation::Rotate0)) {
             // values are reset on the failing test, set them again
             m_crtc->setPendingBlob(DrmCrtc::PropertyIndex::ModeId, &mode, sizeof(drmModeModeInfo));
@@ -288,7 +290,8 @@ bool DrmPipeline::checkTestBuffer()
     // we either don't have a DrmOutput or we're using QPainter
     QSharedPointer<DrmBuffer> buffer;
     if (backend && m_gpu->gbmDevice()) {
-        gbm_bo *bo = gbm_bo_create(m_gpu->gbmDevice(), sourceSize().width(), sourceSize().height(), GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
+        gbm_bo *bo =
+            gbm_bo_create(m_gpu->gbmDevice(), sourceSize().width(), sourceSize().height(), GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
         if (!bo) {
             return false;
         }
@@ -409,9 +412,9 @@ bool DrmPipeline::setGammaRamp(const GammaRamp &ramp)
             return false;
         }
     } else {
-        uint16_t *red = const_cast<uint16_t*>(ramp.red());
-        uint16_t *green = const_cast<uint16_t*>(ramp.green());
-        uint16_t *blue = const_cast<uint16_t*>(ramp.blue());
+        uint16_t *red = const_cast<uint16_t *>(ramp.red());
+        uint16_t *green = const_cast<uint16_t *>(ramp.green());
+        uint16_t *blue = const_cast<uint16_t *>(ramp.blue());
         if (drmModeCrtcSetGamma(m_gpu->fd(), m_crtc->id(), ramp.size(), red, green, blue) != 0) {
             qCWarning(KWIN_DRM) << "setting gamma failed!" << strerror(errno);
             return false;

@@ -6,11 +6,11 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "abstract_output.h"
-#include "platform.h"
 #include "cursor.h"
+#include "kwin_wayland_test.h"
+#include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -24,7 +24,6 @@
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_touch_input-0");
 
 class TouchInputTest : public QObject
@@ -48,7 +47,7 @@ private:
 
 void TouchInputTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -87,11 +86,11 @@ void TouchInputTest::cleanup()
 AbstractClient *TouchInputTest::showWindow(bool decorated)
 {
     using namespace KWayland::Client;
-#define VERIFY(statement) \
-    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))\
+#define VERIFY(statement)                                                                                                                                      \
+    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))                                                                                      \
         return nullptr;
-#define COMPARE(actual, expected) \
-    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
+#define COMPARE(actual, expected)                                                                                                                              \
+    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))                                                                            \
         return nullptr;
 
     Surface *surface = Test::createSurface(Test::waylandCompositor());

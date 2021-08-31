@@ -32,7 +32,6 @@
 
 namespace KWin
 {
-
 Toplevel::Toplevel()
     : m_visual(XCB_NONE)
     , bit_depth(24)
@@ -103,7 +102,7 @@ void Toplevel::detectShape(xcb_window_t id)
 }
 
 // used only by Deleted::copy()
-void Toplevel::copyToDeleted(Toplevel* c)
+void Toplevel::copyToDeleted(Toplevel *c)
 {
     m_internalId = c->internalId();
     m_bufferGeometry = c->m_bufferGeometry;
@@ -236,7 +235,7 @@ void Toplevel::getResourceClass()
 
 void Toplevel::setResourceClass(const QByteArray &name, const QByteArray &className)
 {
-    resource_name  = name;
+    resource_name = name;
     resource_class = className;
     Q_EMIT windowClassChanged();
 }
@@ -334,7 +333,7 @@ void Toplevel::addWorkspaceRepaint(int x, int y, int w, int h)
     addWorkspaceRepaint(QRect(x, y, w, h));
 }
 
-void Toplevel::addWorkspaceRepaint(const QRect& r2)
+void Toplevel::addWorkspaceRepaint(const QRect &r2)
 {
     if (!Compositor::compositing())
         return;
@@ -718,4 +717,3 @@ bool Toplevel::isOnCurrentDesktop() const
 }
 
 } // namespace
-

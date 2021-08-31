@@ -18,7 +18,6 @@ namespace KWin
 {
 namespace QPA
 {
-
 class BackingStore : public QPlatformBackingStore
 {
 public:

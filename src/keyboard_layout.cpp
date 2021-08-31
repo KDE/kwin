@@ -7,9 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "keyboard_layout.h"
-#include "keyboard_layout_switching.h"
-#include "keyboard_input.h"
 #include "input_event.h"
+#include "keyboard_input.h"
+#include "keyboard_layout_switching.h"
 #include "main.h"
 #include "platform.h"
 
@@ -18,12 +18,11 @@
 #include <QAction>
 #include <QDBusConnection>
 #include <QDBusMessage>
-#include <QDBusPendingCall>
 #include <QDBusMetaType>
+#include <QDBusPendingCall>
 
 namespace KWin
 {
-
 KeyboardLayout::KeyboardLayout(Xkb *xkb, const KSharedConfigPtr &config)
     : QObject()
     , m_xkb(xkb)
@@ -44,18 +43,14 @@ void KeyboardLayout::init()
     switchKeyboardAction->setObjectName(QStringLiteral("Switch to Next Keyboard Layout"));
     switchKeyboardAction->setProperty("componentName", QStringLiteral("KDE Keyboard Layout Switcher"));
     switchKeyboardAction->setProperty("componentDisplayName", i18n("Keyboard Layout Switcher"));
-    const QKeySequence sequence = QKeySequence(Qt::ALT+Qt::CTRL+Qt::Key_K);
+    const QKeySequence sequence = QKeySequence(Qt::ALT + Qt::CTRL + Qt::Key_K);
     KGlobalAccel::self()->setDefaultShortcut(switchKeyboardAction, QList<QKeySequence>({sequence}));
     KGlobalAccel::self()->setShortcut(switchKeyboardAction, QList<QKeySequence>({sequence}));
     kwinApp()->platform()->setupActionForGlobalAccel(switchKeyboardAction);
     connect(switchKeyboardAction, &QAction::triggered, this, &KeyboardLayout::switchToNextLayout);
 
-    QDBusConnection::sessionBus().connect(QString(),
-                                          QStringLiteral("/Layouts"),
-                                          QStringLiteral("org.kde.keyboard"),
-                                          QStringLiteral("reloadConfig"),
-                                          this,
-                                          SLOT(reconfigure()));
+    QDBusConnection::sessionBus()
+        .connect(QString(), QStringLiteral("/Layouts"), QStringLiteral("org.kde.keyboard"), QStringLiteral("reloadConfig"), this, SLOT(reconfigure()));
 
     reconfigure();
 }
@@ -73,8 +68,7 @@ void KeyboardLayout::initDBusInterface()
         return;
     }
     m_dbusInterface = new KeyboardLayoutDBusInterface(m_xkb, m_configGroup, this);
-    connect(this, &KeyboardLayout::layoutChanged,
-            m_dbusInterface, &KeyboardLayoutDBusInterface::layoutChanged);
+    connect(this, &KeyboardLayout::layoutChanged, m_dbusInterface, &KeyboardLayoutDBusInterface::layoutChanged);
     // TODO: the signal might be emitted even if the list didn't change
     connect(this, &KeyboardLayout::layoutsReconfigured, m_dbusInterface, &KeyboardLayoutDBusInterface::layoutListChanged);
 }
@@ -131,9 +125,9 @@ void KeyboardLayout::loadShortcuts()
     m_layoutShortcuts.clear();
     const QString componentName = QStringLiteral("KDE Keyboard Layout Switcher");
     const quint32 count = m_xkb->numberOfLayouts();
-    for (uint i = 0; i < count ; ++i) {
+    for (uint i = 0; i < count; ++i) {
         // layout name is translated in the action name in keyboard kcm!
-        const QString action = QStringLiteral("Switch keyboard layout to %1").arg( translatedLayout(m_xkb->layoutName(i)) );
+        const QString action = QStringLiteral("Switch keyboard layout to %1").arg(translatedLayout(m_xkb->layoutName(i)));
         const auto shortcuts = KGlobalAccel::self()->globalShortcut(componentName, action);
         if (shortcuts.isEmpty()) {
             continue;
@@ -141,8 +135,7 @@ void KeyboardLayout::loadShortcuts()
         QAction *a = new QAction(this);
         a->setObjectName(action);
         a->setProperty("componentName", componentName);
-        connect(a, &QAction::triggered, this,
-                std::bind(&KeyboardLayout::switchToLayout, this, i));
+        connect(a, &QAction::triggered, this, std::bind(&KeyboardLayout::switchToLayout, this, i));
         KGlobalAccel::self()->setShortcut(a, shortcuts, KGlobalAccel::Autoloading);
         m_layoutShortcuts << a;
     }
@@ -165,11 +158,10 @@ void KeyboardLayout::checkLayoutChange(uint previousLayout)
 void KeyboardLayout::notifyLayoutChange()
 {
     // notify OSD service about the new layout
-    QDBusMessage msg = QDBusMessage::createMethodCall(
-        QStringLiteral("org.kde.plasmashell"),
-        QStringLiteral("/org/kde/osdService"),
-        QStringLiteral("org.kde.osdService"),
-        QStringLiteral("kbdLayoutChanged"));
+    QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
+                                                      QStringLiteral("/org/kde/osdService"),
+                                                      QStringLiteral("org.kde.osdService"),
+                                                      QStringLiteral("kbdLayoutChanged"));
 
     msg << translatedLayout(m_xkb->layoutName());
 
@@ -211,7 +203,7 @@ void KeyboardLayoutDBusInterface::switchToPreviousLayout()
 bool KeyboardLayoutDBusInterface::setLayout(uint index)
 {
     const quint32 previousLayout = m_xkb->currentLayout();
-    if ( !m_xkb->switchToLayout(index) ) {
+    if (!m_xkb->switchToLayout(index)) {
         return false;
     }
     m_keyboardLayout->checkLayoutChange(previousLayout);
@@ -232,7 +224,7 @@ QVector<KeyboardLayoutDBusInterface::LayoutNames> KeyboardLayoutDBusInterface::g
     const int layoutsSize = m_xkb->numberOfLayouts();
     const int displayNamesSize = displayNames.size();
     for (int i = 0; i < layoutsSize; ++i) {
-        ret.append( {m_xkb->layoutShortName(i), i < displayNamesSize ? displayNames.at(i) : QString(), translatedLayout(m_xkb->layoutName(i))} );
+        ret.append({m_xkb->layoutShortName(i), i < displayNamesSize ? displayNames.at(i) : QString(), translatedLayout(m_xkb->layoutName(i))});
     }
     return ret;
 }

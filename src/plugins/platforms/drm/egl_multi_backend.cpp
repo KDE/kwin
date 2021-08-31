@@ -8,8 +8,8 @@
 */
 
 #include "egl_multi_backend.h"
-#include <config-kwin.h>
 #include "logging.h"
+#include <config-kwin.h>
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
 #endif
@@ -21,7 +21,6 @@
 
 namespace KWin
 {
-
 EglMultiBackend::EglMultiBackend(DrmBackend *backend, AbstractEglDrmBackend *primaryEglBackend)
     : OpenGLBackend()
     , m_platform(backend)

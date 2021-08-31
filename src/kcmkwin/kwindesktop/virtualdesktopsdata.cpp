@@ -6,13 +6,12 @@
 
 #include "virtualdesktopsdata.h"
 
-#include "desktopsmodel.h"
 #include "animationsmodel.h"
+#include "desktopsmodel.h"
 #include "virtualdesktopssettings.h"
 
 namespace KWin
 {
-
 VirtualDesktopsData::VirtualDesktopsData(QObject *parent, const QVariantList &args)
     : KCModuleData(parent, args)
     , m_settings(new VirtualDesktopsSettings(this))

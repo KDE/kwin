@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class LogindSession : public Session
 {
     Q_OBJECT

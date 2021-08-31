@@ -18,7 +18,7 @@ Qt::KeyboardModifiers KWin::InputRedirection::keyboardModifiers() const
     return Qt::NoModifier;
 }
 
-void KWin::InputRedirection::warpPointer(const QPointF&)
+void KWin::InputRedirection::warpPointer(const QPointF &)
 {
 }
 

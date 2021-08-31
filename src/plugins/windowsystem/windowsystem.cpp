@@ -14,7 +14,6 @@ Q_DECLARE_METATYPE(NET::WindowType)
 
 namespace KWin
 {
-
 WindowSystem::WindowSystem()
     : QObject()
     , KWindowSystemPrivate()
@@ -173,7 +172,19 @@ void WindowSystem::setDesktopName(int desktop, const QString &name)
     // KWin internal should not use KWindowSystem to set desktop name
 }
 
-void WindowSystem::setExtendedStrut(WId win, int left_width, int left_start, int left_end, int right_width, int right_start, int right_end, int top_width, int top_start, int top_end, int bottom_width, int bottom_start, int bottom_end)
+void WindowSystem::setExtendedStrut(WId win,
+                                    int left_width,
+                                    int left_start,
+                                    int left_end,
+                                    int right_width,
+                                    int right_start,
+                                    int right_end,
+                                    int top_width,
+                                    int top_start,
+                                    int top_end,
+                                    int bottom_width,
+                                    int bottom_start,
+                                    int bottom_end)
 {
     Q_UNUSED(win)
     Q_UNUSED(left_width)
@@ -247,7 +258,9 @@ void WindowSystem::setState(WId win, NET::States state)
 void WindowSystem::setType(WId win, NET::WindowType windowType)
 {
     const auto windows = qApp->allWindows();
-    auto it = std::find_if(windows.begin(), windows.end(), [win] (QWindow *w) { return w->winId() == win; });
+    auto it = std::find_if(windows.begin(), windows.end(), [win](QWindow *w) {
+        return w->winId() == win;
+    });
     if (it == windows.end()) {
         return;
     }
@@ -267,7 +280,7 @@ bool WindowSystem::showingDesktop()
     return false;
 }
 
-QList< WId > WindowSystem::stackingOrder()
+QList<WId> WindowSystem::stackingOrder()
 {
     // KWin should not use KWindowSystem for stacking order
     return {};
@@ -293,12 +306,12 @@ int WindowSystem::viewportWindowToDesktop(const QRect &r)
     return 0;
 }
 
-QList< WId > WindowSystem::windows()
+QList<WId> WindowSystem::windows()
 {
     return {};
 }
 
-QRect WindowSystem::workArea(const QList< WId > &excludes, int desktop)
+QRect WindowSystem::workArea(const QList<WId> &excludes, int desktop)
 {
     Q_UNUSED(excludes)
     Q_UNUSED(desktop)

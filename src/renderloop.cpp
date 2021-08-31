@@ -7,13 +7,12 @@
 #include "renderloop.h"
 #include "options.h"
 #include "renderloop_p.h"
-#include "utils.h"
 #include "surfaceitem.h"
+#include "utils.h"
 
 namespace KWin
 {
-
-template <typename T>
+template<typename T>
 T alignTimestamp(const T &timestamp, const T &alignment)
 {
     return timestamp + ((alignment - (timestamp % alignment)) % alignment);
@@ -28,7 +27,9 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
     : q(q)
 {
     compositeTimer.setSingleShot(true);
-    QObject::connect(&compositeTimer, &QTimer::timeout, q, [this]() { dispatch(); });
+    QObject::connect(&compositeTimer, &QTimer::timeout, q, [this]() {
+        dispatch();
+    });
 }
 
 void RenderLoopPrivate::scheduleRepaint()
@@ -47,8 +48,7 @@ void RenderLoopPrivate::scheduleRepaint()
     // Estimate when the next presentation will occur. Note that this is a prediction.
     nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
     if (nextPresentationTimestamp < currentTime && presentMode == SyncMode::Fixed) {
-        nextPresentationTimestamp = lastPresentationTimestamp
-                + alignTimestamp(currentTime - lastPresentationTimestamp, vblankInterval);
+        nextPresentationTimestamp = lastPresentationTimestamp + alignTimestamp(currentTime - lastPresentationTimestamp, vblankInterval);
     }
 
     // Estimate when it's a good time to perform the next compositing cycle.
@@ -127,8 +127,7 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp)
     if (lastPresentationTimestamp <= timestamp) {
         lastPresentationTimestamp = timestamp;
     } else {
-        qCWarning(KWIN_CORE, "Got invalid presentation timestamp: %ld (current %ld)",
-                  timestamp.count(), lastPresentationTimestamp.count());
+        qCWarning(KWIN_CORE, "Got invalid presentation timestamp: %ld (current %ld)", timestamp.count(), lastPresentationTimestamp.count());
         lastPresentationTimestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
 

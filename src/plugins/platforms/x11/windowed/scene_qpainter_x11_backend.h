@@ -11,16 +11,15 @@
 
 #include "qpainterbackend.h"
 
-#include <QObject>
 #include <QImage>
-#include <QVector>
 #include <QMap>
+#include <QObject>
+#include <QVector>
 
 #include <xcb/xcb.h>
 
 namespace KWin
 {
-
 class X11WindowedBackend;
 
 class X11WindowedQPainterBackend : public QPainterBackend
@@ -42,7 +41,7 @@ private:
         xcb_window_t window;
         QImage buffer;
     };
-    QMap<AbstractOutput *, Output*> m_outputs;
+    QMap<AbstractOutput *, Output *> m_outputs;
 };
 
 }

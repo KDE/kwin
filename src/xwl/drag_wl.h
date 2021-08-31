@@ -73,10 +73,12 @@ public:
     void sendPosition(const QPointF &globalPos);
     void leave();
 
-    bool finished() const {
+    bool finished() const
+    {
         return m_state.finished;
     }
-    AbstractClient *target() const {
+    AbstractClient *target() const
+    {
         return m_target;
     }
 

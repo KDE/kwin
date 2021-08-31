@@ -8,8 +8,8 @@
 #define MODULE_H
 
 #include <KCModule>
-#include <KSharedConfig>
 #include <KPluginInfo>
+#include <KSharedConfig>
 
 namespace Ui
 {

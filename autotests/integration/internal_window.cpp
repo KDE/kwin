@@ -6,13 +6,13 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_output.h"
-#include "platform.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "effects.h"
 #include "internal_client.h"
+#include "kwin_wayland_test.h"
+#include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -21,8 +21,8 @@
 #include <QRasterWindow>
 
 #include <KWayland/Client/keyboard.h>
-#include <KWayland/Client/surface.h>
 #include <KWayland/Client/seat.h>
+#include <KWayland/Client/surface.h>
 #include <KWindowSystem>
 
 #include <KWaylandServer/surface_interface.h>
@@ -35,7 +35,6 @@ Q_DECLARE_METATYPE(NET::WindowType);
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_internal_window-0");
 
 class InternalWindowTest : public QObject
@@ -77,10 +76,12 @@ public:
     HelperWindow();
     ~HelperWindow() override;
 
-    QPoint latestGlobalMousePos() const {
+    QPoint latestGlobalMousePos() const
+    {
         return m_latestGlobalMousePos;
     }
-    Qt::MouseButtons pressedButtons() const {
+    Qt::MouseButtons pressedButtons() const
+    {
         return m_pressedButtons;
     }
 
@@ -676,10 +677,12 @@ void InternalWindowTest::testPopup()
 
 void InternalWindowTest::testScale()
 {
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection,
-        Q_ARG(int, 2),
-        Q_ARG(QVector<QRect>, QVector<QRect>({QRect(0,0,1280, 1024), QRect(1280/2, 0, 1280, 1024)})),
-        Q_ARG(QVector<int>, QVector<int>({2,2})));
+    QMetaObject::invokeMethod(kwinApp()->platform(),
+                              "setVirtualOutputs",
+                              Qt::DirectConnection,
+                              Q_ARG(int, 2),
+                              Q_ARG(QVector<QRect>, QVector<QRect>({QRect(0, 0, 1280, 1024), QRect(1280 / 2, 0, 1280, 1024)})),
+                              Q_ARG(QVector<int>, QVector<int>({2, 2})));
 
     QSignalSpy clientAddedSpy(workspace(), &Workspace::internalClientAdded);
     QVERIFY(clientAddedSpy.isValid());
@@ -839,7 +842,7 @@ void InternalWindowTest::testDismissPopup()
     auto serverPopup = clientAddedSpy.last().first().value<InternalClient *>();
     QVERIFY(serverPopup);
 
-    //Create the other window to click
+    // Create the other window to click
     HelperWindow otherClientToplevel;
     otherClientToplevel.setGeometry(100, 100, 100, 100);
     otherClientToplevel.show();
@@ -850,8 +853,7 @@ void InternalWindowTest::testDismissPopup()
     // Click somewhere outside the popup window.
     QSignalSpy popupClosedSpy(serverPopup, &InternalClient::windowClosed);
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerMotion(serverOtherToplevel->frameGeometry().center(),
-                                         timestamp++);
+    kwinApp()->platform()->pointerMotion(serverOtherToplevel->frameGeometry().center(), timestamp++);
     kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
     QTRY_COMPARE(popupClosedSpy.count(), 1);
 }

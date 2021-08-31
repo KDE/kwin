@@ -6,17 +6,17 @@
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "atoms.h"
-#include "x11client.h"
 #include "deleted.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "rules.h"
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KWayland/Client/surface.h>
 
@@ -53,8 +53,8 @@ private Q_SLOTS:
 
 void TestDbusInterface::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted*>();
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::Deleted *>();
+    qRegisterMetaType<KWin::AbstractClient *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -77,7 +77,8 @@ void TestDbusInterface::cleanup()
     Test::destroyWaylandConnection();
 }
 
-namespace {
+namespace
+{
 QDBusPendingCall getWindowInfo(const QUuid &uuid)
 {
     auto msg = QDBusMessage::createMethodCall(s_destination, s_path, s_interface, QStringLiteral("getWindowInfo"));
@@ -147,7 +148,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QCOMPARE(windowData.value(QStringLiteral("caption")).toString(), QStringLiteral("Test window"));
     QCOMPARE(windowData.value(QStringLiteral("activities")), QStringList());
 
-    auto verifyProperty = [client] (const QString &name) {
+    auto verifyProperty = [client](const QString &name) {
         QDBusPendingReply<QVariantMap> reply{getWindowInfo(client->internalId())};
         reply.waitForFinished();
         return reply.value().value(name).toBool();
@@ -214,9 +215,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QVERIFY(reply.value().empty());
 }
 
-
-struct XcbConnectionDeleter
-{
+struct XcbConnectionDeleter {
     static inline void cleanup(xcb_connection_t *pointer)
     {
         xcb_disconnect(pointer);
@@ -229,12 +228,19 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 600, 400);
     xcb_window_t w = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_create_window(c.data(),
+                      XCB_COPY_FROM_PARENT,
+                      w,
+                      rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
                       windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+                      0,
+                      XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      XCB_COPY_FROM_PARENT,
+                      0,
+                      nullptr);
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
@@ -290,7 +296,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     // not testing clientmachine as that is system dependent
     // due to that also not testing localhost
 
-    auto verifyProperty = [client] (const QString &name) {
+    auto verifyProperty = [client](const QString &name) {
         QDBusPendingReply<QVariantMap> reply{getWindowInfo(client->internalId())};
         reply.waitForFinished();
         return reply.value().value(name).toBool();

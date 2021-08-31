@@ -6,11 +6,11 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "cursor.h"
 #include "keyboard_input.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "pointer_input.h"
 #include "screens.h"
@@ -53,7 +53,7 @@ private Q_SLOTS:
 
 void TestWindowSelection::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -108,7 +108,7 @@ void TestWindowSelection::testSelectOnWindowPointer()
     QVERIFY(pointerEnteredSpy.wait());
 
     Toplevel *selectedWindow = nullptr;
-    auto callback = [&selectedWindow] (Toplevel *t) {
+    auto callback = [&selectedWindow](Toplevel *t) {
         selectedWindow = t;
     };
 
@@ -192,7 +192,7 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     QVERIFY(!client->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
 
     Toplevel *selectedWindow = nullptr;
-    auto callback = [&selectedWindow] (Toplevel *t) {
+    auto callback = [&selectedWindow](Toplevel *t) {
         selectedWindow = t;
     };
 
@@ -209,7 +209,7 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     // simulate key press
     quint32 timestamp = 0;
     // move cursor through keys
-    auto keyPress = [&timestamp] (qint32 key) {
+    auto keyPress = [&timestamp](qint32 key) {
         kwinApp()->platform()->keyboardKeyPressed(key, timestamp++);
         kwinApp()->platform()->keyboardKeyReleased(key, timestamp++);
     };
@@ -256,7 +256,7 @@ void TestWindowSelection::testSelectOnWindowTouch()
     QVERIFY(client);
 
     Toplevel *selectedWindow = nullptr;
-    auto callback = [&selectedWindow] (Toplevel *t) {
+    auto callback = [&selectedWindow](Toplevel *t) {
         selectedWindow = t;
     };
 
@@ -329,7 +329,7 @@ void TestWindowSelection::testCancelOnWindowPointer()
     QVERIFY(pointerEnteredSpy.wait());
 
     Toplevel *selectedWindow = nullptr;
-    auto callback = [&selectedWindow] (Toplevel *t) {
+    auto callback = [&selectedWindow](Toplevel *t) {
         selectedWindow = t;
     };
 
@@ -388,7 +388,7 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
     QVERIFY(pointerEnteredSpy.wait());
 
     Toplevel *selectedWindow = nullptr;
-    auto callback = [&selectedWindow] (Toplevel *t) {
+    auto callback = [&selectedWindow](Toplevel *t) {
         selectedWindow = t;
     };
 
@@ -447,7 +447,7 @@ void TestWindowSelection::testSelectPointPointer()
     QVERIFY(pointerEnteredSpy.wait());
 
     QPoint point;
-    auto callback = [&point] (const QPoint &p) {
+    auto callback = [&point](const QPoint &p) {
         point = p;
     };
 
@@ -466,7 +466,7 @@ void TestWindowSelection::testSelectPointPointer()
 
     // trying again should not be allowed
     QPoint point2;
-    kwinApp()->platform()->startInteractivePositionSelection([&point2] (const QPoint &p) {
+    kwinApp()->platform()->startInteractivePositionSelection([&point2](const QPoint &p) {
         point2 = p;
     });
     QCOMPARE(point2, QPoint(-1, -1));
@@ -511,7 +511,7 @@ void TestWindowSelection::testSelectPointTouch()
 {
     // this test verifies point selection through touch works
     QPoint point;
-    auto callback = [&point] (const QPoint &p) {
+    auto callback = [&point](const QPoint &p) {
         point = p;
     };
 

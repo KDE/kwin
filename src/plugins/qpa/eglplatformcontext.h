@@ -18,7 +18,6 @@ namespace KWin
 {
 namespace QPA
 {
-
 class EGLPlatformContext : public QPlatformOpenGLContext
 {
 public:

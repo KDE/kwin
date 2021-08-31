@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "clientmodel.h"
-#include <config-kwin.h>
 #include "abstract_client.h"
+#include <config-kwin.h>
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -16,9 +16,10 @@
 #include "virtualdesktops.h"
 #include "workspace.h"
 
-namespace KWin::ScriptingModels::V2 {
-
-static quint32 nextId() {
+namespace KWin::ScriptingModels::V2
+{
+static quint32 nextId()
+{
     static quint32 counter = 0;
     return ++counter;
 }
@@ -216,7 +217,7 @@ quint32 ClientLevel::idForRow(int row) const
         return 0;
     }
     auto it = m_clients.constBegin();
-    for (int i=0; i<row; ++i) {
+    for (int i = 0; i < row; ++i) {
         ++it;
     }
     return it.key();
@@ -230,9 +231,7 @@ bool ClientLevel::containsId(quint32 id) const
 int ClientLevel::rowForId(quint32 id) const
 {
     int row = 0;
-    for (auto it = m_clients.constBegin();
-            it != m_clients.constEnd();
-            ++it, ++row) {
+    for (auto it = m_clients.constBegin(); it != m_clients.constEnd(); ++it, ++row) {
         if (it.key() == id) {
             return row;
         }
@@ -251,9 +250,7 @@ AbstractClient *ClientLevel::clientForId(quint32 child) const
 
 bool ClientLevel::containsClient(AbstractClient *client) const
 {
-    for (auto it = m_clients.constBegin();
-            it != m_clients.constEnd();
-            ++it) {
+    for (auto it = m_clients.constBegin(); it != m_clients.constEnd(); ++it) {
         if (it.value() == client) {
             return true;
         }
@@ -275,12 +272,15 @@ AbstractLevel *ClientLevel::parentForId(quint32 child) const
         return parentLevel();
     }
     if (m_clients.contains(child)) {
-        return const_cast<ClientLevel*>(this);
+        return const_cast<ClientLevel *>(this);
     }
     return nullptr;
 }
 
-AbstractLevel *AbstractLevel::create(const QList< ClientModel::LevelRestriction > &restrictions, ClientModel::LevelRestrictions parentRestrictions, ClientModel *model, AbstractLevel *parent)
+AbstractLevel *AbstractLevel::create(const QList<ClientModel::LevelRestriction> &restrictions,
+                                     ClientModel::LevelRestrictions parentRestrictions,
+                                     ClientModel *model,
+                                     AbstractLevel *parent)
 {
     if (restrictions.isEmpty() || restrictions.first() == ClientModel::NoRestriction) {
         ClientLevel *leaf = new ClientLevel(model, parent);
@@ -320,7 +320,7 @@ AbstractLevel *AbstractLevel::create(const QList< ClientModel::LevelRestriction 
 #endif
     }
     case ClientModel::ScreenRestriction:
-        for (int i=0; i<screens()->count(); ++i) {
+        for (int i = 0; i < screens()->count(); ++i) {
             AbstractLevel *childLevel = create(childRestrictions, childrenRestrictions, model, currentLevel);
             if (!childLevel) {
                 continue;
@@ -330,7 +330,7 @@ AbstractLevel *AbstractLevel::create(const QList< ClientModel::LevelRestriction 
         }
         break;
     case ClientModel::VirtualDesktopRestriction:
-        for (uint i=1; i<=VirtualDesktopManager::self()->count(); ++i) {
+        for (uint i = 1; i <= VirtualDesktopManager::self()->count(); ++i) {
             AbstractLevel *childLevel = create(childRestrictions, childrenRestrictions, model, currentLevel);
             if (!childLevel) {
                 continue;
@@ -417,15 +417,15 @@ void ForkLevel::desktopCountChanged(uint previousCount, uint newCount)
     }
     if (previousCount > newCount) {
         // desktops got removed
-        Q_EMIT beginRemove(newCount, previousCount-1, id());
+        Q_EMIT beginRemove(newCount, previousCount - 1, id());
         while (uint(m_children.count()) > newCount) {
             delete m_children.takeLast();
         }
         Q_EMIT endRemove();
     } else {
         // desktops got added
-        Q_EMIT beginInsert(previousCount, newCount-1, id());
-        for (uint i=previousCount+1; i<=newCount; ++i) {
+        Q_EMIT beginInsert(previousCount, newCount - 1, id());
+        for (uint i = previousCount + 1; i <= newCount; ++i) {
             AbstractLevel *childLevel = AbstractLevel::create(m_childRestrictions, restrictions(), model(), this);
             if (!childLevel) {
                 continue;
@@ -449,15 +449,15 @@ void ForkLevel::screenCountChanged(int previousCount, int newCount)
 
     if (previousCount > newCount) {
         // screens got removed
-        Q_EMIT beginRemove(newCount, previousCount-1, id());
+        Q_EMIT beginRemove(newCount, previousCount - 1, id());
         while (m_children.count() > newCount) {
             delete m_children.takeLast();
         }
         Q_EMIT endRemove();
     } else {
         // screens got added
-        Q_EMIT beginInsert(previousCount, newCount-1, id());
-        for (int i=previousCount; i<newCount; ++i) {
+        Q_EMIT beginInsert(previousCount, newCount - 1, id());
+        for (int i = previousCount; i < newCount; ++i) {
             AbstractLevel *childLevel = AbstractLevel::create(m_childRestrictions, restrictions(), model(), this);
             if (!childLevel) {
                 continue;
@@ -503,7 +503,7 @@ void ForkLevel::activityRemoved(const QString &activityId)
     if (restriction() != ClientModel::ClientModel::ActivityRestriction) {
         return;
     }
-    for (int i=0; i<m_children.length(); ++i) {
+    for (int i = 0; i < m_children.length(); ++i) {
         if (m_children.at(i)->activity() == activityId) {
             Q_EMIT beginRemove(i, i, id());
             delete m_children.takeAt(i);
@@ -533,7 +533,7 @@ void ForkLevel::addChild(AbstractLevel *child)
 void ForkLevel::setActivity(const QString &activity)
 {
     AbstractLevel::setActivity(activity);
-    for (QList<AbstractLevel*>::iterator it = m_children.begin(); it != m_children.end(); ++it) {
+    for (QList<AbstractLevel *>::iterator it = m_children.begin(); it != m_children.end(); ++it) {
         (*it)->setActivity(activity);
     }
 }
@@ -541,7 +541,7 @@ void ForkLevel::setActivity(const QString &activity)
 void ForkLevel::setScreen(uint screen)
 {
     AbstractLevel::setScreen(screen);
-    for (QList<AbstractLevel*>::iterator it = m_children.begin(); it != m_children.end(); ++it) {
+    for (QList<AbstractLevel *>::iterator it = m_children.begin(); it != m_children.end(); ++it) {
         (*it)->setScreen(screen);
     }
 }
@@ -549,14 +549,14 @@ void ForkLevel::setScreen(uint screen)
 void ForkLevel::setVirtualDesktop(uint virtualDesktop)
 {
     AbstractLevel::setVirtualDesktop(virtualDesktop);
-    for (QList<AbstractLevel*>::iterator it = m_children.begin(); it != m_children.end(); ++it) {
+    for (QList<AbstractLevel *>::iterator it = m_children.begin(); it != m_children.end(); ++it) {
         (*it)->setVirtualDesktop(virtualDesktop);
     }
 }
 
 void ForkLevel::init()
 {
-    for (QList<AbstractLevel*>::iterator it = m_children.begin(); it != m_children.end(); ++it) {
+    for (QList<AbstractLevel *>::iterator it = m_children.begin(); it != m_children.end(); ++it) {
         (*it)->init();
     }
 }
@@ -574,7 +574,7 @@ const AbstractLevel *ForkLevel::levelForId(quint32 id) const
     if (id == AbstractLevel::id()) {
         return this;
     }
-    for (QList<AbstractLevel*>::const_iterator it = m_children.constBegin(); it != m_children.constEnd(); ++it) {
+    for (QList<AbstractLevel *>::const_iterator it = m_children.constBegin(); it != m_children.constEnd(); ++it) {
         if (const AbstractLevel *child = (*it)->levelForId(id)) {
             return child;
         }
@@ -588,7 +588,7 @@ AbstractLevel *ForkLevel::parentForId(quint32 child) const
     if (child == id()) {
         return parentLevel();
     }
-    for (QList<AbstractLevel*>::const_iterator it = m_children.constBegin(); it != m_children.constEnd(); ++it) {
+    for (QList<AbstractLevel *>::const_iterator it = m_children.constBegin(); it != m_children.constEnd(); ++it) {
         if (AbstractLevel *parent = (*it)->parentForId(child)) {
             return parent;
         }
@@ -602,16 +602,16 @@ int ForkLevel::rowForId(quint32 child) const
     if (id() == child) {
         return 0;
     }
-    for (int i=0; i<m_children.count(); ++i) {
+    for (int i = 0; i < m_children.count(); ++i) {
         if (m_children.at(i)->id() == child) {
             return i;
         }
     }
     // do recursion
-    for (QList<AbstractLevel*>::const_iterator it = m_children.constBegin(); it != m_children.constEnd(); ++it) {
+    for (QList<AbstractLevel *>::const_iterator it = m_children.constBegin(); it != m_children.constEnd(); ++it) {
         int row = (*it)->rowForId(child);
         if (row != -1) {
-            return  row;
+            return row;
         }
     }
     // not found
@@ -620,7 +620,7 @@ int ForkLevel::rowForId(quint32 child) const
 
 AbstractClient *ForkLevel::clientForId(quint32 child) const
 {
-    for (QList<AbstractLevel*>::const_iterator it = m_children.constBegin(); it != m_children.constEnd(); ++it) {
+    for (QList<AbstractLevel *>::const_iterator it = m_children.constBegin(); it != m_children.constEnd(); ++it) {
         if (AbstractClient *client = (*it)->clientForId(child)) {
             return client;
         }
@@ -640,7 +640,7 @@ ClientModel::~ClientModel()
 {
 }
 
-void ClientModel::setLevels(QList< ClientModel::LevelRestriction > restrictions)
+void ClientModel::setLevels(QList<ClientModel::LevelRestriction> restrictions)
 {
     beginResetModel();
     if (m_root) {
@@ -675,7 +675,7 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
             return level->activity();
         } else if (restriction == VirtualDesktopRestriction && (role == Qt::DisplayRole || role == DesktopRole)) {
             return level->virtualDesktop();
-        } else if (restriction ==ScreenRestriction && (role == Qt::DisplayRole || role == ScreenRole)) {
+        } else if (restriction == ScreenRestriction && (role == Qt::DisplayRole || role == ScreenRole)) {
             return level->screen();
         } else {
             return QVariant();
@@ -716,11 +716,11 @@ int ClientModel::rowCount(const QModelIndex &parent) const
 QHash<int, QByteArray> ClientModel::roleNames() const
 {
     return {
-        { Qt::DisplayRole, QByteArrayLiteral("display") },
-        { ClientRole, QByteArrayLiteral("client") },
-        { ScreenRole, QByteArrayLiteral("screen") },
-        { DesktopRole, QByteArrayLiteral("desktop") },
-        { ActivityRole, QByteArrayLiteral("activity") },
+        {Qt::DisplayRole, QByteArrayLiteral("display")},
+        {ClientRole, QByteArrayLiteral("client")},
+        {ScreenRole, QByteArrayLiteral("screen")},
+        {DesktopRole, QByteArrayLiteral("desktop")},
+        {ActivityRole, QByteArrayLiteral("activity")},
     };
 }
 
@@ -815,13 +815,15 @@ void ClientModel::levelEndRemove()
     endRemoveRows();
 }
 
-#define CLIENT_MODEL_WRAPPER(name, levels) \
-name::name(QObject *parent) \
-    : ClientModel(parent) \
-{ \
-    setLevels(levels); \
-} \
-name::~name() {}
+#define CLIENT_MODEL_WRAPPER(name, levels)                                                                                                                     \
+    name::name(QObject *parent)                                                                                                                                \
+        : ClientModel(parent)                                                                                                                                  \
+    {                                                                                                                                                          \
+        setLevels(levels);                                                                                                                                     \
+    }                                                                                                                                                          \
+    name::~name()                                                                                                                                              \
+    {                                                                                                                                                          \
+    }
 
 CLIENT_MODEL_WRAPPER(SimpleClientModel, QList<LevelRestriction>())
 CLIENT_MODEL_WRAPPER(ClientModelByScreen, QList<LevelRestriction>() << ScreenRestriction)

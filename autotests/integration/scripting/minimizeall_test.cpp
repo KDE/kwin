@@ -24,7 +24,6 @@
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_minimizeall-0");
 static const QString s_scriptName = QStringLiteral("minimizeall");
 
@@ -63,13 +62,10 @@ void MinimizeAllScriptTest::initTestCase()
 
 static QString locateMainScript(const QString &pluginName)
 {
-    const QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->findPackages(
-        QStringLiteral("KWin/Script"),
-        QStringLiteral("kwin/scripts"),
-        [&](const KPluginMetaData &metaData) {
+    const QList<KPluginMetaData> offers =
+        KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), QStringLiteral("kwin/scripts"), [&](const KPluginMetaData &metaData) {
             return metaData.pluginId() == pluginName;
-        }
-    );
+        });
     if (offers.isEmpty()) {
         return QString();
     }

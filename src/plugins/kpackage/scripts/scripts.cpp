@@ -46,4 +46,3 @@ void ScriptsPackage::pathChanged(KPackage::Package *package)
 K_PLUGIN_CLASS_WITH_JSON(ScriptsPackage, "kwin-packagestructure-scripts.json")
 
 #include "scripts.moc"
-

@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 class OverviewEffectConfig : public KCModule
 {
     Q_OBJECT

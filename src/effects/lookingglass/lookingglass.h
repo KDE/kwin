@@ -15,7 +15,6 @@
 
 namespace KWin
 {
-
 class GLRenderTarget;
 class GLShader;
 class GLTexture;
@@ -34,14 +33,15 @@ public:
 
     void reconfigure(ReconfigureFlags) override;
 
-    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     bool isActive() const override;
 
     static bool supported();
 
     // for properties
-    int initialRadius() const {
+    int initialRadius() const
+    {
         return initialradius;
     }
     QRect magnifierArea() const;
@@ -50,9 +50,12 @@ public Q_SLOTS:
     void toggle();
     void zoomIn();
     void zoomOut();
-    void slotMouseChanged(const QPoint& pos, const QPoint& old,
-                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void slotMouseChanged(const QPoint &pos,
+                          const QPoint &old,
+                          Qt::MouseButtons buttons,
+                          Qt::MouseButtons oldbuttons,
+                          Qt::KeyboardModifiers modifiers,
+                          Qt::KeyboardModifiers oldmodifiers);
     void slotWindowDamaged();
 
 private:

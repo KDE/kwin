@@ -13,7 +13,6 @@
 
 namespace KWin
 {
-
 /**
  * The RenderJournal class measures how long it takes to render frames and estimates how
  * long it will take to render the next frame.

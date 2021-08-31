@@ -8,31 +8,40 @@
 */
 #include "shadowbuffer.h"
 
-#include "logging.h"
 #include "drm_output.h"
+#include "logging.h"
 
 namespace KWin
 {
-
 static const float vertices[] = {
-   -1.0f,  1.0f,
-   -1.0f, -1.0f,
-    1.0f, -1.0f,
+    -1.0f,
+    1.0f,
+    -1.0f,
+    -1.0f,
+    1.0f,
+    -1.0f,
 
-   -1.0f,  1.0f,
-    1.0f, -1.0f,
-    1.0f,  1.0f,
+    -1.0f,
+    1.0f,
+    1.0f,
+    -1.0f,
+    1.0f,
+    1.0f,
 };
 
-static const float texCoords[] = {
-    0.0f,  1.0f,
-    0.0f,  0.0f,
-    1.0f,  0.0f,
+static const float texCoords[] = {0.0f,
+                                  1.0f,
+                                  0.0f,
+                                  0.0f,
+                                  1.0f,
+                                  0.0f,
 
-    0.0f,  1.0f,
-    1.0f,  0.0f,
-    1.0f,  1.0f
-};
+                                  0.0f,
+                                  1.0f,
+                                  1.0f,
+                                  0.0f,
+                                  1.0f,
+                                  1.0f};
 
 ShadowBuffer::ShadowBuffer(const QSize &size)
     : m_size(size)
@@ -49,7 +58,7 @@ ShadowBuffer::ShadowBuffer(const QSize &size)
     glBindTexture(GL_TEXTURE_2D, 0);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
-    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         qCCritical(KWIN_DRM) << "Error: framebuffer not complete!";
         return;
     }

@@ -11,16 +11,15 @@
 #ifndef KWIN_LANCZOSFILTER_P_H
 #define KWIN_LANCZOSFILTER_P_H
 
-#include <QObject>
 #include <QBasicTimer>
-#include <QVector>
+#include <QObject>
 #include <QVector2D>
 #include <QVector4D>
+#include <QVector>
 #include <array>
 
 namespace KWin
 {
-
 class EffectWindow;
 class EffectWindowImpl;
 class WindowPaintData;
@@ -36,10 +35,11 @@ class LanczosFilter : public QObject
 public:
     explicit LanczosFilter(Scene *parent);
     ~LanczosFilter() override;
-    void performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
+    void performPaint(EffectWindowImpl *w, int mask, QRegion region, WindowPaintData &data);
 
 protected:
-    void timerEvent(QTimerEvent*) override;
+    void timerEvent(QTimerEvent *) override;
+
 private:
     void init();
     void updateOffscreenSurfaces();

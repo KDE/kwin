@@ -6,8 +6,8 @@
 
 #include "layershellv1client.h"
 #include "abstract_output.h"
-#include "layershellv1integration.h"
 #include "deleted.h"
+#include "layershellv1integration.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -19,26 +19,23 @@ using namespace KWaylandServer;
 
 namespace KWin
 {
-
 static NET::WindowType scopeToType(const QString &scope)
 {
-    static const QHash<QString, NET::WindowType> scopeToType {
-        { QStringLiteral("desktop"), NET::Desktop },
-        { QStringLiteral("dock"), NET::Dock },
-        { QStringLiteral("crititical-notification"), NET::CriticalNotification },
-        { QStringLiteral("notification"), NET::Notification },
-        { QStringLiteral("tooltip"), NET::Tooltip },
-        { QStringLiteral("on-screen-display"), NET::OnScreenDisplay },
-        { QStringLiteral("dialog"), NET::Dialog },
-        { QStringLiteral("splash"), NET::Splash },
-        { QStringLiteral("utility"), NET::Utility },
+    static const QHash<QString, NET::WindowType> scopeToType{
+        {QStringLiteral("desktop"), NET::Desktop},
+        {QStringLiteral("dock"), NET::Dock},
+        {QStringLiteral("crititical-notification"), NET::CriticalNotification},
+        {QStringLiteral("notification"), NET::Notification},
+        {QStringLiteral("tooltip"), NET::Tooltip},
+        {QStringLiteral("on-screen-display"), NET::OnScreenDisplay},
+        {QStringLiteral("dialog"), NET::Dialog},
+        {QStringLiteral("splash"), NET::Splash},
+        {QStringLiteral("utility"), NET::Utility},
     };
     return scopeToType.value(scope.toLower(), NET::Normal);
 }
 
-LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface,
-                                       AbstractOutput *output,
-                                       LayerShellV1Integration *integration)
+LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface, AbstractOutput *output, LayerShellV1Integration *integration)
     : WaylandClient(shellSurface->surface())
     , m_desiredOutput(output)
     , m_integration(integration)
@@ -49,37 +46,23 @@ LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface,
     setSkipPager(true);
     setSkipTaskbar(true);
 
-    connect(shellSurface, &LayerSurfaceV1Interface::aboutToBeDestroyed,
-            this, &LayerShellV1Client::destroyClient);
-    connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
-            this, &LayerShellV1Client::destroyClient);
+    connect(shellSurface, &LayerSurfaceV1Interface::aboutToBeDestroyed, this, &LayerShellV1Client::destroyClient);
+    connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed, this, &LayerShellV1Client::destroyClient);
 
-    connect(output, &AbstractOutput::geometryChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
-    connect(output, &AbstractOutput::enabledChanged,
-            this, &LayerShellV1Client::handleOutputEnabledChanged);
-    connect(output, &AbstractOutput::destroyed,
-            this, &LayerShellV1Client::handleOutputDestroyed);
+    connect(output, &AbstractOutput::geometryChanged, this, &LayerShellV1Client::scheduleRearrange);
+    connect(output, &AbstractOutput::enabledChanged, this, &LayerShellV1Client::handleOutputEnabledChanged);
+    connect(output, &AbstractOutput::destroyed, this, &LayerShellV1Client::handleOutputDestroyed);
 
-    connect(shellSurface->surface(), &SurfaceInterface::sizeChanged,
-            this, &LayerShellV1Client::handleSizeChanged);
-    connect(shellSurface->surface(), &SurfaceInterface::unmapped,
-            this, &LayerShellV1Client::handleUnmapped);
-    connect(shellSurface->surface(), &SurfaceInterface::committed,
-            this, &LayerShellV1Client::handleCommitted);
+    connect(shellSurface->surface(), &SurfaceInterface::sizeChanged, this, &LayerShellV1Client::handleSizeChanged);
+    connect(shellSurface->surface(), &SurfaceInterface::unmapped, this, &LayerShellV1Client::handleUnmapped);
+    connect(shellSurface->surface(), &SurfaceInterface::committed, this, &LayerShellV1Client::handleCommitted);
 
-    connect(shellSurface, &LayerSurfaceV1Interface::desiredSizeChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
-    connect(shellSurface, &LayerSurfaceV1Interface::layerChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
-    connect(shellSurface, &LayerSurfaceV1Interface::marginsChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
-    connect(shellSurface, &LayerSurfaceV1Interface::anchorChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
-    connect(shellSurface, &LayerSurfaceV1Interface::exclusiveZoneChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
-    connect(shellSurface, &LayerSurfaceV1Interface::acceptsFocusChanged,
-            this, &LayerShellV1Client::handleAcceptsFocusChanged);
+    connect(shellSurface, &LayerSurfaceV1Interface::desiredSizeChanged, this, &LayerShellV1Client::scheduleRearrange);
+    connect(shellSurface, &LayerSurfaceV1Interface::layerChanged, this, &LayerShellV1Client::scheduleRearrange);
+    connect(shellSurface, &LayerSurfaceV1Interface::marginsChanged, this, &LayerShellV1Client::scheduleRearrange);
+    connect(shellSurface, &LayerSurfaceV1Interface::anchorChanged, this, &LayerShellV1Client::scheduleRearrange);
+    connect(shellSurface, &LayerSurfaceV1Interface::exclusiveZoneChanged, this, &LayerShellV1Client::scheduleRearrange);
+    connect(shellSurface, &LayerSurfaceV1Interface::acceptsFocusChanged, this, &LayerShellV1Client::handleAcceptsFocusChanged);
 }
 
 LayerSurfaceV1Interface *LayerShellV1Client::shellSurface() const
@@ -148,8 +131,7 @@ StrutRect LayerShellV1Client::strutRect(StrutArea area) const
         return StrutRect();
     case StrutAreaRight:
         if (m_shellSurface->exclusiveEdge() == Qt::RightEdge) {
-            return StrutRect(x() + width() - m_shellSurface->exclusiveZone(), y(),
-                             m_shellSurface->exclusiveZone(), height(), StrutAreaRight);
+            return StrutRect(x() + width() - m_shellSurface->exclusiveZone(), y(), m_shellSurface->exclusiveZone(), height(), StrutAreaRight);
         }
         return StrutRect();
     case StrutAreaTop:
@@ -159,8 +141,7 @@ StrutRect LayerShellV1Client::strutRect(StrutArea area) const
         return StrutRect();
     case StrutAreaBottom:
         if (m_shellSurface->exclusiveEdge() == Qt::BottomEdge) {
-            return StrutRect(x(), y() + height() - m_shellSurface->exclusiveZone(),
-                             width(), m_shellSurface->exclusiveZone(), StrutAreaBottom);
+            return StrutRect(x(), y() + height() - m_shellSurface->exclusiveZone(), width(), m_shellSurface->exclusiveZone(), StrutAreaBottom);
         }
         return StrutRect();
     default:

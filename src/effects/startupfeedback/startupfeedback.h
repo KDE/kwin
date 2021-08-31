@@ -9,18 +9,17 @@
 
 #ifndef KWIN_STARTUPFEEDBACK_H
 #define KWIN_STARTUPFEEDBACK_H
+#include <KConfigWatcher>
+#include <KStartupInfo>
 #include <QObject>
 #include <kwineffects.h>
-#include <KStartupInfo>
-#include <KConfigWatcher>
 
 class KSelectionOwner;
 namespace KWin
 {
 class GLTexture;
 
-class StartupFeedbackEffect
-    : public Effect
+class StartupFeedbackEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(int type READ type)
@@ -29,16 +28,18 @@ public:
     ~StartupFeedbackEffect() override;
 
     void reconfigure(ReconfigureFlags flags) override;
-    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 90;
     }
 
-    int type() const {
+    int type() const
+    {
         return int(m_type);
     }
 
@@ -48,24 +49,24 @@ private Q_SLOTS:
     void gotNewStartup(const QString &id, const QIcon &icon);
     void gotRemoveStartup(const QString &id);
     void gotStartupChange(const QString &id, const QIcon &icon);
-    void slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void slotMouseChanged(const QPoint &pos,
+                          const QPoint &oldpos,
+                          Qt::MouseButtons buttons,
+                          Qt::MouseButtons oldbuttons,
+                          Qt::KeyboardModifiers modifiers,
+                          Qt::KeyboardModifiers oldmodifiers);
 
 private:
-    enum FeedbackType {
-        NoFeedback,
-        BouncingFeedback,
-        BlinkingFeedback,
-        PassiveFeedback
-    };
+    enum FeedbackType { NoFeedback, BouncingFeedback, BlinkingFeedback, PassiveFeedback };
     void start(const QIcon &icon);
     void stop();
-    QImage scalePixmap(const QPixmap& pm, const QSize& size) const;
-    void prepareTextures(const QPixmap& pix);
+    QImage scalePixmap(const QPixmap &pm, const QSize &size) const;
+    void prepareTextures(const QPixmap &pix);
     QRect feedbackRect() const;
 
     qreal m_bounceSizesRatio;
-    KStartupInfo* m_startupInfo;
-    KSelectionOwner* m_selection;
+    KStartupInfo *m_startupInfo;
+    KSelectionOwner *m_selection;
     QString m_currentStartup;
     QMap<QString, QIcon> m_startups; // QString == pixmap
     bool m_active;

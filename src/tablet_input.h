@@ -40,9 +40,15 @@ public:
 
     void tabletPad();
 
-    void tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
-                         qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
-                         bool tipNear, const TabletToolId &tabletToolId,
+    void tabletToolEvent(KWin::InputRedirection::TabletEventType type,
+                         const QPointF &pos,
+                         qreal pressure,
+                         int xTilt,
+                         int yTilt,
+                         qreal rotation,
+                         bool tipDown,
+                         bool tipNear,
+                         const TabletToolId &tabletToolId,
                          quint32 time);
     void tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &tabletToolId);
 
@@ -62,8 +68,7 @@ public:
     }
 
 private:
-    void cleanupDecoration(Decoration::DecoratedClientImpl *old,
-                           Decoration::DecoratedClientImpl *now) override;
+    void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
     void cleanupInternalWindow(QWindow *old, QWindow *now) override;
     void focusUpdate(KWin::Toplevel *old, KWin::Toplevel *now) override;
 

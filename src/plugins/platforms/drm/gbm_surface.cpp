@@ -8,17 +8,16 @@
 */
 #include "gbm_surface.h"
 
-#include <gbm.h>
 #include <errno.h>
+#include <gbm.h>
 
 #include "abstract_egl_drm_backend.h"
 #include "drm_gpu.h"
-#include "logging.h"
 #include "kwineglutils_p.h"
+#include "logging.h"
 
 namespace KWin
 {
-
 GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags)
     : m_surface(gbm_surface_create(gpu->gbmDevice(), size.width(), size.height(), format, flags))
     , m_gpu(gpu)
@@ -35,7 +34,12 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t
 }
 
 GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers)
-    : m_surface(gbm_surface_create_with_modifiers(gpu->gbmDevice(), size.width(), size.height(), format, modifiers.isEmpty() ? nullptr : modifiers.constData(), modifiers.count()))
+    : m_surface(gbm_surface_create_with_modifiers(gpu->gbmDevice(),
+                                                  size.width(),
+                                                  size.height(),
+                                                  format,
+                                                  modifiers.isEmpty() ? nullptr : modifiers.constData(),
+                                                  modifiers.count()))
     , m_gpu(gpu)
     , m_size(size)
 {

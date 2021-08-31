@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 EGLImageTexture::EGLImageTexture(EGLDisplay display, EGLImage image, int internalFormat, const QSize &size)
     : GLTexture(internalFormat, size, 1, true)
     , m_image(image)

@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class PlastikButtonProvider : public QQuickImageProvider
 {
 public:
@@ -35,12 +34,7 @@ private:
         AppMenuIcon,
         NumButtonIcons
     };
-    enum Object {
-        HorizontalLine,
-        VerticalLine,
-        DiagonalLine,
-        CrossDiagonalLine
-    };
+    enum Object { HorizontalLine, VerticalLine, DiagonalLine, CrossDiagonalLine };
     enum DecorationButton {
         /**
          * Invalid button value. A decoration should not create a button for

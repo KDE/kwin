@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 KWIN_SINGLETON_FACTORY(ColorManager)
 
 class ColorManagerPrivate

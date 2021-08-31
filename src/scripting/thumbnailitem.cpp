@@ -19,9 +19,9 @@
 #include <kwingltexture.h>
 #include <kwinglutils.h>
 
-#include <QSGImageNode>
-#include <QRunnable>
 #include <QQuickWindow>
+#include <QRunnable>
+#include <QSGImageNode>
 #include <QSGTextureProvider>
 
 namespace KWin
@@ -57,7 +57,8 @@ void ThumbnailTextureProvider::setTexture(const QSharedPointer<GLTexture> &nativ
         const GLuint textureId = nativeTexture->texture();
         m_nativeTexture = nativeTexture;
         m_texture.reset(m_window->createTextureFromNativeObject(QQuickWindow::NativeObjectTexture,
-                                                                &textureId, 0,
+                                                                &textureId,
+                                                                0,
                                                                 nativeTexture->size(),
                                                                 QQuickWindow::TextureHasAlphaChannel));
         m_texture->setFiltering(QSGTexture::Linear);
@@ -99,12 +100,9 @@ ThumbnailItemBase::ThumbnailItemBase(QQuickItem *parent)
     setFlag(ItemHasContents);
     updateFrameRenderingConnection();
 
-    connect(Compositor::self(), &Compositor::aboutToToggleCompositing,
-            this, &ThumbnailItemBase::destroyOffscreenTexture);
-    connect(Compositor::self(), &Compositor::compositingToggled,
-            this, &ThumbnailItemBase::updateFrameRenderingConnection);
-    connect(this, &QQuickItem::windowChanged,
-            this, &ThumbnailItemBase::updateFrameRenderingConnection);
+    connect(Compositor::self(), &Compositor::aboutToToggleCompositing, this, &ThumbnailItemBase::destroyOffscreenTexture);
+    connect(Compositor::self(), &Compositor::compositingToggled, this, &ThumbnailItemBase::updateFrameRenderingConnection);
+    connect(this, &QQuickItem::windowChanged, this, &ThumbnailItemBase::updateFrameRenderingConnection);
 }
 
 ThumbnailItemBase::~ThumbnailItemBase()
@@ -113,8 +111,7 @@ ThumbnailItemBase::~ThumbnailItemBase()
 
     if (m_provider) {
         if (window()) {
-            window()->scheduleRenderJob(new ThumbnailTextureProviderCleanupJob(m_provider),
-                                        QQuickWindow::AfterSynchronizingStage);
+            window()->scheduleRenderJob(new ThumbnailTextureProviderCleanupJob(m_provider), QQuickWindow::AfterSynchronizingStage);
         } else {
             qCCritical(KWIN_SCRIPTING) << "Can't destroy thumbnail texture provider because window is null";
         }
@@ -124,8 +121,7 @@ ThumbnailItemBase::~ThumbnailItemBase()
 void ThumbnailItemBase::releaseResources()
 {
     if (m_provider) {
-        window()->scheduleRenderJob(new ThumbnailTextureProviderCleanupJob(m_provider),
-                                    QQuickWindow::AfterSynchronizingStage);
+        window()->scheduleRenderJob(new ThumbnailTextureProviderCleanupJob(m_provider), QQuickWindow::AfterSynchronizingStage);
         m_provider = nullptr;
     }
 }
@@ -297,17 +293,13 @@ void WindowThumbnailItem::setClient(AbstractClient *client)
         return;
     }
     if (m_client) {
-        disconnect(m_client, &AbstractClient::frameGeometryChanged,
-                   this, &WindowThumbnailItem::invalidateOffscreenTexture);
-        disconnect(m_client, &AbstractClient::damaged,
-                   this, &WindowThumbnailItem::invalidateOffscreenTexture);
+        disconnect(m_client, &AbstractClient::frameGeometryChanged, this, &WindowThumbnailItem::invalidateOffscreenTexture);
+        disconnect(m_client, &AbstractClient::damaged, this, &WindowThumbnailItem::invalidateOffscreenTexture);
     }
     m_client = client;
     if (m_client) {
-        connect(m_client, &AbstractClient::frameGeometryChanged,
-                this, &WindowThumbnailItem::invalidateOffscreenTexture);
-        connect(m_client, &AbstractClient::damaged,
-                this, &WindowThumbnailItem::invalidateOffscreenTexture);
+        connect(m_client, &AbstractClient::frameGeometryChanged, this, &WindowThumbnailItem::invalidateOffscreenTexture);
+        connect(m_client, &AbstractClient::damaged, this, &WindowThumbnailItem::invalidateOffscreenTexture);
         setWId(m_client->internalId());
     } else {
         setWId(QUuid());
@@ -394,8 +386,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     glClear(GL_COLOR_BUFFER_BIT);
 
     QMatrix4x4 projectionMatrix;
-    projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(),
-                           geometry.y(), geometry.y() + geometry.height(), -1, 1);
+    projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(), geometry.y(), geometry.y() + geometry.height(), -1, 1);
 
     EffectWindowImpl *effectWindow = m_client->effectWindow();
     WindowPaintData data(effectWindow);

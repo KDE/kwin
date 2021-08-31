@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class WindowShadowTile final : public KWindowShadowTilePrivate
 {
 public:

@@ -18,7 +18,6 @@
 
 namespace KWin
 {
-
 class BlurShader : public QObject
 {
     Q_OBJECT
@@ -29,12 +28,7 @@ public:
 
     bool isValid() const;
 
-    enum SampleType {
-        DownSampleType,
-        UpSampleType,
-        CopySampleType,
-        NoiseSampleType
-    };
+    enum SampleType { DownSampleType, UpSampleType, CopySampleType, NoiseSampleType };
 
     void bind(SampleType sampleType);
     void unbind();
@@ -73,7 +67,7 @@ private:
     int m_texStartPosLocationNoisesample;
     int m_halfpixelLocationNoisesample;
 
-    //Caching uniform values to aviod unnecessary setUniform calls
+    // Caching uniform values to aviod unnecessary setUniform calls
     int m_activeSampleType = -1;
 
     float m_offsetDownsample = 0.0;

@@ -43,7 +43,8 @@ public:
      * Main log function
      * Takes any number of arguments that can be written into QTextStream
      */
-    template<typename... Args> void trace(Args... args)
+    template<typename... Args>
+    void trace(Args... args)
     {
         Q_ASSERT(isEnabled());
         QMutexLocker lock(&m_mutex);
@@ -71,7 +72,8 @@ private:
 class KWIN_EXPORT FTraceDuration
 {
 public:
-    template<typename... Args> FTraceDuration(Args... args)
+    template<typename... Args>
+    FTraceDuration(Args... args)
     {
         static QAtomicInteger<quint32> s_context = 0;
         QTextStream stream(&m_message);

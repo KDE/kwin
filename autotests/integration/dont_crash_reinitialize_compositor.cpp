@@ -26,7 +26,6 @@
 
 namespace KWin
 {
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_dont_crash_reinitialize_compositor-0");
 
 class DontCrashReinitializeCompositorTest : public QObject
@@ -100,9 +99,9 @@ void DontCrashReinitializeCompositorTest::testReinitializeCompositor_data()
 {
     QTest::addColumn<QString>("effectName");
 
-    QTest::newRow("Fade")   << QStringLiteral("kwin4_effect_fade");
-    QTest::newRow("Glide")  << QStringLiteral("glide");
-    QTest::newRow("Scale")  << QStringLiteral("kwin4_effect_scale");
+    QTest::newRow("Fade") << QStringLiteral("kwin4_effect_fade");
+    QTest::newRow("Glide") << QStringLiteral("glide");
+    QTest::newRow("Scale") << QStringLiteral("kwin4_effect_scale");
 }
 
 void DontCrashReinitializeCompositorTest::testReinitializeCompositor()

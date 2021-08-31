@@ -9,15 +9,14 @@
 
 #include "kwintabboxdata.h"
 
-#include "kwintabboxsettings.h"
-#include "kwinswitcheffectsettings.h"
 #include "kwinpluginssettings.h"
+#include "kwinswitcheffectsettings.h"
+#include "kwintabboxsettings.h"
 
 namespace KWin
 {
 namespace TabBox
 {
-
 KWinTabboxData::KWinTabboxData(QObject *parent, const QVariantList &args)
     : KCModuleData(parent, args)
     , m_tabBoxConfig(new TabBoxSettings(QStringLiteral("TabBox"), this))

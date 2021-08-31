@@ -9,8 +9,8 @@
 #ifndef KWIN_WAYLAND_SERVER_H
 #define KWIN_WAYLAND_SERVER_H
 
-#include <kwinglobals.h>
 #include "keyboard_input.h"
+#include <kwinglobals.h>
 
 #include <QObject>
 
@@ -62,10 +62,8 @@ class KeyboardShortcutsInhibitManagerV1Interface;
 class XdgDecorationManagerV1Interface;
 }
 
-
 namespace KWin
 {
-
 class AbstractClient;
 class AbstractOutput;
 class Toplevel;
@@ -81,12 +79,7 @@ class KWIN_EXPORT WaylandServer : public QObject
     Q_OBJECT
 
 public:
-    enum class InitializationFlag {
-        NoOptions = 0x0,
-        LockScreen = 0x1,
-        NoLockScreenIntegration = 0x2,
-        NoGlobalShortcuts = 0x4
-    };
+    enum class InitializationFlag { NoOptions = 0x0, LockScreen = 0x1, NoLockScreenIntegration = 0x2, NoGlobalShortcuts = 0x4 };
 
     Q_DECLARE_FLAGS(InitializationFlags, InitializationFlag)
 
@@ -129,10 +122,12 @@ public:
     {
         return m_windowManagement;
     }
-    KWaylandServer::ServerSideDecorationManagerInterface *decorationManager() const {
+    KWaylandServer::ServerSideDecorationManagerInterface *decorationManager() const
+    {
         return m_decorationManager;
     }
-    KWaylandServer::XdgOutputManagerV1Interface *xdgOutputManagerV1() const {
+    KWaylandServer::XdgOutputManagerV1Interface *xdgOutputManagerV1() const
+    {
         return m_xdgOutputManagerV1;
     }
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *keyboardShortcutsInhibitManager() const
@@ -144,11 +139,13 @@ public:
 
     KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *linuxDmabuf();
 
-    KWaylandServer::InputMethodV1Interface *inputMethod() const {
+    KWaylandServer::InputMethodV1Interface *inputMethod() const
+    {
         return m_inputMethod;
     }
 
-    QList<AbstractClient *> clients() const {
+    QList<AbstractClient *> clients() const
+    {
         return m_clients;
     }
     void removeClient(AbstractClient *c);
@@ -192,28 +189,36 @@ public:
     void initWorkspace();
 
     KWaylandServer::ClientConnection *xWaylandConnection() const;
-    KWaylandServer::ClientConnection *inputMethodConnection() const {
+    KWaylandServer::ClientConnection *inputMethodConnection() const
+    {
         return m_inputMethodServerConnection;
     }
-    KWaylandServer::ClientConnection *internalConnection() const {
+    KWaylandServer::ClientConnection *internalConnection() const
+    {
         return m_internalConnection.server;
     }
-    KWaylandServer::ClientConnection *screenLockerClientConnection() const {
+    KWaylandServer::ClientConnection *screenLockerClientConnection() const
+    {
         return m_screenLockerClientConnection;
     }
-    KWayland::Client::Compositor *internalCompositor() {
+    KWayland::Client::Compositor *internalCompositor()
+    {
         return m_internalConnection.compositor;
     }
-    KWayland::Client::Seat *internalSeat() {
+    KWayland::Client::Seat *internalSeat()
+    {
         return m_internalConnection.seat;
     }
-    KWayland::Client::DataDeviceManager *internalDataDeviceManager() {
+    KWayland::Client::DataDeviceManager *internalDataDeviceManager()
+    {
         return m_internalConnection.ddm;
     }
-    KWayland::Client::ConnectionThread *internalClientConection() {
+    KWayland::Client::ConnectionThread *internalClientConection()
+    {
         return m_internalConnection.client;
     }
-    KWayland::Client::Registry *internalClientRegistry() {
+    KWayland::Client::Registry *internalClientRegistry()
+    {
         return m_internalConnection.registry;
     }
     void dispatch();
@@ -240,13 +245,16 @@ public:
     void simulateUserActivity();
     void updateKeyState(KWin::Xkb::LEDs leds);
 
-    QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer*> linuxDmabufBuffers() const {
+    QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer *> linuxDmabufBuffers() const
+    {
         return m_linuxDmabufBuffers;
     }
-    void addLinuxDmabufBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer) {
+    void addLinuxDmabufBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
+    {
         m_linuxDmabufBuffers << buffer;
     }
-    void removeLinuxDmabufBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer) {
+    void removeLinuxDmabufBuffer(KWaylandServer::LinuxDmaBufV1ClientBuffer *buffer)
+    {
         m_linuxDmabufBuffers.remove(buffer);
     }
 
@@ -296,7 +304,7 @@ private:
     KWaylandServer::XdgDecorationManagerV1Interface *m_xdgDecorationManagerV1 = nullptr;
     KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *m_linuxDmabuf = nullptr;
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;
-    QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer*> m_linuxDmabufBuffers;
+    QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer *> m_linuxDmabufBuffers;
     QPointer<KWaylandServer::ClientConnection> m_xwaylandConnection;
     KWaylandServer::InputMethodV1Interface *m_inputMethod = nullptr;
     KWaylandServer::ClientConnection *m_inputMethodServerConnection = nullptr;
@@ -322,12 +330,11 @@ private:
     KWIN_SINGLETON(WaylandServer)
 };
 
-inline
-WaylandServer *waylandServer() {
+inline WaylandServer *waylandServer()
+{
     return WaylandServer::self();
 }
 
 } // namespace KWin
 
 #endif
-

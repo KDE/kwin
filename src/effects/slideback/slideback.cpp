@@ -11,7 +11,6 @@
 
 namespace KWin
 {
-
 SlideBackEffect::SlideBackEffect()
 {
     m_tabboxActive = 0;
@@ -32,8 +31,7 @@ void SlideBackEffect::slotStackingOrderChanged()
         return;
     }
 
-    EffectWindowList newStackingOrder = effects->stackingOrder(),
-                     usableNewStackingOrder = usableWindows(newStackingOrder);
+    EffectWindowList newStackingOrder = effects->stackingOrder(), usableNewStackingOrder = usableWindows(newStackingOrder);
     if (usableNewStackingOrder == usableOldStackingOrder || usableNewStackingOrder.isEmpty()) {
         oldStackingOrder = newStackingOrder;
         usableOldStackingOrder = usableNewStackingOrder;
@@ -42,21 +40,20 @@ void SlideBackEffect::slotStackingOrderChanged()
 
     m_upmostWindow = usableNewStackingOrder.last();
 
-    if (m_upmostWindow == m_justMapped ) // a window was added, got on top, stacking changed. Nothing impressive
+    if (m_upmostWindow == m_justMapped) // a window was added, got on top, stacking changed. Nothing impressive
         m_justMapped = nullptr;
     else if (!usableOldStackingOrder.isEmpty() && m_upmostWindow != usableOldStackingOrder.last())
         windowRaised(m_upmostWindow);
 
     oldStackingOrder = newStackingOrder;
     usableOldStackingOrder = usableNewStackingOrder;
-
 }
 
 void SlideBackEffect::windowRaised(EffectWindow *w)
 {
     // Determine all windows on top of the activated one
     bool currentFound = false;
-    Q_FOREACH (EffectWindow * tmp, oldStackingOrder) {
+    Q_FOREACH (EffectWindow *tmp, oldStackingOrder) {
         if (!currentFound) {
             if (tmp == w) {
                 currentFound = true;
@@ -74,15 +71,14 @@ void SlideBackEffect::windowRaised(EffectWindow *w)
                     destinationList.insert(tmp, slideRect);
                     coveringWindows.append(tmp);
                 } else {
-                    //Does it intersect with a moved (elevated) window and do we have to elevate it too?
-                    Q_FOREACH (EffectWindow * elevatedWindow, elevatedList) {
+                    // Does it intersect with a moved (elevated) window and do we have to elevate it too?
+                    Q_FOREACH (EffectWindow *elevatedWindow, elevatedList) {
                         if (tmp->frameGeometry().intersects(elevatedWindow->frameGeometry())) {
                             effects->setElevatedWindow(tmp, true);
                             elevatedList.append(tmp);
                             break;
                         }
                     }
-
                 }
             }
             if (tmp->isDock() || tmp->keepAbove()) {
@@ -94,7 +90,7 @@ void SlideBackEffect::windowRaised(EffectWindow *w)
     // If a window is minimized it could happen that the panels stay elevated without any windows sliding.
     // clear all elevation settings
     if (!motionManager.managingWindows()) {
-        Q_FOREACH (EffectWindow * tmp, elevatedList) {
+        Q_FOREACH (EffectWindow *tmp, elevatedList) {
             effects->setElevatedWindow(tmp, false);
         }
     }
@@ -105,7 +101,7 @@ QRect SlideBackEffect::getSlideDestination(const QRect &windowUnderGeometry, con
     // Determine the shortest way:
     int leftSlide = windowUnderGeometry.left() - windowOverGeometry.right() - 20;
     int rightSlide = windowUnderGeometry.right() - windowOverGeometry.left() + 20;
-    int upSlide = windowUnderGeometry.top() -  windowOverGeometry.bottom() - 20;
+    int upSlide = windowUnderGeometry.top() - windowOverGeometry.bottom() - 20;
     int downSlide = windowUnderGeometry.bottom() - windowOverGeometry.top() + 20;
 
     int horizSlide = leftSlide;
@@ -181,7 +177,7 @@ void SlideBackEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
     clippedRegions.clear();
 }
 
-void SlideBackEffect::postPaintWindow(EffectWindow* w)
+void SlideBackEffect::postPaintWindow(EffectWindow *w)
 {
     if (motionManager.isManaging(w)) {
         if (destinationList.contains(w)) {
@@ -190,7 +186,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
                 // restore the stacking order of all windows not intersecting any more except panels
                 if (coveringWindows.contains(w)) {
                     EffectWindowList tmpList;
-                    Q_FOREACH (EffectWindow * tmp, elevatedList) {
+                    Q_FOREACH (EffectWindow *tmp, elevatedList) {
                         QRect elevatedGeometry = tmp->frameGeometry();
                         if (motionManager.isManaging(tmp)) {
                             elevatedGeometry = motionManager.transformedGeometry(tmp).toAlignedRect();
@@ -206,7 +202,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
                         } else {
                             if (!tmp->isDock()) {
                                 bool keepElevated = false;
-                                Q_FOREACH (EffectWindow * elevatedWindow, tmpList) {
+                                Q_FOREACH (EffectWindow *elevatedWindow, tmpList) {
                                     if (tmp->frameGeometry().intersects(elevatedWindow->frameGeometry())) {
                                         keepElevated = true;
                                     }
@@ -239,7 +235,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
                 coveringWindows.removeAll(w);
                 if (coveringWindows.isEmpty()) {
                     // Restore correct stacking order
-                    Q_FOREACH (EffectWindow * tmp, elevatedList) {
+                    Q_FOREACH (EffectWindow *tmp, elevatedList) {
                         effects->setElevatedWindow(tmp, false);
                     }
                     elevatedList.clear();
@@ -253,7 +249,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
     effects->postPaintWindow(w);
 }
 
-void SlideBackEffect::slotWindowDeleted(EffectWindow* w)
+void SlideBackEffect::slotWindowDeleted(EffectWindow *w)
 {
     if (w == m_upmostWindow)
         m_upmostWindow = nullptr;
@@ -273,7 +269,7 @@ void SlideBackEffect::slotWindowAdded(EffectWindow *w)
     m_justMapped = w;
 }
 
-void SlideBackEffect::slotWindowUnminimized(EffectWindow* w)
+void SlideBackEffect::slotWindowUnminimized(EffectWindow *w)
 {
     // SlideBack should not be triggered on an unminimized window. For this we need to store the last unminimized window.
     m_justMapped = w;
@@ -290,28 +286,27 @@ void SlideBackEffect::slotTabBoxAdded()
 
 void SlideBackEffect::slotTabBoxClosed()
 {
-    m_tabboxActive = qMax(m_tabboxActive-1, 0);
+    m_tabboxActive = qMax(m_tabboxActive - 1, 0);
 }
 
-bool SlideBackEffect::isWindowUsable(EffectWindow* w)
+bool SlideBackEffect::isWindowUsable(EffectWindow *w)
 {
-    return w && (w->isNormalWindow() || w->isDialog()) && !w->keepAbove() && !w->isDeleted() && !w->isMinimized()
-           && w->isPaintingEnabled();
+    return w && (w->isNormalWindow() || w->isDialog()) && !w->keepAbove() && !w->isDeleted() && !w->isMinimized() && w->isPaintingEnabled();
 }
 
-bool SlideBackEffect::intersects(EffectWindow* windowUnder, const QRect &windowOverGeometry)
+bool SlideBackEffect::intersects(EffectWindow *windowUnder, const QRect &windowOverGeometry)
 {
     QRect windowUnderGeometry = getModalGroupGeometry(windowUnder);
     return windowUnderGeometry.intersects(windowOverGeometry);
 }
 
-EffectWindowList SlideBackEffect::usableWindows(const EffectWindowList & allWindows)
+EffectWindowList SlideBackEffect::usableWindows(const EffectWindowList &allWindows)
 {
     EffectWindowList retList;
-    auto isWindowVisible = [] (const EffectWindow *window) {
+    auto isWindowVisible = [](const EffectWindow *window) {
         return window && effects->virtualScreenGeometry().intersects(window->frameGeometry());
     };
-    Q_FOREACH (EffectWindow * tmp, allWindows) {
+    Q_FOREACH (EffectWindow *tmp, allWindows) {
         if (isWindowUsable(tmp) && isWindowVisible(tmp)) {
             retList.append(tmp);
         }
@@ -323,7 +318,7 @@ QRect SlideBackEffect::getModalGroupGeometry(EffectWindow *w)
 {
     QRect modalGroupGeometry = w->frameGeometry();
     if (w->isModal()) {
-        Q_FOREACH (EffectWindow * modalWindow, w->mainWindows()) {
+        Q_FOREACH (EffectWindow *modalWindow, w->mainWindows()) {
             modalGroupGeometry = modalGroupGeometry.united(getModalGroupGeometry(modalWindow));
         }
     }
@@ -335,4 +330,4 @@ bool SlideBackEffect::isActive() const
     return motionManager.managingWindows();
 }
 
-} //Namespace
+} // Namespace

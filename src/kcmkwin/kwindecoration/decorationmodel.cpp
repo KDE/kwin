@@ -5,18 +5,17 @@
 */
 #include "decorationmodel.h"
 // KDecoration2
-#include <KDecoration2/DecorationSettings>
 #include <KDecoration2/Decoration>
+#include <KDecoration2/DecorationSettings>
 // KDE
-#include <KPluginLoader>
 #include <KPluginFactory>
+#include <KPluginLoader>
 #include <KPluginMetaData>
 // Qt
 #include <QDebug>
 
 namespace KDecoration2
 {
-
 namespace Configuration
 {
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
@@ -57,15 +56,13 @@ QVariant DecorationsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QHash< int, QByteArray > DecorationsModel::roleNames() const
+QHash<int, QByteArray> DecorationsModel::roleNames() const
 {
-    QHash<int, QByteArray> roles({
-        {Qt::DisplayRole, QByteArrayLiteral("display")},
-        {PluginNameRole, QByteArrayLiteral("plugin")},
-        {ThemeNameRole, QByteArrayLiteral("theme")},
-        {ConfigurationRole, QByteArrayLiteral("configureable")},
-        {RecommendedBorderSizeRole, QByteArrayLiteral("recommendedbordersize")}
-    });
+    QHash<int, QByteArray> roles({{Qt::DisplayRole, QByteArrayLiteral("display")},
+                                  {PluginNameRole, QByteArrayLiteral("plugin")},
+                                  {ThemeNameRole, QByteArrayLiteral("theme")},
+                                  {ConfigurationRole, QByteArrayLiteral("configureable")},
+                                  {RecommendedBorderSizeRole, QByteArrayLiteral("recommendedbordersize")}});
     return roles;
 }
 
@@ -153,9 +150,7 @@ void DecorationsModel::init()
                     d.pluginName = info.pluginId();
                     d.themeName = it.value().toString();
                     d.visibleName = it.key();
-                    QMetaObject::invokeMethod(themeFinder.data(), "hasConfiguration",
-                                              Q_RETURN_ARG(bool, d.configuration),
-                                              Q_ARG(QString, d.themeName));
+                    QMetaObject::invokeMethod(themeFinder.data(), "hasConfiguration", Q_RETURN_ARG(bool, d.configuration), Q_ARG(QString, d.themeName));
                     m_plugins.emplace_back(std::move(d));
                 }
 
@@ -176,11 +171,9 @@ void DecorationsModel::init()
 
 QModelIndex DecorationsModel::findDecoration(const QString &pluginName, const QString &themeName) const
 {
-    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(),
-        [pluginName, themeName](const Data &d) {
-            return d.pluginName == pluginName && d.themeName == themeName;
-        }
-    );
+    auto it = std::find_if(m_plugins.cbegin(), m_plugins.cend(), [pluginName, themeName](const Data &d) {
+        return d.pluginName == pluginName && d.themeName == themeName;
+    });
     if (it == m_plugins.cend()) {
         return QModelIndex();
     }

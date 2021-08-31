@@ -18,7 +18,6 @@ namespace KWin
 {
 namespace QPA
 {
-
 bool isOpenGLES()
 {
     if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
@@ -41,17 +40,23 @@ EGLConfig configFromFormat(EGLDisplay display, const QSurfaceFormat &surfaceForm
     const EGLint renderableType = isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT;
 
     // Not setting samples as QtQuick doesn't need it.
-    const QVector<EGLint> attributes {
-        EGL_SURFACE_TYPE, surfaceType,
-        EGL_RED_SIZE, redSize,
-        EGL_GREEN_SIZE, greenSize,
-        EGL_BLUE_SIZE, blueSize,
-        EGL_ALPHA_SIZE, alphaSize,
-        EGL_DEPTH_SIZE, depthSize,
-        EGL_STENCIL_SIZE, stencilSize,
-        EGL_RENDERABLE_TYPE, renderableType,
-        EGL_NONE
-    };
+    const QVector<EGLint> attributes{EGL_SURFACE_TYPE,
+                                     surfaceType,
+                                     EGL_RED_SIZE,
+                                     redSize,
+                                     EGL_GREEN_SIZE,
+                                     greenSize,
+                                     EGL_BLUE_SIZE,
+                                     blueSize,
+                                     EGL_ALPHA_SIZE,
+                                     alphaSize,
+                                     EGL_DEPTH_SIZE,
+                                     depthSize,
+                                     EGL_STENCIL_SIZE,
+                                     stencilSize,
+                                     EGL_RENDERABLE_TYPE,
+                                     renderableType,
+                                     EGL_NONE};
 
     EGLint configCount;
     EGLConfig configs[1024];

@@ -16,6 +16,4 @@
 
 namespace KWin
 {
-
-}// namespace
-
+} // namespace

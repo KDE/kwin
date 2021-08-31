@@ -19,12 +19,10 @@ class QOpenGLFramebufferObject;
 
 namespace KWin
 {
-
 class InternalClient;
 
 namespace QPA
 {
-
 class Window : public QPlatformWindow
 {
 public:

@@ -11,8 +11,8 @@
 
 #include "options.h"
 #include "config-kwin.h"
-#include "utils.h"
 #include "platform.h"
+#include "utils.h"
 
 #ifndef KCMRULES
 
@@ -20,14 +20,13 @@
 
 #include "screens.h"
 #include "settings.h"
-#include <kwinglplatform.h>
 #include <QOpenGLContext>
+#include <kwinglplatform.h>
 
-#endif //KCMRULES
+#endif // KCMRULES
 
 namespace KWin
 {
-
 #ifndef KCMRULES
 
 Options::Options(QObject *parent)
@@ -614,7 +613,6 @@ void Options::setMoveMinimizedWindowsToEndOfTabBoxFocusChain(bool value)
         return;
     }
     m_MoveMinimizedWindowsToEndOfTabBoxFocusChain = value;
-
 }
 
 void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
@@ -713,9 +711,8 @@ void Options::updateSettings()
     // and not kstyle tooltips and vise-versa, we don't read the
     // "EffectNoTooltip" setting from kdeglobals.
 
-
-//    QToolTip::setGloballyEnabled( d->show_tooltips );
-// KDE4 this probably needs to be done manually in clients
+    //    QToolTip::setGloballyEnabled( d->show_tooltips );
+    // KDE4 this probably needs to be done manually in clients
 
     // Driver-specific config detection
     reloadCompositingSettings();
@@ -768,10 +765,12 @@ void Options::loadConfig()
     if (config.hasKey("Alt")) {
         m_modifierOnlyShortcuts.insert(Qt::AltModifier, config.readEntry("Alt", QStringList()));
     }
-    m_modifierOnlyShortcuts.insert(Qt::MetaModifier, config.readEntry("Meta", QStringList{QStringLiteral("org.kde.plasmashell"),
-                                                                                          QStringLiteral("/PlasmaShell"),
-                                                                                          QStringLiteral("org.kde.PlasmaShell"),
-                                                                                          QStringLiteral("activateLauncherMenu")}));
+    m_modifierOnlyShortcuts.insert(Qt::MetaModifier,
+                                   config.readEntry("Meta",
+                                                    QStringList{QStringLiteral("org.kde.plasmashell"),
+                                                                QStringLiteral("/PlasmaShell"),
+                                                                QStringLiteral("org.kde.PlasmaShell"),
+                                                                QStringLiteral("activateLauncherMenu")}));
 }
 
 void Options::syncFromKcfgc()
@@ -815,7 +814,7 @@ void Options::syncFromKcfgc()
     setRenderTimeEstimator(m_settings->renderTimeEstimator());
 }
 
-bool Options::loadCompositingConfig (bool force)
+bool Options::loadCompositingConfig(bool force)
 {
     KConfigGroup config(m_settings->config(), "Compositing");
 
@@ -828,7 +827,7 @@ bool Options::loadCompositingConfig (bool force)
         compositingMode = OpenGLCompositing;
 
     if (const char *c = getenv("KWIN_COMPOSE")) {
-        switch(c[0]) {
+        switch (c[0]) {
         case 'O':
             qCDebug(KWIN_CORE) << "Compositing forced to OpenGL mode by environment variable";
             compositingMode = OpenGLCompositing;
@@ -959,41 +958,68 @@ Options::WindowOperation Options::windowOperation(const QString &name, bool rest
 Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted)
 {
     QString lowerName = name.toLower();
-    if (lowerName == QStringLiteral("raise")) return MouseRaise;
-    if (lowerName == QStringLiteral("lower")) return MouseLower;
-    if (lowerName == QStringLiteral("operations menu")) return MouseOperationsMenu;
-    if (lowerName == QStringLiteral("toggle raise and lower")) return MouseToggleRaiseAndLower;
-    if (lowerName == QStringLiteral("activate and raise")) return MouseActivateAndRaise;
-    if (lowerName == QStringLiteral("activate and lower")) return MouseActivateAndLower;
-    if (lowerName == QStringLiteral("activate")) return MouseActivate;
-    if (lowerName == QStringLiteral("activate, raise and pass click")) return MouseActivateRaiseAndPassClick;
-    if (lowerName == QStringLiteral("activate and pass click")) return MouseActivateAndPassClick;
-    if (lowerName == QStringLiteral("scroll")) return MouseNothing;
-    if (lowerName == QStringLiteral("activate and scroll")) return MouseActivateAndPassClick;
-    if (lowerName == QStringLiteral("activate, raise and scroll")) return MouseActivateRaiseAndPassClick;
+    if (lowerName == QStringLiteral("raise"))
+        return MouseRaise;
+    if (lowerName == QStringLiteral("lower"))
+        return MouseLower;
+    if (lowerName == QStringLiteral("operations menu"))
+        return MouseOperationsMenu;
+    if (lowerName == QStringLiteral("toggle raise and lower"))
+        return MouseToggleRaiseAndLower;
+    if (lowerName == QStringLiteral("activate and raise"))
+        return MouseActivateAndRaise;
+    if (lowerName == QStringLiteral("activate and lower"))
+        return MouseActivateAndLower;
+    if (lowerName == QStringLiteral("activate"))
+        return MouseActivate;
+    if (lowerName == QStringLiteral("activate, raise and pass click"))
+        return MouseActivateRaiseAndPassClick;
+    if (lowerName == QStringLiteral("activate and pass click"))
+        return MouseActivateAndPassClick;
+    if (lowerName == QStringLiteral("scroll"))
+        return MouseNothing;
+    if (lowerName == QStringLiteral("activate and scroll"))
+        return MouseActivateAndPassClick;
+    if (lowerName == QStringLiteral("activate, raise and scroll"))
+        return MouseActivateRaiseAndPassClick;
     if (lowerName == QStringLiteral("activate, raise and move"))
         return restricted ? MouseActivateRaiseAndMove : MouseActivateRaiseAndUnrestrictedMove;
-    if (lowerName == QStringLiteral("move")) return restricted ? MouseMove : MouseUnrestrictedMove;
-    if (lowerName == QStringLiteral("resize")) return restricted ? MouseResize : MouseUnrestrictedResize;
-    if (lowerName == QStringLiteral("shade")) return MouseShade;
-    if (lowerName == QStringLiteral("minimize")) return MouseMinimize;
-    if (lowerName == QStringLiteral("close")) return MouseClose;
-    if (lowerName == QStringLiteral("increase opacity")) return MouseOpacityMore;
-    if (lowerName == QStringLiteral("decrease opacity")) return MouseOpacityLess;
-    if (lowerName == QStringLiteral("nothing")) return MouseNothing;
+    if (lowerName == QStringLiteral("move"))
+        return restricted ? MouseMove : MouseUnrestrictedMove;
+    if (lowerName == QStringLiteral("resize"))
+        return restricted ? MouseResize : MouseUnrestrictedResize;
+    if (lowerName == QStringLiteral("shade"))
+        return MouseShade;
+    if (lowerName == QStringLiteral("minimize"))
+        return MouseMinimize;
+    if (lowerName == QStringLiteral("close"))
+        return MouseClose;
+    if (lowerName == QStringLiteral("increase opacity"))
+        return MouseOpacityMore;
+    if (lowerName == QStringLiteral("decrease opacity"))
+        return MouseOpacityLess;
+    if (lowerName == QStringLiteral("nothing"))
+        return MouseNothing;
     return MouseNothing;
 }
 
 Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
 {
     QString lowerName = name.toLower();
-    if (lowerName == QStringLiteral("raise/lower")) return MouseWheelRaiseLower;
-    if (lowerName == QStringLiteral("shade/unshade")) return MouseWheelShadeUnshade;
-    if (lowerName == QStringLiteral("maximize/restore")) return MouseWheelMaximizeRestore;
-    if (lowerName == QStringLiteral("above/below")) return MouseWheelAboveBelow;
-    if (lowerName == QStringLiteral("previous/next desktop")) return MouseWheelPreviousNextDesktop;
-    if (lowerName == QStringLiteral("change opacity")) return MouseWheelChangeOpacity;
-    if (lowerName == QStringLiteral("nothing")) return MouseWheelNothing;
+    if (lowerName == QStringLiteral("raise/lower"))
+        return MouseWheelRaiseLower;
+    if (lowerName == QStringLiteral("shade/unshade"))
+        return MouseWheelShadeUnshade;
+    if (lowerName == QStringLiteral("maximize/restore"))
+        return MouseWheelMaximizeRestore;
+    if (lowerName == QStringLiteral("above/below"))
+        return MouseWheelAboveBelow;
+    if (lowerName == QStringLiteral("previous/next desktop"))
+        return MouseWheelPreviousNextDesktop;
+    if (lowerName == QStringLiteral("change opacity"))
+        return MouseWheelChangeOpacity;
+    if (lowerName == QStringLiteral("nothing"))
+        return MouseWheelNothing;
     return MouseWheelNothing;
 }
 
@@ -1009,7 +1035,7 @@ bool Options::condensedTitle() const
 
 Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int delta) const
 {
-    switch(com) {
+    switch (com) {
     case MouseWheelRaiseLower:
         return delta > 0 ? MouseRaise : MouseLower;
     case MouseWheelShadeUnshade:
@@ -1030,7 +1056,7 @@ Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int de
 
 double Options::animationTimeFactor() const
 {
- #ifndef KCMRULES
+#ifndef KCMRULES
     return m_settings->animationDurationFactor();
 #else
     return 0;
@@ -1039,9 +1065,7 @@ double Options::animationTimeFactor() const
 
 Options::WindowOperation Options::operationMaxButtonClick(Qt::MouseButtons button) const
 {
-    return button == Qt::RightButton ? opMaxButtonRightClick :
-           button == Qt::MiddleButton ?   opMaxButtonMiddleClick :
-           opMaxButtonLeftClick;
+    return button == Qt::RightButton ? opMaxButtonRightClick : button == Qt::MiddleButton ? opMaxButtonMiddleClick : opMaxButtonLeftClick;
 }
 
 QStringList Options::modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const

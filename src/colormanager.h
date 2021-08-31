@@ -12,7 +12,6 @@
 
 namespace KWin
 {
-
 class AbstractOutput;
 class ColorDevice;
 class ColorManagerPrivate;

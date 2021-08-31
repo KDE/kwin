@@ -20,7 +20,6 @@
 
 namespace KWin
 {
-
 SheetEffect::SheetEffect()
 {
     initConfig<SheetConfig>();
@@ -38,9 +37,7 @@ void SheetEffect::reconfigure(ReconfigureFlags flags)
     SheetConfig::self()->read();
 
     // TODO: Rename AnimationTime config key to Duration.
-    const int d = animationTime(SheetConfig::animationTime() != 0
-        ? SheetConfig::animationTime()
-        : 300);
+    const int d = animationTime(SheetConfig::animationTime() != 0 ? SheetConfig::animationTime() : 300);
     m_duration = std::chrono::milliseconds(static_cast<int>(d));
 }
 
@@ -141,8 +138,7 @@ bool SheetEffect::isActive() const
 
 bool SheetEffect::supported()
 {
-    return effects->isOpenGLCompositing()
-        && effects->animationsSupported();
+    return effects->isOpenGLCompositing() && effects->animationsSupported();
 }
 
 void SheetEffect::slotWindowAdded(EffectWindow *w)
@@ -163,15 +159,14 @@ void SheetEffect::slotWindowAdded(EffectWindow *w)
     animation.timeLine.setEasingCurve(QEasingCurve::Linear);
 
     const auto windows = effects->stackingOrder();
-    auto parentIt = std::find_if(windows.constBegin(), windows.constEnd(),
-        [w](EffectWindow *p) {
-            return p->findModal() == w;
-        });
+    auto parentIt = std::find_if(windows.constBegin(), windows.constEnd(), [w](EffectWindow *p) {
+        return p->findModal() == w;
+    });
     if (parentIt != windows.constEnd()) {
         animation.parentY = (*parentIt)->y();
     }
 
-    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
 
     w->addRepaintFull();
 }
@@ -197,15 +192,14 @@ void SheetEffect::slotWindowClosed(EffectWindow *w)
     animation.timeLine.setEasingCurve(QEasingCurve::Linear);
 
     const auto windows = effects->stackingOrder();
-    auto parentIt = std::find_if(windows.constBegin(), windows.constEnd(),
-        [w](EffectWindow *p) {
-            return p->findModal() == w;
-        });
+    auto parentIt = std::find_if(windows.constBegin(), windows.constEnd(), [w](EffectWindow *p) {
+        return p->findModal() == w;
+    });
     if (parentIt != windows.constEnd()) {
         animation.parentY = (*parentIt)->y();
     }
 
-    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
 
     w->addRepaintFull();
 }

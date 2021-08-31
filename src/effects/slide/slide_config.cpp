@@ -17,13 +17,10 @@
 #include <KAboutData>
 #include <KPluginFactory>
 
-K_PLUGIN_FACTORY_WITH_JSON(SlideEffectConfigFactory,
-                           "slide_config.json",
-                           registerPlugin<KWin::SlideEffectConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(SlideEffectConfigFactory, "slide_config.json", registerPlugin<KWin::SlideEffectConfig>();)
 
 namespace KWin
 {
-
 SlideEffectConfig::SlideEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
 {
@@ -41,9 +38,7 @@ void SlideEffectConfig::save()
 {
     KCModule::save();
 
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("slide"));
 }
 

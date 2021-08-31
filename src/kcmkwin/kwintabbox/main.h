@@ -11,9 +11,9 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+#include "tabboxconfig.h"
 #include <kcmodule.h>
 #include <ksharedconfig.h>
-#include "tabboxconfig.h"
 
 namespace KWin
 {
@@ -25,13 +25,12 @@ class KWinTabboxData;
 class TabBoxSettings;
 }
 
-
 class KWinTabBoxConfig : public KCModule
 {
     Q_OBJECT
 
 public:
-    explicit KWinTabBoxConfig(QWidget* parent, const QVariantList& args);
+    explicit KWinTabBoxConfig(QWidget *parent, const QVariantList &args);
     ~KWinTabBoxConfig() override;
 
 public Q_SLOTS:

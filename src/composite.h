@@ -12,12 +12,11 @@
 #include <kwinglobals.h>
 
 #include <QObject>
-#include <QTimer>
 #include <QRegion>
+#include <QTimer>
 
 namespace KWin
 {
-
 class AbstractOutput;
 class CompositorSelectionOwner;
 class RenderLoop;
@@ -30,20 +29,15 @@ class KWIN_EXPORT Compositor : public QObject
 {
     Q_OBJECT
 public:
-    enum class State {
-        On = 0,
-        Off,
-        Starting,
-        Stopping
-    };
+    enum class State { On = 0, Off, Starting, Stopping };
 
     ~Compositor() override;
     static Compositor *self();
 
     // when adding repaints caused by a window, you probably want to use
     // either Toplevel::addRepaint() or Toplevel::addWorkspaceRepaint()
-    void addRepaint(const QRect& r);
-    void addRepaint(const QRegion& r);
+    void addRepaint(const QRect &r);
+    void addRepaint(const QRegion &r);
     void addRepaint(int x, int y, int w, int h);
     void addRepaintFull();
 
@@ -71,7 +65,8 @@ public:
      */
     bool isActive();
 
-    Scene *scene() const {
+    Scene *scene() const
+    {
         return m_scene;
     }
 
@@ -80,7 +75,8 @@ public:
      *
      * @return bool @c true if there is a Compositor and it is active, @c false otherwise
      */
-    static bool compositing() {
+    static bool compositing()
+    {
         return s_compositor != nullptr && s_compositor->isActive();
     }
 
@@ -165,13 +161,7 @@ class KWIN_EXPORT X11Compositor final : public Compositor
 {
     Q_OBJECT
 public:
-    enum SuspendReason {
-        NoReasonSuspend     = 0,
-        UserSuspend         = 1 << 0,
-        BlockRuleSuspend    = 1 << 1,
-        ScriptSuspend       = 1 << 2,
-        AllReasonSuspend    = 0xff
-    };
+    enum SuspendReason { NoReasonSuspend = 0, UserSuspend = 1 << 0, BlockRuleSuspend = 1 << 1, ScriptSuspend = 1 << 2, AllReasonSuspend = 0xff };
     Q_DECLARE_FLAGS(SuspendReasons, SuspendReason)
     Q_ENUM(SuspendReason)
     Q_FLAG(SuspendReasons)

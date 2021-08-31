@@ -8,38 +8,34 @@
 #include "module.h"
 #include "ui_module.h"
 
-#include <QFileDialog>
-#include <QStringList>
-#include <QStandardPaths>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QStringList>
 
 #include <KAboutData>
 #include <KLocalizedString>
-#include <KPluginFactory>
 #include <KMessageBox>
 #include <KMessageWidget>
-#include <KPackage/PackageLoader>
 #include <KPackage/Package>
+#include <KPackage/PackageLoader>
 #include <KPackage/PackageStructure>
+#include <KPluginFactory>
 
 #include <KNewStuff3/KNS3/Button>
 
-#include "version.h"
 #include "kwinscriptsdata.h"
+#include "version.h"
 
-Module::Module(QWidget *parent, const QVariantList &args) :
-    KCModule(parent, args),
-    ui(new Ui::Module),
-    m_kwinConfig(KSharedConfig::openConfig("kwinrc")),
-    m_kwinScriptsData(new KWinScriptsData(this))
+Module::Module(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
+    , ui(new Ui::Module)
+    , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
+    , m_kwinScriptsData(new KWinScriptsData(this))
 {
-    KAboutData *about = new KAboutData("kwin-scripts",
-                                       i18n("KWin Scripts"),
-                                       global_s_versionStringFull,
-                                       i18n("Configure KWin scripts"),
-                                       KAboutLicense::GPL_V2);
+    KAboutData *about = new KAboutData("kwin-scripts", i18n("KWin Scripts"), global_s_versionStringFull, i18n("Configure KWin scripts"), KAboutLicense::GPL_V2);
 
     about->addAuthor(i18n("Tamás Krutki"));
     setAboutData(about);
@@ -56,10 +52,10 @@ Module::Module(QWidget *parent, const QVariantList &args) :
         }
     });
 
-    connect(ui->scriptSelector, &KPluginSelector::changed, this, [this](bool isChanged){
+    connect(ui->scriptSelector, &KPluginSelector::changed, this, [this](bool isChanged) {
         Q_EMIT changed(isChanged || !m_pendingDeletions.isEmpty());
     });
-    connect(ui->scriptSelector, &KPluginSelector::defaulted, this, [this](bool isDefaulted){
+    connect(ui->scriptSelector, &KPluginSelector::defaulted, this, [this](bool isDefaulted) {
         Q_EMIT defaulted(isDefaulted && m_pendingDeletions.isEmpty());
     });
     connect(this, &Module::defaultsIndicatorsVisibleChanged, ui->scriptSelector, &KPluginSelector::setDefaultsIndicatorsVisible);
@@ -97,8 +93,7 @@ void Module::importScript()
 {
     ui->messageWidget->animatedHide();
 
-    QString path = QFileDialog::getOpenFileName(nullptr, i18n("Import KWin Script"), QDir::homePath(),
-                                                i18n("*.kwinscript|KWin scripts (*.kwinscript)"));
+    QString path = QFileDialog::getOpenFileName(nullptr, i18n("Import KWin Script"), QDir::homePath(), i18n("*.kwinscript|KWin scripts (*.kwinscript)"));
 
     if (path.isNull()) {
         return;
@@ -117,7 +112,8 @@ void Module::importScriptInstallFinished(KJob *job)
 {
     // if the applet is already installed, just add it to the containment
     if (job->error() != KJob::NoError) {
-        ui->messageWidget->setText(i18nc("Placeholder is error message returned from the install service", "Cannot import selected script.\n%1", job->errorString()));
+        ui->messageWidget->setText(
+            i18nc("Placeholder is error message returned from the install service", "Cannot import selected script.\n%1", job->errorString()));
         ui->messageWidget->setMessageType(KMessageWidget::Error);
         ui->messageWidget->animatedShow();
         return;
@@ -131,7 +127,8 @@ void Module::importScriptInstallFinished(KJob *job)
     package.setPath(job->property("packagePath").toString());
     Q_ASSERT(package.isValid());
 
-    ui->messageWidget->setText(i18nc("Placeholder is name of the script that was imported", "The script \"%1\" was successfully imported.", package.metadata().name()));
+    ui->messageWidget->setText(
+        i18nc("Placeholder is name of the script that was imported", "The script \"%1\" was successfully imported.", package.metadata().name()));
     ui->messageWidget->setMessageType(KMessageWidget::Information);
     ui->messageWidget->animatedShow();
 
@@ -171,7 +168,7 @@ void Module::save()
         QDir root = QFileInfo(info.entryPath()).dir();
         root.cdUp();
         KJob *uninstallJob = Package(structure).uninstall(info.pluginName(), root.absolutePath());
-        connect(uninstallJob, &KJob::result, this, [this, uninstallJob](){
+        connect(uninstallJob, &KJob::result, this, [this, uninstallJob]() {
             ui->scriptSelector->clearPlugins();
             updateListViewContents();
             // If the uninstallation is successful the entry will be immediately removed

@@ -15,7 +15,6 @@
 
 namespace KWin
 {
-
 class ScreenShotSink1;
 class ScreenShotSource1;
 
@@ -91,9 +90,7 @@ public Q_SLOTS:
      * @param shouldReturnNativeSize Whether to return an image according to the virtualGeometry,
      * or according to pixel on screen size
      */
-    Q_SCRIPTABLE void screenshotFullscreen(QDBusUnixFileDescriptor fd,
-                                           bool captureCursor = false,
-                                           bool shouldReturnNativeSize = false);
+    Q_SCRIPTABLE void screenshotFullscreen(QDBusUnixFileDescriptor fd, bool captureCursor = false, bool shouldReturnNativeSize = false);
 
     /**
      * Take a screenshot of the passed screens and return a QList<QImage> in the fd response,
@@ -105,10 +102,8 @@ public Q_SLOTS:
      * @param captureCursor
      * @param shouldReturnNativeSize
      */
-    Q_SCRIPTABLE void screenshotScreens(QDBusUnixFileDescriptor fd,
-                                        const QStringList &screensNames,
-                                        bool captureCursor = false,
-                                        bool shouldReturnNativeSize = false);
+    Q_SCRIPTABLE void
+    screenshotScreens(QDBusUnixFileDescriptor fd, const QStringList &screensNames, bool captureCursor = false, bool shouldReturnNativeSize = false);
 
     /**
      * Saves a screenshot of the screen identified by @p screen into a file and returns the path
@@ -151,7 +146,10 @@ private Q_SLOTS:
     void handleSourceCancelled();
 
 private:
-    enum class InfoMessageMode { Window, Screen, };
+    enum class InfoMessageMode {
+        Window,
+        Screen,
+    };
 
     void takeScreenShot(EffectScreen *screen, ScreenShotFlags flags, ScreenShotSink1 *sink);
     void takeScreenShot(const QList<EffectScreen *> &screens, ScreenShotFlags flags, ScreenShotSink1 *sink);

@@ -25,7 +25,6 @@ class XwaylandSocket;
 
 namespace Xwl
 {
-
 class Xwayland : public XwaylandInterface
 {
     Q_OBJECT

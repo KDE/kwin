@@ -31,8 +31,7 @@ class ClientModel;
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.4
  */
-class DesktopModel
-    : public QAbstractItemModel
+class DesktopModel : public QAbstractItemModel
 {
 public:
     enum {
@@ -40,14 +39,14 @@ public:
         DesktopNameRole = Qt::UserRole + 1, ///< Desktop name
         ClientModelRole = Qt::UserRole + 2 ///< Clients on this desktop
     };
-    explicit DesktopModel(QObject* parent = nullptr);
+    explicit DesktopModel(QObject *parent = nullptr);
     ~DesktopModel() override;
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    int columnCount(const QModelIndex& parent = QModelIndex()) const override;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-    QModelIndex parent(const QModelIndex& child) const override;
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
     Q_INVOKABLE QString longestCaption() const;
 
@@ -59,7 +58,8 @@ public:
     /**
      * @return The current list of desktops.
      */
-    QList< int > desktopList() const {
+    QList<int> desktopList() const
+    {
         return m_desktopList;
     }
     /**
@@ -70,8 +70,8 @@ public:
     QModelIndex desktopIndex(int desktop) const;
 
 private:
-    QList< int > m_desktopList;
-    QMap< int, ClientModel* > m_clientModels;
+    QList<int> m_desktopList;
+    QMap<int, ClientModel *> m_clientModels;
 };
 
 } // namespace Tabbox

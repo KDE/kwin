@@ -15,7 +15,6 @@
 
 namespace KWin
 {
-
 class ShowPaintEffectConfig : public KCModule
 {
     Q_OBJECT

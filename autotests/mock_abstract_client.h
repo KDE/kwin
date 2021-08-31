@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 class AbstractClient : public QObject
 {
     Q_OBJECT

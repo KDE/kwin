@@ -11,7 +11,6 @@
 
 namespace KWin
 {
-
 static KWaylandServer::OutputInterface::Transform kwinTransformToOutputTransform(AbstractWaylandOutput::Transform transform)
 {
     switch (transform) {
@@ -116,10 +115,8 @@ WaylandOutput::WaylandOutput(AbstractWaylandOutput *output, QObject *parent)
     m_xdgOutputV1->done();
 
     // The dpms functionality is not part of the wl_output interface, but org_kde_kwin_dpms.
-    connect(output, &AbstractWaylandOutput::dpmsModeChanged,
-            this, &WaylandOutput::handleDpmsModeChanged);
-    connect(m_waylandOutput.data(), &KWaylandServer::OutputInterface::dpmsModeRequested,
-            this, &WaylandOutput::handleDpmsModeRequested);
+    connect(output, &AbstractWaylandOutput::dpmsModeChanged, this, &WaylandOutput::handleDpmsModeChanged);
+    connect(m_waylandOutput.data(), &KWaylandServer::OutputInterface::dpmsModeRequested, this, &WaylandOutput::handleDpmsModeRequested);
 
     // The timer is used to compress output updates so the wayland clients are not spammed.
     m_updateTimer.setSingleShot(true);

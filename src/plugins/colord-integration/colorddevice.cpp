@@ -8,12 +8,11 @@
 #include "abstract_output.h"
 #include "colordevice.h"
 #include "colordlogging.h"
-#include "colormanager.h"
 #include "colordprofileinterface.h"
+#include "colormanager.h"
 
 namespace KWin
 {
-
 ColordDevice::ColordDevice(AbstractOutput *output, QObject *parent)
     : QObject(parent)
     , m_output(output)
@@ -32,8 +31,7 @@ QDBusObjectPath ColordDevice::objectPath() const
 
 void ColordDevice::initialize(const QDBusObjectPath &devicePath)
 {
-    m_colordInterface = new CdDeviceInterface(QStringLiteral("org.freedesktop.ColorManager"),
-                                              devicePath.path(), QDBusConnection::systemBus(), this);
+    m_colordInterface = new CdDeviceInterface(QStringLiteral("org.freedesktop.ColorManager"), devicePath.path(), QDBusConnection::systemBus(), this);
     connect(m_colordInterface, &CdDeviceInterface::Changed, this, &ColordDevice::updateProfile);
 
     updateProfile();
@@ -47,8 +45,7 @@ void ColordDevice::updateProfile()
         return;
     }
 
-    CdProfileInterface profile(QStringLiteral("org.freedesktop.ColorManager"),
-                               profiles.first().path(), QDBusConnection::systemBus());
+    CdProfileInterface profile(QStringLiteral("org.freedesktop.ColorManager"), profiles.first().path(), QDBusConnection::systemBus());
     if (!profile.isValid()) {
         qCWarning(KWIN_COLORD) << profiles.first() << "is an invalid color profile";
         return;

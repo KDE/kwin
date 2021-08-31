@@ -57,10 +57,12 @@ public:
     bool handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event);
     bool filterEvent(xcb_generic_event_t *event);
 
-    xcb_atom_t atom() const {
+    xcb_atom_t atom() const
+    {
         return m_atom;
     }
-    xcb_window_t window() const {
+    xcb_window_t window() const
+    {
         return m_window;
     }
     void overwriteRequestorWindow(xcb_window_t window);
@@ -75,22 +77,26 @@ protected:
     virtual void doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event) = 0;
     virtual void x11OffersChanged(const QStringList &added, const QStringList &removed) = 0;
 
-    virtual bool handleClientMessage(xcb_client_message_event_t *event) {
+    virtual bool handleClientMessage(xcb_client_message_event_t *event)
+    {
         Q_UNUSED(event);
         return false;
     }
     // sets the current provider of the selection
     void setWlSource(WlSource *source);
-    WlSource *wlSource() const {
+    WlSource *wlSource() const
+    {
         return m_waylandSource;
     }
     void createX11Source(xcb_xfixes_selection_notify_event_t *event);
-    X11Source *x11Source() const {
+    X11Source *x11Source() const
+    {
         return m_xSource;
     }
     // must be called in order to provide data from Wl to X
     void ownSelection(bool own);
-    void setWindow(xcb_window_t window) {
+    void setWindow(xcb_window_t window)
+    {
         m_window = window;
     }
 

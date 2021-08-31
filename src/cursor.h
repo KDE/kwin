@@ -1,10 +1,10 @@
-    /*
-    KWin - the KDE window manager
-    This file is part of the KDE project.
+/*
+KWin - the KDE window manager
+This file is part of the KDE project.
 
-    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
+SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-    SPDX-License-Identifier: GPL-2.0-or-later
+SPDX-License-Identifier: GPL-2.0-or-later
 */
 #ifndef KWIN_CURSOR_H
 #define KWIN_CURSOR_H
@@ -23,8 +23,8 @@ class QTimer;
 
 namespace KWin
 {
-
-namespace ExtendedCursor {
+namespace ExtendedCursor
+{
 /**
  * Extension of Qt::CursorShape with values not currently present there
  */
@@ -43,25 +43,31 @@ enum Shape {
 /**
  * @brief Wrapper round Qt::CursorShape with extensions enums into a single entity
  */
-class KWIN_EXPORT CursorShape {
+class KWIN_EXPORT CursorShape
+{
 public:
     CursorShape() = default;
-    CursorShape(Qt::CursorShape qtShape) {
+    CursorShape(Qt::CursorShape qtShape)
+    {
         m_shape = qtShape;
     }
-    CursorShape(KWin::ExtendedCursor::Shape kwinShape) {
+    CursorShape(KWin::ExtendedCursor::Shape kwinShape)
+    {
         m_shape = kwinShape;
     }
-    bool operator==(const CursorShape &o) const {
+    bool operator==(const CursorShape &o) const
+    {
         return m_shape == o.m_shape;
     }
-    operator int() const {
+    operator int() const
+    {
         return m_shape;
     }
     /**
      * @brief The name of a cursor shape in the theme.
      */
     QByteArray name() const;
+
 private:
     int m_shape = Qt::ArrowCursor;
 };
@@ -88,7 +94,7 @@ class KWIN_EXPORT Cursor : public QObject
 {
     Q_OBJECT
 public:
-    Cursor(QObject* parent);
+    Cursor(QObject *parent);
     ~Cursor() override;
     void startMousePolling();
     void stopMousePolling();
@@ -160,21 +166,31 @@ public:
      */
     xcb_cursor_t x11Cursor(const QByteArray &name);
 
-    QImage image() const { return m_image; }
-    QPoint hotspot() const { return m_hotspot; }
+    QImage image() const
+    {
+        return m_image;
+    }
+    QPoint hotspot() const
+    {
+        return m_hotspot;
+    }
     QRect geometry() const;
     QRect rect() const;
 
     void updateCursor(const QImage &image, const QPoint &hotspot);
-    void markAsRendered() {
+    void markAsRendered()
+    {
         Q_EMIT rendered(geometry());
     }
 
 Q_SIGNALS:
-    void posChanged(const QPoint& pos);
-    void mouseChanged(const QPoint& pos, const QPoint& oldpos,
-                      Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                      Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void posChanged(const QPoint &pos);
+    void mouseChanged(const QPoint &pos,
+                      const QPoint &oldpos,
+                      Qt::MouseButtons buttons,
+                      Qt::MouseButtons oldbuttons,
+                      Qt::KeyboardModifiers modifiers,
+                      Qt::KeyboardModifiers oldmodifiers);
     /**
      * @brief Signal emitted when the cursor image changes.
      *
@@ -260,16 +276,17 @@ private:
     int m_themeSize;
 };
 
-
 class KWIN_EXPORT Cursors : public QObject
 {
     Q_OBJECT
 public:
-    Cursor* mouse() const {
+    Cursor *mouse() const
+    {
         return m_mouse;
     }
 
-    void setMouse(Cursor* mouse) {
+    void setMouse(Cursor *mouse)
+    {
         if (m_mouse != mouse) {
             m_mouse = mouse;
 
@@ -278,42 +295,46 @@ public:
         }
     }
 
-    void addCursor(Cursor* cursor);
-    void removeCursor(Cursor* cursor);
+    void addCursor(Cursor *cursor);
+    void removeCursor(Cursor *cursor);
 
     ///@returns the last cursor that moved
-    Cursor* currentCursor() const {
+    Cursor *currentCursor() const
+    {
         return m_currentCursor;
     }
 
-    static Cursors* self();
+    static Cursors *self();
 
 Q_SIGNALS:
-    void currentCursorChanged(Cursor* cursor);
+    void currentCursorChanged(Cursor *cursor);
     void currentCursorRendered(const QRect &geometry);
-    void positionChanged(Cursor* cursor, const QPoint &position);
+    void positionChanged(Cursor *cursor, const QPoint &position);
 
 private:
     void emitCurrentCursorChanged();
-    void setCurrentCursor(Cursor* cursor);
+    void setCurrentCursor(Cursor *cursor);
 
-    static Cursors* s_self;
-    Cursor* m_currentCursor = nullptr;
-    Cursor* m_mouse = nullptr;
-    QVector<Cursor*> m_cursors;
+    static Cursors *s_self;
+    Cursor *m_currentCursor = nullptr;
+    Cursor *m_mouse = nullptr;
+    QVector<Cursor *> m_cursors;
 };
 
 class InputConfig
 {
 public:
-    KSharedConfigPtr inputConfig() const {
+    KSharedConfigPtr inputConfig() const
+    {
         return m_inputConfig;
     }
-    void setInputConfig(KSharedConfigPtr config) {
+    void setInputConfig(KSharedConfigPtr config)
+    {
         m_inputConfig = std::move(config);
     }
 
     static InputConfig *self();
+
 private:
     InputConfig();
 
@@ -331,7 +352,7 @@ inline void Cursor::updatePos(int x, int y)
     updatePos(QPoint(x, y));
 }
 
-inline const QString& Cursor::themeName() const
+inline const QString &Cursor::themeName() const
 {
     return m_themeName;
 }

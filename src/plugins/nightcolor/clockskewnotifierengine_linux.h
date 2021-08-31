@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class LinuxClockSkewNotifierEngine : public ClockSkewNotifierEngine
 {
     Q_OBJECT

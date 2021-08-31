@@ -250,7 +250,7 @@ enum libinput_config_accel_profile libinput_device_config_accel_get_default_prof
 enum libinput_config_status libinput_device_config_accel_set_profile(struct libinput_device *device, enum libinput_config_accel_profile profile)
 {
     if (device->setPointerAccelerationProfileReturnValue == 0) {
-        if (!(device->supportedPointerAccelerationProfiles & profile) && profile!= LIBINPUT_CONFIG_ACCEL_PROFILE_NONE) {
+        if (!(device->supportedPointerAccelerationProfiles & profile) && profile != LIBINPUT_CONFIG_ACCEL_PROFILE_NONE) {
             return LIBINPUT_CONFIG_STATUS_INVALID;
         }
         device->pointerAccelerationProfile = profile;
@@ -376,7 +376,6 @@ enum libinput_config_status libinput_device_config_send_events_set_mode(struct l
     return LIBINPUT_CONFIG_STATUS_INVALID;
 }
 
-
 enum libinput_event_type libinput_event_get_type(struct libinput_event *event)
 {
     return event->type;
@@ -402,10 +401,8 @@ struct libinput_event_keyboard *libinput_event_get_keyboard_event(struct libinpu
 
 struct libinput_event_pointer *libinput_event_get_pointer_event(struct libinput_event *event)
 {
-    if (event->type == LIBINPUT_EVENT_POINTER_MOTION ||
-        event->type == LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE ||
-        event->type == LIBINPUT_EVENT_POINTER_BUTTON ||
-        event->type == LIBINPUT_EVENT_POINTER_AXIS) {
+    if (event->type == LIBINPUT_EVENT_POINTER_MOTION || event->type == LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE || event->type == LIBINPUT_EVENT_POINTER_BUTTON
+        || event->type == LIBINPUT_EVENT_POINTER_AXIS) {
         return reinterpret_cast<libinput_event_pointer *>(event);
     }
     return nullptr;
@@ -413,11 +410,8 @@ struct libinput_event_pointer *libinput_event_get_pointer_event(struct libinput_
 
 struct libinput_event_touch *libinput_event_get_touch_event(struct libinput_event *event)
 {
-    if (event->type == LIBINPUT_EVENT_TOUCH_DOWN ||
-        event->type == LIBINPUT_EVENT_TOUCH_UP ||
-        event->type == LIBINPUT_EVENT_TOUCH_MOTION ||
-        event->type == LIBINPUT_EVENT_TOUCH_CANCEL ||
-        event->type == LIBINPUT_EVENT_TOUCH_FRAME) {
+    if (event->type == LIBINPUT_EVENT_TOUCH_DOWN || event->type == LIBINPUT_EVENT_TOUCH_UP || event->type == LIBINPUT_EVENT_TOUCH_MOTION
+        || event->type == LIBINPUT_EVENT_TOUCH_CANCEL || event->type == LIBINPUT_EVENT_TOUCH_FRAME) {
         return reinterpret_cast<libinput_event_touch *>(event);
     }
     return nullptr;
@@ -425,12 +419,9 @@ struct libinput_event_touch *libinput_event_get_touch_event(struct libinput_even
 
 struct libinput_event_gesture *libinput_event_get_gesture_event(struct libinput_event *event)
 {
-    if (event->type == LIBINPUT_EVENT_GESTURE_PINCH_BEGIN ||
-        event->type == LIBINPUT_EVENT_GESTURE_PINCH_UPDATE ||
-        event->type == LIBINPUT_EVENT_GESTURE_PINCH_END ||
-        event->type == LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN ||
-        event->type == LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE ||
-        event->type == LIBINPUT_EVENT_GESTURE_SWIPE_END) {
+    if (event->type == LIBINPUT_EVENT_GESTURE_PINCH_BEGIN || event->type == LIBINPUT_EVENT_GESTURE_PINCH_UPDATE
+        || event->type == LIBINPUT_EVENT_GESTURE_PINCH_END || event->type == LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN
+        || event->type == LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE || event->type == LIBINPUT_EVENT_GESTURE_SWIPE_END) {
         return reinterpret_cast<libinput_event_gesture *>(event);
     }
     return nullptr;
@@ -714,7 +705,8 @@ int libinput_device_config_middle_emulation_is_available(struct libinput_device 
     return device->supportsMiddleEmulation;
 }
 
-enum libinput_config_status libinput_device_config_middle_emulation_set_enabled(struct libinput_device *device, enum libinput_config_middle_emulation_state enable)
+enum libinput_config_status libinput_device_config_middle_emulation_set_enabled(struct libinput_device *device,
+                                                                                enum libinput_config_middle_emulation_state enable)
 {
     if (device->setMiddleEmulationReturnValue == 0) {
         if (!device->supportsMiddleEmulation) {
@@ -858,7 +850,7 @@ int libinput_device_switch_has_switch(struct libinput_device *device, enum libin
 struct libinput_event_switch *libinput_event_get_switch_event(struct libinput_event *event)
 {
     if (event->type == LIBINPUT_EVENT_SWITCH_TOGGLE) {
-        return reinterpret_cast<libinput_event_switch*>(event);
+        return reinterpret_cast<libinput_event_switch *>(event);
     } else {
         return nullptr;
     }
@@ -878,7 +870,8 @@ enum libinput_switch_state libinput_event_switch_get_switch_state(struct libinpu
 
 uint32_t libinput_event_switch_get_time(struct libinput_event_switch *event)
 {
-    return event->time;;
+    return event->time;
+    ;
 }
 
 uint64_t libinput_event_switch_get_time_usec(struct libinput_event_switch *event)
@@ -894,44 +887,37 @@ struct libinput_event_tablet_pad *libinput_event_get_tablet_pad_event(struct lib
     return nullptr;
 }
 
-struct libinput_event_tablet_tool *
-libinput_event_get_tablet_tool_event(struct libinput_event *event)
+struct libinput_event_tablet_tool *libinput_event_get_tablet_tool_event(struct libinput_event *event)
 {
-    if (event->type == LIBINPUT_EVENT_TABLET_TOOL_AXIS ||
-        event->type == LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY ||
-        event->type == LIBINPUT_EVENT_TABLET_TOOL_TIP) {
+    if (event->type == LIBINPUT_EVENT_TABLET_TOOL_AXIS || event->type == LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY
+        || event->type == LIBINPUT_EVENT_TABLET_TOOL_TIP) {
         return reinterpret_cast<libinput_event_tablet_tool *>(event);
     }
     return nullptr;
 }
 
-int
-libinput_device_tablet_pad_get_num_strips(struct libinput_device *device)
+int libinput_device_tablet_pad_get_num_strips(struct libinput_device *device)
 {
     return device->stripCount;
 }
 
-int
-libinput_device_tablet_pad_get_num_rings(struct libinput_device *device)
+int libinput_device_tablet_pad_get_num_rings(struct libinput_device *device)
 {
     return device->ringCount;
 }
 
-int
-libinput_device_tablet_pad_get_num_buttons(struct libinput_device *device)
+int libinput_device_tablet_pad_get_num_buttons(struct libinput_device *device)
 {
     return device->buttonCount;
 }
 
-struct libinput_device_group *
-libinput_device_get_device_group(struct libinput_device *device)
+struct libinput_device_group *libinput_device_get_device_group(struct libinput_device *device)
 {
     Q_UNUSED(device);
     return nullptr;
 }
 
-void *
-libinput_device_group_get_user_data(struct libinput_device_group *group)
+void *libinput_device_group_get_user_data(struct libinput_device_group *group)
 {
     Q_UNUSED(group);
     return nullptr;

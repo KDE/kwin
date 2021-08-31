@@ -6,17 +6,17 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "abstract_output.h"
-#include "platform.h"
 #include "cursor.h"
+#include "kwin_wayland_test.h"
+#include "platform.h"
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/registry.h>
@@ -196,10 +196,7 @@ void PlasmaSurfaceTest::testOSDPlacement()
     QSignalSpy screensChangedSpy(screens(), &Screens::changed);
     QVERIFY(screensChangedSpy.isValid());
     const QVector<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs",
-                              Qt::DirectConnection,
-                              Q_ARG(int, 2),
-                              Q_ARG(QVector<QRect>, geometries));
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2), Q_ARG(QVector<QRect>, geometries));
     QVERIFY(screensChangedSpy.wait());
     QCOMPARE(screensChangedSpy.count(), 2);
     const auto outputs = kwinApp()->platform()->enabledOutputs();
@@ -240,7 +237,6 @@ void PlasmaSurfaceTest::testOSDPlacementManualPosition()
     QCOMPARE(c->frameGeometry(), QRect(50, 70, 100, 50));
 }
 
-
 void PlasmaSurfaceTest::testPanelTypeHasStrut_data()
 {
     QTest::addColumn<PlasmaShellSurface::PanelBehavior>("panelBehavior");
@@ -250,7 +246,8 @@ void PlasmaSurfaceTest::testPanelTypeHasStrut_data()
 
     QTest::newRow("always visible - xdgWmBase") << PlasmaShellSurface::PanelBehavior::AlwaysVisible << true << QRect(0, 50, 1280, 974) << KWin::DockLayer;
     QTest::newRow("autohide - xdgWmBase") << PlasmaShellSurface::PanelBehavior::AutoHide << false << QRect(0, 0, 1280, 1024) << KWin::AboveLayer;
-    QTest::newRow("windows can cover - xdgWmBase") << PlasmaShellSurface::PanelBehavior::WindowsCanCover << false << QRect(0, 0, 1280, 1024) << KWin::NormalLayer;
+    QTest::newRow("windows can cover - xdgWmBase") << PlasmaShellSurface::PanelBehavior::WindowsCanCover << false << QRect(0, 0, 1280, 1024)
+                                                   << KWin::NormalLayer;
     QTest::newRow("windows go below - xdgWmBase") << PlasmaShellSurface::PanelBehavior::WindowsGoBelow << false << QRect(0, 0, 1280, 1024) << KWin::AboveLayer;
 }
 

@@ -11,9 +11,9 @@
 #include "datasource.h"
 #include "selection_source.h"
 
-#include "x11client.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KWaylandServer/seat_interface.h>
 
@@ -26,20 +26,20 @@ namespace KWin
 {
 namespace Xwl
 {
-
 Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
     : Selection(atom, parent)
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
-    const uint32_t clipboardValues[] = { XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
-                                   XCB_EVENT_MASK_PROPERTY_CHANGE };
+    const uint32_t clipboardValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE};
     xcb_create_window(xcbConn,
                       XCB_COPY_FROM_PARENT,
                       window(),
                       kwinApp()->x11RootWindow(),
-                      0, 0,
-                      10, 10,
+                      0,
+                      0,
+                      10,
+                      10,
                       0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT,
                       XCB_COPY_FROM_PARENT,
@@ -48,8 +48,7 @@ Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
     registerXfixes();
     xcb_flush(xcbConn);
 
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::selectionChanged,
-            this, &Clipboard::wlSelectionChanged);
+    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::selectionChanged, this, &Clipboard::wlSelectionChanged);
 }
 
 void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
@@ -61,8 +60,7 @@ void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
     if (!ownsSelection(dsi)) {
         // Wayland native client provides new selection
         if (!m_checkConnection) {
-            m_checkConnection = connect(workspace(), &Workspace::clientActivated,
-                                        this, &Clipboard::checkWlSource);
+            m_checkConnection = connect(workspace(), &Workspace::clientActivated, this, &Clipboard::checkWlSource);
         }
         // remove previous source so checkWlSource() can create a new one
         setWlSource(nullptr);
@@ -105,7 +103,7 @@ void Clipboard::checkWlSource()
         removeSource();
         return;
     }
-    if (!qobject_cast<KWin::X11Client*>(workspace()->activeClient())) {
+    if (!qobject_cast<KWin::X11Client *>(workspace()->activeClient())) {
         // no active client or active client is Wayland native
         removeSource();
         return;

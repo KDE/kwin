@@ -5,9 +5,9 @@
 
 */
 
-#include <KMessageBox>
-#include <KLocalizedString>
 #include <KAuth/KAuthAction>
+#include <KLocalizedString>
+#include <KMessageBox>
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDebug>
@@ -18,7 +18,7 @@
 #include <cerrno>
 #include <csignal>
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     KLocalizedString::setApplicationDomain("kwin");
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("xcb"));
@@ -30,19 +30,12 @@ int main(int argc, char* argv[])
     QApplication::setApplicationDisplayName(i18n("Window Manager"));
     QCoreApplication::setApplicationVersion(QStringLiteral("1.0"));
 
-
-    QCommandLineOption pidOption(QStringLiteral("pid"),
-                                 i18n("PID of the application to terminate"), i18n("pid"));
-    QCommandLineOption hostNameOption(QStringLiteral("hostname"),
-                                      i18n("Hostname on which the application is running"), i18n("hostname"));
-    QCommandLineOption windowNameOption(QStringLiteral("windowname"),
-                                        i18n("Caption of the window to be terminated"), i18n("caption"));
-    QCommandLineOption applicationNameOption(QStringLiteral("applicationname"),
-                                             i18n("Name of the application to be terminated"), i18n("name"));
-    QCommandLineOption widOption(QStringLiteral("wid"),
-                                 i18n("ID of resource belonging to the application"), i18n("id"));
-    QCommandLineOption timestampOption(QStringLiteral("timestamp"),
-                                       i18n("Time of user action causing termination"), i18n("time"));
+    QCommandLineOption pidOption(QStringLiteral("pid"), i18n("PID of the application to terminate"), i18n("pid"));
+    QCommandLineOption hostNameOption(QStringLiteral("hostname"), i18n("Hostname on which the application is running"), i18n("hostname"));
+    QCommandLineOption windowNameOption(QStringLiteral("windowname"), i18n("Caption of the window to be terminated"), i18n("caption"));
+    QCommandLineOption applicationNameOption(QStringLiteral("applicationname"), i18n("Name of the application to be terminated"), i18n("name"));
+    QCommandLineOption widOption(QStringLiteral("wid"), i18n("ID of resource belonging to the application"), i18n("id"));
+    QCommandLineOption timestampOption(QStringLiteral("timestamp"), i18n("Time of user action causing termination"), i18n("time"));
     QCommandLineParser parser;
     parser.setApplicationDescription(i18n("KWin helper utility"));
     parser.addHelpOption();
@@ -66,8 +59,8 @@ int main(int argc, char* argv[])
     xcb_window_t id = parser.value(widOption).toULong(&id_ok);
     bool time_ok = false;
     xcb_timestamp_t timestamp = parser.value(timestampOption).toULong(&time_ok);
-    if (!pid_ok || pid == 0 || !id_ok || id == XCB_WINDOW_NONE || !time_ok || timestamp == XCB_TIME_CURRENT_TIME
-            || hostname.isEmpty() || caption.isEmpty() || appname.isEmpty()) {
+    if (!pid_ok || pid == 0 || !id_ok || id == XCB_WINDOW_NONE || !time_ok || timestamp == XCB_TIME_CURRENT_TIME || hostname.isEmpty() || caption.isEmpty()
+        || appname.isEmpty()) {
         fprintf(stdout, "%s\n", qPrintable(i18n("This helper utility is not supposed to be called directly.")));
         parser.showHelp(1);
     }
@@ -80,14 +73,21 @@ int main(int argc, char* argv[])
 
     QString question = i18nc("@info", "<b>Application \"%1\" is not responding</b>", appname);
     question += isLocal
-        ? xi18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3) but the application is not responding.</para>",
-            caption, appname, pidString)
-        : xi18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3), running on host \"%4\", but the application is not responding.</para>",
-            caption, appname, pidString, hostname);
+        ? xi18nc("@info",
+                 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3) but the application is not responding.</para>",
+                 caption,
+                 appname,
+                 pidString)
+        : xi18nc("@info",
+                 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3), running on host \"%4\", but the application is not "
+                 "responding.</para>",
+                 caption,
+                 appname,
+                 pidString,
+                 hostname);
     question += xi18nc("@info",
-        "<para>Do you want to terminate this application?</para>"
-        "<para><warning>Terminating the application will close all of its child windows. Any unsaved data will be lost.</warning></para>"
-        );
+                       "<para>Do you want to terminate this application?</para>"
+                       "<para><warning>Terminating the application will close all of its child windows. Any unsaved data will be lost.</warning></para>");
 
     KGuiItem continueButton = KGuiItem(i18n("&Terminate Application %1", appname), QStringLiteral("edit-bomb"));
     KGuiItem cancelButton = KGuiItem(i18n("Wait Longer"), QStringLiteral("chronometer"));

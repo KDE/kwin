@@ -18,7 +18,6 @@ namespace KWin
 {
 namespace LibInput
 {
-
 static bool checkAlphaNumericKeyboard(libinput_device *device)
 {
     for (uint i = KEY_1; i <= KEY_0; i++) {
@@ -44,15 +43,13 @@ static bool checkAlphaNumericKeyboard(libinput_device *device)
     return true;
 }
 
-QVector<Device*> Device::s_devices;
+QVector<Device *> Device::s_devices;
 
 Device *Device::getDevice(libinput_device *native)
 {
-    auto it = std::find_if(s_devices.constBegin(), s_devices.constEnd(),
-        [native] (const Device *d) {
-            return d->device() == native;
-        }
-    );
+    auto it = std::find_if(s_devices.constBegin(), s_devices.constEnd(), [native](const Device *d) {
+        return d->device() == native;
+    });
     if (it != s_devices.constEnd()) {
         return *it;
     }
@@ -80,19 +77,31 @@ enum class ConfigKey {
 struct ConfigData {
     explicit ConfigData(QByteArray _key, void (Device::*_setter)(bool), bool (Device::*_defaultValue)() const = nullptr)
         : key(_key)
-    { booleanSetter.setter = _setter; booleanSetter.defaultValue = _defaultValue; }
+    {
+        booleanSetter.setter = _setter;
+        booleanSetter.defaultValue = _defaultValue;
+    }
 
     explicit ConfigData(QByteArray _key, void (Device::*_setter)(quint32), quint32 (Device::*_defaultValue)() const = nullptr)
         : key(_key)
-    { quint32Setter.setter = _setter; quint32Setter.defaultValue = _defaultValue; }
+    {
+        quint32Setter.setter = _setter;
+        quint32Setter.defaultValue = _defaultValue;
+    }
 
     explicit ConfigData(QByteArray _key, void (Device::*_setter)(QString), QString (Device::*_defaultValue)() const = nullptr)
         : key(_key)
-    { stringSetter.setter = _setter; stringSetter.defaultValue = _defaultValue; }
+    {
+        stringSetter.setter = _setter;
+        stringSetter.defaultValue = _defaultValue;
+    }
 
     explicit ConfigData(QByteArray _key, void (Device::*_setter)(qreal), qreal (Device::*_defaultValue)() const = nullptr)
         : key(_key)
-    { qrealSetter.setter = _setter; qrealSetter.defaultValue = _defaultValue; }
+    {
+        qrealSetter.setter = _setter;
+        qrealSetter.defaultValue = _defaultValue;
+    }
 
     QByteArray key;
 
@@ -115,25 +124,31 @@ struct ConfigData {
     } qrealSetter;
 };
 
-static const QMap<ConfigKey, ConfigData> s_configData {
+static const QMap<ConfigKey, ConfigData> s_configData{
     {ConfigKey::Enabled, ConfigData(QByteArrayLiteral("Enabled"), &Device::setEnabled)},
     {ConfigKey::LeftHanded, ConfigData(QByteArrayLiteral("LeftHanded"), &Device::setLeftHanded, &Device::leftHandedEnabledByDefault)},
-    {ConfigKey::DisableWhileTyping, ConfigData(QByteArrayLiteral("DisableWhileTyping"), &Device::setDisableWhileTyping, &Device::disableWhileTypingEnabledByDefault)},
-    {ConfigKey::PointerAcceleration, ConfigData(QByteArrayLiteral("PointerAcceleration"), &Device::setPointerAccelerationFromString, &Device::defaultPointerAccelerationToString)},
-    {ConfigKey::PointerAccelerationProfile, ConfigData(QByteArrayLiteral("PointerAccelerationProfile"), &Device::setPointerAccelerationProfileFromInt, &Device::defaultPointerAccelerationProfileToInt)},
+    {ConfigKey::DisableWhileTyping,
+     ConfigData(QByteArrayLiteral("DisableWhileTyping"), &Device::setDisableWhileTyping, &Device::disableWhileTypingEnabledByDefault)},
+    {ConfigKey::PointerAcceleration,
+     ConfigData(QByteArrayLiteral("PointerAcceleration"), &Device::setPointerAccelerationFromString, &Device::defaultPointerAccelerationToString)},
+    {ConfigKey::PointerAccelerationProfile,
+     ConfigData(QByteArrayLiteral("PointerAccelerationProfile"),
+                &Device::setPointerAccelerationProfileFromInt,
+                &Device::defaultPointerAccelerationProfileToInt)},
     {ConfigKey::TapToClick, ConfigData(QByteArrayLiteral("TapToClick"), &Device::setTapToClick, &Device::tapToClickEnabledByDefault)},
     {ConfigKey::TapAndDrag, ConfigData(QByteArrayLiteral("TapAndDrag"), &Device::setTapAndDrag, &Device::tapAndDragEnabledByDefault)},
     {ConfigKey::TapDragLock, ConfigData(QByteArrayLiteral("TapDragLock"), &Device::setTapDragLock, &Device::tapDragLockEnabledByDefault)},
-    {ConfigKey::MiddleButtonEmulation, ConfigData(QByteArrayLiteral("MiddleButtonEmulation"), &Device::setMiddleEmulation, &Device::middleEmulationEnabledByDefault)},
+    {ConfigKey::MiddleButtonEmulation,
+     ConfigData(QByteArrayLiteral("MiddleButtonEmulation"), &Device::setMiddleEmulation, &Device::middleEmulationEnabledByDefault)},
     {ConfigKey::LmrTapButtonMap, ConfigData(QByteArrayLiteral("LmrTapButtonMap"), &Device::setLmrTapButtonMap, &Device::lmrTapButtonMapEnabledByDefault)},
     {ConfigKey::NaturalScroll, ConfigData(QByteArrayLiteral("NaturalScroll"), &Device::setNaturalScroll, &Device::naturalScrollEnabledByDefault)},
     {ConfigKey::ScrollMethod, ConfigData(QByteArrayLiteral("ScrollMethod"), &Device::activateScrollMethodFromInt, &Device::defaultScrollMethodToInt)},
     {ConfigKey::ScrollButton, ConfigData(QByteArrayLiteral("ScrollButton"), &Device::setScrollButton, &Device::defaultScrollButton)},
     {ConfigKey::ClickMethod, ConfigData(QByteArrayLiteral("ClickMethod"), &Device::setClickMethodFromInt, &Device::defaultClickMethodToInt)},
-    {ConfigKey::ScrollFactor, ConfigData(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)}
-};
+    {ConfigKey::ScrollFactor, ConfigData(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)}};
 
-namespace {
+namespace
+{
 QMatrix4x4 defaultCalibrationMatrix(libinput_device *device)
 {
     float matrix[6];
@@ -141,12 +156,7 @@ QMatrix4x4 defaultCalibrationMatrix(libinput_device *device)
     if (ret == 0) {
         return QMatrix4x4();
     }
-    return QMatrix4x4{
-        matrix[0], matrix[1], matrix[2], 0.0f,
-        matrix[3], matrix[4], matrix[5], 0.0f,
-        0.0f,  0.0f, 1.0f, 0.0f,
-        0.0f,  0.0f, 0.0f, 1.0f
-    };
+    return QMatrix4x4{matrix[0], matrix[1], matrix[2], 0.0f, matrix[3], matrix[4], matrix[5], 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
 }
 }
 
@@ -251,8 +261,7 @@ Device::Device(libinput_device *device, QObject *parent)
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice/") + m_sysName,
                                                  QStringLiteral("org.kde.KWin.InputDevice"),
                                                  this,
-                                                 QDBusConnection::ExportAllProperties
-    );
+                                                 QDBusConnection::ExportAllProperties);
 }
 
 Device::~Device()
@@ -262,7 +271,7 @@ Device::~Device()
     libinput_device_unref(m_device);
 }
 
-template <typename T>
+template<typename T>
 void Device::writeEntry(const ConfigKey &key, const T &value)
 {
     if (!m_config.isValid()) {
@@ -277,7 +286,7 @@ void Device::writeEntry(const ConfigKey &key, const T &value)
     m_config.sync();
 }
 
-template <typename T, typename Setter>
+template<typename T, typename Setter>
 void Device::readEntry(const QByteArray &key, const Setter &s, const T &defaultValue)
 {
     if (!s.setter) {
@@ -336,7 +345,7 @@ void Device::setScrollButton(quint32 button)
     }
 }
 
-void Device::setPointerAccelerationProfile(bool set, enum  libinput_config_accel_profile profile)
+void Device::setPointerAccelerationProfile(bool set, enum libinput_config_accel_profile profile)
 {
     if (!(m_supportedPointerAccelerationProfiles & profile)) {
         return;
@@ -352,7 +361,7 @@ void Device::setPointerAccelerationProfile(bool set, enum  libinput_config_accel
         if (m_pointerAccelerationProfile != profile) {
             m_pointerAccelerationProfile = profile;
             Q_EMIT pointerAccelerationProfileChanged();
-            writeEntry(ConfigKey::PointerAccelerationProfile, (quint32) profile);
+            writeEntry(ConfigKey::PointerAccelerationProfile, (quint32)profile);
         }
     }
 }
@@ -373,7 +382,7 @@ void Device::setClickMethod(bool set, enum libinput_config_click_method method)
         if (m_clickMethod != method) {
             m_clickMethod = method;
             Q_EMIT clickMethodChanged();
-            writeEntry(ConfigKey::ClickMethod, (quint32) method);
+            writeEntry(ConfigKey::ClickMethod, (quint32)method);
         }
     }
 }
@@ -398,7 +407,7 @@ void Device::setScrollMethod(bool set, enum libinput_config_scroll_method method
         if (!isCurrent) {
             m_scrollMethod = method;
             Q_EMIT scrollMethodChanged();
-            writeEntry(ConfigKey::ScrollMethod, (quint32) method);
+            writeEntry(ConfigKey::ScrollMethod, (quint32)method);
         }
     }
 }
@@ -439,41 +448,41 @@ void *Device::groupUserData() const
     return libinput_device_group_get_user_data(deviceGroup);
 }
 
-
-#define CONFIG(method, condition, function, variable, key) \
-void Device::method(bool set) \
-{ \
-    if (condition) { \
-        return; \
-    } \
-    if (libinput_device_config_##function(m_device, set) == LIBINPUT_CONFIG_STATUS_SUCCESS) { \
-        if (m_##variable != set) { \
-            m_##variable = set; \
-            writeEntry(ConfigKey::key, m_##variable); \
-            Q_EMIT variable##Changed(); \
-        }\
-    } \
-}
+#define CONFIG(method, condition, function, variable, key)                                                                                                     \
+    void Device::method(bool set)                                                                                                                              \
+    {                                                                                                                                                          \
+        if (condition) {                                                                                                                                       \
+            return;                                                                                                                                            \
+        }                                                                                                                                                      \
+        if (libinput_device_config_##function(m_device, set) == LIBINPUT_CONFIG_STATUS_SUCCESS) {                                                              \
+            if (m_##variable != set) {                                                                                                                         \
+                m_##variable = set;                                                                                                                            \
+                writeEntry(ConfigKey::key, m_##variable);                                                                                                      \
+                Q_EMIT variable##Changed();                                                                                                                    \
+            }                                                                                                                                                  \
+        }                                                                                                                                                      \
+    }
 
 CONFIG(setLeftHanded, !m_supportsLeftHanded, left_handed_set, leftHanded, LeftHanded)
 CONFIG(setNaturalScroll, !m_supportsNaturalScroll, scroll_set_natural_scroll_enabled, naturalScroll, NaturalScroll)
 
 #undef CONFIG
 
-#define CONFIG(method, condition, function, enum, variable, key) \
-void Device::method(bool set) \
-{ \
-    if (condition) { \
-        return; \
-    } \
-    if (libinput_device_config_##function(m_device, set ? LIBINPUT_CONFIG_##enum##_ENABLED : LIBINPUT_CONFIG_##enum##_DISABLED) == LIBINPUT_CONFIG_STATUS_SUCCESS) { \
-        if (m_##variable != set) { \
-            m_##variable = set; \
-            writeEntry(ConfigKey::key, m_##variable); \
-            Q_EMIT variable##Changed(); \
-        }\
-    } \
-}
+#define CONFIG(method, condition, function, enum, variable, key)                                                                                               \
+    void Device::method(bool set)                                                                                                                              \
+    {                                                                                                                                                          \
+        if (condition) {                                                                                                                                       \
+            return;                                                                                                                                            \
+        }                                                                                                                                                      \
+        if (libinput_device_config_##function(m_device, set ? LIBINPUT_CONFIG_##enum##_ENABLED : LIBINPUT_CONFIG_##enum##_DISABLED)                            \
+            == LIBINPUT_CONFIG_STATUS_SUCCESS) {                                                                                                               \
+            if (m_##variable != set) {                                                                                                                         \
+                m_##variable = set;                                                                                                                            \
+                writeEntry(ConfigKey::key, m_##variable);                                                                                                      \
+                Q_EMIT variable##Changed();                                                                                                                    \
+            }                                                                                                                                                  \
+        }                                                                                                                                                      \
+    }
 
 CONFIG(setEnabled, !m_supportsDisableEvents, send_events_set_mode, SEND_EVENTS, enabled, Enabled)
 CONFIG(setDisableWhileTyping, !m_supportsDisableWhileTyping, dwt_set_enabled, DWT, disableWhileTyping, DisableWhileTyping)
@@ -499,26 +508,11 @@ void Device::setOrientation(Qt::ScreenOrientation orientation)
         return;
     }
     // 90 deg cw:
-    static const QMatrix4x4 portraitMatrix{
-        0.0f, -1.0f, 1.0f, 0.0f,
-        1.0f,  0.0f, 0.0f, 0.0f,
-        0.0f,  0.0f, 1.0f, 0.0f,
-        0.0f,  0.0f, 0.0f, 1.0f
-    };
+    static const QMatrix4x4 portraitMatrix{0.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
     // 180 deg cw:
-    static const QMatrix4x4 invertedLandscapeMatrix{
-        -1.0f,  0.0f, 1.0f, 0.0f,
-         0.0f, -1.0f, 1.0f, 0.0f,
-         0.0f,  0.0f, 1.0f, 0.0f,
-         0.0f,  0.0f, 0.0f, 1.0f
-    };
+    static const QMatrix4x4 invertedLandscapeMatrix{-1.0f, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
     // 270 deg cw
-    static const QMatrix4x4 invertedPortraitMatrix{
-         0.0f, 1.0f, 0.0f, 0.0f,
-        -1.0f, 0.0f, 1.0f, 0.0f,
-         0.0f,  0.0f, 1.0f, 0.0f,
-         0.0f,  0.0f, 0.0f, 1.0f
-    };
+    static const QMatrix4x4 invertedPortraitMatrix{0.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
     QMatrix4x4 matrix;
     switch (orientation) {
     case Qt::PortraitOrientation:
@@ -537,10 +531,7 @@ void Device::setOrientation(Qt::ScreenOrientation orientation)
     }
     const auto combined = m_defaultCalibrationMatrix * matrix;
     const auto columnOrder = combined.constData();
-    float m[6] = {
-        columnOrder[0], columnOrder[4], columnOrder[8],
-        columnOrder[1], columnOrder[5], columnOrder[9]
-    };
+    float m[6] = {columnOrder[0], columnOrder[4], columnOrder[8], columnOrder[1], columnOrder[5], columnOrder[9]};
     libinput_device_config_calibration_set_matrix(m_device, m);
 }
 

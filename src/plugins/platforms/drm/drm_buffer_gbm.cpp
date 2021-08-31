@@ -10,24 +10,23 @@
 #include "drm_buffer_gbm.h"
 #include "gbm_surface.h"
 
-#include "logging.h"
 #include "drm_gpu.h"
+#include "logging.h"
 
 // system
 #include <sys/mman.h>
 // c++
 #include <cerrno>
 // drm
+#include <gbm.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
-#include <gbm.h>
 // KWaylandServer
 #include "KWaylandServer/clientbuffer.h"
 #include <drm_fourcc.h>
 
 namespace KWin
 {
-
 GbmBuffer::GbmBuffer(GbmSurface *surface, gbm_bo *bo)
     : m_surface(surface)
     , m_bo(bo)
@@ -83,15 +82,16 @@ bool GbmBuffer::map(uint32_t flags)
     return m_data;
 }
 
-
 DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
-    : DrmBuffer(gpu), GbmBuffer(surface, bo)
+    : DrmBuffer(gpu)
+    , GbmBuffer(surface, bo)
 {
     initialize();
 }
 
 DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::ClientBuffer *clientBuffer)
-    : DrmBuffer(gpu), GbmBuffer(buffer, clientBuffer)
+    : DrmBuffer(gpu)
+    , GbmBuffer(buffer, clientBuffer)
 {
     initialize();
 }
@@ -109,10 +109,10 @@ void DrmGbmBuffer::initialize()
 {
     m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
     uint32_t format = gbm_bo_get_format(m_bo);
-    uint32_t handles[4] = { };
-    uint32_t strides[4] = { };
-    uint32_t offsets[4] = { };
-    uint64_t modifiers[4] = { };
+    uint32_t handles[4] = {};
+    uint32_t strides[4] = {};
+    uint32_t offsets[4] = {};
+    uint64_t modifiers[4] = {};
 
     if (gbm_bo_get_handle_for_plane(m_bo, 0).s32 != -1) {
         for (int i = 0; i < gbm_bo_get_plane_count(m_bo); i++) {
@@ -128,10 +128,20 @@ void DrmGbmBuffer::initialize()
     }
 
     if (modifiers[0] != DRM_FORMAT_MOD_INVALID && m_gpu->addFB2ModifiersSupported()) {
-        if (drmModeAddFB2WithModifiers(m_gpu->fd(), m_size.width(), m_size.height(), format, handles, strides, offsets, modifiers, &m_bufferId, DRM_MODE_FB_MODIFIERS)) {
+        if (drmModeAddFB2WithModifiers(m_gpu->fd(),
+                                       m_size.width(),
+                                       m_size.height(),
+                                       format,
+                                       handles,
+                                       strides,
+                                       offsets,
+                                       modifiers,
+                                       &m_bufferId,
+                                       DRM_MODE_FB_MODIFIERS)) {
             gbm_format_name_desc name;
             gbm_format_get_name(format, &name);
-            qCCritical(KWIN_DRM) << "drmModeAddFB2WithModifiers on GPU" << m_gpu->devNode() << "failed for a buffer with format" << name.name << "and modifier" << modifiers[0] << strerror(errno);
+            qCCritical(KWIN_DRM) << "drmModeAddFB2WithModifiers on GPU" << m_gpu->devNode() << "failed for a buffer with format" << name.name << "and modifier"
+                                 << modifiers[0] << strerror(errno);
         }
     } else {
         if (drmModeAddFB2(m_gpu->fd(), m_size.width(), m_size.height(), format, handles, strides, offsets, &m_bufferId, 0)) {
@@ -139,7 +149,8 @@ void DrmGbmBuffer::initialize()
             if (drmModeAddFB(m_gpu->fd(), m_size.width(), m_size.height(), 24, 32, strides[0], handles[0], &m_bufferId) != 0) {
                 gbm_format_name_desc name;
                 gbm_format_get_name(format, &name);
-                qCCritical(KWIN_DRM) << "drmModeAddFB2 and drmModeAddFB both failed on GPU" << m_gpu->devNode() << "for a buffer with format" << name.name << "and modifier" << modifiers[0] << strerror(errno);
+                qCCritical(KWIN_DRM) << "drmModeAddFB2 and drmModeAddFB both failed on GPU" << m_gpu->devNode() << "for a buffer with format" << name.name
+                                     << "and modifier" << modifiers[0] << strerror(errno);
             }
         }
     }

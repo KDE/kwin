@@ -10,8 +10,8 @@
 #define KWIN_SCENE_QPAINTER_FB_BACKEND_H
 #include "qpainterbackend.h"
 
-#include <QObject>
 #include <QImage>
+#include <QObject>
 
 namespace KWin
 {

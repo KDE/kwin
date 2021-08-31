@@ -14,12 +14,11 @@
 
 #include <NETWM>
 
-#include <xcb/xcb.h>
 #include <memory>
+#include <xcb/xcb.h>
 
 namespace KWin
 {
-
 class AbstractClient;
 class RootInfoFilter;
 class X11Client;
@@ -47,8 +46,14 @@ protected:
     void changeShowingDesktop(bool showing) override;
 
 private:
-    RootInfo(xcb_window_t w, const char* name, NET::Properties properties, NET::WindowTypes types,
-             NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr = -1);
+    RootInfo(xcb_window_t w,
+             const char *name,
+             NET::Properties properties,
+             NET::WindowTypes types,
+             NET::States states,
+             NET::Properties2 properties2,
+             NET::Actions actions,
+             int scr = -1);
     static RootInfo *s_self;
     friend RootInfo *rootInfo();
 
@@ -67,8 +72,7 @@ inline RootInfo *rootInfo()
 class WinInfo : public NETWinInfo
 {
 public:
-    WinInfo(X11Client *c, xcb_window_t window,
-            xcb_window_t rwin, NET::Properties properties, NET::Properties2 properties2);
+    WinInfo(X11Client *c, xcb_window_t window, xcb_window_t rwin, NET::Properties properties, NET::Properties2 properties2);
     void changeDesktop(int desktop) override;
     void changeFullscreenMonitors(NETFullscreenMonitors topology) override;
     void changeState(NET::States state, NET::States mask) override;

@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class NoopSession : public Session
 {
     Q_OBJECT

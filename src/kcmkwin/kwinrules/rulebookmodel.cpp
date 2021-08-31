@@ -8,7 +8,6 @@
 
 namespace KWin
 {
-
 RuleBookModel::RuleBookModel(QObject *parent)
     : QAbstractListModel(parent)
     , m_ruleBook(new RuleBookSettings(this))
@@ -21,9 +20,11 @@ RuleBookModel::~RuleBookModel()
 
 QHash<int, QByteArray> RuleBookModel::roleNames() const
 {
-    static auto roles = QHash<int, QByteArray> {
-        { DescriptionRole, QByteArray("display") },
-    }.unite(QAbstractListModel::roleNames());
+    static auto roles =
+        QHash<int, QByteArray>{
+            {DescriptionRole, QByteArray("display")},
+        }
+            .unite(QAbstractListModel::roleNames());
     return roles;
 }
 
@@ -108,18 +109,16 @@ bool RuleBookModel::removeRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
-bool RuleBookModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
-                             const QModelIndex &destinationParent, int destinationChild)
+bool RuleBookModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild)
 {
-    if (sourceParent != destinationParent || sourceParent != QModelIndex()){
+    if (sourceParent != destinationParent || sourceParent != QModelIndex()) {
         return false;
     }
 
     const bool isMoveDown = destinationChild > sourceRow;
     // QAbstractItemModel::beginMoveRows(): when moving rows down in the same parent,
     // the rows will be placed before the destinationChild index.
-    if (!beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1,
-                       destinationParent, isMoveDown ? destinationChild + 1 : destinationChild)) {
+    if (!beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1, destinationParent, isMoveDown ? destinationChild + 1 : destinationChild)) {
         return false;
     }
 
@@ -130,7 +129,6 @@ bool RuleBookModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int
     endMoveRows();
     return true;
 }
-
 
 QString RuleBookModel::descriptionAt(int row) const
 {

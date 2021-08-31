@@ -11,13 +11,12 @@
 #include "logging_p.h"
 
 #include <QCoreApplication>
-#include <QStack>
-#include <QPixmap>
 #include <QGlobalStatic>
+#include <QPixmap>
+#include <QStack>
 
 namespace KWin
 {
-
 namespace XRenderUtils
 {
 static xcb_connection_t *s_connection = nullptr;
@@ -43,14 +42,11 @@ void cleanup()
 xcb_render_color_t preMultiply(const QColor &c, float opacity)
 {
     xcb_render_color_t color;
-    const uint A = c.alpha() * opacity,
-               R = c.red(),
-               G = c.green(),
-               B = c.blue();
+    const uint A = c.alpha() * opacity, R = c.red(), G = c.green(), B = c.blue();
     color.alpha = (A | A << 8);
-    color.red   = (R | R << 8) * color.alpha / 0x10000;
+    color.red = (R | R << 8) * color.alpha / 0x10000;
     color.green = (G | G << 8) * color.alpha / 0x10000;
-    color.blue  = (B | B << 8) * color.alpha / 0x10000;
+    color.blue = (B | B << 8) * color.alpha / 0x10000;
     return color;
 }
 
@@ -98,9 +94,7 @@ static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
         if (!formats) {
             return XCB_RENDER_PICTURE_NONE;
         }
-        for (xcb_render_pictforminfo_iterator_t it = xcb_render_query_pict_formats_formats_iterator(formats);
-                it.rem;
-                xcb_render_pictforminfo_next(&it)) {
+        for (xcb_render_pictforminfo_iterator_t it = xcb_render_query_pict_formats_formats_iterator(formats); it.rem; xcb_render_pictforminfo_next(&it)) {
             if (it.data->depth == depth) {
                 s_renderFormats.insert(depth, it.data->id);
                 break;
@@ -132,8 +126,7 @@ void XRenderPicture::fromImage(const QImage &img)
 
     xcb_gcontext_t cid = xcb_generate_id(c);
     xcb_create_gc(c, cid, xpix, 0, nullptr);
-    xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, xpix, cid, img.width(), img.height(),
-                  0, 0, 0, depth, img.sizeInBytes(), img.constBits());
+    xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, xpix, cid, img.width(), img.height(), 0, 0, 0, depth, img.sizeInBytes(), img.constBits());
     xcb_free_gc(c, cid);
 
     d = new XRenderPictureData(createPicture(xpix, depth));
@@ -175,7 +168,7 @@ XFixesRegion::~XFixesRegion()
 }
 
 static xcb_render_picture_t s_offscreenTarget = XCB_RENDER_PICTURE_NONE;
-static QStack<XRenderPicture*> s_scene_offscreenTargetStack;
+static QStack<XRenderPicture *> s_scene_offscreenTargetStack;
 static int s_renderOffscreen = 0;
 
 void scene_setXRenderOffscreenTarget(xcb_render_picture_t pix)
@@ -225,13 +218,11 @@ xcb_render_picture_t xRenderOffscreenTarget()
 
 namespace XRenderUtils
 {
-
-struct PictFormatData
-{
-    PictFormatData() {
+struct PictFormatData {
+    PictFormatData()
+    {
         // Fetch the render pict formats
-        reply = xcb_render_query_pict_formats_reply(s_connection,
-                        xcb_render_query_pict_formats_unchecked(s_connection), nullptr);
+        reply = xcb_render_query_pict_formats_reply(s_connection, xcb_render_query_pict_formats_unchecked(s_connection), nullptr);
 
         // Init the visual ID -> format ID hash table
         for (auto screens = xcb_render_query_pict_formats_screens_iterator(reply); screens.rem; xcb_render_pictscreen_next(&screens)) {
@@ -254,7 +245,8 @@ struct PictFormatData
         }
     }
 
-    ~PictFormatData() {
+    ~PictFormatData()
+    {
         free(reply);
     }
 

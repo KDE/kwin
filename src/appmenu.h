@@ -24,7 +24,6 @@ class QDBusServiceWatcher;
 
 namespace KWin
 {
-
 class AbstractClient;
 
 class ApplicationMenu : public QObject

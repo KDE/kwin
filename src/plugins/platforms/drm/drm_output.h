@@ -10,20 +10,19 @@
 #define KWIN_DRM_OUTPUT_H
 
 #include "drm_abstract_output.h"
-#include "drm_pointer.h"
 #include "drm_object.h"
 #include "drm_object_plane.h"
+#include "drm_pointer.h"
 
 #include <QObject>
 #include <QPoint>
+#include <QSharedPointer>
 #include <QSize>
 #include <QVector>
-#include <QSharedPointer>
 #include <xf86drmMode.h>
 
 namespace KWin
 {
-
 class DrmBackend;
 class DrmBuffer;
 class DrmDumbBuffer;
@@ -59,7 +58,7 @@ public:
 private:
     friend class DrmGpu;
     friend class DrmBackend;
-    DrmOutput(DrmGpu* gpu, DrmPipeline *pipeline);
+    DrmOutput(DrmGpu *gpu, DrmPipeline *pipeline);
 
     void initOutputDevice();
     bool isCurrentMode(const drmModeModeInfo *mode) const;
@@ -84,6 +83,6 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWin::DrmOutput*)
+Q_DECLARE_METATYPE(KWin::DrmOutput *)
 
 #endif

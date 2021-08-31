@@ -15,7 +15,6 @@
 
 namespace KWin
 {
-
 class EglPixmapTexturePrivate;
 class SoftwareVsyncMonitor;
 class X11StandalonePlatform;

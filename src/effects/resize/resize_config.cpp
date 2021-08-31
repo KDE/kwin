@@ -12,30 +12,28 @@
 #include <config-kwin.h>
 #include <kwineffects_interface.h>
 
-#include <kconfiggroup.h>
 #include <KAboutData>
 #include <KPluginFactory>
+#include <kconfiggroup.h>
 
 #include <QVBoxLayout>
 
-K_PLUGIN_FACTORY_WITH_JSON(ResizeEffectConfigFactory,
-                           "resize_config.json",
-                           registerPlugin<KWin::ResizeEffectConfig>();)
+K_PLUGIN_FACTORY_WITH_JSON(ResizeEffectConfigFactory, "resize_config.json", registerPlugin<KWin::ResizeEffectConfig>();)
 
 namespace KWin
 {
-
-ResizeEffectConfigForm::ResizeEffectConfigForm(QWidget* parent) : QWidget(parent)
+ResizeEffectConfigForm::ResizeEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-ResizeEffectConfig::ResizeEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+ResizeEffectConfig::ResizeEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     m_ui = new ResizeEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->addWidget(m_ui);
 
@@ -48,9 +46,7 @@ ResizeEffectConfig::ResizeEffectConfig(QWidget* parent, const QVariantList& args
 void ResizeEffectConfig::save()
 {
     KCModule::save();
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("resize"));
 }
 

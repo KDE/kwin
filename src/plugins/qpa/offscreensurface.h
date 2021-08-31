@@ -17,7 +17,6 @@ namespace KWin
 {
 namespace QPA
 {
-
 class OffscreenSurface : public QPlatformOffscreenSurface
 {
 public:

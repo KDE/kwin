@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 class AbstractClient;
 class X11Client;
 class X11EventFilter;
@@ -52,8 +51,7 @@ private:
     static Workspace *s_self;
 };
 
-inline
-Workspace *MockWorkspace::self()
+inline Workspace *MockWorkspace::self()
 {
     return s_self;
 }

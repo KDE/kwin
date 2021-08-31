@@ -6,6 +6,7 @@
 #include "xcbutils.h"
 
 #include <QApplication>
+#include <QCheckBox>
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QPlatformSurfaceEvent>
@@ -13,16 +14,15 @@
 #include <QScreen>
 #include <QTimer>
 #include <QToolButton>
-#include <QWindow>
 #include <QWidget>
-#include <QCheckBox>
+#include <QWindow>
 #include <QX11Info>
 
 #include <KWindowSystem>
 
 #include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/plasmashell.h>
+#include <KWayland/Client/registry.h>
 #include <KWayland/Client/surface.h>
 
 class ScreenEdgeHelper : public QObject
@@ -31,7 +31,8 @@ class ScreenEdgeHelper : public QObject
 protected:
     ScreenEdgeHelper(QWidget *widget, QObject *parent = nullptr);
 
-    QWindow *window() const {
+    QWindow *window() const
+    {
         return m_widget->windowHandle();
     }
 
@@ -42,7 +43,7 @@ public:
 
     virtual void hide() = 0;
     virtual void raiseOrShow(bool raise) = 0;
-    virtual void init() {};
+    virtual void init(){};
 
     virtual void moveToTop();
     virtual void moveToRight();
@@ -50,7 +51,8 @@ public:
     virtual void moveToLeft();
     virtual void moveToFloating();
 
-    void hideAndRestore() {
+    void hideAndRestore()
+    {
         hide();
         m_timer->start(10000);
     }
@@ -96,7 +98,7 @@ public:
     void raiseOrShow(bool raise) override;
     void init() override;
 
-    bool eventFilter(QObject * watched, QEvent * event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 protected:
     void restore() override;
@@ -168,7 +170,7 @@ void ScreenEdgeHelperX11::restore()
 
 void ScreenEdgeHelperX11::raiseOrShow(bool raise)
 {
-    m_actionValue = raise ? 1: 0;
+    m_actionValue = raise ? 1 : 0;
 }
 
 void ScreenEdgeHelperX11::moveToBottom()
@@ -210,15 +212,13 @@ ScreenEdgeHelperWayland::ScreenEdgeHelperWayland(QWidget *widget, QObject *paren
     Registry *registry = new Registry(connection);
     registry->create(connection);
 
-    connect(registry, &Registry::interfacesAnnounced, this,
-        [registry, this] {
-            const auto interface = registry->interface(Registry::Interface::PlasmaShell);
-            if (interface.name == 0) {
-                return;
-            }
-            m_shell = registry->createPlasmaShell(interface.name, interface.version);
+    connect(registry, &Registry::interfacesAnnounced, this, [registry, this] {
+        const auto interface = registry->interface(Registry::Interface::PlasmaShell);
+        if (interface.name == 0) {
+            return;
         }
-    );
+        m_shell = registry->createPlasmaShell(interface.name, interface.version);
+    });
 
     registry->setup();
     connection->roundtrip();
@@ -275,7 +275,7 @@ bool ScreenEdgeHelperWayland::eventFilter(QObject *watched, QEvent *event)
         return false;
     }
     if (event->type() == QEvent::PlatformSurface) {
-        QPlatformSurfaceEvent *pe = static_cast<QPlatformSurfaceEvent*>(event);
+        QPlatformSurfaceEvent *pe = static_cast<QPlatformSurfaceEvent *>(event);
         if (pe->surfaceEventType() == QPlatformSurfaceEvent::SurfaceCreated) {
             setupSurface();
         } else {
@@ -298,7 +298,7 @@ int main(int argc, char **argv)
     ScreenEdgeHelper *helper = nullptr;
     QScopedPointer<QWidget> widget(new QWidget(nullptr, Qt::FramelessWindowHint));
     if (KWindowSystem::isPlatformX11()) {
-        app.setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+        app.setProperty("x11Connection", QVariant::fromValue<void *>(QX11Info::connection()));
         helper = new ScreenEdgeHelperX11(widget.data(), &app);
     } else if (KWindowSystem::isPlatformWayland()) {
         helper = new ScreenEdgeHelperWayland(widget.data(), &app);

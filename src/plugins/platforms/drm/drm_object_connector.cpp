@@ -20,23 +20,23 @@
 
 namespace KWin
 {
-
 DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
-    : DrmObject(gpu, connectorId, {
-            PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
-            PropertyDefinition(QByteArrayLiteral("non-desktop"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("DPMS"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("EDID"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("overscan"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("vrr_capable"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("underscan"), Requirement::Optional, {
-                QByteArrayLiteral("off"),
-                QByteArrayLiteral("on"),
-                QByteArrayLiteral("auto")
-            }),
-            PropertyDefinition(QByteArrayLiteral("underscan vborder"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("underscan hborder"), Requirement::Optional),
-        }, DRM_MODE_OBJECT_CONNECTOR)
+    : DrmObject(gpu,
+                connectorId,
+                {
+                    PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
+                    PropertyDefinition(QByteArrayLiteral("non-desktop"), Requirement::Optional),
+                    PropertyDefinition(QByteArrayLiteral("DPMS"), Requirement::Optional),
+                    PropertyDefinition(QByteArrayLiteral("EDID"), Requirement::Optional),
+                    PropertyDefinition(QByteArrayLiteral("overscan"), Requirement::Optional),
+                    PropertyDefinition(QByteArrayLiteral("vrr_capable"), Requirement::Optional),
+                    PropertyDefinition(QByteArrayLiteral("underscan"),
+                                       Requirement::Optional,
+                                       {QByteArrayLiteral("off"), QByteArrayLiteral("on"), QByteArrayLiteral("auto")}),
+                    PropertyDefinition(QByteArrayLiteral("underscan vborder"), Requirement::Optional),
+                    PropertyDefinition(QByteArrayLiteral("underscan hborder"), Requirement::Optional),
+                },
+                DRM_MODE_OBJECT_CONNECTOR)
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
     if (m_conn) {
@@ -50,7 +50,8 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
 
 DrmConnector::~DrmConnector() = default;
 
-namespace {
+namespace
+{
 quint64 refreshRateForMode(_drmModeModeInfo *m)
 {
     // Calculate higher precision (mHz) refresh rate
@@ -118,12 +119,16 @@ bool DrmConnector::init()
     // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
     // as this information is used to calculate DPI info, it's going to result in everything being huge
     const QByteArray unknown = QByteArrayLiteral("unknown");
-    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId().isEmpty() ? unknown : m_edid.eisaId())
-                                                       .group(m_edid.monitorName().isEmpty() ? unknown : m_edid.monitorName())
-                                                       .group(m_edid.serialNumber().isEmpty() ? unknown : m_edid.serialNumber());
+    KConfigGroup group = kwinApp()
+                             ->config()
+                             ->group("EdidOverwrite")
+                             .group(m_edid.eisaId().isEmpty() ? unknown : m_edid.eisaId())
+                             .group(m_edid.monitorName().isEmpty() ? unknown : m_edid.monitorName())
+                             .group(m_edid.serialNumber().isEmpty() ? unknown : m_edid.serialNumber());
     if (group.hasKey("PhysicalSize")) {
         const QSize overwriteSize = group.readEntry("PhysicalSize", m_physicalSize);
-        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber() << " from " << m_physicalSize << "to " << overwriteSize;
+        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber()
+                            << " from " << m_physicalSize << "to " << overwriteSize;
         m_physicalSize = overwriteSize;
     }
 
@@ -189,7 +194,7 @@ QString DrmConnector::modelName() const
 bool DrmConnector::isInternal() const
 {
     return m_conn->connector_type == DRM_MODE_CONNECTOR_LVDS || m_conn->connector_type == DRM_MODE_CONNECTOR_eDP
-                || m_conn->connector_type == DRM_MODE_CONNECTOR_DSI;
+        || m_conn->connector_type == DRM_MODE_CONNECTOR_DSI;
 }
 
 QSize DrmConnector::physicalSize() const
@@ -219,18 +224,9 @@ void DrmConnector::setModeIndex(int index)
 
 static bool checkIfEqual(drmModeModeInfo one, drmModeModeInfo two)
 {
-    return one.clock       == two.clock
-        && one.hdisplay    == two.hdisplay
-        && one.hsync_start == two.hsync_start
-        && one.hsync_end   == two.hsync_end
-        && one.htotal      == two.htotal
-        && one.hskew       == two.hskew
-        && one.vdisplay    == two.vdisplay
-        && one.vsync_start == two.vsync_start
-        && one.vsync_end   == two.vsync_end
-        && one.vtotal      == two.vtotal
-        && one.vscan       == two.vscan
-        && one.vrefresh    == two.vrefresh;
+    return one.clock == two.clock && one.hdisplay == two.hdisplay && one.hsync_start == two.hsync_start && one.hsync_end == two.hsync_end
+        && one.htotal == two.htotal && one.hskew == two.hskew && one.vdisplay == two.vdisplay && one.vsync_start == two.vsync_start
+        && one.vsync_end == two.vsync_end && one.vtotal == two.vtotal && one.vscan == two.vscan && one.vrefresh == two.vrefresh;
 }
 
 void DrmConnector::findCurrentMode(drmModeModeInfo currentMode)

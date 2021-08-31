@@ -14,7 +14,6 @@
 
 namespace KWin
 {
-
 class PipeWireStream;
 
 class ScreencastManager : public Plugin

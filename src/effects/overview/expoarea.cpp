@@ -8,7 +8,6 @@
 
 namespace KWin
 {
-
 ExpoArea::ExpoArea(QObject *parent)
     : QObject(parent)
 {

@@ -29,9 +29,9 @@
 #include <signal.h>
 
 #include "wl-socket.h"
-#include "xwaylandsocket.h"
-#include "xauthority.h"
 #include "wrapper_logging.h"
+#include "xauthority.h"
+#include "xwaylandsocket.h"
 
 class KWinWrapper : public QObject
 {
@@ -103,7 +103,6 @@ void KWinWrapper::run()
         if (m_xauthorityFile.open()) {
             args << "--xwayland-xauthority" << m_xauthorityFile.fileName();
         }
-
     }
 
     // attach our main process arguments
@@ -119,7 +118,7 @@ void KWinWrapper::run()
             qApp->quit();
             return;
         } else if (exitCode == 133) {
-                m_crashCount = 0;
+            m_crashCount = 0;
         }
         m_crashCount++;
 

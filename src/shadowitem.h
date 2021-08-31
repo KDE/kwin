@@ -10,7 +10,6 @@
 
 namespace KWin
 {
-
 class Deleted;
 class Shadow;
 class Toplevel;

@@ -9,7 +9,6 @@
 
 namespace KWin
 {
-
 DesktopEffectsData::DesktopEffectsData(QObject *parent, const QVariantList &args)
     : KCModuleData(parent, args)
     , m_model(new EffectsModel(this))

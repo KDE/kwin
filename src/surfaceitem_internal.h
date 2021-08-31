@@ -12,7 +12,6 @@ class QOpenGLFramebufferObject;
 
 namespace KWin
 {
-
 /**
  * The SurfaceItemInternal class represents an internal surface in the scene.
  */

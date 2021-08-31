@@ -6,11 +6,11 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "mock_tabboxhandler.h"
-#include "clientmodel.h"
 #include "../testutils.h"
-#include <QtTest>
+#include "clientmodel.h"
+#include "mock_tabboxhandler.h"
 #include <QX11Info>
+#include <QtTest>
 
 using namespace KWin;
 
@@ -31,7 +31,7 @@ private Q_SLOTS:
 
 void TestTabBoxHandler::initTestCase()
 {
-    qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+    qApp->setProperty("x11Connection", QVariant::fromValue<void *>(QX11Info::connection()));
 }
 
 void TestTabBoxHandler::testDontCrashUpdateOutlineNullClient()

@@ -16,7 +16,6 @@ class XdgPopupInterface;
 
 namespace KWin
 {
-
 class XdgShellIntegration : public WaylandShellIntegration
 {
     Q_OBJECT

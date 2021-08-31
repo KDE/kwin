@@ -8,12 +8,11 @@
 
 #include "kwinglutils.h"
 
-#include <xcb/xcb.h>
 #include <xcb/sync.h>
+#include <xcb/xcb.h>
 
 namespace KWin
 {
-
 /**
  * SyncObject represents a fence used to synchronize operations in the kwin command stream
  * with operations in the X command stream.
@@ -21,12 +20,21 @@ namespace KWin
 class X11SyncObject
 {
 public:
-    enum State { Ready, TriggerSent, Waiting, Done, Resetting, };
+    enum State {
+        Ready,
+        TriggerSent,
+        Waiting,
+        Done,
+        Resetting,
+    };
 
     X11SyncObject();
     ~X11SyncObject();
 
-    State state() const { return m_state; }
+    State state() const
+    {
+        return m_state;
+    }
 
     void trigger();
     void wait();
