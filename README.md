@@ -9,6 +9,10 @@ KWin is an easy to use, but flexible, composited Window Manager for Xorg windowi
  * a minimalistic window manager
  * designed for use without compositing or for X11 network transparency, though both are possible.
 
+# Contributing to KWin
+
+Please refer to the [contributing document](CONTRIBUTING.md) for everything you need to know to get started contributing to KWin.
+
 # Contacting KWin development team
 
  * mailing list: [kwin@kde.org](https://mail.kde.org/mailman/listinfo/kwin)
@@ -24,9 +28,6 @@ Please contact the support channels of your Linux distribution for user support.
 # Reporting bugs
 
 Please use [KDE's bugtracker](https://bugs.kde.org) and report for [product KWin](https://bugs.kde.org/enter_bug.cgi?product=kwin).
-
-# Developing on KWin
-Please refer to [hacking documentation](HACKING.md) for how to build and start KWin. Further information about KWin's test suite can be found in [TESTING.md](TESTING.md).
 
 ## Guidelines for new features
 
