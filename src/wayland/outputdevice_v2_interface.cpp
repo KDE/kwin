@@ -38,6 +38,7 @@ public:
     void updateCapabilities();
     void updateOverscan();
     void updateVrrPolicy();
+    void updateRgbRange();
 
     void sendGeometry(Resource *resource);
     wl_resource *sendNewMode(Resource *resource, OutputDeviceModeV2Interface *mode);
@@ -52,6 +53,7 @@ public:
     void sendCapabilities(Resource *resource);
     void sendOverscan(Resource *resource);
     void sendVrrPolicy(Resource *resource);
+    void sendRgbRange(Resource *resource);
 
     QSize physicalSize;
     QPoint globalPosition;
@@ -72,6 +74,7 @@ public:
     OutputDeviceV2Interface::Capabilities capabilities;
     uint32_t overscan = 0;
     OutputDeviceV2Interface::VrrPolicy vrrPolicy = OutputDeviceV2Interface::VrrPolicy::Automatic;
+    OutputDeviceV2Interface::RgbRange rgbRange = OutputDeviceV2Interface::RgbRange::Automatic;
 
     QPointer<Display> display;
     OutputDeviceV2Interface *q;
@@ -698,6 +701,33 @@ void OutputDeviceV2InterfacePrivate::updateVrrPolicy()
     const auto clientResources = resourceMap();
     for (const auto &resource : clientResources) {
         sendVrrPolicy(resource);
+    }
+}
+
+OutputDeviceV2Interface::RgbRange OutputDeviceV2Interface::rgbRange() const
+{
+    return d->rgbRange;
+}
+
+void OutputDeviceV2Interface::setRgbRange(RgbRange rgbRange)
+{
+    if (d->rgbRange != rgbRange) {
+        d->rgbRange = rgbRange;
+        d->updateRgbRange();
+        Q_EMIT rgbRangeChanged();
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendRgbRange(Resource *resource)
+{
+    send_rgb_range(resource->handle, static_cast<uint32_t>(rgbRange));
+}
+
+void OutputDeviceV2InterfacePrivate::updateRgbRange()
+{
+    const auto clientResources = resourceMap();
+    for (const auto &resource : clientResources) {
+        sendRgbRange(resource);
     }
 }
 

@@ -111,4 +111,13 @@ OutputDeviceV2Interface::VrrPolicy OutputChangeSetV2::vrrPolicy() const
     return d->vrrPolicy;
 }
 
+bool OutputChangeSetV2::rgbRangeChanged() const
+{
+    return d->rgbRange != d->outputDevice->rgbRange();
+}
+
+OutputDeviceV2Interface::RgbRange OutputChangeSetV2::rgbRange() const
+{
+    return d->rgbRange;
+}
 }

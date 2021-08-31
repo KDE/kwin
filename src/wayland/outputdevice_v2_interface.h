@@ -48,6 +48,7 @@ class KWAYLANDSERVER_EXPORT OutputDeviceV2Interface : public QObject
     Q_PROPERTY(Capabilities capabilities READ capabilities WRITE setCapabilities NOTIFY capabilitiesChanged)
     Q_PROPERTY(uint32_t overscan READ overscan WRITE setOverscan NOTIFY overscanChanged)
     Q_PROPERTY(VrrPolicy vrrPolicy READ vrrPolicy WRITE setVrrPolicy NOTIFY vrrPolicyChanged)
+    Q_PROPERTY(RgbRange rgbRange READ rgbRange WRITE setRgbRange NOTIFY rgbRangeChanged)
 public:
     enum class SubPixel {
         Unknown,
@@ -72,6 +73,7 @@ public:
     enum class Capability {
         Overscan = 0x1,
         Vrr = 0x2,
+        RgbRange = 0x4,
     };
     Q_ENUM(Capability)
     Q_DECLARE_FLAGS(Capabilities, Capability)
@@ -81,6 +83,12 @@ public:
         Automatic = 2
     };
     Q_ENUM(VrrPolicy)
+    enum class RgbRange {
+        Automatic = 0,
+        Full = 1,
+        Limited = 2,
+    };
+    Q_ENUM(RgbRange)
 
     explicit OutputDeviceV2Interface(Display *display, QObject *parent = nullptr);
     ~OutputDeviceV2Interface() override;
@@ -107,6 +115,7 @@ public:
     Capabilities capabilities() const;
     uint32_t overscan() const;
     VrrPolicy vrrPolicy() const;
+    RgbRange rgbRange() const;
 
     void setPhysicalSize(const QSize &size);
     void setGlobalPosition(const QPoint &pos);
@@ -135,6 +144,7 @@ public:
     void setCapabilities(Capabilities cap);
     void setOverscan(uint32_t overscan);
     void setVrrPolicy(VrrPolicy policy);
+    void setRgbRange(RgbRange rgbRange);
 
     static OutputDeviceV2Interface *get(wl_resource *native);
 
@@ -158,6 +168,7 @@ Q_SIGNALS:
     void capabilitiesChanged();
     void overscanChanged();
     void vrrPolicyChanged();
+    void rgbRangeChanged();
 
 private:
     QScopedPointer<OutputDeviceV2InterfacePrivate> d;

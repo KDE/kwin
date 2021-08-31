@@ -72,6 +72,12 @@ public:
      */
     bool vrrPolicyChanged() const;
 
+    /**
+     *  Whether the rgbRange() property of the outputdevice changed.
+     * @returns @c true if the rgbRange() property of the outputdevice has changed.
+     */
+    bool rgbRangeChanged() const;
+
     /** The new value for enabled. */
     bool enabled() const;
 
@@ -96,6 +102,9 @@ public:
 
     /** The new value for vrrPolicy */
     OutputDeviceV2Interface::VrrPolicy vrrPolicy() const;
+
+    /** The new value for rgbRange */
+    OutputDeviceV2Interface::RgbRange rgbRange() const;
 
 private:
     friend class OutputConfigurationV2InterfacePrivate;

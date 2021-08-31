@@ -44,6 +44,7 @@ protected:
     void kde_output_configuration_v2_destroy_resource(Resource *resource) override;
     void kde_output_configuration_v2_overscan(Resource *resource, wl_resource *outputdevice, uint32_t overscan) override;
     void kde_output_configuration_v2_set_vrr_policy(Resource *resource, struct ::wl_resource *outputdevice, uint32_t policy) override;
+    void kde_output_configuration_v2_set_rgb_range(Resource *resource, wl_resource *outputdevice, uint32_t rgbRange) override;
 };
 
 void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable)
@@ -141,6 +142,17 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_set_vrr_
     }
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
     pendingChanges(output)->d->vrrPolicy = static_cast<OutputDeviceV2Interface::VrrPolicy>(policy);
+}
+
+void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_set_rgb_range(Resource *resource, wl_resource *outputdevice, uint32_t rgbRange)
+{
+    Q_UNUSED(resource)
+    if (rgbRange > static_cast<uint32_t>(OutputDeviceV2Interface::RgbRange::Limited)) {
+        qCWarning(KWAYLAND_SERVER) << "Invalid Rgb Range requested:" << rgbRange;
+        return;
+    }
+    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
+    pendingChanges(output)->d->rgbRange = static_cast<OutputDeviceV2Interface::RgbRange>(rgbRange);
 }
 
 void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_destroy(Resource *resource)
