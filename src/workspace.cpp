@@ -2090,10 +2090,11 @@ void Workspace::saveOldScreenSizes()
 {
     olddisplaysize = m_geometry.size();
     oldscreensizes.clear();
-    for( int i = 0;
-         i < screens()->count();
-         ++i )
-        oldscreensizes.append( screens()->geometry( i ));
+
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (const AbstractOutput *output : outputs) {
+        oldscreensizes.append(output->geometry());
+    }
 }
 
 /**
@@ -2110,8 +2111,9 @@ static bool hasOffscreenXineramaStrut(AbstractClient *client)
     region += client->strutRect(StrutAreaLeft);
 
     // Remove all visible areas so that only the invisible remain
-    for (int i = 0; i < screens()->count(); i ++) {
-        region -= screens()->geometry(i);
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (const AbstractOutput *output : outputs) {
+        region -= output->geometry();
     }
 
     // If there's anything left then we have an offscreen strut
