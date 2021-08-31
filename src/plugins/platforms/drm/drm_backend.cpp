@@ -350,8 +350,8 @@ void DrmBackend::removeOutput(DrmAbstractOutput *o)
         m_placeHolderOutput->renderLoop()->inhibit();
     }
     if (m_enabledOutputs.contains(o)) {
-        Q_EMIT outputDisabled(o);
         m_enabledOutputs.removeOne(o);
+        Q_EMIT outputDisabled(o);
     }
     m_outputs.removeOne(o);
     Q_EMIT outputRemoved(o);
