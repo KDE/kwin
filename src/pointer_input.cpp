@@ -84,8 +84,9 @@ static Qt::MouseButton buttonToQtMouseButton(uint32_t button)
 
 static bool screenContainsPos(const QPointF &pos)
 {
-    for (int i = 0; i < screens()->count(); ++i) {
-        if (screens()->geometry(i).contains(pos.toPoint())) {
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (const AbstractOutput *output : outputs) {
+        if (output->geometry().contains(pos.toPoint())) {
             return true;
         }
     }
