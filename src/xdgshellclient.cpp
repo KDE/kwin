@@ -14,7 +14,6 @@
 #include "deleted.h"
 #include "platform.h"
 #include "screenedge.h"
-#include "screens.h"
 #include "subsurfacemonitor.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
@@ -1450,8 +1449,10 @@ void XdgToplevelClient::updateShowOnScreenEdge()
         // Screen edge API requires an edge, thus we need to figure out which edge the window borders.
         const QRect clientGeometry = frameGeometry();
         Qt::Edges edges;
-        for (int i = 0; i < screens()->count(); i++) {
-            const QRect screenGeometry = screens()->geometry(i);
+
+        const auto outputs = kwinApp()->platform()->enabledOutputs();
+        for (const AbstractOutput *output : outputs) {
+            const QRect screenGeometry = output->geometry();
             if (screenGeometry.left() == clientGeometry.left()) {
                 edges |= Qt::LeftEdge;
             }
