@@ -2185,7 +2185,7 @@ QRect Workspace::adjustClientArea(AbstractClient *client, const QRect &area) con
 void Workspace::updateClientArea()
 {
     const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
-    const QVector<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
+    const QVector<NN<VirtualDesktop *>> desktops = VirtualDesktopManager::self()->desktops();
 
     QHash<const VirtualDesktop *, QRect> workAreas;
     QHash<const VirtualDesktop *, StrutRects> restrictedAreas;

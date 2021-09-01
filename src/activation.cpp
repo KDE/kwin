@@ -755,7 +755,7 @@ xcb_timestamp_t X11Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id
                     QList<X11Client *> ret;
                     const auto mcs = mainClients();
                     for (auto mc: mcs) {
-                        if (X11Client *c  = dynamic_cast<X11Client *>(mc)) {
+                        if (X11Client *c  = dynamic_cast<X11Client *>(mc.get())) {
                             ret << c;
                         }
                     }

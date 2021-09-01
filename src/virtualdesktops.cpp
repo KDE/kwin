@@ -153,7 +153,7 @@ VirtualDesktopGrid::VirtualDesktopGrid()
 
 VirtualDesktopGrid::~VirtualDesktopGrid() = default;
 
-void VirtualDesktopGrid::update(const QSize &size, Qt::Orientation orientation, const QVector<VirtualDesktop*> &desktops)
+void VirtualDesktopGrid::update(const QSize &size, Qt::Orientation orientation, const QVector<NN<VirtualDesktop*>> &desktops)
 {
     // Set private variables
     m_size = size;
@@ -243,7 +243,7 @@ void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
         m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
         updateRootInfo();
         m_rootInfo->setCurrentDesktop(currentDesktop()->x11DesktopNumber());
-        for (auto *vd : qAsConst(m_desktops)) {
+        for (auto vd : qAsConst(m_desktops)) {
             m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
         }
     }
@@ -558,7 +558,7 @@ void VirtualDesktopManager::setCount(uint count)
     //this explicit check makes it more readable
     if ((uint)m_desktops.count() > count) {
         const auto desktopsToRemove = m_desktops.mid(count);
-        m_desktops.resize(count);
+        m_desktops.reserve(count);
         if (m_current) {
             uint oldCurrent = current();
             uint newCurrent = qMin(oldCurrent, count);

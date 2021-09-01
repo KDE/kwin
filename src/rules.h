@@ -19,6 +19,8 @@
 #include "options.h"
 #include "utils.h"
 
+#include "pointers.h"
+
 class QDebug;
 class KConfig;
 class KXMessages;
@@ -53,7 +55,7 @@ public:
     int checkOpacityActive(int s) const;
     int checkOpacityInactive(int s) const;
     bool checkIgnoreGeometry(bool ignore, bool init = false) const;
-    QVector<VirtualDesktop *> checkDesktops(QVector<VirtualDesktop *> desktops, bool init = false) const;
+    QVector<NN<VirtualDesktop *>> checkDesktops(QVector<NN<VirtualDesktop *>> desktops, bool init = false) const;
     AbstractOutput *checkOutput(AbstractOutput *output, bool init = false) const;
     QStringList checkActivity(QStringList activity, bool init = false) const;
     NET::WindowType checkType(NET::WindowType type) const;
@@ -147,7 +149,7 @@ public:
     bool applyOpacityActive(int& s) const;
     bool applyOpacityInactive(int& s) const;
     bool applyIgnoreGeometry(bool& ignore, bool init) const;
-    bool applyDesktops(QVector<VirtualDesktop *> &desktops, bool init) const;
+    bool applyDesktops(QVector<NN<VirtualDesktop*>> &desktops, bool init) const;
     bool applyScreen(int& desktop, bool init) const;
     bool applyActivity(QStringList& activity, bool init) const;
     bool applyType(NET::WindowType& type) const;

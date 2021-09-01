@@ -15,6 +15,8 @@
 #include "rules.h"
 #include "cursor.h"
 
+#include "pointers.h"
+
 #include <memory>
 
 #include <QElapsedTimer>
@@ -83,7 +85,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     /**
      * The virtual desktops this client is on. If it's on all desktops, the list is empty.
      */
-    Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops WRITE setDesktops NOTIFY desktopChanged)
+    Q_PROPERTY(QVector<NN<KWin::VirtualDesktop*>> desktops READ desktops WRITE setDesktops NOTIFY desktopChanged)
 
     /**
      * Whether the Client is on all desktops. That is desktop is -1.
@@ -455,12 +457,12 @@ public:
      *  or recursively the transient_for window
      * @todo: remove boolean trap
      */
-    virtual bool hasTransient(const AbstractClient* c, bool indirect) const;
+    virtual bool hasTransient(NeverNull<const AbstractClient*> c, bool indirect) const;
     const QList<AbstractClient*>& transients() const; // Is not indirect
-    virtual void addTransient(AbstractClient *client);
-    virtual void removeTransient(AbstractClient* cl);
-    virtual QList<AbstractClient*> mainClients() const; // Call once before loop , is not indirect
-    QList<AbstractClient*> allMainClients() const; // Call once before loop , is indirect
+    virtual void addTransient(NeverNull<AbstractClient*> client);
+    virtual void removeTransient(NeverNull<AbstractClient*> cl);
+    virtual QList<NN<AbstractClient*>> mainClients() const; // Call once before loop , is not indirect
+    QList<NN<AbstractClient*>> allMainClients() const; // Call once before loop , is indirect
     /**
      * Returns true for "special" windows and false for windows which are "normal"
      * (normal=window which has a border, can be moved by the user, can be closed, etc.)
@@ -468,8 +470,8 @@ public:
      * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
      */
     bool isSpecialWindow() const;
-    void sendToOutput(AbstractOutput *output);
-    void updateGeometryRestoresForFullscreen(AbstractOutput *output);
+    void sendToOutput(NeverNull<AbstractOutput*> output);
+    void updateGeometryRestoresForFullscreen(NN<AbstractOutput*> output);
     const QKeySequence &shortcut() const {
         return _shortcut;
     }
@@ -477,17 +479,17 @@ public:
     bool performMouseCommand(Options::MouseCommand, const QPoint &globalPos);
     void setOnAllDesktops(bool set);
     void setDesktop(int);
-    void enterDesktop(VirtualDesktop *desktop);
-    void leaveDesktop(VirtualDesktop *desktop);
+    void enterDesktop(NN<VirtualDesktop*> desktop);
+    void leaveDesktop(NN<VirtualDesktop*> desktop);
 
     /**
      * Set the window as being on the attached list of desktops
      * On X11 it will be set to the last entry
      */
-    void setDesktops(QVector<VirtualDesktop *> desktops);
+    void setDesktops(QVector<NN<VirtualDesktop*>> desktops);
 
     int desktop() const override;
-    QVector<VirtualDesktop *> desktops() const override {
+    QVector<NN<VirtualDesktop*>> desktops() const override {
         return m_desktops;
     }
     QVector<uint> x11DesktopIds() const;
@@ -1208,7 +1210,7 @@ protected:
         s_haveResizeEffect = false;
     }
 
-    void setDecoration(KDecoration2::Decoration *decoration);
+    void setDecoration(KDecoration2::Decoration* decoration);
     virtual void createDecoration(const QRect &oldGeometry);
     virtual void destroyDecoration();
     void startDecorationDoubleClickTimer();
@@ -1276,7 +1278,7 @@ private:
     QTimer *m_autoRaiseTimer = nullptr;
     QTimer *m_shadeHoverTimer = nullptr;
     ShadeMode m_shadeMode = ShadeNone;
-    QVector <VirtualDesktop *> m_desktops;
+    QVector <NN<VirtualDesktop *>> m_desktops;
 
     QStringList m_activityList;
     int m_activityUpdatesBlocked = 0;
@@ -1324,7 +1326,7 @@ private:
     } m_interactiveMoveResize;
 
     struct {
-        KDecoration2::Decoration *decoration = nullptr;
+        KDecoration2::Decoration* decoration = nullptr;
         QPointer<Decoration::DecoratedClientImpl> client;
         QElapsedTimer doubleClickTimer;
         QRegion inputRegion;

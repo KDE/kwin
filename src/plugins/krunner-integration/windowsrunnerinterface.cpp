@@ -184,7 +184,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
         }
     }
 
-    for (auto *desktop : VirtualDesktopManager::self()->desktops()) {
+    for (auto desktop : VirtualDesktopManager::self()->desktops()) {
         if (desktop->name().contains(term, Qt::CaseInsensitive)) {
             if (!desktopAdded && desktop != VirtualDesktopManager::self()->currentDesktop()) {
                 matches << desktopMatch(desktop, ActivateDesktopAction, 0.8);
@@ -279,7 +279,7 @@ RemoteMatch WindowsRunner::windowsMatch(const AbstractClient *client, const Wind
     match.type = type;
     QVariantMap properties;
 
-    const QVector<VirtualDesktop *> desktops = client->desktops();
+    const QVector<NN<VirtualDesktop *>> desktops = client->desktops();
     bool allDesktops = client->isOnAllDesktops();
 
     const VirtualDesktop *targetDesktop = VirtualDesktopManager::self()->currentDesktop();

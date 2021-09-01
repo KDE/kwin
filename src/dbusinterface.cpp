@@ -387,8 +387,8 @@ VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDe
 
     connect(m_manager, &VirtualDesktopManager::rowsChanged, this, &VirtualDesktopManagerDBusInterface::rowsChanged);
 
-    const QVector<VirtualDesktop *> allDesks = m_manager->desktops();
-    for (auto *vd : allDesks) {
+    const QVector<NN<VirtualDesktop*>> allDesks = m_manager->desktops();
+    for (auto vd : allDesks) {
         connect(vd, &VirtualDesktop::x11DesktopNumberChanged, this,
             [this, vd]() {
                 DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};

@@ -28,7 +28,7 @@ public:
     static void deleteUnmanaged(Unmanaged* c);
     int desktop() const override;
     QStringList activities() const override;
-    QVector<VirtualDesktop *> desktops() const override;
+    QVector<NN<VirtualDesktop*>> desktops() const override;
     QPoint clientPos() const override;
     Layer layer() const override {
         return UnmanagedLayer;

@@ -145,7 +145,7 @@ QStringList Deleted::activities() const
     return activityList;
 }
 
-QVector<VirtualDesktop *> Deleted::desktops() const
+QVector<NN<VirtualDesktop*>> Deleted::desktops() const
 {
     return m_desktops;
 }

@@ -11,6 +11,7 @@
 // KWin
 #include <kwinglobals.h>
 #include <kwin_export.h>
+#include "pointers.h"
 // Qt includes
 #include <QObject>
 #include <QPoint>
@@ -85,7 +86,7 @@ class VirtualDesktopGrid
 public:
     VirtualDesktopGrid();
     ~VirtualDesktopGrid();
-    void update(const QSize &size, Qt::Orientation orientation, const QVector<VirtualDesktop*> &desktops);
+    void update(const QSize &size, Qt::Orientation orientation, const QVector<NN<VirtualDesktop*>> &desktops);
     /**
      * @returns The coords of desktop @a id in grid units.
      */
@@ -255,7 +256,7 @@ public:
     /**
      * @returns all currently managed VirtualDesktops
      */
-    QVector<VirtualDesktop*> desktops() const {
+    QVector<NN<VirtualDesktop*>> desktops() const {
         return m_desktops;
     }
 
@@ -466,7 +467,7 @@ private:
      */
     QAction *addAction(const QString &name, const QString &label, void (VirtualDesktopManager::*slot)());
 
-    QVector<VirtualDesktop*> m_desktops;
+    QVector<NN<VirtualDesktop*>> m_desktops;
     QPointer<VirtualDesktop> m_current;
     quint32 m_rows = 2;
     bool m_navigationWrapsAround;

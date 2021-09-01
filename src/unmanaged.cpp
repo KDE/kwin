@@ -170,9 +170,9 @@ QStringList Unmanaged::activities() const
     return QStringList();
 }
 
-QVector<VirtualDesktop *> Unmanaged::desktops() const
+QVector<NN<VirtualDesktop*>> Unmanaged::desktops() const
 {
-    return QVector<VirtualDesktop *>();
+    return QVector<NN<VirtualDesktop*>>();
 }
 
 QPoint Unmanaged::clientPos() const

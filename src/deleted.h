@@ -31,7 +31,7 @@ public:
     qreal bufferScale() const override;
     int desktop() const override;
     QStringList activities() const override;
-    QVector<VirtualDesktop *> desktops() const override;
+    QVector<NN<VirtualDesktop*>> desktops() const override;
     QPoint clientPos() const override;
     bool isDeleted() const override;
     xcb_window_t frameId() const override;
@@ -48,7 +48,7 @@ public:
     bool isModal() const {
         return m_modal;
     }
-    QList<AbstractClient*> mainClients() const {
+    QList<NN<AbstractClient*>> mainClients() const {
         return m_mainClients;
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
@@ -107,7 +107,7 @@ private:
     QStringList activityList;
     QRect contentsRect; // for clientPos()/clientSize()
     xcb_window_t m_frame;
-    QVector <VirtualDesktop *> m_desktops;
+    QVector <NN<VirtualDesktop*>> m_desktops;
 
     QRect decoration_left;
     QRect decoration_right;
@@ -117,7 +117,7 @@ private:
     bool m_shade;
     bool m_minimized;
     bool m_modal;
-    QList<AbstractClient*> m_mainClients;
+    QList<NN<AbstractClient*>> m_mainClients;
     bool m_wasClient;
     NET::WindowType m_type = NET::Unknown;
     QByteArray m_windowRole;

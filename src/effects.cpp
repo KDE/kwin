@@ -886,7 +886,7 @@ void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &
     if (!cl || cl->isDesktop() || cl->isDock()) {
         return;
     }
-    QVector<VirtualDesktop*> desktops;
+    QVector<NN<VirtualDesktop*>> desktops;
     desktops.reserve(desktopIds.count());
     for (uint x11Id: desktopIds) {
         if (x11Id > VirtualDesktopManager::self()->count()) {

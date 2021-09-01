@@ -432,7 +432,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
     }
 #ifndef KWIN_UNIT_TEST
     if (AbstractClient *c = Workspace::self()->moveResizeClient()) {
-        const QVector<VirtualDesktop *> desktops{desktop};
+        const QVector<NN<VirtualDesktop*>> desktops{desktop};
         if (c->rules()->checkDesktops(desktops) != desktops) {
             // user attempts to move a client to another desktop where it is ruleforced to not be
             return;

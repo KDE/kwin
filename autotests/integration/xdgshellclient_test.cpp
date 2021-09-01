@@ -911,7 +911,7 @@ void TestXdgShellClient::testSendClientWithTransientToDesktop()
 
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     vds->setCount(2);
-    const QVector<VirtualDesktop *> desktops = vds->desktops();
+    const QVector<NN<VirtualDesktop *>> desktops = vds->desktops();
 
     QScopedPointer<KWayland::Client::Surface> surface{Test::createSurface()};
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -931,15 +931,15 @@ void TestXdgShellClient::testSendClientWithTransientToDesktop()
     QVERIFY(c->transients().contains(transient));
 
     // initially, the parent and the transient are on the first virtual desktop
-    QCOMPARE(c->desktops(), QVector<VirtualDesktop *>{desktops[0]});
+    QCOMPARE(c->desktops(), QVector<NN<VirtualDesktop *>>{desktops[0]});
     QVERIFY(!c->isOnAllDesktops());
-    QCOMPARE(transient->desktops(), QVector<VirtualDesktop *>{desktops[0]});
+    QCOMPARE(transient->desktops(), QVector<NN<VirtualDesktop *>>{desktops[0]});
     QVERIFY(!transient->isOnAllDesktops());
 
     // send the transient to the second virtual desktop
     workspace()->slotWindowToDesktop(desktops[1]);
-    QCOMPARE(c->desktops(), QVector<VirtualDesktop *>{desktops[0]});
-    QCOMPARE(transient->desktops(), QVector<VirtualDesktop *>{desktops[1]});
+    QCOMPARE(c->desktops(), QVector<NN<VirtualDesktop *>>{desktops[0]});
+    QCOMPARE(transient->desktops(), QVector<NN<VirtualDesktop *>>{desktops[1]});
 
     // activate c
     workspace()->activateClient(c);
@@ -947,13 +947,13 @@ void TestXdgShellClient::testSendClientWithTransientToDesktop()
     QVERIFY(c->isActive());
 
     // and send it to the desktop it's already on
-    QCOMPARE(c->desktops(), QVector<VirtualDesktop *>{desktops[0]});
-    QCOMPARE(transient->desktops(), QVector<VirtualDesktop *>{desktops[1]});
+    QCOMPARE(c->desktops(), QVector<NN<VirtualDesktop *>>{desktops[0]});
+    QCOMPARE(transient->desktops(), QVector<NN<VirtualDesktop *>>{desktops[1]});
     workspace()->slotWindowToDesktop(desktops[0]);
 
     // which should move the transient back to the desktop
-    QCOMPARE(c->desktops(), QVector<VirtualDesktop *>{desktops[0]});
-    QCOMPARE(transient->desktops(), QVector<VirtualDesktop *>{desktops[0]});
+    QCOMPARE(c->desktops(), QVector<NN<VirtualDesktop *>>{desktops[0]});
+    QCOMPARE(transient->desktops(), QVector<NN<VirtualDesktop *>>{desktops[0]});
 }
 
 void TestXdgShellClient::testMinimizeWindowWithTransients()

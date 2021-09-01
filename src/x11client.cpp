@@ -500,14 +500,14 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     readActivities(activitiesCookie);
 
     // Initial desktop placement
-    std::optional<QVector<VirtualDesktop *>> initialDesktops;
+    std::optional<QVector<NN<VirtualDesktop*>>> initialDesktops;
     if (session) {
         if (session->onAllDesktops) {
-            initialDesktops = QVector<VirtualDesktop *>{};
+            initialDesktops = QVector<NN<VirtualDesktop*>>{};
         } else {
             VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(session->desktop);
             if (desktop) {
-                initialDesktops = QVector<VirtualDesktop *>{desktop};
+                initialDesktops = QVector<NN<VirtualDesktop*>>{desktop};
             }
         }
         setOnActivities(session->activities);
@@ -535,9 +535,9 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
                     on_all = true;
             }
             if (on_all) {
-                initialDesktops = QVector<VirtualDesktop *>{};
+                initialDesktops = QVector<NN<VirtualDesktop*>>{};
             } else if (on_current) {
-                initialDesktops = QVector<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop()};
+                initialDesktops = QVector<NN<VirtualDesktop*>>{VirtualDesktopManager::self()->currentDesktop()};
             } else if (maincl) {
                 initialDesktops = maincl->desktops();
             }
@@ -554,11 +554,11 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
             }
             if (desktopId) {
                 if (desktopId == NET::OnAllDesktops) {
-                    initialDesktops = QVector<VirtualDesktop *>{};
+                    initialDesktops = QVector<NN<VirtualDesktop*>>{};
                 } else {
                     VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId);
                     if (desktop) {
-                        initialDesktops = QVector<VirtualDesktop *>{desktop};
+                        initialDesktops = QVector<NN<VirtualDesktop*>>{desktop};
                     }
                 }
             }
@@ -581,9 +581,9 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     // desktop so place it on the current virtual desktop.
     if (!initialDesktops.has_value()) {
         if (isDesktop()) {
-            initialDesktops = QVector<VirtualDesktop *>{};
+            initialDesktops = QVector<NN<VirtualDesktop*>>{};
         } else {
-            initialDesktops = QVector<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop()};
+            initialDesktops = QVector<NN<VirtualDesktop*>>{VirtualDesktopManager::self()->currentDesktop()};
         }
     }
     setDesktops(rules()->checkDesktops(*initialDesktops, !isMapped));
@@ -3165,7 +3165,7 @@ xcb_window_t X11Client::verifyTransientFor(xcb_window_t new_transient_for, bool 
     return new_transient_for;
 }
 
-void X11Client::addTransient(AbstractClient* cl)
+void X11Client::addTransient(NN<AbstractClient*> cl)
 {
     AbstractClient::addTransient(cl);
     if (workspace()->mostRecentlyActivatedClient() == this && cl->isModal())
@@ -3178,7 +3178,7 @@ void X11Client::addTransient(AbstractClient* cl)
 //        qDebug() << "AT:" << (*it);
 }
 
-void X11Client::removeTransient(AbstractClient* cl)
+void X11Client::removeTransient(NN<AbstractClient*> cl)
 {
 //    qDebug() << "REMOVETRANS:" << this << ":" << cl;
 //    qDebug() << kBacktrace();
@@ -3186,7 +3186,7 @@ void X11Client::removeTransient(AbstractClient* cl)
     // make cl group transient
     AbstractClient::removeTransient(cl);
     if (cl->transientFor() == this) {
-        if (X11Client *c = dynamic_cast<X11Client *>(cl)) {
+        if (X11Client *c = dynamic_cast<X11Client *>(cl.get())) {
             c->m_transientForId = XCB_WINDOW_NONE;
             c->setTransientFor(nullptr); // SELI
 // SELI       cl->setTransient( rootWindow());
@@ -3206,9 +3206,9 @@ void X11Client::checkTransient(xcb_window_t w)
 
 // returns true if cl is the transient_for window for this client,
 // or recursively the transient_for window
-bool X11Client::hasTransient(const AbstractClient* cl, bool indirect) const
+bool X11Client::hasTransient(NN<const AbstractClient*> cl, bool indirect) const
 {
-    if (const X11Client *c = dynamic_cast<const X11Client *>(cl)) {
+    if (const X11Client *c = dynamic_cast<const X11Client *>(cl.get())) {
         // checkGroupTransients() uses this to break loops, so hasTransient() must detect them
         QList<const X11Client *> set;
         return hasTransientInternal(c, indirect, set);
@@ -3253,13 +3253,13 @@ bool X11Client::hasTransientInternal(const X11Client *cl, bool indirect, QList<c
     return false;
 }
 
-QList<AbstractClient*> X11Client::mainClients() const
+QList<NN<AbstractClient*>> X11Client::mainClients() const
 {
     if (!isTransient())
-        return QList<AbstractClient*>();
+        return QList<NN<AbstractClient*>>();
     if (const AbstractClient *t = transientFor())
-        return QList<AbstractClient*>{const_cast< AbstractClient* >(t)};
-    QList<AbstractClient*> result;
+        return QList<NN<AbstractClient*>>{const_cast< AbstractClient* >(t)};
+    QList<NN<AbstractClient*>> result;
     Q_ASSERT(group());
     for (auto it = group()->members().constBegin();
             it != group()->members().constEnd();

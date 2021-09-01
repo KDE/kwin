@@ -429,18 +429,18 @@ void AbstractClient::setDesktop(int desktop)
     if (desktop != NET::OnAllDesktops)   // Do range check
         desktop = qMax(1, qMin(numberOfDesktops, desktop));
 
-    QVector<VirtualDesktop *> desktops;
+    QVector<NN<VirtualDesktop*>> desktops;
     if (desktop != NET::OnAllDesktops) {
        desktops << VirtualDesktopManager::self()->desktopForX11Id(desktop);
     }
     setDesktops(desktops);
 }
 
-void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
+void AbstractClient::setDesktops(QVector<NN<VirtualDesktop*>> desktops)
 {
     //on x11 we can have only one desktop at a time
     if (kwinApp()->operationMode() == Application::OperationModeX11 && desktops.size() > 1) {
-        desktops = QVector<VirtualDesktop*>({desktops.last()});
+        desktops = QVector<NN<VirtualDesktop*>>({desktops.last()});
     }
 
     desktops = rules()->checkDesktops(desktops);
@@ -514,7 +514,7 @@ void AbstractClient::doSetOnActivities(const QStringList &activityList)
     Q_UNUSED(activityList);
 }
 
-void AbstractClient::enterDesktop(VirtualDesktop *virtualDesktop)
+void AbstractClient::enterDesktop(NN<VirtualDesktop*> virtualDesktop)
 {
     if (m_desktops.contains(virtualDesktop)) {
         return;
@@ -524,9 +524,9 @@ void AbstractClient::enterDesktop(VirtualDesktop *virtualDesktop)
     setDesktops(desktops);
 }
 
-void AbstractClient::leaveDesktop(VirtualDesktop *virtualDesktop)
+void AbstractClient::leaveDesktop(NN<VirtualDesktop*> virtualDesktop)
 {
-    QVector<VirtualDesktop*> currentDesktops;
+    QVector<NN<VirtualDesktop*>> currentDesktops;
     if (m_desktops.isEmpty()) {
         currentDesktops = VirtualDesktopManager::self()->desktops();
     } else {
@@ -1951,12 +1951,12 @@ void AbstractClient::setTransientFor(AbstractClient *transientFor)
     Q_EMIT transientChanged();
 }
 
-const AbstractClient *AbstractClient::transientFor() const
+const AbstractClient* AbstractClient::transientFor() const
 {
     return m_transientFor;
 }
 
-AbstractClient *AbstractClient::transientFor()
+AbstractClient* AbstractClient::transientFor()
 {
     return m_transientFor;
 }
@@ -1973,24 +1973,24 @@ QRect AbstractClient::transientPlacement(const QRect &bounds) const
     return QRect();
 }
 
-bool AbstractClient::hasTransient(const AbstractClient *c, bool indirect) const
+bool AbstractClient::hasTransient(NN<const AbstractClient*> c, bool indirect) const
 {
     Q_UNUSED(indirect);
     return c->transientFor() == this;
 }
 
-QList< AbstractClient* > AbstractClient::mainClients() const
+QList< NN<AbstractClient*> > AbstractClient::mainClients() const
 {
     if (const AbstractClient *t = transientFor()) {
-        return QList<AbstractClient*>{const_cast< AbstractClient* >(t)};
+        return QList<NN<AbstractClient*>>{const_cast< AbstractClient* >(t)};
     }
-    return QList<AbstractClient*>();
+    return QList<NN<AbstractClient*>>();
 }
 
-QList<AbstractClient*> AbstractClient::allMainClients() const
+QList<NN<AbstractClient*>> AbstractClient::allMainClients() const
 {
     auto result = mainClients();
-    Q_FOREACH (const auto *cl, result) {
+    Q_FOREACH (const auto cl, result) {
         result += cl->allMainClients();
     }
     return result;
@@ -2036,7 +2036,7 @@ static bool shouldKeepTransientAbove(const AbstractClient *parent, const Abstrac
     return true;
 }
 
-void AbstractClient::addTransient(AbstractClient *cl)
+void AbstractClient::addTransient(NN<AbstractClient*> cl)
 {
     Q_ASSERT(!m_transients.contains(cl));
     Q_ASSERT(cl != this);
@@ -2046,7 +2046,7 @@ void AbstractClient::addTransient(AbstractClient *cl)
     }
 }
 
-void AbstractClient::removeTransient(AbstractClient *cl)
+void AbstractClient::removeTransient(NN<AbstractClient*> cl)
 {
     m_transients.removeAll(cl);
     if (cl->transientFor() == this) {
@@ -2365,7 +2365,7 @@ void AbstractClient::destroyDecoration()
     m_decoration.inputRegion = QRegion();
 }
 
-void AbstractClient::setDecoration(KDecoration2::Decoration *decoration)
+void AbstractClient::setDecoration(KDecoration2::Decoration* decoration)
 {
     m_decoration.decoration = decoration;
     Q_EMIT decorationChanged();
@@ -3255,7 +3255,7 @@ void AbstractClient::doSetQuickTileMode()
 {
 }
 
-void AbstractClient::sendToOutput(AbstractOutput *newOutput)
+void AbstractClient::sendToOutput(NN<AbstractOutput*> newOutput)
 {
     newOutput = rules()->checkOutput(newOutput);
     if (isActive()) {
@@ -3334,7 +3334,7 @@ void AbstractClient::sendToOutput(AbstractOutput *newOutput)
         (*it)->sendToOutput(newOutput);
 }
 
-void AbstractClient::updateGeometryRestoresForFullscreen(AbstractOutput *output)
+void AbstractClient::updateGeometryRestoresForFullscreen(NN<AbstractOutput*> output)
 {
     QRect screenArea = workspace()->clientArea(MaximizeArea, this, output);
     QRect newFullScreenGeometryRestore = screenArea;
@@ -3395,7 +3395,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
     if (!workspace() || workspace()->initializing())
         return;
 
-    VirtualDesktop *desktop = !isOnCurrentDesktop() ? desktops().constLast() : VirtualDesktopManager::self()->currentDesktop();
+    VirtualDesktop *desktop = !isOnCurrentDesktop() ? desktops().constLast().get() : VirtualDesktopManager::self()->currentDesktop();
     if (!oldDesktop) {
         oldDesktop = desktop;
     }

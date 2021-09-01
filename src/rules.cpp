@@ -568,7 +568,7 @@ APPLY_RULE(screen, Screen, int)
 APPLY_RULE(activity, Activity, QStringList)
 APPLY_FORCE_RULE(type, Type, NET::WindowType)
 
-bool Rules::applyDesktops(QVector<VirtualDesktop *> &vds, bool init) const
+bool Rules::applyDesktops(QVector<NN<VirtualDesktop*>> &vds, bool init) const
 {
     if (checkSetRule(desktopsrule, init)) {
         vds.clear();
@@ -791,7 +791,7 @@ CHECK_FORCE_RULE(OpacityActive, int)
 CHECK_FORCE_RULE(OpacityInactive, int)
 CHECK_RULE(IgnoreGeometry, bool)
 
-CHECK_RULE(Desktops, QVector<VirtualDesktop *>)
+CHECK_RULE(Desktops, QVector<NN<VirtualDesktop*>>)
 CHECK_RULE(Activity, QStringList)
 CHECK_FORCE_RULE(Type, NET::WindowType)
 CHECK_RULE(MaximizeVert, MaximizeMode)

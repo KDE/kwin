@@ -114,8 +114,8 @@ public:
     bool isTransient() const override;
     bool groupTransient() const override;
     bool wasOriginallyGroupTransient() const;
-    QList<AbstractClient*> mainClients() const override; // Call once before loop , is not indirect
-    bool hasTransient(const AbstractClient* c, bool indirect) const override;
+    QList<NN<AbstractClient*>> mainClients() const override; // Call once before loop , is not indirect
+    bool hasTransient(NN<const AbstractClient*> c, bool indirect) const override;
     void checkTransient(xcb_window_t w);
     AbstractClient* findModal(bool allow_itself = false) override;
     const Group* group() const override;
@@ -467,8 +467,8 @@ private:
     void readTransientProperty(Xcb::TransientFor &transientFor);
     void readTransient();
     xcb_window_t verifyTransientFor(xcb_window_t transient_for, bool set);
-    void addTransient(AbstractClient* cl) override;
-    void removeTransient(AbstractClient* cl) override;
+    void addTransient(NN<AbstractClient*> cl) override;
+    void removeTransient(NN<AbstractClient*> cl) override;
     void removeFromMainClients();
     void cleanGrouping();
     void checkGroupTransients();
