@@ -363,10 +363,6 @@ XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)
     }
 #endif
 
-    if (waylandServer()->inputMethodConnection() == surface()->client()) {
-        m_windowType = NET::OnScreenDisplay;
-    }
-
     connect(shellSurface, &XdgToplevelInterface::windowTitleChanged,
             this, &XdgToplevelClient::handleWindowTitleChanged);
     connect(shellSurface, &XdgToplevelInterface::windowClassChanged,
