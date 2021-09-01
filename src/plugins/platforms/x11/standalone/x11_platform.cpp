@@ -232,16 +232,17 @@ bool X11StandalonePlatform::compositingPossible() const
     const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") &&
         gl_workaround_group.readEntry(unsafeKey, false)) {
-        qCDebug(KWIN_X11STANDALONE) << "kwinrc :: [Compositing] :: " << unsafeKey  << " is true";
+        qCWarning(KWIN_X11STANDALONE) << "Compositing disabled: video driver seems unstable. If you think it's a false positive, please remove "
+                                      << unsafeKey << " from [Compositing] in kwinrc and restart kwin.";
         return false;
     }
 
     if (!Xcb::Extensions::self()->isCompositeAvailable()) {
-        qCDebug(KWIN_X11STANDALONE) << "No composite extension available";
+        qCWarning(KWIN_X11STANDALONE) << "Compositing disabled: no composite extension available";
         return false;
     }
     if (!Xcb::Extensions::self()->isDamageAvailable()) {
-        qCDebug(KWIN_X11STANDALONE) << "No damage extension available";
+        qCWarning(KWIN_X11STANDALONE) << "Compositing disabled: no damage extension available";
         return false;
     }
     if (hasGlx())
@@ -251,7 +252,7 @@ bool X11StandalonePlatform::compositingPossible() const
     } else if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
         return true;
     }
-    qCDebug(KWIN_X11STANDALONE) << "No OpenGL support";
+    qCWarning(KWIN_X11STANDALONE) << "Compositing disabled: no OpenGL support";
     return false;
 }
 

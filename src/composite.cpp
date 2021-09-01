@@ -769,10 +769,10 @@ void X11Compositor::start()
         if (m_suspended & ScriptSuspend) {
             reasons << QStringLiteral("Disabled by Script");
         }
-        qCDebug(KWIN_CORE) << "Compositing is suspended, reason:" << reasons;
+        qCInfo(KWIN_CORE) << "Compositing is suspended, reason:" << reasons;
         return;
     } else if (!kwinApp()->platform()->compositingPossible()) {
-        qCCritical(KWIN_CORE) << "Compositing is not possible";
+        qCWarning(KWIN_CORE) << "Compositing is not possible";
         return;
     }
     if (!Compositor::setupStart()) {
