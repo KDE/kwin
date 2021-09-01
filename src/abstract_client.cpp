@@ -2165,16 +2165,19 @@ void AbstractClient::checkQuickTilingMaximizationZones(int xroot, int yroot)
 {
     QuickTileMode mode = QuickTileFlag::None;
     bool innerBorder = false;
-    for (int i=0; i < screens()->count(); ++i) {
 
-        if (!screens()->geometry(i).contains(QPoint(xroot, yroot)))
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (const AbstractOutput *output : outputs) {
+        if (!output->geometry().contains(QPoint(xroot, yroot))) {
             continue;
+        }
 
-        auto isInScreen = [i](const QPoint &pt) {
-            for (int j = 0; j < screens()->count(); ++j) {
-                if (j == i)
+        auto isInScreen = [&output, &outputs](const QPoint &pt) {
+            for (const AbstractOutput *other : outputs) {
+                if (other == output) {
                     continue;
-                if (screens()->geometry(j).contains(pt)) {
+                }
+                if (other->geometry().contains(pt)) {
                     return true;
                 }
             }
