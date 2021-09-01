@@ -1235,10 +1235,7 @@ void XdgToplevelClient::initialize()
 
     scheduleConfigure();
     updateColorScheme();
-
-    if (!isLockScreen()) {
-        setupWindowManagementInterface();
-    }
+    setupWindowManagementInterface();
 
     m_isInitialized = true;
 }
