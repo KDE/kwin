@@ -162,7 +162,6 @@ QImage ShmClientBuffer::data() const
         wl_shm_buffer_begin_access(buffer);
         const uchar *data = static_cast<const uchar *>(wl_shm_buffer_get_data(buffer));
         const uint32_t stride = wl_shm_buffer_get_stride(buffer);
-        const uint32_t format = wl_shm_buffer_get_format(buffer);
         return QImage(data, d->width, d->height, stride, d->format, cleanupShmData, buffer);
     }
     return d->savedData;

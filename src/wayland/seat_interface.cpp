@@ -684,6 +684,7 @@ static quint32 qtToWaylandButton(Qt::MouseButton button)
     });
     return s_buttons.value(button, 0);
 #else
+    Q_UNUSED(button)
     return 0;
 #endif
 }
