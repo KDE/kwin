@@ -99,7 +99,7 @@ var fadingPopupsEffect = {
         if (!isPopupWindow(window)) {
             return;
         }
-        if (!window.visible) {
+        if (!window.visible || window.skipsCloseAnimation) {
             return;
         }
         if (!effect.grab(window, Effect.WindowClosedGrabRole)) {

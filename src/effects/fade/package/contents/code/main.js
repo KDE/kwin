@@ -82,7 +82,7 @@ class FadeEffect {
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
-        if (!this.fadeWindows || !FadeEffect.isFadeWindow(window)) {
+        if (!this.fadeWindows || window.skipsCloseAnimation || !FadeEffect.isFadeWindow(window)) {
             return;
         }
         window.fadeOutAnimation = animate({

@@ -237,7 +237,7 @@ void GlideEffect::windowClosed(EffectWindow *w)
         return;
     }
 
-    if (!w->isVisible()) {
+    if (!w->isVisible() || w->skipsCloseAnimation()) {
         return;
     }
 

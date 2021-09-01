@@ -511,10 +511,6 @@ void Scene::paintWindow(Window* w, int mask, const QRegion &_region)
     const QRegion region = _region & QRect({0, 0}, screens()->size());
     if (region.isEmpty())  // completely clipped
         return;
-    if (w->window()->isDeleted() && w->window()->skipsCloseAnimation()) {
-        // should not get painted
-        return;
-    }
 
     WindowPaintData data(w->window()->effectWindow(), screenProjectionMatrix());
     effects->paintWindow(effectWindow(w), mask, region, data);

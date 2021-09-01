@@ -126,7 +126,7 @@ class ScaleEffect {
         if (!ScaleEffect.isScaleWindow(window)) {
             return;
         }
-        if (!window.visible) {
+        if (!window.visible || window.skipsCloseAnimation) {
             return;
         }
         if (!effect.grab(window, Effect.WindowClosedGrabRole)) {
