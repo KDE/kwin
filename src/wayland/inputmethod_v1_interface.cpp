@@ -189,6 +189,9 @@ public:
         case ZWP_TEXT_INPUT_V1_TEXT_DIRECTION_AUTO:
             qtDirection = Qt::LayoutDirectionAuto;
             break;
+        default:
+            Q_UNREACHABLE();
+            break;
         }
         Q_EMIT q->textDirection(serial, qtDirection);
     }

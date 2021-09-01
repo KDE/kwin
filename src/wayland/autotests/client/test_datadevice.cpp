@@ -581,8 +581,8 @@ void TestDataDevice::testReplaceSource()
 
     // try to crash by destroying the data source, then requesting data
     dataSource4.reset();
-    int pipeFds[2];
-    Q_ASSERT(pipe(pipeFds) == 0);
+    int pipeFds[2] = {0, 0};
+    QVERIFY(pipe(pipeFds) == 0);
 
     dataOffer->receive(QStringLiteral("text/plain"), pipeFds[1]);
     close(pipeFds[1]);
