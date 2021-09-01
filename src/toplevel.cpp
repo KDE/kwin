@@ -388,6 +388,11 @@ int Toplevel::screen() const
 
 AbstractOutput *Toplevel::output() const
 {
+    if (!m_output) {
+        auto dis = const_cast<Toplevel*>(this);
+        dis->setOutput(kwinApp()->platform()->outputAt(frameGeometry().center()));
+        Q_ASSERT(m_output);
+    }
     return m_output;
 }
 

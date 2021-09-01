@@ -13,6 +13,7 @@
 // kwin
 #include "utils.h"
 #include "xcbutils.h"
+#include "abstract_output.h"
 // KDE
 #include <NETWM>
 // Qt
@@ -20,6 +21,7 @@
 #include <QMatrix4x4>
 #include <QRect>
 #include <QUuid>
+#include <QPointer>
 // c++
 #include <functional>
 
@@ -33,7 +35,6 @@ class SurfaceInterface;
 namespace KWin
 {
 
-class AbstractOutput;
 class ClientMachine;
 class Deleted;
 class EffectWindowImpl;
@@ -720,7 +721,7 @@ private:
     QRegion opaque_region;
     mutable QRegion m_shapeRegion;
     mutable bool m_shapeRegionIsValid = false;
-    AbstractOutput *m_output = nullptr;
+    QPointer<AbstractOutput> m_output = nullptr;
     bool m_skipCloseAnimation;
     quint32 m_surfaceId = 0;
     KWaylandServer::SurfaceInterface *m_surface = nullptr;
