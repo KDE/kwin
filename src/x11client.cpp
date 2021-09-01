@@ -26,7 +26,6 @@
 #include "netinfo.h"
 #include "platform.h"
 #include "screenedge.h"
-#include "screens.h"
 #include "shadow.h"
 #include "surfaceitem_x11.h"
 #include "virtualdesktops.h"
@@ -4458,16 +4457,16 @@ void X11Client::setFullScreen(bool set, bool user)
 
 void X11Client::updateFullscreenMonitors(NETFullscreenMonitors topology)
 {
-    int nscreens = screens()->count();
+    const int outputCount = kwinApp()->platform()->enabledOutputs().count();
 
 //    qDebug() << "incoming request with top: " << topology.top << " bottom: " << topology.bottom
 //                   << " left: " << topology.left << " right: " << topology.right
 //                   << ", we have: " << nscreens << " screens.";
 
-    if (topology.top >= nscreens ||
-            topology.bottom >= nscreens ||
-            topology.left >= nscreens ||
-            topology.right >= nscreens) {
+    if (topology.top >= outputCount ||
+            topology.bottom >= outputCount ||
+            topology.left >= outputCount ||
+            topology.right >= outputCount) {
         qCWarning(KWIN_CORE) << "fullscreenMonitors update failed. request higher than number of screens.";
         return;
     }
@@ -4483,17 +4482,21 @@ void X11Client::updateFullscreenMonitors(NETFullscreenMonitors topology)
  */
 QRect X11Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) const
 {
-    QRect top, bottom, left, right, total;
+    QRect total;
 
-    top = screens()->geometry(requestedTopology.top);
-    bottom = screens()->geometry(requestedTopology.bottom);
-    left = screens()->geometry(requestedTopology.left);
-    right = screens()->geometry(requestedTopology.right);
-    total = top.united(bottom.united(left.united(right)));
+    if (auto output = kwinApp()->platform()->findOutput(requestedTopology.top)) {
+        total = total.united(output->geometry());
+    }
+    if (auto output = kwinApp()->platform()->findOutput(requestedTopology.bottom)) {
+        total = total.united(output->geometry());
+    }
+    if (auto output = kwinApp()->platform()->findOutput(requestedTopology.left)) {
+        total = total.united(output->geometry());
+    }
+    if (auto output = kwinApp()->platform()->findOutput(requestedTopology.right)) {
+        total = total.united(output->geometry());
+    }
 
-//    qDebug() << "top: " << top << " bottom: " << bottom
-//                   << " left: " << left << " right: " << right;
-//    qDebug() << "returning rect: " << total;
     return total;
 }
 
