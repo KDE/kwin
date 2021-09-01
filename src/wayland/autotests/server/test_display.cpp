@@ -9,7 +9,6 @@
 #include "../../src/server/clientconnection.h"
 #include "../../src/server/display.h"
 #include "../../src/server/output_interface.h"
-#include "../../src/server/outputmanagement_interface.h"
 #include "../../src/server/outputmanagement_v2_interface.h"
 // Wayland
 #include <wayland-server.h>
