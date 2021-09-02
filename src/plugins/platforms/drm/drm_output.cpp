@@ -273,8 +273,6 @@ void DrmOutput::setDrmDpmsMode(DpmsMode mode)
             m_renderLoop->inhibit();
             m_gpu->platform()->createDpmsFilter();
         }
-    } else {
-        qCCritical(KWIN_DRM) << "failed to set active to" << active;
     }
 }
 
