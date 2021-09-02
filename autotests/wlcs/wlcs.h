@@ -1,6 +1,8 @@
 #pragma once
 
-#include <qnamespace.h>
+#include <QThread>
+#include <QWaitCondition>
+
 #include <wlcs/display_server.h>
 #include "kwin_wayland_test.h"
 
@@ -11,6 +13,45 @@ class ClientConnection;
 
 };
 
+// this isn't a qthread because using a qthread will set what
+// qt considers the main thread to the wrong one
+class ApplicationThread
+{
+
+    QScopedPointer<KWin::WaylandTestApplication> app;
+
+    int argc;
+    const char** argv;
+
+    std::thread thread;
+
+    void run();
+
+public:
+
+    QWaitCondition cond;
+
+    ApplicationThread(int argc, const char** argv)
+        : app(nullptr), argc(argc), argv(argv)
+    {
+
+    }
+
+    void start()
+    {
+        thread = std::thread(&ApplicationThread::run, this);
+    }
+    void stop()
+    {
+        app->quit();
+    }
+    void wait()
+    {
+        thread.join();
+    }
+
+};
+
 namespace KWin
 {
 
@@ -18,12 +59,10 @@ struct WlcsServer : public ::WlcsDisplayServer
 {
     explicit WlcsServer(int argc, const char** argv);
 
-    QScopedPointer<WaylandTestApplication> app;
+    QScopedPointer<ApplicationThread> thread;
 
     int argc;
     const char** argv;
-
-    QScopedPointer<QThread> thread;
 
     QMap<int, KWaylandServer::ClientConnection*> conns;
 

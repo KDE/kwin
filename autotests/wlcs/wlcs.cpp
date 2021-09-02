@@ -19,6 +19,64 @@
 
 static const char* s_socketName = "kwin-wlcs-test-0";
 
+void ApplicationThread::run()
+{
+    using namespace KWin;
+
+    qDebug() << __PRETTY_FUNCTION__ << "Starting WlcsServer thread...";
+
+    app.reset
+        ( new WaylandTestApplication
+            ( WaylandTestApplication::OperationModeWaylandOnly
+            , argc
+            , const_cast<char**>(argv)
+            )
+        );
+
+    qDebug() << __PRETTY_FUNCTION__ << "Initting Wayland Server...";
+
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    Q_ASSERT(applicationStartedSpy.isValid());
+    Q_ASSERT(waylandServer()->init(s_socketName));
+
+    qDebug() << __PRETTY_FUNCTION__ << "Setting up output size...";
+
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
+
+    qDebug() << __PRETTY_FUNCTION__ << "Setting up virtual outputs";
+
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+
+    qDebug() << __PRETTY_FUNCTION__ << "Starting KWin App...";
+
+    kwinApp()->start();
+
+    qDebug() << __PRETTY_FUNCTION__ << "Waiting On Started...";
+
+    Q_ASSERT(applicationStartedSpy.wait(6 * 1000));
+
+    qDebug() << __PRETTY_FUNCTION__ << "Started!";
+
+    qDebug() << __PRETTY_FUNCTION__ << "Sanity checking outputs...";
+
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    Q_ASSERT(outputs.count() == 2);
+    Q_ASSERT(outputs[0]->geometry() == QRect(0, 0, 1280, 1024));
+    Q_ASSERT(outputs[1]->geometry() == QRect(1280, 0, 1280, 1024));
+
+    qDebug() << __PRETTY_FUNCTION__ << "Initialising Workspace...";
+
+    Test::initWaylandWorkspace();
+
+    cond.wakeAll();
+
+    qDebug() << __PRETTY_FUNCTION__ << "Thread initialisation done, starting event loop...";
+
+    app->exec();
+
+    qDebug() << __PRETTY_FUNCTION__ << "Event loop finished!";
+}
+
 namespace KWin
 {
 
@@ -59,21 +117,6 @@ const WlcsIntegrationDescriptor* thunk_getDescriptor(const WlcsDisplayServer* se
 
 #define unimplemented ({ qFatal("unimplemented"); nullptr; })
 
-static void startup(int argc, const char** argv)
-{
-    static bool done = false;
-
-    if (done) {
-        return;
-    }
-    done = true;
-
-    qDebug() << __PRETTY_FUNCTION__ << "Creating QApplication...";
-
-    auto app = new QApplication(argc, const_cast<char**>(argv));
-    Q_UNUSED(app);
-}
-
 WlcsServer::WlcsServer(int argc, const char** argv)
     : ::WlcsDisplayServer
         { .version = 3
@@ -86,17 +129,14 @@ WlcsServer::WlcsServer(int argc, const char** argv)
         , .get_descriptor = &thunk_getDescriptor
         , .start_on_this_thread = nullptr
         }
-    , app
-        ( nullptr
+    , thread
+        ( new ApplicationThread(argc, argv)
         )
     , argc
         ( argc
         )
     , argv
         ( argv
-        )
-    , thread
-        ( new QThread()
         )
 {
 }
@@ -105,65 +145,22 @@ void WlcsServer::start()
 {
     qDebug() << __PRETTY_FUNCTION__ << "Starting WlcsServer...";
 
-    app.reset
-        ( new WaylandTestApplication
-            ( WaylandTestApplication::OperationModeXwayland
-            , argc
-            , const_cast<char**>(argv)
-            )
-        );
-
-    qDebug() << __PRETTY_FUNCTION__ << "Initting Wayland Server...";
-
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    Q_ASSERT(applicationStartedSpy.isValid());
-    Q_ASSERT(waylandServer()->init(s_socketName));
-
-    qDebug() << __PRETTY_FUNCTION__ << "Setting up output size...";
-
-    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
-
-    qDebug() << __PRETTY_FUNCTION__ << "Setting up virtual outputs";
-
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
-
-    qDebug() << __PRETTY_FUNCTION__ << "Starting KWin App...";
-
-    kwinApp()->start();
-
-    qDebug() << __PRETTY_FUNCTION__ << "Waiting On Started...";
-
-    Q_ASSERT(applicationStartedSpy.wait());
-
-    qDebug() << __PRETTY_FUNCTION__ << "Started!";
-
-    qDebug() << __PRETTY_FUNCTION__ << "Sanity checking outputs...";
-
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
-    Q_ASSERT(outputs.count() == 2);
-    Q_ASSERT(outputs[0]->geometry() == QRect(0, 0, 1280, 1024));
-    Q_ASSERT(outputs[1]->geometry() == QRect(1280, 0, 1280, 1024));
-
-    qDebug() << __PRETTY_FUNCTION__ << "Initialising Workspace...";
-
-    Test::initWaylandWorkspace();
-
-    qDebug() << __PRETTY_FUNCTION__ << "Moving To Worker Thread...";
-
-    app->moveToThread(thread.data());
-
-    qDebug() << __PRETTY_FUNCTION__ << "Starting Worker Thread's Event Loop...";
-
     thread->start();
+
+    QMutex mtx;
+    QMutexLocker mtxLocker(&mtx);
+
+    thread->cond.wait(&mtx);
+
+    qDebug() << __PRETTY_FUNCTION__ << "Started WlcsServer...";
 }
 
 void WlcsServer::stop()
 {
     qDebug() << __PRETTY_FUNCTION__ << "Stopping WlcsServer...";
 
-    app.reset(nullptr);
-    thread->quit();
-    Q_ASSERT(thread->wait());
+    thread->stop();
+    thread->wait();
 
     qDebug() << __PRETTY_FUNCTION__ << "Stopped WlcsServer...";
 }

@@ -93,7 +93,10 @@ WaylandTestApplication::~WaylandTestApplication()
 
 void WaylandTestApplication::performStartup()
 {
+    qWarning() << "performing startup...";
+
     if (!m_inputMethodServerToStart.isEmpty()) {
+        qWarning() << "making IMS...";
         InputMethod::create();
         if (m_inputMethodServerToStart != QStringLiteral("internal")) {
             InputMethod::self()->setInputMethodCommand(m_inputMethodServerToStart);
@@ -104,10 +107,14 @@ void WaylandTestApplication::performStartup()
     // first load options - done internally by a different thread
     createOptions();
     if (!platform()->initialize()) {
+        qWarning() << "oops, bailing...";
         std::exit(1);
     }
+    qWarning() << "init platform...";
     waylandServer()->initPlatform();
+    qWarning() << "create color manager...";
     createColorManager();
+    qWarning() << "createry internal connection...";
     waylandServer()->createInternalConnection();
 
     // try creating the Wayland Backend
@@ -131,6 +138,7 @@ void WaylandTestApplication::continueStartupWithScreens()
 
 void WaylandTestApplication::finalizeStartup()
 {
+    qWarning() << "finalizing startup...";
     if (m_xwayland) {
         disconnect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
         disconnect(m_xwayland, &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
@@ -144,6 +152,8 @@ void WaylandTestApplication::continueStartupWithScene()
 
     createWorkspace();
 
+    qWarning() << "starting wayland server...";
+
     if (!waylandServer()->start()) {
         qFatal("Failed to initialize the Wayland server, exiting now");
     }
@@ -152,6 +162,8 @@ void WaylandTestApplication::continueStartupWithScene()
         finalizeStartup();
         return;
     }
+
+    qWarning() << "xwayland going...";
 
     m_xwayland = new Xwl::Xwayland(this);
     connect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);

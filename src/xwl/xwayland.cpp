@@ -108,6 +108,8 @@ bool Xwayland::startInternal()
 {
     Q_ASSERT(!m_xwaylandProcess);
 
+    qWarning() << "starting xwayland server internal...";
+
     QVector<int> fdsToClose;
     auto cleanup = qScopeGuard([&fdsToClose] {
         for (const int fd : qAsConst(fdsToClose)) {
@@ -194,6 +196,7 @@ bool Xwayland::startInternal()
     // When Xwayland starts writing the display name to displayfd, it is ready. Alternatively,
     // the Xwayland can send us the SIGUSR1 signal, but it's already reserved for VT hand-off.
     m_readyNotifier = new QSocketNotifier(pipeFds[0], QSocketNotifier::Read, this);
+    qWarning() << "les goooo...";
     connect(m_readyNotifier, &QSocketNotifier::activated, this, &Xwayland::handleXwaylandReady);
 
     m_xwaylandProcess->start();
@@ -371,6 +374,8 @@ void Xwayland::handleXwaylandReady()
         return;
     }
 
+    qWarning() << "xwayland ready";
+
     qCInfo(KWIN_XWL) << "Xwayland server started on display" << m_displayName;
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
@@ -409,6 +414,7 @@ void Xwayland::handleSelectionFailedToClaimOwnership()
 
 void Xwayland::handleSelectionClaimedOwnership()
 {
+    qWarning() << "selection claim ownership";
     Q_EMIT started();
 }
 
