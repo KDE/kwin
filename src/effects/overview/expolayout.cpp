@@ -130,6 +130,11 @@ QRect ExpoCell::naturalRect() const
     return QRect(naturalX(), naturalY(), naturalWidth(), naturalHeight());
 }
 
+QMargins ExpoCell::margins() const
+{
+    return m_margins;
+}
+
 int ExpoCell::x() const
 {
     return m_x.value_or(0);
@@ -193,6 +198,20 @@ void ExpoCell::setPersistentKey(const QString &key)
         m_persistentKey = key;
         update();
         Q_EMIT persistentKeyChanged();
+    }
+}
+
+int ExpoCell::bottomMargin() const
+{
+    return m_margins.bottom();
+}
+
+void ExpoCell::setBottomMargin(int margin)
+{
+    if (m_margins.bottom() != margin) {
+        m_margins.setBottom(margin);
+        update();
+        Q_EMIT bottomMarginChanged();
     }
 }
 
@@ -303,6 +322,17 @@ static int distance(const QPoint &a, const QPoint &b)
     return int(std::sqrt(qreal(xdiff * xdiff + ydiff * ydiff)));
 }
 
+static QRect centered(ExpoCell *cell, const QRect &bounds)
+{
+    const QSize scaled = QSize(cell->naturalWidth(), cell->naturalHeight())
+            .scaled(bounds.size(), Qt::KeepAspectRatio);
+
+    return QRect(bounds.center().x() - scaled.width() / 2,
+                 bounds.center().y() - scaled.height() / 2,
+                 scaled.width(),
+                 scaled.height());
+}
+
 void ExpoLayout::calculateWindowTransformationsClosest()
 {
     QRect area = QRect(0, 0, width(), height());
@@ -363,6 +393,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
                      area.y() + (slot / columns) * slotHeight,
                      slotWidth, slotHeight);
         target.adjust(m_spacing, m_spacing, -m_spacing, -m_spacing);   // Borders
+        target = target.marginsRemoved(cell->margins());
 
         qreal scale;
         if (target.width() / qreal(cell->naturalWidth()) < target.height() / qreal(cell->naturalHeight())) {
@@ -574,7 +605,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
     if (m_cells.count() == 1) {
         // Just move the window to its original location to save time
         ExpoCell *cell = m_cells.constFirst();
-        if (area.contains(QRect(cell->naturalX(), cell->naturalY(), cell->naturalWidth(), cell->naturalHeight()))) {
+        if (area.contains(cell->naturalRect().marginsAdded(cell->margins()))) {
             cell->setX(cell->naturalX());
             cell->setY(cell->naturalY());
             cell->setWidth(cell->naturalWidth());
@@ -808,7 +839,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
     }
 
     for (ExpoCell *cell : qAsConst(m_cells)) {
-        const QRect rect = targets.value(cell);
+        const QRect rect = centered(cell, targets.value(cell).marginsRemoved(cell->margins()));
 
         cell->setX(rect.x());
         cell->setY(rect.y());

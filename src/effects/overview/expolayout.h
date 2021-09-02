@@ -83,6 +83,7 @@ class ExpoCell : public QObject
     Q_PROPERTY(int width READ width NOTIFY widthChanged)
     Q_PROPERTY(int height READ height NOTIFY heightChanged)
     Q_PROPERTY(QString persistentKey READ persistentKey WRITE setPersistentKey NOTIFY persistentKeyChanged)
+    Q_PROPERTY(int bottomMargin READ bottomMargin WRITE setBottomMargin NOTIFY bottomMarginChanged)
 
 public:
     explicit ExpoCell(QObject *parent = nullptr);
@@ -104,6 +105,7 @@ public:
     void setNaturalHeight(int height);
 
     QRect naturalRect() const;
+    QMargins margins() const;
 
     int x() const;
     void setX(int x);
@@ -120,6 +122,9 @@ public:
     QString persistentKey() const;
     void setPersistentKey(const QString &key);
 
+    int bottomMargin() const;
+    void setBottomMargin(int margin);
+
 public Q_SLOTS:
     void update();
 
@@ -134,6 +139,7 @@ Q_SIGNALS:
     void widthChanged();
     void heightChanged();
     void persistentKeyChanged();
+    void bottomMarginChanged();
 
 private:
     QString m_persistentKey;
@@ -141,6 +147,7 @@ private:
     int m_naturalY = 0;
     int m_naturalWidth = 0;
     int m_naturalHeight = 0;
+    QMargins m_margins;
     std::optional<int> m_x;
     std::optional<int> m_y;
     std::optional<int> m_width;
