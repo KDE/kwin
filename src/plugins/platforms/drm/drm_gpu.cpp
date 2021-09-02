@@ -179,6 +179,7 @@ bool DrmGpu::updateOutputs()
             }
             m_connectors << c;
         } else {
+            (*it)->updateProperties();
             oldConnectors.removeOne(*it);
         }
     }

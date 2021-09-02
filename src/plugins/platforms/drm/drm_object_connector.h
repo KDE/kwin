@@ -54,7 +54,7 @@ public:
         return m_encoders;
     }
 
-    bool isConnected();
+    bool isConnected() const;
 
     bool isNonDesktop() const {
         auto prop = m_props.at(static_cast<uint32_t>(PropertyIndex::NonDesktop));
@@ -103,6 +103,7 @@ public:
     AbstractWaylandOutput::RgbRange rgbRange() const;
 
     bool needsModeset() const override;
+    bool updateProperties() override;
 
 private:
     DrmScopedPointer<drmModeConnector> m_conn;

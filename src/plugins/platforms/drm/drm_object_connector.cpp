@@ -138,9 +138,8 @@ bool DrmConnector::init()
     return true;
 }
 
-bool DrmConnector::isConnected()
+bool DrmConnector::isConnected() const
 {
-    m_conn.reset(drmModeGetConnector(gpu()->fd(), id()));
     if (!m_conn) {
         return false;
     }
@@ -333,6 +332,15 @@ AbstractWaylandOutput::RgbRange DrmConnector::rgbRange() const
 {
     const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
     return rgb->enumForValue<AbstractWaylandOutput::RgbRange>(rgb->pending());
+}
+
+bool DrmConnector::updateProperties()
+{
+    if (!DrmObject::updateProperties()) {
+        return false;
+    }
+    m_conn.reset(drmModeGetConnector(gpu()->fd(), id()));
+    return m_conn != nullptr;
 }
 
 }
