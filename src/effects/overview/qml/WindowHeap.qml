@@ -5,6 +5,7 @@
 */
 
 import QtQuick 2.12
+import QtGraphicalEffects 1.12
 import org.kde.kirigami 2.12 as Kirigami
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.overview 1.0
@@ -72,6 +73,39 @@ FocusScope {
                     wId: thumb.client.internalId
                 }
 
+                PlasmaCore.IconItem {
+                    id: icon
+                    width: PlasmaCore.Units.iconSizes.large
+                    height: width
+                    source: thumb.client.icon
+                    anchors.horizontalCenter: thumbSource.horizontalCenter
+                    anchors.bottom: thumbSource.bottom
+                    anchors.bottomMargin: -height / 4
+                }
+
+                PC3.Label {
+                    id: caption
+                    width: Math.min(implicitWidth, thumbSource.width)
+                    anchors.top: icon.bottom
+                    anchors.horizontalCenter: icon.horizontalCenter
+                    elide: Text.ElideRight
+                    text: thumb.client.caption
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    PlasmaCore.ColorScope.colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
+
+                    layer.enabled: true
+                    layer.effect: DropShadow {
+                        cached: true
+                        horizontalOffset: 1
+                        verticalOffset: 1
+                        color: "black"
+                        radius: Math.round(4 * PlasmaCore.Units.devicePixelRatio)
+                        samples: radius * 2 + 1
+                        spread: 0.35
+                    }
+                }
+
                 ExpoCell {
                     id: cell
                     layout: expoLayout
@@ -80,6 +114,7 @@ FocusScope {
                     naturalWidth: thumb.client.width
                     naturalHeight: thumb.client.height
                     persistentKey: thumb.client.internalId
+                    bottomMargin: icon.height / 4 + caption.height
                 }
 
                 states: [
