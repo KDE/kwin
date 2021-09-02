@@ -392,7 +392,7 @@ void Xvisit::determineProposedAction()
         m_proposedAction = DnDAction::None;
     }
     // send updated action to X target
-    if (oldProposedAction != m_proposedAction) {
+    if (oldProposedAction != m_proposedAction && m_state.entered) {
         sendPosition(waylandServer()->seat()->pointerPos());
     }
 }
