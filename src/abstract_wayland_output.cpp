@@ -233,6 +233,7 @@ void AbstractWaylandOutput::setCurrentModeInternal(const QSize &size, int refres
         m_modeSize = size;
         m_refreshRate = refreshRate;
 
+        Q_EMIT currentModeChanged();
         if (sizeChanged) {
             Q_EMIT geometryChanged();
         }
