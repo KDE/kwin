@@ -169,7 +169,6 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSetV2
     if (changeSet->transformChanged()) {
         qCDebug(KWIN_CORE) << "Server setting transform: " << (int)(changeSet->transform());
         auto transform = outputDeviceTransformToKWinTransform(changeSet->transform());
-        setTransformInternal(transform);
         updateTransform(transform);
         emitModeChanged = true;
     }

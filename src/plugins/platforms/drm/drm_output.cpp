@@ -305,6 +305,7 @@ DrmPlane::Transformations outputToPlaneTransform(DrmOutput::Transform transform)
 
 void DrmOutput::updateTransform(Transform transform)
 {
+    setTransformInternal(transform);
     const auto planeTransform = outputToPlaneTransform(transform);
     if (!qEnvironmentVariableIsSet("KWIN_DRM_SW_ROTATIONS_ONLY")
         && !m_pipeline->setTransformation(planeTransform)) {

@@ -502,7 +502,7 @@ void DrmBackend::readOutputsConfiguration()
             if (const QJsonValue scale = outputInfo["scale"]; !scale.isUndefined()) {
                 (*it)->setScale(scale.toDouble(1.));
             }
-            (*it)->setTransformInternal(KWinKScreenIntegration::toDrmTransform(outputInfo["rotation"].toInt()));
+            (*it)->updateTransform(KWinKScreenIntegration::toDrmTransform(outputInfo["rotation"].toInt()));
 
             if (const QJsonObject mode = outputInfo["mode"].toObject(); !mode.isEmpty()) {
                 const QJsonObject size = mode["size"].toObject();
@@ -510,7 +510,7 @@ void DrmBackend::readOutputsConfiguration()
             }
         } else {
             (*it)->moveTo(pos);
-            (*it)->setTransformInternal(DrmOutput::Transform::Normal);
+            (*it)->updateTransform(DrmOutput::Transform::Normal);
         }
         pos.setX(pos.x() + (*it)->geometry().width());
     }
