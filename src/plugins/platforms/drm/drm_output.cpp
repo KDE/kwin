@@ -343,7 +343,7 @@ void DrmOutput::updateModes()
     }
 }
 
-void DrmOutput::updateMode(const QSize &size, int refreshRate)
+void DrmOutput::updateMode(const QSize &size, uint32_t refreshRate)
 {
     auto conn = m_pipeline->connector();
     if (conn->currentMode().size == size && conn->currentMode().refreshRate == refreshRate) {

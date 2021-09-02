@@ -68,7 +68,7 @@ void DrmVirtualOutput::applyMode(int modeIndex)
     Q_UNUSED(modeIndex)
 }
 
-void DrmVirtualOutput::updateMode(const QSize &size, int refreshRate)
+void DrmVirtualOutput::updateMode(const QSize &size, uint32_t refreshRate)
 {
     Q_UNUSED(size)
     Q_UNUSED(refreshRate)

@@ -46,7 +46,7 @@ public:
 private:
     void vblank(std::chrono::nanoseconds timestamp);
     void applyMode(int modeIndex) override;
-    void updateMode(const QSize &size, int refreshRate) override;
+    void updateMode(const QSize &size, uint32_t refreshRate) override;
     void setDpmsMode(DpmsMode mode) override;
     void updateEnablement(bool enable) override;
 

@@ -183,7 +183,7 @@ protected:
     virtual void updateEnablement(bool enable) {
         Q_UNUSED(enable);
     }
-    virtual void updateMode(const QSize &size, int refreshRate)
+    virtual void updateMode(const QSize &size, uint32_t refreshRate)
     {
         Q_UNUSED(size);
         Q_UNUSED(refreshRate);

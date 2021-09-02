@@ -67,7 +67,7 @@ private:
     void setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
     void applyMode(int modeIndex) override;
-    void updateMode(const QSize &size, int refreshRate) override;
+    void updateMode(const QSize &size, uint32_t refreshRate) override;
     void updateModes();
 
     QVector<AbstractWaylandOutput::Mode> getModes() const;
