@@ -2698,10 +2698,15 @@ QString AbstractClient::iconFromDesktopFile(const QString &desktopFileName)
         return {};
     }
 
+    const QString desktopFileNameWithPrefix = desktopFileName + QLatin1String(".desktop");
     QString desktopFilePath;
 
     if (QDir::isAbsolutePath(desktopFileName)) {
-        desktopFilePath = desktopFileName;
+        if (QFile::exists(desktopFileNameWithPrefix)) {
+            desktopFilePath = desktopFileNameWithPrefix;
+        } else {
+            desktopFilePath = desktopFileName;
+        }
     }
 
     if (desktopFilePath.isEmpty()) {
@@ -2710,7 +2715,7 @@ QString AbstractClient::iconFromDesktopFile(const QString &desktopFileName)
     }
     if (desktopFilePath.isEmpty()) {
         desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                                 desktopFileName + QLatin1String(".desktop"));
+                                                 desktopFileNameWithPrefix);
     }
     if (desktopFilePath.isEmpty()) {
         return {};
