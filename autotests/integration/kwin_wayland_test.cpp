@@ -91,6 +91,15 @@ WaylandTestApplication::~WaylandTestApplication()
     destroyCompositor();
 }
 
+bool WaylandTestApplication::event(QEvent *ev)
+{
+    if (ev->type() == ExecuteEvent::eventType) {
+        return true;
+    }
+
+    return ApplicationWaylandAbstract::event(ev);
+}
+
 void WaylandTestApplication::performStartup()
 {
     qWarning() << "performing startup...";

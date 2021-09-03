@@ -13,6 +13,7 @@
 
 // Qt
 #include <QtTest>
+#include <QFutureInterface>
 
 #include "qwayland-idle-inhibit-unstable-v1.h"
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
@@ -60,12 +61,67 @@ class Xwayland;
 
 class AbstractClient;
 
+// this exists to simplify thread synchronisation in wlcs implementation
+class ExecuteEvent : public QEvent {
+
+    static const QEvent::Type eventType = QEvent::Type(QEvent::User + 1);
+
+    std::function<void(void)> toCall;
+
+    friend class WaylandTestApplication;
+
+    ExecuteEvent() : QEvent(eventType)
+    {}
+
+public:
+
+    template<typename Fn>
+    static QPair<ExecuteEvent*, QFuture<typename std::result_of_t<Fn()>>>
+    create(Fn fn) {
+        auto ev = new ExecuteEvent;
+        QFutureInterface<std::result_of_t<Fn()>> ret;
+
+        ev->toCall = [ev, fn, fi = QFutureInterface<std::result_of_t<Fn()>>(ret)]() mutable {
+            if constexpr (!std::is_void_v<std::result_of_t<Fn()>>) {
+                auto val = fn();
+                fi.reportResults({val});
+            } else {
+                fn();
+            }
+        };
+
+        return qMakePair(ev, ret.future());
+    }
+
+    template<typename Fn>
+    static QFuture<typename std::result_of_t<Fn()>>
+    callAgainstApp(Fn fn) {
+        auto [ev, it] = create(fn);
+
+        QCoreApplication::postEvent(QCoreApplication::instance(), ev);
+
+        return it;
+    }
+
+    template<typename Fn>
+    static void
+    callAgainstAppAndWait(Fn fn)
+    {
+        auto [ev, it] = create(fn);
+
+        QCoreApplication::postEvent(QCoreApplication::instance(), ev);
+
+        it.waitForFinished();
+    }
+};
+
 class WaylandTestApplication : public ApplicationWaylandAbstract
 {
     Q_OBJECT
 public:
     WaylandTestApplication(OperationMode mode, int &argc, char **argv);
     ~WaylandTestApplication() override;
+    bool event(QEvent* ev) override;
 
     void setInputMethodServerToStart(const QString &inputMethodServer) {
         m_inputMethodServerToStart = inputMethodServer;

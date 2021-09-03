@@ -1,6 +1,7 @@
 #include "main.h"
 #include "platform.h"
 #include "wayland_server.h"
+#include "kwin_wayland_test.h"
 
 #include "wlcs_pointer.h"
 #include "util.h"
@@ -43,22 +44,30 @@ WlcsPointer::WlcsPointer()
 
 void WlcsPointer::moveAbsolute(wl_fixed_t x, wl_fixed_t y)
 {
-    kwinApp()->platform()->warpPointer(into(x, y));
+    ExecuteEvent::callAgainstAppAndWait([=]() {
+        kwinApp()->platform()->warpPointer(into(x, y));
+    });
 }
 
 void WlcsPointer::moveRelative(wl_fixed_t dx, wl_fixed_t dy)
 {
-    kwinApp()->platform()->pointerMotion(into(dx, dy), timestamp++);
+    ExecuteEvent::callAgainstAppAndWait([=]() {
+        kwinApp()->platform()->pointerMotion(into(dx, dy), timestamp++);
+    });
 }
 
 void WlcsPointer::buttonUp(int button)
 {
-    kwinApp()->platform()->pointerButtonReleased(button, timestamp++);
+    ExecuteEvent::callAgainstAppAndWait([=]() {
+        kwinApp()->platform()->pointerButtonReleased(button, timestamp++);
+    });
 }
 
 void WlcsPointer::buttonDown(int button)
 {
-    kwinApp()->platform()->pointerButtonPressed(button, timestamp++);
+    ExecuteEvent::callAgainstAppAndWait([=]() {
+        kwinApp()->platform()->pointerButtonPressed(button, timestamp++);
+    });
 }
 
 void WlcsPointer::destroy()

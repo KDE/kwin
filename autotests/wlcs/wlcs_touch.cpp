@@ -1,6 +1,7 @@
 #include "main.h"
 #include "platform.h"
 #include "wayland_server.h"
+#include "kwin_wayland_test.h"
 
 #include "wlcs_touch.h"
 #include "util.h"
@@ -39,17 +40,23 @@ WlcsTouch::WlcsTouch()
 
 void WlcsTouch::touchDown(wl_fixed_t x, wl_fixed_t y)
 {
-    kwinApp()->platform()->touchDown(0, into(x, y), timestamp++);
+    ExecuteEvent::callAgainstAppAndWait([=]() {
+        kwinApp()->platform()->touchDown(0, into(x, y), timestamp++);
+    });
 }
 
 void WlcsTouch::touchMove(wl_fixed_t x, wl_fixed_t y)
 {
-    kwinApp()->platform()->touchMotion(0, into(x, y), timestamp++);
+    ExecuteEvent::callAgainstAppAndWait([=]() {
+        kwinApp()->platform()->touchMotion(0, into(x, y), timestamp++);
+    });
 }
 
 void WlcsTouch::touchUp()
 {
-    kwinApp()->platform()->touchUp(0, timestamp++);
+    ExecuteEvent::callAgainstAppAndWait([=]() {
+        kwinApp()->platform()->touchUp(0, timestamp++);
+    });
 }
 
 void WlcsTouch::destroy()
