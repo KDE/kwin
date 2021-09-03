@@ -159,7 +159,14 @@ void WlcsServer::stop()
 {
     qDebug() << __PRETTY_FUNCTION__ << "Stopping WlcsServer...";
 
-    thread->stop();
+    ExecuteEvent::callAgainstAppAndWait([]() {
+        qDebug() << __PRETTY_FUNCTION__ << "Exiting app...";
+
+        QCoreApplication::exit();
+    });
+
+    qDebug() << __PRETTY_FUNCTION__ << "Waiting on WlcsServer to stop...";
+
     thread->wait();
 
     qDebug() << __PRETTY_FUNCTION__ << "Stopped WlcsServer...";
@@ -167,19 +174,17 @@ void WlcsServer::stop()
 
 int WlcsServer::createClientSocket()
 {
+    KWin::WaylandServer::SocketPairConnection conn;
+
     qDebug() << __PRETTY_FUNCTION__ << "Socket connection creation requested, dispatching request event...";
-    auto ret = ExecuteEvent::callAgainstApp([]() {
+    ExecuteEvent::callAgainstAppAndWait([&conn]() {
         qDebug() << __PRETTY_FUNCTION__ << "Creating connection in future...";
 
-        auto conn = WaylandServer::self()->createConnection();
+        conn = WaylandServer::self()->createConnection();
 
-        qDebug() << __PRETTY_FUNCTION__ << "Returning socket connection in future...";
-        return conn;
+        qDebug() << __PRETTY_FUNCTION__ << "Created...";
     });
 
-    qDebug() << __PRETTY_FUNCTION__ << "Awaiting socket from future...";
-    ret.waitForFinished();
-    auto conn = ret.result();
     qDebug() << __PRETTY_FUNCTION__ << "Got socket from future, returning...";
 
     conns[conn.fd] = conn.connection;
@@ -190,7 +195,7 @@ void WlcsServer::positionWindowAbsolute(wl_display* client, wl_surface* surface,
 {
     qDebug() << __PRETTY_FUNCTION__ << "Absolute window position requested, dispatching request event...";
 
-    auto ret = ExecuteEvent::callAgainstApp([client, surface, x, y, this]() {
+    ExecuteEvent::callAgainstAppAndWait([client, surface, x, y, this]() {
         const auto fd = wl_display_get_fd(client);
         const auto id = wl_proxy_get_id(reinterpret_cast<wl_proxy*>(surface));
 
@@ -201,13 +206,9 @@ void WlcsServer::positionWindowAbsolute(wl_display* client, wl_surface* surface,
         Q_ASSERT(it);
 
         it->move(QPoint(x, y));
-
-        return 0;
     });
 
-    qDebug() << __PRETTY_FUNCTION__ << "Waiting for window to be repositioned...";
-    ret.waitForFinished();
-    qDebug() << __PRETTY_FUNCTION__ << "Window repositioned...";
+    qDebug() << __PRETTY_FUNCTION__ << "Repositioned!";
 }
 
 ::WlcsPointer* WlcsServer::createPointer()
