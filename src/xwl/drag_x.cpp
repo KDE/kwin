@@ -272,7 +272,14 @@ void XToWlDrag::offerCallback(const QString &mime)
 void XToWlDrag::setDragTarget()
 {
     auto *ac = m_visit->target();
-    waylandServer()->seat()->setDragTarget(ac->surface(), ac->inputTransformation());
+
+    workspace()->activateClient(ac);
+    auto seat = waylandServer()->seat();
+    auto dropTarget = seat->dropHandlerForSurface(ac->surface());
+    if (!dropTarget || !ac->surface()) {
+        return;
+    }
+    seat->setDragTarget(dropTarget, ac->surface(), ac->inputTransformation());
 }
 
 bool XToWlDrag::checkForFinished()

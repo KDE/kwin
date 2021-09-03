@@ -3,6 +3,8 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2021 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2021 David Redondo <kde@david-redondo.de>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -11,6 +13,7 @@
 #include "databridge.h"
 #include "dnd.h"
 #include "xwayland.h"
+#include "xwldrophandler.h"
 
 #include "atoms.h"
 #include "x11client.h"
@@ -25,108 +28,36 @@
 #include <QMouseEvent>
 #include <QTimer>
 
+using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;
+using DnDActions = KWaylandServer::DataDeviceManagerInterface::DnDActions;
+
 namespace KWin
 {
 namespace Xwl
 {
 
-using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;
-using DnDActions = KWaylandServer::DataDeviceManagerInterface::DnDActions;
-
-static DnDAction atomToClientAction(xcb_atom_t atom)
-{
-    if (atom == atoms->xdnd_action_copy) {
-        return DnDAction::Copy;
-    } else if (atom == atoms->xdnd_action_move) {
-        return DnDAction::Move;
-    } else if (atom == atoms->xdnd_action_ask) {
-        // we currently do not support it - need some test client first
-        return DnDAction::None;
-//        return DnDAction::Ask;
-    }
-    return DnDAction::None;
-}
-
-static xcb_atom_t clientActionToAtom(DnDAction action)
-{
-    if (action == DnDAction::Copy) {
-        return atoms->xdnd_action_copy;
-    } else if (action == DnDAction::Move) {
-        return atoms->xdnd_action_move;
-    } else if (action == DnDAction::Ask) {
-        // we currently do not support it - need some test client first
-        return XCB_ATOM_NONE;
-//        return atoms->xdnd_action_ask;
-    }
-    return XCB_ATOM_NONE;
-}
-
-WlToXDrag::WlToXDrag()
-{
-    m_dsi = waylandServer()->seat()->dragSource()->dragSource();
-}
-
 DragEventReply WlToXDrag::moveFilter(Toplevel *target, const QPoint &pos)
 {
-    AbstractClient *ac = qobject_cast<AbstractClient *>(target);
-    auto *seat = waylandServer()->seat();
-    if (m_visit && m_visit->target() == ac) {
-        // no target change
-        return DragEventReply::Take;
-    }
-    // leave current target
-    if (m_visit) {
-        seat->setDragTarget(nullptr);
-        m_visit->leave();
-        delete m_visit;
-        m_visit = nullptr;
-    }
-    if (!qobject_cast<X11Client *>(ac)) {
-        // no target or wayland native target,
-        // handled by input code directly
-        return DragEventReply::Wayland;
-    }
-    // new target
-    seat->setDragTarget(DataBridge::self()->dnd()->surfaceIface(), pos, ac->inputTransformation());
-    m_visit = new Xvisit(this, ac);
-    return DragEventReply::Take;
+    Q_UNUSED(target)
+    Q_UNUSED(pos)
+    return DragEventReply::Wayland;
 }
 
 bool WlToXDrag::handleClientMessage(xcb_client_message_event_t *event)
 {
-    if (m_visit && m_visit->handleClientMessage(event)) {
-        return true;
-    }
-    return false;
+    return DataBridge::self()->dnd()->dropHandler()->handleClientMessage(event);
 }
 
 bool WlToXDrag::end()
 {
-    if (!m_visit || m_visit->finished()) {
-        delete m_visit;
-        m_visit = nullptr;
-        return true;
-    }
-    connect(m_visit, &Xvisit::finish, this, [this](Xvisit *visit) {
-        Q_ASSERT(m_visit == visit);
-        delete visit;
-        m_visit = nullptr;
-        // we direclty allow to delete previous visits
-        Q_EMIT finish(this);
-    });
-    m_visit->leave();
-    return false;
+    return true;
 }
 
-KWaylandServer::DataSourceInterface *WlToXDrag::dataSourceIface() const
-{
-    return m_dsi.data();
-}
 
-Xvisit::Xvisit(WlToXDrag *drag, AbstractClient *target)
-    : QObject(drag),
-      m_drag(drag),
-      m_target(target)
+Xvisit::Xvisit(AbstractClient *target, KWaylandServer::AbstractDataSource *dataSource, QObject *parent)
+    : QObject(parent),
+      m_target(target),
+      m_dataSource(dataSource)
 {
     // first check supported DND version
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
@@ -156,7 +87,6 @@ Xvisit::Xvisit(WlToXDrag *drag, AbstractClient *target)
     }
     free(reply);
 
-    m_dropConnection = connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragDropped, this, &Xvisit::drop);
     receiveOffer();
 }
 
@@ -181,9 +111,8 @@ bool Xvisit::handleStatus(xcb_client_message_event_t *event)
     m_accepts = data->data32[1] & 1;
     xcb_atom_t actionAtom = data->data32[4];
 
-    auto dataSource = m_drag->dataSourceIface();
-    if (dataSource && !dataSource->mimeTypes().isEmpty()) {
-        dataSource->accept(m_accepts ? dataSource->mimeTypes().constFirst() : QString());
+    if (m_dataSource && !m_dataSource->mimeTypes().isEmpty()) {
+        m_dataSource->accept(m_accepts ? m_dataSource->mimeTypes().constFirst() : QString());
     }
     // TODO: we could optimize via rectangle in data32[2] and data32[3]
 
@@ -192,7 +121,7 @@ bool Xvisit::handleStatus(xcb_client_message_event_t *event)
 
     if (!m_state.dropped) {
         // as long as the drop is not yet done determine requested action
-        m_preferredAction = atomToClientAction(actionAtom);
+        m_preferredAction = Dnd::atomToClientAction(actionAtom);
         determineProposedAction();
         requestDragAndDropAction();
     }
@@ -229,8 +158,8 @@ bool Xvisit::handleFinished(xcb_client_message_event_t *event)
     Q_UNUSED(success);
     Q_UNUSED(usedActionAtom);
 
-    if (auto dataSource = m_drag->dataSourceIface())  {
-        dataSource->dndFinished();
+    if (m_dataSource)  {
+        m_dataSource->dndFinished();
     }
     doFinish();
     return true;
@@ -252,7 +181,7 @@ void Xvisit::sendPosition(const QPointF &globalPos)
     data.data32[0] = DataBridge::self()->dnd()->window();
     data.data32[2] = (x << 16) | y;
     data.data32[3] = XCB_CURRENT_TIME;
-    data.data32[4] = clientActionToAtom(m_proposedAction);
+    data.data32[4] = Dnd::clientActionToAtom(m_proposedAction);
 
     Drag::sendClientMessage(m_target->window(), atoms->xdnd_position, &data);
 }
@@ -277,8 +206,7 @@ void Xvisit::leave()
 void Xvisit::receiveOffer()
 {
     retrieveSupportedActions();
-    auto dragSource = m_drag->dataSourceIface();
-    connect(dragSource, &KWaylandServer::AbstractDataSource::supportedDragAndDropActionsChanged,
+    connect(m_dataSource, &KWaylandServer::AbstractDataSource::supportedDragAndDropActionsChanged,
                           this, &Xvisit::retrieveSupportedActions);
     enter();
 }
@@ -298,8 +226,7 @@ void Xvisit::enter()
 
 void Xvisit::sendEnter()
 {
-    auto dataSource = m_drag->dataSourceIface();
-    if (!dataSource) {
+    if (!m_dataSource) {
         return;
     }
 
@@ -307,7 +234,7 @@ void Xvisit::sendEnter()
     data.data32[0] = DataBridge::self()->dnd()->window();
     data.data32[1] = m_version << 24;
 
-    const auto mimeTypesNames = dataSource->mimeTypes();
+    const auto mimeTypesNames = m_dataSource->mimeTypes();
     const int mimesCount = mimeTypesNames.size();
     size_t cnt = 0;
     size_t totalCnt = 0;
@@ -376,7 +303,7 @@ void Xvisit::sendLeave()
 
 void Xvisit::retrieveSupportedActions()
 {
-    m_supportedActions = m_drag->dataSourceIface()->supportedDragAndDropActions();
+    m_supportedActions = m_dataSource->supportedDragAndDropActions();
     determineProposedAction();
     requestDragAndDropAction();
 }
@@ -412,8 +339,8 @@ void Xvisit::requestDragAndDropAction()
     } else if (m_supportedActions.testFlag(DnDAction::Move)) {
         action = DnDAction::Move;
     }
-    if (auto dataSource = m_drag->dataSourceIface()) {
-        dataSource->dndAction(action);
+    if (m_dataSource) {
+        m_dataSource->dndAction(action);
     }
 }
 
@@ -454,15 +381,8 @@ void Xvisit::stopConnections()
 {
     // final outcome has been determined from Wayland side
     // no more updates needed
-    disconnect(m_enterConnection);
-    m_enterConnection = QMetaObject::Connection();
-    disconnect(m_dropConnection);
-    m_dropConnection = QMetaObject::Connection();
-
     disconnect(m_motionConnection);
     m_motionConnection = QMetaObject::Connection();
-    disconnect(m_actionConnection);
-    m_actionConnection = QMetaObject::Connection();
 }
 
 } // namespace Xwl

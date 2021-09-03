@@ -3,7 +3,8 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
-
+    SPDX-FileCopyrightText: 2021 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2021 David Redondo <kde@david-redondo.de>
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "dnd.h"
@@ -18,6 +19,7 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwayland.h"
+#include "xwldrophandler.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/surface.h>
@@ -42,8 +44,14 @@ uint32_t Dnd::version()
     return s_version;
 }
 
+XwlDropHandler *Dnd::dropHandler() const
+{
+    return m_dropHandler;
+}
+
 Dnd::Dnd(xcb_atom_t atom, QObject *parent)
     : Selection(atom, parent)
+    , m_dropHandler(new XwlDropHandler)
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 

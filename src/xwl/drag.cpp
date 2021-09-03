@@ -3,7 +3,8 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
-
+    SPDX-FileCopyrightText: 2021 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2021 David Redondo <kde@david-redondo.de>
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drag.h"

@@ -13,13 +13,6 @@
 
 #include <QPoint>
 
-namespace KWayland
-{
-namespace Client
-{
-class Surface;
-}
-}
 namespace KWaylandServer
 {
 class SurfaceInterface;
@@ -34,6 +27,8 @@ namespace Xwl
 class Drag;
 enum class DragEventReply;
 
+class XwlDropHandler;
+
 /**
  * Represents the drag and drop mechanism, on X side this is the XDND protocol.
  * For more information on XDND see: https://johnlindal.wixsite.com/xdnd
@@ -46,6 +41,7 @@ public:
     explicit Dnd(xcb_atom_t atom, QObject *parent);
 
     static uint32_t version();
+    XwlDropHandler* dropHandler() const;
 
     void doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event) override;
     void x11OffersChanged(const QStringList &added, const QStringList &removed) override;
@@ -53,12 +49,10 @@ public:
 
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos);
 
-    KWaylandServer::SurfaceInterface *surfaceIface() const {
-        return m_surfaceIface;
-    }
-    KWayland::Client::Surface *surface() const {
-        return m_surface;
-    }
+    using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;
+    using DnDActions = KWaylandServer::DataDeviceManagerInterface::DnDActions;
+    static DnDAction atomToClientAction(xcb_atom_t atom);
+    static xcb_atom_t clientActionToAtom(DnDAction action);
 
 private:
     // start and end Wl native client drags (Wl -> Xwl)
@@ -70,8 +64,7 @@ private:
     Drag *m_currentDrag = nullptr;
     QVector<Drag *> m_oldDrags;
 
-    KWayland::Client::Surface *m_surface;
-    KWaylandServer::SurfaceInterface *m_surfaceIface = nullptr;
+    XwlDropHandler *m_dropHandler;
 
     Q_DISABLE_COPY(Dnd)
 };

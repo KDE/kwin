@@ -16,6 +16,11 @@
 
 class QProcess;
 
+namespace KWaylandServer
+{
+class AbstractDropHandler;
+}
+
 namespace KWin
 {
 class Toplevel;
@@ -41,6 +46,7 @@ public:
 
     virtual Xwl::DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) = 0;
     virtual QProcess *process() const = 0;
+    virtual KWaylandServer::AbstractDropHandler *xwlDropHandler() = 0;
 
 protected:
     explicit XwaylandInterface(QObject *parent = nullptr);

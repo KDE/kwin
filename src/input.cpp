@@ -1924,6 +1924,23 @@ public:
     QHash<KWaylandServer::TabletToolV2Interface*, Cursor*> m_cursorByTool;
 };
 
+static KWaylandServer::AbstractDropHandler *dropHandler(Toplevel *toplevel)
+{
+    auto surface = toplevel->surface();
+    if (!surface) {
+        return nullptr;
+    }
+    auto seat = waylandServer()->seat();
+    auto dropTarget = seat->dropHandlerForSurface(surface);
+    if (dropTarget) {return dropTarget;}
+
+    if (qobject_cast<X11Client*>(toplevel) && xwayland()) {
+        return xwayland()->xwlDropHandler();
+    }
+
+    return nullptr;
+}
+
 class DragAndDropInputFilter : public QObject, public InputEventFilter
 {
     Q_OBJECT
@@ -1979,11 +1996,11 @@ public:
             if (t) {
                 // TODO: consider decorations
                 if (t->surface() != seat->dragSurface()) {
-                    seat->setDragTarget(t->surface(), t->inputTransformation());
+                    seat->setDragTarget(dropHandler(t), t->surface(), t->inputTransformation());
                 }
             } else {
                 // no window at that place, if we have a surface we need to reset
-                seat->setDragTarget(nullptr);
+                seat->setDragTarget(nullptr, nullptr);
                 m_dragTarget = nullptr;
             }
             break;
@@ -2048,7 +2065,7 @@ public:
                     workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
                     m_raiseTimer.start();
                 }
-                seat->setDragTarget(t->surface(), pos, t->inputTransformation());
+                seat->setDragTarget(dropHandler(t), t->surface(), pos, t->inputTransformation());
             }
             if ((pos - m_lastPos).manhattanLength() > 10) {
                 m_lastPos = pos;
@@ -2057,7 +2074,7 @@ public:
             }
         } else {
             // no window at that place, if we have a surface we need to reset
-            seat->setDragTarget(nullptr);
+            seat->setDragTarget(nullptr, nullptr);
             m_dragTarget = nullptr;
         }
         return true;

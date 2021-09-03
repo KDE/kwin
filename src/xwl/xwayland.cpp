@@ -10,6 +10,8 @@
 */
 #include "xwayland.h"
 #include "databridge.h"
+#include "dnd.h"
+#include "xwldrophandler.h"
 
 #include "main_wayland.h"
 #include "options.h"
@@ -482,6 +484,15 @@ DragEventReply Xwayland::dragMoveFilter(Toplevel *target, const QPoint &pos)
         return DragEventReply::Wayland;
     }
     return bridge->dragMoveFilter(target, pos);
+}
+
+KWaylandServer::AbstractDropHandler *Xwayland::xwlDropHandler()
+{
+    DataBridge *bridge = DataBridge::self();
+    if (bridge) {
+        return bridge->dnd()->dropHandler();
+    }
+    return nullptr;
 }
 
 } // namespace Xwl

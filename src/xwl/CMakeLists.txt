@@ -13,5 +13,6 @@ add_library(KWinXwaylandServerModule OBJECT
     selection_source.cpp
     transfer.cpp
     xwayland.cpp
+    xwldrophandler.cpp
 )
 target_link_libraries(KWinXwaylandServerModule PUBLIC kwin KWinXwaylandCommon)
