@@ -32,7 +32,7 @@ ShadowItem::~ShadowItem()
 
 Shadow *ShadowItem::shadow() const
 {
-    return m_shadow.data();
+    return m_shadow;
 }
 
 void ShadowItem::updateGeometry()

@@ -38,7 +38,7 @@ private Q_SLOTS:
 
 private:
     Toplevel *m_window;
-    QScopedPointer<Shadow> m_shadow;
+    Shadow *m_shadow = nullptr;
 };
 
 } // namespace KWin

@@ -73,6 +73,7 @@ public:
      */
     static Shadow *createShadow(Toplevel *toplevel);
 
+    Toplevel *toplevel() const;
     /**
      * Reparents the shadow to @p toplevel.
      * Used when a window is deleted.

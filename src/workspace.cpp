@@ -493,6 +493,7 @@ Workspace::~Workspace()
 
     for (auto it = deleted.begin(); it != deleted.end();) {
         Q_EMIT deletedRemoved(*it);
+        (*it)->finishCompositing();
         it = deleted.erase(it);
     }
 

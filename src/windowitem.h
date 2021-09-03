@@ -38,8 +38,6 @@ public:
     ShadowItem *shadowItem() const;
     Toplevel *window() const;
 
-    void setShadow(Shadow *shadow);
-
 protected:
     explicit WindowItem(Toplevel *window, Item *parent = nullptr);
     void updateSurfaceItem(SurfaceItem *surfaceItem);
@@ -47,6 +45,7 @@ protected:
 private Q_SLOTS:
     void handleWindowClosed(Toplevel *original, Deleted *deleted);
     void updateDecorationItem();
+    void updateShadowItem();
     void updateSurfacePosition();
     void updateSurfaceVisibility();
 

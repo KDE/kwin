@@ -467,6 +467,10 @@ public:
     void elevate(bool elevate);
 
     /**
+     * Returns the Shadow associated with this Toplevel or @c null if it has no shadow.
+     */
+    Shadow *shadow() const;
+    /**
      * Updates the Shadow associated with this Toplevel from X11 Property.
      * Call this method when the Property changes or Compositing is started.
      */
@@ -692,6 +696,7 @@ protected:
     void getSkipCloseAnimation();
     void copyToDeleted(Toplevel* c);
     void disownDataPassedToDeleted();
+    void deleteShadow();
     void deleteEffectWindow();
     void setDepth(int depth);
     QRect m_frameGeometry;
@@ -713,6 +718,7 @@ private:
     Xcb::Window m_client;
     bool is_shape;
     EffectWindowImpl* effect_window;
+    Shadow *m_shadow = nullptr;
     QByteArray resource_name;
     QByteArray resource_class;
     ClientMachine *m_clientMachine;

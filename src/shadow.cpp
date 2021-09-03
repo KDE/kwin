@@ -325,6 +325,11 @@ bool Shadow::updateShadow()
     return true;
 }
 
+Toplevel *Shadow::toplevel() const
+{
+    return m_topLevel;
+}
+
 void Shadow::setToplevel(Toplevel *topLevel)
 {
     m_topLevel = topLevel;

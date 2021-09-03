@@ -466,7 +466,6 @@ void Scene::addToplevel(Toplevel *c)
     connect(c, &Toplevel::windowClosed, this, &Scene::windowClosed);
 
     c->effectWindow()->setSceneWindow(w);
-    c->updateShadow();
 }
 
 void Scene::removeToplevel(Toplevel *toplevel)
@@ -486,9 +485,6 @@ void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
     Q_ASSERT(m_windows.contains(toplevel));
     Window *window = m_windows.take(toplevel);
     window->updateToplevel(deleted);
-    if (window->shadowItem()) {
-        window->shadowItem()->shadow()->setToplevel(deleted);
-    }
     m_windows[deleted] = window;
 }
 

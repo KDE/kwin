@@ -25,6 +25,9 @@ WindowItem::WindowItem(Toplevel *window, Item *parent)
         connect(client, &AbstractClient::decorationChanged, this, &WindowItem::updateDecorationItem);
         updateDecorationItem();
     }
+    connect(window, &Toplevel::shadowChanged, this, &WindowItem::updateShadowItem);
+    updateShadowItem();
+
     connect(window, &Toplevel::windowClosed, this, &WindowItem::handleWindowClosed);
 }
 
@@ -79,8 +82,9 @@ void WindowItem::updateSurfaceVisibility()
     m_surfaceItem->setVisible(!m_window->isShade());
 }
 
-void WindowItem::setShadow(Shadow *shadow)
+void WindowItem::updateShadowItem()
 {
+    Shadow *shadow = m_window->shadow();
     if (shadow) {
         if (!m_shadowItem || m_shadowItem->shadow() != shadow) {
             m_shadowItem.reset(new ShadowItem(shadow, m_window, this));

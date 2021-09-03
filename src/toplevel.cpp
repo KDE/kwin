@@ -118,6 +118,10 @@ void Toplevel::copyToDeleted(Toplevel* c)
     effect_window = c->effect_window;
     if (effect_window != nullptr)
         effect_window->setWindow(this);
+    m_shadow = c->m_shadow;
+    if (m_shadow) {
+        m_shadow->setToplevel(this);
+    }
     resource_name = c->resourceName();
     resource_class = c->resourceClass();
     m_clientMachine = c->m_clientMachine;
@@ -271,6 +275,7 @@ bool Toplevel::setupCompositing()
         return false;
 
     effect_window = new EffectWindowImpl(this);
+    updateShadow();
     Compositor::self()->scene()->addToplevel(this);
 
     connect(windowItem(), &WindowItem::positionChanged, this, &Toplevel::visibleGeometryChanged);
@@ -286,6 +291,9 @@ void Toplevel::finishCompositing(ReleaseReason releaseReason)
         if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
             item->destroyDamage();
         }
+    }
+    if (m_shadow && m_shadow->toplevel() == this) { // otherwise it's already passed to Deleted, don't free data
+        deleteShadow();
     }
     if (effect_window && effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
         deleteEffectWindow();
@@ -359,6 +367,12 @@ void Toplevel::setReadyForPainting()
     }
 }
 
+void Toplevel::deleteShadow()
+{
+    delete m_shadow;
+    m_shadow = nullptr;
+}
+
 void Toplevel::deleteEffectWindow()
 {
     delete effect_window;
@@ -425,21 +439,24 @@ bool Toplevel::isOnOutput(AbstractOutput *output) const
     return output->geometry().intersects(frameGeometry());
 }
 
+Shadow *Toplevel::shadow() const
+{
+    return m_shadow;
+}
+
 void Toplevel::updateShadow()
 {
-    WindowItem *windowItem = this->windowItem();
-    if (!windowItem) {
+    if (!Compositor::compositing()) {
         return;
     }
-    if (auto shadowItem = windowItem->shadowItem()) {
-        if (!shadowItem->shadow()->updateShadow()) {
-            windowItem->setShadow(nullptr);
+    if (m_shadow) {
+        if (!m_shadow->updateShadow()) {
+            deleteShadow();
         }
         Q_EMIT shadowChanged();
     } else {
-        Shadow *shadow = Shadow::createShadow(this);
-        if (shadow) {
-            windowItem->setShadow(shadow);
+        m_shadow = Shadow::createShadow(this);
+        if (m_shadow) {
             Q_EMIT shadowChanged();
         }
     }
