@@ -359,7 +359,10 @@ set(SERVER_LIB_HEADERS
   pointer_interface.h
   pointerconstraints_v1_interface.h
   pointergestures_v1_interface.h
+  primaryselectiondevice_v1_interface.h
   primaryselectiondevicemanager_v1_interface.h
+  primaryselectionoffer_v1_interface.h
+  primaryselectionsource_v1_interface.h
   relativepointer_v1_interface.h
   screencast_v1_interface.h
   seat_interface.h
