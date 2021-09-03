@@ -146,7 +146,9 @@ public:
     KWaylandServer::InputMethodV1Interface *inputMethod() const {
         return m_inputMethod;
     }
-
+    KWaylandServer::IdleInterface *idle() const {
+        return m_idle;
+    }
     QList<AbstractClient *> clients() const {
         return m_clients;
     }
