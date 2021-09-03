@@ -57,7 +57,7 @@ DrmOutput::DrmOutput(DrmGpu *gpu, DrmPipeline *pipeline)
     }
     if (conn->hasRgbRange()) {
         setCapabilityInternal(Capability::RgbRange);
-        setRgbRange(conn->rgbRange());
+        setRgbRangeInternal(conn->rgbRange());
     }
     initOutputDevice();
 
