@@ -328,7 +328,7 @@ EFFECT_FALLBACK
     }, {
         QStringLiteral("overview"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Overview"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Allows you to overview virtual desktops and windows (WIP)"),
+        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Allows you to overview virtual desktops and windows"),
         QStringLiteral("Window Management"),
         QString(),
         QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/present_windows.mp4")),
