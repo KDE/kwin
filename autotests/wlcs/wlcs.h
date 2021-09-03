@@ -53,6 +53,10 @@ public:
     {
         app.reset(nullptr);
     }
+    void releaseApp()
+    {
+        app.take();
+    }
 
 };
 
