@@ -10,20 +10,13 @@
 #define KWIN_XWL_DRAG_X
 
 #include "drag.h"
+#include "datasource.h"
 
-#include <KWayland/Client/datadevicemanager.h>
+#include <KWaylandServer/datadevicemanager_interface.h>
 
 #include <QPoint>
 #include <QPointer>
 #include <QVector>
-
-namespace KWayland
-{
-namespace Client
-{
-class DataSource;
-}
-}
 
 namespace KWin
 {
@@ -49,8 +42,8 @@ public:
     DragEventReply moveFilter(Toplevel *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
-    void setDragAndDropAction(KWayland::Client::DataDeviceManager::DnDAction action);
-    KWayland::Client::DataDeviceManager::DnDAction selectedDragAndDropAction();
+    void setDragAndDropAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action);
+    KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDragAndDropAction();
 
     bool end() override {
         return false;
@@ -61,15 +54,13 @@ public:
 
 private:
     void setOffers(const Mimes &offers);
-    void offerCallback(const QString &mime);
     void setDragTarget();
 
     bool checkForFinished();
 
-    KWayland::Client::DataSource *m_dataSource;
-
     Mimes m_offers;
-    Mimes m_offersPending;
+
+    XwlDataSource m_selectionSource;
 
     X11Source *m_source;
     QVector<QPair<xcb_timestamp_t, bool> > m_dataRequests;
@@ -78,7 +69,7 @@ private:
     QVector<WlVisit *> m_oldVisits;
 
     bool m_performed = false;
-    KWayland::Client::DataDeviceManager::DnDAction m_lastSelectedDragAndDropAction = KWayland::Client::DataDeviceManager::DnDAction::None;
+    KWaylandServer::DataDeviceManagerInterface::DnDAction m_lastSelectedDragAndDropAction = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
 
     Q_DISABLE_COPY(XToWlDrag)
 };
@@ -139,7 +130,7 @@ private:
     uint32_t m_version = 0;
 
     xcb_atom_t m_actionAtom;
-    KWayland::Client::DataDeviceManager::DnDAction m_action = KWayland::Client::DataDeviceManager::DnDAction::None;
+    KWaylandServer::DataDeviceManagerInterface::DnDAction m_action = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
 
     bool m_mapped = false;
     bool m_entered = false;

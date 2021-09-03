@@ -3,6 +3,8 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2021 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2021 David Redondo <kde@david-redondo.de>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -12,18 +14,17 @@
 #include "dnd.h"
 #include "selection_source.h"
 #include "xwayland.h"
+#include "datasource.h"
 
 #include "abstract_client.h"
 #include "atoms.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/datadevice.h>
-#include <KWayland/Client/datasource.h>
-
 #include <KWaylandServer/datasource_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
+#include <KWaylandServer/datadevice_interface.h>
 
 #include <QMouseEvent>
 #include <QTimer>
@@ -33,36 +34,8 @@ namespace KWin
 namespace Xwl
 {
 
-using DnDAction = KWayland::Client::DataDeviceManager::DnDAction;
-using DnDActions = KWayland::Client::DataDeviceManager::DnDActions;
-
-static DnDAction atomToClientAction(xcb_atom_t atom)
-{
-    if (atom == atoms->xdnd_action_copy) {
-        return DnDAction::Copy;
-    } else if (atom == atoms->xdnd_action_move) {
-        return DnDAction::Move;
-    } else if (atom == atoms->xdnd_action_ask) {
-        // we currently do not support it - need some test client first
-        return DnDAction::None;
-//        return DnDAction::Ask;
-    }
-    return DnDAction::None;
-}
-
-xcb_atom_t clientActionToAtom(DnDAction action)
-{
-    if (action == DnDAction::Copy) {
-        return atoms->xdnd_action_copy;
-    } else if (action == DnDAction::Move) {
-        return atoms->xdnd_action_move;
-    } else if (action == DnDAction::Ask) {
-        // we currently do not support it - need some test client first
-        return XCB_ATOM_NONE;
-//        return atoms->xdnd_action_ask;
-    }
-    return XCB_ATOM_NONE;
-}
+using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;
+using DnDActions = KWaylandServer::DataDeviceManagerInterface::DnDActions;
 
 static QStringList atomToMimeTypes(xcb_atom_t atom)
 {
@@ -103,9 +76,7 @@ XToWlDrag::XToWlDrag(X11Source *source)
         Q_UNUSED(fd);
         m_dataRequests << QPair<xcb_timestamp_t, bool>(m_source->timestamp(), false);
     });
-    auto *ddm = waylandServer()->internalDataDeviceManager();
-    m_dataSource = ddm->createDataSource(this);
-    connect(m_dataSource, &KWayland::Client::DataSource::dragAndDropPerformed, this, [this] {
+    connect(&m_selectionSource, &XwlDataSource::dropped, this, [this] {
         m_performed = true;
         if (m_visit) {
             connect(m_visit, &WlVisit::finish, this, [this](WlVisit *visit) {
@@ -124,43 +95,22 @@ XToWlDrag::XToWlDrag(X11Source *source)
                 }
             });
         }
+        // Dave do we need this async finish check anymore?
         checkForFinished();
     });
-    connect(m_dataSource, &KWayland::Client::DataSource::dragAndDropFinished, this, [this] {
-        // this call is not reliably initiated by Wayland clients
+    connect(&m_selectionSource, &XwlDataSource::finished, this, [this] {
         checkForFinished();
     });
+    connect(&m_selectionSource, &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
 
-    // source does _not_ take ownership of m_dataSource
-    source->setDataSource(m_dataSource);
-
-    auto *dc = new QMetaObject::Connection();
-    *dc = connect(waylandServer()->dataDeviceManager(), &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated, this,
-                 [this, dc](KWaylandServer::DataSourceInterface *dsi) {
-                    Q_ASSERT(dsi);
-                    if (dsi->client() != waylandServer()->internalConnection()->client()) {
-                        return;
-                    }
-                    QObject::disconnect(*dc);
-                    delete dc;
-                    connect(dsi, &KWaylandServer::DataSourceInterface::mimeTypeOffered, this, &XToWlDrag::offerCallback);
-                }
-    );
-    // Start drag with serial of last left pointer button press.
-    // This means X to Wl drags can only be executed with the left pointer button being pressed.
-    // For touch and (maybe) other pointer button drags we have to revisit this.
-    //
-    // Until then we accept the restriction for Xwayland clients.
-    DataBridge::self()->dataDevice()->startDrag(waylandServer()->seat()->pointerButtonSerial(Qt::LeftButton),
-                                                m_dataSource,
-                                                DataBridge::self()->dnd()->surface());
-    waylandServer()->dispatch();
+    auto *seat = waylandServer()->seat();
+    int serial = waylandServer()->seat()->pointerButtonSerial(Qt::LeftButton);
+    // we know we are the focussed surface as dnd checks
+    seat->startDrag(&m_selectionSource, seat->focusedPointerSurface(), serial);
 }
 
 XToWlDrag::~XToWlDrag()
 {
-    delete m_dataSource;
-    m_dataSource = nullptr;
 }
 
 DragEventReply XToWlDrag::moveFilter(Toplevel *target, const QPoint &pos)
@@ -194,7 +144,7 @@ DragEventReply XToWlDrag::moveFilter(Toplevel *target, const QPoint &pos)
         if (hasCurrent) {
             // last received enter event is now void,
             // wait for the next one
-            seat->setDragTarget(nullptr);
+            seat->setDragTarget(nullptr, nullptr);
         }
         return DragEventReply::Ignore;
     }
@@ -220,18 +170,12 @@ bool XToWlDrag::handleClientMessage(xcb_client_message_event_t *event)
 
 void XToWlDrag::setDragAndDropAction(DnDAction action)
 {
-    m_dataSource->setDragAndDropActions(action);
+    m_selectionSource.setSupportedDndActions(action);
 }
 
 DnDAction XToWlDrag::selectedDragAndDropAction()
 {
-    // Take the last received action only from before the drag was performed,
-    // because the action gets reset as soon as the drag is performed
-    // (this seems to be a bug in KWayland -> TODO).
-    if (!m_performed) {
-        m_lastSelectedDragAndDropAction = m_dataSource->selectedDragAndDropAction();
-    }
-    return m_lastSelectedDragAndDropAction;
+    return m_selectionSource.selectedDragAndDropAction();
 }
 
 void XToWlDrag::setOffers(const Mimes &offers)
@@ -250,32 +194,25 @@ void XToWlDrag::setOffers(const Mimes &offers)
         return;
     }
 
-    // TODO: make sure that offers are not changed in between visits
-
-    m_offersPending = m_offers = offers;
+    m_offers = offers;
+    QStringList mimeTypes;
+    mimeTypes.reserve(offers.size());
     for (const auto &mimePair : offers) {
-        m_dataSource->offer(mimePair.first);
+        mimeTypes.append(mimePair.first);
     }
+    m_selectionSource.setMimeTypes(mimeTypes);
+    setDragTarget();
 }
 
 using Mime = QPair<QString, xcb_atom_t>;
-
-void XToWlDrag::offerCallback(const QString &mime)
-{
-    m_offersPending.erase(std::remove_if(m_offersPending.begin(), m_offersPending.end(),
-                   [mime](const Mime &m) { return m.first == mime; }));
-    if (m_offersPending.isEmpty() && m_visit && m_visit->entered()) {
-        setDragTarget();
-    }
-}
 
 void XToWlDrag::setDragTarget()
 {
     auto *ac = m_visit->target();
 
-    workspace()->activateClient(ac);
     auto seat = waylandServer()->seat();
     auto dropTarget = seat->dropHandlerForSurface(ac->surface());
+
     if (!dropTarget || !ac->surface()) {
         return;
     }
@@ -470,7 +407,7 @@ bool WlVisit::handlePosition(xcb_client_message_event_t *event)
 
     xcb_atom_t actionAtom = m_version > 1 ? data->data32[4] :
                                             atoms->xdnd_action_copy;
-    auto action = atomToClientAction(actionAtom);
+    auto action = Dnd::atomToClientAction(actionAtom);
 
     if (action == DnDAction::None) {
         // copy action is always possible in XDND

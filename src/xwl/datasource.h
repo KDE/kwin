@@ -19,11 +19,35 @@ public:
     void cancel() override;
     QStringList mimeTypes() const override;
     void setMimeTypes(const QStringList &mimeTypes);
+
+    void accept(const QString &mimeType) override;
+    KWaylandServer::DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const override;
+    void setSupportedDndActions(KWaylandServer::DataDeviceManagerInterface::DnDActions dndActions);
+
+    void dndAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action) override;
+
+    KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDragAndDropAction() {
+        return m_dndAction;
+    }
+
+    void dropPerformed() override {
+        Q_EMIT dropped();
+    }
+    void dndFinished() override {
+        Q_EMIT finished();
+    }
+    bool isAccepted() const override;
+
 Q_SIGNALS:
     void dataRequested(const QString &mimeType, qint32 fd);
+    void dropped();
+    void finished();
 
 private:
     QStringList m_mimeTypes;
+    KWaylandServer::DataDeviceManagerInterface::DnDActions m_supportedDndActions;
+    KWaylandServer::DataDeviceManagerInterface::DnDAction m_dndAction = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
+    bool m_accepted = false;
 };
 }
 }

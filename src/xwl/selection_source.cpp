@@ -13,11 +13,6 @@
 #include "atoms.h"
 #include "wayland_server.h"
 
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/datadevicemanager.h>
-#include <KWayland/Client/datadevice.h>
-#include <KWayland/Client/datasource.h>
-
 #include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/datasource_interface.h>
 #include <KWaylandServer/seat_interface.h>
@@ -51,9 +46,13 @@ void WlSource::setDataSourceIface(KWaylandServer::AbstractDataSource *dsi)
     for (const auto &mime : dsi->mimeTypes()) {
         m_offers << mime;
     }
+
+    // TODO, this can probably be removed after some testing
+    // all mime types should be constant after a data source is set
     m_offerConnection = connect(dsi,
                          &KWaylandServer::DataSourceInterface::mimeTypeOffered,
                          this, &WlSource::receiveOffer);
+
     m_dsi = dsi;
 }
 
@@ -155,7 +154,6 @@ bool WlSource::checkStartTransfer(xcb_selection_request_event_t *event)
     }
 
     m_dsi->requestData(*mimeIt, p[1]);
-    waylandServer()->dispatch();
 
     Q_EMIT transferReady(new xcb_selection_request_event_t(*event), p[0]);
     return true;
@@ -250,26 +248,8 @@ void X11Source::handleTargets()
     free(reply);
 }
 
-void X11Source::setDataSource(KWayland::Client::DataSource *dataSource)
-{
-    Q_ASSERT(dataSource);
-    if (m_dataSource) {
-        delete m_dataSource;
-    }
-
-    m_dataSource = dataSource;
-
-    for (const Mime &offer : qAsConst(m_offers)) {
-        dataSource->offer(offer.first);
-    }
-
-    connect(dataSource, &KWayland::Client::DataSource::sendDataRequested,
-        this, &X11Source::startTransfer);
-}
-
 void X11Source::setOffers(const Mimes &offers)
 {
-    // TODO: share code with handleTargets and emit signals accordingly?
     m_offers = offers;
 }
 

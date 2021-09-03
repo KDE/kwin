@@ -26,5 +26,31 @@ void XwlDataSource::setMimeTypes(const QStringList &mimeTypes)
 {
     m_mimeTypes = mimeTypes;
 }
+
+void XwlDataSource::accept(const QString &mimeType)
+{
+    m_accepted = !mimeType.isEmpty();
+}
+
+KWaylandServer::DataDeviceManagerInterface::DnDActions XwlDataSource::supportedDragAndDropActions() const
+{
+    return m_supportedDndActions;
+}
+
+void XwlDataSource::setSupportedDndActions(KWaylandServer::DataDeviceManagerInterface::DnDActions dndActions)
+{
+    m_supportedDndActions = dndActions;
+    Q_EMIT supportedDragAndDropActionsChanged();
+}
+
+void XwlDataSource::dndAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action)
+{
+    m_dndAction = action;
+}
+
+bool XwlDataSource::isAccepted() const
+{
+    return m_accepted;
+}
 }
 }

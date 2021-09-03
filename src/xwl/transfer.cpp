@@ -16,11 +16,6 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/datadevicemanager.h>
-#include <KWayland/Client/datadevice.h>
-#include <KWayland/Client/datasource.h>
-
 #include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/datasource_interface.h>
 #include <KWaylandServer/seat_interface.h>

@@ -19,13 +19,6 @@ class QSocketNotifier;
 struct xcb_selection_request_event_t;
 struct xcb_xfixes_selection_notify_event_t;
 
-namespace KWayland
-{
-namespace Client
-{
-class DataSource;
-}
-}
 namespace KWaylandServer
 {
 class DataDeviceInterface;
@@ -119,16 +112,6 @@ class X11Source : public SelectionSource
 public:
     X11Source(Selection *selection, xcb_xfixes_selection_notify_event_t *event);
 
-    /**
-     * @param ds must exist.
-     *
-     * X11Source does not take ownership of it in general, but if the function
-     * is called again, it will delete the previous data source.
-     */
-    void setDataSource(KWayland::Client::DataSource *dataSource);
-    KWayland::Client::DataSource *dataSource() const {
-        return m_dataSource;
-    }
     void getTargets();
 
     Mimes offers() const {
@@ -151,7 +134,6 @@ private:
     void handleTargets();
 
     xcb_window_t m_owner;
-    KWayland::Client::DataSource *m_dataSource = nullptr;
 
     Mimes m_offers;
 
