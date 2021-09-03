@@ -159,10 +159,12 @@ void WlcsServer::stop()
 {
     qDebug() << __PRETTY_FUNCTION__ << "Stopping WlcsServer...";
 
-    ExecuteEvent::callAgainstAppAndWait([]() {
+    ExecuteEvent::callAgainstAppAndWait([this]() {
         qDebug() << __PRETTY_FUNCTION__ << "Exiting app...";
 
         QCoreApplication::exit();
+
+        thread->resetApp();
     });
 
     qDebug() << __PRETTY_FUNCTION__ << "Waiting on WlcsServer to stop...";

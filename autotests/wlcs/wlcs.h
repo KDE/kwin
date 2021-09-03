@@ -49,6 +49,10 @@ public:
     {
         thread.join();
     }
+    void resetApp()
+    {
+        app.reset(nullptr);
+    }
 
 };
 
