@@ -1653,7 +1653,7 @@ QVariant DataSourceModel::data(const QModelIndex &index, int role) const
     ;
     if (index.column() == 0 && role == Qt::DisplayRole) {
         return mimeType;
-    } else if (index.column() == 1) {
+    } else if (index.column() == 1 && index.row() < m_data.count()) {
         const QByteArray &data = m_data.at(index.row());
         if (mimeType.contains(QLatin1String("image"))) {
             if (role == Qt::DecorationRole) {
