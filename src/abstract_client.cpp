@@ -2711,11 +2711,11 @@ QString AbstractClient::iconFromDesktopFile(const QString &desktopFileName)
 
     if (desktopFilePath.isEmpty()) {
         desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                                 desktopFileName);
+                                                 desktopFileNameWithPrefix);
     }
     if (desktopFilePath.isEmpty()) {
         desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                                 desktopFileNameWithPrefix);
+                                                 desktopFileName);
     }
     if (desktopFilePath.isEmpty()) {
         return {};
