@@ -11,6 +11,8 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
+#include "abstract_drop_handler.h"
+
 struct wl_client;
 struct wl_resource;
 
@@ -65,7 +67,7 @@ private:
  * @see SeatInterface
  * @see DataSourceInterface
  */
-class KWAYLANDSERVER_EXPORT DataDeviceInterface : public QObject
+class KWAYLANDSERVER_EXPORT DataDeviceInterface : public AbstractDropHandler
 {
     Q_OBJECT
 public:
@@ -80,7 +82,7 @@ public:
     /**
      * The event is sent when a drag-and-drop operation is ended because the implicit grab is removed.
      */
-    void drop();
+    void drop() override;
     /**
      * Updates the SurfaceInterface to which drag motion events are sent.
      *
@@ -92,7 +94,7 @@ public:
      * @param surface The SurfaceInterface which gets motion events
      * @param serial The serial to be used for enter/leave
      */
-    void updateDragTarget(SurfaceInterface *surface, quint32 serial);
+    void updateDragTarget(SurfaceInterface *surface, quint32 serial) override;
     void updateProxy(SurfaceInterface *remote);
 
     wl_client *client();

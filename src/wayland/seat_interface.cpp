@@ -189,6 +189,15 @@ void SeatInterfacePrivate::registerDataDevice(DataDeviceInterface *dataDevice)
     }
 }
 
+KWaylandServer::AbstractDropHandler *SeatInterface::dropHandlerForSurface(SurfaceInterface *surface) const
+{
+    auto list = d->dataDevicesForSurface(surface);
+    if (list.isEmpty()) {
+        return nullptr;
+    };
+    return list.first();
+}
+
 void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interface *dataDevice)
 {
     Q_ASSERT(dataDevice->seat() == q);
@@ -275,7 +284,7 @@ void SeatInterfacePrivate::endDrag(quint32 serial)
 {
     QObject::disconnect(drag.dragSourceDestroyConnection);
 
-    DataDeviceInterface *dragTargetDevice = drag.target;
+    AbstractDropHandler *dragTargetDevice = drag.target.data();
     AbstractDataSource *dragSource = drag.source;
     if (dragSource) {
         // TODO: Also check the current drag-and-drop action.
@@ -487,7 +496,10 @@ void SeatInterface::setTimestamp(quint32 time)
     Q_EMIT timestampChanged(time);
 }
 
-void SeatInterface::setDragTarget(SurfaceInterface *surface, const QPointF &globalPosition, const QMatrix4x4 &inputTransformation)
+void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
+                                  SurfaceInterface *surface,
+                                  const QPointF &globalPosition,
+                                  const QMatrix4x4 &inputTransformation)
 {
     if (surface == d->drag.surface) {
         // no change
@@ -501,10 +513,7 @@ void SeatInterface::setDragTarget(SurfaceInterface *surface, const QPointF &glob
     // TODO: technically we can have mulitple data devices
     // and we should send the drag to all of them, but that seems overly complicated
     // in practice so far the only case for mulitple data devices is for clipboard overriding
-    d->drag.target = nullptr;
-    if (d->dataDevicesForSurface(surface).size() > 0) {
-        d->drag.target = d->dataDevicesForSurface(surface).first();
-    }
+    d->drag.target = dropTarget;
 
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
         notifyPointerMotion(globalPosition);
@@ -523,13 +532,13 @@ void SeatInterface::setDragTarget(SurfaceInterface *surface, const QPointF &glob
     return;
 }
 
-void SeatInterface::setDragTarget(SurfaceInterface *surface, const QMatrix4x4 &inputTransformation)
+void SeatInterface::setDragTarget(AbstractDropHandler *target, SurfaceInterface *surface, const QMatrix4x4 &inputTransformation)
 {
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
-        setDragTarget(surface, pointerPos(), inputTransformation);
+        setDragTarget(target, surface, pointerPos(), inputTransformation);
     } else {
         Q_ASSERT(d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch);
-        setDragTarget(surface, d->globalTouch.focus.firstTouchPos, inputTransformation);
+        setDragTarget(target, surface, d->globalTouch.focus.firstTouchPos, inputTransformation);
     }
 }
 

@@ -18,6 +18,7 @@ struct wl_resource;
 namespace KWaylandServer
 {
 class AbstractDataSource;
+class AbstractDropHandler;
 class DragAndDropIcon;
 class DataDeviceInterface;
 class Display;
@@ -216,15 +217,17 @@ public:
      * Sends a drag leave event to the current target and an enter event to @p surface.
      * The enter position is derived from @p globalPosition and transformed by @p inputTransformation.
      */
-    void setDragTarget(SurfaceInterface *surface, const QPointF &globalPosition, const QMatrix4x4 &inputTransformation);
+    void setDragTarget(AbstractDropHandler *dropTarget, SurfaceInterface *surface, const QPointF &globalPosition, const QMatrix4x4 &inputTransformation);
     /**
      * Sets the current drag target to @p surface.
      *
      * Sends a drag leave event to the current target and an enter event to @p surface.
      * The enter position is derived from current global position and transformed by @p inputTransformation.
      */
-    void setDragTarget(SurfaceInterface *surface, const QMatrix4x4 &inputTransformation = QMatrix4x4());
+    void setDragTarget(AbstractDropHandler *dropTarget, SurfaceInterface *surface, const QMatrix4x4 &inputTransformation = QMatrix4x4());
     ///@}
+
+    AbstractDropHandler *dropHandlerForSurface(SurfaceInterface *surface) const;
 
     /**
      * @name Pointer related methods

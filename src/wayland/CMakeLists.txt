@@ -1,5 +1,6 @@
 set(SERVER_LIB_SRCS
     abstract_data_source.cpp
+    abstract_drop_handler.cpp
     appmenu_interface.cpp
     blur_interface.cpp
     clientbuffer.cpp
@@ -319,6 +320,7 @@ install(TARGETS KWaylandServer EXPORT KWaylandServerTargets ${KF5_INSTALL_TARGET
 set(SERVER_LIB_HEADERS
   ${CMAKE_CURRENT_BINARY_DIR}/KWaylandServer/kwaylandserver_export.h
   abstract_data_source.h
+  abstract_drop_handler.h
   appmenu_interface.h
   blur_interface.h
   clientbuffer.h

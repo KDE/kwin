@@ -123,7 +123,7 @@ public:
         Mode mode = Mode::None;
         AbstractDataSource *source = nullptr;
         QPointer<SurfaceInterface> surface;
-        QPointer<DataDeviceInterface> target;
+        QPointer<AbstractDropHandler> target;
         QPointer<DragAndDropIcon> dragIcon;
         QMatrix4x4 transformation;
         quint32 dragImplicitGrabSerial = -1;

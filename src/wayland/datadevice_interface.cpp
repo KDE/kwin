@@ -91,10 +91,6 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
         dataSource = DataSourceInterface::get(sourceResource);
     }
 
-    if (proxyRemoteSurface) {
-        // origin is a proxy surface
-        focusSurface = proxyRemoteSurface.data();
-    }
     const bool pointerGrab = seat->hasImplicitPointerGrab(serial) && seat->focusedPointerSurface() == focusSurface;
     if (!pointerGrab) {
         // Client doesn't have pointer grab.
@@ -171,7 +167,7 @@ void DataDeviceInterfacePrivate::data_device_destroy_resource(QtWaylandServer::w
 }
 
 DataDeviceInterface::DataDeviceInterface(SeatInterface *seat, wl_resource *resource)
-    : QObject(nullptr)
+    : AbstractDropHandler(nullptr)
     , d(new DataDeviceInterfacePrivate(seat, this, resource))
 {
     SeatInterfacePrivate *seatPrivate = SeatInterfacePrivate::get(seat);
