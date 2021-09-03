@@ -18,6 +18,7 @@ namespace KWin
 
 class AbstractClient;
 class Deleted;
+class GLTexture;
 class Toplevel;
 
 namespace Decoration
@@ -31,6 +32,8 @@ class KWIN_EXPORT DecorationRenderer : public QObject
 
 public:
     virtual void render(const QRegion &region) = 0;
+    virtual QSharedPointer<GLTexture> toOpenGLTexture() const;
+
     void invalidate();
 
     // TODO: Move damage tracking inside DecorationItem.
@@ -38,8 +41,11 @@ public:
     void addDamage(const QRegion &region);
     void resetDamage();
 
+    static WindowQuadList buildQuads(Toplevel *window);
+
 Q_SIGNALS:
     void damaged(const QRegion &region);
+    void invalidated();
 
 protected:
     explicit DecorationRenderer(Decoration::DecoratedClientImpl *client);

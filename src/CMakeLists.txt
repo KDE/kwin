@@ -104,6 +104,7 @@ set(kwin_SRCS
     scripting/v2/thumbnailitem.cpp
     scripting/v3/clientmodel.cpp
     scripting/v3/virtualdesktopmodel.cpp
+    scripting/v3/windowthumbnailitem.cpp
     scripting/dbuscall.cpp
     scripting/screenedgeitem.cpp
     scripting/scriptedeffect.cpp

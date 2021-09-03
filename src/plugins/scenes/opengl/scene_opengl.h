@@ -237,6 +237,9 @@ public:
     ~SceneOpenGLDecorationRenderer() override;
 
     void render(const QRegion &region) override;
+    QSharedPointer<GLTexture> toOpenGLTexture() const override {
+        return m_texture;
+    }
 
     GLTexture *texture() {
         return m_texture.data();
@@ -247,7 +250,7 @@ public:
 
 private:
     void resizeTexture();
-    QScopedPointer<GLTexture> m_texture;
+    QSharedPointer<GLTexture> m_texture;
 };
 
 class KWIN_EXPORT OpenGLFactory : public SceneFactory
