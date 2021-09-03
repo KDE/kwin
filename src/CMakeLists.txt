@@ -80,6 +80,7 @@ set(kwin_SRCS
     moving_client_x11_filter.cpp
     netinfo.cpp
     onscreennotification.cpp
+    openglsurfacetexture.cpp
     options.cpp
     osd.cpp
     outline.cpp

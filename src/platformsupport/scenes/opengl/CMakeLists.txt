@@ -4,7 +4,6 @@ set(SCENE_OPENGL_BACKEND_SRCS
     basiceglsurfacetexture_wayland.cpp
     egl_dmabuf.cpp
     openglbackend.cpp
-    openglsurfacetexture.cpp
     openglsurfacetexture_internal.cpp
     openglsurfacetexture_wayland.cpp
     openglsurfacetexture_x11.cpp
