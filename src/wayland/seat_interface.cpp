@@ -171,42 +171,12 @@ void SeatInterfacePrivate::registerDataDevice(DataDeviceInterface *dataDevice)
     QObject::connect(dataDevice, &DataDeviceInterface::selectionCleared, q, [this, dataDevice] {
         updateSelection(dataDevice);
     });
-    QObject::connect(dataDevice, &DataDeviceInterface::dragStarted, q, [this, dataDevice] {
-        const auto dragSerial = dataDevice->dragImplicitGrabSerial();
-        if (q->hasImplicitPointerGrab(dragSerial)) {
-            drag.mode = Drag::Mode::Pointer;
-            drag.transformation = globalPointer.focus.transformation;
-        } else if (q->hasImplicitTouchGrab(dragSerial)) {
-            drag.mode = Drag::Mode::Touch;
-            // TODO: touch transformation
-        } else {
-            // no implicit grab, abort drag
-            return;
-        }
-        auto *originSurface = dataDevice->origin();
-        const bool proxied = originSurface->dataProxy();
-        if (!proxied) {
-            // origin surface
-            drag.target = dataDevice;
-            drag.surface = originSurface;
-            // TODO: transformation needs to be either pointer or touch
-            drag.transformation = globalPointer.focus.transformation;
-        }
-        drag.source = dataDevice;
-        drag.destroyConnection = QObject::connect(dataDevice, &DataDeviceInterface::aboutToBeDestroyed, q, [this] {
-            cancelDrag(display->nextSerial());
-        });
-        if (dataDevice->dragSource()) {
-            drag.dragSourceDestroyConnection = QObject::connect(dataDevice->dragSource(), &AbstractDataSource::aboutToBeDestroyed, q, [this] {
-                cancelDrag(display->nextSerial());
-            });
-        } else {
-            drag.dragSourceDestroyConnection = QMetaObject::Connection();
-        }
-        dataDevice->updateDragTarget(proxied ? nullptr : originSurface, dataDevice->dragImplicitGrabSerial());
-        Q_EMIT q->dragStarted();
-        Q_EMIT q->dragSurfaceChanged();
-    });
+    QObject::connect(dataDevice,
+                     &DataDeviceInterface::dragStarted,
+                     q,
+                     [this](AbstractDataSource *source, SurfaceInterface *origin, quint32 serial, DragAndDropIcon *dragIcon) {
+                         q->startDrag(source, origin, serial, dragIcon);
+                     });
     // is the new DataDevice for the current keyoard focus?
     if (globalKeyboard.focus.surface) {
         // same client?
@@ -303,12 +273,10 @@ void SeatInterfacePrivate::cancelDrag(quint32 serial)
 
 void SeatInterfacePrivate::endDrag(quint32 serial)
 {
-    QObject::disconnect(drag.destroyConnection);
     QObject::disconnect(drag.dragSourceDestroyConnection);
 
     DataDeviceInterface *dragTargetDevice = drag.target;
-    DataDeviceInterface *dragSourceDevice = drag.source;
-    DataSourceInterface *dragSource = dragSourceDevice ? dragSourceDevice->dragSource() : nullptr;
+    AbstractDataSource *dragSource = drag.source;
     if (dragSource) {
         // TODO: Also check the current drag-and-drop action.
         if (dragTargetDevice && dragSource->isAccepted()) {
@@ -316,18 +284,12 @@ void SeatInterfacePrivate::endDrag(quint32 serial)
             dragTargetDevice->drop();
             dragSource->dropPerformed();
         } else {
-            if (wl_resource_get_version(dragSource->resource()) >= WL_DATA_SOURCE_DND_FINISHED_SINCE_VERSION) {
-                dragSource->cancel();
-            }
+            dragSource->cancel();
         }
     }
 
     if (dragTargetDevice) {
         dragTargetDevice->updateDragTarget(nullptr, serial);
-    }
-    if (dragSourceDevice) {
-        auto devicePrivate = DataDeviceInterfacePrivate::get(dragSourceDevice);
-        devicePrivate->endDrag();
     }
 
     drag = Drag();
@@ -486,12 +448,10 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
         return;
     }
     if (isDragPointer()) {
-        const auto *originSurface = dragSource()->origin();
-        const bool proxyRemoteFocused = originSurface->dataProxy() && originSurface == focusedSurface;
-        if (!proxyRemoteFocused) {
-            // handled by DataDevice
+        // data device will handle it directly
+        // for xwayland cases we still want to send pointer events
+        if (!d->dataDevicesForSurface(focusedSurface).isEmpty())
             return;
-        }
     }
     if (focusedSurface->lockedPointer() && focusedSurface->lockedPointer()->isLocked()) {
         return;
@@ -743,7 +703,7 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
         d->updatePointerButtonSerial(button, serial);
         d->updatePointerButtonState(button, SeatInterfacePrivate::Pointer::State::Released);
         if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
-            if (d->drag.source->dragImplicitGrabSerial() != currentButtonSerial) {
+            if (d->drag.dragImplicitGrabSerial != currentButtonSerial) {
                 // not our drag button - ignore
                 return;
             }
@@ -1100,7 +1060,7 @@ void SeatInterface::notifyTouchUp(qint32 id)
     }
     Q_ASSERT(d->globalTouch.ids.contains(id));
     const qint32 serial = d->display->nextSerial();
-    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && d->drag.source->dragImplicitGrabSerial() == d->globalTouch.ids.value(id)) {
+    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && d->drag.dragImplicitGrabSerial == d->globalTouch.ids.value(id)) {
         // the implicitly grabbing touch point has been upped
         d->endDrag(serial);
     }
@@ -1174,7 +1134,7 @@ SurfaceInterface *SeatInterface::dragSurface() const
     return d->drag.surface;
 }
 
-DataDeviceInterface *SeatInterface::dragSource() const
+AbstractDataSource *SeatInterface::dragSource() const
 {
     return d->drag.source;
 }
@@ -1305,4 +1265,45 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
     Q_EMIT primarySelectionChanged(selection);
 }
 
+void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, int dragSerial, DragAndDropIcon *dragIcon)
+{
+    if (hasImplicitPointerGrab(dragSerial)) {
+        d->drag.mode = SeatInterfacePrivate::Drag::Mode::Pointer;
+        d->drag.transformation = d->globalPointer.focus.transformation;
+    } else if (hasImplicitTouchGrab(dragSerial)) {
+        d->drag.mode = SeatInterfacePrivate::Drag::Mode::Touch;
+        // TODO: touch transformation
+    } else {
+        // no implicit grab, abort drag
+        return;
+    }
+    d->drag.dragImplicitGrabSerial = dragSerial;
+
+    // set initial drag target to ourself
+    d->drag.surface = originSurface;
+    // TODO: transformation needs to be either pointer or touch
+    d->drag.transformation = d->globalPointer.focus.transformation;
+
+    d->drag.source = dragSource;
+    if (dragSource) {
+        d->drag.dragSourceDestroyConnection = QObject::connect(dragSource, &AbstractDataSource::aboutToBeDestroyed, this, [this] {
+            d->cancelDrag(d->display->nextSerial());
+        });
+    }
+    d->drag.dragIcon = dragIcon;
+
+    if (!d->dataDevicesForSurface(originSurface).isEmpty()) {
+        d->drag.target = d->dataDevicesForSurface(originSurface)[0];
+    }
+    if (d->drag.target) {
+        d->drag.target->updateDragTarget(originSurface, dragSerial);
+    }
+    Q_EMIT dragStarted();
+    Q_EMIT dragSurfaceChanged();
+}
+
+DragAndDropIcon *SeatInterface::dragIcon() const
+{
+    return d->drag.dragIcon;
+}
 }

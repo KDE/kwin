@@ -29,13 +29,9 @@ public:
     DataDeviceInterfacePrivate(SeatInterface *seat, DataDeviceInterface *_q, wl_resource *resource);
 
     DataOfferInterface *createDataOffer(AbstractDataSource *source);
-    void endDrag();
 
     SeatInterface *seat;
     DataDeviceInterface *q;
-    DataSourceInterface *source = nullptr;
-    SurfaceInterface *surface = nullptr;
-    QScopedPointer<DragAndDropIcon> icon;
     QPointer<DataSourceInterface> selection;
     QPointer<SurfaceInterface> proxyRemoteSurface;
 

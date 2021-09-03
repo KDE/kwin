@@ -25,11 +25,13 @@ class DataControlDeviceV1Interface;
 class TextInputV2Interface;
 class TextInputV3Interface;
 class PrimarySelectionDeviceV1Interface;
+class DragAndDropIcon;
 
 class SeatInterfacePrivate : public QtWaylandServer::wl_seat
 {
 public:
-    static SeatInterfacePrivate *get(SeatInterface *seat);
+    // exported for unit tests
+    KWAYLANDSERVER_EXPORT static SeatInterfacePrivate *get(SeatInterface *seat);
     SeatInterfacePrivate(SeatInterface *q, Display *display);
 
     void sendCapabilities();
@@ -119,11 +121,12 @@ public:
             Touch,
         };
         Mode mode = Mode::None;
-        DataDeviceInterface *source = nullptr;
+        AbstractDataSource *source = nullptr;
+        QPointer<SurfaceInterface> surface;
         QPointer<DataDeviceInterface> target;
-        SurfaceInterface *surface = nullptr;
+        QPointer<DragAndDropIcon> dragIcon;
         QMatrix4x4 transformation;
-        QMetaObject::Connection destroyConnection;
+        quint32 dragImplicitGrabSerial = -1;
         QMetaObject::Connection dragSourceDestroyConnection;
     };
     Drag drag;

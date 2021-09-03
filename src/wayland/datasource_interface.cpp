@@ -118,7 +118,9 @@ void DataSourceInterface::requestData(const QString &mimeType, qint32 fd)
 
 void DataSourceInterface::cancel()
 {
-    d->send_cancelled();
+    if (wl_resource_get_version(resource()) >= WL_DATA_SOURCE_DND_FINISHED_SINCE_VERSION) {
+        d->send_cancelled();
+    }
 }
 
 QStringList DataSourceInterface::mimeTypes() const

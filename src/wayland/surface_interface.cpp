@@ -936,16 +936,6 @@ bool SurfaceInterface::inhibitsIdle() const
     return !d->idleInhibitors.isEmpty();
 }
 
-void SurfaceInterface::setDataProxy(SurfaceInterface *surface)
-{
-    d->dataProxy = surface;
-}
-
-SurfaceInterface *SurfaceInterface::dataProxy() const
-{
-    return d->dataProxy;
-}
-
 QPointF SurfaceInterface::mapToBuffer(const QPointF &point) const
 {
     return d->surfaceToBufferMatrix.map(point);

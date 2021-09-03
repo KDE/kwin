@@ -119,7 +119,6 @@ public:
 
     QVector<IdleInhibitorV1Interface *> idleInhibitors;
     ViewportInterface *viewportExtension = nullptr;
-    SurfaceInterface *dataProxy = nullptr;
     ClientConnection *client = nullptr;
 
 protected:

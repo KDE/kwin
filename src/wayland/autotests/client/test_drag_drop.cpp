@@ -11,6 +11,7 @@
 #include "../../src/server/datasource_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/seat_interface.h"
+#include "../../src/server/seat_interface_p.h"
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/datadevice.h"
@@ -230,8 +231,8 @@ void TestDragAndDrop::testPointerDragAndDrop()
     QVERIFY(dragStartedSpy.wait());
     QCOMPARE(m_seatInterface->dragSurface(), serverSurface);
     QCOMPARE(m_seatInterface->dragSurfaceTransformation(), QMatrix4x4());
-    QVERIFY(!m_seatInterface->dragSource()->icon());
-    QCOMPARE(m_seatInterface->dragSource()->dragImplicitGrabSerial(), buttonPressSpy.first().first().value<quint32>());
+    QVERIFY(!m_seatInterface->dragIcon());
+    QCOMPARE(SeatInterfacePrivate::get(m_seatInterface)->drag.dragImplicitGrabSerial, buttonPressSpy.first().first().value<quint32>());
     QVERIFY(dragEnteredSpy.wait());
     QCOMPARE(dragEnteredSpy.count(), 1);
     QCOMPARE(dragEnteredSpy.first().first().value<quint32>(), m_display->serial());
@@ -333,8 +334,8 @@ void TestDragAndDrop::testTouchDragAndDrop()
     QVERIFY(dragStartedSpy.wait());
     QCOMPARE(m_seatInterface->dragSurface(), serverSurface);
     QCOMPARE(m_seatInterface->dragSurfaceTransformation(), QMatrix4x4());
-    QVERIFY(!m_seatInterface->dragSource()->icon());
-    QCOMPARE(m_seatInterface->dragSource()->dragImplicitGrabSerial(), tp->downSerial());
+    QVERIFY(!m_seatInterface->dragIcon());
+    QCOMPARE(SeatInterfacePrivate::get(m_seatInterface)->drag.dragImplicitGrabSerial, tp->downSerial());
     QVERIFY(dragEnteredSpy.wait());
     QCOMPARE(dragEnteredSpy.count(), 1);
     QCOMPARE(dragEnteredSpy.first().first().value<quint32>(), m_display->serial());
@@ -428,8 +429,8 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QVERIFY(dragStartedSpy.wait());
     QCOMPARE(m_seatInterface->dragSurface(), serverSurface);
     QCOMPARE(m_seatInterface->dragSurfaceTransformation(), QMatrix4x4());
-    QVERIFY(!m_seatInterface->dragSource()->icon());
-    QCOMPARE(m_seatInterface->dragSource()->dragImplicitGrabSerial(), buttonPressSpy.first().first().value<quint32>());
+    QVERIFY(!m_seatInterface->dragIcon());
+    QCOMPARE(SeatInterfacePrivate::get(m_seatInterface)->drag.dragImplicitGrabSerial, buttonPressSpy.first().first().value<quint32>());
     QVERIFY(dragEnteredSpy.wait());
     QCOMPARE(dragEnteredSpy.count(), 1);
     QCOMPARE(dragEnteredSpy.first().first().value<quint32>(), m_display->serial());

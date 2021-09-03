@@ -49,7 +49,7 @@ public:
     SurfaceInterface *surface() const;
 
 private:
-    explicit DragAndDropIcon(SurfaceInterface *surface, QObject *parent = nullptr);
+    explicit DragAndDropIcon(SurfaceInterface *surface);
     friend class DataDeviceInterfacePrivate;
     QScopedPointer<DragAndDropIconPrivate> d;
 };
@@ -72,18 +72,6 @@ public:
     virtual ~DataDeviceInterface();
 
     SeatInterface *seat() const;
-    DataSourceInterface *dragSource() const;
-    SurfaceInterface *origin() const;
-    /**
-     * Returns the additional icon attached to the cursor during a drag-and-drop operation.
-     * This function returns @c null if no drag-and-drop icon has been attached.
-     */
-    DragAndDropIcon *icon() const;
-
-    /**
-     * @returns the serial of the implicit grab which started the drag
-     */
-    quint32 dragImplicitGrabSerial() const;
 
     DataSourceInterface *selection() const;
 
@@ -105,16 +93,13 @@ public:
      * @param serial The serial to be used for enter/leave
      */
     void updateDragTarget(SurfaceInterface *surface, quint32 serial);
-    /**
-     * Mark this DataDeviceInterface as being a proxy device for @p remote.
-     */
     void updateProxy(SurfaceInterface *remote);
 
     wl_client *client();
 
 Q_SIGNALS:
     void aboutToBeDestroyed();
-    void dragStarted();
+    void dragStarted(AbstractDataSource *source, SurfaceInterface *originSurface, quint32 serial, DragAndDropIcon *dragIcon);
     void selectionChanged(KWaylandServer::DataSourceInterface *);
     void selectionCleared();
 

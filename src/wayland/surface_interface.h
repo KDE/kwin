@@ -310,20 +310,6 @@ public:
      */
     static SurfaceInterface *get(quint32 id, const ClientConnection *client);
 
-    /**
-     * Set @p surface as a data proxy for this SurfaceInterface. This enables
-     * the proxy to conduct drags on the surface's client behalf.
-     *
-     * Setting a data proxy is only allowed when the client owning this surface
-     * has not created a data device itself.
-     */
-    void setDataProxy(SurfaceInterface *surface);
-    /**
-     * Returns the data proxy of this SurfaceInterface or null if there
-     * is none set.
-     */
-    SurfaceInterface *dataProxy() const;
-
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.

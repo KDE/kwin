@@ -39,8 +39,8 @@ void DragAndDropIconPrivate::commit()
     position += surface()->offset();
 }
 
-DragAndDropIcon::DragAndDropIcon(SurfaceInterface *surface, QObject *parent)
-    : QObject(parent)
+DragAndDropIcon::DragAndDropIcon(SurfaceInterface *surface)
+    : QObject(surface)
     , d(new DragAndDropIconPrivate(surface))
 {
 }
@@ -69,11 +69,6 @@ DataDeviceInterfacePrivate::DataDeviceInterfacePrivate(SeatInterface *seat, Data
     , seat(seat)
     , q(_q)
 {
-}
-
-void DataDeviceInterfacePrivate::endDrag()
-{
-    icon.reset();
 }
 
 void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
@@ -109,22 +104,14 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
             return;
         }
     }
-    // TODO: source is allowed to be null, handled client internally!
-    source = dataSource;
-    if (dataSource) {
-        QObject::connect(dataSource, &AbstractDataSource::aboutToBeDestroyed, q, [this] {
-            source = nullptr;
-        });
-    }
+
+    DragAndDropIcon *dragIcon = nullptr;
     if (iconSurface) {
-        icon.reset(new DragAndDropIcon(iconSurface));
-        QObject::connect(iconSurface, &SurfaceInterface::aboutToBeDestroyed, icon.data(), [this] {
-            icon.reset();
-        });
+        // drag icon lifespan is mapped to surface lifespan
+        dragIcon = new DragAndDropIcon(iconSurface);
     }
-    surface = focusSurface;
     drag.serial = serial;
-    Q_EMIT q->dragStarted();
+    Q_EMIT q->dragStarted(dataSource, focusSurface, serial, dragIcon);
 }
 
 void DataDeviceInterfacePrivate::data_device_set_selection(Resource *resource, wl_resource *source, uint32_t serial)
@@ -198,21 +185,6 @@ SeatInterface *DataDeviceInterface::seat() const
     return d->seat;
 }
 
-DataSourceInterface *DataDeviceInterface::dragSource() const
-{
-    return d->source;
-}
-
-DragAndDropIcon *DataDeviceInterface::icon() const
-{
-    return d->icon.data();
-}
-
-SurfaceInterface *DataDeviceInterface::origin() const
-{
-    return d->proxyRemoteSurface ? d->proxyRemoteSurface.data() : d->surface;
-}
-
 DataSourceInterface *DataDeviceInterface::selection() const
 {
     return d->selection;
@@ -267,23 +239,18 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         }
         // don't update serial, we need it
     }
-    auto dragSourceDevice = d->seat->dragSource();
-    if (!surface || !dragSourceDevice) {
-        if (auto s = dragSourceDevice->dragSource()) {
+    auto dragSource = d->seat->dragSource();
+    if (!surface || !dragSource) {
+        if (auto s = dragSource) {
             s->dndAction(DataDeviceManagerInterface::DnDAction::None);
         }
         return;
     }
-    if (d->proxyRemoteSurface && d->proxyRemoteSurface == surface) {
-        // A proxy can not have the remote surface as target.
-        // TODO: do this for all client's surfaces?
-        return;
+
+    if (dragSource) {
+        dragSource->accept(QString());
     }
-    auto *source = dragSourceDevice->dragSource();
-    if (source) {
-        source->setAccepted(false);
-    }
-    DataOfferInterface *offer = d->createDataOffer(source);
+    DataOfferInterface *offer = d->createDataOffer(dragSource);
     d->drag.surface = surface;
     if (d->seat->isDragPointer()) {
         d->drag.posConnection = connect(d->seat, &SeatInterface::pointerPosChanged, this, [this] {
@@ -314,33 +281,28 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
     if (offer) {
         offer->sendSourceActions();
-        auto matchOffers = [source, offer] {
+        auto matchOffers = [dragSource, offer] {
             DataDeviceManagerInterface::DnDAction action{DataDeviceManagerInterface::DnDAction::None};
-            if (source->supportedDragAndDropActions().testFlag(offer->preferredDragAndDropAction())) {
+            if (dragSource->supportedDragAndDropActions().testFlag(offer->preferredDragAndDropAction())) {
                 action = offer->preferredDragAndDropAction();
             } else {
-                if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy)
+                if (dragSource->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy)
                     && offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy)) {
                     action = DataDeviceManagerInterface::DnDAction::Copy;
-                } else if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move)
+                } else if (dragSource->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move)
                            && offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move)) {
                     action = DataDeviceManagerInterface::DnDAction::Move;
-                } else if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Ask)
+                } else if (dragSource->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Ask)
                            && offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Ask)) {
                     action = DataDeviceManagerInterface::DnDAction::Ask;
                 }
             }
             offer->dndAction(action);
-            source->dndAction(action);
+            dragSource->dndAction(action);
         };
-        d->drag.targetActionConnection = connect(offer, &DataOfferInterface::dragAndDropActionsChanged, source, matchOffers);
-        d->drag.sourceActionConnection = connect(source, &DataSourceInterface::supportedDragAndDropActionsChanged, source, matchOffers);
+        d->drag.targetActionConnection = connect(offer, &DataOfferInterface::dragAndDropActionsChanged, dragSource, matchOffers);
+        d->drag.sourceActionConnection = connect(dragSource, &AbstractDataSource::supportedDragAndDropActionsChanged, dragSource, matchOffers);
     }
-}
-
-quint32 DataDeviceInterface::dragImplicitGrabSerial() const
-{
-    return d->drag.serial;
 }
 
 void DataDeviceInterface::updateProxy(SurfaceInterface *remote)

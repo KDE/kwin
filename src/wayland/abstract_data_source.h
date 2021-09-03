@@ -29,6 +29,11 @@ class KWAYLANDSERVER_EXPORT AbstractDataSource : public QObject
 {
     Q_OBJECT
 public:
+    virtual bool isAccepted() const
+    {
+        return false;
+    }
+
     virtual void accept(const QString &mimeType)
     {
         Q_UNUSED(mimeType);

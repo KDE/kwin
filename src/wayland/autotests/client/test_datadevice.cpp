@@ -171,9 +171,6 @@ void TestDataDevice::testCreate()
     auto deviceInterface = dataDeviceCreatedSpy.first().first().value<DataDeviceInterface *>();
     QVERIFY(deviceInterface);
     QCOMPARE(deviceInterface->seat(), m_seatInterface);
-    QVERIFY(!deviceInterface->dragSource());
-    QVERIFY(!deviceInterface->origin());
-    QVERIFY(!deviceInterface->icon());
     QVERIFY(!deviceInterface->selection());
 
     // this will probably fail, we need to make a selection client side
@@ -269,9 +266,9 @@ void TestDataDevice::testDrag()
     dataDevice->startDrag(pointerButtonSerial, dataSource.data(), surface.data());
     QCOMPARE(dragStartedSpy.wait(500), success);
     QCOMPARE(!dragStartedSpy.isEmpty(), success);
-    QCOMPARE(deviceInterface->dragSource(), success ? sourceInterface : nullptr);
-    QCOMPARE(deviceInterface->origin(), success ? surfaceInterface : nullptr);
-    QVERIFY(!deviceInterface->icon());
+    QCOMPARE(m_seatInterface->dragSource(), success ? sourceInterface : nullptr);
+    QCOMPARE(m_seatInterface->dragSurface(), success ? surfaceInterface : nullptr);
+    QVERIFY(!m_seatInterface->dragIcon());
 }
 
 void TestDataDevice::testDragInternally_data()
@@ -350,13 +347,13 @@ void TestDataDevice::testDragInternally()
     dataDevice->startDragInternally(pointerButtonSerial, surface.data(), iconSurface.data());
     QCOMPARE(dragStartedSpy.wait(500), success);
     QCOMPARE(!dragStartedSpy.isEmpty(), success);
-    QVERIFY(!deviceInterface->dragSource());
-    QCOMPARE(deviceInterface->origin(), success ? surfaceInterface : nullptr);
+    QVERIFY(!m_seatInterface->dragSource());
+    QCOMPARE(m_seatInterface->dragSurface(), success ? surfaceInterface : nullptr);
 
     if (success) {
-        QCOMPARE(deviceInterface->icon()->surface(), iconSurfaceInterface);
+        QCOMPARE(m_seatInterface->dragIcon()->surface(), iconSurfaceInterface);
     } else {
-        QCOMPARE(deviceInterface->icon(), nullptr);
+        QCOMPARE(m_seatInterface->dragIcon(), nullptr);
     }
 }
 

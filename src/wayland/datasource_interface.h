@@ -46,7 +46,7 @@ public:
 
     wl_client *client() const override;
 
-    bool isAccepted() const;
+    bool isAccepted() const override;
     void setAccepted(bool accepted);
 
 private:

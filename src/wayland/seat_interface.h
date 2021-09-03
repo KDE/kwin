@@ -18,6 +18,7 @@ struct wl_resource;
 namespace KWaylandServer
 {
 class AbstractDataSource;
+class DragAndDropIcon;
 class DataDeviceInterface;
 class Display;
 class KeyboardInterface;
@@ -208,7 +209,7 @@ public:
      * @returns The DataDeviceInterface which started the drag and drop operation.
      * @see isDrag
      */
-    DataDeviceInterface *dragSource() const;
+    KWaylandServer::AbstractDataSource *dragSource() const;
     /**
      * Sets the current drag target to @p surface.
      *
@@ -617,6 +618,14 @@ public:
 
     KWaylandServer::AbstractDataSource *primarySelection() const;
     void setPrimarySelection(AbstractDataSource *selection);
+
+    void startDrag(AbstractDataSource *source, SurfaceInterface *sourceSurface, int dragSerial = -1, DragAndDropIcon *dragIcon = nullptr);
+
+    /**
+     * Returns the additional icon attached to the cursor during a drag-and-drop operation.
+     * This function returns @c null if no drag-and-drop is active or no icon has been attached.
+     */
+    DragAndDropIcon *dragIcon() const;
 
     static SeatInterface *get(wl_resource *native);
 
