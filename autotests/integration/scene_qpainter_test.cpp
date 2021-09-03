@@ -146,7 +146,7 @@ void SceneQPainterTest::testWindow()
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
-    QScopedPointer<Surface> s(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> s(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> ss(Test::createXdgToplevelSurface(s.data()));
     QScopedPointer<Pointer> p(Test::waylandSeat()->createPointer());
 
@@ -168,7 +168,7 @@ void SceneQPainterTest::testWindow()
     painter.fillRect(0, 0, 200, 300, Qt::blue);
 
     // now let's set a cursor image
-    QScopedPointer<Surface> cs(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> cs(Test::createSurface());
     QVERIFY(!cs.isNull());
     Test::render(cs.data(), QSize(10, 10), Qt::red);
     p->setCursor(cs.data(), QPoint(5, 5));
@@ -190,7 +190,7 @@ void SceneQPainterTest::testWindowScaled()
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
-    QScopedPointer<Surface> s(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> s(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> ss(Test::createXdgToplevelSurface(s.data()));
     QScopedPointer<Pointer> p(Test::waylandSeat()->createPointer());
     QSignalSpy pointerEnteredSpy(p.data(), &Pointer::entered);
@@ -202,7 +202,7 @@ void SceneQPainterTest::testWindowScaled()
     QVERIFY(frameRenderedSpy.isValid());
 
     // now let's set a cursor image
-    QScopedPointer<Surface> cs(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> cs(Test::createSurface());
     QVERIFY(!cs.isNull());
     Test::render(cs.data(), QSize(10, 10), Qt::red);
 
@@ -241,7 +241,7 @@ void SceneQPainterTest::testCompositorRestart()
     // first create a window
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection());
-    QScopedPointer<Surface> s(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> s(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> ss(Test::createXdgToplevelSurface(s.data()));
     QVERIFY(Test::renderAndWaitForShown(s.data(), QSize(200, 300), Qt::blue));
 

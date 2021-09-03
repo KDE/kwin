@@ -489,7 +489,7 @@ void ScriptedEffectsTest::testGrab()
 
     // create test client
     using namespace KWayland::Client;
-    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
@@ -522,7 +522,7 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindow()
 
     // create test client
     using namespace KWayland::Client;
-    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
@@ -559,7 +559,7 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindowForced()
 
     // create test client
     using namespace KWayland::Client;
-    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
@@ -590,7 +590,7 @@ void ScriptedEffectsTest::testUngrab()
 
     // create test client
     using namespace KWayland::Client;
-    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
@@ -633,7 +633,7 @@ void ScriptedEffectsTest::testRedirect()
 
     // create test client
     using namespace KWayland::Client;
-    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
@@ -711,7 +711,7 @@ void ScriptedEffectsTest::testComplete()
 
     // create test client
     using namespace KWayland::Client;
-    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);

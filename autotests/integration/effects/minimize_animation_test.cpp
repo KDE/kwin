@@ -111,7 +111,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
 
     // Create a panel at the top of the screen.
     const QRect panelRect = QRect(0, 0, 1280, 36);
-    QScopedPointer<Surface> panelSurface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> panelSurface(Test::createSurface());
     QVERIFY(!panelSurface.isNull());
     QScopedPointer<Test::XdgToplevel> panelShellSurface(Test::createXdgToplevelSurface(panelSurface.data()));
     QVERIFY(!panelShellSurface.isNull());
@@ -128,7 +128,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     QCOMPARE(plasmaWindowCreatedSpy.count(), 1);
 
     // Create the test client.
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());

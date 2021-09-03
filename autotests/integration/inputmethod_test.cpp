@@ -111,7 +111,7 @@ void InputMethodTest::testOpenClose()
     QVERIFY(clientAddedSpy.isValid());
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
     QVERIFY(client);
@@ -161,7 +161,7 @@ void InputMethodTest::testOpenClose()
 void InputMethodTest::testEnableDisableV3()
 {
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
     QVERIFY(client);
@@ -198,7 +198,7 @@ void InputMethodTest::testEnableActive()
     QSignalSpy activateSpy(InputMethod::self(), &InputMethod::activeChanged);
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
     QVERIFY(client);
@@ -253,7 +253,7 @@ void InputMethodTest::testHidePanel()
     QVERIFY(clientAddedSpy.wait());
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
     waylandServer()->seat()->setFocusedTextInputSurface(client->surface());
@@ -293,7 +293,7 @@ void InputMethodTest::testSwitchFocusedSurfaces()
     QVERIFY(clientAddedSpy.wait(10000));
 
     QVector<AbstractClient *> clients;
-    QVector<Surface *> surfaces;
+    QVector<KWayland::Client::Surface *> surfaces;
     QVector<Test::XdgToplevel *> toplevels;
     // We create 3 surfaces
     for (int i = 0; i < 3; ++i) {

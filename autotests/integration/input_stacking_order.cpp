@@ -107,7 +107,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     // now create the two windows and make them overlap
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
-    Surface *surface1 = Test::createSurface(Test::waylandCompositor());
+    KWayland::Client::Surface *surface1 = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface1);
     Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1, surface1);
     QVERIFY(shellSurface1);
@@ -116,7 +116,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     AbstractClient *window1 = workspace()->activeClient();
     QVERIFY(window1);
 
-    Surface *surface2 = Test::createSurface(Test::waylandCompositor());
+    KWayland::Client::Surface *surface2 = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface2);
     Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2, surface2);
     QVERIFY(shellSurface2);

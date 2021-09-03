@@ -90,12 +90,12 @@ void TestOutputManagement::testOutputDeviceDisabled()
     // This tests checks that OutputConfiguration::apply aka Platform::requestOutputsChange works as expected
     // when disabling and enabling virtual OutputDevice
 
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     auto size = QSize(200,200);
 
-    QSignalSpy outputEnteredSpy(surface.data(), &Surface::outputEntered);
-    QSignalSpy outputLeftSpy(surface.data(), &Surface::outputLeft);
+    QSignalSpy outputEnteredSpy(surface.data(), &KWayland::Client::Surface::outputEntered);
+    QSignalSpy outputLeftSpy(surface.data(), &KWayland::Client::Surface::outputLeft);
 
     QSignalSpy outputEnabledSpy(kwinApp()->platform(), &Platform::outputEnabled);
     QSignalSpy outputDisabledSpy(kwinApp()->platform(), &Platform::outputDisabled);
@@ -177,12 +177,12 @@ void TestOutputManagement::testOutputDeviceRemoved()
     // This tests checks that OutputConfiguration::apply aka Platform::requestOutputsChange works as expected
     // when removing a virtual OutputDevice
 
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     auto size = QSize(200,200);
 
-    QSignalSpy outputEnteredSpy(surface.data(), &Surface::outputEntered);
-    QSignalSpy outputLeftSpy(surface.data(), &Surface::outputLeft);
+    QSignalSpy outputEnteredSpy(surface.data(), &KWayland::Client::Surface::outputEntered);
+    QSignalSpy outputLeftSpy(surface.data(), &KWayland::Client::Surface::outputLeft);
 
     QSignalSpy outputEnabledSpy(kwinApp()->platform(), &Platform::outputEnabled);
     QSignalSpy outputDisabledSpy(kwinApp()->platform(), &Platform::outputDisabled);

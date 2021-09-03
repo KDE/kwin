@@ -77,7 +77,7 @@ void TestIdleInhibition::testInhibit()
     QVERIFY(inhibitedSpy.isValid());
 
     // now create window
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
 
     // now create inhibition on window
@@ -123,7 +123,7 @@ void TestIdleInhibition::testDontInhibitWhenNotOnCurrentDesktop()
     QVERIFY(inhibitedSpy.isValid());
 
     // Create the test client.
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
@@ -180,7 +180,7 @@ void TestIdleInhibition::testDontInhibitWhenMinimized()
     QVERIFY(inhibitedSpy.isValid());
 
     // Create the test client.
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
@@ -227,7 +227,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QVERIFY(inhibitedSpy.isValid());
 
     // Create the test client.
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
@@ -259,7 +259,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
 
     // Unmap the client.
     surface->attachBuffer(Buffer::Ptr());
-    surface->commit(Surface::CommitFlag::None);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(Test::waitForWindowDestroyed(client));
 
     // The surface is no longer visible, so the compositor doesn't have to honor the
@@ -268,7 +268,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QCOMPARE(inhibitedSpy.count(), 2);
 
     // Tell the compositor that we want to map the surface.
-    surface->commit(Surface::CommitFlag::None);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // The compositor will respond with a configure event.
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -310,7 +310,7 @@ void TestIdleInhibition::testDontInhibitWhenLeftCurrentDesktop()
     QVERIFY(inhibitedSpy.isValid());
 
     // Create the test client.
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());

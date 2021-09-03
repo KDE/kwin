@@ -83,7 +83,7 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
 
     using namespace KWayland::Client;
     // create a window
-    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);

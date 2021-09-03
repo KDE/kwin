@@ -110,7 +110,7 @@ void DesktopSwitchingAnimationTest::testSwitchDesktops()
     // The Fade Desktop effect will do nothing if there are no clients to fade,
     // so we have to create a dummy test client.
     using namespace KWayland::Client;
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());

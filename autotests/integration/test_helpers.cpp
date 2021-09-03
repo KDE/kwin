@@ -77,7 +77,7 @@ XdgShell::~XdgShell()
     destroy();
 }
 
-XdgSurface::XdgSurface(XdgShell *shell, Surface *surface, QObject *parent)
+XdgSurface::XdgSurface(XdgShell *shell, KWayland::Client::Surface *surface, QObject *parent)
     : QObject(parent)
     , QtWayland::xdg_surface(shell->get_xdg_surface(*surface))
     , m_surface(surface)
@@ -89,7 +89,7 @@ XdgSurface::~XdgSurface()
     destroy();
 }
 
-Surface *XdgSurface::surface() const
+KWayland::Client::Surface *XdgSurface::surface() const
 {
     return m_surface;
 }
@@ -258,14 +258,14 @@ public:
     ~MockInputMethod();
 
     AbstractClient *client() const { return m_client; }
-    Surface *inputPanelSurface() const { return m_inputSurface; }
+    KWayland::Client::Surface *inputPanelSurface() const { return m_inputSurface; }
 
 protected:
     void zwp_input_method_v1_activate(struct ::zwp_input_method_context_v1 *context) override;
     void zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context) override;
 
 private:
-    QPointer<Surface> m_inputSurface;
+    QPointer<KWayland::Client::Surface> m_inputSurface;
     QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
     QPointer<AbstractClient> m_client;
 };
@@ -275,7 +275,7 @@ AbstractClient *inputPanelClient()
     return s_waylandConnection.inputMethodV1->client();
 }
 
-Surface *inputPanelSurface()
+KWayland::Client::Surface *inputPanelSurface()
 {
     return s_waylandConnection.inputMethodV1->inputPanelSurface();
 }
@@ -692,18 +692,18 @@ bool waitForWaylandKeyboard()
     return hasKeyboardSpy.wait();
 }
 
-void render(Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format)
+void render(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format)
 {
     QImage img(size, format);
     img.fill(color);
     render(surface, img);
 }
 
-void render(Surface *surface, const QImage &img)
+void render(KWayland::Client::Surface *surface, const QImage &img)
 {
     surface->attachBuffer(s_waylandConnection.shm->createBuffer(img));
     surface->damage(QRect(QPoint(0, 0), img.size()));
-    surface->commit(Surface::CommitFlag::None);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
 }
 
 AbstractClient *waitForWaylandWindowShown(int timeout)
@@ -718,7 +718,7 @@ AbstractClient *waitForWaylandWindowShown(int timeout)
     return clientAddedSpy.first().first().value<AbstractClient *>();
 }
 
-AbstractClient *renderAndWaitForShown(Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
+AbstractClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
 {
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     if (!clientAddedSpy.isValid()) {
@@ -739,7 +739,7 @@ void flushWaylandConnection()
     }
 }
 
-Surface *createSurface(QObject *parent)
+KWayland::Client::Surface *createSurface(QObject *parent)
 {
     if (!s_waylandConnection.compositor) {
         return nullptr;
@@ -752,7 +752,7 @@ Surface *createSurface(QObject *parent)
     return s;
 }
 
-SubSurface *createSubSurface(Surface *surface, Surface *parentSurface, QObject *parent)
+SubSurface *createSubSurface(KWayland::Client::Surface *surface, KWayland::Client::Surface *parentSurface, QObject *parent)
 {
     if (!s_waylandConnection.subCompositor) {
         return nullptr;
@@ -765,7 +765,7 @@ SubSurface *createSubSurface(Surface *surface, Surface *parentSurface, QObject *
     return s;
 }
 
-LayerSurfaceV1 *createLayerSurfaceV1(Surface *surface, const QString &scope, Output *output, LayerShellV1::layer layer)
+LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface, const QString &scope, Output *output, LayerShellV1::layer layer)
 {
     LayerShellV1 *shell = s_waylandConnection.layerShellV1;
     if (!shell) {
@@ -784,7 +784,7 @@ LayerSurfaceV1 *createLayerSurfaceV1(Surface *surface, const QString &scope, Out
     return shellSurface;
 }
 
-QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(Surface *surface, Output *output)
+QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface, Output *output)
 {
     if (!s_waylandConnection.inputPanelV1) {
         qWarning() << "Unable to create the input panel surface. The interface input_panel global is not bound";
@@ -807,13 +807,13 @@ static void waitForConfigured(XdgSurface *shellSurface)
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface, &XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.isValid());
 
-    shellSurface->surface()->commit(Surface::CommitFlag::None);
+    shellSurface->surface()->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     shellSurface->ack_configure(surfaceConfigureRequestedSpy.last().first().toUInt());
 }
 
-XdgToplevel *createXdgToplevelSurface(Surface *surface, QObject *parent, CreationSetup configureMode)
+XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent, CreationSetup configureMode)
 {
     XdgShell *shell = s_waylandConnection.xdgShell;
 
@@ -844,7 +844,7 @@ XdgPositioner *createXdgPositioner()
     return new XdgPositioner(shell);
 }
 
-XdgPopup *createXdgPopupSurface(Surface *surface, XdgSurface *parentSurface, XdgPositioner *positioner,
+XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface, XdgPositioner *positioner,
                                 QObject *parent, CreationSetup configureMode)
 {
     XdgShell *shell = s_waylandConnection.xdgShell;

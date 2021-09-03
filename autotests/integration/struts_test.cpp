@@ -162,10 +162,10 @@ void StrutsTest::testWaylandStruts()
 
     QFETCH(QVector<QRect>, windowGeometries);
     // create the panels
-    QHash<Surface*, AbstractClient *> clients;
+    QHash<KWayland::Client::Surface*, AbstractClient *> clients;
     for (auto it = windowGeometries.constBegin(), end = windowGeometries.constEnd(); it != end; it++) {
         const QRect windowGeometry = *it;
-        Surface *surface = Test::createSurface(m_compositor);
+        KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
         Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface, Test::CreationSetup::CreateOnly);
         PlasmaShellSurface *plasmaSurface = m_plasmaShell->createSurface(surface, surface);
         plasmaSurface->setPosition(windowGeometry.topLeft());
@@ -173,7 +173,7 @@ void StrutsTest::testWaylandStruts()
 
         QSignalSpy configureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         QVERIFY(configureRequestedSpy.isValid());
-        surface->commit(Surface::CommitFlag::None);
+        surface->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(configureRequestedSpy.wait());
 
         // map the window
@@ -228,7 +228,7 @@ void StrutsTest::testMoveWaylandPanel()
     // this test verifies that repositioning a Wayland panel updates the client area
     using namespace KWayland::Client;
     const QRect windowGeometry(0, 1000, 1280, 24);
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     plasmaSurface->setPosition(windowGeometry.topLeft());
@@ -236,7 +236,7 @@ void StrutsTest::testMoveWaylandPanel()
 
     QSignalSpy configureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(configureRequestedSpy.isValid());
-    surface->commit(Surface::CommitFlag::None);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(configureRequestedSpy.wait());
 
     // map the window
@@ -280,7 +280,7 @@ void StrutsTest::testWaylandMobilePanel()
 
     // create first top panel
     const QRect windowGeometry(0, 0, 1280, 60);
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     plasmaSurface->setPosition(windowGeometry.topLeft());
@@ -288,7 +288,7 @@ void StrutsTest::testWaylandMobilePanel()
 
     QSignalSpy configureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(configureRequestedSpy.isValid());
-    surface->commit(Surface::CommitFlag::None);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(configureRequestedSpy.wait());
 
     // map the window
@@ -308,7 +308,7 @@ void StrutsTest::testWaylandMobilePanel()
 
     // create another bottom panel
     const QRect windowGeometry2(0, 874, 1280, 150);
-    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data(), surface2.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<PlasmaShellSurface> plasmaSurface2(m_plasmaShell->createSurface(surface2.data()));
     plasmaSurface2->setPosition(windowGeometry2.topLeft());
@@ -316,7 +316,7 @@ void StrutsTest::testWaylandMobilePanel()
 
     QSignalSpy configureRequestedSpy2(shellSurface2->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(configureRequestedSpy2.isValid());
-    surface2->commit(Surface::CommitFlag::None);
+    surface2->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(configureRequestedSpy2.wait());
 
     // map the window

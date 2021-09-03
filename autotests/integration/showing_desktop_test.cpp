@@ -57,10 +57,10 @@ void ShowingDesktopTest::cleanup()
 
 void ShowingDesktopTest::testRestoreFocus()
 {
-    QScopedPointer<Surface> surface1(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
     auto client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
-    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data()));
     auto client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client1 != client2);
@@ -79,7 +79,7 @@ void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
 {
     // first create a desktop window
 
-    QScopedPointer<Surface> desktopSurface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> desktopSurface(Test::createSurface());
     QVERIFY(!desktopSurface.isNull());
     QScopedPointer<Test::XdgToplevel> desktopShellSurface(Test::createXdgToplevelSurface(desktopSurface.data()));
     QVERIFY(!desktopSurface.isNull());
@@ -92,10 +92,10 @@ void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
     QVERIFY(desktop->isDesktop());
 
     // now create some windows
-    QScopedPointer<Surface> surface1(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
     auto client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
-    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data()));
     auto client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client1 != client2);

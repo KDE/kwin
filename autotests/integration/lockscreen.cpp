@@ -155,7 +155,7 @@ AbstractClient *LockScreenTest::showWindow()
     if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
         return nullptr;
 
-    Surface *surface = Test::createSurface(m_compositor);
+    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
     VERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     VERIFY(shellSurface);

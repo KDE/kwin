@@ -318,7 +318,7 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     QVERIFY(slideManager);
 
     // create Wayland window
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface);
     QScopedPointer<Slide> slide(slideManager->createSlide(surface.data()));
     slide->setLocation(Slide::Location::Left);

@@ -229,7 +229,7 @@ void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
     QVERIFY(plasmaWindowCreatedSpy.isValid());
 
     // first create the parent window
-    QScopedPointer<Surface> parentSurface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> parentSurface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> parentShellSurface(Test::createXdgToplevelSurface(parentSurface.data()));
     AbstractClient *parentClient = Test::renderAndWaitForShown(parentSurface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(parentClient);
@@ -242,7 +242,7 @@ void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
     positioner->set_anchor_rect(0, 0, 10, 10);
     positioner->set_anchor(Test::XdgPositioner::anchor_bottom_right);
     positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
-    QScopedPointer<Surface> popupSurface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> popupSurface(Test::createSurface());
     QScopedPointer<Test::XdgPopup> popupShellSurface(Test::createXdgPopupSurface(popupSurface.data(), parentShellSurface->xdgSurface(), positioner.data()));
     AbstractClient *popupClient = Test::renderAndWaitForShown(popupSurface.data(), QSize(10, 10), Qt::blue);
     QVERIFY(popupClient);
@@ -296,7 +296,7 @@ void PlasmaWindowTest::testDestroyedButNotUnmapped()
     QVERIFY(plasmaWindowCreatedSpy.isValid());
 
     // first create the parent window
-    QScopedPointer<Surface> parentSurface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> parentSurface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> parentShellSurface(Test::createXdgToplevelSurface(parentSurface.data()));
     // map that window
     Test::render(parentSurface.data(), QSize(100, 50), Qt::blue);

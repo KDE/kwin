@@ -119,7 +119,7 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
 
     // Create the test client.
     using namespace KWayland::Client;
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
@@ -163,7 +163,7 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
 
     // Create the main window.
     using namespace KWayland::Client;
-    QScopedPointer<Surface> mainWindowSurface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> mainWindowSurface(Test::createSurface());
     QVERIFY(!mainWindowSurface.isNull());
     QScopedPointer<Test::XdgToplevel> mainWindowShellSurface(Test::createXdgToplevelSurface(mainWindowSurface.data()));
     QVERIFY(!mainWindowShellSurface.isNull());
@@ -180,7 +180,7 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
     QVERIFY(!effect->isActive());
 
     // Create a popup, it should not be animated.
-    QScopedPointer<Surface> popupSurface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> popupSurface(Test::createSurface());
     QVERIFY(!popupSurface.isNull());
     QScopedPointer<Test::XdgPositioner> positioner(Test::createXdgPositioner());
     QVERIFY(positioner);

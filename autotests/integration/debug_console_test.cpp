@@ -310,7 +310,7 @@ void DebugConsoleTest::testWaylandClient()
 
     // create the Surface and ShellSurface
     using namespace KWayland::Client;
-    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface->isValid());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
@@ -370,7 +370,7 @@ void DebugConsoleTest::testWaylandClient()
     QVERIFY(rowsRemovedSpy.isValid());
 
     surface->attachBuffer(Buffer::Ptr());
-    surface->commit(Surface::CommitFlag::None);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(rowsRemovedSpy.wait());
 
     QCOMPARE(rowsRemovedSpy.count(), 1);
