@@ -12,7 +12,6 @@
 #include "effects.h"
 #include "scene.h"
 #include "screens.h"
-#include "scripting_logging.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 
@@ -24,7 +23,7 @@
 #include <QQuickWindow>
 #include <QSGTextureProvider>
 
-namespace KWin
+namespace KWin::ScriptingModels::V2
 {
 class ThumbnailTextureProvider : public QSGTextureProvider
 {
@@ -116,7 +115,7 @@ ThumbnailItemBase::~ThumbnailItemBase()
             window()->scheduleRenderJob(new ThumbnailTextureProviderCleanupJob(m_provider),
                                         QQuickWindow::AfterSynchronizingStage);
         } else {
-            qCCritical(KWIN_SCRIPTING) << "Can't destroy thumbnail texture provider because window is null";
+            qCritical() << "Can't destroy thumbnail texture provider because window is null";
         }
     }
 }
@@ -247,19 +246,19 @@ QSGNode *ThumbnailItemBase::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
 void ThumbnailItemBase::setSaturation(qreal saturation)
 {
     Q_UNUSED(saturation)
-    qCWarning(KWIN_SCRIPTING) << "ThumbnailItem.saturation is removed. Use a shader effect to change saturation";
+    qWarning() << "ThumbnailItem.saturation is removed. Use a shader effect to change saturation";
 }
 
 void ThumbnailItemBase::setBrightness(qreal brightness)
 {
     Q_UNUSED(brightness)
-    qCWarning(KWIN_SCRIPTING) << "ThumbnailItem.brightness is removed. Use a shader effect to change brightness";
+    qWarning() << "ThumbnailItem.brightness is removed. Use a shader effect to change brightness";
 }
 
 void ThumbnailItemBase::setClipTo(QQuickItem *clip)
 {
     Q_UNUSED(clip)
-    qCWarning(KWIN_SCRIPTING) << "ThumbnailItem.clipTo is removed and it has no replacements";
+    qWarning() << "ThumbnailItem.clipTo is removed and it has no replacements";
 }
 
 WindowThumbnailItem::WindowThumbnailItem(QQuickItem *parent)

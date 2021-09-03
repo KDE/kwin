@@ -17,6 +17,9 @@ namespace KWin
 class AbstractClient;
 class GLRenderTarget;
 class GLTexture;
+
+namespace ScriptingModels::V2
+{
 class ThumbnailTextureProvider;
 
 class ThumbnailItemBase : public QQuickItem
@@ -142,4 +145,5 @@ private:
     int m_desktop = 1;
 };
 
+}
 } // namespace KWin

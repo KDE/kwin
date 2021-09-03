@@ -16,9 +16,9 @@
 #include "workspace_wrapper.h"
 #include "screenedgeitem.h"
 #include "scripting_logging.h"
-#include "thumbnailitem.h"
 
 #include "v2/clientmodel.h"
+#include "v2/thumbnailitem.h"
 #include "v3/clientmodel.h"
 #include "v3/virtualdesktopmodel.h"
 
@@ -634,8 +634,8 @@ KWin::Scripting::Scripting(QObject *parent)
 
 void KWin::Scripting::init()
 {
-    qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
-    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
+    qmlRegisterType<ScriptingModels::V2::DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
+    qmlRegisterType<ScriptingModels::V2::WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
     qmlRegisterType<DBusCall>("org.kde.kwin", 2, 0, "DBusCall");
     qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 2, 0, "ScreenEdgeItem");
     qmlRegisterType<ScriptingModels::V2::ClientModel>();
@@ -645,7 +645,7 @@ void KWin::Scripting::init()
     qmlRegisterType<ScriptingModels::V2::ClientModelByScreenAndActivity>("org.kde.kwin", 2, 1, "ClientModelByScreenAndActivity");
     qmlRegisterType<ScriptingModels::V2::ClientFilterModel>("org.kde.kwin", 2, 0, "ClientFilterModel");
 
-    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnailItem");
+    qmlRegisterType<ScriptingModels::V2::WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnailItem");
     qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
     qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 3, 0, "ScreenEdgeItem");
     qmlRegisterType<ScriptingModels::V3::ClientModel>("org.kde.kwin", 3, 0, "ClientModel");
