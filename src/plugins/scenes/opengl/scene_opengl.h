@@ -212,6 +212,7 @@ public:
     explicit SceneOpenGLShadow(Toplevel *toplevel);
     ~SceneOpenGLShadow() override;
 
+    QSharedPointer<GLTexture> texture() const override { return m_texture; }
     GLTexture *shadowTexture() {
         return m_texture.data();
     }

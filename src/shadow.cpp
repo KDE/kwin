@@ -385,4 +385,9 @@ void Shadow::setShadowElement(const QPixmap &shadow, Shadow::ShadowElements elem
     m_shadowElements[element] = shadow;
 }
 
+QSharedPointer<GLTexture> Shadow::texture() const
+{
+    return nullptr;
+}
+
 } // namespace

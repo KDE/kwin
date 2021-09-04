@@ -27,6 +27,7 @@ class ShadowInterface;
 
 namespace KWin {
 
+class GLTexture;
 class Toplevel;
 
 /**
@@ -109,6 +110,8 @@ public:
     QMargins offset() const {
         return m_offset;
     }
+
+    virtual QSharedPointer<GLTexture> texture() const;
 
 Q_SIGNALS:
     void offsetChanged();
