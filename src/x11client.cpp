@@ -2162,7 +2162,7 @@ void X11Client::setClientShown(bool shown)
 
 void X11Client::getMotifHints()
 {
-    const bool wasClosable = m_motif.close();
+    const bool wasClosable = isCloseable();
     const bool wasNoBorder = m_motif.noBorder();
     if (m_managed) // only on property change, initial read is prefetched
         m_motif.fetch();
@@ -2179,7 +2179,7 @@ void X11Client::getMotifHints()
 
     // mminimize; - Ignore, bogus - E.g. shading or sending to another desktop is "minimizing" too
     // mmaximize; - Ignore, bogus - Maximizing is basically just resizing
-    const bool closabilityChanged = wasClosable != m_motif.close();
+    const bool closabilityChanged = wasClosable != isCloseable();
     if (isManaged())
         updateDecoration(true);   // Check if noborder state has changed
     if (closabilityChanged) {
@@ -2395,6 +2395,9 @@ void X11Client::updateAllowedActions(bool force)
         }
         if ((allowed_actions & NET::ActionMax) != (old_allowed_actions & NET::ActionMax)) {
             Q_EMIT maximizeableChanged(allowed_actions & NET::ActionMax);
+        }
+        if ((allowed_actions & NET::ActionClose) != (old_allowed_actions & NET::ActionClose)) {
+            Q_EMIT closeableChanged(allowed_actions & NET::ActionClose);
         }
     }
 }
@@ -4701,6 +4704,7 @@ bool X11Client::hasStrut() const
 void X11Client::applyWindowRules()
 {
     AbstractClient::applyWindowRules();
+    updateAllowedActions();
     setBlockingCompositing(info->isBlockingCompositing());
 }
 
