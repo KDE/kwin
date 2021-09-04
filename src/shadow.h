@@ -112,6 +112,7 @@ public:
     }
 
     virtual QSharedPointer<GLTexture> texture() const;
+    WindowQuadList geometry() const;
 
 Q_SIGNALS:
     void offsetChanged();
