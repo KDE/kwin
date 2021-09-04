@@ -18,6 +18,7 @@
 
 #include <kcmodule.h>
 #include <kservice.h>
+#include <KWindowSystem/KWindowSystem>
 
 #include <algorithm>
 #include <functional>
@@ -90,6 +91,10 @@ KWinCompositingKCM::KWinCompositingKCM(QWidget *parent, const QVariantList &args
 
     connect(this, &KWinCompositingKCM::defaultsIndicatorsVisibleChanged, this, &KWinCompositingKCM::updateUnmanagedItemStatus);
 
+    if (KWindowSystem::isPlatformWayland()) {
+        m_form.kcfg_HiddenPreviews->setVisible(false);
+        m_form.label_HiddenPreviews->setVisible(false);
+    }
     init();
 }
 
