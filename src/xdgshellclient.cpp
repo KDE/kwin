@@ -1206,6 +1206,7 @@ void XdgToplevelClient::initialize()
         setKeepAbove(rules()->checkKeepAbove(keepAbove(), true));
         setKeepBelow(rules()->checkKeepBelow(keepBelow(), true));
         setShortcut(rules()->checkShortcut(shortcut().toString(), true));
+        setNoBorder(rules()->checkNoBorder(noBorder(), true));
 
         // Don't place the client if its position is set by a rule.
         if (rules()->checkPosition(invalidPoint, true) != invalidPoint) {
