@@ -6,7 +6,7 @@ X-KDE-ServiceTypes=KCModule
 X-KDE-Library=kcm_kwin_scripts
 X-KDE-ParentApp=kcontrol
 
-X-KDE-Keywords=kwin script
+X-KDE-Keywords=kwin script,plugins,window manager
 X-KDE-Keywords[ar]=سكربت كوين
 X-KDE-Keywords[az]=kwin skripti
 X-KDE-Keywords[bs]=kwin skripta

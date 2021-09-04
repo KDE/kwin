@@ -65,5 +65,5 @@ Comment[uk]=Вибір віртуальної клавіатури
 Comment[vi]=Chọn bàn phím ảo để dùng
 Comment[x-test]=xxSelect which virtual keyboard to usexx
 Comment[zh_CN]=选择要使用的虚拟键盘
-
+X-KDE-Keywords=software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods
 Categories=Qt;KDE;

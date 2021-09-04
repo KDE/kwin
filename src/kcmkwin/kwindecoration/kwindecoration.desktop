@@ -109,7 +109,7 @@ Comment[x-test]=xxConfigure window titlebars and bordersxx
 Comment[zh_CN]=配置窗口标题栏和边框
 Comment[zh_TW]=設定視窗的標題列和邊框
 
-X-KDE-Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
+X-KDE-Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin
 X-KDE-Keywords[az]=kwin, pəncərə,menecer,çərçivə,üslub,mövzu,görünüş,qat,düymə,kənar,kwm, dekorasiya
 X-KDE-Keywords[bs]=kwin,prozor,upravitelj,granica,stil,tema,izgled,osjećati,izgled,dugme,držati,ivica,kwm,dekoracija
 X-KDE-Keywords[ca]=kwin,finestra,gestor,vora,estil,tema,aspecte,comportament,disposició,botó,gestió,vora,kwm,decoració
