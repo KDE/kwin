@@ -784,7 +784,7 @@ void Workspace::addShellClient(AbstractClient *client)
         if (client->isRequestedFullScreen()) {
             placementDone = true;
         }
-        if (client->maximizeMode() == MaximizeMode::MaximizeFull) {
+        if (client->requestedMaximizeMode() == MaximizeMode::MaximizeFull) {
             placementDone = true;
         }
         if (client->rules()->checkPosition(invalidPoint, true) != invalidPoint) {
