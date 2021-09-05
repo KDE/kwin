@@ -369,6 +369,7 @@ XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)
         setOnActivities({a->current()});
     }
 #endif
+    move(workspace()->activeOutput()->geometry().center());
 
     connect(shellSurface, &XdgToplevelInterface::windowTitleChanged,
             this, &XdgToplevelClient::handleWindowTitleChanged);
