@@ -69,7 +69,7 @@ FocusScope {
 
                 KWinComponents.WindowThumbnailItem {
                     id: thumbSource
-                    wId: thumb.client.internalId
+                    sourceId: thumb.client.internalId
                     state: dragHandler.active ? "drag" : "normal"
 
                     Drag.active: dragHandler.active

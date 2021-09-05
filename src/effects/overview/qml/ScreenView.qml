@@ -37,7 +37,7 @@ FocusScope {
 
         KWinComponents.WindowThumbnailItem {
             id: windowThumbnail
-            wId: model.client.internalId
+            sourceId: model.client.internalId
             x: model.client.x - targetScreen.geometry.x
             y: model.client.y - targetScreen.geometry.y
             width: model.client.width
@@ -190,7 +190,7 @@ FocusScope {
 
         KWinComponents.WindowThumbnailItem {
             id: windowThumbnail
-            wId: model.client.internalId
+            sourceId: model.client.internalId
             x: model.client.x - targetScreen.geometry.x
             y: model.client.y - targetScreen.geometry.y
             width: model.client.width

@@ -22,7 +22,7 @@ Item {
         }
 
         KWinComponents.WindowThumbnailItem {
-            wId: model.client.internalId
+            sourceId: model.client.internalId
             x: model.client.x - targetScreen.geometry.x
             y: model.client.y - targetScreen.geometry.y
             width: model.client.width
