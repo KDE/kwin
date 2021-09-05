@@ -62,11 +62,12 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void updateNeedsSave();
-    void parseArguments(const QStringList &args);
 
 private:
     int editIndex() const;
+    void parseArguments(const QStringList &args);
     void createRuleFromProperties();
+    void raiseWindow();
 
     QModelIndex findRuleWithProperties(const QVariantMap &info, bool wholeApp) const;
     void fillSettingsFromProperties(RuleSettings *settings, const QVariantMap &info, bool wholeApp) const;

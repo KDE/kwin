@@ -11,11 +11,14 @@
 #include <QDBusAbstractAdaptor>
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QQuickItem>
+#include <QX11Info>
 
 #include <KAboutData>
 #include <KConfig>
 #include <KLocalizedString>
 #include <KPluginFactory>
+#include <KWindowSystem>
 
 namespace KWin
 {
@@ -43,7 +46,11 @@ KCMKWinRules::KCMKWinRules(QObject *parent, const QVariantList &arguments)
 
     QDBusConnection::sessionBus().registerService(QLatin1String("org.kde.KWin.KCMKWinRules"));
     QDBusConnection::sessionBus().registerObject(QLatin1String("/KCMKWinRules"), m_dbusAdaptor, QDBusConnection::ExportAllSlots);
-    connect(m_dbusAdaptor, &KWinRulesDBusAdaptor::argumentsUpdated, this, &KCMKWinRules::parseArguments);
+
+    connect(m_dbusAdaptor, &KWinRulesDBusAdaptor::argumentsUpdated, this, [this](const QStringList &arguments) {
+        parseArguments(arguments);
+        raiseWindow();
+    });
 
     connect(m_rulesModel, &RulesModel::descriptionChanged, this, [this] {
         if (m_editIndex.isValid()) {
@@ -490,6 +497,31 @@ void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVar
             settings->setWmclassmatch(Rules::ExactMatch);
         }
     }
+}
+
+void KCMKWinRules::raiseWindow()
+{
+    if (QX11Info::isPlatformX11()) {
+        QByteArray startupId = qgetenv("DESKTOP_STARTUP_ID");
+        if (startupId.isEmpty()) {
+            startupId = QX11Info::nextStartupId();
+        }
+        if(!startupId.isEmpty()) {
+            QX11Info::setNextStartupId(startupId);
+        }
+        qDebug() << "Trying to activate on startupId" << startupId;
+    }
+
+    QWindow *window = mainUi()->window();
+
+    if (QX11Info::isPlatformX11()) {
+    //    KStartupInfo::setNewStartupId(window, QX11Info::nextStartupId());
+    } else if (KWindowSystem::isPlatformWayland()) {
+        KWindowSystem::setCurrentXdgActivationToken(qEnvironmentVariable("XDG_ACTIVATION_TOKEN"));
+        KWindowSystem::activateWindow(window->winId());
+    }
+
+    window->raise();
 }
 
 void KWinRulesDBusAdaptor::updateArguments(const QStringList &arguments)
