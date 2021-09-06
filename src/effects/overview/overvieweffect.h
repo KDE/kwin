@@ -70,6 +70,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void activate();
     void deactivate();
+    void quickDeactivate();
     void toggle();
 
 private:

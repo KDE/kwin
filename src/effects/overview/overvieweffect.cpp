@@ -261,6 +261,11 @@ void OverviewEffect::deactivate()
     m_shutdownTimer->start(animationDuration());
 }
 
+void OverviewEffect::quickDeactivate()
+{
+    m_shutdownTimer->start(0);
+}
+
 void OverviewEffect::realDeactivate()
 {
     qDeleteAll(m_screenViews);

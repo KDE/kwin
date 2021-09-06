@@ -65,12 +65,40 @@ FocusScope {
                 }
 
                 visible: opacity > 0
-                z: client.stackingOrder
+                z: dragHandler.active ? 100 : client.stackingOrder
 
                 KWinComponents.WindowThumbnailItem {
                     id: thumbSource
-                    anchors.fill: parent
                     wId: thumb.client.internalId
+                    state: dragHandler.active ? "drag" : "normal"
+
+                    Drag.active: dragHandler.active
+                    Drag.source: thumb.client
+
+                    states: [
+                        State {
+                            name: "normal"
+                            PropertyChanges {
+                                target: thumbSource
+                                x: 0
+                                y: 0
+                                width: thumb.width
+                                height: thumb.height
+                            }
+                        },
+                        State {
+                            name: "drag"
+                            PropertyChanges {
+                                target: thumbSource
+                                x: -dragHandler.centroid.pressPosition.x * dragHandler.targetScale +
+                                        dragHandler.centroid.position.x
+                                y: -dragHandler.centroid.pressPosition.y * dragHandler.targetScale +
+                                        dragHandler.centroid.position.y
+                                width: cell.width * dragHandler.targetScale
+                                height: cell.height * dragHandler.targetScale
+                            }
+                        }
+                    ]
                 }
 
                 PlasmaCore.IconItem {
@@ -81,6 +109,7 @@ FocusScope {
                     anchors.horizontalCenter: thumbSource.horizontalCenter
                     anchors.bottom: thumbSource.bottom
                     anchors.bottomMargin: -height / 4
+                    visible: !dragHandler.active
                 }
 
                 PC3.Label {
@@ -92,6 +121,7 @@ FocusScope {
                     text: thumb.client.caption
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
+                    visible: !dragHandler.active
                     PlasmaCore.ColorScope.colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
 
                     layer.enabled: true
@@ -157,7 +187,7 @@ FocusScope {
                 ]
 
                 component TweenBehavior : Behavior {
-                    enabled: heap.animationEnabled
+                    enabled: heap.animationEnabled && !dragHandler.active
                     NumberAnimation {
                         duration: effect.animationDuration
                         easing.type: Easing.InOutCubic
@@ -199,6 +229,27 @@ FocusScope {
                     onTapped: thumb.client.closeWindow()
                 }
 
+                DragHandler {
+                    id: dragHandler
+                    target: null
+
+                    readonly property double targetScale: {
+                        const localPressPosition = centroid.scenePressPosition.y - expoLayout.Kirigami.ScenePosition.y;
+                        if (localPressPosition == 0) {
+                            return 0.1
+                        } else {
+                            const localPosition = centroid.scenePosition.y - expoLayout.Kirigami.ScenePosition.y;
+                            return Math.max(0.1, Math.min(localPosition / localPressPosition, 1))
+                        }
+                    }
+
+                    onActiveChanged: {
+                        if (!active) {
+                            thumbSource.Drag.drop();
+                        }
+                    }
+                }
+
                 PC3.Button {
                     LayoutMirroring.enabled: Qt.application.layoutDirection == Qt.RightToLeft
                     icon.name: "window-close"
@@ -208,7 +259,7 @@ FocusScope {
                     anchors.topMargin: PlasmaCore.Units.largeSpacing
                     implicitWidth: PlasmaCore.Units.iconSizes.medium
                     implicitHeight: implicitWidth
-                    visible: (hovered || hoverHandler.hovered) && thumb.client.closeable
+                    visible: (hovered || hoverHandler.hovered) && thumb.client.closeable && !dragHandler.active
                     onClicked: thumb.client.closeWindow();
                 }
 
