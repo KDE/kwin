@@ -1150,9 +1150,6 @@ void X11Client::createDecoration(const QRect& oldgeom)
     resize(adjustedSize());
     updateDecorationInputShape();
     maybeCreateX11DecorationRenderer();
-    if (Compositor::compositing()) {
-        discardWindowPixmap();
-    }
     Q_EMIT geometryShapeChanged(this, oldgeom);
 }
 
@@ -1165,8 +1162,6 @@ void X11Client::destroyDecoration()
         maybeDestroyX11DecorationRenderer();
         resize(adjustedSize());
         move(grav);
-        if (Compositor::compositing())
-            discardWindowPixmap();
         if (!isZombie()) {
             Q_EMIT geometryShapeChanged(this, oldgeom);
         }
