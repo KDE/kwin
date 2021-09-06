@@ -13,7 +13,7 @@
 
 namespace KWaylandServer
 {
-static const int s_version = 4;
+static const int s_version = 5;
 
 class CompositorInterfacePrivate : public QtWaylandServer::wl_compositor
 {

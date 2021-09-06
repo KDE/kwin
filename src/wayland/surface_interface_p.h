@@ -138,6 +138,7 @@ protected:
     void surface_set_buffer_transform(Resource *resource, int32_t transform) override;
     void surface_set_buffer_scale(Resource *resource, int32_t scale) override;
     void surface_damage_buffer(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
+    void surface_offset(Resource *resource, int32_t x, int32_t y) override;
 
 private:
     QMetaObject::Connection constrainsOneShotConnection;

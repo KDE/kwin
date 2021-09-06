@@ -238,9 +238,16 @@ void SurfaceInterfacePrivate::surface_destroy(Resource *resource)
 
 void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_resource *buffer, int32_t x, int32_t y)
 {
-    Q_UNUSED(resource)
+    if (wl_resource_get_version(resource->handle) >= WL_SURFACE_OFFSET_SINCE_VERSION) {
+        if (x != 0 || y != 0) {
+            wl_resource_post_error(resource->handle, error_invalid_offset, "wl_surface.attach offset must be 0");
+            return;
+        }
+    } else {
+        pending.offset = QPoint(x, y);
+    }
+
     pending.bufferIsSet = true;
-    pending.offset = QPoint(x, y);
     if (!buffer) {
         // got a null buffer, deletes content in next frame
         pending.buffer = nullptr;
@@ -324,6 +331,12 @@ void SurfaceInterfacePrivate::surface_damage_buffer(Resource *resource, int32_t 
 {
     Q_UNUSED(resource)
     pending.bufferDamage |= QRect(x, y, width, height);
+}
+
+void SurfaceInterfacePrivate::surface_offset(Resource *resource, int32_t x, int32_t y)
+{
+    Q_UNUSED(resource)
+    pending.offset = QPoint(x, y);
 }
 
 SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource *resource)
