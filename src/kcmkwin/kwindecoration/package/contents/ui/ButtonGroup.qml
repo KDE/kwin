@@ -4,18 +4,19 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 import QtQuick 2.7
+import org.kde.kirigami 2.4 as Kirigami
 import org.kde.kwin.private.kdecoration 1.0 as KDecoration
 
 ListView {
     id: view
     property string key
     property bool dragging: false
-    property int iconSize: units.iconSizes.small
+    property int iconSize: Kirigami.Units.iconSizes.small
     orientation: ListView.Horizontal
     interactive: false
-    spacing: units.smallSpacing
+    spacing: Kirigami.Units.smallSpacing
     implicitHeight: iconSize
-    implicitWidth: count * (iconSize + units.smallSpacing) - Math.min(1, count) * units.smallSpacing
+    implicitWidth: count * (iconSize + Kirigami.Units.smallSpacing) - Math.min(1, count) * Kirigami.Units.smallSpacing
     delegate: Item {
         width: view.iconSize
         height: view.iconSize
@@ -50,14 +51,14 @@ ListView {
         }
     }
     add: Transition {
-        NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: units.longDuration/2 }
-        NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: units.longDuration/2 }
+        NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: Kirigami.Units.longDuration/2 }
+        NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: Kirigami.Units.longDuration/2 }
     }
     move: Transition {
-        NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: units.longDuration/2 }
-        NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: units.longDuration/2 }
+        NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: Kirigami.Units.longDuration/2 }
+        NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: Kirigami.Units.longDuration/2 }
     }
     displaced: Transition {
-        NumberAnimation { properties: "x,y"; duration: units.longDuration; easing.type: Easing.OutBounce }
+        NumberAnimation { properties: "x,y"; duration: Kirigami.Units.longDuration; easing.type: Easing.OutBounce }
     }
 }
