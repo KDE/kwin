@@ -314,7 +314,7 @@ bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const Q
     }
     const QSize &s = buffer ? buffer->size() : QSize(64, 64);
     int ret = drmModeSetCursor2(m_gpu->fd(), m_crtc->id(), buffer ? buffer->handle() : 0, s.width(), s.height(), hotspot.x(), hotspot.y());
-    if (ret == ENOTSUP) {
+    if (ret == -ENOTSUP) {
         // for NVIDIA case that does not support drmModeSetCursor2
         ret = drmModeSetCursor(m_gpu->fd(), m_crtc->id(), buffer ? buffer->handle() : 0, s.width(), s.height());
     }
