@@ -50,7 +50,7 @@ AnimationEffect::AnimationEffect() : d_ptr(new AnimationEffectPrivate())
         s_clock.start();
     /* this is the same as the QTimer::singleShot(0, SLOT(init())) kludge
      * defering the init and esp. the connection to the windowClosed slot */
-    QMetaObject::invokeMethod( this, "init", Qt::QueuedConnection );
+    QMetaObject::invokeMethod(this, &AnimationEffect::init, Qt::QueuedConnection);
 }
 
 AnimationEffect::~AnimationEffect()

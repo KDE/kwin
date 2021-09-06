@@ -765,10 +765,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     // need to delay performing the window operation as we need to have the
     // user actions menu closed before we destroy the decoration. Otherwise Qt crashes
     qRegisterMetaType<Options::WindowOperation>();
-    QMetaObject::invokeMethod(workspace(), "performWindowOperation",
-                              Qt::QueuedConnection,
-                              Q_ARG(KWin::AbstractClient*, c),
-                              Q_ARG(Options::WindowOperation, op));
+    QMetaObject::invokeMethod(workspace(), std::bind(&Workspace::performWindowOperation, workspace(), c, op), Qt::QueuedConnection);
 }
 
 void UserActionsMenu::slotToggleOnActivity(QAction *action)
@@ -1191,7 +1188,7 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
         c->performMouseCommand(Options::MouseUnrestrictedResize, Cursors::self()->mouse()->pos());
         break;
     case Options::CloseOp:
-        QMetaObject::invokeMethod(c, "closeWindow", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(c, &AbstractClient::closeWindow, Qt::QueuedConnection);
         break;
     case Options::MaximizeOp:
         c->maximize(c->maximizeMode() == MaximizeFull

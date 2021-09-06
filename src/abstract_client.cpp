@@ -2334,7 +2334,7 @@ void AbstractClient::createDecoration(const QRect &oldGeometry)
 {
     KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
     if (decoration) {
-        QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(decoration, QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
         connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
         connect(decoration, &KDecoration2::Decoration::bordersChanged,
                 this, &AbstractClient::updateDecorationInputShape);

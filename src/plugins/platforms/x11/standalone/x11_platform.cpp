@@ -292,7 +292,7 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
                 }, Qt::DirectConnection);
         } else {
             Q_ASSERT(m_openGLFreezeProtection);
-            QMetaObject::invokeMethod(m_openGLFreezeProtection, "start", Qt::QueuedConnection);
+            QMetaObject::invokeMethod(m_openGLFreezeProtection, QOverload<>::of(&QTimer::start), Qt::QueuedConnection);
         }
         break;
     case OpenGLSafePoint::PostInit:
@@ -301,7 +301,7 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
         // Deliberately continue with PostFrame
         Q_FALLTHROUGH();
     case OpenGLSafePoint::PostFrame:
-        QMetaObject::invokeMethod(m_openGLFreezeProtection, "stop", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(m_openGLFreezeProtection, &QTimer::stop, Qt::QueuedConnection);
         break;
     case OpenGLSafePoint::PostLastGuardedFrame:
         m_openGLFreezeProtection->deleteLater();

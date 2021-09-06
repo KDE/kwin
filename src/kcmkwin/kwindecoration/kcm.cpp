@@ -93,7 +93,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
         .connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
             this, SLOT(reloadKWinSettings()));
 
-    QMetaObject::invokeMethod(m_themesModel, "init", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(m_themesModel, &KDecoration2::Configuration::DecorationsModel::init, Qt::QueuedConnection);
 }
 
 KWinDecorationSettings *KCMKWinDecoration::settings() const
@@ -103,7 +103,7 @@ KWinDecorationSettings *KCMKWinDecoration::settings() const
 
 void KCMKWinDecoration::reloadKWinSettings()
 {
-    QMetaObject::invokeMethod(m_themesModel, "init", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(m_themesModel, &KDecoration2::Configuration::DecorationsModel::init, Qt::QueuedConnection);
 }
 
 void KCMKWinDecoration::load()

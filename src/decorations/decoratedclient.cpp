@@ -176,7 +176,7 @@ DELEGATE(requestMinimize, minimize)
 
 void DecoratedClientImpl::requestClose()
 {
-    QMetaObject::invokeMethod(m_client, "closeWindow", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(m_client, &AbstractClient::closeWindow, Qt::QueuedConnection);
 }
 
 QColor DecoratedClientImpl::color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const
