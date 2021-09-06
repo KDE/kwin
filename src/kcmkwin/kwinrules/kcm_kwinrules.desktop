@@ -124,3 +124,10 @@ Comment[zh_CN]=特定窗口行为
 Comment[zh_TW]=個別視窗行為
 
 X-KDE-Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications
+X-KDE-Keywords[ca]=mida,posició,estat,comportament de la finestra,finestres,específic,solucions alternatives,recorda,regles,regles de finestres,apps,aplicacions
+X-KDE-Keywords[es]=tamaño,posición,estado,comportamiento de las ventanas,ventanas,específicos,soluciones,recordatorio,reglas,reglas de la ventana,aplicaciones,apps
+X-KDE-Keywords[nl]=grootte,positie,status,venstergedrag,vensters,specifiek,er omheen gewerkt,herinneren,regels,vensterregels,toepassingen
+X-KDE-Keywords[pl]=rozmiar,pozycja,stan,zachowanie okna,okna,specyficzne,obejścia,zapamiętaj,zasady,zasady okien,apki,aplikacje
+X-KDE-Keywords[sv]=storlek,position,tillstånd,fönsterbeteende,fönster,specifik,kom ihåg,regler,fönsterregler,program
+X-KDE-Keywords[uk]=size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications,розмір,розташування,місце,стан,поведінка,вікно,вікна,поведінка вікон,окрема,специфічна,окремо,запам’ятати,пам’ять,правило,правила,правила вікон,програми,застосунки
+X-KDE-Keywords[x-test]=xxsizexx,xxpositionxx,xxstatexx,xxwindow behaviorxx,xxwindowsxx,xxspecificxx,xxworkaroundsxx,xxrememberxx,xxrulesxx,xxwindow rulesxx,xxappsxx,xxapplicationsxx
