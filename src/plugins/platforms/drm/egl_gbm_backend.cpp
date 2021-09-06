@@ -394,7 +394,7 @@ bool EglGbmBackend::initBufferConfigs()
 
     qCDebug(KWIN_DRM) << "EGL buffer configs count:" << count;
 
-    uint32_t fallbackFormat;
+    uint32_t fallbackFormat = 0;
     EGLConfig fallbackConfig = nullptr;
 
     // Loop through all configs, choosing the first one that has suitable format.
