@@ -88,7 +88,7 @@ void MoveResizeWindowTest::initTestCase()
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    QCOMPARE(outputs.count(), 2);
+    QCOMPARE(outputs.count(), 1);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
 }
 
