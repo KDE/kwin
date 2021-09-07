@@ -187,6 +187,8 @@ private:
     KSharedConfig::Ptr m_config;
 };
 
+template <typename Loader, typename QueueType>
+class EffectLoadQueue;
 /**
  * @brief Helper class to queue the loading of Effects.
  *
@@ -214,6 +216,10 @@ public:
         }
 protected Q_SLOTS:
     virtual void dequeue() = 0;
+
+private:
+    template <typename Loader, typename QueueType>
+    friend class EffectLoadQueue;
 };
 
 template <typename Loader, typename QueueType>
