@@ -175,7 +175,7 @@ private:
 };
 
 /**
- * @class The OutputDeviceModeV2Interface class
+ * @class OutputDeviceModeV2Interface
  *
  * Represents an output device mode.
  *
