@@ -5,6 +5,7 @@
             {
                 "Email": "notmart@gmail.com",
                 "Name": "Marco Martin",
+                "Name[ar]": "Marco Martin",
                 "Name[az]": "Marco Martin",
                 "Name[ca]": "Marco Martin",
                 "Name[cs]": "Marco Martin",
@@ -28,6 +29,7 @@
             }
         ],
         "Name": "KWin Window Switcher",
+        "Name[ar]": "مبدل نوافذ كوين",
         "Name[az]": "KWin pəncərə dəyişdiricisi",
         "Name[ca]": "Commutador de finestres del KWin",
         "Name[cs]": "Přepínač oken KWin",

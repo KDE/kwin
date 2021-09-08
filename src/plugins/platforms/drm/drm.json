@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Render through drm node.",
+        "Description[ar]": "التصيير عن طريق drm.",
         "Description[az]": "DRM vasitəsi ilə formalaşdırmaq.",
         "Description[ca@valencia]": "Renderitza mitjançant el node DRM.",
         "Description[ca]": "Renderitza mitjançant el node del DRM.",
@@ -42,6 +43,7 @@
         "Description[zh_TW]": "透過 drm 節點成像。",
         "Id": "KWinWaylandDrmBackend",
         "Name": "drm",
+        "Name[ar]": "drm",
         "Name[az]": "drm",
         "Name[ca@valencia]": "DRM",
         "Name[ca]": "DRM",

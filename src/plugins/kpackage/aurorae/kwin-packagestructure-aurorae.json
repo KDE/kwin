@@ -5,6 +5,7 @@
             {
                 "Email": "demitriusbelai@gmail.com",
                 "Name": "Demitrius Belai",
+                "Name[ar]": "Demitrius Belai",
                 "Name[az]": "Demitrius Belai",
                 "Name[ca]": "Demitrius Belai",
                 "Name[cs]": "Demitrius Belai",
@@ -28,6 +29,7 @@
             }
         ],
         "Name": "KWin Aurorae",
+        "Name[ar]": "أورورا كوين",
         "Name[az]": "KWin Aurorae",
         "Name[ca]": "Aurorae del KWin",
         "Name[cs]": "KWin Aurorae",

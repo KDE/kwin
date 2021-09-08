@@ -73,5 +73,7 @@ X-KDE-Keywords[nl]=softwaretoetsenbord,virtueel toetsenbord,aanraaktoetsenbord,t
 X-KDE-Keywords[pl]=klawiatura programowa,klawiatura wirtualna,klawiatura dotykowa,klawiatura ekranowa, sposoby wprowadzania
 X-KDE-Keywords[sv]=programvarutangentbord,virtuellt tangentbord,pektangentbord,tangentbord på skärmen,inmatningsmetoder
 X-KDE-Keywords[uk]=software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,програмна клавіатура,віртуальна клавіатура,сенсорна клавіатура,екранна клавіатура,способи введення,методи введення
+X-KDE-Keywords[vi]=software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,bàn phím phần mềm,bàn phím ảo,bàn phím cảm ứng,bàn phím trên màn hình,phương thức nhập
 X-KDE-Keywords[x-test]=xxsoftware keyboardxx,xxvirtual keyboardxx,xxtouch keyboardxx,xxon screen keyboardxx,xxinput methodsxx
+X-KDE-Keywords[zh_CN]=software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,软件键盘,虚拟键盘,屏幕键盘,,屏上键盘,输入方式,输入法
 Categories=Qt;KDE;
