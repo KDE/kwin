@@ -307,8 +307,10 @@ void DrmOutput::updateTransform(Transform transform)
 {
     setTransformInternal(transform);
     const auto planeTransform = outputToPlaneTransform(transform);
-    if (!qEnvironmentVariableIsSet("KWIN_DRM_SW_ROTATIONS_ONLY")
-        && !m_pipeline->setTransformation(planeTransform)) {
+    static bool valid;
+    // If not set or wrong value, assume KWIN_DRM_SW_ROTATIONS_ONLY=1 until DRM transformations are reliable
+    static int envOnlySoftwareRotations = qEnvironmentVariableIntValue("KWIN_DRM_SW_ROTATIONS_ONLY", &valid) != 0;
+    if (valid && !envOnlySoftwareRotations && !m_pipeline->setTransformation(planeTransform)) {
         qCDebug(KWIN_DRM) << "setting transformation to" << planeTransform << "failed!";
         // just in case, if we had any rotation before, clear it
         m_pipeline->setTransformation(DrmPlane::Transformation::Rotate0);
