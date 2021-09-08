@@ -11,7 +11,7 @@
     <kcfgfile arg="true"/>
     <group name="Effect-Overview">
         <entry name="LayoutMode" type="Int">
-            <default>2</default>
+            <default>1</default>
         </entry>
 
         <entry name="BorderActivate" type="IntList" />

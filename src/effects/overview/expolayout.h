@@ -25,8 +25,7 @@ class ExpoLayout : public QQuickItem
 public:
     enum LayoutMode : uint {
         LayoutClosest = 0,
-        LayoutKompose = 1,
-        LayoutNatural = 2,
+        LayoutNatural = 1,
     };
     Q_ENUM(LayoutMode)
 
@@ -59,7 +58,6 @@ Q_SIGNALS:
 
 private:
     void calculateWindowTransformationsClosest();
-    void calculateWindowTransformationsKompose();
     void calculateWindowTransformationsNatural();
 
     QList<ExpoCell *> m_cells;

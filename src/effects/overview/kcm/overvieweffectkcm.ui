@@ -32,11 +32,6 @@
      </item>
      <item>
       <property name="text">
-       <string>Kompose</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
        <string>Natural</string>
       </property>
      </item>

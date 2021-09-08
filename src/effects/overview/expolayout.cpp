@@ -282,9 +282,6 @@ void ExpoLayout::updatePolish()
         case LayoutClosest:
             calculateWindowTransformationsClosest();
             break;
-        case LayoutKompose:
-            calculateWindowTransformationsKompose();
-            break;
         case LayoutNatural:
             calculateWindowTransformationsNatural();
             break;
@@ -423,156 +420,9 @@ void ExpoLayout::calculateWindowTransformationsClosest()
     }
 }
 
-static inline qreal aspectRatio(ExpoCell *cell)
-{
-    return cell->naturalWidth() / qreal(cell->naturalHeight());
-}
-
-static inline int widthForHeight(ExpoCell *cell, int height)
-{
-    return int((height / qreal(cell->naturalHeight())) * cell->naturalWidth());
-}
-
 static inline int heightForWidth(ExpoCell *cell, int width)
 {
     return int((width / qreal(cell->naturalWidth())) * cell->naturalHeight());
-}
-
-void ExpoLayout::calculateWindowTransformationsKompose()
-{
-    const QRect availRect = QRect(0, 0, width(), height());
-    std::sort(m_cells.begin(), m_cells.end(), [](const ExpoCell *a, const ExpoCell *b) {
-        return a->persistentKey() < b->persistentKey();
-    });   // The location of the windows should not depend on the stacking order
-
-    // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
-    int rows, columns;
-    qreal parentRatio = availRect.width() / qreal(availRect.height());
-    // Use more columns than rows when parent's width > parent's height
-    if (parentRatio > 1) {
-        columns = std::ceil(std::sqrt(qreal(m_cells.count())));
-        rows = std::ceil(qreal(m_cells.count()) / columns);
-    } else {
-        rows = std::ceil(sqrt(qreal(m_cells.count())));
-        columns = std::ceil(qreal(m_cells.count()) / rows);
-    }
-    //qCDebug(KWINEFFECTS) << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
-
-    // Calculate width & height
-    int w = (availRect.width() - (columns + 1) * m_spacing) / columns;
-    int h = (availRect.height() - (rows + 1) * m_spacing) / rows;
-
-    QList<ExpoCell *>::iterator it(m_cells.begin());
-    QList<QRect> geometryRects;
-    QList<int> maxRowHeights;
-    // Process rows
-    for (int i = 0; i < rows; ++i) {
-        int xOffsetFromLastCol = 0;
-        int maxHeightInRow = 0;
-        // Process columns
-        for (int j = 0; j < columns; ++j) {
-            ExpoCell *cell;
-
-            // Check for end of List
-            if (it == m_cells.end()) {
-                break;
-            }
-            cell = *it;
-
-            // Calculate width and height of widget
-            qreal ratio = aspectRatio(cell);
-
-            int widgetWidth = 100;
-            int widgetHeight = 100;
-            int usableWidth = w;
-            int usableHeight = h;
-
-            // use width of two boxes if there is no right neighbour
-            if (cell == m_cells.last() && j != columns - 1) {
-                usableWidth = 2 * w;
-            }
-            ++it; // We need access to the neighbour in the following
-            // expand if right neighbour has ratio < 1
-            if (j != columns - 1 && it != m_cells.end() && aspectRatio(*it) < 1) {
-                int addW = w - widthForHeight(*it, h);
-                if (addW > 0) {
-                    usableWidth = w + addW;
-                }
-            }
-
-            if (ratio == -1) {
-                widgetWidth = w;
-                widgetHeight = h;
-            } else {
-                qreal widthByHeight = widthForHeight(cell, usableHeight);
-                qreal heightByWidth = heightForWidth(cell, usableWidth);
-                if ((ratio >= 1.0 && heightByWidth <= usableHeight) ||
-                        (ratio < 1.0 && widthByHeight > usableWidth)) {
-                    widgetWidth = usableWidth;
-                    widgetHeight = (int)heightByWidth;
-                } else if ((ratio < 1.0 && widthByHeight <= usableWidth) ||
-                           (ratio >= 1.0 && heightByWidth > usableHeight)) {
-                    widgetHeight = usableHeight;
-                    widgetWidth = (int)widthByHeight;
-                }
-                // Don't upscale large-ish windows
-                if (widgetWidth > cell->naturalWidth() && (cell->naturalWidth() > 300 || cell->naturalHeight() > 300)) {
-                    widgetWidth = cell->naturalWidth();
-                    widgetHeight = cell->naturalHeight();
-                }
-            }
-
-            // Set the Widget's size
-
-            int alignmentXoffset = 0;
-            int alignmentYoffset = 0;
-            if (i == 0 && h > widgetHeight) {
-                alignmentYoffset = h - widgetHeight;
-            }
-            if (j == 0 && w > widgetWidth) {
-                alignmentXoffset = w - widgetWidth;
-            }
-            QRect geom(availRect.x() + j *(w + m_spacing) + m_spacing + alignmentXoffset + xOffsetFromLastCol,
-                       availRect.y() + i *(h + m_spacing) + m_spacing + alignmentYoffset,
-                       widgetWidth, widgetHeight);
-            geometryRects.append(geom);
-
-            // Set the x offset for the next column
-            if (alignmentXoffset == 0) {
-                xOffsetFromLastCol += widgetWidth - w;
-            }
-            if (maxHeightInRow < widgetHeight) {
-                maxHeightInRow = widgetHeight;
-            }
-        }
-        maxRowHeights.append(maxHeightInRow);
-    }
-
-    int topOffset = 0;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-            const int pos = i * columns + j;
-            if (pos >= m_cells.count()) {
-                break;
-            }
-
-            ExpoCell *cell = m_cells[pos];
-            QRect target = geometryRects[pos];
-            target.setY(target.y() + topOffset);
-            // @Marrtin: any idea what this is good for?
-//             DataHash::iterator winData = m_windowData.find(window);
-//             if (winData != m_windowData.end())
-//                 winData->slot = pos;
-
-            cell->setX(target.x());
-            cell->setY(target.y());
-            cell->setWidth(target.width());
-            cell->setHeight(target.height());
-        }
-        if (maxRowHeights[i] - h > 0) {
-            topOffset += maxRowHeights[i] - h;
-        }
-    }
 }
 
 static bool isOverlappingAny(ExpoCell *w, const QHash<ExpoCell *, QRect> &targets, const QRegion &border, int spacing)
