@@ -44,6 +44,7 @@ WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
     m_turnOffTimer.setInterval(dimAnimationTime());
     connect(&m_turnOffTimer, &QTimer::timeout, this, [this] {
         setDpmsModeInternal(DpmsMode::Off);
+        Q_EMIT m_backend->outputDisabled(this);
     });
 }
 
@@ -101,6 +102,7 @@ void WaylandOutput::setDpmsMode(KWin::AbstractWaylandOutput::DpmsMode mode)
 
         if (mode != dpmsMode()) {
             setDpmsModeInternal(mode);
+            Q_EMIT m_backend->outputEnabled(this);
             Q_EMIT wakeUp();
         }
     }

@@ -847,8 +847,13 @@ Outputs WaylandBackend::outputs() const
 
 Outputs WaylandBackend::enabledOutputs() const
 {
-    // all outputs are enabled
-    return m_outputs;
+    Outputs ret;
+    for (const auto &output : m_outputs) {
+        if (output->dpmsMode() == AbstractWaylandOutput::DpmsMode::On) {
+            ret += output;
+        }
+    }
+    return ret;
 }
 
 void WaylandBackend::addConfiguredOutput(WaylandOutput *output)
