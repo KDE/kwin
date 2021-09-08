@@ -26,13 +26,11 @@
 #include <KWayland/Client/shadow.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/output.h>
-#include <KWayland/Client/outputdevice.h>
 #include <KWayland/Client/subcompositor.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/textinput.h>
 #include <KWayland/Client/appmenu.h>
-#include <KWayland/Client/outputmanagement.h>
 #include <KWaylandServer/display.h>
 
 //screenlocker
@@ -236,10 +234,10 @@ static struct {
     PlasmaWindowManagement *windowManagement = nullptr;
     PointerConstraints *pointerConstraints = nullptr;
     Registry *registry = nullptr;
-    OutputManagement* outputManagement = nullptr;
+    WaylandOutputManagementV2 *outputManagementV2 = nullptr;
     QThread *thread = nullptr;
     QVector<Output*> outputs;
-    QVector<OutputDevice*> outputDevices;
+    QVector<WaylandOutputDeviceV2 *> outputDevicesV2;
     IdleInhibitManagerV1 *idleInhibitManagerV1 = nullptr;
     AppMenuManager *appMenu = nullptr;
     XdgDecorationManagerV1 *xdgDecorationManagerV1 = nullptr;
@@ -363,22 +361,6 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
         });
     });
 
-    if (flags.testFlag(AdditionalWaylandInterface::OutputDevice)) {
-        QObject::connect(registry, &KWayland::Client::Registry::outputDeviceAnnounced,
-                [=](quint32 name, quint32 version) {
-
-            OutputDevice *device = registry->createOutputDevice(name, version);
-            s_waylandConnection.outputDevices << device;
-
-            QObject::connect(device, &OutputDevice::removed, [=]() {
-                s_waylandConnection.outputDevices.removeOne(device);
-            });
-            QObject::connect(device, &OutputDevice::destroyed, [=]() {
-                s_waylandConnection.outputDevices.removeOne(device);
-            });
-        });
-    }
-
     QObject::connect(registry, &Registry::interfaceAnnounced, [=](const QByteArray &interface, quint32 name, quint32 version) {
         if (flags & AdditionalWaylandInterface::InputMethodV1) {
             if (interface == QByteArrayLiteral("zwp_input_method_v1")) {
@@ -415,6 +397,34 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             if (interface == zwp_idle_inhibit_manager_v1_interface.name) {
                 s_waylandConnection.idleInhibitManagerV1 = new IdleInhibitManagerV1();
                 s_waylandConnection.idleInhibitManagerV1->init(*registry, name, version);
+                return;
+            }
+        }
+        if (flags & AdditionalWaylandInterface::OutputDeviceV2) {
+            if (interface == kde_output_device_v2_interface.name) {
+                WaylandOutputDeviceV2 *device = new WaylandOutputDeviceV2(name);
+                device->init(*registry, name, version);
+
+                s_waylandConnection.outputDevicesV2 << device;
+
+                QObject::connect(device, &WaylandOutputDeviceV2::destroyed, [=]() {
+                    s_waylandConnection.outputDevicesV2.removeOne(device);
+                    device->deleteLater();
+                });
+
+                QObject::connect(registry, &KWayland::Client::Registry::interfaceRemoved, device, [name, device](const quint32 &interfaceName) {
+                    if (name == interfaceName) {
+                        s_waylandConnection.outputDevicesV2.removeOne(device);
+                        device->deleteLater();
+                    }
+                });
+
+                return;
+            }
+        }
+        if (flags & AdditionalWaylandInterface::OutputManagementV2) {
+            if (interface == kde_output_management_v2_interface.name) {
+                s_waylandConnection.outputManagementV2 = new WaylandOutputManagementV2(*registry, name, version);
                 return;
             }
         }
@@ -462,13 +472,6 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
         s_waylandConnection.decoration = registry->createServerSideDecorationManager(registry->interface(Registry::Interface::ServerSideDecorationManager).name,
                                                                                     registry->interface(Registry::Interface::ServerSideDecorationManager).version);
         if (!s_waylandConnection.decoration->isValid()) {
-            return false;
-        }
-    }
-    if (flags.testFlag(AdditionalWaylandInterface::OutputManagement)) {
-        s_waylandConnection.outputManagement = registry->createOutputManagement(registry->interface(Registry::Interface::OutputManagement).name,
-                                                                                registry->interface(Registry::Interface::OutputManagement).version);
-        if (!s_waylandConnection.outputManagement->isValid()) {
             return false;
         }
     }
@@ -549,8 +552,8 @@ void destroyWaylandConnection()
     s_waylandConnection.inputPanelV1 = nullptr;
     delete s_waylandConnection.layerShellV1;
     s_waylandConnection.layerShellV1 = nullptr;
-    delete s_waylandConnection.outputManagement;
-    s_waylandConnection.outputManagement = nullptr;
+    delete s_waylandConnection.outputManagementV2;
+    s_waylandConnection.outputManagementV2 = nullptr;
     if (s_waylandConnection.thread) {
         QSignalSpy spy(s_waylandConnection.connection, &QObject::destroyed);
         s_waylandConnection.connection->deleteLater();
@@ -564,7 +567,7 @@ void destroyWaylandConnection()
         s_waylandConnection.connection = nullptr;
     }
     s_waylandConnection.outputs.clear();
-    s_waylandConnection.outputDevices.clear();
+    s_waylandConnection.outputDevicesV2.clear();
 }
 
 ConnectionThread *waylandConnection()
@@ -622,9 +625,9 @@ AppMenuManager* waylandAppMenuManager()
     return s_waylandConnection.appMenu;
 }
 
-OutputManagement *waylandOutputManagement()
+KWin::Test::WaylandOutputManagementV2 *waylandOutputManagementV2()
 {
-    return s_waylandConnection.outputManagement;
+    return s_waylandConnection.outputManagementV2;
 }
 
 TextInputManager *waylandTextInputManager()
@@ -642,9 +645,9 @@ QVector<KWayland::Client::Output *> waylandOutputs()
     return s_waylandConnection.outputs;
 }
 
-QVector<OutputDevice *> waylandOutputDevices()
+QVector<KWin::Test::WaylandOutputDeviceV2 *> waylandOutputDevicesV2()
 {
-    return s_waylandConnection.outputDevices;
+    return s_waylandConnection.outputDevicesV2;
 }
 
 bool waitForWaylandSurface(AbstractClient *client)
@@ -968,6 +971,304 @@ void initWaylandWorkspace()
     QSignalSpy workspaceInitializedSpy(waylandServer(), &WaylandServer::initialized);
     waylandServer()->initWorkspace();
     QVERIFY(workspaceInitializedSpy.count() || workspaceInitializedSpy.wait());
+}
+
+WaylandOutputManagementV2::WaylandOutputManagementV2(struct ::wl_registry *registry, int id, int version)
+    : QObject()
+    , QtWayland::kde_output_management_v2()
+{
+    init(registry, id, version);
+}
+
+WaylandOutputConfigurationV2 *WaylandOutputManagementV2::createConfiguration()
+{
+    return new WaylandOutputConfigurationV2(create_configuration());
+}
+
+WaylandOutputConfigurationV2::WaylandOutputConfigurationV2(struct ::kde_output_configuration_v2 *object)
+    : QObject()
+    , QtWayland::kde_output_configuration_v2()
+{
+    init(object);
+}
+
+void WaylandOutputConfigurationV2::kde_output_configuration_v2_applied()
+{
+    Q_EMIT applied();
+}
+void WaylandOutputConfigurationV2::kde_output_configuration_v2_failed()
+{
+    Q_EMIT failed();
+}
+
+WaylandOutputDeviceV2Mode::WaylandOutputDeviceV2Mode(struct ::kde_output_device_mode_v2 *object)
+    : QtWayland::kde_output_device_mode_v2(object)
+{
+}
+
+WaylandOutputDeviceV2Mode::~WaylandOutputDeviceV2Mode()
+{
+    kde_output_device_mode_v2_destroy(object());
+}
+
+void WaylandOutputDeviceV2Mode::kde_output_device_mode_v2_size(int32_t width, int32_t height)
+{
+    m_size = QSize(width, height);
+}
+
+void WaylandOutputDeviceV2Mode::kde_output_device_mode_v2_refresh(int32_t refresh)
+{
+    m_refreshRate = refresh;
+}
+
+void WaylandOutputDeviceV2Mode::kde_output_device_mode_v2_preferred()
+{
+    m_preferred = true;
+}
+
+void WaylandOutputDeviceV2Mode::kde_output_device_mode_v2_removed()
+{
+    Q_EMIT removed();
+}
+
+int WaylandOutputDeviceV2Mode::refreshRate() const
+{
+    return m_refreshRate;
+}
+
+QSize WaylandOutputDeviceV2Mode::size() const
+{
+    return m_size;
+}
+
+bool WaylandOutputDeviceV2Mode::preferred() const
+{
+    return m_preferred;
+}
+
+bool WaylandOutputDeviceV2Mode::operator==(const WaylandOutputDeviceV2Mode &other)
+{
+    return m_size == other.m_size && m_refreshRate == other.m_refreshRate && m_preferred == other.m_preferred;
+}
+
+WaylandOutputDeviceV2Mode *WaylandOutputDeviceV2Mode::get(struct ::kde_output_device_mode_v2 *object)
+{
+    auto mode = QtWayland::kde_output_device_mode_v2::fromObject(object);
+    return static_cast<WaylandOutputDeviceV2Mode *>(mode);
+}
+
+WaylandOutputDeviceV2::WaylandOutputDeviceV2(int id)
+    : QObject()
+    , kde_output_device_v2()
+    , m_id(id)
+{
+}
+
+WaylandOutputDeviceV2::~WaylandOutputDeviceV2()
+{
+    qDeleteAll(m_modes);
+
+    kde_output_device_v2_destroy(object());
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_geometry(int32_t x,
+                                                          int32_t y,
+                                                          int32_t physical_width,
+                                                          int32_t physical_height,
+                                                          int32_t subpixel,
+                                                          const QString &make,
+                                                          const QString &model,
+                                                          int32_t transform)
+{
+    m_pos = QPoint(x, y);
+    m_physicalSize = QSize(physical_width, physical_height);
+    m_subpixel = subpixel;
+    m_manufacturer = make;
+    m_model = model;
+    m_transform = transform;
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_current_mode(struct ::kde_output_device_mode_v2 *mode)
+{
+    auto m = WaylandOutputDeviceV2Mode::get(mode);
+
+    if (*m == *m_mode) {
+        // unchanged
+        return;
+    }
+    m_mode = m;
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_mode(struct ::kde_output_device_mode_v2 *mode)
+{
+    WaylandOutputDeviceV2Mode *m = new WaylandOutputDeviceV2Mode(mode);
+    // last mode sent is the current one
+    m_mode = m;
+    m_modes.append(m);
+
+    connect(m, &WaylandOutputDeviceV2Mode::removed, this, [this, m]() {
+        m_modes.removeOne(m);
+        if (m_mode == m) {
+            if (!m_modes.isEmpty()) {
+                m_mode = m_modes.first();
+            } else {
+                // was last mode
+                qFatal("KWaylandBackend: no output modes available anymore, this seems like a compositor bug");
+            }
+        }
+
+        delete m;
+    });
+}
+
+QString WaylandOutputDeviceV2::modeId() const
+{
+    return QString::number(m_modes.indexOf(m_mode));
+}
+
+WaylandOutputDeviceV2Mode *WaylandOutputDeviceV2::deviceModeFromId(const int modeId) const
+{
+    return m_modes.at(modeId);
+}
+
+QString WaylandOutputDeviceV2::modeName(const WaylandOutputDeviceV2Mode *m) const
+{
+    return QString::number(m->size().width()) + QLatin1Char('x') + QString::number(m->size().height()) + QLatin1Char('@')
+        + QString::number(qRound(m->refreshRate() / 1000.0));
+}
+
+QString WaylandOutputDeviceV2::name() const
+{
+    return QStringLiteral("%1 %2").arg(m_manufacturer, m_model);
+}
+
+QDebug operator<<(QDebug dbg, const WaylandOutputDeviceV2 *output)
+{
+    dbg << "WaylandOutput(Id:" << output->id() << ", Name:" << QString(output->manufacturer() + QLatin1Char(' ') + output->model()) << ")";
+    return dbg;
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_done()
+{
+    Q_EMIT done();
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_scale(wl_fixed_t factor)
+{
+    m_factor = wl_fixed_to_double(factor);
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_edid(const QString &edid)
+{
+    m_edid = QByteArray::fromBase64(edid.toUtf8());
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_enabled(int32_t enabled)
+{
+    if (m_enabled != enabled) {
+        m_enabled = enabled;
+        Q_EMIT enabledChanged();
+    }
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_uuid(const QString &uuid)
+{
+    m_uuid = uuid;
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_serial_number(const QString &serialNumber)
+{
+    m_serialNumber = serialNumber;
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_eisa_id(const QString &eisaId)
+{
+    m_eisaId = eisaId;
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_capabilities(uint32_t flags)
+{
+    m_flags = flags;
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_overscan(uint32_t overscan)
+{
+    m_overscan = overscan;
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_vrr_policy(uint32_t vrr_policy)
+{
+    m_vrr_policy = vrr_policy;
+}
+
+void WaylandOutputDeviceV2::kde_output_device_v2_rgb_range(uint32_t rgb_range)
+{
+    m_rgbRange = rgb_range;
+}
+
+QByteArray WaylandOutputDeviceV2::edid() const
+{
+    return m_edid;
+}
+
+bool WaylandOutputDeviceV2::enabled() const
+{
+    return m_enabled;
+}
+
+int WaylandOutputDeviceV2::id() const
+{
+    return m_id;
+}
+
+qreal WaylandOutputDeviceV2::scale() const
+{
+    return m_factor;
+}
+
+QString WaylandOutputDeviceV2::manufacturer() const
+{
+    return m_manufacturer;
+}
+
+QString WaylandOutputDeviceV2::model() const
+{
+    return m_model;
+}
+
+QPoint WaylandOutputDeviceV2::globalPosition() const
+{
+    return m_pos;
+}
+
+QSize WaylandOutputDeviceV2::pixelSize() const
+{
+    return m_mode->size();
+}
+
+int WaylandOutputDeviceV2::refreshRate() const
+{
+    return m_mode->refreshRate();
+}
+
+uint32_t WaylandOutputDeviceV2::vrrPolicy() const
+{
+    return m_vrr_policy;
+}
+
+uint32_t WaylandOutputDeviceV2::overscan() const
+{
+    return m_overscan;
+}
+
+uint32_t WaylandOutputDeviceV2::capabilities() const
+{
+    return m_flags;
+}
+
+uint32_t WaylandOutputDeviceV2::rgbRange() const
+{
+    return m_rgbRange;
 }
 
 }

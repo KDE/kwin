@@ -19,6 +19,8 @@
 #include "qwayland-text-input-unstable-v3.h"
 #include "qwayland-xdg-decoration-unstable-v1.h"
 #include "qwayland-xdg-shell.h"
+#include "qwayland-kde-output-device-v2.h"
+#include "qwayland-kde-output-management-v2.h"
 
 namespace KWayland
 {
@@ -38,9 +40,7 @@ class ShmPool;
 class SubCompositor;
 class SubSurface;
 class Surface;
-class OutputManagement;
 class TextInputManager;
-class OutputDevice;
 }
 }
 
@@ -260,6 +260,139 @@ public:
     ~IdleInhibitorV1() override;
 };
 
+class WaylandOutputConfigurationV2 : public QObject, public QtWayland::kde_output_configuration_v2
+{
+    Q_OBJECT
+public:
+    WaylandOutputConfigurationV2(struct ::kde_output_configuration_v2 *object);
+
+Q_SIGNALS:
+    void applied();
+    void failed();
+
+protected:
+    void kde_output_configuration_v2_applied() override;
+    void kde_output_configuration_v2_failed() override;
+};
+
+class WaylandOutputManagementV2 : public QObject, public QtWayland::kde_output_management_v2
+{
+    Q_OBJECT
+public:
+    WaylandOutputManagementV2(struct ::wl_registry *registry, int id, int version);
+
+    WaylandOutputConfigurationV2 *createConfiguration();
+};
+
+class WaylandOutputDeviceV2Mode : public QObject, public QtWayland::kde_output_device_mode_v2
+{
+    Q_OBJECT
+
+public:
+    WaylandOutputDeviceV2Mode(struct ::kde_output_device_mode_v2 *object);
+    ~WaylandOutputDeviceV2Mode() override;
+
+    int refreshRate() const;
+    QSize size() const;
+    bool preferred() const;
+
+    bool operator==(const WaylandOutputDeviceV2Mode &other);
+
+    static WaylandOutputDeviceV2Mode *get(struct ::kde_output_device_mode_v2 *object);
+
+Q_SIGNALS:
+    void removed();
+
+protected:
+    void kde_output_device_mode_v2_size(int32_t width, int32_t height) override;
+    void kde_output_device_mode_v2_refresh(int32_t refresh) override;
+    void kde_output_device_mode_v2_preferred() override;
+    void kde_output_device_mode_v2_removed() override;
+
+private:
+    int m_refreshRate = 60000;
+    QSize m_size;
+    bool m_preferred = false;
+};
+
+class WaylandOutputDeviceV2 : public QObject, public QtWayland::kde_output_device_v2
+{
+    Q_OBJECT
+
+public:
+    WaylandOutputDeviceV2(int id);
+    ~WaylandOutputDeviceV2() override;
+
+    QByteArray edid() const;
+    bool enabled() const;
+    int id() const;
+    QString name() const;
+    QString model() const;
+    QString manufacturer() const;
+    qreal scale() const;
+    QPoint globalPosition() const;
+    QSize pixelSize() const;
+    int refreshRate() const;
+    uint32_t vrrPolicy() const;
+    uint32_t overscan() const;
+    uint32_t capabilities() const;
+    uint32_t rgbRange() const;
+
+    QString modeId() const;
+
+Q_SIGNALS:
+    void enabledChanged();
+    void done();
+
+protected:
+    void kde_output_device_v2_geometry(int32_t x,
+                                       int32_t y,
+                                       int32_t physical_width,
+                                       int32_t physical_height,
+                                       int32_t subpixel,
+                                       const QString &make,
+                                       const QString &model,
+                                       int32_t transform) override;
+    void kde_output_device_v2_current_mode(struct ::kde_output_device_mode_v2 *mode) override;
+    void kde_output_device_v2_mode(struct ::kde_output_device_mode_v2 *mode) override;
+    void kde_output_device_v2_done() override;
+    void kde_output_device_v2_scale(wl_fixed_t factor) override;
+    void kde_output_device_v2_edid(const QString &raw) override;
+    void kde_output_device_v2_enabled(int32_t enabled) override;
+    void kde_output_device_v2_uuid(const QString &uuid) override;
+    void kde_output_device_v2_serial_number(const QString &serialNumber) override;
+    void kde_output_device_v2_eisa_id(const QString &eisaId) override;
+    void kde_output_device_v2_capabilities(uint32_t flags) override;
+    void kde_output_device_v2_overscan(uint32_t overscan) override;
+    void kde_output_device_v2_vrr_policy(uint32_t vrr_policy) override;
+    void kde_output_device_v2_rgb_range(uint32_t rgb_range) override;
+
+private:
+    QString modeName(const WaylandOutputDeviceV2Mode *m) const;
+    WaylandOutputDeviceV2Mode *deviceModeFromId(const int modeId) const;
+
+    WaylandOutputDeviceV2Mode *m_mode;
+    QList<WaylandOutputDeviceV2Mode *> m_modes;
+
+    int m_id;
+    QPoint m_pos;
+    QSize m_physicalSize;
+    int32_t m_subpixel;
+    QString m_manufacturer;
+    QString m_model;
+    int32_t m_transform;
+    qreal m_factor;
+    QByteArray m_edid;
+    int32_t m_enabled;
+    QString m_uuid;
+    QString m_serialNumber;
+    QString m_eisaId;
+    uint32_t m_flags;
+    uint32_t m_overscan;
+    uint32_t m_vrr_policy;
+    uint32_t m_rgbRange;
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     Decoration = 1 << 1,
@@ -270,12 +403,12 @@ enum class AdditionalWaylandInterface {
     AppMenu = 1 << 6,
     ShadowManager = 1 << 7,
     XdgDecorationV1 = 1 << 8,
-    OutputManagement = 1 << 9,
+    OutputManagementV2 = 1 << 9,
     TextInputManagerV2 = 1 << 10,
     InputMethodV1 = 1 << 11,
     LayerShellV1 = 1 << 12,
     TextInputManagerV3 = 1 << 13,
-    OutputDevice = 1 << 14,
+    OutputDeviceV2 = 1 << 14,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 /**
@@ -305,10 +438,10 @@ KWayland::Client::PlasmaShell *waylandPlasmaShell();
 KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
 KWayland::Client::PointerConstraints *waylandPointerConstraints();
 KWayland::Client::AppMenuManager *waylandAppMenuManager();
-KWayland::Client::OutputManagement *waylandOutputManagement();
+WaylandOutputManagementV2 *waylandOutputManagementV2();
 KWayland::Client::TextInputManager *waylandTextInputManager();
 QVector<KWayland::Client::Output *> waylandOutputs();
-QVector<KWayland::Client::OutputDevice *> waylandOutputDevices();
+QVector<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
 
 bool waitForWaylandSurface(AbstractClient *client);
 

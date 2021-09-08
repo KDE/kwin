@@ -419,6 +419,7 @@ if (BUILD_TESTING)
     find_package(WaylandProtocols 1.19 REQUIRED)
     find_package(QtWaylandScanner ${QT_MIN_VERSION} REQUIRED)
     find_package(Wayland REQUIRED COMPONENTS Client)
+    find_package(PlasmaWaylandProtocols CONFIG REQUIRED)
 
     add_subdirectory(autotests)
     add_subdirectory(tests)

@@ -15,17 +15,13 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/outputmanagement.h>
-#include <KWayland/Client/outputconfiguration.h>
-#include <KWayland/Client/outputdevice.h>
-
-#include <KWaylandServer/outputmanagement_v2_interface.h>
-#include <KWaylandServer/outputconfiguration_v2_interface.h>
-#include <KWaylandServer/outputdevice_v2_interface.h>
 #include <KWayland/Client/output.h>
-#include <KWayland/Client/outputdevice.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
+
+#include <KWaylandServer/outputconfiguration_v2_interface.h>
+#include <KWaylandServer/outputdevice_v2_interface.h>
+#include <KWaylandServer/outputmanagement_v2_interface.h>
 
 #include <KWaylandServer/display.h>
 
@@ -72,8 +68,8 @@ void TestOutputManagement::initTestCase()
 
 void TestOutputManagement::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::OutputManagement |
-                                         Test::AdditionalWaylandInterface::OutputDevice));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::OutputManagementV2 |
+                                         Test::AdditionalWaylandInterface::OutputDeviceV2));
 
     workspace()->setActiveOutput(QPoint(640, 512));
     //put mouse in the middle of screen one
@@ -116,25 +112,25 @@ void TestOutputManagement::testOutputDeviceDisabled()
 
     QSignalSpy screenChangedSpy(screens(), &KWin::Screens::changed);
 
-    OutputManagement *outManagement = Test::waylandOutputManagement();
+    Test::WaylandOutputManagementV2 *outManagement = Test::waylandOutputManagementV2();
 
-    auto outputDevices = Test::waylandOutputDevices();
+    auto outputDevices = Test::waylandOutputDevicesV2();
     QCOMPARE(outputDevices.count(), 2);
 
-    OutputDevice *device = outputDevices.first();
-    QCOMPARE(device->enabled(), OutputDevice::Enablement::Enabled);
-    QSignalSpy outputDeviceEnabledChangedSpy(device, &OutputDevice::enabledChanged);
-    OutputConfiguration *config;
+    Test::WaylandOutputDeviceV2 *device = outputDevices.first();
+    QCOMPARE(device->enabled(), true);
+    QSignalSpy outputDeviceEnabledChangedSpy(device, &Test::WaylandOutputDeviceV2::enabledChanged);
+    Test::WaylandOutputConfigurationV2 *config;
 
     // Disables an output
     config = outManagement->createConfiguration();
-    QSignalSpy configAppliedSpy (config, &OutputConfiguration::applied);
-    config->setEnabled(device, OutputDevice::Enablement::Disabled);
+    QSignalSpy configAppliedSpy(config, &Test::WaylandOutputConfigurationV2::applied);
+    config->enable(device->object(), false);
     config->apply();
     QVERIFY(configAppliedSpy.wait());
 
     QCOMPARE(outputDeviceEnabledChangedSpy.count(), 1);
-    QCOMPARE(device->enabled(), OutputDevice::Enablement::Disabled);
+    QCOMPARE(device->enabled(), false);
     QCOMPARE(screenChangedSpy.count(), 3);
     QCOMPARE(outputLeftSpy.count(), 1);
     QCOMPARE(outputEnteredSpy.count(), 1); // surface was moved to other screen
@@ -153,15 +149,15 @@ void TestOutputManagement::testOutputDeviceDisabled()
 
     // Enable the disabled output
     config = outManagement->createConfiguration();
-    QSignalSpy configAppliedSpy2 (config, &OutputConfiguration::applied);
-    config->setEnabled(device, OutputDevice::Enablement::Enabled);
+    QSignalSpy configAppliedSpy2(config, &Test::WaylandOutputConfigurationV2::applied);
+    config->enable(device->object(), true);
     config->apply();
     QVERIFY(configAppliedSpy2.wait());
 
     QVERIFY(outputEnteredSpy.wait());
 
     QCOMPARE(outputDeviceEnabledChangedSpy.count(), 1);
-    QCOMPARE(device->enabled(), OutputDevice::Enablement::Enabled);
+    QCOMPARE(device->enabled(), true);
     QCOMPARE(screenChangedSpy.count(), 3);
     QCOMPARE(outputLeftSpy.count(), 1);
     QCOMPARE(outputEnteredSpy.count(), 1); // surface moved back to first screen
@@ -204,12 +200,12 @@ void TestOutputManagement::testOutputDeviceRemoved()
 
     QSignalSpy screenChangedSpy(screens(), &KWin::Screens::changed);
 
-    QCOMPARE(Test::waylandOutputDevices().count(), 2);
+    QCOMPARE(Test::waylandOutputDevicesV2().count(), 2);
 
-    OutputDevice *device = Test::waylandOutputDevices().first();
-    QCOMPARE(device->enabled(), OutputDevice::Enablement::Enabled);
+    Test::WaylandOutputDeviceV2 *device = Test::waylandOutputDevicesV2().first();
+    QCOMPARE(device->enabled(), true);
 
-    QSignalSpy outputDeviceEnabledChangedSpy(device, &OutputDevice::enabledChanged);
+    QSignalSpy outputDeviceEnabledChangedSpy(device, &Test::WaylandOutputDeviceV2::enabledChanged);
 
     AbstractOutput *output = kwinApp()->platform()->outputs().first();
     // Removes an output
@@ -221,9 +217,9 @@ void TestOutputManagement::testOutputDeviceRemoved()
     QCOMPARE(waylandServer()->display()->outputs().count(), 1);
     QCOMPARE(waylandServer()->display()->outputDevices().count(), 1);
 
-    QCOMPARE(Test::waylandOutputDevices().count(), 1);
+    QCOMPARE(Test::waylandOutputDevicesV2().count(), 1);
     QCOMPARE(outputDeviceEnabledChangedSpy.count(), 1);
-    QCOMPARE(device->enabled(), OutputDevice::Enablement::Disabled);
+    QCOMPARE(device->enabled(), false);
     QCOMPARE(outputLeftSpy.count(), 1);
     QCOMPARE(outputEnteredSpy.count(), 1); // surface moved to the other screen
     QCOMPARE(surface->outputs().count(), 1);
