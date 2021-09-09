@@ -1822,14 +1822,19 @@ bool Workspace::shortcutAvailable(const QKeySequence &cut, AbstractClient* ignor
     if (ignore && cut == ignore->shortcut())
         return true;
 
-    if (!KGlobalAccel::getGlobalShortcutsByKey(cut).isEmpty()) {
-        return false;
-    }
-    for (auto it = m_allClients.constBegin();
-            it != m_allClients.constEnd();
-            ++it) {
-        if ((*it) != ignore && (*it)->shortcut() == cut)
+    // Check if the shortcut is already registered
+    const QList<KGlobalShortcutInfo> registeredShortcuts = KGlobalAccel::getGlobalShortcutsByKey(cut);
+    for (const auto shortcut : registeredShortcuts) {
+        // Only return "not available" if is not a client activation shortcut, as it may be no longer valid
+        if (!shortcut.uniqueName().startsWith(QStringLiteral("_k_session:"))) {
             return false;
+        }
+    }
+    // Check now conflicts with activation shortcuts for current clients
+    for (const auto client : qAsConst(m_allClients)) {
+        if (client != ignore && client->shortcut() == cut) {
+            return false;
+        }
     }
     return true;
 }
