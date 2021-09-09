@@ -35,7 +35,7 @@ void Drag::sendClientMessage(xcb_window_t target, xcb_atom_t type, xcb_client_me
         type,       // type
         *data,      // data
     };
-    static_assert(sizeof(ev) == 32, "Would leak stack data otherwise");
+    static_assert(sizeof(event) == 32, "Would leak stack data otherwise");
 
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_send_event(xcbConn,
