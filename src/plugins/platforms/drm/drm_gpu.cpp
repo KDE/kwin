@@ -238,12 +238,10 @@ bool DrmGpu::updateOutputs()
                 return c1->getProp(DrmConnector::PropertyIndex::CrtcId)->current() > c2->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
             });
         }
-        auto config = findWorkingCombination({}, connectedConnectors, m_crtcs, m_planes);
-
-        DrmPipeline::commitPipelines(config, DrmPipeline::CommitMode::Commit);
+        const auto config = findWorkingCombination({}, connectedConnectors, m_crtcs, m_planes);
         m_pipelines << config;
 
-        for (const auto &pipeline : qAsConst(config)) {
+        for (const auto &pipeline : config) {
             auto output = pipeline->output();
             if (m_outputs.contains(output)) {
                 // try setting hardware rotation
@@ -267,7 +265,7 @@ QVector<DrmPipeline *> DrmGpu::findWorkingCombination(const QVector<DrmPipeline 
 {
     if (connectors.isEmpty() || crtcs.isEmpty()) {
         // no further pipelines can be added -> test configuration
-        if (testCombination(pipelines)) {
+        if (commitCombination(pipelines)) {
             return pipelines;
         } else {
             return {};
@@ -324,7 +322,7 @@ QVector<DrmPipeline *> DrmGpu::findWorkingCombination(const QVector<DrmPipeline 
     return {};
 }
 
-bool DrmGpu::testCombination(const QVector<DrmPipeline *> &pipelines)
+bool DrmGpu::commitCombination(const QVector<DrmPipeline *> &pipelines)
 {
     for (const auto &pipeline : pipelines) {
         auto output = findOutput(pipeline->connector()->id());
@@ -338,7 +336,7 @@ bool DrmGpu::testCombination(const QVector<DrmPipeline *> &pipelines)
         pipeline->setup();
     }
 
-    if (DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::Test)) {
+    if (DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::Commit)) {
         return true;
     } else {
         for (const auto &pipeline : qAsConst(pipelines)) {

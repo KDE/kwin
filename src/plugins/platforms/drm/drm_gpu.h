@@ -120,7 +120,7 @@ private:
     void initDrmResources();
 
     QVector<DrmPipeline *> findWorkingCombination(const QVector<DrmPipeline *> &pipelines, QVector<DrmConnector *> connectors, QVector<DrmCrtc *> crtcs, const QVector<DrmPlane *> &planes);
-    bool testCombination(const QVector<DrmPipeline *> &pipelines);
+    bool commitCombination(const QVector<DrmPipeline *> &pipelines);
 
     DrmBackend* const m_backend;
     QPointer<AbstractEglDrmBackend> m_eglBackend;
