@@ -340,8 +340,10 @@ bool DrmGpu::commitCombination(const QVector<DrmPipeline *> &pipelines)
         return true;
     } else {
         for (const auto &pipeline : qAsConst(pipelines)) {
-            Q_EMIT outputDisabled(pipeline->output());
-            delete pipeline->output();
+            if (!m_outputs.contains(pipeline->output())) {
+                Q_EMIT outputDisabled(pipeline->output());
+                delete pipeline->output();
+            }
         }
         return false;
     }
