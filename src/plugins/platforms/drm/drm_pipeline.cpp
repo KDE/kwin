@@ -128,37 +128,8 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
             return false;
         }
         uint32_t flags = 0;
-        bool result = true;
-        for (const auto &pipeline : pipelines) {
-            if (!pipeline->checkTestBuffer() || !pipeline->populateAtomicValues(req, flags)) {
-                result = false;
-                break;
-            }
-        }
-        if (mode != CommitMode::CommitWithPageflipEvent) {
-            flags &= ~DRM_MODE_PAGE_FLIP_EVENT;
-        }
-        if (result) {
-            result = drmModeAtomicCommit(pipelines[0]->m_gpu->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, pipelines[0]->m_output) == 0;
-            if (result && mode != CommitMode::Test) {
-                result = drmModeAtomicCommit(pipelines[0]->m_gpu->fd(), req, flags, pipelines[0]->m_output) == 0;
-            }
-        }
-        if (result) {
-            for (const auto &pipeline : pipelines) {
-                pipeline->m_oldTestBuffer = nullptr;
-                for (const auto &obj : qAsConst(pipeline->m_allObjects)) {
-                    obj->commitPending();
-                }
-                if (mode != CommitMode::Test) {
-                    pipeline->m_primaryPlane->setNext(pipeline->m_primaryBuffer);
-                    for (const auto &obj : qAsConst(pipeline->m_allObjects)) {
-                        obj->commit();
-                    }
-                }
-            }
-        } else {
-            qCWarning(KWIN_DRM) << (mode == CommitMode::Test ? "Atomic test" : "Atomic commit") << "failed!" << strerror(errno);
+        const auto &failed = [pipelines, req](){
+            drmModeAtomicFree(req);
             for (const auto &pipeline : pipelines) {
                 pipeline->printDebugInfo();
                 if (pipeline->m_oldTestBuffer) {
@@ -169,9 +140,43 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                     obj->rollbackPending();
                 }
             }
+            return false;
+        };
+        for (const auto &pipeline : pipelines) {
+            if (!pipeline->checkTestBuffer()) {
+                qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
+                return failed();
+            }
+            if (!pipeline->populateAtomicValues(req, flags)) {
+                qCWarning(KWIN_DRM) << "Populating atomic values failed for" << mode;
+                return failed();
+            }
+        }
+        if (mode != CommitMode::CommitWithPageflipEvent) {
+            flags &= ~DRM_MODE_PAGE_FLIP_EVENT;
+        }
+        if (drmModeAtomicCommit(pipelines[0]->m_gpu->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, pipelines[0]->m_output) != 0) {
+            qCWarning(KWIN_DRM) << "Atomic test for" << mode << "failed!" << strerror(errno);
+            return failed();
+        }
+        if (mode != CommitMode::Test && drmModeAtomicCommit(pipelines[0]->m_gpu->fd(), req, flags, pipelines[0]->m_output) != 0) {
+            qCWarning(KWIN_DRM) << "Atomic commit failed! This should never happen!" << strerror(errno);
+            return failed();
+        }
+        for (const auto &pipeline : pipelines) {
+            pipeline->m_oldTestBuffer = nullptr;
+            for (const auto &obj : qAsConst(pipeline->m_allObjects)) {
+                obj->commitPending();
+            }
+            if (mode != CommitMode::Test) {
+                pipeline->m_primaryPlane->setNext(pipeline->m_primaryBuffer);
+                for (const auto &obj : qAsConst(pipeline->m_allObjects)) {
+                    obj->commit();
+                }
+            }
         }
         drmModeAtomicFree(req);
-        return result;
+        return true;
     } else {
         for (const auto &pipeline : pipelines) {
             if (pipeline->m_legacyNeedsModeset && !pipeline->modeset(0)) {

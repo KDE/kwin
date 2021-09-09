@@ -96,7 +96,7 @@ public:
         Commit,
         CommitWithPageflipEvent
     };
-
+    Q_ENUM(CommitMode);
     static bool commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode);
 
 private:
