@@ -265,7 +265,7 @@ QVector<DrmPipeline *> DrmGpu::findWorkingCombination(const QVector<DrmPipeline 
 {
     if (connectors.isEmpty() || crtcs.isEmpty()) {
         // no further pipelines can be added -> test configuration
-        if (commitCombination(pipelines)) {
+        if (pipelines.isEmpty() || commitCombination(pipelines)) {
             return pipelines;
         } else {
             return {};
