@@ -229,6 +229,7 @@ QSGNode *ThumbnailItemBase::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
     QSGImageNode *node = static_cast<QSGImageNode *>(oldNode);
     if (!node) {
         node = window()->createImageNode();
+        node->setFiltering(QSGTexture::Linear);
     }
     node->setTexture(m_provider->texture());
 
