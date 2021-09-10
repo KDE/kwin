@@ -213,15 +213,16 @@ EGLSurface EglOnXBackend::createSurface(xcb_window_t window)
         return EGL_NO_SURFACE;
     }
 
+    // Window is 64 bits on a 64-bit architecture whereas xcb_window_t is always 32 bits.
+    unsigned long nativeWindow = window;
+
     EGLSurface surface = EGL_NO_SURFACE;
     if (havePlatformBase()) {
-        // Note: Window is 64 bits on a 64-bit architecture whereas xcb_window_t is
-        //       always 32 bits. eglCreatePlatformWindowSurfaceEXT() expects the
-        //       native_window parameter to be pointer to a Window, so this variable
-        //       cannot be an xcb_window_t.
-        surface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *) &window, nullptr);
+        // eglCreatePlatformWindowSurfaceEXT() expects a pointer to the Window.
+        surface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *) &nativeWindow, nullptr);
     } else {
-        surface = eglCreateWindowSurface(eglDisplay(), config(), window, nullptr);
+        // eglCreateWindowSurface() expects a Window, not a pointer to the Window.
+        surface = eglCreateWindowSurface(eglDisplay(), config(), reinterpret_cast<EGLNativeWindowType>(nativeWindow), nullptr);
     }
 
     return surface;
