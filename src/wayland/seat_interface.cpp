@@ -227,7 +227,7 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
         // Special klipper workaround to avoid a race
         // If the mimetype x-kde-onlyReplaceEmpty is set, and we've had another update in the meantime, do nothing
         // See https://github.com/swaywm/wlr-protocols/issues/92
-        if (dataDevice->selection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty"))
+        if (dataDevice->primarySelection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty"))
             && currentPrimarySelection) {
             dataDevice->primarySelection()->cancel();
             return;
