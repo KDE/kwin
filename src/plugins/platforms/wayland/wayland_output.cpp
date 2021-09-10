@@ -82,6 +82,11 @@ void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixe
     moveTo(logicalPosition);
 }
 
+void WaylandOutput::updateTransform(Transform transform)
+{
+    setTransformInternal(transform);
+}
+
 void WaylandOutput::updateEnablement(bool enable)
 {
     setDpmsMode(enable ? DpmsMode::On : DpmsMode::Off);

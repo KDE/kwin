@@ -72,6 +72,7 @@ public:
     }
 
     void updateEnablement(bool enable) override;
+    void updateTransform(Transform transform) override;
     void setDpmsMode(KWin::AbstractWaylandOutput::DpmsMode mode) override;
 
 Q_SIGNALS:
