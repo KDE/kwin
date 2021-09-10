@@ -67,6 +67,13 @@ public:
         Q_UNUSED(action);
     };
 
+    /**
+     *  Called when a user stops clicking but it is not accepted by a client.
+     */
+    virtual void dndCancelled()
+    {
+    }
+
     virtual wl_client *client() const
     {
         return nullptr;

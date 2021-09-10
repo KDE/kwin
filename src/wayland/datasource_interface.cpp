@@ -118,9 +118,7 @@ void DataSourceInterface::requestData(const QString &mimeType, qint32 fd)
 
 void DataSourceInterface::cancel()
 {
-    if (wl_resource_get_version(resource()) >= WL_DATA_SOURCE_DND_FINISHED_SINCE_VERSION) {
-        d->send_cancelled();
-    }
+    d->send_cancelled();
 }
 
 QStringList DataSourceInterface::mimeTypes() const
@@ -171,6 +169,15 @@ void DataSourceInterface::dndAction(DataDeviceManagerInterface::DnDAction action
         wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_ask;
     }
     d->send_action(wlAction);
+}
+
+void DataSourceInterface::dndCancelled()
+{
+    // for v3 or less, cancel should not be called after a failed drag operation
+    if (wl_resource_get_version(resource()) < 3) {
+        return;
+    }
+    d->send_cancelled();
 }
 
 wl_resource *DataSourceInterface::resource() const

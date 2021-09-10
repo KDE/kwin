@@ -293,7 +293,7 @@ void SeatInterfacePrivate::endDrag(quint32 serial)
             dragTargetDevice->drop();
             dragSource->dropPerformed();
         } else {
-            dragSource->cancel();
+            dragSource->dndCancelled();
         }
     }
 

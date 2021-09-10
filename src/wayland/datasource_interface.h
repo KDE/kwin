@@ -41,6 +41,7 @@ public:
     void dropPerformed() override;
     void dndFinished() override;
     void dndAction(DataDeviceManagerInterface::DnDAction action) override;
+    void dndCancelled() override;
 
     wl_resource *resource() const;
 
