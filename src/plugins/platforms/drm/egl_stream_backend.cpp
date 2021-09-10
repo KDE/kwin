@@ -358,7 +358,7 @@ bool EglStreamBackend::resetOutput(Output &o)
         o.eglStream = stream;
         o.eglSurface = eglSurface;
 
-        if (sourceSize != drmOutput->pixelSize()) {
+        if (drmOutput->needsSoftwareTransformation()) {
             makeContextCurrent(o);
             o.shadowBuffer = QSharedPointer<ShadowBuffer>::create(o.output->pixelSize());
             if (!o.shadowBuffer->isComplete()) {
@@ -482,7 +482,7 @@ bool EglStreamBackend::needsReset(const Output &o) const
     if (surfaceSize != o.output->sourceSize()) {
         return true;
     }
-    bool needsTexture = surfaceSize != o.output->pixelSize();
+    bool needsTexture = o.output->needsSoftwareTransformation();
     if (needsTexture) {
         return !o.shadowBuffer || o.shadowBuffer->textureSize() != o.output->pixelSize();
     } else {

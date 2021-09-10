@@ -42,6 +42,9 @@ public:
         Q_UNUSED(gamma);
         return true;
     }
+    bool needsSoftwareTransformation() const override {
+        return false;
+    }
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);

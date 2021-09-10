@@ -346,6 +346,11 @@ void DrmOutput::updateModes()
     }
 }
 
+bool DrmOutput::needsSoftwareTransformation() const
+{
+    return m_pipeline->transformation() != outputToPlaneTransform(transform());
+}
+
 void DrmOutput::updateMode(const QSize &size, uint32_t refreshRate)
 {
     auto conn = m_pipeline->connector();

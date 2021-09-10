@@ -179,7 +179,7 @@ bool EglGbmBackend::resetOutput(Output &output)
     output.current = {};
     output.current.gbmSurface = gbmSurface;
 
-    if (size == output.output->pixelSize()) {
+    if (!output.output->needsSoftwareTransformation())  {
         output.current.shadowBuffer = nullptr;
     } else {
         makeContextCurrent(output.current);
@@ -524,10 +524,9 @@ bool EglGbmBackend::doesRenderFit(DrmAbstractOutput *output, const Output::Rende
     if (surfaceSize != render.gbmSurface->size()) {
         return false;
     }
-    QSize pixelSize = output->pixelSize();
-    bool needsTexture = surfaceSize != pixelSize;
+    bool needsTexture = output->needsSoftwareTransformation();
     if (needsTexture) {
-        return render.shadowBuffer && render.shadowBuffer->textureSize() == pixelSize;
+        return render.shadowBuffer && render.shadowBuffer->textureSize() == output->pixelSize();
     } else {
         return render.shadowBuffer == nullptr;
     }
