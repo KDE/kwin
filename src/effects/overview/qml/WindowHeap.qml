@@ -208,7 +208,7 @@ FocusScope {
                     anchors.topMargin: PlasmaCore.Units.largeSpacing
                     implicitWidth: PlasmaCore.Units.iconSizes.medium
                     implicitHeight: implicitWidth
-                    visible: hovered || hoverHandler.hovered
+                    visible: (hovered || hoverHandler.hovered) && thumb.client.closeable
                     onClicked: thumb.client.closeWindow();
                 }
 
