@@ -806,44 +806,12 @@ OverlayWindow* GlxBackend::overlayWindow() const
 
 GlxSurfaceTextureX11::GlxSurfaceTextureX11(GlxBackend *backend, SurfacePixmapX11 *texture)
     : OpenGLSurfaceTextureX11(backend, texture)
-{
-}
-
-bool GlxSurfaceTextureX11::create()
-{
-    auto texture = new GlxPixmapTexture(static_cast<GlxBackend *>(m_backend));
-    if (texture->create(m_pixmap)) {
-        m_texture.reset(texture);
-    }
-    return !m_texture.isNull();
-}
-
-void GlxSurfaceTextureX11::update(const QRegion &region)
-{
-    Q_UNUSED(region)
-    // mipmaps need to be updated
-    m_texture->setDirty();
-}
-
-GlxPixmapTexture::GlxPixmapTexture(GlxBackend *backend)
-    : GLTexture(*new GlxPixmapTexturePrivate(this, backend))
-{
-}
-
-bool GlxPixmapTexture::create(SurfacePixmapX11 *texture)
-{
-    Q_D(GlxPixmapTexture);
-    return d->create(texture);
-}
-
-GlxPixmapTexturePrivate::GlxPixmapTexturePrivate(GlxPixmapTexture *texture, GlxBackend *backend)
-    : m_backend(backend)
-    , q(texture)
+    , m_backend(backend)
     , m_glxPixmap(None)
 {
 }
 
-GlxPixmapTexturePrivate::~GlxPixmapTexturePrivate()
+GlxSurfaceTextureX11::~GlxSurfaceTextureX11()
 {
     if (m_glxPixmap != None) {
         if (!options->isGlStrictBinding()) {
@@ -854,58 +822,59 @@ GlxPixmapTexturePrivate::~GlxPixmapTexturePrivate()
     }
 }
 
-void GlxPixmapTexturePrivate::onDamage()
+bool GlxSurfaceTextureX11::create()
 {
-    if (options->isGlStrictBinding() && m_glxPixmap) {
-        glXReleaseTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT);
-        glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
+    if (m_pixmap->pixmap() == XCB_NONE || m_pixmap->size().isEmpty() || m_pixmap->visual() == XCB_NONE) {
+        return false;
     }
-    GLTexturePrivate::onDamage();
-}
 
-bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
-{
-    if (texture->pixmap() == XCB_NONE || texture->size().isEmpty() || texture->visual() == XCB_NONE)
+    const FBConfigInfo *info = m_backend->infoForVisual(m_pixmap->visual());
+    if (!info || info->fbconfig == nullptr) {
         return false;
+    }
 
-    const FBConfigInfo *info = m_backend->infoForVisual(texture->visual());
-    if (!info || info->fbconfig == nullptr)
-        return false;
-
+    GLuint target;
     if (info->texture_targets & GLX_TEXTURE_2D_BIT_EXT) {
-        m_target = GL_TEXTURE_2D;
-        m_scale.setWidth(1.0f / m_size.width());
-        m_scale.setHeight(1.0f / m_size.height());
+        target = GL_TEXTURE_2D;
     } else {
         Q_ASSERT(info->texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT);
-
-        m_target = GL_TEXTURE_RECTANGLE;
-        m_scale.setWidth(1.0f);
-        m_scale.setHeight(1.0f);
+        target = GL_TEXTURE_RECTANGLE;
     }
 
     const int attrs[] = {
         GLX_TEXTURE_FORMAT_EXT, info->bind_texture_format,
         GLX_MIPMAP_TEXTURE_EXT, false,
-        GLX_TEXTURE_TARGET_EXT, m_target == GL_TEXTURE_2D ? GLX_TEXTURE_2D_EXT : GLX_TEXTURE_RECTANGLE_EXT,
+        GLX_TEXTURE_TARGET_EXT, target == GL_TEXTURE_2D ? GLX_TEXTURE_2D_EXT : GLX_TEXTURE_RECTANGLE_EXT,
         0
     };
 
-    m_glxPixmap     = glXCreatePixmap(m_backend->display(), info->fbconfig, texture->pixmap(), attrs);
-    m_size          = texture->size();
-    m_yInverted     = info->y_inverted ? true : false;
-    m_canUseMipmaps = false;
+    m_glxPixmap = glXCreatePixmap(m_backend->display(), info->fbconfig, m_pixmap->pixmap(), attrs);
+    if (m_glxPixmap == None) {
+        return false;
+    }
 
-    glGenTextures(1, &m_texture);
+    m_texture.reset(new GLTexture(target));
+    m_texture->setSize(m_pixmap->size());
+    m_texture->setYInverted(info->y_inverted);
 
-    q->setDirty();
-    q->setFilter(GL_NEAREST);
+    m_texture->create();
+    m_texture->setFilter(GL_NEAREST);
 
-    glBindTexture(m_target, m_texture);
+    m_texture->bind();
     glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
 
-    updateMatrix();
     return true;
+}
+
+void GlxSurfaceTextureX11::update(const QRegion &region)
+{
+    Q_UNUSED(region)
+    // mipmaps need to be updated
+    if (options->isGlStrictBinding() && m_glxPixmap) {
+        m_texture->bind();
+        glXReleaseTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT);
+        glXBindTexImageEXT(m_backend->display(), m_glxPixmap, GLX_FRONT_LEFT_EXT, nullptr);
+    }
 }
 
 } // namespace

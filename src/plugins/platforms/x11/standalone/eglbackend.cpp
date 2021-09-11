@@ -152,61 +152,24 @@ void EglBackend::vblank(std::chrono::nanoseconds timestamp)
 
 EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture)
     : OpenGLSurfaceTextureX11(backend, texture)
-{
-}
-
-bool EglSurfaceTextureX11::create()
-{
-    auto texture = new EglPixmapTexture(static_cast<EglBackend *>(m_backend));
-    if (texture->create(m_pixmap)) {
-        m_texture.reset(texture);
-    }
-    return !m_texture.isNull();
-}
-
-void EglSurfaceTextureX11::update(const QRegion &region)
-{
-    Q_UNUSED(region)
-    // mipmaps need to be updated
-    m_texture->setDirty();
-}
-
-EglPixmapTexture::EglPixmapTexture(EglBackend *backend)
-    : GLTexture(*new EglPixmapTexturePrivate(this, backend))
-{
-}
-
-bool EglPixmapTexture::create(SurfacePixmapX11 *texture)
-{
-    Q_D(EglPixmapTexture);
-    return d->create(texture);
-}
-
-EglPixmapTexturePrivate::EglPixmapTexturePrivate(EglPixmapTexture *texture, EglBackend *backend)
-    : q(texture)
     , m_backend(backend)
 {
-    m_target = GL_TEXTURE_2D;
 }
 
-EglPixmapTexturePrivate::~EglPixmapTexturePrivate()
+EglSurfaceTextureX11::~EglSurfaceTextureX11()
 {
     if (m_image != EGL_NO_IMAGE_KHR) {
         eglDestroyImageKHR(m_backend->eglDisplay(), m_image);
     }
 }
 
-bool EglPixmapTexturePrivate::create(SurfacePixmapX11 *pixmap)
+bool EglSurfaceTextureX11::create()
 {
-    const xcb_pixmap_t nativePixmap = pixmap->pixmap();
+    const xcb_pixmap_t nativePixmap = m_pixmap->pixmap();
     if (nativePixmap == XCB_NONE) {
         return false;
     }
 
-    glGenTextures(1, &m_texture);
-    q->setWrapMode(GL_CLAMP_TO_EDGE);
-    q->setFilter(GL_LINEAR);
-    q->bind();
     const EGLint attribs[] = {
         EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
         EGL_NONE
@@ -216,26 +179,34 @@ bool EglPixmapTexturePrivate::create(SurfacePixmapX11 *pixmap)
 
     if (EGL_NO_IMAGE_KHR == m_image) {
         qCDebug(KWIN_CORE) << "failed to create egl image";
-        q->unbind();
         return false;
     }
+
+    m_texture.reset(new GLTexture(GL_TEXTURE_2D));
+    m_texture->setSize(m_pixmap->size());
+    m_texture->setYInverted(true);
+    m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
+    m_texture->setFilter(GL_LINEAR);
+    m_texture->create();
+
+    m_texture->bind();
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(m_image));
-    q->unbind();
-    q->setYInverted(true);
-    m_size = pixmap->size();
-    updateMatrix();
+    m_texture->unbind();
+
     return true;
 }
 
-void EglPixmapTexturePrivate::onDamage()
+void EglSurfaceTextureX11::update(const QRegion &region)
 {
+    Q_UNUSED(region)
+    // mipmaps need to be updated
     if (options->isGlStrictBinding()) {
         // This is just implemented to be consistent with
         // the example in mesa/demos/src/egl/opengles1/texture_from_pixmap.c
         eglWaitNative(EGL_CORE_NATIVE_ENGINE);
+        m_texture->bind();
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(m_image));
     }
-    GLTexturePrivate::onDamage();
 }
 
 } // namespace KWin

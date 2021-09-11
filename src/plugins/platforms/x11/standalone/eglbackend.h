@@ -16,7 +16,6 @@
 namespace KWin
 {
 
-class EglPixmapTexturePrivate;
 class SoftwareVsyncMonitor;
 class X11StandalonePlatform;
 
@@ -45,41 +44,18 @@ private:
     int m_bufferAge = 0;
 };
 
-class EglPixmapTexture : public GLTexture
-{
-public:
-    explicit EglPixmapTexture(EglBackend *backend);
-
-    bool create(SurfacePixmapX11 *texture);
-
-private:
-    Q_DECLARE_PRIVATE(EglPixmapTexture)
-};
-
-class EglPixmapTexturePrivate : public GLTexturePrivate
-{
-public:
-    EglPixmapTexturePrivate(EglPixmapTexture *texture, EglBackend *backend);
-    ~EglPixmapTexturePrivate() override;
-
-    bool create(SurfacePixmapX11 *texture);
-
-protected:
-    void onDamage() override;
-
-private:
-    EglBackend *m_backend;
-    EglPixmapTexture *q;
-    EGLImageKHR m_image = EGL_NO_IMAGE_KHR;
-};
-
 class EglSurfaceTextureX11 : public OpenGLSurfaceTextureX11
 {
 public:
     EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture);
+    ~EglSurfaceTextureX11() override;
 
     bool create() override;
     void update(const QRegion &region) override;
+
+private:
+    EglBackend *m_backend;
+    EGLImageKHR m_image = EGL_NO_IMAGE_KHR;
 };
 
 } // namespace KWin

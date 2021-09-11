@@ -27,7 +27,6 @@
 namespace KWin
 {
 
-class GlxPixmapTexturePrivate;
 class VsyncMonitor;
 class X11StandalonePlatform;
 
@@ -116,44 +115,21 @@ private:
     Display *m_x11Display;
     X11StandalonePlatform *m_backend;
     VsyncMonitor *m_vsyncMonitor = nullptr;
-    friend class GlxPixmapTexturePrivate;
-};
-
-class GlxPixmapTexture final : public GLTexture
-{
-public:
-    explicit GlxPixmapTexture(GlxBackend *backend);
-
-    bool create(SurfacePixmapX11 *texture);
-
-private:
-    Q_DECLARE_PRIVATE(GlxPixmapTexture)
-};
-
-class GlxPixmapTexturePrivate final : public GLTexturePrivate
-{
-public:
-    GlxPixmapTexturePrivate(GlxPixmapTexture *texture, GlxBackend *backend);
-    ~GlxPixmapTexturePrivate() override;
-
-    bool create(SurfacePixmapX11 *texture);
-
-protected:
-    void onDamage() override;
-
-private:
-    GlxBackend *m_backend;
-    GlxPixmapTexture *q;
-    GLXPixmap m_glxPixmap;
+    friend class GlxSurfaceTextureX11;
 };
 
 class GlxSurfaceTextureX11 final : public OpenGLSurfaceTextureX11
 {
 public:
     GlxSurfaceTextureX11(GlxBackend *backend, SurfacePixmapX11 *pixmap);
+    ~GlxSurfaceTextureX11() override;
 
     bool create() override;
     void update(const QRegion &region) override;
+
+private:
+    GlxBackend *m_backend;
+    GLXPixmap m_glxPixmap;
 };
 
 } // namespace
