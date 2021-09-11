@@ -8,6 +8,7 @@ X-KDE-ParentApp=kcontrol
 
 X-KDE-Keywords=kwin script,plugins,window manager
 X-KDE-Keywords[ca]=script del kwin,connectors,plugins,gestor de finestres
+X-KDE-Keywords[en_GB]=kwin script,plugins,window manager
 X-KDE-Keywords[es]=guion de kwin,complementos,gestor de ventanas
 X-KDE-Keywords[fr]=script pour kwin, modules externes, gestionnaire de fichiers
 X-KDE-Keywords[nl]=kwin-script,plug-ins,vensterbeheerder
