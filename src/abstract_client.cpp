@@ -308,6 +308,8 @@ Layer AbstractClient::belongsToLayer() const
         return ActiveLayer;
     if (keepAbove())
         return AboveLayer;
+    if (isPopupWindow())
+        return UnmanagedLayer;
 
     return NormalLayer;
 }
