@@ -147,23 +147,7 @@ void DrmBackend::reactivate()
     m_active = true;
 
     for (const auto &output : qAsConst(m_outputs)) {
-        if (auto drmOutput = qobject_cast<DrmOutput *>(output)) {
-            drmOutput->pipeline()->updateProperties();
-            if (drmOutput->isEnabled()) {
-                if (drmOutput->gpu()->atomicModeSetting() && !drmOutput->pipeline()->isConnected()) {
-                    drmOutput->pipeline()->setActive(false);
-                }
-                drmOutput->showCursor();
-            } else {
-                drmOutput->pipeline()->setActive(false);
-            }
-        }
         output->renderLoop()->uninhibit();
-    }
-    for (const auto &output : qAsConst(m_outputs)) {
-        if (auto drmOutput = qobject_cast<DrmOutput *>(output)) {
-            drmOutput->pipeline()->setActive(output->isEnabled());
-        }
     }
 
     if (Compositor *compositor = Compositor::self()) {
@@ -183,9 +167,7 @@ void DrmBackend::deactivate()
     }
 
     for (const auto &output : qAsConst(m_outputs)) {
-        if (output->isEnabled()) {
-            output->renderLoop()->inhibit();
-        }
+        output->renderLoop()->inhibit();
     }
 
     m_active = false;

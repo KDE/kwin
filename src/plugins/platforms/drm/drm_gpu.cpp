@@ -200,13 +200,11 @@ bool DrmGpu::updateOutputs()
     }
 
     // find unused and connected connectors
-    bool hasUnusedConnectors = false;
     QVector<DrmConnector *> connectedConnectors;
     for (const auto &conn : qAsConst(m_connectors)) {
         auto output = findOutput(conn->id());
         if (conn->isConnected() && !conn->isNonDesktop()) {
             connectedConnectors << conn;
-            hasUnusedConnectors |= output == nullptr;
             if (output) {
                 output->updateModes();
             }
@@ -224,37 +222,35 @@ bool DrmGpu::updateOutputs()
         plane->updateProperties();
     }
 
-    if (hasUnusedConnectors) {
-        // delete current pipelines of active outputs
-        for (const auto &output : qAsConst(m_drmOutputs)) {
-            m_pipelines.removeOne(output->pipeline());
-            delete output->pipeline();
-            output->setPipeline(nullptr);
-        }
+    // delete current pipelines of active outputs
+    for (const auto &output : qAsConst(m_drmOutputs)) {
+        m_pipelines.removeOne(output->pipeline());
+        delete output->pipeline();
+        output->setPipeline(nullptr);
+    }
 
-        if (m_atomicModeSetting) {
-            // sort outputs by being already connected (to any CRTC) so that already working outputs get preferred
-            std::sort(connectedConnectors.begin(), connectedConnectors.end(), [](auto c1, auto c2){
-                return c1->getProp(DrmConnector::PropertyIndex::CrtcId)->current() > c2->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
-            });
-        }
-        const auto config = findWorkingCombination({}, connectedConnectors, m_crtcs, m_planes);
-        m_pipelines << config;
+    if (m_atomicModeSetting) {
+        // sort outputs by being already connected (to any CRTC) so that already working outputs get preferred
+        std::sort(connectedConnectors.begin(), connectedConnectors.end(), [](auto c1, auto c2){
+            return c1->getProp(DrmConnector::PropertyIndex::CrtcId)->current() > c2->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
+        });
+    }
+    const auto config = findWorkingCombination({}, connectedConnectors, m_crtcs, m_planes);
+    m_pipelines << config;
 
-        for (const auto &pipeline : config) {
-            auto output = pipeline->output();
-            if (m_outputs.contains(output)) {
-                // try setting hardware rotation
-                output->updateTransform(output->transform());
-            } else {
-                qCDebug(KWIN_DRM).nospace() << "New output on GPU " << m_devNode << ": " << pipeline->connector()->modelName();
-                if (!output->initCursor(m_cursorSize)) {
-                    m_backend->setSoftwareCursorForced(true);
-                }
-                m_outputs << output;
-                m_drmOutputs << output;
-                Q_EMIT outputAdded(output);
+    for (const auto &pipeline : config) {
+        auto output = pipeline->output();
+        if (m_outputs.contains(output)) {
+            // try setting hardware rotation
+            output->updateTransform(output->transform());
+        } else {
+            qCDebug(KWIN_DRM).nospace() << "New output on GPU " << m_devNode << ": " << pipeline->connector()->modelName();
+            if (!output->initCursor(m_cursorSize)) {
+                m_backend->setSoftwareCursorForced(true);
             }
+            m_outputs << output;
+            m_drmOutputs << output;
+            Q_EMIT outputAdded(output);
         }
     }
 
