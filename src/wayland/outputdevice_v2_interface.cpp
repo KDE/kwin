@@ -91,8 +91,15 @@ protected:
 class OutputDeviceModeV2InterfacePrivate : public QtWaylandServer::kde_output_device_mode_v2
 {
 public:
+    struct ModeResource : Resource {
+        OutputDeviceV2InterfacePrivate::Resource *output;
+    };
+
     OutputDeviceModeV2InterfacePrivate(OutputDeviceModeV2Interface *q, const QSize &size, int refreshRate, OutputDeviceModeV2Interface::ModeFlags flags);
     ~OutputDeviceModeV2InterfacePrivate() override;
+
+    Resource *createResource(OutputDeviceV2InterfacePrivate::Resource *output);
+    Resource *findResource(OutputDeviceV2InterfacePrivate::Resource *output) const;
 
     void bindResource(wl_resource *resource);
 
@@ -103,6 +110,9 @@ public:
     QSize m_size;
     int m_refreshRate = 60000;
     OutputDeviceModeV2Interface::ModeFlags m_flags;
+
+protected:
+    Resource *kde_output_device_mode_v2_allocate() override;
 };
 
 OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display)
@@ -292,22 +302,19 @@ wl_resource *OutputDeviceV2InterfacePrivate::sendNewMode(Resource *resource, Out
 {
     auto privateMode = OutputDeviceModeV2InterfacePrivate::get(mode);
     // bind mode to client
-    const auto modeResource = privateMode->add(resource->client(), resource->version())->handle;
-    
-    send_mode(resource->handle, modeResource);
+    const auto modeResource = privateMode->createResource(resource);
 
-    privateMode->bindResource(modeResource);
+    send_mode(resource->handle, modeResource->handle);
 
-    return modeResource;
+    privateMode->bindResource(modeResource->handle);
+
+    return modeResource->handle;
 }
 
 void OutputDeviceV2InterfacePrivate::sendCurrentMode(Resource *outputResource, OutputDeviceModeV2Interface *mode)
 {
-    // mode must already be known to the client
-    const auto modeResources = OutputDeviceModeV2InterfacePrivate::get(mode)->resourceMap();
-    for (auto modeResource : modeResources) {
-        send_current_mode(outputResource->handle, modeResource->handle);
-    }
+    const auto modeResource = OutputDeviceModeV2InterfacePrivate::get(mode)->findResource(outputResource);
+    send_current_mode(outputResource->handle, modeResource->handle);
 }
 
 void OutputDeviceV2InterfacePrivate::sendGeometry(Resource *resource)
@@ -761,6 +768,30 @@ OutputDeviceModeV2InterfacePrivate::~OutputDeviceModeV2InterfacePrivate()
     for (Resource *resource : map) {
         send_removed(resource->handle);
     }
+}
+
+OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate::createResource(OutputDeviceV2InterfacePrivate::Resource *output)
+{
+    const auto modeResource = static_cast<ModeResource *>(add(output->client(), output->version()));
+    modeResource->output = output;
+    return modeResource;
+}
+
+OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate::findResource(OutputDeviceV2InterfacePrivate::Resource *output) const
+{
+    const auto resources = resourceMap();
+    for (const auto &resource : resources) {
+        auto modeResource = static_cast<ModeResource *>(resource);
+        if (modeResource->output == output) {
+            return resource;
+        }
+    }
+    return nullptr;
+}
+
+OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate::kde_output_device_mode_v2_allocate()
+{
+    return new ModeResource;
 }
 
 QSize OutputDeviceModeV2Interface::size() const
