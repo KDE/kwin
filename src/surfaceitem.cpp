@@ -110,7 +110,7 @@ void SurfaceItem::updatePixmap()
     } else {
         m_pixmap->create();
         if (m_pixmap->isValid()) {
-            m_previousPixmap.reset();
+            unreferencePreviousPixmap();
             discardQuads();
         }
     }
@@ -122,7 +122,7 @@ void SurfaceItem::discardPixmap()
         if (m_pixmap->isValid()) {
             m_previousPixmap.reset(m_pixmap.take());
             m_previousPixmap->markAsDiscarded();
-            m_referencePixmapCounter++;
+            referencePreviousPixmap();
         } else {
             m_pixmap.reset();
         }
