@@ -54,18 +54,41 @@ EGLConfig configFromFormat(EGLDisplay display, const QSurfaceFormat &surfaceForm
     };
 
     EGLint configCount;
-    EGLConfig configs[1024];
-    if (!eglChooseConfig(display, attributes.data(), configs, 1, &configCount)) {
-        // FIXME: Don't bail out yet, we should try to find the most suitable config.
+    if (!eglChooseConfig(display, attributes.data(), nullptr, 0, &configCount)) {
         qCWarning(KWIN_QPA, "eglChooseConfig failed: %x", eglGetError());
         return EGL_NO_CONFIG_KHR;
     }
-
-    if (configCount != 1) {
-        qCWarning(KWIN_QPA) << "eglChooseConfig did not return any configs";
+    if (configCount == 0) {
+        qCWarning(KWIN_QPA, "eglChooseConfig did not return any configs");
         return EGL_NO_CONFIG_KHR;
     }
 
+    QVector<EGLConfig> configs(configCount);
+    if (!eglChooseConfig(display, attributes.data(), configs.data(), configCount, &configCount)) {
+        qCWarning(KWIN_QPA, "eglChooseConfig failed: %x", eglGetError());
+        return EGL_NO_CONFIG_KHR;
+    }
+    if (configCount != configs.size()) {
+        qCWarning(KWIN_QPA, "eglChooseConfig did not return requested configs");
+        return EGL_NO_CONFIG_KHR;
+    }
+
+    for (const EGLConfig &config : qAsConst(configs)) {
+        EGLint redConfig, greenConfig, blueConfig, alphaConfig;
+        eglGetConfigAttrib(display, config, EGL_RED_SIZE, &redConfig);
+        eglGetConfigAttrib(display, config, EGL_GREEN_SIZE, &greenConfig);
+        eglGetConfigAttrib(display, config, EGL_BLUE_SIZE, &blueConfig);
+        eglGetConfigAttrib(display, config, EGL_ALPHA_SIZE, &alphaConfig);
+
+        if ((redSize == 0 || redSize == redConfig) &&
+                (greenSize == 0 || greenSize == greenConfig) &&
+                (blueSize == 0 || blueSize == blueConfig) &&
+                (alphaSize == 0 || alphaSize == alphaConfig)) {
+            return config;
+        }
+    }
+
+    // Return first config as a fallback.
     return configs[0];
 }
 
