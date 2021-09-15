@@ -129,9 +129,16 @@ void XdgSurfaceClient::scheduleConfigure()
 void XdgSurfaceClient::sendConfigure()
 {
     XdgSurfaceConfigure *configureEvent = sendRoleConfigure();
-    configureEvent->flags = m_configureFlags;
 
+    // The configure event inherits configure flags from the previous event.
+    if (!m_configureEvents.isEmpty()) {
+        const XdgSurfaceConfigure *previousEvent = m_configureEvents.constLast();
+        configureEvent->flags = previousEvent->flags;
+    }
+
+    configureEvent->flags |= m_configureFlags;
     m_configureFlags = {};
+
     m_configureEvents.append(configureEvent);
 }
 
