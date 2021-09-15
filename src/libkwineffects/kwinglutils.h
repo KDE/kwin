@@ -175,6 +175,7 @@ enum class ShaderTrait {
     UniformColor     = (1 << 1),
     Modulate         = (1 << 2),
     AdjustSaturation = (1 << 3),
+    RgbaToXrgb       = (1 << 4),
 };
 
 Q_DECLARE_FLAGS(ShaderTraits, ShaderTrait)

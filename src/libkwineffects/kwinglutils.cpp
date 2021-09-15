@@ -862,19 +862,21 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     if (traits & ShaderTrait::MapTexture) {
         stream << "vec2 texcoordC = texcoord0;\n";
 
-        if (traits & (ShaderTrait::Modulate | ShaderTrait::AdjustSaturation)) {
-            stream << "    vec4 texel = " << textureLookup << "(sampler, texcoordC);\n";
-            if (traits & ShaderTrait::Modulate)
-                stream << "    texel *= modulation;\n";
-            if (traits & ShaderTrait::AdjustSaturation)
-                stream << "    texel.rgb = mix(vec3(dot(texel.rgb, vec3(0.2126, 0.7152, 0.0722))), texel.rgb, saturation);\n";
-
-            stream << "    " << output << " = texel;\n";
-        } else {
-            stream << "    " << output << " = " << textureLookup << "(sampler, texcoordC);\n";
+        stream << "    vec4 texel = " << textureLookup << "(sampler, texcoordC);\n";
+        if (traits & ShaderTrait::Modulate) {
+            stream << "    texel *= modulation;\n";
         }
-    } else if (traits & ShaderTrait::UniformColor)
-        stream << "    " << output << " = geometryColor;\n";
+        if (traits & ShaderTrait::AdjustSaturation) {
+            stream << "    texel.rgb = mix(vec3(dot(texel.rgb, vec3(0.2126, 0.7152, 0.0722))), texel.rgb, saturation);\n";
+        }
+    } else if (traits & ShaderTrait::UniformColor) {
+        stream << "    vec4 texel = geometryColor;\n";
+    }
+    if (traits & ShaderTrait::RgbaToXrgb) {
+        stream << "    " << output << " = texel.argb;\n";
+    } else {
+        stream << "    " << output << " = texel;\n";
+    }
 
     stream << "}";
     stream.flush();

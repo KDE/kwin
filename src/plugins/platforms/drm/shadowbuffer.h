@@ -26,7 +26,11 @@ public:
 
     void bind();
     void unbind();
-    void render(DrmAbstractOutput *output);
+    enum class RenderMode {
+        Normal,
+        OpenGlToDrm,// flips the Y axis and changes color format to xrgb
+    };
+    void render(DrmAbstractOutput *output, RenderMode mode = RenderMode::Normal);
 
     int texture() const;
 

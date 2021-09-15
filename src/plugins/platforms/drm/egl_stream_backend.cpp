@@ -297,7 +297,7 @@ bool EglStreamBackend::initRenderingContext()
     for (DrmAbstractOutput *drmOutput : outputs) {
         addOutput(drmOutput);
     }
-    return !m_outputs.isEmpty() && makeContextCurrent(m_outputs.first());
+    return !m_outputs.isEmpty() && m_outputs.first().eglSurface != EGL_NO_SURFACE && makeContextCurrent(m_outputs.first());
 }
 
 bool EglStreamBackend::resetOutput(Output &o)
@@ -361,13 +361,14 @@ bool EglStreamBackend::resetOutput(Output &o)
             o.eglStream = stream;
             o.eglSurface = eglSurface;
         } else {
+            makeContextCurrent(o);
             o.secondarySurface = QSharedPointer<ShadowBuffer>::create(sourceSize);
             if (!o.secondarySurface->isComplete()) {
                 cleanupOutput(o);
                 return false;
             }
         }
-        if (drmOutput->needsSoftwareTransformation()) {
+        if (drmOutput->needsSoftwareTransformation() || o.output->gpu() != m_gpu) {
             makeContextCurrent(o);
             o.shadowBuffer = QSharedPointer<ShadowBuffer>::create(o.output->pixelSize());
             if (!o.shadowBuffer->isComplete()) {
@@ -415,12 +416,7 @@ void EglStreamBackend::removeOutput(DrmAbstractOutput *drmOutput)
 
 bool EglStreamBackend::makeContextCurrent(const Output &output)
 {
-    const EGLSurface surface = output.eglSurface;
-    if (surface == EGL_NO_SURFACE) {
-        return false;
-    }
-
-    if (eglMakeCurrent(eglDisplay(), surface, surface, context()) == EGL_FALSE) {
+    if (eglMakeCurrent(eglDisplay(), output.eglSurface, output.eglSurface, context()) == EGL_FALSE) {
         qCCritical(KWIN_DRM) << "Failed to make EGL context current:" << getEglErrorString();
         return false;
     }
@@ -482,7 +478,7 @@ bool EglStreamBackend::needsReset(const Output &o) const
     if (surfaceSize != o.output->sourceSize()) {
         return true;
     }
-    bool needsTexture = o.output->needsSoftwareTransformation();
+    bool needsTexture = o.output->needsSoftwareTransformation() || o.output->gpu() != m_gpu;
     if (needsTexture) {
         return !o.shadowBuffer || o.shadowBuffer->textureSize() != o.output->pixelSize();
     } else {
@@ -587,11 +583,9 @@ bool EglStreamBackend::swapBuffers(DrmAbstractOutput *output, const QRegion &dir
     Q_ASSERT(m_outputs.contains(output));
     Q_UNUSED(dirty);
     const auto &o = m_outputs[output];
-    if (o.shadowBuffer) {
-        o.secondarySurface->bind();
-        o.shadowBuffer->render(output);
-        o.secondarySurface->unbind();
-    }
+    o.secondarySurface->bind();
+    o.shadowBuffer->render(output, ShadowBuffer::RenderMode::OpenGlToDrm);
+    o.secondarySurface->unbind();
     return true;
 }
 
@@ -606,20 +600,7 @@ bool EglStreamBackend::exportFramebuffer(DrmAbstractOutput *output, void *data, 
     o.secondarySurface->bind();
     glReadPixels(0, 0, size.width(), size.height(), GL_RGBA, GL_UNSIGNED_BYTE, data);
     o.secondarySurface->unbind();
-    if (checkGLError("EglStreamBackend::exportFramebuffer")) {
-        return false;
-    }
-    uint8_t *imageData = static_cast<uint8_t*>(data);
-    for (int x = 0; x < size.width(); x++) {
-        for (int y = 0; y < size.height(); y++) {
-            int offset = (y * size.width() + x) * 4;
-            // alpha is irrelevant
-            imageData[offset + 3] = imageData[offset + 2];// g
-            imageData[offset + 2] = imageData[offset + 1];// b
-            imageData[offset + 1] = imageData[offset + 0];// r
-        }
-    }
-    return true;
+    return !checkGLError("EglStreamBackend::exportFramebuffer");
 }
 
 QRegion EglStreamBackend::beginFrameForSecondaryGpu(DrmAbstractOutput *output)

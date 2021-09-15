@@ -67,13 +67,17 @@ ShadowBuffer::~ShadowBuffer()
     glDeleteFramebuffers(1, &m_framebuffer);
 }
 
-void ShadowBuffer::render(DrmAbstractOutput *output)
+void ShadowBuffer::render(DrmAbstractOutput *output, RenderMode mode)
 {
     const auto size = output->modeSize();
     glViewport(0, 0, size.width(), size.height());
-    auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-
     QMatrix4x4 mvpMatrix;
+    ShaderTraits traits = ShaderTrait::MapTexture;
+    if (mode == RenderMode::OpenGlToDrm) {
+        mvpMatrix.scale(1, -1);
+        traits |= ShaderTrait::RgbaToXrgb;
+    }
+    auto shader = ShaderManager::instance()->pushShader(traits);
 
     switch (output->transform()) {
     case DrmOutput::Transform::Normal:
