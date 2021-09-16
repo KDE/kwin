@@ -596,10 +596,12 @@ static void printProps(DrmObject *object)
     auto list = object->properties();
     for (const auto &prop : list) {
         if (prop) {
+            uint64_t current = prop->name().startsWith("SRC_") ? prop->current() >> 16 : prop->current();
             if (prop->isImmutable() || !prop->needsCommit()) {
-                qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << prop->current();
+                qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current;
             } else {
-                qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << prop->current() << "->" << prop->pending();
+                uint64_t pending = prop->name().startsWith("SRC_") ? prop->pending() >> 16 : prop->pending();
+                qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current << "->" << pending;
             }
         }
     }
