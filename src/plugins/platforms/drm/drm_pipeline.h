@@ -103,7 +103,6 @@ private:
     QSharedPointer<DrmBuffer> m_primaryBuffer;
     QSharedPointer<DrmBuffer> m_oldTestBuffer;
 
-    bool m_active = true;
     bool m_legacyNeedsModeset = true;
     struct {
         QPoint pos;

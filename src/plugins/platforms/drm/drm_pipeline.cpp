@@ -184,7 +184,7 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
 bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
 {
     bool usesEglStreams = m_gpu->useEglStreams() && m_gpu->eglBackend() != nullptr && m_gpu == m_gpu->platform()->primaryGpu();
-    if (!usesEglStreams && m_active) {
+    if (!usesEglStreams && isActive()) {
         flags |= DRM_MODE_PAGE_FLIP_EVENT;
     }
     bool needsModeset = std::any_of(m_allObjects.constBegin(), m_allObjects.constEnd(), [](auto obj){return obj->needsModeset();});
@@ -197,7 +197,7 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
 
     auto modeSize = m_connector->currentMode().size;
     m_primaryPlane->set(QPoint(0, 0), m_primaryBuffer ? m_primaryBuffer->size() : modeSize, QPoint(0, 0), modeSize);
-    m_primaryPlane->setBuffer(m_active ? m_primaryBuffer.get() : nullptr);
+    m_primaryPlane->setBuffer(isActive() ? m_primaryBuffer.get() : nullptr);
     for (const auto &obj : qAsConst(m_allObjects)) {
         if (!obj->atomicPopulate(req)) {
             return false;
@@ -272,7 +272,7 @@ bool DrmPipeline::checkTestBuffer()
     if (m_primaryBuffer && m_primaryBuffer->size() == sourceSize()) {
         return true;
     }
-    if (!m_active) {
+    if (!isActive()) {
         return true;
     }
     QSharedPointer<DrmBuffer> buffer;
@@ -337,15 +337,13 @@ bool DrmPipeline::moveCursor(QPoint pos)
 bool DrmPipeline::setActive(bool active)
 {
     // disable the cursor before the primary plane to circumvent a crash in amdgpu
-    if (m_active && !active) {
+    if (isActive() && !active) {
         if (drmModeSetCursor(m_gpu->fd(), m_crtc->id(), 0, 0, 0) != 0) {
             qCWarning(KWIN_DRM) << "Could not set cursor:" << strerror(errno);
         }
     }
     bool success = false;
     auto mode = m_connector->currentMode().mode;
-    bool oldActive = m_active;
-    m_active = active;
     if (m_gpu->atomicModeSetting()) {
         m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, active ? m_crtc->id() : 0);
         m_crtc->setPending(DrmCrtc::PropertyIndex::Active, active);
@@ -362,18 +360,12 @@ bool DrmPipeline::setActive(bool active)
             success = atomicCommit();
         }
     } else {
-        auto dpmsProp = m_connector->getProp(DrmConnector::PropertyIndex::Dpms);
-        if (!dpmsProp) {
-            qCWarning(KWIN_DRM) << "Setting active failed: dpms property missing!";
-        } else {
-            success = dpmsProp->setPropertyLegacy(active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF);
-        }
+        m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF);
     }
     if (!success) {
-        m_active = oldActive;
         qCWarning(KWIN_DRM) << "Setting active to" << active << "failed" << strerror(errno);
     }
-    if (m_active) {
+    if (isActive()) {
         // enable cursor (again)
         setCursor(m_cursor.buffer, m_cursor.hotspot);
     }
@@ -461,8 +453,7 @@ bool DrmPipeline::setOverscan(uint32_t overscan)
 
 bool DrmPipeline::setRgbRange(AbstractWaylandOutput::RgbRange rgbRange)
 {
-    const auto &prop = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB);
-    if (prop) {
+    if (const auto &prop = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB)) {
         prop->setEnum(rgbRange);
         return test();
     } else {
@@ -486,7 +477,11 @@ DrmPlane::Transformations DrmPipeline::transformation() const
 
 bool DrmPipeline::isActive() const
 {
-    return m_active;
+    if (m_gpu->atomicModeSetting()) {
+        return m_crtc->getProp(DrmCrtc::PropertyIndex::Active)->pending() != 0;
+    } else {
+        return m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->current() == DRM_MODE_DPMS_ON;
+    }
 }
 
 bool DrmPipeline::isCursorVisible() const

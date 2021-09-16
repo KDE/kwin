@@ -25,7 +25,7 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
     : DrmObject(gpu, connectorId, {
             PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
             PropertyDefinition(QByteArrayLiteral("non-desktop"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("DPMS"), Requirement::Optional),
+            PropertyDefinition(QByteArrayLiteral("DPMS"), Requirement::RequiredForLegacy),
             PropertyDefinition(QByteArrayLiteral("EDID"), Requirement::Optional),
             PropertyDefinition(QByteArrayLiteral("overscan"), Requirement::Optional),
             PropertyDefinition(QByteArrayLiteral("vrr_capable"), Requirement::Optional),
@@ -83,11 +83,8 @@ bool DrmConnector::init()
     if (!initProps()) {
         return false;
     }
-
-    if (auto dpmsProp = getProp(PropertyIndex::Dpms)) {
-        dpmsProp->setLegacy();
-    } else {
-        qCDebug(KWIN_DRM) << "Could not find DPMS property!";
+    if (const auto &dpms = getProp(PropertyIndex::Dpms)) {
+        dpms->setLegacy();
     }
 
     auto underscan = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)];

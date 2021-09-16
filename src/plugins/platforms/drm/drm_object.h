@@ -183,7 +183,8 @@ public:
 protected:
     enum class Requirement {
         Required,
-        Optional
+        RequiredForLegacy,
+        Optional,
     };
     struct PropertyDefinition
     {
