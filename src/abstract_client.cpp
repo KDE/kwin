@@ -2635,7 +2635,9 @@ void AbstractClient::setVirtualKeyboardGeometry(const QRect &geo)
 {
     // No keyboard anymore
     if (geo.isEmpty() && !m_keyboardGeometryRestore.isEmpty()) {
-        moveResize(m_keyboardGeometryRestore);
+        const QRect availableArea = workspace()->clientArea(MaximizeArea, this);
+        QRect newWindowGeometry = (maximizeMode() & MaximizeHorizontal) ? availableArea : m_keyboardGeometryRestore;
+        moveResize(newWindowGeometry);
         m_keyboardGeometryRestore = QRect();
     } else if (geo.isEmpty()) {
         return;
