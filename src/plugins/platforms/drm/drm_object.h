@@ -79,7 +79,7 @@ public:
     class Property
     {
     public:
-        Property(DrmGpu *gpu, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames, drmModePropertyBlobRes *blob);
+        Property(DrmObject *obj, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames, drmModePropertyBlobRes *blob);
         virtual ~Property();
 
         void initEnumMap(drmModePropertyRes *prop);
@@ -140,6 +140,8 @@ public:
         void rollbackPending();
         bool needsCommit() const;
 
+        bool setPropertyLegacy(uint64_t value);
+
     private:
         uint32_t m_propId = 0;
         QByteArray m_propName;
@@ -160,7 +162,7 @@ public:
         QVector<QByteArray> m_enumNames;
         const bool m_immutable;
         bool m_legacy = false;
-        const DrmGpu *m_gpu;
+        const DrmObject *m_obj;
     };
 
     template <typename T>

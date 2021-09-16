@@ -164,7 +164,7 @@ bool DrmObject::updateProperties()
                         m_props[propIndex]->setCurrent(properties->prop_values[drmPropIndex]);
                     }
                 } else {
-                    m_props[propIndex] = new Property(m_gpu, prop.data(), properties->prop_values[drmPropIndex], def.enumNames, blob);
+                    m_props[propIndex] = new Property(this, prop.data(), properties->prop_values[drmPropIndex], def.enumNames, blob);
                 }
                 found = true;
                 break;
@@ -187,7 +187,7 @@ bool DrmObject::updateProperties()
  * Definitions for DrmObject::Property
  */
 
-DrmObject::Property::Property(DrmGpu *gpu, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames, drmModePropertyBlobRes *blob)
+DrmObject::Property::Property(DrmObject *obj, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames, drmModePropertyBlobRes *blob)
     : m_propId(prop->prop_id)
     , m_propName(prop->name)
     , m_pending(val)
@@ -197,7 +197,7 @@ DrmObject::Property::Property(DrmGpu *gpu, drmModePropertyRes *prop, uint64_t va
     , m_current(val)
     , m_currentBlob(blob)
     , m_immutable(prop->flags & DRM_MODE_PROP_IMMUTABLE)
-    , m_gpu(gpu)
+    , m_obj(obj)
 {
     if (!enumNames.isEmpty()) {
         m_enumNames = enumNames;
@@ -227,17 +227,17 @@ bool DrmObject::Property::setPendingBlob(void *blob, size_t length)
     }
     uint32_t id = 0;
     if (blob != nullptr) {
-        if (drmModeCreatePropertyBlob(m_gpu->fd(), blob, length, &id) != 0) {
+        if (drmModeCreatePropertyBlob(m_obj->m_gpu->fd(), blob, length, &id) != 0) {
             qCWarning(KWIN_DRM) << "Creating property blob failed!" << strerror(errno);
             return false;
         }
     }
     if (m_pending && m_pending != m_current && m_pending != m_next) {
-        drmModeDestroyPropertyBlob(m_gpu->fd(), m_pending);
+        drmModeDestroyPropertyBlob(m_obj->m_gpu->fd(), m_pending);
         drmModeFreePropertyBlob(m_pendingBlob);
     }
     m_pending = id;
-    m_pendingBlob = drmModeGetPropertyBlob(m_gpu->fd(), m_pending);
+    m_pendingBlob = drmModeGetPropertyBlob(m_obj->m_gpu->fd(), m_pending);
     return true;
 }
 
@@ -274,15 +274,15 @@ void DrmObject::Property::setCurrentBlob(drmModePropertyBlobRes *blob)
     if (!blob && m_next == m_current) {
         // same as above, for the "next" blob
         uint32_t id = 0;
-        if (drmModeCreatePropertyBlob(m_gpu->fd(), m_currentBlob->data, m_currentBlob->length, &id) != 0) {
+        if (drmModeCreatePropertyBlob(m_obj->m_gpu->fd(), m_currentBlob->data, m_currentBlob->length, &id) != 0) {
             qCWarning(KWIN_DRM) << "Creating property blob failed!" << strerror(errno);
         }
         m_next = id;
-        m_nextBlob = drmModeGetPropertyBlob(m_gpu->fd(), id);
+        m_nextBlob = drmModeGetPropertyBlob(m_obj->m_gpu->fd(), id);
     }
     uint32_t blobId = blob ? blob->id : 0;
     if (m_current && m_current != m_pending && m_current != m_next && m_current != blobId) {
-        drmModeDestroyPropertyBlob(m_gpu->fd(), m_current);
+        drmModeDestroyPropertyBlob(m_obj->m_gpu->fd(), m_current);
         drmModeFreePropertyBlob(m_currentBlob);
     }
     m_currentBlob = blob;
@@ -313,7 +313,7 @@ void DrmObject::Property::commitPending()
     }
     if (m_pendingBlob || m_nextBlob) {
         if (m_next && m_next != m_current) {
-            drmModeDestroyPropertyBlob(m_gpu->fd(), m_next);
+            drmModeDestroyPropertyBlob(m_obj->m_gpu->fd(), m_next);
             drmModeFreePropertyBlob(m_nextBlob);
         }
         m_next = m_pending;
@@ -330,7 +330,7 @@ void DrmObject::Property::rollbackPending()
     }
     if (m_pendingBlob || m_nextBlob) {
         if (m_pending && m_pending != m_current) {
-            drmModeDestroyPropertyBlob(m_gpu->fd(), m_pending);
+            drmModeDestroyPropertyBlob(m_obj->m_gpu->fd(), m_pending);
             drmModeFreePropertyBlob(m_pendingBlob);
         }
         m_pending = m_next;
@@ -343,6 +343,11 @@ void DrmObject::Property::rollbackPending()
 bool DrmObject::Property::needsCommit() const
 {
     return m_pending != m_current;
+}
+
+bool DrmObject::Property::setPropertyLegacy(uint64_t value)
+{
+    return drmModeObjectSetProperty(m_obj->m_gpu->fd(), m_obj->id(), m_obj->m_objectType, m_propId, value) == 0;
 }
 
 void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)

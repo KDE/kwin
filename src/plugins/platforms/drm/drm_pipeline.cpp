@@ -366,7 +366,7 @@ bool DrmPipeline::setActive(bool active)
         if (!dpmsProp) {
             qCWarning(KWIN_DRM) << "Setting active failed: dpms property missing!";
         } else {
-            success = drmModeConnectorSetProperty(m_gpu->fd(), m_connector->id(), dpmsProp->propId(), active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF) == 0;
+            success = dpmsProp->setPropertyLegacy(active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF);
         }
     }
     if (!success) {
@@ -446,7 +446,7 @@ bool DrmPipeline::setSyncMode(RenderLoopPrivate::SyncMode syncMode)
         vrrProp->setPending(vrr);
         return test();
     } else {
-        return drmModeObjectSetProperty(m_gpu->fd(), m_crtc->id(), DRM_MODE_OBJECT_CRTC, vrrProp->propId(), vrr) == 0;
+        return vrrProp->setPropertyLegacy(vrr);
     }
 }
 
