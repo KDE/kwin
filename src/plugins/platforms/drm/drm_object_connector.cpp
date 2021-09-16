@@ -301,7 +301,11 @@ bool DrmConnector::vrrCapable() const
 
 bool DrmConnector::needsModeset() const
 {
-    return getProp(PropertyIndex::CrtcId)->needsCommit();
+    if (getProp(PropertyIndex::CrtcId)->needsCommit()) {
+        return true;
+    }
+    const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
+    return rgb && rgb->needsCommit();
 }
 
 void DrmConnector::updateModes()
