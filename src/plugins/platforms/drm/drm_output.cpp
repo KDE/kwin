@@ -12,9 +12,6 @@
 #include "drm_object_connector.h"
 #include "drm_gpu.h"
 #include "drm_pipeline.h"
-#if HAVE_GBM
-#include "drm_buffer_gbm.h"
-#endif
 
 #include "composite.h"
 #include "cursor.h"
@@ -434,15 +431,6 @@ DrmConnector *DrmOutput::connector() const
 DrmPipeline *DrmOutput::pipeline() const
 {
     return m_pipeline;
-}
-
-GbmBuffer *DrmOutput::currentBuffer() const
-{
-#if HAVE_GBM
-    return dynamic_cast<GbmBuffer*>(m_pipeline->currentBuffer());
-#else
-    return nullptr;
-#endif
 }
 
 bool DrmOutput::isDpmsEnabled() const

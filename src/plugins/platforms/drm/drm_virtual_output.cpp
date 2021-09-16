@@ -14,9 +14,6 @@
 #include "drm_gpu.h"
 #include "drm_backend.h"
 #include "logging.h"
-#if HAVE_GBM
-#include "drm_buffer_gbm.h"
-#endif
 
 namespace KWin
 {
@@ -93,15 +90,6 @@ void DrmVirtualOutput::updateEnablement(bool enable)
 QSize DrmVirtualOutput::sourceSize() const
 {
     return pixelSize();
-}
-
-GbmBuffer *DrmVirtualOutput::currentBuffer() const
-{
-#if HAVE_GBM
-    return dynamic_cast<GbmBuffer*>(m_currentBuffer.get());
-#else
-    return nullptr;
-#endif
 }
 
 bool DrmVirtualOutput::isFormatSupported(uint32_t drmFormat) const

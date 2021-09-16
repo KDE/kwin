@@ -42,22 +42,10 @@ public:
     void setup();
 
     /**
-     * checks if the connector(s) and plane(s) are set to the CRTC(s)
-     * always returns false in legacy mode
-     */
-    bool isConnected() const;
-
-    /**
      * tests the pending commit first and commits it if the test passes
      * if the test fails, there is a guarantee for no lasting changes
      */
     bool present(const QSharedPointer<DrmBuffer> &buffer);
-
-    /**
-     * tests the pending commit
-     * always returns true in legacy mode!
-     */
-    bool test(const QVector<DrmPipeline*> &pipelines);
 
     bool modeset(int modeIndex);
     bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot = QPoint());
@@ -77,8 +65,6 @@ public:
     DrmConnector *connector() const;
     DrmCrtc *crtc() const;
     DrmPlane *primaryPlane() const;
-
-    DrmBuffer *currentBuffer() const;
 
     void pageFlipped();
     void printDebugInfo() const;

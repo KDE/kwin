@@ -71,18 +71,9 @@ void DrmPipeline::setup()
     }
 }
 
-bool DrmPipeline::test(const QVector<DrmPipeline*> &pipelines)
-{
-    if (m_gpu->atomicModeSetting()) {
-        return checkTestBuffer() && commitPipelines(pipelines, CommitMode::Test);
-    } else {
-        return true;
-    }
-}
-
 bool DrmPipeline::test()
 {
-    return test(m_gpu->pipelines());
+    return checkTestBuffer() && commitPipelines(m_gpu->pipelines(), CommitMode::Test);
 }
 
 bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
@@ -217,7 +208,7 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
 
 bool DrmPipeline::presentLegacy()
 {
-    if ((!currentBuffer() || currentBuffer()->needsModeChange(m_primaryBuffer.get())) && !modeset(m_connector->currentModeIndex())) {
+    if ((!m_crtc->current() || m_crtc->current()->needsModeChange(m_primaryBuffer.get())) && !modeset(m_connector->currentModeIndex())) {
         return false;
     }
     m_lastFlags = DRM_MODE_PAGE_FLIP_EVENT;
@@ -532,11 +523,6 @@ DrmPlane *DrmPipeline::primaryPlane() const
     return m_primaryPlane;
 }
 
-DrmBuffer *DrmPipeline::currentBuffer() const
-{
-    return m_primaryPlane ? m_primaryPlane->current().get() : m_crtc->current().get();
-}
-
 void DrmPipeline::pageFlipped()
 {
     m_crtc->flipBuffer();
@@ -564,16 +550,6 @@ void DrmPipeline::updateProperties()
     // so make sure it gets set again
     m_cursor.dirtyBo = true;
     m_cursor.dirtyPos = true;
-}
-
-bool DrmPipeline::isConnected() const
-{
-    if (m_primaryPlane) {
-        return m_connector->getProp(DrmConnector::PropertyIndex::CrtcId)->current() == m_crtc->id()
-            && m_primaryPlane->getProp(DrmPlane::PropertyIndex::CrtcId)->current() == m_crtc->id();
-    } else {
-        return false;
-    }
 }
 
 bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const

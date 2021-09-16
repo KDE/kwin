@@ -28,7 +28,6 @@ public:
     ~DrmVirtualOutput() override;
 
     bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) override;
-    GbmBuffer *currentBuffer() const override;
     QSize sourceSize() const override;
     bool isDpmsEnabled() const override;
 
