@@ -128,6 +128,7 @@ private:
     } m_cursor;
 
     QVector<DrmObject*> m_allObjects;
+    QMap<uint32_t, QVector<uint64_t>> m_formats;
 
     int m_lastFlags = 0;
 };

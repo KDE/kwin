@@ -53,19 +53,22 @@ DrmPipeline::~DrmPipeline()
 
 void DrmPipeline::setup()
 {
-    if (!m_gpu->atomicModeSetting()) {
-        return;
+    if (m_gpu->atomicModeSetting()) {
+        if (m_connector->getProp(DrmConnector::PropertyIndex::CrtcId)->current() == m_crtc->id()) {
+            m_connector->findCurrentMode(m_crtc->queryCurrentMode());
+        }
+        m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, m_crtc->id());
+        m_crtc->setPending(DrmCrtc::PropertyIndex::Active, 1);
+        auto mode = m_connector->currentMode();
+        m_crtc->setPendingBlob(DrmCrtc::PropertyIndex::ModeId, &mode.mode, sizeof(drmModeModeInfo));
+        m_primaryPlane->setPending(DrmPlane::PropertyIndex::CrtcId, m_crtc->id());
+        m_primaryPlane->set(QPoint(0, 0), sourceSize(), QPoint(0, 0), mode.size);
+        m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate0);
+        m_formats = m_primaryPlane->formats();
+    } else {
+        m_formats.insert(DRM_FORMAT_XRGB8888, {});
+        m_formats.insert(DRM_FORMAT_ARGB8888, {});
     }
-    if (m_connector->getProp(DrmConnector::PropertyIndex::CrtcId)->current() == m_crtc->id()) {
-        m_connector->findCurrentMode(m_crtc->queryCurrentMode());
-    }
-    m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, m_crtc->id());
-    m_crtc->setPending(DrmCrtc::PropertyIndex::Active, 1);
-    auto mode = m_connector->currentMode();
-    m_crtc->setPendingBlob(DrmCrtc::PropertyIndex::ModeId, &mode.mode, sizeof(drmModeModeInfo));
-    m_primaryPlane->setPending(DrmPlane::PropertyIndex::CrtcId, m_crtc->id());
-    m_primaryPlane->set(QPoint(0, 0), sourceSize(), QPoint(0, 0), mode.size);
-    m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate0);
 }
 
 bool DrmPipeline::test(const QVector<DrmPipeline*> &pipelines)
@@ -575,20 +578,12 @@ bool DrmPipeline::isConnected() const
 
 bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const
 {
-    if (m_gpu->atomicModeSetting()) {
-        return m_primaryPlane->formats().contains(drmFormat);
-    } else {
-        return drmFormat == DRM_FORMAT_XRGB8888 || DRM_FORMAT_ARGB8888;
-    }
+    return m_formats.contains(drmFormat);
 }
 
 QVector<uint64_t> DrmPipeline::supportedModifiers(uint32_t drmFormat) const
 {
-    if (m_gpu->atomicModeSetting()) {
-        return m_primaryPlane->formats()[drmFormat];
-    } else {
-        return {};
-    }
+    return m_formats[drmFormat];
 }
 
 static void printProps(DrmObject *object)
