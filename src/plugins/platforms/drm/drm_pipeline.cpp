@@ -281,21 +281,12 @@ bool DrmPipeline::checkTestBuffer()
     if (!m_active) {
         return true;
     }
+    QSharedPointer<DrmBuffer> buffer;
 #if HAVE_GBM
     auto backend = m_gpu->eglBackend();
     if (backend && m_output) {
-        auto buffer = backend->renderTestFrame(m_output);
-        if (buffer && buffer->bufferId()) {
-            m_oldTestBuffer = m_primaryBuffer;
-            m_primaryBuffer = buffer;
-            return true;
-        } else {
-            return false;
-        }
-    }
-    // we either don't have a DrmOutput or we're using QPainter
-    QSharedPointer<DrmBuffer> buffer;
-    if (backend && m_gpu->gbmDevice()) {
+        buffer = backend->renderTestFrame(m_output);
+    } else if (backend && m_gpu->gbmDevice()) {
         gbm_bo *bo = gbm_bo_create(m_gpu->gbmDevice(), sourceSize().width(), sourceSize().height(), GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
         if (!bo) {
             return false;
@@ -305,7 +296,7 @@ bool DrmPipeline::checkTestBuffer()
         buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, sourceSize());
     }
 #else
-    auto buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, sourceSize());
+    buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, sourceSize());
 #endif
     if (buffer && buffer->bufferId()) {
         m_oldTestBuffer = m_primaryBuffer;
