@@ -393,6 +393,12 @@ public:
      */
     virtual RenderLoop *renderLoop() const;
 
+    /**
+     * Returns @c true if compositing can be restarted without causing issues, @c false otherwise
+     * Default implementation returns true
+     */
+    virtual bool supportsCompositingRestart() const;
+
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);

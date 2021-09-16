@@ -537,12 +537,14 @@ void Compositor::reinitialize()
     // Reparse config. Config options will be reloaded by start()
     kwinApp()->config()->reparseConfiguration();
 
-    // Restart compositing
-    stop();
-    start();
+    if (kwinApp()->platform()->supportsCompositingRestart()) {
+        // Restart compositing
+        stop();
+        start();
 
-    if (effects) { // start() may fail
-        effects->reconfigure();
+        if (effects) { // start() may fail
+            effects->reconfigure();
+        }
     }
 }
 

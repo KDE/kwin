@@ -60,6 +60,7 @@ public:
     void checkOutputsAreOn();
 
     QVector<CompositingType> supportedCompositors() const override;
+    bool supportsCompositingRestart() const override;
 
     QString supportInformation() const override;
 

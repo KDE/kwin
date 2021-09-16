@@ -625,4 +625,9 @@ void Platform::setSceneEglGlobalShareContext(EGLContext context)
     m_globalShareContext = context;
 }
 
+bool Platform::supportsCompositingRestart() const
+{
+    return true;
+}
+
 }

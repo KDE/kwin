@@ -726,4 +726,9 @@ DrmGpu *DrmBackend::findGpuByFd(int fd) const
     return nullptr;
 }
 
+bool DrmBackend::supportsCompositingRestart() const
+{
+    return !primaryGpu()->useEglStreams() || !primaryGpu()->eglBackend();
+}
+
 }
