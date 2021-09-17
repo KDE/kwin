@@ -32,6 +32,7 @@
 #include <KWaylandServer/clientbuffer.h>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/eglstream_controller_interface.h>
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -574,6 +575,11 @@ QSharedPointer<DrmBuffer> EglStreamBackend::renderTestFrame(DrmAbstractOutput *d
 bool EglStreamBackend::hasOutput(AbstractOutput *output) const
 {
     return m_outputs.contains(output);
+}
+
+uint32_t EglStreamBackend::drmFormat() const
+{
+    return DRM_FORMAT_XRGB8888;
 }
 
 /************************************************

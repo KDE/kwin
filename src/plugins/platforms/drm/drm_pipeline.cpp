@@ -275,10 +275,29 @@ bool DrmPipeline::checkTestBuffer()
     if (!isActive()) {
         return true;
     }
-    QSharedPointer<DrmBuffer> buffer;
-#if HAVE_GBM
     auto backend = m_gpu->eglBackend();
-    if (backend && m_output) {
+    QSharedPointer<DrmBuffer> buffer;
+    // try to re-use buffers if possible.
+    const auto &checkBuffer = [this, backend, &buffer](const QSharedPointer<DrmBuffer> &buf){
+        if (buf->format() == backend->drmFormat()
+            && (!m_gpu->atomicModeSetting() || supportedModifiers(buf->format()).contains(buf->modifier()))
+            && buf->size() == sourceSize()) {
+            buffer = buf;
+        }
+    };
+    if (m_primaryPlane && m_primaryPlane->next()) {
+        checkBuffer(m_primaryPlane->next());
+    } else if (m_primaryPlane && m_primaryPlane->current()) {
+        checkBuffer(m_primaryPlane->current());
+    } else if (m_crtc->next()) {
+        checkBuffer(m_crtc->next());
+    } else if (m_crtc->current()) {
+        checkBuffer(m_crtc->current());
+    }
+    // if we don't have a fitting buffer already, get or create one
+    if (buffer) {
+#if HAVE_GBM
+    } else if (backend && m_output) {
         buffer = backend->renderTestFrame(m_output);
     } else if (backend && m_gpu->gbmDevice()) {
         gbm_bo *bo = gbm_bo_create(m_gpu->gbmDevice(), sourceSize().width(), sourceSize().height(), GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
@@ -286,12 +305,10 @@ bool DrmPipeline::checkTestBuffer()
             return false;
         }
         buffer = QSharedPointer<DrmGbmBuffer>::create(m_gpu, bo, nullptr);
+#endif
     } else {
         buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, sourceSize());
     }
-#else
-    buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu, sourceSize());
-#endif
     if (buffer && buffer->bufferId()) {
         m_oldTestBuffer = m_primaryBuffer;
         m_primaryBuffer = buffer;
