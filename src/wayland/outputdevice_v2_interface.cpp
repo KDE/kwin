@@ -284,6 +284,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendCapabilities(resource);
     sendOverscan(resource);
     sendVrrPolicy(resource);
+    sendRgbRange(resource);
     sendDone(resource);
 }
 
