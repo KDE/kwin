@@ -87,6 +87,7 @@ private:
     bool makeContextCurrent(const Output &output);
     void cleanupOutput(Output &output);
     bool needsReset(const Output &o) const;
+    const Output *findConnectedOutput() const;
 
     QMap<AbstractOutput *, Output> m_outputs;
     KWaylandServer::EglStreamControllerInterface *m_eglStreamControllerInterface;
