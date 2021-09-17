@@ -62,6 +62,8 @@ public:
 
     virtual QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output) = 0;
 
+    virtual uint32_t drmFormat() const = 0;
+
     static AbstractEglDrmBackend *renderingBackend() {
         return static_cast<AbstractEglDrmBackend*>(primaryBackend());
     }

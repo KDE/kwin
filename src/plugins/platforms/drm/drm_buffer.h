@@ -20,7 +20,7 @@ class DrmGpu;
 class DrmBuffer
 {
 public:
-    DrmBuffer(DrmGpu *gpu);
+    DrmBuffer(DrmGpu *gpu, uint32_t format, uint64_t modifier);
     virtual ~DrmBuffer() = default;
 
     virtual bool needsModeChange(DrmBuffer *b) const {Q_UNUSED(b) return false;}
@@ -36,11 +36,19 @@ public:
     DrmGpu *gpu() const {
         return m_gpu;
     }
+    uint32_t format() const {
+        return m_format;
+    }
+    uint64_t modifier() const {
+        return m_modifier;
+    }
 
 protected:
     quint32 m_bufferId = 0;
     QSize m_size;
     DrmGpu *m_gpu;
+    uint32_t m_format;
+    uint64_t m_modifier;
 };
 
 class DrmDumbBuffer : public DrmBuffer

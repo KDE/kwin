@@ -65,6 +65,7 @@ public:
     bool directScanoutAllowed(AbstractOutput *output) const override;
 
     QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output) override;
+    uint32_t drmFormat() const override;
 
 protected:
     void cleanupSurfaces() override;

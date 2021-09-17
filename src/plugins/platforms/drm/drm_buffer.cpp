@@ -18,18 +18,21 @@
 // drm
 #include <xf86drm.h>
 #include <xf86drmMode.h>
+#include <drm_fourcc.h>
 
 namespace KWin
 {
 
-DrmBuffer:: DrmBuffer(DrmGpu *gpu)
+DrmBuffer:: DrmBuffer(DrmGpu *gpu, uint32_t format, uint64_t modifier)
     : m_gpu(gpu)
+    , m_format(format)
+    , m_modifier(modifier)
 {
 }
 
 // DrmDumbBuffer
 DrmDumbBuffer::DrmDumbBuffer(DrmGpu *gpu, const QSize &size)
-    : DrmBuffer(gpu)
+    : DrmBuffer(gpu, DRM_FORMAT_XRGB8888, DRM_FORMAT_MOD_LINEAR)
 {
     m_size = size;
     drm_mode_create_dumb createArgs;

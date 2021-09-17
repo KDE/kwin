@@ -734,4 +734,9 @@ bool EglGbmBackend::hasOutput(AbstractOutput *output) const
     return m_outputs.contains(output);
 }
 
+uint32_t EglGbmBackend::drmFormat() const
+{
+    return m_gbmFormat;
+}
+
 }
