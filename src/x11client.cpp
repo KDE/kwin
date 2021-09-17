@@ -4154,7 +4154,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
     if (isElectricBorderMaximizing())
         clientArea = workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos());
     else
-        clientArea = workspace()->clientArea(MaximizeArea, this);
+        clientArea = workspace()->clientArea(MaximizeArea, this, moveResizeGeometry().center());
 
     MaximizeMode old_mode = max_mode;
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
