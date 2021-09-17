@@ -1774,6 +1774,8 @@ public:
             tool = createTool(event->tabletId());
         }
 
+        // NOTE: tablet will be nullptr as the device is removed (see ::removeDevice) but events from the tool
+        // may still happen (e.g. Release or ProximityOut events)
         auto tablet = static_cast<KWaylandServer::TabletV2Interface *>(event->tabletId().m_deviceGroupData);
 
         Toplevel *toplevel = input()->findToplevel(event->globalPos());
@@ -1784,7 +1786,7 @@ public:
         KWaylandServer::SurfaceInterface *surface = toplevel->surface();
         tool->setCurrentSurface(surface);
 
-        if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
+        if (!tool->isClientSupported() || (tablet && !tablet->isSurfaceSupported(surface))) {
             return emulateTabletEvent(event);
         }
 
