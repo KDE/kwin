@@ -70,28 +70,39 @@ void Placement::place(AbstractClient *c, const QRect &area)
 
 void Placement::place(AbstractClient *c, const QRect &area, Policy policy, Policy nextPlacement)
 {
-    if (policy == Unknown)
+    switch (policy) {
+    case Unknown:
         policy = Default;
-    if (policy == Default)
+        break;
+    case Default:
         policy = options->placement();
-    if (policy == NoPlacement)
+        break;
+    case NoPlacement:
         return;
-    else if (policy == Random)
+    case Random:
         placeAtRandom(c, area, nextPlacement);
-    else if (policy == Cascade)
+        break;
+    case Cascade:
         placeCascaded(c, area, nextPlacement);
-    else if (policy == Centered)
+        break;
+    case Centered:
         placeCentered(c, area, nextPlacement);
-    else if (policy == ZeroCornered)
+        break;
+    case ZeroCornered:
         placeZeroCornered(c, area, nextPlacement);
-    else if (policy == UnderMouse)
+        break;
+    case UnderMouse:
         placeUnderMouse(c, area, nextPlacement);
-    else if (policy == OnMainWindow)
+        break;
+    case OnMainWindow:
         placeOnMainWindow(c, area, nextPlacement);
-    else if (policy == Maximizing)
+        break;
+    case Maximizing:
         placeMaximizing(c, area, nextPlacement);
-    else
+        break;
+    default:
         placeSmart(c, area, nextPlacement);
+    }
 
     if (options->borderSnapZone()) {
         // snap to titlebar / snap to window borders on inner screen edges
