@@ -202,6 +202,7 @@ void DrmGpu::initDrmResources()
 
 bool DrmGpu::updateOutputs()
 {
+    waitIdle();
     DrmScopedPointer<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed";
