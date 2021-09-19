@@ -70,13 +70,10 @@ void Placement::place(AbstractClient *c, const QRect &area)
 
 void Placement::place(AbstractClient *c, const QRect &area, Policy policy, Policy nextPlacement)
 {
-    switch (policy) {
-    case Unknown:
-        policy = Default;
-        break;
-    case Default:
+    if (policy == Unknown || policy == Default)
         policy = options->placement();
-        break;
+
+    switch (policy) {
     case NoPlacement:
         return;
     case Random:
