@@ -286,20 +286,20 @@ void Platform::keymapChange(int fd, uint32_t size)
     input()->processKeymapChange(fd, size);
 }
 
-void Platform::pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta, InputRedirection::PointerAxisSource source)
+void Platform::pointerAxisHorizontal(qreal delta, quint32 time, qint32 deltaV120, InputRedirection::PointerAxisSource source)
 {
     if (!input()) {
         return;
     }
-    input()->processPointerAxis(InputRedirection::PointerAxisHorizontal, delta, discreteDelta, source, time);
+    input()->processPointerAxis(InputRedirection::PointerAxisHorizontal, delta, deltaV120, source, time);
 }
 
-void Platform::pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta, InputRedirection::PointerAxisSource source)
+void Platform::pointerAxisVertical(qreal delta, quint32 time, qint32 deltaV120, InputRedirection::PointerAxisSource source)
 {
     if (!input()) {
         return;
     }
-    input()->processPointerAxis(InputRedirection::PointerAxisVertical, delta, discreteDelta, source, time);
+    input()->processPointerAxis(InputRedirection::PointerAxisVertical, delta, deltaV120, source, time);
 }
 
 void Platform::pointerButtonPressed(quint32 button, quint32 time)

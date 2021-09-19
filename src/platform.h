@@ -397,10 +397,10 @@ public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);
     void pointerButtonReleased(quint32 button, quint32 time);
-    void pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta = 0,
-        InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
-    void pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta = 0,
-        InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+    void pointerAxisHorizontal(qreal delta, quint32 time, qint32 deltaV120 = 0,
+                               InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+    void pointerAxisVertical(qreal delta, quint32 time, qint32 deltaV120 = 0,
+                             InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
     void keyboardKeyPressed(quint32 key, quint32 time);
     void keyboardKeyReleased(quint32 key, quint32 time);
     void keyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);

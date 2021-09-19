@@ -325,6 +325,32 @@ KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, void *userData)
     return {toolType, capabilities, serial, toolId, userData};
 }
 
+void Connection::handleDiscreteAxis(PointerEvent *pointerEvent, InputRedirection::PointerAxisSource source)
+{
+    const auto axes = pointerEvent->axis();
+    for (const InputRedirection::PointerAxis &axis : axes) {
+        Q_EMIT pointerAxisChanged(axis,
+                                  pointerEvent->scrollValue(axis),
+                                  pointerEvent->scrollValueV120(axis),
+                                  source,
+                                  pointerEvent->time(),
+                                  pointerEvent->device());
+    }
+}
+
+void Connection::handleContinuousAxis(PointerEvent *pointerEvent, InputRedirection::PointerAxisSource source)
+{
+    const auto axes = pointerEvent->axis();
+    for (const InputRedirection::PointerAxis &axis : axes) {
+        Q_EMIT pointerAxisChanged(axis,
+                                  pointerEvent->scrollValue(axis),
+                                  0,
+                                  source,
+                                  pointerEvent->time(),
+                                  pointerEvent->device());
+    }
+}
+
 void Connection::processEvents()
 {
     QMutexLocker locker(&m_mutex);
@@ -422,15 +448,18 @@ void Connection::processEvents()
                 Q_EMIT keyChanged(ke->key(), ke->state(), ke->time(), ke->device());
                 break;
             }
-            case LIBINPUT_EVENT_POINTER_AXIS: {
-                PointerEvent *pe = static_cast<PointerEvent*>(event.data());
-                const auto axes = pe->axis();
-                for (const InputRedirection::PointerAxis &axis : axes) {
-                    Q_EMIT pointerAxisChanged(axis, pe->axisValue(axis), pe->discreteAxisValue(axis),
-                        pe->axisSource(), pe->time(), pe->device());
-                }
+            case LIBINPUT_EVENT_POINTER_SCROLL_WHEEL:
+                handleDiscreteAxis(static_cast<PointerEvent *>(event.data()),
+                                   InputRedirection::PointerAxisSourceWheel);
                 break;
-            }
+            case LIBINPUT_EVENT_POINTER_SCROLL_FINGER:
+                handleContinuousAxis(static_cast<PointerEvent *>(event.data()),
+                                     InputRedirection::PointerAxisSourceFinger);
+                break;
+            case LIBINPUT_EVENT_POINTER_SCROLL_CONTINUOUS:
+                handleContinuousAxis(static_cast<PointerEvent *>(event.data()),
+                                     InputRedirection::PointerAxisSourceContinuous);
+                break;
             case LIBINPUT_EVENT_POINTER_BUTTON: {
                 PointerEvent *pe = static_cast<PointerEvent*>(event.data());
                 Q_EMIT pointerButtonChanged(pe->button(), pe->buttonState(), pe->time(), pe->device());

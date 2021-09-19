@@ -321,7 +321,7 @@ public:
             const WheelEvent *wheelEvent = static_cast<WheelEvent *>(event);
             seat->setTimestamp(wheelEvent->timestamp());
             seat->notifyPointerAxis(wheelEvent->orientation(), wheelEvent->delta(),
-                                    wheelEvent->discreteDelta(),
+                                    wheelEvent->deltaV120(),
                                     kwinAxisSourceToKWaylandAxisSource(wheelEvent->axisSource()));
             seat->notifyPointerFrame();
         }
@@ -1441,7 +1441,7 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         auto _event = static_cast<WheelEvent *>(event);
-        seat->notifyPointerAxis(_event->orientation(), _event->delta(), _event->discreteDelta(),
+        seat->notifyPointerAxis(_event->orientation(), _event->delta(), _event->deltaV120(),
                                 kwinAxisSourceToKWaylandAxisSource(_event->axisSource()));
         seat->notifyPointerFrame();
         return true;
@@ -2574,9 +2574,9 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
     m_pointer->processButton(button, state, time);
 }
 
-void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 discreteDelta, PointerAxisSource source, uint32_t time)
+void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 deltaV120, PointerAxisSource source, uint32_t time)
 {
-    m_pointer->processAxis(axis, delta, discreteDelta, source, time);
+    m_pointer->processAxis(axis, delta, deltaV120, source, time);
 }
 
 void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)

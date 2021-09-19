@@ -32,6 +32,7 @@ namespace LibInput
 class Event;
 class Device;
 class Context;
+class PointerEvent;
 
 class KWIN_EXPORT Connection : public QObject
 {
@@ -94,8 +95,8 @@ Q_SIGNALS:
     void pointerButtonChanged(quint32 button, KWin::InputRedirection::PointerButtonState state, quint32 time, KWin::LibInput::Device *device);
     void pointerMotionAbsolute(QPointF orig, QPointF screen, quint32 time, KWin::LibInput::Device *device);
     void pointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint32 time, quint64 timeMicroseconds, KWin::LibInput::Device *device);
-    void pointerAxisChanged(KWin::InputRedirection::PointerAxis axis, qreal delta, qint32 discreteDelta,
-        KWin::InputRedirection::PointerAxisSource source, quint32 time, KWin::LibInput::Device *device);
+    void pointerAxisChanged(KWin::InputRedirection::PointerAxis axis, qreal delta, qint32 deltaV120,
+                            KWin::InputRedirection::PointerAxisSource source, quint32 time, KWin::LibInput::Device *device);
     void touchFrame(KWin::LibInput::Device *device);
     void touchCanceled(KWin::LibInput::Device *device);
     void touchDown(qint32 id, const QPointF &absolutePos, quint32 time, KWin::LibInput::Device *device);
@@ -139,6 +140,8 @@ private Q_SLOTS:
 private:
     Connection(Context *input, QObject *parent = nullptr);
     void handleEvent();
+    void handleDiscreteAxis(PointerEvent *event, InputRedirection::PointerAxisSource source);
+    void handleContinuousAxis(PointerEvent *event, InputRedirection::PointerAxisSource source);
     void applyDeviceConfig(Device *device);
     void applyScreenToDevice(Device *device);
     Context *m_input;
