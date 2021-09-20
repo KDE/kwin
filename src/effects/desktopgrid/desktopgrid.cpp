@@ -785,7 +785,7 @@ bool DesktopGridEffect::borderActivated(ElectricBorder border)
         return false;
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return true;
-    // toggle();
+    toggle();
     return true;
 }
 
