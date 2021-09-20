@@ -299,7 +299,7 @@ Layer AbstractClient::belongsToLayer() const
         return NotificationLayer;
     if (isCriticalNotification())
         return CriticalNotificationLayer;
-    if (workspace()->showingDesktop() && belongsToDesktop()) {
+    if (workspace()->showingDesktop() && belongsToDesktop() && isSpecialWindow()) {
         return AboveLayer;
     }
     if (keepBelow())
