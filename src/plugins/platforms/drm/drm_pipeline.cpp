@@ -285,8 +285,9 @@ bool DrmPipeline::checkTestBuffer()
     QSharedPointer<DrmBuffer> buffer;
     // try to re-use buffers if possible.
     const auto &checkBuffer = [this, backend, &buffer](const QSharedPointer<DrmBuffer> &buf){
+        const auto &mods = supportedModifiers(buf->format());
         if (buf->format() == backend->drmFormat()
-            && (!m_gpu->atomicModeSetting() || supportedModifiers(buf->format()).contains(buf->modifier()))
+            && (mods.isEmpty() || mods.contains(buf->modifier()))
             && buf->size() == sourceSize()) {
             buffer = buf;
         }
