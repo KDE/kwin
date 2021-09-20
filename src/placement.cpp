@@ -719,6 +719,17 @@ void Workspace::slotWindowPackDown()
     }
 }
 
+/** Moves the active window to the center of the screen. */
+void Workspace::slotWindowCenter()
+{
+    if (active_client && active_client->isMovable()) {
+        const QRect geometry = active_client->moveResizeGeometry();
+        QPoint center = clientArea(MaximizeArea, active_client).center();
+        active_client->packTo(center.x() - (geometry.width() / 2),
+                              center.y() - (geometry.height() / 2));
+    }
+}
+
 void Workspace::slotWindowGrowHorizontal()
 {
     if (active_client)

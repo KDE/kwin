@@ -1007,6 +1007,8 @@ void Workspace::initShortcuts()
         Qt::CTRL + Qt::ALT + Qt::Key_A, slotActivateAttentionWindow);
     DEF(I18N_NOOP("Setup Window Shortcut"),
         0, slotSetupWindowShortcut);
+    DEF2("Window Move Center", I18N_NOOP("Move Window to the Center"), 0,
+     slotWindowCenter);
     DEF2("Window Pack Right", I18N_NOOP("Pack Window to the Right"),
         0, slotWindowPackRight);
     DEF2("Window Pack Left", I18N_NOOP("Pack Window to the Left"),

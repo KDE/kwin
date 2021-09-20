@@ -441,6 +441,9 @@ public Q_SLOTS:
     void slotWindowLower();
     void slotWindowRaiseOrLower();
     void slotActivateAttentionWindow();
+
+    void slotWindowCenter();
+
     void slotWindowPackLeft();
     void slotWindowPackRight();
     void slotWindowPackUp();
