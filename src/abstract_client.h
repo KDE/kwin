@@ -118,10 +118,9 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
 
     /**
-     * Whether the window can be closed by the user. The value is evaluated each time the getter is called.
-     * Because of that no changed signal is provided.
+     * Whether the window can be closed by the user.
      */
-    Q_PROPERTY(bool closeable READ isCloseable)
+    Q_PROPERTY(bool closeable READ isCloseable NOTIFY closeableChanged)
 
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
 
