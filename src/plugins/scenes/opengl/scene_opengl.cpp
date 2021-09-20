@@ -1137,7 +1137,7 @@ QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
     PlatformOpenGLSurfaceTexture *frame = nullptr;
     const SurfaceItem *item = surfaceItem();
 
-    if (item) {
+    if (item && item->pixmap()) {
         frame = static_cast<PlatformOpenGLSurfaceTexture *>(item->pixmap()->platformTexture());
     }
 
