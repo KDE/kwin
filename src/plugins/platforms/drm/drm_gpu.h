@@ -157,7 +157,6 @@ private:
     QVector<DrmOutput*> m_drmOutputs;
     // includes virtual outputs
     QVector<DrmAbstractOutput*> m_outputs;
-
     // for DRM leasing:
     QVector<DrmLeaseOutput*> m_leaseOutputs;
     KWaylandServer::DrmLeaseDeviceV1Interface *m_leaseDevice = nullptr;
