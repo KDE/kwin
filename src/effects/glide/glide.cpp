@@ -12,6 +12,7 @@
 
 // own
 #include "glide.h"
+#include "kwinglutils.h"
 
 // KConfigSkeleton
 #include "glideconfig.h"
@@ -120,7 +121,7 @@ void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     data.setProjectionMatrix(invOffsetMatrix * oldProjMatrix);
 
     // Move the center of the window to the origin.
-    const QRectF screenGeo = effects->virtualScreenGeometry();
+    const QRectF screenGeo = GLRenderTarget::virtualScreenGeometry();
     const QPointF offset = screenGeo.center() - windowGeo.center();
     data.translate(offset.x(), offset.y());
 
