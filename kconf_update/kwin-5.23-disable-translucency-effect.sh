@@ -12,7 +12,7 @@ fi
 
 while read -r line; do
     KEY="${line%=*}"
-    if [ "$KEY" == "kwin4_effect_translucencyEnabled" ]; then
+    if [ "$KEY" = "kwin4_effect_translucencyEnabled" ]; then
         HAS_ENABLED_KEY=1
     fi
     echo "$line"
