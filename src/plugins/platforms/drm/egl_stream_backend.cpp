@@ -627,6 +627,11 @@ void EglStreamSurfaceTextureWayland::createFbo()
     glDeleteRenderbuffers(1, &m_rbo);
     glDeleteFramebuffers(1, &m_fbo);
 
+    GLuint oldReadFbo = 0;
+    GLuint oldDrawFbo = 0;
+    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, reinterpret_cast<GLint *>(&oldReadFbo));
+    glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, reinterpret_cast<GLint *>(&oldDrawFbo));
+
     glGenFramebuffers(1, &m_fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glGenRenderbuffers(1, &m_rbo);
@@ -634,17 +639,20 @@ void EglStreamSurfaceTextureWayland::createFbo()
     glRenderbufferStorage(GL_RENDERBUFFER, m_format, m_texture->width(), m_texture->height());
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, oldReadFbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, oldDrawFbo);
 }
 
 // Renders the contents of the given EXTERNAL_OES texture
 // to the scratch framebuffer, then copies this to m_texture
 void EglStreamSurfaceTextureWayland::copyExternalTexture(GLuint tex)
 {
-    GLint oldViewport[4], oldProgram;
+    GLint oldViewport[4], oldProgram, oldReadFbo, oldDrawFbo;
     glGetIntegerv(GL_VIEWPORT, oldViewport);
     glViewport(0, 0, m_texture->width(), m_texture->height());
     glGetIntegerv(GL_CURRENT_PROGRAM, &oldProgram);
+    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, reinterpret_cast<GLint *>(&oldReadFbo));
+    glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, reinterpret_cast<GLint *>(&oldDrawFbo));
     glUseProgram(0);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glBindRenderbuffer(GL_RENDERBUFFER, m_rbo);
@@ -670,7 +678,8 @@ void EglStreamSurfaceTextureWayland::copyExternalTexture(GLuint tex)
     glDisable(GL_TEXTURE_EXTERNAL_OES);
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, 0);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, oldReadFbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, oldDrawFbo);
     glUseProgram(oldProgram);
     glViewport(oldViewport[0], oldViewport[1], oldViewport[2], oldViewport[3]);
 }
