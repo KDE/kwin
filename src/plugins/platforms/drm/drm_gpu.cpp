@@ -227,6 +227,10 @@ bool DrmGpu::updateOutputs()
     // stash away current pipelines of active outputs
     QMap<DrmOutput*, DrmPipeline*> oldPipelines;
     for (const auto &output : qAsConst(m_drmOutputs)) {
+        if (!output->isEnabled()) {
+            // create render resources for findWorkingCombination
+            Q_EMIT outputEnabled(output);
+        }
         m_pipelines.removeOne(output->pipeline());
         oldPipelines.insert(output, output->pipeline());
         output->setPipeline(nullptr);
@@ -255,10 +259,15 @@ bool DrmGpu::updateOutputs()
     for (const auto &pipeline : qAsConst(config)) {
         auto output = pipeline->output();
         if (m_outputs.contains(output)) {
-            // try setting hardware rotation
-            output->updateTransform(output->transform());
-            if (output->dpmsMode() != AbstractWaylandOutput::DpmsMode::On) {
+            // restore output properties
+            if (output->isEnabled()) {
+                output->updateTransform(output->transform());
+                if (output->dpmsMode() != AbstractWaylandOutput::DpmsMode::On) {
+                    pipeline->setActive(false);
+                }
+            } else {
                 pipeline->setActive(false);
+                Q_EMIT outputDisabled(output);
             }
         } else {
             qCDebug(KWIN_DRM).nospace() << "New output on GPU " << m_devNode << ": " << pipeline->connector()->modelName();

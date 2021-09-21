@@ -114,7 +114,7 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
 
 bool DrmPipeline::atomicCommit()
 {
-    return commitPipelines({this}, CommitMode::CommitWithPageflipEvent);
+    return commitPipelines({this}, CommitMode::Commit);
 }
 
 bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode)
@@ -152,14 +152,11 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                 return failed();
             }
         }
-        if (mode != CommitMode::CommitWithPageflipEvent) {
-            flags &= ~DRM_MODE_PAGE_FLIP_EVENT;
-        }
-        if (drmModeAtomicCommit(pipelines[0]->m_gpu->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, pipelines[0]->m_output) != 0) {
+        if (drmModeAtomicCommit(pipelines[0]->m_gpu->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, pipelines[0]->output()) != 0) {
             qCWarning(KWIN_DRM) << "Atomic test for" << mode << "failed!" << strerror(errno);
             return failed();
         }
-        if (mode != CommitMode::Test && drmModeAtomicCommit(pipelines[0]->m_gpu->fd(), req, flags, pipelines[0]->m_output) != 0) {
+        if (mode != CommitMode::Test && drmModeAtomicCommit(pipelines[0]->m_gpu->fd(), req, flags, pipelines[0]->output()) != 0) {
             qCWarning(KWIN_DRM) << "Atomic commit failed! This should never happen!" << strerror(errno);
             return failed();
         }

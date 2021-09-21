@@ -92,8 +92,7 @@ public:
 
     enum class CommitMode {
         Test,
-        Commit,
-        CommitWithPageflipEvent
+        Commit
     };
     Q_ENUM(CommitMode);
     static bool commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode);
