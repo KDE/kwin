@@ -221,8 +221,11 @@ EGLSurface EglOnXBackend::createSurface(xcb_window_t window)
         // eglCreatePlatformWindowSurfaceEXT() expects a pointer to the Window.
         surface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *) &nativeWindow, nullptr);
     } else {
-        // eglCreateWindowSurface() expects a Window, not a pointer to the Window.
-        surface = eglCreateWindowSurface(eglDisplay(), config(), reinterpret_cast<EGLNativeWindowType>(nativeWindow), nullptr);
+        // eglCreateWindowSurface() expects a Window, not a pointer to the Window. Use
+        // a c style cast as there are (buggy) platforms where the size of the Window
+        // type is not the same as the size of EGLNativeWindowType, reinterpret_cast<>()
+        // may not compile.
+        surface = eglCreateWindowSurface(eglDisplay(), config(), (EGLNativeWindowType) nativeWindow, nullptr);
     }
 
     return surface;
