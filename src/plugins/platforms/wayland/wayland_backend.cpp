@@ -282,21 +282,101 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
                         }
                     }
                 );
-                // TODO: Send discreteDelta and source as well.
-                connect(m_pointer, &Pointer::axisChanged, this,
-                    [this](quint32 time, Pointer::Axis axis, qreal delta) {
-                        switch (axis) {
-                        case Pointer::Axis::Horizontal:
-                            m_backend->pointerAxisHorizontal(delta, time);
-                            break;
-                        case Pointer::Axis::Vertical:
-                            m_backend->pointerAxisVertical(delta, time);
-                            break;
-                        default:
-                            Q_UNREACHABLE();
-                        }
+
+                connect(m_pointer, &Pointer::axisSourceChanged, this, [this](KWayland::Client::Pointer::AxisSource source) {
+                    InputRedirection::PointerAxisSource sourceDevice;
+                    switch (source) {
+                    case KWayland::Client::Pointer::AxisSource::Continuous:
+                        sourceDevice = InputRedirection::PointerAxisSourceContinuous;
+                        break;
+                    case KWayland::Client::Pointer::AxisSource::Finger:
+                        sourceDevice = InputRedirection::PointerAxisSourceFinger;
+                        break;
+                    case KWayland::Client::Pointer::AxisSource::Wheel:
+                        sourceDevice = InputRedirection::PointerAxisSourceWheel;
+                        break;
+                    case KWayland::Client::Pointer::AxisSource::WheelTilt:
+                        sourceDevice = InputRedirection::PointerAxisSourceWheelTilt;
+                        break;
+                    default:
+                        Q_UNREACHABLE();
                     }
-                );
+                    m_axisVertical.source = sourceDevice;
+                    m_axisHorizontal.source = sourceDevice;
+                });
+                connect(m_pointer, &Pointer::axisChanged, this, [this](quint32 time, Pointer::Axis axis, qreal delta) {
+                    switch (axis) {
+                    case KWayland::Client::Pointer::Axis::Horizontal:
+                        m_axisHorizontal.state = AxisFrame::State::Active;
+                        m_axisHorizontal.time = time;
+                        m_axisHorizontal.delta += delta;
+                        break;
+                    case KWayland::Client::Pointer::Axis::Vertical:
+                        m_axisVertical.state = AxisFrame::State::Active;
+                        m_axisVertical.time = time;
+                        m_axisVertical.delta += delta;
+                        break;
+                    default:
+                        Q_UNREACHABLE();
+                    }
+                });
+                connect(m_pointer, &Pointer::axisStopped, this, [this](quint32 time, KWayland::Client::Pointer::Axis axis) {
+                    switch (axis) {
+                    case KWayland::Client::Pointer::Axis::Horizontal:
+                        m_axisHorizontal.state = AxisFrame::State::Stopped;
+                        m_axisHorizontal.time = time;
+                        break;
+                    case KWayland::Client::Pointer::Axis::Vertical:
+                        m_axisVertical.state = AxisFrame::State::Stopped;
+                        m_axisVertical.time = time;
+                        break;
+                    default:
+                        Q_UNREACHABLE();
+                    }
+                });
+                connect(m_pointer, &Pointer::axisDiscreteChanged, this, [this](KWayland::Client::Pointer::Axis axis, qint32 discreteDelta) {
+                    switch (axis) {
+                    case KWayland::Client::Pointer::Axis::Horizontal:
+                        m_axisHorizontal.deltaDiscrete += discreteDelta;
+                        break;
+                    case KWayland::Client::Pointer::Axis::Vertical:
+                        m_axisVertical.deltaDiscrete += discreteDelta;
+                        break;
+                    default:
+                        Q_UNREACHABLE();
+                    }
+                });
+                connect(m_pointer, &Pointer::frame, this, [this]() {
+                    if (m_axisHorizontal.state != AxisFrame::State::None) {
+                        const InputRedirection::PointerAxisSource source =
+                                m_axisHorizontal.source.value_or(InputRedirection::PointerAxisSourceWheel);
+
+                        if (m_axisHorizontal.state == AxisFrame::State::Stopped) {
+                            m_backend->pointerAxisHorizontal(0, m_axisHorizontal.time, 0, source);
+                        } else {
+                            m_backend->pointerAxisHorizontal(m_axisHorizontal.delta,
+                                                             m_axisHorizontal.time,
+                                                             m_axisHorizontal.deltaDiscrete,
+                                                             source);
+                        }
+                        m_axisHorizontal = {};
+                    }
+
+                    if (m_axisVertical.state != AxisFrame::State::None) {
+                        const InputRedirection::PointerAxisSource source =
+                                m_axisVertical.source.value_or(InputRedirection::PointerAxisSourceWheel);
+
+                        if (m_axisVertical.state == AxisFrame::State::Stopped) {
+                            m_backend->pointerAxisVertical(0, m_axisVertical.time, 0, source);
+                        } else {
+                            m_backend->pointerAxisVertical(m_axisVertical.delta,
+                                                           m_axisVertical.time,
+                                                           m_axisVertical.deltaDiscrete,
+                                                           source);
+                        }
+                        m_axisVertical = {};
+                    }
+                });
             } else {
                 destroyPointer();
             }
@@ -518,7 +598,7 @@ bool WaylandBackend::initialize()
             if (Application::usesLibinput()) {
                 return;
             }
-            m_seat = new WaylandSeat(m_registry->bindSeat(name, 2), this);
+            m_seat = new WaylandSeat(m_registry->bindSeat(name, 5), this);
         }
     );
     connect(m_registry, &Registry::shmAnnounced, this,

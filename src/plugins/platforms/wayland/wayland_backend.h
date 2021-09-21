@@ -20,6 +20,8 @@
 #include <QPoint>
 #include <QSize>
 
+#include <optional>
+
 class QTemporaryFile;
 struct wl_buffer;
 struct wl_display;
@@ -150,6 +152,24 @@ private:
     uint32_t m_enteredSerial;
 
     WaylandBackend *m_backend;
+
+    struct AxisFrame
+    {
+        enum class State {
+            None,
+            Active,
+            Stopped,
+        };
+
+        State state = State::None;
+        qreal delta = 0;
+        int deltaDiscrete = 0;
+        quint32 time = 0;
+        std::optional<InputRedirection::PointerAxisSource> source;
+    };
+
+    AxisFrame m_axisHorizontal;
+    AxisFrame m_axisVertical;
 };
 
 /**
