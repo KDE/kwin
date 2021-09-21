@@ -604,6 +604,7 @@ void OutputDeviceV2InterfacePrivate::updateEnabled()
     const auto clientResources = resourceMap();
     for (auto resource : clientResources) {
         sendEnabled(resource);
+        sendDone(resource);
     }
 }
 
@@ -612,6 +613,7 @@ void OutputDeviceV2InterfacePrivate::updateEdid()
     const auto clientResources = resourceMap();
     for (auto resource : clientResources) {
         sendEdid(resource);
+        sendDone(resource);
     }
 }
 
@@ -620,6 +622,7 @@ void OutputDeviceV2InterfacePrivate::updateUuid()
     const auto clientResources = resourceMap();
     for (auto resource : clientResources) {
         sendUuid(resource);
+        sendDone(resource);
     }
 }
 
@@ -628,6 +631,7 @@ void OutputDeviceV2InterfacePrivate::updateEisaId()
     const auto clientResources = resourceMap();
     for (auto resource : clientResources) {
         sendEisaId(resource);
+        sendDone(resource);
     }
 }
 
@@ -660,6 +664,7 @@ void OutputDeviceV2InterfacePrivate::updateCapabilities()
     const auto clientResources = resourceMap();
     for (const auto &resource : clientResources) {
         sendCapabilities(resource);
+        sendDone(resource);
     }
 }
 
@@ -682,6 +687,7 @@ void OutputDeviceV2InterfacePrivate::updateOverscan()
     const auto clientResources = resourceMap();
     for (const auto &resource : clientResources) {
         sendOverscan(resource);
+        sendDone(resource);
     }
 }
 
@@ -709,6 +715,7 @@ void OutputDeviceV2InterfacePrivate::updateVrrPolicy()
     const auto clientResources = resourceMap();
     for (const auto &resource : clientResources) {
         sendVrrPolicy(resource);
+        sendDone(resource);
     }
 }
 
@@ -736,6 +743,7 @@ void OutputDeviceV2InterfacePrivate::updateRgbRange()
     const auto clientResources = resourceMap();
     for (const auto &resource : clientResources) {
         sendRgbRange(resource);
+        sendDone(resource);
     }
 }
 
