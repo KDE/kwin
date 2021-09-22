@@ -19,9 +19,6 @@ var logoutEffect = {
         logoutEffect.outDuration = animationTime(400);
     },
     isLogoutWindow: function (window) {
-        if (window.windowClass === "ksmserver ksmserver") {
-            return true;
-        }
         if (window.windowClass === "ksmserver-logout-greeter ksmserver-logout-greeter") {
             return true;
         }
