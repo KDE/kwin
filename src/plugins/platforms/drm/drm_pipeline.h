@@ -103,13 +103,6 @@ private:
     QSharedPointer<DrmBuffer> m_oldTestBuffer;
 
     bool m_legacyNeedsModeset = true;
-    struct {
-        QPoint pos;
-        QPoint hotspot;
-        QSharedPointer<DrmDumbBuffer> buffer;
-        bool dirtyBo = true;
-        bool dirtyPos = true;
-    } m_cursor;
 
     QVector<DrmObject*> m_allObjects;
     QMap<uint32_t, QVector<uint64_t>> m_formats;

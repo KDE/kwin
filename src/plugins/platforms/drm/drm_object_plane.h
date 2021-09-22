@@ -18,6 +18,7 @@ namespace KWin
 {
 
 class DrmBuffer;
+class DrmCrtc;
 
 class DrmPlane : public DrmObject
 {

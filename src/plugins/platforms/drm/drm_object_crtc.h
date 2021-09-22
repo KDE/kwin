@@ -12,6 +12,7 @@
 #include "drm_object.h"
 
 #include <QSharedPointer>
+#include <QPoint>
 
 namespace KWin
 {
@@ -48,11 +49,25 @@ public:
     void setNext(const QSharedPointer<DrmBuffer> &buffer);
     void flipBuffer();
 
+    bool setLegacyCursor(const QSharedPointer<DrmDumbBuffer> buffer, const QPoint &hotspot);
+    bool moveLegacyCursor(const QPoint &pos);
+    void setLegacyCursor();
+    bool isCursorVisible(const QRect &output) const;
+    QPoint cursorPos() const;
+
 private:
     DrmScopedPointer<drmModeCrtc> m_crtc;
     QSharedPointer<DrmBuffer> m_currentBuffer;
     QSharedPointer<DrmBuffer> m_nextBuffer;
     int m_pipeIndex;
+
+    struct {
+        QPoint pos;
+        QPoint hotspot;
+        QSharedPointer<DrmDumbBuffer> buffer;
+        bool posDirty = true;
+        bool bufferDirty = true;
+    } m_cursor;
 };
 
 }

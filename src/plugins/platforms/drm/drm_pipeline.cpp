@@ -318,36 +318,12 @@ bool DrmPipeline::checkTestBuffer()
 
 bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot)
 {
-    if (!m_cursor.dirtyBo && m_cursor.buffer == buffer && m_cursor.hotspot == hotspot) {
-        return true;
-    }
-    const QSize &s = buffer ? buffer->size() : QSize(64, 64);
-    int ret = drmModeSetCursor2(m_gpu->fd(), m_crtc->id(), buffer ? buffer->handle() : 0, s.width(), s.height(), hotspot.x(), hotspot.y());
-    if (ret == -ENOTSUP) {
-        // for NVIDIA case that does not support drmModeSetCursor2
-        ret = drmModeSetCursor(m_gpu->fd(), m_crtc->id(), buffer ? buffer->handle() : 0, s.width(), s.height());
-    }
-    if (ret != 0) {
-        qCWarning(KWIN_DRM) << "Could not set cursor:" << strerror(errno);
-        return false;
-    }
-    m_cursor.buffer = buffer;
-    m_cursor.dirtyBo = false;
-    m_cursor.hotspot = hotspot;
-    return true;
+    return m_crtc->setLegacyCursor(buffer, hotspot);
 }
 
 bool DrmPipeline::moveCursor(QPoint pos)
 {
-    if (!m_cursor.dirtyPos && m_cursor.pos == pos) {
-        return true;
-    }
-    if (drmModeMoveCursor(m_gpu->fd(), m_crtc->id(), pos.x(), pos.y()) != 0) {
-        return false;
-    }
-    m_cursor.pos = pos;
-    m_cursor.dirtyPos = false;
-    return true;
+    return m_crtc->moveLegacyCursor(pos);
 }
 
 bool DrmPipeline::setActive(bool active)
@@ -357,8 +333,6 @@ bool DrmPipeline::setActive(bool active)
         if (drmModeSetCursor(m_gpu->fd(), m_crtc->id(), 0, 0, 0) != 0) {
             qCWarning(KWIN_DRM) << "Could not set cursor:" << strerror(errno);
         }
-        m_cursor.dirtyBo = true;
-        m_cursor.dirtyPos = true;
     }
     bool success = false;
     auto mode = m_connector->currentMode().mode;
@@ -385,8 +359,7 @@ bool DrmPipeline::setActive(bool active)
     }
     if (isActive()) {
         // enable cursor (again)
-        setCursor(m_cursor.buffer, m_cursor.hotspot);
-        moveCursor(m_cursor.pos);
+        m_crtc->setLegacyCursor();
     }
     return success;
 }
@@ -505,12 +478,12 @@ bool DrmPipeline::isActive() const
 
 bool DrmPipeline::isCursorVisible() const
 {
-    return m_cursor.buffer && QRect(m_cursor.pos, m_cursor.buffer->size()).intersects(QRect(QPoint(0, 0), m_connector->currentMode().size));
+    return m_crtc->isCursorVisible(QRect(QPoint(0, 0), m_connector->currentMode().size));
 }
 
 QPoint DrmPipeline::cursorPos() const
 {
-    return m_cursor.pos;
+    return m_crtc->cursorPos();
 }
 
 DrmConnector *DrmPipeline::connector() const
@@ -553,8 +526,7 @@ void DrmPipeline::updateProperties()
     }
     // with legacy we don't know what happened to the cursor after VT switch
     // so make sure it gets set again
-    m_cursor.dirtyBo = true;
-    m_cursor.dirtyPos = true;
+    m_crtc->setLegacyCursor();
 }
 
 bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const
