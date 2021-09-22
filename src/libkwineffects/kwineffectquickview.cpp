@@ -80,7 +80,7 @@ public:
 };
 
 EffectQuickView::EffectQuickView(QObject *parent)
-    : EffectQuickView(parent, effects->isOpenGLCompositing() ? ExportMode::Texture : ExportMode::Image)
+    : EffectQuickView(parent, effects ? ExportMode::Texture : ExportMode::Image)
 {
 }
 
@@ -90,7 +90,7 @@ EffectQuickView::EffectQuickView(QObject *parent, ExportMode exportMode)
 }
 
 EffectQuickView::EffectQuickView(QObject *parent, QWindow *renderWindow)
-    : EffectQuickView(parent, renderWindow, effects->isOpenGLCompositing() ? ExportMode::Texture : ExportMode::Image)
+    : EffectQuickView(parent, renderWindow, effects ? ExportMode::Texture : ExportMode::Image)
 {
 }
 
