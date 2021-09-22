@@ -17,10 +17,6 @@
 namespace KWin
 {
 
-/*
- * Definitions for class DrmObject
- */
-
 DrmObject::DrmObject(DrmGpu *gpu, uint32_t objectId, const QVector<PropertyDefinition> &&vector, uint32_t objectType)
     : m_gpu(gpu)
     , m_id(objectId)
@@ -94,7 +90,7 @@ bool DrmObject::atomicPopulate(drmModeAtomicReq *req) const
     return true;
 }
 
-QVector<DrmObject::Property*> DrmObject::properties()
+QVector<DrmProperty *> DrmObject::properties()
 {
     return m_props;
 }
@@ -156,7 +152,7 @@ bool DrmObject::updateProperties()
                 if (m_props[propIndex]) {
                     m_props[propIndex]->setCurrent(properties->prop_values[drmPropIndex]);
                 } else {
-                    m_props[propIndex] = new Property(this, prop.data(), properties->prop_values[drmPropIndex], def.enumNames);
+                    m_props[propIndex] = new DrmProperty(this, prop.data(), properties->prop_values[drmPropIndex], def.enumNames);
                 }
                 found = true;
                 break;
@@ -187,160 +183,9 @@ DrmGpu *DrmObject::gpu() const
     return m_gpu;
 }
 
-/*
- * Definitions for DrmObject::Property
- */
-
-DrmObject::Property::Property(DrmObject *obj, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames)
-    : m_propId(prop->prop_id)
-    , m_propName(prop->name)
-    , m_pending(val)
-    , m_next(val)
-    , m_current(val)
-    , m_immutable(prop->flags & DRM_MODE_PROP_IMMUTABLE)
-    , m_obj(obj)
+uint32_t DrmObject::type() const
 {
-    if (!enumNames.isEmpty()) {
-        m_enumNames = enumNames;
-        initEnumMap(prop);
-    }
-}
-
-DrmObject::Property::~Property() = default;
-
-void DrmObject::Property::setPending(uint64_t value)
-{
-    m_pending = value;
-}
-
-uint64_t DrmObject::Property::pending() const
-{
-    return m_pending;
-}
-
-bool DrmObject::Property::setPendingBlob(void *blob, size_t length)
-{
-    if (!blob && !m_pendingBlob) {
-        return true;
-    }
-    if (blob && m_pendingBlob && length == m_pendingBlob->length && memcmp(blob, m_pendingBlob->data, length) == 0) {
-        return true;
-    }
-    uint32_t id = 0;
-    if (blob != nullptr) {
-        if (drmModeCreatePropertyBlob(m_obj->m_gpu->fd(), blob, length, &id) != 0) {
-            qCWarning(KWIN_DRM) << "Creating property blob failed!" << strerror(errno);
-            return false;
-        }
-    }
-    if (m_pendingBlob && m_pendingBlob != m_currentBlob && m_pendingBlob != m_nextBlob) {
-        drmModeDestroyPropertyBlob(m_obj->m_gpu->fd(), m_pendingBlob->id);
-        drmModeFreePropertyBlob(m_pendingBlob);
-    }
-    m_pending = id;
-    m_pendingBlob = drmModeGetPropertyBlob(m_obj->m_gpu->fd(), m_pending);
-    return true;
-}
-
-void DrmObject::Property::setCurrent(uint64_t value)
-{
-    m_current = value;
-}
-
-uint64_t DrmObject::Property::current() const
-{
-    return m_current;
-}
-
-void DrmObject::Property::setCurrentBlob(drmModePropertyBlobRes *blob)
-{
-    if (m_currentBlob && m_currentBlob != m_pendingBlob && m_currentBlob != m_nextBlob && m_currentBlob != blob) {
-        drmModeDestroyPropertyBlob(m_obj->m_gpu->fd(), m_currentBlob->id);
-        drmModeFreePropertyBlob(m_currentBlob);
-    }
-    m_currentBlob = blob;
-    m_current = blob ? blob->id : 0;
-}
-
-void DrmObject::Property::commit()
-{
-    if (m_immutable || m_current == m_pending) {
-        return;
-    }
-    if (m_pendingBlob || m_currentBlob) {
-        setCurrentBlob(m_pendingBlob);
-    } else {
-        setCurrent(m_pending);
-    }
-}
-
-void DrmObject::Property::commitPending()
-{
-    if (m_immutable || m_next == m_pending) {
-        return;
-    }
-    if (m_pendingBlob || m_nextBlob) {
-        if (m_nextBlob && m_nextBlob != m_currentBlob) {
-            drmModeDestroyPropertyBlob(m_obj->m_gpu->fd(), m_nextBlob->id);
-            drmModeFreePropertyBlob(m_nextBlob);
-        }
-        m_next = m_pending;
-        m_nextBlob = m_pendingBlob;
-    } else {
-        m_next = m_pending;
-    }
-}
-
-void DrmObject::Property::rollbackPending()
-{
-    if (m_immutable || m_next == m_pending) {
-        return;
-    }
-    if (m_pendingBlob || m_nextBlob) {
-        if (m_pendingBlob && m_pendingBlob != m_currentBlob) {
-            drmModeDestroyPropertyBlob(m_obj->m_gpu->fd(), m_pendingBlob->id);
-            drmModeFreePropertyBlob(m_pendingBlob);
-        }
-        m_pending = m_next;
-        m_pendingBlob = m_nextBlob;
-    } else {
-        m_pending = m_next;
-    }
-}
-
-bool DrmObject::Property::needsCommit() const
-{
-    return m_pending != m_current;
-}
-
-bool DrmObject::Property::setPropertyLegacy(uint64_t value)
-{
-    if (drmModeObjectSetProperty(m_obj->m_gpu->fd(), m_obj->id(), m_obj->m_objectType, m_propId, value) == 0) {
-        m_current = m_next = m_pending = value;
-        return true;
-    } else {
-        return false;
-    }
-}
-
-void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)
-{
-    if ( ( !(prop->flags & DRM_MODE_PROP_ENUM) && !(prop->flags & DRM_MODE_PROP_BITMASK) )
-            || prop->count_enums < 1 ) {
-        qCWarning(KWIN_DRM) << "Property '" << prop->name << "' ( id ="
-                          << m_propId << ") should be enum valued, but it is not.";
-        return;
-    }
-
-    for (int i = 0; i < prop->count_enums; i++) {
-        struct drm_mode_property_enum *en = &prop->enums[i];
-        int j = m_enumNames.indexOf(QByteArray(en->name));
-        if (j >= 0) {
-            m_enumMap[j] = en->value;
-        } else {
-            qCWarning(KWIN_DRM, "%s has unrecognized enum '%s'", qPrintable(m_propName), en->name);
-        }
-    }
+    return m_objectType;
 }
 
 }
