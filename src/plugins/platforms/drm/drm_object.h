@@ -35,20 +35,16 @@ public:
      */
     virtual bool init() = 0;
 
-    uint32_t id() const {
-        return m_id;
-    }
+    uint32_t id() const;
+    DrmGpu *gpu() const;
 
-    DrmGpu *gpu() const {
-        return m_gpu;
-    }
-
-    /**
-     * Populate an atomic request with data of this object.
-     * @param req the atomic request
-     * @return true when the request was successfully populated
-     */
+    void commit();
+    void commitPending();
+    void rollbackPending();
     bool atomicPopulate(drmModeAtomicReq *req) const;
+    bool needsCommit() const;
+    virtual bool needsModeset() const = 0;
+    virtual bool updateProperties();
 
     template <typename T>
     bool setPending(T prop, uint64_t new_value)
@@ -169,14 +165,6 @@ public:
     }
 
     QVector<Property*> properties();
-    void commit();
-    void commitPending();
-    void rollbackPending();
-
-    bool needsCommit() const;
-    virtual bool needsModeset() const = 0;
-
-    virtual bool updateProperties();
 
 protected:
     enum class Requirement {

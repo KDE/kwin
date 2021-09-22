@@ -177,6 +177,16 @@ bool DrmObject::updateProperties()
     return true;
 }
 
+uint32_t DrmObject::id() const
+{
+    return m_id;
+}
+
+DrmGpu *DrmObject::gpu() const
+{
+    return m_gpu;
+}
+
 /*
  * Definitions for DrmObject::Property
  */

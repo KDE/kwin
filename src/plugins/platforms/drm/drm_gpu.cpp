@@ -46,12 +46,12 @@ namespace KWin
 {
 
 DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t deviceId)
-    : m_backend(backend)
-    , m_devNode(devNode)
-    , m_fd(fd)
+    : m_fd(fd)
     , m_deviceId(deviceId)
+    , m_devNode(devNode)
     , m_atomicModeSetting(false)
     , m_gbmDevice(nullptr)
+    , m_platform(backend)
 {
     uint64_t capability = 0;
 
@@ -108,7 +108,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     });
     connect(m_leaseDevice, &KWaylandServer::DrmLeaseDeviceV1Interface::leaseRequested, this, &DrmGpu::handleLeaseRequest);
     connect(m_leaseDevice, &KWaylandServer::DrmLeaseDeviceV1Interface::leaseRevoked, this, &DrmGpu::handleLeaseRevoked);
-    connect(m_backend->session(), &Session::activeChanged, m_leaseDevice, [this](bool active){
+    connect(m_platform->session(), &Session::activeChanged, m_leaseDevice, [this](bool active){
         if (!active) {
             // when we gain drm master we want to update outputs first and only then notify the lease device
             m_leaseDevice->setDrmMaster(active);
@@ -144,7 +144,7 @@ DrmGpu::~DrmGpu()
         gbm_device_destroy(m_gbmDevice);
     }
 #endif
-    m_backend->session()->closeRestricted(m_fd);
+    m_platform->session()->closeRestricted(m_fd);
 }
 
 clockid_t DrmGpu::presentationClock() const
@@ -356,7 +356,7 @@ bool DrmGpu::updateOutputs()
         } else {
             qCDebug(KWIN_DRM).nospace() << "New output on GPU " << m_devNode << ": " << pipeline->connector()->modelName();
             if (!output->initCursor(m_cursorSize)) {
-                m_backend->setSoftwareCursorForced(true);
+                m_platform->setSoftwareCursorForced(true);
             }
             m_outputs << output;
             m_drmOutputs << output;
@@ -558,7 +558,7 @@ static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsign
 
 void DrmGpu::dispatchEvents()
 {
-    if (!m_backend->session()->isActive()) {
+    if (!m_platform->session()->isActive()) {
         return;
     }
     drmEventContext context = {};
@@ -592,7 +592,7 @@ void DrmGpu::setEglBackend(AbstractEglDrmBackend *eglBackend)
 }
 
 DrmBackend *DrmGpu::platform() const {
-    return m_backend;
+    return m_platform;
 }
 
 const QVector<DrmPipeline*> DrmGpu::pipelines() const
@@ -699,6 +699,61 @@ void DrmGpu::removeLeaseOutput(DrmLeaseOutput *output)
     delete output;
     m_pipelines.removeOne(pipeline);
     delete pipeline;
+}
+
+QVector<DrmAbstractOutput*> DrmGpu::outputs() const
+{
+    return m_outputs;
+}
+
+int DrmGpu::fd() const
+{
+    return m_fd;
+}
+
+dev_t DrmGpu::deviceId() const
+{
+    return m_deviceId;
+}
+
+bool DrmGpu::atomicModeSetting() const
+{
+    return m_atomicModeSetting;
+}
+
+bool DrmGpu::useEglStreams() const
+{
+    return m_useEglStreams;
+}
+
+QString DrmGpu::devNode() const
+{
+    return m_devNode;
+}
+
+gbm_device *DrmGpu::gbmDevice() const
+{
+    return m_gbmDevice;
+}
+
+EGLDisplay DrmGpu::eglDisplay() const
+{
+    return m_eglDisplay;
+}
+
+void DrmGpu::setGbmDevice(gbm_device *d)
+{
+    m_gbmDevice = d;
+}
+
+void DrmGpu::setEglDisplay(EGLDisplay display)
+{
+    m_eglDisplay = display;
+}
+
+bool DrmGpu::addFB2ModifiersSupported() const
+{
+    return m_addFB2ModifiersSupported;
 }
 
 }

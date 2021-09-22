@@ -48,65 +48,33 @@ public:
     DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t deviceId);
     ~DrmGpu();
 
-    // getters
-    QVector<DrmAbstractOutput*> outputs() const {
-        return m_outputs;
-    }
+    int fd() const;
+    dev_t deviceId() const;
+    QString devNode() const;
 
-    int fd() const {
-        return m_fd;
-    }
-
-    dev_t deviceId() const {
-        return m_deviceId;
-    }
-
-    bool atomicModeSetting() const {
-        return m_atomicModeSetting;
-    }
-
-    bool useEglStreams() const {
-        return m_useEglStreams;
-    }
-
-    QString devNode() const {
-        return m_devNode;
-    }
-
-    gbm_device *gbmDevice() const {
-        return m_gbmDevice;
-    }
-
-    EGLDisplay eglDisplay() const {
-        return m_eglDisplay;
-    }
-
+    bool atomicModeSetting() const;
+    bool addFB2ModifiersSupported() const;
+    bool useEglStreams() const;
+    bool isFormatSupported(uint32_t drmFormat) const;
+    gbm_device *gbmDevice() const;
+    EGLDisplay eglDisplay() const;
     AbstractEglDrmBackend *eglBackend() const;
-    void setEglBackend(AbstractEglDrmBackend *eglBackend);
-
-    void setGbmDevice(gbm_device *d) {
-        m_gbmDevice = d;
-    }
-
-    void setEglDisplay(EGLDisplay display) {
-        m_eglDisplay = display;
-    }
-
+    DrmBackend *platform() const;
     /**
      * Returns the clock from which presentation timestamps are sourced. The returned value
      * can be either CLOCK_MONOTONIC or CLOCK_REALTIME.
      */
     clockid_t presentationClock() const;
 
-    bool addFB2ModifiersSupported() const {
-        return m_addFB2ModifiersSupported;
-    }
+    QVector<DrmAbstractOutput*> outputs() const;
+    const QVector<DrmPipeline*> pipelines() const;
+
+    void setGbmDevice(gbm_device *d);
+    void setEglDisplay(EGLDisplay display);
+    void setEglBackend(AbstractEglDrmBackend *eglBackend);
 
     void waitIdle();
-    DrmBackend *platform() const;
-    const QVector<DrmPipeline*> pipelines() const;
-    bool isFormatSupported(uint32_t drmFormat) const;
-
+    bool updateOutputs();
     DrmVirtualOutput *createVirtualOutput();
     void removeVirtualOutput(DrmVirtualOutput *output);
 
@@ -115,10 +83,6 @@ Q_SIGNALS:
     void outputRemoved(DrmAbstractOutput *output);
     void outputEnabled(DrmAbstractOutput *output);
     void outputDisabled(DrmAbstractOutput *output);
-
-protected:
-    friend class DrmBackend;
-    bool updateOutputs();
 
 private:
     void dispatchEvents();
@@ -134,20 +98,17 @@ private:
     void handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest);
     void handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease);
 
-    DrmBackend* const m_backend;
-    QPointer<AbstractEglDrmBackend> m_eglBackend;
-
-    const QString m_devNode;
-    QSize m_cursorSize;
     const int m_fd;
     const dev_t m_deviceId;
+    const QString m_devNode;
     bool m_atomicModeSetting;
     bool m_useEglStreams;
+    bool m_addFB2ModifiersSupported = false;
+    clockid_t m_presentationClock;
     gbm_device* m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
-    clockid_t m_presentationClock;
-    QSocketNotifier *m_socketNotifier = nullptr;
-    bool m_addFB2ModifiersSupported = false;
+    QPointer<AbstractEglDrmBackend> m_eglBackend;
+    DrmBackend* const m_platform;
 
     QVector<DrmPlane*> m_planes;
     QVector<DrmCrtc*> m_crtcs;
@@ -155,11 +116,12 @@ private:
     QVector<DrmPipeline*> m_pipelines;
 
     QVector<DrmOutput*> m_drmOutputs;
-    // includes virtual outputs
     QVector<DrmAbstractOutput*> m_outputs;
-    // for DRM leasing:
     QVector<DrmLeaseOutput*> m_leaseOutputs;
     KWaylandServer::DrmLeaseDeviceV1Interface *m_leaseDevice = nullptr;
+
+    QSocketNotifier *m_socketNotifier = nullptr;
+    QSize m_cursorSize;
 };
 
 }

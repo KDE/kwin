@@ -63,38 +63,24 @@ public:
     Q_DECLARE_FLAGS(Transformations, Transformation);
 
     bool init() override;
+    bool needsModeset() const override;
     TypeIndex type();
 
-    bool isCrtcSupported(int pipeIndex) const {
-        return (m_possibleCrtcs & (1 << pipeIndex));
-    }
-    QMap<uint32_t, QVector<uint64_t>> formats() const {
-        return m_supportedFormats;
-    }
+    bool isCrtcSupported(int pipeIndex) const;
+    QMap<uint32_t, QVector<uint64_t>> formats() const;
 
-    QSharedPointer<DrmBuffer> current() const {
-        return m_current;
-    }
-    QSharedPointer<DrmBuffer> next() const {
-        return m_next;
-    }
-    void setCurrent(const QSharedPointer<DrmBuffer> &b) {
-        m_current = b;
-    }
+    QSharedPointer<DrmBuffer> current() const;
+    QSharedPointer<DrmBuffer> next() const;
+    void setCurrent(const QSharedPointer<DrmBuffer> &b);
     void setNext(const QSharedPointer<DrmBuffer> &b);
-    bool setTransformation(Transformations t);
-    Transformations transformation();
-
     void flipBuffer();
 
-    Transformations supportedTransformations() const {
-        return m_supportedTransformations;
-    }
-
-    void set(const QPoint &srcPos, const QSize &srcSize, const QPoint &dstPos, const QSize &dstSize);
     void setBuffer(DrmBuffer *buffer);
+    void set(const QPoint &srcPos, const QSize &srcSize, const QPoint &dstPos, const QSize &dstSize);
 
-    bool needsModeset() const override;
+    bool setTransformation(Transformations t);
+    Transformations transformation();
+    Transformations supportedTransformations() const;
 
 private:
     QSharedPointer<DrmBuffer> m_current;

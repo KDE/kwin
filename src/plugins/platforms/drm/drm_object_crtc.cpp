@@ -41,9 +41,6 @@ void DrmCrtc::flipBuffer()
 {
     m_currentBuffer = m_nextBuffer;
     m_nextBuffer = nullptr;
-
-    delete m_blackBuffer;
-    m_blackBuffer = nullptr;
 }
 
 drmModeModeInfo DrmCrtc::queryCurrentMode()
@@ -56,6 +53,33 @@ bool DrmCrtc::needsModeset() const
 {
     return getProp(PropertyIndex::Active)->needsCommit()
         || getProp(PropertyIndex::ModeId)->needsCommit();
+}
+
+int DrmCrtc::pipeIndex() const
+{
+    return m_pipeIndex;
+}
+
+QSharedPointer<DrmBuffer> DrmCrtc::current() const
+{
+    return m_currentBuffer;
+}
+QSharedPointer<DrmBuffer> DrmCrtc::next() const
+{
+    return m_nextBuffer;
+}
+void DrmCrtc::setCurrent(const QSharedPointer<DrmBuffer> &buffer)
+{
+    m_currentBuffer = buffer;
+}
+void DrmCrtc::setNext(const QSharedPointer<DrmBuffer> &buffer)
+{
+    m_nextBuffer = buffer;
+}
+
+int DrmCrtc::gammaRampSize() const
+{
+    return m_crtc->gamma_size;
 }
 
 }

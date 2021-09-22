@@ -28,8 +28,6 @@ public:
     DrmConnector(DrmGpu *gpu, uint32_t connectorId);
     ~DrmConnector() override;
 
-    bool init() override;
-
     enum class PropertyIndex : uint32_t {
         CrtcId = 0,
         NonDesktop = 1,
@@ -50,32 +48,18 @@ public:
         Auto = 2,
     };
 
-    QVector<uint32_t> encoders() {
-        return m_encoders;
-    }
+    bool init() override;
+    bool needsModeset() const override;
+    bool updateProperties() override;
 
+    QVector<uint32_t> encoders() const;
     bool isConnected() const;
+    bool isNonDesktop() const;
+    bool isInternal() const;
 
-    bool isNonDesktop() const {
-        auto prop = m_props.at(static_cast<uint32_t>(PropertyIndex::NonDesktop));
-        if (!prop) {
-            return false;
-        }
-        return prop->pending();
-    }
-
-    Property *dpms() const {
-        return m_props[static_cast<uint32_t>(PropertyIndex::Dpms)];
-    }
-
-    const Edid *edid() const {
-        return &m_edid;
-    }
-
+    const Edid *edid() const;
     QString connectorName() const;
     QString modelName() const;
-
-    bool isInternal() const;
     QSize physicalSize() const;
 
     struct Mode {
@@ -88,22 +72,15 @@ public:
     const QVector<Mode> &modes();
     void setModeIndex(int index);
     void findCurrentMode(drmModeModeInfo currentMode);
-
-    AbstractWaylandOutput::SubPixel subpixel() const;
-
     void updateModes();
 
+    AbstractWaylandOutput::SubPixel subpixel() const;
     bool hasOverscan() const;
     uint32_t overscan() const;
     void setOverscan(uint32_t overscan, const QSize &modeSize);
-
     bool vrrCapable() const;
-
     bool hasRgbRange() const;
     AbstractWaylandOutput::RgbRange rgbRange() const;
-
-    bool needsModeset() const override;
-    bool updateProperties() override;
 
 private:
     DrmScopedPointer<drmModeConnector> m_conn;

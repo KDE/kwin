@@ -27,8 +27,6 @@ class DrmCrtc : public DrmObject
 public:
     DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex);
 
-    bool init() override;
-
     enum class PropertyIndex : uint32_t {
         ModeId = 0,
         Active,
@@ -37,38 +35,23 @@ public:
         Count
     };
 
-    int pipeIndex() const {
-        return m_pipeIndex;
-    }
+    bool init() override;
+    bool needsModeset() const override;
 
-    QSharedPointer<DrmBuffer> current() const {
-        return m_currentBuffer;
-    }
-    QSharedPointer<DrmBuffer> next() const {
-        return m_nextBuffer;
-    }
-    void setCurrent(const QSharedPointer<DrmBuffer> &buffer) {
-        m_currentBuffer = buffer;
-    }
-    void setNext(const QSharedPointer<DrmBuffer> &buffer) {
-        m_nextBuffer = buffer;
-    }
-
-    void flipBuffer();
-
-    int gammaRampSize() const {
-        return m_crtc->gamma_size;
-    }
-
+    int pipeIndex() const;
+    int gammaRampSize() const;
     drmModeModeInfo queryCurrentMode();
 
-    bool needsModeset() const override;
+    QSharedPointer<DrmBuffer> current() const;
+    QSharedPointer<DrmBuffer> next() const;
+    void setCurrent(const QSharedPointer<DrmBuffer> &buffer);
+    void setNext(const QSharedPointer<DrmBuffer> &buffer);
+    void flipBuffer();
 
 private:
     DrmScopedPointer<drmModeCrtc> m_crtc;
     QSharedPointer<DrmBuffer> m_currentBuffer;
     QSharedPointer<DrmBuffer> m_nextBuffer;
-    DrmDumbBuffer *m_blackBuffer = nullptr;
     int m_pipeIndex;
 };
 

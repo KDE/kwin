@@ -172,4 +172,34 @@ bool DrmPlane::needsModeset() const
     return getProp(PropertyIndex::CrtcId)->needsCommit();
 }
 
+bool DrmPlane::isCrtcSupported(int pipeIndex) const
+{
+    return (m_possibleCrtcs & (1 << pipeIndex));
+}
+
+QMap<uint32_t, QVector<uint64_t>> DrmPlane::formats() const
+{
+    return m_supportedFormats;
+}
+
+QSharedPointer<DrmBuffer> DrmPlane::current() const
+{
+    return m_current;
+}
+
+QSharedPointer<DrmBuffer> DrmPlane::next() const
+{
+    return m_next;
+}
+
+void DrmPlane::setCurrent(const QSharedPointer<DrmBuffer> &b)
+{
+    m_current = b;
+}
+
+DrmPlane::Transformations DrmPlane::supportedTransformations() const
+{
+    return m_supportedTransformations;
+}
+
 }

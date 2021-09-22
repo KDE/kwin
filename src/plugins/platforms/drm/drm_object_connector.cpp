@@ -347,4 +347,20 @@ bool DrmConnector::updateProperties()
     return m_conn != nullptr;
 }
 
+QVector<uint32_t> DrmConnector::encoders() const
+{
+    return m_encoders;
+}
+
+bool DrmConnector::isNonDesktop() const
+{
+    const auto &prop = getProp(PropertyIndex::NonDesktop);
+    return prop && prop->current();
+}
+
+const Edid *DrmConnector::edid() const
+{
+    return &m_edid;
+}
+
 }
