@@ -38,7 +38,6 @@ KWin::GbmDmaBuf *GbmDmaBuf::createBuffer(const QSize &size, gbm_device *device)
     auto bo = gbm_bo_create(device, size.width(), size.height(), GBM_FORMAT_ARGB8888, GBM_BO_USE_RENDERING | GBM_BO_USE_LINEAR);
 
     if (!bo) {
-        gbm_bo_destroy(bo);
         return nullptr;
     }
 
@@ -61,6 +60,8 @@ KWin::GbmDmaBuf *GbmDmaBuf::createBuffer(const QSize &size, gbm_device *device)
     EGLDisplay display = kwinApp()->platform()->sceneEglDisplay();
     EGLImageKHR destinationImage = eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, importAttributes);
     if (destinationImage == EGL_NO_IMAGE_KHR) {
+        close(fd);
+        gbm_bo_destroy(bo);
         return nullptr;
     }
 
