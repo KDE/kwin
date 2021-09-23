@@ -701,6 +701,7 @@ void DesktopGridEffect::activate()
     timeline.setDirection(QTimeLine::Forward);
     timelineRunning = true;
     // timeline.resume();
+    effects->addRepaintFull();
 }
 
 void DesktopGridEffect::deactivate()
@@ -709,6 +710,7 @@ void DesktopGridEffect::deactivate()
     timeline.setDirection(QTimeLine::Backward);
     timelineRunning = true;
     // timeline.resume();
+    effects->addRepaintFull();
 }
 
 void DesktopGridEffect::toggle()
