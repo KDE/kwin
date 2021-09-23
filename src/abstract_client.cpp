@@ -311,10 +311,10 @@ Layer AbstractClient::belongsToLayer() const
         return layerForDock();
     if (isPopupWindow())
         return PopupLayer;
-    if (isNotification())
-        return NotificationLayer;
     if (isOnScreenDisplay())
         return OnScreenDisplayLayer;
+    if (isNotification())
+        return NotificationLayer;
     if (isCriticalNotification())
         return CriticalNotificationLayer;
 
