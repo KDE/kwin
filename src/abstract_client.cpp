@@ -284,33 +284,46 @@ Layer AbstractClient::belongsToLayer() const
         return UnmanagedLayer;
     if (isInputMethod())
         return UnmanagedLayer;
-    if (isDesktop())
-        return workspace()->showingDesktop() ? AboveLayer : DesktopLayer;
-    if (isSplash())          // no damn annoying splashscreens
-        return NormalLayer; // getting in the way of everything else
-    if (isDock()) {
-        if (workspace()->showingDesktop())
+    if (workspace()->showingDesktop()) {
+        // NOTE: showing desktop state
+        if (isDesktop())
+            return AboveLayer;
+        if (isDock())
             return NotificationLayer;
-        return layerForDock();
+        if (isToolbar())
+            return NormalLayer;
+        if (isNotification())
+            return NotificationLayer;
+        if (isOnScreenDisplay())
+            return OnScreenDisplayLayer;
+        if (isCriticalNotification())
+            return CriticalNotificationLayer;
+    } else {
+        // NOTE: normal state
+        if (isDesktop())
+            return DesktopLayer;
+        if (isSplash())          // no damn annoying splashscreens
+            return NormalLayer; // getting in the way of everything else
+        if (isDock()) {
+            return layerForDock();
+        }
+        if (isOnScreenDisplay())
+            return OnScreenDisplayLayer;
+        if (isNotification())
+            return NotificationLayer;
+        if (isCriticalNotification())
+            return CriticalNotificationLayer;
+        if (keepBelow())
+            return BelowLayer;
+        if (isActiveFullScreen())
+            return ActiveLayer;
+        if (keepAbove())
+            return AboveLayer;
+        if (isPopupWindow())
+            return UnmanagedLayer;
     }
-    if (isOnScreenDisplay())
-        return OnScreenDisplayLayer;
-    if (isNotification())
-        return NotificationLayer;
-    if (isCriticalNotification())
-        return CriticalNotificationLayer;
-    if (workspace()->showingDesktop() && belongsToDesktop() && isSpecialWindow()) {
-        return AboveLayer;
-    }
-    if (keepBelow())
-        return BelowLayer;
-    if (isActiveFullScreen())
-        return ActiveLayer;
-    if (keepAbove())
-        return AboveLayer;
-    if (isPopupWindow())
-        return UnmanagedLayer;
 
+    // fallthrough
     return NormalLayer;
 }
 
