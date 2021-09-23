@@ -82,6 +82,7 @@ WaylandTestApplication::~WaylandTestApplication()
     }
     delete m_xwayland;
     m_xwayland = nullptr;
+    destroyXwm();
     destroyWorkspace();
     waylandServer()->dispatch();
     if (QStyle *s = style()) {
@@ -152,6 +153,8 @@ void WaylandTestApplication::continueStartupWithScene()
         finalizeStartup();
         return;
     }
+
+    createXwm();
 
     m_xwayland = new Xwl::Xwayland(this);
     connect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);

@@ -16,8 +16,6 @@
 #include <QPoint>
 // KF
 #include <KSharedConfig>
-// xcb
-#include <xcb/xcb.h>
 
 class QTimer;
 
@@ -153,12 +151,6 @@ public:
      */
     void setPos(const QPoint &pos);
     void setPos(int x, int y);
-    xcb_cursor_t x11Cursor(CursorShape shape);
-    /**
-     * Notice: if available always use the CursorShape variant to avoid cache duplicates for
-     * ambiguous cursor names in the non existing cursor name specification
-     */
-    xcb_cursor_t x11Cursor(const QByteArray &name);
 
     QImage image() const { return m_image; }
     QPoint hotspot() const { return m_hotspot; }
@@ -239,7 +231,6 @@ private Q_SLOTS:
 private:
     void updateTheme(const QString &name, int size);
     void loadThemeFromKConfig();
-    QHash<QByteArray, xcb_cursor_t > m_cursors;
     QPoint m_pos;
     QPoint m_hotspot;
     QImage m_image;

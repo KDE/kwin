@@ -14,7 +14,6 @@
 #include "main.h"
 #include "platform.h"
 #include "utils.h"
-#include "xcbutils.h"
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -23,8 +22,6 @@
 #include <QDBusConnection>
 #include <QScreen>
 #include <QTimer>
-
-#include <xcb/xcb_cursor.h>
 
 namespace KWin
 {
@@ -127,7 +124,6 @@ void Cursor::updateTheme(const QString &name, int size)
     if (m_themeName != name || m_themeSize != size) {
         m_themeName = name;
         m_themeSize = size;
-        m_cursors.clear();
         Q_EMIT themeChanged();
     }
 }
@@ -181,46 +177,6 @@ void Cursor::updateCursor(const QImage &image, const QPoint &hotspot)
     m_image = image;
     m_hotspot = hotspot;
     Q_EMIT cursorChanged();
-}
-
-xcb_cursor_t Cursor::x11Cursor(CursorShape shape)
-{
-    return x11Cursor(shape.name());
-}
-
-xcb_cursor_t Cursor::x11Cursor(const QByteArray &name)
-{
-    Q_ASSERT(kwinApp()->x11Connection());
-    auto it = m_cursors.constFind(name);
-    if (it != m_cursors.constEnd()) {
-        return it.value();
-    }
-
-    if (name.isEmpty()) {
-        return XCB_CURSOR_NONE;
-    }
-
-    xcb_cursor_context_t *ctx;
-    if (xcb_cursor_context_new(kwinApp()->x11Connection(), kwinApp()->x11DefaultScreen(), &ctx) < 0) {
-        return XCB_CURSOR_NONE;
-    }
-
-    xcb_cursor_t cursor = xcb_cursor_load_cursor(ctx, name.constData());
-    if (cursor == XCB_CURSOR_NONE) {
-        const auto &names = Cursor::cursorAlternativeNames(name);
-        for (const QByteArray &cursorName : names) {
-            cursor = xcb_cursor_load_cursor(ctx, cursorName.constData());
-            if (cursor != XCB_CURSOR_NONE) {
-                break;
-            }
-        }
-    }
-    if (cursor != XCB_CURSOR_NONE) {
-        m_cursors.insert(name, cursor);
-    }
-
-    xcb_cursor_context_free(ctx);
-    return cursor;
 }
 
 void Cursor::doSetPos()

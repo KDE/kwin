@@ -25,6 +25,7 @@
 #include "sm.h"
 #include "workspace.h"
 #include "x11eventfilter.h"
+#include "x11windowmanager.h"
 #include "xcbutils.h"
 
 #include <kwineffects.h>
@@ -267,6 +268,11 @@ void Application::setupLocalizedString()
     KLocalizedString::setApplicationDomain("kwin");
 }
 
+void Application::createXwm()
+{
+    X11WindowManager::create(this);
+}
+
 void Application::createWorkspace()
 {
     // we want all QQuickWindows with an alpha buffer, do here as Workspace might create QQuickWindows
@@ -350,6 +356,11 @@ void Application::destroyColorManager()
 #ifdef KWIN_BUILD_CMS
     delete ColorManager::self();
 #endif
+}
+
+void Application::destroyXwm()
+{
+    delete X11WindowManager::self();
 }
 
 void Application::registerEventFilter(X11EventFilter *filter)

@@ -14,6 +14,7 @@
 #include "screens.h"
 #include "utils.h"
 #include "workspace.h"
+#include "x11windowmanager.h"
 
 #include <QDesktopWidget>
 
@@ -94,7 +95,7 @@ void EffectsHandlerImplX11::doStopMouseInterception()
 
 void EffectsHandlerImplX11::defineCursor(Qt::CursorShape shape)
 {
-    const xcb_cursor_t c = Cursors::self()->mouse()->x11Cursor(shape);
+    const xcb_cursor_t c = xwm()->xcbCursor(shape);
     if (c != XCB_CURSOR_NONE) {
         m_mouseInterceptionWindow.defineCursor(c);
     }

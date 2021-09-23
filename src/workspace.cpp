@@ -53,6 +53,7 @@
 #include "main.h"
 #include "decorations/decorationbridge.h"
 #include "xwaylandclient.h"
+#include "x11windowmanager.h"
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -300,6 +301,7 @@ void Workspace::initializeX11()
         return;
     }
 
+    xwm()->start();
     atoms->retrieveHelpers();
 
     // first initialize the extensions
@@ -470,6 +472,8 @@ void Workspace::cleanupX11()
     m_syncAlarmFilter.reset();
     m_wasUserInteractionFilter.reset();
     m_xStackingQueryTree.reset();
+
+    xwm()->stop();
 }
 
 Workspace::~Workspace()

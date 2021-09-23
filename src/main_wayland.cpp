@@ -129,6 +129,7 @@ ApplicationWayland::~ApplicationWayland()
     }
     delete m_xwayland;
     m_xwayland = nullptr;
+    destroyXwm();
     destroyWorkspace();
     waylandServer()->dispatch();
 
@@ -186,6 +187,8 @@ void ApplicationWayland::continueStartupWithScene()
         finalizeStartup();
         return;
     }
+
+    createXwm();
 
     m_xwayland = new Xwl::Xwayland(this);
     m_xwayland->setListenFDs(m_xwaylandListenFds);

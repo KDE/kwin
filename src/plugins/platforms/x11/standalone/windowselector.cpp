@@ -13,6 +13,7 @@
 #include "cursor.h"
 #include "unmanaged.h"
 #include "workspace.h"
+#include "x11windowmanager.h"
 #include "xcbutils.h"
 // XLib
 #include <X11/cursorfont.h>
@@ -99,9 +100,9 @@ bool WindowSelector::activate(const QByteArray &cursorName)
 xcb_cursor_t WindowSelector::createCursor(const QByteArray &cursorName)
 {
     if (cursorName.isEmpty()) {
-        return Cursors::self()->mouse()->x11Cursor(Qt::CrossCursor);
+        return xwm()->xcbCursor(Qt::CrossCursor);
     }
-    xcb_cursor_t cursor = Cursors::self()->mouse()->x11Cursor(cursorName);
+    xcb_cursor_t cursor = xwm()->xcbCursor(cursorName);
     if (cursor != XCB_CURSOR_NONE) {
         return cursor;
     }

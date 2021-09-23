@@ -145,6 +145,7 @@ set(kwin_SRCS
     x11client.cpp
     x11eventfilter.cpp
     x11syncmanager.cpp
+    x11windowmanager.cpp
     xcbutils.cpp
     xcursortheme.cpp
     xdgactivationv1.cpp

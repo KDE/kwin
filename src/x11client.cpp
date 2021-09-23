@@ -30,6 +30,7 @@
 #include "surfaceitem_x11.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
+#include "x11windowmanager.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/decoratedclient.h"
 #include <KDecoration2/Decoration>
@@ -214,7 +215,7 @@ X11Client::X11Client()
     connect(options, &Options::condensedTitleChanged, this, &X11Client::updateCaption);
 
     connect(this, &X11Client::moveResizeCursorChanged, this, [this] (CursorShape cursor) {
-        xcb_cursor_t nativeCursor = Cursors::self()->mouse()->x11Cursor(cursor);
+        xcb_cursor_t nativeCursor = xwm()->xcbCursor(cursor);
         m_frame.defineCursor(nativeCursor);
         if (m_decoInputExtent.isValid())
             m_decoInputExtent.defineCursor(nativeCursor);
@@ -985,7 +986,7 @@ void X11Client::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
         0,                                // back_pixmap
         0,                                // border_pixel
         colormap,                    // colormap
-        Cursors::self()->mouse()->x11Cursor(Qt::ArrowCursor)
+        xwm()->xcbCursor(Qt::ArrowCursor)
     };
 
     const uint32_t cw_mask = XCB_CW_BACK_PIXMAP | XCB_CW_BORDER_PIXEL |
@@ -4547,7 +4548,7 @@ bool X11Client::doStartInteractiveMoveResize()
     const xcb_grab_pointer_cookie_t cookie = xcb_grab_pointer_unchecked(connection(), false, m_moveResizeGrabWindow,
         XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION |
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
-        XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, m_moveResizeGrabWindow, Cursors::self()->mouse()->x11Cursor(cursor()), xTime());
+        XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, m_moveResizeGrabWindow, xwm()->xcbCursor(cursor()), xTime());
     ScopedCPointer<xcb_grab_pointer_reply_t> pointerGrab(xcb_grab_pointer_reply(connection(), cookie, nullptr));
     if (!pointerGrab.isNull() && pointerGrab->status == XCB_GRAB_STATUS_SUCCESS) {
         has_grab = true;

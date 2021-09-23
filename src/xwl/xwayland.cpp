@@ -9,7 +9,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "xwayland.h"
-#include "cursor.h"
 #include "databridge.h"
 #include "dnd.h"
 #include "xwldrophandler.h"
@@ -18,6 +17,7 @@
 #include "options.h"
 #include "utils.h"
 #include "wayland_server.h"
+#include "x11windowmanager.h"
 #include "xcbutils.h"
 #include "xwayland_logging.h"
 
@@ -386,10 +386,7 @@ void Xwayland::handleXwaylandReady()
             this, &Xwayland::handleSelectionFailedToClaimOwnership);
     m_selectionOwner->claim(true);
 
-    Cursor *mouseCursor = Cursors::self()->mouse();
-    if (mouseCursor) {
-        Xcb::defineCursor(kwinApp()->x11RootWindow(), mouseCursor->x11Cursor(Qt::ArrowCursor));
-    }
+    Xcb::defineCursor(kwinApp()->x11RootWindow(), xwm()->xcbCursor(Qt::ArrowCursor));
 
     DataBridge::create(this);
 
