@@ -212,6 +212,7 @@ target_link_libraries(kwin
     Plasma::KWaylandServer
 
     XCB::COMPOSITE
+    XCB::CURSOR
     XCB::DAMAGE
     XCB::GLX
     XCB::ICCCM

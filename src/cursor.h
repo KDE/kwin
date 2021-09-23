@@ -190,18 +190,6 @@ Q_SIGNALS:
 
 protected:
     /**
-     * Called from x11Cursor to actually retrieve the X11 cursor. Base implementation returns
-     * a null cursor, an implementing subclass should implement this method if it can provide X11
-     * mouse cursors.
-     */
-    virtual xcb_cursor_t getX11Cursor(CursorShape shape);
-    /**
-     * Called from x11Cursor to actually retrieve the X11 cursor. Base implementation returns
-     * a null cursor, an implementing subclass should implement this method if it can provide X11
-     * mouse cursors.
-     */
-    virtual xcb_cursor_t getX11Cursor(const QByteArray &name);
-    /**
      * Performs the actual warping of the cursor.
      */
     virtual void doSetPos();
@@ -251,6 +239,7 @@ private Q_SLOTS:
 private:
     void updateTheme(const QString &name, int size);
     void loadThemeFromKConfig();
+    QHash<QByteArray, xcb_cursor_t > m_cursors;
     QPoint m_pos;
     QPoint m_hotspot;
     QImage m_image;

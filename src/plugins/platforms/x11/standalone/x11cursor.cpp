@@ -16,8 +16,6 @@
 #include <QAbstractEventDispatcher>
 #include <QTimer>
 
-#include <xcb/xcb_cursor.h>
-
 namespace KWin
 {
 
@@ -36,8 +34,6 @@ X11Cursor::X11Cursor(QObject *parent, bool xInputSupport)
     // TODO: How often do we really need to poll?
     m_mousePollingTimer->setInterval(50);
     connect(m_mousePollingTimer, &QTimer::timeout, this, &X11Cursor::mousePolled);
-
-    connect(this, &Cursor::themeChanged, this, [this] { m_cursors.clear(); });
 
     if (m_hasXInput) {
         connect(qApp->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &X11Cursor::aboutToBlock);
@@ -132,46 +128,6 @@ void X11Cursor::mousePolled()
         lastPos = currentPos();
         lastMask = m_buttonMask;
     }
-}
-
-xcb_cursor_t X11Cursor::getX11Cursor(CursorShape shape)
-{
-    return getX11Cursor(shape.name());
-}
-
-xcb_cursor_t X11Cursor::getX11Cursor(const QByteArray &name)
-{
-    auto it = m_cursors.constFind(name);
-    if (it != m_cursors.constEnd()) {
-        return it.value();
-    }
-    return createCursor(name);
-}
-
-xcb_cursor_t X11Cursor::createCursor(const QByteArray &name)
-{
-    if (name.isEmpty()) {
-        return XCB_CURSOR_NONE;
-    }
-    xcb_cursor_context_t *ctx;
-    if (xcb_cursor_context_new(kwinApp()->x11Connection(), kwinApp()->x11DefaultScreen(), &ctx) < 0) {
-        return XCB_CURSOR_NONE;
-    }
-    xcb_cursor_t cursor = xcb_cursor_load_cursor(ctx, name.constData());
-    if (cursor == XCB_CURSOR_NONE) {
-        const auto &names = cursorAlternativeNames(name);
-        for (auto cit = names.begin(); cit != names.end(); ++cit) {
-            cursor = xcb_cursor_load_cursor(ctx, (*cit).constData());
-            if (cursor != XCB_CURSOR_NONE) {
-                break;
-            }
-        }
-    }
-    if (cursor != XCB_CURSOR_NONE) {
-        m_cursors.insert(name, cursor);
-    }
-    xcb_cursor_context_free(ctx);
-    return cursor;
 }
 
 void X11Cursor::notifyCursorChanged()
