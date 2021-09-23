@@ -293,6 +293,8 @@ Layer AbstractClient::belongsToLayer() const
                 return AboveLayer;
             if (isToolbar())
                 return AboveLayer;
+            if (isDialog())
+                return AboveLayer;
         }
     } else {
         // NOTE: normal state
