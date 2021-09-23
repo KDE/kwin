@@ -351,9 +351,9 @@ bool DrmPipeline::moveCursor(QPoint pos)
         return true;
     }
     if (drmModeMoveCursor(m_gpu->fd(), m_crtc->id(), pos.x(), pos.y()) != 0) {
-        m_cursor.pos = pos;
         return false;
     }
+    m_cursor.pos = pos;
     m_cursor.dirtyPos = false;
     return true;
 }
@@ -365,6 +365,8 @@ bool DrmPipeline::setActive(bool active)
         if (drmModeSetCursor(m_gpu->fd(), m_crtc->id(), 0, 0, 0) != 0) {
             qCWarning(KWIN_DRM) << "Could not set cursor:" << strerror(errno);
         }
+        m_cursor.dirtyBo = true;
+        m_cursor.dirtyPos = true;
     }
     bool success = false;
     auto mode = m_connector->currentMode().mode;
@@ -400,6 +402,7 @@ bool DrmPipeline::setActive(bool active)
     if (m_active) {
         // enable cursor (again)
         setCursor(m_cursor.buffer, m_cursor.hotspot);
+        moveCursor(m_cursor.pos);
     }
     return success;
 }
