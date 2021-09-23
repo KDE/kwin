@@ -294,29 +294,12 @@ Layer AbstractClient::belongsToLayer() const
             if (isToolbar())
                 return AboveLayer;
         }
-        if (isNotification())
-            return NotificationLayer;
-        if (isOnScreenDisplay())
-            return OnScreenDisplayLayer;
-        if (isCriticalNotification())
-            return CriticalNotificationLayer;
     } else {
         // NOTE: normal state
         if (isDesktop())
             return DesktopLayer;
-        if (isSplash())          // no damn annoying splashscreens
-            return NormalLayer; // getting in the way of everything else
-        if (isDock()) {
-            return layerForDock();
-        }
         if (isPopupWindow())
             return PopupLayer;
-        if (isOnScreenDisplay())
-            return OnScreenDisplayLayer;
-        if (isNotification())
-            return NotificationLayer;
-        if (isCriticalNotification())
-            return CriticalNotificationLayer;
         if (keepBelow())
             return BelowLayer;
         if (isActiveFullScreen())
@@ -325,7 +308,16 @@ Layer AbstractClient::belongsToLayer() const
             return AboveLayer;
     }
 
-    // fallthrough
+    // fallthrough (both states)
+    if (isDock())
+        return layerForDock();
+    if (isNotification())
+        return NotificationLayer;
+    if (isOnScreenDisplay())
+        return OnScreenDisplayLayer;
+    if (isCriticalNotification())
+        return CriticalNotificationLayer;
+
     return NormalLayer;
 }
 
