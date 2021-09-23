@@ -288,10 +288,12 @@ Layer AbstractClient::belongsToLayer() const
         // NOTE: showing desktop state
         if (isDesktop())
             return AboveLayer;
-        if (isDock())
-            return NotificationLayer;
-        if (isToolbar())
-            return NormalLayer;
+        if (belongsToDesktop()) {
+            if (isDock())
+                return AboveLayer;
+            if (isToolbar())
+                return AboveLayer;
+        }
         if (isNotification())
             return NotificationLayer;
         if (isOnScreenDisplay())
