@@ -309,6 +309,8 @@ Layer AbstractClient::belongsToLayer() const
         if (isDock()) {
             return layerForDock();
         }
+        if (isPopupWindow())
+            return PopupLayer;
         if (isOnScreenDisplay())
             return OnScreenDisplayLayer;
         if (isNotification())
@@ -321,8 +323,6 @@ Layer AbstractClient::belongsToLayer() const
             return ActiveLayer;
         if (keepAbove())
             return AboveLayer;
-        if (isPopupWindow())
-            return UnmanagedLayer;
     }
 
     // fallthrough
