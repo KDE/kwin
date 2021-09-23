@@ -1023,7 +1023,7 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     RenderContext renderContext {
         .clip = region,
         .paintData = data,
-        .hardwareClipping = region != infiniteRegion() && (mask & Scene::PAINT_WINDOW_TRANSFORMED) && !(mask & Scene::PAINT_SCREEN_TRANSFORMED),
+        .hardwareClipping = region != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
     };
 
     renderContext.transforms.push(QMatrix4x4());
