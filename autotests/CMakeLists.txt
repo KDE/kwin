@@ -190,6 +190,8 @@ target_link_libraries(testScriptedEffectLoader
     KF5::Notifications
     KF5::Package
 
+    XCB::CURSOR
+
     kwineffects
     kwin4_effect_builtins
 )
