@@ -10,6 +10,7 @@ X-KDE-Library=kwin_overview_config
 X-KDE-ParentComponents=overview
 
 Name=overview
+Name[az]=ümumi baxış
 Name[ca]=Vista general
 Name[cs]=přehled
 Name[en_GB]=overview

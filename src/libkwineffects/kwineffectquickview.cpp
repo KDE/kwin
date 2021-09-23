@@ -80,7 +80,7 @@ public:
 };
 
 EffectQuickView::EffectQuickView(QObject *parent)
-    : EffectQuickView(parent, effects->isOpenGLCompositing() ? ExportMode::Texture : ExportMode::Image)
+    : EffectQuickView(parent, effects ? ExportMode::Texture : ExportMode::Image)
 {
 }
 
@@ -90,7 +90,7 @@ EffectQuickView::EffectQuickView(QObject *parent, ExportMode exportMode)
 }
 
 EffectQuickView::EffectQuickView(QObject *parent, QWindow *renderWindow)
-    : EffectQuickView(parent, renderWindow, effects->isOpenGLCompositing() ? ExportMode::Texture : ExportMode::Image)
+    : EffectQuickView(parent, renderWindow, effects ? ExportMode::Texture : ExportMode::Image)
 {
 }
 
@@ -120,8 +120,9 @@ EffectQuickView::EffectQuickView(QObject *parent, QWindow *renderWindow, ExportM
         format.setDepthBufferSize(16);
         format.setStencilBufferSize(8);
 
+        auto shareContext = QOpenGLContext::globalShareContext();
         d->m_glcontext.reset(new QOpenGLContext);
-        d->m_glcontext->setShareContext(QOpenGLContext::globalShareContext());
+        d->m_glcontext->setShareContext(shareContext);
         d->m_glcontext->setFormat(format);
         d->m_glcontext->create();
 
@@ -134,8 +135,8 @@ EffectQuickView::EffectQuickView(QObject *parent, QWindow *renderWindow, ExportM
         d->m_renderControl->initialize(d->m_glcontext.data());
         d->m_glcontext->doneCurrent();
 
-        // On Wayland, opengl contexts are implicitly shared.
-        if (!effects->waylandDisplay() && !d->m_glcontext->shareContext()) {
+        // On Wayland, contexts are implicitly shared and QOpenGLContext::globalShareContext() is null.
+        if (shareContext && !d->m_glcontext->shareContext()) {
             qCDebug(LIBKWINEFFECTS) << "Failed to create a shared context, falling back to raster rendering";
             // still render via GL, but blit for presentation
             d->m_useBlit = true;

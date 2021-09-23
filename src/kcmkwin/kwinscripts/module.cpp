@@ -44,6 +44,9 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     about->addAuthor(i18n("Tamás Krutki"));
     setAboutData(about);
 
+    // Hide the help button, because there is no help
+    setButtons(Apply | Default);
+
     ui->setupUi(this);
 
     ui->messageWidget->hide();

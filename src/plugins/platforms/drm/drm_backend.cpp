@@ -234,11 +234,11 @@ void DrmBackend::handleUdevEvent()
         if (!session()->isActive()) {
             continue;
         }
+        if (!m_explicitGpus.isEmpty() && !m_explicitGpus.contains(device->devNode())) {
+            continue;
+        }
 
         if (device->action() == QStringLiteral("add")) {
-            if (!m_explicitGpus.isEmpty() && !m_explicitGpus.contains(device->devNode())) {
-                continue;
-            }
             qCDebug(KWIN_DRM) << "New gpu found:" << device->devNode();
             if (addGpu(device->devNode())) {
                 updateOutputs();

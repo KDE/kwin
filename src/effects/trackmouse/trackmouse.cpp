@@ -146,9 +146,9 @@ void TrackMouseEffect::postPaintScreen()
 bool TrackMouseEffect::init()
 {
     effects->makeOpenGLContextCurrent();
-    if (!m_texture[0] || m_image[0].isNull()) {
+    if (!m_texture[0] && m_image[0].isNull()) {
         loadTexture();
-        if (!m_texture[0] || m_image[0].isNull())
+        if (!m_texture[0] && m_image[0].isNull())
             return false;
     }
     m_lastRect[0].moveCenter(cursorPos());

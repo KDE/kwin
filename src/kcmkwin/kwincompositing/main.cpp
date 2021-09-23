@@ -253,8 +253,10 @@ void KWinCompositingKCM::defaults()
 
     // unmanaged widgets
     m_form.backend->setCurrentIndex(CompositingTypeIndex::OPENGL20_INDEX);
-    // corresponds to 1.0 seconds in s_animationMultipliers
-    m_form.animationDurationFactor->setValue(3);
+    if (!isRunningPlasma()) {
+        // corresponds to 1.0 seconds in s_animationMultipliers
+        m_form.animationDurationFactor->setValue(3);
+    }
 }
 
 void KWinCompositingKCM::save()
@@ -274,8 +276,10 @@ void KWinCompositingKCM::save()
     m_settings->setBackend(backend);
     m_settings->setGlCore(glCore);
 
-    const auto animationDuration = s_animationMultipliers[m_form.animationDurationFactor->value()];
-    m_settings->setAnimationDurationFactor(animationDuration);
+    if (!isRunningPlasma()) {
+        const auto animationDuration = s_animationMultipliers[m_form.animationDurationFactor->value()];
+        m_settings->setAnimationDurationFactor(animationDuration);
+    }
     m_settings->save();
 
     KCModule::save();

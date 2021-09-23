@@ -298,8 +298,6 @@ Layer AbstractClient::belongsToLayer() const
         // NOTE: normal state
         if (isDesktop())
             return DesktopLayer;
-        if (isPopupWindow())
-            return PopupLayer;
         if (keepBelow())
             return BelowLayer;
         if (isActiveFullScreen())
@@ -311,6 +309,8 @@ Layer AbstractClient::belongsToLayer() const
     // fallthrough (both states)
     if (isDock())
         return layerForDock();
+    if (isPopupWindow())
+        return PopupLayer;
     if (isNotification())
         return NotificationLayer;
     if (isOnScreenDisplay())
