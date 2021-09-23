@@ -43,7 +43,6 @@ enum Layer {
     DockLayer,
     AboveLayer,
     NotificationLayer, // layer for windows of type notification
-    PopupLayer, // tooltips, sub- and context menus
     ActiveLayer, // active fullscreen, or active dialog
     PopupLayer, // tooltips, sub- and context menus
     CriticalNotificationLayer, // layer for notifications that should be shown even on top of fullscreen
