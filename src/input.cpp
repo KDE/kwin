@@ -1859,6 +1859,9 @@ public:
         if (!tool) {
             tool = createTool(tabletToolId);
         }
+        if (!tool->isClientSupported()) {
+            return false;
+        }
         tool->sendButton(button, pressed);
         return true;
     }
