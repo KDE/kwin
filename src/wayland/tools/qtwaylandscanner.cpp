@@ -488,6 +488,9 @@ bool Scanner::process()
         printf("#include <QString>\n");
 
         printf("\n");
+        printf("#include <unistd.h>\n");
+
+        printf("\n");
         printf("#ifndef WAYLAND_VERSION_CHECK\n");
         printf("#define WAYLAND_VERSION_CHECK(major, minor, micro) \\\n");
         printf("    ((WAYLAND_VERSION_MAJOR > (major)) || \\\n");
@@ -946,6 +949,10 @@ bool Scanner::process()
                     printf("        Q_UNUSED(client);\n");
                     printf("        Resource *r = Resource::fromResource(resource);\n");
                     printf("        if (Q_UNLIKELY(!r->%s_object)) {\n", interfaceNameStripped);
+                    for (const WaylandArgument &a : e.arguments) {
+                        if (a.type == QByteArrayLiteral("fd"))
+                            printf("        close(%s);\n", a.name.constData());
+                    }
                     if (e.type == "destructor")
                         printf("            wl_resource_destroy(resource);\n");
                     printf("            return;\n");
