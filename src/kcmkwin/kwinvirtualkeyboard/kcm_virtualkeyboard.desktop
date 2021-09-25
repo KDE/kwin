@@ -66,6 +66,7 @@ Comment[vi]=Chọn bàn phím ảo để dùng
 Comment[x-test]=xxSelect which virtual keyboard to usexx
 Comment[zh_CN]=选择要使用的虚拟键盘
 X-KDE-Keywords=software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods
+X-KDE-Keywords[az]=software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,proqram klaviaturası,virtual klaviatura,sensor klaviatura,ekran klaviaturası,daxiletmə üsulları
 X-KDE-Keywords[ca]=teclat per programari,teclat virtual,teclat tàctil,teclat en pantalla,mètodes d'entrada
 X-KDE-Keywords[en_GB]=software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods
 X-KDE-Keywords[es]=teclado de software,teclado virtual,teclado táctil,teclado en la pantalla,métodos de entrada

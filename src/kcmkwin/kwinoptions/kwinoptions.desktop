@@ -133,6 +133,7 @@ Comment[zh_CN]=配置窗口操作和行为
 Comment[zh_TW]=設定視窗動作及行為
 
 X-KDE-Keywords=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate
+X-KDE-Keywords[az]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate,yerdəyişmə,pəncərə davranışları,pəncərə fəaliyyəti,animasiya,yüksəlmə,avtomatik yüksəlmə,pəncərələr,çərçivə,başlıq çubuğu,ikili vuruş,iş masası,ani,hərəkət,kölgələnmə,kölgə,kölgəsiz, kölgəsizləşmə,aktivləşmə,aktiv etmək
 X-KDE-Keywords[ca]=focus,emplaçament,comportament de la finestra,accions de la finestra,animació,elevació,elevació automàtica,finestres,marc,barra de títol,doble clic,escriptori,ajust,moviment,ombreig,ombra,shading,shade,unshading,activació,activar
 X-KDE-Keywords[en_GB]=focus,placement,window behaviour,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate
 X-KDE-Keywords[es]=foco,posicionamiento,comportamiento de las ventanas,acciones de las ventanas,animación,elevación,autoelevación,ventanas,marco,barra de título,doble clic,escritorio,ajuste,movimiento,sombreado,sombra,activación,activar
