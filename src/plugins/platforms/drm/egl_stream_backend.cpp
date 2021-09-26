@@ -374,11 +374,14 @@ bool EglStreamBackend::resetOutput(Output &o)
             makeContextCurrent(o);
         } else {
             if (const auto &output = findConnectedOutput(); output && output->eglSurface) {
-                makeContextCurrent(*output);
+                bool ret = makeContextCurrent(*output);
+                qCWarning(KWIN_DRM) << "EglStreams: making context current with surface" << ret;
             } else {
-                makeContextCurrent(o);
+                bool ret = makeContextCurrent(o);
+                qCWarning(KWIN_DRM) << "EglStreams: making context current without surface" << ret;
             }
             o.secondarySurface = QSharedPointer<ShadowBuffer>::create(sourceSize);
+            qCWarning(KWIN_DRM) << "EglStreams: secondary surface complete?" << o.secondarySurface->isComplete();
             if (!o.secondarySurface->isComplete()) {
                 cleanupOutput(o);
                 return false;
@@ -386,6 +389,7 @@ bool EglStreamBackend::resetOutput(Output &o)
         }
         if (drmOutput->needsSoftwareTransformation() || o.output->gpu() != m_gpu) {
             o.shadowBuffer = QSharedPointer<ShadowBuffer>::create(o.output->pixelSize());
+            qCWarning(KWIN_DRM) << "EglStreams: created shadowbuffer. complete?" << o.secondarySurface->isComplete();
             if (!o.shadowBuffer->isComplete()) {
                 cleanupOutput(o);
                 return false;
