@@ -77,12 +77,6 @@ void DrmVirtualOutput::updateMode(const QSize &size, uint32_t refreshRate)
 void DrmVirtualOutput::setDpmsMode(DpmsMode mode)
 {
     setDpmsModeInternal(mode);
-    m_dpmsEnabled = mode == DpmsMode::On;
-}
-
-bool DrmVirtualOutput::isDpmsEnabled() const
-{
-    return m_dpmsEnabled;
 }
 
 void DrmVirtualOutput::updateEnablement(bool enable)

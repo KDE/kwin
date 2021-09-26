@@ -119,7 +119,7 @@ void DrmBackend::checkOutputsAreOn()
         return;
     }
     for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
-        if (!(*it)->isDpmsEnabled()) {
+        if ((*it)->dpmsMode() != AbstractWaylandOutput::DpmsMode::On) {
             // dpms still disabled, need to keep the filter
             return;
         }

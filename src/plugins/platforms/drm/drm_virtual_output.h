@@ -30,7 +30,6 @@ public:
     bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) override;
     GbmBuffer *currentBuffer() const override;
     QSize sourceSize() const override;
-    bool isDpmsEnabled() const override;
 
     bool isFormatSupported(uint32_t drmFormat) const override;
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
@@ -56,7 +55,6 @@ private:
     QSharedPointer<DrmBuffer> m_currentBuffer;
     bool m_pageFlipPending = true;
     int m_modeIndex = 0;
-    bool m_dpmsEnabled = true;
 
     int m_identifier;
     SoftwareVsyncMonitor *m_vsyncMonitor;

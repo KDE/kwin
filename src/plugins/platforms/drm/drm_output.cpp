@@ -259,7 +259,8 @@ void DrmOutput::setDrmDpmsMode(DpmsMode mode)
         return;
     }
     bool active = mode == DpmsMode::On;
-    if (active == m_pipeline->isActive()) {
+    bool isActive = dpmsMode() == DpmsMode::On;
+    if (active == isActive) {
         setDpmsModeInternal(mode);
         return;
     }
@@ -443,11 +444,6 @@ GbmBuffer *DrmOutput::currentBuffer() const
 #else
     return nullptr;
 #endif
-}
-
-bool DrmOutput::isDpmsEnabled() const
-{
-    return m_pipeline->isActive();
 }
 
 QSize DrmOutput::sourceSize() const
