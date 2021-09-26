@@ -32,7 +32,6 @@ public:
     virtual bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) = 0;
 
     virtual bool needsSoftwareTransformation() const = 0;
-    virtual bool isDpmsEnabled() const = 0;
     virtual QSize sourceSize() const = 0;
     virtual bool isFormatSupported(uint32_t drmFormat) const = 0;
     virtual QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const = 0;

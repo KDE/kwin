@@ -58,7 +58,6 @@ public:
     bool setRgbRange(AbstractWaylandOutput::RgbRange rgbRange);
 
     DrmPlane::Transformations transformation() const;
-    bool isActive() const;
     bool isCursorVisible() const;
     QPoint cursorPos() const;
 
@@ -91,6 +90,7 @@ private:
     bool atomicCommit();
     bool presentLegacy();
     bool checkTestBuffer();
+    bool isActive() const;
 
     bool setPendingTransformation(const DrmPlane::Transformations &transformation);
 

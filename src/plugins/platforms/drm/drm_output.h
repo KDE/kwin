@@ -48,7 +48,6 @@ public:
 
     bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) override;
     void pageFlipped();
-    bool isDpmsEnabled() const override;
 
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;

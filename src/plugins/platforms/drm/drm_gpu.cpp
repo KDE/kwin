@@ -320,6 +320,9 @@ bool DrmGpu::updateOutputs()
         } else if (m_outputs.contains(output)) {
             // try setting hardware rotation
             output->updateTransform(output->transform());
+            if (output->dpmsMode() != AbstractWaylandOutput::DpmsMode::On) {
+                pipeline->setActive(false);
+            }
         } else {
             qCDebug(KWIN_DRM).nospace() << "New output on GPU " << m_devNode << ": " << pipeline->connector()->modelName();
             if (!output->initCursor(m_cursorSize)) {
