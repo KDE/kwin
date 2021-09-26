@@ -380,7 +380,7 @@ bool DrmPipeline::setActive(bool active)
             success = atomicCommit();
         }
     } else {
-        m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF);
+        success = m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF);
     }
     if (!success) {
         qCWarning(KWIN_DRM) << "Setting active to" << active << "failed" << strerror(errno);
