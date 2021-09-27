@@ -87,8 +87,6 @@ public:
 
     void updateLEDs(KWin::Xkb::LEDs leds);
 
-    static void createThread();
-
 Q_SIGNALS:
     void keyChanged(quint32 key, KWin::InputRedirection::KeyboardKeyState, quint32 time, KWin::LibInput::Device *device);
     void pointerButtonChanged(quint32 button, KWin::InputRedirection::PointerButtonState state, quint32 time, KWin::LibInput::Device *device);
@@ -163,7 +161,6 @@ private:
     Xkb::LEDs m_leds;
 
     KWIN_SINGLETON(Connection)
-    static QPointer<QThread> s_thread;
 };
 
 }

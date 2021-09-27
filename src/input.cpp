@@ -55,6 +55,7 @@
 #include <KScreenLocker/KsldApp>
 // Qt
 #include <QKeyEvent>
+#include <QThread>
 #include <qpa/qwindowsysteminterface.h>
 
 #include <xkbcommon/xkbcommon.h>
@@ -2134,6 +2135,14 @@ InputRedirection::InputRedirection(QObject *parent)
 
 InputRedirection::~InputRedirection()
 {
+    if (m_libInput) {
+        m_libInput->deleteLater();
+
+        m_libInputThread->quit();
+        m_libInputThread->wait();
+        delete m_libInputThread;
+    }
+
     s_self = nullptr;
     qDeleteAll(m_filters);
     qDeleteAll(m_spies);
@@ -2374,8 +2383,15 @@ void InputRedirection::setupLibInput()
     if (m_libInput) {
         return;
     }
+
+    m_libInputThread = new QThread();
+    m_libInputThread->setObjectName(QStringLiteral("libinput-connection"));
+    m_libInputThread->start();
+
     LibInput::Connection *conn = LibInput::Connection::create(this);
     m_libInput = conn;
+    m_libInput->moveToThread(m_libInputThread);
+
     if (conn) {
 
         if (waylandServer()) {
