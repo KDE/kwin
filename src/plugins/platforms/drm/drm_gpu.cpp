@@ -190,8 +190,24 @@ void DrmGpu::initDrmResources()
         qCCritical(KWIN_DRM) << "drmModeGetResources for getting CRTCs failed on GPU" << m_devNode;
         return;
     }
+    auto planes = m_planes;
     for (int i = 0; i < resources->count_crtcs; ++i) {
-        auto c = new DrmCrtc(this, resources->crtcs[i], i);
+        DrmPlane *primary = nullptr;
+        for (const auto &plane : qAsConst(planes)) {
+            if (plane->type() == DrmPlane::TypeIndex::Primary
+                && plane->isCrtcSupported(i)) {
+                primary = plane;
+                if (plane->getProp(DrmPlane::PropertyIndex::CrtcId)->current() == resources->crtcs[i]) {
+                    break;
+                }
+            }
+        }
+        if (m_atomicModeSetting && !primary) {
+            qCWarning(KWIN_DRM) << "Could not find a suitable primary plane for crtc" << resources->crtcs[i];
+            continue;
+        }
+        planes.removeOne(primary);
+        auto c = new DrmCrtc(this, resources->crtcs[i], i, primary);
         if (!c->init()) {
             delete c;
             continue;
@@ -301,18 +317,16 @@ bool DrmGpu::updateOutputs()
     }
     auto connectors = connectedConnectors;
     auto crtcs = m_crtcs;
-    auto planes = m_planes;
     // don't touch resources that are leased
     for (const auto &output : qAsConst(m_leaseOutputs)) {
         if (output->lease()) {
             connectors.removeOne(output->pipeline()->connector());
             crtcs.removeOne(output->pipeline()->crtc());
-            planes.removeOne(output->pipeline()->primaryPlane());
         } else {
             m_pipelines.removeOne(output->pipeline());
         }
     }
-    auto config = findWorkingCombination({}, connectors, crtcs, planes);
+    auto config = findWorkingCombination({}, connectors, crtcs);
     if (config.isEmpty() && !connectors.isEmpty()) {
         qCCritical(KWIN_DRM) << "DrmGpu::findWorkingCombination failed to find any functional combinations! Reverting to the old configuration!";
         for (auto it = oldPipelines.begin(); it != oldPipelines.end(); it++) {
@@ -368,7 +382,7 @@ bool DrmGpu::updateOutputs()
     return true;
 }
 
-QVector<DrmPipeline *> DrmGpu::findWorkingCombination(const QVector<DrmPipeline *> &pipelines, QVector<DrmConnector *> connectors, QVector<DrmCrtc *> crtcs, const QVector<DrmPlane *> &planes)
+QVector<DrmPipeline *> DrmGpu::findWorkingCombination(const QVector<DrmPipeline *> &pipelines, QVector<DrmConnector *> connectors, QVector<DrmCrtc *> crtcs)
 {
     if (connectors.isEmpty() || crtcs.isEmpty()) {
         // no further pipelines can be added -> test configuration
@@ -393,15 +407,13 @@ QVector<DrmPipeline *> DrmGpu::findWorkingCombination(const QVector<DrmPipeline 
         });
     }
 
-    auto recurse = [this, connector, connectors, crtcs, planes, pipelines] (DrmCrtc *crtc, DrmPlane *primaryPlane) {
-        auto pipeline = new DrmPipeline(this, connector, crtc, primaryPlane);
+    auto recurse = [this, connector, connectors, crtcs, pipelines] (DrmCrtc *crtc) {
+        auto pipeline = new DrmPipeline(this, connector, crtc);
         auto crtcsLeft = crtcs;
         crtcsLeft.removeOne(crtc);
-        auto planesLeft = planes;
-        planesLeft.removeOne(primaryPlane);
         auto allPipelines = pipelines;
         allPipelines << pipeline;
-        auto ret = findWorkingCombination(allPipelines, connectors, crtcsLeft, planesLeft);
+        auto ret = findWorkingCombination(allPipelines, connectors, crtcsLeft);
         if (ret.isEmpty()) {
             delete pipeline;
         }
@@ -410,19 +422,8 @@ QVector<DrmPipeline *> DrmGpu::findWorkingCombination(const QVector<DrmPipeline 
     for (const auto &encoderId : encoders) {
         DrmScopedPointer<drmModeEncoder> encoder(drmModeGetEncoder(m_fd, encoderId));
         for (const auto &crtc : qAsConst(crtcs)) {
-            if (m_atomicModeSetting) {
-                for (const auto &plane : qAsConst(planes)) {
-                    if (plane->type() == DrmPlane::TypeIndex::Primary
-                        && plane->isCrtcSupported(crtc->pipeIndex())) {
-                        if (auto workingPipelines = recurse(crtc, plane); !workingPipelines.isEmpty()) {
-                            return workingPipelines;
-                        }
-                    }
-                }
-            } else {
-                if (auto workingPipelines = recurse(crtc, nullptr); !workingPipelines.isEmpty()) {
-                    return workingPipelines;
-                }
+            if (auto workingPipelines = recurse(crtc); !workingPipelines.isEmpty()) {
+                return workingPipelines;
             }
         }
     }

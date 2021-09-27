@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex)
+DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane)
     : DrmObject(gpu, crtcId, {
         PropertyDefinition(QByteArrayLiteral("MODE_ID"), Requirement::Required),
         PropertyDefinition(QByteArrayLiteral("ACTIVE"), Requirement::Required),
@@ -26,6 +26,7 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex)
     }, DRM_MODE_OBJECT_CRTC)
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
+    , m_primaryPlane(primaryPlane)
 {
 }
 
@@ -130,6 +131,11 @@ bool DrmCrtc::isCursorVisible(const QRect &output) const
 QPoint DrmCrtc::cursorPos() const
 {
     return m_cursor.pos;
+}
+
+DrmPlane *DrmCrtc::primaryPlane() const
+{
+    return m_primaryPlane;
 }
 
 }

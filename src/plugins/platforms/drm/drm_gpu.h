@@ -92,7 +92,7 @@ private:
     void removeLeaseOutput(DrmLeaseOutput *output);
     void initDrmResources();
 
-    QVector<DrmPipeline *> findWorkingCombination(const QVector<DrmPipeline *> &pipelines, QVector<DrmConnector *> connectors, QVector<DrmCrtc *> crtcs, const QVector<DrmPlane *> &planes);
+    QVector<DrmPipeline *> findWorkingCombination(const QVector<DrmPipeline *> &pipelines, QVector<DrmConnector *> connectors, QVector<DrmCrtc *> crtcs);
     bool commitCombination(const QVector<DrmPipeline *> &pipelines);
 
     void handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest);

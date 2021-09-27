@@ -33,7 +33,7 @@ class GammaRamp;
 class DrmPipeline
 {
 public:
-    DrmPipeline(DrmGpu *gpu, DrmConnector *conn, DrmCrtc *crtc, DrmPlane *primaryPlane);
+    DrmPipeline(DrmGpu *gpu, DrmConnector *conn, DrmCrtc *crtc);
     ~DrmPipeline();
 
     /**

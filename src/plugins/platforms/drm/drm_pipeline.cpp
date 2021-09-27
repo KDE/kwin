@@ -34,12 +34,12 @@
 namespace KWin
 {
 
-DrmPipeline::DrmPipeline(DrmGpu *gpu, DrmConnector *conn, DrmCrtc *crtc, DrmPlane *primaryPlane)
+DrmPipeline::DrmPipeline(DrmGpu *gpu, DrmConnector *conn, DrmCrtc *crtc)
     : m_output(nullptr)
     , m_gpu(gpu)
     , m_connector(conn)
     , m_crtc(crtc)
-    , m_primaryPlane(primaryPlane)
+    , m_primaryPlane(crtc->primaryPlane())
 {
     m_allObjects << m_connector << m_crtc;
     if (m_primaryPlane) {
