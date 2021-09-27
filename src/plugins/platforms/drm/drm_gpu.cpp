@@ -425,7 +425,7 @@ bool DrmGpu::commitCombination(const QVector<DrmPipeline *> &pipelines)
         pipeline->setup();
     }
 
-    if (DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::Commit)) {
+    if (DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::Test)) {
         return true;
     } else {
         for (const auto &pipeline : qAsConst(pipelines)) {
@@ -519,7 +519,7 @@ static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsign
         return;
     }
 
-    // The static_cast<> here are for a 32-bit environment where 
+    // The static_cast<> here are for a 32-bit environment where
     // sizeof(time_t) == sizeof(unsigned int) == 4 . Putting @p sec
     // into a time_t cuts off the most-significant bit (after the
     // year 2038), similarly long can't hold all the bits of an
