@@ -330,6 +330,11 @@ void Application::removeNativeX11EventFilter()
     removeNativeEventFilter(m_eventFilter.data());
 }
 
+void Application::destroyInput()
+{
+    delete InputRedirection::self();
+}
+
 void Application::destroyWorkspace()
 {
     delete Workspace::self();

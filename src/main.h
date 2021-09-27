@@ -233,6 +233,7 @@ protected:
     void createColorManager();
     void installNativeX11EventFilter();
     void removeNativeX11EventFilter();
+    void destroyInput();
     void destroyWorkspace();
     void destroyCompositor();
     void destroyPlugins();
