@@ -100,15 +100,18 @@ bool DrmConnector::init()
 
     // parse edid
     auto edidProp = getProp(PropertyIndex::Edid);
-    if (edidProp && edidProp->currentBlob() && edidProp->currentBlob()->data) {
-        m_edid = Edid(edidProp->currentBlob()->data, edidProp->currentBlob()->length);
-        if (!m_edid.isValid()) {
-            qCWarning(KWIN_DRM, "Couldn't parse EDID for connector with id %d", id());
+    if (edidProp) {
+        DrmScopedPointer<drmModePropertyBlobRes> blob(drmModeGetPropertyBlob(gpu()->fd(), edidProp->current()));
+        if (blob && blob->data) {
+            m_edid = Edid(blob->data, blob->length);
+            if (!m_edid.isValid()) {
+                qCWarning(KWIN_DRM, "Couldn't parse EDID for connector with id %d", id());
+            }
         }
+        deleteProp(PropertyIndex::Edid);
     } else {
         qCDebug(KWIN_DRM) << "Could not find edid for connector" << this;
     }
-    deleteProp(PropertyIndex::Edid);
 
     // check the physical size
     if (m_edid.physicalSize().isEmpty()) {
