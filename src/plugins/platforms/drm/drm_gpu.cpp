@@ -280,10 +280,11 @@ bool DrmGpu::updateOutputs()
         plane->updateProperties();
     }
 
-    // delete current pipelines of active outputs
+    // stash away current pipelines of active outputs
+    QMap<DrmOutput*, DrmPipeline*> oldPipelines;
     for (const auto &output : qAsConst(m_drmOutputs)) {
         m_pipelines.removeOne(output->pipeline());
-        delete output->pipeline();
+        oldPipelines.insert(output, output->pipeline());
         output->setPipeline(nullptr);
     }
 
@@ -304,7 +305,18 @@ bool DrmGpu::updateOutputs()
             planes.removeOne(output->pipeline()->primaryPlane());
         }
     }
-    const auto config = findWorkingCombination({}, connectors, crtcs, planes);
+    auto config = findWorkingCombination({}, connectors, crtcs, planes);
+    if (config.isEmpty() && !connectors.isEmpty()) {
+        qCCritical(KWIN_DRM) << "DrmGpu::findWorkingCombination failed to find any functional combinations! Reverting to the old configuration!";
+        for (auto it = oldPipelines.begin(); it != oldPipelines.end(); it++) {
+            it.value()->setOutput(it.key());
+            config << it.value();
+        }
+    } else {
+        for (const auto &pipeline : qAsConst(oldPipelines)) {
+            delete pipeline;
+        }
+    }
     m_pipelines << config;
 
     for (const auto &pipeline : config) {
