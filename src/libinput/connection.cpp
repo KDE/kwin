@@ -31,7 +31,6 @@
 #include <QDBusPendingCall>
 #include <QMutexLocker>
 #include <QSocketNotifier>
-#include <QThread>
 
 #include <libinput.h>
 #include <cmath>
@@ -81,7 +80,6 @@ Q_SIGNALS:
 };
 
 Connection *Connection::s_self = nullptr;
-QPointer<QThread> Connection::s_thread;
 
 static ConnectionAdaptor *s_adaptor = nullptr;
 static Context *s_context = nullptr;
@@ -105,16 +103,6 @@ Connection::Connection(QObject *parent)
     : Connection(nullptr, parent)
 {
     // only here to fix build, using will crash, BUG 343529
-}
-
-void Connection::createThread()
-{
-    if (s_thread) {
-        return;
-    }
-    s_thread = new QThread();
-    s_thread->setObjectName(QStringLiteral("libinput-connection"));
-    s_thread->start();
 }
 
 Connection *Connection::create(QObject *parent)
@@ -141,12 +129,7 @@ Connection *Connection::create(QObject *parent)
             return nullptr;
         }
     }
-    Connection::createThread();
     s_self = new Connection(s_context);
-    s_self->moveToThread(s_thread);
-    QObject::connect(s_thread, &QThread::finished, s_self, &QObject::deleteLater);
-    QObject::connect(s_thread, &QThread::finished, s_thread, &QObject::deleteLater);
-    QObject::connect(parent, &QObject::destroyed, s_thread, &QThread::quit);
     if (!s_adaptor) {
         s_adaptor = new ConnectionAdaptor(s_self);
     }
@@ -333,7 +316,7 @@ void Connection::processEvents()
         switch (event->type()) {
             case LIBINPUT_EVENT_DEVICE_ADDED: {
                 auto device = new Device(event->nativeDevice());
-                device->moveToThread(s_thread);
+                device->moveToThread(thread());
                 m_devices << device;
                 if (device->isKeyboard()) {
                     m_keyboard++;

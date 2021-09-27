@@ -326,6 +326,7 @@ private:
     GlobalShortcutsManager *m_shortcuts;
 
     LibInput::Connection *m_libInput = nullptr;
+    QThread *m_libInputThread = nullptr;
 
     WindowSelectorFilter *m_windowSelector = nullptr;
 
