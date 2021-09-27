@@ -79,7 +79,7 @@ public:
     class Property
     {
     public:
-        Property(DrmGpu *gpu, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames, drmModePropertyBlobRes *blob);
+        Property(DrmGpu *gpu, drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames);
         virtual ~Property();
 
         void initEnumMap(drmModePropertyRes *prop);
@@ -128,12 +128,10 @@ public:
         void setPending(uint64_t value);
         uint64_t pending() const;
         bool setPendingBlob(void *blob, size_t length);
-        drmModePropertyBlobRes *pendingBlob() const;
 
         void setCurrent(uint64_t value);
         uint64_t current() const;
         void setCurrentBlob(drmModePropertyBlobRes *blob);
-        drmModePropertyBlobRes *currentBlob() const;
 
         void commit();
         void commitPending();
