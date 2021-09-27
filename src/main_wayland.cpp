@@ -137,6 +137,7 @@ ApplicationWayland::~ApplicationWayland()
     }
     waylandServer()->terminateClientConnections();
     destroyCompositor();
+    destroyInput();
 }
 
 void ApplicationWayland::performStartup()
