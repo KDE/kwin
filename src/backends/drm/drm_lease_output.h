@@ -31,7 +31,7 @@ public:
     DrmLeaseOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice);
     ~DrmLeaseOutput() override;
 
-    void addLeaseObjects(QVector<uint32_t> &objectList);
+    bool addLeaseObjects(QVector<uint32_t> &objectList);
     void leased(KWaylandServer::DrmLeaseV1Interface *lease);
     void leaseEnded();
 
@@ -42,7 +42,6 @@ public:
     DrmPipeline *pipeline() const {
         return m_pipeline;
     }
-    void setPipeline(DrmPipeline *pipeline);
 
 private:
     DrmPipeline *m_pipeline;

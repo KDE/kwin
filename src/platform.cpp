@@ -23,6 +23,7 @@
 #include "screenedge.h"
 #include "touch_input.h"
 #include "wayland_server.h"
+#include "waylandoutputconfig.h"
 
 #include <KWaylandServer/outputconfiguration_v2_interface.h>
 #include <KWaylandServer/outputchangeset_v2.h>
@@ -120,55 +121,61 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
         return;
     }
 
+    WaylandOutputConfig cfg;
     const auto changes = config->changes();
-
-    //process all non-disabling changes
     for (auto it = changes.begin(); it != changes.end(); it++) {
         const KWaylandServer::OutputChangeSetV2 *changeset = it.value();
-
-        AbstractOutput* output = findOutput(it.key()->uuid());
+        auto output = qobject_cast<AbstractWaylandOutput*>(findOutput(it.key()->uuid()));
         if (!output) {
             qCWarning(KWIN_CORE) << "Could NOT find output matching " << it.key()->uuid();
             continue;
         }
+        auto props = cfg.changeSet(output);
+        props->enabled = changeset->enabled();
+        props->pos = changeset->position();
+        props->scale = changeset->scale();
+        props->modeSize = changeset->size();
+        props->refreshRate = changeset->refreshRate();
+        props->transform = static_cast<AbstractWaylandOutput::Transform>(changeset->transform());
+        props->overscan = changeset->overscan();
+        props->rgbRange = static_cast<AbstractWaylandOutput::RgbRange>(changeset->rgbRange());
+        props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(changeset->vrrPolicy());
+    }
 
-        qDebug(KWIN_CORE) << "Platform::requestOutputsChange enabling" << changeset << it.key()->uuid() << changeset->enabledChanged() << changeset->enabled();
-
-        if (changeset->enabledChanged() &&
-                changeset->enabled()) {
-            output->setEnabled(true);
+    const auto outputs = enabledOutputs();
+    bool allDisabled = !std::any_of(outputs.begin(), outputs.end(), [&cfg](const auto &output){
+        auto o = qobject_cast<AbstractWaylandOutput*>(output);
+        if (!o) {
+            qCWarning(KWIN_CORE) << "Platform::requestOutputsChange should only be called for Wayland platforms!";
+            return false;
         }
-
-        output->applyChanges(changeset);
+        return cfg.changeSet(o)->enabled;
+    });
+    if (allDisabled) {
+        qCWarning(KWIN_CORE) << "Disabling all outputs through configuration changes is not allowed";
+        config->setFailed();
+        return;
     }
 
-    //process any disable requests
-    for (auto it = changes.begin(); it != changes.end(); it++) {
-        const KWaylandServer::OutputChangeSetV2 *changeset = it.value();
-
-        if (changeset->enabledChanged() && !changeset->enabled()) {
-            if (enabledOutputs().count() == 1) {
-                // TODO: check beforehand this condition and set failed otherwise
-                // TODO: instead create a dummy output?
-                qCWarning(KWIN_CORE) << "Not disabling final screen" << it.key()->uuid();
-                continue;
-            }
-            auto output = findOutput(it.key()->uuid());
-            if (!output) {
-                qCWarning(KWIN_CORE) << "Could NOT find output matching " << it.key()->uuid();
-                continue;
-            }
-            qDebug(KWIN_CORE) << "Platform::requestOutputsChange disabling false" << it.key()->uuid();
-            output->setEnabled(false);
+    if (applyOutputChanges(cfg)) {
+        if (config->primaryChanged()) {
+            setPrimaryOutput(findOutput(config->primary()->uuid()));
         }
+        Q_EMIT screens()->changed();
+        config->setApplied();
+    } else {
+        qCDebug(KWIN_CORE) << "Applying config failed";
+        config->setFailed();
     }
+}
 
-    if (config->primaryChanged()) {
-        setPrimaryOutput(findOutput(config->primary()->uuid()));
+bool Platform::applyOutputChanges(const WaylandOutputConfig &config)
+{
+    const auto outputs = enabledOutputs();
+    for (const auto &output : outputs) {
+        static_cast<AbstractWaylandOutput*>(output)->applyChanges(config);
     }
-
-    Q_EMIT screens()->changed();
-    config->setApplied();
+    return true;
 }
 
 AbstractOutput *Platform::findOutput(int screenId) const

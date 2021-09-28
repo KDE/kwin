@@ -82,6 +82,7 @@ protected:
     void doHideCursor() override;
     void doShowCursor() override;
     void doSetSoftwareCursor() override;
+    bool applyOutputChanges(const WaylandOutputConfig &config) override;
 
 private:
     friend class DrmGpu;
@@ -94,7 +95,7 @@ private:
     void updateCursor();
     void moveCursor();
     void initCursor();
-    void readOutputsConfiguration();
+    void readOutputsConfiguration(const QVector<DrmAbstractOutput*> &outputs);
     void handleUdevEvent();
     DrmGpu *addGpu(const QString &fileName);
 

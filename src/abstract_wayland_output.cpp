@@ -9,6 +9,7 @@
 */
 #include "abstract_wayland_output.h"
 #include "screens.h"
+#include "waylandoutputconfig.h"
 
 // KWayland
 #include <KWaylandServer/outputchangeset_v2.h>
@@ -19,11 +20,6 @@
 
 namespace KWin
 {
-
-static AbstractWaylandOutput::Transform outputDeviceTransformToKWinTransform(KWaylandServer::OutputDeviceV2Interface::Transform transform)
-{
-    return static_cast<AbstractWaylandOutput::Transform>(transform);
-}
 
 AbstractWaylandOutput::AbstractWaylandOutput(QObject *parent)
     : AbstractOutput(parent)
@@ -152,59 +148,18 @@ void AbstractWaylandOutput::setSubPixelInternal(SubPixel subPixel)
     m_subPixel = subPixel;
 }
 
-void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSetV2 *changeSet)
+void AbstractWaylandOutput::applyChanges(const WaylandOutputConfig &config)
 {
+    auto props = config.constChangeSet(this);
     Q_EMIT aboutToChange();
 
-    qCDebug(KWIN_CORE) << "Apply changes to the Wayland output.";
-    bool emitModeChanged = false;
-    bool overallSizeCheckNeeded = false;
+    setEnabled(props->enabled);
+    updateTransform(props->transform);
+    moveTo(props->pos);
+    setScale(props->scale);
+    setVrrPolicy(props->vrrPolicy);
 
-    // Enablement changes are handled by platform.
-    if (changeSet->sizeChanged() || changeSet->refreshRateChanged()) {
-        qCDebug(KWIN_CORE) << "Setting new mode:" << changeSet->size() << changeSet->refreshRate();
-        updateMode(changeSet->size(), changeSet->refreshRate());
-        emitModeChanged = true;
-    }
-    if (changeSet->transformChanged()) {
-        qCDebug(KWIN_CORE) << "Server setting transform: " << changeSet->transform();
-        auto transform = outputDeviceTransformToKWinTransform(changeSet->transform());
-        updateTransform(transform);
-        emitModeChanged = true;
-    }
-    if (changeSet->positionChanged()) {
-        qCDebug(KWIN_CORE) << "Server setting position: " << changeSet->position();
-        moveTo(changeSet->position());
-        // may just work already!
-        overallSizeCheckNeeded = true;
-    }
-    if (changeSet->scaleChanged()) {
-        qCDebug(KWIN_CORE) << "Setting scale:" << changeSet->scale();
-        setScale(changeSet->scale());
-        emitModeChanged = true;
-    }
-    if (changeSet->overscanChanged()) {
-        qCDebug(KWIN_CORE) << "Setting overscan:" << changeSet->overscan();
-        setOverscan(changeSet->overscan());
-    }
-    if (changeSet->vrrPolicyChanged()) {
-        qCDebug(KWIN_CORE) << "Setting VRR Policy:" << changeSet->vrrPolicy();
-        setVrrPolicy(static_cast<RenderLoop::VrrPolicy>(changeSet->vrrPolicy()));
-    }
-    if (changeSet->rgbRangeChanged()) {
-        qDebug(KWIN_CORE) << "Setting rgb range:" << changeSet->rgbRange();
-        setRgbRange(static_cast<AbstractWaylandOutput::RgbRange>(changeSet->rgbRange()));
-    }
     Q_EMIT changed();
-
-    overallSizeCheckNeeded |= emitModeChanged;
-    if (overallSizeCheckNeeded) {
-        Q_EMIT screens()->changed();
-    }
-
-    if (emitModeChanged) {
-        Q_EMIT currentModeChanged();
-    }
 }
 
 bool AbstractWaylandOutput::isEnabled() const
@@ -386,11 +341,6 @@ uint32_t AbstractWaylandOutput::overscan() const
     return m_overscan;
 }
 
-void AbstractWaylandOutput::setOverscan(uint32_t overscan)
-{
-    Q_UNUSED(overscan);
-}
-
 void AbstractWaylandOutput::setVrrPolicy(RenderLoop::VrrPolicy policy)
 {
     if (renderLoop()->vrrPolicy() != policy && (m_capabilities & Capability::Vrr)) {
@@ -417,11 +367,6 @@ void AbstractWaylandOutput::setPlaceholder(bool isPlaceholder)
 AbstractWaylandOutput::RgbRange AbstractWaylandOutput::rgbRange() const
 {
     return m_rgbRange;
-}
-
-void AbstractWaylandOutput::setRgbRange(RgbRange range)
-{
-    Q_UNUSED(range)
 }
 
 void AbstractWaylandOutput::setRgbRangeInternal(RgbRange range)

@@ -30,16 +30,22 @@ class DrmBuffer;
 class DrmDumbBuffer;
 class GammaRamp;
 
+class DrmGammaRamp
+{
+public:
+    DrmGammaRamp(DrmGpu *gpu, const GammaRamp &lut);
+    ~DrmGammaRamp();
+
+    const GammaRamp lut;
+    drm_color_lut *atomicLut = nullptr;
+    uint32_t size;
+};
+
 class DrmPipeline
 {
 public:
-    DrmPipeline(DrmGpu *gpu, DrmConnector *conn, DrmCrtc *crtc);
+    DrmPipeline(DrmConnector *conn);
     ~DrmPipeline();
-
-    /**
-     * Sets the necessary initial drm properties for the pipeline to work
-     */
-    void setup();
 
     /**
      * tests the pending commit first and commits it if the test passes
@@ -47,23 +53,19 @@ public:
      */
     bool present(const QSharedPointer<DrmBuffer> &buffer);
 
-    bool modeset(int modeIndex);
-    bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot = QPoint());
-    bool setActive(bool enable);
-    bool setGammaRamp(const GammaRamp &ramp);
-    bool setTransformation(const DrmPlane::Transformations &transform);
-    bool moveCursor(QPoint pos);
-    bool setSyncMode(RenderLoopPrivate::SyncMode syncMode);
-    bool setOverscan(uint32_t overscan);
-    bool setRgbRange(AbstractWaylandOutput::RgbRange rgbRange);
+    bool needsModeset() const;
+    void prepareModeset();
+    void applyPendingChanges();
+    void revertPendingChanges();
 
-    DrmPlane::Transformations transformation() const;
+    bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot = QPoint());
+    bool moveCursor(QPoint pos);
+
     bool isCursorVisible() const;
     QPoint cursorPos() const;
 
     DrmConnector *connector() const;
-    DrmCrtc *crtc() const;
-    DrmPlane *primaryPlane() const;
+    DrmGpu *gpu() const;
 
     void pageFlipped();
     void printDebugInfo() const;
@@ -76,6 +78,18 @@ public:
     void setOutput(DrmOutput *output);
     DrmOutput *output() const;
 
+    struct State {
+        DrmCrtc *crtc = nullptr;
+        bool active = true;
+        int modeIndex = 0;
+        uint32_t overscan = 0;
+        AbstractWaylandOutput::RgbRange rgbRange = AbstractWaylandOutput::RgbRange::Automatic;
+        RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
+        QSharedPointer<DrmGammaRamp> gamma;
+        DrmPlane::Transformations transformation = DrmPlane::Transformation::Rotate0;
+    };
+    State pending;
+
     enum class CommitMode {
         Test,
         Commit
@@ -85,29 +99,26 @@ public:
 
 private:
     bool populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);
-    bool test();
-    bool atomicCommit();
     bool presentLegacy();
     bool checkTestBuffer();
-    bool isActive() const;
+    bool activePending() const;
 
-    bool setPendingTransformation(const DrmPlane::Transformations &transformation);
+    bool applyPendingChangesLegacy();
+    bool legacyModeset();
 
     DrmOutput *m_output = nullptr;
-    DrmGpu *m_gpu = nullptr;
     DrmConnector *m_connector = nullptr;
-    DrmCrtc *m_crtc = nullptr;
 
-    DrmPlane *m_primaryPlane = nullptr;
     QSharedPointer<DrmBuffer> m_primaryBuffer;
     QSharedPointer<DrmBuffer> m_oldTestBuffer;
 
-    bool m_legacyNeedsModeset = true;
-
-    QVector<DrmObject*> m_allObjects;
     QMap<uint32_t, QVector<uint64_t>> m_formats;
-
     int m_lastFlags = 0;
+
+    // the state that will be applied at the next real atomic commit
+    State m_next;
+    // the state that is already committed
+    State m_current;
 };
 
 }

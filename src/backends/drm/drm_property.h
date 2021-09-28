@@ -70,6 +70,13 @@ public:
     bool needsCommit() const;
 
     bool setPropertyLegacy(uint64_t value);
+    template<typename T>
+    bool setEnumLegacy(T value) {
+        if (hasEnum(static_cast<uint64_t>(value))) {
+            return setPropertyLegacy(m_enumMap[static_cast<uint32_t>(value)]);
+        }
+        return false;
+    }
 
 private:
     uint32_t m_propId = 0;

@@ -25,6 +25,7 @@
 #include "egl_multi_backend.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
+#include "waylandoutputconfig.h"
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
 #include <gbm.h>
@@ -351,7 +352,7 @@ void DrmBackend::updateOutputs()
         }
     });
     if (oldOutputs != m_outputs) {
-        readOutputsConfiguration();
+        readOutputsConfiguration(m_outputs);
     }
     Q_EMIT screensQueried();
 }
@@ -443,40 +444,43 @@ namespace KWinKScreenIntegration
     }
 }
 
-void DrmBackend::readOutputsConfiguration()
+void DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput*> &outputs)
 {
-    if (m_outputs.isEmpty()) {
-        return;
-    }
-    const auto outputsInfo = KWinKScreenIntegration::outputsConfig(m_outputs);
+    const auto outputsInfo = KWinKScreenIntegration::outputsConfig(outputs);
 
     AbstractOutput *primaryOutput = m_outputs.constFirst();
+    WaylandOutputConfig cfg;
     // default position goes from left to right
     QPoint pos(0, 0);
-    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
-        const QJsonObject outputInfo = outputsInfo[*it];
-        qCDebug(KWIN_DRM) << "Reading output configuration for " << *it;
+    for (const auto &output : qAsConst(outputs)) {
+        auto props = cfg.changeSet(output);
+        const QJsonObject outputInfo = outputsInfo[output];
+        qCDebug(KWIN_DRM) << "Reading output configuration for " << output;
         if (!outputInfo.isEmpty()) {
             if (outputInfo["primary"].toBool()) {
-                primaryOutput = *it;
+                primaryOutput = output;
             }
+            props->enabled = outputInfo["enabled"].toBool(true);
             const QJsonObject pos = outputInfo["pos"].toObject();
-            (*it)->moveTo({pos["x"].toInt(), pos["y"].toInt()});
+            props->pos = QPoint(pos["x"].toInt(), pos["y"].toInt());
             if (const QJsonValue scale = outputInfo["scale"]; !scale.isUndefined()) {
-                (*it)->setScale(scale.toDouble(1.));
+                props->scale = scale.toDouble(1.);
             }
-            (*it)->updateTransform(KWinKScreenIntegration::toDrmTransform(outputInfo["rotation"].toInt()));
+            props->transform = KWinKScreenIntegration::toDrmTransform(outputInfo["rotation"].toInt());
 
             if (const QJsonObject mode = outputInfo["mode"].toObject(); !mode.isEmpty()) {
                 const QJsonObject size = mode["size"].toObject();
-                (*it)->updateMode(QSize(size["width"].toInt(), size["height"].toInt()), mode["refresh"].toDouble() * 1000);
+                props->modeSize = QSize(size["width"].toInt(), size["height"].toInt());
+                props->refreshRate = mode["refresh"].toDouble() * 1000;
             }
         } else {
-            (*it)->moveTo(pos);
-            (*it)->updateTransform(DrmOutput::Transform::Normal);
+            props->enabled = true;
+            props->pos = pos;
+            props->transform = DrmOutput::Transform::Normal;
         }
-        pos.setX(pos.x() + (*it)->geometry().width());
+        pos.setX(pos.x() + output->geometry().width());
     }
+    applyOutputChanges(cfg);
     setPrimaryOutput(primaryOutput);
 }
 
@@ -497,12 +501,9 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
         }
     } else {
         if (m_enabledOutputs.count() == 1) {
-            for (const auto &o : qAsConst(m_outputs)) {
-                if (o != output) {
-                    o->setEnabled(true);
-                    break;
-                }
-            }
+            auto outputs = m_outputs;
+            outputs.removeOne(output);
+            readOutputsConfiguration(outputs);
         }
         if (m_enabledOutputs.count() == 1 && !kwinApp()->isTerminating()) {
             qCDebug(KWIN_DRM) << "adding placeholder output";
@@ -683,7 +684,7 @@ QString DrmBackend::supportInformation() const
 AbstractOutput *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale, DrmGpu::Full);
-    readOutputsConfiguration();
+    readOutputsConfiguration(m_outputs);
     Q_EMIT screensQueried();
     return output;
 }
@@ -731,6 +732,38 @@ DrmGpu *DrmBackend::findGpuByFd(int fd) const
         }
     }
     return nullptr;
+}
+
+bool DrmBackend::applyOutputChanges(const WaylandOutputConfig &config)
+{
+    QVector<DrmOutput*> changed;
+    for (const auto &gpu : qAsConst(m_gpus)) {
+        const auto &outputs = gpu->outputs();
+        for (const auto &o : outputs) {
+            DrmOutput *output = qobject_cast<DrmOutput*>(o);
+            if (!output) {
+                // virtual outputs don't need testing
+                continue;
+            }
+            output->queueChanges(config);
+            changed << output;
+        }
+        if (!gpu->testPendingConfiguration()) {
+            for (const auto &output : qAsConst(changed)) {
+                output->revertQueuedChanges();
+            }
+            return false;
+        }
+    }
+    for (const auto &output : qAsConst(m_outputs)) {
+        if (auto drmOutput = qobject_cast<DrmOutput*>(output)) {
+            drmOutput->applyQueuedChanges(config);
+        } else {
+            output->applyChanges(config);
+        }
+    };
+    updateCursor();
+    return true;
 }
 
 }

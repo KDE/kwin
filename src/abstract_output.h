@@ -118,13 +118,6 @@ public:
     virtual void setEnabled(bool enable);
 
     /**
-     * This sets the changes and tests them against the specific output.
-     *
-     * Default implementation does nothing
-     */
-    virtual void applyChanges(const KWaylandServer::OutputChangeSetV2 *changeSet);
-
-    /**
      * Returns geometry of this output in device independent pixels.
      */
     virtual QRect geometry() const = 0;

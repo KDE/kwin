@@ -39,14 +39,19 @@ DrmLeaseOutput::~DrmLeaseOutput()
     qCDebug(KWIN_DRM) << "revoking lease offer for connector" << m_pipeline->connector()->id();
 }
 
-void DrmLeaseOutput::addLeaseObjects(QVector<uint32_t> &objectList)
+bool DrmLeaseOutput::addLeaseObjects(QVector<uint32_t> &objectList)
 {
+    if (!m_pipeline->pending.crtc) {
+        qCWarning(KWIN_DRM) << "Can't lease connector: No suitable crtc available";
+        return false;
+    }
     qCDebug(KWIN_DRM) << "adding connector" << m_pipeline->connector()->id() << "to lease";
     objectList << m_pipeline->connector()->id();
-    objectList << m_pipeline->crtc()->id();
-    if (m_pipeline->primaryPlane()) {
-        objectList << m_pipeline->primaryPlane()->id();
+    objectList << m_pipeline->pending.crtc->id();
+    if (m_pipeline->pending.crtc->primaryPlane()) {
+        objectList << m_pipeline->pending.crtc->primaryPlane()->id();
     }
+    return true;
 }
 
 void DrmLeaseOutput::leased(KWaylandServer::DrmLeaseV1Interface *lease)
@@ -58,13 +63,6 @@ void DrmLeaseOutput::leaseEnded()
 {
     qCDebug(KWIN_DRM) << "ended lease for connector" << m_pipeline->connector()->id();
     m_lease = nullptr;
-}
-
-void DrmLeaseOutput::setPipeline(DrmPipeline *pipeline)
-{
-    Q_ASSERT_X(pipeline->connector() == m_pipeline->connector(), "DrmLeaseOutput::setPipeline", "Pipeline with wrong connector set!");
-    delete m_pipeline;
-    m_pipeline = pipeline;
 }
 
 }

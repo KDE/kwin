@@ -65,17 +65,6 @@ void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
     }
 }
 
-void DrmVirtualOutput::applyMode(int modeIndex)
-{
-    Q_UNUSED(modeIndex)
-}
-
-void DrmVirtualOutput::updateMode(const QSize &size, uint32_t refreshRate)
-{
-    Q_UNUSED(size)
-    Q_UNUSED(refreshRate)
-}
-
 void DrmVirtualOutput::setDpmsMode(DpmsMode mode)
 {
     setDpmsModeInternal(mode);

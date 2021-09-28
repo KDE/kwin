@@ -18,13 +18,10 @@
 #include <QTimer>
 #include <QSize>
 
-namespace KWaylandServer
-{
-class OutputChangeSet;
-}
-
 namespace KWin
 {
+
+class WaylandOutputConfig;
 
 /**
  * Generic output representation in a Wayland session
@@ -121,7 +118,7 @@ public:
     void moveTo(const QPoint &pos);
     void setScale(qreal scale);
 
-    void applyChanges(const KWaylandServer::OutputChangeSetV2 *changeSet) override;
+    void applyChanges(const WaylandOutputConfig &config);
 
     bool isEnabled() const override;
     void setEnabled(bool enable) override;
@@ -136,7 +133,6 @@ public:
     virtual void setDpmsMode(DpmsMode mode);
 
     uint32_t overscan() const;
-    virtual void setOverscan(uint32_t overscan);
 
     /**
      * Returns a matrix that can translate into the display's coordinates system
@@ -150,8 +146,6 @@ public:
 
     void setVrrPolicy(RenderLoop::VrrPolicy policy);
     RenderLoop::VrrPolicy vrrPolicy() const;
-
-    virtual void setRgbRange(RgbRange range);
     RgbRange rgbRange() const;
 
     bool isPlaceholder() const;
@@ -182,14 +176,6 @@ protected:
 
     virtual void updateEnablement(bool enable) {
         Q_UNUSED(enable);
-    }
-    virtual void updateMode(const QSize &size, uint32_t refreshRate)
-    {
-        Q_UNUSED(size);
-        Q_UNUSED(refreshRate);
-    }
-    virtual void applyMode(int modeIndex) {
-        Q_UNUSED(modeIndex);
     }
     virtual void updateTransform(Transform transform) {
         Q_UNUSED(transform);

@@ -11,6 +11,7 @@
 #include "drm_gpu.h"
 #include "drm_pointer.h"
 #include "logging.h"
+#include "drm_pipeline.h"
 
 #include <main.h>
 // frameworks
@@ -42,6 +43,7 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                 QByteArrayLiteral("Limited 16:235")
             }),
         }, DRM_MODE_OBJECT_CONNECTOR)
+    , m_pipeline(new DrmPipeline(this))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
     if (m_conn) {
@@ -361,6 +363,11 @@ bool DrmConnector::isNonDesktop() const
 const Edid *DrmConnector::edid() const
 {
     return &m_edid;
+}
+
+DrmPipeline *DrmConnector::pipeline() const
+{
+    return m_pipeline.data();
 }
 
 QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj)

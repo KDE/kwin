@@ -69,6 +69,7 @@ public:
 
     QVector<DrmAbstractOutput*> outputs() const;
     const QVector<DrmPipeline*> pipelines() const;
+    bool testPendingConfiguration();
 
     void setGbmDevice(gbm_device *d);
     void setEglDisplay(EGLDisplay display);
@@ -96,8 +97,7 @@ private:
     void removeLeaseOutput(DrmLeaseOutput *output);
     void initDrmResources();
 
-    QVector<DrmPipeline *> findWorkingCombination(const QVector<DrmPipeline *> &pipelines, QVector<DrmConnector *> connectors, QVector<DrmCrtc *> crtcs);
-    bool commitCombination(const QVector<DrmPipeline *> &pipelines);
+    bool checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmCrtc*> crtcs);
 
     void handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest);
     void handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease);

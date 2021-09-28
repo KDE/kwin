@@ -100,11 +100,6 @@ void AbstractOutput::setEnabled(bool enable)
     Q_UNUSED(enable)
 }
 
-void AbstractOutput::applyChanges(const KWaylandServer::OutputChangeSetV2 *changeSet)
-{
-    Q_UNUSED(changeSet)
-}
-
 bool AbstractOutput::isInternal() const
 {
     return false;

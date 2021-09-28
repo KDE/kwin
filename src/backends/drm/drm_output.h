@@ -51,25 +51,26 @@ public:
 
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
-    void setPipeline(DrmPipeline *pipeline);
 
     QSize sourceSize() const override;
     bool isFormatSupported(uint32_t drmFormat) const override;
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
     bool needsSoftwareTransformation() const override;
 
+    bool queueChanges(const WaylandOutputConfig &config);
+    void applyQueuedChanges(const WaylandOutputConfig &config);
+    void revertQueuedChanges();
+
 private:
     friend class DrmGpu;
     friend class DrmBackend;
-    DrmOutput(DrmGpu* gpu, DrmPipeline *pipeline);
+    DrmOutput(DrmPipeline *pipeline);
 
     void initOutputDevice();
 
     void updateEnablement(bool enable) override;
-    void setDrmDpmsMode(DpmsMode mode);
+    bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
-    void applyMode(int modeIndex) override;
-    void updateMode(const QSize &size, uint32_t refreshRate) override;
     void updateModes();
 
     QVector<AbstractWaylandOutput::Mode> getModes() const;
@@ -78,8 +79,6 @@ private:
 
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
-    void setOverscan(uint32_t overscan) override;
-    void setRgbRange(RgbRange range) override;
 
     DrmPipeline *m_pipeline;
     DrmConnector *m_connector;

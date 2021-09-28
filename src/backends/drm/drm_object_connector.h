@@ -22,6 +22,8 @@
 namespace KWin
 {
 
+class DrmPipeline;
+
 class DrmConnector : public DrmObject
 {
 public:
@@ -56,6 +58,7 @@ public:
     bool isConnected() const;
     bool isNonDesktop() const;
     bool isInternal() const;
+    DrmPipeline *pipeline() const;
 
     const Edid *edid() const;
     QString connectorName() const;
@@ -83,6 +86,7 @@ public:
     AbstractWaylandOutput::RgbRange rgbRange() const;
 
 private:
+    QScopedPointer<DrmPipeline> m_pipeline;
     DrmScopedPointer<drmModeConnector> m_conn;
     QVector<uint32_t> m_encoders;
     Edid m_edid;

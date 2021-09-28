@@ -42,6 +42,7 @@ class Scene;
 class ScreenEdges;
 class Session;
 class Toplevel;
+class WaylandOutputConfig;
 
 class KWIN_EXPORT Outputs : public QVector<AbstractOutput*>
 {
@@ -520,6 +521,11 @@ protected:
      */
     virtual void doShowCursor();
     virtual void doSetSoftwareCursor();
+
+    /**
+     * Applies the output changes. Default implementation only sets values common between platforms
+     */
+    virtual bool applyOutputChanges(const WaylandOutputConfig &config);
 
 private:
     void triggerCursorRepaint();
