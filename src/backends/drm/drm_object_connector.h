@@ -23,6 +23,30 @@ namespace KWin
 {
 
 class DrmPipeline;
+class DrmConnector;
+
+/**
+ * The DrmConnectorMode class represents a native mode and the associated blob.
+ */
+class DrmConnectorMode
+{
+public:
+    DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode);
+    ~DrmConnectorMode();
+
+    uint32_t blobId();
+
+    drmModeModeInfo *nativeMode();
+    QSize size() const;
+    uint32_t refreshRate() const;
+
+private:
+    DrmConnector *m_connector;
+    drmModeModeInfo m_nativeMode;
+    QSize m_size;
+    uint32_t m_refreshRate;
+    uint32_t m_blobId = 0;
+};
 
 class DrmConnector : public DrmObject
 {
@@ -66,14 +90,9 @@ public:
     QString modelName() const;
     QSize physicalSize() const;
 
-    struct Mode {
-        drmModeModeInfo mode;
-        QSize size;
-        uint32_t refreshRate;
-    };
-    const Mode &currentMode() const;
+    DrmConnectorMode *currentMode() const;
     int currentModeIndex() const;
-    const QVector<Mode> &modes();
+    QVector<DrmConnectorMode *> modes();
     void setModeIndex(int index);
     void findCurrentMode(drmModeModeInfo currentMode);
     void updateModes();
@@ -92,7 +111,7 @@ private:
     QVector<uint32_t> m_encoders;
     Edid m_edid;
     QSize m_physicalSize = QSize(-1, -1);
-    QVector<Mode> m_modes;
+    QVector<DrmConnectorMode *> m_modes;
     int m_modeIndex = 0;
 
     friend QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj);

@@ -22,6 +22,64 @@
 namespace KWin
 {
 
+static quint64 refreshRateForMode(_drmModeModeInfo *m)
+{
+    // Calculate higher precision (mHz) refresh rate
+    // logic based on Weston, see compositor-drm.c
+    quint64 refreshRate = (m->clock * 1000000LL / m->htotal + m->vtotal / 2) / m->vtotal;
+    if (m->flags & DRM_MODE_FLAG_INTERLACE) {
+        refreshRate *= 2;
+    }
+    if (m->flags & DRM_MODE_FLAG_DBLSCAN) {
+        refreshRate /= 2;
+    }
+    if (m->vscan > 1) {
+        refreshRate /= m->vscan;
+    }
+    return refreshRate;
+}
+
+DrmConnectorMode::DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode)
+    : m_connector(connector)
+    , m_nativeMode(nativeMode)
+    , m_size(nativeMode.hdisplay, nativeMode.vdisplay)
+    , m_refreshRate(refreshRateForMode(&nativeMode))
+{
+}
+
+DrmConnectorMode::~DrmConnectorMode()
+{
+    if (m_blobId) {
+        drmModeDestroyPropertyBlob(m_connector->gpu()->fd(), m_blobId);
+        m_blobId = 0;
+    }
+}
+
+drmModeModeInfo *DrmConnectorMode::nativeMode()
+{
+    return &m_nativeMode;
+}
+
+QSize DrmConnectorMode::size() const
+{
+    return m_size;
+}
+
+uint32_t DrmConnectorMode::refreshRate() const
+{
+    return m_refreshRate;
+}
+
+uint32_t DrmConnectorMode::blobId()
+{
+    if (!m_blobId) {
+        if (drmModeCreatePropertyBlob(m_connector->gpu()->fd(), &m_nativeMode, sizeof(m_nativeMode), &m_blobId) != 0) {
+            qCWarning(KWIN_DRM) << "Failed to create connector mode blob:" << strerror(errno);
+        }
+    }
+    return m_blobId;
+}
+
 DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
     : DrmObject(gpu, connectorId, {
             PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
@@ -55,25 +113,9 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
     }
 }
 
-DrmConnector::~DrmConnector() = default;
-
-namespace {
-quint64 refreshRateForMode(_drmModeModeInfo *m)
+DrmConnector::~DrmConnector()
 {
-    // Calculate higher precision (mHz) refresh rate
-    // logic based on Weston, see compositor-drm.c
-    quint64 refreshRate = (m->clock * 1000000LL / m->htotal + m->vtotal / 2) / m->vtotal;
-    if (m->flags & DRM_MODE_FLAG_INTERLACE) {
-        refreshRate *= 2;
-    }
-    if (m->flags & DRM_MODE_FLAG_DBLSCAN) {
-        refreshRate /= 2;
-    }
-    if (m->vscan > 1) {
-        refreshRate /= m->vscan;
-    }
-    return refreshRate;
-}
+    qDeleteAll(m_modes);
 }
 
 bool DrmConnector::init()
@@ -137,7 +179,7 @@ QSize DrmConnector::physicalSize() const
     return m_physicalSize;
 }
 
-const DrmConnector::Mode &DrmConnector::currentMode() const
+DrmConnectorMode *DrmConnector::currentMode() const
 {
     return m_modes[m_modeIndex];
 }
@@ -147,7 +189,7 @@ int DrmConnector::currentModeIndex() const
     return m_modeIndex;
 }
 
-const QVector<DrmConnector::Mode> &DrmConnector::modes()
+QVector<DrmConnectorMode *> DrmConnector::modes()
 {
     return m_modes;
 }
@@ -157,26 +199,26 @@ void DrmConnector::setModeIndex(int index)
     m_modeIndex = index;
 }
 
-static bool checkIfEqual(drmModeModeInfo one, drmModeModeInfo two)
+static bool checkIfEqual(const drmModeModeInfo *one, const drmModeModeInfo *two)
 {
-    return one.clock       == two.clock
-        && one.hdisplay    == two.hdisplay
-        && one.hsync_start == two.hsync_start
-        && one.hsync_end   == two.hsync_end
-        && one.htotal      == two.htotal
-        && one.hskew       == two.hskew
-        && one.vdisplay    == two.vdisplay
-        && one.vsync_start == two.vsync_start
-        && one.vsync_end   == two.vsync_end
-        && one.vtotal      == two.vtotal
-        && one.vscan       == two.vscan
-        && one.vrefresh    == two.vrefresh;
+    return one->clock       == two->clock
+        && one->hdisplay    == two->hdisplay
+        && one->hsync_start == two->hsync_start
+        && one->hsync_end   == two->hsync_end
+        && one->htotal      == two->htotal
+        && one->hskew       == two->hskew
+        && one->vdisplay    == two->vdisplay
+        && one->vsync_start == two->vsync_start
+        && one->vsync_end   == two->vsync_end
+        && one->vtotal      == two->vtotal
+        && one->vscan       == two->vscan
+        && one->vrefresh    == two->vrefresh;
 }
 
 void DrmConnector::findCurrentMode(drmModeModeInfo currentMode)
 {
     for (int i = 0; i < m_modes.count(); i++) {
-        if (checkIfEqual(m_modes[i].mode, currentMode)) {
+        if (checkIfEqual(m_modes[i]->nativeMode(), &currentMode)) {
             m_modeIndex = i;
             return;
         }
@@ -259,16 +301,12 @@ bool DrmConnector::needsModeset() const
 
 void DrmConnector::updateModes()
 {
+    qDeleteAll(m_modes);
     m_modes.clear();
 
     // reload modes
     for (int i = 0; i < m_conn->count_modes; i++) {
-        auto mode = m_conn->modes[i];
-        Mode m;
-        m.mode = mode;
-        m.size = QSize(mode.hdisplay, mode.vdisplay);
-        m.refreshRate = refreshRateForMode(&mode);
-        m_modes << m;
+        m_modes.append(new DrmConnectorMode(this, m_conn->modes[i]));
     }
 }
 

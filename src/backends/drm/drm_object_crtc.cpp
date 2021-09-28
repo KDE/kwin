@@ -156,7 +156,7 @@ DrmPlane *DrmCrtc::cursorPlane() const
 void DrmCrtc::disable()
 {
     setPending(PropertyIndex::Active, 0);
-    setPendingBlob(PropertyIndex::ModeId, nullptr, sizeof(drmModeModeInfo));
+    setPending(PropertyIndex::ModeId, 0);
 }
 
 }

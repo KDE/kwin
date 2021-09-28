@@ -259,7 +259,7 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
         flags |= DRM_MODE_PAGE_FLIP_EVENT;
     }
     if (pending.crtc) {
-        auto modeSize = m_connector->modes()[pending.modeIndex].size;
+        auto modeSize = m_connector->modes()[pending.modeIndex]->size();
         pending.crtc->primaryPlane()->set(QPoint(0, 0), m_primaryBuffer ? m_primaryBuffer->size() : modeSize, QPoint(0, 0), modeSize);
         pending.crtc->primaryPlane()->setBuffer(activePending() ? m_primaryBuffer.get() : nullptr);
         pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
@@ -362,11 +362,11 @@ void DrmPipeline::prepareModeset()
     }
 
     pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, activePending());
-    pending.crtc->setPendingBlob(DrmCrtc::PropertyIndex::ModeId, activePending() ? &mode.mode : nullptr, sizeof(drmModeModeInfo));
+    pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, activePending() ? mode->blobId() : 0);
 
     pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
     pending.crtc->primaryPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
-    pending.crtc->primaryPlane()->set(QPoint(0, 0), sourceSize(), QPoint(0, 0), mode.size);
+    pending.crtc->primaryPlane()->set(QPoint(0, 0), sourceSize(), QPoint(0, 0), mode->size());
 
     m_formats = pending.crtc->primaryPlane()->formats();
 }
@@ -418,7 +418,7 @@ bool DrmPipeline::legacyModeset()
 {
     auto mode = m_connector->modes()[pending.modeIndex];
     uint32_t connId = m_connector->id();
-    if (!checkTestBuffer() || drmModeSetCrtc(gpu()->fd(), pending.crtc->id(), m_primaryBuffer->bufferId(), 0, 0, &connId, 1, &mode.mode) != 0) {
+    if (!checkTestBuffer() || drmModeSetCrtc(gpu()->fd(), pending.crtc->id(), m_primaryBuffer->bufferId(), 0, 0, &connId, 1, mode->nativeMode()) != 0) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
         pending = m_next;
         m_primaryBuffer = m_oldTestBuffer;
@@ -438,14 +438,14 @@ QSize DrmPipeline::sourceSize() const
 {
     auto mode = m_connector->modes()[pending.modeIndex];
     if (pending.transformation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
-        return mode.size.transposed();
+        return mode->size().transposed();
     }
-    return mode.size;
+    return mode->size();
 }
 
 bool DrmPipeline::isCursorVisible() const
 {
-    return pending.crtc && pending.crtc->isCursorVisible(QRect(QPoint(0, 0), m_connector->currentMode().size));
+    return pending.crtc && pending.crtc->isCursorVisible(QRect(QPoint(0, 0), m_connector->currentMode()->size()));
 }
 
 QPoint DrmPipeline::cursorPos() const
