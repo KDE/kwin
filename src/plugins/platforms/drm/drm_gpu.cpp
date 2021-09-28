@@ -253,6 +253,7 @@ bool DrmGpu::updateOutputs()
             removeLeaseOutput(leaseOutput);
         }
         m_connectors.removeOne(connector);
+        delete connector;
     }
 
     // find unused and connected connectors
