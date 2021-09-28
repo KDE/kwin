@@ -58,6 +58,9 @@ KWin::GbmDmaBuf *GbmDmaBuf::createBuffer(const QSize &size, gbm_device *device)
     };
 
     EGLDisplay display = kwinApp()->platform()->sceneEglDisplay();
+    if (display == EGL_NO_DISPLAY) {
+        return nullptr;
+    }
     EGLImageKHR destinationImage = eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, importAttributes);
     if (destinationImage == EGL_NO_IMAGE_KHR) {
         close(fd);
