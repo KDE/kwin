@@ -51,10 +51,11 @@ private:
 
 public:
     ConnectionAdaptor(Connection *con)
-        : m_con(con)
+        : QObject(con)
+        , m_con(con)
     {
-        connect(con, &Connection::deviceAddedSysName, this, &ConnectionAdaptor::deviceAdded, Qt::QueuedConnection);
-        connect(con, &Connection::deviceRemovedSysName, this, &ConnectionAdaptor::deviceRemoved, Qt::QueuedConnection);
+        connect(con, &Connection::deviceAddedSysName, this, &ConnectionAdaptor::deviceAdded);
+        connect(con, &Connection::deviceRemovedSysName, this, &ConnectionAdaptor::deviceRemoved);
 
         QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice"),
                                                      QStringLiteral("org.kde.KWin.InputDeviceManager"),
@@ -68,15 +69,12 @@ public:
     }
 
     QStringList devicesSysNames() {
-        // TODO: is this allowed? directly calling function of object in another thread!?
-        //       otherwise use signal-slot mechanism
         return m_con->devicesSysNames();
     }
 
 Q_SIGNALS:
     void deviceAdded(QString sysName);
     void deviceRemoved(QString sysName);
-
 };
 
 Connection *Connection::s_self = nullptr;
