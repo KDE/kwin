@@ -124,8 +124,8 @@ void DecorationsModel::init()
         QScopedPointer<KDecoration2::DecorationThemeProvider> themeFinder(
             KPluginFactory::instantiatePlugin<KDecoration2::DecorationThemeProvider>(info).plugin);
         KDecoration2::DecorationThemeMetaData data;
+        const auto decoSettingsMap = info.rawData().value("org.kde.kdecoration2").toObject().toVariantMap();
         if (themeFinder) {
-            const auto decoSettingsMap = info.rawData().value("org.kde.kdecoration2").toObject().toVariantMap();
             const QString &kns = findKNewStuff(decoSettingsMap);
             if (!kns.isEmpty() && !m_knsProviders.contains(kns)) {
                 m_knsProviders.append(kns);
@@ -144,9 +144,9 @@ void DecorationsModel::init()
                 // it's a theme engine, we don't want to show this entry
                 continue;
             }
-            data.setHasConfiguration(isConfigureable(decoSettingsMap));
-            data.setBorderSize(recommendedBorderSize(decoSettingsMap));
         }
+        data.setHasConfiguration(isConfigureable(decoSettingsMap));
+        data.setBorderSize(recommendedBorderSize(decoSettingsMap));
         data.setVisibleName(info.name().isEmpty() ? info.pluginId() : info.name());
         data.setPluginId(info.pluginId());
         data.setThemeName(data.visibleName());
