@@ -34,6 +34,7 @@ public:
         Active,
         VrrEnabled,
         Gamma_LUT,
+        Gamma_LUT_Size,
         Count
     };
 

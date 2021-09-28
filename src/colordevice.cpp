@@ -353,7 +353,8 @@ void ColorDevice::update()
     uint16_t *blueChannel = gammaRamp.blue();
 
     for (uint32_t i = 0; i < gammaRamp.size(); ++i) {
-        const uint16_t index = (i * 0xffff) / (gammaRamp.size() - 1);
+        // ensure 64 bit calculation to prevent overflows
+        const uint16_t index = (static_cast<uint64_t>(i) * 0xffff) / (gammaRamp.size() - 1);
 
         const uint16_t in[3] = { index, index, index };
         uint16_t out[3] = { 0 };

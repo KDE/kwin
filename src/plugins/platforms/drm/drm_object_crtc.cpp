@@ -24,6 +24,7 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryP
         PropertyDefinition(QByteArrayLiteral("ACTIVE"), Requirement::Required),
         PropertyDefinition(QByteArrayLiteral("VRR_ENABLED"), Requirement::Optional),
         PropertyDefinition(QByteArrayLiteral("GAMMA_LUT"), Requirement::Optional),
+        PropertyDefinition(QByteArrayLiteral("GAMMA_LUT_SIZE"), Requirement::Optional)
     }, DRM_MODE_OBJECT_CRTC)
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
@@ -81,6 +82,10 @@ void DrmCrtc::setNext(const QSharedPointer<DrmBuffer> &buffer)
 
 int DrmCrtc::gammaRampSize() const
 {
+    // limit atomic gamma ramp to 4096 to work around https://gitlab.freedesktop.org/drm/intel/-/issues/3916
+    if (auto prop = getProp(PropertyIndex::Gamma_LUT_Size); prop && prop->current() <= 4096) {
+        return prop->current();
+    }
     return m_crtc->gamma_size;
 }
 
