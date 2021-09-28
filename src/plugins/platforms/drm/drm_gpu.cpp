@@ -198,6 +198,7 @@ bool DrmGpu::updateOutputs()
             removeOutput(output);
         }
         m_connectors.removeOne(connector);
+        delete connector;
     }
 
     // find unused and connected connectors
