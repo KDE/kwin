@@ -75,6 +75,11 @@ private:
             return;
         }
         QSharedPointer<GLTexture> frameTexture(m_toplevel->effectWindow()->sceneWindow()->windowTexture());
+        if (!frameTexture) {
+            // Some backends will return no-op because textures aren't really supported there
+            return;
+        }
+
         const bool wasYInverted = frameTexture->isYInverted();
         frameTexture->setYInverted(false);
 
@@ -118,6 +123,10 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
     auto bufferToStream = [streamOutput, stream] (const QRegion &damagedRegion) {
         auto scene = Compositor::self()->scene();
         auto texture = scene->textureForOutput(streamOutput);
+        if (!texture) {
+            // Some backends will return no-op because textures aren't really supported there
+            return;
+        }
 
         const QRect frame({}, streamOutput->modeSize());
         const QRegion region = damagedRegion.isEmpty() || streamOutput->pixelSize() != streamOutput->modeSize() ? frame : damagedRegion.translated(-streamOutput->geometry().topLeft()).intersected(frame);
