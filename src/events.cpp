@@ -1285,13 +1285,12 @@ void Toplevel::propertyNotifyEvent(xcb_property_notify_event_t *e)
 void Toplevel::clientMessageEvent(xcb_client_message_event_t *e)
 {
     if (e->type == atoms->wl_surface_id) {
-        m_surfaceId = e->data.data32[0];
+        m_pendingSurfaceId = e->data.data32[0];
         if (auto w = waylandServer()) {
-            if (auto s = KWaylandServer::SurfaceInterface::get(m_surfaceId, w->xWaylandConnection())) {
+            if (auto s = KWaylandServer::SurfaceInterface::get(m_pendingSurfaceId, w->xWaylandConnection())) {
                 setSurface(s);
             }
         }
-        Q_EMIT surfaceIdChanged(m_surfaceId);
     }
 }
 

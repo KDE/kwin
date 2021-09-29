@@ -256,12 +256,6 @@ class KWIN_EXPORT Toplevel : public QObject
     Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation WRITE setSkipCloseAnimation NOTIFY skipCloseAnimationChanged)
 
     /**
-     * The Id of the Wayland Surface associated with this Toplevel.
-     * On X11 only setups the value is @c 0.
-     */
-    Q_PROPERTY(quint32 surfaceId READ surfaceId NOTIFY surfaceIdChanged)
-
-    /**
      * Interface to the Wayland Surface.
      * Relevant only in Wayland, in X11 it will be nullptr
      */
@@ -494,7 +488,7 @@ public:
     bool skipsCloseAnimation() const;
     void setSkipCloseAnimation(bool set);
 
-    quint32 surfaceId() const;
+    quint32 pendingSurfaceId() const;
     KWaylandServer::SurfaceInterface *surface() const;
     void setSurface(KWaylandServer::SurfaceInterface *surface);
 
@@ -616,11 +610,6 @@ Q_SIGNALS:
      */
     void windowClassChanged();
     /**
-     * Emitted when a Wayland Surface gets associated with this Toplevel.
-     * @since 5.3
-     */
-    void surfaceIdChanged(quint32);
-    /**
      * @since 5.4
      */
     void hasAlphaChanged();
@@ -728,7 +717,7 @@ private:
     mutable bool m_shapeRegionIsValid = false;
     AbstractOutput *m_output = nullptr;
     bool m_skipCloseAnimation;
-    quint32 m_surfaceId = 0;
+    quint32 m_pendingSurfaceId = 0;
     KWaylandServer::SurfaceInterface *m_surface = nullptr;
     // when adding new data members, check also copyToDeleted()
     qreal m_screenScale = 1.0;
@@ -969,9 +958,9 @@ inline const ClientMachine *Toplevel::clientMachine() const
     return m_clientMachine;
 }
 
-inline quint32 Toplevel::surfaceId() const
+inline quint32 Toplevel::pendingSurfaceId() const
 {
-    return m_surfaceId;
+    return m_pendingSurfaceId;
 }
 
 inline KWaylandServer::SurfaceInterface *Toplevel::surface() const
