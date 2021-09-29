@@ -609,6 +609,11 @@ void Toplevel::setSkipCloseAnimation(bool set)
     Q_EMIT skipCloseAnimationChanged();
 }
 
+KWaylandServer::SurfaceInterface *Toplevel::surface() const
+{
+    return m_surface;
+}
+
 void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
 {
     if (m_surface == surface) {
@@ -616,9 +621,6 @@ void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
     }
     m_surface = surface;
     m_pendingSurfaceId = 0;
-    connect(m_surface, &KWaylandServer::SurfaceInterface::destroyed, this, [this]() {
-        m_surface = nullptr;
-    });
     Q_EMIT surfaceChanged();
 }
 

@@ -18,6 +18,7 @@
 // Qt
 #include <QObject>
 #include <QMatrix4x4>
+#include <QPointer>
 #include <QRect>
 #include <QUuid>
 // c++
@@ -718,7 +719,7 @@ private:
     AbstractOutput *m_output = nullptr;
     bool m_skipCloseAnimation;
     quint32 m_pendingSurfaceId = 0;
-    KWaylandServer::SurfaceInterface *m_surface = nullptr;
+    QPointer<KWaylandServer::SurfaceInterface> m_surface;
     // when adding new data members, check also copyToDeleted()
     qreal m_screenScale = 1.0;
     qreal m_opacity = 1.0;
@@ -961,11 +962,6 @@ inline const ClientMachine *Toplevel::clientMachine() const
 inline quint32 Toplevel::pendingSurfaceId() const
 {
     return m_pendingSurfaceId;
-}
-
-inline KWaylandServer::SurfaceInterface *Toplevel::surface() const
-{
-    return m_surface;
 }
 
 inline const QSharedPointer<QOpenGLFramebufferObject> &Toplevel::internalFramebufferObject() const
