@@ -548,7 +548,7 @@ void QuickTilingTest::testX11QuickTiling_data()
 {
     QTest::addColumn<QuickTileMode>("mode");
     QTest::addColumn<QRect>("expectedGeometry");
-    QTest::addColumn<int>("screen");
+    QTest::addColumn<int>("screenId");
     QTest::addColumn<QuickTileMode>("modeAfterToggle");
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
@@ -608,9 +608,11 @@ void QuickTilingTest::testX11QuickTiling()
     QCOMPARE(quickTileChangedSpy.count(), 1);
 
     // quick tile to same edge again should also act like send to screen
-    QCOMPARE(client->screen(), 0);
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    QCOMPARE(client->output(), outputs[0]);
     client->setQuickTileMode(mode, true);
-    QTEST(client->screen(), "screen");
+    QFETCH(int, screenId);
+    QCOMPARE(client->output(), outputs[screenId]);
     QTEST(client->quickTileMode(), "modeAfterToggle");
     QCOMPARE(client->geometryRestore(), origGeo);
 
@@ -680,7 +682,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     // vertically maximize the window
     client->maximize(client->maximizeMode() ^ MaximizeVertical);
     QCOMPARE(client->frameGeometry().width(), origGeo.width());
-    QCOMPARE(client->height(), screens()->size(client->screen()).height());
+    QCOMPARE(client->height(), client->output()->geometry().height());
     QCOMPARE(client->geometryRestore(), origGeo);
 
     // now quick tile
