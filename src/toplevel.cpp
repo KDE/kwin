@@ -615,11 +615,10 @@ void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
         return;
     }
     m_surface = surface;
+    m_pendingSurfaceId = 0;
     connect(m_surface, &KWaylandServer::SurfaceInterface::destroyed, this, [this]() {
         m_surface = nullptr;
-        m_surfaceId = 0;
     });
-    m_surfaceId = surface->id();
     Q_EMIT surfaceChanged();
 }
 

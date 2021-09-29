@@ -403,7 +403,7 @@ bool WaylandServer::init(InitializationFlags flags)
             }
 
             X11Client *client = ws->findClient([surface](const X11Client *client) {
-                return client->surfaceId() == surface->id();
+                return client->pendingSurfaceId() == surface->id();
             });
             if (client) {
                 client->setSurface(surface);
@@ -411,7 +411,7 @@ bool WaylandServer::init(InitializationFlags flags)
             }
 
             Unmanaged *unmanaged = ws->findUnmanaged([surface](const Unmanaged *unmanaged) {
-                return unmanaged->surfaceId() == surface->id();
+                return unmanaged->pendingSurfaceId() == surface->id();
             });
             if (unmanaged) {
                 unmanaged->setSurface(surface);
