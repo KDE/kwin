@@ -61,12 +61,18 @@ void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
 {
     m_surfaceItem.reset(surfaceItem);
 
-    connect(m_window, &Toplevel::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
-    connect(m_window, &Toplevel::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
-    connect(m_window, &Toplevel::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
+    if (m_surfaceItem) {
+        connect(m_window, &Toplevel::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
+        connect(m_window, &Toplevel::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
+        connect(m_window, &Toplevel::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
 
-    updateSurfacePosition();
-    updateSurfaceVisibility();
+        updateSurfacePosition();
+        updateSurfaceVisibility();
+    } else {
+        disconnect(m_window, &Toplevel::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
+        disconnect(m_window, &Toplevel::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
+        disconnect(m_window, &Toplevel::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
+    }
 }
 
 void WindowItem::updateSurfacePosition()
@@ -120,29 +126,27 @@ void WindowItem::updateDecorationItem()
 WindowItemX11::WindowItemX11(Toplevel *window, Item *parent)
     : WindowItem(window, parent)
 {
-    switch (kwinApp()->operationMode()) {
-    case Application::OperationModeX11:
-        initialize();
-        break;
-    case Application::OperationModeXwayland:
-        // Xwayland windows and Wayland surfaces are associated asynchronously.
-        if (window->surface()) {
-            initialize();
-        } else {
-            connect(window, &Toplevel::surfaceChanged, this, &WindowItemX11::initialize);
-        }
-        break;
-    case Application::OperationModeWaylandOnly:
-        Q_UNREACHABLE();
-    }
+    initialize();
+
+    // Xwayland windows and Wayland surfaces are associated asynchronously.
+    connect(window, &Toplevel::surfaceChanged, this, &WindowItemX11::initialize);
 }
 
 void WindowItemX11::initialize()
 {
-    if (!window()->surface()) {
+    switch (kwinApp()->operationMode()) {
+    case Application::OperationModeX11:
         updateSurfaceItem(new SurfaceItemX11(window(), this));
-    } else {
-        updateSurfaceItem(new SurfaceItemXwayland(window(), this));
+        break;
+    case Application::OperationModeXwayland:
+        if (!window()->surface()) {
+            updateSurfaceItem(nullptr);
+        } else {
+            updateSurfaceItem(new SurfaceItemXwayland(window(), this));
+        }
+        break;
+    case Application::OperationModeWaylandOnly:
+        Q_UNREACHABLE();
     }
 }
 
