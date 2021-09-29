@@ -670,7 +670,8 @@ const QHash<QString, QString> RulesModel::x11PropertyHash()
         { "skipPager",          "skippager"     },
         { "skipSwitcher",       "skipswitcher"  },
         { "type",               "type"          },
-        { "desktopFile",        "desktopfile"   }
+        { "desktopFile",        "desktopfile"   },
+        { "desktops",           "desktops"      },
     };
     return propertyToRule;
 };
@@ -698,18 +699,6 @@ void RulesModel::setSuggestedProperties(const QVariantMap &info)
 
     m_rules["wmclass"]->setSuggestedValue(wmsimpleclass);
     m_rules["wmclasshelper"]->setSuggestedValue(wmcompleteclass);
-
-    //TODO: Make the DBus method `queryWindowInfo` return the list of desktop IDs and use them directly
-    if (info.value("x11DesktopNumber").toInt() == NET::OnAllDesktops) {
-        m_rules["desktops"]->setSuggestedValue(QStringList());
-    } else {
-        for (const auto vd : qAsConst(m_virtualDesktops)) {
-            if (info.value("x11DesktopNumber").toUInt() == vd.position + 1) {
-                m_rules["desktops"]->setSuggestedValue(QStringList{ vd.id });
-                break;
-            }
-        }
-    }
 
 #ifdef KWIN_BUILD_ACTIVITIES
     const QStringList activities = info.value("activities").toStringList();
