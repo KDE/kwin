@@ -304,6 +304,8 @@ bool DrmGpu::updateOutputs()
             connectors.removeOne(output->pipeline()->connector());
             crtcs.removeOne(output->pipeline()->crtc());
             planes.removeOne(output->pipeline()->primaryPlane());
+        } else {
+            m_pipelines.removeOne(output->pipeline());
         }
     }
     auto config = findWorkingCombination({}, connectors, crtcs, planes);
@@ -312,6 +314,11 @@ bool DrmGpu::updateOutputs()
         for (auto it = oldPipelines.begin(); it != oldPipelines.end(); it++) {
             it.value()->setOutput(it.key());
             config << it.value();
+        }
+        for (const auto &leaseOutput : qAsConst(m_leaseOutputs)) {
+            if (!leaseOutput->lease()) {
+                config << leaseOutput->pipeline();
+            }
         }
     } else {
         for (const auto &pipeline : qAsConst(oldPipelines)) {
