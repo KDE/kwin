@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "device.h"
+#include "abstract_output.h"
 
 #include <QDBusConnection>
 
@@ -542,6 +543,16 @@ void Device::setOrientation(Qt::ScreenOrientation orientation)
         columnOrder[1], columnOrder[5], columnOrder[9]
     };
     libinput_device_config_calibration_set_matrix(m_device, m);
+}
+
+AbstractOutput *Device::output() const
+{
+    return m_output;
+}
+
+void Device::setOutput(AbstractOutput *output)
+{
+    m_output = output;
 }
 
 }

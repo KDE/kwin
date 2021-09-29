@@ -154,7 +154,6 @@ private Q_SLOTS:
     void testLoadLmrTapButtonMap();
     void testLoadLeftHanded_data();
     void testLoadLeftHanded();
-    void testScreenId();
     void testOrientation_data();
     void testOrientation();
     void testCalibrationWithDefault();
@@ -2322,15 +2321,6 @@ void TestLibinputDevice::testLoadLmrTapButtonMap()
         d.setLmrTapButtonMap(initValue);
         QCOMPARE(inputConfig.readEntry("LmrTapButtonMap", configValue), initValue);
     }
-}
-
-void TestLibinputDevice::testScreenId()
-{
-    libinput_device device;
-    Device d(&device);
-    QCOMPARE(d.screenId(), 0);
-    d.setScreenId(1);
-    QCOMPARE(d.screenId(), 1);
 }
 
 void TestLibinputDevice::testOrientation_data()

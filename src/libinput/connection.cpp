@@ -18,7 +18,6 @@
 #include "platform.h"
 #include "workspace.h"
 #include "abstract_client.h"
-#include "screens.h"
 #endif
 
 #include "input_event.h"
@@ -447,8 +446,7 @@ void Connection::processEvents()
             case LIBINPUT_EVENT_TOUCH_DOWN: {
 #ifndef KWIN_BUILD_TESTING
                 TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                const auto *output = static_cast<AbstractWaylandOutput*>(
-                            kwinApp()->platform()->enabledOutputs()[te->device()->screenId()]);
+                const auto *output = static_cast<AbstractWaylandOutput *>(te->device()->output());
                 const QPointF globalPos =
                         devicePointToGlobalPosition(te->absolutePos(output->modeSize()),
                                                     output);
@@ -464,8 +462,7 @@ void Connection::processEvents()
             case LIBINPUT_EVENT_TOUCH_MOTION: {
 #ifndef KWIN_BUILD_TESTING
                 TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                const auto *output = static_cast<AbstractWaylandOutput*>(
-                            kwinApp()->platform()->enabledOutputs()[te->device()->screenId()]);
+                const auto *output = static_cast<AbstractWaylandOutput *>(te->device()->output());
                 const QPointF globalPos =
                         devicePointToGlobalPosition(te->absolutePos(output->modeSize()),
                                                     output);
@@ -555,8 +552,7 @@ void Connection::processEvents()
                 if (workspace()) {
 #ifndef KWIN_BUILD_TESTING
                     auto client = workspace()->activeClient();
-                    const auto *output = static_cast<AbstractWaylandOutput*>(
-                                kwinApp()->platform()->enabledOutputs()[client ? client->screen() : tte->device()->screenId()]);
+                    const auto *output = static_cast<AbstractWaylandOutput *>(client ? client->output() : tte->device()->output());
                     const QPointF globalPos =
                             devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),
                                                         output);
@@ -647,60 +643,62 @@ void Connection::applyScreenToDevice(Device *device)
     if (!device->isTouch()) {
         return;
     }
-    int id = -1;
+
+    AbstractOutput *deviceOutput = nullptr;
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
     // let's try to find a screen for it
-    if (screens()->count() == 1) {
-        id = 0;
+    if (outputs.count() == 1) {
+        deviceOutput = outputs.constFirst();
     }
-    if (id == -1 && !device->outputName().isEmpty()) {
+    if (!deviceOutput && !device->outputName().isEmpty()) {
         // we have an output name, try to find a screen with matching name
-        for (int i = 0; i < screens()->count(); i++) {
-            if (screens()->name(i) == device->outputName()) {
-                id = i;
+        for (AbstractOutput *output : outputs) {
+            if (output->name() == device->outputName()) {
+                deviceOutput = output;
                 break;
             }
         }
     }
-    if (id == -1) {
+    if (!deviceOutput) {
         // do we have an internal screen?
-        int internalId = -1;
-        for (int i = 0; i < screens()->count(); i++) {
-            if (screens()->isInternal(i)) {
-                internalId = i;
+        AbstractOutput *internalOutput = nullptr;
+        for (AbstractOutput *output : outputs) {
+            if (output->isInternal()) {
+                internalOutput = output;
                 break;
             }
         }
-        auto testScreenMatches = [device] (int id) {
+        auto testScreenMatches = [device] (const AbstractOutput *output) {
             const auto &size = device->size();
-            const auto &screenSize = screens()->physicalSize(id);
+            const auto &screenSize = output->physicalSize();
             return std::round(size.width()) == std::round(screenSize.width())
                 && std::round(size.height()) == std::round(screenSize.height());
         };
-        if (internalId != -1 && testScreenMatches(internalId)) {
-            id = internalId;
+        if (internalOutput && testScreenMatches(internalOutput)) {
+            deviceOutput = internalOutput;
         }
         // let's compare all screens for size
-        for (int i = 0; i < screens()->count(); i++) {
-            if (testScreenMatches(i)) {
-                id = i;
+        for (AbstractOutput *output : outputs) {
+            if (testScreenMatches(output)) {
+                deviceOutput = output;
                 break;
             }
         }
-        if (id == -1) {
+        if (!deviceOutput) {
             // still not found
-            if (internalId != -1) {
+            if (internalOutput) {
                 // we have an internal id, so let's use that
-                id = internalId;
-            } else {
+                deviceOutput = internalOutput;
+            } else if (!outputs.isEmpty()) {
                 // just take first screen, we have no clue
-                id = 0;
+                deviceOutput = outputs.constFirst();
             }
         }
     }
-    device->setScreenId(id);
+    device->setOutput(deviceOutput);
 
     // TODO: this is currently non-functional even on DRM. Needs orientation() override there.
-    device->setOrientation(screens()->orientation(id));
+    device->setOrientation(Qt::PrimaryOrientation);
 #else
     Q_UNUSED(device)
 #endif

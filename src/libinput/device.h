@@ -15,6 +15,7 @@
 
 #include <QObject>
 #include <QMatrix4x4>
+#include <QPointer>
 #include <QSizeF>
 #include <QVector>
 #include "kwin_export.h"
@@ -23,6 +24,8 @@ struct libinput_device;
 
 namespace KWin
 {
+class AbstractOutput;
+
 namespace LibInput
 {
 enum class ConfigKey;
@@ -438,20 +441,6 @@ public:
         m_config = config;
     }
 
-    /**
-     * The id of the screen in KWin identifiers. Set from KWin through setScreenId.
-     */
-    int screenId() const {
-        return m_screenId;
-    }
-
-    /**
-     * Sets the KWin screen id for the device
-     */
-    void setScreenId(int screenId) {
-        m_screenId = screenId;
-    }
-
     void setOrientation(Qt::ScreenOrientation orientation);
 
     /**
@@ -475,6 +464,9 @@ public:
     int ringsCount() const;
 
     void *groupUserData() const;
+
+    AbstractOutput *output() const;
+    void setOutput(AbstractOutput *output);
 
     /**
      * All created Devices
@@ -570,7 +562,7 @@ private:
     KConfigGroup m_config;
     bool m_loading = false;
 
-    int m_screenId = 0;
+    QPointer<AbstractOutput> m_output;
     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
     QMatrix4x4 m_defaultCalibrationMatrix;
     quint32 m_supportedClickMethods;
