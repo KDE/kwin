@@ -92,6 +92,7 @@ private:
     void stopInputMethod();
     void setTrackedClient(AbstractClient *trackedClient);
     void installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboardGrab);
+    void updateModifiersMap(const QByteArray &modifiers);
 
     bool touchEventTriggered() const;
 

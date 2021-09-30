@@ -514,6 +514,7 @@ void InputMethod::adoptInputMethodContext()
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditString, this, &InputMethod::setPreeditString, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditCursor, this, &InputMethod::setPreeditCursor, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::keyboardGrabRequested, this, &InputMethod::installKeyboardGrab, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::modifiersMap, this, &InputMethod::updateModifiersMap, Qt::UniqueConnection);
 }
 
 void InputMethod::updateInputPanelState()
@@ -658,6 +659,15 @@ void InputMethod::installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboar
     connect(keyboardGrab, &QObject::destroyed, input(), [filter] {
         input()->uninstallInputEventFilter(filter);
     });
+}
+
+void InputMethod::updateModifiersMap(const QByteArray &modifiers)
+{
+    TextInputV2Interface *t2 = waylandServer()->seat()->textInputV2();
+
+    if (t2 && t2->isEnabled()) {
+        t2->setModifiersMap(modifiers);
+    }
 }
 
 bool InputMethod::isVisible() const
