@@ -1376,6 +1376,7 @@ bool Workspace::checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KSt
 void Workspace::focusToNull()
 {
     if (m_nullFocus) {
+        should_get_focus.clear();
         m_nullFocus->focus();
     }
 }
