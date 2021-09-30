@@ -363,7 +363,7 @@ static quint32 keysymToKeycode(quint32 sym)
     }
 }
 
-void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, Qt::KeyboardModifiers modifiers)
+void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, quint32 modifiers)
 {
     Q_UNUSED(serial)
     Q_UNUSED(time)

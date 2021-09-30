@@ -83,7 +83,7 @@ private:
     void updateInputPanelState();
     void adoptInputMethodContext();
     void commitString(qint32 serial, const QString &text);
-    void keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, Qt::KeyboardModifiers modifiers);
+    void keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, quint32 modifiers);
     void deleteSurroundingText(int32_t index, uint32_t length);
     void setCursorPosition(qint32 index, qint32 anchor);
     void setLanguage(uint32_t serial, const QString &language);
