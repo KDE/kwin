@@ -192,8 +192,8 @@ public:
      */
     void setTextDirection(Qt::LayoutDirection direction);
 
-    void keysymPressed(quint32 keysym, Qt::KeyboardModifiers modifiers = Qt::NoModifier);
-    void keysymReleased(quint32 keysym, Qt::KeyboardModifiers modifiers = Qt::NoModifier);
+    void keysymPressed(quint32 keysym, quint32 modifiers = 0);
+    void keysymReleased(quint32 keysym, quint32 modifiers = 0);
 
     /**
      * Informs the client about changes in the visibility of the input panel (virtual keyboard).

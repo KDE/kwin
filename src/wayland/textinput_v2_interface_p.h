@@ -42,8 +42,8 @@ public:
     void setTextDirection(Qt::LayoutDirection direction);
     void setPreEditCursor(qint32 index);
     void setCursorPosition(qint32 index, qint32 anchor);
-    void keysymPressed(quint32 keysym, Qt::KeyboardModifiers modifiers);
-    void keysymReleased(quint32 keysym, Qt::KeyboardModifiers modifiers);
+    void keysymPressed(quint32 keysym, quint32 modifiers);
+    void keysymReleased(quint32 keysym, quint32 modifiers);
     void sendInputPanelState();
     void sendLanguage();
 

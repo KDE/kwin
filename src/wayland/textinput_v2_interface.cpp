@@ -191,27 +191,27 @@ void TextInputV2InterfacePrivate::commitString(const QString &text)
     }
 }
 
-void TextInputV2InterfacePrivate::keysymPressed(quint32 keysym, Qt::KeyboardModifiers modifiers)
+void TextInputV2InterfacePrivate::keysymPressed(quint32 keysym, quint32 modifiers)
 {
     if (!surface) {
         return;
     }
-    Q_UNUSED(modifiers)
+
     const QList<Resource *> textInputs = textInputsForClient(surface->client());
     for (auto resource : textInputs) {
-        send_keysym(resource->handle, seat ? seat->timestamp() : 0, keysym, WL_KEYBOARD_KEY_STATE_PRESSED, 0);
+        send_keysym(resource->handle, seat ? seat->timestamp() : 0, keysym, WL_KEYBOARD_KEY_STATE_PRESSED, modifiers);
     }
 }
 
-void TextInputV2InterfacePrivate::keysymReleased(quint32 keysym, Qt::KeyboardModifiers modifiers)
+void TextInputV2InterfacePrivate::keysymReleased(quint32 keysym, quint32 modifiers)
 {
     if (!surface) {
         return;
     }
-    Q_UNUSED(modifiers)
+
     const QList<Resource *> textInputs = textInputsForClient(surface->client());
     for (auto resource : textInputs) {
-        send_keysym(resource->handle, seat ? seat->timestamp() : 0, keysym, WL_KEYBOARD_KEY_STATE_RELEASED, 0);
+        send_keysym(resource->handle, seat ? seat->timestamp() : 0, keysym, WL_KEYBOARD_KEY_STATE_RELEASED, modifiers);
     }
 }
 
@@ -438,13 +438,12 @@ void TextInputV2Interface::commitString(const QString &text)
     d->commitString(text);
 }
 
-void TextInputV2Interface::keysymPressed(quint32 keysym, Qt::KeyboardModifiers modifiers)
+void TextInputV2Interface::keysymPressed(quint32 keysym, quint32 modifiers)
 {
-    Q_UNUSED(modifiers)
     d->keysymPressed(keysym, modifiers);
 }
 
-void TextInputV2Interface::keysymReleased(quint32 keysym, Qt::KeyboardModifiers modifiers)
+void TextInputV2Interface::keysymReleased(quint32 keysym, quint32 modifiers)
 {
     d->keysymReleased(keysym, modifiers);
 }
