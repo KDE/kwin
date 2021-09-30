@@ -635,7 +635,6 @@ void DrmPipeline::printDebugInfo() const
     }
     qCWarning(KWIN_DRM) << "Drm objects:";
     qCWarning(KWIN_DRM) << "connector" << m_connector->id();
-    auto list = m_connector->properties();
     printProps(m_connector);
     qCWarning(KWIN_DRM) << "crtc" << m_crtc->id();
     printProps(m_crtc);

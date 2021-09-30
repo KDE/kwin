@@ -630,27 +630,27 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
     }
 
     gbm_bo *importedBuffer;
-    if (buffer->planes()[0].modifier != DRM_FORMAT_MOD_INVALID
-        || buffer->planes()[0].offset > 0
-        || buffer->planes().size() > 1) {
-        if (!m_gpu->addFB2ModifiersSupported() || !output.output->supportedModifiers(buffer->format()).contains(buffer->planes()[0].modifier)) {
+    const auto planes = buffer->planes();
+    if (planes.first().modifier != DRM_FORMAT_MOD_INVALID
+        || planes.first().offset > 0
+        || planes.count() > 1) {
+        if (!m_gpu->addFB2ModifiersSupported() || !output.output->supportedModifiers(buffer->format()).contains(planes.first().modifier)) {
             return false;
         }
         gbm_import_fd_modifier_data data = {};
         data.format = buffer->format();
         data.width = (uint32_t) buffer->size().width();
         data.height = (uint32_t) buffer->size().height();
-        data.num_fds = buffer->planes().count();
-        data.modifier = buffer->planes()[0].modifier;
-        for (int i = 0; i < buffer->planes().count(); i++) {
-            auto plane = buffer->planes()[i];
-            data.fds[i] = plane.fd;
-            data.offsets[i] = plane.offset;
-            data.strides[i] = plane.stride;
+        data.num_fds = planes.count();
+        data.modifier = planes.first().modifier;
+        for (int i = 0; i < planes.count(); i++) {
+            data.fds[i] = planes[i].fd;
+            data.offsets[i] = planes[i].offset;
+            data.strides[i] = planes[i].stride;
         }
         importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
     } else {
-        auto plane = buffer->planes()[0];
+        auto plane = planes.first();
         gbm_import_fd_data data = {};
         data.fd = plane.fd;
         data.width = (uint32_t) buffer->size().width();

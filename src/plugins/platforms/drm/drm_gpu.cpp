@@ -252,7 +252,7 @@ bool DrmGpu::updateOutputs()
     }
     m_pipelines << config;
 
-    for (const auto &pipeline : config) {
+    for (const auto &pipeline : qAsConst(config)) {
         auto output = pipeline->output();
         if (m_outputs.contains(output)) {
             // try setting hardware rotation
