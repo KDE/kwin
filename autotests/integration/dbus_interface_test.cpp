@@ -126,7 +126,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QCOMPARE(windowData.value(QStringLiteral("y")).toInt(), client->y());
     QCOMPARE(windowData.value(QStringLiteral("width")).toInt(), client->width());
     QCOMPARE(windowData.value(QStringLiteral("height")).toInt(), client->height());
-    QCOMPARE(windowData.value(QStringLiteral("x11DesktopNumber")).toInt(), 1);
+    QCOMPARE(windowData.value(QStringLiteral("desktops")).toStringList(), client->desktopIds());
     QCOMPARE(windowData.value(QStringLiteral("minimized")).toBool(), false);
     QCOMPARE(windowData.value(QStringLiteral("shaded")).toBool(), false);
     QCOMPARE(windowData.value(QStringLiteral("fullscreen")).toBool(), false);
@@ -191,7 +191,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QCOMPARE(client->desktop(), 2);
     reply = getWindowInfo(client->internalId());
     reply.waitForFinished();
-    QCOMPARE(reply.value().value(QStringLiteral("x11DesktopNumber")).toInt(), 2);
+    QCOMPARE(reply.value().value(QStringLiteral("desktops")).toStringList(), client->desktopIds());
 
     client->move(QPoint(10, 20));
     reply = getWindowInfo(client->internalId());
@@ -269,7 +269,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     QCOMPARE(windowData.value(QStringLiteral("y")).toInt(), client->y());
     QCOMPARE(windowData.value(QStringLiteral("width")).toInt(), client->width());
     QCOMPARE(windowData.value(QStringLiteral("height")).toInt(), client->height());
-    QCOMPARE(windowData.value(QStringLiteral("x11DesktopNumber")).toInt(), 1);
+    QCOMPARE(windowData.value(QStringLiteral("desktops")).toStringList(), client->desktopIds());
     QCOMPARE(windowData.value(QStringLiteral("minimized")).toBool(), false);
     QCOMPARE(windowData.value(QStringLiteral("shaded")).toBool(), false);
     QCOMPARE(windowData.value(QStringLiteral("fullscreen")).toBool(), false);
