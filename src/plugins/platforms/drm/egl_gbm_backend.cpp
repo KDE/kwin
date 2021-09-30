@@ -552,7 +552,7 @@ QRegion EglGbmBackend::prepareRenderingForOutput(Output &output)
     setViewport(output);
 
     const QRect geometry = output.output->geometry();
-    if (supportsBufferAge()) {
+    if (supportsBufferAge() && (isPrimary() || primaryBackend()->supportsBufferAge())) {
         auto current = &output.current;
         return current->damageJournal.accumulate(current->bufferAge, geometry);
     }
