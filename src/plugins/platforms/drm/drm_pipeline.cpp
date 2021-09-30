@@ -266,6 +266,7 @@ bool DrmPipeline::modeset(int modeIndex)
         } else {
             m_crtc->setCurrent(m_primaryBuffer);
         }
+        m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setCurrent(DRM_MODE_DPMS_ON);
     }
     return true;
 }
@@ -390,6 +391,11 @@ bool DrmPipeline::setActive(bool active)
             qCWarning(KWIN_DRM) << "Setting active failed: dpms property missing!";
         } else {
             success = drmModeConnectorSetProperty(m_gpu->fd(), m_connector->id(), dpmsProp->propId(), active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF) == 0;
+            if (success) {
+                dpmsProp->setPending(active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF);
+                dpmsProp->commitPending();
+                dpmsProp->commit();
+            }
         }
     }
     if (!success) {
@@ -470,7 +476,13 @@ bool DrmPipeline::setSyncMode(RenderLoopPrivate::SyncMode syncMode)
         vrrProp->setPending(vrr);
         return test();
     } else {
-        return drmModeObjectSetProperty(m_gpu->fd(), m_crtc->id(), DRM_MODE_OBJECT_CRTC, vrrProp->propId(), vrr) == 0;
+        bool ret = drmModeObjectSetProperty(m_gpu->fd(), m_crtc->id(), DRM_MODE_OBJECT_CRTC, vrrProp->propId(), vrr) == 0;
+        if (ret) {
+            vrrProp->setPending(vrr);
+            vrrProp->commitPending();
+            vrrProp->commit();
+        }
+        return ret;
     }
 }
 
