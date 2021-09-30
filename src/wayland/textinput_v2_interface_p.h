@@ -46,6 +46,7 @@ public:
     void keysymReleased(quint32 keysym, quint32 modifiers);
     void sendInputPanelState();
     void sendLanguage();
+    void sendModifiersMap();
 
     QList<Resource *> textInputsForClient(ClientConnection *client) const;
     static TextInputV2InterfacePrivate *get(TextInputV2Interface *inputInterface)
@@ -65,6 +66,7 @@ public:
     bool inputPanelVisible = false;
     QRect overlappedSurfaceArea;
     QString language;
+    QByteArray modifiersMap;
     TextInputV2Interface *q;
     QSet<SurfaceInterface *> m_enabledSurfaces;
 

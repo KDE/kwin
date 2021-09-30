@@ -211,6 +211,11 @@ public:
      */
     void setLanguage(const QString &languageTag);
 
+    /**
+     * Sets the modifiers map to use when modifiers are included in a key event.
+     */
+    void setModifiersMap(const QByteArray &modifiersMap);
+
 Q_SIGNALS:
     /**
      * Requests input panels (virtual keyboard) to show.

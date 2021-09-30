@@ -301,6 +301,17 @@ void TextInputV2InterfacePrivate::sendLanguage()
     }
 }
 
+void TextInputV2InterfacePrivate::sendModifiersMap()
+{
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        send_modifiers_map(resource->handle, modifiersMap);
+    }
+}
+
 TextInputV2InterfacePrivate::TextInputV2InterfacePrivate(SeatInterface *seat, TextInputV2Interface *_q)
     : seat(seat)
     , q(_q)
@@ -487,6 +498,16 @@ void TextInputV2Interface::setLanguage(const QString &languageTag)
     }
     d->language = languageTag;
     d->sendLanguage();
+}
+
+void TextInputV2Interface::setModifiersMap(const QByteArray &modifiersMap)
+{
+    if (d->modifiersMap == modifiersMap) {
+        // not changed
+        return;
+    }
+    d->modifiersMap = modifiersMap;
+    d->sendModifiersMap();
 }
 
 QPointer<SurfaceInterface> TextInputV2Interface::surface() const
