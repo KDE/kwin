@@ -130,28 +130,13 @@ public:
     }
     void zwp_input_method_context_v1_modifiers_map(Resource *, wl_array *map) override
     {
-        const QList<QByteArray> modifiersMap = QByteArray::fromRawData(static_cast<const char *>(map->data), map->size).split('\0');
+        const auto mods = QByteArray::fromRawData(static_cast<const char *>(map->data), map->size);
 
-        mods.clear();
-        for (const QByteArray &modifier : modifiersMap) {
-            if (modifier == "Shift") {
-                mods << Qt::ShiftModifier;
-            } else if (modifier == "Alt") {
-                mods << Qt::AltModifier;
-            } else if (modifier == "Control") {
-                mods << Qt::ControlModifier;
-            } else if (modifier == "Mod1") {
-                mods << Qt::AltModifier;
-            } else if (modifier == "Mod4") {
-                mods << Qt::MetaModifier;
-            } else {
-                mods << Qt::NoModifier;
-            }
-        }
+        Q_EMIT q->modifiersMap(mods);
     }
     void zwp_input_method_context_v1_keysym(Resource *, uint32_t serial, uint32_t time, uint32_t sym, uint32_t state, uint32_t modifiers) override
     {
-        Q_EMIT q->keysym(serial, time, sym, state == WL_KEYBOARD_KEY_STATE_PRESSED, toQtModifiers(modifiers));
+        Q_EMIT q->keysym(serial, time, sym, state == WL_KEYBOARD_KEY_STATE_PRESSED, modifiers);
     }
     void zwp_input_method_context_v1_grab_keyboard(Resource *resource, uint32_t id) override
     {
@@ -196,19 +181,6 @@ public:
         Q_EMIT q->textDirection(serial, qtDirection);
     }
 
-    Qt::KeyboardModifiers toQtModifiers(uint32_t modifiers)
-    {
-        Qt::KeyboardModifiers ret = Qt::NoModifier;
-        // if we never got the modifier map from the input method, return empty modifier
-        if (mods.isEmpty()) {
-            return ret;
-        }
-        for (int i = 0; modifiers >>= 1; ++i) {
-            ret |= mods[i];
-        }
-        return ret;
-    }
-
     void zwp_input_method_context_v1_destroy(Resource *resource) override
     {
         wl_resource_destroy(resource->handle);
@@ -216,7 +188,6 @@ public:
 
     InputMethodContextV1Interface *const q;
     QScopedPointer<InputMethodGrabV1> m_keyboardGrab;
-    QVector<Qt::KeyboardModifiers> mods;
 };
 
 InputMethodContextV1Interface::InputMethodContextV1Interface(InputMethodV1Interface *parent)

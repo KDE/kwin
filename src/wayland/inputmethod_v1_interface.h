@@ -87,12 +87,13 @@ Q_SIGNALS:
     void preeditCursor(qint32 index);
     void deleteSurroundingText(qint32 index, quint32 length);
     void cursorPosition(qint32 index, qint32 anchor);
-    void keysym(quint32 serial, quint32 time, quint32 sym, bool pressed, Qt::KeyboardModifiers modifiers);
+    void keysym(quint32 serial, quint32 time, quint32 sym, bool pressed, quint32 modifiers);
     void key(quint32 serial, quint32 time, quint32 key, bool pressed);
     void modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group);
     void language(quint32 serial, const QString &language);
     void textDirection(quint32 serial, Qt::LayoutDirection direction);
     void keyboardGrabRequested(InputMethodGrabV1 *keyboardGrab);
+    void modifiersMap(const QByteArray &map);
 
 private:
     friend class InputMethodV1Interface;
