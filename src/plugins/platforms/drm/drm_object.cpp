@@ -305,7 +305,12 @@ bool DrmObject::Property::needsCommit() const
 
 bool DrmObject::Property::setPropertyLegacy(uint64_t value)
 {
-    return drmModeObjectSetProperty(m_obj->m_gpu->fd(), m_obj->id(), m_obj->m_objectType, m_propId, value) == 0;
+    if (drmModeObjectSetProperty(m_obj->m_gpu->fd(), m_obj->id(), m_obj->m_objectType, m_propId, value) == 0) {
+        m_current = m_next = m_pending = value;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)

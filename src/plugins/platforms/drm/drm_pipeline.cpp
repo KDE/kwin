@@ -260,6 +260,7 @@ bool DrmPipeline::modeset(int modeIndex)
         } else {
             m_crtc->setCurrent(m_primaryBuffer);
         }
+        m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setCurrent(DRM_MODE_DPMS_ON);
     }
     return true;
 }
