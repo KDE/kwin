@@ -67,7 +67,7 @@ bool DrmObject::initProps()
                     debug << prop->current();
                 } else {
                     if (prop->hasEnum(prop->current())) {
-                        debug << prop->enumNames()[prop->enumForValue<uint32_t>(prop->current())];
+                        debug << prop->enumNames().at(prop->enumForValue<uint32_t>(prop->current()));
                     } else {
                         debug << "invalid value: " << prop->current();
                     }

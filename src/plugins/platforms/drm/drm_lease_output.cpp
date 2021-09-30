@@ -27,7 +27,7 @@ DrmLeaseOutput::DrmLeaseOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDe
         leaseDevice,
         pipeline->connector()->id(),
         pipeline->connector()->modelName(),
-        QStringLiteral("%1 %2").arg(pipeline->connector()->edid()->manufacturerString()).arg(pipeline->connector()->modelName())
+        QStringLiteral("%1 %2").arg(pipeline->connector()->edid()->manufacturerString(), pipeline->connector()->modelName())
     )
     , m_pipeline(pipeline)
 {

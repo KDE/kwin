@@ -327,7 +327,7 @@ bool DrmGpu::updateOutputs()
     }
     m_pipelines << config;
 
-    for (const auto &pipeline : config) {
+    for (const auto &pipeline : qAsConst(config)) {
         auto output = pipeline->output();
         if (pipeline->connector()->isNonDesktop()) {
             if (const auto &leaseOutput = findLeaseOutput(pipeline->connector()->id())) {
@@ -636,7 +636,8 @@ void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseReques
 {
     QVector<uint32_t> objects;
     QVector<DrmLeaseOutput*> outputs;
-    for (const auto &connector : leaseRequest->connectors()) {
+    const auto conns = leaseRequest->connectors();
+    for (const auto &connector : conns) {
         auto output = qobject_cast<DrmLeaseOutput*>(connector);
         if (m_leaseOutputs.contains(output) && !output->lease()) {
             output->addLeaseObjects(objects);
@@ -666,7 +667,8 @@ void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseReques
 
 void DrmGpu::handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease)
 {
-    for (const auto &connector : lease->connectors()) {
+    const auto conns = lease->connectors();
+    for (const auto &connector : conns) {
         auto output = qobject_cast<DrmLeaseOutput*>(connector);
         if (m_leaseOutputs.contains(output)) {
             output->leaseEnded();
