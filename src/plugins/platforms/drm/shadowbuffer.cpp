@@ -110,6 +110,7 @@ void ShadowBuffer::render(DrmAbstractOutput *output, RenderMode mode)
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
 
     glBindTexture(GL_TEXTURE_2D, m_texture);
+    glDisable(GL_BLEND);
     m_vbo->render(GL_TRIANGLES);
     ShaderManager::instance()->popShader();
     glBindTexture(GL_TEXTURE_2D, 0);
