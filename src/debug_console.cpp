@@ -1704,7 +1704,6 @@ void DataSourceModel::setSource(KWaylandServer::AbstractDataSource *source)
     m_source = source;
     m_data.clear();
     if (source) {
-        const auto client = source->client();
         m_data.resize(m_source->mimeTypes().size());
         for (auto type = m_source->mimeTypes().cbegin(); type != m_source->mimeTypes().cend(); ++type) {
             int pipeFds[2];
@@ -1712,9 +1711,6 @@ void DataSourceModel::setSource(KWaylandServer::AbstractDataSource *source)
                 continue;
             }
             source->requestData(*type, pipeFds[1]);
-            if (client && client != waylandServer()->internalConnection()->client()) {
-                close(pipeFds[1]);
-            }
             QFuture<QByteArray> data = QtConcurrent::run(readData, pipeFds[0]);
             auto watcher = new QFutureWatcher<QByteArray>(this);
             watcher->setFuture(data);
