@@ -149,8 +149,8 @@ void ThumbnailAsideEffect::arrange()
         mwidth = qMax(mwidth, d.window->width());
         pos[ d.index ] = d.window->height();
     }
-    int effectiveScreen = screen;
-    if (effectiveScreen == -1) {
+    EffectScreen *effectiveScreen = effects->findScreen(screen);
+    if (!effectiveScreen ) {
         effectiveScreen = effects->activeScreen();
     }
     QRect area = effects->clientArea(MaximizeArea, effectiveScreen, effects->currentDesktop());

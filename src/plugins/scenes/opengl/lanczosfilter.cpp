@@ -176,7 +176,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
     if (data.xScale() < 0.9 || data.yScale() < 0.9) {
         if (!m_inited)
             init();
-        const QRect screenRect = Workspace::self()->clientArea(ScreenArea, w->screen(), w->desktop());
+        const QRect screenRect = Workspace::self()->clientArea(ScreenArea, w->window());
         // window geometry may not be bigger than screen geometry to fit into the FBO
         QRect winGeo(w->expandedGeometry());
         if (m_shader && winGeo.width() <= screenRect.width() && winGeo.height() <= screenRect.height()) {

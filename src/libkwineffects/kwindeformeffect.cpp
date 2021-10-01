@@ -81,7 +81,7 @@ GLTexture *DeformEffectPrivate::maybeRender(EffectWindow *window, DeformOffscree
     const QRect geometry = window->expandedGeometry();
     QSize textureSize = geometry.size();
 
-    if (const EffectScreen *screen = effects->findScreen(window->screen())) {
+    if (const EffectScreen *screen = window->screen()) {
         textureSize *= screen->devicePixelRatio();
     }
 

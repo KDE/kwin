@@ -902,15 +902,12 @@ void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &
     cl->setDesktops(desktops);
 }
 
-void EffectsHandlerImpl::windowToScreen(EffectWindow* w, int screen)
+void EffectsHandlerImpl::windowToScreen(EffectWindow* w, EffectScreen *screen)
 {
-    AbstractOutput *output = kwinApp()->platform()->findOutput(screen);
-    if (!output) {
-        return;
-    }
     auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
     if (cl && !cl->isDesktop() && !cl->isDock()) {
-        Workspace::self()->sendClientToOutput(cl, output);
+        EffectScreenImpl *screenImpl = static_cast<EffectScreenImpl *>(screen);
+        Workspace::self()->sendClientToOutput(cl, screenImpl->platformOutput());
     }
 }
 
@@ -1193,9 +1190,9 @@ void EffectsHandlerImpl::addRepaint(int x, int y, int w, int h)
     m_compositor->addRepaint(x, y, w, h);
 }
 
-int EffectsHandlerImpl::activeScreen() const
+EffectScreen *EffectsHandlerImpl::activeScreen() const
 {
-    return kwinApp()->platform()->enabledOutputs().indexOf(workspace()->activeOutput());
+    return EffectScreenImpl::get(workspace()->activeOutput());
 }
 
 int EffectsHandlerImpl::numScreens() const
@@ -1203,14 +1200,17 @@ int EffectsHandlerImpl::numScreens() const
     return Screens::self()->count();
 }
 
-int EffectsHandlerImpl::screenNumber(const QPoint& pos) const
+QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectScreen *screen, int desktop) const
 {
-    return Screens::self()->number(pos);
-}
+    const VirtualDesktop *virtualDesktop;
+    if (desktop == 0 || desktop == -1) {
+        virtualDesktop = VirtualDesktopManager::self()->currentDesktop();
+    } else {
+        virtualDesktop = VirtualDesktopManager::self()->desktopForX11Id(desktop);
+    }
 
-QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, int screen, int desktop) const
-{
-    return Workspace::self()->clientArea(opt, screen, desktop);
+    const EffectScreenImpl *screenImpl = static_cast<const EffectScreenImpl *>(screen);
+    return Workspace::self()->clientArea(opt, screenImpl->platformOutput(), virtualDesktop);
 }
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow* c) const
@@ -1684,7 +1684,7 @@ QList<EffectScreen *> EffectsHandlerImpl::screens() const
 
 EffectScreen *EffectsHandlerImpl::screenAt(const QPoint &point) const
 {
-    return m_effectScreens.value(screenNumber(point));
+    return EffectScreenImpl::get(kwinApp()->platform()->outputAt(point));
 }
 
 EffectScreen *EffectsHandlerImpl::findScreen(const QString &name) const
@@ -1711,15 +1711,10 @@ void EffectsHandlerImpl::slotOutputEnabled(AbstractOutput *output)
 
 void EffectsHandlerImpl::slotOutputDisabled(AbstractOutput *output)
 {
-    auto it = std::find_if(m_effectScreens.begin(), m_effectScreens.end(), [&output](EffectScreen *screen) {
-        return static_cast<EffectScreenImpl *>(screen)->platformOutput() == output;
-    });
-    if (it != m_effectScreens.end()) {
-        EffectScreen *screen = *it;
-        m_effectScreens.erase(it);
-        Q_EMIT screenRemoved(screen);
-        delete screen;
-    }
+    EffectScreen *screen = EffectScreenImpl::get(output);
+    m_effectScreens.removeOne(screen);
+    Q_EMIT screenRemoved(screen);
+    delete screen;
 }
 
 void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
@@ -1736,12 +1731,26 @@ EffectScreenImpl::EffectScreenImpl(AbstractOutput *output, QObject *parent)
     : EffectScreen(parent)
     , m_platformOutput(output)
 {
+    m_platformOutput->m_effectScreen = this;
+
     connect(output, &AbstractOutput::aboutToChange, this, &EffectScreen::aboutToChange);
     connect(output, &AbstractOutput::changed, this, &EffectScreen::changed);
     connect(output, &AbstractOutput::wakeUp, this, &EffectScreen::wakeUp);
     connect(output, &AbstractOutput::aboutToTurnOff, this, &EffectScreen::aboutToTurnOff);
     connect(output, &AbstractOutput::scaleChanged, this, &EffectScreen::devicePixelRatioChanged);
     connect(output, &AbstractOutput::geometryChanged, this, &EffectScreen::geometryChanged);
+}
+
+EffectScreenImpl::~EffectScreenImpl()
+{
+    if (m_platformOutput) {
+        m_platformOutput->m_effectScreen = nullptr;
+    }
+}
+
+EffectScreenImpl *EffectScreenImpl::get(AbstractOutput *output)
+{
+    return output->m_effectScreen;
 }
 
 AbstractOutput *EffectScreenImpl::platformOutput() const
@@ -1865,6 +1874,11 @@ void EffectWindowImpl::unrefWindow()
     abort(); // TODO
 }
 
+EffectScreen *EffectWindowImpl::screen() const
+{
+    return EffectScreenImpl::get(toplevel->output());
+}
+
 #define TOPLEVEL_HELPER( rettype, prototype, toplevelPrototype) \
     rettype EffectWindowImpl::prototype ( ) const \
     { \
@@ -1879,7 +1893,6 @@ TOPLEVEL_HELPER(int, width, width)
 TOPLEVEL_HELPER(int, height, height)
 TOPLEVEL_HELPER(QPoint, pos, pos)
 TOPLEVEL_HELPER(QSize, size, size)
-TOPLEVEL_HELPER(int, screen, screen)
 TOPLEVEL_HELPER(QRect, geometry, frameGeometry)
 TOPLEVEL_HELPER(QRect, frameGeometry, frameGeometry)
 TOPLEVEL_HELPER(QRect, bufferGeometry, bufferGeometry)

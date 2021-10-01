@@ -130,7 +130,7 @@ void KscreenEffect::postPaintScreen()
 
 void KscreenEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    auto screen = effects->findScreen(w->screen());
+    auto screen = w->screen();
     if (isScreenActive(screen)) {
         auto &state = !effects->waylandDisplay() ? m_xcbState : m_waylandStates[screen];
         if (state.m_state != StateNormal) {
@@ -142,7 +142,7 @@ void KscreenEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, st
 
 void KscreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    auto screen = effects->findScreen(w->screen());
+    auto screen = w->screen();
     if (isScreenActive(screen)) {
         auto &state = !effects->waylandDisplay() ? m_xcbState : m_waylandStates[screen];
         //fade to black and fully opaque

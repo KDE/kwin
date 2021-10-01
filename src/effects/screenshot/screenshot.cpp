@@ -213,7 +213,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         geometry = window->clientGeometry();
     }
     if (screenshot->flags & ScreenShotNativeResolution) {
-        if (const EffectScreen *screen = effects->findScreen(window->screen())) {
+        if (const EffectScreen *screen = window->screen()) {
             devicePixelRatio = screen->devicePixelRatio();
         }
     }

@@ -966,9 +966,7 @@ void PresentWindowsEffect::rearrangeWindows()
 
     // Work out which windows are on which screens
     EffectWindowList windowlist;
-    QList<EffectWindowList> windowlists;
-    for (int i = 0; i < effects->numScreens(); i++)
-        windowlists.append(EffectWindowList());
+    QMap<EffectScreen *, EffectWindowList> windowlists;
 
     if (m_windowFilter.isEmpty()) {
         windowlist = m_motionManager.managedWindows();
@@ -1009,8 +1007,8 @@ void PresentWindowsEffect::rearrangeWindows()
     } else
         setHighlightedWindow(findFirstWindow());
 
-    int screens = effects->numScreens();
-    for (int screen = 0; screen < screens; screen++) {
+    const QList<EffectScreen *> screens = effects->screens();
+    for (EffectScreen *screen : screens) {
         EffectWindowList windows;
         windows = windowlists[screen];
 
@@ -1049,7 +1047,7 @@ void PresentWindowsEffect::rearrangeWindows()
     delete metrics;
 }
 
-void PresentWindowsEffect::calculateWindowTransformations(EffectWindowList windowlist, int screen,
+void PresentWindowsEffect::calculateWindowTransformations(EffectWindowList windowlist, EffectScreen *screen,
         WindowMotionManager& motionManager, bool external)
 {
     if (m_layoutMode == LayoutRegularGrid)
@@ -1071,7 +1069,7 @@ static inline int distance(QPoint &pos1, QPoint &pos2)
     return int(sqrt(float(xdiff*xdiff + ydiff*ydiff)));
 }
 
-void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowList windowlist, int screen,
+void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowList windowlist, EffectScreen *screen,
         WindowMotionManager& motionManager)
 {
     // This layout mode requires at least one window visible
@@ -1170,7 +1168,7 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
     }
 }
 
-void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowList windowlist, int screen,
+void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowList windowlist, EffectScreen *screen,
         WindowMotionManager& motionManager)
 {
     // This layout mode requires at least one window visible
@@ -1306,7 +1304,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
     }
 }
 
-void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowList windowlist, int screen,
+void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowList windowlist, EffectScreen *screen,
         WindowMotionManager& motionManager)
 {
     // If windows do not overlap they scale into nothingness, fix by resetting. To reproduce
@@ -2032,8 +2030,9 @@ bool PresentWindowsEffect::isActive() const
 void PresentWindowsEffect::reCreateGrids()
 {
     m_gridSizes.clear();
-    for (int i = 0; i < effects->numScreens(); ++i) {
-        m_gridSizes.append(GridSize());
+    const QList<EffectScreen *> screens = effects->screens();
+    for (EffectScreen *screen : screens) {
+        m_gridSizes.insert(screen, GridSize());
     }
     rearrangeWindows();
 }

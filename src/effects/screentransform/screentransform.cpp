@@ -165,7 +165,7 @@ void ScreenTransformEffect::paintScreen(int mask, const QRegion &region, KWin::S
 
 void ScreenTransformEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    auto screen = effects->findScreen(w->screen());
+    auto screen = w->screen();
     if (isScreenTransforming(screen)) {
         auto &state = m_states[screen];
         if (!state.isSecondHalf()) {
@@ -177,7 +177,7 @@ void ScreenTransformEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &
 
 void ScreenTransformEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    auto screen = effects->findScreen(w->screen());
+    auto screen = w->screen();
     if (isScreenTransforming(screen)) {
         auto &state = m_states[screen];
         if (!state.isSecondHalf()) {

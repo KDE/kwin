@@ -777,7 +777,7 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
      */
     Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
     Q_PROPERTY(bool optionRollOverDesktops READ optionRollOverDesktops)
-    Q_PROPERTY(int activeScreen READ activeScreen)
+    Q_PROPERTY(KWin::EffectScreen *activeScreen READ activeScreen)
     Q_PROPERTY(int numScreens READ numScreens NOTIFY numberScreensChanged)
     /**
      * Factor by which animation speed in the effect should be modified (multiplied).
@@ -943,7 +943,7 @@ public:
      */
     Q_SCRIPTABLE virtual void windowToDesktops(KWin::EffectWindow* w, const QVector<uint> &desktopIds) = 0;
 
-    Q_SCRIPTABLE virtual void windowToScreen(KWin::EffectWindow* w, int screen) = 0;
+    Q_SCRIPTABLE virtual void windowToScreen(KWin::EffectWindow* w, EffectScreen *screen) = 0;
     virtual void setShowingDesktop(bool showing) = 0;
 
     // Activities
@@ -1024,10 +1024,9 @@ public:
     Q_SCRIPTABLE virtual QString desktopName(int desktop) const = 0;
     virtual bool optionRollOverDesktops() const = 0;
 
-    virtual int activeScreen() const = 0; // Xinerama
+    virtual EffectScreen *activeScreen() const = 0; // Xinerama
     virtual int numScreens() const = 0; // Xinerama
-    Q_SCRIPTABLE virtual int screenNumber(const QPoint& pos) const = 0;   // Xinerama
-    virtual QRect clientArea(clientAreaOption, int screen, int desktop) const = 0;
+    virtual QRect clientArea(clientAreaOption, const EffectScreen *screen, int desktop) const = 0;
     virtual QRect clientArea(clientAreaOption, const EffectWindow* c) const = 0;
     virtual QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const = 0;
 
@@ -1917,7 +1916,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
     Q_PROPERTY(int height READ height)
     Q_PROPERTY(qreal opacity READ opacity)
     Q_PROPERTY(QPoint pos READ pos)
-    Q_PROPERTY(int screen READ screen)
+    Q_PROPERTY(KWin::EffectScreen *screen READ screen)
     Q_PROPERTY(QSize size READ size)
     Q_PROPERTY(int width READ width)
     Q_PROPERTY(int x READ x)
@@ -2298,7 +2297,7 @@ public:
      * @since 4.9
      */
     virtual QRect expandedGeometry() const = 0;
-    virtual int screen() const = 0;
+    virtual EffectScreen *screen() const = 0;
     virtual QPoint pos() const = 0;
     virtual QSize size() const = 0;
     virtual QRect rect() const = 0;

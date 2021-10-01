@@ -30,8 +30,10 @@ static QRegion computeDirtyRegion(const QRect &windowRect)
     );
 
     QRegion dirtyRegion;
-    for (int i = 0; i < effects->numScreens(); ++i) {
-        const QRect screenRect = effects->clientArea(ScreenArea, i, 0);
+
+    const QList<EffectScreen *> screens = effects->screens();
+    for (EffectScreen *screen : screens) {
+        const QRect screenRect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
 
         QRect screenWindowRect = windowRect;
         screenWindowRect.moveCenter(screenRect.center());
@@ -102,6 +104,7 @@ void SnapHelperEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
     const qreal opacityFactor = m_animation.active
         ? m_animation.timeLine.value()
         : 1.0;
+    const QList<EffectScreen *> screens = effects->screens();
 
     // Display the guide
     if (effects->isOpenGLCompositing()) {
@@ -119,9 +122,9 @@ void SnapHelperEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
 
         glLineWidth(s_lineWidth);
         QVector<float> verts;
-        verts.reserve(effects->numScreens() * 24);
-        for (int i = 0; i < effects->numScreens(); ++i) {
-            const QRect rect = effects->clientArea(ScreenArea, i, 0);
+        verts.reserve(screens.count() * 24);
+        for (EffectScreen *screen : screens) {
+            const QRect rect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
             const int midX = rect.x() + rect.width() / 2;
             const int midY = rect.y() + rect.height() / 2 ;
             const int halfWidth = m_geometry.width() / 2;
@@ -166,8 +169,8 @@ void SnapHelperEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
         painter->setPen(pen);
         painter->setBrush(Qt::NoBrush);
 
-        for (int i = 0; i < effects->numScreens(); ++i) {
-            const QRect rect = effects->clientArea(ScreenArea, i, 0);
+        for (EffectScreen *screen : screens) {
+            const QRect rect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
             // Center lines.
             painter->drawLine(rect.center().x(), rect.y(), rect.center().x(), rect.y() + rect.height());
             painter->drawLine(rect.x(), rect.center().y(), rect.x() + rect.width(), rect.center().y());

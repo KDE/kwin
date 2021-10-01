@@ -22,7 +22,7 @@ PresentWindowsEffectProxy::~PresentWindowsEffectProxy()
 {
 }
 
-void PresentWindowsEffectProxy::calculateWindowTransformations(EffectWindowList windows, int screen,
+void PresentWindowsEffectProxy::calculateWindowTransformations(EffectWindowList windows, EffectScreen *screen,
         WindowMotionManager& manager)
 {
     return m_effect->calculateWindowTransformations(windows, screen, manager, true);

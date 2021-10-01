@@ -24,8 +24,8 @@ public:
     bool hasActiveFullScreenEffect() const override {
         return false;
     }
-    int activeScreen() const override {
-        return 0;
+    KWin::EffectScreen *activeScreen() const override {
+        return nullptr;
     }
     KWin::EffectWindow *activeWindow() const override {
         return nullptr;
@@ -46,7 +46,7 @@ public:
     QRect clientArea(KWin::clientAreaOption, const KWin::EffectWindow *) const override {
         return QRect();
     }
-    QRect clientArea(KWin::clientAreaOption, int, int) const override {
+    QRect clientArea(KWin::clientAreaOption, const KWin::EffectScreen *, int) const override {
         return QRect();
     }
     void closeTabBox() override {}
@@ -183,9 +183,6 @@ public:
     QPainter *scenePainter() override {
         return nullptr;
     }
-    int screenNumber(const QPoint &) const override {
-        return 0;
-    }
     void setActiveFullScreenEffect(KWin::Effect *) override {}
     void setCurrentDesktop(int) override {}
     void setElevatedWindow(KWin::EffectWindow *, bool) override {}
@@ -210,7 +207,7 @@ public:
         return QSize();
     }
     void windowToDesktop(KWin::EffectWindow *, int) override {}
-    void windowToScreen(KWin::EffectWindow *, int) override {}
+    void windowToScreen(KWin::EffectWindow *, KWin::EffectScreen *) override {}
     int workspaceHeight() const override {
         return 0;
     }

@@ -25,7 +25,7 @@ class OutputChangeSetV2;
 
 namespace KWin
 {
-
+class EffectScreenImpl;
 class RenderLoop;
 
 class KWIN_EXPORT GammaRamp
@@ -266,7 +266,9 @@ Q_SIGNALS:
 
 private:
     Q_DISABLE_COPY(AbstractOutput)
+    EffectScreenImpl *m_effectScreen = nullptr;
     int m_directScanoutCount = 0;
+    friend class EffectScreenImpl; // to access m_effectScreen
 };
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const AbstractOutput *output);

@@ -326,8 +326,7 @@ void OverviewEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
         }
         return;
     }
-    EffectScreen *activeScreen = effects->findScreen(effects->activeScreen());
-    OverviewScreenView *screenView = m_screenViews.value(activeScreen);
+    OverviewScreenView *screenView = m_screenViews.value(effects->activeScreen());
     if (screenView) {
         screenView->contentItem()->setFocus(true);
         screenView->forwardKeyEvent(keyEvent);

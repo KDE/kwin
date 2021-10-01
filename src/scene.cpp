@@ -185,11 +185,12 @@ void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
     }
 
     // preparation step
-    static_cast<EffectsHandlerImpl*>(effects)->startPaint();
+    auto effectsImpl = static_cast<EffectsHandlerImpl *>(effects);
+    effectsImpl->startPaint();
 
     QRegion region = damage;
 
-    auto screen = effects->findScreen(kwinApp()->platform()->enabledOutputs().indexOf(painted_screen));
+    auto screen = painted_screen ? EffectScreenImpl::get(painted_screen) : nullptr;
     ScreenPrePaintData pdata;
     pdata.mask = (damage == displayRegion) ? 0 : PAINT_SCREEN_REGION;
     pdata.paint = region;

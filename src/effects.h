@@ -77,7 +77,7 @@ public:
     EffectWindow* activeWindow() const override;
     void moveWindow(EffectWindow* w, const QPoint& pos, bool snap = false, double snapAdjust = 1.0) override;
     void windowToDesktop(EffectWindow* w, int desktop) override;
-    void windowToScreen(EffectWindow* w, int screen) override;
+    void windowToScreen(EffectWindow* w, EffectScreen *screen) override;
     void setShowingDesktop(bool showing) override;
 
     QString currentActivity() const override;
@@ -140,10 +140,9 @@ public:
     void addRepaint(const QRect& r) override;
     void addRepaint(const QRegion& r) override;
     void addRepaint(int x, int y, int w, int h) override;
-    int activeScreen() const override;
+    EffectScreen *activeScreen() const override;
     int numScreens() const override;
-    int screenNumber(const QPoint& pos) const override;
-    QRect clientArea(clientAreaOption, int screen, int desktop) const override;
+    QRect clientArea(clientAreaOption, const EffectScreen *screen, int desktop) const override;
     QRect clientArea(clientAreaOption, const EffectWindow* c) const override;
     QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const override;
     QSize virtualScreenSize() const override;
@@ -364,6 +363,7 @@ class EffectScreenImpl : public EffectScreen
 
 public:
     explicit EffectScreenImpl(AbstractOutput *output, QObject *parent = nullptr);
+    ~EffectScreenImpl() override;
 
     AbstractOutput *platformOutput() const;
 
@@ -371,6 +371,8 @@ public:
     qreal devicePixelRatio() const override;
     QRect geometry() const override;
     Transform transform() const override;
+
+    static EffectScreenImpl *get(AbstractOutput *output);
 
 private:
     AbstractOutput *m_platformOutput;
@@ -420,7 +422,7 @@ public:
     QString caption() const override;
 
     QRect expandedGeometry() const override;
-    int screen() const override;
+    EffectScreen *screen() const override;
     QPoint pos() const override;
     QSize size() const override;
     QRect rect() const override;
