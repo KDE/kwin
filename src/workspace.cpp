@@ -2343,8 +2343,12 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
         Q_ASSERT(virtualDesktop);
     }
 
-    output = kwinApp()->platform()->findOutput(screen);
-    Q_ASSERT(output);
+    if (screen == -1) {
+        output = activeOutput();
+    } else {
+        output = kwinApp()->platform()->findOutput(screen);
+        Q_ASSERT(output);
+    }
 
     return clientArea(opt, output, virtualDesktop);
 }
