@@ -2472,10 +2472,12 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
 
     if (options->windowSnapZone() || !borderSnapZone.isNull() || options->centerSnapZone()) {
 
+        const bool snappingToCenter = (options->centerSnapZone() * snapAdjust);
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
         const AbstractOutput *output = kwinApp()->platform()->outputAt(pos + c->rect().center());
-        if (maxRect.isNull())
-            maxRect = clientArea(MovementArea, c, output);
+        if (maxRect.isNull()) {
+            maxRect = clientArea(MaximizeArea, c, output);
+        }
         const int xmin = maxRect.left();
         const int xmax = maxRect.right() + 1;             //desk size
         const int ymin = maxRect.top();
@@ -2611,8 +2613,7 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
         }
 
         // center snap
-        snap = options->centerSnapZone() * snapAdjust; //snap trigger
-        if (snap) {
+        if (snappingToCenter) { //snap trigger
             int diffX = qAbs((xmin + xmax) / 2 - (cx + cw / 2));
             int diffY = qAbs((ymin + ymax) / 2 - (cy + ch / 2));
             if (diffX < snap && diffY < snap && diffX < deltaX && diffY < deltaY) {
