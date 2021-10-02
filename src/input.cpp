@@ -14,6 +14,7 @@
 #include "globalshortcuts.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "inputbackend.h"
 #include "keyboard_input.h"
 #include "main.h"
 #include "pointer_input.h"
@@ -47,12 +48,14 @@
 #include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/tablet_v2_interface.h>
-#include <KWaylandServer/keyboard_interface.h>
 #include <decorations/decoratedclient.h>
 
 //screenlocker
 #include <KScreenLocker/KsldApp>
 // Qt
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCall>
 #include <QKeyEvent>
 #include <QThread>
 #include <qpa/qwindowsysteminterface.h>
@@ -1634,6 +1637,12 @@ class TabletInputFilter : public QObject, public InputEventFilter
 public:
     TabletInputFilter()
     {
+        const auto devices = input()->devices();
+        for (InputDevice *device : devices) {
+            integrateDevice(device);
+        }
+        connect(input(), &InputRedirection::deviceAdded, this, &TabletInputFilter::integrateDevice);
+        connect(input(), &InputRedirection::deviceRemoved, this, &TabletInputFilter::removeDevice);
     }
 
     static KWaylandServer::TabletSeatV2Interface *findTabletSeat()
@@ -1646,9 +1655,10 @@ public:
         return manager->seat(findSeat());
     }
 
-    void integrateDevice(LibInput::Device *device)
+    void integrateDevice(InputDevice *inputDevice)
     {
-        if (!device->isTabletTool() && !device->isTabletPad()) {
+        auto device = qobject_cast<LibInput::Device *>(inputDevice);
+        if (!device || (!device->isTabletTool() && !device->isTabletPad())) {
             return;
         }
 
@@ -1678,19 +1688,20 @@ public:
         }
     }
 
-    void removeDevice(LibInput::Device *device)
+    void removeDevice(InputDevice *inputDevice)
     {
-        auto deviceGroup = libinput_device_get_device_group(device->device());
-        libinput_device_group_set_user_data(deviceGroup, nullptr);
-    }
+        auto device = qobject_cast<LibInput::Device *>(inputDevice);
+        if (device) {
+            auto deviceGroup = libinput_device_get_device_group(device->device());
+            libinput_device_group_set_user_data(deviceGroup, nullptr);
 
-    void removeDeviceBySysName(const QString &sysname)
-    {
-        KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
-        if (tabletSeat)
-            tabletSeat->removeDevice(sysname);
-        else
-            qCCritical(KWIN_CORE) << "Could not find tablet to remove" << sysname;
+            KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
+            if (tabletSeat) {
+                tabletSeat->removeDevice(device->sysName());
+            } else {
+                qCCritical(KWIN_CORE) << "Could not find tablet to remove" << device->sysName();
+            }
+        }
     }
 
     KWaylandServer::TabletToolV2Interface::Type getType(const KWin::TabletToolId &tabletToolId) {
@@ -2140,21 +2151,15 @@ InputRedirection::InputRedirection(QObject *parent)
     qRegisterMetaType<KWin::InputRedirection::KeyboardKeyState>();
     qRegisterMetaType<KWin::InputRedirection::PointerButtonState>();
     qRegisterMetaType<KWin::InputRedirection::PointerAxis>();
-    if (Application::usesLibinput()) {
-        setupLibInput();
-    }
+    setupInputBackends();
     connect(kwinApp(), &Application::workspaceCreated, this, &InputRedirection::setupWorkspace);
 }
 
 InputRedirection::~InputRedirection()
 {
-    if (m_libInput) {
-        m_libInput->deleteLater();
-
-        m_libInputThread->quit();
-        m_libInputThread->wait();
-        delete m_libInputThread;
-    }
+    qDeleteAll(m_inputBackends);
+    m_inputBackends.clear();
+    m_inputDevices.clear();
 
     s_self = nullptr;
     qDeleteAll(m_filters);
@@ -2190,6 +2195,10 @@ void InputRedirection::uninstallInputEventSpy(InputEventSpy *spy)
 
 void InputRedirection::init()
 {
+    m_inputConfigWatcher = KConfigWatcher::create(InputConfig::self()->inputConfig());
+    connect(m_inputConfigWatcher.data(), &KConfigWatcher::configChanged,
+            this, &InputRedirection::handleInputConfigChanged);
+
     m_shortcuts->init();
 }
 
@@ -2298,6 +2307,9 @@ void InputRedirection::setupWorkspace()
         m_pointer->init();
         m_touch->init();
         m_tablet->init();
+
+        updateLeds(m_keyboard->xkb()->leds());
+        connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, this, &InputRedirection::updateLeds);
     }
     setupTouchpadShortcuts();
     setupInputFilters();
@@ -2489,178 +2501,211 @@ void InputRedirection::setupInputFilters()
     if (waylandServer()) {
         installInputEventFilter(new WindowActionInputFilter);
         installInputEventFilter(new ForwardInputFilter);
-
-        if (m_libInput) {
-            m_tabletSupport = new TabletInputFilter;
-            const QVector<LibInput::Device *> devices = m_libInput->devices();
-            for (LibInput::Device *dev : devices) {
-                m_tabletSupport->integrateDevice(dev);
-            }
-            connect(m_libInput, &LibInput::Connection::deviceAdded, m_tabletSupport, &TabletInputFilter::integrateDevice);
-            connect(m_libInput, &LibInput::Connection::deviceRemoved, m_tabletSupport, &TabletInputFilter::removeDevice);
-
-            connect(m_libInput, &LibInput::Connection::deviceRemovedSysName, m_tabletSupport, &TabletInputFilter::removeDeviceBySysName);
-            installInputEventFilter(m_tabletSupport);
-        }
+        installInputEventFilter(new TabletInputFilter);
     }
 }
 
 void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)
 {
     if (group.name() == QLatin1String("Keyboard")) {
-        reconfigure();
+        m_keyboard->reconfigure();
     }
 }
 
-void InputRedirection::reconfigure()
+void InputRedirection::updateLeds(LEDs leds)
 {
-    if (Application::usesLibinput()) {
-        auto inputConfig = m_inputConfigWatcher->config();
-        const auto config = inputConfig->group(QStringLiteral("Keyboard"));
-        const int delay = config.readEntry("RepeatDelay", 660);
-        const int rate = int(config.readEntry("RepeatRate", 25.0));
-        const QString repeatMode = config.readEntry("KeyRepeat", "repeat");
-        // when the clients will repeat the character or turn repeat key events into an accent character selection, we want
-        // to tell the clients that we are indeed repeating keys.
-        const bool enabled = repeatMode == QLatin1String("accent") || repeatMode == QLatin1String("repeat");
+    if (m_leds != leds) {
+        m_leds = leds;
 
-        waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, delay);
+        for (InputDevice *device : qAsConst(m_inputDevices)) {
+            device->setLeds(leds);
+        }
     }
 }
 
-void InputRedirection::setupLibInput()
+void InputRedirection::handleInputDeviceAdded(InputDevice *device)
 {
-    if (!Application::usesLibinput()) {
-        return;
+    connect(device, &InputDevice::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
+
+    connect(device, &InputDevice::pointerMotionAbsolute,
+            m_pointer, &PointerInputRedirection::processMotionAbsolute);
+    connect(device, &InputDevice::pointerMotion,
+            m_pointer, &PointerInputRedirection::processMotion);
+    connect(device, &InputDevice::pointerButtonChanged,
+            m_pointer, &PointerInputRedirection::processButton);
+    connect(device, &InputDevice::pointerAxisChanged,
+            m_pointer, &PointerInputRedirection::processAxis);
+    connect(device, &InputDevice::pinchGestureBegin,
+            m_pointer, &PointerInputRedirection::processPinchGestureBegin);
+    connect(device, &InputDevice::pinchGestureUpdate,
+            m_pointer, &PointerInputRedirection::processPinchGestureUpdate);
+    connect(device, &InputDevice::pinchGestureEnd,
+            m_pointer, &PointerInputRedirection::processPinchGestureEnd);
+    connect(device, &InputDevice::pinchGestureCancelled,
+            m_pointer, &PointerInputRedirection::processPinchGestureCancelled);
+    connect(device, &InputDevice::swipeGestureBegin,
+            m_pointer, &PointerInputRedirection::processSwipeGestureBegin);
+    connect(device, &InputDevice::swipeGestureUpdate,
+            m_pointer, &PointerInputRedirection::processSwipeGestureUpdate);
+    connect(device, &InputDevice::swipeGestureEnd,
+            m_pointer, &PointerInputRedirection::processSwipeGestureEnd);
+    connect(device, &InputDevice::swipeGestureCancelled,
+            m_pointer, &PointerInputRedirection::processSwipeGestureCancelled);
+    connect(device, &InputDevice::holdGestureBegin,
+            m_pointer, &PointerInputRedirection::processHoldGestureBegin);
+    connect(device, &InputDevice::holdGestureEnd,
+            m_pointer, &PointerInputRedirection::processHoldGestureEnd);
+    connect(device, &InputDevice::holdGestureCancelled,
+            m_pointer, &PointerInputRedirection::processHoldGestureCancelled);
+
+    connect(device, &InputDevice::touchDown, m_touch, &TouchInputRedirection::processDown);
+    connect(device, &InputDevice::touchUp, m_touch, &TouchInputRedirection::processUp);
+    connect(device, &InputDevice::touchMotion, m_touch, &TouchInputRedirection::processMotion);
+    connect(device, &InputDevice::touchCanceled, m_touch, &TouchInputRedirection::cancel);
+    connect(device, &InputDevice::touchFrame, m_touch, &TouchInputRedirection::frame);
+
+    auto handleSwitchEvent = [this] (SwitchEvent::State state, quint32 time, quint64 timeMicroseconds, InputDevice *device) {
+        SwitchEvent event(state, time, timeMicroseconds, device);
+        processSpies(std::bind(&InputEventSpy::switchEvent, std::placeholders::_1, &event));
+        processFilters(std::bind(&InputEventFilter::switchEvent, std::placeholders::_1, &event));
+    };
+    connect(device, &InputDevice::switchToggledOn, this,
+            std::bind(handleSwitchEvent, SwitchEvent::State::On, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    connect(device, &InputDevice::switchToggledOff, this,
+            std::bind(handleSwitchEvent, SwitchEvent::State::Off, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+
+    connect(device, &InputDevice::tabletToolEvent,
+            m_tablet, &TabletInputRedirection::tabletToolEvent);
+    connect(device, &InputDevice::tabletToolButtonEvent,
+            m_tablet, &TabletInputRedirection::tabletToolButtonEvent);
+    connect(device, &InputDevice::tabletPadButtonEvent,
+            m_tablet, &TabletInputRedirection::tabletPadButtonEvent);
+    connect(device, &InputDevice::tabletPadRingEvent,
+            m_tablet, &TabletInputRedirection::tabletPadRingEvent);
+    connect(device, &InputDevice::tabletPadStripEvent,
+            m_tablet, &TabletInputRedirection::tabletPadStripEvent);
+
+    device->setLeds(m_leds);
+
+    m_inputDevices.append(device);
+    Q_EMIT deviceAdded(device);
+
+    updateAvailableInputDevices();
+}
+
+void InputRedirection::handleInputDeviceRemoved(InputDevice *device)
+{
+    m_inputDevices.removeOne(device);
+    Q_EMIT deviceRemoved(device);
+
+    updateAvailableInputDevices();
+}
+
+void InputRedirection::updateAvailableInputDevices()
+{
+    const bool hasKeyboard = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
+        return device->isKeyboard();
+    });
+    if (m_hasKeyboard != hasKeyboard) {
+        m_hasKeyboard = hasKeyboard;
+        Q_EMIT hasKeyboardChanged(hasKeyboard);
     }
-    if (m_libInput) {
-        return;
+
+    const bool hasAlphaNumericKeyboard = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
+        return device->isAlphaNumericKeyboard();
+    });
+    if (m_hasAlphaNumericKeyboard != hasAlphaNumericKeyboard) {
+        m_hasAlphaNumericKeyboard = hasAlphaNumericKeyboard;
+        Q_EMIT hasAlphaNumericKeyboardChanged(hasAlphaNumericKeyboard);
     }
 
-    m_libInputThread = new QThread();
-    m_libInputThread->setObjectName(QStringLiteral("libinput-connection"));
-    m_libInputThread->start();
+    const bool hasPointer = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
+        return device->isPointer();
+    });
+    if (m_hasPointer != hasPointer) {
+        m_hasPointer = hasPointer;
+        Q_EMIT hasPointerChanged(hasPointer);
+    }
 
-    LibInput::Connection *conn = LibInput::Connection::create(this);
-    m_libInput = conn;
-    m_libInput->moveToThread(m_libInputThread);
+    const bool hasTouch = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
+        return device->isTouch();
+    });
+    if (m_hasTouch != hasTouch) {
+        m_hasTouch = hasTouch;
+        Q_EMIT hasTouchChanged(hasTouch);
+    }
 
-    if (conn) {
-        conn->setInputConfig(InputConfig::self()->inputConfig());
-        conn->updateLEDs(m_keyboard->xkb()->leds());
-        waylandServer()->updateKeyState(m_keyboard->xkb()->leds());
-        connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, waylandServer(), &WaylandServer::updateKeyState);
-        connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, conn, &LibInput::Connection::updateLEDs);
-        connect(conn, &LibInput::Connection::eventsRead, this,
-            [this] {
-                m_libInput->processEvents();
-            }, Qt::QueuedConnection
+    const bool hasTabletModeSwitch = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
+        return device->isTabletModeSwitch();
+    });
+    if (m_hasTabletModeSwitch != hasTabletModeSwitch) {
+        m_hasTabletModeSwitch = hasTabletModeSwitch;
+        Q_EMIT hasTabletModeSwitchChanged(hasTabletModeSwitch);
+    }
+}
+
+void InputRedirection::toggleTouchpads()
+{
+    bool changed = false;
+    m_touchpadsEnabled = !m_touchpadsEnabled;
+    for (InputDevice *device : qAsConst(m_inputDevices)) {
+        if (!device->isTouchpad()) {
+            continue;
+        }
+        const bool old = device->isEnabled();
+        device->setEnabled(m_touchpadsEnabled);
+        if (old != device->isEnabled()) {
+            changed = true;
+        }
+    }
+    if (changed) {
+        // send OSD message
+        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
+                                                          QStringLiteral("/org/kde/osdService"),
+                                                          QStringLiteral("org.kde.osdService"),
+                                                          QStringLiteral("touchpadEnabledChanged")
         );
-        conn->setup();
-        connect(conn, &LibInput::Connection::pointerButtonChanged, m_pointer, &PointerInputRedirection::processButton);
-        connect(conn, &LibInput::Connection::pointerAxisChanged, m_pointer, &PointerInputRedirection::processAxis);
-        connect(conn, &LibInput::Connection::pinchGestureBegin, m_pointer, &PointerInputRedirection::processPinchGestureBegin);
-        connect(conn, &LibInput::Connection::pinchGestureUpdate, m_pointer, &PointerInputRedirection::processPinchGestureUpdate);
-        connect(conn, &LibInput::Connection::pinchGestureEnd, m_pointer, &PointerInputRedirection::processPinchGestureEnd);
-        connect(conn, &LibInput::Connection::pinchGestureCancelled, m_pointer, &PointerInputRedirection::processPinchGestureCancelled);
-        connect(conn, &LibInput::Connection::swipeGestureBegin, m_pointer, &PointerInputRedirection::processSwipeGestureBegin);
-        connect(conn, &LibInput::Connection::swipeGestureUpdate, m_pointer, &PointerInputRedirection::processSwipeGestureUpdate);
-        connect(conn, &LibInput::Connection::swipeGestureEnd, m_pointer, &PointerInputRedirection::processSwipeGestureEnd);
-        connect(conn, &LibInput::Connection::swipeGestureCancelled, m_pointer, &PointerInputRedirection::processSwipeGestureCancelled);
-        connect(conn, &LibInput::Connection::holdGestureBegin, m_pointer, &PointerInputRedirection::processHoldGestureBegin);
-        connect(conn, &LibInput::Connection::holdGestureEnd, m_pointer, &PointerInputRedirection::processHoldGestureEnd);
-        connect(conn, &LibInput::Connection::holdGestureCancelled, m_pointer, &PointerInputRedirection::processHoldGestureCancelled);
-        connect(conn, &LibInput::Connection::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
-        connect(conn, &LibInput::Connection::pointerMotion, m_pointer, &PointerInputRedirection::processMotion);
-        connect(conn, &LibInput::Connection::pointerMotionAbsolute, m_pointer, &PointerInputRedirection::processMotionAbsolute);
-        connect(conn, &LibInput::Connection::touchDown, m_touch, &TouchInputRedirection::processDown);
-        connect(conn, &LibInput::Connection::touchUp, m_touch, &TouchInputRedirection::processUp);
-        connect(conn, &LibInput::Connection::touchMotion, m_touch, &TouchInputRedirection::processMotion);
-        connect(conn, &LibInput::Connection::touchCanceled, m_touch, &TouchInputRedirection::cancel);
-        connect(conn, &LibInput::Connection::touchFrame, m_touch, &TouchInputRedirection::frame);
-        auto handleSwitchEvent = [this] (SwitchEvent::State state, quint32 time, quint64 timeMicroseconds, LibInput::Device *device) {
-            SwitchEvent event(state, time, timeMicroseconds, device);
-            processSpies(std::bind(&InputEventSpy::switchEvent, std::placeholders::_1, &event));
-            processFilters(std::bind(&InputEventFilter::switchEvent, std::placeholders::_1, &event));
-        };
-        connect(conn, &LibInput::Connection::switchToggledOn, this,
-                std::bind(handleSwitchEvent, SwitchEvent::State::On, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        connect(conn, &LibInput::Connection::switchToggledOff, this,
-                std::bind(handleSwitchEvent, SwitchEvent::State::Off, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+        msg.setArguments({m_touchpadsEnabled});
+        QDBusConnection::sessionBus().asyncCall(msg);
+    }
+}
 
-        connect(conn, &LibInput::Connection::tabletToolEvent,
-                m_tablet, &TabletInputRedirection::tabletToolEvent);
-        connect(conn, &LibInput::Connection::tabletToolButtonEvent,
-                m_tablet, &TabletInputRedirection::tabletToolButtonEvent);
-        connect(conn, &LibInput::Connection::tabletPadButtonEvent,
-                m_tablet, &TabletInputRedirection::tabletPadButtonEvent);
-        connect(conn, &LibInput::Connection::tabletPadRingEvent,
-                m_tablet, &TabletInputRedirection::tabletPadRingEvent);
-        connect(conn, &LibInput::Connection::tabletPadStripEvent,
-                m_tablet, &TabletInputRedirection::tabletPadStripEvent);
+void InputRedirection::enableTouchpads()
+{
+    if (!m_touchpadsEnabled) {
+        toggleTouchpads();
+    }
+}
 
-        if (screens()) {
-            setupLibInputWithScreens();
-        } else {
-            connect(kwinApp(), &Application::screensCreated, this, &InputRedirection::setupLibInputWithScreens);
-        }
-        if (auto s = findSeat()) {
-            // Workaround for QTBUG-54371: if there is no real keyboard Qt doesn't request virtual keyboard
-            s->setHasKeyboard(true);
-            s->setHasPointer(conn->hasPointer());
-            s->setHasTouch(conn->hasTouch());
-            connect(conn, &LibInput::Connection::hasAlphaNumericKeyboardChanged, this,
-                [this] (bool set) {
-                    if (m_libInput->isSuspended()) {
-                        return;
-                    }
-                    // TODO: this should update the seat, only workaround for QTBUG-54371
-                    Q_EMIT hasAlphaNumericKeyboardChanged(set);
-                }
-            );
-            connect(conn, &LibInput::Connection::hasTabletModeSwitchChanged, this,
-                [this] (bool set) {
-                    if (m_libInput->isSuspended()) {
-                        return;
-                    }
-                    Q_EMIT hasTabletModeSwitchChanged(set);
-                }
-            );
-            connect(conn, &LibInput::Connection::hasPointerChanged, this,
-                [this, s] (bool set) {
-                    if (m_libInput->isSuspended()) {
-                        return;
-                    }
-                    s->setHasPointer(set);
-                }
-            );
-            connect(conn, &LibInput::Connection::hasTouchChanged, this,
-                [this, s] (bool set) {
-                    if (m_libInput->isSuspended()) {
-                        return;
-                    }
-                    s->setHasTouch(set);
-                }
-            );
-        }
-        connect(kwinApp()->platform()->session(), &Session::activeChanged, m_libInput, [this](bool active) {
-            if (!active) {
-                m_libInput->deactivate();
-            }
-        });
+void InputRedirection::disableTouchpads()
+{
+    if (m_touchpadsEnabled) {
+        toggleTouchpads();
+    }
+}
 
-        m_inputConfigWatcher = KConfigWatcher::create(InputConfig::self()->inputConfig());
-        connect(m_inputConfigWatcher.data(), &KConfigWatcher::configChanged,
-                this, &InputRedirection::handleInputConfigChanged);
-        reconfigure();
+void InputRedirection::addInputBackend(InputBackend *inputBackend)
+{
+    Q_ASSERT(!m_inputBackends.contains(inputBackend));
+    m_inputBackends.append(inputBackend);
+
+    connect(inputBackend, &InputBackend::deviceAdded, this, &InputRedirection::handleInputDeviceAdded);
+    connect(inputBackend, &InputBackend::deviceRemoved, this, &InputRedirection::handleInputDeviceRemoved);
+
+    inputBackend->setConfig(InputConfig::self()->inputConfig());
+    inputBackend->initialize();
+}
+
+void InputRedirection::setupInputBackends()
+{
+    InputBackend *inputBackend = kwinApp()->platform()->createInputBackend();
+    if (inputBackend) {
+        addInputBackend(inputBackend);
     }
 }
 
 void InputRedirection::setupTouchpadShortcuts()
 {
-    if (!m_libInput) {
-        return;
-    }
     QAction *touchpadToggleAction = new QAction(this);
     QAction *touchpadOnAction = new QAction(this);
     QAction *touchpadOffAction = new QAction(this);
@@ -2687,40 +2732,29 @@ void InputRedirection::setupTouchpadShortcuts()
     registerShortcut(Qt::Key_TouchpadOn, touchpadOnAction);
     registerShortcut(Qt::Key_TouchpadOff, touchpadOffAction);
 #endif
-    connect(touchpadToggleAction, &QAction::triggered, m_libInput, &LibInput::Connection::toggleTouchpads);
-    connect(touchpadOnAction, &QAction::triggered, m_libInput, &LibInput::Connection::enableTouchpads);
-    connect(touchpadOffAction, &QAction::triggered, m_libInput, &LibInput::Connection::disableTouchpads);
+    connect(touchpadToggleAction, &QAction::triggered, this, &InputRedirection::toggleTouchpads);
+    connect(touchpadOnAction, &QAction::triggered, this, &InputRedirection::enableTouchpads);
+    connect(touchpadOffAction, &QAction::triggered, this, &InputRedirection::disableTouchpads);
 }
 
 bool InputRedirection::hasAlphaNumericKeyboard()
 {
-    if (m_libInput) {
-        return m_libInput->hasAlphaNumericKeyboard();
-    }
-    return true;
+    return m_hasAlphaNumericKeyboard;
+}
+
+bool InputRedirection::hasPointer() const
+{
+    return m_hasPointer;
+}
+
+bool InputRedirection::hasTouch() const
+{
+    return m_hasTouch;
 }
 
 bool InputRedirection::hasTabletModeSwitch()
 {
-    if (m_libInput) {
-        return m_libInput->hasTabletModeSwitch();
-    }
-    return false;
-}
-
-void InputRedirection::setupLibInputWithScreens()
-{
-    if (!screens() || !m_libInput) {
-        return;
-    }
-    m_libInput->setScreenSize(screens()->size());
-    m_libInput->updateScreens();
-    connect(screens(), &Screens::sizeChanged, this,
-        [this] {
-            m_libInput->setScreenSize(screens()->size());
-        }
-    );
-    connect(screens(), &Screens::changed, m_libInput, &LibInput::Connection::updateScreens);
+    return m_hasTabletModeSwitch;
 }
 
 Qt::MouseButtons InputRedirection::qtButtonStates() const

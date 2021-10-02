@@ -76,6 +76,11 @@ void Platform::doShowCursor()
 {
 }
 
+InputBackend *Platform::createInputBackend()
+{
+    return nullptr;
+}
+
 OpenGLBackend *Platform::createOpenGLBackend()
 {
     return nullptr;

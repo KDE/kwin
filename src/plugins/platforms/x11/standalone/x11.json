@@ -83,6 +83,5 @@
         "Name[x-test]": "xxx11-standalonexx",
         "Name[zh_CN]": "x11-standalone",
         "Name[zh_TW]": "x11-standalone"
-    },
-    "input": true
+    }
 }

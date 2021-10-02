@@ -936,3 +936,11 @@ libinput_device_group_get_user_data(struct libinput_device_group *group)
     Q_UNUSED(group);
     return nullptr;
 }
+
+void
+libinput_device_led_update(struct libinput_device *device,
+                           enum libinput_led leds)
+{
+    Q_UNUSED(device)
+    Q_UNUSED(leds)
+}

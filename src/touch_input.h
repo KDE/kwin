@@ -19,17 +19,13 @@
 namespace KWin
 {
 
+class InputDevice;
 class InputRedirection;
 class Toplevel;
 
 namespace Decoration
 {
 class DecoratedClientImpl;
-}
-
-namespace LibInput
-{
-class Device;
 }
 
 class TouchInputRedirection : public InputDeviceHandler
@@ -43,9 +39,9 @@ public:
     bool focusUpdatesBlocked() override;
     void init() override;
 
-    void processDown(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device = nullptr);
-    void processUp(qint32 id, quint32 time, LibInput::Device *device = nullptr);
-    void processMotion(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device = nullptr);
+    void processDown(qint32 id, const QPointF &pos, quint32 time, InputDevice *device = nullptr);
+    void processUp(qint32 id, quint32 time, InputDevice *device = nullptr);
+    void processMotion(qint32 id, const QPointF &pos, quint32 time, InputDevice *device = nullptr);
     void cancel();
     void frame();
 

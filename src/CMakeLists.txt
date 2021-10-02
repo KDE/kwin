@@ -56,6 +56,8 @@ set(kwin_SRCS
     input.cpp
     input_event.cpp
     input_event_spy.cpp
+    inputbackend.cpp
+    inputdevice.cpp
     inputmethod.cpp
     inputpanelv1client.cpp
     inputpanelv1integration.cpp
@@ -74,6 +76,7 @@ set(kwin_SRCS
     libinput/device.cpp
     libinput/events.cpp
     libinput/libinput_logging.cpp
+    libinput/libinputbackend.cpp
     linux_dmabuf.cpp
     main.cpp
     modifier_only_shortcuts.cpp

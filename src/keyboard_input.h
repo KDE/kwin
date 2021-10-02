@@ -32,15 +32,11 @@ typedef uint32_t xkb_layout_index_t;
 namespace KWin
 {
 
+class InputDevice;
 class InputRedirection;
 class KeyboardLayout;
 class ModifiersChangedSpy;
 class Toplevel;
-
-namespace LibInput
-{
-class Device;
-}
 
 class KWIN_EXPORT KeyboardInputRedirection : public QObject
 {
@@ -50,13 +46,14 @@ public:
     ~KeyboardInputRedirection() override;
 
     void init();
+    void reconfigure();
 
     void update();
 
     /**
      * @internal
      */
-    void processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, LibInput::Device *device = nullptr);
+    void processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, InputDevice *device = nullptr);
     /**
      * @internal
      */

@@ -9,6 +9,7 @@
 #include "fb_backend.h"
 
 #include "composite.h"
+#include "libinput/libinputbackend.h"
 #include "logging.h"
 #include "main.h"
 #include "platform.h"
@@ -79,6 +80,7 @@ FramebufferBackend::FramebufferBackend(QObject *parent)
     , m_session(Session::create(this))
 {
     setPerScreenRenderingEnabled(true);
+    setSupportsPointerWarping(true);
 }
 
 FramebufferBackend::~FramebufferBackend()
@@ -87,6 +89,11 @@ FramebufferBackend::~FramebufferBackend()
     if (m_fd >= 0) {
         close(m_fd);
     }
+}
+
+InputBackend *FramebufferBackend::createInputBackend()
+{
+    return new LibinputBackend(this);
 }
 
 QPainterBackend *FramebufferBackend::createQPainterBackend()

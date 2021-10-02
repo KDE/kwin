@@ -509,9 +509,6 @@ int main(int argc, char * argv[])
     if (hasOutputCountOption) {
         parser.addOption(outputCountOption);
     }
-    QCommandLineOption libinputOption(QStringLiteral("libinput"),
-                                      i18n("Enable libinput support for input events processing. Note: never use in a nested session.	(deprecated)"));
-    parser.addOption(libinputOption);
     QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));
     if (hasDrmOption) {
         parser.addOption(drmOption);
@@ -578,8 +575,6 @@ int main(int argc, char * argv[])
     if (parser.isSet(exitWithSessionOption)) {
         a.setSessionArgument(parser.value(exitWithSessionOption));
     }
-
-    KWin::Application::setUseLibinput(parser.isSet(libinputOption));
 
     QString pluginName;
     QSize initialWindowSize;

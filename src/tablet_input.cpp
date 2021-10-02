@@ -11,7 +11,6 @@
 #include "decorations/decoratedclient.h"
 #include "input_event.h"
 #include "input_event_spy.h"
-#include "libinput/device.h"
 #include "pointer_input.h"
 #include "toplevel.h"
 #include "wayland_server.h"

@@ -14,13 +14,13 @@
 #include "drm_object_plane.h"
 #include "composite.h"
 #include "cursor.h"
+#include "libinput/libinputbackend.h"
 #include "logging.h"
 #include "main.h"
 #include "renderloop.h"
 #include "scene_qpainter_drm_backend.h"
 #include "session.h"
 #include "udev.h"
-#include "wayland_server.h"
 #include "drm_gpu.h"
 #include "egl_multi_backend.h"
 #include "drm_pipeline.h"
@@ -33,8 +33,6 @@
 #if HAVE_EGL_STREAMS
 #include "egl_stream_backend.h"
 #endif
-// KWayland
-#include <KWaylandServer/seat_interface.h>
 // KF5
 #include <KCoreAddons>
 #include <KLocalizedString>
@@ -69,6 +67,7 @@ DrmBackend::DrmBackend(QObject *parent)
     , m_explicitGpus(qEnvironmentVariable("KWIN_DRM_DEVICES").split(':', Qt::SkipEmptyParts))
     , m_dpmsFilter()
 {
+    setSupportsPointerWarping(true);
     setSupportsGammaControl(true);
     setPerScreenRenderingEnabled(true);
     supportsOutputChanges();
@@ -528,21 +527,6 @@ void DrmBackend::initCursor()
     setSoftwareCursorForced(needsSoftwareCursor);
 #endif
 
-    if (waylandServer()->seat()->hasPointer()) {
-        // The cursor is visible by default, do nothing.
-    } else {
-        hideCursor();
-    }
-
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::hasPointerChanged, this,
-        [this] {
-            if (waylandServer()->seat()->hasPointer()) {
-                showCursor();
-            } else {
-                hideCursor();
-            }
-        }
-    );
     // now we have screens and can set cursors, so start tracking
     connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmBackend::updateCursor);
     connect(Cursors::self(), &Cursors::positionChanged, this, &DrmBackend::moveCursor);
@@ -619,6 +603,11 @@ void DrmBackend::moveCursor()
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         (*it)->moveCursor();
     }
+}
+
+InputBackend *DrmBackend::createInputBackend()
+{
+    return new LibinputBackend();
 }
 
 QPainterBackend *DrmBackend::createQPainterBackend()

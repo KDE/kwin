@@ -20,6 +20,7 @@
 #include "workspace.h"
 // KWayland
 #include <KWaylandServer/datadevice_interface.h>
+#include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
 //screenlocker
 #include <KScreenLocker/KsldApp>
@@ -103,6 +104,11 @@ void KeyboardInputRedirection::init()
     m_xkb->setNumLockConfig(InputConfig::self()->inputConfig());
     m_xkb->setConfig(config);
 
+    // Workaround for QTBUG-54371: if there is no real keyboard Qt doesn't request virtual keyboard
+    waylandServer()->seat()->setHasKeyboard(true);
+    // connect(m_input, &InputRedirection::hasAlphaNumericKeyboardChanged,
+    //         waylandServer()->seat(), &KWaylandServer::SeatInterface::setHasKeyboard);
+
     m_input->installInputEventSpy(new KeyStateChangedSpy(m_input));
     m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);
     m_input->installInputEventSpy(m_modifiersChangedSpy);
@@ -134,6 +140,23 @@ void KeyboardInputRedirection::init()
     );
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
+    }
+
+    reconfigure();
+}
+
+void KeyboardInputRedirection::reconfigure()
+{
+    if (waylandServer()->seat()->keyboard()) {
+        const auto config = InputConfig::self()->inputConfig()->group(QStringLiteral("Keyboard"));
+        const int delay = config.readEntry("RepeatDelay", 660);
+        const int rate = int(config.readEntry("RepeatRate", 25.0));
+        const QString repeatMode = config.readEntry("KeyRepeat", "repeat");
+        // when the clients will repeat the character or turn repeat key events into an accent character selection, we want
+        // to tell the clients that we are indeed repeating keys.
+        const bool enabled = repeatMode == QLatin1String("accent") || repeatMode == QLatin1String("repeat");
+
+        waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, delay);
     }
 }
 
@@ -178,7 +201,7 @@ void KeyboardInputRedirection::update()
     }
 }
 
-void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, LibInput::Device *device)
+void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, InputDevice *device)
 {
     QEvent::Type type;
     bool autoRepeat = false;

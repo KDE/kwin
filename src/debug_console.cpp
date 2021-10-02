@@ -9,10 +9,9 @@
 #include "debug_console.h"
 #include "composite.h"
 #include "input_event.h"
+#include "inputdevice.h"
 #include "internal_client.h"
 #include "keyboard_input.h"
-#include "libinput/connection.h"
-#include "libinput/device.h"
 #include "main.h"
 #include "scene.h"
 #include "subsurfacemonitor.h"
@@ -147,7 +146,7 @@ static QString buttonToString(Qt::MouseButton button)
     }
 }
 
-static QString deviceRow(LibInput::Device *device)
+static QString deviceRow(InputDevice *device)
 {
     if (!device) {
         return tableRow(i18n("Input Device"), i18nc("The input device of the event is not known", "Unknown"));
@@ -600,10 +599,8 @@ DebugConsole::DebugConsole()
     m_ui->surfacesView->setModel(new SurfaceTreeModel(this));
     m_ui->clipboardContent->setModel(new DataSourceModel(this));
     m_ui->primaryContent->setModel(new DataSourceModel(this));
-    if (kwinApp()->usesLibinput()) {
-        m_ui->inputDevicesView->setModel(new InputDeviceModel(this));
-        m_ui->inputDevicesView->setItemDelegate(new DebugConsoleDelegate(this));
-    }
+    m_ui->inputDevicesView->setModel(new InputDeviceModel(this));
+    m_ui->inputDevicesView->setItemDelegate(new DebugConsoleDelegate(this));
     m_ui->quitButton->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
     m_ui->tabWidget->setTabIcon(0, QIcon::fromTheme(QStringLiteral("view-list-tree")));
     m_ui->tabWidget->setTabIcon(1, QIcon::fromTheme(QStringLiteral("view-list-tree")));
@@ -612,9 +609,6 @@ DebugConsole::DebugConsole()
         m_ui->tabWidget->setTabEnabled(1, false);
         m_ui->tabWidget->setTabEnabled(2, false);
         m_ui->tabWidget->setTabEnabled(6, false);
-    }
-    if (!kwinApp()->usesLibinput()) {
-        m_ui->tabWidget->setTabEnabled(3, false);
     }
 
     connect(m_ui->quitButton, &QAbstractButton::clicked, this, &DebugConsole::deleteLater);
@@ -1486,22 +1480,22 @@ QVariant SurfaceTreeModel::data(const QModelIndex &index, int role) const
 
 InputDeviceModel::InputDeviceModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , m_devices(LibInput::Connection::self()->devices())
+    , m_devices(input()->devices())
 {
     for (auto it = m_devices.constBegin(); it != m_devices.constEnd(); ++it) {
         setupDeviceConnections(*it);
     }
-    auto c = LibInput::Connection::self();
-    connect(c, &LibInput::Connection::deviceAdded, this,
-        [this] (LibInput::Device *d) {
+
+    connect(input(), &InputRedirection::deviceAdded, this,
+        [this] (InputDevice *d) {
             beginInsertRows(QModelIndex(), m_devices.count(), m_devices.count());
             m_devices << d;
             setupDeviceConnections(d);
             endInsertRows();
         }
     );
-    connect(c, &LibInput::Connection::deviceRemoved, this,
-        [this] (LibInput::Device *d) {
+    connect(input(), &InputRedirection::deviceRemoved, this,
+        [this] (InputDevice *d) {
             const int index = m_devices.indexOf(d);
             if (index == -1) {
                 return;
@@ -1528,17 +1522,16 @@ QVariant InputDeviceModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
     if (!index.parent().isValid() && index.column() == 0) {
-        const auto devices = LibInput::Connection::self()->devices();
-        if (index.row() >= devices.count()) {
+        if (index.row() >= m_devices.count()) {
             return QVariant();
         }
         if (role == Qt::DisplayRole) {
-            return devices.at(index.row())->name();
+            return m_devices.at(index.row())->name();
         }
     }
     if (index.parent().isValid()) {
         if (role == Qt::DisplayRole) {
-            const auto device = LibInput::Connection::self()->devices().at(index.parent().row());
+            const auto device = m_devices.at(index.parent().row());
             const auto property = device->metaObject()->property(index.row());
             if (index.column() == 0) {
                 return property.name();
@@ -1559,12 +1552,12 @@ QModelIndex InputDeviceModel::index(int row, int column, const QModelIndex &pare
         if (parent.internalId() & s_propertyBitMask) {
             return QModelIndex();
         }
-        if (row >= LibInput::Connection::self()->devices().at(parent.row())->metaObject()->propertyCount()) {
+        if (row >= m_devices.at(parent.row())->metaObject()->propertyCount()) {
             return QModelIndex();
         }
         return createIndex(row, column, quint32(row + 1) << 16 | parent.internalId());
     }
-    if (row >= LibInput::Connection::self()->devices().count()) {
+    if (row >= m_devices.count()) {
         return QModelIndex();
     }
     return createIndex(row, column, row + 1);
@@ -1573,13 +1566,13 @@ QModelIndex InputDeviceModel::index(int row, int column, const QModelIndex &pare
 int InputDeviceModel::rowCount(const QModelIndex &parent) const
 {
     if (!parent.isValid()) {
-        return LibInput::Connection::self()->devices().count();
+        return m_devices.count();
     }
     if (parent.internalId() & s_propertyBitMask) {
         return 0;
     }
 
-    return LibInput::Connection::self()->devices().at(parent.row())->metaObject()->propertyCount();
+    return m_devices.at(parent.row())->metaObject()->propertyCount();
 }
 
 QModelIndex InputDeviceModel::parent(const QModelIndex &child) const
@@ -1593,7 +1586,7 @@ QModelIndex InputDeviceModel::parent(const QModelIndex &child) const
 
 void InputDeviceModel::slotPropertyChanged()
 {
-    const auto device = static_cast<LibInput::Device *>(sender());
+    const auto device = static_cast<InputDevice *>(sender());
 
     for (int i = 0; i < device->metaObject()->propertyCount(); ++i) {
         const QMetaProperty metaProperty = device->metaObject()->property(i);
@@ -1605,7 +1598,7 @@ void InputDeviceModel::slotPropertyChanged()
     }
 }
 
-void InputDeviceModel::setupDeviceConnections(LibInput::Device *device)
+void InputDeviceModel::setupDeviceConnections(InputDevice *device)
 {
     QMetaMethod handler = metaObject()->method(metaObject()->indexOfMethod("slotPropertyChanged()"));
     for (int i = 0; i < device->metaObject()->propertyCount(); ++i) {

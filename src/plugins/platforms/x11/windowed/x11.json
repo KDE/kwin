@@ -84,6 +84,5 @@
         "Name[x-test]": "xxx11xx",
         "Name[zh_CN]": "x11",
         "Name[zh_TW]": "x11"
-    },
-    "input": true
+    }
 }

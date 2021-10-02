@@ -84,6 +84,5 @@
         "Name[x-test]": "xxwaylandxx",
         "Name[zh_CN]": "wayland",
         "Name[zh_TW]": "wayland"
-    },
-    "input": true
+    }
 }

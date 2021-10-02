@@ -9,6 +9,8 @@
 #ifndef KWIN_LIBINPUT_DEVICE_H
 #define KWIN_LIBINPUT_DEVICE_H
 
+#include "inputdevice.h"
+
 #include <libinput.h>
 
 #include <KConfigGroup>
@@ -18,7 +20,6 @@
 #include <QPointer>
 #include <QSizeF>
 #include <QVector>
-#include "kwin_export.h"
 
 struct libinput_device;
 
@@ -30,7 +31,7 @@ namespace LibInput
 {
 enum class ConfigKey;
 
-class KWIN_EXPORT Device : public QObject
+class KWIN_EXPORT Device : public InputDevice
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.InputDevice")
@@ -137,16 +138,16 @@ public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
     ~Device() override;
 
-    bool isKeyboard() const {
+    bool isKeyboard() const override {
         return m_keyboard;
     }
-    bool isAlphaNumericKeyboard() const {
+    bool isAlphaNumericKeyboard() const override {
         return m_alphaNumericKeyboard;
     }
-    bool isPointer() const {
+    bool isPointer() const override {
         return m_pointer;
     }
-    bool isTouchpad() const{
+    bool isTouchpad() const override {
         return m_pointer &&
                 // ignore all combined devices. E.g. a touchpad on a keyboard we don't want to toggle
                 // as that would result in the keyboard going off as well
@@ -154,22 +155,22 @@ public:
                 // is this a touch pad? We don't really know, let's do some assumptions
                 (m_tapFingerCount > 0  || m_supportsDisableWhileTyping || m_supportsDisableEventsOnExternalMouse);
     }
-    bool isTouch() const {
+    bool isTouch() const override {
         return m_touch;
     }
-    bool isTabletTool() const {
+    bool isTabletTool() const override {
         return m_tabletTool;
     }
-    bool isTabletPad() const {
+    bool isTabletPad() const override {
         return m_tabletPad;
     }
     bool supportsGesture() const {
         return m_supportsGesture;
     }
-    QString name() const {
+    QString name() const override {
         return m_name;
     }
-    QString sysName() const {
+    QString sysName() const override {
         return m_sysName;
     }
     QString outputName() const {
@@ -424,10 +425,10 @@ public:
         return (quint32) m_defaultClickMethod;
     }
 
-    bool isEnabled() const {
+    bool isEnabled() const override {
         return m_enabled;
     }
-    void setEnabled(bool enabled);
+    void setEnabled(bool enabled) override;
 
     libinput_device *device() const {
         return m_device;
@@ -452,11 +453,11 @@ public:
         return m_switch;
     }
 
-    bool isLidSwitch() const {
+    bool isLidSwitch() const override {
         return m_lidSwitch;
     }
 
-    bool isTabletModeSwitch() const {
+    bool isTabletModeSwitch() const override {
         return m_tabletSwitch;
     }
 
@@ -467,6 +468,9 @@ public:
 
     AbstractOutput *output() const;
     void setOutput(AbstractOutput *output);
+
+    LEDs leds() const override;
+    void setLeds(LEDs leds) override;
 
     /**
      * All created Devices
@@ -569,6 +573,7 @@ private:
     enum libinput_config_click_method m_defaultClickMethod;
     enum libinput_config_click_method m_clickMethod;
 
+    LEDs m_leds;
     static QVector<Device*> s_devices;
 };
 

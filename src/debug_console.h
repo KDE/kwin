@@ -163,11 +163,6 @@ private:
     QTextEdit *m_textEdit;
 };
 
-namespace LibInput
-{
-class Device;
-}
-
 class InputDeviceModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -185,8 +180,8 @@ private Q_SLOTS:
     void slotPropertyChanged();
 
 private:
-    void setupDeviceConnections(LibInput::Device *device);
-    QVector<LibInput::Device*> m_devices;
+    void setupDeviceConnections(InputDevice *device);
+    QList<InputDevice *> m_devices;
 };
 
 class DataSourceModel : public QAbstractItemModel

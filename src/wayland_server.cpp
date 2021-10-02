@@ -13,6 +13,7 @@
 #include "composite.h"
 #include "idle_inhibition.h"
 #include "inputpanelv1integration.h"
+#include "keyboard_input.h"
 #include "screens.h"
 #include "layershellv1integration.h"
 #include "main.h"
@@ -538,6 +539,10 @@ void WaylandServer::shellClientShown(Toplevel *toplevel)
 
 void WaylandServer::initWorkspace()
 {
+    // TODO: Moe the keyboard leds somewhere else.
+    updateKeyState(input()->keyboard()->xkb()->leds());
+    connect(input()->keyboard(), &KeyboardInputRedirection::ledsChanged, this, &WaylandServer::updateKeyState);
+
     VirtualDesktopManager::self()->setVirtualDesktopManagement(m_virtualDesktopManagement);
 
     if (m_windowManagement) {

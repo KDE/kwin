@@ -31,6 +31,7 @@ class AbstractOutput;
 class Edge;
 class Compositor;
 class DmaBufTexture;
+class InputBackend;
 class OverlayWindow;
 class OpenGLBackend;
 class Outline;
@@ -61,6 +62,7 @@ public:
 
     virtual Session *session() const = 0;
     virtual bool initialize() = 0;
+    virtual InputBackend *createInputBackend();
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
     virtual DmaBufTexture *createDmaBufTexture(const QSize &size) {

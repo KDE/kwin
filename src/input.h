@@ -42,7 +42,6 @@ class TouchInputRedirection;
 class WindowSelectorFilter;
 class SwitchEvent;
 class TabletEvent;
-class TabletInputFilter;
 class TabletToolId;
 class TabletPadId;
 
@@ -51,11 +50,8 @@ namespace Decoration
 class DecoratedClientImpl;
 }
 
-namespace LibInput
-{
-    class Connection;
-    class Device;
-}
+class InputBackend;
+class InputDevice;
 
 /**
  * @brief This class is responsible for redirecting incoming input to the surface which currently
@@ -221,14 +217,24 @@ public:
         return m_touch;
     }
 
+    QList<InputDevice *> devices() const;
+
     bool hasAlphaNumericKeyboard();
+    bool hasPointer() const;
+    bool hasTouch() const;
     bool hasTabletModeSwitch();
 
     void startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName);
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
     bool isSelectingWindow() const;
 
+    void toggleTouchpads();
+    void enableTouchpads();
+    void disableTouchpads();
+
 Q_SIGNALS:
+    void deviceAdded(InputDevice *device);
+    void deviceRemoved(InputDevice *device);
     /**
      * @brief Emitted when the global pointer position changed
      *
@@ -267,36 +273,49 @@ Q_SIGNALS:
      */
     void keyStateChanged(quint32 keyCode, InputRedirection::KeyboardKeyState state);
 
+    void hasKeyboardChanged(bool set);
     void hasAlphaNumericKeyboardChanged(bool set);
+    void hasPointerChanged(bool set);
+    void hasTouchChanged(bool set);
     void hasTabletModeSwitchChanged(bool set);
 
 private Q_SLOTS:
     void handleInputConfigChanged(const KConfigGroup &group);
+    void handleInputDeviceAdded(InputDevice *device);
+    void handleInputDeviceRemoved(InputDevice *device);
 
 private:
-    void setupLibInput();
+    void setupInputBackends();
     void setupTouchpadShortcuts();
-    void setupLibInputWithScreens();
     void setupWorkspace();
-    void reconfigure();
     void setupInputFilters();
     void installInputEventFilter(InputEventFilter *filter);
+    void updateLeds(LEDs leds);
+    void updateAvailableInputDevices();
+    void addInputBackend(InputBackend *inputBackend);
     KeyboardInputRedirection *m_keyboard;
     PointerInputRedirection *m_pointer;
     TabletInputRedirection *m_tablet;
     TouchInputRedirection *m_touch;
-    TabletInputFilter *m_tabletSupport = nullptr;
 
     GlobalShortcutsManager *m_shortcuts;
 
-    LibInput::Connection *m_libInput = nullptr;
-    QThread *m_libInputThread = nullptr;
+    QList<InputBackend *> m_inputBackends;
+    QList<InputDevice *> m_inputDevices;
 
     WindowSelectorFilter *m_windowSelector = nullptr;
 
     QVector<InputEventFilter*> m_filters;
     QVector<InputEventSpy*> m_spies;
     KConfigWatcher::Ptr m_inputConfigWatcher;
+
+    LEDs m_leds;
+    bool m_hasKeyboard = false;
+    bool m_hasAlphaNumericKeyboard = false;
+    bool m_hasPointer = false;
+    bool m_hasTouch = false;
+    bool m_hasTabletModeSwitch = false;
+    bool m_touchpadsEnabled = true;
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();
@@ -489,6 +508,11 @@ inline
 InputRedirection *input()
 {
     return InputRedirection::s_self;
+}
+
+inline QList<InputDevice *> InputRedirection::devices() const
+{
+    return m_inputDevices;
 }
 
 template <typename T, typename Slot>

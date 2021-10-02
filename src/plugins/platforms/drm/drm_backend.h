@@ -39,6 +39,7 @@ public:
     explicit DrmBackend(QObject *parent = nullptr);
     ~DrmBackend() override;
 
+    InputBackend *createInputBackend() override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend* createOpenGLBackend() override;
     DmaBufTexture *createDmaBufTexture(const QSize &size) override;

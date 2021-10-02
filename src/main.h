@@ -207,9 +207,6 @@ public:
     static void setupMalloc();
     static void setupLocalizedString();
 
-    static bool usesLibinput();
-    static void setUseLibinput(bool use);
-
 Q_SIGNALS:
     void x11ConnectionChanged();
     void x11ConnectionAboutToBeDestroyed();

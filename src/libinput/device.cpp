@@ -152,7 +152,7 @@ QMatrix4x4 defaultCalibrationMatrix(libinput_device *device)
 }
 
 Device::Device(libinput_device *device, QObject *parent)
-    : QObject(parent)
+    : InputDevice(parent)
     , m_device(device)
     , m_keyboard(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_KEYBOARD))
     , m_pointer(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_POINTER))
@@ -553,6 +553,34 @@ AbstractOutput *Device::output() const
 void Device::setOutput(AbstractOutput *output)
 {
     m_output = output;
+}
+
+static libinput_led toLibinputLEDS(LEDs leds)
+{
+    quint32 libinputLeds = 0;
+    if (leds.testFlag(LED::NumLock)) {
+        libinputLeds = libinputLeds | LIBINPUT_LED_NUM_LOCK;
+    }
+    if (leds.testFlag(LED::CapsLock)) {
+        libinputLeds = libinputLeds | LIBINPUT_LED_CAPS_LOCK;
+    }
+    if (leds.testFlag(LED::ScrollLock)) {
+        libinputLeds = libinputLeds | LIBINPUT_LED_SCROLL_LOCK;
+    }
+    return libinput_led(libinputLeds);
+}
+
+LEDs Device::leds() const
+{
+    return m_leds;
+}
+
+void Device::setLeds(LEDs leds)
+{
+    if (m_leds != leds) {
+        m_leds = leds;
+        libinput_device_led_update(m_device, toLibinputLEDS(m_leds));
+    }
 }
 
 }

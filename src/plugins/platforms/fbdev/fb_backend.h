@@ -50,6 +50,7 @@ public:
     explicit FramebufferBackend(QObject *parent = nullptr);
     ~FramebufferBackend() override;
 
+    InputBackend *createInputBackend() override;
     QPainterBackend *createQPainterBackend() override;
 
     QSize screenSize() const override;

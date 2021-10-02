@@ -38,6 +38,10 @@ TouchInputRedirection::~TouchInputRedirection() = default;
 void TouchInputRedirection::init()
 {
     Q_ASSERT(!inited());
+    waylandServer()->seat()->setHasTouch(input()->hasTouch());
+    connect(input(), &InputRedirection::hasTouchChanged,
+            waylandServer()->seat(), &KWaylandServer::SeatInterface::setHasTouch);
+
     setInited(true);
     InputDeviceHandler::init();
 
@@ -135,7 +139,7 @@ void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *o
     // nothing to do
 }
 
-void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device)
+void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 time, InputDevice *device)
 {
     Q_UNUSED(device)
     if (!inited()) {
@@ -153,7 +157,7 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 t
     m_windowUpdatedInCycle = false;
 }
 
-void TouchInputRedirection::processUp(qint32 id, quint32 time, LibInput::Device *device)
+void TouchInputRedirection::processUp(qint32 id, quint32 time, InputDevice *device)
 {
     Q_UNUSED(device)
     if (!inited()) {
@@ -172,7 +176,7 @@ void TouchInputRedirection::processUp(qint32 id, quint32 time, LibInput::Device 
     }
 }
 
-void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device)
+void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32 time, InputDevice *device)
 {
     Q_UNUSED(device)
     if (!inited()) {
