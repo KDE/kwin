@@ -355,13 +355,6 @@ void DrmBackend::updateOutputs()
         }
     }
 
-    if (m_outputs.isEmpty()) {
-        qCDebug(KWIN_DRM) << "adding placeholder output";
-        m_placeHolderOutput = primaryGpu()->createVirtualOutput();
-        // placeholder doesn't actually need to render anything
-        m_placeHolderOutput->renderLoop()->inhibit();
-    }
-
     std::sort(m_outputs.begin(), m_outputs.end(), [] (DrmAbstractOutput *a, DrmAbstractOutput *b) {
         auto da = qobject_cast<DrmOutput *>(a);
         auto db = qobject_cast<DrmOutput *>(b);
