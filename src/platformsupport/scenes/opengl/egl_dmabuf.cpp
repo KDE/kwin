@@ -10,6 +10,7 @@
 #include "egl_dmabuf.h"
 #include "drm_fourcc.h"
 #include "kwineglext.h"
+#include "logging.h"
 
 #include "wayland_server.h"
 
@@ -384,7 +385,7 @@ void filterFormatsWithMultiplePlanes(QVector<uint32_t> &formats)
     while (it != formats.end()) {
         for (auto linuxFormat : s_multiPlaneFormats) {
             if (*it == linuxFormat) {
-                qDebug() << "Filter multi-plane format" << *it;
+                qCDebug(KWIN_OPENGL) << "Filter multi-plane format" << *it;
                 it = formats.erase(it);
                 it--;
                 break;

@@ -81,16 +81,16 @@ Connection *Connection::s_self = nullptr;
 static ConnectionAdaptor *s_adaptor = nullptr;
 static Context *s_context = nullptr;
 
-static quint32 toLibinputLEDS(Xkb::LEDs leds)
+static quint32 toLibinputLEDS(LEDs leds)
 {
     quint32 libinputLeds = 0;
-    if (leds.testFlag(Xkb::LED::NumLock)) {
+    if (leds.testFlag(LED::NumLock)) {
         libinputLeds = libinputLeds | LIBINPUT_LED_NUM_LOCK;
     }
-    if (leds.testFlag(Xkb::LED::CapsLock)) {
+    if (leds.testFlag(LED::CapsLock)) {
         libinputLeds = libinputLeds | LIBINPUT_LED_CAPS_LOCK;
     }
-    if (leds.testFlag(Xkb::LED::ScrollLock)) {
+    if (leds.testFlag(LED::ScrollLock)) {
         libinputLeds = libinputLeds | LIBINPUT_LED_SCROLL_LOCK;
     }
     return libinputLeds;
@@ -775,7 +775,7 @@ void Connection::disableTouchpads()
     toggleTouchpads();
 }
 
-void Connection::updateLEDs(Xkb::LEDs leds)
+void Connection::updateLEDs(LEDs leds)
 {
     if (m_leds == leds) {
         return;

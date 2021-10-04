@@ -10,9 +10,10 @@
 #define KWIN_WAYLAND_SERVER_H
 
 #include <kwinglobals.h>
-#include "keyboard_input.h"
 
 #include <QObject>
+#include <QPointer>
+#include <QSet>
 
 class QThread;
 class QProcess;
@@ -206,7 +207,7 @@ public:
     SocketPairConnection createConnection();
 
     void simulateUserActivity();
-    void updateKeyState(KWin::Xkb::LEDs leds);
+    void updateKeyState(KWin::LEDs leds);
 
     QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer*> linuxDmabufBuffers() const {
         return m_linuxDmabufBuffers;

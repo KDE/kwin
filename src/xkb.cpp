@@ -78,7 +78,7 @@ Xkb::Xkb(QObject *parent)
     , m_keysym(XKB_KEY_NoSymbol)
     , m_leds()
 {
-    qRegisterMetaType<KWin::Xkb::LEDs>();
+    qRegisterMetaType<KWin::LEDs>();
     if (!m_context) {
         qCDebug(KWIN_XKB) << "Could not create xkb context";
     } else {
