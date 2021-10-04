@@ -39,7 +39,9 @@ bool KWinIdleTimePoller::setUpPoller()
 
 void KWinIdleTimePoller::unloadPoller()
 {
-    disconnect(waylandServer()->idle(), &KWaylandServer::IdleInterface::inhibitedChanged, this, &KWinIdleTimePoller::onInhibitedChanged);
+    if (waylandServer() && waylandServer()->idle()) {
+        disconnect(waylandServer()->idle(), &KWaylandServer::IdleInterface::inhibitedChanged, this, &KWinIdleTimePoller::onInhibitedChanged);
+    }
 
     qDeleteAll(m_timeouts);
     m_timeouts.clear();
