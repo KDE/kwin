@@ -89,6 +89,10 @@ private:
     QSize m_physicalSize = QSize(-1, -1);
     QVector<Mode> m_modes;
     int m_modeIndex = 0;
+
+    friend QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj);
 };
+
+QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj);
 
 }

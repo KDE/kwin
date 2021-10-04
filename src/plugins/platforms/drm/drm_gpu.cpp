@@ -581,6 +581,7 @@ void DrmGpu::dispatchEvents()
 
 void DrmGpu::removeOutput(DrmOutput *output)
 {
+    qCDebug(KWIN_DRM) << "Removing output" << output;
     m_drmOutputs.removeOne(output);
     m_outputs.removeOne(output);
     Q_EMIT outputRemoved(output);
@@ -700,6 +701,7 @@ void DrmGpu::handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease)
 
 void DrmGpu::removeLeaseOutput(DrmLeaseOutput *output)
 {
+    qCDebug(KWIN_DRM) << "Removing leased output" << output;
     m_leaseOutputs.removeOne(output);
     auto pipeline = output->pipeline();
     delete output;

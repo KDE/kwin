@@ -105,7 +105,7 @@ bool DrmConnector::init()
         if (blob && blob->data) {
             m_edid = Edid(blob->data, blob->length);
             if (!m_edid.isValid()) {
-                qCWarning(KWIN_DRM, "Couldn't parse EDID for connector with id %d", id());
+                qCWarning(KWIN_DRM) << "Couldn't parse EDID for connector" << this;
             }
         }
         deleteProp(PropertyIndex::Edid);
@@ -361,6 +361,30 @@ bool DrmConnector::isNonDesktop() const
 const Edid *DrmConnector::edid() const
 {
     return &m_edid;
+}
+
+QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj)
+{
+    QDebugStateSaver saver(s);
+    if (obj) {
+
+        QString connState = QStringLiteral("Disconnected");
+        if (!obj->m_conn || obj->m_conn->connection == DRM_MODE_UNKNOWNCONNECTION) {
+            connState = QStringLiteral("Unknown Connection");
+        } else if (obj->m_conn->connection == DRM_MODE_CONNECTED) {
+            connState = QStringLiteral("Connected");
+        }
+
+        s.nospace() << "DrmConnector(id=" << obj->id() <<
+                       ", gpu="<< obj->gpu() <<
+                       ", name="<< obj->modelName() <<
+                       ", connection=" << connState <<
+                       ", countMode=" << (obj->m_conn ? obj->m_conn->count_modes : 0)
+                    << ')';
+    } else {
+        s << "DrmConnector(0x0)";
+    }
+    return s;
 }
 
 }
