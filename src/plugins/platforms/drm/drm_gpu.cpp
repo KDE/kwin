@@ -486,7 +486,9 @@ void DrmGpu::removeOutput(DrmOutput *output)
 {
     m_drmOutputs.removeOne(output);
     m_outputs.removeOne(output);
-    Q_EMIT outputDisabled(output);
+    if (output->isEnabled()) {
+        Q_EMIT outputDisabled(output);
+    }
     Q_EMIT outputRemoved(output);
     auto pipeline = output->m_pipeline;
     delete output;
@@ -526,7 +528,9 @@ DrmVirtualOutput *DrmGpu::createVirtualOutput()
 void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
 {
     if (m_outputs.removeOne(output)) {
-        Q_EMIT outputDisabled(output);
+        if (output->isEnabled()) {
+            Q_EMIT outputDisabled(output);
+        }
         Q_EMIT outputRemoved(output);
         delete output;
     }
