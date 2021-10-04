@@ -444,12 +444,12 @@ public Q_SLOTS:
 
     void slotWindowCenter();
 
-    void slotWindowPackLeft();
-    void slotWindowPackRight();
-    void slotWindowPackUp();
-    void slotWindowPackDown();
-    void slotWindowGrowHorizontal();
-    void slotWindowGrowVertical();
+    void slotWindowMoveLeft();
+    void slotWindowMoveRight();
+    void slotWindowMoveUp();
+    void slotWindowMoveDown();
+    void slotWindowExpandHorizontal();
+    void slotWindowExpandVertical();
     void slotWindowShrinkHorizontal();
     void slotWindowShrinkVertical();
 

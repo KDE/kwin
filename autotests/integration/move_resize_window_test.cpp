@@ -323,10 +323,10 @@ void MoveResizeWindowTest::testPackTo_data()
     QTest::addColumn<QString>("methodCall");
     QTest::addColumn<QRect>("expectedGeometry");
 
-    QTest::newRow("left")  << QStringLiteral("slotWindowPackLeft")  << QRect(0, 487, 100, 50);
-    QTest::newRow("up")    << QStringLiteral("slotWindowPackUp")    << QRect(590, 0, 100, 50);
-    QTest::newRow("right") << QStringLiteral("slotWindowPackRight") << QRect(1180, 487, 100, 50);
-    QTest::newRow("down")  << QStringLiteral("slotWindowPackDown")  << QRect(590, 974, 100, 50);
+    QTest::newRow("left")  << QStringLiteral("slotWindowMoveLeft")  << QRect(0, 487, 100, 50);
+    QTest::newRow("up")    << QStringLiteral("slotWindowMoveUp")    << QRect(590, 0, 100, 50);
+    QTest::newRow("right") << QStringLiteral("slotWindowMoveRight") << QRect(1180, 487, 100, 50);
+    QTest::newRow("down")  << QStringLiteral("slotWindowMoveDown")  << QRect(590, 974, 100, 50);
 }
 
 void MoveResizeWindowTest::testPackTo()
@@ -361,10 +361,10 @@ void MoveResizeWindowTest::testPackAgainstClient_data()
     QTest::addColumn<QString>("methodCall");
     QTest::addColumn<QRect>("expectedGeometry");
 
-    QTest::newRow("left")  << QStringLiteral("slotWindowPackLeft")  << QRect(10, 487, 100, 50);
-    QTest::newRow("up")    << QStringLiteral("slotWindowPackUp")    << QRect(590, 10, 100, 50);
-    QTest::newRow("right") << QStringLiteral("slotWindowPackRight") << QRect(1170, 487, 100, 50);
-    QTest::newRow("down")  << QStringLiteral("slotWindowPackDown")  << QRect(590, 964, 100, 50);
+    QTest::newRow("left")  << QStringLiteral("slotWindowMoveLeft")  << QRect(10, 487, 100, 50);
+    QTest::newRow("up")    << QStringLiteral("slotWindowMoveUp")    << QRect(590, 10, 100, 50);
+    QTest::newRow("right") << QStringLiteral("slotWindowMoveRight") << QRect(1170, 487, 100, 50);
+    QTest::newRow("down")  << QStringLiteral("slotWindowMoveDown")  << QRect(590, 964, 100, 50);
 }
 
 void MoveResizeWindowTest::testPackAgainstClient()
@@ -401,10 +401,10 @@ void MoveResizeWindowTest::testPackAgainstClient()
         QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
         QCOMPARE(c->frameGeometry(), expectedGeometry);
     };
-    renderWindow(surface1.data(), QStringLiteral("slotWindowPackLeft"),  QRect(0, 507, 10, 10));
-    renderWindow(surface2.data(), QStringLiteral("slotWindowPackUp"),    QRect(635, 0, 10, 10));
-    renderWindow(surface3.data(), QStringLiteral("slotWindowPackRight"), QRect(1270, 507, 10, 10));
-    renderWindow(surface4.data(), QStringLiteral("slotWindowPackDown"),  QRect(635, 1014, 10, 10));
+    renderWindow(surface1.data(), QStringLiteral("slotWindowMoveLeft"),  QRect(0, 507, 10, 10));
+    renderWindow(surface2.data(), QStringLiteral("slotWindowMoveUp"),    QRect(635, 0, 10, 10));
+    renderWindow(surface3.data(), QStringLiteral("slotWindowMoveRight"), QRect(1270, 507, 10, 10));
+    renderWindow(surface4.data(), QStringLiteral("slotWindowMoveDown"),  QRect(635, 1014, 10, 10));
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
@@ -428,8 +428,8 @@ void MoveResizeWindowTest::testGrowShrink_data()
     QTest::addColumn<QString>("methodCall");
     QTest::addColumn<QRect>("expectedGeometry");
 
-    QTest::newRow("grow vertical")     << QStringLiteral("slotWindowGrowVertical")     << QRect(590, 487, 100, 537);
-    QTest::newRow("grow horizontal")   << QStringLiteral("slotWindowGrowHorizontal")   << QRect(590, 487, 690, 50);
+    QTest::newRow("grow vertical")     << QStringLiteral("slotWindowExpandVertical")     << QRect(590, 487, 100, 537);
+    QTest::newRow("grow horizontal")   << QStringLiteral("slotWindowExpandHorizontal")   << QRect(590, 487, 690, 50);
     QTest::newRow("shrink vertical")   << QStringLiteral("slotWindowShrinkVertical")   << QRect(590, 487, 100, 23);
     QTest::newRow("shrink horizontal") << QStringLiteral("slotWindowShrinkHorizontal") << QRect(590, 487, 40, 50);
 }
@@ -445,8 +445,8 @@ void MoveResizeWindowTest::testGrowShrink()
     QVERIFY(!shellSurface1.isNull());
     Test::render(surface1.data(), QSize(650, 514), Qt::blue);
     QVERIFY(Test::waitForWaylandWindowShown());
-    workspace()->slotWindowPackRight();
-    workspace()->slotWindowPackDown();
+    workspace()->slotWindowMoveRight();
+    workspace()->slotWindowMoveDown();
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());

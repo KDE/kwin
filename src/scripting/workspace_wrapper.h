@@ -306,12 +306,50 @@ public Q_SLOTS:
     void slotWindowLower();
     void slotWindowRaiseOrLower();
     void slotActivateAttentionWindow();
-    void slotWindowPackLeft();
-    void slotWindowPackRight();
-    void slotWindowPackUp();
-    void slotWindowPackDown();
-    void slotWindowGrowHorizontal();
-    void slotWindowGrowVertical();
+
+    /**
+     * @deprecated since 5.24 use slotWindowMoveLeft()
+     */
+    void slotWindowPackLeft() {
+        slotWindowMoveLeft();
+    }
+    /**
+     * @deprecated since 5.24 use slotWindowMoveRight()
+     */
+    void slotWindowPackRight() {
+        slotWindowMoveRight();
+    }
+    /**
+     * @deprecated since 5.24 use slotWindowMoveUp()
+     */
+    void slotWindowPackUp() {
+        slotWindowMoveUp();
+    }
+    /**
+     * @deprecated since 5.24 use slotWindowMoveDown()
+     */
+    void slotWindowPackDown() {
+        slotWindowMoveDown();
+    }
+    /**
+     * @deprecated since 5.24 use slotWindowExpandHorizontal()
+     */
+    void slotWindowGrowHorizontal() {
+        slotWindowExpandHorizontal();
+    }
+    /**
+     * @deprecated since 5.24 use slotWindowExpandVertical()
+     */
+    void slotWindowGrowVertical() {
+        slotWindowExpandVertical();
+    }
+
+    void slotWindowMoveLeft();
+    void slotWindowMoveRight();
+    void slotWindowMoveUp();
+    void slotWindowMoveDown();
+    void slotWindowExpandHorizontal();
+    void slotWindowExpandVertical();
     void slotWindowShrinkHorizontal();
     void slotWindowShrinkVertical();
     void slotWindowQuickTileLeft();
