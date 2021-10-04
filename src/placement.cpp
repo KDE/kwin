@@ -683,7 +683,7 @@ void AbstractClient::packTo(int left, int top)
 /**
  * Moves active window left until in bumps into another window or workarea edge.
  */
-void Workspace::slotWindowPackLeft()
+void Workspace::slotWindowMoveLeft()
 {
     if (active_client && active_client->isMovable()) {
         const QRect geometry = active_client->moveResizeGeometry();
@@ -692,7 +692,7 @@ void Workspace::slotWindowPackLeft()
     }
 }
 
-void Workspace::slotWindowPackRight()
+void Workspace::slotWindowMoveRight()
 {
     if (active_client && active_client->isMovable()) {
         const QRect geometry = active_client->moveResizeGeometry();
@@ -701,7 +701,7 @@ void Workspace::slotWindowPackRight()
     }
 }
 
-void Workspace::slotWindowPackUp()
+void Workspace::slotWindowMoveUp()
 {
     if (active_client && active_client->isMovable()) {
         const QRect geometry = active_client->moveResizeGeometry();
@@ -710,7 +710,7 @@ void Workspace::slotWindowPackUp()
     }
 }
 
-void Workspace::slotWindowPackDown()
+void Workspace::slotWindowMoveDown()
 {
     if (active_client && active_client->isMovable()) {
         const QRect geometry = active_client->moveResizeGeometry();
@@ -730,7 +730,7 @@ void Workspace::slotWindowCenter()
     }
 }
 
-void Workspace::slotWindowGrowHorizontal()
+void Workspace::slotWindowExpandHorizontal()
 {
     if (active_client)
         active_client->growHorizontal();
@@ -779,7 +779,7 @@ void AbstractClient::shrinkHorizontal()
     }
 }
 
-void Workspace::slotWindowGrowVertical()
+void Workspace::slotWindowExpandVertical()
 {
     if (active_client)
         active_client->growVertical();

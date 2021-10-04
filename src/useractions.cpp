@@ -1009,21 +1009,21 @@ void Workspace::initShortcuts()
         0, slotSetupWindowShortcut);
     DEF2("Window Move Center", I18N_NOOP("Move Window to the Center"), 0,
      slotWindowCenter);
-    DEF2("Window Pack Right", I18N_NOOP("Pack Window to the Right"),
-        0, slotWindowPackRight);
-    DEF2("Window Pack Left", I18N_NOOP("Pack Window to the Left"),
-        0, slotWindowPackLeft);
-    DEF2("Window Pack Up", I18N_NOOP("Pack Window Up"),
-        0, slotWindowPackUp);
-    DEF2("Window Pack Down", I18N_NOOP("Pack Window Down"),
-        0, slotWindowPackDown);
-    DEF2("Window Grow Horizontal", I18N_NOOP("Pack Grow Window Horizontally"),
-        0, slotWindowGrowHorizontal);
-    DEF2("Window Grow Vertical", I18N_NOOP("Pack Grow Window Vertically"),
-        0, slotWindowGrowVertical);
-    DEF2("Window Shrink Horizontal", I18N_NOOP("Pack Shrink Window Horizontally"),
+    DEF2("Window Pack Right", I18N_NOOP("Move Window Right"),
+        0, slotWindowMoveRight);
+    DEF2("Window Pack Left", I18N_NOOP("Move Window Left"),
+        0, slotWindowMoveLeft);
+    DEF2("Window Pack Up", I18N_NOOP("Move Window Up"),
+        0, slotWindowMoveUp);
+    DEF2("Window Pack Down", I18N_NOOP("Move Window Down"),
+        0, slotWindowMoveDown);
+    DEF2("Window Grow Horizontal", I18N_NOOP("Expand Window Horizontally"),
+        0, slotWindowExpandHorizontal);
+    DEF2("Window Grow Vertical", I18N_NOOP("Expand Window Vertically"),
+        0, slotWindowExpandVertical);
+    DEF2("Window Shrink Horizontal", I18N_NOOP("Shrink Window Horizontally"),
         0, slotWindowShrinkHorizontal);
-    DEF2("Window Shrink Vertical", I18N_NOOP("Pack Shrink Window Vertically"),
+    DEF2("Window Shrink Vertical", I18N_NOOP("Shrink Window Vertically"),
         0, slotWindowShrinkVertical);
     DEF4("Window Quick Tile Left", I18N_NOOP("Quick Tile Window to the Left"),
         Qt::META + Qt::Key_Left, std::bind(&Workspace::quickTileWindow, this, QuickTileFlag::Left));
