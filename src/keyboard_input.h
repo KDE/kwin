@@ -81,7 +81,7 @@ public:
     }
 
 Q_SIGNALS:
-    void ledsChanged(KWin::Xkb::LEDs);
+    void ledsChanged(KWin::LEDs);
 
 private:
     InputRedirection *m_input;

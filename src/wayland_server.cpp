@@ -763,14 +763,14 @@ void WaylandServer::simulateUserActivity()
     }
 }
 
-void WaylandServer::updateKeyState(KWin::Xkb::LEDs leds)
+void WaylandServer::updateKeyState(KWin::LEDs leds)
 {
     if (!m_keyState)
         return;
 
-    m_keyState->setState(KeyStateInterface::Key::CapsLock, leds & KWin::Xkb::LED::CapsLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
-    m_keyState->setState(KeyStateInterface::Key::NumLock, leds & KWin::Xkb::LED::NumLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
-    m_keyState->setState(KeyStateInterface::Key::ScrollLock, leds & KWin::Xkb::LED::ScrollLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
+    m_keyState->setState(KeyStateInterface::Key::CapsLock, leds & KWin::LED::CapsLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
+    m_keyState->setState(KeyStateInterface::Key::NumLock, leds & KWin::LED::NumLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
+    m_keyState->setState(KeyStateInterface::Key::ScrollLock, leds & KWin::LED::ScrollLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
 }
 
 bool WaylandServer::isKeyboardShortcutsInhibited() const

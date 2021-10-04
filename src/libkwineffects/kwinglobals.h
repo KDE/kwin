@@ -137,6 +137,14 @@ enum class SessionState {
 };
 Q_ENUM_NS(SessionState)
 
+enum class LED {
+    NumLock = 1 << 0,
+    CapsLock = 1 << 1,
+    ScrollLock = 1 << 2
+};
+Q_DECLARE_FLAGS(LEDs, LED)
+Q_FLAG_NS(LEDs)
+
 inline
 KWIN_EXPORT xcb_connection_t *connection()
 {

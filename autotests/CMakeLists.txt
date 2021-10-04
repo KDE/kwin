@@ -316,6 +316,8 @@ target_link_libraries(testXkb
     Plasma::KWaylandServer
     KF5::WindowSystem
 
+    kwineffects
+
     XKB::XKB
     Qt5::XkbCommonSupportPrivate
 )

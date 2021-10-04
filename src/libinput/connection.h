@@ -12,7 +12,6 @@
 #include <kwinglobals.h>
 
 #include "input.h"
-#include "keyboard_input.h"
 
 #include <QObject>
 #include <QPointer>
@@ -85,7 +84,7 @@ public:
 
     QStringList devicesSysNames() const;
 
-    void updateLEDs(KWin::Xkb::LEDs leds);
+    void updateLEDs(KWin::LEDs leds);
 
 Q_SIGNALS:
     void keyChanged(quint32 key, KWin::InputRedirection::KeyboardKeyState, quint32 time, KWin::LibInput::Device *device);
@@ -158,7 +157,7 @@ private:
     QVector<Device*> m_devices;
     KSharedConfigPtr m_config;
     bool m_touchpadsEnabled = true;
-    Xkb::LEDs m_leds;
+    LEDs m_leds;
 
     KWIN_SINGLETON(Connection)
 };

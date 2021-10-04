@@ -503,16 +503,16 @@ void KeyboardLayoutTest::testNumLock()
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
     // by default not set
-    QVERIFY(!xkb->leds().testFlag(Xkb::LED::NumLock));
+    QVERIFY(!xkb->leds().testFlag(LED::NumLock));
     quint32 timestamp = 0;
     kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
     // now it should be on
-    QVERIFY(xkb->leds().testFlag(Xkb::LED::NumLock));
+    QVERIFY(xkb->leds().testFlag(LED::NumLock));
     // and back to off
     kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
-    QVERIFY(!xkb->leds().testFlag(Xkb::LED::NumLock));
+    QVERIFY(!xkb->leds().testFlag(LED::NumLock));
 
     // let's reconfigure to enable through config
     auto group = InputConfig::self()->inputConfig()->group("Keyboard");
@@ -520,22 +520,22 @@ void KeyboardLayoutTest::testNumLock()
     group.sync();
     xkb->reconfigure();
     // now it should be on
-    QVERIFY(xkb->leds().testFlag(Xkb::LED::NumLock));
+    QVERIFY(xkb->leds().testFlag(LED::NumLock));
     // pressing should result in it being off
     kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
-    QVERIFY(!xkb->leds().testFlag(Xkb::LED::NumLock));
+    QVERIFY(!xkb->leds().testFlag(LED::NumLock));
 
     // pressing again should enable it
     kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
-    QVERIFY(xkb->leds().testFlag(Xkb::LED::NumLock));
+    QVERIFY(xkb->leds().testFlag(LED::NumLock));
 
     // now reconfigure to disable on load
     group.writeEntry("NumLock", 1);
     group.sync();
     xkb->reconfigure();
-    QVERIFY(!xkb->leds().testFlag(Xkb::LED::NumLock));
+    QVERIFY(!xkb->leds().testFlag(LED::NumLock));
 }
 
 WAYLANDTEST_MAIN(KeyboardLayoutTest)
