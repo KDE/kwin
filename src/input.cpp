@@ -43,7 +43,6 @@
 #include <KLocalizedString>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/fakeinput_interface.h>
-#include <KWaylandServer/relativepointer_v1_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/surface_interface.h>
@@ -2393,13 +2392,6 @@ void InputRedirection::setupLibInput()
     m_libInput->moveToThread(m_libInputThread);
 
     if (conn) {
-
-        if (waylandServer()) {
-            // create relative pointer manager
-            new KWaylandServer::RelativePointerManagerV1Interface(waylandServer()->display(),
-                                                                  waylandServer()->display());
-        }
-
         conn->setInputConfig(InputConfig::self()->inputConfig());
         conn->updateLEDs(m_keyboard->xkb()->leds());
         waylandServer()->updateKeyState(m_keyboard->xkb()->leds());

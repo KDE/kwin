@@ -63,6 +63,7 @@
 #include <KWaylandServer/viewporter_interface.h>
 #include <KWaylandServer/datacontroldevicemanager_v1_interface.h>
 #include <KWaylandServer/primaryselectiondevicemanager_v1_interface.h>
+#include <KWaylandServer/relativepointer_v1_interface.h>
 
 // Qt
 #include <QCryptographicHash>
@@ -414,6 +415,7 @@ bool WaylandServer::init(InitializationFlags flags)
     m_seat = new SeatInterface(m_display, m_display);
     new PointerGesturesV1Interface(m_display, m_display);
     new PointerConstraintsV1Interface(m_display, m_display);
+    new RelativePointerManagerV1Interface(m_display, m_display);
     m_dataDeviceManager = new DataDeviceManagerInterface(m_display, m_display);
     new DataControlDeviceManagerV1Interface(m_display, m_display);
     new PrimarySelectionDeviceManagerV1Interface(m_display, m_display);
