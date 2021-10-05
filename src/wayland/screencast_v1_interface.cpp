@@ -14,7 +14,7 @@
 
 namespace KWaylandServer
 {
-static int s_version = 1;
+static int s_version = 2;
 
 class ScreencastStreamV1InterfacePrivate : public QtWaylandServer::zkde_screencast_stream_unstable_v1
 {
@@ -95,6 +95,20 @@ public:
     void zkde_screencast_unstable_v1_stream_window(Resource *resource, uint32_t streamid, const QString &uuid, uint32_t pointer) override
     {
         Q_EMIT q->windowScreencastRequested(createStream(resource, streamid), uuid, ScreencastV1Interface::CursorMode(pointer));
+    }
+    void zkde_screencast_unstable_v1_stream_virtual_output(Resource *resource,
+                                                           uint32_t streamid,
+                                                           const QString &name,
+                                                           int32_t width,
+                                                           int32_t height,
+                                                           wl_fixed_t scale,
+                                                           uint32_t pointer) override
+    {
+        Q_EMIT q->virtualOutputScreencastRequested(createStream(resource, streamid),
+                                                   name,
+                                                   {width, height},
+                                                   wl_fixed_to_double(scale),
+                                                   ScreencastV1Interface::CursorMode(pointer));
     }
 
     void zkde_screencast_unstable_v1_destroy(Resource *resource) override
