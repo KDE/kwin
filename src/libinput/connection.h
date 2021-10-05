@@ -89,7 +89,7 @@ public:
 Q_SIGNALS:
     void keyChanged(quint32 key, KWin::InputRedirection::KeyboardKeyState, quint32 time, KWin::LibInput::Device *device);
     void pointerButtonChanged(quint32 button, KWin::InputRedirection::PointerButtonState state, quint32 time, KWin::LibInput::Device *device);
-    void pointerMotionAbsolute(QPointF orig, QPointF screen, quint32 time, KWin::LibInput::Device *device);
+    void pointerMotionAbsolute(const QPointF &position, quint32 time, KWin::LibInput::Device *device);
     void pointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint32 time, quint64 timeMicroseconds, KWin::LibInput::Device *device);
     void pointerAxisChanged(KWin::InputRedirection::PointerAxis axis, qreal delta, qint32 discreteDelta,
         KWin::InputRedirection::PointerAxisSource source, quint32 time, KWin::LibInput::Device *device);
