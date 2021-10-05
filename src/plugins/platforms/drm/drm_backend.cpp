@@ -502,7 +502,7 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
         }
         if (m_enabledOutputs.count() == 1 && !kwinApp()->isTerminating()) {
             qCDebug(KWIN_DRM) << "adding placeholder output";
-            m_placeHolderOutput = primaryGpu()->createVirtualOutput();
+            m_placeHolderOutput = primaryGpu()->createVirtualOutput({}, {1920, 1080}, 1, DrmGpu::Placeholder);
             // placeholder doesn't actually need to render anything
             m_placeHolderOutput->renderLoop()->inhibit();
         }
@@ -684,6 +684,23 @@ QString DrmBackend::supportInformation() const
     s << "Using EGL Streams: " << m_gpus.at(0)->useEglStreams() << Qt::endl;
 #endif
     return supportInfo;
+}
+
+AbstractOutput *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
+{
+    auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale, DrmGpu::Full);
+    readOutputsConfiguration();
+    Q_EMIT screensQueried();
+    return output;
+}
+
+void DrmBackend::removeVirtualOutput(AbstractOutput *output)
+{
+    auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output);
+    if (!virtualOutput) {
+        return;
+    }
+    primaryGpu()->removeVirtualOutput(virtualOutput);
 }
 
 DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)

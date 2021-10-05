@@ -14,7 +14,7 @@
 
 namespace KWin
 {
-
+class AbstractWaylandOutput;
 class PipeWireStream;
 
 class ScreencastManager : public Plugin
@@ -24,12 +24,19 @@ class ScreencastManager : public Plugin
 public:
     explicit ScreencastManager(QObject *parent = nullptr);
 
-    void streamWindow(KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid);
-    void streamOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
-                      KWaylandServer::OutputInterface *output,
-                      KWaylandServer::ScreencastV1Interface::CursorMode mode);
-
 private:
+    void streamWindow(KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid);
+    void streamWaylandOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
+                             KWaylandServer::OutputInterface *output,
+                             KWaylandServer::ScreencastV1Interface::CursorMode mode);
+    void
+    streamOutput(KWaylandServer::ScreencastStreamV1Interface *stream, AbstractWaylandOutput *output, KWaylandServer::ScreencastV1Interface::CursorMode mode);
+    void streamVirtualOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
+                             const QString &name,
+                             const QSize &size,
+                             double scale,
+                             KWaylandServer::ScreencastV1Interface::CursorMode mode);
+
     void integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, PipeWireStream *stream);
 
     KWaylandServer::ScreencastV1Interface *m_screencast;

@@ -24,7 +24,8 @@ class DrmVirtualOutput : public DrmAbstractOutput
 {
     Q_OBJECT
 public:
-    DrmVirtualOutput(DrmGpu *gpu);
+    DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size);
+    DrmVirtualOutput(DrmGpu *gpu, const QSize &size);
     ~DrmVirtualOutput() override;
 
     bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) override;
@@ -55,7 +56,6 @@ private:
     bool m_pageFlipPending = true;
     int m_modeIndex = 0;
 
-    int m_identifier;
     SoftwareVsyncMonitor *m_vsyncMonitor;
 };
 

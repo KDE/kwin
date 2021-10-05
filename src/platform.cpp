@@ -478,6 +478,19 @@ RenderLoop *Platform::renderLoop() const
     return nullptr;
 }
 
+AbstractOutput *Platform::createVirtualOutput(const QString &name, const QSize &size, double scale)
+{
+    Q_UNUSED(name);
+    Q_UNUSED(size);
+    Q_UNUSED(scale);
+    return nullptr;
+}
+
+void Platform::removeVirtualOutput(AbstractOutput *output)
+{
+    Q_ASSERT(!output);
+}
+
 void Platform::warpPointer(const QPointF &globalPos)
 {
     Q_UNUSED(globalPos)

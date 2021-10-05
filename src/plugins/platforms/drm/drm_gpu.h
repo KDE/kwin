@@ -77,6 +77,9 @@ public:
     void waitIdle();
     bool updateOutputs();
     DrmVirtualOutput *createVirtualOutput();
+
+    enum VirtualOutputMode { Placeholder, Full };
+    DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputMode mode);
     void removeVirtualOutput(DrmVirtualOutput *output);
 
 Q_SIGNALS:

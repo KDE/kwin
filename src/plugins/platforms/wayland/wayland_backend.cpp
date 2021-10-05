@@ -671,13 +671,19 @@ void WaylandBackend::updateScreenSize(WaylandOutput *output)
    }
 }
 
+KWayland::Client::ServerSideDecorationManager *WaylandBackend::ssdManager()
+{
+    if (!m_ssdManager) {
+        using namespace KWayland::Client;
+        const auto ssdManagerIface = m_registry->interface(Registry::Interface::ServerSideDecorationManager);
+        m_ssdManager = ssdManagerIface.name == 0 ? nullptr : m_registry->createServerSideDecorationManager(ssdManagerIface.name, ssdManagerIface.version, this);
+    }
+    return m_ssdManager;
+}
+
 void WaylandBackend::createOutputs()
 {
     using namespace KWayland::Client;
-
-    const auto ssdManagerIface = m_registry->interface(Registry::Interface::ServerSideDecorationManager);
-    ServerSideDecorationManager *ssdManager = ssdManagerIface.name == 0 ? nullptr :
-            m_registry->createServerSideDecorationManager(ssdManagerIface.name, ssdManagerIface.version, this);
 
 
     const auto xdgIface = m_registry->interface(Registry::Interface::XdgShellStable);
@@ -693,57 +699,61 @@ void WaylandBackend::createOutputs()
 
     int logicalWidthSum = 0;
     for (int i = 0; i < initialOutputCount(); i++) {
-        auto surface = m_compositor->createSurface(this);
-        if (!surface || !surface->isValid()) {
-            qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Surface failed";
-            return;
-        }
-
-        if (ssdManager) {
-            auto decoration = ssdManager->create(surface, this);
-            connect(decoration, &ServerSideDecoration::modeChanged, this,
-                [decoration] {
-                    if (decoration->mode() != ServerSideDecoration::Mode::Server) {
-                        decoration->requestMode(ServerSideDecoration::Mode::Server);
-                    }
-                }
-            );
-        }
-
-        WaylandOutput *waylandOutput = nullptr;
-
-        if (m_xdgShell && m_xdgShell->isValid()) {
-            waylandOutput = new XdgShellOutput(surface, m_xdgShell, this, i+1);
-        }
-
-        if (!waylandOutput) {
-            qCCritical(KWIN_WAYLAND_BACKEND) << "Binding to all shell interfaces failed for output" << i;
-            return;
-        }
-
-        waylandOutput->init(QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
-
-        connect(waylandOutput, &WaylandOutput::sizeChanged, this, [this, waylandOutput](const QSize &size) {
-            Q_UNUSED(size)
-            updateScreenSize(waylandOutput);
-            Compositor::self()->addRepaintFull();
-        });
-        connect(waylandOutput, &WaylandOutput::frameRendered, this, [waylandOutput]() {
-            waylandOutput->resetRendered();
-
-            // The current time of the monotonic clock is a pretty good estimate when the frame
-            // has been presented, however it will be much better if we check whether the host
-            // compositor supports the wp_presentation protocol.
-            RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(waylandOutput->renderLoop());
-            renderLoopPrivate->notifyFrameCompleted(std::chrono::steady_clock::now().time_since_epoch());
-        });
+        createOutput(QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
 
         logicalWidthSum += logicalWidth;
-
-        // The output will only actually be added when it receives its first
-        // configure event, and buffers can start being attached
-        m_pendingInitialOutputs++;
     }
+}
+
+WaylandOutput *WaylandBackend::createOutput(const QPoint &position, const QSize &size)
+{
+    auto surface = m_compositor->createSurface(this);
+    if (!surface || !surface->isValid()) {
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Surface failed";
+        return nullptr;
+    }
+
+    if (ssdManager()) {
+        auto decoration = ssdManager()->create(surface, this);
+        connect(decoration, &ServerSideDecoration::modeChanged, this, [decoration] {
+            if (decoration->mode() != ServerSideDecoration::Mode::Server) {
+                decoration->requestMode(ServerSideDecoration::Mode::Server);
+            }
+        });
+    }
+
+    WaylandOutput *waylandOutput = nullptr;
+
+    if (m_xdgShell && m_xdgShell->isValid()) {
+        waylandOutput = new XdgShellOutput(surface, m_xdgShell, this, m_nextId++);
+    }
+
+    if (!waylandOutput) {
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Binding to all shell interfaces failed for output";
+        return nullptr;
+    }
+
+    waylandOutput->init(position, size);
+
+    connect(waylandOutput, &WaylandOutput::sizeChanged, this, [this, waylandOutput](const QSize &size) {
+        Q_UNUSED(size)
+        updateScreenSize(waylandOutput);
+        Compositor::self()->addRepaintFull();
+    });
+    connect(waylandOutput, &WaylandOutput::frameRendered, this, [waylandOutput]() {
+        waylandOutput->resetRendered();
+
+        // The current time of the monotonic clock is a pretty good estimate when the frame
+        // has been presented, however it will be much better if we check whether the host
+        // compositor supports the wp_presentation protocol.
+        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(waylandOutput->renderLoop());
+        renderLoopPrivate->notifyFrameCompleted(std::chrono::steady_clock::now().time_since_epoch());
+    });
+
+    // The output will only actually be added when it receives its first
+    // configure event, and buffers can start being attached
+    m_pendingInitialOutputs++;
+    return waylandOutput;
 }
 
 void WaylandBackend::destroyOutputs()
@@ -891,6 +901,21 @@ void WaylandBackend::clearDpmsFilter()
     m_dpmsFilter.reset();
 }
 
+AbstractOutput *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
+{
+    Q_UNUSED(name);
+    return createOutput(m_outputs.constLast()->geometry().topRight(), size * scale);
+}
+
+void WaylandBackend::removeVirtualOutput(AbstractOutput *output)
+{
+    WaylandOutput *waylandOutput = dynamic_cast<WaylandOutput *>(output);
+    if (waylandOutput && m_outputs.removeAll(waylandOutput)) {
+        Q_EMIT outputDisabled(waylandOutput);
+        Q_EMIT outputRemoved(waylandOutput);
+        delete waylandOutput;
+    }
+}
 }
 
 } // KWin

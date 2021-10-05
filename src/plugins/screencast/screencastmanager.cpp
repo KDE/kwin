@@ -33,8 +33,8 @@ ScreencastManager::ScreencastManager(QObject *parent)
 {
     connect(m_screencast, &KWaylandServer::ScreencastV1Interface::windowScreencastRequested,
             this, &ScreencastManager::streamWindow);
-    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::outputScreencastRequested,
-            this, &ScreencastManager::streamOutput);
+    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::outputScreencastRequested, this, &ScreencastManager::streamWaylandOutput);
+    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::virtualOutputScreencastRequested, this, &ScreencastManager::streamVirtualOutput);
 }
 
 class WindowStream : public PipeWireStream
@@ -105,12 +105,30 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface
     integrateStreams(waylandStream, stream);
 }
 
+void ScreencastManager::streamVirtualOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
+                                            const QString &name,
+                                            const QSize &size,
+                                            double scale,
+                                            KWaylandServer::ScreencastV1Interface::CursorMode mode)
+{
+    auto output = qobject_cast<AbstractWaylandOutput *>(kwinApp()->platform()->createVirtualOutput(name, size, scale));
+    streamOutput(stream, output, mode);
+    connect(stream, &KWaylandServer::ScreencastStreamV1Interface::finished, output, [output] {
+        kwinApp()->platform()->removeVirtualOutput(output);
+    });
+}
+
+void ScreencastManager::streamWaylandOutput(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
+                                            KWaylandServer::OutputInterface *output,
+                                            KWaylandServer::ScreencastV1Interface::CursorMode mode)
+{
+    streamOutput(waylandStream, waylandServer()->findOutput(output), mode);
+}
+
 void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
-                                     KWaylandServer::OutputInterface *output,
+                                     AbstractWaylandOutput *streamOutput,
                                      KWaylandServer::ScreencastV1Interface::CursorMode mode)
 {
-    AbstractWaylandOutput *streamOutput = waylandServer()->findOutput(output);
-
     if (!streamOutput) {
         waylandStream->sendFailed(i18n("Could not find output"));
         return;

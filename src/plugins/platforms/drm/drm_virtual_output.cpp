@@ -17,23 +17,28 @@
 
 namespace KWin
 {
+static int s_serial = 0;
+DrmVirtualOutput::DrmVirtualOutput(DrmGpu *gpu, const QSize &size)
+    : DrmVirtualOutput(QString::number(s_serial++), gpu, size)
+{
+}
 
-DrmVirtualOutput::DrmVirtualOutput(DrmGpu *gpu)
+DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size)
     : DrmAbstractOutput(gpu)
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
 {
     connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
 
-    static int s_serial = 0;
-    m_identifier = s_serial++;
-    setName("Virtual-" + QString::number(m_identifier));
+    setName("Virtual-" + name);
     m_modeIndex = 0;
-    QVector<Mode> modes = {{{1920, 1080}, 60000, AbstractWaylandOutput::ModeFlags(AbstractWaylandOutput::ModeFlag::Current) | AbstractWaylandOutput::ModeFlag::Preferred, 0}};
-    initialize(QByteArray("model_").append(QByteArray::number(m_identifier)),
-               QByteArray("manufacturer_").append(QByteArray::number(m_identifier)),
-               QByteArray("eisa_").append(QByteArray::number(m_identifier)),
-               QByteArray("serial_").append(QByteArray::number(m_identifier)),
-               modes[m_modeIndex].size, modes, QByteArray("EDID_").append(QByteArray::number(m_identifier)));
+    QVector<Mode> modes = {{size, 60000, AbstractWaylandOutput::ModeFlags(AbstractWaylandOutput::ModeFlag::Current) | AbstractWaylandOutput::ModeFlag::Preferred, 0}};
+    initialize(QLatin1String("model_") + name,
+               QLatin1String("manufacturer_") + name,
+               QLatin1String("eisa_") + name,
+               QLatin1String("serial_") + name,
+               modes[m_modeIndex].size,
+               modes,
+               QByteArray("EDID_") + name.toUtf8());
     m_renderLoop->setRefreshRate(modes[m_modeIndex].refreshRate);
 }
 

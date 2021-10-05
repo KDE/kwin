@@ -393,6 +393,9 @@ public:
      */
     virtual RenderLoop *renderLoop() const;
 
+    virtual AbstractOutput *createVirtualOutput(const QString &name, const QSize &size, qreal scaling);
+    virtual void removeVirtualOutput(AbstractOutput *output);
+
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);

@@ -46,6 +46,7 @@ class Registry;
 class RelativePointer;
 class RelativePointerManager;
 class Seat;
+class ServerSideDecorationManager;
 class SubCompositor;
 class SubSurface;
 class Surface;
@@ -204,6 +205,9 @@ public:
     void createDpmsFilter();
     void clearDpmsFilter();
 
+    AbstractOutput *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
+    void removeVirtualOutput(AbstractOutput *output) override;
+
 Q_SIGNALS:
     void systemCompositorDied();
     void connectionFailed();
@@ -218,6 +222,7 @@ private:
 
     void updateScreenSize(WaylandOutput *output);
     void relativeMotionHandler(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp);
+    WaylandOutput *createOutput(const QPoint &position, const QSize &size);
 
     Session *m_session;
     wl_display *m_display;
@@ -243,6 +248,9 @@ private:
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
 
     bool m_pointerLockRequested = false;
+    KWayland::Client::ServerSideDecorationManager *m_ssdManager = nullptr;
+    KWayland::Client::ServerSideDecorationManager *ssdManager();
+    int m_nextId = 0;
 #if HAVE_GBM && HAVE_WAYLAND_EGL
     int m_drmFileDescriptor = 0;
     gbm_device *m_gbmDevice;
