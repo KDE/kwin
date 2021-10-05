@@ -2428,9 +2428,8 @@ void InputRedirection::setupLibInput()
             }
         );
         connect(conn, &LibInput::Connection::pointerMotionAbsolute, this,
-            [this] (QPointF orig, QPointF screen, uint32_t time, LibInput::Device *device) {
-                Q_UNUSED(orig)
-                m_pointer->processMotion(screen, time, device);
+            [this] (const QPointF &position, uint32_t time, LibInput::Device *device) {
+                m_pointer->processMotion(position, time, device);
             }
         );
         connect(conn, &LibInput::Connection::touchDown, m_touch, &TouchInputRedirection::processDown);
