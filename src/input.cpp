@@ -1832,7 +1832,7 @@ public:
         switch (event->type()) {
         case QEvent::TabletMove:
         case QEvent::TabletEnterProximity:
-            input()->pointer()->processMotion(event->globalPosF(), event->timestamp());
+            input()->pointer()->processMotionAbsolute(event->globalPosF(), event->timestamp());
             break;
         case QEvent::TabletPress:
             input()->pointer()->processButton(KWin::qtMouseButtonToButton(Qt::LeftButton),
@@ -2197,14 +2197,14 @@ void InputRedirection::setupWorkspace()
                 connect(device, &FakeInputDevice::pointerMotionRequested, this,
                     [this] (const QSizeF &delta) {
                         // TODO: Fix time
-                        m_pointer->processMotion(globalPointer() + QPointF(delta.width(), delta.height()), 0);
+                        m_pointer->processMotionAbsolute(globalPointer() + QPointF(delta.width(), delta.height()), 0);
                         waylandServer()->simulateUserActivity();
                     }
                 );
                connect(device, &FakeInputDevice::pointerMotionAbsoluteRequested, this,
                     [this] (const QPointF &pos) {
                         // TODO: Fix time
-                        m_pointer->processMotion(pos, 0);
+                        m_pointer->processMotionAbsolute(pos, 0);
                         waylandServer()->simulateUserActivity();
                     }
                 );
@@ -2414,16 +2414,8 @@ void InputRedirection::setupLibInput()
         connect(conn, &LibInput::Connection::swipeGestureEnd, m_pointer, &PointerInputRedirection::processSwipeGestureEnd);
         connect(conn, &LibInput::Connection::swipeGestureCancelled, m_pointer, &PointerInputRedirection::processSwipeGestureCancelled);
         connect(conn, &LibInput::Connection::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
-        connect(conn, &LibInput::Connection::pointerMotion, this,
-            [this] (const QSizeF &delta, const QSizeF &deltaNonAccel, uint32_t time, quint64 timeMicroseconds, LibInput::Device *device) {
-                m_pointer->processMotion(m_pointer->pos() + QPointF(delta.width(), delta.height()), delta, deltaNonAccel, time, timeMicroseconds, device);
-            }
-        );
-        connect(conn, &LibInput::Connection::pointerMotionAbsolute, this,
-            [this] (const QPointF &position, uint32_t time, LibInput::Device *device) {
-                m_pointer->processMotion(position, time, device);
-            }
-        );
+        connect(conn, &LibInput::Connection::pointerMotion, m_pointer, &PointerInputRedirection::processMotion);
+        connect(conn, &LibInput::Connection::pointerMotionAbsolute, m_pointer, &PointerInputRedirection::processMotionAbsolute);
         connect(conn, &LibInput::Connection::touchDown, m_touch, &TouchInputRedirection::processDown);
         connect(conn, &LibInput::Connection::touchUp, m_touch, &TouchInputRedirection::processUp);
         connect(conn, &LibInput::Connection::touchMotion, m_touch, &TouchInputRedirection::processMotion);
@@ -2576,7 +2568,7 @@ void InputRedirection::setupLibInputWithScreens()
 
 void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
 {
-    m_pointer->processMotion(pos, time);
+    m_pointer->processMotionAbsolute(pos, time);
 }
 
 void InputRedirection::processPointerButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time)

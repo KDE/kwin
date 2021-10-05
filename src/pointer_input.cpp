@@ -199,11 +199,6 @@ void PointerInputRedirection::updateToReset()
     waylandServer()->seat()->setFocusedPointerSurface(nullptr);
 }
 
-void PointerInputRedirection::processMotion(const QPointF &pos, uint32_t time, LibInput::Device *device)
-{
-    processMotion(pos, QSizeF(), QSizeF(), time, 0, device);
-}
-
 class PositionUpdateBlocker
 {
 public:
@@ -217,7 +212,7 @@ public:
         if (s_counter == 0) {
             if (!s_scheduledPositions.isEmpty()) {
                 const auto pos = s_scheduledPositions.takeFirst();
-                m_pointer->processMotion(pos.pos, pos.delta, pos.deltaNonAccelerated, pos.time, pos.timeUsec, nullptr);
+                m_pointer->processMotionInternal(pos.pos, pos.delta, pos.deltaNonAccelerated, pos.time, pos.timeUsec, nullptr);
             }
         }
     }
@@ -247,7 +242,17 @@ private:
 int PositionUpdateBlocker::s_counter = 0;
 QVector<PositionUpdateBlocker::ScheduledPosition> PositionUpdateBlocker::s_scheduledPositions;
 
-void PointerInputRedirection::processMotion(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device)
+void PointerInputRedirection::processMotionAbsolute(const QPointF &pos, uint32_t time, LibInput::Device *device)
+{
+    processMotionInternal(pos, QSizeF(), QSizeF(), time, 0, device);
+}
+
+void PointerInputRedirection::processMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device)
+{
+    processMotionInternal(m_pos + QPointF(delta.width(), delta.height()), delta, deltaNonAccelerated, time, timeUsec, device);
+}
+
+void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device)
 {
     m_lastEventTime = time;
     if (!inited()) {
@@ -717,7 +722,7 @@ void PointerInputRedirection::updatePointerConstraints()
                 m_locked = false;
                 disconnectLockedPointerAboutToBeUnboundConnection();
                 if (! (hint.x() < 0 || hint.y() < 0) && focus()) {
-                    processMotion(focus()->mapFromLocal(hint), waylandServer()->seat()->timestamp());
+                    processMotionAbsolute(focus()->mapFromLocal(hint), waylandServer()->seat()->timestamp());
                 }
             }
             return;
@@ -740,7 +745,7 @@ void PointerInputRedirection::updatePointerConstraints()
                     // When the resource finally goes away, reposition the cursor according to the hint
                     connect(lock, &KWaylandServer::LockedPointerV1Interface::destroyed, this,
                         [this, globalHint]() {
-                            processMotion(globalHint, waylandServer()->seat()->timestamp());
+                            processMotionAbsolute(globalHint, waylandServer()->seat()->timestamp());
                     });
                 }
             );
@@ -890,7 +895,7 @@ void PointerInputRedirection::warp(const QPointF &pos)
 {
     if (supportsWarping()) {
         kwinApp()->platform()->warpPointer(pos);
-        processMotion(pos, waylandServer()->seat()->timestamp());
+        processMotionAbsolute(pos, waylandServer()->seat()->timestamp());
     }
 }
 
@@ -920,7 +925,7 @@ void PointerInputRedirection::updateAfterScreenChange()
     // pointer no longer on a screen, reposition to closes screen
     const AbstractOutput *output = kwinApp()->platform()->outputAt(m_pos.toPoint());
     // TODO: better way to get timestamps
-    processMotion(output->geometry().center(), waylandServer()->seat()->timestamp());
+    processMotionAbsolute(output->geometry().center(), waylandServer()->seat()->timestamp());
 }
 
 QPointF PointerInputRedirection::position() const

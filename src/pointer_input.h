@@ -86,11 +86,11 @@ public:
     /**
      * @internal
      */
-    void processMotion(const QPointF &pos, uint32_t time, LibInput::Device *device = nullptr);
+    void processMotionAbsolute(const QPointF &pos, uint32_t time, LibInput::Device *device = nullptr);
     /**
      * @internal
      */
-    void processMotion(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device);
+    void processMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device);
     /**
      * @internal
      */
@@ -133,6 +133,7 @@ public:
     void processPinchGestureCancelled(quint32 time, KWin::LibInput::Device *device = nullptr);
 
 private:
+    void processMotionInternal(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device);
     void cleanupInternalWindow(QWindow *old, QWindow *now) override;
     void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
 
@@ -165,6 +166,7 @@ private:
     bool m_confined = false;
     bool m_locked = false;
     bool m_enableConstraints = true;
+    friend class PositionUpdateBlocker;
 };
 
 class WaylandCursorImage : public QObject
