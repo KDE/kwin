@@ -487,35 +487,35 @@ void Edge::setGeometry(const QRect &geometry)
     int y = m_geometry.y();
     int width = m_geometry.width();
     int height = m_geometry.height();
-    const int size = m_edges->cornerOffset();
+    const int offset = m_edges->cornerOffset();
     if (isCorner()) {
         if (isRight()) {
-            x = x - size +1;
+            x = x + width - offset;
         }
         if (isBottom()) {
-            y = y - size +1;
+            y = y + height - offset;
         }
-        width = size;
-        height = size;
+        width = offset;
+        height = offset;
     } else {
         if (isLeft()) {
-            y += size + 1;
-            width = size;
-            height = height - size * 2;
+            y += offset;
+            width = offset;
+            height = height - offset * 2;
         } else if (isRight()) {
-            x = x - size + 1;
-            y += size;
-            width = size;
-            height = height - size * 2;
+            x = x + width - offset;
+            y += offset;
+            width = offset;
+            height = height - offset * 2;
         } else if (isTop()) {
-            x += size;
-            width = width - size * 2;
-            height = size;
+            x += offset;
+            width = width - offset * 2;
+            height = offset;
         } else if (isBottom()) {
-            x += size;
-            y = y - size +1;
-            width = width - size * 2;
-            height = size;
+            x += offset;
+            y = y + height - offset;
+            width = width - offset * 2;
+            height = offset;
         }
     }
     m_approachGeometry = QRect(x, y, width, height);
