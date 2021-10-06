@@ -129,7 +129,7 @@ set_package_properties(KF5Kirigami2 PROPERTIES
     TYPE RUNTIME
 )
 
-find_package(KDecoration2 5.18.0 CONFIG REQUIRED)
+find_package(KDecoration2 ${PROJECT_VERSION} CONFIG REQUIRED)
 
 find_package(KScreenLocker CONFIG REQUIRED)
 set_package_properties(KScreenLocker PROPERTIES
