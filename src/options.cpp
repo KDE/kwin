@@ -62,7 +62,6 @@ Options::Options(QObject *parent)
     , m_glSmoothScale(Options::defaultGlSmoothScale())
     , m_glStrictBinding(Options::defaultGlStrictBinding())
     , m_glStrictBindingFollowsDriver(Options::defaultGlStrictBindingFollowsDriver())
-    , m_glCoreProfile(Options::defaultGLCoreProfile())
     , m_glPreferBufferSwap(Options::defaultGlPreferBufferSwap())
     , m_glPlatformInterface(Options::defaultGlPlatformInterface())
     , m_windowsBlockCompositing(true)
@@ -590,15 +589,6 @@ void Options::setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver)
     Q_EMIT glStrictBindingFollowsDriverChanged();
 }
 
-void Options::setGLCoreProfile(bool value)
-{
-    if (m_glCoreProfile == value) {
-        return;
-    }
-    m_glCoreProfile = value;
-    Q_EMIT glCoreProfileChanged();
-}
-
 void Options::setWindowsBlockCompositing(bool value)
 {
     if (m_windowsBlockCompositing == value) {
@@ -883,7 +873,6 @@ void Options::reloadCompositingSettings(bool force)
     if (!isGlStrictBindingFollowsDriver()) {
         setGlStrictBinding(config.readEntry("GLStrictBinding", Options::defaultGlStrictBinding()));
     }
-    setGLCoreProfile(config.readEntry("GLCore", Options::defaultGLCoreProfile()));
 
     char c = 0;
     const QString s = config.readEntry("GLPreferBufferSwap", QString(Options::defaultGlPreferBufferSwap()));

@@ -193,7 +193,6 @@ class KWIN_EXPORT Options : public QObject
      * If @c false glStrictBinding is set from a config value and not updated during scene initialization.
      */
     Q_PROPERTY(bool glStrictBindingFollowsDriver READ isGlStrictBindingFollowsDriver WRITE setGlStrictBindingFollowsDriver NOTIFY glStrictBindingFollowsDriverChanged)
-    Q_PROPERTY(bool glCoreProfile READ glCoreProfile WRITE setGLCoreProfile NOTIFY glCoreProfileChanged)
     Q_PROPERTY(GlSwapStrategy glPreferBufferSwap READ glPreferBufferSwap WRITE setGlPreferBufferSwap NOTIFY glPreferBufferSwapChanged)
     Q_PROPERTY(KWin::OpenGLPlatformInterface glPlatformInterface READ glPlatformInterface WRITE setGlPlatformInterface NOTIFY glPlatformInterfaceChanged)
     Q_PROPERTY(bool windowsBlockCompositing READ windowsBlockCompositing WRITE setWindowsBlockCompositing NOTIFY windowsBlockCompositingChanged)
@@ -583,9 +582,6 @@ public:
     bool isGlStrictBindingFollowsDriver() const {
         return m_glStrictBindingFollowsDriver;
     }
-    bool glCoreProfile() const {
-        return m_glCoreProfile;
-    }
     OpenGLPlatformInterface glPlatformInterface() const {
         return m_glPlatformInterface;
     }
@@ -666,7 +662,6 @@ public:
     void setGlSmoothScale(int glSmoothScale);
     void setGlStrictBinding(bool glStrictBinding);
     void setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver);
-    void setGLCoreProfile(bool glCoreProfile);
     void setGlPreferBufferSwap(char glPreferBufferSwap);
     void setGlPlatformInterface(OpenGLPlatformInterface interface);
     void setWindowsBlockCompositing(bool set);
@@ -753,9 +748,6 @@ public:
     static bool defaultGlStrictBindingFollowsDriver() {
         return true;
     }
-    static bool defaultGLCoreProfile() {
-        return false;
-    }
     static GlSwapStrategy defaultGlPreferBufferSwap() {
         return AutoSwapStrategy;
     }
@@ -839,7 +831,6 @@ Q_SIGNALS:
     void glSmoothScaleChanged();
     void glStrictBindingChanged();
     void glStrictBindingFollowsDriverChanged();
-    void glCoreProfileChanged();
     void glPreferBufferSwapChanged();
     void glPlatformInterfaceChanged();
     void windowsBlockCompositingChanged();
@@ -885,7 +876,6 @@ private:
     // Settings that should be auto-detected
     bool m_glStrictBinding;
     bool m_glStrictBindingFollowsDriver;
-    bool m_glCoreProfile;
     GlSwapStrategy m_glPreferBufferSwap;
     OpenGLPlatformInterface m_glPlatformInterface;
     bool m_windowsBlockCompositing;

@@ -336,39 +336,38 @@ bool GlxBackend::initRenderingContext()
         const bool haveVideoMemoryPurge = hasExtension(QByteArrayLiteral("GLX_NV_robustness_video_memory_purge"));
 
         std::vector<GlxContextAttributeBuilder> candidates;
-        if (options->glCoreProfile()) {
-            if (have_robustness) {
-                if (haveVideoMemoryPurge) {
-                    GlxContextAttributeBuilder purgeMemoryCore;
-                    purgeMemoryCore.setVersion(3, 1);
-                    purgeMemoryCore.setRobust(true);
-                    purgeMemoryCore.setResetOnVideoMemoryPurge(true);
-                    candidates.emplace_back(std::move(purgeMemoryCore));
-                }
-                GlxContextAttributeBuilder robustCore;
-                robustCore.setVersion(3, 1);
-                robustCore.setRobust(true);
-                candidates.emplace_back(std::move(robustCore));
+        // core
+        if (have_robustness) {
+            if (haveVideoMemoryPurge) {
+                GlxContextAttributeBuilder purgeMemoryCore;
+                purgeMemoryCore.setVersion(3, 1);
+                purgeMemoryCore.setRobust(true);
+                purgeMemoryCore.setResetOnVideoMemoryPurge(true);
+                candidates.emplace_back(std::move(purgeMemoryCore));
             }
-            GlxContextAttributeBuilder core;
-            core.setVersion(3, 1);
-            candidates.emplace_back(std::move(core));
-        } else {
-            if (have_robustness) {
-                if (haveVideoMemoryPurge) {
-                    GlxContextAttributeBuilder purgeMemoryLegacy;
-                    purgeMemoryLegacy.setRobust(true);
-                    purgeMemoryLegacy.setResetOnVideoMemoryPurge(true);
-                    candidates.emplace_back(std::move(purgeMemoryLegacy));
-                }
-                GlxContextAttributeBuilder robustLegacy;
-                robustLegacy.setRobust(true);
-                candidates.emplace_back(std::move(robustLegacy));
-            }
-            GlxContextAttributeBuilder legacy;
-            legacy.setVersion(2, 1);
-            candidates.emplace_back(std::move(legacy));
+            GlxContextAttributeBuilder robustCore;
+            robustCore.setVersion(3, 1);
+            robustCore.setRobust(true);
+            candidates.emplace_back(std::move(robustCore));
         }
+        GlxContextAttributeBuilder core;
+        core.setVersion(3, 1);
+        candidates.emplace_back(std::move(core));
+        // legacy
+        if (have_robustness) {
+            if (haveVideoMemoryPurge) {
+                GlxContextAttributeBuilder purgeMemoryLegacy;
+                purgeMemoryLegacy.setRobust(true);
+                purgeMemoryLegacy.setResetOnVideoMemoryPurge(true);
+                candidates.emplace_back(std::move(purgeMemoryLegacy));
+            }
+            GlxContextAttributeBuilder robustLegacy;
+            robustLegacy.setRobust(true);
+            candidates.emplace_back(std::move(robustLegacy));
+        }
+        GlxContextAttributeBuilder legacy;
+        legacy.setVersion(2, 1);
+        candidates.emplace_back(std::move(legacy));
         for (auto it = candidates.begin(); it != candidates.end(); it++) {
             const auto attribs = it->build();
             ctx = glXCreateContextAttribsARB(display(), fbconfig, globalShareContext, true, attribs.data());
