@@ -176,8 +176,10 @@ void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
             std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
 
     if (Q_UNLIKELY(presentTime < m_expectedPresentTimestamp)) {
-        qCDebug(KWIN_CORE, "Provided presentation timestamp is invalid: %ld (current: %ld)",
-                presentTime.count(), m_expectedPresentTimestamp.count());
+        qCDebug(KWIN_CORE,
+                "Provided presentation timestamp is invalid: %lld (current: %lld)",
+                static_cast<long long>(presentTime.count()),
+                static_cast<long long>(m_expectedPresentTimestamp.count()));
     } else {
         m_expectedPresentTimestamp = presentTime;
     }
