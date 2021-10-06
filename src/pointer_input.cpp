@@ -157,8 +157,10 @@ void PointerInputRedirection::init()
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
     connect(workspace(), &Workspace::clientAdded, this, setupMoveResizeConnection);
 
-    // warp the cursor to center of screen
-    warp(workspace()->geometry().center());
+    // warp the cursor to center of screen containing the workspace center
+    if (const AbstractOutput *output = kwinApp()->platform()->outputAt(workspace()->geometry().center())) {
+        warp(output->geometry().center());
+    }
     updateAfterScreenChange();
 }
 
