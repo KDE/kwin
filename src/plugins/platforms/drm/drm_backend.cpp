@@ -313,36 +313,13 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
 void DrmBackend::addOutput(DrmAbstractOutput *o)
 {
     m_outputs.append(o);
-    m_enabledOutputs.append(o);
     Q_EMIT outputAdded(o);
-    Q_EMIT outputEnabled(o);
-    if (m_placeHolderOutput) {
-        qCDebug(KWIN_DRM) << "removing placeholder output";
-        primaryGpu()->removeVirtualOutput(m_placeHolderOutput);
-        m_placeHolderOutput = nullptr;
-    }
+    enableOutput(o, true);
 }
 
 void DrmBackend::removeOutput(DrmAbstractOutput *o)
 {
-    if (m_outputs.count() == 1 && !kwinApp()->isTerminating()) {
-        qCDebug(KWIN_DRM) << "adding placeholder output";
-        m_placeHolderOutput = primaryGpu()->createVirtualOutput();
-        // placeholder doesn't actually need to render anything
-        m_placeHolderOutput->renderLoop()->inhibit();
-    }
-    if (m_enabledOutputs.contains(o)) {
-        if (m_enabledOutputs.count() == 1) {
-            for (const auto &output : qAsConst(m_outputs)) {
-                if (output != o) {
-                    output->setEnabled(true);
-                    break;
-                }
-            }
-        }
-        m_enabledOutputs.removeOne(o);
-        Q_EMIT outputDisabled(o);
-    }
+    enableOutput(o, false);
     m_outputs.removeOne(o);
     Q_EMIT outputRemoved(o);
 }
@@ -501,20 +478,38 @@ void DrmBackend::readOutputsConfiguration()
 
 void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
 {
+    if (m_enabledOutputs.contains(output) == enable) {
+        return;
+    }
     if (enable) {
-        Q_ASSERT(!m_enabledOutputs.contains(output));
         m_enabledOutputs << output;
         Q_EMIT output->gpu()->outputEnabled(output);
         Q_EMIT outputEnabled(output);
+        checkOutputsAreOn();
+        if (m_placeHolderOutput) {
+            qCDebug(KWIN_DRM) << "removing placeholder output";
+            primaryGpu()->removeVirtualOutput(m_placeHolderOutput);
+            m_placeHolderOutput = nullptr;
+        }
     } else {
-        Q_ASSERT(m_enabledOutputs.contains(output));
+        if (m_enabledOutputs.count() == 1) {
+            for (const auto &o : qAsConst(m_outputs)) {
+                if (o != output) {
+                    o->setEnabled(true);
+                    break;
+                }
+            }
+        }
+        if (m_enabledOutputs.count() == 1 && !kwinApp()->isTerminating()) {
+            qCDebug(KWIN_DRM) << "adding placeholder output";
+            m_placeHolderOutput = primaryGpu()->createVirtualOutput();
+            // placeholder doesn't actually need to render anything
+            m_placeHolderOutput->renderLoop()->inhibit();
+        }
         m_enabledOutputs.removeOne(output);
-        Q_ASSERT(!m_enabledOutputs.contains(output));
         Q_EMIT output->gpu()->outputDisabled(output);
         Q_EMIT outputDisabled(output);
     }
-    checkOutputsAreOn();
-    Q_EMIT screensQueried();
 }
 
 void DrmBackend::initCursor()
