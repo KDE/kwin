@@ -204,6 +204,7 @@ WaylandServer::WaylandServer(QObject *parent)
 WaylandServer::~WaylandServer()
 {
     destroyInputMethodConnection();
+    s_self = nullptr;
 }
 
 KWaylandServer::ClientConnection *WaylandServer::xWaylandConnection() const
