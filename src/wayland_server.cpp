@@ -211,38 +211,8 @@ KWaylandServer::ClientConnection *WaylandServer::xWaylandConnection() const
     return m_xwaylandConnection;
 }
 
-void WaylandServer::destroyInternalConnection()
-{
-    Q_EMIT terminatingInternalClientConnection();
-    if (m_internalConnection.client) {
-        // delete all connections hold by plugins like e.g. widget style
-        const auto connections = KWayland::Client::ConnectionThread::connections();
-        for (auto c : connections) {
-            if (c == m_internalConnection.client) {
-                continue;
-            }
-            Q_EMIT c->connectionDied();
-        }
-
-        delete m_internalConnection.registry;
-        delete m_internalConnection.compositor;
-        delete m_internalConnection.seat;
-        delete m_internalConnection.ddm;
-        delete m_internalConnection.eventQueue; // Must be destroyed last.
-        dispatch();
-        m_internalConnection.client->deleteLater();
-        m_internalConnection.clientThread->quit();
-        m_internalConnection.clientThread->wait();
-        delete m_internalConnection.clientThread;
-        m_internalConnection.client = nullptr;
-        m_internalConnection.server->destroy();
-        m_internalConnection.server = nullptr;
-    }
-}
-
 void WaylandServer::terminateClientConnections()
 {
-    destroyInternalConnection();
     destroyInputMethodConnection();
     const auto connections = m_display->connections();
     for (auto it = connections.begin(); it != connections.end(); ++it) {
@@ -616,11 +586,7 @@ void WaylandServer::initWorkspace()
     }
 
     if (hasScreenLockerIntegration()) {
-        if (m_internalConnection.interfacesAnnounced) {
-            initScreenLocker();
-        } else {
-            connect(m_internalConnection.registry, &KWayland::Client::Registry::interfacesAnnounced, this, &WaylandServer::initScreenLocker);
-        }
+        initScreenLocker();
     } else {
         Q_EMIT initialized();
     }
@@ -735,55 +701,9 @@ void WaylandServer::destroyInputMethodConnection()
     if (!m_inputMethodServerConnection) {
         return;
     }
+    Q_EMIT terminatingInputMethodConnection();
     m_inputMethodServerConnection->destroy();
     m_inputMethodServerConnection = nullptr;
-}
-
-void WaylandServer::createInternalConnection()
-{
-    const auto socket = createConnection();
-    if (!socket.connection) {
-        return;
-    }
-    m_internalConnection.server = socket.connection;
-    using namespace KWayland::Client;
-    m_internalConnection.client = new ConnectionThread();
-    m_internalConnection.client->setSocketFd(socket.fd);
-    m_internalConnection.clientThread = new QThread;
-    m_internalConnection.client->moveToThread(m_internalConnection.clientThread);
-    m_internalConnection.clientThread->start();
-
-    connect(m_internalConnection.client, &ConnectionThread::connected, this,
-        [this] {
-            Registry *registry = new Registry(this);
-            EventQueue *eventQueue = new EventQueue(this);
-            eventQueue->setup(m_internalConnection.client);
-            registry->setEventQueue(eventQueue);
-            registry->create(m_internalConnection.client);
-            m_internalConnection.registry = registry;
-            m_internalConnection.eventQueue = eventQueue;
-            connect(registry, &Registry::interfacesAnnounced, this,
-                [this, registry] {
-                    m_internalConnection.interfacesAnnounced = true;
-
-                    const auto compInterface = registry->interface(Registry::Interface::Compositor);
-                    if (compInterface.name != 0) {
-                        m_internalConnection.compositor = registry->createCompositor(compInterface.name, compInterface.version, this);
-                    }
-                    const auto seatInterface = registry->interface(Registry::Interface::Seat);
-                    if (seatInterface.name != 0) {
-                        m_internalConnection.seat = registry->createSeat(seatInterface.name, seatInterface.version, this);
-                    }
-                    const auto ddmInterface = registry->interface(Registry::Interface::DataDeviceManager);
-                    if (ddmInterface.name != 0) {
-                        m_internalConnection.ddm = registry->createDataDeviceManager(ddmInterface.name, ddmInterface.version, this);
-                    }
-                }
-            );
-            registry->setup();
-        }
-    );
-    m_internalConnection.client->initConnection();
 }
 
 void WaylandServer::removeClient(AbstractClient *c)
@@ -796,9 +716,6 @@ void WaylandServer::dispatch()
 {
     if (!m_display) {
         return;
-    }
-    if (m_internalConnection.server) {
-        m_internalConnection.server->flush();
     }
     m_display->dispatchEvents();
 }

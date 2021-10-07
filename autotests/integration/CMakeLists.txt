@@ -43,6 +43,7 @@ ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
 add_library(KWinIntegrationTestFramework STATIC ${KWinIntegrationTestFramework_SOURCES})
 target_link_libraries(KWinIntegrationTestFramework
     Qt::Test
+    KF5::WaylandClient
     kwin
     Wayland::Client
 

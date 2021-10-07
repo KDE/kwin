@@ -570,7 +570,7 @@ void InputMethod::startInputMethod()
         return;
     }
 
-    connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, this, &InputMethod::stopInputMethod, Qt::UniqueConnection);
+    connect(waylandServer(), &WaylandServer::terminatingInputMethodConnection, this, &InputMethod::stopInputMethod, Qt::UniqueConnection);
 
     QStringList arguments = KShell::splitArgs(m_inputMethodCommand);
     if (arguments.isEmpty()) {

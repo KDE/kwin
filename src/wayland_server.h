@@ -18,19 +18,6 @@ class QThread;
 class QProcess;
 class QWindow;
 
-namespace KWayland
-{
-namespace Client
-{
-class ConnectionThread;
-class EventQueue;
-class Registry;
-class Compositor;
-class Seat;
-class DataDeviceManager;
-class Surface;
-}
-}
 namespace KWaylandServer
 {
 class AppMenuManagerInterface;
@@ -188,7 +175,6 @@ public:
      */
     bool hasGlobalShortcutSupport() const;
 
-    void createInternalConnection();
     void initPlatform();
     void initWorkspace();
 
@@ -196,26 +182,8 @@ public:
     KWaylandServer::ClientConnection *inputMethodConnection() const {
         return m_inputMethodServerConnection;
     }
-    KWaylandServer::ClientConnection *internalConnection() const {
-        return m_internalConnection.server;
-    }
     KWaylandServer::ClientConnection *screenLockerClientConnection() const {
         return m_screenLockerClientConnection;
-    }
-    KWayland::Client::Compositor *internalCompositor() {
-        return m_internalConnection.compositor;
-    }
-    KWayland::Client::Seat *internalSeat() {
-        return m_internalConnection.seat;
-    }
-    KWayland::Client::DataDeviceManager *internalDataDeviceManager() {
-        return m_internalConnection.ddm;
-    }
-    KWayland::Client::ConnectionThread *internalClientConection() {
-        return m_internalConnection.client;
-    }
-    KWayland::Client::Registry *internalClientRegistry() {
-        return m_internalConnection.registry;
     }
     void dispatch();
 
@@ -262,14 +230,13 @@ public:
 Q_SIGNALS:
     void shellClientAdded(KWin::AbstractClient *);
     void shellClientRemoved(KWin::AbstractClient *);
-    void terminatingInternalClientConnection();
+    void terminatingInputMethodConnection();
     void initialized();
     void foreignTransientChanged(KWaylandServer::SurfaceInterface *child);
 
 private:
     int createScreenLockerConnection();
     void shellClientShown(Toplevel *t);
-    void destroyInternalConnection();
     void initScreenLocker();
     void registerXdgGenericClient(AbstractClient *client);
     void registerXdgToplevelClient(XdgToplevelClient *client);
@@ -302,18 +269,6 @@ private:
     KWaylandServer::InputMethodV1Interface *m_inputMethod = nullptr;
     KWaylandServer::ClientConnection *m_inputMethodServerConnection = nullptr;
     KWaylandServer::ClientConnection *m_screenLockerClientConnection = nullptr;
-    struct {
-        KWaylandServer::ClientConnection *server = nullptr;
-        KWayland::Client::ConnectionThread *client = nullptr;
-        KWayland::Client::EventQueue *eventQueue = nullptr;
-        QThread *clientThread = nullptr;
-        KWayland::Client::Registry *registry = nullptr;
-        KWayland::Client::Compositor *compositor = nullptr;
-        KWayland::Client::Seat *seat = nullptr;
-        KWayland::Client::DataDeviceManager *ddm = nullptr;
-        bool interfacesAnnounced = false;
-
-    } m_internalConnection;
     KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
     KWaylandServer::KeyStateInterface *m_keyState = nullptr;
     QList<AbstractClient *> m_clients;

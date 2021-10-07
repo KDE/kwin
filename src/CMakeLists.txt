@@ -202,7 +202,6 @@ target_link_libraries(kwin
     KF5::Package
     KF5::Plasma
     KF5::QuickAddons
-    KF5::WaylandClient
     KF5::WindowSystem
 
     KDecoration2::KDecoration

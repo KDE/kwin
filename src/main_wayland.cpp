@@ -154,7 +154,6 @@ void ApplicationWayland::performStartup()
 
     waylandServer()->initPlatform();
     createColorManager();
-    waylandServer()->createInternalConnection();
 
     // try creating the Wayland Backend
     createInput();

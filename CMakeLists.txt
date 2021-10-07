@@ -79,7 +79,6 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     Notifications
     Package
     Plasma
-    Wayland
     WidgetsAddons
     WindowSystem
 )
@@ -420,6 +419,7 @@ if (BUILD_TESTING)
     find_package(QtWaylandScanner ${QT_MIN_VERSION} REQUIRED)
     find_package(Wayland REQUIRED COMPONENTS Client)
     find_package(PlasmaWaylandProtocols CONFIG REQUIRED)
+    find_package(KF5Wayland ${KF5_MIN_VERSION} REQUIRED)
 
     add_subdirectory(autotests)
     add_subdirectory(tests)
