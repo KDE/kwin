@@ -728,7 +728,7 @@ void TestXdgShellClientRules::testSizeApply()
     QVERIFY(!client->isInteractiveMove());
     QVERIFY(!client->isInteractiveResize());
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait(10));
+    QVERIFY(surfaceConfigureRequestedSpy->wait());
     QCOMPARE(surfaceConfigureRequestedSpy->count(), 5);
     QCOMPARE(toplevelConfigureRequestedSpy->count(), 5);
 
@@ -868,7 +868,7 @@ void TestXdgShellClientRules::testSizeRemember()
     QVERIFY(!client->isInteractiveMove());
     QVERIFY(!client->isInteractiveResize());
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait(10));
+    QVERIFY(surfaceConfigureRequestedSpy->wait());
     QCOMPARE(surfaceConfigureRequestedSpy->count(), 5);
     QCOMPARE(toplevelConfigureRequestedSpy->count(), 5);
 
