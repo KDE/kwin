@@ -114,15 +114,13 @@ void TestXdgShellClient::testXdgWindowReactive()
     positioner->set_reactive();
 
     QScopedPointer<KWayland::Client::Surface> rootSurface(Test::createSurface());
-    QScopedPointer<KWayland::Client::Surface> childSurface(Test::createSurface());
-
     QScopedPointer<Test::XdgToplevel> root(Test::createXdgToplevelSurface(rootSurface.data()));
-    QScopedPointer<Test::XdgPopup> popup(Test::createXdgPopupSurface(childSurface.data(), root->xdgSurface(), positioner.data()));
-
     auto rootClient = Test::renderAndWaitForShown(rootSurface.data(), QSize(100, 100), Qt::cyan);
-    auto childClient = Test::renderAndWaitForShown(childSurface.data(), QSize(10, 10), Qt::cyan);
-
     QVERIFY(rootClient);
+
+    QScopedPointer<KWayland::Client::Surface> childSurface(Test::createSurface());
+    QScopedPointer<Test::XdgPopup> popup(Test::createXdgPopupSurface(childSurface.data(), root->xdgSurface(), positioner.data()));
+    auto childClient = Test::renderAndWaitForShown(childSurface.data(), QSize(10, 10), Qt::cyan);
     QVERIFY(childClient);
 
     QSignalSpy popupConfigureRequested(popup.data(), &Test::XdgPopup::configureRequested);
@@ -145,15 +143,13 @@ void TestXdgShellClient::testXdgWindowRepositioning()
     otherPositioner->set_anchor_rect(10, 10, 10, 10);
 
     QScopedPointer<KWayland::Client::Surface> rootSurface(Test::createSurface());
-    QScopedPointer<KWayland::Client::Surface> childSurface(Test::createSurface());
-
     QScopedPointer<Test::XdgToplevel> root(Test::createXdgToplevelSurface(rootSurface.data()));
-    QScopedPointer<Test::XdgPopup> popup(Test::createXdgPopupSurface(childSurface.data(), root->xdgSurface(), positioner.data()));
-
     auto rootClient = Test::renderAndWaitForShown(rootSurface.data(), QSize(100, 100), Qt::cyan);
-    auto childClient = Test::renderAndWaitForShown(childSurface.data(), QSize(10, 10), Qt::cyan);
-
     QVERIFY(rootClient);
+
+    QScopedPointer<KWayland::Client::Surface> childSurface(Test::createSurface());
+    QScopedPointer<Test::XdgPopup> popup(Test::createXdgPopupSurface(childSurface.data(), root->xdgSurface(), positioner.data()));
+    auto childClient = Test::renderAndWaitForShown(childSurface.data(), QSize(10, 10), Qt::cyan);
     QVERIFY(childClient);
 
     QSignalSpy reconfigureSpy(popup.data(), &Test::XdgPopup::configureRequested);
