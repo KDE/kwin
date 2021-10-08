@@ -24,6 +24,7 @@
 #include <QtConcurrentRun>
 #include <QDebug>
 #include <QFutureWatcher>
+#include <QStaticPlugin>
 #include <QStringList>
 
 namespace KWin
@@ -302,6 +303,151 @@ void ScriptedEffectLoader::clear()
     m_queue->clear();
 }
 
+static QJsonValue readPluginInfo(const QJsonObject &metadata, const QString &key)
+{
+    return metadata.value(QLatin1String("KPlugin")).toObject().value(key);
+}
+
+StaticPluginEffectLoader::StaticPluginEffectLoader(QObject *parent)
+    : AbstractEffectLoader(parent)
+    , m_queue(new EffectLoadQueue<StaticPluginEffectLoader, QString>(this))
+{
+    const QVector<QStaticPlugin> staticPlugins = QPluginLoader::staticPlugins();
+    for (const QStaticPlugin &staticPlugin : staticPlugins) {
+        const QJsonObject rootMetaData = staticPlugin.metaData();
+        if (rootMetaData.value(QLatin1String("IID")) != QLatin1String(EffectPluginFactory_iid)) {
+            continue;
+        }
+
+        const QJsonObject pluginMetaData = rootMetaData.value(QLatin1String("MetaData")).toObject();
+        const QString pluginId = readPluginInfo(pluginMetaData, QStringLiteral("Id")).toString();
+        if (pluginId.isEmpty()) {
+            continue;
+        }
+        if (m_staticPlugins.contains(pluginId)) {
+            qCWarning(KWIN_CORE) << "Conflicting plugin id" << pluginId;
+            continue;
+        }
+
+        m_staticPlugins.insert(pluginId, staticPlugin);
+    }
+}
+
+StaticPluginEffectLoader::~StaticPluginEffectLoader()
+{
+}
+
+bool StaticPluginEffectLoader::hasEffect(const QString &name) const
+{
+    return m_staticPlugins.contains(name);
+}
+
+bool StaticPluginEffectLoader::isEffectSupported(const QString &name) const
+{
+    auto it = m_staticPlugins.constFind(name);
+    if (it == m_staticPlugins.constEnd()) {
+        return false;
+    }
+    if (EffectPluginFactory *effectFactory = factory(*it)) {
+        return effectFactory->isSupported();
+    }
+    return false;
+}
+
+QStringList StaticPluginEffectLoader::listOfKnownEffects() const
+{
+    return m_staticPlugins.keys();
+}
+
+void StaticPluginEffectLoader::clear()
+{
+    m_queue->clear();
+}
+
+bool StaticPluginEffectLoader::checkEnabledByDefault(const QStaticPlugin &staticPlugin) const
+{
+    const QJsonObject metadata = staticPlugin.metaData().value("MetaData").toObject();
+    if (metadata.value("org.kde.kwin.effect").toObject().value("enabledByDefaultMethod").toBool()) {
+        if (EffectPluginFactory *effectFactory = factory(staticPlugin)) {
+            return effectFactory->enabledByDefault();
+        }
+    } else if (metadata.value("KPlugin").toObject().value("EnabledByDefault").toBool()) {
+        return true;
+    }
+
+    return false;
+}
+
+void StaticPluginEffectLoader::queryAndLoadAll()
+{
+    for (auto it = m_staticPlugins.constBegin(); it != m_staticPlugins.constEnd(); ++it) {
+        const LoadEffectFlags flags = readConfig(it.key(), checkEnabledByDefault(it.value()));
+        if (flags.testFlag(LoadEffectFlag::Load)) {
+            m_queue->enqueue(qMakePair(it.key(), flags));
+        }
+    }
+}
+
+bool StaticPluginEffectLoader::loadEffect(const QString &name)
+{
+    return loadEffect(name, LoadEffectFlag::Load);
+}
+
+bool StaticPluginEffectLoader::loadEffect(const QString &name, LoadEffectFlags flags)
+{
+    if (m_loadedEffects.contains(name)) {
+        qCDebug(KWIN_CORE) << name << "is already loaded";
+        return false;
+    }
+
+    auto staticPlugin = m_staticPlugins.constFind(name);
+    if (staticPlugin == m_staticPlugins.constEnd()) {
+        return false;
+    }
+
+    EffectPluginFactory *effectFactory = factory(*staticPlugin);
+    if (!effectFactory) {
+        qCDebug(KWIN_CORE) << "Couldn't get an EffectPluginFactory for: " << name;
+        return false;
+    }
+
+#ifndef KWIN_UNIT_TEST
+    effects->makeOpenGLContextCurrent();
+#endif
+    if (!effectFactory->isSupported()) {
+        qCDebug(KWIN_CORE) << "Effect is not supported: " << name;
+        return false;
+    }
+
+    if (flags & LoadEffectFlag::CheckDefaultFunction) {
+        if (!checkEnabledByDefault(*staticPlugin)) {
+            qCDebug(KWIN_CORE) << "Enabled by default function disables effect: " << name;
+            return false;
+        }
+    }
+
+    Effect *effect = effectFactory->createEffect();
+    if (!effect) {
+        qCDebug(KWIN_CORE) << "Failed to create effect: " << name;
+        return false;
+    }
+
+    // insert in our loaded effects
+    m_loadedEffects << name;
+    connect(effect, &Effect::destroyed, this, [this, name]() {
+        m_loadedEffects.removeAll(name);
+    });
+
+    qCDebug(KWIN_CORE) << "Successfully loaded plugin effect: " << name;
+    Q_EMIT effectLoaded(effect, name);
+    return true;
+}
+
+EffectPluginFactory *StaticPluginEffectLoader::factory(const QStaticPlugin &staticPlugin) const
+{
+    return qobject_cast<EffectPluginFactory *>(staticPlugin.instance());
+}
+
 PluginEffectLoader::PluginEffectLoader(QObject *parent)
     : AbstractEffectLoader(parent)
     , m_queue(new EffectLoadQueue< PluginEffectLoader, KPluginMetaData>(this))
@@ -477,6 +623,7 @@ EffectLoader::EffectLoader(QObject *parent)
 {
     m_loaders << new BuiltInEffectLoader(this)
               << new ScriptedEffectLoader(this)
+              << new StaticPluginEffectLoader(this)
               << new PluginEffectLoader(this);
     for (auto it = m_loaders.constBegin(); it != m_loaders.constEnd(); ++it) {
         connect(*it, &AbstractEffectLoader::effectLoaded, this, &AbstractEffectLoader::effectLoaded);
