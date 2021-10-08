@@ -208,4 +208,10 @@ DrmPlane::Transformations DrmPlane::supportedTransformations() const
     return m_supportedTransformations;
 }
 
+void DrmPlane::disable()
+{
+    setPending(PropertyIndex::CrtcId, 0);
+    setPending(PropertyIndex::FbId, 0);
+}
+
 }

@@ -101,7 +101,7 @@ public:
         CommitModeset
     };
     Q_ENUM(CommitMode);
-    static bool commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode);
+    static bool commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects = {});
 
 private:
     bool populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);

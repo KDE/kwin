@@ -101,6 +101,7 @@ private:
     void initDrmResources();
 
     bool checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmCrtc*> crtcs);
+    QVector<DrmObject*> unusedObjects() const;
 
     void handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest);
     void handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease);
@@ -123,6 +124,7 @@ private:
     QVector<DrmPlane*> m_planes;
     QVector<DrmCrtc*> m_crtcs;
     QVector<DrmConnector*> m_connectors;
+    QVector<DrmObject*> m_allObjects;
     QVector<DrmPipeline*> m_pipelines;
 
     QVector<DrmOutput*> m_drmOutputs;

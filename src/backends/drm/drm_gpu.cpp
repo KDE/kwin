@@ -177,6 +177,7 @@ void DrmGpu::initDrmResources()
                 DrmPlane *p = new DrmPlane(this, kplane->plane_id);
                 if (p->init()) {
                     m_planes << p;
+                    m_allObjects << p;
                 } else {
                     delete p;
                 }
@@ -199,13 +200,19 @@ void DrmGpu::initDrmResources()
     }
     auto planes = m_planes;
     for (int i = 0; i < resources->count_crtcs; ++i) {
+        uint32_t crtcId = resources->crtcs[i];
         DrmPlane *primary = nullptr;
+        DrmPlane *cursor = nullptr;
         for (const auto &plane : qAsConst(planes)) {
-            if (plane->type() == DrmPlane::TypeIndex::Primary
-                && plane->isCrtcSupported(i)) {
-                primary = plane;
-                if (plane->getProp(DrmPlane::PropertyIndex::CrtcId)->current() == resources->crtcs[i]) {
-                    break;
+            if (plane->isCrtcSupported(i)) {
+                if (plane->type() == DrmPlane::TypeIndex::Primary) {
+                    if (!primary || primary->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == crtcId) {
+                        primary = plane;
+                    }
+                } else if (plane->type() == DrmPlane::TypeIndex::Cursor) {
+                    if (!cursor || cursor->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == crtcId) {
+                        cursor = plane;
+                    }
                 }
             }
         }
@@ -214,12 +221,13 @@ void DrmGpu::initDrmResources()
             continue;
         }
         planes.removeOne(primary);
-        auto c = new DrmCrtc(this, resources->crtcs[i], i, primary);
+        auto c = new DrmCrtc(this, crtcId, i, primary, cursor);
         if (!c->init()) {
             delete c;
             continue;
         }
         m_crtcs << c;
+        m_allObjects << c;
     }
 }
 
@@ -263,6 +271,7 @@ bool DrmGpu::updateOutputs()
                 continue;
             }
             m_connectors << conn;
+            m_allObjects << conn;
         } else {
             removedConnectors.removeOne(conn);
             conn->updateProperties();
@@ -299,6 +308,7 @@ bool DrmGpu::updateOutputs()
             removeLeaseOutput(leaseOutput);
         }
         m_connectors.removeOne(connector);
+        m_allObjects.removeOne(connector);
         delete connector;
     }
 
@@ -348,13 +358,14 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmC
                 leasePipelines << output->pipeline();
             }
         }
-        bool test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test);
+        const auto unused = unusedObjects();
+        bool test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
         if (!leasePipelines.isEmpty() && test) {
             // non-desktop outputs should be disabled for normal usage
             for (const auto &pipeline : qAsConst(leasePipelines)) {
                 pipeline->pending.active = false;
             }
-            bool ret = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test);
+            bool ret = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
             if (ret) {
                 for (const auto &pipeline : qAsConst(leasePipelines)) {
                     pipeline->applyPendingChanges();
@@ -728,6 +739,8 @@ bool DrmGpu::needsModeset() const
 {
     return std::any_of(m_pipelines.constBegin(), m_pipelines.constEnd(), [](const auto &pipeline) {
         return pipeline->needsModeset();
+    }) || std::any_of(m_allObjects.constBegin(), m_allObjects.constEnd(), [](const auto &object) {
+        return object->needsModeset();
     });
 }
 
@@ -743,11 +756,28 @@ bool DrmGpu::maybeModeset()
         return pipeline->modesetPresentPending() || !pipeline->pending.active;
     });
     if (presentPendingForAll) {
-        return DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset);
+        return DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedObjects());
     } else {
         // commit only once all pipelines are ready for presentation
         return true;
     }
+}
+
+QVector<DrmObject*> DrmGpu::unusedObjects() const
+{
+    if (!m_atomicModeSetting) {
+        return {};
+    }
+    QVector<DrmObject*> ret = m_allObjects;
+    for (const auto &pipeline : m_pipelines) {
+        ret.removeOne(pipeline->connector());
+        if (pipeline->pending.crtc) {
+            ret.removeOne(pipeline->pending.crtc);
+            ret.removeOne(pipeline->pending.crtc->primaryPlane());
+            ret.removeOne(pipeline->pending.crtc->cursorPlane());
+        }
+    }
+    return ret;
 }
 
 }

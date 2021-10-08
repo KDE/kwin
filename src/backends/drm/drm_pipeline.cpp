@@ -111,7 +111,7 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
     return true;
 }
 
-bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode)
+bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects)
 {
     Q_ASSERT(!pipelines.isEmpty());
     if (pipelines[0]->gpu()->atomicModeSetting()) {
@@ -121,7 +121,7 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
             return false;
         }
         uint32_t flags = 0;
-        const auto &failed = [pipelines, req, mode](){
+        const auto &failed = [pipelines, req, mode, unusedObjects](){
             drmModeAtomicFree(req);
             for (const auto &pipeline : pipelines) {
                 pipeline->printDebugInfo();
@@ -139,6 +139,9 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                     pipeline->output()->presentFailed();
                 }
             }
+            for (const auto &obj : unusedObjects) {
+                obj->rollbackPending();
+            }
             return false;
         };
         for (const auto &pipeline : pipelines) {
@@ -148,6 +151,16 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
             }
             if (!pipeline->populateAtomicValues(req, flags)) {
                 qCWarning(KWIN_DRM) << "Populating atomic values failed for" << mode;
+                return failed();
+            }
+        }
+        for (const auto &unused : unusedObjects) {
+            unused->disable();
+            if (unused->needsModeset()) {
+                flags |= DRM_MODE_ATOMIC_ALLOW_MODESET;
+            }
+            if (!unused->atomicPopulate(req)) {
+                qCWarning(KWIN_DRM) << "Populating atomic values failed for unused resource" << unused;
                 return failed();
             }
         }
@@ -176,6 +189,7 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
             if (pipeline->pending.crtc) {
                 pipeline->pending.crtc->commitPending();
                 pipeline->pending.crtc->primaryPlane()->commitPending();
+                pipeline->pending.crtc->cursorPlane()->commitPending();
             }
             if (mode != CommitMode::Test) {
                 pipeline->m_modesetPresentPending = false;
@@ -185,11 +199,18 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                     pipeline->pending.crtc->primaryPlane()->setNext(pipeline->m_primaryBuffer);
                     pipeline->pending.crtc->commit();
                     pipeline->pending.crtc->primaryPlane()->commit();
+                    pipeline->pending.crtc->cursorPlane()->commit();
                 }
                 pipeline->m_current = pipeline->pending;
                 if (modeset && pipeline->activePending()) {
                     pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
                 }
+            }
+        }
+        for (const auto &obj : unusedObjects) {
+            obj->commitPending();
+            if (mode != CommitMode::Test) {
+                obj->commit();
             }
         }
         drmModeAtomicFree(req);

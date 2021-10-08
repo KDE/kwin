@@ -27,7 +27,7 @@ class DrmPlane;
 class DrmCrtc : public DrmObject
 {
 public:
-    DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane);
+    DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane);
 
     enum class PropertyIndex : uint32_t {
         ModeId = 0,
@@ -40,10 +40,12 @@ public:
 
     bool init() override;
     bool needsModeset() const override;
+    void disable() override;
 
     int pipeIndex() const;
     int gammaRampSize() const;
     DrmPlane *primaryPlane() const;
+    DrmPlane *cursorPlane() const;
     drmModeModeInfo queryCurrentMode();
 
     QSharedPointer<DrmBuffer> current() const;
@@ -64,6 +66,8 @@ private:
     QSharedPointer<DrmBuffer> m_nextBuffer;
     int m_pipeIndex;
     DrmPlane *m_primaryPlane;
+    // currently unused but needs to be filtered out for modesets
+    DrmPlane *m_cursorPlane;
 
     struct {
         QPoint pos;

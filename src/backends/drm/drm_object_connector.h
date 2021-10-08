@@ -53,6 +53,7 @@ public:
     bool init() override;
     bool needsModeset() const override;
     bool updateProperties() override;
+    void disable() override;
 
     QVector<uint32_t> encoders() const;
     bool isConnected() const;

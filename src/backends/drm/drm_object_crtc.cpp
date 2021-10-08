@@ -18,7 +18,7 @@
 namespace KWin
 {
 
-DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane)
+DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane)
     : DrmObject(gpu, crtcId, {
         PropertyDefinition(QByteArrayLiteral("MODE_ID"), Requirement::Required),
         PropertyDefinition(QByteArrayLiteral("ACTIVE"), Requirement::Required),
@@ -29,6 +29,7 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryP
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
     , m_primaryPlane(primaryPlane)
+    , m_cursorPlane(cursorPlane)
 {
 }
 
@@ -145,6 +146,17 @@ QPoint DrmCrtc::cursorPos() const
 DrmPlane *DrmCrtc::primaryPlane() const
 {
     return m_primaryPlane;
+}
+
+DrmPlane *DrmCrtc::cursorPlane() const
+{
+    return m_cursorPlane;
+}
+
+void DrmCrtc::disable()
+{
+    setPending(PropertyIndex::Active, 0);
+    setPendingBlob(PropertyIndex::ModeId, nullptr, sizeof(drmModeModeInfo));
 }
 
 }

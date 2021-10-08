@@ -369,6 +369,11 @@ DrmPipeline *DrmConnector::pipeline() const
     return m_pipeline.data();
 }
 
+void DrmConnector::disable()
+{
+    setPending(PropertyIndex::CrtcId, 0);
+}
+
 QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj)
 {
     QDebugStateSaver saver(s);
