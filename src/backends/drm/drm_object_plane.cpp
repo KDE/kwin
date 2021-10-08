@@ -168,6 +168,9 @@ void DrmPlane::setBuffer(DrmBuffer *buffer)
 
 bool DrmPlane::needsModeset() const
 {
+    if (!gpu()->atomicModeSetting()) {
+        return false;
+    }
     auto rotation = getProp(PropertyIndex::Rotation);
     if (rotation && rotation->needsCommit()) {
         return true;

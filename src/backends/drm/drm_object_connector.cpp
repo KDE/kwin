@@ -306,6 +306,9 @@ bool DrmConnector::vrrCapable() const
 
 bool DrmConnector::needsModeset() const
 {
+    if (!gpu()->atomicModeSetting()) {
+        return false;
+    }
     if (getProp(PropertyIndex::CrtcId)->needsCommit()) {
         return true;
     }

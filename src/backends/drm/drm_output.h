@@ -20,6 +20,7 @@
 #include <QVector>
 #include <QSharedPointer>
 #include <xf86drmMode.h>
+#include <chrono>
 
 namespace KWin
 {
@@ -47,7 +48,6 @@ public:
     bool moveCursor() override;
 
     bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) override;
-    void pageFlipped();
 
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
@@ -60,6 +60,9 @@ public:
     bool queueChanges(const WaylandOutputConfig &config);
     void applyQueuedChanges(const WaylandOutputConfig &config);
     void revertQueuedChanges();
+
+    void pageFlipped(std::chrono::nanoseconds timestamp);
+    void presentFailed();
 
 private:
     friend class DrmGpu;
@@ -84,7 +87,6 @@ private:
     DrmConnector *m_connector;
 
     QSharedPointer<DrmDumbBuffer> m_cursor;
-    bool m_pageFlipPending = false;
     QTimer m_turnOffTimer;
 };
 

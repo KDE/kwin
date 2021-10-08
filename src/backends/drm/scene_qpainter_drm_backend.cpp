@@ -78,10 +78,7 @@ void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &damage)
     QSharedPointer<DrmDumbBuffer> back = rendererOutput.swapchain->currentBuffer();
     rendererOutput.swapchain->releaseBuffer(back);
 
-    if (!drmOutput->present(back, drmOutput->geometry())) {
-        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
-        renderLoopPrivate->notifyFrameFailed();
-    }
+    drmOutput->present(back, drmOutput->geometry());
 
     rendererOutput.damageJournal.add(damage);
 }

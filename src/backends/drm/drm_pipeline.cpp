@@ -46,11 +46,21 @@ DrmPipeline::DrmPipeline(DrmConnector *conn)
 
 DrmPipeline::~DrmPipeline()
 {
+    m_output = nullptr;
+    if (m_pageflipPending && m_current.crtc) {
+        pageFlipped({});
+    }
 }
 
 bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
 {
     Q_ASSERT(pending.crtc);
+    if (!buffer) {
+        if (m_output) {
+            m_output->presentFailed();
+        }
+        return false;
+    }
     m_primaryBuffer = buffer;
     if (gpu()->useEglStreams() && gpu()->eglBackend() != nullptr && gpu() == gpu()->platform()->primaryGpu()) {
         // EglStreamBackend queues normal page flips through EGL,
@@ -59,19 +69,42 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
             return true;
         }
     }
+    bool directScanout = false;
+#if HAVE_GBM
+    // with direct scanout disallow modesets, calling presentFailed() and logging warnings
+    if (auto buf = dynamic_cast<DrmGbmBuffer*>(buffer.data()); buf && buf->clientBuffer()) {
+        directScanout = true;
+    }
+#endif
+    if (gpu()->needsModeset()) {
+        if (directScanout) {
+            return false;
+        }
+        m_modesetPresentPending = true;
+        return gpu()->maybeModeset();
+    }
     if (gpu()->atomicModeSetting()) {
         if (!commitPipelines({this}, CommitMode::Commit)) {
             // update properties and try again
             updateProperties();
             if (!commitPipelines({this}, CommitMode::Commit)) {
+                if (directScanout) {
+                    return false;
+                }
                 qCWarning(KWIN_DRM) << "Atomic present failed!" << strerror(errno);
                 printDebugInfo();
+                if (m_output) {
+                    m_output->presentFailed();
+                }
                 return false;
             }
         }
     } else {
         if (!presentLegacy()) {
             qCWarning(KWIN_DRM) << "Present failed!" << strerror(errno);
+            if (m_output) {
+                m_output->presentFailed();
+            }
             return false;
         }
     }
@@ -87,8 +120,8 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
             qCDebug(KWIN_DRM) << "Failed to allocate drmModeAtomicReq!" << strerror(errno);
             return false;
         }
-        uint32_t flags = DRM_MODE_ATOMIC_NONBLOCK;
-        const auto &failed = [pipelines, req](){
+        uint32_t flags = 0;
+        const auto &failed = [pipelines, req, mode](){
             drmModeAtomicFree(req);
             for (const auto &pipeline : pipelines) {
                 pipeline->printDebugInfo();
@@ -100,6 +133,10 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                 if (pipeline->pending.crtc) {
                     pipeline->pending.crtc->rollbackPending();
                     pipeline->pending.crtc->primaryPlane()->rollbackPending();
+                }
+                if (mode != CommitMode::Test && pipeline->activePending() && pipeline->output()) {
+                    pipeline->m_modesetPresentPending = false;
+                    pipeline->output()->presentFailed();
                 }
             }
             return false;
@@ -114,11 +151,22 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                 return failed();
             }
         }
-        if (drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, pipelines[0]->output()) != 0) {
+        bool modeset = flags & DRM_MODE_ATOMIC_ALLOW_MODESET;
+        Q_ASSERT(!modeset || mode != CommitMode::Commit);
+        if (modeset) {
+            // The kernel fails commits with DRM_MODE_PAGE_FLIP_EVENT when a crtc is disabled in the commit
+            // and already was disabled before, to work around some quirks in old userspace.
+            // Instead of using DRM_MODE_PAGE_FLIP_EVENT | DRM_MODE_ATOMIC_NONBLOCK, do the modeset in a blocking
+            // fashion without page flip events and directly call the pageFlipped method afterwards
+            flags = flags & (~DRM_MODE_PAGE_FLIP_EVENT);
+        } else {
+            flags |= DRM_MODE_ATOMIC_NONBLOCK;
+        }
+        if (drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, nullptr) != 0) {
             qCWarning(KWIN_DRM) << "Atomic test for" << mode << "failed!" << strerror(errno);
             return failed();
         }
-        if (mode != CommitMode::Test && drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, flags, pipelines[0]->output()) != 0) {
+        if (mode != CommitMode::Test && drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, flags, nullptr) != 0) {
             qCWarning(KWIN_DRM) << "Atomic commit failed! This should never happen!" << strerror(errno);
             return failed();
         }
@@ -130,6 +178,8 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                 pipeline->pending.crtc->primaryPlane()->commitPending();
             }
             if (mode != CommitMode::Test) {
+                pipeline->m_modesetPresentPending = false;
+                pipeline->m_pageflipPending = true;
                 pipeline->m_connector->commit();
                 if (pipeline->pending.crtc) {
                     pipeline->pending.crtc->primaryPlane()->setNext(pipeline->m_primaryBuffer);
@@ -137,6 +187,9 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                     pipeline->pending.crtc->primaryPlane()->commit();
                 }
                 pipeline->m_current = pipeline->pending;
+                if (modeset && pipeline->activePending()) {
+                    pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
+                }
             }
         }
         drmModeAtomicFree(req);
@@ -152,11 +205,21 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
         if (failure) {
             // at least try to revert the config
             for (const auto &pipeline : pipelines) {
-                pipeline->pending = pipeline->m_next;
+                pipeline->revertPendingChanges();
                 pipeline->applyPendingChangesLegacy();
+                if (mode == CommitMode::CommitModeset && pipeline->output() && pipeline->activePending()) {
+                    pipeline->output()->presentFailed();
+                }
             }
             return false;
         } else {
+            for (const auto &pipeline : pipelines) {
+                pipeline->applyPendingChanges();
+                pipeline->m_current = pipeline->pending;
+                if (mode == CommitMode::CommitModeset && mode != CommitMode::Test && pipeline->activePending()) {
+                    pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
+                }
+            }
             return true;
         }
     }
@@ -201,6 +264,7 @@ bool DrmPipeline::presentLegacy()
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno) << m_primaryBuffer;
         return false;
     }
+    m_pageflipPending = true;
     pending.crtc->setNext(m_primaryBuffer);
     return true;
 }
@@ -378,11 +442,15 @@ DrmGpu *DrmPipeline::gpu() const
     return m_connector->gpu();
 }
 
-void DrmPipeline::pageFlipped()
+void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     m_current.crtc->flipBuffer();
     if (m_current.crtc->primaryPlane()) {
         m_current.crtc->primaryPlane()->flipBuffer();
+    }
+    m_pageflipPending = false;
+    if (m_output) {
+        m_output->pageFlipped(timestamp);
     }
 }
 
@@ -426,7 +494,8 @@ bool DrmPipeline::needsModeset() const
         || pending.active != m_current.active
         || pending.modeIndex != m_current.modeIndex
         || pending.rgbRange != m_current.rgbRange
-        || pending.transformation != m_current.transformation;
+        || pending.transformation != m_current.transformation
+        || m_modesetPresentPending;
 }
 
 bool DrmPipeline::activePending() const
@@ -437,6 +506,21 @@ bool DrmPipeline::activePending() const
 void DrmPipeline::revertPendingChanges()
 {
     pending = m_next;
+}
+
+bool DrmPipeline::pageflipPending() const
+{
+    return m_pageflipPending;
+}
+
+bool DrmPipeline::modesetPresentPending() const
+{
+    return m_modesetPresentPending;
+}
+
+DrmCrtc *DrmPipeline::currentCrtc() const
+{
+    return m_current.crtc;
 }
 
 DrmGammaRamp::DrmGammaRamp(DrmGpu *gpu, const GammaRamp &lut)

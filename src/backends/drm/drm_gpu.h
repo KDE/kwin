@@ -83,6 +83,9 @@ public:
     DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputMode mode);
     void removeVirtualOutput(DrmVirtualOutput *output);
 
+    bool needsModeset() const;
+    bool maybeModeset();
+
 Q_SIGNALS:
     void outputAdded(DrmAbstractOutput *output);
     void outputRemoved(DrmAbstractOutput *output);
@@ -101,6 +104,8 @@ private:
 
     void handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest);
     void handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease);
+
+    static void pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data);
 
     const int m_fd;
     const dev_t m_deviceId;

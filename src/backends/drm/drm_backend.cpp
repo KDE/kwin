@@ -763,6 +763,9 @@ bool DrmBackend::applyOutputChanges(const WaylandOutputConfig &config)
         }
     };
     updateCursor();
+    if (auto compositor = Compositor::self()) {
+        compositor->addRepaintFull();
+    }
     return true;
 }
 

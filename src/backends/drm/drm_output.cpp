@@ -69,9 +69,6 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
 
 DrmOutput::~DrmOutput()
 {
-    if (m_pageFlipPending) {
-        pageFlipped();
-    }
     m_pipeline->setOutput(nullptr);
 }
 
@@ -264,7 +261,7 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
         return true;
     }
     m_pipeline->pending.active = active;
-    if (DrmPipeline::commitPipelines({m_pipeline}, active ? DrmPipeline::CommitMode::Test : DrmPipeline::CommitMode::Commit)) {
+    if (DrmPipeline::commitPipelines({m_pipeline}, active ? DrmPipeline::CommitMode::Test : DrmPipeline::CommitMode::CommitModeset)) {
         m_pipeline->applyPendingChanges();
         setDpmsModeInternal(mode);
         if (active) {
@@ -370,13 +367,6 @@ bool DrmOutput::needsSoftwareTransformation() const
     return m_pipeline->pending.transformation != outputToPlaneTransform(transform());
 }
 
-void DrmOutput::pageFlipped()
-{
-    Q_ASSERT(m_pageFlipPending || !m_gpu->atomicModeSetting());
-    m_pageFlipPending = false;
-    m_pipeline->pageFlipped();
-}
-
 bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion)
 {
     if (!buffer || buffer->bufferId() == 0) {
@@ -393,7 +383,6 @@ bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damaged
         }
     }
     if (m_pipeline->present(buffer)) {
-        m_pageFlipPending = true;
         Q_EMIT outputChange(damagedRegion);
         return true;
     } else {
@@ -492,6 +481,16 @@ void DrmOutput::applyQueuedChanges(const WaylandOutputConfig &config)
 void DrmOutput::revertQueuedChanges()
 {
     m_pipeline->revertPendingChanges();
+}
+
+void DrmOutput::pageFlipped(std::chrono::nanoseconds timestamp)
+{
+    RenderLoopPrivate::get(m_renderLoop)->notifyFrameCompleted(timestamp);
+}
+
+void DrmOutput::presentFailed()
+{
+    RenderLoopPrivate::get(m_renderLoop)->notifyFrameFailed();
 }
 
 }

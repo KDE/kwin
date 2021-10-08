@@ -54,6 +54,9 @@ drmModeModeInfo DrmCrtc::queryCurrentMode()
 
 bool DrmCrtc::needsModeset() const
 {
+    if (!gpu()->atomicModeSetting()) {
+        return false;
+    }
     return getProp(PropertyIndex::Active)->needsCommit()
         || getProp(PropertyIndex::ModeId)->needsCommit();
 }

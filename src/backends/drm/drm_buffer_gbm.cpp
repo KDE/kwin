@@ -83,6 +83,11 @@ bool GbmBuffer::map(uint32_t flags)
     return m_data;
 }
 
+KWaylandServer::ClientBuffer *GbmBuffer::clientBuffer() const
+{
+    return m_clientBuffer;
+}
+
 
 DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
     : DrmBuffer(gpu, gbm_bo_get_format(bo), gbm_bo_get_modifier(bo)), GbmBuffer(surface, bo)

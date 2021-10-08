@@ -581,11 +581,7 @@ void EglGbmBackend::endFrame(AbstractOutput *drmOutput, const QRegion &renderedR
 
     const QRegion dirty = damagedRegion.intersected(output.output->geometry());
     QSharedPointer<DrmBuffer> buffer = endFrameWithBuffer(drmOutput, dirty);
-    if (!buffer || !output.output->present(buffer, dirty)) {
-        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(output.output->renderLoop());
-        renderLoopPrivate->notifyFrameFailed();
-        return;
-    }
+    output.output->present(buffer, dirty);
 }
 
 void EglGbmBackend::updateBufferAge(Output &output, const QRegion &dirty)

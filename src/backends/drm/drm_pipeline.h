@@ -15,6 +15,7 @@
 #include <QSharedPointer>
 
 #include <xf86drmMode.h>
+#include <chrono>
 
 #include "drm_object_plane.h"
 #include "renderloop_p.h"
@@ -54,6 +55,7 @@ public:
     bool present(const QSharedPointer<DrmBuffer> &buffer);
 
     bool needsModeset() const;
+    bool needsCommit() const;
     void prepareModeset();
     void applyPendingChanges();
     void revertPendingChanges();
@@ -65,9 +67,12 @@ public:
     QPoint cursorPos() const;
 
     DrmConnector *connector() const;
+    DrmCrtc *currentCrtc() const;
     DrmGpu *gpu() const;
 
-    void pageFlipped();
+    void pageFlipped(std::chrono::nanoseconds timestamp);
+    bool pageflipPending() const;
+    bool modesetPresentPending() const;
     void printDebugInfo() const;
     QSize sourceSize() const;
     void updateProperties();
@@ -92,7 +97,8 @@ public:
 
     enum class CommitMode {
         Test,
-        Commit
+        Commit,
+        CommitModeset
     };
     Q_ENUM(CommitMode);
     static bool commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode);
@@ -111,6 +117,8 @@ private:
 
     QSharedPointer<DrmBuffer> m_primaryBuffer;
     QSharedPointer<DrmBuffer> m_oldTestBuffer;
+    bool m_pageflipPending = false;
+    bool m_modesetPresentPending = false;
 
     QMap<uint32_t, QVector<uint64_t>> m_formats;
     int m_lastFlags = 0;

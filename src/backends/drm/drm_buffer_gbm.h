@@ -47,6 +47,7 @@ public:
     uint32_t stride() const {
         return m_stride;
     }
+    KWaylandServer::ClientBuffer *clientBuffer() const;
 
 protected:
     GbmSurface *m_surface = nullptr;

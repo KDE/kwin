@@ -347,7 +347,30 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmC
             qCWarning(KWIN_DRM) << "disabling connector" << conn->modelName() << "without a crtc";
             conn->pipeline()->pending.crtc = nullptr;
         }
-        return DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test);
+        // non-desktop outputs need to be tested when they would be enabled so that they can be used if leased
+        QVector<DrmPipeline*> leasePipelines;
+        for (const auto &output : qAsConst(m_leaseOutputs)) {
+            if (!output->lease()) {
+                output->pipeline()->pending.active = true;
+                leasePipelines << output->pipeline();
+            }
+        }
+        bool test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test);
+        if (!leasePipelines.isEmpty() && test) {
+            // non-desktop outputs should be disabled for normal usage
+            for (const auto &pipeline : qAsConst(leasePipelines)) {
+                pipeline->pending.active = false;
+            }
+            bool ret = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test);
+            if (ret) {
+                for (const auto &pipeline : qAsConst(leasePipelines)) {
+                    pipeline->applyPendingChanges();
+                }
+            }
+            return ret;
+        } else {
+            return test;
+        }
     }
     auto connector = connectors.takeFirst();
     auto pipeline = connector->pipeline();
@@ -424,7 +447,7 @@ void DrmGpu::waitIdle()
     m_socketNotifier->setEnabled(false);
     while (true) {
         const bool idle = std::all_of(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [](DrmOutput *output){
-            return !output->m_pageFlipPending;
+            return !output->pipeline()->pageflipPending();
         });
         if (idle) {
             break;
@@ -471,10 +494,10 @@ static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_
     return convertTimestamp(targetCurrentTime) - delta;
 }
 
-static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data)
+void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data)
 {
-    Q_UNUSED(fd)
-    Q_UNUSED(frame)
+    Q_UNUSED(sequence)
+    Q_UNUSED(user_data)
     auto backend = dynamic_cast<DrmBackend*>(kwinApp()->platform());
     if (!backend) {
         return;
@@ -483,29 +506,28 @@ static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsign
     if (!gpu) {
         return;
     }
-    auto output = static_cast<DrmOutput *>(data);
-    if (!gpu->outputs().contains(output)) {
-        // output already got deleted
-        return;
-    }
 
     // The static_cast<> here are for a 32-bit environment where
     // sizeof(time_t) == sizeof(unsigned int) == 4 . Putting @p sec
     // into a time_t cuts off the most-significant bit (after the
     // year 2038), similarly long can't hold all the bits of an
     // unsigned multiplication.
-    std::chrono::nanoseconds timestamp = convertTimestamp(output->gpu()->presentationClock(),
-                                                          CLOCK_MONOTONIC,
+    std::chrono::nanoseconds timestamp = convertTimestamp(gpu->presentationClock(), CLOCK_MONOTONIC,
                                                           { static_cast<time_t>(sec), static_cast<long>(usec * 1000) });
     if (timestamp == std::chrono::nanoseconds::zero()) {
-        qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on output %s",
-                sec, usec, qPrintable(output->name()));
+        qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on gpu %s",
+                sec, usec, qPrintable(gpu->devNode()));
         timestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
-
-    output->pageFlipped();
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(output->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    const auto pipelines = gpu->pipelines();
+    auto it = std::find_if(pipelines.begin(), pipelines.end(), [crtc_id](const auto &pipeline) {
+        return pipeline->currentCrtc() && pipeline->currentCrtc()->id() == crtc_id;
+    });
+    if (it == pipelines.end()) {
+        qCWarning(KWIN_DRM, "received invalid page flip event for crtc %u", crtc_id);
+    } else {
+        (*it)->pageFlipped(timestamp);
+    }
 }
 
 void DrmGpu::dispatchEvents()
@@ -514,8 +536,8 @@ void DrmGpu::dispatchEvents()
         return;
     }
     drmEventContext context = {};
-    context.version = 2;
-    context.page_flip_handler = pageFlipHandler;
+    context.version = 3;
+    context.page_flip_handler2 = pageFlipHandler;
     drmHandleEvent(m_fd, &context);
 }
 
@@ -705,6 +727,32 @@ bool DrmGpu::addFB2ModifiersSupported() const
 bool DrmGpu::isNVidia() const
 {
     return m_isNVidia;
+}
+
+bool DrmGpu::needsModeset() const
+{
+    return std::any_of(m_pipelines.constBegin(), m_pipelines.constEnd(), [](const auto &pipeline) {
+        return pipeline->needsModeset();
+    });
+}
+
+bool DrmGpu::maybeModeset()
+{
+    auto pipelines = m_pipelines;
+    for (const auto &output : qAsConst(m_leaseOutputs)) {
+        if (output->lease()) {
+            pipelines.removeOne(output->pipeline());
+        }
+    }
+    bool presentPendingForAll = std::all_of(pipelines.constBegin(), pipelines.constEnd(), [](const auto &pipeline) {
+        return pipeline->modesetPresentPending() || !pipeline->pending.active;
+    });
+    if (presentPendingForAll) {
+        return DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset);
+    } else {
+        // commit only once all pipelines are ready for presentation
+        return true;
+    }
 }
 
 }
