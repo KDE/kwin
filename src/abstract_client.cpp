@@ -2938,7 +2938,7 @@ void AbstractClient::setOnAllActivities(bool all)
         setOnActivity(Activities::self()->current(), true);
     }
 #else
-    Q_UNUSED(on)
+    Q_UNUSED(all)
 #endif
 }
 

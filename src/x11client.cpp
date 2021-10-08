@@ -1930,7 +1930,7 @@ void X11Client::doSetOnActivities(const QStringList &activityList)
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, joined.length(), joined.constData());
     }
 #else
-    Q_UNUSED(newActivitiesList)
+    Q_UNUSED(activityList)
 #endif
 }
 
