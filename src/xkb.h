@@ -89,7 +89,7 @@ public:
     }
     QString layoutName(xkb_layout_index_t index) const;
     QString layoutName() const;
-    const QString &layoutShortName(int index) const;
+    QString layoutShortName(int index) const;
     quint32 numberOfLayouts() const;
 
     /**

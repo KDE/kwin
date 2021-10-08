@@ -413,9 +413,9 @@ QString Xkb::layoutName() const
     return layoutName(m_currentLayout);
 }
 
-const QString &Xkb::layoutShortName(int index) const
+QString Xkb::layoutShortName(int index) const
 {
-    return m_layoutList.at(index);
+    return m_layoutList.value(index);
 }
 
 void Xkb::updateConsumedModifiers(uint32_t key)
