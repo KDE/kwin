@@ -1,4 +1,18 @@
 #######################################
+# Effect
+
+set(blur_SOURCES
+    blur.cpp
+    blurshader.cpp
+)
+
+kconfig_add_kcfg_files(blur_SOURCES
+    blurconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_blur ${blur_SOURCES})
+
+#######################################
 # Config
 set(kwin_blur_config_SRCS blur_config.cpp)
 ki18n_wrap_ui(kwin_blur_config_SRCS blur_config.ui)

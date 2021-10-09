@@ -1,6 +1,16 @@
 #######################################
 # Effect
 
+set(lookingglass_SOURCES
+    lookingglass.cpp
+)
+
+kconfig_add_kcfg_files(lookingglass_SOURCES
+    lookingglassconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_lookingglass ${lookingglass_SOURCES})
+
 #######################################
 # Config
 set(kwin_lookingglass_config_SRCS lookingglass_config.cpp)

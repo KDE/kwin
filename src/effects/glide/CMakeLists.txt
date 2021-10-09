@@ -1,4 +1,17 @@
 #######################################
+# Effect
+
+set(glide_SOURCES
+    glide.cpp
+)
+
+kconfig_add_kcfg_files(glide_SOURCES
+    glideconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_glide ${glide_SOURCES})
+
+#######################################
 # Config
 set(kwin_glide_config_SRCS glide_config.cpp)
 ki18n_wrap_ui(kwin_glide_config_SRCS glide_config.ui)

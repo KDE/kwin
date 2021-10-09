@@ -2,9 +2,9 @@
 # Effect
 
 # Source files
-set(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    kscreen/kscreen.cpp
+set(kscreen_SOURCES
+    kscreen.cpp
 )
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources kscreen/kscreenconfig.kcfgc)
-
+kconfig_add_kcfg_files(kscreen_SOURCES kscreenconfig.kcfgc)
+kwin4_add_effect_module(kwin4_effect_kscreen ${kscreen_SOURCES})

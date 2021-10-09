@@ -1,4 +1,17 @@
 #######################################
+# Effect
+
+set(mousemark_SOURCES
+    mousemark.cpp
+)
+
+kconfig_add_kcfg_files(mousemark_SOURCES
+    mousemarkconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_mousemark ${mousemark_SOURCES})
+
+#######################################
 # Config
 set(kwin_mousemark_config_SRCS mousemark_config.cpp)
 ki18n_wrap_ui(kwin_mousemark_config_SRCS mousemark_config.ui)

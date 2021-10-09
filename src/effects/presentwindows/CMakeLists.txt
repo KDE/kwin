@@ -2,6 +2,17 @@
 # Effect
 install(FILES main.qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/presentwindows/)
 
+set(presentwindows_SOURCES
+    presentwindows.cpp
+    presentwindows_proxy.cpp
+)
+
+kconfig_add_kcfg_files(presentwindows_SOURCES
+    presentwindowsconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_presentwindows ${presentwindows_SOURCES})
+
 #######################################
 # Config
 set(kwin_presentwindows_config_SRCS presentwindows_config.cpp)

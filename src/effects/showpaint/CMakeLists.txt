@@ -1,5 +1,13 @@
 #######################################
+# Effect
 
+set(showpaint_SOURCES
+    showpaint.cpp
+)
+
+kwin4_add_effect_module(kwin4_effect_showpaint ${showpaint_SOURCES})
+
+#######################################
 # Config
 set(kwin_showpaint_config_SRCS showpaint_config.cpp)
 ki18n_wrap_ui(kwin_showpaint_config_SRCS showpaint_config.ui)
