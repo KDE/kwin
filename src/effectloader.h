@@ -348,7 +348,7 @@ private:
     QMetaObject::Connection m_queryConnection;
 };
 
-class EffectLoader : public AbstractEffectLoader
+class KWIN_EXPORT EffectLoader : public AbstractEffectLoader
 {
     Q_OBJECT
 public:
