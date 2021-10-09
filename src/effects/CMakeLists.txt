@@ -58,11 +58,11 @@ endmacro()
 
 # Adds effect plugin with given name. Sources are given after the name
 macro(KWIN4_ADD_EFFECT name)
-    kwin4_add_effect_backend(kwin4_effect_${name} SHARED ${ARGN})
+    kwin4_add_effect_backend(${name} SHARED ${ARGN})
 
-    set_target_properties(kwin4_effect_${name} PROPERTIES VERSION 1.0.0 SOVERSION 1)
-    set_target_properties(kwin4_effect_${name} PROPERTIES OUTPUT_NAME ${KWIN_NAME}4_effect_${name})
-    install(TARGETS kwin4_effect_${name} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+    set_target_properties(${name} PROPERTIES VERSION 1.0.0 SOVERSION 1)
+    set_target_properties(${name} PROPERTIES OUTPUT_NAME ${name})
+    install(TARGETS ${name} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
 
 macro(KWIN4_ADD_EFFECT_MODULE name)
@@ -150,7 +150,7 @@ set(kwin4_effect_builtins_sources
 
 qt5_add_resources(kwin4_effect_builtins_sources shaders.qrc)
 
-kwin4_add_effect(builtins ${kwin4_effect_builtins_sources})
+kwin4_add_effect(kwin4_effect_builtins ${kwin4_effect_builtins_sources})
 target_link_libraries(kwin4_effect_builtins PRIVATE
     kwin4_effect_blur
     kwin4_effect_colorpicker
