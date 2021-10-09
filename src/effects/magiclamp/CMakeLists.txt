@@ -1,4 +1,17 @@
 #######################################
+# Effect
+
+set(magiclamp_SOURCES
+    magiclamp.cpp
+)
+
+kconfig_add_kcfg_files(magiclamp_SOURCES
+    magiclampconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_magiclamp ${magiclamp_SOURCES})
+
+#######################################
 # Config
 set(kwin_magiclamp_config_SRCS magiclamp_config.cpp)
 ki18n_wrap_ui(kwin_magiclamp_config_SRCS magiclamp_config.ui)

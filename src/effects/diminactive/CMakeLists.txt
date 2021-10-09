@@ -1,4 +1,17 @@
 #######################################
+# Effect
+
+set(diminactive_SOURCES
+    diminactive.cpp
+)
+
+kconfig_add_kcfg_files(diminactive_SOURCES
+    diminactiveconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_diminactive ${diminactive_SOURCES})
+
+#######################################
 # Config
 set(kwin_diminactive_config_SRCS diminactive_config.cpp)
 ki18n_wrap_ui(kwin_diminactive_config_SRCS diminactive_config.ui)

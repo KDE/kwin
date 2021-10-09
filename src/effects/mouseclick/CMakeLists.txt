@@ -1,5 +1,18 @@
+#######################################
+# Effect
+
+set(mouseclick_SOURCES
+    mouseclick.cpp
+)
+
+kconfig_add_kcfg_files(mouseclick_SOURCES
+    mouseclickconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_mouseclick ${mouseclick_SOURCES})
+
 ##########################
-## configurtion dialog 
+## configurtion dialog
 ##########################
 set(kwin_mouseclick_config_SRCS mouseclick_config.cpp)
 ki18n_wrap_ui(kwin_mouseclick_config_SRCS mouseclick_config.ui)

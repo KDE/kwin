@@ -8,7 +8,7 @@
 */
 // own
 #include "screentransform.h"
-#include "kscreenconfig.h"
+#include "../kscreen/kscreenconfig.h"
 #include "kwinglutils.h"
 #include <QDebug>
 

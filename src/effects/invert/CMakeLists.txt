@@ -1,6 +1,12 @@
 #######################################
 # Effect
 
+set(invert_SOURCES
+    invert.cpp
+)
+
+kwin4_add_effect_module(kwin4_effect_invert ${invert_SOURCES})
+
 #######################################
 # Config
 set(kwin_invert_config_SRCS invert_config.cpp)

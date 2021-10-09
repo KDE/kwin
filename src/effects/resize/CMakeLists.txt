@@ -1,4 +1,17 @@
 #######################################
+# Effect
+
+set(resize_SOURCES
+    resize.cpp
+)
+
+kconfig_add_kcfg_files(resize_SOURCES
+    resizeconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_resize ${resize_SOURCES})
+
+#######################################
 # Config
 set(kwin_resize_config_SRCS resize_config.cpp)
 ki18n_wrap_ui(kwin_resize_config_SRCS resize_config.ui)

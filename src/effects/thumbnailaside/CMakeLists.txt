@@ -1,4 +1,17 @@
 #######################################
+# Effect
+
+set(thumbnailaside_SOURCES
+    thumbnailaside.cpp
+)
+
+kconfig_add_kcfg_files(thumbnailaside_SOURCES
+    thumbnailasideconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_thumbnailaside ${thumbnailaside_SOURCES})
+
+#######################################
 # Config
 set(kwin_thumbnailaside_config_SRCS thumbnailaside_config.cpp)
 ki18n_wrap_ui(kwin_thumbnailaside_config_SRCS thumbnailaside_config.ui)

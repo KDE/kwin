@@ -1,4 +1,17 @@
 #######################################
+# Effect
+
+set(windowgeometry_SOURCES
+    windowgeometry.cpp
+)
+
+kconfig_add_kcfg_files(windowgeometry_SOURCES
+    windowgeometryconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_windowgeometry ${windowgeometry_SOURCES})
+
+#######################################
 # Config
 set(kwin_windowgeometry_config_SRCS windowgeometry_config.cpp)
 ki18n_wrap_ui(kwin_windowgeometry_config_SRCS windowgeometry_config.ui)

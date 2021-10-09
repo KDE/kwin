@@ -1,4 +1,17 @@
 #######################################
+# Effect
+
+set(showfps_SOURCES
+    showfps.cpp
+)
+
+kconfig_add_kcfg_files(showfps_SOURCES
+    showfpsconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_showfps ${showfps_SOURCES})
+
+#######################################
 # Config
 set(kwin_showfps_config_SRCS showfps_config.cpp)
 ki18n_wrap_ui(kwin_showfps_config_SRCS showfps_config.ui)

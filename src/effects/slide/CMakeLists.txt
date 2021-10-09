@@ -1,4 +1,17 @@
 #######################################
+# Effect
+
+set(slide_SOURCES
+    slide.cpp
+)
+
+kconfig_add_kcfg_files(slide_SOURCES
+    slideconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_slide ${slide_SOURCES})
+
+#######################################
 # Config
 set(kwin_slide_config_SRCS slide_config.cpp)
 ki18n_wrap_ui(kwin_slide_config_SRCS slide_config.ui)

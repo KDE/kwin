@@ -1,4 +1,17 @@
 #######################################
+# Effect
+
+set(magnifier_SOURCES
+    magnifier.cpp
+)
+
+kconfig_add_kcfg_files(magnifier_SOURCES
+    magnifierconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_magnifier ${magnifier_SOURCES})
+
+#######################################
 # Config
 set(kwin_magnifier_config_SRCS magnifier_config.cpp)
 ki18n_wrap_ui(kwin_magnifier_config_SRCS magnifier_config.ui)

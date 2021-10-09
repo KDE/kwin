@@ -2,6 +2,16 @@
 # Effect
 install(FILES main.qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/desktopgrid/)
 
+set(desktopgrid_SOURCES
+    desktopgrid.cpp
+)
+
+kconfig_add_kcfg_files(desktopgrid_SOURCES
+    desktopgridconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_desktopgrid ${desktopgrid_SOURCES})
+
 #######################################
 # Config
 set(kwin_desktopgrid_config_SRCS desktopgrid_config.cpp)

@@ -2,6 +2,8 @@
 # Effect
 
 # Source files
-set(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    startupfeedback/startupfeedback.cpp
+set(startupfeedback_SOURCES
+    startupfeedback.cpp
 )
+
+kwin4_add_effect_module(kwin4_effect_startupfeedback ${startupfeedback_SOURCES})

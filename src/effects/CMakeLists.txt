@@ -45,8 +45,8 @@ set(kwin_effect_XCB_LIBS
 
 set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinglutils)
 
-macro(KWIN4_ADD_EFFECT_BACKEND name)
-    add_library(${name} SHARED ${ARGN})
+macro(KWIN4_ADD_EFFECT_BACKEND name type)
+    add_library(${name} ${type} ${ARGN})
     target_link_libraries(${name} PRIVATE
         ${kwin_effect_KDE_LIBS}
         ${kwin_effect_OWN_LIBS}
@@ -58,84 +58,19 @@ endmacro()
 
 # Adds effect plugin with given name. Sources are given after the name
 macro(KWIN4_ADD_EFFECT name)
-    kwin4_add_effect_backend(kwin4_effect_${name} ${ARGN})
+    kwin4_add_effect_backend(kwin4_effect_${name} SHARED ${ARGN})
 
     set_target_properties(kwin4_effect_${name} PROPERTIES VERSION 1.0.0 SOVERSION 1)
     set_target_properties(kwin4_effect_${name} PROPERTIES OUTPUT_NAME ${KWIN_NAME}4_effect_${name})
     install(TARGETS kwin4_effect_${name} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
 
+macro(KWIN4_ADD_EFFECT_MODULE name)
+    kwin4_add_effect_backend(${name} OBJECT ${ARGN})
+endmacro()
+
 # Install the KWin/Effect service type
 install(FILES kwineffect.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
-
-# Create initial variables
-set(kwin4_effect_include_directories)
-
-set(kwin4_effect_builtins_sources
-    blur/blur.cpp
-    blur/blurshader.cpp
-    colorpicker/colorpicker.cpp
-    desktopgrid/desktopgrid.cpp
-    diminactive/diminactive.cpp
-    effect_builtins.cpp
-    glide/glide.cpp
-    invert/invert.cpp
-    logging.cpp
-    lookingglass/lookingglass.cpp
-    magiclamp/magiclamp.cpp
-    magnifier/magnifier.cpp
-    mouseclick/mouseclick.cpp
-    mousemark/mousemark.cpp
-    overview/expoarea.cpp
-    overview/expolayout.cpp
-    overview/overvieweffect.cpp
-    presentwindows/presentwindows.cpp
-    presentwindows/presentwindows_proxy.cpp
-    resize/resize.cpp
-    showfps/showfps.cpp
-    showpaint/showpaint.cpp
-    slide/slide.cpp
-    thumbnailaside/thumbnailaside.cpp
-    touchpoints/touchpoints.cpp
-    trackmouse/trackmouse.cpp
-    windowgeometry/windowgeometry.cpp
-    wobblywindows/wobblywindows.cpp
-    zoom/zoom.cpp
-    ../service_utils.cpp
-)
-
-if (HAVE_ACCESSIBILITY)
-    set(kwin4_effect_builtins_sources
-        zoom/accessibilityintegration.cpp
-        ${kwin4_effect_builtins_sources}
-    )
-endif()
-
-qt5_add_resources(kwin4_effect_builtins_sources shaders.qrc)
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources
-    blur/blurconfig.kcfgc
-    desktopgrid/desktopgridconfig.kcfgc
-    diminactive/diminactiveconfig.kcfgc
-    fallapart/fallapartconfig.kcfgc
-    glide/glideconfig.kcfgc
-    lookingglass/lookingglassconfig.kcfgc
-    magiclamp/magiclampconfig.kcfgc
-    magnifier/magnifierconfig.kcfgc
-    mouseclick/mouseclickconfig.kcfgc
-    mousemark/mousemarkconfig.kcfgc
-    overview/overviewconfig.kcfgc
-    presentwindows/presentwindowsconfig.kcfgc
-    resize/resizeconfig.kcfgc
-    showfps/showfpsconfig.kcfgc
-    slide/slideconfig.kcfgc
-    slidingpopups/slidingpopupsconfig.kcfgc
-    thumbnailaside/thumbnailasideconfig.kcfgc
-    trackmouse/trackmouseconfig.kcfgc
-    windowgeometry/windowgeometryconfig.kcfgc
-    wobblywindows/wobblywindowsconfig.kcfgc
-    zoom/zoomconfig.kcfgc
-)
 
 # scripted effects
 function(install_scripted_effect name)
@@ -166,43 +101,90 @@ install_scripted_effect(sessionquit)
 # Built-in effects go here
 
 # Common effects
+add_subdirectory(colorpicker)
 add_subdirectory(desktopgrid)
 add_subdirectory(diminactive)
-include(fallapart/CMakeLists.txt)
-include(highlightwindow/CMakeLists.txt)
-include(kscreen/CMakeLists.txt)
-include(screentransform/CMakeLists.txt)
+add_subdirectory(fallapart)
+add_subdirectory(highlightwindow)
+add_subdirectory(kscreen)
+add_subdirectory(screentransform)
 add_subdirectory(magiclamp)
 add_subdirectory(overview)
 add_subdirectory(presentwindows)
 add_subdirectory(resize)
-include(screenedge/CMakeLists.txt)
+add_subdirectory(screenedge)
 add_subdirectory(showfps)
 add_subdirectory(showpaint)
 add_subdirectory(slide)
-include(slideback/CMakeLists.txt)
-include(slidingpopups/CMakeLists.txt)
+add_subdirectory(slideback)
+add_subdirectory(slidingpopups)
 add_subdirectory(thumbnailaside)
+add_subdirectory(touchpoints)
 add_subdirectory(windowgeometry)
 add_subdirectory(zoom)
 
 # OpenGL-specific effects
 add_subdirectory(blur)
-include(backgroundcontrast/CMakeLists.txt)
+add_subdirectory(backgroundcontrast)
 add_subdirectory(glide)
 add_subdirectory(invert)
 add_subdirectory(lookingglass)
 add_subdirectory(magnifier)
 add_subdirectory(mouseclick)
 add_subdirectory(mousemark)
-include(screenshot/CMakeLists.txt)
-include(sheet/CMakeLists.txt)
-include(snaphelper/CMakeLists.txt)
-include(startupfeedback/CMakeLists.txt)
+add_subdirectory(screenshot)
+add_subdirectory(sheet)
+add_subdirectory(snaphelper)
+add_subdirectory(startupfeedback)
 add_subdirectory(trackmouse)
 add_subdirectory(wobblywindows)
 
 ###############################################################################
 
 # Add the builtins plugin
+set(kwin4_effect_builtins_sources
+    effect_builtins.cpp
+    logging.cpp
+    ../service_utils.cpp
+)
+
+qt5_add_resources(kwin4_effect_builtins_sources shaders.qrc)
+
 kwin4_add_effect(builtins ${kwin4_effect_builtins_sources})
+target_link_libraries(kwin4_effect_builtins PRIVATE
+    kwin4_effect_blur
+    kwin4_effect_colorpicker
+    kwin4_effect_contrast
+    kwin4_effect_desktopgrid
+    kwin4_effect_diminactive
+    kwin4_effect_fallapart
+    kwin4_effect_glide
+    kwin4_effect_highlightwindow
+    kwin4_effect_invert
+    kwin4_effect_kscreen
+    kwin4_effect_lookingglass
+    kwin4_effect_magiclamp
+    kwin4_effect_magnifier
+    kwin4_effect_mouseclick
+    kwin4_effect_mousemark
+    kwin4_effect_overview
+    kwin4_effect_presentwindows
+    kwin4_effect_resize
+    kwin4_effect_screenedge
+    kwin4_effect_screenshot
+    kwin4_effect_screentransform
+    kwin4_effect_sheet
+    kwin4_effect_showfps
+    kwin4_effect_showpaint
+    kwin4_effect_slide
+    kwin4_effect_slideback
+    kwin4_effect_slidingpopups
+    kwin4_effect_snaphelper
+    kwin4_effect_startupfeedback
+    kwin4_effect_thumbnailaside
+    kwin4_effect_touchpoints
+    kwin4_effect_trackmouse
+    kwin4_effect_windowgeometry
+    kwin4_effect_wobblywindows
+    kwin4_effect_zoom
+)
