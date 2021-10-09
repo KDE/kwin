@@ -33,6 +33,8 @@ class ShowFpsEffect
     Q_PROPERTY(QColor textColor READ configuredTextColor)
 public:
     ShowFpsEffect();
+    ~ShowFpsEffect() override;
+
     void reconfigure(ReconfigureFlags) override;
     void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
