@@ -185,7 +185,6 @@ public:
     KWaylandServer::ClientConnection *screenLockerClientConnection() const {
         return m_screenLockerClientConnection;
     }
-    void dispatch();
 
     /**
      * Struct containing information for a created Wayland connection through a

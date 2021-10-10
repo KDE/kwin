@@ -130,7 +130,6 @@ ApplicationWayland::~ApplicationWayland()
     delete m_xwayland;
     m_xwayland = nullptr;
     destroyWorkspace();
-    waylandServer()->dispatch();
 
     if (QStyle *s = style()) {
         s->unpolish(this);

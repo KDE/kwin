@@ -703,14 +703,6 @@ void WaylandServer::removeClient(AbstractClient *c)
     Q_EMIT shellClientRemoved(c);
 }
 
-void WaylandServer::dispatch()
-{
-    if (!m_display) {
-        return;
-    }
-    m_display->dispatchEvents();
-}
-
 static AbstractClient *findClientInList(const QList<AbstractClient *> &clients, const KWaylandServer::SurfaceInterface *surface)
 {
     auto it = std::find_if(clients.begin(), clients.end(),
