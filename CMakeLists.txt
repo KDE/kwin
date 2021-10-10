@@ -100,6 +100,12 @@ set_package_properties(Threads PROPERTIES
     TYPE REQUIRED
 )
 
+find_package(KF5Wayland ${KF5_MIN_VERSION} CONFIG)
+set_package_properties(KF5Wayland PROPERTIES
+    PURPOSE "Required to build wayland platform plugin and tests"
+    TYPE REQUIRED
+)
+
 # optional frameworks
 find_package(KF5Activities ${KF5_MIN_VERSION} CONFIG)
 set_package_properties(KF5Activities PROPERTIES
@@ -420,7 +426,6 @@ if (BUILD_TESTING)
     find_package(QtWaylandScanner ${QT_MIN_VERSION} REQUIRED)
     find_package(Wayland REQUIRED COMPONENTS Client)
     find_package(PlasmaWaylandProtocols CONFIG REQUIRED)
-    find_package(KF5Wayland ${KF5_MIN_VERSION} REQUIRED)
 
     add_subdirectory(autotests)
     add_subdirectory(tests)
