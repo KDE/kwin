@@ -580,9 +580,8 @@ void WaylandServer::initWorkspace()
 
     if (hasScreenLockerIntegration()) {
         initScreenLocker();
-    } else {
-        Q_EMIT initialized();
     }
+    Q_EMIT initialized();
 }
 
 void WaylandServer::initScreenLocker()
@@ -632,7 +631,6 @@ void WaylandServer::initScreenLocker()
     if (m_initFlags.testFlag(InitializationFlag::LockScreen)) {
         ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     }
-    Q_EMIT initialized();
 }
 
 WaylandServer::SocketPairConnection WaylandServer::createConnection()
