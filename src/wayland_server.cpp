@@ -26,14 +26,6 @@
 #include "waylandoutputdevicev2.h"
 #include "virtualdesktops.h"
 
-// Client
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/event_queue.h>
-#include <KWayland/Client/registry.h>
-#include <KWayland/Client/compositor.h>
-#include <KWayland/Client/seat.h>
-#include <KWayland/Client/datadevicemanager.h>
-#include <KWayland/Client/surface.h>
 // Server
 #include <KWaylandServer/appmenu_interface.h>
 #include <KWaylandServer/compositor_interface.h>
