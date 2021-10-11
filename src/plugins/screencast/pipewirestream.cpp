@@ -316,14 +316,13 @@ void PipeWireStream::stop()
 
 static GLTexture *copyTexture(GLTexture *texture)
 {
-    GLTexture *copy = new GLTexture(texture->internalFormat(), texture->size());
+    const QSize size = texture->size();
+    GLTexture *copy = new GLTexture(texture->internalFormat(), size);
     copy->setFilter(GL_LINEAR);
     copy->setWrapMode(GL_CLAMP_TO_EDGE);
 
-    const QRect r({}, texture->size());
-
     copy->bind();
-    glCopyTextureSubImage2D(copy->texture(), 0, 0, 0, 0, 0, r.width(), r.height());
+    glCopyTextureSubImage2D(copy->texture(), 0, 0, 0, 0, 0, size.width(), size.height());
     copy->unbind();
     return copy;
 }
