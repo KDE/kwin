@@ -721,6 +721,7 @@ GLPlatform::GLPlatform()
       m_limitedGLSL(false),
       m_textureNPOT(false),
       m_limitedNPOT(false),
+      m_packInvert(false),
       m_virtualMachine(false),
       m_preferBufferSubData(false),
       m_platformInterface(NoOpenGLPlatformInterface),
@@ -801,6 +802,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 
     m_chipset = QByteArrayLiteral("Unknown");
     m_preferBufferSubData = false;
+    m_packInvert = m_extensions.contains("GL_MESA_pack_invert");
 
 
     // Mesa classic drivers
@@ -1199,6 +1201,9 @@ bool GLPlatform::supports(GLFeature feature) const
 
     case LimitedNPOT:
         return m_limitedNPOT;
+
+    case PackInvert:
+        return m_packInvert;
 
     default:
         return false;
