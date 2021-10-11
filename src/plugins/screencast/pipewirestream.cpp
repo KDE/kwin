@@ -328,6 +328,19 @@ static GLTexture *copyTexture(GLTexture *texture)
     return copy;
 }
 
+// in-place vertical mirroring
+static void mirrorVertically(uchar *data, int height, int stride)
+{
+    const int halfHeight = height / 2;
+    std::vector<uchar> temp(stride);
+    for (int y = 0; y < halfHeight; ++y) {
+        auto cur = &data[y * stride], dest = &data[(height - y - 1) * stride];
+        memcpy(temp.data(), cur, stride);
+        memcpy(cur, dest, stride);
+        memcpy(dest, temp.data(), stride);
+    }
+}
+
 void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damagedRegion)
 {
     Q_ASSERT(!m_stopped);
@@ -384,6 +397,12 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
 
         spa_data->chunk->size = bufferSize;
         spa_data->chunk->stride = stride;
+        const bool invertNeededAndSupported = frameTexture->isYInverted() && GLPlatform::instance()->supports(PackInvert);
+        GLboolean prev;
+        if (invertNeededAndSupported) {
+            glGetBooleanv(GL_PACK_INVERT_MESA, &prev);
+            glPixelStorei(GL_PACK_INVERT_MESA, GL_TRUE);
+        }
 
         frameTexture->bind();
         if (GLPlatform::instance()->isGLES()) {
@@ -392,6 +411,14 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
             glGetTextureImage(frameTexture->texture(), 0, m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bufferSize, data);
         } else {
             glGetTexImage(frameTexture->target(), 0, m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, data);
+        }
+
+        if (invertNeededAndSupported) {
+            if (!prev) {
+                glPixelStorei(GL_PACK_INVERT_MESA, prev);
+            }
+        } else if (frameTexture->isYInverted()) {
+            mirrorVertically(data, size.height(), stride);
         }
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
