@@ -18,6 +18,8 @@
 #include "workspace.h"
 #include "screenlockerwatcher.h"
 #include "deleted.h"
+#include "tabletmodemanager.h"
+#include "libinput/connection.h"
 
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/keyboard_interface.h>
@@ -100,6 +102,15 @@ void InputMethod::init()
             connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
         }
     }
+
+    // Detect changes in tablet mode/keyboard availability and automatically
+    // enable/disable InputMethod based on that.
+    connect(TabletModeManager::self(), &TabletModeManager::tabletModeChanged, this, &InputMethod::onInputConfigurationChanged);
+    connect(LibInput::Connection::self(),
+            &LibInput::Connection::hasAlphaNumericKeyboardChanged,
+            this,
+            &InputMethod::onInputConfigurationChanged);
+    onInputConfigurationChanged();
 }
 
 void InputMethod::show()
@@ -617,6 +628,17 @@ void InputMethod::startInputMethod()
 bool InputMethod::isActive() const
 {
     return waylandServer()->inputMethod()->context();
+}
+
+void InputMethod::onInputConfigurationChanged()
+{
+    bool enabled = TabletModeManager::self()->isTablet();
+
+    if (LibInput::Connection::self()) {
+        enabled = enabled || !LibInput::Connection::self()->hasAlphaNumericKeyboard();
+    }
+
+    setEnabled(enabled);
 }
 
 class InputKeyboardFilter : public InputEventFilter {
