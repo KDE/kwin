@@ -567,11 +567,12 @@ void InputMethod::stopInputMethod()
         m_inputMethodProcess->kill();
         m_inputMethodProcess->waitForFinished();
     }
+    m_inputMethodProcess->deleteLater();
+    m_inputMethodProcess = nullptr;
+
     if (waylandServer()) {
         waylandServer()->destroyInputMethodConnection();
     }
-    m_inputMethodProcess->deleteLater();
-    m_inputMethodProcess = nullptr;
 }
 
 void InputMethod::startInputMethod()
