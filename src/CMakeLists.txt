@@ -123,6 +123,7 @@ set(kwin_SRCS
     surfaceitem_x11.cpp
     syncalarmx11filter.cpp
     tablet_input.cpp
+    tabletmodemanager.cpp
     toplevel.cpp
     touch_hide_cursor_spy.cpp
     touch_input.cpp
@@ -275,7 +276,6 @@ add_subdirectory(xwl)
 
 add_executable(kwin_wayland
     main_wayland.cpp
-    tabletmodemanager.cpp
 )
 target_link_libraries(kwin_wayland
     kwin
