@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Deform windows while they are moving",
+        "EnabledByDefault": false,
+        "Id": "wobblywindows",
+        "License": "GPL",
+        "Name": "Wobbly Windows",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_wobblywindows_config",
+    "org.kde.kwin.effect": {
+        "video": "https://files.kde.org/plasma/kwin/effect-videos/wobbly_windows.ogv"
+    }
+}

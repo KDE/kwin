@@ -4,6 +4,7 @@ install(FILES main.qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/desktopgr
 
 set(desktopgrid_SOURCES
     desktopgrid.cpp
+    main.cpp
 )
 
 kconfig_add_kcfg_files(desktopgrid_SOURCES

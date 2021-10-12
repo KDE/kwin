@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Make modal dialogs smoothly fly in and out when they are shown or hidden",
+        "EnabledByDefault": false,
+        "Id": "sheet",
+        "License": "GPL",
+        "Name": "Sheet",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    }
+}

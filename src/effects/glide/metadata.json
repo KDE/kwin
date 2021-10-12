@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Category": "Window Open/Close Animation",
+        "Description": "Glide windows as they appear or disappear",
+        "EnabledByDefault": false,
+        "Id": "glide",
+        "License": "GPL",
+        "Name": "Glide",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_glide_config",
+    "org.kde.kwin.effect": {
+        "exclusiveGroup": "toplevel-open-close-animation"
+    }
+}

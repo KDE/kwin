@@ -12,6 +12,7 @@
 
 #include <config-kwin.h>
 #include <effect_builtins.h>
+#include <kwineffects.h>
 #include <kwin_effects_interface.h>
 
 #include <KAboutData>
@@ -31,7 +32,10 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QStaticPlugin>
 #include <QVBoxLayout>
+
+KWIN_IMPORT_BUILTIN_EFFECTS
 
 namespace KWin
 {
@@ -225,39 +229,54 @@ bool EffectsModel::setData(const QModelIndex &index, const QVariant &value, int 
 
 void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig)
 {
-    const auto builtins = BuiltInEffects::availableEffects();
-    for (auto builtin : builtins) {
-        const BuiltInEffects::EffectData &data = BuiltInEffects::effectData(builtin);
+    const QVector<QStaticPlugin> staticPlugins = QPluginLoader::staticPlugins();
+    for (const QStaticPlugin &plugin : staticPlugins) {
+        if (plugin.metaData().value("IID").toString() != EffectPluginFactory_iid) {
+            continue;
+        }
+
+        const KPluginMetaData metaData = KPluginMetaData(plugin.metaData().value("MetaData").toObject(), QString());
+        if (!metaData.isValid()) {
+            continue;
+        }
+
         EffectData effect;
-        effect.name = data.displayName;
-        effect.description = data.comment;
+        effect.name = metaData.name();
+        effect.description = metaData.description();
         effect.authorName = i18n("KWin development team");
         effect.authorEmail = QString(); // not used at all
-        effect.license = QStringLiteral("GPL");
-        effect.version = QStringLiteral(KWIN_VERSION_STRING);
-        effect.untranslatedCategory = data.category;
-        effect.category = translatedCategory(data.category);
-        effect.serviceName = data.name;
-        effect.iconName = QStringLiteral("preferences-system-windows");
-        effect.enabledByDefault = data.enabled;
-        effect.enabledByDefaultFunction = (data.enabledFunction != nullptr);
+        effect.license = metaData.license();
+        effect.version = metaData.version();
+        effect.untranslatedCategory = metaData.category();
+        effect.category = translatedCategory(metaData.category());
+        effect.serviceName = metaData.pluginId();
+        effect.iconName = metaData.iconName();
+        effect.enabledByDefault = metaData.isEnabledByDefault();
+        effect.supported = true;
+        effect.enabledByDefaultFunction = false;
+        effect.internal = false;
+        effect.kind = Kind::BuiltIn;
+        effect.configModule = metaData.value(QStringLiteral("X-KDE-ConfigModule"));
+        effect.website = QUrl(metaData.website());
+
+        if (metaData.rawData().contains("org.kde.kwin.effect")) {
+            const QJsonObject d(metaData.rawData().value("org.kde.kwin.effect").toObject());
+            effect.exclusiveGroup = d.value("exclusiveGroup").toString();
+            effect.video = QUrl::fromUserInput(d.value("video").toString());
+            effect.enabledByDefaultFunction = d.value("enabledByDefaultMethod").toBool();
+            effect.internal = d.value("internal").toBool();
+        }
+
         const QString enabledKey = QStringLiteral("%1Enabled").arg(effect.serviceName);
         if (kwinConfig.hasKey(enabledKey)) {
             effect.status = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", effect.enabledByDefault));
-        } else if (data.enabledFunction != nullptr) {
+        } else if (effect.enabledByDefaultFunction) {
             effect.status = Status::EnabledUndeterminded;
         } else {
             effect.status = effectStatus(effect.enabledByDefault);
         }
-        effect.originalStatus = effect.status;
-        effect.video = data.video;
-        effect.website = QUrl();
-        effect.supported = true;
-        effect.exclusiveGroup = data.exclusiveCategory;
-        effect.internal = data.internal;
-        effect.kind = Kind::BuiltIn;
-        effect.configModule = data.configModule;
 
+        effect.originalStatus = effect.status;
         effect.configurable = !effect.configModule.isEmpty();
 
         if (shouldStore(effect)) {

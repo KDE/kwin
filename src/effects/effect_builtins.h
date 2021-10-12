@@ -8,88 +8,42 @@
 */
 #ifndef KWIN_EFFECT_BUILTINS_H
 #define KWIN_EFFECT_BUILTINS_H
-#include <kwineffects_export.h>
-#include <QStringList>
-#include <QUrl>
-#include <functional>
 
-namespace KWin
-{
-class Effect;
-
-/**
- * Defines all the built in effects.
- */
-enum class BuiltInEffect
-{
-    Invalid, ///< not a valid Effect
-    Blur,
-    ColorPicker,
-    Contrast,
-    DesktopGrid,
-    DimInactive,
-    FallApart,
-    Glide,
-    HighlightWindow,
-    Invert,
-    Kscreen,
-    LookingGlass,
-    MagicLamp,
-    Magnifier,
-    MouseClick,
-    MouseMark,
-    Overview,
-    PresentWindows,
-    Resize,
-    ScreenEdge,
-    ScreenShot,
-    ScreenTransform,
-    Sheet,
-    ShowFps,
-    ShowPaint,
-    Slide,
-    SlideBack,
-    SlidingPopups,
-    SnapHelper,
-    StartupFeedback,
-    ThumbnailAside,
-    TouchPoints,
-    TrackMouse,
-    WindowGeometry,
-    WobblyWindows,
-    Zoom
-};
-
-namespace BuiltInEffects
-{
-
-struct EffectData {
-    QString name;
-    QString displayName;
-    QString comment;
-    QString category;
-    QString exclusiveCategory;
-    QUrl video;
-    bool enabled;
-    bool internal;
-    std::function<Effect*()> createFunction;
-    std::function<bool()> supportedFunction;
-    std::function<bool()> enabledFunction;
-    QString configModule;
-};
-
-KWINEFFECTS_EXPORT Effect *create(BuiltInEffect effect);
-KWINEFFECTS_EXPORT bool available(const QString &name);
-KWINEFFECTS_EXPORT bool supported(BuiltInEffect effect);
-KWINEFFECTS_EXPORT bool checkEnabledByDefault(BuiltInEffect effect);
-KWINEFFECTS_EXPORT bool enabledByDefault(BuiltInEffect effect);
-KWINEFFECTS_EXPORT QString nameForEffect(BuiltInEffect effect);
-KWINEFFECTS_EXPORT BuiltInEffect builtInForName(const QString &name);
-KWINEFFECTS_EXPORT QStringList availableEffectNames();
-KWINEFFECTS_EXPORT QList<BuiltInEffect> availableEffects();
-KWINEFFECTS_EXPORT const EffectData &effectData(BuiltInEffect effect);
-}
-
-}
+#define KWIN_IMPORT_BUILTIN_EFFECTS                                                       \
+    Q_IMPORT_PLUGIN(BlurEffectFactory)                                                    \
+    Q_IMPORT_PLUGIN(ColorPickerEffectFactory)                                             \
+    Q_IMPORT_PLUGIN(ContrastEffectFactory)                                                \
+    Q_IMPORT_PLUGIN(DesktopGridEffectFactory)                                             \
+    Q_IMPORT_PLUGIN(DimInactiveEffectFactory)                                             \
+    Q_IMPORT_PLUGIN(FallApartEffectFactory)                                               \
+    Q_IMPORT_PLUGIN(GlideEffectFactory)                                                   \
+    Q_IMPORT_PLUGIN(HighlightWindowEffectFactory)                                         \
+    Q_IMPORT_PLUGIN(InvertEffectFactory)                                                  \
+    Q_IMPORT_PLUGIN(KscreenEffectFactory)                                                 \
+    Q_IMPORT_PLUGIN(LookingGlassEffectFactory)                                            \
+    Q_IMPORT_PLUGIN(MagicLampEffectFactory)                                               \
+    Q_IMPORT_PLUGIN(MagnifierEffectFactory)                                               \
+    Q_IMPORT_PLUGIN(MouseClickEffectFactory)                                              \
+    Q_IMPORT_PLUGIN(MouseMarkEffectFactory)                                               \
+    Q_IMPORT_PLUGIN(OverviewEffectFactory)                                                \
+    Q_IMPORT_PLUGIN(PresentWindowsEffectFactory)                                          \
+    Q_IMPORT_PLUGIN(ResizeEffectFactory)                                                  \
+    Q_IMPORT_PLUGIN(ScreenEdgeEffectFactory)                                              \
+    Q_IMPORT_PLUGIN(ScreenShotEffectFactory)                                              \
+    Q_IMPORT_PLUGIN(ScreenTransformEffectFactory)                                         \
+    Q_IMPORT_PLUGIN(SheetEffectFactory)                                                   \
+    Q_IMPORT_PLUGIN(ShowFpsEffectFactory)                                                 \
+    Q_IMPORT_PLUGIN(ShowPaintEffectFactory)                                               \
+    Q_IMPORT_PLUGIN(SlideEffectFactory)                                                   \
+    Q_IMPORT_PLUGIN(SlideBackEffectFactory)                                               \
+    Q_IMPORT_PLUGIN(SlidingPopupsEffectFactory)                                           \
+    Q_IMPORT_PLUGIN(SnapHelperEffectFactory)                                              \
+    Q_IMPORT_PLUGIN(StartupFeedbackEffectFactory)                                         \
+    Q_IMPORT_PLUGIN(ThumbnailAsideEffectFactory)                                          \
+    Q_IMPORT_PLUGIN(TouchPointsEffectFactory)                                             \
+    Q_IMPORT_PLUGIN(TrackMouseEffectFactory)                                              \
+    Q_IMPORT_PLUGIN(WindowGeometryFactory)                                                \
+    Q_IMPORT_PLUGIN(WobblyWindowsEffectFactory)                                           \
+    Q_IMPORT_PLUGIN(ZoomEffectFactory)
 
 #endif

@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Visualize touch points",
+        "EnabledByDefault": false,
+        "Id": "touchpoints",
+        "License": "GPL",
+        "Name": "Touch Points",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    }
+}

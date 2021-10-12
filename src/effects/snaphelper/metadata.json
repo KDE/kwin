@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "Help you locate the center of the screen when moving a window",
+        "EnabledByDefault": false,
+        "Id": "snaphelper",
+        "License": "GPL",
+        "Name": "Snap Helper",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "org.kde.kwin.effect": {
+        "video": "https://files.kde.org/plasma/kwin/effect-videos/snap_helper.mp4"
+    }
+}

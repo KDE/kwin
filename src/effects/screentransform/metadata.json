@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Animates display transformations",
+        "EnabledByDefault": true,
+        "Id": "screentransform",
+        "License": "GPL",
+        "Name": "Transform",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}

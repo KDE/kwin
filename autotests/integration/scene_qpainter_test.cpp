@@ -14,7 +14,6 @@
 #include "effects.h"
 #include "platform.h"
 #include "wayland_server.h"
-#include "effect_builtins.h"
 #include "workspace.h"
 
 #include <KConfigGroup>

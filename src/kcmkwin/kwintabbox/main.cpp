@@ -8,7 +8,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "main.h"
-#include <effect_builtins.h>
 #include <kwin_effects_interface.h>
 
 // Qt

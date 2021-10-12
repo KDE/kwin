@@ -2,6 +2,7 @@
 # Effect
 
 set(windowgeometry_SOURCES
+    main.cpp
     windowgeometry.cpp
 )
 

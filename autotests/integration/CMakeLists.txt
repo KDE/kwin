@@ -44,6 +44,7 @@ add_library(KWinIntegrationTestFramework STATIC ${KWinIntegrationTestFramework_S
 target_link_libraries(KWinIntegrationTestFramework
     Qt::Test
     KF5::WaylandClient
+    kwin4_effect_builtins
     kwin
     Wayland::Client
 

@@ -57,17 +57,9 @@ macro(KWIN4_ADD_EFFECT_BACKEND name type)
     )
 endmacro()
 
-# Adds effect plugin with given name. Sources are given after the name
-macro(KWIN4_ADD_EFFECT name)
-    kwin4_add_effect_backend(${name} SHARED ${ARGN})
-
-    set_target_properties(${name} PROPERTIES VERSION 1.0.0 SOVERSION 1)
-    set_target_properties(${name} PROPERTIES OUTPUT_NAME ${name})
-    install(TARGETS ${name} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-endmacro()
-
 macro(KWIN4_ADD_EFFECT_MODULE name)
     kwin4_add_effect_backend(${name} OBJECT ${ARGN})
+    target_compile_definitions(${name} PRIVATE QT_STATICPLUGIN)
 endmacro()
 
 # Install the KWin/Effect service type
@@ -144,14 +136,13 @@ add_subdirectory(wobblywindows)
 
 # Add the builtins plugin
 set(kwin4_effect_builtins_sources
-    effect_builtins.cpp
     logging.cpp
     ../service_utils.cpp
 )
 
 qt5_add_resources(kwin4_effect_builtins_sources shaders.qrc)
 
-kwin4_add_effect(kwin4_effect_builtins ${kwin4_effect_builtins_sources})
+kwin4_add_effect_backend(kwin4_effect_builtins STATIC ${kwin4_effect_builtins_sources})
 target_link_libraries(kwin4_effect_builtins PRIVATE
     kwin4_effect_blur
     kwin4_effect_colorpicker

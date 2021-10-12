@@ -25,7 +25,6 @@
 
 #include "windows.h"
 #include "kwinoptions_settings.h"
-#include <effect_builtins.h>
 #include <kwin_effects_interface.h>
 
 #include "kwinoptions_settings.h"
@@ -337,9 +336,9 @@ void KMovingConfig::save(void)
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
     if (m_settings->geometryTip()) {
-        interface.loadEffect(KWin::BuiltInEffects::nameForEffect(KWin::BuiltInEffect::WindowGeometry));
+        interface.loadEffect(QStringLiteral("windowgeometry"));
     } else {
-        interface.unloadEffect(KWin::BuiltInEffects::nameForEffect(KWin::BuiltInEffect::WindowGeometry));
+        interface.unloadEffect(QStringLiteral("windowgeometry"));
     }
 }
 

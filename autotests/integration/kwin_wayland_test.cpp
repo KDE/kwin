@@ -9,6 +9,7 @@
 #include "kwin_wayland_test.h"
 
 #include "composite.h"
+#include "effect_builtins.h"
 #include "effects.h"
 #include "inputmethod.h"
 #include "platform.h"
@@ -36,6 +37,8 @@ Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
 Q_IMPORT_PLUGIN(KGlobalAccelImpl)
 Q_IMPORT_PLUGIN(KWindowSystemKWinPlugin)
 Q_IMPORT_PLUGIN(KWinIdleTimePoller)
+
+KWIN_IMPORT_BUILTIN_EFFECTS
 
 namespace KWin
 {

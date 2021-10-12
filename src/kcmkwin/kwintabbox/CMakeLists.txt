@@ -32,8 +32,6 @@ target_link_libraries(kcm_kwintabbox
     KF5::Service
 
     XCB::XCB
-
-    kwin4_effect_builtins
 )
 
 install(TARGETS kcm_kwintabbox DESTINATION ${KDE_INSTALL_PLUGINDIR} )

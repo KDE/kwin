@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Highlight the appropriate window when hovering over taskbar entries",
+        "EnabledByDefault": true,
+        "Id": "highlightwindow",
+        "License": "GPL",
+        "Name": "Highlight Window",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}

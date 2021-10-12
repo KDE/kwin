@@ -1,0 +1,14 @@
+{
+    "KPlugin": {
+        "Category": "Tools",
+        "Description": "Display KWin's performance in the corner of the screen",
+        "EnabledByDefault": false,
+        "Id": "showfps",
+        "License": "GPL",
+        "Name": "Show FPS",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_showfps_config"
+}

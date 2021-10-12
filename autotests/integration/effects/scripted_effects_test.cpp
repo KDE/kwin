@@ -14,7 +14,6 @@
 #include "composite.h"
 #include "cursor.h"
 #include "deleted.h"
-#include "effect_builtins.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "kwin_wayland_test.h"

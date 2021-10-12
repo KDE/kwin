@@ -11,7 +11,6 @@
 // KWin
 #include <config-kwin.h>
 #include <kwineffects.h>
-#include "effects/effect_builtins.h"
 #include "plugin.h"
 #include "scripting/scriptedeffect.h"
 #include "utils.h"
@@ -62,115 +61,6 @@ LoadEffectFlags AbstractEffectLoader::readConfig(const QString &effectName, bool
         return LoadEffectFlag::Load | LoadEffectFlag::CheckDefaultFunction;
     }
     return LoadEffectFlags();
-}
-
-BuiltInEffectLoader::BuiltInEffectLoader(QObject *parent)
-    : AbstractEffectLoader(parent)
-    , m_queue(new EffectLoadQueue<BuiltInEffectLoader, BuiltInEffect>(this))
-{
-}
-
-BuiltInEffectLoader::~BuiltInEffectLoader()
-{
-}
-
-bool BuiltInEffectLoader::hasEffect(const QString &name) const
-{
-    return BuiltInEffects::available(internalName(name));
-}
-
-bool BuiltInEffectLoader::isEffectSupported(const QString &name) const
-{
-    return BuiltInEffects::supported(BuiltInEffects::builtInForName(internalName(name)));
-}
-
-QStringList BuiltInEffectLoader::listOfKnownEffects() const
-{
-    return BuiltInEffects::availableEffectNames();
-}
-
-bool BuiltInEffectLoader::loadEffect(const QString &name)
-{
-    return loadEffect(name, BuiltInEffects::builtInForName(internalName(name)), LoadEffectFlag::Load);
-}
-
-void BuiltInEffectLoader::queryAndLoadAll()
-{
-    const QList<BuiltInEffect> effects = BuiltInEffects::availableEffects();
-    for (BuiltInEffect effect : effects) {
-        // check whether it is already loaded
-        if (m_loadedEffects.contains(effect)) {
-            continue;
-        }
-        const QString key = BuiltInEffects::nameForEffect(effect);
-        const LoadEffectFlags flags = readConfig(key, BuiltInEffects::enabledByDefault(effect));
-        if (flags.testFlag(LoadEffectFlag::Load)) {
-            m_queue->enqueue(qMakePair(effect, flags));
-        }
-    }
-}
-
-bool BuiltInEffectLoader::loadEffect(BuiltInEffect effect, LoadEffectFlags flags)
-{
-    return loadEffect(BuiltInEffects::nameForEffect(effect), effect, flags);
-}
-
-bool BuiltInEffectLoader::loadEffect(const QString &name, BuiltInEffect effect, LoadEffectFlags flags)
-{
-    if (effect == BuiltInEffect::Invalid) {
-        return false;
-    }
-    if (!flags.testFlag(LoadEffectFlag::Load)) {
-        qCDebug(KWIN_CORE) << "Loading flags disable effect: " << name;
-        return false;
-    }
-    // check that it is not already loaded
-    if (m_loadedEffects.contains(effect)) {
-        return false;
-    }
-
-    // supported might need a context
-#ifndef KWIN_UNIT_TEST
-    effects->makeOpenGLContextCurrent();
-#endif
-    if (!BuiltInEffects::supported(effect)) {
-        qCDebug(KWIN_CORE) << "Effect is not supported: " << name;
-        return false;
-    }
-
-    if (flags.testFlag(LoadEffectFlag::CheckDefaultFunction)) {
-        if (!BuiltInEffects::checkEnabledByDefault(effect)) {
-            qCDebug(KWIN_CORE) << "Enabled by default function disables effect: " << name;
-            return false;
-        }
-    }
-
-    // ok, now we can try to create the Effect
-    Effect *e = BuiltInEffects::create(effect);
-    if (!e) {
-        qCDebug(KWIN_CORE) << "Failed to create effect: " << name;
-        return false;
-    }
-    // insert in our loaded effects
-    m_loadedEffects.insert(effect, e);
-    connect(e, &Effect::destroyed, this,
-        [this, effect]() {
-            m_loadedEffects.remove(effect);
-        }
-    );
-    qCDebug(KWIN_CORE) << "Successfully loaded built-in effect: " << name;
-    Q_EMIT effectLoaded(e, name);
-    return true;
-}
-
-QString BuiltInEffectLoader::internalName(const QString& name) const
-{
-    return name.toLower();
-}
-
-void BuiltInEffectLoader::clear()
-{
-    m_queue->clear();
 }
 
 static const QString s_nameProperty = QStringLiteral("X-KDE-PluginInfo-Name");
@@ -621,9 +511,8 @@ void PluginEffectLoader::clear()
 EffectLoader::EffectLoader(QObject *parent)
     : AbstractEffectLoader(parent)
 {
-    m_loaders << new BuiltInEffectLoader(this)
+    m_loaders << new StaticPluginEffectLoader(this)
               << new ScriptedEffectLoader(this)
-              << new StaticPluginEffectLoader(this)
               << new PluginEffectLoader(this);
     for (auto it = m_loaders.constBegin(); it != m_loaders.constEnd(); ++it) {
         connect(*it, &AbstractEffectLoader::effectLoaded, this, &AbstractEffectLoader::effectLoaded);

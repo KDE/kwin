@@ -1,0 +1,18 @@
+{
+    "KPlugin": {
+        "Category": "Virtual Desktop Switching Animation",
+        "Description": "Slide desktops when switching virtual desktops",
+        "EnabledByDefault": true,
+        "Id": "slide",
+        "License": "GPL",
+        "Name": "Slide",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_slide_config",
+    "org.kde.kwin.effect": {
+        "exclusiveGroup": "desktop-animations",
+        "video": "https://files.kde.org/plasma/kwin/effect-videos/slide.ogv"
+    }
+}

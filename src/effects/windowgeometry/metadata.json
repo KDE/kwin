@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Display window geometries on move/resize",
+        "EnabledByDefault": false,
+        "Id": "windowgeometry",
+        "License": "GPL",
+        "Name": "Window Geometry",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_windowgeometry_config",
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}

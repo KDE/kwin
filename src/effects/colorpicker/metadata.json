@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "Supports picking a color",
+        "EnabledByDefault": true,
+        "Id": "colorpicker",
+        "License": "GPL",
+        "Name": "Color Picker",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}

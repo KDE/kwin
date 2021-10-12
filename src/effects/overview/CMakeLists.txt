@@ -7,6 +7,7 @@ add_subdirectory(kcm)
 set(overview_SOURCES
     expoarea.cpp
     expolayout.cpp
+    main.cpp
     overvieweffect.cpp
 )
 

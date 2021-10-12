@@ -24,7 +24,6 @@ namespace KWin
 {
 class Effect;
 class EffectPluginFactory;
-enum class BuiltInEffect;
 
 /**
  * @brief Flags defining how a Loader should load an Effect.
@@ -266,32 +265,6 @@ private:
     Loader *m_effectLoader;
     bool m_dequeueScheduled;
     QQueue<QPair<QueueType, LoadEffectFlags>> m_queue;
-};
-
-/**
- * @brief Can load the Built-In-Effects
- */
-class BuiltInEffectLoader : public AbstractEffectLoader
-{
-    Q_OBJECT
-public:
-    explicit BuiltInEffectLoader(QObject *parent = nullptr);
-    ~BuiltInEffectLoader() override;
-
-    bool hasEffect(const QString &name) const override;
-    bool isEffectSupported(const QString &name) const override;
-    QStringList listOfKnownEffects() const override;
-
-    void clear() override;
-    void queryAndLoadAll() override;
-    bool loadEffect(const QString& name) override;
-    bool loadEffect(BuiltInEffect effect, LoadEffectFlags flags);
-
-private:
-    bool loadEffect(const QString &name, BuiltInEffect effect, LoadEffectFlags flags);
-    QString internalName(const QString &name) const;
-    EffectLoadQueue<BuiltInEffectLoader, BuiltInEffect> *m_queue;
-    QMap<BuiltInEffect, Effect*> m_loadedEffects;
 };
 
 /**

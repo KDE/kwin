@@ -18,7 +18,6 @@
 namespace KWin
 {
 class KWinTabBoxConfigForm;
-enum class BuiltInEffect;
 namespace TabBox
 {
 class KWinTabboxData;

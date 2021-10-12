@@ -2,6 +2,7 @@
 # Effect
 
 set(slide_SOURCES
+    main.cpp
     slide.cpp
 )
 

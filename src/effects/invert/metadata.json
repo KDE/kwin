@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "Inverts the color of the desktop and windows",
+        "EnabledByDefault": false,
+        "Id": "invert",
+        "License": "GPL",
+        "Name": "Invert",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_invert_config",
+    "org.kde.kwin.effect": {
+        "video": "https://files.kde.org/plasma/kwin/effect-videos/invert.mp4"
+    }
+}

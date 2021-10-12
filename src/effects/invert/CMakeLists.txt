@@ -3,6 +3,7 @@
 
 set(invert_SOURCES
     invert.cpp
+    main.cpp
 )
 
 kwin4_add_effect_module(kwin4_effect_invert ${invert_SOURCES})

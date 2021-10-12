@@ -3,6 +3,7 @@
 
 # Source files
 set(sheet_SOURCES
+    main.cpp
     sheet.cpp
 )
 kconfig_add_kcfg_files(sheet_SOURCES sheetconfig.kcfgc)

@@ -14,7 +14,6 @@
 #include "platform.h"
 #include "scene.h"
 #include "wayland_server.h"
-#include "effect_builtins.h"
 
 #include <KConfigGroup>
 

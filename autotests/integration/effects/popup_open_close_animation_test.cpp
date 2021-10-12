@@ -21,8 +21,6 @@
 
 #include "decorations/decoratedclient.h"
 
-#include "effect_builtins.h"
-
 #include <KWayland/Client/surface.h>
 
 #include <linux/input.h>

@@ -1,0 +1,15 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Improve contrast and readability behind semi-transparent windows",
+        "Id": "contrast",
+        "License": "GPL",
+        "Name": "Background contrast",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "org.kde.kwin.effect": {
+        "enabledByDefaultMethod": true
+    }
+}

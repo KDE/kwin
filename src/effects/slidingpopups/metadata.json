@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Sliding animation for Plasma popups",
+        "EnabledByDefault": true,
+        "Id": "slidingpopups",
+        "License": "GPL",
+        "Name": "Sliding popups",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "org.kde.kwin.effect": {
+        "video": "https://files.kde.org/plasma/kwin/effect-videos/sliding_popups.mp4"
+    }
+}

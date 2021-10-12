@@ -1,0 +1,18 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "Magnify the section of the screen that is near the mouse cursor",
+        "EnabledByDefault": false,
+        "Id": "magnifier",
+        "License": "GPL",
+        "Name": "Magnifier",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_magnifier_config",
+    "org.kde.kwin.effect": {
+        "exclusiveGroup": "magnifiers",
+        "video": "https://files.kde.org/plasma/kwin/effect-videos/magnifier.ogv"
+    }
+}

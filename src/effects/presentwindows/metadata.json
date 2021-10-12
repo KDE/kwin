@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Category": "Window Management",
+        "Description": "Zoom out until all opened windows can be displayed side-by-side",
+        "EnabledByDefault": true,
+        "Id": "presentwindows",
+        "License": "GPL",
+        "Name": "Present Windows",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_presentwindows_config",
+    "org.kde.kwin.effect": {
+        "video": "https://files.kde.org/plasma/kwin/effect-videos/present_windows.mp4"
+    }
+}

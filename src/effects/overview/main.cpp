@@ -1,0 +1,19 @@
+/*
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
+
+#include "overvieweffect.h"
+
+namespace KWin
+{
+
+KWIN_EFFECT_FACTORY_SUPPORTED(OverviewEffectFactory,
+                              OverviewEffect,
+                              "metadata.json",
+                              return OverviewEffect::supported();)
+
+} // namespace KWin
+
+#include "main.moc"

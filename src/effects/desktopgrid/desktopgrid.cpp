@@ -15,7 +15,6 @@
 #include "desktopgridconfig.h"
 
 #include "../presentwindows/presentwindows_proxy.h"
-#include "../effect_builtins.h"
 
 #include <QAction>
 #include <QApplication>
@@ -1102,7 +1101,7 @@ void DesktopGridEffect::setup()
 
     // setup the motion managers
     if (clickBehavior == SwitchDesktopAndActivateWindow)
-        m_proxy = static_cast<PresentWindowsEffectProxy*>(effects->getProxy(BuiltInEffects::nameForEffect(BuiltInEffect::PresentWindows)));
+        m_proxy = static_cast<PresentWindowsEffectProxy*>(effects->getProxy(QStringLiteral("presentwindows")));
     if (isUsingPresentWindows()) {
         m_proxy->reCreateGrids(); // revalidation on multiscreen, bug #351724
         for (int i = 1; i <= effects->numberOfDesktops(); i++) {

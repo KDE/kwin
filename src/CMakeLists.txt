@@ -184,7 +184,6 @@ set_target_properties(kwin PROPERTIES
 )
 
 target_link_libraries(kwin
-    kwin4_effect_builtins
     kwineffects
     kwinglutils
 
@@ -266,7 +265,12 @@ qt5_generate_dbus_interface(virtualkeyboard_dbus.h org.kde.kwin.VirtualKeyboard.
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
 add_executable(kwin_x11 main_x11.cpp)
-target_link_libraries(kwin_x11 kwin KF5::Crash Qt::X11Extras)
+target_link_libraries(kwin_x11
+    kwin4_effect_builtins
+    kwin
+    KF5::Crash
+    Qt::X11Extras
+)
 
 install(TARGETS kwin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
@@ -278,6 +282,7 @@ add_executable(kwin_wayland
     tabletmodemanager.cpp
 )
 target_link_libraries(kwin_wayland
+    kwin4_effect_builtins
     kwin
     KF5::Crash
     KWinXwaylandServerModule

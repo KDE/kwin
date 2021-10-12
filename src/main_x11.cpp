@@ -12,6 +12,7 @@
 
 #include <config-kwin.h>
 
+#include "effect_builtins.h"
 #include "platform.h"
 #include "sm.h"
 #include "workspace.h"
@@ -45,6 +46,8 @@
 #include <iostream>
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
+
+KWIN_IMPORT_BUILTIN_EFFECTS
 
 namespace KWin
 {

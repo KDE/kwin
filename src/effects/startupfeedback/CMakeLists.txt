@@ -3,6 +3,7 @@
 
 # Source files
 set(startupfeedback_SOURCES
+    main.cpp
     startupfeedback.cpp
 )
 

@@ -2,6 +2,7 @@
 # Effect
 
 set(resize_SOURCES
+    main.cpp
     resize.cpp
 )
 

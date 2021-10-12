@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Blurs the background behind semi-transparent windows",
+        "Id": "blur",
+        "License": "GPL",
+        "Name": "Blur",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_blur_config",
+    "org.kde.kwin.effect": {
+        "enabledByDefaultMethod": true
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Simulate a magic lamp when minimizing windows",
+        "EnabledByDefault": false,
+        "Id": "magiclamp",
+        "License": "GPL",
+        "Name": "Magic Lamp",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_magiclamp_config",
+    "org.kde.kwin.effect": {
+        "exclusiveGroup": "minimize",
+        "video": "https://files.kde.org/plasma/kwin/effect-videos/magic_lamp.ogv"
+    }
+}

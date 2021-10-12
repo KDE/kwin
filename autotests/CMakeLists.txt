@@ -134,32 +134,6 @@ add_test(NAME kwin-testXcbWindow COMMAND testXcbWindow)
 ecm_mark_as_test(testXcbWindow)
 
 ########################################################
-# Test BuiltInEffectLoader
-########################################################
-set(testBuiltInEffectLoader_SRCS
-    ../src/effectloader.cpp
-    mock_effectshandler.cpp
-    test_builtin_effectloader.cpp
-)
-add_executable(testBuiltInEffectLoader ${testBuiltInEffectLoader_SRCS})
-set_target_properties(testBuiltInEffectLoader PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
-
-target_link_libraries(testBuiltInEffectLoader
-    Qt::Concurrent
-    Qt::Qml
-    Qt::Test
-    Qt::X11Extras
-
-    KF5::Package
-
-    kwineffects
-    kwin4_effect_builtins
-)
-
-add_test(NAME kwin-testBuiltInEffectLoader COMMAND testBuiltInEffectLoader)
-ecm_mark_as_test(testBuiltInEffectLoader)
-
-########################################################
 # Test ScriptedEffectLoader
 ########################################################
 include_directories(${KWin_SOURCE_DIR}/src)
@@ -193,7 +167,6 @@ target_link_libraries(testScriptedEffectLoader
     XCB::CURSOR
 
     kwineffects
-    kwin4_effect_builtins
 )
 
 add_test(NAME kwin-testScriptedEffectLoader COMMAND testScriptedEffectLoader)
@@ -218,7 +191,6 @@ target_link_libraries(testPluginEffectLoader
     KF5::Package
 
     kwineffects
-    kwin4_effect_builtins
 )
 
 add_test(NAME kwin-testPluginEffectLoader COMMAND testPluginEffectLoader)

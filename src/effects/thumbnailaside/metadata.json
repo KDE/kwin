@@ -1,0 +1,14 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Display window thumbnails on the edge of the screen",
+        "EnabledByDefault": false,
+        "Id": "thumbnailaside",
+        "License": "GPL",
+        "Name": "Thumbnail Aside",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_thumbnailaside_config"
+}

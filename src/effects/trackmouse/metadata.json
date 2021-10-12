@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "Display a mouse cursor locating effect when activated",
+        "EnabledByDefault": false,
+        "Id": "trackmouse",
+        "License": "GPL",
+        "Name": "Track Mouse",
+        "ServiceTypes": [
+            "KWin/Effect"
+        ]
+    },
+    "X-KDE-ConfigModule": "kwin_trackmouse_config",
+    "org.kde.kwin.effect": {
+        "video": "https://files.kde.org/plasma/kwin/effect-videos/track_mouse.mp4"
+    }
+}
