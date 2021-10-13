@@ -54,6 +54,7 @@ public:
     bool isVisible() const;
     bool isAvailable() const;
 
+    void setPanel(InputPanelV1Client* client);
     void setInputMethodCommand(const QString &path);
 
 Q_SIGNALS:
@@ -63,8 +64,6 @@ Q_SIGNALS:
     void availableChanged();
 
 private Q_SLOTS:
-    void clientAdded(AbstractClient* client);
-
     // textinput interface slots
     void handleFocusedSurfaceChanged();
     void surroundingTextChanged();
@@ -93,6 +92,8 @@ private:
     void stopInputMethod();
     void setTrackedClient(AbstractClient *trackedClient);
     void installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboardGrab);
+
+    bool touchEventTriggered() const;
 
     struct {
         QString text = QString();

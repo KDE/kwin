@@ -13,6 +13,7 @@
 #include "workspace.h"
 #include "abstract_wayland_output.h"
 #include "platform.h"
+#include "inputmethod.h"
 #include <KWaylandServer/output_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
@@ -38,6 +39,8 @@ InputPanelV1Client::InputPanelV1Client(InputPanelSurfaceV1Interface *panelSurfac
     connect(panelSurface, &InputPanelSurfaceV1Interface::topLevel, this, &InputPanelV1Client::showTopLevel);
     connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Client::showOverlayPanel);
     connect(panelSurface, &InputPanelSurfaceV1Interface::destroyed, this, &InputPanelV1Client::destroyClient);
+
+    InputMethod::self()->setPanel(this);
 }
 
 void InputPanelV1Client::showOverlayPanel()
@@ -53,12 +56,20 @@ void InputPanelV1Client::showTopLevel(OutputInterface *output, InputPanelSurface
     Q_UNUSED(position);
     m_mode = Toplevel;
     setOutput(output);
-    reposition();
+}
+
+void InputPanelV1Client::allow()
+{
     setReadyForPainting();
+    reposition();
 }
 
 void KWin::InputPanelV1Client::reposition()
 {
+    if (!readyForPainting()) {
+        return;
+    }
+
     switch (m_mode) {
         case Toplevel: {
             if (m_output) {
@@ -109,7 +120,7 @@ NET::WindowType InputPanelV1Client::windowType(bool, int) const
 
 QRect InputPanelV1Client::inputGeometry() const
 {
-    return surface()->input().boundingRect().translated(pos());
+    return readyForPainting() ? surface()->input().boundingRect().translated(pos()) : QRect();
 }
 
 void InputPanelV1Client::setOutput(OutputInterface *outputIface)
