@@ -557,6 +557,7 @@ void InputMethod::stopInputMethod()
         m_inputMethodProcess->waitForFinished();
     }
     if (waylandServer()) {
+        disconnect(waylandServer(), &WaylandServer::terminatingInputMethodConnection, this, &InputMethod::stopInputMethod);
         waylandServer()->destroyInputMethodConnection();
     }
     m_inputMethodProcess->deleteLater();
