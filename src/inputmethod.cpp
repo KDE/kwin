@@ -86,7 +86,6 @@ void InputMethod::init()
         new TextInputManagerV2Interface(waylandServer()->display());
         new TextInputManagerV3Interface(waylandServer()->display());
 
-        connect(workspace(), &Workspace::clientAdded, this, &InputMethod::clientAdded);
         connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceChanged, this, &InputMethod::handleFocusedSurfaceChanged);
 
         TextInputV2Interface *textInputV2 = waylandServer()->seat()->textInputV2();
@@ -118,11 +117,15 @@ void InputMethod::hide()
     setActive(false);
 }
 
-void InputMethod::setActive(bool active)
+bool InputMethod::touchEventTriggered() const
 {
-    active &= input()->touch()
+    return input()->touch()
            && input()->touch()->lastEventTime() > input()->keyboard()->lastEventTime()
            && input()->touch()->lastEventTime() > input()->pointer()->lastEventTime();
+}
+
+void InputMethod::setActive(bool active)
+{
     const bool wasActive = waylandServer()->inputMethod()->context();
     if (wasActive && !active) {
         waylandServer()->inputMethod()->sendDeactivate();
@@ -148,18 +151,14 @@ void InputMethod::setActive(bool active)
     }
 }
 
-void InputMethod::clientAdded(AbstractClient *_client)
+void InputMethod::setPanel(InputPanelV1Client *client)
 {
-    if (!_client->isInputMethod()) {
-        return;
-    }
-
+    Q_ASSERT(client->isInputMethod());
     if (m_inputClient) {
-        qCWarning(KWIN_VIRTUALKEYBOARD) << "Replacing input client" << m_inputClient << "with" << _client;
+        qCWarning(KWIN_VIRTUALKEYBOARD) << "Replacing input client" << m_inputClient << "with" << client;
         disconnect(m_inputClient, nullptr, this, nullptr);
     }
 
-    const auto client = dynamic_cast<InputPanelV1Client *>(_client);
     m_inputClient = client;
     connect(client->surface(), &SurfaceInterface::inputChanged, this, &InputMethod::updateInputPanelState);
     connect(client, &QObject::destroyed, this, [this] {
@@ -252,6 +251,9 @@ void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServe
     }
     if (!t2 || !t2->isEnabled()) {
         return;
+    }
+    if (m_inputClient && touchEventTriggered()) {
+        m_inputClient->allow();
     }
     switch (reason) {
     case KWaylandServer::TextInputV2Interface::UpdateReason::StateChange:
@@ -524,6 +526,10 @@ void InputMethod::updateInputPanelState()
 
     if (!t) {
         return;
+    }
+
+    if (m_inputClient && touchEventTriggered()) {
+        m_inputClient->allow();
     }
 
     QRect overlap = QRect(0, 0, 0, 0);

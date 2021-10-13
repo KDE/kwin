@@ -47,6 +47,7 @@ public:
     {
         return m_mode;
     }
+    void allow();
 
 protected:
     void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
