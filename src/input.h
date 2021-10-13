@@ -462,6 +462,8 @@ public:
     void setDecoration(Decoration::DecoratedClientImpl *decoration);
     void setInternalWindow(QWindow *window);
 
+    uint32_t lastEventTime() const;
+
 Q_SIGNALS:
     void atChanged(Toplevel *old, Toplevel *now);
     void decorationChanged();
@@ -492,6 +494,8 @@ protected:
     inline void setInited(bool set) {
         m_inited = set;
     }
+
+    uint32_t m_lastEventTime = 0;
 
 private:
     bool setAt(Toplevel *toplevel);

@@ -18,6 +18,8 @@
 #include "workspace.h"
 #include "screenlockerwatcher.h"
 #include "deleted.h"
+#include "touch_input.h"
+#include "pointer_input.h"
 
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/keyboard_interface.h>
@@ -114,6 +116,9 @@ void InputMethod::hide()
 
 void InputMethod::setActive(bool active)
 {
+    active &= input()->touch()
+           && input()->touch()->lastEventTime() > input()->keyboard()->lastEventTime()
+           && input()->touch()->lastEventTime() > input()->pointer()->lastEventTime();
     const bool wasActive = waylandServer()->inputMethod()->context();
     if (wasActive && !active) {
         waylandServer()->inputMethod()->sendDeactivate();
