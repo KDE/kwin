@@ -492,8 +492,10 @@ void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
         // the (just moved) modal dialog will confusingly return to the mainwindow with
         // the next desktop change
     {
-        Q_FOREACH (AbstractClient * c2, mainClients())
-        c2->setDesktops(desktops);
+        const auto clients = mainClients();
+        for (AbstractClient *c2 : clients) {
+            c2->setDesktops(desktops);
+        }
     }
 
     doSetDesktop();
@@ -1992,7 +1994,7 @@ QList< AbstractClient* > AbstractClient::mainClients() const
 QList<AbstractClient*> AbstractClient::allMainClients() const
 {
     auto result = mainClients();
-    Q_FOREACH (const auto *cl, result) {
+    for (const auto *cl : result) {
         result += cl->allMainClients();
     }
     return result;
@@ -3265,7 +3267,8 @@ void AbstractClient::sendToOutput(AbstractOutput *newOutput)
     if (isActive()) {
         workspace()->setActiveOutput(newOutput);
         // might impact the layer of a fullscreen window
-        Q_FOREACH (AbstractClient *cc, workspace()->allClientList()) {
+        const auto clients = workspace()->allClientList();
+        for (AbstractClient *cc : clients) {
             if (cc->isFullScreen() && cc->output() == newOutput) {
                 cc->updateLayer();
             }
@@ -3412,7 +3415,8 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
         // we need to find the screen area as it was before the change
         oldScreenArea = QRect( 0, 0, workspace()->oldDisplayWidth(), workspace()->oldDisplayHeight());
         int distance = INT_MAX;
-        Q_FOREACH(const QRect &r, workspace()->previousScreenSizes()) {
+        const auto previousSizes = workspace()->previousScreenSizes();
+        for (const QRect &r : previousSizes) {
             int d = r.contains( oldGeometry.center()) ? 0 : ( r.center() - oldGeometry.center()).manhattanLength();
             if( d < distance ) {
                 distance = d;
