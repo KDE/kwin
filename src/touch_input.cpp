@@ -147,6 +147,7 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 t
     if (m_activeTouchPoints.count() == 1) {
         update();
     }
+    m_lastEventTime = time;
     input()->processSpies(std::bind(&InputEventSpy::touchDown, std::placeholders::_1, id, pos, time));
     input()->processFilters(std::bind(&InputEventFilter::touchDown, std::placeholders::_1, id, pos, time));
     m_windowUpdatedInCycle = false;
@@ -161,6 +162,7 @@ void TouchInputRedirection::processUp(qint32 id, quint32 time, LibInput::Device 
     if (!m_activeTouchPoints.remove(id)) {
         return;
     }
+    m_lastEventTime = time;
     m_windowUpdatedInCycle = false;
     input()->processSpies(std::bind(&InputEventSpy::touchUp, std::placeholders::_1, id, time));
     input()->processFilters(std::bind(&InputEventFilter::touchUp, std::placeholders::_1, id, time));
@@ -179,6 +181,7 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32
     if (!m_activeTouchPoints.contains(id)) {
         return;
     }
+    m_lastEventTime = time;
     m_lastPosition = pos;
     m_windowUpdatedInCycle = false;
     input()->processSpies(std::bind(&InputEventSpy::touchMotion, std::placeholders::_1, id, pos, time));

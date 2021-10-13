@@ -53,6 +53,7 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     if (!inited()) {
         return;
     }
+    m_lastEventTime = time;
     m_lastPosition = pos;
 
     QEvent::Type t;

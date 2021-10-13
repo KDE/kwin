@@ -2950,6 +2950,11 @@ QWindow *InputDeviceHandler::internalWindow() const
     return m_focus.internalWindow;
 }
 
+uint32_t InputDeviceHandler::lastEventTime() const
+{
+    return m_lastEventTime;
+}
+
 } // namespace
 
 #include "input.moc"
