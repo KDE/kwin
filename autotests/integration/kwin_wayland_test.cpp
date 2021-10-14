@@ -88,6 +88,7 @@ WaylandTestApplication::~WaylandTestApplication()
     }
     destroyInputMethod();
     destroyCompositor();
+    destroyInput();
 }
 
 void WaylandTestApplication::performStartup()
