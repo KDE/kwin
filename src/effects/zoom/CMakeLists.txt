@@ -7,7 +7,7 @@ set(zoom_SOURCES
 
 if (HAVE_ACCESSIBILITY)
     set(zoom_SOURCES ${zoom_SOURCES}
-        zoom/accessibilityintegration.cpp
+        accessibilityintegration.cpp
     )
 endif()
 
