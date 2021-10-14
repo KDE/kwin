@@ -82,7 +82,6 @@ public:
     bool init(InitializationFlags flags = InitializationFlag::NoOptions);
 
     bool start();
-    void terminateClientConnections();
 
     KWaylandServer::Display *display() const
     {

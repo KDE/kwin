@@ -204,14 +204,6 @@ KWaylandServer::ClientConnection *WaylandServer::xWaylandConnection() const
     return m_xwaylandConnection;
 }
 
-void WaylandServer::terminateClientConnections()
-{
-    const auto connections = m_display->connections();
-    for (auto it = connections.begin(); it != connections.end(); ++it) {
-        (*it)->destroy();
-    }
-}
-
 void WaylandServer::registerShellClient(AbstractClient *client)
 {
     if (client->isLockScreen()) {

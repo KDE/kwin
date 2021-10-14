@@ -135,7 +135,6 @@ ApplicationWayland::~ApplicationWayland()
         s->unpolish(this);
     }
     destroyInputMethod();
-    waylandServer()->terminateClientConnections();
     destroyCompositor();
     destroyInput();
 }
