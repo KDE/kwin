@@ -94,6 +94,7 @@ public:
     bool addFB2ModifiersSupported() const {
         return m_addFB2ModifiersSupported;
     }
+    bool isNVidia() const;
 
     void waitIdle();
     DrmBackend *platform() const;
@@ -131,6 +132,7 @@ private:
     const dev_t m_deviceId;
     bool m_atomicModeSetting;
     bool m_useEglStreams;
+    bool m_isNVidia;
     gbm_device* m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     clockid_t m_presentationClock;

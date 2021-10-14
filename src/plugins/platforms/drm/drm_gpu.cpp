@@ -74,7 +74,14 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
 
     // find out if this GPU is using the NVidia proprietary driver
     DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
-    m_useEglStreams = strstr(version->name, "nvidia-drm");
+    m_isNVidia = strstr(version->name, "nvidia-drm");
+    m_useEglStreams = m_isNVidia;
+#if HAVE_GBM
+    m_gbmDevice = gbm_create_device(m_fd);
+    if (m_gbmDevice) {
+        m_useEglStreams = m_isNVidia && strcmp(gbm_device_get_backend_name(m_gbmDevice), "nvidia") != 0;
+    }
+#endif
 
     m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
     connect(m_socketNotifier, &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
@@ -549,6 +556,11 @@ bool DrmGpu::isFormatSupported(uint32_t drmFormat) const
         }
         return true;
     }
+}
+
+bool DrmGpu::isNVidia() const
+{
+    return m_isNVidia;
 }
 
 }
