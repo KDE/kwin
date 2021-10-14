@@ -365,6 +365,7 @@ bool EglGbmBackend::makeContextCurrent(const Output::RenderData &render) const
         qCCritical(KWIN_DRM) << "eglMakeCurrent failed:" << getEglErrorString();
         return false;
     }
+    glDrawBuffer(GL_BACK);
     return true;
 }
 
