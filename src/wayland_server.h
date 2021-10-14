@@ -230,7 +230,6 @@ public:
 Q_SIGNALS:
     void shellClientAdded(KWin::AbstractClient *);
     void shellClientRemoved(KWin::AbstractClient *);
-    void terminatingInputMethodConnection();
     void initialized();
     void foreignTransientChanged(KWaylandServer::SurfaceInterface *child);
 

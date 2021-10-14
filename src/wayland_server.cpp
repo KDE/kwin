@@ -196,7 +196,6 @@ WaylandServer::WaylandServer(QObject *parent)
 
 WaylandServer::~WaylandServer()
 {
-    destroyInputMethodConnection();
     s_self = nullptr;
 }
 
@@ -207,7 +206,6 @@ KWaylandServer::ClientConnection *WaylandServer::xWaylandConnection() const
 
 void WaylandServer::terminateClientConnections()
 {
-    destroyInputMethodConnection();
     const auto connections = m_display->connections();
     for (auto it = connections.begin(); it != connections.end(); ++it) {
         (*it)->destroy();
@@ -694,7 +692,6 @@ void WaylandServer::destroyInputMethodConnection()
     if (!m_inputMethodServerConnection) {
         return;
     }
-    Q_EMIT terminatingInputMethodConnection();
     m_inputMethodServerConnection->destroy();
     m_inputMethodServerConnection = nullptr;
 }

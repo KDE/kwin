@@ -18,6 +18,7 @@
 #include "composite.h"
 #include "cursor.h"
 #include "input.h"
+#include "inputmethod.h"
 #include "options.h"
 #include "pluginmanager.h"
 #include "screens.h"
@@ -320,6 +321,11 @@ void Application::createColorManager()
 #endif
 }
 
+void Application::createInputMethod()
+{
+    InputMethod::create(this);
+}
+
 void Application::installNativeX11EventFilter()
 {
     installNativeEventFilter(m_eventFilter.data());
@@ -355,6 +361,11 @@ void Application::destroyColorManager()
 #ifdef KWIN_BUILD_CMS
     delete ColorManager::self();
 #endif
+}
+
+void Application::destroyInputMethod()
+{
+    delete InputMethod::self();
 }
 
 void Application::registerEventFilter(X11EventFilter *filter)

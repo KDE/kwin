@@ -134,6 +134,7 @@ ApplicationWayland::~ApplicationWayland()
     if (QStyle *s = style()) {
         s->unpolish(this);
     }
+    destroyInputMethod();
     waylandServer()->terminateClientConnections();
     destroyCompositor();
     destroyInput();
@@ -159,7 +160,7 @@ void ApplicationWayland::performStartup()
     // now libinput thread has been created, adjust scheduler to not leak into other processes
     gainRealTime(RealTimeFlags::ResetOnFork);
 
-    InputMethod::create(this);
+    createInputMethod();
     TabletModeManager::create(this);
     createPlugins();
 

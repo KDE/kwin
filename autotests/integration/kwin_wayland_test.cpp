@@ -86,6 +86,7 @@ WaylandTestApplication::~WaylandTestApplication()
     if (QStyle *s = style()) {
         s->unpolish(this);
     }
+    destroyInputMethod();
     waylandServer()->terminateClientConnections();
     destroyCompositor();
 }

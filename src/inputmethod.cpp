@@ -61,7 +61,11 @@ InputMethod::InputMethod(QObject *parent)
     }
 }
 
-InputMethod::~InputMethod() = default;
+InputMethod::~InputMethod()
+{
+    stopInputMethod();
+    s_self = nullptr;
+}
 
 void InputMethod::init()
 {
@@ -556,11 +560,10 @@ void InputMethod::stopInputMethod()
         m_inputMethodProcess->kill();
         m_inputMethodProcess->waitForFinished();
     }
-    if (waylandServer()) {
-        waylandServer()->destroyInputMethodConnection();
-    }
     m_inputMethodProcess->deleteLater();
     m_inputMethodProcess = nullptr;
+
+    waylandServer()->destroyInputMethodConnection();
 }
 
 void InputMethod::startInputMethod()
@@ -569,8 +572,6 @@ void InputMethod::startInputMethod()
     if (m_inputMethodCommand.isEmpty() || kwinApp()->isTerminating()) {
         return;
     }
-
-    connect(waylandServer(), &WaylandServer::terminatingInputMethodConnection, this, &InputMethod::stopInputMethod, Qt::UniqueConnection);
 
     QStringList arguments = KShell::splitArgs(m_inputMethodCommand);
     if (arguments.isEmpty()) {
