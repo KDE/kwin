@@ -1133,7 +1133,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
 //                 move(calculateGravitation(true));
 //                 move(calculateGravitation(false));
                 QRect oldgeom = frameGeometry();
-                resize(adjustedSize());
+                resize(implicitSize());
                 if (!isShade())
                     checkWorkspacePosition(oldgeom);
                 Q_EMIT geometryShapeChanged(this, oldgeom);
@@ -1147,7 +1147,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
     setDecoration(decoration);
 
     move(calculateGravitation(false));
-    resize(adjustedSize());
+    resize(implicitSize());
     updateDecorationInputShape();
     maybeCreateX11DecorationRenderer();
     Q_EMIT geometryShapeChanged(this, oldgeom);
@@ -1160,7 +1160,7 @@ void X11Client::destroyDecoration()
         QPoint grav = calculateGravitation(true);
         AbstractClient::destroyDecoration();
         maybeDestroyX11DecorationRenderer();
-        resize(adjustedSize());
+        resize(implicitSize());
         move(grav);
         if (!isZombie()) {
             Q_EMIT geometryShapeChanged(this, oldgeom);
@@ -1505,7 +1505,7 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
         addWorkspaceRepaint(visibleGeometry());
         // Shade
         shade_geometry_change = true;
-        QSize s(adjustedSize());
+        QSize s(implicitSize());
         s.setHeight(borderTop() + borderBottom());
         m_wrapper.selectInput(ClientWinMask);   // Avoid getting UnmapNotify
         m_wrapper.unmap();
@@ -1526,7 +1526,7 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
         shade_geometry_change = true;
         if (decoratedClient())
             decoratedClient()->signalShadeChange();
-        QSize s(adjustedSize());
+        QSize s(implicitSize());
         shade_geometry_change = false;
         resize(s);
         setGeometryRestore(frameGeometry());
@@ -3609,7 +3609,7 @@ void X11Client::getWmNormalHints()
     }
     if (isManaged()) {
         // update to match restrictions
-        QSize new_size = adjustedSize();
+        QSize new_size = clientSizeToFrameSize(constrainClientSize(clientSize()));
         if (new_size != size() && !isFullScreen()) {
             QRect origClientGeometry = m_clientGeometry;
             resizeWithChecks(new_size);
@@ -4201,7 +4201,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
     // save sizes for restoring, if maximalizing
     QSize sz;
     if (isShade())
-        sz = adjustedSize();
+        sz = implicitSize();
     else
         sz = size();
 

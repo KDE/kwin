@@ -906,7 +906,7 @@ void AbstractClient::blockGeometryUpdates(bool block)
         if (--m_blockGeometryUpdates == 0) {
             if (m_pendingMoveResizeMode != MoveResizeMode::None) {
                 if (isShade())
-                    moveResizeInternal(QRect(pos(), adjustedSize()), m_pendingMoveResizeMode);
+                    moveResizeInternal(QRect(pos(), implicitSize()), m_pendingMoveResizeMode);
                 else
                     moveResizeInternal(moveResizeGeometry(), m_pendingMoveResizeMode);
                 m_pendingMoveResizeMode = MoveResizeMode::None;
@@ -3594,18 +3594,12 @@ void AbstractClient::checkOffscreenPosition(QRect* geom, const QRect& screenArea
 }
 
 /**
- * Returns the appropriate frame size for the current client size.
- *
- * This is equivalent to clientSizeToFrameSize(constrainClientSize(clientSize())).
+ * Returns the natural size of the window, if the window is not shaded it's the same
+ * as size().
  */
-QSize AbstractClient::adjustedSize() const
+QSize AbstractClient::implicitSize() const
 {
-    QSize size = clientSize();
-    // The client size is unknown until the window is mapped, don't constrain it.
-    if (!size.isEmpty()) {
-        size = constrainClientSize(size);
-    }
-    return clientSizeToFrameSize(size);
+    return clientSizeToFrameSize(clientSize());
 }
 
 /**
