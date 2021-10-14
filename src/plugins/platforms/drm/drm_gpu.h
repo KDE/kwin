@@ -55,6 +55,7 @@ public:
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
     bool useEglStreams() const;
+    bool isNVidia() const;
     bool isFormatSupported(uint32_t drmFormat) const;
     gbm_device *gbmDevice() const;
     EGLDisplay eglDisplay() const;
@@ -104,6 +105,7 @@ private:
     bool m_atomicModeSetting;
     bool m_useEglStreams;
     bool m_addFB2ModifiersSupported = false;
+    bool m_isNVidia;
     clockid_t m_presentationClock;
     gbm_device* m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
