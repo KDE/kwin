@@ -3600,7 +3600,12 @@ void AbstractClient::checkOffscreenPosition(QRect* geom, const QRect& screenArea
  */
 QSize AbstractClient::adjustedSize() const
 {
-    return clientSizeToFrameSize(constrainClientSize(clientSize()));
+    QSize size = clientSize();
+    // The client size is unknown until the window is mapped, don't constrain it.
+    if (!size.isEmpty()) {
+        size = constrainClientSize(size);
+    }
+    return clientSizeToFrameSize(size);
 }
 
 /**
