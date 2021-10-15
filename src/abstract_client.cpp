@@ -905,10 +905,7 @@ void AbstractClient::blockGeometryUpdates(bool block)
     } else {
         if (--m_blockGeometryUpdates == 0) {
             if (m_pendingMoveResizeMode != MoveResizeMode::None) {
-                if (isShade())
-                    moveResizeInternal(QRect(pos(), implicitSize()), m_pendingMoveResizeMode);
-                else
-                    moveResizeInternal(moveResizeGeometry(), m_pendingMoveResizeMode);
+                moveResizeInternal(moveResizeGeometry(), m_pendingMoveResizeMode);
                 m_pendingMoveResizeMode = MoveResizeMode::None;
             }
         }
