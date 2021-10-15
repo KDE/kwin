@@ -107,7 +107,7 @@ void WaylandCursor::installImage()
 
 void WaylandCursor::doInstallImage(wl_buffer *image, const QSize &size, qreal scale)
 {
-    auto *pointer = m_backend->seat()->pointer();
+    auto *pointer = m_backend->seat()->pointerDevice()->nativePointer();
     if (!pointer || !pointer->isValid()) {
         return;
     }
@@ -131,7 +131,7 @@ WaylandSubSurfaceCursor::WaylandSubSurfaceCursor(WaylandBackend *backend)
 
 void WaylandSubSurfaceCursor::init()
 {
-    if (auto *pointer = backend()->seat()->pointer()) {
+    if (auto *pointer = backend()->seat()->pointerDevice()->nativePointer()) {
         pointer->hideCursor();
     }
 }
@@ -205,237 +205,369 @@ void WaylandSubSurfaceCursor::move(const QPointF &globalPosition)
     Compositor::self()->addRepaintFull();
 }
 
-WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
-    : QObject(nullptr)
-    , m_seat(new Seat(this))
-    , m_pointer(nullptr)
-    , m_keyboard(nullptr)
-    , m_touch(nullptr)
-    , m_enteredSerial(0)
-    , m_backend(backend)
+WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, WaylandSeat *seat)
+    : InputDevice(seat)
+    , m_seat(seat)
+    , m_keyboard(keyboard)
 {
-    m_seat->setup(seat);
-    connect(m_seat, &Seat::hasKeyboardChanged, this,
-        [this](bool hasKeyboard) {
-            if (hasKeyboard) {
-                m_keyboard = m_seat->createKeyboard(this);
-                connect(m_keyboard, &Keyboard::keyChanged, this,
-                    [this](quint32 key, Keyboard::KeyState state, quint32 time) {
-                        switch (state) {
-                        case Keyboard::KeyState::Pressed:
-                            if (key == KEY_RIGHTCTRL) {
-                                m_backend->togglePointerLock();
-                            }
-                            m_backend->keyboardKeyPressed(key, time);
-                            break;
-                        case Keyboard::KeyState::Released:
-                            m_backend->keyboardKeyReleased(key, time);
-                            break;
-                        default:
-                            Q_UNREACHABLE();
-                        }
-                    }
-                );
-                connect(m_keyboard, &Keyboard::modifiersChanged, this,
-                    [this](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
-                        m_backend->keyboardModifiers(depressed, latched, locked, group);
-                    }
-                );
-                connect(m_keyboard, &Keyboard::keymapChanged, this,
-                    [this](int fd, quint32 size) {
-                        m_backend->keymapChange(fd, size);
-                    }
-                );
-            } else {
-                destroyKeyboard();
+    connect(keyboard, &Keyboard::keyChanged, this, [this](quint32 key, Keyboard::KeyState nativeState, quint32 time) {
+        InputRedirection::KeyboardKeyState state;
+        switch (nativeState) {
+        case Keyboard::KeyState::Pressed:
+            if (key == KEY_RIGHTCTRL) {
+                m_seat->backend()->togglePointerLock();
             }
+            state = InputRedirection::KeyboardKeyPressed;
+            break;
+        case Keyboard::KeyState::Released:
+            state = InputRedirection::KeyboardKeyReleased;
+            break;
+        default:
+            Q_UNREACHABLE();
         }
-    );
-    connect(m_seat, &Seat::hasPointerChanged, this,
-        [this](bool hasPointer) {
-            if (hasPointer && !m_pointer) {
-                m_pointer = m_seat->createPointer(this);
-                setupPointerGestures();
-                connect(m_pointer, &Pointer::entered, this,
-                    [this](quint32 serial, const QPointF &relativeToSurface) {
-                        Q_UNUSED(relativeToSurface)
-                        m_enteredSerial = serial;
-                    }
-                );
-                connect(m_pointer, &Pointer::motion, this,
-                    [this](const QPointF &relativeToSurface, quint32 time) {
-                        m_backend->pointerMotionRelativeToOutput(relativeToSurface, time);
-                    }
-                );
-                connect(m_pointer, &Pointer::buttonStateChanged, this,
-                    [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState state) {
-                        Q_UNUSED(serial)
-                        switch (state) {
-                        case Pointer::ButtonState::Pressed:
-                            m_backend->pointerButtonPressed(button, time);
-                            break;
-                        case Pointer::ButtonState::Released:
-                            m_backend->pointerButtonReleased(button, time);
-                            break;
-                        default:
-                            Q_UNREACHABLE();
-                        }
-                    }
-                );
-                // TODO: Send discreteDelta and source as well.
-                connect(m_pointer, &Pointer::axisChanged, this,
-                    [this](quint32 time, Pointer::Axis axis, qreal delta) {
-                        switch (axis) {
-                        case Pointer::Axis::Horizontal:
-                            m_backend->pointerAxisHorizontal(delta, time);
-                            break;
-                        case Pointer::Axis::Vertical:
-                            m_backend->pointerAxisVertical(delta, time);
-                            break;
-                        default:
-                            Q_UNREACHABLE();
-                        }
-                    }
-                );
-            } else {
-                destroyPointer();
-            }
+        Q_EMIT keyChanged(key, state, time, this);
+    });
+    connect(keyboard, &Keyboard::modifiersChanged, this, [this](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
+        m_seat->backend()->keyboardModifiers(depressed, latched, locked, group);
+    });
+    connect(keyboard, &Keyboard::keymapChanged, this, [this](int fd, quint32 size) {
+        m_seat->backend()->keymapChange(fd, size);
+    });
+}
+
+WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, WaylandSeat *seat)
+    : InputDevice(seat)
+    , m_seat(seat)
+    , m_pointer(pointer)
+{
+    connect(pointer, &Pointer::entered, this, [this](quint32 serial, const QPointF &relativeToSurface) {
+        Q_UNUSED(relativeToSurface)
+        m_enteredSerial = serial;
+    });
+    connect(pointer, &Pointer::motion, this, [this](const QPointF &relativeToSurface, quint32 time) {
+        WaylandOutput *output = m_seat->backend()->findOutput(m_pointer->enteredSurface());
+        Q_ASSERT(output);
+        const QPointF absolutePos = output->geometry().topLeft() + relativeToSurface;
+        Q_EMIT pointerMotionAbsolute(absolutePos, time, this);
+    });
+    connect(pointer, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState nativeState) {
+        Q_UNUSED(serial)
+        InputRedirection::PointerButtonState state;
+        switch (nativeState) {
+        case Pointer::ButtonState::Pressed:
+            state = InputRedirection::PointerButtonPressed;
+            break;
+        case Pointer::ButtonState::Released:
+            state = InputRedirection::PointerButtonReleased;
+            break;
+        default:
+            Q_UNREACHABLE();
         }
-    );
-    connect(m_seat, &Seat::hasTouchChanged, this,
-        [this] (bool hasTouch) {
-            if (hasTouch && !m_touch) {
-                m_touch = m_seat->createTouch(this);
-                connect(m_touch, &Touch::sequenceCanceled, m_backend, &Platform::touchCancel);
-                connect(m_touch, &Touch::frameEnded, m_backend, &Platform::touchFrame);
-                connect(m_touch, &Touch::sequenceStarted, this,
-                    [this] (TouchPoint *tp) {
-                        m_backend->touchDown(tp->id(), tp->position(), tp->time());
-                    }
-                );
-                connect(m_touch, &Touch::pointAdded, this,
-                    [this] (TouchPoint *tp) {
-                        m_backend->touchDown(tp->id(), tp->position(), tp->time());
-                    }
-                );
-                connect(m_touch, &Touch::pointRemoved, this,
-                    [this] (TouchPoint *tp) {
-                        m_backend->touchUp(tp->id(), tp->time());
-                    }
-                );
-                connect(m_touch, &Touch::pointMoved, this,
-                    [this] (TouchPoint *tp) {
-                        m_backend->touchMotion(tp->id(), tp->position(), tp->time());
-                    }
-                );
-            } else {
-                destroyTouch();
-            }
+        Q_EMIT pointerButtonChanged(button, state, time, this);
+    });
+    // TODO: Send discreteDelta and source as well.
+    connect(pointer, &Pointer::axisChanged, this, [this](quint32 time, Pointer::Axis nativeAxis, qreal delta) {
+        InputRedirection::PointerAxis axis;
+        switch (nativeAxis) {
+        case Pointer::Axis::Horizontal:
+            axis = InputRedirection::PointerAxisHorizontal;
+            break;
+        case Pointer::Axis::Vertical:
+            axis = InputRedirection::PointerAxisVertical;
+            break;
+        default:
+            Q_UNREACHABLE();
         }
-    );
-    WaylandServer *server = waylandServer();
-    if (server) {
-        using namespace KWaylandServer;
-        SeatInterface *si = server->seat();
-        connect(m_seat, &Seat::hasKeyboardChanged, si, &SeatInterface::setHasKeyboard);
-        connect(m_seat, &Seat::hasPointerChanged, si, &SeatInterface::setHasPointer);
-        connect(m_seat, &Seat::hasTouchChanged, si, &SeatInterface::setHasTouch);
-        connect(m_seat, &Seat::nameChanged, si, &SeatInterface::setName);
+        Q_EMIT pointerAxisChanged(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, time, this);
+    });
+
+    KWayland::Client::PointerGestures *pointerGestures = m_seat->backend()->pointerGestures();
+    if (pointerGestures) {
+        m_pinchGesture.reset(pointerGestures->createPinchGesture(m_pointer.data(), this));
+        connect(m_pinchGesture.data(), &PointerPinchGesture::started, this, [this](quint32 serial, quint32 time) {
+            Q_UNUSED(serial);
+            Q_EMIT pinchGestureBegin(m_pinchGesture->fingerCount(), time, this);
+        });
+        connect(m_pinchGesture.data(), &PointerPinchGesture::updated, this, [this](const QSizeF &delta, qreal scale, qreal rotation, quint32 time) {
+            Q_EMIT pinchGestureUpdate(scale, rotation, delta, time, this);
+        });
+        connect(m_pinchGesture.data(), &PointerPinchGesture::ended, this, [this](quint32 serial, quint32 time) {
+            Q_UNUSED(serial)
+            Q_EMIT pinchGestureEnd(time, this);
+        });
+        connect(m_pinchGesture.data(), &PointerPinchGesture::cancelled, this, [this](quint32 serial, quint32 time) {
+            Q_UNUSED(serial)
+            Q_EMIT pinchGestureCancelled(time, this);
+        });
+
+        m_swipeGesture.reset(pointerGestures->createSwipeGesture(m_pointer.data(), this));
+        connect(m_swipeGesture.data(), &PointerSwipeGesture::started, this, [this](quint32 serial, quint32 time) {
+            Q_UNUSED(serial)
+            Q_EMIT swipeGestureBegin(m_swipeGesture->fingerCount(), time, this);
+        });
+        connect(m_swipeGesture.data(), &PointerSwipeGesture::updated, this, [this](const QSizeF &delta, quint32 time) {
+            Q_EMIT swipeGestureUpdate(delta, time, this);
+        });
+        connect(m_swipeGesture.data(), &PointerSwipeGesture::ended, this, [this](quint32 serial, quint32 time) {
+            Q_UNUSED(serial)
+            Q_EMIT swipeGestureEnd(time, this);
+        });
+        connect(m_swipeGesture.data(), &PointerSwipeGesture::cancelled, this, [this](quint32 serial, quint32 time) {
+            Q_UNUSED(serial)
+            Q_EMIT swipeGestureCancelled(time, this);
+        });
     }
 }
 
-void WaylandBackend::pointerMotionRelativeToOutput(const QPointF &position, quint32 time)
+WaylandInputDevice::WaylandInputDevice(KWayland::Client::RelativePointer *relativePointer, WaylandSeat *seat)
+    : InputDevice(seat)
+    , m_seat(seat)
+    , m_relativePointer(relativePointer)
 {
-    auto outputIt = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [this](WaylandOutput *wo) {
-            return wo->surface() == m_seat->pointer()->enteredSurface();
+    connect(relativePointer, &RelativePointer::relativeMotion, this, [this](const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp) {
+        Q_EMIT pointerMotion(delta, deltaNonAccelerated, timestamp, timestamp * 1000, this);
     });
-    Q_ASSERT(outputIt != m_outputs.constEnd());
-    const QPointF outputPosition = (*outputIt)->geometry().topLeft() + position;
-    Platform::pointerMotion(outputPosition, time);
+}
+
+WaylandInputDevice::WaylandInputDevice(KWayland::Client::Touch *touch, WaylandSeat *seat)
+    : InputDevice(seat)
+    , m_seat(seat)
+    , m_touch(touch)
+{
+    connect(touch, &Touch::sequenceCanceled, this, [this]() {
+        Q_EMIT touchCanceled(this);
+    });
+    connect(touch, &Touch::frameEnded, this, [this]() {
+        Q_EMIT touchFrame(this);
+    });
+    connect(touch, &Touch::sequenceStarted, this, [this](TouchPoint *tp) {
+        Q_EMIT touchDown(tp->id(), tp->position(), tp->time(), this);
+    });
+    connect(touch, &Touch::pointAdded, this, [this](TouchPoint *tp) {
+        Q_EMIT touchDown(tp->id(), tp->position(), tp->time(), this);
+    });
+    connect(touch, &Touch::pointRemoved, this, [this](TouchPoint *tp) {
+        Q_EMIT touchUp(tp->id(), tp->time(), this);
+    });
+    connect(touch, &Touch::pointMoved, this, [this](TouchPoint *tp) {
+        Q_EMIT touchMotion(tp->id(), tp->position(), tp->time(), this);
+    });
+}
+
+WaylandInputDevice::~WaylandInputDevice()
+{
+}
+
+QString WaylandInputDevice::sysName() const
+{
+    return QString();
+}
+
+QString WaylandInputDevice::name() const
+{
+    return QString();
+}
+
+bool WaylandInputDevice::isEnabled() const
+{
+    return true;
+}
+
+void WaylandInputDevice::setEnabled(bool enabled)
+{
+    Q_UNUSED(enabled)
+}
+
+LEDs WaylandInputDevice::leds() const
+{
+    return LEDs();
+}
+
+void WaylandInputDevice::setLeds(LEDs leds)
+{
+    Q_UNUSED(leds)
+}
+
+bool WaylandInputDevice::isKeyboard() const
+{
+    return m_keyboard;
+}
+
+bool WaylandInputDevice::isAlphaNumericKeyboard() const
+{
+    return m_keyboard;
+}
+
+bool WaylandInputDevice::isPointer() const
+{
+    return m_pointer || m_relativePointer;
+}
+
+bool WaylandInputDevice::isTouchpad() const
+{
+    return false;
+}
+
+bool WaylandInputDevice::isTouch() const
+{
+    return m_touch;
+}
+
+bool WaylandInputDevice::isTabletTool() const
+{
+    return false;
+}
+
+bool WaylandInputDevice::isTabletPad() const
+{
+    return false;
+}
+
+bool WaylandInputDevice::isTabletModeSwitch() const
+{
+    return false;
+}
+
+bool WaylandInputDevice::isLidSwitch() const
+{
+    return false;
+}
+
+KWayland::Client::Pointer *WaylandInputDevice::nativePointer() const
+{
+    return m_pointer.data();
+}
+
+WaylandInputBackend::WaylandInputBackend(WaylandBackend *backend, QObject *parent)
+    : InputBackend(parent)
+    , m_backend(backend)
+{
+}
+
+void WaylandInputBackend::initialize()
+{
+    connect(m_backend, &WaylandBackend::seatCreated, this, &WaylandInputBackend::checkSeat);
+    checkSeat();
+}
+
+void WaylandInputBackend::checkSeat()
+{
+    if (auto seat = m_backend->seat()) {
+        if (seat->relativePointerDevice()) {
+            Q_EMIT deviceAdded(seat->relativePointerDevice());
+        }
+        if (seat->pointerDevice()) {
+            Q_EMIT deviceAdded(seat->pointerDevice());
+        }
+        if (seat->keyboardDevice()) {
+            Q_EMIT deviceAdded(seat->keyboardDevice());
+        }
+        if (seat->touchDevice()) {
+            Q_EMIT deviceAdded(seat->touchDevice());
+        }
+
+        connect(seat, &WaylandSeat::deviceAdded, this, &InputBackend::deviceAdded);
+        connect(seat, &WaylandSeat::deviceRemoved, this, &InputBackend::deviceRemoved);
+    }
+}
+
+WaylandSeat::WaylandSeat(KWayland::Client::Seat *nativeSeat, WaylandBackend *backend)
+    : QObject(nullptr)
+    , m_seat(nativeSeat)
+    , m_backend(backend)
+{
+    connect(m_seat, &Seat::hasKeyboardChanged, this, [this](bool hasKeyboard) {
+        if (hasKeyboard) {
+            createKeyboardDevice();
+        } else {
+            destroyKeyboardDevice();
+        }
+    });
+    connect(m_seat, &Seat::hasPointerChanged, this, [this](bool hasPointer) {
+        if (hasPointer && !m_pointerDevice) {
+            createPointerDevice();
+        } else {
+            destroyPointerDevice();
+        }
+    });
+    connect(m_seat, &Seat::hasTouchChanged, this, [this](bool hasTouch) {
+        if (hasTouch && !m_touchDevice) {
+            createTouchDevice();
+        } else {
+            destroyTouchDevice();
+        }
+    });
 }
 
 WaylandSeat::~WaylandSeat()
 {
-    destroyPointer();
-    destroyKeyboard();
-    destroyTouch();
+    destroyPointerDevice();
+    destroyKeyboardDevice();
+    destroyTouchDevice();
 }
 
-void WaylandSeat::destroyPointer()
+void WaylandSeat::createPointerDevice()
 {
-    delete m_pinchGesture;
-    m_pinchGesture = nullptr;
-    delete m_swipeGesture;
-    m_swipeGesture = nullptr;
-    delete m_pointer;
-    m_pointer = nullptr;
+    m_pointerDevice = new WaylandInputDevice(m_seat->createPointer(), this);
+    Q_EMIT deviceAdded(m_pointerDevice);
 }
 
-void WaylandSeat::destroyKeyboard()
+void WaylandSeat::destroyPointerDevice()
 {
-    delete m_keyboard;
-    m_keyboard = nullptr;
-}
-
-void WaylandSeat::destroyTouch()
-{
-    delete m_touch;
-    m_touch = nullptr;
-}
-
-void WaylandSeat::setupPointerGestures()
-{
-    if (!m_pointer || !m_gesturesInterface) {
-        return;
+    if (m_pointerDevice) {
+        Q_EMIT deviceRemoved(m_pointerDevice);
+        destroyRelativePointer();
+        delete m_pointerDevice;
+        m_pointerDevice = nullptr;
     }
-    if (m_pinchGesture || m_swipeGesture) {
-        return;
-    }
-    m_pinchGesture = m_gesturesInterface->createPinchGesture(m_pointer, this);
-    m_swipeGesture = m_gesturesInterface->createSwipeGesture(m_pointer, this);
-    connect(m_pinchGesture, &PointerPinchGesture::started, m_backend,
-        [this] (quint32 serial, quint32 time) {
-            Q_UNUSED(serial);
-            m_backend->processPinchGestureBegin(m_pinchGesture->fingerCount(), time);
-        }
-    );
-    connect(m_pinchGesture, &PointerPinchGesture::updated, m_backend,
-        [this] (const QSizeF &delta, qreal scale, qreal rotation, quint32 time) {
-            m_backend->processPinchGestureUpdate(scale, rotation, delta, time);
-        }
-    );
-    connect(m_pinchGesture, &PointerPinchGesture::ended, m_backend,
-        [this] (quint32 serial, quint32 time) {
-            Q_UNUSED(serial)
-            m_backend->processPinchGestureEnd(time);
-        }
-    );
-    connect(m_pinchGesture, &PointerPinchGesture::cancelled, m_backend,
-        [this] (quint32 serial, quint32 time) {
-            Q_UNUSED(serial)
-            m_backend->processPinchGestureCancelled(time);
-        }
-    );
+}
 
-    connect(m_swipeGesture, &PointerSwipeGesture::started, m_backend,
-        [this] (quint32 serial, quint32 time) {
-            Q_UNUSED(serial)
-            m_backend->processSwipeGestureBegin(m_swipeGesture->fingerCount(), time);
-        }
-    );
-    connect(m_swipeGesture, &PointerSwipeGesture::updated, m_backend, &Platform::processSwipeGestureUpdate);
-    connect(m_swipeGesture, &PointerSwipeGesture::ended, m_backend,
-        [this] (quint32 serial, quint32 time) {
-            Q_UNUSED(serial)
-            m_backend->processSwipeGestureEnd(time);
-        }
-    );
-    connect(m_swipeGesture, &PointerSwipeGesture::cancelled, m_backend,
-        [this] (quint32 serial, quint32 time) {
-            Q_UNUSED(serial)
-            m_backend->processSwipeGestureCancelled(time);
-        }
-    );
+void WaylandSeat::createRelativePointer()
+{
+    KWayland::Client::RelativePointerManager *manager = m_backend->relativePointerManager();
+    if (manager) {
+        m_relativePointerDevice = new WaylandInputDevice(manager->createRelativePointer(m_pointerDevice->nativePointer()), this);
+        Q_EMIT deviceAdded(m_relativePointerDevice);
+    }
+}
+
+void WaylandSeat::destroyRelativePointer()
+{
+    if (m_relativePointerDevice) {
+        Q_EMIT deviceRemoved(m_relativePointerDevice);
+        delete m_relativePointerDevice;
+        m_relativePointerDevice = nullptr;
+    }
+}
+
+void WaylandSeat::createKeyboardDevice()
+{
+    m_keyboardDevice = new WaylandInputDevice(m_seat->createKeyboard(), this);
+    Q_EMIT deviceAdded(m_keyboardDevice);
+}
+
+void WaylandSeat::destroyKeyboardDevice()
+{
+    if (m_keyboardDevice) {
+        Q_EMIT deviceRemoved(m_keyboardDevice);
+        delete m_keyboardDevice;
+        m_keyboardDevice = nullptr;
+    }
+}
+
+void WaylandSeat::createTouchDevice()
+{
+    m_touchDevice = new WaylandInputDevice(m_seat->createTouch(), this);
+    Q_EMIT deviceAdded(m_touchDevice);
+}
+
+void WaylandSeat::destroyTouchDevice()
+{
+    if (m_touchDevice) {
+        Q_EMIT deviceRemoved(m_touchDevice);
+        delete m_touchDevice;
+        m_touchDevice = nullptr;
+    }
 }
 
 WaylandBackend::WaylandBackend(QObject *parent)
@@ -473,6 +605,9 @@ WaylandBackend::~WaylandBackend()
         eglTerminate(sceneEglDisplay());
     }
 
+    if (m_pointerGestures) {
+        m_pointerGestures->release();
+    }
     if (m_pointerConstraints) {
         m_pointerConstraints->release();
     }
@@ -513,11 +648,6 @@ bool WaylandBackend::initialize()
             m_subCompositor->setup(m_registry->bindSubCompositor(name, 1));
         }
     );
-    connect(m_registry, &Registry::seatAnnounced, this,
-        [this](quint32 name) {
-            m_seat = new WaylandSeat(m_registry->bindSeat(name, 2), this);
-        }
-    );
     connect(m_registry, &Registry::shmAnnounced, this,
         [this](quint32 name) {
             m_shm->setup(m_registry->bindShm(name, 1));
@@ -545,18 +675,24 @@ bool WaylandBackend::initialize()
             }
         }
     );
+    connect(m_registry, &Registry::pointerGesturesUnstableV1Announced, this,
+        [this](quint32 name, quint32 version) {
+            if (m_pointerGestures) {
+                return;
+            }
+            m_pointerGestures = m_registry->createPointerGestures(name, version, this);
+        }
+    );
     connect(m_registry, &Registry::interfacesAnnounced, this, &WaylandBackend::createOutputs);
     connect(m_registry, &Registry::interfacesAnnounced, this,
         [this] {
-            if (!m_seat) {
+            const auto seatInterface = m_registry->interface(Registry::Interface::Seat);
+            if (seatInterface.name == 0) {
                 return;
             }
-            const auto gi = m_registry->interface(Registry::Interface::PointerGesturesUnstableV1);
-            if (gi.name == 0) {
-                return;
-            }
-            auto gesturesInterface = m_registry->createPointerGestures(gi.name, gi.version, m_seat);
-            m_seat->installGesturesInterface(gesturesInterface);
+
+            m_seat = new WaylandSeat(m_registry->createSeat(seatInterface.name, std::min(2u, seatInterface.version), this), this);
+            Q_EMIT seatCreated();
 
             m_waylandCursor = new WaylandCursor(this);
         }
@@ -574,21 +710,22 @@ bool WaylandBackend::initialize()
             Q_EMIT c->rendered(c->geometry());
         }
     );
+    connect(Cursors::self(), &Cursors::positionChanged, this,
+        [this](Cursor *cursor, const QPoint &position) {
+            Q_UNUSED(cursor)
+            if (m_waylandCursor) {
+                m_waylandCursor->move(position);
+            }
+        }
+    );
     connect(this, &WaylandBackend::pointerLockChanged, this, [this] (bool locked) {
         delete m_waylandCursor;
         if (locked) {
-            Q_ASSERT(!m_relativePointer);
             m_waylandCursor = new WaylandSubSurfaceCursor(this);
             m_waylandCursor->move(input()->pointer()->pos());
-            m_relativePointer = m_relativePointerManager->createRelativePointer(m_seat->pointer(), this);
-            if (!m_relativePointer->isValid()) {
-                return;
-            }
-            connect(m_relativePointer, &RelativePointer::relativeMotion,
-                    this, &WaylandBackend::relativeMotionHandler);
+            m_seat->createRelativePointer();
         } else {
-            delete m_relativePointer;
-            m_relativePointer = nullptr;
+            m_seat->destroyRelativePointer();
             m_waylandCursor = new WaylandCursor(this);
         }
         m_waylandCursor->init();
@@ -600,17 +737,6 @@ bool WaylandBackend::initialize()
 Session *WaylandBackend::session() const
 {
     return m_session;
-}
-
-void WaylandBackend::relativeMotionHandler(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp)
-{
-    Q_UNUSED(deltaNonAccelerated)
-    Q_ASSERT(m_waylandCursor);
-
-    const auto oldGlobalPos = input()->pointer()->pos();
-    const QPointF newPos = oldGlobalPos + QPointF(delta.width(), delta.height());
-    m_waylandCursor->move(newPos);
-    Platform::pointerMotion(newPos, timestamp);
 }
 
 void WaylandBackend::initConnection()
@@ -763,6 +889,11 @@ void WaylandBackend::destroyOutputs()
     }
 }
 
+InputBackend *WaylandBackend::createInputBackend()
+{
+    return new WaylandInputBackend(this);
+}
+
 OpenGLBackend *WaylandBackend::createOpenGLBackend()
 {
 #if HAVE_WAYLAND_EGL
@@ -794,6 +925,16 @@ WaylandOutput* WaylandBackend::getOutputAt(const QPointF &globalPosition)
     return it == m_outputs.constEnd() ? nullptr : *it;
 }
 
+WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurface) const
+{
+    for (WaylandOutput *output : m_outputs) {
+        if (output->surface() == nativeSurface) {
+            return output;
+        }
+    }
+    return nullptr;
+}
+
 bool WaylandBackend::supportsPointerLock()
 {
     return m_pointerConstraints && m_relativePointerManager;
@@ -810,7 +951,7 @@ void WaylandBackend::togglePointerLock()
     if (!m_seat) {
         return;
     }
-    auto pointer = m_seat->pointer();
+    auto pointer = m_seat->pointerDevice()->nativePointer();
     if (!pointer) {
         return;
     }
@@ -819,7 +960,7 @@ void WaylandBackend::togglePointerLock()
     }
 
     for (auto output : qAsConst(m_outputs)) {
-        output->lockPointer(m_seat->pointer(), !m_pointerLockRequested);
+        output->lockPointer(m_seat->pointerDevice()->nativePointer(), !m_pointerLockRequested);
     }
     m_pointerLockRequested = !m_pointerLockRequested;
     flush();

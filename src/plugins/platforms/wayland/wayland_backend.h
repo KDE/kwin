@@ -10,6 +10,8 @@
 #ifndef KWIN_WAYLAND_BACKEND_H
 #define KWIN_WAYLAND_BACKEND_H
 // KWin
+#include "inputbackend.h"
+#include "inputdevice.h"
 #include "platform.h"
 #include <config-kwin.h>
 #include <kwinglobals.h>
@@ -118,39 +120,102 @@ private:
     KWayland::Client::SubSurface *m_subSurface = nullptr;
 };
 
+class WaylandInputDevice : public InputDevice
+{
+    Q_OBJECT
+
+public:
+    WaylandInputDevice(KWayland::Client::Touch *touch, WaylandSeat *seat);
+    WaylandInputDevice(KWayland::Client::Keyboard *keyboard, WaylandSeat *seat);
+    WaylandInputDevice(KWayland::Client::RelativePointer *relativePointer, WaylandSeat *seat);
+    WaylandInputDevice(KWayland::Client::Pointer *pointer, WaylandSeat *seat);
+    ~WaylandInputDevice() override;
+
+    QString sysName() const override;
+    QString name() const override;
+
+    bool isEnabled() const override;
+    void setEnabled(bool enabled) override;
+
+    LEDs leds() const override;
+    void setLeds(LEDs leds) override;
+
+    bool isKeyboard() const override;
+    bool isAlphaNumericKeyboard() const override;
+    bool isPointer() const override;
+    bool isTouchpad() const override;
+    bool isTouch() const override;
+    bool isTabletTool() const override;
+    bool isTabletPad() const override;
+    bool isTabletModeSwitch() const override;
+    bool isLidSwitch() const override;
+
+    KWayland::Client::Pointer *nativePointer() const;
+
+private:
+    WaylandSeat *m_seat;
+
+    QScopedPointer<KWayland::Client::Keyboard> m_keyboard;
+    QScopedPointer<KWayland::Client::Touch> m_touch;
+    QScopedPointer<KWayland::Client::RelativePointer> m_relativePointer;
+    QScopedPointer<KWayland::Client::Pointer> m_pointer;
+    QScopedPointer<KWayland::Client::PointerPinchGesture> m_pinchGesture;
+    QScopedPointer<KWayland::Client::PointerSwipeGesture> m_swipeGesture;
+
+    uint32_t m_enteredSerial = 0;
+};
+
+class WaylandInputBackend : public InputBackend
+{
+    Q_OBJECT
+
+public:
+    explicit WaylandInputBackend(WaylandBackend *backend, QObject *parent = nullptr);
+
+    void initialize() override;
+
+private:
+    void checkSeat();
+
+    WaylandBackend *m_backend;
+};
+
 class WaylandSeat : public QObject
 {
     Q_OBJECT
 public:
-    WaylandSeat(wl_seat *seat, WaylandBackend *backend);
+    WaylandSeat(KWayland::Client::Seat *nativeSeat, WaylandBackend *backend);
     ~WaylandSeat() override;
 
-    KWayland::Client::Pointer *pointer() const {
-        return m_pointer;
-    }
+    WaylandBackend *backend() const { return m_backend; }
 
-    void installGesturesInterface(KWayland::Client::PointerGestures *gesturesInterface) {
-        m_gesturesInterface = gesturesInterface;
-        setupPointerGestures();
-    }
+    WaylandInputDevice *pointerDevice() const { return m_pointerDevice; }
+    WaylandInputDevice *relativePointerDevice() const { return m_relativePointerDevice; }
+    WaylandInputDevice *keyboardDevice() const { return m_keyboardDevice; }
+    WaylandInputDevice *touchDevice() const { return m_touchDevice; }
+
+    void createRelativePointer();
+    void destroyRelativePointer();
+
+Q_SIGNALS:
+    void deviceAdded(WaylandInputDevice *device);
+    void deviceRemoved(WaylandInputDevice *device);
 
 private:
-    void destroyPointer();
-    void destroyKeyboard();
-    void destroyTouch();
-    void setupPointerGestures();
+    void createPointerDevice();
+    void destroyPointerDevice();
+    void createKeyboardDevice();
+    void destroyKeyboardDevice();
+    void createTouchDevice();
+    void destroyTouchDevice();
 
     KWayland::Client::Seat *m_seat;
-    KWayland::Client::Pointer *m_pointer;
-    KWayland::Client::Keyboard *m_keyboard;
-    KWayland::Client::Touch *m_touch;
-    KWayland::Client::PointerGestures *m_gesturesInterface = nullptr;
-    KWayland::Client::PointerPinchGesture *m_pinchGesture = nullptr;
-    KWayland::Client::PointerSwipeGesture *m_swipeGesture = nullptr;
-
-    uint32_t m_enteredSerial;
-
     WaylandBackend *m_backend;
+
+    WaylandInputDevice *m_pointerDevice = nullptr;
+    WaylandInputDevice *m_relativePointerDevice = nullptr;
+    WaylandInputDevice *m_keyboardDevice = nullptr;
+    WaylandInputDevice *m_touchDevice = nullptr;
 };
 
 /**
@@ -174,6 +239,7 @@ public:
     KWayland::Client::SubCompositor *subCompositor();
     KWayland::Client::ShmPool *shmPool();
 
+    InputBackend *createInputBackend() override;
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend *createQPainterBackend() override;
     DmaBufTexture *createDmaBufTexture(const QSize &size) override;
@@ -183,11 +249,15 @@ public:
     WaylandSeat *seat() const {
         return m_seat;
     }
+    KWayland::Client::PointerGestures *pointerGestures() const {
+        return m_pointerGestures;
+    }
     KWayland::Client::PointerConstraints *pointerConstraints() const {
         return m_pointerConstraints;
     }
-
-    void pointerMotionRelativeToOutput(const QPointF &position, quint32 time);
+    KWayland::Client::RelativePointerManager *relativePointerManager() const {
+        return m_relativePointerManager;
+    }
 
     bool supportsPointerLock();
     void togglePointerLock();
@@ -196,6 +266,7 @@ public:
     QVector<CompositingType> supportedCompositors() const override;
 
     WaylandOutput* getOutputAt(const QPointF &globalPosition);
+    WaylandOutput *findOutput(KWayland::Client::Surface *nativeSurface) const;
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
     QVector<WaylandOutput*> waylandOutputs() const {
@@ -212,6 +283,7 @@ Q_SIGNALS:
     void systemCompositorDied();
     void connectionFailed();
 
+    void seatCreated();
     void pointerLockSupportedChanged();
     void pointerLockChanged(bool locked);
 
@@ -221,7 +293,6 @@ private:
     void destroyOutputs();
 
     void updateScreenSize(WaylandOutput *output);
-    void relativeMotionHandler(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp);
     WaylandOutput *createOutput(const QPoint &position, const QSize &size);
 
     Session *m_session;
@@ -235,9 +306,9 @@ private:
     KWayland::Client::ConnectionThread *m_connectionThreadObject;
 
     WaylandSeat *m_seat = nullptr;
-    KWayland::Client::RelativePointer *m_relativePointer = nullptr;
     KWayland::Client::RelativePointerManager *m_relativePointerManager = nullptr;
     KWayland::Client::PointerConstraints *m_pointerConstraints = nullptr;
+    KWayland::Client::PointerGestures *m_pointerGestures = nullptr;
 
     QThread *m_connectionThread;
     QVector<WaylandOutput*> m_outputs;
