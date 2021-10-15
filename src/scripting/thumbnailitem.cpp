@@ -335,6 +335,9 @@ static QRectF centeredSize(const QRectF &boundingRect, const QSizeF &size)
 
 QRectF WindowThumbnailItem::paintedRect() const
 {
+    if (!m_client) {
+        return QRectF();
+    }
     if (!m_offscreenTexture) {
         const QSizeF iconSize = m_client->icon().actualSize(window(), boundingRect().size().toSize());
         return centeredSize(boundingRect(), iconSize);
