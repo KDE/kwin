@@ -60,6 +60,7 @@ endmacro()
 macro(KWIN4_ADD_EFFECT_MODULE name)
     kwin4_add_effect_backend(${name} OBJECT ${ARGN})
     target_compile_definitions(${name} PRIVATE QT_STATICPLUGIN)
+    install(FILES metadata.json DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_NAME}/builtin-effects/${name}/)
 endmacro()
 
 # Install the KWin/Effect service type
