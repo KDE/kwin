@@ -862,10 +862,11 @@ void AbstractClient::applyWindowRules()
     // Placement - does need explicit update, just like some others below
     // Geometry : setGeometry() doesn't check rules
     auto client_rules = rules();
-    QRect orig_geom = QRect(pos(), implicitSize());   // handle shading
-    QRect geom = client_rules->checkGeometry(orig_geom);
-    if (geom != orig_geom)
-        moveResize(geom);
+    const QRect oldGeometry = moveResizeGeometry();
+    const QRect geometry = client_rules->checkGeometry(oldGeometry);
+    if (geometry != oldGeometry) {
+        moveResize(geometry);
+    }
     // MinSize, MaxSize handled by Geometry
     // IgnoreGeometry
     setDesktops(desktops());
