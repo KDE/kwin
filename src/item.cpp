@@ -106,7 +106,9 @@ void Item::setPosition(const QPoint &point)
     if (m_position != point) {
         scheduleRepaint(boundingRect());
         m_position = point;
-        updateBoundingRect();
+        if (m_parentItem) {
+            m_parentItem->updateBoundingRect();
+        }
         scheduleRepaint(boundingRect());
         Q_EMIT positionChanged();
     }
