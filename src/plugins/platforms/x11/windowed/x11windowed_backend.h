@@ -8,6 +8,9 @@
 */
 #ifndef KWIN_X11WINDOWED_BACKEND_H
 #define KWIN_X11WINDOWED_BACKEND_H
+
+#include "inputbackend.h"
+#include "inputdevice.h"
 #include "platform.h"
 
 #include <kwin_export.h>
@@ -24,7 +27,59 @@ class NETWinInfo;
 
 namespace KWin
 {
+class X11WindowedBackend;
 class X11WindowedOutput;
+
+class X11WindowedInputDevice : public InputDevice
+{
+    Q_OBJECT
+
+public:
+    explicit X11WindowedInputDevice(QObject *parent = nullptr);
+
+    void setPointer(bool set);
+    void setKeyboard(bool set);
+    void setTouch(bool set);
+    void setName(const QString &name);
+
+    QString sysName() const override;
+    QString name() const override;
+
+    bool isEnabled() const override;
+    void setEnabled(bool enabled) override;
+
+    LEDs leds() const override;
+    void setLeds(LEDs leds) override;
+
+    bool isKeyboard() const override;
+    bool isAlphaNumericKeyboard() const override;
+    bool isPointer() const override;
+    bool isTouchpad() const override;
+    bool isTouch() const override;
+    bool isTabletTool() const override;
+    bool isTabletPad() const override;
+    bool isTabletModeSwitch() const override;
+    bool isLidSwitch() const override;
+
+private:
+    QString m_name;
+    bool m_pointer = false;
+    bool m_keyboard = false;
+    bool m_touch = false;
+};
+
+class X11WindowedInputBackend : public InputBackend
+{
+    Q_OBJECT
+
+public:
+    explicit X11WindowedInputBackend(X11WindowedBackend *backend, QObject *parent = nullptr);
+
+    void initialize() override;
+
+private:
+    X11WindowedBackend *m_backend;
+};
 
 class KWIN_EXPORT X11WindowedBackend : public Platform
 {
@@ -59,6 +114,7 @@ public:
 
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend* createQPainterBackend() override;
+    InputBackend *createInputBackend() override;
     void warpPointer(const QPointF &globalPos) override;
 
     QVector<CompositingType> supportedCompositors() const override {
@@ -67,6 +123,10 @@ public:
         }
         return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
     }
+
+    X11WindowedInputDevice *pointerDevice() const;
+    X11WindowedInputDevice *keyboardDevice() const;
+    X11WindowedInputDevice *touchDevice() const;
 
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
@@ -93,6 +153,10 @@ private:
     xcb_screen_t *m_screen = nullptr;
     xcb_key_symbols_t *m_keySymbols = nullptr;
     int m_screenNumber = 0;
+
+    X11WindowedInputDevice *m_pointerDevice = nullptr;
+    X11WindowedInputDevice *m_keyboardDevice = nullptr;
+    X11WindowedInputDevice *m_touchDevice = nullptr;
 
     xcb_atom_t m_protocols = XCB_ATOM_NONE;
     xcb_atom_t m_deleteWindowProtocol = XCB_ATOM_NONE;

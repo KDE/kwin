@@ -43,6 +43,125 @@
 namespace KWin
 {
 
+X11WindowedInputDevice::X11WindowedInputDevice(QObject *parent)
+    : InputDevice(parent)
+{
+}
+
+void X11WindowedInputDevice::setPointer(bool set)
+{
+    m_pointer = set;
+}
+
+void X11WindowedInputDevice::setKeyboard(bool set)
+{
+    m_keyboard = set;
+}
+
+void X11WindowedInputDevice::setTouch(bool set)
+{
+    m_touch = set;
+}
+
+void X11WindowedInputDevice::setName(const QString &name)
+{
+    m_name = name;
+}
+
+QString X11WindowedInputDevice::sysName() const
+{
+    return QString();
+}
+
+QString X11WindowedInputDevice::name() const
+{
+    return m_name;
+}
+
+bool X11WindowedInputDevice::isEnabled() const
+{
+    return true;
+}
+
+void X11WindowedInputDevice::setEnabled(bool enabled)
+{
+    Q_UNUSED(enabled)
+}
+
+LEDs X11WindowedInputDevice::leds() const
+{
+    return LEDs();
+}
+
+void X11WindowedInputDevice::setLeds(LEDs leds)
+{
+    Q_UNUSED(leds)
+}
+
+bool X11WindowedInputDevice::isKeyboard() const
+{
+    return m_keyboard;
+}
+
+bool X11WindowedInputDevice::isAlphaNumericKeyboard() const
+{
+    return m_keyboard;
+}
+
+bool X11WindowedInputDevice::isPointer() const
+{
+    return m_pointer;
+}
+
+bool X11WindowedInputDevice::isTouchpad() const
+{
+    return false;
+}
+
+bool X11WindowedInputDevice::isTouch() const
+{
+    return m_touch;
+}
+
+bool X11WindowedInputDevice::isTabletTool() const
+{
+    return false;
+}
+
+bool X11WindowedInputDevice::isTabletPad() const
+{
+    return false;
+}
+
+bool X11WindowedInputDevice::isTabletModeSwitch() const
+{
+    return false;
+}
+
+bool X11WindowedInputDevice::isLidSwitch() const
+{
+    return false;
+}
+
+X11WindowedInputBackend::X11WindowedInputBackend(X11WindowedBackend *backend, QObject *parent)
+    : InputBackend(parent)
+    , m_backend(backend)
+{
+}
+
+void X11WindowedInputBackend::initialize()
+{
+    if (m_backend->pointerDevice()) {
+        Q_EMIT deviceAdded(m_backend->pointerDevice());
+    }
+    if (m_backend->keyboardDevice()) {
+        Q_EMIT deviceAdded(m_backend->keyboardDevice());
+    }
+    if (m_backend->touchDevice()) {
+        Q_EMIT deviceAdded(m_backend->touchDevice());
+    }
+}
+
 X11WindowedBackend::X11WindowedBackend(QObject *parent)
     : Platform(parent)
     , m_session(Session::create(Session::Type::Noop, this))
@@ -53,6 +172,10 @@ X11WindowedBackend::X11WindowedBackend(QObject *parent)
 
 X11WindowedBackend::~X11WindowedBackend()
 {
+    delete m_pointerDevice;
+    delete m_pointerDevice;
+    delete m_touchDevice;
+
     if (sceneEglDisplay() != EGL_NO_DISPLAY) {
         eglTerminate(sceneEglDisplay());
     }
@@ -99,10 +222,13 @@ bool X11WindowedBackend::initialize()
             }
         );
         setReady(true);
-        waylandServer()->seat()->setHasPointer(true);
-        waylandServer()->seat()->setHasKeyboard(true);
+        m_pointerDevice = new X11WindowedInputDevice(this);
+        m_pointerDevice->setPointer(true);
+        m_keyboardDevice = new X11WindowedInputDevice(this);
+        m_keyboardDevice->setKeyboard(true);
         if (m_hasXInput) {
-            waylandServer()->seat()->setHasTouch(true);
+            m_touchDevice = new X11WindowedInputDevice(this);
+            m_touchDevice->setTouch(true);
         }
         Q_EMIT screensQueried();
         return true;
@@ -233,7 +359,7 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
                 break;
             }
             const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
-            pointerMotion(position, event->time);
+            Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice);
         }
         break;
     case XCB_KEY_PRESS:
@@ -247,9 +373,15 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
                 if (kc == XK_Control_R) {
                     grabKeyboard(event->time);
                 }
-                keyboardKeyPressed(event->detail - 8, event->time);
+                Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
+                                                    InputRedirection::KeyboardKeyPressed,
+                                                    event->time,
+                                                    m_keyboardDevice);
             } else {
-                keyboardKeyReleased(event->detail - 8, event->time);
+                Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
+                                                    InputRedirection::KeyboardKeyReleased,
+                                                    event->time,
+                                                    m_keyboardDevice);
             }
         }
         break;
@@ -263,7 +395,7 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
                 break;
             }
             const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
-            pointerMotion(position, event->time);
+            Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice);
         }
         break;
     case XCB_CLIENT_MESSAGE:
@@ -291,18 +423,18 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
         switch (ge->event_type) {
 
         case XI_TouchBegin: {
-            touchDown(te->detail, position, te->time);
-            touchFrame();
+            Q_EMIT m_touchDevice->touchDown(te->detail, position, te->time, m_touchDevice);
+            Q_EMIT m_touchDevice->touchFrame(m_touchDevice);
             break;
         }
         case XI_TouchUpdate: {
-            touchMotion(te->detail, position, te->time);
-            touchFrame();
+            Q_EMIT m_touchDevice->touchMotion(te->detail, position, te->time, m_touchDevice);
+            Q_EMIT m_touchDevice->touchFrame(m_touchDevice);
             break;
         }
         case XI_TouchEnd: {
-            touchUp(te->detail, te->time);
-            touchFrame();
+            Q_EMIT m_touchDevice->touchUp(te->detail, te->time, m_touchDevice);
+            Q_EMIT m_touchDevice->touchFrame(m_touchDevice);
             break;
         }
         case XI_TouchOwnership: {
@@ -415,11 +547,18 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
         }
         const int delta = (event->detail == XCB_BUTTON_INDEX_4 || event->detail == 6) ? -1 : 1;
         static const qreal s_defaultAxisStepDistance = 10.0;
+        InputRedirection::PointerAxis axis;
         if (event->detail > 5) {
-            pointerAxisHorizontal(delta * s_defaultAxisStepDistance, event->time, delta);
+            axis = InputRedirection::PointerAxisHorizontal;
         } else {
-            pointerAxisVertical(delta * s_defaultAxisStepDistance, event->time, delta);
+            axis = InputRedirection::PointerAxisVertical;
         }
+        Q_EMIT m_pointerDevice->pointerAxisChanged(axis,
+                                                   delta * s_defaultAxisStepDistance,
+                                                   delta,
+                                                   InputRedirection::PointerAxisSourceUnknown,
+                                                   event->time,
+                                                   m_pointerDevice);
         return;
     }
     uint32_t button = 0;
@@ -439,12 +578,12 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
     }
 
     const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
-    pointerMotion(position, event->time);
+    Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice);
 
     if (pressed) {
-        pointerButtonPressed(button, event->time);
+        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputRedirection::PointerButtonPressed, event->time, m_pointerDevice);
     } else {
-        pointerButtonReleased(button, event->time);
+        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputRedirection::PointerButtonReleased, event->time, m_pointerDevice);
     }
 }
 
@@ -508,6 +647,21 @@ xcb_window_t X11WindowedBackend::rootWindow() const
     return m_screen->root;
 }
 
+X11WindowedInputDevice *X11WindowedBackend::pointerDevice() const
+{
+    return m_pointerDevice;
+}
+
+X11WindowedInputDevice *X11WindowedBackend::keyboardDevice() const
+{
+    return m_keyboardDevice;
+}
+
+X11WindowedInputDevice *X11WindowedBackend::touchDevice() const
+{
+    return m_touchDevice;
+}
+
 OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
 {
     return  new EglX11Backend(this);
@@ -516,6 +670,11 @@ OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
 QPainterBackend *X11WindowedBackend::createQPainterBackend()
 {
     return new X11WindowedQPainterBackend(this);
+}
+
+InputBackend *X11WindowedBackend::createInputBackend()
+{
+    return new X11WindowedInputBackend(this);
 }
 
 void X11WindowedBackend::warpPointer(const QPointF &globalPos)
