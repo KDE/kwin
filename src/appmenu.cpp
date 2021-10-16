@@ -76,7 +76,7 @@ void ApplicationMenu::slotShowRequest(const QString &serviceName, const QDBusObj
 {
     // Ignore show request when user has not configured the application menu title bar button
     auto decorationSettings = Decoration::DecorationBridge::self()->settings();
-    if (!decorationSettings->decorationButtonsLeft().contains(KDecoration2::DecorationButtonType::ApplicationMenu)
+    if (decorationSettings && !decorationSettings->decorationButtonsLeft().contains(KDecoration2::DecorationButtonType::ApplicationMenu)
             && !decorationSettings->decorationButtonsRight().contains(KDecoration2::DecorationButtonType::ApplicationMenu)) {
         return;
     }
