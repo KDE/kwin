@@ -33,6 +33,7 @@ bool KWinIdleTimePoller::isAvailable()
 bool KWinIdleTimePoller::setUpPoller()
 {
     connect(waylandServer()->idle(), &KWaylandServer::IdleInterface::inhibitedChanged, this, &KWinIdleTimePoller::onInhibitedChanged);
+    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::timestampChanged, this, &KWinIdleTimePoller::onTimestampChanged);
 
     return true;
 }
@@ -41,6 +42,7 @@ void KWinIdleTimePoller::unloadPoller()
 {
     if (waylandServer() && waylandServer()->idle()) {
         disconnect(waylandServer()->idle(), &KWaylandServer::IdleInterface::inhibitedChanged, this, &KWinIdleTimePoller::onInhibitedChanged);
+        disconnect(waylandServer()->idle(), &KWaylandServer::IdleInterface::timestampChanged, this, &KWinIdleTimePoller::onTimestampChanged);
     }
 
     qDeleteAll(m_timeouts);
@@ -70,7 +72,7 @@ void KWinIdleTimePoller::addTimeout(int newTimeout)
     }
 }
 
-void KWinIdleTimePoller::onActivity()
+void KWinIdleTimePoller::processActivity()
 {
     if (m_idling) {
         Q_EMIT resumingFromIdle();
@@ -96,10 +98,15 @@ void KWinIdleTimePoller::onInhibitedChanged()
     }
 }
 
+void KWinIdleTimePoller::onTimestampChanged()
+{
+    if (!waylandServer()->idle()->isInhibited()) {
+        processActivity();
+    }
+}
+
 void KWinIdleTimePoller::catchIdleEvent()
 {
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::timestampChanged, this, &KWinIdleTimePoller::onActivity);
-
     for (QTimer *timer : qAsConst(m_timeouts)) {
         timer->start();
     }
@@ -107,8 +114,6 @@ void KWinIdleTimePoller::catchIdleEvent()
 
 void KWinIdleTimePoller::stopCatchingIdleEvents()
 {
-    disconnect(waylandServer()->seat(), &KWaylandServer::SeatInterface::timestampChanged, this, &KWinIdleTimePoller::onActivity);
-
     for (QTimer *timer : qAsConst(m_timeouts)) {
         timer->stop();
     }
@@ -119,7 +124,7 @@ void KWinIdleTimePoller::simulateUserActivity()
     if (waylandServer()->idle()->isInhibited()) {
         return ;
     }
-    onActivity();
+    processActivity();
     waylandServer()->simulateUserActivity();
 }
 

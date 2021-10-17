@@ -40,10 +40,11 @@ public Q_SLOTS:
     void simulateUserActivity() override;
 
 private Q_SLOTS:
-    void onActivity();
     void onInhibitedChanged();
+    void onTimestampChanged();
 
 private:
+    void processActivity();
     QHash<int, QTimer *> m_timeouts;
     bool m_idling = false;
 };
