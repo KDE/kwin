@@ -83,7 +83,11 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     m_useEglStreams = m_isNVidia;
 #if HAVE_GBM
     m_gbmDevice = gbm_create_device(m_fd);
-    if (m_gbmDevice) {
+    bool envVarIsSet = false;
+    bool value = qEnvironmentVariableIntValue("KWIN_DRM_FORCE_EGL_STREAMS", &envVarIsSet) != 0;
+    if (envVarIsSet) {
+        m_useEglStreams = m_isNVidia && value;
+    } else if (m_gbmDevice) {
         m_useEglStreams = m_isNVidia && strcmp(gbm_device_get_backend_name(m_gbmDevice), "nvidia") != 0;
     }
 #endif
