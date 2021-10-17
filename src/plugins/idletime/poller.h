@@ -46,7 +46,6 @@ private Q_SLOTS:
 private:
     QHash<int, QTimer *> m_timeouts;
     bool m_idling = false;
-    bool m_started = false;
 };
 
 }

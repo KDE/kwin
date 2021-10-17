@@ -46,7 +46,6 @@ void KWinIdleTimePoller::unloadPoller()
     qDeleteAll(m_timeouts);
     m_timeouts.clear();
 
-    m_started = false;
     m_idling = false;
 }
 
@@ -67,7 +66,6 @@ void KWinIdleTimePoller::addTimeout(int newTimeout)
     m_timeouts.insert(newTimeout, timer);
 
     if (!waylandServer()->idle()->isInhibited()) {
-        m_started = true;
         timer->start();
     }
 }
@@ -86,15 +84,9 @@ void KWinIdleTimePoller::onActivity()
 
 void KWinIdleTimePoller::onInhibitedChanged()
 {
-    if (!m_started) {
-        // if timers were not on, nothing to do
-        return;
-    }
     if (waylandServer()->idle()->isInhibited()) {
         // must stop the timers
         stopCatchingIdleEvents();
-        // keep started state from before inhibition
-        m_started = true;
     } else {
         // resume the timers
         catchIdleEvent();
@@ -106,7 +98,6 @@ void KWinIdleTimePoller::onInhibitedChanged()
 
 void KWinIdleTimePoller::catchIdleEvent()
 {
-    m_started = true;
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::timestampChanged, this, &KWinIdleTimePoller::onActivity);
 
     for (QTimer *timer : qAsConst(m_timeouts)) {
@@ -116,7 +107,6 @@ void KWinIdleTimePoller::catchIdleEvent()
 
 void KWinIdleTimePoller::stopCatchingIdleEvents()
 {
-    m_started = false;
     disconnect(waylandServer()->seat(), &KWaylandServer::SeatInterface::timestampChanged, this, &KWinIdleTimePoller::onActivity);
 
     for (QTimer *timer : qAsConst(m_timeouts)) {
