@@ -176,7 +176,7 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
         return true;
     } else {
         for (const auto &pipeline : pipelines) {
-            if (pipeline->m_legacyNeedsModeset && !pipeline->modeset(0)) {
+            if (pipeline->m_legacyNeedsModeset && pipeline->isActive() && !pipeline->modeset(0)) {
                 return false;
             }
         }
@@ -274,9 +274,6 @@ bool DrmPipeline::modeset(int modeIndex)
 bool DrmPipeline::checkTestBuffer()
 {
     if (m_primaryBuffer && m_primaryBuffer->size() == sourceSize()) {
-        return true;
-    }
-    if (!m_active) {
         return true;
     }
     auto backend = m_gpu->eglBackend();
@@ -386,15 +383,18 @@ bool DrmPipeline::setActive(bool active)
             success = atomicCommit();
         }
     } else {
-        auto dpmsProp = m_connector->getProp(DrmConnector::PropertyIndex::Dpms);
-        if (!dpmsProp) {
-            qCWarning(KWIN_DRM) << "Setting active failed: dpms property missing!";
-        } else {
-            success = drmModeConnectorSetProperty(m_gpu->fd(), m_connector->id(), dpmsProp->propId(), active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF) == 0;
-            if (success) {
-                dpmsProp->setPending(active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF);
-                dpmsProp->commitPending();
-                dpmsProp->commit();
+        success = modeset(m_connector->currentModeIndex());
+        if (success) {
+            auto dpmsProp = m_connector->getProp(DrmConnector::PropertyIndex::Dpms);
+            if (!dpmsProp) {
+                qCWarning(KWIN_DRM) << "Setting active failed: dpms property missing!";
+            } else {
+                success = drmModeConnectorSetProperty(m_gpu->fd(), m_connector->id(), dpmsProp->propId(), active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF) == 0;
+                if (success) {
+                    dpmsProp->setPending(active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF);
+                    dpmsProp->commitPending();
+                    dpmsProp->commit();
+                }
             }
         }
     }
