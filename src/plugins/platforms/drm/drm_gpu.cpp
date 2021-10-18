@@ -256,7 +256,8 @@ bool DrmGpu::updateOutputs()
     }
     m_pipelines << config;
 
-    for (const auto &pipeline : qAsConst(config)) {
+    for (auto it = config.crbegin(); it != config.crend(); it++) {
+        const auto &pipeline = *it;
         auto output = pipeline->output();
         if (m_outputs.contains(output)) {
             // restore output properties
