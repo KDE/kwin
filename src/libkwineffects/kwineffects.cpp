@@ -13,6 +13,7 @@
 
 #include "config-kwin.h"
 
+#include <QMatrix4x4>
 #include <QVariant>
 #include <QTimeLine>
 #include <QFontMetrics>
@@ -22,8 +23,6 @@
 
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
-
-#include <KWaylandServer/surface_interface.h>
 
 #if defined(__SSE2__)
 #  include <emmintrin.h>
