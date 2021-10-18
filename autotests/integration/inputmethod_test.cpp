@@ -57,6 +57,13 @@ private Q_SLOTS:
     void testEnableActive();
     void testHidePanel();
     void testSwitchFocusedSurfaces();
+
+private:
+    void touchNow() {
+        static int time = 0;
+        kwinApp()->platform()->touchDown(0, {100, 100}, ++time);
+        kwinApp()->platform()->touchUp(0, ++time);
+    }
 };
 
 
@@ -87,6 +94,7 @@ void InputMethodTest::initTestCase()
 
 void InputMethodTest::init()
 {
+    touchNow();
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat |
                                          Test::AdditionalWaylandInterface::TextInputManagerV2 |
                                          Test::AdditionalWaylandInterface::InputMethodV1 |
@@ -129,6 +137,7 @@ void InputMethodTest::testOpenClose()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     // Show the keyboard
+    touchNow();
     textInput->showInputPanel();
     QVERIFY(clientAddedSpy.wait());
 
