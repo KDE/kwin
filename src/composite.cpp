@@ -251,6 +251,10 @@ bool Compositor::setupStart()
         delete m_scene;
         m_scene = nullptr;
 
+        if (auto *con = kwinApp()->x11Connection()) {
+            xcb_composite_unredirect_subwindows(con, kwinApp()->x11RootWindow(),
+                                                XCB_COMPOSITE_REDIRECT_MANUAL);
+        }
         if (m_selectionOwner) {
             m_selectionOwner->setOwning(false);
             m_selectionOwner->release();
