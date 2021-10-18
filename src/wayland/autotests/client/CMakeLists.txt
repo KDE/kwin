@@ -163,17 +163,6 @@ add_test(NAME kwayland-testPlasmaShell COMMAND testPlasmaShell)
 ecm_mark_as_test(testPlasmaShell)
 
 ########################################################
-# Test Idle
-########################################################
-set( testIdle_SRCS
-        test_idle.cpp
-    )
-add_executable(testIdle ${testIdle_SRCS})
-target_link_libraries( testIdle Qt::Test Qt::Gui KF5::WaylandClient kwin)
-add_test(NAME kwayland-testIdle COMMAND testIdle)
-ecm_mark_as_test(testIdle)
-
-########################################################
 # Test Shadow
 ########################################################
 set( testShadow_SRCS

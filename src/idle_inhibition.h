@@ -13,13 +13,6 @@
 #include <QObject>
 #include <QVector>
 
-namespace KWaylandServer
-{
-class IdleInterface;
-}
-
-using KWaylandServer::IdleInterface;
-
 namespace KWin
 {
 class Window;
@@ -28,19 +21,10 @@ class IdleInhibition : public QObject
 {
     Q_OBJECT
 public:
-    explicit IdleInhibition(IdleInterface *idle);
+    explicit IdleInhibition(QObject *parent = nullptr);
     ~IdleInhibition() override;
 
     void registerClient(Window *client);
-
-    bool isInhibited() const
-    {
-        return !m_idleInhibitors.isEmpty();
-    }
-    bool isInhibited(Window *client) const
-    {
-        return m_idleInhibitors.contains(client);
-    }
 
 private Q_SLOTS:
     void slotWorkspaceCreated();
@@ -51,8 +35,6 @@ private:
     void uninhibit(Window *client);
     void update(Window *client);
 
-    IdleInterface *m_idle;
-    QVector<Window *> m_idleInhibitors;
     QMap<Window *, QMetaObject::Connection> m_connections;
 };
 }

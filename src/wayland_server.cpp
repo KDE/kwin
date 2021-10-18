@@ -756,13 +756,6 @@ bool WaylandServer::hasGlobalShortcutSupport() const
     return !m_initFlags.testFlag(InitializationFlag::NoGlobalShortcuts);
 }
 
-void WaylandServer::simulateUserActivity()
-{
-    if (m_idle) {
-        m_idle->simulateUserActivity();
-    }
-}
-
 bool WaylandServer::isKeyboardShortcutsInhibited() const
 {
     auto surface = seat()->focusedKeyboardSurface();

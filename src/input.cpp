@@ -17,6 +17,7 @@
 #include "gestures.h"
 #include "globalshortcuts.h"
 #include "hide_cursor_spy.h"
+#include "idledetector.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "inputbackend.h"
@@ -2846,7 +2847,7 @@ public:
 private:
     void notifyActivity()
     {
-        waylandServer()->simulateUserActivity();
+        input()->simulateUserActivity();
     }
 };
 
@@ -3144,6 +3145,49 @@ bool InputRedirection::hasTabletModeSwitch()
 Qt::MouseButtons InputRedirection::qtButtonStates() const
 {
     return m_pointer->buttons();
+}
+
+void InputRedirection::simulateUserActivity()
+{
+    for (IdleDetector *idleDetector : std::as_const(m_idleDetectors)) {
+        idleDetector->activity();
+    }
+}
+
+void InputRedirection::addIdleDetector(IdleDetector *detector)
+{
+    Q_ASSERT(!m_idleDetectors.contains(detector));
+    detector->setInhibited(!m_idleInhibitors.isEmpty());
+    m_idleDetectors.append(detector);
+}
+
+void InputRedirection::removeIdleDetector(IdleDetector *detector)
+{
+    m_idleDetectors.removeOne(detector);
+}
+
+QList<Window *> InputRedirection::idleInhibitors() const
+{
+    return m_idleInhibitors;
+}
+
+void InputRedirection::addIdleInhibitor(Window *inhibitor)
+{
+    if (!m_idleInhibitors.contains(inhibitor)) {
+        m_idleInhibitors.append(inhibitor);
+        for (IdleDetector *idleDetector : std::as_const(m_idleDetectors)) {
+            idleDetector->setInhibited(true);
+        }
+    }
+}
+
+void InputRedirection::removeIdleInhibitor(Window *inhibitor)
+{
+    if (m_idleInhibitors.removeOne(inhibitor) && m_idleInhibitors.isEmpty()) {
+        for (IdleDetector *idleDetector : std::as_const(m_idleDetectors)) {
+            idleDetector->setInhibited(false);
+        }
+    }
 }
 
 Window *InputRedirection::findToplevel(const QPoint &pos)

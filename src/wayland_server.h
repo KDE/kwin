@@ -209,8 +209,6 @@ public:
      */
     SocketPairConnection createConnection();
 
-    void simulateUserActivity();
-
     QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer *> linuxDmabufBuffers() const
     {
         return m_linuxDmabufBuffers;

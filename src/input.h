@@ -32,6 +32,7 @@ class QWheelEvent;
 
 namespace KWin
 {
+class IdleDetector;
 class Window;
 class GlobalShortcutsManager;
 class InputEventFilter;
@@ -165,6 +166,15 @@ public:
      * Uninstalls the @p spy. This happens automatically when deleting an InputEventSpy.
      */
     void uninstallInputEventSpy(InputEventSpy *spy);
+
+    void simulateUserActivity();
+
+    void addIdleDetector(IdleDetector *detector);
+    void removeIdleDetector(IdleDetector *detector);
+
+    QList<Window *> idleInhibitors() const;
+    void addIdleInhibitor(Window *inhibitor);
+    void removeIdleInhibitor(Window *inhibitor);
 
     Window *findToplevel(const QPoint &pos);
     Window *findManagedToplevel(const QPoint &pos);
@@ -324,6 +334,8 @@ private:
     QList<InputBackend *> m_inputBackends;
     QList<InputDevice *> m_inputDevices;
 
+    QList<IdleDetector *> m_idleDetectors;
+    QList<Window *> m_idleInhibitors;
     WindowSelectorFilter *m_windowSelector = nullptr;
 
     QVector<InputEventFilter *> m_filters;

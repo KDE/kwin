@@ -16,6 +16,8 @@
 namespace KWin
 {
 
+class IdleDetector;
+
 class KWinIdleTimePoller : public AbstractSystemPoller
 {
     Q_OBJECT
@@ -24,7 +26,6 @@ class KWinIdleTimePoller : public AbstractSystemPoller
 
 public:
     KWinIdleTimePoller(QObject *parent = nullptr);
-    ~KWinIdleTimePoller() override;
 
     bool isAvailable() override;
     bool setUpPoller() override;
@@ -39,14 +40,9 @@ public Q_SLOTS:
     void stopCatchingIdleEvents() override;
     void simulateUserActivity() override;
 
-private Q_SLOTS:
-    void onInhibitedChanged();
-    void onTimestampChanged();
-
 private:
-    void processActivity();
-    QHash<int, QTimer *> m_timeouts;
-    bool m_idling = false;
+    IdleDetector *m_catchResumeTimeout = nullptr;
+    QHash<int, IdleDetector *> m_timeouts;
 };
 
 }

@@ -21,29 +21,18 @@ class IdleTimeoutInterface;
 class IdleInterfacePrivate : public QtWaylandServer::org_kde_kwin_idle
 {
 public:
-    IdleInterfacePrivate(IdleInterface *_q, Display *display);
-
-    int inhibitCount = 0;
-    QVector<IdleTimeoutInterface *> idleTimeouts;
-    IdleInterface *q;
+    IdleInterfacePrivate(Display *display);
 
 protected:
     void org_kde_kwin_idle_get_idle_timeout(Resource *resource, uint32_t id, wl_resource *seat, uint32_t timeout) override;
 };
 
-class IdleTimeoutInterface : public QObject, QtWaylandServer::org_kde_kwin_idle_timeout
+class IdleTimeoutInterface : public QObject, public QtWaylandServer::org_kde_kwin_idle_timeout
 {
     Q_OBJECT
-public:
-    explicit IdleTimeoutInterface(SeatInterface *seat, IdleInterface *parent, wl_resource *resource);
-    ~IdleTimeoutInterface() override;
-    void setup(quint32 timeout);
-    void simulateUserActivity();
 
-private:
-    SeatInterface *seat;
-    IdleInterface *manager;
-    QTimer *timer = nullptr;
+public:
+    explicit IdleTimeoutInterface(std::chrono::milliseconds timeout, wl_resource *resource);
 
 protected:
     void org_kde_kwin_idle_timeout_destroy_resource(Resource *resource) override;

@@ -42,56 +42,6 @@ public:
     explicit IdleInterface(Display *display, QObject *parent = nullptr);
     ~IdleInterface() override;
 
-    /**
-     * Inhibits the IdleInterface. While inhibited no IdleTimeoutInterface interface gets
-     * notified about an idle timeout.
-     *
-     * This can be used to inhibit power management, screen locking, etc. directly from
-     * Compositor side.
-     *
-     * To resume idle timeouts invoke @link{uninhibit}. It is possible to invoke inhibit several
-     * times, in that case uninhibit needs to called the same amount as inhibit has been called.
-     * @see uninhibit
-     * @see isInhibited
-     * @see inhibitedChanged
-     */
-    void inhibit();
-
-    /**
-     * Inhibits the IdleInterface. The idle timeouts are only restarted if uninhibit has been
-     * called the same amount as inhibit.
-     *
-     * @see inhibit
-     * @see isInhibited
-     * @see inhibitedChanged
-     */
-    void uninhibit();
-
-    /**
-     * @returns Whether idle timeouts are currently inhibited
-     * @see inhibit
-     * @see uninhibit
-     * @see inhibitedChanged
-     */
-    bool isInhibited() const;
-
-    /**
-     * Calling this method allows the Compositor to simulate user activity.
-     * This means the same action is performed as if the user interacted with
-     * an input device on the SeatInterface.
-     * Idle timeouts are resumed and the idle time gets restarted.
-     */
-    void simulateUserActivity();
-
-Q_SIGNALS:
-    /**
-     * Emitted when the system gets inhibited or uninhibited.
-     * @see inhibit
-     * @see uninhibit
-     * @see isInhibited
-     */
-    void inhibitedChanged();
-
 private:
     QScopedPointer<IdleInterfacePrivate> d;
 };

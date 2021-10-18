@@ -9,7 +9,7 @@
 */
 #include "idle_inhibition.h"
 #include "deleted.h"
-#include "wayland/idle_interface.h"
+#include "input.h"
 #include "wayland/surface_interface.h"
 #include "window.h"
 #include "workspace.h"
@@ -22,9 +22,8 @@ using KWaylandServer::SurfaceInterface;
 namespace KWin
 {
 
-IdleInhibition::IdleInhibition(IdleInterface *idle)
-    : QObject(idle)
-    , m_idle(idle)
+IdleInhibition::IdleInhibition(QObject *parent)
+    : QObject(parent)
 {
     // Workspace is created after the wayland server is initialized.
     connect(kwinApp(), &Application::workspaceCreated, this, &IdleInhibition::slotWorkspaceCreated);
@@ -58,24 +57,13 @@ void IdleInhibition::registerClient(Window *client)
 
 void IdleInhibition::inhibit(Window *client)
 {
-    if (isInhibited(client)) {
-        // already inhibited
-        return;
-    }
-    m_idleInhibitors << client;
-    m_idle->inhibit();
+    input()->addIdleInhibitor(client);
     // TODO: notify powerdevil?
 }
 
 void IdleInhibition::uninhibit(Window *client)
 {
-    auto it = std::find(m_idleInhibitors.begin(), m_idleInhibitors.end(), client);
-    if (it == m_idleInhibitors.end()) {
-        // not inhibited
-        return;
-    }
-    m_idleInhibitors.erase(it);
-    m_idle->uninhibit();
+    input()->removeIdleInhibitor(client);
 }
 
 void IdleInhibition::update(Window *client)
