@@ -52,7 +52,6 @@ target_link_libraries(kwineffects
         KF5::CoreAddons
         KF5::WindowSystem
         XCB::XCB
-        Plasma::KWaylandServer
     PRIVATE
         Qt::Quick
         KF5::Declarative
