@@ -170,7 +170,7 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
         return true;
     } else {
         for (const auto &pipeline : pipelines) {
-            if (pipeline->m_legacyNeedsModeset && !pipeline->modeset(0)) {
+            if (pipeline->m_legacyNeedsModeset && pipeline->isActive() && !pipeline->modeset(0)) {
                 return false;
             }
         }
@@ -270,9 +270,6 @@ bool DrmPipeline::checkTestBuffer()
     if (m_primaryBuffer && m_primaryBuffer->size() == sourceSize()) {
         return true;
     }
-    if (!isActive()) {
-        return true;
-    }
     auto backend = m_gpu->eglBackend();
     QSharedPointer<DrmBuffer> buffer;
     // try to re-use buffers if possible.
@@ -352,7 +349,10 @@ bool DrmPipeline::setActive(bool active)
             success = atomicCommit();
         }
     } else {
-        success = m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF);
+        success = modeset(m_connector->currentModeIndex());
+        if (success) {
+            success = m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF);
+        }
     }
     if (!success) {
         qCWarning(KWIN_DRM) << "Setting active to" << active << "failed" << strerror(errno);
