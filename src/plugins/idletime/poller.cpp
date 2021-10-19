@@ -42,7 +42,7 @@ void KWinIdleTimePoller::unloadPoller()
 {
     if (waylandServer() && waylandServer()->idle()) {
         disconnect(waylandServer()->idle(), &KWaylandServer::IdleInterface::inhibitedChanged, this, &KWinIdleTimePoller::onInhibitedChanged);
-        disconnect(waylandServer()->idle(), &KWaylandServer::IdleInterface::timestampChanged, this, &KWinIdleTimePoller::onTimestampChanged);
+        disconnect(waylandServer()->seat(), &KWaylandServer::SeatInterface::timestampChanged, this, &KWinIdleTimePoller::onTimestampChanged);
     }
 
     qDeleteAll(m_timeouts);
