@@ -332,7 +332,7 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 
 void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
 {
-    const auto pluginEffects = KPluginLoader::findPlugins(
+    const auto pluginEffects = KPluginMetaData::findPlugins(
         QStringLiteral("kwin/effects/plugins/"),
         [](const KPluginMetaData &data) {
             return data.serviceTypes().contains(QStringLiteral("KWin/Effect"));
@@ -368,7 +368,7 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
                 return parentComponents.contains(pluginEffect.pluginId());
             };
 
-            const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("kwin/effects/configs/"), filter);
+            const QVector<KPluginMetaData> plugins = KPluginMetaData::findPlugins(QStringLiteral("kwin/effects/configs/"), filter);
 
             if (!plugins.isEmpty()) {
                 effect.configModule = plugins.first().pluginId();

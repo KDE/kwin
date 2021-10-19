@@ -196,7 +196,7 @@ bool Compositor::setupStart()
                 << "Configured compositor not supported by Platform. Falling back to defaults";
     }
 
-    const auto availablePlugins = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.scenes"));
+    const auto availablePlugins = KPluginMetaData::findPlugins(QStringLiteral("org.kde.kwin.scenes"));
 
     for (const KPluginMetaData &pluginMetaData : availablePlugins) {
         qCDebug(KWIN_CORE) << "Available scene plugin:" << pluginMetaData.fileName();

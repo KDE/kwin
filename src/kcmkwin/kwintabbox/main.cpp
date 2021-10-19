@@ -391,7 +391,7 @@ void KWinTabBoxConfig::configureEffectClicked()
             return parentComponents.contains(name);
         };
 
-        const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("kwin/effects/configs/"), filter);
+        const QVector<KPluginMetaData> plugins = KPluginMetaData::findPlugins(QStringLiteral("kwin/effects/configs/"), filter);
 
         if (plugins.isEmpty()) {
             delete configDialog;

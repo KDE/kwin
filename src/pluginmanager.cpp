@@ -64,7 +64,7 @@ PluginManager::PluginManager(QObject *parent)
         }
     }
 
-    const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(s_pluginDirectory);
+    const QVector<KPluginMetaData> plugins = KPluginMetaData::findPlugins(s_pluginDirectory);
     for (const KPluginMetaData &metadata : plugins) {
         if (m_plugins.contains(metadata.pluginId())) {
             qCWarning(KWIN_CORE) << "Conflicting plugin id" << metadata.pluginId();
@@ -92,7 +92,7 @@ QStringList PluginManager::availablePlugins() const
 {
     QStringList ret = m_staticPlugins.keys();
 
-    const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(s_pluginDirectory);
+    const QVector<KPluginMetaData> plugins = KPluginMetaData::findPlugins(s_pluginDirectory);
     for (const KPluginMetaData &metadata : plugins) {
         ret.append(metadata.pluginId());
     }

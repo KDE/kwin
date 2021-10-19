@@ -225,7 +225,7 @@
     <entry key="CommandInactiveTitlebar2" type="Enum">
         <default>Nothing</default>
         <choices>
-            <choice name="ActivateAndRaise" value="Activate and raise"></choice>
+            <choice name="ActivateAndRaise" value="Activate and raisewwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"></choice>
             <choice name="ActivateAndLower" value="Activate and lower"></choice>
             <choice name="Activate"></choice>
             <choice name="Raise"></choice>

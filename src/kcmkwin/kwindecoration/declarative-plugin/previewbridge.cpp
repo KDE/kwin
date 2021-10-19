@@ -108,7 +108,7 @@ void PreviewBridge::createFactory()
         return;
     }
 
-    const auto offers = KPluginLoader::findPlugins(s_pluginName);
+    const auto offers = KPluginMetaData::findPlugins(s_pluginName);
     auto item = std::find_if(offers.constBegin(), offers.constEnd(), [this](const auto &plugin) { return plugin.pluginId() == m_plugin; });
     if (item != offers.constEnd()) {
         KPluginLoader loader(item->fileName());

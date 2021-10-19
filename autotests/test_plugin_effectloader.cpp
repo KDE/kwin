@@ -282,7 +282,7 @@ void TestPluginEffectLoader::testLoadPluginEffect()
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     loader.setConfig(config);
 
-    const auto plugins = KPluginLoader::findPlugins(QString(),
+    const auto plugins = KPluginMetaData::findPlugins(QString(),
         [name] (const KPluginMetaData &data) {
             return data.pluginId().compare(name, Qt::CaseInsensitive) == 0 && data.serviceTypes().contains(QStringLiteral("KWin/Effect"));
         }

@@ -408,7 +408,7 @@ int main(int argc, char * argv[])
     KWin::Application::createAboutData();
     KQuickAddons::QtQuickSettings::init();
 
-    const auto availablePlugins = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.waylandbackends"));
+    const auto availablePlugins = KPluginMetaData::findPlugins(QStringLiteral("org.kde.kwin.waylandbackends"));
     auto hasPlugin = [&availablePlugins] (const QString &name) {
         return std::any_of(availablePlugins.begin(), availablePlugins.end(),
             [name] (const KPluginMetaData &plugin) {
