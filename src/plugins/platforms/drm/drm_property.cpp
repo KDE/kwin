@@ -12,6 +12,7 @@
 #include "drm_object.h"
 #include "drm_gpu.h"
 #include "logging.h"
+#include <cerrno>
 
 namespace KWin
 {

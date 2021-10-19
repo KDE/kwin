@@ -8,6 +8,7 @@
 
 #include "pipewirecore.h"
 #include "kwinscreencast_logging.h"
+#include <cerrno>
 
 #include <KLocalizedString>
 

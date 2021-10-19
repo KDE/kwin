@@ -23,6 +23,7 @@
 #include "x11client.h"
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
+#include <cerrno>
 
 #include "ui_debug_console.h"
 
