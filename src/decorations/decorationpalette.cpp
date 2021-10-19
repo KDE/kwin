@@ -128,7 +128,11 @@ void DecorationPalette::update()
 {
     m_colorSchemeConfig->sync();
 
-    if (!KColorScheme::isColorSetSupported(m_colorSchemeConfig, KColorScheme::Header)) {
+    if (KColorScheme::isColorSetSupported(m_colorSchemeConfig, KColorScheme::Header)) {
+        m_palette.active = KColorScheme(QPalette::Normal, KColorScheme::Header, m_colorSchemeConfig);
+        m_palette.inactive = KColorScheme(QPalette::Inactive, KColorScheme::Header, m_colorSchemeConfig);
+        m_legacyPalette.reset();
+    } else {
         KConfigGroup wmConfig(m_colorSchemeConfig, QStringLiteral("WM"));
 
         if (!wmConfig.exists()) {
@@ -149,10 +153,6 @@ void DecorationPalette::update()
 
         KConfigGroup windowColorsConfig(m_colorSchemeConfig, QStringLiteral("Colors:Window"));
         m_legacyPalette->warningForegroundColor = windowColorsConfig.readEntry("ForegroundNegative", QColor(237, 21, 2));
-    } else {
-        m_palette.active = KColorScheme(QPalette::Normal, KColorScheme::Header, m_colorSchemeConfig);
-        m_palette.inactive = KColorScheme(QPalette::Inactive, KColorScheme::Header, m_colorSchemeConfig);
-        m_legacyPalette.reset();
     }
 
     Q_EMIT changed();
