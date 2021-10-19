@@ -12,7 +12,6 @@
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
-#include <KPluginLoader>
 // Qt
 #include <QtTest>
 #include <QStringList>

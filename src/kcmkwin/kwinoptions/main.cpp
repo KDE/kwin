@@ -16,7 +16,6 @@
 #include <kconfig.h>
 #include <kaboutdata.h>
 #include <KPluginFactory>
-#include <KPluginLoader>
 
 #include "mouse.h"
 #include "windows.h"

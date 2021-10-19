@@ -9,7 +9,6 @@
 #include <KDecoration2/DecorationSettings>
 #include <KDecoration2/DecorationThemeProvider>
 // KDE
-#include <KPluginLoader>
 #include <KPluginFactory>
 #include <KPluginMetaData>
 // Qt

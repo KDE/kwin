@@ -36,7 +36,6 @@
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <KPluginLoader>
 #include <KPluginMetaData>
 #include <KNotification>
 #include <KSelectionOwner>

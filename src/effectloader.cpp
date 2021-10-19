@@ -16,7 +16,6 @@
 #include "utils.h"
 // KDE
 #include <KConfigGroup>
-#include <KPluginLoader>
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
 // Qt
@@ -381,12 +380,12 @@ EffectPluginFactory *PluginEffectLoader::factory(const KPluginMetaData &info) co
     if (!info.isValid()) {
         return nullptr;
     }
-    KPluginLoader loader(info.fileName());
+    QPluginLoader loader(info.fileName());
     if (loader.metaData().value("IID").toString() != EffectPluginFactory_iid) {
         qCDebug(KWIN_CORE) << info.pluginId() << " has not matching plugin version, expected " << PluginFactory_iid << "got " << loader.metaData().value("IID");
         return nullptr;
     }
-    KPluginFactory *factory = loader.factory();
+    KPluginFactory *factory = qobject_cast<KPluginFactory *>(loader.instance());
     if (!factory) {
         qCDebug(KWIN_CORE) << "Did not get KPluginFactory for " << info.pluginId();
         return nullptr;

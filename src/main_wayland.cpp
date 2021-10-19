@@ -28,7 +28,6 @@
 #include <KCrash>
 #include <KDesktopFile>
 #include <KLocalizedString>
-#include <KPluginLoader>
 #include <KPluginMetaData>
 #include <KQuickAddons/QtQuickSettings>
 #include <KShell>

@@ -12,7 +12,6 @@
 
 #include <KConfigGroup>
 #include <KPluginFactory>
-#include <KPluginLoader>
 #include <KPluginMetaData>
 
 namespace KWin
@@ -144,7 +143,7 @@ bool PluginManager::loadDynamicPlugin(const KPluginMetaData &metadata)
     }
 
     const QString pluginId = metadata.pluginId();
-    KPluginLoader pluginLoader(metadata.fileName());
+    QPluginLoader pluginLoader(metadata.fileName());
     if (pluginLoader.metaData().value("IID").toString() != PluginFactory_iid) {
         qCWarning(KWIN_CORE) << pluginId << "has mismatching plugin version";
         return false;

@@ -12,7 +12,6 @@
 #include <KDecoration2/Decoration>
 
 #include <KCModule>
-#include <KPluginLoader>
 #include <KPluginFactory>
 #include <KPluginMetaData>
 
@@ -111,8 +110,7 @@ void PreviewBridge::createFactory()
     const auto offers = KPluginMetaData::findPlugins(s_pluginName);
     auto item = std::find_if(offers.constBegin(), offers.constEnd(), [this](const auto &plugin) { return plugin.pluginId() == m_plugin; });
     if (item != offers.constEnd()) {
-        KPluginLoader loader(item->fileName());
-        m_factory = loader.factory();
+        m_factory = KPluginFactory::loadFactory(*item).plugin;
     }
 
     setValid(!m_factory.isNull());

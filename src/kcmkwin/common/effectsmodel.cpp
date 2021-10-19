@@ -18,7 +18,6 @@
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPackage/PackageLoader>
-#include <KPluginLoader>
 #include <KPluginFactory>
 #include <KPluginInfo>
 #include <KPluginMetaData>
@@ -630,21 +629,13 @@ static KCModule *loadBinaryConfig(const QString &configModule, QObject *parent)
         return nullptr;
     }
 
-    KPluginLoader loader(metaData.fileName());
-    KPluginFactory *factory = loader.factory();
-
-    return factory->create<KCModule>(parent);
+    return KPluginFactory::instantiatePlugin<KCModule>(metaData, parent).plugin;
 }
 
 static KCModule *findScriptedConfig(const QString &pluginId, QObject *parent)
 {
-    KPluginLoader loader(QStringLiteral("kwin/effects/configs/kcm_kwin4_genericscripted"));
-    KPluginFactory *factory = loader.factory();
-    if (!factory) {
-        return nullptr;
-    }
-
-    return factory->create<KCModule>(parent, QVariantList{pluginId});
+    KPluginMetaData metaData(QStringLiteral("kwin/effects/configs/kcm_kwin4_genericscripted"));
+    return KPluginFactory::instantiatePlugin<KCModule>(metaData, parent, QVariantList{pluginId}).plugin;
 }
 
 void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transientParent)

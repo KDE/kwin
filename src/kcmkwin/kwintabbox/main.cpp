@@ -398,15 +398,7 @@ void KWinTabBoxConfig::configureEffectClicked()
             return;
         }
 
-        KCModule *kcm = nullptr;
-
-        KPluginLoader loader(plugins.first().fileName());
-        KPluginFactory *factory = loader.factory();
-        if (!factory) {
-            qWarning() << "Error loading plugin:" << loader.errorString();
-        } else {
-            kcm = factory->create<KCModule>(configDialog);
-        }
+        KCModule *kcm = KPluginFactory::instantiatePlugin<KCModule>(plugins.first(), configDialog).plugin;
 
         if (!kcm) {
             delete configDialog;
