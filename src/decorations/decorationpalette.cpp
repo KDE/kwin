@@ -132,8 +132,8 @@ void DecorationPalette::update()
         KConfigGroup wmConfig(m_colorSchemeConfig, QStringLiteral("WM"));
 
         if (!wmConfig.exists()) {
-            m_palette.active = KColorScheme(QPalette::Normal, KColorScheme::Header, m_colorSchemeConfig);
-            m_palette.inactive = KColorScheme(QPalette::Inactive, KColorScheme::Header, m_colorSchemeConfig);
+            m_palette.active = KColorScheme(QPalette::Normal, KColorScheme::Window, m_colorSchemeConfig);
+            m_palette.inactive = KColorScheme(QPalette::Inactive, KColorScheme::Window, m_colorSchemeConfig);
             m_legacyPalette.reset();
             return;
         }
