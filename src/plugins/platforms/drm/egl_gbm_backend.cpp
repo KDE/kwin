@@ -193,14 +193,8 @@ bool EglGbmBackend::addOutput(DrmAbstractOutput *drmOutput)
 {
     Output newOutput;
     newOutput.output = drmOutput;
-    if (isPrimary()) {
-        if (!resetOutput(newOutput)) {
-            return false;
-        }
-    } else {
-        if (!renderingBackend()->addOutput(drmOutput)) {
-            return false;
-        }
+    if (!isPrimary() && !renderingBackend()->addOutput(drmOutput)) {
+        return false;
     }
     m_outputs.insert(drmOutput, newOutput);
     return true;
