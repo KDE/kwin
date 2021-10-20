@@ -5,6 +5,7 @@
 */
 
 import QtQuick 2.12
+import QtGraphicalEffects 1.12
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.overview 1.0
 import org.kde.plasma.components 3.0 as PC3
@@ -42,6 +43,15 @@ FocusScope {
             y: model.client.y - targetScreen.geometry.y
             width: model.client.width
             height: model.client.height
+
+            layer.enabled: effect.blurBackground
+            layer.effect: FastBlur {
+                radius: container.organized ? 64 : 0
+
+                Behavior on radius {
+                    NumberAnimation { duration: effect.animationDuration; easing.type: Easing.OutCubic }
+                }
+            }
         }
     }
 

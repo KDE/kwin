@@ -40,6 +40,7 @@ class OverviewEffect : public Effect
     Q_OBJECT
     Q_PROPERTY(int animationDuration READ animationDuration NOTIFY animationDurationChanged)
     Q_PROPERTY(ExpoLayout::LayoutMode layout READ layout NOTIFY layoutChanged)
+    Q_PROPERTY(bool blurBackground READ blurBackground NOTIFY blurBackgroundChanged)
 
 public:
     OverviewEffect();
@@ -50,6 +51,9 @@ public:
 
     int animationDuration() const;
     void setAnimationDuration(int duration);
+
+    bool blurBackground() const;
+    void setBlurBackground(bool blur);
 
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
@@ -66,6 +70,7 @@ public:
 Q_SIGNALS:
     void animationDurationChanged();
     void layoutChanged();
+    void blurBackgroundChanged();
 
 public Q_SLOTS:
     void activate();
@@ -88,6 +93,7 @@ private:
     QList<QKeySequence> m_toggleShortcut;
     QList<ElectricBorder> m_borderActivate;
     QList<ElectricBorder> m_touchBorderActivate;
+    bool m_blurBackground = false;
     bool m_activated = false;
     int m_animationDuration = 200;
     ExpoLayout::LayoutMode m_layout = ExpoLayout::LayoutNatural;

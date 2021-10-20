@@ -14,6 +14,10 @@
             <default>1</default>
         </entry>
 
+        <entry name="BlurBackground" type="Bool">
+            <default>true</default>
+        </entry>
+
         <entry name="BorderActivate" type="IntList" />
         <entry name="TouchBorderActivate" type="IntList" />
     </group>
