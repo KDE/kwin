@@ -26,8 +26,8 @@ class EglGbmBackend : public AbstractEglBackend
 public:
     EglGbmBackend(VirtualBackend *b);
     ~EglGbmBackend() override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     QRegion beginFrame(AbstractOutput *output) override;
     void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void init() override;

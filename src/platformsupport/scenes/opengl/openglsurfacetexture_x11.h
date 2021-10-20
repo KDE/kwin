@@ -6,17 +6,17 @@
 
 #pragma once
 
-#include "platformopenglsurfacetexture.h"
+#include "openglsurfacetexture.h"
 
 namespace KWin
 {
 
 class SurfacePixmapX11;
 
-class KWIN_EXPORT PlatformOpenGLSurfaceTextureX11 : public PlatformOpenGLSurfaceTexture
+class KWIN_EXPORT OpenGLSurfaceTextureX11 : public OpenGLSurfaceTexture
 {
 public:
-    PlatformOpenGLSurfaceTextureX11(OpenGLBackend *backend, SurfacePixmapX11 *pixmap);
+    OpenGLSurfaceTextureX11(OpenGLBackend *backend, SurfacePixmapX11 *pixmap);
 
 protected:
     SurfacePixmapX11 *m_pixmap;

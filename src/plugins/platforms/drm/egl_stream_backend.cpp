@@ -464,12 +464,12 @@ bool EglStreamBackend::initBufferConfigs()
     return true;
 }
 
-PlatformSurfaceTexture *EglStreamBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTexture *EglStreamBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return new BasicEGLSurfaceTextureInternal(this, pixmap);
 }
 
-PlatformSurfaceTexture *EglStreamBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTexture *EglStreamBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return new EglStreamSurfaceTextureWayland(this, pixmap);
 }

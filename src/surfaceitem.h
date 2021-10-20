@@ -61,10 +61,10 @@ protected:
     int m_referencePixmapCounter = 0;
 };
 
-class KWIN_EXPORT PlatformSurfaceTexture
+class KWIN_EXPORT SurfaceTexture
 {
 public:
-    virtual ~PlatformSurfaceTexture();
+    virtual ~SurfaceTexture();
 
     virtual bool isValid() const = 0;
 };
@@ -74,9 +74,9 @@ class KWIN_EXPORT SurfacePixmap : public QObject
     Q_OBJECT
 
 public:
-    explicit SurfacePixmap(PlatformSurfaceTexture *platformTexture, QObject *parent = nullptr);
+    explicit SurfacePixmap(SurfaceTexture *texture, QObject *parent = nullptr);
 
-    PlatformSurfaceTexture *platformTexture() const;
+    SurfaceTexture *texture() const;
 
     bool hasAlphaChannel() const;
     QSize size() const;
@@ -96,7 +96,7 @@ protected:
     bool m_hasAlphaChannel = false;
 
 private:
-    QScopedPointer<PlatformSurfaceTexture> m_platformTexture;
+    QScopedPointer<SurfaceTexture> m_texture;
     bool m_isDiscarded = false;
 };
 

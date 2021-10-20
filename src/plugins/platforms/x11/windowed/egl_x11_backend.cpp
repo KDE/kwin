@@ -102,12 +102,12 @@ void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, co
     }
 }
 
-PlatformSurfaceTexture *EglX11Backend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTexture *EglX11Backend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-PlatformSurfaceTexture *EglX11Backend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTexture *EglX11Backend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return new BasicEGLSurfaceTextureInternal(this, pixmap);
 }

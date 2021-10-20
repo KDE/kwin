@@ -44,8 +44,8 @@ public:
     EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu);
     ~EglGbmBackend() override;
 
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
     QRegion beginFrame(AbstractOutput *output) override;
     void endFrame(AbstractOutput *output, const QRegion &damage, const QRegion &damagedRegion) override;

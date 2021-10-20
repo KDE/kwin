@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_qpainter.h"
-#include "platformqpaintersurfacetexture.h"
+#include "qpaintersurfacetexture.h"
 // KWin
 #include "abstract_client.h"
 #include "composite.h"
@@ -271,8 +271,8 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
         return;
     }
 
-    PlatformQPainterSurfaceTexture *platformSurfaceTexture =
-            static_cast<PlatformQPainterSurfaceTexture *>(surfaceTexture->platformTexture());
+    QPainterSurfaceTexture *platformSurfaceTexture =
+            static_cast<QPainterSurfaceTexture *>(surfaceTexture->texture());
     if (!platformSurfaceTexture->isValid()) {
         platformSurfaceTexture->create();
     } else {
@@ -314,14 +314,14 @@ DecorationRenderer *SceneQPainter::createDecorationRenderer(Decoration::Decorate
     return new SceneQPainterDecorationRenderer(impl);
 }
 
-PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTexture *SceneQPainter::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureInternal(pixmap);
+    return m_backend->createSurfaceTextureInternal(pixmap);
 }
 
-PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTexture *SceneQPainter::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureWayland(pixmap);
+    return m_backend->createSurfaceTextureWayland(pixmap);
 }
 
 QPainterEffectFrame::QPainterEffectFrame(EffectFrameImpl *frame, SceneQPainter *scene)

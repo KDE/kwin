@@ -6,17 +6,17 @@
 
 #pragma once
 
-#include "platformqpaintersurfacetexture.h"
+#include "qpaintersurfacetexture.h"
 
 namespace KWin
 {
 
 class SurfacePixmapInternal;
 
-class KWIN_EXPORT PlatformQPainterSurfaceTextureInternal : public PlatformQPainterSurfaceTexture
+class KWIN_EXPORT QPainterSurfaceTextureInternal : public QPainterSurfaceTexture
 {
 public:
-    PlatformQPainterSurfaceTextureInternal(QPainterBackend *backend, SurfacePixmapInternal *pixmap);
+    QPainterSurfaceTextureInternal(QPainterBackend *backend, SurfacePixmapInternal *pixmap);
 
     bool create() override;
     void update(const QRegion &region) override;

@@ -31,8 +31,8 @@ public:
     bool makeCurrent() override;
     void doneCurrent() override;
 
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
     bool directScanoutAllowed(AbstractOutput *output) const override;

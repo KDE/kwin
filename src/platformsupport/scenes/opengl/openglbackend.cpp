@@ -79,19 +79,19 @@ bool OpenGLBackend::directScanoutAllowed(AbstractOutput *output) const
     return false;
 }
 
-PlatformSurfaceTexture *OpenGLBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTexture *OpenGLBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     Q_UNUSED(pixmap)
     return nullptr;
 }
 
-PlatformSurfaceTexture *OpenGLBackend::createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap)
+SurfaceTexture *OpenGLBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
 {
     Q_UNUSED(pixmap)
     return nullptr;
 }
 
-PlatformSurfaceTexture *OpenGLBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTexture *OpenGLBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     Q_UNUSED(pixmap)
     return nullptr;

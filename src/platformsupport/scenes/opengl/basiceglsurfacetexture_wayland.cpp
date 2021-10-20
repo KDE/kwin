@@ -21,7 +21,7 @@ namespace KWin
 
 BasicEGLSurfaceTextureWayland::BasicEGLSurfaceTextureWayland(OpenGLBackend *backend,
                                                              SurfacePixmapWayland *pixmap)
-    : PlatformOpenGLSurfaceTextureWayland(backend, pixmap)
+    : OpenGLSurfaceTextureWayland(backend, pixmap)
 {
 }
 

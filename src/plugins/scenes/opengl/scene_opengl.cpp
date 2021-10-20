@@ -12,7 +12,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_opengl.h"
-#include "platformopenglsurfacetexture.h"
+#include "openglsurfacetexture.h"
 
 #include "platform.h"
 #include "wayland_server.h"
@@ -637,19 +637,19 @@ QSharedPointer<GLTexture> SceneOpenGL::textureForOutput(AbstractOutput* output) 
     return m_backend->textureForOutput(output);
 }
 
-PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTexture *SceneOpenGL::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureInternal(pixmap);
+    return m_backend->createSurfaceTextureInternal(pixmap);
 }
 
-PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTexture *SceneOpenGL::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureWayland(pixmap);
+    return m_backend->createSurfaceTextureWayland(pixmap);
 }
 
-PlatformSurfaceTexture *SceneOpenGL::createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap)
+SurfaceTexture *SceneOpenGL::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
 {
-    return m_backend->createPlatformSurfaceTextureX11(pixmap);
+    return m_backend->createSurfaceTextureX11(pixmap);
 }
 
 //****************************************
@@ -831,7 +831,7 @@ static GLTexture *bindSurfaceTexture(SurfaceItem *surfaceItem)
 {
     SurfacePixmap *surfacePixmap = surfaceItem->pixmap();
     auto platformSurfaceTexture =
-            static_cast<PlatformOpenGLSurfaceTexture *>(surfacePixmap->platformTexture());
+            static_cast<OpenGLSurfaceTexture *>(surfacePixmap->texture());
     if (surfacePixmap->isDiscarded()) {
         return platformSurfaceTexture->texture();
     }
@@ -1134,11 +1134,11 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
 QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
 {
-    PlatformOpenGLSurfaceTexture *frame = nullptr;
+    OpenGLSurfaceTexture *frame = nullptr;
     const SurfaceItem *item = surfaceItem();
 
     if (item && item->pixmap()) {
-        frame = static_cast<PlatformOpenGLSurfaceTexture *>(item->pixmap()->platformTexture());
+        frame = static_cast<OpenGLSurfaceTexture *>(item->pixmap()->texture());
     }
 
     if (frame && item->childItems().isEmpty() && frame->texture()) {

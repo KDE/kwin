@@ -342,12 +342,12 @@ void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output, const QRegion
 
 }
 
-PlatformSurfaceTexture *EglWaylandBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTexture *EglWaylandBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return new BasicEGLSurfaceTextureInternal(this, pixmap);
 }
 
-PlatformSurfaceTexture *EglWaylandBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTexture *EglWaylandBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }

@@ -48,7 +48,7 @@ EglBackend::~EglBackend()
     RenderLoopPrivate::get(kwinApp()->platform()->renderLoop())->invalidate();
 }
 
-PlatformSurfaceTexture *EglBackend::createPlatformSurfaceTextureX11(SurfacePixmapX11 *texture)
+SurfaceTexture *EglBackend::createSurfaceTextureX11(SurfacePixmapX11 *texture)
 {
     return new EglSurfaceTextureX11(this, texture);
 }
@@ -151,7 +151,7 @@ void EglBackend::vblank(std::chrono::nanoseconds timestamp)
 }
 
 EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture)
-    : PlatformOpenGLSurfaceTextureX11(backend, texture)
+    : OpenGLSurfaceTextureX11(backend, texture)
 {
 }
 

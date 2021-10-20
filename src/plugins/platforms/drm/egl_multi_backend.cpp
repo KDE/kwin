@@ -82,14 +82,14 @@ void EglMultiBackend::doneCurrent()
     m_backends[0]->doneCurrent();
 }
 
-PlatformSurfaceTexture *EglMultiBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+SurfaceTexture *EglMultiBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return m_backends[0]->createPlatformSurfaceTextureInternal(pixmap);
+    return m_backends[0]->createSurfaceTextureInternal(pixmap);
 }
 
-PlatformSurfaceTexture *EglMultiBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+SurfaceTexture *EglMultiBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-    return m_backends[0]->createPlatformSurfaceTextureWayland(pixmap);
+    return m_backends[0]->createSurfaceTextureWayland(pixmap);
 }
 
 QSharedPointer<GLTexture> EglMultiBackend::textureForOutput(AbstractOutput *requestedOutput) const

@@ -6,17 +6,17 @@
 
 #pragma once
 
-#include "platformopenglsurfacetexture.h"
+#include "openglsurfacetexture.h"
 
 namespace KWin
 {
 
 class SurfacePixmapInternal;
 
-class KWIN_EXPORT PlatformOpenGLSurfaceTextureInternal : public PlatformOpenGLSurfaceTexture
+class KWIN_EXPORT OpenGLSurfaceTextureInternal : public OpenGLSurfaceTexture
 {
 public:
-    PlatformOpenGLSurfaceTextureInternal(OpenGLBackend *backend, SurfacePixmapInternal *pixmap);
+    OpenGLSurfaceTextureInternal(OpenGLBackend *backend, SurfacePixmapInternal *pixmap);
 
 protected:
     SurfacePixmapInternal *m_pixmap;

@@ -161,13 +161,13 @@ WindowQuadList SurfaceItem::buildQuads() const
     return quads;
 }
 
-PlatformSurfaceTexture::~PlatformSurfaceTexture()
+SurfaceTexture::~SurfaceTexture()
 {
 }
 
-SurfacePixmap::SurfacePixmap(PlatformSurfaceTexture *platformTexture, QObject *parent)
+SurfacePixmap::SurfacePixmap(SurfaceTexture *texture, QObject *parent)
     : QObject(parent)
-    , m_platformTexture(platformTexture)
+    , m_texture(texture)
 {
 }
 
@@ -175,9 +175,9 @@ void SurfacePixmap::update()
 {
 }
 
-PlatformSurfaceTexture *SurfacePixmap::platformTexture() const
+SurfaceTexture *SurfacePixmap::texture() const
 {
-    return m_platformTexture.data();
+    return m_texture.data();
 }
 
 bool SurfacePixmap::hasAlphaChannel() const
