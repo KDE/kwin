@@ -121,8 +121,9 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
             return false;
         }
         uint32_t flags = 0;
-        const auto &failed = [pipelines, req, mode, unusedObjects](){
+        const auto &failed = [pipelines, req, mode, &flags, unusedObjects](){
             drmModeAtomicFree(req);
+            printFlags(flags);
             for (const auto &pipeline : pipelines) {
                 pipeline->printDebugInfo();
                 if (pipeline->m_oldTestBuffer) {
@@ -140,6 +141,7 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                 }
             }
             for (const auto &obj : unusedObjects) {
+                printProps(obj, PrintMode::OnlyChanged);
                 obj->rollbackPending();
             }
             return false;
@@ -256,7 +258,6 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
     if (!usesEglStreams && activePending()) {
         flags |= DRM_MODE_PAGE_FLIP_EVENT;
     }
-    m_lastFlags = flags;
     if (pending.crtc) {
         auto modeSize = m_connector->modes()[pending.modeIndex].size;
         pending.crtc->primaryPlane()->set(QPoint(0, 0), m_primaryBuffer ? m_primaryBuffer->size() : modeSize, QPoint(0, 0), modeSize);
@@ -278,7 +279,6 @@ bool DrmPipeline::presentLegacy()
     if ((!pending.crtc->current() || pending.crtc->current()->needsModeChange(m_primaryBuffer.get())) && !legacyModeset()) {
         return false;
     }
-    m_lastFlags = DRM_MODE_PAGE_FLIP_EVENT;
     QVector<DrmPipeline*> *userData = new QVector<DrmPipeline*>();
     *userData << this;
     if (drmModePageFlip(gpu()->fd(), pending.crtc->id(), m_primaryBuffer ? m_primaryBuffer->bufferId() : 0, DRM_MODE_PAGE_FLIP_EVENT, userData) != 0) {
@@ -563,14 +563,41 @@ DrmGammaRamp::~DrmGammaRamp()
     delete[] atomicLut;
 }
 
-static void printProps(DrmObject *object)
+void DrmPipeline::printFlags(uint32_t flags)
+{
+    if (flags == 0) {
+        qCWarning(KWIN_DRM) << "Flags: none";
+    } else {
+        qCWarning(KWIN_DRM) << "Flags:";
+        if (flags & DRM_MODE_PAGE_FLIP_EVENT) {
+            qCWarning(KWIN_DRM) << "\t DRM_MODE_PAGE_FLIP_EVENT";
+        }
+        if (flags & DRM_MODE_ATOMIC_ALLOW_MODESET) {
+            qCWarning(KWIN_DRM) << "\t DRM_MODE_ATOMIC_ALLOW_MODESET";
+        }
+        if (flags & DRM_MODE_PAGE_FLIP_ASYNC) {
+            qCWarning(KWIN_DRM) << "\t DRM_MODE_PAGE_FLIP_ASYNC";
+        }
+    }
+}
+
+void DrmPipeline::printProps(DrmObject *object, PrintMode mode)
 {
     auto list = object->properties();
+    bool any = mode == PrintMode::All || std::any_of(list.constBegin(), list.constEnd(), [](const auto &prop){
+        return prop && !prop->isImmutable() && prop->needsCommit();
+    });
+    if (!any) {
+        return;
+    }
+    qCWarning(KWIN_DRM) << object->typeName() << object->id();
     for (const auto &prop : list) {
         if (prop) {
             uint64_t current = prop->name().startsWith("SRC_") ? prop->current() >> 16 : prop->current();
             if (prop->isImmutable() || !prop->needsCommit()) {
-                qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current;
+                if (mode == PrintMode::All) {
+                    qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current;
+                }
             } else {
                 uint64_t pending = prop->name().startsWith("SRC_") ? prop->pending() >> 16 : prop->pending();
                 qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current << "->" << pending;
@@ -581,29 +608,12 @@ static void printProps(DrmObject *object)
 
 void DrmPipeline::printDebugInfo() const
 {
-    if (m_lastFlags == 0) {
-        qCWarning(KWIN_DRM) << "Flags: none";
-    } else {
-        qCWarning(KWIN_DRM) << "Flags:";
-        if (m_lastFlags & DRM_MODE_PAGE_FLIP_EVENT) {
-            qCWarning(KWIN_DRM) << "\t DRM_MODE_PAGE_FLIP_EVENT";
-        }
-        if (m_lastFlags & DRM_MODE_ATOMIC_ALLOW_MODESET) {
-            qCWarning(KWIN_DRM) << "\t DRM_MODE_ATOMIC_ALLOW_MODESET";
-        }
-        if (m_lastFlags & DRM_MODE_PAGE_FLIP_ASYNC) {
-            qCWarning(KWIN_DRM) << "\t DRM_MODE_PAGE_FLIP_ASYNC";
-        }
-    }
     qCWarning(KWIN_DRM) << "Drm objects:";
-    qCWarning(KWIN_DRM) << "connector" << m_connector->id();
-    printProps(m_connector);
+    printProps(m_connector, PrintMode::All);
     if (pending.crtc) {
-        qCWarning(KWIN_DRM) << "crtc" << pending.crtc->id();
-        printProps(pending.crtc);
+        printProps(pending.crtc, PrintMode::All);
         if (pending.crtc->primaryPlane()) {
-            qCWarning(KWIN_DRM) << "primary plane" << pending.crtc->primaryPlane()->id();
-            printProps(pending.crtc->primaryPlane());
+            printProps(pending.crtc->primaryPlane(), PrintMode::All);
         }
     }
 }

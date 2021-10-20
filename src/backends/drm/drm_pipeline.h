@@ -112,6 +112,10 @@ private:
     bool applyPendingChangesLegacy();
     bool legacyModeset();
 
+    static void printFlags(uint32_t flags);
+    enum class PrintMode { OnlyChanged, All };
+    static void printProps(DrmObject *object, PrintMode mode);
+
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;
 
@@ -121,7 +125,6 @@ private:
     bool m_modesetPresentPending = false;
 
     QMap<uint32_t, QVector<uint64_t>> m_formats;
-    int m_lastFlags = 0;
 
     // the state that will be applied at the next real atomic commit
     State m_next;

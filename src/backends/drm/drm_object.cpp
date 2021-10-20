@@ -188,6 +188,20 @@ uint32_t DrmObject::type() const
     return m_objectType;
 }
 
+QString DrmObject::typeName() const
+{
+    switch (m_objectType) {
+    case DRM_MODE_OBJECT_CONNECTOR:
+        return QStringLiteral("connector");
+    case DRM_MODE_OBJECT_CRTC:
+        return QStringLiteral("crtc");
+    case DRM_MODE_OBJECT_PLANE:
+        return QStringLiteral("plane");
+    default:
+        return QStringLiteral("unknown?");
+    }
+}
+
 }
 
 QDebug operator<<(QDebug s, const KWin::DrmObject *obj)

@@ -44,6 +44,7 @@ public:
     uint32_t id() const;
     DrmGpu *gpu() const;
     uint32_t type() const;
+    QString typeName() const;
     QVector<DrmProperty*> properties();
 
     void commit();
