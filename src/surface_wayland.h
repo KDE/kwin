@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "surfaceitem.h"
+#include "surface.h"
 
 namespace KWaylandServer
 {
@@ -18,17 +18,20 @@ class SurfaceInterface;
 namespace KWin
 {
 
+class Toplevel;
+
 /**
- * The SurfaceItemWayland class represents a Wayland surface in the scene.
+ * The SurfaceWayland class represents a Wayland surface.
  */
-class KWIN_EXPORT SurfaceItemWayland : public SurfaceItem
+class KWIN_EXPORT SurfaceWayland : public Surface
 {
     Q_OBJECT
 
 public:
-    explicit SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface,
-                                Toplevel *window, Item *parent = nullptr);
+    explicit SurfaceWayland(KWaylandServer::SurfaceInterface *surface,
+                            Toplevel *window, QObject *parent = nullptr);
 
+    SurfacePixmap *createPixmap() override;
     QRegion shape() const override;
     QRegion opaque() const override;
 
@@ -44,25 +47,25 @@ private Q_SLOTS:
     void handleSubSurfacePositionChanged();
     void handleSubSurfaceMappedChanged();
 
-protected:
-    SurfacePixmap *createPixmap() override;
-
 private:
-    SurfaceItemWayland *getOrCreateSubSurfaceItem(KWaylandServer::SubSurfaceInterface *s);
+    SurfaceWayland *getOrCreateChild(KWaylandServer::SubSurfaceInterface *subsurface);
 
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
-    QHash<KWaylandServer::SubSurfaceInterface *, SurfaceItemWayland *> m_subsurfaces;
+    QHash<KWaylandServer::SubSurfaceInterface *, SurfaceWayland *> m_subsurfaces;
 };
 
+/**
+ * The SurfacePixmapWayland class represents a client buffer attached to a wayland surface.
+ */
 class KWIN_EXPORT SurfacePixmapWayland final : public SurfacePixmap
 {
     Q_OBJECT
 
 public:
-    explicit SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent = nullptr);
+    explicit SurfacePixmapWayland(SurfaceWayland *surface, QObject *parent = nullptr);
     ~SurfacePixmapWayland() override;
 
-    SurfaceItemWayland *item() const;
+    SurfaceWayland *item() const;
     KWaylandServer::SurfaceInterface *surface() const;
     KWaylandServer::ClientBuffer *buffer() const;
 
@@ -73,19 +76,19 @@ public:
 private:
     void setBuffer(KWaylandServer::ClientBuffer *buffer);
 
-    SurfaceItemWayland *m_item;
+    SurfaceWayland *m_item;
     KWaylandServer::ClientBuffer *m_buffer = nullptr;
 };
 
 /**
- * The SurfaceItemXwayland class represents an Xwayland surface in the scene.
+ * The SurfaceXwayland class represents an Xwayland surface in the scene.
  */
-class KWIN_EXPORT SurfaceItemXwayland : public SurfaceItemWayland
+class KWIN_EXPORT SurfaceXwayland : public SurfaceWayland
 {
     Q_OBJECT
 
 public:
-    explicit SurfaceItemXwayland(Toplevel *window, Item *parent = nullptr);
+    explicit SurfaceXwayland(Toplevel *window, QObject *parent = nullptr);
 
     QRegion shape() const override;
 };

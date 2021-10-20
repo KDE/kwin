@@ -19,11 +19,6 @@ OpenGLSurfaceTexture::~OpenGLSurfaceTexture()
 {
 }
 
-bool OpenGLSurfaceTexture::isValid() const
-{
-    return m_texture;
-}
-
 OpenGLBackend *OpenGLSurfaceTexture::backend() const
 {
     return m_backend;

@@ -10,7 +10,7 @@
 #include "internal_client.h"
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
-#include "surfaceitem.h"
+#include "surface_internal.h"
 #include "workspace.h"
 
 #include <KDecoration2/Decoration>
@@ -365,7 +365,7 @@ void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
     m_internalFBO = fbo;
 
     setDepth(32);
-    surfaceItem()->addDamage(surfaceItem()->rect());
+    Q_EMIT sceneSurface()->damaged(rect());
 
     if (isInteractiveResize()) {
         performInteractiveMoveResize();
@@ -384,7 +384,7 @@ void InternalClient::present(const QImage &image, const QRegion &damage)
     m_internalImage = image;
 
     setDepth(32);
-    surfaceItem()->addDamage(damage);
+    Q_EMIT sceneSurface()->damaged(damage);
 
     if (isInteractiveResize()) {
         performInteractiveMoveResize();
@@ -510,6 +510,11 @@ void InternalClient::updateInternalWindowGeometry()
         setMoveResizeGeometry(rect);
         commitGeometry(rect);
     }
+}
+
+Surface *InternalClient::createSceneSurface()
+{
+    return new SurfaceInternal(this);
 }
 
 }

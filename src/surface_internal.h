@@ -6,38 +6,42 @@
 
 #pragma once
 
-#include "surfaceitem.h"
+#include "surface.h"
 
 class QOpenGLFramebufferObject;
 
 namespace KWin
 {
 
+class Deleted;
+class Toplevel;
+
 /**
- * The SurfaceItemInternal class represents an internal surface in the scene.
+ * The SurfaceInternal class represents contents of a window created by kwin.
  */
-class KWIN_EXPORT SurfaceItemInternal : public SurfaceItem
+class KWIN_EXPORT SurfaceInternal : public Surface
 {
     Q_OBJECT
 
 public:
-    explicit SurfaceItemInternal(Toplevel *window, Item *parent = nullptr);
+    explicit SurfaceInternal(Toplevel *window, QObject *parent = nullptr);
 
+    SurfacePixmap *createPixmap() override;
     QRegion shape() const override;
 
 private Q_SLOTS:
     void handleBufferGeometryChanged(Toplevel *toplevel, const QRect &old);
-
-protected:
-    SurfacePixmap *createPixmap() override;
 };
 
+/**
+ * The SurfacePixmapInternal class represents a client buffer attached to an internal surface.
+ */
 class KWIN_EXPORT SurfacePixmapInternal final : public SurfacePixmap
 {
     Q_OBJECT
 
 public:
-    explicit SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent = nullptr);
+    explicit SurfacePixmapInternal(SurfaceInternal *item, QObject *parent = nullptr);
 
     QOpenGLFramebufferObject *fbo() const;
     QImage image() const;
@@ -47,7 +51,7 @@ public:
     bool isValid() const override;
 
 private:
-    SurfaceItemInternal *m_item;
+    SurfaceInternal *m_item;
     QSharedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_rasterBuffer;
 };

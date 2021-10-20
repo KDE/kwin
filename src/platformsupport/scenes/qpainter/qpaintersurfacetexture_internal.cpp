@@ -5,7 +5,7 @@
 */
 
 #include "qpaintersurfacetexture_internal.h"
-#include "surfaceitem_internal.h"
+#include "surface_internal.h"
 
 namespace KWin
 {

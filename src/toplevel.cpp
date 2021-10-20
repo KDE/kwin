@@ -21,7 +21,7 @@
 #include "screens.h"
 #include "shadow.h"
 #include "shadowitem.h"
-#include "surfaceitem_x11.h"
+#include "surface_x11.h"
 #include "virtualdesktops.h"
 #include "windowitem.h"
 #include "workspace.h"
@@ -121,6 +121,10 @@ void Toplevel::copyToDeleted(Toplevel* c)
     m_shadow = c->m_shadow;
     if (m_shadow) {
         m_shadow->setToplevel(this);
+    }
+    m_sceneSurface = c->m_sceneSurface;
+    if (m_sceneSurface) {
+        m_sceneSurface->setParent(this);
     }
     resource_name = c->resourceName();
     resource_class = c->resourceClass();
@@ -276,6 +280,7 @@ bool Toplevel::setupCompositing()
 
     effect_window = new EffectWindowImpl(this);
     updateShadow();
+    ensureSceneSurface();
     Compositor::self()->scene()->addToplevel(this);
 
     connect(windowItem(), &WindowItem::positionChanged, this, &Toplevel::visibleGeometryChanged);
@@ -288,12 +293,15 @@ void Toplevel::finishCompositing(ReleaseReason releaseReason)
 {
     // If the X11 window has been destroyed, avoid calling XDamageDestroy.
     if (releaseReason != ReleaseReason::Destroyed) {
-        if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
-            item->destroyDamage();
+        if (SurfaceX11 *surface = qobject_cast<SurfaceX11 *>(sceneSurface())) {
+            surface->destroyDamage();
         }
     }
     if (m_shadow && m_shadow->toplevel() == this) { // otherwise it's already passed to Deleted, don't free data
         deleteShadow();
+    }
+    if (m_sceneSurface && m_sceneSurface->parent() == this) { // otherwise it's already passed to Deleted, don't free data
+        deleteSceneSurface();
     }
     if (effect_window && effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
         deleteEffectWindow();
@@ -379,6 +387,12 @@ void Toplevel::deleteEffectWindow()
     effect_window = nullptr;
 }
 
+void Toplevel::deleteSceneSurface()
+{
+    delete m_sceneSurface;
+    m_sceneSurface = nullptr;
+}
+
 void Toplevel::checkOutput()
 {
     setOutput(kwinApp()->platform()->outputAt(frameGeometry().center()));
@@ -437,6 +451,28 @@ bool Toplevel::isOnActiveOutput() const
 bool Toplevel::isOnOutput(AbstractOutput *output) const
 {
     return output->geometry().intersects(frameGeometry());
+}
+
+Surface *Toplevel::sceneSurface() const
+{
+    return m_sceneSurface;
+}
+
+void Toplevel::ensureSceneSurface()
+{
+    if (m_sceneSurface) {
+        return;
+    }
+    m_sceneSurface = createSceneSurface();
+    if (m_sceneSurface) {
+        m_sceneSurface->setParent(this);
+        Q_EMIT sceneSurfaceChanged();
+    }
+}
+
+Surface *Toplevel::createSceneSurface()
+{
+    return nullptr;
 }
 
 Shadow *Toplevel::shadow() const
@@ -621,6 +657,7 @@ void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
     }
     m_surface = surface;
     m_pendingSurfaceId = 0;
+    ensureSceneSurface();
     Q_EMIT surfaceChanged();
 }
 

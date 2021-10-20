@@ -4,21 +4,23 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "surfaceitem_x11.h"
+#include "surface_x11.h"
 #include "composite.h"
+#include "platform.h"
+#include "renderloop.h"
 #include "scene.h"
-#include "x11syncmanager.h"
+#include "toplevel.h"
 
 namespace KWin
 {
 
-SurfaceItemX11::SurfaceItemX11(Toplevel *window, Item *parent)
-    : SurfaceItem(window, parent)
+SurfaceX11::SurfaceX11(Toplevel *window, QObject *parent)
+    : Surface(window, parent)
 {
     connect(window, &Toplevel::bufferGeometryChanged,
-            this, &SurfaceItemX11::handleBufferGeometryChanged);
+            this, &SurfaceX11::handleBufferGeometryChanged);
     connect(window, &Toplevel::geometryShapeChanged,
-            this, &SurfaceItemX11::discardQuads);
+            this, &SurfaceX11::discardQuads);
 
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
     xcb_damage_create(kwinApp()->x11Connection(), m_damageHandle, window->frameId(),
@@ -27,29 +29,18 @@ SurfaceItemX11::SurfaceItemX11(Toplevel *window, Item *parent)
     setSize(window->bufferGeometry().size());
 }
 
-SurfaceItemX11::~SurfaceItemX11()
+SurfacePixmap *SurfaceX11::createPixmap()
 {
-    // destroyDamage() will be called by the associated Toplevel.
+    return new SurfacePixmapX11(this);
 }
 
-void SurfaceItemX11::preprocess()
-{
-    if (!damage().isEmpty()) {
-        X11Compositor *compositor = X11Compositor::self();
-        if (X11SyncManager *syncManager = compositor->syncManager()) {
-            syncManager->insertWait();
-        }
-    }
-    SurfaceItem::preprocess();
-}
-
-void SurfaceItemX11::processDamage()
+void SurfaceX11::processDamage()
 {
     m_isDamaged = true;
-    scheduleFrame();
+    kwinApp()->platform()->renderLoop()->scheduleRepaint();
 }
 
-bool SurfaceItemX11::fetchDamage()
+bool SurfaceX11::fetchDamage()
 {
     if (!m_isDamaged) {
         return false;
@@ -72,7 +63,7 @@ bool SurfaceItemX11::fetchDamage()
     return true;
 }
 
-void SurfaceItemX11::waitForDamage()
+void SurfaceX11::waitForDamage()
 {
     if (!m_havePendingDamageRegion) {
         return;
@@ -104,10 +95,10 @@ void SurfaceItemX11::waitForDamage()
     }
     free(reply);
 
-    addDamage(region);
+    Q_EMIT damaged(region);
 }
 
-void SurfaceItemX11::destroyDamage()
+void SurfaceX11::destroyDamage()
 {
     if (m_damageHandle != XCB_NONE) {
         xcb_damage_destroy(kwinApp()->x11Connection(), m_damageHandle);
@@ -115,7 +106,7 @@ void SurfaceItemX11::destroyDamage()
     }
 }
 
-void SurfaceItemX11::handleBufferGeometryChanged(Toplevel *toplevel, const QRect &old)
+void SurfaceX11::handleBufferGeometryChanged(Toplevel *toplevel, const QRect &old)
 {
     if (toplevel->bufferGeometry().size() != old.size()) {
         discardPixmap();
@@ -123,27 +114,22 @@ void SurfaceItemX11::handleBufferGeometryChanged(Toplevel *toplevel, const QRect
     setSize(toplevel->bufferGeometry().size());
 }
 
-QRegion SurfaceItemX11::shape() const
+QRegion SurfaceX11::shape() const
 {
-    const QRect clipRect = window()->clientGeometry().translated(-window()->bufferGeometry().topLeft());
-    const QRegion shape = window()->shapeRegion();
+    const QRect clipRect = m_window->clientGeometry().translated(-m_window->bufferGeometry().topLeft());
+    const QRegion shape = m_window->shapeRegion();
 
     return shape & clipRect;
 }
 
-QRegion SurfaceItemX11::opaque() const
+QRegion SurfaceX11::opaque() const
 {
-    return window()->opaqueRegion();
+    return m_window->opaqueRegion();
 }
 
-SurfacePixmap *SurfaceItemX11::createPixmap()
-{
-    return new SurfacePixmapX11(this);
-}
-
-SurfacePixmapX11::SurfacePixmapX11(SurfaceItemX11 *item, QObject *parent)
+SurfacePixmapX11::SurfacePixmapX11(SurfaceX11 *surface, QObject *parent)
     : SurfacePixmap(Compositor::self()->scene()->createSurfaceTextureX11(this), parent)
-    , m_item(item)
+    , m_surface(surface)
 {
 }
 
@@ -166,12 +152,12 @@ xcb_pixmap_t SurfacePixmapX11::pixmap() const
 
 xcb_visualid_t SurfacePixmapX11::visual() const
 {
-    return m_item->window()->visual();
+    return m_surface->window()->visual();
 }
 
 void SurfacePixmapX11::create()
 {
-    const Toplevel *toplevel = m_item->window();
+    const Toplevel *toplevel = m_surface->window();
     if (toplevel->isDeleted()) {
         return;
     }
@@ -210,7 +196,6 @@ void SurfacePixmapX11::create()
     m_pixmap = pixmap;
     m_hasAlphaChannel = toplevel->hasAlpha();
     m_size = bufferGeometry.size();
-    m_contentsRect = QRect(toplevel->clientPos(), toplevel->clientSize());
 }
 
 } // namespace KWin

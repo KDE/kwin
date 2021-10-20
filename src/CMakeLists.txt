@@ -118,10 +118,11 @@ set(kwin_SRCS
     shadowitem.cpp
     sm.cpp
     subsurfacemonitor.cpp
+    surface.cpp
+    surface_internal.cpp
+    surface_wayland.cpp
+    surface_x11.cpp
     surfaceitem.cpp
-    surfaceitem_internal.cpp
-    surfaceitem_wayland.cpp
-    surfaceitem_x11.cpp
     syncalarmx11filter.cpp
     tablet_input.cpp
     toplevel.cpp

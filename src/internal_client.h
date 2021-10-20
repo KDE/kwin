@@ -69,6 +69,7 @@ protected:
     void doInteractiveResizeSync() override;
     void updateCaption() override;
     void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
+    Surface *createSceneSurface() override;
 
 private:
     void requestGeometry(const QRect &rect);

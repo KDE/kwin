@@ -18,7 +18,7 @@
 #include "renderloop_p.h"
 #include "scene.h"
 #include "screens.h"
-#include "surfaceitem_wayland.h"
+#include "surface_wayland.h"
 #include "wayland_server.h"
 #include <kwinglplatform.h>
 #include <kwingltexture.h>

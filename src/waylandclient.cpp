@@ -8,6 +8,7 @@
 
 #include "waylandclient.h"
 #include "screens.h"
+#include "surface_wayland.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -332,6 +333,11 @@ void WaylandClient::updateGeometry(const QRect &rect)
         Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
     }
     Q_EMIT geometryShapeChanged(this, oldFrameGeometry);
+}
+
+Surface *WaylandClient::createSceneSurface()
+{
+    return new SurfaceWayland(surface(), this);
 }
 
 } // namespace KWin

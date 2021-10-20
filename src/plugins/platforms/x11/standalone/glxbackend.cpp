@@ -28,7 +28,7 @@
 #include "renderloop_p.h"
 #include "scene.h"
 #include "screens.h"
-#include "surfaceitem_x11.h"
+#include "surface_x11.h"
 #include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>

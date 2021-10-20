@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "surfaceitem.h"
+#include "surface.h"
 
 #include <QImage>
 

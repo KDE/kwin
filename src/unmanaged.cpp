@@ -12,7 +12,8 @@
 #include "workspace.h"
 #include "effects.h"
 #include "deleted.h"
-#include "surfaceitem_x11.h"
+#include "surface_wayland.h"
+#include "surface_x11.h"
 #include "utils.h"
 #include "xcbutils.h"
 
@@ -78,8 +79,8 @@ void Unmanaged::initialize()
     // and us setting up damage tracking.  If the client wins we won't get a damage event even
     // though the window has been painted.  To avoid this we mark the whole window as damaged
     // and schedule a repaint immediately after creating the damage object.
-    if (auto item = surfaceItem()) {
-        item->addDamage(item->rect());
+    if (auto surface = sceneSurface()) {
+        Q_EMIT surface->damaged(rect());
     }
 }
 
@@ -210,9 +211,22 @@ QWindow *Unmanaged::findInternalWindow() const
 void Unmanaged::damageNotifyEvent()
 {
     Q_ASSERT(kwinApp()->operationMode() == Application::OperationModeX11);
-    SurfaceItemX11 *item = static_cast<SurfaceItemX11 *>(surfaceItem());
-    if (item) {
-        item->processDamage();
+    SurfaceX11 *surface = static_cast<SurfaceX11 *>(sceneSurface());
+    if (surface) {
+        surface->processDamage();
+    }
+}
+
+Surface *Unmanaged::createSceneSurface()
+{
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        return new SurfaceX11(this);
+    } else {
+        if (!surface()) {
+            return nullptr;
+        } else {
+            return new SurfaceXwayland(this);
+        }
     }
 }
 

@@ -43,6 +43,7 @@ protected:
     bool belongsToDesktop() const override;
     void doSetActive() override;
     void updateCaption() override;
+    Surface *createSceneSurface() override;
 
     void cleanGrouping();
     void updateGeometry(const QRect &rect);

@@ -59,7 +59,6 @@
 #include "shadowitem.h"
 #include "surfaceitem.h"
 #include "unmanaged.h"
-#include "waylandclient.h"
 #include "windowitem.h"
 #include "x11client.h"
 
@@ -609,17 +608,8 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
     : QObject(parent)
     , toplevel(client)
     , disable_painting(0)
+    , m_windowItem(new WindowItem(toplevel))
 {
-    if (qobject_cast<WaylandClient *>(client)) {
-        m_windowItem.reset(new WindowItemWayland(toplevel));
-    } else if (qobject_cast<X11Client *>(client) || qobject_cast<Unmanaged *>(client)) {
-        m_windowItem.reset(new WindowItemX11(toplevel));
-    } else if (qobject_cast<InternalClient *>(client)) {
-        m_windowItem.reset(new WindowItemInternal(toplevel));
-    } else {
-        Q_UNREACHABLE();
-    }
-
     connect(toplevel, &Toplevel::frameGeometryChanged, this, &Window::updateWindowPosition);
     updateWindowPosition();
 }

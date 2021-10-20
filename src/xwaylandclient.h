@@ -25,6 +25,7 @@ public:
     explicit XwaylandClient();
 
     bool wantsSyncCounter() const override;
+    Surface *createSceneSurface() override;
 
 private:
     void associate();

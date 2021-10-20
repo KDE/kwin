@@ -8,6 +8,7 @@
 */
 
 #include "xwaylandclient.h"
+#include "surface_wayland.h"
 
 #include <KWaylandServer/surface_interface.h>
 
@@ -41,6 +42,14 @@ void XwaylandClient::initialize()
             setupWindowManagementInterface();
         }
     }
+}
+
+Surface *XwaylandClient::createSceneSurface()
+{
+    if (!surface()) {
+        return nullptr;
+    }
+    return new SurfaceXwayland(this);
 }
 
 bool XwaylandClient::wantsSyncCounter() const

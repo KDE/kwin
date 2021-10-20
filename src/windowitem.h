@@ -33,17 +33,16 @@ class KWIN_EXPORT WindowItem : public Item
     Q_OBJECT
 
 public:
+    explicit WindowItem(Toplevel *window, Item *parent = nullptr);
+
     SurfaceItem *surfaceItem() const;
     DecorationItem *decorationItem() const;
     ShadowItem *shadowItem() const;
     Toplevel *window() const;
 
-protected:
-    explicit WindowItem(Toplevel *window, Item *parent = nullptr);
-    void updateSurfaceItem(SurfaceItem *surfaceItem);
-
 private Q_SLOTS:
     void handleWindowClosed(Toplevel *original, Deleted *deleted);
+    void updateSurfaceItem();
     void updateDecorationItem();
     void updateShadowItem();
     void updateSurfacePosition();
@@ -54,46 +53,6 @@ private:
     QScopedPointer<SurfaceItem> m_surfaceItem;
     QScopedPointer<DecorationItem> m_decorationItem;
     QScopedPointer<ShadowItem> m_shadowItem;
-};
-
-/**
- * The WindowItemX11 class represents an X11 window (both on X11 and Wayland sessions).
- *
- * Note that Xwayland windows and Wayland surfaces are associated asynchronously. This means
- * that the surfaceItem() function can return @c null until the window is fully initialized.
- */
-class KWIN_EXPORT WindowItemX11 : public WindowItem
-{
-    Q_OBJECT
-
-public:
-    explicit WindowItemX11(Toplevel *window, Item *parent = nullptr);
-
-private Q_SLOTS:
-    void initialize();
-};
-
-/**
- * The WindowItemWayland class represents a Wayland window.
- */
-class KWIN_EXPORT WindowItemWayland : public WindowItem
-{
-    Q_OBJECT
-
-public:
-    explicit WindowItemWayland(Toplevel *window, Item *parent = nullptr);
-};
-
-/**
- * The WindowItemInternal class represents a window created by the compositor, for
- * example, the task switcher, etc.
- */
-class KWIN_EXPORT WindowItemInternal : public WindowItem
-{
-    Q_OBJECT
-
-public:
-    explicit WindowItemInternal(Toplevel *window, Item *parent = nullptr);
 };
 
 } // namespace KWin

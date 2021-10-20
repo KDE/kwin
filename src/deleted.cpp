@@ -49,6 +49,7 @@ Deleted::~Deleted()
     }
     deleteEffectWindow();
     deleteShadow();
+    deleteSceneSurface();
 }
 
 Deleted* Deleted::create(Toplevel* c)

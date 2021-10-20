@@ -9,9 +9,7 @@
 #include "decorationitem.h"
 #include "deleted.h"
 #include "shadowitem.h"
-#include "surfaceitem_internal.h"
-#include "surfaceitem_wayland.h"
-#include "surfaceitem_x11.h"
+#include "surfaceitem.h"
 
 namespace KWin
 {
@@ -25,8 +23,15 @@ WindowItem::WindowItem(Toplevel *window, Item *parent)
         connect(client, &AbstractClient::decorationChanged, this, &WindowItem::updateDecorationItem);
         updateDecorationItem();
     }
+
     connect(window, &Toplevel::shadowChanged, this, &WindowItem::updateShadowItem);
     updateShadowItem();
+
+    if (window->sceneSurface()) {
+        updateSurfaceItem();
+    } else {
+        connect(window, &Toplevel::sceneSurfaceChanged, this, &WindowItem::updateSurfaceItem);
+    }
 
     connect(window, &Toplevel::windowClosed, this, &WindowItem::handleWindowClosed);
 }
@@ -57,9 +62,9 @@ void WindowItem::handleWindowClosed(Toplevel *original, Deleted *deleted)
     m_window = deleted;
 }
 
-void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
+void WindowItem::updateSurfaceItem()
 {
-    m_surfaceItem.reset(surfaceItem);
+    m_surfaceItem.reset(new SurfaceItem(m_window->sceneSurface(), this));
 
     if (m_surfaceItem) {
         connect(m_window, &Toplevel::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
@@ -121,45 +126,6 @@ void WindowItem::updateDecorationItem()
     } else {
         m_decorationItem.reset();
     }
-}
-
-WindowItemX11::WindowItemX11(Toplevel *window, Item *parent)
-    : WindowItem(window, parent)
-{
-    initialize();
-
-    // Xwayland windows and Wayland surfaces are associated asynchronously.
-    connect(window, &Toplevel::surfaceChanged, this, &WindowItemX11::initialize);
-}
-
-void WindowItemX11::initialize()
-{
-    switch (kwinApp()->operationMode()) {
-    case Application::OperationModeX11:
-        updateSurfaceItem(new SurfaceItemX11(window(), this));
-        break;
-    case Application::OperationModeXwayland:
-        if (!window()->surface()) {
-            updateSurfaceItem(nullptr);
-        } else {
-            updateSurfaceItem(new SurfaceItemXwayland(window(), this));
-        }
-        break;
-    case Application::OperationModeWaylandOnly:
-        Q_UNREACHABLE();
-    }
-}
-
-WindowItemWayland::WindowItemWayland(Toplevel *window, Item *parent)
-    : WindowItem(window, parent)
-{
-    updateSurfaceItem(new SurfaceItemWayland(window->surface(), window, this));
-}
-
-WindowItemInternal::WindowItemInternal(Toplevel *window, Item *parent)
-    : WindowItem(window, parent)
-{
-    updateSurfaceItem(new SurfaceItemInternal(window, this));
 }
 
 } // namespace KWin

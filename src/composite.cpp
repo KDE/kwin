@@ -21,7 +21,7 @@
 #include "scene.h"
 #include "screens.h"
 #include "shadow.h"
-#include "surfaceitem_x11.h"
+#include "surface_x11.h"
 #include "unmanaged.h"
 #include "useractions.h"
 #include "utils.h"
@@ -800,18 +800,18 @@ void X11Compositor::composite(RenderLoop *renderLoop)
     }
 
     QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
-    QList<SurfaceItemX11 *> dirtyItems;
+    QList<SurfaceX11 *> dirtySurfaces;
 
     // Reset the damage state of each window and fetch the damage region
     // without waiting for a reply
     for (Toplevel *window : qAsConst(windows)) {
-        SurfaceItemX11 *surfaceItem = static_cast<SurfaceItemX11 *>(window->surfaceItem());
-        if (surfaceItem->fetchDamage()) {
-            dirtyItems.append(surfaceItem);
+        SurfaceX11 *surface = static_cast<SurfaceX11 *>(window->sceneSurface());
+        if (surface->fetchDamage()) {
+            dirtySurfaces.append(surface);
         }
     }
 
-    if (dirtyItems.count() > 0) {
+    if (dirtySurfaces.count() > 0) {
         if (m_syncManager) {
             m_syncManager->triggerFence();
         }
@@ -819,8 +819,12 @@ void X11Compositor::composite(RenderLoop *renderLoop)
     }
 
     // Get the replies
-    for (SurfaceItemX11 *item : qAsConst(dirtyItems)) {
-        item->waitForDamage();
+    for (SurfaceX11 *surface : qAsConst(dirtySurfaces)) {
+        surface->waitForDamage();
+    }
+
+    if (m_syncManager) {
+        m_syncManager->insertWait();
     }
 
     if (m_framesToTestForSafety > 0 && (scene()->compositingType() & OpenGLCompositing)) {

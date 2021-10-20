@@ -14,7 +14,7 @@
 #include "scene.h"
 #include "screens.h"
 #include "softwarevsyncmonitor.h"
-#include "surfaceitem_x11.h"
+#include "surface_x11.h"
 #include "x11_platform.h"
 
 #include <QOpenGLContext>

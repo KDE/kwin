@@ -4,18 +4,20 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "surfaceitem_internal.h"
+#include "surface_internal.h"
 #include "composite.h"
+#include "deleted.h"
+#include "internal_client.h"
 #include "scene.h"
 
 namespace KWin
 {
 
-SurfaceItemInternal::SurfaceItemInternal(Toplevel *window, Item *parent)
-    : SurfaceItem(window, parent)
+SurfaceInternal::SurfaceInternal(Toplevel *window, QObject *parent)
+    : Surface(window, parent)
 {
     connect(window, &Toplevel::bufferGeometryChanged,
-            this, &SurfaceItemInternal::handleBufferGeometryChanged);
+            this, &SurfaceInternal::handleBufferGeometryChanged);
 
     setSize(window->bufferGeometry().size());
 
@@ -25,17 +27,17 @@ SurfaceItemInternal::SurfaceItemInternal(Toplevel *window, Item *parent)
     setSurfaceToBufferMatrix(surfaceToBufferMatrix);
 }
 
-QRegion SurfaceItemInternal::shape() const
-{
-    return QRegion(rect());
-}
-
-SurfacePixmap *SurfaceItemInternal::createPixmap()
+SurfacePixmap *SurfaceInternal::createPixmap()
 {
     return new SurfacePixmapInternal(this);
 }
 
-void SurfaceItemInternal::handleBufferGeometryChanged(Toplevel *toplevel, const QRect &old)
+QRegion SurfaceInternal::shape() const
+{
+    return QRegion(QRect(QPoint(0, 0), size()));
+}
+
+void SurfaceInternal::handleBufferGeometryChanged(Toplevel *toplevel, const QRect &old)
 {
     if (toplevel->bufferGeometry().size() != old.size()) {
         discardPixmap();
@@ -43,7 +45,7 @@ void SurfaceItemInternal::handleBufferGeometryChanged(Toplevel *toplevel, const 
     setSize(toplevel->bufferGeometry().size());
 }
 
-SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent)
+SurfacePixmapInternal::SurfacePixmapInternal(SurfaceInternal *item, QObject *parent)
     : SurfacePixmap(Compositor::self()->scene()->createSurfaceTextureInternal(this), parent)
     , m_item(item)
 {

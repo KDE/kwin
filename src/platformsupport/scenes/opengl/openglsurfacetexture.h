@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "surfaceitem.h"
+#include "surface.h"
 
 namespace KWin
 {
@@ -19,8 +19,6 @@ class KWIN_EXPORT OpenGLSurfaceTexture : public SurfaceTexture
 public:
     explicit OpenGLSurfaceTexture(OpenGLBackend *backend);
     ~OpenGLSurfaceTexture() override;
-
-    bool isValid() const override;
 
     OpenGLBackend *backend() const;
     GLTexture *texture() const;

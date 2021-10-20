@@ -5,55 +5,99 @@
 */
 
 #include "surfaceitem.h"
-#include "deleted.h"
+#include "toplevel.h"
 
 namespace KWin
 {
 
-SurfaceItem::SurfaceItem(Toplevel *window, Item *parent)
+SurfaceItem::SurfaceItem(Surface *surface, Item *parent)
     : Item(parent)
-    , m_window(window)
+    , SurfaceView(surface)
 {
-    connect(window, &Toplevel::windowClosed, this, &SurfaceItem::handleWindowClosed);
+    connect(surface, &Surface::damaged, this, &SurfaceItem::addDamage);
+    connect(surface, &Surface::positionChanged, this, &SurfaceItem::handlePositionChanged);
+    connect(surface, &Surface::sizeChanged, this, &SurfaceItem::handleSizeChanged);
+    connect(surface, &Surface::belowChanged, this, &SurfaceItem::handleBelowChanged);
+    connect(surface, &Surface::aboveChanged, this, &SurfaceItem::handleAboveChanged);
+
+    handlePositionChanged();
+    handleSizeChanged();
+    handleAboveChanged();
+    handleBelowChanged();
 }
 
-Toplevel *SurfaceItem::window() const
+void SurfaceItem::surfaceFrame()
 {
-    return m_window;
+    scheduleFrame();
 }
 
-void SurfaceItem::handleWindowClosed(Toplevel *original, Deleted *deleted)
+void SurfaceItem::surfacePixmapInvalidated()
 {
-    Q_UNUSED(original)
-    m_window = deleted;
+    discardPixmap();
 }
 
-QMatrix4x4 SurfaceItem::surfaceToBufferMatrix() const
+void SurfaceItem::surfaceQuadsInvalidated()
 {
-    return m_surfaceToBufferMatrix;
+    discardQuads();
 }
 
-void SurfaceItem::setSurfaceToBufferMatrix(const QMatrix4x4 &matrix)
+void SurfaceItem::handlePositionChanged()
 {
-    m_surfaceToBufferMatrix = matrix;
+    setPosition(surface()->position());
+}
+
+void SurfaceItem::handleSizeChanged()
+{
+    setSize(surface()->size());
+}
+
+SurfaceItem *SurfaceItem::getOrCreateSubSurfaceItem(Surface *subsurface)
+{
+    SurfaceItem *&item = m_subsurfaces[subsurface];
+    if (!item) {
+        item = new SurfaceItem(subsurface, this);
+        item->setParent(this);
+        connect(subsurface, &QObject::destroyed, this, [this, subsurface]() {
+            delete m_subsurfaces.take(subsurface);
+        });
+    }
+    return item;
+}
+
+void SurfaceItem::handleBelowChanged()
+{
+    const QList<Surface *> below = surface()->below();
+    for (int i = 0; i < below.size(); ++i) {
+        getOrCreateSubSurfaceItem(below[i])->setZ(i - below.size());
+    }
+}
+
+void SurfaceItem::handleAboveChanged()
+{
+    const QList<Surface *> above = surface()->above();
+    for (int i = 0; i < above.size(); ++i) {
+        getOrCreateSubSurfaceItem(above[i])->setZ(i);
+    }
 }
 
 QRegion SurfaceItem::shape() const
 {
-    return QRegion();
+    return surface()->shape();
 }
 
 QRegion SurfaceItem::opaque() const
 {
-    return QRegion();
+    return surface()->opaque();
 }
 
 void SurfaceItem::addDamage(const QRegion &region)
 {
+    Toplevel *window = surface()->window();
+
     m_damage += region;
     scheduleRepaint(region);
 
-    Q_EMIT m_window->damaged(m_window, region);
+    Q_EMIT window->damaged(window, region);
 }
 
 void SurfaceItem::resetDamage()
@@ -103,7 +147,7 @@ void SurfaceItem::unreferencePreviousPixmap()
 void SurfaceItem::updatePixmap()
 {
     if (m_pixmap.isNull()) {
-        m_pixmap.reset(createPixmap());
+        m_pixmap.reset(surface()->createPixmap());
     }
     if (m_pixmap->isValid()) {
         m_pixmap->update();
@@ -138,6 +182,7 @@ void SurfaceItem::preprocess()
 WindowQuadList SurfaceItem::buildQuads() const
 {
     const QRegion region = shape();
+    const QMatrix4x4 surfaceToBufferMatrix = surface()->surfaceToBufferMatrix();
 
     WindowQuadList quads;
     quads.reserve(region.rectCount());
@@ -145,10 +190,10 @@ WindowQuadList SurfaceItem::buildQuads() const
     for (const QRectF rect : region) {
         WindowQuad quad;
 
-        const QPointF bufferTopLeft = m_surfaceToBufferMatrix.map(rect.topLeft());
-        const QPointF bufferTopRight = m_surfaceToBufferMatrix.map(rect.topRight());
-        const QPointF bufferBottomRight = m_surfaceToBufferMatrix.map(rect.bottomRight());
-        const QPointF bufferBottomLeft = m_surfaceToBufferMatrix.map(rect.bottomLeft());
+        const QPointF bufferTopLeft = surfaceToBufferMatrix.map(rect.topLeft());
+        const QPointF bufferTopRight = surfaceToBufferMatrix.map(rect.topRight());
+        const QPointF bufferBottomRight = surfaceToBufferMatrix.map(rect.bottomRight());
+        const QPointF bufferBottomLeft = surfaceToBufferMatrix.map(rect.bottomLeft());
 
         quad[0] = WindowVertex(rect.topLeft(), bufferTopLeft);
         quad[1] = WindowVertex(rect.topRight(), bufferTopRight);
@@ -159,50 +204,6 @@ WindowQuadList SurfaceItem::buildQuads() const
     }
 
     return quads;
-}
-
-SurfaceTexture::~SurfaceTexture()
-{
-}
-
-SurfacePixmap::SurfacePixmap(SurfaceTexture *texture, QObject *parent)
-    : QObject(parent)
-    , m_texture(texture)
-{
-}
-
-void SurfacePixmap::update()
-{
-}
-
-SurfaceTexture *SurfacePixmap::texture() const
-{
-    return m_texture.data();
-}
-
-bool SurfacePixmap::hasAlphaChannel() const
-{
-    return m_hasAlphaChannel;
-}
-
-QSize SurfacePixmap::size() const
-{
-    return m_size;
-}
-
-QRect SurfacePixmap::contentsRect() const
-{
-    return m_contentsRect;
-}
-
-bool SurfacePixmap::isDiscarded() const
-{
-    return m_isDiscarded;
-}
-
-void SurfacePixmap::markAsDiscarded()
-{
-    m_isDiscarded = true;
 }
 
 } // namespace KWin
