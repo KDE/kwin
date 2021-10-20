@@ -203,6 +203,17 @@ AbstractOutput *Platform::findOutput(const QUuid &uuid) const
     return nullptr;
 }
 
+AbstractOutput *Platform::findOutput(const QString &name) const
+{
+    const auto candidates = outputs();
+    for (AbstractOutput *candidate : candidates) {
+        if (candidate->name() == name) {
+            return candidate;
+        }
+    }
+    return nullptr;
+}
+
 AbstractOutput *Platform::outputAt(const QPoint &pos) const
 {
     AbstractOutput *bestOutput = nullptr;

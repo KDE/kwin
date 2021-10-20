@@ -15,6 +15,7 @@
 namespace KWin
 {
 class AbstractClient;
+class AbstractOutput;
 class VirtualDesktop;
 
 namespace ScriptingModels::V3
@@ -110,9 +111,9 @@ private:
 
     ClientModel *m_clientModel = nullptr;
     std::optional<QString> m_activity;
+    QPointer<AbstractOutput> m_output;
     QPointer<VirtualDesktop> m_desktop;
     QString m_filter;
-    std::optional<QString> m_screenName;
     std::optional<WindowTypes> m_windowType;
 };
 

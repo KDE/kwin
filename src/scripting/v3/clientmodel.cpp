@@ -7,6 +7,7 @@
 #include "clientmodel.h"
 #include "abstract_client.h"
 #include "abstract_output.h"
+#include "platform.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 
@@ -180,13 +181,14 @@ void ClientFilterModel::setFilter(const QString &filter)
 
 QString ClientFilterModel::screenName() const
 {
-    return m_screenName.value_or(QString());
+    return m_output ? m_output->name() : QString();
 }
 
 void ClientFilterModel::setScreenName(const QString &screen)
 {
-    if (m_screenName != screen) {
-        m_screenName = screen;
+    AbstractOutput *output = kwinApp()->platform()->findOutput(screen);
+    if (m_output != output) {
+        m_output = output;
         Q_EMIT screenNameChanged();
         invalidateFilter();
     }
@@ -194,8 +196,8 @@ void ClientFilterModel::setScreenName(const QString &screen)
 
 void ClientFilterModel::resetScreenName()
 {
-    if (m_screenName.has_value()) {
-        m_screenName.reset();
+    if (m_output) {
+        m_output = nullptr;
         Q_EMIT screenNameChanged();
         invalidateFilter();
     }
@@ -256,8 +258,8 @@ bool ClientFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
         }
     }
 
-    if (m_screenName.has_value()) {
-        if (client->output()->name() != m_screenName) {
+    if (m_output) {
+        if (!client->isOnOutput(m_output)) {
             return false;
         }
     }

@@ -355,6 +355,7 @@ public:
     }
     AbstractOutput *findOutput(int screenId) const;
     AbstractOutput *findOutput(const QUuid &uuid) const;
+    AbstractOutput *findOutput(const QString &name) const;
     AbstractOutput *outputAt(const QPoint &pos) const;
 
     /**
