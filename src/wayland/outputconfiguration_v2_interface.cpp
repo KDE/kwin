@@ -168,8 +168,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_destroy_
 
 void OutputConfigurationV2InterfacePrivate::emitConfigurationChangeRequested() const
 {
-    auto configinterface = reinterpret_cast<OutputConfigurationV2Interface *>(q);
-    Q_EMIT outputManagement->configurationChangeRequested(configinterface);
+    Q_EMIT outputManagement->configurationChangeRequested(q);
 }
 
 OutputConfigurationV2InterfacePrivate::OutputConfigurationV2InterfacePrivate(OutputConfigurationV2Interface *q, OutputManagementV2Interface *outputManagement, wl_resource *resource)
