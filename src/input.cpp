@@ -1229,6 +1229,7 @@ public:
                 m_lastGlobalTouchPos = QPointF();
                 m_lastLocalTouchPos = QPointF();
                 input()->touch()->setDecorationPressId(-1);
+                return true;
             }
             return false;
         }
