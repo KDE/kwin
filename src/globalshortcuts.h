@@ -58,7 +58,7 @@ public:
      */
     void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
-    void registerTouchpadSwipe(QAction *action, SwipeDirection direction);
+    void registerTouchpadSwipe(QAction *action, SwipeDirection direction, int fingerCount);
 
     void registerRealtimeTouchpadSwipe(QAction *onUp, std::function<void(qreal)> progressCallback, SwipeDirection direction);
 
@@ -135,12 +135,13 @@ struct PointerAxisShortcut
         return axisModifiers == rhs.axisModifiers && axisDirection == rhs.axisDirection;
     }
 };
-struct FourFingerSwipeShortcut
+struct TouchpadSwipeShortcut
 {
     SwipeDirection swipeDirection;
-    bool operator==(const FourFingerSwipeShortcut &rhs) const
+    int fingerCount;
+    bool operator==(const TouchpadSwipeShortcut &rhs) const
     {
-        return swipeDirection == rhs.swipeDirection;
+        return swipeDirection == rhs.swipeDirection && fingerCount == rhs.fingerCount;
     }
 };
 struct FourFingerRealtimeFeedbackSwipeShortcut
@@ -155,7 +156,7 @@ struct FourFingerRealtimeFeedbackSwipeShortcut
     }
 };
 
-using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, FourFingerSwipeShortcut, FourFingerRealtimeFeedbackSwipeShortcut>;
+using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, TouchpadSwipeShortcut, FourFingerRealtimeFeedbackSwipeShortcut>;
 
 class GlobalShortcut
 {

@@ -757,7 +757,7 @@ void EffectsHandlerImpl::registerRealtimeTouchpadSwipeShortcut(SwipeDirection di
 
 void EffectsHandlerImpl::registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action)
 {
-    input()->registerTouchpadSwipeShortcut(direction, action);
+    input()->registerTouchpadSwipeShortcut(direction, 4, action);
 }
 
 void* EffectsHandlerImpl::getProxy(QString name)

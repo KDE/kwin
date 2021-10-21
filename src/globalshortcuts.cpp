@@ -34,11 +34,11 @@ GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
         {SwipeDirection::Left, SwipeGesture::Direction::Left},
         {SwipeDirection::Right, SwipeGesture::Direction::Right},
     };
-    if (auto swipeGesture = std::get_if<FourFingerSwipeShortcut>(&sc)) {
+    if (auto swipeGesture = std::get_if<TouchpadSwipeShortcut>(&sc)) {
         m_gesture.reset(new SwipeGesture);
         m_gesture->setDirection(dirs[swipeGesture->swipeDirection]);
-        m_gesture->setMaximumFingerCount(4);
-        m_gesture->setMinimumFingerCount(4);
+        m_gesture->setMaximumFingerCount(swipeGesture->fingerCount);
+        m_gesture->setMinimumFingerCount(swipeGesture->fingerCount);
         QObject::connect(m_gesture.get(), &SwipeGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
     } else if (auto rtSwipeGesture = std::get_if<FourFingerRealtimeFeedbackSwipeShortcut>(&sc)) {
         m_gesture.reset(new SwipeGesture);
@@ -123,7 +123,7 @@ bool GlobalShortcutsManager::addIfNotExists(GlobalShortcut sc)
         }
     }
 
-    if (std::holds_alternative<FourFingerSwipeShortcut>(sc.shortcut()) || std::holds_alternative<FourFingerRealtimeFeedbackSwipeShortcut>(sc.shortcut())) {
+    if (std::holds_alternative<TouchpadSwipeShortcut>(sc.shortcut()) || std::holds_alternative<FourFingerRealtimeFeedbackSwipeShortcut>(sc.shortcut())) {
         m_gestureRecognizer->registerGesture(sc.swipeGesture());
     }
     connect(sc.action(), &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
@@ -141,9 +141,9 @@ void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardM
     addIfNotExists(GlobalShortcut(PointerAxisShortcut{modifiers, axis}, action));
 }
 
-void GlobalShortcutsManager::registerTouchpadSwipe(QAction *action, SwipeDirection direction)
+void GlobalShortcutsManager::registerTouchpadSwipe(QAction *action, SwipeDirection direction, int fingerCount)
 {
-    addIfNotExists(GlobalShortcut(FourFingerSwipeShortcut{direction}, action));
+    addIfNotExists(GlobalShortcut(TouchpadSwipeShortcut{direction, fingerCount}, action));
 }
 
 void GlobalShortcutsManager::registerRealtimeTouchpadSwipe(QAction *action, std::function<void (qreal)> progressCallback, SwipeDirection direction)

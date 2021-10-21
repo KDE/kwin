@@ -2727,9 +2727,9 @@ void InputRedirection::registerRealtimeTouchpadSwipeShortcut(SwipeDirection dire
     m_shortcuts->registerRealtimeTouchpadSwipe(action, cb, direction);
 }
 
-void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action)
+void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, int fingerCount, QAction *action)
 {
-    m_shortcuts->registerTouchpadSwipe(action, direction);
+    m_shortcuts->registerTouchpadSwipe(action, direction, fingerCount);
 }
 
 void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)

@@ -1102,6 +1102,20 @@ void Workspace::initShortcuts()
     TabBox::TabBox::self()->initShortcuts();
 #endif
     vds->initShortcuts();
+
+    auto tileRightAction = new QAction();
+    connect(tileRightAction, &QAction::triggered, this, std::bind(&Workspace::quickTileWindow, this, QuickTileFlag::Right));
+    input()->registerTouchpadSwipeShortcut(SwipeDirection::Right, 3, tileRightAction);
+    auto tileLeftAction = new QAction();
+    connect(tileLeftAction, &QAction::triggered, this, std::bind(&Workspace::quickTileWindow, this, QuickTileFlag::Left));
+    input()->registerTouchpadSwipeShortcut(SwipeDirection::Left, 3, tileLeftAction);
+    auto maximizeAction = new QAction();
+    connect(maximizeAction, &QAction::triggered, this, &Workspace::slotWindowMaximize);
+    input()->registerTouchpadSwipeShortcut(SwipeDirection::Up, 3, maximizeAction);
+    auto minimizeAction = new QAction();
+    connect(minimizeAction, &QAction::triggered, this, &Workspace::slotWindowMinimize);
+    input()->registerTouchpadSwipeShortcut(SwipeDirection::Down, 3, minimizeAction);
+
     m_userActionsMenu->discard(); // so that it's recreated next time
 }
 
