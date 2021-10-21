@@ -97,6 +97,7 @@ private:
 
     void realDeactivate();
     void createScreenView(EffectScreen *screen);
+    OverviewScreenView *viewAt(const QPoint &pos) const;
 
     KDeclarative::QmlObjectSharedEngine *m_qmlEngine = nullptr;
     QQmlComponent *m_qmlComponent = nullptr;
@@ -112,6 +113,7 @@ private:
     bool m_activated = false;
     int m_animationDuration = 200;
     ExpoLayout::LayoutMode m_layout = ExpoLayout::LayoutNatural;
+    QPointer<OverviewScreenView> m_mouseImplicitGrab;
 };
 
 } // namespace KWin

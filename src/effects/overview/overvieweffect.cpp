@@ -364,22 +364,49 @@ void OverviewEffect::createScreenView(EffectScreen *screen)
     m_screenViews.insert(screen, screenView);
 }
 
+OverviewScreenView *OverviewEffect::viewAt(const QPoint &pos) const
+{
+    for (OverviewScreenView *screenView : qAsConst(m_screenViews)) {
+        if (screenView->geometry().contains(pos)) {
+            return screenView;
+        }
+    }
+    return nullptr;
+}
+
 void OverviewEffect::windowInputMouseEvent(QEvent *event)
 {
+    Qt::MouseButtons buttons;
     QPoint globalPosition;
     if (QMouseEvent *mouseEvent = dynamic_cast<QMouseEvent *>(event)) {
+        buttons = mouseEvent->buttons();
         globalPosition = mouseEvent->globalPos();
     } else if (QWheelEvent *wheelEvent = dynamic_cast<QWheelEvent *>(event)) {
+        buttons = wheelEvent->buttons();
         globalPosition = wheelEvent->globalPosition().toPoint();
     } else {
         return;
     }
-    for (OverviewScreenView *screenView : qAsConst(m_screenViews)) {
-        if (screenView->geometry().contains(globalPosition)) {
-            screenView->forwardMouseEvent(event);
-            break;
+
+    if (buttons) {
+        if (!m_mouseImplicitGrab) {
+            m_mouseImplicitGrab = viewAt(globalPosition);
         }
     }
+
+    OverviewScreenView *target = m_mouseImplicitGrab;
+    if (!target) {
+        target = viewAt(globalPosition);
+    }
+
+    if (!buttons) {
+        m_mouseImplicitGrab = nullptr;
+    }
+
+    if (target) {
+        target->forwardMouseEvent(event);
+    }
+
 }
 
 void OverviewEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
