@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Helper effect for screenshot tools",
+        "Description[az]": "Ekranın şəklini çəkən vasitə üçün köməkçi effekt",
+        "Description[ca]": "Efecte auxiliar per a les eines de captura de pantalla",
+        "Description[es]": "Efecto auxiliar para las herramientas de captura de pantalla",
+        "Description[nl]": "Effect van hulp voor hulpmiddelen bij schermafdruk",
+        "Description[sv]": "Hjälpeffekt för skärmbildsverktyg",
+        "Description[uk]": "Допоміжний ефект для створення знімків екрана",
+        "Description[vi]": "Hiệu ứng trợ giúp cho các công cụ chụp ảnh màn hình",
+        "Description[x-test]": "xxHelper effect for screenshot toolsxx",
         "EnabledByDefault": true,
         "Id": "screenshot",
         "License": "GPL",
         "Name": "Screenshot",
+        "Name[az]": "Ekran şəklini çəkmək",
+        "Name[ca]": "Captura de pantalla",
+        "Name[es]": "Captura de pantalla",
+        "Name[nl]": "Schermafdruk",
+        "Name[sv]": "Skärmbild",
+        "Name[uk]": "Знімок вікна",
+        "Name[vi]": "Ảnh chụp màn hình",
+        "Name[x-test]": "xxScreenshotxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Help you locate the center of the screen when moving a window",
+        "Description[az]": "Pəncərələrin yeri dəyişdirilən zaman sizə ekranın mərkəzini təyin etməyə imkan verir",
+        "Description[ca]": "Ajuda a ubicar el centre de la pantalla en moure una finestra",
+        "Description[es]": "Le ayuda a localizar el centro de la pantalla cuando se mueve una ventana",
+        "Description[nl]": "Helpt u om het midden van het venster te bepalen bij het verplaatsen van het venster",
+        "Description[sv]": "Hjälper dig lokalisera bildskärmens mitt när ett fönster flyttas",
+        "Description[uk]": "Допомога у пошуку центра екрана, коли ви пересуватимете вікно",
+        "Description[vi]": "Giúp bạn định vị tâm của màn hình khi di chuyển cửa sổ",
+        "Description[x-test]": "xxHelp you locate the center of the screen when moving a windowxx",
         "EnabledByDefault": false,
         "Id": "snaphelper",
         "License": "GPL",
         "Name": "Snap Helper",
+        "Name[az]": "Yerləşdirmə köməkçisi",
+        "Name[ca]": "Ajudant de desplaçament",
+        "Name[es]": "Auxiliar de ajuste",
+        "Name[nl]": "Vastpinhulp",
+        "Name[sv]": "Bindningshjälp",
+        "Name[uk]": "Помічник розташування",
+        "Name[vi]": "Trợ giúp nhanh",
+        "Name[x-test]": "xxSnap Helperxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

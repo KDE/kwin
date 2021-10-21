@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Inverts the color of the desktop and windows",
+        "Description[az]": "İş Masası və pəncərənin neqativi",
+        "Description[ca]": "Inverteix el color de l'escriptori i les finestres",
+        "Description[es]": "Invierte el color del escritorio y de las ventanas",
+        "Description[nl]": "Draait de kleuren van het bureaublad en de vensters om",
+        "Description[sv]": "Invertera skrivbordets och fönstrens färg",
+        "Description[uk]": "Обернення кольорів стільниці і вікон",
+        "Description[vi]": "Đảo màu bàn làm việc và các cửa sổ",
+        "Description[x-test]": "xxInverts the color of the desktop and windowsxx",
         "EnabledByDefault": false,
         "Id": "invert",
         "License": "GPL",
         "Name": "Invert",
+        "Name[az]": "Tərsinə çevirmək",
+        "Name[ca]": "Inverteix",
+        "Name[es]": "Invertir",
+        "Name[nl]": "Inverteren",
+        "Name[sv]": "Invertera",
+        "Name[uk]": "Інверсія",
+        "Name[vi]": "Đảo",
+        "Name[x-test]": "xxInvertxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

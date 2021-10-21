@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Closed windows fall into pieces",
+        "Description[az]": "Pəncərəni hissələrə parçalayaraq bağlayır",
+        "Description[ca]": "Les finestres tancades es trenquen en peces",
+        "Description[es]": "Las ventanas cerradas caen en pedazos",
+        "Description[nl]": "Gesloten vensters vallen uit elkaar",
+        "Description[sv]": "Stängda fönster faller i bitar",
+        "Description[uk]": "Розпадання вікон на шматочки під час закриття вікон",
+        "Description[vi]": "Cửa sổ bị đóng sẽ vỡ thành nhiều mảnh",
+        "Description[x-test]": "xxClosed windows fall into piecesxx",
         "EnabledByDefault": false,
         "Id": "fallapart",
         "License": "GPL",
         "Name": "Fall Apart",
+        "Name[az]": "Dağılma",
+        "Name[ca]": "Trencament",
+        "Name[es]": "Desmoronar",
+        "Name[nl]": "Uit elkaar vallen",
+        "Name[sv]": "Fall sönder",
+        "Name[uk]": "Розпадання",
+        "Name[vi]": "Tan vỡ",
+        "Name[x-test]": "xxFall Apartxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

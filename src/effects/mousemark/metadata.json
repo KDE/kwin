@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Allows you to draw lines on the desktop",
+        "Description[az]": "Siçan kursoru ilə ekranda şəkil çəkməyə imkan verir",
+        "Description[ca]": "Permet dibuixar línies a l'escriptori",
+        "Description[es]": "Le permite dibujar líneas en el escritorio",
+        "Description[nl]": "Laat u lijnen tekenen op het bureaublad",
+        "Description[sv]": "Låter dig rita linjer på skrivbordet",
+        "Description[uk]": "Можливість малювання ліній на стільниці",
+        "Description[vi]": "Cho phép bạn vẽ các nét trên bàn làm việc",
+        "Description[x-test]": "xxAllows you to draw lines on the desktopxx",
         "EnabledByDefault": false,
         "Id": "mousemark",
         "License": "GPL",
         "Name": "Mouse Mark",
+        "Name[az]": "Siçanla rəsmçəkmə",
+        "Name[ca]": "Marca amb el ratolí",
+        "Name[es]": "Marcar con el ratón",
+        "Name[nl]": "Muismarkering",
+        "Name[sv]": "Markera med musen",
+        "Name[uk]": "Позначки мишкою",
+        "Name[vi]": "Vết chuột",
+        "Name[x-test]": "xxMouse Markxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

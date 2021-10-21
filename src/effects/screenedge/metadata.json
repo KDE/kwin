@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Highlights a screen edge when approaching",
+        "Description[az]": "Ekranın kənarlarına yaxınlaşdıqda onları vurğulayaraq seçir",
+        "Description[ca]": "Ressalta la vora de la pantalla en aproximar-se",
+        "Description[es]": "Resalta el borde de la pantalla al acercarse a él",
+        "Description[nl]": "Accentueert een schermrand bij nadering",
+        "Description[sv]": "Markerar en skärmkant när man närmar sig den",
+        "Description[uk]": "Підсвічує край екрана у разі наближення вказівника",
+        "Description[vi]": "Tô sáng cạnh màn hình khi tiến lại gần",
+        "Description[x-test]": "xxHighlights a screen edge when approachingxx",
         "EnabledByDefault": true,
         "Id": "screenedge",
         "License": "GPL",
         "Name": "Screen Edge",
+        "Name[az]": "Ekran kənarı",
+        "Name[ca]": "Vora de la pantalla",
+        "Name[es]": "Borde de la pantalla",
+        "Name[nl]": "Schermrand",
+        "Name[sv]": "Skärmkant",
+        "Name[uk]": "Край екрана",
+        "Name[vi]": "Cạnh màn hình",
+        "Name[x-test]": "xxScreen Edgexx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

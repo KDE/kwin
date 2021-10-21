@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Simulate a magic lamp when minimizing windows",
+        "Description[az]": "Pəncərələri sehirli lampa effekti ilə yığır",
+        "Description[ca]": "Simula una làmpada màgica en minimitzar les finestres",
+        "Description[es]": "Simular una lámpara mágica al minimizar las ventanas",
+        "Description[nl]": "Simuleert een magische lamp tijdens het minimaliseren van vensters",
+        "Description[sv]": "Simulera en magisk lanterna vid minimering av fönster",
+        "Description[uk]": "Імітація ефекту чарівної лампи під час мінімізації вікон",
+        "Description[vi]": "Mô phỏng một cây đèn thần khi thu nhỏ các cửa sổ",
+        "Description[x-test]": "xxSimulate a magic lamp when minimizing windowsxx",
         "EnabledByDefault": false,
         "Id": "magiclamp",
         "License": "GPL",
         "Name": "Magic Lamp",
+        "Name[az]": "Sehirli Lampa",
+        "Name[ca]": "Làmpada màgica",
+        "Name[es]": "Lámpara mágica",
+        "Name[nl]": "Magische lamp",
+        "Name[sv]": "Magisk lanterna",
+        "Name[uk]": "Чарівна лампа",
+        "Name[vi]": "Đèn thần",
+        "Name[x-test]": "xxMagic Lampxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

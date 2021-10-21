@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Magnify the section of the screen that is near the mouse cursor",
+        "Description[az]": "Kursorun altındakı ekran hissəsini böyüdücü şüşədə göstərir",
+        "Description[ca]": "Amplia la secció de la pantalla que està prop del cursor del ratolí",
+        "Description[es]": "Ampliar la sección de la pantalla que está cerca del cursor del ratón",
+        "Description[nl]": "Vergroot het deel van het scherm dat zich onder de muis bevindt",
+        "Description[sv]": "Förstorar den del av skärmen som är nära muspekaren",
+        "Description[uk]": "Збільшення частини екрана поруч з вказівником миші",
+        "Description[vi]": "Phóng đại khu vực màn hình gần với con trỏ chuột",
+        "Description[x-test]": "xxMagnify the section of the screen that is near the mouse cursorxx",
         "EnabledByDefault": false,
         "Id": "magnifier",
         "License": "GPL",
         "Name": "Magnifier",
+        "Name[az]": "Böyüdücü",
+        "Name[ca]": "Lupa",
+        "Name[es]": "Lupa",
+        "Name[nl]": "Vergrootglas",
+        "Name[sv]": "Förstoringsglas",
+        "Name[uk]": "Лупа",
+        "Name[vi]": "Trình phóng đại",
+        "Name[x-test]": "xxMagnifierxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

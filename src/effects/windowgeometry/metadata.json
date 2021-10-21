@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Display window geometries on move/resize",
+        "Description[az]": "Pəncərənin yeri və ya ölçüsü dəyişdirildiyində ekranda onun mövqeyinin və ölçüsünün həndəsi göstəriciləri.",
+        "Description[ca]": "Mostra la geometria de les finestres en moure/redimensionar",
+        "Description[es]": "Mostrar la geometría de las ventanas al moverlas o cambiar su tamaño",
+        "Description[nl]": "Vensterafmetingen tonen bij verplaatsen/herschalen",
+        "Description[sv]": "Visa fönstergeometri vid förflyttning och storleksändring",
+        "Description[uk]": "Показ розмірів вікон при пересуванні або зміні розмірів",
+        "Description[vi]": "Hiển thị dạng hình học của cửa sổ khi di chuyển / đổi cỡ",
+        "Description[x-test]": "xxDisplay window geometries on move/resizexx",
         "EnabledByDefault": false,
         "Id": "windowgeometry",
         "License": "GPL",
         "Name": "Window Geometry",
+        "Name[az]": "Pəncərənin mövqeyi",
+        "Name[ca]": "Geometria de la finestra",
+        "Name[es]": "Geometría de la ventana",
+        "Name[nl]": "Geometrie van venster",
+        "Name[sv]": "Fönstergeometri",
+        "Name[uk]": "Розміри вікна",
+        "Name[vi]": "Hình dạng của cửa sổ",
+        "Name[x-test]": "xxWindow Geometryxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

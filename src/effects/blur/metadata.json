@@ -2,9 +2,25 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Blurs the background behind semi-transparent windows",
+        "Description[az]": "Yarımşəffaf pəncərələrin altındakı fonu yayğınlaşdırmaq",
+        "Description[ca]": "Difumina el fons de darrere de les finestres semitransparents",
+        "Description[es]": "Difumina el fondo detrás de las ventanas semitransparentes",
+        "Description[nl]": "Vervaagt de achtergrond van halftransparante vensters",
+        "Description[sv]": "Gör bakgrunden bakom halvgenomskinliga fönster suddig",
+        "Description[uk]": "Розмивання тла напівпрозорих вікон",
+        "Description[vi]": "Làm mờ phần nền phía sau các cửa sổ bán trong suốt",
+        "Description[x-test]": "xxBlurs the background behind semi-transparent windowsxx",
         "Id": "blur",
         "License": "GPL",
         "Name": "Blur",
+        "Name[az]": "Bulanıq",
+        "Name[ca]": "Difuminat",
+        "Name[es]": "Desenfocar",
+        "Name[nl]": "Vervagen",
+        "Name[sv]": "Oskärpa",
+        "Name[uk]": "Розмиття",
+        "Name[vi]": "Mờ",
+        "Name[x-test]": "xxBlurxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

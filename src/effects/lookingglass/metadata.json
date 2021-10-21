@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "A screen magnifier that looks like a fisheye lens",
+        "Description[az]": "Ekrandakı sahəni linza effekti ilə göstərir",
+        "Description[ca]": "Una lupa de pantalla que sembla una lent amb ull de peix",
+        "Description[es]": "Una lupa de pantalla que simula una lente de ojo de pez",
+        "Description[nl]": "Een schermvergrootglas dat er uitziet als een visooglens",
+        "Description[sv]": "Ett skärmförstoringsglas som ser ut som en fiskögonlins",
+        "Description[uk]": "Екранна лупа, яка робить вигляд стільниці схожим на зображення, отримане з ефектом «риб’ячого ока»",
+        "Description[vi]": "Một trình phóng đại màn hình trông như một thấu kính mắt cá",
+        "Description[x-test]": "xxA screen magnifier that looks like a fisheye lensxx",
         "EnabledByDefault": false,
         "Id": "lookingglass",
         "License": "GPL",
         "Name": "Looking Glass",
+        "Name[az]": "Linza",
+        "Name[ca]": "Aspecte de vidre",
+        "Name[es]": "Espejo",
+        "Name[nl]": "Vergrootglas",
+        "Name[sv]": "Förstoringsglas",
+        "Name[uk]": "Збільшувальне скло",
+        "Name[vi]": "Kính lúp",
+        "Name[x-test]": "xxLooking Glassxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

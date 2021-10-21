@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Supports picking a color",
+        "Description[az]": "Rəng seçimi dəstəklənir",
+        "Description[ca]": "Permet seleccionar un color",
+        "Description[es]": "Permite seleccionar un color",
+        "Description[nl]": "Ondersteunt een kleur kiezen",
+        "Description[sv]": "Stöder att hämta en färg",
+        "Description[uk]": "Підтримка взяття кольору з екрана",
+        "Description[vi]": "Hỗ trợ nhặt màu",
+        "Description[x-test]": "xxSupports picking a colorxx",
         "EnabledByDefault": true,
         "Id": "colorpicker",
         "License": "GPL",
         "Name": "Color Picker",
+        "Name[az]": "Rəng seçimi",
+        "Name[ca]": "Selector de color",
+        "Name[es]": "Selector de color",
+        "Name[nl]": "Kleurenkiezer",
+        "Name[sv]": "Färghämtare",
+        "Name[uk]": "Піпетка",
+        "Name[vi]": "Trình nhặt màu",
+        "Name[x-test]": "xxColor Pickerxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

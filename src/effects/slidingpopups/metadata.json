@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Sliding animation for Plasma popups",
+        "Description[az]": "Sürüşən pəncərələrin animasiyalı peyda olması",
+        "Description[ca]": "Animació de desplaçament per als missatges emergents del Plasma",
+        "Description[es]": "Animación de deslizamiento para las ventanas emergentes de Plasma",
+        "Description[nl]": "Schuivende animaties voor Plasma-popups",
+        "Description[sv]": "Glidande animering av Plasmarutor",
+        "Description[uk]": "Анімація з ковзанням для контекстних вікон Плазми",
+        "Description[vi]": "Hiệu ứng động dạng trượt cho các ô bật lên Plasma",
+        "Description[x-test]": "xxSliding animation for Plasma popupsxx",
         "EnabledByDefault": true,
         "Id": "slidingpopups",
         "License": "GPL",
         "Name": "Sliding popups",
+        "Name[az]": "Ani pəncərə animasiyası",
+        "Name[ca]": "Missatges emergents desplaçant-se",
+        "Name[es]": "Deslizar ventanas emergentes",
+        "Name[nl]": "Schuivende popups",
+        "Name[sv]": "Glidande rutor",
+        "Name[uk]": "Ковзні контекстні вікна",
+        "Name[vi]": "Ô bật lên dạng trượt",
+        "Name[x-test]": "xxSliding popupsxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

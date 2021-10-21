@@ -2,9 +2,25 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Improve contrast and readability behind semi-transparent windows",
+        "Description[az]": "Yarımşəffaf pəncərənin altındakı fonun kontrastını yaxşılaşdırır",
+        "Description[ca]": "Millora el contrast i la legibilitat darrere de les finestres semitransparents",
+        "Description[es]": "Mejora el contraste y la legibilidad detrás de las ventanas semitransparentes",
+        "Description[nl]": "Contrast en leesbaarheid verbeteren achter half-transparante vensters",
+        "Description[sv]": "Förbättra kontrast och läsbarhet bakom halvgenomskinliga fönster",
+        "Description[uk]": "Покращення контрастності та придатності до читання тексту під напівпрозорими вікнами",
+        "Description[vi]": "Cải thiện độ tương phản và tính dễ đọc phía sau các cửa sổ bán trong suốt",
+        "Description[x-test]": "xxImprove contrast and readability behind semi-transparent windowsxx",
         "Id": "contrast",
         "License": "GPL",
         "Name": "Background contrast",
+        "Name[az]": "Fon kontrastı",
+        "Name[ca]": "Contrast del fons",
+        "Name[es]": "Contraste del fondo",
+        "Name[nl]": "Contrast in achtergrond",
+        "Name[sv]": "Bakgrundskontrast",
+        "Name[uk]": "Контрастність тла",
+        "Name[vi]": "Tương phản nền",
+        "Name[x-test]": "xxBackground contrastxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

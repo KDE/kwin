@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Window Management",
         "Description": "Zoom out until all opened windows can be displayed side-by-side",
+        "Description[az]": "Bütün açıq pəncərələrin miniatürünü yan-yana göstərir",
+        "Description[ca]": "Redueix fins que totes les finestres obertes es poden mostrar una al costat de l'altra",
+        "Description[es]": "Reducir hasta que todas las ventanas abiertas se puedan mostrar una al lado de la otra",
+        "Description[nl]": "Zoomt uit totdat alle geopende vensters zij-aan-zij kunnen worden getoond",
+        "Description[sv]": "Zooma ut till alla öppnade fönster kan visas sida vid sida",
+        "Description[uk]": "Зменшення масштабу вікон так, щоб всі відкриті вікна можна було розташувати поряд",
+        "Description[vi]": "Thu nhỏ cho đến khi tất cả các cửa sổ đang mở hiển thị được cạnh nhau",
+        "Description[x-test]": "xxZoom out until all opened windows can be displayed side-by-sidexx",
         "EnabledByDefault": true,
         "Id": "presentwindows",
         "License": "GPL",
         "Name": "Present Windows",
+        "Name[az]": "Hazırkı pəncərələr",
+        "Name[ca]": "Presenta les finestres",
+        "Name[es]": "Presentar ventanas",
+        "Name[nl]": "Vensters presenteren",
+        "Name[sv]": "Befintliga fönster",
+        "Name[uk]": "Показ вікон",
+        "Name[vi]": "Các cửa sổ hiện thời",
+        "Name[x-test]": "xxPresent Windowsxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Window Open/Close Animation",
         "Description": "Glide windows as they appear or disappear",
+        "Description[az]": "Pəncərələrin süzülərək açılması və ya bağlanması",
+        "Description[ca]": "Les finestres llisquen en aparèixer o desaparèixer",
+        "Description[es]": "Deslizar las ventanas a medida que aparecen o desaparecen",
+        "Description[nl]": "Vensters laten glijden als ze verschijnen of verdwijnen",
+        "Description[sv]": "Glid fönster när de visas eller försvinner",
+        "Description[uk]": "Ковзання вікон при появі або зникненні",
+        "Description[vi]": "Lướt các cửa sổ khi chúng xuất hiện hoặc biến mất",
+        "Description[x-test]": "xxGlide windows as they appear or disappearxx",
         "EnabledByDefault": false,
         "Id": "glide",
         "License": "GPL",
         "Name": "Glide",
+        "Name[az]": "Sürüşmə",
+        "Name[ca]": "Lliscament",
+        "Name[es]": "Planear",
+        "Name[nl]": "Schuiven",
+        "Name[sv]": "Glid",
+        "Name[uk]": "Плин",
+        "Name[vi]": "Lướt",
+        "Name[x-test]": "xxGlidexx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

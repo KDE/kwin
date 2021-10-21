@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Magnify the entire desktop",
+        "Description[az]": "İş Masasının miqyasının dəyişdirilməsi",
+        "Description[ca]": "Amplia tot l'escriptori",
+        "Description[es]": "Ampliar todo el escritorio",
+        "Description[nl]": "Vergroot het gehele bureaublad",
+        "Description[sv]": "Förstora hela skrivbordet",
+        "Description[uk]": "Збільшення цілої стільниці",
+        "Description[vi]": "Phóng đại toàn bộ bàn làm việc",
+        "Description[x-test]": "xxMagnify the entire desktopxx",
         "EnabledByDefault": true,
         "Id": "zoom",
         "License": "GPL",
         "Name": "Zoom",
+        "Name[az]": "Miqyas",
+        "Name[ca]": "Zoom",
+        "Name[es]": "Ampliación",
+        "Name[nl]": "Zoomen",
+        "Name[sv]": "Zooma",
+        "Name[uk]": "Масштабування",
+        "Name[vi]": "Thu phóng",
+        "Name[x-test]": "xxZoomxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

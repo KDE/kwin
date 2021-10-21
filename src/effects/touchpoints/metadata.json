@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Visualize touch points",
+        "Description[az]": "Ekranda toxunan nöqtələri canlandırır",
+        "Description[ca]": "Visualitza els punts de contacte",
+        "Description[es]": "Visualizar los puntos de contacto",
+        "Description[nl]": "Aanraakpunten visualiseren",
+        "Description[sv]": "Åskådliggör beröringspunkter",
+        "Description[uk]": "Візуалізувати точки дотику",
+        "Description[vi]": "Trực quan hoá các điểm chạm",
+        "Description[x-test]": "xxVisualize touch pointsxx",
         "EnabledByDefault": false,
         "Id": "touchpoints",
         "License": "GPL",
         "Name": "Touch Points",
+        "Name[az]": "Toxunma nöqtələri",
+        "Name[ca]": "Punts de contacte",
+        "Name[es]": "Puntos de contacto",
+        "Name[nl]": "Aanraakpunten",
+        "Name[sv]": "Beröringspunkter",
+        "Name[uk]": "Точки дотику",
+        "Name[vi]": "Điểm chạm",
+        "Name[x-test]": "xxTouch Pointsxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

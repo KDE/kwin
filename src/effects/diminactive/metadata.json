@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Focus",
         "Description": "Darken inactive windows",
+        "Description[az]": "Qeyri-aktiv pəncərələri tutqunlaşdırır",
+        "Description[ca]": "Enfosqueix les finestres inactives",
+        "Description[es]": "Oscurece las ventanas inactivas",
+        "Description[nl]": "Maakt inactieve vensters donkerder",
+        "Description[sv]": "Gör inaktiva fönster mörkare",
+        "Description[uk]": "Затемнення неактивних вікон",
+        "Description[vi]": "Làm tối các cửa sổ bất hoạt",
+        "Description[x-test]": "xxDarken inactive windowsxx",
         "EnabledByDefault": false,
         "Id": "diminactive",
         "License": "GPL",
         "Name": "Dim Inactive",
+        "Name[az]": "Qeyri-aktivi qaraldın",
+        "Name[ca]": "Enfosqueix les inactives",
+        "Name[es]": "Oscurecer inactivas",
+        "Name[nl]": "Inactief dimmen",
+        "Name[sv]": "Dämpa inaktiva",
+        "Name[uk]": "Затемнення неактивних",
+        "Name[vi]": "Làm tối bất hoạt",
+        "Name[x-test]": "xxDim Inactivexx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

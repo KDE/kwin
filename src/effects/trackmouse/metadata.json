@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Display a mouse cursor locating effect when activated",
+        "Description[az]": "Ekranda kursorun yerini göstərir",
+        "Description[ca]": "Mostra un efecte de posició del cursor del ratolí quan està activat",
+        "Description[es]": "Muestra un efecto de localización del cursor del ratón cuando se activa",
+        "Description[nl]": "Toont de positie van de muisaanwijzer wanneer geactiveerd",
+        "Description[sv]": "Visa en lokaliseringseffekt för muspekaren om aktiverad",
+        "Description[uk]": "Показ наближення вказівника миші",
+        "Description[vi]": "Khi được kích hoạt, hiển thị một hiệu ứng định vị con trỏ chuột",
+        "Description[x-test]": "xxDisplay a mouse cursor locating effect when activatedxx",
         "EnabledByDefault": false,
         "Id": "trackmouse",
         "License": "GPL",
         "Name": "Track Mouse",
+        "Name[az]": "Kursorun izi",
+        "Name[ca]": "Seguiment del ratolí",
+        "Name[es]": "Seguimiento del ratón",
+        "Name[nl]": "Muis volgen",
+        "Name[sv]": "Följ musen",
+        "Name[uk]": "Сліди мишки",
+        "Name[vi]": "Theo dõi chuột",
+        "Name[x-test]": "xxTrack Mousexx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

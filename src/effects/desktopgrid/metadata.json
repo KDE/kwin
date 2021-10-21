@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Window Management",
         "Description": "Zoom out so all desktops are displayed side-by-side in a grid",
+        "Description[az]": "Bütün İş Masaların bir ekranda yan yana göstərmək",
+        "Description[ca]": "Redueix tots els escriptoris per a visualitzar-los un al costat de l'altre en una quadrícula",
+        "Description[es]": "Reduce la ampliación para que todos los escritorios se muestren uno al lado del otro en una cuadrícula",
+        "Description[nl]": "Verkleint alle bureaubladen zodat ze zij-aan-zij in een raster getoond kunnen worden",
+        "Description[sv]": "Zooma ut så att alla skrivbord visas sida vid sida i ett rutnät",
+        "Description[uk]": "Зменшення стільниць так, щоб всі стільниці було показано поруч у форматі таблиці",
+        "Description[vi]": "Thu nhỏ để tất cả các bàn làm việc được hiển thị cạnh nhau trong một lưới",
+        "Description[x-test]": "xxZoom out so all desktops are displayed side-by-side in a gridxx",
         "EnabledByDefault": true,
         "Id": "desktopgrid",
         "License": "GPL",
         "Name": "Desktop Grid",
+        "Name[az]": "İş masası toru",
+        "Name[ca]": "Quadrícula de l'escriptori",
+        "Name[es]": "Rejilla del escritorio",
+        "Name[nl]": "Bureaubladraster",
+        "Name[sv]": "Skrivbordsrutnät",
+        "Name[uk]": "Таблиця стільниць",
+        "Name[vi]": "Lưới bàn làm việc",
+        "Name[x-test]": "xxDesktop Gridxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Focus",
         "Description": "Slide back windows when another window is raised",
+        "Description[az]": "Yeni pəncərə qaldırıldığında digər pəncərə arxaya sürüşür",
+        "Description[ca]": "Llisca enrere les finestres quan s'eleva una altra finestra",
+        "Description[es]": "Deslizar hacia atrás las ventanas cuando otra ventana pasa al primer plano",
+        "Description[nl]": "Schuif vensters terug wanneer een ander venster omhoog komt",
+        "Description[sv]": "Låt fönster skjutas tillbaka när ett annat fönster höjs",
+        "Description[uk]": "Ковзання вікон на задній план під час підняття інших вікон",
+        "Description[vi]": "Trượt lùi cửa sổ khi một cửa sổ khác được nâng lên",
+        "Description[x-test]": "xxSlide back windows when another window is raisedxx",
         "EnabledByDefault": false,
         "Id": "slideback",
         "License": "GPL",
         "Name": "Slide Back",
+        "Name[az]": "Arxasına sürüşdürmək",
+        "Name[ca]": "Llisca cap enrere",
+        "Name[es]": "Deslizar hacia atrás",
+        "Name[nl]": "Naar achter bewegen",
+        "Name[sv]": "Skjut tillbaka",
+        "Name[uk]": "Зниження",
+        "Name[vi]": "Trượt lùi",
+        "Name[x-test]": "xxSlide Backxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]

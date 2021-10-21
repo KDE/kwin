@@ -2,10 +2,26 @@
     "KPlugin": {
         "Category": "Window Management",
         "Description": "Allows you to overview virtual desktops and windows",
+        "Description[az]": "Pəncərələrə və iş masalarına ümumi baxışa imkan yaradır",
+        "Description[ca]": "Permet un vista general dels escriptoris virtuals i les finestres",
+        "Description[es]": "Le permite mostrar una vista general de los escritorios virtuales y de las ventanas",
+        "Description[nl]": "Biedt u een overzicht van virtuele bureaubladen en vensters",
+        "Description[sv]": "Ger dig en översikt av virtuella skrivbord och fönster",
+        "Description[uk]": "Надає вам змогу оглядати віртуальні стільниці і вікна",
+        "Description[vi]": "Cho phép bạn xem tổng quan các bàn làm việc ảo và các cửa sổ",
+        "Description[x-test]": "xxAllows you to overview virtual desktops and windowsxx",
         "EnabledByDefault": false,
         "Id": "overview",
         "License": "GPL",
         "Name": "Overview",
+        "Name[az]": "Ümumi Baxış",
+        "Name[ca]": "Vista general",
+        "Name[es]": "Vista general",
+        "Name[nl]": "Overzicht",
+        "Name[sv]": "Översikt",
+        "Name[uk]": "Огляд",
+        "Name[vi]": "Tổng quan",
+        "Name[x-test]": "xxOverviewxx",
         "ServiceTypes": [
             "KWin/Effect"
         ]
