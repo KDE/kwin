@@ -882,11 +882,6 @@ void PlasmaWindowInterface::setSkipSwitcher(bool skip)
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPSWITCHER, skip);
 }
 
-void PlasmaWindowInterface::setThemedIconName(const QString &iconName)
-{
-    d->setThemedIconName(iconName);
-}
-
 void PlasmaWindowInterface::setIcon(const QIcon &icon)
 {
     d->setIcon(icon);

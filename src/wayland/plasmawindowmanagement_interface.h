@@ -135,13 +135,6 @@ public:
     void setFullscreenable(bool set);
     void setSkipTaskbar(bool skip);
     void setSkipSwitcher(bool skip);
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 28)
-    /**
-     * @deprecated since 5.28 use setIcon
-     */
-    KWAYLANDSERVER_DEPRECATED_VERSION(5, 28, "Use PlasmaWindowManagementInterface::setIcon(const QIcon&)")
-    void setThemedIconName(const QString &iconName);
-#endif
     void setShadeable(bool set);
     void setShaded(bool set);
     void setMovable(bool set);
