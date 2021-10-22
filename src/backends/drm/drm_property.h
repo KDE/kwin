@@ -56,13 +56,9 @@ public:
 
     void setPending(uint64_t value);
     uint64_t pending() const;
-    bool setPendingBlob(void *blob, size_t length);
-    drmModePropertyBlobRes *pendingBlob() const;
 
     void setCurrent(uint64_t value);
     uint64_t current() const;
-    void setCurrentBlob(drmModePropertyBlobRes *blob);
-    drmModePropertyBlobRes *currentBlob() const;
 
     void commit();
     void commitPending();
@@ -85,14 +81,11 @@ private:
     // the value that will be m_next after the property has been committed
     // has not necessarily been tested to work
     uint64_t m_pending = 0;
-    drmModePropertyBlobRes *m_pendingBlob = nullptr;
     // the value that will be m_current after the next atomic commit
     // and has been tested to work
     uint64_t m_next = 0;
-    drmModePropertyBlobRes *m_nextBlob = nullptr;
     // the value currently set for or by the kernel
     uint64_t m_current = 0;
-    drmModePropertyBlobRes *m_currentBlob = nullptr;
 
     QMap<uint32_t, uint64_t> m_enumMap;
     QVector<QByteArray> m_enumNames;

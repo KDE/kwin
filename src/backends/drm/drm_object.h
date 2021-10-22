@@ -66,15 +66,6 @@ public:
     }
 
     template <typename T>
-    bool setPendingBlob(T prop, void *data, size_t length)
-    {
-        if (auto &property = m_props.at(static_cast<uint32_t>(prop))) {
-            return property->setPendingBlob(data, length);
-        }
-        return false;
-    }
-
-    template <typename T>
     bool propHasEnum(T prop, uint64_t value) const
     {
         const auto &property = m_props.at(static_cast<uint32_t>(prop));

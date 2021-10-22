@@ -34,51 +34,12 @@ DrmProperty::DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val,
 
 DrmProperty::~DrmProperty() = default;
 
-bool DrmProperty::setPendingBlob(void *blob, size_t length)
-{
-    if (!blob && !m_pendingBlob) {
-        return true;
-    }
-    if (blob && m_pendingBlob && length == m_pendingBlob->length && memcmp(blob, m_pendingBlob->data, length) == 0) {
-        return true;
-    }
-    uint32_t id = 0;
-    if (blob != nullptr) {
-        if (drmModeCreatePropertyBlob(m_obj->gpu()->fd(), blob, length, &id) != 0) {
-            qCWarning(KWIN_DRM) << "Creating property blob failed!" << strerror(errno);
-            return false;
-        }
-    }
-    if (m_pendingBlob && m_pendingBlob != m_currentBlob && m_pendingBlob != m_nextBlob) {
-        drmModeDestroyPropertyBlob(m_obj->gpu()->fd(), m_pendingBlob->id);
-        drmModeFreePropertyBlob(m_pendingBlob);
-    }
-    m_pending = id;
-    m_pendingBlob = drmModeGetPropertyBlob(m_obj->gpu()->fd(), m_pending);
-    return true;
-}
-
-void DrmProperty::setCurrentBlob(drmModePropertyBlobRes *blob)
-{
-    if (m_currentBlob && m_currentBlob != m_pendingBlob && m_currentBlob != m_nextBlob && m_currentBlob != blob) {
-        drmModeDestroyPropertyBlob(m_obj->gpu()->fd(), m_currentBlob->id);
-        drmModeFreePropertyBlob(m_currentBlob);
-    }
-    m_currentBlob = blob;
-    m_current = blob ? blob->id : 0;
-}
-
-
 void DrmProperty::commit()
 {
     if (m_immutable || m_current == m_pending) {
         return;
     }
-    if (m_pendingBlob || m_currentBlob) {
-        setCurrentBlob(m_pendingBlob);
-    } else {
-        setCurrent(m_pending);
-    }
+    setCurrent(m_pending);
 }
 
 void DrmProperty::commitPending()
@@ -86,16 +47,7 @@ void DrmProperty::commitPending()
     if (m_immutable || m_next == m_pending) {
         return;
     }
-    if (m_pendingBlob || m_nextBlob) {
-        if (m_nextBlob && m_nextBlob != m_currentBlob) {
-            drmModeDestroyPropertyBlob(m_obj->gpu()->fd(), m_nextBlob->id);
-            drmModeFreePropertyBlob(m_nextBlob);
-        }
-        m_next = m_pending;
-        m_nextBlob = m_pendingBlob;
-    } else {
-        m_next = m_pending;
-    }
+    m_next = m_pending;
 }
 
 void DrmProperty::rollbackPending()
@@ -103,16 +55,7 @@ void DrmProperty::rollbackPending()
     if (m_immutable || m_next == m_pending) {
         return;
     }
-    if (m_pendingBlob || m_nextBlob) {
-        if (m_pendingBlob && m_pendingBlob != m_currentBlob) {
-            drmModeDestroyPropertyBlob(m_obj->gpu()->fd(), m_pendingBlob->id);
-            drmModeFreePropertyBlob(m_pendingBlob);
-        }
-        m_pending = m_next;
-        m_pendingBlob = m_nextBlob;
-    } else {
-        m_pending = m_next;
-    }
+    m_pending = m_next;
 }
 
 bool DrmProperty::setPropertyLegacy(uint64_t value)
@@ -153,16 +96,6 @@ uint64_t DrmProperty::pending() const
 bool DrmProperty::needsCommit() const
 {
     return m_pending != m_current;
-}
-
-drmModePropertyBlobRes *DrmProperty::currentBlob() const
-{
-    return m_currentBlob;
-}
-
-drmModePropertyBlobRes *DrmProperty::pendingBlob() const
-{
-    return m_pendingBlob;
 }
 
 void DrmProperty::setCurrent(uint64_t value)
