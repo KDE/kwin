@@ -37,9 +37,16 @@ public:
     DrmGammaRamp(DrmGpu *gpu, const GammaRamp &lut);
     ~DrmGammaRamp();
 
-    const GammaRamp lut;
-    drm_color_lut *atomicLut = nullptr;
-    uint32_t size;
+    uint32_t size() const;
+    uint16_t *red() const;
+    uint16_t *green() const;
+    uint16_t *blue() const;
+    uint32_t blobId() const;
+
+private:
+    DrmGpu *m_gpu;
+    const GammaRamp m_lut;
+    uint32_t m_blobId = 0;
 };
 
 class DrmPipeline

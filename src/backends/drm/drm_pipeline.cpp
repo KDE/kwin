@@ -263,13 +263,7 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
         pending.crtc->primaryPlane()->set(QPoint(0, 0), m_primaryBuffer ? m_primaryBuffer->size() : modeSize, QPoint(0, 0), modeSize);
         pending.crtc->primaryPlane()->setBuffer(activePending() ? m_primaryBuffer.get() : nullptr);
         pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
-        if (pending.gamma != m_current.gamma) {
-            if (pending.gamma) {
-                pending.crtc->setPendingBlob(DrmCrtc::PropertyIndex::Gamma_LUT, pending.gamma->atomicLut, pending.gamma->size * sizeof(drm_color_lut));
-            } else {
-                pending.crtc->setPendingBlob(DrmCrtc::PropertyIndex::Gamma_LUT, nullptr, 256 * sizeof(drm_color_lut));
-            }
-        }
+        pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, pending.gamma ? pending.gamma->blobId() : 0);
     }
     return m_connector->atomicPopulate(req) && (!pending.crtc || (pending.crtc->atomicPopulate(req) && pending.crtc->primaryPlane()->atomicPopulate(req)));
 }
@@ -397,10 +391,8 @@ bool DrmPipeline::applyPendingChangesLegacy()
             return false;
         }
         m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setCurrent(DRM_MODE_DPMS_ON);
-        if (pending.gamma && drmModeCrtcSetGamma(gpu()->fd(), pending.crtc->id(), pending.gamma->size,
-                                                 const_cast<uint16_t*>(pending.gamma->lut.red()),
-                                                 const_cast<uint16_t*>(pending.gamma->lut.blue()),
-                                                 const_cast<uint16_t*>(pending.gamma->lut.green())) != 0) {
+        if (pending.gamma && drmModeCrtcSetGamma(gpu()->fd(), pending.crtc->id(), pending.gamma->size(),
+                                                 pending.gamma->red(), pending.gamma->green(), pending.gamma->blue()) != 0) {
             qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
             return false;
         }
@@ -545,22 +537,52 @@ DrmCrtc *DrmPipeline::currentCrtc() const
 }
 
 DrmGammaRamp::DrmGammaRamp(DrmGpu *gpu, const GammaRamp &lut)
-    : lut(lut)
-    , size(lut.size())
+    : m_gpu(gpu)
+    , m_lut(lut)
 {
     if (gpu->atomicModeSetting()) {
-        atomicLut = new drm_color_lut[size];
-        for (uint32_t i = 0; i < size; i++) {
+        QVector<drm_color_lut> atomicLut(lut.size());
+        for (uint32_t i = 0; i < lut.size(); i++) {
             atomicLut[i].red = lut.red()[i];
             atomicLut[i].green = lut.green()[i];
             atomicLut[i].blue = lut.blue()[i];
+        }
+        if (drmModeCreatePropertyBlob(gpu->fd(), atomicLut.data(), sizeof(drm_color_lut) * lut.size(), &m_blobId) != 0) {
+            qCWarning(KWIN_DRM) << "Failed to create gamma blob!" << strerror(errno);
         }
     }
 }
 
 DrmGammaRamp::~DrmGammaRamp()
 {
-    delete[] atomicLut;
+    if (m_blobId != 0) {
+        drmModeDestroyPropertyBlob(m_gpu->fd(), m_blobId);
+    }
+}
+
+uint32_t DrmGammaRamp::blobId() const
+{
+    return m_blobId;
+}
+
+uint32_t DrmGammaRamp::size() const
+{
+    return m_lut.size();
+}
+
+uint16_t *DrmGammaRamp::red() const
+{
+    return const_cast<uint16_t*>(m_lut.red());
+}
+
+uint16_t *DrmGammaRamp::green() const
+{
+    return const_cast<uint16_t*>(m_lut.green());
+}
+
+uint16_t *DrmGammaRamp::blue() const
+{
+    return const_cast<uint16_t*>(m_lut.blue());
 }
 
 void DrmPipeline::printFlags(uint32_t flags)
