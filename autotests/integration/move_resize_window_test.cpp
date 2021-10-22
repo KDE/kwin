@@ -662,7 +662,8 @@ void MoveResizeWindowTest::testNetMove()
     const QRect origGeo = client->frameGeometry();
 
     // let's move the cursor outside the window
-    Cursors::self()->mouse()->setPos(screens()->geometry(0).center());
+    Cursors::self()->mouse()->setPos(QPoint(client->x() + client->width() + 1,
+                                            client->y() + client->height() + 1));
     QVERIFY(!origGeo.contains(Cursors::self()->mouse()->pos()));
 
     QSignalSpy moveStartSpy(client, &X11Client::clientStartUserMovedResized);
