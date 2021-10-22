@@ -62,7 +62,6 @@ public:
     void setPid(quint32 pid);
     void setThemedIconName(const QString &iconName);
     void setIcon(const QIcon &icon);
-    void setVirtualDesktop(quint32 desktop);
     void unmap();
     void setState(org_kde_plasma_window_management_state flag, bool set);
     void setParentWindow(PlasmaWindowInterface *parent);
@@ -88,7 +87,6 @@ public:
     QString m_appServiceName;
     QString m_appObjectPath;
     QIcon m_icon;
-    quint32 m_virtualDesktop = 0;
     quint32 m_state = 0;
     QString uuid;
 
@@ -339,8 +337,6 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_destroy(Resource *resou
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_bind_resource(Resource *resource)
 {
-    send_virtual_desktop_changed(resource->handle, m_virtualDesktop);
-
     for (const auto &desk : plasmaVirtualDesktops) {
         send_virtual_desktop_entered(resource->handle, desk);
     }
@@ -497,19 +493,6 @@ void PlasmaWindowInterfacePrivate::setTitle(const QString &title)
     }
 }
 
-void PlasmaWindowInterfacePrivate::setVirtualDesktop(quint32 desktop)
-{
-    if (m_virtualDesktop == desktop) {
-        return;
-    }
-    m_virtualDesktop = desktop;
-    const auto clientResources = resourceMap();
-
-    for (auto resource : clientResources) {
-        send_virtual_desktop_changed(resource->handle, m_virtualDesktop);
-    }
-}
-
 void PlasmaWindowInterfacePrivate::unmap()
 {
     if (unmapped) {
@@ -638,7 +621,9 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_resize(Resource
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_virtual_desktop(Resource *resource, uint32_t number)
 {
     Q_UNUSED(resource)
-    Q_EMIT q->virtualDesktopRequested(number);
+    Q_UNUSED(number)
+
+    // This method is intentionally left blank.
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_state(Resource *resource, uint32_t flags, uint32_t state)
@@ -763,11 +748,6 @@ void PlasmaWindowInterface::setPid(quint32 pid)
 void PlasmaWindowInterface::setTitle(const QString &title)
 {
     d->setTitle(title);
-}
-
-void PlasmaWindowInterface::setVirtualDesktop(quint32 desktop)
-{
-    d->setVirtualDesktop(desktop);
 }
 
 void PlasmaWindowInterface::unmap()

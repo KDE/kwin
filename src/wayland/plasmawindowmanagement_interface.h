@@ -111,16 +111,6 @@ public:
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
     void setPid(quint32 pid);
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 52)
-    /**
-     * @deprecated Since 5.52, use addPlasmaVirtualDesktop and removePlasmaVirtualDesktop
-     */
-    KWAYLANDSERVER_DEPRECATED_VERSION(5,
-                                      52,
-                                      "Use PlasmaWindowManagementInterface::addPlasmaVirtualDesktop(const QString&) and "
-                                      "PlasmaWindowManagementInterface::removePlasmaVirtualDesktop(const QString&)")
-    void setVirtualDesktop(quint32 desktop);
-#endif
     void setActive(bool set);
     void setMinimized(bool set);
     void setMaximized(bool set);
@@ -239,16 +229,6 @@ Q_SIGNALS:
     void closeRequested();
     void moveRequested();
     void resizeRequested();
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 52)
-    /**
-     * @deprecated Since 5.52, use enterPlasmaVirtualDesktopRequested and leavePlasmaVirtualDesktopRequested instead
-     */
-    KWAYLANDSERVER_DEPRECATED_VERSION(5,
-                                      52,
-                                      "Use PlasmaWindowManagementInterface::enterPlasmaVirtualDesktopRequested(const QString&) and "
-                                      "PlasmaWindowManagementInterface::leavePlasmaVirtualDesktopRequested(const QString&)")
-    void virtualDesktopRequested(quint32 desktop);
-#endif
     void activeRequested(bool set);
     void minimizedRequested(bool set);
     void maximizedRequested(bool set);
