@@ -1591,29 +1591,29 @@ QModelIndex InputDeviceModel::parent(const QModelIndex &child) const
     return QModelIndex();
 }
 
+void InputDeviceModel::slotPropertyChanged()
+{
+    const auto device = static_cast<LibInput::Device *>(sender());
+
+    for (int i = 0; i < device->metaObject()->propertyCount(); ++i) {
+        const QMetaProperty metaProperty = device->metaObject()->property(i);
+        if (metaProperty.notifySignalIndex() == senderSignalIndex()) {
+            const QModelIndex parent = index(m_devices.indexOf(device), 0, QModelIndex());
+            const QModelIndex child = index(i, 1, parent);
+            Q_EMIT dataChanged(child, child, QVector<int>{Qt::DisplayRole});
+        }
+    }
+}
+
 void InputDeviceModel::setupDeviceConnections(LibInput::Device *device)
 {
-    connect(device, &LibInput::Device::enabledChanged, this,
-        [this, device] {
-            const QModelIndex parent = index(m_devices.indexOf(device), 0, QModelIndex());
-            const QModelIndex child = index(device->metaObject()->indexOfProperty("enabled"), 1, parent);
-            Q_EMIT dataChanged(child, child, QVector<int>{Qt::DisplayRole});
+    QMetaMethod handler = metaObject()->method(metaObject()->indexOfMethod("slotPropertyChanged()"));
+    for (int i = 0; i < device->metaObject()->propertyCount(); ++i) {
+        const QMetaProperty metaProperty = device->metaObject()->property(i);
+        if (metaProperty.hasNotifySignal()) {
+            connect(device, metaProperty.notifySignal(), this, handler);
         }
-    );
-    connect(device, &LibInput::Device::leftHandedChanged, this,
-        [this, device] {
-            const QModelIndex parent = index(m_devices.indexOf(device), 0, QModelIndex());
-            const QModelIndex child = index(device->metaObject()->indexOfProperty("leftHanded"), 1, parent);
-            Q_EMIT dataChanged(child, child, QVector<int>{Qt::DisplayRole});
-        }
-    );
-    connect(device, &LibInput::Device::pointerAccelerationChanged, this,
-        [this, device] {
-            const QModelIndex parent = index(m_devices.indexOf(device), 0, QModelIndex());
-            const QModelIndex child = index(device->metaObject()->indexOfProperty("pointerAcceleration"), 1, parent);
-            Q_EMIT dataChanged(child, child, QVector<int>{Qt::DisplayRole});
-        }
-    );
+    }
 }
 
 QModelIndex DataSourceModel::index(int row, int column, const QModelIndex &parent) const
