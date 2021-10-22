@@ -1495,7 +1495,6 @@ void AbstractClient::setupWindowManagementInterface()
     using namespace KWaylandServer;
     auto w = waylandServer()->windowManagement()->createWindow(this, internalId());
     w->setTitle(caption());
-    w->setVirtualDesktop(isOnAllDesktops() ? 0 : desktop() - 1);
     w->setActive(isActive());
     w->setFullscreen(isFullScreen());
     w->setKeepAbove(keepAbove());
@@ -1584,11 +1583,6 @@ void AbstractClient::setupWindowManagementInterface()
             performMouseCommand(Options::MouseResize, Cursors::self()->mouse()->pos());
         }
     );
-    connect(w, &PlasmaWindowInterface::virtualDesktopRequested, this,
-        [this] (quint32 desktop) {
-            workspace()->sendClientToDesktop(this, desktop + 1, true);
-        }
-    );
     connect(w, &PlasmaWindowInterface::fullscreenRequested, this,
         [this] (bool set) {
             setFullScreen(set, false);
@@ -1639,18 +1633,6 @@ void AbstractClient::setupWindowManagementInterface()
     for (const auto vd : qAsConst(m_desktops)) {
         w->addPlasmaVirtualDesktop(vd->id());
     }
-
-    //this is only for the legacy
-    connect(this, &AbstractClient::desktopChanged, w,
-        [w, this] {
-            if (isOnAllDesktops()) {
-                w->setOnAllDesktops(true);
-                return;
-            }
-            w->setVirtualDesktop(desktop() - 1);
-            w->setOnAllDesktops(false);
-        }
-    );
 
     //Plasma Virtual desktop management
     //show/hide when the window enters/exits from desktop
