@@ -371,11 +371,11 @@ void TestPlacement::testFullscreen()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
     QVERIFY(geometryChangedSpy.wait());
-    QCOMPARE(client->frameGeometry(), screens()->geometry(0));
+    QCOMPARE(client->frameGeometry(), outputs[0]->geometry());
 
     // this doesn't require a round trip, so should be immediate
     client->sendToOutput(outputs[1]);
-    QCOMPARE(client->frameGeometry(), screens()->geometry(1));
+    QCOMPARE(client->frameGeometry(), outputs[1]->geometry());
     QCOMPARE(geometryChangedSpy.count(), 2);
 }
 
