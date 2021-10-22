@@ -65,14 +65,6 @@ QRect Screens::geometry(int screen) const
     return QRect();
 }
 
-QSize Screens::size(int screen) const
-{
-    if (AbstractOutput *output = findOutput(screen)) {
-        return output->geometry().size();
-    }
-    return QSize();
-}
-
 qreal Screens::scale(int screen) const
 {
     if (AbstractOutput *output = findOutput(screen)) {

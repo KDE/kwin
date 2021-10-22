@@ -41,13 +41,6 @@ public:
      * @see geometryChanged()
      */
     QRect geometry() const;
-    /**
-     * @returns size of the @p screen.
-     *
-     * To get the size of all screens combined use size().
-     * @see size()
-     */
-    QSize size(int screen) const;
 
     /**
      * The highest scale() of all connected screens

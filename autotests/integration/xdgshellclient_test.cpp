@@ -425,7 +425,7 @@ void TestXdgShellClient::testFullscreen()
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states & Test::XdgToplevel::State::Fullscreen);
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), screens()->size(0));
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), client->output()->geometry().size());
 
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
@@ -435,7 +435,7 @@ void TestXdgShellClient::testFullscreen()
     QVERIFY(client->isFullScreen());
     QVERIFY(!client->isDecorated());
     QCOMPARE(client->layer(), ActiveLayer);
-    QCOMPARE(client->frameGeometry(), QRect(QPoint(0, 0), screens()->size(0)));
+    QCOMPARE(client->frameGeometry(), QRect(QPoint(0, 0), client->output()->geometry().size()));
 
     // Ask the compositor to show the window in normal mode.
     shellSurface->unset_fullscreen();
@@ -538,7 +538,7 @@ void TestXdgShellClient::testMaximizedToFullscreen()
     shellSurface->set_fullscreen(nullptr);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), screens()->size(0));
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), client->output()->geometry().size());
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states & Test::XdgToplevel::State::Maximized);
     QVERIFY(states & Test::XdgToplevel::State::Fullscreen);
@@ -579,7 +579,8 @@ void TestXdgShellClient::testFullscreenMultipleOutputs()
 {
     // this test verifies that kwin will place fullscreen windows in the outputs its instructed to
 
-    for (int i = 0; i < screens()->count(); ++i) {
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (int i = 0; i < outputs.count(); ++i) {
         Test::XdgToplevel::States states;
 
         QSharedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -611,7 +612,7 @@ void TestXdgShellClient::testFullscreenMultipleOutputs()
         shellSurface->set_fullscreen(*Test::waylandOutputs()[i]);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
-        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), screens()->size(i));
+        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), outputs[i]->geometry().size());
 
         shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
         Test::render(surface.data(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
@@ -643,12 +644,13 @@ void TestXdgShellClient::testWindowOpensLargerThanScreen()
     QVERIFY(decoSpy.wait());
     QCOMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
 
-    auto c = Test::renderAndWaitForShown(surface.data(), screens()->size(0), Qt::blue);
+    AbstractOutput *output = workspace()->activeOutput();
+    auto c = Test::renderAndWaitForShown(surface.data(), output->geometry().size(), Qt::blue);
     QVERIFY(c);
     QVERIFY(c->isActive());
     QVERIFY(c->isDecorated());
     QEXPECT_FAIL("", "BUG 366632", Continue);
-    QCOMPARE(c->frameGeometry(), QRect(QPoint(0, 0), screens()->size(0)));
+    QCOMPARE(c->frameGeometry(), QRect(QPoint(0, 0), output->geometry().size()));
 }
 
 void TestXdgShellClient::testHidden()
