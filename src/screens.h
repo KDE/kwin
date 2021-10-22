@@ -42,14 +42,6 @@ public:
      */
     QRect geometry() const;
     /**
-     * The output name of the screen (usually eg. LVDS-1, VGA-0 or DVI-I-1 etc.)
-     */
-    QString name(int screen) const;
-    /**
-     * @returns current refreshrate of the @p screen.
-     */
-    float refreshRate(int screen) const;
-    /**
      * @returns size of the @p screen.
      *
      * To get the size of all screens combined use size().
@@ -92,20 +84,6 @@ public:
      * @see size
      */
     QSize displaySize() const;
-
-    /**
-     * The physical size of @p screen in mm.
-     * Default implementation returns a size derived from 96 DPI.
-     */
-    QSizeF physicalSize(int screen) const;
-
-    /**
-     * @returns @c true if the @p screen is connected through an internal display (e.g. LVDS).
-     * Default implementation returns @c false.
-     */
-    bool isInternal(int screen) const;
-
-    Qt::ScreenOrientation orientation(int screen) const;
 
 Q_SIGNALS:
     void countChanged(int previousCount, int newCount);

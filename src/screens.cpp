@@ -57,22 +57,6 @@ void Screens::init()
     Q_EMIT changed();
 }
 
-QString Screens::name(int screen) const
-{
-    if (AbstractOutput *output = findOutput(screen)) {
-        return output->name();
-    }
-    return QString();
-}
-
-bool Screens::isInternal(int screen) const
-{
-    if (AbstractOutput *output = findOutput(screen)) {
-        return output->isInternal();
-    }
-    return false;
-}
-
 QRect Screens::geometry(int screen) const
 {
     if (AbstractOutput *output = findOutput(screen)) {
@@ -95,22 +79,6 @@ qreal Screens::scale(int screen) const
         return output->scale();
     }
     return 1.0;
-}
-
-QSizeF Screens::physicalSize(int screen) const
-{
-    if (AbstractOutput *output = findOutput(screen)) {
-        return output->physicalSize();
-    }
-    return QSizeF();
-}
-
-float Screens::refreshRate(int screen) const
-{
-    if (AbstractOutput *output = findOutput(screen)) {
-        return output->refreshRate() / 1000.0;
-    }
-    return 60.0;
 }
 
 qreal Screens::maxScale() const
@@ -165,12 +133,6 @@ int Screens::intersecting(const QRect &r) const
 QSize Screens::displaySize() const
 {
     return size();
-}
-
-Qt::ScreenOrientation Screens::orientation(int screen) const
-{
-    Q_UNUSED(screen)
-    return Qt::PrimaryOrientation;
 }
 
 int Screens::number(const QPoint &pos) const
