@@ -168,8 +168,8 @@ void ScreenChangesTest::testScreenAddRemove()
                               Q_ARG(QVector<QRect>, geometries2));
     QVERIFY(screensChangedSpy.wait());
     QCOMPARE(screensChangedSpy.count(), 2);
-    QCOMPARE(screens()->count(), 1);
-    QCOMPARE(screens()->geometry(0), geometries2.at(0));
+    QCOMPARE(kwinApp()->platform()->enabledOutputs().count(), 1);
+    QCOMPARE(kwinApp()->platform()->enabledOutputs()[0]->geometry(), geometries2.at(0));
 
     QVERIFY(outputAnnouncedSpy.wait());
     QCOMPARE(outputAnnouncedSpy.count(), 1);
