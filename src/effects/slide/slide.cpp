@@ -33,7 +33,9 @@ SlideEffect::SlideEffect()
             this, &SlideEffect::windowDeleted);
     connect(effects, &EffectsHandler::numberDesktopsChanged,
             this, &SlideEffect::stop);
-    connect(effects, &EffectsHandler::numberScreensChanged,
+    connect(effects, &EffectsHandler::screenAdded,
+            this, &SlideEffect::stop);
+    connect(effects, &EffectsHandler::screenRemoved,
             this, &SlideEffect::stop);
 }
 

@@ -118,7 +118,8 @@ DesktopGridEffect::DesktopGridEffect()
     connect(effects, &EffectsHandler::windowDeleted, this, &DesktopGridEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::numberDesktopsChanged, this, &DesktopGridEffect::slotNumberDesktopsChanged);
     connect(effects, &EffectsHandler::windowFrameGeometryChanged, this, &DesktopGridEffect::slotWindowFrameGeometryChanged);
-    connect(effects, &EffectsHandler::numberScreensChanged, this, &DesktopGridEffect::setup);
+    connect(effects, &EffectsHandler::screenAdded, this, &DesktopGridEffect::setup);
+    connect(effects, &EffectsHandler::screenRemoved, this, &DesktopGridEffect::setup);
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
         deactivate();

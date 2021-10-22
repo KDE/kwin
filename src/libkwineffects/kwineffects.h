@@ -778,7 +778,6 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
     Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
     Q_PROPERTY(bool optionRollOverDesktops READ optionRollOverDesktops)
     Q_PROPERTY(KWin::EffectScreen *activeScreen READ activeScreen)
-    Q_PROPERTY(int numScreens READ numScreens NOTIFY numberScreensChanged)
     /**
      * Factor by which animation speed in the effect should be modified (multiplied).
      * If configurable in the effect itself, the option should have also 'default'
@@ -1025,7 +1024,6 @@ public:
     virtual bool optionRollOverDesktops() const = 0;
 
     virtual EffectScreen *activeScreen() const = 0; // Xinerama
-    virtual int numScreens() const = 0; // Xinerama
     virtual QRect clientArea(clientAreaOption, const EffectScreen *screen, int desktop) const = 0;
     virtual QRect clientArea(clientAreaOption, const EffectWindow* c) const = 0;
     virtual QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const = 0;
@@ -1408,11 +1406,6 @@ Q_SIGNALS:
     * @since 4.7
     */
     void numberDesktopsChanged(uint old);
-    /**
-     * Signal emitted when the number of screens changed.
-     * @since 5.0
-     */
-    void numberScreensChanged();
     /**
      * Signal emitted when the desktop showing ("dashboard") state changed
      * The desktop is risen to the keepAbove layer, you may want to elevate

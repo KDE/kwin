@@ -214,6 +214,7 @@ protected:
     // Window rearranging
     void rearrangeWindows();
     void reCreateGrids();
+    void maybeRecreateGrids();
     void calculateWindowTransformations(EffectWindowList windowlist, EffectScreen *screen,
                                         WindowMotionManager& motionManager, bool external = false);
     void calculateWindowTransformationsClosest(EffectWindowList windowlist, EffectScreen *screen,

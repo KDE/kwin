@@ -99,12 +99,8 @@ PresentWindowsEffect::PresentWindowsEffect()
     connect(effects, &EffectsHandler::windowDeleted, this, &PresentWindowsEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::windowFrameGeometryChanged, this, &PresentWindowsEffect::slotWindowFrameGeometryChanged);
     connect(effects, &EffectsHandler::propertyNotify, this, &PresentWindowsEffect::slotPropertyNotify);
-    connect(effects, &EffectsHandler::numberScreensChanged, this,
-        [this] {
-            if (isActive())
-                reCreateGrids();
-        }
-    );
+    connect(effects, &EffectsHandler::screenAdded, this, &PresentWindowsEffect::maybeRecreateGrids);
+    connect(effects, &EffectsHandler::screenRemoved, this, &PresentWindowsEffect::maybeRecreateGrids);
     connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
         setActive(false);
     });
@@ -2025,6 +2021,13 @@ void PresentWindowsEffect::globalShortcutChanged(QAction *action, const QKeySequ
 bool PresentWindowsEffect::isActive() const
 {
     return (m_activated || m_motionManager.managingWindows()) && !effects->isScreenLocked();
+}
+
+void PresentWindowsEffect::maybeRecreateGrids()
+{
+    if (isActive()) {
+        reCreateGrids();
+    }
 }
 
 void PresentWindowsEffect::reCreateGrids()

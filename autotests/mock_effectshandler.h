@@ -152,9 +152,6 @@ public:
     int numberOfDesktops() const override {
         return 0;
     }
-    int numScreens() const override {
-        return 0;
-    }
     bool optionRollOverDesktops() const override {
         return false;
     }

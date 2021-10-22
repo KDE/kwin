@@ -188,7 +188,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
             &KWin::EffectsHandler::sessionStateChanged);
     connect(vds, &VirtualDesktopManager::countChanged, this, &EffectsHandler::numberDesktopsChanged);
     connect(Cursors::self()->mouse(), &Cursor::mouseChanged, this, &EffectsHandler::mouseChanged);
-    connect(Screens::self(), &Screens::countChanged, this, &EffectsHandler::numberScreensChanged);
     connect(Screens::self(), &Screens::sizeChanged, this, &EffectsHandler::virtualScreenSizeChanged);
     connect(Screens::self(), &Screens::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
 #ifdef KWIN_BUILD_ACTIVITIES
@@ -1193,11 +1192,6 @@ void EffectsHandlerImpl::addRepaint(int x, int y, int w, int h)
 EffectScreen *EffectsHandlerImpl::activeScreen() const
 {
     return EffectScreenImpl::get(workspace()->activeOutput());
-}
-
-int EffectsHandlerImpl::numScreens() const
-{
-    return Screens::self()->count();
 }
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectScreen *screen, int desktop) const
