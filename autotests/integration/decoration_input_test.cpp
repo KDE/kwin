@@ -377,7 +377,7 @@ void DecorationInputTest::testPressToMove()
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
-    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    c->move(c->output()->geometry().center() - QPoint(c->width()/2, c->height()/2));
     QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(startMoveResizedSpy.isValid());
     QSignalSpy clientFinishUserMovedResizedSpy(c, &AbstractClient::clientFinishUserMovedResized);
@@ -436,7 +436,7 @@ void DecorationInputTest::testTapToMove()
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
-    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    c->move(c->output()->geometry().center() - QPoint(c->width()/2, c->height()/2));
     QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(startMoveResizedSpy.isValid());
     QSignalSpy clientFinishUserMovedResizedSpy(c, &AbstractClient::clientFinishUserMovedResized);
@@ -502,7 +502,7 @@ void DecorationInputTest::testResizeOutsideWindow()
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
-    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    c->move(c->output()->geometry().center() - QPoint(c->width()/2, c->height()/2));
     QVERIFY(c->frameGeometry() != c->inputGeometry());
     QVERIFY(c->inputGeometry().contains(c->frameGeometry()));
     QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
@@ -599,7 +599,7 @@ void DecorationInputTest::testModifierClickUnrestrictedMove()
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
-    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    c->move(c->output()->geometry().center() - QPoint(c->width()/2, c->height()/2));
     // move cursor on window
     Cursors::self()->mouse()->setPos(QPoint(c->frameGeometry().center().x(), c->y() + c->clientPos().y() / 2));
 
@@ -661,7 +661,7 @@ void DecorationInputTest::testModifierScrollOpacity()
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
-    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    c->move(c->output()->geometry().center() - QPoint(c->width()/2, c->height()/2));
     // move cursor on window
     Cursors::self()->mouse()->setPos(QPoint(c->frameGeometry().center().x(), c->y() + c->clientPos().y() / 2));
     // set the opacity to 0.5
