@@ -294,31 +294,6 @@ private:
     QMetaObject::Connection m_queryConnection;
 };
 
-class StaticPluginEffectLoader : public AbstractEffectLoader
-{
-    Q_OBJECT
-public:
-    explicit StaticPluginEffectLoader(QObject *parent = nullptr);
-    ~StaticPluginEffectLoader() override;
-
-    bool hasEffect(const QString &name) const override;
-    bool isEffectSupported(const QString &name) const override;
-    QStringList listOfKnownEffects() const override;
-
-    void clear() override;
-    void queryAndLoadAll() override;
-    bool loadEffect(const QString &name) override;
-    bool loadEffect(const QString &name, LoadEffectFlags flags);
-
-private:
-    EffectPluginFactory *factory(const QStaticPlugin &staticPlugin) const;
-    bool checkEnabledByDefault(const QStaticPlugin &staticPlugin) const;
-
-    QHash<QString, QStaticPlugin> m_staticPlugins;
-    EffectLoadQueue<StaticPluginEffectLoader, QString> *m_queue;
-    QStringList m_loadedEffects;
-};
-
 class PluginEffectLoader : public AbstractEffectLoader
 {
     Q_OBJECT

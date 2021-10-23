@@ -77,7 +77,7 @@ set(kwin_effect_XCB_LIBS
 set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinglutils)
 
 macro(KWIN4_ADD_EFFECT_MODULE name)
-    kcoreaddons_add_plugin(${name} STATIC SOURCES ${ARGN} INSTALL_NAMESPACE "kwin/effects/static")
+    kcoreaddons_add_plugin(${name} STATIC SOURCES ${ARGN} INSTALL_NAMESPACE "kwin/effects/plugins")
     target_link_libraries(${name} PRIVATE
         ${kwin_effect_KDE_LIBS}
         ${kwin_effect_OWN_LIBS}
@@ -170,7 +170,7 @@ set(kwin4_effect_builtins_sources
 qt5_add_resources(kwin4_effect_builtins_sources shaders.qrc)
 
 add_library(kwin4_effect_builtins STATIC ${kwin4_effect_builtins_sources})
-kcoreaddons_target_static_plugins(kwin4_effect_builtins "kwin/effects/static" LINK_OPTION "PRIVATE")
+kcoreaddons_target_static_plugins(kwin4_effect_builtins "kwin/effects/plugins" LINK_OPTION "PRIVATE")
 target_link_libraries(kwin4_effect_builtins PRIVATE
     ${kwin_effect_KDE_LIBS}
     ${kwin_effect_OWN_LIBS}
