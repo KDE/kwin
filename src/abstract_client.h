@@ -1039,7 +1039,7 @@ protected:
      */
     void removeTransientFromList(AbstractClient* cl);
 
-    virtual Layer belongsToLayer() const;
+    Layer belongsToLayer() const;
     virtual bool belongsToDesktop() const;
     void invalidateLayer();
     bool isActiveFullScreen() const;
