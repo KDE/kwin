@@ -289,6 +289,9 @@ Layer AbstractClient::belongsToLayer() const
         if (isDesktop())
             return AboveLayer;
         if (belongsToDesktop()) {
+            if (isModal())
+                // NOTICE A modal window marks a dialog on systems where _NET_WN_WINDOW_TYPE is not available (e.g. Wayland).
+                return AboveLayer;
             if (isDock())
                 return AboveLayer;
             if (isToolbar())
