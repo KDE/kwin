@@ -118,7 +118,7 @@ bool DrmCrtc::moveLegacyCursor(const QPoint &pos)
 
 void DrmCrtc::setLegacyCursor()
 {
-    m_cursor.posDirty = true;
+    m_cursor.bufferDirty = true;
     m_cursor.posDirty = true;
     setLegacyCursor(m_cursor.buffer, m_cursor.hotspot);
     moveLegacyCursor(m_cursor.pos);
