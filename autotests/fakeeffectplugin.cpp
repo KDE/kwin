@@ -29,8 +29,7 @@ public:
 
 } // namespace
 
-KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED( FakeEffectPluginFactory,
-                                       KWin::FakeEffect,
+KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED(KWin::FakeEffect,
                                        "fakeeffectplugin.json",
                                        return KWin::FakeEffect::supported();,
                                        return KWin::FakeEffect::enabledByDefault();)

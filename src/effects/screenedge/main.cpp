@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY(ScreenEdgeEffectFactory,
-                    ScreenEdgeEffect,
+KWIN_EFFECT_FACTORY(ScreenEdgeEffect,
                     "metadata.json.stripped")
 
 } // namespace KWin

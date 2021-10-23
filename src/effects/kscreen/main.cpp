@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY(KscreenEffectFactory,
-                    KscreenEffect,
+KWIN_EFFECT_FACTORY(KscreenEffect,
                     "metadata.json.stripped")
 
 } // namespace KWin

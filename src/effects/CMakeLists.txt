@@ -76,8 +76,8 @@ set(kwin_effect_XCB_LIBS
 
 set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinglutils)
 
-macro(KWIN4_ADD_EFFECT_BACKEND name type)
-    add_library(${name} ${type} ${ARGN})
+macro(KWIN4_ADD_EFFECT_MODULE name)
+    kcoreaddons_add_plugin(${name} STATIC SOURCES ${ARGN} INSTALL_NAMESPACE "kwin/effects/static")
     target_link_libraries(${name} PRIVATE
         ${kwin_effect_KDE_LIBS}
         ${kwin_effect_OWN_LIBS}
@@ -85,11 +85,6 @@ macro(KWIN4_ADD_EFFECT_BACKEND name type)
         ${kwin_effect_XCB_LIBS}
         ${kwin_effect_XLIB_LIBS}
     )
-endmacro()
-
-macro(KWIN4_ADD_EFFECT_MODULE name)
-    kwin4_add_effect_backend(${name} OBJECT ${ARGN})
-    target_compile_definitions(${name} PRIVATE QT_STATICPLUGIN)
     kwin_strip_builtin_effect_metadata(${name} metadata.json)
     install(FILES metadata.json DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_NAME}/builtin-effects/${name}/)
 endmacro()
@@ -174,41 +169,12 @@ set(kwin4_effect_builtins_sources
 
 qt5_add_resources(kwin4_effect_builtins_sources shaders.qrc)
 
-kwin4_add_effect_backend(kwin4_effect_builtins STATIC ${kwin4_effect_builtins_sources})
+add_library(kwin4_effect_builtins STATIC ${kwin4_effect_builtins_sources})
+kcoreaddons_target_static_plugins(kwin4_effect_builtins "kwin/effects/static" LINK_OPTION "PRIVATE")
 target_link_libraries(kwin4_effect_builtins PRIVATE
-    kwin4_effect_blur
-    kwin4_effect_colorpicker
-    kwin4_effect_contrast
-    kwin4_effect_desktopgrid
-    kwin4_effect_diminactive
-    kwin4_effect_fallapart
-    kwin4_effect_glide
-    kwin4_effect_highlightwindow
-    kwin4_effect_invert
-    kwin4_effect_kscreen
-    kwin4_effect_lookingglass
-    kwin4_effect_magiclamp
-    kwin4_effect_magnifier
-    kwin4_effect_mouseclick
-    kwin4_effect_mousemark
-    kwin4_effect_overview
-    kwin4_effect_presentwindows
-    kwin4_effect_resize
-    kwin4_effect_screenedge
-    kwin4_effect_screenshot
-    kwin4_effect_screentransform
-    kwin4_effect_sheet
-    kwin4_effect_showfps
-    kwin4_effect_showpaint
-    kwin4_effect_slide
-    kwin4_effect_slideback
-    kwin4_effect_slidingpopups
-    kwin4_effect_snaphelper
-    kwin4_effect_startupfeedback
-    kwin4_effect_thumbnailaside
-    kwin4_effect_touchpoints
-    kwin4_effect_trackmouse
-    kwin4_effect_windowgeometry
-    kwin4_effect_wobblywindows
-    kwin4_effect_zoom
+    ${kwin_effect_KDE_LIBS}
+    ${kwin_effect_OWN_LIBS}
+    ${kwin_effect_QT_LIBS}
+    ${kwin_effect_XCB_LIBS}
+    ${kwin_effect_XLIB_LIBS}
 )

@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY(ShowPaintEffectFactory,
-                    ShowPaintEffect,
+KWIN_EFFECT_FACTORY(ShowPaintEffect,
                     "metadata.json.stripped")
 
 } // namespace KWin

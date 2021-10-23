@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY(SnapHelperEffectFactory,
-                    SnapHelperEffect,
+KWIN_EFFECT_FACTORY(SnapHelperEffect,
                     "metadata.json.stripped")
 
 } // namespace KWin

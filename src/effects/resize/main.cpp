@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY(ResizeEffectFactory,
-                    ResizeEffect,
+KWIN_EFFECT_FACTORY(ResizeEffect,
                     "metadata.json.stripped")
 
 } // namespace KWin

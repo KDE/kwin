@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY_SUPPORTED(GlideEffectFactory,
-                              GlideEffect,
+KWIN_EFFECT_FACTORY_SUPPORTED(GlideEffect,
                               "metadata.json.stripped",
                               return GlideEffect::supported();)
 

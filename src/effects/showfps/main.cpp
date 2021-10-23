@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY(ShowFpsEffectFactory,
-                    ShowFpsEffect,
+KWIN_EFFECT_FACTORY(ShowFpsEffect,
                     "metadata.json.stripped")
 
 } // namespace KWin

@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY_SUPPORTED(StartupFeedbackEffectFactory,
-                              StartupFeedbackEffect,
+KWIN_EFFECT_FACTORY_SUPPORTED(StartupFeedbackEffect,
                               "metadata.json.stripped",
                               return StartupFeedbackEffect::supported();)
 

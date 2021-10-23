@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY(PresentWindowsEffectFactory,
-                    PresentWindowsEffect,
+KWIN_EFFECT_FACTORY(PresentWindowsEffect,
                     "metadata.json.stripped")
 
 } // namespace KWin

@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY_SUPPORTED(OverviewEffectFactory,
-                              OverviewEffect,
+KWIN_EFFECT_FACTORY_SUPPORTED(OverviewEffect,
                               "metadata.json.stripped",
                               return OverviewEffect::supported();)
 

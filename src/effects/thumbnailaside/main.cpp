@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY(ThumbnailAsideEffectFactory,
-                    ThumbnailAsideEffect,
+KWIN_EFFECT_FACTORY(ThumbnailAsideEffect,
                     "metadata.json.stripped")
 
 } // namespace KWin

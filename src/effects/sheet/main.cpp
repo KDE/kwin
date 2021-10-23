@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY_SUPPORTED(SheetEffectFactory,
-                              SheetEffect,
+KWIN_EFFECT_FACTORY_SUPPORTED(SheetEffect,
                               "metadata.json.stripped",
                               return SheetEffect::supported();)
 

@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY_SUPPORTED(ScreenTransformEffectFactory,
-                              ScreenTransformEffect,
+KWIN_EFFECT_FACTORY_SUPPORTED(ScreenTransformEffect,
                               "metadata.json.stripped",
                               return ScreenTransformEffect::supported();)
 

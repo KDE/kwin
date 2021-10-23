@@ -19,6 +19,7 @@
 #include <QtConcurrent>
 
 #include <unistd.h>
+Q_LOGGING_CATEGORY(KWINEFFECTS, "kwineffects", QtWarningMsg)
 
 namespace KWin
 {

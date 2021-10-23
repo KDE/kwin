@@ -8,7 +8,6 @@
 */
 #include "main_wayland.h"
 #include "composite.h"
-#include "effect_builtins.h"
 #include "inputmethod.h"
 #include "workspace.h"
 #include <config-kwin.h>
@@ -58,8 +57,6 @@
 
 #include <iostream>
 #include <iomanip>
-
-KWIN_IMPORT_BUILTIN_EFFECTS
 
 Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
 Q_IMPORT_PLUGIN(KGlobalAccelImpl)

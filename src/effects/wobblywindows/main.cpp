@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY_SUPPORTED(WobblyWindowsEffectFactory,
-                              WobblyWindowsEffect,
+KWIN_EFFECT_FACTORY_SUPPORTED(WobblyWindowsEffect,
                               "metadata.json.stripped",
                               return WobblyWindowsEffect::supported();)
 

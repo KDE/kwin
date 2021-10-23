@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY_SUPPORTED(SlidingPopupsEffectFactory,
-                              SlidingPopupsEffect,
+KWIN_EFFECT_FACTORY_SUPPORTED(SlidingPopupsEffect,
                               "metadata.json.stripped",
                               return SlidingPopupsEffect::supported();)
 

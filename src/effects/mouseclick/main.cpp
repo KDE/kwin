@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY(MouseClickEffectFactory,
-                    MouseClickEffect,
+KWIN_EFFECT_FACTORY(MouseClickEffect,
                     "metadata.json.stripped")
 
 } // namespace KWin

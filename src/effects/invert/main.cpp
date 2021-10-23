@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY_SUPPORTED(InvertEffectFactory,
-                              InvertEffect,
+KWIN_EFFECT_FACTORY_SUPPORTED(InvertEffect,
                               "metadata.json.stripped",
                               return InvertEffect::supported();)
 

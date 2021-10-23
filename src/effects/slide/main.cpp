@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY_SUPPORTED(SlideEffectFactory,
-                              SlideEffect,
+KWIN_EFFECT_FACTORY_SUPPORTED(SlideEffect,
                               "metadata.json.stripped",
                               return SlideEffect::supported();)
 
