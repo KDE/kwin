@@ -195,7 +195,7 @@ void ScriptedEffectLoader::clear()
 PluginEffectLoader::PluginEffectLoader(QObject *parent)
     : AbstractEffectLoader(parent)
     , m_queue(new EffectLoadQueue< PluginEffectLoader, KPluginMetaData>(this))
-    , m_pluginSubDirectory(QStringLiteral("kwin/effects/plugins/"))
+    , m_pluginSubDirectory(QStringLiteral("kwin/effects/plugins"))
 {
 }
 

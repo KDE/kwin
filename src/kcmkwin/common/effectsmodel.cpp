@@ -331,7 +331,7 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 
 void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
 {
-    const auto pluginEffects = KPluginMetaData::findPlugins(QStringLiteral("kwin/effects/plugins/"));
+    const auto pluginEffects = KPluginMetaData::findPlugins(QStringLiteral("kwin/effects/plugins"));
     for (const KPluginMetaData &pluginEffect : pluginEffects) {
         if (!pluginEffect.isValid()) {
             continue;
