@@ -147,7 +147,7 @@ Item {
 
                         Loader {
                             LayoutMirroring.enabled: Qt.application.layoutDirection == Qt.RightToLeft
-                            active: hoverHandler.hovered
+                            active: hoverHandler.hovered && desktopRepeater.count > 1
                             anchors.right: parent.right
                             anchors.top: parent.top
                             sourceComponent: PC3.Button {
