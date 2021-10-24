@@ -153,6 +153,10 @@ Item {
                             sourceComponent: PC3.Button {
                                 icon.name: "delete"
                                 onClicked: delegate.remove()
+                                PC3.ToolTip {
+                                    text: i18n("Delete virtual desktop")
+                                }
+
                             }
                         }
 
