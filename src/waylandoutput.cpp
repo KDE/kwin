@@ -125,6 +125,7 @@ WaylandOutput::WaylandOutput(AbstractWaylandOutput *output, QObject *parent)
     m_updateTimer.setSingleShot(true);
     connect(&m_updateTimer, &QTimer::timeout, this, &WaylandOutput::update);
 
+    connect(output, &AbstractWaylandOutput::currentModeChanged, this, &WaylandOutput::scheduleUpdate);
     connect(output, &AbstractWaylandOutput::geometryChanged, this, &WaylandOutput::scheduleUpdate);
     connect(output, &AbstractWaylandOutput::transformChanged, this, &WaylandOutput::scheduleUpdate);
     connect(output, &AbstractWaylandOutput::scaleChanged, this, &WaylandOutput::scheduleUpdate);
