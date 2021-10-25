@@ -233,6 +233,15 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
         xkb_keymap_unref(keymap);
         return;
     }
+
+    // save Locks
+    bool numLockIsOn, capsLockIsOn;
+    static bool s_startup = true;
+    if (!s_startup) {
+        numLockIsOn = xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_LOCKED);
+        capsLockIsOn = xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_LOCKED);
+    }
+
     // now release the old ones
     xkb_state_unref(m_state);
     xkb_keymap_unref(m_keymap);
@@ -257,24 +266,32 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     m_modifierState.latched = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED));
     m_modifierState.locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
 
-    static bool s_startup = true;
+    auto setLock = [this](xkb_mod_index_t modifier, bool value)
+    {
+        if (m_ownership == Ownership::Server && modifier != XKB_MOD_INVALID) {
+            std::bitset<sizeof(xkb_mod_mask_t)*8> mask{m_modifierState.locked};
+            if (mask.size() > modifier) {
+                mask[modifier] = value;
+                m_modifierState.locked = mask.to_ulong();
+                xkb_state_update_mask(m_state, m_modifierState.depressed, m_modifierState.latched, m_modifierState.locked, 0, 0, m_currentLayout);
+                m_modifierState.locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
+            }
+        }
+    };
+
     if (s_startup || qEnvironmentVariableIsSet("KWIN_FORCE_NUM_LOCK_EVALUATION")) {
         s_startup = false;
-        if (m_ownership == Ownership::Server && m_numModifier != XKB_MOD_INVALID && m_numLockConfig) {
+        if (m_numLockConfig) {
             const KConfigGroup config = m_numLockConfig->group("Keyboard");
             // STATE_ON = 0,  STATE_OFF = 1, STATE_UNCHANGED = 2, see plasma-desktop/kcms/keyboard/kcmmisc.h
             const auto setting = config.readEntry("NumLock", 2);
-            const bool numLockIsOn = xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_LOCKED);
-            if ((setting == 0 && !numLockIsOn) || (setting == 1 && numLockIsOn)) {
-                std::bitset<sizeof(xkb_mod_mask_t)*8> mask{m_modifierState.locked};
-                if (mask.size() > m_numModifier) {
-                    mask[m_numModifier] = (setting == 0);
-                    m_modifierState.locked = mask.to_ulong();
-                    xkb_state_update_mask(m_state, m_modifierState.depressed, m_modifierState.latched, m_modifierState.locked, 0, 0, m_currentLayout);
-                    m_modifierState.locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
-                }
+            if (setting != 2) {
+                setLock(m_numModifier, !setting);
             }
         }
+    } else {
+        setLock(m_numModifier, numLockIsOn);
+        setLock(m_capsModifier, capsLockIsOn);
     }
 
     createKeymapFile();
