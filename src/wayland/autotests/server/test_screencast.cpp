@@ -136,7 +136,6 @@ void TestScreencastV1Interface::initTestCase()
             [this, &registry](const QByteArray &interfaceName, quint32 name, quint32 version) {
                 if (interfaceName != "zkde_screencast_unstable_v1")
                     return;
-                Q_ASSERT(version == 1);
                 m_screencast = new ScreencastV1(this);
                 m_screencast->init(&*registry, name, version);
             });
