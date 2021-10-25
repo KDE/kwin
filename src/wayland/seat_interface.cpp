@@ -1005,6 +1005,11 @@ TouchInterface *SeatInterface::touch() const
     return d->touch.data();
 }
 
+QPointF SeatInterface::firstTouchPointPosition() const
+{
+    return d->globalTouch.focus.firstTouchPos;
+}
+
 void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPointF &surfacePosition)
 {
     if (!d->touch) {

@@ -582,6 +582,7 @@ public:
     void notifyTouchFrame();
     void notifyTouchCancel();
     bool isTouchSequence() const;
+    QPointF firstTouchPointPosition() const;
     /**
      * @returns true if there is a touch sequence going on associated with a touch
      * down of the given @p serial.
