@@ -339,7 +339,7 @@ void TestDragAndDrop::testTouchDragAndDrop()
     QVERIFY(dragEnteredSpy.wait());
     QCOMPARE(dragEnteredSpy.count(), 1);
     QCOMPARE(dragEnteredSpy.first().first().value<quint32>(), m_display->serial());
-    QCOMPARE(dragEnteredSpy.first().last().toPointF(), QPointF(0, 0));
+    QCOMPARE(dragEnteredSpy.first().last().toPointF(), QPointF(50.0, 50.0));
     QCOMPARE(m_dataDevice->dragSurface().data(), s.data());
     auto offer = m_dataDevice->dragOffer();
     QVERIFY(offer);

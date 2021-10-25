@@ -272,8 +272,12 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         d->drag = DataDeviceInterfacePrivate::Drag();
     });
 
-    // TODO: handle touch position
-    const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
+    QPointF pos;
+    if (d->seat->isDragPointer()) {
+        pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
+    } else if (d->seat->isDragTouch()) {
+        pos = d->seat->dragSurfaceTransformation().map(d->seat->firstTouchPointPosition());
+    }
     d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
     if (offer) {
         offer->sendSourceActions();
