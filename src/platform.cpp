@@ -40,6 +40,17 @@ Platform::Platform(QObject *parent)
 {
     setSoftwareCursorForced(false);
     connect(Cursors::self(), &Cursors::currentCursorRendered, this, &Platform::cursorRendered);
+
+    connect(this, &Platform::outputDisabled, this, [this] (AbstractOutput *output) {
+        if (m_primaryOutput == output) {
+            setPrimaryOutput(enabledOutputs().value(0, nullptr));
+        }
+    });
+    connect(this, &Platform::outputEnabled, this, [this] (AbstractOutput *output) {
+        if (!m_primaryOutput) {
+            setPrimaryOutput(output);
+        }
+    });
 }
 
 Platform::~Platform()
@@ -150,6 +161,10 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
             qDebug(KWIN_CORE) << "Platform::requestOutputsChange disabling false" << it.key()->uuid();
             output->setEnabled(false);
         }
+    }
+
+    if (config->primaryChanged()) {
+        setPrimaryOutput(findOutput(config->primary()->uuid()));
     }
 
     Q_EMIT screens()->changed();
@@ -635,6 +650,16 @@ EGLContext Platform::sceneEglGlobalShareContext() const
 void Platform::setSceneEglGlobalShareContext(EGLContext context)
 {
     m_globalShareContext = context;
+}
+
+void Platform::setPrimaryOutput(AbstractOutput *primary)
+{
+    if (primary == m_primaryOutput) {
+        return;
+    }
+    Q_ASSERT(kwinApp()->isTerminating() || primary->isEnabled());
+    m_primaryOutput = primary;
+    Q_EMIT primaryOutputChanged(primary);
 }
 
 }

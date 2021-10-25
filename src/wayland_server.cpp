@@ -51,6 +51,7 @@
 #include <KWaylandServer/blur_interface.h>
 #include <KWaylandServer/outputmanagement_v2_interface.h>
 #include <KWaylandServer/outputconfiguration_v2_interface.h>
+#include <KWaylandServer/primaryoutput_v1_interface.h>
 #include <KWaylandServer/xdgactivation_v1_interface.h>
 #include <KWaylandServer/xdgdecoration_v1_interface.h>
 #include <KWaylandServer/xdgshell_interface.h>
@@ -274,6 +275,13 @@ void WaylandServer::initPlatform()
     connect(kwinApp()->platform(), &Platform::outputEnabled, this, &WaylandServer::handleOutputEnabled);
     connect(kwinApp()->platform(), &Platform::outputDisabled, this, &WaylandServer::handleOutputDisabled);
 
+    connect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, [this] (AbstractOutput *primaryOutput) {
+        m_primary->setPrimaryOutput(primaryOutput->name());
+    });
+    if (auto primaryOutput = kwinApp()->platform()->primaryOutput()) {
+        m_primary->setPrimaryOutput(primaryOutput->name());
+    }
+
     const QVector<AbstractOutput *> outputs = kwinApp()->platform()->outputs();
     for (AbstractOutput *output : outputs) {
         handleOutputAdded(output);
@@ -493,6 +501,7 @@ bool WaylandServer::init(InitializationFlags flags)
             this, [](KWaylandServer::OutputConfigurationV2Interface *config) {
                 kwinApp()->platform()->requestOutputsChange(config);
     });
+    m_primary = new PrimaryOutputV1Interface(m_display, m_display);
 
     m_xdgOutputManagerV1 = new XdgOutputManagerV1Interface(m_display, m_display);
     new SubCompositorInterface(m_display, m_display);

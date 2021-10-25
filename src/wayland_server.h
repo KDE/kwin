@@ -38,6 +38,7 @@ class PlasmaShellInterface;
 class PlasmaWindowActivationFeedbackInterface;
 class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
+class PrimaryOutputV1Interface;
 class OutputManagementV2Interface;
 class XdgForeignV2Interface;
 class XdgOutputManagerV1Interface;
@@ -269,6 +270,7 @@ private:
     KWaylandServer::ClientConnection *m_screenLockerClientConnection = nullptr;
     KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
     KWaylandServer::KeyStateInterface *m_keyState = nullptr;
+    KWaylandServer::PrimaryOutputV1Interface *m_primary = nullptr;
     QList<AbstractClient *> m_clients;
     InitializationFlags m_initFlags;
     QHash<AbstractWaylandOutput *, WaylandOutput *> m_waylandOutputs;

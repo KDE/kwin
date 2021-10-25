@@ -450,12 +450,16 @@ void DrmBackend::readOutputsConfiguration()
     }
     const auto outputsInfo = KWinKScreenIntegration::outputsConfig(m_outputs);
 
+    AbstractOutput *primaryOutput = m_outputs.constFirst();
     // default position goes from left to right
     QPoint pos(0, 0);
     for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
         const QJsonObject outputInfo = outputsInfo[*it];
         qCDebug(KWIN_DRM) << "Reading output configuration for " << *it;
         if (!outputInfo.isEmpty()) {
+            if (outputInfo["primary"].toBool()) {
+                primaryOutput = *it;
+            }
             const QJsonObject pos = outputInfo["pos"].toObject();
             (*it)->moveTo({pos["x"].toInt(), pos["y"].toInt()});
             if (const QJsonValue scale = outputInfo["scale"]; !scale.isUndefined()) {
@@ -473,6 +477,7 @@ void DrmBackend::readOutputsConfiguration()
         }
         pos.setX(pos.x() + (*it)->geometry().width());
     }
+    setPrimaryOutput(primaryOutput);
 }
 
 void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)

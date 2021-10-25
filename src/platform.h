@@ -398,6 +398,18 @@ public:
     virtual AbstractOutput *createVirtualOutput(const QString &name, const QSize &size, qreal scaling);
     virtual void removeVirtualOutput(AbstractOutput *output);
 
+    /**
+     * @returns the primary output amomg the enabled outputs
+     */
+    AbstractOutput *primaryOutput() const {
+        return m_primaryOutput;
+    }
+
+    /**
+     * Assigns a the @p primary output among the enabled outputs
+     */
+    void setPrimaryOutput(AbstractOutput *primary);
+
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);
@@ -454,6 +466,8 @@ Q_SIGNALS:
      * @see outputEnabled, outputRemoved
      */
     void outputDisabled(AbstractOutput *output);
+
+    void primaryOutputChanged(AbstractOutput *primaryOutput);
 
 protected:
     explicit Platform(QObject *parent = nullptr);
@@ -527,6 +541,7 @@ private:
     bool m_supportsOutputChanges = false;
     bool m_isPerScreenRenderingEnabled = false;
     CompositingType m_selectedCompositor = NoCompositing;
+    AbstractOutput *m_primaryOutput = nullptr;
 };
 
 }
