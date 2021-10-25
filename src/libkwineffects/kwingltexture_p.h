@@ -69,7 +69,6 @@ public:
     static bool s_supportsTextureSwizzle;
     static bool s_supportsTextureFormatRG;
     static GLuint s_fbo;
-    static uint s_textureObjectCounter;
 private:
     friend void KWin::cleanupGL();
     static void cleanup();

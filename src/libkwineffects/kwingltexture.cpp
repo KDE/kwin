@@ -36,7 +36,6 @@ bool GLTexturePrivate::s_supportsUnpack = false;
 bool GLTexturePrivate::s_supportsTextureStorage = false;
 bool GLTexturePrivate::s_supportsTextureSwizzle = false;
 bool GLTexturePrivate::s_supportsTextureFormatRG = false;
-uint GLTexturePrivate::s_textureObjectCounter = 0;
 uint GLTexturePrivate::s_fbo = 0;
 
 // Table of GL formats/types associated with different values of QImage::Format.
@@ -287,7 +286,6 @@ GLTexturePrivate::GLTexturePrivate()
  , m_normalizeActive(0)
  , m_vbo(nullptr)
 {
-    ++s_textureObjectCounter;
 }
 
 GLTexturePrivate::~GLTexturePrivate()
@@ -295,11 +293,6 @@ GLTexturePrivate::~GLTexturePrivate()
     delete m_vbo;
     if (m_texture != 0 && !m_foreign) {
         glDeleteTextures(1, &m_texture);
-    }
-    // Delete the FBO if this is the last Texture
-    if (--s_textureObjectCounter == 0 && s_fbo) {
-        glDeleteFramebuffers(1, &s_fbo);
-        s_fbo = 0;
     }
 }
 
@@ -334,6 +327,10 @@ void GLTexturePrivate::cleanup()
 {
     s_supportsFramebufferObjects = false;
     s_supportsARGB32 = false;
+    if (s_fbo) {
+        glDeleteFramebuffers(1, &s_fbo);
+        s_fbo = 0;
+    }
 }
 
 bool GLTexture::isNull() const
