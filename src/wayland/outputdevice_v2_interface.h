@@ -41,6 +41,7 @@ class KWAYLANDSERVER_EXPORT OutputDeviceV2Interface : public QObject
     Q_PROPERTY(QString model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(QString serialNumber READ serialNumber WRITE setSerialNumber NOTIFY serialNumberChanged)
     Q_PROPERTY(QString eisaId READ eisaId WRITE setEisaId NOTIFY eisaIdChanged)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(qreal scale READ scale WRITE setScale NOTIFY scaleChanged)
     Q_PROPERTY(QByteArray edid READ edid WRITE setEdid NOTIFY edidChanged)
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
@@ -101,6 +102,7 @@ public:
     QString model() const;
     QString serialNumber() const;
     QString eisaId() const;
+    QString name() const;
     QSize pixelSize() const;
     int refreshRate() const;
 
@@ -123,6 +125,7 @@ public:
     void setModel(const QString &model);
     void setSerialNumber(const QString &serialNumber);
     void setEisaId(const QString &eisaId);
+    void setName(const QString &name);
 
     void setScale(qreal scale);
     void setSubPixel(SubPixel subPixel);
@@ -146,6 +149,7 @@ public:
     void setVrrPolicy(VrrPolicy policy);
     void setRgbRange(RgbRange rgbRange);
 
+    wl_resource *resource() const;
     static OutputDeviceV2Interface *get(wl_resource *native);
 
 Q_SIGNALS:
@@ -155,6 +159,7 @@ Q_SIGNALS:
     void modelChanged(const QString&);
     void serialNumberChanged(const QString&);
     void eisaIdChanged(const QString &);
+    void nameChanged(const QString &name);
     void scaleChanged(qreal);
     void subPixelChanged(SubPixel);
     void transformChanged(Transform);

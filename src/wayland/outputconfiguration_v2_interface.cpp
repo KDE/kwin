@@ -14,6 +14,8 @@
 #include "qwayland-server-kde-output-management-v2.h"
 #include "qwayland-server-kde-output-device-v2.h"
 
+#include <optional>
+
 namespace KWaylandServer
 {
 class OutputConfigurationV2InterfacePrivate : public QtWaylandServer::kde_output_configuration_v2
@@ -31,6 +33,7 @@ public:
 
     OutputManagementV2Interface *outputManagement;
     QHash<OutputDeviceV2Interface *, OutputChangeSetV2 *> changes;
+    std::optional<OutputDeviceV2Interface *> primaryOutput;
     OutputConfigurationV2Interface *q;
 
 protected:
@@ -45,6 +48,7 @@ protected:
     void kde_output_configuration_v2_overscan(Resource *resource, wl_resource *outputdevice, uint32_t overscan) override;
     void kde_output_configuration_v2_set_vrr_policy(Resource *resource, struct ::wl_resource *outputdevice, uint32_t policy) override;
     void kde_output_configuration_v2_set_rgb_range(Resource *resource, wl_resource *outputdevice, uint32_t rgbRange) override;
+    void kde_output_configuration_v2_set_primary_output(Resource *resource, struct ::wl_resource *output) override;
 };
 
 void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable)
@@ -155,6 +159,12 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_set_rgb_
     pendingChanges(output)->d->rgbRange = static_cast<OutputDeviceV2Interface::RgbRange>(rgbRange);
 }
 
+void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_set_primary_output(Resource *resource, struct ::wl_resource *output)
+{
+    Q_UNUSED(resource);
+    primaryOutput = OutputDeviceV2Interface::get(output);
+}
+
 void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
@@ -181,6 +191,17 @@ OutputConfigurationV2InterfacePrivate::OutputConfigurationV2InterfacePrivate(Out
 QHash<OutputDeviceV2Interface*, OutputChangeSetV2*> OutputConfigurationV2Interface::changes() const
 {
     return d->changes;
+}
+
+bool OutputConfigurationV2Interface::primaryChanged() const
+{
+    return d->primaryOutput.has_value();
+}
+
+OutputDeviceV2Interface *OutputConfigurationV2Interface::primary() const
+{
+    Q_ASSERT(d->primaryOutput.has_value());
+    return *d->primaryOutput;
 }
 
 void OutputConfigurationV2Interface::setApplied()

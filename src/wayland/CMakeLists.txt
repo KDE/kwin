@@ -42,6 +42,7 @@ set(SERVER_LIB_SRCS
     pointer_interface.cpp
     pointerconstraints_v1_interface.cpp
     pointergestures_v1_interface.cpp
+    primaryoutput_v1_interface.cpp
     primaryselectiondevice_v1_interface.cpp
     primaryselectiondevicemanager_v1_interface.cpp
     primaryselectionoffer_v1_interface.cpp
@@ -88,6 +89,11 @@ ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
 ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
     BASENAME kde-output-device-v2
+)
+
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-primary-output-v1.xml
+    BASENAME kde-primary-output-v1
 )
 
 ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
@@ -363,6 +369,7 @@ set(SERVER_LIB_HEADERS
   pointer_interface.h
   pointerconstraints_v1_interface.h
   pointergestures_v1_interface.h
+  primaryoutput_v1_interface.h
   primaryselectiondevice_v1_interface.h
   primaryselectiondevicemanager_v1_interface.h
   primaryselectionoffer_v1_interface.h

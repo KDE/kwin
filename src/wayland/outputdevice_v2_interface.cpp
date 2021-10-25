@@ -19,8 +19,7 @@
 
 namespace KWaylandServer
 {
-
-static const quint32 s_version = 1;
+static const quint32 s_version = 2;
 
 class OutputDeviceV2InterfacePrivate : public QtWaylandServer::kde_output_device_v2
 {
@@ -49,6 +48,7 @@ public:
     void sendEnabled(Resource *resource);
     void sendScale(Resource *resource);
     void sendEisaId(Resource *resource);
+    void sendName(Resource *resource);
     void sendSerialNumber(Resource *resource);
     void sendCapabilities(Resource *resource);
     void sendOverscan(Resource *resource);
@@ -62,6 +62,7 @@ public:
     qreal scale = 1.0;
     QString serialNumber;
     QString eisaId;
+    QString name;
     OutputDeviceV2Interface::SubPixel subPixel = OutputDeviceV2Interface::SubPixel::Unknown;
     OutputDeviceV2Interface::Transform transform = OutputDeviceV2Interface::Transform::Normal;
 
@@ -270,6 +271,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendGeometry(resource);
     sendScale(resource);
     sendEisaId(resource);
+    sendName(resource);
     sendSerialNumber(resource);
 
     auto currentModeIt = modes.end();
@@ -343,6 +345,13 @@ void OutputDeviceV2InterfacePrivate::sendSerialNumber(Resource *resource)
 void OutputDeviceV2InterfacePrivate::sendEisaId(Resource *resource)
 {
     send_eisa_id(resource->handle, eisaId);
+}
+
+void OutputDeviceV2InterfacePrivate::sendName(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_NAME_SINCE_VERSION) {
+        send_name(resource->handle, name);
+    }
 }
 
 void OutputDeviceV2InterfacePrivate::sendDone(Resource *resource)
@@ -422,6 +431,15 @@ void OutputDeviceV2Interface::setEisaId(const QString &arg)
     Q_EMIT eisaIdChanged(d->eisaId);
 }
 
+void OutputDeviceV2Interface::setName(const QString &arg)
+{
+    if (d->name == arg) {
+        return;
+    }
+    d->name = arg;
+    Q_EMIT nameChanged(d->name);
+}
+
 void OutputDeviceV2Interface::setSubPixel(SubPixel arg)
 {
     if (d->subPixel == arg) {
@@ -477,6 +495,11 @@ QString OutputDeviceV2Interface::serialNumber() const
 QString OutputDeviceV2Interface::eisaId() const
 {
     return d->eisaId;
+}
+
+QString OutputDeviceV2Interface::name() const
+{
+    return d->name;
 }
 
 qreal OutputDeviceV2Interface::scale() const
@@ -745,6 +768,11 @@ void OutputDeviceV2InterfacePrivate::updateRgbRange()
         sendRgbRange(resource);
         sendDone(resource);
     }
+}
+
+wl_resource *OutputDeviceV2Interface::resource() const
+{
+    return d->resource()->handle;
 }
 
 OutputDeviceV2Interface *OutputDeviceV2Interface::get(wl_resource *native)

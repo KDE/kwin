@@ -60,6 +60,9 @@ public:
      */
     QHash<OutputDeviceV2Interface *, OutputChangeSetV2 *> changes() const;
 
+    bool primaryChanged() const;
+    OutputDeviceV2Interface *primary() const;
+
 public Q_SLOTS:
     /**
      * Called by the compositor once the changes have successfully been applied.
