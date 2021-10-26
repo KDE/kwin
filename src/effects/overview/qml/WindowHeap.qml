@@ -74,6 +74,7 @@ FocusScope {
 
                     Drag.active: dragHandler.active
                     Drag.source: thumb.client
+                    Drag.hotSpot: Qt.point(width * 0.5, height * 0.5)
 
                     states: [
                         State {
