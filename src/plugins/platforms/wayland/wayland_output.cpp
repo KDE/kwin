@@ -24,6 +24,7 @@ namespace Wayland
 {
 
 using namespace KWayland::Client;
+static const int s_refreshRate = 60000; // TODO: can we get refresh rate data from Wayland host?
 
 WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
     : AbstractWaylandOutput(backend)
@@ -60,26 +61,37 @@ RenderLoop *WaylandOutput::renderLoop() const
 
 void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 {
-    const int refreshRate = 60000; // TODO: can we get refresh rate data from Wayland host?
-    m_renderLoop->setRefreshRate(refreshRate);
+    m_renderLoop->setRefreshRate(s_refreshRate);
 
-    Mode mode;
-    mode.id = 0;
-    mode.size = pixelSize;
-    mode.flags = ModeFlag::Current;
-    mode.refreshRate = refreshRate;
+    const Mode mode {
+        .size = pixelSize,
+        .refreshRate = s_refreshRate,
+        .flags = ModeFlag::Current,
+        .id = 0,
+    };
+
     static uint i = 0;
     initialize(QStringLiteral("model_%1").arg(i++), "manufacturer_TODO", "eisa_TODO", "serial_TODO", pixelSize, { mode }, {});
-    setGeometry(logicalPosition, pixelSize);
+
+    moveTo(logicalPosition);
+    setCurrentModeInternal(mode.size, mode.refreshRate);
     setScale(backend()->initialOutputScale());
 }
 
 void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
 {
-    // TODO: set mode to have updated pixelSize
-    Q_UNUSED(pixelSize)
+    const Mode mode {
+        .size = pixelSize,
+        .refreshRate = s_refreshRate,
+        .flags = ModeFlag::Current,
+        .id = 0,
+    };
+
+    setModes({mode});
+    setCurrentModeInternal(mode.size, mode.refreshRate);
 
     moveTo(logicalPosition);
+    Q_EMIT m_backend->screensQueried();
 }
 
 void WaylandOutput::updateTransform(Transform transform)
