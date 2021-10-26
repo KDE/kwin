@@ -108,6 +108,7 @@ public:
             QMetaObject::Connection destroyConnection;
             QPointF offset = QPointF();
             QPointF firstTouchPos;
+            QMatrix4x4 transformation;
         };
         Focus focus;
         QMap<qint32, quint32> ids;

@@ -1027,7 +1027,8 @@ void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPoi
     }
     d->globalTouch.focus = SeatInterfacePrivate::Touch::Focus();
     d->globalTouch.focus.surface = surface;
-    d->globalTouch.focus.offset = surfacePosition;
+    setFocusedTouchSurfacePosition(surfacePosition);
+
     if (d->globalTouch.focus.surface) {
         d->globalTouch.focus.destroyConnection = connect(surface, &QObject::destroyed, this, [this]() {
             if (isTouchSequence()) {
@@ -1043,6 +1044,8 @@ void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPoi
 void SeatInterface::setFocusedTouchSurfacePosition(const QPointF &surfacePosition)
 {
     d->globalTouch.focus.offset = surfacePosition;
+    d->globalTouch.focus.transformation = QMatrix4x4();
+    d->globalTouch.focus.transformation.translate(-surfacePosition.x(), -surfacePosition.y());
 }
 
 void SeatInterface::notifyTouchDown(qint32 id, const QPointF &globalPosition)
@@ -1322,7 +1325,7 @@ void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
         d->drag.transformation = d->globalPointer.focus.transformation;
     } else if (hasImplicitTouchGrab(dragSerial)) {
         d->drag.mode = SeatInterfacePrivate::Drag::Mode::Touch;
-        // TODO: touch transformation
+        d->drag.transformation = d->globalTouch.focus.transformation;
     } else {
         // no implicit grab, abort drag
         return;
@@ -1331,8 +1334,6 @@ void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
 
     // set initial drag target to ourself
     d->drag.surface = originSurface;
-    // TODO: transformation needs to be either pointer or touch
-    d->drag.transformation = d->globalPointer.focus.transformation;
 
     d->drag.source = dragSource;
     if (dragSource) {
