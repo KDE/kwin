@@ -52,6 +52,9 @@ enum class ReleaseReason {
     KWinShutsDown ///< Release on KWin Shutdown (window still valid)
 };
 
+/** 
+ * Represents a window.
+ */
 class KWIN_EXPORT Toplevel : public QObject
 {
     Q_OBJECT
