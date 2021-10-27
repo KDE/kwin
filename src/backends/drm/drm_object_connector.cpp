@@ -78,66 +78,7 @@ quint64 refreshRateForMode(_drmModeModeInfo *m)
 
 bool DrmConnector::init()
 {
-    if (!m_conn || !m_conn->count_modes) {
-        return false;
-    }
-
-    if (!initProps()) {
-        return false;
-    }
-    if (const auto &dpms = getProp(PropertyIndex::Dpms)) {
-        dpms->setLegacy();
-    }
-
-    auto underscan = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)];
-    auto vborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_vborder)];
-    auto hborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_hborder)];
-    if (underscan && vborder && hborder) {
-        underscan->setEnum(vborder->current() > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
-    } else {
-        deleteProp(PropertyIndex::Underscan);
-        deleteProp(PropertyIndex::Underscan_vborder);
-        deleteProp(PropertyIndex::Underscan_hborder);
-    }
-
-    // parse edid
-    auto edidProp = getProp(PropertyIndex::Edid);
-    if (edidProp) {
-        DrmScopedPointer<drmModePropertyBlobRes> blob(drmModeGetPropertyBlob(gpu()->fd(), edidProp->current()));
-        if (blob && blob->data) {
-            m_edid = Edid(blob->data, blob->length);
-            if (!m_edid.isValid()) {
-                qCWarning(KWIN_DRM) << "Couldn't parse EDID for connector" << this;
-            }
-        }
-        deleteProp(PropertyIndex::Edid);
-    } else {
-        qCDebug(KWIN_DRM) << "Could not find edid for connector" << this;
-    }
-
-    // check the physical size
-    if (m_edid.physicalSize().isEmpty()) {
-        m_physicalSize = QSize(m_conn->mmWidth, m_conn->mmHeight);
-    } else {
-        m_physicalSize = m_edid.physicalSize();
-    }
-
-    // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
-    // as this information is used to calculate DPI info, it's going to result in everything being huge
-    const QByteArray unknown = QByteArrayLiteral("unknown");
-    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId().isEmpty() ? unknown : m_edid.eisaId())
-                                                       .group(m_edid.monitorName().isEmpty() ? unknown : m_edid.monitorName())
-                                                       .group(m_edid.serialNumber().isEmpty() ? unknown : m_edid.serialNumber());
-    if (group.hasKey("PhysicalSize")) {
-        const QSize overwriteSize = group.readEntry("PhysicalSize", m_physicalSize);
-        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber() << " from " << m_physicalSize << "to " << overwriteSize;
-        m_physicalSize = overwriteSize;
-    }
-
-    // init modes
-    updateModes();
-
-    return true;
+    return m_conn && initProps();
 }
 
 bool DrmConnector::isConnected() const
@@ -349,7 +290,62 @@ bool DrmConnector::updateProperties()
         return false;
     }
     m_conn.reset(drmModeGetConnector(gpu()->fd(), id()));
-    return m_conn != nullptr;
+    if (!m_conn) {
+        return false;
+    }
+    if (const auto &dpms = getProp(PropertyIndex::Dpms)) {
+        dpms->setLegacy();
+    }
+
+    auto underscan = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)];
+    auto vborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_vborder)];
+    auto hborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_hborder)];
+    if (underscan && vborder && hborder) {
+        underscan->setEnum(vborder->current() > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
+    } else {
+        deleteProp(PropertyIndex::Underscan);
+        deleteProp(PropertyIndex::Underscan_vborder);
+        deleteProp(PropertyIndex::Underscan_hborder);
+    }
+
+    // parse edid
+    auto edidProp = getProp(PropertyIndex::Edid);
+    if (edidProp) {
+        DrmScopedPointer<drmModePropertyBlobRes> blob(drmModeGetPropertyBlob(gpu()->fd(), edidProp->current()));
+        if (blob && blob->data) {
+            m_edid = Edid(blob->data, blob->length);
+            if (!m_edid.isValid()) {
+                qCWarning(KWIN_DRM) << "Couldn't parse EDID for connector" << this;
+            }
+        }
+        deleteProp(PropertyIndex::Edid);
+    } else {
+        qCDebug(KWIN_DRM) << "Could not find edid for connector" << this;
+    }
+
+    // check the physical size
+    if (m_edid.physicalSize().isEmpty()) {
+        m_physicalSize = QSize(m_conn->mmWidth, m_conn->mmHeight);
+    } else {
+        m_physicalSize = m_edid.physicalSize();
+    }
+
+    // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
+    // as this information is used to calculate DPI info, it's going to result in everything being huge
+    const QByteArray unknown = QByteArrayLiteral("unknown");
+    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId().isEmpty() ? unknown : m_edid.eisaId())
+                                                       .group(m_edid.monitorName().isEmpty() ? unknown : m_edid.monitorName())
+                                                       .group(m_edid.serialNumber().isEmpty() ? unknown : m_edid.serialNumber());
+    if (group.hasKey("PhysicalSize")) {
+        const QSize overwriteSize = group.readEntry("PhysicalSize", m_physicalSize);
+        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber() << " from " << m_physicalSize << "to " << overwriteSize;
+        m_physicalSize = overwriteSize;
+    }
+
+    // init modes
+    updateModes();
+
+    return true;
 }
 
 QVector<uint32_t> DrmConnector::encoders() const

@@ -80,7 +80,7 @@ bool DrmOutput::initCursor(const QSize &cursorSize)
 
 bool DrmOutput::hideCursor()
 {
-    if (!isEnabled()) {
+    if (!isEnabled() || !m_connector->isConnected()) {
         return true;
     }
     bool visibleBefore = m_pipeline->isCursorVisible();
@@ -97,7 +97,7 @@ bool DrmOutput::hideCursor()
 
 bool DrmOutput::showCursor()
 {
-    if (!isEnabled()) {
+    if (!isEnabled() || !m_connector->isConnected()) {
         return true;
     }
     bool visibleBefore = m_pipeline->isCursorVisible();
@@ -126,7 +126,7 @@ static bool isCursorSpriteCompatible(const QImage *buffer, const QImage *sprite)
 
 bool DrmOutput::updateCursor()
 {
-    if (!isEnabled()) {
+    if (!isEnabled() || !m_connector->isConnected()) {
         return true;
     }
     const Cursor *cursor = Cursors::self()->currentCursor();
@@ -164,7 +164,7 @@ bool DrmOutput::updateCursor()
 
 bool DrmOutput::moveCursor()
 {
-    if (!isEnabled()) {
+    if (!isEnabled() || !m_connector->isConnected()) {
         return true;
     }
     Cursor *cursor = Cursors::self()->currentCursor();
@@ -457,6 +457,9 @@ bool DrmOutput::queueChanges(const WaylandOutputConfig &config)
 
 void DrmOutput::applyQueuedChanges(const WaylandOutputConfig &config)
 {
+    if (!m_connector->isConnected()) {
+        return;
+    }
     Q_EMIT aboutToChange();
     m_pipeline->applyPendingChanges();
 
