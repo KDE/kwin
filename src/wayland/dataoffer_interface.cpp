@@ -119,9 +119,11 @@ void DataOfferInterfacePrivate::data_offer_set_actions(Resource *resource, uint3
         preferredAction = DataDeviceManagerInterface::DnDAction::Ask;
     }
 
-    supportedDnDActions = supportedActions;
-    preferredDnDAction = preferredAction;
-    Q_EMIT q->dragAndDropActionsChanged();
+    if (supportedDnDActions != supportedActions || preferredDnDAction != preferredAction) {
+        supportedDnDActions = supportedActions;
+        preferredDnDAction = preferredAction;
+        Q_EMIT q->dragAndDropActionsChanged();
+    }
 }
 
 void DataOfferInterface::sendSourceActions()
