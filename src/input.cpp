@@ -1871,7 +1871,6 @@ public:
         const quint32 MAX_VAL = 65535;
         tool->sendPressure(MAX_VAL * event->pressure());
         tool->sendFrame(event->timestamp());
-        waylandServer()->simulateUserActivity();
         return true;
     }
 
@@ -1900,7 +1899,6 @@ public:
             qCWarning(KWIN_CORE) << "Unexpected tablet event type" << event;
             break;
         }
-        waylandServer()->simulateUserActivity();
         return true;
     }
 
@@ -2250,28 +2248,24 @@ void InputRedirection::setupWorkspace()
                     [this] (const QSizeF &delta) {
                         // TODO: Fix time
                         m_pointer->processMotionAbsolute(globalPointer() + QPointF(delta.width(), delta.height()), 0);
-                        waylandServer()->simulateUserActivity();
                     }
                 );
                connect(device, &FakeInputDevice::pointerMotionAbsoluteRequested, this,
                     [this] (const QPointF &pos) {
                         // TODO: Fix time
                         m_pointer->processMotionAbsolute(pos, 0);
-                        waylandServer()->simulateUserActivity();
                     }
                 );
                 connect(device, &FakeInputDevice::pointerButtonPressRequested, this,
                     [this] (quint32 button) {
                         // TODO: Fix time
                         m_pointer->processButton(button, InputRedirection::PointerButtonPressed, 0);
-                        waylandServer()->simulateUserActivity();
                     }
                 );
                 connect(device, &FakeInputDevice::pointerButtonReleaseRequested, this,
                     [this] (quint32 button) {
                         // TODO: Fix time
                         m_pointer->processButton(button, InputRedirection::PointerButtonReleased, 0);
-                        waylandServer()->simulateUserActivity();
                     }
                 );
                 connect(device, &FakeInputDevice::pointerAxisRequested, this,
@@ -2291,28 +2285,24 @@ void InputRedirection::setupWorkspace()
                         }
                         // TODO: Fix time
                         m_pointer->processAxis(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, 0);
-                        waylandServer()->simulateUserActivity();
                     }
                 );
                 connect(device, &FakeInputDevice::touchDownRequested, this,
                    [this] (qint32 id, const QPointF &pos) {
                        // TODO: Fix time
                        m_touch->processDown(id, pos, 0);
-                        waylandServer()->simulateUserActivity();
                    }
                 );
                 connect(device, &FakeInputDevice::touchMotionRequested, this,
                    [this] (qint32 id, const QPointF &pos) {
                        // TODO: Fix time
                        m_touch->processMotion(id, pos, 0);
-                        waylandServer()->simulateUserActivity();
                    }
                 );
                 connect(device, &FakeInputDevice::touchUpRequested, this,
                     [this] (qint32 id) {
                         // TODO: Fix time
                         m_touch->processUp(id, 0);
-                        waylandServer()->simulateUserActivity();
                     }
                 );
                 connect(device, &FakeInputDevice::touchCancelRequested, this,
@@ -2329,14 +2319,12 @@ void InputRedirection::setupWorkspace()
                     [this] (quint32 button) {
                         // TODO: Fix time
                         m_keyboard->processKey(button, InputRedirection::KeyboardKeyPressed, 0);
-                        waylandServer()->simulateUserActivity();
                     }
                 );
                 connect(device, &FakeInputDevice::keyboardKeyReleaseRequested, this,
                     [this] (quint32 button) {
                         // TODO: Fix time
                         m_keyboard->processKey(button, InputRedirection::KeyboardKeyReleased, 0);
-                        waylandServer()->simulateUserActivity();
                     }
                 );
             }
@@ -2351,6 +2339,155 @@ void InputRedirection::setupWorkspace()
     setupInputFilters();
 }
 
+class UserActivitySpy : public InputEventSpy
+{
+public:
+    void pointerEvent(MouseEvent *event) override
+    {
+        Q_UNUSED(event)
+        notifyActivity();
+    }
+    void wheelEvent(WheelEvent *event) override
+    {
+        Q_UNUSED(event)
+        notifyActivity();
+    }
+
+    void keyEvent(KeyEvent *event) override
+    {
+        Q_UNUSED(event)
+        notifyActivity();
+    }
+
+    void touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
+        Q_UNUSED(id)
+        Q_UNUSED(pos)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
+        Q_UNUSED(id)
+        Q_UNUSED(pos)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void touchUp(qint32 id, quint32 time) override
+    {
+        Q_UNUSED(id)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+
+    void pinchGestureBegin(int fingerCount, quint32 time) override
+    {
+        Q_UNUSED(fingerCount)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
+    {
+        Q_UNUSED(scale)
+        Q_UNUSED(angleDelta)
+        Q_UNUSED(delta)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void pinchGestureEnd(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void pinchGestureCancelled(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+
+    void swipeGestureBegin(int fingerCount, quint32 time) override
+    {
+        Q_UNUSED(fingerCount)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void swipeGestureUpdate(const QSizeF &delta, quint32 time) override
+    {
+        Q_UNUSED(delta)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void swipeGestureEnd(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void swipeGestureCancelled(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+
+    void holdGestureBegin(int fingerCount, quint32 time) override
+    {
+        Q_UNUSED(fingerCount)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void holdGestureEnd(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void holdGestureCancelled(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+
+    void tabletToolEvent(TabletEvent *event) override
+    {
+        Q_UNUSED(event)
+        notifyActivity();
+    }
+    void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId) override
+    {
+        Q_UNUSED(button)
+        Q_UNUSED(pressed)
+        Q_UNUSED(tabletToolId)
+        notifyActivity();
+    }
+    void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId) override
+    {
+        Q_UNUSED(button)
+        Q_UNUSED(pressed)
+        Q_UNUSED(tabletPadId)
+        notifyActivity();
+    }
+    void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
+    {
+        Q_UNUSED(number)
+        Q_UNUSED(position)
+        Q_UNUSED(isFinger)
+        Q_UNUSED(tabletPadId)
+        notifyActivity();
+    }
+    void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
+    {
+        Q_UNUSED(number)
+        Q_UNUSED(position)
+        Q_UNUSED(isFinger)
+        Q_UNUSED(tabletPadId)
+        notifyActivity();
+    }
+
+private:
+    void notifyActivity()
+    {
+        waylandServer()->simulateUserActivity();
+    }
+};
+
 void InputRedirection::setupInputFilters()
 {
     const bool hasGlobalShortcutSupport = !waylandServer() || waylandServer()->hasGlobalShortcutSupport();
@@ -2360,6 +2497,7 @@ void InputRedirection::setupInputFilters()
     }
     if (waylandServer()) {
         installInputEventSpy(new TouchHideCursorSpy);
+        installInputEventSpy(new UserActivitySpy);
         if (hasGlobalShortcutSupport) {
             installInputEventFilter(new TerminateServerFilter);
         }
