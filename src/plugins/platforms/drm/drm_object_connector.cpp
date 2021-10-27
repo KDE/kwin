@@ -351,7 +351,7 @@ DrmConnector::PanelOrientation DrmConnector::panelOrientation() const
     if (!orientation) {
         return PanelOrientation::Normal;
     }
-    return orientation->enumForValue<DrmConnector::PanelOrientation>(orientation->pending());
+    return orientation->enumForValue<DrmConnector::PanelOrientation>(orientation->current());
 }
 
 bool DrmConnector::updateProperties()

@@ -49,7 +49,7 @@ public:
         Auto = 2,
     };
 
-    enum class PanelOrientation : u_int32_t {
+    enum class PanelOrientation : uint32_t {
         Normal,
         UpsideDown = 0,
         LeftUp = 1,
