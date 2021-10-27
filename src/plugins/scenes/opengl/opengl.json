@@ -16,6 +16,7 @@
         "Description[fr]": "Module du compositeur KWin effectuant le rendu avec OpenGL",
         "Description[gl]": "Complemento de compositor de KWin que renderiza a través de OpenGL.",
         "Description[hu]": "KWin összeállító bővítmény OpenGL leképezéssel",
+        "Description[ia]": "Plugin de Compositor KWin rendente transverso OpenGL",
         "Description[id]": "Plugin KWin Compositor perenderan melalui OpenGL",
         "Description[it]": "Estensione del compositore di KWin per la resa tramite OpenGL",
         "Description[ko]": "OpenGL로 렌더링하는 KWin 컴포지터 플러그인",

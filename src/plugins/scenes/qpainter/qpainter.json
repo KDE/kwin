@@ -17,6 +17,7 @@
         "Description[fr]": "Module du compositeur KWin effectuant le rendu avec QPainter",
         "Description[gl]": "Complemento de compositor de KWin que renderiza a través de QPainter.",
         "Description[hu]": "KWin összeállító bővítmény QPainter leképezéssel",
+        "Description[ia]": "Plugin de Compositor KWin rendente transverso QPainter",
         "Description[id]": "Plugin KWin Compositor perenderan melalui QPainter",
         "Description[it]": "Estensione del compositore di KWin per la resa tramite QPainter",
         "Description[ko]": "QPainter로 렌더링하는 KWin 컴포지터 플러그인",
