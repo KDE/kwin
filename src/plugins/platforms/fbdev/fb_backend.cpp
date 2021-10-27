@@ -8,8 +8,8 @@
 */
 #include "fb_backend.h"
 
+#include "backends/libinput/libinputbackend.h"
 #include "composite.h"
-#include "libinput/libinputbackend.h"
 #include "logging.h"
 #include "main.h"
 #include "platform.h"

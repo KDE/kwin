@@ -8,7 +8,7 @@
 */
 #include "mock_libinput.h"
 
-#include "libinput/device.h"
+#include "backends/libinput/device.h"
 #include "input_event.h"
 
 #include <QtTest>

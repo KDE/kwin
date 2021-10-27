@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_backend.h"
+#include "backends/libinput/libinputbackend.h"
 #include <config-kwin.h>
 #include "drm_output.h"
 #include "drm_object_connector.h"
@@ -14,7 +15,6 @@
 #include "drm_object_plane.h"
 #include "composite.h"
 #include "cursor.h"
-#include "libinput/libinputbackend.h"
 #include "logging.h"
 #include "main.h"
 #include "renderloop.h"

@@ -46,8 +46,6 @@ set(kwin_SRCS
     effects.cpp
     egl_context_attribute_builder.cpp
     events.cpp
-    fakeinput/fakeinputbackend.cpp
-    fakeinput/fakeinputdevice.cpp
     focuschain.cpp
     ftrace.cpp
     geometrytip.cpp
@@ -73,12 +71,6 @@ set(kwin_SRCS
     layers.cpp
     layershellv1client.cpp
     layershellv1integration.cpp
-    libinput/connection.cpp
-    libinput/context.cpp
-    libinput/device.cpp
-    libinput/events.cpp
-    libinput/libinput_logging.cpp
-    libinput/libinputbackend.cpp
     linux_dmabuf.cpp
     main.cpp
     modifier_only_shortcuts.cpp
@@ -229,7 +221,6 @@ target_link_libraries(kwin
     XCB::XCB
     XCB::XFIXES
 
-    Libinput::Libinput
     UDev::UDev
     XKB::XKB
     Qt5::XkbCommonSupportPrivate
@@ -237,6 +228,8 @@ target_link_libraries(kwin
 
     Threads::Threads
 )
+
+add_subdirectory(backends)
 
 if (KWIN_BUILD_CMS)
     target_sources(kwin PRIVATE

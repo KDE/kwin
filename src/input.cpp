@@ -9,8 +9,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "input.h"
+#include "backends/fakeinput/fakeinputbackend.h"
+#include "backends/libinput/connection.h"
+#include "backends/libinput/device.h"
 #include "effects.h"
-#include "fakeinput/fakeinputbackend.h"
 #include "gestures.h"
 #include "globalshortcuts.h"
 #include "input_event.h"
@@ -28,8 +30,6 @@
 #include "tabbox/tabbox.h"
 #endif
 #include "internal_client.h"
-#include "libinput/connection.h"
-#include "libinput/device.h"
 #include "platform.h"
 #include "popup_input_filter.h"
 #include "screenedge.h"
