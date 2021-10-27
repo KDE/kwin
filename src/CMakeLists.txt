@@ -46,6 +46,8 @@ set(kwin_SRCS
     effects.cpp
     egl_context_attribute_builder.cpp
     events.cpp
+    fakeinput/fakeinputbackend.cpp
+    fakeinput/fakeinputdevice.cpp
     focuschain.cpp
     ftrace.cpp
     geometrytip.cpp

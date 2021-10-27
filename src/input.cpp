@@ -10,6 +10,7 @@
 */
 #include "input.h"
 #include "effects.h"
+#include "fakeinput/fakeinputbackend.h"
 #include "gestures.h"
 #include "globalshortcuts.h"
 #include "input_event.h"
@@ -43,7 +44,6 @@
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KWaylandServer/display.h>
-#include <KWaylandServer/fakeinput_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/surface_interface.h>
@@ -2205,104 +2205,6 @@ void InputRedirection::init()
 void InputRedirection::setupWorkspace()
 {
     if (waylandServer()) {
-        using namespace KWaylandServer;
-        FakeInputInterface *fakeInput = new FakeInputInterface(waylandServer()->display(), this);
-        connect(fakeInput, &FakeInputInterface::deviceCreated, this,
-            [this] (FakeInputDevice *device) {
-                connect(device, &FakeInputDevice::authenticationRequested, this,
-                    [device] (const QString &application, const QString &reason) {
-                        Q_UNUSED(application)
-                        Q_UNUSED(reason)
-                        // TODO: make secure
-                        device->setAuthentication(true);
-                    }
-                );
-                connect(device, &FakeInputDevice::pointerMotionRequested, this,
-                    [this] (const QSizeF &delta) {
-                        // TODO: Fix time
-                        m_pointer->processMotionAbsolute(globalPointer() + QPointF(delta.width(), delta.height()), 0);
-                    }
-                );
-               connect(device, &FakeInputDevice::pointerMotionAbsoluteRequested, this,
-                    [this] (const QPointF &pos) {
-                        // TODO: Fix time
-                        m_pointer->processMotionAbsolute(pos, 0);
-                    }
-                );
-                connect(device, &FakeInputDevice::pointerButtonPressRequested, this,
-                    [this] (quint32 button) {
-                        // TODO: Fix time
-                        m_pointer->processButton(button, InputRedirection::PointerButtonPressed, 0);
-                    }
-                );
-                connect(device, &FakeInputDevice::pointerButtonReleaseRequested, this,
-                    [this] (quint32 button) {
-                        // TODO: Fix time
-                        m_pointer->processButton(button, InputRedirection::PointerButtonReleased, 0);
-                    }
-                );
-                connect(device, &FakeInputDevice::pointerAxisRequested, this,
-                    [this] (Qt::Orientation orientation, qreal delta) {
-                        // TODO: Fix time
-                        InputRedirection::PointerAxis axis;
-                        switch (orientation) {
-                        case Qt::Horizontal:
-                            axis = InputRedirection::PointerAxisHorizontal;
-                            break;
-                        case Qt::Vertical:
-                            axis = InputRedirection::PointerAxisVertical;
-                            break;
-                        default:
-                            Q_UNREACHABLE();
-                            break;
-                        }
-                        // TODO: Fix time
-                        m_pointer->processAxis(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, 0);
-                    }
-                );
-                connect(device, &FakeInputDevice::touchDownRequested, this,
-                   [this] (qint32 id, const QPointF &pos) {
-                       // TODO: Fix time
-                       m_touch->processDown(id, pos, 0);
-                   }
-                );
-                connect(device, &FakeInputDevice::touchMotionRequested, this,
-                   [this] (qint32 id, const QPointF &pos) {
-                       // TODO: Fix time
-                       m_touch->processMotion(id, pos, 0);
-                   }
-                );
-                connect(device, &FakeInputDevice::touchUpRequested, this,
-                    [this] (qint32 id) {
-                        // TODO: Fix time
-                        m_touch->processUp(id, 0);
-                    }
-                );
-                connect(device, &FakeInputDevice::touchCancelRequested, this,
-                    [this] () {
-                        m_touch->cancel();
-                    }
-                );
-                connect(device, &FakeInputDevice::touchFrameRequested, this,
-                   [this] () {
-                       m_touch->frame();
-                   }
-                );
-                connect(device, &FakeInputDevice::keyboardKeyPressRequested, this,
-                    [this] (quint32 button) {
-                        // TODO: Fix time
-                        m_keyboard->processKey(button, InputRedirection::KeyboardKeyPressed, 0);
-                    }
-                );
-                connect(device, &FakeInputDevice::keyboardKeyReleaseRequested, this,
-                    [this] (quint32 button) {
-                        // TODO: Fix time
-                        m_keyboard->processKey(button, InputRedirection::KeyboardKeyReleased, 0);
-                    }
-                );
-            }
-        );
-
         m_keyboard->init();
         m_pointer->init();
         m_touch->init();
@@ -2701,6 +2603,9 @@ void InputRedirection::setupInputBackends()
     InputBackend *inputBackend = kwinApp()->platform()->createInputBackend();
     if (inputBackend) {
         addInputBackend(inputBackend);
+    }
+    if (waylandServer()) {
+        addInputBackend(new FakeInputBackend());
     }
 }
 
