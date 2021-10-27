@@ -135,7 +135,7 @@ void IdleTest::testTimeout()
 
     // simulate some activity
     QVERIFY(resumedFormIdleSpy.isEmpty());
-    m_seatInterface->setTimestamp(1);
+    m_idleInterface->simulateUserActivity();
     QVERIFY(resumedFormIdleSpy.wait());
 
     timeout.reset();

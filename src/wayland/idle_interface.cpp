@@ -79,9 +79,6 @@ IdleTimeoutInterface::IdleTimeoutInterface(SeatInterface *seat, IdleInterface *m
     , seat(seat)
     , manager(manager)
 {
-    connect(seat, &SeatInterface::timestampChanged, this, [this] {
-        simulateUserActivity();
-    });
     connect(manager, &IdleInterface::inhibitedChanged, this, [this, manager] {
         if (!timer) {
             // not yet configured
