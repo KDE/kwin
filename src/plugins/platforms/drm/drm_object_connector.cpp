@@ -41,6 +41,13 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                 QByteArrayLiteral("Full"),
                 QByteArrayLiteral("Limited 16:235")
             }),
+            PropertyDefinition(QByteArrayLiteral("panel orientation"), Requirement::Optional,
+                {
+                    QByteArrayLiteral("Normal"),
+                    QByteArrayLiteral("Upside Down"),
+                    QByteArrayLiteral("Left Side Up"),
+                    QByteArrayLiteral("Right Side Up"),
+                }),
         }, DRM_MODE_OBJECT_CONNECTOR)
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
@@ -336,6 +343,15 @@ AbstractWaylandOutput::RgbRange DrmConnector::rgbRange() const
 {
     const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
     return rgb->enumForValue<AbstractWaylandOutput::RgbRange>(rgb->pending());
+}
+
+DrmConnector::PanelOrientation DrmConnector::panelOrientation() const
+{
+    const auto &orientation = getProp(PropertyIndex::PanelOrientation);
+    if (!orientation) {
+        return PanelOrientation::Normal;
+    }
+    return orientation->enumForValue<DrmConnector::PanelOrientation>(orientation->pending());
 }
 
 bool DrmConnector::updateProperties()

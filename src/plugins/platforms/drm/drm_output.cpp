@@ -218,6 +218,18 @@ void DrmOutput::initOutputDevice()
     initialize(conn->modelName(), conn->edid()->manufacturerString(),
                conn->edid()->eisaId(), conn->edid()->serialNumber(),
                conn->physicalSize(), getModes(), conn->edid()->raw());
+
+    switch(m_connector->panelOrientation()) {
+    case DrmConnector::PanelOrientation::UpsideDown:
+        setTransformInternal(Transform::Rotated180);
+        break;
+    case DrmConnector::PanelOrientation::LeftUp:
+        setTransformInternal(Transform::Rotated90);
+        break;
+    case DrmConnector::PanelOrientation::RightUp:
+        setTransformInternal(Transform::Rotated270);
+        break;
+    }
 }
 
 void DrmOutput::updateEnablement(bool enable)

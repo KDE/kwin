@@ -39,6 +39,7 @@ public:
         Underscan_vborder = 7,
         Underscan_hborder = 8,
         Broadcast_RGB = 9,
+        PanelOrientation = 10,
         Count
     };
 
@@ -46,6 +47,13 @@ public:
         Off = 0,
         On = 1,
         Auto = 2,
+    };
+
+    enum class PanelOrientation : u_int32_t {
+        Normal,
+        UpsideDown = 0,
+        LeftUp = 1,
+        RightUp = 2,
     };
 
     bool init() override;
@@ -81,6 +89,7 @@ public:
     bool vrrCapable() const;
     bool hasRgbRange() const;
     AbstractWaylandOutput::RgbRange rgbRange() const;
+    PanelOrientation panelOrientation() const;
 
 private:
     DrmScopedPointer<drmModeConnector> m_conn;
