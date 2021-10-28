@@ -320,14 +320,6 @@ void Platform::pointerButtonReleased(quint32 button, quint32 time)
     input()->pointer()->processButton(button, InputRedirection::PointerButtonReleased, time);
 }
 
-int Platform::touchPointCount()
-{
-    if (!input()) {
-        return 0;
-    }
-    return input()->touch()->touchPointCount();
-}
-
 void Platform::pointerMotion(const QPointF &position, quint32 time)
 {
     if (!input()) {

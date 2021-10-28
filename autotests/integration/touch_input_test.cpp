@@ -271,18 +271,18 @@ void TouchInputTest::testTouchMouseAction()
 
 void TouchInputTest::testTouchPointCount()
 {
-    QCOMPARE(kwinApp()->platform()->touchPointCount(), 0);
+    QCOMPARE(input()->touch()->touchPointCount(), 0);
     quint32 timestamp = 1;
     kwinApp()->platform()->touchDown(0, QPointF(125, 125), timestamp++);
     kwinApp()->platform()->touchDown(1, QPointF(125, 125), timestamp++);
     kwinApp()->platform()->touchDown(2, QPointF(125, 125), timestamp++);
-    QCOMPARE(kwinApp()->platform()->touchPointCount(), 3);
+    QCOMPARE(input()->touch()->touchPointCount(), 3);
 
     kwinApp()->platform()->touchUp(1, timestamp++);
-    QCOMPARE(kwinApp()->platform()->touchPointCount(), 2);
+    QCOMPARE(input()->touch()->touchPointCount(), 2);
 
     kwinApp()->platform()->cancelTouchSequence();
-    QCOMPARE(kwinApp()->platform()->touchPointCount(), 0);
+    QCOMPARE(input()->touch()->touchPointCount(), 0);
 }
 
 void TouchInputTest::testUpdateFocusOnDecorationDestroy()

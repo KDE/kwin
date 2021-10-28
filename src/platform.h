@@ -414,7 +414,6 @@ public Q_SLOTS:
     void cancelTouchSequence();
     void touchCancel();
     void touchFrame();
-    int touchPointCount();
 
     void processSwipeGestureBegin(int fingerCount, quint32 time);
     void processSwipeGestureUpdate(const QSizeF &delta, quint32 time);
