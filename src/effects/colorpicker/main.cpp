@@ -11,7 +11,7 @@ namespace KWin
 
 KWIN_EFFECT_FACTORY_SUPPORTED(ColorPickerEffectFactory,
                               ColorPickerEffect,
-                              "metadata.json",
+                              "metadata.json.stripped",
                               return ColorPickerEffect::supported();)
 
 } // namespace KWin

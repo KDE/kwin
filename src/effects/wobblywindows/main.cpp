@@ -11,7 +11,7 @@ namespace KWin
 
 KWIN_EFFECT_FACTORY_SUPPORTED(WobblyWindowsEffectFactory,
                               WobblyWindowsEffect,
-                              "metadata.json",
+                              "metadata.json.stripped",
                               return WobblyWindowsEffect::supported();)
 
 } // namespace KWin

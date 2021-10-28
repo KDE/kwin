@@ -11,7 +11,7 @@ namespace KWin
 
 KWIN_EFFECT_FACTORY_SUPPORTED(MagicLampEffectFactory,
                               MagicLampEffect,
-                              "metadata.json",
+                              "metadata.json.stripped",
                               return MagicLampEffect::supported();)
 
 } // namespace KWin

@@ -11,7 +11,7 @@ namespace KWin
 
 KWIN_EFFECT_FACTORY_SUPPORTED(MagnifierEffectFactory,
                               MagnifierEffect,
-                              "metadata.json",
+                              "metadata.json.stripped",
                               return MagnifierEffect::supported();)
 
 } // namespace KWin

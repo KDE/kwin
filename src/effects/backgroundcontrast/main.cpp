@@ -11,7 +11,7 @@ namespace KWin
 
 KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED(ContrastEffectFactory,
                                       ContrastEffect,
-                                      "metadata.json",
+                                      "metadata.json.stripped",
                                       return ContrastEffect::supported();,
                                       return ContrastEffect::enabledByDefault();)
 

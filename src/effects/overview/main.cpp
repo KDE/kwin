@@ -11,7 +11,7 @@ namespace KWin
 
 KWIN_EFFECT_FACTORY_SUPPORTED(OverviewEffectFactory,
                               OverviewEffect,
-                              "metadata.json",
+                              "metadata.json.stripped",
                               return OverviewEffect::supported();)
 
 } // namespace KWin

@@ -11,7 +11,7 @@ namespace KWin
 
 KWIN_EFFECT_FACTORY_SUPPORTED(LookingGlassEffectFactory,
                               LookingGlassEffect,
-                              "metadata.json",
+                              "metadata.json.stripped",
                               return LookingGlassEffect::supported();)
 
 } // namespace KWin

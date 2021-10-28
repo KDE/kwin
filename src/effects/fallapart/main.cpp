@@ -11,7 +11,7 @@ namespace KWin
 
 KWIN_EFFECT_FACTORY_SUPPORTED(FallApartEffectFactory,
                               FallApartEffect,
-                              "metadata.json",
+                              "metadata.json.stripped",
                               return FallApartEffect::supported();)
 
 } // namespace KWin

@@ -11,7 +11,7 @@ namespace KWin
 
 KWIN_EFFECT_FACTORY_SUPPORTED(ScreenShotEffectFactory,
                               ScreenShotEffect,
-                              "metadata.json",
+                              "metadata.json.stripped",
                               return ScreenShotEffect::supported();)
 
 } // namespace KWin

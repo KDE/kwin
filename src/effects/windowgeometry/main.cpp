@@ -11,7 +11,7 @@ namespace KWin
 
 KWIN_EFFECT_FACTORY(WindowGeometryFactory,
                     WindowGeometry,
-                    "metadata.json")
+                    "metadata.json.stripped")
 
 } // namespace KWin
 

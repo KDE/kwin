@@ -3,6 +3,23 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kwin_effects\" -DEFFECT_BUILTINS)
 
 include_directories(${KWin_SOURCE_DIR}/src) # for xcbutils.h
 
+add_executable(kwin-strip-effect-metadata strip-effect-metadata.cpp)
+target_link_libraries(kwin-strip-effect-metadata Qt5::Core)
+
+function (kwin_strip_builtin_effect_metadata target metadata)
+    set(stripped_metadata "${CMAKE_CURRENT_BINARY_DIR}/${metadata}.stripped")
+
+    set(command kwin-strip-effect-metadata --source=${metadata} --output=${stripped_metadata})
+    add_custom_command(
+        OUTPUT ${stripped_metadata}
+        COMMAND ${command}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        DEPENDS ${metadata}
+        COMMENT "Stripping ${metadata}..."
+    )
+    set_property(TARGET ${target} APPEND PROPERTY AUTOGEN_TARGET_DEPENDS ${stripped_metadata})
+endfunction()
+
 if (HAVE_ACCESSIBILITY)
     include_directories(${QACCESSIBILITYCLIENT_INCLUDE_DIR})
 endif()
@@ -60,6 +77,7 @@ endmacro()
 macro(KWIN4_ADD_EFFECT_MODULE name)
     kwin4_add_effect_backend(${name} OBJECT ${ARGN})
     target_compile_definitions(${name} PRIVATE QT_STATICPLUGIN)
+    kwin_strip_builtin_effect_metadata(${name} metadata.json)
     install(FILES metadata.json DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_NAME}/builtin-effects/${name}/)
 endmacro()
 
