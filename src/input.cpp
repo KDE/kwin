@@ -1478,9 +1478,6 @@ public:
         return true;
     }
     bool keyEvent(QKeyEvent *event) override {
-        if (!workspace()) {
-            return false;
-        }
         if (event->isAutoRepeat()) {
             // handled by Wayland client
             return false;
@@ -1492,63 +1489,42 @@ public:
         return true;
     }
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->notifyTouchDown(id, pos);
         return true;
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->notifyTouchMotion(id, pos);
         return true;
     }
     bool touchUp(qint32 id, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->notifyTouchUp(id);
         return true;
     }
     bool pinchGestureBegin(int fingerCount, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->startPointerPinchGesture(fingerCount);
         return true;
     }
     bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->updatePointerPinchGesture(delta, scale, angleDelta);
         return true;
     }
     bool pinchGestureEnd(quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->endPointerPinchGesture();
         return true;
     }
     bool pinchGestureCancelled(quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->cancelPointerPinchGesture();
@@ -1556,36 +1532,24 @@ public:
     }
 
     bool swipeGestureBegin(int fingerCount, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->startPointerSwipeGesture(fingerCount);
         return true;
     }
     bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->updatePointerSwipeGesture(delta);
         return true;
     }
     bool swipeGestureEnd(quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->endPointerSwipeGesture();
         return true;
     }
     bool swipeGestureCancelled(quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->cancelPointerSwipeGesture();
