@@ -13,6 +13,7 @@
 #include "composite.h"
 #include "cursor.h"
 #include "effects.h"
+#include "keyboard_input.h"
 #include <KCoreAddons>
 #include "overlaywindow.h"
 #include "outline.h"
@@ -20,6 +21,7 @@
 #include "scene.h"
 #include "screens.h"
 #include "screenedge.h"
+#include "touch_input.h"
 #include "wayland_server.h"
 
 #include <KWaylandServer/outputconfiguration_v2_interface.h>
@@ -259,7 +261,7 @@ void Platform::keyboardKeyPressed(quint32 key, quint32 time)
     if (!input()) {
         return;
     }
-    input()->processKeyboardKey(key, InputRedirection::KeyboardKeyPressed, time);
+    input()->keyboard()->processKey(key, InputRedirection::KeyboardKeyPressed, time);
 }
 
 void Platform::keyboardKeyReleased(quint32 key, quint32 time)
@@ -267,7 +269,7 @@ void Platform::keyboardKeyReleased(quint32 key, quint32 time)
     if (!input()) {
         return;
     }
-    input()->processKeyboardKey(key, InputRedirection::KeyboardKeyReleased, time);
+   input()->keyboard()->processKey(key, InputRedirection::KeyboardKeyReleased, time);
 }
 
 void Platform::keyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
@@ -275,7 +277,7 @@ void Platform::keyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, u
     if (!input()) {
         return;
     }
-    input()->processKeyboardModifiers(modsDepressed, modsLatched, modsLocked, group);
+    input()->keyboard()->processModifiers(modsDepressed, modsLatched, modsLocked, group);
 }
 
 void Platform::keymapChange(int fd, uint32_t size)
@@ -283,7 +285,7 @@ void Platform::keymapChange(int fd, uint32_t size)
     if (!input()) {
         return;
     }
-    input()->processKeymapChange(fd, size);
+    input()->keyboard()->processKeymapChange(fd, size);
 }
 
 void Platform::pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta, InputRedirection::PointerAxisSource source)
@@ -291,7 +293,7 @@ void Platform::pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteD
     if (!input()) {
         return;
     }
-    input()->processPointerAxis(InputRedirection::PointerAxisHorizontal, delta, discreteDelta, source, time);
+    input()->pointer()->processAxis(InputRedirection::PointerAxisHorizontal, delta, discreteDelta, source, time);
 }
 
 void Platform::pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta, InputRedirection::PointerAxisSource source)
@@ -299,7 +301,7 @@ void Platform::pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDel
     if (!input()) {
         return;
     }
-    input()->processPointerAxis(InputRedirection::PointerAxisVertical, delta, discreteDelta, source, time);
+    input()->pointer()->processAxis(InputRedirection::PointerAxisVertical, delta, discreteDelta, source, time);
 }
 
 void Platform::pointerButtonPressed(quint32 button, quint32 time)
@@ -307,7 +309,7 @@ void Platform::pointerButtonPressed(quint32 button, quint32 time)
     if (!input()) {
         return;
     }
-    input()->processPointerButton(button, InputRedirection::PointerButtonPressed, time);
+    input()->pointer()->processButton(button, InputRedirection::PointerButtonPressed, time);
 }
 
 void Platform::pointerButtonReleased(quint32 button, quint32 time)
@@ -315,7 +317,7 @@ void Platform::pointerButtonReleased(quint32 button, quint32 time)
     if (!input()) {
         return;
     }
-    input()->processPointerButton(button, InputRedirection::PointerButtonReleased, time);
+    input()->pointer()->processButton(button, InputRedirection::PointerButtonReleased, time);
 }
 
 int Platform::touchPointCount()
@@ -323,7 +325,7 @@ int Platform::touchPointCount()
     if (!input()) {
         return 0;
     }
-    return input()->touchPointCount();
+    return input()->touch()->touchPointCount();
 }
 
 void Platform::pointerMotion(const QPointF &position, quint32 time)
@@ -331,7 +333,7 @@ void Platform::pointerMotion(const QPointF &position, quint32 time)
     if (!input()) {
         return;
     }
-    input()->processPointerMotion(position, time);
+    input()->pointer()->processMotionAbsolute(position, time);
 }
 
 void Platform::cancelTouchSequence()
@@ -339,7 +341,7 @@ void Platform::cancelTouchSequence()
     if (!input()) {
         return;
     }
-    input()->cancelTouchSequence();
+    input()->touch()->cancel();
 }
 
 void Platform::touchCancel()
@@ -347,7 +349,7 @@ void Platform::touchCancel()
     if (!input()) {
         return;
     }
-    input()->cancelTouch();
+    input()->touch()->cancel();
 }
 
 void Platform::touchDown(qint32 id, const QPointF &pos, quint32 time)
@@ -355,7 +357,7 @@ void Platform::touchDown(qint32 id, const QPointF &pos, quint32 time)
     if (!input()) {
         return;
     }
-    input()->processTouchDown(id, pos, time);
+    input()->touch()->processDown(id, pos, time);
 }
 
 void Platform::touchFrame()
@@ -363,7 +365,7 @@ void Platform::touchFrame()
     if (!input()) {
         return;
     }
-    input()->touchFrame();
+    input()->touch()->frame();
 }
 
 void Platform::touchMotion(qint32 id, const QPointF &pos, quint32 time)
@@ -371,7 +373,7 @@ void Platform::touchMotion(qint32 id, const QPointF &pos, quint32 time)
     if (!input()) {
         return;
     }
-    input()->processTouchMotion(id, pos, time);
+    input()->touch()->processMotion(id, pos, time);
 }
 
 void Platform::touchUp(qint32 id, quint32 time)
@@ -379,7 +381,7 @@ void Platform::touchUp(qint32 id, quint32 time)
     if (!input()) {
         return;
     }
-    input()->processTouchUp(id, time);
+    input()->touch()->processUp(id, time);
 }
 
 void Platform::processSwipeGestureBegin(int fingerCount, quint32 time)

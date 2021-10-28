@@ -743,14 +743,14 @@ public:
         m_active = true;
         m_callback = callback;
         input()->keyboard()->update();
-        input()->cancelTouch();
+        input()->touch()->cancel();
     }
     void start(std::function<void(const QPoint &)> callback) {
         Q_ASSERT(!m_active);
         m_active = true;
         m_pointSelectionFallback = callback;
         input()->keyboard()->update();
-        input()->cancelTouch();
+        input()->touch()->cancel();
     }
 private:
     void deactivate() {
@@ -2721,71 +2721,6 @@ void InputRedirection::setupLibInputWithScreens()
         }
     );
     connect(screens(), &Screens::changed, m_libInput, &LibInput::Connection::updateScreens);
-}
-
-void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
-{
-    m_pointer->processMotionAbsolute(pos, time);
-}
-
-void InputRedirection::processPointerButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time)
-{
-    m_pointer->processButton(button, state, time);
-}
-
-void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 discreteDelta, PointerAxisSource source, uint32_t time)
-{
-    m_pointer->processAxis(axis, delta, discreteDelta, source, time);
-}
-
-void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)
-{
-    m_keyboard->processKey(key, state, time);
-}
-
-void InputRedirection::processKeyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
-{
-    m_keyboard->processModifiers(modsDepressed, modsLatched, modsLocked, group);
-}
-
-void InputRedirection::processKeymapChange(int fd, uint32_t size)
-{
-    m_keyboard->processKeymapChange(fd, size);
-}
-
-void InputRedirection::processTouchDown(qint32 id, const QPointF &pos, quint32 time)
-{
-    m_touch->processDown(id, pos, time);
-}
-
-void InputRedirection::processTouchUp(qint32 id, quint32 time)
-{
-    m_touch->processUp(id, time);
-}
-
-void InputRedirection::processTouchMotion(qint32 id, const QPointF &pos, quint32 time)
-{
-    m_touch->processMotion(id, pos, time);
-}
-
-void InputRedirection::cancelTouchSequence()
-{
-    m_touch->cancel();
-}
-
-void InputRedirection::cancelTouch()
-{
-    m_touch->cancel();
-}
-
-void InputRedirection::touchFrame()
-{
-    m_touch->frame();
-}
-
-int InputRedirection::touchPointCount()
-{
-    return m_touch->touchPointCount();
 }
 
 Qt::MouseButtons InputRedirection::qtButtonStates() const

@@ -142,42 +142,6 @@ public:
     void registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, QAction *onUp, std::function<void(qreal)> progressCallback);
     void registerGlobalAccel(KGlobalAccelInterface *interface);
 
-    /**
-     * @internal
-     */
-    void processPointerMotion(const QPointF &pos, uint32_t time);
-    /**
-     * @internal
-     */
-    void processPointerButton(uint32_t button, PointerButtonState state, uint32_t time);
-    /**
-     * @internal
-     */
-    void processPointerAxis(PointerAxis axis, qreal delta, qint32 discreteDelta, PointerAxisSource source, uint32_t time);
-    /**
-     * @internal
-     */
-    void processKeyboardKey(uint32_t key, KeyboardKeyState state, uint32_t time);
-    /**
-     * @internal
-     */
-    void processKeyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
-    /**
-     * @internal
-     */
-    void processKeymapChange(int fd, uint32_t size);
-    void processTouchDown(qint32 id, const QPointF &pos, quint32 time);
-    void processTouchUp(qint32 id, quint32 time);
-    void processTouchMotion(qint32 id, const QPointF &pos, quint32 time);
-    /**
-     * triggers the same code path as LIBINPUT_TOUCH_CANCEL_EVENT.
-     * Only intended for autotests
-     */
-    void cancelTouchSequence();
-    void cancelTouch();
-    void touchFrame();
-    int touchPointCount();
-
     bool supportsPointerWarping() const;
     void warpPointer(const QPointF &pos);
 
