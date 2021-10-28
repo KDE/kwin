@@ -61,6 +61,14 @@ public Q_SLOTS: // METHODS
     Q_NOREPLY void replace();
 
     QVariantMap queryWindowInfo();
+
+    /** 
+     * Returns a map with information about the window.
+     * 
+     * The map includes entries such as position, size, status, and more.
+     * 
+     * @param uuid is a QUuid from Toplevel::internalId().
+     */
     QVariantMap getWindowInfo(const QString &uuid);
 
 private Q_SLOTS:
