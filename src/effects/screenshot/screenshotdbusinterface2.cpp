@@ -299,6 +299,32 @@ bool ScreenShotDBusInterface2::checkPermissions() const
     return true;
 }
 
+QVariantMap ScreenShotDBusInterface2::CaptureActiveWindow(const QVariantMap &options,
+                                                          QDBusUnixFileDescriptor pipe)
+{
+    if (!checkPermissions()) {
+        return QVariantMap();
+    }
+
+    EffectWindow *window = effects->activeWindow();
+    if (!window) {
+        sendErrorReply(s_errorInvalidWindow, s_errorInvalidWindowMessage);
+        return QVariantMap();
+    }
+
+    const int fileDescriptor = dup(pipe.fileDescriptor());
+    if (fileDescriptor == -1) {
+        sendErrorReply(s_errorFileDescriptor, s_errorFileDescriptorMessage);
+        return QVariantMap();
+    }
+
+    takeScreenShot(window, screenShotFlagsFromOptions(options),
+                   new ScreenShotSinkPipe2(fileDescriptor, message()));
+
+    setDelayedReply(true);
+    return QVariantMap();
+}
+
 QVariantMap ScreenShotDBusInterface2::CaptureWindow(const QString &handle,
                                                     const QVariantMap &options,
                                                     QDBusUnixFileDescriptor pipe)

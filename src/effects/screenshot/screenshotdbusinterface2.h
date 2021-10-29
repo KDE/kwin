@@ -42,6 +42,8 @@ public:
 public Q_SLOTS:
     QVariantMap CaptureWindow(const QString &handle, const QVariantMap &options,
                               QDBusUnixFileDescriptor pipe);
+    QVariantMap CaptureActiveWindow(const QVariantMap &options,
+                                    QDBusUnixFileDescriptor pipe);
     QVariantMap CaptureArea(int x, int y, int width, int height,
                             const QVariantMap &options,
                             QDBusUnixFileDescriptor pipe);
