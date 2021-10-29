@@ -273,6 +273,11 @@ ScreenShotDBusInterface2::~ScreenShotDBusInterface2()
     QDBusConnection::sessionBus().unregisterObject(s_dbusObjectPath);
 }
 
+int ScreenShotDBusInterface2::version() const
+{
+    return 2;
+}
+
 bool ScreenShotDBusInterface2::checkPermissions() const
 {
     if (!calledFromDBus()) {

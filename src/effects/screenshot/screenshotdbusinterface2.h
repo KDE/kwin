@@ -31,10 +31,13 @@ class ScreenShotSource2;
 class ScreenShotDBusInterface2 : public QObject, public QDBusContext
 {
     Q_OBJECT
+    Q_PROPERTY(int Version READ version CONSTANT)
 
 public:
     explicit ScreenShotDBusInterface2(ScreenShotEffect *effect);
     ~ScreenShotDBusInterface2() override;
+
+    int version() const;
 
 public Q_SLOTS:
     QVariantMap CaptureWindow(const QString &handle, const QVariantMap &options,

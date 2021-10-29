@@ -15,6 +15,13 @@
     -->
     <interface name="org.kde.KWin.ScreenShot2">
         <!--
+            Version:
+
+            API version.
+        -->
+        <property name="Version" type="u" access="read"/>
+
+        <!--
             CaptureWindow:
             @handle: The unique handle that identified the window
             @options: Optional vardict with screenshot options
