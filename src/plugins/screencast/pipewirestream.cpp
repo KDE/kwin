@@ -66,6 +66,7 @@ void PipeWireStream::onStreamStateChanged(void *data, pw_stream_state old, pw_st
 #define CURSOR_BPP	4
 #define CURSOR_META_SIZE(w,h)	(sizeof(struct spa_meta_cursor) + \
 				 sizeof(struct spa_meta_bitmap) + w * h * CURSOR_BPP)
+static const int videoDamageRegionCount = 16;
 
 void PipeWireStream::newStreamParams()
 {
@@ -99,10 +100,17 @@ void PipeWireStream::newStreamParams()
         (spa_pod*) spa_pod_builder_add_object (&pod_builder,
                                                SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
                                                SPA_PARAM_META_type, SPA_POD_Id (SPA_META_Cursor),
-                                               SPA_PARAM_META_size, SPA_POD_Int (CURSOR_META_SIZE (cursorSize, cursorSize)))
+                                               SPA_PARAM_META_size, SPA_POD_Int (CURSOR_META_SIZE (cursorSize, cursorSize))),
+        (spa_pod*) spa_pod_builder_add_object(&pod_builder,
+                                                SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
+                                                SPA_PARAM_META_type, SPA_POD_Id(SPA_META_VideoDamage),
+                                                SPA_PARAM_META_size, SPA_POD_CHOICE_RANGE_Int(
+                                                            sizeof(struct spa_meta_region) * videoDamageRegionCount,
+                                                            sizeof(struct spa_meta_region) * 1,
+                                                            sizeof(struct spa_meta_region) * videoDamageRegionCount)),
     };
 
-    pw_stream_update_params(pwStream, params, 2);
+    pw_stream_update_params(pwStream, params, 3);
 }
 
 void PipeWireStream::onStreamParamChanged(void *data, uint32_t id, const struct spa_pod *format)
@@ -479,6 +487,30 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
     if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
         sendCursorData(Cursors::self()->currentCursor(),
                         (spa_meta_cursor *) spa_buffer_find_meta_data (spa_buffer, SPA_META_Cursor, sizeof (spa_meta_cursor)));
+    }
+
+    if (spa_meta *vdMeta = spa_buffer_find_meta(spa_buffer, SPA_META_VideoDamage)) {
+        struct spa_meta_region *r = (spa_meta_region *) spa_meta_first(vdMeta);
+
+        // If there's too many rectangles, we just send the bounding rect
+        if (damagedRegion.rectCount() > videoDamageRegionCount - 1) {
+            if (spa_meta_check(r, vdMeta)) {
+                auto rect = damagedRegion.boundingRect();
+                r->region = SPA_REGION(rect.x(), rect.y(), quint32(rect.width()), quint32(rect.height()));
+                r++;
+            }
+        } else {
+            for (const QRect &rect : damagedRegion) {
+                if (spa_meta_check(r, vdMeta)) {
+                    r->region = SPA_REGION(rect.x(), rect.y(), quint32(rect.width()), quint32(rect.height()));
+                    r++;
+                }
+            }
+        }
+
+        if (spa_meta_check(r, vdMeta)) {
+            r->region = SPA_REGION(0, 0, 0, 0);
+        }
     }
 
     tryEnqueue(buffer);
