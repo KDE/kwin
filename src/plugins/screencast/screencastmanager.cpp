@@ -141,13 +141,13 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
     auto bufferToStream = [streamOutput, stream] (const QRegion &damagedRegion) {
         auto scene = Compositor::self()->scene();
         auto texture = scene->textureForOutput(streamOutput);
-        if (!texture) {
+        if (!texture || damagedRegion.isEmpty()) {
             // Some backends will return no-op because textures aren't really supported there
             return;
         }
 
         const QRect frame({}, streamOutput->modeSize());
-        const QRegion region = damagedRegion.isEmpty() || streamOutput->pixelSize() != streamOutput->modeSize() ? frame : damagedRegion.translated(-streamOutput->geometry().topLeft()).intersected(frame);
+        const QRegion region = streamOutput->pixelSize() != streamOutput->modeSize() ? frame : damagedRegion.translated(-streamOutput->geometry().topLeft()).intersected(frame);
         stream->recordFrame(texture.data(), region);
     };
     connect(stream, &PipeWireStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
