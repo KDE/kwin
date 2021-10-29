@@ -2336,7 +2336,6 @@ void AbstractClient::createDecoration(const QRect &oldGeometry)
     }
     setDecoration(decoration);
     moveResize(QRect(oldGeometry.topLeft(), clientSizeToFrameSize(clientSize())));
-    updateDecorationInputShape();
 
     Q_EMIT geometryShapeChanged(this, oldGeometry);
 }
@@ -2344,18 +2343,20 @@ void AbstractClient::createDecoration(const QRect &oldGeometry)
 void AbstractClient::destroyDecoration()
 {
     setDecoration(nullptr);
-    m_decoration.inputRegion = QRegion();
+    resize(implicitSize());
 }
 
 void AbstractClient::setDecoration(KDecoration2::Decoration *decoration)
 {
     m_decoration.decoration.reset(decoration);
+    updateDecorationInputShape();
     Q_EMIT decorationChanged();
 }
 
 void AbstractClient::updateDecorationInputShape()
 {
     if (!isDecorated()) {
+        m_decoration.inputRegion = QRegion();
         return;
     }
 
