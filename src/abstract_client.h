@@ -742,10 +742,10 @@ public:
 
     // decoration related
     KDecoration2::Decoration *decoration() {
-        return m_decoration.decoration;
+        return m_decoration.decoration.data();
     }
     const KDecoration2::Decoration *decoration() const {
-        return m_decoration.decoration;
+        return m_decoration.decoration.data();
     }
     bool isDecorated() const {
         return m_decoration.decoration != nullptr;
@@ -1323,7 +1323,7 @@ private:
     } m_interactiveMoveResize;
 
     struct {
-        KDecoration2::Decoration *decoration = nullptr;
+        QScopedPointer<KDecoration2::Decoration> decoration;
         QPointer<Decoration::DecoratedClientImpl> client;
         QElapsedTimer doubleClickTimer;
         QRegion inputRegion;
