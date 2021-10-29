@@ -585,7 +585,7 @@ QRect PipeWireStream::cursorGeometry(Cursor *cursor) const
 
 void PipeWireStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_cursor)
 {
-    if (!cursor || !spa_meta_cursor) {
+    if (!cursor || !spa_meta_cursor || !m_cursor.viewport.contains(cursor->pos())) {
         return;
     }
 
