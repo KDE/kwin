@@ -2254,6 +2254,7 @@ void Workspace::updateClientArea()
         m_workAreas = workAreas;
         m_screenAreas = screenAreas;
 
+        m_inUpdateClientArea = true;
         m_oldRestrictedAreas = m_restrictedAreas;
         m_restrictedAreas = restrictedAreas;
 
@@ -2276,6 +2277,7 @@ void Workspace::updateClientArea()
         }
 
         m_oldRestrictedAreas.clear(); // reset, no longer valid or needed
+        m_inUpdateClientArea = false;
     }
 }
 
@@ -2397,7 +2399,7 @@ QRegion Workspace::restrictedMoveArea(const VirtualDesktop *desktop, StrutAreas 
 
 bool Workspace::inUpdateClientArea() const
 {
-    return !m_oldRestrictedAreas.isEmpty();
+    return m_inUpdateClientArea;
 }
 
 QRegion Workspace::previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas) const

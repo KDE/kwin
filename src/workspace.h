@@ -673,6 +673,7 @@ private:
     QHash<const AbstractOutput *, QRect> m_oldScreenGeometries;
     QSize olddisplaysize; // previous sizes od displayWidth()/displayHeight()
     QHash<const VirtualDesktop *, StrutRects> m_oldRestrictedAreas;
+    bool m_inUpdateClientArea = false;
 
     int set_active_client_recursion;
     int block_stacking_updates; // When > 0, stacking updates are temporarily disabled
