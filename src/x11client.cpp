@@ -3877,7 +3877,6 @@ void X11Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
             }
         }
     }
-    setGeometryRestore(frameGeometry());
     // No need to send synthetic configure notify event here, either it's sent together
     // with geometry change, or there's no need to send it.
     // Handling of the real ConfigureRequest event forces sending it, as there it's necessary.
