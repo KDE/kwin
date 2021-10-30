@@ -38,6 +38,8 @@ public:
 
     enum ConfigureFlag {
         ConfigurePosition = 0x1,
+        ConfigureResetWidth = 0x2,
+        ConfigureResetHeight = 0x4,
     };
     Q_DECLARE_FLAGS(ConfigureFlags, ConfigureFlag)
 
@@ -68,10 +70,11 @@ protected:
     virtual void handleRoleCommit();
 
     XdgSurfaceConfigure *lastAcknowledgedConfigure() const;
-    void scheduleConfigure();
+    void scheduleConfigure(XdgSurfaceConfigure::ConfigureFlags flags = {});
     void sendConfigure();
 
     QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
+    XdgSurfaceConfigure::ConfigureFlags m_configureFlags;
 
 private:
     void handleConfigureAcknowledged(quint32 serial);
@@ -86,7 +89,6 @@ private:
 
     KWaylandServer::XdgSurfaceInterface *m_shellSurface;
     QTimer *m_configureTimer;
-    XdgSurfaceConfigure::ConfigureFlags m_configureFlags;
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
     QScopedPointer<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
     QRect m_windowGeometry;

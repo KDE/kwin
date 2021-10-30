@@ -112,9 +112,10 @@ XdgSurfaceConfigure *XdgSurfaceClient::lastAcknowledgedConfigure() const
     return m_lastAcknowledgedConfigure.data();
 }
 
-void XdgSurfaceClient::scheduleConfigure()
+void XdgSurfaceClient::scheduleConfigure(XdgSurfaceConfigure::ConfigureFlags flags)
 {
     if (!isZombie()) {
+        m_configureFlags |= flags;
         m_configureTimer->start();
     }
 }
@@ -290,12 +291,12 @@ void XdgSurfaceClient::moveResizeInternal(const QRect &rect, MoveResizeMode mode
     }
 
     if (mode != MoveResizeMode::Move) {
+        // TODO: Need to reset ConfigureResetWidth and ConfigureResetHeight...
         const QSize requestedClientSize = frameSizeToClientSize(rect.size());
         if (requestedClientSize == clientSize()) {
             updateGeometry(rect);
         } else {
-            m_configureFlags |= XdgSurfaceConfigure::ConfigurePosition;
-            scheduleConfigure();
+            scheduleConfigure(XdgSurfaceConfigure::ConfigurePosition);
         }
     } else {
         // If the window is moved, cancel any queued window position updates.
@@ -701,9 +702,15 @@ void XdgToplevelClient::closeWindow()
 
 XdgSurfaceConfigure *XdgToplevelClient::sendRoleConfigure() const
 {
-    const QSize requestedClientSize = frameSizeToClientSize(moveResizeGeometry().size());
-    const quint32 serial = m_shellSurface->sendConfigure(requestedClientSize, m_requestedStates);
+    QSize requestedClientSize = frameSizeToClientSize(moveResizeGeometry().size());
+    if (m_configureFlags & XdgSurfaceConfigure::ConfigureResetWidth) {
+        requestedClientSize.setWidth(0);
+    }
+    if (m_configureFlags & XdgSurfaceConfigure::ConfigureResetHeight) {
+        requestedClientSize.setHeight(0);
+    }
 
+    const quint32 serial = m_shellSurface->sendConfigure(requestedClientSize, m_requestedStates);
     XdgToplevelConfigure *configureEvent = new XdgToplevelConfigure();
     configureEvent->position = moveResizeGeometry().topLeft();
     configureEvent->states = m_requestedStates;
@@ -1544,9 +1551,7 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
                 workspace()->sendClientToOutput(this, currentOutput);
             }
         } else {
-            // this can happen when the window was first shown already fullscreen,
-            // so let the client set the size by itself
-            moveResize(QRect(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
+            scheduleConfigure(XdgSurfaceConfigure::ConfigureResetWidth | XdgSurfaceConfigure::ConfigureResetHeight);
         }
     }
 
@@ -1660,8 +1665,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
             // The window is no longer maximized horizontally and the saved geometry is
             // invalid. This would happen if the window had been mapped in the maximized state.
             // We ask the client to resize the window horizontally to its preferred size.
-            geometry.setX(clientArea.x());
-            geometry.setWidth(0);
+            scheduleConfigure(XdgSurfaceConfigure::ConfigureResetWidth);
         }
     }
 
@@ -1678,8 +1682,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
             // The window is no longer maximized vertically and the saved geometry is
             // invalid. This would happen if the window had been mapped in the maximized state.
             // We ask the client to resize the window vertically to its preferred size.
-            geometry.setY(clientArea.y());
-            geometry.setHeight(0);
+            scheduleConfigure(XdgSurfaceConfigure::ConfigureResetHeight);
         }
     }
 
