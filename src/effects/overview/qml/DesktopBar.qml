@@ -197,11 +197,12 @@ Item {
                             }
                         }
 
-                        TextInput {
+                        PC3.TextField {
                             id: editor
                             anchors.fill: parent
                             visible: label.state == "editing"
-                            color: PlasmaCore.ColorScope.textColor
+                            topPadding: 0
+                            bottomPadding: 0
                             text: delegate.desktop.name
                             onEditingFinished: {
                                 delegate.desktop.name = text;
