@@ -58,7 +58,6 @@ InternalClient::InternalClient(QWindow *window)
     commitGeometry(m_internalWindow->geometry());
     updateDecoration(true);
     moveResize(clientRectToFrameRect(m_internalWindow->geometry()));
-    setGeometryRestore(moveResizeGeometry());
     blockGeometryUpdates(false);
 
     m_internalWindow->installEventFilter(this);

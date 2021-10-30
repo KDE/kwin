@@ -260,10 +260,7 @@ void AbstractClient::updateLayer()
 
 void AbstractClient::placeIn(const QRect &area)
 {
-    // TODO: Get rid of this method eventually. We need to call setGeometryRestore() because
-    // checkWorkspacePosition() operates on geometryRestore() and because of quick tiling.
     Placement::self()->place(this, area);
-    setGeometryRestore(moveResizeGeometry());
 }
 
 void AbstractClient::invalidateLayer()
@@ -3411,12 +3408,12 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
     int oldRightMax = oldScreenArea.x() + oldScreenArea.width();
     int oldBottomMax = oldScreenArea.y() + oldScreenArea.height();
     int oldLeftMax = oldScreenArea.x();
-    const QRect screenArea = workspace()->clientArea(ScreenArea, this, geometryRestore().center());
+    const QRect screenArea = workspace()->clientArea(ScreenArea, this, frameGeometry().center());
     int topMax = screenArea.y();
     int rightMax = screenArea.x() + screenArea.width();
     int bottomMax = screenArea.y() + screenArea.height();
     int leftMax = screenArea.x();
-    QRect newGeom = geometryRestore(); // geometry();
+    QRect newGeom = frameGeometry();
     QRect newClientGeom = newGeom.adjusted(border[Left], border[Top], -border[Right], -border[Bottom]);
     const QRect newGeomTall = QRect(newGeom.x(), screenArea.y(), newGeom.width(), screenArea.height());   // Full screen height
     const QRect newGeomWide = QRect(screenArea.x(), newGeom.y(), screenArea.width(), newGeom.height());   // Full screen width

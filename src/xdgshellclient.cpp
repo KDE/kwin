@@ -88,13 +88,6 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
 
     m_configureTimer->setSingleShot(true);
     connect(m_configureTimer, &QTimer::timeout, this, &XdgSurfaceClient::sendConfigure);
-
-    // Unfortunately, AbstractClient::checkWorkspacePosition() operates on the geometry restore
-    // so we need to initialize it with some reasonable value; otherwise bad things will happen
-    // when we want to decorate the client or move the client to another screen. This is a hack.
-
-    connect(this, &XdgSurfaceClient::frameGeometryChanged,
-            this, &XdgSurfaceClient::updateGeometryRestoreHack);
 }
 
 XdgSurfaceClient::~XdgSurfaceClient()
@@ -311,23 +304,6 @@ void XdgSurfaceClient::moveResizeInternal(const QRect &rect, MoveResizeMode mode
         }
         m_configureFlags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
         updateGeometry(QRect(rect.topLeft(), size()));
-    }
-}
-
-/**
- * \internal
- * \todo We have to check the current frame geometry in checkWorskpacePosition().
- *
- * Sets the geometry restore to the first valid frame geometry. This is a HACK!
- *
- * Unfortunately, AbstractClient::checkWorkspacePosition() operates on the geometry restore
- * rather than the current frame geometry, so we have to ensure that it's initialized with
- * some reasonable value even if the client is not maximized or quick tiled.
- */
-void XdgSurfaceClient::updateGeometryRestoreHack()
-{
-    if (geometryRestore().isEmpty() && !frameGeometry().isEmpty()) {
-        setGeometryRestore(frameGeometry());
     }
 }
 
@@ -638,10 +614,7 @@ void XdgToplevelClient::updateDecoration(bool check_workspace_pos, bool force)
     }
     updateShadow();
     if (check_workspace_pos) {
-        const QRect oldGeometryRestore = geometryRestore();
-        setGeometryRestore(frameGeometry());
         checkWorkspacePosition(oldFrameGeometry, oldClientGeometry);
-        setGeometryRestore(oldGeometryRestore);
     }
 }
 
