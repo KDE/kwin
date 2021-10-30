@@ -415,6 +415,32 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
     return QVariantMap();
 }
 
+QVariantMap ScreenShotDBusInterface2::CaptureActiveScreen(const QVariantMap &options,
+                                                          QDBusUnixFileDescriptor pipe)
+{
+    if (!checkPermissions()) {
+        return QVariantMap();
+    }
+
+    EffectScreen *screen = effects->activeScreen();
+    if (!screen) {
+        sendErrorReply(s_errorInvalidScreen, s_errorInvalidScreenMessage);
+        return QVariantMap();
+    }
+
+    const int fileDescriptor = dup(pipe.fileDescriptor());
+    if (fileDescriptor == -1) {
+        sendErrorReply(s_errorFileDescriptor, s_errorFileDescriptorMessage);
+        return QVariantMap();
+    }
+
+    takeScreenShot(screen, screenShotFlagsFromOptions(options),
+                   new ScreenShotSinkPipe2(fileDescriptor, message()));
+
+    setDelayedReply(true);
+    return QVariantMap();
+}
+
 QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                                                          const QVariantMap &options,
                                                          QDBusUnixFileDescriptor pipe)

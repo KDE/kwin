@@ -49,6 +49,8 @@ public Q_SLOTS:
                             QDBusUnixFileDescriptor pipe);
     QVariantMap CaptureScreen(const QString &name, const QVariantMap &options,
                               QDBusUnixFileDescriptor pipe);
+    QVariantMap CaptureActiveScreen(const QVariantMap &options,
+                                    QDBusUnixFileDescriptor pipe);
     QVariantMap CaptureInteractive(uint kind, const QVariantMap &options,
                                    QDBusUnixFileDescriptor pipe);
 
