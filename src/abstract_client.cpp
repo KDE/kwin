@@ -3346,8 +3346,10 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
     }
     enum { Left = 0, Top, Right, Bottom };
     const int border[4] = { borderLeft(), borderTop(), borderRight(), borderBottom() };
+
+    QRect newGeom = moveResizeGeometry();
     if( !oldGeometry.isValid())
-        oldGeometry = moveResizeGeometry();
+        oldGeometry = newGeom;
     if (!oldClientGeometry.isValid())
         oldClientGeometry = oldGeometry.adjusted(border[Left], border[Top], -border[Right], -border[Bottom]);
     if (isFullScreen()) {
@@ -3387,20 +3389,18 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
     // Old and new maximums have different starting values so windows on the screen
     // edge will move when a new strut is placed on the edge.
     QRect oldScreenArea;
+    QRect screenArea;
     if( workspace()->inUpdateClientArea()) {
         // we need to find the screen area as it was before the change
-        oldScreenArea = QRect( 0, 0, workspace()->oldDisplayWidth(), workspace()->oldDisplayHeight());
-        int distance = INT_MAX;
-        const auto previousSizes = workspace()->previousScreenSizes();
-        for (const QRect &r : previousSizes) {
-            int d = r.contains( oldGeometry.center()) ? 0 : ( r.center() - oldGeometry.center()).manhattanLength();
-            if( d < distance ) {
-                distance = d;
-                oldScreenArea = r;
-            }
+        oldScreenArea = workspace()->previousScreenSizes().value(output());
+        if (oldScreenArea.isNull()) {
+            oldScreenArea = output()->geometry();
         }
+        screenArea = output()->geometry();
+        newGeom.translate(screenArea.topLeft() - oldScreenArea.topLeft());
     } else {
         oldScreenArea = workspace()->clientArea(ScreenArea, kwinApp()->platform()->outputAt(oldGeometry.center()), oldDesktop);
+        screenArea = workspace()->clientArea(ScreenArea, this, newGeom.center());
     }
     const QRect oldGeomTall = QRect(oldGeometry.x(), oldScreenArea.y(), oldGeometry.width(), oldScreenArea.height());   // Full screen height
     const QRect oldGeomWide = QRect(oldScreenArea.x(), oldGeometry.y(), oldScreenArea.width(), oldGeometry.height());   // Full screen width
@@ -3408,12 +3408,10 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
     int oldRightMax = oldScreenArea.x() + oldScreenArea.width();
     int oldBottomMax = oldScreenArea.y() + oldScreenArea.height();
     int oldLeftMax = oldScreenArea.x();
-    const QRect screenArea = workspace()->clientArea(ScreenArea, this, frameGeometry().center());
     int topMax = screenArea.y();
     int rightMax = screenArea.x() + screenArea.width();
     int bottomMax = screenArea.y() + screenArea.height();
     int leftMax = screenArea.x();
-    QRect newGeom = frameGeometry();
     QRect newClientGeom = newGeom.adjusted(border[Left], border[Top], -border[Right], -border[Bottom]);
     const QRect newGeomTall = QRect(newGeom.x(), screenArea.y(), newGeom.width(), screenArea.height());   // Full screen height
     const QRect newGeomWide = QRect(screenArea.x(), newGeom.y(), screenArea.width(), newGeom.height());   // Full screen width
