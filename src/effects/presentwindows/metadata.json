@@ -15,6 +15,7 @@
         "Description[uk]": "Зменшення масштабу вікон так, щоб всі відкриті вікна можна було розташувати поряд",
         "Description[vi]": "Thu nhỏ cho đến khi tất cả các cửa sổ đang mở hiển thị được cạnh nhau",
         "Description[x-test]": "xxZoom out until all opened windows can be displayed side-by-sidexx",
+        "Description[zh_CN]": "所有窗口缩小后平铺显示在一个画面上",
         "EnabledByDefault": true,
         "Id": "presentwindows",
         "License": "GPL",
@@ -33,6 +34,7 @@
         "Name[uk]": "Показ вікон",
         "Name[vi]": "Các cửa sổ hiện thời",
         "Name[x-test]": "xxPresent Windowsxx",
+        "Name[zh_CN]": "窗口平铺展示",
         "ServiceTypes": [
             "KWin/Effect"
         ]

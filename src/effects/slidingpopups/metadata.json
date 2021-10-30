@@ -15,6 +15,7 @@
         "Description[uk]": "Анімація з ковзанням для контекстних вікон Плазми",
         "Description[vi]": "Hiệu ứng động dạng trượt cho các ô bật lên Plasma",
         "Description[x-test]": "xxSliding animation for Plasma popupsxx",
+        "Description[zh_CN]": "气泡显示/隐藏时呈现滑动动效",
         "EnabledByDefault": true,
         "Id": "slidingpopups",
         "License": "GPL",
@@ -32,6 +33,7 @@
         "Name[uk]": "Ковзні контекстні вікна",
         "Name[vi]": "Ô bật lên dạng trượt",
         "Name[x-test]": "xxSliding popupsxx",
+        "Name[zh_CN]": "气泡滑动动效",
         "ServiceTypes": [
             "KWin/Effect"
         ]

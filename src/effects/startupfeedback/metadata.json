@@ -15,6 +15,7 @@
         "Description[uk]": "Допоміжний ефект перегляду повідомлень, що надсилаються програмою під час запуску",
         "Description[vi]": "Hiệu ứng trợ giúp cho phản hồi khởi động",
         "Description[x-test]": "xxHelper effect for startup feedbackxx",
+        "Description[zh_CN]": "程序启动反馈辅助效果",
         "EnabledByDefault": true,
         "Id": "startupfeedback",
         "License": "GPL",
@@ -32,6 +33,7 @@
         "Name[uk]": "Повідомлення під час запуску",
         "Name[vi]": "Phản hồi khởi động",
         "Name[x-test]": "xxStartup Feedbackxx",
+        "Name[zh_CN]": "程序启动反馈",
         "ServiceTypes": [
             "KWin/Effect"
         ]

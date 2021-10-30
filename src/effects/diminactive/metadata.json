@@ -15,6 +15,7 @@
         "Description[uk]": "Затемнення неактивних вікон",
         "Description[vi]": "Làm tối các cửa sổ bất hoạt",
         "Description[x-test]": "xxDarken inactive windowsxx",
+        "Description[zh_CN]": "非活动的窗口将会变暗",
         "EnabledByDefault": false,
         "Id": "diminactive",
         "License": "GPL",
@@ -33,6 +34,7 @@
         "Name[uk]": "Затемнення неактивних",
         "Name[vi]": "Làm tối bất hoạt",
         "Name[x-test]": "xxDim Inactivexx",
+        "Name[zh_CN]": "非活动窗口变暗",
         "ServiceTypes": [
             "KWin/Effect"
         ]

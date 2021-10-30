@@ -14,6 +14,7 @@
         "Description[uk]": "Ковзання вікон при появі або зникненні",
         "Description[vi]": "Lướt các cửa sổ khi chúng xuất hiện hoặc biến mất",
         "Description[x-test]": "xxGlide windows as they appear or disappearxx",
+        "Description[zh_CN]": "窗口显示/隐藏时呈现滑翔过渡动效",
         "EnabledByDefault": false,
         "Id": "glide",
         "License": "GPL",
@@ -32,6 +33,7 @@
         "Name[uk]": "Плин",
         "Name[vi]": "Lướt",
         "Name[x-test]": "xxGlidexx",
+        "Name[zh_CN]": "滑翔动效",
         "ServiceTypes": [
             "KWin/Effect"
         ]

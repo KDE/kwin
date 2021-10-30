@@ -15,6 +15,7 @@
         "Description[uk]": "Екранна лупа, яка робить вигляд стільниці схожим на зображення, отримане з ефектом «риб’ячого ока»",
         "Description[vi]": "Một trình phóng đại màn hình trông như một thấu kính mắt cá",
         "Description[x-test]": "xxA screen magnifier that looks like a fisheye lensxx",
+        "Description[zh_CN]": "放大显示鼠标指针附近的一块圆形的屏幕内容，效果类似鱼眼镜头",
         "EnabledByDefault": false,
         "Id": "lookingglass",
         "License": "GPL",
@@ -33,6 +34,7 @@
         "Name[uk]": "Збільшувальне скло",
         "Name[vi]": "Kính lúp",
         "Name[x-test]": "xxLooking Glassxx",
+        "Name[zh_CN]": "放大镜 (鱼眼)",
         "ServiceTypes": [
             "KWin/Effect"
         ]

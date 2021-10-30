@@ -15,6 +15,7 @@
         "Description[uk]": "Показ розмірів вікон при пересуванні або зміні розмірів",
         "Description[vi]": "Hiển thị dạng hình học của cửa sổ khi di chuyển / đổi cỡ",
         "Description[x-test]": "xxDisplay window geometries on move/resizexx",
+        "Description[zh_CN]": "移动/调整窗口大小时显示窗口大小和位置数值",
         "EnabledByDefault": false,
         "Id": "windowgeometry",
         "License": "GPL",
@@ -32,6 +33,7 @@
         "Name[uk]": "Розміри вікна",
         "Name[vi]": "Hình dạng của cửa sổ",
         "Name[x-test]": "xxWindow Geometryxx",
+        "Name[zh_CN]": "窗口大小位置数值显示",
         "ServiceTypes": [
             "KWin/Effect"
         ]

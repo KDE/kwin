@@ -15,6 +15,7 @@
         "Description[uk]": "Допомога у пошуку центра екрана, коли ви пересуватимете вікно",
         "Description[vi]": "Giúp bạn định vị tâm của màn hình khi di chuyển cửa sổ",
         "Description[x-test]": "xxHelp you locate the center of the screen when moving a windowxx",
+        "Description[zh_CN]": "在移动窗口时显示窗口和桌面的中心位置辅助线，以便对齐两者",
         "EnabledByDefault": false,
         "Id": "snaphelper",
         "License": "GPL",
@@ -32,6 +33,7 @@
         "Name[uk]": "Помічник розташування",
         "Name[vi]": "Trợ giúp nhanh",
         "Name[x-test]": "xxSnap Helperxx",
+        "Name[zh_CN]": "窗口居中辅助线",
         "ServiceTypes": [
             "KWin/Effect"
         ]

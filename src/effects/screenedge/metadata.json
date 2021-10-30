@@ -15,6 +15,7 @@
         "Description[uk]": "Підсвічує край екрана у разі наближення вказівника",
         "Description[vi]": "Tô sáng cạnh màn hình khi tiến lại gần",
         "Description[x-test]": "xxHighlights a screen edge when approachingxx",
+        "Description[zh_CN]": "接近屏幕边缘时高亮显示",
         "EnabledByDefault": true,
         "Id": "screenedge",
         "License": "GPL",
@@ -32,6 +33,7 @@
         "Name[uk]": "Край екрана",
         "Name[vi]": "Cạnh màn hình",
         "Name[x-test]": "xxScreen Edgexx",
+        "Name[zh_CN]": "屏幕边缘高亮",
         "ServiceTypes": [
             "KWin/Effect"
         ]

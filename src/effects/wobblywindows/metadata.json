@@ -15,6 +15,7 @@
         "Description[uk]": "Деформація вікон під час їхнього пересування",
         "Description[vi]": "Làm méo các cửa sổ khi chúng di chuyển",
         "Description[x-test]": "xxDeform windows while they are movingxx",
+        "Description[zh_CN]": "窗口被移动时会呈现惯性晃动特效",
         "EnabledByDefault": false,
         "Id": "wobblywindows",
         "License": "GPL",
@@ -33,6 +34,7 @@
         "Name[uk]": "Желейні вікна",
         "Name[vi]": "Cửa sổ lắc lư",
         "Name[x-test]": "xxWobbly Windowsxx",
+        "Name[zh_CN]": "窗口惯性晃动",
         "ServiceTypes": [
             "KWin/Effect"
         ]

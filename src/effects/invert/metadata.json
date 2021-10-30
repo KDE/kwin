@@ -15,6 +15,7 @@
         "Description[uk]": "Обернення кольорів стільниці і вікон",
         "Description[vi]": "Đảo màu bàn làm việc và các cửa sổ",
         "Description[x-test]": "xxInverts the color of the desktop and windowsxx",
+        "Description[zh_CN]": "对桌面和窗口的颜色进行反相显示",
         "EnabledByDefault": false,
         "Id": "invert",
         "License": "GPL",
@@ -33,6 +34,7 @@
         "Name[uk]": "Інверсія",
         "Name[vi]": "Đảo",
         "Name[x-test]": "xxInvertxx",
+        "Name[zh_CN]": "颜色反相",
         "ServiceTypes": [
             "KWin/Effect"
         ]

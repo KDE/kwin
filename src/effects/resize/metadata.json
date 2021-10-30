@@ -15,6 +15,7 @@
         "Description[uk]": "Зміна розмірів вікон швидким масштабуванням текстур замість оновлення вмісту вікон",
         "Description[vi]": "Đổi cỡ cửa sổ với một sự đổi cỡ nhanh ở bề mặt, thay vì cập nhật nội dung",
         "Description[x-test]": "xxResizes windows with a fast texture scale instead of updating contentsxx",
+        "Description[zh_CN]": "调整窗口时显示简易材质，不实时更新窗口内容",
         "EnabledByDefault": false,
         "Id": "resize",
         "License": "GPL",
@@ -33,6 +34,7 @@
         "Name[uk]": "Зміна розмірів вікон",
         "Name[vi]": "Đổi cỡ cửa sổ",
         "Name[x-test]": "xxResize Windowxx",
+        "Name[zh_CN]": "窗口大小简易调整",
         "ServiceTypes": [
             "KWin/Effect"
         ]

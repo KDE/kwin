@@ -15,6 +15,7 @@
         "Description[uk]": "Плавне влітання або відлітання вікон під час їх появи або приховування",
         "Description[vi]": "Làm các hộp thoại chế độ bay vào và ra một cách êm dịu khi chúng hiện ra và biến mất",
         "Description[x-test]": "xxMake modal dialogs smoothly fly in and out when they are shown or hiddenxx",
+        "Description[zh_CN]": "对话框显示/隐藏时绘制过渡动画",
         "EnabledByDefault": false,
         "Id": "sheet",
         "License": "GPL",
@@ -32,6 +33,7 @@
         "Name[uk]": "Аркуш",
         "Name[vi]": "Tấm mỏng",
         "Name[x-test]": "xxSheetxx",
+        "Name[zh_CN]": "对话框显隐过渡",
         "ServiceTypes": [
             "KWin/Effect"
         ]

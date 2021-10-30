@@ -15,6 +15,7 @@
         "Description[uk]": "Надає вам змогу оглядати віртуальні стільниці і вікна",
         "Description[vi]": "Cho phép bạn xem tổng quan các bàn làm việc ảo và các cửa sổ",
         "Description[x-test]": "xxAllows you to overview virtual desktops and windowsxx",
+        "Description[zh_CN]": "用于显示所有虚拟桌面和窗口的总览图",
         "EnabledByDefault": false,
         "Id": "overview",
         "License": "GPL",
@@ -32,6 +33,7 @@
         "Name[uk]": "Огляд",
         "Name[vi]": "Tổng quan",
         "Name[x-test]": "xxOverviewxx",
+        "Name[zh_CN]": "桌面总览图",
         "ServiceTypes": [
             "KWin/Effect"
         ]

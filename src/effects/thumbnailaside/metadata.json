@@ -15,6 +15,7 @@
         "Description[uk]": "Показ мініатюр вікон при наведенні на край екрана",
         "Description[vi]": "Hiển thị các hình nhỏ cửa sổ ở cạnh màn hình",
         "Description[x-test]": "xxDisplay window thumbnails on the edge of the screenxx",
+        "Description[zh_CN]": "在屏幕边缘显示窗口的缩略图",
         "EnabledByDefault": false,
         "Id": "thumbnailaside",
         "License": "GPL",
@@ -33,6 +34,7 @@
         "Name[uk]": "Мініатюри збоку",
         "Name[vi]": "Hình nhỏ ở cạnh",
         "Name[x-test]": "xxThumbnail Asidexx",
+        "Name[zh_CN]": "缩略图置边",
         "ServiceTypes": [
             "KWin/Effect"
         ]

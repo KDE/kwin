@@ -14,6 +14,7 @@
         "Description[uk]": "Ковзання стільниць під час час перемикання стільниць",
         "Description[vi]": "Trượt qua các bàn làm việc khi chuyển bàn làm việc ảo",
         "Description[x-test]": "xxSlide desktops when switching virtual desktopsxx",
+        "Description[zh_CN]": "虚拟桌面切换时呈现滑动动效",
         "EnabledByDefault": true,
         "Id": "slide",
         "License": "GPL",
@@ -32,6 +33,7 @@
         "Name[uk]": "Ковзання",
         "Name[vi]": "Trượt",
         "Name[x-test]": "xxSlidexx",
+        "Name[zh_CN]": "滑动",
         "ServiceTypes": [
             "KWin/Effect"
         ]

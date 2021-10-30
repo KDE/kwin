@@ -15,6 +15,7 @@
         "Description[uk]": "Показ параметра швидкодії KWin (частоти кадрів) у куті екрана",
         "Description[vi]": "Hiện hiệu suất hoạt động của KWin ở góc màn hình",
         "Description[x-test]": "xxDisplay KWin's performance in the corner of the screenxx",
+        "Description[zh_CN]": "在屏幕一角显示 KWin 的每秒帧数图表",
         "EnabledByDefault": false,
         "Id": "showfps",
         "License": "GPL",
@@ -33,6 +34,7 @@
         "Name[uk]": "Показ частоти кадрів",
         "Name[vi]": "Hiện FPS",
         "Name[x-test]": "xxShow FPSxx",
+        "Name[zh_CN]": "显示每秒帧数",
         "ServiceTypes": [
             "KWin/Effect"
         ]
