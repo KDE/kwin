@@ -3389,13 +3389,18 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
     // edge will move when a new strut is placed on the edge.
     QRect oldScreenArea;
     QRect screenArea;
-    if( workspace()->inUpdateClientArea()) {
+    if (workspace()->inUpdateClientArea()) {
+        // check if the window is on an about to be destroyed output
+        AbstractOutput *newOutput = output();
+        if (!kwinApp()->platform()->enabledOutputs().contains(newOutput)) {
+            newOutput = kwinApp()->platform()->outputAt(newGeom.center());
+        }
         // we need to find the screen area as it was before the change
         oldScreenArea = workspace()->previousScreenSizes().value(output());
         if (oldScreenArea.isNull()) {
-            oldScreenArea = output()->geometry();
+            oldScreenArea = newOutput->geometry();
         }
-        screenArea = output()->geometry();
+        screenArea = newOutput->geometry();
         newGeom.translate(screenArea.topLeft() - oldScreenArea.topLeft());
     } else {
         oldScreenArea = workspace()->clientArea(ScreenArea, kwinApp()->platform()->outputAt(oldGeometry.center()), oldDesktop);

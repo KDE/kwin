@@ -1214,15 +1214,15 @@ void Workspace::slotOutputDisabled(AbstractOutput *output)
         m_activeOutput = kwinApp()->platform()->outputAt(output->geometry().center());
     }
 
+    disconnect(output, &AbstractOutput::geometryChanged, this, &Workspace::desktopResized);
+    desktopResized();
+
     const auto stack = xStackingOrder();
     for (Toplevel *toplevel : stack) {
         if (toplevel->output() == output) {
             toplevel->setOutput(kwinApp()->platform()->outputAt(toplevel->frameGeometry().center()));
         }
     }
-
-    disconnect(output, &AbstractOutput::geometryChanged, this, &Workspace::desktopResized);
-    desktopResized();
 }
 
 void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
