@@ -3358,7 +3358,6 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
     }
 
     if (maximizeMode() != MaximizeRestore) {
-        GeometryUpdatesBlocker block(this);
         changeMaximize(false, false, true);   // adjust size
         QRect geom = moveResizeGeometry();
         const QRect screenArea = workspace()->clientArea(ScreenArea, this, geom.center());
