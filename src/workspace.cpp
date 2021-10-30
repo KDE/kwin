@@ -2091,11 +2091,11 @@ void Workspace::desktopResized()
 void Workspace::saveOldScreenSizes()
 {
     olddisplaysize = m_geometry.size();
-    oldscreensizes.clear();
+    m_oldScreenGeometries.clear();
 
     const auto outputs = kwinApp()->platform()->enabledOutputs();
     for (const AbstractOutput *output : outputs) {
-        oldscreensizes.append(output->geometry());
+        m_oldScreenGeometries.insert(output, output->geometry());
     }
 }
 
@@ -2405,9 +2405,9 @@ QRegion Workspace::previousRestrictedMoveArea(const VirtualDesktop *desktop, Str
     return strutsToRegion(areas, m_oldRestrictedAreas[desktop]);
 }
 
-QVector< QRect > Workspace::previousScreenSizes() const
+QHash<const AbstractOutput *, QRect> Workspace::previousScreenSizes() const
 {
-    return oldscreensizes;
+    return m_oldScreenGeometries;
 }
 
 int Workspace::oldDisplayWidth() const

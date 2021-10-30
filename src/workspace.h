@@ -271,7 +271,7 @@ public:
     // The calls below are valid only in that case.
     bool inUpdateClientArea() const;
     QRegion previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
-    QVector< QRect > previousScreenSizes() const;
+    QHash<const AbstractOutput *, QRect> previousScreenSizes() const;
     int oldDisplayWidth() const;
     int oldDisplayHeight() const;
 
@@ -670,7 +670,7 @@ private:
     QHash<const VirtualDesktop *, QHash<const AbstractOutput *, QRect>> m_screenAreas;
     QRect m_geometry;
 
-    QVector< QRect > oldscreensizes; // array of previous sizes of xinerama screens
+    QHash<const AbstractOutput *, QRect> m_oldScreenGeometries;
     QSize olddisplaysize; // previous sizes od displayWidth()/displayHeight()
     QHash<const VirtualDesktop *, StrutRects> m_oldRestrictedAreas;
 
