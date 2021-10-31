@@ -148,7 +148,7 @@ void MoveResizeWindowTest::testMove()
     QCOMPARE(moveResizedChangedSpy.count(), 1);
     QCOMPARE(windowStartUserMovedResizedSpy.count(), 1);
     QCOMPARE(c->isInteractiveMove(), true);
-    QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->geometryRestore(), QRect());
 
     // send some key events, not going through input redirection
     const QPoint cursorPos = Cursors::self()->mouse()->pos();
@@ -247,7 +247,7 @@ void MoveResizeWindowTest::testResize()
     QCOMPARE(startMoveResizedSpy.count(), 1);
     QCOMPARE(moveResizedChangedSpy.count(), 1);
     QCOMPARE(c->isInteractiveResize(), true);
-    QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->geometryRestore(), QRect());
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 3);
