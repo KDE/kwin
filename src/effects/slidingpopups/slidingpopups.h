@@ -60,6 +60,7 @@ private Q_SLOTS:
 private:
     void setupAnimData(EffectWindow *w);
     void setupInternalWindowSlide(EffectWindow *w);
+    void setupSlideData(EffectWindow *w);
 
     KWaylandServer::ScopedGlobalPointer<KWaylandServer::SlideManagerInterface> m_slideManager;
     long m_atom;
