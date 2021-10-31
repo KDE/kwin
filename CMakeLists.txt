@@ -412,6 +412,19 @@ if (KF5DocTools_FOUND)
     add_subdirectory(doc)
 endif()
 
+include(ECMSetupQtPluginMacroNames)
+ecm_setup_qtplugin_macro_names(
+    JSON_ARG2
+        "KWIN_EFFECT_FACTORY"
+    JSON_ARG3
+        "KWIN_EFFECT_FACTORY_ENABLED"
+        "KWIN_EFFECT_FACTORY_SUPPORTED"
+    JSON_ARG4
+        "KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED"
+    CONFIG_CODE_VARIABLE
+        PACKAGE_SETUP_AUTOMOC_VARIABLES
+)
+
 add_subdirectory(data)
 add_subdirectory(kconf_update)
 add_subdirectory(src)
