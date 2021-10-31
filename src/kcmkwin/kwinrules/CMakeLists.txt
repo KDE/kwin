@@ -7,7 +7,7 @@ include_directories(../../)
 set(kwinrules_SRCS
     ../../rulebooksettings.cpp
     ../../cursor.cpp
-    ../../plugins/platforms/x11/standalone/x11cursor.cpp
+    ../../backends/x11/standalone/x11cursor.cpp
     ../../rules.cpp
     ../../placement.cpp
     ../../utils.cpp
