@@ -56,7 +56,7 @@ public:
     qint32 offset() const;
 
 private:
-    explicit SlideInterface(SlideManagerInterface *manager, wl_resource *resource);
+    explicit SlideInterface(wl_resource *resource);
     friend class SlideManagerInterfacePrivate;
 
     QScopedPointer<SlideInterfacePrivate> d;

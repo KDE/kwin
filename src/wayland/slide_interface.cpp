@@ -45,7 +45,7 @@ void SlideManagerInterfacePrivate::org_kde_kwin_slide_manager_create(Resource *r
         return;
     }
 
-    auto slide = new SlideInterface(q, slide_resource);
+    auto slide = new SlideInterface(slide_resource);
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
     surfacePrivate->setSlide(QPointer<SlideInterface>(slide));
 }
@@ -137,9 +137,8 @@ SlideInterfacePrivate::SlideInterfacePrivate(SlideInterface *_q, wl_resource *re
 {
 }
 
-SlideInterface::SlideInterface(SlideManagerInterface *manager, wl_resource *resource)
-    : QObject(manager)
-    , d(new SlideInterfacePrivate(this, resource))
+SlideInterface::SlideInterface(wl_resource *resource)
+    : d(new SlideInterfacePrivate(this, resource))
 {
 }
 
