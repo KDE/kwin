@@ -260,7 +260,7 @@ FocusScope {
                     anchors.topMargin: PlasmaCore.Units.largeSpacing
                     implicitWidth: PlasmaCore.Units.iconSizes.medium
                     implicitHeight: implicitWidth
-                    visible: (hovered || hoverHandler.hovered) && thumb.client.closeable && !dragHandler.active
+                    visible: (hovered || hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !dragHandler.active
                     onClicked: thumb.client.closeWindow();
                 }
 
