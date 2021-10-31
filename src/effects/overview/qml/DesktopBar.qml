@@ -203,7 +203,7 @@ Item {
                             visible: label.state == "editing"
                             color: PlasmaCore.ColorScope.textColor
                             text: delegate.desktop.name
-                            onAccepted: {
+                            onEditingFinished: {
                                 delegate.desktop.name = text;
                                 label.stopEditing();
                             }
