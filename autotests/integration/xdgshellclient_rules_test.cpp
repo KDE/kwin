@@ -1285,7 +1285,6 @@ void TestXdgShellClientRules::testMaximizeApply()
     QVERIFY(surfaceConfigureRequestedSpy->wait());
     QCOMPARE(surfaceConfigureRequestedSpy->count(), 3);
     QCOMPARE(toplevelConfigureRequestedSpy->count(), 3);
-    QEXPECT_FAIL("", "Geometry restore is set to the first valid geometry", Continue);
     QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
     states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
@@ -1403,7 +1402,6 @@ void TestXdgShellClientRules::testMaximizeRemember()
     QVERIFY(surfaceConfigureRequestedSpy->wait());
     QCOMPARE(surfaceConfigureRequestedSpy->count(), 3);
     QCOMPARE(toplevelConfigureRequestedSpy->count(), 3);
-    QEXPECT_FAIL("", "Geometry restore is set to the first valid geometry", Continue);
     QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
     states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
