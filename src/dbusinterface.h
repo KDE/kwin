@@ -58,6 +58,12 @@ public Q_SLOTS: // METHODS
     QString supportInformation();
     Q_NOREPLY void unclutterDesktop();
     Q_NOREPLY void showDebugConsole();
+    
+    /** 
+     * Instructs kwin_wayland to restart itself.
+     * 
+     * This acts as an implementation detail of: kwin_wayland --replace
+     */
     Q_NOREPLY void replace();
 
     /** 
