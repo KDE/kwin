@@ -119,9 +119,12 @@ void KWinWrapper::run()
             qApp->quit();
             return;
         } else if (exitCode == 133) {
-                m_crashCount = 0;
+            // Exit code 133 asks for kwin_wayland to restart itself,
+            // so we make sure the crash counter is fresh at 0.
+            m_crashCount = 0;
+        } else {
+            m_crashCount++;
         }
-        m_crashCount++;
 
         if (m_crashCount > 10) {
             qApp->quit();
