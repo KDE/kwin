@@ -60,6 +60,14 @@ public Q_SLOTS: // METHODS
     Q_NOREPLY void showDebugConsole();
     Q_NOREPLY void replace();
 
+    /** 
+     * Allows the user to pick a window and get info on it.
+     * 
+     * When called the user's mouse cursor will become a targeting reticule.
+     * On clicking a window with the target a map will be returned
+     * with various information about the picked window, such as: 
+     * height, width, minimized, fullscreen, etc.
+     */
     QVariantMap queryWindowInfo();
 
     /** 
