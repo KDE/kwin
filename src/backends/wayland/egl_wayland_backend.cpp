@@ -31,7 +31,6 @@
 
 // KDE
 #include <KWayland/Client/surface.h>
-#include <KWaylandServer/display.h>
 
 // Qt
 #include <QFile>

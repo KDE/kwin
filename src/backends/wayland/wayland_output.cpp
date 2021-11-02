@@ -14,8 +14,6 @@
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/surface.h>
 
-#include <KWaylandServer/display.h>
-
 #include <KLocalizedString>
 
 namespace KWin

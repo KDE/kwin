@@ -51,8 +51,6 @@
 #include <KWayland/Client/touch.h>
 #include <KWayland/Client/xdgshell.h>
 
-#include <KWaylandServer/seat_interface.h>
-
 #include <QMetaMethod>
 #include <QThread>
 
