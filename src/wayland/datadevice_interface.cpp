@@ -254,6 +254,15 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
             d->send_motion(d->seat->timestamp(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
         });
     } else if (d->seat->isDragTouch()) {
+        // When dragging from one window to another, we may end up in a data_device
+        // that didn't get "data_device_start_drag". In that case, the internal
+        // touch point serial will be incorrect and we need to update it to the
+        // serial from the seat.
+        SeatInterfacePrivate *seatPrivate = SeatInterfacePrivate::get(seat());
+        if (seatPrivate->drag.dragImplicitGrabSerial != d->drag.serial) {
+            d->drag.serial = seatPrivate->drag.dragImplicitGrabSerial.value();
+        }
+
         d->drag.posConnection = connect(d->seat, &SeatInterface::touchMoved, this, [this](qint32 id, quint32 serial, const QPointF &globalPosition) {
             Q_UNUSED(id);
             if (serial != d->drag.serial) {

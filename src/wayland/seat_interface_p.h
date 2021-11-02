@@ -14,6 +14,8 @@
 #include <QPointer>
 #include <QVector>
 
+#include <optional>
+
 #include "qwayland-server-wayland.h"
 
 namespace KWaylandServer
@@ -127,7 +129,7 @@ public:
         QPointer<AbstractDropHandler> target;
         QPointer<DragAndDropIcon> dragIcon;
         QMatrix4x4 transformation;
-        quint32 dragImplicitGrabSerial = -1;
+        std::optional<quint32> dragImplicitGrabSerial;
         QMetaObject::Connection dragSourceDestroyConnection;
     };
     Drag drag;
