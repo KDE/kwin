@@ -24,9 +24,6 @@
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
 #include <QSocketNotifier>
-// kwayland
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/seat_interface.h>
 // xcb
 #include <xcb/xcb_keysyms.h>
 // X11
