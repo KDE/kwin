@@ -47,7 +47,7 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool gestureSupport READ supportsGesture CONSTANT)
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString sysName READ sysName CONSTANT)
-    Q_PROPERTY(QString outputName READ outputName CONSTANT)
+    Q_PROPERTY(QString outputName READ outputName WRITE setOutputName NOTIFY outputNameChanged)
     Q_PROPERTY(QSizeF size READ size CONSTANT)
     Q_PROPERTY(quint32 product READ product CONSTANT)
     Q_PROPERTY(quint32 vendor READ vendor CONSTANT)
@@ -60,6 +60,7 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(QMatrix4x4 defaultCalibrationMatrix READ defaultCalibrationMatrix CONSTANT)
     Q_PROPERTY(QMatrix4x4 calibrationMatrix READ calibrationMatrix WRITE setCalibrationMatrix NOTIFY calibrationMatrixChanged)
     Q_PROPERTY(Qt::ScreenOrientation orientation READ orientation WRITE setOrientation NOTIFY orientationChanged)
+    Q_PROPERTY(int orientationDBus READ orientation WRITE setOrientationDBus NOTIFY orientationChanged)
 
     Q_PROPERTY(bool supportsLeftHanded READ supportsLeftHanded CONSTANT)
     Q_PROPERTY(bool leftHandedEnabledByDefault READ leftHandedEnabledByDefault CONSTANT)
@@ -368,6 +369,10 @@ public:
         return m_orientation;
     }
     void setOrientation(Qt::ScreenOrientation orientation);
+    void setOrientationDBus(int orientation)
+    {
+        setOrientation(Qt::ScreenOrientation(orientation));
+    }
 
     qreal defaultPointerAcceleration() const {
         return m_defaultPointerAcceleration;
@@ -468,8 +473,11 @@ public:
     /**
      * Used to deserialize monitor data from KConfig when initializing a device
      */
-    void setScreen(QString uuid);
-    QString defaultScreen() const { return {}; }
+    void setOutputName(QString uuid);
+    QString defaultOutputName() const
+    {
+        return {};
+    }
 
     /**
      * Loads the configuration and applies it to the Device
@@ -514,7 +522,7 @@ Q_SIGNALS:
     void tapButtonMapChanged();
     void calibrationMatrixChanged();
     void orientationChanged();
-    void screenChanged();
+    void outputNameChanged();
     void leftHandedChanged();
     void disableWhileTypingChanged();
     void pointerAccelerationChanged();

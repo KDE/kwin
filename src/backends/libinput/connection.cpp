@@ -476,8 +476,10 @@ void Connection::processEvents()
 
                 if (workspace()) {
 #ifndef KWIN_BUILD_TESTING
-                    auto client = workspace()->activeClient();
-                    auto *output = static_cast<AbstractWaylandOutput *>(client ? client->output() : tte->device()->output());
+                    AbstractWaylandOutput *output = static_cast<AbstractWaylandOutput *>(tte->device()->output());
+                    if (!output && workspace()->activeClient()) {
+                        output = static_cast<AbstractWaylandOutput *>(workspace()->activeClient()->output());
+                    }
                     if (!output) {
                         output = static_cast<AbstractWaylandOutput *>(workspace()->activeOutput());
                     }

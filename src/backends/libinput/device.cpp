@@ -109,7 +109,7 @@ enum class ConfigKey {
     ScrollFactor,
     Orientation,
     Calibration,
-    Screen
+    OutputName
 };
 
 struct ConfigData {
@@ -188,8 +188,7 @@ static const QMap<ConfigKey, ConfigData> s_configData {
     {ConfigKey::ScrollFactor, ConfigData(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)},
     {ConfigKey::Orientation, ConfigData(QByteArrayLiteral("Orientation"), &Device::setOrientation, &Device::defaultOrientation)},
     {ConfigKey::Calibration, ConfigData(QByteArrayLiteral("CalibrationMatrix"), &Device::setCalibrationMatrix, &Device::defaultCalibrationMatrix)},
-    {ConfigKey::Screen, ConfigData(QByteArrayLiteral("Screen"), &Device::setScreen, &Device::defaultScreen)}
-};
+    {ConfigKey::OutputName, ConfigData(QByteArrayLiteral("OutputName"), &Device::setOutputName, &Device::defaultOutputName)}};
 
 namespace {
 QMatrix4x4 getMatrix(libinput_device *device, std::function<int(libinput_device *, float[6])> getter)
@@ -661,15 +660,17 @@ void Device::setOrientation(Qt::ScreenOrientation orientation)
     }
 }
 
-void Device::setScreen(QString name)
+void Device::setOutputName(QString name)
 {
 #ifndef KWIN_BUILD_TESTING
-    auto outputs =  kwinApp()->platform()->enabledOutputs();
-    for(int i = 0; i < outputs.count(); ++i) {
+    if (name.isEmpty()) {
+        setOutput(nullptr);
+        return;
+    }
+    auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (int i = 0; i < outputs.count(); ++i) {
         if (outputs[i]->name() == name) {
             setOutput(outputs[i]);
-            writeEntry(ConfigKey::Screen, outputs[i]->uuid().toString());
-            Q_EMIT screenChanged();
             break;
         }
     }
@@ -686,6 +687,12 @@ AbstractOutput *Device::output() const
 void Device::setOutput(AbstractOutput *output)
 {
     m_output = output;
+    if (m_output) {
+        writeEntry(ConfigKey::OutputName, output->name());
+    } else {
+        writeEntry(ConfigKey::OutputName, QString());
+    }
+    Q_EMIT outputNameChanged();
 }
 
 static libinput_led toLibinputLEDS(LEDs leds)
