@@ -75,10 +75,6 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
     : Scene(parent)
     , m_backend(backend)
 {
-    if (m_backend->isFailed()) {
-        init_ok = false;
-        return;
-    }
     if (!viewportLimitsMatched(screens()->size()))
         return;
 
