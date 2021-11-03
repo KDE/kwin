@@ -30,6 +30,7 @@ class KWIN_EXPORT SceneOpenGL
     Q_OBJECT
 public:
     class EffectFrame;
+    explicit SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
     ~SceneOpenGL() override;
     bool initFailed() const override;
     void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows,
@@ -41,7 +42,6 @@ public:
     void doneOpenGLContextCurrent() override;
     bool supportsNativeFence() const override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
-    virtual QMatrix4x4 projectionMatrix() const = 0;
     bool animationsSupported() const override;
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
@@ -54,13 +54,17 @@ public:
         return m_backend;
     }
 
+    CompositingType compositingType() const override;
     QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const override;
 
+    QMatrix4x4 projectionMatrix() const { return m_projectionMatrix; }
+    QMatrix4x4 screenProjectionMatrix() const override { return m_screenProjectionMatrix; }
+
     static SceneOpenGL *createScene(QObject *parent);
+    static bool supported(OpenGLBackend *backend);
 
 protected:
-    SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
     void paintBackground(const QRegion &region) override;
     void aboutToStartPainting(AbstractOutput *output, const QRegion &damage) override;
     void extendPaintRegion(QRegion &region, bool opaqueFullscreen) override;
@@ -68,55 +72,29 @@ protected:
     void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
     void paintEffectQuickView(EffectQuickView *w) override;
 
-    void handleGraphicsReset(GLenum status);
-
-    virtual void doPaintBackground(const QVector<float> &vertices) = 0;
-    virtual void updateProjectionMatrix(const QRect &geometry) = 0;
-
-protected:
-    bool init_ok;
-private:
-    bool viewportLimitsMatched(const QSize &size) const;
-
-private:
-    bool m_resetOccurred = false;
-    bool m_debug;
-    OpenGLBackend *m_backend;
-};
-
-class SceneOpenGL2 : public SceneOpenGL
-{
-    Q_OBJECT
-public:
-    explicit SceneOpenGL2(OpenGLBackend *backend, QObject *parent = nullptr);
-    ~SceneOpenGL2() override;
-    CompositingType compositingType() const override {
-        return OpenGLCompositing;
-    }
-
-    static bool supported(OpenGLBackend *backend);
-
-    QMatrix4x4 projectionMatrix() const override { return m_projectionMatrix; }
-    QMatrix4x4 screenProjectionMatrix() const override { return m_screenProjectionMatrix; }
-
-protected:
     void paintSimpleScreen(int mask, const QRegion &region) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
-    void doPaintBackground(const QVector< float >& vertices) override;
     Scene::Window *createWindow(Toplevel *t) override;
     void finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data) override;
-    void updateProjectionMatrix(const QRect &geometry) override;
     void paintCursor(const QRegion &region) override;
 
 private:
+    bool viewportLimitsMatched(const QSize &size) const;
+    void doPaintBackground(const QVector< float >& vertices);
+    void updateProjectionMatrix(const QRect &geometry);
     void performPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
+    void handleGraphicsReset(GLenum status);
 
-    LanczosFilter *m_lanczosFilter;
+    bool init_ok = true;
+    bool m_resetOccurred = false;
+    bool m_debug = false;
+    OpenGLBackend *m_backend;
+    LanczosFilter *m_lanczosFilter = nullptr;
     QScopedPointer<GLTexture> m_cursorTexture;
     bool m_cursorTextureDirty = false;
     QMatrix4x4 m_projectionMatrix;
     QMatrix4x4 m_screenProjectionMatrix;
-    GLuint vao;
+    GLuint vao = 0;
 };
 
 class OpenGLWindow final : public Scene::Window

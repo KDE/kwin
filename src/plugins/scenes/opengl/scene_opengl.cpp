@@ -73,7 +73,6 @@ namespace KWin
 
 SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
     : Scene(parent)
-    , init_ok(true)
     , m_backend(backend)
 {
     if (m_backend->isFailed()) {
@@ -97,6 +96,37 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
         return;
     }
 
+    // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
+    if (!hasGLVersion(2, 0)) {
+        qCDebug(KWIN_OPENGL) << "OpenGL 2.0 is not supported";
+        init_ok = false;
+        return;
+    }
+
+    const QSize &s = screens()->size();
+    GLRenderTarget::setVirtualScreenSize(s);
+    GLRenderTarget::setVirtualScreenGeometry(screens()->geometry());
+
+    // push one shader on the stack so that one is always bound
+    ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+    if (checkGLError("Init")) {
+        qCCritical(KWIN_OPENGL) << "OpenGL 2 compositing setup failed";
+        init_ok = false;
+        return; // error
+    }
+
+    // It is not legal to not have a vertex array object bound in a core context
+    if (!GLPlatform::instance()->isGLES() && hasGLExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
+    }
+
+    if (!ShaderManager::instance()->selfTest()) {
+        qCCritical(KWIN_OPENGL) << "ShaderManager self test failed";
+        init_ok = false;
+        return;
+    }
+
     m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
     initDebugOutput();
 
@@ -104,12 +134,18 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
     if (options->isGlStrictBindingFollowsDriver()) {
         options->setGlStrictBinding(!glPlatform->supports(LooseBinding));
     }
+
+    qCDebug(KWIN_OPENGL) << "OpenGL 2 compositing successfully initialized";
 }
 
 SceneOpenGL::~SceneOpenGL()
 {
     if (init_ok) {
         makeOpenGLContextCurrent();
+    }
+    if (m_lanczosFilter) {
+        delete m_lanczosFilter;
+        m_lanczosFilter = nullptr;
     }
     SceneOpenGL::EffectFrame::cleanup();
 
@@ -207,8 +243,8 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
     }
     SceneOpenGL *scene = nullptr;
     // first let's try an OpenGL 2 scene
-    if (SceneOpenGL2::supported(backend.data())) {
-        scene = new SceneOpenGL2(backend.take(), parent);
+    if (SceneOpenGL::supported(backend.data())) {
+        scene = new SceneOpenGL(backend.take(), parent);
         if (scene->initFailed()) {
             delete scene;
             scene = nullptr;
@@ -275,7 +311,7 @@ void SceneOpenGL::handleGraphicsReset(GLenum status)
  * Render cursor texture in case hardware cursor is disabled.
  * Useful for screen recording apps or backends that can't do planes.
  */
-void SceneOpenGL2::paintCursor(const QRegion &rendered)
+void SceneOpenGL::paintCursor(const QRegion &rendered)
 {
     Cursor* cursor = Cursors::self()->currentCursor();
 
@@ -627,6 +663,11 @@ bool SceneOpenGL::animationsSupported() const
     return !GLPlatform::instance()->isSoftwareEmulation();
 }
 
+CompositingType SceneOpenGL::compositingType() const
+{
+    return OpenGLCompositing;
+}
+
 QVector<QByteArray> SceneOpenGL::openGLPlatformInterfaceExtensions() const
 {
     return m_backend->extensions().toVector();
@@ -652,10 +693,7 @@ SurfaceTexture *SceneOpenGL::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
     return m_backend->createSurfaceTextureX11(pixmap);
 }
 
-//****************************************
-// SceneOpenGL2
-//****************************************
-bool SceneOpenGL2::supported(OpenGLBackend *backend)
+bool SceneOpenGL::supported(OpenGLBackend *backend)
 {
     const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
     if (!forceEnv.isEmpty()) {
@@ -677,72 +715,19 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
     return true;
 }
 
-SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
-    : SceneOpenGL(backend, parent)
-    , m_lanczosFilter(nullptr)
-{
-    if (!init_ok) {
-        // base ctor already failed
-        return;
-    }
-
-    // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
-    if (!hasGLVersion(2, 0)) {
-        qCDebug(KWIN_OPENGL) << "OpenGL 2.0 is not supported";
-        init_ok = false;
-        return;
-    }
-
-    const QSize &s = screens()->size();
-    GLRenderTarget::setVirtualScreenSize(s);
-    GLRenderTarget::setVirtualScreenGeometry(screens()->geometry());
-
-    // push one shader on the stack so that one is always bound
-    ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-    if (checkGLError("Init")) {
-        qCCritical(KWIN_OPENGL) << "OpenGL 2 compositing setup failed";
-        init_ok = false;
-        return; // error
-    }
-
-    // It is not legal to not have a vertex array object bound in a core context
-    if (!GLPlatform::instance()->isGLES() && hasGLExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
-    }
-
-    if (!ShaderManager::instance()->selfTest()) {
-        qCCritical(KWIN_OPENGL) << "ShaderManager self test failed";
-        init_ok = false;
-        return;
-    }
-
-    qCDebug(KWIN_OPENGL) << "OpenGL 2 compositing successfully initialized";
-    init_ok = true;
-}
-
-SceneOpenGL2::~SceneOpenGL2()
-{
-    if (m_lanczosFilter) {
-        makeOpenGLContextCurrent();
-        delete m_lanczosFilter;
-        m_lanczosFilter = nullptr;
-    }
-}
-
-void SceneOpenGL2::updateProjectionMatrix(const QRect &rect)
+void SceneOpenGL::updateProjectionMatrix(const QRect &rect)
 {
     m_projectionMatrix = Scene::createProjectionMatrix(rect);
 }
 
-void SceneOpenGL2::paintSimpleScreen(int mask, const QRegion &region)
+void SceneOpenGL::paintSimpleScreen(int mask, const QRegion &region)
 {
     m_screenProjectionMatrix = m_projectionMatrix;
 
     Scene::paintSimpleScreen(mask, region);
 }
 
-void SceneOpenGL2::paintGenericScreen(int mask, const ScreenPaintData &data)
+void SceneOpenGL::paintGenericScreen(int mask, const ScreenPaintData &data)
 {
     const QMatrix4x4 screenMatrix = transformation(mask, data);
 
@@ -751,7 +736,7 @@ void SceneOpenGL2::paintGenericScreen(int mask, const ScreenPaintData &data)
     Scene::paintGenericScreen(mask, data);
 }
 
-void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
+void SceneOpenGL::doPaintBackground(const QVector< float >& vertices)
 {
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
@@ -764,12 +749,12 @@ void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
     vbo->render(GL_TRIANGLES);
 }
 
-Scene::Window *SceneOpenGL2::createWindow(Toplevel *t)
+Scene::Window *SceneOpenGL::createWindow(Toplevel *t)
 {
     return new OpenGLWindow(t, this);
 }
 
-void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data)
+void SceneOpenGL::finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data)
 {
     if (waylandServer() && waylandServer()->isScreenLocked() && !w->window()->isLockScreen() && !w->window()->isInputMethod()) {
         return;
@@ -777,7 +762,7 @@ void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion 
     performPaintWindow(w, mask, region, data);
 }
 
-void SceneOpenGL2::performPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data)
+void SceneOpenGL::performPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data)
 {
     if (mask & PAINT_WINDOW_LANCZOS) {
         if (!m_lanczosFilter) {
@@ -965,8 +950,6 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
 
 QMatrix4x4 OpenGLWindow::modelViewProjectionMatrix(int mask, const WindowPaintData &data) const
 {
-    SceneOpenGL2 *scene = static_cast<SceneOpenGL2 *>(m_scene);
-
     const QMatrix4x4 pMatrix = data.projectionMatrix();
     const QMatrix4x4 mvMatrix = data.modelViewMatrix();
 
@@ -982,9 +965,9 @@ QMatrix4x4 OpenGLWindow::modelViewProjectionMatrix(int mask, const WindowPaintDa
     // with the default projection matrix.  If the effect hasn't specified a
     // model-view matrix, mvMatrix will be the identity matrix.
     if (mask & Scene::PAINT_SCREEN_TRANSFORMED)
-        return scene->screenProjectionMatrix() * mvMatrix;
+        return m_scene->screenProjectionMatrix() * mvMatrix;
 
-    return scene->projectionMatrix() * mvMatrix;
+    return m_scene->projectionMatrix() * mvMatrix;
 }
 
 static QMatrix4x4 transformForPaintData(int mask, const WindowPaintData &data)
