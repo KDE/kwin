@@ -277,7 +277,7 @@ SessionInfo* Workspace::takeSessionInfo(X11Client *c)
     // First search ``session''
     if (! sessionId.isEmpty()) {
         // look for a real session managed client (algorithm suggested by ICCCM)
-        Q_FOREACH (SessionInfo * info, session) {
+        for (SessionInfo *info : qAsConst(session)) {
             if (realInfo)
                 break;
             if (info->sessionId == sessionId && sessionInfoWindowTypeMatch(c, info)) {
@@ -298,7 +298,7 @@ SessionInfo* Workspace::takeSessionInfo(X11Client *c)
         }
     } else {
         // look for a sessioninfo with matching features.
-        Q_FOREACH (SessionInfo * info, session) {
+        for (SessionInfo *info : qAsConst(session)) {
             if (realInfo)
                 break;
             if (info->resourceName == resourceName

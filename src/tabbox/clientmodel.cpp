@@ -80,7 +80,7 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
 QString ClientModel::longestCaption() const
 {
     QString caption;
-    Q_FOREACH (const QWeakPointer<TabBoxClient> &clientPointer, m_clientList) {
+    for (const QWeakPointer<TabBoxClient> &clientPointer : qAsConst(m_clientList)) {
         QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef();
         if (!client) {
             continue;
@@ -217,7 +217,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         break;
     }
     }
-    Q_FOREACH (const QWeakPointer< TabBoxClient > &c, stickyClients) {
+    for (const QWeakPointer< TabBoxClient > &c : qAsConst(stickyClients)) {
         m_clientList.removeAll(c);
         m_clientList.prepend(c);
     }

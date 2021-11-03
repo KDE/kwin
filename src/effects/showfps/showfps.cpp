@@ -327,7 +327,7 @@ void ShowFpsEffect::paintGraph(int x, int y, QList<int> values, QList<int> lines
         vbo->setColor(color);
         QVector<float> verts;
         // First draw the lines
-        Q_FOREACH (int h, lines) {
+        for (int h : qAsConst(lines)) {
             verts << x << y - h;
             verts << x + values.count() << y - h;
         }
@@ -367,7 +367,7 @@ void ShowFpsEffect::paintGraph(int x, int y, QList<int> values, QList<int> lines
         QPainter *painter = effects->scenePainter();
         painter->setPen(Qt::black);
         // First draw the lines
-        Q_FOREACH (int h, lines) {
+        for (int h : qAsConst(lines)) {
             painter->drawLine(x, y - h, x + values.count(), y - h);
         }
         QColor color(0, 0, 0);

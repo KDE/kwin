@@ -1404,7 +1404,8 @@ void Workspace::setShowingDesktop(bool showing)
                 if (!topDesk)
                     topDesk = c;
                 if (auto group = c->group()) {
-                    Q_FOREACH (X11Client *cm, group->members()) {
+                    const auto members = group->members();
+                    for (X11Client *cm : members) {
                         cm->updateLayer();
                     }
                 }
@@ -1745,17 +1746,19 @@ QString Workspace::supportInformation() const
         }
         support.append(QStringLiteral("\nLoaded Effects:\n"));
         support.append(QStringLiteral(  "---------------\n"));
-        Q_FOREACH (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->loadedEffects()) {
+        const auto loadedEffects = static_cast<EffectsHandlerImpl*>(effects)->loadedEffects();
+        for (const QString &effect : loadedEffects) {
             support.append(effect + QStringLiteral("\n"));
         }
         support.append(QStringLiteral("\nCurrently Active Effects:\n"));
         support.append(QStringLiteral(  "-------------------------\n"));
-        Q_FOREACH (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->activeEffects()) {
+        const auto activeEffects = static_cast<EffectsHandlerImpl*>(effects)->activeEffects();
+        for (const QString &effect : activeEffects) {
             support.append(effect + QStringLiteral("\n"));
         }
         support.append(QStringLiteral("\nEffect Settings:\n"));
         support.append(QStringLiteral(  "----------------\n"));
-        Q_FOREACH (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->loadedEffects()) {
+        for (const QString &effect : loadedEffects) {
             support.append(static_cast<EffectsHandlerImpl*>(effects)->supportInformation(effect));
             support.append(QStringLiteral("\n"));
         }
@@ -2019,8 +2022,10 @@ void Workspace::updateMinimizedOfTransients(AbstractClient* c)
             }
         }
         if (c->isModal()) { // if a modal dialog is minimized, minimize its mainwindow too
-            Q_FOREACH (AbstractClient * c2, c->mainClients())
-            c2->minimize();
+            const auto clients = c->mainClients();
+            for (AbstractClient * c2 :qAsConst(clients)) {
+                c2->minimize();
+            }
         }
     } else {
         // else unmiminize the transients
@@ -2033,8 +2038,10 @@ void Workspace::updateMinimizedOfTransients(AbstractClient* c)
             }
         }
         if (c->isModal()) {
-            Q_FOREACH (AbstractClient * c2, c->mainClients())
-            c2->unminimize();
+            const auto clients = c->mainClients();
+            for (AbstractClient * c2 :qAsConst(clients)) {
+                c2->unminimize();
+            }
         }
     }
 }

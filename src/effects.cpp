@@ -1238,7 +1238,7 @@ bool EffectsHandlerImpl::checkInputWindowEvent(QMouseEvent *e)
     if (m_grabbedMouseEffects.isEmpty()) {
         return false;
     }
-    Q_FOREACH (Effect *effect, m_grabbedMouseEffects) {
+    for (Effect *effect : qAsConst(m_grabbedMouseEffects)) {
         effect->windowInputMouseEvent(e);
     }
     return true;
@@ -1249,7 +1249,7 @@ bool EffectsHandlerImpl::checkInputWindowEvent(QWheelEvent *e)
     if (m_grabbedMouseEffects.isEmpty()) {
         return false;
     }
-    Q_FOREACH (Effect *effect, m_grabbedMouseEffects) {
+    for (Effect *effect : qAsConst(m_grabbedMouseEffects)) {
         effect->windowInputMouseEvent(e);
     }
     return true;

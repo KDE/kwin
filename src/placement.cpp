@@ -620,7 +620,8 @@ void Placement::cascadeDesktop()
     Workspace *ws = Workspace::self();
     const int desktop = VirtualDesktopManager::self()->current();
     reinitCascading(desktop);
-    Q_FOREACH (Toplevel *toplevel, ws->stackingOrder()) {
+    const auto stackingOrder = ws->stackingOrder();
+    for (Toplevel *toplevel : stackingOrder) {
         auto client = qobject_cast<AbstractClient*>(toplevel);
         if (!client ||
                 (!client->isOnCurrentDesktop()) ||

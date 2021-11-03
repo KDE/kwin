@@ -259,15 +259,17 @@ AbstractClient *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop) co
         for (int i = stacking_order.size() - 1; i >= 0; i--) {
             AbstractClient *c = qobject_cast<AbstractClient*>(stacking_order.at(i));
             if (c && c->isOnDesktop(desktop) && c->isDesktop()
-                    && c->isShown(true))
+                    && c->isShown(true)) {
                 return c;
+            }
         }
     } else { // bottom-most
-        Q_FOREACH (Toplevel * c, stacking_order) {
+        for (Toplevel *c : qAsConst(stacking_order)) {
             AbstractClient *client = qobject_cast<AbstractClient*>(c);
             if (client && c->isOnDesktop(desktop) && c->isDesktop()
-                    && client->isShown(true))
+                    && client->isShown(true)) {
                 return client;
+            }
         }
     }
     return nullptr;
@@ -360,8 +362,9 @@ void Workspace::raiseClient(AbstractClient* c, bool nogroup)
         AbstractClient *transient_parent = c;
         while ((transient_parent = transient_parent->transientFor()))
             transients << transient_parent;
-        Q_FOREACH (transient_parent, transients)
+        for (const auto &transient_parent : qAsConst(transients)) {
             raiseClient(transient_parent, true);
+        }
     }
 
     unconstrained_stacking_order.removeAll(c);
@@ -737,7 +740,8 @@ void X11Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource
 
 bool X11Client::belongsToDesktop() const
 {
-    Q_FOREACH (const X11Client *c, group()->members()) {
+    const auto members = group()->members();
+    for (const X11Client *c : members) {
         if (c->isDesktop())
             return true;
     }

@@ -275,9 +275,9 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient* cl
 
 TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
 {
-    QList<Toplevel *> stacking = Workspace::self()->stackingOrder();
+    const QList<Toplevel *> stacking = Workspace::self()->stackingOrder();
     TabBoxClientList ret;
-    Q_FOREACH (Toplevel *toplevel, stacking) {
+    for (Toplevel *toplevel : stacking) {
         if (auto client = qobject_cast<AbstractClient*>(toplevel)) {
             ret.append(client->tabBoxClient());
         }
@@ -321,7 +321,8 @@ void TabBoxHandlerImpl::shadeClient(TabBoxClient *c, bool b) const
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
-    Q_FOREACH (Toplevel *toplevel, Workspace::self()->stackingOrder()) {
+    const auto stackingOrder = Workspace::self()->stackingOrder();
+    for (Toplevel *toplevel : stackingOrder) {
         auto client = qobject_cast<AbstractClient*>(toplevel);
         if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->output() == workspace()->activeOutput()) {
             return client->tabBoxClient();
@@ -653,9 +654,9 @@ AbstractClient* TabBox::currentClient()
 
 QList<AbstractClient*> TabBox::currentClientList()
 {
-    TabBoxClientList list = m_tabBox->clientList();
+    const TabBoxClientList list = m_tabBox->clientList();
     QList<AbstractClient*> ret;
-    Q_FOREACH (const QWeakPointer<TabBoxClient> &clientPointer, list) {
+    for (const QWeakPointer<TabBoxClient> &clientPointer : list) {
         QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef();
         if (!client)
             continue;
@@ -749,12 +750,12 @@ void TabBox::reconfigure()
     QList<ElectricBorder> *borders = &m_borderActivate;
     QString borderConfig = QStringLiteral("BorderActivate");
     for (int i = 0; i < 2; ++i) {
-        Q_FOREACH (ElectricBorder border, *borders) {
+        for (ElectricBorder border : qAsConst(*borders)) {
             ScreenEdges::self()->unreserve(border, this);
         }
         borders->clear();
         QStringList list = config.readEntry(borderConfig, QStringList());
-        Q_FOREACH (const QString &s, list) {
+        for (const QString &s : qAsConst(list)) {
             bool ok;
             const int i = s.toInt(&ok);
             if (!ok)

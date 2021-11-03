@@ -627,7 +627,7 @@ void Connection::slotKGlobalSettingsNotifyChange(int type, int arg)
 
 QStringList Connection::devicesSysNames() const {
     QStringList sl;
-    Q_FOREACH (Device *d, m_devices) {
+    for (Device *d : qAsConst(m_devices)) {
         sl.append(d->sysName());
     }
     return sl;

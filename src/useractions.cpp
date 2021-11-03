@@ -714,7 +714,8 @@ void UserActionsMenu::activityPopupAboutToShow()
     }
     m_activityMenu->addSeparator();
 
-    Q_FOREACH (const QString &id, Activities::self()->running()) {
+    const auto activities = Activities::self()->running();
+    for (const QString &id : activities) {
         KActivities::Info activity(id);
         QString name = activity.name();
         name.replace('&', "&&");

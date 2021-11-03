@@ -62,8 +62,10 @@ BlurEffect::BlurEffect()
     );
 
     // Fetch the blur regions for all windows
-    Q_FOREACH (EffectWindow *window, effects->stackingOrder())
+    const auto stackingOrder = effects->stackingOrder();
+    for (EffectWindow *window : stackingOrder) {
         updateBlurRegion(window);
+    }
 }
 
 BlurEffect::~BlurEffect()
@@ -77,8 +79,10 @@ void BlurEffect::slotScreenGeometryChanged()
     updateTexture();
 
     // Fetch the blur regions for all windows
-    Q_FOREACH (EffectWindow *window, effects->stackingOrder())
+    const auto stackingOrder = effects->stackingOrder();
+    for (EffectWindow *window : stackingOrder) {
         updateBlurRegion(window);
+    }
     effects->doneOpenGLContextCurrent();
 }
 

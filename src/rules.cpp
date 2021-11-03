@@ -1114,8 +1114,10 @@ void RuleBook::setUpdatesDisabled(bool disable)
 {
     m_updatesDisabled = disable;
     if (!disable) {
-        Q_FOREACH (X11Client *c, Workspace::self()->clientList())
+        const auto clients = Workspace::self()->clientList();
+        for (X11Client *c : clients) {
             c->updateWindowRules(Rules::All);
+        }
     }
 }
 

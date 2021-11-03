@@ -2680,7 +2680,7 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
             return nullptr;
         }
         const QList<Unmanaged *> &unmanaged = Workspace::self()->unmanagedList();
-        Q_FOREACH (Unmanaged *u, unmanaged) {
+        for (Unmanaged *u : unmanaged) {
             if (u->hitTest(pos)) {
                 return u;
             }

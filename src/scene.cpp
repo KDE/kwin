@@ -221,7 +221,7 @@ void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
 
     Q_EMIT frameRendered();
 
-    Q_FOREACH (Window *w, stacking_order) {
+    for (Window *w : qAsConst(stacking_order)) {
         effects->postPaintWindow(effectWindow(w));
     }
 
@@ -263,7 +263,7 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
 {
     QVector<Phase2Data> phase2;
     phase2.reserve(stacking_order.size());
-    Q_FOREACH (Window * w, stacking_order) { // bottom to top
+    for (Window * w : qAsConst(stacking_order)) { // bottom to top
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
         // the next frame within Effects::prePaintWindow.
@@ -294,7 +294,7 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
     if (!(orig_mask & PAINT_SCREEN_BACKGROUND_FIRST)) {
         paintBackground(infiniteRegion());
     }
-    Q_FOREACH (const Phase2Data & d, phase2) {
+    for (const Phase2Data &d : qAsConst(phase2)) {
         paintWindow(d.window, d.mask, d.region);
     }
 }
@@ -494,7 +494,7 @@ void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
 void Scene::createStackingOrder(const QList<Toplevel *> &toplevels)
 {
     // TODO: cache the stacking_order in case it has not changed
-    Q_FOREACH (Toplevel *c, toplevels) {
+    for (Toplevel *c : toplevels) {
         Q_ASSERT(m_windows.contains(c));
         stacking_order.append(m_windows[ c ]);
     }

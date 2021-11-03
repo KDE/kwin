@@ -895,7 +895,8 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         // If the window is on an inactive activity during session saving, temporarily force it to show.
         if( !isMapped && !session && isSessionSaving && !isOnCurrentActivity()) {
             setSessionActivityOverride( true );
-            Q_FOREACH( AbstractClient* c, mainClients()) {
+            const auto &clients = mainClients();
+            for (AbstractClient* c : qAsConst(clients)) {
                 if (X11Client *mc = dynamic_cast<X11Client *>(c)) {
                     mc->setSessionActivityOverride(true);
                 }
@@ -1487,7 +1488,8 @@ QRect X11Client::iconGeometry() const
         return geom;
     else {
         // Check all mainwindows of this window (recursively)
-        Q_FOREACH (AbstractClient * amainwin, mainClients()) {
+        const auto &clients = mainClients();
+        for (AbstractClient * amainwin : clients) {
             X11Client *mainwin = dynamic_cast<X11Client *>(amainwin);
             if (!mainwin) {
                 continue;
@@ -1989,7 +1991,8 @@ bool X11Client::takeFocus()
 
     bool breakShowingDesktop = !keepAbove();
     if (breakShowingDesktop) {
-        Q_FOREACH (const X11Client *c, group()->members()) {
+        const auto members = group()->members();
+        for (const X11Client *c : members) {
             if (c->isDesktop()) {
                 breakShowingDesktop = false;
                 break;

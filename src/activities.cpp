@@ -172,7 +172,7 @@ void Activities::reallyStop(const QString &id)
         }
 
         const QStringList activities = c->activities();
-        Q_FOREACH (const QString & activityId, activities) {
+        for (const QString &activityId : activities) {
             if (activityId == id) {
                 saveSessionIds << sessionId;
             } else if (running().contains(activityId)) {
@@ -185,7 +185,7 @@ void Activities::reallyStop(const QString &id)
 
     QStringList saveAndClose;
     QStringList saveOnly;
-    Q_FOREACH (const QByteArray & sessionId, saveSessionIds) {
+    for (const QByteArray &sessionId : qAsConst(saveSessionIds)) {
         if (dontCloseSessionIds.contains(sessionId)) {
             saveOnly << sessionId;
         } else {
