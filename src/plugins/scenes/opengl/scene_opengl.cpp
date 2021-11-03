@@ -75,9 +75,6 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
     : Scene(parent)
     , m_backend(backend)
 {
-    if (!viewportLimitsMatched(screens()->size()))
-        return;
-
     // perform Scene specific checks
     GLPlatform *glPlatform = GLPlatform::instance();
     if (!glPlatform->isGLES() && !hasGLExtension(QByteArrayLiteral("GL_ARB_texture_non_power_of_two"))
@@ -566,24 +563,6 @@ void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
     } else if (options->glPreferBufferSwap() == Options::PaintFullScreen) { // forced full rePaint
         region = QRegion(0, 0, screenSize.width(), screenSize.height());
     }
-}
-
-bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        // TODO: On Wayland we can't suspend. Find a solution that works here as well!
-        return true;
-    }
-    GLint limit[2];
-    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, limit);
-    if (limit[0] < size.width() || limit[1] < size.height()) {
-        auto compositor = static_cast<X11Compositor*>(Compositor::self());
-        QMetaObject::invokeMethod(compositor, [compositor]() {
-            qCDebug(KWIN_OPENGL) << "Suspending compositing because viewport limits are not met";
-            compositor->suspend(X11Compositor::AllReasonSuspend);
-        }, Qt::QueuedConnection);
-        return false;
-    }
-    return true;
 }
 
 void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)

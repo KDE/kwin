@@ -79,7 +79,6 @@ protected:
     void paintCursor(const QRegion &region) override;
 
 private:
-    bool viewportLimitsMatched(const QSize &size) const;
     void doPaintBackground(const QVector< float >& vertices);
     void updateProjectionMatrix(const QRect &geometry);
     void performPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
