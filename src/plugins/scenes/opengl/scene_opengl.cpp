@@ -91,18 +91,6 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
         return;
     }
 
-    const QSize &s = screens()->size();
-    GLRenderTarget::setVirtualScreenSize(s);
-    GLRenderTarget::setVirtualScreenGeometry(screens()->geometry());
-
-    // push one shader on the stack so that one is always bound
-    ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-    if (checkGLError("Init")) {
-        qCCritical(KWIN_OPENGL) << "OpenGL 2 compositing setup failed";
-        init_ok = false;
-        return; // error
-    }
-
     // It is not legal to not have a vertex array object bound in a core context
     if (!GLPlatform::instance()->isGLES() && hasGLExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
         glGenVertexArrays(1, &vao);
