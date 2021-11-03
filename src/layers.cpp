@@ -82,6 +82,8 @@
 #include "internal_client.h"
 #include "virtualdesktops.h"
 
+#include <array>
+
 #include <QDebug>
 #include <QQueue>
 
