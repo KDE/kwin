@@ -398,6 +398,11 @@ void OutputInterface::done()
     }
 }
 
+void OutputInterface::done(wl_client *client)
+{
+    d->sendDone(d->resourceMap().value(client));
+}
+
 OutputInterface *OutputInterface::get(wl_resource *native)
 {
     if (auto outputPrivate = resource_cast<OutputInterfacePrivate *>(native)) {

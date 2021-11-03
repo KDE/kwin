@@ -13,6 +13,7 @@
 #include <QSize>
 
 struct wl_resource;
+struct wl_client;
 
 namespace KWaylandServer
 {
@@ -117,6 +118,11 @@ public:
      * Submit changes to all clients.
      */
     void done();
+
+    /**
+     * Submit changes to @p client.
+     */
+    void done(wl_client *client);
 
     static OutputInterface *get(wl_resource *native);
 

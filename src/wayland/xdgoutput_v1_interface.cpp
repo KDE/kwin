@@ -200,7 +200,7 @@ void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resourc
     if (doneOnce) {
         if (wl_resource_get_version(resource->handle) >= 3) {
             if (output) {
-                output->done();
+                output->done(resource->client());
             }
         } else {
             send_done(resource->handle);
