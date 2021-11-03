@@ -47,12 +47,6 @@ public:
     bool isFailed() const {
         return m_failed;
     }
-    /**
-     * Overload for the case that there is a different buffer per screen.
-     * Default implementation just calls buffer.
-     * @param screenId The id of the screen as used in Screens
-     * @todo Get a better identifier for screen then a counter variable
-     */
     virtual QImage *bufferForScreen(AbstractOutput *output) = 0;
 
 protected:
