@@ -267,7 +267,7 @@ void ScreenEdgesTest::testClientEdge()
     ScreenEdges::self()->reserve(client, border);
 
     // Hide the window.
-    client->hideClient(true);
+    client->hideClient();
     QVERIFY(client->isHiddenInternal());
 
     // Trigger the screen edge.

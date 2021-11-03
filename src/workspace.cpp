@@ -863,7 +863,7 @@ void Workspace::updateToolWindows(bool also_hide)
     // TODO: What if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
     if (!options->isHideUtilityWindowsForInactive()) {
         for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it)
-            (*it)->hideClient(false);
+            (*it)->showClient();
         return;
     }
     const Group* group = nullptr;
@@ -931,12 +931,12 @@ void Workspace::updateToolWindows(bool also_hide)
             i >= 0;
             --i)  // From topmost
         // TODO: Since this is in stacking order, the order of taskbar entries changes :(
-        to_show.at(i)->hideClient(false);
+        to_show.at(i)->showClient();
     if (also_hide) {
         for (auto it = to_hide.constBegin();
                 it != to_hide.constEnd();
                 ++it)  // From bottommost
-            (*it)->hideClient(true);
+            (*it)->hideClient();
         updateToolWindowsTimer.stop();
     } else // setActiveClient() is after called with NULL client, quickly followed
         // by setting a new client, which would result in flickering

@@ -48,7 +48,8 @@ public:
     bool isOutline() const override;
     bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const override;
-    void hideClient(bool hide) override;
+    void hideClient() override;
+    void showClient() override;
     void resizeWithChecks(const QSize &size) override;
     AbstractClient *findModal(bool allow_itself = false) override;
     bool takeFocus() override;

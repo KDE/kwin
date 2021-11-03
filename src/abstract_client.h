@@ -429,8 +429,8 @@ public:
     // TODO: remove boolean trap
     virtual bool isShown(bool shaded_is_shown) const = 0;
     virtual bool isHiddenInternal() const = 0;
-    // TODO: remove boolean trap
-    virtual void hideClient(bool hide) = 0;
+    virtual void hideClient() = 0;
+    virtual void showClient() = 0;
     virtual bool isFullScreenable() const;
     virtual bool isFullScreen() const;
     virtual bool isRequestedFullScreen() const;

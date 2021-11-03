@@ -666,14 +666,14 @@ void TestXdgShellClient::testHidden()
     QVERIFY(c->wantsTabFocus());
     QVERIFY(c->isShown(true));
 
-    c->hideClient(true);
+    c->hideClient();
     QVERIFY(!c->isShown(true));
     QVERIFY(!c->isActive());
     QVERIFY(c->wantsInput());
     QVERIFY(c->wantsTabFocus());
 
     // unhide again
-    c->hideClient(false);
+    c->showClient();
     QVERIFY(c->isShown(true));
     QVERIFY(c->wantsInput());
     QVERIFY(c->wantsTabFocus());

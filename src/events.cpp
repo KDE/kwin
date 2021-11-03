@@ -865,7 +865,7 @@ bool X11Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
         if (isSplash()
                 && button == XCB_BUTTON_INDEX_1 && !bModKeyHeld) {
             // hide splashwindow if the user clicks on it
-            hideClient(true);
+            hideClient();
             if (w == wrapperId())
                 xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
             return true;

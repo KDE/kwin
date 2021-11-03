@@ -239,9 +239,12 @@ bool InternalClient::isHiddenInternal() const
     return false;
 }
 
-void InternalClient::hideClient(bool hide)
+void InternalClient::hideClient()
 {
-    Q_UNUSED(hide)
+}
+
+void InternalClient::showClient()
+{
 }
 
 void InternalClient::resizeWithChecks(const QSize &size)

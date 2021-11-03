@@ -683,7 +683,7 @@ void XdgToplevelClient::showOnScreenEdge()
     // ShowOnScreenEdge can be called by an Edge, and hideClient could destroy the Edge
     // Use the singleshot to avoid use-after-free
     QTimer::singleShot(0, this, [this](){
-        hideClient(false);
+        showClient();
         workspace()->raiseClient(this);
         if (m_plasmaShellSurface && m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
             m_plasmaShellSurface->showAutoHidingPanel();
@@ -1372,13 +1372,13 @@ void XdgToplevelClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *s
     });
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideHideRequested, this, [this] {
         if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
-            hideClient(true);
+            hideClient();
             m_plasmaShellSurface->hideAutoHidingPanel();
         }
         updateShowOnScreenEdge();
     });
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideShowRequested, this, [this] {
-        hideClient(false);
+        showClient();
         ScreenEdges::self()->reserve(this, ElectricNone);
         m_plasmaShellSurface->showAutoHidingPanel();
     });

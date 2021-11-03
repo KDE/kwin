@@ -1393,11 +1393,21 @@ void X11Client::updateInputShape()
     }
 }
 
-void X11Client::hideClient(bool hide)
+void X11Client::hideClient()
 {
-    if (hidden == hide)
+    if (hidden) {
         return;
-    hidden = hide;
+    }
+    hidden = true;
+    updateVisibility();
+}
+
+void X11Client::showClient()
+{
+    if (!hidden) {
+        return;
+    }
+    hidden = false;
     updateVisibility();
 }
 
@@ -2681,11 +2691,11 @@ void X11Client::readShowOnScreenEdge(Xcb::Property &property)
                 }
             });
         } else {
-            hideClient(true);
+            hideClient();
             successfullyHidden = isHiddenInternal();
 
             m_edgeGeometryTrackingConnection = connect(this, &X11Client::frameGeometryChanged, this, [this, border](){
-                hideClient(true);
+                hideClient();
                 ScreenEdges::self()->reserve(this, border);
             });
         }
@@ -2719,7 +2729,7 @@ void X11Client::showOnScreenEdge()
 {
     disconnect(m_edgeRemoveConnection);
 
-    hideClient(false);
+    showClient();
     setKeepBelow(false);
     xcb_delete_property(connection(), window(), atoms->kde_screen_edge_show);
 }

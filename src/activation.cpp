@@ -305,7 +305,7 @@ void Workspace::activateClient(AbstractClient* c, bool force)
         c->unminimize();
 
     // ensure the window is really visible - could eg. be a hidden utility window, see bug #348083
-    c->hideClient(false);
+    c->showClient();
 
 // TODO force should perhaps allow this only if the window already contains the mouse
     if (options->focusPolicyIsReasonable() || force)
