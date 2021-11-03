@@ -791,7 +791,7 @@ void Workspace::addShellClient(AbstractClient *client)
             placementDone = true;
         }
         if (!placementDone) {
-            client->placeIn(area);
+            Placement::self()->place(client, area);
         }
     }
     m_allClients.append(client);
@@ -1938,7 +1938,7 @@ void Workspace::addInternalClient(InternalClient *client)
 
     if (client->isPlaceable()) {
         const QRect area = clientArea(PlacementArea, client, workspace()->activeOutput());
-        client->placeIn(area);
+        Placement::self()->place(client, area);
     }
 
     markXStackingOrderAsDirty();

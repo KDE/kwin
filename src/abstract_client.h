@@ -631,8 +631,6 @@ public:
     Layer layer() const override;
     void updateLayer();
 
-    void placeIn(const QRect &area);
-
     void move(const QPoint &point);
     void resize(const QSize &size);
     void moveResize(const QRect &rect);

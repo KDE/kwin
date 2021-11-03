@@ -88,7 +88,7 @@ AbstractClient::AbstractClient()
             Q_UNUSED(c)
             if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && isPlaceable()) {
                 GeometryUpdatesBlocker blocker(this);
-                placeIn(workspace()->clientArea(PlacementArea, this, workspace()->activeOutput()));
+                Placement::self()->place(this, workspace()->clientArea(PlacementArea, this, workspace()->activeOutput()));
             }
         }
     );
@@ -256,11 +256,6 @@ void AbstractClient::updateLayer()
     for (auto it = transients().constBegin(),
                                   end = transients().constEnd(); it != end; ++it)
         (*it)->updateLayer();
-}
-
-void AbstractClient::placeIn(const QRect &area)
-{
-    Placement::self()->place(this, area);
 }
 
 void AbstractClient::invalidateLayer()
