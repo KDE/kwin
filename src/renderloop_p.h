@@ -41,7 +41,7 @@ public:
     bool pendingReschedule = false;
     bool pendingRepaint = false;
     RenderLoop::VrrPolicy vrrPolicy = RenderLoop::VrrPolicy::Never;
-    bool hasFullscreenSurface = false;
+    Item *fullscreenItem = nullptr;
 
     enum class SyncMode {
         Fixed,
