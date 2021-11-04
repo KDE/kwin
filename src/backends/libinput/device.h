@@ -384,7 +384,7 @@ public:
      * @param acceleration mapped to range [-1,1] with -1 being the slowest, 1 being the fastest supported acceleration.
      */
     void setPointerAcceleration(qreal acceleration);
-    void setPointerAccelerationFromString(QString acceleration) {
+    void setPointerAccelerationFromString(const QString &acceleration) {
         setPointerAcceleration(acceleration.toDouble());
     }
     QString defaultPointerAccelerationToString() const {
@@ -473,7 +473,7 @@ public:
     /**
      * Used to deserialize monitor data from KConfig when initializing a device
      */
-    void setOutputName(QString uuid);
+    void setOutputName(const QString &uuid);
     QString defaultOutputName() const
     {
         return {};

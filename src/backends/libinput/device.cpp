@@ -121,7 +121,7 @@ struct ConfigData {
         : key(_key)
     { quint32Setter.setter = _setter; quint32Setter.defaultValue = _defaultValue; }
 
-    explicit ConfigData(QByteArray _key, void (Device::*_setter)(QString), QString (Device::*_defaultValue)() const = nullptr)
+    explicit ConfigData(QByteArray _key, void (Device::*_setter)(const QString&), QString (Device::*_defaultValue)() const = nullptr)
         : key(_key)
     { stringSetter.setter = _setter; stringSetter.defaultValue = _defaultValue; }
 
@@ -153,7 +153,7 @@ struct ConfigData {
         quint32 (Device::*defaultValue)() const;
     } quint32Setter;
     struct {
-        void (Device::*setter)(QString) = nullptr;
+        void (Device::*setter)(const QString&) = nullptr;
         QString (Device::*defaultValue)() const;
     } stringSetter;
     struct {
@@ -660,7 +660,7 @@ void Device::setOrientation(Qt::ScreenOrientation orientation)
     }
 }
 
-void Device::setOutputName(QString name)
+void Device::setOutputName(const QString &name)
 {
 #ifndef KWIN_BUILD_TESTING
     if (name.isEmpty()) {
