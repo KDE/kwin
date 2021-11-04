@@ -261,12 +261,12 @@ void Item::scheduleRepaintInternal(const QRegion &region)
             const QRegion dirtyRegion = globalRegion & output->geometry();
             if (!dirtyRegion.isEmpty()) {
                 m_repaints[output] += dirtyRegion;
-                output->renderLoop()->scheduleRepaint();
+                output->renderLoop()->scheduleRepaint(this);
             }
         }
     } else {
         m_repaints[nullptr] += globalRegion;
-        kwinApp()->platform()->renderLoop()->scheduleRepaint();
+        kwinApp()->platform()->renderLoop()->scheduleRepaint(this);
     }
 }
 
@@ -280,11 +280,11 @@ void Item::scheduleFrame()
         const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
         for (const AbstractOutput *output : outputs) {
             if (output->geometry().intersects(geometry)) {
-                output->renderLoop()->scheduleRepaint();
+                output->renderLoop()->scheduleRepaint(this);
             }
         }
     } else {
-        kwinApp()->platform()->renderLoop()->scheduleRepaint();
+        kwinApp()->platform()->renderLoop()->scheduleRepaint(this);
     }
 }
 

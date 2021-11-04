@@ -36,7 +36,7 @@ void RenderLoopPrivate::scheduleRepaint()
     if (kwinApp()->isTerminating() || compositeTimer.isActive()) {
         return;
     }
-    if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && hasFullscreenSurface)) {
+    if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && fullscreenItem != nullptr)) {
         presentMode = SyncMode::Adaptive;
     } else {
         presentMode = SyncMode::Fixed;
@@ -216,9 +216,9 @@ void RenderLoop::setRefreshRate(int refreshRate)
     Q_EMIT refreshRateChanged();
 }
 
-void RenderLoop::scheduleRepaint()
+void RenderLoop::scheduleRepaint(Item *item)
 {
-    if (d->pendingRepaint) {
+    if (d->pendingRepaint || (d->fullscreenItem != nullptr && item != nullptr && item != d->fullscreenItem)) {
         return;
     }
     if (!d->pendingFrameCount && !d->inhibitCount) {
@@ -238,9 +238,9 @@ std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
     return d->nextPresentationTimestamp;
 }
 
-void RenderLoop::setFullscreenSurface(SurfaceItem *surfaceItem)
+void RenderLoop::setFullscreenSurface(Item *surfaceItem)
 {
-    d->hasFullscreenSurface = surfaceItem != nullptr;
+    d->fullscreenItem = surfaceItem;
 }
 
 RenderLoop::VrrPolicy RenderLoop::vrrPolicy() const
