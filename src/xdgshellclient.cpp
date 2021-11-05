@@ -1206,10 +1206,11 @@ void XdgToplevelClient::initialize()
     if (isRequestedFullScreen()) {
         needsPlacement = false;
     }
-    if (needsPlacement) {
-        const QRect area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
-        placeIn(area);
-    }
+// At this stage, the expose event isn't arrived yet to the Qt client, so an eventual plasmashellsurface hasn't been created yet (possibly other interfaces as well that could influence placing?)
+//     if (needsPlacement) {
+//         const QRect area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
+//         placeIn(area);
+//     }
 
     scheduleConfigure();
     updateColorScheme();
