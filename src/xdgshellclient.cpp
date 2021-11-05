@@ -464,7 +464,7 @@ bool XdgToplevelClient::isResizable() const
     if (isRequestedFullScreen()) {
         return false;
     }
-    if (isSpecialWindow() || isSplash() || isToolbar()) {
+    if (isSpecialWindow() || isSplash() || isToolbar() || isOnScreenDisplay()) {
         return false;
     }
     if (rules()->checkSize(QSize()).isValid()) {
