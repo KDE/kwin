@@ -45,7 +45,9 @@ Decoration::DecoratedClientImpl *DecorationRenderer::client() const
 
 void DecorationRenderer::invalidate()
 {
-    addDamage(m_client->client()->rect());
+    if (m_client) {
+        addDamage(m_client->client()->rect());
+    }
     m_imageSizesDirty = true;
 }
 
