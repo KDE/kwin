@@ -9,6 +9,8 @@
 #ifndef KWIN_SCENE_QPAINTER_BACKEND_H
 #define KWIN_SCENE_QPAINTER_BACKEND_H
 
+#include <kwin_export.h>
+
 #include <QObject>
 
 class QImage;
@@ -24,7 +26,7 @@ class SurfacePixmapWayland;
 class SurfaceTexture;
 class AbstractOutput;
 
-class QPainterBackend : public QObject
+class KWIN_EXPORT QPainterBackend : public QObject
 {
     Q_OBJECT
 
