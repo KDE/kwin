@@ -34,6 +34,7 @@
 #include "x11syncmanager.h"
 #include "xcbutils.h"
 
+#include <kwinglplatform.h>
 #include <kwingltexture.h>
 
 #include <KWaylandServer/surface_interface.h>
@@ -191,6 +192,11 @@ bool Compositor::attemptOpenGLCompositing()
 
     m_backend = backend.take();
     m_scene = scene.take();
+
+    // set strict binding
+    if (options->isGlStrictBindingFollowsDriver()) {
+        options->setGlStrictBinding(!GLPlatform::instance()->supports(LooseBinding));
+    }
 
     qCDebug(KWIN_CORE) << "OpenGL compositing has been successfully initialized";
     return true;

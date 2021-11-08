@@ -96,11 +96,6 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
         glBindVertexArray(vao);
     }
 
-    // set strict binding
-    if (options->isGlStrictBindingFollowsDriver()) {
-        options->setGlStrictBinding(!glPlatform->supports(LooseBinding));
-    }
-
     qCDebug(KWIN_OPENGL) << "OpenGL 2 compositing successfully initialized";
 }
 
