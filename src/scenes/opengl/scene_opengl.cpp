@@ -97,12 +97,6 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
         glBindVertexArray(vao);
     }
 
-    if (!ShaderManager::instance()->selfTest()) {
-        qCCritical(KWIN_OPENGL) << "ShaderManager self test failed";
-        init_ok = false;
-        return;
-    }
-
     m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
     initDebugOutput();
 
