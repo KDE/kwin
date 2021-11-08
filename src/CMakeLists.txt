@@ -230,6 +230,7 @@ target_link_libraries(kwin
 )
 
 add_subdirectory(backends)
+add_subdirectory(scenes)
 
 if (KWIN_BUILD_CMS)
     target_sources(kwin PRIVATE
