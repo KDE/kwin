@@ -47,9 +47,6 @@ public:
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
-    bool debug() const { return m_debug; }
-    void initDebugOutput();
-
     OpenGLBackend *backend() const {
         return m_backend;
     }
@@ -86,7 +83,6 @@ private:
 
     bool init_ok = true;
     bool m_resetOccurred = false;
-    bool m_debug = false;
     OpenGLBackend *m_backend;
     LanczosFilter *m_lanczosFilter = nullptr;
     QScopedPointer<GLTexture> m_cursorTexture;

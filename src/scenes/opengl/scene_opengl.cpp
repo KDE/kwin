@@ -96,9 +96,6 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
         glBindVertexArray(vao);
     }
 
-    m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
-    initDebugOutput();
-
     // set strict binding
     if (options->isGlStrictBindingFollowsDriver()) {
         options->setGlStrictBinding(!glPlatform->supports(LooseBinding));
@@ -117,82 +114,6 @@ SceneOpenGL::~SceneOpenGL()
         m_lanczosFilter = nullptr;
     }
     SceneOpenGL::EffectFrame::cleanup();
-}
-
-
-void SceneOpenGL::initDebugOutput()
-{
-    const bool have_KHR_debug = hasGLExtension(QByteArrayLiteral("GL_KHR_debug"));
-    const bool have_ARB_debug = hasGLExtension(QByteArrayLiteral("GL_ARB_debug_output"));
-    if (!have_KHR_debug && !have_ARB_debug)
-        return;
-
-    if (!have_ARB_debug) {
-        // if we don't have ARB debug, but only KHR debug we need to verify whether the context is a debug context
-        // it should work without as well, but empirical tests show: no it doesn't
-        if (GLPlatform::instance()->isGLES()) {
-            if (!hasGLVersion(3, 2)) {
-                // empirical data shows extension doesn't work
-                return;
-            }
-        } else if (!hasGLVersion(3, 0)) {
-            return;
-        }
-        // can only be queried with either OpenGL >= 3.0 or OpenGL ES of at least 3.1
-        GLint value = 0;
-        glGetIntegerv(GL_CONTEXT_FLAGS, &value);
-        if (!(value & GL_CONTEXT_FLAG_DEBUG_BIT)) {
-            return;
-        }
-    }
-
-    // Set the callback function
-    auto callback = [](GLenum source, GLenum type, GLuint id,
-                       GLenum severity, GLsizei length,
-                       const GLchar *message,
-                       const GLvoid *userParam) {
-        Q_UNUSED(source)
-        Q_UNUSED(severity)
-        Q_UNUSED(userParam)
-        while (length && std::isspace(message[length - 1])) {
-            --length;
-        }
-
-        switch (type) {
-        case GL_DEBUG_TYPE_ERROR:
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-            qCWarning(KWIN_OPENGL, "%#x: %.*s", id, length, message);
-            break;
-
-        case GL_DEBUG_TYPE_OTHER:
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-        case GL_DEBUG_TYPE_PORTABILITY:
-        case GL_DEBUG_TYPE_PERFORMANCE:
-        default:
-            qCDebug(KWIN_OPENGL, "%#x: %.*s", id, length, message);
-            break;
-        }
-    };
-
-    glDebugMessageCallback(callback, nullptr);
-
-    // This state exists only in GL_KHR_debug
-    if (have_KHR_debug)
-        glEnable(GL_DEBUG_OUTPUT);
-
-#if !defined(QT_NO_DEBUG)
-    // Enable all debug messages
-    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-#else
-    // Enable error messages
-    glDebugMessageControl(GL_DONT_CARE, GL_DEBUG_TYPE_ERROR, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-    glDebugMessageControl(GL_DONT_CARE, GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-#endif
-
-    // Insert a test message
-    const QByteArray message = QByteArrayLiteral("OpenGL debug output initialized");
-    glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_OTHER, 0,
-                         GL_DEBUG_SEVERITY_LOW, message.length(), message.constData());
 }
 
 SceneOpenGL *SceneOpenGL::createScene(OpenGLBackend *backend, QObject *parent)
