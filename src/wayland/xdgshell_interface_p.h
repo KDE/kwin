@@ -103,7 +103,7 @@ public:
     QPointer<XdgToplevelInterface> toplevel;
     QPointer<XdgPopupInterface> popup;
     QPointer<SurfaceInterface> surface;
-    bool isMapped = false;
+    bool firstBufferAttached = false;
     bool isConfigured = false;
 
     XdgSurfaceState next;

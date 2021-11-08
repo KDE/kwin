@@ -145,6 +145,10 @@ XdgSurfaceInterfacePrivate::XdgSurfaceInterfacePrivate(XdgSurfaceInterface *xdgS
 
 void XdgSurfaceInterfacePrivate::commit()
 {
+    if (surface->buffer()) {
+        firstBufferAttached = true;
+    }
+
     if (next.acknowledgedConfigureIsSet) {
         current.acknowledgedConfigure = next.acknowledgedConfigure;
         next.acknowledgedConfigureIsSet = false;
@@ -156,12 +160,11 @@ void XdgSurfaceInterfacePrivate::commit()
         next.windowGeometryIsSet = false;
         Q_EMIT q->windowGeometryChanged(current.windowGeometry);
     }
-
-    isMapped = surface->buffer();
 }
 
 void XdgSurfaceInterfacePrivate::reset()
 {
+    firstBufferAttached = false;
     isConfigured = false;
     current = XdgSurfaceState{};
     next = XdgSurfaceState{};
@@ -315,20 +318,12 @@ XdgToplevelInterfacePrivate::XdgToplevelInterfacePrivate(XdgToplevelInterface *t
 void XdgToplevelInterfacePrivate::commit()
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
-
-    bool isResettable = xdgSurfacePrivate->isConfigured && xdgSurfacePrivate->isMapped;
-
-    if (xdgSurfacePrivate->isConfigured) {
-        xdgSurfacePrivate->commit();
-    } else {
-        Q_EMIT q->initializeRequested();
-        return;
-    }
-
-    if (isResettable && !xdgSurfacePrivate->isMapped) {
+    if (xdgSurfacePrivate->firstBufferAttached && !xdgSurfacePrivate->surface->buffer()) {
         reset();
         return;
     }
+
+    xdgSurfacePrivate->commit();
 
     if (current.minimumSize != next.minimumSize) {
         current.minimumSize = next.minimumSize;
@@ -337,6 +332,10 @@ void XdgToplevelInterfacePrivate::commit()
     if (current.maximumSize != next.maximumSize) {
         current.maximumSize = next.maximumSize;
         Q_EMIT q->maximumSizeChanged(current.maximumSize);
+    }
+
+    if (!xdgSurfacePrivate->isConfigured) {
+        Q_EMIT q->initializeRequested();
     }
 }
 
@@ -646,17 +645,15 @@ void XdgPopupInterfacePrivate::commit()
     }
 
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
-    bool isResettable = xdgSurfacePrivate->isConfigured && xdgSurfacePrivate->isMapped;
-
-    if (xdgSurfacePrivate->isConfigured) {
-        xdgSurfacePrivate->commit();
-    } else {
-        Q_EMIT q->initializeRequested();
+    if (xdgSurfacePrivate->firstBufferAttached && !xdgSurfacePrivate->surface->buffer()) {
+        reset();
         return;
     }
 
-    if (isResettable && !xdgSurfacePrivate->isMapped) {
-        reset();
+    xdgSurfacePrivate->commit();
+
+    if (!xdgSurfacePrivate->isConfigured) {
+        Q_EMIT q->initializeRequested();
     }
 }
 
