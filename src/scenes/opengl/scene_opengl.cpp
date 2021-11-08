@@ -35,7 +35,6 @@
 #include "surfaceitem.h"
 #include "windowitem.h"
 #include "abstract_output.h"
-#include <logging.h>
 
 #include <cmath>
 #include <cstddef>

@@ -9,9 +9,9 @@
 */
 #include "openglbackend.h"
 #include <kwineffects.h>
-#include <logging.h>
 
 #include "screens.h"
+#include "utils.h"
 
 #include <epoxy/gl.h>
 

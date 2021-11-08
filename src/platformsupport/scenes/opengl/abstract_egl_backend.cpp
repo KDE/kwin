@@ -16,7 +16,6 @@
 #include "abstract_wayland_output.h"
 #include <KWaylandServer/display.h>
 // kwin libs
-#include <logging.h>
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 // Qt

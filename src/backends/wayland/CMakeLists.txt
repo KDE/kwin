@@ -14,10 +14,10 @@ endif()
 
 add_library(KWinWaylandWaylandBackend MODULE ${WAYLAND_BACKEND_SOURCES})
 set_target_properties(KWinWaylandWaylandBackend PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.waylandbackends/")
-target_link_libraries(KWinWaylandWaylandBackend kwin KF5::WaylandClient SceneQPainterBackend)
+target_link_libraries(KWinWaylandWaylandBackend kwin KF5::WaylandClient)
 
 if (HAVE_WAYLAND_EGL)
-    target_link_libraries(KWinWaylandWaylandBackend SceneOpenGLBackend Wayland::Egl)
+    target_link_libraries(KWinWaylandWaylandBackend Wayland::Egl)
     if (HAVE_GBM)
        target_link_libraries(KWinWaylandWaylandBackend gbm::gbm)
     endif()

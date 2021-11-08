@@ -10,8 +10,8 @@
 #include "egl_dmabuf.h"
 #include "drm_fourcc.h"
 #include "kwineglext.h"
-#include "logging.h"
 
+#include "utils.h"
 #include "wayland_server.h"
 
 #include <unistd.h>

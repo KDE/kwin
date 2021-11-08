@@ -8,7 +8,6 @@
 #include "egl_dmabuf.h"
 #include "kwineglext.h"
 #include "kwingltexture.h"
-#include "logging.h"
 #include "surfaceitem_wayland.h"
 #include "utils.h"
 

@@ -15,9 +15,8 @@
 #include "screens.h"
 #include "unmanaged.h"
 #include "options.h"
+#include "utils.h"
 #include "workspace.h"
-
-#include <logging.h>
 
 #include <kwinglutils.h>
 #include <kwinglplatform.h>

@@ -38,7 +38,7 @@ endif()
 
 add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})
 set_target_properties(KWinWaylandDrmBackend PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.waylandbackends/")
-target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm SceneQPainterBackend SceneOpenGLBackend VsyncSupport)
+target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm VsyncSupport)
 
 if (HAVE_GBM)
     target_link_libraries(KWinWaylandDrmBackend gbm::gbm)
