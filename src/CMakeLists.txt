@@ -262,6 +262,7 @@ if (KWIN_BUILD_TABBOX)
 endif()
 
 qt5_generate_dbus_interface(virtualkeyboard_dbus.h org.kde.kwin.VirtualKeyboard.xml OPTIONS -A)
+qt5_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xml OPTIONS -A)
 
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
@@ -317,6 +318,7 @@ add_custom_target(
     KWinDBusInterfaces
     ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kwin.VirtualKeyboard.xml
+            ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KWin.TabletModeManager.xml
 )
 
 if (PipeWire_FOUND)
@@ -333,6 +335,7 @@ install(
         org.kde.kwin.Effects.xml
         org.kde.KWin.Plugins.xml
         ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kwin.VirtualKeyboard.xml
+        ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KWin.TabletModeManager.xml
     DESTINATION
         ${KDE_INSTALL_DBUSINTERFACEDIR}
 )
