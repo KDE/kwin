@@ -263,24 +263,6 @@ private:
     int m_paintScreenCount = 0;
 };
 
-/**
- * Factory class to create a Scene. Needs to be implemented by the plugins.
- */
-class KWIN_EXPORT SceneFactory : public QObject
-{
-    Q_OBJECT
-public:
-    ~SceneFactory() override;
-
-    /**
-     * @returns The created Scene, may be @c nullptr.
-     */
-    virtual Scene *create(QObject *parent = nullptr) const = 0;
-
-protected:
-    explicit SceneFactory(QObject *parent);
-};
-
 // The base class for windows representations in composite backends
 class Scene::Window : public QObject
 {
@@ -421,7 +403,5 @@ Toplevel* Scene::Window::window() const
 }
 
 } // namespace
-
-Q_DECLARE_INTERFACE(KWin::SceneFactory, "org.kde.kwin.Scene")
 
 #endif

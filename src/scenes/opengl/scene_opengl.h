@@ -61,7 +61,7 @@ public:
     QMatrix4x4 projectionMatrix() const { return m_projectionMatrix; }
     QMatrix4x4 screenProjectionMatrix() const override { return m_screenProjectionMatrix; }
 
-    static SceneOpenGL *createScene(QObject *parent);
+    static SceneOpenGL *createScene(OpenGLBackend *backend, QObject *parent);
     static bool supported(OpenGLBackend *backend);
 
 protected:
@@ -224,19 +224,6 @@ public:
 private:
     void resizeTexture();
     QScopedPointer<GLTexture> m_texture;
-};
-
-class KWIN_EXPORT OpenGLFactory : public SceneFactory
-{
-    Q_OBJECT
-    Q_INTERFACES(KWin::SceneFactory)
-    Q_PLUGIN_METADATA(IID "org.kde.kwin.Scene" FILE "opengl.json")
-
-public:
-    explicit OpenGLFactory(QObject *parent = nullptr);
-    ~OpenGLFactory() override;
-
-    Scene *create(QObject *parent = nullptr) const override;
 };
 
 } // namespace

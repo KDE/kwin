@@ -38,16 +38,9 @@ namespace KWin
 //****************************************
 // SceneQPainter
 //****************************************
-SceneQPainter *SceneQPainter::createScene(QObject *parent)
+SceneQPainter *SceneQPainter::createScene(QPainterBackend *backend, QObject *parent)
 {
-    QScopedPointer<QPainterBackend> backend(kwinApp()->platform()->createQPainterBackend());
-    if (backend.isNull()) {
-        return nullptr;
-    }
-    if (backend->isFailed()) {
-        return nullptr;
-    }
-    return new SceneQPainter(backend.take(), parent);
+    return new SceneQPainter(backend, parent);
 }
 
 SceneQPainter::SceneQPainter(QPainterBackend *backend, QObject *parent)
@@ -491,23 +484,6 @@ void SceneQPainterDecorationRenderer::resizeImages()
     checkAndCreate(int(DecorationPart::Right), right.size());
     checkAndCreate(int(DecorationPart::Top), top.size());
     checkAndCreate(int(DecorationPart::Bottom), bottom.size());
-}
-
-QPainterFactory::QPainterFactory(QObject *parent)
-    : SceneFactory(parent)
-{
-}
-
-QPainterFactory::~QPainterFactory() = default;
-
-Scene *QPainterFactory::create(QObject *parent) const
-{
-    auto s = SceneQPainter::createScene(parent);
-    if (s && s->initFailed()) {
-        delete s;
-        s = nullptr;
-    }
-    return s;
 }
 
 } // KWin

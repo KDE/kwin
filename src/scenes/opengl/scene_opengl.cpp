@@ -117,9 +117,6 @@ SceneOpenGL::~SceneOpenGL()
         m_lanczosFilter = nullptr;
     }
     SceneOpenGL::EffectFrame::cleanup();
-
-    // backend might be still needed for a different scene
-    delete m_backend;
 }
 
 
@@ -198,38 +195,13 @@ void SceneOpenGL::initDebugOutput()
                          GL_DEBUG_SEVERITY_LOW, message.length(), message.constData());
 }
 
-SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
+SceneOpenGL *SceneOpenGL::createScene(OpenGLBackend *backend, QObject *parent)
 {
-    QScopedPointer<OpenGLBackend> backend(kwinApp()->platform()->createOpenGLBackend());
-    if (!backend) {
-        return nullptr;
-    }
-    if (!backend->isFailed()) {
-        backend->init();
-    }
-    if (backend->isFailed()) {
-        return nullptr;
-    }
-    SceneOpenGL *scene = nullptr;
-    // first let's try an OpenGL 2 scene
-    if (SceneOpenGL::supported(backend.data())) {
-        scene = new SceneOpenGL(backend.take(), parent);
-        if (scene->initFailed()) {
-            delete scene;
-            scene = nullptr;
-        } else {
-            return scene;
-        }
-    }
-    if (!scene) {
-        if (GLPlatform::instance()->recommendedCompositor() == QPainterCompositing) {
-            qCCritical(KWIN_OPENGL) << "OpenGL driver recommends QPainter based compositing. Falling back to QPainter.";
-            qCCritical(KWIN_OPENGL) << "To overwrite the detection use the environment variable KWIN_COMPOSE";
-            qCCritical(KWIN_OPENGL) << "For more information see https://community.kde.org/KWin/Environment_Variables#KWIN_COMPOSE";
-        }
+    if (SceneOpenGL::supported(backend)) {
+        return new SceneOpenGL(backend, parent);
     }
 
-    return scene;
+    return nullptr;
 }
 
 OverlayWindow *SceneOpenGL::overlayWindow() const
@@ -1913,32 +1885,6 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
     } else {
         m_texture.reset();
     }
-}
-
-OpenGLFactory::OpenGLFactory(QObject *parent)
-    : SceneFactory(parent)
-{
-}
-
-OpenGLFactory::~OpenGLFactory() = default;
-
-Scene *OpenGLFactory::create(QObject *parent) const
-{
-    qCDebug(KWIN_OPENGL) << "Initializing OpenGL compositing";
-
-    // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
-    if (kwinApp()->platform()->openGLCompositingIsBroken()) {
-        qCWarning(KWIN_OPENGL) << "KWin has detected that your OpenGL library is unsafe to use";
-        return nullptr;
-    }
-    kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreInit);
-    auto s = SceneOpenGL::createScene(parent);
-    kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
-    if (s && s->initFailed()) {
-        delete s;
-        return nullptr;
-    }
-    return s;
 }
 
 } // namespace

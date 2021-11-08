@@ -15,10 +15,14 @@
 #include "effects.h"
 #include "ftrace.h"
 #include "internal_client.h"
+#include "openglbackend.h"
 #include "overlaywindow.h"
 #include "platform.h"
+#include "qpainterbackend.h"
 #include "renderloop.h"
 #include "scene.h"
+#include "scenes/opengl/scene_opengl.h"
+#include "scenes/qpainter/scene_qpainter.h"
 #include "screens.h"
 #include "shadow.h"
 #include "surfaceitem_x11.h"
@@ -36,7 +40,6 @@
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <KPluginMetaData>
 #include <KNotification>
 #include <KSelectionOwner>
 
@@ -157,6 +160,61 @@ Compositor::~Compositor()
     s_compositor = nullptr;
 }
 
+bool Compositor::attemptOpenGLCompositing()
+{
+    // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
+    if (kwinApp()->platform()->openGLCompositingIsBroken()) {
+        qCWarning(KWIN_CORE) << "KWin has detected that your OpenGL library is unsafe to use";
+        return false;
+    }
+
+    kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreInit);
+    qScopeGuard([]() {
+        kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
+    });
+
+    QScopedPointer<OpenGLBackend> backend(kwinApp()->platform()->createOpenGLBackend());
+    if (!backend) {
+        return false;
+    }
+    if (!backend->isFailed()) {
+        backend->init();
+    }
+    if (backend->isFailed()) {
+        return false;
+    }
+
+    QScopedPointer<Scene> scene(SceneOpenGL::createScene(backend.data(), this));
+    if (!scene || scene->initFailed()) {
+        return false;
+    }
+
+    m_backend = backend.take();
+    m_scene = scene.take();
+
+    qCDebug(KWIN_CORE) << "OpenGL compositing has been successfully initialized";
+    return true;
+}
+
+bool Compositor::attemptQPainterCompositing()
+{
+    QScopedPointer<QPainterBackend> backend(kwinApp()->platform()->createQPainterBackend());
+    if (!backend || backend->isFailed()) {
+        return false;
+    }
+
+    QScopedPointer<Scene> scene(SceneQPainter::createScene(backend.data(), this));
+    if (!scene || scene->initFailed()) {
+        return false;
+    }
+
+    m_backend = backend.take();
+    m_scene = scene.take();
+
+    qCDebug(KWIN_CORE) << "QPainter compositing has been successfully initialized";
+    return true;
+}
+
 bool Compositor::setupStart()
 {
     if (kwinApp()->isTerminating()) {
@@ -195,51 +253,25 @@ bool Compositor::setupStart()
                 << "Configured compositor not supported by Platform. Falling back to defaults";
     }
 
-    const auto availablePlugins = KPluginMetaData::findPlugins(QStringLiteral("org.kde.kwin.scenes"));
-
-    for (const KPluginMetaData &pluginMetaData : availablePlugins) {
-        qCDebug(KWIN_CORE) << "Available scene plugin:" << pluginMetaData.fileName();
-    }
-
     for (auto type : qAsConst(supportedCompositors)) {
+        bool stop = false;
         switch (type) {
         case OpenGLCompositing:
             qCDebug(KWIN_CORE) << "Attempting to load the OpenGL scene";
+            stop = attemptOpenGLCompositing();
             break;
         case QPainterCompositing:
             qCDebug(KWIN_CORE) << "Attempting to load the QPainter scene";
+            stop = attemptQPainterCompositing();
             break;
         case NoCompositing:
             qCDebug(KWIN_CORE) << "Starting without compositing...";
+            stop = true;
             break;
         }
-        const auto pluginIt = std::find_if(availablePlugins.begin(), availablePlugins.end(),
-            [type] (const auto &plugin) {
-                const auto &metaData = plugin.rawData();
-                auto it = metaData.find(QStringLiteral("CompositingType"));
-                if (it != metaData.end()) {
-                    if ((*it).toInt() == int{type}) {
-                        return true;
-                    }
-                }
-                return false;
-            });
-        if (pluginIt != availablePlugins.end()) {
-            std::unique_ptr<SceneFactory>
-                    factory{ qobject_cast<SceneFactory*>(pluginIt->instantiate()) };
-            if (factory) {
-                m_scene = factory->create(this);
-                if (m_scene) {
-                    if (!m_scene->initFailed()) {
-                        qCDebug(KWIN_CORE) << "Instantiated compositing plugin:"
-                                           << pluginIt->name();
-                        break;
-                    } else {
-                        delete m_scene;
-                        m_scene = nullptr;
-                    }
-                }
-            }
+
+        if (stop) {
+            break;
         }
     }
 
@@ -469,6 +501,9 @@ void Compositor::stop()
 
     delete m_scene;
     m_scene = nullptr;
+
+    delete m_backend;
+    m_backend = nullptr;
 
     m_state = State::Off;
     Q_EMIT compositingToggled(false);

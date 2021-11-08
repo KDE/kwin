@@ -135,6 +135,9 @@ private:
     void registerRenderLoop(RenderLoop *renderLoop, AbstractOutput *output);
     void unregisterRenderLoop(RenderLoop *renderLoop);
 
+    bool attemptOpenGLCompositing();
+    bool attemptQPainterCompositing();
+
     State m_state;
 
     CompositorSelectionOwner *m_selectionOwner;
@@ -142,6 +145,7 @@ private:
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
     Scene *m_scene;
+    QObject *m_backend = nullptr;
     QMap<RenderLoop *, AbstractOutput *> m_renderLoops;
 };
 

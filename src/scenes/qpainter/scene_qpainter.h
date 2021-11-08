@@ -43,10 +43,10 @@ public:
     QImage *qpainterRenderBuffer(AbstractOutput *output) const override;
 
     QPainterBackend *backend() const {
-        return m_backend.data();
+        return m_backend;
     }
 
-    static SceneQPainter *createScene(QObject *parent);
+    static SceneQPainter *createScene(QPainterBackend *backend, QObject *parent);
 
 protected:
     void paintBackground(const QRegion &region) override;
@@ -56,7 +56,7 @@ protected:
 
 private:
     explicit SceneQPainter(QPainterBackend *backend, QObject *parent = nullptr);
-    QScopedPointer<QPainterBackend> m_backend;
+    QPainterBackend *m_backend;
     QScopedPointer<QPainter> m_painter;
     class Window;
 };
@@ -122,19 +122,6 @@ public:
 private:
     void resizeImages();
     QImage m_images[int(DecorationPart::Count)];
-};
-
-class KWIN_EXPORT QPainterFactory : public SceneFactory
-{
-    Q_OBJECT
-    Q_INTERFACES(KWin::SceneFactory)
-    Q_PLUGIN_METADATA(IID "org.kde.kwin.Scene" FILE "qpainter.json")
-
-public:
-    explicit QPainterFactory(QObject *parent = nullptr);
-    ~QPainterFactory() override;
-
-    Scene *create(QObject *parent = nullptr) const override;
 };
 
 inline
