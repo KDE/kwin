@@ -1186,12 +1186,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     else
         focusToNull();
 
-    // Not for the very first time, only if something changed and there are more than 1 desktops
-
-    //if ( effects != NULL && old_desktop != 0 && old_desktop != new_desktop )
-    //    static_cast<EffectsHandlerImpl*>( effects )->desktopChanged( old_desktop );
-    if (Compositor::compositing() && m_compositor)
-        m_compositor->scene()->addRepaintFull();
+    Q_EMIT currentActivityChanged();
 #else
     Q_UNUSED(new_activity)
 #endif
