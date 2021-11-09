@@ -98,6 +98,8 @@ void Scene::initialize()
 {
     connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Scene::removeRepaints);
 
+    connect(workspace(), &Workspace::deletedRemoved, this, &Scene::removeToplevel);
+
     connect(workspace(), &Workspace::geometryChanged, this, &Scene::addRepaintFull);
     connect(workspace(), &Workspace::currentActivityChanged, this, &Scene::addRepaintFull);
     connect(workspace(), &Workspace::currentDesktopChanged, this, &Scene::addRepaintFull);
