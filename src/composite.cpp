@@ -381,22 +381,18 @@ void Compositor::startupWithWorkspace()
 
     for (X11Client *c : Workspace::self()->clientList()) {
         c->setupCompositing();
-        c->updateShadow();
     }
     for (Unmanaged *c : Workspace::self()->unmanagedList()) {
         c->setupCompositing();
-        c->updateShadow();
     }
     for (InternalClient *client : workspace()->internalClients()) {
         client->setupCompositing();
-        client->updateShadow();
     }
 
     if (auto *server = waylandServer()) {
         const auto clients = server->clients();
         for (AbstractClient *c : clients) {
             c->setupCompositing();
-            c->updateShadow();
         }
     }
 
