@@ -1422,7 +1422,6 @@ bool EffectsHandlerImpl::isEffectSupported(const QString &name)
 
     // next checks might require a context
     makeOpenGLContextCurrent();
-    m_compositor->addRepaintFull();
 
     return m_effectLoader->isEffectSupported(name);
 
