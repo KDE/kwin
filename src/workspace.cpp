@@ -106,7 +106,6 @@ Workspace* Workspace::_self = nullptr;
 
 Workspace::Workspace()
     : QObject(nullptr)
-    , m_compositor(nullptr)
     // Unsorted
     , m_quickTileCombineTimer(nullptr)
     , active_popup(nullptr)
@@ -174,13 +173,10 @@ Workspace::Workspace()
     TabBox::TabBox::create(this);
 #endif
 
-    if (Compositor::self()) {
-        m_compositor = Compositor::self();
-    } else {
+    if (!Compositor::self()) {
         Q_ASSERT(kwinApp()->operationMode() == Application::OperationMode::OperationModeX11);
-        m_compositor = X11Compositor::create(this);
+        X11Compositor::create(this);
     }
-    connect(m_compositor, &QObject::destroyed, this, [this] { m_compositor = nullptr; });
 
     auto decorationBridge = Decoration::DecorationBridge::create(this);
     decorationBridge->init();

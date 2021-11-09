@@ -258,7 +258,6 @@ public:
     QPoint cascadeOffset(const AbstractClient *c) const;
 
 private:
-    Compositor *m_compositor;
     QTimer *m_quickTileCombineTimer;
     QuickTileMode m_lastTilingMode;
 
