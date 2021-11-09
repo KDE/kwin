@@ -95,8 +95,6 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
     }
-
-    qCDebug(KWIN_OPENGL) << "OpenGL 2 compositing successfully initialized";
 }
 
 SceneOpenGL::~SceneOpenGL()
