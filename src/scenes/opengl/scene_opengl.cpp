@@ -74,15 +74,6 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
     : Scene(parent)
     , m_backend(backend)
 {
-    // perform Scene specific checks
-    GLPlatform *glPlatform = GLPlatform::instance();
-    if (!glPlatform->isGLES() && !hasGLExtension(QByteArrayLiteral("GL_ARB_texture_non_power_of_two"))
-            && !hasGLExtension(QByteArrayLiteral("GL_ARB_texture_rectangle"))) {
-        qCCritical(KWIN_OPENGL) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
-        init_ok = false;
-        return; // error
-    }
-
     // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
     if (!hasGLVersion(2, 0)) {
         qCDebug(KWIN_OPENGL) << "OpenGL 2.0 is not supported";
