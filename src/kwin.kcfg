@@ -127,7 +127,7 @@
                 <choice name="OnMainWindow"/>
                 <choice name="Maximizing"/>
             </choices>
-            <default>Placement::Smart</default>
+            <default>Placement::Centered</default>
         </entry>
         <entry name="AutoRaise" type="Bool">
             <default>false</default>

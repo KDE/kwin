@@ -51,7 +51,7 @@
             <choice name="ZeroCornered"></choice>
             <choice name="UnderMouse"></choice>
         </choices>
-        <default>Smart</default>
+        <default>Centered</default>
     </entry>
 
     <entry key="HideUtilityWindowsForInactive" type="Bool">
