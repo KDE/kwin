@@ -10,6 +10,7 @@
 #include "main.h"
 #include "platform.h"
 #include "renderloop.h"
+#include "scene.h"
 #include "screens.h"
 #include "utils.h"
 
@@ -27,7 +28,7 @@ Item::~Item()
     setParentItem(nullptr);
     for (const auto &dirty : qAsConst(m_repaints)) {
         if (!dirty.isEmpty()) {
-            Compositor::self()->addRepaint(dirty);
+            Compositor::self()->scene()->addRepaint(dirty);
         }
     }
 }

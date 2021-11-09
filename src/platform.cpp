@@ -269,11 +269,10 @@ void Platform::setSoftwareCursorForced(bool forced)
 
 void Platform::triggerCursorRepaint()
 {
-    if (!Compositor::self()) {
-        return;
+    if (Compositor::compositing()) {
+        Compositor::self()->scene()->addRepaint(m_cursor.lastRenderedGeometry);
+        Compositor::self()->scene()->addRepaint(Cursors::self()->currentCursor()->geometry());
     }
-    Compositor::self()->addRepaint(m_cursor.lastRenderedGeometry);
-    Compositor::self()->addRepaint(Cursors::self()->currentCursor()->geometry());
 }
 
 void Platform::cursorRendered(const QRect &geometry)
@@ -469,10 +468,9 @@ void Platform::processPinchGestureCancelled(quint32 time)
 
 void Platform::repaint(const QRect &rect)
 {
-    if (!Compositor::self()) {
-        return;
+    if (Compositor::compositing()) {
+        Compositor::self()->scene()->addRepaint(rect);
     }
-    Compositor::self()->addRepaint(rect);
 }
 
 void Platform::setReady(bool ready)

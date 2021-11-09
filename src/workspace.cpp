@@ -180,7 +180,6 @@ Workspace::Workspace()
         Q_ASSERT(kwinApp()->operationMode() == Application::OperationMode::OperationModeX11);
         m_compositor = X11Compositor::create(this);
     }
-    connect(this, &Workspace::currentDesktopChanged, m_compositor, &Compositor::addRepaintFull);
     connect(m_compositor, &QObject::destroyed, this, [this] { m_compositor = nullptr; });
 
     auto decorationBridge = Decoration::DecorationBridge::create(this);
@@ -1192,7 +1191,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     //if ( effects != NULL && old_desktop != 0 && old_desktop != new_desktop )
     //    static_cast<EffectsHandlerImpl*>( effects )->desktopChanged( old_desktop );
     if (Compositor::compositing() && m_compositor)
-        m_compositor->addRepaintFull();
+        m_compositor->scene()->addRepaintFull();
 #else
     Q_UNUSED(new_activity)
 #endif

@@ -353,6 +353,7 @@ void Compositor::startupWithWorkspace()
 
     Workspace::self()->markXStackingOrderAsDirty();
     Q_ASSERT(m_scene);
+    m_scene->initialize();
 
     const Platform *platform = kwinApp()->platform();
     if (platform->isPerScreenRenderingEnabled()) {
@@ -373,7 +374,6 @@ void Compositor::startupWithWorkspace()
     // Sets also the 'effects' pointer.
     kwinApp()->platform()->createEffectsHandler(this, m_scene);
     connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::removeToplevel);
-    connect(effects, &EffectsHandler::virtualScreenGeometryChanged, this, &Compositor::addRepaintFull);
 
     for (X11Client *c : Workspace::self()->clientList()) {
         c->setupCompositing();
@@ -399,7 +399,7 @@ void Compositor::startupWithWorkspace()
     }
 
     // Render at least once.
-    addRepaintFull();
+    m_scene->addRepaintFull();
 }
 
 void Compositor::registerRenderLoop(RenderLoop *renderLoop, AbstractOutput *output)
@@ -565,7 +565,6 @@ void Compositor::deleteUnusedSupportProperties()
 void Compositor::configChanged()
 {
     reinitialize();
-    addRepaintFull();
 }
 
 void Compositor::reinitialize()
@@ -580,28 +579,6 @@ void Compositor::reinitialize()
     if (effects) { // start() may fail
         effects->reconfigure();
     }
-}
-
-void Compositor::addRepaint(int x, int y, int width, int height)
-{
-    addRepaint(QRegion(x, y, width, height));
-}
-
-void Compositor::addRepaint(const QRect &rect)
-{
-    addRepaint(QRegion(rect));
-}
-
-void Compositor::addRepaint(const QRegion &region)
-{
-    if (m_scene) {
-        m_scene->addRepaint(region);
-    }
-}
-
-void Compositor::addRepaintFull()
-{
-    addRepaint(screens()->geometry());
 }
 
 void Compositor::handleFrameRequested(RenderLoop *renderLoop)

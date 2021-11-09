@@ -61,6 +61,7 @@
 #include "unmanaged.h"
 #include "waylandclient.h"
 #include "windowitem.h"
+#include "workspace.h"
 #include "x11client.h"
 
 #include <QQuickWindow>
@@ -86,12 +87,35 @@ namespace KWin
 Scene::Scene(QObject *parent)
     : QObject(parent)
 {
-    connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Scene::removeRepaints);
 }
 
 Scene::~Scene()
 {
     Q_ASSERT(m_windows.isEmpty());
+}
+
+void Scene::initialize()
+{
+    connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Scene::removeRepaints);
+
+    connect(workspace(), &Workspace::geometryChanged, this, &Scene::addRepaintFull);
+    connect(workspace(), &Workspace::currentDesktopChanged, this, &Scene::addRepaintFull);
+    connect(workspace(), &Workspace::stackingOrderChanged, this, &Scene::addRepaintFull);
+}
+
+void Scene::addRepaintFull()
+{
+    addRepaint(workspace()->geometry());
+}
+
+void Scene::addRepaint(int x, int y, int width, int height)
+{
+    addRepaint(QRegion(x, y, width, height));
+}
+
+void Scene::addRepaint(const QRect &rect)
+{
+    addRepaint(QRegion(rect));
 }
 
 void Scene::addRepaint(const QRegion &region)

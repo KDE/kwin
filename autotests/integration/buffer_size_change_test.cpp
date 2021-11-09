@@ -56,7 +56,7 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
     // add a first repaint
     QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
     QVERIFY(frameRenderedSpy.isValid());
-    Compositor::self()->addRepaintFull();
+    Compositor::self()->scene()->addRepaintFull();
     QVERIFY(frameRenderedSpy.wait());
 
     // now change buffer size
@@ -65,7 +65,7 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
     QSignalSpy damagedSpy(client, &AbstractClient::damaged);
     QVERIFY(damagedSpy.isValid());
     QVERIFY(damagedSpy.wait());
-    KWin::Compositor::self()->addRepaintFull();
+    KWin::Compositor::self()->scene()->addRepaintFull();
     QVERIFY(frameRenderedSpy.wait());
 }
 
@@ -93,7 +93,7 @@ void BufferSizeChangeTest::testShmBufferSizeChangeOnSubSurface()
     // add a first repaint
     QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
     QVERIFY(frameRenderedSpy.isValid());
-    Compositor::self()->addRepaintFull();
+    Compositor::self()->scene()->addRepaintFull();
     QVERIFY(frameRenderedSpy.wait());
 
     // change buffer size of sub surface
@@ -105,7 +105,7 @@ void BufferSizeChangeTest::testShmBufferSizeChangeOnSubSurface()
     QVERIFY(damagedParentSpy.wait());
 
     // add a second repaint
-    KWin::Compositor::self()->addRepaintFull();
+    KWin::Compositor::self()->scene()->addRepaintFull();
     QVERIFY(frameRenderedSpy.wait());
 }
 

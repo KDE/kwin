@@ -11,6 +11,7 @@
 
 #include "kwinglobals.h"
 #include "composite.h"
+#include "scene.h"
 #include "screens.h"
 #include "utils.h"
 #include "xcbutils.h"
@@ -167,7 +168,7 @@ bool OverlayWindowX11::event(xcb_generic_event_t *event)
         const auto *expose = reinterpret_cast<xcb_expose_event_t*>(event);
         if (expose->window == rootWindow()   // root window needs repainting
                 || (m_window != XCB_WINDOW_NONE && expose->window == m_window)) { // overlay needs repainting
-            Compositor::self()->addRepaint(expose->x, expose->y, expose->width, expose->height);
+            Compositor::self()->scene()->addRepaint(expose->x, expose->y, expose->width, expose->height);
         }
     } else if (eventType == XCB_VISIBILITY_NOTIFY) {
         const auto *visibility = reinterpret_cast<xcb_visibility_notify_event_t*>(event);
@@ -177,8 +178,12 @@ bool OverlayWindowX11::event(xcb_generic_event_t *event)
             auto compositor = Compositor::self();
             if (!was_visible && m_visible) {
                 // hack for #154825
-                compositor->addRepaintFull();
-                QTimer::singleShot(2000, compositor, &Compositor::addRepaintFull);
+                compositor->scene()->addRepaintFull();
+                QTimer::singleShot(2000, compositor, [compositor]() {
+                    if (compositor->compositing()) {
+                        compositor->scene()->addRepaintFull();
+                    }
+                });
             }
             compositor->scheduleRepaint();
         }

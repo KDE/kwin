@@ -18,6 +18,7 @@
 #include "logging.h"
 #include "main.h"
 #include "renderloop.h"
+#include "scene.h"
 #include "scene_qpainter_drm_backend.h"
 #include "session.h"
 #include "udev.h"
@@ -147,8 +148,8 @@ void DrmBackend::reactivate()
         output->renderLoop()->uninhibit();
     }
 
-    if (Compositor *compositor = Compositor::self()) {
-        compositor->addRepaintFull();
+    if (Compositor::compositing()) {
+        Compositor::self()->scene()->addRepaintFull();
     }
 
     // While the session had been inactive, an output could have been added or
@@ -712,8 +713,8 @@ bool DrmBackend::applyOutputChanges(const WaylandOutputConfig &config)
         }
     };
     updateCursor();
-    if (auto compositor = Compositor::self()) {
-        compositor->addRepaintFull();
+    if (Compositor::compositing()) {
+        Compositor::self()->scene()->addRepaintFull();
     }
     return true;
 }
