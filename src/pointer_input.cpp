@@ -498,9 +498,6 @@ bool PointerInputRedirection::areButtonsPressed() const
 
 bool PointerInputRedirection::focusUpdatesBlocked()
 {
-    if (!inited()) {
-        return true;
-    }
     if (waylandServer()->seat()->isDragPointer()) {
         // ignore during drag and drop
         return true;

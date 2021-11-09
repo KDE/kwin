@@ -60,9 +60,6 @@ void TouchInputRedirection::init()
 
 bool TouchInputRedirection::focusUpdatesBlocked()
 {
-    if (!inited()) {
-        return true;
-    }
     if (m_windowUpdatedInCycle) {
         return true;
     }
