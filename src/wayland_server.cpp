@@ -276,7 +276,7 @@ void WaylandServer::initPlatform()
     connect(kwinApp()->platform(), &Platform::outputDisabled, this, &WaylandServer::handleOutputDisabled);
 
     connect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, [this] (AbstractOutput *primaryOutput) {
-        m_primary->setPrimaryOutput(primaryOutput ? primaryOutput->name() : "");
+        m_primary->setPrimaryOutput(primaryOutput ? primaryOutput->name() : QString());
     });
     if (auto primaryOutput = kwinApp()->platform()->primaryOutput()) {
         m_primary->setPrimaryOutput(primaryOutput->name());
