@@ -344,15 +344,15 @@ void Toplevel::addWorkspaceRepaint(int x, int y, int w, int h)
 
 void Toplevel::addWorkspaceRepaint(const QRect& r2)
 {
-    if (!Compositor::compositing())
-        return;
-    Compositor::self()->addRepaint(r2);
+    if (Compositor::compositing()) {
+        Compositor::self()->scene()->addRepaint(r2);
+    }
 }
 
 void Toplevel::addWorkspaceRepaint(const QRegion &region)
 {
     if (Compositor::compositing()) {
-        Compositor::self()->addRepaint(region);
+        Compositor::self()->scene()->addRepaint(region);
     }
 }
 

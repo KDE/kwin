@@ -130,7 +130,7 @@ void XwaylandServerCrashTest::testCrash()
     QCOMPARE(kwinApp()->x11ScreenNumber(), -1);
 
     // Render a frame to ensure that the compositor doesn't crash.
-    Compositor::self()->addRepaintFull();
+    Compositor::self()->scene()->addRepaintFull();
     QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
     QVERIFY(frameRenderedSpy.wait());
 }

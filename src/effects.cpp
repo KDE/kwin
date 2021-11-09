@@ -1171,22 +1171,22 @@ EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
 
 void EffectsHandlerImpl::addRepaintFull()
 {
-    m_compositor->addRepaintFull();
+    m_compositor->scene()->addRepaintFull();
 }
 
 void EffectsHandlerImpl::addRepaint(const QRect& r)
 {
-    m_compositor->addRepaint(r);
+    m_compositor->scene()->addRepaint(r);
 }
 
 void EffectsHandlerImpl::addRepaint(const QRegion& r)
 {
-    m_compositor->addRepaint(r);
+    m_compositor->scene()->addRepaint(r);
 }
 
 void EffectsHandlerImpl::addRepaint(int x, int y, int w, int h)
 {
-    m_compositor->addRepaint(x, y, w, h);
+    m_compositor->scene()->addRepaint(x, y, w, h);
 }
 
 EffectScreen *EffectsHandlerImpl::activeScreen() const
@@ -1348,7 +1348,7 @@ QStringList EffectsHandlerImpl::listOfEffects() const
 bool EffectsHandlerImpl::loadEffect(const QString& name)
 {
     makeOpenGLContextCurrent();
-    m_compositor->addRepaintFull();
+    m_compositor->scene()->addRepaintFull();
 
     return m_effectLoader->loadEffect(name);
 }
@@ -1370,7 +1370,7 @@ void EffectsHandlerImpl::unloadEffect(const QString& name)
     effect_order.erase(it);
     effectsChanged();
 
-    m_compositor->addRepaintFull();
+    m_compositor->scene()->addRepaintFull();
 }
 
 void EffectsHandlerImpl::destroyEffect(Effect *effect)

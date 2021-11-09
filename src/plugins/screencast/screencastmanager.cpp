@@ -151,7 +151,7 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
         stream->recordFrame(texture.data(), region);
     };
     connect(stream, &PipeWireStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
-        Compositor::self()->addRepaint(streamOutput->geometry());
+        Compositor::self()->scene()->addRepaint(streamOutput->geometry());
         streamOutput->recordingStarted();
         connect(streamOutput, &AbstractWaylandOutput::outputChange, stream, bufferToStream);
     });

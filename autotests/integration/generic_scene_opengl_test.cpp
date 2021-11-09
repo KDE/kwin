@@ -84,7 +84,7 @@ void GenericSceneOpenGLTest::testRestart()
     QCOMPARE(kwinApp()->platform()->selectedCompositor(), KWin::OpenGLCompositing);
 
     // trigger a repaint
-    KWin::Compositor::self()->addRepaintFull();
+    KWin::Compositor::self()->scene()->addRepaintFull();
     // and wait 100 msec to ensure it's rendered
     // TODO: introduce frameRendered signal in SceneOpenGL
     QTest::qWait(100);

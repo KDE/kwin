@@ -19,6 +19,7 @@
 #include "main.h"
 #include "renderloop.h"
 #include "renderloop_p.h"
+#include "scene.h"
 #include "screens.h"
 #include "session.h"
 #include "waylandoutputconfig.h"
@@ -267,8 +268,8 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
         if (active) {
             m_renderLoop->uninhibit();
             m_gpu->platform()->checkOutputsAreOn();
-            if (Compositor *compositor = Compositor::self()) {
-                compositor->addRepaintFull();
+            if (Compositor::compositing()) {
+                Compositor::self()->scene()->addRepaintFull();
             }
         } else {
             m_renderLoop->inhibit();

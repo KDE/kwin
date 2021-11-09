@@ -114,9 +114,6 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
         }
 
         Q_EMIT stackingOrderChanged();
-        if (m_compositor) {
-            m_compositor->addRepaintFull();
-        }
 
         if (active_client)
             active_client->updateMouseGrab();

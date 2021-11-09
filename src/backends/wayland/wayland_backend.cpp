@@ -27,6 +27,7 @@
 #include "cursor.h"
 #include "input.h"
 #include "main.h"
+#include "scene.h"
 #include "screens.h"
 #include "pointer_input.h"
 #include "wayland_server.h"
@@ -200,7 +201,7 @@ void WaylandSubSurfaceCursor::move(const QPointF &globalPosition)
     // place the sub-surface relative to the output it is on and factor in the hotspot
     const auto relativePosition = globalPosition.toPoint() - Cursors::self()->currentCursor()->hotspot() - m_output->geometry().topLeft();
     m_subSurface->setPosition(relativePosition);
-    Compositor::self()->addRepaintFull();
+    Compositor::self()->scene()->addRepaintFull();
 }
 
 WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, WaylandSeat *seat)
@@ -859,7 +860,7 @@ WaylandOutput *WaylandBackend::createOutput(const QPoint &position, const QSize 
     connect(waylandOutput, &WaylandOutput::sizeChanged, this, [this, waylandOutput](const QSize &size) {
         Q_UNUSED(size)
         updateScreenSize(waylandOutput);
-        Compositor::self()->addRepaintFull();
+        Compositor::self()->scene()->addRepaintFull();
     });
     connect(waylandOutput, &WaylandOutput::frameRendered, this, [waylandOutput]() {
         waylandOutput->resetRendered();

@@ -40,13 +40,6 @@ public:
     ~Compositor() override;
     static Compositor *self();
 
-    // when adding repaints caused by a window, you probably want to use
-    // either Toplevel::addRepaint() or Toplevel::addWorkspaceRepaint()
-    void addRepaint(const QRect& r);
-    void addRepaint(const QRegion& r);
-    void addRepaint(int x, int y, int w, int h);
-    void addRepaintFull();
-
     /**
      * Schedules a new repaint if no repaint is currently scheduled.
      */

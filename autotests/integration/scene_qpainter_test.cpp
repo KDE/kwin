@@ -87,7 +87,7 @@ void SceneQPainterTest::initTestCase()
 void SceneQPainterTest::testStartFrame()
 {
     // this test verifies that the initial rendering is correct
-    Compositor::self()->addRepaintFull();
+    Compositor::self()->scene()->addRepaintFull();
     auto scene = Compositor::self()->scene();
     QVERIFY(scene);
     QCOMPARE(kwinApp()->platform()->selectedCompositor(), QPainterCompositing);
@@ -261,7 +261,7 @@ void SceneQPainterTest::testCompositorRestart()
     QVERIFY(scene);
 
     // this should directly trigger a frame
-    KWin::Compositor::self()->addRepaintFull();
+    KWin::Compositor::self()->scene()->addRepaintFull();
     QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
     QVERIFY(frameRenderedSpy.isValid());
     QVERIFY(frameRenderedSpy.wait());
@@ -360,7 +360,7 @@ void SceneQPainterTest::testX11Window()
     QVERIFY(scene);
 
     // this should directly trigger a frame
-    KWin::Compositor::self()->addRepaintFull();
+    KWin::Compositor::self()->scene()->addRepaintFull();
     QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
     QVERIFY(frameRenderedSpy.isValid());
     QVERIFY(frameRenderedSpy.wait());

@@ -13,6 +13,7 @@
 #include "main.h"
 #include "platform.h"
 #include "renderloop.h"
+#include "scene.h"
 #include "screens.h"
 #include "session.h"
 #include "vsyncmonitor.h"
@@ -50,7 +51,7 @@ void FramebufferQPainterBackend::reactivate()
     for (AbstractOutput *output : outputs) {
         output->renderLoop()->uninhibit();
     }
-    Compositor::self()->addRepaintFull();
+    Compositor::self()->scene()->addRepaintFull();
 }
 
 void FramebufferQPainterBackend::deactivate()
