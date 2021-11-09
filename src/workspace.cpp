@@ -2070,6 +2070,7 @@ void Workspace::desktopResized()
 {
     const auto outputs = kwinApp()->platform()->enabledOutputs();
 
+    const QRect oldGeometry = m_geometry;
     m_geometry = QRect();
     for (const AbstractOutput *output : outputs) {
         m_geometry = m_geometry.united(output->geometry());
@@ -2087,6 +2088,10 @@ void Workspace::desktopResized()
 
     // TODO: emit a signal instead and remove the deep function calls into edges and effects
     ScreenEdges::self()->recreateEdges();
+
+    if (m_geometry != oldGeometry) {
+        Q_EMIT geometryChanged();
+    }
 }
 
 void Workspace::saveOldScreenSizes()

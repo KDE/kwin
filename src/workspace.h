@@ -503,6 +503,7 @@ Q_SIGNALS:
      * This can be used to connect to for performing post-workspace initialization.
      */
     void workspaceInitialized();
+    void geometryChanged();
 
     //Signals required for the scripting interface
     void desktopPresenceChanged(KWin::AbstractClient*, int);
