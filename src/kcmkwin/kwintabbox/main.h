@@ -42,7 +42,6 @@ private Q_SLOTS:
     void updateUnmanagedState();
     void updateDefaultIndicator();
     void configureEffectClicked();
-    void slotGHNS();
 
 private:
     void updateUiFromConfig(KWinTabBoxConfigForm *form, const TabBox::TabBoxSettings *config);

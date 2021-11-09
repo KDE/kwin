@@ -27,7 +27,7 @@
 #include <KLocalizedString>
 #include <KPluginFactory>
 #include <KTitleWidget>
-#include <KNewStuff3/KNS3/QtQuickDialogWrapper>
+#include <KNS3/Button>
 // Plasma
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
@@ -58,8 +58,12 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     tabWidget->addTab(m_primaryTabBoxUi, i18n("Main"));
     tabWidget->addTab(m_alternativeTabBoxUi, i18n("Alternative"));
 
-    QPushButton* ghnsButton = new QPushButton(QIcon::fromTheme(QStringLiteral("get-hot-new-stuff")), i18n("Get New Task Switchers..."));
-    connect(ghnsButton, &QAbstractButton::clicked, this, &KWinTabBoxConfig::slotGHNS);
+    KNS3::Button *ghnsButton = new KNS3::Button(i18n("Get New Task Switchers..."), QStringLiteral("kwinswitcher.knsrc"), this);
+    connect(ghnsButton, &KNS3::Button::dialogFinished, this, [this] (auto changedEntries) {
+        if (!changedEntries.isEmpty()) {
+            initLayoutLists();
+        }
+    });
 
     QHBoxLayout* buttonBar = new QHBoxLayout();
     QSpacerItem* buttonBarSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -420,13 +424,6 @@ void KWinTabBoxConfig::configureEffectClicked()
             kcm->load();
         }
         delete configDialog;
-    }
-}
-
-void KWinTabBoxConfig::slotGHNS()
-{
-    if (!KNS3::QtQuickDialogWrapper("kwinswitcher.knsrc").exec().isEmpty()) {
-        initLayoutLists();
     }
 }
 
