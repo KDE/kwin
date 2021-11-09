@@ -507,6 +507,7 @@ Q_SIGNALS:
 
     //Signals required for the scripting interface
     void desktopPresenceChanged(KWin::AbstractClient*, int);
+    void currentActivityChanged();
     void currentDesktopChanged(int, KWin::AbstractClient*);
     void clientAdded(KWin::AbstractClient *);
     void clientRemoved(KWin::AbstractClient*);
