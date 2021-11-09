@@ -626,6 +626,25 @@ public:
         m_set = false;
         return true;
     }
+
+    bool tabletToolEvent(TabletEvent *event) override {
+        AbstractClient *c = workspace()->moveResizeClient();
+        if (!c) {
+            return false;
+        }
+        switch (event->type()) {
+        case QEvent::TabletMove:
+            c->updateInteractiveMoveResize(event->globalPos());
+            break;
+        case QEvent::TabletRelease:
+            c->endInteractiveMoveResize();
+            break;
+        default:
+            break;
+        }
+        // Let TabletInputFilter receive the event, so the cursor position can be updated.
+        return false;
+    }
 private:
     qint32 m_id = 0;
     bool m_set = false;
@@ -1288,6 +1307,50 @@ public:
         input()->touch()->setDecorationPressId(-1);
         return true;
     }
+    bool tabletToolEvent(TabletEvent *event) override {
+        auto decoration = input()->tablet()->decoration();
+        if (!decoration) {
+            return false;
+        }
+        const QPointF p = event->globalPos() - decoration->client()->pos();
+        switch (event->type()) {
+        case QEvent::TabletMove:
+        case QEvent::TabletEnterProximity: {
+            QHoverEvent e(QEvent::HoverMove, p, p);
+            QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
+            decoration->client()->processDecorationMove(p.toPoint(), event->globalPos());
+            break;
+        }
+        case QEvent::TabletPress:
+        case QEvent::TabletRelease: {
+            const bool isPressed = event->type() == QEvent::TabletPress;
+            QMouseEvent e(isPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+                          p,
+                          event->globalPos(),
+                          Qt::LeftButton,
+                          isPressed ? Qt::LeftButton : Qt::MouseButtons(),
+                          input()->keyboardModifiers());
+            e.setAccepted(false);
+            QCoreApplication::sendEvent(decoration->decoration(), &e);
+            if (!e.isAccepted() && isPressed) {
+                decoration->client()->processDecorationButtonPress(&e);
+            }
+            if (event->type() == QEvent::TabletRelease) {
+                decoration->client()->processDecorationButtonRelease(&e);
+            }
+            break;
+        }
+        case QEvent::TabletLeaveProximity: {
+            QHoverEvent leaveEvent(QEvent::HoverLeave, QPointF(), QPointF());
+            QCoreApplication::sendEvent(decoration->decoration(), &leaveEvent);
+            break;
+        }
+        default:
+            break;
+        }
+        // Let TabletInputFilter receive the event, so the tablet can be registered and the cursor position can be updated.
+        return false;
+    }
 private:
     QPointF m_lastGlobalTouchPos;
     QPointF m_lastLocalTouchPos;
@@ -1434,6 +1497,21 @@ public:
         const Options::MouseCommand command = c->getMouseCommand(Qt::LeftButton, &wasAction);
         if (wasAction) {
             return !c->performMouseCommand(command, pos.toPoint());
+        }
+        return false;
+    }
+    bool tabletToolEvent(TabletEvent *event) override {
+        if (event->type() != QEvent::TabletPress) {
+            return false;
+        }
+        AbstractClient *c = dynamic_cast<AbstractClient*>(input()->tablet()->focus());
+        if (!c) {
+            return false;
+        }
+        bool wasAction = false;
+        const Options::MouseCommand command = c->getMouseCommand(Qt::LeftButton, &wasAction);
+        if (wasAction) {
+            return !c->performMouseCommand(command, event->globalPos());
         }
         return false;
     }
