@@ -14,9 +14,11 @@
 #include "dnd.h"
 #include "xwldrophandler.h"
 
+#include "abstract_output.h"
 #include "main_wayland.h"
 #include "options.h"
 #include "utils.h"
+#include "platform.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
 #include "xwayland_logging.h"
@@ -215,6 +217,7 @@ void Xwayland::stop()
 
 void Xwayland::stopInternal()
 {
+    disconnect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Xwayland::updatePrimary);
     Q_ASSERT(m_xwaylandProcess);
     m_app->setClosingX11Connection(true);
 
@@ -400,7 +403,32 @@ void Xwayland::handleXwaylandReady()
     qputenv("XAUTHORITY", m_xAuthority.toUtf8());
     m_app->setProcessStartupEnvironment(env);
 
+    connect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Xwayland::updatePrimary);
+    updatePrimary(kwinApp()->platform()->primaryOutput());
+
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+}
+
+void Xwayland::updatePrimary(AbstractOutput *primaryOutput)
+{
+    Xcb::RandR::ScreenResources resources(rootWindow());
+    xcb_randr_crtc_t *crtcs = resources.crtcs();
+    if (!crtcs) {
+        return;
+    }
+
+    for (int i = 0; i < resources->num_crtcs; ++i) {
+        Xcb::RandR::CrtcInfo crtcInfo(crtcs[i], resources->config_timestamp);
+        const QRect geometry = crtcInfo.rect();
+        if (geometry.topLeft() == primaryOutput->geometry().topLeft()) {
+            auto outputs = crtcInfo.outputs();
+            if (outputs && crtcInfo->num_outputs > 0) {
+                qCDebug(KWIN_XWL) << "Setting primary" << primaryOutput << outputs[0];
+                xcb_randr_set_output_primary(kwinApp()->x11Connection(), rootWindow(), outputs[0]);
+                break;
+            }
+        }
+    }
 }
 
 void Xwayland::handleSelectionLostOwnership()

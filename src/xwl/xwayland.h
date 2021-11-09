@@ -20,6 +20,7 @@ class KSelectionOwner;
 
 namespace KWin
 {
+class AbstractOutput;
 class ApplicationWaylandAbstract;
 class XwaylandSocket;
 
@@ -115,6 +116,7 @@ private:
     void installSocketNotifier();
     void uninstallSocketNotifier();
     void maybeDestroyReadyNotifier();
+    void updatePrimary(AbstractOutput *primaryOutput);
 
     bool startInternal();
     void stopInternal();
