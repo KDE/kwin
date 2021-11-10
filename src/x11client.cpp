@@ -274,8 +274,6 @@ void X11Client::releaseWindow(bool on_shutdown)
         leaveInteractiveMoveResize();
     finishWindowRules();
     blockGeometryUpdates();
-    if (isOnCurrentDesktop() && isShown(true))
-        addWorkspaceRepaint(visibleGeometry());
     // Grab X during the release to make removing of properties, setting to withdrawn state
     // and repareting to root an atomic operation (https://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
     grabXServer();
@@ -338,8 +336,6 @@ void X11Client::destroyClient()
         leaveInteractiveMoveResize();
     finishWindowRules();
     blockGeometryUpdates();
-    if (isOnCurrentDesktop() && isShown(true))
-        addWorkspaceRepaint(visibleGeometry());
     setModal(false);
     hidden = true; // So that it's not considered visible anymore
     workspace()->clientHidden(this);
