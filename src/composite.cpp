@@ -281,12 +281,8 @@ bool Compositor::setupStart()
         }
     }
 
-    if (m_scene == nullptr || m_scene->initFailed()) {
-        qCCritical(KWIN_CORE) << "Failed to initialize compositing, compositing disabled";
+    if (!m_backend) {
         m_state = State::Off;
-
-        delete m_scene;
-        m_scene = nullptr;
 
         if (auto *con = kwinApp()->x11Connection()) {
             xcb_composite_unredirect_subwindows(con, kwinApp()->x11RootWindow(),
