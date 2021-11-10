@@ -8,6 +8,7 @@ import QtQuick 2.12
 import QtGraphicalEffects 1.12
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.overview 1.0
+import org.kde.milou 0.3 as Milou
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core 2.0 as PlasmaCore
 
@@ -138,7 +139,7 @@ FocusScope {
                     placeholderText: i18n("Search...")
                     clearButtonShown: true
                     Keys.priority: Keys.AfterItem
-                    Keys.forwardTo: heap
+                    Keys.forwardTo: text ? searchResults : heap
                     onTextEdited: forceActiveFocus();
                 }
             }
@@ -176,22 +177,62 @@ FocusScope {
             ]
         }
 
-        WindowHeap {
-            id: heap
+        Item {
             width: parent.width
             height: parent.height - topBar.height
-            padding: PlasmaCore.Units.largeSpacing
-            filter: searchField.text
-            animationEnabled: container.animationEnabled
-            organized: container.organized
-            model: KWinComponents.ClientFilterModel {
-                activity: KWinComponents.Workspace.currentActivity
-                desktop: KWinComponents.Workspace.currentVirtualDesktop
-                screenName: targetScreen.name
-                clientModel: stackModel
-                windowType: ~KWinComponents.ClientFilterModel.Dock &
-                        ~KWinComponents.ClientFilterModel.Desktop &
-                        ~KWinComponents.ClientFilterModel.Notification;
+
+            WindowHeap {
+                id: heap
+                anchors.fill: parent
+                padding: PlasmaCore.Units.largeSpacing
+                animationEnabled: container.animationEnabled
+                organized: container.organized
+                model: KWinComponents.ClientFilterModel {
+                    activity: KWinComponents.Workspace.currentActivity
+                    desktop: KWinComponents.Workspace.currentVirtualDesktop
+                    screenName: targetScreen.name
+                    clientModel: stackModel
+                    windowType: ~KWinComponents.ClientFilterModel.Dock &
+                            ~KWinComponents.ClientFilterModel.Desktop &
+                            ~KWinComponents.ClientFilterModel.Notification;
+                }
+                states: [
+                    State {
+                        when: searchField.text
+                        PropertyChanges {
+                            target: heap
+                            opacity: 0
+                        }
+                    }
+                ]
+            }
+
+            Milou.ResultsView {
+                id: searchResults
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width / 2
+                height: Math.min(contentHeight, parent.height)
+                queryString: searchField.text
+                visible: false
+
+                states: [
+                    State {
+                        when: searchField.text
+                        PropertyChanges {
+                            target: searchResults
+                            visible: true
+                        }
+                    }
+                ]
+
+                onActivated: {
+                    searchField.text = "";
+                    effect.deactivate();
+                }
+
+                Keys.onEscapePressed: {
+                    searchField.text = "";
+                }
             }
         }
     }

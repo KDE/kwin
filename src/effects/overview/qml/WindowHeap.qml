@@ -26,7 +26,6 @@ FocusScope {
     property int selectedIndex: -1
     property bool animationEnabled: false
     property real padding: 0
-    property string filter: ""
 
     required property bool organized
     readonly property bool effectiveOrganized: expoLayout.ready && organized
@@ -50,16 +49,10 @@ FocusScope {
                 required property int index
 
                 readonly property bool selected: heap.selectedIndex == index
-                readonly property bool hidden: {
-                    if (heap.filter) {
-                        return !client.caption.toLowerCase().includes(heap.filter.toLowerCase());
-                    }
-                    return false;
-                }
 
                 state: {
                     if (heap.effectiveOrganized) {
-                        return hidden ? "active-hidden" : "active";
+                        return "active";
                     }
                     return client.minimized ? "initial-minimized" : "initial";
                 }
@@ -176,14 +169,6 @@ FocusScope {
                             width: cell.width
                             height: cell.height
                         }
-                    },
-                    State {
-                        name: "active-hidden"
-                        extend: "active"
-                        PropertyChanges {
-                            target: thumb
-                            opacity: 0
-                        }
                     }
                 ]
 
@@ -273,19 +258,9 @@ FocusScope {
         }
     }
 
-    function findFirstItem() {
-        for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
-            const candidateItem = windowsRepeater.itemAt(candidateIndex);
-            if (!candidateItem.hidden) {
-                return candidateIndex;
-            }
-        }
-        return -1;
-    }
-
     function findNextItem(selectedIndex, direction) {
         if (selectedIndex == -1) {
-            return findFirstItem();
+            return 0;
         }
 
         const selectedItem = windowsRepeater.itemAt(selectedIndex);
@@ -295,9 +270,6 @@ FocusScope {
         case WindowHeap.Direction.Left:
             for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
                 const candidateItem = windowsRepeater.itemAt(candidateIndex);
-                if (candidateItem.hidden) {
-                    continue;
-                }
 
                 if (candidateItem.y + candidateItem.height <= selectedItem.y) {
                     continue;
@@ -320,9 +292,6 @@ FocusScope {
         case WindowHeap.Direction.Right:
             for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
                 const candidateItem = windowsRepeater.itemAt(candidateIndex);
-                if (candidateItem.hidden) {
-                    continue;
-                }
 
                 if (candidateItem.y + candidateItem.height <= selectedItem.y) {
                     continue;
@@ -345,9 +314,6 @@ FocusScope {
         case WindowHeap.Direction.Up:
             for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
                 const candidateItem = windowsRepeater.itemAt(candidateIndex);
-                if (candidateItem.hidden) {
-                    continue;
-                }
 
                 if (candidateItem.x + candidateItem.width <= selectedItem.x) {
                     continue;
@@ -370,9 +336,6 @@ FocusScope {
         case WindowHeap.Direction.Down:
             for (let candidateIndex = 0; candidateIndex < windowsRepeater.count; ++candidateIndex) {
                 const candidateItem = windowsRepeater.itemAt(candidateIndex);
-                if (candidateItem.hidden) {
-                    continue;
-                }
 
                 if (candidateItem.x + candidateItem.width <= selectedItem.x) {
                     continue;
@@ -424,7 +387,6 @@ FocusScope {
     }
 
     onActiveFocusChanged: resetSelected();
-    onFilterChanged: resetSelected();
 
     Keys.onPressed: {
         switch (event.key) {
@@ -461,9 +423,7 @@ FocusScope {
                 // If the window heap has only one visible window, activate it.
                 for (let i = 0; i < windowsRepeater.count; ++i) {
                     const candidateItem = windowsRepeater.itemAt(i);
-                    if (candidateItem.hidden) {
-                        continue;
-                    } else if (selectedItem) {
+                    if (selectedItem) {
                         selectedItem = null;
                         break;
                     }
