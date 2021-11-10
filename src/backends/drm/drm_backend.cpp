@@ -27,11 +27,8 @@
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
 #include "waylandoutputconfig.h"
-#if HAVE_GBM
 #include "egl_gbm_backend.h"
-#include <gbm.h>
 #include "gbm_dmabuf.h"
-#endif
 // KF5
 #include <KCoreAddons>
 #include <KLocalizedString>
@@ -48,6 +45,7 @@
 #include <unistd.h>
 #include <cerrno>
 // drm
+#include <gbm.h>
 #include <xf86drm.h>
 #include <libdrm/drm_mode.h>
 
@@ -588,7 +586,6 @@ QPainterBackend *DrmBackend::createQPainterBackend()
 
 OpenGLBackend *DrmBackend::createOpenGLBackend()
 {
-#if HAVE_GBM
     auto primaryBackend = new EglGbmBackend(this, m_gpus.at(0));
     AbstractEglBackend::setPrimaryBackend(primaryBackend);
     EglMultiBackend *backend = new EglMultiBackend(this, primaryBackend);
@@ -596,9 +593,6 @@ OpenGLBackend *DrmBackend::createOpenGLBackend()
         backend->addGpu(m_gpus[i]);
     }
     return backend;
-#else
-    return Platform::createOpenGLBackend();
-#endif
 }
 
 void DrmBackend::sceneInitialized()
@@ -611,11 +605,7 @@ QVector<CompositingType> DrmBackend::supportedCompositors() const
     if (selectedCompositor() != NoCompositing) {
         return {selectedCompositor()};
     }
-#if HAVE_GBM
     return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
-#else
-    return QVector<CompositingType>{QPainterCompositing};
-#endif
 }
 
 QString DrmBackend::supportInformation() const
@@ -650,13 +640,12 @@ void DrmBackend::removeVirtualOutput(AbstractOutput *output)
 
 DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
 {
-#if HAVE_GBM
     if (primaryGpu()->eglBackend() && primaryGpu()->gbmDevice()) {
         primaryGpu()->eglBackend()->makeCurrent();
         return GbmDmaBuf::createBuffer(size, primaryGpu()->gbmDevice());
+    } else {
+        return nullptr;
     }
-#endif
-    return nullptr;
 }
 
 DrmGpu *DrmBackend::primaryGpu() const

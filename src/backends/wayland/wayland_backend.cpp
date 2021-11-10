@@ -12,10 +12,8 @@
 
 #if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
-#if HAVE_GBM
 #include "../drm/gbm_dmabuf.h"
 #include <gbm.h>
-#endif
 #endif
 #include "logging.h"
 #include "renderloop_p.h"
@@ -586,7 +584,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     connect(this, &WaylandBackend::connectionFailed, qApp, &QCoreApplication::quit);
 
 
-#if HAVE_GBM && HAVE_WAYLAND_EGL
+#if HAVE_WAYLAND_EGL
     char const *drm_render_node = "/dev/dri/renderD128";
     m_drmFileDescriptor = open(drm_render_node, O_RDWR);
     if (m_drmFileDescriptor < 0) {
@@ -627,7 +625,7 @@ WaylandBackend::~WaylandBackend()
     m_connectionThread->quit();
     m_connectionThread->wait();
     m_connectionThreadObject->deleteLater();
-#if HAVE_GBM && HAVE_WAYLAND_EGL
+#if HAVE_WAYLAND_EGL
     gbm_device_destroy(m_gbmDevice);
     close(m_drmFileDescriptor);
 #endif
@@ -1016,7 +1014,7 @@ void WaylandBackend::addConfiguredOutput(WaylandOutput *output)
 
 DmaBufTexture *WaylandBackend::createDmaBufTexture(const QSize& size)
 {
-#if HAVE_GBM && HAVE_WAYLAND_EGL
+#if HAVE_WAYLAND_EGL
     return GbmDmaBuf::createBuffer(size, m_gbmDevice);
 #else
     return nullptr;

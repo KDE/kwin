@@ -10,9 +10,7 @@
 #include "egl_multi_backend.h"
 #include <config-kwin.h>
 #include "logging.h"
-#if HAVE_GBM
 #include "egl_gbm_backend.h"
-#endif
 #include "drm_backend.h"
 #include "drm_gpu.h"
 
@@ -112,13 +110,11 @@ bool EglMultiBackend::directScanoutAllowed(AbstractOutput *output) const
 
 void EglMultiBackend::addGpu(DrmGpu *gpu)
 {
-#if HAVE_GBM
     AbstractEglDrmBackend *backend= new EglGbmBackend(m_platform, gpu);
     if (m_initialized) {
         backend->init();
     }
     m_backends.append(backend);
-#endif
 }
 
 void EglMultiBackend::removeGpu(DrmGpu *gpu)

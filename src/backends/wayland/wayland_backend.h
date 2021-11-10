@@ -322,7 +322,7 @@ private:
     KWayland::Client::ServerSideDecorationManager *m_ssdManager = nullptr;
     KWayland::Client::ServerSideDecorationManager *ssdManager();
     int m_nextId = 0;
-#if HAVE_GBM && HAVE_WAYLAND_EGL
+#if HAVE_WAYLAND_EGL
     int m_drmFileDescriptor = 0;
     gbm_device *m_gbmDevice;
 #endif

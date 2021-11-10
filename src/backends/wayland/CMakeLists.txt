@@ -6,10 +6,7 @@ set(WAYLAND_BACKEND_SOURCES
 )
 
 if (HAVE_WAYLAND_EGL)
-    set(WAYLAND_BACKEND_SOURCES egl_wayland_backend.cpp ${WAYLAND_BACKEND_SOURCES})
-    if (HAVE_GBM)
-        list(APPEND WAYLAND_BACKEND_SOURCES ../drm/gbm_dmabuf.cpp)
-    endif()
+    set(WAYLAND_BACKEND_SOURCES egl_wayland_backend.cpp ${WAYLAND_BACKEND_SOURCES} ../drm/gbm_dmabuf.cpp)
 endif()
 
 add_library(KWinWaylandWaylandBackend MODULE ${WAYLAND_BACKEND_SOURCES})
@@ -17,10 +14,7 @@ set_target_properties(KWinWaylandWaylandBackend PROPERTIES LIBRARY_OUTPUT_DIRECT
 target_link_libraries(KWinWaylandWaylandBackend kwin KF5::WaylandClient)
 
 if (HAVE_WAYLAND_EGL)
-    target_link_libraries(KWinWaylandWaylandBackend Wayland::Egl)
-    if (HAVE_GBM)
-       target_link_libraries(KWinWaylandWaylandBackend gbm::gbm)
-    endif()
+    target_link_libraries(KWinWaylandWaylandBackend Wayland::Egl gbm::gbm)
 endif()
 
 install(

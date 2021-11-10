@@ -19,24 +19,15 @@ set(DRM_SOURCES
     drm_abstract_output.cpp
     drm_virtual_output.cpp
     drm_lease_output.cpp
+    egl_gbm_backend.cpp
+    drm_buffer_gbm.cpp
+    gbm_surface.cpp
+    gbm_dmabuf.cpp
 )
-
-if (HAVE_GBM)
-    set(DRM_SOURCES ${DRM_SOURCES}
-        egl_gbm_backend.cpp
-        drm_buffer_gbm.cpp
-        gbm_surface.cpp
-        gbm_dmabuf.cpp
-    )
-endif()
 
 add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})
 set_target_properties(KWinWaylandDrmBackend PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.waylandbackends/")
-target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm)
-
-if (HAVE_GBM)
-    target_link_libraries(KWinWaylandDrmBackend gbm::gbm)
-endif()
+target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm gbm::gbm)
 
 install(
     TARGETS

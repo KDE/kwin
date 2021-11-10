@@ -22,12 +22,8 @@
 #include "drm_virtual_output.h"
 #include "wayland_server.h"
 #include "drm_lease_output.h"
-
-#if HAVE_GBM
 #include "egl_gbm_backend.h"
-#include <gbm.h>
 #include "gbm_dmabuf.h"
-#endif
 // system
 #include <algorithm>
 #include <errno.h>
@@ -35,6 +31,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 // drm
+#include <gbm.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 #include <libdrm/drm_mode.h>
@@ -80,9 +77,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     // find out if this GPU is using the NVidia proprietary driver
     DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
     m_isNVidia = strstr(version->name, "nvidia-drm");
-#if HAVE_GBM
     m_gbmDevice = gbm_create_device(m_fd);
-#endif
 
     m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
     connect(m_socketNotifier, &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
@@ -142,11 +137,9 @@ DrmGpu::~DrmGpu()
     qDeleteAll(m_connectors);
     qDeleteAll(m_planes);
     delete m_socketNotifier;
-#if HAVE_GBM
     if (m_gbmDevice) {
         gbm_device_destroy(m_gbmDevice);
     }
-#endif
     m_platform->session()->closeRestricted(m_fd);
 }
 

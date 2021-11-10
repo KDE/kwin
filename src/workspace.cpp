@@ -1497,12 +1497,6 @@ QString Workspace::supportInformation() const
 #else
     support.append(no);
 #endif
-    support.append(QStringLiteral("HAVE_GBM: "));
-#if HAVE_GBM
-    support.append(yes);
-#else
-    support.append(no);
-#endif
     support.append(QStringLiteral("HAVE_X11_XCB: "));
 #if HAVE_X11_XCB
     support.append(yes);

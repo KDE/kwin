@@ -21,14 +21,10 @@
 #include "session.h"
 #include "drm_output.h"
 #include "drm_backend.h"
-
-#if HAVE_GBM
-#include <gbm.h>
-
 #include "egl_gbm_backend.h"
 #include "drm_buffer_gbm.h"
-#endif
 
+#include <gbm.h>
 #include <drm_fourcc.h>
 
 namespace KWin
@@ -62,13 +58,9 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
         return false;
     }
     m_primaryBuffer = buffer;
-    bool directScanout = false;
-#if HAVE_GBM
+    auto buf = dynamic_cast<DrmGbmBuffer*>(buffer.data());
     // with direct scanout disallow modesets, calling presentFailed() and logging warnings
-    if (auto buf = dynamic_cast<DrmGbmBuffer*>(buffer.data()); buf && buf->clientBuffer()) {
-        directScanout = true;
-    }
-#endif
+    bool directScanout = buf && buf->clientBuffer();
     if (gpu()->needsModeset()) {
         if (directScanout) {
             return false;
@@ -302,19 +294,18 @@ bool DrmPipeline::checkTestBuffer()
         checkBuffer(pending.crtc->current());
     }
     // if we don't have a fitting buffer already, get or create one
-    if (buffer) {
-#if HAVE_GBM
-    } else if (backend && m_output) {
-        buffer = backend->renderTestFrame(m_output);
-    } else if (backend && gpu()->gbmDevice()) {
-        gbm_bo *bo = gbm_bo_create(gpu()->gbmDevice(), sourceSize().width(), sourceSize().height(), GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
-        if (!bo) {
-            return false;
+    if (!buffer) {
+        if (backend && m_output) {
+            buffer = backend->renderTestFrame(m_output);
+        } else if (backend && gpu()->gbmDevice()) {
+            gbm_bo *bo = gbm_bo_create(gpu()->gbmDevice(), sourceSize().width(), sourceSize().height(), GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
+            if (!bo) {
+                return false;
+            }
+            buffer = QSharedPointer<DrmGbmBuffer>::create(gpu(), bo, nullptr);
+        } else {
+            buffer = QSharedPointer<DrmDumbBuffer>::create(gpu(), sourceSize());
         }
-        buffer = QSharedPointer<DrmGbmBuffer>::create(gpu(), bo, nullptr);
-#endif
-    } else {
-        buffer = QSharedPointer<DrmDumbBuffer>::create(gpu(), sourceSize());
     }
     if (buffer && buffer->bufferId()) {
         m_oldTestBuffer = m_primaryBuffer;
