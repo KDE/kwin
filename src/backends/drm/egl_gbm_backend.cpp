@@ -26,6 +26,7 @@
 #include "kwineglutils_p.h"
 #include "shadowbuffer.h"
 #include "drm_pipeline.h"
+#include "drm_abstract_output.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwineglimagetexture.h>
@@ -43,8 +44,13 @@ namespace KWin
 {
 
 EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu)
-    : AbstractEglDrmBackend(drmBackend, gpu)
+    : m_backend(drmBackend)
+    , m_gpu(gpu)
 {
+    m_gpu->setEglBackend(this);
+    connect(m_gpu, &DrmGpu::outputEnabled, this, &EglGbmBackend::addOutput);
+    connect(m_gpu, &DrmGpu::outputDisabled, this, &EglGbmBackend::removeOutput);
+    setIsDirectRendering(true);
 }
 
 EglGbmBackend::~EglGbmBackend()
@@ -277,12 +283,6 @@ bool EglGbmBackend::exportFramebufferAsDmabuf(DrmAbstractOutput *drmOutput, int 
     return true;
 }
 
-QRegion EglGbmBackend::beginFrameForSecondaryGpu(DrmAbstractOutput *drmOutput)
-{
-    Q_ASSERT(m_outputs.contains(drmOutput));
-    return prepareRenderingForOutput(m_outputs[drmOutput]);
-}
-
 QSharedPointer<DrmBuffer> EglGbmBackend::importFramebuffer(Output &output, const QRegion &dirty) const
 {
     if (!renderingBackend()->swapBuffers(output.output, dirty)) {
@@ -506,7 +506,7 @@ QRegion EglGbmBackend::beginFrame(AbstractOutput *drmOutput)
     if (isPrimary()) {
         return prepareRenderingForOutput(output);
     } else {
-        return renderingBackend()->beginFrameForSecondaryGpu(output.output);
+        return renderingBackend()->beginFrame(output.output);
     }
 }
 
@@ -728,6 +728,16 @@ bool EglGbmBackend::hasOutput(AbstractOutput *output) const
 uint32_t EglGbmBackend::drmFormat() const
 {
     return m_gbmFormat;
+}
+
+DrmGpu *EglGbmBackend::gpu() const
+{
+    return m_gpu;
+}
+
+EglGbmBackend *EglGbmBackend::renderingBackend()
+{
+    return static_cast<EglGbmBackend*>(primaryBackend());
 }
 
 }

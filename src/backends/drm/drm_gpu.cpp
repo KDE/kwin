@@ -540,12 +540,12 @@ void DrmGpu::removeOutput(DrmOutput *output)
     delete output;
 }
 
-AbstractEglDrmBackend *DrmGpu::eglBackend() const
+EglGbmBackend *DrmGpu::eglBackend() const
 {
     return m_eglBackend;
 }
 
-void DrmGpu::setEglBackend(AbstractEglDrmBackend *eglBackend)
+void DrmGpu::setEglBackend(EglGbmBackend *eglBackend)
 {
     m_eglBackend = eglBackend;
 }

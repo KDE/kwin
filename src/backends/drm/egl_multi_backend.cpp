@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-EglMultiBackend::EglMultiBackend(DrmBackend *backend, AbstractEglDrmBackend *primaryEglBackend)
+EglMultiBackend::EglMultiBackend(DrmBackend *backend, EglGbmBackend *primaryEglBackend)
     : OpenGLBackend()
     , m_platform(backend)
 {
@@ -93,7 +93,7 @@ QSharedPointer<GLTexture> EglMultiBackend::textureForOutput(AbstractOutput *requ
     return m_backends[0]->textureForOutput(requestedOutput);
 }
 
-AbstractEglDrmBackend *EglMultiBackend::findBackend(AbstractOutput *output) const
+EglGbmBackend *EglMultiBackend::findBackend(AbstractOutput *output) const
 {
     for (int i = 1; i < m_backends.count(); i++) {
         if (m_backends[i]->hasOutput(output)) {
@@ -110,7 +110,7 @@ bool EglMultiBackend::directScanoutAllowed(AbstractOutput *output) const
 
 void EglMultiBackend::addGpu(DrmGpu *gpu)
 {
-    AbstractEglDrmBackend *backend= new EglGbmBackend(m_platform, gpu);
+    EglGbmBackend *backend= new EglGbmBackend(m_platform, gpu);
     if (m_initialized) {
         backend->init();
     }

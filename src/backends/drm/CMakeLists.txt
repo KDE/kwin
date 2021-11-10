@@ -12,7 +12,6 @@ set(DRM_SOURCES
     scene_qpainter_drm_backend.cpp
     drm_gpu.cpp
     egl_multi_backend.cpp
-    abstract_egl_drm_backend.cpp
     dumb_swapchain.cpp
     shadowbuffer.cpp
     drm_pipeline.cpp

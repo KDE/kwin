@@ -8,7 +8,7 @@
 */
 #ifndef KWIN_EGL_GBM_BACKEND_H
 #define KWIN_EGL_GBM_BACKEND_H
-#include "abstract_egl_drm_backend.h"
+#include "abstract_egl_backend.h"
 #include "utils.h"
 
 #include <kwinglutils.h>
@@ -26,6 +26,7 @@ class SurfaceInterface;
 namespace KWin
 {
 class AbstractOutput;
+class DrmAbstractOutput;
 class DrmBuffer;
 class DrmGbmBuffer;
 class DrmOutput;
@@ -33,11 +34,13 @@ class GbmSurface;
 class GbmBuffer;
 class DumbSwapchain;
 class ShadowBuffer;
+class DrmBackend;
+class DrmGpu;
 
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
  */
-class EglGbmBackend : public AbstractEglDrmBackend
+class EglGbmBackend : public AbstractEglBackend
 {
     Q_OBJECT
 public:
@@ -54,18 +57,16 @@ public:
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
-    bool hasOutput(AbstractOutput *output) const override;
-    bool addOutput(DrmAbstractOutput *output) override;
-    void removeOutput(DrmAbstractOutput *output) override;
-    bool swapBuffers(DrmAbstractOutput *output, const QRegion &dirty) override;
-    bool exportFramebuffer(DrmAbstractOutput *output, void *data, const QSize &size, uint32_t stride) override;
-    bool exportFramebufferAsDmabuf(DrmAbstractOutput *output, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier) override;
-    QRegion beginFrameForSecondaryGpu(DrmAbstractOutput *output) override;
+    bool hasOutput(AbstractOutput *output) const;
+    bool swapBuffers(DrmAbstractOutput *output, const QRegion &dirty);
+    bool exportFramebuffer(DrmAbstractOutput *output, void *data, const QSize &size, uint32_t stride);
+    bool exportFramebufferAsDmabuf(DrmAbstractOutput *output, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier);
 
     bool directScanoutAllowed(AbstractOutput *output) const override;
 
-    QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output) override;
-    uint32_t drmFormat() const override;
+    QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output);
+    uint32_t drmFormat() const;
+    DrmGpu *gpu() const;
 
 protected:
     void cleanupSurfaces() override;
@@ -98,6 +99,8 @@ private:
 
     bool doesRenderFit(DrmAbstractOutput *output, const Output::RenderData &render);
     bool resetOutput(Output &output);
+    bool addOutput(DrmAbstractOutput *output);
+    void removeOutput(DrmAbstractOutput *output);
 
     bool makeContextCurrent(const Output::RenderData &output) const;
     void setViewport(const Output &output) const;
@@ -112,6 +115,10 @@ private:
 
     QMap<AbstractOutput *, Output> m_outputs;
     uint32_t m_gbmFormat;
+    DrmBackend *m_backend;
+    DrmGpu *m_gpu;
+
+    static EglGbmBackend *renderingBackend();
 
     friend class EglGbmTexture;
 };

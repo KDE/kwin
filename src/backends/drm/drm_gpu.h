@@ -35,7 +35,7 @@ class DrmOutput;
 class DrmCrtc;
 class DrmConnector;
 class DrmBackend;
-class AbstractEglDrmBackend;
+class EglGbmBackend;
 class DrmPipeline;
 class DrmAbstractOutput;
 class DrmVirtualOutput;
@@ -58,7 +58,7 @@ public:
     bool isFormatSupported(uint32_t drmFormat) const;
     gbm_device *gbmDevice() const;
     EGLDisplay eglDisplay() const;
-    AbstractEglDrmBackend *eglBackend() const;
+    EglGbmBackend *eglBackend() const;
     DrmBackend *platform() const;
     /**
      * Returns the clock from which presentation timestamps are sourced. The returned value
@@ -72,7 +72,7 @@ public:
 
     void setGbmDevice(gbm_device *d);
     void setEglDisplay(EGLDisplay display);
-    void setEglBackend(AbstractEglDrmBackend *eglBackend);
+    void setEglBackend(EglGbmBackend *eglBackend);
 
     void waitIdle();
     bool updateOutputs();
@@ -116,7 +116,7 @@ private:
     clockid_t m_presentationClock;
     gbm_device* m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
-    QPointer<AbstractEglDrmBackend> m_eglBackend;
+    QPointer<EglGbmBackend> m_eglBackend;
     DrmBackend* const m_platform;
 
     QVector<DrmPlane*> m_planes;

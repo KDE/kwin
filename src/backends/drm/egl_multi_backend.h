@@ -10,16 +10,20 @@
 #ifndef EGLMULTIBACKEND_H
 #define EGLMULTIBACKEND_H
 
-#include "abstract_egl_drm_backend.h"
+#include "openglbackend.h"
 
 namespace KWin
 {
+
+class DrmBackend;
+class DrmGpu;
+class EglGbmBackend;
 
 class EglMultiBackend : public OpenGLBackend
 {
     Q_OBJECT
 public:
-    EglMultiBackend(DrmBackend *backend, AbstractEglDrmBackend *primaryEglBackend);
+    EglMultiBackend(DrmBackend *backend, EglGbmBackend *primaryEglBackend);
     ~EglMultiBackend();
 
     void init() override;
@@ -43,10 +47,10 @@ public Q_SLOTS:
 
 private:
     DrmBackend *m_platform;
-    QVector<AbstractEglDrmBackend*> m_backends;
+    QVector<EglGbmBackend*> m_backends;
     bool m_initialized = false;
 
-    AbstractEglDrmBackend *findBackend(AbstractOutput *output) const;
+    EglGbmBackend *findBackend(AbstractOutput *output) const;
 };
 
 }
