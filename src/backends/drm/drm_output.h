@@ -57,6 +57,7 @@ public:
     bool isFormatSupported(uint32_t drmFormat) const override;
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
     bool needsSoftwareTransformation() const override;
+    int maxBpc() const override;
 
     bool queueChanges(const WaylandOutputConfig &config);
     void applyQueuedChanges(const WaylandOutputConfig &config);

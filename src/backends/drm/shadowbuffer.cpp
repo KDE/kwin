@@ -34,7 +34,7 @@ static const float texCoords[] = {
     1.0f,  1.0f
 };
 
-ShadowBuffer::ShadowBuffer(const QSize &size)
+ShadowBuffer::ShadowBuffer(const QSize &size, const GbmFormat &format)
     : m_size(size)
 {
     glGenFramebuffers(1, &m_framebuffer);
@@ -43,7 +43,7 @@ ShadowBuffer::ShadowBuffer(const QSize &size)
 
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.width(), size.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat(format), size.width(), size.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -132,6 +132,19 @@ int ShadowBuffer::texture() const
 QSize ShadowBuffer::textureSize() const
 {
     return m_size;
+}
+
+GLint ShadowBuffer::internalFormat(const GbmFormat &format)
+{
+    if (format.redSize <= 8 && format.greenSize <= 8 && format.blueSize <= 8) {
+        return GL_RGBA8;
+    } else if (format.redSize <= 10 && format.greenSize <= 10 && format.blueSize <= 10) {
+        return GL_RGB10_A2;
+    } else if (format.redSize <= 12 && format.greenSize <= 12 && format.blueSize <= 12) {
+        return GL_RGBA12;
+    } else {
+        return GL_RGBA16;
+    }
 }
 
 }

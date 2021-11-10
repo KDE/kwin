@@ -37,7 +37,7 @@ public:
                                                             quint32 flags) override;
 
 protected:
-    void setSupportedFormatsAndModifiers(dev_t device, const QHash<uint32_t, QSet<uint64_t>> &set);
+    void setSupportedFormatsAndModifiers(const QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> &tranches);
 };
 
 }

@@ -485,4 +485,10 @@ void DrmOutput::presentFailed()
     RenderLoopPrivate::get(m_renderLoop)->notifyFrameFailed();
 }
 
+int DrmOutput::maxBpc() const
+{
+    auto prop = m_connector->getProp(DrmConnector::PropertyIndex::MaxBpc);
+    return prop ? prop->maxValue() : 8;
+}
+
 }

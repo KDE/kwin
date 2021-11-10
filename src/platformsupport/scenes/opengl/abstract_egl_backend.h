@@ -71,6 +71,7 @@ public:
     }
 
     dev_t deviceId() const;
+    virtual bool prefer10bpc() const;
 
 protected:
     AbstractEglBackend(dev_t deviceId = 0);

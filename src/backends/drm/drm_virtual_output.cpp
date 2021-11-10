@@ -109,4 +109,9 @@ bool DrmVirtualOutput::needsSoftwareTransformation() const
     return false;
 }
 
+int DrmVirtualOutput::maxBpc() const
+{
+    return 8;
+}
+
 }

@@ -299,7 +299,7 @@ bool DrmPipeline::checkTestBuffer()
     // try to re-use buffers if possible.
     const auto &checkBuffer = [this, backend, &buffer](const QSharedPointer<DrmBuffer> &buf){
         const auto &mods = supportedModifiers(buf->format());
-        if (backend && buf->format() == backend->drmFormat()
+        if (backend && buf->format() == backend->drmFormat(m_output)
             && (mods.isEmpty() || mods.contains(buf->modifier()))
             && buf->size() == sourceSize()) {
             buffer = buf;

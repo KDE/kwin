@@ -395,6 +395,34 @@ void filterFormatsWithMultiplePlanes(QVector<uint32_t> &formats)
     }
 }
 
+static int bpcForFormat(uint32_t format)
+{
+    switch(format) {
+    case DRM_FORMAT_XRGB8888:
+    case DRM_FORMAT_XBGR8888:
+    case DRM_FORMAT_RGBX8888:
+    case DRM_FORMAT_BGRX8888:
+    case DRM_FORMAT_ARGB8888:
+    case DRM_FORMAT_ABGR8888:
+    case DRM_FORMAT_RGBA8888:
+    case DRM_FORMAT_BGRA8888:
+    case DRM_FORMAT_RGB888:
+    case DRM_FORMAT_BGR888:
+        return 8;
+    case DRM_FORMAT_XRGB2101010:
+    case DRM_FORMAT_XBGR2101010:
+    case DRM_FORMAT_RGBX1010102:
+    case DRM_FORMAT_BGRX1010102:
+    case DRM_FORMAT_ARGB2101010:
+    case DRM_FORMAT_ABGR2101010:
+    case DRM_FORMAT_RGBA1010102:
+    case DRM_FORMAT_BGRA1010102:
+        return 10;
+    default:
+        return -1;
+    }
+};
+
 void EglDmabuf::setSupportedFormatsAndModifiers()
 {
     const EGLDisplay eglDisplay = m_backend->eglDisplay();
@@ -412,30 +440,50 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
 
     filterFormatsWithMultiplePlanes(formats);
 
-    QHash<uint32_t, QSet<uint64_t> > set;
-
-    for (auto format : qAsConst(formats)) {
-        if (eglQueryDmaBufModifiersEXT != nullptr) {
-            count = 0;
-            success = eglQueryDmaBufModifiersEXT(eglDisplay, format, 0, nullptr, nullptr, &count);
-
-            if (success && count > 0) {
-                QVector<uint64_t> modifiers(count);
-                if (eglQueryDmaBufModifiersEXT(eglDisplay,
-                                               format, count, modifiers.data(),
-                                               nullptr, &count)) {
-                    QSet<uint64_t> modifiersSet;
-                    for (auto mod : qAsConst(modifiers)) {
-                        modifiersSet.insert(mod);
+    auto queryFormats = [&formats, &eglDisplay](int bpc) {
+        QHash<uint32_t, QSet<uint64_t>> set;
+        for (auto format : qAsConst(formats)) {
+            if (bpc != bpcForFormat(format)) {
+                continue;
+            }
+            if (eglQueryDmaBufModifiersEXT != nullptr) {
+                EGLint count = 0;
+                const EGLBoolean success = eglQueryDmaBufModifiersEXT(eglDisplay, format, 0, nullptr, nullptr, &count);
+                if (success && count > 0) {
+                    QVector<uint64_t> modifiers(count);
+                    if (eglQueryDmaBufModifiersEXT(eglDisplay, format, count, modifiers.data(), nullptr, &count)) {
+                        QSet<uint64_t> modifiersSet;
+                        for (const uint64_t &mod : qAsConst(modifiers)) {
+                            modifiersSet.insert(mod);
+                        }
+                        set.insert(format, modifiersSet);
+                        continue;
                     }
-                    set.insert(format, modifiersSet);
-                    continue;
                 }
             }
+            set.insert(format, QSet<uint64_t>());
         }
-        set.insert(format, QSet<uint64_t>());
+        return set;
+    };
+    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> tranches;
+    if (m_backend->prefer10bpc()) {
+        tranches.append({
+            .device = m_backend->deviceId(),
+            .flags = {},
+            .formatTable = queryFormats(10),
+        });
     }
-    LinuxDmaBufV1RendererInterface::setSupportedFormatsAndModifiers(m_backend->deviceId(), set);
+    tranches.append({
+        .device = m_backend->deviceId(),
+        .flags = {},
+        .formatTable = queryFormats(8),
+    });
+    tranches.append({
+        .device = m_backend->deviceId(),
+        .flags = {},
+        .formatTable = queryFormats(-1),
+    });
+    LinuxDmaBufV1RendererInterface::setSupportedFormatsAndModifiers(tranches);
 }
 
 }

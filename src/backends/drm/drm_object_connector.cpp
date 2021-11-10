@@ -100,6 +100,7 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                 QByteArrayLiteral("Full"),
                 QByteArrayLiteral("Limited 16:235")
             }),
+            PropertyDefinition(QByteArrayLiteral("max bpc"), Requirement::Optional),
         }, DRM_MODE_OBJECT_CONNECTOR)
     , m_pipeline(new DrmPipeline(this))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
@@ -295,6 +296,9 @@ bool DrmConnector::needsModeset() const
     if (getProp(PropertyIndex::CrtcId)->needsCommit()) {
         return true;
     }
+    if (const auto &prop = getProp(PropertyIndex::MaxBpc); prop && prop->needsCommit()) {
+        return true;
+    }
     const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
     return rgb && rgb->needsCommit();
 }
@@ -378,6 +382,11 @@ bool DrmConnector::updateProperties()
         const QSize overwriteSize = group.readEntry("PhysicalSize", m_physicalSize);
         qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber() << " from " << m_physicalSize << "to " << overwriteSize;
         m_physicalSize = overwriteSize;
+    }
+
+    if (auto bpc = getProp(PropertyIndex::MaxBpc)) {
+        // make sure the driver allows us to use high bpc
+        bpc->setPending(bpc->maxValue());
     }
 
     // init modes

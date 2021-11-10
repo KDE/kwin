@@ -65,6 +65,7 @@ public:
         Underscan_vborder = 7,
         Underscan_hborder = 8,
         Broadcast_RGB = 9,
+        MaxBpc = 10,
         Count
     };
 

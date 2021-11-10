@@ -392,4 +392,10 @@ dev_t AbstractEglBackend::deviceId() const
 {
     return m_deviceId;
 }
+
+bool AbstractEglBackend::prefer10bpc() const
+{
+    return false;
+}
+
 }
