@@ -16,7 +16,6 @@
 #cmakedefine01 HAVE_X11_XINPUT
 #cmakedefine01 HAVE_GBM
 #cmakedefine01 HAVE_GBM_BO_GET_FD_FOR_PLANE
-#cmakedefine01 HAVE_EGL_STREAMS
 #cmakedefine01 HAVE_WAYLAND_EGL
 #cmakedefine01 HAVE_SYS_PRCTL_H
 #cmakedefine01 HAVE_PR_SET_DUMPABLE

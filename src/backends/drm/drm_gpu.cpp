@@ -80,16 +80,8 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     // find out if this GPU is using the NVidia proprietary driver
     DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
     m_isNVidia = strstr(version->name, "nvidia-drm");
-    m_useEglStreams = m_isNVidia;
 #if HAVE_GBM
     m_gbmDevice = gbm_create_device(m_fd);
-    bool envVarIsSet = false;
-    bool value = qEnvironmentVariableIntValue("KWIN_DRM_FORCE_EGL_STREAMS", &envVarIsSet) != 0;
-    if (envVarIsSet) {
-        m_useEglStreams = m_isNVidia && value;
-    } else if (m_gbmDevice) {
-        m_useEglStreams = m_isNVidia && strcmp(gbm_device_get_backend_name(m_gbmDevice), "nvidia") != 0;
-    }
 #endif
 
     m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
@@ -693,11 +685,6 @@ dev_t DrmGpu::deviceId() const
 bool DrmGpu::atomicModeSetting() const
 {
     return m_atomicModeSetting;
-}
-
-bool DrmGpu::useEglStreams() const
-{
-    return m_useEglStreams;
 }
 
 QString DrmGpu::devNode() const

@@ -1513,12 +1513,6 @@ QString Workspace::supportInformation() const
 #else
     support.append(no);
 #endif
-    support.append(QStringLiteral("HAVE_EGL_STREAMS: "));
-#if HAVE_EGL_STREAMS
-    support.append(yes);
-#else
-    support.append(no);
-#endif
     support.append(QStringLiteral("HAVE_X11_XCB: "));
 #if HAVE_X11_XCB
     support.append(yes);

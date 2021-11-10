@@ -13,9 +13,6 @@
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
 #endif
-#if HAVE_EGL_STREAMS
-#include "egl_stream_backend.h"
-#endif
 #include "drm_backend.h"
 #include "drm_gpu.h"
 
@@ -115,22 +112,13 @@ bool EglMultiBackend::directScanoutAllowed(AbstractOutput *output) const
 
 void EglMultiBackend::addGpu(DrmGpu *gpu)
 {
-    AbstractEglDrmBackend *backend;
-    if (gpu->useEglStreams()) {
-#if HAVE_EGL_STREAMS
-        backend = new EglStreamBackend(m_platform, gpu);
-#endif
-    } else {
 #if HAVE_GBM
-        backend = new EglGbmBackend(m_platform, gpu);
+    AbstractEglDrmBackend *backend= new EglGbmBackend(m_platform, gpu);
+    if (m_initialized) {
+        backend->init();
+    }
+    m_backends.append(backend);
 #endif
-    }
-    if (backend) {
-        if (m_initialized) {
-            backend->init();
-        }
-        m_backends.append(backend);
-    }
 }
 
 void EglMultiBackend::removeGpu(DrmGpu *gpu)

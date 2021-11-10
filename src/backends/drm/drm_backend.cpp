@@ -31,9 +31,6 @@
 #include <gbm.h>
 #include "gbm_dmabuf.h"
 #endif
-#if HAVE_EGL_STREAMS
-#include "egl_stream_backend.h"
-#endif
 // KF5
 #include <KCoreAddons>
 #include <KLocalizedString>
@@ -190,17 +187,6 @@ bool DrmBackend::initialize()
                 bootVga |= device->isBootVga();
             }
         }
-
-        // if a boot device is set, honor that setting
-        // if not, prefer gbm for rendering because that works better
-        if (!bootVga && !m_gpus.isEmpty() && m_gpus[0]->useEglStreams()) {
-            for (int i = 1; i < m_gpus.count(); i++) {
-                if (!m_gpus[i]->useEglStreams()) {
-                    m_gpus.swapItemsAt(i, 0);
-                    break;
-                }
-            }
-        }
     }
 
     if (m_gpus.isEmpty()) {
@@ -209,10 +195,6 @@ bool DrmBackend::initialize()
     }
 
     initCursor();
-    // workaround for BUG 438363: something goes wrong in scene initialization without a surface being current in EglStreamBackend
-    if (m_gpus[0]->useEglStreams()) {
-        updateOutputs();
-    }
 
     // setup udevMonitor
     if (m_udevMonitor) {
@@ -276,9 +258,6 @@ void DrmBackend::handleUdevEvent()
 
 DrmGpu *DrmBackend::addGpu(const QString &fileName)
 {
-    if (primaryGpu() && primaryGpu()->useEglStreams()) {
-        return nullptr;
-    }
     int fd = session()->openRestricted(fileName);
     if (fd < 0) {
         qCWarning(KWIN_DRM) << "failed to open drm device at" << fileName;
@@ -519,21 +498,6 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
 
 void DrmBackend::initCursor()
 {
-
-#if HAVE_EGL_STREAMS
-    // Hardware cursors aren't currently supported with EGLStream backend,
-    // possibly an NVIDIA driver bug
-    bool needsSoftwareCursor = false;
-    for (auto gpu : qAsConst(m_gpus)) {
-        if (gpu->useEglStreams()) {
-            needsSoftwareCursor = true;
-            break;
-        }
-    }
-    setSoftwareCursorForced(needsSoftwareCursor);
-#endif
-
-    // now we have screens and can set cursors, so start tracking
     connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmBackend::updateCursor);
     connect(Cursors::self(), &Cursors::positionChanged, this, &DrmBackend::moveCursor);
 }
@@ -623,14 +587,6 @@ QPainterBackend *DrmBackend::createQPainterBackend()
 
 OpenGLBackend *DrmBackend::createOpenGLBackend()
 {
-#if HAVE_EGL_STREAMS
-    if (m_gpus.at(0)->useEglStreams()) {
-        auto backend = new EglStreamBackend(this, m_gpus.at(0));
-        AbstractEglBackend::setPrimaryBackend(backend);
-        return backend;
-    }
-#endif
-
 #if HAVE_GBM
     auto primaryBackend = new EglGbmBackend(this, m_gpus.at(0));
     AbstractEglBackend::setPrimaryBackend(primaryBackend);
@@ -656,10 +612,6 @@ QVector<CompositingType> DrmBackend::supportedCompositors() const
     }
 #if HAVE_GBM
     return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
-#elif HAVE_EGL_STREAMS
-    return m_gpus.at(0)->useEglStreams() ?
-        QVector<CompositingType>{OpenGLCompositing, QPainterCompositing} :
-        QVector<CompositingType>{QPainterCompositing};
 #else
     return QVector<CompositingType>{QPainterCompositing};
 #endif
@@ -675,9 +627,6 @@ QString DrmBackend::supportInformation() const
     for (int g = 0; g < m_gpus.size(); g++) {
         s << "Atomic Mode Setting on GPU " << g << ": " << m_gpus.at(g)->atomicModeSetting() << Qt::endl;
     }
-#if HAVE_EGL_STREAMS
-    s << "Using EGL Streams: " << m_gpus.at(0)->useEglStreams() << Qt::endl;
-#endif
     return supportInfo;
 }
 

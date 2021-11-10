@@ -62,13 +62,6 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
         return false;
     }
     m_primaryBuffer = buffer;
-    if (gpu()->useEglStreams() && gpu()->eglBackend() != nullptr && gpu() == gpu()->platform()->primaryGpu()) {
-        // EglStreamBackend queues normal page flips through EGL,
-        // modesets etc are performed through DRM-KMS
-        if (!m_connector->needsCommit() && !pending.crtc->needsCommit()) {
-            return true;
-        }
-    }
     bool directScanout = false;
 #if HAVE_GBM
     // with direct scanout disallow modesets, calling presentFailed() and logging warnings
@@ -254,8 +247,7 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
         prepareModeset();
         flags |= DRM_MODE_ATOMIC_ALLOW_MODESET;
     }
-    bool usesEglStreams = gpu()->useEglStreams() && gpu()->eglBackend() != nullptr && gpu() == gpu()->platform()->primaryGpu();
-    if (!usesEglStreams && activePending()) {
+    if (activePending()) {
         flags |= DRM_MODE_PAGE_FLIP_EVENT;
     }
     if (pending.crtc) {

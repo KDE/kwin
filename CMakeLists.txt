@@ -230,11 +230,6 @@ else()
     set(HAVE_GBM_BO_GET_FD_FOR_PLANE 0)
 endif()
 
-option(KWIN_BUILD_EGL_STREAM_BACKEND "Enable building of EGLStream based DRM backend" ON)
-if (KWIN_BUILD_EGL_STREAM_BACKEND)
-    set(HAVE_EGL_STREAMS TRUE)
-endif()
-
 find_package(X11)
 set_package_properties(X11 PROPERTIES
     DESCRIPTION "X11 libraries"
