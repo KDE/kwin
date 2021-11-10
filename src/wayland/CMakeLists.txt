@@ -20,7 +20,6 @@ set(SERVER_LIB_SRCS
     dpms_interface.cpp
     drmclientbuffer.cpp
     drmleasedevice_v1_interface.cpp
-    eglstream_controller_interface.cpp
     fakeinput_interface.cpp
     filtered_display.cpp
     idle_interface.cpp
@@ -226,11 +225,6 @@ ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
 )
 
 ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
-    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/wayland-eglstream-controller.xml
-    BASENAME wl-eglstream-controller
-)
-
-ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/keystate.xml
     BASENAME keystate
 )
@@ -347,7 +341,6 @@ set(SERVER_LIB_HEADERS
   dpms_interface.h
   drmclientbuffer.h
   drmleasedevice_v1_interface.h
-  eglstream_controller_interface.h
   fakeinput_interface.h
   filtered_display.h
   idle_interface.h
