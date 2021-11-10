@@ -357,7 +357,6 @@ void Compositor::startupWithWorkspace()
 
     Workspace::self()->markXStackingOrderAsDirty();
     Q_ASSERT(m_scene);
-    m_scene->initialize();
 
     const Platform *platform = kwinApp()->platform();
     if (platform->isPerScreenRenderingEnabled()) {
@@ -395,6 +394,7 @@ void Compositor::startupWithWorkspace()
         }
     }
 
+    m_scene->initialize();
     Q_EMIT compositingToggled(true);
 
     if (m_releaseSelectionTimer.isActive()) {
@@ -452,16 +452,10 @@ void Compositor::stop()
     delete effects;
     effects = nullptr;
 
+    delete m_scene;
+    m_scene = nullptr;
+
     if (Workspace::self()) {
-        for (X11Client *c : Workspace::self()->clientList()) {
-            m_scene->removeToplevel(c);
-        }
-        for (Unmanaged *c : Workspace::self()->unmanagedList()) {
-            m_scene->removeToplevel(c);
-        }
-        for (InternalClient *client : workspace()->internalClients()) {
-            m_scene->removeToplevel(client);
-        }
         for (X11Client *c : Workspace::self()->clientList()) {
             c->finishCompositing();
         }
@@ -481,10 +475,6 @@ void Compositor::stop()
     }
 
     if (waylandServer()) {
-        const QList<AbstractClient *> toRemoveTopLevel = waylandServer()->clients();
-        for (AbstractClient *c : toRemoveTopLevel) {
-            m_scene->removeToplevel(c);
-        }
         const QList<AbstractClient *> toFinishCompositing = waylandServer()->clients();
         for (AbstractClient *c : toFinishCompositing) {
             c->finishCompositing();
@@ -499,9 +489,6 @@ void Compositor::stop()
                this, &Compositor::handleOutputEnabled);
     disconnect(kwinApp()->platform(), &Platform::outputDisabled,
                this, &Compositor::handleOutputDisabled);
-
-    delete m_scene;
-    m_scene = nullptr;
 
     delete m_backend;
     m_backend = nullptr;

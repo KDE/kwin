@@ -91,13 +91,51 @@ Scene::Scene(QObject *parent)
 
 Scene::~Scene()
 {
-    Q_ASSERT(m_windows.isEmpty());
+    if (workspace()) {
+        const auto clients = workspace()->allClientList();
+        for (AbstractClient *client : clients) {
+            removeToplevel(client);
+        }
+
+        const auto internalClients = workspace()->internalClients();
+        for (AbstractClient *client : internalClients) {
+            removeToplevel(client);
+        }
+
+        const auto unmanagedList = workspace()->unmanagedList();
+        for (Unmanaged *unmanaged : unmanagedList) {
+            removeToplevel(unmanaged);
+        }
+
+        const auto deletedList = workspace()->deletedList();
+        for (Deleted *deleted : deletedList) {
+            removeToplevel(deleted);
+        }
+    }
 }
 
 void Scene::initialize()
 {
     connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Scene::removeRepaints);
 
+    const auto clients = workspace()->allClientList();
+    for (AbstractClient *client : clients) {
+        addToplevel(client);
+    }
+
+    const auto internalClients = workspace()->internalClients();
+    for (AbstractClient *client : internalClients) {
+        addToplevel(client);
+    }
+
+    const auto unmanagedList = workspace()->unmanagedList();
+    for (Unmanaged *unmanaged : unmanagedList) {
+        addToplevel(unmanaged);
+    }
+
+    connect(workspace(), &Workspace::clientAdded, this, &Scene::addToplevel);
+    connect(workspace(), &Workspace::internalClientAdded, this, &Scene::addToplevel);
+    connect(workspace(), &Workspace::unmanagedAdded, this, &Scene::addToplevel);
     connect(workspace(), &Workspace::deletedRemoved, this, &Scene::removeToplevel);
 
     connect(workspace(), &Workspace::geometryChanged, this, &Scene::addRepaintFull);
@@ -492,17 +530,21 @@ void Scene::addToplevel(Toplevel *c)
     Q_ASSERT(!m_windows.contains(c));
     Scene::Window *w = createWindow(c);
     m_windows[ c ] = w;
+    c->effectWindow()->setSceneWindow(w);
+
+    connect(c->windowItem(), &WindowItem::positionChanged, c, &Toplevel::visibleGeometryChanged);
+    connect(c->windowItem(), &WindowItem::boundingRectChanged, c, &Toplevel::visibleGeometryChanged);
+    Q_EMIT c->visibleGeometryChanged();
 
     connect(c, &Toplevel::windowClosed, this, &Scene::windowClosed);
-
-    c->effectWindow()->setSceneWindow(w);
 }
 
 void Scene::removeToplevel(Toplevel *toplevel)
 {
-    Q_ASSERT(m_windows.contains(toplevel));
-    delete m_windows.take(toplevel);
-    toplevel->effectWindow()->setSceneWindow(nullptr);
+    if (Scene::Window *w = m_windows.take(toplevel)) {
+        delete w;
+        toplevel->effectWindow()->setSceneWindow(nullptr);
+    }
 }
 
 void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
