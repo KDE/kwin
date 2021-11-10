@@ -36,12 +36,7 @@ DrmClientBuffer::DrmClientBuffer(wl_resource *resource, DrmClientBufferIntegrati
     Q_D(DrmClientBuffer);
 
     EGLDisplay eglDisplay = integration->display()->eglDisplay();
-    if (!eglQueryWaylandBufferWL(eglDisplay, resource, EGL_TEXTURE_FORMAT, &d->textureFormat)) {
-        // The proprietary Nvidia driver doesn't support querying the EGL_TEXTURE_FORMAT.
-        // We must assume that the buffer has an alpha channel for transparency to work.
-        d->textureFormat = EGL_TEXTURE_RGBA;
-    }
-
+    eglQueryWaylandBufferWL(eglDisplay, resource, EGL_TEXTURE_FORMAT, &d->textureFormat);
     eglQueryWaylandBufferWL(eglDisplay, resource, EGL_WIDTH, &d->width);
     eglQueryWaylandBufferWL(eglDisplay, resource, EGL_HEIGHT, &d->height);
 
@@ -89,8 +84,8 @@ ClientBuffer *DrmClientBufferIntegration::createBuffer(::wl_resource *resource)
         resolved = true;
     }
 
-    EGLint height;
-    if (eglQueryWaylandBufferWL(eglDisplay, resource, EGL_HEIGHT, &height)) {
+    EGLint format;
+    if (eglQueryWaylandBufferWL(eglDisplay, resource, EGL_TEXTURE_FORMAT, &format)) {
         return new DrmClientBuffer(resource, this);
     }
     return nullptr;
