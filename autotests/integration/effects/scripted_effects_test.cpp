@@ -18,6 +18,7 @@
 #include "effects.h"
 #include "kwin_wayland_test.h"
 #include "platform.h"
+#include "renderbackend.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -151,9 +152,7 @@ void ScriptedEffectsTest::initTestCase()
     QVERIFY(applicationStartedSpy.wait());
     QVERIFY(Compositor::self());
 
-    auto scene = KWin::Compositor::self()->scene();
-    QVERIFY(scene);
-    QCOMPARE(scene->compositingType(), KWin::OpenGLCompositing);
+    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 
     KWin::VirtualDesktopManager::self()->setCount(2);
 }

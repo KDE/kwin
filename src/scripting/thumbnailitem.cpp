@@ -10,6 +10,7 @@
 #include "abstract_client.h"
 #include "composite.h"
 #include "effects.h"
+#include "renderbackend.h"
 #include "scene.h"
 #include "screens.h"
 #include "scripting_logging.h"
@@ -150,17 +151,15 @@ void ThumbnailItemBase::updateFrameRenderingConnection()
 {
     disconnect(m_frameRenderingConnection);
 
-    if (!Compositor::self()) {
+    if (!Compositor::compositing()) {
         return;
     }
-    Scene *scene = Compositor::self()->scene();
-
     if (!window()) {
         return;
     }
 
-    if (scene && scene->compositingType() == OpenGLCompositing) {
-        m_frameRenderingConnection = connect(scene, &Scene::frameRendered, this, &ThumbnailItemBase::updateOffscreenTexture);
+    if (Compositor::self()->backend()->compositingType() == OpenGLCompositing) {
+        m_frameRenderingConnection = connect(Compositor::self()->scene(), &Scene::frameRendered, this, &ThumbnailItemBase::updateOffscreenTexture);
     }
 }
 
@@ -180,15 +179,15 @@ void ThumbnailItemBase::setSourceSize(const QSize &sourceSize)
 
 void ThumbnailItemBase::destroyOffscreenTexture()
 {
-    if (!Compositor::self()) {
+    if (!Compositor::compositing()) {
         return;
     }
-    Scene *scene = Compositor::self()->scene();
-    if (!scene || scene->compositingType() != OpenGLCompositing) {
+    if (Compositor::self()->backend()->compositingType() != OpenGLCompositing) {
         return;
     }
 
     if (m_offscreenTexture) {
+        Scene *scene = Compositor::self()->scene();
         scene->makeOpenGLContextCurrent();
         m_offscreenTarget.reset();
         m_offscreenTexture.reset();

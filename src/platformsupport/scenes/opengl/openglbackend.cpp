@@ -29,6 +29,11 @@ OpenGLBackend::~OpenGLBackend()
 {
 }
 
+CompositingType OpenGLBackend::compositingType() const
+{
+    return OpenGLCompositing;
+}
+
 void OpenGLBackend::setFailed(const QString &reason)
 {
     qCWarning(KWIN_OPENGL) << "Creating the OpenGL rendering failed: " << reason;

@@ -87,6 +87,7 @@ set(kwin_SRCS
     pluginmanager.cpp
     pointer_input.cpp
     popup_input_filter.cpp
+    renderbackend.cpp
     renderjournal.cpp
     renderloop.cpp
     rootinfo_filter.cpp

@@ -23,6 +23,7 @@
 #include "internal_client.h"
 #include "osd.h"
 #include "pointer_input.h"
+#include "renderbackend.h"
 #include "unmanaged.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
@@ -108,7 +109,7 @@ static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
 //---------------------
 
 EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
-    : EffectsHandler(scene->compositingType())
+    : EffectsHandler(Compositor::self()->backend()->compositingType())
     , keyboard_grab_effect(nullptr)
     , fullscreen_effect(nullptr)
     , m_compositor(compositor)

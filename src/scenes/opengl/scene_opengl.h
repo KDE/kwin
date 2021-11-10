@@ -51,7 +51,6 @@ public:
         return m_backend;
     }
 
-    CompositingType compositingType() const override;
     QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const override;
 

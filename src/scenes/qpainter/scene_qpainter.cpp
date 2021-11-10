@@ -54,11 +54,6 @@ SceneQPainter::~SceneQPainter()
 {
 }
 
-CompositingType SceneQPainter::compositingType() const
-{
-    return QPainterCompositing;
-}
-
 bool SceneQPainter::initFailed() const
 {
     return false;

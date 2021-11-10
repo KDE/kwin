@@ -9,9 +9,7 @@
 #ifndef KWIN_SCENE_QPAINTER_BACKEND_H
 #define KWIN_SCENE_QPAINTER_BACKEND_H
 
-#include <kwin_export.h>
-
-#include <QObject>
+#include "renderbackend.h"
 
 class QImage;
 class QRegion;
@@ -26,12 +24,14 @@ class SurfacePixmapWayland;
 class SurfaceTexture;
 class AbstractOutput;
 
-class KWIN_EXPORT QPainterBackend : public QObject
+class KWIN_EXPORT QPainterBackend : public RenderBackend
 {
     Q_OBJECT
 
 public:
     virtual ~QPainterBackend();
+
+    CompositingType compositingType() const override final;
 
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);

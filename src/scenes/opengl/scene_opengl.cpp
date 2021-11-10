@@ -491,11 +491,6 @@ bool SceneOpenGL::animationsSupported() const
     return !GLPlatform::instance()->isSoftwareEmulation();
 }
 
-CompositingType SceneOpenGL::compositingType() const
-{
-    return OpenGLCompositing;
-}
-
 QVector<QByteArray> SceneOpenGL::openGLPlatformInterfaceExtensions() const
 {
     return m_backend->extensions().toVector();

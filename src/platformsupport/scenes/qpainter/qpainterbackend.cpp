@@ -25,6 +25,11 @@ QPainterBackend::~QPainterBackend()
 {
 }
 
+CompositingType QPainterBackend::compositingType() const
+{
+    return QPainterCompositing;
+}
+
 SurfaceTexture *QPainterBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return new QPainterSurfaceTextureInternal(this, pixmap);

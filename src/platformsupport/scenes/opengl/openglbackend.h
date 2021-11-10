@@ -10,10 +10,9 @@
 #ifndef KWIN_SCENE_OPENGL_BACKEND_H
 #define KWIN_SCENE_OPENGL_BACKEND_H
 
-#include <QObject>
-#include <QRegion>
+#include "renderbackend.h"
 
-#include <kwin_export.h>
+#include <QRegion>
 
 namespace KWin
 {
@@ -41,7 +40,7 @@ class GLTexture;
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  */
-class KWIN_EXPORT OpenGLBackend : public QObject
+class KWIN_EXPORT OpenGLBackend : public RenderBackend
 {
     Q_OBJECT
 
@@ -50,6 +49,7 @@ public:
     virtual ~OpenGLBackend();
 
     virtual void init() = 0;
+    CompositingType compositingType() const override final;
 
     virtual SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
     virtual SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap);

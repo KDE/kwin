@@ -16,6 +16,7 @@
 #include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
+#include "renderbackend.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -72,9 +73,7 @@ void DontCrashReinitializeCompositorTest::initTestCase()
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
     Test::initWaylandWorkspace();
 
-    auto scene = KWin::Compositor::self()->scene();
-    QVERIFY(scene);
-    QCOMPARE(scene->compositingType(), KWin::OpenGLCompositing);
+    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void DontCrashReinitializeCompositorTest::init()

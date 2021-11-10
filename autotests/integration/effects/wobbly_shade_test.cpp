@@ -13,6 +13,7 @@
 #include "effects.h"
 #include "effectloader.h"
 #include "platform.h"
+#include "renderbackend.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -66,9 +67,7 @@ void WobblyWindowsShadeTest::initTestCase()
     QVERIFY(applicationStartedSpy.wait());
     QVERIFY(Compositor::self());
 
-    auto scene = KWin::Compositor::self()->scene();
-    QVERIFY(scene);
-    QCOMPARE(scene->compositingType(), KWin::OpenGLCompositing);
+    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void WobblyWindowsShadeTest::init()

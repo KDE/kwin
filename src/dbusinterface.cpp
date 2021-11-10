@@ -22,8 +22,8 @@
 #include "placement.h"
 #include "platform.h"
 #include "pluginmanager.h"
+#include "renderbackend.h"
 #include "kwinadaptor.h"
-#include "scene.h"
 #include "unmanaged.h"
 #include "workspace.h"
 #include "virtualdesktops.h"
@@ -273,10 +273,10 @@ QString CompositorDBusInterface::compositingNotPossibleReason() const
 
 QString CompositorDBusInterface::compositingType() const
 {
-    if (!m_compositor->scene()) {
+    if (!m_compositor->compositing()) {
         return QStringLiteral("none");
     }
-    switch (m_compositor->scene()->compositingType()) {
+    switch (m_compositor->backend()->compositingType()) {
     case OpenGLCompositing:
         if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
             return QStringLiteral("gles");

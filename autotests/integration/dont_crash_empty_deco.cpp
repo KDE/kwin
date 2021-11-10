@@ -12,7 +12,7 @@
 #include "x11client.h"
 #include "composite.h"
 #include "cursor.h"
-#include "scene.h"
+#include "renderbackend.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -57,9 +57,7 @@ void DontCrashEmptyDecorationTest::initTestCase()
     setenv("QT_QPA_PLATFORM", "wayland", true);
     Test::initWaylandWorkspace();
 
-    auto scene = KWin::Compositor::self()->scene();
-    QVERIFY(scene);
-    QCOMPARE(scene->compositingType(), KWin::OpenGLCompositing);
+    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void DontCrashEmptyDecorationTest::init()

@@ -300,9 +300,9 @@ bool Compositor::setupStart()
         return false;
     }
 
-    kwinApp()->platform()->setSelectedCompositor(m_scene->compositingType());
+    kwinApp()->platform()->setSelectedCompositor(m_backend->compositingType());
 
-    if (!Workspace::self() && m_scene && m_scene->compositingType() == QPainterCompositing) {
+    if (!Workspace::self() && m_backend && m_backend->compositingType() == QPainterCompositing) {
         // Force Software QtQuick on first startup with QPainter.
         QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
     }
@@ -856,7 +856,7 @@ void X11Compositor::composite(RenderLoop *renderLoop)
         item->waitForDamage();
     }
 
-    if (m_framesToTestForSafety > 0 && (scene()->compositingType() & OpenGLCompositing)) {
+    if (m_framesToTestForSafety > 0 && (backend()->compositingType() & OpenGLCompositing)) {
         kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreFrame);
     }
 
@@ -871,11 +871,11 @@ void X11Compositor::composite(RenderLoop *renderLoop)
     }
 
     if (m_framesToTestForSafety > 0) {
-        if (scene()->compositingType() & OpenGLCompositing) {
+        if (backend()->compositingType() & OpenGLCompositing) {
             kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostFrame);
         }
         m_framesToTestForSafety--;
-        if (m_framesToTestForSafety == 0 && (scene()->compositingType() & OpenGLCompositing)) {
+        if (m_framesToTestForSafety == 0 && (backend()->compositingType() & OpenGLCompositing)) {
             kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostLastGuardedFrame);
         }
     }

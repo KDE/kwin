@@ -12,11 +12,11 @@
 #include "x11client.h"
 #include "composite.h"
 #include "cursor.h"
+#include "renderbackend.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "scene.h"
 #include <kwineffects.h>
 
 #include <KDecoration2/Decoration>
@@ -66,9 +66,7 @@ void DontCrashAuroraeDestroyDecoTest::initTestCase()
     setenv("QT_QPA_PLATFORM", "wayland", true);
     Test::initWaylandWorkspace();
 
-    auto scene = KWin::Compositor::self()->scene();
-    QVERIFY(scene);
-    QCOMPARE(scene->compositingType(), KWin::OpenGLCompositing);
+    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void DontCrashAuroraeDestroyDecoTest::init()

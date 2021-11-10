@@ -20,6 +20,7 @@ namespace KWin
 
 class AbstractOutput;
 class CompositorSelectionOwner;
+class RenderBackend;
 class RenderLoop;
 class Scene;
 class Toplevel;
@@ -73,6 +74,9 @@ public:
 
     Scene *scene() const {
         return m_scene;
+    }
+    RenderBackend *backend() const {
+        return m_backend;
     }
 
     /**
@@ -145,7 +149,7 @@ private:
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
     Scene *m_scene;
-    QObject *m_backend = nullptr;
+    RenderBackend *m_backend = nullptr;
     QMap<RenderLoop *, AbstractOutput *> m_renderLoops;
 };
 
