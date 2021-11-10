@@ -132,8 +132,6 @@ private:
     bool m_pageflipPending = false;
     bool m_modesetPresentPending = false;
 
-    QMap<uint32_t, QVector<uint64_t>> m_formats;
-
     // the state that will be applied at the next real atomic commit
     State m_next;
     // the state that is already committed

@@ -34,10 +34,6 @@ DrmPipeline::DrmPipeline(DrmConnector *conn)
     : m_output(nullptr)
     , m_connector(conn)
 {
-    if (!gpu()->atomicModeSetting()) {
-        m_formats.insert(DRM_FORMAT_XRGB8888, {});
-        m_formats.insert(DRM_FORMAT_ARGB8888, {});
-    }
 }
 
 DrmPipeline::~DrmPipeline()
@@ -348,8 +344,6 @@ void DrmPipeline::prepareModeset()
     pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
     pending.crtc->primaryPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
     pending.crtc->primaryPlane()->set(QPoint(0, 0), sourceSize(), QPoint(0, 0), mode->size());
-
-    m_formats = pending.crtc->primaryPlane()->formats();
 }
 
 void DrmPipeline::applyPendingChanges()
@@ -466,12 +460,24 @@ DrmOutput *DrmPipeline::output() const
 
 bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const
 {
-    return m_formats.contains(drmFormat);
+    if (pending.crtc) {
+        if (pending.crtc->primaryPlane()) {
+            return pending.crtc->primaryPlane()->formats().contains(drmFormat);
+        } else {
+            return drmFormat == DRM_FORMAT_XRGB8888 || drmFormat == DRM_FORMAT_ARGB8888;
+        }
+    } else {
+        return false;
+    }
 }
 
 QVector<uint64_t> DrmPipeline::supportedModifiers(uint32_t drmFormat) const
 {
-    return m_formats[drmFormat];
+    if (pending.crtc && pending.crtc->primaryPlane()) {
+        return pending.crtc->primaryPlane()->formats()[drmFormat];
+    } else {
+        return {};
+    }
 }
 
 bool DrmPipeline::needsModeset() const
