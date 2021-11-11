@@ -11,7 +11,6 @@ X-KDE-PluginInfo-Name=kcm_kwinrules
 X-KDE-PluginInfo-Version=
 X-KDE-PluginInfo-Website=https://www.kde.org/plasma-desktop
 X-KDE-ServiceTypes=Plasma/Generic
-X-Plasma-API=declarativeappletscript
 X-Plasma-MainScript=ui/RulesList.qml
 X-KDE-FormFactors=desktop,tablet
 
