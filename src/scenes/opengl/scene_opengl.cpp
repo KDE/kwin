@@ -306,6 +306,7 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
         } else {
             // prepare rendering makescontext current on the output
             repaint = m_backend->beginFrame(output);
+            GLVertexBuffer::streamingBuffer()->beginFrame();
 
             GLVertexBuffer::setVirtualScreenGeometry(geo);
             GLRenderTarget::setVirtualScreenGeometry(geo);
@@ -337,7 +338,6 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
 
             GLVertexBuffer::streamingBuffer()->endOfFrame();
             m_backend->endFrame(output, valid, update);
-            GLVertexBuffer::streamingBuffer()->framePosted();
         }
     }
 

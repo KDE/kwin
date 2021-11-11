@@ -747,11 +747,11 @@ public:
     void endOfFrame();
 
     /**
-     * Notifies the vertex buffer that we have posted the frame.
+     * Notifies the vertex buffer that we are about to paint a frame.
      *
      * @internal
      */
-    void framePosted();
+    void beginFrame();
 
     /**
      * @internal
