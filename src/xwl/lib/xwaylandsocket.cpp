@@ -42,19 +42,18 @@ UnixSocketAddress::UnixSocketAddress(const QString &socketPath, Type type)
     const QByteArray encodedSocketPath = QFile::encodeName(socketPath);
 
     int byteCount = offsetof(sockaddr_un, sun_path) + encodedSocketPath.size() + 1;
-    if (type == Type::Abstract) {
-        byteCount++; // For the first '\0'.
-    }
     m_buffer.resize(byteCount);
 
     sockaddr_un *address = reinterpret_cast<sockaddr_un *>(m_buffer.data());
     address->sun_family = AF_UNIX;
 
     if (type == Type::Unix) {
-        qstrcpy(address->sun_path, encodedSocketPath);
+        memcpy(address->sun_path, encodedSocketPath.data(), encodedSocketPath.size());
+        address->sun_path[encodedSocketPath.size()] = '\0';
     } else {
+        // Abstract domain socket does not need the NUL-termination byte.
         *address->sun_path = '\0';
-        qstrcpy(address->sun_path + 1, encodedSocketPath);
+        memcpy(address->sun_path + 1, encodedSocketPath.data(), encodedSocketPath.size());
     }
 }
 
