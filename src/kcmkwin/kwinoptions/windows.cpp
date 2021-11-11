@@ -70,6 +70,9 @@ void KFocusConfig::initialize(KWinOptionsSettings *settings)
     connect(qApp, &QGuiApplication::screenAdded, this, &KFocusConfig::updateMultiScreen);
     connect(qApp, &QGuiApplication::screenRemoved, this, &KFocusConfig::updateMultiScreen);
     updateMultiScreen();
+
+    // WindowActionInputFilter is only loaded in a Wayland session
+    m_ui->kcfg_EnableWindowsActivationPolicyForTabletInput->setVisible(KWindowSystem::isPlatformWayland());
 }
 
 void KFocusConfig::updateMultiScreen()

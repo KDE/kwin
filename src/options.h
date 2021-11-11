@@ -75,6 +75,12 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(int xwaylandMaxCrashCount READ xwaylandMaxCrashCount WRITE setXwaylandMaxCrashCount NOTIFY xwaylandMaxCrashCountChanged)
     Q_PROPERTY(bool nextFocusPrefersMouse READ isNextFocusPrefersMouse WRITE setNextFocusPrefersMouse NOTIFY nextFocusPrefersMouseChanged)
     /**
+      * Whether windows activation policy is enabled for stylus input.
+      *
+      * @since 5.24
+    */
+    Q_PROPERTY(bool isWindowsActivationPolicyEnabledForTabletInput READ isWindowsActivationPolicyEnabledForTabletInput WRITE setIsWindowsActivationPolicyEnabledForTabletInput NOTIFY isWindowsActivationPolicyEnabledForTabletInputChanged)
+    /**
      * Whether clicking on a window raises it in FocusFollowsMouse
      * mode or not.
      */
@@ -254,6 +260,15 @@ public:
     }
     int xwaylandMaxCrashCount() const {
         return m_xwaylandMaxCrashCount;
+    }
+
+    /**
+      * Whether windows activation policy is enabled for stylus input.
+      *
+      * @since 5.24
+    */
+    bool isWindowsActivationPolicyEnabledForTabletInput() const {
+        return m_enableWindowsActivationPolicyForTabletInput;
     }
 
     /**
@@ -615,6 +630,7 @@ public:
     void setXwaylandCrashPolicy(XwaylandCrashPolicy crashPolicy);
     void setXwaylandMaxCrashCount(int maxCrashCount);
     void setNextFocusPrefersMouse(bool nextFocusPrefersMouse);
+    void setIsWindowsActivationPolicyEnabledForTabletInput(bool mode);
     void setClickRaise(bool clickRaise);
     void setAutoRaise(bool autoRaise);
     void setAutoRaiseInterval(int autoRaiseInterval);
@@ -784,6 +800,7 @@ Q_SIGNALS:
     void xwaylandCrashPolicyChanged();
     void xwaylandMaxCrashCountChanged();
     void nextFocusPrefersMouseChanged();
+    void isWindowsActivationPolicyEnabledForTabletInputChanged();
     void clickRaiseChanged();
     void autoRaiseChanged();
     void autoRaiseIntervalChanged();
@@ -847,6 +864,7 @@ private:
 
     FocusPolicy m_focusPolicy;
     bool m_nextFocusPrefersMouse;
+    bool m_enableWindowsActivationPolicyForTabletInput;
     bool m_clickRaise;
     bool m_autoRaise;
     int m_autoRaiseInterval;

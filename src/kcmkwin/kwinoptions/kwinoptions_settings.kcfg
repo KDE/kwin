@@ -124,6 +124,10 @@
         <min>0</min>
     </entry>
 
+    <entry key="EnableWindowsActivationPolicyForTabletInput" type="Bool">
+        <default>true</default>
+    </entry>
+
     <entry key="AutoRaise" type="Bool">
         <default>false</default>
     </entry>

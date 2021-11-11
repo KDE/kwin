@@ -35,6 +35,7 @@ Options::Options(QObject *parent)
     , m_settings(new Settings(kwinApp()->config()))
     , m_focusPolicy(ClickToFocus)
     , m_nextFocusPrefersMouse(false)
+    , m_enableWindowsActivationPolicyForTabletInput(true)
     , m_clickRaise(false)
     , m_autoRaise(false)
     , m_autoRaiseInterval(0)
@@ -144,6 +145,15 @@ void Options::setXwaylandMaxCrashCount(int maxCrashCount)
     }
     m_xwaylandMaxCrashCount = maxCrashCount;
     Q_EMIT xwaylandMaxCrashCountChanged();
+}
+
+void Options::setIsWindowsActivationPolicyEnabledForTabletInput(bool mode)
+{
+    if (m_enableWindowsActivationPolicyForTabletInput == mode) {
+        return;
+    }
+    m_enableWindowsActivationPolicyForTabletInput = mode;
+    Q_EMIT isWindowsActivationPolicyEnabledForTabletInputChanged();
 }
 
 void Options::setClickRaise(bool clickRaise)
@@ -788,6 +798,7 @@ void Options::syncFromKcfgc()
     setDelayFocusInterval(m_settings->delayFocusInterval());
     setShadeHover(m_settings->shadeHover());
     setShadeHoverInterval(m_settings->shadeHoverInterval());
+    setIsWindowsActivationPolicyEnabledForTabletInput(m_settings->enableWindowsActivationPolicyForTabletInput());
     setClickRaise(m_settings->clickRaise());
     setBorderSnapZone(m_settings->borderSnapZone());
     setWindowSnapZone(m_settings->windowSnapZone());

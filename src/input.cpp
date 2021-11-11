@@ -1501,7 +1501,7 @@ public:
         return false;
     }
     bool tabletToolEvent(TabletEvent *event) override {
-        if (event->type() != QEvent::TabletPress) {
+        if (event->type() != QEvent::TabletPress || !options->isWindowsActivationPolicyEnabledForTabletInput()) {
             return false;
         }
         AbstractClient *c = dynamic_cast<AbstractClient*>(input()->tablet()->focus());
