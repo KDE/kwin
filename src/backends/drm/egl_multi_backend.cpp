@@ -57,9 +57,9 @@ QRegion EglMultiBackend::beginFrame(AbstractOutput *output)
     return findBackend(output)->beginFrame(output);
 }
 
-void EglMultiBackend::endFrame(AbstractOutput *output, const QRegion &damage, const QRegion &damagedRegion)
+void EglMultiBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    findBackend(output)->endFrame(output, damage, damagedRegion);
+    findBackend(output)->endFrame(output, renderedRegion, damagedRegion);
 }
 
 bool EglMultiBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)

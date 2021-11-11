@@ -91,7 +91,7 @@ void SceneQPainter::paint(AbstractOutput *output, const QRegion &damage, const Q
 
         m_painter->end();
         renderLoop->endFrame();
-        m_backend->endFrame(output, updateRegion);
+        m_backend->endFrame(output, validRegion, updateRegion);
     }
 
     // do cleanup

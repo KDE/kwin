@@ -48,9 +48,10 @@ void VirtualQPainterBackend::createOutputs()
     }
 }
 
-void VirtualQPainterBackend::endFrame(AbstractOutput *output, const QRegion &damage)
+void VirtualQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(damage)
+    Q_UNUSED(renderedRegion)
+    Q_UNUSED(damagedRegion)
 
     static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
 

@@ -85,7 +85,7 @@ public:
 
     QImage *bufferForScreen(AbstractOutput *output) override;
 
-    void endFrame(AbstractOutput *output, const QRegion& damage) override;
+    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QRegion beginFrame(AbstractOutput *output) override;
 
 private:

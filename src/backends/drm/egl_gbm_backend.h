@@ -51,7 +51,7 @@ public:
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
     QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &damage, const QRegion &damagedRegion) override;
+    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void init() override;
     bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem) override;
 

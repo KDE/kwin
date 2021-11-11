@@ -32,7 +32,7 @@ public:
 
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *texture) override;
     QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &damage, const QRegion &damagedRegion) override;
+    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
     void screenGeometryChanged();

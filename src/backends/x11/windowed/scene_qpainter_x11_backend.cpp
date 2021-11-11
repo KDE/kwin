@@ -55,9 +55,10 @@ QRegion X11WindowedQPainterBackend::beginFrame(AbstractOutput *output)
     return output->geometry();
 }
 
-void X11WindowedQPainterBackend::endFrame(AbstractOutput *output, const QRegion &damage)
+void X11WindowedQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(damage)
+    Q_UNUSED(renderedRegion)
+    Q_UNUSED(damagedRegion)
 
     static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
 

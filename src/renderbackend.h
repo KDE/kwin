@@ -13,6 +13,7 @@
 namespace KWin
 {
 
+class AbstractOutput;
 class OverlayWindow;
 
 /**
@@ -27,6 +28,9 @@ public:
 
     virtual CompositingType compositingType() const = 0;
     virtual OverlayWindow *overlayWindow() const;
+
+    virtual QRegion beginFrame(AbstractOutput *output) = 0;
+    virtual void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
 };
 
 } // namespace KWin

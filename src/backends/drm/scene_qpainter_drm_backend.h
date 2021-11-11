@@ -33,7 +33,7 @@ public:
 
     QImage *bufferForScreen(AbstractOutput *output) override;
     QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &damage) override;
+    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
     void initOutput(DrmAbstractOutput *output);

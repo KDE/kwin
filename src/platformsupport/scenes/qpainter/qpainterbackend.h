@@ -36,8 +36,6 @@ public:
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
-    virtual void endFrame(AbstractOutput *output, const QRegion &damage) = 0;
-    virtual QRegion beginFrame(AbstractOutput *output) = 0;
     /**
      * @brief Whether the creation of the Backend failed.
      *

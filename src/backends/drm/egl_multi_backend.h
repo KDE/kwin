@@ -29,7 +29,7 @@ public:
     void init() override;
 
     QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &damage, const QRegion &damagedRegion) override;
+    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem) override;
 
     bool makeCurrent() override;

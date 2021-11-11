@@ -70,8 +70,9 @@ QRegion DrmQPainterBackend::beginFrame(AbstractOutput *output)
     return rendererOutput->damageJournal.accumulate(bufferAge, rendererOutput->output->geometry());
 }
 
-void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &damage)
+void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damage)
 {
+    Q_UNUSED(renderedRegion)
     Output &rendererOutput = m_outputs[output];
     DrmAbstractOutput *drmOutput = rendererOutput.output;
 
