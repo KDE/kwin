@@ -32,7 +32,6 @@ class EffectFrameImpl;
 class EffectWindowImpl;
 class GLTexture;
 class Item;
-class OverlayWindow;
 class RenderLoop;
 class Shadow;
 class ShadowItem;
@@ -138,7 +137,6 @@ public:
         PAINT_WINDOW_LANCZOS = 1 << 8
         // PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS = 1 << 9 has been removed
     };
-    virtual OverlayWindow* overlayWindow() const = 0;
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();

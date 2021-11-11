@@ -14,4 +14,9 @@ RenderBackend::RenderBackend(QObject *parent)
 {
 }
 
+OverlayWindow *RenderBackend::overlayWindow() const
+{
+    return nullptr;
+}
+
 } // namespace KWin

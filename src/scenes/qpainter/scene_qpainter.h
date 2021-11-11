@@ -23,7 +23,6 @@ class KWIN_EXPORT SceneQPainter : public Scene
 
 public:
     ~SceneQPainter() override;
-    OverlayWindow* overlayWindow() const override;
     void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows,
                RenderLoop *renderLoop) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
@@ -122,12 +121,6 @@ private:
     void resizeImages();
     QImage m_images[int(DecorationPart::Count)];
 };
-
-inline
-OverlayWindow* SceneQPainter::overlayWindow() const
-{
-    return nullptr;
-}
 
 inline
 QPainter* SceneQPainter::scenePainter() const

@@ -40,11 +40,6 @@ void OpenGLBackend::setFailed(const QString &reason)
     m_failed = true;
 }
 
-OverlayWindow* OpenGLBackend::overlayWindow() const
-{
-    return nullptr;
-}
-
 bool OpenGLBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)
 {
     Q_UNUSED(output)

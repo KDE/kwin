@@ -18,7 +18,6 @@ namespace KWin
 {
 class AbstractOutput;
 class OpenGLBackend;
-class OverlayWindow;
 class SurfaceItem;
 class SurfacePixmapInternal;
 class SurfacePixmapX11;
@@ -71,16 +70,6 @@ public:
      */
     virtual bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem);
 
-    /**
-     * @brief Returns the OverlayWindow used by the backend.
-     *
-     * A backend does not have to use an OverlayWindow, this is mostly for the X world.
-     * In case the backend does not use an OverlayWindow it is allowed to return @c null.
-     * It's the task of the caller to check whether it is @c null.
-     *
-     * @return :OverlayWindow*
-     */
-    virtual OverlayWindow *overlayWindow() const;
     /**
      * @brief Whether the creation of the Backend failed.
      *

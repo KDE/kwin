@@ -109,11 +109,6 @@ SceneOpenGL *SceneOpenGL::createScene(OpenGLBackend *backend, QObject *parent)
     return nullptr;
 }
 
-OverlayWindow *SceneOpenGL::overlayWindow() const
-{
-    return m_backend->overlayWindow();
-}
-
 bool SceneOpenGL::initFailed() const
 {
     return !init_ok;

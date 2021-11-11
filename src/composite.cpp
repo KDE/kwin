@@ -803,7 +803,7 @@ void X11Compositor::stop()
 
 void X11Compositor::composite(RenderLoop *renderLoop)
 {
-    if (scene()->overlayWindow() && !isOverlayWindowVisible()) {
+    if (backend()->overlayWindow() && !isOverlayWindowVisible()) {
         // Return since nothing is visible.
         return;
     }
@@ -859,27 +859,27 @@ void X11Compositor::composite(RenderLoop *renderLoop)
 
 bool X11Compositor::checkForOverlayWindow(WId w) const
 {
-    if (!scene()) {
-        // No scene, so it cannot be the overlay window.
+    if (!backend()) {
+        // No backend, so it cannot be the overlay window.
         return false;
     }
-    if (!scene()->overlayWindow()) {
+    if (!backend()->overlayWindow()) {
         // No overlay window, it cannot be the overlay.
         return false;
     }
     // Compare the window ID's.
-    return w == scene()->overlayWindow()->window();
+    return w == backend()->overlayWindow()->window();
 }
 
 bool X11Compositor::isOverlayWindowVisible() const
 {
-    if (!scene()) {
+    if (!backend()) {
         return false;
     }
-    if (!scene()->overlayWindow()) {
+    if (!backend()->overlayWindow()) {
         return false;
     }
-    return scene()->overlayWindow()->isVisible();
+    return backend()->overlayWindow()->isVisible();
 }
 
 void X11Compositor::updateClientCompositeBlocking(X11Client *c)
