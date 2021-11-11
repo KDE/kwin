@@ -144,6 +144,10 @@ public:
      */
     void forwardKeyEvent(QKeyEvent *keyEvent);
 
+    bool forwardTouchDown(qint32 id, const QPointF &pos, quint32 time);
+    bool forwardTouchMotion(qint32 id, const QPointF &pos, quint32 time);
+    bool forwardTouchUp(qint32 id, quint32 time);
+
 Q_SIGNALS:
     /**
      * The frame buffer has changed, contents need re-rendering on screen
