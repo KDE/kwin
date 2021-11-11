@@ -226,6 +226,7 @@ Item {
                         }
                         function stopEditing() {
                             state = "normal";
+                            searchField.forceActiveFocus();
                         }
                     }
 
