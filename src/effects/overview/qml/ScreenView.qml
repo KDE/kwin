@@ -79,7 +79,7 @@ FocusScope {
                 name: "active"
                 PropertyChanges {
                     target: underlay
-                    opacity: 0.4
+                    opacity: 0.75
                 }
             }
         ]
