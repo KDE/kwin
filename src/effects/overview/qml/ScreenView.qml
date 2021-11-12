@@ -29,6 +29,9 @@ FocusScope {
 
     Keys.onEscapePressed: effect.deactivate();
 
+    Keys.priority: Keys.AfterItem
+    Keys.forwardTo: searchField
+
     Repeater {
         model: KWinComponents.ClientFilterModel {
             activity: KWinComponents.Workspace.currentActivity
@@ -136,6 +139,7 @@ FocusScope {
                     clearButtonShown: true
                     Keys.priority: Keys.AfterItem
                     Keys.forwardTo: heap
+                    onTextEdited: forceActiveFocus();
                 }
             }
 
