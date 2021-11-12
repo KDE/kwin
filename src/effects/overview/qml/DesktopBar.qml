@@ -68,7 +68,7 @@ Item {
                         DesktopView {
                             id: thumbnail
 
-                            property bool scaled: state == "scaled"
+                            property bool scaled: state === "scaled"
 
                             width: targetScreen.geometry.width
                             height: targetScreen.geometry.height
@@ -126,7 +126,7 @@ Item {
                             border.width: 2
                             border.color: PlasmaCore.ColorScope.highlightColor
                             opacity: dropArea.containsDrag ? 0.5 : 1.0
-                            visible: !thumbnail.scaled && (dropArea.containsDrag || bar.selectedDesktop == delegate.desktop)
+                            visible: !thumbnail.scaled && (dropArea.containsDrag || bar.selectedDesktop === delegate.desktop)
                         }
 
                         MouseArea {
@@ -146,7 +146,7 @@ Item {
                         }
 
                         Loader {
-                            LayoutMirroring.enabled: Qt.application.layoutDirection == Qt.RightToLeft
+                            LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
                             active: (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && desktopRepeater.count > 1
                             anchors.right: parent.right
                             anchors.top: parent.top
@@ -186,7 +186,7 @@ Item {
                             text: delegate.desktop.name
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
-                            visible: label.state == "normal"
+                            visible: label.state === "normal"
                         }
 
                         MouseArea {
@@ -198,7 +198,7 @@ Item {
                         }
 
                         Loader {
-                            active: label.state == "editing"
+                            active: label.state === "editing"
                             anchors.fill: parent
                             sourceComponent: PC3.TextField {
                                 topPadding: 0
