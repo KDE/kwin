@@ -28,16 +28,6 @@ public:
     ~OutputDeviceV2InterfacePrivate() override;
 
     void updateGeometry();
-    void updateUuid();
-    void updateEdid();
-    void updateEnabled();
-    void updateScale();
-    void updateEisaId();
-    void updateSerialNumber();
-    void updateCapabilities();
-    void updateOverscan();
-    void updateVrrPolicy();
-    void updateRgbRange();
 
     void sendGeometry(Resource *resource);
     wl_resource *sendNewMode(Resource *resource, OutputDeviceModeV2Interface *mode);
@@ -355,17 +345,8 @@ void OutputDeviceV2InterfacePrivate::sendDone(Resource *resource)
 void OutputDeviceV2InterfacePrivate::updateGeometry()
 {
     const auto clientResources = resourceMap();
-    for (auto resource : clientResources) {
+    for (const auto &resource : clientResources) {
         sendGeometry(resource);
-        sendDone(resource);
-    }
-}
-
-void OutputDeviceV2InterfacePrivate::updateScale()
-{
-    const auto clientResources = resourceMap();
-    for (auto resource : clientResources) {
-        sendScale(resource);
         sendDone(resource);
     }
 }
@@ -451,7 +432,11 @@ void OutputDeviceV2Interface::setScale(qreal scale)
         return;
     }
     d->scale = scale;
-    d->updateScale();
+    const auto clientResources = d->resourceMap();
+    for (const auto &resource : clientResources) {
+        d->sendScale(resource);
+        d->sendDone(resource);
+    }
 }
 
 QSize OutputDeviceV2Interface::physicalSize() const
@@ -515,8 +500,6 @@ void OutputDeviceV2Interface::setModes(const QList<OutputDeviceModeV2Interface *
 
     const auto oldModes = d->modes;
     d->modes.clear();
-
-    const auto oldCurrentMode = d->currentMode;
     d->currentMode = nullptr;
 
     for (OutputDeviceModeV2Interface *outputDeviceMode : modes) {
@@ -551,7 +534,11 @@ void OutputDeviceV2Interface::setModes(const QList<OutputDeviceModeV2Interface *
 void OutputDeviceV2Interface::setEdid(const QByteArray &edid)
 {
     d->edid = edid;
-    d->updateEdid();
+    const auto clientResources = d->resourceMap();
+    for (const auto &resource : clientResources) {
+        d->sendEdid(resource);
+        d->sendDone(resource);
+    }
 }
 
 QByteArray OutputDeviceV2Interface::edid() const
@@ -563,7 +550,11 @@ void OutputDeviceV2Interface::setEnabled(bool enabled)
 {
     if (d->enabled != enabled) {
         d->enabled = enabled;
-        d->updateEnabled();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendEnabled(resource);
+            d->sendDone(resource);
+        }
     }
 }
 
@@ -576,7 +567,11 @@ void OutputDeviceV2Interface::setUuid(const QUuid &uuid)
 {
     if (d->uuid != uuid) {
         d->uuid = uuid;
-        d->updateUuid();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendUuid(resource);
+            d->sendDone(resource);
+        }
     }
 }
 
@@ -600,42 +595,6 @@ void OutputDeviceV2InterfacePrivate::sendUuid(Resource *resource)
     send_uuid(resource->handle, uuid.toString(QUuid::WithoutBraces));
 }
 
-void OutputDeviceV2InterfacePrivate::updateEnabled()
-{
-    const auto clientResources = resourceMap();
-    for (auto resource : clientResources) {
-        sendEnabled(resource);
-        sendDone(resource);
-    }
-}
-
-void OutputDeviceV2InterfacePrivate::updateEdid()
-{
-    const auto clientResources = resourceMap();
-    for (auto resource : clientResources) {
-        sendEdid(resource);
-        sendDone(resource);
-    }
-}
-
-void OutputDeviceV2InterfacePrivate::updateUuid()
-{
-    const auto clientResources = resourceMap();
-    for (auto resource : clientResources) {
-        sendUuid(resource);
-        sendDone(resource);
-    }
-}
-
-void OutputDeviceV2InterfacePrivate::updateEisaId()
-{
-    const auto clientResources = resourceMap();
-    for (auto resource : clientResources) {
-        sendEisaId(resource);
-        sendDone(resource);
-    }
-}
-
 uint32_t OutputDeviceV2Interface::overscan() const
 {
     return d->overscan;
@@ -650,7 +609,11 @@ void OutputDeviceV2Interface::setCapabilities(Capabilities cap)
 {
     if (d->capabilities != cap) {
         d->capabilities = cap;
-        d->updateCapabilities();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendCapabilities(resource);
+            d->sendDone(resource);
+        }
     }
 }
 
@@ -659,35 +622,21 @@ void OutputDeviceV2InterfacePrivate::sendCapabilities(Resource *resource)
     send_capabilities(resource->handle, static_cast<uint32_t>(capabilities));
 }
 
-void OutputDeviceV2InterfacePrivate::updateCapabilities()
-{
-    const auto clientResources = resourceMap();
-    for (const auto &resource : clientResources) {
-        sendCapabilities(resource);
-        sendDone(resource);
-    }
-}
-
 void OutputDeviceV2Interface::setOverscan(uint32_t overscan)
 {
     if (d->overscan != overscan) {
         d->overscan = overscan;
-        d->updateOverscan();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendOverscan(resource);
+            d->sendDone(resource);
+        }
     }
 }
 
 void OutputDeviceV2InterfacePrivate::sendOverscan(Resource *resource)
 {
     send_overscan(resource->handle, static_cast<uint32_t>(overscan));
-}
-
-void OutputDeviceV2InterfacePrivate::updateOverscan()
-{
-    const auto clientResources = resourceMap();
-    for (const auto &resource : clientResources) {
-        sendOverscan(resource);
-        sendDone(resource);
-    }
 }
 
 void OutputDeviceV2InterfacePrivate::sendVrrPolicy(Resource *resource)
@@ -704,16 +653,11 @@ void OutputDeviceV2Interface::setVrrPolicy(VrrPolicy policy)
 {
     if (d->vrrPolicy != policy) {
         d->vrrPolicy = policy;
-        d->updateVrrPolicy();
-    }
-}
-
-void OutputDeviceV2InterfacePrivate::updateVrrPolicy()
-{
-    const auto clientResources = resourceMap();
-    for (const auto &resource : clientResources) {
-        sendVrrPolicy(resource);
-        sendDone(resource);
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendVrrPolicy(resource);
+            d->sendDone(resource);
+        }
     }
 }
 
@@ -726,22 +670,17 @@ void OutputDeviceV2Interface::setRgbRange(RgbRange rgbRange)
 {
     if (d->rgbRange != rgbRange) {
         d->rgbRange = rgbRange;
-        d->updateRgbRange();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendRgbRange(resource);
+            d->sendDone(resource);
+        }
     }
 }
 
 void OutputDeviceV2InterfacePrivate::sendRgbRange(Resource *resource)
 {
     send_rgb_range(resource->handle, static_cast<uint32_t>(rgbRange));
-}
-
-void OutputDeviceV2InterfacePrivate::updateRgbRange()
-{
-    const auto clientResources = resourceMap();
-    for (const auto &resource : clientResources) {
-        sendRgbRange(resource);
-        sendDone(resource);
-    }
 }
 
 wl_resource *OutputDeviceV2Interface::resource() const
