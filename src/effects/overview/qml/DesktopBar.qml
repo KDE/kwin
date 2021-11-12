@@ -241,7 +241,9 @@ Item {
                 height: bar.desktopHeight
                 icon.name: "list-add"
                 opacity: hovered ? 1 : 0.75
-                onClicked: desktopModel.create(desktopModel.rowCount())
+                action: Action {
+                    onTriggered: desktopModel.create(desktopModel.rowCount())
+                }
 
                 ToolTip.text: i18n("Add Desktop")
                 ToolTip.visible: hovered
@@ -257,6 +259,9 @@ Item {
                         drag.source.desktop = desktopModel.rowCount() + 1;
                     }
                 }
+
+                Keys.onReturnPressed: action.trigger()
+                Keys.onEnterPressed: action.trigger()
             }
         }
     }
