@@ -39,10 +39,7 @@
         "Name[uk]": "Огляд",
         "Name[vi]": "Tổng quan",
         "Name[x-test]": "xxOverviewxx",
-        "Name[zh_CN]": "桌面总览图",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "桌面总览图"
     },
     "X-KDE-ConfigModule": "kwin_overview_config",
     "org.kde.kwin.effect": {

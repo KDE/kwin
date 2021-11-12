@@ -40,10 +40,7 @@
         "Name[uk]": "Збільшувальне скло",
         "Name[vi]": "Kính lúp",
         "Name[x-test]": "xxLooking Glassxx",
-        "Name[zh_CN]": "放大镜 (鱼眼)",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "放大镜 (鱼眼)"
     },
     "X-KDE-ConfigModule": "kwin_lookingglass_config",
     "org.kde.kwin.effect": {

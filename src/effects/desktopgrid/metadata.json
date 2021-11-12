@@ -40,10 +40,7 @@
         "Name[uk]": "Таблиця стільниць",
         "Name[vi]": "Lưới bàn làm việc",
         "Name[x-test]": "xxDesktop Gridxx",
-        "Name[zh_CN]": "虚拟桌面平铺网格",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "虚拟桌面平铺网格"
     },
     "X-KDE-ConfigModule": "kwin_desktopgrid_config",
     "org.kde.kwin.effect": {

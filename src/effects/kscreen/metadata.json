@@ -39,10 +39,7 @@
         "Name[uk]": "Kscreen",
         "Name[vi]": "Kscreen",
         "Name[x-test]": "xxKscreenxx",
-        "Name[zh_CN]": "Kscreen 辅助特效",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "Kscreen 辅助特效"
     },
     "org.kde.kwin.effect": {
         "internal": true

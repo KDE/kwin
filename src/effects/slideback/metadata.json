@@ -39,9 +39,6 @@
         "Name[uk]": "Зниження",
         "Name[vi]": "Trượt lùi",
         "Name[x-test]": "xxSlide Backxx",
-        "Name[zh_CN]": "窗口后滑动效",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "窗口后滑动效"
     }
 }

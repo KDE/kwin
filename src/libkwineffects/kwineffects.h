@@ -134,7 +134,7 @@ typedef QList< KWin::EffectWindow* > EffectWindowList;
  *  @li Icon Name of the icon of the effect
  *  @li Comment Short description of the effect
  *  @li Type must be "Service"
- *  @li X-KDE-ServiceTypes must be "KWin/Effect"
+ *  @li X-KDE-ServiceTypes must be "KWin/Effect" for scripted effects
  *  @li X-KDE-PluginInfo-Name effect's internal name as passed to the KWIN_EFFECT macro plus "kwin4_effect_" prefix
  *  @li X-KDE-PluginInfo-Category effect's category. Should be one of Appearance, Accessibility, Window Management, Demos, Tests, Misc
  *  @li X-KDE-PluginInfo-EnabledByDefault whether the effect should be enabled by default (use sparingly). Default is false

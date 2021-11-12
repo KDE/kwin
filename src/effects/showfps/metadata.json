@@ -40,10 +40,7 @@
         "Name[uk]": "Показ частоти кадрів",
         "Name[vi]": "Hiện FPS",
         "Name[x-test]": "xxShow FPSxx",
-        "Name[zh_CN]": "显示每秒帧数",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "显示每秒帧数"
     },
     "X-KDE-ConfigModule": "kwin_showfps_config"
 }

@@ -40,10 +40,7 @@
         "Name[uk]": "Желейні вікна",
         "Name[vi]": "Cửa sổ lắc lư",
         "Name[x-test]": "xxWobbly Windowsxx",
-        "Name[zh_CN]": "窗口惯性晃动",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "窗口惯性晃动"
     },
     "X-KDE-ConfigModule": "kwin_wobblywindows_config",
     "org.kde.kwin.effect": {

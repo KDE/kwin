@@ -39,10 +39,7 @@
         "Name[uk]": "Помічник розташування",
         "Name[vi]": "Trợ giúp nhanh",
         "Name[x-test]": "xxSnap Helperxx",
-        "Name[zh_CN]": "窗口居中辅助线",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "窗口居中辅助线"
     },
     "org.kde.kwin.effect": {
         "video": "https://files.kde.org/plasma/kwin/effect-videos/snap_helper.mp4"

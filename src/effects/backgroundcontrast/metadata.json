@@ -39,10 +39,7 @@
         "Name[uk]": "Контрастність тла",
         "Name[vi]": "Tương phản nền",
         "Name[x-test]": "xxBackground contrastxx",
-        "Name[zh_CN]": "背景对比度增强",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "背景对比度增强"
     },
     "org.kde.kwin.effect": {
         "enabledByDefaultMethod": true

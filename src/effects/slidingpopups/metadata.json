@@ -39,10 +39,7 @@
         "Name[uk]": "Ковзні контекстні вікна",
         "Name[vi]": "Ô bật lên dạng trượt",
         "Name[x-test]": "xxSliding popupsxx",
-        "Name[zh_CN]": "气泡滑动动效",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "气泡滑动动效"
     },
     "org.kde.kwin.effect": {
         "video": "https://files.kde.org/plasma/kwin/effect-videos/sliding_popups.mp4"

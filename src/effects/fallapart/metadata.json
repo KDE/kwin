@@ -39,9 +39,6 @@
         "Name[uk]": "Розпадання",
         "Name[vi]": "Tan vỡ",
         "Name[x-test]": "xxFall Apartxx",
-        "Name[zh_CN]": "窗口粉碎动画",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "窗口粉碎动画"
     }
 }

@@ -40,10 +40,7 @@
         "Name[uk]": "Лупа",
         "Name[vi]": "Trình phóng đại",
         "Name[x-test]": "xxMagnifierxx",
-        "Name[zh_CN]": "放大镜 (方形)",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "放大镜 (方形)"
     },
     "X-KDE-ConfigModule": "kwin_magnifier_config",
     "org.kde.kwin.effect": {

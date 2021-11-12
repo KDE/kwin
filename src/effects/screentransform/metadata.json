@@ -39,10 +39,7 @@
         "Name[uk]": "Перетворення",
         "Name[vi]": "Biến đổi",
         "Name[x-test]": "xxTransformxx",
-        "Name[zh_CN]": "变形",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "变形"
     },
     "org.kde.kwin.effect": {
         "internal": true

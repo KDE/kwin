@@ -39,10 +39,7 @@
         "Name[uk]": "Знімок вікна",
         "Name[vi]": "Ảnh chụp màn hình",
         "Name[x-test]": "xxScreenshotxx",
-        "Name[zh_CN]": "屏幕截图",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "屏幕截图"
     },
     "org.kde.kwin.effect": {
         "internal": true

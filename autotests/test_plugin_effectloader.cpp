@@ -283,7 +283,7 @@ void TestPluginEffectLoader::testLoadPluginEffect()
 
     const auto plugins = KPluginMetaData::findPlugins(QString(),
         [name] (const KPluginMetaData &data) {
-            return data.pluginId().compare(name, Qt::CaseInsensitive) == 0 && data.serviceTypes().contains(QStringLiteral("KWin/Effect"));
+            return data.pluginId().compare(name, Qt::CaseInsensitive) == 0;
         }
     );
     QCOMPARE(plugins.size(), 1);

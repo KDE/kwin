@@ -40,10 +40,7 @@
         "Name[uk]": "Показ вікон",
         "Name[vi]": "Các cửa sổ hiện thời",
         "Name[x-test]": "xxPresent Windowsxx",
-        "Name[zh_CN]": "窗口平铺展示",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "窗口平铺展示"
     },
     "X-KDE-ConfigModule": "kwin_presentwindows_config",
     "org.kde.kwin.effect": {

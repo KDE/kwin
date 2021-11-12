@@ -39,10 +39,7 @@
         "Name[uk]": "Повідомлення під час запуску",
         "Name[vi]": "Phản hồi khởi động",
         "Name[x-test]": "xxStartup Feedbackxx",
-        "Name[zh_CN]": "程序启动反馈",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "程序启动反馈"
     },
     "org.kde.kwin.effect": {
         "internal": true

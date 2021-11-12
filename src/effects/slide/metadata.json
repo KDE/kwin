@@ -39,10 +39,7 @@
         "Name[uk]": "Ковзання",
         "Name[vi]": "Trượt",
         "Name[x-test]": "xxSlidexx",
-        "Name[zh_CN]": "滑动",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "滑动"
     },
     "X-KDE-ConfigModule": "kwin_slide_config",
     "org.kde.kwin.effect": {

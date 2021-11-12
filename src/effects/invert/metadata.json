@@ -40,10 +40,7 @@
         "Name[uk]": "Інверсія",
         "Name[vi]": "Đảo",
         "Name[x-test]": "xxInvertxx",
-        "Name[zh_CN]": "颜色反相",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "颜色反相"
     },
     "X-KDE-ConfigModule": "kwin_invert_config",
     "org.kde.kwin.effect": {

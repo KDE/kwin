@@ -40,10 +40,7 @@
         "Name[uk]": "Анімація за клацанням миші",
         "Name[vi]": "Hiệu ứng động khi bấm chuột",
         "Name[x-test]": "xxMouse Click Animationxx",
-        "Name[zh_CN]": "鼠标点击动效",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "鼠标点击动效"
     },
     "X-KDE-ConfigModule": "kwin_mouseclick_config",
     "org.kde.kwin.effect": {

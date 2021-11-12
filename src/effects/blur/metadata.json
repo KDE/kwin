@@ -40,10 +40,7 @@
         "Name[uk]": "Розмиття",
         "Name[vi]": "Mờ",
         "Name[x-test]": "xxBlurxx",
-        "Name[zh_CN]": "窗口背景虚化",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "窗口背景虚化"
     },
     "X-KDE-ConfigModule": "kwin_blur_config",
     "org.kde.kwin.effect": {

@@ -40,10 +40,7 @@
         "Name[uk]": "Масштабування",
         "Name[vi]": "Thu phóng",
         "Name[x-test]": "xxZoomxx",
-        "Name[zh_CN]": "缩放",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "缩放"
     },
     "X-KDE-ConfigModule": "kwin_zoom_config",
     "org.kde.kwin.effect": {

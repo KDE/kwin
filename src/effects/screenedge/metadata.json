@@ -39,9 +39,6 @@
         "Name[uk]": "Край екрана",
         "Name[vi]": "Cạnh màn hình",
         "Name[x-test]": "xxScreen Edgexx",
-        "Name[zh_CN]": "屏幕边缘高亮",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "屏幕边缘高亮"
     }
 }

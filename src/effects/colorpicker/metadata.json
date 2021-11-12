@@ -40,10 +40,7 @@
         "Name[uk]": "Піпетка",
         "Name[vi]": "Trình nhặt màu",
         "Name[x-test]": "xxColor Pickerxx",
-        "Name[zh_CN]": "拾色器",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "拾色器"
     },
     "org.kde.kwin.effect": {
         "internal": true

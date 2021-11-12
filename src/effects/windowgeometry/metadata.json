@@ -39,10 +39,7 @@
         "Name[uk]": "Розміри вікна",
         "Name[vi]": "Hình dạng của cửa sổ",
         "Name[x-test]": "xxWindow Geometryxx",
-        "Name[zh_CN]": "窗口大小位置数值显示",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "窗口大小位置数值显示"
     },
     "X-KDE-ConfigModule": "kwin_windowgeometry_config",
     "org.kde.kwin.effect": {

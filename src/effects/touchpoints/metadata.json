@@ -38,9 +38,6 @@
         "Name[uk]": "Точки дотику",
         "Name[vi]": "Điểm chạm",
         "Name[x-test]": "xxTouch Pointsxx",
-        "Name[zh_CN]": "触摸点高亮",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "触摸点高亮"
     }
 }

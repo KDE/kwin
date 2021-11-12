@@ -40,10 +40,7 @@
         "Name[uk]": "Позначки мишкою",
         "Name[vi]": "Vết chuột",
         "Name[x-test]": "xxMouse Markxx",
-        "Name[zh_CN]": "鼠标屏幕画线",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "鼠标屏幕画线"
     },
     "X-KDE-ConfigModule": "kwin_mousemark_config"
 }

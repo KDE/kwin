@@ -39,9 +39,6 @@
         "Name[uk]": "Аркуш",
         "Name[vi]": "Tấm mỏng",
         "Name[x-test]": "xxSheetxx",
-        "Name[zh_CN]": "对话框显隐过渡",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "对话框显隐过渡"
     }
 }

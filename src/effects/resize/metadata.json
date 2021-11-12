@@ -40,10 +40,7 @@
         "Name[uk]": "Зміна розмірів вікон",
         "Name[vi]": "Đổi cỡ cửa sổ",
         "Name[x-test]": "xxResize Windowxx",
-        "Name[zh_CN]": "窗口大小简易调整",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "窗口大小简易调整"
     },
     "X-KDE-ConfigModule": "kwin_resize_config"
 }

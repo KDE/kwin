@@ -40,10 +40,7 @@
         "Name[uk]": "Затемнення неактивних",
         "Name[vi]": "Làm tối bất hoạt",
         "Name[x-test]": "xxDim Inactivexx",
-        "Name[zh_CN]": "非活动窗口变暗",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "非活动窗口变暗"
     },
     "X-KDE-ConfigModule": "kwin_diminactive_config",
     "org.kde.kwin.effect": {

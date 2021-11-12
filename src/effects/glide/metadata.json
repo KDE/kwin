@@ -39,10 +39,7 @@
         "Name[uk]": "Плин",
         "Name[vi]": "Lướt",
         "Name[x-test]": "xxGlidexx",
-        "Name[zh_CN]": "滑翔动效",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "滑翔动效"
     },
     "X-KDE-ConfigModule": "kwin_glide_config",
     "org.kde.kwin.effect": {

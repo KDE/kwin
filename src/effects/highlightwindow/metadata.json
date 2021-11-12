@@ -39,10 +39,7 @@
         "Name[uk]": "Підсвічування вікна",
         "Name[vi]": "Tô sáng cửa sổ",
         "Name[x-test]": "xxHighlight Windowxx",
-        "Name[zh_CN]": "突出显示窗口",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "突出显示窗口"
     },
     "org.kde.kwin.effect": {
         "internal": true

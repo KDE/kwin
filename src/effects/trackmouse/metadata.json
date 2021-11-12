@@ -40,10 +40,7 @@
         "Name[uk]": "Сліди мишки",
         "Name[vi]": "Theo dõi chuột",
         "Name[x-test]": "xxTrack Mousexx",
-        "Name[zh_CN]": "鼠标定位",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ]
+        "Name[zh_CN]": "鼠标定位"
     },
     "X-KDE-ConfigModule": "kwin_trackmouse_config",
     "org.kde.kwin.effect": {
