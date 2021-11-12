@@ -434,8 +434,17 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
 
     if (current.viewport.sourceGeometry.isValid()) {
         surfaceToBufferMatrix.translate(current.viewport.sourceGeometry.x(), current.viewport.sourceGeometry.y());
-        surfaceToBufferMatrix.scale(current.viewport.sourceGeometry.width() / surfaceSize.width(),
-                                    current.viewport.sourceGeometry.height() / surfaceSize.height());
+    }
+
+    QSizeF sourceSize;
+    if (current.viewport.sourceGeometry.isValid()) {
+        sourceSize = current.viewport.sourceGeometry.size();
+    } else {
+        sourceSize = bufferSize / current.bufferScale;
+    }
+
+    if (sourceSize != surfaceSize) {
+        surfaceToBufferMatrix.scale(sourceSize.width() / surfaceSize.width(), sourceSize.height() / surfaceSize.height());
     }
 
     return surfaceToBufferMatrix;
