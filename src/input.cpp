@@ -1562,7 +1562,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        seat->startPointerHoldGesture(time);
+        seat->startPointerHoldGesture(fingerCount);
         return true;
     }
     bool holdGestureEnd(quint32 time) override
