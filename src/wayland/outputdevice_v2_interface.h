@@ -35,21 +35,21 @@ class OutputDeviceModeV2InterfacePrivate;
 class KWAYLANDSERVER_EXPORT OutputDeviceV2Interface : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QSize physicalSize READ physicalSize WRITE setPhysicalSize NOTIFY physicalSizeChanged)
-    Q_PROPERTY(QPoint globalPosition READ globalPosition WRITE setGlobalPosition NOTIFY globalPositionChanged)
-    Q_PROPERTY(QString manufacturer READ manufacturer WRITE setManufacturer NOTIFY manufacturerChanged)
-    Q_PROPERTY(QString model READ model WRITE setModel NOTIFY modelChanged)
-    Q_PROPERTY(QString serialNumber READ serialNumber WRITE setSerialNumber NOTIFY serialNumberChanged)
-    Q_PROPERTY(QString eisaId READ eisaId WRITE setEisaId NOTIFY eisaIdChanged)
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(qreal scale READ scale WRITE setScale NOTIFY scaleChanged)
-    Q_PROPERTY(QByteArray edid READ edid WRITE setEdid NOTIFY edidChanged)
-    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(QUuid uuid READ uuid WRITE setUuid NOTIFY uuidChanged)
-    Q_PROPERTY(Capabilities capabilities READ capabilities WRITE setCapabilities NOTIFY capabilitiesChanged)
-    Q_PROPERTY(uint32_t overscan READ overscan WRITE setOverscan NOTIFY overscanChanged)
-    Q_PROPERTY(VrrPolicy vrrPolicy READ vrrPolicy WRITE setVrrPolicy NOTIFY vrrPolicyChanged)
-    Q_PROPERTY(RgbRange rgbRange READ rgbRange WRITE setRgbRange NOTIFY rgbRangeChanged)
+    Q_PROPERTY(QSize physicalSize READ physicalSize WRITE setPhysicalSize)
+    Q_PROPERTY(QPoint globalPosition READ globalPosition WRITE setGlobalPosition)
+    Q_PROPERTY(QString manufacturer READ manufacturer WRITE setManufacturer)
+    Q_PROPERTY(QString model READ model WRITE setModel)
+    Q_PROPERTY(QString serialNumber READ serialNumber WRITE setSerialNumber)
+    Q_PROPERTY(QString eisaId READ eisaId WRITE setEisaId)
+    Q_PROPERTY(QString name READ name WRITE setName)
+    Q_PROPERTY(qreal scale READ scale WRITE setScale)
+    Q_PROPERTY(QByteArray edid READ edid WRITE setEdid)
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled)
+    Q_PROPERTY(QUuid uuid READ uuid WRITE setUuid)
+    Q_PROPERTY(Capabilities capabilities READ capabilities WRITE setCapabilities)
+    Q_PROPERTY(uint32_t overscan READ overscan WRITE setOverscan)
+    Q_PROPERTY(VrrPolicy vrrPolicy READ vrrPolicy WRITE setVrrPolicy)
+    Q_PROPERTY(RgbRange rgbRange READ rgbRange WRITE setRgbRange)
 public:
     enum class SubPixel {
         Unknown,
@@ -151,29 +151,6 @@ public:
 
     wl_resource *resource() const;
     static OutputDeviceV2Interface *get(wl_resource *native);
-
-Q_SIGNALS:
-    void physicalSizeChanged(const QSize&);
-    void globalPositionChanged(const QPoint&);
-    void manufacturerChanged(const QString&);
-    void modelChanged(const QString&);
-    void serialNumberChanged(const QString&);
-    void eisaIdChanged(const QString &);
-    void nameChanged(const QString &name);
-    void scaleChanged(qreal);
-    void subPixelChanged(SubPixel);
-    void transformChanged(Transform);
-    void modesChanged();
-    void currentModeChanged();
-
-    void edidChanged();
-    void enabledChanged();
-    void uuidChanged();
-
-    void capabilitiesChanged();
-    void overscanChanged();
-    void vrrPolicyChanged();
-    void rgbRangeChanged();
 
 private:
     QScopedPointer<OutputDeviceV2InterfacePrivate> d;

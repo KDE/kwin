@@ -137,12 +137,6 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, QObject *pare
     : QObject(parent)
     , d(new OutputDeviceV2InterfacePrivate(this, display))
 {
-    connect(this, &OutputDeviceV2Interface::subPixelChanged,       this, [this] { d->updateGeometry(); });
-    connect(this, &OutputDeviceV2Interface::transformChanged,      this, [this] { d->updateGeometry(); });
-    connect(this, &OutputDeviceV2Interface::globalPositionChanged, this, [this] { d->updateGeometry(); });
-    connect(this, &OutputDeviceV2Interface::modelChanged,          this, [this] { d->updateGeometry(); });
-    connect(this, &OutputDeviceV2Interface::manufacturerChanged,   this, [this] { d->updateGeometry(); });
-    connect(this, &OutputDeviceV2Interface::scaleChanged,         this, [this] { d->updateScale(); });
 }
 
 OutputDeviceV2Interface::~OutputDeviceV2Interface()
@@ -199,8 +193,7 @@ void OutputDeviceV2Interface::setCurrentMode(OutputDeviceModeV2Interface *mode)
         d->sendCurrentMode(resource, d->currentMode);
         d->sendDone(resource);
     }
-
-    Q_EMIT currentModeChanged();
+    d->updateGeometry();
 }
 
 bool OutputDeviceV2Interface::setCurrentMode(const QSize &size, int refreshRate)
@@ -383,7 +376,6 @@ void OutputDeviceV2Interface::setPhysicalSize(const QSize &arg)
         return;
     }
     d->physicalSize = arg;
-    Q_EMIT physicalSizeChanged(d->physicalSize);
 }
 
 void OutputDeviceV2Interface::setGlobalPosition(const QPoint &arg)
@@ -392,7 +384,7 @@ void OutputDeviceV2Interface::setGlobalPosition(const QPoint &arg)
         return;
     }
     d->globalPosition = arg;
-    Q_EMIT globalPositionChanged(d->globalPosition);
+    d->updateGeometry();
 }
 
 void OutputDeviceV2Interface::setManufacturer(const QString &arg)
@@ -401,7 +393,6 @@ void OutputDeviceV2Interface::setManufacturer(const QString &arg)
         return;
     }
     d->manufacturer = arg;
-    Q_EMIT manufacturerChanged(d->manufacturer);
 }
 
 void OutputDeviceV2Interface::setModel(const QString &arg)
@@ -410,7 +401,6 @@ void OutputDeviceV2Interface::setModel(const QString &arg)
         return;
     }
     d->model = arg;
-    Q_EMIT modelChanged(d->model);
 }
 
 void OutputDeviceV2Interface::setSerialNumber(const QString &arg)
@@ -419,7 +409,6 @@ void OutputDeviceV2Interface::setSerialNumber(const QString &arg)
         return;
     }
     d->serialNumber = arg;
-    Q_EMIT serialNumberChanged(d->serialNumber);
 }
 
 void OutputDeviceV2Interface::setEisaId(const QString &arg)
@@ -428,7 +417,6 @@ void OutputDeviceV2Interface::setEisaId(const QString &arg)
         return;
     }
     d->eisaId = arg;
-    Q_EMIT eisaIdChanged(d->eisaId);
 }
 
 void OutputDeviceV2Interface::setName(const QString &arg)
@@ -437,7 +425,6 @@ void OutputDeviceV2Interface::setName(const QString &arg)
         return;
     }
     d->name = arg;
-    Q_EMIT nameChanged(d->name);
 }
 
 void OutputDeviceV2Interface::setSubPixel(SubPixel arg)
@@ -446,7 +433,7 @@ void OutputDeviceV2Interface::setSubPixel(SubPixel arg)
         return;
     }
     d->subPixel = arg;
-    Q_EMIT subPixelChanged(d->subPixel);
+    d->updateGeometry();
 }
 
 void OutputDeviceV2Interface::setTransform(Transform arg)
@@ -455,7 +442,7 @@ void OutputDeviceV2Interface::setTransform(Transform arg)
         return;
     }
     d->transform = arg;
-    Q_EMIT transformChanged(d->transform);
+    d->updateGeometry();
 }
 
 void OutputDeviceV2Interface::setScale(qreal scale)
@@ -464,7 +451,7 @@ void OutputDeviceV2Interface::setScale(qreal scale)
         return;
     }
     d->scale = scale;
-    Q_EMIT scaleChanged(d->scale);
+    d->updateScale();
 }
 
 QSize OutputDeviceV2Interface::physicalSize() const
@@ -559,19 +546,12 @@ void OutputDeviceV2Interface::setModes(const QList<OutputDeviceModeV2Interface *
     for (auto resource : clientResources) {
         d->sendDone(resource);
     }
-
-    if (oldCurrentMode != d->currentMode) {
-        Q_EMIT currentModeChanged();
-    }
-
-    Q_EMIT modesChanged();
 }
 
 void OutputDeviceV2Interface::setEdid(const QByteArray &edid)
 {
     d->edid = edid;
     d->updateEdid();
-    Q_EMIT edidChanged();
 }
 
 QByteArray OutputDeviceV2Interface::edid() const
@@ -584,7 +564,6 @@ void OutputDeviceV2Interface::setEnabled(bool enabled)
     if (d->enabled != enabled) {
         d->enabled = enabled;
         d->updateEnabled();
-        Q_EMIT enabledChanged();
     }
 }
 
@@ -598,7 +577,6 @@ void OutputDeviceV2Interface::setUuid(const QUuid &uuid)
     if (d->uuid != uuid) {
         d->uuid = uuid;
         d->updateUuid();
-        Q_EMIT uuidChanged();
     }
 }
 
@@ -673,7 +651,6 @@ void OutputDeviceV2Interface::setCapabilities(Capabilities cap)
     if (d->capabilities != cap) {
         d->capabilities = cap;
         d->updateCapabilities();
-        Q_EMIT capabilitiesChanged();
     }
 }
 
@@ -696,7 +673,6 @@ void OutputDeviceV2Interface::setOverscan(uint32_t overscan)
     if (d->overscan != overscan) {
         d->overscan = overscan;
         d->updateOverscan();
-        Q_EMIT overscanChanged();
     }
 }
 
@@ -729,7 +705,6 @@ void OutputDeviceV2Interface::setVrrPolicy(VrrPolicy policy)
     if (d->vrrPolicy != policy) {
         d->vrrPolicy = policy;
         d->updateVrrPolicy();
-        Q_EMIT vrrPolicyChanged();
     }
 }
 
@@ -752,7 +727,6 @@ void OutputDeviceV2Interface::setRgbRange(RgbRange rgbRange)
     if (d->rgbRange != rgbRange) {
         d->rgbRange = rgbRange;
         d->updateRgbRange();
-        Q_EMIT rgbRangeChanged();
     }
 }
 
