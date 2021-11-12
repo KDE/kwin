@@ -113,27 +113,22 @@ FocusScope {
                     visible: !dragHandler.active
                 }
 
-                PC3.Label {
-                    id: caption
-                    width: Math.min(implicitWidth, thumbSource.width)
+                Rectangle {
+                    id: captionBackground
+                    implicitWidth: caption.width + 2 * PlasmaCore.Units.smallSpacing
+                    implicitHeight: caption.implicitHeight + 2 * PlasmaCore.Units.smallSpacing
+                    color: Qt.rgba(0, 0, 0, 0.25)
+                    radius: 3
                     anchors.top: icon.bottom
                     anchors.horizontalCenter: icon.horizontalCenter
-                    elide: Text.ElideRight
-                    text: thumb.client.caption
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    visible: !dragHandler.active
-                    PlasmaCore.ColorScope.colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
-
-                    layer.enabled: true
-                    layer.effect: DropShadow {
-                        cached: true
-                        horizontalOffset: 1
-                        verticalOffset: 1
-                        color: "black"
-                        radius: Math.round(4 * PlasmaCore.Units.devicePixelRatio)
-                        samples: radius * 2 + 1
-                        spread: 0.35
+                    PC3.Label {
+                        id: caption
+                        width: Math.min(implicitWidth, thumbSource.width)
+                        elide: Text.ElideRight
+                        text: thumb.client.caption
+                        anchors.centerIn: parent
+                        visible: !dragHandler.active
+                        PlasmaCore.ColorScope.colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
                     }
                 }
 
