@@ -197,19 +197,20 @@ Item {
                             }
                         }
 
-                        PC3.TextField {
-                            id: editor
+                        Loader {
+                            active: label.state == "editing"
                             anchors.fill: parent
-                            visible: label.state == "editing"
-                            focus: visible
-                            topPadding: 0
-                            bottomPadding: 0
-                            text: delegate.desktop.name
-                            onEditingFinished: {
-                                delegate.desktop.name = text;
-                                label.stopEditing();
+                            sourceComponent: PC3.TextField {
+                                topPadding: 0
+                                bottomPadding: 0
+                                text: delegate.desktop.name
+                                onEditingFinished: {
+                                    delegate.desktop.name = text;
+                                    label.stopEditing();
+                                }
+                                Keys.onEscapePressed: label.stopEditing();
+                                Component.onCompleted: forceActiveFocus();
                             }
-                            Keys.onEscapePressed: label.stopEditing();
                         }
 
                         states: [
@@ -223,7 +224,6 @@ Item {
 
                         function startEditing() {
                             state = "editing";
-                            editor.forceActiveFocus();
                         }
                         function stopEditing() {
                             state = "normal";
