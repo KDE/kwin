@@ -201,6 +201,7 @@ Item {
                             id: editor
                             anchors.fill: parent
                             visible: label.state == "editing"
+                            focus: visible
                             topPadding: 0
                             bottomPadding: 0
                             text: delegate.desktop.name
@@ -226,7 +227,6 @@ Item {
                         }
                         function stopEditing() {
                             state = "normal";
-                            searchField.forceActiveFocus();
                         }
                     }
 

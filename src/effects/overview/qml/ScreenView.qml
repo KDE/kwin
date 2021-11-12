@@ -27,6 +27,8 @@ FocusScope {
         container.organized = false;
     }
 
+    Keys.onEscapePressed: effect.deactivate();
+
     Repeater {
         model: KWinComponents.ClientFilterModel {
             activity: KWinComponents.Workspace.currentActivity

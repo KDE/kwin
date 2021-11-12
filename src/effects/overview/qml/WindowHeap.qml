@@ -428,9 +428,6 @@ FocusScope {
 
     Keys.onPressed: {
         switch (event.key) {
-        case Qt.Key_Escape:
-            effect.deactivate();
-            break;
         case Qt.Key_Up:
             selectNextItem(WindowHeap.Direction.Up);
             break;
