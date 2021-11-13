@@ -180,7 +180,6 @@ Item {
                         state: "normal"
 
                         PC3.Label {
-                            PlasmaCore.ColorScope.colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
                             anchors.fill: parent
                             elide: Text.ElideRight
                             text: delegate.desktop.name
