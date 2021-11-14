@@ -99,9 +99,7 @@ private:
         qint64 lastKey = 0;
         QRect lastRect;
         QScopedPointer<GLTexture> texture;
-        QScopedPointer<GLTexture> lastFrameTexture;
     } m_cursor;
-    bool m_repainting = false;
     QRect cursorGeometry(Cursor *cursor) const;
 
     QHash<struct pw_buffer *, QSharedPointer<DmaBufTexture>> m_dmabufDataForPwBuffer;

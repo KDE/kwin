@@ -301,11 +301,7 @@ bool PipeWireStream::createStream()
 
     if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded) {
         connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
-            if (m_cursor.lastFrameTexture) {
-                m_repainting = true;
-                recordFrame(QRegion{m_cursor.lastRect} | cursorGeometry(Cursors::self()->currentCursor()));
-                m_repainting = false;
-            }
+            recordFrame(QRegion{m_cursor.lastRect} | cursorGeometry(Cursors::self()->currentCursor()));
         });
     }
 
@@ -321,19 +317,6 @@ void PipeWireStream::stop()
 {
     m_stopped = true;
     delete this;
-}
-
-static GLTexture *copyTexture(GLTexture *texture)
-{
-    const QSize size = texture->size();
-    GLTexture *copy = new GLTexture(texture->internalFormat(), size);
-    copy->setFilter(GL_LINEAR);
-    copy->setWrapMode(GL_CLAMP_TO_EDGE);
-
-    copy->bind();
-    glCopyTextureSubImage2D(copy->texture(), 0, 0, 0, 0, 0, size.width(), size.height());
-    copy->unbind();
-    return copy;
 }
 
 // in-place vertical mirroring
@@ -460,9 +443,6 @@ void PipeWireStream::recordFrame(const QRegion &damagedRegion)
             QMatrix4x4 mvp;
             mvp.ortho(r);
             shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-
-            if (!m_repainting) //We need to copy the last version of the stream to render the moved cursor on top
-                m_cursor.lastFrameTexture.reset(copyTexture(buf->texture()));
 
             if (!m_cursor.texture || m_cursor.lastKey != cursor->image().cacheKey())
                 m_cursor.texture.reset(new GLTexture(cursor->image()));
