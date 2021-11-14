@@ -1,9 +1,12 @@
 set(screencast_SOURCES
     eglnativefence.cpp
     main.cpp
+    outputscreencastsource.cpp
     pipewirecore.cpp
     pipewirestream.cpp
     screencastmanager.cpp
+    screencastsource.cpp
+    windowscreencastsource.cpp
 )
 
 ecm_qt_declare_logging_category(screencast_SOURCES

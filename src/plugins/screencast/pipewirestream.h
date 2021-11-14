@@ -32,12 +32,13 @@ class DmaBufTexture;
 class EGLNativeFence;
 class GLTexture;
 class PipeWireCore;
+class ScreenCastSource;
 
 class KWIN_EXPORT PipeWireStream : public QObject
 {
     Q_OBJECT
 public:
-    explicit PipeWireStream(bool hasAlpha, const QSize &resolution, QObject *parent);
+    explicit PipeWireStream(ScreenCastSource *source, QObject *parent);
     ~PipeWireStream();
 
     bool init();
@@ -50,7 +51,7 @@ public:
     void stop();
 
     /** Renders @p frame into the current framebuffer into the stream */
-    void recordFrame(GLTexture *frame, const QRegion &damagedRegion);
+    void recordFrame(const QRegion &damagedRegion);
 
     void setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport);
 
@@ -77,6 +78,7 @@ private:
                          uint64_t *modifiers, int modifier_count);
 
     QSharedPointer<PipeWireCore> pwCore;
+    QScopedPointer<ScreenCastSource> m_source;
     struct pw_stream *pwStream = nullptr;
     spa_hook streamListener;
     pw_stream_events pwStreamEvents = {};
@@ -89,7 +91,6 @@ private:
     spa_video_info_raw videoFormat;
     bool m_hasModifier = false;
     QString m_error;
-    const bool m_hasAlpha;
 
     struct {
         KWaylandServer::ScreencastV1Interface::CursorMode mode = KWaylandServer::ScreencastV1Interface::Hidden;

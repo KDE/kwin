@@ -20,6 +20,11 @@ DmaBufTexture::DmaBufTexture(KWin::GLTexture *texture)
 
 DmaBufTexture::~DmaBufTexture() = default;
 
+KWin::GLTexture *DmaBufTexture::texture() const
+{
+    return m_texture.data();
+}
+
 KWin::GLRenderTarget *DmaBufTexture::framebuffer() const
 {
     return m_framebuffer.data();

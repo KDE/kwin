@@ -21,6 +21,7 @@ public:
 
     virtual quint32 stride() const = 0;
     virtual int fd() const = 0;
+    KWin::GLTexture *texture() const;
     KWin::GLRenderTarget* framebuffer() const;
 
 protected:

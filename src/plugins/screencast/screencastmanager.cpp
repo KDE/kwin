@@ -13,10 +13,12 @@
 #include "deleted.h"
 #include "effects.h"
 #include "kwingltexture.h"
+#include "outputscreencastsource.h"
 #include "pipewirestream.h"
 #include "platform.h"
 #include "scene.h"
 #include "wayland_server.h"
+#include "windowscreencastsource.h"
 #include "workspace.h"
 
 #include <KLocalizedString>
@@ -41,7 +43,7 @@ class WindowStream : public PipeWireStream
 {
 public:
     WindowStream(Toplevel *toplevel, QObject *parent)
-        : PipeWireStream(toplevel->hasAlpha(), toplevel->bufferGeometry().size() * toplevel->bufferScale(), parent)
+        : PipeWireStream(new WindowScreenCastSource(toplevel), parent)
         , m_toplevel(toplevel)
     {
         if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
@@ -71,21 +73,10 @@ private:
     }
 
     void bufferToStream () {
-        if (m_damagedRegion.isEmpty()) {
-            return;
+        if (!m_damagedRegion.isEmpty()) {
+            recordFrame(m_damagedRegion);
+            m_damagedRegion = {};
         }
-        QSharedPointer<GLTexture> frameTexture(m_toplevel->effectWindow()->sceneWindow()->windowTexture());
-        if (!frameTexture) {
-            // Some backends will return no-op because textures aren't really supported there
-            return;
-        }
-
-        const bool wasYInverted = frameTexture->isYInverted();
-        frameTexture->setYInverted(false);
-
-        recordFrame(frameTexture.data(), m_damagedRegion);
-        frameTexture->setYInverted(wasYInverted);
-        m_damagedRegion = {};
     }
 
     QRegion m_damagedRegion;
@@ -134,21 +125,18 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
         return;
     }
 
-    auto stream = new PipeWireStream(true, streamOutput->pixelSize(), this);
+    auto stream = new PipeWireStream(new OutputScreenCastSource(streamOutput), this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
     connect(streamOutput, &QObject::destroyed, stream, &PipeWireStream::stopStreaming);
     auto bufferToStream = [streamOutput, stream] (const QRegion &damagedRegion) {
-        auto scene = Compositor::self()->scene();
-        auto texture = scene->textureForOutput(streamOutput);
-        if (!texture || damagedRegion.isEmpty()) {
-            // Some backends will return no-op because textures aren't really supported there
+        if (damagedRegion.isEmpty()) {
             return;
         }
 
         const QRect frame({}, streamOutput->modeSize());
         const QRegion region = streamOutput->pixelSize() != streamOutput->modeSize() ? frame : damagedRegion.translated(-streamOutput->geometry().topLeft()).intersected(frame);
-        stream->recordFrame(texture.data(), region);
+        stream->recordFrame(region);
     };
     connect(stream, &PipeWireStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
         Compositor::self()->scene()->addRepaint(streamOutput->geometry());

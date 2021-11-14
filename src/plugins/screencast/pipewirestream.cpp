@@ -17,6 +17,7 @@
 #include "main.h"
 #include "pipewirecore.h"
 #include "platform.h"
+#include "screencastsource.h"
 #include "utils.h"
 
 #include <KLocalizedString>
@@ -155,7 +156,7 @@ void PipeWireStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
             return;
         }
 
-        const int bytesPerPixel = stream->m_hasAlpha ? 4 : 3;
+        const int bytesPerPixel = stream->m_source->hasAlphaChannel() ? 4 : 3;
         const int stride = SPA_ROUND_UP_N (stream->m_resolution.width() * bytesPerPixel, 4);
         spa_data->maxsize = stride * stream->m_resolution.height();
         spa_data->type = SPA_DATA_MemFd;
@@ -202,10 +203,10 @@ void PipeWireStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
     }
 }
 
-PipeWireStream::PipeWireStream(bool hasAlpha, const QSize &resolution, QObject *parent)
+PipeWireStream::PipeWireStream(ScreenCastSource *source, QObject *parent)
     : QObject(parent)
-    , m_resolution(resolution)
-    , m_hasAlpha(hasAlpha)
+    , m_source(source)
+    , m_resolution(source->textureSize())
 {
     pwStreamEvents.version = PW_VERSION_STREAM_EVENTS;
     pwStreamEvents.add_buffer = &PipeWireStream::onStreamAddBuffer;
@@ -277,7 +278,7 @@ bool PipeWireStream::createStream()
     auto canCreateDmaBuf = [this] () -> bool {
         return QSharedPointer<DmaBufTexture>(kwinApp()->platform()->createDmaBufTexture(m_resolution));
     };
-    const auto format = m_hasAlpha || canCreateDmaBuf() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
+    const auto format = m_source->hasAlphaChannel() || canCreateDmaBuf() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
 
     if (canCreateDmaBuf()) {
       params[0] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, &modifier, 1);
@@ -302,7 +303,7 @@ bool PipeWireStream::createStream()
         connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
             if (m_cursor.lastFrameTexture) {
                 m_repainting = true;
-                recordFrame(m_cursor.lastFrameTexture.data(), QRegion{m_cursor.lastRect} | cursorGeometry(Cursors::self()->currentCursor()));
+                recordFrame(QRegion{m_cursor.lastRect} | cursorGeometry(Cursors::self()->currentCursor()));
                 m_repainting = false;
             }
         });
@@ -348,18 +349,20 @@ static void mirrorVertically(uchar *data, int height, int stride)
     }
 }
 
-void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damagedRegion)
+void PipeWireStream::recordFrame(const QRegion &damagedRegion)
 {
     Q_ASSERT(!m_stopped);
-    Q_ASSERT(frameTexture);
+    if (!m_source->isValid()) {
+        return;
+    }
 
     if (m_pendingBuffer) {
         qCWarning(KWIN_SCREENCAST) << "Dropping a screencast frame because the compositor is slow";
         return;
     }
 
-    if (frameTexture->size() != m_resolution) {
-        m_resolution = frameTexture->size();
+    if (m_source->textureSize() != m_resolution) {
+        m_resolution = m_source->textureSize();
         newStreamParams();
         return;
     }
@@ -389,10 +392,11 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
         return;
     }
 
-    const auto size = frameTexture->size();
+    const auto size = m_source->textureSize();
     spa_data->chunk->offset = 0;
     if (data || spa_data[0].type == SPA_DATA_MemFd) {
-        const int bpp = data && !m_hasAlpha ? 3 : 4;
+        const bool hasAlpha = m_source->hasAlphaChannel();
+        const int bpp = data && !hasAlpha ? 3 : 4;
         const uint stride = SPA_ROUND_UP_N (size.width() * bpp, 4);
         const uint bufferSize = stride * size.height();
 
@@ -402,29 +406,33 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
             return;
         }
 
+        GLTexture offscreenTexture(hasAlpha ? GL_RGBA8 : GL_RGB8, m_source->textureSize());
+        GLRenderTarget offscreenTarget(offscreenTexture);
+        m_source->render(&offscreenTarget);
+
         spa_data->chunk->size = bufferSize;
         spa_data->chunk->stride = stride;
-        const bool invertNeededAndSupported = frameTexture->isYInverted() && GLPlatform::instance()->supports(PackInvert);
+        const bool invertNeededAndSupported = offscreenTexture.isYInverted() && GLPlatform::instance()->supports(PackInvert);
         GLboolean prev;
         if (invertNeededAndSupported) {
             glGetBooleanv(GL_PACK_INVERT_MESA, &prev);
             glPixelStorei(GL_PACK_INVERT_MESA, GL_TRUE);
         }
 
-        frameTexture->bind();
+        offscreenTexture.bind();
         if (GLPlatform::instance()->isGLES()) {
-            glReadPixels(0, 0, size.width(), size.height(), m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, (GLvoid*)data);
+            glReadPixels(0, 0, size.width(), size.height(), hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, (GLvoid*)data);
         } else if (GLPlatform::instance()->glVersion() >= kVersionNumber(4, 5)) {
-            glGetTextureImage(frameTexture->texture(), 0, m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bufferSize, data);
+            glGetTextureImage(offscreenTexture.texture(), 0, hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bufferSize, data);
         } else {
-            glGetTexImage(frameTexture->target(), 0, m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, data);
+            glGetTexImage(offscreenTexture.target(), 0, hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, data);
         }
 
         if (invertNeededAndSupported) {
             if (!prev) {
                 glPixelStorei(GL_PACK_INVERT_MESA, prev);
             }
-        } else if (frameTexture->isYInverted()) {
+        } else if (offscreenTexture.isYInverted()) {
             mirrorVertically(data, size.height(), stride);
         }
         auto cursor = Cursors::self()->currentCursor();
@@ -440,27 +448,21 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
         spa_data->chunk->stride = buf->stride();
         spa_data->chunk->size = spa_data->maxsize;
 
-        GLRenderTarget::pushRenderTarget(buf->framebuffer());
-        frameTexture->bind();
-
-        QRect r(QPoint(), size);
-        auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-
-        QMatrix4x4 mvp;
-        mvp.ortho(r);
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-
-        QRegion dr = damagedRegion;
-        if (m_cursor.texture) {
-            dr |= m_cursor.lastRect;
-        }
-
-        frameTexture->render(damagedRegion, r, true);
+        m_source->render(buf->framebuffer());
 
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
+            GLRenderTarget::pushRenderTarget(buf->framebuffer());
+
+            QRect r(QPoint(), size);
+            auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+
+            QMatrix4x4 mvp;
+            mvp.ortho(r);
+            shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+
             if (!m_repainting) //We need to copy the last version of the stream to render the moved cursor on top
-                m_cursor.lastFrameTexture.reset(copyTexture(frameTexture));
+                m_cursor.lastFrameTexture.reset(copyTexture(buf->texture()));
 
             if (!m_cursor.texture || m_cursor.lastKey != cursor->image().cacheKey())
                 m_cursor.texture.reset(new GLTexture(cursor->image()));
@@ -477,12 +479,11 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
             glDisable(GL_BLEND);
             m_cursor.texture->unbind();
             m_cursor.lastRect = cursorRect;
-        }
-        ShaderManager::instance()->popShader();
 
-        GLRenderTarget::popRenderTarget();
+            ShaderManager::instance()->popShader();
+            GLRenderTarget::popRenderTarget();
+        }
     }
-    frameTexture->unbind();
 
     if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
         sendCursorData(Cursors::self()->currentCursor(),
