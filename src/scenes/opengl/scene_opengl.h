@@ -120,7 +120,6 @@ public:
     ~OpenGLWindow() override;
 
     void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
-    QSharedPointer<GLTexture> windowTexture() override;
 
 private:
     QMatrix4x4 modelViewProjectionMatrix(int mask, const WindowPaintData &data) const;

@@ -316,10 +316,6 @@ public:
     SurfaceItem *surfaceItem() const;
     ShadowItem *shadowItem() const;
 
-    virtual QSharedPointer<GLTexture> windowTexture() {
-        return {};
-    }
-
 protected:
     Toplevel* toplevel;
 private:
