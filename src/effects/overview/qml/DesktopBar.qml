@@ -198,6 +198,10 @@ Item {
                                 drag.accepted = true;
                             }
                             onDropped: {
+                                const screenId = KWinComponents.Workspace.screenAt(Qt.point(targetScreen.geometry.x + targetScreen.geometry.width / 2,
+                                                                                            targetScreen.geometry.y + targetScreen.geometry.height / 2));
+                                KWinComponents.Workspace.sendClientToScreen(drag.source, screenId);
+
                                 drag.source.desktop = delegate.desktop.x11DesktopNumber;
                             }
                         }

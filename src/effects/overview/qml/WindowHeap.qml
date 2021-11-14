@@ -5,6 +5,7 @@
 */
 
 import QtQuick 2.12
+import QtQml 2.15
 import org.kde.kirigami 2.12 as Kirigami
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.overview 1.0
@@ -57,47 +58,13 @@ FocusScope {
                 }
 
                 visible: opacity > 0
-                z: dragHandler.active ? 100 : client.stackingOrder
+                z: client.stackingOrder
 
                 KWinComponents.WindowThumbnailItem {
                     id: thumbSource
+                    anchors.fill: parent
                     wId: thumb.client.internalId
-                    state: dragHandler.active ? "drag" : "normal"
-
-                    Drag.active: dragHandler.active
-                    Drag.source: thumb.client
-                    Drag.hotSpot: Qt.point(width * 0.5, height * 0.5)
-
-                    states: [
-                        State {
-                            name: "normal"
-                            PropertyChanges {
-                                target: thumbSource
-                                x: 0
-                                y: 0
-                                width: thumb.width
-                                height: thumb.height
-                            }
-                        },
-                        State {
-                            name: "drag"
-                            PropertyChanges {
-                                target: thumbSource
-                                x: -dragHandler.centroid.pressPosition.x * dragHandler.targetScale +
-                                        dragHandler.centroid.position.x
-                                y: -dragHandler.centroid.pressPosition.y * dragHandler.targetScale +
-                                        dragHandler.centroid.position.y
-                                width: cell.width * dragHandler.targetScale
-                                height: cell.height * dragHandler.targetScale
-                            }
-                        }
-                    ]
-
-                    MouseArea {
-                        anchors.fill: parent
-                        acceptedButtons: Qt.NoButton
-                        cursorShape: dragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
-                    }
+                    visible: !dragHandler.active
                 }
 
                 PlasmaCore.IconItem {
@@ -212,21 +179,21 @@ FocusScope {
                     id: dragHandler
                     target: null
 
-                    readonly property double targetScale: {
-                        const localPressPosition = centroid.scenePressPosition.y - expoLayout.Kirigami.ScenePosition.y;
-                        if (localPressPosition == 0) {
-                            return 0.1
-                        } else {
-                            const localPosition = centroid.scenePosition.y - expoLayout.Kirigami.ScenePosition.y;
-                            return Math.max(0.1, Math.min(localPosition / localPressPosition, 1))
-                        }
-                    }
-
                     onActiveChanged: {
-                        if (!active) {
-                            thumbSource.Drag.drop();
+                        if (active) {
+                            dragMultiplexer.start(thumb.client.internalId, thumb.client);
+                        } else {
+                            dragMultiplexer.drop();
                         }
                     }
+                }
+
+                Binding {
+                    target: dragMultiplexer
+                    property: "position"
+                    value: targetScreen.mapToGlobal(thumb.mapToItem(null, dragHandler.centroid.position))
+                    when: dragHandler.active
+                    restoreMode: Binding.RestoreNone
                 }
 
                 PC3.Button {
@@ -248,6 +215,50 @@ FocusScope {
                     }
                 }
             }
+        }
+    }
+
+    DragMultiplexer {
+        id: dragMultiplexer
+
+        KWinComponents.WindowThumbnailItem {
+            id: thumb
+            wId: dragMultiplexer.windowId
+            opacity: 0.75
+            visible: dragMultiplexer.active
+
+            readonly property point position: dragMultiplexer.mapFromItem(null, targetScreen.mapFromGlobal(dragMultiplexer.position))
+            x: position.x - width * 0.5
+            y: position.y - height * 0.5
+            width: PlasmaCore.Units.gridUnit * 4
+            height: PlasmaCore.Units.gridUnit * 4
+
+            Drag.active: dragMultiplexer.active
+            Drag.source: dragMultiplexer.source
+            Drag.hotSpot: Qt.point(width * 0.5, height * 0.5)
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+                cursorShape: dragMultiplexer.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
+            }
+        }
+
+        onDropped: {
+            thumb.Drag.drop();
+        }
+    }
+
+    DropArea {
+        anchors.fill: parent
+
+        onEntered: {
+            drag.accepted = true;
+        }
+        onDropped: {
+            const screenId = KWinComponents.Workspace.screenAt(Qt.point(targetScreen.geometry.x + targetScreen.geometry.width / 2,
+                                                                        targetScreen.geometry.y + targetScreen.geometry.height / 2));
+            KWinComponents.Workspace.sendClientToScreen(drag.source, screenId);
         }
     }
 

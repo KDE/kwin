@@ -5,6 +5,7 @@
 add_subdirectory(kcm)
 
 set(overview_SOURCES
+    dragfeedback.cpp
     expoarea.cpp
     expolayout.cpp
     main.cpp

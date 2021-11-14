@@ -356,6 +356,11 @@ int WorkspaceWrapper::workspaceWidth() const
     return desktopGridWidth() * displayWidth();
 }
 
+int WorkspaceWrapper::screenAt(const QPointF &pos) const
+{
+    return screens()->number(pos.toPoint());
+}
+
 int WorkspaceWrapper::numScreens() const
 {
     return screens()->count();

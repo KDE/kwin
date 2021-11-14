@@ -747,6 +747,16 @@ EffectScreen::EffectScreen(QObject *parent)
 {
 }
 
+QPointF EffectScreen::mapToGlobal(const QPointF &pos) const
+{
+    return pos + geometry().topLeft();
+}
+
+QPointF EffectScreen::mapFromGlobal(const QPointF &pos) const
+{
+    return pos - geometry().topLeft();
+}
+
 //****************************************
 // EffectWindow
 //****************************************

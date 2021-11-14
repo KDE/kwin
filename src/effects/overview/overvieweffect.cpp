@@ -5,6 +5,7 @@
 */
 
 #include "overvieweffect.h"
+#include "dragfeedback.h"
 #include "expoarea.h"
 #include "expolayout.h"
 #include "overviewconfig.h"
@@ -84,6 +85,7 @@ OverviewEffect::OverviewEffect()
     qmlRegisterType<ExpoArea>("org.kde.kwin.private.overview", 1, 0, "ExpoArea");
     qmlRegisterType<ExpoLayout>("org.kde.kwin.private.overview", 1, 0, "ExpoLayout");
     qmlRegisterType<ExpoCell>("org.kde.kwin.private.overview", 1, 0, "ExpoCell");
+    qmlRegisterType<DragMultiplexer>("org.kde.kwin.private.overview", 1, 0, "DragMultiplexer");
 
     m_shutdownTimer->setSingleShot(true);
     connect(m_shutdownTimer, &QTimer::timeout, this, &OverviewEffect::realDeactivate);

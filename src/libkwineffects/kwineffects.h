@@ -1843,6 +1843,8 @@ public:
      */
     virtual QRect geometry() const = 0;
 
+    Q_INVOKABLE QPointF mapToGlobal(const QPointF &pos) const;
+    Q_INVOKABLE QPointF mapFromGlobal(const QPointF &pos) const;
 
     enum class Transform {
         Normal,
