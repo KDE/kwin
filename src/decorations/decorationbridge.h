@@ -13,8 +13,6 @@
 
 #include <KDecoration2/Private/DecorationBridge>
 
-#include <KSharedConfig>
-
 #include <QObject>
 #include <QSharedPointer>
 
@@ -77,7 +75,6 @@ private:
     QString readTheme() const;
     void readDecorationOptions();
     KPluginFactory *m_factory;
-    KSharedConfig::Ptr m_lnfConfig;
     bool m_blur;
     bool m_showToolTips;
     QString m_recommendedBorderSize;
