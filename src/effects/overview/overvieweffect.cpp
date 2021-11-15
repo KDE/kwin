@@ -352,4 +352,34 @@ void OverviewEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
     }
 }
 
+bool OverviewEffect::touchDown(qint32 id, const QPointF &pos, quint32 time)
+{
+    for (OverviewScreenView *screenView : qAsConst(m_screenViews)) {
+        if (screenView->geometry().contains(pos.toPoint())) {
+            return screenView->forwardTouchDown(id, pos, time);
+        }
+    }
+    return false;
+}
+
+bool OverviewEffect::touchMotion(qint32 id, const QPointF &pos, quint32 time)
+{
+    for (OverviewScreenView *screenView : qAsConst(m_screenViews)) {
+        if (screenView->geometry().contains(pos.toPoint())) {
+            return screenView->forwardTouchMotion(id, pos, time);
+        }
+    }
+    return false;
+}
+
+bool OverviewEffect::touchUp(qint32 id, quint32 time)
+{
+    for (OverviewScreenView *screenView : qAsConst(m_screenViews)) {
+        if (screenView->forwardTouchUp(id, time)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 } // namespace KWin
