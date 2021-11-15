@@ -27,6 +27,7 @@ public:
     QSize textureSize() const override;
 
     void render(GLRenderTarget *target) override;
+    void render(QImage *image) override;
 
 private:
     QPointer<Toplevel> m_window;

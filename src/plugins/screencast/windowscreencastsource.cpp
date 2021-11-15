@@ -5,6 +5,7 @@
 */
 
 #include "windowscreencastsource.h"
+#include "screencastutils.h"
 
 #include "effects.h"
 #include "kwineffects.h"
@@ -35,6 +36,15 @@ bool WindowScreenCastSource::hasAlphaChannel() const
 QSize WindowScreenCastSource::textureSize() const
 {
     return m_window->clientGeometry().size();
+}
+
+void WindowScreenCastSource::render(QImage *image)
+{
+    GLTexture offscreenTexture(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize());
+    GLRenderTarget offscreenTarget(offscreenTexture);
+
+    render(&offscreenTarget);
+    grabTexture(&offscreenTexture, image);
 }
 
 void WindowScreenCastSource::render(GLRenderTarget *target)

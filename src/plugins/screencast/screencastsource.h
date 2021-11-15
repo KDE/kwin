@@ -25,6 +25,7 @@ public:
     virtual QSize textureSize() const = 0;
 
     virtual void render(GLRenderTarget *target) = 0;
+    virtual void render(QImage *image) = 0;
 };
 
 } // namespace KWin

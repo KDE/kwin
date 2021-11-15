@@ -5,6 +5,7 @@
 */
 
 #include "outputscreencastsource.h"
+#include "screencastutils.h"
 
 #include "abstract_output.h"
 #include "composite.h"
@@ -34,6 +35,14 @@ bool OutputScreenCastSource::hasAlphaChannel() const
 QSize OutputScreenCastSource::textureSize() const
 {
     return m_output->pixelSize();
+}
+
+void OutputScreenCastSource::render(QImage *image)
+{
+    const QSharedPointer<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
+    if (outputTexture) {
+        grabTexture(outputTexture.data(), image);
+    }
 }
 
 void OutputScreenCastSource::render(GLRenderTarget *target)

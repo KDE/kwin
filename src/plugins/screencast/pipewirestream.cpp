@@ -319,19 +319,6 @@ void PipeWireStream::stop()
     delete this;
 }
 
-// in-place vertical mirroring
-static void mirrorVertically(uchar *data, int height, int stride)
-{
-    const int halfHeight = height / 2;
-    std::vector<uchar> temp(stride);
-    for (int y = 0; y < halfHeight; ++y) {
-        auto cur = &data[y * stride], dest = &data[(height - y - 1) * stride];
-        memcpy(temp.data(), cur, stride);
-        memcpy(cur, dest, stride);
-        memcpy(dest, temp.data(), stride);
-    }
-}
-
 void PipeWireStream::recordFrame(const QRegion &damagedRegion)
 {
     Q_ASSERT(!m_stopped);
@@ -381,46 +368,21 @@ void PipeWireStream::recordFrame(const QRegion &damagedRegion)
         const bool hasAlpha = m_source->hasAlphaChannel();
         const int bpp = data && !hasAlpha ? 3 : 4;
         const uint stride = SPA_ROUND_UP_N (size.width() * bpp, 4);
-        const uint bufferSize = stride * size.height();
 
-        if (bufferSize > spa_data->maxsize) {
+        QImage dest(data, size.width(), size.height(), stride, hasAlpha ? QImage::Format_RGBA8888_Premultiplied : QImage::Format_RGB888);
+        if (dest.sizeInBytes() > spa_data->maxsize) {
             qCDebug(KWIN_SCREENCAST) << "Failed to record frame: frame is too big";
             pw_stream_queue_buffer(pwStream, buffer);
             return;
         }
 
-        GLTexture offscreenTexture(hasAlpha ? GL_RGBA8 : GL_RGB8, m_source->textureSize());
-        GLRenderTarget offscreenTarget(offscreenTexture);
-        m_source->render(&offscreenTarget);
+        spa_data->chunk->size = dest.sizeInBytes();
+        spa_data->chunk->stride = dest.bytesPerLine();
 
-        spa_data->chunk->size = bufferSize;
-        spa_data->chunk->stride = stride;
-        const bool invertNeededAndSupported = offscreenTexture.isYInverted() && GLPlatform::instance()->supports(PackInvert);
-        GLboolean prev;
-        if (invertNeededAndSupported) {
-            glGetBooleanv(GL_PACK_INVERT_MESA, &prev);
-            glPixelStorei(GL_PACK_INVERT_MESA, GL_TRUE);
-        }
+        m_source->render(&dest);
 
-        offscreenTexture.bind();
-        if (GLPlatform::instance()->isGLES()) {
-            glReadPixels(0, 0, size.width(), size.height(), hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, (GLvoid*)data);
-        } else if (GLPlatform::instance()->glVersion() >= kVersionNumber(4, 5)) {
-            glGetTextureImage(offscreenTexture.texture(), 0, hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bufferSize, data);
-        } else {
-            glGetTexImage(offscreenTexture.target(), 0, hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, data);
-        }
-
-        if (invertNeededAndSupported) {
-            if (!prev) {
-                glPixelStorei(GL_PACK_INVERT_MESA, prev);
-            }
-        } else if (offscreenTexture.isYInverted()) {
-            mirrorVertically(data, size.height(), stride);
-        }
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
-            QImage dest(data, size.width(), size.height(), QImage::Format_RGBA8888_Premultiplied);
             QPainter painter(&dest);
             const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
             painter.drawImage(QRect{position, cursor->image().size()}, cursor->image());
