@@ -44,6 +44,7 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
     , m_shellSurface(shellSurface)
     , m_configureTimer(new QTimer(this))
 {
+    setupPlasmaShellIntegration();
     connect(shellSurface, &XdgSurfaceInterface::configureAcknowledged,
             this, &XdgSurfaceClient::handleConfigureAcknowledged);
     connect(shellSurface, &XdgSurfaceInterface::resetOccurred,
@@ -93,6 +94,13 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
 XdgSurfaceClient::~XdgSurfaceClient()
 {
     qDeleteAll(m_configureEvents);
+}
+
+NET::WindowType XdgSurfaceClient::windowType(bool direct, int supported_types) const
+{
+    Q_UNUSED(direct)
+    Q_UNUSED(supported_types)
+    return m_windowType;
 }
 
 QRect XdgSurfaceClient::inputGeometry() const
@@ -334,11 +342,206 @@ void XdgSurfaceClient::destroyClient()
     delete this;
 }
 
+void XdgSurfaceClient::updateClientArea()
+{
+    if (hasStrut()) {
+        workspace()->updateClientArea();
+    }
+}
+
+void XdgSurfaceClient::updateShowOnScreenEdge()
+{
+    if (!ScreenEdges::self()) {
+        return;
+    }
+    if (!readyForPainting() || !m_plasmaShellSurface ||
+            m_plasmaShellSurface->role() != PlasmaShellSurfaceInterface::Role::Panel) {
+        ScreenEdges::self()->reserve(this, ElectricNone);
+        return;
+    }
+    const PlasmaShellSurfaceInterface::PanelBehavior panelBehavior = m_plasmaShellSurface->panelBehavior();
+    if ((panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide && isHidden()) ||
+            panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover) {
+        // Screen edge API requires an edge, thus we need to figure out which edge the window borders.
+        const QRect clientGeometry = frameGeometry();
+        Qt::Edges edges;
+
+        const auto outputs = kwinApp()->platform()->enabledOutputs();
+        for (const AbstractOutput *output : outputs) {
+            const QRect screenGeometry = output->geometry();
+            if (screenGeometry.left() == clientGeometry.left()) {
+                edges |= Qt::LeftEdge;
+            }
+            if (screenGeometry.right() == clientGeometry.right()) {
+                edges |= Qt::RightEdge;
+            }
+            if (screenGeometry.top() == clientGeometry.top()) {
+                edges |= Qt::TopEdge;
+            }
+            if (screenGeometry.bottom() == clientGeometry.bottom()) {
+                edges |= Qt::BottomEdge;
+            }
+        }
+
+        // A panel might border multiple screen edges. E.g. a horizontal panel at the bottom will
+        // also border the left and right edge. Let's remove such cases.
+        if (edges & Qt::LeftEdge && edges & Qt::RightEdge) {
+            edges = edges & (~(Qt::LeftEdge | Qt::RightEdge));
+        }
+        if (edges & Qt::TopEdge && edges & Qt::BottomEdge) {
+            edges = edges & (~(Qt::TopEdge | Qt::BottomEdge));
+        }
+
+        // It's still possible that a panel borders two edges, e.g. bottom and left
+        // in that case the one which is sharing more with the edge wins.
+        auto check = [clientGeometry](Qt::Edges edges, Qt::Edge horizontal, Qt::Edge vertical) {
+            if (edges & horizontal && edges & vertical) {
+                if (clientGeometry.width() >= clientGeometry.height()) {
+                    return edges & ~horizontal;
+                } else {
+                    return edges & ~vertical;
+                }
+            }
+            return edges;
+        };
+        edges = check(edges, Qt::LeftEdge, Qt::TopEdge);
+        edges = check(edges, Qt::LeftEdge, Qt::BottomEdge);
+        edges = check(edges, Qt::RightEdge, Qt::TopEdge);
+        edges = check(edges, Qt::RightEdge, Qt::BottomEdge);
+
+        ElectricBorder border = ElectricNone;
+        if (edges & Qt::LeftEdge) {
+            border = ElectricLeft;
+        }
+        if (edges & Qt::RightEdge) {
+            border = ElectricRight;
+        }
+        if (edges & Qt::TopEdge) {
+            border = ElectricTop;
+        }
+        if (edges & Qt::BottomEdge) {
+            border = ElectricBottom;
+        }
+        ScreenEdges::self()->reserve(this, border);
+    } else {
+        ScreenEdges::self()->reserve(this, ElectricNone);
+    }
+}
+
+/**
+ * \todo This whole plasma shell surface thing doesn't seem right. It turns xdg-toplevel into
+ * something completely different! Perhaps plasmashell surfaces need to be implemented via a
+ * proprietary protocol that doesn't piggyback on existing shell surface protocols. It'll lead
+ * to cleaner code and will be technically correct, but I'm not sure whether this is do-able.
+ */
+void XdgSurfaceClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface)
+{
+    m_plasmaShellSurface = shellSurface;
+
+    auto updatePosition = [this, shellSurface] { move(shellSurface->position()); };
+    auto updateRole = [this, shellSurface] {
+        NET::WindowType type = NET::Unknown;
+        switch (shellSurface->role()) {
+        case PlasmaShellSurfaceInterface::Role::Desktop:
+            type = NET::Desktop;
+            break;
+        case PlasmaShellSurfaceInterface::Role::Panel:
+            type = NET::Dock;
+            break;
+        case PlasmaShellSurfaceInterface::Role::OnScreenDisplay:
+            type = NET::OnScreenDisplay;
+            break;
+        case PlasmaShellSurfaceInterface::Role::Notification:
+            type = NET::Notification;
+            break;
+        case PlasmaShellSurfaceInterface::Role::ToolTip:
+            type = NET::Tooltip;
+            break;
+        case PlasmaShellSurfaceInterface::Role::CriticalNotification:
+            type = NET::CriticalNotification;
+            break;
+        case PlasmaShellSurfaceInterface::Role::Normal:
+        default:
+            type = NET::Normal;
+            break;
+        }
+        if (m_windowType == type) {
+            return;
+        }
+        m_windowType = type;
+        switch (m_windowType) {
+        case NET::Desktop:
+        case NET::Dock:
+        case NET::OnScreenDisplay:
+        case NET::Notification:
+        case NET::CriticalNotification:
+        case NET::Tooltip:
+            setOnAllDesktops(true);
+#if KWIN_BUILD_ACTIVITIES
+            setOnAllActivities(true);
+#endif
+            break;
+        default:
+            break;
+        }
+        workspace()->updateClientArea();
+    };
+    connect(shellSurface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
+    connect(shellSurface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
+    connect(shellSurface, &PlasmaShellSurfaceInterface::panelBehaviorChanged, this, [this] {
+        updateShowOnScreenEdge();
+        workspace()->updateClientArea();
+    });
+    connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideHideRequested, this, [this] {
+        if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
+            hideClient();
+            m_plasmaShellSurface->hideAutoHidingPanel();
+        }
+        updateShowOnScreenEdge();
+    });
+    connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideShowRequested, this, [this] {
+        showClient();
+        ScreenEdges::self()->reserve(this, ElectricNone);
+        m_plasmaShellSurface->showAutoHidingPanel();
+    });
+    connect(shellSurface, &PlasmaShellSurfaceInterface::panelTakesFocusChanged, this, [this] {
+        if (m_plasmaShellSurface->panelTakesFocus()) {
+            workspace()->activateClient(this);
+        }
+    });
+    if (shellSurface->isPositionSet()) {
+        updatePosition();
+    }
+    updateRole();
+    updateShowOnScreenEdge();
+    connect(this, &XdgSurfaceClient::frameGeometryChanged,
+            this, &XdgSurfaceClient::updateShowOnScreenEdge);
+    connect(this, &XdgSurfaceClient::windowShown,
+            this, &XdgSurfaceClient::updateShowOnScreenEdge);
+
+    setSkipTaskbar(shellSurface->skipTaskbar());
+    connect(shellSurface, &PlasmaShellSurfaceInterface::skipTaskbarChanged, this, [this] {
+        setSkipTaskbar(m_plasmaShellSurface->skipTaskbar());
+    });
+
+    setSkipSwitcher(shellSurface->skipSwitcher());
+    connect(shellSurface, &PlasmaShellSurfaceInterface::skipSwitcherChanged, this, [this] {
+        setSkipSwitcher(m_plasmaShellSurface->skipSwitcher());
+    });
+}
+
+void XdgSurfaceClient::setupPlasmaShellIntegration()
+{
+    connect(surface(), &SurfaceInterface::mapped,
+            this, &XdgSurfaceClient::updateShowOnScreenEdge);
+    connect(this, &XdgSurfaceClient::frameGeometryChanged,
+            this, &XdgSurfaceClient::updateClientArea);
+}
+
 XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)
     : XdgSurfaceClient(shellSurface->xdgSurface())
     , m_shellSurface(shellSurface)
 {
-    setupPlasmaShellIntegration();
     setDesktops({VirtualDesktopManager::self()->currentDesktop()});
 #if KWIN_BUILD_ACTIVITIES
     if (auto a = Activities::self()) {
@@ -395,13 +598,6 @@ XdgToplevelClient::~XdgToplevelClient()
 XdgToplevelInterface *XdgToplevelClient::shellSurface() const
 {
     return m_shellSurface;
-}
-
-NET::WindowType XdgToplevelClient::windowType(bool direct, int supported_types) const
-{
-    Q_UNUSED(direct)
-    Q_UNUSED(supported_types)
-    return m_windowType;
 }
 
 MaximizeMode XdgToplevelClient::maximizeMode() const
@@ -1306,202 +1502,6 @@ void XdgToplevelClient::installPalette(ServerSideDecorationPaletteInterface *pal
     updateColorScheme();
 }
 
-/**
- * \todo This whole plasma shell surface thing doesn't seem right. It turns xdg-toplevel into
- * something completely different! Perhaps plasmashell surfaces need to be implemented via a
- * proprietary protocol that doesn't piggyback on existing shell surface protocols. It'll lead
- * to cleaner code and will be technically correct, but I'm not sure whether this is do-able.
- */
-void XdgToplevelClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface)
-{
-    m_plasmaShellSurface = shellSurface;
-
-    auto updatePosition = [this, shellSurface] { move(shellSurface->position()); };
-    auto updateRole = [this, shellSurface] {
-        NET::WindowType type = NET::Unknown;
-        switch (shellSurface->role()) {
-        case PlasmaShellSurfaceInterface::Role::Desktop:
-            type = NET::Desktop;
-            break;
-        case PlasmaShellSurfaceInterface::Role::Panel:
-            type = NET::Dock;
-            break;
-        case PlasmaShellSurfaceInterface::Role::OnScreenDisplay:
-            type = NET::OnScreenDisplay;
-            break;
-        case PlasmaShellSurfaceInterface::Role::Notification:
-            type = NET::Notification;
-            break;
-        case PlasmaShellSurfaceInterface::Role::ToolTip:
-            type = NET::Tooltip;
-            break;
-        case PlasmaShellSurfaceInterface::Role::CriticalNotification:
-            type = NET::CriticalNotification;
-            break;
-        case PlasmaShellSurfaceInterface::Role::Normal:
-        default:
-            type = NET::Normal;
-            break;
-        }
-        if (m_windowType == type) {
-            return;
-        }
-        m_windowType = type;
-        switch (m_windowType) {
-        case NET::Desktop:
-        case NET::Dock:
-        case NET::OnScreenDisplay:
-        case NET::Notification:
-        case NET::CriticalNotification:
-        case NET::Tooltip:
-            setOnAllDesktops(true);
-#if KWIN_BUILD_ACTIVITIES
-            setOnAllActivities(true);
-#endif
-            break;
-        default:
-            break;
-        }
-        workspace()->updateClientArea();
-    };
-    connect(shellSurface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
-    connect(shellSurface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
-    connect(shellSurface, &PlasmaShellSurfaceInterface::panelBehaviorChanged, this, [this] {
-        updateShowOnScreenEdge();
-        workspace()->updateClientArea();
-    });
-    connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideHideRequested, this, [this] {
-        if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
-            hideClient();
-            m_plasmaShellSurface->hideAutoHidingPanel();
-        }
-        updateShowOnScreenEdge();
-    });
-    connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideShowRequested, this, [this] {
-        showClient();
-        ScreenEdges::self()->reserve(this, ElectricNone);
-        m_plasmaShellSurface->showAutoHidingPanel();
-    });
-    connect(shellSurface, &PlasmaShellSurfaceInterface::panelTakesFocusChanged, this, [this] {
-        if (m_plasmaShellSurface->panelTakesFocus()) {
-            workspace()->activateClient(this);
-        }
-    });
-    if (shellSurface->isPositionSet()) {
-        updatePosition();
-    }
-    updateRole();
-    updateShowOnScreenEdge();
-    connect(this, &XdgToplevelClient::frameGeometryChanged,
-            this, &XdgToplevelClient::updateShowOnScreenEdge);
-    connect(this, &XdgToplevelClient::windowShown,
-            this, &XdgToplevelClient::updateShowOnScreenEdge);
-
-    setSkipTaskbar(shellSurface->skipTaskbar());
-    connect(shellSurface, &PlasmaShellSurfaceInterface::skipTaskbarChanged, this, [this] {
-        setSkipTaskbar(m_plasmaShellSurface->skipTaskbar());
-    });
-
-    setSkipSwitcher(shellSurface->skipSwitcher());
-    connect(shellSurface, &PlasmaShellSurfaceInterface::skipSwitcherChanged, this, [this] {
-        setSkipSwitcher(m_plasmaShellSurface->skipSwitcher());
-    });
-}
-
-void XdgToplevelClient::updateShowOnScreenEdge()
-{
-    if (!ScreenEdges::self()) {
-        return;
-    }
-    if (!readyForPainting() || !m_plasmaShellSurface ||
-            m_plasmaShellSurface->role() != PlasmaShellSurfaceInterface::Role::Panel) {
-        ScreenEdges::self()->reserve(this, ElectricNone);
-        return;
-    }
-    const PlasmaShellSurfaceInterface::PanelBehavior panelBehavior = m_plasmaShellSurface->panelBehavior();
-    if ((panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide && isHidden()) ||
-            panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover) {
-        // Screen edge API requires an edge, thus we need to figure out which edge the window borders.
-        const QRect clientGeometry = frameGeometry();
-        Qt::Edges edges;
-
-        const auto outputs = kwinApp()->platform()->enabledOutputs();
-        for (const AbstractOutput *output : outputs) {
-            const QRect screenGeometry = output->geometry();
-            if (screenGeometry.left() == clientGeometry.left()) {
-                edges |= Qt::LeftEdge;
-            }
-            if (screenGeometry.right() == clientGeometry.right()) {
-                edges |= Qt::RightEdge;
-            }
-            if (screenGeometry.top() == clientGeometry.top()) {
-                edges |= Qt::TopEdge;
-            }
-            if (screenGeometry.bottom() == clientGeometry.bottom()) {
-                edges |= Qt::BottomEdge;
-            }
-        }
-
-        // A panel might border multiple screen edges. E.g. a horizontal panel at the bottom will
-        // also border the left and right edge. Let's remove such cases.
-        if (edges & Qt::LeftEdge && edges & Qt::RightEdge) {
-            edges = edges & (~(Qt::LeftEdge | Qt::RightEdge));
-        }
-        if (edges & Qt::TopEdge && edges & Qt::BottomEdge) {
-            edges = edges & (~(Qt::TopEdge | Qt::BottomEdge));
-        }
-
-        // It's still possible that a panel borders two edges, e.g. bottom and left
-        // in that case the one which is sharing more with the edge wins.
-        auto check = [clientGeometry](Qt::Edges edges, Qt::Edge horizontal, Qt::Edge vertical) {
-            if (edges & horizontal && edges & vertical) {
-                if (clientGeometry.width() >= clientGeometry.height()) {
-                    return edges & ~horizontal;
-                } else {
-                    return edges & ~vertical;
-                }
-            }
-            return edges;
-        };
-        edges = check(edges, Qt::LeftEdge, Qt::TopEdge);
-        edges = check(edges, Qt::LeftEdge, Qt::BottomEdge);
-        edges = check(edges, Qt::RightEdge, Qt::TopEdge);
-        edges = check(edges, Qt::RightEdge, Qt::BottomEdge);
-
-        ElectricBorder border = ElectricNone;
-        if (edges & Qt::LeftEdge) {
-            border = ElectricLeft;
-        }
-        if (edges & Qt::RightEdge) {
-            border = ElectricRight;
-        }
-        if (edges & Qt::TopEdge) {
-            border = ElectricTop;
-        }
-        if (edges & Qt::BottomEdge) {
-            border = ElectricBottom;
-        }
-        ScreenEdges::self()->reserve(this, border);
-    } else {
-        ScreenEdges::self()->reserve(this, ElectricNone);
-    }
-}
-
-void XdgToplevelClient::updateClientArea()
-{
-    if (hasStrut()) {
-        workspace()->updateClientArea();
-    }
-}
-
-void XdgToplevelClient::setupPlasmaShellIntegration()
-{
-    connect(surface(), &SurfaceInterface::mapped,
-            this, &XdgToplevelClient::updateShowOnScreenEdge);
-    connect(this, &XdgToplevelClient::frameGeometryChanged,
-            this, &XdgToplevelClient::updateClientArea);
-}
-
 void XdgToplevelClient::setFullScreen(bool set, bool user)
 {
     set = rules()->checkFullScreen(set);
@@ -1707,6 +1707,7 @@ XdgPopupClient::XdgPopupClient(XdgPopupInterface *shellSurface)
     : XdgSurfaceClient(shellSurface->xdgSurface())
     , m_shellSurface(shellSurface)
 {
+    m_windowType = NET::Unknown;
     setDesktops({VirtualDesktopManager::self()->currentDesktop()});
 #if KWIN_BUILD_ACTIVITIES
     if (auto a = Activities::self()) {
@@ -1750,13 +1751,6 @@ void XdgPopupClient::relayout()
 
 XdgPopupClient::~XdgPopupClient()
 {
-}
-
-NET::WindowType XdgPopupClient::windowType(bool direct, int supported_types) const
-{
-    Q_UNUSED(direct)
-    Q_UNUSED(supported_types)
-    return NET::Unknown;
 }
 
 bool XdgPopupClient::hasPopupGrab() const
@@ -2029,17 +2023,6 @@ void XdgPopupClient::initialize()
     const QRect area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
     Placement::self()->place(this, area);
     scheduleConfigure();
-}
-
-void XdgPopupClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface)
-{
-    m_plasmaShellSurface = shellSurface;
-
-    auto updatePosition = [this, shellSurface] { move(shellSurface->position()); };
-    connect(shellSurface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
-    if (shellSurface->isPositionSet()) {
-        updatePosition();
-    }
 }
 
 } // namespace KWin

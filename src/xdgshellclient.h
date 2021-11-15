@@ -54,12 +54,13 @@ public:
     explicit XdgSurfaceClient(KWaylandServer::XdgSurfaceInterface *shellSurface);
     ~XdgSurfaceClient() override;
 
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     QRect frameRectToBufferRect(const QRect &rect) const override;
     QRect inputGeometry() const override;
     QMatrix4x4 inputTransformation() const override;
     void destroyClient() override;
 
-    virtual void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) = 0;
+    void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface);
 
 protected:
     void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
@@ -73,7 +74,12 @@ protected:
 
     QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
 
+    NET::WindowType m_windowType = NET::Normal;
+
 private:
+    void setupPlasmaShellIntegration();
+    void updateClientArea();
+    void updateShowOnScreenEdge();
     void handleConfigureAcknowledged(quint32 serial);
     void handleCommit();
     void handleNextWindowGeometry();
@@ -114,7 +120,6 @@ public:
 
     KWaylandServer::XdgToplevelInterface *shellSurface() const;
 
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     MaximizeMode maximizeMode() const override;
     MaximizeMode requestedMaximizeMode() const override;
     QSize minSize() const override;
@@ -149,7 +154,6 @@ public:
     void installAppMenu(KWaylandServer::AppMenuInterface *appMenu);
     void installServerDecoration(KWaylandServer::ServerSideDecorationInterface *decoration);
     void installPalette(KWaylandServer::ServerSideDecorationPaletteInterface *palette);
-    void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) override;
     void installXdgDecoration(KWaylandServer::XdgToplevelDecorationV1Interface *decoration);
 
 protected:
@@ -190,9 +194,6 @@ private:
     void initialize();
     void updateMaximizeMode(MaximizeMode maximizeMode);
     void updateFullScreenMode(bool set);
-    void updateShowOnScreenEdge();
-    void updateClientArea();
-    void setupPlasmaShellIntegration();
     void sendPing(PingReason reason);
     MaximizeMode initialMaximizeMode() const;
     bool initialFullScreenMode() const;
@@ -206,7 +207,6 @@ private:
     KWaylandServer::XdgToplevelInterface::States m_acknowledgedStates;
     KWaylandServer::XdgToplevelInterface::States m_initialStates;
     QMap<quint32, PingReason> m_pings;
-    NET::WindowType m_windowType = NET::Normal;
     MaximizeMode m_maximizeMode = MaximizeRestore;
     MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
     bool m_isFullScreen = false;
@@ -225,7 +225,6 @@ public:
     explicit XdgPopupClient(KWaylandServer::XdgPopupInterface *shellSurface);
     ~XdgPopupClient() override;
 
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool hasPopupGrab() const override;
     void popupDone() override;
     bool isPopupWindow() const override;
@@ -239,7 +238,6 @@ public:
     void closeWindow() override;
     bool wantsInput() const override;
     bool takeFocus() override;
-    void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) override;
 
 protected:
     bool acceptsFocus() const override;
