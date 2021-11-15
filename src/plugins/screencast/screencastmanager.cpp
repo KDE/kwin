@@ -49,7 +49,6 @@ public:
         if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
             setObjectName(client->desktopFileName());
         }
-        connect(toplevel, &Toplevel::windowClosed, this, &PipeWireStream::stopStreaming);
         connect(this, &PipeWireStream::startStreaming, this, &WindowStream::startFeeding);
         connect(this, &PipeWireStream::stopStreaming, this, &WindowStream::stopFeeding);
     }
@@ -128,7 +127,6 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
     auto stream = new PipeWireStream(new OutputScreenCastSource(streamOutput), this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
-    connect(streamOutput, &QObject::destroyed, stream, &PipeWireStream::stopStreaming);
     auto bufferToStream = [streamOutput, stream] (const QRegion &damagedRegion) {
         if (damagedRegion.isEmpty()) {
             return;

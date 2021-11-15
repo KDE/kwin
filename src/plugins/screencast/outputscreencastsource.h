@@ -22,7 +22,6 @@ class OutputScreenCastSource : public ScreenCastSource
 public:
     explicit OutputScreenCastSource(AbstractOutput *output, QObject *parent = nullptr);
 
-    bool isValid() const override;
     bool hasAlphaChannel() const override;
     QSize textureSize() const override;
 

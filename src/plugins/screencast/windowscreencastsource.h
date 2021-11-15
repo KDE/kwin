@@ -22,7 +22,6 @@ class WindowScreenCastSource : public ScreenCastSource
 public:
     explicit WindowScreenCastSource(Toplevel *window, QObject *parent = nullptr);
 
-    bool isValid() const override;
     bool hasAlphaChannel() const override;
     QSize textureSize() const override;
 

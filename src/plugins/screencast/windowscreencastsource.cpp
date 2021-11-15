@@ -7,6 +7,7 @@
 #include "windowscreencastsource.h"
 #include "screencastutils.h"
 
+#include "deleted.h"
 #include "effects.h"
 #include "kwineffects.h"
 #include "kwingltexture.h"
@@ -21,11 +22,7 @@ WindowScreenCastSource::WindowScreenCastSource(Toplevel *window, QObject *parent
     : ScreenCastSource(parent)
     , m_window(window)
 {
-}
-
-bool WindowScreenCastSource::isValid() const
-{
-    return !m_window.isNull();
+    connect(m_window, &Toplevel::windowClosed, this, &ScreenCastSource::closed);
 }
 
 bool WindowScreenCastSource::hasAlphaChannel() const

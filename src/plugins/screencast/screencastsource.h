@@ -20,12 +20,14 @@ class ScreenCastSource : public QObject
 public:
     explicit ScreenCastSource(QObject *parent = nullptr);
 
-    virtual bool isValid() const = 0;
     virtual bool hasAlphaChannel() const = 0;
     virtual QSize textureSize() const = 0;
 
     virtual void render(GLRenderTarget *target) = 0;
     virtual void render(QImage *image) = 0;
+
+Q_SIGNALS:
+    void closed();
 };
 
 } // namespace KWin

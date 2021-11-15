@@ -208,6 +208,8 @@ PipeWireStream::PipeWireStream(ScreenCastSource *source, QObject *parent)
     , m_source(source)
     , m_resolution(source->textureSize())
 {
+    connect(source, &ScreenCastSource::closed, this, &PipeWireStream::stopStreaming);
+
     pwStreamEvents.version = PW_VERSION_STREAM_EVENTS;
     pwStreamEvents.add_buffer = &PipeWireStream::onStreamAddBuffer;
     pwStreamEvents.remove_buffer = &PipeWireStream::onStreamRemoveBuffer;
@@ -322,9 +324,6 @@ void PipeWireStream::stop()
 void PipeWireStream::recordFrame(const QRegion &damagedRegion)
 {
     Q_ASSERT(!m_stopped);
-    if (!m_source->isValid()) {
-        return;
-    }
 
     if (m_pendingBuffer) {
         qCWarning(KWIN_SCREENCAST) << "Dropping a screencast frame because the compositor is slow";
