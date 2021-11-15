@@ -83,6 +83,7 @@ KWinCompositingKCM::KWinCompositingKCM(QWidget *parent, const QVariantList &args
 
     m_form.kcfg_Enabled->setVisible(!compositingRequired());
     m_form.kcfg_WindowsBlockCompositing->setVisible(!compositingRequired());
+    m_form.compositingLabel->setVisible(!compositingRequired());
 
     connect(this, &KWinCompositingKCM::defaultsIndicatorsVisibleChanged, this, &KWinCompositingKCM::updateUnmanagedItemStatus);
 
