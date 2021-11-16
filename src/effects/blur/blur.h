@@ -17,7 +17,6 @@
 #include <QStack>
 
 #include <KWaylandServer/blur_interface.h>
-#include <KWaylandServer/utils.h>
 
 namespace KWin
 {
@@ -90,7 +89,7 @@ private:
     QScopedPointer<GLTexture> m_noiseTexture;
 
     bool m_renderTargetsValid;
-    long net_wm_blur_region;
+    long net_wm_blur_region = 0;
     QRegion m_paintedArea; // keeps track of all painted areas (from bottom to top)
     QRegion m_currentBlur; // keeps track of the currently blured area of the windows(from bottom to top)
 
@@ -116,7 +115,9 @@ private:
     QVector <BlurValuesStruct> blurStrengthValues;
 
     QMap <EffectWindow*, QMetaObject::Connection> windowBlurChangedConnections;
-    KWaylandServer::ScopedGlobalPointer<KWaylandServer::BlurManagerInterface> m_blurManager;
+
+    static KWaylandServer::BlurManagerInterface *s_blurManager;
+    static QTimer *s_blurManagerRemoveTimer;
 };
 
 inline
