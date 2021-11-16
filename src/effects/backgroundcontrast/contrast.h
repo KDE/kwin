@@ -16,7 +16,6 @@
 #include <QVector2D>
 
 #include <KWaylandServer/contrast_interface.h>
-#include <KWaylandServer/utils.h>
 
 namespace KWin
 {
@@ -34,7 +33,6 @@ public:
     static bool enabledByDefault();
 
     static QMatrix4x4 colorMatrix(qreal contrast, qreal intensity, qreal saturation);
-    void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
@@ -67,12 +65,13 @@ private:
 
 private:
     ContrastShader *shader;
-    long net_wm_contrast_region;
+    long net_wm_contrast_region = 0;
     QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
     QRegion m_currentContrast; // keeps track of the currently contrasted area of non-caching windows(from bottom to top)
     QHash< const EffectWindow*, QMatrix4x4> m_colorMatrices;
     QHash< const EffectWindow*, QMetaObject::Connection > m_contrastChangedConnections; // used only in Wayland to keep track of effect changed
-    KWaylandServer::ScopedGlobalPointer<KWaylandServer::ContrastManagerInterface> m_contrastManager;
+    static KWaylandServer::ContrastManagerInterface *s_contrastManager;
+    static QTimer *s_contrastManagerRemoveTimer;
 };
 
 inline

@@ -11,6 +11,7 @@
 // KConfigSkeleton
 
 #include <QMatrix4x4>
+#include <QTimer>
 #include <QWindow>
 
 #include <KWaylandServer/surface_interface.h>
@@ -21,22 +22,34 @@ namespace KWin
 
 static const QByteArray s_contrastAtomName = QByteArrayLiteral("_KDE_NET_WM_BACKGROUND_CONTRAST_REGION");
 
+KWaylandServer::ContrastManagerInterface *ContrastEffect::s_contrastManager = nullptr;
+QTimer *ContrastEffect::s_contrastManagerRemoveTimer = nullptr;
+
 ContrastEffect::ContrastEffect()
 {
     shader = ContrastShader::create();
-
-    reconfigure(ReconfigureAll);
+    shader->init();
 
     // ### Hackish way to announce support.
     //     Should be included in _NET_SUPPORTED instead.
     if (shader && shader->isValid()) {
-        net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
-        KWaylandServer::Display *display = effects->waylandDisplay();
-        if (display) {
-            m_contrastManager.reset(new KWaylandServer::ContrastManagerInterface(display));
+        if (effects->xcbConnection()) {
+            net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
         }
-    } else {
-        net_wm_contrast_region = 0;
+        if (effects->waylandDisplay()) {
+            if (!s_contrastManagerRemoveTimer) {
+                s_contrastManagerRemoveTimer = new QTimer(qApp);
+                s_contrastManagerRemoveTimer->setSingleShot(true);
+                s_contrastManagerRemoveTimer->callOnTimeout([]() {
+                    s_contrastManager->remove();
+                    s_contrastManager = nullptr;
+                });
+            }
+            s_contrastManagerRemoveTimer->stop();
+            if (!s_contrastManager) {
+                s_contrastManager = new KWaylandServer::ContrastManagerInterface(effects->waylandDisplay(), s_contrastManagerRemoveTimer);
+            }
+        }
     }
 
     connect(effects, &EffectsHandler::windowAdded, this, &ContrastEffect::slotWindowAdded);
@@ -60,6 +73,10 @@ ContrastEffect::ContrastEffect()
 
 ContrastEffect::~ContrastEffect()
 {
+    // When compositing is restarted, avoid removing the manager immediately.
+    if (s_contrastManager) {
+        s_contrastManagerRemoveTimer->start(1000);
+    }
     delete shader;
 }
 
@@ -74,19 +91,6 @@ void ContrastEffect::slotScreenGeometryChanged()
     const EffectWindowList windowList = effects->stackingOrder();
     for (EffectWindow *window : windowList) {
         updateContrastRegion(window);
-    }
-}
-
-void ContrastEffect::reconfigure(ReconfigureFlags flags)
-{
-    Q_UNUSED(flags)
-
-    if (shader)
-        shader->init();
-
-    if (!shader || !shader->isValid()) {
-        effects->removeSupportProperty(s_contrastAtomName, this);
-        m_contrastManager.reset();
     }
 }
 
