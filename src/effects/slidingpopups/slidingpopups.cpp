@@ -13,6 +13,7 @@
 
 #include <QApplication>
 #include <QFontMetrics>
+#include <QTimer>
 #include <QWindow>
 
 #include <KWaylandServer/surface_interface.h>
@@ -25,12 +26,27 @@ Q_DECLARE_METATYPE(KWindowEffects::SlideFromLocation)
 namespace KWin
 {
 
+KWaylandServer::SlideManagerInterface *SlidingPopupsEffect::s_slideManager = nullptr;
+QTimer *SlidingPopupsEffect::s_slideManagerRemoveTimer = nullptr;
+
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
     initConfig<SlidingPopupsConfig>();
+
     KWaylandServer::Display *display = effects->waylandDisplay();
     if (display) {
-        m_slideManager.reset(new KWaylandServer::SlideManagerInterface(display));
+        if (!s_slideManagerRemoveTimer) {
+            s_slideManagerRemoveTimer = new QTimer(qApp);
+            s_slideManagerRemoveTimer->setSingleShot(true);
+            s_slideManagerRemoveTimer->callOnTimeout([]() {
+                s_slideManager->remove();
+                s_slideManager = nullptr;
+            });
+        }
+        s_slideManagerRemoveTimer->stop();
+        if (!s_slideManager) {
+            s_slideManager = new KWaylandServer::SlideManagerInterface(display, s_slideManagerRemoveTimer);
+        }
     }
 
     m_slideLength = QFontMetrics(qApp->font()).height() * 8;
@@ -62,6 +78,10 @@ SlidingPopupsEffect::SlidingPopupsEffect()
 
 SlidingPopupsEffect::~SlidingPopupsEffect()
 {
+    // When compositing is restarted, avoid removing the manager immediately.
+    if (s_slideManager) {
+        s_slideManagerRemoveTimer->start(1000);
+    }
 }
 
 bool SlidingPopupsEffect::supported()

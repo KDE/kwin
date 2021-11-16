@@ -15,7 +15,6 @@
 #include <kwineffects.h>
 
 #include <KWaylandServer/slide_interface.h>
-#include <KWaylandServer/utils.h>
 
 namespace KWin
 {
@@ -62,8 +61,9 @@ private:
     void setupInternalWindowSlide(EffectWindow *w);
     void setupSlideData(EffectWindow *w);
 
-    KWaylandServer::ScopedGlobalPointer<KWaylandServer::SlideManagerInterface> m_slideManager;
-    long m_atom;
+    static KWaylandServer::SlideManagerInterface *s_slideManager;
+    static QTimer *s_slideManagerRemoveTimer;
+    long m_atom = 0;
 
     int m_slideLength;
     std::chrono::milliseconds m_slideInDuration;
