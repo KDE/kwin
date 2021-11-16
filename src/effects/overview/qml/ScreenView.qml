@@ -16,6 +16,10 @@ FocusScope {
     id: container
     focus: true
 
+    readonly property bool lightBackground: Math.max(PlasmaCore.ColorScope.backgroundColor.r,
+                                                     PlasmaCore.ColorScope.backgroundColor.g,
+                                                     PlasmaCore.ColorScope.backgroundColor.b) > 0.5
+
     property bool animationEnabled: false
     property bool organized: false
 
@@ -114,7 +118,10 @@ FocusScope {
                 id: desktopBar
                 width: parent.width
                 implicitHeight: bar.implicitHeight + 2 * PlasmaCore.Units.smallSpacing
-                color: Qt.rgba(0, 0, 0, 0.25)
+                color: container.lightBackground ? Qt.rgba(PlasmaCore.ColorScope.backgroundColor.r,
+                                                           PlasmaCore.ColorScope.backgroundColor.g,
+                                                           PlasmaCore.ColorScope.backgroundColor.b, 0.75)
+                                                 : Qt.rgba(0, 0, 0, 0.25)
 
                 DesktopBar {
                     id: bar
