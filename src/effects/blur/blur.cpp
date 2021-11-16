@@ -64,7 +64,7 @@ BlurEffect::BlurEffect()
     // Fetch the blur regions for all windows
     const auto stackingOrder = effects->stackingOrder();
     for (EffectWindow *window : stackingOrder) {
-        updateBlurRegion(window);
+        slotWindowAdded(window);
     }
 }
 
