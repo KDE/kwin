@@ -34,12 +34,12 @@ class GLTexture;
 class PipeWireCore;
 class ScreenCastSource;
 
-class KWIN_EXPORT PipeWireStream : public QObject
+class KWIN_EXPORT ScreenCastStream : public QObject
 {
     Q_OBJECT
 public:
-    explicit PipeWireStream(ScreenCastSource *source, QObject *parent);
-    ~PipeWireStream();
+    explicit ScreenCastStream(ScreenCastSource *source, QObject *parent);
+    ~ScreenCastStream();
 
     bool init();
     uint framerate();

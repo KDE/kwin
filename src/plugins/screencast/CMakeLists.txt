@@ -3,9 +3,9 @@ set(screencast_SOURCES
     main.cpp
     outputscreencastsource.cpp
     pipewirecore.cpp
-    pipewirestream.cpp
     screencastmanager.cpp
     screencastsource.cpp
+    screencaststream.cpp
     windowscreencastsource.cpp
 )
 

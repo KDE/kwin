@@ -14,7 +14,7 @@
 #include "effects.h"
 #include "kwingltexture.h"
 #include "outputscreencastsource.h"
-#include "pipewirestream.h"
+#include "screencaststream.h"
 #include "platform.h"
 #include "scene.h"
 #include "wayland_server.h"
@@ -39,18 +39,18 @@ ScreencastManager::ScreencastManager(QObject *parent)
     connect(m_screencast, &KWaylandServer::ScreencastV1Interface::virtualOutputScreencastRequested, this, &ScreencastManager::streamVirtualOutput);
 }
 
-class WindowStream : public PipeWireStream
+class WindowStream : public ScreenCastStream
 {
 public:
     WindowStream(Toplevel *toplevel, QObject *parent)
-        : PipeWireStream(new WindowScreenCastSource(toplevel), parent)
+        : ScreenCastStream(new WindowScreenCastSource(toplevel), parent)
         , m_toplevel(toplevel)
     {
         if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
             setObjectName(client->desktopFileName());
         }
-        connect(this, &PipeWireStream::startStreaming, this, &WindowStream::startFeeding);
-        connect(this, &PipeWireStream::stopStreaming, this, &WindowStream::stopFeeding);
+        connect(this, &ScreenCastStream::startStreaming, this, &WindowStream::startFeeding);
+        connect(this, &ScreenCastStream::stopStreaming, this, &WindowStream::stopFeeding);
     }
 
 private:
@@ -124,7 +124,7 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
         return;
     }
 
-    auto stream = new PipeWireStream(new OutputScreenCastSource(streamOutput), this);
+    auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
     auto bufferToStream = [streamOutput, stream] (const QRegion &damagedRegion) {
@@ -136,25 +136,25 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
         const QRegion region = streamOutput->pixelSize() != streamOutput->modeSize() ? frame : damagedRegion.translated(-streamOutput->geometry().topLeft()).intersected(frame);
         stream->recordFrame(region);
     };
-    connect(stream, &PipeWireStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
+    connect(stream, &ScreenCastStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
         Compositor::self()->scene()->addRepaint(streamOutput->geometry());
         streamOutput->recordingStarted();
         connect(streamOutput, &AbstractWaylandOutput::outputChange, stream, bufferToStream);
     });
-    connect(stream, &PipeWireStream::stopStreaming, waylandStream, [streamOutput]{
+    connect(stream, &ScreenCastStream::stopStreaming, waylandStream, [streamOutput]{
         streamOutput->recordingStopped();
     });
     integrateStreams(waylandStream, stream);
 }
 
-void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, PipeWireStream *stream)
+void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream)
 {
-    connect(waylandStream, &KWaylandServer::ScreencastStreamV1Interface::finished, stream, &PipeWireStream::stop);
-    connect(stream, &PipeWireStream::stopStreaming, waylandStream, [stream, waylandStream] {
+    connect(waylandStream, &KWaylandServer::ScreencastStreamV1Interface::finished, stream, &ScreenCastStream::stop);
+    connect(stream, &ScreenCastStream::stopStreaming, waylandStream, [stream, waylandStream] {
         waylandStream->sendClosed();
         stream->deleteLater();
     });
-    connect(stream, &PipeWireStream::streamReady, stream, [waylandStream] (uint nodeid) {
+    connect(stream, &ScreenCastStream::streamReady, stream, [waylandStream] (uint nodeid) {
         waylandStream->sendCreated(nodeid);
     });
     if (!stream->init()) {

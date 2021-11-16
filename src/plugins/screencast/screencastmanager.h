@@ -15,7 +15,7 @@
 namespace KWin
 {
 class AbstractWaylandOutput;
-class PipeWireStream;
+class ScreenCastStream;
 
 class ScreencastManager : public Plugin
 {
@@ -37,7 +37,7 @@ private:
                              double scale,
                              KWaylandServer::ScreencastV1Interface::CursorMode mode);
 
-    void integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, PipeWireStream *stream);
+    void integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream);
 
     KWaylandServer::ScreencastV1Interface *m_screencast;
 };

@@ -6,7 +6,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "pipewirestream.h"
+#include "screencaststream.h"
 #include "cursor.h"
 #include "dmabuftexture.h"
 #include "eglnativefence.h"
@@ -36,9 +36,9 @@
 namespace KWin
 {
 
-void PipeWireStream::onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message)
+void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message)
 {
-    PipeWireStream *pw = static_cast<PipeWireStream*>(data);
+    ScreenCastStream *pw = static_cast<ScreenCastStream*>(data);
     qCDebug(KWIN_SCREENCAST) << "state changed"<< pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
 
     switch (state) {
@@ -69,7 +69,7 @@ void PipeWireStream::onStreamStateChanged(void *data, pw_stream_state old, pw_st
 				 sizeof(struct spa_meta_bitmap) + w * h * CURSOR_BPP)
 static const int videoDamageRegionCount = 16;
 
-void PipeWireStream::newStreamParams()
+void ScreenCastStream::newStreamParams()
 {
     const int bpp = videoFormat.format == SPA_VIDEO_FORMAT_RGB || videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
     auto stride = SPA_ROUND_UP_N (m_resolution.width() * bpp, 4);
@@ -114,13 +114,13 @@ void PipeWireStream::newStreamParams()
     pw_stream_update_params(pwStream, params, 3);
 }
 
-void PipeWireStream::onStreamParamChanged(void *data, uint32_t id, const struct spa_pod *format)
+void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struct spa_pod *format)
 {
     if (!format || id != SPA_PARAM_Format) {
         return;
     }
 
-    PipeWireStream *pw = static_cast<PipeWireStream *>(data);
+    ScreenCastStream *pw = static_cast<ScreenCastStream *>(data);
     spa_format_video_raw_parse (format, &pw->videoFormat);
     // TODO[explicit_modifiers]: check if modifier list or single modifier,
     // make test allocation, fixate format, ...
@@ -130,10 +130,10 @@ void PipeWireStream::onStreamParamChanged(void *data, uint32_t id, const struct 
     pw->newStreamParams();
 }
 
-void PipeWireStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
+void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
 {
     QSharedPointer<DmaBufTexture> dmabuf;
-    PipeWireStream *stream = static_cast<PipeWireStream *>(data);
+    ScreenCastStream *stream = static_cast<ScreenCastStream *>(data);
     struct spa_data *spa_data = buffer->buffer->datas;
 
     spa_data->mapoffset = 0;
@@ -190,9 +190,9 @@ void PipeWireStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
     }
 }
 
-void PipeWireStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
+void ScreenCastStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
 {
-    PipeWireStream *stream = static_cast<PipeWireStream *>(data);
+    ScreenCastStream *stream = static_cast<ScreenCastStream *>(data);
     stream->m_dmabufDataForPwBuffer.remove(buffer);
 
     struct spa_buffer *spa_buffer = buffer->buffer;
@@ -203,21 +203,21 @@ void PipeWireStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
     }
 }
 
-PipeWireStream::PipeWireStream(ScreenCastSource *source, QObject *parent)
+ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
     : QObject(parent)
     , m_source(source)
     , m_resolution(source->textureSize())
 {
-    connect(source, &ScreenCastSource::closed, this, &PipeWireStream::stopStreaming);
+    connect(source, &ScreenCastSource::closed, this, &ScreenCastStream::stopStreaming);
 
     pwStreamEvents.version = PW_VERSION_STREAM_EVENTS;
-    pwStreamEvents.add_buffer = &PipeWireStream::onStreamAddBuffer;
-    pwStreamEvents.remove_buffer = &PipeWireStream::onStreamRemoveBuffer;
-    pwStreamEvents.state_changed = &PipeWireStream::onStreamStateChanged;
-    pwStreamEvents.param_changed = &PipeWireStream::onStreamParamChanged;
+    pwStreamEvents.add_buffer = &ScreenCastStream::onStreamAddBuffer;
+    pwStreamEvents.remove_buffer = &ScreenCastStream::onStreamRemoveBuffer;
+    pwStreamEvents.state_changed = &ScreenCastStream::onStreamStateChanged;
+    pwStreamEvents.param_changed = &ScreenCastStream::onStreamParamChanged;
 }
 
-PipeWireStream::~PipeWireStream()
+ScreenCastStream::~ScreenCastStream()
 {
     m_stopped = true;
     if (pwStream) {
@@ -225,7 +225,7 @@ PipeWireStream::~PipeWireStream()
     }
 }
 
-bool PipeWireStream::init()
+bool ScreenCastStream::init()
 {
     pwCore = PipeWireCore::self();
     if (!pwCore->m_error.isEmpty()) {
@@ -233,7 +233,7 @@ bool PipeWireStream::init()
         return false;
     }
 
-    connect(pwCore.data(), &PipeWireCore::pipewireFailed, this, &PipeWireStream::coreFailed);
+    connect(pwCore.data(), &PipeWireCore::pipewireFailed, this, &ScreenCastStream::coreFailed);
 
     if (!createStream()) {
         qCWarning(KWIN_SCREENCAST) << "Failed to create PipeWire stream";
@@ -244,7 +244,7 @@ bool PipeWireStream::init()
     return true;
 }
 
-uint PipeWireStream::framerate()
+uint ScreenCastStream::framerate()
 {
     if (pwStream) {
         return videoFormat.max_framerate.num / videoFormat.max_framerate.denom;
@@ -253,12 +253,12 @@ uint PipeWireStream::framerate()
     return 0;
 }
 
-uint PipeWireStream::nodeId()
+uint ScreenCastStream::nodeId()
 {
     return pwNodeId;
 }
 
-bool PipeWireStream::createStream()
+bool ScreenCastStream::createStream()
 {
     const QByteArray objname = "kwin-screencast-" + objectName().toUtf8();
     pwStream = pw_stream_new(pwCore->pwCore, objname, nullptr);
@@ -309,19 +309,19 @@ bool PipeWireStream::createStream()
 
     return true;
 }
-void PipeWireStream::coreFailed(const QString &errorMessage)
+void ScreenCastStream::coreFailed(const QString &errorMessage)
 {
     m_error = errorMessage;
     Q_EMIT stopStreaming();
 }
 
-void PipeWireStream::stop()
+void ScreenCastStream::stop()
 {
     m_stopped = true;
     delete this;
 }
 
-void PipeWireStream::recordFrame(const QRegion &damagedRegion)
+void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
 {
     Q_ASSERT(!m_stopped);
 
@@ -458,7 +458,7 @@ void PipeWireStream::recordFrame(const QRegion &damagedRegion)
     tryEnqueue(buffer);
 }
 
-void PipeWireStream::tryEnqueue(pw_buffer *buffer)
+void ScreenCastStream::tryEnqueue(pw_buffer *buffer)
 {
     m_pendingBuffer = buffer;
 
@@ -476,7 +476,7 @@ void PipeWireStream::tryEnqueue(pw_buffer *buffer)
         } else {
             m_pendingNotifier = new QSocketNotifier(m_pendingFence->fileDescriptor(),
                                                     QSocketNotifier::Read, this);
-            connect(m_pendingNotifier, &QSocketNotifier::activated, this, &PipeWireStream::enqueue);
+            connect(m_pendingNotifier, &QSocketNotifier::activated, this, &ScreenCastStream::enqueue);
         }
     } else {
         // The compositing backend doesn't support native fences. We don't have any other choice
@@ -486,7 +486,7 @@ void PipeWireStream::tryEnqueue(pw_buffer *buffer)
     }
 }
 
-void PipeWireStream::enqueue()
+void ScreenCastStream::enqueue()
 {
     Q_ASSERT_X(m_pendingBuffer, "enqueue", "pending buffer must be valid");
 
@@ -500,7 +500,7 @@ void PipeWireStream::enqueue()
     m_pendingNotifier = nullptr;
 }
 
-spa_pod *PipeWireStream::buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
+spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
              struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
              uint64_t *modifiers, int modifierCount)
 {
@@ -551,13 +551,13 @@ spa_pod *PipeWireStream::buildFormat(struct spa_pod_builder *b, enum spa_video_f
     return (spa_pod*)spa_pod_builder_pop(b, &f[0]);
 }
 
-QRect PipeWireStream::cursorGeometry(Cursor *cursor) const
+QRect ScreenCastStream::cursorGeometry(Cursor *cursor) const
 {
     const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
     return QRect{position, m_cursor.texture->size()};
 }
 
-void PipeWireStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_cursor)
+void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_cursor)
 {
     if (!cursor || !spa_meta_cursor || !m_cursor.viewport.contains(cursor->pos())) {
         return;
@@ -602,7 +602,7 @@ void PipeWireStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_cu
     painter.drawImage(QPoint(), image);
 }
 
-void PipeWireStream::setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport)
+void ScreenCastStream::setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport)
 {
     m_cursor.mode = mode;
     m_cursor.scale = scale;
