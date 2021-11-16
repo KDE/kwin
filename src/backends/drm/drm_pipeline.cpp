@@ -176,7 +176,9 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
             if (pipeline->pending.crtc) {
                 pipeline->pending.crtc->commitPending();
                 pipeline->pending.crtc->primaryPlane()->commitPending();
-                pipeline->pending.crtc->cursorPlane()->commitPending();
+                if (pipeline->pending.crtc->cursorPlane()) {
+                    pipeline->pending.crtc->cursorPlane()->commitPending();
+                }
             }
             if (mode != CommitMode::Test) {
                 pipeline->m_modesetPresentPending = false;
@@ -186,7 +188,9 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                     pipeline->pending.crtc->primaryPlane()->setNext(pipeline->m_primaryBuffer);
                     pipeline->pending.crtc->commit();
                     pipeline->pending.crtc->primaryPlane()->commit();
-                    pipeline->pending.crtc->cursorPlane()->commit();
+                    if (pipeline->pending.crtc->cursorPlane()) {
+                        pipeline->pending.crtc->cursorPlane()->commit();
+                    }
                 }
                 pipeline->m_current = pipeline->pending;
                 if (modeset && pipeline->activePending()) {
