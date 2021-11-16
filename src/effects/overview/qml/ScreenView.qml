@@ -15,6 +15,8 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 FocusScope {
     id: container
     focus: true
+    LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+    LayoutMirroring.childrenInherit: true
 
     required property QtObject effect
     required property QtObject targetScreen
