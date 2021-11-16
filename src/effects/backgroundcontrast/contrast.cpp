@@ -54,7 +54,7 @@ ContrastEffect::ContrastEffect()
     // Fetch the contrast regions for all windows
     const EffectWindowList windowList = effects->stackingOrder();
     for (EffectWindow *window : windowList) {
-        updateContrastRegion(window);
+        slotWindowAdded(window);
     }
 }
 
