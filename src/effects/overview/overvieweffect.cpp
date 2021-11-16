@@ -279,6 +279,9 @@ void OverviewEffect::activate()
     effects->setActiveFullScreenEffect(this);
     m_activated = true;
 
+    // Install an event filter to monitor cursor shape changes.
+    qApp->installEventFilter(this);
+
     // This is an ugly hack to make hidpi rendering work as expected on wayland until we switch
     // to Qt 6.3 or newer. See https://codereview.qt-project.org/c/qt/qtdeclarative/+/361506
     if (effects->waylandDisplay()) {
@@ -317,6 +320,7 @@ void OverviewEffect::realDeactivate()
     m_screenViews.clear();
     m_dummyWindow.reset();
     m_activated = false;
+    qApp->removeEventFilter(this);
     effects->ungrabKeyboard();
     effects->stopMouseInterception(this);
     effects->setActiveFullScreenEffect(nullptr);
@@ -333,6 +337,16 @@ void OverviewEffect::handleScreenAdded(EffectScreen *screen)
 void OverviewEffect::handleScreenRemoved(EffectScreen *screen)
 {
     delete m_screenViews.take(screen);
+}
+
+bool OverviewEffect::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::CursorChange) {
+        if (const QWindow *window = qobject_cast<QWindow *>(watched)) {
+            effects->defineCursor(window->cursor().shape());
+        }
+    }
+    return false;
 }
 
 void OverviewEffect::createScreenView(EffectScreen *screen)

@@ -53,6 +53,8 @@ public:
     OverviewEffect();
     ~OverviewEffect() override;
 
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
     ExpoLayout::LayoutMode layout() const;
     void setLayout(ExpoLayout::LayoutMode layout);
 
