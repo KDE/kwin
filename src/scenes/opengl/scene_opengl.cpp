@@ -585,13 +585,6 @@ void SceneOpenGL::performPaintWindow(EffectWindowImpl* w, int mask, const QRegio
     if (mask & PAINT_WINDOW_LANCZOS) {
         if (!m_lanczosFilter) {
             m_lanczosFilter = new LanczosFilter(this);
-            // reset the lanczos filter when the screen gets resized
-            // it will get created next paint
-            connect(screens(), &Screens::changed, this, [this]() {
-                makeOpenGLContextCurrent();
-                delete m_lanczosFilter;
-                m_lanczosFilter = nullptr;
-            });
         }
         m_lanczosFilter->performPaint(w, mask, region, data);
     } else
