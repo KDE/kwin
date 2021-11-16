@@ -268,6 +268,8 @@ bool DrmGpu::updateOutputs()
                 qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
                 m_pipelines << conn->pipeline();
                 if (conn->isNonDesktop()) {
+                    conn->pipeline()->pending.active = false;
+                    conn->pipeline()->applyPendingChanges();
                     auto leaseOutput = new DrmLeaseOutput(conn->pipeline(), m_leaseDevice);
                     m_leaseOutputs << leaseOutput;
                 } else {
@@ -311,6 +313,7 @@ bool DrmGpu::updateOutputs()
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->applyPendingChanges();
             if (!pipeline->pending.crtc && pipeline->output()) {
+                pipeline->pending.enabled = false;
                 pipeline->output()->setEnabled(false);
             }
         }
@@ -335,35 +338,28 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmC
             qCWarning(KWIN_DRM) << "disabling connector" << conn->modelName() << "without a crtc";
             conn->pipeline()->pending.crtc = nullptr;
         }
-        // non-desktop outputs need to be tested when they would be enabled so that they can be used if leased
-        QVector<DrmPipeline*> leasePipelines;
-        for (const auto &output : qAsConst(m_leaseOutputs)) {
-            if (!output->lease()) {
-                output->pipeline()->pending.active = true;
-                leasePipelines << output->pipeline();
+        // pipelines that are enabled but not active need to be activated for the test
+        QVector<DrmPipeline*> inactivePipelines;
+        for (const auto &pipeline : qAsConst(m_pipelines)) {
+            if (!pipeline->pending.active) {
+                pipeline->pending.active = true;
+                inactivePipelines << pipeline;
             }
         }
         const auto unused = unusedObjects();
         bool test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
-        if (!leasePipelines.isEmpty() && test) {
-            // non-desktop outputs should be disabled for normal usage
-            for (const auto &pipeline : qAsConst(leasePipelines)) {
-                pipeline->pending.active = false;
-            }
-            bool ret = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
-            if (ret) {
-                for (const auto &pipeline : qAsConst(leasePipelines)) {
-                    pipeline->applyPendingChanges();
-                }
-            }
-            return ret;
-        } else {
-            return test;
+        // disable inactive pipelines again
+        for (const auto &pipeline : qAsConst(inactivePipelines)) {
+            pipeline->pending.active = false;
         }
+        if (!inactivePipelines.isEmpty() && test) {
+            test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
+        }
+        return test;
     }
     auto connector = connectors.takeFirst();
     auto pipeline = connector->pipeline();
-    if (const auto &output = pipeline->output(); output && !pipeline->pending.active) {
+    if (!pipeline->pending.enabled) {
         // disabled pipelines don't need CRTCs
         pipeline->pending.crtc = nullptr;
         return checkCrtcAssignment(connectors, crtcs);

@@ -92,7 +92,8 @@ public:
 
     struct State {
         DrmCrtc *crtc = nullptr;
-        bool active = true;
+        bool active = true; // whether or not the pipeline should be currently used
+        bool enabled = true;// whether or not the pipeline needs a crtc
         int modeIndex = 0;
         uint32_t overscan = 0;
         AbstractWaylandOutput::RgbRange rgbRange = AbstractWaylandOutput::RgbRange::Automatic;

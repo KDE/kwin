@@ -453,6 +453,7 @@ bool DrmOutput::queueChanges(const WaylandOutputConfig &config)
     m_pipeline->pending.overscan = props->overscan;
     m_pipeline->pending.rgbRange = props->rgbRange;
     m_pipeline->pending.transformation = DrmPlane::Transformation::Rotate0;
+    m_pipeline->pending.enabled = props->enabled;
     return true;
 }
 
