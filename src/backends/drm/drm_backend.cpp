@@ -355,7 +355,9 @@ namespace KWinKScreenIntegration
         QStringList hashedOutputs;
         hashedOutputs.reserve(outputs.count());
         for (auto output : qAsConst(outputs)) {
-            hashedOutputs << outputHash(output);
+            if (!output->isPlaceholder()) {
+                hashedOutputs << outputHash(output);
+            }
         }
         std::sort(hashedOutputs.begin(), hashedOutputs.end());
         const auto hash = QCryptographicHash::hash(hashedOutputs.join(QString()).toLatin1(), QCryptographicHash::Md5);
@@ -431,6 +433,9 @@ void DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput*> &out
     // default position goes from left to right
     QPoint pos(0, 0);
     for (const auto &output : qAsConst(outputs)) {
+        if (output->isPlaceholder()) {
+            continue;
+        }
         auto props = cfg.changeSet(output);
         const QJsonObject outputInfo = outputsInfo[output];
         qCDebug(KWIN_DRM) << "Reading output configuration for " << output;
