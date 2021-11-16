@@ -35,21 +35,6 @@ class OutputDeviceModeV2InterfacePrivate;
 class KWAYLANDSERVER_EXPORT OutputDeviceV2Interface : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QSize physicalSize READ physicalSize WRITE setPhysicalSize)
-    Q_PROPERTY(QPoint globalPosition READ globalPosition WRITE setGlobalPosition)
-    Q_PROPERTY(QString manufacturer READ manufacturer WRITE setManufacturer)
-    Q_PROPERTY(QString model READ model WRITE setModel)
-    Q_PROPERTY(QString serialNumber READ serialNumber WRITE setSerialNumber)
-    Q_PROPERTY(QString eisaId READ eisaId WRITE setEisaId)
-    Q_PROPERTY(QString name READ name WRITE setName)
-    Q_PROPERTY(qreal scale READ scale WRITE setScale)
-    Q_PROPERTY(QByteArray edid READ edid WRITE setEdid)
-    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled)
-    Q_PROPERTY(QUuid uuid READ uuid WRITE setUuid)
-    Q_PROPERTY(Capabilities capabilities READ capabilities WRITE setCapabilities)
-    Q_PROPERTY(uint32_t overscan READ overscan WRITE setOverscan)
-    Q_PROPERTY(VrrPolicy vrrPolicy READ vrrPolicy WRITE setVrrPolicy)
-    Q_PROPERTY(RgbRange rgbRange READ rgbRange WRITE setRgbRange)
 public:
     enum class SubPixel {
         Unknown,
