@@ -6,12 +6,13 @@
 
 #include "surfaceitem_internal.h"
 #include "composite.h"
+#include "internal_client.h"
 #include "scene.h"
 
 namespace KWin
 {
 
-SurfaceItemInternal::SurfaceItemInternal(Toplevel *window, Item *parent)
+SurfaceItemInternal::SurfaceItemInternal(InternalClient *window, Item *parent)
     : SurfaceItem(window, parent)
 {
     connect(window, &Toplevel::bufferGeometryChanged,

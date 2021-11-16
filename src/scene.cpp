@@ -641,8 +641,8 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
         m_windowItem.reset(new WindowItemWayland(toplevel));
     } else if (qobject_cast<X11Client *>(client) || qobject_cast<Unmanaged *>(client)) {
         m_windowItem.reset(new WindowItemX11(toplevel));
-    } else if (qobject_cast<InternalClient *>(client)) {
-        m_windowItem.reset(new WindowItemInternal(toplevel));
+    } else if (auto internalClient = qobject_cast<InternalClient *>(client)) {
+        m_windowItem.reset(new WindowItemInternal(internalClient));
     } else {
         Q_UNREACHABLE();
     }

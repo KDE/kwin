@@ -28,7 +28,6 @@ public:
     void unrefWindow();
     void discard();
     QMargins frameMargins() const override;
-    qreal bufferScale() const override;
     int desktop() const override;
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
@@ -128,7 +127,6 @@ private:
     bool m_wasPopupWindow;
     bool m_wasOutline;
     bool m_wasLockScreen;
-    qreal m_bufferScale = 1;
 };
 
 inline void Deleted::refWindow()

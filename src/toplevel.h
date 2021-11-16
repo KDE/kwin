@@ -52,7 +52,7 @@ enum class ReleaseReason {
     KWinShutsDown ///< Release on KWin Shutdown (window still valid)
 };
 
-/** 
+/**
  * Represents a window.
  */
 class KWIN_EXPORT Toplevel : public QObject
@@ -350,13 +350,6 @@ public:
      * @since 5.12
      */
     qreal screenScale() const; //
-    /**
-     * Returns the ratio between physical pixels and device-independent pixels for
-     * the attached buffer (or pixmap).
-     *
-     * For X11 clients, this method always returns 1.
-     */
-    virtual qreal bufferScale() const;
     virtual QPoint clientPos() const = 0; // inside of geometry()
     QSize clientSize() const;
     /**

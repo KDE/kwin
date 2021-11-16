@@ -24,7 +24,6 @@ public:
 
     bool eventFilter(QObject *watched, QEvent *event) override;
 
-    qreal bufferScale() const override;
     QString captionNormal() const override;
     QString captionSuffix() const override;
     QSize minSize() const override;
@@ -62,6 +61,7 @@ public:
 
     void present(const QSharedPointer<QOpenGLFramebufferObject> fbo);
     void present(const QImage &image, const QRegion &damage);
+    qreal bufferScale() const;
     QWindow *internalWindow() const;
 
 protected:

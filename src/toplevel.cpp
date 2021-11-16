@@ -424,11 +424,6 @@ qreal Toplevel::screenScale() const
     return m_screenScale;
 }
 
-qreal Toplevel::bufferScale() const
-{
-    return surface() ? surface()->bufferScale() : 1;
-}
-
 bool Toplevel::isOnActiveOutput() const
 {
     return isOnOutput(workspace()->activeOutput());

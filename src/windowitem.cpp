@@ -8,6 +8,7 @@
 #include "abstract_client.h"
 #include "decorationitem.h"
 #include "deleted.h"
+#include "internal_client.h"
 #include "shadowitem.h"
 #include "surfaceitem_internal.h"
 #include "surfaceitem_wayland.h"
@@ -156,7 +157,7 @@ WindowItemWayland::WindowItemWayland(Toplevel *window, Item *parent)
     updateSurfaceItem(new SurfaceItemWayland(window->surface(), window, this));
 }
 
-WindowItemInternal::WindowItemInternal(Toplevel *window, Item *parent)
+WindowItemInternal::WindowItemInternal(InternalClient *window, Item *parent)
     : WindowItem(window, parent)
 {
     updateSurfaceItem(new SurfaceItemInternal(window, this));
