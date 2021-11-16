@@ -1486,7 +1486,7 @@ void XdgToplevelClient::installXdgDecoration(XdgToplevelDecorationV1Interface *d
     connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::preferredModeChanged, this, [this] {
         if (m_isInitialized) {
             // force is true as we must send a new configure response.
-            updateDecoration(/* check_workspace_pos */ true, /* force */ true);
+            updateDecoration(/* check_workspace_pos */ false, /* force */ true);
         }
     });
 }
