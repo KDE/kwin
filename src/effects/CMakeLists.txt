@@ -44,7 +44,6 @@ set(kwin_effect_OWN_LIBS
 set(kwin_effect_KDE_LIBS
     KF5::ConfigGui
     KF5::ConfigWidgets
-    KF5::Declarative # overview effect
     KF5::GlobalAccel
     KF5::I18n
     KF5::Notifications # screenshot effect
