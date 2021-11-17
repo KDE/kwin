@@ -1587,6 +1587,10 @@ static void clamp_sides(int left, int width, int right, const uint32_t *src, uin
 static void clamp(QImage &image, const QRect &viewport)
 {
     Q_ASSERT(image.depth() == 32);
+    if (viewport.isEmpty()) {
+        image = {};
+        return;
+    }
 
     const QRect rect = image.rect();
 
