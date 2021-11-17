@@ -3,8 +3,21 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kwin_effects\" -DEFFECT_BUILTINS)
 
 include_directories(${KWin_SOURCE_DIR}/src) # for xcbutils.h
 
-add_executable(kwin-strip-effect-metadata strip-effect-metadata.cpp)
-target_link_libraries(kwin-strip-effect-metadata Qt5::Core)
+if (CMAKE_CROSSCOMPILING)
+    if (NOT KWIN_HOST_TOOLING)
+        message(FATAL_ERROR "Please provide the path to a native build and pass -DKWIN_HOST_TOOLING=path")
+    endif()
+    find_file(KSEM_EXECUTABLE StripEffectMetadataTargets.cmake
+              PATHS ${KWIN_HOST_TOOLING}
+              NO_DEFAULT_PATH
+              NO_CMAKE_FIND_ROOT_PATH)
+    include(${KSEM_EXECUTABLE})
+else()
+    add_executable(kwin-strip-effect-metadata strip-effect-metadata.cpp)
+    target_link_libraries(kwin-strip-effect-metadata Qt5::Core)
+    # Export the kwin-strip-effect-metadata target to a file, so it can be used by another build.
+    export(TARGETS kwin-strip-effect-metadata FILE ${CMAKE_BINARY_DIR}/StripEffectMetadataTargets.cmake)
+endif()
 
 function (kwin_strip_builtin_effect_metadata target metadata)
     set(stripped_metadata "${CMAKE_CURRENT_BINARY_DIR}/${metadata}.stripped")
