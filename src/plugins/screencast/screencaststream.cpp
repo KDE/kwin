@@ -553,6 +553,10 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
 
 QRect ScreenCastStream::cursorGeometry(Cursor *cursor) const
 {
+    if (!m_cursor.texture) {
+        return {};
+    }
+
     const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
     return QRect{position, m_cursor.texture->size()};
 }
