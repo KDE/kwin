@@ -298,15 +298,10 @@ void DrmOutput::updateTransform(Transform transform)
     static int envOnlySoftwareRotations = qEnvironmentVariableIntValue("KWIN_DRM_SW_ROTATIONS_ONLY", &valid) != 0;
     if (valid && !envOnlySoftwareRotations) {
         m_pipeline->pending.transformation = outputToPlaneTransform(transform);
-        if (!DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test)) {
-            // just in case, if we had any rotation before, clear it
-            m_pipeline->pending.transformation = DrmPlane::Transformation::Rotate0;
-            if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test)) {
-                m_pipeline->applyPendingChanges();
-            } else {
-                m_pipeline->revertPendingChanges();
-                qCWarning(KWIN_DRM) << "Can't switch rotation back to Rotate0!";
-            }
+        if (m_gpu->testPendingConfiguration(DrmGpu::TestMode::TestOnly)) {
+            m_pipeline->applyPendingChanges();
+        } else {
+            m_pipeline->revertPendingChanges();
         }
     }
 }

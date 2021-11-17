@@ -70,7 +70,6 @@ public:
 
     QVector<DrmAbstractOutput*> outputs() const;
     const QVector<DrmPipeline*> pipelines() const;
-    bool testPendingConfiguration();
 
     void setEglDisplay(EGLDisplay display);
     void setEglBackend(EglGbmBackend *eglBackend);
@@ -81,6 +80,11 @@ public:
     DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputMode mode);
     void removeVirtualOutput(DrmVirtualOutput *output);
 
+    enum class TestMode {
+        TestOnly,
+        TestWithCrtcReallocation
+    };
+    bool testPendingConfiguration(TestMode mode = TestMode::TestWithCrtcReallocation);
     bool needsModeset() const;
     bool maybeModeset();
 
@@ -100,6 +104,7 @@ private:
     void waitIdle();
 
     bool checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmCrtc*> crtcs);
+    bool testPipelines();
     QVector<DrmObject*> unusedObjects() const;
 
     void handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest);

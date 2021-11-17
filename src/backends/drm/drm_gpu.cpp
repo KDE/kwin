@@ -335,24 +335,7 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmC
             qCWarning(KWIN_DRM) << "disabling connector" << conn->modelName() << "without a crtc";
             conn->pipeline()->pending.crtc = nullptr;
         }
-        // pipelines that are enabled but not active need to be activated for the test
-        QVector<DrmPipeline*> inactivePipelines;
-        for (const auto &pipeline : qAsConst(m_pipelines)) {
-            if (!pipeline->pending.active) {
-                pipeline->pending.active = true;
-                inactivePipelines << pipeline;
-            }
-        }
-        const auto unused = unusedObjects();
-        bool test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
-        // disable inactive pipelines again
-        for (const auto &pipeline : qAsConst(inactivePipelines)) {
-            pipeline->pending.active = false;
-        }
-        if (!inactivePipelines.isEmpty() && test) {
-            test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
-        }
-        return test;
+        return testPipelines();
     }
     auto connector = connectors.takeFirst();
     auto pipeline = connector->pipeline();
@@ -388,7 +371,7 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmC
     return false;
 }
 
-bool DrmGpu::testPendingConfiguration()
+bool DrmGpu::testPendingConfiguration(TestMode mode)
 {
     QVector<DrmConnector *> connectors;
     for (const auto &conn : qAsConst(m_connectors)) {
@@ -410,7 +393,33 @@ bool DrmGpu::testPendingConfiguration()
             return c1->getProp(DrmConnector::PropertyIndex::CrtcId)->current() > c2->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
         });
     }
-    return checkCrtcAssignment(connectors, crtcs);
+    if (mode == TestMode::TestWithCrtcReallocation) {
+        return checkCrtcAssignment(connectors, crtcs);
+    } else {
+        return testPipelines();
+    }
+}
+
+bool DrmGpu::testPipelines()
+{
+    // pipelines that are enabled but not active need to be activated for the test
+    QVector<DrmPipeline*> inactivePipelines;
+    for (const auto &pipeline : qAsConst(m_pipelines)) {
+        if (!pipeline->pending.active) {
+            pipeline->pending.active = true;
+            inactivePipelines << pipeline;
+        }
+    }
+    const auto unused = unusedObjects();
+    bool test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
+    // disable inactive pipelines again
+    for (const auto &pipeline : qAsConst(inactivePipelines)) {
+        pipeline->pending.active = false;
+    }
+    if (!inactivePipelines.isEmpty() && test) {
+        test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
+    }
+    return test;
 }
 
 DrmOutput *DrmGpu::findOutput(quint32 connector)
