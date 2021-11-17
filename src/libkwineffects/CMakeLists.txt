@@ -41,6 +41,7 @@ set(kwin_EFFECTSLIB_SRCS
     kwindeformeffect.cpp
     kwineffects.cpp
     kwinoffscreenquickview.cpp
+    kwinquickeffect.cpp
     logging.cpp
 )
 
@@ -100,6 +101,7 @@ install(FILES
     kwinglutils.h
     kwinglutils_funcs.h
     kwinoffscreenquickview.h
+    kwinquickeffect.h
     kwinxrenderutils.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR} COMPONENT Devel)
 
