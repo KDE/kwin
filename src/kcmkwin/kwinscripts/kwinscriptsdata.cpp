@@ -6,12 +6,11 @@
 
 #include "kwinscriptsdata.h"
 
-#include <KPluginFactory>
-#include <KPackage/PackageLoader>
+#include <KConfigGroup>
 #include <KPackage/Package>
+#include <KPackage/PackageLoader>
 #include <KPackage/PackageStructure>
-#include "kpluginselector.h"
-
+#include <KPluginFactory>
 
 KWinScriptsData::KWinScriptsData(QObject *parent, const QVariantList &args)
     : KCModuleData(parent, args)
@@ -19,25 +18,22 @@ KWinScriptsData::KWinScriptsData(QObject *parent, const QVariantList &args)
 {
 }
 
-QList<KPluginInfo> KWinScriptsData::pluginInfoList() const
+QVector<KPluginMetaData> KWinScriptsData::pluginMetaDataList() const
 {
     auto filter =  [](const KPluginMetaData &md) {
         return md.isValid() && !md.rawData().value("X-KWin-Exclude-Listing").toBool();
     };
 
     const QString scriptFolder = QStringLiteral("kwin/scripts/");
-    const auto scripts = KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), scriptFolder, filter);
-
-    return KPluginInfo::fromMetaData(scripts.toVector());
+    return KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), scriptFolder, filter).toVector();
 }
 
 bool KWinScriptsData::isDefaults() const
 {
-    QList<KPluginInfo> scriptinfos = pluginInfoList();
+    QVector<KPluginMetaData> plugins = pluginMetaDataList();
     KConfigGroup cfgGroup(m_kwinConfig, "Plugins");
-    for (auto &script : scriptinfos) {
-        script.load(cfgGroup);
-        if (script.isPluginEnabled() != script.isPluginEnabledByDefault()) {
+    for (auto &plugin : plugins) {
+        if (cfgGroup.readEntry(plugin.pluginId() + QLatin1String("Enabled"), plugin.isEnabledByDefault()) != plugin.isEnabledByDefault()) {
             return false;
         }
     }

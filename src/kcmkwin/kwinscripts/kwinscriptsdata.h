@@ -8,10 +8,10 @@
 #define KWINSCRIPTSDATA_H
 
 #include <QObject>
-#include <QList>
+#include <QVector>
 
 #include <KCModuleData>
-#include <KPluginInfo>
+#include <KPluginMetaData>
 #include <KSharedConfig>
 
 class KWinScriptsData : public KCModuleData
@@ -23,7 +23,7 @@ public:
 
     bool isDefaults() const override;
 
-    QList<KPluginInfo> pluginInfoList() const;
+    QVector<KPluginMetaData> pluginMetaDataList() const;
 
 private:
     KSharedConfigPtr m_kwinConfig;

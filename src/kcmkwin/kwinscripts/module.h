@@ -8,8 +8,8 @@
 #define MODULE_H
 
 #include <KCModule>
+#include <KPluginMetaData>
 #include <KSharedConfig>
-#include <KPluginInfo>
 
 namespace Ui
 {
@@ -62,7 +62,7 @@ private:
     void updateListViewContents();
     KSharedConfigPtr m_kwinConfig;
     KWinScriptsData *m_kwinScriptsData;
-    QList<KPluginInfo> m_pendingDeletions;
+    QList<KPluginMetaData> m_pendingDeletions;
 };
 
 #endif // MODULE_H
