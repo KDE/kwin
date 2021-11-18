@@ -110,7 +110,7 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline*> &pipelines, 
 {
     drmModeAtomicReq *req = drmModeAtomicAlloc();
     if (!req) {
-        qCDebug(KWIN_DRM) << "Failed to allocate drmModeAtomicReq!" << strerror(errno);
+        qCCritical(KWIN_DRM) << "Failed to allocate drmModeAtomicReq!" << strerror(errno);
         return false;
     }
     uint32_t flags = 0;
@@ -159,11 +159,11 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline*> &pipelines, 
         flags |= DRM_MODE_ATOMIC_NONBLOCK;
     }
     if (drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, nullptr) != 0) {
-        qCWarning(KWIN_DRM) << "Atomic test for" << mode << "failed!" << strerror(errno);
+        qCDebug(KWIN_DRM) << "Atomic test for" << mode << "failed!" << strerror(errno);
         return failed();
     }
     if (mode != CommitMode::Test && drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, flags, nullptr) != 0) {
-        qCWarning(KWIN_DRM) << "Atomic commit failed! This should never happen!" << strerror(errno);
+        qCCritical(KWIN_DRM) << "Atomic commit failed! This should never happen!" << strerror(errno);
         return failed();
     }
     for (const auto &pipeline : pipelines) {
@@ -577,17 +577,17 @@ uint16_t *DrmGammaRamp::blue() const
 void DrmPipeline::printFlags(uint32_t flags)
 {
     if (flags == 0) {
-        qCWarning(KWIN_DRM) << "Flags: none";
+        qCDebug(KWIN_DRM) << "Flags: none";
     } else {
-        qCWarning(KWIN_DRM) << "Flags:";
+        qCDebug(KWIN_DRM) << "Flags:";
         if (flags & DRM_MODE_PAGE_FLIP_EVENT) {
-            qCWarning(KWIN_DRM) << "\t DRM_MODE_PAGE_FLIP_EVENT";
+            qCDebug(KWIN_DRM) << "\t DRM_MODE_PAGE_FLIP_EVENT";
         }
         if (flags & DRM_MODE_ATOMIC_ALLOW_MODESET) {
-            qCWarning(KWIN_DRM) << "\t DRM_MODE_ATOMIC_ALLOW_MODESET";
+            qCDebug(KWIN_DRM) << "\t DRM_MODE_ATOMIC_ALLOW_MODESET";
         }
         if (flags & DRM_MODE_PAGE_FLIP_ASYNC) {
-            qCWarning(KWIN_DRM) << "\t DRM_MODE_PAGE_FLIP_ASYNC";
+            qCDebug(KWIN_DRM) << "\t DRM_MODE_PAGE_FLIP_ASYNC";
         }
     }
 }
@@ -601,17 +601,17 @@ void DrmPipeline::printProps(DrmObject *object, PrintMode mode)
     if (!any) {
         return;
     }
-    qCWarning(KWIN_DRM) << object->typeName() << object->id();
+    qCDebug(KWIN_DRM) << object->typeName() << object->id();
     for (const auto &prop : list) {
         if (prop) {
             uint64_t current = prop->name().startsWith("SRC_") ? prop->current() >> 16 : prop->current();
             if (prop->isImmutable() || !prop->needsCommit()) {
                 if (mode == PrintMode::All) {
-                    qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current;
+                    qCDebug(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current;
                 }
             } else {
                 uint64_t pending = prop->name().startsWith("SRC_") ? prop->pending() >> 16 : prop->pending();
-                qCWarning(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current << "->" << pending;
+                qCDebug(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current << "->" << pending;
             }
         }
     }
@@ -619,7 +619,7 @@ void DrmPipeline::printProps(DrmObject *object, PrintMode mode)
 
 void DrmPipeline::printDebugInfo() const
 {
-    qCWarning(KWIN_DRM) << "Drm objects:";
+    qCDebug(KWIN_DRM) << "Drm objects:";
     printProps(m_connector, PrintMode::All);
     if (pending.crtc) {
         printProps(pending.crtc, PrintMode::All);
