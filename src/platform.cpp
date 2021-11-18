@@ -158,8 +158,15 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
     }
 
     if (applyOutputChanges(cfg)) {
-        if (config->primaryChanged()) {
-            setPrimaryOutput(findOutput(config->primary()->uuid()));
+        if (config->primaryChanged() || !primaryOutput()->isEnabled()) {
+            auto requestedPrimaryOutput = findOutput(config->primary()->uuid());
+            if (requestedPrimaryOutput && requestedPrimaryOutput->isEnabled()) {
+                setPrimaryOutput(requestedPrimaryOutput);
+            } else {
+                auto defaultPrimaryOutput = enabledOutputs().constFirst();
+                qCWarning(KWIN_CORE) << "Requested invalid primary screen, using" << defaultPrimaryOutput;
+                setPrimaryOutput(defaultPrimaryOutput);
+            }
         }
         Q_EMIT screens()->changed();
         config->setApplied();
