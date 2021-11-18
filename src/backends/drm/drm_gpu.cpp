@@ -275,7 +275,7 @@ bool DrmGpu::updateOutputs()
                 } else {
                     auto output = new DrmOutput(conn->pipeline());
                     if (!output->initCursor(m_cursorSize)) {
-                        m_platform->setSoftwareCursor(true);
+                        m_platform->setSoftwareCursorForced(true);
                     }
                     m_drmOutputs << output;
                     m_outputs << output;
