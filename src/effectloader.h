@@ -317,9 +317,7 @@ private:
     KPluginMetaData findEffect(const QString &name) const;
     EffectPluginFactory *factory(const KPluginMetaData &info) const;
     QStringList m_loadedEffects;
-    EffectLoadQueue< PluginEffectLoader, KPluginMetaData> *m_queue;
     QString m_pluginSubDirectory;
-    QMetaObject::Connection m_queryConnection;
 };
 
 class KWIN_EXPORT EffectLoader : public AbstractEffectLoader

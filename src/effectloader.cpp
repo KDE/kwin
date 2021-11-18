@@ -194,7 +194,6 @@ void ScriptedEffectLoader::clear()
 
 PluginEffectLoader::PluginEffectLoader(QObject *parent)
     : AbstractEffectLoader(parent)
-    , m_queue(new EffectLoadQueue< PluginEffectLoader, KPluginMetaData>(this))
     , m_pluginSubDirectory(QStringLiteral("kwin/effects/plugins"))
 {
 }
@@ -332,25 +331,13 @@ bool PluginEffectLoader::loadEffect(const KPluginMetaData &info, LoadEffectFlags
 
 void PluginEffectLoader::queryAndLoadAll()
 {
-    if (m_queryConnection) {
-        return;
+    const auto effects = findAllEffects();
+    for (const auto &effect : effects) {
+        const LoadEffectFlags flags = readConfig(effect.pluginId(), effect.isEnabledByDefault());
+        if (flags.testFlag(LoadEffectFlag::Load)) {
+            loadEffect(effect, flags);
+        }
     }
-    // perform querying for the services in a thread
-    QFutureWatcher<QVector<KPluginMetaData>> *watcher = new QFutureWatcher<QVector<KPluginMetaData>>(this);
-    m_queryConnection = connect(watcher, &QFutureWatcher<QVector<KPluginMetaData>>::finished, this,
-        [this, watcher]() {
-            const auto effects = watcher->result();
-            for (const auto &effect : effects) {
-                const LoadEffectFlags flags = readConfig(effect.pluginId(), effect.isEnabledByDefault());
-                if (flags.testFlag(LoadEffectFlag::Load)) {
-                    m_queue->enqueue(qMakePair(effect, flags));
-                }
-            }
-            watcher->deleteLater();
-            m_queryConnection = QMetaObject::Connection();
-        },
-        Qt::QueuedConnection);
-    watcher->setFuture(QtConcurrent::run(this, &PluginEffectLoader::findAllEffects));
 }
 
 QVector<KPluginMetaData> PluginEffectLoader::findAllEffects() const
@@ -365,9 +352,6 @@ void PluginEffectLoader::setPluginSubDirectory(const QString &directory)
 
 void PluginEffectLoader::clear()
 {
-    disconnect(m_queryConnection);
-    m_queryConnection = QMetaObject::Connection();
-    m_queue->clear();
 }
 
 EffectLoader::EffectLoader(QObject *parent)
