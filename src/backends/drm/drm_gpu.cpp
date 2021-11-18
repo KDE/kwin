@@ -393,10 +393,23 @@ bool DrmGpu::testPendingConfiguration(TestMode mode)
             return c1->getProp(DrmConnector::PropertyIndex::CrtcId)->current() > c2->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
         });
     }
-    if (mode == TestMode::TestWithCrtcReallocation) {
-        return checkCrtcAssignment(connectors, crtcs);
+    const auto &test = [&connectors, &crtcs, this, mode](){
+        if (mode == TestMode::TestWithCrtcReallocation) {
+            return checkCrtcAssignment(connectors, crtcs);
+        } else {
+            return testPipelines();
+        }
+    };
+    if (test()) {
+        return true;
     } else {
-        return testPipelines();
+        // try again without hw rotation
+        bool hwRotationUsed = false;
+        for (const auto &pipeline : qAsConst(m_pipelines)) {
+            hwRotationUsed |= (pipeline->pending.transformation != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
+            pipeline->pending.transformation = DrmPlane::Transformation::Rotate0;
+        }
+        return hwRotationUsed ? test() : false;
     }
 }
 
