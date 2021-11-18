@@ -9,12 +9,13 @@
 #include "expolayout.h"
 #include "overviewconfig.h"
 
+#include <KDeclarative/QmlObjectSharedEngine>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 
 #include <QAction>
 #include <QDebug>
-#include <QQmlContext>
+#include <QQmlComponent>
 #include <QQuickItem>
 #include <QTimer>
 #include <QWindow>
@@ -22,18 +23,33 @@
 namespace KWin
 {
 
-OverviewScreenView::OverviewScreenView(EffectScreen *screen, QWindow *renderWindow, OverviewEffect *effect)
-    : EffectQuickScene(effect, renderWindow)
+OverviewScreenView::OverviewScreenView(QQmlComponent *component, EffectScreen *screen, QWindow *renderWindow, OverviewEffect *effect)
+    : EffectQuickView(effect, renderWindow)
 {
-    rootContext()->setContextProperty("effect", effect);
-    rootContext()->setContextProperty("targetScreen", screen);
+    const QVariantMap initialProperties {
+        { QStringLiteral("effect"), QVariant::fromValue(effect) },
+        { QStringLiteral("targetScreen"), QVariant::fromValue(screen) },
+    };
 
     setGeometry(screen->geometry());
-    setSource(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/overview/qml/ScreenView.qml"))));
-
     connect(screen, &EffectScreen::geometryChanged, this, [this, screen]() {
         setGeometry(screen->geometry());
     });
+
+    m_rootItem = qobject_cast<QQuickItem *>(component->createWithInitialProperties(initialProperties));
+    Q_ASSERT(m_rootItem);
+    m_rootItem->setParentItem(contentItem());
+
+    auto updateSize = [this]() { m_rootItem->setSize(contentItem()->size()); };
+    updateSize();
+    connect(contentItem(), &QQuickItem::widthChanged, m_rootItem, updateSize);
+    connect(contentItem(), &QQuickItem::heightChanged, m_rootItem, updateSize);
+}
+
+OverviewScreenView::~OverviewScreenView()
+{
+    delete m_rootItem;
+    m_rootItem = nullptr;
 }
 
 bool OverviewScreenView::isDirty() const
@@ -59,7 +75,7 @@ void OverviewScreenView::scheduleRepaint()
 
 void OverviewScreenView::stop()
 {
-    QMetaObject::invokeMethod(rootItem(), "stop");
+    QMetaObject::invokeMethod(m_rootItem, "stop");
 }
 
 OverviewEffect::OverviewEffect()
@@ -245,6 +261,21 @@ void OverviewEffect::activate()
         return;
     }
 
+    if (!m_qmlEngine) {
+        m_qmlEngine = new KDeclarative::QmlObjectSharedEngine(this);
+    }
+
+    if (!m_qmlComponent) {
+        m_qmlComponent = new QQmlComponent(m_qmlEngine->engine(), this);
+        m_qmlComponent->loadUrl(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/overview/qml/ScreenView.qml"))));
+        if (m_qmlComponent->isError()) {
+            qWarning() << "Failed to load the Overview effect:" << m_qmlComponent->errors();
+            delete m_qmlComponent;
+            m_qmlComponent = nullptr;
+            return;
+        }
+    }
+
     effects->setActiveFullScreenEffect(this);
     m_activated = true;
 
@@ -306,7 +337,7 @@ void OverviewEffect::handleScreenRemoved(EffectScreen *screen)
 
 void OverviewEffect::createScreenView(EffectScreen *screen)
 {
-    auto screenView = new OverviewScreenView(screen, m_dummyWindow.data(), this);
+    auto screenView = new OverviewScreenView(m_qmlComponent, screen, m_dummyWindow.data(), this);
     screenView->setAutomaticRepaint(false);
 
     connect(screenView, &EffectQuickView::repaintNeeded, this, [screenView]() {

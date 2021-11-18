@@ -11,17 +11,23 @@
 
 #include "expolayout.h"
 
+namespace KDeclarative
+{
+class QmlObjectSharedEngine;
+}
+
 namespace KWin
 {
 
 class OverviewEffect;
 
-class OverviewScreenView : public EffectQuickScene
+class OverviewScreenView : public EffectQuickView
 {
     Q_OBJECT
 
 public:
-    OverviewScreenView(EffectScreen *screen, QWindow *renderWindow, OverviewEffect *effect);
+    OverviewScreenView(QQmlComponent *component, EffectScreen *screen, QWindow *renderWindow, OverviewEffect *effect);
+    ~OverviewScreenView() override;
 
     bool isDirty() const;
     void markDirty();
@@ -32,6 +38,7 @@ public Q_SLOTS:
     void scheduleRepaint();
 
 private:
+    QQuickItem *m_rootItem = nullptr;
     bool m_dirty = false;
 };
 
@@ -89,6 +96,8 @@ private:
     void realDeactivate();
     void createScreenView(EffectScreen *screen);
 
+    KDeclarative::QmlObjectSharedEngine *m_qmlEngine = nullptr;
+    QQmlComponent *m_qmlComponent = nullptr;
     QScopedPointer<QWindow> m_dummyWindow;
     QTimer *m_shutdownTimer;
     QHash<EffectScreen *, OverviewScreenView *> m_screenViews;
