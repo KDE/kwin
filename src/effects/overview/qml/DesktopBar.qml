@@ -43,6 +43,7 @@ Item {
 
                 Column {
                     id: delegate
+                    activeFocusOnTab: true
                     width: bar.desktopWidth
                     height: bar.columnHeight
                     spacing: PlasmaCore.Units.smallSpacing
@@ -50,7 +51,36 @@ Item {
                     required property QtObject desktop
                     required property int index
 
+                    Keys.onEnterPressed: activate();
+                    Keys.onReturnPressed: activate();
+                    Keys.onSpacePressed: activate();
+                    Keys.onDeletePressed: remove();
+
+                    Keys.onPressed: {
+                        if (event.key === Qt.Key_F2) {
+                            event.accepted = true;
+                            label.startEditing();
+                        }
+                    }
+
+                    Keys.onLeftPressed: nextItemInFocusChain(LayoutMirroring.enabled).forceActiveFocus(Qt.BacktabFocusReason);
+                    Keys.onRightPressed: nextItemInFocusChain(!LayoutMirroring.enabled).forceActiveFocus(Qt.TabFocusReason);
+
+                    function activate() {
+                        thumbnail.state = "scaled";
+                    }
+
                     function remove() {
+                        if (desktopRepeater.count === 1) {
+                            return;
+                        }
+                        if (delegate.activeFocus) {
+                            if (delegate.index === 0) {
+                                desktopRepeater.itemAt(1).forceActiveFocus();
+                            } else {
+                                desktopRepeater.itemAt(delegate.index - 1).forceActiveFocus();
+                            }
+                        }
                         bar.desktopModel.remove(delegate.index);
                     }
 
@@ -126,7 +156,7 @@ Item {
                             border.width: 2
                             border.color: PlasmaCore.ColorScope.highlightColor
                             opacity: dropArea.containsDrag ? 0.5 : 1.0
-                            visible: !thumbnail.scaled && (dropArea.containsDrag || bar.selectedDesktop === delegate.desktop)
+                            visible: !thumbnail.scaled && (delegate.activeFocus || dropArea.containsDrag || bar.selectedDesktop === delegate.desktop)
                         }
 
                         MouseArea {
@@ -136,7 +166,7 @@ Item {
                                 mouse.accepted = true;
                                 switch (mouse.button) {
                                 case Qt.LeftButton:
-                                    thumbnail.state = "scaled";
+                                    delegate.activate();
                                     break;
                                 case Qt.MiddleButton:
                                     delegate.remove();
@@ -261,6 +291,9 @@ Item {
 
                 Keys.onReturnPressed: action.trigger()
                 Keys.onEnterPressed: action.trigger()
+
+                Keys.onLeftPressed: nextItemInFocusChain(LayoutMirroring.enabled).forceActiveFocus(Qt.BacktabFocusReason);
+                Keys.onRightPressed: nextItemInFocusChain(!LayoutMirroring.enabled).forceActiveFocus(Qt.TabFocusReason);
             }
         }
     }
