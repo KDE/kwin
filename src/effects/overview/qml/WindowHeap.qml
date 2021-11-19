@@ -92,6 +92,12 @@ FocusScope {
                             }
                         }
                     ]
+
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.NoButton
+                        cursorShape: dragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
+                    }
                 }
 
                 PlasmaCore.IconItem {
