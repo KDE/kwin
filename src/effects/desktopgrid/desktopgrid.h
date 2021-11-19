@@ -17,7 +17,7 @@
 
 class QTimer;
 
-#include "kwineffectquickview.h"
+#include "kwinoffscreenquickview.h"
 
 namespace KWin
 {
@@ -168,7 +168,7 @@ private:
     QRect m_windowMoveGeometry;
     QPoint m_windowMoveStartPoint;
 
-    QVector<EffectQuickScene*> m_desktopButtons;
+    QVector<OffscreenQuickScene*> m_desktopButtons;
 
     QAction *m_gestureAction;
     QAction *m_shortcutAction;

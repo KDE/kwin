@@ -253,9 +253,9 @@ void DesktopGridEffect::paintScreen(int mask, const QRegion &region, ScreenPaint
     }
 
     // paint the add desktop button
-    for (EffectQuickScene *view : qAsConst(m_desktopButtons)) {
+    for (OffscreenQuickScene *view : qAsConst(m_desktopButtons)) {
         view->rootItem()->setOpacity(timeline.currentValue());
-        effects->renderEffectQuickView(view);
+        effects->renderOffscreenQuickView(view);
     }
 
     if (isUsingPresentWindows() && windowMove && wasWindowMove) {
@@ -493,7 +493,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
         return;
     QMouseEvent* me = static_cast< QMouseEvent* >(e);
     if (!(wasWindowMove || wasDesktopMove)) {
-        for (EffectQuickScene *view : qAsConst(m_desktopButtons)) {
+        for (OffscreenQuickScene *view : qAsConst(m_desktopButtons)) {
             view->forwardMouseEvent(me);
             if (e->isAccepted()) {
                 return;
@@ -1138,12 +1138,12 @@ void DesktopGridEffect::setup()
     auto it = m_desktopButtons.begin();
     const QList<EffectScreen *> screens = DesktopGridConfig::showAddRemove() ? effects->screens() : QList<EffectScreen *>{};
     for (EffectScreen *screen : screens) {
-        EffectQuickScene *view;
+        OffscreenQuickScene *view;
         QSize size;
         if (it == m_desktopButtons.end()) {
-            view = new EffectQuickScene(this);
+            view = new OffscreenQuickScene(this);
 
-            connect(view, &EffectQuickView::repaintNeeded, this, []() {
+            connect(view, &OffscreenQuickView::repaintNeeded, this, []() {
                 effects->addRepaintFull();
             });
 
@@ -1257,7 +1257,7 @@ void DesktopGridEffect::finish()
         [this] {
             if (activated)
                 return;
-            for (EffectQuickScene *view : qAsConst(m_desktopButtons)) {
+            for (OffscreenQuickScene *view : qAsConst(m_desktopButtons)) {
                 view->hide();
             }
         }

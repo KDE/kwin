@@ -232,7 +232,7 @@ protected:
     // the default is NOOP
     virtual void extendPaintRegion(QRegion &region, bool opaqueFullscreen);
 
-    virtual void paintEffectQuickView(EffectQuickView *w) = 0;
+    virtual void paintOffscreenQuickView(OffscreenQuickView *w) = 0;
 
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data {

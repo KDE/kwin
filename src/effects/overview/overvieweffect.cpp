@@ -24,7 +24,7 @@ namespace KWin
 {
 
 OverviewScreenView::OverviewScreenView(QQmlComponent *component, EffectScreen *screen, QWindow *renderWindow, OverviewEffect *effect)
-    : EffectQuickView(effect, renderWindow)
+    : OffscreenQuickView(effect, renderWindow)
 {
     const QVariantMap initialProperties {
         { QStringLiteral("effect"), QVariant::fromValue(effect) },
@@ -195,13 +195,13 @@ void OverviewEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDat
     m_paintedScreen = data.screen();
 
     if (effects->waylandDisplay()) {
-        EffectQuickView *screenView = m_screenViews.value(data.screen());
+        OffscreenQuickView *screenView = m_screenViews.value(data.screen());
         if (screenView) {
-            effects->renderEffectQuickView(screenView);
+            effects->renderOffscreenQuickView(screenView);
         }
     } else {
-        for (EffectQuickView *screenView : qAsConst(m_screenViews)) {
-            effects->renderEffectQuickView(screenView);
+        for (OffscreenQuickView *screenView : qAsConst(m_screenViews)) {
+            effects->renderOffscreenQuickView(screenView);
         }
     }
 }
@@ -213,13 +213,13 @@ void OverviewEffect::postPaintScreen()
     if (effects->waylandDisplay()) {
         OverviewScreenView *screenView = m_screenViews.value(m_paintedScreen);
         if (screenView && screenView->isDirty()) {
-            QMetaObject::invokeMethod(screenView, &EffectQuickView::update, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(screenView, &OffscreenQuickView::update, Qt::QueuedConnection);
             screenView->resetDirty();
         }
     } else {
         for (OverviewScreenView *screenView : qAsConst(m_screenViews)) {
             if (screenView->isDirty()) {
-                QMetaObject::invokeMethod(screenView, &EffectQuickView::update, Qt::QueuedConnection);
+                QMetaObject::invokeMethod(screenView, &OffscreenQuickView::update, Qt::QueuedConnection);
                 screenView->resetDirty();
             }
         }
@@ -354,11 +354,11 @@ void OverviewEffect::createScreenView(EffectScreen *screen)
     auto screenView = new OverviewScreenView(m_qmlComponent, screen, m_dummyWindow.data(), this);
     screenView->setAutomaticRepaint(false);
 
-    connect(screenView, &EffectQuickView::repaintNeeded, this, [screenView]() {
+    connect(screenView, &OffscreenQuickView::repaintNeeded, this, [screenView]() {
         effects->addRepaint(screenView->geometry());
     });
-    connect(screenView, &EffectQuickView::renderRequested, screenView, &OverviewScreenView::scheduleRepaint);
-    connect(screenView, &EffectQuickView::sceneChanged, screenView, &OverviewScreenView::scheduleRepaint);
+    connect(screenView, &OffscreenQuickView::renderRequested, screenView, &OverviewScreenView::scheduleRepaint);
+    connect(screenView, &OffscreenQuickView::sceneChanged, screenView, &OverviewScreenView::scheduleRepaint);
 
     screenView->scheduleRepaint();
     m_screenViews.insert(screen, screenView);

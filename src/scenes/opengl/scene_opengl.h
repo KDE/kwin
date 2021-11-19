@@ -65,7 +65,7 @@ protected:
     void extendPaintRegion(QRegion &region, bool opaqueFullscreen) override;
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
     void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
-    void paintEffectQuickView(EffectQuickView *w) override;
+    void paintOffscreenQuickView(OffscreenQuickView *w) override;
 
     void paintSimpleScreen(int mask, const QRegion &region) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;

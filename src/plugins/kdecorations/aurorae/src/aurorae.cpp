@@ -7,7 +7,7 @@
 #include "aurorae.h"
 #include "auroraetheme.h"
 #include "config-kwin.h"
-#include "kwineffectquickview.h"
+#include "kwinoffscreenquickview.h"
 // qml imports
 #include "decorationoptions.h"
 // KDecoration2
@@ -314,13 +314,13 @@ void Decoration::init()
         m_item->setParentItem(visualParent.value<QQuickItem*>());
         visualParent.value<QQuickItem*>()->setProperty("drawBackground", false);
     } else {
-        m_view = new KWin::EffectQuickView(this, KWin::EffectQuickView::ExportMode::Image);
+        m_view = new KWin::OffscreenQuickView(this, KWin::OffscreenQuickView::ExportMode::Image);
         m_item->setParentItem(m_view->contentItem());
         auto updateSize = [this]() { m_item->setSize(m_view->contentItem()->size()); };
         updateSize();
         connect(m_view->contentItem(), &QQuickItem::widthChanged, m_item, updateSize);
         connect(m_view->contentItem(), &QQuickItem::heightChanged, m_item, updateSize);
-        connect(m_view, &KWin::EffectQuickView::repaintNeeded, this, &Decoration::updateBuffer);
+        connect(m_view, &KWin::OffscreenQuickView::repaintNeeded, this, &Decoration::updateBuffer);
     }
     setupBorders(m_item);
 

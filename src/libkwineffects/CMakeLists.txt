@@ -39,8 +39,8 @@ set(kwin_EFFECTSLIB_SRCS
     anidata.cpp
     kwinanimationeffect.cpp
     kwindeformeffect.cpp
-    kwineffectquickview.cpp
     kwineffects.cpp
+    kwinoffscreenquickview.cpp
     logging.cpp
 )
 
@@ -93,13 +93,13 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwinxrenderutils_export.h
     kwinanimationeffect.h
     kwindeformeffect.h
-    kwineffectquickview.h
     kwineffects.h
     kwinglobals.h
     kwinglplatform.h
     kwingltexture.h
     kwinglutils.h
     kwinglutils_funcs.h
+    kwinoffscreenquickview.h
     kwinxrenderutils.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR} COMPONENT Devel)
 

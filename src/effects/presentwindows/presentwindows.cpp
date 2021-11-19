@@ -242,7 +242,7 @@ void PresentWindowsEffect::paintScreen(int mask, const QRegion &region, ScreenPa
         m_filterFrame->render(region);
 
     if (m_closeView)
-        effects->renderEffectQuickView(m_closeView);
+        effects->renderOffscreenQuickView(m_closeView);
 }
 
 void PresentWindowsEffect::postPaintScreen()
@@ -1594,7 +1594,7 @@ void PresentWindowsEffect::setActive(bool active)
 
         if (!(m_doNotCloseWindows || m_closeView)) {
             m_closeView = new CloseWindowView();
-            connect(m_closeView, &EffectQuickView::repaintNeeded, this, []() {
+            connect(m_closeView, &OffscreenQuickView::repaintNeeded, this, []() {
                 effects->addRepaintFull();
             });
             connect(m_closeView, &CloseWindowView::requestClose, this, &PresentWindowsEffect::closeWindow);
@@ -2062,7 +2062,7 @@ void PresentWindowsEffect::reCreateGrids()
 }
 
 CloseWindowView::CloseWindowView(QObject *parent)
-    : EffectQuickScene(parent)
+    : OffscreenQuickScene(parent)
 {
     setSource(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/presentwindows/main.qml"))));
     if (QQuickItem *item = rootItem()) {

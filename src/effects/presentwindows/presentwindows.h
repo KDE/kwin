@@ -14,7 +14,7 @@
 #include "presentwindows_proxy.h"
 
 #include <kwineffects.h>
-#include <kwineffectquickview.h>
+#include <kwinoffscreenquickview.h>
 
 #include <QElapsedTimer>
 
@@ -23,7 +23,7 @@ class QQuickView;
 
 namespace KWin
 {
-class CloseWindowView : public EffectQuickScene
+class CloseWindowView : public OffscreenQuickScene
 {
     Q_OBJECT
 public:

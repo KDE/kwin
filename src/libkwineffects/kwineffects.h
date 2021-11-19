@@ -68,7 +68,7 @@ class EffectWindow;
 class EffectWindowGroup;
 class EffectFrame;
 class EffectFramePrivate;
-class EffectQuickView;
+class OffscreenQuickView;
 class EffectScreen;
 class Effect;
 class WindowQuad;
@@ -1339,11 +1339,11 @@ public:
     virtual bool hasActiveFullScreenEffect() const = 0;
 
     /**
-     * Render the supplied EffectQuickView onto the scene
+     * Render the supplied OffscreenQuickView onto the scene
      * It can be called at any point during the scene rendering
      * @since 5.18
      */
-    virtual void renderEffectQuickView(EffectQuickView *effectQuickView) const = 0;
+    virtual void renderOffscreenQuickView(OffscreenQuickView *effectQuickView) const = 0;
 
     /**
      * The status of the session i.e if the user is logging out

@@ -33,7 +33,7 @@
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
-#include <kwineffectquickview.h>
+#include <kwinoffscreenquickview.h>
 #include <kwinxrenderutils.h>
 // Qt
 #include <QDebug>

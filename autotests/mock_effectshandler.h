@@ -255,7 +255,7 @@ public:
 
     KSharedConfigPtr config() const override;
     KSharedConfigPtr inputConfig() const override;
-    void renderEffectQuickView(KWin::EffectQuickView *quickView) const override {
+    void renderOffscreenQuickView(KWin::OffscreenQuickView *quickView) const override {
         Q_UNUSED(quickView);
     }
     KWin::SessionState sessionState() const override {

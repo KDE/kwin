@@ -36,7 +36,7 @@
 #include "window_property_notify_x11_filter.h"
 #include "workspace.h"
 #include "kwinglutils.h"
-#include "kwineffectquickview.h"
+#include "kwinoffscreenquickview.h"
 
 #include <QDebug>
 #include <QMouseEvent>
@@ -1658,12 +1658,12 @@ Effect *EffectsHandlerImpl::findEffect(const QString &name) const
     return (*it).second;
 }
 
-void EffectsHandlerImpl::renderEffectQuickView(EffectQuickView *w) const
+void EffectsHandlerImpl::renderOffscreenQuickView(OffscreenQuickView *w) const
 {
     if (!w->isVisible()) {
         return;
     }
-    scene()->paintEffectQuickView(w);
+    scene()->paintOffscreenQuickView(w);
 }
 
 SessionState EffectsHandlerImpl::sessionState() const

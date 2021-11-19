@@ -24,7 +24,7 @@ class KConfigLoader;
 namespace KWin
 {
 class Borders;
-class EffectQuickView;
+class OffscreenQuickView;
 }
 
 namespace Aurorae
@@ -76,7 +76,7 @@ private:
     KWin::Borders *m_padding;
     QString m_themeName;
 
-    KWin::EffectQuickView *m_view;
+    KWin::OffscreenQuickView *m_view;
     QElapsedTimer m_doubleClickTimer;
 };
 

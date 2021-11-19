@@ -18,7 +18,7 @@
 #include "wayland_server.h"
 
 #include <kwinglplatform.h>
-#include <kwineffectquickview.h>
+#include <kwinoffscreenquickview.h>
 
 #include "utils.h"
 #include "abstract_client.h"
@@ -427,7 +427,7 @@ void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, Scr
     glDisable(GL_SCISSOR_TEST);
 }
 
-void SceneOpenGL::paintEffectQuickView(EffectQuickView *w)
+void SceneOpenGL::paintOffscreenQuickView(OffscreenQuickView *w)
 {
     GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
     const QRect rect = w->geometry();

@@ -32,7 +32,7 @@ namespace KWin
 {
 class GLTexture;
 
-class EffectQuickView;
+class OffscreenQuickView;
 
 /**
  * @brief The KwinQuickView class provides a convenient API for exporting
@@ -43,7 +43,7 @@ class EffectQuickView;
  * blitting is performed when we update our FBO to keep kwin's render loop
  * as fast as possible.
  */
-class KWINEFFECTS_EXPORT EffectQuickView : public QObject
+class KWINEFFECTS_EXPORT OffscreenQuickView : public QObject
 {
     Q_OBJECT
 
@@ -59,31 +59,31 @@ public:
      * Construct a new KWinQuickView
      * Export mode will be determined by the current effectsHandler
      */
-    EffectQuickView(QObject *parent);
+    OffscreenQuickView(QObject *parent);
 
     /**
-     * Construct a new EffectQuickView with the specified @a parent and the
+     * Construct a new OffscreenQuickView with the specified @a parent and the
      * render window @a renderWindow. The render window can be used by QtQuick
      * to compute the scale factor.
      */
-    EffectQuickView(QObject *parent, QWindow *renderWindow);
+    OffscreenQuickView(QObject *parent, QWindow *renderWindow);
 
     /**
-     * Construct a new EffectQuickView with the specified @a parent and the
+     * Construct a new OffscreenQuickView with the specified @a parent and the
      * render window @a renderWindow. The render window can be used by QtQuick
      * to compute the scale factor.
      */
-    EffectQuickView(QObject *parent, QWindow *renderWindow, ExportMode exportMode);
+    OffscreenQuickView(QObject *parent, QWindow *renderWindow, ExportMode exportMode);
 
     /**
      * Construct a new KWinQuickView explicitly stating an export mode
      */
-    EffectQuickView(QObject *parent, ExportMode exportMode);
+    OffscreenQuickView(QObject *parent, ExportMode exportMode);
 
     /**
      * Note that this may change the current GL Context
      */
-    ~EffectQuickView();
+    ~OffscreenQuickView();
 
     QSize size() const;
 
@@ -170,14 +170,14 @@ private:
  * adding QML support. This will represent a context
  * powered by an engine
  */
-class KWINEFFECTS_EXPORT EffectQuickScene : public EffectQuickView
+class KWINEFFECTS_EXPORT OffscreenQuickScene : public OffscreenQuickView
 {
 public:
-    EffectQuickScene(QObject *parent);
-    EffectQuickScene(QObject *parent, ExportMode exportMode);
-    EffectQuickScene(QObject *parent, QWindow *renderWindow);
-    EffectQuickScene(QObject *parent, QWindow *renderWindow, ExportMode exportMode);
-    ~EffectQuickScene();
+    OffscreenQuickScene(QObject *parent);
+    OffscreenQuickScene(QObject *parent, ExportMode exportMode);
+    OffscreenQuickScene(QObject *parent, QWindow *renderWindow);
+    OffscreenQuickScene(QObject *parent, QWindow *renderWindow, ExportMode exportMode);
+    ~OffscreenQuickScene();
 
     QQmlContext *rootContext() const;
     /** top level item in the given source*/

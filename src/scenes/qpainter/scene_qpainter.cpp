@@ -24,7 +24,7 @@
 #include "windowitem.h"
 #include "abstract_output.h"
 
-#include <kwineffectquickview.h>
+#include <kwinoffscreenquickview.h>
 // Qt
 #include <QDebug>
 #include <QPainter>
@@ -123,7 +123,7 @@ void SceneQPainter::paintCursor(const QRegion &rendered)
     m_painter->restore();
 }
 
-void SceneQPainter::paintEffectQuickView(EffectQuickView *w)
+void SceneQPainter::paintOffscreenQuickView(OffscreenQuickView *w)
 {
     QPainter *painter = effects->scenePainter();
     const QImage buffer = w->bufferAsImage();
