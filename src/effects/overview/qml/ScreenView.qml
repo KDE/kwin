@@ -193,7 +193,7 @@ FocusScope {
 
             WindowHeap {
                 id: heap
-                visible: !searchField.text
+                visible: !(container.organized && searchField.text)
                 anchors.fill: parent
                 padding: PlasmaCore.Units.largeSpacing
                 animationEnabled: container.animationEnabled
@@ -215,15 +215,10 @@ FocusScope {
                 width: parent.width / 2
                 height: Math.min(contentHeight, parent.height)
                 queryString: searchField.text
-                visible: searchField.text
+                visible: container.organized && searchField.text
 
                 onActivated: {
-                    searchField.text = "";
                     effect.deactivate();
-                }
-
-                Keys.onEscapePressed: {
-                    searchField.text = "";
                 }
             }
         }
