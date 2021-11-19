@@ -193,6 +193,7 @@ FocusScope {
 
             WindowHeap {
                 id: heap
+                visible: !searchField.text
                 anchors.fill: parent
                 padding: PlasmaCore.Units.largeSpacing
                 animationEnabled: container.animationEnabled
@@ -206,15 +207,6 @@ FocusScope {
                             ~KWinComponents.ClientFilterModel.Desktop &
                             ~KWinComponents.ClientFilterModel.Notification;
                 }
-                states: [
-                    State {
-                        when: searchField.text
-                        PropertyChanges {
-                            target: heap
-                            opacity: 0
-                        }
-                    }
-                ]
             }
 
             Milou.ResultsView {
@@ -223,17 +215,7 @@ FocusScope {
                 width: parent.width / 2
                 height: Math.min(contentHeight, parent.height)
                 queryString: searchField.text
-                visible: false
-
-                states: [
-                    State {
-                        when: searchField.text
-                        PropertyChanges {
-                            target: searchResults
-                            visible: true
-                        }
-                    }
-                ]
+                visible: searchField.text
 
                 onActivated: {
                     searchField.text = "";
