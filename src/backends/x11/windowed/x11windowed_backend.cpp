@@ -170,7 +170,7 @@ X11WindowedBackend::X11WindowedBackend(QObject *parent)
 X11WindowedBackend::~X11WindowedBackend()
 {
     delete m_pointerDevice;
-    delete m_pointerDevice;
+    delete m_keyboardDevice;
     delete m_touchDevice;
 
     if (sceneEglDisplay() != EGL_NO_DISPLAY) {
