@@ -460,7 +460,7 @@ void EffectQuickView::Private::updateTouchState(Qt::TouchPointState state, qint3
 
     // Find the touch point that has changed. This is separate from the above
     // loop because removing the released touch points invalidates iterators.
-    auto changed = std::find_if(touchPoints.begin(), touchPoints.end(), [id, idOffset](const QTouchEvent::TouchPoint &point) {
+    auto changed = std::find_if(touchPoints.begin(), touchPoints.end(), [id](const QTouchEvent::TouchPoint &point) {
         return point.id() == id + idOffset;
     });
 
