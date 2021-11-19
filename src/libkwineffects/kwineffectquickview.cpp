@@ -57,8 +57,8 @@ class Q_DECL_HIDDEN EffectQuickView::Private
 public:
     QQuickWindow *m_view;
     QQuickRenderControl *m_renderControl;
-    QScopedPointer<QOpenGLContext> m_glcontext;
     QScopedPointer<QOffscreenSurface> m_offscreenSurface;
+    QScopedPointer<QOpenGLContext> m_glcontext;
     QScopedPointer<QOpenGLFramebufferObject> m_fbo;
 
     QTimer *m_repaintTimer;
@@ -165,7 +165,6 @@ EffectQuickView::~EffectQuickView()
         delete d->m_view;
         d->m_view = nullptr;
         d->m_renderControl->invalidate();
-        d->m_glcontext->doneCurrent();
     }
 }
 
