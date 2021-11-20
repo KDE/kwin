@@ -111,6 +111,7 @@ protected:
     QRectF paintedRect() const override;
     void invalidateOffscreenTexture() override;
     void updateOffscreenTexture() override;
+    void updateImplicitSize();
 
 private:
     QUuid m_wId;

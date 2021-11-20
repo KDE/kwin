@@ -150,6 +150,8 @@ void WindowThumbnailItem::findImage()
     } else {
         m_image = QImage(imagePath);
     }
+
+    setImplicitSize(m_image.width(), m_image.height());
 }
 
 QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *updatePaintNodeData)
