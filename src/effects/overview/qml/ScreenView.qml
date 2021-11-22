@@ -7,7 +7,7 @@
 import QtQuick 2.12
 import QtGraphicalEffects 1.12
 import org.kde.kwin 3.0 as KWinComponents
-import org.kde.kwin.private.overview 1.0
+import org.kde.kwin.private.effects 1.0
 import org.kde.milou 0.3 as Milou
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core 2.0 as PlasmaCore
@@ -191,7 +191,9 @@ FocusScope {
                 id: heap
                 visible: !(container.organized && searchField.text)
                 anchors.fill: parent
+                layout: effect.layout
                 padding: PlasmaCore.Units.largeSpacing
+                animationDuration: effect.animationDuration
                 animationEnabled: container.animationEnabled
                 organized: container.organized
                 model: KWinComponents.ClientFilterModel {
@@ -203,6 +205,7 @@ FocusScope {
                             ~KWinComponents.ClientFilterModel.Desktop &
                             ~KWinComponents.ClientFilterModel.Notification;
                 }
+                onActivated: effect.deactivate();
             }
 
             Milou.ResultsView {
