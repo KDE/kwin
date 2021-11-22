@@ -72,6 +72,7 @@ class ExpoCell : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(ExpoLayout *layout READ layout WRITE setLayout NOTIFY layoutChanged)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(int naturalX READ naturalX WRITE setNaturalX NOTIFY naturalXChanged)
     Q_PROPERTY(int naturalY READ naturalY WRITE setNaturalY NOTIFY naturalYChanged)
     Q_PROPERTY(int naturalWidth READ naturalWidth WRITE setNaturalWidth NOTIFY naturalWidthChanged)
@@ -86,6 +87,9 @@ class ExpoCell : public QObject
 public:
     explicit ExpoCell(QObject *parent = nullptr);
     ~ExpoCell() override;
+
+    bool isEnabled() const;
+    void setEnabled(bool enabled);
 
     ExpoLayout *layout() const;
     void setLayout(ExpoLayout *layout);
@@ -128,6 +132,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void layoutChanged();
+    void enabledChanged();
     void naturalXChanged();
     void naturalYChanged();
     void naturalWidthChanged();
@@ -141,6 +146,7 @@ Q_SIGNALS:
 
 private:
     QString m_persistentKey;
+    bool m_enabled = true;
     int m_naturalX = 0;
     int m_naturalY = 0;
     int m_naturalWidth = 0;

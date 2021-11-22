@@ -36,10 +36,32 @@ void ExpoCell::setLayout(ExpoLayout *layout)
         m_layout->removeCell(this);
     }
     m_layout = layout;
-    if (m_layout) {
+    if (m_layout && m_enabled) {
         m_layout->addCell(this);
     }
     Q_EMIT layoutChanged();
+}
+
+bool ExpoCell::isEnabled() const
+{
+    return m_enabled;
+}
+
+void ExpoCell::setEnabled(bool enabled)
+{
+    if (m_enabled != enabled) {
+        m_enabled = enabled;
+        if (enabled) {
+            if (m_layout) {
+                m_layout->addCell(this);
+            }
+        } else {
+            if (m_layout) {
+                m_layout->removeCell(this);
+            }
+        }
+        Q_EMIT enabledChanged();
+    }
 }
 
 void ExpoCell::update()
