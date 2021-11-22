@@ -87,6 +87,10 @@ protected:
     bool createContext();
 
 private:
+    EGLContext ensureGlobalShareContext();
+    void destroyGlobalShareContext();
+    EGLContext createContextInternal(EGLContext sharedContext);
+
     void teardown();
 
     AbstractEglBackendFunctions m_functions;

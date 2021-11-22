@@ -36,44 +36,6 @@ static bool isOpenGLES_helper()
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }
 
-static EGLContext ensureGlobalShareContext()
-{
-    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
-
-    if (kwinApp()->platform()->sceneEglGlobalShareContext() != EGL_NO_CONTEXT) {
-        return kwinApp()->platform()->sceneEglGlobalShareContext();
-    }
-
-    std::vector<int> attribs;
-    if (isOpenGLES_helper()) {
-        EglOpenGLESContextAttributeBuilder builder;
-        builder.setVersion(2);
-        attribs = builder.build();
-    } else {
-        EglContextAttributeBuilder builder;
-        attribs = builder.build();
-    }
-
-    s_globalShareContext = eglCreateContext(eglDisplay, EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT, attribs.data());
-    if (s_globalShareContext == EGL_NO_CONTEXT) {
-        qCWarning(KWIN_OPENGL, "Failed to create global share context: 0x%x", eglGetError());
-    }
-
-    kwinApp()->platform()->setSceneEglGlobalShareContext(s_globalShareContext);
-    return s_globalShareContext;
-}
-
-static void destroyGlobalShareContext()
-{
-    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
-    if (eglDisplay == EGL_NO_DISPLAY || s_globalShareContext == EGL_NO_CONTEXT) {
-        return;
-    }
-    eglDestroyContext(eglDisplay, s_globalShareContext);
-    s_globalShareContext = EGL_NO_CONTEXT;
-    kwinApp()->platform()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
-}
-
 AbstractEglBackend *AbstractEglBackend::s_primaryBackend = nullptr;
 
 AbstractEglBackend::AbstractEglBackend()
@@ -87,6 +49,30 @@ AbstractEglBackend::AbstractEglBackend()
 AbstractEglBackend::~AbstractEglBackend()
 {
     delete m_dmaBuf;
+}
+
+EGLContext AbstractEglBackend::ensureGlobalShareContext()
+{
+    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
+
+    if (kwinApp()->platform()->sceneEglGlobalShareContext() != EGL_NO_CONTEXT) {
+        return kwinApp()->platform()->sceneEglGlobalShareContext();
+    }
+
+    s_globalShareContext = createContextInternal(EGL_NO_CONTEXT);
+    kwinApp()->platform()->setSceneEglGlobalShareContext(s_globalShareContext);
+    return s_globalShareContext;
+}
+
+void AbstractEglBackend::destroyGlobalShareContext()
+{
+    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
+    if (eglDisplay == EGL_NO_DISPLAY || s_globalShareContext == EGL_NO_CONTEXT) {
+        return;
+    }
+    eglDestroyContext(eglDisplay, s_globalShareContext);
+    s_globalShareContext = EGL_NO_CONTEXT;
+    kwinApp()->platform()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
 }
 
 void AbstractEglBackend::teardown()
@@ -263,7 +249,15 @@ bool AbstractEglBackend::createContext()
     if (globalShareContext == EGL_NO_CONTEXT) {
         return false;
     }
+    m_context = createContextInternal(globalShareContext);
+    if (m_context == EGL_NO_CONTEXT) {
+        return false;
+    }
+    return true;
+}
 
+EGLContext AbstractEglBackend::createContextInternal(EGLContext sharedContext)
+{
     const bool haveRobustness = hasExtension(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
     const bool haveCreateContext = hasExtension(QByteArrayLiteral("EGL_KHR_create_context"));
     const bool haveContextPriority = hasExtension(QByteArrayLiteral("EGL_IMG_context_priority"));
@@ -334,7 +328,7 @@ bool AbstractEglBackend::createContext()
     EGLContext ctx = EGL_NO_CONTEXT;
     for (auto it = candidates.begin(); it != candidates.end(); it++) {
         const auto attribs = (*it)->build();
-        ctx = eglCreateContext(m_display, config(), globalShareContext, attribs.data());
+        ctx = eglCreateContext(m_display, config(), sharedContext, attribs.data());
         if (ctx != EGL_NO_CONTEXT) {
             qCDebug(KWIN_OPENGL) << "Created EGL context with attributes:" << (*it).get();
             break;
@@ -343,10 +337,8 @@ bool AbstractEglBackend::createContext()
 
     if (ctx == EGL_NO_CONTEXT) {
         qCCritical(KWIN_OPENGL) << "Create Context failed";
-        return false;
     }
-    m_context = ctx;
-    return true;
+    return ctx;
 }
 
 void AbstractEglBackend::setEglDisplay(const EGLDisplay &display) {
