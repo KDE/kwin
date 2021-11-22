@@ -17,6 +17,7 @@
 #include <QSize>
 
 #include <epoxy/egl.h>
+#include <sys/types.h>
 
 struct gbm_device;
 
