@@ -167,6 +167,7 @@ FocusScope {
                 ExpoCell {
                     id: cell
                     layout: expoLayout
+                    enabled: !thumb.hidden
                     naturalX: thumb.client.x
                     naturalY: thumb.client.y
                     naturalWidth: thumb.client.width
