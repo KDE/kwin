@@ -2047,6 +2047,7 @@ TOPLEVEL_HELPER(bool, isOutline, isOutline)
 TOPLEVEL_HELPER(bool, isLockScreen, isLockScreen)
 TOPLEVEL_HELPER(pid_t, pid, pid)
 TOPLEVEL_HELPER(qlonglong, windowId, window)
+TOPLEVEL_HELPER(QUuid, internalId, internalId)
 
 #undef TOPLEVEL_HELPER
 
