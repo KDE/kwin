@@ -67,8 +67,6 @@ public:
     void presentFailed();
 
 private:
-    friend class DrmBackend;
-
     void initOutputDevice();
 
     void updateEnablement(bool enable) override;
