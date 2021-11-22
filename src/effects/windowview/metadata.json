@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Category": "Window Management",
+        "Description": "Helper effect for the task manager",
+        "EnabledByDefault": true,
+        "Id": "windowview",
+        "License": "GPL",
+        "Name": "Window View"
+    },
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}
