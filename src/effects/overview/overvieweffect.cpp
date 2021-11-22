@@ -5,8 +5,6 @@
 */
 
 #include "overvieweffect.h"
-#include "expoarea.h"
-#include "expolayout.h"
 #include "overviewconfig.h"
 
 #include <KGlobalAccel>
@@ -23,10 +21,6 @@ namespace KWin
 OverviewEffect::OverviewEffect()
     : m_shutdownTimer(new QTimer(this))
 {
-    qmlRegisterType<ExpoArea>("org.kde.kwin.private.overview", 1, 0, "ExpoArea");
-    qmlRegisterType<ExpoLayout>("org.kde.kwin.private.overview", 1, 0, "ExpoLayout");
-    qmlRegisterType<ExpoCell>("org.kde.kwin.private.overview", 1, 0, "ExpoCell");
-
     m_shutdownTimer->setSingleShot(true);
     connect(m_shutdownTimer, &QTimer::timeout, this, &OverviewEffect::realDeactivate);
 
@@ -63,7 +57,7 @@ QVariantMap OverviewEffect::initialProperties(EffectScreen *screen)
 void OverviewEffect::reconfigure(ReconfigureFlags)
 {
     OverviewConfig::self()->read();
-    setLayout(ExpoLayout::LayoutMode(OverviewConfig::layoutMode()));
+    setLayout(OverviewConfig::layoutMode());
     setAnimationDuration(animationTime(200));
     setBlurBackground(OverviewConfig::blurBackground());
 
@@ -104,12 +98,12 @@ void OverviewEffect::setAnimationDuration(int duration)
     }
 }
 
-ExpoLayout::LayoutMode OverviewEffect::layout() const
+int OverviewEffect::layout() const
 {
     return m_layout;
 }
 
-void OverviewEffect::setLayout(ExpoLayout::LayoutMode layout)
+void OverviewEffect::setLayout(int layout)
 {
     if (m_layout != layout) {
         m_layout = layout;

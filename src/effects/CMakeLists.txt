@@ -3,6 +3,8 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kwin_effects\" -DEFFECT_BUILTINS)
 
 include_directories(${KWin_SOURCE_DIR}/src) # for xcbutils.h
 
+add_subdirectory(private)
+
 if (CMAKE_CROSSCOMPILING)
     if (NOT KWIN_HOST_TOOLING)
         message(FATAL_ERROR "Please provide the path to a native build and pass -DKWIN_HOST_TOOLING=path")

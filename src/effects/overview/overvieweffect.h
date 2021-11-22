@@ -8,8 +8,6 @@
 
 #include <kwinquickeffect.h>
 
-#include "expolayout.h"
-
 namespace KWin
 {
 
@@ -17,15 +15,15 @@ class OverviewEffect : public QuickSceneEffect
 {
     Q_OBJECT
     Q_PROPERTY(int animationDuration READ animationDuration NOTIFY animationDurationChanged)
-    Q_PROPERTY(ExpoLayout::LayoutMode layout READ layout NOTIFY layoutChanged)
+    Q_PROPERTY(int layout READ layout NOTIFY layoutChanged)
     Q_PROPERTY(bool blurBackground READ blurBackground NOTIFY blurBackgroundChanged)
 
 public:
     OverviewEffect();
     ~OverviewEffect() override;
 
-    ExpoLayout::LayoutMode layout() const;
-    void setLayout(ExpoLayout::LayoutMode layout);
+    int layout() const;
+    void setLayout(int layout);
 
     int animationDuration() const;
     void setAnimationDuration(int duration);
@@ -62,7 +60,7 @@ private:
     QList<ElectricBorder> m_touchBorderActivate;
     bool m_blurBackground = false;
     int m_animationDuration = 200;
-    ExpoLayout::LayoutMode m_layout = ExpoLayout::LayoutNatural;
+    int m_layout = 1;
 };
 
 } // namespace KWin

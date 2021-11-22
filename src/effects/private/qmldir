@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+module org.kde.kwin.private.effects
+
+plugin effectsplugin
+classname EffectKitExtensionPlugin
+
+WindowHeap 1.0 WindowHeap.qml
