@@ -25,6 +25,10 @@ std::vector<int> EglContextAttributeBuilder::build() const
         attribs.emplace_back(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR);
         attribs.emplace_back(EGL_LOSE_CONTEXT_ON_RESET_KHR);
         contextFlags |= EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR;
+        if (isResetOnVideoMemoryPurge()) {
+            attribs.emplace_back(EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV);
+            attribs.emplace_back(GL_TRUE);
+        }
     }
     if (isForwardCompatible()) {
         contextFlags |= EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR;
@@ -59,6 +63,10 @@ std::vector<int> EglOpenGLESContextAttributeBuilder::build() const
         attribs.emplace_back(EGL_TRUE);
         attribs.emplace_back(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT);
         attribs.emplace_back(EGL_LOSE_CONTEXT_ON_RESET_EXT);
+        if (isResetOnVideoMemoryPurge()) {
+            attribs.emplace_back(EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV);
+            attribs.emplace_back(GL_TRUE);
+        }
     }
     if (isHighPriority()) {
         attribs.emplace_back(EGL_CONTEXT_PRIORITY_LEVEL_IMG);

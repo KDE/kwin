@@ -19,6 +19,7 @@ QDebug AbstractOpenGLContextAttributeBuilder::operator<<(QDebug dbg) const
         dbg.nospace() << "Version:\t" << majorVersion() << "." << minorVersion() << "\n";
     }
     dbg.nospace() << "Robust:\t" << isRobust() << "\n";
+    dbg.nospace() << "Reset on video memory purge:\t" << isResetOnVideoMemoryPurge() << "\n";
     dbg.nospace() << "Forward compatible:\t" << isForwardCompatible() << "\n";
     dbg.nospace() << "Core profile:\t" << isCoreProfile() << "\n";
     dbg.nospace() << "Compatibility profile:\t" << isCompatibilityProfile() << "\n";

@@ -261,9 +261,19 @@ EGLContext AbstractEglBackend::createContextInternal(EGLContext sharedContext)
     const bool haveRobustness = hasExtension(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
     const bool haveCreateContext = hasExtension(QByteArrayLiteral("EGL_KHR_create_context"));
     const bool haveContextPriority = hasExtension(QByteArrayLiteral("EGL_IMG_context_priority"));
+    const bool haveResetOnVideoMemoryPurge = hasExtension(QByteArrayLiteral("EGL_NV_robustness_video_memory_purge"));
 
     std::vector<std::unique_ptr<AbstractOpenGLContextAttributeBuilder>> candidates;
     if (isOpenGLES()) {
+        if (haveCreateContext && haveRobustness && haveContextPriority && haveResetOnVideoMemoryPurge) {
+            auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
+            glesRobustPriority->setResetOnVideoMemoryPurge(true);
+            glesRobustPriority->setVersion(2);
+            glesRobustPriority->setRobust(true);
+            glesRobustPriority->setHighPriority(true);
+            candidates.push_back(std::move(glesRobustPriority));
+        }
+
         if (haveCreateContext && haveRobustness && haveContextPriority) {
             auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesRobustPriority->setVersion(2);
@@ -288,6 +298,14 @@ EGLContext AbstractEglBackend::createContextInternal(EGLContext sharedContext)
         candidates.push_back(std::move(gles));
     } else {
         if (haveCreateContext) {
+            if (haveRobustness && haveContextPriority && haveResetOnVideoMemoryPurge) {
+                auto robustCorePriority = std::make_unique<EglContextAttributeBuilder>();
+                robustCorePriority->setResetOnVideoMemoryPurge(true);
+                robustCorePriority->setVersion(3, 1);
+                robustCorePriority->setRobust(true);
+                robustCorePriority->setHighPriority(true);
+                candidates.push_back(std::move(robustCorePriority));
+            }
             if (haveRobustness && haveContextPriority) {
                 auto robustCorePriority = std::make_unique<EglContextAttributeBuilder>();
                 robustCorePriority->setVersion(3, 1);
