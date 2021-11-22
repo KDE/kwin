@@ -2517,6 +2517,15 @@ public:
      * @since 5.21
      */
     virtual qlonglong windowId() const = 0;
+    /**
+     * Returns the internal id of the window that uniquely identifies it. The main difference
+     * between internalId() and windowId() is that the latter one works as expected only on X11,
+     * while the former is unique regardless of the window system.
+     *
+     * Note that the internaId() has special meaning only to kwin.
+     * @since 5.24
+     */
+    virtual QUuid internalId() const = 0;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.

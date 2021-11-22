@@ -478,6 +478,7 @@ public:
 
     pid_t pid() const override;
     qlonglong windowId() const override;
+    QUuid internalId() const override;
 
     QRect decorationInnerRect() const override;
     QByteArray readProperty(long atom, long type, int format) const override;
