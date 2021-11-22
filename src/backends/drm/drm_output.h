@@ -39,6 +39,7 @@ class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
     Q_OBJECT
 public:
+    DrmOutput(DrmPipeline *pipeline);
     ~DrmOutput() override;
 
     bool initCursor(const QSize &cursorSize) override;
@@ -60,21 +61,19 @@ public:
     bool queueChanges(const WaylandOutputConfig &config);
     void applyQueuedChanges(const WaylandOutputConfig &config);
     void revertQueuedChanges();
+    void updateModes();
 
     void pageFlipped(std::chrono::nanoseconds timestamp);
     void presentFailed();
 
 private:
-    friend class DrmGpu;
     friend class DrmBackend;
-    DrmOutput(DrmPipeline *pipeline);
 
     void initOutputDevice();
 
     void updateEnablement(bool enable) override;
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
-    void updateModes();
 
     QVector<AbstractWaylandOutput::Mode> getModes() const;
 
