@@ -14,11 +14,9 @@
 #include <QVector>
 #include <QSocketNotifier>
 #include <QPointer>
+#include <QSize>
 
 #include <epoxy/egl.h>
-
-#include "drm_buffer.h"
-#include "drm_object_plane.h"
 
 struct gbm_device;
 
@@ -32,8 +30,10 @@ namespace KWin
 {
 
 class DrmOutput;
+class DrmObject;
 class DrmCrtc;
 class DrmConnector;
+class DrmPlane;
 class DrmBackend;
 class EglGbmBackend;
 class DrmPipeline;
@@ -70,13 +70,10 @@ public:
     const QVector<DrmPipeline*> pipelines() const;
     bool testPendingConfiguration();
 
-    void setGbmDevice(gbm_device *d);
     void setEglDisplay(EGLDisplay display);
     void setEglBackend(EglGbmBackend *eglBackend);
 
-    void waitIdle();
     bool updateOutputs();
-    DrmVirtualOutput *createVirtualOutput();
 
     enum VirtualOutputMode { Placeholder, Full };
     DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputMode mode);
@@ -98,6 +95,7 @@ private:
     void removeOutput(DrmOutput *output);
     void removeLeaseOutput(DrmLeaseOutput *output);
     void initDrmResources();
+    void waitIdle();
 
     bool checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmCrtc*> crtcs);
     QVector<DrmObject*> unusedObjects() const;

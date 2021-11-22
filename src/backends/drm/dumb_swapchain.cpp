@@ -9,6 +9,7 @@
 
 #include "dumb_swapchain.h"
 #include "drm_gpu.h"
+#include "drm_buffer.h"
 #include "logging.h"
 
 namespace KWin

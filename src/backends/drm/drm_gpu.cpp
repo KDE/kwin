@@ -24,6 +24,7 @@
 #include "drm_lease_output.h"
 #include "egl_gbm_backend.h"
 #include "gbm_dmabuf.h"
+#include "drm_object_plane.h"
 // system
 #include <algorithm>
 #include <errno.h>
@@ -689,11 +690,6 @@ gbm_device *DrmGpu::gbmDevice() const
 EGLDisplay DrmGpu::eglDisplay() const
 {
     return m_eglDisplay;
-}
-
-void DrmGpu::setGbmDevice(gbm_device *d)
-{
-    m_gbmDevice = d;
 }
 
 void DrmGpu::setEglDisplay(EGLDisplay display)

@@ -12,6 +12,7 @@
 #include "drm_object_connector.h"
 #include "drm_gpu.h"
 #include "drm_pipeline.h"
+#include "drm_buffer.h"
 
 #include "composite.h"
 #include "cursor.h"
