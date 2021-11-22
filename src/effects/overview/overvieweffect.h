@@ -8,8 +8,6 @@
 
 #include <kwinquickeffect.h>
 
-#include "expolayout.h"
-
 namespace KWin
 {
 
@@ -17,7 +15,7 @@ class OverviewEffect : public QuickSceneEffect
 {
     Q_OBJECT
     Q_PROPERTY(int animationDuration READ animationDuration NOTIFY animationDurationChanged)
-    Q_PROPERTY(ExpoLayout::LayoutMode layout READ layout NOTIFY layoutChanged)
+    Q_PROPERTY(int layout READ layout NOTIFY layoutChanged)
     Q_PROPERTY(bool blurBackground READ blurBackground NOTIFY blurBackgroundChanged)
     Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
     // More efficient from a property binding pov rather than binding to partialActivationFactor !== 0
@@ -32,8 +30,8 @@ public:
     OverviewEffect();
     ~OverviewEffect() override;
 
-    ExpoLayout::LayoutMode layout() const;
-    void setLayout(ExpoLayout::LayoutMode layout);
+    int layout() const;
+    void setLayout(int layout);
 
     int animationDuration() const;
     void setAnimationDuration(int duration);
@@ -79,7 +77,7 @@ private:
     bool m_blurBackground = false;
     Status m_status = Status::Inactive;
     int m_animationDuration = 200;
-    ExpoLayout::LayoutMode m_layout = ExpoLayout::LayoutNatural;
+    int m_layout = 1;
 };
 
 } // namespace KWin

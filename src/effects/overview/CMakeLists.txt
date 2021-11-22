@@ -7,8 +7,6 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 set(overview_SOURCES
-    expoarea.cpp
-    expolayout.cpp
     main.cpp
     overvieweffect.cpp
 )

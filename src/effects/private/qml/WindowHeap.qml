@@ -7,7 +7,7 @@
 import QtQuick 2.12
 import org.kde.kirigami 2.12 as Kirigami
 import org.kde.kwin 3.0 as KWinComponents
-import org.kde.kwin.private.overview 1.0
+import org.kde.kwin.private.effects 1.0
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core 2.0 as PlasmaCore
 
@@ -22,12 +22,16 @@ FocusScope {
     }
 
     property alias model: windowsRepeater.model
+    property alias layout: expoLayout.mode
     property int selectedIndex: -1
+    property int animationDuration: PlasmaCore.Units.longDuration
     property bool animationEnabled: false
     property real padding: 0
 
     required property bool organized
     readonly property bool effectiveOrganized: expoLayout.ready && organized
+
+    signal activated()
 
     ExpoLayout {
         id: expoLayout
@@ -35,7 +39,6 @@ FocusScope {
         y: heap.padding
         width: parent.width - 2 * heap.padding
         height: parent.height - 2 * heap.padding
-        mode: effect.layout
         spacing: PlasmaCore.Units.largeSpacing
 
         Repeater {
@@ -246,9 +249,9 @@ FocusScope {
                     to: "initial, active"
                     enabled: heap.animationEnabled
                     NumberAnimation {
-                        duration: effect.animationDuration
+                        duration: heap.animationDuration
                         properties: "x, y, width, height, opacity"
-                        easing.type: Easing.OutCubic
+                        easing.type: Easing.InOutCubic
                     }
                 }
 
@@ -273,7 +276,7 @@ FocusScope {
                     acceptedButtons: Qt.LeftButton
                     onTapped: {
                         KWinComponents.Workspace.activeClient = thumb.client;
-                        effect.deactivate();
+                        heap.activated();
                     }
                 }
 
@@ -528,7 +531,7 @@ FocusScope {
             }
             if (selectedItem) {
                 KWinComponents.Workspace.activeClient = selectedItem.client;
-                effect.deactivate();
+                heap.activated();
             }
             break;
         default:
