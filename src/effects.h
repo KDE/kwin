@@ -500,6 +500,7 @@ public:
 
     pid_t pid() const override;
     qlonglong windowId() const override;
+    QUuid internalId() const override;
 
     QRect decorationInnerRect() const override;
     KDecoration2::Decoration *decoration() const override;
