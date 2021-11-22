@@ -71,7 +71,13 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
     if (gpu()->atomicModeSetting()) {
         if (!commitPipelines({this}, CommitMode::Commit)) {
             // update properties and try again
-            updateProperties();
+            m_connector->updateProperties();
+            if (pending.crtc) {
+                pending.crtc->updateProperties();
+                if (pending.crtc->primaryPlane()) {
+                    pending.crtc->primaryPlane()->updateProperties();
+                }
+            }
             if (!commitPipelines({this}, CommitMode::Commit)) {
                 if (directScanout) {
                     return false;
@@ -462,20 +468,6 @@ void DrmPipeline::setOutput(DrmOutput *output)
 DrmOutput *DrmPipeline::output() const
 {
     return m_output;
-}
-
-void DrmPipeline::updateProperties()
-{
-    m_connector->updateProperties();
-    if (pending.crtc) {
-        pending.crtc->updateProperties();
-        if (pending.crtc->primaryPlane()) {
-            pending.crtc->primaryPlane()->updateProperties();
-        }
-    }
-    // with legacy we don't know what happened to the cursor after VT switch
-    // so make sure it gets set again
-    pending.crtc->setLegacyCursor();
 }
 
 bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const

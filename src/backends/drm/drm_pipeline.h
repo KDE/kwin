@@ -82,7 +82,6 @@ public:
     bool modesetPresentPending() const;
     void printDebugInfo() const;
     QSize sourceSize() const;
-    void updateProperties();
 
     bool isFormatSupported(uint32_t drmFormat) const;
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const;
