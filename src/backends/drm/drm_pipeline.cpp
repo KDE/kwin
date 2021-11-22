@@ -367,7 +367,7 @@ bool DrmPipeline::applyPendingChangesLegacy()
     }
     if (pending.active) {
         Q_ASSERT(pending.crtc);
-        if (auto vrr = pending.crtc->getProp(DrmCrtc::PropertyIndex::VrrEnabled); !vrr->setPropertyLegacy(pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive)) {
+        if (auto vrr = pending.crtc->getProp(DrmCrtc::PropertyIndex::VrrEnabled); vrr && !vrr->setPropertyLegacy(pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive)) {
             qCWarning(KWIN_DRM) << "Setting vrr failed!" << strerror(errno);
             return false;
         }
