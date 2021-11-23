@@ -12,22 +12,22 @@
 
 #include <cmath>
 
-ExpoCell::ExpoCell(QObject *parent)
+ExpoLayoutAttached::ExpoLayoutAttached(QObject *parent)
     : QObject(parent)
 {
 }
 
-ExpoCell::~ExpoCell()
+ExpoLayoutAttached::~ExpoLayoutAttached()
 {
     setLayout(nullptr);
 }
 
-ExpoLayout *ExpoCell::layout() const
+ExpoLayout *ExpoLayoutAttached::layout() const
 {
     return m_layout;
 }
 
-void ExpoCell::setLayout(ExpoLayout *layout)
+void ExpoLayoutAttached::setLayout(ExpoLayout *layout)
 {
     if (m_layout == layout) {
         return;
@@ -39,15 +39,14 @@ void ExpoCell::setLayout(ExpoLayout *layout)
     if (m_layout && m_enabled) {
         m_layout->addCell(this);
     }
-    Q_EMIT layoutChanged();
 }
 
-bool ExpoCell::isEnabled() const
+bool ExpoLayoutAttached::isEnabled() const
 {
     return m_enabled;
 }
 
-void ExpoCell::setEnabled(bool enabled)
+void ExpoLayoutAttached::setEnabled(bool enabled)
 {
     if (m_enabled != enabled) {
         m_enabled = enabled;
@@ -64,19 +63,19 @@ void ExpoCell::setEnabled(bool enabled)
     }
 }
 
-void ExpoCell::update()
+void ExpoLayoutAttached::update()
 {
     if (m_layout) {
         m_layout->polish();
     }
 }
 
-int ExpoCell::naturalX() const
+int ExpoLayoutAttached::naturalX() const
 {
     return m_naturalX;
 }
 
-void ExpoCell::setNaturalX(int x)
+void ExpoLayoutAttached::setNaturalX(int x)
 {
     if (m_naturalX != x) {
         m_naturalX = x;
@@ -90,12 +89,12 @@ void ExpoCell::setNaturalX(int x)
     }
 }
 
-int ExpoCell::naturalY() const
+int ExpoLayoutAttached::naturalY() const
 {
     return m_naturalY;
 }
 
-void ExpoCell::setNaturalY(int y)
+void ExpoLayoutAttached::setNaturalY(int y)
 {
     if (m_naturalY != y) {
         m_naturalY = y;
@@ -109,12 +108,12 @@ void ExpoCell::setNaturalY(int y)
     }
 }
 
-int ExpoCell::naturalWidth() const
+int ExpoLayoutAttached::naturalWidth() const
 {
     return m_naturalWidth;
 }
 
-void ExpoCell::setNaturalWidth(int width)
+void ExpoLayoutAttached::setNaturalWidth(int width)
 {
     if (m_naturalWidth != width) {
         m_naturalWidth = width;
@@ -128,12 +127,12 @@ void ExpoCell::setNaturalWidth(int width)
     }
 }
 
-int ExpoCell::naturalHeight() const
+int ExpoLayoutAttached::naturalHeight() const
 {
     return m_naturalHeight;
 }
 
-void ExpoCell::setNaturalHeight(int height)
+void ExpoLayoutAttached::setNaturalHeight(int height)
 {
     if (m_naturalHeight != height) {
         m_naturalHeight = height;
@@ -147,22 +146,22 @@ void ExpoCell::setNaturalHeight(int height)
     }
 }
 
-QRect ExpoCell::naturalRect() const
+QRect ExpoLayoutAttached::naturalRect() const
 {
     return QRect(naturalX(), naturalY(), naturalWidth(), naturalHeight());
 }
 
-QMargins ExpoCell::margins() const
+QMargins ExpoLayoutAttached::margins() const
 {
     return m_margins;
 }
 
-int ExpoCell::x() const
+int ExpoLayoutAttached::x() const
 {
     return m_x.value_or(0);
 }
 
-void ExpoCell::setX(int x)
+void ExpoLayoutAttached::setX(int x)
 {
     if (m_x != x) {
         m_x = x;
@@ -170,12 +169,12 @@ void ExpoCell::setX(int x)
     }
 }
 
-int ExpoCell::y() const
+int ExpoLayoutAttached::y() const
 {
     return m_y.value_or(0);
 }
 
-void ExpoCell::setY(int y)
+void ExpoLayoutAttached::setY(int y)
 {
     if (m_y != y) {
         m_y = y;
@@ -183,12 +182,12 @@ void ExpoCell::setY(int y)
     }
 }
 
-int ExpoCell::width() const
+int ExpoLayoutAttached::width() const
 {
     return m_width.value_or(0);
 }
 
-void ExpoCell::setWidth(int width)
+void ExpoLayoutAttached::setWidth(int width)
 {
     if (m_width != width) {
         m_width = width;
@@ -196,12 +195,12 @@ void ExpoCell::setWidth(int width)
     }
 }
 
-int ExpoCell::height() const
+int ExpoLayoutAttached::height() const
 {
     return m_height.value_or(0);
 }
 
-void ExpoCell::setHeight(int height)
+void ExpoLayoutAttached::setHeight(int height)
 {
     if (m_height != height) {
         m_height = height;
@@ -209,12 +208,12 @@ void ExpoCell::setHeight(int height)
     }
 }
 
-QString ExpoCell::persistentKey() const
+QString ExpoLayoutAttached::persistentKey() const
 {
     return m_persistentKey;
 }
 
-void ExpoCell::setPersistentKey(const QString &key)
+void ExpoLayoutAttached::setPersistentKey(const QString &key)
 {
     if (m_persistentKey != key) {
         m_persistentKey = key;
@@ -223,12 +222,12 @@ void ExpoCell::setPersistentKey(const QString &key)
     }
 }
 
-int ExpoCell::bottomMargin() const
+int ExpoLayoutAttached::bottomMargin() const
 {
     return m_margins.bottom();
 }
 
-void ExpoCell::setBottomMargin(int margin)
+void ExpoLayoutAttached::setBottomMargin(int margin)
 {
     if (m_margins.bottom() != margin) {
         m_margins.setBottom(margin);
@@ -240,6 +239,14 @@ void ExpoCell::setBottomMargin(int margin)
 ExpoLayout::ExpoLayout(QQuickItem *parent)
     : QQuickItem(parent)
 {
+}
+
+ExpoLayout::~ExpoLayout()
+{
+    while (!m_cells.isEmpty()) {
+        ExpoLayoutAttached *attached = m_cells.constLast();
+        attached->setLayout(nullptr);
+    }
 }
 
 ExpoLayout::LayoutMode ExpoLayout::mode() const
@@ -297,6 +304,11 @@ void ExpoLayout::setReady()
     }
 }
 
+ExpoLayoutAttached *ExpoLayout::qmlAttachedProperties(QObject *parent)
+{
+    return new ExpoLayoutAttached(parent);
+}
+
 void ExpoLayout::updatePolish()
 {
     if (!m_cells.isEmpty()) {
@@ -313,17 +325,35 @@ void ExpoLayout::updatePolish()
     setReady();
 }
 
-void ExpoLayout::addCell(ExpoCell *cell)
+void ExpoLayout::addCell(ExpoLayoutAttached *cell)
 {
     Q_ASSERT(!m_cells.contains(cell));
     m_cells.append(cell);
     polish();
 }
 
-void ExpoLayout::removeCell(ExpoCell *cell)
+void ExpoLayout::removeCell(ExpoLayoutAttached *cell)
 {
     m_cells.removeOne(cell);
     polish();
+}
+
+void ExpoLayout::itemChange(ItemChange change, const ItemChangeData &value)
+{
+    if (change == ItemChildAddedChange) {
+        // If the item hasn't created ExpoLayoutAttached itself, do nothing.
+        auto attached = static_cast<ExpoLayoutAttached *>(qmlAttachedPropertiesObject<ExpoLayout>(value.item, false));
+        if (attached) {
+            attached->setLayout(this);
+        }
+    } else if (change == ItemChildRemovedChange) {
+        // If the item hasn't created ExpoLayoutAttached itself, do nothing.
+        auto attached = static_cast<ExpoLayoutAttached *>(qmlAttachedPropertiesObject<ExpoLayout>(value.item, false));
+        if (attached) {
+            attached->setLayout(nullptr);
+        }
+    }
+    QQuickItem::itemChange(change, value);
 }
 
 void ExpoLayout::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
@@ -341,7 +371,7 @@ static int distance(const QPoint &a, const QPoint &b)
     return int(std::sqrt(qreal(xdiff * xdiff + ydiff * ydiff)));
 }
 
-static QRect centered(ExpoCell *cell, const QRect &bounds)
+static QRect centered(ExpoLayoutAttached *cell, const QRect &bounds)
 {
     const QSize scaled = QSize(cell->naturalWidth(), cell->naturalHeight())
             .scaled(bounds.size(), Qt::KeepAspectRatio);
@@ -361,7 +391,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
     // Assign slots
     const int slotWidth = area.width() / columns;
     const int slotHeight = area.height() / rows;
-    QVector<ExpoCell *> takenSlots;
+    QVector<ExpoLayoutAttached *> takenSlots;
     takenSlots.resize(rows * columns);
     takenSlots.fill(nullptr);
 
@@ -375,16 +405,16 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         }
 
     // Assign each window to the closest available slot
-    QList<ExpoCell *> tmpList = m_cells; // use a QLinkedList copy instead?
+    QList<ExpoLayoutAttached *> tmpList = m_cells; // use a QLinkedList copy instead?
     while (!tmpList.isEmpty()) {
-        ExpoCell *cell = tmpList.first();
+        ExpoLayoutAttached *cell = tmpList.first();
         int slotCandidate = -1, slotCandidateDistance = INT_MAX;
         const QPoint pos = cell->naturalRect().center();
 
         for (int i = 0; i < columns*rows; ++i) { // all slots
             const int dist = distance(pos, slotCenters[i]);
             if (dist < slotCandidateDistance) { // window is interested in this slot
-                ExpoCell *occupier = takenSlots[i];
+                ExpoLayoutAttached *occupier = takenSlots[i];
                 Q_ASSERT(occupier != cell);
                 if (!occupier || dist < distance(occupier->naturalRect().center(), slotCenters[i])) {
                     // either nobody lives here, or we're better - takeover the slot if it's our best
@@ -402,7 +432,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
     }
 
     for (int slot = 0; slot < columns * rows; ++slot) {
-        ExpoCell *cell = takenSlots[slot];
+        ExpoLayoutAttached *cell = takenSlots[slot];
         if (!cell) { // some slots might be empty
             continue;
         }
@@ -442,14 +472,14 @@ void ExpoLayout::calculateWindowTransformationsClosest()
     }
 }
 
-static inline int heightForWidth(ExpoCell *cell, int width)
+static inline int heightForWidth(ExpoLayoutAttached *cell, int width)
 {
     return int((width / qreal(cell->naturalWidth())) * cell->naturalHeight());
 }
 
-static bool isOverlappingAny(ExpoCell *w, const QHash<ExpoCell *, QRect> &targets, const QRegion &border, int spacing)
+static bool isOverlappingAny(ExpoLayoutAttached *w, const QHash<ExpoLayoutAttached *, QRect> &targets, const QRegion &border, int spacing)
 {
-    QHash<ExpoCell *, QRect>::const_iterator winTarget = targets.find(w);
+    QHash<ExpoLayoutAttached *, QRect>::const_iterator winTarget = targets.find(w);
     if (winTarget == targets.constEnd()) {
         return false;
     }
@@ -459,7 +489,7 @@ static bool isOverlappingAny(ExpoCell *w, const QHash<ExpoCell *, QRect> &target
     const QMargins halfSpacing(spacing / 2, spacing / 2, spacing / 2, spacing / 2);
 
     // Is there a better way to do this?
-    QHash<ExpoCell *, QRect>::const_iterator target;
+    QHash<ExpoLayoutAttached *, QRect>::const_iterator target;
     for (target = targets.constBegin(); target != targets.constEnd(); ++target) {
         if (target == winTarget) {
             continue;
@@ -477,16 +507,16 @@ void ExpoLayout::calculateWindowTransformationsNatural()
 
     // As we are using pseudo-random movement (See "slot") we need to make sure the list
     // is always sorted the same way no matter which window is currently active.
-    std::sort(m_cells.begin(), m_cells.end(), [](const ExpoCell *a, const ExpoCell *b) {
+    std::sort(m_cells.begin(), m_cells.end(), [](const ExpoLayoutAttached *a, const ExpoLayoutAttached *b) {
         return a->persistentKey() < b->persistentKey();
     });
 
     QRect bounds;
     int direction = 0;
-    QHash<ExpoCell *, QRect> targets;
-    QHash<ExpoCell *, int> directions;
+    QHash<ExpoLayoutAttached *, QRect> targets;
+    QHash<ExpoLayoutAttached *, int> directions;
 
-    for (ExpoCell *cell : qAsConst(m_cells)) {
+    for (ExpoLayoutAttached *cell : qAsConst(m_cells)) {
         const QRect cellRect(cell->naturalX(), cell->naturalY(), cell->naturalWidth(), cell->naturalHeight());
         targets[cell] = cellRect;
         // Reuse the unused "slot" as a preferred direction attribute. This is used when the window
@@ -505,9 +535,9 @@ void ExpoLayout::calculateWindowTransformationsNatural()
     bool overlap;
     do {
         overlap = false;
-        for (ExpoCell *cell : qAsConst(m_cells)) {
+        for (ExpoLayoutAttached *cell : qAsConst(m_cells)) {
             QRect *target_w = &targets[cell];
-            for (ExpoCell *e : qAsConst(m_cells)) {
+            for (ExpoLayoutAttached *e : qAsConst(m_cells)) {
                 if (cell == e) {
                     continue;
                 }
@@ -596,7 +626,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                    area.height() / scale);
 
     // Move all windows back onto the screen and set their scale
-    QHash<ExpoCell *, QRect>::iterator target = targets.begin();
+    QHash<ExpoLayoutAttached *, QRect>::iterator target = targets.begin();
     while (target != targets.end()) {
         target->setRect((target->x() - bounds.x()) * scale + area.x(),
                         (target->y() - bounds.y()) * scale + area.y(),
@@ -614,7 +644,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
         bool moved;
         do {
             moved = false;
-            for (ExpoCell *cell : qAsConst(m_cells)) {
+            for (ExpoLayoutAttached *cell : qAsConst(m_cells)) {
                 QRect oldRect;
                 QRect *target = &targets[cell];
                 // This may cause some slight distortion if the windows are enlarged a large amount
@@ -685,7 +715,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
         // The expanding code above can actually enlarge windows over 1.0/2.0 scale, we don't like this
         // We can't add this to the loop above as it would cause a never-ending loop so we have to make
         // do with the less-than-optimal space usage with using this method.
-        for (ExpoCell *cell : qAsConst(m_cells)) {
+        for (ExpoLayoutAttached *cell : qAsConst(m_cells)) {
             QRect *target = &targets[cell];
             qreal scale = target->width() / qreal(cell->naturalWidth());
             if (scale > 2.0 || (scale > 1.0 && (cell->naturalWidth() > 300 || cell->naturalHeight() > 300))) {
@@ -698,7 +728,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
         }
     }
 
-    for (ExpoCell *cell : qAsConst(m_cells)) {
+    for (ExpoLayoutAttached *cell : qAsConst(m_cells)) {
         const QRect rect = centered(cell, targets.value(cell).marginsRemoved(cell->margins()));
 
         cell->setX(rect.x());

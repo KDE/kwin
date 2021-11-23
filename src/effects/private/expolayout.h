@@ -12,7 +12,7 @@
 
 #include <optional>
 
-class ExpoCell;
+class ExpoLayoutAttached;
 
 class ExpoLayout : public QQuickItem
 {
@@ -30,6 +30,7 @@ public:
     Q_ENUM(LayoutMode)
 
     explicit ExpoLayout(QQuickItem *parent = nullptr);
+    ~ExpoLayout() override;
 
     LayoutMode mode() const;
     void setMode(LayoutMode mode);
@@ -40,13 +41,16 @@ public:
     int spacing() const;
     void setSpacing(int spacing);
 
-    void addCell(ExpoCell *cell);
-    void removeCell(ExpoCell *cell);
+    void addCell(ExpoLayoutAttached *cell);
+    void removeCell(ExpoLayoutAttached *cell);
 
     bool isReady() const;
     void setReady();
 
+    static ExpoLayoutAttached *qmlAttachedProperties(QObject *object);
+
 protected:
+    void itemChange(ItemChange change, const ItemChangeData &value) override;
     void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;
     void updatePolish() override;
 
@@ -60,7 +64,7 @@ private:
     void calculateWindowTransformationsClosest();
     void calculateWindowTransformationsNatural();
 
-    QList<ExpoCell *> m_cells;
+    QList<ExpoLayoutAttached *> m_cells;
     LayoutMode m_mode = LayoutNatural;
     int m_accuracy = 20;
     int m_spacing = 10;
@@ -68,10 +72,9 @@ private:
     bool m_fillGaps = false;
 };
 
-class ExpoCell : public QObject
+class ExpoLayoutAttached : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(ExpoLayout *layout READ layout WRITE setLayout NOTIFY layoutChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(int naturalX READ naturalX WRITE setNaturalX NOTIFY naturalXChanged)
     Q_PROPERTY(int naturalY READ naturalY WRITE setNaturalY NOTIFY naturalYChanged)
@@ -85,8 +88,8 @@ class ExpoCell : public QObject
     Q_PROPERTY(int bottomMargin READ bottomMargin WRITE setBottomMargin NOTIFY bottomMarginChanged)
 
 public:
-    explicit ExpoCell(QObject *parent = nullptr);
-    ~ExpoCell() override;
+    explicit ExpoLayoutAttached(QObject *parent);
+    ~ExpoLayoutAttached() override;
 
     bool isEnabled() const;
     void setEnabled(bool enabled);
@@ -131,7 +134,6 @@ public Q_SLOTS:
     void update();
 
 Q_SIGNALS:
-    void layoutChanged();
     void enabledChanged();
     void naturalXChanged();
     void naturalYChanged();
@@ -145,6 +147,7 @@ Q_SIGNALS:
     void bottomMarginChanged();
 
 private:
+    ExpoLayout *m_layout = nullptr;
     QString m_persistentKey;
     bool m_enabled = true;
     int m_naturalX = 0;
@@ -156,5 +159,6 @@ private:
     std::optional<int> m_y;
     std::optional<int> m_width;
     std::optional<int> m_height;
-    QPointer<ExpoLayout> m_layout;
 };
+
+QML_DECLARE_TYPEINFO(ExpoLayout, QML_HAS_ATTACHED_PROPERTIES)
