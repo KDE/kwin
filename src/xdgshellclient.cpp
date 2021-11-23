@@ -862,7 +862,7 @@ StrutRect XdgToplevelClient::strutRect(StrutArea area) const
 
 bool XdgToplevelClient::hasStrut() const
 {
-    if (!isShown(true)) {
+    if (!isShown()) {
         return false;
     }
     if (!m_plasmaShellSurface) {

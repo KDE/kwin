@@ -353,7 +353,7 @@ bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
             if (modal->desktops() != c->desktops()) {
                 modal->setDesktops(c->desktops());
             }
-            if (!modal->isShown(true) && !modal->isMinimized())  // forced desktop or utility window
+            if (!modal->isShown() && !modal->isMinimized())  // forced desktop or utility window
                 activateClient(modal);   // activating a minimized blocked window will unminimize its modal implicitly
             // if the click was inside the window (i.e. handled is set),
             // but it has a modal, there's no need to use handled mode, because
@@ -380,7 +380,7 @@ bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
         }
         flags &= ~ActivityFocus;
     }
-    if (!c->isShown(true)) {  // shouldn't happen, call activateClient() if needed
+    if (!c->isShown()) {  // shouldn't happen, call activateClient() if needed
         qCWarning(KWIN_CORE) << "takeActivity: not shown" ;
         return false;
     }
@@ -408,7 +408,7 @@ bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
  */
 void Workspace::clientHidden(AbstractClient* c)
 {
-    Q_ASSERT(!c->isShown(true) || !c->isOnCurrentDesktop() || !c->isOnCurrentActivity());
+    Q_ASSERT(!c->isShown() || !c->isOnCurrentDesktop() || !c->isOnCurrentActivity());
     activateNextClient(c);
 }
 
@@ -423,8 +423,8 @@ AbstractClient *Workspace::clientUnderMouse(AbstractOutput *output) const
 
         // rule out clients which are not really visible.
         // the screen test is rather superfluous for xrandr & twinview since the geometry would differ -> TODO: might be dropped
-        if (!(client->isShown(false) && client->isOnCurrentDesktop() &&
-                client->isOnCurrentActivity() && client->isOnOutput(output)))
+        if (!(client->isShown() && client->isOnCurrentDesktop() &&
+                client->isOnCurrentActivity() && client->isOnOutput(output) && !client->isShade()))
             continue;
 
         if (client->frameGeometry().contains(Cursors::self()->mouse()->pos())) {

@@ -1214,7 +1214,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
             --i) {
         auto it = qobject_cast<AbstractClient*>(Workspace::self()->stackingOrder().at(i));
         if (it && it->isOnCurrentActivity() && it->isOnCurrentDesktop() && !it->isSpecialWindow()
-                && it->isShown(false) && it->wantsTabFocus()
+                && !it->isShade() && it->isShown() && it->wantsTabFocus()
                 && !it->keepAbove() && !it->keepBelow()) {
             c = it;
             break;

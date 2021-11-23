@@ -146,7 +146,7 @@ public:
     void updateActivities(bool includeTransients) override;
 
     /// Is not minimized and not hidden. I.e. normally visible on some virtual desktop.
-    bool isShown(bool shaded_is_shown) const override;
+    bool isShown() const override;
     bool isHiddenInternal() const override; // For compositing
 
     bool isShadeable() const override;
@@ -566,9 +566,9 @@ inline Group* X11Client::group()
     return in_group;
 }
 
-inline bool X11Client::isShown(bool shaded_is_shown) const
+inline bool X11Client::isShown() const
 {
-    return !isMinimized() && (!isShade() || shaded_is_shown) && !hidden;
+    return !isMinimized() && !hidden;
 }
 
 inline bool X11Client::isHiddenInternal() const

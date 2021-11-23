@@ -771,7 +771,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         for (auto it = mainclients.constBegin();
                 it != mainclients.constEnd();
                 ++it)
-            if ((*it)->isShown(true))
+            if ((*it)->isShown())
                 init_minimize = false; // SELI TODO: Even e.g. for NET::Utility?
     }
     // If a dialog is shown for minimized window, minimize it too
@@ -784,7 +784,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         for (auto it = mainclients.constBegin();
                 it != mainclients.constEnd();
                 ++it)
-            if ((*it)->isShown(true))
+            if ((*it)->isShown())
                 visible_parent = true;
         if (!visible_parent) {
             init_minimize = true;
@@ -872,7 +872,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     else
         ready_for_painting = true; // set to true in case compositing is turned on later. bug #160393
 
-    if (isShown(true)) {
+    if (isShown()) {
         bool allow;
         if (session)
             allow = session->active &&
@@ -1446,7 +1446,7 @@ bool X11Client::isMinimizable() const
         for (auto it = mainclients.constBegin();
                 it != mainclients.constEnd();
                 ++it)
-            if ((*it)->isShown(true))
+            if ((*it)->isShown())
                 shown_mainwindow = true;
         if (!shown_mainwindow)
             return true;
@@ -1562,7 +1562,7 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
             workspace()->requestFocus(this);
     }
     info->setState(isShade() ? NET::Shaded : NET::States(), NET::Shaded);
-    info->setState(isShown(false) ? NET::States() : NET::Hidden, NET::Hidden);
+    info->setState((isShade() || !isShown()) ? NET::Hidden : NET::States(), NET::Hidden);
     updateVisibility();
     updateAllowedActions();
     discardWindowPixmap();

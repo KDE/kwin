@@ -224,7 +224,7 @@ void InternalWindowTest::testEnterLeave()
     QVERIFY(!c->isDecorated());
     QCOMPARE(workspace()->findInternal(&win), c);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 100));
-    QVERIFY(c->isShown(false));
+    QVERIFY(c->isShown());
     QVERIFY(workspace()->stackingOrder().contains(c));
 
     QSignalSpy enterSpy(&win, &HelperWindow::entered);

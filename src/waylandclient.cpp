@@ -240,9 +240,8 @@ void WaylandClient::cleanGrouping()
     }
 }
 
-bool WaylandClient::isShown(bool shaded_is_shown) const
+bool WaylandClient::isShown() const
 {
-    Q_UNUSED(shaded_is_shown)
     return !isZombie() && !isHidden() && !isMinimized();
 }
 

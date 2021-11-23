@@ -227,10 +227,8 @@ bool InternalClient::isOutline() const
     return false;
 }
 
-bool InternalClient::isShown(bool shaded_is_shown) const
+bool InternalClient::isShown() const
 {
-    Q_UNUSED(shaded_is_shown)
-
     return readyForPainting();
 }
 

@@ -1057,7 +1057,7 @@ void X11Client::focusInEvent(xcb_focus_in_event_t *e)
         return; // we don't care
     if (e->detail == XCB_NOTIFY_DETAIL_POINTER)
         return;  // we don't care
-    if (!isShown(false) || !isOnCurrentDesktop())    // we unmapped it, but it got focus meanwhile ->
+    if (isShade() || !isShown() || !isOnCurrentDesktop())    // we unmapped it, but it got focus meanwhile ->
         return;            // activateNextClient() already transferred focus elsewhere
     workspace()->forEachClient([](X11Client *client) {
         client->cancelFocusOutTimer();

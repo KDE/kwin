@@ -181,7 +181,7 @@ static inline bool isIrrelevant(const AbstractClient *client, const AbstractClie
         return true;
     if (client == regarding)
         return true;
-    if (!client->isShown(false))
+    if (!client->isShown() || client->isShade())
         return true;
     if (!client->isOnDesktop(desktop))
         return true;

@@ -237,7 +237,7 @@ AbstractClient *Workspace::topClientOnDesktop(VirtualDesktop *desktop, AbstractO
         if (!c) {
             continue;
         }
-        if (c->isOnDesktop(desktop) && c->isShown(false) && c->isOnCurrentActivity()) {
+        if (c->isOnDesktop(desktop) && c->isShown() && c->isOnCurrentActivity() && !c->isShade()) {
             if (output && c->output() != output)
                 continue;
             if (!only_normal)
@@ -255,16 +255,14 @@ AbstractClient *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop) co
     if (topmost) {
         for (int i = stacking_order.size() - 1; i >= 0; i--) {
             AbstractClient *c = qobject_cast<AbstractClient*>(stacking_order.at(i));
-            if (c && c->isOnDesktop(desktop) && c->isDesktop()
-                    && c->isShown(true)) {
+            if (c && c->isOnDesktop(desktop) && c->isDesktop() && c->isShown()) {
                 return c;
             }
         }
     } else { // bottom-most
         for (Toplevel *c : qAsConst(stacking_order)) {
             AbstractClient *client = qobject_cast<AbstractClient*>(c);
-            if (client && c->isOnDesktop(desktop) && c->isDesktop()
-                    && client->isShown(true)) {
+            if (client && c->isOnDesktop(desktop) && c->isDesktop() && client->isShown()) {
                 return client;
             }
         }
@@ -710,7 +708,7 @@ void X11Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource
             }
             X11Client *c = qobject_cast<X11Client *>(*it);
 
-            if (!c || !(  (*it)->isNormalWindow() && c->isShown(true) &&
+            if (!c || !(  (*it)->isNormalWindow() && c->isShown() &&
                     (*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->isOnOutput(output()) ))
                 continue; // irrelevant clients
 

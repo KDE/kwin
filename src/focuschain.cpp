@@ -65,7 +65,7 @@ AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop, AbstractOu
     for (int i = chain.size() - 1; i >= 0; --i) {
         auto tmp = chain.at(i);
         // TODO: move the check into Client
-        if (tmp->isShown(false) && tmp->isOnCurrentActivity()
+        if (!tmp->isShade() && tmp->isShown() && tmp->isOnCurrentActivity()
             && ( !m_separateScreenFocus || tmp->output() == output)) {
             return tmp;
         }
@@ -206,7 +206,7 @@ AbstractClient *FocusChain::nextMostRecentlyUsed(AbstractClient *reference) cons
 bool FocusChain::isUsableFocusCandidate(AbstractClient *c, AbstractClient *prev) const
 {
     return c != prev &&
-           c->isShown(false) && c->isOnCurrentDesktop() && c->isOnCurrentActivity() &&
+           !c->isShade() && c->isShown() && c->isOnCurrentDesktop() && c->isOnCurrentActivity() &&
            (!m_separateScreenFocus || c->isOnOutput(prev ? prev->output() : workspace()->activeOutput()));
 }
 
