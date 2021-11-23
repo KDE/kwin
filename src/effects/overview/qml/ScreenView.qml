@@ -234,6 +234,7 @@ FocusScope {
 
         KWinComponents.WindowThumbnailItem {
             id: windowThumbnail
+            visible: !model.client.hidden
             wId: model.client.internalId
             x: model.client.x - targetScreen.geometry.x
             y: model.client.y - targetScreen.geometry.y
