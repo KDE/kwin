@@ -10,6 +10,7 @@
 #include "compositor_interface.h"
 #include "display.h"
 #include "idleinhibit_v1_interface_p.h"
+#include "linuxdmabufv1clientbuffer.h"
 #include "pointerconstraints_v1_interface_p.h"
 #include "region_interface_p.h"
 #include "subcompositor_interface.h"
@@ -943,6 +944,11 @@ ConfinedPointerV1Interface *SurfaceInterface::confinedPointer() const
 bool SurfaceInterface::inhibitsIdle() const
 {
     return !d->idleInhibitors.isEmpty();
+}
+
+LinuxDmaBufV1Feedback *SurfaceInterface::dmabufFeedbackV1() const
+{
+    return d->dmabufFeedbackV1.data();
 }
 
 QPointF SurfaceInterface::mapToBuffer(const QPointF &point) const

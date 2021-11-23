@@ -2,6 +2,7 @@
     SPDX-FileCopyrightText: 2018 Fredrik Höglund <fredrik@kde.org>
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2021 Xaver Hugl <xaver.hugl@gmail.com>
 
     Based on the libweston implementation,
     SPDX-FileCopyrightText: 2014, 2015 Collabora, Ltd.
@@ -11,36 +12,63 @@
 
 #include "linuxdmabufv1clientbuffer.h"
 #include "linuxdmabufv1clientbuffer_p.h"
+#include "logging.h"
+#include "surface_interface_p.h"
+
+#include <QTemporaryFile>
+#include <fcntl.h>
 
 namespace KWaylandServer
 {
-static const int s_version = 3;
+static const int s_version = 4;
 
 LinuxDmaBufV1ClientBufferIntegrationPrivate::LinuxDmaBufV1ClientBufferIntegrationPrivate(LinuxDmaBufV1ClientBufferIntegration *q, Display *display)
     : QtWaylandServer::zwp_linux_dmabuf_v1(*display, s_version)
     , q(q)
+    , defaultFeedback(new LinuxDmaBufV1Feedback(q))
 {
 }
 
 void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_bind_resource(Resource *resource)
 {
-    for (auto it = supportedModifiers.constBegin(); it != supportedModifiers.constEnd(); ++it) {
-        const uint32_t format = it.key();
-        QSet<uint64_t> modifiers = it.value();
-        if (modifiers.isEmpty()) {
-            modifiers.insert(DRM_FORMAT_MOD_INVALID);
-        }
+    if (resource->version() < ZWP_LINUX_DMABUF_V1_GET_DEFAULT_FEEDBACK_SINCE_VERSION) {
+        for (auto it = supportedModifiers.constBegin(); it != supportedModifiers.constEnd(); ++it) {
+            const uint32_t format = it.key();
+            QSet<uint64_t> modifiers = it.value();
+            if (modifiers.isEmpty()) {
+                modifiers.insert(DRM_FORMAT_MOD_INVALID);
+            }
 
-        for (const uint64_t &modifier : qAsConst(modifiers)) {
-            if (resource->version() >= ZWP_LINUX_DMABUF_V1_MODIFIER_SINCE_VERSION) {
-                const uint32_t modifier_lo = modifier & 0xffffffff;
-                const uint32_t modifier_hi = modifier >> 32;
-                send_modifier(resource->handle, format, modifier_hi, modifier_lo);
-            } else if (modifier == DRM_FORMAT_MOD_LINEAR || modifier == DRM_FORMAT_MOD_INVALID) {
-                send_format(resource->handle, format);
+            for (const uint64_t &modifier : qAsConst(modifiers)) {
+                if (resource->version() >= ZWP_LINUX_DMABUF_V1_MODIFIER_SINCE_VERSION) {
+                    const uint32_t modifier_lo = modifier & 0xffffffff;
+                    const uint32_t modifier_hi = modifier >> 32;
+                    send_modifier(resource->handle, format, modifier_hi, modifier_lo);
+                } else if (modifier == DRM_FORMAT_MOD_LINEAR || modifier == DRM_FORMAT_MOD_INVALID) {
+                    send_format(resource->handle, format);
+                }
             }
         }
     }
+}
+
+void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_get_default_feedback(Resource *resource, uint32_t id)
+{
+    LinuxDmaBufV1FeedbackPrivate::get(defaultFeedback.data())->add(resource->client(), id, resource->version());
+}
+
+void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_get_surface_feedback(Resource *resource, uint32_t id, wl_resource *surfaceResource)
+{
+    auto surface = SurfaceInterface::get(surfaceResource);
+    if (!surface) {
+        qCWarning(KWAYLAND_SERVER) << "requested surface feedback for nonexistant surface!";
+        return;
+    }
+    auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
+    if (!surfacePrivate->dmabufFeedbackV1) {
+        surfacePrivate->dmabufFeedbackV1.reset(new LinuxDmaBufV1Feedback(q));
+    }
+    LinuxDmaBufV1FeedbackPrivate::get(surfacePrivate->dmabufFeedbackV1.data())->add(resource->client(), id, resource->version());
 }
 
 void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_destroy(Resource *resource)
@@ -56,6 +84,11 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_create_par
         return;
     }
     new LinuxDmaBufParamsV1(q, paramsResource);
+}
+
+LinuxDmaBufV1ClientBufferIntegrationPrivate *LinuxDmaBufV1ClientBufferIntegrationPrivate::get(LinuxDmaBufV1ClientBufferIntegration *integration)
+{
+    return integration->d.data();
 }
 
 LinuxDmaBufParamsV1::LinuxDmaBufParamsV1(LinuxDmaBufV1ClientBufferIntegration *integration, ::wl_resource *resource)
@@ -279,9 +312,18 @@ void LinuxDmaBufV1ClientBufferIntegration::setRendererInterface(RendererInterfac
     d->rendererInterface = rendererInterface;
 }
 
-void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(const QHash<uint32_t, QSet<uint64_t>> &set)
+void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(dev_t mainDevice, const QHash<uint32_t, QSet<uint64_t>> &set)
 {
-    d->supportedModifiers = set;
+    if (d->supportedModifiers != set || d->mainDevice != mainDevice) {
+        d->supportedModifiers = set;
+        d->mainDevice = mainDevice;
+        d->table.reset(new LinuxDmaBufV1FormatTable(set));
+        LinuxDmaBufV1Feedback::Tranche tranche;
+        tranche.device = mainDevice;
+        tranche.flags = {};
+        tranche.formatTable = set;
+        d->defaultFeedback->setTranches({tranche});
+    }
 }
 
 static bool testAlphaChannel(uint32_t drmFormat)
@@ -392,6 +434,128 @@ ClientBuffer::Origin LinuxDmaBufV1ClientBuffer::origin() const
         return ClientBuffer::Origin::BottomLeft;
     } else {
         return ClientBuffer::Origin::TopLeft;
+    }
+}
+
+LinuxDmaBufV1Feedback::LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegration *integration)
+    : d(new LinuxDmaBufV1FeedbackPrivate(LinuxDmaBufV1ClientBufferIntegrationPrivate::get(integration)))
+{
+}
+
+LinuxDmaBufV1Feedback::~LinuxDmaBufV1Feedback() = default;
+
+void LinuxDmaBufV1Feedback::setTranches(const QVector<Tranche> &tranches)
+{
+    if (d->m_tranches != tranches) {
+        d->m_tranches = tranches;
+        const auto &map = d->resourceMap();
+        for (const auto &resource : map) {
+            d->send(resource);
+        }
+    }
+}
+
+LinuxDmaBufV1FeedbackPrivate *LinuxDmaBufV1FeedbackPrivate::get(LinuxDmaBufV1Feedback *q)
+{
+    return q->d.data();
+}
+
+LinuxDmaBufV1FeedbackPrivate::LinuxDmaBufV1FeedbackPrivate(LinuxDmaBufV1ClientBufferIntegrationPrivate *bufferintegration)
+    : m_bufferintegration(bufferintegration)
+{
+}
+
+bool operator==(const LinuxDmaBufV1Feedback::Tranche &t1, const LinuxDmaBufV1Feedback::Tranche &t2)
+{
+    return t1.device == t2.device && t1.flags == t2.flags && t1.formatTable == t2.formatTable;
+}
+
+void LinuxDmaBufV1FeedbackPrivate::send(Resource *resource)
+{
+    send_format_table(resource->handle, m_bufferintegration->table->fd, m_bufferintegration->table->size);
+    QByteArray bytes;
+    bytes.append(reinterpret_cast<const char *>(&m_bufferintegration->mainDevice), sizeof(dev_t));
+    send_main_device(resource->handle, bytes);
+    const auto &sendTranche = [this, resource](const LinuxDmaBufV1Feedback::Tranche &tranche) {
+        QByteArray targetDevice;
+        targetDevice.append(reinterpret_cast<const char *>(&tranche.device), sizeof(dev_t));
+        QByteArray indices;
+        for (auto it = tranche.formatTable.begin(); it != tranche.formatTable.end(); it++) {
+            const uint32_t format = it.key();
+            for (const auto &mod : qAsConst(it.value())) {
+                uint16_t index = m_bufferintegration->table->indices[std::pair<uint32_t, uint64_t>(format, mod)];
+                indices.append(reinterpret_cast<const char *>(&index), 2);
+            }
+        }
+        send_tranche_target_device(resource->handle, targetDevice);
+        send_tranche_formats(resource->handle, indices);
+        send_tranche_flags(resource->handle, static_cast<uint32_t>(tranche.flags));
+        send_tranche_done(resource->handle);
+    };
+    for (const auto &tranche : qAsConst(m_tranches)) {
+        sendTranche(tranche);
+    }
+    // send default hints as the last fallback tranche
+    if (this != get(m_bufferintegration->defaultFeedback.data())) {
+        sendTranche(get(m_bufferintegration->defaultFeedback.data())->m_tranches[0]);
+    }
+    send_done(resource->handle);
+}
+
+void LinuxDmaBufV1FeedbackPrivate::zwp_linux_dmabuf_feedback_v1_bind_resource(Resource *resource)
+{
+    send(resource);
+}
+
+void LinuxDmaBufV1FeedbackPrivate::zwp_linux_dmabuf_feedback_v1_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+struct linux_dmabuf_feedback_v1_table_entry {
+    uint32_t format;
+    uint32_t pad; // unused
+    uint64_t modifier;
+};
+
+LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QSet<uint64_t>> &supportedModifiers)
+{
+    QVector<linux_dmabuf_feedback_v1_table_entry> data;
+    for (auto it = supportedModifiers.begin(); it != supportedModifiers.end(); it++) {
+        const uint32_t format = it.key();
+        for (const uint64_t &mod : *it) {
+            indices.insert({format, mod}, data.size());
+            data.append({format, 0, mod});
+        }
+    }
+    size = data.size() * sizeof(linux_dmabuf_feedback_v1_table_entry);
+    QScopedPointer<QTemporaryFile> tmp(new QTemporaryFile());
+    if (!tmp->open()) {
+        qCWarning(KWAYLAND_SERVER) << "Failed to create keymap file:" << tmp->errorString();
+        return;
+    }
+    fd = open(tmp->fileName().toUtf8().constData(), O_RDONLY | O_CLOEXEC);
+    if (fd < 0) {
+        qCWarning(KWAYLAND_SERVER) << "Could not create readonly shm fd!" << strerror(errno);
+        return;
+    }
+    unlink(tmp->fileName().toUtf8().constData());
+    if (!tmp->resize(size)) {
+        qCWarning(KWAYLAND_SERVER) << "Failed to resize keymap file:" << tmp->errorString();
+        return;
+    }
+    uchar *address = tmp->map(0, size);
+    if (!address) {
+        qCWarning(KWAYLAND_SERVER) << "Failed to map keymap file:" << tmp->errorString();
+        return;
+    }
+    memcpy(address, data.data(), size);
+}
+
+LinuxDmaBufV1FormatTable::~LinuxDmaBufV1FormatTable()
+{
+    if (fd != -1) {
+        close(fd);
     }
 }
 

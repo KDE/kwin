@@ -2,6 +2,7 @@
     SPDX-FileCopyrightText: 2018 Fredrik Höglund <fredrik@kde.org>
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2021 Xaver Hugl <xaver.hugl@gmail.com>
 
     Based on the libweston implementation,
     SPDX-FileCopyrightText: 2014, 2015 Collabora, Ltd.
@@ -21,10 +22,10 @@
 #include <QDebug>
 #include <QVector>
 
-#include <unistd.h>
-
 namespace KWaylandServer
 {
+
+class LinuxDmaBufV1FormatTable;
 
 class LinuxDmaBufV1ClientBufferIntegrationPrivate : public QtWaylandServer::zwp_linux_dmabuf_v1
 {
@@ -33,12 +34,19 @@ public:
 
     LinuxDmaBufV1ClientBufferIntegration *q;
     LinuxDmaBufV1ClientBufferIntegration::RendererInterface *rendererInterface = nullptr;
+    QScopedPointer<LinuxDmaBufV1Feedback> defaultFeedback;
+    QScopedPointer<LinuxDmaBufV1FormatTable> table;
+    dev_t mainDevice;
     QHash<uint32_t, QSet<uint64_t>> supportedModifiers;
+
+    static LinuxDmaBufV1ClientBufferIntegrationPrivate *get(LinuxDmaBufV1ClientBufferIntegration *integration);
 
 protected:
     void zwp_linux_dmabuf_v1_bind_resource(Resource *resource) override;
     void zwp_linux_dmabuf_v1_destroy(Resource *resource) override;
     void zwp_linux_dmabuf_v1_create_params(Resource *resource, uint32_t params_id) override;
+    void zwp_linux_dmabuf_v1_get_default_feedback(Resource *resource, uint32_t id) override;
+    void zwp_linux_dmabuf_v1_get_surface_feedback(Resource *resource, uint32_t id, wl_resource *surface) override;
 };
 
 class LinuxDmaBufV1ClientBufferPrivate : public ClientBufferPrivate, public QtWaylandServer::wl_buffer
@@ -83,4 +91,30 @@ private:
     bool m_isUsed = false;
 };
 
+class LinuxDmaBufV1FormatTable
+{
+public:
+    LinuxDmaBufV1FormatTable(const QHash<uint32_t, QSet<uint64_t>> &supportedModifiers);
+    ~LinuxDmaBufV1FormatTable();
+
+    int fd = -1;
+    int size;
+    QMap<std::pair<uint32_t, uint64_t>, uint16_t> indices;
+};
+
+class LinuxDmaBufV1FeedbackPrivate : public QtWaylandServer::zwp_linux_dmabuf_feedback_v1
+{
+public:
+    LinuxDmaBufV1FeedbackPrivate(LinuxDmaBufV1ClientBufferIntegrationPrivate *bufferintegration);
+
+    static LinuxDmaBufV1FeedbackPrivate *get(LinuxDmaBufV1Feedback *q);
+    void send(Resource *resource);
+
+    QVector<LinuxDmaBufV1Feedback::Tranche> m_tranches;
+    LinuxDmaBufV1ClientBufferIntegrationPrivate *m_bufferintegration;
+
+protected:
+    void zwp_linux_dmabuf_feedback_v1_bind_resource(Resource *resource) override;
+    void zwp_linux_dmabuf_feedback_v1_destroy(Resource *resource) override;
+};
 }

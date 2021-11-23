@@ -27,6 +27,7 @@ class ShadowInterface;
 class SlideInterface;
 class SubSurfaceInterface;
 class SurfaceInterfacePrivate;
+class LinuxDmaBufV1Feedback;
 
 /**
  * @brief Resource representing a wl_surface.
@@ -52,6 +53,7 @@ class SurfaceInterfacePrivate;
  * @see ContrastInterface
  * @see ShadowInterface
  * @see SlideInterface
+ * @see LinuxDmaBufV1Feedback
  */
 class KWAYLANDSERVER_EXPORT SurfaceInterface : public QObject
 {
@@ -300,6 +302,11 @@ public:
      * @see inhibitsIdleChanged
      */
     bool inhibitsIdle() const;
+
+    /**
+     * dmabuf feedback installed on this SurfaceInterface
+     */
+    LinuxDmaBufV1Feedback *dmabufFeedbackV1() const;
 
     /**
      * @returns The SurfaceInterface for the @p native resource.

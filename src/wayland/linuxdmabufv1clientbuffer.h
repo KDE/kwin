@@ -2,6 +2,7 @@
     SPDX-FileCopyrightText: 2018 Fredrik Höglund <fredrik@kde.org>
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2021 Xaver Hugl <xaver.hugl@gmail.com>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -12,11 +13,13 @@
 
 #include <QHash>
 #include <QSet>
+#include <sys/types.h>
 
 namespace KWaylandServer
 {
 class LinuxDmaBufV1ClientBufferPrivate;
 class LinuxDmaBufV1ClientBufferIntegrationPrivate;
+class LinuxDmaBufV1FeedbackPrivate;
 
 /**
  * The LinuxDmaBufV1Plane type represents a plane in a client buffer.
@@ -101,10 +104,41 @@ public:
      */
     void setRendererInterface(RendererInterface *rendererInterface);
 
-    void setSupportedFormatsWithModifiers(const QHash<uint32_t, QSet<uint64_t>> &set);
+    void setSupportedFormatsWithModifiers(dev_t mainDevice, const QHash<uint32_t, QSet<uint64_t>> &set);
 
 private:
+    friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;
     QScopedPointer<LinuxDmaBufV1ClientBufferIntegrationPrivate> d;
+};
+
+class KWAYLANDSERVER_EXPORT LinuxDmaBufV1Feedback : public QObject
+{
+    Q_OBJECT
+public:
+    ~LinuxDmaBufV1Feedback() override;
+
+    enum class TrancheFlag : uint32_t {
+        Scanout = 1,
+    };
+    Q_DECLARE_FLAGS(TrancheFlags, TrancheFlag)
+
+    struct Tranche {
+        dev_t device;
+        TrancheFlags flags;
+        QHash<uint32_t, QSet<uint64_t>> formatTable;
+    };
+    /**
+     * Sets the list of tranches for this feedback object, with lower indices
+     * indicating a higher priority / a more optimal configuration.
+     * The main device does not need to be included
+     */
+    void setTranches(const QVector<Tranche> &tranches);
+
+private:
+    LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegration *integration);
+    friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;
+    friend class LinuxDmaBufV1FeedbackPrivate;
+    QScopedPointer<LinuxDmaBufV1FeedbackPrivate> d;
 };
 
 } // namespace KWaylandServer
