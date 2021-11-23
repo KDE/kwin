@@ -26,6 +26,7 @@ FocusScope {
     property int selectedIndex: -1
     property int animationDuration: PlasmaCore.Units.longDuration
     property bool animationEnabled: false
+    property bool dragEnabled: true
     property real padding: 0
     property var showOnly: []
 
@@ -227,6 +228,7 @@ FocusScope {
 
                 DragHandler {
                     id: dragHandler
+                    enabled: heap.dragEnabled
                     target: null
 
                     readonly property double targetScale: {
