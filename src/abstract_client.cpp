@@ -67,6 +67,9 @@ AbstractClient::AbstractClient()
     connect(this, &AbstractClient::clientStartUserMovedResized,  this, &AbstractClient::removeCheckOutputConnection);
     connect(this, &AbstractClient::clientFinishUserMovedResized, this, &AbstractClient::setupCheckOutputConnection);
 
+    connect(this, &AbstractClient::windowShown, this, &AbstractClient::hiddenChanged);
+    connect(this, &AbstractClient::windowHidden, this, &AbstractClient::hiddenChanged);
+
     connect(this, &AbstractClient::paletteChanged, this, &AbstractClient::triggerDecorationRepaint);
 
     connect(Decoration::DecorationBridge::self(), &QObject::destroyed, this, &AbstractClient::destroyDecoration);

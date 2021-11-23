@@ -334,6 +334,11 @@ class KWIN_EXPORT AbstractClient : public Toplevel
 
     Q_PROPERTY(KWin::Layer layer READ layer)
 
+    /**
+     * Whether this client is hidden. It's usually the case with auto-hide panels.
+     */
+    Q_PROPERTY(bool hidden READ isHiddenInternal NOTIFY hiddenChanged)
+
 public:
     ~AbstractClient() override;
 
@@ -953,6 +958,7 @@ Q_SIGNALS:
     void applicationMenuActiveChanged(bool);
     void unresponsiveChanged(bool);
     void decorationChanged();
+    void hiddenChanged();
 
 protected:
     AbstractClient();
