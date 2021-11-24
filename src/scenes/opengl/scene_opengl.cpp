@@ -28,7 +28,6 @@
 #include "main.h"
 #include "overlaywindow.h"
 #include "renderloop.h"
-#include "screens.h"
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
 #include "shadowitem.h"
@@ -255,7 +254,7 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
         geo = output->geometry();
         scaling = output->scale();
     } else {
-        geo = screens()->geometry();
+        geo = geometry();
         scaling = 1;
     }
 
@@ -320,8 +319,7 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
             paintCursor(valid);
 
             if (!GLPlatform::instance()->isGLES() && !output) {
-                const QSize &screenSize = screens()->size();
-                const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
+                const QRegion displayRegion(geometry());
 
                 // copy dirty parts from front to backbuffer
                 if (!m_backend->supportsBufferAge() &&
@@ -395,11 +393,11 @@ void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
     if (m_backend->supportsBufferAge())
         return;
 
-    const QSize &screenSize = screens()->size();
     if (options->glPreferBufferSwap() == Options::ExtendDamage) { // only Extend "large" repaints
-        const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
+        const QRegion displayRegion(geometry());
         uint damagedPixels = 0;
-        const uint fullRepaintLimit = (opaqueFullscreen?0.49f:0.748f)*screenSize.width()*screenSize.height();
+        const QSize &sceneSize = geometry().size();
+        const uint fullRepaintLimit = (opaqueFullscreen?0.49f:0.748f)*sceneSize.width()*sceneSize.height();
         // 16:9 is 75% of 4:3 and 2.55:1 is 49.01% of 5:4
         // (5:4 is the most square format and 2.55:1 is Cinemascope55 - the widest ever shot
         // movie aspect - two times ;-) It's a Fox format, though, so maybe we want to restrict
@@ -414,7 +412,7 @@ void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
             }
         }
     } else if (options->glPreferBufferSwap() == Options::PaintFullScreen) { // forced full rePaint
-        region = QRegion(0, 0, screenSize.width(), screenSize.height());
+        region = QRegion(geometry());
     }
 }
 
@@ -422,7 +420,7 @@ void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, Scr
 {
     const QRect r = region.boundingRect();
     glEnable(GL_SCISSOR_TEST);
-    glScissor(r.x(), screens()->size().height() - r.y() - r.height(), r.width(), r.height());
+    glScissor(r.x(), geometry().size().height() - r.y() - r.height(), r.width(), r.height());
     KWin::Scene::paintDesktop(desktop, mask, region, data);
     glDisable(GL_SCISSOR_TEST);
 }

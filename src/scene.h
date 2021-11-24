@@ -62,6 +62,9 @@ public:
     void addRepaint(int x, int y, int width, int height);
     void addRepaintFull();
 
+    QRect geometry() const;
+    void setGeometry(const QRect &rect);
+
     /**
      * Returns the repaints region for output with the specified @a output.
      */
@@ -261,6 +264,7 @@ private:
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     QHash< Toplevel*, Window* > m_windows;
     QMap<AbstractOutput *, QRegion> m_repaints;
+    QRect m_geometry;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
 };

@@ -71,7 +71,6 @@
 #include "deleted.h"
 #include "effects.h"
 #include "renderloop.h"
-#include "screens.h"
 #include "shadow.h"
 #include "wayland_server.h"
 #include "composite.h"
@@ -100,15 +99,19 @@ void Scene::initialize()
 
     connect(workspace(), &Workspace::deletedRemoved, this, &Scene::removeToplevel);
 
-    connect(workspace(), &Workspace::geometryChanged, this, &Scene::addRepaintFull);
     connect(workspace(), &Workspace::currentActivityChanged, this, &Scene::addRepaintFull);
     connect(workspace(), &Workspace::currentDesktopChanged, this, &Scene::addRepaintFull);
     connect(workspace(), &Workspace::stackingOrderChanged, this, &Scene::addRepaintFull);
+
+    setGeometry(workspace()->geometry());
+    connect(workspace(), &Workspace::geometryChanged, this, [this]() {
+        setGeometry(workspace()->geometry());
+    });
 }
 
 void Scene::addRepaintFull()
 {
-    addRepaint(workspace()->geometry());
+    addRepaint(geometry());
 }
 
 void Scene::addRepaint(int x, int y, int width, int height)
@@ -135,6 +138,19 @@ void Scene::addRepaint(const QRegion &region)
     } else {
         m_repaints[0] += region;
         kwinApp()->platform()->renderLoop()->scheduleRepaint();
+    }
+}
+
+QRect Scene::geometry() const
+{
+    return m_geometry;
+}
+
+void Scene::setGeometry(const QRect &rect)
+{
+    if (m_geometry != rect) {
+        m_geometry = rect;
+        addRepaintFull();
     }
 }
 
@@ -196,8 +212,7 @@ void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
                         QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop,
                         const QMatrix4x4 &projection)
 {
-    const QSize &screenSize = screens()->size();
-    const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
+    const QRegion displayRegion(geometry());
 
     const std::chrono::milliseconds presentTime =
             std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
@@ -309,7 +324,7 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
         phase2.append({w, infiniteRegion(), data.clip, data.mask,});
     }
 
-    damaged_region = QRegion(QRect {{}, screens()->size()});
+    damaged_region = geometry();
     if (m_paintScreenCount == 1) {
         aboutToStartPainting(painted_screen, damaged_region);
 
@@ -407,8 +422,7 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
     const QRegion repaintClip = repaint_region - dirtyArea;
     dirtyArea |= repaint_region;
 
-    const QSize &screenSize = screens()->size();
-    const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
+    const QRegion displayRegion(geometry());
     bool fullRepaint(dirtyArea == displayRegion); // spare some expensive region operations
     if (!fullRepaint) {
         extendPaintRegion(dirtyArea, opaqueFullscreen);
@@ -535,7 +549,7 @@ void Scene::clearStackingOrder()
 void Scene::paintWindow(Window* w, int mask, const QRegion &_region)
 {
     // no painting outside visible screen (and no transformations)
-    const QRegion region = _region & QRect({0, 0}, screens()->size());
+    const QRegion region = _region & geometry();
     if (region.isEmpty())  // completely clipped
         return;
 

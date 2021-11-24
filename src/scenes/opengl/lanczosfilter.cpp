@@ -12,7 +12,6 @@
 #include "x11client.h"
 #include "deleted.h"
 #include "effects.h"
-#include "screens.h"
 #include "unmanaged.h"
 #include "options.h"
 #include "utils.h"
@@ -98,7 +97,7 @@ void LanczosFilter::init()
 
 void LanczosFilter::updateOffscreenSurfaces()
 {
-    const QSize &s = screens()->size();
+    const QSize &s = m_scene->geometry().size();
     int w = s.width();
     int h = s.height();
 
