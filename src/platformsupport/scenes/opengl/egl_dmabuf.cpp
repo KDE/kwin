@@ -435,8 +435,7 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
         }
         set.insert(format, QSet<uint64_t>());
     }
-
-    LinuxDmaBufV1RendererInterface::setSupportedFormatsAndModifiers(set);
+    LinuxDmaBufV1RendererInterface::setSupportedFormatsAndModifiers(m_backend->deviceId(), set);
 }
 
 }

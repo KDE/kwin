@@ -44,7 +44,8 @@ namespace KWin
 {
 
 EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu)
-    : m_backend(drmBackend)
+    : AbstractEglBackend(gpu->deviceId())
+    , m_backend(drmBackend)
     , m_gpu(gpu)
 {
     m_gpu->setEglBackend(this);
@@ -502,10 +503,16 @@ QRegion EglGbmBackend::beginFrame(AbstractOutput *drmOutput)
 {
     Q_ASSERT(m_outputs.contains(drmOutput));
     Output &output = m_outputs[drmOutput];
-    if (output.surfaceInterface) {
+    if (output.scanoutSurface) {
         qCDebug(KWIN_DRM) << "Direct scanout stopped on output" << output.output->name();
     }
-    output.surfaceInterface = nullptr;
+    output.scanoutSurface = nullptr;
+    if (output.scanoutCandidate) {
+        output.oldScanoutCandidate = output.scanoutCandidate;
+        output.scanoutCandidate = nullptr;
+    } else if (output.oldScanoutCandidate && output.oldScanoutCandidate->dmabufFeedbackV1()) {
+        output.oldScanoutCandidate->dmabufFeedbackV1()->setTranches({});
+    }
     if (isPrimary()) {
         return prepareRenderingForOutput(output);
     } else {
@@ -616,10 +623,31 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
     if (buffer->size() != output.output->modeSize()) {
         return false;
     }
-    if (!buffer->planes().count()) {
-        return false;
+    if (output.oldScanoutCandidate && output.oldScanoutCandidate != surface) {
+        output.oldScanoutCandidate->dmabufFeedbackV1()->setTranches({});
+        output.oldScanoutCandidate = nullptr;
     }
-    if (!output.output->isFormatSupported(buffer->format())) {
+    output.scanoutCandidate = surface;
+    const auto &sendFeedback = [&output, this]() {
+        if (const auto &drmOutput = qobject_cast<DrmOutput *>(output.output); drmOutput && output.scanoutCandidate->dmabufFeedbackV1()) {
+            KWaylandServer::LinuxDmaBufV1Feedback::Tranche tranche;
+            tranche.device = m_gpu->deviceId();
+            tranche.flags = KWaylandServer::LinuxDmaBufV1Feedback::TrancheFlag::Scanout;
+            // atm no format changes are sent as those might require a modeset
+            // and thus require more elaborate feedback
+            const auto &mods = drmOutput->pipeline()->supportedModifiers(m_gbmFormat);
+            for (const auto &mod : mods) {
+                tranche.formatTable[m_gbmFormat] << mod;
+            }
+            if (tranche.formatTable.isEmpty()) {
+                output.scanoutCandidate->dmabufFeedbackV1()->setTranches({});
+            } else {
+                output.scanoutCandidate->dmabufFeedbackV1()->setTranches({tranche});
+            }
+        }
+    };
+    if (!buffer->planes().count() || !output.output->isFormatSupported(buffer->format())) {
+        sendFeedback();
         return false;
     }
 
@@ -629,6 +657,7 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
         || planes.first().offset > 0
         || planes.count() > 1) {
         if (!m_gpu->addFB2ModifiersSupported() || !output.output->supportedModifiers(buffer->format()).contains(planes.first().modifier)) {
+            sendFeedback();
             return false;
         }
         gbm_import_fd_modifier_data data = {};
@@ -654,6 +683,7 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
         importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT);
     }
     if (!importedBuffer) {
+        sendFeedback();
         if (errno != EINVAL) {
             qCWarning(KWIN_DRM) << "Importing buffer for direct scanout failed:" << strerror(errno);
         }
@@ -661,7 +691,7 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
     }
     // damage tracking for screen casting
     QRegion damage;
-    if (output.surfaceInterface == surface && buffer->size() == output.output->modeSize()) {
+    if (output.scanoutSurface == surface && buffer->size() == output.output->modeSize()) {
         QRegion trackedDamage = surfaceItem->damage();
         surfaceItem->resetDamage();
         for (const auto &rect : trackedDamage) {
@@ -677,13 +707,14 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
     makeCurrent();
     if (output.output->present(bo, damage)) {
         output.current.damageJournal.clear();
-        if (output.surfaceInterface != surface) {
+        if (output.scanoutSurface != surface) {
             auto path = surface->client()->executablePath();
             qCDebug(KWIN_DRM).nospace() << "Direct scanout starting on output " << output.output->name() << " for application \"" << path << "\"";
         }
-        output.surfaceInterface = surface;
+        output.scanoutSurface = surface;
         return true;
     } else {
+        sendFeedback();
         return false;
     }
 }

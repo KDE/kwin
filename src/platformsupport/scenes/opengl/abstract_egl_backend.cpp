@@ -38,7 +38,8 @@ static bool isOpenGLES_helper()
 
 AbstractEglBackend *AbstractEglBackend::s_primaryBackend = nullptr;
 
-AbstractEglBackend::AbstractEglBackend()
+AbstractEglBackend::AbstractEglBackend(dev_t deviceId)
+    : m_deviceId(deviceId)
 {
     if (s_primaryBackend == nullptr) {
         setPrimaryBackend(this);
@@ -387,4 +388,8 @@ QSharedPointer<GLTexture> AbstractEglBackend::textureForOutput(AbstractOutput *r
     return texture;
 }
 
+dev_t AbstractEglBackend::deviceId() const
+{
+    return m_deviceId;
+}
 }

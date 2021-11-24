@@ -70,8 +70,10 @@ public:
         return this == s_primaryBackend;
     }
 
+    dev_t deviceId() const;
+
 protected:
-    AbstractEglBackend();
+    AbstractEglBackend(dev_t deviceId = 0);
     void setEglDisplay(const EGLDisplay &display);
     void setSurface(const EGLSurface &surface);
     void setConfig(const EGLConfig &config);
@@ -101,6 +103,7 @@ private:
     // note: m_dmaBuf is nullptr if this is not the primary backend
     EglDmabuf *m_dmaBuf = nullptr;
     QList<QByteArray> m_clientExtensions;
+    const dev_t m_deviceId;
 
     static AbstractEglBackend * s_primaryBackend;
 };

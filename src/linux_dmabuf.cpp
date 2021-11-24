@@ -53,9 +53,9 @@ KWaylandServer::LinuxDmaBufV1ClientBuffer *LinuxDmaBufV1RendererInterface::impor
     return nullptr;
 }
 
-void LinuxDmaBufV1RendererInterface::setSupportedFormatsAndModifiers(const QHash<uint32_t, QSet<uint64_t>> &set)
+void LinuxDmaBufV1RendererInterface::setSupportedFormatsAndModifiers(dev_t device, const QHash<uint32_t, QSet<uint64_t>> &set)
 {
-    waylandServer()->linuxDmabuf()->setSupportedFormatsWithModifiers(set);
+    waylandServer()->linuxDmabuf()->setSupportedFormatsWithModifiers(device, set);
 }
 
 }

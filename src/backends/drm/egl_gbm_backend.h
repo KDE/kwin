@@ -13,6 +13,7 @@
 
 #include <kwinglutils.h>
 
+#include <QPointer>
 #include <QSharedPointer>
 
 struct gbm_surface;
@@ -94,7 +95,9 @@ private:
             QSharedPointer<DumbSwapchain> importSwapchain;
         } old, current;
 
-        KWaylandServer::SurfaceInterface *surfaceInterface = nullptr;
+        KWaylandServer::SurfaceInterface *scanoutSurface = nullptr;
+        QPointer<KWaylandServer::SurfaceInterface> scanoutCandidate;
+        QPointer<KWaylandServer::SurfaceInterface> oldScanoutCandidate;
     };
 
     bool doesRenderFit(DrmAbstractOutput *output, const Output::RenderData &render);
