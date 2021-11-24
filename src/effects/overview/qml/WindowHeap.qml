@@ -204,6 +204,7 @@ FocusScope {
                 }
 
                 TapHandler {
+                    acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
                     acceptedButtons: Qt.MiddleButton
                     onTapped: thumb.client.closeWindow()
                 }
