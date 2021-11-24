@@ -140,7 +140,11 @@ void DrmBackend::reactivate()
     if (m_active) {
         return;
     }
-    m_active = true;
+    auto time = std::chrono::system_clock::now();
+    while (!m_active && std::chrono::system_clock::now() - time < std::chrono::seconds(30)) {
+        m_active = drmIsMaster(primaryGpu()->fd());
+        QThread::msleep(1);
+    }
 
     for (const auto &output : qAsConst(m_outputs)) {
         output->renderLoop()->uninhibit();
