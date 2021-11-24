@@ -229,17 +229,19 @@ FocusScope {
                     }
                 }
 
-                PC3.Button {
+                Loader {
                     LayoutMirroring.enabled: Qt.application.layoutDirection == Qt.RightToLeft
-                    icon.name: "window-close"
+                    active: (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !dragHandler.active
                     anchors.right: thumbSource.right
                     anchors.rightMargin: PlasmaCore.Units.largeSpacing
                     anchors.top: thumbSource.top
                     anchors.topMargin: PlasmaCore.Units.largeSpacing
-                    implicitWidth: PlasmaCore.Units.iconSizes.medium
-                    implicitHeight: implicitWidth
-                    visible: (hovered || hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !dragHandler.active
-                    onClicked: thumb.client.closeWindow();
+                    sourceComponent: PC3.Button {
+                        icon.name: "window-close"
+                        implicitWidth: PlasmaCore.Units.iconSizes.medium
+                        implicitHeight: implicitWidth
+                        onClicked: thumb.client.closeWindow();
+                    }
                 }
 
                 Component.onDestruction: {
