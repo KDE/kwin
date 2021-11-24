@@ -30,7 +30,7 @@ OverviewEffect::OverviewEffect()
     m_shutdownTimer->setSingleShot(true);
     connect(m_shutdownTimer, &QTimer::timeout, this, &OverviewEffect::realDeactivate);
 
-    const QKeySequence defaultToggleShortcut = Qt::CTRL + Qt::META + Qt::Key_D;
+    const QKeySequence defaultToggleShortcut = Qt::META + Qt::Key_W;
     m_toggleAction = new QAction(this);
     connect(m_toggleAction, &QAction::triggered, this, &OverviewEffect::toggle);
     m_toggleAction->setObjectName(QStringLiteral("Overview"));
