@@ -12,12 +12,14 @@
 #include "kwinglutils.h"
 #include "logging_p.h"
 
+#include <QGuiApplication>
 #include <QQmlEngine>
 #include <QQuickItem>
 #include <QQmlContext>
 #include <QQmlComponent>
 #include <QQuickView>
 #include <QQuickRenderControl>
+#include <QStyleHints>
 
 #include <QOffscreenSurface>
 #include <QOpenGLContext>
@@ -73,6 +75,9 @@ public:
     QList<QTouchEvent::TouchPoint> touchPoints;
     Qt::TouchPointStates touchState;
     QTouchDevice *touchDevice;
+
+    ulong lastMousePressTime = 0;
+    Qt::MouseButton lastMousePressButton = Qt::NoButton;
 
     void releaseResources();
 
@@ -270,13 +275,25 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
     case QEvent::MouseMove:
     case QEvent::MouseButtonPress:
     case QEvent::MouseButtonRelease:
-    case QEvent::MouseButtonDblClick:
     {
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
         const QPoint widgetPos = d->m_view->mapFromGlobal(me->pos());
         QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
         QCoreApplication::sendEvent(d->m_view, &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
+
+        if (e->type() == QEvent::MouseButtonPress) {
+            const ulong doubleClickInterval = static_cast<ulong>(QGuiApplication::styleHints()->mouseDoubleClickInterval());
+            const bool doubleClick = (me->timestamp() - d->lastMousePressTime < doubleClickInterval) && me->button() == d->lastMousePressButton;
+            d->lastMousePressTime = me->timestamp();
+            d->lastMousePressButton = me->button();
+            if (doubleClick) {
+                d->lastMousePressButton = Qt::NoButton;
+                QMouseEvent doubleClickEvent(QEvent::MouseButtonDblClick, me->localPos(), me->windowPos(), me->screenPos(), me->button(), me->buttons(), me->modifiers());
+                QCoreApplication::sendEvent(d->m_view, &doubleClickEvent);
+            }
+        }
+
         return;
     }
     case QEvent::HoverEnter:
