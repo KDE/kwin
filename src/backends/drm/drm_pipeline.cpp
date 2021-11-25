@@ -183,7 +183,9 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                 }
             }
             if (mode != CommitMode::Test) {
-                pipeline->m_pageflipPending = true;
+                if (pipeline->activePending()) {
+                    pipeline->m_pageflipPending = true;
+                }
                 pipeline->m_connector->commit();
                 if (pipeline->pending.crtc) {
                     pipeline->pending.crtc->primaryPlane()->setNext(pipeline->m_primaryBuffer);
