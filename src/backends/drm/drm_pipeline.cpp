@@ -126,10 +126,6 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                     pipeline->pending.crtc->rollbackPending();
                     pipeline->pending.crtc->primaryPlane()->rollbackPending();
                 }
-                if (mode != CommitMode::Test && pipeline->activePending() && pipeline->output()) {
-                    pipeline->m_modesetPresentPending = false;
-                    pipeline->output()->presentFailed();
-                }
             }
             for (const auto &obj : unusedObjects) {
                 printProps(obj, PrintMode::OnlyChanged);
@@ -187,7 +183,6 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
                 }
             }
             if (mode != CommitMode::Test) {
-                pipeline->m_modesetPresentPending = false;
                 pipeline->m_pageflipPending = true;
                 pipeline->m_connector->commit();
                 if (pipeline->pending.crtc) {
@@ -225,9 +220,6 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
             for (const auto &pipeline : pipelines) {
                 pipeline->revertPendingChanges();
                 pipeline->applyPendingChangesLegacy();
-                if (mode == CommitMode::CommitModeset && pipeline->output() && pipeline->activePending()) {
-                    pipeline->output()->presentFailed();
-                }
             }
             return false;
         } else {
@@ -508,6 +500,11 @@ bool DrmPipeline::pageflipPending() const
 bool DrmPipeline::modesetPresentPending() const
 {
     return m_modesetPresentPending;
+}
+
+void DrmPipeline::resetModesetPresentPending()
+{
+    m_modesetPresentPending = false;
 }
 
 DrmCrtc *DrmPipeline::currentCrtc() const

@@ -80,6 +80,7 @@ public:
     void pageFlipped(std::chrono::nanoseconds timestamp);
     bool pageflipPending() const;
     bool modesetPresentPending() const;
+    void resetModesetPresentPending();
     void printDebugInfo() const;
     QSize sourceSize() const;
 

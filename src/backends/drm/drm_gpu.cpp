@@ -727,12 +727,20 @@ bool DrmGpu::maybeModeset()
     bool presentPendingForAll = std::all_of(pipelines.constBegin(), pipelines.constEnd(), [](const auto &pipeline) {
         return pipeline->modesetPresentPending() || !pipeline->pending.active;
     });
-    if (presentPendingForAll) {
-        return DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedObjects());
-    } else {
+    if (!presentPendingForAll) {
         // commit only once all pipelines are ready for presentation
         return true;
     }
+    const bool ok = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedObjects());
+    for (DrmPipeline *pipeline : qAsConst(pipelines)) {
+        if (pipeline->modesetPresentPending() && pipeline->output()) {
+            pipeline->resetModesetPresentPending();
+            if (!ok) {
+                pipeline->output()->presentFailed();
+            }
+        }
+    }
+    return ok;
 }
 
 QVector<DrmObject*> DrmGpu::unusedObjects() const
