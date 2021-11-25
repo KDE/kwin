@@ -75,6 +75,11 @@ DrmBackend::~DrmBackend()
     qDeleteAll(m_gpus);
 }
 
+bool DrmBackend::isActive() const
+{
+    return m_active;
+}
+
 Session *DrmBackend::session() const
 {
     return m_session;
@@ -154,6 +159,7 @@ void DrmBackend::reactivate()
     // removed, we need to re-scan outputs.
     updateOutputs();
     updateCursor();
+    Q_EMIT activeChanged();
 }
 
 void DrmBackend::deactivate()
@@ -167,11 +173,22 @@ void DrmBackend::deactivate()
     }
 
     m_active = false;
+    Q_EMIT activeChanged();
 }
 
 bool DrmBackend::initialize()
 {
-    connect(session(), &Session::activeChanged, this, &DrmBackend::activate);
+    // TODO: Pause/Resume individual GPU devices instead.
+    connect(session(), &Session::devicePaused, this, [this](dev_t deviceId) {
+        if (primaryGpu()->deviceId() == deviceId) {
+            deactivate();
+        }
+    });
+    connect(session(), &Session::deviceResumed, this, [this](dev_t deviceId) {
+        if (primaryGpu()->deviceId() == deviceId) {
+            reactivate();
+        }
+    });
     connect(session(), &Session::awoke, this, &DrmBackend::turnOutputsOn);
 
     if (!m_explicitGpus.isEmpty()) {
@@ -212,7 +229,7 @@ bool DrmBackend::initialize()
 void DrmBackend::handleUdevEvent()
 {
     while (auto device = m_udevMonitor->getDevice()) {
-        if (!session()->isActive()) {
+        if (!m_active) {
             continue;
         }
         if (!m_explicitGpus.isEmpty() && !m_explicitGpus.contains(device->devNode())) {

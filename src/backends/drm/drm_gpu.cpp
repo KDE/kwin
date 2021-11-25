@@ -107,10 +107,10 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     });
     connect(m_leaseDevice, &KWaylandServer::DrmLeaseDeviceV1Interface::leaseRequested, this, &DrmGpu::handleLeaseRequest);
     connect(m_leaseDevice, &KWaylandServer::DrmLeaseDeviceV1Interface::leaseRevoked, this, &DrmGpu::handleLeaseRevoked);
-    connect(m_platform->session(), &Session::activeChanged, m_leaseDevice, [this](bool active){
-        if (!active) {
+    connect(m_platform, &DrmBackend::activeChanged, m_leaseDevice, [this]() {
+        if (!m_platform->isActive()) {
             // when we gain drm master we want to update outputs first and only then notify the lease device
-            m_leaseDevice->setDrmMaster(active);
+            m_leaseDevice->setDrmMaster(false);
         }
     });
 }
@@ -518,7 +518,7 @@ void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, un
 
 void DrmGpu::dispatchEvents()
 {
-    if (!m_platform->session()->isActive()) {
+    if (!m_platform->isActive()) {
         return;
     }
     drmEventContext context = {};

@@ -70,11 +70,14 @@ public:
     DrmGpu *findGpu(dev_t deviceId) const;
     DrmGpu *findGpuByFd(int fd) const;
 
+    bool isActive() const;
+
 public Q_SLOTS:
     void turnOutputsOn();
     void sceneInitialized() override;
 
 Q_SIGNALS:
+    void activeChanged();
     void gpuRemoved(DrmGpu *gpu);
     void gpuAdded(DrmGpu *gpu);
 

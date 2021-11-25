@@ -290,6 +290,11 @@ bool ConsoleKitSession::initialize()
                                          this,
                                          SLOT(handlePauseDevice(uint, uint, QString)));
 
+    QDBusConnection::systemBus().connect(s_serviceName, m_sessionPath, s_sessionInterface,
+                                         QStringLiteral("ResumeDevice"),
+                                         this,
+                                         SLOT(handleResumeDevice(uint,uint,QDBusUnixFileDescriptor)));
+
     QDBusConnection::systemBus().connect(s_serviceName, m_sessionPath, s_propertiesInterface,
                                          QStringLiteral("PropertiesChanged"),
                                          this,
@@ -308,6 +313,8 @@ void ConsoleKitSession::updateActive(bool active)
 
 void ConsoleKitSession::handlePauseDevice(uint major, uint minor, const QString &type)
 {
+    Q_EMIT devicePaused(makedev(major, minor));
+
     if (type == QLatin1String("pause")) {
         QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, m_sessionPath,
                                                               s_sessionInterface,
@@ -316,6 +323,15 @@ void ConsoleKitSession::handlePauseDevice(uint major, uint minor, const QString 
 
         QDBusConnection::systemBus().asyncCall(message);
     }
+}
+
+void ConsoleKitSession::handleResumeDevice(uint major, uint minor, QDBusUnixFileDescriptor fileDescriptor)
+{
+    // We don't care about the file descriptor as the libinput backend will re-open input devices
+    // and the drm file descriptors remain valid after pausing gpus.
+    Q_UNUSED(fileDescriptor)
+
+    Q_EMIT deviceResumed(makedev(major, minor));
 }
 
 void ConsoleKitSession::handlePropertiesChanged(const QString &interfaceName, const QVariantMap &properties)

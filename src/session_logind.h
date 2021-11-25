@@ -8,6 +8,8 @@
 
 #include "session.h"
 
+#include <QDBusUnixFileDescriptor>
+
 namespace KWin
 {
 
@@ -28,6 +30,7 @@ public:
     void switchTo(uint terminal) override;
 
 private Q_SLOTS:
+    void handleResumeDevice(uint major, uint minor, QDBusUnixFileDescriptor fileDescriptor);
     void handlePauseDevice(uint major, uint minor, const QString &type);
     void handlePropertiesChanged(const QString &interfaceName, const QVariantMap &properties);
     void handlePrepareForSleep(bool sleep);
