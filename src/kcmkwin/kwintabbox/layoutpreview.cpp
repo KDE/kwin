@@ -8,7 +8,7 @@
 */
 // own
 #include "layoutpreview.h"
-#include "thumbnailitem.h"
+
 #include <QApplication>
 #include <QDebug>
 #include <QQmlEngine>
@@ -25,7 +25,7 @@ namespace KWin
 namespace TabBox
 {
 
-LayoutPreview::LayoutPreview(const QString &path, QObject *parent)
+LayoutPreview::LayoutPreview(const QString &path, bool showDesktopThumbnail, QObject *parent)
     : QObject(parent)
     , m_item(nullptr)
 {
@@ -52,6 +52,7 @@ LayoutPreview::LayoutPreview(const QString &path, QObject *parent)
     };
     if (SwitcherItem *switcher = findSwitcher()) {
         m_item = switcher;
+        static_cast<ExampleClientModel *>(switcher->model())->showDesktopThumbnail(showDesktopThumbnail);
         switcher->setVisible(true);
     }
     auto findWindow = [item]() -> QQuickWindow* {
@@ -115,50 +116,56 @@ ExampleClientModel::~ExampleClientModel()
 void ExampleClientModel::init()
 {
     if (const auto s = KApplicationTrader::preferredService(QStringLiteral("inode/directory"))) {
-        m_services << s;
-        m_fileManager = s;
+        m_thumbnails << ThumbnailInfo{ WindowThumbnailItem::Dolphin, s->name(), s->icon() };
     }
     if (const auto s = KApplicationTrader::preferredService(QStringLiteral("text/html"))) {
-        m_services << s;
-        m_browser = s;
+        m_thumbnails << ThumbnailInfo{ WindowThumbnailItem::Konqueror, s->name(), s->icon() };
     }
     if (const auto s = KApplicationTrader::preferredService(QStringLiteral("message/rfc822"))) {
-        m_services << s;
-        m_email = s;
+        m_thumbnails << ThumbnailInfo{ WindowThumbnailItem::KMail, s->name(), s->icon() };
     }
     if (const auto s = KService::serviceByDesktopName(QStringLiteral("kdesystemsettings"))) {
-        m_services << s;
-        m_systemSettings = s;
+        m_thumbnails << ThumbnailInfo{ WindowThumbnailItem::Systemsettings, s->name(), s->icon() };
     }
+}
+
+void ExampleClientModel::showDesktopThumbnail(bool showDesktop)
+{
+    const ThumbnailInfo desktopThumbnail = ThumbnailInfo { WindowThumbnailItem::Desktop, i18n("Show Desktop"), QStringLiteral("desktop") };
+    const int desktopIndex = m_thumbnails.indexOf(desktopThumbnail);
+    if (showDesktop == (desktopIndex >= 0)) {
+        return;
+    }
+
+    Q_EMIT beginResetModel();
+    if (showDesktop) {
+        m_thumbnails << desktopThumbnail;
+    } else {
+        m_thumbnails.removeAt(desktopIndex);
+    }
+    Q_EMIT endResetModel();
 }
 
 QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid()) {
+    if (!index.isValid() || index.row() >= rowCount()) {
         return QVariant();
     }
+
+    const ThumbnailInfo &item = m_thumbnails.at(index.row());
+
     switch (role) {
     case Qt::DisplayRole:
     case CaptionRole:
-        return m_services.at(index.row())->name();
+        return item.caption;
     case MinimizedRole:
         return false;
     case DesktopNameRole:
         return i18nc("An example Desktop Name", "Desktop 1");
     case IconRole:
-        return m_services.at(index.row())->icon();
+        return item.icon;
     case WindowIdRole:
-        const auto s = m_services.at(index.row());
-        if (s == m_browser) {
-            return WindowThumbnailItem::Konqueror;
-        } else if (s == m_email) {
-            return WindowThumbnailItem::KMail;
-        } else if (s == m_systemSettings) {
-            return WindowThumbnailItem::Systemsettings;
-        } else if (s == m_fileManager) {
-            return WindowThumbnailItem::Dolphin;
-        }
-        return 0;
+        return item.wId;
     }
     return QVariant();
 }
@@ -166,10 +173,9 @@ QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
 QString ExampleClientModel::longestCaption() const
 {
     QString caption;
-    for (const auto &item : m_services) {
-        const QString name = item->name();
-        if (name.size() > caption.size()) {
-            caption = name;
+    for (const auto &item : m_thumbnails) {
+        if (item.caption.size() > caption.size()) {
+            caption = item.caption;
         }
     }
     return caption;
@@ -178,7 +184,7 @@ QString ExampleClientModel::longestCaption() const
 int ExampleClientModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return m_services.size();
+    return m_thumbnails.size();
 }
 
 QHash<int, QByteArray> ExampleClientModel::roleNames() const

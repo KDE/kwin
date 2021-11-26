@@ -79,7 +79,8 @@ public:
         Konqueror = 1,
         KMail,
         Systemsettings,
-        Dolphin
+        Dolphin,
+        Desktop,
     };
 Q_SIGNALS:
     void wIdChanged(qulonglong wid);

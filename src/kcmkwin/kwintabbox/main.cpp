@@ -377,7 +377,9 @@ void KWinTabBoxConfig::configureEffectClicked()
 
     if (form->effectComboCurrentData(KWinTabBoxConfigForm::AddonEffect).toBool()) {
         // Show the preview for addon effect
-        new LayoutPreview(form->effectComboCurrentData(KWinTabBoxConfigForm::LayoutPath).toString(), this);
+        new LayoutPreview(form->effectComboCurrentData(KWinTabBoxConfigForm::LayoutPath).toString(),
+                          form->showDesktopMode(),
+                          this);
     } else {
         // For builtin effect, display a configuration dialog
         QPointer<QDialog> configDialog = new QDialog(this);

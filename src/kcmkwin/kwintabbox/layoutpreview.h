@@ -9,10 +9,11 @@
 #ifndef KWIN_TABBOX_LAYOUTPREVIEW_H
 #define KWIN_TABBOX_LAYOUTPREVIEW_H
 
-#include <KService>
 #include <QAbstractListModel>
 #include <QQuickView>
 #include <QRect>
+
+#include "thumbnailitem.h"
 
 namespace KWin
 {
@@ -26,7 +27,7 @@ class LayoutPreview : public QObject
 {
     Q_OBJECT
 public:
-    explicit LayoutPreview(const QString &path, QObject *parent = nullptr);
+    explicit LayoutPreview(const QString &path, bool showDesktopThumbnail = false, QObject *parent = nullptr);
     ~LayoutPreview() override;
 
     bool eventFilter(QObject *object, QEvent *event) override;
@@ -54,13 +55,21 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     Q_INVOKABLE QString longestCaption() const;
 
+    void showDesktopThumbnail(bool showDesktop);
+
 private:
+    struct ThumbnailInfo {
+        WindowThumbnailItem::Thumbnail wId;
+        QString caption;
+        QString icon;
+
+        bool operator==(const ThumbnailInfo &other) {
+            return wId == other.wId;
+        }
+    };
+
     void init();
-    QList<KService::Ptr> m_services;
-    KService::Ptr m_fileManager;
-    KService::Ptr m_browser;
-    KService::Ptr m_email;
-    KService::Ptr m_systemSettings;
+    QList<ThumbnailInfo> m_thumbnails;
 };
 
 

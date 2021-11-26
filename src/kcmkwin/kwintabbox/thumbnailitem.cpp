@@ -141,6 +141,12 @@ void WindowThumbnailItem::findImage()
     case Dolphin:
         imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/dolphin.png");
         break;
+    case Desktop:
+        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "wallpapers/Next/contents/screenshot.png");
+        if (imagePath.isNull()) {
+            imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/desktop.png");
+        }
+        break;
     default:
         // ignore
         break;
