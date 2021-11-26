@@ -58,6 +58,11 @@ bool MockWorkspace::showingDesktop() const
     return m_showingDesktop;
 }
 
+QRect MockWorkspace::geometry() const
+{
+    return QRect();
+}
+
 QRect MockWorkspace::clientArea(clientAreaOption, int screen, int desktop) const
 {
     Q_UNUSED(screen)

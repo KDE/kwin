@@ -15,7 +15,7 @@
 
 #include "input.h"
 #include "screenedge.h"
-#include "screens.h"
+#include "workspace.h"
 // KDE
 #include <KConfigGroup>
 #include <kconfigloader.h>
@@ -605,12 +605,12 @@ QJSValue ScriptedEffect::readConfig(const QString &key, const QJSValue &defaultV
 
 int ScriptedEffect::displayWidth() const
 {
-    return screens()->displaySize().width();
+    return workspace()->geometry().width();
 }
 
 int ScriptedEffect::displayHeight() const
 {
-    return screens()->displaySize().height();
+    return workspace()->geometry().height();
 }
 
 int ScriptedEffect::animationTime(int defaultTime) const

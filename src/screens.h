@@ -66,18 +66,6 @@ public:
 
     int intersecting(const QRect &r) const;
 
-    /**
-     * The virtual bounding size of all screens combined.
-     * The default implementation returns the same as @ref size and that is the
-     * method which should be preferred.
-     *
-     * This method is only for cases where the platform specific implementation needs
-     * to support different virtual sizes like on X11 with XRandR panning.
-     *
-     * @see size
-     */
-    QSize displaySize() const;
-
 Q_SIGNALS:
     void countChanged(int previousCount, int newCount);
     /**

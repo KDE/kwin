@@ -32,6 +32,7 @@ public:
     AbstractClient *moveResizeClient() const;
     void setShowingDesktop(bool showing);
     bool showingDesktop() const;
+    QRect geometry() const;
     QRect clientArea(clientAreaOption, int screen, int desktop) const;
 
     void setActiveClient(AbstractClient *c);

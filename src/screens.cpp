@@ -122,11 +122,6 @@ int Screens::intersecting(const QRect &r) const
     return cnt;
 }
 
-QSize Screens::displaySize() const
-{
-    return size();
-}
-
 int Screens::number(const QPoint &pos) const
 {
     // TODO: Do something about testScreens and other tests that use MockScreens.
