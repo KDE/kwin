@@ -10,6 +10,7 @@
 #include "internal_client.h"
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
+#include "platform.h"
 #include "surfaceitem.h"
 #include "workspace.h"
 
@@ -472,6 +473,7 @@ void InternalClient::commitGeometry(const QRect &rect)
     // The client geometry and the buffer geometry are the same.
     const QRect oldClientGeometry = m_clientGeometry;
     const QRect oldFrameGeometry = m_frameGeometry;
+    const AbstractOutput *oldOutput = m_output;
 
     m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;
@@ -481,6 +483,7 @@ void InternalClient::commitGeometry(const QRect &rect)
         return;
     }
 
+    m_output = kwinApp()->platform()->outputAt(rect.center());
     syncGeometryToInternalWindow();
 
     if (oldClientGeometry != m_clientGeometry) {
@@ -489,6 +492,9 @@ void InternalClient::commitGeometry(const QRect &rect)
     }
     if (oldFrameGeometry != m_frameGeometry) {
         Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
+    }
+    if (oldOutput != m_output) {
+        Q_EMIT screenChanged();
     }
     Q_EMIT geometryShapeChanged(this, oldFrameGeometry);
 }

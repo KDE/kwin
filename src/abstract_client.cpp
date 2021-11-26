@@ -63,8 +63,6 @@ AbstractClient::AbstractClient()
 {
     connect(this, &AbstractClient::clientStartUserMovedResized, this, &AbstractClient::moveResizedChanged);
     connect(this, &AbstractClient::clientFinishUserMovedResized, this, &AbstractClient::moveResizedChanged);
-    connect(this, &AbstractClient::clientStartUserMovedResized, this, &AbstractClient::removeCheckOutputConnection);
-    connect(this, &AbstractClient::clientFinishUserMovedResized, this, &AbstractClient::setupCheckOutputConnection);
 
     connect(this, &AbstractClient::windowShown, this, &AbstractClient::hiddenChanged);
     connect(this, &AbstractClient::windowHidden, this, &AbstractClient::hiddenChanged);
@@ -1041,7 +1039,6 @@ void AbstractClient::finishInteractiveMoveResize(bool cancel)
     if (cancel) {
         moveResize(initialInteractiveMoveResizeGeometry());
     }
-    checkOutput(); // needs to be done because clientFinishUserMovedResized has not yet re-activated online alignment
     if (output() != interactiveMoveResizeStartOutput()) {
         workspace()->sendClientToOutput(this, output()); // checks rule validity
         if (isFullScreen() || maximizeMode() != MaximizeRestore) {

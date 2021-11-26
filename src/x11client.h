@@ -537,6 +537,7 @@ private:
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
 
     QMargins m_clientFrameExtents;
+    AbstractOutput *m_lastOutput = nullptr;
     QRect m_lastBufferGeometry;
     QRect m_lastFrameGeometry;
     QRect m_lastClientGeometry;
