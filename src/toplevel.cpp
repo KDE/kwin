@@ -411,17 +411,6 @@ void Toplevel::setOutput(AbstractOutput *output)
         m_output = output;
         Q_EMIT screenChanged();
     }
-
-    qreal newScale = m_output->scale();
-    if (newScale != m_screenScale) {
-        m_screenScale = newScale;
-        Q_EMIT screenScaleChanged();
-    }
-}
-
-qreal Toplevel::screenScale() const
-{
-    return m_screenScale;
 }
 
 bool Toplevel::isOnActiveOutput() const

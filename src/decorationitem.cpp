@@ -7,6 +7,7 @@
 
 #include "decorationitem.h"
 #include "abstract_client.h"
+#include "abstract_output.h"
 #include "composite.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
@@ -28,8 +29,6 @@ DecorationRenderer::DecorationRenderer(Decoration::DecoratedClientImpl *client)
     connect(client->decoration(), &KDecoration2::Decoration::damaged,
             this, &DecorationRenderer::addDamage);
 
-    connect(client->client(), &AbstractClient::screenScaleChanged,
-            this, &DecorationRenderer::invalidate);
     connect(client->decoration(), &KDecoration2::Decoration::bordersChanged,
             this, &DecorationRenderer::invalidate);
     connect(client->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
@@ -67,10 +66,22 @@ void DecorationRenderer::resetDamage()
     m_damage = QRegion();
 }
 
+qreal DecorationRenderer::devicePixelRatio() const
+{
+    return m_devicePixelRatio;
+}
+
+void DecorationRenderer::setDevicePixelRatio(qreal dpr)
+{
+    if (m_devicePixelRatio != dpr) {
+        m_devicePixelRatio = dpr;
+        invalidate();
+    }
+}
+
 QImage DecorationRenderer::renderToImage(const QRect &geo)
 {
     Q_ASSERT(m_client);
-    auto dpr = client()->client()->screenScale();
 
     // Guess the pixel format of the X pixmap into which the QImage will be copied.
     QImage::Format format;
@@ -89,8 +100,8 @@ QImage DecorationRenderer::renderToImage(const QRect &geo)
         break;
     };
 
-    QImage image(geo.width() * dpr, geo.height() * dpr, format);
-    image.setDevicePixelRatio(dpr);
+    QImage image(geo.width() * m_devicePixelRatio, geo.height() * m_devicePixelRatio, format);
+    image.setDevicePixelRatio(m_devicePixelRatio);
     image.fill(Qt::transparent);
     QPainter p(&image);
     p.setRenderHint(QPainter::Antialiasing);
@@ -115,9 +126,9 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, AbstractCli
             this, &DecorationItem::handleFrameGeometryChanged);
     connect(window, &Toplevel::windowClosed,
             this, &DecorationItem::handleWindowClosed);
+    connect(window, &Toplevel::screenChanged,
+            this, &DecorationItem::handleOutputChanged);
 
-    connect(window, &Toplevel::screenScaleChanged,
-            this, &DecorationItem::discardQuads);
     connect(decoration, &KDecoration2::Decoration::bordersChanged,
             this, &DecorationItem::discardQuads);
 
@@ -125,6 +136,7 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, AbstractCli
             this, &DecorationItem::scheduleRepaint);
 
     setSize(window->size());
+    handleOutputChanged();
 }
 
 void DecorationItem::preprocess()
@@ -133,6 +145,29 @@ void DecorationItem::preprocess()
     if (!damage.isEmpty()) {
         m_renderer->render(damage);
         m_renderer->resetDamage();
+    }
+}
+
+void DecorationItem::handleOutputChanged()
+{
+    if (m_output) {
+        disconnect(m_output, &AbstractOutput::scaleChanged, this, &DecorationItem::handleOutputScaleChanged);
+    }
+
+    m_output = m_window->output();
+
+    if (m_output) {
+        handleOutputScaleChanged();
+        connect(m_output, &AbstractOutput::scaleChanged, this, &DecorationItem::handleOutputScaleChanged);
+    }
+}
+
+void DecorationItem::handleOutputScaleChanged()
+{
+    const qreal dpr = m_output->scale();
+    if (m_renderer->devicePixelRatio() != dpr) {
+        m_renderer->setDevicePixelRatio(dpr);
+        discardQuads();
     }
 }
 
@@ -169,7 +204,7 @@ WindowQuadList DecorationItem::buildQuads() const
         deleted->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
     }
 
-    const qreal textureScale = m_window->screenScale();
+    const qreal textureScale = m_renderer->devicePixelRatio();
     const int padding = 1;
 
     const QPoint topSpritePosition(padding, padding);

@@ -344,12 +344,6 @@ public:
     int screen() const; // the screen where the center is
     AbstractOutput *output() const;
     void setOutput(AbstractOutput *output);
-    /**
-     * The scale of the screen this window is currently on
-     * @note The buffer scale can be different.
-     * @since 5.12
-     */
-    qreal screenScale() const; //
     virtual QPoint clientPos() const = 0; // inside of geometry()
     QSize clientSize() const;
     /**
@@ -616,13 +610,6 @@ Q_SIGNALS:
      */
     void surfaceChanged();
 
-    /*
-     * Emitted when the client's screen changes onto a screen of a different scale
-     * or the screen we're on changes
-     * @since 5.12
-     */
-    void screenScaleChanged();
-
     /**
      * Emitted whenever the client's shadow changes.
      * @since 5.15
@@ -717,7 +704,6 @@ private:
     quint32 m_pendingSurfaceId = 0;
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
     // when adding new data members, check also copyToDeleted()
-    qreal m_screenScale = 1.0;
     qreal m_opacity = 1.0;
     int m_stackingOrder = 0;
 };

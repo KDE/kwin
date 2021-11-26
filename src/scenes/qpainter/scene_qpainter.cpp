@@ -466,7 +466,7 @@ void SceneQPainterDecorationRenderer::resizeImages()
     client()->client()->layoutDecorationRects(left, top, right, bottom);
 
     auto checkAndCreate = [this](int index, const QSize &size) {
-        auto dpr = client()->client()->screenScale();
+        auto dpr = devicePixelRatio();
         if (m_images[index].size() != size * dpr ||
             m_images[index].devicePixelRatio() != dpr)
         {

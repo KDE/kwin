@@ -1661,22 +1661,21 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
         }
 
         QRect viewport = geo.translated(-rect.x(), -rect.y());
-        const qreal devicePixelRatio = client()->client()->screenScale();
 
-        QImage image(rect.size() * devicePixelRatio, QImage::Format_ARGB32_Premultiplied);
-        image.setDevicePixelRatio(devicePixelRatio);
+        QImage image(rect.size() * devicePixelRatio(), QImage::Format_ARGB32_Premultiplied);
+        image.setDevicePixelRatio(devicePixelRatio());
         image.fill(Qt::transparent);
 
         QPainter painter(&image);
         painter.setRenderHint(QPainter::Antialiasing);
-        painter.setViewport(QRect(viewport.topLeft(), viewport.size() * devicePixelRatio));
+        painter.setViewport(QRect(viewport.topLeft(), viewport.size() * devicePixelRatio()));
         painter.setWindow(QRect(geo.topLeft(), geo.size() * qPainterEffectiveDevicePixelRatio(&painter)));
         painter.setClipRect(geo);
         renderToPainter(&painter, geo);
         painter.end();
 
-        const QRect viewportScaled(viewport.topLeft() * devicePixelRatio, viewport.size() * devicePixelRatio);
-        const bool isIntegerScaling = qFuzzyCompare(devicePixelRatio, std::ceil(devicePixelRatio));
+        const QRect viewportScaled(viewport.topLeft() * devicePixelRatio(), viewport.size() * devicePixelRatio());
+        const bool isIntegerScaling = qFuzzyCompare(devicePixelRatio(), std::ceil(devicePixelRatio()));
         clamp(image, isIntegerScaling ? viewportScaled : viewportScaled.marginsRemoved({1, 1, 1, 1}));
 
         if (rotated) {
@@ -1725,7 +1724,7 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
 
     size.rwidth() = align(size.width(), 128);
 
-    size *= client()->client()->screenScale();
+    size *= devicePixelRatio();
     if (m_texture && m_texture->size() == size)
         return;
 
