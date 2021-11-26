@@ -47,7 +47,6 @@ Toplevel::Toplevel()
     , m_skipCloseAnimation(false)
 {
     connect(screens(), &Screens::changed, this, &Toplevel::screenChanged);
-    setupCheckOutputConnection();
     connect(this, &Toplevel::bufferGeometryChanged, this, &Toplevel::inputTransformationChanged);
 
     // Only for compatibility reasons, drop in the next major release.
@@ -377,22 +376,6 @@ void Toplevel::deleteEffectWindow()
 {
     delete effect_window;
     effect_window = nullptr;
-}
-
-void Toplevel::checkOutput()
-{
-    setOutput(kwinApp()->platform()->outputAt(frameGeometry().center()));
-}
-
-void Toplevel::setupCheckOutputConnection()
-{
-    connect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::checkOutput);
-    checkOutput();
-}
-
-void Toplevel::removeCheckOutputConnection()
-{
-    disconnect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::checkOutput);
 }
 
 int Toplevel::screen() const

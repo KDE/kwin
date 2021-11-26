@@ -12,6 +12,7 @@
 #include "workspace.h"
 #include "effects.h"
 #include "deleted.h"
+#include "platform.h"
 #include "surfaceitem_x11.h"
 #include "utils/common.h"
 
@@ -204,6 +205,11 @@ QWindow *Unmanaged::findInternalWindow() const
         }
     }
     return nullptr;
+}
+
+void Unmanaged::checkOutput()
+{
+    setOutput(kwinApp()->platform()->outputAt(frameGeometry().center()));
 }
 
 void Unmanaged::damageNotifyEvent()

@@ -45,6 +45,7 @@ private:
     void configureNotifyEvent(xcb_configure_notify_event_t *e);
     void damageNotifyEvent();
     QWindow *findInternalWindow() const;
+    void checkOutput();
     void associate();
     void initialize();
     bool m_outline = false;

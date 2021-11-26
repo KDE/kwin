@@ -7,6 +7,7 @@
 */
 
 #include "waylandclient.h"
+#include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -289,6 +290,7 @@ void WaylandClient::updateGeometry(const QRect &rect)
     const QRect oldClientGeometry = m_clientGeometry;
     const QRect oldFrameGeometry = m_frameGeometry;
     const QRect oldBufferGeometry = m_bufferGeometry;
+    const AbstractOutput *oldOutput = m_output;
 
     m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;
@@ -310,6 +312,7 @@ void WaylandClient::updateGeometry(const QRect &rect)
         return;
     }
 
+    m_output = kwinApp()->platform()->outputAt(rect.center());
     updateWindowRules(Rules::Position | Rules::Size);
 
     if (changedGeometries & WaylandGeometryBuffer) {
@@ -320,6 +323,9 @@ void WaylandClient::updateGeometry(const QRect &rect)
     }
     if (changedGeometries & WaylandGeometryFrame) {
         Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
+    }
+    if (oldOutput != m_output) {
+        Q_EMIT screenChanged();
     }
     Q_EMIT geometryShapeChanged(this, oldFrameGeometry);
 }
