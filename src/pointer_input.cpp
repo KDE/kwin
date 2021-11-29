@@ -187,8 +187,6 @@ void PointerInputRedirection::updateOnStartMoveResize()
 void PointerInputRedirection::updateToReset()
 {
     if (internalWindow()) {
-        disconnect(m_internalWindowConnection);
-        m_internalWindowConnection = QMetaObject::Connection();
         QEvent event(QEvent::Leave);
         QCoreApplication::sendEvent(internalWindow(), &event);
         setInternalWindow(nullptr);
@@ -514,23 +512,10 @@ bool PointerInputRedirection::focusUpdatesBlocked()
 
 void PointerInputRedirection::cleanupInternalWindow(QWindow *old, QWindow *now)
 {
-    disconnect(m_internalWindowConnection);
-    m_internalWindowConnection = QMetaObject::Connection();
-
     if (old) {
         // leave internal window
         QEvent leaveEvent(QEvent::Leave);
         QCoreApplication::sendEvent(old, &leaveEvent);
-    }
-
-    if (now) {
-        m_internalWindowConnection = connect(internalWindow(), &QWindow::visibleChanged, this,
-            [this] (bool visible) {
-                if (!visible) {
-                    update();
-                }
-            }
-        );
     }
 }
 

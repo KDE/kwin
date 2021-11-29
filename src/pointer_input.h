@@ -164,7 +164,6 @@ private:
     QHash<uint32_t, InputRedirection::PointerButtonState> m_buttons;
     Qt::MouseButtons m_qtButtons;
     QMetaObject::Connection m_focusGeometryConnection;
-    QMetaObject::Connection m_internalWindowConnection;
     QMetaObject::Connection m_constraintsConnection;
     QMetaObject::Connection m_constraintsActivatedConnection;
     QMetaObject::Connection m_confinedPointerRegionConnection;
