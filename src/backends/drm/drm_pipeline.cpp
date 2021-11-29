@@ -47,12 +47,7 @@ DrmPipeline::~DrmPipeline()
 bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
 {
     Q_ASSERT(pending.crtc);
-    if (!buffer) {
-        if (m_output) {
-            m_output->presentFailed();
-        }
-        return false;
-    }
+    Q_ASSERT(buffer);
     m_primaryBuffer = buffer;
     auto buf = dynamic_cast<DrmGbmBuffer*>(buffer.data());
     // with direct scanout disallow modesets, calling presentFailed() and logging warnings

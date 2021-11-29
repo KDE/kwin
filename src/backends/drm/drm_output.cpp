@@ -372,6 +372,7 @@ bool DrmOutput::needsSoftwareTransformation() const
 bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion)
 {
     if (!buffer || buffer->bufferId() == 0) {
+        presentFailed();
         return false;
     }
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
