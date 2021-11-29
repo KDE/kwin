@@ -83,11 +83,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
     connect(m_socketNotifier, &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
 
-    // trying to activate Atomic Mode Setting (this means also Universal Planes)
-    static const bool atomicModesetting = !qEnvironmentVariableIsSet("KWIN_DRM_NO_AMS");
-    if (atomicModesetting) {
-        initDrmResources();
-    }
+    initDrmResources();
 
     m_leaseDevice = new KWaylandServer::DrmLeaseDeviceV1Interface(waylandServer()->display(), [this]{
         char *path = drmGetDeviceNameFromFd2(m_fd);
@@ -152,7 +148,13 @@ clockid_t DrmGpu::presentationClock() const
 void DrmGpu::initDrmResources()
 {
     // try atomic mode setting
-    if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0) {
+    bool tmp = false;
+    bool noAMS = qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &tmp) != 0 && tmp;
+    if (noAMS) {
+        qCWarning(KWIN_DRM) << "Atomic Mode Setting requested off via environment variable. Using legacy mode on GPU" << m_devNode;
+    } else if(drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) != 0) {
+        qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode on GPU" << m_devNode;
+    } else {
         DrmScopedPointer<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
         if (planeResources) {
             qCDebug(KWIN_DRM) << "Using Atomic Mode Setting on gpu" << m_devNode;
@@ -174,8 +176,6 @@ void DrmGpu::initDrmResources()
         } else {
             qCWarning(KWIN_DRM) << "Failed to get plane resources. Falling back to legacy mode on GPU " << m_devNode;
         }
-    } else {
-        qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode on GPU" << m_devNode;
     }
     m_atomicModeSetting = !m_planes.isEmpty();
 
