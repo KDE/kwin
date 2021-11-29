@@ -2516,7 +2516,7 @@ void AbstractClient::setDecoratedClient(QPointer< Decoration::DecoratedClientImp
     m_decoration.client = client;
 }
 
-void AbstractClient::enterEvent(const QPoint &globalPos)
+void AbstractClient::pointerEnterEvent(const QPoint &globalPos)
 {
     if (options->isShadeHover()) {
         cancelShadeHoverTimer();
@@ -2544,7 +2544,7 @@ void AbstractClient::enterEvent(const QPoint &globalPos)
     }
 }
 
-void AbstractClient::leaveEvent()
+void AbstractClient::pointerLeaveEvent()
 {
     cancelAutoRaise();
     workspace()->cancelDelayFocus();

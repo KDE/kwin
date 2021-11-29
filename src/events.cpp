@@ -679,7 +679,7 @@ void X11Client::enterNotifyEvent(xcb_enter_notify_event_t *e)
     if (e->mode == XCB_NOTIFY_MODE_NORMAL || (e->mode == XCB_NOTIFY_MODE_UNGRAB && MOUSE_DRIVEN_FOCUS)) {
 #undef MOUSE_DRIVEN_FOCUS
 
-        enterEvent(QPoint(e->root_x, e->root_y));
+        pointerEnterEvent(QPoint(e->root_x, e->root_y));
         return;
     }
 }
@@ -712,7 +712,7 @@ void X11Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
             }
         }
         if (lostMouse) {
-            leaveEvent();
+            pointerLeaveEvent();
             if (isDecorated()) {
                 // sending a move instead of a leave. With leave we need to send proper coords, with move it's handled internally
                 QHoverEvent leaveEvent(QEvent::HoverMove, QPointF(-1, -1), QPointF(-1, -1), Qt::NoModifier);
