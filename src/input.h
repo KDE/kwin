@@ -422,7 +422,7 @@ public:
      *
      * This will be null if no toplevel is at the position
      */
-    Toplevel *at() const;
+    Toplevel *hover() const;
     /**
      * @brief Toplevel currently having pointer input focus (this might
      * be different from the Toplevel at the position of the pointer).
@@ -485,18 +485,18 @@ protected:
     uint32_t m_lastEventTime = 0;
 
 private:
-    bool setAt(Toplevel *toplevel);
+    bool setHover(Toplevel *toplevel);
     void updateFocus();
     bool updateDecoration();
     void updateInternalWindow(QWindow *window);
 
     struct {
-        QPointer<Toplevel> at;
+        QPointer<Toplevel> window;
         QMetaObject::Connection surfaceCreatedConnection;
-    } m_at;
+    } m_hover;
 
     struct {
-        QPointer<Toplevel> focus;
+        QPointer<Toplevel> window;
         QPointer<Decoration::DecoratedClientImpl> decoration;
         QPointer<QWindow> internalWindow;
     } m_focus;

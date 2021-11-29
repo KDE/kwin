@@ -601,7 +601,7 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
 
     if (internalWindow()) {
         // enter internal window
-        const auto pos = at()->pos();
+        const auto pos = hover()->pos();
         QEnterEvent enterEvent(pos, pos, m_pos);
         QCoreApplication::sendEvent(internalWindow(), &enterEvent);
     }

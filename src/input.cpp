@@ -2903,23 +2903,23 @@ void InputDeviceHandler::init()
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, &InputDeviceHandler::update);
 }
 
-bool InputDeviceHandler::setAt(Toplevel *toplevel)
+bool InputDeviceHandler::setHover(Toplevel *toplevel)
 {
-    if (m_at.at == toplevel) {
+    if (m_hover.window == toplevel) {
         return false;
     }
-    auto old = m_at.at;
-    disconnect(m_at.surfaceCreatedConnection);
-    m_at.surfaceCreatedConnection = QMetaObject::Connection();
+    auto old = m_hover.window;
+    disconnect(m_hover.surfaceCreatedConnection);
+    m_hover.surfaceCreatedConnection = QMetaObject::Connection();
 
-    m_at.at = toplevel;
+    m_hover.window = toplevel;
     Q_EMIT atChanged(old, toplevel);
     return true;
 }
 
 void InputDeviceHandler::setFocus(Toplevel *toplevel)
 {
-    m_focus.focus = toplevel;
+    m_focus.window = toplevel;
     //TODO: call focusUpdate?
 }
 
@@ -2939,21 +2939,21 @@ void InputDeviceHandler::setInternalWindow(QWindow *window)
 
 void InputDeviceHandler::updateFocus()
 {
-    auto oldFocus = m_focus.focus;
+    auto oldFocus = m_focus.window;
 
-    if (m_at.at && !m_at.at->surface()) {
+    if (m_hover.window && !m_hover.window->surface()) {
         // The surface has not yet been created (special XWayland case).
         // Therefore listen for its creation.
-        if (!m_at.surfaceCreatedConnection) {
-            m_at.surfaceCreatedConnection = connect(m_at.at, &Toplevel::surfaceChanged,
+        if (!m_hover.surfaceCreatedConnection) {
+            m_hover.surfaceCreatedConnection = connect(m_hover.window, &Toplevel::surfaceChanged,
                                                     this, &InputDeviceHandler::update);
         }
-        m_focus.focus = nullptr;
+        m_focus.window = nullptr;
     } else {
-        m_focus.focus = m_at.at;
+        m_focus.window = m_hover.window;
     }
 
-    focusUpdate(oldFocus, m_focus.focus);
+    focusUpdate(oldFocus, m_focus.window);
 }
 
 bool InputDeviceHandler::updateDecoration()
@@ -2961,7 +2961,7 @@ bool InputDeviceHandler::updateDecoration()
     const auto oldDeco = m_focus.decoration;
     m_focus.decoration = nullptr;
 
-    auto *ac = qobject_cast<AbstractClient*>(m_at.at);
+    auto *ac = qobject_cast<AbstractClient*>(m_hover.window);
     if (ac && ac->decoratedClient()) {
         if (!ac->clientGeometry().contains(position().toPoint())) {
             // input device above decoration
@@ -3000,7 +3000,7 @@ void InputDeviceHandler::update()
         toplevel = input()->findToplevel(position().toPoint());
     }
     // Always set the toplevel at the position of the input device.
-    setAt(toplevel);
+    setHover(toplevel);
 
     if (focusUpdatesBlocked()) {
         workspace()->updateFocusMousePosition(position().toPoint());
@@ -3021,7 +3021,7 @@ void InputDeviceHandler::update()
     } else {
         updateInternalWindow(nullptr);
 
-        if (m_focus.focus != m_at.at) {
+        if (m_focus.window != m_hover.window) {
             // focus change
             updateDecoration();
             updateFocus();
@@ -3034,14 +3034,14 @@ void InputDeviceHandler::update()
     workspace()->updateFocusMousePosition(position().toPoint());
 }
 
-Toplevel *InputDeviceHandler::at() const
+Toplevel *InputDeviceHandler::hover() const
 {
-    return m_at.at.data();
+    return m_hover.window.data();
 }
 
 Toplevel *InputDeviceHandler::focus() const
 {
-    return m_focus.focus.data();
+    return m_focus.window.data();
 }
 
 Decoration::DecoratedClientImpl *InputDeviceHandler::decoration() const
