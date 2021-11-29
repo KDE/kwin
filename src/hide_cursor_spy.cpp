@@ -6,26 +6,27 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "touch_hide_cursor_spy.h"
+#include "hide_cursor_spy.h"
 #include "main.h"
 #include "platform.h"
+#include "input_event.h"
 
 namespace KWin
 {
 
-void TouchHideCursorSpy::pointerEvent(MouseEvent *event)
+void HideCursorSpy::pointerEvent(MouseEvent *event)
 {
     Q_UNUSED(event)
     showCursor();
 }
 
-void TouchHideCursorSpy::wheelEvent(KWin::WheelEvent *event)
+void HideCursorSpy::wheelEvent(KWin::WheelEvent *event)
 {
     Q_UNUSED(event)
     showCursor();
 }
 
-void TouchHideCursorSpy::touchDown(qint32 id, const QPointF &pos, quint32 time)
+void HideCursorSpy::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(pos)
@@ -33,7 +34,16 @@ void TouchHideCursorSpy::touchDown(qint32 id, const QPointF &pos, quint32 time)
     hideCursor();
 }
 
-void TouchHideCursorSpy::showCursor()
+void HideCursorSpy::tabletToolEvent(TabletEvent *event)
+{
+    if (event->type() == QEvent::Type::TabletLeaveProximity) {
+        hideCursor();
+    } else {
+        showCursor();
+    }
+}
+
+void HideCursorSpy::showCursor()
 {
     if (!m_cursorHidden) {
         return;
@@ -42,7 +52,7 @@ void TouchHideCursorSpy::showCursor()
     kwinApp()->platform()->showCursor();
 }
 
-void TouchHideCursorSpy::hideCursor()
+void HideCursorSpy::hideCursor()
 {
     if (m_cursorHidden) {
         return;

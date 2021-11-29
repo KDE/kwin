@@ -23,7 +23,7 @@
 #include "pointer_input.h"
 #include "session.h"
 #include "tablet_input.h"
-#include "touch_hide_cursor_spy.h"
+#include "hide_cursor_spy.h"
 #include "touch_input.h"
 #include "x11client.h"
 #ifdef KWIN_BUILD_TABBOX
@@ -2455,7 +2455,7 @@ void InputRedirection::setupInputFilters()
         installInputEventFilter(new VirtualTerminalFilter);
     }
     if (waylandServer()) {
-        installInputEventSpy(new TouchHideCursorSpy);
+        installInputEventSpy(new HideCursorSpy);
         installInputEventSpy(new UserActivitySpy);
         if (hasGlobalShortcutSupport) {
             installInputEventFilter(new TerminateServerFilter);
