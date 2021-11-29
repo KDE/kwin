@@ -40,23 +40,26 @@ ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
     BASENAME kde-output-management-v2
 )
 
-add_library(KWinIntegrationTestFramework STATIC ${KWinIntegrationTestFramework_SOURCES})
+add_library(KWinIntegrationTestFramework SHARED ${KWinIntegrationTestFramework_SOURCES})
 target_link_libraries(KWinIntegrationTestFramework
-    Qt::Test
-    KF5::WaylandClient
-    kwin4_effect_builtins
-    kwin
-    Wayland::Client
+    PUBLIC
+        Qt::Test
+        KF5::WaylandClient
+        Wayland::Client
+        kwin
 
-    # Own libraries
-    KWinXwaylandServerModule
+    PRIVATE
+        kwin4_effect_builtins
+        # Own libraries
+        KWinXwaylandServerModule
 
-    # Static plugins
-    KWinQpaPlugin
-    KF5GlobalAccelKWinPlugin
-    KF5WindowSystemKWinPlugin
-    KF5IdleTimeKWinPlugin
+        # Static plugins
+        KWinQpaPlugin
+        KF5GlobalAccelKWinPlugin
+        KF5WindowSystemKWinPlugin
+        KF5IdleTimeKWinPlugin
 )
+set_target_properties(KWinIntegrationTestFramework PROPERTIES CXX_VISIBILITY_PRESET default)
 
 function(integrationTest)
     set(optionArgs WAYLAND_ONLY)
@@ -64,12 +67,12 @@ function(integrationTest)
     set(multiValueArgs SRCS LIBS)
     cmake_parse_arguments(ARGS "${optionArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     add_executable(${ARGS_NAME} ${ARGS_SRCS})
-    target_link_libraries(${ARGS_NAME} KWinIntegrationTestFramework kwin Qt::Test ${ARGS_LIBS})
+    target_link_libraries(${ARGS_NAME} KWinIntegrationTestFramework Qt::Test ${ARGS_LIBS})
     add_test(NAME kwin-${ARGS_NAME} COMMAND dbus-run-session ${CMAKE_BINARY_DIR}/bin/${ARGS_NAME})
     if (${ARGS_WAYLAND_ONLY})
         add_executable(${ARGS_NAME}_waylandonly ${ARGS_SRCS} )
         set_target_properties(${ARGS_NAME}_waylandonly PROPERTIES COMPILE_DEFINITIONS "NO_XWAYLAND")
-        target_link_libraries(${ARGS_NAME}_waylandonly KWinIntegrationTestFramework kwin Qt::Test ${ARGS_LIBS})
+        target_link_libraries(${ARGS_NAME}_waylandonly KWinIntegrationTestFramework Qt::Test ${ARGS_LIBS})
         add_test(NAME kwin-${ARGS_NAME}-waylandonly COMMAND dbus-run-session ${CMAKE_BINARY_DIR}/bin/${ARGS_NAME}_waylandonly)
     endif()
 endfunction()
