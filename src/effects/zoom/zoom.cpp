@@ -39,8 +39,6 @@ ZoomEffect::ZoomEffect()
     , mouseTracking(MouseTrackingProportional)
     , mousePointer(MousePointerScale)
     , focusDelay(350)   // in milliseconds
-    , imageWidth(0)
-    , imageHeight(0)
     , isMouseHidden(false)
     , xMove(0)
     , yMove(0)
@@ -157,13 +155,32 @@ bool ZoomEffect::isTextCaretTrackingEnabled() const
 #endif
 }
 
+GLTexture *ZoomEffect::ensureCursorTexture()
+{
+    if (!m_cursorTexture || m_cursorTextureDirty) {
+        m_cursorTexture.reset();
+        m_cursorTextureDirty = false;
+        const auto cursor = effects->cursorImage();
+        if (!cursor.image().isNull()) {
+            m_cursorTexture.reset(new GLTexture(cursor.image()));
+            m_cursorTexture->setWrapMode(GL_CLAMP_TO_EDGE);
+        }
+    }
+    return m_cursorTexture.data();
+}
+
+void ZoomEffect::markCursorTextureDirty()
+{
+    m_cursorTextureDirty = true;
+}
+
 void ZoomEffect::showCursor()
 {
     if (isMouseHidden) {
-        disconnect(effects, &EffectsHandler::cursorShapeChanged, this, &ZoomEffect::recreateTexture);
+        disconnect(effects, &EffectsHandler::cursorShapeChanged, this, &ZoomEffect::markCursorTextureDirty);
         // show the previously hidden mouse-pointer again and free the loaded texture/picture.
         effects->showCursor();
-        texture.reset();
+        m_cursorTexture.reset();
         isMouseHidden = false;
     }
 }
@@ -174,35 +191,15 @@ void ZoomEffect::hideCursor()
         return; // don't replace the actual cursor by a static image for no reason.
     if (!isMouseHidden) {
         // try to load the cursor-theme into a OpenGL texture and if successful then hide the mouse-pointer
-        recreateTexture();
-        bool shouldHide = false;
+        GLTexture *texture = nullptr;
         if (effects->isOpenGLCompositing()) {
-            shouldHide = !texture.isNull();
+            texture = ensureCursorTexture();
         }
-        if (shouldHide) {
+        if (texture) {
             effects->hideCursor();
-            connect(effects, &EffectsHandler::cursorShapeChanged, this, &ZoomEffect::recreateTexture);
+            connect(effects, &EffectsHandler::cursorShapeChanged, this, &ZoomEffect::markCursorTextureDirty);
             isMouseHidden = true;
         }
-    }
-}
-
-void ZoomEffect::recreateTexture()
-{
-    effects->makeOpenGLContextCurrent();
-    const auto cursor = effects->cursorImage();
-    if (!cursor.image().isNull()) {
-        imageWidth = cursor.image().width();
-        imageHeight = cursor.image().height();
-        cursorHotSpot = cursor.hotSpot();
-        if (effects->isOpenGLCompositing()) {
-            texture.reset(new GLTexture(cursor.image()));
-            texture->setWrapMode(GL_CLAMP_TO_EDGE);
-        }
-    }
-    else {
-        qCDebug(KWINEFFECTS) << "Falling back to proportional mouse tracking!";
-        mouseTracking = MouseTrackingProportional;
     }
 }
 
@@ -325,29 +322,31 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& d
     effects->paintScreen(mask, region, data);
 
     if (zoom != 1.0 && mousePointer != MousePointerHide) {
-        // Draw the mouse-texture at the position matching to zoomed-in image of the desktop. Hiding the
-        // previous mouse-cursor and drawing our own fake mouse-cursor is needed to be able to scale the
-        // mouse-cursor up and to re-position those mouse-cursor to match to the chosen zoom-level.
-        int w = imageWidth;
-        int h = imageHeight;
-        if (mousePointer == MousePointerScale) {
-            w *= zoom;
-            h *= zoom;
-        }
-        const QPoint p = effects->cursorPos() - cursorHotSpot;
-        QRect rect(p.x() * zoom + data.xTranslation(), p.y() * zoom + data.yTranslation(), w, h);
+        GLTexture *cursorTexture = ensureCursorTexture();
+        if (cursorTexture) {
+            const auto cursor = effects->cursorImage();
 
-        if (texture) {
-            texture->bind();
+            // Draw the mouse-texture at the position matching to zoomed-in image of the desktop. Hiding the
+            // previous mouse-cursor and drawing our own fake mouse-cursor is needed to be able to scale the
+            // mouse-cursor up and to re-position those mouse-cursor to match to the chosen zoom-level.
+            QSize cursorSize = cursor.image().size() / cursor.image().devicePixelRatio();
+            if (mousePointer == MousePointerScale) {
+                cursorSize *= zoom;
+            }
+
+            const QPoint p = effects->cursorPos() - cursor.hotSpot();
+            QRect rect(p * zoom + QPoint(data.xTranslation(), data.yTranslation()), cursorSize);
+
+            cursorTexture->bind();
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
             QMatrix4x4 mvp = data.projectionMatrix();
             mvp.translate(rect.x(), rect.y());
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            texture->render(region, rect);
+            cursorTexture->render(region, rect);
             ShaderManager::instance()->popShader();
-            texture->unbind();
+            cursorTexture->unbind();
             glDisable(GL_BLEND);
         }
     }
