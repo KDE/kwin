@@ -2913,7 +2913,6 @@ bool InputDeviceHandler::setHover(Toplevel *toplevel)
     m_hover.surfaceCreatedConnection = QMetaObject::Connection();
 
     m_hover.window = toplevel;
-    Q_EMIT atChanged(old, toplevel);
     return true;
 }
 

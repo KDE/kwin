@@ -452,7 +452,6 @@ public:
     uint32_t lastEventTime() const;
 
 Q_SIGNALS:
-    void atChanged(Toplevel *old, Toplevel *now);
     void decorationChanged();
 
 protected:
