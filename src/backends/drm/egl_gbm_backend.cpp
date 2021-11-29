@@ -152,11 +152,14 @@ bool EglGbmBackend::resetOutput(Output &output)
     QVector<uint64_t> modifiers = output.output->supportedModifiers(m_gbmFormat);
 
     QSharedPointer<GbmSurface> gbmSurface;
+    bool modifiersEnvSet = false;
+    static bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
+    static bool allowModifiers = (gpu()->isNVidia() && !modifiersEnvSet) || (modifiersEnvSet && modifiersEnv);
 #if HAVE_GBM_BO_GET_FD_FOR_PLANE
-    if (modifiers.isEmpty()) {
+    if (!allowModifiers) {
 #else
     // modifiers have to be disabled with multi-gpu if gbm_bo_get_fd_for_plane is not available
-    if (modifiers.isEmpty() || output.output->gpu() != m_gpu) {
+    if (!allowModifiers || output.output->gpu() != m_gpu) {
 #endif
         int flags = GBM_BO_USE_RENDERING;
         if (output.output->gpu() == m_gpu) {
