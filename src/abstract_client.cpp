@@ -2966,11 +2966,6 @@ Group *AbstractClient::group()
     return nullptr;
 }
 
-bool AbstractClient::isInternal() const
-{
-    return false;
-}
-
 bool AbstractClient::supportsWindowRules() const
 {
     return false;

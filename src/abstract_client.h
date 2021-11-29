@@ -879,16 +879,6 @@ public:
     virtual Group *group();
 
     /**
-     * Returns whether this is an internal client.
-     *
-     * Internal clients are created by KWin and used for special purpose windows,
-     * like the task switcher, etc.
-     *
-     * Default implementation returns @c false.
-     */
-    virtual bool isInternal() const;
-
-    /**
      * Returns whether window rules can be applied to this client.
      *
      * Default implementation returns @c false.
