@@ -30,6 +30,7 @@ Dependencies:
     'frameworks/kdoctools': '@stable'
     'frameworks/krunner': '@stable'
     'frameworks/kirigami': '@stable'
+    'plasma/breeze': '@same'
     'plasma/kdecoration': '@same'
     'plasma/kscreenlocker': '@same'
     'plasma/kwayland-server': '@same'
