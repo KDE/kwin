@@ -92,7 +92,6 @@ void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
 
     if (AbstractClient *ac = qobject_cast<AbstractClient*>(focusNow)) {
         ac->pointerEnterEvent(m_lastPosition.toPoint());
-        workspace()->updateFocusMousePosition(m_lastPosition.toPoint());
     }
 
     auto seat = waylandServer()->seat();
