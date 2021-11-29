@@ -126,18 +126,7 @@ void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, 
 
 bool TabletInputRedirection::focusUpdatesBlocked()
 {
-    if (waylandServer()->seat()->isDragPointer()) {
-        // ignore during drag and drop
-        return true;
-    }
-    if (waylandServer()->seat()->isTouchSequence()) {
-        // ignore during touch operations
-        return true;
-    }
-    if (input()->isSelectingWindow()) {
-        return true;
-    }
-    return false;
+    return input()->isSelectingWindow();
 }
 
 void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old,
@@ -158,8 +147,6 @@ void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *
         // left decoration
         return;
     }
-
-    waylandServer()->seat()->setFocusedPointerSurface(nullptr);
 
     const auto pos = m_lastPosition - now->client()->pos();
     QHoverEvent event(QEvent::HoverEnter, pos, pos);
@@ -188,107 +175,18 @@ void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *
 
 void TabletInputRedirection::cleanupInternalWindow(QWindow *old, QWindow *now)
 {
-    disconnect(m_internalWindowConnection);
-    m_internalWindowConnection = QMetaObject::Connection();
+    Q_UNUSED(old)
+    Q_UNUSED(now)
 
-    if (old) {
-        // leave internal window
-        QEvent leaveEvent(QEvent::Leave);
-        QCoreApplication::sendEvent(old, &leaveEvent);
-    }
-
-    if (now) {
-        m_internalWindowConnection = connect(internalWindow(), &QWindow::visibleChanged, this,
-            [this] (bool visible) {
-                if (!visible) {
-                    update();
-                }
-            }
-        );
-    }
+    // This method is left blank intentionally.
 }
 
 void TabletInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
 {
-    if (AbstractClient *ac = qobject_cast<AbstractClient*>(focusOld)) {
-        ac->leaveEvent();
-    }
-    disconnect(m_focusGeometryConnection);
-    m_focusGeometryConnection = QMetaObject::Connection();
+    Q_UNUSED(focusOld)
+    Q_UNUSED(focusNow)
 
-    if (AbstractClient *ac = qobject_cast<AbstractClient*>(focusNow)) {
-        ac->enterEvent(m_lastPosition.toPoint());
-    }
-
-    if (internalWindow()) {
-        // enter internal window
-        const auto pos = at()->pos();
-        QEnterEvent enterEvent(pos, pos, m_lastPosition);
-        QCoreApplication::sendEvent(internalWindow(), &enterEvent);
-    }
-
-    auto seat = waylandServer()->seat();
-    if (!focusNow || !focusNow->surface() || decoration()) {
-        // Clean up focused pointer surface if there's no client to take focus,
-        // or the pointer is on a client without surface or on a decoration.
-        warpXcbOnSurfaceLeft(nullptr);
-        seat->setFocusedPointerSurface(nullptr);
-        return;
-    }
-
-    // TODO: add convenient API to update global pos together with updating focused surface
-    warpXcbOnSurfaceLeft(focusNow->surface());
-
-    seat->notifyPointerMotion(m_lastPosition.toPoint());
-    seat->setFocusedPointerSurface(focusNow->surface(), focusNow->inputTransformation());
-
-    m_focusGeometryConnection = connect(focusNow, &Toplevel::inputTransformationChanged, this,
-        [this] {
-            // TODO: why no assert possible?
-            if (!focus()) {
-                return;
-            }
-            // TODO: can we check on the client instead?
-            if (workspace()->moveResizeClient()) {
-                // don't update while moving
-                return;
-            }
-            auto seat = waylandServer()->seat();
-            if (focus()->surface() != seat->focusedPointerSurface()) {
-                return;
-            }
-            seat->setFocusedPointerSurfaceTransformation(focus()->inputTransformation());
-        }
-    );
-}
-
-void TabletInputRedirection::warpXcbOnSurfaceLeft(KWaylandServer::SurfaceInterface *newSurface)
-{
-    auto xc = waylandServer()->xWaylandConnection();
-    if (!xc) {
-        // No XWayland, no point in warping the x cursor
-        return;
-    }
-    const auto c = kwinApp()->x11Connection();
-    if (!c) {
-        return;
-    }
-    static bool s_hasXWayland119 = xcb_get_setup(c)->release_number >= 11900000;
-    if (s_hasXWayland119) {
-        return;
-    }
-    if (newSurface && newSurface->client() == xc) {
-        // new window is an X window
-        return;
-    }
-    auto s = waylandServer()->seat()->focusedPointerSurface();
-    if (!s || s->client() != xc) {
-        // pointer was not on an X window
-        return;
-    }
-    // warp pointer to 0/0 to trigger leave events on previously focused X window
-    xcb_warp_pointer(c, XCB_WINDOW_NONE, kwinApp()->x11RootWindow(), 0, 0, 0, 0, 0, 0),
-    xcb_flush(c);
+    // This method is left blank intentionally.
 }
 
 }

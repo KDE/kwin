@@ -16,11 +16,6 @@
 #include <QPointF>
 #include <QPointer>
 
-namespace KWaylandServer
-{
-class SurfaceInterface;
-}
-
 namespace KWin
 {
 class Toplevel;
@@ -72,14 +67,11 @@ private:
                            Decoration::DecoratedClientImpl *now) override;
     void cleanupInternalWindow(QWindow *old, QWindow *now) override;
     void focusUpdate(Toplevel *focusOld, Toplevel *focusNow) override;
-    void warpXcbOnSurfaceLeft(KWaylandServer::SurfaceInterface *surface);
 
     bool m_tipDown = false;
     bool m_tipNear = false;
 
     QPointF m_lastPosition;
-    QMetaObject::Connection m_focusGeometryConnection;
-    QMetaObject::Connection m_internalWindowConnection;
     QMetaObject::Connection m_decorationGeometryConnection;
     QMetaObject::Connection m_decorationDestroyedConnection;
 };
