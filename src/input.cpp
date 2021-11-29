@@ -1902,7 +1902,10 @@ public:
             m_cursorByTool[tool]->setPos(event->globalPos());
             break;
         } case QEvent::TabletEnterProximity: {
+            const QPoint pos = event->globalPos();
+            m_cursorByTool[tool]->setPos(pos);
             tool->sendProximityIn(tablet);
+            tool->sendMotion(toplevel->mapToLocal(event->globalPosF()));
             break;
         } case QEvent::TabletLeaveProximity:
             tool->sendProximityOut();
