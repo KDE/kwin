@@ -157,7 +157,6 @@ void PointerInputRedirection::init()
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded, this,
         [this] {
             // need to force a focused pointer change
-            waylandServer()->seat()->setFocusedPointerSurface(nullptr);
             setFocus(nullptr);
             update();
         }
@@ -183,7 +182,6 @@ void PointerInputRedirection::updateOnStartMoveResize()
     breakPointerConstraints(focus() ? focus()->surface() : nullptr);
     disconnectPointerConstraintsConnection();
     setFocus(nullptr);
-    waylandServer()->seat()->setFocusedPointerSurface(nullptr);
 }
 
 void PointerInputRedirection::updateToReset()
@@ -210,7 +208,6 @@ void PointerInputRedirection::updateToReset()
         disconnectPointerConstraintsConnection();
         setFocus(nullptr);
     }
-    waylandServer()->seat()->setFocusedPointerSurface(nullptr);
 }
 
 class PositionUpdateBlocker
@@ -554,8 +551,6 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
         // left decoration
         return;
     }
-
-    waylandServer()->seat()->setFocusedPointerSurface(nullptr);
 
     auto pos = m_pos - now->client()->pos();
     QHoverEvent event(QEvent::HoverEnter, pos, pos);

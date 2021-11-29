@@ -2918,8 +2918,9 @@ bool InputDeviceHandler::setHover(Toplevel *toplevel)
 
 void InputDeviceHandler::setFocus(Toplevel *toplevel)
 {
+    Toplevel *oldFocus = m_focus.window;
     m_focus.window = toplevel;
-    //TODO: call focusUpdate?
+    focusUpdate(oldFocus, m_focus.window);
 }
 
 void InputDeviceHandler::setDecoration(Decoration::DecoratedClientImpl *decoration)
@@ -2932,13 +2933,14 @@ void InputDeviceHandler::setDecoration(Decoration::DecoratedClientImpl *decorati
 
 void InputDeviceHandler::setInternalWindow(QWindow *window)
 {
+    QWindow *oldFocus = m_focus.internalWindow;
     m_focus.internalWindow = window;
-    //TODO: call internalWindowUpdate?
+    cleanupInternalWindow(oldFocus, m_focus.internalWindow);
 }
 
 void InputDeviceHandler::updateFocus()
 {
-    auto oldFocus = m_focus.window;
+    Toplevel *focus = m_hover.window;
 
     if (m_hover.window && !m_hover.window->surface()) {
         // The surface has not yet been created (special XWayland case).
@@ -2947,12 +2949,10 @@ void InputDeviceHandler::updateFocus()
             m_hover.surfaceCreatedConnection = connect(m_hover.window, &Toplevel::surfaceChanged,
                                                     this, &InputDeviceHandler::update);
         }
-        m_focus.window = nullptr;
-    } else {
-        m_focus.window = m_hover.window;
+        focus = nullptr;
     }
 
-    focusUpdate(oldFocus, m_focus.window);
+    setFocus(focus);
 }
 
 bool InputDeviceHandler::updateDecoration()
