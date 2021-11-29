@@ -58,6 +58,8 @@ public:
     bool hasPopupGrab() const override;
     void popupDone() override;
     bool hitTest(const QPoint &point) const override;
+    void pointerEnterEvent(const QPoint &globalPos) override;
+    void pointerLeaveEvent() override;
 
     void present(const QSharedPointer<QOpenGLFramebufferObject> fbo);
     void present(const QImage &image, const QRegion &damage);

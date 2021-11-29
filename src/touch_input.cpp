@@ -119,14 +119,6 @@ void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
     );
 }
 
-void TouchInputRedirection::cleanupInternalWindow(QWindow *old, QWindow *now)
-{
-    Q_UNUSED(old);
-    Q_UNUSED(now);
-
-    // nothing to do
-}
-
 void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now)
 {
     Q_UNUSED(old);

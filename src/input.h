@@ -437,17 +437,11 @@ public:
      * @return decoration with pointer focus.
      */
     Decoration::DecoratedClientImpl *decoration() const;
-    /**
-     * @brief The internal window currently receiving events.
-     * @return QWindow with pointer focus.
-     */
-    QWindow *internalWindow() const;
 
     virtual QPointF position() const = 0;
 
     void setFocus(Toplevel *toplevel);
     void setDecoration(Decoration::DecoratedClientImpl *decoration);
-    void setInternalWindow(QWindow *window);
 
     uint32_t lastEventTime() const;
 
@@ -457,7 +451,6 @@ Q_SIGNALS:
 protected:
     explicit InputDeviceHandler(InputRedirection *parent);
 
-    virtual void cleanupInternalWindow(QWindow *old, QWindow *now) = 0;
     virtual void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) = 0;
 
     virtual void focusUpdate(Toplevel *old, Toplevel *now) = 0;
@@ -487,7 +480,6 @@ private:
     bool setHover(Toplevel *toplevel);
     void updateFocus();
     bool updateDecoration();
-    void updateInternalWindow(QWindow *window);
 
     struct {
         QPointer<Toplevel> window;
@@ -497,7 +489,6 @@ private:
     struct {
         QPointer<Toplevel> window;
         QPointer<Decoration::DecoratedClientImpl> decoration;
-        QPointer<QWindow> internalWindow;
     } m_focus;
 
     bool m_inited = false;

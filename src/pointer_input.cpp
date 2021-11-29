@@ -186,11 +186,6 @@ void PointerInputRedirection::updateOnStartMoveResize()
 
 void PointerInputRedirection::updateToReset()
 {
-    if (internalWindow()) {
-        QEvent event(QEvent::Leave);
-        QCoreApplication::sendEvent(internalWindow(), &event);
-        setInternalWindow(nullptr);
-    }
     if (decoration()) {
         QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
         QCoreApplication::instance()->sendEvent(decoration()->decoration(), &event);
@@ -510,15 +505,6 @@ bool PointerInputRedirection::focusUpdatesBlocked()
     return false;
 }
 
-void PointerInputRedirection::cleanupInternalWindow(QWindow *old, QWindow *now)
-{
-    if (old) {
-        // leave internal window
-        QEvent leaveEvent(QEvent::Leave);
-        QCoreApplication::sendEvent(old, &leaveEvent);
-    }
-}
-
 void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now)
 {
     disconnect(m_decorationGeometryConnection);
@@ -575,13 +561,6 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
 
     if (AbstractClient *ac = qobject_cast<AbstractClient*>(focusNow)) {
         ac->pointerEnterEvent(m_pos.toPoint());
-    }
-
-    if (internalWindow()) {
-        // enter internal window
-        const auto pos = hover()->pos();
-        QEnterEvent enterEvent(pos, pos, m_pos);
-        QCoreApplication::sendEvent(internalWindow(), &enterEvent);
     }
 
     auto seat = waylandServer()->seat();

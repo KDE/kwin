@@ -960,63 +960,33 @@ std::pair<bool, bool> performClientWheelAction(QWheelEvent *event, AbstractClien
 class InternalWindowEventFilter : public InputEventFilter {
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
         Q_UNUSED(nativeButton)
-        auto internal = input()->pointer()->internalWindow();
-        if (!internal) {
+        if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
         }
-        // find client
-        switch (event->type())
-        {
-        case QEvent::MouseButtonPress:
-        case QEvent::MouseButtonRelease: {
-            auto s = qobject_cast<InternalClient *>(workspace()->findInternal(internal));
-            if (s && s->isDecorated()) {
-                // only perform mouse commands on decorated internal windows
-                const auto actionResult = performClientMouseAction(event, s);
-                if (actionResult.first) {
-                    return actionResult.second;
-                }
-            }
-            break;
-        }
-        default:
-            break;
-        }
-        QMouseEvent e(event->type(),
-                        event->pos() - internal->position(),
-                        event->globalPos(),
-                        event->button(), event->buttons(), event->modifiers());
-        e.setAccepted(false);
-        QCoreApplication::sendEvent(internal, &e);
-        return e.isAccepted();
+        QWindow *internal = static_cast<InternalClient *>(input()->pointer()->focus())->internalWindow();
+        QMouseEvent mouseEvent(event->type(),
+                               event->pos() - internal->position(),
+                               event->globalPos(),
+                               event->button(), event->buttons(), event->modifiers());
+        QCoreApplication::sendEvent(internal, &mouseEvent);
+        return mouseEvent.isAccepted();
     }
     bool wheelEvent(QWheelEvent *event) override {
-        auto internal = input()->pointer()->internalWindow();
-        if (!internal) {
+        if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
         }
-        if (event->angleDelta().y() != 0) {
-            auto s = qobject_cast<InternalClient *>(workspace()->findInternal(internal));
-            if (s && s->isDecorated()) {
-                // client window action only on vertical scrolling
-                const auto actionResult = performClientWheelAction(event, s);
-                if (actionResult.first) {
-                    return actionResult.second;
-                }
-            }
-        }
+        QWindow *internal = static_cast<InternalClient *>(input()->pointer()->focus())->internalWindow();
         const QPointF localPos = event->globalPosF() - internal->position();
         const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
         const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
-        QWheelEvent e(localPos, event->globalPosF(), QPoint(),
-                        event->angleDelta() * -1,
-                        delta * -1,
-                        orientation,
-                        event->buttons(),
-                        event->modifiers());
-        e.setAccepted(false);
-        QCoreApplication::sendEvent(internal, &e);
-        return e.isAccepted();
+        QWheelEvent wheelEvent(localPos, event->globalPosF(), QPoint(),
+                               event->angleDelta() * -1,
+                               delta * -1,
+                               orientation,
+                               event->buttons(),
+                               event->modifiers());
+        QCoreApplication::sendEvent(internal, &wheelEvent);
+        return wheelEvent.isAccepted();
     }
     bool keyEvent(QKeyEvent *event) override {
         const QList<InternalClient *> &clients = workspace()->internalClients();
@@ -1079,12 +1049,12 @@ class InternalWindowEventFilter : public InputEventFilter {
         }
         // a new touch point
         seat->setTimestamp(time);
-        auto internal = touch->internalWindow();
-        if (!internal) {
+        if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
             return false;
         }
         touch->setInternalPressId(id);
         // Qt's touch event API is rather complex, let's do fake mouse events instead
+        QWindow *internal = static_cast<InternalClient *>(input()->touch()->focus())->internalWindow();
         m_lastGlobalTouchPos = pos;
         m_lastLocalTouchPos = pos - internal->position();
 
@@ -1098,8 +1068,7 @@ class InternalWindowEventFilter : public InputEventFilter {
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
         auto touch = input()->touch();
-        auto internal = touch->internalWindow();
-        if (!internal) {
+        if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
             return false;
         }
         if (touch->internalPressId() == -1) {
@@ -1110,6 +1079,7 @@ class InternalWindowEventFilter : public InputEventFilter {
             // ignore, but filter out
             return true;
         }
+        QWindow *internal = static_cast<InternalClient *>(input()->touch()->focus())->internalWindow();
         m_lastGlobalTouchPos = pos;
         m_lastLocalTouchPos = pos - QPointF(internal->x(), internal->y());
 
@@ -1119,11 +1089,7 @@ class InternalWindowEventFilter : public InputEventFilter {
     }
     bool touchUp(qint32 id, quint32 time) override {
         auto touch = input()->touch();
-        auto internal = touch->internalWindow();
         const bool removed = m_pressedIds.remove(id);
-        if (!internal) {
-            return removed;
-        }
         if (touch->internalPressId() == -1) {
             return removed;
         }
@@ -1132,6 +1098,10 @@ class InternalWindowEventFilter : public InputEventFilter {
             // ignore, but filter out
             return true;
         }
+        if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
+            return removed;
+        }
+        QWindow *internal = static_cast<InternalClient *>(input()->touch()->focus())->internalWindow();
         // send mouse up
         QMouseEvent e(QEvent::MouseButtonRelease, m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton, Qt::MouseButtons(), input()->keyboardModifiers());
         e.setAccepted(false);
@@ -2480,9 +2450,9 @@ void InputRedirection::setupInputFilters()
         installInputEventFilter(new PopupInputFilter);
     }
     installInputEventFilter(new DecorationEventFilter);
-    installInputEventFilter(new InternalWindowEventFilter);
     if (waylandServer()) {
         installInputEventFilter(new WindowActionInputFilter);
+        installInputEventFilter(new InternalWindowEventFilter);
         installInputEventFilter(new ForwardInputFilter);
         installInputEventFilter(new TabletInputFilter);
     }
@@ -2931,18 +2901,11 @@ void InputDeviceHandler::setDecoration(Decoration::DecoratedClientImpl *decorati
     Q_EMIT decorationChanged();
 }
 
-void InputDeviceHandler::setInternalWindow(QWindow *window)
-{
-    QWindow *oldFocus = m_focus.internalWindow;
-    m_focus.internalWindow = window;
-    cleanupInternalWindow(oldFocus, m_focus.internalWindow);
-}
-
 void InputDeviceHandler::updateFocus()
 {
     Toplevel *focus = m_hover.window;
 
-    if (m_hover.window && !m_hover.window->surface()) {
+    if (m_hover.window && !m_hover.window->surface() && !m_hover.window->isInternal()) {
         // The surface has not yet been created (special XWayland case).
         // Therefore listen for its creation.
         if (!m_hover.surfaceCreatedConnection) {
@@ -2977,17 +2940,6 @@ bool InputDeviceHandler::updateDecoration()
     return true;
 }
 
-void InputDeviceHandler::updateInternalWindow(QWindow *window)
-{
-    if (m_focus.internalWindow == window) {
-        // no change
-        return;
-    }
-    const auto oldInternal = m_focus.internalWindow;
-    m_focus.internalWindow = window;
-    cleanupInternalWindow(oldInternal, window);
-}
-
 void InputDeviceHandler::update()
 {
     if (!m_inited) {
@@ -3006,28 +2958,13 @@ void InputDeviceHandler::update()
         return;
     }
 
-    if (auto client = qobject_cast<InternalClient *>(toplevel)) {
-        QWindow *handle = client->internalWindow();
-        if (m_focus.internalWindow != handle) {
-            // changed internal window
-            updateDecoration();
-            updateInternalWindow(handle);
-            updateFocus();
-        } else if (updateDecoration()) {
-            // went onto or off from decoration, update focus
-            updateFocus();
-        }
-    } else {
-        updateInternalWindow(nullptr);
-
-        if (m_focus.window != m_hover.window) {
-            // focus change
-            updateDecoration();
-            updateFocus();
-        } else if (updateDecoration()) {
-            // went onto or off from decoration, update focus
-            updateFocus();
-        }
+    if (m_focus.window != m_hover.window) {
+        // focus change
+        updateDecoration();
+        updateFocus();
+    } else if (updateDecoration()) {
+        // went onto or off from decoration, update focus
+        updateFocus();
     }
 
     workspace()->updateFocusMousePosition(position().toPoint());
@@ -3046,11 +2983,6 @@ Toplevel *InputDeviceHandler::focus() const
 Decoration::DecoratedClientImpl *InputDeviceHandler::decoration() const
 {
     return m_focus.decoration;
-}
-
-QWindow *InputDeviceHandler::internalWindow() const
-{
-    return m_focus.internalWindow;
 }
 
 uint32_t InputDeviceHandler::lastEventTime() const

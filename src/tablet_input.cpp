@@ -173,14 +173,6 @@ void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *
     m_decorationDestroyedConnection = connect(now, &QObject::destroyed, this, &TabletInputRedirection::update, Qt::QueuedConnection);
 }
 
-void TabletInputRedirection::cleanupInternalWindow(QWindow *old, QWindow *now)
-{
-    Q_UNUSED(old)
-    Q_UNUSED(now)
-
-    // This method is left blank intentionally.
-}
-
 void TabletInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
 {
     Q_UNUSED(focusOld)

@@ -598,8 +598,8 @@ public:
     void endInteractiveMoveResize();
     void keyPressEvent(uint key_code);
 
-    void pointerEnterEvent(const QPoint &globalPos);
-    void pointerLeaveEvent();
+    virtual void pointerEnterEvent(const QPoint &globalPos);
+    virtual void pointerLeaveEvent();
 
     /**
      * These values represent positions inside an area

@@ -88,6 +88,22 @@ bool InternalClient::hitTest(const QPoint &point) const
     return true;
 }
 
+void InternalClient::pointerEnterEvent(const QPoint &globalPos)
+{
+    AbstractClient::pointerEnterEvent(globalPos);
+
+    QEnterEvent enterEvent(pos(), pos(), globalPos);
+    QCoreApplication::sendEvent(m_internalWindow, &enterEvent);
+}
+
+void InternalClient::pointerLeaveEvent()
+{
+    AbstractClient::pointerLeaveEvent();
+
+    QEvent event(QEvent::Leave);
+    QCoreApplication::sendEvent(m_internalWindow, &event);
+}
+
 bool InternalClient::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == m_internalWindow && event->type() == QEvent::DynamicPropertyChange) {
