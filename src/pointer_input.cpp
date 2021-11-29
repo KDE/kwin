@@ -563,8 +563,6 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
     m_decorationDestroyedConnection = connect(now, &QObject::destroyed, this, &PointerInputRedirection::update, Qt::QueuedConnection);
 }
 
-static bool s_cursorUpdateBlocking = false;
-
 void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
 {
     if (AbstractClient *ac = qobject_cast<AbstractClient*>(focusOld)) {
@@ -597,11 +595,6 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
 
     // TODO: add convenient API to update global pos together with updating focused surface
     warpXcbOnSurfaceLeft(focusNow->surface());
-
-    // TODO: why? in order to reset the cursor icon?
-    s_cursorUpdateBlocking = true;
-    seat->setFocusedPointerSurface(nullptr);
-    s_cursorUpdateBlocking = false;
 
     seat->notifyPointerMotion(m_pos.toPoint());
     seat->setFocusedPointerSurface(focusNow->surface(), focusNow->inputTransformation());
@@ -1080,10 +1073,6 @@ void CursorImage::handlePointerChanged()
 
 void CursorImage::handleFocusedSurfaceChanged()
 {
-    if (s_cursorUpdateBlocking) {
-        return;
-    }
-
     KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
     disconnect(m_serverCursor.connection);
 
