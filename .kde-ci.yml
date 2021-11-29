@@ -4,6 +4,7 @@
 Dependencies:
 - 'on': ['@all']
   'require':
+    'frameworks/breeze-icons': '@stable'
     'frameworks/extra-cmake-modules': '@stable'
     'frameworks/kconfig': '@stable'
     'frameworks/kconfigwidgets': '@stable'
