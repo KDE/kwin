@@ -58,6 +58,12 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     qunsetenv("XKB_DEFAULT_VARIANT");
     qunsetenv("XKB_DEFAULT_OPTIONS");
 
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup windowsGroup = config->group("Windows");
+    windowsGroup.writeEntry("Placement", Placement::policyToString(Placement::Smart));
+    windowsGroup.sync();
+    setConfig(config);
+
     const auto ownPath = libraryPaths().last();
     removeLibraryPath(ownPath);
     addLibraryPath(ownPath);
