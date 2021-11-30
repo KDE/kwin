@@ -240,6 +240,7 @@ FocusScope {
             y: model.client.y - targetScreen.geometry.y
             width: model.client.width
             height: model.client.height
+            forwardsPointerInput: true
 
             TapHandler {
                 onTapped: effect.deactivate();

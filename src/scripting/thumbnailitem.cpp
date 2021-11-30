@@ -10,15 +10,19 @@
 #include "abstract_client.h"
 #include "composite.h"
 #include "effects.h"
+#include "pointer_input.h"
 #include "renderbackend.h"
 #include "scene.h"
 #include "screens.h"
 #include "scripting_logging.h"
 #include "virtualdesktops.h"
+#include "wayland_server.h"
 #include "workspace.h"
 
 #include <kwingltexture.h>
 #include <kwinglutils.h>
+
+#include <KWaylandServer/seat_interface.h>
 
 #include <QSGImageNode>
 #include <QRunnable>
@@ -331,6 +335,20 @@ void WindowThumbnailItem::updateImplicitSize()
     setImplicitSize(frameSize.width(), frameSize.height());
 }
 
+bool WindowThumbnailItem::forwardsPointerInput() const
+{
+    return m_forwardsPointerInput;
+}
+
+void WindowThumbnailItem::setForwardsPointerInput(bool forwards)
+{
+    if (m_forwardsPointerInput != forwards) {
+        m_forwardsPointerInput = forwards;
+        setAcceptHoverEvents(forwards);
+        Q_EMIT forwardsPointerInputChanged();
+    }
+}
+
 QImage WindowThumbnailItem::fallbackImage() const
 {
     if (m_client) {
@@ -433,6 +451,77 @@ void WindowThumbnailItem::updateOffscreenTexture()
 
     // We know that the texture has changed, so schedule an item update.
     update();
+}
+
+void WindowThumbnailItem::mousePressEvent(QMouseEvent *event)
+{
+    if (waylandServer()) {
+        auto seat = waylandServer()->seat();
+        seat->setFocusedPointerSurface(m_client->surface());
+        seat->setTimestamp(event->timestamp());
+        seat->notifyPointerButton(qtMouseButtonToButton(event->button()), KWaylandServer::PointerButtonState::Pressed);
+        seat->notifyPointerFrame();
+    }
+}
+
+void WindowThumbnailItem::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (waylandServer()) {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
+        seat->notifyPointerButton(qtMouseButtonToButton(event->button()), KWaylandServer::PointerButtonState::Released);
+        seat->notifyPointerFrame();
+    }
+}
+void WindowThumbnailItem::mouseMoveEvent(QMouseEvent *event)
+{
+    if (waylandServer()) {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
+        seat->notifyPointerMotion(event->localPos());
+        seat->notifyPointerFrame();
+    }
+}
+
+void WindowThumbnailItem::wheelEvent(QWheelEvent *event)
+{
+    if (waylandServer()) {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
+        seat->notifyPointerAxis(event->orientation(), event->delta(), event->delta() / 120, KWaylandServer::PointerAxisSource::Wheel);
+        seat->notifyPointerFrame();
+    }
+}
+
+void WindowThumbnailItem::hoverEnterEvent(QHoverEvent *event)
+{
+    if (waylandServer()) {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
+        seat->setFocusedPointerSurface(m_client->surface());
+        seat->notifyPointerMotion(event->posF());
+        seat->notifyPointerFrame();
+    }
+}
+
+void WindowThumbnailItem::hoverLeaveEvent(QHoverEvent *event)
+{
+    if (waylandServer()) {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
+        seat->setFocusedPointerSurface(nullptr);
+        seat->notifyPointerFrame();
+    }
+}
+
+void WindowThumbnailItem::hoverMoveEvent(QHoverEvent *event)
+{
+    if (waylandServer()) {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
+        seat->notifyPointerMotion(event->pos());
+        seat->notifyPointerFrame();
+    }
 }
 
 DesktopThumbnailItem::DesktopThumbnailItem(QQuickItem *parent)

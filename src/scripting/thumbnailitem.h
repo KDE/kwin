@@ -92,6 +92,7 @@ class WindowThumbnailItem : public ThumbnailItemBase
     Q_OBJECT
     Q_PROPERTY(QUuid wId READ wId WRITE setWId NOTIFY wIdChanged)
     Q_PROPERTY(KWin::AbstractClient *client READ client WRITE setClient NOTIFY clientChanged)
+    Q_PROPERTY(bool forwardsPointerInput READ forwardsPointerInput WRITE setForwardsPointerInput NOTIFY forwardsPointerInputChanged)
 
 public:
     explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
@@ -102,7 +103,11 @@ public:
     AbstractClient *client() const;
     void setClient(AbstractClient *client);
 
+    bool forwardsPointerInput() const;
+    void setForwardsPointerInput(bool forwards);
+
 Q_SIGNALS:
+    void forwardsPointerInputChanged();
     void wIdChanged();
     void clientChanged();
 
@@ -113,9 +118,20 @@ protected:
     void updateOffscreenTexture() override;
     void updateImplicitSize();
 
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+
+    void wheelEvent(QWheelEvent *event) override;
+
+    void hoverEnterEvent(QHoverEvent *event) override;
+    void hoverLeaveEvent(QHoverEvent *event) override;
+    void hoverMoveEvent(QHoverEvent *event) override;
+
 private:
     QUuid m_wId;
     QPointer<AbstractClient> m_client;
+    bool m_forwardsPointerInput = false;
     bool m_dirty = false;
 };
 
