@@ -33,6 +33,8 @@ public:
     void setEnabled(bool enabled);
     void setActive(bool active);
 
+    Q_SCRIPTABLE bool willShowOnActive() const;
+
 Q_SIGNALS:
     Q_SCRIPTABLE void enabledChanged();
     Q_SCRIPTABLE void activeChanged();

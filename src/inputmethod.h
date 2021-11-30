@@ -61,6 +61,7 @@ public:
     void setInputMethodCommand(const QString &path);
 
     KWaylandServer::InputMethodGrabV1 *keyboardGrab();
+    bool shouldShowOnActive() const;
 
 Q_SIGNALS:
     void activeChanged(bool active);

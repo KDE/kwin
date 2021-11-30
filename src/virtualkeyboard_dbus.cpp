@@ -58,4 +58,9 @@ bool VirtualKeyboardDBus::isAvailable() const
     return m_inputMethod->isAvailable();
 }
 
+bool VirtualKeyboardDBus::willShowOnActive() const
+{
+    return isAvailable() && isEnabled() && m_inputMethod->shouldShowOnActive();
+}
+
 }
