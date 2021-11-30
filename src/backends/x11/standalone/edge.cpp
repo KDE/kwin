@@ -99,9 +99,7 @@ void WindowBasedEdge::doStartApproaching()
     }
     m_approachWindow.unmap();
     Cursor *cursor = Cursors::self()->mouse();
-#ifndef KWIN_UNIT_TEST
     m_cursorPollingConnection = connect(cursor, &Cursor::posChanged, this, &WindowBasedEdge::updateApproaching);
-#endif
     cursor->startMousePolling();
 }
 

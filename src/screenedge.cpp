@@ -430,7 +430,6 @@ void Edge::switchDesktop(const QPoint &cursorPos)
             pos.setY(OFFSET);
         }
     }
-#ifndef KWIN_UNIT_TEST
     if (AbstractClient *c = Workspace::self()->moveResizeClient()) {
         const QVector<VirtualDesktop *> desktops{desktop};
         if (c->rules()->checkDesktops(desktops) != desktops) {
@@ -438,7 +437,6 @@ void Edge::switchDesktop(const QPoint &cursorPos)
             return;
         }
     }
-#endif
     vds->setCurrent(desktop);
     if (vds->currentDesktop() != oldDesktop) {
         m_pushBackBlocked = true;
