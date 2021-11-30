@@ -92,7 +92,7 @@ WaylandOutput::WaylandOutput(AbstractWaylandOutput *output, QObject *parent)
     : QObject(parent)
     , m_platformOutput(output)
     , m_waylandOutput(new KWaylandServer::OutputInterface(waylandServer()->display()))
-    , m_xdgOutputV1(waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput.data(), this))
+    , m_xdgOutputV1(waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput.data(), m_waylandOutput.data()))
 {
     const QRect geometry = m_platformOutput->geometry();
 
