@@ -34,12 +34,8 @@ Screens::Screens(QObject *parent)
     , m_count(0)
     , m_maxScale(1.0)
 {
-    // TODO: Do something about testScreens and other tests that use MockScreens.
-    // They only make core code more convoluted with ifdefs.
-#ifndef KWIN_UNIT_TEST
     connect(kwinApp()->platform(), &Platform::screensQueried, this, &Screens::updateCount);
     connect(kwinApp()->platform(), &Platform::screensQueried, this, &Screens::changed);
-#endif
 }
 
 Screens::~Screens()
@@ -124,26 +120,12 @@ int Screens::intersecting(const QRect &r) const
 
 int Screens::number(const QPoint &pos) const
 {
-    // TODO: Do something about testScreens and other tests that use MockScreens.
-    // They only make core code more convoluted with ifdefs.
-#ifdef KWIN_UNIT_TEST
-    Q_UNUSED(pos)
-    return -1;
-#else
     return kwinApp()->platform()->enabledOutputs().indexOf(kwinApp()->platform()->outputAt(pos));
-#endif
 }
 
 AbstractOutput *Screens::findOutput(int screen) const
 {
-    // TODO: Do something about testScreens and other tests that use MockScreens.
-    // They only make core code more convoluted with ifdefs.
-#ifdef KWIN_UNIT_TEST
-    Q_UNUSED(screen)
-    return nullptr;
-#else
     return kwinApp()->platform()->findOutput(screen);
-#endif
 }
 
 } // namespace

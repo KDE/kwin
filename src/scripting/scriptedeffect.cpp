@@ -233,10 +233,8 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
 
     globalObject.setProperty(QStringLiteral("Effect"),
                              m_engine->newQMetaObject(&ScriptedEffect::staticMetaObject));
-#ifndef KWIN_UNIT_TEST
     globalObject.setProperty(QStringLiteral("KWin"),
                              m_engine->newQMetaObject(&QtScriptWorkspaceWrapper::staticMetaObject));
-#endif
     globalObject.setProperty(QStringLiteral("Globals"),
                              m_engine->newQMetaObject(&KWin::staticMetaObject));
     globalObject.setProperty(QStringLiteral("QEasingCurve"),
