@@ -2263,9 +2263,10 @@ void InputRedirection::setupWorkspace()
 
         updateLeds(m_keyboard->xkb()->leds());
         connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, this, &InputRedirection::updateLeds);
+
+        setupTouchpadShortcuts();
+        setupInputFilters();
     }
-    setupTouchpadShortcuts();
-    setupInputFilters();
 }
 
 class UserActivitySpy : public InputEventSpy
@@ -2419,22 +2420,20 @@ private:
 
 void InputRedirection::setupInputFilters()
 {
-    const bool hasGlobalShortcutSupport = !waylandServer() || waylandServer()->hasGlobalShortcutSupport();
+    const bool hasGlobalShortcutSupport = waylandServer()->hasGlobalShortcutSupport();
     if ((kwinApp()->platform()->session()->capabilities() & Session::Capability::SwitchTerminal)
             && hasGlobalShortcutSupport) {
         installInputEventFilter(new VirtualTerminalFilter);
     }
-    if (waylandServer()) {
-        installInputEventSpy(new HideCursorSpy);
-        installInputEventSpy(new UserActivitySpy);
-        if (hasGlobalShortcutSupport) {
-            installInputEventFilter(new TerminateServerFilter);
-        }
-        installInputEventFilter(new DragAndDropInputFilter);
-        installInputEventFilter(new LockScreenFilter);
-        m_windowSelector = new WindowSelectorFilter;
-        installInputEventFilter(m_windowSelector);
+    installInputEventSpy(new HideCursorSpy);
+    installInputEventSpy(new UserActivitySpy);
+    if (hasGlobalShortcutSupport) {
+        installInputEventFilter(new TerminateServerFilter);
     }
+    installInputEventFilter(new DragAndDropInputFilter);
+    installInputEventFilter(new LockScreenFilter);
+    m_windowSelector = new WindowSelectorFilter;
+    installInputEventFilter(m_windowSelector);
     if (hasGlobalShortcutSupport) {
         installInputEventFilter(new ScreenEdgeInputFilter);
     }
@@ -2446,16 +2445,12 @@ void InputRedirection::setupInputFilters()
     if (hasGlobalShortcutSupport) {
         installInputEventFilter(new GlobalShortcutFilter);
     }
-    if (waylandServer()) {
-        installInputEventFilter(new PopupInputFilter);
-    }
+    installInputEventFilter(new PopupInputFilter);
     installInputEventFilter(new DecorationEventFilter);
-    if (waylandServer()) {
-        installInputEventFilter(new WindowActionInputFilter);
-        installInputEventFilter(new InternalWindowEventFilter);
-        installInputEventFilter(new ForwardInputFilter);
-        installInputEventFilter(new TabletInputFilter);
-    }
+    installInputEventFilter(new WindowActionInputFilter);
+    installInputEventFilter(new InternalWindowEventFilter);
+    installInputEventFilter(new ForwardInputFilter);
+    installInputEventFilter(new TabletInputFilter);
 }
 
 void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)
