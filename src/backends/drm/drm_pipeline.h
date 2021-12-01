@@ -77,7 +77,14 @@ public:
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
     void printDebugInfo() const;
+    /**
+     * which size buffers for rendering should have
+     */
     QSize sourceSize() const;
+    /**
+     * what size buffers submitted to this pipeline should have
+     */
+    QSize bufferSize() const;
 
     bool isFormatSupported(uint32_t drmFormat) const;
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const;
@@ -95,11 +102,15 @@ public:
         AbstractWaylandOutput::RgbRange rgbRange = AbstractWaylandOutput::RgbRange::Automatic;
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
         QSharedPointer<DrmGammaRamp> gamma;
-        DrmPlane::Transformations transformation = DrmPlane::Transformation::Rotate0;
 
         QPoint cursorPos;
         QPoint cursorHotspot;
         QSharedPointer<DrmDumbBuffer> cursorBo;
+
+        // the transformation that this pipeline will apply to submitted buffers
+        DrmPlane::Transformations bufferTransformation = DrmPlane::Transformation::Rotate0;
+        // the transformation that buffers submitted to the pipeline should have
+        DrmPlane::Transformations sourceTransformation = DrmPlane::Transformation::Rotate0;
     };
     State pending;
 

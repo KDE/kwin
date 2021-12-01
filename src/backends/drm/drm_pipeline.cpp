@@ -192,7 +192,7 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
         pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
         pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, pending.gamma ? pending.gamma->blobId() : 0);
         auto modeSize = m_connector->modes()[pending.modeIndex]->size();
-        pending.crtc->primaryPlane()->set(QPoint(0, 0), m_primaryBuffer ? m_primaryBuffer->size() : modeSize, QPoint(0, 0), modeSize);
+        pending.crtc->primaryPlane()->set(QPoint(0, 0), m_primaryBuffer ? m_primaryBuffer->size() : bufferSize(), QPoint(0, 0), modeSize);
         pending.crtc->primaryPlane()->setBuffer(activePending() ? m_primaryBuffer.get() : nullptr);
 
         if (pending.crtc->cursorPlane()) {
@@ -235,7 +235,7 @@ void DrmPipeline::prepareAtomicModeset()
     pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, activePending() ? mode->blobId() : 0);
 
     pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
-    pending.crtc->primaryPlane()->setTransformation(pending.transformation);
+    pending.crtc->primaryPlane()->setTransformation(pending.bufferTransformation);
     if (pending.crtc->cursorPlane()) {
         pending.crtc->cursorPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
     }
@@ -291,7 +291,7 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
 
 bool DrmPipeline::checkTestBuffer()
 {
-    if (!pending.crtc || (m_primaryBuffer && m_primaryBuffer->size() == sourceSize())) {
+    if (!pending.crtc || (m_primaryBuffer && m_primaryBuffer->size() == bufferSize())) {
         return true;
     }
     auto backend = gpu()->eglBackend();
@@ -301,7 +301,7 @@ bool DrmPipeline::checkTestBuffer()
         const auto &mods = supportedModifiers(buf->format());
         if (backend && buf->format() == backend->drmFormat(m_output)
             && (mods.isEmpty() || mods.contains(buf->modifier()))
-            && buf->size() == sourceSize()) {
+            && buf->size() == bufferSize()) {
             buffer = buf;
         }
     };
@@ -319,13 +319,13 @@ bool DrmPipeline::checkTestBuffer()
         if (backend && m_output) {
             buffer = backend->renderTestFrame(m_output);
         } else if (backend && gpu()->gbmDevice()) {
-            gbm_bo *bo = gbm_bo_create(gpu()->gbmDevice(), sourceSize().width(), sourceSize().height(), DRM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
+            gbm_bo *bo = gbm_bo_create(gpu()->gbmDevice(), bufferSize().width(), bufferSize().height(), DRM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
             if (!bo) {
                 return false;
             }
             buffer = QSharedPointer<DrmGbmBuffer>::create(gpu(), bo, nullptr);
         } else {
-            buffer = QSharedPointer<DrmDumbBuffer>::create(gpu(), sourceSize(), DRM_FORMAT_XRGB8888);
+            buffer = QSharedPointer<DrmDumbBuffer>::create(gpu(), bufferSize(), DRM_FORMAT_XRGB8888);
         }
     }
     if (buffer && buffer->bufferId()) {
@@ -395,13 +395,22 @@ void DrmPipeline::applyPendingChanges()
     m_next = pending;
 }
 
+QSize DrmPipeline::bufferSize() const
+{
+    const auto modeSize = m_connector->modes()[pending.modeIndex]->size();
+    if (pending.bufferTransformation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
+        return modeSize.transposed();
+    }
+    return modeSize;
+}
+
 QSize DrmPipeline::sourceSize() const
 {
-    auto mode = m_connector->modes()[pending.modeIndex];
-    if (pending.transformation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
-        return mode->size().transposed();
+    const auto modeSize = m_connector->modes()[pending.modeIndex]->size();
+    if (pending.sourceTransformation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
+        return modeSize.transposed();
     }
-    return mode->size();
+    return modeSize;
 }
 
 bool DrmPipeline::isCursorVisible() const
@@ -491,7 +500,7 @@ bool DrmPipeline::needsModeset() const
         || pending.active != m_current.active
         || pending.modeIndex != m_current.modeIndex
         || pending.rgbRange != m_current.rgbRange
-        || pending.transformation != m_current.transformation
+        || pending.bufferTransformation != m_current.bufferTransformation
         || m_modesetPresentPending;
 }
 

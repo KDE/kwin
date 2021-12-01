@@ -323,7 +323,7 @@ void DrmOutput::updateModes()
 
 bool DrmOutput::needsSoftwareTransformation() const
 {
-    return m_pipeline->pending.transformation != outputToPlaneTransform(transform());
+    return m_pipeline->pending.bufferTransformation != m_pipeline->pending.sourceTransformation;
 }
 
 bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion)
@@ -378,6 +378,11 @@ DrmPipeline *DrmOutput::pipeline() const
     return m_pipeline;
 }
 
+QSize DrmOutput::bufferSize() const
+{
+    return m_pipeline->bufferSize();
+}
+
 QSize DrmOutput::sourceSize() const
 {
     return m_pipeline->sourceSize();
@@ -414,8 +419,9 @@ bool DrmOutput::queueChanges(const WaylandOutputConfig &config)
     m_pipeline->pending.modeIndex = index;
     m_pipeline->pending.overscan = props->overscan;
     m_pipeline->pending.rgbRange = props->rgbRange;
-    if (!envOnlySoftwareRotations) {
-        m_pipeline->pending.transformation = outputToPlaneTransform(props->transform);
+    m_pipeline->pending.sourceTransformation = outputToPlaneTransform(props->transform);
+    if (!envOnlySoftwareRotations && m_gpu->atomicModeSetting()) {
+        m_pipeline->pending.bufferTransformation = m_pipeline->pending.sourceTransformation;
     }
     m_pipeline->pending.enabled = props->enabled;
     return true;

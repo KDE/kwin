@@ -406,8 +406,8 @@ bool DrmGpu::testPendingConfiguration(TestMode mode)
         // try again without hw rotation
         bool hwRotationUsed = false;
         for (const auto &pipeline : qAsConst(m_pipelines)) {
-            hwRotationUsed |= (pipeline->pending.transformation != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
-            pipeline->pending.transformation = DrmPlane::Transformation::Rotate0;
+            hwRotationUsed |= (pipeline->pending.bufferTransformation != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
+            pipeline->pending.bufferTransformation = DrmPlane::Transformation::Rotate0;
         }
         return hwRotationUsed ? test() : false;
     }

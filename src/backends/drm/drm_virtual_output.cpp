@@ -75,6 +75,11 @@ void DrmVirtualOutput::updateEnablement(bool enable)
     gpu()->platform()->enableOutput(this, enable);
 }
 
+QSize DrmVirtualOutput::bufferSize() const
+{
+    return pixelSize();
+}
+
 QSize DrmVirtualOutput::sourceSize() const
 {
     return pixelSize();

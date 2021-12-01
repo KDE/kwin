@@ -157,8 +157,8 @@ bool EglGbmBackend::resetOutput(Output &output)
     }
     output.current.format = gbmFormat.value();
     uint32_t format = gbmFormat.value().drmFormat;
-    const QSize size = output.output->sourceSize();
     QVector<uint64_t> modifiers = output.output->supportedModifiers(format);
+    const QSize size = output.output->bufferSize();
 
     QSharedPointer<GbmSurface> gbmSurface;
     bool modifiersEnvSet = false;
@@ -199,7 +199,7 @@ bool EglGbmBackend::resetOutput(Output &output)
         output.current.shadowBuffer = nullptr;
     } else {
         makeContextCurrent(output.current);
-        output.current.shadowBuffer = QSharedPointer<ShadowBuffer>::create(output.output->pixelSize(), output.current.format);
+        output.current.shadowBuffer = QSharedPointer<ShadowBuffer>::create(output.output->sourceSize(), output.current.format);
         if (!output.current.shadowBuffer->isComplete()) {
             return false;
         }
@@ -517,7 +517,7 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
 
 void EglGbmBackend::setViewport(const Output &output) const
 {
-    const QSize size = output.output->pixelSize();
+    const QSize size = output.output->sourceSize();
     glViewport(0, 0, size.width(), size.height());
 }
 
@@ -547,13 +547,13 @@ bool EglGbmBackend::doesRenderFit(DrmAbstractOutput *output, const Output::Rende
     if (!render.gbmSurface) {
         return false;
     }
-    QSize surfaceSize = output->sourceSize();
+    QSize surfaceSize = output->bufferSize();
     if (surfaceSize != render.gbmSurface->size()) {
         return false;
     }
     bool needsTexture = output->needsSoftwareTransformation();
     if (needsTexture) {
-        return render.shadowBuffer && render.shadowBuffer->textureSize() == output->pixelSize();
+        return render.shadowBuffer && render.shadowBuffer->textureSize() == output->sourceSize();
     } else {
         return render.shadowBuffer == nullptr;
     }
@@ -771,7 +771,7 @@ QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output
     Q_ASSERT(m_outputs.contains(output));
     auto &renderOutput = m_outputs[output];
     if (renderOutput.current.shadowBuffer) {
-        const auto glTexture = QSharedPointer<KWin::GLTexture>::create(renderOutput.current.shadowBuffer->texture(), GL_RGBA8, output->pixelSize());
+        const auto glTexture = QSharedPointer<KWin::GLTexture>::create(renderOutput.current.shadowBuffer->texture(), GL_RGBA8, renderOutput.output->sourceSize());
         glTexture->setYInverted(true);
         return glTexture;
     }

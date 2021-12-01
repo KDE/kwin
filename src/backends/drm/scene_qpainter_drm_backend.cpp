@@ -46,13 +46,13 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu)
 void DrmQPainterBackend::initOutput(DrmAbstractOutput *output)
 {
     Output o;
-    o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize(), DRM_FORMAT_XRGB8888);
+    o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->sourceSize(), DRM_FORMAT_XRGB8888);
     o.output = output;
     m_outputs.insert(output, o);
     connect(output, &DrmOutput::currentModeChanged, this,
         [output, this] {
             auto &o = m_outputs[output];
-            o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->pixelSize(), DRM_FORMAT_XRGB8888);
+            o.swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, output->sourceSize(), DRM_FORMAT_XRGB8888);
             o.damageJournal.setCapacity(o.swapchain->slotCount());
         }
     );
