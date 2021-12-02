@@ -19,7 +19,6 @@
 #include <KLocalizedString>
 #include <KPackage/PackageLoader>
 #include <KPluginFactory>
-#include <KPluginInfo>
 #include <KPluginMetaData>
 
 #include <QDBusConnection>
@@ -290,35 +289,41 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
         QStringLiteral("KWin/Effect"),
         QStringLiteral("kwin/effects")
     );
-    for (const KPluginMetaData &metaData : plugins) {
-        KPluginInfo plugin(metaData);
+    for (const KPluginMetaData &plugin : plugins) {
         EffectData effect;
 
         effect.name = plugin.name();
-        effect.description = plugin.comment();
-        effect.authorName = plugin.author();
-        effect.authorEmail = plugin.email();
+        effect.description = plugin.description();
+        const auto authors = plugin.authors();
+        effect.authorName = !authors.isEmpty() ? authors.first().name() : QString();
+        effect.authorEmail = !authors.isEmpty() ? authors.first().emailAddress() : QString();
         effect.license = plugin.license();
         effect.version = plugin.version();
         effect.untranslatedCategory = plugin.category();
         effect.category = translatedCategory(plugin.category());
-        effect.serviceName = plugin.pluginName();
-        effect.iconName = plugin.icon();
-        effect.status = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isPluginEnabledByDefault()));
+        effect.serviceName = plugin.pluginId();
+        effect.iconName = plugin.iconName();
+        effect.status = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isEnabledByDefault()));
         effect.originalStatus = effect.status;
-        effect.enabledByDefault = plugin.isPluginEnabledByDefault();
+        effect.enabledByDefault = plugin.isEnabledByDefault();
         effect.enabledByDefaultFunction = false;
-        effect.video = plugin.property(QStringLiteral("X-KWin-Video-Url")).toUrl();
+        effect.video = QUrl(plugin.value(QStringLiteral("X-KWin-Video-Url")));
         effect.website = QUrl(plugin.website());
         effect.supported = true;
-        effect.exclusiveGroup = plugin.property(QStringLiteral("X-KWin-Exclusive-Category")).toString();
-        effect.internal = plugin.property(QStringLiteral("X-KWin-Internal")).toBool();
+        effect.exclusiveGroup = plugin.value(QStringLiteral("X-KWin-Exclusive-Category"));
+        effect.internal = plugin.value(QStringLiteral("X-KWin-Internal"), false);
         effect.kind = Kind::Scripted;
 
-        const QString pluginKeyword = plugin.property(QStringLiteral("X-KDE-PluginKeyword")).toString();
+        const QString pluginKeyword = plugin.value(QStringLiteral("X-KDE-PluginKeyword"));
         if (!pluginKeyword.isEmpty()) {
              // scripted effects have their pluginName() as the keyword
-             effect.configurable = plugin.property(QStringLiteral("X-KDE-ParentComponents")).toString() == pluginKeyword;
+             const QStringList parentComponents = plugin.value(QStringLiteral("X-KDE-ParentComponents"), QStringList{});
+
+             if (parentComponents.isEmpty()) {
+                 effect.configurable = false;
+             } else {
+                 effect.configurable = parentComponents.first() == pluginKeyword;
+             }
         } else {
             effect.configurable = false;
         }
