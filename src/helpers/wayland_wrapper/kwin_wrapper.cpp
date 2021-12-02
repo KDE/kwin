@@ -95,7 +95,7 @@ void KWinWrapper::run()
 
     QStringList args;
 
-    args << "--wayland_fd" << QString::number(wl_socket_get_fd(m_socket));
+    args << "--wayland-fd" << QString::number(wl_socket_get_fd(m_socket));
     args << "--socket" << QString::fromUtf8(wl_socket_get_display_name(m_socket));
 
     if (m_xwlSocket) {

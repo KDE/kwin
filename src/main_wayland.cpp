@@ -456,9 +456,9 @@ int main(int argc, char * argv[])
                                     QStringLiteral("count"));
     outputCountOption.setDefaultValue(QString::number(1));
 
-    QCommandLineOption waylandSocketFdOption(QStringLiteral("wayland_fd"),
+    QCommandLineOption waylandSocketFdOption(QStringLiteral("wayland-fd"),
                                     i18n("Wayland socket to use for incoming connections. This can be combined with --socket to name the socket"),
-                                    QStringLiteral("wayland_fd"));
+                                    QStringLiteral("wayland-fd"));
 
     QCommandLineOption xwaylandListenFdOption(QStringLiteral("xwayland-fd"),
                                     i18n("XWayland socket to use for Xwayland's incoming connections. This can be set multiple times"),
