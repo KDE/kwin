@@ -95,6 +95,31 @@ bool PopupInputFilter::keyEvent(QKeyEvent *event)
     return true;
 }
 
+bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
+{
+    Q_UNUSED(id)
+    Q_UNUSED(time)
+    if (m_popupClients.isEmpty()) {
+        return false;
+    }
+    auto pointerFocus = qobject_cast<AbstractClient*>(input()->findToplevel(pos.toPoint()));
+    if (!pointerFocus || !AbstractClient::belongToSameApplication(pointerFocus, qobject_cast<AbstractClient*>(m_popupClients.constLast()))) {
+        // a touch on a window (or no window) not belonging to the popup window
+        cancelPopups();
+        // filter out this touch
+        return true;
+    }
+    if (pointerFocus && pointerFocus->isDecorated()) {
+        // test whether it is on the decoration
+        const QRect clientRect = QRect(pointerFocus->clientPos(), pointerFocus->clientSize()).translated(pointerFocus->pos());
+        if (!clientRect.contains(pos.toPoint())) {
+            cancelPopups();
+            return true;
+        }
+    }
+    return false;
+}
+
 void PopupInputFilter::cancelPopups()
 {
     while (!m_popupClients.isEmpty()) {

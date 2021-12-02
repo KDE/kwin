@@ -23,6 +23,7 @@ public:
     explicit PopupInputFilter();
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
     bool keyEvent(QKeyEvent *event) override;
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override;
 private:
     void handleClientAdded(Toplevel *client);
     void handleClientRemoved(Toplevel *client);
