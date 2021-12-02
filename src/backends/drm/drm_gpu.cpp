@@ -275,9 +275,6 @@ bool DrmGpu::updateOutputs()
                     m_leaseOutputs << leaseOutput;
                 } else {
                     auto output = new DrmOutput(conn->pipeline());
-                    if (!output->initCursor(m_cursorSize)) {
-                        m_platform->setSoftwareCursorForced(true);
-                    }
                     m_drmOutputs << output;
                     m_outputs << output;
                     Q_EMIT outputAdded(output);
@@ -758,6 +755,11 @@ QVector<DrmObject*> DrmGpu::unusedObjects() const
         }
     }
     return ret;
+}
+
+QSize DrmGpu::cursorSize() const
+{
+    return m_cursorSize;
 }
 
 }

@@ -54,7 +54,7 @@ protected:
 class DrmDumbBuffer : public DrmBuffer
 {
 public:
-    DrmDumbBuffer(DrmGpu *gpu, const QSize &size);
+    DrmDumbBuffer(DrmGpu *gpu, const QSize &size, uint32_t drmFormat);
     ~DrmDumbBuffer() override;
 
     bool needsModeChange(DrmBuffer *b) const override;

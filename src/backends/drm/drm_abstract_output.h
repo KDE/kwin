@@ -22,8 +22,6 @@ class DrmAbstractOutput : public AbstractWaylandOutput
 {
     Q_OBJECT
 public:
-
-    virtual bool initCursor(const QSize &cursorSize);
     virtual bool showCursor();
     virtual bool hideCursor();
     virtual bool updateCursor();

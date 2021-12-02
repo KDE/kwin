@@ -34,6 +34,7 @@ class DrmCrtc;
 class Cursor;
 class DrmGpu;
 class DrmPipeline;
+class DumbSwapchain;
 
 class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
@@ -42,7 +43,6 @@ public:
     DrmOutput(DrmPipeline *pipeline);
     ~DrmOutput() override;
 
-    bool initCursor(const QSize &cursorSize) override;
     bool showCursor() override;
     bool hideCursor() override;
     bool updateCursor() override;
@@ -83,7 +83,7 @@ private:
     DrmPipeline *m_pipeline;
     DrmConnector *m_connector;
 
-    QSharedPointer<DrmDumbBuffer> m_cursor;
+    QSharedPointer<DumbSwapchain> m_cursor;
     QTimer m_turnOffTimer;
 };
 

@@ -66,6 +66,7 @@ public:
      * can be either CLOCK_MONOTONIC or CLOCK_REALTIME.
      */
     clockid_t presentationClock() const;
+    QSize cursorSize() const;
 
     QVector<DrmAbstractOutput*> outputs() const;
     const QVector<DrmPipeline*> pipelines() const;

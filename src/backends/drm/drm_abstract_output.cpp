@@ -20,12 +20,6 @@ DrmAbstractOutput::DrmAbstractOutput(DrmGpu *gpu)
 {
 }
 
-bool DrmAbstractOutput::initCursor(const QSize &cursorSize)
-{
-    Q_UNUSED(cursorSize)
-    return true;
-}
-
 bool DrmAbstractOutput::showCursor()
 {
     return true;

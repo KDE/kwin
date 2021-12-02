@@ -111,7 +111,7 @@ bool DrmPlane::init()
     return success;
 }
 
-DrmPlane::TypeIndex DrmPlane::type()
+DrmPlane::TypeIndex DrmPlane::type() const
 {
     const auto &prop = getProp(PropertyIndex::Type);
     return prop->enumForValue<DrmPlane::TypeIndex>(prop->current());
@@ -165,7 +165,7 @@ void DrmPlane::setBuffer(DrmBuffer *buffer)
 
 bool DrmPlane::needsModeset() const
 {
-    if (!gpu()->atomicModeSetting()) {
+    if (!gpu()->atomicModeSetting() || type() == TypeIndex::Cursor) {
         return false;
     }
     auto rotation = getProp(PropertyIndex::Rotation);

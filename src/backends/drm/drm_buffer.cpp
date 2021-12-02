@@ -31,8 +31,8 @@ DrmBuffer:: DrmBuffer(DrmGpu *gpu, uint32_t format, uint64_t modifier)
 }
 
 // DrmDumbBuffer
-DrmDumbBuffer::DrmDumbBuffer(DrmGpu *gpu, const QSize &size)
-    : DrmBuffer(gpu, DRM_FORMAT_XRGB8888, DRM_FORMAT_MOD_LINEAR)
+DrmDumbBuffer::DrmDumbBuffer(DrmGpu *gpu, const QSize &size, uint32_t drmFormat)
+    : DrmBuffer(gpu, drmFormat, DRM_FORMAT_MOD_LINEAR)
 {
     m_size = size;
     drm_mode_create_dumb createArgs;
@@ -47,9 +47,16 @@ DrmDumbBuffer::DrmDumbBuffer(DrmGpu *gpu, const QSize &size)
     m_handle = createArgs.handle;
     m_bufferSize = createArgs.size;
     m_stride = createArgs.pitch;
-    if (drmModeAddFB(m_gpu->fd(), size.width(), size.height(), 24, 32,
-                     m_stride, createArgs.handle, &m_bufferId) != 0) {
-        qCWarning(KWIN_DRM) << "drmModeAddFB failed!" << strerror(errno);
+    uint32_t handles[4] = {m_handle, 0, 0, 0};
+    uint32_t strides[4] = {m_stride, 0, 0, 0};
+    uint32_t offsets[4] = {0, 0, 0, 0};
+    if (drmModeAddFB2(m_gpu->fd(), size.width(), size.height(), drmFormat, handles, strides, offsets, &m_bufferId, 0) != 0) {
+        if (drmModeAddFB(m_gpu->fd(), size.width(), size.height(), 24, 32, m_stride, createArgs.handle, &m_bufferId) != 0) {
+            qCWarning(KWIN_DRM) << "drmModeAddFB2 and drmModeAddFB both failed!" << strerror(errno);
+        } else {
+            qCWarning(KWIN_DRM) << "drmModeAddFB2 failed! Falling back to drmModeAddFB with XRGB8888" << strerror(errno);
+            m_format = DRM_FORMAT_XRGB8888;
+        }
     }
 }
 

@@ -24,6 +24,7 @@
 #include "screens.h"
 #include "session.h"
 #include "waylandoutputconfig.h"
+#include "dumb_swapchain.h"
 // Qt
 #include <QMatrix4x4>
 #include <QCryptographicHash>
@@ -33,6 +34,7 @@
 // drm
 #include <xf86drm.h>
 #include <libdrm/drm_mode.h>
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -74,27 +76,12 @@ DrmOutput::~DrmOutput()
     m_pipeline->setOutput(nullptr);
 }
 
-bool DrmOutput::initCursor(const QSize &cursorSize)
-{
-    m_cursor = QSharedPointer<DrmDumbBuffer>::create(m_gpu, cursorSize);
-    return m_cursor->map(QImage::Format_ARGB32_Premultiplied);
-}
-
 bool DrmOutput::hideCursor()
 {
     if (!isEnabled() || !m_connector->isConnected()) {
         return true;
     }
-    bool visibleBefore = m_pipeline->isCursorVisible();
-    if (m_pipeline->setCursor(nullptr)) {
-        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
-            && visibleBefore) {
-            m_renderLoop->scheduleRepaint();
-        }
-        return true;
-    } else {
-        return false;
-    }
+    return m_pipeline->setCursor(nullptr);
 }
 
 bool DrmOutput::showCursor()
@@ -102,18 +89,8 @@ bool DrmOutput::showCursor()
     if (!isEnabled() || !m_connector->isConnected()) {
         return true;
     }
-    bool visibleBefore = m_pipeline->isCursorVisible();
     const Cursor * const cursor = Cursors::self()->currentCursor();
-    if (m_pipeline->setCursor(m_cursor, logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()) )) {
-        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
-            && !visibleBefore
-            && m_pipeline->isCursorVisible()) {
-            m_renderLoop->scheduleRepaint();
-        }
-        return true;
-    } else {
-        return false;
-    }
+    return m_pipeline->setCursor(m_cursor->currentBuffer(), logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()));
 }
 
 static bool isCursorSpriteCompatible(const QImage *buffer, const QImage *sprite)
@@ -141,7 +118,36 @@ bool DrmOutput::updateCursor()
         hideCursor();
         return true;
     }
-    QImage *c = m_cursor->image();
+    if (m_cursor && m_cursor->isEmpty()) {
+        return false;
+    }
+    const auto plane = m_pipeline->pending.crtc->cursorPlane();
+    if (!m_cursor || (plane && !plane->formats()[m_cursor->drmFormat()].contains(DRM_FORMAT_MOD_LINEAR))) {
+        if (plane) {
+            const auto formatModifiers = plane->formats();
+            const auto formats = formatModifiers.keys();
+            for (uint32_t format : formats) {
+                if (!formatModifiers[format].contains(DRM_FORMAT_MOD_LINEAR)) {
+                    continue;
+                }
+                m_cursor = QSharedPointer<DumbSwapchain>::create(m_gpu, m_gpu->cursorSize(), format, QImage::Format::Format_ARGB32_Premultiplied);
+                if (!m_cursor->isEmpty()) {
+                    break;
+                }
+            }
+            if (!m_cursor || m_cursor->isEmpty()) {
+                return false;
+            }
+        } else {
+            m_cursor = QSharedPointer<DumbSwapchain>::create(m_gpu, m_gpu->cursorSize(), DRM_FORMAT_XRGB8888, QImage::Format::Format_ARGB32_Premultiplied);
+            if (m_cursor->isEmpty()) {
+                return false;
+            }
+        }
+    }
+    m_cursor->releaseBuffer(m_cursor->currentBuffer());
+    m_cursor->acquireBuffer();
+    QImage *c = m_cursor->currentBuffer()->image();
     c->setDevicePixelRatio(scale());
     if (!isCursorSpriteCompatible(c, &cursorImage)) {
         // If the cursor image is too big, fall back to rendering the software cursor.
@@ -153,15 +159,7 @@ bool DrmOutput::updateCursor()
     p.setWorldTransform(logicalToNativeMatrix(cursor->rect(), 1, transform()).toTransform());
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
-    if (m_pipeline->setCursor(m_cursor, logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()) )) {
-        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
-            && m_pipeline->isCursorVisible()) {
-            m_renderLoop->scheduleRepaint();
-        }
-        return true;
-    } else {
-        return false;
-    }
+    return m_pipeline->setCursor(m_cursor->currentBuffer(), logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()));
 }
 
 bool DrmOutput::moveCursor()
@@ -170,23 +168,9 @@ bool DrmOutput::moveCursor()
         return true;
     }
     Cursor *cursor = Cursors::self()->currentCursor();
-    const QMatrix4x4 hotspotMatrix = logicalToNativeMatrix(cursor->rect(), scale(), transform());
     const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(geometry(), scale(), transform());
-
-    QPoint pos = monitorMatrix.map(cursor->pos());
-    pos -= hotspotMatrix.map(cursor->hotspot());
-
-    bool visibleBefore = m_pipeline->isCursorVisible();
-    if (pos != m_pipeline->cursorPos()) {
-        if (!m_pipeline->moveCursor(pos)) {
-            return false;
-        }
-        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
-            && (visibleBefore || m_pipeline->isCursorVisible())) {
-            m_renderLoop->scheduleRepaint();
-        }
-    }
-    return true;
+    const QMatrix4x4 hotspotMatrix = logicalToNativeMatrix(cursor->rect(), scale(), transform());
+    return m_pipeline->moveCursor(monitorMatrix.map(cursor->pos()) - hotspotMatrix.map(cursor->hotspot()));
 }
 
 QVector<AbstractWaylandOutput::Mode> DrmOutput::getModes() const

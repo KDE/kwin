@@ -15,15 +15,16 @@
 namespace KWin
 {
 
-DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size)
+DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat, QImage::Format imageFormat)
     : m_size(size)
+    , m_format(drmFormat)
 {
     for (int i = 0; i < 2; i++) {
-        auto buffer = QSharedPointer<DrmDumbBuffer>::create(gpu, size);
+        auto buffer = QSharedPointer<DrmDumbBuffer>::create(gpu, size, drmFormat);
         if (!buffer->bufferId()) {
             break;
         }
-        if (!buffer->map()) {
+        if (!buffer->map(imageFormat)) {
             break;
         }
         buffer->image()->fill(Qt::black);
@@ -63,6 +64,11 @@ void DumbSwapchain::releaseBuffer(QSharedPointer<DrmDumbBuffer> buffer)
             m_slots[i].age++;
         }
     }
+}
+
+uint32_t DumbSwapchain::drmFormat() const
+{
+    return m_format;
 }
 
 }

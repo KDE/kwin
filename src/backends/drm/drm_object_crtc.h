@@ -66,7 +66,6 @@ private:
     QSharedPointer<DrmBuffer> m_nextBuffer;
     int m_pipeIndex;
     DrmPlane *m_primaryPlane;
-    // currently unused but needs to be filtered out for modesets
     DrmPlane *m_cursorPlane;
 
     struct {

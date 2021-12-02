@@ -70,9 +70,6 @@ public:
     bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot = QPoint());
     bool moveCursor(QPoint pos);
 
-    bool isCursorVisible() const;
-    QPoint cursorPos() const;
-
     DrmConnector *connector() const;
     DrmCrtc *currentCrtc() const;
     DrmGpu *gpu() const;
@@ -100,6 +97,9 @@ public:
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
         QSharedPointer<DrmGammaRamp> gamma;
         DrmPlane::Transformations transformation = DrmPlane::Transformation::Rotate0;
+
+        QPoint cursorPos;
+        QSharedPointer<DrmDumbBuffer> cursorBo;
     };
     State pending;
 
@@ -116,6 +116,7 @@ private:
     bool presentLegacy();
     bool checkTestBuffer();
     bool activePending() const;
+    bool isCursorVisible() const;
 
     bool applyPendingChangesLegacy();
     bool legacyModeset();

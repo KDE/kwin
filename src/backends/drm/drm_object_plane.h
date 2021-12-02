@@ -66,7 +66,7 @@ public:
     bool init() override;
     bool needsModeset() const override;
     void disable() override;
-    TypeIndex type();
+    TypeIndex type() const;
 
     bool isCrtcSupported(int pipeIndex) const;
     QMap<uint32_t, QVector<uint64_t>> formats() const;

@@ -12,6 +12,7 @@
 #include <QVector>
 #include <QSize>
 #include <QSharedPointer>
+#include <QImage>
 
 namespace KWin
 {
@@ -22,7 +23,7 @@ class DrmGpu;
 class DumbSwapchain
 {
 public:
-    DumbSwapchain(DrmGpu *gpu, const QSize &size);
+    DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat, QImage::Format imageFormat = QImage::Format_RGB32);
 
     QSharedPointer<DrmDumbBuffer> acquireBuffer(int *age = nullptr);
     QSharedPointer<DrmDumbBuffer> currentBuffer() const;
@@ -39,6 +40,7 @@ public:
     bool isEmpty() const {
         return m_slots.isEmpty();
     }
+    uint32_t drmFormat() const;
 
 private:
     struct Slot
@@ -49,6 +51,7 @@ private:
 
     QSize m_size;
     int index = 0;
+    uint32_t m_format;
     QVector<Slot> m_slots;
 };
 
