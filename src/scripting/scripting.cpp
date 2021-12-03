@@ -12,6 +12,7 @@
 #include "scripting.h"
 // own
 #include "dbuscall.h"
+#include "desktopbackgrounditem.h"
 #include "scriptingutils.h"
 #include "workspace_wrapper.h"
 #include "screenedgeitem.h"
@@ -645,6 +646,7 @@ void KWin::Scripting::init()
     qmlRegisterType<ScriptingModels::V2::ClientModelByScreenAndActivity>("org.kde.kwin", 2, 1, "ClientModelByScreenAndActivity");
     qmlRegisterType<ScriptingModels::V2::ClientFilterModel>("org.kde.kwin", 2, 0, "ClientFilterModel");
 
+    qmlRegisterType<DesktopBackgroundItem>("org.kde.kwin", 3, 0, "DesktopBackgroundItem");
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnailItem");
     qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
     qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 3, 0, "ScreenEdgeItem");

@@ -40,30 +40,17 @@ FocusScope {
     Keys.priority: Keys.AfterItem
     Keys.forwardTo: searchField
 
-    Repeater {
-        model: KWinComponents.ClientFilterModel {
-            activity: KWinComponents.Workspace.currentActivity
-            desktop: KWinComponents.Workspace.currentVirtualDesktop
-            screenName: targetScreen.name
-            clientModel: stackModel
-            windowType: KWinComponents.ClientFilterModel.Desktop
-        }
+    KWinComponents.DesktopBackgroundItem {
+        activity: KWinComponents.Workspace.currentActivity
+        desktop: KWinComponents.Workspace.currentVirtualDesktop
+        outputName: targetScreen.name
 
-        KWinComponents.WindowThumbnailItem {
-            id: windowThumbnail
-            wId: model.client.internalId
-            x: model.client.x - targetScreen.geometry.x
-            y: model.client.y - targetScreen.geometry.y
-            width: model.client.width
-            height: model.client.height
+        layer.enabled: effect.blurBackground
+        layer.effect: FastBlur {
+            radius: container.organized ? 64 : 0
 
-            layer.enabled: effect.blurBackground
-            layer.effect: FastBlur {
-                radius: container.organized ? 64 : 0
-
-                Behavior on radius {
-                    NumberAnimation { duration: effect.animationDuration; easing.type: Easing.OutCubic }
-                }
+            Behavior on radius {
+                NumberAnimation { duration: effect.animationDuration; easing.type: Easing.OutCubic }
             }
         }
     }
