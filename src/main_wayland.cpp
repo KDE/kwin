@@ -648,7 +648,7 @@ int main(int argc, char * argv[])
     KWin::WaylandServer *server = KWin::WaylandServer::create(&a);
 
     KWin::WaylandServer::InitializationFlags flags;
-    if (parser.isSet(screenLockerOption)) {
+    if (parser.isSet(screenLockerOption) || a.config()->group("Wayland").readEntry("StartLocked", false)) {
         flags = KWin::WaylandServer::InitializationFlag::LockScreen;
     } else if (parser.isSet(noScreenLockerOption)) {
         flags = KWin::WaylandServer::InitializationFlag::NoLockScreenIntegration;
