@@ -451,7 +451,7 @@ static bool isOverlappingAny(ExpoCell *w, const QHash<ExpoCell *, QRect> &target
 
 void ExpoLayout::calculateWindowTransformationsNatural()
 {
-    QRect area = QRect(0, 0, width(), height());
+    const QRect area = QRect(0, 0, width(), height());
     if (m_cells.count() == 1) {
         // Just move the window to its original location to save time
         ExpoCell *cell = m_cells.constFirst();
@@ -470,7 +470,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
         return a->persistentKey() < b->persistentKey();
     });
 
-    QRect bounds = area;
+    QRect bounds;
     int direction = 0;
     QHash<ExpoCell *, QRect> targets;
     QHash<ExpoCell *, int> directions;
@@ -569,11 +569,10 @@ void ExpoLayout::calculateWindowTransformationsNatural()
         }
     } while (overlap);
 
-    // Work out scaling by getting the most top-left and most bottom-right window coords.
-    // The 20's and 10's are so that the windows don't touch the edge of the screen.
+    // Compute the scale factor so the bounding rect fits the target area.
     qreal scale;
-    if (bounds == area) {
-        scale = 1.0; // Don't add borders to the screen
+    if (bounds.width() <= area.width() && bounds.height() <= area.height()) {
+        scale = 1.0;
     } else if (area.width() / qreal(bounds.width()) < area.height() / qreal(bounds.height())) {
         scale = area.width() / qreal(bounds.width());
     } else {

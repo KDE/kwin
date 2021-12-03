@@ -126,8 +126,8 @@ FocusScope {
                 ExpoCell {
                     id: cell
                     layout: expoLayout
-                    naturalX: thumb.client.x - targetScreen.geometry.x - expoLayout.Kirigami.ScenePosition.x
-                    naturalY: thumb.client.y - targetScreen.geometry.y - expoLayout.Kirigami.ScenePosition.y
+                    naturalX: thumb.client.x
+                    naturalY: thumb.client.y
                     naturalWidth: thumb.client.width
                     naturalHeight: thumb.client.height
                     persistentKey: thumb.client.internalId
