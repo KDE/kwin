@@ -53,7 +53,7 @@
 #include <kconfig.h>
 #include <QMenu>
 #include <QRegularExpression>
-#include <QWidgetAction>
+#include <QAction>
 #include <kauthorized.h>
 
 #include "killwindow.h"
@@ -719,21 +719,17 @@ void UserActionsMenu::activityPopupAboutToShow()
         KActivities::Info activity(id);
         QString name = activity.name();
         name.replace('&', "&&");
-        QWidgetAction *action = new QWidgetAction(m_activityMenu);
-        QCheckBox *box = new QCheckBox(name, m_activityMenu);
-        action->setDefaultWidget(box);
+        auto action = m_activityMenu->addAction(name);
+        action->setCheckable(true);
         const QString icon = activity.icon();
-        if (!icon.isEmpty())
-            box->setIcon(QIcon::fromTheme(icon));
-        box->setBackgroundRole(m_activityMenu->backgroundRole());
-        box->setForegroundRole(m_activityMenu->foregroundRole());
-        box->setPalette(m_activityMenu->palette());
-        connect(box, &QCheckBox::clicked, action, &QAction::triggered);
+        if (!icon.isEmpty()) {
+            action->setIcon(QIcon::fromTheme(icon));
+        }
         m_activityMenu->addAction(action);
         action->setData(id);
 
         if (m_client && !m_client->isOnAllActivities() && m_client->isOnActivity(id)) {
-            box->setChecked(true);
+            action->setChecked(true);
         }
     }
 #endif
@@ -793,14 +789,11 @@ void UserActionsMenu::slotToggleOnActivity(QAction *action)
             // susequent toggling ("off") would move the client to only that activity.
             // bug #330838 -> set all but "on all" off to "force proper usage"
             for (int i = 1; i < m_activityMenu->actions().count(); ++i) {
-                if (QWidgetAction *qwa = qobject_cast<QWidgetAction*>(m_activityMenu->actions().at(i))) {
-                    if (QCheckBox *qcb = qobject_cast<QCheckBox*>(qwa->defaultWidget())) {
-                        qcb->setChecked(false);
-                    }
-                }
+                m_activityMenu->actions().at(i)->setChecked(true);
             }
         }
     }
+
 #else
     Q_UNUSED(action)
 #endif
