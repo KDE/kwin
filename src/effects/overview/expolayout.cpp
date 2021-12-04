@@ -452,17 +452,6 @@ static bool isOverlappingAny(ExpoCell *w, const QHash<ExpoCell *, QRect> &target
 void ExpoLayout::calculateWindowTransformationsNatural()
 {
     const QRect area = QRect(0, 0, width(), height());
-    if (m_cells.count() == 1) {
-        // Just move the window to its original location to save time
-        ExpoCell *cell = m_cells.constFirst();
-        if (area.contains(cell->naturalRect().marginsAdded(cell->margins()))) {
-            cell->setX(cell->naturalX());
-            cell->setY(cell->naturalY());
-            cell->setWidth(cell->naturalWidth());
-            cell->setHeight(cell->naturalHeight());
-            return;
-        }
-    }
 
     // As we are using pseudo-random movement (See "slot") we need to make sure the list
     // is always sorted the same way no matter which window is currently active.
