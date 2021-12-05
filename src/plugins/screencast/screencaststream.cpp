@@ -280,10 +280,10 @@ bool ScreenCastStream::createStream()
     auto canCreateDmaBuf = [this] () -> bool {
         return QSharedPointer<DmaBufTexture>(kwinApp()->platform()->createDmaBufTexture(m_resolution));
     };
-    const auto format = m_source->hasAlphaChannel() || canCreateDmaBuf() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
+    const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
 
     if (canCreateDmaBuf()) {
-      params[0] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, &modifier, 1);
+      params[0] = buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, &modifier, 1);
       params[1] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
       n_params = 2;
     } else {
