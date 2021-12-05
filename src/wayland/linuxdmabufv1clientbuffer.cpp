@@ -25,7 +25,7 @@ static const int s_version = 4;
 LinuxDmaBufV1ClientBufferIntegrationPrivate::LinuxDmaBufV1ClientBufferIntegrationPrivate(LinuxDmaBufV1ClientBufferIntegration *q, Display *display)
     : QtWaylandServer::zwp_linux_dmabuf_v1(*display, s_version)
     , q(q)
-    , defaultFeedback(new LinuxDmaBufV1Feedback(q))
+    , defaultFeedback(new LinuxDmaBufV1Feedback(this))
 {
 }
 
@@ -66,7 +66,7 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_get_surfac
     }
     auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
     if (!surfacePrivate->dmabufFeedbackV1) {
-        surfacePrivate->dmabufFeedbackV1.reset(new LinuxDmaBufV1Feedback(q));
+        surfacePrivate->dmabufFeedbackV1.reset(new LinuxDmaBufV1Feedback(this));
     }
     LinuxDmaBufV1FeedbackPrivate::get(surfacePrivate->dmabufFeedbackV1.data())->add(resource->client(), id, resource->version());
 }
@@ -84,11 +84,6 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_create_par
         return;
     }
     new LinuxDmaBufParamsV1(q, paramsResource);
-}
-
-LinuxDmaBufV1ClientBufferIntegrationPrivate *LinuxDmaBufV1ClientBufferIntegrationPrivate::get(LinuxDmaBufV1ClientBufferIntegration *integration)
-{
-    return integration->d.data();
 }
 
 LinuxDmaBufParamsV1::LinuxDmaBufParamsV1(LinuxDmaBufV1ClientBufferIntegration *integration, ::wl_resource *resource)
@@ -437,8 +432,8 @@ ClientBuffer::Origin LinuxDmaBufV1ClientBuffer::origin() const
     }
 }
 
-LinuxDmaBufV1Feedback::LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegration *integration)
-    : d(new LinuxDmaBufV1FeedbackPrivate(LinuxDmaBufV1ClientBufferIntegrationPrivate::get(integration)))
+LinuxDmaBufV1Feedback::LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegrationPrivate *integration)
+    : d(new LinuxDmaBufV1FeedbackPrivate(integration))
 {
 }
 

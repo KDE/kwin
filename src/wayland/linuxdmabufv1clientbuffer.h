@@ -135,7 +135,7 @@ public:
     void setTranches(const QVector<Tranche> &tranches);
 
 private:
-    LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegration *integration);
+    LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegrationPrivate *integration);
     friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;
     friend class LinuxDmaBufV1FeedbackPrivate;
     QScopedPointer<LinuxDmaBufV1FeedbackPrivate> d;

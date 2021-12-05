@@ -39,8 +39,6 @@ public:
     dev_t mainDevice;
     QHash<uint32_t, QSet<uint64_t>> supportedModifiers;
 
-    static LinuxDmaBufV1ClientBufferIntegrationPrivate *get(LinuxDmaBufV1ClientBufferIntegration *integration);
-
 protected:
     void zwp_linux_dmabuf_v1_bind_resource(Resource *resource) override;
     void zwp_linux_dmabuf_v1_destroy(Resource *resource) override;
