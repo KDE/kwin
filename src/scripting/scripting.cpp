@@ -654,10 +654,10 @@ void KWin::Scripting::init()
     qmlRegisterType<ScriptingModels::V3::ClientFilterModel>("org.kde.kwin", 3, 0, "ClientFilterModel");
     qmlRegisterType<ScriptingModels::V3::VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");
 
-    qmlRegisterSingletonType<QtScriptWorkspaceWrapper>("org.kde.kwin", 3, 0, "Workspace", [](QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
+    qmlRegisterSingletonType<DeclarativeScriptWorkspaceWrapper>("org.kde.kwin", 3, 0, "Workspace", [](QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
         Q_UNUSED(qmlEngine)
         Q_UNUSED(jsEngine)
-        return new QtScriptWorkspaceWrapper();
+        return new DeclarativeScriptWorkspaceWrapper();
     });
 
     qmlRegisterType<KWin::AbstractClient>();
