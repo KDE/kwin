@@ -567,13 +567,9 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
     if (!focusNow || !focusNow->surface() || decoration()) {
         // Clean up focused pointer surface if there's no client to take focus,
         // or the pointer is on a client without surface or on a decoration.
-        warpXcbOnSurfaceLeft(nullptr);
         seat->setFocusedPointerSurface(nullptr);
         return;
     }
-
-    // TODO: add convenient API to update global pos together with updating focused surface
-    warpXcbOnSurfaceLeft(focusNow->surface());
 
     seat->notifyPointerMotion(m_pos.toPoint());
     seat->setFocusedPointerSurface(focusNow->surface(), focusNow->inputTransformation());
@@ -760,35 +756,6 @@ void PointerInputRedirection::updatePointerConstraints()
         m_locked = false;
         disconnectLockedPointerAboutToBeUnboundConnection();
     }
-}
-
-void PointerInputRedirection::warpXcbOnSurfaceLeft(KWaylandServer::SurfaceInterface *newSurface)
-{
-    auto xc = waylandServer()->xWaylandConnection();
-    if (!xc) {
-        // No XWayland, no point in warping the x cursor
-        return;
-    }
-    const auto c = kwinApp()->x11Connection();
-    if (!c) {
-        return;
-    }
-    static bool s_hasXWayland119 = xcb_get_setup(c)->release_number >= 11900000;
-    if (s_hasXWayland119) {
-        return;
-    }
-    if (newSurface && newSurface->client() == xc) {
-        // new window is an X window
-        return;
-    }
-    auto s = waylandServer()->seat()->focusedPointerSurface();
-    if (!s || s->client() != xc) {
-        // pointer was not on an X window
-        return;
-    }
-    // warp pointer to 0/0 to trigger leave events on previously focused X window
-    xcb_warp_pointer(c, XCB_WINDOW_NONE, kwinApp()->x11RootWindow(), 0, 0, 0, 0, 0, 0),
-    xcb_flush(c);
 }
 
 QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) const

@@ -152,7 +152,6 @@ private:
     void updateToReset();
     void updatePosition(const QPointF &pos);
     void updateButton(uint32_t button, InputRedirection::PointerButtonState state);
-    void warpXcbOnSurfaceLeft(KWaylandServer::SurfaceInterface *surface);
     QPointF applyPointerConfinement(const QPointF &pos) const;
     void disconnectConfinedPointerRegionConnection();
     void disconnectLockedPointerAboutToBeUnboundConnection();
