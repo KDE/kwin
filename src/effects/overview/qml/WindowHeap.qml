@@ -5,6 +5,7 @@
 */
 
 import QtQuick 2.12
+import QtGraphicalEffects 1.12
 import org.kde.kirigami 2.12 as Kirigami
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.overview 1.0
@@ -109,6 +110,17 @@ FocusScope {
                     anchors.bottom: thumbSource.bottom
                     anchors.bottomMargin: -height / 4
                     visible: !dragHandler.active
+
+                    layer.enabled: true
+                    layer.effect: DropShadow {
+                        cached: true
+                        horizontalOffset: 0
+                        verticalOffset: 1
+                        color: Qt.rgba(0, 0, 0, 0.3)
+                        radius: Math.round(10 * PlasmaCore.Units.devicePixelRatio)
+                        samples: radius * 2 + 1
+                        spread: 0.35
+                    }
                 }
 
                 PC3.Label {
