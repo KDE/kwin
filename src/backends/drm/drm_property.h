@@ -60,6 +60,9 @@ public:
     void setCurrent(uint64_t value);
     uint64_t current() const;
 
+    uint64_t minValue() const;
+    uint64_t maxValue() const;
+
     void commit();
     void commitPending();
     void rollbackPending();
@@ -86,6 +89,9 @@ private:
     uint64_t m_next = 0;
     // the value currently set for or by the kernel
     uint64_t m_current = 0;
+
+    uint64_t m_minValue = -1;
+    uint64_t m_maxValue = -1;
 
     QMap<uint32_t, uint64_t> m_enumMap;
     QVector<QByteArray> m_enumNames;

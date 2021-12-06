@@ -30,6 +30,11 @@ DrmProperty::DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val,
         m_enumNames = enumNames;
         initEnumMap(prop);
     }
+    if (prop->flags & DRM_MODE_PROP_RANGE) {
+        Q_ASSERT(prop->count_values > 1);
+        m_minValue = prop->values[0];
+        m_maxValue = prop->values[1];
+    }
 }
 
 DrmProperty::~DrmProperty() = default;
@@ -144,6 +149,16 @@ bool DrmProperty::isLegacy() const
 void DrmProperty::setLegacy()
 {
     m_legacy = true;
+}
+
+uint64_t DrmProperty::minValue() const
+{
+    return m_minValue;
+}
+
+uint64_t DrmProperty::maxValue() const
+{
+    return m_maxValue;
 }
 
 }
