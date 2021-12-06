@@ -59,6 +59,36 @@ private:
     friend class LinuxDmaBufParamsV1;
 };
 
+class KWAYLANDSERVER_EXPORT LinuxDmaBufV1Feedback : public QObject
+{
+    Q_OBJECT
+public:
+    ~LinuxDmaBufV1Feedback() override;
+
+    enum class TrancheFlag : uint32_t {
+        Scanout = 1,
+    };
+    Q_DECLARE_FLAGS(TrancheFlags, TrancheFlag)
+
+    struct Tranche {
+        dev_t device;
+        TrancheFlags flags;
+        QHash<uint32_t, QSet<uint64_t>> formatTable;
+    };
+    /**
+     * Sets the list of tranches for this feedback object, with lower indices
+     * indicating a higher priority / a more optimal configuration.
+     * The main device does not need to be included
+     */
+    void setTranches(const QVector<Tranche> &tranches);
+
+private:
+    LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegrationPrivate *integration);
+    friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;
+    friend class LinuxDmaBufV1FeedbackPrivate;
+    QScopedPointer<LinuxDmaBufV1FeedbackPrivate> d;
+};
+
 /**
  * The LinuxDmaBufV1ClientBufferIntegration class provides support for linux dma-buf buffers.
  */
@@ -104,41 +134,11 @@ public:
      */
     void setRendererInterface(RendererInterface *rendererInterface);
 
-    void setSupportedFormatsWithModifiers(dev_t mainDevice, const QHash<uint32_t, QSet<uint64_t>> &set);
+    void setSupportedFormatsWithModifiers(const QVector<LinuxDmaBufV1Feedback::Tranche> &tranches);
 
 private:
     friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;
     QScopedPointer<LinuxDmaBufV1ClientBufferIntegrationPrivate> d;
-};
-
-class KWAYLANDSERVER_EXPORT LinuxDmaBufV1Feedback : public QObject
-{
-    Q_OBJECT
-public:
-    ~LinuxDmaBufV1Feedback() override;
-
-    enum class TrancheFlag : uint32_t {
-        Scanout = 1,
-    };
-    Q_DECLARE_FLAGS(TrancheFlags, TrancheFlag)
-
-    struct Tranche {
-        dev_t device;
-        TrancheFlags flags;
-        QHash<uint32_t, QSet<uint64_t>> formatTable;
-    };
-    /**
-     * Sets the list of tranches for this feedback object, with lower indices
-     * indicating a higher priority / a more optimal configuration.
-     * The main device does not need to be included
-     */
-    void setTranches(const QVector<Tranche> &tranches);
-
-private:
-    LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegrationPrivate *integration);
-    friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;
-    friend class LinuxDmaBufV1FeedbackPrivate;
-    QScopedPointer<LinuxDmaBufV1FeedbackPrivate> d;
 };
 
 } // namespace KWaylandServer

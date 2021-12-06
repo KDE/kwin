@@ -307,17 +307,17 @@ void LinuxDmaBufV1ClientBufferIntegration::setRendererInterface(RendererInterfac
     d->rendererInterface = rendererInterface;
 }
 
-void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(dev_t mainDevice, const QHash<uint32_t, QSet<uint64_t>> &set)
+void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(const QVector<LinuxDmaBufV1Feedback::Tranche> &tranches)
 {
-    if (d->supportedModifiers != set || d->mainDevice != mainDevice) {
+    if (LinuxDmaBufV1FeedbackPrivate::get(d->defaultFeedback.data())->m_tranches != tranches) {
+        QHash<uint32_t, QSet<uint64_t>> set;
+        for (const auto &tranche : tranches) {
+            set.insert(tranche.formatTable);
+        }
         d->supportedModifiers = set;
-        d->mainDevice = mainDevice;
+        d->mainDevice = tranches.first().device;
         d->table.reset(new LinuxDmaBufV1FormatTable(set));
-        LinuxDmaBufV1Feedback::Tranche tranche;
-        tranche.device = mainDevice;
-        tranche.flags = {};
-        tranche.formatTable = set;
-        d->defaultFeedback->setTranches({tranche});
+        d->defaultFeedback->setTranches(tranches);
     }
 }
 
