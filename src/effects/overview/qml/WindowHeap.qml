@@ -169,7 +169,7 @@ FocusScope {
                     enabled: heap.animationEnabled && !dragHandler.active
                     NumberAnimation {
                         duration: effect.animationDuration
-                        easing.type: Easing.InOutCubic
+                        easing.type: Easing.OutCubic
                     }
                 }
 

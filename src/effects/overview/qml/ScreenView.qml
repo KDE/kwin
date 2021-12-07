@@ -59,27 +59,10 @@ FocusScope {
         id: underlay
         anchors.fill: parent
         color: PlasmaCore.ColorScope.backgroundColor
-        state: container.organized ? "active" : "initial"
-
-        states: [
-            State {
-                name: "initial"
-                PropertyChanges {
-                    target: underlay
-                    opacity: 0
-                }
-            },
-            State {
-                name: "active"
-                PropertyChanges {
-                    target: underlay
-                    opacity: 0.75
-                }
-            }
-        ]
+        opacity: container.organized ? 0.75 : 0
 
         Behavior on opacity {
-            OpacityAnimator { duration: effect.animationDuration }
+            OpacityAnimator { duration: effect.animationDuration; easing.type: Easing.OutCubic }
         }
 
         TapHandler {
@@ -100,9 +83,9 @@ FocusScope {
 
         Item {
             id: topBar
-            state: container.organized ? "visible" : "hidden"
             width: parent.width
             height: searchBar.height + desktopBar.height
+            opacity: container.organized ? 1 : 0
 
             Rectangle {
                 id: desktopBar
@@ -141,37 +124,9 @@ FocusScope {
                 }
             }
 
-            states: [
-                State {
-                    name: "hidden"
-                    PropertyChanges {
-                        target: topBar
-                        opacity: 0
-                    }
-                },
-                State {
-                    name: "visible"
-                    PropertyChanges {
-                        target: topBar
-                        opacity: 1
-                    }
-                }
-            ]
-
-            transitions: [
-                Transition {
-                    from: "hidden"; to: "visible"
-                    OpacityAnimator {
-                        duration: effect.animationDuration; easing.type: Easing.OutCubic
-                    }
-                },
-                Transition {
-                    from: "visible"; to: "hidden"
-                    OpacityAnimator {
-                        duration: effect.animationDuration; easing.type: Easing.InCubic
-                    }
-                }
-            ]
+            Behavior on opacity {
+                OpacityAnimator { duration: effect.animationDuration; easing.type: Easing.OutCubic }
+            }
         }
 
         Item {
