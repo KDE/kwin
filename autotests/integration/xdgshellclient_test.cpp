@@ -106,6 +106,7 @@ private Q_SLOTS:
     void testDoubleMaximize();
     void testMaximizeAndChangeDecorationModeAfterInitialCommit();
     void testFullScreenAndChangeDecorationModeAfterInitialCommit();
+    void testChangeDecorationModeAfterInitialCommit();
 };
 
 void TestXdgShellClient::testXdgWindowReactive()
@@ -1885,6 +1886,33 @@ void TestXdgShellClient::testFullScreenAndChangeDecorationModeAfterInitialCommit
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(1280, 1024));
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>(), Test::XdgToplevel::State::Fullscreen);
+}
+
+void TestXdgShellClient::testChangeDecorationModeAfterInitialCommit()
+{
+    // This test verifies that the compositor will respond with a good configure event when
+    // the decoration mode changes after the first surface commit but before the surface is mapped.
+
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), nullptr, Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
+    QSignalSpy decorationConfigureRequestedSpy(decoration.data(), &Test::XdgToplevelDecorationV1::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+    // Perform the initial commit.
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
+    QCOMPARE(decorationConfigureRequestedSpy.last().at(0).value<Test::XdgToplevelDecorationV1::mode>(), Test::XdgToplevelDecorationV1::mode_server_side);
+
+    // Change decoration mode.
+    decoration->set_mode(Test::XdgToplevelDecorationV1::mode_client_side);
+
+    // The configure event should still have 0x0 size.
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
+    QCOMPARE(decorationConfigureRequestedSpy.last().at(0).value<Test::XdgToplevelDecorationV1::mode>(), Test::XdgToplevelDecorationV1::mode_client_side);
 }
 
 WAYLANDTEST_MAIN(TestXdgShellClient)
