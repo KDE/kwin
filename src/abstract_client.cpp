@@ -2337,8 +2337,9 @@ void AbstractClient::createDecoration(const QRect &oldGeometry)
 
 void AbstractClient::destroyDecoration()
 {
+    const QSize clientSize = frameSizeToClientSize(moveResizeGeometry().size());
     setDecoration(nullptr);
-    resize(implicitSize());
+    resize(clientSize);
 }
 
 void AbstractClient::setDecoration(KDecoration2::Decoration *decoration)
