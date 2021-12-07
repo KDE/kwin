@@ -108,19 +108,21 @@ FocusScope {
                     anchors.horizontalCenter: thumbSource.horizontalCenter
                     anchors.bottom: thumbSource.bottom
                     anchors.bottomMargin: -height / 4
+                    opacity: heap.organized ? 1 : 0
                     visible: !dragHandler.active
-                }
 
-                PC3.Label {
-                    id: caption
-                    width: Math.min(implicitWidth, thumbSource.width)
-                    anchors.top: icon.bottom
-                    anchors.horizontalCenter: icon.horizontalCenter
-                    elide: Text.ElideRight
-                    text: thumb.client.caption
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    visible: !dragHandler.active
+                    TweenBehavior on opacity {}
+
+                    PC3.Label {
+                        id: caption
+                        width: Math.min(implicitWidth, thumbSource.width)
+                        anchors.top: parent.bottom
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        elide: Text.ElideRight
+                        text: thumb.client.caption
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
                 }
 
                 ExpoCell {
