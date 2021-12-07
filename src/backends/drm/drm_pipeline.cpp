@@ -100,139 +100,83 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
 {
     Q_ASSERT(!pipelines.isEmpty());
     if (pipelines[0]->gpu()->atomicModeSetting()) {
-        drmModeAtomicReq *req = drmModeAtomicAlloc();
-        if (!req) {
-            qCDebug(KWIN_DRM) << "Failed to allocate drmModeAtomicReq!" << strerror(errno);
-            return false;
-        }
-        uint32_t flags = 0;
-        const auto &failed = [pipelines, req, mode, &flags, unusedObjects](){
-            drmModeAtomicFree(req);
-            printFlags(flags);
-            for (const auto &pipeline : pipelines) {
-                pipeline->printDebugInfo();
-                if (pipeline->m_oldTestBuffer) {
-                    pipeline->m_primaryBuffer = pipeline->m_oldTestBuffer;
-                    pipeline->m_oldTestBuffer = nullptr;
-                }
-                pipeline->m_connector->rollbackPending();
-                if (pipeline->pending.crtc) {
-                    pipeline->pending.crtc->rollbackPending();
-                    pipeline->pending.crtc->primaryPlane()->rollbackPending();
-                    if (pipeline->pending.crtc->cursorPlane()) {
-                        pipeline->pending.crtc->cursorPlane()->rollbackPending();
-                    }
-                }
-            }
-            for (const auto &obj : unusedObjects) {
-                printProps(obj, PrintMode::OnlyChanged);
-                obj->rollbackPending();
-            }
-            return false;
-        };
+        return commitPipelinesAtomic(pipelines, mode, unusedObjects);
+    } else {
+        return commitPipelinesLegacy(pipelines, mode);
+    }
+}
+
+bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects)
+{
+    drmModeAtomicReq *req = drmModeAtomicAlloc();
+    if (!req) {
+        qCDebug(KWIN_DRM) << "Failed to allocate drmModeAtomicReq!" << strerror(errno);
+        return false;
+    }
+    uint32_t flags = 0;
+    const auto &failed = [pipelines, req, &flags, unusedObjects](){
+        drmModeAtomicFree(req);
+        printFlags(flags);
         for (const auto &pipeline : pipelines) {
-            if (!pipeline->checkTestBuffer()) {
-                qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
-                return failed();
-            }
-            if (!pipeline->populateAtomicValues(req, flags)) {
-                qCWarning(KWIN_DRM) << "Populating atomic values failed for" << mode;
-                return failed();
-            }
-        }
-        for (const auto &unused : unusedObjects) {
-            unused->disable();
-            if (unused->needsModeset()) {
-                flags |= DRM_MODE_ATOMIC_ALLOW_MODESET;
-            }
-            if (!unused->atomicPopulate(req)) {
-                qCWarning(KWIN_DRM) << "Populating atomic values failed for unused resource" << unused;
-                return failed();
-            }
-        }
-        bool modeset = flags & DRM_MODE_ATOMIC_ALLOW_MODESET;
-        Q_ASSERT(!modeset || mode != CommitMode::Commit);
-        if (modeset) {
-            // The kernel fails commits with DRM_MODE_PAGE_FLIP_EVENT when a crtc is disabled in the commit
-            // and already was disabled before, to work around some quirks in old userspace.
-            // Instead of using DRM_MODE_PAGE_FLIP_EVENT | DRM_MODE_ATOMIC_NONBLOCK, do the modeset in a blocking
-            // fashion without page flip events and directly call the pageFlipped method afterwards
-            flags = flags & (~DRM_MODE_PAGE_FLIP_EVENT);
-        } else {
-            flags |= DRM_MODE_ATOMIC_NONBLOCK;
-        }
-        if (drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, nullptr) != 0) {
-            qCWarning(KWIN_DRM) << "Atomic test for" << mode << "failed!" << strerror(errno);
-            return failed();
-        }
-        if (mode != CommitMode::Test && drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, flags, nullptr) != 0) {
-            qCWarning(KWIN_DRM) << "Atomic commit failed! This should never happen!" << strerror(errno);
-            return failed();
-        }
-        for (const auto &pipeline : pipelines) {
-            pipeline->m_oldTestBuffer = nullptr;
-            pipeline->m_connector->commitPending();
-            if (pipeline->pending.crtc) {
-                pipeline->pending.crtc->commitPending();
-                pipeline->pending.crtc->primaryPlane()->commitPending();
-                if (pipeline->pending.crtc->cursorPlane()) {
-                    pipeline->pending.crtc->cursorPlane()->commitPending();
-                }
-            }
-            if (mode != CommitMode::Test) {
-                if (pipeline->activePending()) {
-                    pipeline->m_pageflipPending = true;
-                }
-                pipeline->m_connector->commit();
-                if (pipeline->pending.crtc) {
-                    pipeline->pending.crtc->primaryPlane()->setNext(pipeline->m_primaryBuffer);
-                    pipeline->pending.crtc->commit();
-                    pipeline->pending.crtc->primaryPlane()->commit();
-                    if (pipeline->pending.crtc->cursorPlane()) {
-                        pipeline->pending.crtc->cursorPlane()->setNext(pipeline->pending.cursorBo);
-                        pipeline->pending.crtc->cursorPlane()->commit();
-                    }
-                }
-                pipeline->m_current = pipeline->pending;
-                if (modeset && pipeline->activePending()) {
-                    pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
-                }
-            }
+            pipeline->printDebugInfo();
+            pipeline->atomicCommitFailed();
         }
         for (const auto &obj : unusedObjects) {
-            obj->commitPending();
-            if (mode != CommitMode::Test) {
-                obj->commit();
-            }
+            printProps(obj, PrintMode::OnlyChanged);
+            obj->rollbackPending();
         }
-        drmModeAtomicFree(req);
-        return true;
-    } else {
-        bool failure = false;
-        for (const auto &pipeline : pipelines) {
-            if (!pipeline->applyPendingChangesLegacy()) {
-                failure = true;
-                break;
-            }
+        return false;
+    };
+    for (const auto &pipeline : pipelines) {
+        if (!pipeline->checkTestBuffer()) {
+            qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
+            return failed();
         }
-        if (failure) {
-            // at least try to revert the config
-            for (const auto &pipeline : pipelines) {
-                pipeline->revertPendingChanges();
-                pipeline->applyPendingChangesLegacy();
-            }
-            return false;
-        } else {
-            for (const auto &pipeline : pipelines) {
-                pipeline->applyPendingChanges();
-                pipeline->m_current = pipeline->pending;
-                if (mode == CommitMode::CommitModeset && mode != CommitMode::Test && pipeline->activePending()) {
-                    pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
-                }
-            }
-            return true;
+        if (!pipeline->populateAtomicValues(req, flags)) {
+            qCWarning(KWIN_DRM) << "Populating atomic values failed for" << mode;
+            return failed();
         }
     }
+    for (const auto &unused : unusedObjects) {
+        unused->disable();
+        if (unused->needsModeset()) {
+            flags |= DRM_MODE_ATOMIC_ALLOW_MODESET;
+        }
+        if (!unused->atomicPopulate(req)) {
+            qCWarning(KWIN_DRM) << "Populating atomic values failed for unused resource" << unused;
+            return failed();
+        }
+    }
+    bool modeset = flags & DRM_MODE_ATOMIC_ALLOW_MODESET;
+    Q_ASSERT(!modeset || mode != CommitMode::Commit);
+    if (modeset) {
+        // The kernel fails commits with DRM_MODE_PAGE_FLIP_EVENT when a crtc is disabled in the commit
+        // and already was disabled before, to work around some quirks in old userspace.
+        // Instead of using DRM_MODE_PAGE_FLIP_EVENT | DRM_MODE_ATOMIC_NONBLOCK, do the modeset in a blocking
+        // fashion without page flip events and directly call the pageFlipped method afterwards
+        flags = flags & (~DRM_MODE_PAGE_FLIP_EVENT);
+    } else {
+        flags |= DRM_MODE_ATOMIC_NONBLOCK;
+    }
+    if (drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, nullptr) != 0) {
+        qCWarning(KWIN_DRM) << "Atomic test for" << mode << "failed!" << strerror(errno);
+        return failed();
+    }
+    if (mode != CommitMode::Test && drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, flags, nullptr) != 0) {
+        qCWarning(KWIN_DRM) << "Atomic commit failed! This should never happen!" << strerror(errno);
+        return failed();
+    }
+    for (const auto &pipeline : pipelines) {
+        pipeline->atomicCommitSucessful(mode);
+    }
+    for (const auto &obj : unusedObjects) {
+        obj->commitPending();
+        if (mode != CommitMode::Test) {
+            obj->commit();
+        }
+    }
+    drmModeAtomicFree(req);
+    return true;
 }
 
 bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
@@ -274,20 +218,52 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
     return true;
 }
 
-bool DrmPipeline::presentLegacy()
+void DrmPipeline::atomicCommitFailed()
 {
-    if ((!pending.crtc->current() || pending.crtc->current()->needsModeChange(m_primaryBuffer.get())) && !legacyModeset()) {
-        return false;
+    if (m_oldTestBuffer) {
+        m_primaryBuffer = m_oldTestBuffer;
+        m_oldTestBuffer = nullptr;
     }
-    QVector<DrmPipeline*> *userData = new QVector<DrmPipeline*>();
-    *userData << this;
-    if (drmModePageFlip(gpu()->fd(), pending.crtc->id(), m_primaryBuffer ? m_primaryBuffer->bufferId() : 0, DRM_MODE_PAGE_FLIP_EVENT, userData) != 0) {
-        qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno) << m_primaryBuffer;
-        return false;
+    m_connector->rollbackPending();
+    if (pending.crtc) {
+        pending.crtc->rollbackPending();
+        pending.crtc->primaryPlane()->rollbackPending();
+        if (pending.crtc->cursorPlane()) {
+            pending.crtc->cursorPlane()->rollbackPending();
+        }
     }
-    m_pageflipPending = true;
-    pending.crtc->setNext(m_primaryBuffer);
-    return true;
+}
+
+void DrmPipeline::atomicCommitSucessful(CommitMode mode)
+{
+    m_oldTestBuffer = nullptr;
+    m_connector->commitPending();
+    if (pending.crtc) {
+        pending.crtc->commitPending();
+        pending.crtc->primaryPlane()->commitPending();
+        if (pending.crtc->cursorPlane()) {
+            pending.crtc->cursorPlane()->commitPending();
+        }
+    }
+    if (mode != CommitMode::Test) {
+        if (activePending()) {
+            m_pageflipPending = true;
+        }
+        m_connector->commit();
+        if (pending.crtc) {
+            pending.crtc->commit();
+            pending.crtc->primaryPlane()->setNext(m_primaryBuffer);
+            pending.crtc->primaryPlane()->commit();
+            if (pending.crtc->cursorPlane()) {
+                pending.crtc->cursorPlane()->setNext(pending.cursorBo);
+                pending.crtc->cursorPlane()->commit();
+            }
+        }
+        m_current = pending;
+        if (mode == CommitMode::CommitModeset && activePending()) {
+            pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
+        }
+    }
 }
 
 bool DrmPipeline::checkTestBuffer()
@@ -414,59 +390,6 @@ void DrmPipeline::applyPendingChanges()
         pending.active = false;
     }
     m_next = pending;
-}
-
-bool DrmPipeline::applyPendingChangesLegacy()
-{
-    if (!pending.active && pending.crtc) {
-        drmModeSetCursor(gpu()->fd(), pending.crtc->id(), 0, 0, 0);
-    }
-    if (pending.active) {
-        Q_ASSERT(pending.crtc);
-        if (auto vrr = pending.crtc->getProp(DrmCrtc::PropertyIndex::VrrEnabled); vrr && !vrr->setPropertyLegacy(pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive)) {
-            qCWarning(KWIN_DRM) << "Setting vrr failed!" << strerror(errno);
-            return false;
-        }
-        if (const auto &rgbRange = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB)) {
-            rgbRange->setEnumLegacy(pending.rgbRange);
-        }
-        if (needsModeset() &&!legacyModeset()) {
-            return false;
-        }
-        m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setCurrent(DRM_MODE_DPMS_ON);
-        if (pending.gamma && drmModeCrtcSetGamma(gpu()->fd(), pending.crtc->id(), pending.gamma->size(),
-                                                 pending.gamma->red(), pending.gamma->green(), pending.gamma->blue()) != 0) {
-            qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
-            return false;
-        }
-
-        pending.crtc->setLegacyCursor();
-    }
-    if (!m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(pending.active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
-        qCWarning(KWIN_DRM) << "Setting legacy dpms failed!" << strerror(errno);
-        return false;
-    }
-    return true;
-}
-
-bool DrmPipeline::legacyModeset()
-{
-    auto mode = m_connector->modes()[pending.modeIndex];
-    uint32_t connId = m_connector->id();
-    if (!checkTestBuffer() || drmModeSetCrtc(gpu()->fd(), pending.crtc->id(), m_primaryBuffer->bufferId(), 0, 0, &connId, 1, mode->nativeMode()) != 0) {
-        qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
-        pending = m_next;
-        m_primaryBuffer = m_oldTestBuffer;
-        return false;
-    }
-    m_oldTestBuffer = nullptr;
-    // make sure the buffer gets kept alive, or the modeset gets reverted by the kernel
-    if (pending.crtc->current()) {
-        pending.crtc->setNext(m_primaryBuffer);
-    } else {
-        pending.crtc->setCurrent(m_primaryBuffer);
-    }
-    return true;
 }
 
 QSize DrmPipeline::sourceSize() const

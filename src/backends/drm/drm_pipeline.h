@@ -112,7 +112,6 @@ public:
     static bool commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects = {});
 
 private:
-    bool populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);
     bool presentLegacy();
     bool checkTestBuffer();
     bool activePending() const;
@@ -121,9 +120,16 @@ private:
     bool applyPendingChangesLegacy();
     bool legacyModeset();
 
+    bool populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);
+    void atomicCommitFailed();
+    void atomicCommitSucessful(CommitMode mode);
+
     static void printFlags(uint32_t flags);
     enum class PrintMode { OnlyChanged, All };
     static void printProps(DrmObject *object, PrintMode mode);
+
+    static bool commitPipelinesAtomic(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects);
+    static bool commitPipelinesLegacy(const QVector<DrmPipeline*> &pipelines, CommitMode mode);
 
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;
