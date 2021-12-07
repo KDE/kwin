@@ -105,13 +105,35 @@ bool DrmPipeline::applyPendingChangesLegacy()
             qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
             return false;
         }
-        pending.crtc->setLegacyCursor();
+        setCursorLegacy();
+        moveCursorLegacy();
     }
     if (!m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(pending.active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
         qCWarning(KWIN_DRM) << "Setting legacy dpms failed!" << strerror(errno);
         return false;
     }
     return true;
+}
+
+bool DrmPipeline::setCursorLegacy()
+{
+    const QSize &s = pending.cursorBo ? pending.cursorBo->size() : QSize(64, 64);
+    int ret = drmModeSetCursor2(gpu()->fd(), pending.crtc->id(),
+                                pending.cursorBo ? pending.cursorBo->handle() : 0,
+                                s.width(), s.height(),
+                                pending.cursorHotspot.x(), pending.cursorHotspot.y());
+    if (ret == -ENOTSUP) {
+        // for NVIDIA case that does not support drmModeSetCursor2
+        ret = drmModeSetCursor(gpu()->fd(), pending.crtc->id(),
+                               pending.cursorBo ? pending.cursorBo->handle() : 0,
+                               s.width(), s.height());
+    }
+    return true;
+}
+
+bool DrmPipeline::moveCursorLegacy()
+{
+    return drmModeMoveCursor(gpu()->fd(), pending.crtc->id(), pending.cursorPos.x(), pending.cursorPos.y()) != 0;
 }
 
 }

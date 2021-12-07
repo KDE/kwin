@@ -300,7 +300,6 @@ bool DrmGpu::updateOutputs()
     // update crtc properties
     for (const auto &crtc : qAsConst(m_crtcs)) {
         crtc->updateProperties();
-        crtc->setLegacyCursor();
     }
     // update plane properties
     for (const auto &plane : qAsConst(m_planes)) {

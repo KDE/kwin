@@ -99,6 +99,7 @@ public:
         DrmPlane::Transformations transformation = DrmPlane::Transformation::Rotate0;
 
         QPoint cursorPos;
+        QPoint cursorHotspot;
         QSharedPointer<DrmDumbBuffer> cursorBo;
     };
     State pending;
@@ -112,17 +113,19 @@ public:
     static bool commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects = {});
 
 private:
-    bool presentLegacy();
     bool checkTestBuffer();
     bool activePending() const;
     bool isCursorVisible() const;
 
-    bool applyPendingChangesLegacy();
+    bool presentLegacy();
     bool legacyModeset();
+    bool applyPendingChangesLegacy();
+    bool setCursorLegacy();
+    bool moveCursorLegacy();
 
     bool populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);
     void atomicCommitFailed();
-    void atomicCommitSucessful(CommitMode mode);
+    void atomicCommitSuccessful(CommitMode mode);
 
     static void printFlags(uint32_t flags);
     enum class PrintMode { OnlyChanged, All };

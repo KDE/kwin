@@ -93,56 +93,6 @@ int DrmCrtc::gammaRampSize() const
     return m_crtc->gamma_size;
 }
 
-bool DrmCrtc::setLegacyCursor(const QSharedPointer<DrmDumbBuffer> buffer, const QPoint &hotspot)
-{
-    if (m_cursor.bufferDirty || m_cursor.buffer != buffer || m_cursor.hotspot != hotspot) {
-        const QSize &s = buffer ? buffer->size() : QSize(64, 64);
-        int ret = drmModeSetCursor2(gpu()->fd(), id(), buffer ? buffer->handle() : 0, s.width(), s.height(), hotspot.x(), hotspot.y());
-        if (ret == -ENOTSUP) {
-            // for NVIDIA case that does not support drmModeSetCursor2
-            ret = drmModeSetCursor(gpu()->fd(), id(), buffer ? buffer->handle() : 0, s.width(), s.height());
-        }
-        if (ret != 0) {
-            qCWarning(KWIN_DRM) << "Could not set cursor:" << strerror(errno);
-            return false;
-        }
-        m_cursor.buffer = buffer;
-        m_cursor.bufferDirty = false;
-        m_cursor.hotspot = hotspot;
-    }
-    return true;
-}
-
-bool DrmCrtc::moveLegacyCursor(const QPoint &pos)
-{
-    if (m_cursor.posDirty || m_cursor.pos != pos) {
-        if (drmModeMoveCursor(gpu()->fd(), id(), pos.x(), pos.y()) != 0) {
-            return false;
-        }
-        m_cursor.pos = pos;
-        m_cursor.posDirty = false;
-    }
-    return true;
-}
-
-void DrmCrtc::setLegacyCursor()
-{
-    m_cursor.bufferDirty = true;
-    m_cursor.posDirty = true;
-    setLegacyCursor(m_cursor.buffer, m_cursor.hotspot);
-    moveLegacyCursor(m_cursor.pos);
-}
-
-bool DrmCrtc::isCursorVisible(const QRect &output) const
-{
-    return m_cursor.buffer && QRect(m_cursor.pos, m_cursor.buffer->size()).intersects(output);
-}
-
-QPoint DrmCrtc::cursorPos() const
-{
-    return m_cursor.pos;
-}
-
 DrmPlane *DrmCrtc::primaryPlane() const
 {
     return m_primaryPlane;

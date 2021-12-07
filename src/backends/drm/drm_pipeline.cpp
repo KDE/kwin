@@ -167,7 +167,7 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline*> &pipelines, 
         return failed();
     }
     for (const auto &pipeline : pipelines) {
-        pipeline->atomicCommitSucessful(mode);
+        pipeline->atomicCommitSuccessful(mode);
     }
     for (const auto &obj : unusedObjects) {
         obj->commitPending();
@@ -234,7 +234,7 @@ void DrmPipeline::atomicCommitFailed()
     }
 }
 
-void DrmPipeline::atomicCommitSucessful(CommitMode mode)
+void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
 {
     m_oldTestBuffer = nullptr;
     m_connector->commitPending();
@@ -315,50 +315,51 @@ bool DrmPipeline::checkTestBuffer()
 
 bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot)
 {
+    if (pending.cursorBo == buffer && pending.cursorHotspot == hotspot) {
+        return true;
+    }
     bool result;
     const bool visibleBefore = isCursorVisible();
+    pending.cursorBo = buffer;
+    pending.cursorHotspot = hotspot;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (pending.crtc->cursorPlane()) {
-        if (pending.cursorBo == buffer) {
-            return true;
-        }
-        pending.cursorBo = buffer;
         result = commitPipelines({this}, CommitMode::Test);
-        if (result) {
-            m_next = pending;
-        } else {
-            pending = m_next;
+    } else {
+        result = setCursorLegacy();
+    }
+    if (result) {
+        m_next = pending;
+        if (m_output && (visibleBefore || isCursorVisible())) {
+            m_output->renderLoop()->scheduleRepaint();
         }
     } else {
-        result = pending.crtc->setLegacyCursor(buffer, hotspot);
-    }
-    if (result && m_output && (visibleBefore || isCursorVisible())) {
-        m_output->renderLoop()->scheduleRepaint();
+        pending = m_next;
     }
     return result;
 }
 
 bool DrmPipeline::moveCursor(QPoint pos)
 {
+    if (pending.cursorPos == pos) {
+        return true;
+    }
     bool result;
     const bool visibleBefore = isCursorVisible();
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (pending.crtc->cursorPlane()) {
-        if (pending.cursorPos == pos) {
-            return true;
-        }
         pending.cursorPos = pos;
         result = commitPipelines({this}, CommitMode::Test);
-        if (result) {
-            m_next = pending;
-        } else {
-            pending = m_next;
+    } else {
+        result = moveCursorLegacy();
+    }
+    if (result) {
+        m_next = pending;
+        if (m_output && (visibleBefore || isCursorVisible())) {
+            m_output->renderLoop()->scheduleRepaint();
         }
     } else {
-        result = pending.crtc->moveLegacyCursor(pos);
-    }
-    if (result && m_output && (visibleBefore || isCursorVisible())) {
-        m_output->renderLoop()->scheduleRepaint();
+        pending = m_next;
     }
     return result;
 }
@@ -404,11 +405,7 @@ QSize DrmPipeline::sourceSize() const
 bool DrmPipeline::isCursorVisible() const
 {
     const QRect mode = QRect(QPoint(), m_connector->modes()[pending.modeIndex]->size());
-    if (pending.crtc->cursorPlane()) {
-        return pending.cursorBo && QRect(pending.cursorPos, pending.cursorBo->size()).intersects(mode);
-    } else {
-        return pending.crtc->isCursorVisible(mode);
-    }
+    return pending.cursorBo && QRect(pending.cursorPos, pending.cursorBo->size()).intersects(mode);
 }
 
 DrmConnector *DrmPipeline::connector() const
