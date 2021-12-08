@@ -762,10 +762,6 @@ public:
     void processDecorationButtonRelease(QMouseEvent *event);
     bool wantsShadowToBeRendered() const override;
 
-    /**
-     * TODO: fix boolean traps
-     */
-    virtual void updateDecoration(bool check_workspace_pos, bool force = false);
     virtual void invalidateDecoration();
 
     /**

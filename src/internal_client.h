@@ -53,7 +53,6 @@ public:
     AbstractClient *findModal(bool allow_itself = false) override;
     bool takeFocus() override;
     void setNoBorder(bool set) override;
-    void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void invalidateDecoration() override;
     void destroyClient() override;
     bool hasPopupGrab() const override;
@@ -81,6 +80,7 @@ private:
     void markAsMapped();
     void syncGeometryToInternalWindow();
     void updateInternalWindowGeometry();
+    void updateDecoration(bool check_workspace_pos, bool force = false);
 
     QWindow *m_internalWindow = nullptr;
     QString m_captionNormal;

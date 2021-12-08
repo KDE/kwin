@@ -139,7 +139,6 @@ public:
     bool userCanSetNoBorder() const override;
     bool noBorder() const override;
     void setNoBorder(bool set) override;
-    void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void invalidateDecoration() override;
     QString preferredColorScheme() const override;
     bool supportsWindowRules() const override;
@@ -198,6 +197,7 @@ private:
     void sendPing(PingReason reason);
     MaximizeMode initialMaximizeMode() const;
     bool initialFullScreenMode() const;
+    void updateDecoration(bool check_workspace_pos, bool force = false);
 
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
     QPointer<KWaylandServer::ServerSideDecorationPaletteInterface> m_paletteInterface;

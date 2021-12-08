@@ -182,7 +182,6 @@ public:
 
     bool takeFocus() override;
 
-    void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void invalidateDecoration() override;
 
     void updateShape();
@@ -444,6 +443,7 @@ private:
 
     void maybeCreateX11DecorationRenderer();
     void maybeDestroyX11DecorationRenderer();
+    void updateDecoration(bool check_workspace_pos, bool force = false);
 
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
