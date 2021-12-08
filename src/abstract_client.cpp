@@ -2310,27 +2310,8 @@ void AbstractClient::endInteractiveMoveResize()
 
 void AbstractClient::createDecoration(const QRect &oldGeometry)
 {
-    KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
-    if (decoration) {
-        QMetaObject::invokeMethod(decoration, QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
-        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
-        connect(decoration, &KDecoration2::Decoration::bordersChanged,
-                this, &AbstractClient::updateDecorationInputShape);
-        connect(decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged,
-                this, &AbstractClient::updateDecorationInputShape);
-        connect(decoration, &KDecoration2::Decoration::bordersChanged, this, [this]() {
-            GeometryUpdatesBlocker blocker(this);
-            const QRect oldGeometry = frameGeometry();
-            if (!isShade()) {
-                checkWorkspacePosition(oldGeometry);
-            }
-            Q_EMIT geometryShapeChanged(this, oldGeometry);
-        });
-        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
-                this, &AbstractClient::updateDecorationInputShape);
-    }
-    setDecoration(decoration);
-    moveResize(QRect(oldGeometry.topLeft(), clientSizeToFrameSize(clientSize())));
+    setDecoration(Decoration::DecorationBridge::self()->createDecoration(this));
+    moveResize(oldGeometry);
 
     Q_EMIT geometryShapeChanged(this, oldGeometry);
 }
@@ -2344,6 +2325,28 @@ void AbstractClient::destroyDecoration()
 
 void AbstractClient::setDecoration(KDecoration2::Decoration *decoration)
 {
+    if (m_decoration.decoration.data() == decoration) {
+        return;
+    }
+    if (decoration) {
+        QMetaObject::invokeMethod(decoration, QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
+        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
+        connect(decoration, &KDecoration2::Decoration::bordersChanged,
+                this, &AbstractClient::updateDecorationInputShape);
+        connect(decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged,
+                this, &AbstractClient::updateDecorationInputShape);
+        connect(decoration, &KDecoration2::Decoration::bordersChanged, this, [this]() {
+            GeometryUpdatesBlocker blocker(this);
+            const QRect oldGeometry = frameGeometry();
+            resize(implicitSize());
+            if (!isShade()) {
+                checkWorkspacePosition(oldGeometry);
+            }
+            Q_EMIT geometryShapeChanged(this, oldGeometry);
+        });
+        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
+                this, &AbstractClient::updateDecorationInputShape);
+    }
     m_decoration.decoration.reset(decoration);
     updateDecorationInputShape();
     Q_EMIT decorationChanged();

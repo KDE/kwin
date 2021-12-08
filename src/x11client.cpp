@@ -1114,32 +1114,9 @@ void X11Client::createDecoration(const QRect& oldgeom)
 {
     KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
     if (decoration) {
-        QMetaObject::invokeMethod(decoration, QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
-        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
-        connect(decoration, &KDecoration2::Decoration::bordersChanged,
-                this, &X11Client::updateDecorationInputShape);
-        connect(decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged,
-                this, &X11Client::updateDecorationInputShape);
         connect(decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &X11Client::updateInputWindow);
-        connect(decoration, &KDecoration2::Decoration::bordersChanged, this,
-            [this]() {
-                updateFrameExtents();
-                GeometryUpdatesBlocker blocker(this);
-                // TODO: this is obviously idempotent
-                // calculateGravitation(true) would have to operate on the old border sizes
-//                 move(calculateGravitation(true));
-//                 move(calculateGravitation(false));
-                QRect oldgeom = frameGeometry();
-                resize(implicitSize());
-                if (!isShade())
-                    checkWorkspacePosition(oldgeom);
-                Q_EMIT geometryShapeChanged(this, oldgeom);
-            }
-        );
-        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::widthChanged, this, &X11Client::updateInputWindow);
-        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::heightChanged, this, &X11Client::updateInputWindow);
-        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
-                this, &X11Client::updateDecorationInputShape);
+        connect(decoration, &KDecoration2::Decoration::bordersChanged, this, &X11Client::updateFrameExtents);
+        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, &X11Client::updateInputWindow);
     }
     setDecoration(decoration);
 
