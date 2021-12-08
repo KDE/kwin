@@ -659,16 +659,18 @@ void KWin::Scripting::init()
         Q_UNUSED(jsEngine)
         return new DeclarativeScriptWorkspaceWrapper();
     });
+    qmlRegisterSingletonInstance("org.kde.kwin", 3, 0, "Options", options);
 
     qmlRegisterType<KWin::AbstractClient>();
     qmlRegisterType<KWin::VirtualDesktop>();
     qmlRegisterType<KWin::X11Client>();
     qmlRegisterType<QAbstractItemModel>();
 
+    // TODO Plasma 6: Drop context properties.
     m_qmlEngine->rootContext()->setContextProperty(QStringLiteral("workspace"), m_workspaceWrapper);
     m_qmlEngine->rootContext()->setContextProperty(QStringLiteral("options"), options);
-
     m_declarativeScriptSharedContext->setContextProperty(QStringLiteral("workspace"), new DeclarativeScriptWorkspaceWrapper(this));
+
     // QQmlListProperty interfaces only work via properties, rebind them as functions here
     QQmlExpression expr(m_declarativeScriptSharedContext, nullptr, "workspace.clientList = function() { return workspace.clients }");
     expr.evaluate();
