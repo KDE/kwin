@@ -94,6 +94,10 @@ public:
      * @see modeRequested
      */
     ServerSideDecorationManagerInterface::Mode mode() const;
+    /**
+     * Returns the preferred decoration mode as specified by the client.
+     */
+    ServerSideDecorationManagerInterface::Mode preferredMode() const;
 
     /**
      * @returns The SurfaceInterface this ServerSideDecorationInterface references.
@@ -112,10 +116,10 @@ Q_SIGNALS:
      * @see setMode
      * @see mode
      */
-    void modeRequested(KWaylandServer::ServerSideDecorationManagerInterface::Mode);
+    void preferredModeChanged();
 
 private:
-    explicit ServerSideDecorationInterface(SurfaceInterface *surface, wl_resource *resource);
+    explicit ServerSideDecorationInterface(ServerSideDecorationManagerInterface *manager, SurfaceInterface *surface, wl_resource *resource);
     friend class ServerSideDecorationManagerInterfacePrivate;
 
     QScopedPointer<ServerSideDecorationInterfacePrivate> d;

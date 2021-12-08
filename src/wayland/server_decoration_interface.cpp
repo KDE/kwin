@@ -10,6 +10,8 @@
 
 #include <QVector>
 
+#include <optional>
+
 #include <qwayland-server-server-decoration.h>
 
 namespace KWaylandServer
@@ -57,7 +59,7 @@ void ServerSideDecorationManagerInterfacePrivate::org_kde_kwin_server_decoration
         wl_client_post_no_memory(resource->client());
         return;
     }
-    auto decoration = new ServerSideDecorationInterface(s, decorationResource);
+    auto decoration = new ServerSideDecorationInterface(q, s, decorationResource);
     decoration->setMode(defaultMode);
     Q_EMIT q->decorationCreated(decoration);
 }
@@ -105,13 +107,18 @@ ServerSideDecorationManagerInterface::Mode ServerSideDecorationManagerInterface:
 class ServerSideDecorationInterfacePrivate : public QtWaylandServer::org_kde_kwin_server_decoration
 {
 public:
-    ServerSideDecorationInterfacePrivate(ServerSideDecorationInterface *_q, SurfaceInterface *surface, wl_resource *resource);
+    ServerSideDecorationInterfacePrivate(ServerSideDecorationManagerInterface *manager,
+                                         ServerSideDecorationInterface *_q,
+                                         SurfaceInterface *surface,
+                                         wl_resource *resource);
     ~ServerSideDecorationInterfacePrivate();
 
     static ServerSideDecorationInterface *get(SurfaceInterface *surface);
     void setMode(ServerSideDecorationManagerInterface::Mode mode);
 
+    ServerSideDecorationManagerInterface *manager;
     ServerSideDecorationManagerInterface::Mode mode = ServerSideDecorationManagerInterface::Mode::None;
+    std::optional<ServerSideDecorationManagerInterface::Mode> preferredMode;
     SurfaceInterface *surface;
 
 private:
@@ -145,7 +152,8 @@ void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_reques
         qCWarning(KWAYLAND_SERVER) << "Invalid mode:" << mode;
         return;
     }
-    Q_EMIT q->modeRequested(m);
+    preferredMode = m;
+    Q_EMIT q->preferredModeChanged();
 }
 
 void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_release(Resource *resource)
@@ -169,8 +177,12 @@ ServerSideDecorationInterface *ServerSideDecorationInterfacePrivate::get(Surface
     return nullptr;
 }
 
-ServerSideDecorationInterfacePrivate::ServerSideDecorationInterfacePrivate(ServerSideDecorationInterface *_q, SurfaceInterface *surface, wl_resource *resource)
+ServerSideDecorationInterfacePrivate::ServerSideDecorationInterfacePrivate(ServerSideDecorationManagerInterface *manager,
+                                                                           ServerSideDecorationInterface *_q,
+                                                                           SurfaceInterface *surface,
+                                                                           wl_resource *resource)
     : QtWaylandServer::org_kde_kwin_server_decoration(resource)
+    , manager(manager)
     , surface(surface)
     , q(_q)
 {
@@ -188,9 +200,9 @@ void ServerSideDecorationInterfacePrivate::setMode(ServerSideDecorationManagerIn
     send_mode(modeWayland(mode));
 }
 
-ServerSideDecorationInterface::ServerSideDecorationInterface(SurfaceInterface *surface, wl_resource *resource)
+ServerSideDecorationInterface::ServerSideDecorationInterface(ServerSideDecorationManagerInterface *manager, SurfaceInterface *surface, wl_resource *resource)
     : QObject()
-    , d(new ServerSideDecorationInterfacePrivate(this, surface, resource))
+    , d(new ServerSideDecorationInterfacePrivate(manager, this, surface, resource))
 {
 }
 
@@ -204,6 +216,11 @@ void ServerSideDecorationInterface::setMode(ServerSideDecorationManagerInterface
 ServerSideDecorationManagerInterface::Mode ServerSideDecorationInterface::mode() const
 {
     return d->mode;
+}
+
+ServerSideDecorationManagerInterface::Mode ServerSideDecorationInterface::preferredMode() const
+{
+    return d->preferredMode.value_or(d->manager->defaultMode());
 }
 
 SurfaceInterface *ServerSideDecorationInterface::surface() const

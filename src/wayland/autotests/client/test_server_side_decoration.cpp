@@ -244,8 +244,8 @@ void TestServerSideDecoration::testRequest()
 
     auto serverDeco = decorationCreated.first().first().value<ServerSideDecorationInterface *>();
     QVERIFY(serverDeco);
-    QSignalSpy modeSpy(serverDeco, &ServerSideDecorationInterface::modeRequested);
-    QVERIFY(modeSpy.isValid());
+    QSignalSpy preferredModeChangedSpy(serverDeco, &ServerSideDecorationInterface::preferredModeChanged);
+    QVERIFY(preferredModeChangedSpy.isValid());
 
     // after binding the client should get the default mode
     QVERIFY(modeChangedSpy.wait());
@@ -258,10 +258,10 @@ void TestServerSideDecoration::testRequest()
     // mode not yet changed
     QTEST(serverSideDecoration->mode(), "clientMode");
 
-    QVERIFY(modeSpy.wait());
-    QCOMPARE(modeSpy.count(), 1);
+    QVERIFY(preferredModeChangedSpy.wait());
+    QCOMPARE(preferredModeChangedSpy.count(), 1);
     QFETCH(ServerSideDecorationManagerInterface::Mode, serverRequestedMode);
-    QCOMPARE(modeSpy.first().first().value<ServerSideDecorationManagerInterface::Mode>(), serverRequestedMode);
+    QCOMPARE(serverDeco->preferredMode(), serverRequestedMode);
 
     // mode not yet changed
     QCOMPARE(serverDeco->mode(), defaultMode);
