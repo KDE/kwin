@@ -1110,6 +1110,11 @@ void X11Client::updateDecoration(bool check_workspace_pos, bool force)
     updateFrameExtents();
 }
 
+void X11Client::invalidateDecoration()
+{
+    updateDecoration(true, true);
+}
+
 void X11Client::createDecoration(const QRect& oldgeom)
 {
     KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);

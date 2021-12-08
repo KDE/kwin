@@ -814,6 +814,11 @@ void XdgToplevelClient::updateDecoration(bool check_workspace_pos, bool force)
     }
 }
 
+void XdgToplevelClient::invalidateDecoration()
+{
+    updateDecoration(true, true);
+}
+
 bool XdgToplevelClient::supportsWindowRules() const
 {
     return true;

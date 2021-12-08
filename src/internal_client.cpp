@@ -336,6 +336,11 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
     }
 }
 
+void InternalClient::invalidateDecoration()
+{
+    updateDecoration(true, true);
+}
+
 void InternalClient::destroyClient()
 {
     markAsZombie();

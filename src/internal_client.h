@@ -54,6 +54,7 @@ public:
     bool takeFocus() override;
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
+    void invalidateDecoration() override;
     void destroyClient() override;
     bool hasPopupGrab() const override;
     void popupDone() override;
