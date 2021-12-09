@@ -128,12 +128,12 @@ bool DrmPipeline::setCursorLegacy()
                                pending.cursorBo ? pending.cursorBo->handle() : 0,
                                s.width(), s.height());
     }
-    return true;
+    return ret == 0;
 }
 
 bool DrmPipeline::moveCursorLegacy()
 {
-    return drmModeMoveCursor(gpu()->fd(), pending.crtc->id(), pending.cursorPos.x(), pending.cursorPos.y()) != 0;
+    return drmModeMoveCursor(gpu()->fd(), pending.crtc->id(), pending.cursorPos.x(), pending.cursorPos.y()) == 0;
 }
 
 }
