@@ -344,9 +344,9 @@ bool DrmPipeline::moveCursor(QPoint pos)
     if (pending.cursorPos == pos) {
         return true;
     }
-    pending.cursorPos = pos;
-    bool result;
     const bool visibleBefore = isCursorVisible();
+    bool result;
+    pending.cursorPos = pos;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (pending.crtc->cursorPlane()) {
         result = commitPipelines({this}, CommitMode::Test);
