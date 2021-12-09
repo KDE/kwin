@@ -487,12 +487,6 @@ bool WaylandServer::init(InitializationFlags flags)
             if (XdgToplevelClient *client = findXdgToplevelClient(decoration->surface())) {
                 client->installServerDecoration(decoration);
             }
-            connect(decoration, &ServerSideDecorationInterface::modeRequested, this,
-                [decoration] (ServerSideDecorationManagerInterface::Mode mode) {
-                    // always acknowledge the requested mode
-                    decoration->setMode(mode);
-                }
-            );
         }
     );
 

@@ -725,7 +725,7 @@ bool XdgToplevelClient::userCanSetFullScreen() const
 bool XdgToplevelClient::userCanSetNoBorder() const
 {
     if (m_serverDecoration) {
-        switch (m_serverDecoration->mode()) {
+        switch (m_serverDecoration->preferredMode()) {
         case ServerSideDecorationManagerInterface::Mode::Server:
             return !isFullScreen() && !isShade();
         case ServerSideDecorationManagerInterface::Mode::Client:
@@ -748,7 +748,7 @@ bool XdgToplevelClient::userCanSetNoBorder() const
 bool XdgToplevelClient::noBorder() const
 {
     if (m_serverDecoration) {
-        switch (m_serverDecoration->mode()) {
+        switch (m_serverDecoration->preferredMode()) {
         case ServerSideDecorationManagerInterface::Mode::Server:
             return m_userNoBorder || isRequestedFullScreen();
         case ServerSideDecorationManagerInterface::Mode::Client:
@@ -1465,9 +1465,9 @@ void XdgToplevelClient::installServerDecoration(ServerSideDecorationInterface *d
             updateDecoration(/* check_workspace_pos */ true);
         }
     });
-    connect(m_serverDecoration, &ServerSideDecorationInterface::modeRequested, this,
-        [this] (ServerSideDecorationManagerInterface::Mode mode) {
-            const bool changed = mode != m_serverDecoration->mode();
+    connect(m_serverDecoration, &ServerSideDecorationInterface::preferredModeChanged, this,
+        [this] () {
+            const bool changed = m_serverDecoration->preferredMode() != m_serverDecoration->mode();
             if (changed && readyForPainting()) {
                 updateDecoration(/* check_workspace_pos */ true);
             }
