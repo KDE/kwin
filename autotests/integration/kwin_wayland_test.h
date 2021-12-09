@@ -470,14 +470,17 @@ enum class CreationSetup {
 QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface,
                                                                  KWayland::Client::Output *output);
 
-XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr,
-                                      CreationSetup configureMode = CreationSetup::CreateAndConfigure);
+XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr);
+XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface,
+                                      CreationSetup configureMode,
+                                      QObject *parent = nullptr);
 
 XdgPositioner *createXdgPositioner();
 
 XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface,
-                                XdgPositioner *positioner, QObject *parent = nullptr,
-                                CreationSetup configureMode = CreationSetup::CreateAndConfigure);
+                                XdgPositioner *positioner,
+                                CreationSetup configureMode = CreationSetup::CreateAndConfigure,
+                                QObject *parent = nullptr);
 
 XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QObject *parent = nullptr);
 IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface);

@@ -177,7 +177,7 @@ std::tuple<AbstractClient *, KWayland::Client::Surface *, Test::XdgToplevel *> c
 {
     // Create an xdg surface.
     KWayland::Client::Surface *surface = Test::createSurface();
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface, Test::CreationSetup::CreateOnly);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
 
     // Assign the desired app id.
     shellSurface->set_app_id(appId);
@@ -592,7 +592,7 @@ void TestXdgShellClientRules::testSizeDontAffect()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -644,7 +644,7 @@ void TestXdgShellClientRules::testSizeApply()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -737,7 +737,7 @@ void TestXdgShellClientRules::testSizeApply()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -784,7 +784,7 @@ void TestXdgShellClientRules::testSizeRemember()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -877,7 +877,7 @@ void TestXdgShellClientRules::testSizeRemember()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -924,7 +924,7 @@ void TestXdgShellClientRules::testSizeForce()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -969,7 +969,7 @@ void TestXdgShellClientRules::testSizeForce()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -1003,7 +1003,7 @@ void TestXdgShellClientRules::testSizeApplyNow()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1087,7 +1087,7 @@ void TestXdgShellClientRules::testSizeForceTemporarily()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1132,7 +1132,7 @@ void TestXdgShellClientRules::testSizeForceTemporarily()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -1181,7 +1181,7 @@ void TestXdgShellClientRules::testMaximizeDontAffect()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1244,7 +1244,7 @@ void TestXdgShellClientRules::testMaximizeApply()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1304,7 +1304,7 @@ void TestXdgShellClientRules::testMaximizeApply()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -1361,7 +1361,7 @@ void TestXdgShellClientRules::testMaximizeRemember()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1421,7 +1421,7 @@ void TestXdgShellClientRules::testMaximizeRemember()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -1478,7 +1478,7 @@ void TestXdgShellClientRules::testMaximizeForce()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1527,7 +1527,7 @@ void TestXdgShellClientRules::testMaximizeForce()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -1569,7 +1569,7 @@ void TestXdgShellClientRules::testMaximizeApplyNow()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1694,7 +1694,7 @@ void TestXdgShellClientRules::testMaximizeForceTemporarily()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1743,7 +1743,7 @@ void TestXdgShellClientRules::testMaximizeForceTemporarily()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));

@@ -109,7 +109,7 @@ PlaceWindowResult TestPlacement::createAndPlaceWindow(const QSize &defaultSize, 
 
     // create a new window
     auto surface = Test::createSurface(parent);
-    auto shellSurface = Test::createXdgToplevelSurface(surface, surface, Test::CreationSetup::CreateOnly);
+    auto shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
 
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface, &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
@@ -211,7 +211,7 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
     // all windows should be initially fullscreen with an initial configure size sent, despite the policy
     for (int i = 0; i < 4; i++) {
         auto surface = Test::createSurface(testParent.data());
-        auto shellSurface = Test::createXdgToplevelSurface(surface, surface, Test::CreationSetup::CreateOnly);
+        auto shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
         shellSurface->set_fullscreen(nullptr);
         QSignalSpy toplevelConfigureRequestedSpy(shellSurface, &Test::XdgToplevel::configureRequested);
         QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);

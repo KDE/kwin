@@ -389,8 +389,7 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
 
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(
-        Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
 
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);

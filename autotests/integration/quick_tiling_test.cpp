@@ -405,8 +405,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(
-        surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QVERIFY(!shellSurface.isNull());
 
     // wait for the initial configure event
@@ -479,8 +478,7 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QVERIFY(!surface.isNull());
     QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
 
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(
-        surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QVERIFY(!shellSurface.isNull());
 
     // wait for the initial configure event

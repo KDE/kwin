@@ -816,7 +816,12 @@ static void waitForConfigured(XdgSurface *shellSurface)
     shellSurface->ack_configure(surfaceConfigureRequestedSpy.last().first().toUInt());
 }
 
-XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent, CreationSetup configureMode)
+XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent)
+{
+    return createXdgToplevelSurface(surface, CreationSetup::CreateAndConfigure, parent);
+}
+
+XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, CreationSetup configureMode, QObject *parent)
 {
     XdgShell *shell = s_waylandConnection.xdgShell;
 
@@ -848,7 +853,7 @@ XdgPositioner *createXdgPositioner()
 }
 
 XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface, XdgPositioner *positioner,
-                                QObject *parent, CreationSetup configureMode)
+                                CreationSetup configureMode, QObject *parent)
 {
     XdgShell *shell = s_waylandConnection.xdgShell;
 

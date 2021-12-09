@@ -166,7 +166,7 @@ void StrutsTest::testWaylandStruts()
     for (auto it = windowGeometries.constBegin(), end = windowGeometries.constEnd(); it != end; it++) {
         const QRect windowGeometry = *it;
         KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
-        Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface, Test::CreationSetup::CreateOnly);
+        Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
         PlasmaShellSurface *plasmaSurface = m_plasmaShell->createSurface(surface, surface);
         plasmaSurface->setPosition(windowGeometry.topLeft());
         plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
@@ -229,7 +229,7 @@ void StrutsTest::testMoveWaylandPanel()
     using namespace KWayland::Client;
     const QRect windowGeometry(0, 1000, 1280, 24);
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     plasmaSurface->setPosition(windowGeometry.topLeft());
     plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
@@ -281,7 +281,7 @@ void StrutsTest::testWaylandMobilePanel()
     // create first top panel
     const QRect windowGeometry(0, 0, 1280, 60);
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     plasmaSurface->setPosition(windowGeometry.topLeft());
     plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
@@ -309,7 +309,7 @@ void StrutsTest::testWaylandMobilePanel()
     // create another bottom panel
     const QRect windowGeometry2(0, 874, 1280, 150);
     QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data(), surface2.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<PlasmaShellSurface> plasmaSurface2(m_plasmaShell->createSurface(surface2.data()));
     plasmaSurface2->setPosition(windowGeometry2.topLeft());
     plasmaSurface2->setRole(PlasmaShellSurface::Role::Panel);
