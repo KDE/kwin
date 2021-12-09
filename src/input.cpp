@@ -1589,6 +1589,7 @@ public:
             disconnect(m_surface, nullptr, this, nullptr);
         }
         m_surface = surface;
+        m_hotspot = hotspot;
         connect(m_surface, &KWaylandServer::SurfaceInterface::committed, this, &SurfaceCursor::refresh);
 
         refresh();
