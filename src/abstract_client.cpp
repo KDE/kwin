@@ -72,8 +72,6 @@ AbstractClient::AbstractClient()
 
     connect(this, &AbstractClient::paletteChanged, this, &AbstractClient::triggerDecorationRepaint);
 
-    connect(Decoration::DecorationBridge::self(), &QObject::destroyed, this, &AbstractClient::destroyDecoration);
-
     // If the user manually moved the window, don't restore it after the keyboard closes
     connect(this, &AbstractClient::clientFinishUserMovedResized, this, [this] () {
         m_keyboardGeometryRestore = QRect();
@@ -2306,21 +2304,6 @@ void AbstractClient::endInteractiveMoveResize()
         setInteractiveMoveResizePointerMode(mousePosition());
     }
     updateCursor();
-}
-
-void AbstractClient::createDecoration(const QRect &oldGeometry)
-{
-    setDecoration(QSharedPointer<KDecoration2::Decoration>(Decoration::DecorationBridge::self()->createDecoration(this)));
-    moveResize(oldGeometry);
-
-    Q_EMIT geometryShapeChanged(this, oldGeometry);
-}
-
-void AbstractClient::destroyDecoration()
-{
-    const QSize clientSize = frameSizeToClientSize(moveResizeGeometry().size());
-    setDecoration(nullptr);
-    resize(clientSize);
 }
 
 void AbstractClient::setDecoration(QSharedPointer<KDecoration2::Decoration> decoration)

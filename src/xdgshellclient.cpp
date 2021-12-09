@@ -340,7 +340,7 @@ void XdgSurfaceClient::destroyClient()
     Q_EMIT windowClosed(this, deleted);
     StackingUpdatesBlocker blocker(workspace());
     RuleBook::self()->discardUsed(this, true);
-    destroyDecoration();
+    setDecoration(nullptr);
     cleanGrouping();
     waylandServer()->removeClient(this);
     deleted->unrefWindow();

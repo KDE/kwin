@@ -308,6 +308,21 @@ void InternalClient::setNoBorder(bool set)
     updateDecoration(true);
 }
 
+void InternalClient::createDecoration(const QRect &oldGeometry)
+{
+    setDecoration(QSharedPointer<KDecoration2::Decoration>(Decoration::DecorationBridge::self()->createDecoration(this)));
+    moveResize(oldGeometry);
+
+    Q_EMIT geometryShapeChanged(this, oldGeometry);
+}
+
+void InternalClient::destroyDecoration()
+{
+    const QSize clientSize = frameSizeToClientSize(moveResizeGeometry().size());
+    setDecoration(nullptr);
+    resize(clientSize);
+}
+
 void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
 {
     if (!force && isDecorated() == !noBorder()) {

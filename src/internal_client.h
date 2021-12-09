@@ -81,6 +81,8 @@ private:
     void syncGeometryToInternalWindow();
     void updateInternalWindowGeometry();
     void updateDecoration(bool check_workspace_pos, bool force = false);
+    void createDecoration(const QRect &oldGeometry);
+    void destroyDecoration();
 
     QWindow *m_internalWindow = nullptr;
     QString m_captionNormal;

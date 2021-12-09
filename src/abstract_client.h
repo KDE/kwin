@@ -1198,8 +1198,6 @@ protected:
     }
 
     void setDecoration(QSharedPointer<KDecoration2::Decoration> decoration);
-    virtual void createDecoration(const QRect &oldGeometry);
-    virtual void destroyDecoration();
     void startDecorationDoubleClickTimer();
     void invalidateDecorationDoubleClickTimer();
     void updateDecorationInputShape();

@@ -400,7 +400,6 @@ private:
     void establishCommandWindowGrab(uint8_t button);
     void establishCommandAllGrab(uint8_t button);
     void resizeDecoration();
-    void createDecoration(const QRect &oldgeom) override;
 
     void pingWindow();
     void killProcess(bool ask, xcb_timestamp_t timestamp = XCB_TIME_CURRENT_TIME);
@@ -410,7 +409,6 @@ private:
 
     void embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth);
     void detectNoBorder();
-    void destroyDecoration() override;
     void updateFrameExtents();
     void setClientFrameExtents(const NETStrut &strut);
 
@@ -444,6 +442,8 @@ private:
     void maybeCreateX11DecorationRenderer();
     void maybeDestroyX11DecorationRenderer();
     void updateDecoration(bool check_workspace_pos, bool force = false);
+    void createDecoration(const QRect &oldgeom);
+    void destroyDecoration();
 
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
