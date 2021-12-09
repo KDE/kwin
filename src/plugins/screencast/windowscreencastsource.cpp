@@ -27,7 +27,7 @@ WindowScreenCastSource::WindowScreenCastSource(Toplevel *window, QObject *parent
 
 bool WindowScreenCastSource::hasAlphaChannel() const
 {
-    return false;
+    return true;
 }
 
 QSize WindowScreenCastSource::textureSize() const
