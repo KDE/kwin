@@ -321,6 +321,7 @@ void DrmBackend::addOutput(DrmAbstractOutput *o)
         primaryGpu()->removeVirtualOutput(m_placeHolderOutput);
         m_placeHolderOutput = nullptr;
     }
+    checkOutputsAreOn();
 }
 
 void DrmBackend::removeOutput(DrmAbstractOutput *o)
