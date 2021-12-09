@@ -29,7 +29,6 @@ public:
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
-    void reconfigure(ReconfigureFlags flags) override;
     bool isActive() const override;
 
     int requestedEffectChainPosition() const override
