@@ -157,6 +157,7 @@ bool DrmOutput::updateCursor()
     QPainter p;
     p.begin(c);
     p.setWorldTransform(logicalToNativeMatrix(cursor->rect(), 1, transform()).toTransform());
+    p.setRenderHint(QPainter::SmoothPixmapTransform);
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
     return m_pipeline->setCursor(m_cursor->currentBuffer(), logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()));

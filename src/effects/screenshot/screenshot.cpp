@@ -390,6 +390,7 @@ void ScreenShotEffect::grabPointerImage(QImage &snapshot, int xOffset, int yOffs
     }
 
     QPainter painter(&snapshot);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
     painter.drawImage(effects->cursorPos() - cursor.hotSpot() - QPoint(xOffset, yOffset), cursor.image());
 }
 
