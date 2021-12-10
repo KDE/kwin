@@ -412,6 +412,11 @@ public:
      */
     void setPrimaryOutput(AbstractOutput *primary);
 
+    /**
+     * Applies the output changes. Default implementation only sets values common between platforms
+     */
+    virtual bool applyOutputChanges(const WaylandOutputConfig &config);
+
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);
@@ -522,11 +527,6 @@ protected:
      */
     virtual void doShowCursor();
     virtual void doSetSoftwareCursor();
-
-    /**
-     * Applies the output changes. Default implementation only sets values common between platforms
-     */
-    virtual bool applyOutputChanges(const WaylandOutputConfig &config);
 
 private:
     void triggerCursorRepaint();
