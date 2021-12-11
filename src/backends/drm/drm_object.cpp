@@ -36,7 +36,7 @@ bool DrmObject::initProps()
     if (!updateProperties()) {
         return false;
     }
-    if (KWIN_DRM().isDebugEnabled() && m_gpu->atomicModeSetting()) {
+    if (KWIN_DRM().isDebugEnabled()) {
         auto debug = QMessageLogger(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, KWIN_DRM().categoryName()).debug().nospace();
         switch(m_objectType) {
         case DRM_MODE_OBJECT_CONNECTOR:
