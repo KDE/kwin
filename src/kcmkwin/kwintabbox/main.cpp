@@ -380,52 +380,6 @@ void KWinTabBoxConfig::configureEffectClicked()
         new LayoutPreview(form->effectComboCurrentData(KWinTabBoxConfigForm::LayoutPath).toString(),
                           form->showDesktopMode(),
                           this);
-    } else {
-        // For builtin effect, display a configuration dialog
-        QPointer<QDialog> configDialog = new QDialog(this);
-        configDialog->setLayout(new QVBoxLayout);
-        configDialog->setWindowTitle(form->effectComboCurrentData(Qt::DisplayRole).toString());
-        QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults, configDialog);
-        connect(buttonBox, &QDialogButtonBox::accepted, configDialog.data(), &QDialog::accept);
-        connect(buttonBox, &QDialogButtonBox::rejected, configDialog.data(), &QDialog::reject);
-
-        const QString name = form->effectComboCurrentData().toString();
-
-        auto filter = [name](const KPluginMetaData &md) -> bool
-        {
-            const QStringList parentComponents = KPluginMetaData::readStringList(md.rawData(), QStringLiteral("X-KDE-ParentComponents"));
-            return parentComponents.contains(name);
-        };
-
-        const QVector<KPluginMetaData> plugins = KPluginMetaData::findPlugins(QStringLiteral("kwin/effects/configs/"), filter);
-
-        if (plugins.isEmpty()) {
-            delete configDialog;
-            return;
-        }
-
-        KCModule *kcm = KPluginFactory::instantiatePlugin<KCModule>(plugins.first(), configDialog).plugin;
-
-        if (!kcm) {
-            delete configDialog;
-            return;
-        }
-
-        connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, kcm, &KCModule::defaults);
-
-        QWidget *showWidget = new QWidget(configDialog);
-        QVBoxLayout *layout = new QVBoxLayout;
-        showWidget->setLayout(layout);
-        layout->addWidget(kcm);
-        configDialog->layout()->addWidget(showWidget);
-        configDialog->layout()->addWidget(buttonBox);
-
-        if (configDialog->exec() == QDialog::Accepted) {
-            kcm->save();
-        } else {
-            kcm->load();
-        }
-        delete configDialog;
     }
 }
 
