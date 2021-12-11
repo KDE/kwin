@@ -86,9 +86,11 @@ void DrmCrtc::setNext(const QSharedPointer<DrmBuffer> &buffer)
 
 int DrmCrtc::gammaRampSize() const
 {
-    // limit atomic gamma ramp to 4096 to work around https://gitlab.freedesktop.org/drm/intel/-/issues/3916
-    if (auto prop = getProp(PropertyIndex::Gamma_LUT_Size); prop && prop->current() <= 4096) {
-        return prop->current();
+    if (gpu()->atomicModeSetting()) {
+        // limit atomic gamma ramp to 4096 to work around https://gitlab.freedesktop.org/drm/intel/-/issues/3916
+        if (auto prop = getProp(PropertyIndex::Gamma_LUT_Size); prop && prop->current() <= 4096) {
+            return prop->current();
+        }
     }
     return m_crtc->gamma_size;
 }
