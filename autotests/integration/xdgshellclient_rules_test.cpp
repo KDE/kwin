@@ -130,6 +130,13 @@ private Q_SLOTS:
     void testInactiveOpacityForce();
     void testInactiveOpacityForceTemporarily();
 
+    void testNoBorderDontAffect();
+    void testNoBorderApply();
+    void testNoBorderRemember();
+    void testNoBorderForce();
+    void testNoBorderApplyNow();
+    void testNoBorderForceTemporarily();
+
     void testMatchAfterNameChange();
 
 private:
@@ -161,7 +168,7 @@ void TestXdgShellClientRules::initTestCase()
 void TestXdgShellClientRules::init()
 {
     VirtualDesktopManager::self()->setCurrent(VirtualDesktopManager::self()->desktops().first());
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgDecorationV1));
 
     workspace()->setActiveOutput(QPoint(640, 512));
 }
@@ -181,14 +188,15 @@ void TestXdgShellClientRules::cleanup()
     QCOMPARE(VirtualDesktopManager::self()->count(), 1u);
 }
 
-std::tuple<AbstractClient *, KWayland::Client::Surface *, Test::XdgToplevel *> createWindow(const QString &appId)
+std::tuple<AbstractClient *, KWayland::Client::Surface *, Test::XdgToplevel *> createWindow(const QString &appId, Test::XdgToplevelDecorationV1::mode decorationMode = Test::XdgToplevelDecorationV1::mode_client_side)
 {
     // Create an xdg surface.
     KWayland::Client::Surface *surface = Test::createSurface();
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
+    Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(shellSurface, shellSurface);
 
-    // Assign the desired app id.
     shellSurface->set_app_id(appId);
+    decoration->set_mode(decorationMode);
 
     // Wait for the initial configure event.
     QSignalSpy configureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
@@ -4114,6 +4122,251 @@ void TestXdgShellClientRules::testInactiveOpacityForceTemporarily()
     workspace()->setActiveClient(nullptr);
     QVERIFY(!client->isActive());
     QCOMPARE(client->opacity(), 1.0);
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testNoBorderDontAffect()
+{
+    // Initialize RuleBook with the test rule.
+    m_config->group("General").writeEntry("count", 1);
+    KConfigGroup group = m_config->group("1");
+    group.writeEntry("noborder", true);
+    group.writeEntry("noborderrule", int(Rules::DontAffect));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // The client should not be affected by the rule.
+    QVERIFY(!client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testNoBorderApply()
+{
+    // Initialize RuleBook with the test rule.
+    m_config->group("General").writeEntry("count", 1);
+    KConfigGroup group = m_config->group("1");
+    group.writeEntry("noborder", true);
+    group.writeEntry("noborderrule", int(Rules::Apply));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // Initially, the client should not be decorated.
+    QVERIFY(client->noBorder());
+    QVERIFY(!client->isDecorated());
+
+    // But you should be able to change "no border" property afterwards.
+    QVERIFY(client->userCanSetNoBorder());
+    client->setNoBorder(false);
+    QVERIFY(!client->noBorder());
+
+    // If one re-opens the client, it should have no border again.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+    QVERIFY(client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testNoBorderRemember()
+{
+    // Initialize RuleBook with the test rule.
+    m_config->group("General").writeEntry("count", 1);
+    KConfigGroup group = m_config->group("1");
+    group.writeEntry("noborder", true);
+    group.writeEntry("noborderrule", int(Rules::Remember));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // Initially, the client should not be decorated.
+    QVERIFY(client->noBorder());
+    QVERIFY(!client->isDecorated());
+
+    // Unset the "no border" property.
+    QVERIFY(client->userCanSetNoBorder());
+    client->setNoBorder(false);
+    QVERIFY(!client->noBorder());
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+
+    // Re-open the client, it should be decorated.
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+    QVERIFY(client->isDecorated());
+    QVERIFY(!client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testNoBorderForce()
+{
+    // Initialize RuleBook with the test rule.
+    m_config->group("General").writeEntry("count", 1);
+    KConfigGroup group = m_config->group("1");
+    group.writeEntry("noborder", true);
+    group.writeEntry("noborderrule", int(Rules::Force));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // The client should not be decorated.
+    QVERIFY(client->noBorder());
+    QVERIFY(!client->isDecorated());
+
+    // And the user should not be able to change the "no border" property.
+    client->setNoBorder(false);
+    QVERIFY(client->noBorder());
+
+    // Reopen the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // The "no border" property should be still forced.
+    QVERIFY(client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testNoBorderApplyNow()
+{
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+    QVERIFY(!client->noBorder());
+
+    // Initialize RuleBook with the test rule.
+    m_config->group("General").writeEntry("count", 1);
+    KConfigGroup group = m_config->group("1");
+    group.writeEntry("noborder", true);
+    group.writeEntry("noborderrule", int(Rules::ApplyNow));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // The "no border" property should be set now.
+    QVERIFY(client->noBorder());
+
+    // One should be still able to change the "no border" property.
+    client->setNoBorder(false);
+    QVERIFY(!client->noBorder());
+
+    // The rule should not be applied again.
+    client->evaluateWindowRules();
+    QVERIFY(!client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testNoBorderForceTemporarily()
+{
+    // Initialize RuleBook with the test rule.
+    m_config->group("General").writeEntry("count", 1);
+    KConfigGroup group = m_config->group("1");
+    group.writeEntry("noborder", true);
+    group.writeEntry("noborderrule", int(Rules::ForceTemporarily));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // The "no border" property should be set.
+    QVERIFY(client->noBorder());
+
+    // And you should not be able to change it.
+    client->setNoBorder(false);
+    QVERIFY(client->noBorder());
+
+    // The rule should be discarded when the client is closed.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+    QVERIFY(!client->noBorder());
+
+    // The "no border" property is no longer forced.
+    client->setNoBorder(true);
+    QVERIFY(client->noBorder());
+    client->setNoBorder(false);
+    QVERIFY(!client->noBorder());
 
     // Destroy the client.
     delete shellSurface;
