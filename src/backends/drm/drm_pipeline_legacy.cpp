@@ -22,9 +22,7 @@ bool DrmPipeline::presentLegacy()
     if ((!pending.crtc->current() || pending.crtc->current()->needsModeChange(m_primaryBuffer.get())) && !legacyModeset()) {
         return false;
     }
-    QVector<DrmPipeline*> *userData = new QVector<DrmPipeline*>();
-    *userData << this;
-    if (drmModePageFlip(gpu()->fd(), pending.crtc->id(), m_primaryBuffer ? m_primaryBuffer->bufferId() : 0, DRM_MODE_PAGE_FLIP_EVENT, userData) != 0) {
+    if (drmModePageFlip(gpu()->fd(), pending.crtc->id(), m_primaryBuffer ? m_primaryBuffer->bufferId() : 0, DRM_MODE_PAGE_FLIP_EVENT, nullptr) != 0) {
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno) << m_primaryBuffer;
         return false;
     }
