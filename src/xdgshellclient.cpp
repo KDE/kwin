@@ -637,7 +637,7 @@ void XdgToplevelClient::updateDecoration(bool check_workspace_pos, bool force)
         scheduleConfigure();
     }
     updateShadow();
-    if (check_workspace_pos) {
+    if (check_workspace_pos && oldFrameGeometry.isValid()) {
         const QRect oldGeometryRestore = geometryRestore();
         setGeometryRestore(frameGeometry());
         checkWorkspacePosition(oldFrameGeometry, oldClientGeometry);
