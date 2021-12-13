@@ -86,7 +86,7 @@ void InputMethodGrabV1::sendModifiers(quint32 serial, quint32 depressed, quint32
 {
     const auto resources = d->resourceMap();
     for (auto r : resources) {
-        d->send_modifiers(r->handle, depressed, latched, locked, group, serial);
+        d->send_modifiers(r->handle, serial, depressed, latched, locked, group);
     }
 }
 
