@@ -57,6 +57,8 @@ public:
     void setPanel(InputPanelV1Client* client);
     void setInputMethodCommand(const QString &path);
 
+    KWaylandServer::InputMethodGrabV1 *keyboardGrab();
+
 Q_SIGNALS:
     void activeChanged(bool active);
     void enabledChanged(bool enabled);
@@ -106,6 +108,7 @@ private:
     quint32 m_serial = 0;
     QPointer<InputPanelV1Client> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;
+    QPointer<KWaylandServer::InputMethodGrabV1> m_keyboardGrab;
 
     QProcess *m_inputMethodProcess = nullptr;
     QTimer m_inputMethodCrashTimer;

@@ -18,6 +18,7 @@
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "inputbackend.h"
+#include "inputmethod.h"
 #include "keyboard_input.h"
 #include "main.h"
 #include "pointer_input.h"
@@ -44,6 +45,7 @@
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KWaylandServer/display.h>
+#include <KWaylandServer/inputmethod_v1_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/surface_interface.h>
@@ -1487,6 +1489,23 @@ public:
     }
 };
 
+class InputKeyboardFilter : public InputEventFilter
+{
+public:
+    bool keyEvent(QKeyEvent *event) override
+    {
+        if (auto keyboardGrab = InputMethod::self()->keyboardGrab()) {
+            if (event->isAutoRepeat()) {
+                return true;
+            }
+            auto newState = event->type() == QEvent::KeyPress ? KWaylandServer::KeyboardKeyState::Pressed : KWaylandServer::KeyboardKeyState::Released;
+            keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->timestamp(), event->nativeScanCode(), newState);
+            return true;
+        }
+        return false;
+    }
+};
+
 /**
  * The remaining default input filter which forwards events to other windows
  */
@@ -2450,6 +2469,7 @@ void InputRedirection::setupInputFilters()
     installInputEventFilter(new DecorationEventFilter);
     installInputEventFilter(new WindowActionInputFilter);
     installInputEventFilter(new InternalWindowEventFilter);
+    installInputEventFilter(new InputKeyboardFilter);
     installInputEventFilter(new ForwardInputFilter);
     installInputEventFilter(new TabletInputFilter);
 }

@@ -630,33 +630,16 @@ bool InputMethod::isActive() const
     return waylandServer()->inputMethod()->context();
 }
 
-class InputKeyboardFilter : public InputEventFilter {
-public:
-    InputKeyboardFilter(KWaylandServer::InputMethodGrabV1 *grab)
-        : m_keyboardGrab(grab)
-    {
-    }
-
-    bool keyEvent(QKeyEvent *event) override {
-        if (event->isAutoRepeat()) {
-            return true;
-        }
-        auto newState = event->type() == QEvent::KeyPress ? KWaylandServer::KeyboardKeyState::Pressed : KWaylandServer::KeyboardKeyState::Released;
-        m_keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->timestamp(), event->nativeScanCode(), newState);
-        return true;
-    }
-    InputMethodGrabV1 *const m_keyboardGrab;
-};
+KWaylandServer::InputMethodGrabV1 *InputMethod::keyboardGrab()
+{
+    return isActive() ? m_keyboardGrab : nullptr;
+}
 
 void InputMethod::installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboardGrab)
 {
     auto xkb = input()->keyboard()->xkb();
-    auto filter = new InputKeyboardFilter(keyboardGrab);
+    m_keyboardGrab = keyboardGrab;
     keyboardGrab->sendKeymap(xkb->keymapContents());
-    input()->prependInputEventFilter(filter);
-    connect(keyboardGrab, &QObject::destroyed, input(), [filter] {
-        input()->uninstallInputEventFilter(filter);
-    });
 }
 
 void InputMethod::updateModifiersMap(const QByteArray &modifiers)
