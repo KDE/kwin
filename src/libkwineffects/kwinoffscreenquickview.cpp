@@ -176,12 +176,15 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
 OffscreenQuickView::~OffscreenQuickView()
 {
     if (d->m_glcontext) {
-        d->m_glcontext->makeCurrent(d->m_offscreenSurface.data());
         // close the view whilst we have an active GL context
-        delete d->m_view;
-        d->m_view = nullptr;
-        d->m_renderControl->invalidate();
+        d->m_glcontext->makeCurrent(d->m_offscreenSurface.data());
     }
+
+    delete d->m_renderControl; // Always delete render control first.
+    d->m_renderControl = nullptr;
+
+    delete d->m_view;
+    d->m_view = nullptr;
 }
 
 bool OffscreenQuickView::automaticRepaint() const
