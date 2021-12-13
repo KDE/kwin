@@ -104,6 +104,8 @@ void InputMethod::init()
             connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged);
             connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
         }
+
+        connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, &InputMethod::forwardModifiers);
     }
 }
 
@@ -484,6 +486,18 @@ void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods
     xkb->updateModifiers(mods_depressed, mods_latched, mods_locked, group);
 }
 
+void InputMethod::forwardModifiers()
+{
+    auto xkb = input()->keyboard()->xkb();
+    if (m_keyboardGrab) {
+        m_keyboardGrab->sendModifiers(waylandServer()->display()->nextSerial(),
+                                      xkb->modifierState().depressed,
+                                      xkb->modifierState().latched,
+                                      xkb->modifierState().locked,
+                                      xkb->currentLayout());
+    }
+}
+
 void InputMethod::adoptInputMethodContext()
 {
     auto inputContext = waylandServer()->inputMethod()->context();
@@ -640,6 +654,7 @@ void InputMethod::installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboar
     auto xkb = input()->keyboard()->xkb();
     m_keyboardGrab = keyboardGrab;
     keyboardGrab->sendKeymap(xkb->keymapContents());
+    forwardModifiers();
 }
 
 void InputMethod::updateModifiersMap(const QByteArray &modifiers)

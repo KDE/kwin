@@ -81,6 +81,11 @@ public:
     quint32 currentLayout() const {
         return m_currentLayout;
     }
+
+    const auto &modifierState() const
+    {
+        return m_modifierState;
+    }
     QString layoutName(xkb_layout_index_t index) const;
     QString layoutName() const;
     QString layoutShortName(int index) const;
@@ -96,6 +101,7 @@ public:
 
 Q_SIGNALS:
     void ledsChanged(const LEDs &leds);
+    void modifierStateChanged();
 
 private:
     void applyEnvironmentRules(xkb_rule_names &);

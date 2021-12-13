@@ -97,6 +97,7 @@ private:
     void updateModifiersMap(const QByteArray &modifiers);
 
     bool touchEventTriggered() const;
+    void forwardModifiers();
 
     struct {
         QString text = QString();
