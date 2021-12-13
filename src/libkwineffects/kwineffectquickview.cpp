@@ -160,13 +160,15 @@ EffectQuickView::EffectQuickView(QObject *parent, QWindow *renderWindow, ExportM
 EffectQuickView::~EffectQuickView()
 {
     if (d->m_glcontext) {
-        d->m_glcontext->makeCurrent(d->m_offscreenSurface.data());
         // close the view whilst we have an active GL context
-        delete d->m_view;
-        d->m_view = nullptr;
-        d->m_renderControl->invalidate();
-        d->m_glcontext->doneCurrent();
+        d->m_glcontext->makeCurrent(d->m_offscreenSurface.data());
     }
+
+    delete d->m_renderControl; // Always delete render control first.
+    d->m_renderControl = nullptr;
+
+    delete d->m_view;
+    d->m_view = nullptr;
 }
 
 bool EffectQuickView::automaticRepaint() const
