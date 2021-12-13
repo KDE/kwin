@@ -206,6 +206,11 @@ KWaylandServer::ClientConnection *WaylandServer::xWaylandConnection() const
     return m_xwaylandConnection;
 }
 
+KWaylandServer::ClientConnection *WaylandServer::inputMethodConnection() const
+{
+    return m_inputMethodServerConnection;
+}
+
 void WaylandServer::registerShellClient(AbstractClient *client)
 {
     if (client->isLockScreen()) {

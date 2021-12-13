@@ -180,9 +180,7 @@ public:
     void initWorkspace();
 
     KWaylandServer::ClientConnection *xWaylandConnection() const;
-    KWaylandServer::ClientConnection *inputMethodConnection() const {
-        return m_inputMethodServerConnection;
-    }
+    KWaylandServer::ClientConnection *inputMethodConnection() const;
     KWaylandServer::ClientConnection *screenLockerClientConnection() const {
         return m_screenLockerClientConnection;
     }
@@ -266,7 +264,7 @@ private:
     QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer*> m_linuxDmabufBuffers;
     QPointer<KWaylandServer::ClientConnection> m_xwaylandConnection;
     KWaylandServer::InputMethodV1Interface *m_inputMethod = nullptr;
-    KWaylandServer::ClientConnection *m_inputMethodServerConnection = nullptr;
+    QPointer<KWaylandServer::ClientConnection> m_inputMethodServerConnection;
     KWaylandServer::ClientConnection *m_screenLockerClientConnection = nullptr;
     KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
     KWaylandServer::KeyStateInterface *m_keyState = nullptr;
