@@ -280,6 +280,8 @@ private:
     int m_capacity = 10;
 };
 
+KWIN_EXPORT QPoint popupOffset(const QRect &anchorRect, const Qt::Edges anchorEdge, const Qt::Edges gravity, const QSize popupSize);
+
 } // namespace
 
 // Must be outside namespace
