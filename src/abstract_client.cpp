@@ -3348,6 +3348,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
         oldClientGeometry = oldGeometry.adjusted(border[Left], border[Top], -border[Right], -border[Bottom]);
     if (isFullScreen()) {
         moveResize(workspace()->clientArea(FullScreenArea, this, fullscreenGeometryRestore().center()));
+        updateGeometryRestoresForFullscreen(kwinApp()->platform()->outputAt(newGeom.center()));
         return;
     }
 
