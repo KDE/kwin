@@ -382,7 +382,8 @@ void DrmPipeline::prepareModeset()
 
     pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
     pending.crtc->primaryPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
-    pending.crtc->cursorPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
+    if (pending.crtc->cursorPlane())
+        pending.crtc->cursorPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
 }
 
 void DrmPipeline::applyPendingChanges()
