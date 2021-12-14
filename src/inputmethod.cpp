@@ -602,9 +602,7 @@ void InputMethod::startInputMethod()
     QProcessEnvironment environment = kwinApp()->processStartupEnvironment();
     environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
     environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
-    environment.remove("DISPLAY");
     environment.remove("WAYLAND_DISPLAY");
-    environment.remove("XAUTHORITY");
 
     m_inputMethodProcess = new Process(this);
     m_inputMethodProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
