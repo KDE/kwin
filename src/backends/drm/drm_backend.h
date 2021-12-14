@@ -48,12 +48,6 @@ public:
 
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
-    QVector<DrmAbstractOutput*> drmOutputs() const {
-        return m_outputs;
-    }
-    QVector<DrmAbstractOutput*> drmEnabledOutputs() const {
-        return m_enabledOutputs;
-    }
 
     void enableOutput(DrmAbstractOutput *output, bool enable);
 

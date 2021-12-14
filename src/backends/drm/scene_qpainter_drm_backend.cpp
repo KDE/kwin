@@ -23,9 +23,9 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu)
     , m_backend(backend)
     , m_gpu(gpu)
 {
-    const auto outputs = m_backend->drmOutputs();
+    const auto outputs = m_backend->enabledOutputs();
     for (auto output: outputs) {
-        initOutput(output);
+        initOutput(static_cast<DrmAbstractOutput*>(output));
     }
     connect(m_gpu, &DrmGpu::outputEnabled, this, &DrmQPainterBackend::initOutput);
     connect(m_gpu, &DrmGpu::outputDisabled, this,
