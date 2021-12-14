@@ -19,13 +19,8 @@ class GbmDmaBuf : public DmaBufTexture
 public:
     ~GbmDmaBuf();
 
-    int fd() const override
-    {
-        return m_fd;
-    }
-    quint32 stride() const override {
-        return gbm_bo_get_stride(m_bo);
-    }
+    int fd() const override;
+    quint32 stride() const override;
 
     static GbmDmaBuf *createBuffer(const QSize &size, gbm_device *device);
 

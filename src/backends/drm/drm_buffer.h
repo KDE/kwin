@@ -25,23 +25,11 @@ public:
 
     virtual bool needsModeChange(DrmBuffer *b) const {Q_UNUSED(b) return false;}
 
-    quint32 bufferId() const {
-        return m_bufferId;
-    }
-
-    const QSize &size() const {
-        return m_size;
-    }
-
-    DrmGpu *gpu() const {
-        return m_gpu;
-    }
-    uint32_t format() const {
-        return m_format;
-    }
-    uint64_t modifier() const {
-        return m_modifier;
-    }
+    quint32 bufferId() const;
+    const QSize &size() const;
+    DrmGpu *gpu() const;
+    uint32_t format() const;
+    uint64_t modifier() const;
 
 protected:
     quint32 m_bufferId = 0;
@@ -60,18 +48,10 @@ public:
     bool needsModeChange(DrmBuffer *b) const override;
 
     bool map(QImage::Format format = QImage::Format_RGB32);
-    quint32 handle() const {
-        return m_handle;
-    }
-    QImage *image() const {
-        return m_image;
-    }
-    void *data() const {
-        return m_memory;
-    }
-    quint32 stride() const {
-        return m_stride;
-    }
+    quint32 handle() const;
+    QImage *image() const;
+    void *data() const;
+    quint32 stride() const;
 
 private:
     quint32 m_handle = 0;

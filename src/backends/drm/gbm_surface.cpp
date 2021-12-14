@@ -116,4 +116,19 @@ QSharedPointer<DrmGbmBuffer> GbmSurface::currentDrmBuffer() const
     return m_currentDrmBuffer;
 }
 
+EGLSurface GbmSurface::eglSurface() const
+{
+    return m_eglSurface;
+}
+
+QSize GbmSurface::size() const
+{
+    return m_size;
+}
+
+bool GbmSurface::isValid() const
+{
+    return m_surface != nullptr && m_eglSurface != EGL_NO_SURFACE;
+}
+
 }

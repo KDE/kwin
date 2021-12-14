@@ -23,11 +23,36 @@
 namespace KWin
 {
 
-DrmBuffer:: DrmBuffer(DrmGpu *gpu, uint32_t format, uint64_t modifier)
+DrmBuffer::DrmBuffer(DrmGpu *gpu, uint32_t format, uint64_t modifier)
     : m_gpu(gpu)
     , m_format(format)
     , m_modifier(modifier)
 {
+}
+
+quint32 DrmBuffer::bufferId() const
+{
+    return m_bufferId;
+}
+
+const QSize &DrmBuffer::size() const
+{
+    return m_size;
+}
+
+DrmGpu *DrmBuffer::gpu() const
+{
+    return m_gpu;
+}
+
+uint32_t DrmBuffer::format() const
+{
+    return m_format;
+}
+
+uint64_t DrmBuffer::modifier() const
+{
+    return m_modifier;
 }
 
 // DrmDumbBuffer
@@ -103,6 +128,26 @@ bool DrmDumbBuffer::map(QImage::Format format)
     m_memory = address;
     m_image = new QImage((uchar*)m_memory, m_size.width(), m_size.height(), m_stride, format);
     return !m_image->isNull();
+}
+
+quint32 DrmDumbBuffer::handle() const
+{
+    return m_handle;
+}
+
+QImage *DrmDumbBuffer::image() const
+{
+    return m_image;
+}
+
+void *DrmDumbBuffer::data() const
+{
+    return m_memory;
+}
+
+quint32 DrmDumbBuffer::stride() const
+{
+    return m_stride;
 }
 
 }

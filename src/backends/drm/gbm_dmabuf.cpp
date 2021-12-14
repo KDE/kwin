@@ -28,8 +28,17 @@ GbmDmaBuf::~GbmDmaBuf()
     gbm_bo_destroy(m_bo);
 }
 
+int GbmDmaBuf::fd() const
+{
+    return m_fd;
+}
 
-KWin::GbmDmaBuf *GbmDmaBuf::createBuffer(const QSize &size, gbm_device *device)
+quint32 GbmDmaBuf::stride() const
+{
+    return gbm_bo_get_stride(m_bo);
+}
+
+GbmDmaBuf *GbmDmaBuf::createBuffer(const QSize &size, gbm_device *device)
 {
     if (!device) {
         return nullptr;

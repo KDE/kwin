@@ -29,17 +29,9 @@ public:
     QSharedPointer<DrmDumbBuffer> currentBuffer() const;
     void releaseBuffer(QSharedPointer<DrmDumbBuffer> buffer);
 
-    qsizetype slotCount() const {
-        return m_slots.count();
-    }
-
-    QSize size() const {
-        return m_size;
-    }
-
-    bool isEmpty() const {
-        return m_slots.isEmpty();
-    }
+    qsizetype slotCount() const;
+    QSize size() const;
+    bool isEmpty() const;
     uint32_t drmFormat() const;
 
 private:

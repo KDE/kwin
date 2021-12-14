@@ -88,6 +88,21 @@ KWaylandServer::ClientBuffer *GbmBuffer::clientBuffer() const
     return m_clientBuffer;
 }
 
+gbm_bo* GbmBuffer::getBo() const
+{
+    return m_bo;
+}
+
+void *GbmBuffer::mappedData() const
+{
+    return m_data;
+}
+
+uint32_t GbmBuffer::stride() const
+{
+    return m_stride;
+}
+
 
 DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
     : DrmBuffer(gpu, gbm_bo_get_format(bo), gbm_bo_get_modifier(bo)), GbmBuffer(surface, bo)
@@ -149,6 +164,20 @@ void DrmGbmBuffer::initialize()
     }
 
     gbm_bo_set_user_data(m_bo, this, nullptr);
+}
+
+bool DrmGbmBuffer::needsModeChange(DrmBuffer *b) const
+{
+    if (DrmGbmBuffer *sb = dynamic_cast<DrmGbmBuffer*>(b)) {
+        return hasBo() != sb->hasBo();
+    } else {
+        return true;
+    }
+}
+
+bool DrmGbmBuffer::hasBo() const
+{
+    return m_bo != nullptr;
 }
 
 }

@@ -36,17 +36,9 @@ public:
     QSharedPointer<GbmBuffer> currentBuffer() const;
     QSharedPointer<DrmGbmBuffer> currentDrmBuffer() const;
 
-    EGLSurface eglSurface() const {
-        return m_eglSurface;
-    }
-
-    QSize size() const {
-        return m_size;
-    }
-
-    bool isValid() const {
-        return m_surface != nullptr && m_eglSurface != EGL_NO_SURFACE;
-    }
+    EGLSurface eglSurface() const;
+    QSize size() const;
+    bool isValid() const;
 
 private:
     gbm_surface *m_surface;

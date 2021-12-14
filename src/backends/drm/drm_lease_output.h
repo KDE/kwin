@@ -35,13 +35,8 @@ public:
     void leased(KWaylandServer::DrmLeaseV1Interface *lease);
     void leaseEnded();
 
-    KWaylandServer::DrmLeaseV1Interface *lease() const {
-        return m_lease;
-    }
-
-    DrmPipeline *pipeline() const {
-        return m_pipeline;
-    }
+    KWaylandServer::DrmLeaseV1Interface *lease() const;
+    DrmPipeline *pipeline() const;
 
 private:
     DrmPipeline *m_pipeline;

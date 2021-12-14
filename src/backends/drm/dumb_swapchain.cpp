@@ -71,4 +71,19 @@ uint32_t DumbSwapchain::drmFormat() const
     return m_format;
 }
 
+qsizetype DumbSwapchain::slotCount() const
+{
+    return m_slots.count();
+}
+
+QSize DumbSwapchain::size() const
+{
+    return m_size;
+}
+
+bool DumbSwapchain::isEmpty() const
+{
+    return m_slots.isEmpty();
+}
+
 }

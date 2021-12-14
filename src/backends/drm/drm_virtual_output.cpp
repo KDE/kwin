@@ -93,4 +93,20 @@ QVector<uint64_t> DrmVirtualOutput::supportedModifiers(uint32_t drmFormat) const
     return {};
 }
 
+int DrmVirtualOutput::gammaRampSize() const
+{
+    return 200;
+}
+
+bool DrmVirtualOutput::setGammaRamp(const GammaRamp &gamma)
+{
+    Q_UNUSED(gamma);
+    return true;
+}
+
+bool DrmVirtualOutput::needsSoftwareTransformation() const
+{
+    return false;
+}
+
 }

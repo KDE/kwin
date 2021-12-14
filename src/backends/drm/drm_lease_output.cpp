@@ -65,4 +65,14 @@ void DrmLeaseOutput::leaseEnded()
     m_lease = nullptr;
 }
 
+KWaylandServer::DrmLeaseV1Interface *DrmLeaseOutput::lease() const
+{
+    return m_lease;
+}
+
+DrmPipeline *DrmLeaseOutput::pipeline() const
+{
+    return m_pipeline;
+}
+
 }
