@@ -62,8 +62,6 @@ public:
     bool present(const QSharedPointer<DrmBuffer> &buffer);
 
     bool needsModeset() const;
-    bool needsCommit() const;
-    void prepareModeset();
     void applyPendingChanges();
     void revertPendingChanges();
 
@@ -117,22 +115,25 @@ private:
     bool activePending() const;
     bool isCursorVisible() const;
 
+    // legacy only
     bool presentLegacy();
     bool legacyModeset();
     bool applyPendingChangesLegacy();
     bool setCursorLegacy();
     bool moveCursorLegacy();
+    static bool commitPipelinesLegacy(const QVector<DrmPipeline*> &pipelines, CommitMode mode);
 
+    // atomic modesetting only
     bool populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);
     void atomicCommitFailed();
     void atomicCommitSuccessful(CommitMode mode);
-
-    static void printFlags(uint32_t flags);
-    enum class PrintMode { OnlyChanged, All };
-    static void printProps(DrmObject *object, PrintMode mode);
-
+    void prepareAtomicModeset();
     static bool commitPipelinesAtomic(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects);
-    static bool commitPipelinesLegacy(const QVector<DrmPipeline*> &pipelines, CommitMode mode);
+
+    // logging helpers
+    enum class PrintMode { OnlyChanged, All };
+    static void printFlags(uint32_t flags);
+    static void printProps(DrmObject *object, PrintMode mode);
 
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;

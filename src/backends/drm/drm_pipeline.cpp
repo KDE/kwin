@@ -182,7 +182,7 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline*> &pipelines, 
 bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
 {
     if (needsModeset()) {
-        prepareModeset();
+        prepareAtomicModeset();
         flags |= DRM_MODE_ATOMIC_ALLOW_MODESET;
     }
     if (activePending()) {
@@ -216,6 +216,29 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
         }
     }
     return true;
+}
+
+void DrmPipeline::prepareAtomicModeset()
+{
+    if (!pending.crtc) {
+        m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, 0);
+        return;
+    }
+    auto mode = m_connector->modes()[pending.modeIndex];
+
+    m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
+    if (const auto &prop = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB)) {
+        prop->setEnum(pending.rgbRange);
+    }
+
+    pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, activePending());
+    pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, activePending() ? mode->blobId() : 0);
+
+    pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
+    pending.crtc->primaryPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
+    if (pending.crtc->cursorPlane()) {
+        pending.crtc->cursorPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
+    }
 }
 
 void DrmPipeline::atomicCommitFailed()
@@ -362,28 +385,6 @@ bool DrmPipeline::moveCursor(QPoint pos)
         pending = m_next;
     }
     return result;
-}
-
-void DrmPipeline::prepareModeset()
-{
-    if (!pending.crtc) {
-        m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, 0);
-        return;
-    }
-    auto mode = m_connector->modes()[pending.modeIndex];
-
-    m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
-    if (const auto &prop = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB)) {
-        prop->setEnum(pending.rgbRange);
-    }
-
-    pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, activePending());
-    pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, activePending() ? mode->blobId() : 0);
-
-    pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
-    pending.crtc->primaryPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
-    if (pending.crtc->cursorPlane())
-        pending.crtc->cursorPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
 }
 
 void DrmPipeline::applyPendingChanges()
