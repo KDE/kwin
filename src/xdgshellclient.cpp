@@ -1367,7 +1367,16 @@ void XdgToplevelClient::initialize()
 
     setupWindowRules(false);
 
-    moveResize(rules()->checkGeometry(frameGeometry(), true));
+    // Move or resize the window only if enforced by a window rule.
+    const QPoint forcedPosition = rules()->checkPosition(invalidPoint, true);
+    if (forcedPosition != invalidPoint) {
+        move(forcedPosition);
+    }
+    const QSize forcedSize = rules()->checkSize(QSize(), true);
+    if (forcedSize.isValid()) {
+        resize(forcedSize);
+    }
+
     maximize(rules()->checkMaximize(initialMaximizeMode(), true));
     setFullScreen(rules()->checkFullScreen(initialFullScreenMode(), true), false);
     setOnActivities(rules()->checkActivity(activities(), true));
