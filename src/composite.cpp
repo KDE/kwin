@@ -371,9 +371,6 @@ void Compositor::startupWithWorkspace()
 
     m_state = State::On;
 
-    // Sets also the 'effects' pointer.
-    kwinApp()->platform()->createEffectsHandler(this, m_scene);
-
     for (X11Client *c : Workspace::self()->clientList()) {
         c->setupCompositing();
     }
@@ -390,6 +387,9 @@ void Compositor::startupWithWorkspace()
             c->setupCompositing();
         }
     }
+
+    // Sets also the 'effects' pointer.
+    kwinApp()->platform()->createEffectsHandler(this, m_scene);
 
     Q_EMIT compositingToggled(true);
 
