@@ -458,6 +458,10 @@ public:
     }
     void setEnabled(bool enabled) override;
 
+    bool isEnabledByDefault() const {
+        return true;
+    }
+
     libinput_device *device() const {
         return m_device;
     }
@@ -541,8 +545,6 @@ Q_SIGNALS:
 private:
     template <typename T>
     void writeEntry(const ConfigKey &key, const T &value);
-    template <typename T, typename Setter>
-    void readEntry(const QByteArray &key, const Setter &s, const T &defaultValue = T());
     libinput_device *m_device;
     bool m_keyboard;
     bool m_alphaNumericKeyboard = false;

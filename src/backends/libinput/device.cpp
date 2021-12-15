@@ -112,83 +112,98 @@ enum class ConfigKey {
     OutputName
 };
 
-struct ConfigData {
-    explicit ConfigData(QByteArray _key, void (Device::*_setter)(bool), bool (Device::*_defaultValue)() const = nullptr)
-        : key(_key)
-    { booleanSetter.setter = _setter; booleanSetter.defaultValue = _defaultValue; }
-
-    explicit ConfigData(QByteArray _key, void (Device::*_setter)(quint32), quint32 (Device::*_defaultValue)() const = nullptr)
-        : key(_key)
-    { quint32Setter.setter = _setter; quint32Setter.defaultValue = _defaultValue; }
-
-    explicit ConfigData(QByteArray _key, void (Device::*_setter)(const QString&), QString (Device::*_defaultValue)() const = nullptr)
-        : key(_key)
-    { stringSetter.setter = _setter; stringSetter.defaultValue = _defaultValue; }
-
-    explicit ConfigData(QByteArray _key, void (Device::*_setter)(qreal), qreal (Device::*_defaultValue)() const = nullptr)
-        : key(_key)
-    { qrealSetter.setter = _setter; qrealSetter.defaultValue = _defaultValue; }
-
-    explicit ConfigData(QByteArray _key, void (Device::*_setter)(Qt::ScreenOrientation), Qt::ScreenOrientation (Device::*_defaultValue)() const = nullptr)
-        : key(_key)
-    {
-        screenOrientationSetter.setter = _setter;
-        screenOrientationSetter.defaultValue = _defaultValue;
-    }
-
-    explicit ConfigData(QByteArray _key, void (Device::*_setter)(const QMatrix4x4 &), QMatrix4x4 (Device::*_defaultValue)() const = nullptr)
-        : key(_key)
-    {
-        qMatrix4x4Setter.setter = _setter, qMatrix4x4Setter.defaultValue = _defaultValue;
-    }
+struct ConfigDataBase {
+    ConfigDataBase(const QByteArray &_key) : key(_key) { }
+    virtual ~ConfigDataBase() = default;
 
     QByteArray key;
-
-    struct {
-        void (Device::*setter)(bool) = nullptr;
-        bool (Device::*defaultValue)() const;
-    } booleanSetter;
-    struct {
-        void (Device::*setter)(quint32) = nullptr;
-        quint32 (Device::*defaultValue)() const;
-    } quint32Setter;
-    struct {
-        void (Device::*setter)(const QString&) = nullptr;
-        QString (Device::*defaultValue)() const;
-    } stringSetter;
-    struct {
-        void (Device::*setter)(qreal) = nullptr;
-        qreal (Device::*defaultValue)() const;
-    } qrealSetter;
-    struct {
-        void (Device::*setter)(Qt::ScreenOrientation) = nullptr;
-        Qt::ScreenOrientation (Device::*defaultValue)() const;
-    } screenOrientationSetter;
-    struct {
-        void (Device::*setter)(const QMatrix4x4 &) = nullptr;
-        QMatrix4x4 (Device::*defaultValue)() const;
-    } qMatrix4x4Setter;
+    virtual void read(Device */*device*/, const KConfigGroup &/*values*/) const = 0;
 };
 
-static const QMap<ConfigKey, ConfigData> s_configData {
-    {ConfigKey::Enabled, ConfigData(QByteArrayLiteral("Enabled"), &Device::setEnabled)},
-    {ConfigKey::LeftHanded, ConfigData(QByteArrayLiteral("LeftHanded"), &Device::setLeftHanded, &Device::leftHandedEnabledByDefault)},
-    {ConfigKey::DisableWhileTyping, ConfigData(QByteArrayLiteral("DisableWhileTyping"), &Device::setDisableWhileTyping, &Device::disableWhileTypingEnabledByDefault)},
-    {ConfigKey::PointerAcceleration, ConfigData(QByteArrayLiteral("PointerAcceleration"), &Device::setPointerAccelerationFromString, &Device::defaultPointerAccelerationToString)},
-    {ConfigKey::PointerAccelerationProfile, ConfigData(QByteArrayLiteral("PointerAccelerationProfile"), &Device::setPointerAccelerationProfileFromInt, &Device::defaultPointerAccelerationProfileToInt)},
-    {ConfigKey::TapToClick, ConfigData(QByteArrayLiteral("TapToClick"), &Device::setTapToClick, &Device::tapToClickEnabledByDefault)},
-    {ConfigKey::TapAndDrag, ConfigData(QByteArrayLiteral("TapAndDrag"), &Device::setTapAndDrag, &Device::tapAndDragEnabledByDefault)},
-    {ConfigKey::TapDragLock, ConfigData(QByteArrayLiteral("TapDragLock"), &Device::setTapDragLock, &Device::tapDragLockEnabledByDefault)},
-    {ConfigKey::MiddleButtonEmulation, ConfigData(QByteArrayLiteral("MiddleButtonEmulation"), &Device::setMiddleEmulation, &Device::middleEmulationEnabledByDefault)},
-    {ConfigKey::LmrTapButtonMap, ConfigData(QByteArrayLiteral("LmrTapButtonMap"), &Device::setLmrTapButtonMap, &Device::lmrTapButtonMapEnabledByDefault)},
-    {ConfigKey::NaturalScroll, ConfigData(QByteArrayLiteral("NaturalScroll"), &Device::setNaturalScroll, &Device::naturalScrollEnabledByDefault)},
-    {ConfigKey::ScrollMethod, ConfigData(QByteArrayLiteral("ScrollMethod"), &Device::activateScrollMethodFromInt, &Device::defaultScrollMethodToInt)},
-    {ConfigKey::ScrollButton, ConfigData(QByteArrayLiteral("ScrollButton"), &Device::setScrollButton, &Device::defaultScrollButton)},
-    {ConfigKey::ClickMethod, ConfigData(QByteArrayLiteral("ClickMethod"), &Device::setClickMethodFromInt, &Device::defaultClickMethodToInt)},
-    {ConfigKey::ScrollFactor, ConfigData(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)},
-    {ConfigKey::Orientation, ConfigData(QByteArrayLiteral("Orientation"), &Device::setOrientation, &Device::defaultOrientation)},
-    {ConfigKey::Calibration, ConfigData(QByteArrayLiteral("CalibrationMatrix"), &Device::setCalibrationMatrix, &Device::defaultCalibrationMatrix)},
-    {ConfigKey::OutputName, ConfigData(QByteArrayLiteral("OutputName"), &Device::setOutputName, &Device::defaultOutputName)}};
+template <typename T>
+struct ConfigData : public ConfigDataBase {
+    using SetterFunction = std::function<void(Device*, const T&)>;
+    using DefaultValueFunction = std::function<T(Device*)>;
+
+    explicit ConfigData(const QByteArray &_key, const SetterFunction &_setter, const DefaultValueFunction &_defaultValue)
+        : ConfigDataBase(_key)
+        , setterFunction(_setter)
+        , defaultValueFunction(_defaultValue)
+    {
+    }
+
+    void read(Device *device, const KConfigGroup &values) const override
+    {
+        if (!setterFunction || !defaultValueFunction) {
+            return;
+        }
+
+        setterFunction(device, values.readEntry(key.constData(), defaultValueFunction(device)));
+    }
+
+    SetterFunction setterFunction;
+    DefaultValueFunction defaultValueFunction;
+};
+
+// Template specializations for some specific config types that can't be handled
+// through plain readEntry.
+//
+// This uses tagged types to avoid specialising the general type since we
+// directly call the getters/setters.
+
+using DeviceOrientation = Qt::ScreenOrientation;
+
+template <>
+struct ConfigData<DeviceOrientation> : public ConfigDataBase {
+    explicit ConfigData() : ConfigDataBase(QByteArrayLiteral("Orientation") ) { }
+
+    void read(Device *device, const KConfigGroup &values) const override
+    {
+        int defaultValue = device->defaultOrientation();
+        device->setOrientation(static_cast<Qt::ScreenOrientation>(values.readEntry(key.constData(), defaultValue)));
+    }
+};
+
+using CalibrationMatrix = QMatrix4x4;
+
+template <>
+struct ConfigData<CalibrationMatrix> : public ConfigDataBase {
+    explicit ConfigData() : ConfigDataBase(QByteArrayLiteral("CalibrationMatrix")) { }
+
+    void read(Device *device, const KConfigGroup &values) const override
+    {
+        if (values.hasKey(key.constData())) {
+            auto list = values.readEntry(key.constData(), QList<float>());
+            if (list.size() == 16) {
+                device->setCalibrationMatrix(QMatrix4x4{list.toVector().constData()});
+                return;
+            }
+        }
+
+        device->setCalibrationMatrix(device->defaultCalibrationMatrix());
+    }
+};
+
+static const QMap<ConfigKey, ConfigDataBase*> s_configData {
+    {ConfigKey::Enabled, new ConfigData<bool>(QByteArrayLiteral("Enabled"), &Device::setEnabled, &Device::isEnabledByDefault)},
+    {ConfigKey::LeftHanded, new ConfigData<bool>(QByteArrayLiteral("LeftHanded"), &Device::setLeftHanded, &Device::leftHandedEnabledByDefault)},
+    {ConfigKey::DisableWhileTyping, new ConfigData<bool>(QByteArrayLiteral("DisableWhileTyping"), &Device::setDisableWhileTyping, &Device::disableWhileTypingEnabledByDefault)},
+    {ConfigKey::PointerAcceleration, new ConfigData<QString>(QByteArrayLiteral("PointerAcceleration"), &Device::setPointerAccelerationFromString, &Device::defaultPointerAccelerationToString)},
+    {ConfigKey::PointerAccelerationProfile, new ConfigData<quint32>(QByteArrayLiteral("PointerAccelerationProfile"), &Device::setPointerAccelerationProfileFromInt, &Device::defaultPointerAccelerationProfileToInt)},
+    {ConfigKey::TapToClick, new ConfigData<bool>(QByteArrayLiteral("TapToClick"), &Device::setTapToClick, &Device::tapToClickEnabledByDefault)},
+    {ConfigKey::TapAndDrag, new ConfigData<bool>(QByteArrayLiteral("TapAndDrag"), &Device::setTapAndDrag, &Device::tapAndDragEnabledByDefault)},
+    {ConfigKey::TapDragLock, new ConfigData<bool>(QByteArrayLiteral("TapDragLock"), &Device::setTapDragLock, &Device::tapDragLockEnabledByDefault)},
+    {ConfigKey::MiddleButtonEmulation, new ConfigData<bool>(QByteArrayLiteral("MiddleButtonEmulation"), &Device::setMiddleEmulation, &Device::middleEmulationEnabledByDefault)},
+    {ConfigKey::LmrTapButtonMap, new ConfigData<bool>(QByteArrayLiteral("LmrTapButtonMap"), &Device::setLmrTapButtonMap, &Device::lmrTapButtonMapEnabledByDefault)},
+    {ConfigKey::NaturalScroll, new ConfigData<bool>(QByteArrayLiteral("NaturalScroll"), &Device::setNaturalScroll, &Device::naturalScrollEnabledByDefault)},
+    {ConfigKey::ScrollMethod, new ConfigData<quint32>(QByteArrayLiteral("ScrollMethod"), &Device::activateScrollMethodFromInt, &Device::defaultScrollMethodToInt)},
+    {ConfigKey::ScrollButton, new ConfigData<quint32>(QByteArrayLiteral("ScrollButton"), &Device::setScrollButton, &Device::defaultScrollButton)},
+    {ConfigKey::ClickMethod, new ConfigData<quint32>(QByteArrayLiteral("ClickMethod"), &Device::setClickMethodFromInt, &Device::defaultClickMethodToInt)},
+    {ConfigKey::ScrollFactor, new ConfigData<qreal>(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)},
+    {ConfigKey::Orientation, new ConfigData<DeviceOrientation>{}},
+    {ConfigKey::Calibration, new ConfigData<CalibrationMatrix>{}},
+    {ConfigKey::OutputName, new ConfigData<QString>(QByteArrayLiteral("OutputName"), &Device::setOutputName, &Device::defaultOutputName)}
+};
 
 namespace {
 QMatrix4x4 getMatrix(libinput_device *device, std::function<int(libinput_device *, float[6])> getter)
@@ -388,18 +403,8 @@ void Device::writeEntry(const ConfigKey &key, const T &value)
     }
     auto it = s_configData.find(key);
     Q_ASSERT(it != s_configData.end());
-    m_config.writeEntry(it.value().key.constData(), value);
+    m_config.writeEntry(it.value()->key.constData(), value);
     m_config.sync();
-}
-
-template <typename T, typename Setter>
-void Device::readEntry(const QByteArray &key, const Setter &s, const T &defaultValue)
-{
-    if (!s.setter) {
-        return;
-    }
-
-    (this->*(s.setter))(m_config.readEntry(key.constData(), s.defaultValue ? (this->*(s.defaultValue))() : defaultValue));
 }
 
 void Device::loadConfiguration()
@@ -407,35 +412,10 @@ void Device::loadConfiguration()
     if (!m_config.isValid()) {
         return;
     }
+
     m_loading = true;
     for (auto it = s_configData.begin(), end = s_configData.end(); it != end; ++it) {
-        const auto key = it.value().key;
-        if (!m_config.hasKey(key.constData())) {
-            continue;
-        }
-        readEntry(key, it.value().booleanSetter, true);
-        readEntry(key, it.value().quint32Setter, 0);
-        readEntry(key, it.value().stringSetter, "");
-        readEntry(key, it.value().qrealSetter, 1.0);
-
-        if (it.value().screenOrientationSetter.setter != nullptr) {
-            auto setter = it.value().screenOrientationSetter;
-            int def = setter.defaultValue ? (this->*(setter.defaultValue))() : Qt::PrimaryOrientation;
-            int orientation = m_config.readEntry(key.constData(), def);
-            (this->*(setter.setter))(static_cast<Qt::ScreenOrientation>(orientation));
-        }
-
-        if (it.value().qMatrix4x4Setter.setter != nullptr) {
-            auto setter = it.value().qMatrix4x4Setter;
-            QList<float> list = m_config.readEntry(key.constData(), QList<float>());
-            QMatrix4x4 matrix;
-            if (list.size() == 16) {
-                matrix = QMatrix4x4(list.toVector().constData());
-            } else if (setter.defaultValue) {
-                matrix = (this->*(setter.defaultValue))();
-            }
-            (this->*(setter.setter))(matrix);
-        }
+        (*it)->read(this, m_config);
     };
 
     m_loading = false;
