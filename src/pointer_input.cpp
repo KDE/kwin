@@ -564,9 +564,7 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
     }
 
     auto seat = waylandServer()->seat();
-    if (!focusNow || !focusNow->surface() || decoration()) {
-        // Clean up focused pointer surface if there's no client to take focus,
-        // or the pointer is on a client without surface or on a decoration.
+    if (!focusNow || !focusNow->surface()) {
         seat->setFocusedPointerSurface(nullptr);
         return;
     }

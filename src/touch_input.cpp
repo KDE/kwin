@@ -95,8 +95,7 @@ void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
     }
 
     auto seat = waylandServer()->seat();
-    if (!focusNow || !focusNow->surface() || decoration()) {
-        // no new surface or internal window or on decoration -> cleanup
+    if (!focusNow || !focusNow->surface()) {
         seat->setFocusedTouchSurface(nullptr);
         return;
     }
