@@ -315,7 +315,7 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_scrollButton(libinput_device_config_scroll_get_button(m_device))
     , m_defaultPointerAcceleration(libinput_device_config_accel_get_default_speed(m_device))
     , m_pointerAcceleration(libinput_device_config_accel_get_speed(m_device))
-    , m_scrollFactor(scrollFactorDefault())
+    , m_scrollFactor(1.0)
     , m_supportedPointerAccelerationProfiles(libinput_device_config_accel_get_profiles(m_device))
     , m_defaultPointerAccelerationProfile(libinput_device_config_accel_get_default_profile(m_device))
     , m_pointerAccelerationProfile(libinput_device_config_accel_get_profile(m_device))
@@ -409,7 +409,7 @@ void Device::writeEntry(const ConfigKey &key, const T &value)
 
 void Device::loadConfiguration()
 {
-    if (!m_config.isValid()) {
+    if (!m_config.isValid() && !m_defaultConfig.isValid()) {
         return;
     }
 

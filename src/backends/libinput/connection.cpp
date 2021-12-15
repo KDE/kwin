@@ -614,6 +614,21 @@ void Connection::applyScreenToDevice(Device *device)
 
 void Connection::applyDeviceConfig(Device *device)
 {
+    KConfigGroup defaults = m_config->group("Libinput").group("Defaults");
+    if (defaults.isValid()) {
+        if (device->isAlphaNumericKeyboard() && defaults.hasGroup("Keyboard")) {
+            defaults = defaults.group("Keyboard");
+        }
+        if (device->isPointer() && defaults.hasGroup("Pointer")) {
+            defaults = defaults.group("Pointer");
+        }
+        if (device->isTouchpad() && defaults.hasGroup("Touchpad")) {
+            defaults = defaults.group("Touchpad");
+        }
+
+        device->setDefaultConfig(defaults);
+    }
+
     // pass configuration to Device
     device->setConfig(m_config->group("Libinput").group(QString::number(device->vendor())).group(QString::number(device->product())).group(device->name()));
     device->loadConfiguration();

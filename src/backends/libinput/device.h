@@ -196,7 +196,7 @@ public:
         return m_tapFingerCount;
     }
     bool tapToClickEnabledByDefault() const {
-        return m_tapToClickEnabledByDefault;
+        return defaultValue("TapToClick", m_tapToClickEnabledByDefault);
     }
     bool isTapToClick() const {
         return m_tapToClick;
@@ -206,14 +206,14 @@ public:
      */
     void setTapToClick(bool set);
     bool tapAndDragEnabledByDefault() const {
-        return m_tapAndDragEnabledByDefault;
+        return defaultValue("TapAndDrag", m_tapAndDragEnabledByDefault);
     }
     bool isTapAndDrag() const {
         return m_tapAndDrag;
     }
     void setTapAndDrag(bool set);
     bool tapDragLockEnabledByDefault() const {
-        return m_tapDragLockEnabledByDefault;
+        return defaultValue("TapDragLock", m_tapDragLockEnabledByDefault);
     }
     bool isTapDragLock() const {
         return m_tapDragLock;
@@ -223,7 +223,7 @@ public:
         return m_supportsDisableWhileTyping;
     }
     bool disableWhileTypingEnabledByDefault() const {
-        return m_disableWhileTypingEnabledByDefault;
+        return defaultValue("DisableWhileTyping", m_disableWhileTypingEnabledByDefault);
     }
     bool supportsPointerAcceleration() const {
         return m_supportsPointerAcceleration;
@@ -256,34 +256,36 @@ public:
         return (m_supportedScrollMethods & LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN);
     }
     bool leftHandedEnabledByDefault() const {
-        return m_leftHandedEnabledByDefault;
+        return defaultValue("LeftHanded", m_leftHandedEnabledByDefault);
     }
     bool middleEmulationEnabledByDefault() const {
-        return m_middleEmulationEnabledByDefault;
+        return defaultValue("MiddleButtonEmulation", m_middleEmulationEnabledByDefault);
     }
     bool naturalScrollEnabledByDefault() const {
-        return m_naturalScrollEnabledByDefault;
+        return defaultValue("NaturalScroll", m_naturalScrollEnabledByDefault);
     }
     enum libinput_config_scroll_method defaultScrollMethod() const {
-        return m_defaultScrollMethod;
+        quint32 defaultScrollMethod = defaultValue("ScrollMethod", static_cast<quint32>(m_defaultScrollMethod));
+        return static_cast<libinput_config_scroll_method>(defaultScrollMethod);
     }
     quint32 defaultScrollMethodToInt() const {
-        return (quint32) m_defaultScrollMethod;
+        return static_cast<quint32>(defaultScrollMethod());
     }
     bool scrollTwoFingerEnabledByDefault() const {
-        return m_defaultScrollMethod == LIBINPUT_CONFIG_SCROLL_2FG;
+        return defaultScrollMethod() == LIBINPUT_CONFIG_SCROLL_2FG;
     }
     bool scrollEdgeEnabledByDefault() const {
-        return m_defaultScrollMethod == LIBINPUT_CONFIG_SCROLL_EDGE;
+        return defaultScrollMethod() == LIBINPUT_CONFIG_SCROLL_EDGE;
     }
     bool scrollOnButtonDownEnabledByDefault() const {
-        return m_defaultScrollMethod == LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN;
+        return defaultScrollMethod() == LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN;
     }
     bool supportsLmrTapButtonMap() const {
         return m_tapFingerCount > 1;
     }
     bool lmrTapButtonMapEnabledByDefault() const {
-        return m_defaultTapButtonMap == LIBINPUT_CONFIG_TAP_MAP_LMR;
+        quint32 lmrButtonMap = defaultValue("LmrTapButtonMap", static_cast<quint32>(m_defaultTapButtonMap));
+        return lmrButtonMap == LIBINPUT_CONFIG_TAP_MAP_LMR;
     }
 
     void setLmrTapButtonMap(bool set);
@@ -330,7 +332,7 @@ public:
     void setScrollButton(quint32 button);
 
     qreal scrollFactorDefault() const {
-        return 1.0;
+        return defaultValue("ScrollFactor", 1.0);
     }
     qreal scrollFactor() const {
         return m_scrollFactor;
@@ -352,6 +354,11 @@ public:
 
     QMatrix4x4 defaultCalibrationMatrix() const
     {
+        auto list = defaultValue("CalibrationMatrix", QList<float>{});
+        if (list.size() == 16) {
+            return QMatrix4x4{list.toVector().constData()};
+        }
+
         return m_defaultCalibrationMatrix;
     }
     QMatrix4x4 calibrationMatrix() const
@@ -362,7 +369,8 @@ public:
 
     Qt::ScreenOrientation defaultOrientation() const
     {
-        return Qt::PrimaryOrientation;
+        quint32 orientation = defaultValue("Orientation", static_cast<quint32>(Qt::PrimaryOrientation));
+        return static_cast<Qt::ScreenOrientation>(orientation);
     }
     Qt::ScreenOrientation orientation() const
     {
@@ -419,13 +427,13 @@ public:
         setPointerAccelerationProfile(true, (libinput_config_accel_profile) profile);
     }
     quint32 defaultPointerAccelerationProfileToInt() const {
-        return (quint32) m_defaultPointerAccelerationProfile;
+        return defaultValue("PointerAccelerationProfile", static_cast<quint32>(m_defaultPointerAccelerationProfile));
     }
     bool supportsClickMethodAreas() const {
         return (m_supportedClickMethods & LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS);
     }
     bool defaultClickMethodAreas() const {
-        return (m_defaultClickMethod == LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS);
+        return (defaultClickMethod() == LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS);
     }
     bool isClickMethodAreas() const {
         return (m_clickMethod == LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS);
@@ -434,7 +442,7 @@ public:
         return (m_supportedClickMethods & LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER);
     }
     bool defaultClickMethodClickfinger() const {
-        return (m_defaultClickMethod == LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER);
+        return (defaultClickMethod() == LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER);
     }
     bool isClickMethodClickfinger() const {
         return (m_clickMethod == LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER);
@@ -449,8 +457,11 @@ public:
     void setClickMethodFromInt(quint32 method) {
         setClickMethod(true, (libinput_config_click_method) method);
     }
+    libinput_config_click_method defaultClickMethod() const {
+        return static_cast<libinput_config_click_method>(defaultClickMethodToInt());
+    }
     quint32 defaultClickMethodToInt() const {
-        return (quint32) m_defaultClickMethod;
+        return defaultValue("ClickMethod", static_cast<quint32>(m_defaultClickMethod));
     }
 
     bool isEnabled() const override {
@@ -459,7 +470,7 @@ public:
     void setEnabled(bool enabled) override;
 
     bool isEnabledByDefault() const {
-        return true;
+        return defaultValue("Enabled", true);
     }
 
     libinput_device *device() const {
@@ -472,6 +483,10 @@ public:
      */
     void setConfig(const KConfigGroup &config) {
         m_config = config;
+    }
+
+    void setDefaultConfig(const KConfigGroup &config) {
+        m_defaultConfig = config;
     }
 
     /**
@@ -545,6 +560,17 @@ Q_SIGNALS:
 private:
     template <typename T>
     void writeEntry(const ConfigKey &key, const T &value);
+
+    template <typename T>
+    T defaultValue(const char* key, const T &fallback) const
+    {
+        if (m_defaultConfig.isValid() && m_defaultConfig.hasKey(key)) {
+            return m_defaultConfig.readEntry(key, fallback);
+        }
+
+        return fallback;
+    }
+
     libinput_device *m_device;
     bool m_keyboard;
     bool m_alphaNumericKeyboard = false;
@@ -604,6 +630,7 @@ private:
     bool m_enabled;
 
     KConfigGroup m_config;
+    KConfigGroup m_defaultConfig;
     bool m_loading = false;
 
     QPointer<AbstractOutput> m_output;
