@@ -11,6 +11,7 @@ X-KDE-ParentComponents=overview
 
 Name=overview
 Name[ca]=Vista general
+Name[ca@valencia]=Vista general
 Name[cs]=přehled
 Name[en_GB]=overview
 Name[es]=vista general

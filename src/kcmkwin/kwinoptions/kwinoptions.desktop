@@ -101,6 +101,7 @@ Name[zh_TW]=視窗行為
 Comment=Configure window actions and behavior
 Comment[az]=Pəncərə fəaliyyətlərini və davranışını tənzimləmək
 Comment[ca]=Configura les accions i comportament de les finestres
+Comment[ca@valencia]=Configura les accions i comportament de les finestres
 Comment[cs]=Nastavte činností a chování oken
 Comment[da]=Indstil vindueshandlinger og -opførsel
 Comment[de]=Fenster-Aktionen und -verhalten einrichten
@@ -135,6 +136,7 @@ Comment[zh_TW]=設定視窗動作及行為
 
 X-KDE-Keywords=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate
 X-KDE-Keywords[ca]=focus,emplaçament,comportament de la finestra,accions de la finestra,animació,elevació,elevació automàtica,finestres,marc,barra de títol,doble clic,escriptori,ajust,moviment,ombreig,ombra,shading,shade,unshading,activació,activar
+X-KDE-Keywords[ca@valencia]=focus,emplaçament,comportament de la finestra,accions de la finestra,animació,elevació,elevació automàtica,finestres,marc,barra de títol,doble clic,escriptori,ajust,moviment,ombreig,ombra,shading,shade,unshading,activació,activar
 X-KDE-Keywords[en_GB]=focus,placement,window behaviour,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate
 X-KDE-Keywords[es]=foco,posicionamiento,comportamiento de las ventanas,acciones de las ventanas,animación,elevación,autoelevación,ventanas,marco,barra de título,doble clic,escritorio,ajuste,movimiento,sombreado,sombra,activación,activar
 X-KDE-Keywords[fi]=kohdistus,fokus,sijoittelu,sijoitus,ikkunoiden toiminta,ikkunoiden toiminnot,ikkunatoiminnot,animaatio,nosta,automaattinen nosto,ikkunat,kehys,otsikkorivi,otsikkopalkki,työpöytä,snap,kiinnitys,rullaus,rullaa,varjostus,aktivointi,aktivoi

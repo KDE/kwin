@@ -84,6 +84,7 @@ Name[zh_TW]=螢幕邊緣
 Comment=Configure active screen corners and edges
 Comment[az]=Aktiv ekran künclərini və kənarlarını tənzimləmək
 Comment[ca]=Configura les cantonades i vores actives de la pantalla
+Comment[ca@valencia]=Configura les cantonades i vores actives de la pantalla
 Comment[da]=Indstil aktive skærmhjørner- og kanter
 Comment[de]=Aktive Bildschirmränder und -ecken einrichten
 Comment[en_GB]=Configure active screen corners and edges
@@ -117,6 +118,7 @@ Comment[zh_TW]=設定作用中螢幕角落與邊緣
 
 X-KDE-Keywords=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,borders,screen borders,desktop borders,desktop corners,corners
 X-KDE-Keywords[ca]=kwin,finestra,gestor,efecte,cantonada,vora,acció,canvi,escriptori,vores de la pantalla del kwin,vores de l'escriptori,vores de la pantalla,maximitza les finestres,finestres en mosaic,costat de la pantalla,comportament de la pantalla,canvi d'escriptori,escriptori virtual,cantonades de la pantalla,vores,vores de la pantalla,vores d'escriptori,cantonades d'escriptori,cantonades
+X-KDE-Keywords[ca@valencia]=kwin,finestra,gestor,efecte,cantonada,vora,acció,canvi,escriptori,vores de la pantalla del kwin,vores de l'escriptori,vores de la pantalla,maximitza les finestres,finestres en mosaic,costat de la pantalla,comportament de la pantalla,canvi d'escriptori,escriptori virtual,cantonades de la pantalla,vores,vores de la pantalla,vores d'escriptori,cantonades d'escriptori,cantonades
 X-KDE-Keywords[en_GB]=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximise windows,tile windows,side of screen,screen behaviour,switch desktop,virtual desktop,screen corners,borders,screen borders,desktop borders,desktop corners,corners
 X-KDE-Keywords[es]=kwin,ventana,gestor,efecto,esquina,borde,acción,cambiar,escritorio,bordes de pantalla de kwin,bordes del escritorio,bordes de la pantalla,maximizar ventanas,ventanas en mosaico,lado de la pantalla,comportamiento de la pantalla,cambiar escritorio,escritorio virtual,esquinas de la pantalla,bordes,bordes de la pantalla,bordes del escritorio,esquinas del escritorio,esquinas
 X-KDE-Keywords[fi]=kwin,ikkunahallinta,ikkunamanageri,ikkunaohjelma,ikkunointi,tehoste,kulma,reuna,reunat,toiminta,vaihto,työpöytä,työpöydän reunat,näytön reunat,suurenna ikkuna,laatoita ikkunat,kaakeloi ikkunat,näytön toiminta,vaihda työpöytää,työpöytävaihto,virtuaalityöpöytä

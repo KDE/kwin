@@ -61,7 +61,7 @@ Comment=Compositor Settings for Desktop Effects
 Comment[az]=İş Masası üçün effekt tətbiq edilməsinin ayarlanması
 Comment[bs]=Postavke Compositor-a  za Desktop Efekte
 Comment[ca]=Arranjament del compositor per als efectes de l'escriptori
-Comment[ca@valencia]=Arranjament del compositor pels efectes d'escriptori
+Comment[ca@valencia]=Arranjament del compositor per als efectes de l'escriptori
 Comment[cs]=Nastavení kompozitoru pro efekty pracovní plochy
 Comment[da]=Compositor-indstillinger til skrivebordseffekter
 Comment[de]=Compositor-Einstellungen für Arbeitsflächen-Effekte
@@ -106,6 +106,7 @@ Comment[zh_TW]=桌面效果使用的組合器設定
 
 X-KDE-Keywords=kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails,scale method,scaling method,backend
 X-KDE-Keywords[ca]=kwin,finestra,gestor,composició,compositor,efecte,efectes 3D,efectes 2D,OpenGL,XRender,arranjament de vídeo,efectes gràfics,efectes de l'escriptori,gràfics.latència,vsync,tearing,esquinçament,miniatures de finestres,mètode d'esca,mètode d'escalat,dorsal
+X-KDE-Keywords[ca@valencia]=kwin,finestra,gestor,composició,compositor,efecte,efectes 3D,efectes 2D,OpenGL,XRender,arranjament de vídeo,efectes gràfics,efectes de l'escriptori,gràfics.latència,vsync,tearing,esquinçament,miniatures de finestres,mètode d'esca,mètode d'escalat,dorsal
 X-KDE-Keywords[en_GB]=kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails,scale method,scaling method,backend
 X-KDE-Keywords[es]=kwin,ventana,gestor,composición,compositor,efecto,efectos 3D,efectos 2D,OpenGL,XRender,preferencias de vídeo,efectos gráficos,efectos del escritorio,gráficos,latencia,vsync,tearing,miniaturas de ventanas,método de escalado,motor
 X-KDE-Keywords[fi]=kwin,ikkunaohjelma,ikkunointiohjelma,ikkunahallinta,koostaminen,koostaja,3D-tehosteet,3U-tehosteet,2D-tehosteet,2U-tehosteet,OpenGL,XRender,näyttöasetukset,videoasetukset,grafiikka-asetukset,työpöytätehosteet,grafiikka,viive,latenssi,vsync,pirstominen,ikkunan pienoiskuvat,skaalaustapa,taustajärjestelmä

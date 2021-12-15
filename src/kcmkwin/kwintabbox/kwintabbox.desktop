@@ -119,6 +119,7 @@ Comment[zh_CN]=配置窗口切换器选项
 Comment[zh_TW]=透過視窗導覽
 X-KDE-Keywords=window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher
 X-KDE-Keywords[ca]=finestra,finestres,commutador,commutador de finestres,commutació,commutació de finestres,alttab,alt-tab,alt+tab,alt tab,canviador d'apps,canviador d'aplicacions,aplicació,app,tasca,commutació,commutador de tasques
+X-KDE-Keywords[ca@valencia]=finestra,finestres,commutador,commutador de finestres,commutació,commutació de finestres,alttab,alt-tab,alt+tab,alt tab,canviador d'apps,canviador d'aplicacions,aplicació,app,tasca,commutació,commutador de tasques
 X-KDE-Keywords[en_GB]=window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher
 X-KDE-Keywords[es]=ventana,ventanas,conmutador,conmutador de ventanas,conmutación,conmutación de ventanas,alttab,alt-tab,alt+tab,alt tab,selector de aplicaciones,cambiador de aplicaciones,app,tarea,selector,cambiador,selector de tarea,cambiador de tarea
 X-KDE-Keywords[fi]=ikkuna,ikkunat,vaihtaja,vaihto,valitsin,ikkunan vaihtaja,tehtävänvalitsin,ikkunanvalitsin,vaihtaminen,ikkunan vaihtaminen,ikkunan vaihto,alttab,alt-tab,alt+tab,alt tab,altsarkain,alt-sarkain,alt+sarkain,alt sarkain,sovellusvaihto,sovellusvaihtaja
