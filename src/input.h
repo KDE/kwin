@@ -479,7 +479,7 @@ protected:
 private:
     bool setHover(Toplevel *toplevel);
     void updateFocus();
-    bool updateDecoration();
+    void updateDecoration();
 
     struct {
         QPointer<Toplevel> window;

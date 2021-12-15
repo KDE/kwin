@@ -2904,24 +2904,30 @@ bool InputDeviceHandler::setHover(Toplevel *toplevel)
 
 void InputDeviceHandler::setFocus(Toplevel *toplevel)
 {
-    Toplevel *oldFocus = m_focus.window;
-    m_focus.window = toplevel;
-    focusUpdate(oldFocus, m_focus.window);
+    if (m_focus.window != toplevel) {
+        Toplevel *oldFocus = m_focus.window;
+        m_focus.window = toplevel;
+        focusUpdate(oldFocus, m_focus.window);
+    }
 }
 
 void InputDeviceHandler::setDecoration(Decoration::DecoratedClientImpl *decoration)
 {
-    auto oldDeco = m_focus.decoration;
-    m_focus.decoration = decoration;
-    cleanupDecoration(oldDeco.data(), m_focus.decoration.data());
-    Q_EMIT decorationChanged();
+    if (m_focus.decoration != decoration) {
+        auto oldDeco = m_focus.decoration;
+        m_focus.decoration = decoration;
+        cleanupDecoration(oldDeco.data(), m_focus.decoration.data());
+        Q_EMIT decorationChanged();
+    }
 }
 
 void InputDeviceHandler::updateFocus()
 {
     Toplevel *focus = m_hover.window;
 
-    if (m_hover.window && !m_hover.window->surface() && !m_hover.window->isInternal()) {
+    if (m_focus.decoration) {
+        focus = nullptr;
+    } else if (m_hover.window && !m_hover.window->surface() && !m_hover.window->isInternal()) {
         // The surface has not yet been created (special XWayland case).
         // Therefore listen for its creation.
         if (!m_hover.surfaceCreatedConnection) {
@@ -2934,26 +2940,18 @@ void InputDeviceHandler::updateFocus()
     setFocus(focus);
 }
 
-bool InputDeviceHandler::updateDecoration()
+void InputDeviceHandler::updateDecoration()
 {
-    const auto oldDeco = m_focus.decoration;
-    m_focus.decoration = nullptr;
-
+    Decoration::DecoratedClientImpl *decoration = nullptr;
     auto *ac = qobject_cast<AbstractClient*>(m_hover.window);
     if (ac && ac->decoratedClient()) {
         if (!ac->clientGeometry().contains(position().toPoint())) {
             // input device above decoration
-            m_focus.decoration = ac->decoratedClient();
+            decoration = ac->decoratedClient();
         }
     }
 
-    if (m_focus.decoration == oldDeco) {
-        // no change to decoration
-        return false;
-    }
-    cleanupDecoration(oldDeco.data(), m_focus.decoration.data());
-    Q_EMIT decorationChanged();
-    return true;
+    setDecoration(decoration);
 }
 
 void InputDeviceHandler::update()
@@ -2974,14 +2972,8 @@ void InputDeviceHandler::update()
         return;
     }
 
-    if (m_focus.window != m_hover.window) {
-        // focus change
-        updateDecoration();
-        updateFocus();
-    } else if (updateDecoration()) {
-        // went onto or off from decoration, update focus
-        updateFocus();
-    }
+    updateDecoration();
+    updateFocus();
 
     workspace()->updateFocusMousePosition(position().toPoint());
 }
