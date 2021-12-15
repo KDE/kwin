@@ -38,6 +38,7 @@ Name[zh_CN]=缩放
 Name[zh_TW]=縮放
 Icon=preferences-system-windows-effect-scale
 Comment=Make windows smoothly scale in and out when they are shown or hidden
+Comment[ar]=اجعل النوافذ تكبر وتصغر بنعومة عند إظهاراها وإخفائها
 Comment[az]=Böyüdülərkən və ya kiçildilərkən pəncərələrin miqyasının rəvan şəkildə dəyişməsi
 Comment[ca]=Fa que les finestres entrin o surtin volant quan es mostren o s'oculten
 Comment[ca@valencia]=Fa que les finestres entrin o isquen volant quan es mostren o s'oculten

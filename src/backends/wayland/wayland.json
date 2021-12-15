@@ -3,7 +3,7 @@
         "Description": "Render to a nested window on running Wayland compositor.",
         "Description[ar]": "التصيير إلى نافذة متداخلة تعمل على مؤلف ويلاند.",
         "Description[az]": "Wayland birləşdiricisində iç-içə keçmiş pəncərələri formalaşdırmaq.",
-        "Description[ca@valencia]": "Renderitza en una finestra imbricada en un compositor Wayland en execució.",
+        "Description[ca@valencia]": "Renderitza a una finestra imbricada en un compositor Wayland en execució.",
         "Description[ca]": "Renderitza a una finestra imbricada en un compositor Wayland en execució.",
         "Description[da]": "Rendér til et indlejret vindue på kørende Wayland-compositor.",
         "Description[de]": "In ein eingebettetes Fenster auf dem laufenden Wayland-Kompositor rendern.",

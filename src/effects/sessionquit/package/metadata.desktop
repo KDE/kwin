@@ -2,6 +2,7 @@
 Name=Session Quit
 Name[az]=Sesiyadan çıxış
 Name[ca]=Sortida de la sessió
+Name[ca@valencia]=Eixida de la sessió
 Name[cs]=Sezení bylo ukončeno
 Name[da]=Afslutning af session
 Name[de]=Sitzungsende
@@ -37,6 +38,7 @@ Icon=preferences-system-windows-effect-logout
 Comment=Keep the desktop background alive during logout until the end
 Comment[az]=Seansdan çıxışda sona qədər İş Masası fon şəklinin saxlanılması
 Comment[ca]=Manté viu el fons de l'escriptori durant la sortida de la sessió fins al final
+Comment[ca@valencia]=Manté viu el fons de l'escriptori durant l'eixida de la sessió fins al final
 Comment[da]=Hold skrivebordsbaggrunden i live under log ud helt til sidst
 Comment[de]=Beim Abmelden den Hintergrund der Arbeitsfläche bis zum Schluss behalten
 Comment[en_GB]=Keep the desktop background alive during logout until the end

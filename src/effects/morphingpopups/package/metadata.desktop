@@ -41,6 +41,7 @@ Comment[zh_CN]=工具提示/通知信息框大小变化时呈现过渡动效
 Comment[zh_TW]=當工具提示或通知變更位置時交錯的淡出動畫
 Icon=preferences-system-windows-effect-morphingpopups
 Name=Morphing popups
+Name[ar]=المنبثقات المتحورة
 Name[az]=Sürüşən pəncərələrin əmələ gəlmə animasiyası
 Name[ca]=Missatges emergents en metamorfosi
 Name[ca@valencia]=Missatges emergents en metamorfosi
