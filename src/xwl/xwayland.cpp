@@ -87,8 +87,8 @@ void Xwayland::start()
         if (!m_socket->isValid()) {
             qFatal("Failed to establish X11 socket");
         }
-        setListenFDs({m_socket->unixFileDescriptor(), m_socket->abstractFileDescriptor()});
         m_displayName = m_socket->name();
+        m_listenFds = m_socket->fileDescriptors();
     }
 
     startInternal();

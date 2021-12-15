@@ -8,6 +8,7 @@
 
 #include <QByteArray>
 #include <QString>
+#include <QVector>
 
 namespace KWin
 {
@@ -27,12 +28,10 @@ public:
     int display() const;
     QString name() const;
 
-    int unixFileDescriptor() const;
-    int abstractFileDescriptor() const;
+    QVector<int> fileDescriptors() const;
 
 private:
-    int m_unixFileDescriptor = -1;
-    int m_abstractFileDescriptor = -1;
+    QVector<int> m_fileDescriptors;
     int m_display = -1;
     QString m_socketFilePath;
     QString m_lockFilePath;

@@ -9,6 +9,7 @@
 
 #include <QCoreApplication>
 #include <QFile>
+#include <QScopeGuard>
 
 #include <errno.h>
 #include <signal.h>
@@ -176,24 +177,35 @@ XwaylandSocket::XwaylandSocket(OperationMode mode)
             continue;
         }
 
+        QVector<int> fileDescriptors;
+        auto socketCleanup = qScopeGuard([&fileDescriptors]() {
+            for (const int &fileDescriptor : qAsConst(fileDescriptors)) {
+                close(fileDescriptor);
+            }
+        });
+
         const int unixFileDescriptor = listen_helper(socketFilePath, UnixSocketAddress::Type::Unix, mode);
         if (unixFileDescriptor == -1) {
             QFile::remove(lockFilePath);
             continue;
         }
+        fileDescriptors << unixFileDescriptor;
 
+#if defined(Q_OS_LINUX)
         const int abstractFileDescriptor = listen_helper(socketFilePath, UnixSocketAddress::Type::Abstract, mode);
         if (abstractFileDescriptor == -1) {
             QFile::remove(lockFilePath);
             QFile::remove(socketFilePath);
-            close(unixFileDescriptor);
             continue;
         }
+        fileDescriptors << abstractFileDescriptor;
+#endif
+
+        m_fileDescriptors = fileDescriptors;
+        socketCleanup.dismiss();
 
         m_socketFilePath = socketFilePath;
         m_lockFilePath = lockFilePath;
-        m_unixFileDescriptor = unixFileDescriptor;
-        m_abstractFileDescriptor = abstractFileDescriptor;
         m_display = display;
         return;
     }
@@ -203,11 +215,8 @@ XwaylandSocket::XwaylandSocket(OperationMode mode)
 
 XwaylandSocket::~XwaylandSocket()
 {
-    if (m_unixFileDescriptor != -1) {
-        close(m_unixFileDescriptor);
-    }
-    if (m_abstractFileDescriptor != -1) {
-        close(m_abstractFileDescriptor);
+    for (const int &fileDescriptor : qAsConst(m_fileDescriptors)) {
+        close(fileDescriptor);
     }
     if (!m_socketFilePath.isEmpty()) {
         QFile::remove(m_socketFilePath);
@@ -222,14 +231,9 @@ bool XwaylandSocket::isValid() const
     return m_display != -1;
 }
 
-int XwaylandSocket::unixFileDescriptor() const
+QVector<int> XwaylandSocket::fileDescriptors() const
 {
-    return m_unixFileDescriptor;
-}
-
-int XwaylandSocket::abstractFileDescriptor() const
-{
-    return m_abstractFileDescriptor;
+    return m_fileDescriptors;
 }
 
 int XwaylandSocket::display() const

@@ -99,8 +99,10 @@ void KWinWrapper::run()
     args << "--socket" << QString::fromUtf8(wl_socket_get_display_name(m_socket));
 
     if (m_xwlSocket) {
-        args << "--xwayland-fd" << QString::number(m_xwlSocket->abstractFileDescriptor());
-        args << "--xwayland-fd" << QString::number(m_xwlSocket->unixFileDescriptor());
+        const auto xwaylandFileDescriptors = m_xwlSocket->fileDescriptors();
+        for (const int &fileDescriptor : xwaylandFileDescriptors) {
+            args << "--xwayland-fd" << QString::number(fileDescriptor);
+        }
         args << "--xwayland-display" << m_xwlSocket->name();
         if (m_xauthorityFile.open()) {
             args << "--xwayland-xauthority" << m_xauthorityFile.fileName();
