@@ -1161,15 +1161,13 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     AbstractClient* c = nullptr;
 
     //FIXME below here is a lot of focuschain stuff, probably all wrong now
-    if (options->focusPolicyIsReasonable()) {
+     // Keep active client focused if it's on the new activity
+    if (active_client && active_client->isShown() && active_client->isOnCurrentDesktop() && active_client->isOnCurrentActivity()) {
+        c = active_client;
+    } else if (options->focusPolicyIsReasonable()) {
         // Search in focus chain
         c = FocusChain::self()->getForActivation(VirtualDesktopManager::self()->currentDesktop());
     }
-    // If "unreasonable focus policy" and active_client is on_all_desktops and
-    // under mouse (Hence == old_active_client), conserve focus.
-    // (Thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
-    else if (active_client && active_client->isShown() && active_client->isOnCurrentDesktop() && active_client->isOnCurrentActivity())
-        c = active_client;
 
     if (!c)
         c = findDesktop(true, VirtualDesktopManager::self()->currentDesktop());
