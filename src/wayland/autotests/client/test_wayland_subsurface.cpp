@@ -39,8 +39,6 @@ private Q_SLOTS:
     void testPosition();
     void testPlaceAbove();
     void testPlaceBelow();
-    void testDestroy();
-    void testCast();
     void testSyncMode();
     void testDeSyncMode();
     void testMainSurfaceFromTree();
@@ -550,51 +548,6 @@ void TestSubSurface::testPlaceBelow()
     QCOMPARE(serverSubSurface1->parentSurface()->below().at(1), serverSubSurface1);
     QCOMPARE(serverSubSurface1->parentSurface()->below().at(2), serverSubSurface2);
     QCOMPARE(serverSubSurface1->parentSurface()->above().count(), 0);
-}
-
-void TestSubSurface::testDestroy()
-{
-    using namespace KWayland::Client;
-
-    // create two Surfaces
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QScopedPointer<Surface> parent(m_compositor->createSurface());
-    // create subSurface for surface of parent
-    QScopedPointer<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.data()), QPointer<Surface>(parent.data())));
-
-    connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_subCompositor, &SubCompositor::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_shm, &ShmPool::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, surface.data(), &Surface::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, parent.data(), &Surface::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, subSurface.data(), &SubSurface::destroy);
-    QVERIFY(subSurface->isValid());
-
-    QSignalSpy connectionDiedSpy(m_connection, &KWayland::Client::ConnectionThread::connectionDied);
-    QVERIFY(connectionDiedSpy.isValid());
-    delete m_display;
-    m_display = nullptr;
-    QVERIFY(connectionDiedSpy.wait());
-
-    // now the pool should be destroyed;
-    QVERIFY(!subSurface->isValid());
-
-    // calling destroy again should not fail
-    subSurface->destroy();
-}
-
-void TestSubSurface::testCast()
-{
-    using namespace KWayland::Client;
-
-    // create two Surfaces
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QScopedPointer<Surface> parent(m_compositor->createSurface());
-    // create subSurface for surface of parent
-    QScopedPointer<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.data()), QPointer<Surface>(parent.data())));
-
-    QCOMPARE(SubSurface::get(*(subSurface.data())), QPointer<SubSurface>(subSurface.data()));
 }
 
 void TestSubSurface::testSyncMode()

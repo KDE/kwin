@@ -72,8 +72,6 @@ private Q_SLOTS:
     void testCursor();
     void testCursorDamage();
     void testKeyboard();
-    void testCast();
-    void testDestroy();
     void testSelection();
     void testDataDeviceForKeyboardSurface();
     void testTouch();
@@ -1674,86 +1672,6 @@ void TestWaylandSeat::testKeyboard()
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
     QCOMPARE(m_seatInterface->keyboard(), serverKeyboard);
-}
-
-void TestWaylandSeat::testCast()
-{
-    using namespace KWayland::Client;
-    Registry registry;
-    QSignalSpy seatSpy(&registry, &KWayland::Client::Registry::seatAnnounced);
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-
-    QVERIFY(seatSpy.wait());
-    Seat s;
-    QVERIFY(!s.isValid());
-    auto wlSeat = registry.bindSeat(seatSpy.first().first().value<quint32>(), seatSpy.first().last().value<quint32>());
-    QVERIFY(wlSeat);
-    s.setup(wlSeat);
-    QVERIFY(s.isValid());
-
-    QCOMPARE((wl_seat *)s, wlSeat);
-    const Seat &s2(s);
-    QCOMPARE((wl_seat *)s2, wlSeat);
-}
-
-void TestWaylandSeat::testDestroy()
-{
-    using namespace KWayland::Client;
-    QSignalSpy keyboardSpy(m_seat, &KWayland::Client::Seat::hasKeyboardChanged);
-    QVERIFY(keyboardSpy.isValid());
-    m_seatInterface->setHasKeyboard(true);
-    QVERIFY(keyboardSpy.wait());
-    Keyboard *k = m_seat->createKeyboard(m_seat);
-    QVERIFY(k->isValid());
-
-    QSignalSpy pointerSpy(m_seat, &KWayland::Client::Seat::hasPointerChanged);
-    QVERIFY(pointerSpy.isValid());
-    m_seatInterface->setHasPointer(true);
-    QVERIFY(pointerSpy.wait());
-    Pointer *p = m_seat->createPointer(m_seat);
-    QVERIFY(p->isValid());
-
-    QSignalSpy touchSpy(m_seat, &KWayland::Client::Seat::hasTouchChanged);
-    QVERIFY(touchSpy.isValid());
-    m_seatInterface->setHasTouch(true);
-    QVERIFY(touchSpy.wait());
-    Touch *t = m_seat->createTouch(m_seat);
-    QVERIFY(t->isValid());
-
-    delete m_compositor;
-    m_compositor = nullptr;
-    connect(m_connection, &ConnectionThread::connectionDied, m_seat, &Seat::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_shm, &ShmPool::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_subCompositor, &SubCompositor::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_relativePointerManager, &RelativePointerManager::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_pointerGestures, &PointerGestures::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
-    QVERIFY(m_seat->isValid());
-
-    QSignalSpy connectionDiedSpy(m_connection, &KWayland::Client::ConnectionThread::connectionDied);
-    QVERIFY(connectionDiedSpy.isValid());
-    delete m_display;
-    m_display = nullptr;
-    m_compositorInterface = nullptr;
-    m_seatInterface = nullptr;
-    m_subCompositorInterface = nullptr;
-    m_relativePointerManagerV1Interface = nullptr;
-    m_pointerGesturesV1Interface = nullptr;
-    QVERIFY(connectionDiedSpy.wait());
-
-    // now the seat should be destroyed;
-    QVERIFY(!m_seat->isValid());
-    QVERIFY(!k->isValid());
-    QVERIFY(!p->isValid());
-    QVERIFY(!t->isValid());
-
-    // calling destroy again should not fail
-    m_seat->destroy();
-    k->destroy();
-    p->destroy();
-    t->destroy();
 }
 
 void TestWaylandSeat::testSelection()

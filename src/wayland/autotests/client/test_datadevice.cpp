@@ -44,7 +44,6 @@ private Q_SLOTS:
     void testSetSelection();
     void testSendSelectionOnSeat();
     void testReplaceSource();
-    void testDestroy();
 
 private:
     KWaylandServer::Display *m_display = nullptr;
@@ -588,32 +587,6 @@ void TestDataDevice::testReplaceSource()
     QTest::qWait(10);
 
     close(pipeFds[0]);
-}
-
-void TestDataDevice::testDestroy()
-{
-    using namespace KWayland::Client;
-
-    QScopedPointer<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
-    QVERIFY(dataDevice->isValid());
-
-    connect(m_connection, &ConnectionThread::connectionDied, m_dataDeviceManager, &DataDeviceManager::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_seat, &Seat::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, dataDevice.data(), &DataDevice::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
-
-    QSignalSpy connectionDiedSpy(m_connection, &KWayland::Client::ConnectionThread::connectionDied);
-    QVERIFY(connectionDiedSpy.isValid());
-    delete m_display;
-    m_display = nullptr;
-    QVERIFY(connectionDiedSpy.wait());
-
-    // now the data device should be destroyed;
-    QVERIFY(!dataDevice->isValid());
-
-    // calling destroy again should not fail
-    dataDevice->destroy();
 }
 
 QTEST_GUILESS_MAIN(TestDataDevice)

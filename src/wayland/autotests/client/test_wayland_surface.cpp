@@ -45,7 +45,6 @@ private Q_SLOTS:
     void testOpaque();
     void testInput();
     void testScale();
-    void testDestroy();
     void testUnmapOfNotMappedSurface();
     void testSurfaceAt();
     void testDestroyAttachedBuffer();
@@ -813,37 +812,6 @@ void TestWaylandSurface::testScale()
     QCOMPARE(bufferScaleChangedSpy.count(), 1);
     QCOMPARE(serverSurface->bufferScale(), 2);
     QCOMPARE(serverSurface->size(), QSize(25, 25));
-}
-
-void TestWaylandSurface::testDestroy()
-{
-    using namespace KWayland::Client;
-    Surface *s = m_compositor->createSurface();
-
-    connect(m_connection, &ConnectionThread::connectionDied, s, &Surface::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_shm, &ShmPool::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_idleInhibitManager, &IdleInhibitManager::destroy);
-    QVERIFY(s->isValid());
-
-    QSignalSpy connectionDiedSpy(m_connection, &KWayland::Client::ConnectionThread::connectionDied);
-    QVERIFY(connectionDiedSpy.isValid());
-
-    delete m_compositorInterface;
-    m_compositorInterface = nullptr;
-    delete m_idleInhibitInterface;
-    m_idleInhibitInterface = nullptr;
-    delete m_display;
-    m_display = nullptr;
-
-    QVERIFY(connectionDiedSpy.wait());
-
-    // now the Surface should be destroyed;
-    QVERIFY(!s->isValid());
-
-    // calling destroy again should not fail
-    s->destroy();
 }
 
 void TestWaylandSurface::testUnmapOfNotMappedSurface()

@@ -49,29 +49,6 @@ add_test(NAME kwayland-testShmPool COMMAND testShmPool)
 ecm_mark_as_test(testShmPool)
 
 ########################################################
-# Test Compositor
-########################################################
-set( testCompositor_SRCS
-        test_compositor.cpp
-    )
-add_executable(testCompositor ${testCompositor_SRCS})
-target_link_libraries( testCompositor Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer)
-add_test(NAME kwayland-testCompositor COMMAND testCompositor)
-ecm_mark_as_test(testCompositor)
-
-########################################################
-# Test SubCompositor
-########################################################
-set( testSubCompositor_SRCS
-        test_wayland_subcompositor.cpp
-    )
-add_executable(testSubCompositor ${testSubCompositor_SRCS})
-target_link_libraries( testSubCompositor Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer)
-add_test(NAME kwayland-testSubCompositor COMMAND testSubCompositor)
-ecm_mark_as_test(testSubCompositor)
-
-
-########################################################
 # Test SubSurface
 ########################################################
 set( testSubSurface_SRCS

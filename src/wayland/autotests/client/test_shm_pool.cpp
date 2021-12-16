@@ -32,7 +32,6 @@ private Q_SLOTS:
     void testCreateBufferFromImageWithAlpha();
     void testCreateBufferFromData();
     void testReuseBuffer();
-    void testDestroy();
 
 private:
     KWaylandServer::Display *m_display;
@@ -203,28 +202,6 @@ void TestShmPool::testReuseBuffer()
     QVERIFY(buffer4);
     QVERIFY(buffer4 != buffer2);
     QVERIFY(buffer4 != buffer3);
-}
-
-void TestShmPool::testDestroy()
-{
-    using namespace KWayland::Client;
-    connect(m_connection, &ConnectionThread::connectionDied, m_shmPool, &ShmPool::destroy);
-    QVERIFY(m_shmPool->isValid());
-
-    // let's create one Buffer
-    m_shmPool->getBuffer(QSize(10, 10), 8);
-
-    QSignalSpy connectionDiedSpy(m_connection, &KWayland::Client::ConnectionThread::connectionDied);
-    QVERIFY(connectionDiedSpy.isValid());
-    delete m_display;
-    m_display = nullptr;
-    QVERIFY(connectionDiedSpy.wait());
-
-    // now the pool should be destroyed;
-    QVERIFY(!m_shmPool->isValid());
-
-    // calling destroy again should not fail
-    m_shmPool->destroy();
 }
 
 QTEST_GUILESS_MAIN(TestShmPool)

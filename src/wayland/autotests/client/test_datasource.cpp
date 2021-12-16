@@ -31,7 +31,6 @@ private Q_SLOTS:
     void testRequestSend();
     void testCancel();
     void testServerGet();
-    void testDestroy();
 
 private:
     KWaylandServer::Display *m_display = nullptr;
@@ -264,30 +263,6 @@ void TestDataSource::testServerGet()
 
     QCOMPARE(DataSourceInterface::get(d->resource()), d);
     QVERIFY(!DataSourceInterface::get(nullptr));
-}
-
-void TestDataSource::testDestroy()
-{
-    using namespace KWayland::Client;
-
-    QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
-    QVERIFY(dataSource->isValid());
-
-    connect(m_connection, &ConnectionThread::connectionDied, m_dataDeviceManager, &DataDeviceManager::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
-    connect(m_connection, &ConnectionThread::connectionDied, dataSource.data(), &DataSource::destroy);
-
-    QSignalSpy connectionDiedSpy(m_connection, &KWayland::Client::ConnectionThread::connectionDied);
-    QVERIFY(connectionDiedSpy.isValid());
-    delete m_display;
-    m_display = nullptr;
-    QVERIFY(connectionDiedSpy.wait());
-
-    // now the pool should be destroyed;
-    QVERIFY(!dataSource->isValid());
-
-    // calling destroy again should not fail
-    dataSource->destroy();
 }
 
 QTEST_GUILESS_MAIN(TestDataSource)
