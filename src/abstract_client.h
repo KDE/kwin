@@ -1238,6 +1238,8 @@ protected:
 
     void cleanTabBox();
 
+    QStringList m_activityList;
+
 private Q_SLOTS:
     void shadeHover();
     void shadeUnhover();
@@ -1265,7 +1267,6 @@ private:
     ShadeMode m_shadeMode = ShadeNone;
     QVector <VirtualDesktop *> m_desktops;
 
-    QStringList m_activityList;
     int m_activityUpdatesBlocked = 0;
     bool m_blockedActivityUpdatesRequireTransients = false;
 

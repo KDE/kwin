@@ -2409,16 +2409,16 @@ void X11Client::readActivities(Xcb::StringProperty &property)
 
     if (prop == Activities::nullUuid()) {
         //copied from setOnAllActivities to avoid a redundant XChangeProperty.
-        if (!activityList.isEmpty()) {
-            activityList.clear();
+        if (!m_activityList.isEmpty()) {
+            m_activityList.clear();
             updateActivities(true);
         }
         return;
     }
     if (prop.isEmpty()) {
         //note: this makes it *act* like it's on all activities but doesn't set the property to 'ALL'
-        if (!activityList.isEmpty()) {
-            activityList.clear();
+        if (!m_activityList.isEmpty()) {
+            m_activityList.clear();
             updateActivities(true);
         }
         return;
@@ -2426,7 +2426,7 @@ void X11Client::readActivities(Xcb::StringProperty &property)
 
     newActivitiesList = prop.split(u',');
 
-    if (newActivitiesList == activityList)
+    if (newActivitiesList == m_activityList)
         return; //expected change, it's ok.
 
     //otherwise, somebody else changed it. we need to validate before reacting.
