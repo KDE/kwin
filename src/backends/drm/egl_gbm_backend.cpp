@@ -624,7 +624,9 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
         return false;
     }
     if (output.oldScanoutCandidate && output.oldScanoutCandidate != surface) {
-        output.oldScanoutCandidate->dmabufFeedbackV1()->setTranches({});
+        if (output.oldScanoutCandidate->dmabufFeedbackV1()) {
+            output.oldScanoutCandidate->dmabufFeedbackV1()->setTranches({});
+        }
         output.oldScanoutCandidate = nullptr;
     }
     output.scanoutCandidate = surface;
