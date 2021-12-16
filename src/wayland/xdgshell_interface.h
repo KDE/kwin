@@ -291,6 +291,12 @@ public:
     void sendClose();
 
     /**
+     * Sends an event to the client specifying the maximum bounds for the surface size. Must be
+     * called before sendConfigure().
+     */
+    void sendConfigureBounds(const QSize &size);
+
+    /**
      * Returns the XdgToplevelInterface for the specified wayland resource object \a resource.
      */
     static XdgToplevelInterface *get(::wl_resource *resource);

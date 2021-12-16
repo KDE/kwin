@@ -16,7 +16,7 @@
 
 namespace KWaylandServer
 {
-static const int s_version = 3;
+static const int s_version = 4;
 
 XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
     : q(shell)
@@ -597,6 +597,13 @@ quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &sta
 void XdgToplevelInterface::sendClose()
 {
     d->send_close();
+}
+
+void XdgToplevelInterface::sendConfigureBounds(const QSize &size)
+{
+    if (d->resource()->version() >= XDG_TOPLEVEL_CONFIGURE_BOUNDS_SINCE_VERSION) {
+        d->send_configure_bounds(size.width(), size.height());
+    }
 }
 
 XdgToplevelInterface *XdgToplevelInterface::get(::wl_resource *resource)
