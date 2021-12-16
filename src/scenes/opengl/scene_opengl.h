@@ -215,6 +215,8 @@ public:
     }
 
 private:
+    void renderPart(const QRect &rect, const QRect &partRect, const QPoint &textureOffset, bool rotated = false);
+    static const QMargins texturePadForPart(const QRect &rect, const QRect &partRect);
     void resizeTexture();
     QScopedPointer<GLTexture> m_texture;
 };

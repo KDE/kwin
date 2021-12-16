@@ -1530,31 +1530,6 @@ SceneOpenGLDecorationRenderer::~SceneOpenGLDecorationRenderer()
     }
 }
 
-// Rotates the given source rect 90° counter-clockwise,
-// and flips it vertically
-static QImage rotate(const QImage &srcImage, const QRect &srcRect)
-{
-    auto dpr = srcImage.devicePixelRatio();
-    QImage image(srcRect.height() * dpr, srcRect.width() * dpr, srcImage.format());
-    image.setDevicePixelRatio(dpr);
-    const QPoint srcPoint(srcRect.x() * dpr, srcRect.y() * dpr);
-
-    const uint32_t *src = reinterpret_cast<const uint32_t *>(srcImage.bits());
-    uint32_t *dst = reinterpret_cast<uint32_t *>(image.bits());
-
-    for (int x = 0; x < image.width(); x++) {
-        const uint32_t *s = src + (srcPoint.y() + x) * srcImage.width() + srcPoint.x();
-        uint32_t *d = dst + x;
-
-        for (int y = 0; y < image.height(); y++) {
-            *d = s[y];
-            d += image.width();
-        }
-    }
-
-    return image;
-}
-
 static void clamp_row(int left, int width, int right, const uint32_t *src, uint32_t *dest)
 {
     std::fill_n(dest, left, *src);
@@ -1620,71 +1595,94 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
     QRect left, top, right, bottom;
     client()->client()->layoutDecorationRects(left, top, right, bottom);
 
-    // We pad each part in the decoration atlas in order to avoid texture bleeding.
-    const int padding = 1;
+    const int topHeight = std::ceil(top.height() * devicePixelRatio());
+    const int bottomHeight = std::ceil(bottom.height() * devicePixelRatio());
+    const int leftWidth = std::ceil(left.width() * devicePixelRatio());
 
-    auto renderPart = [=](const QRect &geo, const QRect &partRect, const QPoint &position, bool rotated = false) {
-        if (!geo.isValid()) {
-            return;
-        }
+    const QPoint topPosition(0, 0);
+    const QPoint bottomPosition(0, topPosition.y() + topHeight + (2 * TexturePad));
+    const QPoint leftPosition(0, bottomPosition.y() + bottomHeight + (2 * TexturePad));
+    const QPoint rightPosition(0, leftPosition.y() + leftWidth + (2 * TexturePad));
 
-        QRect rect = geo;
+    const QRect dirtyRect = region.boundingRect();
 
-        // We allow partial decoration updates and it might just so happen that the dirty region
-        // is completely contained inside the decoration part, i.e. the dirty region doesn't touch
-        // any of the decoration's edges. In that case, we should **not** pad the dirty region.
-        if (rect.left() == partRect.left()) {
-            rect.setLeft(rect.left() - padding);
-        }
-        if (rect.top() == partRect.top()) {
-            rect.setTop(rect.top() - padding);
-        }
-        if (rect.right() == partRect.right()) {
-            rect.setRight(rect.right() + padding);
-        }
-        if (rect.bottom() == partRect.bottom()) {
-            rect.setBottom(rect.bottom() + padding);
-        }
+    renderPart(top.intersected(dirtyRect), top, topPosition);
+    renderPart(bottom.intersected(dirtyRect), bottom, bottomPosition);
+    renderPart(left.intersected(dirtyRect), left, leftPosition, true);
+    renderPart(right.intersected(dirtyRect), right, rightPosition, true);
+}
 
-        QRect viewport = geo.translated(-rect.x(), -rect.y());
+void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &partRect,
+                                               const QPoint &textureOffset, bool rotated)
+{
+    if (!rect.isValid()) {
+        return;
+    }
+    // We allow partial decoration updates and it might just so happen that the
+    // dirty region is completely contained inside the decoration part, i.e.
+    // the dirty region doesn't touch any of the decoration's edges. In that
+    // case, we should **not** pad the dirty region.
+    const QMargins padding = texturePadForPart(rect, partRect);
+    int verticalPadding = padding.top() + padding.bottom();
+    int horizontalPadding = padding.left() + padding.right();
 
-        QImage image(rect.size() * devicePixelRatio(), QImage::Format_ARGB32_Premultiplied);
-        image.setDevicePixelRatio(devicePixelRatio());
-        image.fill(Qt::transparent);
+    QSize imageSize = rect.size() * devicePixelRatio();
+    if (rotated) {
+        imageSize = QSize(imageSize.height(), imageSize.width());
+    }
+    QSize paddedImageSize = imageSize;
+    paddedImageSize.rheight() += verticalPadding;
+    paddedImageSize.rwidth() += horizontalPadding;
+    QImage image(paddedImageSize, QImage::Format_ARGB32_Premultiplied);
+    image.setDevicePixelRatio(devicePixelRatio());
+    image.fill(Qt::transparent);
 
-        QPainter painter(&image);
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.setViewport(QRect(viewport.topLeft(), viewport.size() * devicePixelRatio()));
-        painter.setWindow(QRect(geo.topLeft(), geo.size() * qPainterEffectiveDevicePixelRatio(&painter)));
-        painter.setClipRect(geo);
-        renderToPainter(&painter, geo);
-        painter.end();
+    QRect padClip = QRect(padding.left(), padding.top(), imageSize.width(), imageSize.height());
+    QPainter painter(&image);
+    const qreal inverseScale = 1.0 / devicePixelRatio();
+    painter.scale(inverseScale, inverseScale);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setClipRect(padClip);
+    painter.translate(padding.left(), padding.top());
+    if (rotated) {
+        painter.translate(0, imageSize.height());
+        painter.rotate(-90);
+    }
+    painter.scale(devicePixelRatio(), devicePixelRatio());
+    painter.translate(-rect.topLeft());
+    renderToPainter(&painter, rect);
+    painter.end();
 
-        const QRect viewportScaled(viewport.topLeft() * devicePixelRatio(), viewport.size() * devicePixelRatio());
-        const bool isIntegerScaling = qFuzzyCompare(devicePixelRatio(), std::ceil(devicePixelRatio()));
-        clamp(image, isIntegerScaling ? viewportScaled : viewportScaled.marginsRemoved({1, 1, 1, 1}));
+    // fill padding pixels by copying from the neighbour row
+    clamp(image, padClip);
 
-        if (rotated) {
-            // TODO: get this done directly when rendering to the image
-            image = rotate(image, QRect(QPoint(), rect.size()));
-            viewport = QRect(viewport.y(), viewport.x(), viewport.height(), viewport.width());
-        }
+    QPoint dirtyOffset = (rect.topLeft() - partRect.topLeft()) * devicePixelRatio();
+    if (padding.top() == 0) {
+        dirtyOffset.ry() += TexturePad;
+    }
+    if (padding.left() == 0) {
+        dirtyOffset.rx() += TexturePad;
+    }
+    m_texture->update(image, textureOffset + dirtyOffset);
+}
 
-        const QPoint dirtyOffset = geo.topLeft() - partRect.topLeft();
-        m_texture->update(image, (position + dirtyOffset - viewport.topLeft()) * image.devicePixelRatio());
-    };
-
-    const QRect geometry = region.boundingRect();
-
-    const QPoint topPosition(padding, padding);
-    const QPoint bottomPosition(padding, topPosition.y() + top.height() + 2 * padding);
-    const QPoint leftPosition(padding, bottomPosition.y() + bottom.height() + 2 * padding);
-    const QPoint rightPosition(padding, leftPosition.y() + left.width() + 2 * padding);
-
-    renderPart(left.intersected(geometry), left, leftPosition, true);
-    renderPart(top.intersected(geometry), top, topPosition);
-    renderPart(right.intersected(geometry), right, rightPosition, true);
-    renderPart(bottom.intersected(geometry), bottom, bottomPosition);
+const QMargins SceneOpenGLDecorationRenderer::texturePadForPart(
+        const QRect &rect, const QRect &partRect)
+{
+    QMargins result = QMargins(0, 0, 0, 0);
+    if (rect.top() == partRect.top()) {
+        result.setTop(TexturePad);
+    }
+    if (rect.bottom() == partRect.bottom()) {
+        result.setBottom(TexturePad);
+    }
+    if (rect.left() == partRect.left()) {
+        result.setLeft(TexturePad);
+    }
+    if (rect.right() == partRect.right()) {
+        result.setRight(TexturePad);
+    }
+    return result;
 }
 
 static int align(int value, int align)
@@ -1702,15 +1700,12 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
                          qMax(left.height(), right.height()));
     size.rheight() = top.height() + bottom.height() +
                      left.width() + right.width();
+    size *= devicePixelRatio();
 
-    // Reserve some space for padding. We pad decoration parts to avoid texture bleeding.
-    const int padding = 1;
-    size.rwidth() += 2 * padding;
-    size.rheight() += 4 * 2 * padding;
-
+    size.rheight() += 4 * (2 * TexturePad);
+    size.rwidth() += 2 * TexturePad;
     size.rwidth() = align(size.width(), 128);
 
-    size *= devicePixelRatio();
     if (m_texture && m_texture->size() == size)
         return;
 

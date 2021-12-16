@@ -41,6 +41,9 @@ public:
     qreal devicePixelRatio() const;
     void setDevicePixelRatio(qreal dpr);
 
+    // Reserve some space for padding. We pad decoration parts to avoid texture bleeding.
+    static const int TexturePad = 1;
+
 Q_SIGNALS:
     void damaged(const QRegion &region);
 
