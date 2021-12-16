@@ -831,12 +831,23 @@ void XdgToplevelClient::closeWindow()
 
 XdgSurfaceConfigure *XdgToplevelClient::sendRoleConfigure() const
 {
+    QSize framePadding(0, 0);
+    if (m_nextDecoration) {
+        framePadding.setWidth(m_nextDecoration->borderLeft() + m_nextDecoration->borderRight());
+        framePadding.setHeight(m_nextDecoration->borderTop() + m_nextDecoration->borderBottom());
+    }
+
     QSize nextClientSize = moveResizeGeometry().size();
     if (!nextClientSize.isEmpty()) {
-        if (m_nextDecoration) {
-            nextClientSize.rwidth() -= m_nextDecoration->borderLeft() + m_nextDecoration->borderRight();
-            nextClientSize.rheight() -= m_nextDecoration->borderTop() + m_nextDecoration->borderBottom();
-        }
+        nextClientSize.rwidth() -= framePadding.width();
+        nextClientSize.rheight() -= framePadding.height();
+    }
+
+    if (nextClientSize.isEmpty()) {
+        QSize bounds = workspace()->clientArea(PlacementArea, this, output()).size();
+        bounds.rwidth() -= framePadding.width();
+        bounds.rheight() -= framePadding.height();
+        m_shellSurface->sendConfigureBounds(bounds);
     }
 
     const quint32 serial = m_shellSurface->sendConfigure(nextClientSize, m_nextStates);
