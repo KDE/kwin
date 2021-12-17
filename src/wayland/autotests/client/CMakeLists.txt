@@ -23,19 +23,17 @@ ecm_mark_as_test(testWaylandSurface)
 ########################################################
 # Test WaylandSeat
 ########################################################
-if (HAVE_LINUX_INPUT_H)
-    set( testWaylandSeat_SRCS
-            test_wayland_seat.cpp
-        )
-    ecm_add_qtwayland_client_protocol(testWaylandSeat_SRCS
-        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml
-        BASENAME pointer-gestures-unstable-v1
+set( testWaylandSeat_SRCS
+        test_wayland_seat.cpp
     )
-    add_executable(testWaylandSeat ${testWaylandSeat_SRCS})
-    target_link_libraries( testWaylandSeat Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer Wayland::Client Wayland::Server)
-    add_test(NAME kwayland-testWaylandSeat COMMAND testWaylandSeat)
-    ecm_mark_as_test(testWaylandSeat)
-endif()
+ecm_add_qtwayland_client_protocol(testWaylandSeat_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml
+    BASENAME pointer-gestures-unstable-v1
+)
+add_executable(testWaylandSeat ${testWaylandSeat_SRCS})
+target_link_libraries( testWaylandSeat Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer Wayland::Client Wayland::Server)
+add_test(NAME kwayland-testWaylandSeat COMMAND testWaylandSeat)
+ecm_mark_as_test(testWaylandSeat)
 
 ########################################################
 # Test ShmPool
@@ -183,15 +181,13 @@ ecm_mark_as_test(testShadow)
 ########################################################
 # Test FakeInput
 ########################################################
-if (HAVE_LINUX_INPUT_H)
-    set( testFakeInput_SRCS
-            test_fake_input.cpp
-        )
-    add_executable(testFakeInput ${testFakeInput_SRCS})
-    target_link_libraries( testFakeInput Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer)
-    add_test(NAME kwayland-testFakeInput COMMAND testFakeInput)
-    ecm_mark_as_test(testFakeInput)
-endif()
+set( testFakeInput_SRCS
+        test_fake_input.cpp
+    )
+add_executable(testFakeInput ${testFakeInput_SRCS})
+target_link_libraries( testFakeInput Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer)
+add_test(NAME kwayland-testFakeInput COMMAND testFakeInput)
+ecm_mark_as_test(testFakeInput)
 
 ########################################################
 # Test TextInputV2

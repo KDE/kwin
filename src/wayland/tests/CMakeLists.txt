@@ -27,19 +27,16 @@ add_executable(pasteClient pasteclient.cpp)
 target_link_libraries(pasteClient Qt::Concurrent KF5::WaylandClient)
 ecm_mark_as_test(pasteClient)
 
-if (HAVE_LINUX_INPUT_H)
-    add_executable(touchClientTest touchclienttest.cpp)
-    target_link_libraries(touchClientTest KF5::WaylandClient)
+add_executable(touchClientTest touchclienttest.cpp)
+target_link_libraries(touchClientTest KF5::WaylandClient)
 
+add_executable(panelTest paneltest.cpp)
+target_link_libraries(panelTest KF5::WaylandClient)
+ecm_mark_as_test(panelTest)
 
-    add_executable(panelTest paneltest.cpp)
-    target_link_libraries(panelTest KF5::WaylandClient)
-    ecm_mark_as_test(panelTest)
-
-    add_executable(subsurface-test subsurfacetest.cpp)
-    target_link_libraries(subsurface-test Qt::Core Qt::Gui KF5::WaylandClient)
-    ecm_mark_as_test(subsurface-test)
-endif()
+add_executable(subsurface-test subsurfacetest.cpp)
+target_link_libraries(subsurface-test Qt::Core Qt::Gui KF5::WaylandClient)
+ecm_mark_as_test(subsurface-test)
 
 add_executable(shadowTest shadowtest.cpp)
 target_link_libraries(shadowTest KF5::WaylandClient)

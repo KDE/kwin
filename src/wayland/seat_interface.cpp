@@ -30,11 +30,8 @@
 #include "textinput_v3_interface_p.h"
 #include "touch_interface_p.h"
 #include "utils.h"
-// linux
-#include <config-kwaylandserver.h>
-#if HAVE_LINUX_INPUT_H
+
 #include <linux/input.h>
-#endif
 
 #include <functional>
 
@@ -631,7 +628,6 @@ PointerInterface *SeatInterface::pointer() const
 
 static quint32 qtToWaylandButton(Qt::MouseButton button)
 {
-#if HAVE_LINUX_INPUT_H
     static const QHash<Qt::MouseButton, quint32> s_buttons({
         {Qt::LeftButton, BTN_LEFT},
         {Qt::RightButton, BTN_RIGHT},
@@ -652,10 +648,6 @@ static quint32 qtToWaylandButton(Qt::MouseButton button)
         // further mapping not possible, 0x120 is BTN_JOYSTICK
     });
     return s_buttons.value(button, 0);
-#else
-    Q_UNUSED(button)
-    return 0;
-#endif
 }
 
 bool SeatInterface::isPointerButtonPressed(Qt::MouseButton button) const
@@ -1061,7 +1053,6 @@ void SeatInterface::notifyTouchDown(qint32 id, const QPointF &globalPosition)
         d->globalTouch.focus.firstTouchPos = globalPosition;
     }
 
-#if HAVE_LINUX_INPUT_H
     if (id == 0 && hasPointer() && focusedTouchSurface()) {
         TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
         if (touchPrivate->touchesForClient(focusedTouchSurface()->client()).isEmpty()) {
@@ -1072,7 +1063,6 @@ void SeatInterface::notifyTouchDown(qint32 id, const QPointF &globalPosition)
             d->pointer->sendFrame();
         }
     }
-#endif
 
     d->globalTouch.ids[id] = serial;
 }
@@ -1119,7 +1109,6 @@ void SeatInterface::notifyTouchUp(qint32 id)
     }
     d->touch->sendUp(id, serial);
 
-#if HAVE_LINUX_INPUT_H
     if (id == 0 && hasPointer() && focusedTouchSurface()) {
         TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
         if (touchPrivate->touchesForClient(focusedTouchSurface()->client()).isEmpty()) {
@@ -1129,7 +1118,6 @@ void SeatInterface::notifyTouchUp(qint32 id)
             d->pointer->sendFrame();
         }
     }
-#endif
 
     d->globalTouch.ids.remove(id);
 }
