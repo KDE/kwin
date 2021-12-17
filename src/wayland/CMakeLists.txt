@@ -285,6 +285,16 @@ ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
 )
 
 add_library(KWaylandServer ${SERVER_LIB_SRCS})
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_sources(KWaylandServer PRIVATE utils/executable_path_proc.cpp)
+elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+    target_sources(KWaylandServer PRIVATE utils/executable_path_sysctl.cpp)
+else()
+    message(FATAL_ERROR "Unsupported platform ${CMAKE_SYSTEM_NAME}")
+endif()
+
+
 add_library(Plasma::KWaylandServer ALIAS KWaylandServer)
 ecm_generate_export_header(KWaylandServer
     BASE_NAME

@@ -5,6 +5,7 @@
 */
 #include "clientconnection.h"
 #include "display.h"
+#include "utils/executable_path.h"
 // Qt
 #include <QFileInfo>
 #include <QVector>
@@ -44,7 +45,7 @@ ClientConnectionPrivate::ClientConnectionPrivate(wl_client *c, Display *display,
     listener.notify = destroyListenerCallback;
     wl_client_add_destroy_listener(c, &listener);
     wl_client_get_credentials(client, &pid, &user, &group);
-    executablePath = QFileInfo(QStringLiteral("/proc/%1/exe").arg(pid)).symLinkTarget();
+    executablePath = executablePathFromPid(pid);
 }
 
 ClientConnectionPrivate::~ClientConnectionPrivate()
