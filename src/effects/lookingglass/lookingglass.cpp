@@ -27,6 +27,8 @@
 
 #include <cmath>
 
+Q_LOGGING_CATEGORY(KWIN_LOOKINGGLASS, "kwin_effect_lookingglass", QtWarningMsg)
+
 namespace KWin
 {
 
@@ -83,7 +85,7 @@ void LookingGlassEffect::reconfigure(ReconfigureFlags)
     LookingGlassConfig::self()->read();
     initialradius = LookingGlassConfig::radius();
     radius = initialradius;
-    qCDebug(KWINEFFECTS) << "Radius from config:" << radius;
+    qCDebug(KWIN_LOOKINGGLASS) << "Radius from config:" << radius;
     m_valid = loadData();
 }
 
@@ -109,7 +111,7 @@ bool LookingGlassEffect::loadData()
         ShaderBinder binder(m_shader);
         m_shader->setUniform("u_textureSize", QVector2D(screenSize.width(), screenSize.height()));
     } else {
-        qCCritical(KWINEFFECTS) << "The shader failed to load!";
+        qCCritical(KWIN_LOOKINGGLASS) << "The shader failed to load!";
         return false;
     }
 
@@ -195,7 +197,7 @@ void LookingGlassEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::m
             zoom = qMin(zoom * qMax(1.0 + diff, 1.2), target_zoom);
         else
             zoom = qMax(zoom * qMin(1.0 - diff, 0.8), target_zoom);
-        qCDebug(KWINEFFECTS) << "zoom is now " << zoom;
+        qCDebug(KWIN_LOOKINGGLASS) << "zoom is now " << zoom;
         radius = qBound((double)initialradius, initialradius * zoom, 3.5 * initialradius);
 
         if (zoom <= 1.0f) {

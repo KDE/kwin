@@ -20,6 +20,8 @@
 
 #include <QMatrix4x4>
 
+Q_LOGGING_CATEGORY(KWIN_INVERT, "kwin_effect_invert", QtWarningMsg)
+
 namespace KWin
 {
 
@@ -64,7 +66,7 @@ bool InvertEffect::loadData()
 
     m_shader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("invert.frag"));
     if (!m_shader->isValid()) {
-        qCCritical(KWINEFFECTS) << "The shader failed to load!";
+        qCCritical(KWIN_INVERT) << "The shader failed to load!";
         return false;
     }
 

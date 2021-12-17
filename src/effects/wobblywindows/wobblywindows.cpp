@@ -26,6 +26,8 @@
 #   endif
 #endif
 
+Q_LOGGING_CATEGORY(KWIN_WOBBLYWINDOWS, "kwin_effect_wobblywindows", QtWarningMsg)
+
 namespace KWin
 {
 
@@ -132,7 +134,7 @@ WobblyWindowsEffect::~WobblyWindowsEffect()
     if (!windows.empty()) {
         // we should be empty at this point...
         // emit a warning and clean the list.
-        qCDebug(KWINEFFECTS) << "Windows list not empty. Left items : " << windows.count();
+        qCDebug(KWIN_WOBBLYWINDOWS) << "Windows list not empty. Left items : " << windows.count();
         QHash< const EffectWindow*,  WindowWobblyInfos >::iterator i;
         for (i = windows.begin(); i != windows.end(); ++i) {
             freeWobblyInfo(i.value());
@@ -148,7 +150,7 @@ void WobblyWindowsEffect::reconfigure(ReconfigureFlags)
     if (settingsMode != QStringLiteral("Custom")) {
         unsigned int wobblynessLevel = WobblyWindowsConfig::wobblynessLevel();
         if (wobblynessLevel > 4) {
-            qCDebug(KWINEFFECTS) << "Wrong value for \"WobblynessLevel\" : " << wobblynessLevel;
+            qCDebug(KWIN_WOBBLYWINDOWS) << "Wrong value for \"WobblynessLevel\" : " << wobblynessLevel;
             wobblynessLevel = 4;
         }
         setParameterSet(pset[wobblynessLevel]);
@@ -178,7 +180,7 @@ void WobblyWindowsEffect::reconfigure(ReconfigureFlags)
     m_resizeWobble = WobblyWindowsConfig::resizeWobble();
 
 #if defined VERBOSE_MODE
-    qCDebug(KWINEFFECTS) << "Parameters :\n" <<
+    qCDebug(KWIN_WOBBLYWINDOWS) << "Parameters :\n" <<
                  "grid(" << m_stiffness << ", " << m_drag << ", " << m_move_factor << ")\n" <<
                  "velocity(" << m_minVelocity << ", " << m_maxVelocity << ", " << m_stopVelocity << ")\n" <<
                  "acceleration(" << m_minAcceleration << ", " << m_maxAcceleration << ", " << m_stopAcceleration << ")\n" <<
@@ -392,14 +394,14 @@ void WobblyWindowsEffect::startMovedResized(EffectWindow* w)
     int indy = (picked.y - rect.y()) / y_increment + 0.5;
     int pickedPointIndex = indy * wwi.width + indx;
     if (pickedPointIndex < 0) {
-        qCDebug(KWINEFFECTS) << "Picked index == " << pickedPointIndex << " with (" << cursorPos().x() << "," << cursorPos().y() << ")";
+        qCDebug(KWIN_WOBBLYWINDOWS) << "Picked index == " << pickedPointIndex << " with (" << cursorPos().x() << "," << cursorPos().y() << ")";
         pickedPointIndex = 0;
     } else if (static_cast<unsigned int>(pickedPointIndex) > wwi.count - 1) {
-        qCDebug(KWINEFFECTS) << "Picked index == " << pickedPointIndex << " with (" << cursorPos().x() << "," << cursorPos().y() << ")";
+        qCDebug(KWIN_WOBBLYWINDOWS) << "Picked index == " << pickedPointIndex << " with (" << cursorPos().x() << "," << cursorPos().y() << ")";
         pickedPointIndex = wwi.count - 1;
     }
 #if defined VERBOSE_MODE
-    qCDebug(KWINEFFECTS) << "Original Picked point -- x : " << picked.x << " - y : " << picked.y;
+    qCDebug(KWIN_WOBBLYWINDOWS) << "Original Picked point -- x : " << picked.x << " - y : " << picked.y;
 #endif
     wwi.constraint[pickedPointIndex] = true;
 
@@ -598,8 +600,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
     qreal y_length = rect.height() / (wwi.height - 1.0);
 
 #if defined VERBOSE_MODE
-    qCDebug(KWINEFFECTS) << "time " << time;
-    qCDebug(KWINEFFECTS) << "increment x " << x_length << " // y" <<  y_length;
+    qCDebug(KWIN_WOBBLYWINDOWS) << "time " << time;
+    qCDebug(KWIN_WOBBLYWINDOWS) << "increment x " << x_length << " // y" <<  y_length;
 #endif
 
     Pair origine = {rect.x(), rect.y()};
@@ -895,7 +897,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
 
 #if defined VERBOSE_MODE
         if (wwi.constraint[i]) {
-            qCDebug(KWINEFFECTS) << "Constraint point ** vel : " << vel.x << "," << vel.y << " ** move : " << vel.x*time << "," << vel.y*time;
+            qCDebug(KWIN_WOBBLYWINDOWS) << "Constraint point ** vel : " << vel.x << "," << vel.y << " ** move : " << vel.x*time << "," << vel.y*time;
         }
 #endif
     }
@@ -923,10 +925,10 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
 
 #if defined VERBOSE_MODE
 #   if defined COMPUTE_STATS
-    qCDebug(KWINEFFECTS) << "Acceleration bounds (" << accBound.x << ", " << accBound.y << ")";
-    qCDebug(KWINEFFECTS) << "Velocity bounds (" << velBound.x << ", " << velBound.y << ")";
+    qCDebug(KWIN_WOBBLYWINDOWS) << "Acceleration bounds (" << accBound.x << ", " << accBound.y << ")";
+    qCDebug(KWIN_WOBBLYWINDOWS) << "Velocity bounds (" << velBound.x << ", " << velBound.y << ")";
 #   endif
-    qCDebug(KWINEFFECTS) << "sum_acc : " << acc_sum << "  ***  sum_vel :" << vel_sum;
+    qCDebug(KWIN_WOBBLYWINDOWS) << "sum_acc : " << acc_sum << "  ***  sum_vel :" << vel_sum;
 #endif
 
     if (wwi.status != Moving && acc_sum < m_stopAcceleration && vel_sum < m_stopVelocity) {

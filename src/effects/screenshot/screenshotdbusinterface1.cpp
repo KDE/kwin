@@ -6,6 +6,7 @@
 */
 
 #include "screenshotdbusinterface1.h"
+#include "screenshotlogging.h"
 #include "../service_utils.h"
 
 #include <KLocalizedString>
@@ -19,7 +20,6 @@
 #include <QtConcurrent>
 
 #include <unistd.h>
-Q_LOGGING_CATEGORY(KWINEFFECTS, "kwineffects", QtWarningMsg)
 
 namespace KWin
 {
@@ -295,13 +295,13 @@ ScreenShotSink1::ScreenShotSink1(ScreenShotDBusInterface1 *interface, QDBusMessa
 void ScreenShotSink1::flush(const QImage &image)
 {
     Q_UNUSED(image)
-    qCWarning(KWINEFFECTS) << metaObject()->className() << "does not implement" << Q_FUNC_INFO;
+    qCWarning(KWIN_SCREENSHOT) << metaObject()->className() << "does not implement" << Q_FUNC_INFO;
 }
 
 void ScreenShotSink1::flushMulti(const QList<QImage> &images)
 {
     Q_UNUSED(images)
-    qCWarning(KWINEFFECTS) << metaObject()->className() << "does not implement" << Q_FUNC_INFO;
+    qCWarning(KWIN_SCREENSHOT) << metaObject()->className() << "does not implement" << Q_FUNC_INFO;
 }
 
 void ScreenShotSink1::cancel()
@@ -506,7 +506,7 @@ bool ScreenShotDBusInterface1::checkCall() const
         const auto interfaces = KWin::fetchRestrictedDBusInterfacesFromPid(pid);
         if (!interfaces.contains(s_dbusInterfaceName)) {
             sendErrorReply(s_errorNotAuthorized, s_errorNotAuthorizedMsg);
-            qCWarning(KWINEFFECTS) << "Process" << pid << "tried to take a screenshot without being granted to DBus interface" << s_dbusInterfaceName;
+            qCWarning(KWIN_SCREENSHOT) << "Process" << pid << "tried to take a screenshot without being granted to DBus interface" << s_dbusInterfaceName;
             return false;
         }
     } else {

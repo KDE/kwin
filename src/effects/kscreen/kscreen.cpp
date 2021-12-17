@@ -37,6 +37,8 @@
  * 3: fading in
  */
 
+Q_LOGGING_CATEGORY(KWIN_KSCREEN, "kwin_effect_kscreen", QtWarningMsg)
+
 namespace KWin
 {
 
@@ -189,7 +191,7 @@ void KscreenEffect::propertyNotify(EffectWindow *window, long int atom)
     const uint32_t *data = byteData.isEmpty() ? nullptr : reinterpret_cast<const uint32_t *>(byteData.data());
     if (!data || data[0] >= LastState) { // Property was deleted
         if (data) {
-            qCDebug(KWINEFFECTS) << "Incorrect Property state, immediate stop: " << data[0];
+            qCDebug(KWIN_KSCREEN) << "Incorrect Property state, immediate stop: " << data[0];
         }
         setState(m_xcbState, StateNormal);
         return;

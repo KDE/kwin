@@ -12,6 +12,8 @@
 
 #include <QDBusConnection>
 
+Q_LOGGING_CATEGORY(KWIN_HIGHLIGHTWINDOW, "kwin_effect_highlightwindow", QtWarningMsg)
+
 namespace KWin
 {
 
@@ -138,7 +140,7 @@ void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a, EffectWi
         m_highlightedIds << data[i];
         EffectWindow* foundWin = effects->findWindow(data[i]);
         if (!foundWin) {
-            qCDebug(KWINEFFECTS) << "Invalid window targetted for highlight. Requested:" << data[i];
+            qCDebug(KWIN_HIGHLIGHTWINDOW) << "Invalid window targetted for highlight. Requested:" << data[i];
             continue; // might come in later.
         }
         m_highlightedWindows.append(foundWin);

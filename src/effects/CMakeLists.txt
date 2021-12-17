@@ -163,7 +163,6 @@ add_subdirectory(wobblywindows)
 
 # Add the builtins plugin
 set(kwin4_effect_builtins_sources
-    logging.cpp
     ../service_utils.cpp
 )
 

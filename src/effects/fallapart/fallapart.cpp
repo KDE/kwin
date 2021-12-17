@@ -13,6 +13,8 @@
 
 #include <cmath>
 
+Q_LOGGING_CATEGORY(KWIN_FALLAPART, "kwin_effect_fallapart", QtWarningMsg)
+
 namespace KWin
 {
 
@@ -132,15 +134,15 @@ bool FallApartEffect::isRealWindow(EffectWindow* w)
 {
     // TODO: isSpecialWindow is rather generic, maybe tell windowtypes separately?
     /*
-    qCDebug(KWINEFFECTS) << "--" << w->caption() << "--------------------------------";
-    qCDebug(KWINEFFECTS) << "Tooltip:" << w->isTooltip();
-    qCDebug(KWINEFFECTS) << "Toolbar:" << w->isToolbar();
-    qCDebug(KWINEFFECTS) << "Desktop:" << w->isDesktop();
-    qCDebug(KWINEFFECTS) << "Special:" << w->isSpecialWindow();
-    qCDebug(KWINEFFECTS) << "TopMenu:" << w->isTopMenu();
-    qCDebug(KWINEFFECTS) << "Notific:" << w->isNotification();
-    qCDebug(KWINEFFECTS) << "Splash:" << w->isSplash();
-    qCDebug(KWINEFFECTS) << "Normal:" << w->isNormalWindow();
+    qCDebug(KWIN_FALLAPART) << "--" << w->caption() << "--------------------------------";
+    qCDebug(KWIN_FALLAPART) << "Tooltip:" << w->isTooltip();
+    qCDebug(KWIN_FALLAPART) << "Toolbar:" << w->isToolbar();
+    qCDebug(KWIN_FALLAPART) << "Desktop:" << w->isDesktop();
+    qCDebug(KWIN_FALLAPART) << "Special:" << w->isSpecialWindow();
+    qCDebug(KWIN_FALLAPART) << "TopMenu:" << w->isTopMenu();
+    qCDebug(KWIN_FALLAPART) << "Notific:" << w->isNotification();
+    qCDebug(KWIN_FALLAPART) << "Splash:" << w->isSplash();
+    qCDebug(KWIN_FALLAPART) << "Normal:" << w->isNormalWindow();
     */
     if (w->isPopupWindow()) {
         return false;

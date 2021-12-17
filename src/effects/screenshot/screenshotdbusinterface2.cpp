@@ -9,6 +9,7 @@
 #include "screenshotdbusinterface2.h"
 #include "../service_utils.h"
 #include "screenshot2adaptor.h"
+#include "screenshotlogging.h"
 
 #include <KLocalizedString>
 
@@ -51,7 +52,7 @@ static void writeBufferToPipe(int fileDescriptor, const QByteArray &buffer)
     QFile file;
     if (!file.open(fileDescriptor, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
         close(fileDescriptor);
-        qCWarning(KWINEFFECTS) << Q_FUNC_INFO << "failed to open pipe:" << file.errorString();
+        qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "failed to open pipe:" << file.errorString();
         return;
     }
 
@@ -65,21 +66,21 @@ static void writeBufferToPipe(int fileDescriptor, const QByteArray &buffer)
         const int ready = poll(pfds, 1, 60000);
         if (ready < 0) {
             if (errno != EINTR) {
-                qCWarning(KWINEFFECTS) << Q_FUNC_INFO << "poll() failed:" << strerror(errno);
+                qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "poll() failed:" << strerror(errno);
                 return;
             }
         } else if (ready == 0) {
-            qCWarning(KWINEFFECTS) << Q_FUNC_INFO << "timed out writing to pipe";
+            qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "timed out writing to pipe";
             return;
         } else if (!(pfds[0].revents & POLLOUT)) {
-            qCWarning(KWINEFFECTS) << Q_FUNC_INFO << "pipe is broken";
+            qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "pipe is broken";
             return;
         } else {
             const char *chunk = buffer.constData() + (buffer.size() - remainingSize);
             const qint64 writtenCount = file.write(chunk, remainingSize);
 
             if (writtenCount < 0) {
-                qCWarning(KWINEFFECTS) << Q_FUNC_INFO << "write() failed:" << file.errorString();
+                qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "write() failed:" << file.errorString();
                 return;
             }
 
@@ -340,7 +341,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureWindow(const QString &handle,
         if (ok) {
             window = effects->findWindow(winId);
         } else {
-            qCWarning(KWINEFFECTS) << "Invalid handle:" << handle;
+            qCWarning(KWIN_SCREENSHOT) << "Invalid handle:" << handle;
         }
     }
     if (!window) {

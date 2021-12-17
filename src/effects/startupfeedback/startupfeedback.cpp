@@ -28,6 +28,8 @@
 // based on StartupId in KRunner by Lubos Lunak
 // SPDX-FileCopyrightText: 2001 Lubos Lunak <l.lunak@kde.org>
 
+Q_LOGGING_CATEGORY(KWIN_STARTUPFEEDBACK, "kwin_effect_startupfeedback", QtWarningMsg)
+
 namespace KWin
 {
 
@@ -145,9 +147,9 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
         if (effects->compositingType() == OpenGLCompositing) {
             m_blinkingShader.reset(ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("blinking-startup-fragment.glsl")));
             if (m_blinkingShader->isValid()) {
-                qCDebug(KWINEFFECTS) << "Blinking Shader is valid";
+                qCDebug(KWIN_STARTUPFEEDBACK) << "Blinking Shader is valid";
             } else {
-                qCDebug(KWINEFFECTS) << "Blinking Shader is not valid";
+                qCDebug(KWIN_STARTUPFEEDBACK) << "Blinking Shader is not valid";
             }
         }
     } else
