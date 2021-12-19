@@ -140,8 +140,6 @@ void InputMethod::setActive(bool active)
 
         if (!wasActive) {
             waylandServer()->inputMethod()->sendActivate();
-        } else {
-            waylandServer()->inputMethod()->context()->sendReset();
         }
         adoptInputMethodContext();
     } else {
