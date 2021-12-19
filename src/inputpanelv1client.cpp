@@ -117,7 +117,7 @@ void KWin::InputPanelV1Client::reposition()
                 }
                 if (popupRect.top() < screen.top() || popupRect.bottom() > screen.bottom()) {
                     auto flippedPopupRect =
-                        QRect(popupOffset(cursorRectangle, Qt::BottomEdge | Qt::LeftEdge, Qt::RightEdge | Qt::TopEdge, surface()->size()), surface()->size());
+                        QRect(popupOffset(cursorRectangle, Qt::TopEdge | Qt::LeftEdge, Qt::RightEdge | Qt::TopEdge, surface()->size()), surface()->size());
 
                     // if it still doesn't fit we should continue with the unflipped version
                     if (flippedPopupRect.top() >= screen.top() || flippedPopupRect.bottom() <= screen.bottom()) {
