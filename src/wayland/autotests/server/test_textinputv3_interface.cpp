@@ -553,6 +553,7 @@ void TestTextInputV3Interface::testMultipleTextinputs()
 
     m_serverTextInputV3 = m_seat->textInputV3();
     QVERIFY(m_serverTextInputV3);
+    QVERIFY(!m_serverTextInputV3->isEnabled());
 
     QSignalSpy committedSpy(m_serverTextInputV3, &TextInputV3Interface::stateCommitted);
     // Enable ti1
@@ -560,6 +561,7 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     ti1->commit();
     QVERIFY(committedSpy.wait());
     QCOMPARE(committedSpy.last().at(0).value<quint32>(), 1);
+    QVERIFY(m_serverTextInputV3->isEnabled());
 
     // Send another three commits on ti1
     ti1->enable();
@@ -567,12 +569,14 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     ti1->commit();
     QVERIFY(committedSpy.wait());
     QCOMPARE(committedSpy.last().at(0).value<quint32>(), 2);
+    QVERIFY(m_serverTextInputV3->isEnabled());
 
     ti1->enable();
     ti1->set_content_type(QtWayland::zwp_text_input_v3::content_hint_none, QtWayland::zwp_text_input_v3::content_purpose_normal);
     ti1->commit();
     QVERIFY(committedSpy.wait());
     QCOMPARE(committedSpy.last().at(0).value<quint32>(), 3);
+    QVERIFY(m_serverTextInputV3->isEnabled());
 
     // at this point total commit count to ti1 is 3
     QSignalSpy doneSpy1(ti1, &TextInputV3::done);
@@ -590,12 +594,14 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     ti1->commit();
     QVERIFY(committedSpy.wait());
     QCOMPARE(committedSpy.last().at(0).value<quint32>(), 4);
+    QVERIFY(!m_serverTextInputV3->isEnabled());
 
     // first commit to ti2
     ti2->enable();
     ti2->commit();
     QVERIFY(committedSpy.wait());
     QCOMPARE(committedSpy.last().at(0).value<quint32>(), 1);
+    QVERIFY(m_serverTextInputV3->isEnabled());
 
     // send commit string
     m_serverTextInputV3->commitString("Hello world");
@@ -608,6 +614,7 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     ti2->commit();
     QVERIFY(committedSpy.wait());
     QCOMPARE(committedSpy.last().at(0).value<quint32>(), 2);
+    QVERIFY(!m_serverTextInputV3->isEnabled());
 
     // now re-enable the ti1 and verify sending commits to t2 hasn't affected it's serial
     // Enable ti1 : 5 commits now
@@ -615,6 +622,7 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     ti1->commit();
     QVERIFY(committedSpy.wait());
     QCOMPARE(committedSpy.last().at(0).value<quint32>(), 5);
+    QVERIFY(m_serverTextInputV3->isEnabled());
 
     // send done signal
     m_serverTextInputV3->commitString("Hello");

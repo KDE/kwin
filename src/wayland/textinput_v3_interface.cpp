@@ -108,6 +108,26 @@ TextInputManagerV3InterfacePrivate::TextInputManagerV3InterfacePrivate(TextInput
 {
 }
 
+class EnabledEmitter
+{
+public:
+    EnabledEmitter(TextInputV3Interface *q)
+        : q(q)
+        , m_wasEnabled(q->isEnabled())
+    {
+    }
+    ~EnabledEmitter()
+    {
+        if (m_wasEnabled != q->isEnabled()) {
+            Q_EMIT q->enabledChanged();
+        }
+    }
+
+private:
+    TextInputV3Interface *q;
+    const bool m_wasEnabled;
+};
+
 void TextInputManagerV3InterfacePrivate::zwp_text_input_manager_v3_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
@@ -121,7 +141,11 @@ void TextInputManagerV3InterfacePrivate::zwp_text_input_manager_v3_get_text_inpu
         return;
     }
     TextInputV3InterfacePrivate *textInputPrivate = TextInputV3InterfacePrivate::get(s->textInputV3());
-    textInputPrivate->add(resource->client(), id, resource->version());
+    auto *textInputResource = textInputPrivate->add(resource->client(), id, resource->version());
+    // Send enter to this new text input object if the surface is already focused.
+    if (textInputPrivate->surface && textInputPrivate->surface->client()->client() == resource->client()) {
+        textInputPrivate->send_enter(textInputResource->handle, textInputPrivate->surface->resource());
+    }
 }
 
 TextInputManagerV3Interface::TextInputManagerV3Interface(Display *display, QObject *parent)
@@ -142,35 +166,37 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_bind_resource(Resource *reso
 {
     // we initialize the serial for the resource to be 0
     serialHash.insert(resource, 0);
+    enabled.insert(resource, false);
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_destroy(Resource *resource)
 {
     // drop resource from the serial hash
     serialHash.remove(resource);
+    enabled.remove(resource);
 }
 
-void TextInputV3InterfacePrivate::sendEnter(SurfaceInterface *s)
+void TextInputV3InterfacePrivate::sendEnter(SurfaceInterface *newSurface)
 {
-    if (!s) {
-        return;
-    }
-    surface = QPointer<SurfaceInterface>(s);
-    const auto clientResources = textInputsForClient(s->client());
+    EnabledEmitter emitter(q);
+    // It should be always synchronized with SeatInterface::focusedTextInputSurface.
+    Q_ASSERT(!surface && newSurface);
+    surface = newSurface;
+    const auto clientResources = textInputsForClient(newSurface->client());
     for (auto resource : clientResources) {
-        send_enter(resource->handle, s->resource());
+        send_enter(resource->handle, newSurface->resource());
     }
 }
 
-void TextInputV3InterfacePrivate::sendLeave(SurfaceInterface *s)
+void TextInputV3InterfacePrivate::sendLeave(SurfaceInterface *leavingSurface)
 {
-    if (!s) {
-        return;
-    }
+    EnabledEmitter emitter(q);
+    // It should be always synchronized with SeatInterface::focusedTextInputSurface.
+    Q_ASSERT(leavingSurface && surface == leavingSurface);
     surface.clear();
-    const auto clientResources = textInputsForClient(s->client());
+    const auto clientResources = textInputsForClient(leavingSurface->client());
     for (auto resource : clientResources) {
-        send_leave(resource->handle, s->resource());
+        send_leave(resource->handle, leavingSurface->resource());
     }
 }
 
@@ -179,7 +205,7 @@ void TextInputV3InterfacePrivate::sendPreEdit(const QString &text, const quint32
     if (!surface) {
         return;
     }
-    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
     for (auto resource : textInputs) {
         send_preedit_string(resource->handle, text, cursorBegin, cursorEnd);
     }
@@ -190,7 +216,7 @@ void TextInputV3InterfacePrivate::commitString(const QString &text)
     if (!surface) {
         return;
     }
-    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
     for (auto resource : textInputs) {
         send_commit_string(resource->handle, text);
     }
@@ -201,7 +227,7 @@ void TextInputV3InterfacePrivate::deleteSurroundingText(quint32 before, quint32 
     if (!surface) {
         return;
     }
-    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
     for (auto resource : textInputs) {
         send_delete_surrounding_text(resource->handle, before, after);
     }
@@ -212,7 +238,8 @@ void TextInputV3InterfacePrivate::done()
     if (!surface) {
         return;
     }
-    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
+
     for (auto resource : textInputs) {
         // zwp_text_input_v3.done takes the serial argument which is equal to number of commit requests issued
         send_done(resource->handle, serialHash[resource]);
@@ -222,6 +249,29 @@ void TextInputV3InterfacePrivate::done()
 QList<TextInputV3InterfacePrivate::Resource *> TextInputV3InterfacePrivate::textInputsForClient(ClientConnection *client) const
 {
     return resourceMap().values(client->client());
+}
+
+QList<TextInputV3InterfacePrivate::Resource *> TextInputV3InterfacePrivate::enabledTextInputsForClient(ClientConnection *client) const
+{
+    QList<TextInputV3InterfacePrivate::Resource *> result;
+    const auto [start, end] = resourceMap().equal_range(client->client());
+    for (auto it = start; it != end; ++it) {
+        if (enabled[*it]) {
+            result.append(*it);
+        }
+    }
+    return result;
+}
+
+bool TextInputV3InterfacePrivate::isEnabled() const
+{
+    if (!surface) {
+        return false;
+    }
+    const auto clientResources = textInputsForClient(surface->client());
+    return std::any_of(clientResources.begin(), clientResources.end(), [this](Resource *resource) {
+        return enabled[resource];
+    });
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_enable(Resource *resource)
@@ -284,11 +334,12 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_set_text_change_cause(Resour
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
 {
+    EnabledEmitter emitter(q);
     serialHash[resource]++;
 
-    if (enabled != pending.enabled) {
-        enabled = pending.enabled;
-        Q_EMIT q->enabledChanged();
+    auto &resourceEnabled = enabled[resource];
+    if (resourceEnabled != pending.enabled) {
+        resourceEnabled = pending.enabled;
     }
 
     if (surroundingTextChangeCause != pending.surroundingTextChangeCause) {
@@ -299,14 +350,14 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
     if (contentHints != pending.contentHints || contentPurpose != pending.contentPurpose) {
         contentHints = pending.contentHints;
         contentPurpose = pending.contentPurpose;
-        if (enabled) {
+        if (resourceEnabled) {
             Q_EMIT q->contentTypeChanged();
         }
     }
 
     if (cursorRectangle != pending.cursorRectangle) {
         cursorRectangle = pending.cursorRectangle;
-        if (enabled) {
+        if (resourceEnabled) {
             Q_EMIT q->cursorRectangleChanged(cursorRectangle);
         }
     }
@@ -316,7 +367,7 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
         surroundingText = pending.surroundingText;
         surroundingTextCursorPosition = pending.surroundingTextCursorPosition;
         surroundingTextSelectionAnchor = pending.surroundingTextSelectionAnchor;
-        if (enabled) {
+        if (resourceEnabled) {
             Q_EMIT q->surroundingTextChanged();
         }
     }
@@ -391,6 +442,14 @@ void TextInputV3Interface::done()
 
 QPointer<SurfaceInterface> TextInputV3Interface::surface() const
 {
+    if (!d->surface) {
+        return nullptr;
+    }
+
+    if (!d->resourceMap().contains(d->surface->client()->client())) {
+        return nullptr;
+    }
+
     return d->surface;
 }
 
@@ -401,7 +460,7 @@ QRect TextInputV3Interface::cursorRectangle() const
 
 bool TextInputV3Interface::isEnabled() const
 {
-    return d->enabled;
+    return d->isEnabled();
 }
 
 }

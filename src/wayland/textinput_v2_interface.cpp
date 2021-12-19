@@ -127,7 +127,12 @@ void TextInputManagerV2InterfacePrivate::zwp_text_input_manager_v2_get_text_inpu
     }
 
     TextInputV2InterfacePrivate *textInputPrivate = TextInputV2InterfacePrivate::get(s->textInputV2());
-    textInputPrivate->add(resource->client(), id, resource->version());
+    auto *textInputResource = textInputPrivate->add(resource->client(), id, resource->version());
+    // Send enter to this new text input object if the surface is already focused.
+    const quint32 serial = s->display()->nextSerial();
+    if (textInputPrivate->surface && textInputPrivate->surface->client()->client() == resource->client()) {
+        textInputPrivate->send_enter(textInputResource->handle, serial, textInputPrivate->surface->resource());
+    }
 }
 
 TextInputManagerV2Interface::TextInputManagerV2Interface(Display *display, QObject *parent)
@@ -141,25 +146,19 @@ TextInputManagerV2Interface::~TextInputManagerV2Interface() = default;
 void TextInputV2InterfacePrivate::sendEnter(SurfaceInterface *newSurface, quint32 serial)
 {
     EnabledEmitter emitter(q);
-    if (surface) {
-        sendLeave(serial, newSurface);
-    }
-
+    // It should be always synchronized with SeatInterface::focusedTextInputSurface.
+    Q_ASSERT(!surface && newSurface);
     surface = newSurface;
-    if (surface) {
-        const auto clientResources = textInputsForClient(newSurface->client());
-        for (auto resource : clientResources) {
-            send_enter(resource->handle, serial, newSurface->resource());
-        }
+    const auto clientResources = textInputsForClient(newSurface->client());
+    for (auto resource : clientResources) {
+        send_enter(resource->handle, serial, newSurface->resource());
     }
 }
 
 void TextInputV2InterfacePrivate::sendLeave(quint32 serial, SurfaceInterface *leavingSurface)
 {
-    if (leavingSurface != surface || !leavingSurface) {
-        return;
-    }
-
+    // It should be always synchronized with SeatInterface::focusedTextInputSurface.
+    Q_ASSERT(leavingSurface && surface == leavingSurface);
     EnabledEmitter emitter(q);
     surface.clear();
     const auto clientResources = textInputsForClient(leavingSurface->client());
@@ -335,7 +334,14 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_enable(Resource *resource, w
     Q_UNUSED(resource)
     EnabledEmitter emitter(q);
     auto enabledSurface = SurfaceInterface::get(s);
+    if (m_enabledSurfaces.contains(enabledSurface)) {
+        return;
+    }
     m_enabledSurfaces.insert(enabledSurface);
+    QObject::connect(enabledSurface, &SurfaceInterface::aboutToBeDestroyed, q, [this, enabledSurface] {
+        EnabledEmitter emitter(q);
+        m_enabledSurfaces.remove(enabledSurface);
+    });
 }
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_disable(Resource *resource, wl_resource *s)
@@ -343,8 +349,8 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_disable(Resource *resource, 
     Q_UNUSED(resource)
     EnabledEmitter emitter(q);
     auto disabledSurface = SurfaceInterface::get(s);
+    QObject::disconnect(disabledSurface, &SurfaceInterface::aboutToBeDestroyed, q, nullptr);
     m_enabledSurfaces.remove(disabledSurface);
-
     if (disabledSurface == surface) {
         q->setInputPanelState(false, {0, 0, 0, 0});
     }
@@ -529,6 +535,14 @@ void TextInputV2Interface::setModifiersMap(const QByteArray &modifiersMap)
 
 QPointer<SurfaceInterface> TextInputV2Interface::surface() const
 {
+    if (!d->surface) {
+        return nullptr;
+    }
+
+    if (!d->resourceMap().contains(d->surface->client()->client())) {
+        return nullptr;
+    }
+
     return d->surface;
 }
 

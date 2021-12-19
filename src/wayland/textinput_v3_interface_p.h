@@ -42,7 +42,9 @@ public:
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength);
     void done();
 
+    bool isEnabled() const;
     QList<TextInputV3InterfacePrivate::Resource *> textInputsForClient(ClientConnection *client) const;
+    QList<TextInputV3InterfacePrivate::Resource *> enabledTextInputsForClient(ClientConnection *client) const;
 
     static TextInputV3InterfacePrivate *get(TextInputV3Interface *inputInterface)
     {
@@ -55,7 +57,6 @@ public:
 
     SeatInterface *seat = nullptr;
     QPointer<SurfaceInterface> surface;
-    bool enabled = false;
 
     QString surroundingText;
     qint32 surroundingTextCursorPosition = 0;
@@ -74,6 +75,7 @@ public:
     } pending;
 
     QHash<Resource *, quint32> serialHash;
+    QHash<Resource *, bool> enabled;
 
     void defaultPending();
 

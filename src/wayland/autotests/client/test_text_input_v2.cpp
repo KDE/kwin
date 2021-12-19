@@ -33,6 +33,7 @@ private Q_SLOTS:
 
     void testEnterLeave_data();
     void testEnterLeave();
+    void testFocusedBeforeCreateTextInput();
     void testShowHidePanel();
     void testCursorRectangle();
     void testPreferredLanguage();
@@ -265,6 +266,50 @@ void TextInputTest::testEnterLeave()
     QVERIFY(unboundSpy.wait());
     QVERIFY(leftSpy.wait());
     QVERIFY(!textInput->enteredSurface());
+}
+
+void TextInputTest::testFocusedBeforeCreateTextInput()
+{
+    // this test verifies that enter leave are sent correctly
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    auto serverSurface = waitForSurface();
+    // now let's try to enter it
+    QSignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputSurfaceChanged);
+    QVERIFY(textInputChangedSpy.isValid());
+    QVERIFY(!m_seatInterface->focusedTextInputSurface());
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    QCOMPARE(m_seatInterface->focusedTextInputSurface(), serverSurface);
+    QCOMPARE(textInputChangedSpy.count(), 1);
+
+    // This is null because there is no text input object for this client.
+    QCOMPARE(m_seatInterface->textInputV2()->surface(), nullptr);
+
+    QVERIFY(serverSurface);
+    QScopedPointer<TextInput> textInput(createTextInput());
+    QVERIFY(!textInput.isNull());
+    QSignalSpy enteredSpy(textInput.data(), &TextInput::entered);
+    QVERIFY(enteredSpy.isValid());
+    QSignalSpy leftSpy(textInput.data(), &TextInput::left);
+    QVERIFY(leftSpy.isValid());
+
+    // and trigger an enter
+    if (enteredSpy.isEmpty()) {
+        QVERIFY(enteredSpy.wait());
+    }
+    QCOMPARE(enteredSpy.count(), 1);
+    QCOMPARE(textInput->enteredSurface(), surface.data());
+
+    // This is not null anymore because there is a text input object associated with it.
+    QCOMPARE(m_seatInterface->textInputV2()->surface(), serverSurface);
+
+    // now trigger a leave
+    m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    QCOMPARE(textInputChangedSpy.count(), 2);
+    QVERIFY(leftSpy.wait());
+    QVERIFY(!textInput->enteredSurface());
+
+    QCOMPARE(m_seatInterface->textInputV2()->surface(), nullptr);
+    QCOMPARE(m_seatInterface->focusedTextInputSurface(), nullptr);
 }
 
 void TextInputTest::testShowHidePanel()

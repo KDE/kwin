@@ -1184,26 +1184,25 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
 {
     const quint32 serial = d->display->nextSerial();
 
+    if (d->focusedTextInputSurface == surface) {
+        return;
+    }
+
     if (d->focusedTextInputSurface) {
         disconnect(d->focusedSurfaceDestroyConnection);
-    }
-
-    if (d->focusedTextInputSurface != surface) {
         d->textInputV2->d->sendLeave(serial, d->focusedTextInputSurface);
         d->textInputV3->d->sendLeave(d->focusedTextInputSurface);
-        d->focusedTextInputSurface = surface;
-        Q_EMIT focusedTextInputSurfaceChanged();
     }
+    d->focusedTextInputSurface = surface;
+    Q_EMIT focusedTextInputSurfaceChanged();
 
-    if (d->focusedTextInputSurface) {
+    if (surface) {
         d->focusedSurfaceDestroyConnection = connect(surface, &SurfaceInterface::aboutToBeDestroyed, this, [this] {
             setFocusedTextInputSurface(nullptr);
         });
+        d->textInputV2->d->sendEnter(surface, serial);
+        d->textInputV3->d->sendEnter(surface);
     }
-
-    d->textInputV2->d->sendEnter(surface, serial);
-    d->textInputV3->d->sendEnter(surface);
-    // TODO: setFocusedSurface like in other interfaces
 }
 
 SurfaceInterface *SeatInterface::focusedTextInputSurface() const
