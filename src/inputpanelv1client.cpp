@@ -107,7 +107,7 @@ void KWin::InputPanelV1Client::reposition()
                 const QRect screen = Workspace::self()->clientArea(PlacementArea, cursorRectangle.bottomLeft(), 0);
 
                 // Reuse the similar logic like xdg popup
-                QRect popupRect(popupOffset(cursorRectangle, Qt::TopEdge | Qt::LeftEdge, Qt::RightEdge | Qt::BottomEdge, surface()->size()), surface()->size());
+                QRect popupRect(popupOffset(cursorRectangle, Qt::BottomEdge | Qt::LeftEdge, Qt::RightEdge | Qt::BottomEdge, surface()->size()), surface()->size());
 
                 if (popupRect.left() < screen.left()) {
                     popupRect.moveLeft(screen.left());
