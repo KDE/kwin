@@ -416,6 +416,7 @@ void InputMethod::deleteSurroundingText(int32_t index, uint32_t length)
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3 && t3->isEnabled()) {
         t3->deleteSurroundingText(index, length);
+        t3->done();
     }
 }
 
@@ -455,7 +456,6 @@ void InputMethod::setPreeditCursor(qint32 index)
     if (t3 && t3->isEnabled()) {
         preedit.begin = index;
         preedit.end = index;
-        t3->sendPreEditString(preedit.text, preedit.begin, preedit.end);
     }
 }
 
@@ -471,6 +471,7 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
     if (t3 && t3->isEnabled()) {
         preedit.text = text;
         t3->sendPreEditString(preedit.text, preedit.begin, preedit.end);
+        t3->done();
     }
 }
 
