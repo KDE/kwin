@@ -180,6 +180,18 @@ void TextInputV2InterfacePrivate::preEdit(const QString &text, const QString &co
     }
 }
 
+void TextInputV2InterfacePrivate::preEditStyling(uint32_t index, uint32_t length, uint32_t style)
+{
+    if (!surface) {
+        return;
+    }
+
+    const auto clientResources = textInputsForClient(surface->client());
+    for (auto resource : clientResources) {
+        send_preedit_styling(resource->handle, index, length, style);
+    }
+}
+
 void TextInputV2InterfacePrivate::commitString(const QString &text)
 {
     if (!surface) {
@@ -442,6 +454,11 @@ qint32 TextInputV2Interface::surroundingTextSelectionAnchor() const
 void TextInputV2Interface::preEdit(const QString &text, const QString &commit)
 {
     d->preEdit(text, commit);
+}
+
+void TextInputV2Interface::preEditStyling(uint32_t index, uint32_t length, uint32_t style)
+{
+    d->preEditStyling(index, length, style);
 }
 
 void TextInputV2Interface::commitString(const QString &text)

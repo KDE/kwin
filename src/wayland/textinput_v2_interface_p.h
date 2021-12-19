@@ -37,6 +37,7 @@ public:
     void sendEnter(SurfaceInterface *surface, quint32 serial);
     void sendLeave(quint32 serial, SurfaceInterface *surface);
     void preEdit(const QString &text, const QString &commit);
+    void preEditStyling(uint32_t index, uint32_t length, uint32_t style);
     void commitString(const QString &text);
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength);
     void setTextDirection(Qt::LayoutDirection direction);

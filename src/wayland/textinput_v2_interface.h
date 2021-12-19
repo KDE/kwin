@@ -170,6 +170,17 @@ public:
     void setPreEditCursor(qint32 index);
 
     /**
+     * Sets the style for a range of text for the composing text (as byte offset).
+     *
+     * The Client applies the @p index together with {@link preEdit}.
+     * @param index The position relative to the start of the composing text
+     * @param length The length of the style to apply on
+     * @param style style flag
+     * @see preEdit
+     */
+    void preEditStyling(uint32_t index, uint32_t length, uint32_t style);
+
+    /**
      * Notify when the text around the current cursor position should be deleted.
      *
      * The Client processes this event together with the commit string
