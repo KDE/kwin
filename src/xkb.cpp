@@ -171,8 +171,6 @@ void Xkb::applyEnvironmentRules(xkb_rule_names &ruleNames)
     if (ruleNames.options == nullptr) {
         ruleNames.options = getenv("XKB_DEFAULT_OPTIONS");
     }
-
-    m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
 }
 
 xkb_keymap *Xkb::loadKeymapFromConfig()
@@ -200,6 +198,8 @@ xkb_keymap *Xkb::loadKeymapFromConfig()
 
     applyEnvironmentRules(ruleNames);
 
+    m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
+
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
@@ -207,6 +207,7 @@ xkb_keymap *Xkb::loadDefaultKeymap()
 {
     xkb_rule_names ruleNames = {};
     applyEnvironmentRules(ruleNames);
+    m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
