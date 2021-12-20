@@ -77,6 +77,7 @@ private Q_SLOTS:
 
     // inputcontext slots
     void setPreeditString(uint32_t serial, const QString &text, const QString &commit);
+    void setPreeditStyling(quint32 index, quint32 length, quint32 style);
     void setPreeditCursor(qint32 index);
     void key(quint32 serial, quint32 time, quint32 key, bool pressed);
     void modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group);
