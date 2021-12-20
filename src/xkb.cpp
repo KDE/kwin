@@ -191,8 +191,13 @@ xkb_keymap *Xkb::loadKeymapFromConfig()
         .model = model.constData(),
         .layout = layout.constData(),
         .variant = variant.constData(),
-        .options = options.constData()
+        .options = nullptr,
     };
+
+    if (m_configGroup.readEntry("ResetOldOptions", false)) {
+        ruleNames.options = options.constData();
+    }
+
     applyEnvironmentRules(ruleNames);
 
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
