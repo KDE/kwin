@@ -168,6 +168,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="actionTypes">
+       <enum>KShortcutsEditor::GlobalAction</enum>
+     </property>
     </widget>
    </item>
   </layout>
