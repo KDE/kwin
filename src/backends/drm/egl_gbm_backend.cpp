@@ -708,7 +708,6 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
     // ensure that a context is current like with normal presentation
     makeCurrent();
     if (output.output->present(bo, damage)) {
-        output.current.damageJournal.clear();
         if (output.scanoutSurface != surface) {
             auto path = surface->client()->executablePath();
             qCDebug(KWIN_DRM).nospace() << "Direct scanout starting on output " << output.output->name() << " for application \"" << path << "\"";
