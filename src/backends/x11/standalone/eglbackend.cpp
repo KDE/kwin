@@ -6,6 +6,7 @@
 */
 
 #include "eglbackend.h"
+#include "kwinglplatform.h"
 #include "logging.h"
 #include "options.h"
 #include "overlaywindow.h"
@@ -114,7 +115,18 @@ void EglBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
     // eglSwapBuffers() or eglSwapBuffersWithDamageEXT() completes.
     m_vsyncMonitor->arm();
 
-    presentSurface(surface(), renderedRegion, screens()->geometry());
+    QRegion effectiveRenderedRegion = renderedRegion;
+    if (!GLPlatform::instance()->isGLES()) {
+        const QRegion displayRegion(screens()->geometry());
+        if (!supportsBufferAge() && options->glPreferBufferSwap() == Options::CopyFrontBuffer && renderedRegion != displayRegion) {
+            glReadBuffer(GL_FRONT);
+            copyPixels(displayRegion - renderedRegion);
+            glReadBuffer(GL_BACK);
+            effectiveRenderedRegion = displayRegion;
+        }
+    }
+
+    presentSurface(surface(), effectiveRenderedRegion, screens()->geometry());
 
     if (overlayWindow() && overlayWindow()->window()) { // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long

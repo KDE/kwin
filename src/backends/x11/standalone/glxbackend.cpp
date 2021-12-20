@@ -767,7 +767,17 @@ void GlxBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
         m_vsyncMonitor->arm();
     }
 
-    present(renderedRegion);
+    const QRegion displayRegion(screens()->geometry());
+
+    QRegion effectiveRenderedRegion = renderedRegion;
+    if (!supportsBufferAge() && options->glPreferBufferSwap() == Options::CopyFrontBuffer && renderedRegion != displayRegion) {
+        glReadBuffer(GL_FRONT);
+        copyPixels(displayRegion - renderedRegion);
+        glReadBuffer(GL_BACK);
+        effectiveRenderedRegion = displayRegion;
+    }
+
+    present(effectiveRenderedRegion);
 
     if (overlayWindow()->window())  // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long

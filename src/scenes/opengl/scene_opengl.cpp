@@ -318,20 +318,6 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
                         renderLoop, projectionMatrix());   // call generic implementation
             paintCursor(output, valid);
 
-            if (!GLPlatform::instance()->isGLES() && !output) {
-                const QRegion displayRegion(geometry());
-
-                // copy dirty parts from front to backbuffer
-                if (!m_backend->supportsBufferAge() &&
-                    options->glPreferBufferSwap() == Options::CopyFrontBuffer &&
-                    valid != displayRegion) {
-                    glReadBuffer(GL_FRONT);
-                    m_backend->copyPixels(displayRegion - valid);
-                    glReadBuffer(GL_BACK);
-                    valid = displayRegion;
-                }
-            }
-
             renderLoop->endFrame();
 
             GLVertexBuffer::streamingBuffer()->endOfFrame();
