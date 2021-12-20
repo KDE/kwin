@@ -103,7 +103,7 @@ void KWin::InputPanelV1Client::reposition()
                 cursorRectangle = textInputV3->cursorRectangle();
             }
             if (textClient) {
-                cursorRectangle.translate(textClient->pos() + textClient->clientPos());
+                cursorRectangle.translate(textClient->bufferGeometry().topLeft());
                 const QRect screen = Workspace::self()->clientArea(PlacementArea, cursorRectangle.bottomLeft(), 0);
 
                 // Reuse the similar logic like xdg popup
