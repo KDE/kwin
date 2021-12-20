@@ -70,7 +70,11 @@
     </widget>
    </item>
    <item>
-    <widget class="KShortcutsEditor" name="editor"/>
+    <widget class="KShortcutsEditor" name="editor">
+      <property name="actionTypes">
+        <enum>KShortcutsEditor::GlobalAction</enum>
+      </property>
+    </widget>
    </item>
    <item>
     <widget class="QLabel" name="label_3">
