@@ -1498,6 +1498,8 @@ public:
             if (event->isAutoRepeat()) {
                 return true;
             }
+            auto seat = waylandServer()->seat();
+            seat->setTimestamp(event->timestamp());
             auto newState = event->type() == QEvent::KeyPress ? KWaylandServer::KeyboardKeyState::Pressed : KWaylandServer::KeyboardKeyState::Released;
             keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->timestamp(), event->nativeScanCode(), newState);
             return true;
