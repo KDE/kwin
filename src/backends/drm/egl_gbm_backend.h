@@ -99,8 +99,6 @@ private:
         struct RenderData {
             QSharedPointer<ShadowBuffer> shadowBuffer;
             QSharedPointer<GbmSurface> gbmSurface;
-            int bufferAge = 0;
-            DamageJournal damageJournal;
             GbmFormat format;
 
             // for secondary GPU import
@@ -126,7 +124,6 @@ private:
     QRegion prepareRenderingForOutput(Output &output);
     QSharedPointer<DrmBuffer> importFramebuffer(Output &output, const QRegion &dirty) const;
     QSharedPointer<DrmBuffer> endFrameWithBuffer(AbstractOutput *output, const QRegion &dirty);
-    void updateBufferAge(Output &output, const QRegion &dirty);
     std::optional<GbmFormat> chooseFormat(Output &output) const;
 
     void cleanupRenderData(Output::RenderData &output);

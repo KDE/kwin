@@ -14,6 +14,7 @@
 #include <QVector>
 
 #include "drm_buffer_gbm.h"
+#include "utils/common.h"
 
 struct gbm_device;
 struct gbm_surface;
@@ -28,10 +29,10 @@ public:
     explicit GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config);
     ~GbmSurface();
 
-    bool makeContextCurrent() const;
+    QRegion makeContextCurrent(const QRect &geometry) const;
 
-    QSharedPointer<DrmGbmBuffer> swapBuffersForDrm();
-    QSharedPointer<GbmBuffer> swapBuffers();
+    QSharedPointer<DrmGbmBuffer> swapBuffersForDrm(const QRegion &dirty);
+    QSharedPointer<GbmBuffer> swapBuffers(const QRegion &dirty);
     void releaseBuffer(GbmBuffer *buffer);
 
     QSharedPointer<GbmBuffer> currentBuffer() const;
@@ -42,6 +43,7 @@ public:
     bool isValid() const;
     uint32_t format() const;
     QVector<uint64_t> modifiers() const;
+    int bufferAge() const;
 
 private:
     gbm_surface *m_surface;
@@ -50,6 +52,8 @@ private:
     QSize m_size;
     const uint32_t m_format;
     const QVector<uint64_t> m_modifiers;
+    int m_bufferAge = 0;
+    DamageJournal m_damageJournal;
 
     QSharedPointer<GbmBuffer> m_currentBuffer;
     QSharedPointer<DrmGbmBuffer> m_currentDrmBuffer;

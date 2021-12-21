@@ -70,7 +70,7 @@ void EglGbmBackend::cleanupSurfaces()
 void EglGbmBackend::cleanupRenderData(Output::RenderData &render)
 {
     if (render.shadowBuffer) {
-        render.gbmSurface->makeContextCurrent();
+        render.gbmSurface->makeContextCurrent({});
         render.shadowBuffer = nullptr;
     }
     render.importSwapchain = nullptr;
@@ -198,7 +198,7 @@ bool EglGbmBackend::resetOutput(Output &output)
     if (!output.output->needsSoftwareTransformation())  {
         output.current.shadowBuffer = nullptr;
     } else {
-        output.current.gbmSurface->makeContextCurrent();
+        output.current.gbmSurface->makeContextCurrent({});
         output.current.shadowBuffer = QSharedPointer<ShadowBuffer>::create(output.output->sourceSize(), output.current.format);
         if (!output.current.shadowBuffer->isComplete()) {
             return false;
@@ -237,9 +237,8 @@ bool EglGbmBackend::swapBuffers(DrmAbstractOutput *drmOutput, const QRegion &dir
     if (output.current.shadowBuffer) {
         output.current.shadowBuffer->render(output.output);
     }
-    if (output.current.gbmSurface->swapBuffers()) {
+    if (output.current.gbmSurface->swapBuffers(dirty)) {
         cleanupRenderData(output.old);
-        updateBufferAge(output, dirty);
         return true;
     } else {
         return false;
@@ -467,7 +466,7 @@ void EglGbmBackend::aboutToStartPainting(AbstractOutput *drmOutput, const QRegio
     Q_ASSERT_X(drmOutput, "aboutToStartPainting", "not using per screen rendering");
     Q_ASSERT(m_outputs.contains(drmOutput));
     const Output &output = m_outputs[drmOutput];
-    if (output.current.bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
+    if (output.current.gbmSurface->bufferAge() > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
         const QRegion region = damagedRegion & output.output->geometry();
 
         QVector<EGLint> rects = regionToRects(region, output.output);
@@ -553,19 +552,13 @@ QRegion EglGbmBackend::prepareRenderingForOutput(Output &output)
             resetOutput(output);
         }
     }
-    output.current.gbmSurface->makeContextCurrent();
-    if (output.current.shadowBuffer) {
-        output.current.shadowBuffer->bind();
+    auto &current = output.current;
+    const auto needsRepaint = current.gbmSurface->makeContextCurrent(output.output->geometry());
+    if (current.shadowBuffer) {
+        current.shadowBuffer->bind();
     }
     setViewport(output);
-
-    const QRect geometry = output.output->geometry();
-    if (supportsBufferAge()) {
-        auto current = &output.current;
-        return current->damageJournal.accumulate(current->bufferAge, geometry);
-    }
-
-    return geometry;
+    return needsRepaint;
 }
 
 QSharedPointer<DrmBuffer> EglGbmBackend::endFrameWithBuffer(AbstractOutput *drmOutput, const QRegion &dirty)
@@ -576,11 +569,7 @@ QSharedPointer<DrmBuffer> EglGbmBackend::endFrameWithBuffer(AbstractOutput *drmO
         if (output.current.shadowBuffer) {
             output.current.shadowBuffer->render(output.output);
         }
-        auto buffer = output.current.gbmSurface->swapBuffersForDrm();
-        if (buffer) {
-            updateBufferAge(output, dirty);
-        }
-        return buffer;
+        return output.current.gbmSurface->swapBuffersForDrm(dirty);
     } else {
         return importFramebuffer(output, dirty);
     }
@@ -598,14 +587,6 @@ void EglGbmBackend::endFrame(AbstractOutput *drmOutput, const QRegion &renderedR
     const QRegion dirty = damagedRegion.intersected(output.output->geometry());
     QSharedPointer<DrmBuffer> buffer = endFrameWithBuffer(drmOutput, dirty);
     output.output->present(buffer, dirty);
-}
-
-void EglGbmBackend::updateBufferAge(Output &output, const QRegion &dirty)
-{
-    if (supportsBufferAge()) {
-        eglQuerySurface(eglDisplay(), output.current.gbmSurface->eglSurface(), EGL_BUFFER_AGE_EXT, &output.current.bufferAge);
-        output.current.damageJournal.add(dirty);
-    }
 }
 
 bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
