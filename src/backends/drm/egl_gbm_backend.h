@@ -123,7 +123,6 @@ private:
 
     void setViewport(const Output &output) const;
 
-    void renderFramebufferToSurface(Output &output);
     QRegion prepareRenderingForOutput(Output &output);
     QSharedPointer<DrmBuffer> importFramebuffer(Output &output, const QRegion &dirty) const;
     QSharedPointer<DrmBuffer> endFrameWithBuffer(AbstractOutput *output, const QRegion &dirty);
