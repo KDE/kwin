@@ -121,7 +121,6 @@ private:
     bool addOutput(DrmAbstractOutput *output);
     void removeOutput(DrmAbstractOutput *output);
 
-    bool makeContextCurrent(const Output::RenderData &output) const;
     void setViewport(const Output &output) const;
 
     void renderFramebufferToSurface(Output &output);

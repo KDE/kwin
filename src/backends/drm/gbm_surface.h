@@ -28,9 +28,10 @@ public:
     explicit GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config);
     ~GbmSurface();
 
+    bool makeContextCurrent() const;
+
     QSharedPointer<DrmGbmBuffer> swapBuffersForDrm();
     QSharedPointer<GbmBuffer> swapBuffers();
-
     void releaseBuffer(GbmBuffer *buffer);
 
     QSharedPointer<GbmBuffer> currentBuffer() const;

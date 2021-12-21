@@ -69,12 +69,12 @@ void EglGbmBackend::cleanupSurfaces()
 
 void EglGbmBackend::cleanupRenderData(Output::RenderData &render)
 {
-    render.gbmSurface = nullptr;
-    render.importSwapchain = nullptr;
     if (render.shadowBuffer) {
-        makeContextCurrent(render);
+        render.gbmSurface->makeContextCurrent();
         render.shadowBuffer = nullptr;
     }
+    render.importSwapchain = nullptr;
+    render.gbmSurface = nullptr;
 }
 
 bool EglGbmBackend::initializeEgl()
@@ -198,7 +198,7 @@ bool EglGbmBackend::resetOutput(Output &output)
     if (!output.output->needsSoftwareTransformation())  {
         output.current.shadowBuffer = nullptr;
     } else {
-        makeContextCurrent(output.current);
+        output.current.gbmSurface->makeContextCurrent();
         output.current.shadowBuffer = QSharedPointer<ShadowBuffer>::create(output.output->sourceSize(), output.current.format);
         if (!output.current.shadowBuffer->isComplete()) {
             return false;
@@ -359,25 +359,8 @@ void EglGbmBackend::renderFramebufferToSurface(Output &output)
         // No additional render target.
         return;
     }
-    makeContextCurrent(output.current);
+    output.current.gbmSurface->makeContextCurrent();
     output.current.shadowBuffer->render(output.output);
-}
-
-bool EglGbmBackend::makeContextCurrent(const Output::RenderData &render) const
-{
-    Q_ASSERT(isPrimary());
-    const auto surface = render.gbmSurface;
-    if (!surface) {
-        return false;
-    }
-    if (eglMakeCurrent(eglDisplay(), surface->eglSurface(), surface->eglSurface(), context()) == EGL_FALSE) {
-        qCCritical(KWIN_DRM) << "eglMakeCurrent failed:" << getEglErrorString();
-        return false;
-    }
-    if (!GLPlatform::instance()->isGLES()) {
-        glDrawBuffer(GL_BACK);
-    }
-    return true;
 }
 
 bool EglGbmBackend::initBufferConfigs()
@@ -578,7 +561,7 @@ QRegion EglGbmBackend::prepareRenderingForOutput(Output &output)
             resetOutput(output);
         }
     }
-    makeContextCurrent(output.current);
+    output.current.gbmSurface->makeContextCurrent();
     if (output.current.shadowBuffer) {
         output.current.shadowBuffer->bind();
     }

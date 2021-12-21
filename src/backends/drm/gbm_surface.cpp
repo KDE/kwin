@@ -15,6 +15,7 @@
 #include "drm_gpu.h"
 #include "logging.h"
 #include "kwineglutils_p.h"
+#include "kwinglplatform.h"
 
 namespace KWin
 {
@@ -64,6 +65,17 @@ GbmSurface::~GbmSurface()
     if (m_surface) {
         gbm_surface_destroy(m_surface);
     }
+}
+bool GbmSurface::makeContextCurrent() const
+{
+    if (eglMakeCurrent(m_gpu->eglDisplay(), m_eglSurface, m_eglSurface, m_gpu->eglBackend()->context()) == EGL_FALSE) {
+        qCCritical(KWIN_DRM) << "eglMakeCurrent failed:" << getEglErrorString();
+        return false;
+    }
+    if (!GLPlatform::instance()->isGLES()) {
+        glDrawBuffer(GL_BACK);
+    }
+    return true;
 }
 
 QSharedPointer<DrmGbmBuffer> GbmSurface::swapBuffersForDrm()
