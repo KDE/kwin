@@ -29,8 +29,7 @@ public:
     explicit GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config);
     ~GbmSurface();
 
-    QRegion makeContextCurrent(const QRect &geometry) const;
-
+    bool makeContextCurrent() const;
     QSharedPointer<DrmGbmBuffer> swapBuffersForDrm(const QRegion &dirty);
     QSharedPointer<GbmBuffer> swapBuffers(const QRegion &dirty);
     void releaseBuffer(GbmBuffer *buffer);
@@ -44,6 +43,7 @@ public:
     uint32_t format() const;
     QVector<uint64_t> modifiers() const;
     int bufferAge() const;
+    QRegion repaintRegion(const QRect &geometry) const;
 
 private:
     gbm_surface *m_surface;

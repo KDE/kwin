@@ -70,7 +70,7 @@ void EglGbmBackend::cleanupSurfaces()
 void EglGbmBackend::cleanupRenderData(Output::RenderData &render)
 {
     if (render.shadowBuffer) {
-        render.gbmSurface->makeContextCurrent({});
+        render.gbmSurface->makeContextCurrent();
         render.shadowBuffer = nullptr;
     }
     render.importSwapchain = nullptr;
@@ -198,7 +198,7 @@ bool EglGbmBackend::resetOutput(Output &output)
     if (!output.output->needsSoftwareTransformation())  {
         output.current.shadowBuffer = nullptr;
     } else {
-        output.current.gbmSurface->makeContextCurrent({});
+        output.current.gbmSurface->makeContextCurrent();
         output.current.shadowBuffer = QSharedPointer<ShadowBuffer>::create(output.output->sourceSize(), output.current.format);
         if (!output.current.shadowBuffer->isComplete()) {
             return false;
@@ -553,12 +553,12 @@ QRegion EglGbmBackend::prepareRenderingForOutput(Output &output)
         }
     }
     auto &current = output.current;
-    const auto needsRepaint = current.gbmSurface->makeContextCurrent(output.output->geometry());
+    current.gbmSurface->makeContextCurrent();
     if (current.shadowBuffer) {
         current.shadowBuffer->bind();
     }
     setViewport(output);
-    return needsRepaint;
+    return current.gbmSurface->repaintRegion(output.output->geometry());
 }
 
 QSharedPointer<DrmBuffer> EglGbmBackend::endFrameWithBuffer(AbstractOutput *drmOutput, const QRegion &dirty)

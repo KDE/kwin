@@ -67,20 +67,16 @@ GbmSurface::~GbmSurface()
     }
 }
 
-QRegion GbmSurface::makeContextCurrent(const QRect &geometry) const
+bool GbmSurface::makeContextCurrent() const
 {
     if (eglMakeCurrent(m_gpu->eglDisplay(), m_eglSurface, m_eglSurface, m_gpu->eglBackend()->context()) == EGL_FALSE) {
         qCCritical(KWIN_DRM) << "eglMakeCurrent failed:" << getEglErrorString();
-        return {};
+        return false;
     }
     if (!GLPlatform::instance()->isGLES()) {
         glDrawBuffer(GL_BACK);
     }
-    if (m_gpu->eglBackend()->supportsBufferAge()) {
-        return m_damageJournal.accumulate(m_bufferAge, geometry);
-    } else {
-        return geometry;
-    }
+    return true;
 }
 
 QSharedPointer<DrmGbmBuffer> GbmSurface::swapBuffersForDrm(const QRegion &dirty)
@@ -172,6 +168,15 @@ QVector<uint64_t> GbmSurface::modifiers() const
 int GbmSurface::bufferAge() const
 {
     return m_bufferAge;
+}
+
+QRegion GbmSurface::repaintRegion(const QRect &geometry) const
+{
+    if (m_gpu->eglBackend()->supportsBufferAge()) {
+        return m_damageJournal.accumulate(m_bufferAge, geometry);
+    } else {
+        return geometry;
+    }
 }
 
 }

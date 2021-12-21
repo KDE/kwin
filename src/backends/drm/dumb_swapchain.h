@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "utils/common.h"
+
 #include <QVector>
 #include <QSize>
 #include <QSharedPointer>
@@ -25,9 +27,9 @@ class DumbSwapchain
 public:
     DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat, QImage::Format imageFormat = QImage::Format_RGB32);
 
-    QSharedPointer<DrmDumbBuffer> acquireBuffer(int *age = nullptr);
+    QSharedPointer<DrmDumbBuffer> acquireBuffer(const QRect &geometry = {}, QRegion *needsRepaint = nullptr);
     QSharedPointer<DrmDumbBuffer> currentBuffer() const;
-    void releaseBuffer(QSharedPointer<DrmDumbBuffer> buffer);
+    void releaseBuffer(QSharedPointer<DrmDumbBuffer> buffer, const QRegion &damage = {});
 
     qsizetype slotCount() const;
     QSize size() const;
@@ -45,6 +47,7 @@ private:
     int index = 0;
     uint32_t m_format;
     QVector<Slot> m_slots;
+    DamageJournal m_damageJournal;
 };
 
 }
