@@ -475,7 +475,9 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3 && t3->isEnabled()) {
         preedit.text = text;
-        t3->sendPreEditString(preedit.text, preedit.begin, preedit.end);
+        if (!preedit.text.isEmpty()) {
+            t3->sendPreEditString(preedit.text, preedit.begin, preedit.end);
+        }
         t3->done();
     }
 }
