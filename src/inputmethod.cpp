@@ -111,12 +111,24 @@ void InputMethod::init()
 
 void InputMethod::show()
 {
+    if (m_inputClient) {
+        m_inputClient->showClient();
+        updateInputPanelState();
+    }
     setActive(true);
 }
 
 void InputMethod::hide()
 {
-    setActive(false);
+    if (m_inputClient) {
+        m_inputClient->hideClient();
+        updateInputPanelState();
+    }
+    auto inputContext = waylandServer()->inputMethod()->context();
+    if (!inputContext) {
+        return;
+    }
+    inputContext->sendReset();
 }
 
 bool InputMethod::touchEventTriggered() const

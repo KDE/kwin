@@ -49,6 +49,7 @@ void InputPanelV1Client::showOverlayPanel()
     setOutput(nullptr);
     m_mode = Overlay;
     reposition();
+    showClient();
     setReadyForPainting();
 }
 
@@ -57,6 +58,7 @@ void InputPanelV1Client::showTopLevel(OutputInterface *output, InputPanelSurface
     Q_UNUSED(position);
     m_mode = Toplevel;
     setOutput(output);
+    showClient();
 }
 
 void InputPanelV1Client::allow()
