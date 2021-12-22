@@ -26,9 +26,7 @@
 // KConfigSkeleton
 #include "trackmouseconfig.h"
 
-K_PLUGIN_FACTORY_WITH_JSON(TrackMouseEffectConfigFactory,
-                           "trackmouse_config.json",
-                           registerPlugin<KWin::TrackMouseEffectConfig>();)
+K_PLUGIN_CLASS(KWin::TrackMouseEffectConfig)
 
 namespace KWin
 {

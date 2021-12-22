@@ -18,9 +18,7 @@
 
 #include <QAction>
 
-K_PLUGIN_FACTORY_WITH_JSON(OverviewEffectConfigFactory,
-                           "overvieweffectkcm.json",
-                           registerPlugin<KWin::OverviewEffectConfig>();)
+K_PLUGIN_CLASS(KWin::OverviewEffectConfig)
 
 namespace KWin
 {

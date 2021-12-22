@@ -18,9 +18,7 @@
 
 #include <QVBoxLayout>
 
-K_PLUGIN_FACTORY_WITH_JSON(ResizeEffectConfigFactory,
-                           "resize_config.json",
-                           registerPlugin<KWin::ResizeEffectConfig>();)
+K_PLUGIN_CLASS(KWin::ResizeEffectConfig)
 
 namespace KWin
 {

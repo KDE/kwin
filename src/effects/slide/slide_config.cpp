@@ -17,9 +17,7 @@
 #include <KAboutData>
 #include <KPluginFactory>
 
-K_PLUGIN_FACTORY_WITH_JSON(SlideEffectConfigFactory,
-                           "slide_config.json",
-                           registerPlugin<KWin::SlideEffectConfig>();)
+K_PLUGIN_CLASS(KWin::SlideEffectConfig)
 
 namespace KWin
 {

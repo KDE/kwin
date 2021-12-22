@@ -27,9 +27,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 
-K_PLUGIN_FACTORY_WITH_JSON(LookingGlassEffectConfigFactory,
-                           "lookingglass_config.json",
-                           registerPlugin<KWin::LookingGlassEffectConfig>();)
+K_PLUGIN_CLASS(KWin::LookingGlassEffectConfig)
 
 namespace KWin
 {

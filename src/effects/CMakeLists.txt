@@ -3,6 +3,11 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kwin_effects\" -DEFFECT_BUILTINS)
 
 include_directories(${KWin_SOURCE_DIR}/src) # for xcbutils.h
 
+function(kwin_add_effect_config name)
+    list(REMOVE_ITEM ARGV ${name})
+    kcoreaddons_add_plugin(${name} INSTALL_NAMESPACE "kwin/effects/configs" SOURCES ${ARGV})
+endfunction()
+
 if (CMAKE_CROSSCOMPILING)
     if (NOT KWIN_HOST_TOOLING)
         message(FATAL_ERROR "Please provide the path to a native build and pass -DKWIN_HOST_TOOLING=path")

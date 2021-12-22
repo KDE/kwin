@@ -13,9 +13,7 @@
 #include <KAboutData>
 #include <KPluginFactory>
 
-K_PLUGIN_FACTORY_WITH_JSON(BlurEffectConfigFactory,
-                           "blur_config.json",
-                           registerPlugin<KWin::BlurEffectConfig>();)
+K_PLUGIN_CLASS(KWin::BlurEffectConfig)
 
 namespace KWin
 {

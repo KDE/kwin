@@ -24,9 +24,7 @@
 
 #include <QVBoxLayout>
 
-K_PLUGIN_FACTORY_WITH_JSON(PresentWindowsEffectConfigFactory,
-                           "presentwindows_config.json",
-                           registerPlugin<KWin::PresentWindowsEffectConfig>();)
+K_PLUGIN_CLASS(KWin::PresentWindowsEffectConfig)
 
 namespace KWin
 {

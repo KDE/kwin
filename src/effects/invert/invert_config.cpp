@@ -21,9 +21,7 @@
 
 #include <QVBoxLayout>
 
-K_PLUGIN_FACTORY_WITH_JSON(InvertEffectConfigFactory,
-                           "invert_config.json",
-                           registerPlugin<KWin::InvertEffectConfig>();)
+K_PLUGIN_CLASS(KWin::InvertEffectConfig)
 
 namespace KWin
 {

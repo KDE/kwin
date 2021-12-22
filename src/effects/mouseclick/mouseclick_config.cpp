@@ -23,9 +23,7 @@
 
 #include <QWidget>
 
-K_PLUGIN_FACTORY_WITH_JSON(MouseClickEffectConfigFactory,
-                           "mouseclick_config.json",
-                           registerPlugin<KWin::MouseClickEffectConfig>();)
+K_PLUGIN_CLASS(KWin::MouseClickEffectConfig)
 
 namespace KWin
 {

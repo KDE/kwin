@@ -13,21 +13,11 @@ kwin4_add_effect_module(kwin4_effect_showpaint ${showpaint_SOURCES})
 set(kwin_showpaint_config_SRCS showpaint_config.cpp)
 ki18n_wrap_ui(kwin_showpaint_config_SRCS showpaint_config.ui)
 
-add_library(kwin_showpaint_config MODULE ${kwin_showpaint_config_SRCS})
+kwin_add_effect_config(kwin_showpaint_config ${kwin_showpaint_config_SRCS})
 
 target_link_libraries(kwin_showpaint_config
     KF5::ConfigWidgets
     KF5::GlobalAccel
     KF5::I18n
     KF5::XmlGui
-)
-
-kcoreaddons_desktop_to_json(kwin_showpaint_config showpaint_config.desktop SERVICE_TYPES kcmodule.desktop)
-
-install(
-    TARGETS
-        kwin_showpaint_config
-
-    DESTINATION
-        ${KDE_INSTALL_PLUGINDIR}/kwin/effects/configs
 )

@@ -20,7 +20,7 @@ set(kwin_presentwindows_config_SRCS presentwindows_config.cpp)
 ki18n_wrap_ui(kwin_presentwindows_config_SRCS presentwindows_config.ui)
 kconfig_add_kcfg_files(kwin_presentwindows_config_SRCS presentwindowsconfig.kcfgc)
 
-add_library(kwin_presentwindows_config MODULE ${kwin_presentwindows_config_SRCS})
+kwin_add_effect_config(kwin_presentwindows_config ${kwin_presentwindows_config_SRCS})
 
 target_link_libraries(kwin_presentwindows_config
     KF5::Completion
@@ -29,13 +29,4 @@ target_link_libraries(kwin_presentwindows_config
     KF5::I18n
     KF5::XmlGui
     KWinEffectsInterface
-)
-
-kcoreaddons_desktop_to_json(kwin_presentwindows_config presentwindows_config.desktop SERVICE_TYPES kcmodule.desktop)
-
-install(
-    TARGETS
-        kwin_presentwindows_config
-    DESTINATION
-        ${KDE_INSTALL_PLUGINDIR}/kwin/effects/configs
 )

@@ -25,9 +25,7 @@
 #include <QDebug>
 #include <QWidget>
 
-K_PLUGIN_FACTORY_WITH_JSON(MouseMarkEffectConfigFactory,
-                           "mousemark_config.json",
-                           registerPlugin<KWin::MouseMarkEffectConfig>();)
+K_PLUGIN_CLASS(KWin::MouseMarkEffectConfig)
 
 namespace KWin
 {

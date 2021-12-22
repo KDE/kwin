@@ -24,9 +24,7 @@
 
 #include <QVBoxLayout>
 
-K_PLUGIN_FACTORY_WITH_JSON(ZoomEffectConfigFactory,
-                           "zoom_config.json",
-                           registerPlugin<KWin::ZoomEffectConfig>();)
+K_PLUGIN_CLASS(KWin::ZoomEffectConfig)
 
 namespace KWin
 {

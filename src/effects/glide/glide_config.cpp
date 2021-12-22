@@ -14,9 +14,7 @@
 #include <KAboutData>
 #include <KPluginFactory>
 
-K_PLUGIN_FACTORY_WITH_JSON(GlideEffectConfigFactory,
-                           "glide_config.json",
-                           registerPlugin<KWin::GlideEffectConfig>();)
+K_PLUGIN_CLASS(KWin::GlideEffectConfig)
 
 namespace KWin
 {

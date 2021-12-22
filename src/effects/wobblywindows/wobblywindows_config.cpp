@@ -19,9 +19,7 @@
 #include <kconfiggroup.h>
 #include <KPluginFactory>
 
-K_PLUGIN_FACTORY_WITH_JSON(WobblyWindowsEffectConfigFactory,
-                           "wobblywindows_config.json",
-                           registerPlugin<KWin::WobblyWindowsEffectConfig>();)
+K_PLUGIN_CLASS(KWin::WobblyWindowsEffectConfig)
 
 namespace KWin
 {
