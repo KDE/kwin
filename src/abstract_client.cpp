@@ -1430,25 +1430,25 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
     if (!update)
         return;
 
-    if (isInteractiveResize() && !haveResizeEffect()) {
-        doInteractiveResizeSync();
-    } else
-        performInteractiveMoveResize();
+    if (isInteractiveMove()) {
+        move(moveResizeGeometry().topLeft());
+        completeInteractiveMoveResizeStep();
+    } else {
+        if (!haveResizeEffect()) {
+            doInteractiveResizeSync();
+        } else {
+            completeInteractiveMoveResizeStep();
+        }
+    }
 
     if (isInteractiveMove()) {
         ScreenEdges::self()->check(globalPos, QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC));
     }
 }
 
-void AbstractClient::performInteractiveMoveResize()
+void AbstractClient::completeInteractiveMoveResizeStep()
 {
-    const QRect &moveResizeGeom = moveResizeGeometry();
-    if (isInteractiveMove()) {
-        move(moveResizeGeom.topLeft());
-    } else if (isInteractiveResize() && !haveResizeEffect()) {
-        resize(moveResizeGeom.size());
-    }
-    Q_EMIT clientStepUserMovedResized(this, moveResizeGeom);
+    Q_EMIT clientStepUserMovedResized(this, moveResizeGeometry());
 }
 
 StrutRect AbstractClient::strutRect(StrutArea area) const

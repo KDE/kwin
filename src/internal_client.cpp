@@ -404,7 +404,7 @@ void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
     surfaceItem()->addDamage(surfaceItem()->rect());
 
     if (isInteractiveResize()) {
-        performInteractiveMoveResize();
+        completeInteractiveMoveResizeStep();
     }
 }
 
@@ -423,7 +423,7 @@ void InternalClient::present(const QImage &image, const QRegion &damage)
     surfaceItem()->addDamage(damage);
 
     if (isInteractiveResize()) {
-        performInteractiveMoveResize();
+        completeInteractiveMoveResizeStep();
     }
 }
 

@@ -396,6 +396,7 @@ private:
     void getSyncCounter();
     void sendSyncRequest();
     void leaveInteractiveMoveResize() override;
+    void performInteractiveResize();
     void establishCommandWindowGrab(uint8_t button);
     void establishCommandAllGrab(uint8_t button);
     void resizeDecoration();

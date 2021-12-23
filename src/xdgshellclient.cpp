@@ -245,7 +245,7 @@ void XdgSurfaceClient::handleNextWindowGeometry()
     updateGeometry(frameGeometry);
 
     if (isInteractiveResize()) {
-        performInteractiveMoveResize();
+        completeInteractiveMoveResizeStep();
     }
 }
 

@@ -2772,10 +2772,18 @@ void X11Client::handleSync()
         if (m_syncRequest.timeout) {
             m_syncRequest.timeout->stop();
         }
-        performInteractiveMoveResize();
+        performInteractiveResize();
         updateWindowPixmap();
     } else // setReadyForPainting does as well, but there's a small chance for resize syncs after the resize ended
         addRepaintFull();
+}
+
+void X11Client::performInteractiveResize()
+{
+    if (isInteractiveResize() && !haveResizeEffect()) {
+        resize(moveResizeGeometry().size());
+    }
+    completeInteractiveMoveResizeStep();
 }
 
 bool X11Client::belongToSameApplication(const X11Client *c1, const X11Client *c2, SameApplicationChecks checks)
@@ -4583,7 +4591,7 @@ void X11Client::handleSyncTimeout()
     if (m_syncRequest.counter == XCB_NONE) { // client w/o XSYNC support. allow the next resize event
         m_syncRequest.isPending = false;     // NEVER do this for clients with a valid counter
     }                                        // (leads to sync request races in some clients)
-    performInteractiveMoveResize();
+    performInteractiveResize();
 }
 
 NETExtendedStrut X11Client::strut() const
