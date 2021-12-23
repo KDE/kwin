@@ -58,6 +58,7 @@ private Q_SLOTS:
     void testHidePanel();
     void testSwitchFocusedSurfaces();
     void testV3Styling();
+    void testDisableShowInputPanel();
 
 private:
     void touchNow() {
@@ -100,7 +101,6 @@ void InputMethodTest::init()
                                          Test::AdditionalWaylandInterface::TextInputManagerV2 |
                                          Test::AdditionalWaylandInterface::InputMethodV1 |
                                          Test::AdditionalWaylandInterface::TextInputManagerV3));
-
 
     workspace()->setActiveOutput(QPoint(640, 512));
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
@@ -428,6 +428,38 @@ void InputMethodTest::testV3Styling()
     // Merged range should be [1,6).
     QCOMPARE(textInputPreeditSpy.last().at(1), 1);
     QCOMPARE(textInputPreeditSpy.last().at(2), 6);
+}
+
+void InputMethodTest::testDisableShowInputPanel()
+{
+    // Create an xdg_toplevel surface and wait for the compositor to catch up.
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QCOMPARE(client->frameGeometry().size(), QSize(1280, 1024));
+
+    QScopedPointer<KWayland::Client::TextInput> textInputV2(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+
+    QSignalSpy inputMethodActiveSpy(InputMethod::self(), &InputMethod::activeChanged);
+    // just enabling the text-input should not show it but rather on commit
+    QVERIFY(!InputMethod::self()->isActive());
+    textInputV2->enable(surface.get());
+    QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
+    QVERIFY(InputMethod::self()->isActive());
+
+    // disable text input and ensure that it is not hiding input panel without commit
+    inputMethodActiveSpy.clear();
+    QVERIFY(InputMethod::self()->isActive());
+    textInputV2->disable(surface.get());
+    QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
+    QVERIFY(!InputMethod::self()->isActive());
+
+    QSignalSpy requestShowInputPanelSpy(waylandServer()->seat()->textInputV2(), &KWaylandServer::TextInputV2Interface::requestShowInputPanel);
+    textInputV2->showInputPanel();
+    QVERIFY(requestShowInputPanelSpy.count() || requestShowInputPanelSpy.wait());
+    QVERIFY(!InputMethod::self()->isActive());
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)

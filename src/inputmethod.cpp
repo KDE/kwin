@@ -115,7 +115,6 @@ void InputMethod::show()
         m_inputClient->showClient();
         updateInputPanelState();
     }
-    setActive(true);
 }
 
 void InputMethod::hide()
