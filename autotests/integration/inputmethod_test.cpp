@@ -57,6 +57,7 @@ private Q_SLOTS:
     void testEnableActive();
     void testHidePanel();
     void testSwitchFocusedSurfaces();
+    void testV3Styling();
 
 private:
     void touchNow() {
@@ -337,6 +338,96 @@ void InputMethodTest::testSwitchFocusedSurfaces()
         delete toplevels[i];
         QVERIFY(Test::waitForWindowDestroyed(clients[i]));
     }
+}
+
+void InputMethodTest::testV3Styling()
+{
+    // Create an xdg_toplevel surface and wait for the compositor to catch up.
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QCOMPARE(client->frameGeometry().size(), QSize(1280, 1024));
+
+    Test::TextInputV3 *textInputV3 = new Test::TextInputV3();
+    textInputV3->init(Test::waylandTextInputManagerV3()->get_text_input(*(Test::waylandSeat())));
+    textInputV3->enable();
+
+    QSignalSpy inputMethodActiveSpy(InputMethod::self(), &InputMethod::activeChanged);
+    QSignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    // just enabling the text-input should not show it but rather on commit
+    QVERIFY(!InputMethod::self()->isActive());
+    textInputV3->commit();
+    QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
+    QVERIFY(InputMethod::self()->isActive());
+    QVERIFY(inputMethodActivateSpy.wait());
+    auto context = Test::inputMethod()->context();
+    QSignalSpy textInputPreeditSpy(textInputV3, &Test::TextInputV3::preeditString);
+    zwp_input_method_context_v1_preedit_cursor(context, 0);
+    zwp_input_method_context_v1_preedit_styling(context, 0, 3, 7);
+    zwp_input_method_context_v1_preedit_string(context, 0, "ABCD", "ABCD");
+    QVERIFY(textInputPreeditSpy.wait());
+    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCD"));
+    QCOMPARE(textInputPreeditSpy.last().at(1), 0);
+    QCOMPARE(textInputPreeditSpy.last().at(2), 0);
+
+    zwp_input_method_context_v1_preedit_cursor(context, 1);
+    zwp_input_method_context_v1_preedit_styling(context, 0, 3, 7);
+    zwp_input_method_context_v1_preedit_string(context, 0, "ABCDE", "ABCDE");
+    QVERIFY(textInputPreeditSpy.wait());
+    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCDE"));
+    QCOMPARE(textInputPreeditSpy.last().at(1), 1);
+    QCOMPARE(textInputPreeditSpy.last().at(2), 1);
+
+    zwp_input_method_context_v1_preedit_cursor(context, 2);
+    // Use selection for [2, 2+2)
+    zwp_input_method_context_v1_preedit_styling(context, 2, 2, 6);
+    // Use high light for [3, 3+3)
+    zwp_input_method_context_v1_preedit_styling(context, 3, 3, 4);
+    zwp_input_method_context_v1_preedit_string(context, 0, "ABCDEF", "ABCDEF");
+    QVERIFY(textInputPreeditSpy.wait());
+    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCDEF"));
+    // Merged range should be [2, 6)
+    QCOMPARE(textInputPreeditSpy.last().at(1), 2);
+    QCOMPARE(textInputPreeditSpy.last().at(2), 6);
+
+    zwp_input_method_context_v1_preedit_cursor(context, 2);
+    // Use selection for [0, 0+2)
+    zwp_input_method_context_v1_preedit_styling(context, 0, 2, 6);
+    // Use high light for [3, 3+3)
+    zwp_input_method_context_v1_preedit_styling(context, 3, 3, 4);
+    zwp_input_method_context_v1_preedit_string(context, 0, "ABCDEF", "ABCDEF");
+    QVERIFY(textInputPreeditSpy.wait());
+    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCDEF"));
+    // Merged range should be none, because of the disjunction highlight.
+    QCOMPARE(textInputPreeditSpy.last().at(1), 2);
+    QCOMPARE(textInputPreeditSpy.last().at(2), 2);
+
+    zwp_input_method_context_v1_preedit_cursor(context, 1);
+    // Use selection for [0, 0+2)
+    zwp_input_method_context_v1_preedit_styling(context, 0, 2, 6);
+    // Use high light for [2, 2+3)
+    zwp_input_method_context_v1_preedit_styling(context, 2, 3, 4);
+    zwp_input_method_context_v1_preedit_string(context, 0, "ABCDEF", "ABCDEF");
+    QVERIFY(textInputPreeditSpy.wait());
+    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCDEF"));
+    // Merged range should be none, starting offset does not match.
+    QCOMPARE(textInputPreeditSpy.last().at(1), 1);
+    QCOMPARE(textInputPreeditSpy.last().at(2), 1);
+
+    // Use different order of styling and cursor
+    // Use high light for [3, 3+3)
+    zwp_input_method_context_v1_preedit_styling(context, 3, 3, 4);
+    zwp_input_method_context_v1_preedit_cursor(context, 1);
+    // Use selection for [1, 1+2)
+    zwp_input_method_context_v1_preedit_styling(context, 1, 2, 6);
+    zwp_input_method_context_v1_preedit_string(context, 0, "ABCDEF", "ABCDEF");
+    QVERIFY(textInputPreeditSpy.wait());
+    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCDEF"));
+    // Merged range should be [1,6).
+    QCOMPARE(textInputPreeditSpy.last().at(1), 1);
+    QCOMPARE(textInputPreeditSpy.last().at(2), 6);
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)

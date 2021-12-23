@@ -9,6 +9,9 @@
 #ifndef KWIN_VIRTUAL_KEYBOARD_H
 #define KWIN_VIRTUAL_KEYBOARD_H
 
+#include <vector>
+#include <utility>
+
 #include <QObject>
 
 #include <kwinglobals.h>
@@ -99,11 +102,12 @@ private:
 
     bool touchEventTriggered() const;
     void forwardModifiers();
+    void resetPendingPreedit();
 
     struct {
         QString text = QString();
-        quint32 begin = 0;
-        quint32 end = 0;
+        qint32 cursor = 0;
+        std::vector<std::pair<quint32, quint32>> highlightRanges;
     } preedit;
 
     bool m_enabled = true;

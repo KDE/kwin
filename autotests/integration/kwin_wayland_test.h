@@ -9,18 +9,22 @@
 #ifndef KWIN_WAYLAND_TEST_H
 #define KWIN_WAYLAND_TEST_H
 
+#include "abstract_client.h"
 #include "main.h"
 
 // Qt
 #include <QtTest>
 
+#include <KWayland/Client/surface.h>
+
 #include "qwayland-idle-inhibit-unstable-v1.h"
-#include "qwayland-wlr-layer-shell-unstable-v1.h"
-#include "qwayland-text-input-unstable-v3.h"
-#include "qwayland-xdg-decoration-unstable-v1.h"
-#include "qwayland-xdg-shell.h"
+#include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-kde-output-device-v2.h"
 #include "qwayland-kde-output-management-v2.h"
+#include "qwayland-text-input-unstable-v3.h"
+#include "qwayland-wlr-layer-shell-unstable-v1.h"
+#include "qwayland-xdg-decoration-unstable-v1.h"
+#include "qwayland-xdg-shell.h"
 
 namespace KWayland
 {
@@ -93,9 +97,20 @@ public:
     ~TextInputManagerV3() override { destroy(); }
 };
 
-class TextInputV3 : public QtWayland::zwp_text_input_v3
+class TextInputV3 : public QObject, public QtWayland::zwp_text_input_v3
 {
+    Q_OBJECT
+public:
     ~TextInputV3() override { destroy(); }
+
+Q_SIGNALS:
+    void preeditString(const QString &text, int cursor_begin, int cursor_end);
+
+protected:
+    void zwp_text_input_v3_preedit_string(const QString &text, int32_t cursor_begin, int32_t cursor_end) override
+    {
+        Q_EMIT preeditString(text, cursor_begin, cursor_end);
+    }
 };
 
 class LayerShellV1 : public QtWayland::zwlr_layer_shell_v1
@@ -393,6 +408,40 @@ private:
     uint32_t m_rgbRange;
 };
 
+class MockInputMethod : public QObject, QtWayland::zwp_input_method_v1
+{
+    Q_OBJECT
+public:
+    MockInputMethod(struct wl_registry *registry, int id, int version);
+    ~MockInputMethod();
+
+    AbstractClient *client() const
+    {
+        return m_client;
+    }
+    KWayland::Client::Surface *inputPanelSurface() const
+    {
+        return m_inputSurface;
+    }
+    auto *context() const
+    {
+        return m_context;
+    }
+
+Q_SIGNALS:
+    void activate();
+
+protected:
+    void zwp_input_method_v1_activate(struct ::zwp_input_method_context_v1 *context) override;
+    void zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context) override;
+
+private:
+    QPointer<KWayland::Client::Surface> m_inputSurface;
+    QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
+    QPointer<AbstractClient> m_client;
+    struct ::zwp_input_method_context_v1 *m_context = nullptr;
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     Decoration = 1 << 1,
@@ -528,6 +577,7 @@ bool unlockScreen();
 void initWaylandWorkspace();
 
 AbstractClient *inputPanelClient();
+MockInputMethod *inputMethod();
 KWayland::Client::Surface *inputPanelSurface();
 
 }

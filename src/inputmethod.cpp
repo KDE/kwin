@@ -300,9 +300,7 @@ void InputMethod::textInputInterfaceV3EnabledChanged()
     setActive(t3->isEnabled());
     if (!t3->isEnabled()) {
         // reset value of preedit when textinput is disabled
-        preedit.text = QString();
-        preedit.begin = 0;
-        preedit.end = 0;
+        resetPendingPreedit();
     }
     auto context = waylandServer()->inputMethod()->context();
     if (context) {
@@ -479,8 +477,7 @@ void InputMethod::setPreeditCursor(qint32 index)
     }
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3 && t3->isEnabled()) {
-        preedit.begin = index;
-        preedit.end = index;
+        preedit.cursor = index;
     }
 }
 
@@ -489,6 +486,13 @@ void InputMethod::setPreeditStyling(quint32 index, quint32 length, quint32 style
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         t2->preEditStyling(index, length, style);
+    }
+    auto t3 = waylandServer()->seat()->textInputV3();
+    if (t3 && t3->isEnabled()) {
+        // preedit style: highlight(4) or selection(6)
+        if (style == 4 || style == 6) {
+            preedit.highlightRanges.emplace_back(index, index + length);
+        }
     }
 }
 
@@ -503,10 +507,36 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
     if (t3 && t3->isEnabled()) {
         preedit.text = text;
         if (!preedit.text.isEmpty()) {
-            t3->sendPreEditString(preedit.text, preedit.begin, preedit.end);
+            quint32 cursor = 0, cursorEnd = 0;
+            if (preedit.cursor > 0) {
+                cursor = cursorEnd = preedit.cursor;
+            }
+            // Check if we can convert highlight style to a range of selection.
+            if (!preedit.highlightRanges.empty()) {
+                std::sort(preedit.highlightRanges.begin(), preedit.highlightRanges.end());
+                // Check if starting point matches.
+                if (preedit.highlightRanges.front().first == cursor) {
+                    quint32 end = preedit.highlightRanges.front().second;
+                    bool nonContinousHighlight = false;
+                    for (size_t i = 1 ; i < preedit.highlightRanges.size(); i ++) {
+                        if (end >= preedit.highlightRanges[i].first) {
+                            end = std::max(end, preedit.highlightRanges[i].second);
+                        } else {
+                            nonContinousHighlight = true;
+                            break;
+                        }
+                    }
+                    if (!nonContinousHighlight) {
+                        cursorEnd = end;
+                    }
+                }
+            }
+
+            t3->sendPreEditString(preedit.text, cursor, cursorEnd);
         }
         t3->done();
     }
+    resetPendingPreedit();
 }
 
 void InputMethod::key(quint32 /*serial*/, quint32 /*time*/, quint32 keyCode, bool pressed)
@@ -710,6 +740,12 @@ bool InputMethod::isVisible() const
 bool InputMethod::isAvailable() const
 {
     return !m_inputMethodCommand.isEmpty();
+}
+
+void InputMethod::resetPendingPreedit() {
+    preedit.text = QString();
+    preedit.cursor = 0;
+    preedit.highlightRanges.clear();
 }
 
 }

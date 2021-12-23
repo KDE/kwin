@@ -7,11 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
-#include "abstract_client.h"
 #include "screenlockerwatcher.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "qwayland-input-method-unstable-v1.h"
 #include "inputmethod.h"
 
 #include <KWayland/Client/compositor.h>
@@ -249,28 +247,14 @@ static struct {
     TextInputManagerV3 *textInputManagerV3 = nullptr;
 } s_waylandConnection;
 
-class MockInputMethod : public QtWayland::zwp_input_method_v1
-{
-public:
-    MockInputMethod(struct wl_registry *registry, int id, int version);
-    ~MockInputMethod();
-
-    AbstractClient *client() const { return m_client; }
-    KWayland::Client::Surface *inputPanelSurface() const { return m_inputSurface; }
-
-protected:
-    void zwp_input_method_v1_activate(struct ::zwp_input_method_context_v1 *context) override;
-    void zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context) override;
-
-private:
-    QPointer<KWayland::Client::Surface> m_inputSurface;
-    QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
-    QPointer<AbstractClient> m_client;
-};
-
 AbstractClient *inputPanelClient()
 {
     return s_waylandConnection.inputMethodV1->client();
+}
+
+MockInputMethod *inputMethod()
+{
+    return s_waylandConnection.inputMethodV1;
 }
 
 KWayland::Client::Surface *inputPanelSurface()
@@ -295,11 +279,16 @@ void MockInputMethod::zwp_input_method_v1_activate(struct ::zwp_input_method_con
         m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface, s_waylandConnection.outputs.first());
     }
     m_client = Test::renderAndWaitForShown(m_inputSurface, QSize(1280, 400), Qt::blue);
+    m_context = context;
+
+    Q_EMIT activate();
 }
 
 void MockInputMethod::zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context)
 {
+    QCOMPARE(context, m_context);
     zwp_input_method_context_v1_destroy(context);
+    m_context = nullptr;
 
     if (m_inputSurface) {
         m_inputSurface->release();
