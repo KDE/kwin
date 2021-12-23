@@ -944,20 +944,51 @@ bool AbstractClient::startInteractiveMoveResize()
     setInteractiveMoveResize(true);
     workspace()->setMoveResizeClient(this);
 
-    const Position mode = interactiveMoveResizePointerMode();
-    if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
-        if (maximizeMode() == MaximizeFull) { // partial is cond. reset in finishMoveResize
-            setGeometryRestore(moveResizeGeometry()); // "restore" to current geometry
-            setMaximize(false, false);
+    if (maximizeMode() != MaximizeRestore) {
+        switch (interactiveMoveResizePointerMode()) {
+        case PositionLeft:
+        case PositionRight:
+            // Quit maximized horizontally state if the window is resized horizontally.
+            if (maximizeMode() & MaximizeHorizontal) {
+                QRect originalGeometry = geometryRestore();
+                originalGeometry.setX(moveResizeGeometry().x());
+                originalGeometry.setWidth(moveResizeGeometry().width());
+                setGeometryRestore(originalGeometry);
+                maximize(maximizeMode() ^ MaximizeHorizontal);
+            }
+            break;
+        case PositionTop:
+        case PositionBottom:
+            // Quit maximized vertically state if the window is resized vertically.
+            if (maximizeMode() & MaximizeVertical) {
+                QRect originalGeometry = geometryRestore();
+                originalGeometry.setY(moveResizeGeometry().y());
+                originalGeometry.setHeight(moveResizeGeometry().height());
+                setGeometryRestore(originalGeometry);
+                maximize(maximizeMode() ^ MaximizeVertical);
+            }
+            break;
+        case PositionTopLeft:
+        case PositionBottomLeft:
+        case PositionTopRight:
+        case PositionBottomRight:
+            // Quit the maximized mode if the window is resized by dragging one of its corners.
+            setGeometryRestore(moveResizeGeometry());
+            maximize(MaximizeRestore);
+            break;
+        default:
+            break;
         }
     }
 
-    if (quickTileMode() != QuickTileMode(QuickTileFlag::None) && mode != PositionCenter) { // Cannot use isResize() yet
-        // Exit quick tile mode when the user attempts to resize a tiled window
-        updateQuickTileMode(QuickTileFlag::None); // Do so without restoring original geometry
-        setGeometryRestore(moveResizeGeometry());
-        doSetQuickTileMode();
-        Q_EMIT quickTileModeChanged();
+    if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+        if (interactiveMoveResizePointerMode() != PositionCenter) { // Cannot use isResize() yet
+            // Exit quick tile mode when the user attempts to resize a tiled window
+            updateQuickTileMode(QuickTileFlag::None); // Do so without restoring original geometry
+            setGeometryRestore(moveResizeGeometry());
+            doSetQuickTileMode();
+            Q_EMIT quickTileModeChanged();
+        }
     }
 
     updateHaveResizeEffect();
@@ -972,25 +1003,12 @@ bool AbstractClient::startInteractiveMoveResize()
 void AbstractClient::finishInteractiveMoveResize(bool cancel)
 {
     GeometryUpdatesBlocker blocker(this);
-    const bool wasResize = isInteractiveResize(); // store across leaveMoveResize
     leaveInteractiveMoveResize();
 
     doFinishInteractiveMoveResize();
 
-    if (cancel)
+    if (cancel) {
         moveResize(initialInteractiveMoveResizeGeometry());
-    else {
-        const QRect &moveResizeGeom = moveResizeGeometry();
-        if (wasResize) {
-            const bool restoreH = maximizeMode() == MaximizeHorizontal &&
-                                    moveResizeGeom.width() != initialInteractiveMoveResizeGeometry().width();
-            const bool restoreV = maximizeMode() == MaximizeVertical &&
-                                    moveResizeGeom.height() != initialInteractiveMoveResizeGeometry().height();
-            if (restoreH || restoreV) {
-                changeMaximize(restoreH, restoreV, false);
-            }
-        }
-        moveResize(moveResizeGeom);
     }
     checkOutput(); // needs to be done because clientFinishUserMovedResized has not yet re-activated online alignment
     if (output() != interactiveMoveResizeStartOutput()) {
