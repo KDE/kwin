@@ -6,10 +6,6 @@
    <kcfgfile name="kwinrc"/>
 
    <group name="Windows">
-    <entry key="GeometryTip" type="Bool">
-        <default>false</default>
-    </entry>
-
     <entry key="BorderSnapZone" type="Int">
         <default>10</default>
         <min>0</min>

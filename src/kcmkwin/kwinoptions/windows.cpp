@@ -331,15 +331,6 @@ void KMovingConfig::save(void)
             QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
     }
-    // and reconfigure the effect
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
-    if (m_settings->geometryTip()) {
-        interface.loadEffect(QStringLiteral("windowgeometry"));
-    } else {
-        interface.unloadEffect(QStringLiteral("windowgeometry"));
-    }
 }
 
 bool KMovingConfig::isDefaults() const

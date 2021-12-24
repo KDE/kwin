@@ -21,7 +21,6 @@
 #include "deleted.h"
 #include "effects.h"
 #include "focuschain.h"
-#include "geometrytip.h"
 #include "group.h"
 #include "netinfo.h"
 #include "platform.h"
@@ -4498,30 +4497,6 @@ QRect X11Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology)
     return total;
 }
 
-static GeometryTip* geometryTip    = nullptr;
-
-void X11Client::positionGeometryTip()
-{
-    Q_ASSERT(isInteractiveMove() || isInteractiveResize());
-    // Position and Size display
-    if (effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::GeometryTip))
-        return; // some effect paints this for us
-    if (options->showGeometryTip()) {
-        if (!geometryTip) {
-            geometryTip = new GeometryTip(&m_geometryHints);
-        }
-        QRect wgeom(moveResizeGeometry());   // position of the frame, size of the window itself
-        wgeom.setWidth(wgeom.width() - (width() - clientSize().width()));
-        wgeom.setHeight(wgeom.height() - (height() - clientSize().height()));
-        if (isShade())
-            wgeom.setHeight(0);
-        geometryTip->setGeometry(wgeom);
-        if (!geometryTip->isVisible())
-            geometryTip->show();
-        geometryTip->raise();
-    }
-}
-
 bool X11Client::doStartInteractiveMoveResize()
 {
     bool has_grab = false;
@@ -4559,11 +4534,6 @@ void X11Client::leaveInteractiveMoveResize()
     }
     if (!isInteractiveResize())
         sendSyntheticConfigureNotify(); // tell the client about it's new final position
-    if (geometryTip) {
-        geometryTip->hide();
-        delete geometryTip;
-        geometryTip = nullptr;
-    }
     if (move_resize_has_keyboard_grab)
         ungrabXKeyboard();
     move_resize_has_keyboard_grab = false;

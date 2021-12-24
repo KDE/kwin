@@ -81,9 +81,6 @@
         </entry>
     </group>
     <group name="Windows">
-        <entry name="GeometryTip" type="Bool">
-            <default>false</default>
-        </entry>
         <entry name="CondensedTitle" type="Bool">
             <default>false</default>
         </entry>

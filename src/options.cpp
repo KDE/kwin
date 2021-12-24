@@ -87,7 +87,6 @@ Options::Options(QObject *parent)
     , electric_border_tiling(false)
     , electric_border_corner_ratio(0.0)
     , borderless_maximized_windows(false)
-    , show_geometry_tip(false)
     , condensed_title(false)
 {
     m_settings->setDefaults();
@@ -463,15 +462,6 @@ void Options::setKeyCmdAllModKey(uint keyCmdAllModKey)
     Q_EMIT keyCmdAllModKeyChanged();
 }
 
-void Options::setShowGeometryTip(bool showGeometryTip)
-{
-    if (show_geometry_tip == showGeometryTip) {
-        return;
-    }
-    show_geometry_tip = showGeometryTip;
-    Q_EMIT showGeometryTipChanged();
-}
-
 void Options::setCondensedTitle(bool condensedTitle)
 {
     if (condensed_title == condensedTitle) {
@@ -766,7 +756,6 @@ void Options::loadConfig()
 
 void Options::syncFromKcfgc()
 {
-    setShowGeometryTip(m_settings->geometryTip());
     setCondensedTitle(m_settings->condensedTitle());
     setFocusPolicy(m_settings->focusPolicy());
     setNextFocusPrefersMouse(m_settings->nextFocusPrefersMouse());
@@ -984,11 +973,6 @@ Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
     if (lowerName == QStringLiteral("change opacity")) return MouseWheelChangeOpacity;
     if (lowerName == QStringLiteral("nothing")) return MouseWheelNothing;
     return MouseWheelNothing;
-}
-
-bool Options::showGeometryTip() const
-{
-    return show_geometry_tip;
 }
 
 bool Options::condensedTitle() const

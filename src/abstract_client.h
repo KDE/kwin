@@ -1158,7 +1158,6 @@ protected:
      * ensures that the internal mode is properly ended.
      */
     virtual void leaveInteractiveMoveResize();
-    virtual void positionGeometryTip();
     void performInteractiveMoveResize();
     /*
      * Checks if the mouse cursor is near the edge of the screen and if so

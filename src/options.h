@@ -149,10 +149,6 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(MouseCommand commandAll3 READ commandAll3 WRITE setCommandAll3 NOTIFY commandAll3Changed)
     Q_PROPERTY(uint keyCmdAllModKey READ keyCmdAllModKey WRITE setKeyCmdAllModKey NOTIFY keyCmdAllModKeyChanged)
     /**
-     * Whether the Geometry Tip should be shown during a window move/resize.
-     */
-    Q_PROPERTY(bool showGeometryTip READ showGeometryTip WRITE setShowGeometryTip NOTIFY showGeometryTipChanged)
-    /**
      * Whether the visible name should be condensed.
      */
     Q_PROPERTY(bool condensedTitle READ condensedTitle WRITE setCondensedTitle NOTIFY condensedTitleChanged)
@@ -498,11 +494,6 @@ public:
     static MouseWheelCommand mouseWheelCommand(const QString &name);
 
     /**
-     * @returns true if the Geometry Tip should be shown during a window move/resize.
-     */
-    bool showGeometryTip() const;
-
-    /**
      * Returns whether the user prefers his caption clean.
      */
     bool condensedTitle() const;
@@ -648,7 +639,6 @@ public:
     void setCommandAll2(MouseCommand commandAll2);
     void setCommandAll3(MouseCommand commandAll3);
     void setKeyCmdAllModKey(uint keyCmdAllModKey);
-    void setShowGeometryTip(bool showGeometryTip);
     void setCondensedTitle(bool condensedTitle);
     void setElectricBorderMaximize(bool electricBorderMaximize);
     void setElectricBorderTiling(bool electricBorderTiling);
@@ -817,7 +807,6 @@ Q_SIGNALS:
     void commandAll2Changed();
     void commandAll3Changed();
     void keyCmdAllModKeyChanged();
-    void showGeometryTipChanged();
     void condensedTitleChanged();
     void electricBorderMaximizeChanged();
     void electricBorderTilingChanged();
@@ -908,7 +897,6 @@ private:
     bool electric_border_tiling;
     float electric_border_corner_ratio;
     bool borderless_maximized_windows;
-    bool show_geometry_tip;
     bool condensed_title;
 
     QHash<Qt::KeyboardModifier, QStringList> m_modifierOnlyShortcuts;
