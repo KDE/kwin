@@ -1432,22 +1432,16 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
 
     if (isInteractiveMove()) {
         move(moveResizeGeometry().topLeft());
-        completeInteractiveMoveResizeStep();
     } else {
         if (!haveResizeEffect()) {
             doInteractiveResizeSync();
-        } else {
-            completeInteractiveMoveResizeStep();
         }
     }
 
     if (isInteractiveMove()) {
         ScreenEdges::self()->check(globalPos, QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC));
     }
-}
 
-void AbstractClient::completeInteractiveMoveResizeStep()
-{
     Q_EMIT clientStepUserMovedResized(this, moveResizeGeometry());
 }
 

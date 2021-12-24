@@ -268,7 +268,7 @@ void MoveResizeWindowTest::testResize()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(108, 50));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
 
     // Now render new size.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());

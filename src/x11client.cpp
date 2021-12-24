@@ -2783,7 +2783,6 @@ void X11Client::performInteractiveResize()
     if (isInteractiveResize() && !haveResizeEffect()) {
         resize(moveResizeGeometry().size());
     }
-    completeInteractiveMoveResizeStep();
 }
 
 bool X11Client::belongToSameApplication(const X11Client *c1, const X11Client *c2, SameApplicationChecks checks)

@@ -666,7 +666,7 @@ void TestXdgShellClientRules::testSizeApply()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(surface.data(), QSize(488, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
@@ -795,7 +795,7 @@ void TestXdgShellClientRules::testSizeRemember()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(surface.data(), QSize(488, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
