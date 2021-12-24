@@ -601,21 +601,6 @@ public:
     virtual void pointerEnterEvent(const QPoint &globalPos);
     virtual void pointerLeaveEvent();
 
-    /**
-     * These values represent positions inside an area
-     */
-    enum Position {
-        // without prefix, they'd conflict with Qt::TopLeftCorner etc. :(
-        PositionCenter         = 0x00,
-        PositionLeft           = 0x01,
-        PositionRight          = 0x02,
-        PositionTop            = 0x04,
-        PositionBottom         = 0x08,
-        PositionTopLeft        = PositionLeft | PositionTop,
-        PositionTopRight       = PositionRight | PositionTop,
-        PositionBottomLeft     = PositionLeft | PositionBottom,
-        PositionBottomRight    = PositionRight | PositionBottom
-    };
     Qt::Edge titlebarPosition() const;
     bool titlebarPositionUnderMouse() const;
 
@@ -710,13 +695,13 @@ public:
      * Returns @c true if the Client is being interactively moved; otherwise @c false.
      */
     bool isInteractiveMove() const {
-        return isInteractiveMoveResize() && interactiveMoveResizePointerMode() == PositionCenter;
+        return isInteractiveMoveResize() && interactiveMoveResizeGravity() == Gravity::None;
     }
     /**
      * Returns @c true if the Client is being interactively resized; otherwise @c false.
      */
     bool isInteractiveResize() const {
-        return isInteractiveMoveResize() && interactiveMoveResizePointerMode() != PositionCenter;
+        return isInteractiveMoveResize() && interactiveMoveResizeGravity() != Gravity::None;
     }
     /**
      * Cursor shape for move/resize mode.
@@ -1117,11 +1102,11 @@ protected:
      */
     void updateInitialMoveResizeGeometry();
     void setMoveResizeGeometry(const QRect &geo);
-    Position interactiveMoveResizePointerMode() const {
-        return m_interactiveMoveResize.pointer;
+    Gravity interactiveMoveResizeGravity() const {
+        return m_interactiveMoveResize.gravity;
     }
-    void setInteractiveMoveResizePointerMode(Position mode) {
-        m_interactiveMoveResize.pointer = mode;
+    void setInteractiveMoveResizeGravity(Gravity gravity) {
+        m_interactiveMoveResize.gravity = gravity;
     }
     bool isInteractiveMoveResizePointerButtonDown() const {
         return m_interactiveMoveResize.buttonDown;
@@ -1182,10 +1167,10 @@ protected:
     virtual QSize resizeIncrements() const;
 
     /**
-     * Returns the position depending on the Decoration's section under mouse.
-     * If no decoration it returns PositionCenter.
+     * Returns the interactive move resize gravity depending on the Decoration's section
+     * under mouse. If no decoration it returns Gravity::None.
      */
-    Position mousePosition() const;
+    Gravity mouseGravity() const;
 
     void setDecoration(QSharedPointer<KDecoration2::Decoration> decoration);
     void startDecorationDoubleClickTimer();
@@ -1294,7 +1279,7 @@ private:
         QPoint offset;
         QPoint invertedOffset;
         QRect initialGeometry;
-        Position pointer = PositionCenter;
+        Gravity gravity = Gravity::None;
         bool buttonDown = false;
         CursorShape cursor = Qt::ArrowCursor;
         AbstractOutput *startOutput = nullptr;

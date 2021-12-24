@@ -145,6 +145,21 @@ enum class LED {
 Q_DECLARE_FLAGS(LEDs, LED)
 Q_FLAG_NS(LEDs)
 
+/**
+ * The Gravity enum is used to specify the direction in which geometry changes during resize.
+ */
+enum class Gravity {
+    None,
+    Left,
+    Right,
+    Top,
+    Bottom,
+    TopLeft,
+    TopRight,
+    BottomLeft,
+    BottomRight,
+};
+
 inline
 KWIN_EXPORT xcb_connection_t *connection()
 {

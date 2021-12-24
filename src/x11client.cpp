@@ -3998,10 +3998,11 @@ bool X11Client::isResizable() const
         return false;
     if (rules()->checkSize(QSize()).isValid())   // forced size
         return false;
-    const Position mode = interactiveMoveResizePointerMode();
-    if ((mode == PositionTop || mode == PositionTopLeft || mode == PositionTopRight ||
-         mode == PositionLeft || mode == PositionBottomLeft) && rules()->checkPosition(invalidPoint) != invalidPoint)
+    const Gravity gravity = interactiveMoveResizeGravity();
+    if ((gravity == Gravity::Top || gravity == Gravity::TopLeft || gravity == Gravity::TopRight ||
+         gravity == Gravity::Left || gravity == Gravity::BottomLeft) && rules()->checkPosition(invalidPoint) != invalidPoint) {
         return false;
+    }
 
     QSize min = minSize();
     QSize max = maxSize();

@@ -264,25 +264,25 @@ QRect XdgSurfaceClient::adjustMoveResizeGeometry(const QRect &rect) const
 {
     QRect geometry = rect;
 
-    switch (interactiveMoveResizePointerMode()) {
-    case PositionTopLeft:
+    switch (interactiveMoveResizeGravity()) {
+    case Gravity::TopLeft:
         geometry.moveRight(moveResizeGeometry().right());
         geometry.moveBottom(moveResizeGeometry().bottom());
         break;
-    case PositionTop:
-    case PositionTopRight:
+    case Gravity::Top:
+    case Gravity::TopRight:
         geometry.moveLeft(moveResizeGeometry().left());
         geometry.moveBottom(moveResizeGeometry().bottom());
         break;
-    case PositionRight:
-    case PositionBottomRight:
-    case PositionBottom:
-    case PositionCenter:
+    case Gravity::Right:
+    case Gravity::BottomRight:
+    case Gravity::Bottom:
+    case Gravity::None:
         geometry.moveLeft(moveResizeGeometry().left());
         geometry.moveTop(moveResizeGeometry().top());
         break;
-    case PositionBottomLeft:
-    case PositionLeft:
+    case Gravity::BottomLeft:
+    case Gravity::Left:
         geometry.moveRight(moveResizeGeometry().right());
         geometry.moveTop(moveResizeGeometry().top());
         break;
@@ -1005,7 +1005,7 @@ void XdgToplevelClient::doSetQuickTileMode()
 
 bool XdgToplevelClient::doStartInteractiveMoveResize()
 {
-    if (interactiveMoveResizePointerMode() != PositionCenter) {
+    if (interactiveMoveResizeGravity() != Gravity::None) {
         m_nextStates |= XdgToplevelInterface::State::Resizing;
         scheduleConfigure();
     }
@@ -1143,37 +1143,37 @@ void XdgToplevelClient::handleResizeRequested(SeatInterface *seat, XdgToplevelIn
     setInteractiveMoveOffset(cursorPos - pos());  // map from global
     setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
     setUnrestrictedInteractiveMoveResize(false);
-    Position position;
+    Gravity gravity;
     switch (anchor) {
     case XdgToplevelInterface::ResizeAnchor::TopLeft:
-        position = PositionTopLeft;
+        gravity = Gravity::TopLeft;
         break;
     case XdgToplevelInterface::ResizeAnchor::Top:
-        position = PositionTop;
+        gravity = Gravity::Top;
         break;
     case XdgToplevelInterface::ResizeAnchor::TopRight:
-        position = PositionTopRight;
+        gravity = Gravity::TopRight;
         break;
     case XdgToplevelInterface::ResizeAnchor::Right:
-        position = PositionRight;
+        gravity = Gravity::Right;
         break;
     case XdgToplevelInterface::ResizeAnchor::BottomRight:
-        position = PositionBottomRight;
+        gravity = Gravity::BottomRight;
         break;
     case XdgToplevelInterface::ResizeAnchor::Bottom:
-        position = PositionBottom;
+        gravity = Gravity::Bottom;
         break;
     case XdgToplevelInterface::ResizeAnchor::BottomLeft:
-        position = PositionBottomLeft;
+        gravity = Gravity::BottomLeft;
         break;
     case XdgToplevelInterface::ResizeAnchor::Left:
-        position = PositionLeft;
+        gravity = Gravity::Left;
         break;
     default:
-        position = PositionCenter;
+        gravity = Gravity::None;
         break;
     }
-    setInteractiveMoveResizePointerMode(position);
+    setInteractiveMoveResizeGravity(gravity);
     if (!startInteractiveMoveResize()) {
         setInteractiveMoveResizePointerButtonDown(false);
     }

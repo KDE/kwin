@@ -694,7 +694,7 @@ void X11Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
         return; // care only about leaving the whole frame
     if (e->mode == XCB_NOTIFY_MODE_NORMAL) {
         if (!isInteractiveMoveResizePointerButtonDown()) {
-            setInteractiveMoveResizePointerMode(PositionCenter);
+            setInteractiveMoveResizeGravity(Gravity::None);
             updateCursor();
         }
         bool lostMouse = !rect().contains(QPoint(e->event_x, e->event_y));
@@ -1034,9 +1034,9 @@ bool X11Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x
                 QCoreApplication::instance()->sendEvent(decoration(), &event);
             }
         }
-        Position newmode = modKeyDown(state) ? PositionCenter : mousePosition();
-        if (newmode != interactiveMoveResizePointerMode()) {
-            setInteractiveMoveResizePointerMode(newmode);
+        Gravity newGravity = modKeyDown(state) ? Gravity::None : mouseGravity();
+        if (newGravity != interactiveMoveResizeGravity()) {
+            setInteractiveMoveResizeGravity(newGravity);
             updateCursor();
         }
         return false;
@@ -1137,15 +1137,15 @@ void X11Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
         setInteractiveMoveResizePointerButtonDown(false);
         updateCursor();
     } else if (direction >= NET::TopLeft && direction <= NET::Left) {
-        static const Position convert[] = {
-            PositionTopLeft,
-            PositionTop,
-            PositionTopRight,
-            PositionRight,
-            PositionBottomRight,
-            PositionBottom,
-            PositionBottomLeft,
-            PositionLeft
+        static const Gravity convert[] = {
+            Gravity::TopLeft,
+            Gravity::Top,
+            Gravity::TopRight,
+            Gravity::Right,
+            Gravity::BottomRight,
+            Gravity::Bottom,
+            Gravity::BottomLeft,
+            Gravity::Left
         };
         if (!isResizable() || isShade())
             return;
@@ -1155,7 +1155,7 @@ void X11Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
         setInteractiveMoveOffset(QPoint(x_root - x(), y_root - y()));  // map from global
         setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
         setUnrestrictedInteractiveMoveResize(false);
-        setInteractiveMoveResizePointerMode(convert[ direction ]);
+        setInteractiveMoveResizeGravity(convert[direction]);
         if (!startInteractiveMoveResize())
             setInteractiveMoveResizePointerButtonDown(false);
         updateCursor();

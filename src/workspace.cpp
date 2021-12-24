@@ -2628,7 +2628,7 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
     return pos;
 }
 
-QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int mode)
+QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, Gravity gravity)
 {
     //adapted from adjustClientPosition on 29May2004
     //this function is called when resizing a window and will modify
@@ -2687,32 +2687,32 @@ QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int m
         deltaX = qAbs(xmax-newrx); \
         newrx = xmax; \
     }
-            switch(mode) {
-            case AbstractClient::PositionBottomRight:
+            switch (gravity) {
+            case Gravity::BottomRight:
                 SNAP_BORDER_BOTTOM
                 SNAP_BORDER_RIGHT
                 break;
-            case AbstractClient::PositionRight:
+            case Gravity::Right:
                 SNAP_BORDER_RIGHT
                 break;
-            case AbstractClient::PositionBottom:
+            case Gravity::Bottom:
                 SNAP_BORDER_BOTTOM
                 break;
-            case AbstractClient::PositionTopLeft:
+            case Gravity::TopLeft:
                 SNAP_BORDER_TOP
                 SNAP_BORDER_LEFT
                 break;
-            case AbstractClient::PositionLeft:
+            case Gravity::Left:
                 SNAP_BORDER_LEFT
                 break;
-            case AbstractClient::PositionTop:
+            case Gravity::Top:
                 SNAP_BORDER_TOP
                 break;
-            case AbstractClient::PositionTopRight:
+            case Gravity::TopRight:
                 SNAP_BORDER_TOP
                 SNAP_BORDER_RIGHT
                 break;
-            case AbstractClient::PositionBottomLeft:
+            case Gravity::BottomLeft:
                 SNAP_BORDER_BOTTOM
                 SNAP_BORDER_LEFT
                 break;
@@ -2803,42 +2803,42 @@ QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int m
     newrx = lrx - 1; \
 }
 
-                    switch(mode) {
-                    case AbstractClient::PositionBottomRight:
+                    switch (gravity) {
+                    case Gravity::BottomRight:
                         SNAP_WINDOW_BOTTOM
                         SNAP_WINDOW_RIGHT
                         SNAP_WINDOW_C_BOTTOM
                         SNAP_WINDOW_C_RIGHT
                         break;
-                    case AbstractClient::PositionRight:
+                    case Gravity::Right:
                         SNAP_WINDOW_RIGHT
                         SNAP_WINDOW_C_RIGHT
                         break;
-                    case AbstractClient::PositionBottom:
+                    case Gravity::Bottom:
                         SNAP_WINDOW_BOTTOM
                         SNAP_WINDOW_C_BOTTOM
                         break;
-                    case AbstractClient::PositionTopLeft:
+                    case Gravity::TopLeft:
                         SNAP_WINDOW_TOP
                         SNAP_WINDOW_LEFT
                         SNAP_WINDOW_C_TOP
                         SNAP_WINDOW_C_LEFT
                         break;
-                    case AbstractClient::PositionLeft:
+                    case Gravity::Left:
                         SNAP_WINDOW_LEFT
                         SNAP_WINDOW_C_LEFT
                         break;
-                    case AbstractClient::PositionTop:
+                    case Gravity::Top:
                         SNAP_WINDOW_TOP
                         SNAP_WINDOW_C_TOP
                         break;
-                    case AbstractClient::PositionTopRight:
+                    case Gravity::TopRight:
                         SNAP_WINDOW_TOP
                         SNAP_WINDOW_RIGHT
                         SNAP_WINDOW_C_TOP
                         SNAP_WINDOW_C_RIGHT
                         break;
-                    case AbstractClient::PositionBottomLeft:
+                    case Gravity::BottomLeft:
                         SNAP_WINDOW_BOTTOM
                         SNAP_WINDOW_LEFT
                         SNAP_WINDOW_C_BOTTOM
