@@ -4350,11 +4350,11 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
                 const bool overHeight = r.height() > clientArea.height();
                 const bool overWidth  = r.width()  > clientArea.width();
                 if (closeWidth || closeHeight) {
-                    Position titlePos = titlebarPosition();
+                    Qt::Edge titlePos = titlebarPosition();
                     const QRect screenArea = workspace()->clientArea(ScreenArea, this, clientArea.center());
                     if (closeHeight) {
-                        bool tryBottom = titlePos == PositionBottom;
-                        if ((overHeight && titlePos == PositionTop) ||
+                        bool tryBottom = titlePos == Qt::BottomEdge;
+                        if ((overHeight && titlePos == Qt::TopEdge) ||
                             screenArea.top() == clientArea.top())
                             r.setTop(clientArea.top());
                         else
@@ -4364,8 +4364,8 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
                             r.setBottom(clientArea.bottom());
                     }
                     if (closeWidth) {
-                        bool tryLeft = titlePos == PositionLeft;
-                        if ((overWidth && titlePos == PositionRight) ||
+                        bool tryLeft = titlePos == Qt::LeftEdge;
+                        if ((overWidth && titlePos == Qt::RightEdge) ||
                             screenArea.right() == clientArea.right())
                             r.setRight(clientArea.right());
                         else

@@ -679,10 +679,10 @@ void AbstractClient::toggleShade()
     setShade(shadeMode() == ShadeNone ? ShadeNormal : ShadeNone);
 }
 
-AbstractClient::Position AbstractClient::titlebarPosition() const
+Qt::Edge AbstractClient::titlebarPosition() const
 {
     // TODO: still needed, remove?
-    return PositionTop;
+    return Qt::TopEdge;
 }
 
 bool AbstractClient::titlebarPositionUnderMouse() const
@@ -696,13 +696,13 @@ bool AbstractClient::titlebarPositionUnderMouse() const
     }
     // check other sections based on titlebarPosition
     switch (titlebarPosition()) {
-    case AbstractClient::PositionTop:
+    case Qt::TopEdge:
         return (sectionUnderMouse == Qt::TopLeftSection || sectionUnderMouse == Qt::TopSection || sectionUnderMouse == Qt::TopRightSection);
-    case AbstractClient::PositionLeft:
+    case Qt::LeftEdge:
         return (sectionUnderMouse == Qt::TopLeftSection || sectionUnderMouse == Qt::LeftSection || sectionUnderMouse == Qt::BottomLeftSection);
-    case AbstractClient::PositionRight:
+    case Qt::RightEdge:
         return (sectionUnderMouse == Qt::BottomRightSection || sectionUnderMouse == Qt::RightSection || sectionUnderMouse == Qt::TopRightSection);
-    case AbstractClient::PositionBottom:
+    case Qt::BottomEdge:
         return (sectionUnderMouse == Qt::BottomLeftSection || sectionUnderMouse == Qt::BottomSection || sectionUnderMouse == Qt::BottomRightSection);
     default:
         // nothing
@@ -1179,17 +1179,17 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
         r.moveTopLeft(QPoint(0,0));
         switch (titlebarPosition()) {
         default:
-        case PositionTop:
+        case Qt::TopEdge:
             r.setHeight(borderTop());
             break;
-        case PositionLeft:
+        case Qt::LeftEdge:
             r.setWidth(borderLeft());
             transposed = true;
             break;
-        case PositionBottom:
+        case Qt::BottomEdge:
             r.setTop(r.bottom() - borderBottom());
             break;
-        case PositionRight:
+        case Qt::RightEdge:
             r.setLeft(r.right() - borderRight());
             transposed = true;
             break;
@@ -1306,16 +1306,16 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
                 };
                 switch (titlebarPosition()) {
                 default:
-                case PositionTop:
+                case Qt::TopEdge:
                     fixChangedState(topChanged, btmChanged, leftChanged, rightChanged);
                     break;
-                case PositionLeft:
+                case Qt::LeftEdge:
                     fixChangedState(leftChanged, rightChanged, topChanged, btmChanged);
                     break;
-                case PositionBottom:
+                case Qt::BottomEdge:
                     fixChangedState(btmChanged, topChanged, leftChanged, rightChanged);
                     break;
-                case PositionRight:
+                case Qt::RightEdge:
                     fixChangedState(rightChanged, leftChanged, topChanged, btmChanged);
                     break;
                 }

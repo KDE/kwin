@@ -616,7 +616,7 @@ public:
         PositionBottomLeft     = PositionLeft | PositionBottom,
         PositionBottomRight    = PositionRight | PositionBottom
     };
-    Position titlebarPosition() const;
+    Qt::Edge titlebarPosition() const;
     bool titlebarPositionUnderMouse() const;
 
     // a helper for the workspace window packing. tests for screen validity and updates since in maximization case as with normal moving

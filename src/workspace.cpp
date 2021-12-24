@@ -2495,20 +2495,20 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
             QMargins frameMargins = c->frameMargins();
 
             // snap to titlebar / snap to window borders on inner screen edges
-            AbstractClient::Position titlePos = c->titlebarPosition();
-            if (frameMargins.left() && (titlePos == AbstractClient::PositionLeft || (c->maximizeMode() & MaximizeHorizontal) ||
+            Qt::Edge titlePos = c->titlebarPosition();
+            if (frameMargins.left() && (titlePos == Qt::LeftEdge || (c->maximizeMode() & MaximizeHorizontal) ||
                                         screens()->intersecting(geo.translated(maxRect.x() - (frameMargins.left() + geo.x()), 0)) > 1)) {
                 frameMargins.setLeft(0);
             }
-            if (frameMargins.right() && (titlePos == AbstractClient::PositionRight || (c->maximizeMode() & MaximizeHorizontal) ||
+            if (frameMargins.right() && (titlePos == Qt::RightEdge || (c->maximizeMode() & MaximizeHorizontal) ||
                                          screens()->intersecting(geo.translated(maxRect.right() + frameMargins.right() - geo.right(), 0)) > 1)) {
                 frameMargins.setRight(0);
             }
-            if (frameMargins.top() && (titlePos == AbstractClient::PositionTop || (c->maximizeMode() & MaximizeVertical) ||
+            if (frameMargins.top() && (titlePos == Qt::TopEdge || (c->maximizeMode() & MaximizeVertical) ||
                                        screens()->intersecting(geo.translated(0, maxRect.y() - (frameMargins.top() + geo.y()))) > 1)) {
                 frameMargins.setTop(0);
             }
-            if (frameMargins.bottom() && (titlePos == AbstractClient::PositionBottom || (c->maximizeMode() & MaximizeVertical) ||
+            if (frameMargins.bottom() && (titlePos == Qt::BottomEdge || (c->maximizeMode() & MaximizeVertical) ||
                                           screens()->intersecting(geo.translated(0, maxRect.bottom() + frameMargins.bottom() - geo.bottom())) > 1)) {
                 frameMargins.setBottom(0);
             }
