@@ -419,13 +419,28 @@ void InputMethod::commitString(qint32 serial, const QString &text)
 
 void InputMethod::deleteSurroundingText(int32_t index, uint32_t length)
 {
+    // zwp_input_method_v1 Delete surrounding text interface is designed for text-input-v1.
+    // The parameter has different meaning in text-input-v{2,3}.
+    // Current cursor is at index 0.
+    // The actualy deleted text range is [index, index + length].
+    // In v{2,3}'s before/after style, text to be deleted with v{2,3} interface is [-before, after].
+    // And before/after are all unsigned, which make it impossible to do certain things.
+    // Those request will be ignored.
+
+    // Verify we can handle such request.
+    if (index > 0 || index + static_cast<ssize_t>(length) < 0) {
+        return;
+    }
+    const quint32 before = -index;
+    const quint32 after = index + length;
+
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
-        t2->deleteSurroundingText(index, length);
+        t2->deleteSurroundingText(before, after);
     }
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3 && t3->isEnabled()) {
-        t3->deleteSurroundingText(index, length);
+        t3->deleteSurroundingText(before, after);
         t3->done();
     }
 }
