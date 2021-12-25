@@ -703,8 +703,6 @@ bool WaylandBackend::initialize()
                 return;
             }
             m_waylandCursor->installImage();
-            auto c = Cursors::self()->currentCursor();
-            Q_EMIT c->rendered(c->geometry());
         }
     );
     connect(Cursors::self(), &Cursors::positionChanged, this,
@@ -1051,6 +1049,7 @@ void WaylandBackend::removeVirtualOutput(AbstractOutput *output)
         delete waylandOutput;
     }
 }
+
 }
 
 } // KWin

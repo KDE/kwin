@@ -22,11 +22,6 @@ class DrmAbstractOutput : public AbstractWaylandOutput
 {
     Q_OBJECT
 public:
-    virtual bool showCursor();
-    virtual bool hideCursor();
-    virtual bool updateCursor();
-    virtual bool moveCursor();
-
     virtual bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) = 0;
 
     virtual bool needsSoftwareTransformation() const = 0;

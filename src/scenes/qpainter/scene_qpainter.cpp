@@ -87,7 +87,7 @@ void SceneQPainter::paint(AbstractOutput *output, const QRegion &damage, const Q
 
         QRegion updateRegion, validRegion;
         paintScreen(damage.intersected(geometry), repaint, &updateRegion, &validRegion, renderLoop);
-        paintCursor(updateRegion);
+        paintCursor(output, updateRegion);
 
         m_painter->end();
         renderLoop->endFrame();
@@ -105,9 +105,9 @@ void SceneQPainter::paintBackground(const QRegion &region)
     }
 }
 
-void SceneQPainter::paintCursor(const QRegion &rendered)
+void SceneQPainter::paintCursor(AbstractOutput *output, const QRegion &rendered)
 {
-    if (!kwinApp()->platform()->usesSoftwareCursor()) {
+    if (!output || output->usesSoftwareCursor() || Cursors::self()->isCursorHidden()) {
         return;
     }
 

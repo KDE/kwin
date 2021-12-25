@@ -220,26 +220,6 @@ public:
     virtual void setupActionForGlobalAccel(QAction *action);
 
     /**
-     * Returns @c true if the software cursor is being used; otherwise returns @c false.
-     */
-    bool usesSoftwareCursor() const;
-
-    /**
-     * Returns @c true if the software cursor is being forced; otherwise returns @c false.
-     *
-     * Note that the value returned by this function not always matches usesSoftwareCursor().
-     * If this function returns @c true, then it is guaranteed that the compositor will
-     * use the software cursor. However, this doesn't apply vice versa.
-     *
-     * If the compositor uses a software cursor, this function may return @c false. This
-     * is typically the case if the current cursor image can't be displayed using hardware
-     * cursors, for example due to buffer size limitations, etc.
-     *
-     * @see usesSoftwareCursor()
-     */
-    bool isSoftwareCursorForced() const;
-
-    /**
      * Returns a PlatformCursorImage. By default this is created by softwareCursor and
      * softwareCursorHotspot. An implementing subclass can use this to provide a better
      * suited PlatformCursorImage.
@@ -250,33 +230,6 @@ public:
      */
     virtual PlatformCursorImage cursorImage() const;
 
-    /**
-     * The Platform cursor image should be hidden.
-     * @see showCursor
-     * @see doHideCursor
-     * @see isCursorHidden
-     * @since 5.9
-     */
-    void hideCursor();
-
-    /**
-     * The Platform cursor image should be shown again.
-     * @see hideCursor
-     * @see doShowCursor
-     * @see isCursorHidden
-     * @since 5.9
-     */
-    void showCursor();
-
-    /**
-     * Whether the cursor is currently hidden.
-     * @see showCursor
-     * @see hideCursor
-     * @since 5.9
-     */
-    bool isCursorHidden() const {
-        return m_hideCursorCounter > 0;
-    }
     bool isReady() const {
         return m_ready;
     }
@@ -478,8 +431,6 @@ Q_SIGNALS:
 
 protected:
     explicit Platform(QObject *parent = nullptr);
-    void setSoftwareCursor(bool set);
-    void setSoftwareCursorForced(bool forced);
     void repaint(const QRect &rect);
     void setReady(bool ready);
     void setPerScreenRenderingEnabled(bool enabled);
@@ -503,35 +454,8 @@ protected:
         m_supportsOutputChanges = true;
     }
 
-    /**
-     * Actual platform specific way to hide the cursor.
-     * Sub-classes need to implement if they support hiding the cursor.
-     *
-     * This method is invoked by hideCursor if the cursor needs to be hidden.
-     * The default implementation does nothing.
-     *
-     * @see doShowCursor
-     * @see hideCursor
-     * @see showCursor
-     */
-    virtual void doHideCursor();
-    /**
-     * Actual platform specific way to show the cursor.
-     * Sub-classes need to implement if they support showing the cursor.
-     *
-     * This method is invoked by showCursor if the cursor needs to be shown again.
-     *
-     * @see doShowCursor
-     * @see hideCursor
-     * @see showCursor
-     */
-    virtual void doShowCursor();
-    virtual void doSetSoftwareCursor();
-
 private:
     void triggerCursorRepaint();
-    bool m_softwareCursor = false;
-    bool m_softwareCursorForced = false;
     struct {
         QRect lastRenderedGeometry;
     } m_cursor;
@@ -543,7 +467,6 @@ private:
     qreal m_initialOutputScale = 1;
     EGLDisplay m_eglDisplay;
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
-    int m_hideCursorCounter = 0;
     bool m_supportsGammaControl = false;
     bool m_supportsOutputChanges = false;
     bool m_isPerScreenRenderingEnabled = false;

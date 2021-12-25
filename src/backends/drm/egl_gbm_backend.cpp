@@ -773,7 +773,7 @@ QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output
 
 bool EglGbmBackend::directScanoutAllowed(AbstractOutput *output) const
 {
-    return !m_backend->usesSoftwareCursor() && !output->directScanoutInhibited();
+    return !output->usesSoftwareCursor() && !output->directScanoutInhibited();
 }
 
 bool EglGbmBackend::hasOutput(AbstractOutput *output) const

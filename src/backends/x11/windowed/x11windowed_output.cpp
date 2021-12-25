@@ -180,4 +180,9 @@ void X11WindowedOutput::vblank(std::chrono::nanoseconds timestamp)
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
+bool X11WindowedOutput::usesSoftwareCursor() const
+{
+    return false;
+}
+
 }

@@ -107,6 +107,23 @@ void Scene::initialize()
     connect(workspace(), &Workspace::geometryChanged, this, [this]() {
         setGeometry(workspace()->geometry());
     });
+
+    connect(Cursors::self(), &Cursors::currentCursorChanged, this, &Scene::addCursorRepaints);
+    connect(Cursors::self(), &Cursors::positionChanged, this, &Scene::addCursorRepaints);
+}
+
+void Scene::addCursorRepaints()
+{
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    QRegion repaintRegion = Cursors::self()->currentCursor()->geometry();
+    repaintRegion |= m_lastCursorGeometry;
+    for (const auto &output : outputs) {
+        auto intersection = repaintRegion.intersected(output->geometry());
+        if (!intersection.isEmpty() && output->usesSoftwareCursor()) {
+            addRepaint(intersection);
+        }
+    }
+    m_lastCursorGeometry = Cursors::self()->currentCursor()->geometry();
 }
 
 void Scene::addRepaintFull()

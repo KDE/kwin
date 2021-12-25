@@ -1595,12 +1595,12 @@ PlatformCursorImage EffectsHandlerImpl::cursorImage() const
 
 void EffectsHandlerImpl::hideCursor()
 {
-    kwinApp()->platform()->hideCursor();
+    Cursors::self()->hideCursor();
 }
 
 void EffectsHandlerImpl::showCursor()
 {
-    kwinApp()->platform()->showCursor();
+    Cursors::self()->showCursor();
 }
 
 void EffectsHandlerImpl::startInteractiveWindowSelection(std::function<void(KWin::EffectWindow*)> callback)

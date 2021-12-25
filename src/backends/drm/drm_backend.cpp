@@ -158,7 +158,6 @@ void DrmBackend::reactivate()
     // While the session had been inactive, an output could have been added or
     // removed, we need to re-scan outputs.
     updateOutputs();
-    updateCursor();
     Q_EMIT activeChanged();
 }
 
@@ -210,8 +209,6 @@ bool DrmBackend::initialize()
         return false;
     }
 
-    initCursor();
-
     // setup udevMonitor
     if (m_udevMonitor) {
         m_udevMonitor->filterSubsystemDevType("drm");
@@ -240,7 +237,6 @@ void DrmBackend::handleUdevEvent()
             qCDebug(KWIN_DRM) << "New gpu found:" << device->devNode();
             if (addGpu(device->devNode())) {
                 updateOutputs();
-                updateCursor();
             }
         } else if (device->action() == QStringLiteral("remove")) {
             DrmGpu *gpu = findGpu(device->devNum());
@@ -255,7 +251,6 @@ void DrmBackend::handleUdevEvent()
                     m_gpus.removeOne(gpu);
                     delete gpu;
                     updateOutputs();
-                    updateCursor();
                 }
             }
         } else if (device->action() == QStringLiteral("change")) {
@@ -266,7 +261,6 @@ void DrmBackend::handleUdevEvent()
             if (gpu) {
                 qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->devNode();
                 updateOutputs();
-                updateCursor();
             }
         }
     }
@@ -517,85 +511,6 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
     }
 }
 
-void DrmBackend::initCursor()
-{
-    connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmBackend::updateCursor);
-    connect(Cursors::self(), &Cursors::positionChanged, this, &DrmBackend::moveCursor);
-}
-
-void DrmBackend::updateCursor()
-{
-    if (isSoftwareCursorForced() || isCursorHidden()) {
-        return;
-    }
-
-    auto cursor = Cursors::self()->currentCursor();
-    if (cursor->image().isNull()) {
-        doHideCursor();
-        return;
-    }
-
-    bool success = true;
-
-    for (DrmAbstractOutput *output : qAsConst(m_outputs)) {
-        success = output->updateCursor();
-        if (!success) {
-            qCDebug(KWIN_DRM) << "Failed to update cursor on output" << output->name();
-            break;
-        }
-        success = output->showCursor();
-        if (!success) {
-            qCDebug(KWIN_DRM) << "Failed to show cursor on output" << output->name();
-            break;
-        }
-        success = output->moveCursor();
-        if (!success) {
-            qCDebug(KWIN_DRM) << "Failed to move cursor on output" << output->name();
-            break;
-        }
-    }
-
-    setSoftwareCursor(!success);
-}
-
-void DrmBackend::doShowCursor()
-{
-    if (usesSoftwareCursor()) {
-        return;
-    }
-    updateCursor();
-}
-
-void DrmBackend::doHideCursor()
-{
-    if (usesSoftwareCursor()) {
-        return;
-    }
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        (*it)->hideCursor();
-    }
-}
-
-void DrmBackend::doSetSoftwareCursor()
-{
-    if (isCursorHidden() || !usesSoftwareCursor()) {
-        return;
-    }
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        (*it)->hideCursor();
-    }
-}
-
-void DrmBackend::moveCursor()
-{
-    if (isCursorHidden() || usesSoftwareCursor()) {
-        return;
-    }
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        (*it)->moveCursor();
-    }
-}
-
 InputBackend *DrmBackend::createInputBackend()
 {
     return new LibinputBackend();
@@ -723,7 +638,6 @@ bool DrmBackend::applyOutputChanges(const WaylandOutputConfig &config)
             output->applyChanges(config);
         }
     };
-    updateCursor();
     if (Compositor::compositing()) {
         Compositor::self()->scene()->addRepaintFull();
     }

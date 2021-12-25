@@ -207,7 +207,7 @@ protected:
                      QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop,
                      const QMatrix4x4 &projection = QMatrix4x4());
     // Render cursor texture in case hardware cursor is disabled/non-applicable
-    virtual void paintCursor(const QRegion &region) = 0;
+    virtual void paintCursor(AbstractOutput *output, const QRegion &region) = 0;
     friend class EffectsHandlerImpl;
     // called after all effects had their paintScreen() called
     void finalPaintScreen(int mask, const QRegion &region, ScreenPaintData& data);
@@ -261,12 +261,15 @@ protected:
     QVector< Window* > stacking_order;
 private:
     void removeRepaints(AbstractOutput *output);
+    void addCursorRepaints();
+
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     QHash< Toplevel*, Window* > m_windows;
     QMap<AbstractOutput *, QRegion> m_repaints;
     QRect m_geometry;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
+    QRect m_lastCursorGeometry;
 };
 
 // The base class for windows representations in composite backends

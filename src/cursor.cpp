@@ -15,6 +15,9 @@
 #include "platform.h"
 #include "utils.h"
 #include "xcbutils.h"
+#include "abstract_output.h"
+#include "composite.h"
+#include "scene.h"
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -60,6 +63,27 @@ void Cursors::removeCursor(Cursor* cursor)
     }
 }
 
+void Cursors::hideCursor()
+{
+    m_cursorHideCounter++;
+    if (m_cursorHideCounter == 1) {
+        Q_EMIT currentCursorChanged(m_currentCursor);
+    }
+}
+
+void Cursors::showCursor()
+{
+    m_cursorHideCounter--;
+    if (m_cursorHideCounter == 0) {
+        Q_EMIT currentCursorChanged(m_currentCursor);
+    }
+}
+
+bool Cursors::isCursorHidden() const
+{
+    return m_cursorHideCounter > 0;
+}
+
 void Cursors::setCurrentCursor(Cursor* cursor)
 {
     if (m_currentCursor == cursor)
@@ -68,11 +92,9 @@ void Cursors::setCurrentCursor(Cursor* cursor)
     Q_ASSERT(m_cursors.contains(cursor) || !cursor);
 
     if (m_currentCursor) {
-        disconnect(m_currentCursor, &Cursor::rendered, this, &Cursors::currentCursorRendered);
         disconnect(m_currentCursor, &Cursor::cursorChanged, this, &Cursors::emitCurrentCursorChanged);
     }
     m_currentCursor = cursor;
-    connect(m_currentCursor, &Cursor::rendered, this, &Cursors::currentCursorRendered);
     connect(m_currentCursor, &Cursor::cursorChanged, this, &Cursors::emitCurrentCursorChanged);
 
     Q_EMIT currentCursorChanged(m_currentCursor);

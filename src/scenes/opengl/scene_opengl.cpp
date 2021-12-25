@@ -151,14 +151,14 @@ void SceneOpenGL::handleGraphicsReset(GLenum status)
  * Render cursor texture in case hardware cursor is disabled.
  * Useful for screen recording apps or backends that can't do planes.
  */
-void SceneOpenGL::paintCursor(const QRegion &rendered)
+void SceneOpenGL::paintCursor(AbstractOutput *output, const QRegion &rendered)
 {
     Cursor* cursor = Cursors::self()->currentCursor();
 
     // don't paint if we use hardware cursor or the cursor is hidden
-    if (!kwinApp()->platform()->usesSoftwareCursor() ||
-        kwinApp()->platform()->isCursorHidden() ||
-        cursor->image().isNull()) {
+    if (!output || !output->usesSoftwareCursor()
+        || Cursors::self()->isCursorHidden()
+        || cursor->image().isNull()) {
         return;
     }
 
@@ -316,7 +316,7 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
 
             paintScreen(damage.intersected(geo), repaint, &update, &valid,
                         renderLoop, projectionMatrix());   // call generic implementation
-            paintCursor(valid);
+            paintCursor(output, valid);
 
             if (!GLPlatform::instance()->isGLES() && !output) {
                 const QRegion displayRegion(geometry());

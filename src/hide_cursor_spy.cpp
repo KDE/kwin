@@ -10,6 +10,7 @@
 #include "main.h"
 #include "platform.h"
 #include "input_event.h"
+#include "cursor.h"
 
 namespace KWin
 {
@@ -49,7 +50,7 @@ void HideCursorSpy::showCursor()
         return;
     }
     m_cursorHidden = false;
-    kwinApp()->platform()->showCursor();
+    Cursors::self()->showCursor();
 }
 
 void HideCursorSpy::hideCursor()
@@ -58,7 +59,7 @@ void HideCursorSpy::hideCursor()
         return;
     }
     m_cursorHidden = true;
-    kwinApp()->platform()->hideCursor();
+    Cursors::self()->hideCursor();
 }
 
 }

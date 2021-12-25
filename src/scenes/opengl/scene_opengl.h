@@ -71,7 +71,7 @@ protected:
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     Scene::Window *createWindow(Toplevel *t) override;
     void finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data) override;
-    void paintCursor(const QRegion &region) override;
+    void paintCursor(AbstractOutput *output, const QRegion &region) override;
 
 private:
     void doPaintBackground(const QVector< float >& vertices);

@@ -1736,27 +1736,27 @@ void PointerInputTest::testMoveCursor()
 
 void PointerInputTest::testHideShowCursor()
 {
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), false);
-    kwinApp()->platform()->hideCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
-    kwinApp()->platform()->showCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), false);
+    QCOMPARE(Cursors::self()->isCursorHidden(), false);
+    Cursors::self()->hideCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    Cursors::self()->showCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), false);
 
-    kwinApp()->platform()->hideCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
-    kwinApp()->platform()->hideCursor();
-    kwinApp()->platform()->hideCursor();
-    kwinApp()->platform()->hideCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
+    Cursors::self()->hideCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    Cursors::self()->hideCursor();
+    Cursors::self()->hideCursor();
+    Cursors::self()->hideCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
 
-    kwinApp()->platform()->showCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
-    kwinApp()->platform()->showCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
-    kwinApp()->platform()->showCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
-    kwinApp()->platform()->showCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), false);
+    Cursors::self()->showCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    Cursors::self()->showCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    Cursors::self()->showCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    Cursors::self()->showCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), false);
 }
 
 void PointerInputTest::testDefaultInputRegion()

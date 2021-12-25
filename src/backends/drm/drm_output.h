@@ -43,11 +43,6 @@ public:
     DrmOutput(DrmPipeline *pipeline);
     ~DrmOutput() override;
 
-    bool showCursor() override;
-    bool hideCursor() override;
-    bool updateCursor() override;
-    bool moveCursor() override;
-
     bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) override;
 
     DrmConnector *connector() const;
@@ -66,6 +61,7 @@ public:
 
     void pageFlipped(std::chrono::nanoseconds timestamp);
     void presentFailed();
+    bool usesSoftwareCursor() const override;
 
 private:
     void initOutputDevice();
@@ -80,11 +76,16 @@ private:
 
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
+    void updateCursor();
+    void moveCursor();
 
     DrmPipeline *m_pipeline;
     DrmConnector *m_connector;
 
     QSharedPointer<DumbSwapchain> m_cursor;
+    bool m_setCursorSuccessful = false;
+    bool m_moveCursorSuccessful = false;
+    QRect m_lastCursorGeometry;
     QTimer m_turnOffTimer;
 };
 

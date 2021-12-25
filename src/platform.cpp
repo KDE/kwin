@@ -39,9 +39,6 @@ Platform::Platform(QObject *parent)
     : QObject(parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
 {
-    setSoftwareCursorForced(false);
-    connect(Cursors::self(), &Cursors::currentCursorRendered, this, &Platform::cursorRendered);
-
     connect(this, &Platform::outputDisabled, this, [this] (AbstractOutput *output) {
         if (m_primaryOutput == output) {
             setPrimaryOutput(enabledOutputs().value(0, nullptr));
@@ -62,30 +59,6 @@ PlatformCursorImage Platform::cursorImage() const
 {
     Cursor* cursor = Cursors::self()->currentCursor();
     return PlatformCursorImage(cursor->image(), cursor->hotspot());
-}
-
-void Platform::hideCursor()
-{
-    m_hideCursorCounter++;
-    if (m_hideCursorCounter == 1) {
-        doHideCursor();
-    }
-}
-
-void Platform::doHideCursor()
-{
-}
-
-void Platform::showCursor()
-{
-    m_hideCursorCounter--;
-    if (m_hideCursorCounter == 0) {
-        doShowCursor();
-    }
-}
-
-void Platform::doShowCursor()
-{
 }
 
 InputBackend *Platform::createInputBackend()
@@ -236,55 +209,6 @@ AbstractOutput *Platform::outputAt(const QPoint &pos) const
     return bestOutput;
 }
 
-bool Platform::usesSoftwareCursor() const
-{
-    return m_softwareCursor;
-}
-
-void Platform::setSoftwareCursor(bool set)
-{
-    if (m_softwareCursor == set) {
-        return;
-    }
-    m_softwareCursor = set;
-    doSetSoftwareCursor();
-    if (m_softwareCursor) {
-        connect(Cursors::self(), &Cursors::positionChanged, this, &Platform::triggerCursorRepaint);
-        connect(Cursors::self(), &Cursors::currentCursorChanged, this, &Platform::triggerCursorRepaint);
-    } else {
-        disconnect(Cursors::self(), &Cursors::positionChanged, this, &Platform::triggerCursorRepaint);
-        disconnect(Cursors::self(), &Cursors::currentCursorChanged, this, &Platform::triggerCursorRepaint);
-    }
-    triggerCursorRepaint();
-}
-
-void Platform::doSetSoftwareCursor()
-{
-}
-
-bool Platform::isSoftwareCursorForced() const
-{
-    return m_softwareCursorForced;
-}
-
-void Platform::setSoftwareCursorForced(bool forced)
-{
-    if (qEnvironmentVariableIsSet("KWIN_FORCE_SW_CURSOR")) {
-        forced = true;
-    }
-    if (m_softwareCursorForced == forced) {
-        return;
-    }
-    m_softwareCursorForced = forced;
-    if (m_softwareCursorForced) {
-        setSoftwareCursor(true);
-    } else {
-        // Do not unset the software cursor yet, the platform will choose the right
-        // moment when it can be done. There is still a chance that we must continue
-        // using the software cursor.
-    }
-}
-
 void Platform::triggerCursorRepaint()
 {
     if (Compositor::compositing()) {
@@ -295,9 +219,7 @@ void Platform::triggerCursorRepaint()
 
 void Platform::cursorRendered(const QRect &geometry)
 {
-    if (m_softwareCursor) {
-        m_cursor.lastRenderedGeometry = geometry;
-    }
+    m_cursor.lastRenderedGeometry = geometry;
 }
 
 void Platform::keyboardKeyPressed(quint32 key, quint32 time)

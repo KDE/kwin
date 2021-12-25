@@ -121,13 +121,13 @@ void PointerInputRedirection::init()
     InputDeviceHandler::init();
 
     if (!input()->hasPointer()) {
-        kwinApp()->platform()->hideCursor();
+        Cursors::self()->hideCursor();
     }
-    connect(input(), &InputRedirection::hasPointerChanged, this, [this]() {
+    connect(input(), &InputRedirection::hasPointerChanged, this, []() {
         if (input()->hasPointer()) {
-            kwinApp()->platform()->showCursor();
+            Cursors::self()->showCursor();
         } else {
-            kwinApp()->platform()->hideCursor();
+            Cursors::self()->hideCursor();
         }
     });
 
@@ -137,8 +137,6 @@ void PointerInputRedirection::init()
         updateCursorOutputs();
     });
     Q_EMIT m_cursor->changed();
-
-    connect(Cursors::self()->mouse(), &Cursor::rendered, m_cursor, &CursorImage::markAsRendered);
 
     connect(screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);
     if (waylandServer()->hasScreenLockerIntegration()) {

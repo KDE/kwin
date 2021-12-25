@@ -20,26 +20,6 @@ DrmAbstractOutput::DrmAbstractOutput(DrmGpu *gpu)
 {
 }
 
-bool DrmAbstractOutput::showCursor()
-{
-    return true;
-}
-
-bool DrmAbstractOutput::hideCursor()
-{
-    return true;
-}
-
-bool DrmAbstractOutput::updateCursor()
-{
-    return true;
-}
-
-bool DrmAbstractOutput::moveCursor()
-{
-    return true;
-}
-
 DrmGpu *DrmAbstractOutput::gpu() const
 {
     return m_gpu;

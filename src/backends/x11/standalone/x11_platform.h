@@ -68,10 +68,6 @@ public:
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
 
-protected:
-    void doHideCursor() override;
-    void doShowCursor() override;
-
 private:
     /**
      * Tests whether GLX is supported and returns @c true
@@ -88,6 +84,7 @@ private:
     template <typename T>
     void doUpdateOutputs();
     void updateRefreshRate();
+    void updateCursor();
 
     Session *m_session;
     XInputIntegration *m_xinputIntegration = nullptr;

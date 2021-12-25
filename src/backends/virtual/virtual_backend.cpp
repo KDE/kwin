@@ -195,8 +195,6 @@ bool VirtualBackend::initialize()
         Q_EMIT outputAdded(dummyOutput);
         Q_EMIT outputEnabled(dummyOutput);
     }
-
-    setSoftwareCursorForced(true);
     setReady(true);
 
     Q_EMIT screensQueried();

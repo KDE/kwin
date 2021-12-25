@@ -65,6 +65,8 @@ public:
      */
     QPointF mapFromGlobal(const QPointF &pos) const;
 
+    bool usesSoftwareCursor() const override;
+
 private:
     void initXInputForWindow();
     void vblank(std::chrono::nanoseconds timestamp);

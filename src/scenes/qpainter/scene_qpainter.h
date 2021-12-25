@@ -49,7 +49,7 @@ public:
 protected:
     void paintBackground(const QRegion &region) override;
     Scene::Window *createWindow(Toplevel *toplevel) override;
-    void paintCursor(const QRegion &region) override;
+    void paintCursor(AbstractOutput *output, const QRegion &region) override;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;
 
 private:

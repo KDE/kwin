@@ -108,8 +108,6 @@ Session *FramebufferBackend::session() const
 
 bool FramebufferBackend::initialize()
 {
-    setSoftwareCursorForced(true);
-
     QString framebufferDevice = deviceIdentifier();
     if (framebufferDevice.isEmpty()) {
         const auto fbs = Udev().listFramebuffers();

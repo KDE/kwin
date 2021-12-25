@@ -213,6 +213,8 @@ public:
     Q_ENUM(Transform)
     virtual Transform transform() const { return Transform::Normal; }
 
+    virtual bool usesSoftwareCursor() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.

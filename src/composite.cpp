@@ -649,9 +649,6 @@ void Compositor::composite(RenderLoop *renderLoop)
                 surface->frameRendered(frameTime.count());
             }
         }
-        if (!kwinApp()->platform()->isCursorHidden()) {
-            Cursors::self()->currentCursor()->markAsRendered();
-        }
     }
 }
 

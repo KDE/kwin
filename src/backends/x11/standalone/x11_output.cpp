@@ -98,4 +98,9 @@ QSize X11Output::pixelSize() const
     return geometry().size();
 }
 
+bool X11Output::usesSoftwareCursor() const
+{
+    return false;
+}
+
 }

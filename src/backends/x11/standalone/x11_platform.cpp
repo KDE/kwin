@@ -142,6 +142,8 @@ bool X11StandalonePlatform::initialize()
     if (Xcb::Extensions::self()->isRandrAvailable()) {
         m_randrEventFilter.reset(new XrandrEventFilter(this));
     }
+    connect(Cursors::self(), &Cursors::currentCursorChanged, this, &X11StandalonePlatform::updateCursor);
+    updateCursor();
     return true;
 }
 
@@ -333,14 +335,13 @@ PlatformCursorImage X11StandalonePlatform::cursorImage() const
     return PlatformCursorImage(qcursorimg.copy(), QPoint(cursor->xhot, cursor->yhot));
 }
 
-void X11StandalonePlatform::doHideCursor()
+void X11StandalonePlatform::updateCursor()
 {
-    xcb_xfixes_hide_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
-}
-
-void X11StandalonePlatform::doShowCursor()
-{
-    xcb_xfixes_show_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
+    if (Cursors::self()->isCursorHidden()) {
+        xcb_xfixes_hide_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
+    } else {
+        xcb_xfixes_show_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
+    }
 }
 
 void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
