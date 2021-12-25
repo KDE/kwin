@@ -88,6 +88,5 @@ X-Plasma-API=javascript
 X-Plasma-MainScript=code/main.js
 X-KDE-PluginKeyword=kwin4_effect_scale
 X-KDE-Library=kcm_kwin4_genericscripted
-X-KDE-ParentComponents=kwin4_effect_scale
 X-KWin-Config-TranslationDomain=kwin_effects
 X-KWin-Exclusive-Category=toplevel-open-close-animation

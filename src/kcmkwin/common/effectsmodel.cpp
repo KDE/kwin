@@ -316,14 +316,11 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 
         const QString pluginKeyword = plugin.value(QStringLiteral("X-KDE-PluginKeyword"));
         if (!pluginKeyword.isEmpty()) {
-             // scripted effects have their pluginName() as the keyword
-             const QStringList parentComponents = plugin.value(QStringLiteral("X-KDE-ParentComponents"), QStringList{});
-
-             if (parentComponents.isEmpty()) {
-                 effect.configurable = false;
-             } else {
-                 effect.configurable = parentComponents.first() == pluginKeyword;
-             }
+            QDir package(QFileInfo(plugin.fileName()).dir());
+            package.cd(QStringLiteral("contents"));
+            const QString xmlFile = package.filePath(QStringLiteral("config/main.xml"));
+            const QString uiFile =package.filePath(QStringLiteral("ui/config.ui"));
+            effect.configurable = QFileInfo::exists(xmlFile) && QFileInfo::exists(uiFile);
         } else {
             effect.configurable = false;
         }
