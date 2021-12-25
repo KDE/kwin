@@ -357,23 +357,6 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
         effect.kind = Kind::Binary;
         effect.configModule = pluginEffect.value(QStringLiteral("X-KDE-ConfigModule"));
 
-        // Compatibility with plugins that don't have ConfigModule in their metadata
-        // TODO KF6 remove
-        if (effect.configModule.isEmpty()) {
-
-            auto filter = [pluginEffect](const KPluginMetaData &md) -> bool
-            {
-                const QStringList parentComponents = KPluginMetaData::readStringList(md.rawData(), QStringLiteral("X-KDE-ParentComponents"));
-                return parentComponents.contains(pluginEffect.pluginId());
-            };
-
-            const QVector<KPluginMetaData> plugins = KPluginMetaData::findPlugins(QStringLiteral("kwin/effects/configs/"), filter);
-
-            if (!plugins.isEmpty()) {
-                effect.configModule = plugins.first().pluginId();
-            }
-        }
-
         for (int i = 0; i < pluginEffect.authors().count(); ++i) {
             effect.authorName.append(pluginEffect.authors().at(i).name());
             effect.authorEmail.append(pluginEffect.authors().at(i).emailAddress());
