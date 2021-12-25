@@ -2921,7 +2921,6 @@ void TestXdgShellClientRules::testScreenForce()
     kwinApp()->platform()->applyOutputChanges(config);
 
     QVERIFY(outputs.at(1)->isEnabled());
-    QEXPECT_FAIL("", "Disabling and enabling an output does not move the client to the Forced screen", Continue);
     QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // Close and reopen the client.
