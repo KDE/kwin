@@ -1456,10 +1456,6 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
         }
     }
 
-    if (isInteractiveMove()) {
-        ScreenEdges::self()->check(globalPos, QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC));
-    }
-
     Q_EMIT clientStepUserMovedResized(this, moveResizeGeometry());
 }
 
