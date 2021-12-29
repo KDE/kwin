@@ -105,7 +105,9 @@ void InputMethod::init()
             connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
         }
 
-        connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, &InputMethod::forwardModifiers);
+        connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
+            m_hasPendingModifiers = true;
+        });
     }
 }
 
@@ -550,8 +552,13 @@ void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods
     xkb->updateModifiers(mods_depressed, mods_latched, mods_locked, group);
 }
 
-void InputMethod::forwardModifiers()
+void InputMethod::forwardModifiers(ForwardModifiersForce force)
 {
+    const bool sendModifiers = m_hasPendingModifiers || force == Force;
+    m_hasPendingModifiers = false;
+    if (!sendModifiers) {
+        return;
+    }
     auto xkb = input()->keyboard()->xkb();
     if (m_keyboardGrab) {
         m_keyboardGrab->sendModifiers(waylandServer()->display()->nextSerial(),
@@ -719,7 +726,7 @@ void InputMethod::installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboar
     auto xkb = input()->keyboard()->xkb();
     m_keyboardGrab = keyboardGrab;
     keyboardGrab->sendKeymap(xkb->keymapContents());
-    forwardModifiers();
+    forwardModifiers(Force);
 }
 
 void InputMethod::updateModifiersMap(const QByteArray &modifiers)

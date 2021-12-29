@@ -43,6 +43,8 @@ class KWIN_EXPORT InputMethod : public QObject
 {
     Q_OBJECT
 public:
+    enum ForwardModifiersForce { NoForce = 0, Force = 1 };
+
     ~InputMethod() override;
 
     void init();
@@ -62,6 +64,8 @@ public:
 
     KWaylandServer::InputMethodGrabV1 *keyboardGrab();
     bool shouldShowOnActive() const;
+
+    void forwardModifiers(ForwardModifiersForce force);
 
 Q_SIGNALS:
     void activeChanged(bool active);
@@ -102,7 +106,6 @@ private:
     void updateModifiersMap(const QByteArray &modifiers);
 
     bool touchEventTriggered() const;
-    void forwardModifiers();
     void resetPendingPreedit();
 
     struct {
@@ -121,6 +124,8 @@ private:
     QTimer m_inputMethodCrashTimer;
     uint m_inputMethodCrashes = 0;
     QString m_inputMethodCommand;
+
+    bool m_hasPendingModifiers = false;
 
     KWIN_SINGLETON(InputMethod)
 };

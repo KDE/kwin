@@ -32,11 +32,13 @@
 #include <KWaylandServer/surface_interface.h>
 
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/region.h>
+#include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/textinput.h>
-#include <KWayland/Client/seat.h>
+#include <linux/input-event-codes.h>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -59,6 +61,7 @@ private Q_SLOTS:
     void testSwitchFocusedSurfaces();
     void testV3Styling();
     void testDisableShowInputPanel();
+    void testModifierForwarding();
 
 private:
     void touchNow() {
@@ -460,6 +463,77 @@ void InputMethodTest::testDisableShowInputPanel()
     textInputV2->showInputPanel();
     QVERIFY(requestShowInputPanelSpy.count() || requestShowInputPanelSpy.wait());
     QVERIFY(!InputMethod::self()->isActive());
+}
+
+void InputMethodTest::testModifierForwarding()
+{
+    // Create an xdg_toplevel surface and wait for the compositor to catch up.
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QCOMPARE(client->frameGeometry().size(), QSize(1280, 1024));
+
+    Test::TextInputV3 *textInputV3 = new Test::TextInputV3();
+    textInputV3->init(Test::waylandTextInputManagerV3()->get_text_input(*(Test::waylandSeat())));
+    textInputV3->enable();
+
+    QSignalSpy inputMethodActiveSpy(InputMethod::self(), &InputMethod::activeChanged);
+    QSignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    // just enabling the text-input should not show it but rather on commit
+    QVERIFY(!InputMethod::self()->isActive());
+    textInputV3->commit();
+    QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
+    QVERIFY(InputMethod::self()->isActive());
+    QVERIFY(inputMethodActivateSpy.wait());
+    auto context = Test::inputMethod()->context();
+    QScopedPointer<KWayland::Client::Keyboard> keyboardGrab(new KWayland::Client::Keyboard);
+    keyboardGrab->setup(zwp_input_method_context_v1_grab_keyboard(context));
+    QSignalSpy modifierSpy(keyboardGrab.get(), &Keyboard::modifiersChanged);
+    // Wait for initial modifiers update
+    QVERIFY(modifierSpy.wait());
+
+    quint32 timestamp = 1;
+
+    QSignalSpy keySpy(keyboardGrab.get(), &Keyboard::keyChanged);
+    bool keyChanged = false;
+    bool modifiersChanged = false;
+    // We want to verify the order of two signals, so SignalSpy is not very useful here.
+    auto keyChangedConnection = connect(keyboardGrab.get(), &Keyboard::keyChanged, [&keyChanged, &modifiersChanged]() {
+        QVERIFY(!modifiersChanged);
+        keyChanged = true;
+    });
+    auto modifiersChangedConnection = connect(keyboardGrab.get(), &Keyboard::modifiersChanged, [&keyChanged, &modifiersChanged]() {
+        QVERIFY(keyChanged);
+        modifiersChanged = true;
+    });
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    QVERIFY(keySpy.count() == 1 || keySpy.wait());
+    QVERIFY(modifierSpy.count() == 2 || modifierSpy.wait());
+    disconnect(keyChangedConnection);
+    disconnect(modifiersChangedConnection);
+
+    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    QVERIFY(keySpy.count() == 2 || keySpy.wait());
+    QVERIFY(modifierSpy.count() == 2 || modifierSpy.wait());
+
+    // verify the order of key and modifiers again. Key first, then modifiers.
+    keyChanged = false;
+    modifiersChanged = false;
+    keyChangedConnection = connect(keyboardGrab.get(), &Keyboard::keyChanged, [&keyChanged, &modifiersChanged]() {
+        QVERIFY(!modifiersChanged);
+        keyChanged = true;
+    });
+    modifiersChangedConnection = connect(keyboardGrab.get(), &Keyboard::modifiersChanged, [&keyChanged, &modifiersChanged]() {
+        QVERIFY(keyChanged);
+        modifiersChanged = true;
+    });
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    QVERIFY(keySpy.count() == 3 || keySpy.wait());
+    QVERIFY(modifierSpy.count() == 3 || modifierSpy.wait());
+    disconnect(keyChangedConnection);
+    disconnect(modifiersChangedConnection);
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)

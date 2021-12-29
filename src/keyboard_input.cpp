@@ -7,15 +7,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "keyboard_input.h"
+#include "abstract_client.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "inputmethod.h"
 #include "keyboard_layout.h"
 #include "keyboard_repeat.h"
-#include "abstract_client.h"
 #include "modifier_only_shortcuts.h"
-#include "utils.h"
 #include "screenlockerwatcher.h"
 #include "toplevel.h"
+#include "utils.h"
 #include "wayland_server.h"
 #include "workspace.h"
 // KWayland
@@ -247,6 +248,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
 
     m_xkb->forwardModifiers();
+    InputMethod::self()->forwardModifiers(InputMethod::NoForce);
 
     if (event.modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifier::NoModifier && type != QEvent::KeyRelease) {
         m_keyboardLayout->checkLayoutChange(previousLayout);
