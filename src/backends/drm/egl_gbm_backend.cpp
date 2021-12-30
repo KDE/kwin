@@ -27,6 +27,7 @@
 #include "shadowbuffer.h"
 #include "drm_pipeline.h"
 #include "drm_abstract_output.h"
+#include "egl_dmabuf.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwineglimagetexture.h>
@@ -659,8 +660,11 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
             // atm no format changes are sent as those might require a modeset
             // and thus require more elaborate feedback
             const auto &mods = drmOutput->pipeline()->supportedModifiers(output.current.format.drmFormat);
+            const auto &supportedModifiers = primaryBackend()->dmabuf()->supportedFormats()[output.current.format.drmFormat];
             for (const auto &mod : mods) {
-                tranche.formatTable[output.current.format.drmFormat] << mod;
+                if (supportedModifiers.contains(mod)) {
+                    tranche.formatTable[output.current.format.drmFormat] << mod;
+                }
             }
             if (tranche.formatTable.isEmpty()) {
                 output.scanoutCandidate->dmabufFeedbackV1()->setTranches({});

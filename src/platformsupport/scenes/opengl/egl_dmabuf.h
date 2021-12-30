@@ -67,6 +67,10 @@ public:
                                                             const QSize &size,
                                                             quint32 flags) override;
 
+    QHash<uint32_t, QSet<uint64_t>> supportedFormats() const {
+        return m_supportedFormats;
+    }
+
 private:
     EGLImage createImage(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
                          uint32_t format,
@@ -80,6 +84,7 @@ private:
     void setSupportedFormatsAndModifiers();
 
     AbstractEglBackend *m_backend;
+    QHash<uint32_t, QSet<uint64_t>> m_supportedFormats;
 
     friend class EglDmabufBuffer;
 };

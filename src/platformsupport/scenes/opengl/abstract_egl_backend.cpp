@@ -398,4 +398,9 @@ bool AbstractEglBackend::prefer10bpc() const
     return false;
 }
 
+EglDmabuf *AbstractEglBackend::dmabuf() const
+{
+    return m_dmaBuf;
+}
+
 }

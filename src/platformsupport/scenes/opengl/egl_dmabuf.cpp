@@ -440,28 +440,31 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
 
     filterFormatsWithMultiplePlanes(formats);
 
-    auto queryFormats = [&formats, &eglDisplay](int bpc) {
-        QHash<uint32_t, QSet<uint64_t>> set;
-        for (auto format : qAsConst(formats)) {
-            if (bpc != bpcForFormat(format)) {
-                continue;
-            }
-            if (eglQueryDmaBufModifiersEXT != nullptr) {
-                EGLint count = 0;
-                const EGLBoolean success = eglQueryDmaBufModifiersEXT(eglDisplay, format, 0, nullptr, nullptr, &count);
-                if (success && count > 0) {
-                    QVector<uint64_t> modifiers(count);
-                    if (eglQueryDmaBufModifiersEXT(eglDisplay, format, count, modifiers.data(), nullptr, &count)) {
-                        QSet<uint64_t> modifiersSet;
-                        for (const uint64_t &mod : qAsConst(modifiers)) {
-                            modifiersSet.insert(mod);
-                        }
-                        set.insert(format, modifiersSet);
-                        continue;
+    for (auto format : qAsConst(formats)) {
+        if (eglQueryDmaBufModifiersEXT != nullptr) {
+            EGLint count = 0;
+            const EGLBoolean success = eglQueryDmaBufModifiersEXT(eglDisplay, format, 0, nullptr, nullptr, &count);
+            if (success && count > 0) {
+                QVector<uint64_t> modifiers(count);
+                if (eglQueryDmaBufModifiersEXT(eglDisplay, format, count, modifiers.data(), nullptr, &count)) {
+                    QSet<uint64_t> modifiersSet;
+                    for (const uint64_t &mod : qAsConst(modifiers)) {
+                        modifiersSet.insert(mod);
                     }
+                    m_supportedFormats.insert(format, modifiersSet);
+                    continue;
                 }
             }
-            set.insert(format, QSet<uint64_t>());
+        }
+        m_supportedFormats.insert(format, QSet<uint64_t>());
+    }
+
+    auto filterFormats = [this](int bpc) {
+        QHash<uint32_t, QSet<uint64_t>> set;
+        for (auto it = m_supportedFormats.constBegin(); it != m_supportedFormats.constEnd(); it++) {
+            if (bpcForFormat(it.key()) == bpc) {
+                set.insert(it.key(), it.value());
+            }
         }
         return set;
     };
@@ -470,18 +473,18 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
         tranches.append({
             .device = m_backend->deviceId(),
             .flags = {},
-            .formatTable = queryFormats(10),
+            .formatTable = filterFormats(10),
         });
     }
     tranches.append({
         .device = m_backend->deviceId(),
         .flags = {},
-        .formatTable = queryFormats(8),
+        .formatTable = filterFormats(8),
     });
     tranches.append({
         .device = m_backend->deviceId(),
         .flags = {},
-        .formatTable = queryFormats(-1),
+        .formatTable = filterFormats(-1),
     });
     LinuxDmaBufV1RendererInterface::setSupportedFormatsAndModifiers(tranches);
 }
