@@ -108,7 +108,10 @@ private:
         } old, current;
 
         KWaylandServer::SurfaceInterface *scanoutSurface = nullptr;
-        QPointer<KWaylandServer::SurfaceInterface> scanoutCandidate;
+        struct {
+            QPointer<KWaylandServer::SurfaceInterface> surface;
+            QMap<uint32_t, QVector<uint64_t>> attemptedFormats;
+        } scanoutCandidate;
         QPointer<KWaylandServer::SurfaceInterface> oldScanoutCandidate;
     };
 

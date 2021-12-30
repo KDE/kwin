@@ -440,6 +440,7 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
 
     filterFormatsWithMultiplePlanes(formats);
 
+    QHash<uint32_t, QSet<uint64_t>> supportedFormats;
     for (auto format : qAsConst(formats)) {
         if (eglQueryDmaBufModifiersEXT != nullptr) {
             EGLint count = 0;
@@ -451,42 +452,41 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
                     for (const uint64_t &mod : qAsConst(modifiers)) {
                         modifiersSet.insert(mod);
                     }
-                    m_supportedFormats.insert(format, modifiersSet);
+                    supportedFormats.insert(format, modifiersSet);
                     continue;
                 }
             }
         }
-        m_supportedFormats.insert(format, QSet<uint64_t>());
+        supportedFormats.insert(format, QSet<uint64_t>());
     }
 
-    auto filterFormats = [this](int bpc) {
+    auto filterFormats = [&supportedFormats](int bpc) {
         QHash<uint32_t, QSet<uint64_t>> set;
-        for (auto it = m_supportedFormats.constBegin(); it != m_supportedFormats.constEnd(); it++) {
+        for (auto it = supportedFormats.constBegin(); it != supportedFormats.constEnd(); it++) {
             if (bpcForFormat(it.key()) == bpc) {
                 set.insert(it.key(), it.value());
             }
         }
         return set;
     };
-    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> tranches;
     if (m_backend->prefer10bpc()) {
-        tranches.append({
+        m_tranches.append({
             .device = m_backend->deviceId(),
             .flags = {},
             .formatTable = filterFormats(10),
         });
     }
-    tranches.append({
+    m_tranches.append({
         .device = m_backend->deviceId(),
         .flags = {},
         .formatTable = filterFormats(8),
     });
-    tranches.append({
+    m_tranches.append({
         .device = m_backend->deviceId(),
         .flags = {},
         .formatTable = filterFormats(-1),
     });
-    LinuxDmaBufV1RendererInterface::setSupportedFormatsAndModifiers(tranches);
+    LinuxDmaBufV1RendererInterface::setSupportedFormatsAndModifiers(m_tranches);
 }
 
 }

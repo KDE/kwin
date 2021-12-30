@@ -529,9 +529,9 @@ QRegion EglGbmBackend::beginFrame(AbstractOutput *drmOutput)
         qCDebug(KWIN_DRM) << "Direct scanout stopped on output" << output.output->name();
     }
     output.scanoutSurface = nullptr;
-    if (output.scanoutCandidate) {
-        output.oldScanoutCandidate = output.scanoutCandidate;
-        output.scanoutCandidate = nullptr;
+    if (output.scanoutCandidate.surface) {
+        output.oldScanoutCandidate = output.scanoutCandidate.surface;
+        output.scanoutCandidate = {};
     } else if (output.oldScanoutCandidate && output.oldScanoutCandidate->dmabufFeedbackV1()) {
         output.oldScanoutCandidate->dmabufFeedbackV1()->setTranches({});
     }
@@ -642,7 +642,8 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
         return false;
     }
     Output &output = m_outputs[drmOutput];
-    if (buffer->size() != output.output->modeSize()) {
+    const auto planes = buffer->planes();
+    if (buffer->size() != output.output->modeSize() || planes.isEmpty()) {
         return false;
     }
     if (output.oldScanoutCandidate && output.oldScanoutCandidate != surface) {
@@ -651,35 +652,45 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
         }
         output.oldScanoutCandidate = nullptr;
     }
-    output.scanoutCandidate = surface;
-    const auto &sendFeedback = [&output, this]() {
-        if (const auto &drmOutput = qobject_cast<DrmOutput *>(output.output); drmOutput && output.scanoutCandidate->dmabufFeedbackV1()) {
-            KWaylandServer::LinuxDmaBufV1Feedback::Tranche tranche;
-            tranche.device = m_gpu->deviceId();
-            tranche.flags = KWaylandServer::LinuxDmaBufV1Feedback::TrancheFlag::Scanout;
-            // atm no format changes are sent as those might require a modeset
-            // and thus require more elaborate feedback
-            const auto &mods = drmOutput->pipeline()->supportedModifiers(output.current.format.drmFormat);
-            const auto &supportedModifiers = primaryBackend()->dmabuf()->supportedFormats()[output.current.format.drmFormat];
-            for (const auto &mod : mods) {
-                if (supportedModifiers.contains(mod)) {
-                    tranche.formatTable[output.current.format.drmFormat] << mod;
+    if (output.scanoutCandidate.surface != surface) {
+        output.scanoutCandidate.attemptedFormats = {};
+    }
+    output.scanoutCandidate.surface = surface;
+    const auto &sendFeedback = [&output, &buffer, &planes, this]() {
+        if (!output.scanoutCandidate.attemptedFormats[buffer->format()].contains(planes.first().modifier)) {
+            output.scanoutCandidate.attemptedFormats[buffer->format()] << planes.first().modifier;
+        }
+        if (const auto &drmOutput = qobject_cast<DrmOutput *>(output.output); drmOutput && output.scanoutCandidate.surface->dmabufFeedbackV1()) {
+            QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> scanoutTranches;
+            const auto &drmFormats = drmOutput->pipeline()->supportedFormats();
+            const auto tranches = primaryBackend()->dmabuf()->tranches();
+            for (const auto &tranche : tranches) {
+                KWaylandServer::LinuxDmaBufV1Feedback::Tranche scanoutTranche;
+                for (auto it = tranche.formatTable.constBegin(); it != tranche.formatTable.constEnd(); it++) {
+                    const uint32_t format = it.key();
+                    const auto trancheModifiers = it.value();
+                    const auto drmModifiers = drmFormats[format];
+                    for (const auto &mod : trancheModifiers) {
+                        if (drmModifiers.contains(mod) && !output.scanoutCandidate.attemptedFormats[format].contains(mod)) {
+                            scanoutTranche.formatTable[format] << mod;
+                        }
+                    }
+                }
+                if (!scanoutTranche.formatTable.isEmpty()) {
+                    scanoutTranche.device = m_gpu->deviceId();
+                    scanoutTranche.flags = KWaylandServer::LinuxDmaBufV1Feedback::TrancheFlag::Scanout;
+                    scanoutTranches << scanoutTranche;
                 }
             }
-            if (tranche.formatTable.isEmpty()) {
-                output.scanoutCandidate->dmabufFeedbackV1()->setTranches({});
-            } else {
-                output.scanoutCandidate->dmabufFeedbackV1()->setTranches({tranche});
-            }
+            output.scanoutCandidate.surface->dmabufFeedbackV1()->setTranches(scanoutTranches);
         }
     };
-    if (!buffer->planes().count() || !output.output->isFormatSupported(buffer->format())) {
+    if (!output.output->isFormatSupported(buffer->format())) {
         sendFeedback();
         return false;
     }
 
     gbm_bo *importedBuffer;
-    const auto planes = buffer->planes();
     if (planes.first().modifier != DRM_FORMAT_MOD_INVALID
         || planes.first().offset > 0
         || planes.count() > 1) {
@@ -740,7 +751,10 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
         output.scanoutSurface = surface;
         return true;
     } else {
-        sendFeedback();
+        // TODO clean the modeset and direct scanout code paths up
+        if (!m_gpu->needsModeset()) {
+            sendFeedback();
+        }
         return false;
     }
 }

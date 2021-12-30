@@ -67,8 +67,8 @@ public:
                                                             const QSize &size,
                                                             quint32 flags) override;
 
-    QHash<uint32_t, QSet<uint64_t>> supportedFormats() const {
-        return m_supportedFormats;
+    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> tranches() const {
+        return m_tranches;
     }
 
 private:
@@ -84,7 +84,7 @@ private:
     void setSupportedFormatsAndModifiers();
 
     AbstractEglBackend *m_backend;
-    QHash<uint32_t, QSet<uint64_t>> m_supportedFormats;
+    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> m_tranches;
 
     friend class EglDmabufBuffer;
 };
