@@ -158,6 +158,7 @@ void AbstractWaylandOutput::applyChanges(const WaylandOutputConfig &config)
     moveTo(props->pos);
     setScale(props->scale);
     setVrrPolicy(props->vrrPolicy);
+    setRgbRangeInternal(props->rgbRange);
 
     Q_EMIT changed();
 }

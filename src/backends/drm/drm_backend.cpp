@@ -462,6 +462,10 @@ void DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput*> &out
             }
             props->transform = KWinKScreenIntegration::toDrmTransform(outputInfo["rotation"].toInt());
 
+            props->overscan = static_cast<uint32_t>(outputInfo["overscan"].toInt(props->overscan));
+            props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(outputInfo["vrrpolicy"].toInt(static_cast<uint32_t>(props->vrrPolicy)));
+            props->rgbRange = static_cast<AbstractWaylandOutput::RgbRange>(outputInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
+
             if (const QJsonObject mode = outputInfo["mode"].toObject(); !mode.isEmpty()) {
                 const QJsonObject size = mode["size"].toObject();
                 props->modeSize = QSize(size["width"].toInt(), size["height"].toInt());
