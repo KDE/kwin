@@ -92,7 +92,7 @@ static bool isCursorSpriteCompatible(const QImage *buffer, const QImage *sprite)
 
 void DrmOutput::updateCursor()
 {
-    if (!isEnabled() || !m_connector->isConnected()) {
+    if (!m_pipeline->pending.crtc) {
         return;
     }
     const Cursor *cursor = Cursors::self()->currentCursor();
@@ -155,7 +155,7 @@ void DrmOutput::updateCursor()
 
 void DrmOutput::moveCursor()
 {
-    if (!m_setCursorSuccessful) {
+    if (!m_setCursorSuccessful || !m_pipeline->pending.crtc) {
         return;
     }
     Cursor *cursor = Cursors::self()->currentCursor();
