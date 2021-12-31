@@ -491,8 +491,11 @@ void LinuxDmaBufV1FeedbackPrivate::send(Resource *resource)
         sendTranche(tranche);
     }
     // send default hints as the last fallback tranche
-    if (this != get(m_bufferintegration->defaultFeedback.data())) {
-        sendTranche(get(m_bufferintegration->defaultFeedback.data())->m_tranches[0]);
+    const auto defaultFeedbackPrivate = get(m_bufferintegration->defaultFeedback.data());
+    if (this != defaultFeedbackPrivate) {
+        for (const auto &tranche : qAsConst(defaultFeedbackPrivate->m_tranches)) {
+            sendTranche(tranche);
+        }
     }
     send_done(resource->handle);
 }
