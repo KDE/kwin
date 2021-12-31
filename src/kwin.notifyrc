@@ -198,6 +198,7 @@ Action=Popup
 
 [Event/graphicsreset]
 Name=Graphics Reset
+Name[ar]=إعادة ضبط الرسوميات
 Name[az]=Qrafikanın sıfırlanması
 Name[bs]=Reset grafike
 Name[ca]=Reinici dels gràfics
@@ -245,6 +246,7 @@ Name[x-test]=xxGraphics Resetxx
 Name[zh_CN]=图形功能重置
 Name[zh_TW]=圖形重置
 Comment=A graphics reset event occurred
+Comment[ar]=حدث عملية إعادة ضبط الرسوميات
 Comment[az]=Qrafik sistemdə qəza baş verdi
 Comment[bs]=Grafički reset događaj se desio
 Comment[ca]=Ha ocorregut un esdeveniment de reinici dels gràfics
@@ -294,6 +296,7 @@ Action=Popup
 
 [Event/xwaylandcrash]
 Name=Xwayland Crash
+Name[ar]=إنهيار ويلاند_اكس
 Name[az]=Xwayland Qəzası
 Name[ca]=Fallada de l'Xwayland
 Name[ca@valencia]=Fallada de l'Xwayland
@@ -325,6 +328,7 @@ Name[vi]=Sự cố Xwayland
 Name[x-test]=xxXwayland Crashxx
 Name[zh_CN]=Xwayland 崩溃
 Comment=Xwayland has crashed
+Comment[ar]=إنهار ويلاند_اكس
 Comment[az]=Xwayland qəzaya uğradı
 Comment[ca]=L'Xwayland ha fallat
 Comment[ca@valencia]=L'Xwayland ha fallat

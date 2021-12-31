@@ -43,6 +43,7 @@ Name[vi]=Bàn phím ảo
 Name[x-test]=xxVirtual Keyboardxx
 Name[zh_CN]=虚拟键盘
 Comment=Select which virtual keyboard to use
+Comment[ar]=اختر أيا من لوحات المفاتيح الافتراضية لإستعمالها
 Comment[az]=İstifadə edəcəyiniz klaviaturanı seçin
 Comment[ca]=Seleccioneu el teclat virtual a usar
 Comment[ca@valencia]=Seleccioneu el teclat virtual a usar

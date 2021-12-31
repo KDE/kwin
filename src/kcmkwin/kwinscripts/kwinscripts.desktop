@@ -85,6 +85,7 @@ Name[x-test]=xxKWin Scriptsxx
 Name[zh_CN]=KWin 脚本
 Name[zh_TW]=KWin 文稿
 Comment=Manage KWin scripts
+Comment[ar]=أدر سكربتات كوين
 Comment[az]=KWin skriptləri meneceri
 Comment[bs]=Podesi KWin skripte
 Comment[ca]=Gestiona els scripts del KWin

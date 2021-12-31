@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/WindowSwitcher
 
 Comment=KWin Window Switcher Layout
+Comment[ar]=تخطيط مبدل النوافذ لكوين
 Comment[az]=KWin Pəncərə dəyişdiricisi
 Comment[bs]=KWin Prozor Switcher Izgled
 Comment[ca]=Disposició del commutador de finestres del KWin
