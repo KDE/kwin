@@ -65,6 +65,27 @@
 namespace KWin
 {
 
+namespace
+{
+bool isIdentityOrTranslation(const QMatrix4x4 &m) {
+    if (m(3, 0) != 0 || m(3, 1) != 0 || m(3, 2) != 0 || m(3, 3) != 1)
+        return false;
+    // Rotation
+    if (m(2, 0) != 0 || m(2, 1) != 0 || m(0, 2) != 0 || m(1, 2) != 0) {
+        return false;
+    }
+    // 2D Rotation
+    if (m(1, 0) != 0 || m(0, 1) != 0) {
+        return false;
+    }
+    // No scale.
+    if (m(0, 0) == 1 && m(1, 1) == 1 && m(2, 2) == 1) {
+        return true;
+    }
+    return false;
+}
+}
+
 /************************************************
  * SceneOpenGL
  ***********************************************/
@@ -890,7 +911,10 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
             opacity = renderNode.opacity;
         }
 
-        renderNode.texture->setFilter(GL_LINEAR);
+        const qreal screenScale = GLRenderTarget::virtualScreenScale();
+        const bool isIntegerScaling = qFuzzyCompare(screenScale, std::ceil(screenScale));
+        renderNode.texture->setFilter((isIntegerScaling && isIdentityOrTranslation(renderNode.transformMatrix)) ? GL_NEAREST : GL_LINEAR);
+
         renderNode.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         renderNode.texture->bind();
 
