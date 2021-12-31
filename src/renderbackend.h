@@ -29,6 +29,8 @@ public:
     virtual CompositingType compositingType() const = 0;
     virtual OverlayWindow *overlayWindow() const;
 
+    virtual bool checkGraphicsReset();
+
     virtual QRegion beginFrame(AbstractOutput *output) = 0;
     virtual void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
 };

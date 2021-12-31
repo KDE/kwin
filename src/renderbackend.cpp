@@ -19,4 +19,9 @@ OverlayWindow *RenderBackend::overlayWindow() const
     return nullptr;
 }
 
+bool RenderBackend::checkGraphicsReset()
+{
+    return false;
+}
+
 } // namespace KWin

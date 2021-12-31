@@ -193,7 +193,6 @@ public:
 
 Q_SIGNALS:
     void frameRendered();
-    void resetCompositing();
 
 public Q_SLOTS:
     // a window has been closed

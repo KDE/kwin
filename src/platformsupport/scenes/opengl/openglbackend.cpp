@@ -13,7 +13,21 @@
 #include "screens.h"
 #include "utils.h"
 
+#include <QElapsedTimer>
+
 #include <epoxy/gl.h>
+#include <unistd.h>
+
+// HACK: workaround for libepoxy < 1.3
+#ifndef GL_GUILTY_CONTEXT_RESET
+#define GL_GUILTY_CONTEXT_RESET 0x8253
+#endif
+#ifndef GL_INNOCENT_CONTEXT_RESET
+#define GL_INNOCENT_CONTEXT_RESET 0x8254
+#endif
+#ifndef GL_UNKNOWN_CONTEXT_RESET
+#define GL_UNKNOWN_CONTEXT_RESET 0x8255
+#endif
 
 namespace KWin
 {
@@ -95,6 +109,38 @@ SurfaceTexture *OpenGLBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
 {
     Q_UNUSED(pixmap)
     return nullptr;
+}
+
+bool OpenGLBackend::checkGraphicsReset()
+{
+    const GLenum status = glGetGraphicsResetStatus();
+    if (Q_LIKELY(status == GL_NO_ERROR)) {
+        return false;
+    }
+
+    switch (status) {
+    case GL_GUILTY_CONTEXT_RESET:
+        qCDebug(KWIN_OPENGL) << "A graphics reset attributable to the current GL context occurred.";
+        break;
+    case GL_INNOCENT_CONTEXT_RESET:
+        qCDebug(KWIN_OPENGL) << "A graphics reset not attributable to the current GL context occurred.";
+        break;
+    case GL_UNKNOWN_CONTEXT_RESET:
+        qCDebug(KWIN_OPENGL) << "A graphics reset of an unknown cause occurred.";
+        break;
+    default:
+        break;
+    }
+
+    QElapsedTimer timer;
+    timer.start();
+
+    // Wait until the reset is completed or max 10 seconds
+    while (timer.elapsed() < 10000 && glGetGraphicsResetStatus() != GL_NO_ERROR) {
+        usleep(50);
+    }
+
+    return true;
 }
 
 }

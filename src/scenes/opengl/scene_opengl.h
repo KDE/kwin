@@ -77,10 +77,8 @@ private:
     void doPaintBackground(const QVector< float >& vertices);
     void updateProjectionMatrix(const QRect &geometry);
     void performPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
-    void handleGraphicsReset(GLenum status);
 
     bool init_ok = true;
-    bool m_resetOccurred = false;
     OpenGLBackend *m_backend;
     LanczosFilter *m_lanczosFilter = nullptr;
     QScopedPointer<GLTexture> m_cursorTexture;

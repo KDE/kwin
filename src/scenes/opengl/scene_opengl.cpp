@@ -37,7 +37,6 @@
 
 #include <cmath>
 #include <cstddef>
-#include <unistd.h>
 
 #include <QGraphicsScale>
 #include <QPainter>
@@ -45,22 +44,7 @@
 #include <QVector2D>
 #include <QVector4D>
 #include <QMatrix4x4>
-
-#include <KLocalizedString>
-#include <KNotification>
-#include <KProcess>
 #include <QtMath>
-
-// HACK: workaround for libepoxy < 1.3
-#ifndef GL_GUILTY_CONTEXT_RESET
-#define GL_GUILTY_CONTEXT_RESET 0x8253
-#endif
-#ifndef GL_INNOCENT_CONTEXT_RESET
-#define GL_INNOCENT_CONTEXT_RESET 0x8254
-#endif
-#ifndef GL_UNKNOWN_CONTEXT_RESET
-#define GL_UNKNOWN_CONTEXT_RESET 0x8255
-#endif
 
 namespace KWin
 {
@@ -111,40 +95,6 @@ SceneOpenGL *SceneOpenGL::createScene(OpenGLBackend *backend, QObject *parent)
 bool SceneOpenGL::initFailed() const
 {
     return !init_ok;
-}
-
-void SceneOpenGL::handleGraphicsReset(GLenum status)
-{
-    switch (status) {
-    case GL_GUILTY_CONTEXT_RESET:
-        qCDebug(KWIN_OPENGL) << "A graphics reset attributable to the current GL context occurred.";
-        break;
-
-    case GL_INNOCENT_CONTEXT_RESET:
-        qCDebug(KWIN_OPENGL) << "A graphics reset not attributable to the current GL context occurred.";
-        break;
-
-    case GL_UNKNOWN_CONTEXT_RESET:
-        qCDebug(KWIN_OPENGL) << "A graphics reset of an unknown cause occurred.";
-        break;
-
-    default:
-        break;
-    }
-
-    QElapsedTimer timer;
-    timer.start();
-
-    // Wait until the reset is completed or max 10 seconds
-    while (timer.elapsed() < 10000 && glGetGraphicsResetStatus() != GL_NO_ERROR)
-        usleep(50);
-
-    qCDebug(KWIN_OPENGL) << "Attempting to reset compositing.";
-    QMetaObject::invokeMethod(this, "resetCompositing", Qt::QueuedConnection);
-
-    KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
-
-    m_resetOccurred = true;
 }
 
 /**
@@ -237,10 +187,6 @@ static SurfaceItem *findTopMostSurface(SurfaceItem *item)
 void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &toplevels,
                         RenderLoop *renderLoop)
 {
-    if (m_resetOccurred) {
-        return; // A graphics reset has occurred, do nothing.
-    }
-
     painted_screen = output;
     // actually paint the frame, flushed with the NEXT frame
     createStackingOrder(toplevels);
@@ -258,71 +204,66 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
         scaling = 1;
     }
 
-    const GLenum status = glGetGraphicsResetStatus();
-    if (status != GL_NO_ERROR) {
-        handleGraphicsReset(status);
-    } else {
-        renderLoop->beginFrame();
+    renderLoop->beginFrame();
 
-        SurfaceItem *fullscreenSurface = nullptr;
-        for (int i = stacking_order.count() - 1; i >=0; i--) {
-            Window *window = stacking_order[i];
-            Toplevel *toplevel = window->window();
-            if (output && toplevel->isOnOutput(output) && window->isVisible() && toplevel->opacity() > 0) {
-                AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
-                if (!c || !c->isFullScreen()) {
-                    break;
-                }
-                if (!window->surfaceItem()) {
-                    break;
-                }
-                SurfaceItem *topMost = findTopMostSurface(window->surfaceItem());
-                auto pixmap = topMost->pixmap();
-                if (!pixmap) {
-                    break;
-                }
-                pixmap->update();
-                // the subsurface has to be able to cover the whole window
-                if (topMost->position() != QPoint(0, 0)) {
-                    break;
-                }
-                // and it has to be completely opaque
-                if (!window->isOpaque() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
-                    break;
-                }
-                fullscreenSurface = topMost;
+    SurfaceItem *fullscreenSurface = nullptr;
+    for (int i = stacking_order.count() - 1; i >=0; i--) {
+        Window *window = stacking_order[i];
+        Toplevel *toplevel = window->window();
+        if (output && toplevel->isOnOutput(output) && window->isVisible() && toplevel->opacity() > 0) {
+            AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
+            if (!c || !c->isFullScreen()) {
                 break;
             }
+            if (!window->surfaceItem()) {
+                break;
+            }
+            SurfaceItem *topMost = findTopMostSurface(window->surfaceItem());
+            auto pixmap = topMost->pixmap();
+            if (!pixmap) {
+                break;
+            }
+            pixmap->update();
+            // the subsurface has to be able to cover the whole window
+            if (topMost->position() != QPoint(0, 0)) {
+                break;
+            }
+            // and it has to be completely opaque
+            if (!window->isOpaque() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
+                break;
+            }
+            fullscreenSurface = topMost;
+            break;
         }
-        renderLoop->setFullscreenSurface(fullscreenSurface);
+    }
+    renderLoop->setFullscreenSurface(fullscreenSurface);
 
-        bool directScanout = false;
-        if (m_backend->directScanoutAllowed(output) && !static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
-            directScanout = m_backend->scanout(output, fullscreenSurface);
-        }
-        if (directScanout) {
-            renderLoop->endFrame();
-        } else {
-            // prepare rendering makescontext current on the output
-            repaint = m_backend->beginFrame(output);
-            GLVertexBuffer::streamingBuffer()->beginFrame();
+    bool directScanout = false;
+    if (m_backend->directScanoutAllowed(output) && !static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
+        directScanout = m_backend->scanout(output, fullscreenSurface);
+    }
+    if (directScanout) {
+        renderLoop->endFrame();
+    } else {
+        // prepare rendering makescontext current on the output
+        repaint = m_backend->beginFrame(output);
+        GLVertexBuffer::streamingBuffer()->beginFrame();
 
-            GLVertexBuffer::setVirtualScreenGeometry(geo);
-            GLRenderTarget::setVirtualScreenGeometry(geo);
-            GLVertexBuffer::setVirtualScreenScale(scaling);
-            GLRenderTarget::setVirtualScreenScale(scaling);
+        GLVertexBuffer::setVirtualScreenGeometry(geo);
+        GLRenderTarget::setVirtualScreenGeometry(geo);
+        GLVertexBuffer::setVirtualScreenScale(scaling);
+        GLRenderTarget::setVirtualScreenScale(scaling);
 
-            updateProjectionMatrix(geo);
+        updateProjectionMatrix(geo);
 
-            paintScreen(damage.intersected(geo), repaint, &update, &valid,
-                        renderLoop, projectionMatrix());   // call generic implementation
-            paintCursor(output, valid);
+        paintScreen(damage.intersected(geo), repaint, &update, &valid,
+                    renderLoop, projectionMatrix());   // call generic implementation
+        paintCursor(output, valid);
 
-            renderLoop->endFrame();
+        renderLoop->endFrame();
 
-            GLVertexBuffer::streamingBuffer()->endOfFrame();
-            m_backend->endFrame(output, valid, update);
-        }
+        GLVertexBuffer::streamingBuffer()->endOfFrame();
+        m_backend->endFrame(output, valid, update);
     }
 
     // do cleanup

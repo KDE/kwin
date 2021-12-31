@@ -49,6 +49,7 @@ public:
 
     virtual void init() = 0;
     CompositingType compositingType() const override final;
+    bool checkGraphicsReset() override final;
 
     virtual SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
     virtual SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap);

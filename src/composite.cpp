@@ -307,7 +307,6 @@ bool Compositor::setupStart()
         QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
     }
 
-    connect(m_scene, &Scene::resetCompositing, this, &Compositor::reinitialize);
     Q_EMIT sceneCreated();
 
     return true;
@@ -619,8 +618,14 @@ QList<Toplevel *> Compositor::windowsToRender() const
 
 void Compositor::composite(RenderLoop *renderLoop)
 {
-    const auto &output = m_renderLoops[renderLoop];
+    if (m_backend->checkGraphicsReset()) {
+        qCDebug(KWIN_CORE) << "Graphics reset occurred";
+        KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
+        reinitialize();
+        return;
+    }
 
+    const auto &output = m_renderLoops[renderLoop];
     fTraceDuration("Paint (", output ? output->name() : QStringLiteral("screens"), ")");
 
     const auto windows = windowsToRender();
