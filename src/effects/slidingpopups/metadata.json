@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Sliding animation for Plasma popups",
+        "Description[ar]": "تحريكات التمرير لمنبثقات بلازما",
         "Description[az]": "Sürüşən pəncərələrin animasiyalı peyda olması",
         "Description[ca@valencia]": "Animació de desplaçament per als missatges emergents del Plasma",
         "Description[ca]": "Animació de desplaçament per als missatges emergents del Plasma",
@@ -26,6 +27,7 @@
         "Id": "slidingpopups",
         "License": "GPL",
         "Name": "Sliding popups",
+        "Name[ar]": "تمرير المنبثقات",
         "Name[az]": "Ani pəncərə animasiyası",
         "Name[ca@valencia]": "Missatges emergents desplaçant-se",
         "Name[ca]": "Missatges emergents desplaçant-se",

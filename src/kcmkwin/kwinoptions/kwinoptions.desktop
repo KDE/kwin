@@ -99,6 +99,7 @@ Name[zh_CN]=窗口行为
 Name[zh_TW]=視窗行為
 
 Comment=Configure window actions and behavior
+Comment[ar]=اضبط سلوك النوافذ وإجراءاتها
 Comment[az]=Pəncərə fəaliyyətlərini və davranışını tənzimləmək
 Comment[ca]=Configura les accions i comportament de les finestres
 Comment[ca@valencia]=Configura les accions i comportament de les finestres
@@ -135,6 +136,7 @@ Comment[zh_CN]=配置窗口操作和行为
 Comment[zh_TW]=設定視窗動作及行為
 
 X-KDE-Keywords=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate
+X-KDE-Keywords[ar]=تركيز,سلوك,سلوك النوافذ,إجراءات,إجراء,تظليل,تفعيل,تنشيط,تحريك,سطح مكتب,إطار,نقر,نقر مزدوج
 X-KDE-Keywords[az]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate,yerdəyişmə,pəncərə davranışları,pəncərə fəaliyyəti,animasiya,yüksəlmə,avtomatik yüksəlmə,pəncərələr,çərçivə,başlıq çubuğu,ikili vuruş,iş masası,ani,hərəkət,kölgələnmə,kölgə,kölgəsiz, kölgəsizləşmə,aktivləşmə,aktiv etmək
 X-KDE-Keywords[ca]=focus,emplaçament,comportament de la finestra,accions de la finestra,animació,elevació,elevació automàtica,finestres,marc,barra de títol,doble clic,escriptori,ajust,moviment,ombreig,ombra,shading,shade,unshading,activació,activar
 X-KDE-Keywords[ca@valencia]=focus,emplaçament,comportament de la finestra,accions de la finestra,animació,elevació,elevació automàtica,finestres,marc,barra de títol,doble clic,escriptori,ajust,moviment,ombreig,ombra,shading,shade,unshading,activació,activar

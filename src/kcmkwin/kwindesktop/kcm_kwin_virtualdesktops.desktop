@@ -77,6 +77,7 @@ Name[zh_CN]=虚拟桌面
 Name[zh_TW]=虛擬桌面
 
 Comment=Configure navigation, number and layout of virtual desktops
+Comment[ar]=اضبط عدد وتخطيط أسطح المكتب الافتراضية وكيفية التنقل بينها
 Comment[az]=Virtual İş Masasının nömrəsi, qatı və istiqamətinin tənzimlənməsi
 Comment[ca]=Configura la navegació, el nombre i la disposició dels escriptoris virtuals
 Comment[ca@valencia]=Configura la navegació, el nombre i la disposició dels escriptoris virtuals
@@ -111,6 +112,7 @@ Comment[x-test]=xxConfigure navigation, number and layout of virtual desktopsxx
 Comment[zh_CN]=配置虚拟桌面的数量、排列方式和切换方式
 Comment[zh_TW]=設定虛擬桌面的導覽、數字與佈局
 X-KDE-Keywords=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces
+X-KDE-Keywords[ar]=سطح,أسطح,مكتب,عدد,افتراضي,تنقل,مكعب,مساحة العمل,مؤشر
 X-KDE-Keywords[az]=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces,iş masası,iş masaları,say,virtual iş masaları,səhifələyici,səhifələyici vidjet, səhifələyici əlavə,səhifələmə ayarları,göstərici,istiqamət,kub,sürüşmə,iş sahələri
 X-KDE-Keywords[ca]=escriptori,escriptoris,nombre,escriptori virtual,múltiples escriptoris,paginador,giny paginador,miniaplicació de paginació,arranjament del paginador,indicador,navegació,cub,diapositiva,espais de treball
 X-KDE-Keywords[ca@valencia]=escriptori,escriptoris,nombre,escriptori virtual,múltiples escriptoris,paginador,giny paginador,miniaplicació de paginació,arranjament del paginador,indicador,navegació,cub,diapositiva,espais de treball

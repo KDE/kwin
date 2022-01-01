@@ -1,5 +1,6 @@
 [Desktop Entry]
 Comment=Squash windows when they are minimized
+Comment[ar]=تنكمش النوافذ عند تصغيرها
 Comment[az]=Yığılarkən pəncrəni sıxlaşdıqmaq
 Comment[ca]=Amuntega les finestres quan estan minimitzades
 Comment[ca@valencia]=Amuntega les finestres quan estan minimitzades
@@ -35,6 +36,7 @@ Comment[zh_CN]=窗口最小化时绘制收缩过渡动画
 Comment[zh_TW]=壓縮最小化的視窗
 Icon=preferences-system-windows-effect-squash
 Name=Squash
+Name[ar]=الانكماش
 Name[az]=Sıxılma
 Name[ca]=Amuntega
 Name[ca@valencia]=Amuntega

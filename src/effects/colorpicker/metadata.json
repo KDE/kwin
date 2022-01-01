@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Supports picking a color",
+        "Description[ar]": "يدعم انتقاء لون",
         "Description[az]": "Rəng seçimi dəstəklənir",
         "Description[ca@valencia]": "Permet seleccionar un color",
         "Description[ca]": "Permet seleccionar un color",

@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Display a mouse cursor locating effect when activated",
+        "Description[ar]": "تعرض تأثير تحديد موقع مؤشر الفأرة عند التنشيط",
         "Description[az]": "Ekranda kursorun yerini göstərir",
         "Description[ca@valencia]": "Mostra un efecte de posició del cursor del ratolí quan està activat",
         "Description[ca]": "Mostra un efecte de posició del cursor del ratolí quan està activat",

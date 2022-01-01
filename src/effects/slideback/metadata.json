@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Focus",
         "Description": "Slide back windows when another window is raised",
+        "Description[ar]": "مرر النوافذ للخلف عند صعود نافذة أخرى",
         "Description[az]": "Yeni pəncərə qaldırıldığında digər pəncərə arxaya sürüşür",
         "Description[ca@valencia]": "Llisca arrere les finestres quan s'eleva una altra finestra",
         "Description[ca]": "Llisca enrere les finestres quan s'eleva una altra finestra",
@@ -26,6 +27,7 @@
         "Id": "slideback",
         "License": "GPL",
         "Name": "Slide Back",
+        "Name[ar]": "التمرير الخلفي",
         "Name[az]": "Arxasına sürüşdürmək",
         "Name[ca@valencia]": "Llisca cap arrere",
         "Name[ca]": "Llisca cap enrere",

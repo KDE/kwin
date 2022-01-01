@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Synchronize Skip Switcher with Taskbar
+Name[ar]=زامن بين مبدل التخطي و شريط المهام
 Name[az]=Tapşırıq paneli ilə dəyişdiricidə buraxılan pəncərələrin eyniləşdirilməsi
 Name[bs]=Uskladite Skip Switcher s trake
 Name[ca]=Sincronitza «Ignora el commutador» amb la barra de tasques
@@ -48,6 +49,7 @@ Name[x-test]=xxSynchronize Skip Switcher with Taskbarxx
 Name[zh_CN]=窗口切换器与任务栏同步跳过窗口设置
 Name[zh_TW]=將工作列中設定要忽略的視窗也套用在視窗切換器
 Comment=Hides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)
+Comment[ar]=يخفي جميع النوافذ المعلّمة على أنها "تخطَ شريط المهام"  من مبدلات النوافذ (مثل Alt + Tab)
 Comment[az]=Tapşırəq panelində gğstərilməyən bütün pəncərələri gizlədir ki, onlar pəncərə dəyişdiricisilərində (e.g. Alt+Tab) göstərilməsin
 Comment[bs]=Skriva sve prozorie označene kao Skip traka da će također biti isključeni iz prebacivanja prozora(npr. Alt + Tab)
 Comment[ca]=Oculta totes les finestres marcades com a «Ignora la barra de tasques» que també s'excloguin del commutador de finestres (p. ex. Alt+Tab)

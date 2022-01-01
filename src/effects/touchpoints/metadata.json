@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Visualize touch points",
+        "Description[ar]": "تصور نقاط اللمس",
         "Description[az]": "Ekranda toxunan nöqtələri canlandırır",
         "Description[ca@valencia]": "Visualitza els punts de contacte",
         "Description[ca]": "Visualitza els punts de contacte",
@@ -25,6 +26,7 @@
         "Id": "touchpoints",
         "License": "GPL",
         "Name": "Touch Points",
+        "Name[ar]": "نقاط اللمس",
         "Name[az]": "Toxunma nöqtələri",
         "Name[ca@valencia]": "Punts de contacte",
         "Name[ca]": "Punts de contacte",

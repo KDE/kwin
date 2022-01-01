@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Blurs the background behind semi-transparent windows",
+        "Description[ar]": "تغشي الخلفية خلف النوافذ شبه الشفافة",
         "Description[az]": "Yarımşəffaf pəncərələrin altındakı fonu yayğınlaşdırmaq",
         "Description[ca@valencia]": "Difumina el fons de darrere de les finestres semitransparents",
         "Description[ca]": "Difumina el fons de darrere de les finestres semitransparents",

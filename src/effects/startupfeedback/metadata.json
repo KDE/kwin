@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Helper effect for startup feedback",
+        "Description[ar]": "تأثير مساعد لمؤشر بدء التشغيل",
         "Description[az]": "İstifadəçi rəyinin başlanğıcı üçün yardımçı effekt",
         "Description[ca@valencia]": "Efecte auxiliar per a la retroacció en iniciar",
         "Description[ca]": "Efecte auxiliar per a la retroacció en iniciar",
@@ -26,6 +27,7 @@
         "Id": "startupfeedback",
         "License": "GPL",
         "Name": "Startup Feedback",
+        "Name[ar]": "مؤشر البدء",
         "Name[az]": "İstifadəçi rəyinin başlanğıcı",
         "Name[ca@valencia]": "Retroacció en iniciar",
         "Name[ca]": "Retroacció en iniciar",

@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Virtual Desktop Switching Animation",
         "Description": "Slide desktops when switching virtual desktops",
+        "Description[ar]": "مرر أسطح المكتب عند التبديل الأسطح الافتراضية",
         "Description[az]": "Virtual İş Masalarını dəyişərkən iş masalarını sürüşdürür",
         "Description[ca@valencia]": "Llisca els escriptoris en canviar els escriptoris virtuals",
         "Description[ca]": "Llisca els escriptoris en canviar els escriptoris virtuals",

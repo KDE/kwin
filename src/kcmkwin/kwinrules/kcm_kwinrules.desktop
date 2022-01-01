@@ -76,6 +76,7 @@ Name[zh_CN]=窗口规则
 Name[zh_TW]=視窗規則
 
 Comment=Individual Window Behavior
+Comment[ar]=سلوك النافذ المفردة
 Comment[az]=İndividual pəncərə davranışları
 Comment[bs]=Ponašanje pojedinog prozora
 Comment[ca]=Comportament individual de les finestres
@@ -124,6 +125,7 @@ Comment[zh_CN]=特定窗口行为
 Comment[zh_TW]=個別視窗行為
 
 X-KDE-Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications
+X-KDE-Keywords[ar]=حجم,حالة,سلوك النافذة,تذكر,قواعد,قاعدة,تطبيق,تطبيقات
 X-KDE-Keywords[az]=size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications,olçü,mövqe,pəncərə davranışı,pəncərə,iş əhatəsi,yadda saxlamaq,qaydalar,pəncərə qaydaları,tətbiqlər,tətbiqetmələr
 X-KDE-Keywords[ca]=mida,posició,estat,comportament de la finestra,finestres,específic,solucions alternatives,recorda,regles,regles de finestres,apps,aplicacions
 X-KDE-Keywords[ca@valencia]=mida,posició,estat,comportament de la finestra,finestres,específic,solucions alternatives,recorda,regles,regles de finestres,apps,aplicacions

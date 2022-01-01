@@ -65,6 +65,7 @@ Name[zh_CN]=虚拟桌面
 Name[zh_TW]=虛擬桌面
 
 Comment=Configure navigation, number and layout of virtual desktops
+Comment[ar]=اضبط عدد وتخطيط أسطح المكتب الافتراضية وكيفية التنقل بينها
 Comment[az]=Virtual İş Masasının nömrəsi, qatı və istiqamətinin tənzimlənməsi
 Comment[ca]=Configura la navegació, el nombre i la disposició dels escriptoris virtuals
 Comment[ca@valencia]=Configura la navegació, el nombre i la disposició dels escriptoris virtuals

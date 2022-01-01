@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Display window geometries on move/resize",
+        "Description[ar]": "تعرض أبعاد النافذة عند التحريك/التحجيم",
         "Description[az]": "Pəncərənin yeri və ya ölçüsü dəyişdirildiyində ekranda onun mövqeyinin və ölçüsünün həndəsi göstəriciləri.",
         "Description[ca@valencia]": "Mostra la geometria de les finestres en moure/redimensionar",
         "Description[ca]": "Mostra la geometria de les finestres en moure/redimensionar",
