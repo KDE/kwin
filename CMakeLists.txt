@@ -173,7 +173,7 @@ set_package_properties(EGL PROPERTIES
     PURPOSE "Required to build KWin with EGL support"
 )
 
-find_package(epoxy)
+find_package(epoxy 1.3)
 set_package_properties(epoxy PROPERTIES
     DESCRIPTION "libepoxy"
     URL "https://github.com/anholt/libepoxy"
