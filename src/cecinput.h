@@ -9,7 +9,9 @@
 
 #pragma once
 
-#include <QObject>
+#include <QThread>
+
+#include <libcec/cec.h>
 
 namespace CEC {
     class ICECAdapter;
@@ -21,14 +23,21 @@ namespace CEC {
  * This is generally used on embedded systems that are connected to a TV so
  * that you can use the TV's remote as an input device.
  */
-class CECInput : public QObject
+class CECInput : public QThread
 {
     Q_OBJECT
 public:
     CECInput(QObject *parent);
     ~CECInput();
 
+    void run() override;
+
 private:
     bool m_opened = false;
     CEC::ICECAdapter *m_cecAdapter = nullptr;
+    CEC::ICECCallbacks m_cecCallbacks;
+    static QHash<int, int> m_keyCodeTranslation;
+
+    static void handleCecKeypress(void* data, const CEC::cec_keypress* key);
+    static void handleCecLogMessage(void* data, const CEC::cec_log_message* key);
 };

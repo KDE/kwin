@@ -519,7 +519,8 @@ bool WaylandServer::init(InitializationFlags flags)
         connect(static_cast<Application*>(qApp), &Application::workspaceCreated, this, init);
     }
 
-    new CECInput(this);
+    CECInput* ct = new CECInput(this);
+    ct->start();
     return true;
 }
 
