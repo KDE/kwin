@@ -135,13 +135,12 @@ private:
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
 
-    State m_state;
-
-    CompositorSelectionOwner *m_selectionOwner;
+    State m_state = State::Off;
+    CompositorSelectionOwner *m_selectionOwner = nullptr;
     QTimer m_releaseSelectionTimer;
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
-    Scene *m_scene;
+    Scene *m_scene = nullptr;
     RenderBackend *m_backend = nullptr;
     QMap<RenderLoop *, AbstractOutput *> m_renderLoops;
 };

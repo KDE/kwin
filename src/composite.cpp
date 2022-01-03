@@ -112,9 +112,6 @@ private:
 
 Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
-    , m_state(State::Off)
-    , m_selectionOwner(nullptr)
-    , m_scene(nullptr)
 {
     connect(options, &Options::configChanged, this, &Compositor::configChanged);
     connect(options, &Options::animationSpeedChanged, this, &Compositor::configChanged);
