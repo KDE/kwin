@@ -248,7 +248,9 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
 
     m_xkb->forwardModifiers();
-    InputMethod::self()->forwardModifiers(InputMethod::NoForce);
+    if (auto *inputmethod = InputMethod::self()) {
+        inputmethod->forwardModifiers(InputMethod::NoForce);
+    }
 
     if (event.modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifier::NoModifier && type != QEvent::KeyRelease) {
         m_keyboardLayout->checkLayoutChange(previousLayout);

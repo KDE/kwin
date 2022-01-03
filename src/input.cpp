@@ -1494,7 +1494,12 @@ class InputKeyboardFilter : public InputEventFilter
 public:
     bool keyEvent(QKeyEvent *event) override
     {
-        if (auto keyboardGrab = InputMethod::self()->keyboardGrab()) {
+        auto *inputmethod = InputMethod::self();
+        if (!inputmethod) {
+            return false;
+        }
+
+        if (auto keyboardGrab = inputmethod->keyboardGrab()) {
             if (event->isAutoRepeat()) {
                 return true;
             }
