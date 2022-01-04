@@ -1007,16 +1007,17 @@ bool XdgToplevelClient::doStartInteractiveMoveResize()
 {
     if (interactiveMoveResizePointerMode() != PositionCenter) {
         m_nextStates |= XdgToplevelInterface::State::Resizing;
+        scheduleConfigure();
     }
-
-    scheduleConfigure();
     return true;
 }
 
 void XdgToplevelClient::doFinishInteractiveMoveResize()
 {
-    m_nextStates &= ~XdgToplevelInterface::State::Resizing;
-    scheduleConfigure();
+    if (m_nextStates & XdgToplevelInterface::State::Resizing) {
+        m_nextStates &= ~XdgToplevelInterface::State::Resizing;
+        scheduleConfigure();
+    }
 }
 
 bool XdgToplevelClient::takeFocus()
