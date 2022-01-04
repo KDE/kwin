@@ -1189,7 +1189,7 @@ void X11Client::detectNoBorder()
         noborder = false;
         break;
     default:
-        abort();
+        Q_UNREACHABLE();
     }
     // NET::Override is some strange beast without clear definition, usually
     // just meaning "noborder", so let's treat it only as such flag, and ignore it as
@@ -4660,7 +4660,7 @@ StrutRect X11Client::strutRect(StrutArea area) const
                              ), StrutAreaLeft);
         break;
     default:
-        abort(); // Not valid
+        Q_UNREACHABLE(); // Not valid
     }
     return StrutRect(); // Null rect
 }

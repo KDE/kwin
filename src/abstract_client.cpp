@@ -1237,7 +1237,7 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
                 break;
             case PositionCenter:
             default:
-                abort();
+                Q_UNREACHABLE();
                 break;
             }
         };
@@ -1442,8 +1442,9 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
         }
         if (moveResizeGeometry().topLeft() != previousMoveResizeGeom.topLeft())
             update = true;
-    } else
-        abort();
+    } else {
+        Q_UNREACHABLE();
+    }
 
     if (!update)
         return;

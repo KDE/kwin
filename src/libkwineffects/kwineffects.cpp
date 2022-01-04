@@ -1382,8 +1382,7 @@ void WindowMotionManager::apply(EffectWindow *w, WindowPaintData &data)
 void WindowMotionManager::moveWindow(EffectWindow *w, QPoint target, double scale, double yScale)
 {
     QHash<EffectWindow*, WindowMotion>::iterator it = m_managedWindows.find(w);
-    if (it == m_managedWindows.end())
-        abort(); // Notify the effect author that they did something wrong
+    Q_ASSERT(it != m_managedWindows.end()); // Notify the effect author that they did something wrong
 
     WindowMotion *motion = &it.value();
 

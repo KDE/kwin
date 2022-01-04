@@ -2718,7 +2718,7 @@ QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int m
                 SNAP_BORDER_LEFT
                 break;
             default:
-                abort();
+                Q_UNREACHABLE();
                 break;
             }
 
@@ -2846,7 +2846,7 @@ QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int m
                         SNAP_WINDOW_C_LEFT
                         break;
                     default:
-                        abort();
+                        Q_UNREACHABLE();
                         break;
                     }
                 }

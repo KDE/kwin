@@ -1857,7 +1857,7 @@ void EffectWindowImpl::refWindow()
     if (auto d = qobject_cast<Deleted *>(toplevel)) {
         return d->refWindow();
     }
-    abort(); // TODO
+    Q_UNREACHABLE(); // TODO
 }
 
 void EffectWindowImpl::unrefWindow()
@@ -1865,7 +1865,7 @@ void EffectWindowImpl::unrefWindow()
     if (auto d = qobject_cast<Deleted *>(toplevel)) {
         return d->unrefWindow();   // delays deletion in case
     }
-    abort(); // TODO
+    Q_UNREACHABLE(); // TODO
 }
 
 EffectScreen *EffectWindowImpl::screen() const

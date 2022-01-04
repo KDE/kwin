@@ -189,7 +189,7 @@ int Monitor::selectedEdgeItem(int edge) const
             return actions.indexOf(act);
         }
     }
-    abort();
+    Q_UNREACHABLE();
 }
 
 void Monitor::popup(Corner* c, QPoint pos)
@@ -209,7 +209,7 @@ void Monitor::popup(Corner* c, QPoint pos)
             return;
         }
     }
-    abort();
+    Q_UNREACHABLE();
 }
 
 void Monitor::flip(Corner* c, QPoint pos)
@@ -225,7 +225,7 @@ void Monitor::flip(Corner* c, QPoint pos)
             return;
         }
     }
-    abort();
+    Q_UNREACHABLE();
 }
 
 Monitor::Corner::Corner(Monitor* m)

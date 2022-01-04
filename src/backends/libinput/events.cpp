@@ -116,8 +116,9 @@ InputRedirection::KeyboardKeyState KeyEvent::state() const
         return InputRedirection::KeyboardKeyPressed;
     case LIBINPUT_KEY_STATE_RELEASED:
         return InputRedirection::KeyboardKeyReleased;
+    default:
+        Q_UNREACHABLE();
     }
-    abort();
 }
 
 uint32_t KeyEvent::time() const
@@ -183,8 +184,9 @@ InputRedirection::PointerButtonState PointerEvent::buttonState() const
         return InputRedirection::PointerButtonPressed;
     case LIBINPUT_BUTTON_STATE_RELEASED:
         return InputRedirection::PointerButtonReleased;
+    default:
+        Q_UNREACHABLE();
     }
-    abort();
 }
 
 QVector<InputRedirection::PointerAxis> PointerEvent::axis() const

@@ -1998,7 +1998,7 @@ EffectWindow* PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, i
         }
     }
 
-    abort(); // Should never get here
+    Q_UNREACHABLE(); // Should never get here
 }
 
 EffectWindow* PresentWindowsEffect::findFirstWindow() const

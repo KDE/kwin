@@ -179,8 +179,9 @@ void UserActionsMenu::helperDialog(const QString& message, AbstractClient* clien
                  "activated using the %1 keyboard shortcut.",
                  shortcut(QStringLiteral("Window Operations Menu")));
         type = QStringLiteral("altf3warning");
-    } else
-        abort();
+    } else {
+        Q_UNREACHABLE();
+    }
     if (!type.isEmpty()) {
         KConfig cfg(QStringLiteral("kwin_dialogsrc"));
         KConfigGroup cg(&cfg, "Notification Messages");  // Depends on KMessageBox
