@@ -158,6 +158,6 @@ X-KDE-PluginInfo-Name=kwin4_effect_fade
 X-KDE-PluginInfo-Version=0.2.0
 X-KDE-PluginInfo-Category=Window Open/Close Animation
 X-KDE-PluginInfo-License=GPL
-X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-PluginInfo-EnabledByDefault=false
 X-KDE-Ordering=60
 X-KWin-Exclusive-Category=toplevel-open-close-animation
