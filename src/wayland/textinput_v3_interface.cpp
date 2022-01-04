@@ -12,9 +12,11 @@
 
 namespace KWaylandServer
 {
-static const quint32 s_version = 1;
+namespace
+{
+const quint32 s_version = 1;
 
-static TextInputContentHints convertContentHint(uint32_t hint)
+TextInputContentHints convertContentHint(uint32_t hint)
 {
     const auto hints = zwp_text_input_v3_content_hint(hint);
     TextInputContentHints ret = TextInputContentHint::None;
@@ -52,7 +54,7 @@ static TextInputContentHints convertContentHint(uint32_t hint)
     return ret;
 }
 
-static TextInputContentPurpose convertContentPurpose(uint32_t purpose)
+TextInputContentPurpose convertContentPurpose(uint32_t purpose)
 {
     const auto wlPurpose = QtWaylandServer::zwp_text_input_v3::content_purpose(purpose);
 
@@ -90,7 +92,7 @@ static TextInputContentPurpose convertContentPurpose(uint32_t purpose)
     }
 }
 
-static TextInputChangeCause convertChangeCause(uint32_t cause)
+TextInputChangeCause convertChangeCause(uint32_t cause)
 {
     const auto wlCause = QtWaylandServer::zwp_text_input_v3::change_cause(cause);
     switch (wlCause) {
@@ -100,12 +102,6 @@ static TextInputChangeCause convertChangeCause(uint32_t cause)
     default:
         return TextInputChangeCause::Other;
     }
-}
-
-TextInputManagerV3InterfacePrivate::TextInputManagerV3InterfacePrivate(TextInputManagerV3Interface *_q, Display *display)
-    : QtWaylandServer::zwp_text_input_manager_v3(*display, s_version)
-    , q(_q)
-{
 }
 
 class EnabledEmitter
@@ -127,6 +123,14 @@ private:
     TextInputV3Interface *q;
     const bool m_wasEnabled;
 };
+
+}
+
+TextInputManagerV3InterfacePrivate::TextInputManagerV3InterfacePrivate(TextInputManagerV3Interface *_q, Display *display)
+    : QtWaylandServer::zwp_text_input_manager_v3(*display, s_version)
+    , q(_q)
+{
+}
 
 void TextInputManagerV3InterfacePrivate::zwp_text_input_manager_v3_destroy(Resource *resource)
 {

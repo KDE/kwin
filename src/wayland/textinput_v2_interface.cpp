@@ -10,10 +10,13 @@
 
 namespace KWaylandServer
 {
-static const quint32 s_version = 1;
+
+namespace
+{
+const quint32 s_version = 1;
 
 // helpers
-static TextInputContentHints convertContentHint(uint32_t hint)
+TextInputContentHints convertContentHint(uint32_t hint)
 {
     const auto hints = zwp_text_input_v2_content_hint(hint);
     TextInputContentHints ret = TextInputContentHint::None;
@@ -51,7 +54,7 @@ static TextInputContentHints convertContentHint(uint32_t hint)
     return ret;
 }
 
-static TextInputContentPurpose convertContentPurpose(uint32_t purpose)
+TextInputContentPurpose convertContentPurpose(uint32_t purpose)
 {
     const auto wlPurpose = QtWaylandServer::zwp_text_input_v2::content_purpose(purpose);
 
@@ -87,12 +90,6 @@ static TextInputContentPurpose convertContentPurpose(uint32_t purpose)
     }
 }
 
-TextInputManagerV2InterfacePrivate::TextInputManagerV2InterfacePrivate(TextInputManagerV2Interface *_q, Display *display)
-    : QtWaylandServer::zwp_text_input_manager_v2(*display, s_version)
-    , q(_q)
-{
-}
-
 class EnabledEmitter
 {
 public:
@@ -112,6 +109,14 @@ private:
     TextInputV2Interface *q;
     const bool m_wasEnabled;
 };
+
+}
+
+TextInputManagerV2InterfacePrivate::TextInputManagerV2InterfacePrivate(TextInputManagerV2Interface *_q, Display *display)
+    : QtWaylandServer::zwp_text_input_manager_v2(*display, s_version)
+    , q(_q)
+{
+}
 
 void TextInputManagerV2InterfacePrivate::zwp_text_input_manager_v2_destroy(Resource *resource)
 {
