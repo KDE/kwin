@@ -33,6 +33,8 @@ LayoutPreview::LayoutPreview(const QString &path, bool showDesktopThumbnail, QOb
     QQmlComponent *component = new QQmlComponent(engine, this);
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
     qmlRegisterType<SwitcherItem>("org.kde.kwin", 2, 0, "Switcher");
+    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnailItem");
+    qmlRegisterType<SwitcherItem>("org.kde.kwin", 3, 0, "TabBoxSwitcher");
     qmlRegisterType<QAbstractItemModel>();
     component->loadUrl(QUrl::fromLocalFile(path));
     if (component->isError()) {
