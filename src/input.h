@@ -404,6 +404,7 @@ public:
 
 protected:
     void passToWaylandServer(QKeyEvent *event);
+    bool passToInputMethod(QKeyEvent *event);
 };
 
 class KWIN_EXPORT InputDeviceHandler : public QObject

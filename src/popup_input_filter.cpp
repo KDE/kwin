@@ -81,15 +81,9 @@ bool PopupInputFilter::keyEvent(QKeyEvent *event)
     }
 
     seat->setFocusedKeyboardSurface(last->surface());
-    switch (event->type()) {
-    case QEvent::KeyPress:
-        seat->notifyKeyboardKey(event->nativeScanCode(), KWaylandServer::KeyboardKeyState::Pressed);
-        break;
-    case QEvent::KeyRelease:
-        seat->notifyKeyboardKey(event->nativeScanCode(), KWaylandServer::KeyboardKeyState::Released);
-        break;
-    default:
-        break;
+
+    if (!passToInputMethod(event)) {
+        passToWaylandServer(event);
     }
 
     return true;

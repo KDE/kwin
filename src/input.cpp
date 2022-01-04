@@ -274,6 +274,25 @@ void InputEventFilter::passToWaylandServer(QKeyEvent *event)
     }
 }
 
+bool InputEventFilter::passToInputMethod(QKeyEvent *event)
+{
+    auto *inputmethod = InputMethod::self();
+
+    if (!inputmethod) {
+        return false;
+    }
+
+    if (auto keyboardGrab = inputmethod->keyboardGrab()) {
+        if (event->isAutoRepeat()) {
+            return true;
+        }
+        auto newState = event->type() == QEvent::KeyPress ? KWaylandServer::KeyboardKeyState::Pressed : KWaylandServer::KeyboardKeyState::Released;
+        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->timestamp(), event->nativeScanCode(), newState);
+        return true;
+    }
+    return false;
+}
+
 class VirtualTerminalFilter : public InputEventFilter {
 public:
     bool keyEvent(QKeyEvent *event) override {
@@ -1494,20 +1513,7 @@ class InputKeyboardFilter : public InputEventFilter
 public:
     bool keyEvent(QKeyEvent *event) override
     {
-        auto *inputmethod = InputMethod::self();
-        if (!inputmethod) {
-            return false;
-        }
-
-        if (auto keyboardGrab = inputmethod->keyboardGrab()) {
-            if (event->isAutoRepeat()) {
-                return true;
-            }
-            auto newState = event->type() == QEvent::KeyPress ? KWaylandServer::KeyboardKeyState::Pressed : KWaylandServer::KeyboardKeyState::Released;
-            keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->timestamp(), event->nativeScanCode(), newState);
-            return true;
-        }
-        return false;
+        return passToInputMethod(event);
     }
 };
 
