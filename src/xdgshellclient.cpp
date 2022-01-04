@@ -863,11 +863,11 @@ XdgSurfaceConfigure *XdgToplevelClient::sendRoleConfigure() const
         }
     }
 
-    const quint32 serial = m_shellSurface->sendConfigure(nextClientSize, m_requestedStates);
+    const quint32 serial = m_shellSurface->sendConfigure(nextClientSize, m_nextStates);
 
     XdgToplevelConfigure *configureEvent = new XdgToplevelConfigure();
     configureEvent->position = moveResizeGeometry().topLeft();
-    configureEvent->states = m_requestedStates;
+    configureEvent->states = m_nextStates;
     configureEvent->decoration = m_nextDecoration;
     configureEvent->serial = serial;
 
@@ -911,9 +911,9 @@ void XdgToplevelClient::doSetActive()
     WaylandClient::doSetActive();
 
     if (isActive()) {
-        m_requestedStates |= XdgToplevelInterface::State::Activated;
+        m_nextStates |= XdgToplevelInterface::State::Activated;
     } else {
-        m_requestedStates &= ~XdgToplevelInterface::State::Activated;
+        m_nextStates &= ~XdgToplevelInterface::State::Activated;
     }
 
     scheduleConfigure();
@@ -922,9 +922,9 @@ void XdgToplevelClient::doSetActive()
 void XdgToplevelClient::doSetFullScreen()
 {
     if (isRequestedFullScreen()) {
-        m_requestedStates |= XdgToplevelInterface::State::FullScreen;
+        m_nextStates |= XdgToplevelInterface::State::FullScreen;
     } else {
-        m_requestedStates &= ~XdgToplevelInterface::State::FullScreen;
+        m_nextStates &= ~XdgToplevelInterface::State::FullScreen;
     }
 
     scheduleConfigure();
@@ -933,15 +933,15 @@ void XdgToplevelClient::doSetFullScreen()
 void XdgToplevelClient::doSetMaximized()
 {
     if (requestedMaximizeMode() & MaximizeHorizontal) {
-        m_requestedStates |= XdgToplevelInterface::State::MaximizedHorizontal;
+        m_nextStates |= XdgToplevelInterface::State::MaximizedHorizontal;
     } else {
-        m_requestedStates &= ~XdgToplevelInterface::State::MaximizedHorizontal;
+        m_nextStates &= ~XdgToplevelInterface::State::MaximizedHorizontal;
     }
 
     if (requestedMaximizeMode() & MaximizeVertical) {
-        m_requestedStates |= XdgToplevelInterface::State::MaximizedVertical;
+        m_nextStates |= XdgToplevelInterface::State::MaximizedVertical;
     } else {
-        m_requestedStates &= ~XdgToplevelInterface::State::MaximizedVertical;
+        m_nextStates &= ~XdgToplevelInterface::State::MaximizedVertical;
     }
 
     scheduleConfigure();
@@ -977,27 +977,27 @@ void XdgToplevelClient::doSetQuickTileMode()
     const Qt::Edges anchors = anchorsForQuickTileMode(quickTileMode());
 
     if (anchors & Qt::LeftEdge) {
-        m_requestedStates |= XdgToplevelInterface::State::TiledLeft;
+        m_nextStates |= XdgToplevelInterface::State::TiledLeft;
     } else {
-        m_requestedStates &= ~XdgToplevelInterface::State::TiledLeft;
+        m_nextStates &= ~XdgToplevelInterface::State::TiledLeft;
     }
 
     if (anchors & Qt::RightEdge) {
-        m_requestedStates |= XdgToplevelInterface::State::TiledRight;
+        m_nextStates |= XdgToplevelInterface::State::TiledRight;
     } else {
-        m_requestedStates &= ~XdgToplevelInterface::State::TiledRight;
+        m_nextStates &= ~XdgToplevelInterface::State::TiledRight;
     }
 
     if (anchors & Qt::TopEdge) {
-        m_requestedStates |= XdgToplevelInterface::State::TiledTop;
+        m_nextStates |= XdgToplevelInterface::State::TiledTop;
     } else {
-        m_requestedStates &= ~XdgToplevelInterface::State::TiledTop;
+        m_nextStates &= ~XdgToplevelInterface::State::TiledTop;
     }
 
     if (anchors & Qt::BottomEdge) {
-        m_requestedStates |= XdgToplevelInterface::State::TiledBottom;
+        m_nextStates |= XdgToplevelInterface::State::TiledBottom;
     } else {
-        m_requestedStates &= ~XdgToplevelInterface::State::TiledBottom;
+        m_nextStates &= ~XdgToplevelInterface::State::TiledBottom;
     }
 
     scheduleConfigure();
@@ -1006,7 +1006,7 @@ void XdgToplevelClient::doSetQuickTileMode()
 bool XdgToplevelClient::doStartInteractiveMoveResize()
 {
     if (interactiveMoveResizePointerMode() != PositionCenter) {
-        m_requestedStates |= XdgToplevelInterface::State::Resizing;
+        m_nextStates |= XdgToplevelInterface::State::Resizing;
     }
 
     scheduleConfigure();
@@ -1015,7 +1015,7 @@ bool XdgToplevelClient::doStartInteractiveMoveResize()
 
 void XdgToplevelClient::doFinishInteractiveMoveResize()
 {
-    m_requestedStates &= ~XdgToplevelInterface::State::Resizing;
+    m_nextStates &= ~XdgToplevelInterface::State::Resizing;
     scheduleConfigure();
 }
 

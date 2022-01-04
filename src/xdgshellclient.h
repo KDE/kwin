@@ -216,7 +216,7 @@ private:
     QPointer<KWaylandServer::ServerSideDecorationInterface> m_serverDecoration;
     QPointer<KWaylandServer::XdgToplevelDecorationV1Interface> m_xdgDecoration;
     KWaylandServer::XdgToplevelInterface *m_shellSurface;
-    KWaylandServer::XdgToplevelInterface::States m_requestedStates;
+    KWaylandServer::XdgToplevelInterface::States m_nextStates;
     KWaylandServer::XdgToplevelInterface::States m_acknowledgedStates;
     KWaylandServer::XdgToplevelInterface::States m_initialStates;
     QMap<quint32, PingReason> m_pings;
