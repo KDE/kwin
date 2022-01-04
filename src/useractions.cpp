@@ -1821,7 +1821,7 @@ bool Workspace::shortcutAvailable(const QKeySequence &cut, AbstractClient* ignor
 
     // Check if the shortcut is already registered
     const QList<KGlobalShortcutInfo> registeredShortcuts = KGlobalAccel::getGlobalShortcutsByKey(cut);
-    for (const auto shortcut : registeredShortcuts) {
+    for (const auto &shortcut : registeredShortcuts) {
         // Only return "not available" if is not a client activation shortcut, as it may be no longer valid
         if (!shortcut.uniqueName().startsWith(QStringLiteral("_k_session:"))) {
             return false;
