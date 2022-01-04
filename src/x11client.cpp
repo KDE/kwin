@@ -1404,8 +1404,6 @@ void X11Client::finishCompositing(ReleaseReason releaseReason)
 {
     Toplevel::finishCompositing(releaseReason);
     updateVisibility();
-    // for safety in case KWin is just resizing the window
-    resetHaveResizeEffect();
     // If compositing is off, render the decoration in the X11 frame window.
     maybeCreateX11DecorationRenderer();
 }
@@ -2780,7 +2778,7 @@ void X11Client::handleSync()
 
 void X11Client::performInteractiveResize()
 {
-    if (isInteractiveResize() && !haveResizeEffect()) {
+    if (isInteractiveResize()) {
         resize(moveResizeGeometry().size());
     }
 }

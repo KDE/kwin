@@ -1187,14 +1187,6 @@ protected:
      */
     Position mousePosition() const;
 
-    static bool haveResizeEffect() {
-        return s_haveResizeEffect;
-    }
-    static void updateHaveResizeEffect();
-    static void resetHaveResizeEffect() {
-        s_haveResizeEffect = false;
-    }
-
     void setDecoration(QSharedPointer<KDecoration2::Decoration> decoration);
     void startDecorationDoubleClickTimer();
     void invalidateDecorationDoubleClickTimer();
@@ -1326,8 +1318,6 @@ private:
     QKeySequence _shortcut;
 
     WindowRules m_rules;
-
-    static bool s_haveResizeEffect;
 };
 
 /**

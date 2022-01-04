@@ -18,7 +18,6 @@
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationpalette.h"
 #include "decorations/decorationbridge.h"
-#include "effects.h"
 #include "focuschain.h"
 #include "outline.h"
 #include "platform.h"
@@ -991,7 +990,6 @@ bool AbstractClient::startInteractiveMoveResize()
         }
     }
 
-    updateHaveResizeEffect();
     updateInitialMoveResizeGeometry();
     checkUnrestrictedInteractiveMoveResize();
     Q_EMIT clientStartUserMovedResized(this);
@@ -1452,9 +1450,7 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
     if (isInteractiveMove()) {
         move(moveResizeGeometry().topLeft());
     } else {
-        if (!haveResizeEffect()) {
-            doInteractiveResizeSync();
-        }
+        doInteractiveResizeSync();
     }
 
     Q_EMIT clientStepUserMovedResized(this, moveResizeGeometry());
@@ -2128,13 +2124,6 @@ void AbstractClient::leaveInteractiveMoveResize()
         outline()->hide();
         elevate(false);
     }
-}
-
-bool AbstractClient::s_haveResizeEffect = false;
-
-void AbstractClient::updateHaveResizeEffect()
-{
-    s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
 }
 
 bool AbstractClient::doStartInteractiveMoveResize()
