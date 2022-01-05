@@ -6,8 +6,6 @@ function(add_kwin_script name)
     file(COPY ${name} DESTINATION ${CMAKE_BINARY_DIR}/bin/kwin/scripts/)
 endfunction()
 
-# videowall defines a KCModule service that has to be separately installed for the config dialog to be accessible
-install(FILES videowall/metadata.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR} RENAME kwin-script-videowall.desktop)
 add_kwin_script(videowall)
 add_kwin_script(synchronizeskipswitcher)
 add_kwin_script(desktopchangeosd)
