@@ -330,25 +330,6 @@ bool DrmOutput::present()
     return false;
 }
 
-int DrmOutput::gammaRampSize() const
-{
-    return m_pipeline->pending.crtc ? m_pipeline->pending.crtc->gammaRampSize() : 256;
-}
-
-bool DrmOutput::setGammaRamp(const GammaRamp &gamma)
-{
-    m_pipeline->pending.gamma = QSharedPointer<DrmGammaRamp>::create(m_gpu, gamma);
-    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test)) {
-        m_pipeline->applyPendingChanges();
-        m_renderLoop->scheduleRepaint();
-        return true;
-    } else {
-        qCWarning(KWIN_DRM) << "Applying gamma ramp failed on output" << this;
-        m_pipeline->revertPendingChanges();
-        return false;
-    }
-}
-
 DrmConnector *DrmOutput::connector() const
 {
     return m_connector;
@@ -428,4 +409,14 @@ DrmOutputLayer *DrmOutput::outputLayer() const
     return m_pipeline->pending.layer.data();
 }
 
+void DrmOutput::setColorTransformation(const QSharedPointer<ColorTransformation> &transformation)
+{
+    m_pipeline->pending.colorTransformation = transformation;
+    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test)) {
+        m_pipeline->applyPendingChanges();
+        m_renderLoop->scheduleRepaint();
+    } else {
+        m_pipeline->revertPendingChanges();
+    }
+}
 }

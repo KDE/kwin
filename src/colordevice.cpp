@@ -5,6 +5,7 @@
 */
 
 #include "colordevice.h"
+#include "colors.h"
 #include "output.h"
 #include "utils/common.h"
 
@@ -22,17 +23,6 @@ struct CmsDeleter;
 
 template<typename T>
 using CmsScopedPointer = QScopedPointer<T, CmsDeleter<T>>;
-
-template<>
-struct CmsDeleter<cmsPipeline>
-{
-    static inline void cleanup(cmsPipeline *pipeline)
-    {
-        if (pipeline) {
-            cmsPipelineFree(pipeline);
-        }
-    }
-};
 
 template<>
 struct CmsDeleter<cmsStage>
@@ -67,7 +57,6 @@ public:
     Q_DECLARE_FLAGS(DirtyToneCurves, DirtyToneCurveBit)
 
     void rebuildPipeline();
-    void unlinkPipeline();
 
     void updateTemperatureToneCurves();
     void updateBrightnessToneCurves();
@@ -84,16 +73,16 @@ public:
     CmsScopedPointer<cmsStage> brightnessStage;
     CmsScopedPointer<cmsStage> calibrationStage;
 
-    CmsScopedPointer<cmsPipeline> pipeline;
+    QSharedPointer<ColorTransformation> transformation;
 };
 
 void ColorDevicePrivate::rebuildPipeline()
 {
+    cmsPipeline *pipeline = cmsPipelineAlloc(nullptr, 3, 3);
     if (!pipeline) {
-        pipeline.reset(cmsPipelineAlloc(nullptr, 3, 3));
+        qCWarning(KWIN_CORE) << "Failed to allocate cmsPipeline!";
+        return;
     }
-
-    unlinkPipeline();
 
     if (dirtyCurves & DirtyCalibrationToneCurve) {
         updateCalibrationToneCurves();
@@ -108,32 +97,21 @@ void ColorDevicePrivate::rebuildPipeline()
     dirtyCurves = DirtyToneCurves();
 
     if (calibrationStage) {
-        if (!cmsPipelineInsertStage(pipeline.data(), cmsAT_END, calibrationStage.data())) {
+        if (!cmsPipelineInsertStage(pipeline, cmsAT_END, calibrationStage.data())) {
             qCWarning(KWIN_CORE) << "Failed to insert the color calibration pipeline stage";
         }
     }
     if (temperatureStage) {
-        if (!cmsPipelineInsertStage(pipeline.data(), cmsAT_END, temperatureStage.data())) {
+        if (!cmsPipelineInsertStage(pipeline, cmsAT_END, temperatureStage.data())) {
             qCWarning(KWIN_CORE) << "Failed to insert the  color temperature pipeline stage";
         }
     }
     if (brightnessStage) {
-        if (!cmsPipelineInsertStage(pipeline.data(), cmsAT_END, brightnessStage.data())) {
+        if (!cmsPipelineInsertStage(pipeline, cmsAT_END, brightnessStage.data())) {
             qCWarning(KWIN_CORE) << "Failed to insert the color brightness pipeline stage";
         }
     }
-}
-
-void ColorDevicePrivate::unlinkPipeline()
-{
-    while (true) {
-        cmsStage *last = nullptr;
-        cmsPipelineUnlinkStage(pipeline.data(), cmsAT_END, &last);
-
-        if (!last) {
-            break;
-        }
-    }
+    transformation = QSharedPointer<ColorTransformation>::create(pipeline);
 }
 
 static qreal interpolate(qreal a, qreal b, qreal blendFactor)
@@ -277,9 +255,6 @@ ColorDevice::ColorDevice(Output *output, QObject *parent)
 
 ColorDevice::~ColorDevice()
 {
-    if (d->pipeline) {
-        d->unlinkPipeline();
-    }
 }
 
 Output *ColorDevice::output() const
@@ -346,28 +321,7 @@ void ColorDevice::setProfile(const QString &profile)
 void ColorDevice::update()
 {
     d->rebuildPipeline();
-
-    GammaRamp gammaRamp(d->output->gammaRampSize());
-    uint16_t *redChannel = gammaRamp.red();
-    uint16_t *greenChannel = gammaRamp.green();
-    uint16_t *blueChannel = gammaRamp.blue();
-
-    for (uint32_t i = 0; i < gammaRamp.size(); ++i) {
-        // ensure 64 bit calculation to prevent overflows
-        const uint16_t index = (static_cast<uint64_t>(i) * 0xffff) / (gammaRamp.size() - 1);
-
-        const uint16_t in[3] = {index, index, index};
-        uint16_t out[3] = {0};
-        cmsPipelineEval16(in, out, d->pipeline.data());
-
-        redChannel[i] = out[0];
-        greenChannel[i] = out[1];
-        blueChannel[i] = out[2];
-    }
-
-    if (!d->output->setGammaRamp(gammaRamp)) {
-        qCWarning(KWIN_CORE) << "Failed to update gamma ramp for output" << d->output;
-    }
+    d->output->setColorTransformation(d->transformation);
 }
 
 void ColorDevice::scheduleUpdate()

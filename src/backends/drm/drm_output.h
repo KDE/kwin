@@ -9,10 +9,10 @@
 #ifndef KWIN_DRM_OUTPUT_H
 #define KWIN_DRM_OUTPUT_H
 
+#include "colors.h"
 #include "drm_abstract_output.h"
 #include "drm_object.h"
 #include "drm_object_plane.h"
-#include "drm_pointer.h"
 
 #include <QObject>
 #include <QPoint>
@@ -57,6 +57,8 @@ public:
 
     bool usesSoftwareCursor() const override;
 
+    void setColorTransformation(const QSharedPointer<ColorTransformation> &transformation) override;
+
 private:
     void initOutputDevice();
 
@@ -66,8 +68,6 @@ private:
 
     QVector<Output::Mode> getModes() const;
 
-    int gammaRampSize() const override;
-    bool setGammaRamp(const GammaRamp &gamma) override;
     void updateCursor();
     void moveCursor();
 

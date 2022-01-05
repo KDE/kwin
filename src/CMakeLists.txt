@@ -34,6 +34,7 @@ target_sources(kwin PRIVATE
     client_machine.cpp
     colordevice.cpp
     colormanager.cpp
+    colors.cpp
     composite.cpp
     cursor.cpp
     cursordelegate_opengl.cpp

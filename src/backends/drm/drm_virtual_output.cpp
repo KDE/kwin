@@ -77,17 +77,6 @@ void DrmVirtualOutput::updateEnablement(bool enable)
     m_gpu->platform()->enableOutput(this, enable);
 }
 
-int DrmVirtualOutput::gammaRampSize() const
-{
-    return 200;
-}
-
-bool DrmVirtualOutput::setGammaRamp(const GammaRamp &gamma)
-{
-    Q_UNUSED(gamma);
-    return true;
-}
-
 DrmOutputLayer *DrmVirtualOutput::outputLayer() const
 {
     return m_layer.data();

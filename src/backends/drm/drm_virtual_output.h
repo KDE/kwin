@@ -30,8 +30,6 @@ public:
     ~DrmVirtualOutput() override;
 
     bool present() override;
-    int gammaRampSize() const override;
-    bool setGammaRamp(const GammaRamp &gamma) override;
     DrmOutputLayer *outputLayer() const override;
     void recreateSurface();
 

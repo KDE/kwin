@@ -38,8 +38,7 @@ public:
     int xineramaNumber() const;
     void setXineramaNumber(int number);
 
-    int gammaRampSize() const override;
-    bool setGammaRamp(const GammaRamp &gamma) override;
+    void setColorTransformation(const QSharedPointer<ColorTransformation> &transformation) override;
 
     void setPhysicalSize(const QSize &size);
     void setMode(const QSize &size, int refreshRate);

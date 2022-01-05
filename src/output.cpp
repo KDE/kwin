@@ -17,47 +17,6 @@
 namespace KWin
 {
 
-GammaRamp::GammaRamp(uint32_t size)
-    : m_table(3 * size)
-    , m_size(size)
-{
-}
-
-uint32_t GammaRamp::size() const
-{
-    return m_size;
-}
-
-uint16_t *GammaRamp::red()
-{
-    return m_table.data();
-}
-
-const uint16_t *GammaRamp::red() const
-{
-    return m_table.data();
-}
-
-uint16_t *GammaRamp::green()
-{
-    return m_table.data() + m_size;
-}
-
-const uint16_t *GammaRamp::green() const
-{
-    return m_table.data() + m_size;
-}
-
-uint16_t *GammaRamp::blue()
-{
-    return m_table.data() + 2 * m_size;
-}
-
-const uint16_t *GammaRamp::blue() const
-{
-    return m_table.data() + 2 * m_size;
-}
-
 QDebug operator<<(QDebug debug, const Output *output)
 {
     QDebugStateSaver saver(debug);
@@ -126,17 +85,6 @@ QString Output::serialNumber() const
 bool Output::isInternal() const
 {
     return m_internal;
-}
-
-int Output::gammaRampSize() const
-{
-    return 0;
-}
-
-bool Output::setGammaRamp(const GammaRamp &gamma)
-{
-    Q_UNUSED(gamma);
-    return false;
 }
 
 void Output::inhibitDirectScanout()
@@ -475,6 +423,11 @@ void Output::setRgbRangeInternal(RgbRange range)
 void Output::setPhysicalSizeInternal(const QSize &size)
 {
     m_physicalSize = size;
+}
+
+void Output::setColorTransformation(const QSharedPointer<ColorTransformation> &transformation)
+{
+    Q_UNUSED(transformation);
 }
 
 } // namespace KWin

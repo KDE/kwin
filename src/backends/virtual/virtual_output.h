@@ -32,19 +32,7 @@ public:
     SoftwareVsyncMonitor *vsyncMonitor() const;
 
     void init(const QPoint &logicalPosition, const QSize &pixelSize);
-
     void setGeometry(const QRect &geo);
-
-    int gammaRampSize() const override
-    {
-        return m_gammaSize;
-    }
-    bool setGammaRamp(const GammaRamp &gamma) override
-    {
-        Q_UNUSED(gamma);
-        return m_gammaResult;
-    }
-
     void updateEnablement(bool enable) override;
 
 private:

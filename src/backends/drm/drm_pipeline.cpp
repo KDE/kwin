@@ -175,6 +175,10 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
     }
     if (pending.crtc) {
         pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
+        const auto currentTransformation = pending.gamma ? pending.gamma->lut().transformation() : nullptr;
+        if (pending.colorTransformation != currentTransformation) {
+            pending.gamma = QSharedPointer<DrmGammaRamp>::create(pending.crtc, pending.colorTransformation);
+        }
         pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, pending.gamma ? pending.gamma->blobId() : 0);
         const auto modeSize = pending.mode->size();
         const auto buffer = pending.layer->currentBuffer().data();
@@ -471,18 +475,18 @@ DrmCrtc *DrmPipeline::currentCrtc() const
     return m_current.crtc;
 }
 
-DrmGammaRamp::DrmGammaRamp(DrmGpu *gpu, const GammaRamp &lut)
-    : m_gpu(gpu)
-    , m_lut(lut)
+DrmGammaRamp::DrmGammaRamp(DrmCrtc *crtc, const QSharedPointer<ColorTransformation> &transformation)
+    : m_gpu(crtc->gpu())
+    , m_lut(transformation, crtc->gammaRampSize())
 {
-    if (gpu->atomicModeSetting()) {
-        QVector<drm_color_lut> atomicLut(lut.size());
-        for (uint32_t i = 0; i < lut.size(); i++) {
-            atomicLut[i].red = lut.red()[i];
-            atomicLut[i].green = lut.green()[i];
-            atomicLut[i].blue = lut.blue()[i];
+    if (crtc->gpu()->atomicModeSetting()) {
+        QVector<drm_color_lut> atomicLut(m_lut.size());
+        for (uint32_t i = 0; i < m_lut.size(); i++) {
+            atomicLut[i].red = m_lut.red()[i];
+            atomicLut[i].green = m_lut.green()[i];
+            atomicLut[i].blue = m_lut.blue()[i];
         }
-        if (drmModeCreatePropertyBlob(gpu->fd(), atomicLut.data(), sizeof(drm_color_lut) * lut.size(), &m_blobId) != 0) {
+        if (drmModeCreatePropertyBlob(crtc->gpu()->fd(), atomicLut.data(), sizeof(drm_color_lut) * m_lut.size(), &m_blobId) != 0) {
             qCWarning(KWIN_DRM) << "Failed to create gamma blob!" << strerror(errno);
         }
     }
@@ -500,24 +504,9 @@ uint32_t DrmGammaRamp::blobId() const
     return m_blobId;
 }
 
-uint32_t DrmGammaRamp::size() const
+const ColorLUT &DrmGammaRamp::lut() const
 {
-    return m_lut.size();
-}
-
-uint16_t *DrmGammaRamp::red() const
-{
-    return const_cast<uint16_t *>(m_lut.red());
-}
-
-uint16_t *DrmGammaRamp::green() const
-{
-    return const_cast<uint16_t *>(m_lut.green());
-}
-
-uint16_t *DrmGammaRamp::blue() const
-{
-    return const_cast<uint16_t *>(m_lut.blue());
+    return m_lut;
 }
 
 void DrmPipeline::printFlags(uint32_t flags)
