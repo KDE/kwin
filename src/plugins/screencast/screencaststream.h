@@ -55,6 +55,9 @@ public:
 
     void setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport);
 
+public Q_SLOTS:
+     void recordCursor();
+
 Q_SIGNALS:
     void streamReady(quint32 nodeId);
     void startStreaming();

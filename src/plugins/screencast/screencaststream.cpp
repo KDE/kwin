@@ -305,6 +305,8 @@ bool ScreenCastStream::createStream()
         connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
             recordFrame(QRegion{m_cursor.lastRect} | cursorGeometry(Cursors::self()->currentCursor()));
         });
+    } else if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
+        connect(Cursors::self(), &Cursors::positionChanged, this, &ScreenCastStream::recordCursor);
     }
 
     return true;
@@ -454,6 +456,38 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
             r->region = SPA_REGION(0, 0, 0, 0);
         }
     }
+
+    tryEnqueue(buffer);
+}
+
+void ScreenCastStream::recordCursor()
+{
+    Q_ASSERT(!m_stopped);
+
+    if (m_pendingBuffer) {
+        qCWarning(KWIN_SCREENCAST) << "Dropping a screencast cursor update because the compositor is slow";
+        return;
+    }
+
+    const char *error = "";
+    auto state = pw_stream_get_state(pwStream, &error);
+    if (state != PW_STREAM_STATE_STREAMING) {
+        if (error) {
+            qCWarning(KWIN_SCREENCAST) << "Failed to record cursor position: stream is not active" << error;
+        }
+        return;
+    }
+
+    struct pw_buffer *buffer = pw_stream_dequeue_buffer(pwStream);
+
+    if (!buffer) {
+        return;
+    }
+
+    struct spa_buffer *spa_buffer = buffer->buffer;
+    spa_buffer->datas[0].chunk->size = 0;
+    sendCursorData(Cursors::self()->currentCursor(),
+                   (spa_meta_cursor *) spa_buffer_find_meta_data (spa_buffer, SPA_META_Cursor, sizeof (spa_meta_cursor)));
 
     tryEnqueue(buffer);
 }
