@@ -101,7 +101,7 @@ void DrmOutput::updateCursor()
         return;
     }
     const QImage cursorImage = cursor->image();
-    if (cursorImage.isNull()) {
+    if (cursorImage.isNull() || Cursors::self()->isCursorHidden()) {
         m_pipeline->setCursor(nullptr);
         return;
     }
