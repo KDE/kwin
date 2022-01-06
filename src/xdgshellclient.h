@@ -41,7 +41,8 @@ public:
     };
     Q_DECLARE_FLAGS(ConfigureFlags, ConfigureFlag)
 
-    QPoint position;
+    QRect bounds;
+    Gravity gravity;
     qreal serial;
     ConfigureFlags flags;
 };
@@ -76,6 +77,7 @@ protected:
     QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
 
     NET::WindowType m_windowType = NET::Normal;
+    Gravity m_nextGravity = Gravity::None;
 
 private:
     void setupPlasmaShellIntegration();
@@ -87,7 +89,6 @@ private:
     bool haveNextWindowGeometry() const;
     void setHaveNextWindowGeometry();
     void resetHaveNextWindowGeometry();
-    QRect adjustMoveResizeGeometry(const QRect &rect) const;
     void maybeUpdateMoveResizeGeometry(const QRect &rect);
 
     KWaylandServer::XdgSurfaceInterface *m_shellSurface;

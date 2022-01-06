@@ -137,6 +137,7 @@ void XdgSurfaceClient::sendConfigure()
         configureEvent->flags = previousEvent->flags;
     }
 
+    configureEvent->gravity = m_nextGravity;
     configureEvent->flags |= m_configureFlags;
     m_configureFlags = {};
 
@@ -199,6 +200,37 @@ void XdgSurfaceClient::maybeUpdateMoveResizeGeometry(const QRect &rect)
     setMoveResizeGeometry(rect);
 }
 
+static QRect gravitateGeometry(const QRect &rect, const QRect &bounds, Gravity gravity)
+{
+    QRect geometry = rect;
+
+    switch (gravity) {
+    case Gravity::TopLeft:
+        geometry.moveRight(bounds.right());
+        geometry.moveBottom(bounds.bottom());
+        break;
+    case Gravity::Top:
+    case Gravity::TopRight:
+        geometry.moveLeft(bounds.left());
+        geometry.moveBottom(bounds.bottom());
+        break;
+    case Gravity::Right:
+    case Gravity::BottomRight:
+    case Gravity::Bottom:
+    case Gravity::None:
+        geometry.moveLeft(bounds.left());
+        geometry.moveTop(bounds.top());
+        break;
+    case Gravity::BottomLeft:
+    case Gravity::Left:
+        geometry.moveRight(bounds.right());
+        geometry.moveTop(bounds.top());
+        break;
+    }
+
+    return geometry;
+}
+
 void XdgSurfaceClient::handleNextWindowGeometry()
 {
     const QRect boundingGeometry = surface()->boundingRect();
@@ -221,22 +253,13 @@ void XdgSurfaceClient::handleNextWindowGeometry()
     }
 
     QRect frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
-
-    // We're not done yet. The xdg-shell spec allows clients to attach buffers smaller than
-    // we asked. Normally, this is not a big deal, but when the client is being interactively
-    // resized, it may cause the window contents to bounce. In order to counter this, we have
-    // to "gravitate" the new geometry according to the current move-resize pointer mode so
-    // the opposite window corner stays still.
-
-    if (isInteractiveMoveResize()) {
-        frameGeometry = adjustMoveResizeGeometry(frameGeometry);
-    } else {
-        if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
-            if (configureEvent->flags & XdgSurfaceConfigure::ConfigurePosition) {
-                frameGeometry.moveTopLeft(configureEvent->position);
-            }
+    if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
+        if (configureEvent->flags & XdgSurfaceConfigure::ConfigurePosition) {
+            frameGeometry = gravitateGeometry(frameGeometry, configureEvent->bounds, configureEvent->gravity);
         }
+    }
 
+    if (!isInteractiveMoveResize()) {
         // Both the compositor and the client can change the window geometry. If the client
         // sets a new window geometry, the compositor's move-resize geometry will be invalid.
         maybeUpdateMoveResizeGeometry(frameGeometry);
@@ -258,37 +281,6 @@ void XdgSurfaceClient::setHaveNextWindowGeometry()
 void XdgSurfaceClient::resetHaveNextWindowGeometry()
 {
     m_haveNextWindowGeometry = false;
-}
-
-QRect XdgSurfaceClient::adjustMoveResizeGeometry(const QRect &rect) const
-{
-    QRect geometry = rect;
-
-    switch (interactiveMoveResizeGravity()) {
-    case Gravity::TopLeft:
-        geometry.moveRight(moveResizeGeometry().right());
-        geometry.moveBottom(moveResizeGeometry().bottom());
-        break;
-    case Gravity::Top:
-    case Gravity::TopRight:
-        geometry.moveLeft(moveResizeGeometry().left());
-        geometry.moveBottom(moveResizeGeometry().bottom());
-        break;
-    case Gravity::Right:
-    case Gravity::BottomRight:
-    case Gravity::Bottom:
-    case Gravity::None:
-        geometry.moveLeft(moveResizeGeometry().left());
-        geometry.moveTop(moveResizeGeometry().top());
-        break;
-    case Gravity::BottomLeft:
-    case Gravity::Left:
-        geometry.moveRight(moveResizeGeometry().right());
-        geometry.moveTop(moveResizeGeometry().top());
-        break;
-    }
-
-    return geometry;
 }
 
 void XdgSurfaceClient::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
@@ -866,7 +858,7 @@ XdgSurfaceConfigure *XdgToplevelClient::sendRoleConfigure() const
     const quint32 serial = m_shellSurface->sendConfigure(nextClientSize, m_nextStates);
 
     XdgToplevelConfigure *configureEvent = new XdgToplevelConfigure();
-    configureEvent->position = moveResizeGeometry().topLeft();
+    configureEvent->bounds = moveResizeGeometry();
     configureEvent->states = m_nextStates;
     configureEvent->decoration = m_nextDecoration;
     configureEvent->serial = serial;
@@ -1006,6 +998,7 @@ void XdgToplevelClient::doSetQuickTileMode()
 bool XdgToplevelClient::doStartInteractiveMoveResize()
 {
     if (interactiveMoveResizeGravity() != Gravity::None) {
+        m_nextGravity = interactiveMoveResizeGravity();
         m_nextStates |= XdgToplevelInterface::State::Resizing;
         scheduleConfigure();
     }
@@ -2031,7 +2024,7 @@ XdgSurfaceConfigure *XdgPopupClient::sendRoleConfigure() const
     const quint32 serial = m_shellSurface->sendConfigure(QRect(popupPosition, moveResizeGeometry().size()));
 
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
-    configureEvent->position = moveResizeGeometry().topLeft();
+    configureEvent->bounds = moveResizeGeometry();
     configureEvent->serial = serial;
 
     return configureEvent;
