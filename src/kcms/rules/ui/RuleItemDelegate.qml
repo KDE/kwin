@@ -13,10 +13,6 @@ import org.kde.kcmutils as KCM
 QQC2.ItemDelegate {
     id: ruleDelegate
 
-    property bool ruleEnabled: model.enabled
-
-    Kirigami.Theme.colorSet: Kirigami.Theme.View
-
     width: ListView.view.width
     highlighted: false
     hoverEnabled: false
@@ -76,7 +72,6 @@ QQC2.ItemDelegate {
                 Layout.alignment: Qt.AlignVCenter
 
                 visible: count > 0
-                enabled: ruleEnabled
 
                 model: policyModel
                 onActivated: {
@@ -89,8 +84,6 @@ QQC2.ItemDelegate {
                 Layout.preferredWidth: 50  // 50%
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-
-                enabled: model.enabled
 
                 ruleValue: model.value
                 ruleOptions: model.options

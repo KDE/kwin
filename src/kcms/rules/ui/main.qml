@@ -14,7 +14,6 @@ import org.kde.kirigami 2.12 as Kirigami
 KCM.ScrollViewKCM {
     id: rulesListKCM
 
-    // FIXME: ScrollViewKCM.qml:73:13: QML Control: Binding loop detected for property "implicitHeight"
     implicitWidth: Kirigami.Units.gridUnit * 35
     implicitHeight: Kirigami.Units.gridUnit * 35
 

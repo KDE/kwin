@@ -124,7 +124,7 @@ Loader {
             multipleChoice: true
 
             onActivated: {
-                let selectionList = []
+                const selectionList = []
                 for (let i = 0; i < count; i++) {
                     if (selectionMask & (1 << i)) {
                         selectionList.push(model.data(model.index(i,0), Qt.UserRole))

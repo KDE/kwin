@@ -297,7 +297,7 @@ KCM.ScrollViewKCM {
             case RuleItem.Option:
                 return options.textOfValue(value);
             case RuleItem.NetTypes:
-                var selectedValue = value.toString(2).length - 1;
+                const selectedValue = value.toString(2).length - 1;
                 return options.textOfValue(selectedValue);
             case RuleItem.OptionList:
                 return Array.from(value, item => options.textOfValue(item) ).join(", ");
@@ -309,7 +309,7 @@ KCM.ScrollViewKCM {
         id: enabledRulesModel
         sourceModel: kcm.rulesModel
         filterRowCallback: (source_row, source_parent) => {
-            var index = sourceModel.index(source_row, 0, source_parent);
+            const index = sourceModel.index(source_row, 0, source_parent);
             return sourceModel.data(index, RulesModel.EnabledRole);
         }
     }
@@ -325,13 +325,13 @@ KCM.ScrollViewKCM {
 
         filterString: searchField.text.trim().toLowerCase()
         filterRowCallback: (source_row, source_parent) => {
-            var index = sourceModel.index(source_row, 0, source_parent);
+            const index = sourceModel.index(source_row, 0, source_parent);
 
-            var hasSuggestion = sourceModel.data(index, RulesModel.SuggestedValueRole) != null;
-            var isOptional = sourceModel.data(index, RulesModel.SelectableRole);
-            var isEnabled = sourceModel.data(index, RulesModel.EnabledRole);
+            const hasSuggestion = sourceModel.data(index, RulesModel.SuggestedValueRole) != null;
+            const isOptional = sourceModel.data(index, RulesModel.SelectableRole);
+            const isEnabled = sourceModel.data(index, RulesModel.EnabledRole);
 
-            var showItem = hasSuggestion || (!onlySuggestions && isOptional && !isEnabled);
+            const showItem = hasSuggestion || (!onlySuggestions && isOptional && !isEnabled);
 
             if (!showItem) {
                 return false;
