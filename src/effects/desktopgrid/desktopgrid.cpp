@@ -445,7 +445,7 @@ void DesktopGridEffect::slotWindowClosed(EffectWindow* w)
         windowMove = nullptr;
     }
     if (isUsingPresentWindows()) {
-        const auto desktops = desktopList(windowMove);
+        const auto desktops = desktopList(w);
         for (const int i : desktops) {
             WindowMotionManager& manager = m_managers[w->screen()][i];
             manager.unmanage(w);
