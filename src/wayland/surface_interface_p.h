@@ -104,6 +104,7 @@ public:
     QMatrix4x4 surfaceToBufferMatrix;
     QMatrix4x4 bufferToSurfaceMatrix;
     QSize bufferSize;
+    QSize implicitSurfaceSize;
     QSize surfaceSize;
     QRegion inputRegion;
     ClientBuffer *bufferRef = nullptr;

@@ -441,7 +441,7 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
     if (current.viewport.sourceGeometry.isValid()) {
         sourceSize = current.viewport.sourceGeometry.size();
     } else {
-        sourceSize = bufferSize / current.bufferScale;
+        sourceSize = implicitSurfaceSize;
     }
 
     if (sourceSize != surfaceSize) {
@@ -556,28 +556,32 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     // TODO: Refactor the state management code because it gets more clumsy.
     if (current.buffer) {
         bufferSize = current.buffer->size();
+
+        implicitSurfaceSize = current.buffer->size() / current.bufferScale;
+        switch (current.bufferTransform) {
+        case OutputInterface::Transform::Rotated90:
+        case OutputInterface::Transform::Rotated270:
+        case OutputInterface::Transform::Flipped90:
+        case OutputInterface::Transform::Flipped270:
+            implicitSurfaceSize.transpose();
+            break;
+        case OutputInterface::Transform::Normal:
+        case OutputInterface::Transform::Rotated180:
+        case OutputInterface::Transform::Flipped:
+        case OutputInterface::Transform::Flipped180:
+            break;
+        }
+
         if (current.viewport.destinationSize.isValid()) {
             surfaceSize = current.viewport.destinationSize;
         } else if (current.viewport.sourceGeometry.isValid()) {
             surfaceSize = current.viewport.sourceGeometry.size().toSize();
         } else {
-            surfaceSize = current.buffer->size() / current.bufferScale;
-            switch (current.bufferTransform) {
-            case OutputInterface::Transform::Rotated90:
-            case OutputInterface::Transform::Rotated270:
-            case OutputInterface::Transform::Flipped90:
-            case OutputInterface::Transform::Flipped270:
-                surfaceSize.transpose();
-                break;
-            case OutputInterface::Transform::Normal:
-            case OutputInterface::Transform::Rotated180:
-            case OutputInterface::Transform::Flipped:
-            case OutputInterface::Transform::Flipped180:
-                break;
-            }
+            surfaceSize = implicitSurfaceSize;
         }
     } else {
         surfaceSize = QSize();
+        implicitSurfaceSize = QSize();
         bufferSize = QSize();
     }
 
