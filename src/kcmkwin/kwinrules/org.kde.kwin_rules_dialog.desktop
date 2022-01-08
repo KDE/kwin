@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Window Rules
+NoDisplay=true
+Exec=kwin_rules_dialog
+Icon=preferences-system-windows-actions
