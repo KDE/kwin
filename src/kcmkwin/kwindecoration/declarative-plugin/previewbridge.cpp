@@ -147,16 +147,7 @@ DecorationButton *PreviewBridge::createButton(KDecoration2::Decoration *decorati
     if (!m_valid) {
         return nullptr;
     }
-    auto button = m_factory->create<KDecoration2::DecorationButton>(parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
-#if KCOREADDONS_BUILD_DEPRECATED_SINCE(5, 87)
-    if (!button) {
-        button = m_factory->create<KDecoration2::DecorationButton>(QStringLiteral("button"), parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
-        if (button) {
-            qWarning() << "Loading a KDecoration2::DecorationButton using the button keyword is deprecated in KWin 5.23, register the plugin without a keyword instead" << m_plugin;
-        }
-    }
-#endif
-    return button;
+    return m_factory->create<KDecoration2::DecorationButton>(parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
 }
 
 void PreviewBridge::configure(QQuickItem *ctx)
@@ -177,18 +168,7 @@ void PreviewBridge::configure(QQuickItem *ctx)
         args.insert(QStringLiteral("theme"), m_theme);
     }
 
-    KCModule *kcm = nullptr;
-
-    kcm = m_factory->create<KCModule>(dialog, QVariantList({args}));
-
-#if KCOREADDONS_BUILD_DEPRECATED_SINCE(5, 87)
-    if (!kcm) {
-        kcm = m_factory->create<KCModule>(QStringLiteral("kcmodule"), dialog, QVariantList({args}));
-        if (kcm) {
-            qWarning() << "Loading a KCModule using the kcmodule keyword is deprecated in KWin 5.23, register the plugin without a keyword instead" << m_theme;
-        }
-    }
-#endif
+    KCModule *kcm = m_factory->create<KCModule>(dialog, QVariantList({args}));
 
     if (!kcm) {
         return;
