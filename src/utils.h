@@ -171,33 +171,6 @@ Qt::MouseButtons KWIN_EXPORT x11ToQtMouseButtons(int state);
 Qt::KeyboardModifiers KWIN_EXPORT x11ToQtKeyboardModifiers(int state);
 
 /**
- * Separate the concept of an unet QPoint and 0,0
- */
-class ClearablePoint
-{
-public:
-    inline bool isValid() const {
-        return m_valid;
-    }
-
-    inline void clear(){
-        m_valid = false;
-    }
-
-    inline void setPoint(const QPoint &point) {
-        m_point = point; m_valid = true;
-    }
-
-    inline QPoint point() const {
-        return m_point;
-    }
-
-private:
-    QPoint m_point;
-    bool m_valid = false;
-};
-
-/**
  * QProcess subclass which unblocks SIGUSR in the child process.
  */
 class KWIN_EXPORT Process : public QProcess
