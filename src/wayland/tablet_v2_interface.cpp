@@ -91,7 +91,7 @@ public:
     TabletCursorV2 *const q;
 
     quint32 m_serial = 0;
-    SurfaceInterface *m_surface = nullptr;
+    QPointer<SurfaceInterface> m_surface;
     QPoint m_hotspot;
 };
 
