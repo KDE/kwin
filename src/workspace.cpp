@@ -2416,9 +2416,8 @@ AbstractOutput *Workspace::activeOutput() const
         return kwinApp()->platform()->outputAt(Cursors::self()->mouse()->pos());
     }
 
-    AbstractClient *client = Workspace::self()->activeClient();
-    if (active_client && !client->isOnOutput(m_activeOutput)) {
-        return client->output();
+    if (active_client && !active_client->isOnOutput(m_activeOutput)) {
+        return active_client->output();
     }
 
     return m_activeOutput;
