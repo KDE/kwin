@@ -15,6 +15,7 @@
 #include "platform.h"
 #include "effects.h"
 #include "tabletmodemanager.h"
+#include "utils/scheduler.h"
 
 #include "wayland_server.h"
 #include "xwl/xwayland.h"
@@ -49,12 +50,6 @@
 #include <sys/procctl.h>
 #endif
 
-#if HAVE_LIBCAP
-#include <sys/capability.h>
-#endif
-
-#include <sched.h>
-
 #include <iostream>
 #include <iomanip>
 
@@ -81,30 +76,6 @@ void disableDrKonqi()
 // run immediately, before Q_CORE_STARTUP functions
 // that would enable drkonqi
 Q_CONSTRUCTOR_FUNCTION(disableDrKonqi)
-
-enum class RealTimeFlags
-{
-    DontReset,
-    ResetOnFork
-};
-
-namespace {
-void gainRealTime(RealTimeFlags flags = RealTimeFlags::DontReset)
-{
-#if HAVE_SCHED_RESET_ON_FORK
-    const int minPriority = sched_get_priority_min(SCHED_RR);
-    struct sched_param sp;
-    sp.sched_priority = minPriority;
-    int policy = SCHED_RR;
-    if (flags == RealTimeFlags::ResetOnFork) {
-        policy |= SCHED_RESET_ON_FORK;
-    }
-    sched_setscheduler(0, policy, &sp);
-#else
-    Q_UNUSED(flags);
-#endif
-}
-}
 
 //************************************
 // ApplicationWayland
@@ -140,6 +111,8 @@ ApplicationWayland::~ApplicationWayland()
 
 void ApplicationWayland::performStartup()
 {
+    Scheduler::gainRealTime();
+
     if (m_startXWayland) {
         setOperationMode(OperationModeXwayland);
     }
@@ -155,9 +128,6 @@ void ApplicationWayland::performStartup()
 
     // try creating the Wayland Backend
     createInput();
-    // now libinput thread has been created, adjust scheduler to not leak into other processes
-    gainRealTime(RealTimeFlags::ResetOnFork);
-
     createInputMethod();
     TabletModeManager::create(this);
     createPlugins();
@@ -337,27 +307,6 @@ static void unsetDumpable(int sig)
     return;
 }
 
-void dropNiceCapability()
-{
-#if HAVE_LIBCAP
-    cap_t caps = cap_get_proc();
-    if (!caps) {
-        return;
-    }
-    cap_value_t capList[] = { CAP_SYS_NICE };
-    if (cap_set_flag(caps, CAP_PERMITTED, 1, capList, CAP_CLEAR) == -1) {
-        cap_free(caps);
-        return;
-    }
-    if (cap_set_flag(caps, CAP_EFFECTIVE, 1, capList, CAP_CLEAR) == -1) {
-        cap_free(caps);
-        return;
-    }
-    cap_set_proc(caps);
-    cap_free(caps);
-#endif
-}
-
 } // namespace
 
 int main(int argc, char * argv[])
@@ -365,8 +314,6 @@ int main(int argc, char * argv[])
     KWin::disablePtrace();
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
-    KWin::gainRealTime();
-    KWin::dropNiceCapability();
 
     if (signal(SIGTERM, KWin::sighandler) == SIG_IGN)
         signal(SIGTERM, SIG_IGN);

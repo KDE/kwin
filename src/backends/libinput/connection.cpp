@@ -19,6 +19,7 @@
 #include "workspace.h"
 #include "abstract_client.h"
 #endif
+#include "utils/scheduler.h"
 
 #include "input_event.h"
 #include "session.h"
@@ -151,6 +152,8 @@ void Connection::setup()
 void Connection::doSetup()
 {
     Q_ASSERT(!m_notifier);
+    Scheduler::gainRealTime();
+
     m_notifier = new QSocketNotifier(m_input->fileDescriptor(), QSocketNotifier::Read, this);
     connect(m_notifier, &QSocketNotifier::activated, this, &Connection::handleEvent);
 
