@@ -41,6 +41,7 @@ ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
 )
 
 add_library(KWinIntegrationTestFramework SHARED ${KWinIntegrationTestFramework_SOURCES})
+kcoreaddons_target_static_plugins(KWinIntegrationTestFramework "kwin/effects/plugins" LINK_OPTION "PRIVATE")
 target_link_libraries(KWinIntegrationTestFramework
     PUBLIC
         Qt::Test
