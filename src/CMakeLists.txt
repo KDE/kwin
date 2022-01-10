@@ -32,6 +32,8 @@ target_sources(kwin PRIVATE
     appmenu.cpp
     atoms.cpp
     client_machine.cpp
+    colordevice.cpp
+    colormanager.cpp
     composite.cpp
     cursor.cpp
     cursordelegate_opengl.cpp
@@ -201,6 +203,7 @@ target_link_libraries(kwin
     epoxy::epoxy
 
     Threads::Threads
+    lcms2::lcms2
 )
 if (QT_MAJOR_VERSION EQUAL "5")
     target_link_libraries(kwin Qt5::XkbCommonSupportPrivate)
@@ -244,14 +247,6 @@ target_sources(kwin PRIVATE
 add_subdirectory(backends)
 add_subdirectory(scenes)
 add_subdirectory(utils)
-
-if (KWIN_BUILD_CMS)
-    target_sources(kwin PRIVATE
-        colordevice.cpp
-        colormanager.cpp
-    )
-    target_link_libraries(kwin lcms2::lcms2)
-endif()
 
 if (KWIN_BUILD_ACTIVITIES)
     target_sources(kwin PRIVATE activities.cpp)

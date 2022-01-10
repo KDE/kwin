@@ -237,9 +237,9 @@ find_package(lcms2)
 set_package_properties(lcms2 PROPERTIES
     DESCRIPTION "Small-footprint color management engine"
     URL "http://www.littlecms.com"
-    TYPE OPTIONAL
+    TYPE REQUIRED
+    PURPOSE "Required for the color management system"
 )
-add_feature_info("lcms2" lcms2_FOUND "Required for the color management system")
 
 # All the required XCB components
 find_package(XCB 1.10 REQUIRED COMPONENTS
@@ -345,7 +345,6 @@ option(KWIN_BUILD_SCREENLOCKER "Enable building of KWin lockscreen functionality
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF5Activities_FOUND" OFF)
 cmake_dependent_option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON "KF5Runner_FOUND" OFF)
-cmake_dependent_option(KWIN_BUILD_CMS "Enable building of KWin with CMS" ON "lcms2_FOUND" OFF)
 
 # Binary name of KWin
 set(KWIN_NAME "kwin")
