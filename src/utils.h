@@ -23,7 +23,6 @@
 #include <QPoint>
 #include <QRect>
 #include <QScopedPointer>
-#include <QProcess>
 // system
 #include <climits>
 Q_DECLARE_LOGGING_CATEGORY(KWIN_CORE)
@@ -169,22 +168,6 @@ Qt::MouseButton x11ToQtMouseButton(int button);
 Qt::MouseButton KWIN_EXPORT x11ToQtMouseButton(int button);
 Qt::MouseButtons KWIN_EXPORT x11ToQtMouseButtons(int state);
 Qt::KeyboardModifiers KWIN_EXPORT x11ToQtKeyboardModifiers(int state);
-
-/**
- * QProcess subclass which unblocks SIGUSR in the child process.
- */
-class KWIN_EXPORT Process : public QProcess
-{
-    Q_OBJECT
-public:
-    explicit Process(QObject *parent = nullptr);
-    ~Process() override;
-
-#ifndef KCMRULES
-protected:
-    void setupChildProcess() override;
-#endif
-};
 
 /**
  * The DamageJournal class is a helper that tracks last N damage regions.

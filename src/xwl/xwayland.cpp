@@ -181,7 +181,7 @@ bool Xwayland::startInternal()
     arguments << QStringLiteral("-rootless");
     arguments << QStringLiteral("-wm") << QString::number(fd);
 
-    m_xwaylandProcess = new Process(this);
+    m_xwaylandProcess = new QProcess(this);
     m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
     m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
     QProcessEnvironment env = m_app->processStartupEnvironment();

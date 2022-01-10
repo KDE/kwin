@@ -311,7 +311,7 @@ void UserActionsMenu::init()
                     args << QStringLiteral("--desktopfile") << path;
                 }
                 args << configModules(false);
-                QProcess *p = new Process(this);
+                QProcess *p = new QProcess(this);
                 p->setArguments(args);
                 p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
                 p->setProgram(QStringLiteral("kcmshell5"));

@@ -231,7 +231,7 @@ void ApplicationWayland::startSession()
         QStringList arguments = KShell::splitArgs(m_sessionArgument);
         if (!arguments.isEmpty()) {
             QString program = arguments.takeFirst();
-            QProcess *p = new Process(this);
+            QProcess *p = new QProcess(this);
             p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
             p->setProcessEnvironment(processStartupEnvironment());
             connect(p, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this, [p] (int code, QProcess::ExitStatus status) {
@@ -268,7 +268,7 @@ void ApplicationWayland::startSession()
             QString program = arguments.takeFirst();
             // note: this will kill the started process when we exit
             // this is going to happen anyway as we are the wayland and X server the app connects to
-            QProcess *p = new Process(this);
+            QProcess *p = new QProcess(this);
             p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
             p->setProcessEnvironment(processStartupEnvironment());
             p->setProgram(program);
@@ -377,12 +377,6 @@ int main(int argc, char * argv[])
     signal(SIGABRT, KWin::unsetDumpable);
     signal(SIGSEGV, KWin::unsetDumpable);
     signal(SIGPIPE, SIG_IGN);
-    // ensure that no thread takes SIGUSR
-    sigset_t userSignals;
-    sigemptyset(&userSignals);
-    sigaddset(&userSignals, SIGUSR1);
-    sigaddset(&userSignals, SIGUSR2);
-    pthread_sigmask(SIG_BLOCK, &userSignals, nullptr);
 
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
 

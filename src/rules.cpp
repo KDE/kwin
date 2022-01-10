@@ -1003,7 +1003,7 @@ void RuleBook::edit(AbstractClient* c, bool whole_app)
     args << QStringLiteral("--uuid") << c->internalId().toString();
     if (whole_app)
         args << QStringLiteral("--whole-app");
-    QProcess *p = new Process(this);
+    QProcess *p = new QProcess(this);
     p->setArguments(args);
     p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
     const QFileInfo buildDirBinary{QDir{QCoreApplication::applicationDirPath()}, QStringLiteral("kwin_rules_dialog")};
