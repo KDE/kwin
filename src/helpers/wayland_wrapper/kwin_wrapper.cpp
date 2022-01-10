@@ -20,6 +20,8 @@
  * Usage kwin_wayland_wrapper [argForKwin] [argForKwin] ...
  */
 
+#include "config-kwin.h"
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QProcess>
@@ -34,6 +36,29 @@
 #include "xwaylandsocket.h"
 #include "xauthority.h"
 #include "wrapper_logging.h"
+
+#include <sched.h>
+
+class CompositorProcess : public QProcess
+{
+    Q_OBJECT
+
+public:
+    explicit CompositorProcess(QObject *parent = nullptr)
+        : QProcess(parent)
+    {
+    }
+
+protected:
+    void setupChildProcess() override
+    {
+#if HAVE_SCHED_RESET_ON_FORK
+        struct sched_param params;
+        params.sched_priority = sched_get_priority_min(SCHED_RR);
+        sched_setscheduler(processId(), SCHED_RR | SCHED_RESET_ON_FORK, &params);
+#endif
+    }
+};
 
 class KWinWrapper : public QObject
 {
@@ -55,7 +80,7 @@ private:
 
 KWinWrapper::KWinWrapper(QObject *parent)
     : QObject(parent)
-    , m_kwinProcess(new QProcess(this))
+    , m_kwinProcess(new CompositorProcess(this))
 {
     m_socket = wl_socket_create();
     if (!m_socket) {

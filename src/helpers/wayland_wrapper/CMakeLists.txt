@@ -18,4 +18,15 @@ add_executable(kwin_wayland_wrapper ${kwin_wayland_wrapper_SOURCES})
 
 target_link_libraries(kwin_wayland_wrapper Qt5::Core Qt5::DBus KF5::DBusAddons KWinXwaylandCommon)
 set_property(TARGET kwin_wayland_wrapper PROPERTY C_STANDARD 11)
+
+if (HAVE_LIBCAP)
+    install(
+    CODE "execute_process(
+            COMMAND
+                ${SETCAP_EXECUTABLE}
+                CAP_SYS_NICE=+ep
+                \$ENV{DESTDIR}${CMAKE_INSTALL_FULL_BINDIR}/kwin_wayland_wrapper)"
+    )
+endif()
+
 install(TARGETS kwin_wayland_wrapper ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

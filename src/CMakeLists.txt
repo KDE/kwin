@@ -290,20 +290,8 @@ target_link_libraries(kwin_wayland
     KF5::Crash
     KWinXwaylandServerModule
 )
-if (HAVE_LIBCAP)
-    target_link_libraries(kwin_wayland ${Libcap_LIBRARIES})
-endif()
 
 install(TARGETS kwin_wayland ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-if (HAVE_LIBCAP)
-    install(
-    CODE "execute_process(
-            COMMAND
-                ${SETCAP_EXECUTABLE}
-                CAP_SYS_NICE=+ep
-                \$ENV{DESTDIR}${CMAKE_INSTALL_FULL_BINDIR}/kwin_wayland)"
-    )
-endif()
 
 add_subdirectory(platformsupport)
 add_subdirectory(plugins)
