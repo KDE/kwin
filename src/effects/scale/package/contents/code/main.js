@@ -53,6 +53,11 @@ class ScaleEffect {
             return false;
         }
 
+        // Don't animate utility windows (e.g. Gimp's toolboxes)
+        if (window.utility) {
+            return false;
+        }
+
         if (window.hasDecoration) {
             return true;
         }
