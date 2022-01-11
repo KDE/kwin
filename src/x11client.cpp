@@ -193,6 +193,7 @@ X11Client::X11Client()
     m_syncRequest.timeout = m_syncRequest.failsafeTimeout = nullptr;
     m_syncRequest.lastTimestamp = xTime();
     m_syncRequest.isPending = false;
+    m_syncRequest.interactiveResize = false;
 
     // Set the initial mapping state
     mapping_state = Withdrawn;
@@ -2290,6 +2291,7 @@ void X11Client::sendSyncRequest()
                 }
                 // failed during resize
                 m_syncRequest.isPending = false;
+                m_syncRequest.interactiveResize = false;
                 m_syncRequest.counter = XCB_NONE;
                 m_syncRequest.alarm = XCB_NONE;
                 delete m_syncRequest.timeout;
@@ -2321,6 +2323,7 @@ void X11Client::sendSyncRequest()
     sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request,
                       m_syncRequest.value.lo, m_syncRequest.value.hi);
     m_syncRequest.isPending = true;
+    m_syncRequest.interactiveResize = isInteractiveResize();
     m_syncRequest.lastTimestamp = xTime();
 }
 
@@ -2766,21 +2769,21 @@ void X11Client::handleSync()
     if (m_syncRequest.failsafeTimeout) {
         m_syncRequest.failsafeTimeout->stop();
     }
-    if (isInteractiveResize()) {
+
+    // Sync request can be acknowledged shortly after finishing resize.
+    if (m_syncRequest.interactiveResize) {
+        m_syncRequest.interactiveResize = false;
         if (m_syncRequest.timeout) {
             m_syncRequest.timeout->stop();
         }
         performInteractiveResize();
         updateWindowPixmap();
-    } else // setReadyForPainting does as well, but there's a small chance for resize syncs after the resize ended
-        addRepaintFull();
+    }
 }
 
 void X11Client::performInteractiveResize()
 {
-    if (isInteractiveResize()) {
-        resize(moveResizeGeometry().size());
-    }
+    resize(moveResizeGeometry().size());
 }
 
 bool X11Client::belongToSameApplication(const X11Client *c1, const X11Client *c2, SameApplicationChecks checks)
@@ -4544,17 +4547,12 @@ void X11Client::leaveInteractiveMoveResize()
     move_resize_has_keyboard_grab = false;
     xcb_ungrab_pointer(connection(), xTime());
     m_moveResizeGrabWindow.reset();
-    if (m_syncRequest.counter == XCB_NONE) { // don't forget to sanitize since the timeout will no more fire
-        m_syncRequest.isPending = false;
-    }
-    delete m_syncRequest.timeout;
-    m_syncRequest.timeout = nullptr;
     AbstractClient::leaveInteractiveMoveResize();
 }
 
 bool X11Client::isWaitingForInteractiveMoveResizeSync() const
 {
-    return m_syncRequest.isPending && isInteractiveResize();
+    return m_syncRequest.isPending && m_syncRequest.interactiveResize;
 }
 
 void X11Client::doInteractiveResizeSync()
@@ -4564,13 +4562,19 @@ void X11Client::doInteractiveResizeSync()
         connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Client::handleSyncTimeout);
         m_syncRequest.timeout->setSingleShot(true);
     }
+
     if (m_syncRequest.counter != XCB_NONE) {
         m_syncRequest.timeout->start(250);
         sendSyncRequest();
-    } else {                              // for clients not supporting the XSYNC protocol, we
-        m_syncRequest.isPending = true;   // limit the resizes to 30Hz to take pointless load from X11
-        m_syncRequest.timeout->start(33); // and the client, the mouse is still moved at full speed
-    }                                     // and no human can control faster resizes anyway
+    } else {
+        // For clients not supporting the XSYNC protocol, we limit the resizes to 30Hz
+        // to take pointless load from X11 and the client, the mouse is still moved at
+        // full speed and no human can control faster resizes anyway.
+        m_syncRequest.isPending = true;
+        m_syncRequest.interactiveResize = true;
+        m_syncRequest.timeout->start(33);
+    }
+
     const QRect moveResizeClientGeometry = frameRectToClientRect(moveResizeGeometry());
     const QRect moveResizeBufferGeometry = frameRectToBufferRect(moveResizeGeometry());
 
@@ -4585,9 +4589,10 @@ void X11Client::doInteractiveResizeSync()
 
 void X11Client::handleSyncTimeout()
 {
-    if (m_syncRequest.counter == XCB_NONE) { // client w/o XSYNC support. allow the next resize event
-        m_syncRequest.isPending = false;     // NEVER do this for clients with a valid counter
-    }                                        // (leads to sync request races in some clients)
+    if (m_syncRequest.counter == XCB_NONE) {     // client w/o XSYNC support. allow the next resize event
+        m_syncRequest.isPending = false;         // NEVER do this for clients with a valid counter
+        m_syncRequest.interactiveResize = false; // (leads to sync request races in some clients)
+    }
     performInteractiveResize();
 }
 

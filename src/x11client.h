@@ -291,6 +291,7 @@ public:
         xcb_timestamp_t lastTimestamp;
         QTimer *timeout, *failsafeTimeout;
         bool isPending;
+        bool interactiveResize;
     };
     const SyncRequest &syncRequest() const {
         return m_syncRequest;
