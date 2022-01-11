@@ -403,7 +403,8 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2IconPixmap |
         NET::WM2OpaqueRegion |
         NET::WM2DesktopFileName |
-        NET::WM2GTKFrameExtents;
+        NET::WM2GTKFrameExtents |
+        NET::WM2GTKApplicationId;
 
     auto wmClientLeaderCookie = fetchWmClientLeader();
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
@@ -456,7 +457,11 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
 
     setModal((info->state() & NET::Modal) != 0);   // Needs to be valid before handling groups
     readTransientProperty(transientCookie);
-    setDesktopFileName(rules()->checkDesktopFile(QByteArray(info->desktopFileName()), true).toUtf8());
+    QByteArray desktopFileName{info->desktopFileName()};
+    if (desktopFileName.isEmpty()) {
+        desktopFileName = info->gtkApplicationId();
+    }
+    setDesktopFileName(rules()->checkDesktopFile(desktopFileName, true).toUtf8());
     getIcons();
     connect(this, &X11Client::desktopFileNameChanged, this, &X11Client::getIcons);
 
