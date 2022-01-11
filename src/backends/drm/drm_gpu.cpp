@@ -521,7 +521,7 @@ void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, un
     if (timestamp == std::chrono::nanoseconds::zero()) {
         qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on gpu %s",
                 sec, usec, qPrintable(gpu->devNode()));
-        timestamp = std::chrono::steady_clock::now().time_since_epoch();
+        timestamp = std::chrono::steady_clock::now().time_since_epoch() - std::chrono::milliseconds(3);
     }
     const auto pipelines = gpu->pipelines();
     auto it = std::find_if(pipelines.begin(), pipelines.end(), [crtc_id](const auto &pipeline) {
