@@ -84,8 +84,7 @@ bool DrmPipeline::applyPendingChangesLegacy()
     if (!pending.active && pending.crtc) {
         drmModeSetCursor(gpu()->fd(), pending.crtc->id(), 0, 0, 0);
     }
-    if (pending.active) {
-        Q_ASSERT(pending.crtc);
+    if (activePending()) {
         auto vrr = pending.crtc->getProp(DrmCrtc::PropertyIndex::VrrEnabled);
         if (vrr && !vrr->setPropertyLegacy(pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive)) {
             qCWarning(KWIN_DRM) << "Setting vrr failed!" << strerror(errno);
@@ -106,7 +105,7 @@ bool DrmPipeline::applyPendingChangesLegacy()
         setCursorLegacy();
         moveCursorLegacy();
     }
-    if (!m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(pending.active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
+    if (pending.crtc && !m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(pending.active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
         qCWarning(KWIN_DRM) << "Setting legacy dpms failed!" << strerror(errno);
         return false;
     }
