@@ -9,13 +9,13 @@
 */
 #include "openglbackend.h"
 #include <kwineffects.h>
+#include <kwinglutils_funcs.h>
 
 #include "screens.h"
 #include "utils.h"
 
 #include <QElapsedTimer>
 
-#include <epoxy/gl.h>
 #include <unistd.h>
 
 namespace KWin
@@ -102,7 +102,7 @@ SurfaceTexture *OpenGLBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
 
 bool OpenGLBackend::checkGraphicsReset()
 {
-    const GLenum status = glGetGraphicsResetStatus();
+    const GLenum status = KWin::glGetGraphicsResetStatus();
     if (Q_LIKELY(status == GL_NO_ERROR)) {
         return false;
     }
@@ -125,7 +125,7 @@ bool OpenGLBackend::checkGraphicsReset()
     timer.start();
 
     // Wait until the reset is completed or max 10 seconds
-    while (timer.elapsed() < 10000 && glGetGraphicsResetStatus() != GL_NO_ERROR) {
+    while (timer.elapsed() < 10000 && KWin::glGetGraphicsResetStatus() != GL_NO_ERROR) {
         usleep(50);
     }
 
