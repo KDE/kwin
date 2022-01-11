@@ -158,11 +158,6 @@ public:
     }
 };
 
-// the docs say it's UrgencyHint, but it's often #defined as XUrgencyHint
-#ifndef UrgencyHint
-#define UrgencyHint XUrgencyHint
-#endif
-
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states
 Qt::MouseButton x11ToQtMouseButton(int button);
 Qt::MouseButton KWIN_EXPORT x11ToQtMouseButton(int button);
