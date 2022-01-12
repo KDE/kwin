@@ -430,22 +430,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_resize(Resource *resource, ::wl_r
     }
 
     SeatInterface *seat = SeatInterface::get(seatResource);
-
-    Qt::Edges edges;
-    if (xdgEdges & XDG_TOPLEVEL_RESIZE_EDGE_TOP) {
-        edges |= Qt::TopEdge;
-    }
-    if (xdgEdges & XDG_TOPLEVEL_RESIZE_EDGE_RIGHT) {
-        edges |= Qt::RightEdge;
-    }
-    if (xdgEdges & XDG_TOPLEVEL_RESIZE_EDGE_BOTTOM) {
-        edges |= Qt::BottomEdge;
-    }
-    if (xdgEdges & XDG_TOPLEVEL_RESIZE_EDGE_LEFT) {
-        edges |= Qt::LeftEdge;
-    }
-
-    Q_EMIT q->resizeRequested(seat, edges, serial);
+    Q_EMIT q->resizeRequested(seat, XdgToplevelInterface::ResizeAnchor(xdgEdges), serial);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_max_size(Resource *resource, int32_t width, int32_t height)

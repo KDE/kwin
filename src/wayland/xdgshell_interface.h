@@ -210,6 +210,19 @@ public:
     };
     Q_DECLARE_FLAGS(States, State)
 
+    enum class ResizeAnchor {
+        None = 0,
+        Top = 1,
+        Bottom = 2,
+        Left = 4,
+        TopLeft = 5,
+        BottomLeft = 6,
+        Right = 8,
+        TopRight = 9,
+        BottomRight = 10,
+    };
+    Q_ENUM(ResizeAnchor)
+
     /**
      * Constructs an XdgToplevelInterface for the given xdg-surface \a surface.
      */
@@ -332,11 +345,11 @@ Q_SIGNALS:
     void moveRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
 
     /**
-     * This signal is emitted when the toplevel wants to be interactively resized along the
-     * specified window edges \a edges. The \a seat and the \a serial indicate the user action
+     * This signal is emitted when the toplevel wants to be interactively resized by dragging
+     * the specified \a anchor. The \a seat and the \a serial indicate the user action
      * in response to which this request has been issued.
      */
-    void resizeRequested(KWaylandServer::SeatInterface *seat, Qt::Edges edges, quint32 serial);
+    void resizeRequested(KWaylandServer::SeatInterface *seat, KWaylandServer::XdgToplevelInterface::ResizeAnchor anchor, quint32 serial);
 
     /**
      * This signal is emitted when the toplevel surface wants to become maximized.
