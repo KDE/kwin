@@ -1122,7 +1122,7 @@ void XdgToplevelClient::handleMoveRequested(SeatInterface *seat, quint32 serial)
     }
 }
 
-void XdgToplevelClient::handleResizeRequested(SeatInterface *seat, Qt::Edges edges, quint32 serial)
+void XdgToplevelClient::handleResizeRequested(SeatInterface *seat, XdgToplevelInterface::ResizeAnchor anchor, quint32 serial)
 {
     if (!seat->hasImplicitPointerGrab(serial) && !seat->hasImplicitTouchGrab(serial)) {
         return;
@@ -1143,21 +1143,37 @@ void XdgToplevelClient::handleResizeRequested(SeatInterface *seat, Qt::Edges edg
     setInteractiveMoveOffset(cursorPos - pos());  // map from global
     setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
     setUnrestrictedInteractiveMoveResize(false);
-    auto toPosition = [edges] {
-        Position position = PositionCenter;
-        if (edges.testFlag(Qt::TopEdge)) {
-            position = PositionTop;
-        } else if (edges.testFlag(Qt::BottomEdge)) {
-            position = PositionBottom;
-        }
-        if (edges.testFlag(Qt::LeftEdge)) {
-            position = Position(position | PositionLeft);
-        } else if (edges.testFlag(Qt::RightEdge)) {
-            position = Position(position | PositionRight);
-        }
-        return position;
-    };
-    setInteractiveMoveResizePointerMode(toPosition());
+    Position position;
+    switch (anchor) {
+    case XdgToplevelInterface::ResizeAnchor::TopLeft:
+        position = PositionTopLeft;
+        break;
+    case XdgToplevelInterface::ResizeAnchor::Top:
+        position = PositionTop;
+        break;
+    case XdgToplevelInterface::ResizeAnchor::TopRight:
+        position = PositionTopRight;
+        break;
+    case XdgToplevelInterface::ResizeAnchor::Right:
+        position = PositionRight;
+        break;
+    case XdgToplevelInterface::ResizeAnchor::BottomRight:
+        position = PositionBottomRight;
+        break;
+    case XdgToplevelInterface::ResizeAnchor::Bottom:
+        position = PositionBottom;
+        break;
+    case XdgToplevelInterface::ResizeAnchor::BottomLeft:
+        position = PositionBottomLeft;
+        break;
+    case XdgToplevelInterface::ResizeAnchor::Left:
+        position = PositionLeft;
+        break;
+    default:
+        position = PositionCenter;
+        break;
+    }
+    setInteractiveMoveResizePointerMode(position);
     if (!startInteractiveMoveResize()) {
         setInteractiveMoveResizePointerButtonDown(false);
     }

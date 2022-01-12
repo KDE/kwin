@@ -185,7 +185,7 @@ private:
     void handleWindowMenuRequested(KWaylandServer::SeatInterface *seat,
                                    const QPoint &surfacePos, quint32 serial);
     void handleMoveRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
-    void handleResizeRequested(KWaylandServer::SeatInterface *seat, Qt::Edges, quint32 serial);
+    void handleResizeRequested(KWaylandServer::SeatInterface *seat, KWaylandServer::XdgToplevelInterface::ResizeAnchor anchor, quint32 serial);
     void handleStatesAcknowledged(const KWaylandServer::XdgToplevelInterface::States &states);
     void handleMaximizeRequested();
     void handleUnmaximizeRequested();
