@@ -213,7 +213,7 @@ public:
 
     QImage image() const;
     QPoint hotSpot() const;
-    void markAsRendered();
+    void markAsRendered(std::chrono::milliseconds timestamp);
 
 Q_SIGNALS:
     void changed();
@@ -255,7 +255,6 @@ private:
     WaylandCursorImage::Image m_fallbackCursor;
     WaylandCursorImage::Image m_moveResizeCursor;
     WaylandCursorImage::Image m_windowSelectionCursor;
-    QElapsedTimer m_surfaceRenderedTimer;
     struct {
         WaylandCursorImage::Image cursor;
         QMetaObject::Connection connection;

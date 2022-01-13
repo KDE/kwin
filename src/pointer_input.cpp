@@ -131,6 +131,7 @@ void PointerInputRedirection::init()
         }
     });
 
+    connect(Cursors::self()->mouse(), &Cursor::rendered, m_cursor, &CursorImage::markAsRendered);
     connect(m_cursor, &CursorImage::changed, Cursors::self()->mouse(), [this] {
         auto cursor = Cursors::self()->mouse();
         cursor->updateCursor(m_cursor->image(), m_cursor->hotSpot());
@@ -961,8 +962,6 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     connect(workspace(), &Workspace::clientAdded, this, setupMoveResizeConnection);
     loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
 
-    m_surfaceRenderedTimer.start();
-
     connect(&m_waylandImage, &WaylandCursorImage::themeChanged, this, [this] {
         loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
         updateDecorationCursor();
@@ -975,12 +974,12 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
 
 CursorImage::~CursorImage() = default;
 
-void CursorImage::markAsRendered()
+void CursorImage::markAsRendered(std::chrono::milliseconds timestamp)
 {
     if (m_currentSource == CursorSource::DragAndDrop) {
         // always sending a frame rendered to the drag icon surface to not freeze QtWayland (see https://bugreports.qt.io/browse/QTBUG-51599 )
         if (const KWaylandServer::DragAndDropIcon *icon = waylandServer()->seat()->dragIcon()) {
-            icon->surface()->frameRendered(m_surfaceRenderedTimer.elapsed());
+            icon->surface()->frameRendered(timestamp.count());
         }
     }
     if (m_currentSource != CursorSource::LockScreen
@@ -1000,7 +999,7 @@ void CursorImage::markAsRendered()
     if (!cursorSurface) {
         return;
     }
-    cursorSurface->frameRendered(m_surfaceRenderedTimer.elapsed());
+    cursorSurface->frameRendered(timestamp.count());
 }
 
 void CursorImage::handlePointerChanged()

@@ -166,6 +166,7 @@ public:
     QRect rect() const;
 
     void updateCursor(const QImage &image, const QPoint &hotspot);
+    void markAsRendered(std::chrono::milliseconds timestamp);
 
 Q_SIGNALS:
     void posChanged(const QPoint& pos);
@@ -182,6 +183,7 @@ Q_SIGNALS:
      */
     void cursorChanged();
     void themeChanged();
+    void rendered(std::chrono::milliseconds timestamp);
 
 protected:
     /**
