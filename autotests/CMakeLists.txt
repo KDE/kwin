@@ -186,8 +186,8 @@ add_test(NAME kwin-testX11TimestampUpdate COMMAND testX11TimestampUpdate)
 ecm_mark_as_test(testX11TimestampUpdate)
 
 set(testOpenGLContextAttributeBuilder_SRCS
-    ../src/abstract_opengl_context_attribute_builder.cpp
-    ../src/egl_context_attribute_builder.cpp
+    ../src/utils/abstract_opengl_context_attribute_builder.cpp
+    ../src/utils/egl_context_attribute_builder.cpp
     opengl_context_attribute_builder_test.cpp
 )
 

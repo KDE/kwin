@@ -22,7 +22,6 @@ endif()
 set(kwin_SRCS
     3rdparty/xcursor.c
     abstract_client.cpp
-    abstract_opengl_context_attribute_builder.cpp
     abstract_output.cpp
     abstract_wayland_output.cpp
     activation.cpp
@@ -44,7 +43,6 @@ set(kwin_SRCS
     dpmsinputeventfilter.cpp
     effectloader.cpp
     effects.cpp
-    egl_context_attribute_builder.cpp
     events.cpp
     focuschain.cpp
     ftrace.cpp

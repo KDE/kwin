@@ -9,9 +9,9 @@
 #include "abstract_egl_backend.h"
 #include "egl_dmabuf.h"
 #include "composite.h"
-#include "egl_context_attribute_builder.h"
 #include "options.h"
 #include "platform.h"
+#include "utils/egl_context_attribute_builder.h"
 #include "wayland_server.h"
 #include "abstract_wayland_output.h"
 #include <KWaylandServer/display.h>
