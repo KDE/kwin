@@ -19,7 +19,7 @@
 #include "deleted.h"
 #include "x11client.h"
 #include "cursor.h"
-#include "group.h"
+#include "x11group.h"
 #include "internal_client.h"
 #include "osd.h"
 #include "pointer_input.h"

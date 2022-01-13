@@ -36,7 +36,7 @@ class Decoration;
 
 namespace KWin
 {
-class Group;
+class X11Group;
 
 namespace TabBox
 {
@@ -852,13 +852,13 @@ public:
      *
      * Mostly for X11 clients, holds the client group
      */
-    virtual const Group *group() const;
+    virtual const X11Group *group() const;
     /**
      * Default implementation returns @c null.
      *
      * Mostly for X11 clients, holds the client group
      */
-    virtual Group *group();
+    virtual X11Group *group();
 
     /**
      * Returns whether window rules can be applied to this client.

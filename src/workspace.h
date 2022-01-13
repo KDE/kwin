@@ -45,7 +45,7 @@ class AbstractOutput;
 class ColorMapper;
 class Compositor;
 class Deleted;
-class Group;
+class X11Group;
 class InternalClient;
 class KillWindow;
 class ShortcutDialog;
@@ -332,10 +332,10 @@ public:
 
     void removeX11Client(X11Client *);   // Only called from X11Client::destroyClient() or X11Client::releaseWindow()
     void setActiveClient(AbstractClient*);
-    Group* findGroup(xcb_window_t leader) const;
-    void addGroup(Group* group);
-    void removeGroup(Group* group);
-    Group* findClientLeaderGroup(const X11Client *c) const;
+    X11Group* findGroup(xcb_window_t leader) const;
+    void addGroup(X11Group* group);
+    void removeGroup(X11Group* group);
+    X11Group* findClientLeaderGroup(const X11Client *c) const;
 
     void removeUnmanaged(Unmanaged*);   // Only called from Unmanaged::release()
     void removeDeleted(Deleted*);
@@ -513,7 +513,7 @@ Q_SIGNALS:
     void clientActivated(KWin::AbstractClient*);
     void clientDemandsAttentionChanged(KWin::AbstractClient*, bool);
     void clientMinimizedChanged(KWin::AbstractClient*);
-    void groupAdded(KWin::Group*);
+    void groupAdded(KWin::X11Group*);
     void unmanagedAdded(KWin::Unmanaged*);
     void unmanagedRemoved(KWin::Unmanaged*);
     void deletedRemoved(KWin::Deleted*);
@@ -632,7 +632,7 @@ private:
 
     bool showing_desktop;
 
-    QList<Group *> groups;
+    QList<X11Group *> groups;
 
     bool was_user_interaction;
     QScopedPointer<X11EventFilter> m_wasUserInteractionFilter;
@@ -741,13 +741,13 @@ inline AbstractClient *Workspace::mostRecentlyActivatedClient() const
     return should_get_focus.count() > 0 ? should_get_focus.last() : active_client;
 }
 
-inline void Workspace::addGroup(Group* group)
+inline void Workspace::addGroup(X11Group* group)
 {
     Q_EMIT groupAdded(group);
     groups.append(group);
 }
 
-inline void Workspace::removeGroup(Group* group)
+inline void Workspace::removeGroup(X11Group* group)
 {
     groups.removeAll(group);
 }

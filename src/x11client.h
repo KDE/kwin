@@ -118,10 +118,10 @@ public:
     bool hasTransient(const AbstractClient* c, bool indirect) const override;
     void checkTransient(xcb_window_t w);
     AbstractClient* findModal(bool allow_itself = false) override;
-    const Group* group() const override;
-    Group* group() override;
-    void checkGroup(Group* gr = nullptr, bool force = false);
-    void changeClientLeaderGroup(Group* gr);
+    const X11Group* group() const override;
+    X11Group* group() override;
+    void checkGroup(X11Group* gr = nullptr, bool force = false);
+    void changeClientLeaderGroup(X11Group* gr);
     bool supportsWindowRules() const override;
     void updateWindowRules(Rules::Types selection) override;
     void applyWindowRules() override;
@@ -493,7 +493,7 @@ private:
     MaximizeMode max_mode;
     xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix;
-    Group* in_group;
+    X11Group* in_group;
     QTimer* ping_timer;
     qint64 m_killHelperPID;
     xcb_timestamp_t m_pingTimestamp;
@@ -557,12 +557,12 @@ inline bool X11Client::isTransient() const
     return m_transientForId != XCB_WINDOW_NONE;
 }
 
-inline const Group* X11Client::group() const
+inline const X11Group* X11Client::group() const
 {
     return in_group;
 }
 
-inline Group* X11Client::group()
+inline X11Group* X11Client::group()
 {
     return in_group;
 }

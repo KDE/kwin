@@ -10,7 +10,7 @@
 
 //#define QT_CLEAN_NAMESPACE
 
-#include "group.h"
+#include "x11group.h"
 #include "workspace.h"
 #include "x11client.h"
 #include "effects.h"
@@ -25,7 +25,7 @@ namespace KWin
 // Group
 //********************************************
 
-Group::Group(xcb_window_t leader_P)
+X11Group::X11Group(xcb_window_t leader_P)
     :   leader_client(nullptr),
         leader_wid(leader_P),
         leader_info(nullptr),
@@ -41,13 +41,13 @@ Group::Group(xcb_window_t leader_P)
     workspace()->addGroup(this);
 }
 
-Group::~Group()
+X11Group::~X11Group()
 {
     delete leader_info;
     delete effect_group;
 }
 
-QIcon Group::icon() const
+QIcon X11Group::icon() const
 {
     if (leader_client != nullptr)
         return leader_client->icon();
@@ -70,14 +70,14 @@ QIcon Group::icon() const
     return QIcon();
 }
 
-void Group::addMember(X11Client *member_P)
+void X11Group::addMember(X11Client *member_P)
 {
     _members.append(member_P);
 //    qDebug() << "GROUPADD:" << this << ":" << member_P;
 //    qDebug() << kBacktrace();
 }
 
-void Group::removeMember(X11Client *member_P)
+void X11Group::removeMember(X11Client *member_P)
 {
 //    qDebug() << "GROUPREMOVE:" << this << ":" << member_P;
 //    qDebug() << kBacktrace();
@@ -93,12 +93,12 @@ void Group::removeMember(X11Client *member_P)
     }
 }
 
-void Group::ref()
+void X11Group::ref()
 {
     ++refcount;
 }
 
-void Group::deref()
+void X11Group::deref()
 {
     if (--refcount == 0 && _members.isEmpty()) {
         workspace()->removeGroup(this);
@@ -106,13 +106,13 @@ void Group::deref()
     }
 }
 
-void Group::gotLeader(X11Client *leader_P)
+void X11Group::gotLeader(X11Client *leader_P)
 {
     Q_ASSERT(leader_P->window() == leader_wid);
     leader_client = leader_P;
 }
 
-void Group::lostLeader()
+void X11Group::lostLeader()
 {
     Q_ASSERT(!_members.contains(leader_client));
     leader_client = nullptr;

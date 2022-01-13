@@ -23,7 +23,7 @@
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
-#include "group.h"
+#include "x11group.h"
 #include "rules.h"
 #include "unmanaged.h"
 #include "useractions.h"

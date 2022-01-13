@@ -11,7 +11,7 @@
 
 #include "workspace.h"
 #include "abstract_client.h"
-#include "group.h"
+#include "x11group.h"
 #include "netinfo.h"
 #include "shadow.h"
 #include "virtualdesktops.h"

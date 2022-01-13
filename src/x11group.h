@@ -20,11 +20,11 @@ namespace KWin
 class EffectWindowGroupImpl;
 class X11Client;
 
-class Group
+class X11Group
 {
 public:
-    Group(xcb_window_t leader);
-    ~Group();
+    X11Group(xcb_window_t leader);
+    ~X11Group();
     xcb_window_t leader() const;
     const X11Client *leaderClient() const;
     X11Client *leaderClient();
@@ -50,33 +50,33 @@ private:
     EffectWindowGroupImpl* effect_group;
 };
 
-inline xcb_window_t Group::leader() const
+inline xcb_window_t X11Group::leader() const
 {
     return leader_wid;
 }
 
-inline const X11Client *Group::leaderClient() const
+inline const X11Client *X11Group::leaderClient() const
 {
     return leader_client;
 }
 
-inline X11Client *Group::leaderClient()
+inline X11Client *X11Group::leaderClient()
 {
     return leader_client;
 }
 
-inline const QList<X11Client *> &Group::members() const
+inline const QList<X11Client *> &X11Group::members() const
 {
     return _members;
 }
 
-inline xcb_timestamp_t Group::userTime() const
+inline xcb_timestamp_t X11Group::userTime() const
 {
     return user_time;
 }
 
 inline
-EffectWindowGroupImpl* Group::effectGroup()
+EffectWindowGroupImpl* X11Group::effectGroup()
 {
     return effect_group;
 }

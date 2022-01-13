@@ -70,7 +70,7 @@
 #include "netinfo.h"
 #include "workspace.h"
 #include "tabbox.h"
-#include "group.h"
+#include "x11group.h"
 #include "rules.h"
 #include "screens.h"
 #include "unmanaged.h"
@@ -481,7 +481,7 @@ static Layer layerForClient(const X11Client *client)
         return layer;
     }
 
-    if (const Group *group = client->group()) {
+    if (const X11Group *group = client->group()) {
         const auto members = group->members();
         for (const X11Client *member : members) {
             if (member == client) {

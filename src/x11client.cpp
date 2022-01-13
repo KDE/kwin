@@ -21,7 +21,7 @@
 #include "deleted.h"
 #include "effects.h"
 #include "focuschain.h"
-#include "group.h"
+#include "x11group.h"
 #include "netinfo.h"
 #include "platform.h"
 #include "screenedge.h"
@@ -3280,9 +3280,9 @@ AbstractClient* X11Client::findModal(bool allow_itself)
 // X11Client::window_group only holds the contents of the hint,
 // but it should be used only to find the group, not for anything else
 // Argument is only when some specific group needs to be set.
-void X11Client::checkGroup(Group* set_group, bool force)
+void X11Client::checkGroup(X11Group* set_group, bool force)
 {
-    Group* old_group = in_group;
+    X11Group* old_group = in_group;
     if (old_group != nullptr)
         old_group->ref(); // turn off automatic deleting
     if (set_group != nullptr) {
@@ -3293,7 +3293,7 @@ void X11Client::checkGroup(Group* set_group, bool force)
             in_group->addMember(this);
         }
     } else if (info->groupLeader() != XCB_WINDOW_NONE) {
-        Group* new_group = workspace()->findGroup(info->groupLeader());
+        X11Group* new_group = workspace()->findGroup(info->groupLeader());
         X11Client *t = qobject_cast<X11Client *>(transientFor());
         if (t != nullptr && t->group() != new_group) {
             // move the window to the right group (e.g. a dialog provided
@@ -3301,7 +3301,7 @@ void X11Client::checkGroup(Group* set_group, bool force)
             new_group = t->group();
         }
         if (new_group == nullptr)   // doesn't exist yet
-            new_group = new Group(info->groupLeader());
+            new_group = new X11Group(info->groupLeader());
         if (new_group != in_group) {
             if (in_group != nullptr)
                 in_group->removeMember(this);
@@ -3312,7 +3312,7 @@ void X11Client::checkGroup(Group* set_group, bool force)
         if (X11Client *t = qobject_cast<X11Client *>(transientFor())) {
             // doesn't have window group set, but is transient for something
             // so make it part of that group
-            Group* new_group = t->group();
+            X11Group* new_group = t->group();
             if (new_group != in_group) {
                 if (in_group != nullptr)
                     in_group->removeMember(this);
@@ -3322,9 +3322,9 @@ void X11Client::checkGroup(Group* set_group, bool force)
         } else if (groupTransient()) {
             // group transient which actually doesn't have a group :(
             // try creating group with other windows with the same client leader
-            Group* new_group = workspace()->findClientLeaderGroup(this);
+            X11Group* new_group = workspace()->findClientLeaderGroup(this);
             if (new_group == nullptr)
-                new_group = new Group(XCB_WINDOW_NONE);
+                new_group = new X11Group(XCB_WINDOW_NONE);
             if (new_group != in_group) {
                 if (in_group != nullptr)
                     in_group->removeMember(this);
@@ -3335,13 +3335,13 @@ void X11Client::checkGroup(Group* set_group, bool force)
             // This might be stupid if grouping was used for e.g. taskbar grouping
             // or minimizing together the whole group, but as long as it is used
             // only for dialogs it's better to keep windows from one app in one group.
-            Group* new_group = workspace()->findClientLeaderGroup(this);
+            X11Group* new_group = workspace()->findClientLeaderGroup(this);
             if (in_group != nullptr && in_group != new_group) {
                 in_group->removeMember(this);
                 in_group = nullptr;
             }
             if (new_group == nullptr)
-                new_group = new Group(XCB_WINDOW_NONE);
+                new_group = new X11Group(XCB_WINDOW_NONE);
             if (in_group != new_group) {
                 in_group = new_group;
                 in_group->addMember(this);
@@ -3399,7 +3399,7 @@ void X11Client::checkGroup(Group* set_group, bool force)
 }
 
 // used by Workspace::findClientLeaderGroup()
-void X11Client::changeClientLeaderGroup(Group* gr)
+void X11Client::changeClientLeaderGroup(X11Group* gr)
 {
     // transientFor() != NULL are in the group of their mainwindow, so keep them there
     if (transientFor() != nullptr)

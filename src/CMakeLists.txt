@@ -50,7 +50,6 @@ set(kwin_SRCS
     ftrace.cpp
     gestures.cpp
     globalshortcuts.cpp
-    group.cpp
     idle_inhibition.cpp
     input.cpp
     input_event.cpp
@@ -144,6 +143,7 @@ set(kwin_SRCS
     workspace.cpp
     x11client.cpp
     x11eventfilter.cpp
+    x11group.cpp
     x11syncmanager.cpp
     xcbutils.cpp
     xcursortheme.cpp

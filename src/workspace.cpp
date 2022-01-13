@@ -26,7 +26,7 @@
 #include "deleted.h"
 #include "effects.h"
 #include "focuschain.h"
-#include "group.h"
+#include "x11group.h"
 #include "input.h"
 #include "internal_client.h"
 #include "moving_client_x11_filter.h"
@@ -678,7 +678,7 @@ Unmanaged* Workspace::createUnmanaged(xcb_window_t w)
 
 void Workspace::addClient(X11Client *c)
 {
-    Group* grp = findGroup(c->window());
+    X11Group* grp = findGroup(c->window());
 
     Q_EMIT clientAdded(c);
 
@@ -731,7 +731,7 @@ void Workspace::removeX11Client(X11Client *c)
     Q_ASSERT(m_x11Clients.contains(c));
     // TODO: if marked client is removed, notify the marked list
     m_x11Clients.removeAll(c);
-    Group* group = findGroup(c->window());
+    X11Group* group = findGroup(c->window());
     if (group != nullptr)
         group->lostLeader();
     removeAbstractClient(c);
@@ -861,7 +861,7 @@ void Workspace::updateToolWindows(bool also_hide)
             (*it)->showClient();
         return;
     }
-    const Group* group = nullptr;
+    const X11Group* group = nullptr;
     auto client = active_client;
     // Go up in transiency hiearchy, if the top is found, only tool transients for the top mainwindow
     // will be shown; if a group transient is group, all tools in the group will be shown
@@ -1938,7 +1938,7 @@ void Workspace::removeInternalClient(InternalClient *client)
     Q_EMIT internalClientRemoved(client);
 }
 
-Group* Workspace::findGroup(xcb_window_t leader) const
+X11Group* Workspace::findGroup(xcb_window_t leader) const
 {
     Q_ASSERT(leader != XCB_WINDOW_NONE);
     for (auto it = groups.constBegin();
@@ -1951,9 +1951,9 @@ Group* Workspace::findGroup(xcb_window_t leader) const
 
 // Client is group transient, but has no group set. Try to find
 // group with windows with the same client leader.
-Group* Workspace::findClientLeaderGroup(const X11Client *c) const
+X11Group* Workspace::findClientLeaderGroup(const X11Client *c) const
 {
-    Group* ret = nullptr;
+    X11Group* ret = nullptr;
     for (auto it = m_x11Clients.constBegin();
             it != m_x11Clients.constEnd();
             ++it) {

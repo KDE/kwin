@@ -42,7 +42,7 @@ class AbstractClient;
 class Compositor;
 class Deleted;
 class EffectLoader;
-class Group;
+class X11Group;
 class Toplevel;
 class Unmanaged;
 class WindowPropertyNotifyX11Filter;
@@ -522,10 +522,10 @@ class EffectWindowGroupImpl
     : public EffectWindowGroup
 {
 public:
-    explicit EffectWindowGroupImpl(Group* g);
+    explicit EffectWindowGroupImpl(X11Group* g);
     EffectWindowList members() const override;
 private:
-    Group* group;
+    X11Group* group;
 };
 
 class KWIN_EXPORT EffectFrameImpl
@@ -632,7 +632,7 @@ xcb_connection_t *EffectsHandlerImpl::xcbConnection() const
 }
 
 inline
-EffectWindowGroupImpl::EffectWindowGroupImpl(Group* g)
+EffectWindowGroupImpl::EffectWindowGroupImpl(X11Group* g)
     : group(g)
 {
 }

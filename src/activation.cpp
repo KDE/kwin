@@ -31,7 +31,7 @@
 #include <KLocalizedString>
 
 #include "atoms.h"
-#include "group.h"
+#include "x11group.h"
 #include "rules.h"
 #include "screens.h"
 #include "useractions.h"
@@ -858,7 +858,7 @@ void X11Client::updateUrgency()
 // Group
 //****************************************
 
-void Group::startupIdChanged()
+void X11Group::startupIdChanged()
 {
     KStartupInfoId asn_id;
     KStartupInfoData asn_data;
@@ -871,7 +871,7 @@ void Group::startupIdChanged()
     }
 }
 
-void Group::updateUserTime(xcb_timestamp_t time)
+void X11Group::updateUserTime(xcb_timestamp_t time)
 {
     // copy of X11Client::updateUserTime
     if (time == XCB_CURRENT_TIME) {
