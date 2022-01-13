@@ -306,7 +306,6 @@ private:
 
     QStack<GLShader*> m_boundShaders;
     QHash<ShaderTraits, GLShader *> m_shaderHash;
-    QString m_resourcePath;
     static ShaderManager *s_shaderManager;
 };
 

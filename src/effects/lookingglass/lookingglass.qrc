@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/effects/lookingglass/">
+  <file>shaders/lookingglass.frag</file>
+  <file>shaders/lookingglass_core.frag</file>
+</qresource>
+</RCC>
+

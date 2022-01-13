@@ -3,6 +3,7 @@
 
 set(lookingglass_SOURCES
     lookingglass.cpp
+    lookingglass.qrc
     main.cpp
 )
 
