@@ -618,12 +618,6 @@ void ShaderManager::cleanup()
 
 ShaderManager::ShaderManager()
 {
-    const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
-    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber) {
-        m_resourcePath = QStringLiteral(":/effect-shaders-1.40/");
-    } else {
-        m_resourcePath = QStringLiteral(":/effect-shaders-1.10/");
-    }
 }
 
 ShaderManager::~ShaderManager()
@@ -783,26 +777,49 @@ GLShader *ShaderManager::generateCustomShader(ShaderTraits traits, const QByteAr
     return shader;
 }
 
+static QString resolveShaderFilePath(const QString &filePath)
+{
+    QString suffix;
+    QString extension;
+
+    const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
+    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber) {
+        suffix = QStringLiteral("_core");
+    }
+
+    if (filePath.endsWith(QStringLiteral(".frag"))) {
+        extension = QStringLiteral(".frag");
+    } else if (filePath.endsWith(QStringLiteral(".vert"))) {
+        extension = QStringLiteral(".vert");
+    } else {
+        qCWarning(LIBKWINGLUTILS) << filePath << "must end either with .vert or .frag";
+        return QString();
+    }
+
+    const QString prefix = filePath.chopped(extension.size());
+    return prefix + suffix + extension;
+}
+
 GLShader *ShaderManager::generateShaderFromResources(ShaderTraits traits, const QString &vertexFile, const QString &fragmentFile)
 {
-    auto loadShaderFile = [this] (const QString &fileName) {
-        QFile file(m_resourcePath + fileName);
+    auto loadShaderFile = [](const QString &filePath) {
+        QFile file(filePath);
         if (file.open(QIODevice::ReadOnly)) {
             return file.readAll();
         }
-        qCCritical(LIBKWINGLUTILS) << "Failed to read shader " << fileName;
+        qCCritical(LIBKWINGLUTILS) << "Failed to read shader " << filePath;
         return QByteArray();
     };
     QByteArray vertexSource;
     QByteArray fragmentSource;
     if (!vertexFile.isEmpty()) {
-        vertexSource = loadShaderFile(vertexFile);
+        vertexSource = loadShaderFile(resolveShaderFilePath(vertexFile));
         if (vertexSource.isEmpty()) {
             return new GLShader();
         }
     }
     if (!fragmentFile.isEmpty()) {
-        fragmentSource = loadShaderFile(fragmentFile);
+        fragmentSource = loadShaderFile(resolveShaderFilePath(fragmentFile));
         if (fragmentSource.isEmpty()) {
             return new GLShader();
         }

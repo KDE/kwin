@@ -30,6 +30,12 @@
 
 Q_LOGGING_CATEGORY(KWIN_STARTUPFEEDBACK, "kwin_effect_startupfeedback", QtWarningMsg)
 
+static void ensureResources()
+{
+    // Must initialize resources manually because the effect is a static lib.
+    Q_INIT_RESOURCE(startupfeedback);
+}
+
 namespace KWin
 {
 
@@ -145,7 +151,8 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
     else if (busyBlinking) {
         m_type = BlinkingFeedback;
         if (effects->compositingType() == OpenGLCompositing) {
-            m_blinkingShader.reset(ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("blinking-startup-fragment.glsl")));
+            ensureResources();
+            m_blinkingShader.reset(ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/startupfeedback/shaders/blinking-startup.frag")));
             if (m_blinkingShader->isValid()) {
                 qCDebug(KWIN_STARTUPFEEDBACK) << "Blinking Shader is valid";
             } else {

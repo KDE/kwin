@@ -3,6 +3,7 @@
 
 set(invert_SOURCES
     invert.cpp
+    invert.qrc
     main.cpp
 )
 

@@ -169,8 +169,6 @@ set(kwin4_effect_builtins_sources
     ../service_utils.cpp
 )
 
-qt5_add_resources(kwin4_effect_builtins_sources shaders.qrc)
-
 add_library(kwin4_effect_builtins STATIC ${kwin4_effect_builtins_sources})
 kcoreaddons_target_static_plugins(kwin4_effect_builtins "kwin/effects/plugins" LINK_OPTION "PRIVATE")
 target_link_libraries(kwin4_effect_builtins PRIVATE
