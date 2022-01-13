@@ -10,6 +10,7 @@
 #include "egl_dmabuf.h"
 #include "drm_fourcc.h"
 #include "kwineglext.h"
+#include "kwineglutils_p.h"
 
 #include "utils.h"
 #include "wayland_server.h"
@@ -430,11 +431,13 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
     EGLBoolean success = eglQueryDmaBufFormatsEXT(eglDisplay, 0, nullptr, &count);
 
     if (!success || count == 0) {
+        qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT failed!" << getEglErrorString();
         return;
     }
 
     QVector<uint32_t> formats(count);
     if (!eglQueryDmaBufFormatsEXT(eglDisplay, count, (EGLint *) formats.data(), &count)) {
+        qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT with count" << count << "failed!" << getEglErrorString();
         return;
     }
 
@@ -459,6 +462,7 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
         }
         supportedFormats.insert(format, QSet<uint64_t>());
     }
+    qCDebug(KWIN_OPENGL) << "EGL driver advertises" << supportedFormats.count() << "supported dmabuf formats" << (eglQueryDmaBufModifiersEXT != nullptr ? "with" : "without") << "modifiers";
 
     auto filterFormats = [&supportedFormats](int bpc) {
         QHash<uint32_t, QSet<uint64_t>> set;
