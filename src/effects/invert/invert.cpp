@@ -71,7 +71,7 @@ bool InvertEffect::loadData()
     ensureResources();
     m_inited = true;
 
-    m_shader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/invert/shaders/invert.frag"));
+    m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/invert/shaders/invert.frag"));
     if (!m_shader->isValid()) {
         qCCritical(KWIN_INVERT) << "The shader failed to load!";
         return false;

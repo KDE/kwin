@@ -800,7 +800,7 @@ static QString resolveShaderFilePath(const QString &filePath)
     return prefix + suffix + extension;
 }
 
-GLShader *ShaderManager::generateShaderFromResources(ShaderTraits traits, const QString &vertexFile, const QString &fragmentFile)
+GLShader *ShaderManager::generateShaderFromFile(ShaderTraits traits, const QString &vertexFile, const QString &fragmentFile)
 {
     auto loadShaderFile = [](const QString &filePath) {
         QFile file(filePath);
