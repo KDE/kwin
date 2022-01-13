@@ -18,7 +18,7 @@
 #ifndef KWIN_EDGE_H
 #define KWIN_EDGE_H
 #include "screenedge.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 
 namespace KWin
 {

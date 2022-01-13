@@ -8,7 +8,7 @@
 */
 #include "testutils.h"
 // KWin
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 // Qt
 #include <QApplication>
 #include <QtTest>

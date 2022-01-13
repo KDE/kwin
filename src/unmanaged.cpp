@@ -14,7 +14,6 @@
 #include "deleted.h"
 #include "surfaceitem_x11.h"
 #include "utils.h"
-#include "xcbutils.h"
 
 #include <QDebug>
 #include <QTimer>

@@ -49,7 +49,7 @@
 #include "virtualdesktops.h"
 #include "was_user_interaction_x11_filter.h"
 #include "wayland_server.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 #include "main.h"
 #include "decorations/decorationbridge.h"
 #include "xwaylandclient.h"

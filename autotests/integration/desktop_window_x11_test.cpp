@@ -17,7 +17,7 @@
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 #include <kwineffects.h>
 
 #include <netwm.h>

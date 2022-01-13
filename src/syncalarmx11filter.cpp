@@ -10,7 +10,7 @@
 #include "syncalarmx11filter.h"
 #include "workspace.h"
 #include "x11client.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 
 namespace KWin
 {

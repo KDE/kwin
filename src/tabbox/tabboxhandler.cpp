@@ -11,7 +11,7 @@
 #include "tabboxhandler.h"
 #include <config-kwin.h>
 #include <kwinglobals.h>
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 // tabbox
 #include "clientmodel.h"
 #include "desktopmodel.h"

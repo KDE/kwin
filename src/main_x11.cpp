@@ -15,7 +15,7 @@
 #include "platform.h"
 #include "sm.h"
 #include "workspace.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 
 #include <KConfigGroup>
 #include <KCrash>

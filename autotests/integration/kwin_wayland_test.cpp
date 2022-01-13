@@ -15,7 +15,7 @@
 #include "pluginmanager.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 #include "xwl/xwayland.h"
 
 #include <KPluginMetaData>

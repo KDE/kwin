@@ -13,7 +13,7 @@
 // kwin
 #include "decorationitem.h"
 #include "abstract_client.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 // Qt
 #include <QElapsedTimer>
 #include <QFlags>

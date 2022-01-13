@@ -12,9 +12,9 @@
 #include "transfer.h"
 
 #include "atoms.h"
+#include "utils/xcbutils.h"
 #include "workspace.h"
 #include "x11client.h"
-#include "xcbutils.h"
 
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>

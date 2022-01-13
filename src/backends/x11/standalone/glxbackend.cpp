@@ -29,7 +29,7 @@
 #include "scene.h"
 #include "screens.h"
 #include "surfaceitem_x11.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwinglutils.h>

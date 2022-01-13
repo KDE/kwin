@@ -24,9 +24,9 @@
 #include "screens.h"
 #include "screenlockerwatcher.h"
 #include "sm.h"
+#include "utils/xcbutils.h"
 #include "workspace.h"
 #include "x11eventfilter.h"
-#include "xcbutils.h"
 
 #include <kwineffects.h>
 

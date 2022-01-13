@@ -151,7 +151,6 @@ target_sources(kwin PRIVATE
     x11client.cpp
     x11eventfilter.cpp
     x11syncmanager.cpp
-    xcbutils.cpp
     xcursortheme.cpp
     xdgactivationv1.cpp
     xdgshellclient.cpp
@@ -239,6 +238,7 @@ target_sources(kwin PRIVATE
 
 add_subdirectory(backends)
 add_subdirectory(scenes)
+add_subdirectory(utils)
 
 if (KWIN_BUILD_CMS)
     target_sources(kwin PRIVATE

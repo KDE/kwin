@@ -3,7 +3,7 @@
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 
 #include <QApplication>
 #include <QHBoxLayout>

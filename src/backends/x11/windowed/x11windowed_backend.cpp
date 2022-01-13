@@ -12,7 +12,7 @@
 #include "scene_qpainter_x11_backend.h"
 #include "logging.h"
 #include "wayland_server.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 #include "egl_x11_backend.h"
 #include "screens.h"
 #include "session.h"

@@ -12,7 +12,7 @@
 #ifndef KWIN_ATOMS_H
 #define KWIN_ATOMS_H
 
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 
 namespace KWin
 {

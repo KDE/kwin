@@ -36,7 +36,7 @@
 #include "unmanaged.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 // Qt
 #include <QAction>
 #include <QKeyEvent>
