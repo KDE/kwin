@@ -460,7 +460,7 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
                 }
             }
         }
-        supportedFormats.insert(format, QSet<uint64_t>());
+        supportedFormats.insert(format, {DRM_FORMAT_MOD_INVALID});
     }
     qCDebug(KWIN_OPENGL) << "EGL driver advertises" << supportedFormats.count() << "supported dmabuf formats" << (eglQueryDmaBufModifiersEXT != nullptr ? "with" : "without") << "modifiers";
 
