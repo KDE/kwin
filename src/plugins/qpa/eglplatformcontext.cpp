@@ -9,11 +9,11 @@
 */
 
 #include "eglplatformcontext.h"
-#include "egl_context_attribute_builder.h"
 #include "eglhelpers.h"
 #include "internal_client.h"
 #include "offscreensurface.h"
 #include "platform.h"
+#include "utils/egl_context_attribute_builder.h"
 #include "window.h"
 
 #include "logging.h"

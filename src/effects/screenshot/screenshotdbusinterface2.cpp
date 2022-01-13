@@ -7,9 +7,9 @@
 */
 
 #include "screenshotdbusinterface2.h"
-#include "../service_utils.h"
 #include "screenshot2adaptor.h"
 #include "screenshotlogging.h"
+#include "utils/serviceutils.h"
 
 #include <KLocalizedString>
 
