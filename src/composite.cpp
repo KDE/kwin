@@ -651,6 +651,12 @@ void Compositor::composite(RenderLoop *renderLoop)
                 surface->frameRendered(frameTime.count());
             }
         }
+        if (!Cursors::self()->isCursorHidden()) {
+            Cursor *cursor = Cursors::self()->currentCursor();
+            if (cursor->geometry().intersects(output->geometry())) {
+                cursor->markAsRendered(frameTime);
+            }
+        }
     }
 }
 

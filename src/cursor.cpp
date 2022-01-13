@@ -205,6 +205,11 @@ void Cursor::updateCursor(const QImage &image, const QPoint &hotspot)
     Q_EMIT cursorChanged();
 }
 
+void Cursor::markAsRendered(std::chrono::milliseconds timestamp)
+{
+    Q_EMIT rendered(timestamp);
+}
+
 xcb_cursor_t Cursor::x11Cursor(CursorShape shape)
 {
     return x11Cursor(shape.name());
