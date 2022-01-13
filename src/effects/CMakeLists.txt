@@ -165,11 +165,7 @@ add_subdirectory(wobblywindows)
 ###############################################################################
 
 # Add the builtins plugin
-set(kwin4_effect_builtins_sources
-    ../service_utils.cpp
-)
-
-add_library(kwin4_effect_builtins STATIC ${kwin4_effect_builtins_sources})
+add_library(kwin4_effect_builtins STATIC)
 kcoreaddons_target_static_plugins(kwin4_effect_builtins "kwin/effects/plugins" LINK_OPTION "PRIVATE")
 target_link_libraries(kwin4_effect_builtins PRIVATE
     ${kwin_effect_KDE_LIBS}
