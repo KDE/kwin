@@ -15,7 +15,7 @@
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>

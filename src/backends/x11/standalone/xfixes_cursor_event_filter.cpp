@@ -8,7 +8,7 @@
 */
 #include "xfixes_cursor_event_filter.h"
 #include "x11cursor.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 
 namespace KWin
 {

@@ -12,7 +12,7 @@
 
 // kwin
 #include "utils.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 // KDE
 #include <NETWM>
 // Qt

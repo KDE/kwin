@@ -9,12 +9,8 @@
 */
 
 #include "lanczosfilter.h"
-#include "x11client.h"
-#include "deleted.h"
 #include "effects.h"
-#include "unmanaged.h"
 #include "options.h"
-#include "utils.h"
 #include "workspace.h"
 
 #include <kwinglutils.h>

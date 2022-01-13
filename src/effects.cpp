@@ -45,8 +45,8 @@
 #include <Plasma/Theme>
 
 #include "composite.h"
-#include "xcbutils.h"
 #include "platform.h"
+#include "utils/xcbutils.h"
 #include "waylandclient.h"
 #include "wayland_server.h"
 

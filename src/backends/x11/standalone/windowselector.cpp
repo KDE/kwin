@@ -13,7 +13,7 @@
 #include "cursor.h"
 #include "unmanaged.h"
 #include "workspace.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 // XLib
 #include <X11/cursorfont.h>
 #include <X11/Xutil.h>

@@ -7,7 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 #include "utils.h"
 // Qt
 #include <QDebug>

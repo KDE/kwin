@@ -30,7 +30,7 @@
 #include "effects.h"
 #include "screenedge.h"
 #include "screens.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 
 #include <KDecoration2/Decoration>
 

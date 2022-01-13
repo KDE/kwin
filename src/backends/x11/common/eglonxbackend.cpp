@@ -14,7 +14,7 @@
 #include "options.h"
 #include "overlaywindow.h"
 #include "platform.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 // Qt
 #include <QLoggingCategory>
 #include <QDebug>

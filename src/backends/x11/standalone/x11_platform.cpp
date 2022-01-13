@@ -31,7 +31,7 @@
 #include "non_composited_outline.h"
 #include "workspace.h"
 #include "x11_output.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 #include "renderloop.h"
 
 #include <kwinxrenderutils.h>

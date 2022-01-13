@@ -9,7 +9,7 @@
 #ifndef KWIN_NON_COMPOSITED_OUTLINE_H
 #define KWIN_NON_COMPOSITED_OUTLINE_H
 #include "outline.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 
 namespace KWin
 {

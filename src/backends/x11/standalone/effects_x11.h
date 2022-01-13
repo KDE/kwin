@@ -11,7 +11,7 @@
 #define KWIN_EFFECTS_X11_H
 
 #include "effects.h"
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 
 #include <memory.h>
 
