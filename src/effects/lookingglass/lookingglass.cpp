@@ -114,7 +114,7 @@ bool LookingGlassEffect::loadData()
         return false;
     }
 
-    m_shader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/lookingglass/shaders/lookingglass.frag"));
+    m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/lookingglass/shaders/lookingglass.frag"));
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader);
         m_shader->setUniform("u_textureSize", QVector2D(screenSize.width(), screenSize.height()));
