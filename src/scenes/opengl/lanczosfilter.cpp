@@ -76,14 +76,8 @@ void LanczosFilter::init()
             return;
         }
     }
-    QFile ff(gl->glslVersion() >= kVersionNumber(1, 40) ?
-             QStringLiteral(":/scenes/opengl/shaders/1.40/lanczos-fragment.glsl") :
-             QStringLiteral(":/scenes/opengl/shaders/1.10/lanczos-fragment.glsl"));
-    if (!ff.open(QIODevice::ReadOnly)) {
-        qCDebug(KWIN_OPENGL) << "Failed to open lanczos shader";
-        return;
-    }
-    m_shader.reset(ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll()));
+
+    m_shader.reset(ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/scenes/opengl/shaders/lanczos.frag")));
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader.data());
         m_uKernel     = m_shader->uniformLocation("kernel");
