@@ -218,8 +218,19 @@ void RenderLoop::setRefreshRate(int refreshRate)
 
 void RenderLoop::scheduleRepaint(Item *item)
 {
-    if (d->pendingRepaint || (d->fullscreenItem != nullptr && item != nullptr && item != d->fullscreenItem)) {
+    if (d->pendingRepaint) {
         return;
+    }
+    if (d->fullscreenItem != nullptr && item != nullptr) {
+        bool allowed = false;
+        Item *i = item;
+        do {
+            allowed |= i == d->fullscreenItem;
+            i = i->parentItem();
+        } while (!allowed && i && i != d->fullscreenItem);
+        if (!allowed) {
+            return;
+        }
     }
     if (!d->pendingFrameCount && !d->inhibitCount) {
         d->scheduleRepaint();
