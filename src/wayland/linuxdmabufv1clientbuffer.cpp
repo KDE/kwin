@@ -33,12 +33,8 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_bind_resou
 {
     if (resource->version() < ZWP_LINUX_DMABUF_V1_GET_DEFAULT_FEEDBACK_SINCE_VERSION) {
         for (auto it = supportedModifiers.constBegin(); it != supportedModifiers.constEnd(); ++it) {
-            const uint32_t format = it.key();
-            QSet<uint64_t> modifiers = it.value();
-            if (modifiers.isEmpty()) {
-                modifiers.insert(DRM_FORMAT_MOD_INVALID);
-            }
-
+            const uint32_t &format = it.key();
+            const QSet<uint64_t> &modifiers = it.value();
             for (const uint64_t &modifier : qAsConst(modifiers)) {
                 if (resource->version() >= ZWP_LINUX_DMABUF_V1_MODIFIER_SINCE_VERSION) {
                     const uint32_t modifier_lo = modifier & 0xffffffff;
