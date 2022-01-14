@@ -334,7 +334,7 @@ QSharedPointer<DrmBuffer> EglGbmBackend::importFramebuffer(Output &output, const
     }
     // ImportMode::DumbBuffer
     if (!output.current.importSwapchain || output.current.importSwapchain->size() != size) {
-        output.current.importSwapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, size, DRM_FORMAT_XRGB8888);
+        output.current.importSwapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, size, renderingBackend()->drmFormat(output.output));
         if (output.current.importSwapchain->isEmpty()) {
             output.current.importSwapchain = nullptr;
         }
