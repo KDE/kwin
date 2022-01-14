@@ -101,6 +101,10 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                 QByteArrayLiteral("Limited 16:235")
             }),
             PropertyDefinition(QByteArrayLiteral("max bpc"), Requirement::Optional),
+            PropertyDefinition(QByteArrayLiteral("link-status"), Requirement::Optional, {
+                QByteArrayLiteral("Good"),
+                QByteArrayLiteral("Bad")
+            }),
         }, DRM_MODE_OBJECT_CONNECTOR)
     , m_pipeline(new DrmPipeline(this))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
@@ -419,6 +423,14 @@ DrmPipeline *DrmConnector::pipeline() const
 void DrmConnector::disable()
 {
     setPending(PropertyIndex::CrtcId, 0);
+}
+
+DrmConnector::LinkStatus DrmConnector::linkStatus() const
+{
+    if (const auto &property = getProp(PropertyIndex::LinkStatus)) {
+        return property->enumForValue<LinkStatus>(property->current());
+    }
+    return LinkStatus::Good;
 }
 
 QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj)

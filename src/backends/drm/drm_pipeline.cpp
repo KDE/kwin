@@ -230,6 +230,9 @@ void DrmPipeline::prepareAtomicModeset()
     if (const auto &prop = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB)) {
         prop->setEnum(pending.rgbRange);
     }
+    if (const auto &prop = m_connector->getProp(DrmConnector::PropertyIndex::LinkStatus)) {
+        prop->setEnum(DrmConnector::LinkStatus::Good);
+    }
 
     pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, activePending());
     pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, activePending() ? mode->blobId() : 0);
@@ -501,6 +504,7 @@ bool DrmPipeline::needsModeset() const
         || pending.modeIndex != m_current.modeIndex
         || pending.rgbRange != m_current.rgbRange
         || pending.bufferTransformation != m_current.bufferTransformation
+        || m_connector->linkStatus() == DrmConnector::LinkStatus::Bad
         || m_modesetPresentPending;
 }
 
