@@ -3087,12 +3087,6 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
             QRect prev_geom_restore = geometryRestore(); // setMaximize() would set moveResizeGeom as geom_restore
             m_quickTileMode = int(QuickTileFlag::Maximize);
             setMaximize(true, true);
-            QRect clientArea = workspace()->clientArea(MaximizeArea, this);
-            if (moveResizeGeometry().top() != clientArea.top()) {
-                QRect r(moveResizeGeometry());
-                r.moveTop(clientArea.top());
-                moveResize(r);
-            }
             setGeometryRestore(prev_geom_restore);
         }
         doSetQuickTileMode();
