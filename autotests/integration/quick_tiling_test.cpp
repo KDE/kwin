@@ -437,8 +437,6 @@ void QuickTilingTest::testQuickTilingPointerMove()
     workspace()->performWindowOperation(c, Options::UnrestrictedMoveOp);
     QCOMPARE(c, workspace()->moveResizeClient());
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(49, 24));
-    QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
 
     QFETCH(QPoint, targetPos);
     quint32 timestamp = 1;
@@ -451,7 +449,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QTEST(c->quickTileMode(), "expectedMode");
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
     QCOMPARE(false, toplevelConfigureRequestedSpy.last().first().toSize().isEmpty());
 }
 
@@ -511,11 +509,12 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
 
+    // Note that interactive move will be started with a delay.
     quint32 timestamp = 1;
+    QSignalSpy clientStartUserMovedResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
     kwinApp()->platform()->touchDown(0, QPointF(c->frameGeometry().center().x(), c->frameGeometry().y() + decoration->borderTop() / 2), timestamp++);
-    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QVERIFY(clientStartUserMovedResizedSpy.wait());
     QCOMPARE(c, workspace()->moveResizeClient());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
 
     QFETCH(QPoint, targetPos);
     kwinApp()->platform()->touchMotion(0, targetPos, timestamp++);
@@ -530,7 +529,7 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QTEST(c->quickTileMode(), "expectedMode");
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QTRY_COMPARE(surfaceConfigureRequestedSpy.count(), hasBorders ? 5 : 4);
+    QTRY_COMPARE(surfaceConfigureRequestedSpy.count(), hasBorders ? 4 : 3);
     QCOMPARE(false, toplevelConfigureRequestedSpy.last().first().toSize().isEmpty());
 }
 
