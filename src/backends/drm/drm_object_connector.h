@@ -66,6 +66,7 @@ public:
         Underscan_hborder = 8,
         Broadcast_RGB = 9,
         MaxBpc = 10,
+        LinkStatus = 11,
         Count
     };
 
@@ -73,6 +74,10 @@ public:
         Off = 0,
         On = 1,
         Auto = 2,
+    };
+    enum class LinkStatus : uint32_t {
+        Good = 0,
+        Bad = 1
     };
 
     bool init() override;
@@ -105,6 +110,7 @@ public:
     bool vrrCapable() const;
     bool hasRgbRange() const;
     AbstractWaylandOutput::RgbRange rgbRange() const;
+    LinkStatus linkStatus() const;
 
 private:
     QScopedPointer<DrmPipeline> m_pipeline;
