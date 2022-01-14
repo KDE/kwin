@@ -3080,14 +3080,22 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
     GeometryUpdatesBlocker blocker(this);
 
     if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
-        m_quickTileMode = int(QuickTileFlag::None);
         if (maximizeMode() == MaximizeFull) {
+            m_quickTileMode = int(QuickTileFlag::None);
             setMaximize(false, false);
         } else {
-            QRect prev_geom_restore = geometryRestore(); // setMaximize() would set moveResizeGeom as geom_restore
+            // If the window is tiled, geometryRestore() already has a good value.
+            QRect effectiveGeometryRestore = geometryRestore();
+            if (m_quickTileMode == QuickTileMode(QuickTileFlag::None)) {
+                if (isElectricBorderMaximizing()) {
+                    effectiveGeometryRestore = initialInteractiveMoveResizeGeometry();
+                } else {
+                    effectiveGeometryRestore = moveResizeGeometry();
+                }
+            }
             m_quickTileMode = int(QuickTileFlag::Maximize);
             setMaximize(true, true);
-            setGeometryRestore(prev_geom_restore);
+            setGeometryRestore(effectiveGeometryRestore);
         }
         doSetQuickTileMode();
         Q_EMIT quickTileModeChanged();

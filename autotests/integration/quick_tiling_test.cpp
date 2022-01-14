@@ -262,7 +262,7 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     // but quick tile mode already changed
     QCOMPARE(c->quickTileMode(), QuickTileFlag::Maximize);
-    QCOMPARE(c->geometryRestore(), QRect());
+    QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
 
     // but we got requested a new geometry
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -276,7 +276,7 @@ void QuickTilingTest::testQuickMaximizing()
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 1280, 1024));
-    QCOMPARE(c->geometryRestore(), QRect());
+    QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
 
     // client is now set to maximised
     QCOMPARE(maximizeChangedSpy1.count(), 1);
@@ -295,11 +295,11 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(quickTileChangedSpy.count(), 2);
     // geometry not yet changed
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 1280, 1024));
-    QCOMPARE(c->geometryRestore(), QRect());
+    QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
     // we got requested a new geometry
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(0, 0));
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(100, 50));
 
     // render again
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
@@ -308,7 +308,7 @@ void QuickTilingTest::testQuickMaximizing()
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 2);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
-    QCOMPARE(c->geometryRestore(), QRect());
+    QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
     QCOMPARE(maximizeChangedSpy1.count(), 2);
     QCOMPARE(maximizeChangedSpy1.last().first().value<KWin::AbstractClient*>(), c);
     QCOMPARE(maximizeChangedSpy1.last().last().value<KWin::MaximizeMode>(), MaximizeRestore);
