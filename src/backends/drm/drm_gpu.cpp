@@ -593,20 +593,6 @@ void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
     }
 }
 
-bool DrmGpu::isFormatSupported(uint32_t drmFormat) const
-{
-    if (!m_atomicModeSetting) {
-        return drmFormat == DRM_FORMAT_XRGB8888 || drmFormat == DRM_FORMAT_ARGB8888;
-    } else {
-        for (const auto &plane : qAsConst(m_planes)) {
-            if (plane->type() == DrmPlane::TypeIndex::Primary && !plane->formats().contains(drmFormat)) {
-                return false;
-            }
-        }
-        return true;
-    }
-}
-
 DrmLeaseOutput *DrmGpu::findLeaseOutput(quint32 connector)
 {
     auto it = std::find_if(m_leaseOutputs.constBegin(), m_leaseOutputs.constEnd(), [connector] (DrmLeaseOutput *o) {
