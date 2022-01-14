@@ -329,17 +329,15 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
         return;
     }
 
-    const QRect oldFrameGeometry = frameGeometry();
-    const QRect oldClientGeometry = oldFrameGeometry - frameMargins();
-
     GeometryUpdatesBlocker blocker(this);
 
+    const QRect oldFrameGeometry = frameGeometry();
     if (force) {
         destroyDecoration();
     }
 
     if (!noBorder()) {
-        createDecoration(oldClientGeometry);
+        createDecoration(oldFrameGeometry);
     } else {
         destroyDecoration();
     }
@@ -347,7 +345,7 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
     updateShadow();
 
     if (check_workspace_pos) {
-        checkWorkspacePosition(oldFrameGeometry, oldClientGeometry);
+        checkWorkspacePosition(oldFrameGeometry);
     }
 }
 

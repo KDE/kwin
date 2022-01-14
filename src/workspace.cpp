@@ -1284,7 +1284,7 @@ void Workspace::sendClientToDesktop(AbstractClient* c, int desk, bool dont_activ
     } else
         raiseClient(c);
 
-    c->checkWorkspacePosition( QRect(), QRect(), VirtualDesktopManager::self()->desktopForX11Id(old_desktop) );
+    c->checkWorkspacePosition( QRect(), VirtualDesktopManager::self()->desktopForX11Id(old_desktop) );
 
     auto transients_stacking_order = ensureStackingOrder(c->transients());
     for (auto it = transients_stacking_order.constBegin();
@@ -2491,42 +2491,22 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
         const int snapY = borderSnapZone.height() * snapAdjust;
         if (snapX || snapY) {
             QRect geo = c->frameGeometry();
-            QMargins frameMargins = c->frameMargins();
-
-            // snap to titlebar / snap to window borders on inner screen edges
-            Qt::Edge titlePos = c->titlebarPosition();
-            if (frameMargins.left() && (titlePos == Qt::LeftEdge || (c->maximizeMode() & MaximizeHorizontal) ||
-                                        screens()->intersecting(geo.translated(maxRect.x() - (frameMargins.left() + geo.x()), 0)) > 1)) {
-                frameMargins.setLeft(0);
-            }
-            if (frameMargins.right() && (titlePos == Qt::RightEdge || (c->maximizeMode() & MaximizeHorizontal) ||
-                                         screens()->intersecting(geo.translated(maxRect.right() + frameMargins.right() - geo.right(), 0)) > 1)) {
-                frameMargins.setRight(0);
-            }
-            if (frameMargins.top() && (titlePos == Qt::TopEdge || (c->maximizeMode() & MaximizeVertical) ||
-                                       screens()->intersecting(geo.translated(0, maxRect.y() - (frameMargins.top() + geo.y()))) > 1)) {
-                frameMargins.setTop(0);
-            }
-            if (frameMargins.bottom() && (titlePos == Qt::BottomEdge || (c->maximizeMode() & MaximizeVertical) ||
-                                          screens()->intersecting(geo.translated(0, maxRect.bottom() + frameMargins.bottom() - geo.bottom())) > 1)) {
-                frameMargins.setBottom(0);
-            }
             if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snapX)) {
                 deltaX = xmin - cx;
-                nx = xmin - frameMargins.left();
+                nx = xmin;
             }
             if ((sOWO ? (rx > xmax) : true) && (qAbs(rx - xmax) < snapX) && (qAbs(xmax - rx) < deltaX)) {
                 deltaX = rx - xmax;
-                nx = xmax - cw + frameMargins.right();
+                nx = xmax - cw;
             }
 
             if ((sOWO ? (cy < ymin) : true) && (qAbs(ymin - cy) < snapY)) {
                 deltaY = ymin - cy;
-                ny = ymin - frameMargins.top();
+                ny = ymin;
             }
             if ((sOWO ? (ry > ymax) : true) && (qAbs(ry - ymax) < snapY) && (qAbs(ymax - ry) < deltaY)) {
                 deltaY = ry - ymax;
-                ny = ymax - ch + frameMargins.bottom();
+                ny = ymax - ch;
             }
         }
 

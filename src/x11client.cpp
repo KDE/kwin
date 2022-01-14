@@ -1105,7 +1105,6 @@ void X11Client::updateDecoration(bool check_workspace_pos, bool force)
             ((!isDecorated() && noBorder()) || (isDecorated() && !noBorder())))
         return;
     QRect oldgeom = frameGeometry();
-    QRect oldClientGeom = oldgeom.adjusted(borderLeft(), borderTop(), -borderRight(), -borderBottom());
     blockGeometryUpdates(true);
     if (force)
         destroyDecoration();
@@ -1115,7 +1114,7 @@ void X11Client::updateDecoration(bool check_workspace_pos, bool force)
         destroyDecoration();
     updateShadow();
     if (check_workspace_pos)
-        checkWorkspacePosition(oldgeom, oldClientGeom);
+        checkWorkspacePosition(oldgeom);
     updateInputWindow();
     blockGeometryUpdates(false);
     updateFrameExtents();

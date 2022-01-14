@@ -100,33 +100,6 @@ void Placement::place(AbstractClient *c, const QRect &area, Policy policy, Polic
     default:
         placeSmart(c, area, nextPlacement);
     }
-
-    if (options->borderSnapZone()) {
-        // snap to titlebar / snap to window borders on inner screen edges
-        const QRect geo(c->moveResizeGeometry());
-        QPoint corner = geo.topLeft();
-        const QMargins frameMargins = c->frameMargins();
-        Qt::Edge titlePos = c->titlebarPosition();
-
-        const QRect fullRect = workspace()->clientArea(FullArea, c);
-        if (!(c->maximizeMode() & MaximizeHorizontal)) {
-            if (titlePos != Qt::RightEdge && geo.right() == fullRect.right()) {
-                corner.rx() += frameMargins.right();
-            }
-            if (titlePos != Qt::LeftEdge && geo.left() == fullRect.left()) {
-                corner.rx() -= frameMargins.left();
-            }
-        }
-        if (!(c->maximizeMode() & MaximizeVertical)) {
-            if (titlePos != Qt::BottomEdge && geo.bottom() == fullRect.bottom()) {
-                corner.ry() += frameMargins.bottom();
-            }
-            if (titlePos != Qt::TopEdge && geo.top() == fullRect.top()) {
-                corner.ry() -= frameMargins.top();
-            }
-        }
-        c->move(corner);
-    }
 }
 
 /**
@@ -863,14 +836,6 @@ int Workspace::packPositionLeft(const AbstractClient *client, int oldX, bool lef
                           client,
                           QPoint(client->frameGeometry().left() - 1, client->frameGeometry().center().y())).left();
     }
-    if (client->titlebarPosition() != Qt::LeftEdge) {
-        const int right = newX - client->frameMargins().left();
-        QRect frameGeometry = client->frameGeometry();
-        frameGeometry.moveRight(right);
-        if (screens()->intersecting(frameGeometry) < 2) {
-            newX = right;
-        }
-    }
     if (oldX <= newX) {
         return oldX;
     }
@@ -896,14 +861,6 @@ int Workspace::packPositionRight(const AbstractClient *client, int oldX, bool ri
         newX = clientArea(MaximizeArea,
                           client,
                           QPoint(client->frameGeometry().right() + 1, client->frameGeometry().center().y())).right();
-    }
-    if (client->titlebarPosition() != Qt::RightEdge) {
-        const int right = newX + client->frameMargins().right();
-        QRect frameGeometry = client->frameGeometry();
-        frameGeometry.moveRight(right);
-        if (screens()->intersecting(frameGeometry) < 2) {
-            newX = right;
-        }
     }
     if (oldX >= newX) {
         return oldX;
@@ -931,14 +888,6 @@ int Workspace::packPositionUp(const AbstractClient *client, int oldY, bool topEd
                           client,
                           QPoint(client->frameGeometry().center().x(), client->frameGeometry().top() - 1)).top();
     }
-    if (client->titlebarPosition() != Qt::TopEdge) {
-        const int top = newY - client->frameMargins().top();
-        QRect frameGeometry = client->frameGeometry();
-        frameGeometry.moveTop(top);
-        if (screens()->intersecting(frameGeometry) < 2) {
-            newY = top;
-        }
-    }
     if (oldY <= newY) {
         return oldY;
     }
@@ -964,14 +913,6 @@ int Workspace::packPositionDown(const AbstractClient *client, int oldY, bool bot
         newY = clientArea(MaximizeArea,
                           client,
                           QPoint(client->frameGeometry().center().x(), client->frameGeometry().bottom() + 1)).bottom();
-    }
-    if (client->titlebarPosition() != Qt::BottomEdge) {
-        const int bottom = newY + client->frameMargins().bottom();
-        QRect frameGeometry = client->frameGeometry();
-        frameGeometry.moveBottom(bottom);
-        if (screens()->intersecting(frameGeometry) < 2) {
-            newY = bottom;
-        }
     }
     if (oldY >= newY) {
         return oldY;
