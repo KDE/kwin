@@ -552,6 +552,10 @@ bool EglGbmBackend::doesRenderFit(const Output &output, const Output::RenderData
     if (output.forceXrgb8888 && render.gbmSurface->format() != DRM_FORMAT_XRGB8888) {
         return false;
     }
+    if (!output.output->isFormatSupported(render.gbmSurface->format())
+        || output.output->supportedModifiers(render.gbmSurface->format()) != render.gbmSurface->modifiers()) {
+        return false;
+    }
     QSize surfaceSize = output.output->bufferSize();
     if (surfaceSize != render.gbmSurface->size()) {
         return false;

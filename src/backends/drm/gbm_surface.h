@@ -40,6 +40,7 @@ public:
     QSize size() const;
     bool isValid() const;
     uint32_t format() const;
+    QVector<uint64_t> modifiers() const;
 
 private:
     gbm_surface *m_surface;
@@ -47,6 +48,7 @@ private:
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     QSize m_size;
     const uint32_t m_format;
+    const QVector<uint64_t> m_modifiers;
 
     QSharedPointer<GbmBuffer> m_currentBuffer;
     QSharedPointer<DrmGbmBuffer> m_currentDrmBuffer;
