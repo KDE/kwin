@@ -21,7 +21,6 @@
         "Description[sl]": "Zdrsni namizja ob preklapljanju navideznih omizij",
         "Description[sv]": "Låt skrivbord skjutas vid byte av virtuella skrivbord",
         "Description[uk]": "Ковзання стільниць під час час перемикання стільниць",
-        "Description[vi]": "Trượt qua các bàn làm việc khi chuyển bàn làm việc ảo",
         "Description[x-test]": "xxSlide desktops when switching virtual desktopsxx",
         "Description[zh_CN]": "虚拟桌面切换时呈现滑动动效",
         "EnabledByDefault": true,
@@ -32,7 +31,6 @@
         "Name[az]": "Slayd",
         "Name[ca@valencia]": "Lliscament",
         "Name[ca]": "Lliscament",
-        "Name[cs]": "Sklouznutí",
         "Name[en_GB]": "Slide",
         "Name[es]": "Deslizar",
         "Name[fi]": "Työpöytäliuku",
@@ -49,7 +47,6 @@
         "Name[sl]": "Zdrsni",
         "Name[sv]": "Skjut",
         "Name[uk]": "Ковзання",
-        "Name[vi]": "Trượt",
         "Name[x-test]": "xxSlidexx",
         "Name[zh_CN]": "滑动"
     },

@@ -6,7 +6,6 @@
         "Description[az]": "Ekranın kənarlarına yaxınlaşdıqda onları vurğulayaraq seçir",
         "Description[ca@valencia]": "Ressalta la vora de la pantalla en aproximar-se",
         "Description[ca]": "Ressalta la vora de la pantalla en aproximar-se",
-        "Description[cs]": "Zvýrazní hranu obrazovky při přiblížení k ní",
         "Description[en_GB]": "Highlights a screen edge when approaching",
         "Description[es]": "Resalta el borde de la pantalla al acercarse a él",
         "Description[fi]": "Korostaa näytön reunan sitä lähestyttäessä",
@@ -22,7 +21,6 @@
         "Description[sl]": "Osvetli rob zaslona, ko se mu bliža",
         "Description[sv]": "Markerar en skärmkant när man närmar sig den",
         "Description[uk]": "Підсвічує край екрана у разі наближення вказівника",
-        "Description[vi]": "Tô sáng cạnh màn hình khi tiến lại gần",
         "Description[x-test]": "xxHighlights a screen edge when approachingxx",
         "Description[zh_CN]": "接近屏幕边缘时高亮显示",
         "EnabledByDefault": true,
@@ -33,7 +31,6 @@
         "Name[az]": "Ekran kənarı",
         "Name[ca@valencia]": "Vora de la pantalla",
         "Name[ca]": "Vora de la pantalla",
-        "Name[cs]": "Hrana obrazovky",
         "Name[en_GB]": "Screen Edge",
         "Name[es]": "Borde de la pantalla",
         "Name[fi]": "Näytön reuna",
@@ -49,7 +46,6 @@
         "Name[sl]": "Rob zaslona",
         "Name[sv]": "Skärmkant",
         "Name[uk]": "Край екрана",
-        "Name[vi]": "Cạnh màn hình",
         "Name[x-test]": "xxScreen Edgexx",
         "Name[zh_CN]": "屏幕边缘高亮"
     }

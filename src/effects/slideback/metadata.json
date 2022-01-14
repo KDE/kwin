@@ -6,7 +6,6 @@
         "Description[az]": "Yeni pəncərə qaldırıldığında digər pəncərə arxaya sürüşür",
         "Description[ca@valencia]": "Llisca arrere les finestres quan s'eleva una altra finestra",
         "Description[ca]": "Llisca enrere les finestres quan s'eleva una altra finestra",
-        "Description[cs]": "Zasunout okna, pokud ztratí zaměření",
         "Description[en_GB]": "Slide back windows when another window is raised",
         "Description[es]": "Deslizar hacia atrás las ventanas cuando otra ventana pasa al primer plano",
         "Description[fi]": "Liu’uttaa ikkunoita taaksepäin toisen ikkunan noustessa",
@@ -22,7 +21,6 @@
         "Description[sl]": "Zdrsni okna nazaj, ko se dvigne drugo",
         "Description[sv]": "Låt fönster skjutas tillbaka när ett annat fönster höjs",
         "Description[uk]": "Ковзання вікон на задній план під час підняття інших вікон",
-        "Description[vi]": "Trượt lùi cửa sổ khi một cửa sổ khác được nâng lên",
         "Description[x-test]": "xxSlide back windows when another window is raisedxx",
         "Description[zh_CN]": "激活一个窗口时呈现其他窗口的后滑动效",
         "EnabledByDefault": false,
@@ -33,7 +31,6 @@
         "Name[az]": "Arxasına sürüşdürmək",
         "Name[ca@valencia]": "Llisca cap arrere",
         "Name[ca]": "Llisca cap enrere",
-        "Name[cs]": "Zasunout",
         "Name[en_GB]": "Slide Back",
         "Name[es]": "Deslizar hacia atrás",
         "Name[fi]": "Liuku taaksepäin",
@@ -49,7 +46,6 @@
         "Name[sl]": "Zdrsni nazaj",
         "Name[sv]": "Skjut tillbaka",
         "Name[uk]": "Зниження",
-        "Name[vi]": "Trượt lùi",
         "Name[x-test]": "xxSlide Backxx",
         "Name[zh_CN]": "窗口后滑动效"
     }

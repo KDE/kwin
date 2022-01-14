@@ -6,7 +6,6 @@
         "Description[az]": "Modal pəncərələr rəvan şəkildə uçuşla göstərilir və ya gizlədilir",
         "Description[ca@valencia]": "Fa que els diàlegs modals entrin o isquen volant quan es mostren o s'oculten",
         "Description[ca]": "Fa que els diàlegs modals entrin o surtin volant quan es mostren o s'oculten",
-        "Description[cs]": "Nechat modální dialogy plynule zmizet/objevit se, pokud jsou zobrazeny resp. skryty",
         "Description[en_GB]": "Make modal dialogues smoothly fly in and out when they are shown or hidden",
         "Description[es]": "Hace que los diálogos modales vuelen suavemente hacia adentro y hacia afuera cuando se muestran u ocultan",
         "Description[fi]": "Lennättää ponnahdusikkunat ruudulle ja ruudulta",
@@ -22,7 +21,6 @@
         "Description[sl]": "Modalna okna gladko priletijo in odletijo, kadar se prikažejo ali skrijejo",
         "Description[sv]": "Gör att dialogrutor mjukt flyger in eller ut när de visas eller döljs",
         "Description[uk]": "Плавне влітання або відлітання вікон під час їх появи або приховування",
-        "Description[vi]": "Làm các hộp thoại chế độ bay vào và ra một cách êm dịu khi chúng hiện ra và biến mất",
         "Description[x-test]": "xxMake modal dialogs smoothly fly in and out when they are shown or hiddenxx",
         "Description[zh_CN]": "对话框显示/隐藏时绘制过渡动画",
         "EnabledByDefault": false,
@@ -33,7 +31,6 @@
         "Name[az]": "Vərəq",
         "Name[ca@valencia]": "Full",
         "Name[ca]": "Full",
-        "Name[cs]": "List",
         "Name[en_GB]": "Sheet",
         "Name[es]": "Hoja",
         "Name[fi]": "Arkki",
@@ -49,7 +46,6 @@
         "Name[sl]": "List",
         "Name[sv]": "Blad",
         "Name[uk]": "Аркуш",
-        "Name[vi]": "Tấm mỏng",
         "Name[x-test]": "xxSheetxx",
         "Name[zh_CN]": "对话框显隐过渡"
     }

@@ -6,7 +6,6 @@
         "Description[az]": "Ekranda toxunan nöqtələri canlandırır",
         "Description[ca@valencia]": "Visualitza els punts de contacte",
         "Description[ca]": "Visualitza els punts de contacte",
-        "Description[cs]": "Vizualizovat dotekové body",
         "Description[en_GB]": "Visualise touch points",
         "Description[es]": "Visualizar los puntos de contacto",
         "Description[fi]": "Korosta kosketuspisteet",
@@ -22,7 +21,6 @@
         "Description[sl]": "Vizualiziraj točke dotika",
         "Description[sv]": "Åskådliggör beröringspunkter",
         "Description[uk]": "Візуалізувати точки дотику",
-        "Description[vi]": "Trực quan hoá các điểm chạm",
         "Description[x-test]": "xxVisualize touch pointsxx",
         "Description[zh_CN]": "高亮显示在触控屏幕上的触摸点",
         "EnabledByDefault": false,
@@ -33,7 +31,6 @@
         "Name[az]": "Toxunma nöqtələri",
         "Name[ca@valencia]": "Punts de contacte",
         "Name[ca]": "Punts de contacte",
-        "Name[cs]": "Dotekové body",
         "Name[en_GB]": "Touch Points",
         "Name[es]": "Puntos de contacto",
         "Name[fi]": "Kosketuspisteet",
@@ -49,7 +46,6 @@
         "Name[sl]": "Točke dotika",
         "Name[sv]": "Beröringspunkter",
         "Name[uk]": "Точки дотику",
-        "Name[vi]": "Điểm chạm",
         "Name[x-test]": "xxTouch Pointsxx",
         "Name[zh_CN]": "触摸点高亮"
     }

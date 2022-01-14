@@ -21,7 +21,6 @@
         "Description[sl]": "Okna drsijo, ko se pojavijo ali izginejo",
         "Description[sv]": "Glid fönster när de visas eller försvinner",
         "Description[uk]": "Ковзання вікон при появі або зникненні",
-        "Description[vi]": "Lướt các cửa sổ khi chúng xuất hiện hoặc biến mất",
         "Description[x-test]": "xxGlide windows as they appear or disappearxx",
         "Description[zh_CN]": "窗口显示/隐藏时呈现滑翔过渡动效",
         "EnabledByDefault": false,
@@ -32,7 +31,6 @@
         "Name[az]": "Sürüşmə",
         "Name[ca@valencia]": "Lliscament",
         "Name[ca]": "Lliscament",
-        "Name[cs]": "Klouzání",
         "Name[en_GB]": "Glide",
         "Name[es]": "Planear",
         "Name[fi]": "Ikkunaliuku",
@@ -49,7 +47,6 @@
         "Name[sl]": "Drsanje",
         "Name[sv]": "Glid",
         "Name[uk]": "Плин",
-        "Name[vi]": "Lướt",
         "Name[x-test]": "xxGlidexx",
         "Name[zh_CN]": "滑翔动效"
     },
