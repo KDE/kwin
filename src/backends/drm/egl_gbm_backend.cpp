@@ -334,8 +334,9 @@ QSharedPointer<DrmBuffer> EglGbmBackend::importFramebuffer(Output &output, const
     }
     // ImportMode::DumbBuffer
     if (!output.current.importSwapchain || output.current.importSwapchain->size() != size) {
-        output.current.importSwapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, size, renderingBackend()->drmFormat(output.output));
-        if (output.current.importSwapchain->isEmpty()) {
+        const uint32_t format = renderingBackend()->drmFormat(output.output);
+        output.current.importSwapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, size, format);
+        if (output.current.importSwapchain->isEmpty() || output.current.importSwapchain->currentBuffer()->format() != format) {
             output.current.importSwapchain = nullptr;
         }
     }
@@ -346,7 +347,8 @@ QSharedPointer<DrmBuffer> EglGbmBackend::importFramebuffer(Output &output, const
         }
     }
     qCWarning(KWIN_DRM) << "all imports failed on output" << output.output;
-    // TODO turn off output?
+    // try again with XRGB8888, the most universally supported basic format
+    output.forceXrgb8888 = true;
     return nullptr;
 }
 
@@ -542,18 +544,21 @@ QRegion EglGbmBackend::beginFrame(AbstractOutput *drmOutput)
     }
 }
 
-bool EglGbmBackend::doesRenderFit(DrmAbstractOutput *output, const Output::RenderData &render)
+bool EglGbmBackend::doesRenderFit(const Output &output, const Output::RenderData &render)
 {
     if (!render.gbmSurface) {
         return false;
     }
-    QSize surfaceSize = output->bufferSize();
+    if (output.forceXrgb8888 && render.gbmSurface->format() != DRM_FORMAT_XRGB8888) {
+        return false;
+    }
+    QSize surfaceSize = output.output->bufferSize();
     if (surfaceSize != render.gbmSurface->size()) {
         return false;
     }
-    bool needsTexture = output->needsSoftwareTransformation();
+    bool needsTexture = output.output->needsSoftwareTransformation();
     if (needsTexture) {
-        return render.shadowBuffer && render.shadowBuffer->textureSize() == output->sourceSize();
+        return render.shadowBuffer && render.shadowBuffer->textureSize() == output.output->sourceSize();
     } else {
         return render.shadowBuffer == nullptr;
     }
@@ -562,8 +567,8 @@ bool EglGbmBackend::doesRenderFit(DrmAbstractOutput *output, const Output::Rende
 QRegion EglGbmBackend::prepareRenderingForOutput(Output &output)
 {
     // check if the current surface still fits
-    if (!doesRenderFit(output.output, output.current)) {
-        if (doesRenderFit(output.output, output.old)) {
+    if (!doesRenderFit(output, output.current)) {
+        if (doesRenderFit(output, output.old)) {
             cleanupRenderData(output.current);
             output.current = output.old;
             output.old = {};
@@ -763,7 +768,15 @@ QSharedPointer<DrmBuffer> EglGbmBackend::renderTestFrame(DrmAbstractOutput *outp
 {
     beginFrame(output);
     glClear(GL_COLOR_BUFFER_BIT);
-    return endFrameWithBuffer(output, output->geometry());
+    const auto buffer = endFrameWithBuffer(output, output->geometry());
+    if (!buffer && this != renderingBackend()) {
+        // if CPU import fails we might need to try again
+        beginFrame(output);
+        glClear(GL_COLOR_BUFFER_BIT);
+        return endFrameWithBuffer(output, output->geometry());
+    } else {
+        return buffer;
+    }
 }
 
 QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output) const
@@ -812,6 +825,15 @@ DrmGpu *EglGbmBackend::gpu() const
 
 std::optional<GbmFormat> EglGbmBackend::chooseFormat(Output &output) const
 {
+    if (output.forceXrgb8888) {
+        return GbmFormat {
+            .drmFormat = DRM_FORMAT_XRGB8888,
+            .redSize = 8,
+            .greenSize = 8,
+            .blueSize = 8,
+            .alphaSize = 0,
+        };
+    }
     // formats are already sorted by order of preference
     std::optional<GbmFormat> fallback;
     for (const auto &format : qAsConst(m_formats)) {
