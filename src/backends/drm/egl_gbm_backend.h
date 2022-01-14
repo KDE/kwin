@@ -95,6 +95,7 @@ private:
     };
     struct Output {
         DrmAbstractOutput *output = nullptr;
+        bool forceXrgb8888 = false;
         struct RenderData {
             QSharedPointer<ShadowBuffer> shadowBuffer;
             QSharedPointer<GbmSurface> gbmSurface;
@@ -115,7 +116,7 @@ private:
         QPointer<KWaylandServer::SurfaceInterface> oldScanoutCandidate;
     };
 
-    bool doesRenderFit(DrmAbstractOutput *output, const Output::RenderData &render);
+    bool doesRenderFit(const Output &output, const Output::RenderData &render);
     bool resetOutput(Output &output);
     bool addOutput(DrmAbstractOutput *output);
     void removeOutput(DrmAbstractOutput *output);
