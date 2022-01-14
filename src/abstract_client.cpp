@@ -1014,7 +1014,7 @@ void AbstractClient::finishInteractiveMoveResize(bool cancel)
             updateGeometryRestoresForFullscreen(output());
         }
         workspace()->sendClientToOutput(this, output()); // checks rule validity
-        if (maximizeMode() != MaximizeRestore) {
+        if (isFullScreen() || maximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
         }
     }
@@ -3225,28 +3225,13 @@ void AbstractClient::sendToOutput(AbstractOutput *newOutput)
             }
         }
     }
-    if (output() == newOutput && !isFullScreen())   // Don't use isOnScreen(), that's true even when only partially
+    if (output() == newOutput)   // Don't use isOnScreen(), that's true even when only partially
         return;
 
     GeometryUpdatesBlocker blocker(this);
 
-    // operating on the maximized / quicktiled window would leave the old geom_restore behind,
-    // so we clear the state first
-    MaximizeMode maxMode = maximizeMode();
-    QuickTileMode qtMode = quickTileMode();
-    if (maxMode != MaximizeRestore)
-        maximize(MaximizeRestore);
-    if (qtMode != QuickTileMode(QuickTileFlag::None))
-        setQuickTileMode(QuickTileFlag::None, true);
-
     QRect oldScreenArea = workspace()->clientArea(MaximizeArea, this);
     QRect screenArea = workspace()->clientArea(MaximizeArea, this, newOutput);
-
-    // the window can have its center so that the position correction moves the new center onto
-    // the old screen, what will tile it where it is. Ie. the screen is not changed
-    // this happens esp. with electric border quicktiling
-    if (qtMode != QuickTileMode(QuickTileFlag::None))
-        keepInArea(oldScreenArea);
 
     QRect oldGeom = moveResizeGeometry();
     QRect newGeom = oldGeom;
@@ -3267,25 +3252,8 @@ void AbstractClient::sendToOutput(AbstractOutput *newOutput)
         keepInArea(screenArea);
     }
 
-    if (isFullScreen()) {
-        updateGeometryRestoresForFullscreen(newOutput);
-        checkWorkspacePosition(oldGeom);
-    } else {
-        // align geom_restore - checkWorkspacePosition operates on it
-        setGeometryRestore(moveResizeGeometry());
-
-        checkWorkspacePosition(oldGeom);
-
-        // re-align geom_restore to constrained geometry
-        setGeometryRestore(moveResizeGeometry());
-    }
-    // finally reset special states
-    // NOTICE that MaximizeRestore/QuickTileFlag::None checks are required.
-    // eg. setting QuickTileFlag::None would break maximization
-    if (maxMode != MaximizeRestore)
-        maximize(maxMode);
-    if (qtMode != QuickTileMode(QuickTileFlag::None) && qtMode != quickTileMode())
-        setQuickTileMode(qtMode, true);
+    updateGeometryRestoresForFullscreen(newOutput);
+    checkWorkspacePosition(oldGeom);
 
     auto tso = workspace()->ensureStackingOrder(transients());
     for (auto it = tso.constBegin(), end = tso.constEnd(); it != end; ++it)
