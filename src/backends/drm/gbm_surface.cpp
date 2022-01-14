@@ -40,6 +40,7 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<
     , m_gpu(gpu)
     , m_size(size)
     , m_format(format)
+    , m_modifiers(modifiers)
 {
     if (!m_surface) {
         qCCritical(KWIN_DRM) << "Could not create gbm surface!" << strerror(errno);
@@ -136,6 +137,11 @@ bool GbmSurface::isValid() const
 uint32_t GbmSurface::format() const
 {
     return m_format;
+}
+
+QVector<uint64_t> GbmSurface::modifiers() const
+{
+    return m_modifiers;
 }
 
 }
