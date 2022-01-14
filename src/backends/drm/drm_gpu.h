@@ -56,7 +56,6 @@ public:
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
     bool isNVidia() const;
-    bool isFormatSupported(uint32_t drmFormat) const;
     gbm_device *gbmDevice() const;
     EGLDisplay eglDisplay() const;
     EglGbmBackend *eglBackend() const;

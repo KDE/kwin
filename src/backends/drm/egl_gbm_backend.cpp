@@ -408,10 +408,6 @@ bool EglGbmBackend::initBufferConfigs()
         EGLint gbmFormat;
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
 
-        if (!m_gpu->isFormatSupported(gbmFormat)) {
-            continue;
-        }
-
         GbmFormat format;
         format.drmFormat = gbmFormat;
         // Query number of bits for color channel
