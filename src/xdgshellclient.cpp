@@ -10,18 +10,18 @@
 */
 #include "xdgshellclient.h"
 #include "abstract_wayland_output.h"
+#if KWIN_BUILD_ACTIVITIES
+#include "activities.h"
+#endif
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
 #include "platform.h"
 #include "screenedge.h"
-#include "subsurfacemonitor.h"
+#include "touch_input.h"
+#include "utils/subsurfacemonitor.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#if KWIN_BUILD_ACTIVITIES
-#include "activities.h"
-#endif
-#include "touch_input.h"
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>

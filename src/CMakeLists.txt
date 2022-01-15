@@ -113,7 +113,6 @@ set(kwin_SRCS
     shadow.cpp
     shadowitem.cpp
     sm.cpp
-    subsurfacemonitor.cpp
     surfaceitem.cpp
     surfaceitem_internal.cpp
     surfaceitem_wayland.cpp
