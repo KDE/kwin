@@ -92,6 +92,12 @@ static bool isCursorSpriteCompatible(const QImage *buffer, const QImage *sprite)
 
 void DrmOutput::updateCursor()
 {
+    static bool valid;
+    static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
+    if (forceSoftwareCursor) {
+        m_setCursorSuccessful = false;
+        return;
+    }
     if (!m_pipeline->pending.crtc) {
         return;
     }
