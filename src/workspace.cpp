@@ -1041,8 +1041,6 @@ void Workspace::updateClientVisibilityOnDesktopChange(VirtualDesktop *newDesktop
         if (c->isOnDesktop(newDesktop) && c->isOnCurrentActivity())
             c->updateVisibility();
     }
-    if (showingDesktop())   // Do this only after desktop change to avoid flicker
-        setShowingDesktop(false);
 }
 
 void Workspace::activateClientOnNewDesktop(VirtualDesktop *desktop)
