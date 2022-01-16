@@ -194,7 +194,7 @@ int DrmConnector::currentModeIndex() const
     return m_modeIndex;
 }
 
-QVector<DrmConnectorMode *> DrmConnector::modes()
+QVector<DrmConnectorMode *> DrmConnector::modes() const
 {
     return m_modes;
 }

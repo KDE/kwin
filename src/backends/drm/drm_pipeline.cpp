@@ -191,7 +191,7 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
     if (pending.crtc) {
         pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
         pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, pending.gamma ? pending.gamma->blobId() : 0);
-        auto modeSize = m_connector->modes()[pending.modeIndex]->size();
+        auto modeSize = m_connector->modes().at(pending.modeIndex)->size();
         pending.crtc->primaryPlane()->set(QPoint(0, 0), m_primaryBuffer ? m_primaryBuffer->size() : bufferSize(), QPoint(0, 0), modeSize);
         pending.crtc->primaryPlane()->setBuffer(activePending() ? m_primaryBuffer.get() : nullptr);
 
@@ -224,7 +224,7 @@ void DrmPipeline::prepareAtomicModeset()
         m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, 0);
         return;
     }
-    auto mode = m_connector->modes()[pending.modeIndex];
+    auto mode = m_connector->modes().at(pending.modeIndex);
 
     m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
     if (const auto &prop = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB)) {
@@ -400,7 +400,7 @@ void DrmPipeline::applyPendingChanges()
 
 QSize DrmPipeline::bufferSize() const
 {
-    const auto modeSize = m_connector->modes()[pending.modeIndex]->size();
+    const auto modeSize = m_connector->modes().at(pending.modeIndex)->size();
     if (pending.bufferTransformation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
         return modeSize.transposed();
     }
@@ -409,7 +409,7 @@ QSize DrmPipeline::bufferSize() const
 
 QSize DrmPipeline::sourceSize() const
 {
-    const auto modeSize = m_connector->modes()[pending.modeIndex]->size();
+    const auto modeSize = m_connector->modes().at(pending.modeIndex)->size();
     if (pending.sourceTransformation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
         return modeSize.transposed();
     }
@@ -418,7 +418,7 @@ QSize DrmPipeline::sourceSize() const
 
 bool DrmPipeline::isCursorVisible() const
 {
-    const QRect mode = QRect(QPoint(), m_connector->modes()[pending.modeIndex]->size());
+    const QRect mode = QRect(QPoint(), m_connector->modes().at(pending.modeIndex)->size());
     return pending.cursorBo && QRect(pending.cursorPos, pending.cursorBo->size()).intersects(mode);
 }
 
@@ -468,7 +468,7 @@ bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const
         if (pending.crtc->primaryPlane()) {
             return pending.crtc->primaryPlane()->formats().contains(drmFormat);
         } else {
-            return legacyFormats.keys().contains(drmFormat);
+            return legacyFormats.contains(drmFormat);
         }
     } else {
         return false;
@@ -478,7 +478,7 @@ bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const
 QVector<uint64_t> DrmPipeline::supportedModifiers(uint32_t drmFormat) const
 {
     if (pending.crtc && pending.crtc->primaryPlane()) {
-        return pending.crtc->primaryPlane()->formats()[drmFormat];
+        return pending.crtc->primaryPlane()->formats().value(drmFormat);
     } else {
         return {};
     }

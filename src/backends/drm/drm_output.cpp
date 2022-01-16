@@ -116,7 +116,7 @@ void DrmOutput::updateCursor()
         return;
     }
     const auto plane = m_pipeline->pending.crtc->cursorPlane();
-    if (!m_cursor || (plane && !plane->formats()[m_cursor->drmFormat()].contains(DRM_FORMAT_MOD_LINEAR))) {
+    if (!m_cursor || (plane && !plane->formats().value(m_cursor->drmFormat()).contains(DRM_FORMAT_MOD_LINEAR))) {
         if (plane) {
             const auto formatModifiers = plane->formats();
             const auto formats = formatModifiers.keys();
