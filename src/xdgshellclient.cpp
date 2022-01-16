@@ -1602,10 +1602,6 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     }
     m_isRequestedFullScreen = set;
 
-    if (set) {
-        workspace()->raiseClient(this);
-    }
-
     configureDecoration();
 
     if (set) {
