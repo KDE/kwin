@@ -196,11 +196,8 @@ bool DrmBackend::initialize()
         }
     } else {
         const auto devices = m_udev->listGPUs();
-        bool bootVga = false;
         for (const UdevDevice::Ptr &device : devices) {
-            if (addGpu(device->devNode())) {
-                bootVga |= device->isBootVga();
-            }
+            addGpu(device->devNode());
         }
     }
 
