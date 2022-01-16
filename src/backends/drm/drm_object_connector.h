@@ -98,7 +98,7 @@ public:
 
     DrmConnectorMode *currentMode() const;
     int currentModeIndex() const;
-    QVector<DrmConnectorMode *> modes();
+    QVector<DrmConnectorMode *> modes() const;
     void setModeIndex(int index);
     void findCurrentMode(drmModeModeInfo currentMode);
     void updateModes();
