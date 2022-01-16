@@ -34,8 +34,6 @@ private Q_SLOTS:
     void testSize_data();
     void testSize();
     void testCount();
-    void testIntersecting_data();
-    void testIntersecting();
     void testCurrent_data();
     void testCurrent();
     void testCurrentWithFollowsMouse_data();
@@ -140,35 +138,6 @@ void ScreensTest::testCount()
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection, Q_ARG(int, 1));
     QVERIFY(changedSpy.wait());
     QCOMPARE(countChangedSpy.count(), 1);
-}
-
-void ScreensTest::testIntersecting_data()
-{
-    QTest::addColumn<QVector<QRect>>("geometries");
-    QTest::addColumn<QRect>("testGeometry");
-    QTest::addColumn<int>("expectedCount");
-
-    QTest::newRow("null-rect") << QVector<QRect>{{QRect{0, 0, 100, 100}}} << QRect() << 0;
-    QTest::newRow("non-overlapping") << QVector<QRect>{{QRect{0, 0, 100, 100}}} << QRect(100, 0, 100, 100) << 0;
-    QTest::newRow("in-between") << QVector<QRect>{{QRect{0, 0, 10, 20}, QRect{20, 40, 10, 20}}} << QRect(15, 0, 2, 2) << 0;
-    QTest::newRow("gap-overlapping") << QVector<QRect>{{QRect{0, 0, 10, 20}, QRect{20, 40, 10, 20}}} << QRect(9, 10, 200, 200) << 2;
-    QTest::newRow("larger") << QVector<QRect>{{QRect{0, 0, 100, 100}}} << QRect(-10, -10, 200, 200) << 1;
-    QTest::newRow("several") << QVector<QRect>{{QRect{0, 0, 100, 100}, QRect{100, 0, 100, 100}, QRect{200, 100, 100, 100}, QRect{300, 100, 100, 100}}} << QRect(0, 0, 300, 300) << 3;
-}
-
-void ScreensTest::testIntersecting()
-{
-    QSignalSpy changedSpy(screens(), &Screens::changed);
-    QVERIFY(changedSpy.isValid());
-
-    QFETCH(QVector<QRect>, geometries);
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,
-                              Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
-    QVERIFY(changedSpy.wait());
-
-    QFETCH(QRect, testGeometry);
-    QCOMPARE(screens()->count(), geometries.count());
-    QTEST(screens()->intersecting(testGeometry), "expectedCount");
 }
 
 void ScreensTest::testCurrent_data()

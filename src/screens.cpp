@@ -107,17 +107,6 @@ void Screens::setCount(int count)
     Q_EMIT countChanged(previous, count);
 }
 
-int Screens::intersecting(const QRect &r) const
-{
-    int cnt = 0;
-    for (int i = 0; i < count(); ++i) {
-        if (geometry(i).intersects(r)) {
-            ++cnt;
-        }
-    }
-    return cnt;
-}
-
 int Screens::number(const QPoint &pos) const
 {
     return kwinApp()->platform()->enabledOutputs().indexOf(kwinApp()->platform()->outputAt(pos));
