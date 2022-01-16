@@ -2680,9 +2680,13 @@ void X11Client::readShowOnScreenEdge(Xcb::Property &property)
             hideClient();
             successfullyHidden = isHiddenInternal();
 
-            m_edgeGeometryTrackingConnection = connect(this, &X11Client::frameGeometryChanged, this, [this, border](){
-                hideClient();
-                ScreenEdges::self()->reserve(this, border);
+            m_edgeGeometryTrackingConnection = connect(this, &X11Client::frameGeometryChanged, this, [this, border]() {
+                // frameGeometryChanged will be emitted before and after the panel is moved to the edge,
+                // but we don't want to call reserve(...) before the panel is moved. (BUG 448420)
+                QTimer::singleShot(0, this, [this, border] {
+                    hideClient();
+                    ScreenEdges::self()->reserve(this, border);
+                });
             });
         }
 
