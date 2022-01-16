@@ -1049,8 +1049,7 @@ void ScreenEdges::recreateEdges()
                 ++oldIt) {
             Edge *oldEdge = *oldIt;
             if (oldEdge->client()) {
-                // show the client again and don't recreate the edge
-                oldEdge->client()->showOnScreenEdge();
+                // don't recreate the edge
                 continue;
             }
             if (oldEdge->border() != edge->border()) {
