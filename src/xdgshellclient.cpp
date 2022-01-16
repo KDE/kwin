@@ -1604,7 +1604,6 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
 
     if (set) {
         workspace()->raiseClient(this);
-        dontInteractiveMoveResize();
     }
 
     configureDecoration();
@@ -1666,9 +1665,6 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
     }
 
     StackingUpdatesBlocker blocker(workspace());
-    if (m_requestedMaximizeMode != MaximizeRestore) {
-        dontInteractiveMoveResize();
-    }
 
     // call into decoration update borders
     if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {

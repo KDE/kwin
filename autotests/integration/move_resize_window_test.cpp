@@ -68,8 +68,6 @@ private Q_SLOTS:
     void testResizeForVirtualKeyboardWithFullScreen();
     void testDestroyMoveClient();
     void testDestroyResizeClient();
-    void testSetFullScreenWhenMoving();
-    void testSetMaximizeWhenMoving();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -1098,57 +1096,6 @@ void MoveResizeWindowTest::testDestroyResizeClient()
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
 }
 
-void MoveResizeWindowTest::testSetFullScreenWhenMoving()
-{
-    // Ensure we disable moving event when setFullScreen is triggered
-    using namespace KWayland::Client;
-
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(!surface.isNull());
-
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
-
-    // let's render
-    auto client = Test::renderAndWaitForShown(surface.data(), QSize(500, 800), Qt::blue);
-    QVERIFY(client);
-
-    workspace()->slotWindowMove();
-    QCOMPARE(client->isInteractiveMove(), true);
-    client->setFullScreen(true);
-    QCOMPARE(client->isInteractiveMove(), false);
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    // Let's pretend that the client crashed.
-    shellSurface.reset();
-    surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
-}
-
-void MoveResizeWindowTest::testSetMaximizeWhenMoving()
-{
-    // Ensure we disable moving event when changeMaximize is triggered
-    using namespace KWayland::Client;
-
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(!surface.isNull());
-
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
-
-    // let's render
-    auto client = Test::renderAndWaitForShown(surface.data(), QSize(500, 800), Qt::blue);
-    QVERIFY(client);
-
-    workspace()->slotWindowMove();
-    QCOMPARE(client->isInteractiveMove(), true);
-    client->setMaximize(true, true);
-    QCOMPARE(client->isInteractiveMove(), false);
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    // Let's pretend that the client crashed.
-    shellSurface.reset();
-    surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
-}
 }
 
 WAYLANDTEST_MAIN(KWin::MoveResizeWindowTest)
