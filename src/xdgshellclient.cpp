@@ -507,8 +507,11 @@ void XdgSurfaceClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     }
     updateRole();
     updateShowOnScreenEdge();
-    connect(this, &XdgSurfaceClient::frameGeometryChanged,
-            this, &XdgSurfaceClient::updateShowOnScreenEdge);
+    connect(this, &XdgSurfaceClient::frameGeometryChanged, this, [this] {
+        // HACK: On Wayland, frameGeometryChanged is emitted only once after a screen is rotated and
+        // before the panel is moved to any edge, so set a small delay to get the correct geometry of a screen.
+        QTimer::singleShot(100, this, &XdgSurfaceClient::updateShowOnScreenEdge);
+    });
     connect(this, &XdgSurfaceClient::windowShown,
             this, &XdgSurfaceClient::updateShowOnScreenEdge);
 
