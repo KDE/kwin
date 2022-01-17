@@ -184,6 +184,7 @@ XwaylandSocket::XwaylandSocket(OperationMode mode)
             }
         });
 
+        QFile::remove(socketFilePath);
         const int unixFileDescriptor = listen_helper(socketFilePath, UnixSocketAddress::Type::Unix, mode);
         if (unixFileDescriptor == -1) {
             QFile::remove(lockFilePath);
