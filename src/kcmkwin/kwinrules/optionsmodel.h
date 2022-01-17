@@ -25,16 +25,26 @@ public:
     enum OptionsRole {
         ValueRole = Qt::UserRole,
         IconNameRole,
+        OptionTypeRole, /**< The type of an option item, like "Select All" or "Global" */
     };
     Q_ENUM(OptionsRole)
 
+    enum OptionType {
+        NormalType, /**< Normal option */
+        GlobalType, /**< This option item represents all other option items, so all other option items
+                         are deselected when this option item is selected */
+        SelectAllType, /**< All option items are selected when this option item is selected */
+    };
+    Q_ENUM(OptionType)
+
     struct Data
     {
-        Data(const QVariant &value, const QString &text, const QIcon &icon = {}, const QString &description = {})
+        Data(const QVariant &value, const QString &text, const QIcon &icon = {}, const QString &description = {}, OptionType optionType = NormalType)
             : value(value)
             , text(text)
             , icon(icon)
             , description(description)
+            , optionType(optionType)
         {
         }
         Data(const QVariant &value, const QString &text, const QString &description)
@@ -48,6 +58,7 @@ public:
         QString text;
         QIcon icon;
         QString description;
+        OptionType optionType;
     };
 
 public:
