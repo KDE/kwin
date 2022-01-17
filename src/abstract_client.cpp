@@ -1010,11 +1010,8 @@ void AbstractClient::finishInteractiveMoveResize(bool cancel)
     }
     checkOutput(); // needs to be done because clientFinishUserMovedResized has not yet re-activated online alignment
     if (output() != interactiveMoveResizeStartOutput()) {
-        if (isFullScreen() || isElectricBorderMaximizing()) {
-            updateGeometryRestoresForFullscreen(output());
-        }
         workspace()->sendClientToOutput(this, output()); // checks rule validity
-        if (maximizeMode() != MaximizeRestore) {
+        if (isFullScreen() || maximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
         }
     }
@@ -3215,8 +3212,9 @@ void AbstractClient::sendToOutput(AbstractOutput *newOutput)
             }
         }
     }
-    if (output() == newOutput && !isFullScreen())   // Don't use isOnScreen(), that's true even when only partially
+    if (output() == newOutput) { // Don't use isOnScreen(), that's true even when only partially
         return;
+    }
 
     GeometryUpdatesBlocker blocker(this);
 
@@ -3318,7 +3316,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
     if (!oldClientGeometry.isValid())
         oldClientGeometry = oldGeometry.adjusted(border[Left], border[Top], -border[Right], -border[Bottom]);
     if (isFullScreen()) {
-        moveResize(workspace()->clientArea(FullScreenArea, this, fullscreenGeometryRestore().center()));
+        moveResize(workspace()->clientArea(FullScreenArea, this, newGeom.center()));
         updateGeometryRestoresForFullscreen(kwinApp()->platform()->outputAt(newGeom.center()));
         return;
     }
