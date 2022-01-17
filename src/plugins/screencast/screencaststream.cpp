@@ -108,9 +108,13 @@ void ScreenCastStream::newStreamParams()
                                                             sizeof(struct spa_meta_region) * videoDamageRegionCount,
                                                             sizeof(struct spa_meta_region) * 1,
                                                             sizeof(struct spa_meta_region) * videoDamageRegionCount)),
+        (spa_pod*) spa_pod_builder_add_object(&pod_builder,
+                                                SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
+                                                SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Header),
+                                                SPA_PARAM_META_size, SPA_POD_Int(sizeof(struct spa_meta_header))),
     };
 
-    pw_stream_update_params(pwStream, params, 3);
+    pw_stream_update_params(pwStream, params, 4);
 }
 
 void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struct spa_pod *format)
@@ -454,6 +458,19 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
         if (spa_meta_check(r, vdMeta)) {
             r->region = SPA_REGION(0, 0, 0, 0);
         }
+    }
+
+    spa_meta_header *spaHeader = (spa_meta_header *) spa_buffer_find_meta_data(spa_buffer, SPA_META_Header, sizeof(spaHeader));
+    if (spaHeader) {
+        spaHeader->flags = 0;
+        spaHeader->dts_offset = 0;
+        spaHeader->seq = m_sequential++;
+
+        const auto timestamp = m_source->clock();
+        if (!m_start) {
+            m_start = timestamp;
+        }
+        spaHeader->pts = (timestamp - m_start.value()).count();
     }
 
     tryEnqueue(buffer);

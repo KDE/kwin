@@ -7,11 +7,13 @@
 #include "windowscreencastsource.h"
 #include "screencastutils.h"
 
+#include "abstract_output.h"
 #include "deleted.h"
 #include "effects.h"
 #include "kwineffects.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
+#include "renderloop.h"
 #include "scene.h"
 #include "toplevel.h"
 
@@ -60,6 +62,11 @@ void WindowScreenCastSource::render(GLRenderTarget *target)
     glClear(GL_COLOR_BUFFER_BIT);
     effectWindow->sceneWindow()->performPaint(Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), data);
     GLRenderTarget::popRenderTarget();
+}
+
+std::chrono::nanoseconds WindowScreenCastSource::clock() const
+{
+    return m_window->output()->renderLoop()->lastPresentationTimestamp();
 }
 
 } // namespace KWin

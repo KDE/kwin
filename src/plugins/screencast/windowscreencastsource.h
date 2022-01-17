@@ -27,6 +27,7 @@ public:
 
     void render(GLRenderTarget *target) override;
     void render(QImage *image) override;
+    std::chrono::nanoseconds clock() const override;
 
 private:
     QPointer<Toplevel> m_window;

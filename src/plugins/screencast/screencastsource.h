@@ -25,6 +25,7 @@ public:
 
     virtual void render(GLRenderTarget *target) = 0;
     virtual void render(QImage *image) = 0;
+    virtual std::chrono::nanoseconds clock() const = 0;
 
 Q_SIGNALS:
     void closed();

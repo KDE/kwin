@@ -11,6 +11,7 @@
 #include "composite.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
+#include "renderloop.h"
 #include "scene.h"
 
 namespace KWin
@@ -60,6 +61,11 @@ void OutputScreenCastSource::render(GLRenderTarget *target)
     outputTexture->render(geometry, geometry, true);
     outputTexture->unbind();
     GLRenderTarget::popRenderTarget();
+}
+
+std::chrono::nanoseconds OutputScreenCastSource::clock() const
+{
+    return m_output->renderLoop()->lastPresentationTimestamp();
 }
 
 } // namespace KWin
