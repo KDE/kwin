@@ -740,7 +740,14 @@ QList<OptionsModel::Data> RulesModel::windowTypesModelData() const
 
 QList<OptionsModel::Data> RulesModel::virtualDesktopsModelData() const
 {
-    QList<OptionsModel::Data> modelData = {{QString(), i18n("All Desktops"), QIcon::fromTheme("window-pin")}};
+    QList<OptionsModel::Data> modelData;
+    modelData << OptionsModel::Data{
+        QString(),
+        i18n("All Desktops"),
+        QIcon::fromTheme("window-pin"),
+        i18nc("@info:tooltip in the virtual desktop list", "Make the window available on all desktops"),
+        OptionsModel::GlobalType,
+    };
     for (const DBusDesktopDataStruct &desktop : m_virtualDesktops) {
         modelData << OptionsModel::Data{
             desktop.id,
