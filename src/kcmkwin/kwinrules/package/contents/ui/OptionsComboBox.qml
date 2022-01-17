@@ -9,6 +9,7 @@ import QtQuick.Layouts 1.14
 import QtQuick.Controls 2.14 as QQC2
 
 import org.kde.kirigami 2.10 as Kirigami
+import org.kde.kcms.kwinrules 1.0
 
 
 QQC2.ComboBox {
@@ -22,6 +23,10 @@ QQC2.ComboBox {
     // Otherwise, it will use the item indexes.
     property bool useFlagsValue: false
     property int selectionMask: 0
+    readonly property int selectionCount: selectionMask.toString(2).replace(/0/g, '').length
+
+    property int globalBit: -1
+    property int selectAllBit: -1
 
     currentIndex: multipleChoice ? -1 : model.selectedIndex
 
@@ -29,7 +34,6 @@ QQC2.ComboBox {
         if (!multipleChoice) {
             return currentText;
         }
-        var selectionCount = selectionMask.toString(2).replace(/0/g, '').length;
         switch (selectionCount) {
             case 0:
                 return i18n("None selected");
@@ -48,14 +52,69 @@ QQC2.ComboBox {
         width: parent.width
 
         contentItem: RowLayout {
-            QQC2.CheckBox {
+            Loader {
                 id: itemSelection
-                visible: multipleChoice
+                active: multipleChoice
+                visible: active
                 readonly property int bit: (useFlagsValue) ? value : index
-                checked: (selectionMask & (1 << bit))
-                onToggled: {
-                    selectionMask = (selectionMask & ~(1 << bit)) | (checked << bit);
-                    activated(index);
+                readonly property bool checked: (selectionMask & (1 << bit))
+                sourceComponent: model.optionType === OptionsModel.GlobalType ? radioButton : checkBox
+
+                Component {
+                    id: radioButton
+
+                    QQC2.RadioButton {
+                        checked: itemSelection.checked
+                        onToggled: {
+                            selectionMask = (checked << bit); // Only check the global option item
+                            activated(index);
+                        }
+
+                        Component.onCompleted: optionsCombo.globalBit = Qt.binding(() => itemSelection.bit);
+                    }
+                }
+
+                Component {
+                    id: checkBox
+
+                    QQC2.CheckBox {
+                        checked: itemSelection.checked
+                        onToggled: {
+                            if (model.optionType === OptionsModel.SelectAllType) {
+                                selectionMask = 0; // Reset the mask
+                                if (checked) {
+                                    for (let i = 0; i < optionsCombo.count; i++) {
+                                        selectionMask = selectionMask | (1 << i); // Check all items
+                                    }
+                                }
+                            } else {
+                                if (optionsCombo.globalBit >= 0) {
+                                    selectionMask = (selectionMask & ~(1 << optionsCombo.globalBit)); // Uncheck "Global"
+                                } else if (optionsCombo.selectAllBit >= 0) {
+                                    selectionMask = (selectionMask & ~(1 << optionsCombo.selectAllBit));
+                                }
+                                selectionMask = (selectionMask & ~(1 << bit)) | (checked << bit);
+                            }
+
+                            if (optionsCombo.selectionCount === count - 1) {
+                                if (optionsCombo.globalBit >= 0) {
+                                    selectionMask = (1 << optionsCombo.globalBit); // Only check the global option item
+                                    activated(optionsCombo.globalBit);
+                                    return;
+                                } else if (optionsCombo.selectAllBit >= 0) {
+                                    selectionMask = selectionMask | (1 << optionsCombo.selectAllBit); // Check "Select all"
+                                    activated(optionsCombo.selectAllBit);
+                                    return;
+                                }
+                            }
+
+                            activated(index);
+                        }
+
+                        Component.onCompleted: if (model.optionType === OptionsModel.SelectAllType) {
+                            optionsCombo.selectAllBit = Qt.binding(() => itemSelection.bit);
+                        }
+                    }
                 }
             }
             Kirigami.Icon {
@@ -75,8 +134,8 @@ QQC2.ComboBox {
             anchors.fill: contentItem
             enabled: multipleChoice
             onClicked: {
-                itemSelection.toggle();
-                itemSelection.toggled();
+                itemSelection.item.toggle();
+                itemSelection.item.toggled();
             }
         }
 
