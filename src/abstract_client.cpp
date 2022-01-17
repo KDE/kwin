@@ -1022,19 +1022,7 @@ void AbstractClient::finishInteractiveMoveResize(bool cancel)
     if (isElectricBorderMaximizing()) {
         setQuickTileMode(electricBorderMode());
         setElectricBorderMaximizing(false);
-    } else if (!cancel && !isFullScreen()) {
-        QRect geom_restore = geometryRestore();
-        if (!(maximizeMode() & MaximizeHorizontal)) {
-            geom_restore.setX(moveResizeGeometry().x());
-            geom_restore.setWidth(moveResizeGeometry().width());
-        }
-        if (!(maximizeMode() & MaximizeVertical)) {
-            geom_restore.setY(moveResizeGeometry().y());
-            geom_restore.setHeight(moveResizeGeometry().height());
-        }
-        setGeometryRestore(geom_restore);
     }
-// FRAME    update();
 
     Q_EMIT clientFinishUserMovedResized(this);
 }
