@@ -1660,8 +1660,6 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
         return;
     }
 
-    StackingUpdatesBlocker blocker(workspace());
-
     // call into decoration update borders
     if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {
         changeMaximizeRecursion = true;
