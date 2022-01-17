@@ -22,6 +22,12 @@ class OptionsModel : public QAbstractListModel
     Q_PROPERTY(int selectedIndex READ selectedIndex NOTIFY selectedIndexChanged)
 
 public:
+    enum OptionsRole {
+        ValueRole = Qt::UserRole,
+        IconNameRole,
+    };
+    Q_ENUM(OptionsRole)
+
     struct Data
     {
         Data(const QVariant &value, const QString &text, const QIcon &icon = {}, const QString &description = {})

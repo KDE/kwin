@@ -30,6 +30,8 @@ RulesModel::RulesModel(QObject *parent)
                                          QStringLiteral("Do not create objects of type RuleItem"));
     qmlRegisterUncreatableType<RulesModel>("org.kde.kcms.kwinrules", 1, 0, "RulesModel",
                                            QStringLiteral("Do not create objects of type RulesModel"));
+    qmlRegisterUncreatableType<OptionsModel>("org.kde.kcms.kwinrules", 1, 0, "OptionsModel",
+                                             QStringLiteral("Do not create objects of type OptionsModel"));
 
     qDBusRegisterMetaType<KWin::DBusDesktopDataStruct>();
     qDBusRegisterMetaType<KWin::DBusDesktopDataVector>();
