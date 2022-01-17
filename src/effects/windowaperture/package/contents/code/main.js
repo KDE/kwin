@@ -174,7 +174,18 @@ var badBadWindowsEffect = {
                             type: Effect.Position,
                             sourceAnchor: anchor,
                             from: { value1: tx, value2: ty }
-                        },{
+                        }, {
+                            type: Effect.Opacity,
+                            from: 0.0
+                        }]
+                    });
+                } else {
+                    // when switching to another virtual desktop, add fade-in animations so windows will not suddenly appear.
+                    animate({
+                        window: w,
+                        duration: badBadWindowsEffect.duration,
+                        curve: QEasingCurve.InOutCubic,
+                        animations: [{
                             type: Effect.Opacity,
                             from: 0.0
                         }]
