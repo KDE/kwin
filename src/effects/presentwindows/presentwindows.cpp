@@ -633,7 +633,9 @@ void PresentWindowsEffect::inputEventUpdate(const QPoint &pos, QEvent::Type type
     }
 
     if (!hovering)
-        setHighlightedWindow(nullptr);
+	if(m_windowFilter.isEmpty()){
+            setHighlightedWindow(nullptr);
+	}
     if (m_highlightedWindow && m_motionManager.transformedGeometry(m_highlightedWindow).contains(pos))
         updateCloseWindow();
     else if (m_closeView)
@@ -669,7 +671,7 @@ void PresentWindowsEffect::inputEventUpdate(const QPoint &pos, QEvent::Type type
                 mouseActionDesktop(m_rightButtonDesktop);
             }
         }
-    } else if (highlightCandidate && !m_motionManager.areWindowsMoving())
+    } else if (highlightCandidate && !m_motionManager.areWindowsMoving() && m_windowFilter.isEmpty())
         setHighlightedWindow(highlightCandidate);
 }
 
@@ -829,6 +831,7 @@ void PresentWindowsEffect::grabbedKeyboardEvent(QKeyEvent *e)
             break;
         case Qt::Key_Backspace:
             if (!m_windowFilter.isEmpty()) {
+		setHighlightedWindow(nullptr);
                 m_windowFilter.remove(m_windowFilter.length() - 1, 1);
                 updateFilterFrame();
                 rearrangeWindows();
