@@ -107,7 +107,7 @@ void SceneQPainter::paintBackground(const QRegion &region)
 
 void SceneQPainter::paintCursor(AbstractOutput *output, const QRegion &rendered)
 {
-    if (!output || !output->usesSoftwareCursor() || Cursors::self()->isCursorHidden()) {
+    if (!output || !output->updateHardwareCursor() || Cursors::self()->isCursorHidden()) {
         return;
     }
 

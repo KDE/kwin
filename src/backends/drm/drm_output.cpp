@@ -71,8 +71,18 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
         setDrmDpmsMode(DpmsMode::Off);
     });
 
-    connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmOutput::updateCursor);
-    connect(Cursors::self(), &Cursors::positionChanged, this, &DrmOutput::moveCursor);
+    connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
+        m_cursor.needsUpdate = true;
+        if (!m_gpu->atomicModeSetting()) {
+            updateCursor();
+        }
+    });
+    connect(Cursors::self(), &Cursors::positionChanged, this, [this]() {
+        m_cursor.needsMove = true;
+        if (!m_gpu->atomicModeSetting()) {
+            moveCursor();
+        }
+    });
 }
 
 DrmOutput::~DrmOutput()
@@ -95,12 +105,13 @@ void DrmOutput::updateCursor()
     static bool valid;
     static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
     if (forceSoftwareCursor) {
-        m_setCursorSuccessful = false;
+        m_cursor.updateSuccessful = false;
         return;
     }
-    if (!m_pipeline->pending.crtc) {
+    if (!m_pipeline->pending.crtc || !m_cursor.needsUpdate) {
         return;
     }
+    m_cursor.needsUpdate = false;
     Cursor *cursor = Cursors::self()->currentCursor();
     if (!cursor) {
         m_pipeline->setCursor(nullptr, {});
@@ -111,12 +122,12 @@ void DrmOutput::updateCursor()
         m_pipeline->setCursor(nullptr, {});
         return;
     }
-    if (m_cursor && m_cursor->isEmpty()) {
+    if (m_cursor.buffer && m_cursor.buffer->isEmpty()) {
         m_pipeline->setCursor(nullptr, {});
         return;
     }
     const auto plane = m_pipeline->pending.crtc->cursorPlane();
-    if (!m_cursor || (plane && !plane->formats().value(m_cursor->drmFormat()).contains(DRM_FORMAT_MOD_LINEAR))) {
+    if (!m_cursor.buffer || (plane && !plane->formats().value(m_cursor.buffer->drmFormat()).contains(DRM_FORMAT_MOD_LINEAR))) {
         if (plane) {
             const auto formatModifiers = plane->formats();
             const auto formats = formatModifiers.keys();
@@ -124,28 +135,28 @@ void DrmOutput::updateCursor()
                 if (!formatModifiers[format].contains(DRM_FORMAT_MOD_LINEAR)) {
                     continue;
                 }
-                m_cursor = QSharedPointer<DumbSwapchain>::create(m_gpu, m_gpu->cursorSize(), format, QImage::Format::Format_ARGB32_Premultiplied);
-                if (!m_cursor->isEmpty()) {
+                m_cursor.buffer = QSharedPointer<DumbSwapchain>::create(m_gpu, m_gpu->cursorSize(), format, QImage::Format::Format_ARGB32_Premultiplied);
+                if (!m_cursor.buffer->isEmpty()) {
                     break;
                 }
             }
         } else {
-            m_cursor = QSharedPointer<DumbSwapchain>::create(m_gpu, m_gpu->cursorSize(), DRM_FORMAT_XRGB8888, QImage::Format::Format_ARGB32_Premultiplied);
+            m_cursor.buffer = QSharedPointer<DumbSwapchain>::create(m_gpu, m_gpu->cursorSize(), DRM_FORMAT_XRGB8888, QImage::Format::Format_ARGB32_Premultiplied);
         }
-        if (!m_cursor || m_cursor->isEmpty()) {
+        if (!m_cursor.buffer || m_cursor.buffer->isEmpty()) {
             m_pipeline->setCursor(nullptr, {});
-            m_setCursorSuccessful = false;
+            m_cursor.updateSuccessful = false;
             return;
         }
     }
-    m_cursor->releaseBuffer(m_cursor->currentBuffer());
-    m_cursor->acquireBuffer();
-    QImage *c = m_cursor->currentBuffer()->image();
+    m_cursor.buffer->releaseBuffer(m_cursor.buffer->currentBuffer());
+    m_cursor.buffer->acquireBuffer();
+    QImage *c = m_cursor.buffer->currentBuffer()->image();
     c->setDevicePixelRatio(scale());
     if (!isCursorSpriteCompatible(c, &cursorImage)) {
         // If the cursor image is too big, fall back to rendering the software cursor.
         m_pipeline->setCursor(nullptr, {});
-        m_setCursorSuccessful = false;
+        m_cursor.updateSuccessful = false;
         return;
     }
     c->fill(Qt::transparent);
@@ -158,19 +169,23 @@ void DrmOutput::updateCursor()
     const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(geometry(), scale(), transform());
     const QMatrix4x4 hotspotMatrix = logicalToNativeMatrix(cursor->rect(), scale(), transform());
     const auto hotspot = hotspotMatrix.map(cursor->hotspot());
-    m_setCursorSuccessful = m_pipeline->setCursor(m_cursor->currentBuffer(), monitorMatrix.map(cursor->pos()) - hotspot, hotspot);
+    m_cursor.updateSuccessful = m_pipeline->setCursor(m_cursor.buffer->currentBuffer(), monitorMatrix.map(cursor->pos()) - hotspot, hotspot);
+    if (m_gpu->atomicModeSetting()) {
+        m_cursor.needsMove = false;
+    }
 }
 
 void DrmOutput::moveCursor()
 {
-    if (!m_setCursorSuccessful || !m_pipeline->pending.crtc) {
+    if (!m_cursor.updateSuccessful || !m_pipeline->pending.crtc || !m_cursor.needsMove) {
         return;
     }
+    m_cursor.needsMove = false;
     Cursor *cursor = Cursors::self()->currentCursor();
     const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(geometry(), scale(), transform());
     const QMatrix4x4 hotspotMatrix = logicalToNativeMatrix(cursor->rect(), scale(), transform());
-    m_moveCursorSuccessful = m_pipeline->moveCursor(monitorMatrix.map(cursor->pos()) - hotspotMatrix.map(cursor->hotspot()));
-    if (!m_moveCursorSuccessful) {
+    m_cursor.moveSuccessful = m_pipeline->moveCursor(monitorMatrix.map(cursor->pos()) - hotspotMatrix.map(cursor->hotspot()));
+    if (!m_cursor.moveSuccessful) {
         m_pipeline->setCursor(nullptr, {});
     }
 }
@@ -484,7 +499,19 @@ int DrmOutput::maxBpc() const
 
 bool DrmOutput::usesSoftwareCursor() const
 {
-    return !m_setCursorSuccessful || !m_moveCursorSuccessful;
+    return !m_cursor.updateSuccessful || !m_cursor.moveSuccessful;
+}
+
+bool DrmOutput::updateHardwareCursor()
+{
+    updateCursor();
+    moveCursor();
+    return !usesSoftwareCursor();
+}
+
+bool DrmOutput::hardwareCursorNeedsPresent() const
+{
+    return m_gpu->atomicModeSetting();
 }
 
 }

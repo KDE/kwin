@@ -118,9 +118,18 @@ void Scene::addCursorRepaints()
     QRegion repaintRegion = Cursors::self()->currentCursor()->geometry();
     repaintRegion |= m_lastCursorGeometry;
     for (const auto &output : outputs) {
-        auto intersection = repaintRegion.intersected(output->geometry());
-        if (!intersection.isEmpty() && output->usesSoftwareCursor()) {
-            addRepaint(intersection);
+        const bool needsPresent = output->hardwareCursorNeedsPresent();
+        const bool softwareCursor = output->usesSoftwareCursor();
+        if (softwareCursor || needsPresent) {
+            const auto intersection = repaintRegion.intersected(output->geometry());
+            if (!intersection.isEmpty()) {
+                if (softwareCursor) {
+                    addRepaint(intersection);
+                } else {
+                    // no actual repaints need to be added
+                    output->renderLoop()->scheduleRepaint();
+                }
+            }
         }
     }
     m_lastCursorGeometry = Cursors::self()->currentCursor()->geometry();

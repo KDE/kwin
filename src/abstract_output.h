@@ -214,6 +214,8 @@ public:
     virtual Transform transform() const { return Transform::Normal; }
 
     virtual bool usesSoftwareCursor() const;
+    virtual bool hardwareCursorNeedsPresent() const;
+    virtual bool updateHardwareCursor();
 
 Q_SIGNALS:
     /**

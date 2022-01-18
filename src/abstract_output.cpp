@@ -171,4 +171,14 @@ bool AbstractOutput::usesSoftwareCursor() const
     return true;
 }
 
+bool AbstractOutput::hardwareCursorNeedsPresent() const
+{
+    return false;
+}
+
+bool AbstractOutput::updateHardwareCursor()
+{
+    return !usesSoftwareCursor();
+}
+
 } // namespace KWin

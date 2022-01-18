@@ -345,7 +345,6 @@ bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const Q
         return true;
     }
     bool result;
-    const bool visibleBefore = isCursorVisible();
     pending.cursorBo = buffer;
     pending.cursorHotspot = hotspot;    // for legacy
     pending.cursorPos = position;       // for AMS
@@ -357,9 +356,6 @@ bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const Q
     }
     if (result) {
         m_next = pending;
-        if (m_output && (visibleBefore || isCursorVisible())) {
-            m_output->renderLoop()->scheduleRepaint();
-        }
     } else {
         pending = m_next;
     }
@@ -371,7 +367,6 @@ bool DrmPipeline::moveCursor(QPoint pos)
     if (pending.cursorPos == pos) {
         return true;
     }
-    const bool visibleBefore = isCursorVisible();
     bool result;
     pending.cursorPos = pos;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
@@ -382,9 +377,6 @@ bool DrmPipeline::moveCursor(QPoint pos)
     }
     if (result) {
         m_next = pending;
-        if (m_output && (visibleBefore || isCursorVisible())) {
-            m_output->renderLoop()->scheduleRepaint();
-        }
     } else {
         pending = m_next;
     }
@@ -415,12 +407,6 @@ QSize DrmPipeline::sourceSize() const
         return modeSize.transposed();
     }
     return modeSize;
-}
-
-bool DrmPipeline::isCursorVisible() const
-{
-    const QRect mode = QRect(QPoint(), m_connector->modes().at(pending.modeIndex)->size());
-    return pending.cursorBo && QRect(pending.cursorPos, pending.cursorBo->size()).intersects(mode);
 }
 
 DrmConnector *DrmPipeline::connector() const

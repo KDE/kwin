@@ -125,7 +125,6 @@ public:
 private:
     bool checkTestBuffer();
     bool activePending() const;
-    bool isCursorVisible() const;
 
     // legacy only
     bool presentLegacy();

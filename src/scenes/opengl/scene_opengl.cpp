@@ -106,7 +106,7 @@ void SceneOpenGL::paintCursor(AbstractOutput *output, const QRegion &rendered)
     Cursor* cursor = Cursors::self()->currentCursor();
 
     // don't paint if we use hardware cursor or the cursor is hidden
-    if (!output || !output->usesSoftwareCursor()
+    if (!output || output->updateHardwareCursor()
         || Cursors::self()->isCursorHidden()
         || cursor->image().isNull()) {
         return;

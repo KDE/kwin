@@ -63,6 +63,8 @@ public:
     void pageFlipped(std::chrono::nanoseconds timestamp);
     void presentFailed();
     bool usesSoftwareCursor() const override;
+    bool updateHardwareCursor() override;
+    bool hardwareCursorNeedsPresent() const override;
 
 private:
     void initOutputDevice();
@@ -77,14 +79,18 @@ private:
     bool setGammaRamp(const GammaRamp &gamma) override;
     void updateCursor();
     void moveCursor();
+    bool shouldShowCursor() const;
 
     DrmPipeline *m_pipeline;
     DrmConnector *m_connector;
 
-    QSharedPointer<DumbSwapchain> m_cursor;
-    bool m_setCursorSuccessful = false;
-    bool m_moveCursorSuccessful = false;
-    QRect m_lastCursorGeometry;
+    struct {
+        QSharedPointer<DumbSwapchain> buffer;
+        bool moveSuccessful = false;
+        bool needsMove = false;
+        bool updateSuccessful = false;
+        bool needsUpdate = false;
+    } m_cursor;
     QTimer m_turnOffTimer;
 };
 
