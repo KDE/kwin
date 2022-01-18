@@ -1,8 +1,5 @@
 add_subdirectory(drm)
 add_subdirectory(fakeinput)
-if (HAVE_LINUX_FB_H)
-    add_subdirectory(fbdev)
-endif()
 add_subdirectory(libinput)
 add_subdirectory(virtual)
 add_subdirectory(wayland)
