@@ -14,6 +14,8 @@
 #include <KStartupInfo>
 #include <KConfigWatcher>
 
+#include <chrono>
+
 class KSelectionOwner;
 namespace KWin
 {
@@ -57,7 +59,13 @@ private:
         BlinkingFeedback,
         PassiveFeedback
     };
-    void start(const QIcon &icon);
+
+    struct Startup {
+        QIcon icon;
+        QSharedPointer<QTimer> expiredTimer;
+    };
+
+    void start(const Startup &startup);
     void stop();
     QImage scalePixmap(const QPixmap& pm, const QSize& size) const;
     void prepareTextures(const QPixmap& pix);
@@ -67,7 +75,7 @@ private:
     KStartupInfo* m_startupInfo;
     KSelectionOwner* m_selection;
     QString m_currentStartup;
-    QMap<QString, QIcon> m_startups; // QString == pixmap
+    QMap<QString, Startup> m_startups;
     bool m_active;
     int m_frame;
     int m_progress;
@@ -80,6 +88,7 @@ private:
     int m_cursorSize;
     KConfigWatcher::Ptr m_configWatcher;
     bool m_splashVisible;
+    std::chrono::seconds m_timeout;
 };
 } // namespace
 
