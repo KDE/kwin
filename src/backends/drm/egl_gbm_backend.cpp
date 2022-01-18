@@ -549,7 +549,8 @@ bool EglGbmBackend::doesRenderFit(const Output &output, const Output::RenderData
         return false;
     }
     if (!output.output->isFormatSupported(render.gbmSurface->format())
-        || output.output->supportedModifiers(render.gbmSurface->format()) != render.gbmSurface->modifiers()) {
+        || (!render.gbmSurface->modifiers().isEmpty()
+            && output.output->supportedModifiers(render.gbmSurface->format()) != render.gbmSurface->modifiers())) {
         return false;
     }
     QSize surfaceSize = output.output->bufferSize();
