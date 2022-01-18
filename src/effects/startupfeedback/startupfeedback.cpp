@@ -13,10 +13,11 @@
 #include <QDBusConnectionInterface>
 #include <QDBusServiceWatcher>
 #include <QFile>
-#include <QSize>
-#include <QStyle>
-#include <QStandardPaths>
 #include <QPainter>
+#include <QSize>
+#include <QStandardPaths>
+#include <QStyle>
+#include <QTimer>
 // KDE
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -141,7 +142,8 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
     const bool busyCursor = c.readEntry("BusyCursor", true);
 
     c = m_configWatcher->config()->group("BusyCursorSettings");
-    m_startupInfo->setTimeout(c.readEntry("Timeout", s_startupDefaultTimeout));
+    m_timeout = std::chrono::seconds(c.readEntry("Timeout", s_startupDefaultTimeout));
+    m_startupInfo->setTimeout(m_timeout.count());
     const bool busyBlinking = c.readEntry("Blinking", false);
     const bool busyBouncing = c.readEntry("Bouncing", true);
     if (!busyCursor)
@@ -163,7 +165,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
         m_type = PassiveFeedback;
     if (m_active) {
         stop();
-        start(m_startups[ m_currentStartup ]);
+        start(m_startups[m_currentStartup]);
     }
 }
 
@@ -263,9 +265,19 @@ void StartupFeedbackEffect::slotMouseChanged(const QPoint& pos, const QPoint& ol
 
 void StartupFeedbackEffect::gotNewStartup(const QString &id, const QIcon &icon)
 {
+    Startup &startup = m_startups[id];
+    startup.icon = icon;
+
+    startup.expiredTimer.reset(new QTimer());
+    // Stop the animation if the startup doesn't finish within reasonable interval.
+    connect(startup.expiredTimer.data(), &QTimer::timeout, this, [this, id]() {
+        gotRemoveStartup(id);
+    });
+    startup.expiredTimer->setSingleShot(true);
+    startup.expiredTimer->start(m_timeout);
+
     m_currentStartup = id;
-    m_startups[ id ] = icon;
-    start(icon);
+    start(startup);
 }
 
 void StartupFeedbackEffect::gotRemoveStartup(const QString &id)
@@ -283,14 +295,15 @@ void StartupFeedbackEffect::gotRemoveStartup(const QString &id)
 void StartupFeedbackEffect::gotStartupChange(const QString &id, const QIcon &icon)
 {
     if (m_currentStartup == id) {
-        if (!icon.isNull() && icon.name() != m_startups[m_currentStartup].name()) {
-            m_startups[ id ] = icon;
-            start(icon);
+        Startup &currentStartup = m_startups[m_currentStartup];
+        if (!icon.isNull() && icon.name() != currentStartup.icon.name()) {
+            currentStartup.icon = icon;
+            start(currentStartup);
         }
     }
 }
 
-void StartupFeedbackEffect::start(const QIcon &icon)
+void StartupFeedbackEffect::start(const Startup &startup)
 {
     if (m_type == NoFeedback || m_splashVisible || effects->isCursorHidden())
         return;
@@ -309,7 +322,7 @@ void StartupFeedbackEffect::start(const QIcon &icon)
     // get ratio for bouncing cursor so we don't need to manually calculate the sizes for each icon size
     if (m_type == BouncingFeedback)
         m_bounceSizesRatio = iconSize / 16.0;
-    const QPixmap iconPixmap = icon.pixmap(iconSize);
+    const QPixmap iconPixmap = startup.icon.pixmap(iconSize);
     prepareTextures(iconPixmap);
     m_dirtyRect = m_currentGeometry = feedbackRect();
     effects->addRepaint(m_dirtyRect);
