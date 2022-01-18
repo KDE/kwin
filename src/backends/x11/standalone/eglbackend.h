@@ -8,7 +8,7 @@
 
 #include "eglonxbackend.h"
 #include "openglsurfacetexture_x11.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <kwingltexture.h>
 #include <kwingltexture_p.h>

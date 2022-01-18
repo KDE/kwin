@@ -11,7 +11,7 @@
 #define KWIN_TOPLEVEL_H
 
 // kwin
-#include "utils.h"
+#include "utils/common.h"
 #include "utils/xcbutils.h"
 // KDE
 #include <NETWM>

@@ -10,7 +10,7 @@
 #include <abstract_client.h>
 #include "abstract_output.h"
 #include "cursor.h"
-#include "utils.h"
+#include "utils/common.h"
 #include "settings.h"
 #include <workspace.h>
 #include <config-kwin.h>

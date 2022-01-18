@@ -11,7 +11,7 @@
 #include "openglbackend.h"
 #include "openglsurfacetexture_x11.h"
 #include "x11eventfilter.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <xcb/glx.h>
 #include <epoxy/glx.h>

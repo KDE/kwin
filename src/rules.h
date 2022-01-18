@@ -17,7 +17,7 @@
 
 #include "placement.h"
 #include "options.h"
-#include "utils.h"
+#include "utils/common.h"
 
 class QDebug;
 class KConfig;

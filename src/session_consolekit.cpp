@@ -5,7 +5,7 @@
 */
 
 #include "session_consolekit.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <QCoreApplication>
 #include <QDBusConnection>

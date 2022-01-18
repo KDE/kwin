@@ -8,7 +8,7 @@
 */
 #include "effects_mouse_interception_x11_filter.h"
 #include "effects.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <QMouseEvent>
 

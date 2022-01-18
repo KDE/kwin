@@ -17,7 +17,7 @@
 #include "abstract_output.h"
 #include "main_wayland.h"
 #include "options.h"
-#include "utils.h"
+#include "utils/common.h"
 #include "platform.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"

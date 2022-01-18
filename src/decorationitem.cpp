@@ -12,7 +12,7 @@
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
 #include "scene.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <cmath>
 

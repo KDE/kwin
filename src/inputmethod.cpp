@@ -12,7 +12,7 @@
 #include "input.h"
 #include "inputpanelv1client.h"
 #include "keyboard_input.h"
-#include "utils.h"
+#include "utils/common.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"

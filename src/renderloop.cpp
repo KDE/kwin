@@ -7,8 +7,8 @@
 #include "renderloop.h"
 #include "options.h"
 #include "renderloop_p.h"
-#include "utils.h"
 #include "surfaceitem.h"
+#include "utils/common.h"
 
 namespace KWin
 {

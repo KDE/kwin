@@ -13,7 +13,7 @@
 #include <KPluginMetaData>
 
 #include "main.h"
-#include "utils.h"
+#include "utils/common.h"
 
 namespace KWin
 {

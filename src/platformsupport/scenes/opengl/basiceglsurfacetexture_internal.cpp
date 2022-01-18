@@ -7,7 +7,7 @@
 #include "basiceglsurfacetexture_internal.h"
 #include "kwingltexture.h"
 #include "surfaceitem_internal.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <QOpenGLFramebufferObject>
 

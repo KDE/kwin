@@ -18,7 +18,7 @@
 #include "pipewirecore.h"
 #include "platform.h"
 #include "screencastsource.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <KLocalizedString>
 

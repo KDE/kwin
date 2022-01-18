@@ -9,7 +9,7 @@
 #include "qpainterbackend.h"
 #include "qpaintersurfacetexture_internal.h"
 #include "qpaintersurfacetexture_wayland.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <QtGlobal>
 

@@ -13,7 +13,7 @@
 #include <kwineffects.h>
 #include "plugin.h"
 #include "scripting/scriptedeffect.h"
-#include "utils.h"
+#include "utils/common.h"
 // KDE
 #include <KConfigGroup>
 #include <KPackage/Package>
