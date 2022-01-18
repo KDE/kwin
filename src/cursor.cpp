@@ -13,7 +13,7 @@
 #include "keyboard_input.h"
 #include "main.h"
 #include "platform.h"
-#include "utils.h"
+#include "utils/common.h"
 #include "utils/xcbutils.h"
 #include "abstract_output.h"
 #include "composite.h"

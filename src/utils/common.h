@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_UTILS_H
-#define KWIN_UTILS_H
+#pragma once
 
 // cmake stuff
 #include <config-kwin.h>
@@ -238,5 +237,3 @@ KWIN_EXPORT QPoint popupOffset(const QRect &anchorRect, const Qt::Edges anchorEd
 // Must be outside namespace
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::StrutAreas)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::QuickTileMode)
-
-#endif

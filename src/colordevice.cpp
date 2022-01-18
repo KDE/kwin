@@ -6,7 +6,7 @@
 
 #include "colordevice.h"
 #include "abstract_output.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include "3rdparty/colortemperature.h"
 

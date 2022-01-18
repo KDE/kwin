@@ -9,7 +9,7 @@
 #include "kwineglext.h"
 #include "kwingltexture.h"
 #include "surfaceitem_wayland.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <KWaylandServer/drmclientbuffer.h>
 #include <KWaylandServer/linuxdmabufv1clientbuffer.h>

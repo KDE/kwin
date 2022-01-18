@@ -12,7 +12,7 @@
 #include <kwinglutils_funcs.h>
 
 #include "screens.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <QElapsedTimer>
 

@@ -11,7 +11,7 @@
 #define KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
 
 #include "qpainterbackend.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <QObject>
 #include <QImage>

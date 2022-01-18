@@ -20,7 +20,7 @@
 #include <kwinglplatform.h>
 #include <kwinoffscreenquickview.h>
 
-#include "utils.h"
+#include "utils/common.h"
 #include "abstract_client.h"
 #include "composite.h"
 #include "effects.h"

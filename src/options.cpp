@@ -11,7 +11,7 @@
 
 #include "options.h"
 #include "config-kwin.h"
-#include "utils.h"
+#include "utils/common.h"
 #include "platform.h"
 
 #ifndef KCMRULES

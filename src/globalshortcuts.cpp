@@ -12,7 +12,7 @@
 #include "gestures.h"
 #include "kwinglobals.h"
 #include "main.h"
-#include "utils.h"
+#include "utils/common.h"
 #include <config-kwin.h>
 // KDE
 #include <KGlobalAccel/private/kglobalaccel_interface.h>

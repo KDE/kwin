@@ -64,7 +64,7 @@
 
 */
 
-#include "utils.h"
+#include "utils/common.h"
 #include "x11client.h"
 #include "focuschain.h"
 #include "netinfo.h"

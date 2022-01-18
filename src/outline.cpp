@@ -14,7 +14,7 @@
 #include "main.h"
 #include "platform.h"
 #include "scripting/scripting.h"
-#include "utils.h"
+#include "utils/common.h"
 // Frameworks
 #include <KConfigGroup>
 // Qt

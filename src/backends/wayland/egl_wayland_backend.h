@@ -10,7 +10,7 @@
 #ifndef KWIN_EGL_WAYLAND_BACKEND_H
 #define KWIN_EGL_WAYLAND_BACKEND_H
 #include "abstract_egl_backend.h"
-#include "utils.h"
+#include "utils/common.h"
 // wayland
 #include <wayland-egl.h>
 

@@ -16,7 +16,7 @@
 // kwin
 #include "options.h"
 #include "sm.h"
-#include "utils.h"
+#include "utils/common.h"
 // Qt
 #include <QTimer>
 #include <QVector>

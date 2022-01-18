@@ -9,7 +9,7 @@
 #ifndef KWIN_SCENE_QPAINTER_DRM_BACKEND_H
 #define KWIN_SCENE_QPAINTER_DRM_BACKEND_H
 #include "qpainterbackend.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <QObject>
 #include <QVector>

@@ -10,7 +10,7 @@
 #include "main.h"
 #include "platform.h"
 #include "session.h"
-#include "utils.h"
+#include "utils/common.h"
 // Qt
 #include <QByteArray>
 #include <QScopedPointer>

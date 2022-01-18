@@ -131,7 +131,6 @@ target_sources(kwin PRIVATE
     udev.cpp
     unmanaged.cpp
     useractions.cpp
-    utils.cpp
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp
     virtualkeyboard_dbus.cpp

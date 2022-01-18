@@ -12,7 +12,7 @@
 #include "cursor.h"
 #include "screenedge.h"
 #include "screens.h"
-#include "utils.h"
+#include "utils/common.h"
 #include "workspace.h"
 
 #include <QDesktopWidget>

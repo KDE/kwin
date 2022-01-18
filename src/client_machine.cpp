@@ -8,7 +8,7 @@
 */
 // own
 #include "client_machine.h"
-#include "utils.h"
+#include "utils/common.h"
 // KF5
 #include <NETWM>
 // Qt

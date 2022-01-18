@@ -8,7 +8,7 @@
 #include "dbusinterface.h"
 #include "main.h"
 #include "plugin.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <KConfigGroup>
 #include <KPluginFactory>

@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "xkb.h"
-#include "utils.h"
+#include "utils/common.h"
 // frameworks
 #include <KConfigGroup>
 // KWayland

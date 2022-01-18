@@ -10,7 +10,7 @@
 #include "xdgactivationv1.h"
 #include "abstract_client.h"
 #include "effects.h"
-#include "utils.h"
+#include "utils/common.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <KWaylandServer/display.h>

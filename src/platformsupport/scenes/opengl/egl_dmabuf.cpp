@@ -12,7 +12,7 @@
 #include "kwineglext.h"
 #include "kwineglutils_p.h"
 
-#include "utils.h"
+#include "utils/common.h"
 #include "wayland_server.h"
 
 #include <unistd.h>

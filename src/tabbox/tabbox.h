@@ -15,7 +15,7 @@
 #include <QKeySequence>
 #include <QTimer>
 #include <QModelIndex>
-#include "utils.h"
+#include "utils/common.h"
 #include "tabbox/tabboxhandler.h"
 
 class KConfigGroup;

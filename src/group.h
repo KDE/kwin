@@ -11,7 +11,7 @@
 #ifndef KWIN_GROUP_H
 #define KWIN_GROUP_H
 
-#include "utils.h"
+#include "utils/common.h"
 #include <netwm.h>
 
 namespace KWin

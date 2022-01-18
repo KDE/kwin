@@ -11,7 +11,7 @@
 #define KWIN_SCENE_H
 
 #include "toplevel.h"
-#include "utils.h"
+#include "utils/common.h"
 #include "kwineffects.h"
 
 #include <QElapsedTimer>

@@ -14,7 +14,7 @@
 
 */
 
-#include "utils.h"
+#include "utils/common.h"
 
 #include <QPainter>
 #include <QWidget>

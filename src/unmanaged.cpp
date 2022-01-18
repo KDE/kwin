@@ -13,7 +13,7 @@
 #include "effects.h"
 #include "deleted.h"
 #include "surfaceitem_x11.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <QDebug>
 #include <QTimer>

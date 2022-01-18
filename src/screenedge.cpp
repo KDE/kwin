@@ -25,7 +25,7 @@
 #include "cursor.h"
 #include "main.h"
 #include "platform.h"
-#include "utils.h"
+#include "utils/common.h"
 #include <workspace.h>
 #include "virtualdesktops.h"
 // DBus generated
