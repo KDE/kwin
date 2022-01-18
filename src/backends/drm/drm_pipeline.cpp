@@ -339,15 +339,16 @@ bool DrmPipeline::checkTestBuffer()
     return false;
 }
 
-bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot)
+bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &position, const QPoint &hotspot)
 {
-    if (pending.cursorBo == buffer && pending.cursorHotspot == hotspot) {
+    if (pending.cursorBo == buffer && pending.cursorHotspot == hotspot && pending.cursorPos == position) {
         return true;
     }
     bool result;
     const bool visibleBefore = isCursorVisible();
     pending.cursorBo = buffer;
-    pending.cursorHotspot = hotspot;
+    pending.cursorHotspot = hotspot;    // for legacy
+    pending.cursorPos = position;       // for AMS
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (pending.crtc->cursorPlane()) {
         result = commitPipelines({this}, CommitMode::Test);

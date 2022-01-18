@@ -65,7 +65,7 @@ public:
     void applyPendingChanges();
     void revertPendingChanges();
 
-    bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot = QPoint());
+    bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &position, const QPoint &hotspot = QPoint());
     bool moveCursor(QPoint pos);
 
     DrmConnector *connector() const;
