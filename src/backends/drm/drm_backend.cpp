@@ -632,10 +632,14 @@ bool DrmBackend::applyOutputChanges(const WaylandOutputConfig &config)
             return false;
         }
     }
+    // first, apply changes to drm outputs.
+    // This may remove the placeholder output and thus change m_outputs!
+    for (const auto &output : qAsConst(changed)) {
+        output->applyQueuedChanges(config);
+    }
+    // only then apply changes to the virtual outputs
     for (const auto &output : qAsConst(m_outputs)) {
-        if (auto drmOutput = qobject_cast<DrmOutput*>(output)) {
-            drmOutput->applyQueuedChanges(config);
-        } else {
+        if (!qobject_cast<DrmOutput*>(output)) {
             output->applyChanges(config);
         }
     };
