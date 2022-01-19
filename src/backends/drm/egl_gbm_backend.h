@@ -141,6 +141,8 @@ private:
 
     static EglGbmBackend *renderingBackend();
 
+    void setForceXrgb8888(DrmAbstractOutput *output);
+
     friend class EglGbmTexture;
 };
 
