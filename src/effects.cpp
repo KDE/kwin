@@ -1717,6 +1717,11 @@ void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
     scene()->paintScreen(output, Compositor::self()->windowsToRender());
 }
 
+bool EffectsHandlerImpl::isCursorHidden() const
+{
+    return Cursors::self()->isCursorHidden();
+}
+
 //****************************************
 // EffectScreenImpl
 //****************************************

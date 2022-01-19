@@ -1263,6 +1263,11 @@ public:
     virtual void showCursor() = 0;
 
     /**
+     * @returns Whether or not the cursor is currently hidden
+     */
+    virtual bool isCursorHidden() const = 0;
+
+    /**
      * Starts an interactive window selection process.
      *
      * Once the user selected a window the @p callback is invoked with the selected EffectWindow as

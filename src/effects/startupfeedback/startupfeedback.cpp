@@ -175,6 +175,9 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono
     }
     m_lastPresentTime = presentTime;
 
+    if (m_active && effects->isCursorHidden()) {
+        stop();
+    }
     if (m_active) {
         // need the unclipped version
         switch(m_type) {
@@ -289,7 +292,7 @@ void StartupFeedbackEffect::gotStartupChange(const QString &id, const QIcon &ico
 
 void StartupFeedbackEffect::start(const QIcon &icon)
 {
-    if (m_type == NoFeedback || m_splashVisible)
+    if (m_type == NoFeedback || m_splashVisible || effects->isCursorHidden())
         return;
     if (!m_active)
         effects->startMousePolling();
