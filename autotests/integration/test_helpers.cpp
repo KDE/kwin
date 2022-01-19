@@ -278,8 +278,8 @@ void MockInputMethod::zwp_input_method_v1_activate(struct ::zwp_input_method_con
         m_inputSurface = Test::createSurface();
         m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface, s_waylandConnection.outputs.first());
     }
-    m_client = Test::renderAndWaitForShown(m_inputSurface, QSize(1280, 400), Qt::blue);
     m_context = context;
+    m_client = Test::renderAndWaitForShown(m_inputSurface, QSize(1280, 400), Qt::blue);
 
     Q_EMIT activate();
 }
