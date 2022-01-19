@@ -256,20 +256,23 @@ void InputMethodTest::testHidePanel()
 {
     QVERIFY(!InputMethod::self()->isActive());
 
+    touchNow();
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QSignalSpy clientRemovedSpy(workspace(), &Workspace::clientRemoved);
     QVERIFY(clientAddedSpy.isValid());
 
     QSignalSpy activateSpy(InputMethod::self(), &InputMethod::activeChanged);
     QScopedPointer<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
-    textInput->showInputPanel();
-    QVERIFY(clientAddedSpy.wait());
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
     waylandServer()->seat()->setFocusedTextInputSurface(client->surface());
+
+    textInput->enable(surface.get());
+    textInput->showInputPanel();
+    QVERIFY(clientAddedSpy.wait());
 
     QCOMPARE(workspace()->activeClient(), client);
 
@@ -294,6 +297,7 @@ void InputMethodTest::testHidePanel()
 
 void InputMethodTest::testSwitchFocusedSurfaces()
 {
+    touchNow();
     QVERIFY(!InputMethod::self()->isActive());
 
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
@@ -302,8 +306,6 @@ void InputMethodTest::testSwitchFocusedSurfaces()
 
     QSignalSpy activateSpy(InputMethod::self(), &InputMethod::activeChanged);
     QScopedPointer<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
-    textInput->showInputPanel();
-    QVERIFY(clientAddedSpy.wait(10000));
 
     QVector<AbstractClient *> clients;
     QVector<KWayland::Client::Surface *> surfaces;
@@ -317,10 +319,9 @@ void InputMethodTest::testSwitchFocusedSurfaces()
         surfaces += surface;
         toplevels += shellSurface;
     }
+    QCOMPARE(clientAddedSpy.count(), 3);
     waylandServer()->seat()->setFocusedTextInputSurface(clients.constFirst()->surface());
 
-    QCOMPARE(clientAddedSpy.count(), 4);
-    QVERIFY(activateSpy.count() || activateSpy.wait());
     QVERIFY(!InputMethod::self()->isActive());
     textInput->enable(surfaces.last());
     QVERIFY(!InputMethod::self()->isActive());
