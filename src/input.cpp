@@ -561,6 +561,36 @@ public:
         }
         return static_cast< EffectsHandlerImpl* >(effects)->touchUp(id, time);
     }
+    bool tabletToolEvent(TabletEvent *event) override {
+        if (!effects) {
+            return false;
+        }
+        return static_cast< EffectsHandlerImpl* >(effects)->tabletToolEvent(event);
+    }
+    bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId) override {
+        if (!effects) {
+            return false;
+        }
+        return static_cast< EffectsHandlerImpl* >(effects)->tabletToolButtonEvent(button, pressed, tabletToolId);
+    }
+    bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId) override {
+        if (!effects) {
+            return false;
+        }
+        return static_cast< EffectsHandlerImpl* >(effects)->tabletPadButtonEvent(button, pressed, tabletPadId);
+    }
+    bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override {
+        if (!effects) {
+            return false;
+        }
+        return static_cast< EffectsHandlerImpl* >(effects)->tabletPadStripEvent(number, position, isFinger, tabletPadId);
+    }
+    bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override {
+        if (!effects) {
+            return false;
+        }
+        return static_cast< EffectsHandlerImpl* >(effects)->tabletPadRingEvent(number, position, isFinger, tabletPadId);
+    }
 };
 
 class MoveResizeFilter : public InputEventFilter {

@@ -684,6 +684,46 @@ bool Effect::perform(Feature feature, const QVariantList &arguments)
     return false;
 }
 
+bool Effect::tabletToolEvent(QTabletEvent *event)
+{
+    Q_UNUSED(event)
+    return false;
+}
+
+bool Effect::tabletToolButtonEvent(uint button, bool pressed, quint64 tabletToolId)
+{
+    Q_UNUSED(button)
+    Q_UNUSED(pressed)
+    Q_UNUSED(tabletToolId)
+    return false;
+}
+
+bool Effect::tabletPadButtonEvent(uint button, bool pressed, void *tabletPadId)
+{
+    Q_UNUSED(button)
+    Q_UNUSED(pressed)
+    Q_UNUSED(tabletPadId)
+    return false;
+}
+
+bool Effect::tabletPadStripEvent(int number, int position, bool isFinger, void *tabletPadId)
+{
+    Q_UNUSED(number)
+    Q_UNUSED(position)
+    Q_UNUSED(isFinger)
+    Q_UNUSED(tabletPadId)
+    return false;
+}
+
+bool Effect::tabletPadRingEvent(int number, int position, bool isFinger, void *tabletPadId)
+{
+    Q_UNUSED(number)
+    Q_UNUSED(position)
+    Q_UNUSED(isFinger)
+    Q_UNUSED(tabletPadId)
+    return false;
+}
+
 bool Effect::blocksDirectScanout() const
 {
     return true;

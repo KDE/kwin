@@ -25,6 +25,7 @@
 #include "pointer_input.h"
 #include "renderbackend.h"
 #include "unmanaged.h"
+#include "input_event.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
@@ -734,6 +735,62 @@ bool EffectsHandlerImpl::touchUp(qint32 id, quint32 time)
     }
     return false;
 }
+
+bool EffectsHandlerImpl::tabletToolEvent(TabletEvent *event)
+{
+    // TODO: reverse call order?
+    for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if (it->second->tabletToolEvent(event)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool EffectsHandlerImpl::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId)
+{
+    // TODO: reverse call order?
+    for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if (it->second->tabletToolButtonEvent(button, pressed, tabletToolId.m_uniqueId)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool EffectsHandlerImpl::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId)
+{
+    // TODO: reverse call order?
+    for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if (it->second->tabletPadButtonEvent(button, pressed, tabletPadId.data)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool EffectsHandlerImpl::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
+{
+    // TODO: reverse call order?
+    for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if (it->second->tabletPadStripEvent(number, position, isFinger, tabletPadId.data)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool EffectsHandlerImpl::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
+{
+    // TODO: reverse call order?
+    for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if (it->second->tabletPadRingEvent(number, position, isFinger, tabletPadId.data)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 void EffectsHandlerImpl::registerGlobalShortcut(const QKeySequence &shortcut, QAction *action)
 {

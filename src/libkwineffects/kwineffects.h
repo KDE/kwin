@@ -46,6 +46,7 @@ class QFont;
 class QKeyEvent;
 class QMatrix4x4;
 class QAction;
+class QTabletEvent;
 
 /**
  * Logging category to be used inside the KWin effects.
@@ -602,6 +603,64 @@ public:
      * @since 5.8
      */
     virtual bool touchUp(qint32 id, quint32 time);
+
+    /**
+     * There has been an event from a drawing tablet tool
+     *
+     * i.e. a pen and the likes.
+     *
+     * @param event the event information
+     * @see QTabletEvent
+     *
+     * @since 5.25
+     */
+    virtual bool tabletToolEvent(QTabletEvent *event);
+
+    /**
+     * There has been an event from a button on a drawing tablet tool
+     *
+     * @param button which button
+     * @param pressed true if pressed, false when released
+     * @param tabletToolId the identifier of the tool id
+     *
+     * @since 5.25
+     */
+    virtual bool tabletToolButtonEvent(uint button, bool pressed, quint64 tabletToolId);
+
+    /**
+     * There has been an event from a button on a drawing tablet pad
+     *
+     * @param button which button
+     * @param pressed true if pressed, false when released
+     * @param tabletPadId the identifier of the tool id
+     *
+     * @since 5.25
+     */
+    virtual bool tabletPadButtonEvent(uint button, bool pressed, void *tabletPadId);
+
+    /**
+     * There has been an event from a input strip on a drawing tablet pad
+     *
+     * @param number which strip
+     * @param position the value within the strip that was selected
+     * @param isFinger if it was activated with a finger
+     * @param tabletPadId the identifier of the tool id
+     *
+     * @since 5.25
+     */
+    virtual bool tabletPadStripEvent(int number, int position, bool isFinger, void *tabletPadId);
+
+    /**
+     * There has been an event from a input ring on a drawing tablet pad
+     *
+     * @param number which ring
+     * @param position the value within the ring that was selected
+     * @param isFinger if it was activated with a finger
+     * @param tabletPadId the identifier of the tool id
+     *
+     * @since 5.25
+     */
+    virtual bool tabletPadRingEvent(int number, int position, bool isFinger, void *tabletPadId);
 
     static QPoint cursorPos();
 
