@@ -620,28 +620,35 @@ void PresentWindowsEffect::inputEventUpdate(const QPoint &pos, QEvent::Type type
     EffectWindow *highlightCandidate = nullptr;
     for (int i = 0; i < windows.size(); ++i) {
         DataHash::const_iterator winData = m_windowData.constFind(windows.at(i));
-        if (winData == m_windowData.constEnd())
+        if (winData == m_windowData.constEnd()) {
             continue;
+        }
 
         if (m_motionManager.transformedGeometry(windows.at(i)).contains(pos) &&
                 winData->visible && !winData->deleted) {
             hovering = true;
-            if (windows.at(i) && m_highlightedWindow != windows.at(i))
+            if (windows.at(i) && m_highlightedWindow != windows.at(i)) {
                 highlightCandidate = windows.at(i);
+            }
             break;
         }
     }
 
-    if (!hovering)
-        setHighlightedWindow(nullptr);
-    if (m_highlightedWindow && m_motionManager.transformedGeometry(m_highlightedWindow).contains(pos))
+    if (!hovering) {
+        if (m_windowFilter.isEmpty()) {
+            setHighlightedWindow(nullptr);
+        }
+    }
+    if (m_highlightedWindow && m_motionManager.transformedGeometry(m_highlightedWindow).contains(pos)) {
         updateCloseWindow();
-    else if (m_closeView)
+    } else if (m_closeView) {
         m_closeView->hide();
+    }
 
     if (type == QEvent::MouseButtonRelease) {
-        if (highlightCandidate)
+        if (highlightCandidate) {
             setHighlightedWindow(highlightCandidate);
+        }
         if (button == Qt::LeftButton) {
             if (hovering) {
                 // mouse is hovering above a window - use MouseActionsWindow
@@ -669,8 +676,9 @@ void PresentWindowsEffect::inputEventUpdate(const QPoint &pos, QEvent::Type type
                 mouseActionDesktop(m_rightButtonDesktop);
             }
         }
-    } else if (highlightCandidate && !m_motionManager.areWindowsMoving())
+    } else if (highlightCandidate && !m_motionManager.areWindowsMoving() && m_windowFilter.isEmpty()) {
         setHighlightedWindow(highlightCandidate);
+    }
 }
 
 bool PresentWindowsEffect::touchDown(qint32 id, const QPointF &pos, quint32 time)
@@ -856,6 +864,7 @@ void PresentWindowsEffect::grabbedKeyboardEvent(QKeyEvent *e)
             return; // HACK: Workaround for Qt bug on unbound keys (#178547)
         default:
             if (!e->text().isEmpty()) {
+                setHighlightedWindow(nullptr);
                 m_windowFilter.append(e->text());
                 updateFilterFrame();
                 rearrangeWindows();
