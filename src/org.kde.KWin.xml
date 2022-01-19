@@ -14,7 +14,7 @@
     <method name="killWindow">
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
-    <method name="activeScreen">
+    <method name="activeScreenName">
       <arg type="s" direction="out"/>
     </method>
     <method name="setCurrentDesktop">
