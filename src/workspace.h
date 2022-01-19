@@ -535,6 +535,8 @@ Q_SIGNALS:
      */
     void internalClientRemoved(KWin::InternalClient *client);
 
+    void activeOutputChanged(AbstractOutput *output);
+
 private:
     void init();
     void initializeX11();
