@@ -38,6 +38,7 @@ var eyeOnScreenEffect = {
         var screenGeo = effects.virtualScreenGeometry;
         var center = { value1: screenGeo.x + screenGeo.width/2,
                        value2: screenGeo.y + screenGeo.height/2 };
+	var screenNum = 0;
         for (var i = 0; i < stackingOrder.length; ++i) {
             var w = stackingOrder[i];
             if (!w.visible || !(showing || w.slurpedByEyeOnScreen)) {
@@ -62,7 +63,8 @@ var eyeOnScreenEffect = {
                         to: 0.0
                     }]
                 });
-                if (showing) // (when not showing, pretty much everything would be above)
+		++screenNum;
+                if (showing && screenNum >= effects.numScreens) // (when not showing, pretty much everything would be above)
                     break; // ignore windows above the desktop
             } else {
                 effects.setElevatedWindow(w, showing);
