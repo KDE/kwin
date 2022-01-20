@@ -741,14 +741,11 @@ bool XdgToplevelClient::userCanSetNoBorder() const
 
 bool XdgToplevelClient::noBorder() const
 {
-    return m_userNoBorder || preferredDecorationMode() != DecorationMode::Server;
+    return m_userNoBorder;
 }
 
 void XdgToplevelClient::setNoBorder(bool set)
 {
-    if (!userCanSetNoBorder()) {
-        return;
-    }
     set = rules()->checkNoBorder(set);
     if (m_userNoBorder == set) {
         return;
