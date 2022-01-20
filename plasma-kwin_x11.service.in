@@ -1,6 +1,6 @@
 [Unit]
 Description=KDE Window Manager
-Wants=plasma-kcminit.service
+After=plasma-kcminit.service
 PartOf=graphical-session.target
 
 [Service]
