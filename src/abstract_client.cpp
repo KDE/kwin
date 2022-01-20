@@ -603,7 +603,7 @@ void AbstractClient::setShade(ShadeMode mode)
         return;
     if (mode == ShadeHover && isInteractiveMove())
         return; // causes geometry breaks and is probably nasty
-    if (isSpecialWindow() || noBorder())
+    if (isSpecialWindow() || !isDecorated())
         mode = ShadeNone;
 
     mode = rules()->checkShade(mode);

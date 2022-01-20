@@ -1049,7 +1049,7 @@ void X11Client::updateInputWindow()
 
     QRegion region;
 
-    if (!noBorder() && isDecorated()) {
+    if (decoration()) {
         const QMargins &r = decoration()->resizeOnlyBorders();
         const int left   = r.left();
         const int top    = r.top();
@@ -1324,7 +1324,7 @@ void X11Client::updateShape()
             noborder = rules()->checkNoBorder(true);
             updateDecoration(true);
         }
-        if (noBorder()) {
+        if (!isDecorated()) {
             xcb_shape_combine(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING,
                               frameId(), clientPos().x(), clientPos().y(), window());
         }
@@ -1492,7 +1492,7 @@ QRect X11Client::iconGeometry() const
 
 bool X11Client::isShadeable() const
 {
-    return !isSpecialWindow() && !noBorder() && (rules()->checkShade(ShadeNormal) != rules()->checkShade(ShadeNone));
+    return !isSpecialWindow() && isDecorated() && (rules()->checkShade(ShadeNormal) != rules()->checkShade(ShadeNone));
 }
 
 void X11Client::doSetShade(ShadeMode previousShadeMode)
