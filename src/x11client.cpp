@@ -213,17 +213,19 @@ X11Client::X11Client()
     connect(options, &Options::configChanged, this, &X11Client::updateMouseGrab);
     connect(options, &Options::condensedTitleChanged, this, &X11Client::updateCaption);
 
-    connect(this, &X11Client::moveResizeCursorChanged, this, [this] (CursorShape cursor) {
-        xcb_cursor_t nativeCursor = Cursors::self()->mouse()->x11Cursor(cursor);
-        m_frame.defineCursor(nativeCursor);
-        if (m_decoInputExtent.isValid())
-            m_decoInputExtent.defineCursor(nativeCursor);
-        if (isInteractiveMoveResize()) {
-            // changing window attributes doesn't change cursor if there's pointer grab active
-            xcb_change_active_pointer_grab(connection(), nativeCursor, xTime(),
-                XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW);
-        }
-    });
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        connect(this, &X11Client::moveResizeCursorChanged, this, [this] (CursorShape cursor) {
+            xcb_cursor_t nativeCursor = Cursors::self()->mouse()->x11Cursor(cursor);
+            m_frame.defineCursor(nativeCursor);
+            if (m_decoInputExtent.isValid())
+                m_decoInputExtent.defineCursor(nativeCursor);
+            if (isInteractiveMoveResize()) {
+                // changing window attributes doesn't change cursor if there's pointer grab active
+                xcb_change_active_pointer_grab(connection(), nativeCursor, xTime(),
+                    XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW);
+            }
+        });
+    }
 
     // SELI TODO: Initialize xsizehints??
 }
