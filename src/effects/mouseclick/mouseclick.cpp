@@ -17,6 +17,7 @@
 #include <KGlobalAccel>
 
 #include <QPainter>
+#include <QTabletEvent>
 
 #include <cmath>
 
@@ -123,6 +124,12 @@ void MouseClickEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             click->m_frame->render(infiniteRegion(), frameAlpha, frameAlpha);
         }
     }
+    for (const auto &tool: qAsConst(m_tabletTools)) {
+        const int step = m_ringMaxSize * (1. - tool.m_pressure);
+        for (qreal size = m_ringMaxSize; size > 0; size -= step) {
+            drawCircle(tool.m_color, tool.m_globalPosition.x(), tool.m_globalPosition.y(), size);
+        }
+    }
     paintScreenFinish(mask, region, data);
 }
 
@@ -200,6 +207,14 @@ void MouseClickEffect::repaint()
         }
         effects->addRepaint(dirtyRegion);
     }
+    if (!m_tabletTools.isEmpty()) {
+        QRegion dirtyRegion;
+        const int radius = m_ringMaxSize + m_lineWidth;
+        for (const auto &event : qAsConst(m_tabletTools)) {
+            dirtyRegion |= QRect(event.m_globalPosition.x() - radius, event.m_globalPosition.y() - radius, 2*radius, 2*radius);
+        }
+        effects->addRepaint(dirtyRegion);
+    }
 }
 
 bool MouseClickEffect::isReleased(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons)
@@ -226,6 +241,7 @@ void MouseClickEffect::toggleEnabled()
 
     qDeleteAll(m_clicks);
     m_clicks.clear();
+    m_tabletTools.clear();
 
     for (int i = 0; i < BUTTON_COUNT; ++i) {
         m_buttons[i]->m_time = 0;
@@ -235,7 +251,7 @@ void MouseClickEffect::toggleEnabled()
 
 bool MouseClickEffect::isActive() const
 {
-    return m_enabled && (m_clicks.size() > 0);
+    return m_enabled && (!m_clicks.isEmpty() || !m_tabletTools.isEmpty());
 }
 
 void MouseClickEffect::drawCircle(const QColor& color, float cx, float cy, float r)
@@ -311,6 +327,42 @@ void MouseClickEffect::paintScreenFinishGl(int, QRegion, ScreenPaintData&)
     glDisable(GL_BLEND);
 
     ShaderManager::instance()->popShader();
+}
+
+bool MouseClickEffect::tabletToolEvent(QTabletEvent *event)
+{
+    auto &tabletEvent = m_tabletTools[event->uniqueId()];
+    if (!tabletEvent.m_color.isValid()) {
+        switch (event->pointerType()) {
+            case QTabletEvent::UnknownPointer:
+            case QTabletEvent::Pen:
+                tabletEvent.m_color = MouseClickConfig::color1();
+                break;
+            case QTabletEvent::Eraser:
+                tabletEvent.m_color = MouseClickConfig::color2();
+                break;
+            case QTabletEvent::Cursor:
+                tabletEvent.m_color = MouseClickConfig::color3();
+                break;
+        }
+    }
+    switch (event->type()) {
+        case QEvent::TabletPress:
+            tabletEvent.m_pressed = true;
+            break;
+        case QEvent::TabletRelease:
+            tabletEvent.m_pressed = false;
+            break;
+        case QEvent::TabletLeaveProximity:
+            m_tabletTools.remove(event->uniqueId());
+            return false;
+        default:
+            break;
+    }
+    tabletEvent.m_globalPosition = event->globalPos();
+    tabletEvent.m_pressure = event->pressure();
+
+    return false;
 }
 
 } // namespace

@@ -14,6 +14,7 @@
 #include <kwinglutils.h>
 #include <KLocalizedString>
 #include <QFont>
+#include <QHash>
 
 namespace KWin
 {
@@ -41,6 +42,15 @@ public:
     {
         delete m_frame;
     }
+};
+
+class TabletToolEvent
+{
+public:
+    QPointF m_globalPosition;
+    bool m_pressed = false;
+    qreal m_pressure = 0;
+    QColor m_color;
 };
 
 class MouseButton
@@ -128,6 +138,8 @@ public:
         return m_enabled;
     }
 
+    bool tabletToolEvent(QTabletEvent * event) override;
+
 private Q_SLOTS:
     void toggleEnabled();
     void slotMouseChanged(const QPoint& pos, const QPoint& old,
@@ -163,6 +175,7 @@ private:
 
     QList<MouseEvent*> m_clicks;
     MouseButton* m_buttons[BUTTON_COUNT];
+    QHash<quint64, TabletToolEvent> m_tabletTools;
 
     bool m_enabled;
 
