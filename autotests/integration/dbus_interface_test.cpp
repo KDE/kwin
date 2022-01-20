@@ -137,7 +137,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QCOMPARE(windowData.value(QStringLiteral("skipSwitcher")).toBool(), false);
     QCOMPARE(windowData.value(QStringLiteral("maximizeHorizontal")).toBool(), false);
     QCOMPARE(windowData.value(QStringLiteral("maximizeVertical")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("noBorder")).toBool(), true);
+    QCOMPARE(windowData.value(QStringLiteral("noBorder")).toBool(), false);
     QCOMPARE(windowData.value(QStringLiteral("clientMachine")).toString(), QString());
     QCOMPARE(windowData.value(QStringLiteral("localhost")).toBool(), true);
     QCOMPARE(windowData.value(QStringLiteral("role")).toString(), QString());

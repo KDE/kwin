@@ -1217,7 +1217,9 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
         c->setFullScreen(!c->isFullScreen(), true);
         break;
     case Options::NoBorderOp:
-        c->setNoBorder(!c->noBorder());
+        if (c->userCanSetNoBorder()) {
+            c->setNoBorder(!c->noBorder());
+        }
         break;
     case Options::KeepAboveOp: {
         StackingUpdatesBlocker blocker(this);
