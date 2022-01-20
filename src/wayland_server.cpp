@@ -213,10 +213,6 @@ KWaylandServer::ClientConnection *WaylandServer::inputMethodConnection() const
 
 void WaylandServer::registerShellClient(AbstractClient *client)
 {
-    if (client->isLockScreen()) {
-        ScreenLocker::KSldApp::self()->lockScreenShown();
-    }
-
     if (client->readyForPainting()) {
         Q_EMIT shellClientAdded(client);
     } else {
@@ -595,6 +591,12 @@ void WaylandServer::initScreenLocker()
 
     ScreenLocker::KSldApp::self()->setGreeterEnvironment(kwinApp()->processStartupEnvironment());
     ScreenLocker::KSldApp::self()->initialize();
+
+    connect(this, &WaylandServer::shellClientAdded, this, [](AbstractClient *client) {
+        if (client->isLockScreen()) {
+            ScreenLocker::KSldApp::self()->lockScreenShown();
+        }
+    });
 
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::aboutToLock, this,
         [this, screenLockerApp] () {
