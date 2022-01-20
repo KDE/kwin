@@ -182,7 +182,7 @@ void DBusInterface::showDebugConsole()
     console->show();
 }
 
-QString DBusInterface::activeScreenName() const
+QString DBusInterface::activeOutputName() const
 {
     AbstractOutput *activeOutput = workspace()->activeOutput();
     return activeOutput->name();

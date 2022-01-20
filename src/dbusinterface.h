@@ -62,7 +62,7 @@ public Q_SLOTS: // METHODS
      * Returns the name of the active screen, which is the one owning the currently active window,
      * or if configured the mouse cursor. this will correspond to QScreen::name
      */
-    QString activeScreenName() const;
+    QString activeOutputName() const;
     /** 
      * Instructs kwin_wayland to restart itself.
      * 
