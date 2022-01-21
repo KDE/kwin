@@ -118,6 +118,8 @@ Kirigami.Page {
                             onEntryEvent: function (entry, event) {
                                 if (event == 1) { // StatusChangedEvent
                                     kcm.reloadKWinSettings()
+                                } else if (event == 2) { // EntryAdoptedEvent
+                                    kcm.load()
                                 }
                             }
                         }
