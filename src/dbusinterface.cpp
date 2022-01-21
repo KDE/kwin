@@ -15,6 +15,7 @@
 
 // kwin
 #include "abstract_client.h"
+#include "abstract_output.h"
 #include "atoms.h"
 #include "composite.h"
 #include "debug_console.h"
@@ -252,6 +253,16 @@ QVariantMap DBusInterface::getWindowInfo(const QString &uuid)
     } else {
         return {};
     }
+}
+
+QRect DBusInterface::activeOutputAvailableArea() const
+{
+    QRect ret;
+    AbstractOutput *activeOutput = workspace()->activeOutput();
+    if (activeOutput) {
+        ret = workspace()->clientArea(MaximizeArea, activeOutput, VirtualDesktopManager::self()->currentDesktop());
+    }
+    return ret;
 }
 
 CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)

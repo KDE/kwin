@@ -85,6 +85,8 @@ public Q_SLOTS: // METHODS
      */
     QVariantMap getWindowInfo(const QString &uuid);
 
+    QRect activeOutputAvailableArea() const;
+
 private Q_SLOTS:
     void becomeKWinService(const QString &service);
 
