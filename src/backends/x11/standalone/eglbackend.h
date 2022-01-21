@@ -68,8 +68,8 @@ protected:
     void onDamage() override;
 
 private:
-    EglBackend *m_backend;
     EglPixmapTexture *q;
+    EglBackend *m_backend;
     EGLImageKHR m_image = EGL_NO_IMAGE_KHR;
 };
 
