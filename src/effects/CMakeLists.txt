@@ -10,7 +10,7 @@ endfunction()
 
 if (CMAKE_CROSSCOMPILING)
     if (NOT KWIN_HOST_TOOLING)
-        message(FATAL_ERROR "Please provide the path to a native build and pass -DKWIN_HOST_TOOLING=path")
+        message(FATAL_ERROR "Please provide the path to a native build -DKWIN_HOST_TOOLING=path")
     endif()
     find_file(KSEM_EXECUTABLE StripEffectMetadataTargets.cmake
               PATHS ${KWIN_HOST_TOOLING}
