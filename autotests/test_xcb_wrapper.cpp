@@ -155,11 +155,15 @@ void TestXcbWrapper::assignementEmpty()
     testEmpty(geometry);
     testEmpty(other);
     QVERIFY(!other.isRetrieved());
+
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_CLANG("-Wself-assign-overloaded")
     // test assignment to self
     geometry = geometry;
     other = other;
     testEmpty(geometry);
     testEmpty(other);
+QT_WARNING_POP
 }
 
 void TestXcbWrapper::assignmentBeforeRetrieve()
@@ -177,10 +181,14 @@ void TestXcbWrapper::assignmentBeforeRetrieve()
     QCOMPARE(other.window(), (xcb_window_t)m_testWindow);
     other = WindowGeometry();
     testEmpty(geometry);
+
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_CLANG("-Wself-assign-overloaded")
     // test assignment to self
     geometry = geometry;
     other = other;
     testEmpty(geometry);
+QT_WARNING_POP
 }
 
 void TestXcbWrapper::assignmentAfterRetrieve()
@@ -194,11 +202,14 @@ void TestXcbWrapper::assignmentAfterRetrieve()
     QVERIFY(other.isRetrieved());
     testGeometry(other, QRect(0, 0, 10, 10));
 
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_CLANG("-Wself-assign-overloaded")
     // test assignment to self
     geometry = geometry;
     other = other;
     testEmpty(geometry);
     testGeometry(other, QRect(0, 0, 10, 10));
+QT_WARNING_POP
 
     // set to empty again
     other = WindowGeometry();
