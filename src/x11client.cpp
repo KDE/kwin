@@ -1038,6 +1038,10 @@ void X11Client::updateInputWindow()
     if (!Xcb::Extensions::self()->isShapeInputAvailable())
         return;
 
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        return;
+    }
+
     QRegion region;
 
     if (!noBorder() && isDecorated()) {
