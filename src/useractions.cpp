@@ -864,7 +864,7 @@ void ShortcutDialog::keySequenceChanged()
     // Check if the key sequence is used currently
     QString sc = seq.toString();
     // NOTICE - seq.toString() & the entries in "conflicting" randomly get invalidated after the next call (if no sc has been set & conflicting isn't empty?!)
-    QList<KGlobalShortcutInfo> conflicting = KGlobalAccel::getGlobalShortcutsByKey(seq);
+    QList<KGlobalShortcutInfo> conflicting = KGlobalAccel::globalShortcutsByKey(seq);
     if (!conflicting.isEmpty()) {
         const KGlobalShortcutInfo &conflict = conflicting.at(0);
         m_ui.warning->setText(i18nc("'%1' is a keyboard shortcut like 'ctrl+w'",
@@ -1820,7 +1820,7 @@ bool Workspace::shortcutAvailable(const QKeySequence &cut, AbstractClient* ignor
         return true;
 
     // Check if the shortcut is already registered
-    const QList<KGlobalShortcutInfo> registeredShortcuts = KGlobalAccel::getGlobalShortcutsByKey(cut);
+    const QList<KGlobalShortcutInfo> registeredShortcuts = KGlobalAccel::globalShortcutsByKey(cut);
     for (const auto &shortcut : registeredShortcuts) {
         // Only return "not available" if is not a client activation shortcut, as it may be no longer valid
         if (!shortcut.uniqueName().startsWith(QStringLiteral("_k_session:"))) {
