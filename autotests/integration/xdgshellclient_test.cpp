@@ -995,7 +995,6 @@ void TestXdgShellClient::testXdgDecoration()
 
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last()[0].toInt());
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QCOMPARE(c->userCanSetNoBorder(), expectedMode == Test::XdgToplevelDecorationV1::mode_server_side);
     QCOMPARE(c->isDecorated(), expectedMode == Test::XdgToplevelDecorationV1::mode_server_side);
 }
 
