@@ -54,8 +54,6 @@ AbstractEglBackend::~AbstractEglBackend()
 
 EGLContext AbstractEglBackend::ensureGlobalShareContext()
 {
-    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
-
     if (kwinApp()->platform()->sceneEglGlobalShareContext() != EGL_NO_CONTEXT) {
         return kwinApp()->platform()->sceneEglGlobalShareContext();
     }
