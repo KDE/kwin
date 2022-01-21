@@ -723,26 +723,7 @@ bool XdgToplevelClient::userCanSetFullScreen() const
 
 bool XdgToplevelClient::userCanSetNoBorder() const
 {
-    if (m_serverDecoration) {
-        switch (m_serverDecoration->preferredMode()) {
-        case ServerSideDecorationManagerInterface::Mode::Server:
-            return !isFullScreen() && !isShade();
-        case ServerSideDecorationManagerInterface::Mode::Client:
-        case ServerSideDecorationManagerInterface::Mode::None:
-            return false;
-        }
-    }
-    if (m_xdgDecoration) {
-        switch (m_xdgDecoration->preferredMode()) {
-        case XdgToplevelDecorationV1Interface::Mode::Server:
-        case XdgToplevelDecorationV1Interface::Mode::Undefined:
-            return Decoration::DecorationBridge::hasPlugin() && !isFullScreen() && !isShade();
-        case XdgToplevelDecorationV1Interface::Mode::None:
-        case XdgToplevelDecorationV1Interface::Mode::Client:
-            return false;
-        }
-    }
-    return false;
+    return (m_serverDecoration || m_xdgDecoration) && !isFullScreen() && !isShade();
 }
 
 bool XdgToplevelClient::noBorder() const
