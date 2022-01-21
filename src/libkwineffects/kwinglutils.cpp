@@ -983,14 +983,14 @@ GLRenderTarget* GLRenderTarget::popRenderTarget()
 }
 
 GLRenderTarget::GLRenderTarget()
-    : mValid(false)
-    , mTexture(GL_TEXTURE_2D)
+    : mTexture(GL_TEXTURE_2D)
+    , mValid(false)
 {
 }
 
 GLRenderTarget::GLRenderTarget(const GLTexture& color)
-    : mValid(false)
-    , mTexture(color)
+    : mTexture(color)
+    , mValid(false)
 {
     // Make sure FBO is supported
     if (sSupported && !mTexture.isNull()) {
