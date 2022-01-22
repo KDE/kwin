@@ -44,6 +44,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <cerrno>
+#include <math.h>
 // drm
 #include <gbm.h>
 #include <xf86drm.h>
@@ -467,7 +468,7 @@ bool DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput*> &out
             if (const QJsonObject mode = outputInfo["mode"].toObject(); !mode.isEmpty()) {
                 const QJsonObject size = mode["size"].toObject();
                 props->modeSize = QSize(size["width"].toInt(), size["height"].toInt());
-                props->refreshRate = mode["refresh"].toDouble() * 1000;
+                props->refreshRate = round(mode["refresh"].toDouble() * 1000);
             }
         } else {
             props->enabled = true;
