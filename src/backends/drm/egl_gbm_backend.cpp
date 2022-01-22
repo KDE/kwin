@@ -669,6 +669,7 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
     }
     output.scanoutCandidate.surface = surface;
     const auto &sendFeedback = [&output, &buffer, &planes, this]() {
+        qCWarning(KWIN_DRM) << "sending feedback!";
         if (!output.scanoutCandidate.attemptedFormats[buffer->format()].contains(planes.first().modifier)) {
             output.scanoutCandidate.attemptedFormats[buffer->format()] << planes.first().modifier;
         }
