@@ -1674,11 +1674,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
     }
 
     if (options->borderlessMaximizedWindows()) {
-        // triggers a maximize change.
-        // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore geometry
-        changeMaximizeRecursion = true;
-        setNoBorder(rules()->checkNoBorder(m_requestedMaximizeMode == MaximizeFull));
-        changeMaximizeRecursion = false;
+        setNoBorder(m_requestedMaximizeMode == MaximizeFull);
     }
 
     if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
