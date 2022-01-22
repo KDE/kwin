@@ -633,6 +633,11 @@ void EglGbmBackend::updateBufferAge(Output &output, const QRegion &dirty)
 
 bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
 {
+    static bool valid;
+    static const bool disableDirectScanout = qEnvironmentVariableIntValue("KWIN_DRM_DISABLE_DIRECT_SCANOUT", &valid) == 1 && valid;
+    if (disableDirectScanout) {
+        return false;
+    }
     Q_ASSERT(m_outputs.contains(drmOutput));
     SurfaceItemWayland *item = qobject_cast<SurfaceItemWayland *>(surfaceItem);
     if (!item) {
