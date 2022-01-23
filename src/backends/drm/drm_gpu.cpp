@@ -323,7 +323,7 @@ bool DrmGpu::updateOutputs()
     return true;
 }
 
-bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmCrtc*> crtcs)
+bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector*> connectors, const QVector<DrmCrtc*> &crtcs)
 {
     if (connectors.isEmpty() || crtcs.isEmpty()) {
         if (m_pipelines.isEmpty()) {
@@ -344,15 +344,25 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmC
         pipeline->pending.crtc = nullptr;
         return checkCrtcAssignment(connectors, crtcs);
     }
+    DrmCrtc *currentCrtc = nullptr;
     if (m_atomicModeSetting) {
         // try the crtc that this connector is already connected to first
-        std::sort(crtcs.begin(), crtcs.end(), [connector](auto c1, auto c2){
-            Q_UNUSED(c2)
-            return connector->getProp(DrmConnector::PropertyIndex::CrtcId)->pending() == c1->id();
+        uint32_t id = connector->getProp(DrmConnector::PropertyIndex::CrtcId)->pending();
+        auto it = std::find_if(crtcs.begin(), crtcs.end(), [id](const auto &crtc) {
+            return id == crtc->id();
         });
+        if (it != crtcs.end()) {
+            currentCrtc = *it;
+            auto crtcsLeft = crtcs;
+            crtcsLeft.removeOne(currentCrtc);
+            pipeline->pending.crtc = currentCrtc;
+            if (checkCrtcAssignment(connectors, crtcsLeft)) {
+                return true;
+            }
+        }
     }
     for (const auto &crtc : qAsConst(crtcs)) {
-        if (connector->isCrtcSupported(crtc)) {
+        if (connector->isCrtcSupported(crtc) && crtc != currentCrtc) {
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(crtc);
             pipeline->pending.crtc = crtc;

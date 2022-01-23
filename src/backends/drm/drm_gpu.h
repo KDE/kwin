@@ -102,7 +102,7 @@ private:
     void initDrmResources();
     void waitIdle();
 
-    bool checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmCrtc*> crtcs);
+    bool checkCrtcAssignment(QVector<DrmConnector*> connectors, const QVector<DrmCrtc*> &crtcs);
     bool testPipelines();
     QVector<DrmObject*> unusedObjects() const;
 
