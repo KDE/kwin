@@ -351,20 +351,13 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector*> connectors, QVector<DrmC
             return connector->getProp(DrmConnector::PropertyIndex::CrtcId)->pending() == c1->id();
         });
     }
-    auto encoders = connector->encoders();
-    for (const auto &encoder : encoders) {
-        DrmScopedPointer<drmModeEncoder> enc(drmModeGetEncoder(m_fd, encoder));
-        if (!enc) {
-            continue;
-        }
-        for (const auto &crtc : qAsConst(crtcs)) {
-            if ((enc->possible_crtcs & (1 << crtc->pipeIndex()))) {
-                auto crtcsLeft = crtcs;
-                crtcsLeft.removeOne(crtc);
-                pipeline->pending.crtc = crtc;
-                if (checkCrtcAssignment(connectors, crtcsLeft)) {
-                    return true;
-                }
+    for (const auto &crtc : qAsConst(crtcs)) {
+        if (connector->isCrtcSupported(crtc)) {
+            auto crtcsLeft = crtcs;
+            crtcsLeft.removeOne(crtc);
+            pipeline->pending.crtc = crtc;
+            if (checkCrtcAssignment(connectors, crtcsLeft)) {
+                return true;
             }
         }
     }

@@ -24,6 +24,7 @@ namespace KWin
 
 class DrmPipeline;
 class DrmConnector;
+class DrmCrtc;
 
 /**
  * The DrmConnectorMode class represents a native mode and the associated blob.
@@ -85,7 +86,7 @@ public:
     bool updateProperties() override;
     void disable() override;
 
-    QVector<uint32_t> encoders() const;
+    bool isCrtcSupported(DrmCrtc *crtc) const;
     bool isConnected() const;
     bool isNonDesktop() const;
     bool isInternal() const;
@@ -115,11 +116,11 @@ public:
 private:
     QScopedPointer<DrmPipeline> m_pipeline;
     DrmScopedPointer<drmModeConnector> m_conn;
-    QVector<uint32_t> m_encoders;
     Edid m_edid;
     QSize m_physicalSize = QSize(-1, -1);
     QVector<DrmConnectorMode *> m_modes;
     int m_modeIndex = 0;
+    uint32_t m_possibleCrtcs = 0;
 
     friend QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj);
 };

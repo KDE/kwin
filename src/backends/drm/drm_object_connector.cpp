@@ -12,6 +12,7 @@
 #include "drm_pointer.h"
 #include "logging.h"
 #include "drm_pipeline.h"
+#include "drm_object_crtc.h"
 
 #include <main.h>
 // frameworks
@@ -111,7 +112,12 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
 {
     if (m_conn) {
         for (int i = 0; i < m_conn->count_encoders; ++i) {
-            m_encoders << m_conn->encoders[i];
+            DrmScopedPointer<drmModeEncoder> enc(drmModeGetEncoder(gpu->fd(), m_conn->encoders[i]));
+            if (!enc) {
+                qCWarning(KWIN_DRM) << "failed to get encoder" << m_conn->encoders[i];
+                continue;
+            }
+            m_possibleCrtcs |= enc->possible_crtcs;
         }
     } else {
         qCWarning(KWIN_DRM) << "drmModeGetConnector failed!" << strerror(errno);
@@ -399,9 +405,9 @@ bool DrmConnector::updateProperties()
     return true;
 }
 
-QVector<uint32_t> DrmConnector::encoders() const
+bool DrmConnector::isCrtcSupported(DrmCrtc *crtc) const
 {
-    return m_encoders;
+    return (m_possibleCrtcs & (1 << crtc->pipeIndex()));
 }
 
 bool DrmConnector::isNonDesktop() const
