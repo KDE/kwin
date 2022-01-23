@@ -67,6 +67,7 @@ public:
     void setParentWindow(PlasmaWindowInterface *parent);
     void setGeometry(const QRect &geometry);
     void setApplicationMenuPaths(const QString &service, const QString &object);
+    void setResourceName(const QString &resourceName);
     wl_resource *resourceForParent(PlasmaWindowInterface *parent, Resource *child) const;
 
     quint32 windowId = 0;
@@ -89,6 +90,7 @@ public:
     QIcon m_icon;
     quint32 m_state = 0;
     QString uuid;
+    QString m_resourceName;
 
 protected:
     void org_kde_plasma_window_bind_resource(Resource *resource) override;
@@ -375,6 +377,11 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_bind_resource(Resource 
     if (resource->version() >= ORG_KDE_PLASMA_WINDOW_INITIAL_STATE_SINCE_VERSION) {
         send_initial_state(resource->handle);
     }
+    if (!m_resourceName.isEmpty()) {
+        if (resource->version() >= ORG_KDE_PLASMA_WINDOW_RESOURCE_NAME_CHANGED_SINCE_VERSION) {
+            send_resource_name_changed(resource->handle, m_resourceName);
+        }
+    }
 }
 
 void PlasmaWindowInterfacePrivate::setAppId(const QString &appId)
@@ -426,6 +433,21 @@ void PlasmaWindowInterfacePrivate::setIcon(const QIcon &icon)
     for (auto resource : clientResources) {
         if (resource->version() >= ORG_KDE_PLASMA_WINDOW_ICON_CHANGED_SINCE_VERSION) {
             send_icon_changed(resource->handle);
+        }
+    }
+}
+
+void PlasmaWindowInterfacePrivate::setResourceName(const QString &resourceName)
+{
+    if (m_resourceName == resourceName) {
+        return;
+    }
+    m_resourceName = resourceName;
+
+    const auto clientResources = resourceMap();
+    for (auto resource : clientResources) {
+        if (resource->version() >= ORG_KDE_PLASMA_WINDOW_RESOURCE_NAME_CHANGED_SINCE_VERSION) {
+            send_resource_name_changed(resource->handle, resourceName);
         }
     }
 }
@@ -865,6 +887,11 @@ void PlasmaWindowInterface::setSkipSwitcher(bool skip)
 void PlasmaWindowInterface::setIcon(const QIcon &icon)
 {
     d->setIcon(icon);
+}
+
+void PlasmaWindowInterface::setResourceName(const QString &resourceName)
+{
+    d->setResourceName(resourceName);
 }
 
 void PlasmaWindowInterface::addPlasmaVirtualDesktop(const QString &id)

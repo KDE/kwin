@@ -129,6 +129,7 @@ public:
     void setShaded(bool set);
     void setMovable(bool set);
     void setResizable(bool set);
+    void setResourceName(const QString &resourceName);
     /**
      * FIXME: still relevant with new desktops?
      */
