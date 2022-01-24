@@ -432,11 +432,11 @@ namespace KWinKScreenIntegration
     }
 }
 
-void DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput*> &outputs)
+bool DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput*> &outputs)
 {
     const auto outputsInfo = KWinKScreenIntegration::outputsConfig(outputs);
 
-    AbstractOutput *primaryOutput = m_outputs.constFirst();
+    AbstractWaylandOutput *primaryOutput = outputs.constFirst();
     WaylandOutputConfig cfg;
     // default position goes from left to right
     QPoint pos(0, 0);
@@ -475,8 +475,23 @@ void DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput*> &out
         }
         pos.setX(pos.x() + output->geometry().width());
     }
-    applyOutputChanges(cfg);
+    bool allDisabled = std::all_of(outputs.begin(), outputs.end(), [&cfg](const auto &output) {
+        return !cfg.changeSet(output)->enabled;
+    });
+    if (allDisabled) {
+        qCWarning(KWIN_DRM) << "KScreen config would disable all outputs!";
+        return false;
+    }
+    if (!cfg.changeSet(primaryOutput)->enabled) {
+        qCWarning(KWIN_DRM) << "KScreen config would disable the primary output!";
+        return false;
+    }
+    if (!applyOutputChanges(cfg)) {
+        qCWarning(KWIN_DRM) << "Applying KScreen config failed!";
+        return false;
+    }
     setPrimaryOutput(primaryOutput);
+    return true;
 }
 
 void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
@@ -498,7 +513,14 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
         if (m_enabledOutputs.count() == 1) {
             auto outputs = m_outputs;
             outputs.removeOne(output);
-            readOutputsConfiguration(outputs);
+            if (!readOutputsConfiguration(outputs)) {
+                // config is invalid or failed to apply -> Try to enable an output anyways
+                WaylandOutputConfig cfg;
+                cfg.changeSet(outputs.constFirst())->enabled = true;
+                if (!applyOutputChanges(cfg)) {
+                    qCCritical(KWIN_DRM) << "Could not enable any outputs!";
+                }
+            }
         }
         if (m_enabledOutputs.count() == 1 && !kwinApp()->isTerminating()) {
             qCDebug(KWIN_DRM) << "adding placeholder output";
