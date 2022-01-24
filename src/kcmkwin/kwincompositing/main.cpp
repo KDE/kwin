@@ -104,16 +104,16 @@ void KWinCompositingKCM::init()
 {
     auto currentIndexChangedSignal = static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
 
-    // animation speed
-    m_form.animationDurationFactor->setMaximum(s_animationMultipliers.size() - 1);
-    connect(m_form.animationDurationFactor, &QSlider::valueChanged, this, [this]() {
-        m_settings->setAnimationDurationFactor(s_animationMultipliers[m_form.animationDurationFactor->value()]);
-        updateUnmanagedItemStatus();
-    });
-
     if (isRunningPlasma()) {
         m_form.animationSpeedLabel->hide();
         m_form.animationSpeedControls->hide();
+    } else {
+        // animation speed
+        m_form.animationDurationFactor->setMaximum(s_animationMultipliers.size() - 1);
+        connect(m_form.animationDurationFactor, &QSlider::valueChanged, this, [this]() {
+            m_settings->setAnimationDurationFactor(s_animationMultipliers[m_form.animationDurationFactor->value()]);
+            updateUnmanagedItemStatus();
+        });
     }
 
     // gl scale filter
@@ -188,13 +188,15 @@ void KWinCompositingKCM::load()
 {
     KCModule::load();
 
-    // unmanaged items
-    m_settings->findItem("AnimationDurationFactor")->readConfig(m_settings->config());
-    const double multiplier = m_settings->animationDurationFactor();
-    auto const it = std::lower_bound(s_animationMultipliers.begin(), s_animationMultipliers.end(), multiplier, std::greater<qreal>());
-    const int index = static_cast<int>(std::distance(s_animationMultipliers.begin(), it));
-    m_form.animationDurationFactor->setValue(index);
-    m_form.animationDurationFactor->setDisabled(m_settings->isAnimationDurationFactorImmutable());
+    if (!isRunningPlasma()) {
+        // unmanaged items
+        m_settings->findItem("AnimationDurationFactor")->readConfig(m_settings->config());
+        const double multiplier = m_settings->animationDurationFactor();
+        auto const it = std::lower_bound(s_animationMultipliers.begin(), s_animationMultipliers.end(), multiplier, std::greater<qreal>());
+        const int index = static_cast<int>(std::distance(s_animationMultipliers.begin(), it));
+        m_form.animationDurationFactor->setValue(index);
+        m_form.animationDurationFactor->setDisabled(m_settings->isAnimationDurationFactorImmutable());
+    }
 }
 
 void KWinCompositingKCM::defaults()
