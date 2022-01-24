@@ -97,6 +97,7 @@ private:
 
     struct {
         KWaylandServer::ScreencastV1Interface::CursorMode mode = KWaylandServer::ScreencastV1Interface::Hidden;
+        const QSize bitmapSize = QSize(256, 256);
         qreal scale = 1;
         QRect viewport;
         qint64 lastKey = 0;

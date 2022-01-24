@@ -78,14 +78,13 @@ void ScreenCastStream::newStreamParams()
     spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT (paramsBuffer, sizeof (paramsBuffer));
     int buffertypes;
 
-    spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
-    const int cursorSize = Cursors::self()->currentCursor()->themeSize() * m_cursor.scale;
     if (m_hasModifier) {
         buffertypes = (1<<SPA_DATA_DmaBuf);
     } else {
         buffertypes = (1<<SPA_DATA_MemFd);
     }
 
+    spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
     const spa_pod *params[] = {
         (spa_pod*) spa_pod_builder_add_object(&pod_builder,
                                               SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers,
@@ -101,7 +100,7 @@ void ScreenCastStream::newStreamParams()
         (spa_pod*) spa_pod_builder_add_object (&pod_builder,
                                                SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
                                                SPA_PARAM_META_type, SPA_POD_Id (SPA_META_Cursor),
-                                               SPA_PARAM_META_size, SPA_POD_Int (CURSOR_META_SIZE (cursorSize, cursorSize))),
+                                               SPA_PARAM_META_size, SPA_POD_Int (CURSOR_META_SIZE (m_cursor.bitmapSize.width(), m_cursor.bitmapSize.height()))),
         (spa_pod*) spa_pod_builder_add_object(&pod_builder,
                                                 SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
                                                 SPA_PARAM_META_type, SPA_POD_Id(SPA_META_VideoDamage),
@@ -625,8 +624,7 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
     spa_meta_bitmap->offset = sizeof (struct spa_meta_bitmap);
 
     uint8_t *bitmap_data = SPA_MEMBER (spa_meta_bitmap, spa_meta_bitmap->offset, uint8_t);
-    const int bufferSideSize = Cursors::self()->currentCursor()->themeSize() * m_cursor.scale;
-    QImage dest(bitmap_data, std::min(bufferSideSize, image.width()), std::min(bufferSideSize, image.height()), QImage::Format_RGBA8888_Premultiplied);
+    QImage dest(bitmap_data, std::min(m_cursor.bitmapSize.width(), image.width()), std::min(m_cursor.bitmapSize.height(), image.height()), QImage::Format_RGBA8888_Premultiplied);
     spa_meta_bitmap->size.width = dest.width();
     spa_meta_bitmap->size.height = dest.height();
     spa_meta_bitmap->stride = dest.bytesPerLine();
