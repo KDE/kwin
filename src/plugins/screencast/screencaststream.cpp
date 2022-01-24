@@ -620,23 +620,22 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
     struct spa_meta_bitmap *spa_meta_bitmap = SPA_MEMBER (spa_meta_cursor,
                                                           spa_meta_cursor->bitmap_offset,
                                                           struct spa_meta_bitmap);
-    spa_meta_bitmap->format = SPA_VIDEO_FORMAT_RGBA;
-    spa_meta_bitmap->offset = sizeof (struct spa_meta_bitmap);
 
     uint8_t *bitmap_data = SPA_MEMBER (spa_meta_bitmap, spa_meta_bitmap->offset, uint8_t);
     QImage dest(bitmap_data, std::min(m_cursor.bitmapSize.width(), image.width()), std::min(m_cursor.bitmapSize.height(), image.height()), QImage::Format_RGBA8888_Premultiplied);
+    dest.setDevicePixelRatio(m_cursor.scale);
+    dest.fill(Qt::transparent);
+
+    if (!image.isNull()) {
+        QPainter painter(&dest);
+        painter.drawImage(QPoint(), image);
+    }
+
+    spa_meta_bitmap->format = SPA_VIDEO_FORMAT_RGBA;
+    spa_meta_bitmap->offset = sizeof (struct spa_meta_bitmap);
     spa_meta_bitmap->size.width = dest.width();
     spa_meta_bitmap->size.height = dest.height();
     spa_meta_bitmap->stride = dest.bytesPerLine();
-
-    if (image.isNull()) {
-        return;
-    }
-
-    dest.setDevicePixelRatio(m_cursor.scale);
-    dest.fill(Qt::transparent);
-    QPainter painter(&dest);
-    painter.drawImage(QPoint(), image);
 }
 
 void ScreenCastStream::setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport)
