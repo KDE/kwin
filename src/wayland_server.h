@@ -83,6 +83,7 @@ public:
     bool init(InitializationFlags flags = InitializationFlag::NoOptions);
 
     bool start();
+    void stop();
 
     KWaylandServer::Display *display() const
     {

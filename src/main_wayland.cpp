@@ -121,6 +121,7 @@ ApplicationWayland::~ApplicationWayland()
     if (!waylandServer()) {
         return;
     }
+    waylandServer()->stop();
 
     // need to unload all effects prior to destroying X connection as they might do X calls
     if (effects) {
