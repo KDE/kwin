@@ -39,7 +39,6 @@ public:
     explicit XToWlDrag(X11Source *source);
     ~XToWlDrag() override;
 
-    DragEventReply moveFilter(Toplevel *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
     void setDragAndDropAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action);
@@ -55,6 +54,7 @@ public:
 private:
     void setOffers(const Mimes &offers);
     void setDragTarget();
+    void dragSurfaceChanged();
 
     bool checkForFinished();
 

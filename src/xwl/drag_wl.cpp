@@ -36,13 +36,6 @@ namespace KWin
 namespace Xwl
 {
 
-DragEventReply WlToXDrag::moveFilter(Toplevel *target, const QPoint &pos)
-{
-    Q_UNUSED(target)
-    Q_UNUSED(pos)
-    return DragEventReply::Wayland;
-}
-
 bool WlToXDrag::handleClientMessage(xcb_client_message_event_t *event)
 {
     return DataBridge::self()->dnd()->dropHandler()->handleClientMessage(event);

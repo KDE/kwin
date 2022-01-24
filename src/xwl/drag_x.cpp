@@ -107,23 +107,68 @@ XToWlDrag::XToWlDrag(X11Source *source)
     int serial = waylandServer()->seat()->pointerButtonSerial(Qt::LeftButton);
     // we know we are the focussed surface as dnd checks
     seat->startDrag(&m_selectionSource, seat->focusedPointerSurface(), serial);
+    connect(seat, &KWaylandServer::SeatInterface::dragSurfaceChanged, this, &XToWlDrag::dragSurfaceChanged);
 }
 
 XToWlDrag::~XToWlDrag()
 {
 }
 
-DragEventReply XToWlDrag::moveFilter(Toplevel *target, const QPoint &pos)
+// DragEventReply XToWlDrag::moveFilter(Toplevel *target, const QPoint &pos)
+// {
+//     Q_UNUSED(pos);
+//
+//     auto *seat = waylandServer()->seat();
+//
+//     if (m_visit && m_visit->target() == target) {
+//         // still same Wl target, wait for X events
+//         return DragEventReply::Ignore;
+//     }
+//     if (m_visit) {
+//         if (m_visit->leave()) {
+//             delete m_visit;
+//         } else {
+//             connect(m_visit, &WlVisit::finish, this, [this](WlVisit *visit) {
+//                 m_oldVisits.removeOne(visit);
+//                 delete visit;
+//             });
+//             m_oldVisits << m_visit;
+//         }
+//     }
+//     const bool hasCurrent = m_visit;
+//     m_visit = nullptr;
+//
+//     if (!target || !target->surface() ||
+//             target->surface()->client() == waylandServer()->xWaylandConnection()) {
+//         // currently there is no target or target is an Xwayland window
+//         // handled here and by X directly
+//         if (hasCurrent) {
+//             // last received enter event is now void,
+//             // wait for the next one
+//             seat->setDragTarget(nullptr, nullptr);
+//         }
+//         return DragEventReply::Ignore;
+//     }
+//     // new Wl native target
+//     auto *ac = static_cast<AbstractClient*>(target);
+//     m_visit = new WlVisit(ac, this);
+//     connect(m_visit, &WlVisit::offersReceived, this, &XToWlDrag::setOffers);
+//     return DragEventReply::Ignore;
+// }
+
+void XToWlDrag::dragSurfaceChanged()
 {
-    Q_UNUSED(pos);
+    const auto dragSurface = waylandServer()->seat()->dragSurface();
+    const auto client = waylandServer()->findClient(dragSurface);
 
-    auto *seat = waylandServer()->seat();
+    qDebug() << "XToWlDrag: new dragSurface" << dragSurface << client->desktopFileName();
 
-    if (m_visit && m_visit->target() == target) {
-        // still same Wl target, wait for X events
-        return DragEventReply::Ignore;
-    }
     if (m_visit) {
+        if (m_visit->target() == client) {
+            // Nothing changed
+            qDebug() << "XToWlDrag: Nothing changed";
+            return;
+        }
         if (m_visit->leave()) {
             delete m_visit;
         } else {
@@ -134,25 +179,16 @@ DragEventReply XToWlDrag::moveFilter(Toplevel *target, const QPoint &pos)
             m_oldVisits << m_visit;
         }
     }
-    const bool hasCurrent = m_visit;
+
     m_visit = nullptr;
 
-    if (!target || !target->surface() ||
-            target->surface()->client() == waylandServer()->xWaylandConnection()) {
-        // currently there is no target or target is an Xwayland window
-        // handled here and by X directly
-        if (hasCurrent) {
-            // last received enter event is now void,
-            // wait for the next one
-            seat->setDragTarget(nullptr, nullptr);
-        }
-        return DragEventReply::Ignore;
+    if (!client) {
+        qDebug() << "XToWlDrag: no wayland target, nothing to do...";
+        return;
     }
-    // new Wl native target
-    auto *ac = static_cast<AbstractClient*>(target);
-    m_visit = new WlVisit(ac, this);
+    //   new Wl native target
+    m_visit = new WlVisit(client, this);
     connect(m_visit, &WlVisit::offersReceived, this, &XToWlDrag::setOffers);
-    return DragEventReply::Ignore;
 }
 
 bool XToWlDrag::handleClientMessage(xcb_client_message_event_t *event)

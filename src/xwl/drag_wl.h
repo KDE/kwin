@@ -40,7 +40,6 @@ class WlToXDrag : public Drag
     Q_OBJECT
     using Drag::Drag;
 public:
-    DragEventReply moveFilter(Toplevel *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
     bool end() override;

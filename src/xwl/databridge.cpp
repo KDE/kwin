@@ -66,10 +66,5 @@ bool DataBridge::nativeEventFilter(const QByteArray &eventType, void *message, l
     return false;
 }
 
-DragEventReply DataBridge::dragMoveFilter(Toplevel *target, const QPoint &pos)
-{
-    return m_dnd->dragMoveFilter(target, pos);
-}
-
 } // namespace Xwl
 } // namespace KWin

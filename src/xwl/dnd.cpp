@@ -134,12 +134,6 @@ bool Dnd::handleClientMessage(xcb_client_message_event_t *event)
     return false;
 }
 
-DragEventReply Dnd::dragMoveFilter(Toplevel *target, const QPoint &pos)
-{
-    Q_ASSERT(m_currentDrag);
-    return m_currentDrag->moveFilter(target, pos);
-}
-
 void Dnd::startDrag()
 {
     auto dragSource = waylandServer()->seat()->dragSource();

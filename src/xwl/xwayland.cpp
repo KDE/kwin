@@ -511,15 +511,6 @@ void Xwayland::destroyX11Connection()
     Q_EMIT m_app->x11ConnectionChanged();
 }
 
-DragEventReply Xwayland::dragMoveFilter(Toplevel *target, const QPoint &pos)
-{
-    DataBridge *bridge = DataBridge::self();
-    if (!bridge) {
-        return DragEventReply::Wayland;
-    }
-    return bridge->dragMoveFilter(target, pos);
-}
-
 KWaylandServer::AbstractDropHandler *Xwayland::xwlDropHandler()
 {
     DataBridge *bridge = DataBridge::self();

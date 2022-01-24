@@ -125,7 +125,6 @@ private:
     bool createX11Connection();
     void destroyX11Connection();
 
-    DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) override;
     KWaylandServer::AbstractDropHandler *xwlDropHandler() override;
 
     int m_xcbConnectionFd = -1;

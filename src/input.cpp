@@ -2126,15 +2126,6 @@ public:
             }
             m_dragTarget = dragTarget;
 
-            if (auto *xwl = xwayland()) {
-                const auto ret = xwl->dragMoveFilter(t, eventPos);
-                if (ret == Xwl::DragEventReply::Ignore) {
-                    return false;
-                } else if (ret == Xwl::DragEventReply::Take) {
-                    break;
-                }
-            }
-
             if (t) {
                 // TODO: consider decorations
                 if (t->surface() != seat->dragSurface()) {

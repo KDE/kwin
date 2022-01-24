@@ -47,8 +47,6 @@ public:
 
     ~DataBridge() override;
 
-    DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos);
-
     Dnd *dnd() const
     {
         return m_dnd;
