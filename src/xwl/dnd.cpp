@@ -168,6 +168,7 @@ void Dnd::endDrag()
         connect(m_currentDrag, &Drag::finish, this, &Dnd::clearOldDrag);
         m_oldDrags << m_currentDrag;
     }
+    setWlSource(nullptr);
     m_currentDrag = nullptr;
 }
 
