@@ -86,7 +86,7 @@ private:
     void reactivate();
     void deactivate();
     void updateOutputs();
-    void readOutputsConfiguration(const QVector<DrmAbstractOutput*> &outputs);
+    bool readOutputsConfiguration(const QVector<DrmAbstractOutput*> &outputs);
     void handleUdevEvent();
     DrmGpu *addGpu(const QString &fileName);
 
