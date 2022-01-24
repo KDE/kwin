@@ -18,6 +18,8 @@
 #include <QQueue>
 #include <QTimer>
 
+#include <optional>
+
 namespace KWaylandServer
 {
 class AppMenuInterface;
@@ -96,6 +98,7 @@ private:
     XdgSurfaceConfigure::ConfigureFlags m_configureFlags;
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
     QScopedPointer<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
+    std::optional<quint32> m_lastAcknowledgedConfigureSerial;
     QRect m_windowGeometry;
     bool m_haveNextWindowGeometry = false;
 };
