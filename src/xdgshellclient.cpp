@@ -146,18 +146,23 @@ void XdgSurfaceClient::sendConfigure()
 
 void XdgSurfaceClient::handleConfigureAcknowledged(quint32 serial)
 {
-    while (!m_configureEvents.isEmpty()) {
-        if (serial < m_configureEvents.first()->serial) {
-            break;
-        }
-        m_lastAcknowledgedConfigure.reset(m_configureEvents.takeFirst());
-    }
+    m_lastAcknowledgedConfigureSerial = serial;
 }
 
 void XdgSurfaceClient::handleCommit()
 {
     if (!surface()->buffer()) {
         return;
+    }
+
+    if (m_lastAcknowledgedConfigureSerial.has_value()) {
+        const quint32 serial = m_lastAcknowledgedConfigureSerial.value();
+        while (!m_configureEvents.isEmpty()) {
+            if (serial < m_configureEvents.constFirst()->serial) {
+                break;
+            }
+            m_lastAcknowledgedConfigure.reset(m_configureEvents.takeFirst());
+        }
     }
 
     handleRolePrecommit();
@@ -168,6 +173,7 @@ void XdgSurfaceClient::handleCommit()
 
     handleRoleCommit();
     m_lastAcknowledgedConfigure.reset();
+    m_lastAcknowledgedConfigureSerial.reset();
 
     setReadyForPainting();
     updateDepth();

@@ -103,6 +103,7 @@ private Q_SLOTS:
     void testPointerInputTransform();
     void testReentrantSetFrameGeometry();
     void testDoubleMaximize();
+    void testDoubleFullscreenSeparatedByCommit();
     void testMaximizeAndChangeDecorationModeAfterInitialCommit();
     void testFullScreenAndChangeDecorationModeAfterInitialCommit();
     void testChangeDecorationModeAfterInitialCommit();
@@ -1563,6 +1564,39 @@ void TestXdgShellClient::testDoubleMaximize()
     QCOMPARE(size, QSize(1280, 1024));
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
+}
+
+void TestXdgShellClient::testDoubleFullscreenSeparatedByCommit()
+{
+    // Some applications do weird things at startup and this is one of them. This test verifies
+    // that the window will have good frame geometry if the client has issued several
+    // xdg_toplevel.set_fullscreen requests and they are separated by a surface commit with
+    // no attached buffer.
+
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+    // Tell the compositor that we want the window to be shown in fullscreen mode.
+    shellSurface->set_fullscreen(nullptr);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(1280, 1024));
+    QVERIFY(toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>() & Test::XdgToplevel::State::Fullscreen);
+
+    // Ask again.
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    shellSurface->set_fullscreen(nullptr);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(1280, 1024));
+    QVERIFY(toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>() & Test::XdgToplevel::State::Fullscreen);
+
+    // Map the window.
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(client->isFullScreen());
+    QCOMPARE(client->frameGeometry(), QRect(0, 0, 1280, 1024));
 }
 
 void TestXdgShellClient::testMaximizeHorizontal()
