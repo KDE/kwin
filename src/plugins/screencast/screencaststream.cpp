@@ -635,6 +635,7 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
         return;
     }
 
+    dest.setDevicePixelRatio(m_cursor.scale);
     dest.fill(Qt::transparent);
     QPainter painter(&dest);
     painter.drawImage(QPoint(), image);
