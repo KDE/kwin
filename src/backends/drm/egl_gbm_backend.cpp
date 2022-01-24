@@ -753,6 +753,12 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
         damage = output.output->geometry();
     }
     auto bo = QSharedPointer<DrmGbmBuffer>::create(m_gpu, importedBuffer, buffer);
+    if (!bo->bufferId()) {
+        // buffer can't actually be scanned out. Mesa is supposed to prevent this from happening
+        // in gbm_bo_import but apparently that doesn't always work
+        sendFeedback();
+        return false;
+    }
     // ensure that a context is current like with normal presentation
     makeCurrent();
     if (output.output->present(bo, damage)) {
