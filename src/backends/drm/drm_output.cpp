@@ -420,6 +420,7 @@ bool DrmOutput::queueChanges(const WaylandOutputConfig &config)
         }
     }
     if (index == -1) {
+        qCWarning(KWIN_DRM).nospace() << "Could not find mode " << props->modeSize << "@" << props->refreshRate << " for output " << this;
         return false;
     }
     m_pipeline->pending.modeIndex = index;
