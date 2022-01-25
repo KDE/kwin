@@ -14,7 +14,6 @@
 #include "cursor.h"
 #include "deleted.h"
 #include "screenedge.h"
-#include "screens.h"
 #include "rules.h"
 #include "wayland_server.h"
 #include "workspace.h"

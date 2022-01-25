@@ -12,7 +12,6 @@
 #include "debug_console.h"
 #include "internal_client.h"
 #include "platform.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "utils/xcbutils.h"

@@ -14,7 +14,6 @@
 #include "deleted.h"
 #include "effects.h"
 #include "effectloader.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "scripting/scriptedeffect.h"

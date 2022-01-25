@@ -11,7 +11,6 @@
 #include "cursor.h"
 #include "input.h"
 #include "platform.h"
-#include "screens.h"
 #include "scripting/scripting.h"
 #include "useractions.h"
 #include "virtualdesktops.h"

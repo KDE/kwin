@@ -12,7 +12,6 @@
 #include "keyboard_input.h"
 #include "platform.h"
 #include "screenedge.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 

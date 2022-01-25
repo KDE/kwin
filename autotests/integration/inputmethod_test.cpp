@@ -13,7 +13,6 @@
 #include "effects.h"
 #include "deleted.h"
 #include "platform.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "inputmethod.h"

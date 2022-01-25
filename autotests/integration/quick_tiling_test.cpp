@@ -14,7 +14,6 @@
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "scripting/scripting.h"

@@ -11,7 +11,6 @@
 #include "cursor.h"
 #include "input.h"
 #include "platform.h"
-#include "screens.h"
 #include "tabbox/tabbox.h"
 #include "wayland_server.h"
 #include "workspace.h"

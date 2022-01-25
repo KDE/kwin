@@ -12,7 +12,6 @@
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "platform.h"
-#include "screens.h"
 #include "scripting/scripting.h"
 #include "wayland_server.h"
 #include "workspace.h"

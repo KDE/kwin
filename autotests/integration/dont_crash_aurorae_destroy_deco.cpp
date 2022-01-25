@@ -14,7 +14,6 @@
 #include "cursor.h"
 #include "renderbackend.h"
 #include "screenedge.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <kwineffects.h>

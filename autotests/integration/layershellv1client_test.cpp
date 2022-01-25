@@ -9,7 +9,6 @@
 #include "abstract_output.h"
 #include "main.h"
 #include "platform.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 

@@ -15,7 +15,6 @@
 #include "cursor.h"
 #include "platform.h"
 #include "rules.h"
-#include "screens.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"

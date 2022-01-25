@@ -11,7 +11,6 @@
 #include "abstract_client.h"
 #include "x11client.h"
 #include "deleted.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 

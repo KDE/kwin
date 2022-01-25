@@ -12,7 +12,6 @@
 #include "platform.h"
 #include "touch_input.h"
 #include "cursor.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
