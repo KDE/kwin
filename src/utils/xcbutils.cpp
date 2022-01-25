@@ -364,6 +364,7 @@ Extensions::~Extensions()
 void Extensions::init()
 {
     xcb_connection_t *c = connection();
+    Q_ASSERT(c);
     xcb_prefetch_extension_data(c, &xcb_shape_id);
     xcb_prefetch_extension_data(c, &xcb_randr_id);
     xcb_prefetch_extension_data(c, &xcb_damage_id);

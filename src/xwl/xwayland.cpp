@@ -22,6 +22,7 @@
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "xwayland_logging.h"
+#include "x11eventfilter.h"
 
 #include "xwaylandsocket.h"
 
@@ -54,6 +55,31 @@ namespace KWin
 {
 namespace Xwl
 {
+
+class XrandrEventFilter : public X11EventFilter
+{
+public:
+    explicit XrandrEventFilter(Xwayland *backend);
+
+    bool event(xcb_generic_event_t *event) override;
+
+private:
+    Xwayland *const m_backend;
+};
+
+XrandrEventFilter::XrandrEventFilter(Xwayland *backend)
+    : X11EventFilter(Xcb::Extensions::self()->randrNotifyEvent())
+    , m_backend(backend)
+{
+}
+
+bool XrandrEventFilter::event(xcb_generic_event_t *event)
+{
+    Q_ASSERT((event->response_type & ~0x80) == Xcb::Extensions::self()->randrNotifyEvent());
+    m_backend->updatePrimary(kwinApp()->platform()->primaryOutput());
+    return false;
+}
+
 
 Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
     : XwaylandInterface(parent)
@@ -220,6 +246,9 @@ void Xwayland::stopInternal()
     disconnect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Xwayland::updatePrimary);
     Q_ASSERT(m_xwaylandProcess);
     m_app->setClosingX11Connection(true);
+
+    delete m_xrandrEventsFilter;
+    m_xrandrEventsFilter = nullptr;
 
     // If Xwayland has crashed, we must deactivate the socket notifier and ensure that no X11
     // events will be dispatched before blocking; otherwise we will simply hang...
@@ -407,6 +436,9 @@ void Xwayland::handleXwaylandReady()
     updatePrimary(kwinApp()->platform()->primaryOutput());
 
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+
+    delete m_xrandrEventsFilter;
+    m_xrandrEventsFilter = new XrandrEventFilter(this);
 }
 
 void Xwayland::updatePrimary(AbstractOutput *primaryOutput)

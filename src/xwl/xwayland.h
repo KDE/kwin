@@ -26,6 +26,7 @@ class XwaylandSocket;
 
 namespace Xwl
 {
+class XrandrEventFilter;
 
 class KWIN_EXPORT Xwayland : public XwaylandInterface
 {
@@ -113,6 +114,8 @@ private Q_SLOTS:
     void handleSelectionClaimedOwnership();
 
 private:
+    friend class XrandrEventFilter;
+
     void installSocketNotifier();
     void uninstallSocketNotifier();
     void maybeDestroyReadyNotifier();
@@ -143,6 +146,7 @@ private:
     QString m_xAuthority;
 
     int m_crashCount = 0;
+    XrandrEventFilter *m_xrandrEventsFilter = nullptr;
 
     Q_DISABLE_COPY(Xwayland)
 };
