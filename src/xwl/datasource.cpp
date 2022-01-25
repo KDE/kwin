@@ -9,6 +9,11 @@ namespace KWin
 {
 namespace Xwl
 {
+XwlDataSource::~XwlDataSource()
+{
+    Q_EMIT aboutToBeDestroyed();
+}
+
 void XwlDataSource::requestData(const QString &mimeType, qint32 fd)
 {
     Q_EMIT dataRequested(mimeType, fd);
