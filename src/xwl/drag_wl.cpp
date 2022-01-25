@@ -48,12 +48,6 @@ bool WlToXDrag::handleClientMessage(xcb_client_message_event_t *event)
     return DataBridge::self()->dnd()->dropHandler()->handleClientMessage(event);
 }
 
-bool WlToXDrag::end()
-{
-    return true;
-}
-
-
 Xvisit::Xvisit(AbstractClient *target, KWaylandServer::AbstractDataSource *dataSource, QObject *parent)
     : QObject(parent),
       m_target(target),

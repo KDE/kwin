@@ -45,9 +45,6 @@ public:
     void setDragAndDropAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action);
     KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDragAndDropAction();
 
-    bool end() override {
-        return false;
-    }
     X11Source *x11Source() const {
         return m_source;
     }

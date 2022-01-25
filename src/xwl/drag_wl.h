@@ -42,8 +42,6 @@ class WlToXDrag : public Drag
 public:
     DragEventReply moveFilter(Toplevel *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
-
-    bool end() override;
 private:
 
     Q_DISABLE_COPY(WlToXDrag)
