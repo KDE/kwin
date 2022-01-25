@@ -99,7 +99,7 @@ bool DrmPlane::init()
             }
         } else {
             for (uint32_t i = 0; i < p->count_formats; i++) {
-                m_supportedFormats.insert(p->formats[i], {});
+                m_supportedFormats.insert(p->formats[i], {DRM_FORMAT_MOD_LINEAR});
             }
         }
         if (m_supportedFormats.isEmpty()) {
