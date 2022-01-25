@@ -458,8 +458,7 @@ DrmOutput *DrmPipeline::output() const
 }
 
 static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {
-    {DRM_FORMAT_XRGB8888, {}},
-    {DRM_FORMAT_ARGB8888, {}}
+    {DRM_FORMAT_XRGB8888, {}}
 };
 
 bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const
