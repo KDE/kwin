@@ -360,11 +360,15 @@ void StartupFeedbackEffect::prepareTextures(const QPixmap& pix)
     case BouncingFeedback:
         for (int i = 0; i < 5; ++i) {
             m_bouncingTextures[i].reset(new GLTexture(scalePixmap(pix, BOUNCE_SIZES[i])));
+            m_bouncingTextures[i]->setFilter(GL_LINEAR);
+            m_bouncingTextures[i]->setWrapMode(GL_CLAMP_TO_EDGE);
         }
         break;
     case BlinkingFeedback:
     case PassiveFeedback:
         m_texture.reset(new GLTexture(pix));
+        m_texture->setFilter(GL_LINEAR);
+        m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         break;
     default:
         // for safety
