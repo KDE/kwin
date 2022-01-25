@@ -236,7 +236,9 @@ void Xvisit::sendEnter()
 
     const auto mimeTypesNames = m_dataSource->mimeTypes();
     const int mimesCount = mimeTypesNames.size();
-    size_t cnt = 0;
+    // Number of written entries in data32
+    size_t cnt = 2;
+    // Number of mimeTypes
     size_t totalCnt = 0;
     for (const auto &mimeName : mimeTypesNames) {
         // 3 mimes and less can be sent directly in the XdndEnter message
@@ -246,13 +248,13 @@ void Xvisit::sendEnter()
         const auto atom = Selection::mimeTypeToAtom(mimeName);
 
         if (atom != XCB_ATOM_NONE) {
-            data.data32[cnt + 2] = atom;
+            data.data32[cnt] = atom;
             cnt++;
         }
         totalCnt++;
     }
-    for (int i = cnt; i < 4; i++) {
-        data.data32[i + 2] = XCB_ATOM_NONE;
+    for (int i = cnt; i < 5; i++) {
+        data.data32[i] = XCB_ATOM_NONE;
     }
 
     if (mimesCount > 3) {
