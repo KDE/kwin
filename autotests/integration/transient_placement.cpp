@@ -11,7 +11,6 @@
 #include "platform.h"
 #include "abstract_client.h"
 #include "cursor.h"
-#include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"

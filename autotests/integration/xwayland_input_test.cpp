@@ -12,7 +12,6 @@
 #include "x11client.h"
 #include "cursor.h"
 #include "deleted.h"
-#include "screenedge.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
