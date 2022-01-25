@@ -103,9 +103,8 @@ bool DrmPlane::init()
             }
         }
         if (m_supportedFormats.isEmpty()) {
-            qCWarning(KWIN_DRM) << "Driver doesn't advertise any formats for this plane. Falling back to XRGB8888 and ARGB8888 without modifiers";
+            qCWarning(KWIN_DRM) << "Driver doesn't advertise any formats for this plane. Falling back to XRGB8888 without explicit modifiers";
             m_supportedFormats.insert(DRM_FORMAT_XRGB8888, {});
-            m_supportedFormats.insert(DRM_FORMAT_ARGB8888, {});
         }
     }
     return success;
