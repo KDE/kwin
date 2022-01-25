@@ -1239,7 +1239,7 @@ void SeatInterface::setSelection(AbstractDataSource *selection)
         auto cleanup = [this]() {
             setSelection(nullptr);
         };
-        connect(selection, &DataSourceInterface::aboutToBeDestroyed, this, cleanup);
+        connect(selection, &AbstractDataSource::aboutToBeDestroyed, this, cleanup);
     }
 
     d->currentSelection = selection;
@@ -1282,7 +1282,7 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
         auto cleanup = [this]() {
             setPrimarySelection(nullptr);
         };
-        connect(selection, &DataSourceInterface::aboutToBeDestroyed, this, cleanup);
+        connect(selection, &AbstractDataSource::aboutToBeDestroyed, this, cleanup);
     }
 
     d->currentPrimarySelection = selection;

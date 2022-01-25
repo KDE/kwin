@@ -56,8 +56,7 @@ void PrimarySelectionSourceV1InterfacePrivate::zwp_primary_selection_source_v1_d
 }
 
 PrimarySelectionSourceV1Interface::PrimarySelectionSourceV1Interface(PrimarySelectionDeviceManagerV1Interface *parent, ::wl_resource *resource)
-    : AbstractDataSource(parent)
-    , d(new PrimarySelectionSourceV1InterfacePrivate(this, resource))
+    : d(new PrimarySelectionSourceV1InterfacePrivate(this, resource))
 {
 }
 

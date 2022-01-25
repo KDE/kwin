@@ -94,8 +94,7 @@ void DataSourceInterfacePrivate::data_source_set_actions(Resource *resource, uin
 }
 
 DataSourceInterface::DataSourceInterface(DataDeviceManagerInterface *parent, wl_resource *resource)
-    : AbstractDataSource(parent)
-    , d(new DataSourceInterfacePrivate(this, resource))
+    : d(new DataSourceInterfacePrivate(this, resource))
 {
     if (d->resource()->version() < WL_DATA_SOURCE_ACTION_SINCE_VERSION) {
         d->supportedDnDActions = DataDeviceManagerInterface::DnDAction::Copy;
