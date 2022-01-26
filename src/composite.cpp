@@ -167,7 +167,7 @@ bool Compositor::attemptOpenGLCompositing()
     }
 
     kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreInit);
-    qScopeGuard([]() {
+    auto safePointScope = qScopeGuard([]() {
         kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
     });
 
