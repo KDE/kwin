@@ -56,9 +56,7 @@ static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)
 {
     const Cursor *pointerCursor = Cursors::self()->mouse();
 
-    const KXcursorTheme theme = KXcursorTheme::fromTheme(pointerCursor->themeName(),
-                                                         pointerCursor->themeSize(),
-                                                         screens()->maxScale());
+    const KXcursorTheme theme(pointerCursor->themeName(), pointerCursor->themeSize(), screens()->maxScale());
     if (theme.isEmpty()) {
         return PlatformCursorImage();
     }

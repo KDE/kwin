@@ -7,8 +7,13 @@
 #include "xcursortheme.h"
 #include "3rdparty/xcursor.h"
 
-#include <QMap>
+#include <KConfig>
+#include <KConfigGroup>
+
+#include <QDir>
+#include <QFile>
 #include <QSharedData>
+#include <QStandardPaths>
 
 namespace KWin
 {
@@ -24,7 +29,10 @@ public:
 class KXcursorThemePrivate : public QSharedData
 {
 public:
-    QMap<QByteArray, QVector<KXcursorSprite>> registry;
+    void load(const QString &themeName, int size, qreal devicePixelRatio);
+    void loadCursors(const QString &packagePath, int size, qreal devicePixelRatio);
+
+    QHash<QByteArray, QVector<KXcursorSprite>> registry;
 };
 
 KXcursorSprite::KXcursorSprite()
@@ -71,20 +79,17 @@ std::chrono::milliseconds KXcursorSprite::delay() const
     return d->delay;
 }
 
-struct XcursorThemeClosure
+static QVector<KXcursorSprite> loadCursor(const QString &filePath, int desiredSize, qreal devicePixelRatio)
 {
-    QMap<QByteArray, QVector<KXcursorSprite>> registry;
-    int desiredSize;
-};
+    XcursorImages *images = XcursorFileLoadImages(QFile::encodeName(filePath), desiredSize * devicePixelRatio);
+    if (!images) {
+        return {};
+    }
 
-static void load_callback(XcursorImages *images, void *data)
-{
-    XcursorThemeClosure *closure = static_cast<XcursorThemeClosure *>(data);
     QVector<KXcursorSprite> sprites;
-
     for (int i = 0; i < images->nimage; ++i) {
         const XcursorImage *nativeCursorImage = images->images[i];
-        const qreal scale = std::max(qreal(1), qreal(nativeCursorImage->size) / closure->desiredSize);
+        const qreal scale = std::max(qreal(1), qreal(nativeCursorImage->size) / desiredSize);
         const QPoint hotspot(nativeCursorImage->xhot, nativeCursorImage->yhot);
         const std::chrono::milliseconds delay(nativeCursorImage->delay);
 
@@ -95,10 +100,80 @@ static void load_callback(XcursorImages *images, void *data)
         sprites.append(KXcursorSprite(data, hotspot / scale, delay));
     }
 
-    if (!sprites.isEmpty()) {
-        closure->registry.insert(images->name, sprites);
-    }
     XcursorImagesDestroy(images);
+    return sprites;
+}
+
+void KXcursorThemePrivate::loadCursors(const QString &packagePath, int size, qreal devicePixelRatio)
+{
+    const QDir dir(packagePath);
+    QFileInfoList entries = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+    std::partition(entries.begin(), entries.end(), [](const QFileInfo &fileInfo) {
+        return !fileInfo.isSymLink();
+    });
+
+    for (const QFileInfo &entry : std::as_const(entries)) {
+        const QByteArray shape = QFile::encodeName(entry.fileName());
+        if (registry.contains(shape)) {
+            continue;
+        }
+        if (entry.isSymLink()) {
+            const QFileInfo symLinkInfo(entry.symLinkTarget());
+            if (symLinkInfo.absolutePath() == entry.absolutePath()) {
+                const auto sprites = registry.value(QFile::encodeName(symLinkInfo.fileName()));
+                if (!sprites.isEmpty()) {
+                    registry.insert(shape, sprites);
+                    continue;
+                }
+            }
+        }
+        const QVector<KXcursorSprite> sprites = loadCursor(entry.absoluteFilePath(), size, devicePixelRatio);
+        if (!sprites.isEmpty()) {
+            registry.insert(shape, sprites);
+        }
+    }
+}
+
+static QStringList searchPaths()
+{
+    static QStringList paths;
+    if (paths.isEmpty()) {
+        if (const QString env = qEnvironmentVariable("XCURSOR_PATH"); !env.isEmpty()) {
+            paths.append(env.split(':', Qt::SkipEmptyParts));
+        } else {
+            const QString home = QDir::homePath();
+            if (!home.isEmpty()) {
+                paths.append(home + QLatin1String("/.icons"));
+            }
+            const QStringList dataDirs = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+            for (const QString &dataDir : dataDirs) {
+                paths.append(dataDir + QLatin1String("/icons"));
+            }
+        }
+    }
+    return paths;
+}
+
+void KXcursorThemePrivate::load(const QString &themeName, int size, qreal devicePixelRatio)
+{
+    const QStringList paths = searchPaths();
+    QStringList inherits;
+
+    for (const QString &path : paths) {
+        const QDir dir(path + QLatin1Char('/') + themeName);
+        if (!dir.exists()) {
+            continue;
+        }
+        loadCursors(dir.filePath(QStringLiteral("cursors")), size, devicePixelRatio);
+        if (inherits.isEmpty()) {
+            const KConfig config(dir.filePath(QStringLiteral("index.theme")), KConfig::NoGlobals);
+            inherits << KConfigGroup(&config, "Icon Theme").readEntry("Inherits", QStringList());
+        }
+    }
+
+    for (const QString &inherit : inherits) {
+        load(inherit, size, devicePixelRatio);
+    }
 }
 
 KXcursorTheme::KXcursorTheme()
@@ -106,10 +181,10 @@ KXcursorTheme::KXcursorTheme()
 {
 }
 
-KXcursorTheme::KXcursorTheme(const QMap<QByteArray, QVector<KXcursorSprite>> &registry)
-    : KXcursorTheme()
+KXcursorTheme::KXcursorTheme(const QString &themeName, int size, qreal devicePixelRatio)
+    : d(new KXcursorThemePrivate)
 {
-    d->registry = registry;
+    d->load(themeName, size, devicePixelRatio);
 }
 
 KXcursorTheme::KXcursorTheme(const KXcursorTheme &other)
@@ -135,22 +210,6 @@ bool KXcursorTheme::isEmpty() const
 QVector<KXcursorSprite> KXcursorTheme::shape(const QByteArray &name) const
 {
     return d->registry.value(name);
-}
-
-KXcursorTheme KXcursorTheme::fromTheme(const QString &themeName, int size, qreal dpr)
-{
-    // Xcursors don't support HiDPI natively so we fake it by scaling the desired cursor
-    // size. The device pixel ratio argument acts only as a hint. The real scale factor
-    // of every cursor sprite will be computed in the loading closure.
-    XcursorThemeClosure closure;
-    closure.desiredSize = size;
-    xcursor_load_theme(themeName.toUtf8().constData(), size * dpr, load_callback, &closure);
-
-    if (closure.registry.isEmpty()) {
-        return KXcursorTheme();
-    }
-
-    return KXcursorTheme(closure.registry);
 }
 
 } // namespace KWin

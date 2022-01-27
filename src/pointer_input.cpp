@@ -1262,14 +1262,12 @@ bool WaylandCursorImage::ensureCursorTheme()
     const Cursor *pointerCursor = Cursors::self()->mouse();
     const qreal targetDevicePixelRatio = screens()->maxScale();
 
-    m_cursorTheme = KXcursorTheme::fromTheme(pointerCursor->themeName(), pointerCursor->themeSize(),
-                                             targetDevicePixelRatio);
+    m_cursorTheme = KXcursorTheme(pointerCursor->themeName(), pointerCursor->themeSize(), targetDevicePixelRatio);
     if (!m_cursorTheme.isEmpty()) {
         return true;
     }
 
-    m_cursorTheme = KXcursorTheme::fromTheme(Cursor::defaultThemeName(), Cursor::defaultThemeSize(),
-                                             targetDevicePixelRatio);
+    m_cursorTheme = KXcursorTheme(Cursor::defaultThemeName(), Cursor::defaultThemeSize(), targetDevicePixelRatio);
     if (!m_cursorTheme.isEmpty()) {
         return true;
     }

@@ -55,19 +55,13 @@ typedef struct _XcursorImage {
 typedef struct _XcursorImages {
     int		    nimage;	/* number of images */
     XcursorImage    **images;	/* array of XcursorImage pointers */
-    char	    *name;	/* name used to load images */
 } XcursorImages;
 
 XcursorImages *
-XcursorLibraryLoadImages (const char *file, const char *theme, int size);
+XcursorFileLoadImages (const char *file, int size);
 
 void
 XcursorImagesDestroy (XcursorImages *images);
-
-void
-xcursor_load_theme(const char *theme, int size,
-		    void (*load_callback)(XcursorImages *, void *),
-		    void *user_data);
 
 #ifdef __cplusplus
 }
