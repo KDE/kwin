@@ -1235,8 +1235,7 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
             // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
             // the other directions. If not visible enough, move the window to the closest valid
             // point. We bruteforce this by slowly moving the window back to its previous position
-            QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()));
-            availableArea -= workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
+            const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
             bool transposed = false;
             int requiredPixels;
             QRect bTitleRect = titleBarRect(transposed, requiredPixels);
@@ -1247,16 +1246,19 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
                 const QRect titleRect(bTitleRect.translated(moveResizeGeometry().topLeft()));
                 int visiblePixels = 0;
                 int realVisiblePixels = 0;
-                for (const QRect &rect : availableArea) {
-                    const QRect r = rect & titleRect;
-                    realVisiblePixels += r.width() * r.height();
-                    if ((transposed && r.width() == titleRect.width()) || // Only the full size regions...
-                        (!transposed && r.height() == titleRect.height())) // ...prevents long slim areas
-                        visiblePixels += r.width() * r.height();
+                for (const AbstractOutput *output : outputs) {
+                    const QRect availableArea = workspace()->clientArea(PlacementArea, this, output);
+                    const QRect visibleArea = availableArea & titleRect;
+                    realVisiblePixels += visibleArea.width() * visibleArea.height();
+                    if ((transposed && visibleArea.width() == titleRect.width()) || // Only the full size regions...
+                        (!transposed && visibleArea.height() == titleRect.height())) { // ...prevents long slim areas
+                        visiblePixels += visibleArea.width() * visibleArea.height();
+                    }
                 }
 
-                if (visiblePixels >= requiredPixels)
+                if (visiblePixels >= requiredPixels) {
                     break; // We have reached a valid position
+                }
 
                 if (realVisiblePixels <= lastVisiblePixels) {
                     if (titleFailed && realVisiblePixels < lastVisiblePixels)
@@ -1362,9 +1364,7 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
             setMoveResizeGeometry(moveResizeGeom);
 
             if (!isUnrestrictedInteractiveMoveResize()) {
-                const QRegion strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
-                QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()));
-                availableArea -= strut;   // Strut areas
+                const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
                 bool transposed = false;
                 int requiredPixels;
                 QRect bTitleRect = titleBarRect(transposed, requiredPixels);
@@ -1372,14 +1372,17 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
                     QRect moveResizeGeom = moveResizeGeometry();
                     const QRect titleRect(bTitleRect.translated(moveResizeGeom.topLeft()));
                     int visiblePixels = 0;
-                    for (const QRect &rect : availableArea) {
-                        const QRect r = rect & titleRect;
-                        if ((transposed && r.width() == titleRect.width()) || // Only the full size regions...
-                            (!transposed && r.height() == titleRect.height())) // ...prevents long slim areas
-                            visiblePixels += r.width() * r.height();
+                    for (const AbstractOutput *output : outputs) {
+                        const QRect availableArea = workspace()->clientArea(PlacementArea, this, output);
+                        const QRect visibleArea = availableArea & titleRect;
+                        if ((transposed && visibleArea.width() == titleRect.width()) || // Only the full size regions...
+                            (!transposed && visibleArea.height() == titleRect.height())) { // ...prevents long slim areas
+                            visiblePixels += visibleArea.width() * visibleArea.height();
+                        }
                     }
-                    if (visiblePixels >= requiredPixels)
+                    if (visiblePixels >= requiredPixels) {
                         break; // We have reached a valid position
+                    }
 
                     // (esp.) if there're more screens with different struts (panels) it the titlebar
                     // will be movable outside the movearea (covering one of the panels) until it
@@ -1393,6 +1396,7 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
                     if (screens()->count() > 1) { // optimization
                         // TODO: could be useful on partial screen struts (half-width panels etc.)
                         int newTitleTop = -1;
+                        const QRegion strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
                         for (const QRect &r : strut) {
                             if (r.top() == 0 && r.width() > r.height() && // "top panel"
                                 r.intersects(moveResizeGeom) && moveResizeGeom.top() < r.bottom()) {
