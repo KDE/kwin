@@ -1,0 +1,8 @@
+File=kwinxwaylandsettings.kcfg
+ClassName=KWinXwaylandSettings
+Mutators=true
+DefaultValueGetters=true
+GenerateProperties=true
+ParentInConstructor=true
+Notifiers=true
+GlobalEnums=true

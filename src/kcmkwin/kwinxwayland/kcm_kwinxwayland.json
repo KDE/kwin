@@ -1,0 +1,15 @@
+{
+    "Categories": "Qt;KDE;",
+    "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwinxwayland",
+        "Description": "Select which keys will be globally available to legacy X11 apps",
+        "Icon": "xorg",
+        "Name": "Legacy X11 App Support"
+    },
+    "X-KDE-Keywords": "xwayland,global,keys,forward",
+    "X-KDE-OnlyShowOnQtPlatforms": [
+        "wayland"
+    ],
+    "X-KDE-ParentApp": "kcontrol",
+    "X-KDE-System-Settings-Parent-Category": "applications"
+}

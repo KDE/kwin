@@ -238,12 +238,13 @@ void InputEventFilter::passToWaylandServer(QKeyEvent *event)
     }
 
     KWaylandServer::SeatInterface *seat = waylandServer()->seat();
+    const int keyCode = event->nativeScanCode();
     switch (event->type()) {
     case QEvent::KeyPress:
-        seat->notifyKeyboardKey(event->nativeScanCode(), KWaylandServer::KeyboardKeyState::Pressed);
+        seat->notifyKeyboardKey(keyCode, KWaylandServer::KeyboardKeyState::Pressed);
         break;
     case QEvent::KeyRelease:
-        seat->notifyKeyboardKey(event->nativeScanCode(), KWaylandServer::KeyboardKeyState::Released);
+        seat->notifyKeyboardKey(keyCode, KWaylandServer::KeyboardKeyState::Released);
         break;
     default:
         break;

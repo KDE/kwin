@@ -90,6 +90,7 @@ private Q_SLOTS:
 
 private:
     void maybeDestroyReadyNotifier();
+
     bool startInternal();
     void stopInternal();
     void restartInternal();

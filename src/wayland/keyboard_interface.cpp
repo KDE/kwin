@@ -169,6 +169,15 @@ QVector<quint32> KeyboardInterfacePrivate::pressedKeys() const
     return keys;
 }
 
+void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client)
+{
+    const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(client);
+    const quint32 serial = d->seat->display()->nextSerial();
+    for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
+        d->send_key(keyboardResource->handle, serial, d->seat->timestamp(), key, quint32(state));
+    }
+}
+
 void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
 {
     if (!d->updateKey(key, state)) {
@@ -179,11 +188,7 @@ void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
         return;
     }
 
-    const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(d->focusedSurface->client());
-    const quint32 serial = d->seat->display()->nextSerial();
-    for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
-        d->send_key(keyboardResource->handle, serial, d->seat->timestamp(), key, quint32(state));
-    }
+    sendKey(key, state, d->focusedSurface->client());
 }
 
 void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)

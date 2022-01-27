@@ -908,6 +908,7 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
         return;
     }
 
+    Q_EMIT focusedKeyboardSurfaceAboutToChange(surface);
     const quint32 serial = d->display->nextSerial();
 
     if (d->globalKeyboard.focus.surface) {

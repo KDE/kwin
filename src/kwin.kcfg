@@ -352,5 +352,15 @@
         <entry name="XwaylandMaxCrashCount" type="UInt">
             <default>3</default>
         </entry>
+
+        <entry name="XwaylandEavesdrops" type="Enum">
+            <choices>
+                <choice name="None"/>
+                <choice name="Modifiers"/>
+                <choice name="Combinations"/>
+                <choice name="All"/>
+            </choices>
+            <default>None</default>
+        </entry>
     </group>
 </kcfg>

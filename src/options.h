@@ -33,6 +33,13 @@ enum HiddenPreviews {
     HiddenPreviewsAlways
 };
 
+enum XwaylandEavesdropsMode {
+    None,
+    Modifiers,
+    Combinations,
+    All
+};
+
 /**
  * This enum type specifies whether the Xwayland server must be restarted after a crash.
  */
@@ -274,6 +281,10 @@ public:
     int xwaylandMaxCrashCount() const
     {
         return m_xwaylandMaxCrashCount;
+    }
+    XwaylandEavesdropsMode xwaylandEavesdrops() const
+    {
+        return m_xwaylandEavesdrops;
     }
 
     /**
@@ -711,6 +722,7 @@ public:
     void setFocusPolicy(FocusPolicy focusPolicy);
     void setXwaylandCrashPolicy(XwaylandCrashPolicy crashPolicy);
     void setXwaylandMaxCrashCount(int maxCrashCount);
+    void setXwaylandEavesdrops(XwaylandEavesdropsMode mode);
     void setNextFocusPrefersMouse(bool nextFocusPrefersMouse);
     void setClickRaise(bool clickRaise);
     void setAutoRaise(bool autoRaise);
@@ -888,6 +900,10 @@ public:
     {
         return 3;
     }
+    static XwaylandEavesdropsMode defaultXwaylandEavesdrops()
+    {
+        return None;
+    }
     static LatencyPolicy defaultLatencyPolicy()
     {
         return LatencyMedium;
@@ -917,6 +933,7 @@ Q_SIGNALS:
     void focusPolicyIsResonableChanged();
     void xwaylandCrashPolicyChanged();
     void xwaylandMaxCrashCountChanged();
+    void xwaylandEavesdropsChanged();
     void nextFocusPrefersMouseChanged();
     void clickRaiseChanged();
     void autoRaiseChanged();
@@ -1002,6 +1019,7 @@ private:
     bool m_hideUtilityWindowsForInactive;
     XwaylandCrashPolicy m_xwaylandCrashPolicy;
     int m_xwaylandMaxCrashCount;
+    XwaylandEavesdropsMode m_xwaylandEavesdrops;
     LatencyPolicy m_latencyPolicy;
     RenderTimeEstimator m_renderTimeEstimator;
 

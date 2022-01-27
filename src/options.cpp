@@ -20,6 +20,7 @@
 #include <QProcess>
 
 #include "settings.h"
+#include "workspace.h"
 #include <QOpenGLContext>
 #include <kwinglplatform.h>
 
@@ -55,6 +56,7 @@ Options::Options(QObject *parent)
     , m_hideUtilityWindowsForInactive(false)
     , m_xwaylandCrashPolicy(Options::defaultXwaylandCrashPolicy())
     , m_xwaylandMaxCrashCount(Options::defaultXwaylandMaxCrashCount())
+    , m_xwaylandEavesdrops(Options::defaultXwaylandEavesdrops())
     , m_latencyPolicy(Options::defaultLatencyPolicy())
     , m_renderTimeEstimator(Options::defaultRenderTimeEstimator())
     , m_compositingMode(Options::defaultCompositingMode())
@@ -97,6 +99,8 @@ Options::Options(QObject *parent)
     connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
         if (group.name() == QLatin1String("KDE") && names.contains(QByteArrayLiteral("AnimationDurationFactor"))) {
             Q_EMIT animationSpeedChanged();
+        } else if (group.name() == QLatin1String("Xwayland")) {
+            workspace()->reconfigure();
         }
     });
 }
@@ -144,6 +148,15 @@ void Options::setXwaylandMaxCrashCount(int maxCrashCount)
     }
     m_xwaylandMaxCrashCount = maxCrashCount;
     Q_EMIT xwaylandMaxCrashCountChanged();
+}
+
+void Options::setXwaylandEavesdrops(XwaylandEavesdropsMode mode)
+{
+    if (m_xwaylandEavesdrops == mode) {
+        return;
+    }
+    m_xwaylandEavesdrops = mode;
+    Q_EMIT xwaylandEavesdropsChanged();
 }
 
 void Options::setClickRaise(bool clickRaise)
@@ -785,6 +798,7 @@ void Options::syncFromKcfgc()
     setActivationDesktopPolicy(m_settings->activationDesktopPolicy());
     setXwaylandCrashPolicy(m_settings->xwaylandCrashPolicy());
     setXwaylandMaxCrashCount(m_settings->xwaylandMaxCrashCount());
+    setXwaylandEavesdrops(XwaylandEavesdropsMode(m_settings->xwaylandEavesdrops()));
     setPlacement(m_settings->placement());
     setAutoRaise(m_settings->autoRaise());
     setAutoRaiseInterval(m_settings->autoRaiseInterval());

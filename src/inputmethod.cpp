@@ -615,7 +615,8 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
 
 void InputMethod::key(quint32 /*serial*/, quint32 /*time*/, quint32 keyCode, bool pressed)
 {
-    waylandServer()->seat()->notifyKeyboardKey(keyCode, pressed ? KWaylandServer::KeyboardKeyState::Pressed : KWaylandServer::KeyboardKeyState::Released);
+    waylandServer()->seat()->notifyKeyboardKey(keyCode,
+                                               pressed ? KWaylandServer::KeyboardKeyState::Pressed : KWaylandServer::KeyboardKeyState::Released);
 }
 
 void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)

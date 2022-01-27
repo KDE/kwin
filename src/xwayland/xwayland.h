@@ -27,6 +27,7 @@ class Application;
 namespace Xwl
 {
 class XrandrEventFilter;
+class XwaylandInputSpy;
 class XwaylandLauncher;
 class DataBridge;
 
@@ -69,6 +70,7 @@ private:
     void installSocketNotifier();
     void uninstallSocketNotifier();
     void updatePrimary();
+    void refreshEavesdropping();
 
     bool createX11Connection();
     void destroyX11Connection();
@@ -83,6 +85,7 @@ private:
 
     XrandrEventFilter *m_xrandrEventsFilter = nullptr;
     XwaylandLauncher *m_launcher;
+    std::unique_ptr<XwaylandInputSpy> m_inputSpy;
 
     Q_DISABLE_COPY(Xwayland)
 };

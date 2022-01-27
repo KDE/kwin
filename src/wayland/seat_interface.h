@@ -720,6 +720,11 @@ Q_SIGNALS:
      * @see focusedTextInput
      */
     void focusedTextInputSurfaceChanged();
+    /**
+     * Emitted whenever the focused keyboard is about to change.
+     * @see focusedKeyboardSurface
+     */
+    void focusedKeyboardSurfaceAboutToChange(SurfaceInterface *nextSurface);
 
 private:
     std::unique_ptr<SeatInterfacePrivate> d;
