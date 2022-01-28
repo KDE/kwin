@@ -6,7 +6,7 @@ project(KWin VERSION ${PROJECT_VERSION})
 set(CMAKE_C_STANDARD 99)
 
 set(QT_MIN_VERSION "5.15.0")
-set(KF5_MIN_VERSION "5.89")
+set(KF5_MIN_VERSION "5.91")
 set(KDE_COMPILERSETTINGS_LEVEL "5.82")
 
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
@@ -145,7 +145,7 @@ set_package_properties(KScreenLocker PROPERTIES
     PURPOSE "For screenlocker integration in kwin_wayland"
 )
 
-find_package(KWaylandServer CONFIG REQUIRED)
+find_package(KWaylandServer ${PROJECT_VERSION} CONFIG REQUIRED)
 set_package_properties(KWaylandServer PROPERTIES
     TYPE REQUIRED
     PURPOSE "For Wayland integration"
