@@ -160,8 +160,15 @@ static QHash<int, QByteArray> s_connectorNames = {
     {DRM_MODE_CONNECTOR_eDP, QByteArrayLiteral("eDP")},
     {DRM_MODE_CONNECTOR_VIRTUAL, QByteArrayLiteral("Virtual")},
     {DRM_MODE_CONNECTOR_DSI, QByteArrayLiteral("DSI")},
-#ifdef DRM_MODE_CONNECTOR_DPI
     {DRM_MODE_CONNECTOR_DPI, QByteArrayLiteral("DPI")},
+#ifdef DRM_MODE_CONNECTOR_WRITEBACK
+    {DRM_MODE_CONNECTOR_WRITEBACK, QByteArrayLiteral("Writeback")},
+#endif
+#ifdef DRM_MODE_CONNECTOR_SPI
+    {DRM_MODE_CONNECTOR_SPI, QByteArrayLiteral("SPI")},
+#endif
+#ifdef DRM_MODE_CONNECTOR_USB
+    {DRM_MODE_CONNECTOR_USB, QByteArrayLiteral("USB")},
 #endif
 };
 
