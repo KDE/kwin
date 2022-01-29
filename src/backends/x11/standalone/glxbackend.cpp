@@ -464,18 +464,8 @@ bool GlxBackend::initFbConfig()
         0
     };
 
-    bool llvmpipe = false;
-
-    // Note that we cannot use GLPlatform::driver() here, because it has not been initialized at this point
-    if (hasExtension(QByteArrayLiteral("GLX_MESA_query_renderer"))) {
-        const QByteArray device = glXQueryRendererStringMESA(display(), DefaultScreen(display()), 0, GLX_RENDERER_DEVICE_ID_MESA);
-        if (device.contains(QByteArrayLiteral("llvmpipe"))) {
-            llvmpipe = true;
-        }
-    }
-
-    // Don't request an sRGB configuration with LLVMpipe when the default depth is 16. See bug #408594.
-    if (!llvmpipe || Xcb::defaultDepth() > 16) {
+    // Only request sRGB configurations with default depth 24 as it can cause problems with other default depths. See bugs #408594 and #423014.
+    if (Xcb::defaultDepth() == 24) {
         fbconfig = chooseGlxFbConfig(display(), attribs_srgb);
     }
     if (!fbconfig) {
