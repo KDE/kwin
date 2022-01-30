@@ -1195,6 +1195,7 @@ public:
                 return actionResult.second;
             }
             QMouseEvent e(event->type(), p, event->globalPos(), event->button(), event->buttons(), event->modifiers());
+            e.setTimestamp(event->timestamp());
             e.setAccepted(false);
             QCoreApplication::sendEvent(decoration->decoration(), &e);
             if (!e.isAccepted() && event->type() == QEvent::MouseButtonPress) {

@@ -951,6 +951,7 @@ bool X11Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
         } else {
             QMouseEvent event(QEvent::MouseButtonPress, QPointF(x, y), QPointF(x_root, y_root),
                             x11ToQtMouseButton(button), x11ToQtMouseButtons(state), x11ToQtKeyboardModifiers(state));
+            event.setTimestamp(time);
             event.setAccepted(false);
             QCoreApplication::sendEvent(decoration(), &event);
             if (!event.isAccepted()) {
