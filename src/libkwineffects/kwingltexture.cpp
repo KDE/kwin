@@ -36,6 +36,7 @@ bool GLTexturePrivate::s_supportsUnpack = false;
 bool GLTexturePrivate::s_supportsTextureStorage = false;
 bool GLTexturePrivate::s_supportsTextureSwizzle = false;
 bool GLTexturePrivate::s_supportsTextureFormatRG = false;
+bool GLTexturePrivate::s_supportsTexture16Bit = false;
 uint GLTexturePrivate::s_fbo = 0;
 
 // Table of GL formats/types associated with different values of QImage::Format.
@@ -73,6 +74,11 @@ struct {
     { GL_RGB10_A2, GL_BGRA, GL_UNSIGNED_INT_2_10_10_10_REV }, // QImage::Format_A2RGB30_Premultiplied
     { GL_R8,       GL_RED,  GL_UNSIGNED_BYTE               }, // QImage::Format_Alpha8
     { GL_R8,       GL_RED,  GL_UNSIGNED_BYTE               }, // QImage::Format_Grayscale8
+    { GL_RGBA16,   GL_RGBA, GL_UNSIGNED_SHORT              }, // QImage::Format_RGBX64
+    { 0,           0,       0                              }, // QImage::Format_RGBA64
+    { GL_RGBA16,   GL_RGBA, GL_UNSIGNED_SHORT              }, // QImage::Format_RGBA64_Premultiplied
+    { GL_R16,      GL_RED,  GL_UNSIGNED_SHORT              }, // QImage::Format_Grayscale16
+    { 0,           0,       0                              }, // QImage::Format_BGR888
 };
 
 GLTexture::GLTexture(GLenum target)
@@ -129,7 +135,8 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
 
         const QImage::Format index = image.format();
 
-        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat) {
+        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
+            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !d->s_supportsTexture16Bit)) {
             internalFormat = formatTable[index].internalFormat;
             format = formatTable[index].format;
             type = formatTable[index].type;
@@ -305,6 +312,7 @@ void GLTexturePrivate::initStatic()
         s_supportsTextureSwizzle = hasGLVersion(3, 3) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_swizzle"));
         // see https://www.opengl.org/registry/specs/ARB/texture_rg.txt
         s_supportsTextureFormatRG = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_rg"));
+        s_supportsTexture16Bit = true;
         s_supportsARGB32 = true;
         s_supportsUnpack = true;
     } else {
@@ -313,6 +321,7 @@ void GLTexturePrivate::initStatic()
         s_supportsTextureSwizzle = hasGLVersion(3, 0);
         // see https://www.khronos.org/registry/gles/extensions/EXT/EXT_texture_rg.txt
         s_supportsTextureFormatRG = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_texture_rg"));
+        s_supportsTexture16Bit = hasGLExtension(QByteArrayLiteral("GL_EXT_texture_norm16"));
 
         // QImage::Format_ARGB32_Premultiplied is a packed-pixel format, so it's only
         // equivalent to GL_BGRA/GL_UNSIGNED_BYTE on little-endian systems.
@@ -369,7 +378,8 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
     if (!GLPlatform::instance()->isGLES()) {
         const QImage::Format index = image.format();
 
-        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat) {
+        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
+            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !d->s_supportsTexture16Bit)) {
             glFormat = formatTable[index].format;
             type = formatTable[index].type;
             uploadFormat = index;
