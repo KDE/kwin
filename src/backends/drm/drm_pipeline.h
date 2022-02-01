@@ -127,6 +127,7 @@ private:
     bool checkTestBuffer();
     bool activePending() const;
     bool isCursorVisible() const;
+    bool isBufferForDirectScanout() const;
 
     // legacy only
     bool presentLegacy();

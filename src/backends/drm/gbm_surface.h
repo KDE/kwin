@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <epoxy/egl.h>
 #include <QVector>
+#include <optional>
 
 #include "drm_buffer_gbm.h"
 #include "utils/common.h"
@@ -30,6 +31,7 @@ public:
     ~GbmSurface();
 
     bool makeContextCurrent() const;
+
     QSharedPointer<DrmGbmBuffer> swapBuffersForDrm(const QRegion &dirty);
     QSharedPointer<GbmBuffer> swapBuffers(const QRegion &dirty);
     void releaseBuffer(GbmBuffer *buffer);

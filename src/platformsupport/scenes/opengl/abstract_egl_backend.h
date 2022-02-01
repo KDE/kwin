@@ -59,17 +59,6 @@ public:
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const override;
 
-    static void setPrimaryBackend(AbstractEglBackend *primaryBackend) {
-        s_primaryBackend = primaryBackend;
-    }
-    static AbstractEglBackend *primaryBackend() {
-        return s_primaryBackend;
-    }
-
-    bool isPrimary() const {
-        return this == s_primaryBackend;
-    }
-
     dev_t deviceId() const;
     virtual bool prefer10bpc() const;
     EglDmabuf *dmabuf() const;

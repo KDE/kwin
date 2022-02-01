@@ -36,6 +36,7 @@ static const float texCoords[] = {
 
 ShadowBuffer::ShadowBuffer(const QSize &size, const GbmFormat &format)
     : m_size(size)
+    , m_drmFormat(format.drmFormat)
 {
     glGenFramebuffers(1, &m_framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
@@ -134,7 +135,12 @@ QSize ShadowBuffer::textureSize() const
     return m_size;
 }
 
-GLint ShadowBuffer::internalFormat(const GbmFormat &format)
+uint32_t ShadowBuffer::drmFormat() const
+{
+    return m_drmFormat;
+}
+
+GLint ShadowBuffer::internalFormat(const GbmFormat &format) const
 {
     if (format.redSize <= 8 && format.greenSize <= 8 && format.blueSize <= 8) {
         return GL_RGBA8;

@@ -36,14 +36,9 @@ static bool isOpenGLES_helper()
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }
 
-AbstractEglBackend *AbstractEglBackend::s_primaryBackend = nullptr;
-
 AbstractEglBackend::AbstractEglBackend(dev_t deviceId)
     : m_deviceId(deviceId)
 {
-    if (s_primaryBackend == nullptr) {
-        setPrimaryBackend(this);
-    }
     connect(Compositor::self(), &Compositor::aboutToDestroy, this, &AbstractEglBackend::teardown);
 }
 
@@ -85,12 +80,10 @@ void AbstractEglBackend::teardown()
 void AbstractEglBackend::cleanup()
 {
     cleanupSurfaces();
-    if (isPrimary()) {
-        cleanupGL();
-        doneCurrent();
-        eglDestroyContext(m_display, m_context);
-        eglReleaseThread();
-    }
+    cleanupGL();
+    doneCurrent();
+    eglDestroyContext(m_display, m_context);
+    eglReleaseThread();
 }
 
 void AbstractEglBackend::cleanupSurfaces()
@@ -360,9 +353,7 @@ EGLContext AbstractEglBackend::createContextInternal(EGLContext sharedContext)
 
 void AbstractEglBackend::setEglDisplay(const EGLDisplay &display) {
     m_display = display;
-    if (isPrimary()) {
-        kwinApp()->platform()->setSceneEglDisplay(display);
-    }
+    kwinApp()->platform()->setSceneEglDisplay(display);
 }
 
 void AbstractEglBackend::setConfig(const EGLConfig &config)

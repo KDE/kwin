@@ -18,31 +18,13 @@
 namespace KWin
 {
 
-DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu)
+DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
     : QPainterBackend()
     , m_backend(backend)
-    , m_gpu(gpu)
 {
-    const auto outputs = m_backend->enabledOutputs();
-    for (auto output: outputs) {
-        initOutput(static_cast<DrmAbstractOutput*>(output));
-    }
-    connect(m_gpu, &DrmGpu::outputEnabled, this, &DrmQPainterBackend::initOutput);
-    connect(m_gpu, &DrmGpu::outputDisabled, this,
-        [this] (DrmAbstractOutput *o) {
-            m_swapchains.remove(o);
-        }
-    );
-}
-
-void DrmQPainterBackend::initOutput(DrmAbstractOutput *output)
-{
-    m_swapchains.insert(output, QSharedPointer<DumbSwapchain>::create(m_gpu, output->sourceSize(), DRM_FORMAT_XRGB8888));
-    connect(output, &DrmOutput::currentModeChanged, this,
-        [output, this] {
-            m_swapchains[output] = QSharedPointer<DumbSwapchain>::create(m_gpu, output->sourceSize(), DRM_FORMAT_XRGB8888);
-        }
-    );
+    connect(m_backend, &DrmBackend::outputDisabled, this, [this] (const auto output) {
+        m_swapchains.remove(output);
+    });
 }
 
 QImage *DrmQPainterBackend::bufferForScreen(AbstractOutput *output)
@@ -52,6 +34,10 @@ QImage *DrmQPainterBackend::bufferForScreen(AbstractOutput *output)
 
 QRegion DrmQPainterBackend::beginFrame(AbstractOutput *output)
 {
+    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
+    if (!m_swapchains[output] || m_swapchains[output]->size() != drmOutput->sourceSize()) {
+        m_swapchains[output] = QSharedPointer<DumbSwapchain>::create(drmOutput->gpu(), drmOutput->sourceSize(), DRM_FORMAT_XRGB8888);
+    }
     QRegion needsRepainting;
     m_swapchains[output]->acquireBuffer(output->geometry(), &needsRepainting);
     return needsRepainting;

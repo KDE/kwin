@@ -28,17 +28,15 @@ class DrmQPainterBackend : public QPainterBackend
 {
     Q_OBJECT
 public:
-    DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu);
+    DrmQPainterBackend(DrmBackend *backend);
 
     QImage *bufferForScreen(AbstractOutput *output) override;
     QRegion beginFrame(AbstractOutput *output) override;
     void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
-    void initOutput(DrmAbstractOutput *output);
     QMap<AbstractOutput *, QSharedPointer<DumbSwapchain>> m_swapchains;
     DrmBackend *m_backend;
-    DrmGpu *m_gpu;
 };
 }
 

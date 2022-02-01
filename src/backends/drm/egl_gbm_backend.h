@@ -38,13 +38,14 @@ class DumbSwapchain;
 class ShadowBuffer;
 class DrmBackend;
 class DrmGpu;
+class EglGbmLayer;
 
 struct GbmFormat {
-    uint32_t drmFormat;
-    EGLint redSize;
-    EGLint greenSize;
-    EGLint blueSize;
-    EGLint alphaSize;
+    uint32_t drmFormat = 0;
+    EGLint redSize = -1;
+    EGLint greenSize = -1;
+    EGLint blueSize = -1;
+    EGLint alphaSize = -1;
 };
 bool operator==(const GbmFormat &lhs, const GbmFormat &rhs);
 
@@ -55,7 +56,7 @@ class EglGbmBackend : public AbstractEglBackend
 {
     Q_OBJECT
 public:
-    EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu);
+    EglGbmBackend(DrmBackend *drmBackend);
     ~EglGbmBackend() override;
 
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
@@ -69,16 +70,12 @@ public:
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
-    bool hasOutput(AbstractOutput *output) const;
-    bool swapBuffers(DrmAbstractOutput *output, const QRegion &dirty);
-    bool exportFramebuffer(DrmAbstractOutput *output, void *data, const QSize &size, uint32_t stride);
-    bool exportFramebufferAsDmabuf(DrmAbstractOutput *output, int *fds, int *strides, int *offsets, uint32_t *num_fds, uint32_t *format, uint64_t *modifier);
-
     bool directScanoutAllowed(AbstractOutput *output) const override;
 
-    QSharedPointer<DrmBuffer> renderTestFrame(DrmAbstractOutput *output);
-    uint32_t drmFormat(DrmAbstractOutput *output) const;
-    DrmGpu *gpu() const;
+    QSharedPointer<DrmBuffer> testBuffer(DrmAbstractOutput *output);
+    EGLConfig config(uint32_t format) const;
+    GbmFormat gbmFormatForDrmFormat(uint32_t format) const;
+    std::optional<uint32_t> chooseFormat(DrmAbstractOutput *output) const;
 
 protected:
     void cleanupSurfaces() override;
@@ -88,55 +85,13 @@ private:
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
+    void addOutput(AbstractOutput *output);
+    void removeOutput(AbstractOutput *output);
 
-    enum class ImportMode {
-        Dmabuf,
-        DumbBuffer
-    };
-    struct Output {
-        DrmAbstractOutput *output = nullptr;
-        bool forceXrgb8888 = false;
-        struct RenderData {
-            QSharedPointer<ShadowBuffer> shadowBuffer;
-            QSharedPointer<GbmSurface> gbmSurface;
-            GbmFormat format;
-
-            // for secondary GPU import
-            ImportMode importMode = ImportMode::Dmabuf;
-            QSharedPointer<DumbSwapchain> importSwapchain;
-        } old, current;
-
-        KWaylandServer::SurfaceInterface *scanoutSurface = nullptr;
-        struct {
-            QPointer<KWaylandServer::SurfaceInterface> surface;
-            QMap<uint32_t, QVector<uint64_t>> attemptedFormats;
-        } scanoutCandidate;
-        QPointer<KWaylandServer::SurfaceInterface> oldScanoutCandidate;
-    };
-
-    bool doesRenderFit(const Output &output, const Output::RenderData &render);
-    bool resetOutput(Output &output);
-    bool addOutput(DrmAbstractOutput *output);
-    void removeOutput(DrmAbstractOutput *output);
-
-    void setViewport(const Output &output) const;
-
-    QRegion prepareRenderingForOutput(Output &output);
-    QSharedPointer<DrmBuffer> importFramebuffer(Output &output, const QRegion &dirty) const;
-    QSharedPointer<DrmBuffer> endFrameWithBuffer(AbstractOutput *output, const QRegion &dirty);
-    std::optional<GbmFormat> chooseFormat(Output &output) const;
-
-    void cleanupRenderData(Output::RenderData &output);
-
-    QMap<AbstractOutput *, Output> m_outputs;
+    QMap<AbstractOutput *, QSharedPointer<EglGbmLayer>> m_surfaces;
     DrmBackend *m_backend;
-    DrmGpu *m_gpu;
     QVector<GbmFormat> m_formats;
     QMap<uint32_t, EGLConfig> m_configs;
-
-    static EglGbmBackend *renderingBackend();
-
-    void setForceXrgb8888(DrmAbstractOutput *output);
 
     friend class EglGbmTexture;
 };

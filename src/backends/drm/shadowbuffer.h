@@ -32,13 +32,15 @@ public:
     int texture() const;
 
     QSize textureSize() const;
+    uint32_t drmFormat() const;
 
 private:
-    GLint internalFormat(const GbmFormat &format);
+    GLint internalFormat(const GbmFormat &format) const;
     GLuint m_texture;
     GLuint m_framebuffer;
     QScopedPointer<GLVertexBuffer> m_vbo;
-    QSize m_size;
+    const QSize m_size;
+    const uint32_t m_drmFormat;
 };
 
 }

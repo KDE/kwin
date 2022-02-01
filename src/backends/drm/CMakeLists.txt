@@ -11,7 +11,6 @@ set(DRM_SOURCES
     logging.cpp
     scene_qpainter_drm_backend.cpp
     drm_gpu.cpp
-    egl_multi_backend.cpp
     dumb_swapchain.cpp
     shadowbuffer.cpp
     drm_pipeline.cpp
@@ -20,6 +19,7 @@ set(DRM_SOURCES
     drm_virtual_output.cpp
     drm_lease_output.cpp
     egl_gbm_backend.cpp
+    egl_gbm_layer.cpp
     drm_buffer_gbm.cpp
     gbm_surface.cpp
     gbm_dmabuf.cpp

@@ -23,7 +23,6 @@
 #include "session.h"
 #include "udev.h"
 #include "drm_gpu.h"
-#include "egl_multi_backend.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
 #include "waylandoutputconfig.h"
@@ -49,10 +48,6 @@
 #include <gbm.h>
 #include <xf86drm.h>
 #include <libdrm/drm_mode.h>
-
-#include "drm_gpu.h"
-#include "egl_multi_backend.h"
-#include "drm_pipeline.h"
 
 namespace KWin
 {
@@ -543,18 +538,12 @@ InputBackend *DrmBackend::createInputBackend()
 
 QPainterBackend *DrmBackend::createQPainterBackend()
 {
-    return new DrmQPainterBackend(this, m_gpus.at(0));
+    return new DrmQPainterBackend(this);
 }
 
 OpenGLBackend *DrmBackend::createOpenGLBackend()
 {
-    auto primaryBackend = new EglGbmBackend(this, m_gpus.at(0));
-    AbstractEglBackend::setPrimaryBackend(primaryBackend);
-    EglMultiBackend *backend = new EglMultiBackend(this, primaryBackend);
-    for (int i = 1; i < m_gpus.count(); i++) {
-        backend->addGpu(m_gpus[i]);
-    }
-    return backend;
+    return new EglGbmBackend(this);
 }
 
 void DrmBackend::sceneInitialized()

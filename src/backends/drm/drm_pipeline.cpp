@@ -49,9 +49,8 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
     Q_ASSERT(pending.crtc);
     Q_ASSERT(buffer);
     m_primaryBuffer = buffer;
-    auto buf = dynamic_cast<DrmGbmBuffer*>(buffer.data());
     // with direct scanout disallow modesets, calling presentFailed() and logging warnings
-    bool directScanout = buf && buf->clientBuffer();
+    const bool directScanout = isBufferForDirectScanout();
     if (gpu()->needsModeset()) {
         if (directScanout) {
             return false;
@@ -94,6 +93,12 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
         }
     }
     return true;
+}
+
+bool DrmPipeline::isBufferForDirectScanout() const
+{
+    const auto buf = dynamic_cast<DrmGbmBuffer*>(m_primaryBuffer.data());
+    return buf && buf->clientBuffer();
 }
 
 bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects)
@@ -293,42 +298,21 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
 
 bool DrmPipeline::checkTestBuffer()
 {
-    if (!pending.crtc || (m_primaryBuffer && m_primaryBuffer->size() == bufferSize())) {
+    const auto backend = gpu()->eglBackend();
+    if (!pending.crtc || (!(backend && m_output) && m_primaryBuffer && m_primaryBuffer->size() == bufferSize()) || isBufferForDirectScanout()) {
         return true;
     }
-    auto backend = gpu()->eglBackend();
     QSharedPointer<DrmBuffer> buffer;
-    // try to re-use buffers if possible.
-    const auto &checkBuffer = [this, backend, &buffer](const QSharedPointer<DrmBuffer> &buf){
-        const auto &mods = supportedModifiers(buf->format());
-        if (backend && buf->format() == backend->drmFormat(m_output)
-            && (mods.isEmpty() || mods.contains(buf->modifier()))
-            && buf->size() == bufferSize()) {
-            buffer = buf;
+    if (backend && m_output) {
+        buffer = backend->testBuffer(m_output);
+    } else if (backend && gpu()->gbmDevice()) {
+        gbm_bo *bo = gbm_bo_create(gpu()->gbmDevice(), bufferSize().width(), bufferSize().height(), DRM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
+        if (!bo) {
+            return false;
         }
-    };
-    if (pending.crtc->primaryPlane() && pending.crtc->primaryPlane()->next()) {
-        checkBuffer(pending.crtc->primaryPlane()->next());
-    } else if (pending.crtc->primaryPlane() && pending.crtc->primaryPlane()->current()) {
-        checkBuffer(pending.crtc->primaryPlane()->current());
-    } else if (pending.crtc->next()) {
-        checkBuffer(pending.crtc->next());
-    } else if (pending.crtc->current()) {
-        checkBuffer(pending.crtc->current());
-    }
-    // if we don't have a fitting buffer already, get or create one
-    if (!buffer) {
-        if (backend && m_output) {
-            buffer = backend->renderTestFrame(m_output);
-        } else if (backend && gpu()->gbmDevice()) {
-            gbm_bo *bo = gbm_bo_create(gpu()->gbmDevice(), bufferSize().width(), bufferSize().height(), DRM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
-            if (!bo) {
-                return false;
-            }
-            buffer = QSharedPointer<DrmGbmBuffer>::create(gpu(), bo, nullptr);
-        } else {
-            buffer = QSharedPointer<DrmDumbBuffer>::create(gpu(), bufferSize(), DRM_FORMAT_XRGB8888);
-        }
+        buffer = QSharedPointer<DrmGbmBuffer>::create(gpu(), bo, nullptr);
+    } else {
+        buffer = QSharedPointer<DrmDumbBuffer>::create(gpu(), bufferSize(), DRM_FORMAT_XRGB8888);
     }
     if (buffer && buffer->bufferId()) {
         m_oldTestBuffer = m_primaryBuffer;
