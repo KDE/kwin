@@ -607,7 +607,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         } else {
             surfaceSize = implicitSurfaceSize;
         }
-        surfaceSize = implicitSurfaceSize;
 
         const QRect surfaceRect(QPoint(0, 0), surfaceSize);
         inputRegion = current.input & surfaceRect;
@@ -618,7 +617,10 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
             opaqueRegion = current.opaque & surfaceRect;
         }
 
-        const QMatrix4x4 scaleOverrideMatrix(QTransform::fromScale(1. / scaleOverride, 1. / scaleOverride));
+        QMatrix4x4 scaleOverrideMatrix;
+        if (scaleOverride != 1.) {
+            scaleOverrideMatrix.scale(1. / scaleOverride, 1. / scaleOverride);
+        }
 
         opaqueRegion = map_helper(scaleOverrideMatrix, opaqueRegion);
         inputRegion = map_helper(scaleOverrideMatrix, inputRegion);

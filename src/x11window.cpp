@@ -1240,7 +1240,10 @@ void X11Window::updateFrameExtents()
 
 void X11Window::setClientFrameExtents(const NETStrut &strut)
 {
-    const QMargins clientFrameExtents(strut.left, strut.top, strut.right, strut.bottom);
+    const QMargins clientFrameExtents(Xcb::fromXNative(strut.left),
+                                      Xcb::fromXNative(strut.top),
+                                      Xcb::fromXNative(strut.right),
+                                      Xcb::fromXNative(strut.bottom));
     if (m_clientFrameExtents == clientFrameExtents) {
         return;
     }
@@ -1343,8 +1346,14 @@ void X11Window::updateShape()
             updateDecoration(true);
         }
         if (!isDecorated()) {
-            xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING,
-                              frameId(), clientPos().x(), clientPos().y(), window());
+            xcb_shape_combine(kwinApp()->x11Connection(),
+                              XCB_SHAPE_SO_SET,
+                              XCB_SHAPE_SK_BOUNDING,
+                              XCB_SHAPE_SK_BOUNDING,
+                              frameId(),
+                              Xcb::toXNative(clientPos().x()),
+                              Xcb::toXNative(clientPos().y()),
+                              window());
         }
     } else if (app_noborder) {
         xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
@@ -1386,14 +1395,27 @@ void X11Window::updateInputShape()
         if (!shape_helper_window.isValid()) {
             shape_helper_window.create(QRect(0, 0, 1, 1));
         }
-        shape_helper_window.resize(m_bufferGeometry.size());
+        const QSize bufferSize = m_bufferGeometry.size();
+        shape_helper_window.resize(QSize(Xcb::toXNative(bufferSize.width()), Xcb::toXNative(bufferSize.height())));
         xcb_connection_t *c = kwinApp()->x11Connection();
         xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
                           shape_helper_window, 0, 0, frameId());
-        xcb_shape_combine(c, XCB_SHAPE_SO_SUBTRACT, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
-                          shape_helper_window, clientPos().x(), clientPos().y(), window());
-        xcb_shape_combine(c, XCB_SHAPE_SO_UNION, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT,
-                          shape_helper_window, clientPos().x(), clientPos().y(), window());
+        xcb_shape_combine(c,
+                          XCB_SHAPE_SO_SUBTRACT,
+                          XCB_SHAPE_SK_INPUT,
+                          XCB_SHAPE_SK_BOUNDING,
+                          shape_helper_window,
+                          Xcb::toXNative(clientPos().x()),
+                          Xcb::toXNative(clientPos().y()),
+                          window());
+        xcb_shape_combine(c,
+                          XCB_SHAPE_SO_UNION,
+                          XCB_SHAPE_SK_INPUT,
+                          XCB_SHAPE_SK_INPUT,
+                          shape_helper_window,
+                          Xcb::toXNative(clientPos().x()),
+                          Xcb::toXNative(clientPos().y()),
+                          window());
         xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT,
                           frameId(), 0, 0, shape_helper_window);
     }
@@ -3739,10 +3761,10 @@ void X11Window::sendSyntheticConfigureNotify()
     u.event.response_type = XCB_CONFIGURE_NOTIFY;
     u.event.event = window();
     u.event.window = window();
-    u.event.x = m_clientGeometry.x();
-    u.event.y = m_clientGeometry.y();
-    u.event.width = m_clientGeometry.width();
-    u.event.height = m_clientGeometry.height();
+    u.event.x = Xcb::toXNative(m_clientGeometry.x());
+    u.event.y = Xcb::toXNative(m_clientGeometry.y());
+    u.event.width = Xcb::toXNative(m_clientGeometry.width());
+    u.event.height = Xcb::toXNative(m_clientGeometry.height());
     u.event.border_width = 0;
     u.event.above_sibling = XCB_WINDOW_NONE;
     u.event.override_redirect = 0;
@@ -4030,6 +4052,7 @@ void X11Window::resizeWithChecks(int w, int h, xcb_gravity_t gravity)
 }
 
 // _NET_MOVERESIZE_WINDOW
+// note co-ordinates are kwin logical
 void X11Window::NETMoveResizeWindow(int flags, int x, int y, int width, int height)
 {
     int gravity = flags & 0xff;
@@ -4619,7 +4642,7 @@ bool X11Window::doStartInteractiveMoveResize()
         // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
         // (https://lists.kde.org/?t=107302193400001&r=1&w=2)
         QRect r = workspace()->clientArea(FullArea, this);
-        m_moveResizeGrabWindow.create(r, XCB_WINDOW_CLASS_INPUT_ONLY, 0, nullptr, kwinApp()->x11RootWindow());
+        m_moveResizeGrabWindow.create(Xcb::toXNative(r), XCB_WINDOW_CLASS_INPUT_ONLY, 0, nullptr, kwinApp()->x11RootWindow());
         m_moveResizeGrabWindow.map();
         m_moveResizeGrabWindow.raise();
         updateXTime();

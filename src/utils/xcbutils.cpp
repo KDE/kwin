@@ -611,5 +611,30 @@ bool Shm::init()
     return true;
 }
 
+uint32_t toXNative(uint value)
+{
+    return kwinApp()->xwaylandScale() * value;
+}
+
+QRect toXNative(const QRect &r)
+{
+    return QRect(toXNative(r.x()), toXNative(r.y()), toXNative(r.width()), toXNative(r.height()));
+}
+
+uint32_t fromXNative(uint value)
+{
+    return value / kwinApp()->xwaylandScale();
+}
+
+QRect fromXNative(const QRect &r)
+{
+    return QRect(fromXNative(r.x()), fromXNative(r.y()), fromXNative(r.width()), fromXNative(r.height()));
+}
+
+QSize fromXNative(const QSize &s)
+{
+    return QSize(fromXNative(s.width()), fromXNative(s.height()));
+}
+
 } // namespace Xcb
 } // namespace KWin
