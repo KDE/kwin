@@ -1863,7 +1863,7 @@ EffectWindow* PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, i
 
     // TODO: Is it possible to select hidden windows?
     EffectWindow* next;
-    QRect area = effects->clientArea(FullArea, 0, effects->currentDesktop());
+    QRect area = effects->virtualScreenGeometry();
     QRect detectRect;
 
     // Detect across the width of the desktop
