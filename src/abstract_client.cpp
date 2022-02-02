@@ -991,6 +991,7 @@ bool AbstractClient::startInteractiveMoveResize()
     }
 
     updateInitialMoveResizeGeometry();
+    updateElectricGeometryRestore();
     checkUnrestrictedInteractiveMoveResize();
     Q_EMIT clientStartUserMovedResized(this);
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
@@ -3053,6 +3054,35 @@ QRect AbstractClient::electricBorderMaximizeGeometry(const QPoint &pos) const
     return ret;
 }
 
+void AbstractClient::updateElectricGeometryRestore()
+{
+    m_electricGeometryRestore = geometryRestore();
+    if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
+        if (!(maximizeMode() & MaximizeHorizontal)) {
+            m_electricGeometryRestore.setX(x());
+            m_electricGeometryRestore.setWidth(width());
+        }
+        if (!(maximizeMode() & MaximizeVertical)) {
+            m_electricGeometryRestore.setY(y());
+            m_electricGeometryRestore.setHeight(height());
+        }
+    }
+}
+
+QRect AbstractClient::quickTileGeometryRestore() const
+{
+    if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+        // If the window is tiled, geometryRestore() already has a good value.
+        return geometryRestore();
+    }
+
+    if (isElectricBorderMaximizing()) {
+        return m_electricGeometryRestore;
+    } else {
+        return moveResizeGeometry();
+    }
+}
+
 void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
 {
     // Only allow quick tile on a regular window.
@@ -3069,15 +3099,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
             m_quickTileMode = int(QuickTileFlag::None);
             setMaximize(false, false);
         } else {
-            // If the window is tiled, geometryRestore() already has a good value.
-            QRect effectiveGeometryRestore = geometryRestore();
-            if (m_quickTileMode == QuickTileMode(QuickTileFlag::None)) {
-                if (isElectricBorderMaximizing()) {
-                    effectiveGeometryRestore = initialInteractiveMoveResizeGeometry();
-                } else {
-                    effectiveGeometryRestore = moveResizeGeometry();
-                }
-            }
+            QRect effectiveGeometryRestore = quickTileGeometryRestore();
             m_quickTileMode = int(QuickTileFlag::Maximize);
             setMaximize(true, true);
             setGeometryRestore(effectiveGeometryRestore);
@@ -3169,7 +3191,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
         } else if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
             // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
             // Store geometry first, so we can go out of this tile later.
-            setGeometryRestore(moveResizeGeometry());
+            setGeometryRestore(quickTileGeometryRestore());
         }
 
         if (mode != QuickTileMode(QuickTileFlag::None)) {
@@ -3186,9 +3208,9 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if (mode == QuickTileMode(QuickTileFlag::None)) {
         m_quickTileMode = int(QuickTileFlag::None);
         // Untiling, so just restore geometry, and we're done.
-        if (!geometryRestore().isValid()) // invalid if we started maximized and wait for placement
-            setGeometryRestore(moveResizeGeometry());
-        moveResize(geometryRestore());
+        if (geometryRestore().isValid()) { // invalid if we started maximized and wait for placement
+            moveResize(geometryRestore());
+        }
         checkWorkspacePosition(); // Just in case it's a different screen
     }
     doSetQuickTileMode();

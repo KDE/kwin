@@ -1030,6 +1030,8 @@ protected:
         return m_electricMaximizing;
     }
     QRect electricBorderMaximizeGeometry(const QPoint &pos) const;
+    void updateElectricGeometryRestore();
+    QRect quickTileGeometryRestore() const;
     void updateQuickTileMode(QuickTileMode newMode) {
         m_quickTileMode = newMode;
     }
@@ -1259,6 +1261,7 @@ private:
 
     // electric border/quick tiling
     QuickTileMode m_electricMode = QuickTileFlag::None;
+    QRect m_electricGeometryRestore;
     bool m_electricMaximizing = false;
     // The quick tile mode of this window.
     int m_quickTileMode = int(QuickTileFlag::None);
