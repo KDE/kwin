@@ -607,7 +607,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         } else {
             surfaceSize = implicitSurfaceSize;
         }
-        surfaceSize = implicitSurfaceSize;
 
         const QRect surfaceRect(QPoint(0, 0), surfaceSize);
         inputRegion = current.input & surfaceRect;

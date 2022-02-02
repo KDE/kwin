@@ -36,6 +36,12 @@ namespace Xcb
 
 typedef xcb_window_t WindowId;
 
+uint32_t KWIN_EXPORT toXNative(uint value);
+QRect KWIN_EXPORT toXNative(const QRect &value);
+uint KWIN_EXPORT fromXNative(uint32_t value);
+QRect KWIN_EXPORT fromXNative(const QRect &value);
+QSize KWIN_EXPORT fromXNative(const QSize &value);
+
 // forward declaration of methods
 static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
 static void setInputFocus(xcb_window_t window, uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
@@ -584,7 +590,7 @@ public:
         if (!geometry) {
             return QRect();
         }
-        return QRect(geometry->x, geometry->y, geometry->width, geometry->height);
+        return QRect(Xcb::fromXNative(geometry->x), Xcb::fromXNative(geometry->y), Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
     }
 
     inline QSize size()
@@ -593,7 +599,7 @@ public:
         if (!geometry) {
             return QSize();
         }
-        return QSize(geometry->width, geometry->height);
+        return QSize(Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
     }
 };
 
@@ -991,7 +997,8 @@ public:
         if (!hasMaxSize()) {
             return QSize(INT_MAX, INT_MAX);
         }
-        return QSize(qMax(m_sizeHints->maxWidth, 1), qMax(m_sizeHints->maxHeight, 1));
+        const QSize size(qMax(m_sizeHints->maxWidth, 1), qMax(m_sizeHints->maxHeight, 1));
+        return fromXNative(size);
     }
     QSize minSize() const
     {
@@ -999,7 +1006,8 @@ public:
             // according to ICCCM 4.1.23 base size should be used as a fallback
             return baseSize();
         }
-        return QSize(m_sizeHints->minWidth, m_sizeHints->minHeight);
+        const QSize size(m_sizeHints->minWidth, m_sizeHints->minHeight);
+        return fromXNative(size);
     }
     QSize baseSize() const
     {
@@ -1007,14 +1015,16 @@ public:
         if (!hasBaseSize()) {
             return QSize(0, 0);
         }
-        return QSize(m_sizeHints->baseWidth, m_sizeHints->baseHeight);
+        const QSize size(m_sizeHints->baseWidth, m_sizeHints->baseHeight);
+        return fromXNative(size);
     }
     QSize resizeIncrements() const
     {
         if (!hasResizeIncrements()) {
             return QSize(1, 1);
         }
-        return QSize(qMax(m_sizeHints->widthInc, 1), qMax(m_sizeHints->heightInc, 1));
+        const QSize size(qMax(m_sizeHints->widthInc, 1), qMax(m_sizeHints->heightInc, 1));
+        return fromXNative(size);
     }
     xcb_gravity_t windowGravity() const
     {
@@ -1623,7 +1633,7 @@ inline xcb_window_t Window::doCreate(const QRect &geometry, uint16_t windowClass
     m_logicGeometry = geometry;
     xcb_window_t w = xcb_generate_id(connection());
     xcb_create_window(connection(), XCB_COPY_FROM_PARENT, w, parent,
-                      geometry.x(), geometry.y(), geometry.width(), geometry.height(),
+                      Xcb::toXNative(geometry.x()), Xcb::toXNative(geometry.y()), Xcb::toXNative(geometry.width()), Xcb::toXNative(geometry.height()),
                       0, windowClass, XCB_COPY_FROM_PARENT, mask, values);
     return w;
 }
@@ -1647,7 +1657,7 @@ inline void Window::setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t
         return;
     }
     const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    const uint32_t values[] = {x, y, width, height};
+    const uint32_t values[] = {Xcb::toXNative(x), Xcb::toXNative(y), Xcb::toXNative(width), Xcb::toXNative(height)};
     xcb_configure_window(connection(), m_window, mask, values);
 }
 
@@ -1677,7 +1687,7 @@ inline void Window::resize(uint32_t width, uint32_t height)
         return;
     }
     const uint16_t mask = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    const uint32_t values[] = {width, height};
+    const uint32_t values[] = {Xcb::toXNative(width), Xcb::toXNative(height)};
     xcb_configure_window(connection(), m_window, mask, values);
 }
 
@@ -1713,7 +1723,7 @@ inline void Window::reparent(xcb_window_t parent, int x, int y)
     if (!isValid()) {
         return;
     }
-    xcb_reparent_window(connection(), m_window, parent, x, y);
+    xcb_reparent_window(connection(), m_window, parent, Xcb::toXNative(x), Xcb::toXNative(y));
 }
 
 inline void Window::changeProperty(xcb_atom_t property, xcb_atom_t type, uint8_t format, uint32_t length, const void *data, uint8_t mode)
@@ -1737,7 +1747,8 @@ inline void Window::setBorderWidth(uint32_t width)
     if (!isValid()) {
         return;
     }
-    xcb_configure_window(connection(), m_window, XCB_CONFIG_WINDOW_BORDER_WIDTH, &width);
+    uint32_t _width = Xcb::toXNative(width);
+    xcb_configure_window(connection(), m_window, XCB_CONFIG_WINDOW_BORDER_WIDTH, &_width);
 }
 
 inline void Window::grabButton(uint8_t pointerMode, uint8_t keyboardmode, uint16_t modifiers,
@@ -1800,11 +1811,8 @@ inline void Window::kill()
 static inline void moveResizeWindow(WindowId window, const QRect &geometry)
 {
     const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    const uint32_t values[] = {
-        static_cast<uint32_t>(geometry.x()),
-        static_cast<uint32_t>(geometry.y()),
-        static_cast<uint32_t>(geometry.width()),
-        static_cast<uint32_t>(geometry.height())};
+
+    const uint32_t values[] = {Xcb::toXNative(geometry.x()), Xcb::toXNative(geometry.y()), Xcb::toXNative(geometry.width()), Xcb::toXNative(geometry.height())};
     xcb_configure_window(connection(), window, mask, values);
 }
 
@@ -1816,7 +1824,7 @@ static inline void moveWindow(xcb_window_t window, const QPoint &pos)
 static inline void moveWindow(xcb_window_t window, uint32_t x, uint32_t y)
 {
     const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
-    const uint32_t values[] = {x, y};
+    const uint32_t values[] = {Xcb::toXNative(x), Xcb::toXNative(y)};
     xcb_configure_window(connection(), window, mask, values);
 }
 
@@ -1881,11 +1889,12 @@ static inline int defaultDepth()
 
 static inline xcb_rectangle_t fromQt(const QRect &rect)
 {
+    const QRect nativeRect = toXNative(rect);
     xcb_rectangle_t rectangle;
-    rectangle.x = rect.x();
-    rectangle.y = rect.y();
-    rectangle.width = rect.width();
-    rectangle.height = rect.height();
+    rectangle.x = nativeRect.x();
+    rectangle.y = nativeRect.y();
+    rectangle.width = nativeRect.width();
+    rectangle.height = nativeRect.height();
     return rectangle;
 }
 

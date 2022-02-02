@@ -128,6 +128,7 @@ void ApplicationWayland::performStartup()
 {
     if (m_startXWayland) {
         setOperationMode(OperationModeXwayland);
+        setXwaylandScale(config()->group("Xwayland").readEntry("Scale", 1.0));
     }
     // first load options - done internally by a different thread
     createOptions();

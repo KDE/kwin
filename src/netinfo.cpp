@@ -204,7 +204,7 @@ void RootInfo::moveResize(xcb_window_t w, int x_root, int y_root, unsigned long 
     X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
     if (c) {
         updateXTime(); // otherwise grabbing may have old timestamp - this message should include timestamp
-        c->NETMoveResize(x_root, y_root, (Direction)direction);
+        c->NETMoveResize(Xcb::fromXNative(x_root), Xcb::fromXNative(y_root), (Direction)direction);
     }
 }
 
@@ -212,7 +212,7 @@ void RootInfo::moveResizeWindow(xcb_window_t w, int flags, int x, int y, int wid
 {
     X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
     if (c) {
-        c->NETMoveResizeWindow(flags, x, y, width, height);
+        c->NETMoveResizeWindow(flags, Xcb::fromXNative(x), Xcb::fromXNative(y), Xcb::fromXNative(width), Xcb::fromXNative(height));
     }
 }
 

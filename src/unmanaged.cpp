@@ -109,6 +109,7 @@ bool Unmanaged::track(xcb_window_t w)
     if (geo.isNull()) {
         return false;
     }
+
     setWindowHandles(w); // the window is also the frame
     Xcb::selectInput(w, attr->your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
     m_bufferGeometry = geo.rect();

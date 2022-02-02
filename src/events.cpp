@@ -443,9 +443,15 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
     }
     case XCB_MOTION_NOTIFY: {
         const auto *event = reinterpret_cast<xcb_motion_notify_event_t *>(e);
+
+        int x = Xcb::fromXNative(event->event_x);
+        int y = Xcb::fromXNative(event->event_y);
+        int root_x = Xcb::fromXNative(event->root_x);
+        int root_y = Xcb::fromXNative(event->root_y);
+
         motionNotifyEvent(event->event, event->state,
-                          event->event_x, event->event_y, event->root_x, event->root_y);
-        workspace()->updateFocusMousePosition(QPoint(event->root_x, event->root_y));
+                          x, y, root_x, root_y);
+        workspace()->updateFocusMousePosition(QPoint(root_x, root_y));
         break;
     }
     case XCB_ENTER_NOTIFY: {
@@ -456,15 +462,25 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         // starts or only ends there, Enter/LeaveNotify are generated.
         // Fake a MotionEvent in such cases to make handle of mouse
         // events simpler (Qt does that too).
+        int x = Xcb::fromXNative(event->event_x);
+        int y = Xcb::fromXNative(event->event_y);
+        int root_x = Xcb::fromXNative(event->root_x);
+        int root_y = Xcb::fromXNative(event->root_y);
+
         motionNotifyEvent(event->event, event->state,
-                          event->event_x, event->event_y, event->root_x, event->root_y);
-        workspace()->updateFocusMousePosition(QPoint(event->root_x, event->root_y));
+                          x, y, root_x, root_y);
+        workspace()->updateFocusMousePosition(QPoint(root_x, root_y));
         break;
     }
     case XCB_LEAVE_NOTIFY: {
         auto *event = reinterpret_cast<xcb_leave_notify_event_t *>(e);
+
+        int x = Xcb::fromXNative(event->event_x);
+        int y = Xcb::fromXNative(event->event_y);
+        int root_x = Xcb::fromXNative(event->root_x);
+        int root_y = Xcb::fromXNative(event->root_y);
         motionNotifyEvent(event->event, event->state,
-                          event->event_x, event->event_y, event->root_x, event->root_y);
+                          x, y, root_x, root_y);
         leaveNotifyEvent(event);
         // not here, it'd break following enter notify handling
         // workspace()->updateFocusMousePosition( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ));
@@ -627,9 +643,9 @@ void X11Window::configureRequestEvent(xcb_configure_request_event_t *e)
     }
 
     if (e->value_mask & (XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_WIDTH)) {
-        configureRequest(e->value_mask, e->x, e->y, e->width, e->height, 0, false);
+        configureRequest(e->value_mask, Xcb::fromXNative(e->x),
+                         Xcb::fromXNative(e->y), Xcb::fromXNative(e->width), Xcb::fromXNative(e->height), 0, false);
     }
-
     if (e->value_mask & XCB_CONFIG_WINDOW_STACK_MODE) {
         restackWindow(e->sibling, e->stack_mode, NET::FromApplication, userTime(), false);
     }
@@ -1297,7 +1313,7 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
     if (effects) {
         static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowStacking(); // keep them on top
     }
-    QRect newgeom(e->x, e->y, e->width, e->height);
+    QRect newgeom(Xcb::fromXNative(e->x), Xcb::fromXNative(e->y), Xcb::fromXNative(e->width), Xcb::fromXNative(e->height));
     if (newgeom != m_frameGeometry) {
         QRect old = m_frameGeometry;
         m_clientGeometry = newgeom;
