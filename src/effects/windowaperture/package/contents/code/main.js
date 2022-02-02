@@ -184,7 +184,7 @@ var badBadWindowsEffect = {
                     animate({
                         window: w,
                         duration: badBadWindowsEffect.duration,
-                        curve: QEasingCurve.InOutCubic,
+                        curve: QEasingCurve.OutCubic,
                         animations: [{
                             type: Effect.Opacity,
                             from: 0.0
