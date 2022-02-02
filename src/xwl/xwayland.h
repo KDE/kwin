@@ -65,6 +65,7 @@ private:
     void uninstallSocketNotifier();
     void updatePrimary(AbstractOutput *primaryOutput);
 
+    void refreshScaling();
     bool createX11Connection();
     void destroyX11Connection();
 

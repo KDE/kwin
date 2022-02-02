@@ -78,6 +78,7 @@ public:
     Xcb::Atom incr;
     Xcb::Atom wl_selection;
     Xcb::Atom primary;
+    Xcb::Atom xwaylandGlobalOutputScale;
 
     /**
      * @internal

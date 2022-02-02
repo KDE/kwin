@@ -22,6 +22,11 @@
 
 using namespace KWin;
 
+uint32_t Xcb::scale(uint value)
+{
+    return value;
+}
+
 class TestXcbWindow : public QObject
 {
     Q_OBJECT

@@ -1337,8 +1337,14 @@ void X11Client::updateShape()
             updateDecoration(true);
         }
         if (!isDecorated()) {
-            xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING,
-                              frameId(), clientPos().x(), clientPos().y(), window());
+            xcb_shape_combine(kwinApp()->x11Connection(),
+                              XCB_SHAPE_SO_SET,
+                              XCB_SHAPE_SK_BOUNDING,
+                              XCB_SHAPE_SK_BOUNDING,
+                              frameId(),
+                              Xcb::scale(clientPos().x()),
+                              Xcb::scale(clientPos().y()),
+                              window());
         }
     } else if (app_noborder) {
         xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
@@ -1388,10 +1394,22 @@ void X11Client::updateInputShape()
         xcb_connection_t *c = kwinApp()->x11Connection();
         xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
                           shape_helper_window, 0, 0, frameId());
-        xcb_shape_combine(c, XCB_SHAPE_SO_SUBTRACT, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
-                          shape_helper_window, clientPos().x(), clientPos().y(), window());
-        xcb_shape_combine(c, XCB_SHAPE_SO_UNION, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT,
-                          shape_helper_window, clientPos().x(), clientPos().y(), window());
+        xcb_shape_combine(c,
+                          XCB_SHAPE_SO_SUBTRACT,
+                          XCB_SHAPE_SK_INPUT,
+                          XCB_SHAPE_SK_BOUNDING,
+                          shape_helper_window,
+                          Xcb::scale(clientPos().x()),
+                          Xcb::scale(clientPos().y()),
+                          window());
+        xcb_shape_combine(c,
+                          XCB_SHAPE_SO_UNION,
+                          XCB_SHAPE_SK_INPUT,
+                          XCB_SHAPE_SK_INPUT,
+                          shape_helper_window,
+                          Xcb::scale(clientPos().x()),
+                          Xcb::scale(clientPos().y()),
+                          window());
         xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT,
                           frameId(), 0, 0, shape_helper_window);
     }
@@ -3765,10 +3783,10 @@ void X11Client::sendSyntheticConfigureNotify()
     u.event.response_type = XCB_CONFIGURE_NOTIFY;
     u.event.event = window();
     u.event.window = window();
-    u.event.x = m_clientGeometry.x();
-    u.event.y = m_clientGeometry.y();
-    u.event.width = m_clientGeometry.width();
-    u.event.height = m_clientGeometry.height();
+    u.event.x = Xcb::scale(m_clientGeometry.x());
+    u.event.y = Xcb::scale(m_clientGeometry.y());
+    u.event.width = Xcb::scale(m_clientGeometry.width());
+    u.event.height = Xcb::scale(m_clientGeometry.height());
     u.event.border_width = 0;
     u.event.above_sibling = XCB_WINDOW_NONE;
     u.event.override_redirect = 0;
@@ -4072,7 +4090,7 @@ void X11Client::NETMoveResizeWindow(int flags, int x, int y, int width, int heig
     if (flags & (1 << 11)) {
         value_mask |= XCB_CONFIG_WINDOW_HEIGHT;
     }
-    configureRequest(value_mask, x, y, width, height, gravity, true);
+    configureRequest(value_mask, Xcb::scale(x), Xcb::scale(y), Xcb::scale(width), Xcb::scale(height), gravity, true);
 }
 
 bool X11Client::isMovable() const
@@ -4638,7 +4656,7 @@ bool X11Client::doStartInteractiveMoveResize()
         // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
         // (https://lists.kde.org/?t=107302193400001&r=1&w=2)
         QRect r = workspace()->clientArea(FullArea, this);
-        m_moveResizeGrabWindow.create(r, XCB_WINDOW_CLASS_INPUT_ONLY, 0, nullptr, kwinApp()->x11RootWindow());
+        m_moveResizeGrabWindow.create(Xcb::scale(r), XCB_WINDOW_CLASS_INPUT_ONLY, 0, nullptr, rootWindow());
         m_moveResizeGrabWindow.map();
         m_moveResizeGrabWindow.raise();
         updateXTime();

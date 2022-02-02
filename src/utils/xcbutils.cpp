@@ -611,5 +611,15 @@ bool Shm::init()
     return true;
 }
 
+uint32_t scale(uint value)
+{
+    return kwinApp()->xwaylandScale() * value;
+}
+
+QRect scale(const QRect &r)
+{
+    return QRect(scale(r.x()), scale(r.y()), scale(r.width()), scale(r.height()));
+}
+
 } // namespace Xcb
 } // namespace KWin

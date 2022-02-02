@@ -265,19 +265,19 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 & (XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_BORDER_WIDTH);
             int i = 0;
             if (value_mask & XCB_CONFIG_WINDOW_X) {
-                values[i++] = event->x;
+                values[i++] = Xcb::scale(event->x);
             }
             if (value_mask & XCB_CONFIG_WINDOW_Y) {
-                values[i++] = event->y;
+                values[i++] = Xcb::scale(event->y);
             }
             if (value_mask & XCB_CONFIG_WINDOW_WIDTH) {
-                values[i++] = event->width;
+                values[i++] = Xcb::scale(event->width);
             }
             if (value_mask & XCB_CONFIG_WINDOW_HEIGHT) {
-                values[i++] = event->height;
+                values[i++] = Xcb::scale(event->height);
             }
             if (value_mask & XCB_CONFIG_WINDOW_BORDER_WIDTH) {
-                values[i++] = event->border_width;
+                values[i++] = Xcb::scale(event->border_width);
             }
             xcb_configure_window(kwinApp()->x11Connection(), event->window, value_mask, values);
             return true;
@@ -628,9 +628,8 @@ void X11Client::configureRequestEvent(xcb_configure_request_event_t *e)
     }
 
     if (e->value_mask & (XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_WIDTH)) {
-        configureRequest(e->value_mask, e->x, e->y, e->width, e->height, 0, false);
+        configureRequest(e->value_mask, Xcb::scale(e->x), Xcb::scale(e->y), Xcb::scale(e->width), Xcb::scale(e->height), 0, false);
     }
-
     if (e->value_mask & XCB_CONFIG_WINDOW_STACK_MODE) {
         restackWindow(e->sibling, e->stack_mode, NET::FromApplication, userTime(), false);
     }
@@ -1044,6 +1043,10 @@ bool X11Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x,
 // return value matters only when filtering events before decoration gets them
 bool X11Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root)
 {
+    x = Xcb::scale(x);
+    y = Xcb::scale(y);
+    x_root = Xcb::scale(x_root);
+    y_root = Xcb::scale(y_root);
     if (waylandServer()) {
         return true;
     }

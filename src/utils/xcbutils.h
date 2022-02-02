@@ -36,6 +36,9 @@ namespace Xcb
 
 typedef xcb_window_t WindowId;
 
+uint32_t KWIN_EXPORT scale(uint value);
+QRect KWIN_EXPORT scale(const QRect &value);
+
 // forward declaration of methods
 static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
 static void setInputFocus(xcb_window_t window, uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
@@ -1647,7 +1650,7 @@ inline void Window::setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t
         return;
     }
     const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    const uint32_t values[] = {x, y, width, height};
+    const uint32_t values[] = {Xcb::scale(x), Xcb::scale(y), Xcb::scale(width), Xcb::scale(height)};
     xcb_configure_window(connection(), m_window, mask, values);
 }
 
@@ -1677,7 +1680,7 @@ inline void Window::resize(uint32_t width, uint32_t height)
         return;
     }
     const uint16_t mask = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    const uint32_t values[] = {width, height};
+    const uint32_t values[] = {Xcb::scale(width), Xcb::scale(height)};
     xcb_configure_window(connection(), m_window, mask, values);
 }
 
@@ -1800,11 +1803,8 @@ inline void Window::kill()
 static inline void moveResizeWindow(WindowId window, const QRect &geometry)
 {
     const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    const uint32_t values[] = {
-        static_cast<uint32_t>(geometry.x()),
-        static_cast<uint32_t>(geometry.y()),
-        static_cast<uint32_t>(geometry.width()),
-        static_cast<uint32_t>(geometry.height())};
+
+    const uint32_t values[] = {Xcb::scale(geometry.x()), Xcb::scale(geometry.y()), Xcb::scale(geometry.width()), Xcb::scale(geometry.height())};
     xcb_configure_window(connection(), window, mask, values);
 }
 
@@ -1816,7 +1816,7 @@ static inline void moveWindow(xcb_window_t window, const QPoint &pos)
 static inline void moveWindow(xcb_window_t window, uint32_t x, uint32_t y)
 {
     const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
-    const uint32_t values[] = {x, y};
+    const uint32_t values[] = {Xcb::scale(x), Xcb::scale(y)};
     xcb_configure_window(connection(), window, mask, values);
 }
 

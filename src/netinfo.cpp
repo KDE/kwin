@@ -205,16 +205,15 @@ void RootInfo::moveResize(xcb_window_t w, int x_root, int y_root, unsigned long 
     X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
     if (c) {
         updateXTime(); // otherwise grabbing may have old timestamp - this message should include timestamp
-        c->NETMoveResize(x_root, y_root, (Direction)direction);
+        c->NETMoveResize(Xcb::scale(x_root), Xcb::scale(y_root), (Direction)direction);
     }
 }
 
 void RootInfo::moveResizeWindow(xcb_window_t w, int flags, int x, int y, int width, int height)
 {
     X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
-    if (c) {
-        c->NETMoveResizeWindow(flags, x, y, width, height);
-    }
+    if (c)
+        c->NETMoveResizeWindow(flags, Xcb::scale(x), Xcb::scale(y), Xcb::scale(width), Xcb::scale(height));
 }
 
 void RootInfo::gotPing(xcb_window_t w, xcb_timestamp_t timestamp)

@@ -82,6 +82,7 @@ public:
          */
         OperationModeXwayland
     };
+    Q_ENUM(OperationMode)
     ~Application() override;
 
     void setConfigLock(bool lock);
@@ -190,6 +191,13 @@ public:
         return m_defaultScreen;
     }
 
+    uint xwaylandScale() const
+    {
+        return m_xwaylandScale;
+    }
+
+    void setXwaylandScale(uint scale);
+
     /**
      * Returns @c true if we're in the middle of destroying the X11 connection.
      */
@@ -228,6 +236,7 @@ public:
 Q_SIGNALS:
     void x11ConnectionChanged();
     void x11ConnectionAboutToBeDestroyed();
+    void xwaylandScaleChanged();
     void workspaceCreated();
     void screensCreated();
     void platformCreated();
@@ -312,6 +321,7 @@ private:
     Platform *m_platform = nullptr;
     bool m_terminating = false;
     bool m_isClosingX11Connection = false;
+    uint m_xwaylandScale = 1;
 };
 
 inline static Application *kwinApp()

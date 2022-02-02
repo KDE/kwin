@@ -18,12 +18,16 @@
 #include "xwaylandlauncher.h"
 #include "xwldrophandler.h"
 
+#include "abstract_client.h"
 #include "abstract_output.h"
+#include "atoms.h"
 #include "main_wayland.h"
 #include "platform.h"
+#include "screens.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
+#include "workspace.h"
 #include "x11eventfilter.h"
 #include "xwayland_logging.h"
 
@@ -209,6 +213,10 @@ void Xwayland::handleXwaylandReady()
 
     delete m_xrandrEventsFilter;
     m_xrandrEventsFilter = new XrandrEventFilter(this);
+    connect(kwinApp(), &Application::xwaylandScaleChanged, this, &Xwayland::refreshScaling);
+
+    kwinApp()->setXwaylandScale(screens()->maxScale());
+    refreshScaling();
 }
 
 void Xwayland::updatePrimary(AbstractOutput *primaryOutput)
@@ -318,6 +326,20 @@ KWaylandServer::AbstractDropHandler *Xwayland::xwlDropHandler()
         return bridge->dnd()->dropHandler();
     }
     return nullptr;
+}
+
+void Xwayland::refreshScaling()
+{
+    if (!atoms->xwaylandGlobalOutputScale.isValid()) {
+        qCDebug(KWIN_XWL) << "Xwayland scaling unsupported";
+        return;
+    }
+
+    const uint scale = kwinApp()->xwaylandScale();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
+    qCDebug(KWIN_XWL) << "Scaling Xwayland to" << scale;
+    xcb_change_property(xcbConn, XCB_PROP_MODE_REPLACE, rootWindow(), atoms->xwaylandGlobalOutputScale, XCB_ATOM_CARDINAL, sizeof(scale) * 8, 1, &scale);
+    xcb_flush(xcbConn);
 }
 
 } // namespace Xwl
