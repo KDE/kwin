@@ -485,7 +485,7 @@ void Window::getWmOpaqueRegion()
     const auto rects = info->opaqueRegion();
     QRegion new_opaque_region;
     for (const auto &r : rects) {
-        new_opaque_region += QRect(r.pos.x, r.pos.y, r.size.width, r.size.height);
+        new_opaque_region += Xcb::fromXNative(QRect(r.pos.x, r.pos.y, r.size.width, r.size.height));
     }
 
     opaque_region = new_opaque_region;
@@ -507,7 +507,7 @@ QRegion Window::shapeRegion() const
             const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.data());
             const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.data());
             for (int i = 0; i < rectCount; ++i) {
-                m_shapeRegion += QRegion(rects[i].x, rects[i].y, rects[i].width, rects[i].height);
+                m_shapeRegion += Xcb::fromXNative(QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height));
             }
             // make sure the shape is sane (X is async, maybe even XShape is broken)
             m_shapeRegion &= QRegion(0, 0, bufferGeometry.width(), bufferGeometry.height());

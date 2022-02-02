@@ -52,6 +52,7 @@ ecm_mark_as_test(testVirtualDesktops)
 set(testClientMachine_SRCS
     ../src/client_machine.cpp
     test_client_machine.cpp
+    xcb_scaling_mock.cpp
 )
 add_executable(testClientMachine ${testClientMachine_SRCS})
 set_target_properties(testClientMachine PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
@@ -80,10 +81,7 @@ ecm_mark_as_test(testClientMachine)
 ########################################################
 # Test XcbWrapper
 ########################################################
-set(testXcbWrapper_SRCS
-    test_xcb_wrapper.cpp
-)
-add_executable(testXcbWrapper ${testXcbWrapper_SRCS})
+add_executable(testXcbWrapper test_xcb_wrapper.cpp xcb_scaling_mock.cpp)
 
 target_link_libraries(testXcbWrapper
     Qt::Test
@@ -103,7 +101,7 @@ add_test(NAME kwin-testXcbWrapper COMMAND testXcbWrapper)
 ecm_mark_as_test(testXcbWrapper)
 
 if (XCB_ICCCM_FOUND)
-    add_executable(testXcbSizeHints test_xcb_size_hints.cpp)
+    add_executable(testXcbSizeHints test_xcb_size_hints.cpp xcb_scaling_mock.cpp)
     set_target_properties(testXcbSizeHints PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
     target_link_libraries(testXcbSizeHints
         Qt::Test
@@ -127,10 +125,7 @@ endif()
 ########################################################
 # Test XcbWindow
 ########################################################
-set(testXcbWindow_SRCS
-    test_xcb_window.cpp
-)
-add_executable(testXcbWindow ${testXcbWindow_SRCS})
+add_executable(testXcbWindow test_xcb_window.cpp xcb_scaling_mock.cpp)
 
 target_link_libraries(testXcbWindow
     Qt::Test

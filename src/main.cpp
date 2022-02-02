@@ -378,6 +378,14 @@ static X11EventFilterContainer *takeEventFilter(X11EventFilter *eventFilter,
     return nullptr;
 }
 
+void Application::setXwaylandScale(qreal scale)
+{
+    if (scale != m_xwaylandScale) {
+        m_xwaylandScale = scale;
+        Q_EMIT xwaylandScaleChanged();
+    }
+}
+
 void Application::unregisterEventFilter(X11EventFilter *filter)
 {
     X11EventFilterContainer *container = nullptr;

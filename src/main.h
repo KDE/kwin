@@ -82,6 +82,7 @@ public:
          */
         OperationModeXwayland
     };
+    Q_ENUM(OperationMode)
     ~Application() override;
 
     void setConfigLock(bool lock);
@@ -190,6 +191,21 @@ public:
         return m_defaultScreen;
     }
 
+    qreal xwaylandScale() const
+    {
+        return m_xwaylandScale;
+    }
+
+    void setXwaylandScale(qreal scale);
+
+    /**
+     * Returns @c true if we're in the middle of destroying the X11 connection.
+     */
+    bool isClosingX11Connection() const
+    {
+        return m_isClosingX11Connection;
+    }
+
 #if KWIN_BUILD_ACTIVITIES
     bool usesKActivities() const
     {
@@ -220,6 +236,7 @@ public:
 Q_SIGNALS:
     void x11ConnectionChanged();
     void x11ConnectionAboutToBeDestroyed();
+    void xwaylandScaleChanged();
     void workspaceCreated();
     void screensCreated();
     void platformCreated();
@@ -299,6 +316,8 @@ private:
 #endif
     Platform *m_platform = nullptr;
     bool m_terminating = false;
+    bool m_isClosingX11Connection = false;
+    qreal m_xwaylandScale = 1;
 };
 
 inline static Application *kwinApp()

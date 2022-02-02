@@ -114,6 +114,7 @@ public:
     bool mapped = false;
     bool hasCacheState = false;
     qreal scaleOverride = 1.;
+    qreal pendingScaleOverride = 1.;
 
     QVector<OutputInterface *> outputs;
 
