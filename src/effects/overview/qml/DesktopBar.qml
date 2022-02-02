@@ -32,6 +32,7 @@ Item {
         topMargin: Math.max((height - contentHeight) / 2, 0)
         contentWidth: contentItem.childrenRect.width
         contentHeight: contentItem.childrenRect.height
+        interactive: contentWidth > width
         clip: true
         flickableDirection: Flickable.HorizontalFlick
 
