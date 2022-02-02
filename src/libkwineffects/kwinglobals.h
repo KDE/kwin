@@ -126,6 +126,11 @@ enum class SwipeDirection {
     Right,
 };
 
+enum class PinchDirection {
+    Expanding,
+    Contracting
+};
+
 /**
  * Represents the state of the session running outside kwin
  * Under Plasma this is managed by ksmserver

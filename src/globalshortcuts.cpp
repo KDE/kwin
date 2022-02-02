@@ -28,27 +28,47 @@ GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
     : m_shortcut(sc)
     , m_action(action)
 {
-    static const QMap<SwipeDirection, SwipeGesture::Direction> dirs = {
+    static const QMap<SwipeDirection, SwipeGesture::Direction> swipeDirs = {
         {SwipeDirection::Up, SwipeGesture::Direction::Up},
         {SwipeDirection::Down, SwipeGesture::Direction::Down},
         {SwipeDirection::Left, SwipeGesture::Direction::Left},
         {SwipeDirection::Right, SwipeGesture::Direction::Right},
     };
-    if (auto swipeGesture = std::get_if<FourFingerSwipeShortcut>(&sc)) {
-        m_gesture.reset(new SwipeGesture);
-        m_gesture->setDirection(dirs[swipeGesture->swipeDirection]);
-        m_gesture->setMaximumFingerCount(4);
-        m_gesture->setMinimumFingerCount(4);
-        QObject::connect(m_gesture.get(), &SwipeGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
-    } else if (auto rtSwipeGesture = std::get_if<FourFingerRealtimeFeedbackSwipeShortcut>(&sc)) {
-        m_gesture.reset(new SwipeGesture);
-        m_gesture->setDirection(dirs[rtSwipeGesture->swipeDirection]);
-        m_gesture->setMinimumDelta(QSizeF(200, 200));
-        m_gesture->setMaximumFingerCount(4);
-        m_gesture->setMinimumFingerCount(4);
-        QObject::connect(m_gesture.get(), &SwipeGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
-        QObject::connect(m_gesture.get(), &SwipeGesture::cancelled, m_action, &QAction::trigger, Qt::QueuedConnection);
-        QObject::connect(m_gesture.get(), &SwipeGesture::progress, [cb = rtSwipeGesture->progressCallback](qreal v) {
+    static const QMap<PinchDirection, PinchGesture::Direction> pinchDirs = {
+        {PinchDirection::Expanding, PinchGesture::Direction::Expanding},
+        {PinchDirection::Contracting, PinchGesture::Direction::Contracting}
+    };
+    if (auto swipeGesture = std::get_if<SwipeShortcut>(&sc)) {
+        m_swipeGesture.reset(new SwipeGesture());
+        m_swipeGesture->setDirection(swipeDirs[swipeGesture->direction]);
+        m_swipeGesture->setMaximumFingerCount(swipeGesture->fingerCount);
+        m_swipeGesture->setMinimumFingerCount(swipeGesture->fingerCount);
+        QObject::connect(m_swipeGesture.get(), &SwipeGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
+    } else if (auto rtSwipeGesture = std::get_if<RealtimeFeedbackSwipeShortcut>(&sc)) {
+        m_swipeGesture.reset(new SwipeGesture());
+        m_swipeGesture->setDirection(swipeDirs[rtSwipeGesture->direction]);
+        m_swipeGesture->setMinimumDelta(QSizeF(200, 200));
+        m_swipeGesture->setMaximumFingerCount(rtSwipeGesture->fingerCount);
+        m_swipeGesture->setMinimumFingerCount(rtSwipeGesture->fingerCount);
+        QObject::connect(m_swipeGesture.get(), &SwipeGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
+        QObject::connect(m_swipeGesture.get(), &SwipeGesture::cancelled, m_action, &QAction::trigger, Qt::QueuedConnection);
+        QObject::connect(m_swipeGesture.get(), &SwipeGesture::progress, [cb = rtSwipeGesture->progressCallback](qreal v) {
+            cb(v);
+        });
+    } else if (auto pinchGesture = std::get_if<PinchShortcut>(&sc)) {
+        m_pinchGesture.reset(new PinchGesture());
+        m_pinchGesture->setDirection(pinchDirs[pinchGesture->direction]);
+        m_pinchGesture->setMaximumFingerCount(pinchGesture->fingerCount);
+        m_pinchGesture->setMinimumFingerCount(pinchGesture->fingerCount);
+        QObject::connect(m_pinchGesture.get(), &PinchGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
+    } else if (auto rtPinchGesture = std::get_if<RealtimeFeedbackPinchShortcut>(&sc)) {
+        m_pinchGesture.reset(new PinchGesture());
+        m_pinchGesture->setDirection(pinchDirs[rtPinchGesture->direction]);
+        m_pinchGesture->setMaximumFingerCount(rtPinchGesture->fingerCount);
+        m_pinchGesture->setMinimumFingerCount(rtPinchGesture->fingerCount);
+        QObject::connect(m_pinchGesture.get(), &PinchGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
+        QObject::connect(m_pinchGesture.get(), &PinchGesture::cancelled, m_action, &QAction::trigger, Qt::QueuedConnection);
+        QObject::connect(m_pinchGesture.get(), &PinchGesture::progress, [cb = rtPinchGesture->scaleCallback](qreal v) {
             cb(v);
         });
     }
@@ -75,7 +95,12 @@ const Shortcut &GlobalShortcut::shortcut() const
 
 SwipeGesture *GlobalShortcut::swipeGesture() const
 {
-    return m_gesture.get();
+    return m_swipeGesture.get();
+}
+
+PinchGesture *GlobalShortcut::pinchGesture() const
+{
+    return m_pinchGesture.get();
 }
 
 GlobalShortcutsManager::GlobalShortcutsManager(QObject *parent)
@@ -123,8 +148,10 @@ bool GlobalShortcutsManager::addIfNotExists(GlobalShortcut sc)
         }
     }
 
-    if (std::holds_alternative<FourFingerSwipeShortcut>(sc.shortcut()) || std::holds_alternative<FourFingerRealtimeFeedbackSwipeShortcut>(sc.shortcut())) {
-        m_gestureRecognizer->registerGesture(sc.swipeGesture());
+    if (std::holds_alternative<SwipeShortcut>(sc.shortcut()) || std::holds_alternative<RealtimeFeedbackSwipeShortcut>(sc.shortcut())) {
+        m_gestureRecognizer->registerSwipeGesture(sc.swipeGesture());
+    } else if (std::holds_alternative<PinchShortcut>(sc.shortcut()) || std::holds_alternative<RealtimeFeedbackPinchShortcut>(sc.shortcut())) {
+        m_gestureRecognizer->registerPinchGesture(sc.pinchGesture());
     }
     connect(sc.action(), &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
     m_shortcuts.push_back(std::move(sc));
@@ -141,14 +168,24 @@ void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardM
     addIfNotExists(GlobalShortcut(PointerAxisShortcut{modifiers, axis}, action));
 }
 
-void GlobalShortcutsManager::registerTouchpadSwipe(QAction *action, SwipeDirection direction)
+void GlobalShortcutsManager::registerTouchpadSwipe(QAction *action, SwipeDirection direction, uint fingerCount)
 {
-    addIfNotExists(GlobalShortcut(FourFingerSwipeShortcut{direction}, action));
+    addIfNotExists(GlobalShortcut(SwipeShortcut{direction, fingerCount}, action));
 }
 
-void GlobalShortcutsManager::registerRealtimeTouchpadSwipe(QAction *action, std::function<void (qreal)> progressCallback, SwipeDirection direction)
+void GlobalShortcutsManager::registerRealtimeTouchpadSwipe(QAction *action, std::function<void (qreal)> progressCallback, SwipeDirection direction, uint fingerCount)
 {
-    addIfNotExists(GlobalShortcut(FourFingerRealtimeFeedbackSwipeShortcut{direction, progressCallback}, action));
+    addIfNotExists(GlobalShortcut(RealtimeFeedbackSwipeShortcut{direction, progressCallback, fingerCount}, action));
+}
+
+void GlobalShortcutsManager::registerTouchpadPinch(QAction *action, PinchDirection direction, uint fingerCount)
+{
+    addIfNotExists(GlobalShortcut(PinchShortcut{direction, fingerCount}, action));
+}
+
+void GlobalShortcutsManager::registerRealtimeTouchpadPinch(QAction *onUp, std::function<void(qreal)> progressCallback, PinchDirection direction, uint fingerCount)
+{
+    addIfNotExists(GlobalShortcut(RealtimeFeedbackPinchShortcut{direction, progressCallback, fingerCount}, onUp));
 }
 
 bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
@@ -231,6 +268,26 @@ void GlobalShortcutsManager::processSwipeEnd()
 {
     m_gestureRecognizer->endSwipeGesture();
     // TODO: cancel on Wayland Seat if one triggered
+}
+
+void GlobalShortcutsManager::processPinchStart(uint fingerCount)
+{
+    m_gestureRecognizer->startPinchGesture(fingerCount);
+}
+
+void GlobalShortcutsManager::processPinchUpdate(qreal scale, qreal angleDelta, const QSizeF &delta)
+{
+    m_gestureRecognizer->updatePinchGesture(scale, angleDelta, delta);
+}
+
+void GlobalShortcutsManager::processPinchCancel()
+{
+    m_gestureRecognizer->cancelPinchGesture();
+}
+
+void GlobalShortcutsManager::processPinchEnd()
+{
+    m_gestureRecognizer->endPinchGesture();
 }
 
 } // namespace

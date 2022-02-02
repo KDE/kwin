@@ -99,9 +99,9 @@ Edge::Edge(ScreenEdges *parent)
         [this] {
             if (isReserved()) {
                 if (activatesForTouchGesture()) {
-                    m_edges->gestureRecognizer()->registerGesture(m_gesture);
+                    m_edges->gestureRecognizer()->registerSwipeGesture (m_gesture);
                 } else {
-                    m_edges->gestureRecognizer()->unregisterGesture(m_gesture);
+                    m_edges->gestureRecognizer()->unregisterSwipeGesture (m_gesture);
                 }
             }
         }
@@ -565,7 +565,7 @@ void Edge::doGeometryUpdate()
 void Edge::activate()
 {
     if (activatesForTouchGesture()) {
-        m_edges->gestureRecognizer()->registerGesture(m_gesture);
+        m_edges->gestureRecognizer()->registerSwipeGesture (m_gesture);
     }
     doActivate();
 }
@@ -576,7 +576,7 @@ void Edge::doActivate()
 
 void Edge::deactivate()
 {
-    m_edges->gestureRecognizer()->unregisterGesture(m_gesture);
+    m_edges->gestureRecognizer()->unregisterSwipeGesture (m_gesture);
     doDeactivate();
 }
 

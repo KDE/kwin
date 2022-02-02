@@ -74,13 +74,15 @@ DesktopGridEffect::DesktopGridEffect()
             activated = true;
             timeline.setDirection(QTimeLine::Forward);
             timelineRunning = true;
-        } else {
+        } else if (timeline.currentTime() > 0) {
             activated = false;
             timeline.setDirection(QTimeLine::Backward);
             timelineRunning = true;
+        } else {
+            finish();
         }
     });
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, a, [this](qreal cb) {
+    effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, 4, a, [this](qreal cb) {
         if (activated) return;
 
         if (timeline.currentValue() == 0) {
@@ -89,15 +91,19 @@ DesktopGridEffect::DesktopGridEffect()
             activated = false;
         }
 
-        timeline.setDirection(QTimeLine::Forward);
         timeline.setCurrentTime(timeline.duration() * cb);
         effects->addRepaintFull();
     });
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, a, [this](qreal cb) {
-        if (!activated) return;
+    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 4, a, [this](qreal cb) {
+        if (activated) return;
 
-        timeline.setDirection(QTimeLine::Backward);
-        timeline.setCurrentTime(timeline.duration() - (timeline.duration() * cb));
+        if (timeline.currentValue() == 0) {
+            activated = true;
+            setup();
+            activated = false;
+        }
+
+        timeline.setCurrentTime(timeline.duration() * cb);
         effects->addRepaintFull();
     });
     connect(&timeline, &QTimeLine::frameChanged, this, []() {

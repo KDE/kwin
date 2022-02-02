@@ -134,8 +134,10 @@ public:
     void registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, Slot slot);
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
-    void registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action);
-    void registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, QAction *onUp, std::function<void(qreal)> progressCallback);
+    void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action);
+    void registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
+    void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action);
+    void registerRealtimeTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
     void registerGlobalAccel(KGlobalAccelInterface *interface);
 
     bool supportsPointerWarping() const;
@@ -380,7 +382,7 @@ public:
      * Event filter for keyboard events.
      *
      * @param event The event information about the key event
-     * @return @c tru to stop further event processing, @c false to pass to next filter.
+     * @return @c true to stop further event processing, @c false to pass to next filter.
      */
     virtual bool keyEvent(QKeyEvent *event);
     virtual bool touchDown(qint32 id, const QPointF &pos, quint32 time);

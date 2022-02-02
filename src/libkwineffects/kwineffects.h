@@ -945,10 +945,13 @@ public:
      * @param action The action which gets triggered when the gesture triggers
      * @since 5.10
      */
-    virtual void registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action) = 0;
+    virtual void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action) = 0;
 
-    virtual void registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, QAction* onUp, std::function<void(qreal)> progressCallback) = 0;
+    virtual void registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction* onUp, std::function<void(qreal)> progressCallback) = 0;
 
+    virtual void registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction* onUp, std::function<void(qreal)> progressCallback) = 0;
+
+    virtual void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action) = 0;
     /**
      * Retrieve the proxy class for an effect if it has one. Will return NULL if
      * the effect isn't loaded or doesn't have a proxy class.
