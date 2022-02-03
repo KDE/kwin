@@ -1567,9 +1567,7 @@ void XdgToplevelClient::installPalette(ServerSideDecorationPaletteInterface *pal
 void XdgToplevelClient::setFullScreen(bool set, bool user)
 {
     set = rules()->checkFullScreen(set);
-
-    const bool wasFullscreen = isRequestedFullScreen();
-    if (wasFullscreen == set) {
+    if (m_isRequestedFullScreen == set) {
         return;
     }
     if (isSpecialWindow()) {
@@ -1579,17 +1577,12 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
         return;
     }
 
-    if (wasFullscreen) {
-        workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
-    } else {
-        setFullscreenGeometryRestore(moveResizeGeometry());
-    }
     m_isRequestedFullScreen = set;
-
     configureDecoration();
 
     if (set) {
         const AbstractOutput *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : kwinApp()->platform()->outputAt(moveResizeGeometry().center());
+        setFullscreenGeometryRestore(moveResizeGeometry());
         moveResize(workspace()->clientArea(FullScreenArea, this, output));
     } else {
         m_fullScreenRequestedOutput.clear();
