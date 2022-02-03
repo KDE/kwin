@@ -1029,9 +1029,9 @@ protected:
     bool isElectricBorderMaximizing() const {
         return m_electricMaximizing;
     }
-    QRect electricBorderMaximizeGeometry(const QPoint &pos) const;
     void updateElectricGeometryRestore();
     QRect quickTileGeometryRestore() const;
+    QRect quickTileGeometry(QuickTileMode mode, const QPoint &pos) const;
     void updateQuickTileMode(QuickTileMode newMode) {
         m_quickTileMode = newMode;
     }
