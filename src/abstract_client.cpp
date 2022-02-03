@@ -1021,6 +1021,7 @@ void AbstractClient::finishInteractiveMoveResize(bool cancel)
         setQuickTileMode(electricBorderMode());
         setElectricBorderMaximizing(false);
     }
+    setElectricBorderMode(QuickTileMode(QuickTileFlag::None));
 
     Q_EMIT clientFinishUserMovedResized(this);
 }
