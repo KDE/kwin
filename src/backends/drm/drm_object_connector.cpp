@@ -23,6 +23,22 @@
 namespace KWin
 {
 
+static bool checkIfEqual(const drmModeModeInfo *one, const drmModeModeInfo *two)
+{
+    return one->clock       == two->clock
+        && one->hdisplay    == two->hdisplay
+        && one->hsync_start == two->hsync_start
+        && one->hsync_end   == two->hsync_end
+        && one->htotal      == two->htotal
+        && one->hskew       == two->hskew
+        && one->vdisplay    == two->vdisplay
+        && one->vsync_start == two->vsync_start
+        && one->vsync_end   == two->vsync_end
+        && one->vtotal      == two->vtotal
+        && one->vscan       == two->vscan
+        && one->vrefresh    == two->vrefresh;
+}
+
 static quint64 refreshRateForMode(_drmModeModeInfo *m)
 {
     // Calculate higher precision (mHz) refresh rate
@@ -81,6 +97,11 @@ uint32_t DrmConnectorMode::blobId()
     return m_blobId;
 }
 
+bool DrmConnectorMode::operator==(const DrmConnectorMode &otherMode)
+{
+    return checkIfEqual(&m_nativeMode, &otherMode.m_nativeMode);
+}
+
 DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
     : DrmObject(gpu, connectorId, {
             PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
@@ -122,11 +143,6 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
     } else {
         qCWarning(KWIN_DRM) << "drmModeGetConnector failed!" << strerror(errno);
     }
-}
-
-DrmConnector::~DrmConnector()
-{
-    qDeleteAll(m_modes);
 }
 
 bool DrmConnector::init()
@@ -197,51 +213,17 @@ QSize DrmConnector::physicalSize() const
     return m_physicalSize;
 }
 
-DrmConnectorMode *DrmConnector::currentMode() const
-{
-    return m_modes[m_modeIndex];
-}
-
-int DrmConnector::currentModeIndex() const
-{
-    return m_modeIndex;
-}
-
-QVector<DrmConnectorMode *> DrmConnector::modes() const
+QVector<QSharedPointer<DrmConnectorMode>> DrmConnector::modes() const
 {
     return m_modes;
 }
 
-void DrmConnector::setModeIndex(int index)
+QSharedPointer<DrmConnectorMode> DrmConnector::findMode(const drmModeModeInfo &modeInfo) const
 {
-    m_modeIndex = index;
-}
-
-static bool checkIfEqual(const drmModeModeInfo *one, const drmModeModeInfo *two)
-{
-    return one->clock       == two->clock
-        && one->hdisplay    == two->hdisplay
-        && one->hsync_start == two->hsync_start
-        && one->hsync_end   == two->hsync_end
-        && one->htotal      == two->htotal
-        && one->hskew       == two->hskew
-        && one->vdisplay    == two->vdisplay
-        && one->vsync_start == two->vsync_start
-        && one->vsync_end   == two->vsync_end
-        && one->vtotal      == two->vtotal
-        && one->vscan       == two->vscan
-        && one->vrefresh    == two->vrefresh;
-}
-
-void DrmConnector::findCurrentMode(drmModeModeInfo currentMode)
-{
-    for (int i = 0; i < m_modes.count(); i++) {
-        if (checkIfEqual(m_modes[i]->nativeMode(), &currentMode)) {
-            m_modeIndex = i;
-            return;
-        }
-    }
-    m_modeIndex = 0;
+    const auto it = std::find_if(m_modes.constBegin(), m_modes.constEnd(), [&modeInfo](const auto &mode) {
+        return checkIfEqual(mode->nativeMode(), &modeInfo);
+    });
+    return it == m_modes.constEnd() ? nullptr : *it;
 }
 
 AbstractWaylandOutput::SubPixel DrmConnector::subpixel() const
@@ -322,12 +304,11 @@ bool DrmConnector::needsModeset() const
 
 void DrmConnector::updateModes()
 {
-    qDeleteAll(m_modes);
     m_modes.clear();
 
     // reload modes
     for (int i = 0; i < m_conn->count_modes; i++) {
-        m_modes.append(new DrmConnectorMode(this, m_conn->modes[i]));
+        m_modes.append(QSharedPointer<DrmConnectorMode>::create(this, m_conn->modes[i]));
     }
 }
 
@@ -408,6 +389,9 @@ bool DrmConnector::updateProperties()
 
     // init modes
     updateModes();
+    if (!m_modes.isEmpty() && !m_pipeline->pending.mode) {
+        m_pipeline->pending.mode = m_modes.constFirst();
+    }
 
     return true;
 }

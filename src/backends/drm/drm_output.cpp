@@ -46,8 +46,8 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
     , m_connector(pipeline->connector())
 {
     m_pipeline->setOutput(this);
-    auto conn = m_pipeline->connector();
-    m_renderLoop->setRefreshRate(conn->currentMode()->refreshRate());
+    const auto conn = m_pipeline->connector();
+    m_renderLoop->setRefreshRate(m_pipeline->pending.mode->refreshRate());
     setSubPixelInternal(conn->subpixel());
     setInternal(conn->isInternal());
     setCapabilityInternal(DrmOutput::Capability::Dpms);
@@ -177,13 +177,13 @@ QVector<AbstractWaylandOutput::Mode> DrmOutput::getModes() const
 {
     bool modeFound = false;
     QVector<Mode> modes;
-    auto conn = m_pipeline->connector();
-    QVector<DrmConnectorMode *> modelist = conn->modes();
+    const auto modelist = m_pipeline->connector()->modes();
 
     modes.reserve(modelist.count());
     for (int i = 0; i < modelist.count(); ++i) {
         Mode mode;
-        if (i == conn->currentModeIndex()) {
+        // compare the actual mode objects, not the pointers!
+        if (*modelist[i] == *m_pipeline->pending.mode) {
             mode.flags |= ModeFlag::Current;
             modeFound = true;
         }
@@ -298,31 +298,21 @@ DrmPlane::Transformations outputToPlaneTransform(DrmOutput::Transform transform)
 
 void DrmOutput::updateModes()
 {
-    auto conn = m_pipeline->connector();
-    conn->updateModes();
-
-    const auto modes = getModes();
-    setModes(modes);
-
-    auto it = std::find_if(modes.constBegin(), modes.constEnd(),
-        [](const AbstractWaylandOutput::Mode &mode){
-            return mode.flags.testFlag(ModeFlag::Current);
-        }
-    );
-    Q_ASSERT(it != modes.constEnd());
-    AbstractWaylandOutput::Mode mode = *it;
-
-    // mode changed
-    if (mode.size != modeSize() || mode.refreshRate != refreshRate()) {
-        m_pipeline->pending.modeIndex = mode.id;
-        if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test)) {
-            m_pipeline->applyPendingChanges();
-            auto mode = m_pipeline->connector()->currentMode();
-            setCurrentModeInternal(mode->size(), mode->refreshRate());
-            m_renderLoop->setRefreshRate(mode->refreshRate());
-        } else {
-            qCWarning(KWIN_DRM) << "Setting changed mode failed!";
-            m_pipeline->revertPendingChanges();
+    m_pipeline->connector()->updateModes();
+    setModes(getModes());
+    if (m_pipeline->pending.crtc) {
+        const auto currentMode = m_pipeline->connector()->findMode(m_pipeline->pending.crtc->queryCurrentMode());
+        if (currentMode != m_pipeline->pending.mode) {
+            // DrmConnector::findCurrentMode might fail
+            m_pipeline->pending.mode = currentMode ? currentMode : m_pipeline->connector()->modes().constFirst();
+            if (DrmPipeline::commitPipelines(m_gpu->pipelines(), DrmPipeline::CommitMode::Test)) {
+                m_pipeline->applyPendingChanges();
+                setCurrentModeInternal(m_pipeline->pending.mode->size(), m_pipeline->pending.mode->refreshRate());
+                m_renderLoop->setRefreshRate(m_pipeline->pending.mode->refreshRate());
+            } else {
+                qCWarning(KWIN_DRM) << "Setting changed mode failed!";
+                m_pipeline->revertPendingChanges();
+            }
         }
     }
 }
@@ -409,21 +399,17 @@ bool DrmOutput::queueChanges(const WaylandOutputConfig &config)
     static bool valid;
     static int envOnlySoftwareRotations = qEnvironmentVariableIntValue("KWIN_DRM_SW_ROTATIONS_ONLY", &valid) == 1 || !valid;
 
-    auto props = config.constChangeSet(this);
+    const auto props = config.constChangeSet(this);
     m_pipeline->pending.active = props->enabled;
-    auto modelist = m_connector->modes();
-    int index = -1;
-    for (int i = 0; i < modelist.size(); i++) {
-        if (modelist[i]->size() == props->modeSize && modelist[i]->refreshRate() == props->refreshRate) {
-            index = i;
-            break;
-        }
-    }
-    if (index == -1) {
+    const auto modelist = m_connector->modes();
+    const auto it = std::find_if(modelist.begin(), modelist.end(), [&props](const auto &mode) {
+        return mode->size() == props->modeSize && mode->refreshRate() == props->refreshRate;
+    });
+    if (it == modelist.end()) {
         qCWarning(KWIN_DRM).nospace() << "Could not find mode " << props->modeSize << "@" << props->refreshRate << " for output " << this;
         return false;
     }
-    m_pipeline->pending.modeIndex = index;
+    m_pipeline->pending.mode = *it;
     m_pipeline->pending.overscan = props->overscan;
     m_pipeline->pending.rgbRange = props->rgbRange;
     m_pipeline->pending.sourceTransformation = outputToPlaneTransform(props->transform);
@@ -448,8 +434,7 @@ void DrmOutput::applyQueuedChanges(const WaylandOutputConfig &config)
     setScale(props->scale);
     setTransformInternal(props->transform);
 
-    m_connector->setModeIndex(m_pipeline->pending.modeIndex);
-    auto mode = m_connector->currentMode();
+    const auto &mode = m_pipeline->pending.mode;
     setCurrentModeInternal(mode->size(), mode->refreshRate());
     m_renderLoop->setRefreshRate(mode->refreshRate());
     setOverscanInternal(m_pipeline->pending.overscan);

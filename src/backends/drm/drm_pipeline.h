@@ -30,6 +30,7 @@ class DrmCrtc;
 class DrmBuffer;
 class DrmDumbBuffer;
 class GammaRamp;
+class DrmConnectorMode;
 
 class DrmGammaRamp
 {
@@ -97,7 +98,7 @@ public:
         DrmCrtc *crtc = nullptr;
         bool active = true; // whether or not the pipeline should be currently used
         bool enabled = true;// whether or not the pipeline needs a crtc
-        int modeIndex = 0;
+        QSharedPointer<DrmConnectorMode> mode;
         uint32_t overscan = 0;
         AbstractWaylandOutput::RgbRange rgbRange = AbstractWaylandOutput::RgbRange::Automatic;
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;

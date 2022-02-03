@@ -41,6 +41,8 @@ public:
     QSize size() const;
     uint32_t refreshRate() const;
 
+    bool operator==(const DrmConnectorMode &otherMode);
+
 private:
     DrmConnector *m_connector;
     drmModeModeInfo m_nativeMode;
@@ -53,7 +55,6 @@ class DrmConnector : public DrmObject
 {
 public:
     DrmConnector(DrmGpu *gpu, uint32_t connectorId);
-    ~DrmConnector() override;
 
     enum class PropertyIndex : uint32_t {
         CrtcId = 0,
@@ -97,11 +98,8 @@ public:
     QString modelName() const;
     QSize physicalSize() const;
 
-    DrmConnectorMode *currentMode() const;
-    int currentModeIndex() const;
-    QVector<DrmConnectorMode *> modes() const;
-    void setModeIndex(int index);
-    void findCurrentMode(drmModeModeInfo currentMode);
+    QVector<QSharedPointer<DrmConnectorMode>> modes() const;
+    QSharedPointer<DrmConnectorMode> findMode(const drmModeModeInfo &modeInfo) const;
     void updateModes();
 
     AbstractWaylandOutput::SubPixel subpixel() const;
@@ -118,8 +116,7 @@ private:
     DrmScopedPointer<drmModeConnector> m_conn;
     Edid m_edid;
     QSize m_physicalSize = QSize(-1, -1);
-    QVector<DrmConnectorMode *> m_modes;
-    int m_modeIndex = 0;
+    QVector<QSharedPointer<DrmConnectorMode>> m_modes;
     uint32_t m_possibleCrtcs = 0;
 
     friend QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj);
