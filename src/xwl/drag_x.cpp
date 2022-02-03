@@ -101,6 +101,12 @@ XToWlDrag::XToWlDrag(X11Source *source)
     connect(&m_selectionSource, &XwlDataSource::finished, this, [this] {
         checkForFinished();
     });
+    connect(&m_selectionSource, &XwlDataSource::cancelled, this, [this] {
+        if (m_visit && !m_visit->leave())  {
+            connect(m_visit, &WlVisit::finish, this, &XToWlDrag::checkForFinished);
+        }
+        checkForFinished();
+    });
     connect(&m_selectionSource, &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
 
     auto *seat = waylandServer()->seat();
@@ -229,7 +235,7 @@ bool XToWlDrag::checkForFinished()
     if (!m_visit->finished()) {
         return false;
     }
-    if (m_dataRequests.size() == 0) {
+    if (m_dataRequests.size() == 0 && m_selectionSource.isAccepted()) {
         // need to wait for first data request
         return false;
     }

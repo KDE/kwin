@@ -47,12 +47,17 @@ public:
     void dndFinished() override {
         Q_EMIT finished();
     }
+    void dndCancelled() override {
+        Q_EMIT cancelled();
+    }
+
     bool isAccepted() const override;
 
 Q_SIGNALS:
     void dataRequested(const QString &mimeType, qint32 fd);
     void dropped();
     void finished();
+    void cancelled();
 
 private:
     QStringList m_mimeTypes;
