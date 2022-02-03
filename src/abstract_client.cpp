@@ -3026,15 +3026,15 @@ void AbstractClient::setElectricBorderMaximizing(bool maximizing)
 {
     m_electricMaximizing = maximizing;
     if (maximizing)
-        outline()->show(electricBorderMaximizeGeometry(Cursors::self()->mouse()->pos()), moveResizeGeometry());
+        outline()->show(quickTileGeometry(electricBorderMode(), Cursors::self()->mouse()->pos()), moveResizeGeometry());
     else
         outline()->hide();
     elevate(maximizing);
 }
 
-QRect AbstractClient::electricBorderMaximizeGeometry(const QPoint &pos) const
+QRect AbstractClient::quickTileGeometry(QuickTileMode mode, const QPoint &pos) const
 {
-    if (electricBorderMode() == QuickTileMode(QuickTileFlag::Maximize)) {
+    if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
         if (maximizeMode() == MaximizeFull)
             return geometryRestore();
         else
@@ -3042,13 +3042,13 @@ QRect AbstractClient::electricBorderMaximizeGeometry(const QPoint &pos) const
     }
 
     QRect ret = workspace()->clientArea(MaximizeArea, this, pos);
-    if (electricBorderMode() & QuickTileFlag::Left)
+    if (mode & QuickTileFlag::Left)
         ret.setRight(ret.left()+ret.width()/2 - 1);
-    else if (electricBorderMode() & QuickTileFlag::Right)
+    else if (mode & QuickTileFlag::Right)
         ret.setLeft(ret.right()-(ret.width()-ret.width()/2) + 1);
-    if (electricBorderMode() & QuickTileFlag::Top)
+    if (mode & QuickTileFlag::Top)
         ret.setBottom(ret.top()+ret.height()/2 - 1);
-    else if (electricBorderMode() & QuickTileFlag::Bottom)
+    else if (mode & QuickTileFlag::Bottom)
         ret.setTop(ret.bottom()-(ret.height()-ret.height()/2) + 1);
 
     return ret;
@@ -3115,8 +3115,6 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if ((mode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Vertical))
         mode &= ~QuickTileMode(QuickTileFlag::Vertical);
 
-    setElectricBorderMode(mode); // used by ::electricBorderMaximizeGeometry(.)
-
     // restore from maximized so that it is possible to tile maximized windows with one hit or by dragging
     if (maximizeMode() != MaximizeRestore) {
 
@@ -3125,7 +3123,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
             setMaximize(false, false);
 
-            moveResize(electricBorderMaximizeGeometry(keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos()));
+            moveResize(quickTileGeometry(mode, keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos()));
             // Store the mode change
             m_quickTileMode = mode;
         } else {
@@ -3187,22 +3185,16 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
                     mode = (~mode & QuickTileFlag::Horizontal) | (mode & QuickTileFlag::Vertical);
                 }
             }
-            setElectricBorderMode(mode); // used by ::electricBorderMaximizeGeometry(.)
         } else if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
             // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
             // Store geometry first, so we can go out of this tile later.
             setGeometryRestore(quickTileGeometryRestore());
         }
 
-        if (mode != QuickTileMode(QuickTileFlag::None)) {
-            m_quickTileMode = mode;
-            // Temporary, so the maximize code doesn't get all confused
-            m_quickTileMode = int(QuickTileFlag::None);
-            moveResize(electricBorderMaximizeGeometry(whichScreen));
-        }
-
-        // Store the mode change
         m_quickTileMode = mode;
+        if (mode != QuickTileMode(QuickTileFlag::None)) {
+            moveResize(quickTileGeometry(mode, whichScreen));
+        }
     }
 
     if (mode == QuickTileMode(QuickTileFlag::None)) {
@@ -3353,7 +3345,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
     }
 
     if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-        moveResize(electricBorderMaximizeGeometry(moveResizeGeometry().center()));
+        moveResize(quickTileGeometry(quickTileMode(), moveResizeGeometry().center()));
         return;
     }
 
