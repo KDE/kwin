@@ -220,6 +220,7 @@ void Scene::paintScreen(AbstractOutput *output, const QList<Toplevel *> &topleve
 
     const QRect geo = output->geometry();
     QRegion update = geo, repaint = geo, valid;
+    painted_screen = output;
 
     paintScreen(geo, repaint, &update, &valid, output->renderLoop(), createProjectionMatrix(output->geometry()));
     clearStackingOrder();
