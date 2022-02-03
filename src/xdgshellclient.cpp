@@ -1670,21 +1670,6 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
         setGeometryRestore(savedGeometry);
     }
 
-    // Conditional quick tiling exit points
-    const auto oldQuickTileMode = quickTileMode();
-    if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-        if (oldMode == MaximizeFull &&
-                !clientArea.contains(geometryRestore().center())) {
-            // Not restoring on the same screen
-            // TODO: The following doesn't work for some reason
-            //quick_tile_mode = QuickTileNone; // And exit quick tile mode manually
-        } else if ((oldMode == MaximizeVertical && m_requestedMaximizeMode == MaximizeRestore) ||
-                  (oldMode == MaximizeFull && m_requestedMaximizeMode == MaximizeHorizontal)) {
-            // Modifying geometry of a tiled window
-            updateQuickTileMode(QuickTileFlag::None); // Exit quick tile mode without restoring geometry
-        }
-    }
-
     const MaximizeMode delta = m_requestedMaximizeMode ^ oldMode;
     QRect geometry = oldGeometry;
 
@@ -1724,13 +1709,14 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
         }
     }
 
+    const auto oldQuickTileMode = quickTileMode();
     if (m_requestedMaximizeMode == MaximizeFull) {
         if (options->electricBorderMaximize()) {
             updateQuickTileMode(QuickTileFlag::Maximize);
         } else {
             updateQuickTileMode(QuickTileFlag::None);
         }
-    } else if (m_requestedMaximizeMode == MaximizeRestore) {
+    } else {
         updateQuickTileMode(QuickTileFlag::None);
     }
 
