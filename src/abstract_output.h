@@ -95,7 +95,11 @@ public:
     ~AbstractOutput() override;
 
     /**
-     * Returns the primary layer. TODO: remove it
+     * Returns a dummy OutputLayer corresponding to the primary plane.
+     *
+     * TODO: remove this. The Compositor should allocate and deallocate hardware planes
+     * after the pre paint pass. Planes must be allocated based on the bounding rect, transform,
+     * and visibility (for the cursor plane).
      */
     OutputLayer *layer() const;
 

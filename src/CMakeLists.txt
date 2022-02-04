@@ -93,6 +93,8 @@ target_sources(kwin PRIVATE
     popup_input_filter.cpp
     renderbackend.cpp
     renderjournal.cpp
+    renderlayer.cpp
+    renderlayerdelegate.cpp
     renderloop.cpp
     rootinfo_filter.cpp
     rulebooksettings.cpp

@@ -10,6 +10,7 @@
 #ifndef KWIN_SCENE_H
 #define KWIN_SCENE_H
 
+#include "renderlayerdelegate.h"
 #include "toplevel.h"
 #include "utils/common.h"
 #include "kwineffects.h"
@@ -33,6 +34,7 @@ class EffectWindowImpl;
 class GLTexture;
 class Item;
 class RenderLoop;
+class Scene;
 class Shadow;
 class ShadowItem;
 class SurfaceItem;
@@ -42,13 +44,32 @@ class SurfacePixmapX11;
 class SurfaceTexture;
 class WindowItem;
 
-// The base class for compositing backends.
+class SceneDelegate : public RenderLayerDelegate
+{
+    Q_OBJECT
+
+public:
+    explicit SceneDelegate(Scene *scene, QObject *parent = nullptr);
+    explicit SceneDelegate(Scene *scene, AbstractOutput *output, QObject *parent = nullptr);
+    ~SceneDelegate() override;
+
+    SurfaceItem *scanoutCandidate() const override;
+    void prePaint() override;
+    void postPaint() override;
+    void paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid) override;
+
+private:
+    Scene *m_scene;
+    AbstractOutput *m_output = nullptr;
+};
+
 class KWIN_EXPORT Scene : public QObject
 {
     Q_OBJECT
+
 public:
     explicit Scene(QObject *parent = nullptr);
-    ~Scene() override = 0;
+    ~Scene() override;
     class EffectFrame;
     class Window;
 
@@ -65,22 +86,17 @@ public:
     QRect geometry() const;
     void setGeometry(const QRect &rect);
 
-    /**
-     * Returns the repaints region for output with the specified @a output.
-     */
-    QRegion repaints(AbstractOutput *output) const;
-    void resetRepaints(AbstractOutput *output);
+    QList<SceneDelegate *> delegates() const;
+    void addDelegate(SceneDelegate *delegate);
+    void removeDelegate(SceneDelegate *delegate);
 
     // Returns true if the ctor failed to properly initialize.
     virtual bool initFailed() const = 0;
 
     SurfaceItem *scanoutCandidate() const;
-
     void prePaint(AbstractOutput *output);
     void postPaint();
     virtual void paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid) = 0;
-
-    void paintScreen(AbstractOutput *output);
 
     /**
      * Adds the Toplevel to the Scene.
@@ -262,12 +278,11 @@ protected:
     // windows in their stacking order
     QVector< Window* > stacking_order;
 private:
-    void removeRepaints(AbstractOutput *output);
     void addCursorRepaints();
 
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
+    QList<SceneDelegate *> m_delegates;
     QHash< Toplevel*, Window* > m_windows;
-    QMap<AbstractOutput *, QRegion> m_repaints;
     QRect m_geometry;
     QMatrix4x4 m_renderTargetProjectionMatrix;
     QRect m_renderTargetRect;

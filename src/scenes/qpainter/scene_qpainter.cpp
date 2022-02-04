@@ -70,18 +70,12 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
 
 void SceneQPainter::paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid)
 {
-    Q_ASSERT(kwinApp()->platform()->isPerScreenRenderingEnabled());
-
     QImage *buffer = m_backend->bufferForScreen(painted_screen);
     if (buffer && !buffer->isNull()) {
-        const QRect geometry = painted_screen->geometry();
         m_painter->begin(buffer);
-        m_painter->setWindow(geometry);
-
-        QRegion updateRegion, validRegion;
-        paintScreen(damage, repaint, &updateRegion, &validRegion);
-        paintCursor(painted_screen, updateRegion);
-
+        m_painter->setWindow(painted_screen->geometry());
+        paintScreen(damage, repaint, &update, &valid);
+        paintCursor(painted_screen, update);
         m_painter->end();
     }
 }
