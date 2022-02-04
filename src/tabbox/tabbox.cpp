@@ -1465,7 +1465,7 @@ void TabBox::accept(bool closeTabBox)
         Workspace::self()->activateClient(c);
         shadeActivate(c);
         if (c->isDesktop()) {
-            Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
+            Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop(), !m_desktopListConfig.isHighlightWindows());
         }
     }
 }
