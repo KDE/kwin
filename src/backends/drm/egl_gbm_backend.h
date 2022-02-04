@@ -69,8 +69,6 @@ public:
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
-    bool directScanoutAllowed(AbstractOutput *output) const override;
-
     QSharedPointer<DrmBuffer> testBuffer(DrmAbstractOutput *output);
     EGLConfig config(uint32_t format) const;
     GbmFormat gbmFormatForDrmFormat(uint32_t format) const;

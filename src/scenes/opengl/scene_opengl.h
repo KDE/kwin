@@ -33,8 +33,7 @@ public:
     explicit SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
     ~SceneOpenGL() override;
     bool initFailed() const override;
-    void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows,
-               RenderLoop *renderLoop) override;
+    void paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     bool makeOpenGLContextCurrent() override;

@@ -74,15 +74,13 @@ public:
     // Returns true if the ctor failed to properly initialize.
     virtual bool initFailed() const = 0;
 
-    // Repaints the given screen areas, windows provides the stacking order.
-    // The entry point for the main part of the painting pass.
-    // returns the time since the last vblank signal - if there's one
-    // ie. "what of this frame is lost to painting"
-    virtual void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows,
-                       RenderLoop *renderLoop) = 0;
+    SurfaceItem *scanoutCandidate() const;
 
+    void prePaint(AbstractOutput *output);
+    void postPaint();
+    virtual void paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid) = 0;
 
-    void paintScreen(AbstractOutput *output, const QList<Toplevel *> &toplevels);
+    void paintScreen(AbstractOutput *output);
 
     /**
      * Adds the Toplevel to the Scene.
@@ -205,7 +203,7 @@ public Q_SLOTS:
     void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 protected:
     virtual Window *createWindow(Toplevel *toplevel) = 0;
-    void createStackingOrder(const QList<Toplevel *> &toplevels);
+    void createStackingOrder();
     void clearStackingOrder();
     // shared implementation, starts painting the screen
     void paintScreen(const QRegion &damage, const QRegion &repaint,

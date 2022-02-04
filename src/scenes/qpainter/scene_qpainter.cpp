@@ -68,34 +68,22 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
     m_painter->restore();
 }
 
-void SceneQPainter::paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &toplevels,
-                          RenderLoop *renderLoop)
+void SceneQPainter::paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid)
 {
     Q_ASSERT(kwinApp()->platform()->isPerScreenRenderingEnabled());
-    painted_screen = output;
 
-    createStackingOrder(toplevels);
-
-    const QRegion repaint = m_backend->beginFrame(output);
-    const QRect geometry = output->geometry();
-
-    QImage *buffer = m_backend->bufferForScreen(output);
+    QImage *buffer = m_backend->bufferForScreen(painted_screen);
     if (buffer && !buffer->isNull()) {
-        renderLoop->beginFrame();
+        const QRect geometry = painted_screen->geometry();
         m_painter->begin(buffer);
         m_painter->setWindow(geometry);
 
         QRegion updateRegion, validRegion;
         paintScreen(damage, repaint, &updateRegion, &validRegion);
-        paintCursor(output, updateRegion);
+        paintCursor(painted_screen, updateRegion);
 
         m_painter->end();
-        renderLoop->endFrame();
-        m_backend->endFrame(output, validRegion, updateRegion);
     }
-
-    // do cleanup
-    clearStackingOrder();
 }
 
 void SceneQPainter::paintBackground(const QRegion &region)

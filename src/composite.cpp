@@ -591,38 +591,6 @@ void Compositor::handleFrameRequested(RenderLoop *renderLoop)
     composite(renderLoop);
 }
 
-QList<Toplevel *> Compositor::windowsToRender() const
-{
-    // Create a list of all windows in the stacking order
-    QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
-
-    // Move elevated windows to the top of the stacking order
-    const QList<EffectWindow *> elevatedList = static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows();
-    for (EffectWindow *c : elevatedList) {
-        Toplevel *t = static_cast<EffectWindowImpl *>(c)->window();
-        windows.removeAll(t);
-        windows.append(t);
-    }
-
-    // Skip windows that are not yet ready for being painted and if screen is locked skip windows
-    // that are neither lockscreen nor inputmethod windows.
-    //
-    // TODO? This cannot be used so carelessly - needs protections against broken clients, the
-    // window should not get focus before it's displayed, handle unredirected windows properly and
-    // so on.
-    for (Toplevel *win : windows) {
-        if (!win->readyForPainting()) {
-            windows.removeAll(win);
-        }
-        if (waylandServer() && waylandServer()->isScreenLocked()) {
-            if(!win->isLockScreen() && !win->isInputMethod()) {
-                windows.removeAll(win);
-            }
-        }
-    }
-    return windows;
-}
-
 void Compositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
@@ -635,39 +603,31 @@ void Compositor::composite(RenderLoop *renderLoop)
     AbstractOutput *output = findOutput(renderLoop);
     fTraceDuration("Paint (", output->name(), ")");
 
-    const auto windows = windowsToRender();
-
-    const QRegion repaints = m_scene->repaints(output);
+    const QRegion damage = m_scene->repaints(output);
     m_scene->resetRepaints(output);
+    m_scene->prePaint(output);
 
-    m_scene->paint(output, repaints, windows, renderLoop);
+    SurfaceItem *scanoutCandidate = m_scene->scanoutCandidate();
+    renderLoop->setFullscreenSurface(scanoutCandidate);
 
-    if (waylandServer()) {
-        const std::chrono::milliseconds frameTime =
-                std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->lastPresentationTimestamp());
-
-        for (Toplevel *window : windows) {
-            if (!window->readyForPainting()) {
-                continue;
-            }
-            if (waylandServer()->isScreenLocked() &&
-                    !(window->isLockScreen() || window->isInputMethod())) {
-                continue;
-            }
-            if (!window->isOnOutput(output)) {
-                continue;
-            }
-            if (auto surface = window->surface()) {
-                surface->frameRendered(frameTime.count());
-            }
-        }
-        if (!Cursors::self()->isCursorHidden()) {
-            Cursor *cursor = Cursors::self()->currentCursor();
-            if (cursor->geometry().intersects(output->geometry())) {
-                cursor->markAsRendered(frameTime);
-            }
+    renderLoop->beginFrame();
+    bool directScanout = false;
+    if (scanoutCandidate) {
+        if (!output->usesSoftwareCursor() && !output->directScanoutInhibited()) {
+            directScanout = m_backend->scanout(output, scanoutCandidate);
         }
     }
+    if (directScanout) {
+        renderLoop->endFrame();
+    } else {
+        QRegion update, valid;
+        const QRegion repaint = m_backend->beginFrame(output);
+        m_scene->paint(damage, repaint, update, valid);
+        renderLoop->endFrame();
+        m_backend->endFrame(output, valid, update);
+    }
+
+    m_scene->postPaint();
 }
 
 bool Compositor::isActive()

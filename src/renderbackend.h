@@ -15,6 +15,7 @@ namespace KWin
 
 class AbstractOutput;
 class OverlayWindow;
+class SurfaceItem;
 
 /**
  * The RenderBackend class is the base class for all rendering backends.
@@ -33,6 +34,12 @@ public:
 
     virtual QRegion beginFrame(AbstractOutput *output) = 0;
     virtual void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
+
+    /**
+     * Tries to directly scan out a surface to the screen
+     * Returns @c true if scanout succeeds, @c false if rendering is necessary
+     */
+    virtual bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem);
 };
 
 } // namespace KWin

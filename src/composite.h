@@ -84,7 +84,6 @@ public:
     // for delayed supportproperty management of effects
     void keepSupportProperty(xcb_atom_t atom);
     void removeSupportProperty(xcb_atom_t atom);
-    QList<Toplevel *> windowsToRender() const;
 
 Q_SIGNALS:
     void compositingToggled(bool active);

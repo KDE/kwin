@@ -306,11 +306,6 @@ QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output
     return m_surfaces[output]->texture();
 }
 
-bool EglGbmBackend::directScanoutAllowed(AbstractOutput *output) const
-{
-    return !output->usesSoftwareCursor() && !output->directScanoutInhibited();
-}
-
 GbmFormat EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const
 {
     // TODO use a hardcoded lookup table where needed instead?

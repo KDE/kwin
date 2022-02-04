@@ -174,83 +174,12 @@ void SceneOpenGL::aboutToStartPainting(AbstractOutput *output, const QRegion &da
     m_backend->aboutToStartPainting(output, damage);
 }
 
-static SurfaceItem *findTopMostSurface(SurfaceItem *item)
+void SceneOpenGL::paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid)
 {
-    const QList<Item *> children = item->childItems();
-    if (children.isEmpty()) {
-        return item;
-    } else {
-        return findTopMostSurface(static_cast<SurfaceItem *>(children.constLast()));
-    }
-}
-
-void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &toplevels,
-                        RenderLoop *renderLoop)
-{
-    painted_screen = output;
-    // actually paint the frame, flushed with the NEXT frame
-    createStackingOrder(toplevels);
-
-    QRegion update;
-    QRegion valid;
-    QRegion repaint;
-
-    renderLoop->beginFrame();
-
-    SurfaceItem *fullscreenSurface = nullptr;
-    for (int i = stacking_order.count() - 1; i >=0; i--) {
-        Window *window = stacking_order[i];
-        Toplevel *toplevel = window->window();
-        if (output && toplevel->isOnOutput(output) && window->isVisible() && toplevel->opacity() > 0) {
-            AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
-            if (!c || !c->isFullScreen()) {
-                break;
-            }
-            if (!window->surfaceItem()) {
-                break;
-            }
-            SurfaceItem *topMost = findTopMostSurface(window->surfaceItem());
-            auto pixmap = topMost->pixmap();
-            if (!pixmap) {
-                break;
-            }
-            pixmap->update();
-            // the subsurface has to be able to cover the whole window
-            if (topMost->position() != QPoint(0, 0)) {
-                break;
-            }
-            // and it has to be completely opaque
-            if (!window->isOpaque() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
-                break;
-            }
-            fullscreenSurface = topMost;
-            break;
-        }
-    }
-    renderLoop->setFullscreenSurface(fullscreenSurface);
-
-    bool directScanout = false;
-    if (m_backend->directScanoutAllowed(output) && !static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
-        directScanout = m_backend->scanout(output, fullscreenSurface);
-    }
-    if (directScanout) {
-        renderLoop->endFrame();
-    } else {
-        // prepare rendering makescontext current on the output
-        repaint = m_backend->beginFrame(output);
-        GLVertexBuffer::streamingBuffer()->beginFrame();
-
-        paintScreen(damage, repaint, &update, &valid);
-        paintCursor(output, valid);
-
-        renderLoop->endFrame();
-
-        GLVertexBuffer::streamingBuffer()->endOfFrame();
-        m_backend->endFrame(output, valid, update);
-    }
-
-    // do cleanup
-    clearStackingOrder();
+    GLVertexBuffer::streamingBuffer()->beginFrame();
+    paintScreen(damage, repaint, &update, &valid);
+    paintCursor(painted_screen, valid);
+    GLVertexBuffer::streamingBuffer()->endOfFrame();
 }
 
 QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) const

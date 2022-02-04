@@ -63,11 +63,6 @@ public:
     virtual void aboutToStartPainting(AbstractOutput *output, const QRegion &damage);
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
-    /**
-     * Tries to directly scan out a surface to the screen)
-     * @return if the scanout fails (or is not supported on the specified screen)
-     */
-    virtual bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem);
 
     /**
      * @brief Whether the creation of the Backend failed.
@@ -109,7 +104,6 @@ public:
     {
         return m_haveNativeFence;
     }
-    virtual bool directScanoutAllowed(AbstractOutput *output) const;
 
     /**
      * The backend specific extensions (e.g. EGL/GLX extensions).

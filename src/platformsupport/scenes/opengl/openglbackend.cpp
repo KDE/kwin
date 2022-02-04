@@ -43,13 +43,6 @@ void OpenGLBackend::setFailed(const QString &reason)
     m_failed = true;
 }
 
-bool OpenGLBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)
-{
-    Q_UNUSED(output)
-    Q_UNUSED(surfaceItem)
-    return false;
-}
-
 void OpenGLBackend::copyPixels(const QRegion &region)
 {
     const int height = screens()->size().height();
@@ -73,13 +66,6 @@ void OpenGLBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &
 {
     Q_UNUSED(output)
     Q_UNUSED(damage)
-}
-
-
-bool OpenGLBackend::directScanoutAllowed(AbstractOutput *output) const
-{
-    Q_UNUSED(output);
-    return false;
 }
 
 SurfaceTexture *OpenGLBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)

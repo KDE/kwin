@@ -23,8 +23,7 @@ class KWIN_EXPORT SceneQPainter : public Scene
 
 public:
     ~SceneQPainter() override;
-    void paint(AbstractOutput *output, const QRegion &damage, const QList<Toplevel *> &windows,
-               RenderLoop *renderLoop) override;
+    void paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     bool initFailed() const override;
     EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;

@@ -76,6 +76,8 @@
 #include "composite.h"
 #include <QtMath>
 
+#include <KWaylandServer/surface_interface.h>
+
 namespace KWin
 {
 
@@ -186,6 +188,84 @@ void Scene::removeRepaints(AbstractOutput *output)
     m_repaints.remove(output);
 }
 
+static SurfaceItem *findTopMostSurface(SurfaceItem *item)
+{
+    const QList<Item *> children = item->childItems();
+    if (children.isEmpty()) {
+        return item;
+    } else {
+        return findTopMostSurface(static_cast<SurfaceItem *>(children.constLast()));
+    }
+}
+
+SurfaceItem *Scene::scanoutCandidate() const
+{
+    SurfaceItem *candidate = nullptr;
+    if (!static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
+        for (int i = stacking_order.count() - 1; i >=0; i--) {
+            Window *window = stacking_order[i];
+            Toplevel *toplevel = window->window();
+            if (painted_screen && toplevel->isOnOutput(painted_screen) && window->isVisible() && toplevel->opacity() > 0) {
+                AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
+                if (!c || !c->isFullScreen()) {
+                    break;
+                }
+                if (!window->surfaceItem()) {
+                    break;
+                }
+                SurfaceItem *topMost = findTopMostSurface(window->surfaceItem());
+                auto pixmap = topMost->pixmap();
+                if (!pixmap) {
+                    break;
+                }
+                pixmap->update();
+                // the subsurface has to be able to cover the whole window
+                if (topMost->position() != QPoint(0, 0)) {
+                    break;
+                }
+                // and it has to be completely opaque
+                if (!window->isOpaque() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
+                    break;
+                }
+                candidate = topMost;
+                break;
+            }
+        }
+    }
+    return candidate;
+}
+
+void Scene::prePaint(AbstractOutput *output)
+{
+    createStackingOrder();
+    painted_screen = output;
+}
+
+void Scene::postPaint()
+{
+    if (waylandServer()) {
+        const std::chrono::milliseconds frameTime =
+                std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->renderLoop()->lastPresentationTimestamp());
+
+        for (Window *window : std::as_const(m_windows)) {
+            Toplevel *toplevel = window->window();
+            if (!toplevel->isOnOutput(painted_screen)) {
+                continue;
+            }
+            if (auto surface = toplevel->surface()) {
+                surface->frameRendered(frameTime.count());
+            }
+        }
+        if (!Cursors::self()->isCursorHidden()) {
+            Cursor *cursor = Cursors::self()->currentCursor();
+            if (cursor->geometry().intersects(painted_screen->geometry())) {
+                cursor->markAsRendered(frameTime);
+            }
+        }
+    }
+
+    clearStackingOrder();
+}
 
 static QMatrix4x4 createProjectionMatrix(const QRect &rect)
 {
@@ -252,9 +332,9 @@ QRegion Scene::mapToRenderTarget(const QRegion &region) const
     return result;
 }
 
-void Scene::paintScreen(AbstractOutput *output, const QList<Toplevel *> &toplevels)
+void Scene::paintScreen(AbstractOutput *output)
 {
-    createStackingOrder(toplevels);
+    createStackingOrder();
     painted_screen = output;
 
     QRegion update, valid;
@@ -594,10 +674,38 @@ void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
     m_windows[deleted] = window;
 }
 
-void Scene::createStackingOrder(const QList<Toplevel *> &toplevels)
+void Scene::createStackingOrder()
 {
+    // Create a list of all windows in the stacking order
+    QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
+
+    // Move elevated windows to the top of the stacking order
+    const QList<EffectWindow *> elevatedList = static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows();
+    for (EffectWindow *c : elevatedList) {
+        Toplevel *t = static_cast<EffectWindowImpl *>(c)->window();
+        windows.removeAll(t);
+        windows.append(t);
+    }
+
+    // Skip windows that are not yet ready for being painted and if screen is locked skip windows
+    // that are neither lockscreen nor inputmethod windows.
+    //
+    // TODO? This cannot be used so carelessly - needs protections against broken clients, the
+    // window should not get focus before it's displayed, handle unredirected windows properly and
+    // so on.
+    for (Toplevel *win : windows) {
+        if (!win->readyForPainting()) {
+            windows.removeAll(win);
+        }
+        if (waylandServer() && waylandServer()->isScreenLocked()) {
+            if(!win->isLockScreen() && !win->isInputMethod()) {
+                windows.removeAll(win);
+            }
+        }
+    }
+
     // TODO: cache the stacking_order in case it has not changed
-    for (Toplevel *c : toplevels) {
+    for (Toplevel *c : std::as_const(windows)) {
         Q_ASSERT(m_windows.contains(c));
         stacking_order.append(m_windows[ c ]);
     }
