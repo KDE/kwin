@@ -26,6 +26,7 @@ class OutputChangeSetV2;
 namespace KWin
 {
 class EffectScreenImpl;
+class OutputLayer;
 class RenderLoop;
 
 class KWIN_EXPORT GammaRamp
@@ -92,6 +93,11 @@ class KWIN_EXPORT AbstractOutput : public QObject
 public:
     explicit AbstractOutput(QObject *parent = nullptr);
     ~AbstractOutput() override;
+
+    /**
+     * Returns the primary layer. TODO: remove it
+     */
+    OutputLayer *layer() const;
 
     /**
      * Returns a short identifiable name of this output.
@@ -262,6 +268,7 @@ Q_SIGNALS:
 private:
     Q_DISABLE_COPY(AbstractOutput)
     EffectScreenImpl *m_effectScreen = nullptr;
+    OutputLayer *m_layer;
     int m_directScanoutCount = 0;
     friend class EffectScreenImpl; // to access m_effectScreen
 };

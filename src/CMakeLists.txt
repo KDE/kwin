@@ -83,6 +83,7 @@ target_sources(kwin PRIVATE
     options.cpp
     osd.cpp
     outline.cpp
+    outputlayer.cpp
     overlaywindow.cpp
     placement.cpp
     platform.cpp

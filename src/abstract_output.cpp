@@ -8,6 +8,7 @@
 */
 
 #include "abstract_output.h"
+#include "outputlayer.h"
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -78,11 +79,17 @@ QDebug operator<<(QDebug debug, const AbstractOutput *output)
 
 AbstractOutput::AbstractOutput(QObject *parent)
     : QObject(parent)
+    , m_layer(new OutputLayer(this))
 {
 }
 
 AbstractOutput::~AbstractOutput()
 {
+}
+
+OutputLayer *AbstractOutput::layer() const
+{
+    return m_layer;
 }
 
 QUuid AbstractOutput::uuid() const
