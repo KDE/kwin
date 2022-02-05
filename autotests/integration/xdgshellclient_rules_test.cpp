@@ -17,6 +17,7 @@
 #include "rules.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
+#include "waylandoutputconfig.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
@@ -135,6 +136,13 @@ private Q_SLOTS:
     void testNoBorderForce();
     void testNoBorderApplyNow();
     void testNoBorderForceTemporarily();
+
+    void testScreenDontAffect();
+    void testScreenApply();
+    void testScreenRemember();
+    void testScreenForce();
+    void testScreenApplyNow();
+    void testScreenForceTemporarily();
 
     void testMatchAfterNameChange();
 
@@ -3682,6 +3690,216 @@ void TestXdgShellClientRules::testNoBorderForceTemporarily()
     QVERIFY(client->noBorder());
     client->setNoBorder(false);
     QVERIFY(!client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenDontAffect()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    setWindowRule("screen", int(1), int(Rules::DontAffect));
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    // The client should not be affected by the rule.
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // The user can still move the client to another screen.
+    workspace()->sendClientToOutput(client, outputs.at(1));
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenApply()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    setWindowRule("screen", int(1), int(Rules::Apply));
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    // The client should be in the screen specified by the rule.
+    QEXPECT_FAIL("", "Applying a screen rule on a new client fails on Wayland", Continue);
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // The user can move the client to another screen.
+    workspace()->sendClientToOutput(client, outputs.at(0));
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenRemember()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    setWindowRule("screen", int(1), int(Rules::Remember));
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    // Initially, the client should be in the first screen
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // Move the client to the second screen.
+    workspace()->sendClientToOutput(client, outputs.at(1));
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Close and reopen the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    QEXPECT_FAIL("", "Applying a screen rule on a new client fails on Wayland", Continue);
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenForce()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+
+    setWindowRule("screen", int(1), int(Rules::Force));
+
+    // The client should be forced to the screen specified by the rule.
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // User should not be able to move the client to another screen.
+    workspace()->sendClientToOutput(client, outputs.at(0));
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Disable the output where the window is on, so the client is moved the other screen
+    WaylandOutputConfig config;
+    auto changeSet = config.changeSet(static_cast<AbstractWaylandOutput *>(outputs.at(1)));
+    changeSet->enabled = false;
+    kwinApp()->platform()->applyOutputChanges(config);
+
+    QVERIFY(!outputs.at(1)->isEnabled());
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // Enable the output and check that the client is moved there again
+    changeSet->enabled = true;
+    kwinApp()->platform()->applyOutputChanges(config);
+
+    QVERIFY(outputs.at(1)->isEnabled());
+    QEXPECT_FAIL("", "Disabling and enabling an output does not move the client to the Forced screen", Continue);
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Close and reopen the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    QEXPECT_FAIL("", "Applying a screen rule on a new client fails on Wayland", Continue);
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenApplyNow()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // Set the rule so the client should move to the screen specified by the rule.
+    setWindowRule("screen", int(1), int(Rules::ApplyNow));
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // The user can move the client to another screen.
+    workspace()->sendClientToOutput(client, outputs.at(0));
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // The rule should not be applied again.
+    client->evaluateWindowRules();
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenForceTemporarily()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    setWindowRule("screen", int(1), int(Rules::ForceTemporarily));
+
+    // The client should be forced the second screen
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // User is not allowed to move it
+    workspace()->sendClientToOutput(client, outputs.at(0));
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Close and reopen the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    // The rule should be discarded now
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
 
     // Destroy the client.
     delete shellSurface;
