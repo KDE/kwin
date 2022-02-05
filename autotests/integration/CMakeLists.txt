@@ -49,7 +49,6 @@ target_link_libraries(KWinIntegrationTestFramework
         kwin
 
     PRIVATE
-        kwin4_effect_builtins
         # Own libraries
         KWinXwaylandServerModule
 
@@ -59,6 +58,7 @@ target_link_libraries(KWinIntegrationTestFramework
         KF5WindowSystemKWinPlugin
         KF5IdleTimeKWinPlugin
 )
+kcoreaddons_target_static_plugins(KWinIntegrationTestFramework "kwin/effects/plugins" LINK_OPTION "PRIVATE")
 set_target_properties(KWinIntegrationTestFramework PROPERTIES CXX_VISIBILITY_PRESET default)
 
 function(integrationTest)

@@ -161,16 +161,3 @@ add_subdirectory(snaphelper)
 add_subdirectory(startupfeedback)
 add_subdirectory(trackmouse)
 add_subdirectory(wobblywindows)
-
-###############################################################################
-
-# Add the builtins plugin
-add_library(kwin4_effect_builtins STATIC)
-kcoreaddons_target_static_plugins(kwin4_effect_builtins "kwin/effects/plugins" LINK_OPTION "PRIVATE")
-target_link_libraries(kwin4_effect_builtins PRIVATE
-    ${kwin_effect_KDE_LIBS}
-    ${kwin_effect_OWN_LIBS}
-    ${kwin_effect_QT_LIBS}
-    ${kwin_effect_XCB_LIBS}
-    ${kwin_effect_XLIB_LIBS}
-)

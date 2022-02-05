@@ -271,11 +271,11 @@ generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
 add_executable(kwin_x11 main_x11.cpp)
 target_link_libraries(kwin_x11
-    kwin4_effect_builtins
     kwin
     KF5::Crash
     Qt::X11Extras
 )
+kcoreaddons_target_static_plugins(kwin_x11 "kwin/effects/plugins")
 
 install(TARGETS kwin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
@@ -287,11 +287,11 @@ add_executable(kwin_wayland
     tabletmodemanager.cpp
 )
 target_link_libraries(kwin_wayland
-    kwin4_effect_builtins
     kwin
     KF5::Crash
     KWinXwaylandServerModule
 )
+kcoreaddons_target_static_plugins(kwin_wayland "kwin/effects/plugins")
 if (HAVE_LIBCAP)
     target_link_libraries(kwin_wayland ${Libcap_LIBRARIES})
 endif()
