@@ -20,6 +20,7 @@ namespace KWin
 
 class AbstractOutput;
 class CompositorSelectionOwner;
+class CursorView;
 class RenderBackend;
 class RenderLayer;
 class RenderLoop;
@@ -148,6 +149,7 @@ private:
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
     Scene *m_scene = nullptr;
+    CursorView *m_cursorView = nullptr;
     RenderBackend *m_backend = nullptr;
     QHash<RenderLoop *, RenderLayer *> m_superlayers;
 };

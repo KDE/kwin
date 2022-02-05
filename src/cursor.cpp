@@ -9,6 +9,7 @@
 
 #include "cursor.h"
 // kwin
+#include "abstract_output.h"
 #include "input.h"
 #include "keyboard_input.h"
 #include "main.h"
@@ -165,6 +166,17 @@ void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
         qputenv("XCURSOR_THEME", m_themeName.toUtf8());
         qputenv("XCURSOR_SIZE", QByteArray::number(m_themeSize));
     }
+}
+
+bool Cursor::isOnOutput(AbstractOutput *output) const
+{
+    if (Cursors::self()->isCursorHidden()) {
+        return false;
+    }
+    if (!geometry().intersects(output->geometry())) {
+        return false;
+    }
+    return !image().isNull();
 }
 
 QRect Cursor::geometry() const

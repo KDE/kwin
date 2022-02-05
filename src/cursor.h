@@ -24,6 +24,8 @@ class QTimer;
 namespace KWin
 {
 
+class AbstractOutput;
+
 namespace ExtendedCursor {
 /**
  * Extension of Qt::CursorShape with values not currently present there
@@ -164,6 +166,11 @@ public:
     QPoint hotspot() const { return m_hotspot; }
     QRect geometry() const;
     QRect rect() const;
+
+    /**
+     * Returns @c true if the cursor is visible on the given output; otherwise returns @c false.
+     */
+    bool isOnOutput(AbstractOutput *output) const;
 
     void updateCursor(const QImage &image, const QPoint &hotspot);
     void markAsRendered(std::chrono::milliseconds timestamp);

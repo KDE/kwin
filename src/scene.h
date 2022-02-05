@@ -224,8 +224,6 @@ protected:
     // shared implementation, starts painting the screen
     void paintScreen(const QRegion &damage, const QRegion &repaint,
                      QRegion *updateRegion, QRegion *validRegion);
-    // Render cursor texture in case hardware cursor is disabled/non-applicable
-    virtual void paintCursor(AbstractOutput *output, const QRegion &region) = 0;
     friend class EffectsHandlerImpl;
     // called after all effects had their paintScreen() called
     void finalPaintScreen(int mask, const QRegion &region, ScreenPaintData& data);
@@ -278,8 +276,6 @@ protected:
     // windows in their stacking order
     QVector< Window* > stacking_order;
 private:
-    void addCursorRepaints();
-
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     QList<SceneDelegate *> m_delegates;
     QHash< Toplevel*, Window* > m_windows;
@@ -289,7 +285,6 @@ private:
     qreal m_renderTargetScale = 1;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
-    QRect m_lastCursorGeometry;
 };
 
 // The base class for windows representations in composite backends

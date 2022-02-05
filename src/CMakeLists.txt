@@ -36,6 +36,9 @@ target_sources(kwin PRIVATE
     client_machine.cpp
     composite.cpp
     cursor.cpp
+    cursorview.cpp
+    cursorview_opengl.cpp
+    cursorview_qpainter.cpp
     dbusinterface.cpp
     debug_console.cpp
     decorationitem.cpp

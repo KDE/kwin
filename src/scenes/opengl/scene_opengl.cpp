@@ -97,78 +97,6 @@ bool SceneOpenGL::initFailed() const
     return !init_ok;
 }
 
-/**
- * Render cursor texture in case hardware cursor is disabled.
- * Useful for screen recording apps or backends that can't do planes.
- */
-void SceneOpenGL::paintCursor(AbstractOutput *output, const QRegion &rendered)
-{
-    Cursor* cursor = Cursors::self()->currentCursor();
-
-    // don't paint if we use hardware cursor or the cursor is hidden
-    if (!output || !output->usesSoftwareCursor()
-        || Cursors::self()->isCursorHidden()
-        || cursor->image().isNull()) {
-        return;
-    }
-
-    // figure out which part of the cursor needs to be repainted
-    const QPoint cursorPos = cursor->pos() - cursor->hotspot();
-    const QRect cursorRect = cursor->rect();
-    QRegion region;
-    for (const QRect &rect : rendered) {
-        region |= rect.translated(-cursorPos).intersected(cursorRect);
-    }
-    if (region.isEmpty()) {
-        return;
-    }
-
-    auto newTexture = [this] {
-        const QImage img = Cursors::self()->currentCursor()->image();
-        if (img.isNull()) {
-            m_cursorTextureDirty = false;
-            return;
-        }
-        m_cursorTexture.reset(new GLTexture(img));
-        m_cursorTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        m_cursorTextureDirty = false;
-    };
-
-    // lazy init texture cursor only in case we need software rendering
-    if (!m_cursorTexture) {
-        newTexture();
-
-        // handle shape update on case cursor image changed
-        connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this] {
-            m_cursorTextureDirty = true;
-        });
-    } else if (m_cursorTextureDirty) {
-        const QImage image = Cursors::self()->currentCursor()->image();
-        if (image.size() == m_cursorTexture->size()) {
-            m_cursorTexture->update(image);
-            m_cursorTextureDirty = false;
-        } else {
-            newTexture();
-        }
-    }
-
-    // get cursor position in projection coordinates
-    QMatrix4x4 mvp = renderTargetProjectionMatrix();
-    mvp.translate(cursorPos.x(), cursorPos.y());
-
-    // handle transparence
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // paint texture in cursor offset
-    m_cursorTexture->bind();
-    ShaderBinder binder(ShaderTrait::MapTexture);
-    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_cursorTexture->render(cursorRect);
-    m_cursorTexture->unbind();
-    glDisable(GL_BLEND);
-}
-
 void SceneOpenGL::aboutToStartPainting(AbstractOutput *output, const QRegion &damage)
 {
     m_backend->aboutToStartPainting(output, damage);
@@ -178,7 +106,6 @@ void SceneOpenGL::paint(const QRegion &damage, const QRegion &repaint, QRegion &
 {
     GLVertexBuffer::streamingBuffer()->beginFrame();
     paintScreen(damage, repaint, &update, &valid);
-    paintCursor(painted_screen, valid);
     GLVertexBuffer::streamingBuffer()->endOfFrame();
 }
 

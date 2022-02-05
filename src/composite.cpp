@@ -8,6 +8,8 @@
 */
 #include "composite.h"
 #include "abstract_output.h"
+#include "cursorview_opengl.h"
+#include "cursorview_qpainter.h"
 #include "dbusinterface.h"
 #include "x11client.h"
 #include "decorations/decoratedclient.h"
@@ -191,6 +193,7 @@ bool Compositor::attemptOpenGLCompositing()
 
     m_backend = backend.take();
     m_scene = scene.take();
+    m_cursorView = new OpenGLCursorView();
 
     // set strict binding
     if (options->isGlStrictBindingFollowsDriver()) {
@@ -215,6 +218,7 @@ bool Compositor::attemptQPainterCompositing()
 
     m_backend = backend.take();
     m_scene = scene.take();
+    m_cursorView = new QPainterCursorView();
 
     qCDebug(KWIN_CORE) << "QPainter compositing has been successfully initialized";
     return true;
@@ -412,12 +416,33 @@ AbstractOutput *Compositor::findOutput(RenderLoop *loop) const
 
 void Compositor::addOutput(AbstractOutput *output)
 {
+    Q_ASSERT(kwinApp()->operationMode() != Application::OperationModeX11);
+
     auto workspaceLayer = new RenderLayer(output->renderLoop());
     workspaceLayer->setDelegate(new SceneDelegate(m_scene, output));
     workspaceLayer->setGeometry(output->geometry());
     connect(output, &AbstractOutput::geometryChanged, this, [output, workspaceLayer]() {
         workspaceLayer->setGeometry(output->geometry());
     });
+
+    auto cursorLayer = new RenderLayer(output->renderLoop());
+    cursorLayer->setVisible(false);
+    cursorLayer->setDelegate(new CursorDelegate(output, m_cursorView));
+    cursorLayer->setParent(workspaceLayer);
+    cursorLayer->setSuperlayer(workspaceLayer);
+
+    auto updateCursorLayer = [output, workspaceLayer, cursorLayer]() {
+        const Cursor *cursor = Cursors::self()->currentCursor();
+        cursorLayer->setVisible(cursor->isOnOutput(output) && output->usesSoftwareCursor());
+        cursorLayer->setGeometry(workspaceLayer->mapFromGlobal(cursor->geometry()));
+        cursorLayer->addRepaintFull();
+    };
+    updateCursorLayer();
+    connect(output, &AbstractOutput::geometryChanged, cursorLayer, updateCursorLayer);
+    connect(Cursors::self(), &Cursors::currentCursorChanged, cursorLayer, updateCursorLayer);
+    connect(Cursors::self(), &Cursors::hiddenChanged, cursorLayer, updateCursorLayer);
+    connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, updateCursorLayer);
+
     addSuperLayer(workspaceLayer);
 }
 
@@ -511,6 +536,9 @@ void Compositor::stop()
 
     delete m_scene;
     m_scene = nullptr;
+
+    delete m_cursorView;
+    m_cursorView = nullptr;
 
     delete m_backend;
     m_backend = nullptr;
@@ -646,6 +674,19 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     postPaintPass(superLayer);
+
+    // TODO: Put it inside the cursor layer once the cursor layer can be backed by a real output layer.
+    if (waylandServer()) {
+        const std::chrono::milliseconds frameTime =
+                std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
+
+        if (!Cursors::self()->isCursorHidden()) {
+            Cursor *cursor = Cursors::self()->currentCursor();
+            if (cursor->geometry().intersects(output->geometry())) {
+                cursor->markAsRendered(frameTime);
+            }
+        }
+    }
 }
 
 void Compositor::prePaintPass(RenderLayer *layer)
