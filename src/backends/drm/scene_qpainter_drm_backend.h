@@ -20,9 +20,8 @@ namespace KWin
 {
 
 class DrmBackend;
-class DrmDumbBuffer;
 class DrmAbstractOutput;
-class DrmGpu;
+class DrmQPainterLayer;
 
 class DrmQPainterBackend : public QPainterBackend
 {
@@ -35,7 +34,7 @@ public:
     void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
-    QMap<AbstractOutput *, QSharedPointer<DumbSwapchain>> m_swapchains;
+    QMap<AbstractOutput *, QSharedPointer<DrmQPainterLayer>> m_swapchains;
     DrmBackend *m_backend;
 };
 }

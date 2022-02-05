@@ -18,6 +18,7 @@ set(DRM_SOURCES
     drm_abstract_output.cpp
     drm_virtual_output.cpp
     drm_lease_output.cpp
+    drm_qpainter_layer.cpp
     egl_gbm_backend.cpp
     egl_gbm_layer.cpp
     drm_buffer_gbm.cpp

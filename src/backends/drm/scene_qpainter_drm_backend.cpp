@@ -12,6 +12,7 @@
 #include "drm_gpu.h"
 #include "drm_buffer.h"
 #include "renderloop_p.h"
+#include "drm_qpainter_layer.h"
 
 #include <drm_fourcc.h>
 
@@ -22,6 +23,9 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
     : QPainterBackend()
     , m_backend(backend)
 {
+    connect(m_backend, &DrmBackend::outputEnabled, this, [this] (const auto output) {
+        m_swapchains[output] = QSharedPointer<DrmQPainterLayer>::create(static_cast<DrmAbstractOutput*>(output));
+    });
     connect(m_backend, &DrmBackend::outputDisabled, this, [this] (const auto output) {
         m_swapchains.remove(output);
     });
@@ -29,26 +33,19 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
 
 QImage *DrmQPainterBackend::bufferForScreen(AbstractOutput *output)
 {
-    return m_swapchains[output]->currentBuffer()->image();
+    return static_cast<DrmDumbBuffer*>(m_swapchains[output]->currentBuffer().data())->image();
 }
 
 QRegion DrmQPainterBackend::beginFrame(AbstractOutput *output)
 {
-    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
-    if (!m_swapchains[output] || m_swapchains[output]->size() != drmOutput->sourceSize()) {
-        m_swapchains[output] = QSharedPointer<DumbSwapchain>::create(drmOutput->gpu(), drmOutput->sourceSize(), DRM_FORMAT_XRGB8888);
-    }
-    QRegion needsRepainting;
-    m_swapchains[output]->acquireBuffer(output->geometry(), &needsRepainting);
-    return needsRepainting;
+    return m_swapchains[output]->startRendering().value_or(QRegion());
 }
 
 void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damage)
 {
     Q_UNUSED(renderedRegion)
-    QSharedPointer<DrmDumbBuffer> back = m_swapchains[output]->currentBuffer();
-    m_swapchains[output]->releaseBuffer(back, damage);
-    static_cast<DrmAbstractOutput*>(output)->present(back, output->geometry());
+    m_swapchains[output]->endRendering(damage);
+    static_cast<DrmAbstractOutput*>(output)->present(m_swapchains[output]->currentBuffer(), output->geometry());
 }
 
 }

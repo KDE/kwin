@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "drm_layer.h"
 
 #include <QSharedPointer>
 #include <QPointer>
@@ -33,35 +34,20 @@ class DrmGpu;
 class SurfaceItem;
 class GLTexture;
 
-class EglGbmLayer {
+class EglGbmLayer : public DrmLayer
+{
 public:
     EglGbmLayer(DrmGpu *renderGpu, DrmAbstractOutput *output);
     ~EglGbmLayer();
 
-    std::optional<QRegion> startRendering();
-    bool endRendering(const QRegion &damagedRegion);
-
-    /**
-     * attempts to directly scan out the current buffer of the surfaceItem
-     * @returns true if scanout was successful
-     *          false if rendering is required
-     */
-    bool scanout(SurfaceItem *surfaceItem);
-
-    /**
-     * @returns a buffer for atomic test commits
-     * If no fitting buffer is available, one is created
-     */
-    QSharedPointer<DrmBuffer> testBuffer();
-
-    /**
-     * only temporarily here, should be migrated out!
-     */
+    std::optional<QRegion> startRendering() override;
+    bool endRendering(const QRegion &damagedRegion) override;
+    bool scanout(SurfaceItem *surfaceItem) override;
+    QSharedPointer<DrmBuffer> testBuffer() override;
+    QSharedPointer<DrmBuffer> currentBuffer() const override;
     QSharedPointer<GLTexture> texture() const;
 
-    QSharedPointer<DrmBuffer> currentBuffer() const;
-
-    DrmAbstractOutput *output() const;
+    DrmAbstractOutput *output() const override;
     int bufferAge() const;
     EGLSurface eglSurface() const;
 
