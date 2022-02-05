@@ -46,7 +46,7 @@ EglBackend::~EglBackend()
     // No completion events will be received for in-flight frames, this may lock the
     // render loop. We need to ensure that the render loop is back to its initial state
     // if the render backend is about to be destroyed.
-    RenderLoopPrivate::get(kwinApp()->platform()->renderLoop())->invalidate();
+    RenderLoopPrivate::get(m_backend->renderLoop())->invalidate();
 }
 
 SurfaceTexture *EglBackend::createSurfaceTextureX11(SurfacePixmapX11 *texture)

@@ -3186,7 +3186,7 @@ public:
     QMatrix4x4 projectionMatrix() const;
 
     /**
-     * Returns the currently rendered screen. Only set for per-screen rendering, e.g. Wayland.
+     * Returns the currently rendered screen. It's always the primary screen on X11.
      */
     EffectScreen *screen() const;
 

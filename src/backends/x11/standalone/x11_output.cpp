@@ -23,6 +23,16 @@ QString X11Output::name() const
     return m_name;
 }
 
+RenderLoop *X11Output::renderLoop() const
+{
+    return m_loop;
+}
+
+void X11Output::setRenderLoop(RenderLoop *loop)
+{
+    m_loop = loop;
+}
+
 int X11Output::xineramaNumber() const
 {
     return m_xineramaNumber;

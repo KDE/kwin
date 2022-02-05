@@ -195,7 +195,7 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
     QRegion valid;
     QRegion repaint;
 
-    if (output) {
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         setRenderTargetRect(output->geometry());
         setRenderTargetScale(output->scale());
     } else {
@@ -248,7 +248,7 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
         repaint = m_backend->beginFrame(output);
         GLVertexBuffer::streamingBuffer()->beginFrame();
 
-        paintScreen(damage.intersected(renderTargetRect()), repaint, &update, &valid, renderLoop);   // call generic implementation
+        paintScreen(damage.intersected(renderTargetRect()), repaint, &update, &valid);
         paintCursor(output, valid);
 
         renderLoop->endFrame();

@@ -21,6 +21,7 @@
 
 namespace KWin
 {
+class RenderLoop;
 class XInputIntegration;
 class WindowSelector;
 class X11EventFilter;
@@ -64,7 +65,7 @@ public:
     void scheduleUpdateOutputs();
     void updateOutputs();
 
-    RenderLoop *renderLoop() const override;
+    RenderLoop *renderLoop() const;
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
 

@@ -255,9 +255,9 @@ void Item::scheduleRepaint(const QRegion &region)
 
 void Item::scheduleRepaintInternal(const QRegion &region)
 {
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
     const QRegion globalRegion = mapToGlobal(region);
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
-        const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
         for (const auto &output : outputs) {
             const QRegion dirtyRegion = globalRegion & output->geometry();
             if (!dirtyRegion.isEmpty()) {
@@ -266,8 +266,8 @@ void Item::scheduleRepaintInternal(const QRegion &region)
             }
         }
     } else {
-        m_repaints[nullptr] += globalRegion;
-        kwinApp()->platform()->renderLoop()->scheduleRepaint(this);
+        m_repaints[outputs.constFirst()] += globalRegion;
+        outputs.constFirst()->renderLoop()->scheduleRepaint(this);
     }
 }
 
@@ -276,16 +276,16 @@ void Item::scheduleFrame()
     if (!isVisible()) {
         return;
     }
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         const QRect geometry = mapToGlobal(rect());
-        const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
         for (const AbstractOutput *output : outputs) {
             if (output->geometry().intersects(geometry)) {
                 output->renderLoop()->scheduleRepaint(this);
             }
         }
     } else {
-        kwinApp()->platform()->renderLoop()->scheduleRepaint(this);
+        outputs.constFirst()->renderLoop()->scheduleRepaint(this);
     }
 }
 

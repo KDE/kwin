@@ -135,6 +135,8 @@ private:
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
 
+    AbstractOutput *findOutput(RenderLoop *loop) const;
+
     State m_state = State::Off;
     CompositorSelectionOwner *m_selectionOwner = nullptr;
     QTimer m_releaseSelectionTimer;

@@ -10,9 +10,15 @@
 namespace KWin
 {
 
-X11PlaceholderOutput::X11PlaceholderOutput(QObject *parent)
+X11PlaceholderOutput::X11PlaceholderOutput(RenderLoop *loop, QObject *parent)
     : AbstractOutput(parent)
+    , m_loop(loop)
 {
+}
+
+RenderLoop *X11PlaceholderOutput::renderLoop() const
+{
+    return m_loop;
 }
 
 QString X11PlaceholderOutput::name() const

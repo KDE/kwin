@@ -90,8 +90,8 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
     // it's CLOCK_MONOTONIC, so no special conversions are needed.
     const std::chrono::microseconds timestamp((uint64_t(swapEvent->ust_hi) << 32) | swapEvent->ust_lo);
 
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(kwinApp()->platform()->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
+    const auto platform = static_cast<X11StandalonePlatform *>(kwinApp()->platform());
+    RenderLoopPrivate::get(platform->renderLoop())->notifyFrameCompleted(timestamp);
 
     return true;
 }
@@ -122,7 +122,7 @@ GlxBackend::~GlxBackend()
     // No completion events will be received for in-flight frames, this may lock the
     // render loop. We need to ensure that the render loop is back to its initial state
     // if the render backend is about to be destroyed.
-    RenderLoopPrivate::get(kwinApp()->platform()->renderLoop())->invalidate();
+    RenderLoopPrivate::get(m_backend->renderLoop())->invalidate();
 
     if (isFailed()) {
         m_overlayWindow->destroy();

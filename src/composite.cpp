@@ -351,18 +351,17 @@ void Compositor::startupWithWorkspace()
     Q_ASSERT(m_scene);
     m_scene->initialize();
 
-    const Platform *platform = kwinApp()->platform();
-    if (platform->isPerScreenRenderingEnabled()) {
-        const QVector<AbstractOutput *> outputs = platform->enabledOutputs();
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         for (AbstractOutput *output : outputs) {
             registerRenderLoop(output->renderLoop(), output);
         }
-        connect(platform, &Platform::outputEnabled,
+        connect(kwinApp()->platform(), &Platform::outputEnabled,
                 this, &Compositor::handleOutputEnabled);
-        connect(platform, &Platform::outputDisabled,
+        connect(kwinApp()->platform(), &Platform::outputDisabled,
                 this, &Compositor::handleOutputDisabled);
     } else {
-        registerRenderLoop(platform->renderLoop(), nullptr);
+        registerRenderLoop(outputs.constFirst()->renderLoop(), nullptr);
     }
 
     m_state = State::On;
@@ -395,6 +394,17 @@ void Compositor::startupWithWorkspace()
 
     // Render at least once.
     m_scene->addRepaintFull();
+}
+
+AbstractOutput *Compositor::findOutput(RenderLoop *loop) const
+{
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (AbstractOutput *output : outputs) {
+        if (output->renderLoop() == loop) {
+            return output;
+        }
+    }
+    return nullptr;
 }
 
 void Compositor::registerRenderLoop(RenderLoop *renderLoop, AbstractOutput *output)
@@ -622,8 +632,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
-    const auto &output = m_renderLoops[renderLoop];
-    fTraceDuration("Paint (", output ? output->name() : QStringLiteral("screens"), ")");
+    AbstractOutput *output = findOutput(renderLoop);
+    fTraceDuration("Paint (", output->name(), ")");
 
     const auto windows = windowsToRender();
 

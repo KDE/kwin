@@ -432,11 +432,6 @@ void Platform::setPerScreenRenderingEnabled(bool enabled)
     m_isPerScreenRenderingEnabled = enabled;
 }
 
-RenderLoop *Platform::renderLoop() const
-{
-    return nullptr;
-}
-
 AbstractOutput *Platform::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     Q_UNUSED(name);

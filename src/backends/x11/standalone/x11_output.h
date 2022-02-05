@@ -32,6 +32,9 @@ public:
 
     QString name() const override;
 
+    RenderLoop *renderLoop() const override;
+    void setRenderLoop(RenderLoop *loop);
+
     int xineramaNumber() const;
     void setXineramaNumber(int number);
 
@@ -54,6 +57,7 @@ private:
     void setCrtc(xcb_randr_crtc_t crtc);
     void setGammaRampSize(int size);
 
+    RenderLoop *m_loop = nullptr;
     xcb_randr_crtc_t m_crtc = XCB_NONE;
     QString m_name;
     QRect m_geometry;

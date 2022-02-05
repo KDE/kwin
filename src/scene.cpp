@@ -143,8 +143,8 @@ void Scene::addRepaint(const QRect &rect)
 
 void Scene::addRepaint(const QRegion &region)
 {
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
-        const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
         for (const auto &output : outputs) {
             const QRegion dirtyRegion = region & output->geometry();
             if (!dirtyRegion.isEmpty()) {
@@ -153,8 +153,8 @@ void Scene::addRepaint(const QRegion &region)
             }
         }
     } else {
-        m_repaints[0] += region;
-        kwinApp()->platform()->renderLoop()->scheduleRepaint();
+        m_repaints[outputs.constFirst()] += region;
+        outputs.constFirst()->renderLoop()->scheduleRepaint();
     }
 }
 
@@ -261,16 +261,17 @@ void Scene::paintScreen(AbstractOutput *output, const QList<Toplevel *> &topleve
     setRenderTargetScale(output->scale());
 
     QRegion update, valid;
-    paintScreen(renderTargetRect(), QRect(), &update, &valid, output->renderLoop());
+    paintScreen(renderTargetRect(), QRect(), &update, &valid);
     clearStackingOrder();
 }
 
 // returns mask and possibly modified region
 void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
-                        QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop)
+                        QRegion *updateRegion, QRegion *validRegion)
 {
     const QRegion displayRegion(geometry());
 
+    const RenderLoop *renderLoop = painted_screen->renderLoop();
     const std::chrono::milliseconds presentTime =
             std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
 
@@ -289,7 +290,7 @@ void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
 
     QRegion region = damage;
 
-    auto screen = painted_screen ? EffectScreenImpl::get(painted_screen) : nullptr;
+    auto screen = EffectScreenImpl::get(painted_screen);
     ScreenPrePaintData pdata;
     pdata.mask = (damage == displayRegion) ? 0 : PAINT_SCREEN_REGION;
     pdata.paint = region;

@@ -60,7 +60,7 @@ void ColorPickerEffect::postPaintScreen()
 {
     effects->postPaintScreen();
 
-    if (m_scheduledPosition != QPoint(-1, -1) && (!m_paintedScreen || m_paintedScreen->geometry().contains(m_scheduledPosition))) {
+    if (m_scheduledPosition != QPoint(-1, -1) && effects->renderTargetRect().contains(m_scheduledPosition)) {
         uint8_t data[3];
         const QRect geo = effects->renderTargetRect();
         const QPoint screenPosition(m_scheduledPosition.x() - geo.x(), m_scheduledPosition.y() - geo.y());

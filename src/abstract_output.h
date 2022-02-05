@@ -180,10 +180,10 @@ public:
     virtual QString serialNumber() const;
 
     /**
-     * Returns the RenderLoop for this output. This function returns @c null if the
-     * underlying platform doesn't support per-screen rendering mode.
+     * Returns the RenderLoop for this output. If the platform does not support per screen
+     * rendering, all outputs will share the same render loop.
      */
-    virtual RenderLoop *renderLoop() const;
+    virtual RenderLoop *renderLoop() const = 0;
 
     void inhibitDirectScanout();
     void uninhibitDirectScanout();

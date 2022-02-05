@@ -531,6 +531,7 @@ void X11StandalonePlatform::doUpdateOutputs()
                     // drm platform do this.
                     Xcb::RandR::CrtcGamma gamma(crtcs[i]);
 
+                    output->setRenderLoop(m_renderLoop);
                     output->setCrtc(crtcs[i]);
                     output->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
                     output->setGeometry(geometry);
@@ -560,7 +561,7 @@ void X11StandalonePlatform::doUpdateOutputs()
     // The workspace handles having no outputs poorly. If the last output is about to be
     // removed, create a dummy output to avoid crashing.
     if (changed.isEmpty() && added.isEmpty()) {
-        auto dummyOutput = new X11PlaceholderOutput();
+        auto dummyOutput = new X11PlaceholderOutput(m_renderLoop);
         m_outputs << dummyOutput;
         Q_EMIT outputAdded(dummyOutput);
         Q_EMIT outputEnabled(dummyOutput);

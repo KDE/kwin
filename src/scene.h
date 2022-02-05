@@ -209,7 +209,7 @@ protected:
     void clearStackingOrder();
     // shared implementation, starts painting the screen
     void paintScreen(const QRegion &damage, const QRegion &repaint,
-                     QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop);
+                     QRegion *updateRegion, QRegion *validRegion);
     // Render cursor texture in case hardware cursor is disabled/non-applicable
     virtual void paintCursor(AbstractOutput *output, const QRegion &region) = 0;
     friend class EffectsHandlerImpl;

@@ -141,11 +141,6 @@ QString AbstractOutput::serialNumber() const
     return QString();
 }
 
-RenderLoop *AbstractOutput::renderLoop() const
-{
-    return nullptr;
-}
-
 void AbstractOutput::inhibitDirectScanout()
 {
     m_directScanoutCount++;

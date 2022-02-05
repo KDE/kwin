@@ -268,7 +268,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
 
 bool ScreenShotEffect::takeScreenShot(ScreenShotAreaData *screenshot)
 {
-    if (!m_paintedScreen) {
+    if (!effects->waylandDisplay()) {
         // On X11, all screens are painted simultaneously and there is no native HiDPI support.
         QImage snapshot = blitScreenshot(screenshot->area);
         if (screenshot->flags & ScreenShotIncludeCursor) {
