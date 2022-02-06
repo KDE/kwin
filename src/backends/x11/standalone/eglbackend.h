@@ -42,6 +42,7 @@ private:
     X11StandalonePlatform *m_backend;
     SoftwareVsyncMonitor *m_vsyncMonitor;
     DamageJournal m_damageJournal;
+    QScopedPointer<GLRenderTarget> m_renderTarget;
     int m_bufferAge = 0;
 };
 

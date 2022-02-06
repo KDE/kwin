@@ -68,11 +68,6 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
         GLRenderTarget renderTarget(*state.m_texture);
         GLRenderTarget::pushRenderTarget(&renderTarget);
 
-        GLVertexBuffer::setVirtualScreenGeometry(screen->geometry());
-        GLRenderTarget::setVirtualScreenGeometry(screen->geometry());
-        GLVertexBuffer::setVirtualScreenScale(screen->devicePixelRatio());
-        GLRenderTarget::setVirtualScreenScale(screen->devicePixelRatio());
-
         effects->renderScreen(screen);
         state.m_captured = true;
         GLRenderTarget::popRenderTarget();
@@ -146,7 +141,7 @@ void ScreenTransformEffect::paintScreen(int mask, const QRegion &region, KWin::S
             shader->setUniform(GLShader::ModelViewProjectionMatrix, matrix);
 
             state.m_texture->bind();
-            state.m_texture->render(screen->geometry(), textureRect);
+            state.m_texture->render(infiniteRegion(), textureRect);
             state.m_texture->unbind();
         }
         effects->addRepaintFull();

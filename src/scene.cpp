@@ -214,17 +214,51 @@ QMatrix4x4 Scene::createProjectionMatrix(const QRect &rect)
     return ret;
 }
 
+QRect Scene::renderTargetRect() const
+{
+    return m_renderTargetRect;
+}
+
+void Scene::setRenderTargetRect(const QRect &rect)
+{
+    m_renderTargetRect = rect;
+}
+
+qreal Scene::renderTargetScale() const
+{
+    return m_renderTargetScale;
+}
+
+void Scene::setRenderTargetScale(qreal scale)
+{
+    m_renderTargetScale = scale;
+}
+
+QRegion Scene::mapToRenderTarget(const QRegion &region) const
+{
+    QRegion result;
+    for (const QRect &rect : region) {
+        result += QRect((rect.x() - m_renderTargetRect.x()) * m_renderTargetScale,
+                        (rect.y() - m_renderTargetRect.y()) * m_renderTargetScale,
+                        rect.width() * m_renderTargetScale,
+                        rect.height() * m_renderTargetScale);
+    }
+    return result;
+}
+
 void Scene::paintScreen(AbstractOutput *output, const QList<Toplevel *> &toplevels)
 {
     createStackingOrder(toplevels);
-
-    const QRect geo = output->geometry();
-    QRegion update = geo, repaint = geo, valid;
     painted_screen = output;
 
-    paintScreen(geo, repaint, &update, &valid, output->renderLoop(), createProjectionMatrix(output->geometry()));
+    setRenderTargetRect(output->geometry());
+    setRenderTargetScale(output->scale());
+
+    QRegion update, valid;
+    paintScreen(renderTargetRect(), QRect(), &update, &valid, output->renderLoop(), createProjectionMatrix(renderTargetRect()));
     clearStackingOrder();
 }
+
 // returns mask and possibly modified region
 void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
                         QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop,

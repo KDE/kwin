@@ -107,6 +107,7 @@ private:
     QHash<xcb_visualid_t, FBConfigInfo *> m_fbconfigHash;
     QHash<xcb_visualid_t, int> m_visualDepthHash;
     std::unique_ptr<SwapEventFilter> m_swapEventFilter;
+    QScopedPointer<GLRenderTarget> m_renderTarget;
     DamageJournal m_damageJournal;
     int m_bufferAge;
     bool m_haveMESACopySubBuffer = false;

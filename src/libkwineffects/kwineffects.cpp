@@ -780,6 +780,26 @@ bool EffectsHandler::isOpenGLCompositing() const
     return compositing_type & OpenGLCompositing;
 }
 
+QRect EffectsHandler::mapToRenderTarget(const QRect &rect) const
+{
+    const QRect targetRect = renderTargetRect();
+    const qreal targetScale = renderTargetScale();
+
+    return QRect((rect.x() - targetRect.x()) * targetScale,
+                 (rect.y() - targetRect.y()) * targetScale,
+                 rect.width() * targetScale,
+                 rect.height() * targetScale);
+}
+
+QRegion EffectsHandler::mapToRenderTarget(const QRegion &region) const
+{
+    QRegion result;
+    for (const QRect &rect : region) {
+        result += mapToRenderTarget(rect);
+    }
+    return result;
+}
+
 EffectsHandler* effects = nullptr;
 
 EffectScreen::EffectScreen(QObject *parent)

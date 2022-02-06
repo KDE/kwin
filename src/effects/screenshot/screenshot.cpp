@@ -364,7 +364,7 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, qreal devicePixel
             image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
             GLTexture texture(GL_RGBA8, nativeSize.width(), nativeSize.height());
             GLRenderTarget target(texture);
-            target.blitFromFramebuffer(geometry);
+            target.blitFromFramebuffer(effects->mapToRenderTarget(geometry));
             // copy content from framebuffer into image
             texture.bind();
             glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE,

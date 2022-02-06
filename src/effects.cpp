@@ -1784,6 +1784,16 @@ bool EffectsHandlerImpl::isCursorHidden() const
     return Cursors::self()->isCursorHidden();
 }
 
+QRect EffectsHandlerImpl::renderTargetRect() const
+{
+    return m_scene->renderTargetRect();
+}
+
+qreal EffectsHandlerImpl::renderTargetScale() const
+{
+    return m_scene->renderTargetScale();
+}
+
 //****************************************
 // EffectScreenImpl
 //****************************************

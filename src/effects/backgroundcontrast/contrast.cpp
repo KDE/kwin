@@ -427,8 +427,8 @@ bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const Windo
 
 void ContrastEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    const QRect screen = GLRenderTarget::virtualScreenGeometry();
     if (shouldContrast(w, mask, data)) {
+        const QRect screen = effects->renderTargetRect();
         QRegion shape = region & contrastRegion(w).translated(w->pos()) & screen;
 
         // let's do the evil parts - someone wants to blur behind a transformed window
@@ -472,7 +472,7 @@ void ContrastEffect::doContrast(EffectWindow *w, const QRegion& shape, const QRe
     const QRegion actualShape = shape & screen;
     const QRect r = actualShape.boundingRect();
 
-    qreal scale = GLRenderTarget::virtualScreenScale();
+    const qreal scale = effects->renderTargetScale();
 
     // Upload geometry for the horizontal and vertical passes
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -487,7 +487,7 @@ void ContrastEffect::doContrast(EffectWindow *w, const QRegion& shape, const QRe
     scratch.setWrapMode(GL_CLAMP_TO_EDGE);
     scratch.bind();
 
-    const QRect sg = GLRenderTarget::virtualScreenGeometry();
+    const QRect sg = effects->renderTargetRect();
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, (r.x() - sg.x()) * scale, (sg.height() - (r.y() - sg.y() + r.height())) * scale,
                         scratch.width(), scratch.height());
 

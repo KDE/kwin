@@ -38,25 +38,14 @@ ShadowBuffer::ShadowBuffer(const QSize &size, const GbmFormat &format)
     : m_size(size)
     , m_drmFormat(format.drmFormat)
 {
-    glGenFramebuffers(1, &m_framebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
-    GLRenderTarget::setKWinFramebuffer(m_framebuffer);
+    m_texture.reset(new GLTexture(internalFormat(format), size));
+    m_texture->setFilter(GL_NEAREST);
 
-    glGenTextures(1, &m_texture);
-    glBindTexture(GL_TEXTURE_2D, m_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat(format), size.width(), size.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
-    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    m_renderTarget.reset(new GLRenderTarget(*m_texture));
+    if (!m_renderTarget->valid()) {
         qCCritical(KWIN_DRM) << "Error: framebuffer not complete!";
         return;
     }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    GLRenderTarget::setKWinFramebuffer(0);
 
     m_vbo.reset(new GLVertexBuffer(KWin::GLVertexBuffer::Static));
     m_vbo->setData(6, 2, vertices, texCoords);
@@ -64,18 +53,11 @@ ShadowBuffer::ShadowBuffer(const QSize &size, const GbmFormat &format)
 
 ShadowBuffer::~ShadowBuffer()
 {
-    glDeleteTextures(1, &m_texture);
-    glDeleteFramebuffers(1, &m_framebuffer);
 }
 
 void ShadowBuffer::render(DrmAbstractOutput *output)
 {
-    const auto size = output->modeSize();
-    glViewport(0, 0, size.width(), size.height());
-    auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-
     QMatrix4x4 mvpMatrix;
-
     switch (output->transform()) {
     case DrmOutput::Transform::Normal:
     case DrmOutput::Transform::Flipped:
@@ -104,35 +86,27 @@ void ShadowBuffer::render(DrmAbstractOutput *output)
         break;
     }
 
+    auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    GLRenderTarget::setKWinFramebuffer(0);
-    glBindTexture(GL_TEXTURE_2D, m_texture);
+    m_texture->bind();
     m_vbo->render(GL_TRIANGLES);
     ShaderManager::instance()->popShader();
-    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void ShadowBuffer::bind()
+GLRenderTarget *ShadowBuffer::renderTarget() const
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
-    GLRenderTarget::setKWinFramebuffer(m_framebuffer);
+    return m_renderTarget.data();
 }
 
-bool ShadowBuffer::isComplete() const
-{
-    return m_texture && m_framebuffer && m_vbo;
-}
-
-int ShadowBuffer::texture() const
+QSharedPointer<GLTexture> ShadowBuffer::texture() const
 {
     return m_texture;
 }
 
-QSize ShadowBuffer::textureSize() const
+bool ShadowBuffer::isComplete() const
 {
-    return m_size;
+    return m_renderTarget->valid() && m_vbo;
 }
 
 uint32_t ShadowBuffer::drmFormat() const

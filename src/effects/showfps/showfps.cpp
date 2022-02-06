@@ -229,7 +229,7 @@ void ShowFpsEffect::paintGL(int fps, const QMatrix4x4 &projectionMatrix)
         QMatrix4x4 mvp = projectionMatrix;
         mvp.translate(fpsTextRect.x(), fpsTextRect.y());
         binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-        fpsText->render(QRegion(fpsTextRect), fpsTextRect);
+        fpsText->render(infiniteRegion(), fpsTextRect);
         fpsText->unbind();
         effects->addRepaint(fpsTextRect);
     }

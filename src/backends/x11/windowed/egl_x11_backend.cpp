@@ -40,9 +40,10 @@ void EglX11Backend::init()
 
 void EglX11Backend::cleanupSurfaces()
 {
-    for (auto it = m_surfaces.begin(); it != m_surfaces.end(); ++it) {
-        eglDestroySurface(eglDisplay(), *it);
+    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
+        eglDestroySurface(eglDisplay(), (*it)->m_eglSurface);
     }
+    qDeleteAll(m_outputs);
 }
 
 bool EglX11Backend::createSurfaces()
@@ -53,26 +54,24 @@ bool EglX11Backend::createSurfaces()
         if (s == EGL_NO_SURFACE) {
             return false;
         }
-        m_surfaces.insert(output, s);
+        EglX11Output *rendererOutput = new EglX11Output;
+        rendererOutput->m_eglSurface = s;
+        rendererOutput->m_renderTarget.reset(new GLRenderTarget(0, output->pixelSize()));
+        m_outputs[output] = rendererOutput;
     }
-    if (m_surfaces.isEmpty()) {
+    if (m_outputs.isEmpty()) {
         return false;
     }
-    setSurface(m_surfaces.first());
+    setSurface(m_outputs.first()->m_eglSurface);
     return true;
 }
 
 QRegion EglX11Backend::beginFrame(AbstractOutput *output)
 {
-    makeContextCurrent(m_surfaces[output]);
-    setupViewport(output);
+    const EglX11Output *rendererOutput = m_outputs[output];
+    makeContextCurrent(rendererOutput->m_eglSurface);
+    GLRenderTarget::pushRenderTarget(rendererOutput->m_renderTarget.data());
     return output->geometry();
-}
-
-void EglX11Backend::setupViewport(AbstractOutput *output)
-{
-    const QSize size = output->pixelSize() * output->scale();
-    glViewport(0, 0, size.width(), size.height());
 }
 
 void EglX11Backend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -80,8 +79,9 @@ void EglX11Backend::endFrame(AbstractOutput *output, const QRegion &renderedRegi
     Q_UNUSED(damagedRegion)
 
     static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
+    GLRenderTarget::popRenderTarget();
 
-    presentSurface(m_surfaces[output], renderedRegion, output->geometry());
+    presentSurface(m_outputs[output]->m_eglSurface, renderedRegion, output->geometry());
 }
 
 void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)

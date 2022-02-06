@@ -274,6 +274,8 @@ public:
     EffectScreen *findScreen(int screenId) const override;
     void renderScreen(EffectScreen *screen) override;
     bool isCursorHidden() const override;
+    QRect renderTargetRect() const override;
+    qreal renderTargetScale() const override;
 
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);

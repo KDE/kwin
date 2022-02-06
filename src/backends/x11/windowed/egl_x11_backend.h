@@ -9,6 +9,7 @@
 #ifndef KWIN_EGL_X11_BACKEND_H
 #define KWIN_EGL_X11_BACKEND_H
 #include "eglonxbackend.h"
+#include "kwinglutils.h"
 
 #include <QMap>
 
@@ -16,6 +17,13 @@ namespace KWin
 {
 
 class X11WindowedBackend;
+
+class EglX11Output
+{
+public:
+    EGLSurface m_eglSurface;
+    QScopedPointer<GLRenderTarget> m_renderTarget;
+};
 
 /**
  * @brief OpenGL Backend using Egl windowing system over an X overlay window.
@@ -39,10 +47,9 @@ protected:
     bool createSurfaces() override;
 
 private:
-    void setupViewport(AbstractOutput *output);
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
 
-    QMap<AbstractOutput *, EGLSurface> m_surfaces;
+    QMap<AbstractOutput *, EglX11Output *> m_outputs;
     X11WindowedBackend *m_backend;
 };
 

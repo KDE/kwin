@@ -194,14 +194,13 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
     QRegion update;
     QRegion valid;
     QRegion repaint;
-    QRect geo;
-    qreal scaling;
+
     if (output) {
-        geo = output->geometry();
-        scaling = output->scale();
+        setRenderTargetRect(output->geometry());
+        setRenderTargetScale(output->scale());
     } else {
-        geo = geometry();
-        scaling = 1;
+        setRenderTargetRect(geometry());
+        setRenderTargetScale(1);
     }
 
     renderLoop->beginFrame();
@@ -249,14 +248,9 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
         repaint = m_backend->beginFrame(output);
         GLVertexBuffer::streamingBuffer()->beginFrame();
 
-        GLVertexBuffer::setVirtualScreenGeometry(geo);
-        GLRenderTarget::setVirtualScreenGeometry(geo);
-        GLVertexBuffer::setVirtualScreenScale(scaling);
-        GLRenderTarget::setVirtualScreenScale(scaling);
+        updateProjectionMatrix(renderTargetRect());
 
-        updateProjectionMatrix(geo);
-
-        paintScreen(damage.intersected(geo), repaint, &update, &valid,
+        paintScreen(damage.intersected(renderTargetRect()), repaint, &update, &valid,
                     renderLoop, projectionMatrix());   // call generic implementation
         paintCursor(output, valid);
 
@@ -815,6 +809,12 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
     float opacity = -1.0;
 
+    // The scissor region must be in the render target local coordinate system.
+    QRegion scissorRegion = infiniteRegion();
+    if (renderContext.hardwareClipping) {
+        scissorRegion = m_scene->mapToRenderTarget(region);
+    }
+
     const QMatrix4x4 modelViewProjection = modelViewProjectionMatrix(mask, data);
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
@@ -835,7 +835,7 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
         renderNode.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         renderNode.texture->bind();
 
-        vbo->draw(region, primitiveType, renderNode.firstVertex,
+        vbo->draw(scissorRegion, primitiveType, renderNode.firstVertex,
                   renderNode.vertexCount, renderContext.hardwareClipping);
     }
 

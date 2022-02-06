@@ -58,7 +58,7 @@ void OutputScreenCastSource::render(GLRenderTarget *target)
 
     GLRenderTarget::pushRenderTarget(target);
     outputTexture->bind();
-    outputTexture->render(geometry, geometry, true);
+    outputTexture->render(infiniteRegion(), geometry);
     outputTexture->unbind();
     GLRenderTarget::popRenderTarget();
 }

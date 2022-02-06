@@ -96,21 +96,24 @@ std::optional<QRegion> EglGbmLayer::startRendering()
             }
         }
     }
+
+    GLRenderTarget::pushRenderTarget(m_gbmSurface->renderTarget());
     if (m_shadowBuffer) {
-        m_shadowBuffer->bind();
         // the blit after rendering will completely overwrite the back buffer anyways
         repaintRegion = QRegion();
+        GLRenderTarget::pushRenderTarget(m_shadowBuffer->renderTarget());
     }
 
-    glViewport(0, 0, m_output->sourceSize().width(), m_output->sourceSize().height());
     return repaintRegion;
 }
 
 bool EglGbmLayer::endRendering(const QRegion &damagedRegion)
 {
     if (m_shadowBuffer) {
+        GLRenderTarget::popRenderTarget();
         m_shadowBuffer->render(m_output);
     }
+    GLRenderTarget::popRenderTarget();
     const auto buffer = m_gbmSurface->swapBuffersForDrm(damagedRegion.intersected(m_output->geometry()));
     if (buffer) {
         m_currentBuffer = buffer;
@@ -198,7 +201,7 @@ bool EglGbmLayer::doesGbmSurfaceFit(GbmSurface *surf) const
 bool EglGbmLayer::doesShadowBufferFit(ShadowBuffer *buffer) const
 {
     if (m_output->needsSoftwareTransformation()) {
-        return buffer && buffer->textureSize() == m_output->sourceSize() && buffer->drmFormat() == m_gbmSurface->format();
+        return buffer && buffer->texture()->size() == m_output->sourceSize() && buffer->drmFormat() == m_gbmSurface->format();
     } else {
         return buffer == nullptr;
     }
@@ -212,9 +215,7 @@ bool EglGbmLayer::doesSwapchainFit(DumbSwapchain *swapchain) const
 QSharedPointer<GLTexture> EglGbmLayer::texture() const
 {
     if (m_shadowBuffer) {
-        const auto glTexture = QSharedPointer<KWin::GLTexture>::create(m_shadowBuffer->texture(), GL_RGBA8, m_shadowBuffer->textureSize());
-        glTexture->setYInverted(true);
-        return glTexture;
+        return m_shadowBuffer->texture();
     }
     GbmBuffer *gbmBuffer = m_gbmSurface->currentBuffer().get();
     if (!gbmBuffer) {

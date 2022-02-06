@@ -17,6 +17,7 @@
 #include "wayland_output.h"
 
 #include "composite.h"
+#include "kwinglutils.h"
 #include "logging.h"
 #include "options.h"
 
@@ -59,6 +60,7 @@ bool EglWaylandOutput::init(EglWaylandBackend *backend)
         return false;
     }
     m_overlay = overlay;
+    m_renderTarget.reset(new GLRenderTarget(0, nativeSize));
 
     EGLSurface eglSurface = EGL_NO_SURFACE;
     if (backend->havePlatformBase()) {
@@ -79,9 +81,20 @@ bool EglWaylandOutput::init(EglWaylandBackend *backend)
     return true;
 }
 
+EglWaylandOutput::~EglWaylandOutput()
+{
+}
+
+GLRenderTarget *EglWaylandOutput::renderTarget() const
+{
+    return m_renderTarget.data();
+}
+
 void EglWaylandOutput::updateSize()
 {
     const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
+    m_renderTarget.reset(new GLRenderTarget(0, nativeSize));
+
     wl_egl_window_resize(m_overlay, nativeSize.width(), nativeSize.height(), 0, 0);
     resetBufferAge();
 }
@@ -245,8 +258,6 @@ bool EglWaylandBackend::makeContextCurrent(EglWaylandOutput *output)
         return false;
     }
 
-    const QSize size = output->m_waylandOutput->pixelSize();
-    glViewport(0, 0, size.width(), size.height());
     return true;
 }
 
@@ -358,9 +369,13 @@ QRegion EglWaylandBackend::beginFrame(AbstractOutput *output)
 
     const auto &eglOutput = m_outputs[output];
     makeContextCurrent(eglOutput);
+
+    GLRenderTarget::pushRenderTarget(eglOutput->renderTarget());
+
     if (supportsBufferAge()) {
         return eglOutput->m_damageJournal.accumulate(eglOutput->m_bufferAge, eglOutput->m_waylandOutput->geometry());
     }
+
     return QRegion();
 }
 
@@ -368,6 +383,9 @@ void EglWaylandBackend::endFrame(AbstractOutput *output, const QRegion &rendered
 {
     Q_ASSERT(m_outputs.contains(output));
     Q_UNUSED(renderedRegion);
+
+    GLRenderTarget::popRenderTarget();
+
     const auto &eglOutput = m_outputs[output];
     QRegion damage = damagedRegion.intersected(eglOutput->m_waylandOutput->geometry());
     presentOnSurface(eglOutput, damage);

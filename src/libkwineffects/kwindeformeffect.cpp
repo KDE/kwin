@@ -155,7 +155,7 @@ void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const 
     shader->setUniform(GLShader::Saturation, data.saturation());
 
     texture->bind();
-    vbo->draw(region, primitiveType, 0, verticesPerQuad * quads.count(), true);
+    vbo->draw(effects->mapToRenderTarget(region), primitiveType, 0, verticesPerQuad * quads.count(), true);
     texture->unbind();
 
     glDisable(GL_BLEND);

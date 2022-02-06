@@ -76,6 +76,8 @@ void EglBackend::init()
         return;
     }
 
+    m_renderTarget.reset(new GLRenderTarget(0, screens()->size()));
+
     kwinApp()->platform()->setSceneEglDisplay(shareDisplay);
     kwinApp()->platform()->setSceneEglGlobalShareContext(shareContext);
     EglOnXBackend::init();
@@ -87,15 +89,13 @@ void EglBackend::screenGeometryChanged()
 
     // The back buffer contents are now undefined
     m_bufferAge = 0;
+    m_renderTarget.reset(new GLRenderTarget(0, screens()->size()));
 }
 
 QRegion EglBackend::beginFrame(AbstractOutput *output)
 {
     Q_UNUSED(output)
     makeCurrent();
-
-    const QSize size = screens()->size();
-    glViewport(0, 0, size.width(), size.height());
 
     QRegion repaint;
     if (supportsBufferAge()) {
@@ -104,6 +104,8 @@ QRegion EglBackend::beginFrame(AbstractOutput *output)
 
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
+    // Push the default framebuffer to the render target stack.
+    GLRenderTarget::pushRenderTarget(m_renderTarget.data());
     return repaint;
 }
 
@@ -125,6 +127,9 @@ void EglBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
             effectiveRenderedRegion = displayRegion;
         }
     }
+
+    // Pop the default render target from the render target stack.
+    GLRenderTarget::popRenderTarget();
 
     presentSurface(surface(), effectiveRenderedRegion, screens()->geometry());
 

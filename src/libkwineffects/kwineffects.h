@@ -1433,6 +1433,26 @@ public:
      */
     virtual void renderScreen(EffectScreen *screen) = 0;
 
+    /**
+     * Returns the rect that's currently being repainted, in the logical pixels.
+     */
+    virtual QRect renderTargetRect() const = 0;
+    /**
+     * Returns the device pixel ratio of the current render target.
+     */
+    virtual qreal renderTargetScale() const = 0;
+
+    /**
+     * Maps the given @a rect from the global screen cordinates to the render
+     * target local coordinate system.
+     */
+    QRect mapToRenderTarget(const QRect &rect) const;
+    /**
+     * Maps the given @a region from the global screen coordinates to the render
+     * target local coordinate system.
+     */
+    QRegion mapToRenderTarget(const QRegion &region) const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever a new @a screen is added to the system.

@@ -401,21 +401,27 @@ public:
      * @param color texture where the scene will be rendered onto
      */
     explicit GLRenderTarget(const GLTexture& color);
+
+    /**
+     * Constructs a wrapper for an already created render target object. The GLRenderTarget
+     * does not take the ownership of the framebuffer object handle.
+     */
+    GLRenderTarget(GLuint handle, const QSize &size);
     ~GLRenderTarget();
 
     /**
-     * Enables this render target.
-     * All OpenGL commands from now on affect this render target until the
-     *  @ref disable method is called
+     * Returns the framebuffer object handle to this render target object.
      */
-    bool enable();
+    GLuint handle() const {
+        return mFramebuffer;
+    }
     /**
-     * Disables this render target, activating whichever target was active
-     *  when @ref enable was called.
+     * Returns the size of the color attachment to this render target object.
      */
-    bool disable();
-
-    bool valid() const  {
+    QSize size() const {
+        return mSize;
+    }
+    bool valid() const {
         return mValid;
     }
 
@@ -427,6 +433,11 @@ public:
     static bool supported()  {
         return sSupported;
     }
+
+    /**
+     * Returns the last bound render target, or @c null if no render target is current.
+     */
+    static GLRenderTarget *currentRenderTarget();
 
     /**
      * Pushes the render target stack of the input parameter in reverse order.
@@ -448,92 +459,37 @@ public:
     static bool blitSupported();
 
     /**
-     * Blits the content of the current draw framebuffer into the texture attached to this FBO.
+     * Blits from @a source rectangle in the current render target to the @a destination rectangle in
+     * this render target.
      *
-     * Be aware that framebuffer blitting may not be supported on all hardware. Use blitSupported to check whether
-     * it is supported.
-     * @param source Geometry in screen coordinates which should be blitted, if not specified complete framebuffer is used
-     * @param destination Geometry in attached texture, if not specified complete texture is used as destination
-     * @param filter The filter to use if blitted content needs to be scaled.
+     * Be aware that framebuffer blitting may not be supported on all hardware. Use blitSupported()
+     * to check whether it is supported.
+     *
+     * The @a source and the @a destination rectangles can have different sizes. The @a filter indicates
+     * what filter will be used in case scaling needs to be performed.
+     *
      * @see blitSupported
      * @since 4.8
      */
     void blitFromFramebuffer(const QRect &source = QRect(), const QRect &destination = QRect(), GLenum filter = GL_LINEAR);
 
-    /**
-     * Sets the virtual screen size to @p s.
-     * @since 5.2
-     */
-    static void setVirtualScreenSize(const QSize &s) {
-        s_virtualScreenSize = s;
-    }
-
-    /**
-     * Sets the virtual screen geometry to @p g.
-     * This is the geometry of the OpenGL window currently being rendered to
-     * in the virtual geometry space the rendering geometries use.
-     * @see virtualScreenGeometry
-     * @since 5.9
-     */
-    static void setVirtualScreenGeometry(const QRect &g) {
-        s_virtualScreenGeometry = g;
-    }
-
-    /**
-     * The geometry of the OpenGL window currently being rendered to
-     * in the virtual geometry space the rendering system uses.
-     * @see setVirtualScreenGeometry
-     * @since 5.9
-     */
-    static QRect virtualScreenGeometry() {
-        return s_virtualScreenGeometry;
-    }
-
-    /**
-     * The scale of the OpenGL window currently being rendered to
-     *
-     * @returns the ratio between the virtual geometry space the rendering
-     * system uses and the target
-     * @since 5.10
-     */
-    static void setVirtualScreenScale(qreal scale) {
-        s_virtualScreenScale = scale;
-    }
-
-    static qreal virtualScreenScale() {
-        return s_virtualScreenScale;
-    }
-
-    /**
-     * The framebuffer of KWin's OpenGL window or other object currently being rendered to
-     *
-     * @since 5.18
-     */
-    static void setKWinFramebuffer(GLuint fb) {
-        s_kwinFramebuffer = fb;
-    }
-
-
 protected:
     void initFBO();
 
-
 private:
+    bool bind();
+
     friend void KWin::cleanupGL();
     static void cleanup();
     static bool sSupported;
     static bool s_blitSupported;
     static QStack<GLRenderTarget*> s_renderTargets;
-    static QSize s_virtualScreenSize;
-    static QRect s_virtualScreenGeometry;
-    static qreal s_virtualScreenScale;
-    static GLint s_virtualScreenViewport[4];
-    static GLuint s_kwinFramebuffer;
 
     GLTexture mTexture;
-    bool mValid;
-
-    GLuint mFramebuffer;
+    GLuint mFramebuffer = 0;
+    QSize mSize;
+    bool mValid = false;
+    bool mForeign = false;
 };
 
 enum VertexAttributeType {
@@ -759,31 +715,8 @@ public:
      */
     static GLVertexBuffer *streamingBuffer();
 
-    /**
-     * Sets the virtual screen geometry to @p g.
-     * This is the geometry of the OpenGL window currently being rendered to
-     * in the virtual geometry space the rendering geometries use.
-     * @since 5.9
-     */
-    static void setVirtualScreenGeometry(const QRect &g) {
-        s_virtualScreenGeometry = g;
-    }
-
-    /**
-     * The scale of the OpenGL window currently being rendered to
-     *
-     * @returns the ratio between the virtual geometry space the rendering
-     * system uses and the target
-     * @since 5.11.3
-     */
-    static void setVirtualScreenScale(qreal s) {
-        s_virtualScreenScale = s;
-    }
-
 private:
     GLVertexBufferPrivate* const d;
-    static QRect s_virtualScreenGeometry;
-    static qreal s_virtualScreenScale;
 };
 
 } // namespace

@@ -23,6 +23,8 @@ struct gbm_surface;
 namespace KWin
 {
 
+class GLRenderTarget;
+
 class GbmSurface
 {
 public:
@@ -38,6 +40,7 @@ public:
 
     QSharedPointer<GbmBuffer> currentBuffer() const;
     QSharedPointer<DrmGbmBuffer> currentDrmBuffer() const;
+    GLRenderTarget *renderTarget() const;
 
     EGLSurface eglSurface() const;
     QSize size() const;
@@ -60,6 +63,7 @@ private:
     QSharedPointer<GbmBuffer> m_currentBuffer;
     QSharedPointer<DrmGbmBuffer> m_currentDrmBuffer;
     QVector<GbmBuffer*> m_lockedBuffers;
+    QScopedPointer<GLRenderTarget> m_renderTarget;
 };
 
 }

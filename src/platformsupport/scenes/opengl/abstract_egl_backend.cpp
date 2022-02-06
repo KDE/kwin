@@ -370,10 +370,7 @@ QSharedPointer<GLTexture> AbstractEglBackend::textureForOutput(AbstractOutput *r
 {
     QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, requestedOutput->pixelSize()));
     GLRenderTarget renderTarget(*texture);
-
-    const QRect geo = requestedOutput->geometry();
-    QRect invGeo(geo.left(), geo.bottom(), geo.width(), -geo.height());
-    renderTarget.blitFromFramebuffer(invGeo);
+    renderTarget.blitFromFramebuffer(QRect(0, texture->height(), texture->width(), -texture->height()));
     return texture;
 }
 

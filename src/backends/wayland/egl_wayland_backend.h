@@ -20,6 +20,7 @@ struct wl_shm;
 
 namespace KWin
 {
+class GLRenderTarget;
 
 namespace Wayland
 {
@@ -32,10 +33,12 @@ class EglWaylandOutput : public QObject
     Q_OBJECT
 public:
     EglWaylandOutput(WaylandOutput *output, QObject *parent = nullptr);
-    ~EglWaylandOutput() override = default;
+    ~EglWaylandOutput() override;
 
     bool init(EglWaylandBackend *backend);
     void updateSize();
+
+    GLRenderTarget *renderTarget() const;
 
 private:
     void resetBufferAge();
@@ -45,6 +48,7 @@ private:
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     int m_bufferAge = 0;
     DamageJournal m_damageJournal;
+    QScopedPointer<GLRenderTarget> m_renderTarget;
 
     friend class EglWaylandBackend;
 };

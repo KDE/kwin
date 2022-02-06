@@ -191,6 +191,13 @@ public:
 
     static QMatrix4x4 createProjectionMatrix(const QRect &rect);
 
+    QRect renderTargetRect() const;
+    void setRenderTargetRect(const QRect &rect);
+    qreal renderTargetScale() const;
+    void setRenderTargetScale(qreal scale);
+
+    QRegion mapToRenderTarget(const QRegion &region) const;
+
 Q_SIGNALS:
     void frameRendered();
 
@@ -266,6 +273,8 @@ private:
     QHash< Toplevel*, Window* > m_windows;
     QMap<AbstractOutput *, QRegion> m_repaints;
     QRect m_geometry;
+    QRect m_renderTargetRect;
+    qreal m_renderTargetScale = 1;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
     QRect m_lastCursorGeometry;

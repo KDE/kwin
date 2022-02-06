@@ -126,7 +126,7 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
                       cursor.y() - (double)area.height() / (zoom*2),
                       (double)area.width() / zoom, (double)area.height() / zoom);
         if (effects->isOpenGLCompositing()) {
-            m_fbo->blitFromFramebuffer(srcArea);
+            m_fbo->blitFromFramebuffer(effects->mapToRenderTarget(srcArea));
             // paint magnifier
             m_texture->bind();
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
