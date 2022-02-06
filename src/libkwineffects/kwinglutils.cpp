@@ -1154,40 +1154,6 @@ void GLRenderTarget::blitFromFramebuffer(const QRect &source, const QRect &desti
     GLRenderTarget::popRenderTarget();
 }
 
-void GLRenderTarget::attachTexture(const GLTexture& target)
-{
-    if (!mValid) {
-        initFBO();
-    }
-
-    if (mTexture.texture() == target.texture()) {
-        return;
-    }
-
-    pushRenderTarget(this);
-
-    mTexture = target;
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           mTexture.target(), mTexture.texture(), 0);
-
-    popRenderTarget();
-}
-
-void GLRenderTarget::detachTexture()
-{
-    if (mTexture.isNull()) {
-        return;
-    }
-
-    pushRenderTarget(this);
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           mTexture.target(), 0, 0);
-
-    popRenderTarget();
-}
-
-
 // ------------------------------------------------------------------
 
 static const uint16_t indices[] = {

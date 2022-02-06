@@ -415,19 +415,6 @@ public:
      */
     bool disable();
 
-    /**
-     * Sets the target texture
-     * @param target texture where the scene will be rendered on
-     * @since 4.8
-     */
-    void attachTexture(const GLTexture& target);
-
-    /**
-     * Detaches the texture that is currently attached to this framebuffer object.
-     * @since 5.13
-     */
-    void detachTexture();
-
     bool valid() const  {
         return mValid;
     }
