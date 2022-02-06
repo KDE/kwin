@@ -10,7 +10,7 @@
 */
 
 #include "kwinconfig.h" // KWIN_HAVE_OPENGL
-
+#include "kwineffects.h"
 #include "kwinglplatform.h"
 #include "kwinglutils_funcs.h"
 #include "kwinglutils.h"
@@ -494,6 +494,11 @@ void GLTexture::unbind()
 {
     Q_D(GLTexture);
     glBindTexture(d->m_target, 0);
+}
+
+void GLTexture::render(const QRect &rect)
+{
+    render(infiniteRegion(), rect, false);
 }
 
 void GLTexture::render(const QRegion &region, const QRect& rect, bool hardwareClipping)

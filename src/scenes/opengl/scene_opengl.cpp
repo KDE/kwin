@@ -164,7 +164,7 @@ void SceneOpenGL::paintCursor(AbstractOutput *output, const QRegion &rendered)
     m_cursorTexture->bind();
     ShaderBinder binder(ShaderTrait::MapTexture);
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_cursorTexture->render(region, cursorRect);
+    m_cursorTexture->render(cursorRect);
     m_cursorTexture->unbind();
     glDisable(GL_BLEND);
 }
@@ -363,7 +363,7 @@ void SceneOpenGL::paintOffscreenQuickView(OffscreenQuickView *w)
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     t->bind();
-    t->render(QRegion(infiniteRegion()), w->geometry());
+    t->render(w->geometry());
     t->unbind();
     glDisable(GL_BLEND);
 
@@ -944,8 +944,7 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
     if (m_effectFrame->geometry().isEmpty())
         return; // Nothing to display
 
-    Q_UNUSED(_region);
-    const QRegion region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
+    Q_UNUSED(_region); // TODO: Old region doesn't seem to work with OpenGL
 
     GLShader* shader = m_effectFrame->shader();
     if (!shader) {
@@ -1087,7 +1086,7 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
         mvp.translate(pt.x(), pt.y());
         shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
-        m_unstyledVBO->render(region, GL_TRIANGLES);
+        m_unstyledVBO->render(GL_TRIANGLES);
         m_unstyledTexture->unbind();
     } else if (m_effectFrame->style() == EffectFrameStyled) {
         if (!m_texture)   // Lazy creation
@@ -1106,7 +1105,7 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
         mvp.translate(rect.x(), rect.y());
         shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
-        m_texture->render(region, rect);
+        m_texture->render(rect);
         m_texture->unbind();
 
     }
@@ -1126,7 +1125,7 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
             shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             m_selectionTexture->bind();
-            m_selectionTexture->render(region, m_effectFrame->selection());
+            m_selectionTexture->render(m_effectFrame->selection());
             m_selectionTexture->unbind();
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
@@ -1148,7 +1147,7 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
             }
 
             m_oldIconTexture->bind();
-            m_oldIconTexture->render(region, QRect(topLeft, m_effectFrame->iconSize()));
+            m_oldIconTexture->render(QRect(topLeft, m_effectFrame->iconSize()));
             m_oldIconTexture->unbind();
             if (shader) {
                 const float a = opacity * m_effectFrame->crossFadeProgress();
@@ -1165,7 +1164,7 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
             m_iconTexture = new GLTexture(m_effectFrame->icon().pixmap(m_effectFrame->iconSize()));
         }
         m_iconTexture->bind();
-        m_iconTexture->render(region, QRect(topLeft, m_effectFrame->iconSize()));
+        m_iconTexture->render(QRect(topLeft, m_effectFrame->iconSize()));
         m_iconTexture->unbind();
     }
 
@@ -1181,7 +1180,7 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
             }
 
             m_oldTextTexture->bind();
-            m_oldTextTexture->render(region, m_effectFrame->geometry());
+            m_oldTextTexture->render(m_effectFrame->geometry());
             m_oldTextTexture->unbind();
             if (shader) {
                 const float a = opacity * m_effectFrame->crossFadeProgress();
@@ -1198,7 +1197,7 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
 
         if (m_textTexture) {
             m_textTexture->bind();
-            m_textTexture->render(region, m_effectFrame->geometry());
+            m_textTexture->render(m_effectFrame->geometry());
             m_textTexture->unbind();
         }
     }

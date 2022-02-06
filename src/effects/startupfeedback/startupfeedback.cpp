@@ -229,7 +229,7 @@ void StartupFeedbackEffect::paintScreen(int mask, const QRegion &region, ScreenP
         QMatrix4x4 mvp = data.projectionMatrix();
         mvp.translate(m_currentGeometry.x(), m_currentGeometry.y());
         ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-        texture->render(infiniteRegion(), m_currentGeometry);
+        texture->render(m_currentGeometry);
         ShaderManager::instance()->popShader();
         texture->unbind();
         glDisable(GL_BLEND);

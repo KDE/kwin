@@ -141,7 +141,7 @@ void ScreenTransformEffect::paintScreen(int mask, const QRegion &region, KWin::S
             shader->setUniform(GLShader::ModelViewProjectionMatrix, matrix);
 
             state.m_texture->bind();
-            state.m_texture->render(infiniteRegion(), textureRect);
+            state.m_texture->render(textureRect);
             state.m_texture->unbind();
         }
         effects->addRepaintFull();

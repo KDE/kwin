@@ -427,7 +427,7 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
 
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            m_cursor.texture->render(infiniteRegion(), cursorRect);
+            m_cursor.texture->render(cursorRect);
             glDisable(GL_BLEND);
             m_cursor.texture->unbind();
             m_cursor.lastRect = cursorRect;
