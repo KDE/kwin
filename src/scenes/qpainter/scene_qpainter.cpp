@@ -444,7 +444,7 @@ void SceneQPainterDecorationRenderer::render(const QRegion &region)
         }
         QPainter painter(&m_images[index]);
         painter.setRenderHint(QPainter::Antialiasing);
-        painter.setWindow(QRect(partRect.topLeft(), partRect.size() * qPainterEffectiveDevicePixelRatio(&painter)));
+        painter.setWindow(QRect(partRect.topLeft(), partRect.size() * effectiveDevicePixelRatio()));
         painter.setClipRect(rect);
         painter.save();
         // clear existing part
@@ -466,7 +466,7 @@ void SceneQPainterDecorationRenderer::resizeImages()
     client()->client()->layoutDecorationRects(left, top, right, bottom);
 
     auto checkAndCreate = [this](int index, const QSize &size) {
-        auto dpr = devicePixelRatio();
+        auto dpr = effectiveDevicePixelRatio();
         if (m_images[index].size() != size * dpr ||
             m_images[index].devicePixelRatio() != dpr)
         {

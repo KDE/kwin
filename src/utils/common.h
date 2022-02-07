@@ -123,15 +123,6 @@ void KWIN_EXPORT ungrabXServer();
 bool KWIN_EXPORT grabXKeyboard(xcb_window_t w = XCB_WINDOW_NONE);
 void KWIN_EXPORT ungrabXKeyboard();
 
-/**
- * QPainter::setWindow() doesn't work as expected when the device pixel ratio of the paint
- * device is less than 1.
- *
- * QPainter simply doesn't allow the effective scale factor to be less than 1. Use this function
- * to determine the effective device pixel ratio by which the window rect has to be scaled.
- */
-qreal KWIN_EXPORT qPainterEffectiveDevicePixelRatio(const QPainter *painter);
-
 static inline QRegion mapRegion(const QMatrix4x4 &matrix, const QRegion &region)
 {
     QRegion result;
