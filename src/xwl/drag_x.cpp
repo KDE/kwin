@@ -214,6 +214,10 @@ using Mime = QPair<QString, xcb_atom_t>;
 
 void XToWlDrag::setDragTarget()
 {
+    if (!m_visit) {
+        return;
+    }
+
     auto *ac = m_visit->target();
 
     auto seat = waylandServer()->seat();
