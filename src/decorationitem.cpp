@@ -68,6 +68,12 @@ void DecorationRenderer::resetDamage()
     m_damage = QRegion();
 }
 
+qreal DecorationRenderer::effectiveDevicePixelRatio() const
+{
+    // QPainter won't let paint with a device pixel ratio less than 1.
+    return std::max(qreal(1.0), devicePixelRatio());
+}
+
 qreal DecorationRenderer::devicePixelRatio() const
 {
     return m_devicePixelRatio;
@@ -107,7 +113,7 @@ QImage DecorationRenderer::renderToImage(const QRect &geo)
     image.fill(Qt::transparent);
     QPainter p(&image);
     p.setRenderHint(QPainter::Antialiasing);
-    p.setWindow(QRect(geo.topLeft(), geo.size() * qPainterEffectiveDevicePixelRatio(&p)));
+    p.setWindow(QRect(geo.topLeft(), geo.size() * effectiveDevicePixelRatio()));
     p.setClipRect(geo);
     renderToPainter(&p, geo);
     return image;
@@ -230,7 +236,7 @@ WindowQuadList DecorationItem::buildQuads() const
     }
 
     QRect left, top, right, bottom;
-    const qreal devicePixelRatio = m_renderer->devicePixelRatio();
+    const qreal devicePixelRatio = m_renderer->effectiveDevicePixelRatio();
     const int texturePad = DecorationRenderer::TexturePad;
 
     if (const AbstractClient *client = qobject_cast<const AbstractClient *>(m_window)) {

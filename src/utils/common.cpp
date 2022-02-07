@@ -181,11 +181,6 @@ Qt::KeyboardModifiers x11ToQtKeyboardModifiers(int state)
     return ret;
 }
 
-qreal qPainterEffectiveDevicePixelRatio(const QPainter *painter)
-{
-    return std::max(qreal(1), painter->device()->devicePixelRatioF());
-}
-
 QPoint popupOffset(const QRect &anchorRect, const Qt::Edges anchorEdge, const Qt::Edges gravity, const QSize popupSize)
 {
     QPoint anchorPoint;

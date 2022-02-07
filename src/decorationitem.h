@@ -38,6 +38,7 @@ public:
     void addDamage(const QRegion &region);
     void resetDamage();
 
+    qreal effectiveDevicePixelRatio() const;
     qreal devicePixelRatio() const;
     void setDevicePixelRatio(qreal dpr);
 

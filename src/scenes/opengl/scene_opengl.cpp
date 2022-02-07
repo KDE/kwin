@@ -1536,9 +1536,10 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
     QRect left, top, right, bottom;
     client()->client()->layoutDecorationRects(left, top, right, bottom);
 
-    const int topHeight = std::ceil(top.height() * devicePixelRatio());
-    const int bottomHeight = std::ceil(bottom.height() * devicePixelRatio());
-    const int leftWidth = std::ceil(left.width() * devicePixelRatio());
+    const qreal devicePixelRatio = effectiveDevicePixelRatio();
+    const int topHeight = std::ceil(top.height() * devicePixelRatio);
+    const int bottomHeight = std::ceil(bottom.height() * devicePixelRatio);
+    const int leftWidth = std::ceil(left.width() * devicePixelRatio);
 
     const QPoint topPosition(0, 0);
     const QPoint bottomPosition(0, topPosition.y() + topHeight + (2 * TexturePad));
@@ -1547,14 +1548,15 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
 
     const QRect dirtyRect = region.boundingRect();
 
-    renderPart(top.intersected(dirtyRect), top, topPosition);
-    renderPart(bottom.intersected(dirtyRect), bottom, bottomPosition);
-    renderPart(left.intersected(dirtyRect), left, leftPosition, true);
-    renderPart(right.intersected(dirtyRect), right, rightPosition, true);
+    renderPart(top.intersected(dirtyRect), top, topPosition, devicePixelRatio);
+    renderPart(bottom.intersected(dirtyRect), bottom, bottomPosition, devicePixelRatio);
+    renderPart(left.intersected(dirtyRect), left, leftPosition, devicePixelRatio, true);
+    renderPart(right.intersected(dirtyRect), right, rightPosition, devicePixelRatio, true);
 }
 
 void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &partRect,
-                                               const QPoint &textureOffset, bool rotated)
+                                               const QPoint &textureOffset,
+                                               qreal devicePixelRatio, bool rotated)
 {
     if (!rect.isValid()) {
         return;
@@ -1567,7 +1569,7 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
     int verticalPadding = padding.top() + padding.bottom();
     int horizontalPadding = padding.left() + padding.right();
 
-    QSize imageSize = rect.size() * devicePixelRatio();
+    QSize imageSize = rect.size() * devicePixelRatio;
     if (rotated) {
         imageSize = QSize(imageSize.height(), imageSize.width());
     }
@@ -1575,12 +1577,12 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
     paddedImageSize.rheight() += verticalPadding;
     paddedImageSize.rwidth() += horizontalPadding;
     QImage image(paddedImageSize, QImage::Format_ARGB32_Premultiplied);
-    image.setDevicePixelRatio(devicePixelRatio());
+    image.setDevicePixelRatio(devicePixelRatio);
     image.fill(Qt::transparent);
 
     QRect padClip = QRect(padding.left(), padding.top(), imageSize.width(), imageSize.height());
     QPainter painter(&image);
-    const qreal inverseScale = 1.0 / devicePixelRatio();
+    const qreal inverseScale = 1.0 / devicePixelRatio;
     painter.scale(inverseScale, inverseScale);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setClipRect(padClip);
@@ -1589,7 +1591,7 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
         painter.translate(0, imageSize.height());
         painter.rotate(-90);
     }
-    painter.scale(devicePixelRatio(), devicePixelRatio());
+    painter.scale(devicePixelRatio, devicePixelRatio);
     painter.translate(-rect.topLeft());
     renderToPainter(&painter, rect);
     painter.end();
@@ -1597,7 +1599,7 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
     // fill padding pixels by copying from the neighbour row
     clamp(image, padClip);
 
-    QPoint dirtyOffset = (rect.topLeft() - partRect.topLeft()) * devicePixelRatio();
+    QPoint dirtyOffset = (rect.topLeft() - partRect.topLeft()) * devicePixelRatio;
     if (padding.top() == 0) {
         dirtyOffset.ry() += TexturePad;
     }
@@ -1641,7 +1643,7 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
                          qMax(left.height(), right.height()));
     size.rheight() = top.height() + bottom.height() +
                      left.width() + right.width();
-    size *= devicePixelRatio();
+    size *= effectiveDevicePixelRatio();
 
     size.rheight() += 4 * (2 * TexturePad);
     size.rwidth() += 2 * TexturePad;
