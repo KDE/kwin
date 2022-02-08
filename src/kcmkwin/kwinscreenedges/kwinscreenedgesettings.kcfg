@@ -73,7 +73,7 @@
     </group>
     <group name="TabBox">
         <entry name="BorderActivateTabBox" key="BorderActivate" type="IntList">
-            <default>ElectricLeft</default>
+            <default>ElectricNone</default>
         </entry>
         <entry key="BorderAlternativeActivate" type="IntList">
             <default>ElectricNone</default>
