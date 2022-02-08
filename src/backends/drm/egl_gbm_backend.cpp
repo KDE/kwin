@@ -162,7 +162,7 @@ bool EglGbmBackend::resetOutput(Output &output)
     QSharedPointer<GbmSurface> gbmSurface;
     bool modifiersEnvSet = false;
     static bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
-    static bool allowModifiers = (gpu()->isNVidia() && !modifiersEnvSet) || (modifiersEnvSet && modifiersEnv);
+    static bool allowModifiers = gpu()->addFB2ModifiersSupported() && ((gpu()->isNVidia() && !modifiersEnvSet) || (modifiersEnvSet && modifiersEnv));
 #if HAVE_GBM_BO_GET_FD_FOR_PLANE
     if (!allowModifiers) {
 #else
