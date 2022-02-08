@@ -8,6 +8,7 @@
 */
 // own
 #include "client_machine.h"
+#include "main.h"
 #include "utils/common.h"
 // KF5
 #include <NETWM>

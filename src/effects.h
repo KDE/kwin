@@ -638,7 +638,7 @@ xcb_window_t EffectsHandlerImpl::x11RootWindow() const
 inline
 xcb_connection_t *EffectsHandlerImpl::xcbConnection() const
 {
-    return connection();
+    return kwinApp()->x11Connection();
 }
 
 inline

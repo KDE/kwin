@@ -147,13 +147,13 @@ bool Shadow::init(const QVector< uint32_t > &data)
 {
     QVector<Xcb::WindowGeometry> pixmapGeometries(ShadowElementsCount);
     QVector<xcb_get_image_cookie_t> getImageCookies(ShadowElementsCount);
-    auto *c = connection();
+    auto *c = kwinApp()->x11Connection();
     for (int i = 0; i < ShadowElementsCount; ++i) {
         pixmapGeometries[i] = Xcb::WindowGeometry(data[i]);
     }
     auto discardReplies = [&getImageCookies](int start) {
         for (int i = start; i < getImageCookies.size(); ++i) {
-            xcb_discard_reply(connection(), getImageCookies.at(i).sequence);
+            xcb_discard_reply(kwinApp()->x11Connection(), getImageCookies.at(i).sequence);
         }
     };
     for (int i = 0; i < ShadowElementsCount; ++i) {

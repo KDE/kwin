@@ -41,7 +41,7 @@ void KillWindow::start()
             if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
                 c->killWindow();
             } else if (Unmanaged *u = qobject_cast<Unmanaged*>(t)) {
-                xcb_kill_client(connection(), u->window());
+                xcb_kill_client(kwinApp()->x11Connection(), u->window());
             }
         }, QByteArrayLiteral("pirate")
     );

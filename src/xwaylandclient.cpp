@@ -50,7 +50,7 @@ bool XwaylandClient::wantsSyncCounter() const
     // With the addition of multiple window buffers in Xwayland 1.21, X11 clients
     // are no longer able to destroy the buffer after it's been committed and not
     // released by the compositor yet.
-    static const quint32 xwaylandVersion = xcb_get_setup(connection())->release_number;
+    static const quint32 xwaylandVersion = xcb_get_setup(kwinApp()->x11Connection())->release_number;
     return xwaylandVersion >= 12100000;
 }
 

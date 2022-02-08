@@ -190,7 +190,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             // see comments for allowClientActivation()
             updateXTime();
             const xcb_timestamp_t t = xTime();
-            xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, event->window, atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 32, 1, &t);
+            xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, event->window, atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 32, 1, &t);
         }
         break;
     }
@@ -221,9 +221,9 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             // NOTICE: The save-set support in X11Client::mapRequestEvent() actually requires that
             // this code doesn't check the parent to be root.
             if (!createClient(event->window, false)) {
-                xcb_map_window(connection(), event->window);
+                xcb_map_window(kwinApp()->x11Connection(), event->window);
                 const uint32_t values[] = { XCB_STACK_MODE_ABOVE };
-                xcb_configure_window(connection(), event->window, XCB_CONFIG_WINDOW_STACK_MODE, values);
+                xcb_configure_window(kwinApp()->x11Connection(), event->window, XCB_CONFIG_WINDOW_STACK_MODE, values);
             }
         }
         return true;
@@ -271,7 +271,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             if (value_mask & XCB_CONFIG_WINDOW_BORDER_WIDTH) {
                 values[i++] = event->border_width;
             }
-            xcb_configure_window(connection(), event->window, value_mask, values);
+            xcb_configure_window(kwinApp()->x11Connection(), event->window, value_mask, values);
             return true;
         }
         break;
@@ -357,7 +357,7 @@ bool X11Client::windowEvent(xcb_generic_event_t *e)
                 setOpacity(info->opacityF());
             } else {
                 // forward to the frame if there's possibly another compositing manager running
-                NETWinInfo i(connection(), frameId(), rootWindow(), NET::Properties(), NET::Properties2());
+                NETWinInfo i(kwinApp()->x11Connection(), frameId(), rootWindow(), NET::Properties(), NET::Properties2());
                 i.setOpacity(info->opacity());
             }
         }
@@ -787,7 +787,7 @@ void X11Client::updateMouseGrab()
         return;
     }
 
-    xcb_ungrab_button(connection(), XCB_BUTTON_INDEX_ANY, m_wrapper, XCB_MOD_MASK_ANY);
+    xcb_ungrab_button(kwinApp()->x11Connection(), XCB_BUTTON_INDEX_ANY, m_wrapper, XCB_MOD_MASK_ANY);
 
     if (TabBox::TabBox::self()->forcedGlobalMouseGrab()) { // see TabBox::establishTabBoxGrab()
         m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
@@ -854,7 +854,7 @@ bool X11Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
     }
     if (isInteractiveMoveResizePointerButtonDown()) {
         if (w == wrapperId())
-            xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
+            xcb_allow_events(kwinApp()->x11Connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
         return true;
     }
 
@@ -868,7 +868,7 @@ bool X11Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
             // hide splashwindow if the user clicks on it
             hideClient();
             if (w == wrapperId())
-                xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
+                xcb_allow_events(kwinApp()->x11Connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
             return true;
         }
 
@@ -907,13 +907,13 @@ bool X11Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
                 replay = true;
 
             if (w == wrapperId())  // these can come only from a grab
-                xcb_allow_events(connection(), replay ? XCB_ALLOW_REPLAY_POINTER : XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
+                xcb_allow_events(kwinApp()->x11Connection(), replay ? XCB_ALLOW_REPLAY_POINTER : XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
             return true;
         }
     }
 
     if (w == wrapperId()) { // these can come only from a grab
-        xcb_allow_events(connection(), XCB_ALLOW_REPLAY_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
+        xcb_allow_events(kwinApp()->x11Connection(), XCB_ALLOW_REPLAY_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
         return true;
     }
     if (w == inputId()) {
@@ -986,7 +986,7 @@ bool X11Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x,
         }
     }
     if (w == wrapperId()) {
-        xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
+        xcb_allow_events(kwinApp()->x11Connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
         return true;
     }
     if (w != frameId() && w != inputId() && w != moveResizeGrabWindow())

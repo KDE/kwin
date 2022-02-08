@@ -491,8 +491,8 @@ QRegion Toplevel::shapeRegion() const
     const QRect bufferGeometry = this->bufferGeometry();
 
     if (shape()) {
-        auto cookie = xcb_shape_get_rectangles_unchecked(connection(), frameId(), XCB_SHAPE_SK_BOUNDING);
-        ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(connection(), cookie, nullptr));
+        auto cookie = xcb_shape_get_rectangles_unchecked(kwinApp()->x11Connection(), frameId(), XCB_SHAPE_SK_BOUNDING);
+        ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(kwinApp()->x11Connection(), cookie, nullptr));
         if (!reply.isNull()) {
             m_shapeRegion = QRegion();
             const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.data());

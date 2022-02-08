@@ -97,7 +97,7 @@ void ColorMapper::update()
         }
     }
     if (cmap != m_installed) {
-        xcb_install_colormap(connection(), cmap);
+        xcb_install_colormap(kwinApp()->x11Connection(), cmap);
         m_installed = cmap;
     }
 }
@@ -312,7 +312,7 @@ void Workspace::initializeX11()
     // Compatibility
     int32_t data = 1;
 
-    xcb_change_property(connection(), XCB_PROP_MODE_APPEND, rootWindow(), atoms->kwin_running,
+    xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_APPEND, rootWindow(), atoms->kwin_running,
                         atoms->kwin_running, 32, 1, &data);
 
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
@@ -335,7 +335,7 @@ void Workspace::initializeX11()
 
     // TODO: only in X11 mode
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
-    NETRootInfo client_info(connection(), NET::ActiveWindow | NET::CurrentDesktop);
+    NETRootInfo client_info(kwinApp()->x11Connection(), NET::ActiveWindow | NET::CurrentDesktop);
     if (!qApp->isSessionRestored()) {
         m_initialDesktop = client_info.currentDesktop();
         vds->setCurrent(m_initialDesktop);
@@ -2866,7 +2866,7 @@ void Workspace::setMoveResizeClient(AbstractClient *c)
 // (the property with the size of the frame remains on the window after the crash).
 void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geometry)
 {
-    NETWinInfo i(connection(), w, rootWindow(), NET::WMFrameExtents, NET::Properties2());
+    NETWinInfo i(kwinApp()->x11Connection(), w, rootWindow(), NET::WMFrameExtents, NET::Properties2());
     NETStrut frame = i.frameExtents();
 
     if (frame.left != 0 || frame.top != 0) {
@@ -2874,7 +2874,7 @@ void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_rep
         const uint32_t left = frame.left;
         const uint32_t top = frame.top;
         const uint32_t values[] = { geometry->x - left, geometry->y - top };
-        xcb_configure_window(connection(), w, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y, values);
+        xcb_configure_window(kwinApp()->x11Connection(), w, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y, values);
     }
 }
 

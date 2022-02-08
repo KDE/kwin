@@ -104,7 +104,7 @@ bool Unmanaged::track(xcb_window_t w)
     checkOutput();
     m_visual = attr->visual;
     bit_depth = geo->depth;
-    info = new NETWinInfo(connection(), w, rootWindow(),
+    info = new NETWinInfo(kwinApp()->x11Connection(), w, rootWindow(),
                           NET::WMWindowType | NET::WMPid,
                           NET::WM2Opacity |
                           NET::WM2WindowRole |
@@ -115,7 +115,7 @@ bool Unmanaged::track(xcb_window_t w)
     getWmClientLeader();
     getWmClientMachine();
     if (Xcb::Extensions::self()->isShapeAvailable())
-        xcb_shape_select_input(connection(), w, true);
+        xcb_shape_select_input(kwinApp()->x11Connection(), w, true);
     detectShape(w);
     getWmOpaqueRegion();
     getSkipCloseAnimation();
@@ -138,7 +138,7 @@ void Unmanaged::release(ReleaseReason releaseReason)
     finishCompositing(releaseReason);
     if (!QWidget::find(window()) && releaseReason != ReleaseReason::Destroyed) { // don't affect our own windows
         if (Xcb::Extensions::self()->isShapeAvailable())
-            xcb_shape_select_input(connection(), window(), false);
+            xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);
         Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
     workspace()->removeUnmanaged(this);

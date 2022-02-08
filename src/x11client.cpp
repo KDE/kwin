@@ -91,7 +91,7 @@ X11DecorationRenderer::X11DecorationRenderer(Decoration::DecoratedClientImpl *cl
 X11DecorationRenderer::~X11DecorationRenderer()
 {
     if (m_gc != XCB_NONE) {
-        xcb_free_gc(connection(), m_gc);
+        xcb_free_gc(kwinApp()->x11Connection(), m_gc);
     }
 }
 
@@ -221,7 +221,7 @@ X11Client::X11Client()
                 m_decoInputExtent.defineCursor(nativeCursor);
             if (isInteractiveMoveResize()) {
                 // changing window attributes doesn't change cursor if there's pointer grab active
-                xcb_change_active_pointer_grab(connection(), nativeCursor, xTime(),
+                xcb_change_active_pointer_grab(kwinApp()->x11Connection(), nativeCursor, xTime(),
                     XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW);
             }
         });
@@ -240,7 +240,7 @@ X11Client::~X11Client()
         m_killHelperPID = 0;
     }
     if (m_syncRequest.alarm != XCB_NONE) {
-        xcb_sync_destroy_alarm(connection(), m_syncRequest.alarm);
+        xcb_sync_destroy_alarm(kwinApp()->x11Connection(), m_syncRequest.alarm);
     }
     Q_ASSERT(!isInteractiveMoveResize());
     Q_ASSERT(m_client == XCB_WINDOW_NONE);
@@ -293,7 +293,7 @@ void X11Client::releaseWindow(bool on_shutdown)
         info->setDesktop(0);
         info->setState(NET::States(), info->state());  // Reset all state flags
     }
-    xcb_connection_t *c = connection();
+    xcb_connection_t *c = kwinApp()->x11Connection();
     m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
     m_client.deleteProperty(atoms->net_frame_extents);
     m_client.deleteProperty(atoms->kde_net_wm_frame_strut);
@@ -446,7 +446,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     connect(this, &X11Client::windowClassChanged, this, &X11Client::evaluateWindowRules);
 
     if (Xcb::Extensions::self()->isShapeAvailable())
-        xcb_shape_select_input(connection(), window(), true);
+        xcb_shape_select_input(kwinApp()->x11Connection(), window(), true);
     detectShape(window());
     detectNoBorder();
     fetchIconicName();
@@ -953,7 +953,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
             if (opacity() == 1.0) {
                 return;
             }
-            NETWinInfo info(connection(), frameId(), rootWindow(), NET::Properties(), NET::Properties2());
+            NETWinInfo info(kwinApp()->x11Connection(), frameId(), rootWindow(), NET::Properties(), NET::Properties2());
             info.setOpacityF(opacity());
         }
     );
@@ -975,7 +975,7 @@ void X11Client::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
 
     const uint32_t zero_value = 0;
 
-    xcb_connection_t *conn = connection();
+    xcb_connection_t *conn = kwinApp()->x11Connection();
 
     // We don't want the window to be destroyed when we quit
     xcb_change_save_set(conn, XCB_SET_MODE_INSERT, m_client);
@@ -1095,7 +1095,7 @@ void X11Client::updateInputWindow()
     }
 
     const QVector<xcb_rectangle_t> rects = Xcb::regionToRects(region);
-    xcb_shape_rectangles(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_CLIP_ORDERING_UNSORTED,
+    xcb_shape_rectangles(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_CLIP_ORDERING_UNSORTED,
                          m_decoInputExtent, 0, 0, rects.count(), rects.constData());
 }
 
@@ -1324,11 +1324,11 @@ void X11Client::updateShape()
             updateDecoration(true);
         }
         if (!isDecorated()) {
-            xcb_shape_combine(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING,
+            xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING,
                               frameId(), clientPos().x(), clientPos().y(), window());
         }
     } else if (app_noborder) {
-        xcb_shape_mask(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
+        xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
         detectNoBorder();
         app_noborder = noborder;
         noborder = rules()->checkNoBorder(noborder || m_motif.noBorder());
@@ -1370,7 +1370,7 @@ void X11Client::updateInputShape()
         if (!shape_helper_window.isValid())
             shape_helper_window.create(QRect(0, 0, 1, 1));
         shape_helper_window.resize(m_bufferGeometry.size());
-        xcb_connection_t *c = connection();
+        xcb_connection_t *c = kwinApp()->x11Connection();
         xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
                           shape_helper_window, 0, 0, frameId());
         xcb_shape_combine(c, XCB_SHAPE_SO_SUBTRACT, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
@@ -1725,7 +1725,7 @@ void X11Client::updateHiddenPreview()
     if (hiddenPreview()) {
         workspace()->forceRestacking();
         if (Xcb::Extensions::self()->isShapeInputAvailable()) {
-            xcb_shape_rectangles(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT,
+            xcb_shape_rectangles(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT,
                                  XCB_CLIP_ORDERING_UNSORTED, frameId(), 0, 0, 0, nullptr);
         }
     } else {
@@ -1755,8 +1755,8 @@ void X11Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t proto
     if (w == rootWindow()) {
         eventMask = XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT; // Magic!
     }
-    xcb_send_event(connection(), false, w, eventMask, reinterpret_cast<const char*>(&ev));
-    xcb_flush(connection());
+    xcb_send_event(kwinApp()->x11Connection(), false, w, eventMask, reinterpret_cast<const char*>(&ev));
+    xcb_flush(kwinApp()->x11Connection());
 }
 
 /**
@@ -1958,10 +1958,10 @@ QStringList X11Client::activities() const
 bool X11Client::takeFocus()
 {
     if (rules()->checkAcceptFocus(info->input())) {
-        xcb_void_cookie_t cookie = xcb_set_input_focus_checked(connection(),
+        xcb_void_cookie_t cookie = xcb_set_input_focus_checked(kwinApp()->x11Connection(),
                                                                XCB_INPUT_FOCUS_POINTER_ROOT,
                                                                window(), XCB_TIME_CURRENT_TIME);
-        ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
+        ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(kwinApp()->x11Connection(), cookie));
         if (error) {
             qCWarning(KWIN_CORE, "Failed to focus 0x%x (error %d)", window(), error->error_code);
             return false;
@@ -2027,9 +2027,9 @@ void X11Client::fetchName()
 
 static inline QString readNameProperty(xcb_window_t w, xcb_atom_t atom)
 {
-    const auto cookie = xcb_icccm_get_text_property_unchecked(connection(), w, atom);
+    const auto cookie = xcb_icccm_get_text_property_unchecked(kwinApp()->x11Connection(), w, atom);
     xcb_icccm_get_text_property_reply_t reply;
-    if (xcb_icccm_get_wm_name_reply(connection(), cookie, &reply, nullptr)) {
+    if (xcb_icccm_get_wm_name_reply(kwinApp()->x11Connection(), cookie, &reply, nullptr)) {
         QString retVal;
         if (reply.encoding == atoms->utf8_string) {
             retVal = QString::fromUtf8(QByteArray(reply.name, reply.name_len));
@@ -2251,7 +2251,7 @@ void X11Client::getSyncCounter()
         m_syncRequest.counter = counter;
         m_syncRequest.value.hi = 0;
         m_syncRequest.value.lo = 0;
-        auto *c = connection();
+        auto *c = kwinApp()->x11Connection();
         xcb_sync_set_counter(c, m_syncRequest.counter, m_syncRequest.value);
         if (m_syncRequest.alarm == XCB_NONE) {
             const uint32_t mask = XCB_SYNC_CA_COUNTER | XCB_SYNC_CA_VALUE_TYPE | XCB_SYNC_CA_TEST_TYPE | XCB_SYNC_CA_EVENTS;
@@ -2699,7 +2699,7 @@ void X11Client::readShowOnScreenEdge(Xcb::Property &property)
     } else if (!property.isNull() && property->type != XCB_ATOM_NONE) {
         // property value is incorrect, delete the property
         // so that the client knows that it is not hidden
-        xcb_delete_property(connection(), window(), atoms->kde_screen_edge_show);
+        xcb_delete_property(kwinApp()->x11Connection(), window(), atoms->kde_screen_edge_show);
     } else {
         // restore
         // TODO: add proper unreserve
@@ -2722,7 +2722,7 @@ void X11Client::showOnScreenEdge()
 
     showClient();
     setKeepBelow(false);
-    xcb_delete_property(connection(), window(), atoms->kde_screen_edge_show);
+    xcb_delete_property(kwinApp()->x11Connection(), window(), atoms->kde_screen_edge_show);
 }
 
 bool X11Client::belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const
@@ -3675,8 +3675,8 @@ void X11Client::sendSyntheticConfigureNotify()
     u.event.border_width = 0;
     u.event.above_sibling = XCB_WINDOW_NONE;
     u.event.override_redirect = 0;
-    xcb_send_event(connection(), true, c.event, XCB_EVENT_MASK_STRUCTURE_NOTIFY, reinterpret_cast<const char*>(&u));
-    xcb_flush(connection());
+    xcb_send_event(kwinApp()->x11Connection(), true, c.event, XCB_EVENT_MASK_STRUCTURE_NOTIFY, reinterpret_cast<const char*>(&u));
+    xcb_flush(kwinApp()->x11Connection());
 }
 
 QPoint X11Client::gravityAdjustment(xcb_gravity_t gravity) const
@@ -4528,11 +4528,11 @@ bool X11Client::doStartInteractiveMoveResize()
         m_moveResizeGrabWindow.map();
         m_moveResizeGrabWindow.raise();
         updateXTime();
-        const xcb_grab_pointer_cookie_t cookie = xcb_grab_pointer_unchecked(connection(), false, m_moveResizeGrabWindow,
+        const xcb_grab_pointer_cookie_t cookie = xcb_grab_pointer_unchecked(kwinApp()->x11Connection(), false, m_moveResizeGrabWindow,
             XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION |
             XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
             XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, m_moveResizeGrabWindow, Cursors::self()->mouse()->x11Cursor(cursor()), xTime());
-        ScopedCPointer<xcb_grab_pointer_reply_t> pointerGrab(xcb_grab_pointer_reply(connection(), cookie, nullptr));
+        ScopedCPointer<xcb_grab_pointer_reply_t> pointerGrab(xcb_grab_pointer_reply(kwinApp()->x11Connection(), cookie, nullptr));
         if (!pointerGrab.isNull() && pointerGrab->status == XCB_GRAB_STATUS_SUCCESS) {
             has_grab = true;
         }
@@ -4561,7 +4561,7 @@ void X11Client::leaveInteractiveMoveResize()
             ungrabXKeyboard();
         }
         move_resize_has_keyboard_grab = false;
-        xcb_ungrab_pointer(connection(), xTime());
+        xcb_ungrab_pointer(kwinApp()->x11Connection(), xTime());
         m_moveResizeGrabWindow.reset();
     }
     AbstractClient::leaveInteractiveMoveResize();

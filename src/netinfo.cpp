@@ -27,15 +27,15 @@ RootInfo *RootInfo::s_self = nullptr;
 RootInfo *RootInfo::create()
 {
     Q_ASSERT(!s_self);
-    xcb_window_t supportWindow = xcb_generate_id(connection());
+    xcb_window_t supportWindow = xcb_generate_id(kwinApp()->x11Connection());
     const uint32_t values[] = {true};
-    xcb_create_window(connection(), XCB_COPY_FROM_PARENT, supportWindow, KWin::rootWindow(),
+    xcb_create_window(kwinApp()->x11Connection(), XCB_COPY_FROM_PARENT, supportWindow, KWin::rootWindow(),
                       0, 0, 1, 1, 0, XCB_COPY_FROM_PARENT,
                       XCB_COPY_FROM_PARENT, XCB_CW_OVERRIDE_REDIRECT, values);
     const uint32_t lowerValues[] = { XCB_STACK_MODE_BELOW }; // See usage in layers.cpp
     // we need to do the lower window with a roundtrip, otherwise NETRootInfo is not functioning
-    ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(),
-        xcb_configure_window_checked(connection(), supportWindow, XCB_CONFIG_WINDOW_STACK_MODE, lowerValues)));
+    ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(kwinApp()->x11Connection(),
+        xcb_configure_window_checked(kwinApp()->x11Connection(), supportWindow, XCB_CONFIG_WINDOW_STACK_MODE, lowerValues)));
     if (!error.isNull()) {
         qCDebug(KWIN_CORE) << "Error occurred while lowering support window: " << error->error_code;
     }
@@ -127,12 +127,12 @@ void RootInfo::destroy()
     xcb_window_t supportWindow = s_self->supportWindow();
     delete s_self;
     s_self = nullptr;
-    xcb_destroy_window(connection(), supportWindow);
+    xcb_destroy_window(kwinApp()->x11Connection(), supportWindow);
 }
 
 RootInfo::RootInfo(xcb_window_t w, const char *name, NET::Properties properties, NET::WindowTypes types,
                    NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr)
-    : NETRootInfo(connection(), w, name, properties, types, states, properties2, actions, scr)
+    : NETRootInfo(kwinApp()->x11Connection(), w, name, properties, types, states, properties2, actions, scr)
     , m_activeWindow(activeWindow())
     , m_eventFilter(std::make_unique<RootInfoFilter>(this))
 {
@@ -237,7 +237,7 @@ void RootInfo::setActiveClient(AbstractClient *client)
 
 WinInfo::WinInfo(X11Client *c, xcb_window_t window,
                  xcb_window_t rwin, NET::Properties properties, NET::Properties2 properties2)
-    : NETWinInfo(connection(), window, rwin, properties, properties2, NET::WindowManager), m_client(c)
+    : NETWinInfo(kwinApp()->x11Connection(), window, rwin, properties, properties2, NET::WindowManager), m_client(c)
 {
 }
 
