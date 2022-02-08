@@ -542,14 +542,14 @@ inline bool X11Client::isClientSideDecorated() const
 
 inline bool X11Client::groupTransient() const
 {
-    return m_transientForId == rootWindow();
+    return m_transientForId == kwinApp()->x11RootWindow();
 }
 
 // Needed because verifyTransientFor() may set transient_for_id to root window,
 // if the original value has a problem (window doesn't exist, etc.)
 inline bool X11Client::wasOriginallyGroupTransient() const
 {
-    return m_originalTransientForId == rootWindow();
+    return m_originalTransientForId == kwinApp()->x11RootWindow();
 }
 
 inline bool X11Client::isTransient() const

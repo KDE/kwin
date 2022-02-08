@@ -156,7 +156,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     // events that should be handled before Clients can get them
     switch (eventType) {
     case XCB_CONFIGURE_NOTIFY:
-        if (reinterpret_cast<xcb_configure_notify_event_t*>(e)->event == rootWindow())
+        if (reinterpret_cast<xcb_configure_notify_event_t*>(e)->event == kwinApp()->x11RootWindow())
             markXStackingOrderAsDirty();
         break;
     };
@@ -184,7 +184,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     switch (eventType) {
     case XCB_CREATE_NOTIFY: {
         const auto *event = reinterpret_cast<xcb_create_notify_event_t*>(e);
-        if (event->parent == rootWindow() &&
+        if (event->parent == kwinApp()->x11RootWindow() &&
                 !QWidget::find(event->window) &&
                 !event->override_redirect) {
             // see comments for allowClientActivation()
@@ -251,7 +251,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 
     case XCB_CONFIGURE_REQUEST: {
         const auto *event = reinterpret_cast<xcb_configure_request_event_t*>(e);
-        if (event->parent == rootWindow()) {
+        if (event->parent == kwinApp()->x11RootWindow()) {
             uint32_t values[5] = { 0, 0, 0, 0, 0};
             const uint32_t value_mask = event->value_mask
                                         & (XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_BORDER_WIDTH);
@@ -278,13 +278,13 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     }
     case XCB_FOCUS_IN: {
         const auto *event = reinterpret_cast<xcb_focus_in_event_t*>(e);
-        if (event->event == rootWindow()
+        if (event->event == kwinApp()->x11RootWindow()
                 && (event->detail == XCB_NOTIFY_DETAIL_NONE || event->detail == XCB_NOTIFY_DETAIL_POINTER_ROOT || event->detail == XCB_NOTIFY_DETAIL_INFERIOR)) {
             Xcb::CurrentInput currentInput;
             updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
             // it seems we can "loose" focus reversions when the closing client hold a grab
             // => catch the typical pattern (though we don't want the focus on the root anyway) #348935
-            const bool lostFocusPointerToRoot = currentInput->focus == rootWindow() && event->detail == XCB_NOTIFY_DETAIL_INFERIOR;
+            const bool lostFocusPointerToRoot = currentInput->focus == kwinApp()->x11RootWindow() && event->detail == XCB_NOTIFY_DETAIL_INFERIOR;
             if (!currentInput.isNull() && (currentInput->focus == XCB_WINDOW_NONE || currentInput->focus == XCB_INPUT_FOCUS_POINTER_ROOT || lostFocusPointerToRoot)) {
                 //kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" ;
                 AbstractClient *c = mostRecentlyActivatedClient();
@@ -357,7 +357,7 @@ bool X11Client::windowEvent(xcb_generic_event_t *e)
                 setOpacity(info->opacityF());
             } else {
                 // forward to the frame if there's possibly another compositing manager running
-                NETWinInfo i(kwinApp()->x11Connection(), frameId(), rootWindow(), NET::Properties(), NET::Properties2());
+                NETWinInfo i(kwinApp()->x11Connection(), frameId(), kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
                 i.setOpacity(info->opacity());
             }
         }
@@ -535,7 +535,7 @@ void X11Client::unmapNotifyEvent(xcb_unmap_notify_event_t *e)
     if (e->event != wrapperId()) {
         // most probably event from root window when initially reparenting
         bool ignore = true;
-        if (e->event == rootWindow() && (e->response_type & 0x80))
+        if (e->event == kwinApp()->x11RootWindow() && (e->response_type & 0x80))
             ignore = false; // XWithdrawWindow()
         if (ignore)
             return;

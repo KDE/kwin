@@ -192,7 +192,7 @@ void ApplicationX11::lostSelection()
     destroyCompositor();
     destroyWorkspace();
     // Remove windowmanager privileges
-    Xcb::selectInput(rootWindow(), XCB_EVENT_MASK_PROPERTY_CHANGE);
+    Xcb::selectInput(kwinApp()->x11RootWindow(), XCB_EVENT_MASK_PROPERTY_CHANGE);
     removeNativeX11EventFilter();
     quit();
 }
@@ -240,7 +240,7 @@ void ApplicationX11::performStartup()
         const uint32_t maskValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT};
         ScopedCPointer<xcb_generic_error_t> redirectCheck(xcb_request_check(kwinApp()->x11Connection(),
                                                                             xcb_change_window_attributes_checked(kwinApp()->x11Connection(),
-                                                                                                                 rootWindow(),
+                                                                                                                 kwinApp()->x11RootWindow(),
                                                                                                                  XCB_CW_EVENT_MASK,
                                                                                                                  maskValues)));
         if (!redirectCheck.isNull()) {

@@ -94,7 +94,7 @@ class CompositorSelectionOwner : public KSelectionOwner
     Q_OBJECT
 public:
     CompositorSelectionOwner(const char *selection)
-        : KSelectionOwner(selection, kwinApp()->x11Connection(), rootWindow())
+        : KSelectionOwner(selection, kwinApp()->x11Connection(), kwinApp()->x11RootWindow())
         , m_owning(false)
     {
         connect (this, &CompositorSelectionOwner::lostOwnership,

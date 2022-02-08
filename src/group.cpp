@@ -34,7 +34,7 @@ Group::Group(xcb_window_t leader_P)
 {
     if (leader_P != XCB_WINDOW_NONE) {
         leader_client = workspace()->findClient(Predicate::WindowMatch, leader_P);
-        leader_info = new NETWinInfo(kwinApp()->x11Connection(), leader_P, rootWindow(),
+        leader_info = new NETWinInfo(kwinApp()->x11Connection(), leader_P, kwinApp()->x11RootWindow(),
                                      NET::Properties(), NET::WM2StartupId);
     }
     effect_group = new EffectWindowGroupImpl(this);
@@ -53,7 +53,7 @@ QIcon Group::icon() const
         return leader_client->icon();
     else if (leader_wid != XCB_WINDOW_NONE) {
         QIcon ic;
-        NETWinInfo info(kwinApp()->x11Connection(), leader_wid, rootWindow(), NET::WMIcon, NET::WM2IconPixmap);
+        NETWinInfo info(kwinApp()->x11Connection(), leader_wid, kwinApp()->x11RootWindow(), NET::WMIcon, NET::WM2IconPixmap);
         auto readIcon = [&ic, &info, this](int size, bool scale = true) {
             const QPixmap pix = KWindowSystem::icon(leader_wid, size, size, scale, KWindowSystem::NETWM | KWindowSystem::WMHints, &info);
             if (!pix.isNull()) {

@@ -312,7 +312,10 @@ void Workspace::initializeX11()
     // Compatibility
     int32_t data = 1;
 
-    xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_APPEND, rootWindow(), atoms->kwin_running,
+    xcb_change_property(kwinApp()->x11Connection(),
+                        XCB_PROP_MODE_APPEND,
+                        kwinApp()->x11RootWindow(),
+                        atoms->kwin_running,
                         atoms->kwin_running, 32, 1, &data);
 
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
@@ -352,7 +355,7 @@ void Workspace::initializeX11()
         // Begin updates blocker block
         StackingUpdatesBlocker blocker(this);
 
-        Xcb::Tree tree(rootWindow());
+        Xcb::Tree tree(kwinApp()->x11RootWindow());
         xcb_window_t *wins = xcb_query_tree_children(tree.data());
 
         QVector<Xcb::WindowAttributes> windowAttributes(tree->children_len);
@@ -1241,12 +1244,12 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
 void Workspace::selectWmInputEventMask()
 {
     uint32_t presentMask = 0;
-    Xcb::WindowAttributes attr(rootWindow());
+    Xcb::WindowAttributes attr(kwinApp()->x11RootWindow());
     if (!attr.isNull()) {
         presentMask = attr->your_event_mask;
     }
 
-    Xcb::selectInput(rootWindow(),
+    Xcb::selectInput(kwinApp()->x11RootWindow(),
                      presentMask |
                      XCB_EVENT_MASK_KEY_PRESS |
                      XCB_EVENT_MASK_PROPERTY_CHANGE |
@@ -1319,7 +1322,7 @@ bool Workspace::isOnCurrentHead()
         return !is_multihead;
     }
 
-    return rootWindow() == geometry->root;
+    return kwinApp()->x11RootWindow() == geometry->root;
 }
 
 void Workspace::sendClientToOutput(AbstractClient *client, AbstractOutput *output)
@@ -2866,7 +2869,7 @@ void Workspace::setMoveResizeClient(AbstractClient *c)
 // (the property with the size of the frame remains on the window after the crash).
 void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geometry)
 {
-    NETWinInfo i(kwinApp()->x11Connection(), w, rootWindow(), NET::WMFrameExtents, NET::Properties2());
+    NETWinInfo i(kwinApp()->x11Connection(), w, kwinApp()->x11RootWindow(), NET::WMFrameExtents, NET::Properties2());
     NETStrut frame = i.frameExtents();
 
     if (frame.left != 0 || frame.top != 0) {

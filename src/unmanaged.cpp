@@ -104,7 +104,7 @@ bool Unmanaged::track(xcb_window_t w)
     checkOutput();
     m_visual = attr->visual;
     bit_depth = geo->depth;
-    info = new NETWinInfo(kwinApp()->x11Connection(), w, rootWindow(),
+    info = new NETWinInfo(kwinApp()->x11Connection(), w, kwinApp()->x11RootWindow(),
                           NET::WMWindowType | NET::WMPid,
                           NET::WM2Opacity |
                           NET::WM2WindowRole |

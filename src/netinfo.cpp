@@ -29,7 +29,7 @@ RootInfo *RootInfo::create()
     Q_ASSERT(!s_self);
     xcb_window_t supportWindow = xcb_generate_id(kwinApp()->x11Connection());
     const uint32_t values[] = {true};
-    xcb_create_window(kwinApp()->x11Connection(), XCB_COPY_FROM_PARENT, supportWindow, KWin::rootWindow(),
+    xcb_create_window(kwinApp()->x11Connection(), XCB_COPY_FROM_PARENT, supportWindow, kwinApp()->x11RootWindow(),
                       0, 0, 1, 1, 0, XCB_COPY_FROM_PARENT,
                       XCB_COPY_FROM_PARENT, XCB_CW_OVERRIDE_REDIRECT, values);
     const uint32_t lowerValues[] = { XCB_STACK_MODE_BELOW }; // See usage in layers.cpp

@@ -632,7 +632,7 @@ QList<EffectWindow*> EffectsHandlerImpl::elevatedWindows() const
 inline
 xcb_window_t EffectsHandlerImpl::x11RootWindow() const
 {
-    return rootWindow();
+    return kwinApp()->x11RootWindow();
 }
 
 inline

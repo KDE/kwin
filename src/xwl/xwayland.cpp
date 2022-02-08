@@ -443,7 +443,7 @@ void Xwayland::handleXwaylandReady()
 
 void Xwayland::updatePrimary(AbstractOutput *primaryOutput)
 {
-    Xcb::RandR::ScreenResources resources(rootWindow());
+    Xcb::RandR::ScreenResources resources(kwinApp()->x11RootWindow());
     xcb_randr_crtc_t *crtcs = resources.crtcs();
     if (!crtcs) {
         return;
@@ -456,7 +456,7 @@ void Xwayland::updatePrimary(AbstractOutput *primaryOutput)
             auto outputs = crtcInfo.outputs();
             if (outputs && crtcInfo->num_outputs > 0) {
                 qCDebug(KWIN_XWL) << "Setting primary" << primaryOutput << outputs[0];
-                xcb_randr_set_output_primary(kwinApp()->x11Connection(), rootWindow(), outputs[0]);
+                xcb_randr_set_output_primary(kwinApp()->x11Connection(), kwinApp()->x11RootWindow(), outputs[0]);
                 break;
             }
         }

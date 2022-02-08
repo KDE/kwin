@@ -297,7 +297,7 @@ void X11Client::releaseWindow(bool on_shutdown)
     m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
     m_client.deleteProperty(atoms->net_frame_extents);
     m_client.deleteProperty(atoms->kde_net_wm_frame_strut);
-    m_client.reparent(rootWindow(), m_bufferGeometry.x(), m_bufferGeometry.y());
+    m_client.reparent(kwinApp()->x11RootWindow(), m_bufferGeometry.x(), m_bufferGeometry.y());
     xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
     m_client.selectInput(XCB_EVENT_MASK_NO_EVENT);
     if (on_shutdown)
@@ -420,7 +420,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
 
     m_geometryHints.init(window());
     m_motif.init(window());
-    info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
+    info = new WinInfo(this, m_client, kwinApp()->x11RootWindow(), properties, properties2);
 
     if (isDesktop() && bit_depth == 32) {
         // force desktop windows to be opaque. It's a desktop after all, there is no window below
@@ -953,7 +953,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
             if (opacity() == 1.0) {
                 return;
             }
-            NETWinInfo info(kwinApp()->x11Connection(), frameId(), rootWindow(), NET::Properties(), NET::Properties2());
+            NETWinInfo info(kwinApp()->x11Connection(), frameId(), kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
             info.setOpacityF(opacity());
         }
     );
@@ -1014,7 +1014,7 @@ void X11Client::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
 
     // Create the frame window
     xcb_window_t frame = xcb_generate_id(conn);
-    xcb_create_window(conn, depth, frame, rootWindow(), 0, 0, 1, 1, 0,
+    xcb_create_window(conn, depth, frame, kwinApp()->x11RootWindow(), 0, 0, 1, 1, 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
     m_frame.reset(frame);
 
@@ -1752,7 +1752,7 @@ void X11Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t proto
     ev.data.data32[3] = data2;
     ev.data.data32[4] = data3;
     uint32_t eventMask = 0;
-    if (w == rootWindow()) {
+    if (w == kwinApp()->x11RootWindow()) {
         eventMask = XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT; // Magic!
     }
     xcb_send_event(kwinApp()->x11Connection(), false, w, eventMask, reinterpret_cast<const char*>(&ev));
@@ -3113,24 +3113,24 @@ xcb_window_t X11Client::verifyTransientFor(xcb_window_t new_transient_for, bool 
     // make sure splashscreens are shown above all their app's windows, even though
     // they're in Normal layer
     if (isSplash() && new_transient_for == XCB_WINDOW_NONE)
-        new_transient_for = rootWindow();
+        new_transient_for = kwinApp()->x11RootWindow();
     if (new_transient_for == XCB_WINDOW_NONE) {
         if (set)   // sometimes WM_TRANSIENT_FOR is set to None, instead of root window
-            new_property_value = new_transient_for = rootWindow();
+            new_property_value = new_transient_for = kwinApp()->x11RootWindow();
         else
             return XCB_WINDOW_NONE;
     }
     if (new_transient_for == window()) { // pointing to self
         // also fix the property itself
         qCWarning(KWIN_CORE) << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself." ;
-        new_property_value = new_transient_for = rootWindow();
+        new_property_value = new_transient_for = kwinApp()->x11RootWindow();
     }
 //  The transient_for window may be embedded in another application,
 //  so kwin cannot see it. Try to find the managed client for the
 //  window and fix the transient_for property if possible.
     xcb_window_t before_search = new_transient_for;
     while (new_transient_for != XCB_WINDOW_NONE
-            && new_transient_for != rootWindow()
+            && new_transient_for != kwinApp()->x11RootWindow()
             && !workspace()->findClient(Predicate::WindowMatch, new_transient_for)) {
         Xcb::Tree tree(new_transient_for);
         if (tree.isNull()) {
@@ -3151,20 +3151,20 @@ xcb_window_t X11Client::verifyTransientFor(xcb_window_t new_transient_for, bool 
 // windows in the group
     int count = 20;
     xcb_window_t loop_pos = new_transient_for;
-    while (loop_pos != XCB_WINDOW_NONE && loop_pos != rootWindow()) {
+    while (loop_pos != XCB_WINDOW_NONE && loop_pos != kwinApp()->x11RootWindow()) {
         X11Client *pos = workspace()->findClient(Predicate::WindowMatch, loop_pos);
         if (pos == nullptr)
             break;
         loop_pos = pos->m_transientForId;
         if (--count == 0 || pos == this) {
             qCWarning(KWIN_CORE) << "Client " << this << " caused WM_TRANSIENT_FOR loop." ;
-            new_transient_for = rootWindow();
+            new_transient_for = kwinApp()->x11RootWindow();
         }
     }
-    if (new_transient_for != rootWindow()
+    if (new_transient_for != kwinApp()->x11RootWindow()
             && workspace()->findClient(Predicate::WindowMatch, new_transient_for) == nullptr) {
         // it's transient for a specific window, but that window is not mapped
-        new_transient_for = rootWindow();
+        new_transient_for = kwinApp()->x11RootWindow();
     }
     if (new_property_value != m_originalTransientForId)
         Xcb::setTransientFor(window(), new_property_value);
@@ -3195,7 +3195,7 @@ void X11Client::removeTransient(AbstractClient* cl)
         if (X11Client *c = dynamic_cast<X11Client *>(cl)) {
             c->m_transientForId = XCB_WINDOW_NONE;
             c->setTransientFor(nullptr); // SELI
-// SELI       cl->setTransient( rootWindow());
+// SELI       cl->setTransient( kwinApp()->x11RootWindow());
             c->setTransient(XCB_WINDOW_NONE);
         }
     }
@@ -4524,7 +4524,7 @@ bool X11Client::doStartInteractiveMoveResize()
         // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
         // (https://lists.kde.org/?t=107302193400001&r=1&w=2)
         QRect r = workspace()->clientArea(FullArea, this);
-        m_moveResizeGrabWindow.create(r, XCB_WINDOW_CLASS_INPUT_ONLY, 0, nullptr, rootWindow());
+        m_moveResizeGrabWindow.create(r, XCB_WINDOW_CLASS_INPUT_ONLY, 0, nullptr, kwinApp()->x11RootWindow());
         m_moveResizeGrabWindow.map();
         m_moveResizeGrabWindow.raise();
         updateXTime();
