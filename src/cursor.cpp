@@ -67,7 +67,7 @@ void Cursors::hideCursor()
 {
     m_cursorHideCounter++;
     if (m_cursorHideCounter == 1) {
-        Q_EMIT currentCursorChanged(m_currentCursor);
+        Q_EMIT hiddenChanged();
     }
 }
 
@@ -75,7 +75,7 @@ void Cursors::showCursor()
 {
     m_cursorHideCounter--;
     if (m_cursorHideCounter == 0) {
-        Q_EMIT currentCursorChanged(m_currentCursor);
+        Q_EMIT hiddenChanged();
     }
 }
 
