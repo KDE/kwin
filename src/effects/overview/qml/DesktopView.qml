@@ -28,6 +28,7 @@ Item {
             width: model.client.width
             height: model.client.height
             z: model.client.stackingOrder
+            visible: !model.client.minimized
         }
     }
 }
