@@ -151,8 +151,8 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
 
 bool Platform::applyOutputChanges(const WaylandOutputConfig &config)
 {
-    const auto outputs = enabledOutputs();
-    for (const auto &output : outputs) {
+    const auto availableOutputs = outputs();
+    for (const auto &output : availableOutputs) {
         static_cast<AbstractWaylandOutput*>(output)->applyChanges(config);
     }
     return true;
