@@ -72,6 +72,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
     });
 
     connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmOutput::updateCursor);
+    connect(Cursors::self(), &Cursors::hiddenChanged, this, &DrmOutput::updateCursor);
     connect(Cursors::self(), &Cursors::positionChanged, this, &DrmOutput::moveCursor);
 }
 

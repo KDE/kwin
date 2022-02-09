@@ -280,6 +280,7 @@ public:
 
 Q_SIGNALS:
     void currentCursorChanged(Cursor* cursor);
+    void hiddenChanged();
     void positionChanged(Cursor* cursor, const QPoint &position);
 
 private:

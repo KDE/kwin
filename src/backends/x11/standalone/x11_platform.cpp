@@ -142,8 +142,7 @@ bool X11StandalonePlatform::initialize()
     if (Xcb::Extensions::self()->isRandrAvailable()) {
         m_randrEventFilter.reset(new XrandrEventFilter(this));
     }
-    connect(Cursors::self(), &Cursors::currentCursorChanged, this, &X11StandalonePlatform::updateCursor);
-    updateCursor();
+    connect(Cursors::self(), &Cursors::hiddenChanged, this, &X11StandalonePlatform::updateCursor);
     return true;
 }
 
