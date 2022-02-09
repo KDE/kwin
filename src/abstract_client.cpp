@@ -2302,8 +2302,7 @@ void AbstractClient::setDecoration(QSharedPointer<KDecoration2::Decoration> deco
                 this, &AbstractClient::updateDecorationInputShape);
         connect(decoration.data(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
             GeometryUpdatesBlocker blocker(this);
-            const QRect oldGeometry = frameGeometry();
-            resize(implicitSize());
+            const QRect oldGeometry = moveResizeGeometry();
             if (!isShade()) {
                 checkWorkspacePosition(oldGeometry);
             }
@@ -3096,7 +3095,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
     GeometryUpdatesBlocker blocker(this);
 
     if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
-        if (maximizeMode() == MaximizeFull) {
+        if (requestedMaximizeMode() == MaximizeFull) {
             m_quickTileMode = int(QuickTileFlag::None);
             setMaximize(false, false);
         } else {
@@ -3117,7 +3116,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
         mode &= ~QuickTileMode(QuickTileFlag::Vertical);
 
     // restore from maximized so that it is possible to tile maximized windows with one hit or by dragging
-    if (maximizeMode() != MaximizeRestore) {
+    if (requestedMaximizeMode() != MaximizeRestore) {
 
         if (mode != QuickTileMode(QuickTileFlag::None)) {
             m_quickTileMode = int(QuickTileFlag::None); // Temporary, so the maximize code doesn't get all confused
@@ -3330,13 +3329,13 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, QRect oldClientGe
         oldGeometry = newGeom;
     if (!oldClientGeometry.isValid())
         oldClientGeometry = oldGeometry.adjusted(border[Left], border[Top], -border[Right], -border[Bottom]);
-    if (isFullScreen()) {
+    if (isRequestedFullScreen()) {
         moveResize(workspace()->clientArea(FullScreenArea, this, newGeom.center()));
         updateGeometryRestoresForFullscreen(kwinApp()->platform()->outputAt(newGeom.center()));
         return;
     }
 
-    if (maximizeMode() != MaximizeRestore) {
+    if (requestedMaximizeMode() != MaximizeRestore) {
         changeMaximize(false, false, true);   // adjust size
         QRect geom = moveResizeGeometry();
         const QRect screenArea = workspace()->clientArea(ScreenArea, this, geom.center());
