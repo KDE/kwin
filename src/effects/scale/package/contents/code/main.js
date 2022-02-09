@@ -96,7 +96,7 @@ class ScaleEffect {
         if (!window.visible) {
             return;
         }
-        if (!effect.grab(window, Effect.WindowAddedGrabRole)) {
+        if (effect.isGrabbed(window, Effect.WindowAddedGrabRole)) {
             return;
         }
         this.setupForcedRoles(window);
@@ -127,7 +127,7 @@ class ScaleEffect {
         if (!window.visible || window.skipsCloseAnimation) {
             return;
         }
-        if (!effect.grab(window, Effect.WindowClosedGrabRole)) {
+        if (effect.isGrabbed(window, Effect.WindowClosedGrabRole)) {
             return;
         }
         if (window.scaleInAnimation) {
