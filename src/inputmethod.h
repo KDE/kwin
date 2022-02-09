@@ -58,6 +58,7 @@ public:
     bool isVisible() const;
     bool isAvailable() const;
 
+    InputPanelV1Client *panel() const;
     void setPanel(InputPanelV1Client* client);
     void setInputMethodCommand(const QString &path);
 
@@ -67,6 +68,7 @@ public:
     void forwardModifiers(ForwardModifiersForce force);
 
 Q_SIGNALS:
+    void panelChanged();
     void activeChanged(bool active);
     void enabledChanged(bool enabled);
     void visibleChanged();

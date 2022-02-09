@@ -67,6 +67,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
             this, &SlidingPopupsEffect::stopAnimations);
     connect(effects, &EffectsHandler::activeFullScreenEffectChanged,
             this, &SlidingPopupsEffect::stopAnimations);
+    connect(effects, &EffectsHandler::windowFrameGeometryChanged, this, &SlidingPopupsEffect::slotWindowFrameGeometryChanged);
 
     reconfigure(ReconfigureAll);
 
@@ -319,6 +320,13 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long atom)
     setupAnimData(w);
 }
 
+void SlidingPopupsEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const QRect &)
+{
+    if (w == effects->inputPanel()) {
+        setupInputPanelSlide();
+    }
+}
+
 void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
 {
     const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
@@ -452,6 +460,26 @@ void SlidingPopupsEffect::setupInternalWindowSlide(EffectWindow *w)
     animData.slideOutDuration = m_slideOutDuration;
 
     setupAnimData(w);
+}
+
+void SlidingPopupsEffect::setupInputPanelSlide()
+{
+    auto w = effects->inputPanel();
+
+    if (!w || effects->isInputPanelOverlay()) {
+        return;
+    }
+
+    AnimationData &animData = m_animationsData[w];
+    animData.location = Location::Bottom;
+    animData.offset = 0;
+    animData.slideLength = 0;
+    animData.slideInDuration = m_slideInDuration;
+    animData.slideOutDuration = m_slideOutDuration;
+
+    setupAnimData(w);
+
+    slideIn(w);
 }
 
 bool SlidingPopupsEffect::eventFilter(QObject *watched, QEvent *event)

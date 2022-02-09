@@ -871,6 +871,8 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
      */
     Q_PROPERTY(KWin::SessionState sessionState READ sessionState NOTIFY sessionStateChanged)
 
+    Q_PROPERTY(KWin::EffectWindow *inputPanel READ inputPanel NOTIFY inputPanelChanged)
+
     friend class Effect;
 public:
     explicit EffectsHandler(CompositingType type);
@@ -1453,6 +1455,9 @@ public:
      */
     QRegion mapToRenderTarget(const QRegion &region) const;
 
+    virtual KWin::EffectWindow *inputPanel() const = 0;
+    virtual bool isInputPanelOverlay() const = 0;
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever a new @a screen is added to the system.
@@ -1905,6 +1910,8 @@ Q_SIGNALS:
     void startupAdded(const QString &id, const QIcon &icon);
     void startupChanged(const QString &id, const QIcon &icon);
     void startupRemoved(const QString &id);
+
+    void inputPanelChanged();
 
 protected:
     QVector< EffectPair > loaded_effects;

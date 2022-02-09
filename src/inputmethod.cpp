@@ -159,6 +159,11 @@ void InputMethod::setActive(bool active)
     }
 }
 
+InputPanelV1Client *InputMethod::panel() const
+{
+    return m_inputClient;
+}
+
 void InputMethod::setPanel(InputPanelV1Client *client)
 {
     Q_ASSERT(client->isInputMethod());
@@ -182,6 +187,7 @@ void InputMethod::setPanel(InputPanelV1Client *client)
     connect(m_inputClient, &AbstractClient::windowClosed, this, &InputMethod::visibleChanged);
     Q_EMIT visibleChanged();
     updateInputPanelState();
+    Q_EMIT panelChanged();
 }
 
 void InputMethod::setTrackedClient(AbstractClient* trackedClient)

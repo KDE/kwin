@@ -43,6 +43,9 @@
 #include "kwinglutils.h"
 #include "kwinoffscreenquickview.h"
 
+#include "inputmethod.h"
+#include "inputpanelv1client.h"
+
 #include <QDebug>
 #include <QMouseEvent>
 #include <QWheelEvent>
@@ -265,6 +268,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     for (AbstractOutput *output : outputs) {
         slotOutputEnabled(output);
     }
+
+    connect(InputMethod::self(), &InputMethod::panelChanged, this, &EffectsHandlerImpl::inputPanelChanged);
 
     reconfigure();
 }
@@ -1805,6 +1810,24 @@ QRect EffectsHandlerImpl::renderTargetRect() const
 qreal EffectsHandlerImpl::renderTargetScale() const
 {
     return m_scene->renderTargetScale();
+}
+
+KWin::EffectWindow *EffectsHandlerImpl::inputPanel() const
+{
+    auto panel = InputMethod::self()->panel();
+    if (panel) {
+        return panel->effectWindow();
+    }
+    return nullptr;
+}
+
+bool EffectsHandlerImpl::isInputPanelOverlay() const
+{
+    auto panel = InputMethod::self()->panel();
+    if (panel) {
+        return panel->mode() == InputPanelV1Client::Overlay;
+    }
+    return true;
 }
 
 //****************************************

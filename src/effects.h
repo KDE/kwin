@@ -277,6 +277,9 @@ public:
     QRect renderTargetRect() const override;
     qreal renderTargetScale() const override;
 
+    KWin::EffectWindow *inputPanel() const override;
+    bool isInputPanelOverlay() const override;
+
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);
     void slotTabAdded(EffectWindow* from, EffectWindow* to);

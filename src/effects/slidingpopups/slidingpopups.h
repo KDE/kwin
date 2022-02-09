@@ -51,6 +51,7 @@ private Q_SLOTS:
     void slotWindowDeleted(EffectWindow *w);
     void slotPropertyNotify(EffectWindow *w, long atom);
     void slotWaylandSlideOnShowChanged(EffectWindow *w);
+    void slotWindowFrameGeometryChanged(EffectWindow *w, const QRect &);
 
     void slideIn(EffectWindow *w);
     void slideOut(EffectWindow *w);
@@ -60,6 +61,7 @@ private:
     void setupAnimData(EffectWindow *w);
     void setupInternalWindowSlide(EffectWindow *w);
     void setupSlideData(EffectWindow *w);
+    void setupInputPanelSlide();
 
     static KWaylandServer::SlideManagerInterface *s_slideManager;
     static QTimer *s_slideManagerRemoveTimer;
