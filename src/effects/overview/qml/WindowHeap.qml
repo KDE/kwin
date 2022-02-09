@@ -187,7 +187,7 @@ FocusScope {
                     imagePath: "widgets/viewitem"
                     prefix: "hover"
                     z: -1
-                    visible: hoverHandler.hovered || selected
+                    visible: !dragHandler.active && (hoverHandler.hovered || selected)
                 }
 
                 HoverHandler {
