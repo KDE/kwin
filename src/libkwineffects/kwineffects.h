@@ -54,6 +54,10 @@ class QTabletEvent;
  */
 Q_DECLARE_LOGGING_CATEGORY(KWINEFFECTS)
 
+namespace KDecoration2 {
+class Decoration;
+}
+
 namespace KWaylandServer {
     class SurfaceInterface;
     class Display;
@@ -1866,6 +1870,14 @@ Q_SIGNALS:
     void sessionStateChanged();
 
     /**
+     * This signal is emitted when decoration of @p was changed.
+     *
+     * @param w The window for which decoration changed
+     * @since 5.25
+     */
+    void windowDecorationChanged(KWin::EffectWindow *window);
+
+    /**
      * This signal is emitted when the visible geometry of a window changed.
      */
     void windowExpandedGeometryChanged(KWin::EffectWindow *window);
@@ -2377,6 +2389,11 @@ public:
     virtual QRect decorationInnerRect() const = 0;
     bool hasDecoration() const;
     virtual bool decorationHasAlpha() const = 0;
+    /**
+     * Returns the decoration
+     * @since 5.25
+     */
+    virtual KDecoration2::Decoration *decoration() const = 0;
     virtual QByteArray readProperty(long atom, long type, int format) const = 0;
     virtual void deleteProperty(long atom) const = 0;
 

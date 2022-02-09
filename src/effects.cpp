@@ -52,6 +52,7 @@
 #include "wayland_server.h"
 
 #include "decorations/decorationbridge.h"
+#include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
 
 namespace KWin
@@ -354,6 +355,10 @@ void EffectsHandlerImpl::setupClientConnections(AbstractClient* c)
     );
     connect(c, &AbstractClient::visibleGeometryChanged, this, [this, c]() {
         Q_EMIT windowExpandedGeometryChanged(c->effectWindow());
+    });
+
+    connect(c, &AbstractClient::decorationChanged, this, [this, c]() {
+        Q_EMIT windowDecorationChanged(c->effectWindow());
     });
 }
 
@@ -2076,6 +2081,16 @@ void EffectWindowImpl::setSceneWindow(Scene::Window* w)
 QRect EffectWindowImpl::decorationInnerRect() const
 {
     return toplevel->rect() - toplevel->frameMargins();
+}
+
+KDecoration2::Decoration *EffectWindowImpl::decoration() const
+{
+    auto client = qobject_cast<AbstractClient *>(toplevel);
+    if (!client) {
+        return nullptr;
+    }
+
+    return client->decoration();
 }
 
 QByteArray EffectWindowImpl::readProperty(long atom, long type, int format) const

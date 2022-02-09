@@ -25,6 +25,8 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
+#include <KDecoration2/Decoration>
+
 namespace KWin
 {
 
@@ -65,6 +67,7 @@ BlurEffect::BlurEffect()
 
     connect(effects, &EffectsHandler::windowAdded, this, &BlurEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &BlurEffect::slotWindowDeleted);
+    connect(effects, &EffectsHandler::windowDecorationChanged, this, &BlurEffect::setupDecorationConnections);
     connect(effects, &EffectsHandler::propertyNotify, this, &BlurEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::virtualScreenGeometryChanged, this, &BlurEffect::slotScreenGeometryChanged);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this,
@@ -334,6 +337,7 @@ void BlurEffect::slotWindowAdded(EffectWindow *w)
         internal->installEventFilter(this);
     }
 
+    setupDecorationConnections(w);
     updateBlurRegion(w);
 }
 
@@ -352,6 +356,17 @@ void BlurEffect::slotPropertyNotify(EffectWindow *w, long atom)
     if (w && atom == net_wm_blur_region && net_wm_blur_region != XCB_ATOM_NONE) {
         updateBlurRegion(w);
     }
+}
+
+void BlurEffect::setupDecorationConnections(EffectWindow *w)
+{
+    if (!w->decoration()) {
+        return;
+    }
+
+    connect(w->decoration(), &KDecoration2::Decoration::blurRegionChanged, this, [this, w] () {
+        updateBlurRegion(w);
+    });
 }
 
 bool BlurEffect::eventFilter(QObject *watched, QEvent *event)
@@ -399,6 +414,23 @@ bool BlurEffect::supported()
     return supported;
 }
 
+QRegion BlurEffect::decorationBlurRegion(const EffectWindow *w) const
+{
+    if (!w || !effects->decorationSupportsBlurBehind() || !w->decoration()) {
+        return QRegion();
+    }
+
+    QRegion decorationRegion = QRegion(w->decoration()->rect()) - w->decorationInnerRect();
+
+    if (!w->decoration()->blurRegion().isNull()) {
+        //! we return only blurred regions that belong to decoration region
+        return decorationRegion.intersected(w->decoration()->blurRegion());
+    }
+
+    //! when decoration requests blur but does not provide any blur region we can assume it prefers entire decoration region
+    return decorationRegion;
+}
+
 QRect BlurEffect::expand(const QRect &rect) const
 {
     return rect.adjusted(-m_expandSize, -m_expandSize, m_expandSize, m_expandSize);
@@ -424,7 +456,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
         const QRegion appRegion = qvariant_cast<QRegion>(value);
         if (!appRegion.isEmpty()) {
             if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
-                region = QRegion(w->rect()) - w->decorationInnerRect();
+                region = decorationBlurRegion(w);
             }
             region |= appRegion.translated(w->contentsRect().topLeft()) &
                       w->decorationInnerRect();
@@ -436,7 +468,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
     } else if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
         // If the client hasn't specified a blur region, we'll only enable
         // the effect behind the decoration.
-        region = QRegion(w->rect()) - w->decorationInnerRect();
+        region = decorationBlurRegion(w);
     }
 
     return region;
