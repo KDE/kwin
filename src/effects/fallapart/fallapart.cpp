@@ -157,6 +157,8 @@ bool FallApartEffect::isRealWindow(EffectWindow* w)
 
 void FallApartEffect::slotWindowClosed(EffectWindow* c)
 {
+    if (effects->activeFullScreenEffect())
+        return;
     if (!isRealWindow(c))
         return;
     if (!c->isVisible())
