@@ -209,23 +209,28 @@ WindowQuad buildQuad(const QRect &partRect, const QPoint &textureOffset,
     const int x1 = r.x() + r.width();
     const int y1 = r.y() + r.height();
 
-    int u0 = textureOffset.x() + p;
-    int v0 = textureOffset.y() + p;
-    int u1 = textureOffset.x() + p + (r.width() * devicePixelRatio);
-    int v1 = textureOffset.y() + p + (r.height() * devicePixelRatio);
-
-    if (rotated) {
-        u0 = textureOffset.x() + p;
-        v0 = textureOffset.y() + p + (r.width() * devicePixelRatio);
-        u1 = textureOffset.x() + p + (r.height() * devicePixelRatio);
-        v1 = textureOffset.y() + p;
-    }
-
     WindowQuad quad;
-    quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
-    quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
-    quad[2] = WindowVertex(x1, y1, u1, v1); // Bottom-right
-    quad[3] = WindowVertex(x0, y1, u0, v1); // Bottom-left
+    if (rotated) {
+        const int u0 = textureOffset.y() + p;
+        const int v0 = textureOffset.x() + p;
+        const int u1 = textureOffset.y() + p + (r.width() * devicePixelRatio);
+        const int v1 = textureOffset.x() + p + (r.height() * devicePixelRatio);
+
+        quad[0] = WindowVertex(x0, y0, v0, u1); // Top-left
+        quad[1] = WindowVertex(x1, y0, v0, u0); // Top-right
+        quad[2] = WindowVertex(x1, y1, v1, u0); // Bottom-right
+        quad[3] = WindowVertex(x0, y1, v1, u1); // Bottom-left
+    } else {
+        const int u0 = textureOffset.x() + p;
+        const int v0 = textureOffset.y() + p;
+        const int u1 = textureOffset.x() + p + (r.width() * devicePixelRatio);
+        const int v1 = textureOffset.y() + p + (r.height() * devicePixelRatio);
+
+        quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
+        quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
+        quad[2] = WindowVertex(x1, y1, u1, v1); // Bottom-right
+        quad[3] = WindowVertex(x0, y1, u0, v1); // Bottom-left
+    }
     return quad;
 }
 
