@@ -8,6 +8,7 @@
 
 #include "screencaststream.h"
 #include "cursor.h"
+#include "composite.h"
 #include "dmabuftexture.h"
 #include "eglnativefence.h"
 #include "kwinglplatform.h"
@@ -17,6 +18,7 @@
 #include "main.h"
 #include "pipewirecore.h"
 #include "platform.h"
+#include "scene.h"
 #include "screencastsource.h"
 #include "utils/common.h"
 
@@ -306,6 +308,9 @@ bool ScreenCastStream::createStream()
 
     if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded) {
         connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
+            if (auto scene = Compositor::self()->scene()) {
+                scene->makeOpenGLContextCurrent();
+            }
             recordFrame(QRegion{m_cursor.lastRect} | cursorGeometry(Cursors::self()->currentCursor()));
         });
     } else if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
