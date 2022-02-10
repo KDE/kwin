@@ -317,7 +317,7 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 
         const QString pluginKeyword = plugin.value(QStringLiteral("X-KDE-PluginKeyword"));
         if (!pluginKeyword.isEmpty()) {
-            QDir package(QFileInfo(plugin.fileName()).dir());
+            QDir package(QFileInfo(plugin.metaDataFileName()).dir());
             package.cd(QStringLiteral("contents"));
             const QString xmlFile = package.filePath(QStringLiteral("config/main.xml"));
             const QString uiFile =package.filePath(QStringLiteral("ui/config.ui"));
