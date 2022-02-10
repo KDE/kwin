@@ -82,6 +82,7 @@ KWinWrapper::~KWinWrapper()
 {
     wl_socket_destroy(m_socket);
     if (m_kwinProcess) {
+        disconnect(m_kwinProcess, nullptr, this, nullptr);
         m_kwinProcess->terminate();
         m_kwinProcess->waitForFinished();
         m_kwinProcess->kill();
