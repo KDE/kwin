@@ -52,7 +52,7 @@ public:
     QSize sourceSize() const override;
     bool isFormatSupported(uint32_t drmFormat) const override;
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
-    bool needsSoftwareTransformation() const override;
+    DrmPlane::Transformations softwareTransforms() const override;
     int maxBpc() const override;
 
     bool queueChanges(const WaylandOutputConfig &config);

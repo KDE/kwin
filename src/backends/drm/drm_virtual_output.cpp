@@ -109,14 +109,14 @@ bool DrmVirtualOutput::setGammaRamp(const GammaRamp &gamma)
     return true;
 }
 
-bool DrmVirtualOutput::needsSoftwareTransformation() const
-{
-    return false;
-}
-
 int DrmVirtualOutput::maxBpc() const
 {
     return 8;
+}
+
+DrmPlane::Transformations DrmVirtualOutput::softwareTransforms() const
+{
+    return DrmPlane::Transformation::Rotate0;
 }
 
 }

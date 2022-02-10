@@ -318,11 +318,6 @@ void DrmOutput::updateModes()
     }
 }
 
-bool DrmOutput::needsSoftwareTransformation() const
-{
-    return m_pipeline->pending.bufferTransformation != m_pipeline->pending.sourceTransformation;
-}
-
 bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion)
 {
     if (!buffer || buffer->bufferId() == 0) {
@@ -470,6 +465,16 @@ int DrmOutput::maxBpc() const
 bool DrmOutput::usesSoftwareCursor() const
 {
     return !m_setCursorSuccessful || !m_moveCursorSuccessful;
+}
+
+DrmPlane::Transformations DrmOutput::softwareTransforms() const
+{
+    if (m_pipeline->pending.bufferTransformation == m_pipeline->pending.sourceTransformation) {
+        return DrmPlane::Transformation::Rotate0;
+    } else {
+        // TODO handle sourceTransformation != Rotate0
+        return m_pipeline->pending.sourceTransformation;
+    }
 }
 
 }

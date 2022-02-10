@@ -85,7 +85,7 @@ std::optional<QRegion> EglGbmLayer::startRendering()
         if (doesShadowBufferFit(m_oldShadowBuffer.data())) {
             m_shadowBuffer = m_oldShadowBuffer;
         } else {
-            if (m_output->needsSoftwareTransformation()) {
+            if (m_output->softwareTransforms() != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0)) {
                 const auto format = m_renderGpu->eglBackend()->gbmFormatForDrmFormat(m_gbmSurface->format());
                 m_shadowBuffer = QSharedPointer<ShadowBuffer>::create(m_output->sourceSize(), format);
                 if (!m_shadowBuffer->isComplete()) {
@@ -200,7 +200,7 @@ bool EglGbmLayer::doesGbmSurfaceFit(GbmSurface *surf) const
 
 bool EglGbmLayer::doesShadowBufferFit(ShadowBuffer *buffer) const
 {
-    if (m_output->needsSoftwareTransformation()) {
+    if (m_output->softwareTransforms() != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0)) {
         return buffer && buffer->texture()->size() == m_output->sourceSize() && buffer->drmFormat() == m_gbmSurface->format();
     } else {
         return buffer == nullptr;

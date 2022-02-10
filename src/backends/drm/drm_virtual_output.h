@@ -38,7 +38,7 @@ public:
 
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
-    bool needsSoftwareTransformation() const override;
+    DrmPlane::Transformations softwareTransforms() const override;
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);

@@ -29,6 +29,7 @@ DrmLeaseOutput::DrmLeaseOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDe
         pipeline->connector()->modelName(),
         QStringLiteral("%1 %2").arg(pipeline->connector()->edid()->manufacturerString(), pipeline->connector()->modelName())
     )
+    , DrmDisplayDevice(pipeline->gpu())
     , m_pipeline(pipeline)
 {
     qCDebug(KWIN_DRM) << "offering connector" << m_pipeline->connector()->id() << "for lease";
@@ -73,6 +74,47 @@ KWaylandServer::DrmLeaseV1Interface *DrmLeaseOutput::lease() const
 DrmPipeline *DrmLeaseOutput::pipeline() const
 {
     return m_pipeline;
+}
+
+bool DrmLeaseOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion)
+{
+    Q_UNUSED(buffer)
+    Q_UNUSED(damagedRegion)
+    return false;
+}
+
+DrmPlane::Transformations DrmLeaseOutput::softwareTransforms() const
+{
+    return DrmPlane::Transformation::Rotate0;
+}
+
+QSize DrmLeaseOutput::bufferSize() const
+{
+    return m_pipeline->bufferSize();
+}
+
+QSize DrmLeaseOutput::sourceSize() const
+{
+    return m_pipeline->sourceSize();
+}
+
+bool DrmLeaseOutput::isFormatSupported(uint32_t drmFormat) const
+{
+    return m_pipeline->isFormatSupported(drmFormat);
+}
+
+QVector<uint64_t> DrmLeaseOutput::supportedModifiers(uint32_t drmFormat) const
+{
+    return m_pipeline->supportedModifiers(drmFormat);
+}
+
+int DrmLeaseOutput::maxBpc() const
+{
+    if (const auto prop = m_pipeline->connector()->getProp(DrmConnector::PropertyIndex::MaxBpc)) {
+        return prop->maxValue();
+    } else {
+        return 8;
+    }
 }
 
 }

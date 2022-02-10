@@ -13,6 +13,7 @@ set(DRM_SOURCES
     drm_gpu.cpp
     dumb_swapchain.cpp
     shadowbuffer.cpp
+    drm_display_device.cpp
     drm_pipeline.cpp
     drm_pipeline_legacy.cpp
     drm_abstract_output.cpp

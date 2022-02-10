@@ -15,14 +15,9 @@ namespace KWin
 
 DrmAbstractOutput::DrmAbstractOutput(DrmGpu *gpu)
     : AbstractWaylandOutput(gpu->platform())
+    , DrmDisplayDevice(gpu)
     , m_renderLoop(new RenderLoop(this))
-    , m_gpu(gpu)
 {
-}
-
-DrmGpu *DrmAbstractOutput::gpu() const
-{
-    return m_gpu;
 }
 
 RenderLoop *DrmAbstractOutput::renderLoop() const
