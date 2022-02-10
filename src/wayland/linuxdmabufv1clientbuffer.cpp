@@ -17,6 +17,7 @@
 
 #include <QTemporaryFile>
 #include <fcntl.h>
+#include <errno.h>
 
 namespace KWaylandServer
 {
