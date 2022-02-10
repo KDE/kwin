@@ -14,6 +14,8 @@
 #include "drm_object_connector.h"
 #include "logging.h"
 
+#include <errno.h>
+
 namespace KWin
 {
 
