@@ -27,6 +27,7 @@
 #include <QDBusConnection>
 
 #include <UpdateLaunchEnvironmentJob>
+#include <KSignalHandler>
 
 #include <signal.h>
 
@@ -156,17 +157,17 @@ void KWinWrapper::run()
     });
 }
 
-void sigtermHandler(int)
-{
-    qApp->quit();
-}
-
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
     app.setQuitLockEnabled(false); // don't exit when the first KJob finishes
 
-    signal(SIGTERM, sigtermHandler);
+    KSignalHandler::self()->watchSignal(SIGTERM);
+    QObject::connect(KSignalHandler::self(), &KSignalHandler::signalReceived, &app, [&app](int signal) {
+        if (signal == SIGTERM) {
+            app.quit();
+        }
+    });
 
     KWinWrapper wrapper(&app);
     wrapper.run();
