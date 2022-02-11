@@ -388,8 +388,8 @@ int main(int argc, char * argv[])
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
-    // reset QT_QPA_PLATFORM to a sane value for any processes started from KWin
-    setenv("QT_QPA_PLATFORM", "wayland", true);
+    // reset QT_QPA_PLATFORM so we don't propagate it to our children (e.g. apps launched from the overview effect)
+    qunsetenv("QT_QPA_PLATFORM");
 
     KWin::Application::createAboutData();
     KQuickAddons::QtQuickSettings::init();
