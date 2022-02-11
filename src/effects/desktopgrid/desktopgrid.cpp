@@ -222,7 +222,7 @@ void DesktopGridEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::mi
         if (isUsingPresentWindows()) {
             for (auto i = m_managers.begin(); i != m_managers.end(); ++i) {
                 for (WindowMotionManager &manager : *i) {
-                    manager.calculate(timeline.currentTime());
+                    manager.calculate(time);
                 }
             }
         }
