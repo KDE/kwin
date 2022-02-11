@@ -53,7 +53,7 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     if (!inited()) {
         return;
     }
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     m_lastPosition = pos;
 
     QEvent::Type t;
@@ -95,6 +95,7 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
                                     std::placeholders::_1, button, isPressed, tabletToolId));
     input()->processFilters(std::bind( &InputEventFilter::tabletToolButtonEvent,
                                       std::placeholders::_1, button, isPressed, tabletToolId));
+    input()->setLastInputHandler(this);
 }
 
 void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed,
@@ -104,6 +105,7 @@ void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPres
                                      std::placeholders::_1, button, isPressed, tabletPadId));
     input()->processFilters(std::bind( &InputEventFilter::tabletPadButtonEvent,
                                        std::placeholders::_1, button, isPressed, tabletPadId));
+    input()->setLastInputHandler(this);
 }
 
 void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger,
@@ -113,6 +115,7 @@ void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position,
                                      std::placeholders::_1, number, position, isFinger, tabletPadId));
     input()->processFilters(std::bind( &InputEventFilter::tabletPadStripEvent,
                                        std::placeholders::_1, number, position, isFinger, tabletPadId));
+    input()->setLastInputHandler(this);
 }
 
 void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger,
@@ -122,6 +125,7 @@ void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, 
                                      std::placeholders::_1, number, position, isFinger, tabletPadId));
     input()->processFilters(std::bind( &InputEventFilter::tabletPadRingEvent,
                                        std::placeholders::_1, number, position, isFinger, tabletPadId));
+    input()->setLastInputHandler(this);
 }
 
 bool TabletInputRedirection::focusUpdatesBlocked()

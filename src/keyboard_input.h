@@ -73,10 +73,6 @@ public:
         return m_xkb->modifiersRelevantForGlobalShortcuts();
     }
 
-    uint32_t lastEventTime() const {
-        return m_lastEventTime;
-    }
-
 Q_SIGNALS:
     void ledsChanged(KWin::LEDs);
 
@@ -87,7 +83,6 @@ private:
     QMetaObject::Connection m_activeClientSurfaceChangedConnection;
     ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
     KeyboardLayout *m_keyboardLayout = nullptr;
-    uint32_t m_lastEventTime = 0;
 };
 
 }

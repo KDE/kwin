@@ -257,7 +257,7 @@ void PointerInputRedirection::processMotion(const QSizeF &delta, const QSizeF &d
 
 void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, InputDevice *device)
 {
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     if (!inited()) {
         return;
     }
@@ -280,7 +280,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QS
 
 void PointerInputRedirection::processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time, InputDevice *device)
 {
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     QEvent::Type type;
     switch (state) {
     case InputRedirection::PointerButtonReleased:
@@ -318,7 +318,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
 void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 discreteDelta,
     InputRedirection::PointerAxisSource source, uint32_t time, InputDevice *device)
 {
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     update();
 
     Q_EMIT input()->pointerAxisChanged(axis, delta);
@@ -338,7 +338,7 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
 
 void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 time, KWin::InputDevice *device)
 {
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     Q_UNUSED(device)
     if (!inited()) {
         return;
@@ -350,7 +350,7 @@ void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 
 
 void PointerInputRedirection::processSwipeGestureUpdate(const QSizeF &delta, quint32 time, KWin::InputDevice *device)
 {
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     Q_UNUSED(device)
     if (!inited()) {
         return;
@@ -363,7 +363,7 @@ void PointerInputRedirection::processSwipeGestureUpdate(const QSizeF &delta, qui
 
 void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::InputDevice *device)
 {
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     Q_UNUSED(device)
     if (!inited()) {
         return;
@@ -376,7 +376,7 @@ void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::InputDe
 
 void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::InputDevice *device)
 {
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     Q_UNUSED(device)
     if (!inited()) {
         return;
@@ -389,7 +389,7 @@ void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::I
 
 void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 time, KWin::InputDevice *device)
 {
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     Q_UNUSED(device)
     if (!inited()) {
         return;
@@ -402,7 +402,7 @@ void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 
 
 void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time, KWin::InputDevice *device)
 {
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     Q_UNUSED(device)
     if (!inited()) {
         return;
@@ -415,7 +415,7 @@ void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angle
 
 void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::InputDevice *device)
 {
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     Q_UNUSED(device)
     if (!inited()) {
         return;
@@ -428,7 +428,7 @@ void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::InputDe
 
 void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::InputDevice *device)
 {
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     Q_UNUSED(device)
     if (!inited()) {
         return;
