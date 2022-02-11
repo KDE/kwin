@@ -339,7 +339,11 @@ void Workspace::initializeX11()
     // TODO: only in X11 mode
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
     NETRootInfo client_info(kwinApp()->x11Connection(), NET::ActiveWindow | NET::CurrentDesktop);
-    if (!qApp->isSessionRestored()) {
+    bool sessionRestored = false;
+#ifndef QT_NO_SESSIONMANAGER
+    sessionRestored = qApp->isSessionRestored();
+#endif
+    if (!sessionRestored) {
         m_initialDesktop = client_info.currentDesktop();
         vds->setCurrent(m_initialDesktop);
     }
@@ -348,7 +352,7 @@ void Workspace::initializeX11()
     rootInfo->setActiveWindow(XCB_WINDOW_NONE);
     focusToNull();
 
-    if (!qApp->isSessionRestored())
+    if (!sessionRestored)
         ++block_focus; // Because it will be set below
 
     {
@@ -411,7 +415,7 @@ void Workspace::initializeX11()
 
     // TODO: only on X11?
     AbstractClient* new_active_client = nullptr;
-    if (!qApp->isSessionRestored()) {
+    if (!sessionRestored) {
         --block_focus;
         new_active_client = findClient(Predicate::WindowMatch, client_info.activeWindow());
     }
