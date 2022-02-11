@@ -244,7 +244,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     if (!m_inited) {
         return;
     }
-    m_lastEventTime = time;
+    input()->setLastInputHandler(this);
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
 
     m_xkb->forwardModifiers();

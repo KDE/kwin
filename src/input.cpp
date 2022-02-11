@@ -2331,6 +2331,16 @@ void InputRedirection::setupWorkspace()
     }
 }
 
+QObject *InputRedirection::lastInputHandler() const
+{
+    return m_lastInputDevice;
+}
+
+void InputRedirection::setLastInputHandler(QObject *device)
+{
+    m_lastInputDevice = device;
+}
+
 class UserActivitySpy : public InputEventSpy
 {
 public:
@@ -3033,11 +3043,6 @@ Toplevel *InputDeviceHandler::focus() const
 Decoration::DecoratedClientImpl *InputDeviceHandler::decoration() const
 {
     return m_focus.decoration;
-}
-
-uint32_t InputDeviceHandler::lastEventTime() const
-{
-    return m_lastEventTime;
 }
 
 } // namespace

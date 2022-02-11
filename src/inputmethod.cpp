@@ -19,7 +19,7 @@
 #include "screenlockerwatcher.h"
 #include "deleted.h"
 #include "touch_input.h"
-#include "pointer_input.h"
+#include "tablet_input.h"
 
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/keyboard_interface.h>
@@ -134,9 +134,8 @@ void InputMethod::hide()
 
 bool InputMethod::shouldShowOnActive() const
 {
-    return input()->touch()
-           && input()->touch()->lastEventTime() > input()->keyboard()->lastEventTime()
-           && input()->touch()->lastEventTime() > input()->pointer()->lastEventTime();
+    return input()->touch() == input()->lastInputHandler()
+        || input()->tablet() == input()->lastInputHandler();
 }
 
 void InputMethod::setActive(bool active)

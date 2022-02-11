@@ -217,6 +217,12 @@ public:
         return m_touch;
     }
 
+    /**
+     * Specifies which was the device that triggered the last input event
+     */
+    void setLastInputHandler(QObject *device);
+    QObject *lastInputHandler() const;
+
     QList<InputDevice *> devices() const;
 
     bool hasAlphaNumericKeyboard();
@@ -297,6 +303,7 @@ private:
     PointerInputRedirection *m_pointer;
     TabletInputRedirection *m_tablet;
     TouchInputRedirection *m_touch;
+    QObject *m_lastInputDevice = nullptr;
 
     GlobalShortcutsManager *m_shortcuts;
 
@@ -444,8 +451,6 @@ public:
     void setFocus(Toplevel *toplevel);
     void setDecoration(Decoration::DecoratedClientImpl *decoration);
 
-    uint32_t lastEventTime() const;
-
 Q_SIGNALS:
     void decorationChanged();
 
@@ -474,8 +479,6 @@ protected:
     inline void setInited(bool set) {
         m_inited = set;
     }
-
-    uint32_t m_lastEventTime = 0;
 
 private:
     bool setHover(Toplevel *toplevel);
