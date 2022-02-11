@@ -8,6 +8,7 @@
 */
 #include "screen.h"
 #include "abstract_output.h"
+#include "integration.h"
 #include "logging.h"
 #include "platformcursor.h"
 
@@ -23,14 +24,29 @@ static int forcedDpi()
     return qEnvironmentVariableIsSet("QT_WAYLAND_FORCE_DPI") ? qEnvironmentVariableIntValue("QT_WAYLAND_FORCE_DPI") : -1;
 }
 
-Screen::Screen(AbstractOutput *output)
+Screen::Screen(AbstractOutput *output, Integration *integration)
     : m_output(output)
     , m_cursor(new PlatformCursor)
+    , m_integration(integration)
 {
     connect(output, &AbstractOutput::geometryChanged, this, &Screen::handleGeometryChanged);
 }
 
 Screen::~Screen() = default;
+
+QList<QPlatformScreen *> Screen::virtualSiblings() const
+{
+    const auto screens = m_integration->screens();
+
+    QList<QPlatformScreen *> siblings;
+    siblings.reserve(siblings.size());
+
+    for (Screen *screen : screens) {
+        siblings << screen;
+    }
+
+    return siblings;
+}
 
 int Screen::depth() const
 {

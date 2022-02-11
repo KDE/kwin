@@ -41,8 +41,9 @@ public:
     QStringList themeNames() const override;
     QPlatformTheme *createPlatformTheme(const QString &name) const override;
     QPlatformOpenGLContext *createPlatformOpenGLContext(QOpenGLContext *context) const override;
-
     void initialize() override;
+
+    QHash<AbstractOutput *, Screen *> screens() const;
 
 private Q_SLOTS:
     void handleOutputEnabled(AbstractOutput *output);

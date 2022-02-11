@@ -20,6 +20,7 @@ class AbstractOutput;
 
 namespace QPA
 {
+class Integration;
 class PlatformCursor;
 
 class Screen : public QObject, public QPlatformScreen
@@ -27,7 +28,7 @@ class Screen : public QObject, public QPlatformScreen
     Q_OBJECT
 
 public:
-    explicit Screen(AbstractOutput *output);
+    Screen(AbstractOutput *output, Integration *integration);
     ~Screen() override;
 
     QString name() const override;
@@ -38,6 +39,7 @@ public:
     QPlatformCursor *cursor() const override;
     QDpi logicalDpi() const override;
     qreal devicePixelRatio() const override;
+    QList<QPlatformScreen *> virtualSiblings() const override;
 
 private Q_SLOTS:
     void handleGeometryChanged();
@@ -45,6 +47,7 @@ private Q_SLOTS:
 private:
     QPointer<AbstractOutput> m_output;
     QScopedPointer<PlatformCursor> m_cursor;
+    Integration *m_integration;
 };
 
 class PlaceholderScreen : public QPlatformPlaceholderScreen
