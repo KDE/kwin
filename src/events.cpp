@@ -789,10 +789,12 @@ void X11Client::updateMouseGrab()
 
     xcb_ungrab_button(kwinApp()->x11Connection(), XCB_BUTTON_INDEX_ANY, m_wrapper, XCB_MOD_MASK_ANY);
 
+#ifdef KWIN_BUILD_TABBOX
     if (TabBox::TabBox::self()->forcedGlobalMouseGrab()) { // see TabBox::establishTabBoxGrab()
         m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
         return;
     }
+#endif
 
     // When a passive grab is activated or deactivated, the X server will generate crossing
     // events as if the pointer were suddenly to warp from its current position to some position
