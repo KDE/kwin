@@ -590,7 +590,6 @@ void WaylandServer::initScreenLocker()
     auto *screenLockerApp = ScreenLocker::KSldApp::self();
 
     ScreenLocker::KSldApp::self()->setGreeterEnvironment(kwinApp()->processStartupEnvironment());
-    ScreenLocker::KSldApp::self()->initialize();
 
     connect(this, &WaylandServer::shellClientAdded, this, [](AbstractClient *client) {
         if (client->isLockScreen()) {
@@ -634,6 +633,8 @@ void WaylandServer::initScreenLocker()
             ScreenLocker::KSldApp::self()->setWaylandFd(-1);
         }
     );
+
+    ScreenLocker::KSldApp::self()->initialize();
 
     if (m_initFlags.testFlag(InitializationFlag::LockScreen)) {
         ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
