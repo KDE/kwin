@@ -40,6 +40,7 @@ Integration::Integration()
     : QObject()
     , QPlatformIntegration()
     , m_fontDb(new QGenericUnixFontDatabase())
+    , m_services(new QGenericUnixServices())
 {
 }
 
@@ -188,6 +189,11 @@ void Integration::handleOutputDisabled(AbstractOutput *output)
     }
 
     QWindowSystemInterface::handleScreenRemoved(platformScreen);
+}
+
+QPlatformServices *Integration::services() const
+{
+    return m_services.data();
 }
 
 }
