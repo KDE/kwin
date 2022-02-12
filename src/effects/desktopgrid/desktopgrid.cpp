@@ -352,16 +352,14 @@ void DesktopGridEffect::postPaintScreen()
 void DesktopGridEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
 {
     if (timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
-        if (w->isOnDesktop(paintingDesktop)) {
-            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-            if (w->isMinimized() && isUsingPresentWindows())
-                w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
-            data.mask |= PAINT_WINDOW_TRANSFORMED;
-
-            if (windowMove && wasWindowMove && windowMove->findModal() == w)
-                w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-        } else
+        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+        if (w->isMinimized() && isUsingPresentWindows()) {
+            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
+        }
+        if (windowMove && wasWindowMove && windowMove->findModal() == w) {
             w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+        }
+        data.setTransformed();
     }
     effects->prePaintWindow(w, data, presentTime);
 }
@@ -369,6 +367,9 @@ void DesktopGridEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data
 void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
+        if (!w->isOnDesktop(paintingDesktop)) {
+            return;
+        }
         if (isUsingPresentWindows() && w == windowMove && wasWindowMove &&
             ((!wasWindowCopy && sourceDesktop == paintingDesktop) ||
              (sourceDesktop != highlightedDesktop && highlightedDesktop == paintingDesktop))) {
