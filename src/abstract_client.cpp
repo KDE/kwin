@@ -496,8 +496,10 @@ void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
     updateWindowRules(Rules::Desktops);
 
     Q_EMIT desktopChanged();
-    if (wasOnCurrentDesktop != isOnCurrentDesktop())
+    if (wasOnCurrentDesktop != isOnCurrentDesktop()) {
+        addWorkspaceRepaint(visibleGeometry());
         Q_EMIT desktopPresenceChanged(this, was_desk);
+    }
     Q_EMIT x11DesktopIdsChanged();
 }
 
