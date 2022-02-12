@@ -281,6 +281,7 @@ set_package_properties(X11_XCB PROPERTIES
 # dependencies for QPA plugin
 find_package(Qt5FontDatabaseSupport REQUIRED)
 find_package(Qt5ThemeSupport REQUIRED)
+find_package(Qt5ServiceSupport REQUIRED)
 find_package(Qt5EventDispatcherSupport REQUIRED)
 
 find_package(Freetype REQUIRED)
