@@ -17,7 +17,7 @@ namespace KWin
 
 class SurfaceItem;
 class DrmBuffer;
-class DrmAbstractOutput;
+class DrmDisplayDevice;
 
 class DrmLayer
 {
@@ -41,7 +41,7 @@ public:
     virtual QSharedPointer<DrmBuffer> testBuffer() = 0;
 
     virtual QSharedPointer<DrmBuffer> currentBuffer() const = 0;
-    virtual DrmAbstractOutput *output() const = 0;
+    virtual DrmDisplayDevice *displayDevice() const = 0;
 };
 
 }

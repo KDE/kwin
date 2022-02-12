@@ -28,7 +28,6 @@ namespace KWin
 class GbmSurface;
 class DumbSwapchain;
 class ShadowBuffer;
-class DrmAbstractOutput;
 class DrmBuffer;
 class DrmGpu;
 class SurfaceItem;
@@ -37,7 +36,7 @@ class GLTexture;
 class EglGbmLayer : public DrmLayer
 {
 public:
-    EglGbmLayer(DrmGpu *renderGpu, DrmAbstractOutput *output);
+    EglGbmLayer(DrmGpu *renderGpu, DrmDisplayDevice *displayDevice);
     ~EglGbmLayer();
 
     std::optional<QRegion> startRendering() override;
@@ -47,7 +46,7 @@ public:
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     QSharedPointer<GLTexture> texture() const;
 
-    DrmAbstractOutput *output() const override;
+    DrmDisplayDevice *displayDevice() const override;
     int bufferAge() const;
     EGLSurface eglSurface() const;
 
@@ -85,7 +84,7 @@ private:
     QSharedPointer<DumbSwapchain> m_importSwapchain;
     QSharedPointer<DumbSwapchain> m_oldImportSwapchain;
 
-    DrmAbstractOutput *const m_output;
+    DrmDisplayDevice *const m_displayDevice;
     DrmGpu *const m_renderGpu;
 };
 

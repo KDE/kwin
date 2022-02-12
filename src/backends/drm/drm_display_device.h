@@ -33,6 +33,7 @@ public:
     virtual bool isFormatSupported(uint32_t drmFormat) const = 0;
     virtual QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const = 0;
     virtual int maxBpc() const = 0;
+    virtual QRect renderGeometry() const = 0;
 
 protected:
     DrmGpu *const m_gpu;

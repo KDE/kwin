@@ -16,7 +16,7 @@
 namespace KWin
 {
 
-class DrmAbstractOutput;
+class DrmDisplayDevice;
 
 class ShadowBuffer
 {
@@ -25,8 +25,7 @@ public:
     ~ShadowBuffer();
 
     bool isComplete() const;
-
-    void render(DrmAbstractOutput *output);
+    void render(DrmDisplayDevice *displayDevice);
 
     GLRenderTarget *renderTarget() const;
     QSharedPointer<GLTexture> texture() const;

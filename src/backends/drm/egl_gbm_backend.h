@@ -38,6 +38,7 @@ class ShadowBuffer;
 class DrmBackend;
 class DrmGpu;
 class EglGbmLayer;
+class DrmDisplayDevice;
 
 struct GbmFormat {
     uint32_t drmFormat = 0;
@@ -72,7 +73,7 @@ public:
     QSharedPointer<DrmBuffer> testBuffer(DrmAbstractOutput *output);
     EGLConfig config(uint32_t format) const;
     GbmFormat gbmFormatForDrmFormat(uint32_t format) const;
-    std::optional<uint32_t> chooseFormat(DrmAbstractOutput *output) const;
+    std::optional<uint32_t> chooseFormat(DrmDisplayDevice *displyDevice) const;
 
 protected:
     void cleanupSurfaces() override;

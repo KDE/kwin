@@ -23,6 +23,7 @@ public:
     DrmAbstractOutput(DrmGpu *gpu);
 
     RenderLoop *renderLoop() const override;
+    QRect renderGeometry() const override;
 
 protected:
     friend class DrmGpu;

@@ -25,4 +25,9 @@ RenderLoop *DrmAbstractOutput::renderLoop() const
     return m_renderLoop;
 }
 
+QRect DrmAbstractOutput::renderGeometry() const
+{
+    return geometry();
+}
+
 }

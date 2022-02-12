@@ -55,35 +55,22 @@ ShadowBuffer::~ShadowBuffer()
 {
 }
 
-void ShadowBuffer::render(DrmAbstractOutput *output)
+void ShadowBuffer::render(DrmDisplayDevice *displayDevice)
 {
     QMatrix4x4 mvpMatrix;
-    switch (output->transform()) {
-    case DrmOutput::Transform::Normal:
-    case DrmOutput::Transform::Flipped:
-        break;
-    case DrmOutput::Transform::Rotated90:
-    case DrmOutput::Transform::Flipped90:
+    const auto transform = displayDevice->softwareTransforms();
+    if (transform & DrmPlane::Transformation::Rotate90) {
         mvpMatrix.rotate(90, 0, 0, 1);
-        break;
-    case DrmOutput::Transform::Rotated180:
-    case DrmOutput::Transform::Flipped180:
+    } else if (transform & DrmPlane::Transformation::Rotate180) {
         mvpMatrix.rotate(180, 0, 0, 1);
-        break;
-    case DrmOutput::Transform::Rotated270:
-    case DrmOutput::Transform::Flipped270:
+    } else if (transform & DrmPlane::Transformation::Rotate270) {
         mvpMatrix.rotate(270, 0, 0, 1);
-        break;
     }
-    switch (output->transform()) {
-    case DrmOutput::Transform::Flipped:
-    case DrmOutput::Transform::Flipped90:
-    case DrmOutput::Transform::Flipped180:
-    case DrmOutput::Transform::Flipped270:
+    if (transform & DrmPlane::Transformation::ReflectX) {
         mvpMatrix.scale(-1, 1);
-        break;
-    default:
-        break;
+    }
+    if (transform & DrmPlane::Transformation::ReflectY) {
+        mvpMatrix.scale(1, -1);
     }
 
     auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);

@@ -117,4 +117,9 @@ int DrmLeaseOutput::maxBpc() const
     }
 }
 
+QRect DrmLeaseOutput::renderGeometry() const
+{
+    return QRect(QPoint(), m_pipeline->sourceSize());
+}
+
 }

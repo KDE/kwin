@@ -16,18 +16,18 @@
 namespace KWin
 {
 
-DrmQPainterLayer::DrmQPainterLayer(DrmAbstractOutput *output)
-    : m_output(output)
+DrmQPainterLayer::DrmQPainterLayer(DrmDisplayDevice *displayDevice)
+    : m_displayDevice(displayDevice)
 {
 }
 
 std::optional<QRegion> DrmQPainterLayer::startRendering()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = QSharedPointer<DumbSwapchain>::create(m_output->gpu(), m_output->sourceSize(), DRM_FORMAT_XRGB8888);
+        m_swapchain = QSharedPointer<DumbSwapchain>::create(m_displayDevice->gpu(), m_displayDevice->sourceSize(), DRM_FORMAT_XRGB8888);
     }
     QRegion needsRepaint;
-    if (!m_swapchain->acquireBuffer(m_output->geometry(), &needsRepaint)) {
+    if (!m_swapchain->acquireBuffer(m_displayDevice->renderGeometry(), &needsRepaint)) {
         return std::optional<QRegion>();
     }
     return needsRepaint;
@@ -48,14 +48,14 @@ bool DrmQPainterLayer::scanout(SurfaceItem *surfaceItem)
 QSharedPointer<DrmBuffer> DrmQPainterLayer::testBuffer()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = QSharedPointer<DumbSwapchain>::create(m_output->gpu(), m_output->sourceSize(), DRM_FORMAT_XRGB8888);
+        m_swapchain = QSharedPointer<DumbSwapchain>::create(m_displayDevice->gpu(), m_displayDevice->sourceSize(), DRM_FORMAT_XRGB8888);
     }
     return m_swapchain->currentBuffer();
 }
 
 bool DrmQPainterLayer::doesSwapchainFit() const
 {
-    return m_swapchain && m_swapchain->size() == m_output->sourceSize();
+    return m_swapchain && m_swapchain->size() == m_displayDevice->sourceSize();
 }
 
 QSharedPointer<DrmBuffer> DrmQPainterLayer::currentBuffer() const
@@ -63,9 +63,9 @@ QSharedPointer<DrmBuffer> DrmQPainterLayer::currentBuffer() const
     return m_swapchain ? m_swapchain->currentBuffer() : nullptr;
 }
 
-DrmAbstractOutput *DrmQPainterLayer::output() const
+DrmDisplayDevice *DrmQPainterLayer::displayDevice() const
 {
-    return m_output;
+    return m_displayDevice;
 }
 
 }

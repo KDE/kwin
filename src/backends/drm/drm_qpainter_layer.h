@@ -16,20 +16,20 @@ class DumbSwapchain;
 
 class DrmQPainterLayer : public DrmLayer {
 public:
-    DrmQPainterLayer(DrmAbstractOutput *output);
+    DrmQPainterLayer(DrmDisplayDevice *displayDevice);
 
     std::optional<QRegion> startRendering() override;
     bool endRendering(const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
     QSharedPointer<DrmBuffer> testBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
-    DrmAbstractOutput *output() const override;
+    DrmDisplayDevice *displayDevice() const override;
 
 private:
     bool doesSwapchainFit() const;
 
     QSharedPointer<DumbSwapchain> m_swapchain;
-    DrmAbstractOutput *const m_output;
+    DrmDisplayDevice *const m_displayDevice;
 };
 
 }

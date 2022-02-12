@@ -323,14 +323,14 @@ GbmFormat EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const
     }
 }
 
-std::optional<uint32_t> EglGbmBackend::chooseFormat(DrmAbstractOutput *output) const
+std::optional<uint32_t> EglGbmBackend::chooseFormat(DrmDisplayDevice *device) const
 {
     // formats are already sorted by order of preference
     std::optional<uint32_t> fallback;
     for (const auto &format : qAsConst(m_formats)) {
-        if (output->isFormatSupported(format.drmFormat)) {
+        if (device->isFormatSupported(format.drmFormat)) {
             int bpc = std::max(format.redSize, std::max(format.greenSize, format.blueSize));
-            if (bpc <= output->maxBpc() && !fallback.has_value()) {
+            if (bpc <= device->maxBpc() && !fallback.has_value()) {
                 fallback = format.drmFormat;
             } else {
                 return format.drmFormat;
