@@ -1,9 +1,10 @@
-set(kwin_wayland_wrapper_SOURCES
+add_executable(kwin_wayland_wrapper)
+target_sources(kwin_wayland_wrapper PRIVATE
     kwin_wrapper.cpp
     wl-socket.c
 )
 
-ecm_qt_declare_logging_category(kwin_wayland_wrapper_SOURCES
+ecm_qt_declare_logging_category(kwin_wayland_wrapper
     HEADER
         wrapper_logging.h
     IDENTIFIER
@@ -13,8 +14,6 @@ ecm_qt_declare_logging_category(kwin_wayland_wrapper_SOURCES
     DEFAULT_SEVERITY
         Warning
 )
-
-add_executable(kwin_wayland_wrapper ${kwin_wayland_wrapper_SOURCES})
 
 target_link_libraries(kwin_wayland_wrapper Qt5::Core Qt5::DBus KF5::DBusAddons KWinXwaylandCommon)
 set_property(TARGET kwin_wayland_wrapper PROPERTY C_STANDARD 11)
