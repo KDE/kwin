@@ -9,6 +9,7 @@
 #include "drm_abstract_output.h"
 #include "drm_gpu.h"
 #include "drm_backend.h"
+#include "renderloop_p.h"
 
 namespace KWin
 {
@@ -28,6 +29,16 @@ RenderLoop *DrmAbstractOutput::renderLoop() const
 QRect DrmAbstractOutput::renderGeometry() const
 {
     return geometry();
+}
+
+void DrmAbstractOutput::frameFailed() const
+{
+    RenderLoopPrivate::get(m_renderLoop)->notifyFrameFailed();
+}
+
+void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp) const
+{
+    RenderLoopPrivate::get(m_renderLoop)->notifyFrameCompleted(timestamp);
 }
 
 }

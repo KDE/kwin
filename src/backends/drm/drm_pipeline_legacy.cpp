@@ -13,6 +13,7 @@
 #include "drm_object_crtc.h"
 #include "drm_object_connector.h"
 #include "logging.h"
+#include "drm_layer.h"
 
 #include <errno.h>
 
@@ -21,33 +22,32 @@ namespace KWin
 
 bool DrmPipeline::presentLegacy()
 {
-    if ((!pending.crtc->current() || pending.crtc->current()->needsModeChange(m_primaryBuffer.get())) && !legacyModeset()) {
+    const auto buffer = pending.layer->currentBuffer();
+    if ((!pending.crtc->current() || pending.crtc->current()->needsModeChange(buffer.get())) && !legacyModeset()) {
         return false;
     }
-    if (drmModePageFlip(gpu()->fd(), pending.crtc->id(), m_primaryBuffer ? m_primaryBuffer->bufferId() : 0, DRM_MODE_PAGE_FLIP_EVENT, nullptr) != 0) {
-        qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno) << m_primaryBuffer;
+    if (drmModePageFlip(gpu()->fd(), pending.crtc->id(), buffer ? buffer->bufferId() : 0, DRM_MODE_PAGE_FLIP_EVENT, nullptr) != 0) {
+        qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno) << buffer;
         return false;
     }
     m_pageflipPending = true;
-    pending.crtc->setNext(m_primaryBuffer);
+    pending.crtc->setNext(buffer);
     return true;
 }
 
 bool DrmPipeline::legacyModeset()
 {
     uint32_t connId = m_connector->id();
-    if (!checkTestBuffer() || drmModeSetCrtc(gpu()->fd(), pending.crtc->id(), m_primaryBuffer->bufferId(), 0, 0, &connId, 1, pending.mode->nativeMode()) != 0) {
+    if (!pending.layer->testBuffer() || drmModeSetCrtc(gpu()->fd(), pending.crtc->id(), pending.layer->currentBuffer()->bufferId(), 0, 0, &connId, 1, pending.mode->nativeMode()) != 0) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
         pending = m_next;
-        m_primaryBuffer = m_oldTestBuffer;
         return false;
     }
-    m_oldTestBuffer = nullptr;
     // make sure the buffer gets kept alive, or the modeset gets reverted by the kernel
     if (pending.crtc->current()) {
-        pending.crtc->setNext(m_primaryBuffer);
+        pending.crtc->setNext(pending.layer->currentBuffer());
     } else {
-        pending.crtc->setCurrent(m_primaryBuffer);
+        pending.crtc->setCurrent(pending.layer->currentBuffer());
     }
     return true;
 }

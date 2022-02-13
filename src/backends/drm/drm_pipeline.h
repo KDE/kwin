@@ -31,6 +31,8 @@ class DrmBuffer;
 class DrmDumbBuffer;
 class GammaRamp;
 class DrmConnectorMode;
+class DrmLayer;
+class DrmDisplayDevice;
 
 class DrmGammaRamp
 {
@@ -60,7 +62,8 @@ public:
      * tests the pending commit first and commits it if the test passes
      * if the test fails, there is a guarantee for no lasting changes
      */
-    bool present(const QSharedPointer<DrmBuffer> &buffer);
+    bool present();
+    bool testScanout();
 
     bool needsModeset() const;
     void applyPendingChanges();
@@ -91,8 +94,8 @@ public:
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const;
     QMap<uint32_t, QVector<uint64_t>> supportedFormats() const;
 
-    void setOutput(DrmOutput *output);
-    DrmOutput *output() const;
+    void setDisplayDevice(DrmDisplayDevice *device);
+    DrmDisplayDevice *displayDevice() const;
 
     struct State {
         DrmCrtc *crtc = nullptr;
@@ -103,6 +106,8 @@ public:
         AbstractWaylandOutput::RgbRange rgbRange = AbstractWaylandOutput::RgbRange::Automatic;
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
         QSharedPointer<DrmGammaRamp> gamma;
+
+        QSharedPointer<DrmLayer> layer;
 
         QPoint cursorPos;
         QPoint cursorHotspot;
@@ -124,7 +129,6 @@ public:
     static bool commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects = {});
 
 private:
-    bool checkTestBuffer();
     bool activePending() const;
     bool isCursorVisible() const;
     bool isBufferForDirectScanout() const;
@@ -150,11 +154,9 @@ private:
     static void printFlags(uint32_t flags);
     static void printProps(DrmObject *object, PrintMode mode);
 
-    DrmOutput *m_output = nullptr;
+    DrmDisplayDevice *m_displayDevice = nullptr;
     DrmConnector *m_connector = nullptr;
 
-    QSharedPointer<DrmBuffer> m_primaryBuffer;
-    QSharedPointer<DrmBuffer> m_oldTestBuffer;
     bool m_pageflipPending = false;
     bool m_modesetPresentPending = false;
 

@@ -35,6 +35,7 @@ std::optional<QRegion> DrmQPainterLayer::startRendering()
 
 bool DrmQPainterLayer::endRendering(const QRegion &damagedRegion)
 {
+    m_currentDamage = damagedRegion;
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
     return true;
 }
@@ -63,9 +64,19 @@ QSharedPointer<DrmBuffer> DrmQPainterLayer::currentBuffer() const
     return m_swapchain ? m_swapchain->currentBuffer() : nullptr;
 }
 
+QRegion DrmQPainterLayer::currentDamage() const
+{
+    return m_currentDamage;
+}
+
 DrmDisplayDevice *DrmQPainterLayer::displayDevice() const
 {
     return m_displayDevice;
+}
+
+bool DrmQPainterLayer::hasDirectScanoutBuffer() const
+{
+    return false;
 }
 
 }

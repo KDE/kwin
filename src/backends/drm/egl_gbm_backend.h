@@ -6,9 +6,9 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_EGL_GBM_BACKEND_H
-#define KWIN_EGL_GBM_BACKEND_H
+#pragma once
 #include "abstract_egl_backend.h"
+#include "drm_render_backend.h"
 
 #include <kwinglutils.h>
 
@@ -52,7 +52,7 @@ bool operator==(const GbmFormat &lhs, const GbmFormat &rhs);
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
  */
-class EglGbmBackend : public AbstractEglBackend
+class EglGbmBackend : public AbstractEglBackend, public DrmRenderBackend
 {
     Q_OBJECT
 public:
@@ -67,6 +67,7 @@ public:
     void init() override;
     bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem) override;
     bool prefer10bpc() const override;
+    QSharedPointer<DrmLayer> createLayer(DrmDisplayDevice *displayDevice) const override;
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
@@ -76,17 +77,13 @@ public:
     std::optional<uint32_t> chooseFormat(DrmDisplayDevice *displyDevice) const;
 
 protected:
-    void cleanupSurfaces() override;
     void aboutToStartPainting(AbstractOutput *output, const QRegion &damage) override;
 
 private:
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
-    void addOutput(AbstractOutput *output);
-    void removeOutput(AbstractOutput *output);
 
-    QMap<AbstractOutput *, QSharedPointer<EglGbmLayer>> m_surfaces;
     DrmBackend *m_backend;
     QVector<GbmFormat> m_formats;
     QMap<uint32_t, EGLConfig> m_configs;
@@ -95,5 +92,3 @@ private:
 };
 
 } // namespace
-
-#endif

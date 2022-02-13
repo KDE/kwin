@@ -24,6 +24,8 @@ public:
 
     RenderLoop *renderLoop() const override;
     QRect renderGeometry() const override;
+    void frameFailed() const override;
+    void pageFlipped(std::chrono::nanoseconds timestamp) const override;
 
 protected:
     friend class DrmGpu;

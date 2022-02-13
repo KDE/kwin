@@ -44,6 +44,8 @@ public:
     bool scanout(SurfaceItem *surfaceItem) override;
     QSharedPointer<DrmBuffer> testBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
+    bool hasDirectScanoutBuffer() const override;
+    QRegion currentDamage() const override;
     QSharedPointer<GLTexture> texture() const;
 
     DrmDisplayDevice *displayDevice() const override;
@@ -76,7 +78,9 @@ private:
         bool attemptedThisFrame = false;
     } m_scanoutCandidate;
 
+    QSharedPointer<DrmBuffer> m_scanoutBuffer;
     QSharedPointer<DrmBuffer> m_currentBuffer;
+    QRegion m_currentDamage;
     QSharedPointer<GbmSurface> m_gbmSurface;
     QSharedPointer<GbmSurface> m_oldGbmSurface;
     QSharedPointer<ShadowBuffer> m_shadowBuffer;

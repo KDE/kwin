@@ -23,12 +23,15 @@ public:
     bool scanout(SurfaceItem *surfaceItem) override;
     QSharedPointer<DrmBuffer> testBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
+    QRegion currentDamage() const override;
+    bool hasDirectScanoutBuffer() const override;
     DrmDisplayDevice *displayDevice() const override;
 
 private:
     bool doesSwapchainFit() const;
 
     QSharedPointer<DumbSwapchain> m_swapchain;
+    QRegion m_currentDamage;
     DrmDisplayDevice *const m_displayDevice;
 };
 

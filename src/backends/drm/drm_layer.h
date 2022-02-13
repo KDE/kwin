@@ -41,6 +41,9 @@ public:
     virtual QSharedPointer<DrmBuffer> testBuffer() = 0;
 
     virtual QSharedPointer<DrmBuffer> currentBuffer() const = 0;
+    virtual QRegion currentDamage() const = 0;
+    virtual bool hasDirectScanoutBuffer() const = 0;
+
     virtual DrmDisplayDevice *displayDevice() const = 0;
 };
 

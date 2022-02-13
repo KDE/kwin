@@ -49,20 +49,14 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
     : AbstractEglBackend(drmBackend->primaryGpu()->deviceId())
     , m_backend(drmBackend)
 {
-    drmBackend->primaryGpu()->setEglBackend(this);
-    connect(m_backend, &DrmBackend::outputAdded, this, &EglGbmBackend::addOutput);
-    connect(m_backend, &DrmBackend::outputRemoved, this, &EglGbmBackend::removeOutput);
+    drmBackend->primaryGpu()->setRenderBackend(this);
     setIsDirectRendering(true);
 }
 
 EglGbmBackend::~EglGbmBackend()
 {
     cleanup();
-}
-
-void EglGbmBackend::cleanupSurfaces()
-{
-    m_surfaces.clear();
+    m_backend->primaryGpu()->setRenderBackend(nullptr);
 }
 
 bool EglGbmBackend::initializeEgl()
@@ -124,21 +118,7 @@ bool EglGbmBackend::initRenderingContext()
     if (!createContext() || !makeCurrent()) {
         return false;
     }
-    const auto outputs = m_backend->outputs();
-    for (const auto &output : outputs) {
-        addOutput(output);
-    }
     return true;
-}
-
-void EglGbmBackend::addOutput(AbstractOutput *output) {
-    auto drmOutput = static_cast<DrmAbstractOutput*>(output);
-    m_surfaces.insert(drmOutput, QSharedPointer<EglGbmLayer>::create(m_backend->primaryGpu(), drmOutput));
-}
-
-void EglGbmBackend::removeOutput(AbstractOutput *output)
-{
-    m_surfaces.remove(output);
 }
 
 bool EglGbmBackend::initBufferConfigs()
@@ -250,9 +230,8 @@ static QVector<EGLint> regionToRects(const QRegion &region, DrmAbstractOutput *o
 
 void EglGbmBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &damagedRegion)
 {
-    Q_ASSERT_X(output, "aboutToStartPainting", "not using per screen rendering");
-    Q_ASSERT(m_surfaces.contains(output));
-    const auto &surface = m_surfaces[output];
+    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
+    const auto &surface = static_cast<EglGbmLayer*>(drmOutput->outputLayer());
     if (surface->bufferAge() > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
         QVector<EGLint> rects = regionToRects(damagedRegion, static_cast<DrmAbstractOutput*>(output));
         const bool correct = eglSetDamageRegionKHR(eglDisplay(), surface->eglSurface(), rects.data(), rects.count()/4);
@@ -274,34 +253,34 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
 
 QRegion EglGbmBackend::beginFrame(AbstractOutput *output)
 {
-    Q_ASSERT(m_surfaces.contains(output));
-    return m_surfaces[output]->startRendering().value_or(QRegion());
+    return static_cast<DrmAbstractOutput*>(output)->outputLayer()->startRendering().value_or(QRegion());
 }
 
 void EglGbmBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
                              const QRegion &damagedRegion)
 {
-    Q_ASSERT(m_surfaces.contains(output));
     Q_UNUSED(renderedRegion)
 
-    m_surfaces[output]->endRendering(damagedRegion);
-    static_cast<DrmAbstractOutput*>(output)->present(m_surfaces[output]->currentBuffer(), damagedRegion);
+    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
+    drmOutput->outputLayer()->endRendering(damagedRegion);
+    drmOutput->present();
 }
 
 bool EglGbmBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)
 {
-    return m_surfaces[output]->scanout(surfaceItem);
-}
-
-QSharedPointer<DrmBuffer> EglGbmBackend::testBuffer(DrmAbstractOutput *output)
-{
-    return m_surfaces[output]->testBuffer();
+    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
+    if (drmOutput->outputLayer()->scanout(surfaceItem)) {
+        drmOutput->present();
+        return true;
+    } else {
+        return false;
+    }
 }
 
 QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output) const
 {
-    Q_ASSERT(m_surfaces.contains(output));
-    return m_surfaces[output]->texture();
+    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
+    return static_cast<EglGbmLayer*>(drmOutput->outputLayer())->texture();
 }
 
 GbmFormat EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const
@@ -350,6 +329,11 @@ bool EglGbmBackend::prefer10bpc() const
 EGLConfig EglGbmBackend::config(uint32_t format) const
 {
     return m_configs[format];
+}
+
+QSharedPointer<DrmLayer> EglGbmBackend::createLayer(DrmDisplayDevice *displayDevice) const
+{
+    return QSharedPointer<EglGbmLayer>::create(m_backend->primaryGpu(), displayDevice);
 }
 
 bool operator==(const GbmFormat &lhs, const GbmFormat &rhs)

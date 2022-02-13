@@ -6,15 +6,14 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_SCENE_QPAINTER_DRM_BACKEND_H
-#define KWIN_SCENE_QPAINTER_DRM_BACKEND_H
+#pragma once
 #include "qpainterbackend.h"
+#include "drm_render_backend.h"
+#include "dumb_swapchain.h"
 
 #include <QObject>
 #include <QVector>
 #include <QSharedPointer>
-
-#include "dumb_swapchain.h"
 
 namespace KWin
 {
@@ -23,20 +22,19 @@ class DrmBackend;
 class DrmAbstractOutput;
 class DrmQPainterLayer;
 
-class DrmQPainterBackend : public QPainterBackend
+class DrmQPainterBackend : public QPainterBackend, public DrmRenderBackend
 {
     Q_OBJECT
 public:
     DrmQPainterBackend(DrmBackend *backend);
+    ~DrmQPainterBackend();
 
     QImage *bufferForScreen(AbstractOutput *output) override;
     QRegion beginFrame(AbstractOutput *output) override;
     void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QSharedPointer<DrmLayer> createLayer(DrmDisplayDevice *displayDevice) const override;
 
 private:
-    QMap<AbstractOutput *, QSharedPointer<DrmQPainterLayer>> m_swapchains;
     DrmBackend *m_backend;
 };
 }
-
-#endif

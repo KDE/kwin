@@ -43,25 +43,24 @@ public:
     DrmOutput(DrmPipeline *pipeline);
     ~DrmOutput() override;
 
-    bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) override;
-
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
 
+    bool present() override;
+    bool testScanout() override;
     QSize bufferSize() const override;
     QSize sourceSize() const override;
     bool isFormatSupported(uint32_t drmFormat) const override;
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
     DrmPlane::Transformations softwareTransforms() const override;
     int maxBpc() const override;
+    DrmLayer *outputLayer() const override;
 
     bool queueChanges(const WaylandOutputConfig &config);
     void applyQueuedChanges(const WaylandOutputConfig &config);
     void revertQueuedChanges();
     void updateModes();
 
-    void pageFlipped(std::chrono::nanoseconds timestamp);
-    void presentFailed();
     bool usesSoftwareCursor() const override;
 
 private:

@@ -23,29 +23,37 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
     : QPainterBackend()
     , m_backend(backend)
 {
-    connect(m_backend, &DrmBackend::outputEnabled, this, [this] (const auto output) {
-        m_swapchains[output] = QSharedPointer<DrmQPainterLayer>::create(static_cast<DrmAbstractOutput*>(output));
-    });
-    connect(m_backend, &DrmBackend::outputDisabled, this, [this] (const auto output) {
-        m_swapchains.remove(output);
-    });
+    m_backend->primaryGpu()->setRenderBackend(this);
+}
+
+DrmQPainterBackend::~DrmQPainterBackend()
+{
+    m_backend->primaryGpu()->setRenderBackend(nullptr);
 }
 
 QImage *DrmQPainterBackend::bufferForScreen(AbstractOutput *output)
 {
-    return static_cast<DrmDumbBuffer*>(m_swapchains[output]->currentBuffer().data())->image();
+    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
+    return static_cast<DrmDumbBuffer*>(drmOutput->outputLayer()->currentBuffer().data())->image();
 }
 
 QRegion DrmQPainterBackend::beginFrame(AbstractOutput *output)
 {
-    return m_swapchains[output]->startRendering().value_or(QRegion());
+    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
+    return drmOutput->outputLayer()->startRendering().value_or(QRegion());
 }
 
 void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damage)
 {
     Q_UNUSED(renderedRegion)
-    m_swapchains[output]->endRendering(damage);
-    static_cast<DrmAbstractOutput*>(output)->present(m_swapchains[output]->currentBuffer(), output->geometry());
+    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
+    drmOutput->outputLayer()->endRendering(damage);
+    static_cast<DrmAbstractOutput*>(output)->present();
+}
+
+QSharedPointer<DrmLayer> DrmQPainterBackend::createLayer(DrmDisplayDevice *displayDevice) const
+{
+    return QSharedPointer<DrmQPainterLayer>::create(displayDevice);
 }
 
 }

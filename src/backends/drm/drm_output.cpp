@@ -26,6 +26,7 @@
 #include "waylandoutputconfig.h"
 #include "dumb_swapchain.h"
 #include "cursor.h"
+#include "drm_layer.h"
 // Qt
 #include <QMatrix4x4>
 #include <QCryptographicHash>
@@ -45,7 +46,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
     , m_pipeline(pipeline)
     , m_connector(pipeline->connector())
 {
-    m_pipeline->setOutput(this);
+    m_pipeline->setDisplayDevice(this);
     const auto conn = m_pipeline->connector();
     m_renderLoop->setRefreshRate(m_pipeline->pending.mode->refreshRate());
     setSubPixelInternal(conn->subpixel());
@@ -78,7 +79,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
 
 DrmOutput::~DrmOutput()
 {
-    m_pipeline->setOutput(nullptr);
+    m_pipeline->setDisplayDevice(nullptr);
 }
 
 static bool isCursorSpriteCompatible(const QImage *buffer, const QImage *sprite)
@@ -318,12 +319,8 @@ void DrmOutput::updateModes()
     }
 }
 
-bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion)
+bool DrmOutput::present()
 {
-    if (!buffer || buffer->bufferId() == 0) {
-        presentFailed();
-        return false;
-    }
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
     if (m_pipeline->pending.syncMode != renderLoopPrivate->presentMode) {
         m_pipeline->pending.syncMode = renderLoopPrivate->presentMode;
@@ -334,12 +331,19 @@ bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damaged
             setVrrPolicy(RenderLoop::VrrPolicy::Never);
         }
     }
-    if (m_pipeline->present(buffer)) {
-        Q_EMIT outputChange(damagedRegion);
+    if (m_pipeline->present()) {
+        Q_EMIT outputChange(m_pipeline->pending.layer->currentDamage());
         return true;
     } else {
+        qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
+        frameFailed();
         return false;
     }
+}
+
+bool DrmOutput::testScanout()
+{
+    return m_pipeline->testScanout();
 }
 
 int DrmOutput::gammaRampSize() const
@@ -446,16 +450,6 @@ void DrmOutput::revertQueuedChanges()
     m_pipeline->revertPendingChanges();
 }
 
-void DrmOutput::pageFlipped(std::chrono::nanoseconds timestamp)
-{
-    RenderLoopPrivate::get(m_renderLoop)->notifyFrameCompleted(timestamp);
-}
-
-void DrmOutput::presentFailed()
-{
-    RenderLoopPrivate::get(m_renderLoop)->notifyFrameFailed();
-}
-
 int DrmOutput::maxBpc() const
 {
     auto prop = m_connector->getProp(DrmConnector::PropertyIndex::MaxBpc);
@@ -475,6 +469,11 @@ DrmPlane::Transformations DrmOutput::softwareTransforms() const
         // TODO handle sourceTransformation != Rotate0
         return m_pipeline->pending.sourceTransformation;
     }
+}
+
+DrmLayer *DrmOutput::outputLayer() const
+{
+    return m_pipeline->pending.layer.data();
 }
 
 }

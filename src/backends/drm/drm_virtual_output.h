@@ -19,6 +19,7 @@ namespace KWin
 
 class SoftwareVsyncMonitor;
 class VirtualBackend;
+class DrmLayer;
 
 class DrmVirtualOutput : public DrmAbstractOutput
 {
@@ -28,7 +29,7 @@ public:
     DrmVirtualOutput(DrmGpu *gpu, const QSize &size);
     ~DrmVirtualOutput() override;
 
-    bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) override;
+    bool present() override;
     QSize bufferSize() const override;
     QSize sourceSize() const override;
 
@@ -39,13 +40,15 @@ public:
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
     DrmPlane::Transformations softwareTransforms() const override;
+    DrmLayer *outputLayer() const override;
+    bool testScanout() override;
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);
     void setDpmsMode(DpmsMode mode) override;
     void updateEnablement(bool enable) override;
 
-    QSharedPointer<DrmBuffer> m_currentBuffer;
+    QSharedPointer<DrmLayer> m_layer;
     bool m_pageFlipPending = true;
     int m_modeIndex = 0;
 

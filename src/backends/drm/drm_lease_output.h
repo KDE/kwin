@@ -40,7 +40,7 @@ public:
     KWaylandServer::DrmLeaseV1Interface *lease() const;
     DrmPipeline *pipeline() const;
 
-    bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) override;
+    bool present() override;
     DrmPlane::Transformations softwareTransforms() const override;
     QSize bufferSize() const override;
     QSize sourceSize() const override;
@@ -48,6 +48,10 @@ public:
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
     int maxBpc() const override;
     QRect renderGeometry() const override;
+    DrmLayer *outputLayer() const override;
+    bool testScanout() override;
+    void frameFailed() const override;
+    void pageFlipped(std::chrono::nanoseconds timestamp) const override;
 
 private:
     DrmPipeline *m_pipeline;

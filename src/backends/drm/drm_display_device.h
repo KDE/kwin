@@ -17,6 +17,7 @@ namespace KWin
 
 class DrmBuffer;
 class DrmGpu;
+class DrmLayer;
 
 class DrmDisplayDevice
 {
@@ -26,7 +27,11 @@ public:
 
     DrmGpu *gpu() const;
 
-    virtual bool present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion) = 0;
+    virtual bool present() = 0;
+    virtual bool testScanout() = 0;
+    virtual void frameFailed() const = 0;
+    virtual void pageFlipped(std::chrono::nanoseconds timestamp) const = 0;
+
     virtual DrmPlane::Transformations softwareTransforms() const = 0;
     virtual QSize bufferSize() const = 0;
     virtual QSize sourceSize() const = 0;
@@ -34,6 +39,7 @@ public:
     virtual QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const = 0;
     virtual int maxBpc() const = 0;
     virtual QRect renderGeometry() const = 0;
+    virtual DrmLayer *outputLayer() const = 0;
 
 protected:
     DrmGpu *const m_gpu;

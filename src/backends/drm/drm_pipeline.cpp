@@ -23,6 +23,7 @@
 #include "drm_backend.h"
 #include "egl_gbm_backend.h"
 #include "drm_buffer_gbm.h"
+#include "drm_layer.h"
 
 #include <gbm.h>
 #include <drm_fourcc.h>
@@ -31,30 +32,37 @@ namespace KWin
 {
 
 DrmPipeline::DrmPipeline(DrmConnector *conn)
-    : m_output(nullptr)
+    : m_displayDevice(nullptr)
     , m_connector(conn)
 {
 }
 
 DrmPipeline::~DrmPipeline()
 {
-    m_output = nullptr;
     if (m_pageflipPending && m_current.crtc) {
         pageFlipped({});
     }
 }
 
-bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
+bool DrmPipeline::testScanout()
+{
+    // TODO make the modeset check only be tested at most once per scanout cycle
+    if (gpu()->needsModeset()) {
+        return false;
+    }
+    if (gpu()->atomicModeSetting()) {
+        return commitPipelines({this}, CommitMode::Test);
+    } else {
+        // no other way to test than to do it.
+        // As we only have a maximum of one test per scanout cycle, this is fine
+        return presentLegacy();
+    }
+}
+
+bool DrmPipeline::present()
 {
     Q_ASSERT(pending.crtc);
-    Q_ASSERT(buffer);
-    m_primaryBuffer = buffer;
-    // with direct scanout disallow modesets, calling presentFailed() and logging warnings
-    const bool directScanout = isBufferForDirectScanout();
     if (gpu()->needsModeset()) {
-        if (directScanout) {
-            return false;
-        }
         m_modesetPresentPending = true;
         return gpu()->maybeModeset();
     }
@@ -72,33 +80,20 @@ bool DrmPipeline::present(const QSharedPointer<DrmBuffer> &buffer)
                 }
             }
             if (!commitPipelines({this}, CommitMode::Commit)) {
-                if (directScanout) {
-                    return false;
-                }
-                qCWarning(KWIN_DRM) << "Atomic present failed!" << strerror(errno);
                 printDebugInfo();
-                if (m_output) {
-                    m_output->presentFailed();
-                }
                 return false;
             }
         }
     } else {
+        if (pending.layer->hasDirectScanoutBuffer()) {
+            // already presented
+            return true;
+        }
         if (!presentLegacy()) {
-            qCWarning(KWIN_DRM) << "Present failed!" << strerror(errno);
-            if (m_output) {
-                m_output->presentFailed();
-            }
             return false;
         }
     }
     return true;
-}
-
-bool DrmPipeline::isBufferForDirectScanout() const
-{
-    const auto buf = dynamic_cast<DrmGbmBuffer*>(m_primaryBuffer.data());
-    return buf && buf->clientBuffer();
 }
 
 bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects)
@@ -133,7 +128,7 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline*> &pipelines, 
         return false;
     };
     for (const auto &pipeline : pipelines) {
-        if (!pipeline->checkTestBuffer()) {
+        if (!pipeline->pending.layer->testBuffer()) {
             qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
             return failed();
         }
@@ -197,8 +192,9 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
         pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
         pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, pending.gamma ? pending.gamma->blobId() : 0);
         const auto modeSize = pending.mode->size();
-        pending.crtc->primaryPlane()->set(QPoint(0, 0), m_primaryBuffer ? m_primaryBuffer->size() : bufferSize(), QPoint(0, 0), modeSize);
-        pending.crtc->primaryPlane()->setBuffer(activePending() ? m_primaryBuffer.get() : nullptr);
+        const auto buffer = pending.layer->currentBuffer().data();
+        pending.crtc->primaryPlane()->set(QPoint(0, 0), buffer ? buffer->size() : bufferSize(), QPoint(0, 0), modeSize);
+        pending.crtc->primaryPlane()->setBuffer(activePending() ? buffer : nullptr);
 
         if (pending.crtc->cursorPlane()) {
             pending.crtc->cursorPlane()->set(QPoint(0, 0), gpu()->cursorSize(), pending.cursorPos, gpu()->cursorSize());
@@ -271,10 +267,6 @@ uint32_t DrmPipeline::calculateUnderscan()
 
 void DrmPipeline::atomicCommitFailed()
 {
-    if (m_oldTestBuffer) {
-        m_primaryBuffer = m_oldTestBuffer;
-        m_oldTestBuffer = nullptr;
-    }
     m_connector->rollbackPending();
     if (pending.crtc) {
         pending.crtc->rollbackPending();
@@ -287,7 +279,6 @@ void DrmPipeline::atomicCommitFailed()
 
 void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
 {
-    m_oldTestBuffer = nullptr;
     m_connector->commitPending();
     if (pending.crtc) {
         pending.crtc->commitPending();
@@ -303,7 +294,7 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
         m_connector->commit();
         if (pending.crtc) {
             pending.crtc->commit();
-            pending.crtc->primaryPlane()->setNext(m_primaryBuffer);
+            pending.crtc->primaryPlane()->setNext(pending.layer->currentBuffer());
             pending.crtc->primaryPlane()->commit();
             if (pending.crtc->cursorPlane()) {
                 pending.crtc->cursorPlane()->setNext(pending.cursorBo);
@@ -315,32 +306,6 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
             pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
         }
     }
-}
-
-bool DrmPipeline::checkTestBuffer()
-{
-    const auto backend = gpu()->eglBackend();
-    if (!pending.crtc || (!(backend && m_output) && m_primaryBuffer && m_primaryBuffer->size() == bufferSize()) || isBufferForDirectScanout()) {
-        return true;
-    }
-    QSharedPointer<DrmBuffer> buffer;
-    if (backend && m_output) {
-        buffer = backend->testBuffer(m_output);
-    } else if (backend && gpu()->gbmDevice()) {
-        gbm_bo *bo = gbm_bo_create(gpu()->gbmDevice(), bufferSize().width(), bufferSize().height(), DRM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
-        if (!bo) {
-            return false;
-        }
-        buffer = QSharedPointer<DrmGbmBuffer>::create(gpu(), bo, nullptr);
-    } else {
-        buffer = QSharedPointer<DrmDumbBuffer>::create(gpu(), bufferSize(), DRM_FORMAT_XRGB8888);
-    }
-    if (buffer && buffer->bufferId()) {
-        m_oldTestBuffer = m_primaryBuffer;
-        m_primaryBuffer = buffer;
-        return true;
-    }
-    return false;
 }
 
 bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot)
@@ -360,8 +325,8 @@ bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const Q
     }
     if (result) {
         m_next = pending;
-        if (m_output && (visibleBefore || isCursorVisible())) {
-            m_output->renderLoop()->scheduleRepaint();
+        if (const auto drmOutput = dynamic_cast<DrmOutput*>(m_displayDevice); drmOutput && (visibleBefore || isCursorVisible())) {
+            drmOutput->renderLoop()->scheduleRepaint();
         }
     } else {
         pending = m_next;
@@ -385,8 +350,8 @@ bool DrmPipeline::moveCursor(QPoint pos)
     }
     if (result) {
         m_next = pending;
-        if (m_output && (visibleBefore || isCursorVisible())) {
-            m_output->renderLoop()->scheduleRepaint();
+        if (const auto drmOutput = dynamic_cast<DrmOutput*>(m_displayDevice); drmOutput && (visibleBefore || isCursorVisible())) {
+            drmOutput->renderLoop()->scheduleRepaint();
         }
     } else {
         pending = m_next;
@@ -446,19 +411,12 @@ void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
         m_current.crtc->cursorPlane()->flipBuffer();
     }
     m_pageflipPending = false;
-    if (m_output) {
-        m_output->pageFlipped(timestamp);
-    }
+    m_displayDevice->pageFlipped(timestamp);
 }
 
-void DrmPipeline::setOutput(DrmOutput *output)
+void DrmPipeline::setDisplayDevice(DrmDisplayDevice *device)
 {
-    m_output = output;
-}
-
-DrmOutput *DrmPipeline::output() const
-{
-    return m_output;
+    m_displayDevice = device;
 }
 
 static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {
@@ -539,6 +497,11 @@ void DrmPipeline::resetModesetPresentPending()
 DrmCrtc *DrmPipeline::currentCrtc() const
 {
     return m_current.crtc;
+}
+
+DrmDisplayDevice *DrmPipeline::displayDevice() const
+{
+    return m_displayDevice;
 }
 
 DrmGammaRamp::DrmGammaRamp(DrmGpu *gpu, const GammaRamp &lut)

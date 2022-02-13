@@ -14,9 +14,12 @@
 #include "drm_gpu.h"
 #include "drm_backend.h"
 #include "logging.h"
+#include "drm_layer.h"
+#include "drm_render_backend.h"
 
 namespace KWin
 {
+
 static int s_serial = 0;
 DrmVirtualOutput::DrmVirtualOutput(DrmGpu *gpu, const QSize &size)
     : DrmVirtualOutput(QString::number(s_serial++), gpu, size)
@@ -40,20 +43,19 @@ DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize
                modes,
                QByteArray("EDID_") + name.toUtf8());
     m_renderLoop->setRefreshRate(modes[m_modeIndex].refreshRate);
+
+    m_layer = gpu->renderBackend()->createLayer(this);
 }
 
 DrmVirtualOutput::~DrmVirtualOutput()
 {
 }
 
-bool DrmVirtualOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion)
+bool DrmVirtualOutput::present()
 {
-    Q_UNUSED(damagedRegion)
-
-    m_currentBuffer = buffer;
     m_vsyncMonitor->arm();
     m_pageFlipPending = true;
-    Q_EMIT outputChange(damagedRegion);
+    Q_EMIT outputChange(m_layer->currentDamage());
     return true;
 }
 
@@ -117,6 +119,16 @@ int DrmVirtualOutput::maxBpc() const
 DrmPlane::Transformations DrmVirtualOutput::softwareTransforms() const
 {
     return DrmPlane::Transformation::Rotate0;
+}
+
+DrmLayer *DrmVirtualOutput::outputLayer() const
+{
+    return m_layer.data();
+}
+
+bool DrmVirtualOutput::testScanout()
+{
+    return true;
 }
 
 }

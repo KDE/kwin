@@ -32,11 +32,13 @@ DrmLeaseOutput::DrmLeaseOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDe
     , DrmDisplayDevice(pipeline->gpu())
     , m_pipeline(pipeline)
 {
+    m_pipeline->setDisplayDevice(this);
     qCDebug(KWIN_DRM) << "offering connector" << m_pipeline->connector()->id() << "for lease";
 }
 
 DrmLeaseOutput::~DrmLeaseOutput()
 {
+    m_pipeline->setDisplayDevice(nullptr);
     qCDebug(KWIN_DRM) << "revoking lease offer for connector" << m_pipeline->connector()->id();
 }
 
@@ -76,10 +78,13 @@ DrmPipeline *DrmLeaseOutput::pipeline() const
     return m_pipeline;
 }
 
-bool DrmLeaseOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damagedRegion)
+bool DrmLeaseOutput::present()
 {
-    Q_UNUSED(buffer)
-    Q_UNUSED(damagedRegion)
+    return false;
+}
+
+bool DrmLeaseOutput::testScanout()
+{
     return false;
 }
 
@@ -120,6 +125,20 @@ int DrmLeaseOutput::maxBpc() const
 QRect DrmLeaseOutput::renderGeometry() const
 {
     return QRect(QPoint(), m_pipeline->sourceSize());
+}
+
+DrmLayer *DrmLeaseOutput::outputLayer() const
+{
+    return m_pipeline->pending.layer.data();
+}
+
+void DrmLeaseOutput::frameFailed() const
+{
+}
+
+void DrmLeaseOutput::pageFlipped(std::chrono::nanoseconds timestamp) const
+{
+    Q_UNUSED(timestamp)
 }
 
 }

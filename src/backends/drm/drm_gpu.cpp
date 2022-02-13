@@ -309,9 +309,9 @@ bool DrmGpu::updateOutputs()
     if (testPendingConfiguration()) {
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->applyPendingChanges();
-            if (!pipeline->pending.crtc && pipeline->output()) {
+            if (const auto drmOutput = dynamic_cast<DrmAbstractOutput*>(pipeline->displayDevice()); drmOutput && !pipeline->pending.crtc) {
                 pipeline->pending.enabled = false;
-                pipeline->output()->setEnabled(false);
+                drmOutput->setEnabled(false);
             }
         }
     } else {
@@ -421,6 +421,9 @@ bool DrmGpu::testPipelines()
     // pipelines that are enabled but not active need to be activated for the test
     QVector<DrmPipeline*> inactivePipelines;
     for (const auto &pipeline : qAsConst(m_pipelines)) {
+        if (!pipeline->pending.layer) {
+            pipeline->pending.layer = m_renderBackend->createLayer(pipeline->displayDevice());
+        }
         if (!pipeline->pending.active) {
             pipeline->pending.active = true;
             inactivePipelines << pipeline;
@@ -553,6 +556,7 @@ void DrmGpu::removeOutput(DrmOutput *output)
     qCDebug(KWIN_DRM) << "Removing output" << output;
     m_drmOutputs.removeOne(output);
     m_pipelines.removeOne(output->pipeline());
+    output->pipeline()->pending.layer.reset();
     m_outputs.removeOne(output);
     Q_EMIT outputRemoved(output);
     delete output;
@@ -560,12 +564,17 @@ void DrmGpu::removeOutput(DrmOutput *output)
 
 EglGbmBackend *DrmGpu::eglBackend() const
 {
-    return m_eglBackend;
+    return dynamic_cast<EglGbmBackend*>(m_renderBackend);
 }
 
-void DrmGpu::setEglBackend(EglGbmBackend *eglBackend)
+DrmRenderBackend *DrmGpu::renderBackend() const
 {
-    m_eglBackend = eglBackend;
+    return m_renderBackend;
+}
+
+void DrmGpu::setRenderBackend(DrmRenderBackend *backend)
+{
+    m_renderBackend = backend;
 }
 
 DrmBackend *DrmGpu::platform() const {
@@ -661,6 +670,7 @@ void DrmGpu::removeLeaseOutput(DrmLeaseOutput *output)
     qCDebug(KWIN_DRM) << "Removing leased output" << output;
     m_leaseOutputs.removeOne(output);
     m_pipelines.removeOne(output->pipeline());
+    output->pipeline()->pending.layer.reset();
     delete output;
 }
 
@@ -740,10 +750,10 @@ bool DrmGpu::maybeModeset()
     }
     const bool ok = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedObjects());
     for (DrmPipeline *pipeline : qAsConst(pipelines)) {
-        if (pipeline->modesetPresentPending() && pipeline->output()) {
+        if (pipeline->modesetPresentPending()) {
             pipeline->resetModesetPresentPending();
             if (!ok) {
-                pipeline->output()->presentFailed();
+                pipeline->displayDevice()->frameFailed();
             }
         }
     }

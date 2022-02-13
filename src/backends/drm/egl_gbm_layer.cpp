@@ -50,6 +50,7 @@ EglGbmLayer::~EglGbmLayer()
 
 std::optional<QRegion> EglGbmLayer::startRendering()
 {
+    m_scanoutBuffer.reset();
     // dmabuf feedback
     if (!m_scanoutCandidate.attemptedThisFrame && m_scanoutCandidate.surface) {
         if (const auto feedback = m_scanoutCandidate.surface->dmabufFeedbackV1()) {
@@ -117,13 +118,27 @@ bool EglGbmLayer::endRendering(const QRegion &damagedRegion)
     const auto buffer = m_gbmSurface->swapBuffersForDrm(damagedRegion);
     if (buffer) {
         m_currentBuffer = buffer;
+        m_currentDamage = damagedRegion;
     }
     return buffer;
+}
+
+QRegion EglGbmLayer::currentDamage() const
+{
+    return m_currentDamage;
 }
 
 QSharedPointer<DrmBuffer> EglGbmLayer::testBuffer()
 {
     if (!m_currentBuffer || !doesGbmSurfaceFit(m_gbmSurface.data())) {
+        if (doesGbmSurfaceFit(m_oldGbmSurface.data())) {
+            // re-use old surface and buffer without rendering
+            m_gbmSurface = m_oldGbmSurface;
+            if (m_gbmSurface->currentBuffer()) {
+                m_currentBuffer = m_gbmSurface->currentDrmBuffer();
+                return m_currentBuffer;
+            }
+        }
         if (!renderTestBuffer() && m_importMode == MultiGpuImportMode::DumbBufferXrgb8888) {
             // try multi-gpu import again, this time with DRM_FORMAT_XRGB8888
             renderTestBuffer();
@@ -401,10 +416,11 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         }
         return false;
     }
-    const auto bo = QSharedPointer<DrmGbmBuffer>::create(m_displayDevice->gpu(), importedBuffer, buffer);
-    if (!bo->bufferId()) {
+    m_scanoutBuffer = QSharedPointer<DrmGbmBuffer>::create(m_displayDevice->gpu(), importedBuffer, buffer);
+    if (!m_scanoutBuffer->bufferId()) {
         // buffer can't actually be scanned out. Mesa is supposed to prevent this from happening
         // in gbm_bo_import but apparently that doesn't always work
+        m_scanoutBuffer.reset();
         sendDmabufFeedback(buffer);
         return false;
     }
@@ -421,10 +437,12 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     } else {
         damage = m_displayDevice->renderGeometry();
     }
-    if (m_displayDevice->present(bo, damage)) {
-        m_currentBuffer = bo;
+    if (m_displayDevice->testScanout()) {
+        m_currentBuffer = m_scanoutBuffer;
+        m_currentDamage = damage;
         return true;
     } else {
+        m_scanoutBuffer.reset();
         return false;
     }
 }
@@ -462,7 +480,7 @@ void EglGbmLayer::sendDmabufFeedback(KWaylandServer::LinuxDmaBufV1ClientBuffer *
 
 QSharedPointer<DrmBuffer> EglGbmLayer::currentBuffer() const
 {
-    return m_currentBuffer;
+    return m_scanoutBuffer ? m_scanoutBuffer : m_currentBuffer;
 }
 
 DrmDisplayDevice *EglGbmLayer::displayDevice() const
@@ -478,6 +496,11 @@ int EglGbmLayer::bufferAge() const
 EGLSurface EglGbmLayer::eglSurface() const
 {
     return m_gbmSurface ? m_gbmSurface->eglSurface() : EGL_NO_SURFACE;
+}
+
+bool EglGbmLayer::hasDirectScanoutBuffer() const
+{
+    return m_scanoutBuffer != nullptr;
 }
 
 }
