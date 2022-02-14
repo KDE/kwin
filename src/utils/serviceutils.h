@@ -32,7 +32,7 @@ static QStringList fetchProcessServiceField(const QString &executablePath, const
     static QLoggingCategory KWIN_UTILS ("KWIN_UTILS", QtWarningMsg);
     const auto servicesFound = KApplicationTrader::query([&executablePath] (const KService::Ptr &service) {
 
-        if (service->exec().isEmpty() || service->exec() != executablePath)
+        if (service->exec().isEmpty() || QFileInfo(service->exec()).canonicalFilePath() != executablePath)
             return false;
 
         return true;
