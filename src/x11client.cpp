@@ -1131,8 +1131,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
     }
     setDecoration(decoration);
 
-    move(calculateGravitation(false));
-    resize(implicitSize());
+    moveResize(QRect(calculateGravitation(false), implicitSize()));
     maybeCreateX11DecorationRenderer();
     Q_EMIT geometryShapeChanged(this, oldgeom);
 }
@@ -1144,8 +1143,7 @@ void X11Client::destroyDecoration()
         QPoint grav = calculateGravitation(true);
         setDecoration(nullptr);
         maybeDestroyX11DecorationRenderer();
-        resize(implicitSize());
-        move(grav);
+        moveResize(QRect(grav, implicitSize()));
         if (!isZombie()) {
             Q_EMIT geometryShapeChanged(this, oldgeom);
         }
