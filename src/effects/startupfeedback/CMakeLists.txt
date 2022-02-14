@@ -9,3 +9,9 @@ set(startupfeedback_SOURCES
 )
 
 kwin4_add_effect_module(kwin4_effect_startupfeedback ${startupfeedback_SOURCES})
+target_link_libraries(kwin4_effect_startupfeedback PRIVATE
+    kwineffects
+    kwinglutils
+
+    Qt::DBus
+)

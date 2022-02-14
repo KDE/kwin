@@ -11,6 +11,14 @@ kconfig_add_kcfg_files(mousemark_SOURCES
 )
 
 kwin4_add_effect_module(kwin4_effect_mousemark ${mousemark_SOURCES})
+target_link_libraries(kwin4_effect_mousemark PRIVATE
+    kwineffects
+    kwinglutils
+
+    KF5::ConfigGui
+    KF5::GlobalAccel
+    KF5::I18n
+)
 
 #######################################
 # Config

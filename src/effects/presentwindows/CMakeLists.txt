@@ -13,6 +13,17 @@ kconfig_add_kcfg_files(presentwindows_SOURCES
 )
 
 kwin4_add_effect_module(kwin4_effect_presentwindows ${presentwindows_SOURCES})
+target_link_libraries(kwin4_effect_presentwindows PRIVATE
+    kwineffects
+
+    KF5::ConfigGui
+    KF5::GlobalAccel
+    KF5::I18n
+
+    Qt::DBus
+    Qt::Qml
+    Qt::Quick
+)
 
 #######################################
 # Config

@@ -13,6 +13,14 @@ kconfig_add_kcfg_files(trackmouse_SOURCES
 )
 
 kwin4_add_effect_module(kwin4_effect_trackmouse ${trackmouse_SOURCES})
+target_link_libraries(kwin4_effect_trackmouse PRIVATE
+    kwineffects
+    kwinglutils
+
+    KF5::ConfigGui
+    KF5::GlobalAccel
+    KF5::I18n
+)
 
 #######################################
 # Config

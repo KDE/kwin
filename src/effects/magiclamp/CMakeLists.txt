@@ -11,6 +11,11 @@ kconfig_add_kcfg_files(magiclamp_SOURCES
 )
 
 kwin4_add_effect_module(kwin4_effect_magiclamp ${magiclamp_SOURCES})
+target_link_libraries(kwin4_effect_magiclamp PRIVATE
+    kwineffects
+
+    KF5::ConfigGui
+)
 
 #######################################
 # Config

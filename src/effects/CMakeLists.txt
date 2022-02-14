@@ -38,59 +38,8 @@ function (kwin_strip_builtin_effect_metadata target metadata)
     set_property(TARGET ${target} APPEND PROPERTY AUTOGEN_TARGET_DEPENDS ${stripped_metadata})
 endfunction()
 
-if (HAVE_ACCESSIBILITY)
-    include_directories(${QACCESSIBILITYCLIENT_INCLUDE_DIR})
-endif()
-
-set(kwin_effect_OWN_LIBS
-    kwineffects
-)
-
-set(kwin_effect_KDE_LIBS
-    KF5::ConfigGui
-    KF5::ConfigWidgets
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::Notifications # screenshot effect
-    KF5::Plasma # screenedge effect
-    KF5::WindowSystem
-    KF5::Service # utils / screenshot effect
-    KDecoration2::KDecoration # blur effect
-    Plasma::KWaylandServer
-)
-
-if (HAVE_ACCESSIBILITY)
-    set(kwin_effect_KDE_LIBS ${kwin_effect_KDE_LIBS} ${QACCESSIBILITYCLIENT_LIBRARY})
-endif()
-
-set(kwin_effect_QT_LIBS
-    Qt::Concurrent
-    Qt::DBus
-    Qt::Quick
-    Qt::X11Extras
-)
-
-set(kwin_effect_XLIB_LIBS
-    ${X11_X11_LIB}
-)
-
-set(kwin_effect_XCB_LIBS
-    XCB::IMAGE
-    XCB::XCB
-    XCB::XFIXES
-)
-
-set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinglutils)
-
 macro(KWIN4_ADD_EFFECT_MODULE name)
     kcoreaddons_add_plugin(${name} STATIC SOURCES ${ARGN} INSTALL_NAMESPACE "kwin/effects/plugins")
-    target_link_libraries(${name} PRIVATE
-        ${kwin_effect_KDE_LIBS}
-        ${kwin_effect_OWN_LIBS}
-        ${kwin_effect_QT_LIBS}
-        ${kwin_effect_XCB_LIBS}
-        ${kwin_effect_XLIB_LIBS}
-    )
     kwin_strip_builtin_effect_metadata(${name} metadata.json)
     install(FILES metadata.json DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_NAME}/builtin-effects/${name}/)
 endmacro()

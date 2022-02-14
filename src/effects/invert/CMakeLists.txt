@@ -8,6 +8,13 @@ set(invert_SOURCES
 )
 
 kwin4_add_effect_module(kwin4_effect_invert ${invert_SOURCES})
+target_link_libraries(kwin4_effect_invert PRIVATE
+    kwineffects
+    kwinglutils
+
+    KF5::GlobalAccel
+    KF5::I18n
+)
 
 #######################################
 # Config

@@ -11,6 +11,11 @@ kconfig_add_kcfg_files(glide_SOURCES
 )
 
 kwin4_add_effect_module(kwin4_effect_glide ${glide_SOURCES})
+target_link_libraries(kwin4_effect_glide PRIVATE
+    kwineffects
+
+    KF5::ConfigGui
+)
 
 #######################################
 # Config

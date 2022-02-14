@@ -12,6 +12,15 @@ kconfig_add_kcfg_files(desktopgrid_SOURCES
 )
 
 kwin4_add_effect_module(kwin4_effect_desktopgrid ${desktopgrid_SOURCES})
+target_link_libraries(kwin4_effect_desktopgrid PRIVATE
+    kwineffects
+
+    KF5::ConfigGui
+    KF5::GlobalAccel
+    KF5::I18n
+
+    Qt::Quick
+)
 
 #######################################
 # Config

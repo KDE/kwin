@@ -17,6 +17,20 @@ kconfig_add_kcfg_files(zoom_SOURCES
 )
 
 kwin4_add_effect_module(kwin4_effect_zoom ${zoom_SOURCES})
+target_link_libraries(kwin4_effect_zoom PRIVATE
+    kwineffects
+    kwinglutils
+
+    KF5::ConfigGui
+    KF5::ConfigWidgets
+    KF5::GlobalAccel
+    KF5::I18n
+)
+
+if (HAVE_ACCESSIBILITY)
+    target_include_directories(kwin4_effect_zoom PRIVATE ${QACCESSIBILITYCLIENT_INCLUDE_DIR})
+    target_link_libraries(kwin4_effect_zoom PRIVATE ${QACCESSIBILITYCLIENT_LIBRARY})
+endif()
 
 #######################################
 # Config

@@ -11,6 +11,13 @@ kconfig_add_kcfg_files(showfps_SOURCES
 )
 
 kwin4_add_effect_module(kwin4_effect_showfps ${showfps_SOURCES})
+target_link_libraries(kwin4_effect_showfps PRIVATE
+    kwineffects
+    kwinglutils
+
+    KF5::ConfigGui
+    KF5::I18n
+)
 
 #######################################
 # Config
