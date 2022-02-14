@@ -75,7 +75,6 @@ private Q_SLOTS:
     void testMaximizedToFullscreen_data();
     void testMaximizedToFullscreen();
     void testFullscreenMultipleOutputs();
-    void testWindowOpensLargerThanScreen();
     void testHidden();
     void testDesktopFileName();
     void testCaptionSimplified();
@@ -616,35 +615,6 @@ void TestXdgShellClient::testFullscreenMultipleOutputs()
 
         QCOMPARE(client->frameGeometry(), screens()->geometry(i));
     }
-}
-
-void TestXdgShellClient::testWindowOpensLargerThanScreen()
-{
-    // this test creates a window which is as large as the screen, but is decorated
-    // the window should get resized to fit into the screen, BUG: 366632
-
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
-    QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
-    QSignalSpy decorationConfigureRequestedSpy(decoration.data(), &Test::XdgToplevelDecorationV1::configureRequested);
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-
-    // Initialize the xdg-toplevel surface.
-    decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
-    surface->commit(KWayland::Client::Surface::CommitFlag::None);
-
-    QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(decorationConfigureRequestedSpy.last().at(0).value<Test::XdgToplevelDecorationV1::mode>(), Test::XdgToplevelDecorationV1::mode_server_side);
-
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    AbstractOutput *output = workspace()->activeOutput();
-    auto c = Test::renderAndWaitForShown(surface.data(), output->geometry().size(), Qt::blue);
-    QVERIFY(c);
-    QVERIFY(c->isActive());
-    QVERIFY(c->isDecorated());
-    QEXPECT_FAIL("", "BUG 366632", Continue);
-    QCOMPARE(c->frameGeometry(), QRect(QPoint(0, 0), output->geometry().size()));
 }
 
 void TestXdgShellClient::testHidden()
