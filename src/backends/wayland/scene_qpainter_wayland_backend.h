@@ -11,7 +11,7 @@
 #define KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
 
 #include "qpainterbackend.h"
-#include "utils/common.h"
+#include "utils/damagejournal.h"
 
 #include <QObject>
 #include <QImage>

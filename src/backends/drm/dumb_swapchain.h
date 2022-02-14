@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "utils/common.h"
+#include "utils/damagejournal.h"
 
 #include <QVector>
 #include <QSize>

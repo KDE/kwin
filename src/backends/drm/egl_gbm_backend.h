@@ -9,7 +9,6 @@
 #ifndef KWIN_EGL_GBM_BACKEND_H
 #define KWIN_EGL_GBM_BACKEND_H
 #include "abstract_egl_backend.h"
-#include "utils/common.h"
 
 #include <kwinglutils.h>
 
