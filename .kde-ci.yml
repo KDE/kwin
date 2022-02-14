@@ -12,7 +12,6 @@ Dependencies:
     'frameworks/kcrash': '@stable'
     'frameworks/kglobalaccel': '@stable'
     'frameworks/ki18n': '@stable'
-    'frameworks/kiconthemes': '@stable'
     'frameworks/kidletime': '@stable'
     'frameworks/knotifications': '@stable'
     'frameworks/kpackage': '@stable'

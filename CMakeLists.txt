@@ -77,7 +77,6 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     DBusAddons
     GlobalAccel
     I18n
-    IconThemes
     IdleTime
     Notifications
     Package
