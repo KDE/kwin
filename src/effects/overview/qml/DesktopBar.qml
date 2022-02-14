@@ -185,7 +185,7 @@ Item {
                                 icon.name: "delete"
                                 onClicked: delegate.remove()
                                 PC3.ToolTip {
-                                    text: i18n("Delete virtual desktop")
+                                    text: i18nd("kwin_effects", "Delete virtual desktop")
                                 }
 
                             }
@@ -275,7 +275,7 @@ Item {
                     onTriggered: desktopModel.create(desktopModel.rowCount())
                 }
 
-                ToolTip.text: i18n("Add Desktop")
+                ToolTip.text: i18nd("kwin_effects", "Add Desktop")
                 ToolTip.visible: hovered
                 ToolTip.delay: Kirigami.Units.toolTipDelay
 
