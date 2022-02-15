@@ -117,10 +117,13 @@ public:
      * Make the texture fully transparent
      */
     void clear();
+    /**
+     * @deprecated track modifications to the texture yourself
+     */
+    void setDirty();
     bool isDirty() const;
     void setFilter(GLenum filter);
     void setWrapMode(GLenum mode);
-    void setDirty();
 
     void generateMipmaps();
 
