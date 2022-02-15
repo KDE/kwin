@@ -11,12 +11,14 @@
 
 #include "kwinglutils.h"
 #include "logging_p.h"
+#include "sharedqmlengine.h"
 
 #include <QGuiApplication>
 #include <QQmlEngine>
 #include <QQuickItem>
 #include <QQmlContext>
 #include <QQmlComponent>
+#include <QQmlEngine>
 #include <QQuickView>
 #include <QQuickRenderControl>
 #include <QStyleHints>
@@ -25,8 +27,6 @@
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
 #include <QTimer>
-
-#include <KDeclarative/QmlObjectSharedEngine>
 
 namespace KWin
 {
@@ -87,7 +87,15 @@ public:
 class Q_DECL_HIDDEN OffscreenQuickScene::Private
 {
 public:
-    KDeclarative::QmlObjectSharedEngine *qmlObject = nullptr;
+    Private()
+        : qmlEngine(SharedQmlEngine::engine())
+    {
+
+    }
+
+    SharedQmlEngine::Ptr qmlEngine;
+    QScopedPointer<QQmlComponent> qmlComponent;
+    QScopedPointer<QQuickItem> quickItem;
 };
 
 OffscreenQuickView::OffscreenQuickView(QObject *parent)
@@ -541,44 +549,53 @@ OffscreenQuickScene::OffscreenQuickScene(QObject *parent)
     : OffscreenQuickView(parent)
     , d(new OffscreenQuickScene::Private)
 {
-    d->qmlObject = new KDeclarative::QmlObjectSharedEngine(this);
 }
 
 OffscreenQuickScene::OffscreenQuickScene(QObject *parent, QWindow *renderWindow)
     : OffscreenQuickView(parent, renderWindow)
     , d(new OffscreenQuickScene::Private)
 {
-    d->qmlObject = new KDeclarative::QmlObjectSharedEngine(this);
 }
 
 OffscreenQuickScene::OffscreenQuickScene(QObject *parent, QWindow *renderWindow, ExportMode exportMode)
     : OffscreenQuickView(parent, renderWindow, exportMode)
     , d(new OffscreenQuickScene::Private)
 {
-    d->qmlObject = new KDeclarative::QmlObjectSharedEngine(this);
 }
 
 OffscreenQuickScene::OffscreenQuickScene(QObject *parent, OffscreenQuickView::ExportMode exportMode)
     : OffscreenQuickView(parent, exportMode)
     , d(new OffscreenQuickScene::Private)
 {
-    d->qmlObject = new KDeclarative::QmlObjectSharedEngine(this);
 }
 
-OffscreenQuickScene::~OffscreenQuickScene()
-{
-    delete d->qmlObject;
-}
+OffscreenQuickScene::~OffscreenQuickScene() = default;
 
 void OffscreenQuickScene::setSource(const QUrl &source)
 {
-    d->qmlObject->setSource(source);
+    if (!d->qmlComponent) {
+        d->qmlComponent.reset(new QQmlComponent(d->qmlEngine.data()));
+    }
 
-    QQuickItem *item = rootItem();
-    if (!item) {
-        qCDebug(LIBKWINEFFECTS) << "Could not load effect quick view" << source;
+    d->qmlComponent->loadUrl(source);
+    if (d->qmlComponent->isError()) {
+        qCWarning(LIBKWINEFFECTS).nospace() << "Failed to load effect quick view " << source << ": " << d->qmlComponent->errors();
+        d->qmlComponent.reset();
         return;
     }
+
+    d->quickItem.reset();
+
+    QScopedPointer<QObject> qmlObject(d->qmlComponent->create());
+    QQuickItem *item = qobject_cast<QQuickItem *>(qmlObject.data());
+    if (!item) {
+        qCWarning(LIBKWINEFFECTS) << "Root object of effect quick view" << source << "is not a QQuickItem";
+        return;
+    }
+
+    qmlObject.take();
+    d->quickItem.reset(item);
+
     item->setParentItem(contentItem());
 
     auto updateSize = [item, this]() { item->setSize(contentItem()->size()); };
@@ -589,12 +606,12 @@ void OffscreenQuickScene::setSource(const QUrl &source)
 
 QQmlContext *OffscreenQuickScene::rootContext() const
 {
-    return d->qmlObject->rootContext();
+    return d->qmlEngine->rootContext();
 }
 
 QQuickItem *OffscreenQuickScene::rootItem() const
 {
-    return qobject_cast<QQuickItem *>(d->qmlObject->rootObject());
+    return d->quickItem.data();
 }
 
 } // namespace KWin

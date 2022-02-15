@@ -6,9 +6,10 @@
 
 #include "kwinquickeffect.h"
 
-#include <KDeclarative/QmlObjectSharedEngine>
+#include "sharedqmlengine.h"
 
 #include <QQuickItem>
+#include <QQmlEngine>
 #include <QWindow>
 
 namespace KWin
@@ -19,7 +20,7 @@ class QuickSceneEffectPrivate
 public:
     static QuickSceneEffectPrivate *get(QuickSceneEffect *effect) { return effect->d.data(); }
 
-    QScopedPointer<KDeclarative::QmlObjectSharedEngine> qmlEngine;
+    SharedQmlEngine::Ptr qmlEngine;
     QScopedPointer<QQmlComponent> qmlComponent;
     QUrl source;
     QHash<EffectScreen *, QuickSceneView *> views;
@@ -254,11 +255,11 @@ void QuickSceneEffect::startInternal()
     }
 
     if (!d->qmlEngine) {
-        d->qmlEngine.reset(new KDeclarative::QmlObjectSharedEngine(this));
+        d->qmlEngine = SharedQmlEngine::engine();
     }
 
     if (!d->qmlComponent) {
-        d->qmlComponent.reset(new QQmlComponent(d->qmlEngine->engine()));
+        d->qmlComponent.reset(new QQmlComponent(d->qmlEngine.data()));
         d->qmlComponent->loadUrl(d->source);
         if (d->qmlComponent->isError()) {
             qWarning().nospace() << "Failed to load " << d->source << ": " << d->qmlComponent->errors();

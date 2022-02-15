@@ -43,6 +43,7 @@ set(kwin_EFFECTSLIB_SRCS
     kwinoffscreenquickview.cpp
     kwinquickeffect.cpp
     logging.cpp
+    sharedqmlengine.cpp
 )
 
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
@@ -55,7 +56,7 @@ target_link_libraries(kwineffects
         XCB::XCB
     PRIVATE
         Qt::Quick
-        KF5::Declarative
+        KF5::I18n
         kwinglutils
 )
 set_target_properties(kwineffects PROPERTIES
