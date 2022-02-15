@@ -964,8 +964,6 @@ void GLRenderTarget::pushRenderTargets(QStack <GLRenderTarget*> targets)
 GLRenderTarget* GLRenderTarget::popRenderTarget()
 {
     GLRenderTarget* ret = s_renderTargets.pop();
-    ret->setTextureDirty();
-
     if (!s_renderTargets.isEmpty()) {
         s_renderTargets.top()->bind();
     }

@@ -425,10 +425,6 @@ public:
         return mValid;
     }
 
-    void setTextureDirty() {
-        mTexture.setDirty();
-    }
-
     static void initStatic();
     static bool supported()  {
         return sSupported;
