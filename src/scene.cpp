@@ -187,7 +187,7 @@ void Scene::removeRepaints(AbstractOutput *output)
 }
 
 
-QMatrix4x4 Scene::createProjectionMatrix(const QRect &rect)
+static QMatrix4x4 createProjectionMatrix(const QRect &rect)
 {
     // Create a perspective projection with a 60° field-of-view,
     // and an aspect ratio of 1.0.
@@ -214,6 +214,11 @@ QMatrix4x4 Scene::createProjectionMatrix(const QRect &rect)
     return ret;
 }
 
+QMatrix4x4 Scene::renderTargetProjectionMatrix() const
+{
+    return m_renderTargetProjectionMatrix;
+}
+
 QRect Scene::renderTargetRect() const
 {
     return m_renderTargetRect;
@@ -222,6 +227,7 @@ QRect Scene::renderTargetRect() const
 void Scene::setRenderTargetRect(const QRect &rect)
 {
     m_renderTargetRect = rect;
+    m_renderTargetProjectionMatrix = createProjectionMatrix(rect);
 }
 
 qreal Scene::renderTargetScale() const
@@ -255,14 +261,13 @@ void Scene::paintScreen(AbstractOutput *output, const QList<Toplevel *> &topleve
     setRenderTargetScale(output->scale());
 
     QRegion update, valid;
-    paintScreen(renderTargetRect(), QRect(), &update, &valid, output->renderLoop(), createProjectionMatrix(renderTargetRect()));
+    paintScreen(renderTargetRect(), QRect(), &update, &valid, output->renderLoop());
     clearStackingOrder();
 }
 
 // returns mask and possibly modified region
 void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
-                        QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop,
-                        const QMatrix4x4 &projection)
+                        QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop)
 {
     const QRegion displayRegion(geometry());
 
@@ -310,7 +315,7 @@ void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
     painted_region = region;
     repaint_region = repaint;
 
-    ScreenPaintData data(projection, screen);
+    ScreenPaintData data(m_renderTargetProjectionMatrix, screen);
     effects->paintScreen(mask, region, data);
 
     Q_EMIT frameRendered();

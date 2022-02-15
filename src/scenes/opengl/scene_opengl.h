@@ -53,7 +53,6 @@ public:
     QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const override;
 
-    QMatrix4x4 projectionMatrix() const { return m_projectionMatrix; }
     QMatrix4x4 screenProjectionMatrix() const override { return m_screenProjectionMatrix; }
 
     static SceneOpenGL *createScene(OpenGLBackend *backend, QObject *parent);
@@ -75,7 +74,6 @@ protected:
 
 private:
     void doPaintBackground(const QVector< float >& vertices);
-    void updateProjectionMatrix(const QRect &geometry);
     void performPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
 
     bool init_ok = true;
@@ -83,7 +81,6 @@ private:
     LanczosFilter *m_lanczosFilter = nullptr;
     QScopedPointer<GLTexture> m_cursorTexture;
     bool m_cursorTextureDirty = false;
-    QMatrix4x4 m_projectionMatrix;
     QMatrix4x4 m_screenProjectionMatrix;
     GLuint vao = 0;
 };

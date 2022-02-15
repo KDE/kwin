@@ -189,8 +189,7 @@ public:
 
     virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
 
-    static QMatrix4x4 createProjectionMatrix(const QRect &rect);
-
+    QMatrix4x4 renderTargetProjectionMatrix() const;
     QRect renderTargetRect() const;
     void setRenderTargetRect(const QRect &rect);
     qreal renderTargetScale() const;
@@ -210,8 +209,7 @@ protected:
     void clearStackingOrder();
     // shared implementation, starts painting the screen
     void paintScreen(const QRegion &damage, const QRegion &repaint,
-                     QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop,
-                     const QMatrix4x4 &projection = QMatrix4x4());
+                     QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop);
     // Render cursor texture in case hardware cursor is disabled/non-applicable
     virtual void paintCursor(AbstractOutput *output, const QRegion &region) = 0;
     friend class EffectsHandlerImpl;
@@ -273,6 +271,7 @@ private:
     QHash< Toplevel*, Window* > m_windows;
     QMap<AbstractOutput *, QRegion> m_repaints;
     QRect m_geometry;
+    QMatrix4x4 m_renderTargetProjectionMatrix;
     QRect m_renderTargetRect;
     qreal m_renderTargetScale = 1;
     // how many times finalPaintScreen() has been called

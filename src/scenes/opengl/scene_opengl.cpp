@@ -153,7 +153,7 @@ void SceneOpenGL::paintCursor(AbstractOutput *output, const QRegion &rendered)
     }
 
     // get cursor position in projection coordinates
-    QMatrix4x4 mvp = m_projectionMatrix;
+    QMatrix4x4 mvp = renderTargetProjectionMatrix();
     mvp.translate(cursorPos.x(), cursorPos.y());
 
     // handle transparence
@@ -248,10 +248,7 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
         repaint = m_backend->beginFrame(output);
         GLVertexBuffer::streamingBuffer()->beginFrame();
 
-        updateProjectionMatrix(renderTargetRect());
-
-        paintScreen(damage.intersected(renderTargetRect()), repaint, &update, &valid,
-                    renderLoop, projectionMatrix());   // call generic implementation
+        paintScreen(damage.intersected(renderTargetRect()), repaint, &update, &valid, renderLoop);   // call generic implementation
         paintCursor(output, valid);
 
         renderLoop->endFrame();
@@ -356,7 +353,7 @@ void SceneOpenGL::paintOffscreenQuickView(OffscreenQuickView *w)
         return;
     }
 
-    QMatrix4x4 mvp(projectionMatrix());
+    QMatrix4x4 mvp(renderTargetProjectionMatrix());
     mvp.translate(rect.x(), rect.y());
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
@@ -452,14 +449,9 @@ bool SceneOpenGL::supported(OpenGLBackend *backend)
     return true;
 }
 
-void SceneOpenGL::updateProjectionMatrix(const QRect &rect)
-{
-    m_projectionMatrix = Scene::createProjectionMatrix(rect);
-}
-
 void SceneOpenGL::paintSimpleScreen(int mask, const QRegion &region)
 {
-    m_screenProjectionMatrix = m_projectionMatrix;
+    m_screenProjectionMatrix = renderTargetProjectionMatrix();
 
     Scene::paintSimpleScreen(mask, region);
 }
@@ -468,7 +460,7 @@ void SceneOpenGL::paintGenericScreen(int mask, const ScreenPaintData &data)
 {
     const QMatrix4x4 screenMatrix = transformation(mask, data);
 
-    m_screenProjectionMatrix = m_projectionMatrix * screenMatrix;
+    m_screenProjectionMatrix = renderTargetProjectionMatrix() * screenMatrix;
 
     Scene::paintGenericScreen(mask, data);
 }
@@ -481,7 +473,7 @@ void SceneOpenGL::doPaintBackground(const QVector< float >& vertices)
     vbo->setData(vertices.count() / 2, 2, vertices.data(), nullptr);
 
     ShaderBinder binder(ShaderTrait::UniformColor);
-    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, m_projectionMatrix);
+    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, renderTargetProjectionMatrix());
 
     vbo->render(GL_TRIANGLES);
 }
@@ -697,7 +689,7 @@ QMatrix4x4 OpenGLWindow::modelViewProjectionMatrix(int mask, const WindowPaintDa
     if (mask & Scene::PAINT_SCREEN_TRANSFORMED)
         return m_scene->screenProjectionMatrix() * mvMatrix;
 
-    return m_scene->projectionMatrix() * mvMatrix;
+    return m_scene->renderTargetProjectionMatrix() * mvMatrix;
 }
 
 static QMatrix4x4 transformForPaintData(int mask, const WindowPaintData &data)
@@ -957,7 +949,7 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
         shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
         shader->setUniform(GLShader::Saturation, 1.0f);
     }
-    const QMatrix4x4 projection = m_scene->projectionMatrix();
+    const QMatrix4x4 projection = m_scene->renderTargetProjectionMatrix();
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
