@@ -86,7 +86,7 @@ void SceneQPainter::paint(AbstractOutput *output, const QRegion &damage, const Q
         m_painter->setWindow(geometry);
 
         QRegion updateRegion, validRegion;
-        paintScreen(damage.intersected(geometry), repaint, &updateRegion, &validRegion);
+        paintScreen(damage, repaint, &updateRegion, &validRegion);
         paintCursor(output, updateRegion);
 
         m_painter->end();

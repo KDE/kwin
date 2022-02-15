@@ -248,7 +248,7 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
         repaint = m_backend->beginFrame(output);
         GLVertexBuffer::streamingBuffer()->beginFrame();
 
-        paintScreen(damage.intersected(renderTargetRect()), repaint, &update, &valid);
+        paintScreen(damage, repaint, &update, &valid);
         paintCursor(output, valid);
 
         renderLoop->endFrame();

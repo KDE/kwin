@@ -269,8 +269,6 @@ void Scene::paintScreen(AbstractOutput *output, const QList<Toplevel *> &topleve
 void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
                         QRegion *updateRegion, QRegion *validRegion)
 {
-    const QRegion displayRegion(geometry());
-
     const RenderLoop *renderLoop = painted_screen->renderLoop();
     const std::chrono::milliseconds presentTime =
             std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
@@ -288,6 +286,7 @@ void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
     auto effectsImpl = static_cast<EffectsHandlerImpl *>(effects);
     effectsImpl->startPaint();
 
+    const QRegion displayRegion(renderTargetRect());
     QRegion region = damage;
 
     auto screen = EffectScreenImpl::get(painted_screen);
@@ -382,7 +381,7 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
         phase2.append({w, infiniteRegion(), data.clip, data.mask,});
     }
 
-    damaged_region = geometry();
+    damaged_region = renderTargetRect();
     if (m_paintScreenCount == 1) {
         aboutToStartPainting(painted_screen, damaged_region);
 
@@ -480,7 +479,7 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
     const QRegion repaintClip = repaint_region - dirtyArea;
     dirtyArea |= repaint_region;
 
-    const QRegion displayRegion(geometry());
+    const QRegion displayRegion(renderTargetRect());
     bool fullRepaint(dirtyArea == displayRegion); // spare some expensive region operations
     if (!fullRepaint) {
         extendPaintRegion(dirtyArea, opaqueFullscreen);
@@ -607,7 +606,7 @@ void Scene::clearStackingOrder()
 void Scene::paintWindow(Window* w, int mask, const QRegion &_region)
 {
     // no painting outside visible screen (and no transformations)
-    const QRegion region = _region & geometry();
+    const QRegion region = _region & renderTargetRect();
     if (region.isEmpty())  // completely clipped
         return;
 
