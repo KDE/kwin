@@ -934,11 +934,6 @@ void GLRenderTarget::cleanup()
     s_blitSupported = false;
 }
 
-bool GLRenderTarget::isRenderTargetBound()
-{
-    return !s_renderTargets.isEmpty();
-}
-
 bool GLRenderTarget::blitSupported()
 {
     return s_blitSupported;

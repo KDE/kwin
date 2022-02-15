@@ -40,7 +40,7 @@ EglGbmBackend::EglGbmBackend(VirtualBackend *b)
 
 EglGbmBackend::~EglGbmBackend()
 {
-    while (GLRenderTarget::isRenderTargetBound()) {
+    while (GLRenderTarget::currentRenderTarget()) {
         GLRenderTarget::popRenderTarget();
     }
     delete m_fbo;
@@ -90,7 +90,7 @@ void EglGbmBackend::init()
         return;
     }
     GLRenderTarget::pushRenderTarget(m_fbo);
-    if (!m_fbo->isRenderTargetBound()) {
+    if (!GLRenderTarget::currentRenderTarget()) {
         setFailed("Failed to bind framebuffer object");
         return;
     }
@@ -153,7 +153,7 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
 QRegion EglGbmBackend::beginFrame(AbstractOutput *output)
 {
     Q_UNUSED(output)
-    if (!GLRenderTarget::isRenderTargetBound()) {
+    if (!GLRenderTarget::currentRenderTarget()) {
         GLRenderTarget::pushRenderTarget(m_fbo);
     }
     return QRegion(0, 0, screens()->size().width(), screens()->size().height());

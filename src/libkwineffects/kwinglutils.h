@@ -446,7 +446,6 @@ public:
 
     static void pushRenderTarget(GLRenderTarget *target);
     static GLRenderTarget *popRenderTarget();
-    static bool isRenderTargetBound();
     /**
      * Whether the GL_EXT_framebuffer_blit extension is supported.
      * This functionality is not available in OpenGL ES 2.0.
