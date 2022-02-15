@@ -65,7 +65,12 @@ void DrmProperty::rollbackPending()
 
 bool DrmProperty::setPropertyLegacy(uint64_t value)
 {
-    return drmModeObjectSetProperty(m_obj->gpu()->fd(), m_obj->id(), m_obj->type(), m_propId, value) == 0;
+    if (drmModeObjectSetProperty(m_obj->gpu()->fd(), m_obj->id(), m_obj->type(), m_propId, value) == 0) {
+        m_current = m_next = m_pending = value;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void DrmProperty::initEnumMap(drmModePropertyRes *prop)

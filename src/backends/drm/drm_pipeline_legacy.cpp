@@ -97,7 +97,6 @@ bool DrmPipeline::applyPendingChangesLegacy()
         if (needsModeset() &&!legacyModeset()) {
             return false;
         }
-        m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setCurrent(DRM_MODE_DPMS_ON);
         if (pending.gamma && drmModeCrtcSetGamma(gpu()->fd(), pending.crtc->id(), pending.gamma->size(),
                                     pending.gamma->red(), pending.gamma->green(), pending.gamma->blue()) != 0) {
             qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
@@ -106,7 +105,7 @@ bool DrmPipeline::applyPendingChangesLegacy()
         setCursorLegacy();
         moveCursorLegacy();
     }
-    if (pending.crtc && !m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(pending.active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
+    if (!m_connector->getProp(DrmConnector::PropertyIndex::Dpms)->setPropertyLegacy(activePending() ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
         qCWarning(KWIN_DRM) << "Setting legacy dpms failed!" << strerror(errno);
         return false;
     }
