@@ -28,6 +28,7 @@
 #include "waylandoutputconfig.h"
 #include "egl_gbm_backend.h"
 #include "gbm_dmabuf.h"
+#include "drm_render_backend.h"
 // KF5
 #include <KCoreAddons>
 #include <KLocalizedString>
@@ -550,7 +551,13 @@ OpenGLBackend *DrmBackend::createOpenGLBackend()
 
 void DrmBackend::sceneInitialized()
 {
-    updateOutputs();
+    if (m_outputs.isEmpty()) {
+        updateOutputs();
+    } else {
+        for (const auto &gpu : qAsConst(m_gpus)) {
+            gpu->recreateSurfaces();
+        }
+    }
 }
 
 QVector<CompositingType> DrmBackend::supportedCompositors() const
@@ -593,8 +600,8 @@ void DrmBackend::removeVirtualOutput(AbstractOutput *output)
 
 DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
 {
-    if (primaryGpu()->eglBackend() && primaryGpu()->gbmDevice()) {
-        primaryGpu()->eglBackend()->makeCurrent();
+    if (const auto eglBackend = dynamic_cast<EglGbmBackend*>(m_renderBackend); eglBackend && primaryGpu()->gbmDevice()) {
+        eglBackend->makeCurrent();
         return GbmDmaBuf::createBuffer(size, primaryGpu()->gbmDevice());
     } else {
         return nullptr;
@@ -662,6 +669,16 @@ bool DrmBackend::applyOutputChanges(const WaylandOutputConfig &config)
         Compositor::self()->scene()->addRepaintFull();
     }
     return true;
+}
+
+void DrmBackend::setRenderBackend(DrmRenderBackend *backend)
+{
+    m_renderBackend = backend;
+}
+
+DrmRenderBackend *DrmBackend::renderBackend() const
+{
+    return m_renderBackend;
 }
 
 }

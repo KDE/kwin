@@ -14,7 +14,8 @@ namespace KWin
 
 class DumbSwapchain;
 
-class DrmQPainterLayer : public DrmLayer {
+class DrmQPainterLayer : public DrmLayer
+{
 public:
     DrmQPainterLayer(DrmDisplayDevice *displayDevice);
 
@@ -25,14 +26,12 @@ public:
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     QRegion currentDamage() const override;
     bool hasDirectScanoutBuffer() const override;
-    DrmDisplayDevice *displayDevice() const override;
 
 private:
     bool doesSwapchainFit() const;
 
     QSharedPointer<DumbSwapchain> m_swapchain;
     QRegion m_currentDamage;
-    DrmDisplayDevice *const m_displayDevice;
 };
 
 }

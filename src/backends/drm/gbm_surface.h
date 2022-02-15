@@ -24,6 +24,7 @@ namespace KWin
 {
 
 class GLRenderTarget;
+class EglGbmBackend;
 
 class GbmSurface
 {
@@ -52,7 +53,7 @@ public:
 
 private:
     gbm_surface *m_surface;
-    DrmGpu *m_gpu;
+    EglGbmBackend *const m_eglBackend;
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     QSize m_size;
     const uint32_t m_format;

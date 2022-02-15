@@ -422,7 +422,7 @@ bool DrmGpu::testPipelines()
     QVector<DrmPipeline*> inactivePipelines;
     for (const auto &pipeline : qAsConst(m_pipelines)) {
         if (!pipeline->pending.layer) {
-            pipeline->pending.layer = m_renderBackend->createLayer(pipeline->displayDevice());
+            pipeline->pending.layer = m_platform->renderBackend()->createLayer(pipeline->displayDevice());
         }
         if (!pipeline->pending.active) {
             pipeline->pending.active = true;
@@ -560,21 +560,6 @@ void DrmGpu::removeOutput(DrmOutput *output)
     m_outputs.removeOne(output);
     Q_EMIT outputRemoved(output);
     delete output;
-}
-
-EglGbmBackend *DrmGpu::eglBackend() const
-{
-    return dynamic_cast<EglGbmBackend*>(m_renderBackend);
-}
-
-DrmRenderBackend *DrmGpu::renderBackend() const
-{
-    return m_renderBackend;
-}
-
-void DrmGpu::setRenderBackend(DrmRenderBackend *backend)
-{
-    m_renderBackend = backend;
 }
 
 DrmBackend *DrmGpu::platform() const {
@@ -780,6 +765,18 @@ QVector<DrmObject*> DrmGpu::unusedObjects() const
 QSize DrmGpu::cursorSize() const
 {
     return m_cursorSize;
+}
+
+void DrmGpu::recreateSurfaces()
+{
+    for (const auto &pipeline : qAsConst(m_pipelines)) {
+        pipeline->pending.layer = m_platform->renderBackend()->createLayer(pipeline->displayDevice());
+    }
+    for (const auto &output : qAsConst(m_outputs)) {
+        if (const auto virtualOutput = qobject_cast<DrmVirtualOutput*>(output)) {
+            virtualOutput->recreateSurface();
+        }
+    }
 }
 
 }

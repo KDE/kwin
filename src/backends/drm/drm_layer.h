@@ -11,6 +11,7 @@
 #include <optional>
 #include <QRegion>
 #include <QSharedPointer>
+#include <QObject>
 
 namespace KWin
 {
@@ -19,10 +20,12 @@ class SurfaceItem;
 class DrmBuffer;
 class DrmDisplayDevice;
 
-class DrmLayer
+class DrmLayer : public QObject
 {
+    Q_OBJECT
 public:
-    virtual ~DrmLayer() = default;
+    DrmLayer(DrmDisplayDevice *device);
+    virtual ~DrmLayer();
 
     virtual std::optional<QRegion> startRendering() = 0;
     virtual bool endRendering(const QRegion &damagedRegion) = 0;
@@ -44,7 +47,10 @@ public:
     virtual QRegion currentDamage() const = 0;
     virtual bool hasDirectScanoutBuffer() const = 0;
 
-    virtual DrmDisplayDevice *displayDevice() const = 0;
+    DrmDisplayDevice *displayDevice() const;
+
+protected:
+    DrmDisplayDevice *const m_displayDevice;
 };
 
 }

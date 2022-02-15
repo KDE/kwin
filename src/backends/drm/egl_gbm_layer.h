@@ -32,11 +32,12 @@ class DrmBuffer;
 class DrmGpu;
 class SurfaceItem;
 class GLTexture;
+class EglGbmBackend;
 
 class EglGbmLayer : public DrmLayer
 {
 public:
-    EglGbmLayer(DrmGpu *renderGpu, DrmDisplayDevice *displayDevice);
+    EglGbmLayer(EglGbmBackend *eglBackend, DrmDisplayDevice *displayDevice);
     ~EglGbmLayer();
 
     std::optional<QRegion> startRendering() override;
@@ -48,7 +49,6 @@ public:
     QRegion currentDamage() const override;
     QSharedPointer<GLTexture> texture() const;
 
-    DrmDisplayDevice *displayDevice() const override;
     int bufferAge() const;
     EGLSurface eglSurface() const;
 
@@ -59,6 +59,7 @@ private:
     bool doesSwapchainFit(DumbSwapchain *swapchain) const;
     void sendDmabufFeedback(KWaylandServer::LinuxDmaBufV1ClientBuffer *failedBuffer);
     bool renderTestBuffer();
+    void destroyResources();
 
     QSharedPointer<DrmBuffer> importBuffer();
     QSharedPointer<DrmBuffer> importDmabuf();
@@ -88,8 +89,7 @@ private:
     QSharedPointer<DumbSwapchain> m_importSwapchain;
     QSharedPointer<DumbSwapchain> m_oldImportSwapchain;
 
-    DrmDisplayDevice *const m_displayDevice;
-    DrmGpu *const m_renderGpu;
+    EglGbmBackend *const m_eglBackend;
 };
 
 }

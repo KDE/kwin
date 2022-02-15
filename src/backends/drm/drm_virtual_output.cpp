@@ -44,7 +44,7 @@ DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize
                QByteArray("EDID_") + name.toUtf8());
     m_renderLoop->setRefreshRate(modes[m_modeIndex].refreshRate);
 
-    m_layer = gpu->renderBackend()->createLayer(this);
+    recreateSurface();
 }
 
 DrmVirtualOutput::~DrmVirtualOutput()
@@ -129,6 +129,11 @@ DrmLayer *DrmVirtualOutput::outputLayer() const
 bool DrmVirtualOutput::testScanout()
 {
     return true;
+}
+
+void DrmVirtualOutput::recreateSurface()
+{
+    m_layer = m_gpu->platform()->renderBackend()->createLayer(this);
 }
 
 }

@@ -23,12 +23,12 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
     : QPainterBackend()
     , m_backend(backend)
 {
-    m_backend->primaryGpu()->setRenderBackend(this);
+    m_backend->setRenderBackend(this);
 }
 
 DrmQPainterBackend::~DrmQPainterBackend()
 {
-    m_backend->primaryGpu()->setRenderBackend(nullptr);
+    m_backend->setRenderBackend(nullptr);
 }
 
 QImage *DrmQPainterBackend::bufferForScreen(AbstractOutput *output)
@@ -51,7 +51,7 @@ void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &rendere
     static_cast<DrmAbstractOutput*>(output)->present();
 }
 
-QSharedPointer<DrmLayer> DrmQPainterBackend::createLayer(DrmDisplayDevice *displayDevice) const
+QSharedPointer<DrmLayer> DrmQPainterBackend::createLayer(DrmDisplayDevice *displayDevice)
 {
     return QSharedPointer<DrmQPainterLayer>::create(displayDevice);
 }

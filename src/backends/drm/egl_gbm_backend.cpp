@@ -49,14 +49,15 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
     : AbstractEglBackend(drmBackend->primaryGpu()->deviceId())
     , m_backend(drmBackend)
 {
-    drmBackend->primaryGpu()->setRenderBackend(this);
+    drmBackend->setRenderBackend(this);
     setIsDirectRendering(true);
 }
 
 EglGbmBackend::~EglGbmBackend()
 {
+    Q_EMIT aboutToBeDestroyed();
     cleanup();
-    m_backend->primaryGpu()->setRenderBackend(nullptr);
+    m_backend->setRenderBackend(nullptr);
 }
 
 bool EglGbmBackend::initializeEgl()
@@ -331,9 +332,14 @@ EGLConfig EglGbmBackend::config(uint32_t format) const
     return m_configs[format];
 }
 
-QSharedPointer<DrmLayer> EglGbmBackend::createLayer(DrmDisplayDevice *displayDevice) const
+QSharedPointer<DrmLayer> EglGbmBackend::createLayer(DrmDisplayDevice *displayDevice)
 {
-    return QSharedPointer<EglGbmLayer>::create(m_backend->primaryGpu(), displayDevice);
+    return QSharedPointer<EglGbmLayer>::create(this, displayDevice);
+}
+
+DrmGpu *EglGbmBackend::gpu() const
+{
+    return m_backend->primaryGpu();
 }
 
 bool operator==(const GbmFormat &lhs, const GbmFormat &rhs)

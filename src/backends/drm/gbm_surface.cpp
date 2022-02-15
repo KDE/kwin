@@ -16,13 +16,14 @@
 #include "logging.h"
 #include "kwineglutils_p.h"
 #include "kwinglplatform.h"
+#include "drm_backend.h"
 
 namespace KWin
 {
 
 GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config)
     : m_surface(gbm_surface_create(gpu->gbmDevice(), size.width(), size.height(), format, flags))
-    , m_gpu(gpu)
+    , m_eglBackend(static_cast<EglGbmBackend*>(gpu->platform()->renderBackend()))
     , m_size(size)
     , m_format(format)
     , m_renderTarget(new GLRenderTarget(0, size))
@@ -31,7 +32,7 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t
         qCCritical(KWIN_DRM) << "Could not create gbm surface!" << strerror(errno);
         return;
     }
-    m_eglSurface = eglCreatePlatformWindowSurfaceEXT(m_gpu->eglDisplay(), config, m_surface, nullptr);
+    m_eglSurface = eglCreatePlatformWindowSurfaceEXT(m_eglBackend->eglDisplay(), config, m_surface, nullptr);
     if (m_eglSurface == EGL_NO_SURFACE) {
         qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
     }
@@ -39,7 +40,7 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t
 
 GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config)
     : m_surface(gbm_surface_create_with_modifiers(gpu->gbmDevice(), size.width(), size.height(), format, modifiers.isEmpty() ? nullptr : modifiers.constData(), modifiers.count()))
-    , m_gpu(gpu)
+    , m_eglBackend(static_cast<EglGbmBackend*>(gpu->platform()->renderBackend()))
     , m_size(size)
     , m_format(format)
     , m_modifiers(modifiers)
@@ -49,7 +50,7 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<
         qCCritical(KWIN_DRM) << "Could not create gbm surface!" << strerror(errno);
         return;
     }
-    m_eglSurface = eglCreatePlatformWindowSurfaceEXT(m_gpu->eglDisplay(), config, m_surface, nullptr);
+    m_eglSurface = eglCreatePlatformWindowSurfaceEXT(m_eglBackend->eglDisplay(), config, m_surface, nullptr);
     if (m_eglSurface == EGL_NO_SURFACE) {
         qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
     }
@@ -62,7 +63,7 @@ GbmSurface::~GbmSurface()
         buffer->releaseBuffer();
     }
     if (m_eglSurface != EGL_NO_SURFACE) {
-        eglDestroySurface(m_gpu->eglDisplay(), m_eglSurface);
+        eglDestroySurface(m_eglBackend->eglDisplay(), m_eglSurface);
     }
     if (m_surface) {
         gbm_surface_destroy(m_surface);
@@ -71,7 +72,7 @@ GbmSurface::~GbmSurface()
 
 bool GbmSurface::makeContextCurrent() const
 {
-    if (eglMakeCurrent(m_gpu->eglDisplay(), m_eglSurface, m_eglSurface, m_gpu->eglBackend()->context()) == EGL_FALSE) {
+    if (eglMakeCurrent(m_eglBackend->eglDisplay(), m_eglSurface, m_eglSurface, m_eglBackend->context()) == EGL_FALSE) {
         qCCritical(KWIN_DRM) << "eglMakeCurrent failed:" << getEglErrorString();
         return false;
     }
@@ -83,7 +84,7 @@ bool GbmSurface::makeContextCurrent() const
 
 QSharedPointer<DrmGbmBuffer> GbmSurface::swapBuffersForDrm(const QRegion &dirty)
 {
-    auto error = eglSwapBuffers(m_gpu->eglDisplay(), m_eglSurface);
+    auto error = eglSwapBuffers(m_eglBackend->eglDisplay(), m_eglSurface);
     if (error != EGL_TRUE) {
         qCCritical(KWIN_DRM) << "an error occurred while swapping buffers" << getEglErrorString();
         return nullptr;
@@ -92,15 +93,15 @@ QSharedPointer<DrmGbmBuffer> GbmSurface::swapBuffersForDrm(const QRegion &dirty)
     if (!bo) {
         return nullptr;
     }
-    auto buffer = QSharedPointer<DrmGbmBuffer>::create(m_gpu, this, bo);
+    auto buffer = QSharedPointer<DrmGbmBuffer>::create(m_eglBackend->gpu(), this, bo);
     m_currentBuffer = buffer;
     m_lockedBuffers << m_currentBuffer.get();
     if (!buffer->bufferId()) {
         return nullptr;
     }
     m_currentDrmBuffer = buffer;
-    if (m_gpu->eglBackend()->supportsBufferAge()) {
-        eglQuerySurface(m_gpu->eglDisplay(), m_eglSurface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
+    if (m_eglBackend->supportsBufferAge()) {
+        eglQuerySurface(m_eglBackend->eglDisplay(), m_eglSurface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
         m_damageJournal.add(dirty);
     }
     return buffer;
@@ -108,7 +109,7 @@ QSharedPointer<DrmGbmBuffer> GbmSurface::swapBuffersForDrm(const QRegion &dirty)
 
 QSharedPointer<GbmBuffer> GbmSurface::swapBuffers(const QRegion &dirty)
 {
-    auto error = eglSwapBuffers(m_gpu->eglDisplay(), m_eglSurface);
+    auto error = eglSwapBuffers(m_eglBackend->eglDisplay(), m_eglSurface);
     if (error != EGL_TRUE) {
         qCCritical(KWIN_DRM) << "an error occurred while swapping buffers" << getEglErrorString();
         return nullptr;
@@ -119,8 +120,8 @@ QSharedPointer<GbmBuffer> GbmSurface::swapBuffers(const QRegion &dirty)
     }
     m_currentBuffer = QSharedPointer<GbmBuffer>::create(this, bo);
     m_lockedBuffers << m_currentBuffer.get();
-    if (m_gpu->eglBackend()->supportsBufferAge()) {
-        eglQuerySurface(m_gpu->eglDisplay(), m_eglSurface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
+    if (m_eglBackend->supportsBufferAge()) {
+        eglQuerySurface(m_eglBackend->eglDisplay(), m_eglSurface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
         m_damageJournal.add(dirty);
     }
     return m_currentBuffer;
@@ -179,7 +180,7 @@ int GbmSurface::bufferAge() const
 
 QRegion GbmSurface::repaintRegion(const QRect &geometry) const
 {
-    if (m_gpu->eglBackend()->supportsBufferAge()) {
+    if (m_eglBackend->supportsBufferAge()) {
         return m_damageJournal.accumulate(m_bufferAge, geometry);
     } else {
         return geometry;

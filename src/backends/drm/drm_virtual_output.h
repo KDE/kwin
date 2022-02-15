@@ -43,6 +43,8 @@ public:
     DrmLayer *outputLayer() const override;
     bool testScanout() override;
 
+    void recreateSurface();
+
 private:
     void vblank(std::chrono::nanoseconds timestamp);
     void setDpmsMode(DpmsMode mode) override;

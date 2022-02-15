@@ -59,8 +59,6 @@ public:
     bool isNVidia() const;
     gbm_device *gbmDevice() const;
     EGLDisplay eglDisplay() const;
-    EglGbmBackend *eglBackend() const;
-    DrmRenderBackend *renderBackend() const;
     DrmBackend *platform() const;
     /**
      * Returns the clock from which presentation timestamps are sourced. The returned value
@@ -73,7 +71,6 @@ public:
     const QVector<DrmPipeline*> pipelines() const;
 
     void setEglDisplay(EGLDisplay display);
-    void setRenderBackend(DrmRenderBackend *backend);
 
     bool updateOutputs();
 
@@ -88,6 +85,8 @@ public:
     bool testPendingConfiguration(TestMode mode = TestMode::TestWithCrtcReallocation);
     bool needsModeset() const;
     bool maybeModeset();
+
+    void recreateSurfaces();
 
 Q_SIGNALS:
     void outputAdded(DrmAbstractOutput *output);
@@ -122,7 +121,6 @@ private:
     clockid_t m_presentationClock;
     gbm_device* m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
-    DrmRenderBackend *m_renderBackend;
     DrmBackend* const m_platform;
 
     QVector<DrmPlane*> m_planes;

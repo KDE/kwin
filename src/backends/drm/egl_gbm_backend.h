@@ -67,7 +67,7 @@ public:
     void init() override;
     bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem) override;
     bool prefer10bpc() const override;
-    QSharedPointer<DrmLayer> createLayer(DrmDisplayDevice *displayDevice) const override;
+    QSharedPointer<DrmLayer> createLayer(DrmDisplayDevice *displayDevice) override;
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
@@ -75,6 +75,10 @@ public:
     EGLConfig config(uint32_t format) const;
     GbmFormat gbmFormatForDrmFormat(uint32_t format) const;
     std::optional<uint32_t> chooseFormat(DrmDisplayDevice *displyDevice) const;
+    DrmGpu *gpu() const;
+
+Q_SIGNALS:
+    void aboutToBeDestroyed();
 
 protected:
     void aboutToStartPainting(AbstractOutput *output, const QRegion &damage) override;

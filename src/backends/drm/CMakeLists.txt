@@ -14,6 +14,7 @@ set(DRM_SOURCES
     dumb_swapchain.cpp
     shadowbuffer.cpp
     drm_display_device.cpp
+    drm_layer.cpp
     drm_pipeline.cpp
     drm_pipeline_legacy.cpp
     drm_abstract_output.cpp

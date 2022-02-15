@@ -21,7 +21,7 @@ class DrmRenderBackend
 public:
     virtual ~DrmRenderBackend() = default;
 
-    virtual QSharedPointer<DrmLayer> createLayer(DrmDisplayDevice *displayDevice) const = 0;
+    virtual QSharedPointer<DrmLayer> createLayer(DrmDisplayDevice *displayDevice) = 0;
 
 };
 

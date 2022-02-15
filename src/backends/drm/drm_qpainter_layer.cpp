@@ -10,6 +10,9 @@
 #include "dumb_swapchain.h"
 #include "drm_abstract_output.h"
 #include "drm_buffer.h"
+#include "scene_qpainter_drm_backend.h"
+#include "drm_gpu.h"
+#include "drm_backend.h"
 
 #include <drm_fourcc.h>
 
@@ -17,8 +20,11 @@ namespace KWin
 {
 
 DrmQPainterLayer::DrmQPainterLayer(DrmDisplayDevice *displayDevice)
-    : m_displayDevice(displayDevice)
+    : DrmLayer(displayDevice)
 {
+    connect(static_cast<DrmQPainterBackend*>(displayDevice->gpu()->platform()->renderBackend()), &DrmQPainterBackend::aboutToBeDestroyed, this, [this]() {
+        m_swapchain.reset();
+    });
 }
 
 std::optional<QRegion> DrmQPainterLayer::startRendering()
@@ -67,11 +73,6 @@ QSharedPointer<DrmBuffer> DrmQPainterLayer::currentBuffer() const
 QRegion DrmQPainterLayer::currentDamage() const
 {
     return m_currentDamage;
-}
-
-DrmDisplayDevice *DrmQPainterLayer::displayDevice() const
-{
-    return m_displayDevice;
 }
 
 bool DrmQPainterLayer::hasDirectScanoutBuffer() const
