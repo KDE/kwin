@@ -89,7 +89,7 @@ GLTexture *DeformEffectPrivate::maybeRender(EffectWindow *window, DeformOffscree
         offscreenData->texture.reset(new GLTexture(GL_RGBA8, textureSize));
         offscreenData->texture->setFilter(GL_LINEAR);
         offscreenData->texture->setWrapMode(GL_CLAMP_TO_EDGE);
-        offscreenData->renderTarget.reset(new GLRenderTarget(*offscreenData->texture));
+        offscreenData->renderTarget.reset(new GLRenderTarget(offscreenData->texture.data()));
         offscreenData->isDirty = true;
     }
 

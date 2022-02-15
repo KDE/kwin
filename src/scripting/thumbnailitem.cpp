@@ -404,7 +404,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
         m_offscreenTexture.reset(new GLTexture(GL_RGBA8, textureSize));
         m_offscreenTexture->setFilter(GL_LINEAR);
         m_offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        m_offscreenTarget.reset(new GLRenderTarget(*m_offscreenTexture));
+        m_offscreenTarget.reset(new GLRenderTarget(m_offscreenTexture.data()));
     }
 
     GLRenderTarget::pushRenderTarget(m_offscreenTarget.data());
@@ -493,7 +493,7 @@ void DesktopThumbnailItem::updateOffscreenTexture()
         m_offscreenTexture->setFilter(GL_LINEAR);
         m_offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_offscreenTexture->setYInverted(true);
-        m_offscreenTarget.reset(new GLRenderTarget(*m_offscreenTexture));
+        m_offscreenTarget.reset(new GLRenderTarget(m_offscreenTexture.data()));
     }
 
     GLRenderTarget::pushRenderTarget(m_offscreenTarget.data());

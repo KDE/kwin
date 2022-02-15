@@ -397,10 +397,12 @@ public:
     explicit GLRenderTarget();
 
     /**
-     * Constructs a GLRenderTarget
-     * @param color texture where the scene will be rendered onto
+     * Constructs a GLRenderTarget. Note that ensuring the color attachment outlives
+     * the render target is the responsibility of the caller.
+     *
+     * @param colorAttachment texture where the scene will be rendered onto
      */
-    explicit GLRenderTarget(const GLTexture& color);
+    explicit GLRenderTarget(GLTexture *colorAttachment);
 
     /**
      * Constructs a wrapper for an already created render target object. The GLRenderTarget
@@ -470,7 +472,7 @@ public:
     void blitFromFramebuffer(const QRect &source = QRect(), const QRect &destination = QRect(), GLenum filter = GL_LINEAR);
 
 protected:
-    void initFBO();
+    void initFBO(GLTexture *colorAttachment);
 
 private:
     bool bind();
@@ -481,7 +483,6 @@ private:
     static bool s_blitSupported;
     static QStack<GLRenderTarget*> s_renderTargets;
 
-    GLTexture mTexture;
     GLuint mFramebuffer = 0;
     QSize mSize;
     bool mValid = false;

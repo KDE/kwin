@@ -84,7 +84,7 @@ void EglGbmBackend::init()
     initKWinGL();
 
     m_backBuffer = new GLTexture(GL_RGB8, screens()->size().width(), screens()->size().height());
-    m_fbo = new GLRenderTarget(*m_backBuffer);
+    m_fbo = new GLRenderTarget(m_backBuffer);
     if (!m_fbo->valid()) {
         setFailed("Could not create framebuffer object");
         return;

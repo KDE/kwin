@@ -224,7 +224,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         offscreenTexture.reset(new GLTexture(GL_RGBA8, geometry.size() * devicePixelRatio));
         offscreenTexture->setFilter(GL_LINEAR);
         offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        target.reset(new GLRenderTarget(*offscreenTexture));
+        target.reset(new GLRenderTarget(offscreenTexture.data()));
         validTarget = target->valid();
     }
     if (validTarget) {
@@ -363,7 +363,7 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, qreal devicePixel
         if (GLRenderTarget::blitSupported() && !GLPlatform::instance()->isGLES()) {
             image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
             GLTexture texture(GL_RGBA8, nativeSize.width(), nativeSize.height());
-            GLRenderTarget target(texture);
+            GLRenderTarget target(&texture);
             target.blitFromFramebuffer(effects->mapToRenderTarget(geometry));
             // copy content from framebuffer into image
             texture.bind();

@@ -972,24 +972,22 @@ GLRenderTarget* GLRenderTarget::popRenderTarget()
 }
 
 GLRenderTarget::GLRenderTarget()
-    : mTexture(GL_TEXTURE_2D)
 {
 }
 
-GLRenderTarget::GLRenderTarget(const GLTexture& color)
-    : mTexture(color)
-    , mSize(color.size())
+GLRenderTarget::GLRenderTarget(GLTexture *colorAttachment)
+    : mSize(colorAttachment->size())
 {
     // Make sure FBO is supported
-    if (sSupported && !mTexture.isNull()) {
-        initFBO();
-    } else
+    if (sSupported && !colorAttachment->isNull()) {
+        initFBO(colorAttachment);
+    } else {
         qCCritical(LIBKWINGLUTILS) << "Render targets aren't supported!";
+    }
 }
 
 GLRenderTarget::GLRenderTarget(GLuint handle, const QSize &size)
-    : mTexture({})
-    , mFramebuffer(handle)
+    : mFramebuffer(handle)
     , mSize(size)
     , mValid(true)
     , mForeign(true)
@@ -1012,7 +1010,6 @@ bool GLRenderTarget::bind()
 
     glBindFramebuffer(GL_FRAMEBUFFER, handle());
     glViewport(0, 0, mSize.width(), mSize.height());
-    mTexture.setDirty();
 
     return true;
 }
@@ -1049,7 +1046,7 @@ static QString formatFramebufferStatus(GLenum status)
     }
 }
 
-void GLRenderTarget::initFBO()
+void GLRenderTarget::initFBO(GLTexture *colorAttachment)
 {
 #if DEBUG_GLRENDERTARGET
     GLenum err = glGetError();
@@ -1082,7 +1079,7 @@ void GLRenderTarget::initFBO()
 #endif
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           mTexture.target(), mTexture.texture(), 0);
+                           colorAttachment->target(), colorAttachment->texture(), 0);
 
 #if DEBUG_GLRENDERTARGET
     if ((err = glGetError()) != GL_NO_ERROR) {

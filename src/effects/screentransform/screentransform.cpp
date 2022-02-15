@@ -65,7 +65,7 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
         // Rendering the current scene into a texture
         const bool c = state.m_texture->create();
         Q_ASSERT(c);
-        GLRenderTarget renderTarget(*state.m_texture);
+        GLRenderTarget renderTarget(state.m_texture.data());
         GLRenderTarget::pushRenderTarget(&renderTarget);
 
         effects->renderScreen(screen);

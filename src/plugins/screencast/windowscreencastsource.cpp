@@ -40,7 +40,7 @@ QSize WindowScreenCastSource::textureSize() const
 void WindowScreenCastSource::render(QImage *image)
 {
     GLTexture offscreenTexture(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize());
-    GLRenderTarget offscreenTarget(offscreenTexture);
+    GLRenderTarget offscreenTarget(&offscreenTexture);
 
     render(&offscreenTarget);
     grabTexture(&offscreenTexture, image);

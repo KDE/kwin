@@ -85,7 +85,7 @@ private:
 private:
     BlurShader *m_shader;
     QVector <GLRenderTarget*> m_renderTargets;
-    QVector <GLTexture> m_renderTextures;
+    QVector<GLTexture *> m_renderTextures;
     QStack <GLRenderTarget*> m_renderTargetStack;
 
     QScopedPointer<GLTexture> m_noiseTexture;
