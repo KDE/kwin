@@ -68,6 +68,9 @@ DesktopGridEffect::DesktopGridEffect()
 
     connect(a, &QAction::triggered, this, [this]() {
         if ((qreal(timeline.currentTime()) / qreal(timeline.duration())) > 0.5) {
+            if (effects->isScreenLocked()) {
+                return;
+            }
             activated = true;
             timeline.setDirection(QTimeLine::Forward);
             timelineRunning = true;

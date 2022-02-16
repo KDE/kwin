@@ -155,6 +155,9 @@ void OverviewEffect::toggle()
 
 void OverviewEffect::activate()
 {
+    if (effects->isScreenLocked()) {
+        return;
+    }
     setRunning(true);
 }
 
