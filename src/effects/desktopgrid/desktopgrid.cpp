@@ -17,12 +17,13 @@
 #include "../presentwindows/presentwindows_proxy.h"
 
 #include <QAction>
-#include <QApplication>
+#include <QGuiApplication>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <netwm_def.h>
 #include <QEvent>
 #include <QMouseEvent>
+#include <QStyleHints>
 #include <QTimer>
 #include <QVector2D>
 #include <QMatrix4x4>
@@ -129,7 +130,7 @@ DesktopGridEffect::DesktopGridEffect()
         }
     });
 
-    windowMoveElevateTimer->setInterval(QApplication::startDragTime());
+    windowMoveElevateTimer->setInterval(QGuiApplication::styleHints()->startDragTime());
     windowMoveElevateTimer->setSingleShot(true);
     connect(windowMoveElevateTimer, &QTimer::timeout, this, [this]() {
         effects->setElevatedWindow(windowMove, true);
@@ -503,7 +504,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
     if (e->type() == QEvent::MouseMove) {
         int d = posToDesktop(me->pos());
         if (windowMove != nullptr &&
-                (me->pos() - dragStartPos).manhattanLength() > QApplication::startDragDistance()) {
+                (me->pos() - dragStartPos).manhattanLength() > QGuiApplication::styleHints()->startDragDistance()) {
             // Handle window moving
             if (windowMoveElevateTimer->isActive()) { // Window started moving, but is not elevated yet!
                 windowMoveElevateTimer->stop();
@@ -561,7 +562,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
                 effects->addRepaintFull();
             }
         } else if ((me->buttons() & Qt::LeftButton) && !wasDesktopMove &&
-                  (me->pos() - dragStartPos).manhattanLength() > QApplication::startDragDistance()) {
+                  (me->pos() - dragStartPos).manhattanLength() > QGuiApplication::styleHints()->startDragDistance()) {
             wasDesktopMove = true;
             effects->defineCursor(Qt::ClosedHandCursor);
         }
