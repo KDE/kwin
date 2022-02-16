@@ -383,6 +383,16 @@ QRect OffscreenQuickView::geometry() const
     return d->m_view->geometry();
 }
 
+void OffscreenQuickView::setOpacity(qreal opacity)
+{
+    d->m_view->setOpacity(opacity);
+}
+
+qreal OffscreenQuickView::opacity() const
+{
+    return d->m_view->opacity();
+}
+
 QQuickItem *OffscreenQuickView::contentItem() const
 {
     return d->m_view->contentItem();

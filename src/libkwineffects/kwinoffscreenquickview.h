@@ -94,6 +94,9 @@ public:
     void setGeometry(const QRect &rect);
     QRect geometry() const;
 
+    void setOpacity(qreal opacity);
+    qreal opacity() const;
+
     /**
      * Render the current scene graph into the FBO.
      * This is typically done automatically when the scene changes

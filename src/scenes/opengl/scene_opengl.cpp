@@ -337,17 +337,27 @@ void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, Scr
 
 void SceneOpenGL::paintOffscreenQuickView(OffscreenQuickView *w)
 {
-    GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-    const QRect rect = w->geometry();
-
     GLTexture *t = w->bufferAsTexture();
     if (!t) {
         return;
     }
 
+    ShaderTraits traits = ShaderTrait::MapTexture;
+    const qreal a = w->opacity();
+    if (a != 1.0) {
+        traits |= ShaderTrait::Modulate;
+    }
+
+    GLShader *shader = ShaderManager::instance()->pushShader(traits);
+    const QRect rect = w->geometry();
+
     QMatrix4x4 mvp(renderTargetProjectionMatrix());
     mvp.translate(rect.x(), rect.y());
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+
+    if (a != 1.0) {
+        shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+    }
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

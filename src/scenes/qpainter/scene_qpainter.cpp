@@ -130,7 +130,10 @@ void SceneQPainter::paintOffscreenQuickView(OffscreenQuickView *w)
     if (buffer.isNull()) {
         return;
     }
+    painter->save();
+    painter->setOpacity(w->opacity());
     painter->drawImage(w->geometry(), buffer);
+    painter->restore();
 }
 
 Scene::Window *SceneQPainter::createWindow(Toplevel *toplevel)
