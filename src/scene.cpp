@@ -257,11 +257,8 @@ void Scene::paintScreen(AbstractOutput *output, const QList<Toplevel *> &topleve
     createStackingOrder(toplevels);
     painted_screen = output;
 
-    setRenderTargetRect(output->geometry());
-    setRenderTargetScale(output->scale());
-
     QRegion update, valid;
-    paintScreen(renderTargetRect(), QRect(), &update, &valid);
+    paintScreen(output->geometry(), QRect(), &update, &valid);
     clearStackingOrder();
 }
 
@@ -285,6 +282,14 @@ void Scene::paintScreen(const QRegion &damage, const QRegion &repaint,
     // preparation step
     auto effectsImpl = static_cast<EffectsHandlerImpl *>(effects);
     effectsImpl->startPaint();
+
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+        setRenderTargetRect(painted_screen->geometry());
+        setRenderTargetScale(painted_screen->scale());
+    } else {
+        setRenderTargetRect(geometry());
+        setRenderTargetScale(1);
+    }
 
     const QRegion displayRegion(renderTargetRect());
     QRegion region = damage;

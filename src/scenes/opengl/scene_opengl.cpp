@@ -195,14 +195,6 @@ void SceneOpenGL::paint(AbstractOutput *output, const QRegion &damage, const QLi
     QRegion valid;
     QRegion repaint;
 
-    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
-        setRenderTargetRect(output->geometry());
-        setRenderTargetScale(output->scale());
-    } else {
-        setRenderTargetRect(geometry());
-        setRenderTargetScale(1);
-    }
-
     renderLoop->beginFrame();
 
     SurfaceItem *fullscreenSurface = nullptr;
