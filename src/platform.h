@@ -391,7 +391,6 @@ public Q_SLOTS:
     void processPinchGestureEnd(quint32 time);
     void processPinchGestureCancelled(quint32 time);
 
-    void cursorRendered(const QRect &geometry);
     virtual void sceneInitialized() {};
 
 Q_SIGNALS:
@@ -448,10 +447,6 @@ protected:
     }
 
 private:
-    void triggerCursorRepaint();
-    struct {
-        QRect lastRenderedGeometry;
-    } m_cursor;
     bool m_ready = false;
     QSize m_initialWindowSize;
     QByteArray m_deviceIdentifier;

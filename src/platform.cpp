@@ -209,19 +209,6 @@ AbstractOutput *Platform::outputAt(const QPoint &pos) const
     return bestOutput;
 }
 
-void Platform::triggerCursorRepaint()
-{
-    if (Compositor::compositing()) {
-        Compositor::self()->scene()->addRepaint(m_cursor.lastRenderedGeometry);
-        Compositor::self()->scene()->addRepaint(Cursors::self()->currentCursor()->geometry());
-    }
-}
-
-void Platform::cursorRendered(const QRect &geometry)
-{
-    m_cursor.lastRenderedGeometry = geometry;
-}
-
 void Platform::keyboardKeyPressed(quint32 key, quint32 time)
 {
     if (!input()) {
