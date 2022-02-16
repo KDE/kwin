@@ -11,7 +11,7 @@
 #include "slidingpopups.h"
 #include "slidingpopupsconfig.h"
 
-#include <QApplication>
+#include <QGuiApplication>
 #include <QFontMetrics>
 #include <QTimer>
 #include <QWindow>
@@ -36,7 +36,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     KWaylandServer::Display *display = effects->waylandDisplay();
     if (display) {
         if (!s_slideManagerRemoveTimer) {
-            s_slideManagerRemoveTimer = new QTimer(qApp);
+            s_slideManagerRemoveTimer = new QTimer(QCoreApplication::instance());
             s_slideManagerRemoveTimer->setSingleShot(true);
             s_slideManagerRemoveTimer->callOnTimeout([]() {
                 s_slideManager->remove();
@@ -49,7 +49,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
         }
     }
 
-    m_slideLength = QFontMetrics(qApp->font()).height() * 8;
+    m_slideLength = QFontMetrics(QGuiApplication::font()).height() * 8;
 
     m_atom = effects->announceSupportProperty("_KDE_SLIDE", this);
     connect(effects, &EffectsHandler::windowAdded, this, &SlidingPopupsEffect::slotWindowAdded);
