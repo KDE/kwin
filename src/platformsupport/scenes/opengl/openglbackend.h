@@ -55,12 +55,6 @@ public:
     virtual SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap);
     virtual SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
-    /**
-     * Notifies about starting to paint.
-     *
-     * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
-     */
-    virtual void aboutToStartPainting(AbstractOutput *output, const QRegion &damage);
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
 

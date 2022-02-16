@@ -32,6 +32,13 @@ public:
 
     virtual bool checkGraphicsReset();
 
+    /**
+     * Notifies about starting to paint.
+     *
+     * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
+     */
+    virtual void aboutToStartPainting(AbstractOutput *output, const QRegion &damage);
+
     virtual QRegion beginFrame(AbstractOutput *output) = 0;
     virtual void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
 

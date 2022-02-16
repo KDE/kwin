@@ -1797,8 +1797,7 @@ void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
 {
     auto output = static_cast<EffectScreenImpl *>(screen)->platformOutput();
     m_scene->prePaint(output);
-    QRegion update, valid;
-    m_scene->paint(output->geometry(), QRect(), update, valid);
+    m_scene->paint(output->geometry());
     m_scene->postPaint();
 }
 

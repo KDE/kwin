@@ -31,6 +31,11 @@ public:
     void setLayer(RenderLayer *layer);
 
     /**
+     * Returns the repaints schduled for the next frame.
+     */
+    virtual QRegion repaints() const;
+
+    /**
      * This function is called by the compositor before starting compositing. Reimplement
      * this function to do frame initialization.
      */
@@ -52,7 +57,7 @@ public:
      * This function is called when the compositor wants the render layer delegate
      * to repaint its contents.
      */
-    virtual void paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid) = 0;
+    virtual void paint(const QRegion &region) = 0;
 
 private:
     RenderLayer *m_layer = nullptr;

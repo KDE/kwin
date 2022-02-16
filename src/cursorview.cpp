@@ -23,17 +23,11 @@ CursorDelegate::CursorDelegate(AbstractOutput *output, CursorView *view)
 {
 }
 
-void CursorDelegate::paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid)
+void CursorDelegate::paint(const QRegion &region)
 {
     const Cursor *cursor = Cursors::self()->currentCursor();
-    const QRegion cursorDamage = damage.intersected(cursor->geometry());
-    const QRegion cursorRepaint = repaint.intersected(cursor->geometry());
-
-    update = cursorDamage;
-    valid = cursorDamage.united(cursorRepaint);
-
-    if (!valid.isEmpty()) {
-        m_view->paint(m_output, valid);
+    if (region.intersects(cursor->geometry())) {
+        m_view->paint(m_output, region);
     }
 }
 

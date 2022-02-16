@@ -53,10 +53,11 @@ public:
     explicit SceneDelegate(Scene *scene, AbstractOutput *output, QObject *parent = nullptr);
     ~SceneDelegate() override;
 
+    QRegion repaints() const override;
     SurfaceItem *scanoutCandidate() const override;
     void prePaint() override;
     void postPaint() override;
-    void paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid) override;
+    void paint(const QRegion &region) override;
 
 private:
     Scene *m_scene;
@@ -82,6 +83,7 @@ public:
     void addRepaint(const QRect &rect);
     void addRepaint(int x, int y, int width, int height);
     void addRepaintFull();
+    QRegion damage() const;
 
     QRect geometry() const;
     void setGeometry(const QRect &rect);
@@ -96,7 +98,7 @@ public:
     SurfaceItem *scanoutCandidate() const;
     void prePaint(AbstractOutput *output);
     void postPaint();
-    virtual void paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid) = 0;
+    virtual void paint(const QRegion &region) = 0;
 
     /**
      * Adds the Toplevel to the Scene.
@@ -222,34 +224,25 @@ protected:
     void createStackingOrder();
     void clearStackingOrder();
     // shared implementation, starts painting the screen
-    void paintScreen(const QRegion &damage, const QRegion &repaint,
-                     QRegion *updateRegion, QRegion *validRegion);
+    void paintScreen(const QRegion &region);
     friend class EffectsHandlerImpl;
     // called after all effects had their paintScreen() called
     void finalPaintScreen(int mask, const QRegion &region, ScreenPaintData& data);
     // shared implementation of painting the screen in the generic
     // (unoptimized) way
+    void preparePaintGenericScreen();
     virtual void paintGenericScreen(int mask, const ScreenPaintData &data);
     // shared implementation of painting the screen in an optimized way
+    void preparePaintSimpleScreen();
     virtual void paintSimpleScreen(int mask, const QRegion &region);
     // paint the background (not the desktop background - the whole background)
     virtual void paintBackground(const QRegion &region) = 0;
-
-    /**
-     * Notifies about starting to paint.
-     *
-     * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
-     */
-    virtual void aboutToStartPainting(AbstractOutput *output, const QRegion &damage);
     // called after all effects had their paintWindow() called
     void finalPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
     // shared implementation, starts painting the window
     virtual void paintWindow(Window* w, int mask, const QRegion &region);
     // called after all effects had their drawWindow() called
     virtual void finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
-    // let the scene decide whether it's better to paint more of the screen, eg. in order to allow a buffer swap
-    // the default is NOOP
-    virtual void extendPaintRegion(QRegion &region, bool opaqueFullscreen);
 
     virtual void paintOffscreenQuickView(OffscreenQuickView *w) = 0;
 
@@ -260,16 +253,13 @@ protected:
         QRegion clip;
         int mask = 0;
     };
-    // The region which actually has been painted by paintScreen() and should be
-    // copied from the buffer to the screen. I.e. the region returned from Scene::paintScreen().
-    // Since prePaintWindow() can extend areas to paint, these changes would have to propagate
-    // up all the way from paintSimpleScreen() up to paintScreen(), so save them here rather
-    // than propagate them up in arguments.
-    QRegion painted_region;
-    // Additional damage that needs to be repaired to bring a reused back buffer up to date
-    QRegion repaint_region;
-    // The dirty region before it was unioned with repaint_region
-    QRegion damaged_region;
+
+    struct PaintContext {
+        QRegion damage;
+        int mask = 0;
+        QVector<Phase2Data> phase2Data;
+    };
+
     // The screen that is being currently painted
     AbstractOutput *painted_screen = nullptr;
 
@@ -285,6 +275,7 @@ private:
     qreal m_renderTargetScale = 1;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
+    PaintContext m_paintContext;
 };
 
 // The base class for windows representations in composite backends

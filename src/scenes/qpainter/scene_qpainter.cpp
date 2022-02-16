@@ -68,13 +68,13 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
     m_painter->restore();
 }
 
-void SceneQPainter::paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid)
+void SceneQPainter::paint(const QRegion &region)
 {
     QImage *buffer = m_backend->bufferForScreen(painted_screen);
     if (buffer && !buffer->isNull()) {
         m_painter->begin(buffer);
         m_painter->setWindow(painted_screen->geometry());
-        paintScreen(damage, repaint, &update, &valid);
+        paintScreen(region);
         m_painter->end();
     }
 }

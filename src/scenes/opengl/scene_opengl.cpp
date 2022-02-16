@@ -97,15 +97,10 @@ bool SceneOpenGL::initFailed() const
     return !init_ok;
 }
 
-void SceneOpenGL::aboutToStartPainting(AbstractOutput *output, const QRegion &damage)
-{
-    m_backend->aboutToStartPainting(output, damage);
-}
-
-void SceneOpenGL::paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid)
+void SceneOpenGL::paint(const QRegion &region)
 {
     GLVertexBuffer::streamingBuffer()->beginFrame();
-    paintScreen(damage, repaint, &update, &valid);
+    paintScreen(region);
     GLVertexBuffer::streamingBuffer()->endOfFrame();
 }
 
@@ -151,34 +146,6 @@ void SceneOpenGL::paintBackground(const QRegion &region)
             verts << r.x() + r.width() << r.y();
         }
         doPaintBackground(verts);
-    }
-}
-
-void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
-{
-    if (m_backend->supportsBufferAge())
-        return;
-
-    if (options->glPreferBufferSwap() == Options::ExtendDamage) { // only Extend "large" repaints
-        const QRegion displayRegion(geometry());
-        uint damagedPixels = 0;
-        const QSize &sceneSize = geometry().size();
-        const uint fullRepaintLimit = (opaqueFullscreen?0.49f:0.748f)*sceneSize.width()*sceneSize.height();
-        // 16:9 is 75% of 4:3 and 2.55:1 is 49.01% of 5:4
-        // (5:4 is the most square format and 2.55:1 is Cinemascope55 - the widest ever shot
-        // movie aspect - two times ;-) It's a Fox format, though, so maybe we want to restrict
-        // to 2.20:1 - Panavision - which has actually been used for interesting movies ...)
-        // would be 57% of 5/4
-        for (const QRect &r : region) {
-//                 damagedPixels += r.width() * r.height(); // combined window damage test
-            damagedPixels = r.width() * r.height(); // experimental single window damage testing
-            if (damagedPixels > fullRepaintLimit) {
-                region = displayRegion;
-                return;
-            }
-        }
-    } else if (options->glPreferBufferSwap() == Options::PaintFullScreen) { // forced full rePaint
-        region = QRegion(geometry());
     }
 }
 

@@ -141,7 +141,7 @@ private:
     void prePaintPass(RenderLayer *layer);
     void postPaintPass(RenderLayer *layer);
     void preparePaintPass(RenderLayer *layer, QRegion *repaint);
-    void paintPass(RenderLayer *layer, const QRegion &repaint, const QRegion &repair, QRegion *surfaceDamage, QRegion *bufferDamage);
+    void paintPass(RenderLayer *layer, const QRegion &region);
 
     State m_state = State::Off;
     CompositorSelectionOwner *m_selectionOwner = nullptr;

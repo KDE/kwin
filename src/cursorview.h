@@ -30,7 +30,7 @@ class KWIN_EXPORT CursorDelegate : public RenderLayerDelegate
 public:
     CursorDelegate(AbstractOutput *output, CursorView *view);
 
-    void paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid) override;
+    void paint(const QRegion &region) override;
 
 private:
     CursorView *m_view;

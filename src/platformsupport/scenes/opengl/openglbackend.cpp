@@ -62,12 +62,6 @@ QSharedPointer<KWin::GLTexture> OpenGLBackend::textureForOutput(AbstractOutput* 
     return {};
 }
 
-void OpenGLBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &damage)
-{
-    Q_UNUSED(output)
-    Q_UNUSED(damage)
-}
-
 SurfaceTexture *OpenGLBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     Q_UNUSED(pixmap)

@@ -33,7 +33,7 @@ public:
     explicit SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
     ~SceneOpenGL() override;
     bool initFailed() const override;
-    void paint(const QRegion &damage, const QRegion &repaint, QRegion &update, QRegion &valid) override;
+    void paint(const QRegion &region) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     bool makeOpenGLContextCurrent() override;
@@ -59,8 +59,6 @@ public:
 
 protected:
     void paintBackground(const QRegion &region) override;
-    void aboutToStartPainting(AbstractOutput *output, const QRegion &damage) override;
-    void extendPaintRegion(QRegion &region, bool opaqueFullscreen) override;
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
     void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;

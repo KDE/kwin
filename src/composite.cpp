@@ -666,14 +666,15 @@ void Compositor::composite(RenderLoop *renderLoop)
     if (directScanout) {
         renderLoop->endFrame();
     } else {
-        QRegion repaint = outputLayer->repaints();
+        QRegion surfaceDamage = outputLayer->repaints();
         outputLayer->resetRepaints();
-        preparePaintPass(superLayer, &repaint);
+        preparePaintPass(superLayer, &surfaceDamage);
 
-        QRegion surfaceDamage;
-        QRegion bufferDamage;
         const QRegion repair = m_backend->beginFrame(output);
-        paintPass(superLayer, repaint, repair, &surfaceDamage, &bufferDamage);
+        const QRegion bufferDamage = surfaceDamage.united(repair);
+        m_backend->aboutToStartPainting(output, bufferDamage);
+
+        paintPass(superLayer, bufferDamage);
         renderLoop->endFrame();
         m_backend->endFrame(output, bufferDamage, surfaceDamage);
     }
@@ -715,7 +716,7 @@ void Compositor::postPaintPass(RenderLayer *layer)
 void Compositor::preparePaintPass(RenderLayer *layer, QRegion *repaint)
 {
     // TODO: Cull opaque region.
-    *repaint += layer->mapToGlobal(layer->repaints());
+    *repaint += layer->mapToGlobal(layer->repaints() + layer->delegate()->repaints());
     layer->resetRepaints();
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {
@@ -725,19 +726,14 @@ void Compositor::preparePaintPass(RenderLayer *layer, QRegion *repaint)
     }
 }
 
-void Compositor::paintPass(RenderLayer *layer, const QRegion &repaint, const QRegion &repair, QRegion *surfaceDamage, QRegion *bufferDamage)
+void Compositor::paintPass(RenderLayer *layer, const QRegion &region)
 {
-    QRegion localSurfaceDamage;
-    QRegion localBufferDamage;
-
-    layer->delegate()->paint(repaint, repair, localSurfaceDamage, localBufferDamage);
-    *surfaceDamage += localSurfaceDamage;
-    *bufferDamage += localBufferDamage;
+    layer->delegate()->paint(region);
 
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {
         if (sublayer->isVisible()) {
-            paintPass(sublayer, repaint, repair, surfaceDamage, bufferDamage);
+            paintPass(sublayer, region);
         }
     }
 }

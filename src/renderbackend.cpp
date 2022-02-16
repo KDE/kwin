@@ -24,6 +24,12 @@ bool RenderBackend::checkGraphicsReset()
     return false;
 }
 
+void RenderBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &damage)
+{
+    Q_UNUSED(output)
+    Q_UNUSED(damage)
+}
+
 bool RenderBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)
 {
     Q_UNUSED(output)
