@@ -17,7 +17,6 @@
 #endif
 
 #include <QAction>
-#include <QApplication>
 #include <QStyle>
 #include <QVector2D>
 #include <kstandardaction.h>
