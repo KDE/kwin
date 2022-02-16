@@ -1593,6 +1593,9 @@ void PresentWindowsEffect::setActive(bool active)
         return;
     if (m_activated == active)
         return;
+    if (effects->isScreenLocked() && active) {
+        return;
+    }
 
     m_activated = active;
     if (m_activated) {
