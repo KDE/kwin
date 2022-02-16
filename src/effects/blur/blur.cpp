@@ -13,7 +13,7 @@
 
 #include <QGuiApplication>
 #include <QMatrix4x4>
-#include <QScreen> // for QGuiApplication
+#include <QScreen>
 #include <QTime>
 #include <QTimer>
 #include <QWindow>
@@ -51,7 +51,7 @@ BlurEffect::BlurEffect()
         }
         if (effects->waylandDisplay()) {
             if (!s_blurManagerRemoveTimer) {
-                s_blurManagerRemoveTimer = new QTimer(qApp);
+                s_blurManagerRemoveTimer = new QTimer(QCoreApplication::instance());
                 s_blurManagerRemoveTimer->setSingleShot(true);
                 s_blurManagerRemoveTimer->callOnTimeout([]() {
                     s_blurManager->remove();
