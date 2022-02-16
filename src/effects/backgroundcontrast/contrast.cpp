@@ -10,6 +10,7 @@
 #include "contrastshader.h"
 // KConfigSkeleton
 
+#include <QCoreApplication>
 #include <QMatrix4x4>
 #include <QTimer>
 #include <QWindow>
@@ -38,7 +39,7 @@ ContrastEffect::ContrastEffect()
         }
         if (effects->waylandDisplay()) {
             if (!s_contrastManagerRemoveTimer) {
-                s_contrastManagerRemoveTimer = new QTimer(qApp);
+                s_contrastManagerRemoveTimer = new QTimer(QCoreApplication::instance());
                 s_contrastManagerRemoveTimer->setSingleShot(true);
                 s_contrastManagerRemoveTimer->callOnTimeout([]() {
                     s_contrastManager->remove();
