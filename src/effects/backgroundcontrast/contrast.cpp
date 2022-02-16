@@ -347,61 +347,6 @@ void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region)
     vbo->setAttribLayout(layout, 2, sizeof(QVector2D));
 }
 
-void ContrastEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
-{
-    m_paintedArea = QRegion();
-    m_currentContrast = QRegion();
-
-    effects->prePaintScreen(data, presentTime);
-}
-
-void ContrastEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
-{
-    // this effect relies on prePaintWindow being called in the bottom to top order
-
-    effects->prePaintWindow(w, data, presentTime);
-
-    if (!w->isPaintingEnabled()) {
-        return;
-    }
-    if (!shader || !shader->isValid()) {
-        return;
-    }
-
-    // we don't have to blur a region we don't see
-    m_currentContrast -= data.clip;
-    // if we have to paint a non-opaque part of this window that intersects with the
-    // currently blurred region (which is not cached) we have to redraw the whole region
-    if ((data.paint-data.clip).intersects(m_currentContrast)) {
-        data.paint |= m_currentContrast;
-    }
-
-    // in case this window has regions to be blurred
-    const QRect screen = effects->virtualScreenGeometry();
-    const QRegion contrastArea = contrastRegion(w).translated(w->pos()) & screen;
-
-    // we are not caching the window
-
-    // if this window or an window underneath the modified area is painted again we have to
-    // do everything
-    if (m_paintedArea.intersects(contrastArea) || data.paint.intersects(contrastArea)) {
-        data.paint |= contrastArea;
-
-        // we have to check again whether we do not damage a blurred area
-        // of a window we do not cache
-        if (contrastArea.intersects(m_currentContrast)) {
-            data.paint |= m_currentContrast;
-        }
-    }
-
-    m_currentContrast |= contrastArea;
-
-
-    // m_paintedArea keep track of all repainted areas
-    m_paintedArea -= data.clip;
-    m_paintedArea |= data.paint;
-}
-
 bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const WindowPaintData &data) const
 {
     if (!shader || !shader->isValid())
