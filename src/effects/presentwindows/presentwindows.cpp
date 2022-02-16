@@ -20,7 +20,6 @@
 #include <QMouseEvent>
 #include <netwm_def.h>
 
-#include <QApplication>
 #include <QDBusConnection>
 #include <QQmlContext>
 #include <QQmlEngine>
