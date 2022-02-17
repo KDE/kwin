@@ -210,7 +210,7 @@ void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteA
         return;
     }
 
-    KDesktopFile file(group.readEntry("InputMethod", QString()));
+    KDesktopFile file(group.readPathEntry("InputMethod", QString()));
     InputMethod::self()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
 }
 
