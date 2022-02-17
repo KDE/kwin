@@ -126,6 +126,7 @@ private:
     bool checkTestBuffer();
     bool activePending() const;
     bool isCursorVisible() const;
+    uint32_t calculateUnderscan();
 
     // legacy only
     bool presentLegacy();

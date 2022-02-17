@@ -106,7 +106,6 @@ public:
     AbstractWaylandOutput::SubPixel subpixel() const;
     bool hasOverscan() const;
     uint32_t overscan() const;
-    void setOverscan(uint32_t overscan, const QSize &modeSize);
     bool vrrCapable() const;
     bool hasRgbRange() const;
     AbstractWaylandOutput::RgbRange rgbRange() const;
