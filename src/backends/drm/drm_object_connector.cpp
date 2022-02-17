@@ -261,24 +261,6 @@ uint32_t DrmConnector::overscan() const
     return 0;
 }
 
-void DrmConnector::setOverscan(uint32_t overscan, const QSize &modeSize)
-{
-    if (auto prop = m_props[static_cast<uint32_t>(PropertyIndex::Overscan)]) {
-        prop->setPending(overscan);
-    } else if (auto prop = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)]) {
-        float aspectRatio = modeSize.width() / static_cast<float>(modeSize.height());
-        prop->setEnum(overscan > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
-        uint32_t hborder = overscan * aspectRatio;
-        if (hborder > 128) {
-            hborder = 128;
-            overscan = 128 / aspectRatio;
-        }
-        // overscan only goes from 0-100 so we cut off the 101-128 value range of underscan_vborder
-        setPending(PropertyIndex::Underscan_vborder, overscan);
-        setPending(PropertyIndex::Underscan_hborder, hborder);
-    }
-}
-
 bool DrmConnector::vrrCapable() const
 {
     if (const auto &prop = getProp(PropertyIndex::VrrCapable)) {

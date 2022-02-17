@@ -94,6 +94,14 @@ bool DrmPipeline::applyPendingChangesLegacy()
         if (const auto &rgbRange = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB)) {
             rgbRange->setEnumLegacy(pending.rgbRange);
         }
+        if (const auto overscan = m_connector->getProp(DrmConnector::PropertyIndex::Overscan)) {
+            overscan->setPropertyLegacy(pending.overscan);
+        } else if (const auto underscan = m_connector->getProp(DrmConnector::PropertyIndex::Underscan)) {
+            const uint32_t hborder = calculateUnderscan();
+            underscan->setEnumLegacy(pending.overscan != 0 ? DrmConnector::UnderscanOptions::On : DrmConnector::UnderscanOptions::Off);
+            m_connector->getProp(DrmConnector::PropertyIndex::Underscan_vborder)->setPropertyLegacy(pending.overscan);
+            m_connector->getProp(DrmConnector::PropertyIndex::Underscan_hborder)->setPropertyLegacy(hborder);
+        }
         if (needsModeset() &&!legacyModeset()) {
             return false;
         }

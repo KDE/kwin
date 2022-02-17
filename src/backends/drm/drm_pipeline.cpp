@@ -237,6 +237,14 @@ void DrmPipeline::prepareAtomicModeset()
     if (const auto &prop = m_connector->getProp(DrmConnector::PropertyIndex::LinkStatus)) {
         prop->setEnum(DrmConnector::LinkStatus::Good);
     }
+    if (const auto overscan = m_connector->getProp(DrmConnector::PropertyIndex::Overscan)) {
+        overscan->setPending(pending.overscan);
+    } else if (const auto underscan = m_connector->getProp(DrmConnector::PropertyIndex::Underscan)) {
+        const uint32_t hborder = calculateUnderscan();
+        underscan->setEnum(pending.overscan != 0 ? DrmConnector::UnderscanOptions::On : DrmConnector::UnderscanOptions::Off);
+        m_connector->getProp(DrmConnector::PropertyIndex::Underscan_vborder)->setPending(pending.overscan);
+        m_connector->getProp(DrmConnector::PropertyIndex::Underscan_hborder)->setPending(hborder);
+    }
 
     pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, activePending());
     pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, activePending() ? pending.mode->blobId() : 0);
@@ -246,6 +254,19 @@ void DrmPipeline::prepareAtomicModeset()
     if (pending.crtc->cursorPlane()) {
         pending.crtc->cursorPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
     }
+}
+
+uint32_t DrmPipeline::calculateUnderscan()
+{
+    const auto size = pending.mode->size();
+    const float aspectRatio = size.width() / static_cast<float>(size.height());
+    uint32_t hborder = pending.overscan * aspectRatio;
+    if (hborder > 128) {
+        // overscan only goes from 0-100 so we cut off the 101-128 value range of underscan_vborder
+        hborder = 128;
+        pending.overscan = 128 / aspectRatio;
+    }
+    return hborder;
 }
 
 void DrmPipeline::atomicCommitFailed()

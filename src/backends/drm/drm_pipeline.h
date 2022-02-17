@@ -128,6 +128,7 @@ private:
     bool activePending() const;
     bool isCursorVisible() const;
     bool isBufferForDirectScanout() const;
+    uint32_t calculateUnderscan();
 
     // legacy only
     bool presentLegacy();
