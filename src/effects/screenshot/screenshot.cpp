@@ -200,6 +200,23 @@ void ScreenShotEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
 {
     m_paintedScreen = data.screen();
     effects->paintScreen(mask, region, data);
+
+    while (!m_windowScreenShots.isEmpty()) {
+        ScreenShotWindowData screenshot = m_windowScreenShots.takeLast();
+        takeScreenShot(&screenshot);
+    }
+
+    for (int i = m_areaScreenShots.count() - 1; i >= 0; --i) {
+        if (takeScreenShot(&m_areaScreenShots[i])) {
+            m_areaScreenShots.removeAt(i);
+        }
+    }
+
+    for (int i = m_screenScreenShots.count() - 1; i >= 0; --i) {
+        if (takeScreenShot(&m_screenScreenShots[i])) {
+            m_screenScreenShots.removeAt(i);
+        }
+    }
 }
 
 void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
@@ -331,28 +348,6 @@ bool ScreenShotEffect::takeScreenShot(ScreenShotScreenData *screenshot)
     return screenshot->promise.isFinished();
 }
 
-void ScreenShotEffect::postPaintScreen()
-{
-    effects->postPaintScreen();
-
-    while (!m_windowScreenShots.isEmpty()) {
-        ScreenShotWindowData screenshot = m_windowScreenShots.takeLast();
-        takeScreenShot(&screenshot);
-    }
-
-    for (int i = m_areaScreenShots.count() - 1; i >= 0; --i) {
-        if (takeScreenShot(&m_areaScreenShots[i])) {
-            m_areaScreenShots.removeAt(i);
-        }
-    }
-
-    for (int i = m_screenScreenShots.count() - 1; i >= 0; --i) {
-        if (takeScreenShot(&m_screenScreenShots[i])) {
-            m_screenScreenShots.removeAt(i);
-        }
-    }
-}
-
 QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, qreal devicePixelRatio) const
 {
     QImage image;
@@ -402,7 +397,7 @@ bool ScreenShotEffect::isActive() const
 
 int ScreenShotEffect::requestedEffectChainPosition() const
 {
-    return 50;
+    return 0;
 }
 
 void ScreenShotEffect::handleScreenAdded()
