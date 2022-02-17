@@ -27,11 +27,10 @@ public:
     ColorPickerEffect();
     ~ColorPickerEffect() override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
-    void postPaintScreen() override;
     bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
-        return 50;
+        return 0;
     }
 
     static bool supported();
@@ -44,7 +43,6 @@ private:
     void hideInfoMessage();
 
     QDBusMessage m_replyMessage;
-    EffectScreen *m_paintedScreen = nullptr;
     QPoint m_scheduledPosition;
     bool m_picking = false;
 };
