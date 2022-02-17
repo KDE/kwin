@@ -62,7 +62,6 @@ DrmBackend::DrmBackend(QObject *parent)
 {
     setSupportsPointerWarping(true);
     setSupportsGammaControl(true);
-    setPerScreenRenderingEnabled(true);
     supportsOutputChanges();
 }
 

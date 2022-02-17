@@ -79,7 +79,6 @@ FramebufferBackend::FramebufferBackend(QObject *parent)
     : Platform(parent)
     , m_session(Session::create(this))
 {
-    setPerScreenRenderingEnabled(true);
     setSupportsPointerWarping(true);
 }
 

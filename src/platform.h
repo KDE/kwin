@@ -338,11 +338,6 @@ public:
         m_selectedCompositor = type;
     }
 
-    /**
-     * Returns @c true if rendering is split per screen; otherwise returns @c false.
-     */
-    bool isPerScreenRenderingEnabled() const;
-
     virtual AbstractOutput *createVirtualOutput(const QString &name, const QSize &size, qreal scaling);
     virtual void removeVirtualOutput(AbstractOutput *output);
 
@@ -425,7 +420,6 @@ protected:
     explicit Platform(QObject *parent = nullptr);
     void repaint(const QRect &rect);
     void setReady(bool ready);
-    void setPerScreenRenderingEnabled(bool enabled);
     QSize initialWindowSize() const {
         return m_initialWindowSize;
     }
@@ -457,7 +451,6 @@ private:
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
     bool m_supportsGammaControl = false;
     bool m_supportsOutputChanges = false;
-    bool m_isPerScreenRenderingEnabled = false;
     CompositingType m_selectedCompositor = NoCompositing;
     AbstractOutput *m_primaryOutput = nullptr;
 };

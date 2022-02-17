@@ -164,7 +164,6 @@ X11WindowedBackend::X11WindowedBackend(QObject *parent)
     , m_session(Session::create(Session::Type::Noop, this))
 {
     setSupportsPointerWarping(true);
-    setPerScreenRenderingEnabled(true);
 }
 
 X11WindowedBackend::~X11WindowedBackend()

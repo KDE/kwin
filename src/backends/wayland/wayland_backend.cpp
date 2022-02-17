@@ -579,7 +579,6 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_connectionThreadObject(new ConnectionThread(nullptr))
     , m_connectionThread(nullptr)
 {
-    setPerScreenRenderingEnabled(true);
     supportsOutputChanges();
     connect(this, &WaylandBackend::connectionFailed, qApp, &QCoreApplication::quit);
 

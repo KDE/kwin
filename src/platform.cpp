@@ -409,16 +409,6 @@ void Platform::setReady(bool ready)
     Q_EMIT readyChanged(m_ready);
 }
 
-bool Platform::isPerScreenRenderingEnabled() const
-{
-    return m_isPerScreenRenderingEnabled;
-}
-
-void Platform::setPerScreenRenderingEnabled(bool enabled)
-{
-    m_isPerScreenRenderingEnabled = enabled;
-}
-
 AbstractOutput *Platform::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     Q_UNUSED(name);

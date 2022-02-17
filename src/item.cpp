@@ -257,7 +257,7 @@ void Item::scheduleRepaintInternal(const QRegion &region)
 {
     const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
     const QRegion globalRegion = mapToGlobal(region);
-    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
         for (const auto &output : outputs) {
             const QRegion dirtyRegion = globalRegion & output->geometry();
             if (!dirtyRegion.isEmpty()) {
@@ -277,7 +277,7 @@ void Item::scheduleFrame()
         return;
     }
     const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
-    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
         const QRect geometry = mapToGlobal(rect());
         for (const AbstractOutput *output : outputs) {
             if (output->geometry().intersects(geometry)) {
