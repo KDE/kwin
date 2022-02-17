@@ -346,7 +346,7 @@ void Scene::preparePaintGenericScreen()
             m_paintContext.phase2Data.append(Phase2Data{
                 .window = sceneWindow,
                 .region = infiniteRegion(),
-                .clip = data.clip,
+                .opaque = data.clip,
                 .mask = data.mask,
             });
         }
@@ -392,7 +392,7 @@ void Scene::preparePaintSimpleScreen()
             m_paintContext.phase2Data.append(Phase2Data{
                 .window = sceneWindow,
                 .region = data.paint,
-                .clip = data.clip,
+                .opaque = data.clip,
                 .mask = data.mask,
             });
         }
@@ -405,7 +405,7 @@ void Scene::preparePaintSimpleScreen()
         const auto &paintData = m_paintContext.phase2Data.at(i);
         surfaceDamage += paintData.region - opaque;
         if (!(paintData.mask & PAINT_WINDOW_TRANSLUCENT)) {
-            opaque += paintData.clip;
+            opaque += paintData.opaque;
         }
     }
 
@@ -554,7 +554,7 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
 
         data->region = visible & item->mapToGlobal(item->boundingRect());
         if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
-            visible -= data->clip;
+            visible -= data->opaque;
         }
     }
 

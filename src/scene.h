@@ -250,7 +250,7 @@ protected:
     struct Phase2Data {
         Window *window = nullptr;
         QRegion region;
-        QRegion clip;
+        QRegion opaque;
         int mask = 0;
     };
 
