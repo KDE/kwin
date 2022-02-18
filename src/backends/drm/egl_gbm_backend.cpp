@@ -50,8 +50,8 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
     , m_backend(drmBackend)
 {
     drmBackend->primaryGpu()->setEglBackend(this);
-    connect(m_backend, &DrmBackend::outputEnabled, this, &EglGbmBackend::addOutput);
-    connect(m_backend, &DrmBackend::outputDisabled, this, &EglGbmBackend::removeOutput);
+    connect(m_backend, &DrmBackend::outputAdded, this, &EglGbmBackend::addOutput);
+    connect(m_backend, &DrmBackend::outputRemoved, this, &EglGbmBackend::removeOutput);
     setIsDirectRendering(true);
 }
 
