@@ -29,7 +29,6 @@
 #include <KWaylandServer/inputmethod_v1_interface.h>
 
 #include <KShell>
-#include <KStatusNotifierItem>
 #include <KLocalizedString>
 
 #include <QDBusConnection>

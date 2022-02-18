@@ -21,7 +21,6 @@
 #include <QTimer>
 #include <KWaylandServer/textinput_v2_interface.h>
 
-class KStatusNotifierItem;
 class QProcess;
 
 namespace KWaylandServer
