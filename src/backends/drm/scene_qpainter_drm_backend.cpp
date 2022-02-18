@@ -13,6 +13,7 @@
 #include "drm_buffer.h"
 #include "renderloop_p.h"
 #include "drm_qpainter_layer.h"
+#include "drm_virtual_output.h"
 
 #include <drm_fourcc.h>
 
@@ -34,7 +35,7 @@ DrmQPainterBackend::~DrmQPainterBackend()
 QImage *DrmQPainterBackend::bufferForScreen(AbstractOutput *output)
 {
     const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
-    return static_cast<DrmDumbBuffer*>(drmOutput->outputLayer()->currentBuffer().data())->image();
+    return dynamic_cast<QPainterLayer*>(drmOutput->outputLayer())->image();
 }
 
 QRegion DrmQPainterBackend::beginFrame(AbstractOutput *output)
@@ -51,9 +52,14 @@ void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &rendere
     static_cast<DrmAbstractOutput*>(output)->present();
 }
 
-QSharedPointer<DrmLayer> DrmQPainterBackend::createLayer(DrmDisplayDevice *displayDevice)
+QSharedPointer<DrmPipelineLayer> DrmQPainterBackend::createDrmPipelineLayer(DrmPipeline *pipeline)
 {
-    return QSharedPointer<DrmQPainterLayer>::create(displayDevice);
+    return QSharedPointer<DrmQPainterLayer>::create(pipeline);
+}
+
+QSharedPointer<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput *output)
+{
+    return QSharedPointer<DrmVirtualQPainterLayer>::create(output);
 }
 
 }

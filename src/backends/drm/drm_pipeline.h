@@ -31,7 +31,7 @@ class DrmBuffer;
 class DrmDumbBuffer;
 class GammaRamp;
 class DrmConnectorMode;
-class DrmLayer;
+class DrmPipelineLayer;
 class DrmDisplayDevice;
 
 class DrmGammaRamp
@@ -107,7 +107,7 @@ public:
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
         QSharedPointer<DrmGammaRamp> gamma;
 
-        QSharedPointer<DrmLayer> layer;
+        QSharedPointer<DrmPipelineLayer> layer;
 
         QPoint cursorPos;
         QPoint cursorHotspot;

@@ -21,6 +21,7 @@ namespace KWin
 class DrmBackend;
 class DrmAbstractOutput;
 class DrmQPainterLayer;
+class DrmPipeline;
 
 class DrmQPainterBackend : public QPainterBackend, public DrmRenderBackend
 {
@@ -32,7 +33,8 @@ public:
     QImage *bufferForScreen(AbstractOutput *output) override;
     QRegion beginFrame(AbstractOutput *output) override;
     void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    QSharedPointer<DrmLayer> createLayer(DrmDisplayDevice *displayDevice) override;
+    QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) override;
+    QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
 Q_SIGNALS:
     void aboutToBeDestroyed();

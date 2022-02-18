@@ -39,6 +39,8 @@ class DrmBackend;
 class DrmGpu;
 class EglGbmLayer;
 class DrmDisplayDevice;
+class DrmOutputLayer;
+class DrmPipeline;
 
 struct GbmFormat {
     uint32_t drmFormat = 0;
@@ -67,14 +69,14 @@ public:
     void init() override;
     bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem) override;
     bool prefer10bpc() const override;
-    QSharedPointer<DrmLayer> createLayer(DrmDisplayDevice *displayDevice) override;
+    QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) override;
+    QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
     QSharedPointer<DrmBuffer> testBuffer(DrmAbstractOutput *output);
     EGLConfig config(uint32_t format) const;
     GbmFormat gbmFormatForDrmFormat(uint32_t format) const;
-    std::optional<uint32_t> chooseFormat(DrmDisplayDevice *displyDevice) const;
     DrmGpu *gpu() const;
 
 Q_SIGNALS:

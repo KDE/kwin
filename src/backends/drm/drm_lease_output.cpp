@@ -14,6 +14,7 @@
 #include "drm_object_crtc.h"
 #include "drm_object_plane.h"
 #include "drm_pipeline.h"
+#include "drm_layer.h"
 
 #include "logging.h"
 
@@ -83,51 +84,12 @@ bool DrmLeaseOutput::present()
     return false;
 }
 
-bool DrmLeaseOutput::testScanout()
-{
-    return false;
-}
-
-DrmPlane::Transformations DrmLeaseOutput::softwareTransforms() const
-{
-    return DrmPlane::Transformation::Rotate0;
-}
-
-QSize DrmLeaseOutput::bufferSize() const
-{
-    return m_pipeline->bufferSize();
-}
-
-QSize DrmLeaseOutput::sourceSize() const
-{
-    return m_pipeline->sourceSize();
-}
-
-bool DrmLeaseOutput::isFormatSupported(uint32_t drmFormat) const
-{
-    return m_pipeline->isFormatSupported(drmFormat);
-}
-
-QVector<uint64_t> DrmLeaseOutput::supportedModifiers(uint32_t drmFormat) const
-{
-    return m_pipeline->supportedModifiers(drmFormat);
-}
-
-int DrmLeaseOutput::maxBpc() const
-{
-    if (const auto prop = m_pipeline->connector()->getProp(DrmConnector::PropertyIndex::MaxBpc)) {
-        return prop->maxValue();
-    } else {
-        return 8;
-    }
-}
-
 QRect DrmLeaseOutput::renderGeometry() const
 {
     return QRect(QPoint(), m_pipeline->sourceSize());
 }
 
-DrmLayer *DrmLeaseOutput::outputLayer() const
+DrmOutputLayer *DrmLeaseOutput::outputLayer() const
 {
     return m_pipeline->pending.layer.data();
 }
@@ -139,6 +101,12 @@ void DrmLeaseOutput::frameFailed() const
 void DrmLeaseOutput::pageFlipped(std::chrono::nanoseconds timestamp) const
 {
     Q_UNUSED(timestamp)
+}
+
+QVector<int32_t> DrmLeaseOutput::regionToRects(const QRegion &region) const
+{
+    Q_UNUSED(region)
+    return {};
 }
 
 }

@@ -41,17 +41,11 @@ public:
     DrmPipeline *pipeline() const;
 
     bool present() override;
-    DrmPlane::Transformations softwareTransforms() const override;
-    QSize bufferSize() const override;
-    QSize sourceSize() const override;
-    bool isFormatSupported(uint32_t drmFormat) const override;
-    QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
-    int maxBpc() const override;
     QRect renderGeometry() const override;
-    DrmLayer *outputLayer() const override;
-    bool testScanout() override;
+    DrmOutputLayer *outputLayer() const override;
     void frameFailed() const override;
     void pageFlipped(std::chrono::nanoseconds timestamp) const override;
+    QVector<int32_t> regionToRects(const QRegion &region) const override;
 
 private:
     DrmPipeline *m_pipeline;

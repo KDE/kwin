@@ -7,20 +7,24 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_layer.h"
+#include "drm_pipeline.h"
+#include "drm_display_device.h"
+
+#include <QMatrix4x4>
 
 namespace KWin
 {
 
-DrmLayer::DrmLayer(KWin::DrmDisplayDevice* device)
-    : m_displayDevice(device)
+DrmOutputLayer::~DrmOutputLayer() = default;
+
+void DrmOutputLayer::aboutToStartPainting(const QRegion &damagedRegion)
 {
+    Q_UNUSED(damagedRegion)
 }
 
-DrmLayer::~DrmLayer() = default;
-
-DrmDisplayDevice *DrmLayer::displayDevice() const
+DrmPipelineLayer::DrmPipelineLayer(DrmPipeline *pipeline)
+    : m_pipeline(pipeline)
 {
-    return m_displayDevice;
 }
 
 }

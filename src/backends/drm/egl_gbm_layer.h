@@ -33,26 +33,26 @@ class DrmGpu;
 class SurfaceItem;
 class GLTexture;
 class EglGbmBackend;
+class DrmPipeline;
 
-class EglGbmLayer : public DrmLayer
+class EglGbmLayer : public DrmPipelineLayer
 {
 public:
-    EglGbmLayer(EglGbmBackend *eglBackend, DrmDisplayDevice *displayDevice);
+    EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
     ~EglGbmLayer();
 
     std::optional<QRegion> startRendering() override;
+    void aboutToStartPainting(const QRegion &damagedRegion) override;
     bool endRendering(const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
     QSharedPointer<DrmBuffer> testBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     bool hasDirectScanoutBuffer() const override;
     QRegion currentDamage() const override;
-    QSharedPointer<GLTexture> texture() const;
-
-    int bufferAge() const;
-    EGLSurface eglSurface() const;
+    QSharedPointer<GLTexture> texture() const override;
 
 private:
+    bool createGbmSurface(uint32_t format, const QVector<uint64_t> &modifiers);
     bool createGbmSurface();
     bool doesGbmSurfaceFit(GbmSurface *surf) const;
     bool doesShadowBufferFit(ShadowBuffer *buffer) const;

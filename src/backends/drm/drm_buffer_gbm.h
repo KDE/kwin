@@ -19,6 +19,7 @@ struct gbm_bo;
 namespace KWaylandServer
 {
 class ClientBuffer;
+class LinuxDmaBufV1ClientBuffer;
 }
 
 namespace KWin
@@ -31,7 +32,7 @@ class GbmBuffer : public QObject
     Q_OBJECT
 public:
     GbmBuffer(GbmSurface *surface, gbm_bo *bo);
-    GbmBuffer(gbm_bo *buffer, KWaylandServer::ClientBuffer *clientBuffer);
+    GbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer);
     virtual ~GbmBuffer();
 
     void releaseBuffer();
@@ -56,7 +57,7 @@ class DrmGbmBuffer : public DrmBuffer, public GbmBuffer
 {
 public:
     DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo);
-    DrmGbmBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::ClientBuffer *clientBuffer);
+    DrmGbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer);
     ~DrmGbmBuffer() override;
 
     bool needsModeChange(DrmBuffer *b) const override;

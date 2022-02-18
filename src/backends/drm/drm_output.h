@@ -47,14 +47,7 @@ public:
     DrmPipeline *pipeline() const;
 
     bool present() override;
-    bool testScanout() override;
-    QSize bufferSize() const override;
-    QSize sourceSize() const override;
-    bool isFormatSupported(uint32_t drmFormat) const override;
-    QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
-    DrmPlane::Transformations softwareTransforms() const override;
-    int maxBpc() const override;
-    DrmLayer *outputLayer() const override;
+    DrmOutputLayer *outputLayer() const override;
 
     bool queueChanges(const WaylandOutputConfig &config);
     void applyQueuedChanges(const WaylandOutputConfig &config);

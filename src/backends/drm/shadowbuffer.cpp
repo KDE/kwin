@@ -56,10 +56,9 @@ ShadowBuffer::~ShadowBuffer()
 {
 }
 
-void ShadowBuffer::render(DrmDisplayDevice *displayDevice)
+void ShadowBuffer::render(DrmPlane::Transformations transform)
 {
     QMatrix4x4 mvpMatrix;
-    const auto transform = displayDevice->softwareTransforms();
     if (transform & DrmPlane::Transformation::Rotate90) {
         mvpMatrix.rotate(90, 0, 0, 1);
     } else if (transform & DrmPlane::Transformation::Rotate180) {

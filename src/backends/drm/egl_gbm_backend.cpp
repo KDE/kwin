@@ -29,6 +29,7 @@
 #include "drm_abstract_output.h"
 #include "egl_dmabuf.h"
 #include "egl_gbm_layer.h"
+#include "virtual_egl_gbm_layer.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwineglimagetexture.h>
@@ -208,38 +209,9 @@ bool EglGbmBackend::initBufferConfigs()
     return false;
 }
 
-static QVector<EGLint> regionToRects(const QRegion &region, DrmAbstractOutput *output)
-{
-    const int height = output->sourceSize().height();
-
-    const QMatrix4x4 matrix = DrmOutput::logicalToNativeMatrix(output->geometry(),
-                                                               output->scale(),
-                                                               output->transform());
-
-    QVector<EGLint> rects;
-    rects.reserve(region.rectCount() * 4);
-    for (const QRect &_rect : region) {
-        const QRect rect = matrix.mapRect(_rect);
-
-        rects << rect.left();
-        rects << height - (rect.y() + rect.height());
-        rects << rect.width();
-        rects << rect.height();
-    }
-    return rects;
-}
-
 void EglGbmBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &damagedRegion)
 {
-    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
-    const auto &surface = static_cast<EglGbmLayer*>(drmOutput->outputLayer());
-    if (surface->bufferAge() > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
-        QVector<EGLint> rects = regionToRects(damagedRegion, static_cast<DrmAbstractOutput*>(output));
-        const bool correct = eglSetDamageRegionKHR(eglDisplay(), surface->eglSurface(), rects.data(), rects.count()/4);
-        if (!correct) {
-            qCWarning(KWIN_DRM) << "eglSetDamageRegionKHR failed:" << getEglErrorString();
-        }
-    }
+    static_cast<DrmAbstractOutput*>(output)->outputLayer()->aboutToStartPainting(damagedRegion);
 }
 
 SurfaceTexture *EglGbmBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
@@ -303,23 +275,6 @@ GbmFormat EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const
     }
 }
 
-std::optional<uint32_t> EglGbmBackend::chooseFormat(DrmDisplayDevice *device) const
-{
-    // formats are already sorted by order of preference
-    std::optional<uint32_t> fallback;
-    for (const auto &format : qAsConst(m_formats)) {
-        if (device->isFormatSupported(format.drmFormat)) {
-            int bpc = std::max(format.redSize, std::max(format.greenSize, format.blueSize));
-            if (bpc <= device->maxBpc() && !fallback.has_value()) {
-                fallback = format.drmFormat;
-            } else {
-                return format.drmFormat;
-            }
-        }
-    }
-    return fallback;
-}
-
 bool EglGbmBackend::prefer10bpc() const
 {
     static bool ok = false;
@@ -332,9 +287,14 @@ EGLConfig EglGbmBackend::config(uint32_t format) const
     return m_configs[format];
 }
 
-QSharedPointer<DrmLayer> EglGbmBackend::createLayer(DrmDisplayDevice *displayDevice)
+QSharedPointer<DrmPipelineLayer> EglGbmBackend::createDrmPipelineLayer(DrmPipeline *pipeline)
 {
-    return QSharedPointer<EglGbmLayer>::create(this, displayDevice);
+    return QSharedPointer<EglGbmLayer>::create(this, pipeline);
+}
+
+QSharedPointer<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)
+{
+    return QSharedPointer<VirtualEglGbmLayer>::create(this, output);
 }
 
 DrmGpu *EglGbmBackend::gpu() const

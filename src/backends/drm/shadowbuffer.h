@@ -12,6 +12,7 @@
 #include <kwinglutils.h>
 
 #include "egl_gbm_backend.h"
+#include "drm_object_plane.h"
 
 namespace KWin
 {
@@ -25,7 +26,7 @@ public:
     ~ShadowBuffer();
 
     bool isComplete() const;
-    void render(DrmDisplayDevice *displayDevice);
+    void render(DrmPlane::Transformations transform);
 
     GLRenderTarget *renderTarget() const;
     QSharedPointer<GLTexture> texture() const;

@@ -422,7 +422,7 @@ bool DrmGpu::testPipelines()
     QVector<DrmPipeline*> inactivePipelines;
     for (const auto &pipeline : qAsConst(m_pipelines)) {
         if (!pipeline->pending.layer) {
-            pipeline->pending.layer = m_platform->renderBackend()->createLayer(pipeline->displayDevice());
+            pipeline->pending.layer = m_platform->renderBackend()->createDrmPipelineLayer(pipeline);
         }
         if (!pipeline->pending.active) {
             pipeline->pending.active = true;
@@ -772,7 +772,7 @@ QSize DrmGpu::cursorSize() const
 void DrmGpu::recreateSurfaces()
 {
     for (const auto &pipeline : qAsConst(m_pipelines)) {
-        pipeline->pending.layer = m_platform->renderBackend()->createLayer(pipeline->displayDevice());
+        pipeline->pending.layer = m_platform->renderBackend()->createDrmPipelineLayer(pipeline);
     }
     for (const auto &output : qAsConst(m_outputs)) {
         if (const auto virtualOutput = qobject_cast<DrmVirtualOutput*>(output)) {

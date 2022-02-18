@@ -17,7 +17,7 @@ namespace KWin
 
 class DrmBuffer;
 class DrmGpu;
-class DrmLayer;
+class DrmOutputLayer;
 
 class DrmDisplayDevice
 {
@@ -28,18 +28,11 @@ public:
     DrmGpu *gpu() const;
 
     virtual bool present() = 0;
-    virtual bool testScanout() = 0;
     virtual void frameFailed() const = 0;
     virtual void pageFlipped(std::chrono::nanoseconds timestamp) const = 0;
-
-    virtual DrmPlane::Transformations softwareTransforms() const = 0;
-    virtual QSize bufferSize() const = 0;
-    virtual QSize sourceSize() const = 0;
-    virtual bool isFormatSupported(uint32_t drmFormat) const = 0;
-    virtual QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const = 0;
-    virtual int maxBpc() const = 0;
     virtual QRect renderGeometry() const = 0;
-    virtual DrmLayer *outputLayer() const = 0;
+    virtual DrmOutputLayer *outputLayer() const = 0;
+    virtual QVector<int32_t> regionToRects(const QRegion &region) const = 0;
 
 protected:
     DrmGpu *const m_gpu;

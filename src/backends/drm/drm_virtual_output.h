@@ -19,7 +19,7 @@ namespace KWin
 
 class SoftwareVsyncMonitor;
 class VirtualBackend;
-class DrmLayer;
+class DrmPipelineLayer;
 
 class DrmVirtualOutput : public DrmAbstractOutput
 {
@@ -30,19 +30,9 @@ public:
     ~DrmVirtualOutput() override;
 
     bool present() override;
-    QSize bufferSize() const override;
-    QSize sourceSize() const override;
-
-    bool isFormatSupported(uint32_t drmFormat) const override;
-    QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const override;
-    int maxBpc() const override;
-
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
-    DrmPlane::Transformations softwareTransforms() const override;
-    DrmLayer *outputLayer() const override;
-    bool testScanout() override;
-
+    DrmOutputLayer *outputLayer() const override;
     void recreateSurface();
 
 private:
@@ -50,7 +40,7 @@ private:
     void setDpmsMode(DpmsMode mode) override;
     void updateEnablement(bool enable) override;
 
-    QSharedPointer<DrmLayer> m_layer;
+    QSharedPointer<DrmOutputLayer> m_layer;
     bool m_pageFlipPending = true;
     int m_modeIndex = 0;
 

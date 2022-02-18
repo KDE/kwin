@@ -77,29 +77,6 @@ void DrmVirtualOutput::updateEnablement(bool enable)
     gpu()->platform()->enableOutput(this, enable);
 }
 
-QSize DrmVirtualOutput::bufferSize() const
-{
-    return pixelSize();
-}
-
-QSize DrmVirtualOutput::sourceSize() const
-{
-    return pixelSize();
-}
-
-bool DrmVirtualOutput::isFormatSupported(uint32_t drmFormat) const
-{
-    Q_UNUSED(drmFormat);
-    return true;
-}
-
-QVector<uint64_t> DrmVirtualOutput::supportedModifiers(uint32_t drmFormat) const
-{
-    Q_UNUSED(drmFormat);
-    // empty list -> implicit modifiers are used / modifier is freely chosen by gbm
-    return {};
-}
-
 int DrmVirtualOutput::gammaRampSize() const
 {
     return 200;
@@ -111,24 +88,9 @@ bool DrmVirtualOutput::setGammaRamp(const GammaRamp &gamma)
     return true;
 }
 
-int DrmVirtualOutput::maxBpc() const
-{
-    return 8;
-}
-
-DrmPlane::Transformations DrmVirtualOutput::softwareTransforms() const
-{
-    return DrmPlane::Transformation::Rotate0;
-}
-
-DrmLayer *DrmVirtualOutput::outputLayer() const
+DrmOutputLayer *DrmVirtualOutput::outputLayer() const
 {
     return m_layer.data();
-}
-
-bool DrmVirtualOutput::testScanout()
-{
-    return true;
 }
 
 void DrmVirtualOutput::recreateSurface()

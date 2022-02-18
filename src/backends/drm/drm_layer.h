@@ -18,15 +18,16 @@ namespace KWin
 
 class SurfaceItem;
 class DrmBuffer;
-class DrmDisplayDevice;
+class GLTexture;
+class DrmPipeline;
 
-class DrmLayer : public QObject
+class DrmOutputLayer : public QObject
 {
     Q_OBJECT
 public:
-    DrmLayer(DrmDisplayDevice *device);
-    virtual ~DrmLayer();
+    virtual ~DrmOutputLayer();
 
+    virtual void aboutToStartPainting(const QRegion &damagedRegion);
     virtual std::optional<QRegion> startRendering() = 0;
     virtual bool endRendering(const QRegion &damagedRegion) = 0;
 
@@ -37,6 +38,16 @@ public:
      */
     virtual bool scanout(SurfaceItem *surfaceItem) = 0;
 
+    virtual QSharedPointer<GLTexture> texture() const = 0;
+
+    virtual QRegion currentDamage() const = 0;
+};
+
+class DrmPipelineLayer : public DrmOutputLayer
+{
+public:
+    DrmPipelineLayer(DrmPipeline *pipeline);
+
     /**
      * @returns a buffer for atomic test commits
      * If no fitting buffer is available, a new current buffer is created
@@ -44,13 +55,10 @@ public:
     virtual QSharedPointer<DrmBuffer> testBuffer() = 0;
 
     virtual QSharedPointer<DrmBuffer> currentBuffer() const = 0;
-    virtual QRegion currentDamage() const = 0;
     virtual bool hasDirectScanoutBuffer() const = 0;
 
-    DrmDisplayDevice *displayDevice() const;
-
 protected:
-    DrmDisplayDevice *const m_displayDevice;
+    DrmPipeline *const m_pipeline;
 };
 
 }

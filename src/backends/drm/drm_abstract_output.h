@@ -26,6 +26,7 @@ public:
     QRect renderGeometry() const override;
     void frameFailed() const override;
     void pageFlipped(std::chrono::nanoseconds timestamp) const override;
+    QVector<int32_t> regionToRects(const QRegion &region) const override;
 
 protected:
     friend class DrmGpu;

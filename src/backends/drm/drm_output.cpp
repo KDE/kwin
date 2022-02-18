@@ -340,11 +340,6 @@ bool DrmOutput::present()
     }
 }
 
-bool DrmOutput::testScanout()
-{
-    return m_pipeline->testScanout();
-}
-
 int DrmOutput::gammaRampSize() const
 {
     return m_pipeline->pending.crtc ? m_pipeline->pending.crtc->gammaRampSize() : 256;
@@ -371,26 +366,6 @@ DrmConnector *DrmOutput::connector() const
 DrmPipeline *DrmOutput::pipeline() const
 {
     return m_pipeline;
-}
-
-QSize DrmOutput::bufferSize() const
-{
-    return m_pipeline->bufferSize();
-}
-
-QSize DrmOutput::sourceSize() const
-{
-    return m_pipeline->sourceSize();
-}
-
-bool DrmOutput::isFormatSupported(uint32_t drmFormat) const
-{
-    return m_pipeline->isFormatSupported(drmFormat);
-}
-
-QVector<uint64_t> DrmOutput::supportedModifiers(uint32_t drmFormat) const
-{
-    return m_pipeline->supportedModifiers(drmFormat);
 }
 
 bool DrmOutput::queueChanges(const WaylandOutputConfig &config)
@@ -449,28 +424,12 @@ void DrmOutput::revertQueuedChanges()
     m_pipeline->revertPendingChanges();
 }
 
-int DrmOutput::maxBpc() const
-{
-    auto prop = m_connector->getProp(DrmConnector::PropertyIndex::MaxBpc);
-    return prop ? prop->maxValue() : 8;
-}
-
 bool DrmOutput::usesSoftwareCursor() const
 {
     return !m_setCursorSuccessful || !m_moveCursorSuccessful;
 }
 
-DrmPlane::Transformations DrmOutput::softwareTransforms() const
-{
-    if (m_pipeline->pending.bufferTransformation == m_pipeline->pending.sourceTransformation) {
-        return DrmPlane::Transformation::Rotate0;
-    } else {
-        // TODO handle sourceTransformation != Rotate0
-        return m_pipeline->pending.sourceTransformation;
-    }
-}
-
-DrmLayer *DrmOutput::outputLayer() const
+DrmOutputLayer *DrmOutput::outputLayer() const
 {
     return m_pipeline->pending.layer.data();
 }

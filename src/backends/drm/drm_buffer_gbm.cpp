@@ -21,9 +21,10 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 #include <gbm.h>
+#include <drm_fourcc.h>
 // KWaylandServer
 #include "KWaylandServer/clientbuffer.h"
-#include <drm_fourcc.h>
+#include "KWaylandServer/linuxdmabufv1clientbuffer.h"
 
 namespace KWin
 {
@@ -31,17 +32,42 @@ namespace KWin
 GbmBuffer::GbmBuffer(GbmSurface *surface, gbm_bo *bo)
     : m_surface(surface)
     , m_bo(bo)
-{
-    m_stride = gbm_bo_get_stride(m_bo);
-}
-
-GbmBuffer::GbmBuffer(gbm_bo *buffer, KWaylandServer::ClientBuffer *clientBuffer)
-    : m_bo(buffer)
-    , m_clientBuffer(clientBuffer)
     , m_stride(gbm_bo_get_stride(m_bo))
 {
-    if (m_clientBuffer) {
-        m_clientBuffer->ref();
+}
+
+GbmBuffer::GbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer)
+    : m_clientBuffer(clientBuffer)
+{
+    clientBuffer->ref();
+    const auto planes = clientBuffer->planes();
+    if (planes.first().modifier != DRM_FORMAT_MOD_INVALID || planes.first().offset > 0 || planes.count() > 1) {
+        gbm_import_fd_modifier_data data = {};
+        data.format = clientBuffer->format();
+        data.width = (uint32_t) clientBuffer->size().width();
+        data.height = (uint32_t) clientBuffer->size().height();
+        data.num_fds = planes.count();
+        data.modifier = planes.first().modifier;
+        for (int i = 0; i < planes.count(); i++) {
+            data.fds[i] = planes[i].fd;
+            data.offsets[i] = planes[i].offset;
+            data.strides[i] = planes[i].stride;
+        }
+        m_bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
+    } else {
+        const auto &plane = planes.first();
+        gbm_import_fd_data data = {};
+        data.fd = plane.fd;
+        data.width = (uint32_t) clientBuffer->size().width();
+        data.height = (uint32_t) clientBuffer->size().height();
+        data.stride = plane.stride;
+        data.format = clientBuffer->format();
+        m_bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT);
+    }
+    if (m_bo) {
+        m_stride = gbm_bo_get_stride(m_bo);
+    } else if (errno != EINVAL) {
+        qCWarning(KWIN_DRM) << "Importing buffer for direct scanout failed:" << strerror(errno);
     }
 }
 
@@ -105,13 +131,15 @@ uint32_t GbmBuffer::stride() const
 
 
 DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
-    : DrmBuffer(gpu, gbm_bo_get_format(bo), gbm_bo_get_modifier(bo)), GbmBuffer(surface, bo)
+    : DrmBuffer(gpu, gbm_bo_get_format(bo), gbm_bo_get_modifier(bo))
+    , GbmBuffer(surface, bo)
 {
     initialize();
 }
 
-DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::ClientBuffer *clientBuffer)
-    : DrmBuffer(gpu, gbm_bo_get_format(buffer), gbm_bo_get_modifier(buffer)), GbmBuffer(buffer, clientBuffer)
+DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer)
+    : DrmBuffer(gpu, clientBuffer->format(), clientBuffer->planes().constFirst().modifier)
+    , GbmBuffer(gpu, clientBuffer)
 {
     initialize();
 }
@@ -127,6 +155,9 @@ DrmGbmBuffer::~DrmGbmBuffer()
 
 void DrmGbmBuffer::initialize()
 {
+    if (!m_bo) {
+        return;
+    }
     m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
     uint32_t handles[4] = { };
     uint32_t strides[4] = { };
