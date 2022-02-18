@@ -50,8 +50,8 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu)
     , m_gpu(gpu)
 {
     m_gpu->setEglBackend(this);
-    connect(m_gpu, &DrmGpu::outputEnabled, this, &EglGbmBackend::addOutput);
-    connect(m_gpu, &DrmGpu::outputDisabled, this, &EglGbmBackend::removeOutput);
+    connect(m_backend, &DrmBackend::outputAdded, this, &EglGbmBackend::addOutput);
+    connect(m_backend, &DrmBackend::outputRemoved, this, &EglGbmBackend::removeOutput);
     setIsDirectRendering(true);
 }
 
@@ -207,8 +207,9 @@ bool EglGbmBackend::resetOutput(Output &output)
     return true;
 }
 
-bool EglGbmBackend::addOutput(DrmAbstractOutput *drmOutput)
+bool EglGbmBackend::addOutput(AbstractOutput *output)
 {
+    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
     Output newOutput;
     newOutput.output = drmOutput;
     if (!isPrimary() && !renderingBackend()->addOutput(drmOutput)) {
@@ -218,16 +219,16 @@ bool EglGbmBackend::addOutput(DrmAbstractOutput *drmOutput)
     return true;
 }
 
-void EglGbmBackend::removeOutput(DrmAbstractOutput *drmOutput)
+void EglGbmBackend::removeOutput(AbstractOutput *output)
 {
-    Q_ASSERT(m_outputs.contains(drmOutput));
+    Q_ASSERT(m_outputs.contains(output));
     if (isPrimary()) {
         // shadow buffer needs context current for destruction
         makeCurrent();
     } else {
-        renderingBackend()->removeOutput(drmOutput);
+        renderingBackend()->removeOutput(output);
     }
-    m_outputs.remove(drmOutput);
+    m_outputs.remove(output);
 }
 
 bool EglGbmBackend::swapBuffers(DrmAbstractOutput *drmOutput, const QRegion &dirty)

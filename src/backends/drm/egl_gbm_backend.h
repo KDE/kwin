@@ -118,8 +118,8 @@ private:
 
     bool doesRenderFit(const Output &output, const Output::RenderData &render);
     bool resetOutput(Output &output);
-    bool addOutput(DrmAbstractOutput *output);
-    void removeOutput(DrmAbstractOutput *output);
+    bool addOutput(AbstractOutput *output);
+    void removeOutput(AbstractOutput *output);
 
     bool makeContextCurrent(const Output::RenderData &output) const;
     void setViewport(const Output &output) const;
