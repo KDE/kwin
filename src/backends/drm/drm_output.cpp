@@ -418,6 +418,7 @@ bool DrmOutput::queueChanges(const WaylandOutputConfig &config)
         m_pipeline->pending.bufferTransformation = m_pipeline->pending.sourceTransformation;
     }
     m_pipeline->pending.enabled = props->enabled;
+    updateEnablement(props->enabled);
     return true;
 }
 
