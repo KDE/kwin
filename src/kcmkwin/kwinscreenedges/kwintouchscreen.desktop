@@ -4,7 +4,7 @@ Type=Application
 NoDisplay=true
 Exec=systemsettings kcm_kwintouchscreen
 X-KDE-ParentApp=kcontrol
-
+X-KDE-OnlyShowOnQtPlatforms=wayland
 Name=Touch Screen
 Name[ar]=شاشة اللمس
 Name[ast]=Pantalla táctil
