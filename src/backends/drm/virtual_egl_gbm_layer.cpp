@@ -50,7 +50,7 @@ void VirtualEglGbmLayer::destroyResources()
 
 void VirtualEglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
 {
-    if (m_gbmSurface->bufferAge() > 0 && !damagedRegion.isEmpty() && m_eglBackend->supportsPartialUpdate()) {
+    if (m_gbmSurface && m_gbmSurface->bufferAge() > 0 && !damagedRegion.isEmpty() && m_eglBackend->supportsPartialUpdate()) {
         const QRegion region = damagedRegion & m_output->geometry();
 
         QVector<EGLint> rects = m_output->regionToRects(region);

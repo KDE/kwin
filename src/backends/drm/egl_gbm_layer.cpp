@@ -123,7 +123,7 @@ std::optional<QRegion> EglGbmLayer::startRendering()
 
 void EglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
 {
-    if (m_gbmSurface->bufferAge() > 0 && !damagedRegion.isEmpty() && m_eglBackend->supportsPartialUpdate()) {
+    if (m_gbmSurface && m_gbmSurface->bufferAge() > 0 && !damagedRegion.isEmpty() && m_eglBackend->supportsPartialUpdate()) {
         QVector<EGLint> rects = m_pipeline->output()->regionToRects(damagedRegion);
         const bool correct = eglSetDamageRegionKHR(m_eglBackend->eglDisplay(), m_gbmSurface->eglSurface(), rects.data(), rects.count() / 4);
         if (!correct) {
