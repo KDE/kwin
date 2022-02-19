@@ -32,8 +32,7 @@ namespace KWin
 {
 
 DrmPipeline::DrmPipeline(DrmConnector *conn)
-    : m_displayDevice(nullptr)
-    , m_connector(conn)
+    : m_connector(conn)
 {
 }
 
@@ -309,8 +308,8 @@ bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const Q
     }
     if (result) {
         m_next = pending;
-        if (const auto drmOutput = dynamic_cast<DrmOutput*>(m_displayDevice); drmOutput && (visibleBefore || isCursorVisible())) {
-            drmOutput->renderLoop()->scheduleRepaint();
+        if (m_output && (visibleBefore || isCursorVisible())) {
+            m_output->renderLoop()->scheduleRepaint();
         }
     } else {
         pending = m_next;
@@ -334,8 +333,8 @@ bool DrmPipeline::moveCursor(QPoint pos)
     }
     if (result) {
         m_next = pending;
-        if (const auto drmOutput = dynamic_cast<DrmOutput*>(m_displayDevice); drmOutput && (visibleBefore || isCursorVisible())) {
-            drmOutput->renderLoop()->scheduleRepaint();
+        if (m_output && (visibleBefore || isCursorVisible())) {
+            m_output->renderLoop()->scheduleRepaint();
         }
     } else {
         pending = m_next;
@@ -395,12 +394,19 @@ void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
         m_current.crtc->cursorPlane()->flipBuffer();
     }
     m_pageflipPending = false;
-    m_displayDevice->pageFlipped(timestamp);
+    if (m_output) {
+        m_output->pageFlipped(timestamp);
+    }
 }
 
-void DrmPipeline::setDisplayDevice(DrmDisplayDevice *device)
+void DrmPipeline::setOutput(DrmOutput *output)
 {
-    m_displayDevice = device;
+    m_output = output;
+}
+
+DrmOutput *DrmPipeline::output() const
+{
+    return m_output;
 }
 
 static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {
@@ -481,11 +487,6 @@ void DrmPipeline::resetModesetPresentPending()
 DrmCrtc *DrmPipeline::currentCrtc() const
 {
     return m_current.crtc;
-}
-
-DrmDisplayDevice *DrmPipeline::displayDevice() const
-{
-    return m_displayDevice;
 }
 
 DrmGammaRamp::DrmGammaRamp(DrmGpu *gpu, const GammaRamp &lut)

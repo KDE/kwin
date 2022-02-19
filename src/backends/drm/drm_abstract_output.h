@@ -9,29 +9,34 @@
 #pragma once
 
 #include "abstract_wayland_output.h"
-#include "drm_display_device.h"
 
 namespace KWin
 {
 
 class DrmBackend;
+class DrmGpu;
+class DrmOutputLayer;
 
-class DrmAbstractOutput : public AbstractWaylandOutput, public DrmDisplayDevice
+class DrmAbstractOutput : public AbstractWaylandOutput
 {
     Q_OBJECT
 public:
     DrmAbstractOutput(DrmGpu *gpu);
 
     RenderLoop *renderLoop() const override;
-    QRect renderGeometry() const override;
-    void frameFailed() const override;
-    void pageFlipped(std::chrono::nanoseconds timestamp) const override;
-    QVector<int32_t> regionToRects(const QRegion &region) const override;
+    void frameFailed() const;
+    void pageFlipped(std::chrono::nanoseconds timestamp) const;
+    QVector<int32_t> regionToRects(const QRegion &region) const;
+    DrmGpu *gpu() const;
+
+    virtual bool present() = 0;
+    virtual DrmOutputLayer *outputLayer() const = 0;
 
 protected:
     friend class DrmGpu;
 
     RenderLoop *m_renderLoop;
+    DrmGpu *const m_gpu;
 };
 
 }

@@ -74,7 +74,7 @@ void DrmVirtualOutput::setDpmsMode(DpmsMode mode)
 
 void DrmVirtualOutput::updateEnablement(bool enable)
 {
-    gpu()->platform()->enableOutput(this, enable);
+    m_gpu->platform()->enableOutput(this, enable);
 }
 
 int DrmVirtualOutput::gammaRampSize() const

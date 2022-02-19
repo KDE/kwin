@@ -30,16 +30,13 @@ DrmLeaseOutput::DrmLeaseOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDe
         pipeline->connector()->modelName(),
         QStringLiteral("%1 %2").arg(pipeline->connector()->edid()->manufacturerString(), pipeline->connector()->modelName())
     )
-    , DrmDisplayDevice(pipeline->gpu())
     , m_pipeline(pipeline)
 {
-    m_pipeline->setDisplayDevice(this);
     qCDebug(KWIN_DRM) << "offering connector" << m_pipeline->connector()->id() << "for lease";
 }
 
 DrmLeaseOutput::~DrmLeaseOutput()
 {
-    m_pipeline->setDisplayDevice(nullptr);
     qCDebug(KWIN_DRM) << "revoking lease offer for connector" << m_pipeline->connector()->id();
 }
 
@@ -77,36 +74,6 @@ KWaylandServer::DrmLeaseV1Interface *DrmLeaseOutput::lease() const
 DrmPipeline *DrmLeaseOutput::pipeline() const
 {
     return m_pipeline;
-}
-
-bool DrmLeaseOutput::present()
-{
-    return false;
-}
-
-QRect DrmLeaseOutput::renderGeometry() const
-{
-    return QRect(QPoint(), m_pipeline->sourceSize());
-}
-
-DrmOutputLayer *DrmLeaseOutput::outputLayer() const
-{
-    return m_pipeline->pending.layer.data();
-}
-
-void DrmLeaseOutput::frameFailed() const
-{
-}
-
-void DrmLeaseOutput::pageFlipped(std::chrono::nanoseconds timestamp) const
-{
-    Q_UNUSED(timestamp)
-}
-
-QVector<int32_t> DrmLeaseOutput::regionToRects(const QRegion &region) const
-{
-    Q_UNUSED(region)
-    return {};
 }
 
 }

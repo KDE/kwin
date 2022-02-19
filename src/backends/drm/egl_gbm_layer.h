@@ -28,12 +28,7 @@ namespace KWin
 class GbmSurface;
 class DumbSwapchain;
 class ShadowBuffer;
-class DrmBuffer;
-class DrmGpu;
-class SurfaceItem;
-class GLTexture;
 class EglGbmBackend;
-class DrmPipeline;
 
 class EglGbmLayer : public DrmPipelineLayer
 {

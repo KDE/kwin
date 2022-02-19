@@ -90,7 +90,7 @@ std::optional<QRegion> EglGbmLayer::startRendering()
     if (!m_gbmSurface->makeContextCurrent()) {
         return std::optional<QRegion>();
     }
-    auto repaintRegion = m_gbmSurface->repaintRegion(m_pipeline->displayDevice()->renderGeometry());
+    auto repaintRegion = m_gbmSurface->repaintRegion(m_pipeline->output()->geometry());
 
     // shadow buffer
     if (doesShadowBufferFit(m_shadowBuffer.data())) {
@@ -124,7 +124,7 @@ std::optional<QRegion> EglGbmLayer::startRendering()
 void EglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
 {
     if (m_gbmSurface->bufferAge() > 0 && !damagedRegion.isEmpty() && m_eglBackend->supportsPartialUpdate()) {
-        QVector<EGLint> rects = m_pipeline->displayDevice()->regionToRects(damagedRegion);
+        QVector<EGLint> rects = m_pipeline->output()->regionToRects(damagedRegion);
         const bool correct = eglSetDamageRegionKHR(m_eglBackend->eglDisplay(), m_gbmSurface->eglSurface(), rects.data(), rects.count() / 4);
         if (!correct) {
             qCWarning(KWIN_DRM) << "eglSetDamageRegionKHR failed:" << getEglErrorString();
@@ -178,7 +178,7 @@ bool EglGbmLayer::renderTestBuffer()
         return false;
     }
     glClear(GL_COLOR_BUFFER_BIT);
-    if (!endRendering(m_pipeline->displayDevice()->renderGeometry())) {
+    if (!endRendering(m_pipeline->output()->geometry())) {
         return false;
     }
     return true;
@@ -438,11 +438,11 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         surfaceItem->resetDamage();
         for (const auto &rect : trackedDamage) {
             auto damageRect = QRect(rect);
-            damageRect.translate(m_pipeline->displayDevice()->renderGeometry().topLeft());
+            damageRect.translate(m_pipeline->output()->geometry().topLeft());
             damage |= damageRect;
         }
     } else {
-        damage = m_pipeline->displayDevice()->renderGeometry();
+        damage = m_pipeline->output()->geometry();
     }
     if (m_pipeline->testScanout()) {
         m_currentBuffer = m_scanoutBuffer;

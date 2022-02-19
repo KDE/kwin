@@ -28,19 +28,19 @@ public:
     virtual ~DrmOutputLayer();
 
     virtual void aboutToStartPainting(const QRegion &damagedRegion);
-    virtual std::optional<QRegion> startRendering() = 0;
-    virtual bool endRendering(const QRegion &damagedRegion) = 0;
+    virtual std::optional<QRegion> startRendering();
+    virtual bool endRendering(const QRegion &damagedRegion);
 
     /**
      * attempts to directly scan out the current buffer of the surfaceItem
      * @returns true if scanout was successful
      *          false if rendering is required
      */
-    virtual bool scanout(SurfaceItem *surfaceItem) = 0;
+    virtual bool scanout(SurfaceItem *surfaceItem);
 
-    virtual QSharedPointer<GLTexture> texture() const = 0;
+    virtual QSharedPointer<GLTexture> texture() const;
 
-    virtual QRegion currentDamage() const = 0;
+    virtual QRegion currentDamage() const;
 };
 
 class DrmPipelineLayer : public DrmOutputLayer
@@ -55,7 +55,7 @@ public:
     virtual QSharedPointer<DrmBuffer> testBuffer() = 0;
 
     virtual QSharedPointer<DrmBuffer> currentBuffer() const = 0;
-    virtual bool hasDirectScanoutBuffer() const = 0;
+    virtual bool hasDirectScanoutBuffer() const;
 
 protected:
     DrmPipeline *const m_pipeline;

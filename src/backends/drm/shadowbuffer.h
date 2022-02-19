@@ -17,8 +17,6 @@
 namespace KWin
 {
 
-class DrmDisplayDevice;
-
 class ShadowBuffer
 {
 public:

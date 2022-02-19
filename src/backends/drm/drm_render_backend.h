@@ -14,7 +14,6 @@ namespace KWin
 {
 
 class DrmPipelineLayer;
-class DrmDisplayDevice;
 class DrmVirtualOutput;
 class DrmPipeline;
 class DrmOutputLayer;

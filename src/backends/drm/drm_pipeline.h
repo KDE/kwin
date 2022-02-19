@@ -32,7 +32,6 @@ class DrmDumbBuffer;
 class GammaRamp;
 class DrmConnectorMode;
 class DrmPipelineLayer;
-class DrmDisplayDevice;
 
 class DrmGammaRamp
 {
@@ -94,8 +93,8 @@ public:
     QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const;
     QMap<uint32_t, QVector<uint64_t>> supportedFormats() const;
 
-    void setDisplayDevice(DrmDisplayDevice *device);
-    DrmDisplayDevice *displayDevice() const;
+    void setOutput(DrmOutput *output);
+    DrmOutput *output() const;
 
     struct State {
         DrmCrtc *crtc = nullptr;
@@ -154,7 +153,7 @@ private:
     static void printFlags(uint32_t flags);
     static void printProps(DrmObject *object, PrintMode mode);
 
-    DrmDisplayDevice *m_displayDevice = nullptr;
+    DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;
 
     bool m_pageflipPending = false;

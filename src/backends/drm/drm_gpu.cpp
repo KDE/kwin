@@ -309,9 +309,9 @@ bool DrmGpu::updateOutputs()
     if (testPendingConfiguration()) {
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->applyPendingChanges();
-            if (const auto drmOutput = dynamic_cast<DrmAbstractOutput*>(pipeline->displayDevice()); drmOutput && !pipeline->pending.crtc) {
+            if (pipeline->output() && !pipeline->pending.crtc) {
                 pipeline->pending.enabled = false;
-                drmOutput->setEnabled(false);
+                pipeline->output()->setEnabled(false);
             }
         }
     } else {
@@ -740,7 +740,7 @@ bool DrmGpu::maybeModeset()
         if (pipeline->modesetPresentPending()) {
             pipeline->resetModesetPresentPending();
             if (!ok) {
-                pipeline->displayDevice()->frameFailed();
+                pipeline->output()->frameFailed();
             }
         }
     }

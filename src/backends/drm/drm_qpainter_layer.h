@@ -17,6 +17,8 @@ namespace KWin
 class DumbSwapchain;
 class DrmPipeline;
 class DrmVirtualOutput;
+class DrmQPainterBackend;
+class DrmDumbBuffer;
 
 class QPainterLayer
 {
@@ -26,19 +28,16 @@ public:
     virtual QImage *image() = 0;
 };
 
-class DrmQPainterLayer : public DrmPipelineLayer, QPainterLayer
+class DrmQPainterLayer : public DrmPipelineLayer, public QPainterLayer
 {
 public:
-    DrmQPainterLayer(DrmPipeline *pipeline);
+    DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline);
 
     std::optional<QRegion> startRendering() override;
     bool endRendering(const QRegion &damagedRegion) override;
-    bool scanout(SurfaceItem *surfaceItem) override;
     QSharedPointer<DrmBuffer> testBuffer() override;
-    QSharedPointer<GLTexture> texture() const override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     QRegion currentDamage() const override;
-    bool hasDirectScanoutBuffer() const override;
     QImage *image() override;
 
 private:
@@ -48,16 +47,14 @@ private:
     QRegion m_currentDamage;
 };
 
-class DrmVirtualQPainterLayer : public DrmOutputLayer, QPainterLayer
+class DrmVirtualQPainterLayer : public DrmOutputLayer, public QPainterLayer
 {
 public:
     DrmVirtualQPainterLayer(DrmVirtualOutput *output);
 
     std::optional<QRegion> startRendering() override;
     bool endRendering(const QRegion &damagedRegion) override;
-    bool scanout(SurfaceItem *surfaceItem) override;
 
-    QSharedPointer<GLTexture> texture() const override;
     QRegion currentDamage() const override;
     QImage *image() override;
 
@@ -65,6 +62,18 @@ private:
     QImage m_image;
     QRegion m_currentDamage;
     DrmVirtualOutput *const m_output;
+};
+
+class DrmLeaseQPainterLayer : public DrmPipelineLayer
+{
+public:
+    DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline);
+
+    QSharedPointer<DrmBuffer> testBuffer() override;
+    QSharedPointer<DrmBuffer> currentBuffer() const override;
+
+private:
+    QSharedPointer<DrmDumbBuffer> m_buffer;
 };
 
 }

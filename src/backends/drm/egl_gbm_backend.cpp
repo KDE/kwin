@@ -30,6 +30,7 @@
 #include "egl_dmabuf.h"
 #include "egl_gbm_layer.h"
 #include "virtual_egl_gbm_layer.h"
+#include "drm_lease_egl_gbm_layer.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwineglimagetexture.h>
@@ -289,7 +290,11 @@ EGLConfig EglGbmBackend::config(uint32_t format) const
 
 QSharedPointer<DrmPipelineLayer> EglGbmBackend::createDrmPipelineLayer(DrmPipeline *pipeline)
 {
-    return QSharedPointer<EglGbmLayer>::create(this, pipeline);
+    if (pipeline->output()) {
+        return QSharedPointer<EglGbmLayer>::create(this, pipeline);
+    } else {
+        return QSharedPointer<DrmLeaseEglGbmLayer>::create(this, pipeline);
+    }
 }
 
 QSharedPointer<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)

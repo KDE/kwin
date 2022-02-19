@@ -13,8 +13,6 @@
 #include <QVector>
 #include <KWaylandServer/drmleasedevice_v1_interface.h>
 
-#include "drm_display_device.h"
-
 namespace KWin
 {
 
@@ -26,7 +24,7 @@ class DrmPipeline;
  * that is not used directly by the compositor but is instead leased out to
  * applications (usually VR compositors) that drive the output themselves
  */
-class DrmLeaseOutput : public KWaylandServer::DrmLeaseConnectorV1Interface, public DrmDisplayDevice
+class DrmLeaseOutput : public KWaylandServer::DrmLeaseConnectorV1Interface
 {
     Q_OBJECT
 public:
@@ -39,13 +37,6 @@ public:
 
     KWaylandServer::DrmLeaseV1Interface *lease() const;
     DrmPipeline *pipeline() const;
-
-    bool present() override;
-    QRect renderGeometry() const override;
-    DrmOutputLayer *outputLayer() const override;
-    void frameFailed() const override;
-    void pageFlipped(std::chrono::nanoseconds timestamp) const override;
-    QVector<int32_t> regionToRects(const QRegion &region) const override;
 
 private:
     DrmPipeline *m_pipeline;

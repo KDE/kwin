@@ -46,7 +46,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
     , m_pipeline(pipeline)
     , m_connector(pipeline->connector())
 {
-    m_pipeline->setDisplayDevice(this);
+    m_pipeline->setOutput(this);
     const auto conn = m_pipeline->connector();
     m_renderLoop->setRefreshRate(m_pipeline->pending.mode->refreshRate());
     setSubPixelInternal(conn->subpixel());
@@ -79,7 +79,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
 
 DrmOutput::~DrmOutput()
 {
-    m_pipeline->setDisplayDevice(nullptr);
+    m_pipeline->setOutput(nullptr);
 }
 
 static bool isCursorSpriteCompatible(const QImage *buffer, const QImage *sprite)

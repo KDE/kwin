@@ -16,19 +16,14 @@ namespace KWin
 
 DrmAbstractOutput::DrmAbstractOutput(DrmGpu *gpu)
     : AbstractWaylandOutput(gpu->platform())
-    , DrmDisplayDevice(gpu)
     , m_renderLoop(new RenderLoop(this))
+    , m_gpu(gpu)
 {
 }
 
 RenderLoop *DrmAbstractOutput::renderLoop() const
 {
     return m_renderLoop;
-}
-
-QRect DrmAbstractOutput::renderGeometry() const
-{
-    return geometry();
 }
 
 void DrmAbstractOutput::frameFailed() const
@@ -55,6 +50,11 @@ QVector<int32_t> DrmAbstractOutput::regionToRects(const QRegion &region) const
         rects << rect.height();
     }
     return rects;
+}
+
+DrmGpu *DrmAbstractOutput::gpu() const
+{
+    return m_gpu;
 }
 
 }

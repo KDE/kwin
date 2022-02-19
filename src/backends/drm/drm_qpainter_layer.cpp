@@ -15,16 +15,17 @@
 #include "drm_backend.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
+#include "drm_output.h"
 
 #include <drm_fourcc.h>
 
 namespace KWin
 {
 
-DrmQPainterLayer::DrmQPainterLayer(DrmPipeline *pipeline)
+DrmQPainterLayer::DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline)
     : DrmPipelineLayer(pipeline)
 {
-    connect(static_cast<DrmQPainterBackend*>(pipeline->gpu()->platform()->renderBackend()), &DrmQPainterBackend::aboutToBeDestroyed, this, [this]() {
+    connect(backend, &DrmQPainterBackend::aboutToBeDestroyed, this, [this]() {
         m_swapchain.reset();
     });
 }
@@ -35,7 +36,7 @@ std::optional<QRegion> DrmQPainterLayer::startRendering()
         m_swapchain = QSharedPointer<DumbSwapchain>::create(m_pipeline->gpu(), m_pipeline->sourceSize(), DRM_FORMAT_XRGB8888);
     }
     QRegion needsRepaint;
-    if (!m_swapchain->acquireBuffer(m_pipeline->displayDevice()->renderGeometry(), &needsRepaint)) {
+    if (!m_swapchain->acquireBuffer(m_pipeline->output()->geometry(), &needsRepaint)) {
         return std::optional<QRegion>();
     }
     return needsRepaint;
@@ -46,12 +47,6 @@ bool DrmQPainterLayer::endRendering(const QRegion &damagedRegion)
     m_currentDamage = damagedRegion;
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
     return true;
-}
-
-bool DrmQPainterLayer::scanout(SurfaceItem *surfaceItem)
-{
-    Q_UNUSED(surfaceItem);
-    return false;
 }
 
 QSharedPointer<DrmBuffer> DrmQPainterLayer::testBuffer()
@@ -75,16 +70,6 @@ QSharedPointer<DrmBuffer> DrmQPainterLayer::currentBuffer() const
 QRegion DrmQPainterLayer::currentDamage() const
 {
     return m_currentDamage;
-}
-
-bool DrmQPainterLayer::hasDirectScanoutBuffer() const
-{
-    return false;
-}
-
-QSharedPointer<GLTexture> DrmQPainterLayer::texture() const
-{
-    return nullptr;
 }
 
 QImage *DrmQPainterLayer::image()
@@ -112,17 +97,6 @@ bool DrmVirtualQPainterLayer::endRendering(const QRegion &damagedRegion)
     return true;
 }
 
-bool DrmVirtualQPainterLayer::scanout(SurfaceItem *surfaceItem)
-{
-    Q_UNUSED(surfaceItem);
-    return false;
-}
-
-QSharedPointer<GLTexture> DrmVirtualQPainterLayer::texture() const
-{
-    return nullptr;
-}
-
 QRegion DrmVirtualQPainterLayer::currentDamage() const
 {
     return m_currentDamage;
@@ -131,6 +105,29 @@ QRegion DrmVirtualQPainterLayer::currentDamage() const
 QImage *DrmVirtualQPainterLayer::image()
 {
     return &m_image;
+}
+
+
+DrmLeaseQPainterLayer::DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline)
+    : DrmPipelineLayer(pipeline)
+{
+    connect(backend, &DrmQPainterBackend::aboutToBeDestroyed, this, [this]() {
+        m_buffer.reset();
+    });
+}
+
+QSharedPointer<DrmBuffer> DrmLeaseQPainterLayer::testBuffer()
+{
+    const auto size = m_pipeline->sourceSize();
+    if (!m_buffer || m_buffer->size() != size) {
+        m_buffer = QSharedPointer<DrmDumbBuffer>::create(m_pipeline->gpu(), size, DRM_FORMAT_XRGB8888);
+    }
+    return m_buffer;
+}
+
+QSharedPointer<DrmBuffer> DrmLeaseQPainterLayer::currentBuffer() const
+{
+    return m_buffer;
 }
 
 }

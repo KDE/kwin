@@ -14,6 +14,7 @@
 #include "renderloop_p.h"
 #include "drm_qpainter_layer.h"
 #include "drm_virtual_output.h"
+#include "drm_pipeline.h"
 
 #include <drm_fourcc.h>
 
@@ -54,7 +55,11 @@ void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &rendere
 
 QSharedPointer<DrmPipelineLayer> DrmQPainterBackend::createDrmPipelineLayer(DrmPipeline *pipeline)
 {
-    return QSharedPointer<DrmQPainterLayer>::create(pipeline);
+    if (pipeline->output()) {
+        return QSharedPointer<DrmQPainterLayer>::create(this, pipeline);
+    } else {
+        return QSharedPointer<DrmLeaseQPainterLayer>::create(this, pipeline);
+    }
 }
 
 QSharedPointer<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput *output)

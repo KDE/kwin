@@ -13,7 +13,6 @@ set(DRM_SOURCES
     drm_gpu.cpp
     dumb_swapchain.cpp
     shadowbuffer.cpp
-    drm_display_device.cpp
     drm_layer.cpp
     drm_pipeline.cpp
     drm_pipeline_legacy.cpp
@@ -28,6 +27,7 @@ set(DRM_SOURCES
     gbm_dmabuf.cpp
     placeholderinputeventfilter.cpp
     virtual_egl_gbm_layer.cpp
+    drm_lease_egl_gbm_layer.cpp
 )
 
 add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})

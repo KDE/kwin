@@ -377,8 +377,8 @@ bool DrmConnector::updateProperties()
             if (!m_pipeline->pending.mode) {
                 m_pipeline->pending.mode = m_modes.constFirst();
             }
-            if (const auto output = dynamic_cast<DrmOutput*>(m_pipeline->displayDevice())) {
-                output->updateModes();
+            if (m_pipeline->output()) {
+                m_pipeline->output()->updateModes();
             }
         }
     }

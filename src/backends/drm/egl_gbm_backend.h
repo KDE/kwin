@@ -38,7 +38,6 @@ class ShadowBuffer;
 class DrmBackend;
 class DrmGpu;
 class EglGbmLayer;
-class DrmDisplayDevice;
 class DrmOutputLayer;
 class DrmPipeline;
 
