@@ -1072,7 +1072,12 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
     if (!d->touch) {
         return;
     }
-    Q_ASSERT(d->globalTouch.ids.contains(id));
+    auto itTouch = d->globalTouch.ids.constFind(id);
+    if (itTouch == d->globalTouch.ids.constEnd()) {
+        // This can happen in cases where the interaction started while the device was asleep
+        qCWarning(KWAYLAND_SERVER) << "Detected a touch move that never has been down, discarding";
+        return;
+    }
 
     const auto pos = globalPosition - d->globalTouch.focus.offset;
     if (isDragTouch()) {
@@ -1093,7 +1098,7 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
             }
         }
     }
-    Q_EMIT touchMoved(id, d->globalTouch.ids[id], globalPosition);
+    Q_EMIT touchMoved(id, *itTouch, globalPosition);
 }
 
 void SeatInterface::notifyTouchUp(qint32 id)
@@ -1101,7 +1106,13 @@ void SeatInterface::notifyTouchUp(qint32 id)
     if (!d->touch) {
         return;
     }
-    Q_ASSERT(d->globalTouch.ids.contains(id));
+
+    auto itTouch = d->globalTouch.ids.find(id);
+    if (itTouch == d->globalTouch.ids.end()) {
+        // This can happen in cases where the interaction started while the device was asleep
+        qCWarning(KWAYLAND_SERVER) << "Detected a touch that never started, discarding";
+        return;
+    }
     const qint32 serial = d->display->nextSerial();
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && d->drag.dragImplicitGrabSerial == d->globalTouch.ids.value(id)) {
         // the implicitly grabbing touch point has been upped
@@ -1119,7 +1130,7 @@ void SeatInterface::notifyTouchUp(qint32 id)
         }
     }
 
-    d->globalTouch.ids.remove(id);
+    d->globalTouch.ids.erase(itTouch);
 }
 
 void SeatInterface::notifyTouchFrame()
