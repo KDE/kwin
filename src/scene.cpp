@@ -337,7 +337,7 @@ void Scene::preparePaintGenericScreen()
         resetRepaintsHelper(sceneWindow->windowItem(), painted_screen);
 
         WindowPrePaintData data;
-        data.mask = m_paintContext.mask | (sceneWindow->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT);
+        data.mask = m_paintContext.mask;
         data.paint = infiniteRegion(); // no clipping, so doesn't really matter
 
         sceneWindow->resetPaintingEnabled();
@@ -360,14 +360,14 @@ void Scene::preparePaintSimpleScreen()
     for (Window *sceneWindow : std::as_const(stacking_order)) {
         const Toplevel *toplevel = sceneWindow->window();
         WindowPrePaintData data;
-        data.mask = m_paintContext.mask | (sceneWindow->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT);
+        data.mask = m_paintContext.mask;
         accumulateRepaints(sceneWindow->windowItem(), painted_screen, &data.paint);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
         if (sceneWindow->isOpaque()) {
             const SurfaceItem *surfaceItem = sceneWindow->surfaceItem();
             if (surfaceItem) {
-                data.clip |= surfaceItem->mapToGlobal(surfaceItem->shape());
+                data.clip = surfaceItem->mapToGlobal(surfaceItem->shape());
             }
         } else if (toplevel->hasAlpha() && toplevel->opacity() == 1.0) {
             const SurfaceItem *surfaceItem = sceneWindow->surfaceItem();
@@ -375,9 +375,6 @@ void Scene::preparePaintSimpleScreen()
                 const QRegion shape = surfaceItem->shape();
                 const QRegion opaque = surfaceItem->opaque();
                 data.clip = surfaceItem->mapToGlobal(shape & opaque);
-                if (opaque == shape) {
-                    data.mask = m_paintContext.mask | PAINT_WINDOW_OPAQUE;
-                }
             }
         }
 
