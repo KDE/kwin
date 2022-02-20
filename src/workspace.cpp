@@ -1485,41 +1485,17 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("=============\n"));
 
     support.append(QStringLiteral("KWIN_BUILD_DECORATIONS: "));
-#ifdef KWIN_BUILD_DECORATIONS
-    support.append(yes);
-#else
-    support.append(no);
-#endif
+    support.append(KWIN_BUILD_DECORATIONS ? yes : no);
     support.append(QStringLiteral("KWIN_BUILD_TABBOX: "));
-#ifdef KWIN_BUILD_TABBOX
-    support.append(yes);
-#else
-    support.append(no);
-#endif
+    support.append(KWIN_BUILD_TABBOX ? yes : no);
     support.append(QStringLiteral("KWIN_BUILD_ACTIVITIES: "));
-#ifdef KWIN_BUILD_ACTIVITIES
-    support.append(yes);
-#else
-    support.append(no);
-#endif
+    support.append(KWIN_BUILD_ACTIVITIES ? yes : no);
     support.append(QStringLiteral("HAVE_X11_XCB: "));
-#if HAVE_X11_XCB
-    support.append(yes);
-#else
-    support.append(no);
-#endif
+    support.append(HAVE_X11_XCB ? yes : no );
     support.append(QStringLiteral("HAVE_EPOXY_GLX: "));
-#if HAVE_EPOXY_GLX
-    support.append(yes);
-#else
-    support.append(no);
-#endif
+    support.append(HAVE_EPOXY_GLX ? yes : no);
     support.append(QStringLiteral("HAVE_WAYLAND_EGL: "));
-#if HAVE_WAYLAND_EGL
-    support.append(yes);
-#else
-    support.append(no);
-#endif
+    support.append(HAVE_WAYLAND_EGL ? yes : no);
     support.append(QStringLiteral("\n"));
 
     if (auto c = kwinApp()->x11Connection()) {
