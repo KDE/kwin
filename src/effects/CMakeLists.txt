@@ -8,26 +8,15 @@ function(kwin_add_effect_config name)
     kcoreaddons_add_plugin(${name} INSTALL_NAMESPACE "kwin/effects/configs" SOURCES ${ARGV})
 endfunction()
 
-if (CMAKE_CROSSCOMPILING)
-    if (NOT KWIN_HOST_TOOLING)
-        message(FATAL_ERROR "Please provide the path to a native build -DKWIN_HOST_TOOLING=path")
-    endif()
-    find_file(KSEM_EXECUTABLE StripEffectMetadataTargets.cmake
-              PATHS ${KWIN_HOST_TOOLING}
-              NO_DEFAULT_PATH
-              NO_CMAKE_FIND_ROOT_PATH)
-    include(${KSEM_EXECUTABLE})
-else()
-    add_executable(kwin-strip-effect-metadata strip-effect-metadata.cpp)
-    target_link_libraries(kwin-strip-effect-metadata Qt5::Core)
-    # Export the kwin-strip-effect-metadata target to a file, so it can be used by another build.
-    export(TARGETS kwin-strip-effect-metadata FILE ${CMAKE_BINARY_DIR}/StripEffectMetadataTargets.cmake)
-endif()
+# Add a CMake-time check for python3 to avoid failures during build.
+find_package (Python3 COMPONENTS Interpreter)
+add_feature_info("Python3" Python3_Interpreter_FOUND "Required to strip effects metadata")
+set(KSEM_EXE "${CMAKE_CURRENT_SOURCE_DIR}/strip-effect-metadata.py")
 
 function (kwin_strip_builtin_effect_metadata target metadata)
     set(stripped_metadata "${CMAKE_CURRENT_BINARY_DIR}/${metadata}.stripped")
 
-    set(command kwin-strip-effect-metadata --source=${metadata} --output=${stripped_metadata})
+    set(command ${KSEM_EXE} --source=${metadata} --output=${stripped_metadata})
     add_custom_command(
         OUTPUT ${stripped_metadata}
         COMMAND ${command}
