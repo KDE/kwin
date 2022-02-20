@@ -225,7 +225,7 @@ EGLSurface EglOnXBackend::createSurface(xcb_window_t window)
         // a c style cast as there are (buggy) platforms where the size of the Window
         // type is not the same as the size of EGLNativeWindowType, reinterpret_cast<>()
         // may not compile.
-        surface = eglCreateWindowSurface(eglDisplay(), config(), (EGLNativeWindowType) nativeWindow, nullptr);
+        surface = eglCreateWindowSurface(eglDisplay(), config(), (EGLNativeWindowType)(uintptr_t)nativeWindow, nullptr);
     }
 
     return surface;

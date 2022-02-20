@@ -228,8 +228,11 @@ bool EglPixmapTexturePrivate::create(SurfacePixmapX11 *pixmap)
         EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
         EGL_NONE
     };
-    m_image = eglCreateImageKHR(m_backend->eglDisplay(), EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
-                                reinterpret_cast<EGLClientBuffer>(nativePixmap), attribs);
+    m_image = eglCreateImageKHR(m_backend->eglDisplay(),
+                                EGL_NO_CONTEXT,
+                                EGL_NATIVE_PIXMAP_KHR,
+                                reinterpret_cast<EGLClientBuffer>(static_cast<uintptr_t>(nativePixmap)),
+                                attribs);
 
     if (EGL_NO_IMAGE_KHR == m_image) {
         qCDebug(KWIN_CORE) << "failed to create egl image";
