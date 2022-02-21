@@ -315,9 +315,7 @@ void EglWaylandBackend::aboutToStartPainting(AbstractOutput *output, const QRegi
     Q_ASSERT(m_outputs.contains(output));
     const auto &eglOutput = m_outputs[output];
     if (eglOutput->m_bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
-        const QRegion region = damagedRegion & eglOutput->m_waylandOutput->geometry();
-
-        QVector<EGLint> rects = regionToRects(region, eglOutput->m_waylandOutput);
+        QVector<EGLint> rects = regionToRects(damagedRegion, eglOutput->m_waylandOutput);
         const bool correct = eglSetDamageRegionKHR(eglDisplay(), eglOutput->m_eglSurface,
                                                    rects.data(), rects.count()/4);
         if (!correct) {
@@ -387,11 +385,10 @@ void EglWaylandBackend::endFrame(AbstractOutput *output, const QRegion &rendered
     GLRenderTarget::popRenderTarget();
 
     const auto &eglOutput = m_outputs[output];
-    QRegion damage = damagedRegion.intersected(eglOutput->m_waylandOutput->geometry());
-    presentOnSurface(eglOutput, damage);
+    presentOnSurface(eglOutput, damagedRegion);
 
     if (supportsBufferAge()) {
-        eglOutput->m_damageJournal.add(damage);
+        eglOutput->m_damageJournal.add(damagedRegion);
     }
 }
 

@@ -114,7 +114,7 @@ bool EglGbmLayer::endRendering(const QRegion &damagedRegion)
         m_shadowBuffer->render(m_output);
     }
     GLRenderTarget::popRenderTarget();
-    const auto buffer = m_gbmSurface->swapBuffersForDrm(damagedRegion.intersected(m_output->geometry()));
+    const auto buffer = m_gbmSurface->swapBuffersForDrm(damagedRegion);
     if (buffer) {
         m_currentBuffer = buffer;
     }

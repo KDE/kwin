@@ -254,9 +254,7 @@ void EglGbmBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &
     Q_ASSERT(m_surfaces.contains(output));
     const auto &surface = m_surfaces[output];
     if (surface->bufferAge() > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
-        const QRegion region = damagedRegion & output->geometry();
-
-        QVector<EGLint> rects = regionToRects(region, static_cast<DrmAbstractOutput*>(output));
+        QVector<EGLint> rects = regionToRects(damagedRegion, static_cast<DrmAbstractOutput*>(output));
         const bool correct = eglSetDamageRegionKHR(eglDisplay(), surface->eglSurface(), rects.data(), rects.count()/4);
         if (!correct) {
             qCWarning(KWIN_DRM) << "eglSetDamageRegionKHR failed:" << getEglErrorString();
@@ -287,7 +285,7 @@ void EglGbmBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegi
     Q_UNUSED(renderedRegion)
 
     m_surfaces[output]->endRendering(damagedRegion);
-    static_cast<DrmAbstractOutput*>(output)->present(m_surfaces[output]->currentBuffer(), damagedRegion & output->geometry());
+    static_cast<DrmAbstractOutput*>(output)->present(m_surfaces[output]->currentBuffer(), damagedRegion);
 }
 
 bool EglGbmBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)

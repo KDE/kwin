@@ -719,10 +719,8 @@ void Scene::clearStackingOrder()
     stacking_order.clear();
 }
 
-void Scene::paintWindow(Window* w, int mask, const QRegion &_region)
+void Scene::paintWindow(Window *w, int mask, const QRegion &region)
 {
-    // no painting outside visible screen (and no transformations)
-    const QRegion region = _region & renderTargetRect();
     if (region.isEmpty())  // completely clipped
         return;
 
