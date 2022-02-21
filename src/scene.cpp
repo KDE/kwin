@@ -215,14 +215,17 @@ static SurfaceItem *findTopMostSurface(SurfaceItem *item)
 
 SurfaceItem *Scene::scanoutCandidate() const
 {
+    if (!waylandServer()) {
+        return nullptr;
+    }
     SurfaceItem *candidate = nullptr;
     if (!static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
         for (int i = stacking_order.count() - 1; i >=0; i--) {
             Window *window = stacking_order[i];
             Toplevel *toplevel = window->window();
-            if (painted_screen && toplevel->isOnOutput(painted_screen) && window->isVisible() && toplevel->opacity() > 0) {
+            if (toplevel->isOnOutput(painted_screen) && window->isVisible() && toplevel->opacity() > 0) {
                 AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
-                if (!c || !c->isFullScreen()) {
+                if (!c || !c->isFullScreen() || c->opacity() != 1.0) {
                     break;
                 }
                 if (!window->surfaceItem()) {
@@ -239,7 +242,7 @@ SurfaceItem *Scene::scanoutCandidate() const
                     break;
                 }
                 // and it has to be completely opaque
-                if (!window->isOpaque() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
+                if (pixmap->hasAlphaChannel() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
                     break;
                 }
                 candidate = topMost;
