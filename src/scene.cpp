@@ -401,7 +401,7 @@ void Scene::preparePaintSimpleScreen()
     for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
         const auto &paintData = m_paintContext.phase2Data.at(i);
         surfaceDamage += paintData.region - opaque;
-        if (!(paintData.mask & PAINT_WINDOW_TRANSLUCENT)) {
+        if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED))) {
             opaque += paintData.opaque;
         }
     }
@@ -547,11 +547,15 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
     QRegion visible = region;
     for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
         Phase2Data *data = &m_paintContext.phase2Data[i];
-        const Item *item = data->window->windowItem();
+        data->region = visible;
 
-        data->region = visible & item->mapToGlobal(item->boundingRect());
-        if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
-            visible -= data->opaque;
+        if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
+            const Item *item = data->window->windowItem();
+            data->region &= item->mapToGlobal(item->boundingRect());
+
+            if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
+                visible -= data->opaque;
+            }
         }
     }
 
