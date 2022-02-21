@@ -504,6 +504,7 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
             qCDebug(KWIN_DRM) << "removing placeholder output";
             primaryGpu()->removeVirtualOutput(m_placeHolderOutput);
             m_placeHolderOutput = nullptr;
+            m_placeholderFilter.reset();
         }
     } else {
         if (m_enabledOutputs.count() == 1 && m_outputs.count() > 1) {
@@ -523,6 +524,8 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
             m_placeHolderOutput = primaryGpu()->createVirtualOutput({}, m_enabledOutputs.constFirst()->pixelSize(), 1, DrmGpu::Placeholder);
             // placeholder doesn't actually need to render anything
             m_placeHolderOutput->renderLoop()->inhibit();
+            m_placeholderFilter.reset(new PlaceholderInputEventFilter());
+            input()->prependInputEventFilter(m_placeholderFilter.data());
         }
         m_enabledOutputs.removeOne(output);
         Q_EMIT output->gpu()->outputDisabled(output);

@@ -23,6 +23,7 @@ set(DRM_SOURCES
     drm_buffer_gbm.cpp
     gbm_surface.cpp
     gbm_dmabuf.cpp
+    placeholderinputeventfilter.cpp
 )
 
 add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})
