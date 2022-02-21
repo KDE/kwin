@@ -77,7 +77,7 @@ ecm_qt_declare_logging_category(SERVER_LIB_SRCS
     CATEGORY_NAME kwayland-server
     DEFAULT_SEVERITY Critical
     DESCRIPTION "KWayland Server Library"
-    EXPORT KWAYLAND
+    EXPORT KWAYLANDSERVER
 )
 
 ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
