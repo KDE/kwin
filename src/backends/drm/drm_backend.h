@@ -11,6 +11,7 @@
 #include "platform.h"
 
 #include "dpmsinputeventfilter.h"
+#include "placeholderinputeventfilter.h"
 
 #include <QPointer>
 #include <QSize>
@@ -103,6 +104,7 @@ private:
     const QStringList m_explicitGpus;
     QVector<DrmGpu*> m_gpus;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
+    QScopedPointer<PlaceholderInputEventFilter> m_placeholderFilter;
 };
 
 
