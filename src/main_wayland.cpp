@@ -36,7 +36,6 @@
 #include <QCommandLineParser>
 #include <QFileInfo>
 #include <QProcess>
-#include <QStyle>
 #include <QDebug>
 #include <QWindow>
 #include <QDBusInterface>
@@ -130,9 +129,6 @@ ApplicationWayland::~ApplicationWayland()
     m_xwayland = nullptr;
     destroyWorkspace();
 
-    if (QStyle *s = style()) {
-        s->unpolish(this);
-    }
     destroyInputMethod();
     destroyCompositor();
     destroyInput();

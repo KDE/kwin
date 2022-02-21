@@ -23,7 +23,6 @@
 #include <QAbstractEventDispatcher>
 #include <QPluginLoader>
 #include <QSocketNotifier>
-#include <QStyle>
 #include <QThread>
 #include <QtConcurrentRun>
 
@@ -89,9 +88,6 @@ WaylandTestApplication::~WaylandTestApplication()
     delete m_xwayland;
     m_xwayland = nullptr;
     destroyWorkspace();
-    if (QStyle *s = style()) {
-        s->unpolish(this);
-    }
     destroyInputMethod();
     destroyCompositor();
     destroyInput();
