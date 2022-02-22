@@ -30,6 +30,7 @@ kwin_add_effect_config(kwin_showfps_config ${kwin_showfps_config_SRCS})
 target_link_libraries(kwin_showfps_config
     KF5::Completion
     KF5::ConfigWidgets
+    KF5::CoreAddons
     KF5::I18n
     Qt::DBus
     KWinEffectsInterface

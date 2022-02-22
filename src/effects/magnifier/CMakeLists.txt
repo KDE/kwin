@@ -31,6 +31,7 @@ kwin_add_effect_config(kwin_magnifier_config ${kwin_magnifier_config_SRCS})
 
 target_link_libraries(kwin_magnifier_config
     KF5::ConfigWidgets
+    KF5::CoreAddons
     KF5::GlobalAccel
     KF5::I18n
     KF5::XmlGui

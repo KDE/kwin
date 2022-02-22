@@ -36,6 +36,7 @@ kwin_add_effect_config(kwin_presentwindows_config ${kwin_presentwindows_config_S
 target_link_libraries(kwin_presentwindows_config
     KF5::Completion
     KF5::ConfigWidgets
+    KF5::CoreAddons
     KF5::GlobalAccel
     KF5::I18n
     KF5::XmlGui

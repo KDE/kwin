@@ -27,6 +27,7 @@ kwin_add_effect_config(kwin_wobblywindows_config ${kwin_wobblywindows_config_SRC
 
 target_link_libraries(kwin_wobblywindows_config
     KF5::ConfigWidgets
+    KF5::CoreAddons
     KF5::I18n
     Qt::DBus
     KWinEffectsInterface
