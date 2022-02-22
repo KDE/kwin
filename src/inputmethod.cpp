@@ -689,6 +689,10 @@ void InputMethod::startInputMethod()
     QProcessEnvironment environment = kwinApp()->processStartupEnvironment();
     environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
     environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
+    // When we use Maliit as virtual keyboard, we want KWin to handle the animation
+    // since that works a lot better. So we need to tell Maliit to not do client side
+    // animation.
+    environment.insert(QStringLiteral("MALIIT_ENABLE_ANIMATIONS"), "0");
 
     m_inputMethodProcess = new QProcess(this);
     m_inputMethodProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
