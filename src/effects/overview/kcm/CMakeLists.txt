@@ -8,7 +8,6 @@ kconfig_add_kcfg_files(kwin_overview_config_SOURCES ../overviewconfig.kcfgc)
 
 kwin_add_effect_config(kwin_overview_config ${kwin_overview_config_SOURCES})
 target_link_libraries(kwin_overview_config
-    KF5::Completion
     KF5::ConfigWidgets
     KF5::CoreAddons
     KF5::GlobalAccel
