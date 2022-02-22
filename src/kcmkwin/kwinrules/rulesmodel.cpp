@@ -14,7 +14,6 @@
 #include <QIcon>
 #include <QQmlEngine>
 #include <QtDBus>
-#include <QX11Info>
 
 #include <KColorSchemeManager>
 #include <KConfig>
@@ -435,7 +434,7 @@ void RulesModel::populateRuleList()
                          QIcon::fromTheme("resizerow")));
 
     RuleItem *desktops;
-    if (QX11Info::isPlatformX11()) {
+    if (KWindowSystem::isPlatformX11()) {
         // Single selection of Virtual Desktop on X11
         desktops = new RuleItem(QLatin1String("desktops"),
                                 RulePolicy::SetRule, RuleItem::Option,
