@@ -15,7 +15,6 @@
 #include <kwineffects_interface.h>
 
 #include <KLocalizedString>
-#include <KAboutData>
 #include <kconfiggroup.h>
 #include <KPluginFactory>
 

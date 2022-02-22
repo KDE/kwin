@@ -18,7 +18,6 @@
 #include <KLocalizedString>
 #include <kconfiggroup.h>
 #include <KActionCollection>
-#include <KAboutData>
 #include <KGlobalAccel>
 #include <KPluginFactory>
 

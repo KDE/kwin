@@ -16,7 +16,6 @@
 #include <KLocalizedString>
 #include <KActionCollection>
 #include <KShortcutsEditor>
-#include <KAboutData>
 #include <KPluginFactory>
 
 #include <QVBoxLayout>

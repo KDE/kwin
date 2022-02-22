@@ -19,7 +19,6 @@
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KActionCollection>
-#include <KAboutData>
 #include <KPluginFactory>
 
 #include <QVBoxLayout>

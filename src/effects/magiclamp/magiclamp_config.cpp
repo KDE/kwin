@@ -14,7 +14,6 @@
 #include <kwineffects_interface.h>
 
 #include <kconfiggroup.h>
-#include <KAboutData>
 #include <KPluginFactory>
 
 #include <QVBoxLayout>

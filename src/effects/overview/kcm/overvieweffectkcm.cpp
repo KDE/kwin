@@ -10,7 +10,6 @@
 #include <config-kwin.h>
 #include <kwineffects_interface.h>
 
-#include <KAboutData>
 #include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>

@@ -16,7 +16,6 @@
 
 #include <kwineffects_interface.h>
 
-#include <KAboutData>
 #include <KPluginFactory>
 
 K_PLUGIN_CLASS(KWin::DimInactiveEffectConfig)

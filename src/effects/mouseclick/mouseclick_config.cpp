@@ -16,7 +16,6 @@
 #include <QAction>
 
 #include <KActionCollection>
-#include <KAboutData>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KPluginFactory>

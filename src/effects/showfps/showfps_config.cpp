@@ -15,7 +15,6 @@
 #include <kwineffects_interface.h>
 
 #include <KLocalizedString>
-#include <KAboutData>
 #include <KPluginFactory>
 
 K_PLUGIN_CLASS(KWin::ShowFpsEffectConfig)

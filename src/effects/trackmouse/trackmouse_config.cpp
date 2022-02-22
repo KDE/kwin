@@ -14,7 +14,6 @@
 
 #include <KLocalizedString>
 #include <KActionCollection>
-#include <KAboutData>
 #include <KGlobalAccel>
 #include <KPluginFactory>
 

@@ -9,7 +9,6 @@
 
 #include "showpaint_config.h"
 
-#include <KAboutData>
 #include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>

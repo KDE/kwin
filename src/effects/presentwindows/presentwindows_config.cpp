@@ -17,7 +17,6 @@
 
 #include <kconfiggroup.h>
 #include <KActionCollection>
-#include <KAboutData>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KPluginFactory>
