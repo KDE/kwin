@@ -28,7 +28,6 @@ add_library(kcm_kwinscreenedges MODULE ${kcm_kwinscreenedges_PART_SRCS})
 set(kcm_screenedges_LIBS
     Qt::DBus
 
-    KF5::Completion
     KF5::ConfigCore
     KF5::ConfigWidgets
     KF5::KCMUtils

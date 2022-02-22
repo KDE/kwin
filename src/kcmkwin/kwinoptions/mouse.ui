@@ -31,7 +31,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="kcfg_TitlebarDoubleClickCommand">
+       <widget class="QComboBox" name="kcfg_TitlebarDoubleClickCommand">
         <property name="whatsThis">
          <string>Behavior on &lt;em&gt;double&lt;/em&gt; click into the titlebar.</string>
         </property>
@@ -93,7 +93,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KComboBox" name="kcfg_CommandTitlebarWheel">
+       <widget class="QComboBox" name="kcfg_CommandTitlebarWheel">
         <property name="whatsThis">
          <string>Behavior on &lt;em&gt;mouse wheel&lt;/em&gt; scroll over the titlebar.</string>
         </property>
@@ -221,7 +221,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="KComboBox" name="kcfg_CommandActiveTitlebar1">
+         <widget class="QComboBox" name="kcfg_CommandActiveTitlebar1">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -274,7 +274,7 @@
          </widget>
         </item>
         <item row="1" column="2">
-         <widget class="KComboBox" name="kcfg_CommandInactiveTitlebar1">
+         <widget class="QComboBox" name="kcfg_CommandInactiveTitlebar1">
           <property name="whatsThis">
            <string>Behavior on &lt;em&gt;left&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;inactive&lt;/em&gt; window.</string>
           </property>
@@ -336,7 +336,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="KComboBox" name="kcfg_CommandActiveTitlebar2">
+         <widget class="QComboBox" name="kcfg_CommandActiveTitlebar2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -389,7 +389,7 @@
          </widget>
         </item>
         <item row="2" column="2">
-         <widget class="KComboBox" name="kcfg_CommandInactiveTitlebar2">
+         <widget class="QComboBox" name="kcfg_CommandInactiveTitlebar2">
           <property name="whatsThis">
            <string>Behavior on &lt;em&gt;left&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;inactive&lt;/em&gt; window.</string>
           </property>
@@ -451,7 +451,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="KComboBox" name="kcfg_CommandActiveTitlebar3">
+         <widget class="QComboBox" name="kcfg_CommandActiveTitlebar3">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -504,7 +504,7 @@
          </widget>
         </item>
         <item row="3" column="2">
-         <widget class="KComboBox" name="kcfg_CommandInactiveTitlebar3">
+         <widget class="QComboBox" name="kcfg_CommandInactiveTitlebar3">
           <property name="whatsThis">
            <string>Behavior on &lt;em&gt;left&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;inactive&lt;/em&gt; window.</string>
           </property>
@@ -606,7 +606,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="kcfg_MaximizeButtonLeftClickCommand">
+       <widget class="QComboBox" name="kcfg_MaximizeButtonLeftClickCommand">
         <property name="whatsThis">
          <string>Behavior on &lt;em&gt;left&lt;/em&gt; click onto the maximize button.</string>
         </property>
@@ -641,7 +641,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KComboBox" name="kcfg_MaximizeButtonMiddleClickCommand">
+       <widget class="QComboBox" name="kcfg_MaximizeButtonMiddleClickCommand">
         <property name="whatsThis">
          <string>Behavior on &lt;em&gt;middle&lt;/em&gt; click onto the maximize button.</string>
         </property>
@@ -676,7 +676,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="KComboBox" name="kcfg_MaximizeButtonRightClickCommand">
+       <widget class="QComboBox" name="kcfg_MaximizeButtonRightClickCommand">
         <property name="whatsThis">
          <string>Behavior on &lt;em&gt;right&lt;/em&gt; click onto the maximize button.</string>
         </property>
@@ -715,13 +715,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>kcfg_TitlebarDoubleClickCommand</tabstop>
   <tabstop>kcfg_CommandTitlebarWheel</tabstop>

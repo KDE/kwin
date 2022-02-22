@@ -29,7 +29,7 @@ kconfig_add_kcfg_files(kcm_kwinoptions_PART_SRCS kwinoptions_kdeglobals_settings
 
 qt_add_dbus_interface(kcm_kwinoptions_PART_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
 add_library(kcm_kwinoptions MODULE ${kcm_kwinoptions_PART_SRCS})
-target_link_libraries(kcm_kwinoptions kwin Qt::DBus KF5::KCMUtils KF5::Completion KF5::I18n KF5::ConfigWidgets KF5::Service KF5::WindowSystem)
+target_link_libraries(kcm_kwinoptions kwin Qt::DBus KF5::KCMUtils KF5::I18n KF5::ConfigWidgets KF5::Service KF5::WindowSystem)
 install(TARGETS kcm_kwinoptions DESTINATION ${KDE_INSTALL_PLUGINDIR})
 
 ########### install files ###############

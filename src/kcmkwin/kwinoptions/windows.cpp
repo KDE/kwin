@@ -11,7 +11,6 @@
 #include <QCheckBox>
 #include <QRadioButton>
 #include <QLabel>
-#include <KComboBox>
 #include <QHBoxLayout>
 #include <QFormLayout>
 #include <QtDBus>

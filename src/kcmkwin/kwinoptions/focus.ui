@@ -109,7 +109,7 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="KComboBox" name="kcfg_FocusStealingPreventionLevel">
+      <widget class="QComboBox" name="kcfg_FocusStealingPreventionLevel">
        <property name="whatsThis">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This option specifies how much KWin will try to prevent unwanted focus stealing caused by unexpected activation of new windows. (Note: This feature does not work with the &lt;span style=&quot; font-style:italic;&quot;&gt;Focus under mouse&lt;/span&gt; or &lt;span style=&quot; font-style:italic;&quot;&gt;Focus strictly under mouse&lt;/span&gt; focus policies.) &lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;None:&lt;/span&gt; Prevention is turned off and new windows always become activated.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Low:&lt;/span&gt; Prevention is enabled; when some window does not have support for the underlying mechanism and KWin cannot reliably decide whether to activate the window or not, it will be activated. This setting may have both worse and better results than the medium level, depending on the applications.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Medium:&lt;/span&gt; Prevention is enabled.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;High:&lt;/span&gt; New windows get activated only if no window is currently active or if they belong to the currently active application. This setting is probably not really usable when not using mouse focus policy.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Extreme:&lt;/span&gt; All windows must be explicitly activated by the user.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Windows that are prevented from stealing focus are marked as demanding attention, which by default means their taskbar entry will be highlighted. This can be changed in the Notifications control module.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -253,13 +253,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections>
   <connection>

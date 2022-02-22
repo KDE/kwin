@@ -133,7 +133,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="kcfg_LeftButtonWindow">
+       <widget class="QComboBox" name="kcfg_LeftButtonWindow">
         <item>
          <property name="text">
           <string>No action</string>
@@ -177,7 +177,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KComboBox" name="kcfg_MiddleButtonWindow">
+       <widget class="QComboBox" name="kcfg_MiddleButtonWindow">
         <item>
          <property name="text">
           <string>No action</string>
@@ -226,7 +226,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="KComboBox" name="kcfg_RightButtonWindow">
+       <widget class="QComboBox" name="kcfg_RightButtonWindow">
         <item>
          <property name="text">
           <string>No action</string>
@@ -287,7 +287,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="kcfg_LeftButtonDesktop">
+       <widget class="QComboBox" name="kcfg_LeftButtonDesktop">
         <item>
          <property name="text">
           <string>No action</string>
@@ -321,7 +321,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KComboBox" name="kcfg_MiddleButtonDesktop">
+       <widget class="QComboBox" name="kcfg_MiddleButtonDesktop">
         <item>
          <property name="text">
           <string>No action</string>
@@ -355,7 +355,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="KComboBox" name="kcfg_RightButtonDesktop">
+       <widget class="QComboBox" name="kcfg_RightButtonDesktop">
         <item>
          <property name="text">
           <string>No action</string>
@@ -429,7 +429,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="kcfg_LayoutMode">
+       <widget class="QComboBox" name="kcfg_LayoutMode">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -466,11 +466,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
   <customwidget>
    <class>KShortcutsEditor</class>
    <extends>QWidget</extends>

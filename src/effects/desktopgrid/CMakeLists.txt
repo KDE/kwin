@@ -31,7 +31,6 @@ kconfig_add_kcfg_files(kwin_desktopgrid_config_SRCS desktopgridconfig.kcfgc)
 kwin_add_effect_config(kwin_desktopgrid_config ${kwin_desktopgrid_config_SRCS})
 
 target_link_libraries(kwin_desktopgrid_config
-    KF5::Completion
     KF5::ConfigWidgets
     KF5::CoreAddons
     KF5::GlobalAccel

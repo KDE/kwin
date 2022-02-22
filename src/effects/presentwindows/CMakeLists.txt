@@ -34,7 +34,6 @@ kconfig_add_kcfg_files(kwin_presentwindows_config_SRCS presentwindowsconfig.kcfg
 kwin_add_effect_config(kwin_presentwindows_config ${kwin_presentwindows_config_SRCS})
 
 target_link_libraries(kwin_presentwindows_config
-    KF5::Completion
     KF5::ConfigWidgets
     KF5::CoreAddons
     KF5::GlobalAccel
