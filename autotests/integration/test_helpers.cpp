@@ -45,6 +45,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <xdgdbusannotation_v1.h>
 
 using namespace KWayland::Client;
 
@@ -244,6 +245,7 @@ static struct {
     IdleInhibitManagerV1 *idleInhibitManagerV1 = nullptr;
     AppMenuManager *appMenu = nullptr;
     XdgDecorationManagerV1 *xdgDecorationManagerV1 = nullptr;
+    XdgDBusAnnotationManagerV1 *dbusAnnotationManagerV1 = nullptr;
     TextInputManager *textInputManager = nullptr;
     QtWayland::zwp_input_panel_v1 *inputPanelV1 = nullptr;
     MockInputMethod *inputMethodV1 = nullptr;
@@ -496,6 +498,13 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             return false;
         }
     }
+    if (flags.testFlag(AdditionalWaylandInterface::XDGDBusAnnotationV1)) {
+        auto iface = registry->interface(Registry::Interface::XdgDBusAnnotationManagerV1);
+        s_waylandConnection.dbusAnnotationManagerV1 = registry->createXdgDBusAnnotationManagerV1(iface.name, iface.version);
+        if (!s_waylandConnection.dbusAnnotationManagerV1->isValid()) {
+            return false;
+        }
+    }
     if (flags.testFlag(AdditionalWaylandInterface::TextInputManagerV2)) {
         s_waylandConnection.textInputManager = registry->createTextInputManager(registry->interface(Registry::Interface::TextInputManagerUnstableV2).name, registry->interface(Registry::Interface::TextInputManagerUnstableV2).version);
         if (!s_waylandConnection.textInputManager->isValid()) {
@@ -617,6 +626,11 @@ PointerConstraints *waylandPointerConstraints()
 AppMenuManager* waylandAppMenuManager()
 {
     return s_waylandConnection.appMenu;
+}
+
+XdgDBusAnnotationManagerV1* waylandDBusAnnotationManager()
+{
+    return s_waylandConnection.dbusAnnotationManagerV1;
 }
 
 KWin::Test::WaylandOutputManagementV2 *waylandOutputManagementV2()

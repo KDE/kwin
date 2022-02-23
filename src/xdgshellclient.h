@@ -27,6 +27,7 @@ class PlasmaShellSurfaceInterface;
 class ServerSideDecorationInterface;
 class ServerSideDecorationPaletteInterface;
 class XdgToplevelDecorationV1Interface;
+class XdgDBusAnnotationV1Interface;
 }
 
 namespace KWin
@@ -163,6 +164,7 @@ public:
     void closeWindow() override;
 
     void installAppMenu(KWaylandServer::AppMenuInterface *appMenu);
+    void installDBusAnnotation(KWaylandServer::XdgDBusAnnotationV1Interface *annotation);
     void installServerDecoration(KWaylandServer::ServerSideDecorationInterface *decoration);
     void installPalette(KWaylandServer::ServerSideDecorationPaletteInterface *palette);
     void installXdgDecoration(KWaylandServer::XdgToplevelDecorationV1Interface *decoration);
@@ -216,6 +218,7 @@ private:
     void clearDecoration();
 
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
+    QPointer<KWaylandServer::XdgDBusAnnotationV1Interface> m_appmenuDbusAnnotation;
     QPointer<KWaylandServer::ServerSideDecorationPaletteInterface> m_paletteInterface;
     QPointer<KWaylandServer::ServerSideDecorationInterface> m_serverDecoration;
     QPointer<KWaylandServer::XdgToplevelDecorationV1Interface> m_xdgDecoration;

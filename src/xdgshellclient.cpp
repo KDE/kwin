@@ -10,6 +10,7 @@
 */
 #include "xdgshellclient.h"
 #include "abstract_wayland_output.h"
+#include <KWaylandServer/xdgdbusannotation_v1_interface.h>
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -1438,6 +1439,25 @@ void XdgToplevelClient::installAppMenu(AppMenuInterface *appMenu)
     };
     connect(m_appMenuInterface, &AppMenuInterface::addressChanged, this, updateMenu);
     updateMenu(appMenu->address());
+}
+
+void XdgToplevelClient::installDBusAnnotation(XdgDBusAnnotationV1Interface* annotation)
+{
+    if (annotation->name() != QLatin1String("wayland.appmenu.canonical-convention")) {
+        return;
+    }
+
+    m_appmenuDbusAnnotation = annotation;
+
+    auto updateMenu = [this, annotation]() {
+        const auto address = annotation->address();
+
+        updateApplicationMenuServiceName(address.serviceName);
+        updateApplicationMenuObjectPath(address.objectPath);
+    };
+
+    connect(annotation, &XdgDBusAnnotationV1Interface::addressChanged, this, updateMenu);
+    updateMenu();
 }
 
 XdgToplevelClient::DecorationMode XdgToplevelClient::preferredDecorationMode() const

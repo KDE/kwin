@@ -54,6 +54,7 @@
 #include <KWaylandServer/outputconfiguration_v2_interface.h>
 #include <KWaylandServer/primaryoutput_v1_interface.h>
 #include <KWaylandServer/xdgactivation_v1_interface.h>
+#include <KWaylandServer/xdgdbusannotation_v1_interface.h>
 #include <KWaylandServer/xdgdecoration_v1_interface.h>
 #include <KWaylandServer/xdgshell_interface.h>
 #include <KWaylandServer/xdgforeign_v2_interface.h>
@@ -439,6 +440,20 @@ bool WaylandServer::init(InitializationFlags flags)
         [this] (AppMenuInterface *appMenu) {
             if (XdgToplevelClient *client = findXdgToplevelClient(appMenu->surface())) {
                 client->installAppMenu(appMenu);
+            }
+        }
+    );
+    m_xdgAnnotationManagerV1 = new XdgDBusAnnotationManagerV1Interface(m_display, m_display);
+    connect(m_xdgAnnotationManagerV1, &XdgDBusAnnotationManagerV1Interface::annotationCreated, this,
+        [this] (XdgDBusAnnotationV1Interface *annotation) {
+            if (std::holds_alternative<XdgToplevelInterface*>(annotation->target())) {
+                XdgToplevelClient *client = findXdgToplevelClient(std::get<XdgToplevelInterface*>(annotation->target())->surface());
+                if (!client) {
+                    return;
+                }
+                client->installDBusAnnotation(annotation);
+            } else if (std::holds_alternative<ClientConnection*>(annotation->target())) {
+                // TODO: client-wide connections
             }
         }
     );

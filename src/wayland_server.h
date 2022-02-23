@@ -48,6 +48,7 @@ class LinuxDmaBufV1ClientBuffer;
 class TabletManagerV2Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class XdgDecorationManagerV1Interface;
+class XdgDBusAnnotationManagerV1Interface;
 }
 
 
@@ -259,6 +260,7 @@ private:
     KWaylandServer::IdleInterface *m_idle = nullptr;
     KWaylandServer::XdgOutputManagerV1Interface *m_xdgOutputManagerV1 = nullptr;
     KWaylandServer::XdgDecorationManagerV1Interface *m_xdgDecorationManagerV1 = nullptr;
+    KWaylandServer::XdgDBusAnnotationManagerV1Interface *m_xdgAnnotationManagerV1 = nullptr;
     KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *m_linuxDmabuf = nullptr;
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;
     QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer*> m_linuxDmabufBuffers;

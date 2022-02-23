@@ -45,6 +45,7 @@ class SubCompositor;
 class SubSurface;
 class Surface;
 class TextInputManager;
+class XdgDBusAnnotationManagerV1;
 }
 }
 
@@ -458,6 +459,7 @@ enum class AdditionalWaylandInterface {
     LayerShellV1 = 1 << 12,
     TextInputManagerV3 = 1 << 13,
     OutputDeviceV2 = 1 << 14,
+    XDGDBusAnnotationV1 = 1 << 15,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 /**
@@ -487,6 +489,7 @@ KWayland::Client::PlasmaShell *waylandPlasmaShell();
 KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
 KWayland::Client::PointerConstraints *waylandPointerConstraints();
 KWayland::Client::AppMenuManager *waylandAppMenuManager();
+KWayland::Client::XdgDBusAnnotationManagerV1* waylandDBusAnnotationManager();
 WaylandOutputManagementV2 *waylandOutputManagementV2();
 KWayland::Client::TextInputManager *waylandTextInputManager();
 QVector<KWayland::Client::Output *> waylandOutputs();

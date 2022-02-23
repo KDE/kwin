@@ -34,6 +34,7 @@
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/appmenu.h>
+#include <KWayland/Client/xdgdbusannotation_v1.h>
 
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/display.h>
@@ -82,6 +83,7 @@ private Q_SLOTS:
     void testUnresponsiveWindow_data();
     void testUnresponsiveWindow();
     void testAppMenu();
+    void testXdgDbusAnnotation();
     void testSendClientWithTransientToDesktop();
     void testMinimizeWindowWithTransients();
     void testXdgDecoration_data();
@@ -841,6 +843,29 @@ void TestXdgShellClient::testAppMenu()
     QSignalSpy spy(c, &AbstractClient::hasApplicationMenuChanged);
     menu->setAddress("service.name", "object/path");
     spy.wait();
+    QCOMPARE(c->hasApplicationMenu(), true);
+    QCOMPARE(c->applicationMenuServiceName(), QString("service.name"));
+    QCOMPARE(c->applicationMenuObjectPath(), QString("object/path"));
+
+    QVERIFY (QDBusConnection::sessionBus().unregisterService("org.kde.kappmenu"));
+}
+
+void TestXdgShellClient::testXdgDbusAnnotation()
+{
+    //register a faux appmenu client
+    QVERIFY (QDBusConnection::sessionBus().registerService("org.kde.kappmenu"));
+
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+
+    QScopedPointer<XdgDBusAnnotationV1> menu(Test::waylandDBusAnnotationManager()->createForToplevel(/* TODO: get the right xdgshellsurface handle here */ nullptr, QLatin1String("wayland.appmenu.canonical-convention")));
+
+    QSignalSpy spy(c, &AbstractClient::hasApplicationMenuChanged);
+    menu->setAddress("service.name", "object/path");
+    spy.wait();
+
     QCOMPARE(c->hasApplicationMenu(), true);
     QCOMPARE(c->applicationMenuServiceName(), QString("service.name"));
     QCOMPARE(c->applicationMenuObjectPath(), QString("object/path"));
