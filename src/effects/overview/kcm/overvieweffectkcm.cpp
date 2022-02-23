@@ -44,8 +44,6 @@ OverviewEffectConfig::OverviewEffectConfig(QWidget *parent, const QVariantList &
 
     ui.shortcutsEditor->addCollection(actionCollection);
     connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &OverviewEffectConfig::markAsChanged);
-
-    load();
 }
 
 OverviewEffectConfig::~OverviewEffectConfig()

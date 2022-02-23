@@ -30,8 +30,6 @@ ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget* parent, const QVariantList& ar
 
     ShowFpsConfig::instance(KWIN_CONFIG);
     addConfig(ShowFpsConfig::self(), this);
-
-    load();
 }
 
 ShowFpsEffectConfig::~ShowFpsEffectConfig()

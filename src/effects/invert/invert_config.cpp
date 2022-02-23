@@ -50,8 +50,6 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
                                            KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     connect(mShortcutEditor, &KShortcutsEditor::keyChange, this, &InvertEffectConfig::markAsChanged);
     layout->addWidget(mShortcutEditor);
-
-    load();
 }
 
 InvertEffectConfig::~InvertEffectConfig()

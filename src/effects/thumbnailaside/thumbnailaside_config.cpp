@@ -62,8 +62,6 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_T);
 
     m_ui->editor->addCollection(m_actionCollection);
-
-    load();
 }
 
 ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()

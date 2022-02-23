@@ -44,8 +44,6 @@ ShowPaintEffectConfig::ShowPaintEffectConfig(QWidget *parent, const QVariantList
 
     connect(m_ui->shortcutsEditor, &KShortcutsEditor::keyChange,
             this, &ShowPaintEffectConfig::markAsChanged);
-
-    load();
 }
 
 ShowPaintEffectConfig::~ShowPaintEffectConfig()

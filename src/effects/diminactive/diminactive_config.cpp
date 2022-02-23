@@ -29,7 +29,6 @@ DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget *parent, const QVariant
     m_ui.setupUi(this);
     DimInactiveConfig::instance(KWIN_CONFIG);
     addConfig(DimInactiveConfig::self(), this);
-    load();
 }
 
 DimInactiveEffectConfig::~DimInactiveEffectConfig()

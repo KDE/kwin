@@ -39,8 +39,6 @@ MagicLampEffectConfig::MagicLampEffectConfig(QWidget* parent, const QVariantList
 
     MagicLampConfig::instance(KWIN_CONFIG);
     addConfig(MagicLampConfig::self(), m_ui);
-
-    load();
 }
 
 void MagicLampEffectConfig::save()

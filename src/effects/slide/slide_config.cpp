@@ -27,7 +27,6 @@ SlideEffectConfig::SlideEffectConfig(QWidget *parent, const QVariantList &args)
     m_ui.setupUi(this);
     SlideConfig::instance(KWIN_CONFIG);
     addConfig(SlideConfig::self(), this);
-    load();
 }
 
 SlideEffectConfig::~SlideEffectConfig()

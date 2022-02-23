@@ -24,7 +24,6 @@ GlideEffectConfig::GlideEffectConfig(QWidget *parent, const QVariantList &args)
     ui.setupUi(this);
     GlideConfig::instance(KWIN_CONFIG);
     addConfig(GlideConfig::self(), this);
-    load();
 }
 
 GlideEffectConfig::~GlideEffectConfig()
