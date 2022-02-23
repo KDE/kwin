@@ -1272,5 +1272,104 @@ uint32_t WaylandOutputDeviceV2::rgbRange() const
     return m_rgbRange;
 }
 
+VirtualInputDevice::VirtualInputDevice(QObject *parent)
+    : InputDevice(parent)
+{
+}
+
+void VirtualInputDevice::setPointer(bool set)
+{
+    m_pointer = set;
+}
+
+void VirtualInputDevice::setKeyboard(bool set)
+{
+    m_keyboard = set;
+}
+
+void VirtualInputDevice::setTouch(bool set)
+{
+    m_touch = set;
+}
+
+void VirtualInputDevice::setName(const QString &name)
+{
+    m_name = name;
+}
+
+QString VirtualInputDevice::sysName() const
+{
+    return QString();
+}
+
+QString VirtualInputDevice::name() const
+{
+    return m_name;
+}
+
+bool VirtualInputDevice::isEnabled() const
+{
+    return true;
+}
+
+void VirtualInputDevice::setEnabled(bool enabled)
+{
+    Q_UNUSED(enabled)
+}
+
+LEDs VirtualInputDevice::leds() const
+{
+    return LEDs();
+}
+
+void VirtualInputDevice::setLeds(LEDs leds)
+{
+    Q_UNUSED(leds)
+}
+
+bool VirtualInputDevice::isKeyboard() const
+{
+    return m_keyboard;
+}
+
+bool VirtualInputDevice::isAlphaNumericKeyboard() const
+{
+    return m_keyboard;
+}
+
+bool VirtualInputDevice::isPointer() const
+{
+    return m_pointer;
+}
+
+bool VirtualInputDevice::isTouchpad() const
+{
+    return false;
+}
+
+bool VirtualInputDevice::isTouch() const
+{
+    return m_touch;
+}
+
+bool VirtualInputDevice::isTabletTool() const
+{
+    return false;
+}
+
+bool VirtualInputDevice::isTabletPad() const
+{
+    return false;
+}
+
+bool VirtualInputDevice::isTabletModeSwitch() const
+{
+    return false;
+}
+
+bool VirtualInputDevice::isLidSwitch() const
+{
+    return false;
+}
 }
 }

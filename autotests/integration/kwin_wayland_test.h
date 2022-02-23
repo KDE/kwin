@@ -10,6 +10,7 @@
 #define KWIN_WAYLAND_TEST_H
 
 #include "abstract_client.h"
+#include "inputdevice.h"
 #include "main.h"
 
 // Qt
@@ -460,6 +461,45 @@ enum class AdditionalWaylandInterface {
     OutputDeviceV2 = 1 << 14,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
+
+class VirtualInputDevice : public InputDevice
+{
+    Q_OBJECT
+
+public:
+    explicit VirtualInputDevice(QObject *parent = nullptr);
+
+    void setPointer(bool set);
+    void setKeyboard(bool set);
+    void setTouch(bool set);
+    void setName(const QString &name);
+
+    QString sysName() const override;
+    QString name() const override;
+
+    bool isEnabled() const override;
+    void setEnabled(bool enabled) override;
+
+    LEDs leds() const override;
+    void setLeds(LEDs leds) override;
+
+    bool isKeyboard() const override;
+    bool isAlphaNumericKeyboard() const override;
+    bool isPointer() const override;
+    bool isTouchpad() const override;
+    bool isTouch() const override;
+    bool isTabletTool() const override;
+    bool isTabletPad() const override;
+    bool isTabletModeSwitch() const override;
+    bool isLidSwitch() const override;
+
+private:
+    QString m_name;
+    bool m_pointer = false;
+    bool m_keyboard = false;
+    bool m_touch = false;
+};
+
 /**
  * Creates a Wayland Connection in a dedicated thread and creates various
  * client side objects which can be used to create windows.

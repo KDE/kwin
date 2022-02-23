@@ -22,135 +22,10 @@
 namespace KWin
 {
 
-VirtualInputDevice::VirtualInputDevice(QObject *parent)
-    : InputDevice(parent)
-{
-}
-
-void VirtualInputDevice::setPointer(bool set)
-{
-    m_pointer = set;
-}
-
-void VirtualInputDevice::setKeyboard(bool set)
-{
-    m_keyboard = set;
-}
-
-void VirtualInputDevice::setTouch(bool set)
-{
-    m_touch = set;
-}
-
-void VirtualInputDevice::setName(const QString &name)
-{
-    m_name = name;
-}
-
-QString VirtualInputDevice::sysName() const
-{
-    return QString();
-}
-
-QString VirtualInputDevice::name() const
-{
-    return m_name;
-}
-
-bool VirtualInputDevice::isEnabled() const
-{
-    return true;
-}
-
-void VirtualInputDevice::setEnabled(bool enabled)
-{
-    Q_UNUSED(enabled)
-}
-
-LEDs VirtualInputDevice::leds() const
-{
-    return LEDs();
-}
-
-void VirtualInputDevice::setLeds(LEDs leds)
-{
-    Q_UNUSED(leds)
-}
-
-bool VirtualInputDevice::isKeyboard() const
-{
-    return m_keyboard;
-}
-
-bool VirtualInputDevice::isAlphaNumericKeyboard() const
-{
-    return m_keyboard;
-}
-
-bool VirtualInputDevice::isPointer() const
-{
-    return m_pointer;
-}
-
-bool VirtualInputDevice::isTouchpad() const
-{
-    return false;
-}
-
-bool VirtualInputDevice::isTouch() const
-{
-    return m_touch;
-}
-
-bool VirtualInputDevice::isTabletTool() const
-{
-    return false;
-}
-
-bool VirtualInputDevice::isTabletPad() const
-{
-    return false;
-}
-
-bool VirtualInputDevice::isTabletModeSwitch() const
-{
-    return false;
-}
-
-bool VirtualInputDevice::isLidSwitch() const
-{
-    return false;
-}
-
-VirtualInputBackend::VirtualInputBackend(VirtualBackend *backend, QObject *parent)
-    : InputBackend(parent)
-    , m_backend(backend)
-{
-}
-
-void VirtualInputBackend::initialize()
-{
-    Q_EMIT deviceAdded(m_backend->virtualPointer());
-    Q_EMIT deviceAdded(m_backend->virtualKeyboard());
-    Q_EMIT deviceAdded(m_backend->virtualTouch());
-}
-
 VirtualBackend::VirtualBackend(QObject *parent)
     : Platform(parent)
     , m_session(Session::create(Session::Type::Noop, this))
 {
-    m_virtualKeyboard.reset(new VirtualInputDevice());
-    m_virtualKeyboard->setName(QStringLiteral("Virtual Keyboard 1"));
-    m_virtualKeyboard->setKeyboard(true);
-
-    m_virtualPointer.reset(new VirtualInputDevice());
-    m_virtualPointer->setName(QStringLiteral("Virtual Pointer 1"));
-    m_virtualPointer->setPointer(true);
-
-    m_virtualTouch.reset(new VirtualInputDevice());
-    m_virtualTouch->setName(QStringLiteral("Virtual Touch 1"));
-    m_virtualTouch->setTouch(true);
-
     if (qEnvironmentVariableIsSet("KWIN_WAYLAND_VIRTUAL_SCREENSHOTS")) {
         m_screenshotDir.reset(new QTemporaryDir);
         if (!m_screenshotDir->isValid()) {
@@ -200,32 +75,12 @@ bool VirtualBackend::initialize()
     return true;
 }
 
-VirtualInputDevice *VirtualBackend::virtualPointer() const
-{
-    return m_virtualPointer.data();
-}
-
-VirtualInputDevice *VirtualBackend::virtualKeyboard() const
-{
-    return m_virtualKeyboard.data();
-}
-
-VirtualInputDevice *VirtualBackend::virtualTouch() const
-{
-    return m_virtualTouch.data();
-}
-
 QString VirtualBackend::screenshotDirPath() const
 {
     if (m_screenshotDir.isNull()) {
         return QString();
     }
     return m_screenshotDir->path();
-}
-
-InputBackend *VirtualBackend::createInputBackend()
-{
-    return new VirtualInputBackend(this);
 }
 
 QPainterBackend *VirtualBackend::createQPainterBackend()
