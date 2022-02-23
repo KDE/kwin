@@ -6,6 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include <config-kwin.h>
 #include "wayland_server.h"
 #include "abstract_wayland_output.h"
 #include "x11client.h"
@@ -80,7 +81,9 @@
 #include <unistd.h>
 
 //screenlocker
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
+#endif
 
 using namespace KWaylandServer;
 
@@ -587,6 +590,7 @@ void WaylandServer::initWorkspace()
 
 void WaylandServer::initScreenLocker()
 {
+#ifdef KWIN_BUILD_SCREENLOCKER
     auto *screenLockerApp = ScreenLocker::KSldApp::self();
 
     ScreenLocker::KSldApp::self()->setGreeterEnvironment(kwinApp()->processStartupEnvironment());
@@ -639,6 +643,7 @@ void WaylandServer::initScreenLocker()
     if (m_initFlags.testFlag(InitializationFlag::LockScreen)) {
         ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     }
+#endif
 }
 
 WaylandServer::SocketPairConnection WaylandServer::createConnection()
@@ -746,16 +751,24 @@ XdgSurfaceClient *WaylandServer::findXdgSurfaceClient(SurfaceInterface *surface)
 
 bool WaylandServer::isScreenLocked() const
 {
+#ifdef KWIN_BUILD_SCREENLOCKER
     if (!hasScreenLockerIntegration()) {
         return false;
     }
     return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked ||
            ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::AcquiringLock;
+#else
+    return false;
+#endif
 }
 
 bool WaylandServer::hasScreenLockerIntegration() const
 {
+#ifdef KWIN_BUILD_SCREENLOCKER
     return !m_initFlags.testFlag(InitializationFlag::NoLockScreenIntegration);
+#else
+    return false;
+#endif
 }
 
 bool WaylandServer::hasGlobalShortcutSupport() const

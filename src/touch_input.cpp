@@ -7,6 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include <config-kwin.h>
 #include "touch_input.h"
 #include "abstract_client.h"
 #include "pointer_input.h"
@@ -20,7 +21,9 @@
 // KWayland
 #include <KWaylandServer/seat_interface.h>
 // screenlocker
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
+#endif
 // Qt
 #include <QHoverEvent>
 #include <QWindow>
@@ -45,6 +48,7 @@ void TouchInputRedirection::init()
     setInited(true);
     InputDeviceHandler::init();
 
+#ifdef KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
             [this] {
@@ -54,6 +58,7 @@ void TouchInputRedirection::init()
             }
         );
     }
+#endif
     connect(workspace(), &QObject::destroyed, this, [this] { setInited(false); });
     connect(waylandServer(), &QObject::destroyed, this, [this] { setInited(false); });
 }

@@ -20,8 +20,6 @@
 // KWayland
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
-// screenlocker
-#include <KScreenLocker/KsldApp>
 // Qt
 #include <QHoverEvent>
 #include <QWindow>

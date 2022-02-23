@@ -8,6 +8,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include <config-kwin.h>
 #include "pointer_input.h"
 #include "abstract_output.h"
 #include "platform.h"
@@ -31,7 +32,9 @@
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
 // screenlocker
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
+#endif
 
 #include <KLocalizedString>
 
@@ -140,6 +143,7 @@ void PointerInputRedirection::init()
     Q_EMIT m_cursor->changed();
 
     connect(screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);
+#ifdef KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
             [this] {
@@ -151,6 +155,7 @@ void PointerInputRedirection::init()
             }
         );
     }
+#endif
     connect(workspace(), &QObject::destroyed, this, [this] { setInited(false); });
     connect(waylandServer(), &QObject::destroyed, this, [this] { setInited(false); });
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded, this,
@@ -948,9 +953,11 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
             reevaluteSource();
         }
     );
+#ifdef KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &CursorImage::reevaluteSource);
     }
+#endif
     connect(m_pointer, &PointerInputRedirection::decorationChanged, this, &CursorImage::updateDecoration);
     // connect the move resize of all window
     auto setupMoveResizeConnection = [this] (AbstractClient *c) {

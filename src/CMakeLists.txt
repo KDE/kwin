@@ -104,7 +104,6 @@ target_sources(kwin PRIVATE
     rules.cpp
     scene.cpp
     screenedge.cpp
-    screenlockerwatcher.cpp
     screens.cpp
     scripting/v2/clientmodel.cpp
     scripting/v3/clientmodel.cpp
@@ -185,7 +184,6 @@ target_link_libraries(kwin
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
 
-    PW::KScreenLocker
     Plasma::KWaylandServer
 
     XCB::COMPOSITE
@@ -230,8 +228,11 @@ qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusin
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin::PluginManagerDBusInterface)
 
-qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface)
-qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/org.kde.screensaver.xml kscreenlocker_interface)
+if (KWIN_BUILD_SCREENLOCKER)
+    qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface)
+    qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/org.kde.screensaver.xml kscreenlocker_interface)
+endif()
+
 qt_add_dbus_interface(kwin_dbus_SRCS org.kde.kappmenu.xml appmenu_interface)
 
 target_sources(kwin PRIVATE
@@ -253,6 +254,11 @@ endif()
 if (KWIN_BUILD_ACTIVITIES)
     target_sources(kwin PRIVATE activities.cpp)
     target_link_libraries(kwin KF5::Activities)
+endif()
+
+if (KWIN_BUILD_SCREENLOCKER)
+    target_sources(kwin PRIVATE screenlockerwatcher.cpp)
+    target_link_libraries(kwin PW::KScreenLocker)
 endif()
 
 if (KWIN_BUILD_TABBOX)

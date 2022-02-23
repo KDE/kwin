@@ -6,8 +6,11 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include <config-kwin.h>
 #include "kwin_wayland_test.h"
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
+#endif
 #include "wayland_server.h"
 #include "workspace.h"
 #include "inputmethod.h"
@@ -32,7 +35,9 @@
 #include <KWaylandServer/display.h>
 
 //screenlocker
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
+#endif
 
 #include <QThread>
 
@@ -893,6 +898,7 @@ bool waitForWindowDestroyed(AbstractClient *client)
     return destroyedSpy.wait();
 }
 
+#ifdef KWIN_BUILD_SCREENLOCKER
 bool lockScreen()
 {
     if (waylandServer()->isScreenLocked()) {
@@ -959,6 +965,7 @@ bool unlockScreen()
     }
     return true;
 }
+#endif // KWIN_BUILD_LOCKSCREEN
 
 void initWaylandWorkspace()
 {

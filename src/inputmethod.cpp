@@ -6,6 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include <config-kwin.h>
 #include "inputmethod.h"
 #include "abstract_client.h"
 #include "virtualkeyboard_dbus.h"
@@ -16,7 +17,9 @@
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
+#endif
 #include "deleted.h"
 #include "touch_input.h"
 #include "tablet_input.h"
@@ -76,7 +79,9 @@ void InputMethod::init()
     connect(&m_inputMethodCrashTimer, &QTimer::timeout, this, [this] {
         m_inputMethodCrashes = 0;
     });
+#ifdef KWIN_BUILD_SCREENLOCKER
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &InputMethod::hide);
+#endif
 
     new VirtualKeyboardDBus(this);
     qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the DBus interface";

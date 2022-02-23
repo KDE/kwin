@@ -10,6 +10,8 @@
 
 #include "effects.h"
 
+#include <config-kwin.h>
+
 #include "abstract_output.h"
 #include "effectsadaptor.h"
 #include "effectloader.h"
@@ -32,7 +34,9 @@
 #include "screenedge.h"
 #include "scripting/scriptedeffect.h"
 #include "screens.h"
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
+#endif
 #include "virtualdesktops.h"
 #include "window_property_notify_x11_filter.h"
 #include "workspace.h"
@@ -209,8 +213,10 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(tabBox, &TabBox::TabBox::tabBoxKeyEvent, this, &EffectsHandler::tabBoxKeyEvent);
 #endif
     connect(ScreenEdges::self(), &ScreenEdges::approaching, this, &EffectsHandler::screenEdgeApproaching);
+#ifdef KWIN_BUILD_SCREENLOCKER
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked, this, &EffectsHandler::screenLockingChanged);
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &EffectsHandler::screenAboutToLock);
+#endif
 
     connect(kwinApp(), &Application::x11ConnectionChanged, this,
         [this] {
@@ -1607,7 +1613,11 @@ QString EffectsHandlerImpl::supportInformation(const QString &name) const
 
 bool EffectsHandlerImpl::isScreenLocked() const
 {
+#ifdef KWIN_BUILD_SCREENLOCKER
     return ScreenLockerWatcher::self()->isLocked();
+#else
+    return false;
+#endif
 }
 
 QString EffectsHandlerImpl::debug(const QString& name, const QString& parameter) const

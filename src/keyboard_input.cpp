@@ -6,6 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include <config-kwin.h>
 #include "keyboard_input.h"
 #include "abstract_client.h"
 #include "input_event.h"
@@ -14,7 +15,6 @@
 #include "keyboard_layout.h"
 #include "keyboard_repeat.h"
 #include "modifier_only_shortcuts.h"
-#include "screenlockerwatcher.h"
 #include "toplevel.h"
 #include "utils/common.h"
 #include "wayland_server.h"
@@ -24,7 +24,9 @@
 #include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
 //screenlocker
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
+#endif
 // Frameworks
 #include <KGlobalAccel>
 // Qt
@@ -141,9 +143,11 @@ void KeyboardInputRedirection::init()
             update();
         }
     );
+#ifdef KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
     }
+#endif
 
     reconfigure();
 }

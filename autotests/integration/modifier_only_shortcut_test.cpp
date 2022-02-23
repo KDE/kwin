@@ -6,6 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include <config-kwin.h>
 #include "kwin_wayland_test.h"
 #include "cursor.h"
 #include "input.h"
@@ -223,6 +224,7 @@ void ModifierOnlyShortcutTest::testTrigger()
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 2);
 
+#ifdef KWIN_BUILD_SCREENLOCKER
     // now try to lock the screen while modifier key is pressed
     kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
     QVERIFY(Test::lockScreen());
@@ -235,6 +237,7 @@ void ModifierOnlyShortcutTest::testTrigger()
     QCOMPARE(triggeredSpy.count(), 2);
 
     QVERIFY(Test::unlockScreen());
+#endif
 }
 
 void ModifierOnlyShortcutTest::testCapsLock()

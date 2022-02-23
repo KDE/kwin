@@ -8,6 +8,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include <config-kwin.h>
 #include "input.h"
 #include "backends/fakeinput/fakeinputbackend.h"
 #include "backends/libinput/connection.h"
@@ -53,7 +54,9 @@
 #include <decorations/decoratedclient.h>
 
 //screenlocker
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
+#endif
 // Qt
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -381,11 +384,13 @@ public:
         // send event to KSldApp for global accel
         // if event is set to accepted it means a whitelisted shortcut was triggered
         // in that case we filter it out and don't process it further
+#ifdef KWIN_BUILD_SCREENLOCKER
         event->setAccepted(false);
         QCoreApplication::sendEvent(ScreenLocker::KSldApp::self(), event);
         if (event->isAccepted()) {
             return true;
         }
+#endif
 
         // continue normal processing
         input()->keyboard()->update();

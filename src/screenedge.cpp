@@ -19,6 +19,7 @@
 #include "screenedge.h"
 
 // KWin
+#include <config-kwin.h>
 #include "abstract_output.h"
 #include "gestures.h"
 #include <x11client.h>
@@ -29,10 +30,13 @@
 #include <workspace.h>
 #include "virtualdesktops.h"
 // DBus generated
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include "screenlocker_interface.h"
+#endif
 // frameworks
 #include <KConfigGroup>
 // Qt
+#include <QAbstractEventDispatcher>
 #include <QAction>
 #include <QMouseEvent>
 #include <QSharedPointer>
@@ -329,6 +333,7 @@ bool Edge::handleAction(ElectricBorderAction action)
         return true;
     }
     case ElectricActionLockScreen: { // Lock the screen
+#ifdef KWIN_BUILD_SCREENLOCKER
         OrgFreedesktopScreenSaverInterface interface(QStringLiteral("org.freedesktop.ScreenSaver"),
                                                      QStringLiteral("/ScreenSaver"),
                                                      QDBusConnection::sessionBus());
@@ -336,6 +341,9 @@ bool Edge::handleAction(ElectricBorderAction action)
             interface.Lock();
         }
         return true;
+#else
+        return false;
+#endif
     }
     case ElectricActionKRunner: { // open krunner
         QDBusConnection::sessionBus().asyncCall(

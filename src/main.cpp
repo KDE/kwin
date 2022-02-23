@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
+#include <config-kwin.h>
 #include "main.h"
 // kwin
 #include "platform.h"
@@ -22,7 +23,9 @@
 #include "options.h"
 #include "pluginmanager.h"
 #include "screens.h"
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
+#endif
 #include "sm.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
@@ -284,7 +287,9 @@ void Application::createWorkspace()
 
 void Application::createInput()
 {
+#ifdef KWIN_BUILD_SCREENLOCKER
     ScreenLockerWatcher::create(this);
+#endif
     auto input = InputRedirection::create(this);
     input->init();
     m_platform->createPlatformCursor(this);

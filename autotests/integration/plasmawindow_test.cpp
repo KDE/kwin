@@ -20,7 +20,9 @@
 #include <KWayland/Client/surface.h>
 #include <KWaylandServer/seat_interface.h>
 //screenlocker
+#ifdef KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
+#endif
 
 #include <QPainter>
 #include <QRasterWindow>
@@ -256,6 +258,7 @@ void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
 
 void PlasmaWindowTest::testLockScreenNoPlasmaWindow()
 {
+#ifdef KWIN_BUILD_SCREENLOCKER
     // this test verifies that lock screen windows are not exposed to PlasmaWindow
     QSignalSpy plasmaWindowCreatedSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
     QVERIFY(plasmaWindowCreatedSpy.isValid());
@@ -284,6 +287,9 @@ void PlasmaWindowTest::testLockScreenNoPlasmaWindow()
     }
     QVERIFY(lockStateChangedSpy.wait());
     QVERIFY(!waylandServer()->isScreenLocked());
+#else
+    QSKIP("KWin was built without lockscreen support");
+#endif
 }
 
 void PlasmaWindowTest::testDestroyedButNotUnmapped()
