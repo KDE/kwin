@@ -94,6 +94,7 @@ private Q_SLOTS:
     void testWarpingUpdatesFocus();
     void testWarpingGeneratesPointerMotion();
     void testWarpingDuringFilter();
+    void testWarpingBetweenWindows();
     void testUpdateFocusAfterScreenChange();
     void testUpdateFocusOnDecorationDestroy();
     void testModifierClickUnrestrictedMove_data();
@@ -310,6 +311,49 @@ void PointerInputTest::testWarpingDuringFilter()
     QCOMPARE(movedSpy.count(), 2);
     QCOMPARE(movedSpy.at(0).first().toPoint(), QPoint(0, 0));
     QCOMPARE(movedSpy.at(1).first().toPoint(), QPoint(1, 1));
+}
+
+void PointerInputTest::testWarpingBetweenWindows()
+{
+    // This test verifies that the compositor will send correct events when the pointer
+    // leaves one window and enters another window.
+
+    QScopedPointer<KWayland::Client::Pointer> pointer(m_seat->createPointer(m_seat));
+    QSignalSpy enteredSpy(pointer.data(), &KWayland::Client::Pointer::entered);
+    QSignalSpy leftSpy(pointer.data(), &KWayland::Client::Pointer::left);
+    QSignalSpy motionSpy(pointer.data(), &KWayland::Client::Pointer::motion);
+
+    // create windows
+    QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
+    auto client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::cyan);
+    QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data()));
+    auto client2 = Test::renderAndWaitForShown(surface2.data(), QSize(200, 100), Qt::red);
+
+    // place windows side by side
+    client1->move(QPoint(0, 0));
+    client2->move(QPoint(100, 0));
+
+    quint32 timestamp = 0;
+
+    // put the pointer at the center of the first window
+    kwinApp()->platform()->pointerMotion(client1->frameGeometry().center(), timestamp++);
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 1);
+    QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(49, 24));
+    QCOMPARE(leftSpy.count(), 0);
+    QCOMPARE(motionSpy.count(), 0);
+    QCOMPARE(pointer->enteredSurface(), surface1.data());
+
+    // put the pointer at the center of the second window
+    kwinApp()->platform()->pointerMotion(client2->frameGeometry().center(), timestamp++);
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 2);
+    QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(99, 49));
+    QCOMPARE(leftSpy.count(), 1);
+    QCOMPARE(motionSpy.count(), 0);
+    QCOMPARE(pointer->enteredSurface(), surface2.data());
 }
 
 void PointerInputTest::testUpdateFocusAfterScreenChange()
