@@ -33,9 +33,12 @@ public:
     explicit MouseMarkEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
     ~MouseMarkEffectConfig() override;
 
+    void load() override;
     void save() override;
 
 private:
+    void updateSpinBoxSuffix();
+
     MouseMarkEffectConfigForm* m_ui;
     KActionCollection* m_actionCollection;
 };

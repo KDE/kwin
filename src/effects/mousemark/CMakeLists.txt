@@ -33,7 +33,6 @@ target_link_libraries(kwin_mousemark_config
     KF5::CoreAddons
     KF5::GlobalAccel
     KF5::I18n
-    KF5::TextWidgets
     KF5::XmlGui
     KWinEffectsInterface
 )
