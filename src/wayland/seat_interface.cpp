@@ -481,7 +481,7 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
     }
 
     if (d->pointer->focusedSurface() != effectiveFocusedSurface) {
-        d->pointer->setFocusedSurface(effectiveFocusedSurface, localPosition, display()->nextSerial());
+        d->pointer->sendEnter(effectiveFocusedSurface, localPosition, display()->nextSerial());
     }
 
     d->pointer->sendMotion(localPosition);
@@ -552,17 +552,17 @@ SurfaceInterface *SeatInterface::focusedPointerSurface() const
     return d->globalPointer.focus.surface;
 }
 
-void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QPointF &surfacePosition)
+void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF &position, const QPointF &surfacePosition)
 {
     QMatrix4x4 m;
     m.translate(-surfacePosition.x(), -surfacePosition.y());
-    setFocusedPointerSurface(surface, m);
+    notifyPointerEnter(surface, position, m);
     if (d->globalPointer.focus.surface) {
         d->globalPointer.focus.offset = surfacePosition;
     }
 }
 
-void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QMatrix4x4 &transformation)
+void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF &position, const QMatrix4x4 &transformation)
 {
     if (!d->pointer) {
         return;
@@ -579,28 +579,42 @@ void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QM
     }
     d->globalPointer.focus = SeatInterfacePrivate::Pointer::Focus();
     d->globalPointer.focus.surface = surface;
-    if (d->globalPointer.focus.surface) {
-        d->globalPointer.focus.destroyConnection = connect(surface, &QObject::destroyed, this, [this] {
-            d->globalPointer.focus = SeatInterfacePrivate::Pointer::Focus();
-        });
-        d->globalPointer.focus.serial = serial;
-        d->globalPointer.focus.transformation = transformation;
-        d->globalPointer.focus.offset = QPointF();
+    d->globalPointer.focus.destroyConnection = connect(surface, &QObject::destroyed, this, [this] {
+        d->globalPointer.focus = SeatInterfacePrivate::Pointer::Focus();
+    });
+    d->globalPointer.focus.serial = serial;
+    d->globalPointer.focus.transformation = transformation;
+    d->globalPointer.focus.offset = QPointF();
+
+    d->globalPointer.pos = position;
+    QPointF localPosition = focusedPointerSurfaceTransformation().map(position);
+    SurfaceInterface *effectiveFocusedSurface = surface->inputSurfaceAt(localPosition);
+    if (!effectiveFocusedSurface) {
+        effectiveFocusedSurface = surface;
+    }
+    if (surface != effectiveFocusedSurface) {
+        localPosition = surface->mapToChild(effectiveFocusedSurface, localPosition);
+    }
+    d->pointer->sendEnter(effectiveFocusedSurface, localPosition, serial);
+}
+
+void SeatInterface::notifyPointerLeave()
+{
+    if (!d->pointer) {
+        return;
+    }
+    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
+        // ignore
+        return;
     }
 
-    if (surface) {
-        QPointF localPosition = focusedPointerSurfaceTransformation().map(pointerPos());
-        SurfaceInterface *effectiveFocusedSurface = surface->inputSurfaceAt(localPosition);
-        if (!effectiveFocusedSurface) {
-            effectiveFocusedSurface = surface;
-        }
-        if (surface != effectiveFocusedSurface) {
-            localPosition = surface->mapToChild(effectiveFocusedSurface, localPosition);
-        }
-        d->pointer->setFocusedSurface(effectiveFocusedSurface, localPosition, serial);
-    } else {
-        d->pointer->setFocusedSurface(nullptr, QPointF(), serial);
+    if (d->globalPointer.focus.surface) {
+        disconnect(d->globalPointer.focus.destroyConnection);
     }
+    d->globalPointer.focus = SeatInterfacePrivate::Pointer::Focus();
+
+    const quint32 serial = d->display->nextSerial();
+    d->pointer->sendLeave(serial);
 }
 
 void SeatInterface::setFocusedPointerSurfacePosition(const QPointF &surfacePosition)
@@ -1066,7 +1080,7 @@ void SeatInterface::notifyTouchDown(qint32 id, const QPointF &globalPosition)
         if (touchPrivate->touchesForClient(focusedTouchSurface()->client()).isEmpty()) {
             // If the client did not bind the touch interface fall back
             // to at least emulating touch through pointer events.
-            d->pointer->setFocusedSurface(focusedTouchSurface(), pos, serial);
+            d->pointer->sendEnter(focusedTouchSurface(), pos, serial);
             d->pointer->sendMotion(pos);
             d->pointer->sendFrame();
         }

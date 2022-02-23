@@ -41,11 +41,6 @@ public:
      * the effective focused surface.
      */
     SurfaceInterface *focusedSurface() const;
-    /**
-     * Sets the effective focused pointer surface to @a surface. The @a position indicates
-     * where the pointer has entered the surface.
-     */
-    void setFocusedSurface(SurfaceInterface *surface, const QPointF &position, quint32 serial);
 
     Cursor *cursor() const;
 
@@ -59,6 +54,8 @@ public:
      */
     static PointerInterface *get(wl_resource *native);
 
+    void sendEnter(SurfaceInterface *surface, const QPointF &position, quint32 serial);
+    void sendLeave(quint32 serial);
     void sendButton(quint32 button, PointerButtonState state, quint32 serial);
     void sendAxis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source);
     void sendMotion(const QPointF &position);

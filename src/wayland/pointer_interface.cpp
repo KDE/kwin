@@ -152,7 +152,7 @@ SurfaceInterface *PointerInterface::focusedSurface() const
     return d->focusedSurface;
 }
 
-void PointerInterface::setFocusedSurface(SurfaceInterface *surface, const QPointF &position, quint32 serial)
+void PointerInterface::sendEnter(SurfaceInterface *surface, const QPointF &position, quint32 serial)
 {
     if (d->focusedSurface == surface) {
         return;
@@ -160,25 +160,38 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, const QPoint
 
     if (d->focusedSurface) {
         d->sendLeave(serial);
-        if (!surface || d->focusedSurface->client() != surface->client()) {
+        if (d->focusedSurface->client() != surface->client()) {
             d->sendFrame();
         }
         disconnect(d->destroyConnection);
     }
 
     d->focusedSurface = surface;
-
-    if (d->focusedSurface) {
-        d->destroyConnection = connect(d->focusedSurface, &SurfaceInterface::aboutToBeDestroyed, this, [this]() {
-            d->sendLeave(d->seat->display()->nextSerial());
-            d->sendFrame();
-            d->focusedSurface = nullptr;
-            Q_EMIT focusedSurfaceChanged();
-        });
-        d->sendEnter(position, serial);
+    d->destroyConnection = connect(d->focusedSurface, &SurfaceInterface::aboutToBeDestroyed, this, [this]() {
+        d->sendLeave(d->seat->display()->nextSerial());
         d->sendFrame();
-        d->lastPosition = position;
+        d->focusedSurface = nullptr;
+        Q_EMIT focusedSurfaceChanged();
+    });
+
+    d->sendEnter(position, serial);
+    d->sendFrame();
+    d->lastPosition = position;
+
+    Q_EMIT focusedSurfaceChanged();
+}
+
+void PointerInterface::sendLeave(quint32 serial)
+{
+    if (!d->focusedSurface) {
+        return;
     }
+
+    d->sendLeave(serial);
+    d->sendFrame();
+
+    d->focusedSurface = nullptr;
+    disconnect(d->destroyConnection);
 
     Q_EMIT focusedSurfaceChanged();
 }

@@ -206,8 +206,8 @@ void TestDragAndDrop::testPointerDragAndDrop()
     // now we need to pass pointer focus to the Surface and simulate a button press
     QSignalSpy buttonPressSpy(m_pointer, &Pointer::buttonStateChanged);
     QVERIFY(buttonPressSpy.isValid());
-    m_seatInterface->setFocusedPointerSurface(serverSurface);
     m_seatInterface->setTimestamp(2);
+    m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
     m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonPressSpy.wait());
@@ -404,8 +404,8 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     // now we need to pass pointer focus to the Surface and simulate a button press
     QSignalSpy buttonPressSpy(m_pointer, &Pointer::buttonStateChanged);
     QVERIFY(buttonPressSpy.isValid());
-    m_seatInterface->setFocusedPointerSurface(serverSurface);
     m_seatInterface->setTimestamp(2);
+    m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
     m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonPressSpy.wait());
@@ -495,7 +495,7 @@ void TestDragAndDrop::testPointerEventsIgnored()
     QVERIFY(serverSurface);
 
     // pass it pointer focus
-    m_seatInterface->setFocusedPointerSurface(serverSurface);
+    m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
 
     // create signal spies for all the pointer events
     QSignalSpy pointerEnteredSpy(m_pointer, &Pointer::entered);
@@ -549,10 +549,10 @@ void TestDragAndDrop::testPointerEventsIgnored()
     m_seatInterface->notifyPointerAxis(Qt::Vertical, 5, 1, PointerAxisSource::Wheel);
     m_seatInterface->notifyPointerFrame();
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->setFocusedPointerSurface(nullptr);
+    m_seatInterface->notifyPointerLeave();
     m_seatInterface->notifyPointerFrame();
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->setFocusedPointerSurface(serverSurface);
+    m_seatInterface->notifyPointerEnter(serverSurface, m_seatInterface->pointerPos());
     m_seatInterface->notifyPointerFrame();
     m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerMotion(QPointF(50, 50));

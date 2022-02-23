@@ -130,7 +130,7 @@ void CompositorWindow::updateFocus()
     if (it == m_stackingOrder.constEnd()) {
         return;
     }
-    m_seat->setFocusedPointerSurface((*it)->surface());
+    m_seat->notifyPointerEnter((*it)->surface(), m_seat->pointerPos());
     m_seat->setFocusedKeyboardSurface((*it)->surface());
 }
 
@@ -195,7 +195,7 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
     QWidget::mousePressEvent(event);
     if (!m_seat->focusedPointerSurface()) {
         if (!m_stackingOrder.isEmpty()) {
-            m_seat->setFocusedPointerSurface(m_stackingOrder.last()->surface());
+            m_seat->notifyPointerEnter(m_stackingOrder.last()->surface(), event->globalPos());
         }
     }
     m_seat->setTimestamp(event->timestamp());

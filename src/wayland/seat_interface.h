@@ -104,9 +104,8 @@ enum class KeyboardKeyState : quint32 {
  *
  * @code
  * // example for pointer
- * seat->setFocusedPointerSurface(surface, QPointF(100, 200)); // surface at it's global position
  * seat->setTimestamp(100);
- * seat->notifyPointerMotion(QPointF(350, 210)); // global pos, local pos in surface: 250,10
+ * seat->notifyPointerEnter(surface, QPointF(350, 210), QPointF(100, 200)); // surface at it's global position
  * seat->notifyPointerFrame();
  * seat->setTimestamp(110);
  * seat->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed);
@@ -274,7 +273,7 @@ public:
      * @see setFocusedPointerSurfaceTransformation
      * @see focusedPointerSurfaceTransformation
      */
-    void setFocusedPointerSurface(SurfaceInterface *surface, const QPointF &surfacePosition = QPoint());
+    void notifyPointerEnter(SurfaceInterface *surface, const QPointF &position, const QPointF &surfacePosition = QPointF());
     /**
      * Sets the focused pointer @p surface.
      * All pointer events will be sent to the @p surface till a new focused pointer surface gets
@@ -298,10 +297,12 @@ public:
      * @see setFocusedPointerSurfaceTransformation
      * @see focusedPointerSurfaceTransformation
      */
-    void setFocusedPointerSurface(SurfaceInterface *surface, const QMatrix4x4 &transformation);
+    void notifyPointerEnter(SurfaceInterface *surface, const QPointF &position, const QMatrix4x4 &transformation);
+    void notifyPointerLeave();
     /**
      * @returns The currently focused pointer surface, that is the surface receiving pointer events.
-     * @see setFocusedPointerSurface
+     * @see notifyPointerEnter
+     * @see notifyPointerLeave
      */
     SurfaceInterface *focusedPointerSurface() const;
     PointerInterface *pointer() const;
@@ -315,7 +316,6 @@ public:
      *
      * @param surfacePosition The new global position of the focused pointer surface
      * @see focusedPointerSurface
-     * @see setFocusedPointerSurface
      * @see focusedPointerSurfaceTransformation
      * @see setFocusedPointerSurfaceTransformation
      */
@@ -323,7 +323,6 @@ public:
     /**
      * @returns The position of the focused pointer surface in global coordinates.
      * @see setFocusedPointerSurfacePosition
-     * @see setFocusedPointerSurface
      * @see focusedPointerSurfaceTransformation
      */
     QPointF focusedPointerSurfacePosition() const;

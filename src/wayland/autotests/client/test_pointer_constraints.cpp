@@ -222,7 +222,7 @@ void TestPointerConstraints::testLockPointer()
     // let's lock the surface
     QSignalSpy lockedChangedSpy(serverLockedPointer, &LockedPointerV1Interface::lockedChanged);
     QVERIFY(lockedChangedSpy.isValid());
-    m_seatInterface->setFocusedPointerSurface(serverSurface);
+    m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
     QSignalSpy pointerMotionSpy(m_pointer, &Pointer::motion);
     QVERIFY(pointerMotionSpy.isValid());
     m_seatInterface->notifyPointerMotion(QPoint(0, 1));
@@ -339,7 +339,7 @@ void TestPointerConstraints::testConfinePointer()
     // let's confine the surface
     QSignalSpy confinedChangedSpy(serverConfinedPointer, &ConfinedPointerV1Interface::confinedChanged);
     QVERIFY(confinedChangedSpy.isValid());
-    m_seatInterface->setFocusedPointerSurface(serverSurface);
+    m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
     serverConfinedPointer->setConfined(true);
     QCOMPARE(serverConfinedPointer->isConfined(), true);
     QCOMPARE(confinedChangedSpy.count(), 1);

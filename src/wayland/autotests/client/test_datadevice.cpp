@@ -249,7 +249,7 @@ void TestDataDevice::testDrag()
         m_seatInterface->notifyPointerFrame();
     }
     if (hasPointerFocus) {
-        m_seatInterface->setFocusedPointerSurface(surfaceInterface);
+        m_seatInterface->notifyPointerEnter(surfaceInterface, QPointF(0, 0));
     }
     if (hasGrab) {
         m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed);
@@ -330,7 +330,7 @@ void TestDataDevice::testDragInternally()
         m_seatInterface->notifyPointerFrame();
     }
     if (hasPointerFocus) {
-        m_seatInterface->setFocusedPointerSurface(surfaceInterface);
+        m_seatInterface->notifyPointerEnter(surfaceInterface, QPointF(0, 0));
     }
     if (hasGrab) {
         m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed);
