@@ -18,15 +18,17 @@ target_link_libraries(kwin4_effect_invert PRIVATE
 
 #######################################
 # Config
-set(kwin_invert_config_SRCS invert_config.cpp)
+if (KWIN_BUILD_KCMS)
+    set(kwin_invert_config_SRCS invert_config.cpp)
 
-kwin_add_effect_config(kwin_invert_config ${kwin_invert_config_SRCS})
+    kwin_add_effect_config(kwin_invert_config ${kwin_invert_config_SRCS})
 
-target_link_libraries(kwin_invert_config
-    KF5::ConfigWidgets
-    KF5::CoreAddons
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::XmlGui
-    KWinEffectsInterface
-)
+    target_link_libraries(kwin_invert_config
+        KF5::ConfigWidgets
+        KF5::CoreAddons
+        KF5::GlobalAccel
+        KF5::I18n
+        KF5::XmlGui
+        KWinEffectsInterface
+    )
+endif()

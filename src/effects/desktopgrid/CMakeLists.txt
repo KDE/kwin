@@ -24,19 +24,21 @@ target_link_libraries(kwin4_effect_desktopgrid PRIVATE
 
 #######################################
 # Config
-set(kwin_desktopgrid_config_SRCS desktopgrid_config.cpp)
-ki18n_wrap_ui(kwin_desktopgrid_config_SRCS desktopgrid_config.ui)
-kconfig_add_kcfg_files(kwin_desktopgrid_config_SRCS desktopgridconfig.kcfgc)
+if (KWIN_BUILD_KCMS)
+    set(kwin_desktopgrid_config_SRCS desktopgrid_config.cpp)
+    ki18n_wrap_ui(kwin_desktopgrid_config_SRCS desktopgrid_config.ui)
+    kconfig_add_kcfg_files(kwin_desktopgrid_config_SRCS desktopgridconfig.kcfgc)
 
-kwin_add_effect_config(kwin_desktopgrid_config ${kwin_desktopgrid_config_SRCS})
+    kwin_add_effect_config(kwin_desktopgrid_config ${kwin_desktopgrid_config_SRCS})
 
-target_link_libraries(kwin_desktopgrid_config
-    KF5::ConfigWidgets
-    KF5::CoreAddons
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::XmlGui
-    Qt::Quick
-    kwineffects
-    KWinEffectsInterface
-)
+    target_link_libraries(kwin_desktopgrid_config
+        KF5::ConfigWidgets
+        KF5::CoreAddons
+        KF5::GlobalAccel
+        KF5::I18n
+        KF5::XmlGui
+        Qt::Quick
+        kwineffects
+        KWinEffectsInterface
+    )
+endif()

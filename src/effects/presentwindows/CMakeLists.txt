@@ -27,17 +27,19 @@ target_link_libraries(kwin4_effect_presentwindows PRIVATE
 
 #######################################
 # Config
-set(kwin_presentwindows_config_SRCS presentwindows_config.cpp)
-ki18n_wrap_ui(kwin_presentwindows_config_SRCS presentwindows_config.ui)
-kconfig_add_kcfg_files(kwin_presentwindows_config_SRCS presentwindowsconfig.kcfgc)
+if (KWIN_BUILD_KCMS)
+    set(kwin_presentwindows_config_SRCS presentwindows_config.cpp)
+    ki18n_wrap_ui(kwin_presentwindows_config_SRCS presentwindows_config.ui)
+    kconfig_add_kcfg_files(kwin_presentwindows_config_SRCS presentwindowsconfig.kcfgc)
 
-kwin_add_effect_config(kwin_presentwindows_config ${kwin_presentwindows_config_SRCS})
+    kwin_add_effect_config(kwin_presentwindows_config ${kwin_presentwindows_config_SRCS})
 
-target_link_libraries(kwin_presentwindows_config
-    KF5::ConfigWidgets
-    KF5::CoreAddons
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::XmlGui
-    KWinEffectsInterface
-)
+    target_link_libraries(kwin_presentwindows_config
+        KF5::ConfigWidgets
+        KF5::CoreAddons
+        KF5::GlobalAccel
+        KF5::I18n
+        KF5::XmlGui
+        KWinEffectsInterface
+    )
+endif()

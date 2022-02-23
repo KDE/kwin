@@ -2,7 +2,9 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-add_subdirectory(kcm)
+if (KWIN_BUILD_KCMS)
+    add_subdirectory(kcm)
+endif()
 
 set(overview_SOURCES
     expoarea.cpp

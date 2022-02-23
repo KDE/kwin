@@ -19,16 +19,18 @@ target_link_libraries(kwin4_effect_magiclamp PRIVATE
 
 #######################################
 # Config
-set(kwin_magiclamp_config_SRCS magiclamp_config.cpp)
-ki18n_wrap_ui(kwin_magiclamp_config_SRCS magiclamp_config.ui)
-kconfig_add_kcfg_files(kwin_magiclamp_config_SRCS magiclampconfig.kcfgc)
+if (KWIN_BUILD_KCMS)
+    set(kwin_magiclamp_config_SRCS magiclamp_config.cpp)
+    ki18n_wrap_ui(kwin_magiclamp_config_SRCS magiclamp_config.ui)
+    kconfig_add_kcfg_files(kwin_magiclamp_config_SRCS magiclampconfig.kcfgc)
 
-kwin_add_effect_config(kwin_magiclamp_config ${kwin_magiclamp_config_SRCS})
+    kwin_add_effect_config(kwin_magiclamp_config ${kwin_magiclamp_config_SRCS})
 
-target_link_libraries(kwin_magiclamp_config
-    KF5::ConfigWidgets
-    KF5::CoreAddons
-    KF5::I18n
-    Qt::DBus
-    KWinEffectsInterface
-)
+    target_link_libraries(kwin_magiclamp_config
+        KF5::ConfigWidgets
+        KF5::CoreAddons
+        KF5::I18n
+        Qt::DBus
+        KWinEffectsInterface
+    )
+endif()
