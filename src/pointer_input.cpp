@@ -553,8 +553,6 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
     m_decorationDestroyedConnection = connect(now, &QObject::destroyed, this, &PointerInputRedirection::update, Qt::QueuedConnection);
 }
 
-static bool s_cursorUpdateBlocking = false;
-
 void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
 {
     if (AbstractClient *ac = qobject_cast<AbstractClient*>(focusOld)) {
@@ -571,17 +569,11 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
 
     auto seat = waylandServer()->seat();
     if (!focusNow || !focusNow->surface()) {
-        seat->setFocusedPointerSurface(nullptr);
+        seat->notifyPointerLeave();
         return;
     }
 
-    // prevent updating cursor and sending motion event outside the previously focused surface
-    s_cursorUpdateBlocking = true;
-    seat->setFocusedPointerSurface(nullptr);
-    s_cursorUpdateBlocking = false;
-
-    seat->notifyPointerMotion(m_pos.toPoint());
-    seat->setFocusedPointerSurface(focusNow->surface(), focusNow->inputTransformation());
+    seat->notifyPointerEnter(focusNow->surface(), m_pos, focusNow->inputTransformation());
 
     m_focusGeometryConnection = connect(focusNow, &Toplevel::inputTransformationChanged, this,
         [this] {
@@ -1028,10 +1020,6 @@ void CursorImage::handlePointerChanged()
 
 void CursorImage::handleFocusedSurfaceChanged()
 {
-    if (s_cursorUpdateBlocking) {
-        return;
-    }
-
     KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
     disconnect(m_serverCursor.connection);
 
