@@ -252,7 +252,7 @@ void WobblyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
 
         // We have to reset the clip region in order to render clients below
         // opaque wobbly windows.
-        data.clip = QRegion();
+        data.opaque = QRegion();
 
         while ((presentTime - infoIt->clock).count() > 0) {
             const auto delta = std::min(presentTime - infoIt->clock, integrationStep);

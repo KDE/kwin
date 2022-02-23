@@ -2754,10 +2754,10 @@ public:
      */
     QRegion paint;
     /**
-     * The clip region will be subtracted from paint region of following windows.
-     * I.e. window will definitely cover it's clip region
+     * Region indicating the opaque content. It can be used to avoid painting
+     * windows occluded by the opaque region.
      */
-    QRegion clip;
+    QRegion opaque;
     /**
      * Simple helper that sets data to say the window will be painted as non-opaque.
      * Takes also care of changing the regions.

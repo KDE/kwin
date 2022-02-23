@@ -37,7 +37,7 @@ void WindowPrePaintData::setTranslucent()
 {
     mask |= Effect::PAINT_WINDOW_TRANSLUCENT;
     mask &= ~Effect::PAINT_WINDOW_OPAQUE;
-    clip = QRegion(); // cannot clip, will be transparent
+    opaque = QRegion(); // cannot clip, will be transparent
 }
 
 void WindowPrePaintData::setTransformed()

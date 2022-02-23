@@ -346,7 +346,7 @@ void Scene::preparePaintGenericScreen()
             m_paintContext.phase2Data.append(Phase2Data{
                 .window = sceneWindow,
                 .region = infiniteRegion(),
-                .opaque = data.clip,
+                .opaque = data.opaque,
                 .mask = data.mask,
             });
         }
@@ -367,20 +367,20 @@ void Scene::preparePaintSimpleScreen()
         if (sceneWindow->isOpaque()) {
             const SurfaceItem *surfaceItem = sceneWindow->surfaceItem();
             if (surfaceItem) {
-                data.clip = surfaceItem->mapToGlobal(surfaceItem->shape());
+                data.opaque = surfaceItem->mapToGlobal(surfaceItem->shape());
             }
         } else if (toplevel->hasAlpha() && toplevel->opacity() == 1.0) {
             const SurfaceItem *surfaceItem = sceneWindow->surfaceItem();
             if (surfaceItem) {
                 const QRegion shape = surfaceItem->shape();
                 const QRegion opaque = surfaceItem->opaque();
-                data.clip = surfaceItem->mapToGlobal(shape & opaque);
+                data.opaque = surfaceItem->mapToGlobal(shape & opaque);
             }
         }
 
         const AbstractClient *client = dynamic_cast<const AbstractClient *>(toplevel);
         if (client && !client->decorationHasAlpha() && toplevel->opacity() == 1.0) {
-            data.clip |= sceneWindow->decorationShape().translated(sceneWindow->pos());
+            data.opaque |= sceneWindow->decorationShape().translated(sceneWindow->pos());
         }
 
         sceneWindow->resetPaintingEnabled();
@@ -389,7 +389,7 @@ void Scene::preparePaintSimpleScreen()
             m_paintContext.phase2Data.append(Phase2Data{
                 .window = sceneWindow,
                 .region = data.paint,
-                .opaque = data.clip,
+                .opaque = data.opaque,
                 .mask = data.mask,
             });
         }

@@ -542,22 +542,22 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::
         return;
     }
 
-    const QRegion oldClip = data.clip;
-    if (data.clip.intersects(m_currentBlur)) {
+    const QRegion oldOpaque = data.opaque;
+    if (data.opaque.intersects(m_currentBlur)) {
         // to blur an area partially we have to shrink the opaque area of a window
-        QRegion newClip;
-        for (const QRect &rect : data.clip) {
-            newClip |= rect.adjusted(m_expandSize, m_expandSize, -m_expandSize, -m_expandSize);
+        QRegion newOpaque;
+        for (const QRect &rect : data.opaque) {
+            newOpaque |= rect.adjusted(m_expandSize, m_expandSize, -m_expandSize, -m_expandSize);
         }
-        data.clip = newClip;
+        data.opaque = newOpaque;
 
         // we don't have to blur a region we don't see
-        m_currentBlur -= newClip;
+        m_currentBlur -= newOpaque;
     }
 
     // if we have to paint a non-opaque part of this window that intersects with the
     // currently blurred region we have to redraw the whole region
-    if ((data.paint - oldClip).intersects(m_currentBlur)) {
+    if ((data.paint - oldOpaque).intersects(m_currentBlur)) {
         data.paint |= m_currentBlur;
     }
 
@@ -579,7 +579,7 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::
 
     m_currentBlur |= expandedBlur;
 
-    m_paintedArea -= data.clip;
+    m_paintedArea -= data.opaque;
     m_paintedArea |= data.paint;
 }
 
