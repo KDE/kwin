@@ -853,10 +853,10 @@ std::optional<GbmFormat> EglGbmBackend::chooseFormat(Output &output) const
     for (const auto &format : qAsConst(m_formats)) {
         if (output.output->isFormatSupported(format.drmFormat)) {
             int bpc = std::max(format.redSize, std::max(format.greenSize, format.blueSize));
-            if (bpc <= output.output->maxBpc() && !fallback.has_value()) {
-                fallback = format;
-            } else {
+            if (bpc <= output.output->maxBpc()) {
                 return format;
+            } else if (!fallback.has_value()) {
+                fallback = format;
             }
         }
     }
