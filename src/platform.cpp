@@ -115,8 +115,8 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
         props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(changeset->vrrPolicy());
     }
 
-    const auto outputs = enabledOutputs();
-    bool allDisabled = !std::any_of(outputs.begin(), outputs.end(), [&cfg](const auto &output){
+    const auto allOutputs = outputs();
+    bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [&cfg](const auto &output){
         auto o = qobject_cast<AbstractWaylandOutput*>(output);
         if (!o) {
             qCWarning(KWIN_CORE) << "Platform::requestOutputsChange should only be called for Wayland platforms!";
