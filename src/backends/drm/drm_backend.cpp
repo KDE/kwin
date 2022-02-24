@@ -508,7 +508,7 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
             m_placeholderFilter.reset();
         }
     } else {
-        if (m_enabledOutputs.count() == 1 && m_outputs.count() > 1) {
+        if (m_enabledOutputs.count() == 1 && m_outputs.count() > 1 && !kwinApp()->isTerminating()) {
             auto outputs = m_outputs;
             outputs.removeOne(output);
             if (!readOutputsConfiguration(outputs)) {
