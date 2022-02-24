@@ -635,7 +635,8 @@ DrmGpu *DrmBackend::findGpuByFd(int fd) const
 
 bool DrmBackend::applyOutputChanges(const WaylandOutputConfig &config)
 {
-    QVector<DrmOutput*> changed;
+    QVector<DrmOutput*> toBeEnabled;
+    QVector<DrmOutput*> toBeDisabled;
     for (const auto &gpu : qAsConst(m_gpus)) {
         const auto &outputs = gpu->outputs();
         for (const auto &o : outputs) {
@@ -645,10 +646,17 @@ bool DrmBackend::applyOutputChanges(const WaylandOutputConfig &config)
                 continue;
             }
             output->queueChanges(config);
-            changed << output;
+            if (config.constChangeSet(output)->enabled) {
+                toBeEnabled << output;
+            } else {
+                toBeDisabled << output;
+            }
         }
         if (!gpu->testPendingConfiguration()) {
-            for (const auto &output : qAsConst(changed)) {
+            for (const auto &output : qAsConst(toBeEnabled)) {
+                output->revertQueuedChanges();
+            }
+            for (const auto &output : qAsConst(toBeDisabled)) {
                 output->revertQueuedChanges();
             }
             return false;
@@ -656,7 +664,10 @@ bool DrmBackend::applyOutputChanges(const WaylandOutputConfig &config)
     }
     // first, apply changes to drm outputs.
     // This may remove the placeholder output and thus change m_outputs!
-    for (const auto &output : qAsConst(changed)) {
+    for (const auto &output : qAsConst(toBeEnabled)) {
+        output->applyQueuedChanges(config);
+    }
+    for (const auto &output : qAsConst(toBeDisabled)) {
         output->applyQueuedChanges(config);
     }
     // only then apply changes to the virtual outputs
@@ -664,7 +675,7 @@ bool DrmBackend::applyOutputChanges(const WaylandOutputConfig &config)
         if (!qobject_cast<DrmOutput*>(output)) {
             output->applyChanges(config);
         }
-    };
+    }
     if (Compositor::compositing()) {
         Compositor::self()->scene()->addRepaintFull();
     }
