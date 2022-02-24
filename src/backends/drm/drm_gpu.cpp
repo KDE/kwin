@@ -733,6 +733,8 @@ bool DrmGpu::maybeModeset()
         // commit only once all pipelines are ready for presentation
         return true;
     }
+    // make sure there's no pending pageflips
+    waitIdle();
     const bool ok = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedObjects());
     for (DrmPipeline *pipeline : qAsConst(pipelines)) {
         if (pipeline->modesetPresentPending()) {
