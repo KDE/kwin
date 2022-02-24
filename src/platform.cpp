@@ -151,8 +151,20 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
 
 bool Platform::applyOutputChanges(const WaylandOutputConfig &config)
 {
-    const auto outputs = enabledOutputs();
-    for (const auto &output : outputs) {
+    const auto availableOutputs = outputs();
+    QVector<AbstractOutput*> toBeEnabledOutputs;
+    QVector<AbstractOutput*> toBeDisabledOutputs;
+    for (const auto &output : availableOutputs) {
+        if (config.constChangeSet(qobject_cast<AbstractWaylandOutput*>(output))->enabled) {
+            toBeEnabledOutputs << output;
+        } else {
+            toBeDisabledOutputs << output;
+        }
+    }
+    for (const auto &output : toBeEnabledOutputs) {
+        static_cast<AbstractWaylandOutput*>(output)->applyChanges(config);
+    }
+    for (const auto &output : toBeDisabledOutputs) {
         static_cast<AbstractWaylandOutput*>(output)->applyChanges(config);
     }
     return true;
