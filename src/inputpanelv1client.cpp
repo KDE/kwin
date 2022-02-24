@@ -81,22 +81,24 @@ void KWin::InputPanelV1Client::reposition()
             }
 
             QRect availableArea;
+            QRect outputArea;
             if (m_output) {
+                outputArea = m_output->geometry();
                 if (waylandServer()->isScreenLocked()) {
-                    availableArea = m_output->geometry();
+                    availableArea = outputArea;
                 } else {
                     availableArea = workspace()->clientArea(MaximizeArea, this, m_output);
                 }
             } else {
                 availableArea = workspace()->clientArea(MaximizeArea, this);
+                outputArea = workspace()->clientArea(FullScreenArea, this);
             }
 
             panelSize = panelSize.boundedTo(availableArea.size());
 
             QRect geo(availableArea.topLeft(), panelSize);
-            geo.translate((availableArea.width() - panelSize.width())/2, availableArea.height() - panelSize.height());
+            geo.translate((availableArea.width() - panelSize.width())/2, availableArea.height() - outputArea.height());
             moveResize(geo);
-
         }   break;
         case Overlay: {
             auto textInputSurface = waylandServer()->seat()->focusedTextInputSurface();
