@@ -5,12 +5,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
+#include <config-kwin.h>
 #include "screenshotdbusinterface1.h"
 #include "screenshotlogging.h"
 #include "utils/serviceutils.h"
 
 #include <KLocalizedString>
+#if KWIN_BUILD_NOTIFICATIONS
 #include <KNotification>
+#endif
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -468,10 +471,13 @@ static QString saveTempImage(const QImage &image)
     }
     image.save(&temp);
     temp.close();
+    qCInfo(KWIN_SCREENSHOT) << "Screenshot saved to" << temp.fileName();
+#if KWIN_BUILD_NOTIFICATIONS
     KNotification::event(KNotification::Notification,
                          i18nc("Notification caption that a screenshot got saved to file", "Screenshot"),
                          i18nc("Notification with path to screenshot file", "Screenshot saved to %1", temp.fileName()),
                          QStringLiteral("spectacle"));
+#endif
     return temp.fileName();
 }
 

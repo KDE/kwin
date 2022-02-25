@@ -175,7 +175,6 @@ target_link_libraries(kwin
     KF5::GlobalAccel
     KF5::GlobalAccelPrivate
     KF5::I18n
-    KF5::Notifications
     KF5::Package
     KF5::Plasma
     KF5::QuickAddons
@@ -207,6 +206,10 @@ target_link_libraries(kwin
 
     Threads::Threads
 )
+
+if (KWIN_BUILD_NOTIFICATIONS)
+    target_link_libraries(kwin KF5::Notifications)
+endif()
 
 kconfig_add_kcfg_files(kwin
     settings.kcfgc
@@ -341,7 +344,9 @@ if (PipeWire_FOUND)
 endif()
 
 install(FILES kwin.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR} RENAME ${KWIN_NAME}.kcfg)
-install(FILES kwin.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} RENAME ${KWIN_NAME}.notifyrc)
+if (KWIN_BUILD_NOTIFICATIONS)
+    install(FILES kwin.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} RENAME ${KWIN_NAME}.notifyrc)
+endif()
 install(
     FILES
         org.kde.KWin.VirtualDesktopManager.xml

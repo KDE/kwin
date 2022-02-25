@@ -8,6 +8,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include <config-kwin.h>
 #include "xwayland.h"
 #include "cursor.h"
 #include "databridge.h"
@@ -27,7 +28,9 @@
 #include "xwaylandsocket.h"
 
 #include <KLocalizedString>
+#if KWIN_BUILD_NOTIFICATIONS
 #include <KNotification>
+#endif
 #include <KSelectionOwner>
 
 #include <QAbstractEventDispatcher>
@@ -347,7 +350,9 @@ void Xwayland::handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitSta
 
 void Xwayland::handleXwaylandCrashed()
 {
+#if KWIN_BUILD_NOTIFICATIONS
     KNotification::event(QStringLiteral("xwaylandcrash"), i18n("Xwayland has crashed"));
+#endif
     m_resetCrashCountTimer->stop();
 
     switch (options->xwaylandCrashPolicy()) {

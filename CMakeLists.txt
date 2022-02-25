@@ -78,7 +78,6 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     GlobalAccel
     I18n
     IdleTime
-    Notifications
     Package
     Plasma
     WidgetsAddons
@@ -335,6 +334,7 @@ include(CMakeDependentOption)
 
 option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
+option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications support" ON)
 option(KWIN_BUILD_SCREENLOCKER "Enable building of KWin lockscreen functionality" ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF5Activities_FOUND" OFF)
@@ -390,6 +390,10 @@ add_feature_info("SCHED_RESET_ON_FORK"
 
 pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=0.3.29)
 add_feature_info(PipeWire PipeWire_FOUND "Required for Wayland screencasting")
+
+if (KWIN_BUILD_NOTIFICATIONS)
+    find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS Notifications)
+endif()
 
 if (KWIN_BUILD_SCREENLOCKER)
     find_package(KScreenLocker CONFIG REQUIRED)

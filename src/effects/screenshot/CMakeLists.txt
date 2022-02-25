@@ -16,13 +16,16 @@ target_link_libraries(kwin4_effect_screenshot PRIVATE
     kwineffects
     kwinglutils
 
-    KF5::Notifications
     KF5::Service
     KF5::I18n
 
     Qt::Concurrent
     Qt::DBus
 )
+
+if (KWIN_BUILD_NOTIFICATIONS)
+    target_link_libraries(kwin4_effect_screenshot PRIVATE KF5::Notifications)
+endif()
 
 ecm_qt_declare_logging_category(kwin4_effect_screenshot
     HEADER screenshotlogging.h
