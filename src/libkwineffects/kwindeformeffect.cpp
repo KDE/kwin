@@ -29,6 +29,7 @@ public:
                const WindowPaintData &data, const WindowQuadList &quads);
 
     GLTexture *maybeRender(EffectWindow *window, DeformOffscreenData *offscreenData);
+    bool live = true;
 };
 
 DeformEffect::DeformEffect(QObject *parent)
@@ -47,6 +48,12 @@ bool DeformEffect::supported()
     return effects->isOpenGLCompositing();
 }
 
+void DeformEffect::setLive(bool live)
+{
+    Q_ASSERT(d->windows.isEmpty());
+    d->live = live;
+}
+
 void DeformEffect::redirect(EffectWindow *window)
 {
     DeformOffscreenData *&offscreenData = d->windows[window];
@@ -57,6 +64,11 @@ void DeformEffect::redirect(EffectWindow *window)
 
     if (d->windows.count() == 1) {
         setupConnections();
+    }
+
+    if (!d->live) {
+        effects->makeOpenGLContextCurrent();
+        d->maybeRender(window, offscreenData);
     }
 }
 
@@ -205,8 +217,10 @@ void DeformEffect::handleWindowDeleted(EffectWindow *window)
 
 void DeformEffect::setupConnections()
 {
-    d->windowDamagedConnection =
-        connect(effects, &EffectsHandler::windowDamaged, this, &DeformEffect::handleWindowDamaged);
+    if (d->live) {
+        d->windowDamagedConnection =
+            connect(effects, &EffectsHandler::windowDamaged, this, &DeformEffect::handleWindowDamaged);
+    }
     d->windowDeletedConnection =
         connect(effects, &EffectsHandler::windowDeleted, this, &DeformEffect::handleWindowDeleted);
 }

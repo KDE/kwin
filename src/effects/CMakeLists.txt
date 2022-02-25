@@ -86,6 +86,7 @@ add_subdirectory(touchpoints)
 add_subdirectory(zoom)
 
 # OpenGL-specific effects
+add_subdirectory(blendchanges)
 add_subdirectory(blur)
 add_subdirectory(backgroundcontrast)
 add_subdirectory(glide)
