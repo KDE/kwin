@@ -263,9 +263,7 @@ bool DrmGpu::updateOutputs()
             conn->updateProperties();
         }
         if (conn->isConnected()) {
-            if (auto output = findOutput(conn->id())) {
-                output->updateModes();
-            } else if (!findLeaseOutput(conn->id())) {
+            if (conn->isNonDesktop() ? !findLeaseOutput(conn->id()) : !findOutput(conn->id())) {
                 qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
                 m_pipelines << conn->pipeline();
                 if (conn->isNonDesktop()) {

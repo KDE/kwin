@@ -13,6 +13,7 @@
 #include "logging.h"
 #include "drm_pipeline.h"
 #include "drm_object_crtc.h"
+#include "drm_output.h"
 
 #include <main.h>
 // frameworks
@@ -286,11 +287,19 @@ bool DrmConnector::needsModeset() const
 
 void DrmConnector::updateModes()
 {
-    m_modes.clear();
-
-    // reload modes
-    for (int i = 0; i < m_conn->count_modes; i++) {
-        m_modes.append(QSharedPointer<DrmConnectorMode>::create(this, m_conn->modes[i]));
+    bool equal = m_conn->count_modes == m_modes.count();
+    for (int i = 0; equal && i < m_conn->count_modes; i++) {
+        equal &= checkIfEqual(m_modes[i]->nativeMode(), &m_conn->modes[i]);
+    }
+    if (!equal) {
+        // reload modes
+        m_modes.clear();
+        for (int i = 0; i < m_conn->count_modes; i++) {
+            m_modes.append(QSharedPointer<DrmConnectorMode>::create(this, m_conn->modes[i]));
+        }
+        if (const auto output = dynamic_cast<DrmOutput*>(m_pipeline->displayDevice())) {
+            output->updateModes();
+        }
     }
 }
 
