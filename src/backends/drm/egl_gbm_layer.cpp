@@ -140,7 +140,14 @@ bool EglGbmLayer::endRendering(const QRegion &damagedRegion)
         m_shadowBuffer->render(m_pipeline->pending.sourceTransformation);
     }
     GLRenderTarget::popRenderTarget();
-    const auto buffer = m_gbmSurface->swapBuffersForDrm(damagedRegion);
+    QSharedPointer<DrmBuffer> buffer;
+    if (m_pipeline->gpu() == m_eglBackend->gpu()) {
+        buffer = m_gbmSurface->swapBuffersForDrm(damagedRegion);
+    } else {
+        if (m_gbmSurface->swapBuffers(damagedRegion)) {
+            buffer = importBuffer();
+        }
+    }
     if (buffer) {
         m_currentBuffer = buffer;
         m_currentDamage = damagedRegion;
