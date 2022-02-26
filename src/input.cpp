@@ -2587,7 +2587,7 @@ void InputRedirection::updateLeds(LEDs leds)
     }
 }
 
-void InputRedirection::handleInputDeviceAdded(InputDevice *device)
+void InputRedirection::addInputDevice(InputDevice *device)
 {
     connect(device, &InputDevice::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
 
@@ -2657,7 +2657,7 @@ void InputRedirection::handleInputDeviceAdded(InputDevice *device)
     updateAvailableInputDevices();
 }
 
-void InputRedirection::handleInputDeviceRemoved(InputDevice *device)
+void InputRedirection::removeInputDevice(InputDevice *device)
 {
     m_inputDevices.removeOne(device);
     Q_EMIT deviceRemoved(device);
@@ -2753,8 +2753,8 @@ void InputRedirection::addInputBackend(InputBackend *inputBackend)
     Q_ASSERT(!m_inputBackends.contains(inputBackend));
     m_inputBackends.append(inputBackend);
 
-    connect(inputBackend, &InputBackend::deviceAdded, this, &InputRedirection::handleInputDeviceAdded);
-    connect(inputBackend, &InputBackend::deviceRemoved, this, &InputRedirection::handleInputDeviceRemoved);
+    connect(inputBackend, &InputBackend::deviceAdded, this, &InputRedirection::addInputDevice);
+    connect(inputBackend, &InputBackend::deviceRemoved, this, &InputRedirection::removeInputDevice);
 
     inputBackend->setConfig(InputConfig::self()->inputConfig());
     inputBackend->initialize();

@@ -287,10 +287,12 @@ Q_SIGNALS:
     void hasTouchChanged(bool set);
     void hasTabletModeSwitchChanged(bool set);
 
+public Q_SLOTS:
+    void addInputDevice(InputDevice *device);
+    void removeInputDevice(InputDevice *device);
+
 private Q_SLOTS:
     void handleInputConfigChanged(const KConfigGroup &group);
-    void handleInputDeviceAdded(InputDevice *device);
-    void handleInputDeviceRemoved(InputDevice *device);
 
 private:
     void setupInputBackends();
