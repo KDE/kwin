@@ -87,10 +87,37 @@ WaylandTestApplication::~WaylandTestApplication()
     }
     delete m_xwayland;
     m_xwayland = nullptr;
+    destroyVirtualInputDevices();
     destroyWorkspace();
     destroyInputMethod();
     destroyCompositor();
     destroyInput();
+}
+
+void WaylandTestApplication::createVirtualInputDevices()
+{
+    m_virtualKeyboard.reset(new Test::VirtualInputDevice());
+    m_virtualKeyboard->setName(QStringLiteral("Virtual Keyboard 1"));
+    m_virtualKeyboard->setKeyboard(true);
+
+    m_virtualPointer.reset(new Test::VirtualInputDevice());
+    m_virtualPointer->setName(QStringLiteral("Virtual Pointer 1"));
+    m_virtualPointer->setPointer(true);
+
+    m_virtualTouch.reset(new Test::VirtualInputDevice());
+    m_virtualTouch->setName(QStringLiteral("Virtual Touch 1"));
+    m_virtualTouch->setTouch(true);
+
+    input()->addInputDevice(m_virtualPointer.get());
+    input()->addInputDevice(m_virtualTouch.get());
+    input()->addInputDevice(m_virtualKeyboard.get());
+}
+
+void WaylandTestApplication::destroyVirtualInputDevices()
+{
+    input()->removeInputDevice(m_virtualPointer.get());
+    input()->removeInputDevice(m_virtualTouch.get());
+    input()->removeInputDevice(m_virtualKeyboard.get());
 }
 
 void WaylandTestApplication::performStartup()
@@ -114,6 +141,7 @@ void WaylandTestApplication::performStartup()
     // try creating the Wayland Backend
     createInput();
     createPlugins();
+    createVirtualInputDevices();
 
     if (!platform()->enabledOutputs().isEmpty()) {
         continueStartupWithScreens();
@@ -160,4 +188,18 @@ void WaylandTestApplication::continueStartupWithScene()
     m_xwayland->start();
 }
 
+Test::VirtualInputDevice *WaylandTestApplication::virtualPointer() const
+{
+    return m_virtualPointer.get();
+}
+
+Test::VirtualInputDevice *WaylandTestApplication::virtualKeyboard() const
+{
+    return m_virtualKeyboard.get();
+}
+
+Test::VirtualInputDevice *WaylandTestApplication::virtualTouch() const
+{
+    return m_virtualTouch.get();
+}
 }

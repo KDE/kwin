@@ -64,6 +64,10 @@ class Xwayland;
 }
 
 class AbstractClient;
+namespace Test
+{
+class VirtualInputDevice;
+}
 
 class WaylandTestApplication : public ApplicationWaylandAbstract
 {
@@ -75,6 +79,11 @@ public:
     void setInputMethodServerToStart(const QString &inputMethodServer) {
         m_inputMethodServerToStart = inputMethodServer;
     }
+
+    Test::VirtualInputDevice *virtualPointer() const;
+    Test::VirtualInputDevice *virtualKeyboard() const;
+    Test::VirtualInputDevice *virtualTouch() const;
+
 protected:
     void performStartup() override;
 
@@ -83,8 +92,15 @@ private:
     void continueStartupWithScene();
     void finalizeStartup();
 
+    void createVirtualInputDevices();
+    void destroyVirtualInputDevices();
+
     Xwl::Xwayland *m_xwayland = nullptr;
     QString m_inputMethodServerToStart;
+
+    QScopedPointer<Test::VirtualInputDevice> m_virtualPointer;
+    QScopedPointer<Test::VirtualInputDevice> m_virtualKeyboard;
+    QScopedPointer<Test::VirtualInputDevice> m_virtualTouch;
 };
 
 namespace Test
