@@ -46,7 +46,7 @@
 
 #include <xcb/damage.h>
 #include <xcb/sync.h>
-#ifdef XCB_ICCCM_FOUND
+#if XCB_ICCCM_FOUND
 #include <xcb/xcb_icccm.h>
 #endif
 

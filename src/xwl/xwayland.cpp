@@ -195,7 +195,7 @@ bool Xwayland::startInternal()
         for (int socket : qAsConst(m_listenFds)) {
             int dupSocket = dup(socket);
             fdsToClose << dupSocket;
-            #if defined(HAVE_XWAYLAND_LISTENFD)
+            #if HAVE_XWAYLAND_LISTENFD
                 arguments << QStringLiteral("-listenfd") << QString::number(dupSocket);
             #else
                 arguments << QStringLiteral("-listen") << QString::number(dupSocket);
