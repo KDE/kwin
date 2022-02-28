@@ -529,6 +529,7 @@ QRegion EglGbmBackend::beginFrame(AbstractOutput *drmOutput)
         qCDebug(KWIN_DRM) << "Direct scanout stopped on output" << output.output->name();
     }
     output.scanoutSurface = nullptr;
+    output.scanoutBuffer = nullptr;
     if (output.scanoutCandidate.surface) {
         output.oldScanoutCandidate = output.scanoutCandidate.surface;
         output.scanoutCandidate = {};
@@ -768,6 +769,7 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
             qCDebug(KWIN_DRM).nospace() << "Direct scanout starting on output " << output.output->name() << " for application \"" << path << "\"";
         }
         output.scanoutSurface = surface;
+        output.scanoutBuffer = bo;
         return true;
     } else {
         // TODO clean the modeset and direct scanout code paths up
@@ -796,7 +798,18 @@ QSharedPointer<DrmBuffer> EglGbmBackend::renderTestFrame(DrmAbstractOutput *outp
 QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output) const
 {
     Q_ASSERT(m_outputs.contains(output));
+    const auto createImage = [this, output](GbmBuffer *buffer) {
+        EGLImageKHR image = eglCreateImageKHR(eglDisplay(), nullptr, EGL_NATIVE_PIXMAP_KHR, buffer->getBo(), nullptr);
+        if (image == EGL_NO_IMAGE_KHR) {
+            qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << glGetError();
+            return QSharedPointer<EGLImageTexture>(nullptr);
+        }
+        return QSharedPointer<EGLImageTexture>::create(eglDisplay(), image, GL_RGBA8, static_cast<DrmAbstractOutput*>(output)->modeSize());
+    };
     auto &renderOutput = m_outputs[output];
+    if (renderOutput.scanoutBuffer) {
+        return createImage(dynamic_cast<GbmBuffer*>(renderOutput.scanoutBuffer.data()));
+    }
     if (renderOutput.current.shadowBuffer) {
         const auto glTexture = QSharedPointer<KWin::GLTexture>::create(renderOutput.current.shadowBuffer->texture(), GL_RGBA8, renderOutput.output->sourceSize());
         glTexture->setYInverted(true);
@@ -807,13 +820,7 @@ QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output
         qCWarning(KWIN_DRM) << "Failed to record frame: No gbm buffer!";
         return {};
     }
-    EGLImageKHR image = eglCreateImageKHR(eglDisplay(), nullptr, EGL_NATIVE_PIXMAP_KHR, gbmBuffer->getBo(), nullptr);
-    if (image == EGL_NO_IMAGE_KHR) {
-        qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << glGetError();
-        return {};
-    }
-
-    return QSharedPointer<EGLImageTexture>::create(eglDisplay(), image, GL_RGBA8, static_cast<DrmAbstractOutput*>(output)->modeSize());
+    return createImage(gbmBuffer);
 }
 
 bool EglGbmBackend::directScanoutAllowed(AbstractOutput *output) const

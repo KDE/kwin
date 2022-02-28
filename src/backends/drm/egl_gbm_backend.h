@@ -113,6 +113,7 @@ private:
             QPointer<KWaylandServer::SurfaceInterface> surface;
             QMap<uint32_t, QVector<uint64_t>> attemptedFormats;
         } scanoutCandidate;
+        QSharedPointer<DrmBuffer> scanoutBuffer;
         QPointer<KWaylandServer::SurfaceInterface> oldScanoutCandidate;
     };
 
