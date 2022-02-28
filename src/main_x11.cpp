@@ -42,9 +42,9 @@
 #include <QtDBus>
 
 // system
-#ifdef HAVE_UNISTD_H
+#if __has_include(<unistd.h>)
 #include <unistd.h>
-#endif // HAVE_UNISTD_H
+#endif
 #include <iostream>
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)

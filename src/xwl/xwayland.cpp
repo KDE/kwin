@@ -43,10 +43,7 @@
 #include <QtConcurrentRun>
 
 // system
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#if HAVE_SYS_PROCCTL_H
+#if __has_include(<unistd.h>)
 #include <unistd.h>
 #endif
 

@@ -355,10 +355,6 @@ set(HAVE_X11_XCB ${X11_XCB_FOUND})
 include(CheckIncludeFile)
 include(CheckIncludeFiles)
 include(CheckSymbolExists)
-check_include_files(unistd.h HAVE_UNISTD_H)
-check_include_files(malloc.h HAVE_MALLOC_H)
-
-check_include_file("sys/sysmacros.h" HAVE_SYS_SYSMACROS_H)
 
 check_symbol_exists(SCHED_RESET_ON_FORK "sched.h" HAVE_SCHED_RESET_ON_FORK)
 add_feature_info("SCHED_RESET_ON_FORK"
