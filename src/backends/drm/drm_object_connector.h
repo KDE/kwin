@@ -100,7 +100,6 @@ public:
 
     QVector<QSharedPointer<DrmConnectorMode>> modes() const;
     QSharedPointer<DrmConnectorMode> findMode(const drmModeModeInfo &modeInfo) const;
-    void updateModes();
 
     AbstractWaylandOutput::SubPixel subpixel() const;
     bool hasOverscan() const;

@@ -300,7 +300,6 @@ DrmPlane::Transformations outputToPlaneTransform(DrmOutput::Transform transform)
 
 void DrmOutput::updateModes()
 {
-    m_pipeline->connector()->updateModes();
     setModes(getModes());
     if (m_pipeline->pending.crtc) {
         const auto currentMode = m_pipeline->connector()->findMode(m_pipeline->pending.crtc->queryCurrentMode());

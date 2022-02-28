@@ -250,6 +250,7 @@ bool DrmGpu::updateOutputs()
         const uint32_t currentConnector = resources->connectors[i];
         auto it = std::find_if(m_connectors.constBegin(), m_connectors.constEnd(), [currentConnector] (DrmConnector *c) { return c->id() == currentConnector; });
         DrmConnector *conn = it == m_connectors.constEnd() ? nullptr : *it;
+        bool updateSuccess = true;
         if (!conn) {
             conn = new DrmConnector(this, currentConnector);
             if (!conn->init()) {
@@ -258,11 +259,12 @@ bool DrmGpu::updateOutputs()
             }
             m_connectors << conn;
             m_allObjects << conn;
-        } else {
+        } else if (conn->updateProperties()) {
             removedConnectors.removeOne(conn);
-            conn->updateProperties();
+        } else {
+            updateSuccess = false;
         }
-        if (conn->isConnected()) {
+        if (conn->isConnected() && updateSuccess) {
             if (conn->isNonDesktop() ? !findLeaseOutput(conn->id()) : !findOutput(conn->id())) {
                 qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
                 m_pipelines << conn->pipeline();

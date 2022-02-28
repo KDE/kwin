@@ -285,24 +285,6 @@ bool DrmConnector::needsModeset() const
     return rgb && rgb->needsCommit();
 }
 
-void DrmConnector::updateModes()
-{
-    bool equal = m_conn->count_modes == m_modes.count();
-    for (int i = 0; equal && i < m_conn->count_modes; i++) {
-        equal &= checkIfEqual(m_modes[i]->nativeMode(), &m_conn->modes[i]);
-    }
-    if (!equal) {
-        // reload modes
-        m_modes.clear();
-        for (int i = 0; i < m_conn->count_modes; i++) {
-            m_modes.append(QSharedPointer<DrmConnectorMode>::create(this, m_conn->modes[i]));
-        }
-        if (const auto output = dynamic_cast<DrmOutput*>(m_pipeline->displayDevice())) {
-            output->updateModes();
-        }
-    }
-}
-
 bool DrmConnector::hasRgbRange() const
 {
     const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
@@ -378,10 +360,27 @@ bool DrmConnector::updateProperties()
         bpc->setPending(bpc->maxValue());
     }
 
-    // init modes
-    updateModes();
-    if (!m_modes.isEmpty() && !m_pipeline->pending.mode) {
-        m_pipeline->pending.mode = m_modes.constFirst();
+    // update modes
+    bool equal = m_conn->count_modes == m_modes.count();
+    for (int i = 0; equal && i < m_conn->count_modes; i++) {
+        equal &= checkIfEqual(m_modes[i]->nativeMode(), &m_conn->modes[i]);
+    }
+    if (!equal) {
+        // reload modes
+        m_modes.clear();
+        for (int i = 0; i < m_conn->count_modes; i++) {
+            m_modes.append(QSharedPointer<DrmConnectorMode>::create(this, m_conn->modes[i]));
+        }
+        if (m_modes.isEmpty()) {
+            return false;
+        } else {
+            if (!m_pipeline->pending.mode) {
+                m_pipeline->pending.mode = m_modes.constFirst();
+            }
+            if (const auto output = dynamic_cast<DrmOutput*>(m_pipeline->displayDevice())) {
+                output->updateModes();
+            }
+        }
     }
 
     return true;
