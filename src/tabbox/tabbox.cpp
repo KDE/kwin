@@ -20,7 +20,7 @@
 #include "tabbox/tabbox_logging.h"
 #include "tabbox/x11_filter.h"
 // kwin
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "composite.h"
@@ -69,7 +69,7 @@ TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox* tabBox)
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     connect(vds, &VirtualDesktopManager::countChanged, m_desktopFocusChain, &DesktopChainManager::resize);
     connect(vds, &VirtualDesktopManager::currentChanged, m_desktopFocusChain, &DesktopChainManager::addDesktop);
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (Activities::self()) {
         connect(Activities::self(), &Activities::currentChanged, m_desktopFocusChain, &DesktopChainManager::useChain);
     }

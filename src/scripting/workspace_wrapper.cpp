@@ -15,7 +15,7 @@
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 
@@ -38,7 +38,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(vds, &VirtualDesktopManager::layoutChanged, this, &WorkspaceWrapper::desktopLayoutChanged);
     connect(vds, &VirtualDesktopManager::currentChanged, this, &WorkspaceWrapper::currentVirtualDesktopChanged);
     connect(ws, &Workspace::clientDemandsAttentionChanged, this, &WorkspaceWrapper::clientDemandsAttentionChanged);
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (KWin::Activities *activities = KWin::Activities::self()) {
         connect(activities, &Activities::currentChanged, this, &WorkspaceWrapper::currentActivityChanged);
         connect(activities, &Activities::added, this, &WorkspaceWrapper::activitiesChanged);
@@ -101,7 +101,7 @@ AbstractClient *WorkspaceWrapper::activeClient() const
 
 QString WorkspaceWrapper::currentActivity() const
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return QString();
     }
@@ -113,7 +113,7 @@ QString WorkspaceWrapper::currentActivity() const
 
 void WorkspaceWrapper::setCurrentActivity(QString activity)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (Activities::self()) {
         Activities::self()->setCurrent(activity);
     }
@@ -124,7 +124,7 @@ void WorkspaceWrapper::setCurrentActivity(QString activity)
 
 QStringList WorkspaceWrapper::activityList() const
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return QStringList();
     }

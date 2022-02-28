@@ -16,7 +16,7 @@
 #include <QSortFilterProxyModel>
 #include <QObject>
 
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include <KActivities/Consumer>
 #endif
 
@@ -112,7 +112,7 @@ private:
     QList<RuleItem *> m_ruleList;
     QHash<QString, RuleItem *> m_rules;
     DBusDesktopDataVector m_virtualDesktops;
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     KActivities::Consumer *m_activities;
 #endif
     RuleSettings *m_settings;

@@ -224,7 +224,7 @@ void ModifierOnlyShortcutTest::testTrigger()
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 2);
 
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     // now try to lock the screen while modifier key is pressed
     kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
     QVERIFY(Test::lockScreen());

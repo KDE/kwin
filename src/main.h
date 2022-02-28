@@ -184,7 +184,7 @@ public:
         return m_isClosingX11Connection;
     }
 
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     bool usesKActivities() const {
         return m_useKActivities;
     }
@@ -283,7 +283,7 @@ private:
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;
     xcb_connection_t *m_connection = nullptr;
     xcb_screen_t *m_defaultScreen = nullptr;
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     bool m_useKActivities = true;
 #endif
     Platform *m_platform = nullptr;

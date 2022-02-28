@@ -21,7 +21,7 @@
 #include "netinfo.h"
 #include "platform.h"
 #include "workspace.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "virtualdesktops.h"
@@ -293,7 +293,7 @@ void Workspace::activateClient(AbstractClient* c, bool force)
         VirtualDesktopManager::self()->setCurrent(c->desktops().constLast());
         --block_focus;
     }
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!c->isOnCurrentActivity()) {
         ++block_focus;
         //DBUS!

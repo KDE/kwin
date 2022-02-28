@@ -30,7 +30,7 @@
 #include <workspace.h>
 #include "virtualdesktops.h"
 // DBus generated
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include "screenlocker_interface.h"
 #endif
 // frameworks
@@ -333,7 +333,7 @@ bool Edge::handleAction(ElectricBorderAction action)
         return true;
     }
     case ElectricActionLockScreen: { // Lock the screen
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
         OrgFreedesktopScreenSaverInterface interface(QStringLiteral("org.freedesktop.ScreenSaver"),
                                                      QStringLiteral("/ScreenSaver"),
                                                      QDBusConnection::sessionBus());

@@ -32,7 +32,7 @@
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
 // screenlocker
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
 #endif
 
@@ -143,7 +143,7 @@ void PointerInputRedirection::init()
     Q_EMIT m_cursor->changed();
 
     connect(screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
             [this] {
@@ -960,7 +960,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
             reevaluteSource();
         }
     );
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &CursorImage::reevaluteSource);
     }

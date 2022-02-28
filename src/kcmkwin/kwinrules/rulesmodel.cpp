@@ -7,7 +7,7 @@
 
 #include "rulesmodel.h"
 
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 
@@ -455,7 +455,7 @@ void RulesModel::populateRuleList()
 
     updateVirtualDesktops();
 
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     m_activities = new KActivities::Consumer(this);
 
     auto activity = addRule(new RuleItem(QLatin1String("activity"),
@@ -699,7 +699,7 @@ void RulesModel::setSuggestedProperties(const QVariantMap &info)
     m_rules["wmclass"]->setSuggestedValue(wmsimpleclass);
     m_rules["wmclasshelper"]->setSuggestedValue(wmcompleteclass);
 
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     const QStringList activities = info.value("activities").toStringList();
     m_rules["activity"]->setSuggestedValue(activities.isEmpty() ? QStringList{ Activities::nullUuid() }
                                                                 : activities);
@@ -755,7 +755,7 @@ QList<OptionsModel::Data> RulesModel::virtualDesktopsModelData() const
 
 QList<OptionsModel::Data> RulesModel::activitiesModelData() const
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     QList<OptionsModel::Data> modelData;
 
     modelData << OptionsModel::Data{

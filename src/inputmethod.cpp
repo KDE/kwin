@@ -17,7 +17,7 @@
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
 #include "deleted.h"
@@ -79,7 +79,7 @@ void InputMethod::init()
     connect(&m_inputMethodCrashTimer, &QTimer::timeout, this, [this] {
         m_inputMethodCrashes = 0;
     });
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &InputMethod::hide);
 #endif
 

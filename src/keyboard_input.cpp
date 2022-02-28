@@ -24,7 +24,7 @@
 #include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
 //screenlocker
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
 #endif
 // Frameworks
@@ -143,7 +143,7 @@ void KeyboardInputRedirection::init()
             update();
         }
     );
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
     }

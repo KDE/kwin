@@ -46,7 +46,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     // TODO: add a test move to kglobalaccel instead?
     QFile{QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kglobalshortcutsrc"))}.remove();
     QIcon::setThemeName(QStringLiteral("breeze"));
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     setUseKActivities(false);
 #endif
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));

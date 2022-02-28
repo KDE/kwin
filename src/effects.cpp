@@ -15,7 +15,7 @@
 #include "abstract_output.h"
 #include "effectsadaptor.h"
 #include "effectloader.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "deleted.h"
@@ -28,13 +28,13 @@
 #include "renderbackend.h"
 #include "unmanaged.h"
 #include "input_event.h"
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
 #include "screenedge.h"
 #include "scripting/scriptedeffect.h"
 #include "screens.h"
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
 #include "virtualdesktops.h"
@@ -197,7 +197,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(Cursors::self()->mouse(), &Cursor::mouseChanged, this, &EffectsHandler::mouseChanged);
     connect(Screens::self(), &Screens::sizeChanged, this, &EffectsHandler::virtualScreenSizeChanged);
     connect(Screens::self(), &Screens::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (Activities *activities = Activities::self()) {
         connect(activities, &Activities::added,          this, &EffectsHandler::activityAdded);
         connect(activities, &Activities::removed,        this, &EffectsHandler::activityRemoved);
@@ -205,7 +205,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     }
 #endif
     connect(ws, &Workspace::stackingOrderChanged, this, &EffectsHandler::stackingOrderChanged);
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
     connect(tabBox, &TabBox::TabBox::tabBoxAdded,    this, &EffectsHandler::tabBoxAdded);
     connect(tabBox, &TabBox::TabBox::tabBoxUpdated,  this, &EffectsHandler::tabBoxUpdated);
@@ -213,7 +213,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(tabBox, &TabBox::TabBox::tabBoxKeyEvent, this, &EffectsHandler::tabBoxKeyEvent);
 #endif
     connect(ScreenEdges::self(), &ScreenEdges::approaching, this, &EffectsHandler::screenEdgeApproaching);
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked, this, &EffectsHandler::screenLockingChanged);
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &EffectsHandler::screenAboutToLock);
 #endif
@@ -986,7 +986,7 @@ void EffectsHandlerImpl::setShowingDesktop(bool showing)
 
 QString EffectsHandlerImpl::currentActivity() const
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return QString();
     }
@@ -1157,7 +1157,7 @@ void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow* w, bool set)
 
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)
 {
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     if (auto c = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window())) {
         TabBox::TabBox::self()->setCurrentClient(c);
     }
@@ -1168,7 +1168,7 @@ void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)
 
 void EffectsHandlerImpl::setTabBoxDesktop(int desktop)
 {
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     TabBox::TabBox::self()->setCurrentDesktop(desktop);
 #else
     Q_UNUSED(desktop)
@@ -1177,7 +1177,7 @@ void EffectsHandlerImpl::setTabBoxDesktop(int desktop)
 
 EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
 {
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     const auto clients = TabBox::TabBox::self()->currentClientList();
     EffectWindowList ret;
     ret.reserve(clients.size());
@@ -1192,28 +1192,28 @@ EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
 
 void EffectsHandlerImpl::refTabBox()
 {
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     TabBox::TabBox::self()->reference();
 #endif
 }
 
 void EffectsHandlerImpl::unrefTabBox()
 {
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     TabBox::TabBox::self()->unreference();
 #endif
 }
 
 void EffectsHandlerImpl::closeTabBox()
 {
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     TabBox::TabBox::self()->close();
 #endif
 }
 
 QList< int > EffectsHandlerImpl::currentTabBoxDesktopList() const
 {
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     return TabBox::TabBox::self()->currentDesktopList();
 #else
     return QList< int >();
@@ -1222,7 +1222,7 @@ QList< int > EffectsHandlerImpl::currentTabBoxDesktopList() const
 
 int EffectsHandlerImpl::currentTabBoxDesktop() const
 {
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     return TabBox::TabBox::self()->currentDesktop();
 #else
     return -1;
@@ -1231,7 +1231,7 @@ int EffectsHandlerImpl::currentTabBoxDesktop() const
 
 EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
 {
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     if (auto c = TabBox::TabBox::self()->currentClient())
         return c->effectWindow();
 #endif
@@ -1613,7 +1613,7 @@ QString EffectsHandlerImpl::supportInformation(const QString &name) const
 
 bool EffectsHandlerImpl::isScreenLocked() const
 {
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     return ScreenLockerWatcher::self()->isLocked();
 #else
     return false;

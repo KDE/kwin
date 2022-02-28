@@ -506,7 +506,7 @@ int main(int argc, char * argv[])
                                            i18n("List all available backends and quit."));
     parser.addOption(listBackendsOption);
 
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     QCommandLineOption screenLockerOption(QStringLiteral("lockscreen"),
                                           i18n("Starts the session in locked mode."));
     parser.addOption(screenLockerOption);
@@ -520,7 +520,7 @@ int main(int argc, char * argv[])
                                                i18n("Starts the session without global shortcuts support."));
     parser.addOption(noGlobalShortcutsOption);
 
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     QCommandLineOption noActivitiesOption(QStringLiteral("no-kactivities"),
                                           i18n("Disable KActivities integration."));
     parser.addOption(noActivitiesOption);
@@ -538,7 +538,7 @@ int main(int argc, char * argv[])
     parser.process(a);
     a.processCommandLine(&parser);
 
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (parser.isSet(noActivitiesOption)) {
         a.setUseKActivities(false);
     }
@@ -636,7 +636,7 @@ int main(int argc, char * argv[])
     KWin::WaylandServer *server = KWin::WaylandServer::create(&a);
 
     KWin::WaylandServer::InitializationFlags flags;
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     if (parser.isSet(screenLockerOption)) {
         flags = KWin::WaylandServer::InitializationFlag::LockScreen;
     } else if (parser.isSet(noScreenLockerOption)) {

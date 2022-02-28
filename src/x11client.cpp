@@ -11,7 +11,7 @@
 #include "x11client.h"
 // kwin
 #include "abstract_output.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "atoms.h"
@@ -566,7 +566,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
                 }
             }
         }
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
         if (Activities::self() && !isMapped && !skipTaskbar() && isNormalWindow() && !activitiesDefined) {
             //a new, regular window, when we're not recovering from a crash,
             //and it hasn't got an activity. let's try giving it the current one.
@@ -1916,7 +1916,7 @@ void X11Client::doSetDemandsAttention()
 
 void X11Client::doSetOnActivities(const QStringList &activityList)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (activityList.isEmpty()) {
         const QByteArray nullUuid = Activities::nullUuid().toUtf8();
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, nullUuid.length(), nullUuid.constData());
@@ -2401,7 +2401,7 @@ void X11Client::updateAllowedActions(bool force)
 
 Xcb::StringProperty X11Client::fetchActivities() const
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     return Xcb::StringProperty(window(), atoms->activities);
 #else
     return Xcb::StringProperty();
@@ -2410,7 +2410,7 @@ Xcb::StringProperty X11Client::fetchActivities() const
 
 void X11Client::readActivities(Xcb::StringProperty &property)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     QStringList newActivitiesList;
     QString prop = QString::fromUtf8(property);
     activitiesDefined = !prop.isEmpty();
@@ -2465,7 +2465,7 @@ void X11Client::readActivities(Xcb::StringProperty &property)
 
 void X11Client::checkActivities()
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     Xcb::StringProperty property = fetchActivities();
     readActivities(property);
 #endif

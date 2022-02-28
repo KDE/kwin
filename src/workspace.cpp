@@ -14,7 +14,7 @@
 #include <kwinglplatform.h>
 // kwin
 #include "abstract_wayland_output.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "appmenu.h"
@@ -41,7 +41,7 @@
 #include "platform.h"
 #include "scripting/scripting.h"
 #include "syncalarmx11filter.h"
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
 #include "unmanaged.h"
@@ -135,7 +135,7 @@ Workspace::Workspace()
 
     _self = this;
 
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     Activities *activities = nullptr;
     if (kwinApp()->usesKActivities()) {
         activities = Activities::create(this);
@@ -168,7 +168,7 @@ Workspace::Workspace()
     //dbus interface
     new VirtualDesktopManagerDBusInterface(VirtualDesktopManager::self());
 
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     // need to create the tabbox before compositing scene is setup
     TabBox::TabBox::create(this);
 #endif
@@ -1116,7 +1116,7 @@ AbstractClient *Workspace::findClientToActivateOnDesktop(VirtualDesktop *desktop
 
 void Workspace::updateCurrentActivity(const QString &new_activity)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return;
     }
@@ -1882,7 +1882,7 @@ void Workspace::setWasUserInteraction()
 
 void Workspace::updateTabbox()
 {
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
     if (tabBox->isDisplayed()) {
         tabBox->reset(true);

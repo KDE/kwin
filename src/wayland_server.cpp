@@ -81,7 +81,7 @@
 #include <unistd.h>
 
 //screenlocker
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
 #endif
 
@@ -590,7 +590,7 @@ void WaylandServer::initWorkspace()
 
 void WaylandServer::initScreenLocker()
 {
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     auto *screenLockerApp = ScreenLocker::KSldApp::self();
 
     ScreenLocker::KSldApp::self()->setGreeterEnvironment(kwinApp()->processStartupEnvironment());
@@ -751,7 +751,7 @@ XdgSurfaceClient *WaylandServer::findXdgSurfaceClient(SurfaceInterface *surface)
 
 bool WaylandServer::isScreenLocked() const
 {
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     if (!hasScreenLockerIntegration()) {
         return false;
     }
@@ -764,7 +764,7 @@ bool WaylandServer::isScreenLocked() const
 
 bool WaylandServer::hasScreenLockerIntegration() const
 {
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     return !m_initFlags.testFlag(InitializationFlag::NoLockScreenIntegration);
 #else
     return false;

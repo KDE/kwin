@@ -10,7 +10,7 @@
 #include "modifier_only_shortcuts.h"
 #include "input_event.h"
 #include "options.h"
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
 #include "wayland_server.h"
@@ -27,7 +27,7 @@ ModifierOnlyShortcuts::ModifierOnlyShortcuts()
     : QObject()
     , InputEventSpy()
 {
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked, this, &ModifierOnlyShortcuts::reset);
 #endif
 }
@@ -43,7 +43,7 @@ void ModifierOnlyShortcuts::keyEvent(KeyEvent *event)
         const bool wasEmpty = m_pressedKeys.isEmpty();
         m_pressedKeys.insert(event->nativeScanCode());
         if (wasEmpty && m_pressedKeys.size() == 1 &&
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
             !ScreenLockerWatcher::self()->isLocked() &&
 #endif
             m_pressedButtons == Qt::NoButton &&

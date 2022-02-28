@@ -27,7 +27,7 @@
 #include "unmanaged.h"
 #include "workspace.h"
 #include "virtualdesktops.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 
@@ -131,7 +131,7 @@ WRAP(QString, supportInformation)
 
 bool DBusInterface::startActivity(const QString &in0)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return false;
     }
@@ -144,7 +144,7 @@ bool DBusInterface::startActivity(const QString &in0)
 
 bool DBusInterface::stopActivity(const QString &in0)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return false;
     }
@@ -214,7 +214,7 @@ QVariantMap clientToVariantMap(const AbstractClient *c)
         {QStringLiteral("skipSwitcher"), c->skipSwitcher()},
         {QStringLiteral("maximizeHorizontal"), c->maximizeMode() & MaximizeHorizontal},
         {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical},
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
         {QStringLiteral("activities"), c->activities()},
 #endif
     };

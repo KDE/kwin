@@ -13,7 +13,7 @@
 // kwin
 #include "platform.h"
 #include "atoms.h"
-#ifdef KWIN_BUILD_CMS
+#if KWIN_BUILD_CMS
 #include "colormanager.h"
 #endif
 #include "composite.h"
@@ -23,7 +23,7 @@
 #include "options.h"
 #include "pluginmanager.h"
 #include "screens.h"
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
 #include "sm.h"
@@ -287,7 +287,7 @@ void Application::createWorkspace()
 
 void Application::createInput()
 {
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     ScreenLockerWatcher::create(this);
 #endif
     auto input = InputRedirection::create(this);
@@ -321,7 +321,7 @@ void Application::createPlugins()
 
 void Application::createColorManager()
 {
-#ifdef KWIN_BUILD_CMS
+#if KWIN_BUILD_CMS
     ColorManager::create(this);
 #endif
 }
@@ -363,7 +363,7 @@ void Application::destroyPlugins()
 
 void Application::destroyColorManager()
 {
-#ifdef KWIN_BUILD_CMS
+#if KWIN_BUILD_CMS
     delete ColorManager::self();
 #endif
 }

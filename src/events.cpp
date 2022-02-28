@@ -20,7 +20,7 @@
 #include "netinfo.h"
 #include "workspace.h"
 #include "atoms.h"
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
 #include "group.h"
@@ -789,7 +789,7 @@ void X11Client::updateMouseGrab()
 
     xcb_ungrab_button(kwinApp()->x11Connection(), XCB_BUTTON_INDEX_ANY, m_wrapper, XCB_MOD_MASK_ANY);
 
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     if (TabBox::TabBox::self()->forcedGlobalMouseGrab()) { // see TabBox::establishTabBoxGrab()
         m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
         return;

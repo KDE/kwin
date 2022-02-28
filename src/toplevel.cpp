@@ -10,7 +10,7 @@
 
 #include "abstract_client.h"
 #include "abstract_output.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "atoms.h"
@@ -531,7 +531,7 @@ bool Toplevel::isDeleted() const
 
 bool Toplevel::isOnCurrentActivity() const
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return true;
     }

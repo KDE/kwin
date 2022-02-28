@@ -11,7 +11,7 @@
 
 #include "abstract_output.h"
 #include "abstract_wayland_output.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "appmenu.h"
@@ -22,7 +22,7 @@
 #include "outline.h"
 #include "platform.h"
 #include "screens.h"
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
 #include "screenedge.h"
@@ -56,7 +56,7 @@ std::shared_ptr<Decoration::DecorationPalette> AbstractClient::s_defaultPalette;
 
 AbstractClient::AbstractClient()
     : Toplevel()
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     , m_tabBoxClient(QSharedPointer<TabBox::TabBoxClientImpl>(new TabBox::TabBoxClientImpl(this)))
 #endif
     , m_colorScheme(QStringLiteral("kdeglobals"))
@@ -2801,7 +2801,7 @@ QStringList AbstractClient::activities() const
  */
 void AbstractClient::setOnActivity(const QString &activity, bool enable)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return;
     }
@@ -2832,7 +2832,7 @@ void AbstractClient::setOnActivity(const QString &activity, bool enable)
  */
 void AbstractClient::setOnActivities(const QStringList &newActivitiesList)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return;
     }
@@ -2874,7 +2874,7 @@ void AbstractClient::setOnActivities(const QStringList &newActivitiesList)
  */
 void AbstractClient::setOnAllActivities(bool all)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (all == isOnAllActivities()) {
         return;
     }
@@ -3732,7 +3732,7 @@ void AbstractClient::setFullscreenGeometryRestore(const QRect &geom)
 
 void AbstractClient::cleanTabBox()
 {
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
     if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
         tabBox->nextPrev(true);

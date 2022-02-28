@@ -28,7 +28,7 @@
 #include "hide_cursor_spy.h"
 #include "touch_input.h"
 #include "x11client.h"
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
 #include "internal_client.h"
@@ -54,7 +54,7 @@
 #include <decorations/decoratedclient.h>
 
 //screenlocker
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
 #endif
 // Qt
@@ -384,7 +384,7 @@ public:
         // send event to KSldApp for global accel
         // if event is set to accepted it means a whitelisted shortcut was triggered
         // in that case we filter it out and don't process it further
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
         event->setAccepted(false);
         QCoreApplication::sendEvent(ScreenLocker::KSldApp::self(), event);
         if (event->isAccepted()) {
@@ -1383,7 +1383,7 @@ private:
     QPointF m_lastLocalTouchPos;
 };
 
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
 class TabBoxInputFilter : public InputEventFilter
 {
 public:
@@ -2516,7 +2516,7 @@ void InputRedirection::setupInputFilters()
     }
     installInputEventFilter(new EffectsFilter);
     installInputEventFilter(new MoveResizeFilter);
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     installInputEventFilter(new TabBoxInputFilter);
 #endif
     if (hasGlobalShortcutSupport) {

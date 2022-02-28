@@ -766,7 +766,7 @@ void Options::syncFromKcfgc()
     setXwaylandCrashPolicy(m_settings->xwaylandCrashPolicy());
     setXwaylandMaxCrashCount(m_settings->xwaylandMaxCrashCount());
 
-#ifdef KWIN_BUILD_DECORATIONS
+#if KWIN_BUILD_DECORATIONS
     setPlacement(m_settings->placement());
 #else
     setPlacement(Placement::Maximizing);

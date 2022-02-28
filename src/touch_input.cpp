@@ -21,7 +21,7 @@
 // KWayland
 #include <KWaylandServer/seat_interface.h>
 // screenlocker
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
 #endif
 // Qt
@@ -48,7 +48,7 @@ void TouchInputRedirection::init()
     setInited(true);
     InputDeviceHandler::init();
 
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
             [this] {

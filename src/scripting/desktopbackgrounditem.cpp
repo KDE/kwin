@@ -7,7 +7,7 @@
 #include "desktopbackgrounditem.h"
 #include "abstract_client.h"
 #include "abstract_output.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "main.h"
@@ -100,7 +100,7 @@ void DesktopBackgroundItem::updateWindow()
 
     QString activity = m_activity;
     if (activity.isEmpty()) {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
         activity = Activities::self()->current();
 #endif
     }

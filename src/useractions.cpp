@@ -35,7 +35,7 @@
 #include "virtualdesktops.h"
 #include "scripting/scripting.h"
 
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #include <kactivities/info.h>
 #endif
@@ -57,7 +57,7 @@
 #include <kauthorized.h>
 
 #include "killwindow.h"
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
 
@@ -206,7 +206,7 @@ QStringList configModules(bool controlCenter)
     else if (KAuthorized::authorizeControlModule(QStringLiteral("kde-kwinoptions.desktop")))
         args << QStringLiteral("kwinactions") << QStringLiteral("kwinfocus") <<  QStringLiteral("kwinmoving") << QStringLiteral("kwinadvanced")
              << QStringLiteral("kwinrules") << QStringLiteral("kwincompositing") << QStringLiteral("kwineffects")
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
              << QStringLiteral("kwintabbox")
 #endif
              << QStringLiteral("kwinscreenedges")
@@ -419,7 +419,7 @@ void UserActionsMenu::menuAboutToShow()
 
 void UserActionsMenu::showHideActivityMenu()
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return;
     }
@@ -693,7 +693,7 @@ void UserActionsMenu::activityPopupAboutToShow()
     if (!m_activityMenu)
         return;
 
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return;
     }
@@ -768,7 +768,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
 
 void UserActionsMenu::slotToggleOnActivity(QAction *action)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return;
     }
@@ -1093,7 +1093,7 @@ void Workspace::initShortcuts()
     #undef DEF4
     #undef DEF5
     #undef DEF6
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     TabBox::TabBox::self()->initShortcuts();
 #endif
     vds->initShortcuts();

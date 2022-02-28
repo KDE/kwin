@@ -8,7 +8,7 @@
 */
 #include <config-kwin.h>
 #include "kwin_wayland_test.h"
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
 #include "wayland_server.h"
@@ -35,7 +35,7 @@
 #include <KWaylandServer/display.h>
 
 //screenlocker
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
 #endif
 
@@ -898,7 +898,7 @@ bool waitForWindowDestroyed(AbstractClient *client)
     return destroyedSpy.wait();
 }
 
-#ifdef KWIN_BUILD_SCREENLOCKER
+#if KWIN_BUILD_SCREENLOCKER
 bool lockScreen()
 {
     if (waylandServer()->isScreenLocked()) {

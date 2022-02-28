@@ -101,7 +101,7 @@ RootInfo *RootInfo::create()
         NET::WM2KDEShadow |
         NET::WM2OpaqueRegion |
         NET::WM2GTKFrameExtents;
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
         properties2 |= NET::WM2Activities;
 #endif
     const NET::Actions actions = NET::ActionMove |

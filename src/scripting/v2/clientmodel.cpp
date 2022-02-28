@@ -9,7 +9,7 @@
 #include "clientmodel.h"
 #include <config-kwin.h>
 #include "abstract_client.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "screens.h"
@@ -302,7 +302,7 @@ AbstractLevel *AbstractLevel::create(const QList< ClientModel::LevelRestriction 
     }
     switch (restriction) {
     case ClientModel::ActivityRestriction: {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
         if (Activities::self()) {
             const QStringList &activities = Activities::self()->all();
             for (QStringList::const_iterator it = activities.begin(); it != activities.end(); ++it) {
@@ -395,7 +395,7 @@ ForkLevel::ForkLevel(const QList<ClientModel::LevelRestriction> &childRestrictio
 {
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, this, &ForkLevel::desktopCountChanged);
     connect(screens(), &Screens::countChanged, this, &ForkLevel::screenCountChanged);
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (Activities *activities = Activities::self()) {
         connect(activities, &Activities::added, this, &ForkLevel::activityAdded);
         connect(activities, &Activities::removed, this, &ForkLevel::activityRemoved);
@@ -472,7 +472,7 @@ void ForkLevel::screenCountChanged(int previousCount, int newCount)
 
 void ForkLevel::activityAdded(const QString &activityId)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (restriction() != ClientModel::ClientModel::ActivityRestriction) {
         return;
     }
@@ -499,7 +499,7 @@ void ForkLevel::activityAdded(const QString &activityId)
 
 void ForkLevel::activityRemoved(const QString &activityId)
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (restriction() != ClientModel::ClientModel::ActivityRestriction) {
         return;
     }
