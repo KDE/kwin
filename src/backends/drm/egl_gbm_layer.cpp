@@ -20,6 +20,7 @@
 #include "surfaceitem_wayland.h"
 #include "kwineglimagetexture.h"
 #include "drm_backend.h"
+#include "kwineglutils_p.h"
 
 #include "KWaylandServer/surface_interface.h"
 #include "KWaylandServer/linuxdmabufv1clientbuffer.h"
@@ -241,20 +242,26 @@ bool EglGbmLayer::doesSwapchainFit(DumbSwapchain *swapchain) const
 
 QSharedPointer<GLTexture> EglGbmLayer::texture() const
 {
+    const auto createImage = [this](GbmBuffer *gbmBuffer) {
+        EGLImageKHR image = eglCreateImageKHR(m_eglBackend->eglDisplay(), nullptr, EGL_NATIVE_PIXMAP_KHR, gbmBuffer->getBo(), nullptr);
+        if (image == EGL_NO_IMAGE_KHR) {
+            qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
+            return QSharedPointer<EGLImageTexture>(nullptr);
+        }
+        return QSharedPointer<EGLImageTexture>::create(m_eglBackend->eglDisplay(), image, GL_RGBA8, m_displayDevice->sourceSize());
+    };
+    if (m_scanoutBuffer) {
+        return createImage(dynamic_cast<GbmBuffer*>(m_scanoutBuffer.data()));
+    }
     if (m_shadowBuffer) {
         return m_shadowBuffer->texture();
     }
-    GbmBuffer *gbmBuffer = m_gbmSurface->currentBuffer().get();
+    GbmBuffer *gbmBuffer = m_gbmSurface->currentBuffer().data();
     if (!gbmBuffer) {
         qCWarning(KWIN_DRM) << "Failed to record frame: No gbm buffer!";
         return nullptr;
     }
-    EGLImageKHR image = eglCreateImageKHR(m_eglBackend->eglDisplay(), nullptr, EGL_NATIVE_PIXMAP_KHR, gbmBuffer->getBo(), nullptr);
-    if (image == EGL_NO_IMAGE_KHR) {
-        qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << glGetError();
-        return nullptr;
-    }
-    return QSharedPointer<EGLImageTexture>::create(m_eglBackend->eglDisplay(), image, GL_RGBA8, m_displayDevice->sourceSize());
+    return createImage(gbmBuffer);
 }
 
 QSharedPointer<DrmBuffer> EglGbmLayer::importBuffer()
