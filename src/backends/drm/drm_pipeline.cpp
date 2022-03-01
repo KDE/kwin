@@ -67,23 +67,7 @@ bool DrmPipeline::present()
         return gpu()->maybeModeset();
     }
     if (gpu()->atomicModeSetting()) {
-        if (!commitPipelines({this}, CommitMode::Commit)) {
-            // update properties and try again
-            m_connector->updateProperties();
-            if (pending.crtc) {
-                pending.crtc->updateProperties();
-                if (pending.crtc->primaryPlane()) {
-                    pending.crtc->primaryPlane()->updateProperties();
-                }
-                if (pending.crtc->cursorPlane()) {
-                    pending.crtc->cursorPlane()->updateProperties();
-                }
-            }
-            if (!commitPipelines({this}, CommitMode::Commit)) {
-                printDebugInfo();
-                return false;
-            }
-        }
+        return commitPipelines({this}, CommitMode::Commit);
     } else {
         if (pending.layer->hasDirectScanoutBuffer()) {
             // already presented
