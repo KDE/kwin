@@ -16,6 +16,10 @@ ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
     BASENAME text-input-unstable-v3
 )
 ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dbus-annotation/xdg-dbus-annotation-v1.xml
+    BASENAME xdg-dbus-annotation-v1
+)
+ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
     PROTOCOL protocols/wlr-layer-shell-unstable-v1.xml
     BASENAME wlr-layer-shell-unstable-v1
 )

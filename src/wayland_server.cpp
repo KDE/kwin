@@ -451,7 +451,7 @@ bool WaylandServer::init(InitializationFlags flags)
                 if (!client) {
                     return;
                 }
-                client->installDBusAnnotation(annotation);
+                client->installXdgDBusAnnotation(annotation);
             } else if (std::holds_alternative<ClientConnection*>(annotation->target())) {
                 // TODO: client-wide connections
             }

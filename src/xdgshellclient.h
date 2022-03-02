@@ -164,7 +164,7 @@ public:
     void closeWindow() override;
 
     void installAppMenu(KWaylandServer::AppMenuInterface *appMenu);
-    void installDBusAnnotation(KWaylandServer::XdgDBusAnnotationV1Interface *annotation);
+    void installXdgDBusAnnotation(KWaylandServer::XdgDBusAnnotationV1Interface *annotation);
     void installServerDecoration(KWaylandServer::ServerSideDecorationInterface *decoration);
     void installPalette(KWaylandServer::ServerSideDecorationPaletteInterface *palette);
     void installXdgDecoration(KWaylandServer::XdgToplevelDecorationV1Interface *decoration);

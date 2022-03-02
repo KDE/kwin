@@ -10,7 +10,6 @@
 */
 #include "xdgshellclient.h"
 #include "abstract_wayland_output.h"
-#include <KWaylandServer/xdgdbusannotation_v1_interface.h>
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -33,6 +32,7 @@
 #include <KWaylandServer/server_decoration_interface.h>
 #include <KWaylandServer/server_decoration_palette_interface.h>
 #include <KWaylandServer/surface_interface.h>
+#include <KWaylandServer/xdgdbusannotation_v1_interface.h>
 #include <KWaylandServer/xdgdecoration_v1_interface.h>
 
 using namespace KWaylandServer;
@@ -1441,7 +1441,7 @@ void XdgToplevelClient::installAppMenu(AppMenuInterface *appMenu)
     updateMenu(appMenu->address());
 }
 
-void XdgToplevelClient::installDBusAnnotation(XdgDBusAnnotationV1Interface* annotation)
+void XdgToplevelClient::installXdgDBusAnnotation(XdgDBusAnnotationV1Interface* annotation)
 {
     if (annotation->name() != QLatin1String("wayland.appmenu.canonical-convention")) {
         return;
