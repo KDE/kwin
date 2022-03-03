@@ -58,6 +58,7 @@ Q_SIGNALS:
     void outputScreencastRequested(ScreencastStreamV1Interface *stream, OutputInterface *output, CursorMode mode);
     void virtualOutputScreencastRequested(ScreencastStreamV1Interface *stream, const QString &name, const QSize &size, double scaling, CursorMode mode);
     void windowScreencastRequested(ScreencastStreamV1Interface *stream, const QString &winid, CursorMode mode);
+    void regionScreencastRequested(ScreencastStreamV1Interface *stream, const QRect &geometry, qreal scaling, CursorMode mode);
 
 private:
     QScopedPointer<ScreencastV1InterfacePrivate> d;

@@ -9,12 +9,13 @@
 #include "output_interface.h"
 
 #include <QDebug>
+#include <QRect>
 
 #include "qwayland-server-zkde-screencast-unstable-v1.h"
 
 namespace KWaylandServer
 {
-static int s_version = 2;
+static int s_version = 3;
 
 class ScreencastStreamV1InterfacePrivate : public QtWaylandServer::zkde_screencast_stream_unstable_v1
 {
@@ -109,6 +110,21 @@ public:
                                                    {width, height},
                                                    wl_fixed_to_double(scale),
                                                    ScreencastV1Interface::CursorMode(pointer));
+    }
+
+    void zkde_screencast_unstable_v1_stream_region(QtWaylandServer::zkde_screencast_unstable_v1::Resource *resource,
+                                                   uint32_t stream,
+                                                   int32_t x,
+                                                   int32_t y,
+                                                   uint32_t width,
+                                                   uint32_t height,
+                                                   wl_fixed_t scale,
+                                                   uint32_t pointer) override
+    {
+        Q_EMIT q->regionScreencastRequested(createStream(resource, stream),
+                                            {x, y, int(width), int(height)},
+                                            wl_fixed_to_double(scale),
+                                            ScreencastV1Interface::CursorMode(pointer));
     }
 
     void zkde_screencast_unstable_v1_destroy(Resource *resource) override
