@@ -309,6 +309,17 @@ static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutpu
     return rects;
 }
 
+
+QSharedPointer<KWin::GLTexture> EglWaylandBackend::textureForOutput(KWin::AbstractOutput *output) const
+{
+    QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, output->pixelSize()));
+    GLRenderTarget::pushRenderTarget(m_outputs[output]->renderTarget());
+    GLRenderTarget renderTarget(texture.data());
+    renderTarget.blitFromFramebuffer(QRect(0, texture->height(), texture->width(), -texture->height()));
+    GLRenderTarget::popRenderTarget();
+    return texture;
+}
+
 void EglWaylandBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &damagedRegion)
 {
     Q_ASSERT_X(output, "aboutToStartPainting", "not using per screen rendering");
