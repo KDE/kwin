@@ -230,6 +230,11 @@ public:
     AbstractDropHandler *dropHandlerForSurface(SurfaceInterface *surface) const;
 
     /**
+     * If there is a current drag in progress, force it to cancel
+     */
+    void cancelDrag();
+
+    /**
      * @name Pointer related methods
      */
     ///@{
