@@ -2240,6 +2240,22 @@ public:
         }
         return true;
     }
+    bool keyEvent(QKeyEvent *event)
+    {
+        if (event->key() != Qt::Key_Escape) {
+            return false;
+        }
+
+        auto seat = waylandServer()->seat();
+        if (!seat->isDrag()) {
+            return false;
+        }
+        seat->setTimestamp(event->timestamp());
+
+        seat->cancelDrag();
+
+        return true;
+    }
 private:
     void raiseDragTarget()
     {
