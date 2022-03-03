@@ -640,6 +640,17 @@ void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape 
 void EffectsHandlerImpl::doStartMouseInterception(Qt::CursorShape shape)
 {
     input()->pointer()->setEffectsOverrideCursor(shape);
+
+    // We want to allow global shortcuts to be triggered when moving a
+    // window so it is possible to pick up a window and then move it to a
+    // different desktop by using the global shortcut to switch desktop.
+    // However, that means that some other things can also be triggered. If
+    // an effect that fill the screen gets triggered that way, we end up in a
+    // weird state where the move will restart after the effect closes. So to
+    // avoid that, abort move/resize if a full screen effect starts.
+    if (workspace()->moveResizeWindow()) {
+        workspace()->moveResizeWindow()->endInteractiveMoveResize();
+    }
 }
 
 void EffectsHandlerImpl::stopMouseInterception(Effect *effect)

@@ -2853,7 +2853,6 @@ void InputRedirection::setupInputFilters()
     if (hasGlobalShortcutSupport) {
         installInputEventFilter(new ScreenEdgeInputFilter);
     }
-    installInputEventFilter(new MoveResizeFilter);
 #if KWIN_BUILD_TABBOX
     installInputEventFilter(new TabBoxInputFilter);
 #endif
@@ -2861,6 +2860,7 @@ void InputRedirection::setupInputFilters()
         installInputEventFilter(new GlobalShortcutFilter);
     }
     installInputEventFilter(new EffectsFilter);
+    installInputEventFilter(new MoveResizeFilter);
     installInputEventFilter(new PopupInputFilter);
     installInputEventFilter(new DecorationEventFilter);
     installInputEventFilter(new WindowActionInputFilter);
