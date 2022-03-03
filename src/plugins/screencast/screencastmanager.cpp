@@ -138,11 +138,7 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
     };
     connect(stream, &ScreenCastStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
         Compositor::self()->scene()->addRepaint(streamOutput->geometry());
-        streamOutput->recordingStarted();
         connect(streamOutput, &AbstractWaylandOutput::outputChange, stream, bufferToStream);
-    });
-    connect(stream, &ScreenCastStream::stopStreaming, waylandStream, [streamOutput]{
-        streamOutput->recordingStopped();
     });
     integrateStreams(waylandStream, stream);
 }

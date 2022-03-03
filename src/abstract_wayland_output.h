@@ -139,11 +139,6 @@ public:
      */
     static QMatrix4x4 logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform);
 
-    void recordingStarted();
-    void recordingStopped();
-
-    bool isBeingRecorded();
-
     void setVrrPolicy(RenderLoop::VrrPolicy policy);
     RenderLoop::VrrPolicy vrrPolicy() const;
     RgbRange rgbRange() const;
@@ -210,7 +205,6 @@ private:
     DpmsMode m_dpmsMode = DpmsMode::On;
     SubPixel m_subPixel = SubPixel::Unknown;
     int m_refreshRate = -1;
-    int m_recorders = 0;
     bool m_isEnabled = true;
     bool m_internal = false;
     bool m_isPlaceholder = false;
