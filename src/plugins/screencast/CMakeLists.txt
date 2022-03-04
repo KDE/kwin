@@ -4,6 +4,7 @@ target_sources(KWinScreencastPlugin PRIVATE
     main.cpp
     outputscreencastsource.cpp
     pipewirecore.cpp
+    regionscreencastsource.cpp
     screencastmanager.cpp
     screencastsource.cpp
     screencaststream.cpp
