@@ -365,7 +365,7 @@ void Compositor::startupWithWorkspace()
         auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
         workspaceLayer->setDelegate(new SceneDelegate(m_scene));
         workspaceLayer->setGeometry(workspace()->geometry());
-        connect(workspace(), &Workspace::geometryChanged, this, [workspaceLayer]() {
+        connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
             workspaceLayer->setGeometry(workspace()->geometry());
         });
         addSuperLayer(workspaceLayer);
@@ -424,7 +424,7 @@ void Compositor::addOutput(AbstractOutput *output)
     auto workspaceLayer = new RenderLayer(output->renderLoop());
     workspaceLayer->setDelegate(new SceneDelegate(m_scene, output));
     workspaceLayer->setGeometry(output->geometry());
-    connect(output, &AbstractOutput::geometryChanged, this, [output, workspaceLayer]() {
+    connect(output, &AbstractOutput::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
         workspaceLayer->setGeometry(output->geometry());
     });
 
