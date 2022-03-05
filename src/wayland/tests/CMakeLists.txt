@@ -9,8 +9,8 @@ add_executable(testServer ${testServer_SRCS})
 target_link_libraries(testServer Plasma::KWaylandServer)
 ecm_mark_as_test(testServer)
 
-find_package(Qt5Widgets ${QT_MIN_VERSION} CONFIG QUIET)
-if (Qt5Widgets_FOUND)
+find_package(Qt${QT_MAJOR_VERSION}Widgets ${QT_MIN_VERSION} CONFIG QUIET)
+if (TARGET Qt::Widgets)
     set(testRenderingServer_SRCS
         renderingservertest.cpp
         )
@@ -43,7 +43,7 @@ target_link_libraries(shadowTest KF5::WaylandClient)
 ecm_mark_as_test(shadowTest)
 
 
-if (Qt5Widgets_FOUND)
+if (TARGET Qt::Widgets)
     add_executable(dpmsTest dpmstest.cpp)
     target_link_libraries(dpmsTest KF5::WaylandClient Qt::Widgets)
     ecm_mark_as_test(dpmsTest)

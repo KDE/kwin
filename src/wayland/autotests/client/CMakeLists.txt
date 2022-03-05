@@ -23,14 +23,20 @@ ecm_mark_as_test(testWaylandSurface)
 ########################################################
 # Test WaylandSeat
 ########################################################
+add_executable(testWaylandSeat)
 set( testWaylandSeat_SRCS
         test_wayland_seat.cpp
     )
-ecm_add_qtwayland_client_protocol(testWaylandSeat_SRCS
-    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml
-    BASENAME pointer-gestures-unstable-v1
-)
-add_executable(testWaylandSeat ${testWaylandSeat_SRCS})
+if (QT_MAJOR_VERSION EQUAL "5")
+    ecm_add_qtwayland_client_protocol(testWaylandSeat_SRCS
+        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml
+        BASENAME pointer-gestures-unstable-v1
+    )
+else()
+    qt6_generate_wayland_protocol_client_sources(testWaylandSeat FILES
+        ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml)
+endif()
+target_sources(testWaylandSeat PRIVATE ${testWaylandSeat_SRCS})
 target_link_libraries( testWaylandSeat Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer Wayland::Client Wayland::Server)
 add_test(NAME kwayland-testWaylandSeat COMMAND testWaylandSeat)
 ecm_mark_as_test(testWaylandSeat)
