@@ -305,6 +305,11 @@ void LinuxDmaBufV1ClientBufferIntegration::setRendererInterface(RendererInterfac
     d->rendererInterface = rendererInterface;
 }
 
+bool operator==(const LinuxDmaBufV1Feedback::Tranche &t1, const LinuxDmaBufV1Feedback::Tranche &t2)
+{
+    return t1.device == t2.device && t1.flags == t2.flags && t1.formatTable == t2.formatTable;
+}
+
 void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(const QVector<LinuxDmaBufV1Feedback::Tranche> &tranches)
 {
     if (LinuxDmaBufV1FeedbackPrivate::get(d->defaultFeedback.data())->m_tranches != tranches) {
@@ -456,11 +461,6 @@ LinuxDmaBufV1FeedbackPrivate *LinuxDmaBufV1FeedbackPrivate::get(LinuxDmaBufV1Fee
 LinuxDmaBufV1FeedbackPrivate::LinuxDmaBufV1FeedbackPrivate(LinuxDmaBufV1ClientBufferIntegrationPrivate *bufferintegration)
     : m_bufferintegration(bufferintegration)
 {
-}
-
-bool operator==(const LinuxDmaBufV1Feedback::Tranche &t1, const LinuxDmaBufV1Feedback::Tranche &t2)
-{
-    return t1.device == t2.device && t1.flags == t2.flags && t1.formatTable == t2.formatTable;
 }
 
 void LinuxDmaBufV1FeedbackPrivate::send(Resource *resource)
