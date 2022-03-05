@@ -14,6 +14,8 @@
 #include "qwayland-server-kde-output-management-v2.h"
 #include "qwayland-server-kde-output-device-v2.h"
 
+#include <wayland-client-protocol.h>
+
 #include <optional>
 
 namespace KWaylandServer

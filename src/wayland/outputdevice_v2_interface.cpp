@@ -15,6 +15,8 @@
 #include <QString>
 #include <QPointer>
 
+#include <wayland-client-protocol.h>
+
 #include "qwayland-server-kde-output-device-v2.h"
 
 namespace KWaylandServer

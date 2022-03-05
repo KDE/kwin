@@ -18,6 +18,8 @@
 #include "surface_interface_p.h"
 #include "surfacerole_p.h"
 #include "utils.h"
+
+#include <wayland-server.h>
 // std
 #include <algorithm>
 
