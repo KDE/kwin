@@ -6,7 +6,7 @@ set(testServer_SRCS
     waylandservertest.cpp
     )
 add_executable(testServer ${testServer_SRCS})
-target_link_libraries(testServer Plasma::KWaylandServer)
+target_link_libraries(testServer Plasma::KWaylandServer Qt::CorePrivate)
 ecm_mark_as_test(testServer)
 
 find_package(Qt${QT_MAJOR_VERSION}Widgets ${QT_MIN_VERSION} CONFIG QUIET)
