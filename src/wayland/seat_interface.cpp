@@ -352,7 +352,7 @@ void SeatInterface::setHasKeyboard(bool has)
     d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasKeyboardChanged(d->keyboard);
+    Q_EMIT hasKeyboardChanged(!d->keyboard.isNull());
 }
 
 void SeatInterface::setHasPointer(bool has)
@@ -370,7 +370,7 @@ void SeatInterface::setHasPointer(bool has)
     d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasPointerChanged(d->pointer);
+    Q_EMIT hasPointerChanged(!d->pointer.isNull());
 }
 
 void SeatInterface::setHasTouch(bool has)
@@ -388,7 +388,7 @@ void SeatInterface::setHasTouch(bool has)
     d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasTouchChanged(d->touch);
+    Q_EMIT hasTouchChanged(!d->touch.isNull());
 }
 
 void SeatInterface::setName(const QString &name)
@@ -415,17 +415,17 @@ QString SeatInterface::name() const
 
 bool SeatInterface::hasPointer() const
 {
-    return d->pointer;
+    return !d->pointer.isNull();
 }
 
 bool SeatInterface::hasKeyboard() const
 {
-    return d->keyboard;
+    return !d->keyboard.isNull();
 }
 
 bool SeatInterface::hasTouch() const
 {
-    return d->touch;
+    return !d->touch.isNull();
 }
 
 Display *SeatInterface::display() const
