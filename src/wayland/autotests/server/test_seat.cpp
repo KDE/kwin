@@ -29,7 +29,7 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-seat-tes
 
 void TestWaylandServerSeat::testCapabilities()
 {
-    Display display;
+    KWaylandServer::Display display;
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display);
@@ -79,7 +79,7 @@ void TestWaylandServerSeat::testCapabilities()
 
 void TestWaylandServerSeat::testName()
 {
-    Display display;
+    KWaylandServer::Display display;
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display);
@@ -98,7 +98,7 @@ void TestWaylandServerSeat::testName()
 
 void TestWaylandServerSeat::testPointerButton()
 {
-    Display display;
+    KWaylandServer::Display display;
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display);
@@ -129,7 +129,7 @@ void TestWaylandServerSeat::testPointerButton()
 
 void TestWaylandServerSeat::testPointerPos()
 {
-    Display display;
+    KWaylandServer::Display display;
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display);
@@ -159,7 +159,7 @@ void TestWaylandServerSeat::testPointerPos()
 
 void TestWaylandServerSeat::testRepeatInfo()
 {
-    Display display;
+    KWaylandServer::Display display;
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display);
@@ -177,7 +177,7 @@ void TestWaylandServerSeat::testRepeatInfo()
 
 void TestWaylandServerSeat::testMultiple()
 {
-    Display display;
+    KWaylandServer::Display display;
     display.addSocketName(s_socketName);
     display.start();
     QVERIFY(display.seats().isEmpty());

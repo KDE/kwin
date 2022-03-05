@@ -171,7 +171,7 @@ private:
     InputMethodV1 *m_inputMethod;
     InputPanel *m_inputPanel;
     QThread *m_thread;
-    Display m_display;
+    KWaylandServer::Display m_display;
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
 

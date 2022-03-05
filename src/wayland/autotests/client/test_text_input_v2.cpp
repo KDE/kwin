@@ -53,7 +53,7 @@ private Q_SLOTS:
 private:
     SurfaceInterface *waitForSurface();
     TextInput *createTextInput();
-    Display *m_display = nullptr;
+    KWaylandServer::Display *m_display = nullptr;
     SeatInterface *m_seatInterface = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
     TextInputManagerV2Interface *m_textInputManagerV2Interface = nullptr;
@@ -71,7 +71,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-text-input-0")
 void TextInputTest::init()
 {
     delete m_display;
-    m_display = new Display(this);
+    m_display = new KWaylandServer::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

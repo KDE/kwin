@@ -33,7 +33,7 @@ private Q_SLOTS:
     void testIdleInhibitBlocksTimeout();
 
 private:
-    Display *m_display = nullptr;
+    KWaylandServer::Display *m_display = nullptr;
     SeatInterface *m_seatInterface = nullptr;
     IdleInterface *m_idleInterface = nullptr;
     ConnectionThread *m_connection = nullptr;
@@ -48,7 +48,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-idle-0");
 void IdleTest::init()
 {
     delete m_display;
-    m_display = new Display(this);
+    m_display = new KWaylandServer::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

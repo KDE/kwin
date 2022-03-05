@@ -236,7 +236,7 @@ int main(int argc, char **argv)
     parser.addOption(xwaylandOption);
     parser.process(app);
 
-    Display display;
+    KWaylandServer::Display display;
     display.start();
     new DataDeviceManagerInterface(&display);
     new CompositorInterface(&display, &display);

@@ -44,7 +44,7 @@ private Q_SLOTS:
     void testAlreadyConstrained();
 
 private:
-    Display *m_display = nullptr;
+    KWaylandServer::Display *m_display = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
     SeatInterface *m_seatInterface = nullptr;
     PointerConstraintsV1Interface *m_pointerConstraintsInterface = nullptr;
@@ -62,7 +62,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-pointer_constr
 void TestPointerConstraints::init()
 {
     delete m_display;
-    m_display = new Display(this);
+    m_display = new KWaylandServer::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

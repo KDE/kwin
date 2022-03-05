@@ -34,7 +34,7 @@ private Q_SLOTS:
     void testMultiplePlasmaShellSurfacesForSurface();
 
 private:
-    Display *m_display = nullptr;
+    KWaylandServer::Display *m_display = nullptr;
     CompositorInterface *m_ci = nullptr;
     PlasmaShellInterface *m_psi = nullptr;
     ConnectionThread *m_connection = nullptr;
@@ -49,7 +49,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-error-0");
 void ErrorTest::init()
 {
     delete m_display;
-    m_display = new Display(this);
+    m_display = new KWaylandServer::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

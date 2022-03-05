@@ -34,8 +34,8 @@ private Q_SLOTS:
 
 void TestWaylandServerDisplay::testSocketName()
 {
-    Display display;
-    QSignalSpy changedSpy(&display, &Display::socketNamesChanged);
+    KWaylandServer::Display display;
+    QSignalSpy changedSpy(&display, &KWaylandServer::Display::socketNamesChanged);
     QVERIFY(changedSpy.isValid());
     QCOMPARE(display.socketNames(), QStringList());
     const QString testSName = QStringLiteral("fooBar");
@@ -55,7 +55,7 @@ void TestWaylandServerDisplay::testStartStop()
     QVERIFY(runtimeDir.exists());
     QVERIFY(!runtimeDir.exists(testSocketName));
 
-    QScopedPointer<Display> display(new Display);
+    QScopedPointer<KWaylandServer::Display> display(new KWaylandServer::Display);
     QSignalSpy runningSpy(display.data(), SIGNAL(runningChanged(bool)));
     QVERIFY(runningSpy.isValid());
     display->addSocketName(testSocketName);
@@ -73,7 +73,7 @@ void TestWaylandServerDisplay::testStartStop()
 
 void TestWaylandServerDisplay::testAddRemoveOutput()
 {
-    Display display;
+    KWaylandServer::Display display;
     display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-output-0"));
     display.start();
 
@@ -87,7 +87,7 @@ void TestWaylandServerDisplay::testAddRemoveOutput()
 
 void TestWaylandServerDisplay::testClientConnection()
 {
-    Display display;
+    KWaylandServer::Display display;
     display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-client-connection"));
     display.start();
     QSignalSpy connectedSpy(&display, SIGNAL(clientConnected(KWaylandServer::ClientConnection *)));
@@ -163,7 +163,7 @@ void TestWaylandServerDisplay::testClientConnection()
 
 void TestWaylandServerDisplay::testConnectNoSocket()
 {
-    Display display;
+    KWaylandServer::Display display;
     display.start();
     QVERIFY(display.isRunning());
 
@@ -180,7 +180,7 @@ void TestWaylandServerDisplay::testConnectNoSocket()
 
 void TestWaylandServerDisplay::testOutputManagement()
 {
-    Display display;
+    KWaylandServer::Display display;
     display.addSocketName("kwayland-test-0");
     display.start();
     new OutputManagementV2Interface(&display, this);
@@ -192,16 +192,16 @@ void TestWaylandServerDisplay::testAutoSocketName()
     QVERIFY(runtimeDir.isValid());
     QVERIFY(qputenv("XDG_RUNTIME_DIR", runtimeDir.path().toUtf8()));
 
-    Display display0;
-    QSignalSpy socketNameChangedSpy0(&display0, &Display::socketNamesChanged);
+    KWaylandServer::Display display0;
+    QSignalSpy socketNameChangedSpy0(&display0, &KWaylandServer::Display::socketNamesChanged);
     QVERIFY(socketNameChangedSpy0.isValid());
     QVERIFY(display0.addSocketName());
     display0.start();
     QVERIFY(display0.isRunning());
     QCOMPARE(socketNameChangedSpy0.count(), 1);
 
-    Display display1;
-    QSignalSpy socketNameChangedSpy1(&display1, &Display::socketNamesChanged);
+    KWaylandServer::Display display1;
+    QSignalSpy socketNameChangedSpy1(&display1, &KWaylandServer::Display::socketNamesChanged);
     QVERIFY(socketNameChangedSpy1.isValid());
     QVERIFY(display1.addSocketName());
     display1.start();

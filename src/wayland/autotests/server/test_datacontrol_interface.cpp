@@ -151,7 +151,7 @@ private:
     KWayland::Client::Seat *m_clientSeat = nullptr;
 
     QThread *m_thread;
-    Display *m_display;
+    KWaylandServer::Display *m_display;
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
 
@@ -166,7 +166,7 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-datacontrol-tes
 
 void DataControlInterfaceTest::init()
 {
-    m_display = new Display();
+    m_display = new KWaylandServer::Display();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

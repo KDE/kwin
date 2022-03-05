@@ -62,7 +62,7 @@ void TestAppmenu::init()
     using namespace KWaylandServer;
     qRegisterMetaType<AppMenuInterface::InterfaceAddress>();
     delete m_display;
-    m_display = new Display(this);
+    m_display = new KWaylandServer::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

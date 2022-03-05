@@ -49,7 +49,7 @@ private:
     KWayland::Client::ShmPool *m_shm;
 
     QThread *m_thread;
-    Display m_display;
+    KWaylandServer::Display m_display;
     CompositorInterface *m_serverCompositor;
     Viewporter *m_viewporter;
 };

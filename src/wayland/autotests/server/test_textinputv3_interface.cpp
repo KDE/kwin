@@ -115,7 +115,7 @@ private:
 
     SeatInterface *m_seat;
     QThread *m_thread;
-    Display m_display;
+    KWaylandServer::Display m_display;
     TextInputV3 *m_clientTextInputV3;
     CompositorInterface *m_serverCompositor;
     TextInputV3Interface *m_serverTextInputV3;

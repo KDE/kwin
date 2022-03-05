@@ -61,7 +61,7 @@ private:
     XdgShellInterface *m_xdgShellInterface = nullptr;
     Compositor *m_compositor = nullptr;
     XdgShell *m_xdgShell = nullptr;
-    Display *m_display = nullptr;
+    KWaylandServer::Display *m_display = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
     OutputInterface *m_o1Interface = nullptr;
     OutputInterface *m_o2Interface = nullptr;
@@ -88,7 +88,7 @@ private:
 void XdgShellTest::init()
 {
     delete m_display;
-    m_display = new Display(this);
+    m_display = new KWaylandServer::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

@@ -34,7 +34,7 @@ private Q_SLOTS:
     void testSurfaceDestroy();
 
 private:
-    Display *m_display = nullptr;
+    KWaylandServer::Display *m_display = nullptr;
 
     ConnectionThread *m_connection = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
@@ -51,7 +51,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-shadow-0");
 void ShadowTest::init()
 {
     delete m_display;
-    m_display = new Display(this);
+    m_display = new KWaylandServer::Display(this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
