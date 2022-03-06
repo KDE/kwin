@@ -9,19 +9,18 @@
 
 #include <KCModule>
 #include <KPluginMetaData>
+#include <KPluginModel>
+#include <KQuickAddons/ConfigModule>
 #include <KSharedConfig>
-
-namespace Ui
-{
-class Module;
-}
 
 class KJob;
 class KWinScriptsData;
 
-class Module : public KCModule
+class Module : public KQuickAddons::ConfigModule
 {
     Q_OBJECT
+        
+    Q_PROPERTY(QAbstractItemModel *effectsModel READ effectsModel CONSTANT)
 public:
     /**
      * Constructor.
@@ -29,7 +28,7 @@ public:
      * @param parent Parent widget of the module
      * @param args Arguments for the module
      */
-    explicit Module(QWidget *parent, const QVariantList &args = QVariantList());
+    explicit Module(QObject *parent, const QVariantList &args = QVariantList());
 
     /**
      * Destructor.
@@ -38,6 +37,10 @@ public:
     void load() override;
     void save() override;
     void defaults() override;
+    QAbstractItemModel *effectsModel() const
+    {
+        return m_model;
+    }
 
 Q_SIGNALS:
     void pendingDeletionsChanged();
@@ -51,18 +54,13 @@ protected Q_SLOTS:
 
     void importScriptInstallFinished(KJob *job);
 
+    void configure(const KPluginMetaData &data);
+
 private:
-    /**
-     * UI
-     */
-    Ui::Module *ui;
-    /**
-     * Updates the contents of the list view.
-     */
-    void updateListViewContents();
     KSharedConfigPtr m_kwinConfig;
     KWinScriptsData *m_kwinScriptsData;
     QList<KPluginMetaData> m_pendingDeletions;
+    KPluginModel *m_model;
 };
 
 #endif // MODULE_H

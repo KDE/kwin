@@ -6,11 +6,6 @@
 */
 #include "module.h"
 
-#include "config-kwin.h"
-
-#include "kwinscriptsdata.h"
-#include "ui_module.h"
-
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
@@ -29,11 +24,16 @@
 #include <KPackage/PackageStructure>
 #include <KPluginFactory>
 
-Module::Module(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
-    , ui(new Ui::Module)
+#include <KCMultiDialog>
+
+#include "kwinscriptsdata.h"
+#include "config-kwin.h"
+
+Module::Module(QObject *parent, const QVariantList &args)
+    : KQuickAddons::ConfigModule(parent, args)
     , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
     , m_kwinScriptsData(new KWinScriptsData(this))
+    , m_model(new KPluginModel(this))
 {
     KAboutData *about = new KAboutData("kwin-scripts",
                                        i18n("KWin Scripts"),
@@ -46,61 +46,14 @@ Module::Module(QWidget *parent, const QVariantList &args)
 
     // Hide the help button, because there is no help
     setButtons(Apply | Default);
-
-    ui->setupUi(this);
-
-    ui->messageWidget->hide();
-
-    ui->ghnsButton->setConfigFile(QStringLiteral("kwinscripts.knsrc"));
-    connect(ui->ghnsButton, &KNSWidgets::Button::dialogFinished, this, [this](const KNSCore::Entry::List &changedEntries) {
-        if (!changedEntries.isEmpty()) {
-            ui->scriptSelector->clear();
-            updateListViewContents();
-        }
-    });
-
-    ui->scriptSelector->setConfig(m_kwinConfig->group("Plugins"));
-    connect(ui->scriptSelector, &KPluginWidget::changed, this, [this](bool isChanged) {
-        Q_EMIT changed(isChanged || !m_pendingDeletions.isEmpty());
-    });
-    connect(ui->scriptSelector, &KPluginWidget::defaulted, this, [this](bool isDefaulted) {
-        Q_EMIT defaulted(isDefaulted && m_pendingDeletions.isEmpty());
-    });
-    connect(this, &Module::defaultsIndicatorsVisibleChanged, ui->scriptSelector, &KPluginWidget::setDefaultsIndicatorsVisible);
-    connect(ui->importScriptButton, &QPushButton::clicked, this, &Module::importScript);
-
-    ui->scriptSelector->setAdditionalButtonHandler([this](const KPluginMetaData &info) {
-        QPushButton *button = new QPushButton(ui->scriptSelector);
-        button->setIcon(QIcon::fromTheme(QStringLiteral("delete")));
-        button->setEnabled(QFileInfo(info.fileName()).isWritable());
-        connect(button, &QPushButton::clicked, this, [this, info]() {
-            if (m_pendingDeletions.contains(info)) {
-                m_pendingDeletions.removeOne(info);
-            } else {
-                m_pendingDeletions << info;
-            }
-            Q_EMIT pendingDeletionsChanged();
-        });
-        connect(this, &Module::pendingDeletionsChanged, button, [this, info, button]() {
-            button->setIcon(QIcon::fromTheme(m_pendingDeletions.contains(info) ? QStringLiteral("edit-undo") : QStringLiteral("delete")));
-            changed(ui->scriptSelector->isSaveNeeded() || !m_pendingDeletions.isEmpty());
-            defaulted(ui->scriptSelector->isDefault() && m_pendingDeletions.isEmpty());
-        });
-        return button;
-    });
-
-    updateListViewContents();
 }
 
 Module::~Module()
 {
-    delete ui;
 }
 
 void Module::importScript()
 {
-    ui->messageWidget->animatedHide();
-
     QString path = QFileDialog::getOpenFileName(nullptr, i18n("Import KWin Script"), QDir::homePath(),
                                                 i18n("*.kwinscript|KWin scripts (*.kwinscript)"));
 
@@ -117,15 +70,24 @@ void Module::importScript()
     connect(installJob, &KJob::result, this, &Module::importScriptInstallFinished);
 }
 
+void Module::configure(const KPluginMetaData &data)
+{
+    qWarning()<<Q_FUNC_INFO << data.fileName();
+    auto dialog = new KCMultiDialog();
+    dialog->addModule(data);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->show();
+}
+
 void Module::importScriptInstallFinished(KJob *job)
 {
     // if the applet is already installed, just add it to the containment
-    if (job->error() != KJob::NoError) {
+    /*if (job->error() != KJob::NoError) {
         ui->messageWidget->setText(i18nc("Placeholder is error message returned from the install service", "Cannot import selected script.\n%1", job->errorString()));
         ui->messageWidget->setMessageType(KMessageWidget::Error);
         ui->messageWidget->animatedShow();
         return;
-    }
+    }*/
 
     using namespace KPackage;
 
@@ -135,35 +97,29 @@ void Module::importScriptInstallFinished(KJob *job)
     package.setPath(job->property("packagePath").toString());
     Q_ASSERT(package.isValid());
 
-    ui->messageWidget->setText(i18nc("Placeholder is name of the script that was imported", "The script \"%1\" was successfully imported.", package.metadata().name()));
+    /*ui->messageWidget->setText(i18nc("Placeholder is name of the script that was imported", "The script \"%1\" was successfully imported.", package.metadata().name()));
     ui->messageWidget->setMessageType(KMessageWidget::Information);
     ui->messageWidget->animatedShow();
 
     updateListViewContents();
+     */
 
-    Q_EMIT changed(true);
-}
-
-void Module::updateListViewContents()
-{
-    ui->scriptSelector->clear();
-    ui->scriptSelector->addPlugins(m_kwinScriptsData->pluginMetaDataList(), QString());
+    setNeedsSave(false);
 }
 
 void Module::defaults()
 {
     m_pendingDeletions.clear();
     Q_EMIT pendingDeletionsChanged();
-    ui->scriptSelector->defaults();
 }
 
 void Module::load()
 {
+    m_model->addPlugins(m_kwinScriptsData->pluginMetaDataList(), QStringLiteral("bla :)"));
     m_pendingDeletions.clear();
     Q_EMIT pendingDeletionsChanged();
-    updateListViewContents();
 
-    Q_EMIT changed(false);
+    setNeedsSave(false);
 }
 
 void Module::save()
@@ -176,21 +132,26 @@ void Module::save()
         root.cdUp();
         KJob *uninstallJob = Package(structure).uninstall(info.pluginId(), root.absolutePath());
         connect(uninstallJob, &KJob::result, this, [this, uninstallJob]() {
-            updateListViewContents();
             // If the uninstallation is successful the entry will be immediately removed
-            if (!uninstallJob->errorString().isEmpty()) {
+            /*if (!uninstallJob->errorString().isEmpty()) {
                 ui->messageWidget->setText(i18n("Error when uninstalling KWin Script: %1", uninstallJob->errorString()));
                 ui->messageWidget->setMessageType(KMessageWidget::Error);
                 ui->messageWidget->animatedShow();
-            }
+            }*/
         });
     }
     m_pendingDeletions.clear();
 
-    ui->scriptSelector->save();
     m_kwinConfig->sync();
     QDBusMessage message = QDBusMessage::createMethodCall("org.kde.KWin", "/Scripting", "org.kde.kwin.Scripting", "start");
     QDBusConnection::sessionBus().asyncCall(message);
 
-    Q_EMIT changed(false);
+    setNeedsSave(false);
 }
+
+K_PLUGIN_FACTORY_WITH_JSON(KcmKWinScriptsFactory, "kwinscripts.json",
+                 registerPlugin<Module>();
+                 registerPlugin<KWinScriptsData>();
+                )
+
+#include "module.moc"
