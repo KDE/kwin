@@ -355,6 +355,7 @@ void Decoration::init()
                 rect = rect.adjusted(-m_padding->left(), -m_padding->top(), m_padding->right(), m_padding->bottom());
             }
             m_view->setGeometry(rect);
+            updateBlur();
         };
         connect(this, &Decoration::bordersChanged, this, resizeWindow);
         connect(decorationClient, &KDecoration2::DecoratedClient::widthChanged, this, resizeWindow);
@@ -569,6 +570,35 @@ void Decoration::updateExtendedBorders()
     setResizeOnlyBorders(QMargins(extLeft, 0, extRight, extBottom));
 }
 
+void Decoration::updateBlur()
+{
+    if (!m_item) {
+        return;
+    }
+
+    QRegion mask;
+
+    const QVariant maskProperty = m_item->property("decorationMask");
+    if (static_cast<QMetaType::Type>(maskProperty.type()) == QMetaType::QRegion) {
+        mask = maskProperty.value<QRegion>();
+
+        if (!mask.isNull()) {
+            QPoint maskOffset(-m_padding->left(), -m_padding->top());
+
+            if (clientPointer() && !clientPointer()->isMaximized()) {
+                // moving mask by 1,1 because mask size has already been adjusted to be smaller than the frame.
+                // Since the svg will have antialiasing and the mask not, there will be artifacts at the corners,
+                // if they go under the svg they're less evident.
+                maskOffset += QPoint(1, 1);
+            }
+
+            mask.translate(maskOffset);
+        }
+    }
+
+    setBlurRegion(mask);
+}
+
 void Decoration::updateBuffer()
 {
     const QImage buffer = m_view->bufferAsImage();
@@ -582,6 +612,7 @@ void Decoration::updateBuffer()
         m_contentRect = m_contentRect.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
     }
     updateShadow();
+    updateBlur();
     update();
 }
 

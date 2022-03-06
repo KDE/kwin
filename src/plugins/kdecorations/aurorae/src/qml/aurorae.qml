@@ -10,6 +10,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 Decoration {
     id: root
     property bool animate: false
+    property alias decorationMask: maskItem.mask
     Component.onCompleted: {
         borders.left   = Qt.binding(function() { return Math.max(0, auroraeTheme.borderLeft);});
         borders.right  = Qt.binding(function() { return Math.max(0, auroraeTheme.borderRight);});
@@ -216,5 +217,15 @@ Decoration {
                 duration: auroraeTheme.animationTime
             }
         }
+    }
+    PlasmaCore.FrameSvgItem {
+        id: maskItem
+        anchors.fill: parent
+        // This makes the mask slightly smaller than the frame. Since the svg will have antialiasing and the mask not,
+        // there will be artifacts at the corners, if they go under the svg they're less evident
+        anchors.margins: decoration.client.maximized ? 0 : 1
+        imagePath: backgroundSvg.imagePath
+        opacity: 0
+        enabledBorders: decoration.client.maximized ? PlasmaCore.FrameSvg.NoBorder : PlasmaCore.FrameSvg.TopBorder | PlasmaCore.FrameSvg.BottomBorder | PlasmaCore.FrameSvg.LeftBorder | PlasmaCore.FrameSvg.RightBorder
     }
 }

@@ -49,6 +49,7 @@ public Q_SLOTS:
     void installTitleItem(QQuickItem *item);
 
     void updateShadow();
+    void updateBlur();
 
 Q_SIGNALS:
     void configChanged();
