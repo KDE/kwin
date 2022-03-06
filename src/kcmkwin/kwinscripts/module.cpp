@@ -27,8 +27,8 @@
 
 #include <KNewStuff3/KNS3/Button>
 
-#include "version.h"
 #include "kwinscriptsdata.h"
+#include "config-kwin.h"
 
 Module::Module(QWidget *parent, const QVariantList &args) :
     KCModule(parent, args),
@@ -38,7 +38,7 @@ Module::Module(QWidget *parent, const QVariantList &args) :
 {
     KAboutData *about = new KAboutData("kwin-scripts",
                                        i18n("KWin Scripts"),
-                                       global_s_versionStringFull,
+                                       KWIN_VERSION_STRING,
                                        i18n("Configure KWin scripts"),
                                        KAboutLicense::GPL_V2);
 
