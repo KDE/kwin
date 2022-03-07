@@ -75,6 +75,11 @@ public:
     bool isPositionSet() const;
 
     /**
+     * @returns Whether the surface has requested to be opened under the cursor.
+     */
+    bool wantsOpenUnderCursor() const;
+
+    /**
      * Describes possible roles this PlasmaShellSurfaceInterface can have.
      * The role can be used by the server to e.g. change the stacking order accordingly.
      */
@@ -159,6 +164,12 @@ Q_SIGNALS:
      * A change of global position has been requested.
      */
     void positionChanged();
+
+    /**
+     * The surface has requested to be initially shown under the cursor. Can only occur
+     * before any buffer has been attached.
+     */
+    void openUnderCursorRequested();
     /**
      * A change of the role has been requested.
      */

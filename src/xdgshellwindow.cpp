@@ -438,6 +438,17 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     auto updatePosition = [this, shellSurface] {
         move(shellSurface->position());
     };
+    auto moveUnderCursor = [this, shellSurface] {
+        // Wait for the first commit
+        auto connection = new QMetaObject::Connection;
+        *connection = connect(this, &Window::windowShown,  [this, connection] () {
+            disconnect(*connection);
+            if (input()->hasPointer()) {
+                move(input()->globalPointer().toPoint());
+                keepInArea(workspace()->clientArea(PlacementArea, this));
+            }
+        });
+    };
     auto updateRole = [this, shellSurface] {
         NET::WindowType type = NET::Unknown;
         switch (shellSurface->role()) {
@@ -486,6 +497,7 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         workspace()->updateClientArea();
     };
     connect(shellSurface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
+    connect(shellSurface, &PlasmaShellSurfaceInterface::openUnderCursorRequested, this, moveUnderCursor);
     connect(shellSurface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelBehaviorChanged, this, [this] {
         updateShowOnScreenEdge();
@@ -510,6 +522,9 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     });
     if (shellSurface->isPositionSet()) {
         updatePosition();
+    }
+    if (shellSurface->wantsOpenUnderCursor()) {
+        moveUnderCursor();
     }
     updateRole();
     updateShowOnScreenEdge();
@@ -707,7 +722,10 @@ bool XdgToplevelWindow::isMinimizable() const
 
 bool XdgToplevelWindow::isPlaceable() const
 {
-    return !m_plasmaShellSurface || !m_plasmaShellSurface->isPositionSet();
+    if (m_plasmaShellSurface) {
+        return !m_plasmaShellSurface->isPositionSet() && !m_plasmaShellSurface->wantsOpenUnderCursor();
+    }
+    return true;
 }
 
 bool XdgToplevelWindow::isTransient() const

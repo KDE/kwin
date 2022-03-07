@@ -46,6 +46,7 @@ public:
     bool m_skipTaskbar = false;
     bool m_skipSwitcher = false;
     bool m_panelTakesFocus = false;
+    bool m_openUnderCursorRequested = false;
 
 private:
     void org_kde_plasma_surface_destroy_resource(Resource *resource) override;
@@ -59,6 +60,7 @@ private:
     void org_kde_plasma_surface_panel_auto_hide_show(Resource *resource) override;
     void org_kde_plasma_surface_set_panel_takes_focus(Resource *resource, uint32_t takes_focus) override;
     void org_kde_plasma_surface_set_skip_switcher(Resource *resource, uint32_t skip) override;
+    void org_kde_plasma_surface_open_under_cursor(Resource *resource) override;
 };
 
 PlasmaShellInterface::PlasmaShellInterface(Display *display, QObject *parent)
@@ -146,6 +148,15 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_position(Res
     m_positionSet = true;
     m_globalPos = globalPos;
     Q_EMIT q->positionChanged();
+}
+
+void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_open_under_cursor(Resource *resource)
+{
+    if (surface && surface->buffer()) {
+        wl_resource_post_error(resource->handle, -1, "open_under_cursor: surface has a buffer");
+    }
+    m_openUnderCursorRequested = true;
+    Q_EMIT q->openUnderCursorRequested();
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_role(Resource *resource, uint32_t role)
@@ -270,6 +281,11 @@ PlasmaShellSurfaceInterface::Role PlasmaShellSurfaceInterface::role() const
 bool PlasmaShellSurfaceInterface::isPositionSet() const
 {
     return d->m_positionSet;
+}
+
+bool PlasmaShellSurfaceInterface::wantsOpenUnderCursor() const
+{
+    return d->m_openUnderCursorRequested;
 }
 
 PlasmaShellSurfaceInterface::PanelBehavior PlasmaShellSurfaceInterface::panelBehavior() const
