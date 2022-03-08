@@ -153,24 +153,29 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
         return;
     }
 
-    // determine the direction of the swipe
-    if (m_lastDelta.width() == m_lastDelta.height()) {
-        // special case of diagonal, this is not yet supported, thus cancel all gestures
-        cancelActiveSwipeGestures();
-        return;
+    // if we aren't locked into a specific direction for the gesture yet,
+    // we need to figure out which direction the user is trying to swipe,
+    // in order to lock into that direction for the rest of the gesture
+    if (!m_lockedDirection.has_value()) {
+        // determine the direction of the swipe
+        if (m_lastDelta.width() == m_lastDelta.height()) {
+            // special case of diagonal, this is not yet supported, thus cancel all gestures
+            cancelActiveSwipeGestures();
+            return;
+        }
+        if (std::abs(m_lastDelta.width()) > std::abs(m_lastDelta.height())) {
+            // horizontal
+            m_lockedDirection = m_lastDelta.width() < 0 ? SwipeGesture::Direction::Left : SwipeGesture::Direction::Right;
+        } else {
+            // vertical
+            m_lockedDirection = m_lastDelta.height() < 0 ? SwipeGesture::Direction::Up : SwipeGesture::Direction::Down;
+        }
     }
-    SwipeGesture::Direction direction;
-    if (std::abs(m_lastDelta.width()) > std::abs(m_lastDelta.height())) {
-        // horizontal
-        direction = m_lastDelta.width() < 0 ? SwipeGesture::Direction::Left : SwipeGesture::Direction::Right;
-    } else {
-        // vertical
-        direction = m_lastDelta.height() < 0 ? SwipeGesture::Direction::Up : SwipeGesture::Direction::Down;
-    }
+
     const QSizeF combinedDelta = std::accumulate(m_swipeUpdates.constBegin(), m_swipeUpdates.constEnd(), QSizeF(0, 0));
     for (auto it = m_activeSwipeGestures.begin(); it != m_activeSwipeGestures.end();) {
         auto g = qobject_cast<SwipeGesture*>(*it);
-        if (g->direction() == direction) {
+        if (g->direction() == m_lockedDirection) {
             if (g->isMinimumDeltaRelevant()) {
                 Q_EMIT g->progress(g->minimumDeltaReachedProgress(combinedDelta));
             }
@@ -189,6 +194,7 @@ void GestureRecognizer::cancelActiveSwipeGestures()
     }
     m_activeSwipeGestures.clear();
     m_currentDelta = QSizeF(0, 0);
+    m_lockedDirection.reset();
     m_lastDelta = QSizeF(0, 0);
 }
 
@@ -197,6 +203,7 @@ void GestureRecognizer::cancelSwipeGesture()
     cancelActiveSwipeGestures();
     m_swipeUpdates.clear();
     m_currentDelta = QSizeF(0, 0);
+    m_lockedDirection.reset();
     m_lastDelta = QSizeF(0, 0);
 }
 
@@ -213,6 +220,7 @@ void GestureRecognizer::endSwipeGesture()
     m_activeSwipeGestures.clear();
     m_swipeUpdates.clear();
     m_currentDelta = QSizeF(0, 0);
+    m_lockedDirection.reset();
     m_lastDelta = QSizeF(0, 0);
 }
 

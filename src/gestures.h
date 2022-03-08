@@ -17,6 +17,8 @@
 #include <QMap>
 #include <QVector>
 
+#include <optional>
+
 namespace KWin
 {
 
@@ -203,6 +205,7 @@ private:
     QVector<QSizeF> m_swipeUpdates;
     QSizeF m_lastDelta = QSizeF(0, 0);
     QSizeF m_currentDelta = QSizeF(0, 0);
+    std::optional<SwipeGesture::Direction> m_lockedDirection;
 };
 
 }

@@ -50,7 +50,46 @@ private Q_SLOTS:
     void testSwipeGeometryStart();
     void testSwipeDiagonalCancels_data();
     void testSwipeDiagonalCancels();
+    void testSwipeDirectionLock_data();
+    void testSwipeDirectionLock();
 };
+
+void GestureTest::testSwipeDirectionLock_data()
+{
+    QTest::addColumn<QSizeF>("delta1");
+    QTest::addColumn<QSizeF>("delta2");
+
+    QTest::newRow("forward") << QSizeF(0, 50) << QSizeF(0, 50);
+    QTest::newRow("reverse") << QSizeF(0, 50) << QSizeF(0, -50);
+    QTest::newRow("lateral") << QSizeF(0, 50) << QSizeF(50, 1);
+}
+
+void GestureTest::testSwipeDirectionLock()
+{
+    GestureRecognizer recognizer;
+    SwipeGesture gesture;
+    gesture.setMinimumFingerCount(4);
+    gesture.setMaximumFingerCount(4);
+    gesture.setMinimumDelta(QSizeF(0, 0));
+
+    QSignalSpy startedSpy(&gesture, &SwipeGesture::started);
+    QVERIFY(startedSpy.isValid());
+    QSignalSpy progressSpy(&gesture, &SwipeGesture::progress);
+    QVERIFY(progressSpy.isValid());
+
+    recognizer.registerGesture(&gesture);
+    QFETCH(QSizeF, delta1);
+    QFETCH(QSizeF, delta2);
+
+    recognizer.startSwipeGesture(4);
+    QVERIFY2(!startedSpy.isEmpty(), "gesture started");
+
+    recognizer.updateSwipeGesture(delta1);
+    QVERIFY2(!progressSpy.isEmpty(), "first progress call");
+
+    recognizer.updateSwipeGesture(delta2);
+    QVERIFY2(progressSpy.count() == 2, "still updated progress even with different direction after locking");
+}
 
 void GestureTest::testSwipeMinFinger_data()
 {
@@ -422,17 +461,17 @@ void GestureTest::testSwipeUpdateCancel()
     // and an up gesture
     recognizer.updateSwipeGesture(QSizeF(-2, -10));
     QCOMPARE(upCancelledSpy.count(), 1);
-    QCOMPARE(downCancelledSpy.count(), 1);
+    QCOMPARE(downCancelledSpy.count(), 0);
     QCOMPARE(leftCancelledSpy.count(), 1);
     QCOMPARE(rightCancelledSpy.count(), 1);
 
     recognizer.endSwipeGesture();
     QCOMPARE(upCancelledSpy.count(), 1);
-    QCOMPARE(downCancelledSpy.count(), 1);
+    QCOMPARE(downCancelledSpy.count(), 0);
     QCOMPARE(leftCancelledSpy.count(), 1);
     QCOMPARE(rightCancelledSpy.count(), 1);
     QCOMPARE(upTriggeredSpy.count(), 0);
-    QCOMPARE(downTriggeredSpy.count(), 0);
+    QCOMPARE(downTriggeredSpy.count(), 1);
     QCOMPARE(leftTriggeredSpy.count(), 0);
     QCOMPARE(rightTriggeredSpy.count(), 0);
 
