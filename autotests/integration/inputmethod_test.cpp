@@ -154,7 +154,7 @@ void InputMethodTest::testOpenClose()
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
 
-    QCOMPARE(client->frameGeometry().height(), 1024 - keyboardClient->inputGeometry().height() + 1);
+    QCOMPARE(client->frameGeometry().height(), 1024 - keyboardClient->inputGeometry().height());
 
     // Hide the keyboard
     textInput->hideInputPanel();
