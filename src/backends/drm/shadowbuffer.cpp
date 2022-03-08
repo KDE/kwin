@@ -40,6 +40,7 @@ ShadowBuffer::ShadowBuffer(const QSize &size, const GbmFormat &format)
 {
     m_texture.reset(new GLTexture(internalFormat(format), size));
     m_texture->setFilter(GL_NEAREST);
+    m_texture->setYInverted(true);
 
     m_renderTarget.reset(new GLRenderTarget(m_texture.data()));
     if (!m_renderTarget->valid()) {
