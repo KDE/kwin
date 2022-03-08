@@ -575,7 +575,11 @@ void Application::updateX11Time(xcb_generic_event_t *event)
     setX11Time(time);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long int *result)
+#else
+bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)
+#endif
 {
     Q_UNUSED(result)
     if (eventType == "xcb_generic_event_t") {
