@@ -2240,7 +2240,7 @@ public:
         }
         return true;
     }
-    bool keyEvent(QKeyEvent *event)
+    bool keyEvent(QKeyEvent *event) override
     {
         if (event->key() != Qt::Key_Escape) {
             return false;

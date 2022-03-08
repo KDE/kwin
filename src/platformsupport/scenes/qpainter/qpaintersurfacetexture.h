@@ -20,7 +20,7 @@ class KWIN_EXPORT QPainterSurfaceTexture : public SurfaceTexture
 public:
     explicit QPainterSurfaceTexture(QPainterBackend *backend);
 
-    bool isValid() const;
+    bool isValid() const override;
 
     QPainterBackend *backend() const;
     QImage image() const;
