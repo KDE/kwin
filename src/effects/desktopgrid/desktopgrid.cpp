@@ -314,7 +314,7 @@ void DesktopGridEffect::postPaintScreen()
 {
     bool resetLastPresentTime = true;
 
-    if (activated ? timeline.currentValue() != 1 : timeline.currentValue() != 0) {
+    if (timelineRunning || activated ? timeline.currentValue() != 1 : timeline.currentValue() != 0) {
         effects->addRepaintFull(); // Repaint during zoom
         resetLastPresentTime = false;
     }
