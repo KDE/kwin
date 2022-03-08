@@ -122,11 +122,6 @@ void InputMethod::hide()
         m_inputClient->hideClient();
         updateInputPanelState();
     }
-    auto inputContext = waylandServer()->inputMethod()->context();
-    if (!inputContext) {
-        return;
-    }
-    inputContext->sendReset();
 }
 
 bool InputMethod::shouldShowOnActive() const
