@@ -1,4 +1,4 @@
-qt5_generate_dbus_interface(device.h org.kde.kwin.InputDevice.xml OPTIONS -A)
+qt_generate_dbus_interface(device.h org.kde.kwin.InputDevice.xml OPTIONS -A)
 
 add_custom_target(
     KWinInputDBusInterfaces

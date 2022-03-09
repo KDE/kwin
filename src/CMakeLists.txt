@@ -279,8 +279,8 @@ if (KWIN_BUILD_TABBOX)
     target_link_libraries(kwin Qt::GuiPrivate)
 endif()
 
-qt5_generate_dbus_interface(virtualkeyboard_dbus.h org.kde.kwin.VirtualKeyboard.xml OPTIONS -A)
-qt5_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xml OPTIONS -A)
+qt_generate_dbus_interface(virtualkeyboard_dbus.h org.kde.kwin.VirtualKeyboard.xml OPTIONS -A)
+qt_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xml OPTIONS -A)
 
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
@@ -345,7 +345,7 @@ endif()
 
 install(FILES kwin.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR} RENAME ${KWIN_NAME}.kcfg)
 if (KWIN_BUILD_NOTIFICATIONS)
-    install(FILES kwin.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} RENAME ${KWIN_NAME}.notifyrc)
+    install(FILES kwin.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR} RENAME ${KWIN_NAME}.notifyrc)
 endif()
 install(
     FILES
@@ -362,4 +362,4 @@ install(
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${KDE_INSTALL_INCLUDEDIR} COMPONENT Devel)
 
 # Install the KWin/Script service type
-install(FILES scripting/kwinscript.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
+install(FILES scripting/kwinscript.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPESDIR})

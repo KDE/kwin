@@ -29,6 +29,6 @@ kcoreaddons_desktop_to_json(kcm_kwin_effects "kcm_kwin_effects.desktop")
 ########### install files ###############
 
 install(TARGETS kcm_kwin_effects DESTINATION ${KDE_INSTALL_PLUGINDIR}/kcms)
-install(FILES kcm_kwin_effects.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
+install(FILES kcm_kwin_effects.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})
 install(FILES kwineffect.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
 kpackage_install_package(package kcm_kwin_effects kcms)

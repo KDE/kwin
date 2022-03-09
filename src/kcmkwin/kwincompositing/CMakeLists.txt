@@ -31,4 +31,4 @@ target_link_libraries(kwincompositing
 )
 
 install(TARGETS kwincompositing DESTINATION ${KDE_INSTALL_PLUGINDIR})
-install(FILES kwincompositing.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
+install(FILES kwincompositing.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})

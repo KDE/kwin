@@ -59,4 +59,4 @@ add_library(kcm_kwintouchscreen MODULE ${kcm_kwintouchscreenedges_PART_SRCS})
 target_link_libraries(kcm_kwintouchscreen ${X11_LIBRARIES} ${kcm_screenedges_LIBS})
 
 install(TARGETS kcm_kwinscreenedges kcm_kwintouchscreen DESTINATION ${KDE_INSTALL_PLUGINDIR})
-install(FILES kwinscreenedges.desktop kwintouchscreen.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
+install(FILES kwinscreenedges.desktop kwintouchscreen.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})

@@ -70,4 +70,4 @@ set(QMLFILES
 )
 install(FILES ${QMLFILES} DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kwin/decoration)
 file(COPY ${QMLFILES} DESTINATION ${CMAKE_BINARY_DIR}/bin/org/kde/kwin/decoration/)
-install(FILES kwindecoration.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
+install(FILES kwindecoration.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPESDIR})

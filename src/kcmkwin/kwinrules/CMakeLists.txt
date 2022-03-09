@@ -55,7 +55,7 @@ target_link_libraries(kcm_kwinrules KWinRulesObjects)
 kcoreaddons_desktop_to_json(kcm_kwinrules "kcm_kwinrules.desktop" SERVICE_TYPES kcmodule.desktop)
 
 install(TARGETS kcm_kwinrules DESTINATION ${KDE_INSTALL_PLUGINDIR}/kcms)
-install(FILES kcm_kwinrules.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
+install(FILES kcm_kwinrules.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})
 kpackage_install_package(package kcm_kwinrules kcms)
 
 install(FILES org.kde.kwin_rules_dialog.desktop DESTINATION ${KDE_INSTALL_APPDIR})

@@ -24,5 +24,5 @@ target_link_libraries(kcm_virtualkeyboard
 kcoreaddons_desktop_to_json(kcm_virtualkeyboard "kcm_virtualkeyboard.desktop")
 
 install(TARGETS kcm_virtualkeyboard DESTINATION ${KDE_INSTALL_PLUGINDIR}/kcms)
-install(FILES kcm_virtualkeyboard.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
+install(FILES kcm_virtualkeyboard.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})
 kpackage_install_package(package kcm_virtualkeyboard kcms)

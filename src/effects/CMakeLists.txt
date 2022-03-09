@@ -34,7 +34,7 @@ macro(KWIN4_ADD_EFFECT_MODULE name)
 endmacro()
 
 # Install the KWin/Effect service type
-install(FILES kwineffect.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
+install(FILES kwineffect.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPESDIR})
 
 # scripted effects
 function(install_scripted_effect name)
