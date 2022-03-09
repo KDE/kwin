@@ -429,8 +429,13 @@ class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
     Q_PROPERTY(QQmlListProperty<KWin::AbstractClient> clients READ clients)
 public:
     QQmlListProperty<KWin::AbstractClient> clients();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     static int countClientList(QQmlListProperty<KWin::AbstractClient> *clients);
     static KWin::AbstractClient *atClientList(QQmlListProperty<KWin::AbstractClient> *clients, int index);
+#else
+    static qsizetype countClientList(QQmlListProperty<KWin::AbstractClient> *clients);
+    static KWin::AbstractClient *atClientList(QQmlListProperty<KWin::AbstractClient> *clients, qsizetype index);
+#endif
 
     explicit DeclarativeScriptWorkspaceWrapper(QObject* parent = nullptr);
 };
