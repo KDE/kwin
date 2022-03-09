@@ -1006,7 +1006,7 @@ std::pair<bool, bool> performClientWheelAction(QWheelEvent *event, AbstractClien
         }
     }
     if (wasAction) {
-        return std::make_pair(wasAction, !c->performMouseCommand(command, event->globalPos()));
+        return std::make_pair(wasAction, !c->performMouseCommand(command, event->globalPosition().toPoint()));
     }
     return std::make_pair(wasAction, false);
 }
@@ -1032,7 +1032,7 @@ class InternalWindowEventFilter : public InputEventFilter {
             return false;
         }
         QWindow *internal = static_cast<InternalClient *>(input()->pointer()->focus())->internalWindow();
-        const QPointF localPos = event->globalPosF() - internal->position();
+        const QPointF localPos = event->globalPosition() - internal->position();
         const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
         const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
         QWheelEvent wheelEvent(localPos, event->globalPosF(), QPoint(),
@@ -1228,10 +1228,10 @@ public:
                 return actionResult.second;
             }
         }
-        const QPointF localPos = event->globalPosF() - decoration->client()->pos();
+        const QPointF localPos = event->globalPosition() - decoration->client()->pos();
         const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
         const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
-        QWheelEvent e(localPos, event->globalPosF(), QPoint(),
+        QWheelEvent e(localPos, event->globalPosition(), QPoint(),
                         event->angleDelta(),
                         delta,
                         orientation,
@@ -1244,7 +1244,7 @@ public:
         }
         if ((orientation == Qt::Vertical) && decoration->client()->titlebarPositionUnderMouse()) {
             decoration->client()->performMouseCommand(options->operationTitlebarMouseWheel(delta * -1),
-                                                        event->globalPosF().toPoint());
+                                                        event->globalPosition().toPoint());
         }
         return true;
     }
