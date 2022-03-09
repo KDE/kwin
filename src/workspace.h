@@ -18,6 +18,7 @@
 #include "sm.h"
 #include "utils/common.h"
 // Qt
+#include <QStringList>
 #include <QTimer>
 #include <QVector>
 // std
@@ -29,7 +30,6 @@ class KConfigGroup;
 class KStartupInfo;
 class KStartupInfoData;
 class KStartupInfoId;
-class QStringList;
 
 namespace KWin
 {

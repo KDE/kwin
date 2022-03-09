@@ -8,6 +8,7 @@
 
 #include "kwin_export.h"
 
+#include <QList>
 #include <QRegion>
 
 namespace KWin

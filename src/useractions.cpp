@@ -54,6 +54,7 @@
 #include <QMenu>
 #include <QRegularExpression>
 #include <QAction>
+#include <QActionGroup>
 #include <kauthorized.h>
 
 #include "killwindow.h"

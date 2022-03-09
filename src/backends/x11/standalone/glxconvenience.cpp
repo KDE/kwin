@@ -8,6 +8,7 @@
 
 #include "glxconvenience.h"
 
+#include <algorithm>
 #include <deque>
 
 namespace KWin

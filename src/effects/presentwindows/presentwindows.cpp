@@ -12,6 +12,7 @@
 //KConfigSkeleton
 #include "presentwindowsconfig.h"
 #include <QAction>
+#include <QFontMetrics>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 
