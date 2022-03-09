@@ -790,3 +790,4 @@ void ConfigurationModule::initQml()
 }
 
 #include "aurorae.moc"
+#include "moc_aurorae.cpp"

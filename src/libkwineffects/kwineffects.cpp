@@ -20,6 +20,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QtMath>
+#include <QWindow>
 
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
@@ -1767,3 +1768,4 @@ TimeLine &TimeLine::operator=(const TimeLine &other)
 } // namespace
 
 #include "moc_kwinglobals.cpp"
+#include "moc_kwineffects.cpp"

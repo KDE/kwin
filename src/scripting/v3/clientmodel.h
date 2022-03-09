@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "virtualdesktops.h"
+
 #include <QAbstractListModel>
 #include <QPointer>
 #include <QSortFilterProxyModel>
@@ -16,7 +18,6 @@ namespace KWin
 {
 class AbstractClient;
 class AbstractOutput;
-class VirtualDesktop;
 
 namespace ScriptingModels::V3
 {

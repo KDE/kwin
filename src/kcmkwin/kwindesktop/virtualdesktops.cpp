@@ -165,3 +165,4 @@ bool VirtualDesktops::isSaveNeeded() const
 }
 
 #include "virtualdesktops.moc"
+#include "moc_virtualdesktops.cpp"

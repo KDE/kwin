@@ -455,3 +455,5 @@ SETTER2(setProvidesContextHelp, providesContextHelp)
 
 } // namespace Preview
 } // namespace KDecoration2
+
+#include "moc_previewclient.cpp"

@@ -260,3 +260,4 @@ QString KCMKWinDecoration::borderSizeIndexToString(int index) const
 }
 
 #include "kcm.moc"
+#include "moc_kcm.cpp"

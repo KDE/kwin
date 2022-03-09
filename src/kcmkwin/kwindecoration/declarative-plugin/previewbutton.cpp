@@ -133,3 +133,5 @@ void PreviewButtonItem::setColor(const QColor &color)
 
 }
 }
+
+#include "moc_previewbutton.cpp"

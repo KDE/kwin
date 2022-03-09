@@ -3747,3 +3747,5 @@ bool AbstractClient::wantsShadowToBeRendered() const
 }
 
 }
+
+#include "moc_abstract_client.cpp"

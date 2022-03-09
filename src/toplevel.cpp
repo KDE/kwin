@@ -721,3 +721,4 @@ bool Toplevel::isOnCurrentDesktop() const
 
 } // namespace
 
+#include "moc_toplevel.cpp"

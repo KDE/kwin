@@ -421,3 +421,5 @@ DeclarativeScriptWorkspaceWrapper::DeclarativeScriptWorkspaceWrapper(QObject* pa
     : WorkspaceWrapper(parent) {}
 
 } // KWin
+
+#include "moc_workspace_wrapper.cpp"

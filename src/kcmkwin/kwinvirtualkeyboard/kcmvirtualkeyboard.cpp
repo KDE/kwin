@@ -100,3 +100,4 @@ int VirtualKeyboardsModel::rowCount(const QModelIndex &parent) const
 }
 
 #include "kcmvirtualkeyboard.moc"
+#include "moc_kcmvirtualkeyboard.cpp"
