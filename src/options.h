@@ -689,7 +689,7 @@ public:
         return MouseNothing;
     }
     static MouseCommand defaultCommandInactiveTitlebar3() {
-        return MouseOperationsMenu;
+        return MouseActivateAndOperationsMenu;
     }
     static MouseCommand defaultCommandWindow1() {
         return MouseActivateRaiseAndPassClick;

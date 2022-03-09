@@ -238,7 +238,7 @@
     </entry>
 
     <entry key="CommandInactiveTitlebar3" type="Enum">
-      <default>OperationsMenu</default>
+      <default>ActivateAndOperationsMenu</default>
       <choices>
           <choice name="ActivateAndRaise" value="Activate and raise"></choice>
           <choice name="ActivateAndLower" value="Activate and lower"></choice>

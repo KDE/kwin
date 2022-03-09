@@ -727,7 +727,7 @@ void Options::loadConfig()
     setCommandActiveTitlebar3(mouseCommand(config.readEntry("CommandActiveTitlebar3", "Operations menu"), true));
     setCommandInactiveTitlebar1(mouseCommand(config.readEntry("CommandInactiveTitlebar1", "Activate and raise"), true));
     setCommandInactiveTitlebar2(mouseCommand(config.readEntry("CommandInactiveTitlebar2", "Nothing"), true));
-    setCommandInactiveTitlebar3(mouseCommand(config.readEntry("CommandInactiveTitlebar3", "Operations menu"), true));
+    setCommandInactiveTitlebar3(mouseCommand(config.readEntry("CommandInactiveTitlebar3", "Activate and show operations menu"), true));
     setCommandWindow1(mouseCommand(config.readEntry("CommandWindow1", "Activate, raise and pass click"), false));
     setCommandWindow2(mouseCommand(config.readEntry("CommandWindow2", "Activate and pass click"), false));
     setCommandWindow3(mouseCommand(config.readEntry("CommandWindow3", "Activate and pass click"), false));
