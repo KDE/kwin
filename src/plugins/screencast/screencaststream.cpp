@@ -284,7 +284,7 @@ bool ScreenCastStream::createStream()
     int n_params;
 
     auto canCreateDmaBuf = [this] () -> bool {
-        return QSharedPointer<DmaBufTexture>(kwinApp()->platform()->createDmaBufTexture(m_resolution));
+        return !QSharedPointer<DmaBufTexture>(kwinApp()->platform()->createDmaBufTexture(m_resolution)).isNull();
     };
     const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
 

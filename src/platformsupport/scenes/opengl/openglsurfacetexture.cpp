@@ -21,7 +21,7 @@ OpenGLSurfaceTexture::~OpenGLSurfaceTexture()
 
 bool OpenGLSurfaceTexture::isValid() const
 {
-    return m_texture;
+    return !m_texture.isNull();
 }
 
 OpenGLBackend *OpenGLSurfaceTexture::backend() const

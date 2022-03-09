@@ -237,7 +237,7 @@ void OffscreenQuickView::update()
         return;
     }
 
-    bool usingGl = d->m_glcontext;
+    bool usingGl = !d->m_glcontext.isNull();
 
     if (usingGl) {
         if (!d->m_glcontext->makeCurrent(d->m_offscreenSurface.data())) {

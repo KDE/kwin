@@ -387,12 +387,12 @@ void WaylandInputDevice::setLeds(LEDs leds)
 
 bool WaylandInputDevice::isKeyboard() const
 {
-    return m_keyboard;
+    return !m_keyboard.isNull();
 }
 
 bool WaylandInputDevice::isAlphaNumericKeyboard() const
 {
-    return m_keyboard;
+    return !m_keyboard.isNull();
 }
 
 bool WaylandInputDevice::isPointer() const
@@ -407,7 +407,7 @@ bool WaylandInputDevice::isTouchpad() const
 
 bool WaylandInputDevice::isTouch() const
 {
-    return m_touch;
+    return !m_touch.isNull();
 }
 
 bool WaylandInputDevice::isTabletTool() const
