@@ -26,7 +26,7 @@ target_link_libraries(kcm_kwintabbox
     KF5::GlobalAccel
     KF5::I18n
     KF5::KCMUtils
-    KF5::NewStuff
+    KF5::NewStuffWidgets
     KF5::Package
     KF5::Service
 

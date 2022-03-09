@@ -27,7 +27,7 @@
 #include <KLocalizedString>
 #include <KPluginFactory>
 #include <KTitleWidget>
-#include <KNS3/Button>
+#include <KNSWidgets/Button>
 // Plasma
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
@@ -58,8 +58,8 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     tabWidget->addTab(m_primaryTabBoxUi, i18n("Main"));
     tabWidget->addTab(m_alternativeTabBoxUi, i18n("Alternative"));
 
-    KNS3::Button *ghnsButton = new KNS3::Button(i18n("Get New Task Switchers..."), QStringLiteral("kwinswitcher.knsrc"), this);
-    connect(ghnsButton, &KNS3::Button::dialogFinished, this, [this] (auto changedEntries) {
+    KNSWidgets::Button *ghnsButton = new KNSWidgets::Button(i18n("Get New Task Switchers..."), QStringLiteral("kwinswitcher.knsrc"), this);
+    connect(ghnsButton, &KNSWidgets::Button::dialogFinished, this, [this] (auto changedEntries) {
         if (!changedEntries.isEmpty()) {
             initLayoutLists();
         }

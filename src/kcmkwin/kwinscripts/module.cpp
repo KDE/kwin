@@ -25,7 +25,7 @@
 #include <KPackage/PackageStructure>
 #include <KPluginFactory>
 
-#include <KNewStuff3/KNS3/Button>
+#include <KNSWidgets/Button>
 
 #include "kwinscriptsdata.h"
 #include "config-kwin.h"
@@ -53,7 +53,7 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     ui->messageWidget->hide();
 
     ui->ghnsButton->setConfigFile(QStringLiteral("kwinscripts.knsrc"));
-    connect(ui->ghnsButton, &KNS3::Button::dialogFinished, this, [this](const KNS3::Entry::List &changedEntries) {
+    connect(ui->ghnsButton, &KNSWidgets::Button::dialogFinished, this, [this](const KNSCore::Entry::List &changedEntries) {
         if (!changedEntries.isEmpty()) {
             ui->scriptSelector->clear();
             updateListViewContents();

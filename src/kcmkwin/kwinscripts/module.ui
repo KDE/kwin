@@ -62,7 +62,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KNS3::Button" name="ghnsButton">
+      <widget class="KNSWidgets::Button" name="ghnsButton">
        <property name="text">
         <string>Get New Scripts...</string>
        </property>
@@ -80,9 +80,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KNS3::Button</class>
+   <class>KNSWidgets::Button</class>
    <extends>QPushButton</extends>
-   <header>KNS3/Button</header>
+   <header>KNSWidgets/Button</header>
   </customwidget>
   <customwidget>
    <class>KMessageWidget</class>
