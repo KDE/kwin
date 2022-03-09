@@ -129,7 +129,11 @@ Workspace::Workspace()
     , m_sessionManager(new SessionManager(this))
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
+#else
+    QFuture<void> reparseConfigFuture = QtConcurrent::run(&Options::reparseConfiguration, options);
+#endif
 
     ApplicationMenu::create(this);
 

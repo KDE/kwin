@@ -49,9 +49,15 @@ void ScreenLockerWatcher::initialize()
             this, &ScreenLockerWatcher::serviceRegisteredQueried);
     connect(watcher, &QFutureWatcher<QDBusReply<bool>>::canceled,
             watcher, &QFutureWatcher<QDBusReply<bool>>::deleteLater);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     watcher->setFuture(QtConcurrent::run(QDBusConnection::sessionBus().interface(),
                                          &QDBusConnectionInterface::isServiceRegistered,
                                          SCREEN_LOCKER_SERVICE_NAME));
+#else
+    watcher->setFuture(QtConcurrent::run(&QDBusConnectionInterface::isServiceRegistered,
+                                         QDBusConnection::sessionBus().interface(),
+                                         SCREEN_LOCKER_SERVICE_NAME));
+#endif
 }
 
 void ScreenLockerWatcher::serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner)
@@ -91,9 +97,15 @@ void ScreenLockerWatcher::serviceRegisteredQueried()
                 this, &ScreenLockerWatcher::serviceOwnerQueried);
         connect(ownerWatcher, &QFutureWatcher<QDBusReply<QString>>::canceled,
                 ownerWatcher, &QFutureWatcher<QDBusReply<QString>>::deleteLater);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         ownerWatcher->setFuture(QtConcurrent::run(QDBusConnection::sessionBus().interface(),
                                                   &QDBusConnectionInterface::serviceOwner,
                                                   SCREEN_LOCKER_SERVICE_NAME));
+#else
+        ownerWatcher->setFuture(QtConcurrent::run(&QDBusConnectionInterface::serviceOwner,
+                                                  QDBusConnection::sessionBus().interface(),
+                                                  SCREEN_LOCKER_SERVICE_NAME));
+#endif
     }
     watcher->deleteLater();
 }
