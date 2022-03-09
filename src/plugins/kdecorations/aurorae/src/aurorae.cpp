@@ -223,8 +223,8 @@ void Helper::init()
     m_engine->importPlugin(pluginPath, "org.kde.kwin.decoration", nullptr);
     qmlRegisterType<KWin::Borders>("org.kde.kwin.decoration", 0, 1, "Borders");
 
-    qmlRegisterType<KDecoration2::Decoration>();
-    qmlRegisterType<KDecoration2::DecoratedClient>();
+    qmlRegisterAnonymousType<KDecoration2::Decoration>("org.kde.kwin.decoration", 0);
+    qmlRegisterAnonymousType<KDecoration2::DecoratedClient>("org.kde.kwin.decoration", 0);
     qRegisterMetaType<KDecoration2::BorderSize>();
 }
 

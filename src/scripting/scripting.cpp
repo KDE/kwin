@@ -643,7 +643,7 @@ void KWin::Scripting::init()
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
     qmlRegisterType<DBusCall>("org.kde.kwin", 2, 0, "DBusCall");
     qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 2, 0, "ScreenEdgeItem");
-    qmlRegisterType<ScriptingModels::V2::ClientModel>();
+    qmlRegisterAnonymousType<ScriptingModels::V2::ClientModel>("org.kde.kwin", 2);
     qmlRegisterType<ScriptingModels::V2::SimpleClientModel>("org.kde.kwin", 2, 0, "ClientModel");
     qmlRegisterType<ScriptingModels::V2::ClientModelByScreen>("org.kde.kwin", 2, 0, "ClientModelByScreen");
     qmlRegisterType<ScriptingModels::V2::ClientModelByScreenAndDesktop>("org.kde.kwin", 2, 0, "ClientModelByScreenAndDesktop");
@@ -665,10 +665,14 @@ void KWin::Scripting::init()
     });
     qmlRegisterSingletonInstance("org.kde.kwin", 3, 0, "Options", options);
 
-    qmlRegisterType<KWin::AbstractClient>();
-    qmlRegisterType<KWin::VirtualDesktop>();
-    qmlRegisterType<KWin::X11Client>();
-    qmlRegisterType<QAbstractItemModel>();
+    qmlRegisterAnonymousType<KWin::AbstractClient>("org.kde.kwin", 2);
+    qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 2);
+    qmlRegisterAnonymousType<KWin::X11Client>("org.kde.kwin", 2);
+    qmlRegisterAnonymousType<QAbstractItemModel>("org.kde.kwin", 2);
+    qmlRegisterAnonymousType<KWin::AbstractClient>("org.kde.kwin", 3);
+    qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 3);
+    qmlRegisterAnonymousType<KWin::X11Client>("org.kde.kwin", 3);
+    qmlRegisterAnonymousType<QAbstractItemModel>("org.kde.kwin", 3);
 
     // TODO Plasma 6: Drop context properties.
     m_qmlEngine->rootContext()->setContextProperty(QStringLiteral("workspace"), m_workspaceWrapper);
