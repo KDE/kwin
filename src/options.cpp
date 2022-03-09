@@ -959,6 +959,7 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
     if (lowerName == QStringLiteral("increase opacity")) return MouseOpacityMore;
     if (lowerName == QStringLiteral("decrease opacity")) return MouseOpacityLess;
     if (lowerName == QStringLiteral("nothing")) return MouseNothing;
+    if (lowerName == QStringLiteral("activate and show operations menu")) return MouseActivateAndOperationsMenu;
     return MouseNothing;
 }
 

@@ -1746,6 +1746,13 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
         }
         break;
     }
+    case Options::MouseActivateAndOperationsMenu:
+        if (isActive() && options->isClickRaise())
+            autoRaise();
+        workspace()->takeActivity(this, Workspace::ActivityFocus);
+        workspace()->setActiveOutput(globalPos);
+        workspace()->showWindowMenu(QRect(globalPos, globalPos), this);
+        break;
     case Options::MouseOperationsMenu:
         if (isActive() && options->isClickRaise())
             autoRaise();

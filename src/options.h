@@ -414,7 +414,8 @@ public:
         MouseAbove, MouseBelow,
         MouseOpacityMore, MouseOpacityLess,
         MouseClose,
-        MouseNothing
+        MouseNothing,
+        MouseActivateAndOperationsMenu
     };
     Q_ENUM(MouseCommand)
 

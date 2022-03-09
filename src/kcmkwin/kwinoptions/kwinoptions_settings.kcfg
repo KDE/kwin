@@ -214,6 +214,7 @@
             <choice name="Shade"></choice>
             <choice name="Close"></choice>
             <choice name="OperationsMenu" value="Operations menu"></choice>
+            <choice name="ActivateAndOperationsMenu" value="Activate and show operations menu"></choice>
             <choice name="Nothing"></choice>
         </choices>
     </entry>
@@ -231,6 +232,7 @@
             <choice name="Shade"></choice>
             <choice name="Close"></choice>
             <choice name="OperationsMenu" value="Operations menu"></choice>
+            <choice name="ActivateAndOperationsMenu" value="Activate and show operations menu"></choice>
             <choice name="Nothing"></choice>
         </choices>
     </entry>
@@ -248,6 +250,7 @@
           <choice name="Shade"></choice>
           <choice name="Close"></choice>
           <choice name="OperationsMenu" value="Operations menu"></choice>
+          <choice name="ActivateAndOperationsMenu" value="Activate and show operations menu"></choice>
           <choice name="Nothing"></choice>
       </choices>
     </entry>

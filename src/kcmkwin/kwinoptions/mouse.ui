@@ -330,6 +330,11 @@
           </item>
           <item>
            <property name="text">
+            <string>Activate and show actions menu</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Do nothing</string>
            </property>
           </item>
@@ -445,6 +450,11 @@
           </item>
           <item>
            <property name="text">
+            <string>Activate and show actions menu</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Do nothing</string>
            </property>
           </item>
@@ -556,6 +566,11 @@
           <item>
            <property name="text">
             <string>Show actions menu</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Activate and show actions menu</string>
            </property>
           </item>
           <item>
