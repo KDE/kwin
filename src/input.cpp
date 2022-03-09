@@ -3040,7 +3040,7 @@ void InputDeviceHandler::update()
     // Always set the toplevel at the position of the input device.
     setHover(toplevel);
 
-    if (focusUpdatesBlocked()) {
+    if ((!toplevel || !toplevel->hasPopupGrab()) && focusUpdatesBlocked()) {
         workspace()->updateFocusMousePosition(position().toPoint());
         return;
     }
