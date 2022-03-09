@@ -11,6 +11,7 @@
 #include <QRect>
 #include <functional>
 #include <cmath>
+#include <QDebug>
 
 namespace KWin
 {
@@ -255,6 +256,7 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
     // Send progress update
     for (SwipeGesture *g: std::as_const(m_activeSwipeGestures)) {
         Q_EMIT g->progress(g->minimumDeltaReachedProgress(m_currentDelta));
+        Q_EMIT g->deltaProgress(m_currentDelta);
     }
 
 }

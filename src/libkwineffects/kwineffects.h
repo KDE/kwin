@@ -979,6 +979,25 @@ public:
      * @since 5.10
      */
     virtual void registerTouchBorder(ElectricBorder border, QAction *action) = 0;
+
+    /**
+     * Registers the given @p action for the given @p border to be activated through
+     * a touch swipe gesture.
+     *
+     * If the @p border gets triggered through a touch swipe gesture the QAction::triggered
+     * signal gets invoked.
+     *
+     * progressCallback will be dinamically called each time the touch position is updated
+     * to show the effect "partially" activated
+     *
+     * To unregister the touch screen action either delete the @p action or
+     * invoke unregisterTouchBorder.
+     *
+     * @see unregisterTouchBorder
+     * @since 5.25
+     */
+    virtual void registerRealtimeTouchBorder(ElectricBorder border, QAction *action, std::function<void(ElectricBorder border, const QSizeF&, const QSize&)> progressCallback) = 0;
+
     /**
      * Unregisters the given @p action for the given touch @p border.
      *

@@ -192,7 +192,26 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
         if (!relevantBorders.contains(ElectricBorder(i))) {
             continue;
         }
-        effects->registerTouchBorder(ElectricBorder(i), m_shortcutAction);
+
+        effects->registerRealtimeTouchBorder(ElectricBorder(i), m_gestureAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const QSize &scaledScreenSize) {
+            if (activated) return;
+
+            if (timeline.currentValue() == 0) {
+                activated = true;
+                setup();
+                activated = false;
+            }
+            qreal progress = 0;
+            if (border == ElectricTop || border == ElectricBottom) {
+                progress = qAbs(deltaProgress.height() / (scaledScreenSize.height()/2));
+            } else {
+                progress = deltaProgress.width() / scaledScreenSize.width();
+            }
+
+            timeline.setDirection(QTimeLine::Forward);
+            timeline.setCurrentTime(timeline.duration() * progress);
+            effects->addRepaintFull();
+        });
     }
 }
 
