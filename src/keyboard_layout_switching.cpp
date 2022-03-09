@@ -282,7 +282,7 @@ ApplicationPolicy::ApplicationPolicy(KWin::Xkb* xkb, KWin::KeyboardLayout* layou
                 const QStringList keyList = m_config.keyList().filter(keyPrefix);
                 for (const QString& key : keyList) {
                     m_layoutsRestored.insert(
-                                key.midRef(keyPrefix.size()).toLatin1(),
+                                QStringView(key).mid(keyPrefix.size()).toLatin1(),
                                 m_config.readEntry(key, 0));
                 }
             }
