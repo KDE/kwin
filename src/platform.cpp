@@ -28,7 +28,11 @@
 #include <KWaylandServer/outputconfiguration_v2_interface.h>
 #include <KWaylandServer/outputchangeset_v2.h>
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <private/qtx11extras_p.h>
+#else
 #include <QX11Info>
+#endif
 
 #include <cerrno>
 

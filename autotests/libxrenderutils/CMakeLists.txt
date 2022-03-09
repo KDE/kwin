@@ -5,9 +5,13 @@ target_link_libraries(blendPictureTest
     kwinxrenderutils
     Qt::Test
     Qt::Gui
-    Qt::X11Extras
     XCB::XCB
     XCB::RENDER
     XCB::XFIXES
 )
+if (QT_MAJOR_VERSION EQUAL "5")
+    target_link_libraries(blendPictureTest Qt::X11Extras)
+else()
+    target_link_libraries(blendPictureTest Qt::GuiPrivate)
+endif()
 ecm_mark_as_test(blendPictureTest)

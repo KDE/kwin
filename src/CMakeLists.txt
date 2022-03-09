@@ -288,8 +288,10 @@ add_executable(kwin_x11 main_x11.cpp)
 target_link_libraries(kwin_x11
     kwin
     KF5::Crash
-    Qt::X11Extras
 )
+if (QT_MAJOR_VERSION EQUAL "5")
+    target_link_libraries(kwin_x11 Qt::X11Extras)
+endif()
 kcoreaddons_target_static_plugins(kwin_x11 "kwin/effects/plugins")
 
 install(TARGETS kwin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
