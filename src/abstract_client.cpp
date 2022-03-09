@@ -1652,8 +1652,9 @@ void AbstractClient::setupWindowManagementInterface()
 
     // Notify clients on activities changes
     connect(this, &AbstractClient::activitiesChanged, w, [w, this] {
-        const auto newActivities = m_activityList.toSet();
-        const auto oldActivities = w->plasmaActivities().toSet();
+        const auto newActivities = QSet<QString>(m_activityList.begin(), m_activityList.end());
+        const auto oldActivitiesList = w->plasmaActivities();
+        const auto oldActivities = QSet<QString>(oldActivitiesList.begin(), oldActivitiesList.end());
 
         const auto activitiesToAdd = newActivities - oldActivities;
         for (const auto &activity : activitiesToAdd) {
