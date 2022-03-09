@@ -126,7 +126,6 @@ Connection::Connection(Context *input, QObject *parent)
     : QObject(parent)
     , m_input(input)
     , m_notifier(nullptr)
-    , m_mutex(QMutex::Recursive)
 {
     Q_ASSERT(m_input);
     // need to connect to KGlobalSettings as the mouse KCM does not emit a dedicated signal

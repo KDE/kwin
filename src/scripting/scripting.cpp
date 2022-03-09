@@ -626,7 +626,7 @@ KWin::Scripting *KWin::Scripting::create(QObject *parent)
 
 KWin::Scripting::Scripting(QObject *parent)
     : QObject(parent)
-    , m_scriptsLock(new QMutex(QMutex::Recursive))
+    , m_scriptsLock(new QRecursiveMutex)
     , m_qmlEngine(new QQmlEngine(this))
     , m_declarativeScriptSharedContext(new QQmlContext(m_qmlEngine, this))
     , m_workspaceWrapper(new QtScriptWorkspaceWrapper(this))

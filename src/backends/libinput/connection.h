@@ -16,7 +16,7 @@
 #include <QObject>
 #include <QPointer>
 #include <QSize>
-#include <QMutex>
+#include <QRecursiveMutex>
 #include <QVector>
 #include <QStringList>
 
@@ -67,7 +67,7 @@ private:
     void applyScreenToDevice(Device *device);
     Context *m_input;
     QSocketNotifier *m_notifier;
-    QMutex m_mutex;
+    QRecursiveMutex m_mutex;
     QVector<Event*> m_eventQueue;
     QVector<Device*> m_devices;
     KSharedConfigPtr m_config;
