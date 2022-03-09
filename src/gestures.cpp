@@ -11,6 +11,7 @@
 #include <QRect>
 #include <functional>
 #include <cmath>
+#include <QDebug>
 
 namespace KWin
 {
@@ -243,9 +244,12 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
             auto g = static_cast<SwipeGesture *>(*it);
 
             if (g->direction() != direction) {
-                Q_EMIT g->cancelled();
-                it = m_activeSwipeGestures.erase(it);
-                continue;
+                // If a gesture was started from a touchscreen border never cancel it
+                if (!g->minimumXIsRelevant() || !g->maximumXIsRelevant() || !g->minimumYIsRelevant() || !g->maximumYIsRelevant()) {
+                    Q_EMIT g->cancelled();
+                    it = m_activeSwipeGestures.erase(it);
+                    continue;
+                }
             }
 
             it++;
@@ -255,6 +259,7 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
     // Send progress update
     for (SwipeGesture *g: std::as_const(m_activeSwipeGestures)) {
         Q_EMIT g->progress(g->minimumDeltaReachedProgress(m_currentDelta));
+        Q_EMIT g->deltaProgress(m_currentDelta);
     }
 
 }

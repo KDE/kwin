@@ -71,6 +71,7 @@ enum ElectricBorder {
     ELECTRIC_COUNT,
     ElectricNone,
 };
+Q_ENUM_NS(ElectricBorder)
 
 // TODO: Hardcoding is bad, need to add some way of registering global actions to these.
 // When designing the new system we must keep in mind that we have conditional actions

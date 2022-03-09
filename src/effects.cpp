@@ -1391,6 +1391,13 @@ void EffectsHandlerImpl::registerTouchBorder(ElectricBorder border, QAction *act
     ScreenEdges::self()->reserveTouch(border, action);
 }
 
+void EffectsHandlerImpl::registerRealtimeTouchBorder(ElectricBorder border, QAction *action, EffectsHandler::TouchBorderCallback progressCallback)
+{
+    ScreenEdges::self()->reserveTouch(border, action, [progressCallback] (ElectricBorder border, const QSizeF &deltaProgress, AbstractOutput *output) {
+        progressCallback(border, deltaProgress, EffectScreenImpl::get(output));
+    });
+}
+
 void EffectsHandlerImpl::unregisterTouchBorder(ElectricBorder border, QAction *action)
 {
     ScreenEdges::self()->unreserveTouch(border, action);

@@ -41,17 +41,81 @@ FocusScope {
     Keys.forwardTo: searchField
 
     KWinComponents.DesktopBackgroundItem {
+        id: backgroundItem
         activity: KWinComponents.Workspace.currentActivity
         desktop: KWinComponents.Workspace.currentVirtualDesktop
         outputName: targetScreen.name
+        property real blurRadius: 0
 
         layer.enabled: effect.blurBackground
         layer.effect: FastBlur {
-            radius: container.organized ? 64 : 0
+            radius: backgroundItem.blurRadius
+        }
+    }
 
-            Behavior on radius {
-                NumberAnimation { duration: effect.animationDuration; easing.type: Easing.OutCubic }
+    state: {
+        if (effect.gestureInProgress) {
+            return "partial";
+        } else if (container.organized) {
+            return "active";
+        } else {
+            return "initial";
+        }
+    }
+
+    states: [
+        State {
+            name: "initial"
+            PropertyChanges {
+                target: underlay
+                opacity: 0
             }
+            PropertyChanges {
+                target: topBar
+                opacity: 0
+            }
+            PropertyChanges {
+                target: backgroundItem
+                blurRadius: 0
+            }
+        },
+        State {
+            name: "partial"
+            PropertyChanges {
+                target: underlay
+                opacity: 0.75 * effect.partialActivationFactor
+            }
+            PropertyChanges {
+                target: topBar
+                opacity: effect.partialActivationFactor
+            }
+            PropertyChanges {
+                target: backgroundItem
+                blurRadius: 64 * effect.partialActivationFactor
+            }
+        },
+        State {
+            name: "active"
+            PropertyChanges {
+                target: underlay
+                opacity: 0.75
+            }
+            PropertyChanges {
+                target: topBar
+                opacity: 1
+            }
+            PropertyChanges {
+                target: backgroundItem
+                blurRadius: 64
+            }
+        }
+    ]
+    transitions: Transition {
+        to: "initial, active"
+        NumberAnimation {
+            duration: effect.animationDuration
+            properties: "opacity, blurRadius"
+            easing.type: Easing.OutCubic
         }
     }
 
@@ -59,11 +123,6 @@ FocusScope {
         id: underlay
         anchors.fill: parent
         color: PlasmaCore.ColorScope.backgroundColor
-        opacity: container.organized ? 0.75 : 0
-
-        Behavior on opacity {
-            OpacityAnimator { duration: effect.animationDuration; easing.type: Easing.OutCubic }
-        }
 
         TapHandler {
             onTapped: effect.deactivate();
@@ -85,7 +144,6 @@ FocusScope {
             id: topBar
             width: parent.width
             height: searchBar.height + desktopBar.height
-            opacity: container.organized ? 1 : 0
 
             Rectangle {
                 id: desktopBar
@@ -122,10 +180,6 @@ FocusScope {
                     Keys.forwardTo: text ? searchResults : heap
                     onTextEdited: forceActiveFocus();
                 }
-            }
-
-            Behavior on opacity {
-                OpacityAnimator { duration: effect.animationDuration; easing.type: Easing.OutCubic }
             }
         }
 

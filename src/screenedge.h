@@ -34,9 +34,26 @@ class QMouseEvent;
 namespace KWin {
 
 class AbstractClient;
+class AbstractOutput;
 class GestureRecognizer;
 class ScreenEdges;
 class SwipeGesture;
+
+class TouchCallback
+{
+public:
+    using CallbackFunction = std::function<void(ElectricBorder border, const QSizeF&, AbstractOutput *output)>;
+    explicit TouchCallback(QAction *touchUpAction, TouchCallback::CallbackFunction progressCallback);
+    ~TouchCallback();
+
+    QAction *touchUpAction() const;
+    void progressCallback(ElectricBorder border, const QSizeF &deltaProgress, AbstractOutput *output) const;
+    bool hasProgressCallback() const;
+
+private:
+    QAction *m_touchUpAction = nullptr;
+    TouchCallback::CallbackFunction m_progressCallback;
+};
 
 class KWIN_EXPORT Edge : public QObject
 {
@@ -59,16 +76,15 @@ public:
     ElectricBorder border() const;
     void reserve(QObject *object, const char *slot);
     const QHash<QObject *, QByteArray> &callBacks() const;
-    void reserveTouchCallBack(QAction *action);
+    void reserveTouchCallBack(QAction *action, TouchCallback::CallbackFunction callback = nullptr);
     void unreserveTouchCallBack(QAction *action);
-    QVector<QAction *> touchCallBacks() const {
-        return m_touchActions;
-    }
     void startApproaching();
     void stopApproaching();
     bool isApproaching() const;
     void setClient(AbstractClient *client);
     AbstractClient *client() const;
+    void setOutput(AbstractOutput *output);
+    AbstractOutput *output() const;
     const QRect &geometry() const;
     void setTouchAction(ElectricBorderAction action);
 
@@ -126,6 +142,10 @@ private:
     void handleTouchCallback();
     void switchDesktop(const QPoint &cursorPos);
     void pushCursorBack(const QPoint &cursorPos);
+    void reserveTouchCallBack(const TouchCallback &callback);
+    QVector<TouchCallback> touchCallBacks() const {
+        return m_touchCallbacks;
+    }
     ScreenEdges *m_edges;
     ElectricBorder m_border;
     ElectricBorderAction m_action;
@@ -142,8 +162,10 @@ private:
     bool m_blocked;
     bool m_pushBackBlocked;
     AbstractClient *m_client;
+    AbstractOutput *m_output;
     SwipeGesture *m_gesture;
-    QVector<QAction *> m_touchActions;
+    QVector<TouchCallback> m_touchCallbacks;
+    friend class ScreenEdges;
 };
 
 /**
@@ -283,7 +305,7 @@ public:
      * @see unreserveTouch
      * @since 5.10
      */
-    void reserveTouch(ElectricBorder border, QAction *action);
+    void reserveTouch(ElectricBorder border, QAction *action, TouchCallback::CallbackFunction callback = nullptr);
     /**
      * Unreserves the specified @p border from activating the @p action for touch gestures.
      * @see reserveTouch
@@ -369,9 +391,9 @@ private:
     void setCursorPushBackDistance(const QSize &distance);
     void setTimeThreshold(int threshold);
     void setReActivationThreshold(int threshold);
-    void createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea);
-    void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea);
-    Edge *createEdge(ElectricBorder border, int x, int y, int width, int height, bool createAction = true);
+    void createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, AbstractOutput *output);
+    void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, AbstractOutput *output);
+    Edge *createEdge(ElectricBorder border, int x, int y, int width, int height, AbstractOutput *output, bool createAction = true);
     void setActionForBorder(ElectricBorder border, ElectricBorderAction *oldValue, ElectricBorderAction newValue);
     void setActionForTouchBorder(ElectricBorder border, ElectricBorderAction newValue);
     ElectricBorderAction actionForEdge(Edge *edge) const;
@@ -394,7 +416,7 @@ private:
     ElectricBorderAction m_actionBottom;
     ElectricBorderAction m_actionBottomLeft;
     ElectricBorderAction m_actionLeft;
-    QMap<ElectricBorder, ElectricBorderAction> m_touchActions;
+    QMap<ElectricBorder, ElectricBorderAction> m_touchCallbacks;
     int m_cornerOffset;
     GestureRecognizer *m_gestureRecognizer;
 

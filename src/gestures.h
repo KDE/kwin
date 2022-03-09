@@ -99,6 +99,11 @@ Q_SIGNALS:
      */
     void progress(qreal);
 
+    /**
+     * The progress in actual pixel distance traveled by the fingers
+     */
+    void deltaProgress(const QSizeF &delta);
+
 private:
     bool m_minimumFingerCountRelevant = false;
     uint m_minimumFingerCount = 0;
