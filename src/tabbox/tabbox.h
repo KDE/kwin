@@ -19,6 +19,7 @@
 #include "tabbox/tabboxhandler.h"
 
 class KConfigGroup;
+class KLazyLocalizedString;
 class QAction;
 class QMouseEvent;
 class QKeyEvent;
@@ -304,7 +305,7 @@ private:
     bool establishTabBoxGrab();
     void removeTabBoxGrab();
     template <typename Slot>
-    void key(const char *actionName, Slot slot, const QKeySequence &shortcut = QKeySequence());
+    void key(const KLazyLocalizedString &actionName, Slot slot, const QKeySequence &shortcut = QKeySequence());
 
     void shadeActivate(AbstractClient *c);
 

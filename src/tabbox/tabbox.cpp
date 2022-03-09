@@ -45,6 +45,7 @@
 #include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KLazyLocalizedString>
 #include <kkeyserver.h>
 // X11
 #include <X11/keysym.h>
@@ -511,30 +512,30 @@ void TabBox::handlerReady()
 }
 
 template <typename Slot>
-void TabBox::key(const char *actionName, Slot slot, const QKeySequence &shortcut)
+void TabBox::key(const KLazyLocalizedString &actionName, Slot slot, const QKeySequence &shortcut)
 {
     QAction *a = new QAction(this);
     a->setProperty("componentName", QStringLiteral(KWIN_NAME));
-    a->setObjectName(QString::fromUtf8(actionName));
-    a->setText(i18n(actionName));
+    a->setObjectName(QString::fromUtf8(actionName.untranslatedText()));
+    a->setText(actionName.toString());
     KGlobalAccel::self()->setGlobalShortcut(a, QList<QKeySequence>() << shortcut);
     input()->registerShortcut(shortcut, a, TabBox::self(), slot);
     auto cuts = KGlobalAccel::self()->shortcut(a);
     globalShortcutChanged(a, cuts.isEmpty() ? QKeySequence() : cuts.first());
 }
 
-static const char s_windows[]        = I18N_NOOP("Walk Through Windows");
-static const char s_windowsRev[]     = I18N_NOOP("Walk Through Windows (Reverse)");
-static const char s_windowsAlt[]     = I18N_NOOP("Walk Through Windows Alternative");
-static const char s_windowsAltRev[]  = I18N_NOOP("Walk Through Windows Alternative (Reverse)");
-static const char s_app[]            = I18N_NOOP("Walk Through Windows of Current Application");
-static const char s_appRev[]         = I18N_NOOP("Walk Through Windows of Current Application (Reverse)");
-static const char s_appAlt[]         = I18N_NOOP("Walk Through Windows of Current Application Alternative");
-static const char s_appAltRev[]      = I18N_NOOP("Walk Through Windows of Current Application Alternative (Reverse)");
-static const char s_desktops[]       = I18N_NOOP("Walk Through Desktops");
-static const char s_desktopsRev[]    = I18N_NOOP("Walk Through Desktops (Reverse)");
-static const char s_desktopList[]    = I18N_NOOP("Walk Through Desktop List");
-static const char s_desktopListRev[] = I18N_NOOP("Walk Through Desktop List (Reverse)");
+static constexpr const auto s_windows        = kli18n("Walk Through Windows");
+static constexpr const auto s_windowsRev     = kli18n("Walk Through Windows (Reverse)");
+static constexpr const auto s_windowsAlt     = kli18n("Walk Through Windows Alternative");
+static constexpr const auto s_windowsAltRev  = kli18n("Walk Through Windows Alternative (Reverse)");
+static constexpr const auto s_app            = kli18n("Walk Through Windows of Current Application");
+static constexpr const auto s_appRev         = kli18n("Walk Through Windows of Current Application (Reverse)");
+static constexpr const auto s_appAlt         = kli18n("Walk Through Windows of Current Application Alternative");
+static constexpr const auto s_appAltRev      = kli18n("Walk Through Windows of Current Application Alternative (Reverse)");
+static constexpr const auto s_desktops       = kli18n("Walk Through Desktops");
+static constexpr const auto s_desktopsRev    = kli18n("Walk Through Desktops (Reverse)");
+static constexpr const auto s_desktopList    = kli18n("Walk Through Desktop List");
+static constexpr const auto s_desktopListRev = kli18n("Walk Through Desktop List (Reverse)");
 
 void TabBox::initShortcuts()
 {
@@ -556,29 +557,29 @@ void TabBox::initShortcuts()
 
 void TabBox::globalShortcutChanged(QAction *action, const QKeySequence &seq)
 {
-    if (qstrcmp(qPrintable(action->objectName()), s_windows) == 0) {
+    if (qstrcmp(qPrintable(action->objectName()), s_windows.untranslatedText()) == 0) {
         m_cutWalkThroughWindows = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_windowsRev) == 0) {
+    } else if (qstrcmp(qPrintable(action->objectName()), s_windowsRev.untranslatedText()) == 0) {
         m_cutWalkThroughWindowsReverse = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_app) == 0) {
+    } else if (qstrcmp(qPrintable(action->objectName()), s_app.untranslatedText()) == 0) {
         m_cutWalkThroughCurrentAppWindows = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_appRev) == 0) {
+    } else if (qstrcmp(qPrintable(action->objectName()), s_appRev.untranslatedText()) == 0) {
         m_cutWalkThroughCurrentAppWindowsReverse = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_windowsAlt) == 0) {
+    } else if (qstrcmp(qPrintable(action->objectName()), s_windowsAlt.untranslatedText()) == 0) {
         m_cutWalkThroughWindowsAlternative = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_windowsAltRev) == 0) {
+    } else if (qstrcmp(qPrintable(action->objectName()), s_windowsAltRev.untranslatedText()) == 0) {
         m_cutWalkThroughWindowsAlternativeReverse = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_appAlt) == 0) {
+    } else if (qstrcmp(qPrintable(action->objectName()), s_appAlt.untranslatedText()) == 0) {
         m_cutWalkThroughCurrentAppWindowsAlternative = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_appAltRev) == 0) {
+    } else if (qstrcmp(qPrintable(action->objectName()), s_appAltRev.untranslatedText()) == 0) {
         m_cutWalkThroughCurrentAppWindowsAlternativeReverse = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_desktops) == 0) {
+    } else if (qstrcmp(qPrintable(action->objectName()), s_desktops.untranslatedText()) == 0) {
         m_cutWalkThroughDesktops = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopsRev) == 0) {
+    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopsRev.untranslatedText()) == 0) {
         m_cutWalkThroughDesktopsReverse = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopList) == 0) {
+    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopList.untranslatedText()) == 0) {
         m_cutWalkThroughDesktopList = seq;
-    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopListRev) == 0) {
+    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopListRev.untranslatedText()) == 0) {
         m_cutWalkThroughDesktopListReverse = seq;
     }
 }

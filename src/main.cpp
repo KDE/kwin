@@ -196,14 +196,12 @@ bool Application::wasCrash()
     return crashes > 0;
 }
 
-static const char description[] = I18N_NOOP("KDE window manager");
-
 void Application::createAboutData()
 {
     KAboutData aboutData(QStringLiteral(KWIN_NAME),          // The program name used internally
                          i18n("KWin"),                       // A displayable program name string
                          QStringLiteral(KWIN_VERSION_STRING), // The program version string
-                         i18n(description),                  // Short description of what the app does
+                         i18n("KDE window manager"),          // Short description of what the app does
                          KAboutLicense::GPL,            // The license this code is released under
                          i18n("(c) 1999-2019, The KDE Developers"));   // Copyright Statement
 
