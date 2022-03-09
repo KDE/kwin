@@ -864,7 +864,7 @@ void Options::reloadCompositingSettings(bool force)
     }
 
     char c = 0;
-    const QString s = config.readEntry("GLPreferBufferSwap", QString(Options::defaultGlPreferBufferSwap()));
+    const QString s = config.readEntry("GLPreferBufferSwap", QString(QLatin1Char(Options::defaultGlPreferBufferSwap())));
     if (!s.isEmpty())
         c = s.at(0).toLatin1();
     if (c != 'a' && c != 'c' && c != 'p' && c != 'e')
