@@ -634,7 +634,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
                 windowMove = w;
                 windowMoveElevateTimer->start();
             }
-        } else if ((me->buttons() == Qt::MiddleButton || me->buttons() == Qt::RightButton) && windowMove == nullptr) {
+        } else if (me->buttons() == Qt::RightButton && windowMove == nullptr) {
             EffectWindow* w = windowAt(me->pos());
             if (w && w->isDesktop()) {
                 w = nullptr;
@@ -661,6 +661,15 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
                 }
                 effects->addRepaintFull();
             }
+        } else if (me->buttons() == Qt::MiddleButton && windowMove == nullptr) {
+            EffectWindow* w = windowAt(me->pos());
+            if (w && w->isDesktop()) {
+                w = nullptr;
+            }
+            if (w == nullptr) {
+                return;
+            }
+            w->closeWindow();
         }
     }
     if (e->type() == QEvent::MouseButtonRelease && me->button() == Qt::LeftButton) {
