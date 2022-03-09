@@ -538,10 +538,10 @@ static const char s_desktopListRev[] = I18N_NOOP("Walk Through Desktop List (Rev
 
 void TabBox::initShortcuts()
 {
-    key(s_windows,        &TabBox::slotWalkThroughWindows, Qt::ALT + Qt::Key_Tab);
-    key(s_windowsRev,     &TabBox::slotWalkBackThroughWindows, Qt::ALT + Qt::SHIFT + Qt::Key_Backtab);
-    key(s_app,            &TabBox::slotWalkThroughCurrentAppWindows, Qt::ALT + Qt::Key_QuoteLeft);
-    key(s_appRev,         &TabBox::slotWalkBackThroughCurrentAppWindows, Qt::ALT + Qt::Key_AsciiTilde);
+    key(s_windows,        &TabBox::slotWalkThroughWindows, Qt::ALT | Qt::Key_Tab);
+    key(s_windowsRev,     &TabBox::slotWalkBackThroughWindows, Qt::ALT | Qt::SHIFT | Qt::Key_Backtab);
+    key(s_app,            &TabBox::slotWalkThroughCurrentAppWindows, Qt::ALT | Qt::Key_QuoteLeft);
+    key(s_appRev,         &TabBox::slotWalkBackThroughCurrentAppWindows, Qt::ALT | Qt::Key_AsciiTilde);
     key(s_windowsAlt,     &TabBox::slotWalkThroughWindowsAlternative);
     key(s_windowsAltRev,  &TabBox::slotWalkBackThroughWindowsAlternative);
     key(s_appAlt,         &TabBox::slotWalkThroughCurrentAppWindowsAlternative);

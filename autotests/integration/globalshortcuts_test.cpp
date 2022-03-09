@@ -259,8 +259,8 @@ void GlobalShortcutsTest::testMetaShiftW()
     action->setObjectName(QStringLiteral("globalshortcuts-test-meta-shift-w"));
     QSignalSpy triggeredSpy(action.data(), &QAction::triggered);
     QVERIFY(triggeredSpy.isValid());
-    KGlobalAccel::self()->setShortcut(action.data(), QList<QKeySequence>{Qt::META + Qt::SHIFT + Qt::Key_W}, KGlobalAccel::NoAutoloading);
-    input()->registerShortcut(Qt::META + Qt::SHIFT + Qt::Key_W, action.data());
+    KGlobalAccel::self()->setShortcut(action.data(), QList<QKeySequence>{Qt::META | Qt::SHIFT | Qt::Key_W}, KGlobalAccel::NoAutoloading);
+    input()->registerShortcut(Qt::META | Qt::SHIFT | Qt::Key_W, action.data());
 
     // press meta+shift+w
     quint32 timestamp = 0;
@@ -343,7 +343,7 @@ void GlobalShortcutsTest::testX11ClientShortcut()
     QCOMPARE(workspace()->activeClient(), client);
     QVERIFY(client->isActive());
     QCOMPARE(client->shortcut(), QKeySequence());
-    const QKeySequence seq(Qt::META + Qt::SHIFT + Qt::Key_Y);
+    const QKeySequence seq(Qt::META | Qt::SHIFT | Qt::Key_Y);
     QVERIFY(workspace()->shortcutAvailable(seq));
     client->setShortcut(seq.toString());
     QCOMPARE(client->shortcut(), seq);
@@ -385,7 +385,7 @@ void GlobalShortcutsTest::testWaylandClientShortcut()
     QCOMPARE(workspace()->activeClient(), client);
     QVERIFY(client->isActive());
     QCOMPARE(client->shortcut(), QKeySequence());
-    const QKeySequence seq(Qt::META + Qt::SHIFT + Qt::Key_Y);
+    const QKeySequence seq(Qt::META | Qt::SHIFT | Qt::Key_Y);
     QVERIFY(workspace()->shortcutAvailable(seq));
     client->setShortcut(seq.toString());
     QCOMPARE(client->shortcut(), seq);
@@ -453,7 +453,7 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     // now send in enter
     kwinApp()->platform()->keyboardKeyPressed(KEY_ENTER, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_ENTER, timestamp++);
-    QTRY_COMPARE(client->shortcut(), QKeySequence(Qt::META + Qt::SHIFT + Qt::Key_Y));
+    QTRY_COMPARE(client->shortcut(), QKeySequence(Qt::META | Qt::SHIFT | Qt::Key_Y));
 }
 
 WAYLANDTEST_MAIN(GlobalShortcutsTest)

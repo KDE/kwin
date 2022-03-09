@@ -79,10 +79,10 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, QWidget *parent)
     m_actionCollection->setConfigGlobal(true);
 
     if (TabboxType::Main == m_type) {
-        addShortcut("Walk Through Windows", ui->scAll, Qt::ALT + Qt::Key_Tab);
-        addShortcut("Walk Through Windows (Reverse)", ui->scAllReverse, Qt::ALT + Qt::SHIFT + Qt::Key_Backtab);
-        addShortcut("Walk Through Windows of Current Application", ui->scCurrent, Qt::ALT + Qt::Key_QuoteLeft);
-        addShortcut("Walk Through Windows of Current Application (Reverse)", ui->scCurrentReverse, Qt::ALT + Qt::Key_AsciiTilde);
+        addShortcut("Walk Through Windows", ui->scAll, Qt::ALT | Qt::Key_Tab);
+        addShortcut("Walk Through Windows (Reverse)", ui->scAllReverse, Qt::ALT | Qt::SHIFT | Qt::Key_Backtab);
+        addShortcut("Walk Through Windows of Current Application", ui->scCurrent, Qt::ALT | Qt::Key_QuoteLeft);
+        addShortcut("Walk Through Windows of Current Application (Reverse)", ui->scCurrentReverse, Qt::ALT | Qt::Key_AsciiTilde);
     } else if (TabboxType::Alternative == m_type) {
         addShortcut("Walk Through Windows Alternative", ui->scAll);
         addShortcut("Walk Through Windows Alternative (Reverse)", ui->scAllReverse);
@@ -256,10 +256,10 @@ void KWinTabBoxConfigForm::resetShortcuts()
         KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << sequence, KGlobalAccel::NoAutoloading);
     };
     if (TabboxType::Main == m_type) {
-        resetShortcut(ui->scAll, Qt::ALT + Qt::Key_Tab);
-        resetShortcut(ui->scAllReverse, Qt::ALT + Qt::SHIFT + Qt::Key_Backtab);
-        resetShortcut(ui->scCurrent, Qt::ALT + Qt::Key_QuoteLeft);
-        resetShortcut(ui->scCurrentReverse, Qt::ALT + Qt::Key_AsciiTilde);
+        resetShortcut(ui->scAll, Qt::ALT | Qt::Key_Tab);
+        resetShortcut(ui->scAllReverse, Qt::ALT | Qt::SHIFT | Qt::Key_Backtab);
+        resetShortcut(ui->scCurrent, Qt::ALT | Qt::Key_QuoteLeft);
+        resetShortcut(ui->scCurrentReverse, Qt::ALT | Qt::Key_AsciiTilde);
     } else if (TabboxType::Alternative == m_type) {
         resetShortcut(ui->scAll);
         resetShortcut(ui->scAllReverse);

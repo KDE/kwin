@@ -804,13 +804,13 @@ void VirtualDesktopManager::initShortcuts()
     QAction *previousAction = addAction(QStringLiteral("Switch to Previous Desktop"), i18n("Switch to Previous Desktop"), &VirtualDesktopManager::slotPrevious);
     input()->registerTouchpadSwipeShortcut(SwipeDirection::Left, previousAction);
     QAction *slotRightAction = addAction(QStringLiteral("Switch One Desktop to the Right"), i18n("Switch One Desktop to the Right"), &VirtualDesktopManager::slotRight);
-    KGlobalAccel::setGlobalShortcut(slotRightAction, QKeySequence(Qt::CTRL + Qt::META + Qt::Key_Right));
+    KGlobalAccel::setGlobalShortcut(slotRightAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Right));
     QAction *slotLeftAction = addAction(QStringLiteral("Switch One Desktop to the Left"), i18n("Switch One Desktop to the Left"), &VirtualDesktopManager::slotLeft);
-    KGlobalAccel::setGlobalShortcut(slotLeftAction, QKeySequence(Qt::CTRL + Qt::META + Qt::Key_Left));
+    KGlobalAccel::setGlobalShortcut(slotLeftAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Left));
     QAction *slotUpAction = addAction(QStringLiteral("Switch One Desktop Up"), i18n("Switch One Desktop Up"), &VirtualDesktopManager::slotUp);
-    KGlobalAccel::setGlobalShortcut(slotUpAction, QKeySequence(Qt::CTRL + Qt::META + Qt::Key_Up));
+    KGlobalAccel::setGlobalShortcut(slotUpAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Up));
     QAction *slotDownAction = addAction(QStringLiteral("Switch One Desktop Down"), i18n("Switch One Desktop Down"), &VirtualDesktopManager::slotDown);
-    KGlobalAccel::setGlobalShortcut(slotDownAction, QKeySequence(Qt::CTRL + Qt::META + Qt::Key_Down));
+    KGlobalAccel::setGlobalShortcut(slotDownAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Down));
 
     // axis events
     input()->registerAxisShortcut(Qt::ControlModifier | Qt::AltModifier, PointerAxisDown,
@@ -823,10 +823,10 @@ void VirtualDesktopManager::initSwitchToShortcuts()
 {
     const QString toDesktop = QStringLiteral("Switch to Desktop %1");
     const KLocalizedString toDesktopLabel = ki18n("Switch to Desktop %1");
-    addAction(toDesktop, toDesktopLabel, 1, QKeySequence(Qt::CTRL + Qt::Key_F1), &VirtualDesktopManager::slotSwitchTo);
-    addAction(toDesktop, toDesktopLabel, 2, QKeySequence(Qt::CTRL + Qt::Key_F2), &VirtualDesktopManager::slotSwitchTo);
-    addAction(toDesktop, toDesktopLabel, 3, QKeySequence(Qt::CTRL + Qt::Key_F3), &VirtualDesktopManager::slotSwitchTo);
-    addAction(toDesktop, toDesktopLabel, 4, QKeySequence(Qt::CTRL + Qt::Key_F4), &VirtualDesktopManager::slotSwitchTo);
+    addAction(toDesktop, toDesktopLabel, 1, QKeySequence(Qt::CTRL | Qt::Key_F1), &VirtualDesktopManager::slotSwitchTo);
+    addAction(toDesktop, toDesktopLabel, 2, QKeySequence(Qt::CTRL | Qt::Key_F2), &VirtualDesktopManager::slotSwitchTo);
+    addAction(toDesktop, toDesktopLabel, 3, QKeySequence(Qt::CTRL | Qt::Key_F3), &VirtualDesktopManager::slotSwitchTo);
+    addAction(toDesktop, toDesktopLabel, 4, QKeySequence(Qt::CTRL | Qt::Key_F4), &VirtualDesktopManager::slotSwitchTo);
 
     for (uint i = 5; i <= maximum(); ++i) {
         addAction(toDesktop, toDesktopLabel, i, QKeySequence(), &VirtualDesktopManager::slotSwitchTo);

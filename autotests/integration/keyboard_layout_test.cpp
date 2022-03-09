@@ -257,12 +257,12 @@ void KeyboardLayoutTest::testPerLayoutShortcut()
     QAction *a = new QAction(this);
     a->setObjectName(QStringLiteral("Switch keyboard layout to English (US)"));
     a->setProperty("componentName", componentName);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>{Qt::CTRL+Qt::ALT+Qt::Key_1}, KGlobalAccel::NoAutoloading);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>{Qt::CTRL|Qt::ALT|Qt::Key_1}, KGlobalAccel::NoAutoloading);
     delete a;
     a = new QAction(this);
     a->setObjectName(QStringLiteral("Switch keyboard layout to German"));
     a->setProperty("componentName", componentName);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>{Qt::CTRL+Qt::ALT+Qt::Key_2}, KGlobalAccel::NoAutoloading);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>{Qt::CTRL|Qt::ALT|Qt::Key_2}, KGlobalAccel::NoAutoloading);
     delete a;
 
     // now we should have three layouts

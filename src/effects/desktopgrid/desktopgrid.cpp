@@ -115,10 +115,10 @@ DesktopGridEffect::DesktopGridEffect()
     s->setObjectName(QStringLiteral("ShowDesktopGrid"));
     s->setText(i18n("Show Desktop Grid"));
 
-    KGlobalAccel::self()->setDefaultShortcut(s, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
-    KGlobalAccel::self()->setShortcut(s, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
+    KGlobalAccel::self()->setDefaultShortcut(s, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F8));
+    KGlobalAccel::self()->setShortcut(s, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F8));
     shortcut = KGlobalAccel::self()->shortcut(s);
-    effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F8, s);
+    effects->registerGlobalShortcut(Qt::CTRL | Qt::Key_F8, s);
 
     connect(s, &QAction::triggered, this, &DesktopGridEffect::toggle);
 
@@ -750,7 +750,7 @@ void DesktopGridEffect::grabbedKeyboardEvent(QKeyEvent* e)
     if (e->type() == QEvent::KeyPress) {
         // check for global shortcuts
         // HACK: keyboard grab disables the global shortcuts so we have to check for global shortcut (bug 156155)
-        if (shortcut.contains(e->key() + e->modifiers())) {
+        if (shortcut.contains(e->key() | e->modifiers())) {
             deactivate();
             return;
         }

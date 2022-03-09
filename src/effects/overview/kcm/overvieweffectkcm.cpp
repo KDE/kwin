@@ -35,7 +35,7 @@ OverviewEffectConfig::OverviewEffectConfig(QWidget *parent, const QVariantList &
     actionCollection->setConfigGroup(QStringLiteral("Overview"));
     actionCollection->setConfigGlobal(true);
 
-    const QKeySequence defaultToggleShortcut = Qt::META + Qt::Key_W;
+    const QKeySequence defaultToggleShortcut = Qt::META | Qt::Key_W;
     QAction *toggleAction = actionCollection->addAction(QStringLiteral("Overview"));
     toggleAction->setText(i18n("Toggle Overview"));
     toggleAction->setProperty("isConfigurationAction", true);
