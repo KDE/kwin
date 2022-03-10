@@ -84,7 +84,7 @@ private:
 
 void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface *waylandStream, const QString &winid)
 {
-    auto *toplevel = Workspace::self()->findToplevel(winid);
+    auto *toplevel = Workspace::self()->findToplevel(QUuid(winid));
 
     if (!toplevel) {
         waylandStream->sendFailed(i18n("Could not find window id %1", winid));

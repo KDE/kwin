@@ -72,7 +72,7 @@ void KCMKWinRules::parseArguments(const QStringList &args)
             uuid = QUuid(arg);
             nextArgIsUuid = false;
         } else if (arg.startsWith("uuid=")) {
-            uuid = arg.mid(strlen("uuid="));
+            uuid = QUuid(arg.mid(strlen("uuid=")));
         } else if (arg == QLatin1String("whole-app")) {
             m_wholeApp = true;
         }

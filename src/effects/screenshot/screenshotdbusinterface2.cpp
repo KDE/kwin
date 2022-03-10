@@ -334,7 +334,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureWindow(const QString &handle,
         return QVariantMap();
     }
 
-    EffectWindow *window = effects->findWindow(handle);
+    EffectWindow *window = effects->findWindow(QUuid(handle));
     if (!window) {
         bool ok;
         const int winId = handle.toInt(&ok);
