@@ -151,13 +151,13 @@ Item {
                         }
 
                         Rectangle {
+                            readonly property bool active: !thumbnail.scaled && (delegate.activeFocus || dropArea.containsDrag || bar.selectedDesktop === delegate.desktop)
                             anchors.fill: parent
                             radius: 3
                             color: "transparent"
                             border.width: 2
-                            border.color: PlasmaCore.ColorScope.highlightColor
-                            opacity: dropArea.containsDrag ? 0.5 : 1.0
-                            visible: !thumbnail.scaled && (delegate.activeFocus || dropArea.containsDrag || bar.selectedDesktop === delegate.desktop)
+                            border.color: active ? PlasmaCore.ColorScope.highlightColor : PlasmaCore.ColorScope.textColor
+                            opacity: dropArea.containsDrag || !active ? 0.5 : 1.0
                         }
 
                         MouseArea {
