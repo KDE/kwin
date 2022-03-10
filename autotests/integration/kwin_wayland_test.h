@@ -516,6 +516,20 @@ private:
     bool m_touch = false;
 };
 
+void keyboardKeyPressed(quint32 key, quint32 time);
+void keyboardKeyReleased(quint32 key, quint32 time);
+void pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta = 0,
+        InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+void pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta = 0,
+        InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+void pointerButtonPressed(quint32 button, quint32 time);
+void pointerButtonReleased(quint32 button, quint32 time);
+void pointerMotion(const QPointF &position, quint32 time);
+void touchCancel();
+void touchDown(qint32 id, const QPointF &pos, quint32 time);
+void touchMotion(qint32 id, const QPointF &pos, quint32 time);
+void touchUp(qint32 id, quint32 time);
+
 /**
  * Creates a Wayland Connection in a dedicated thread and creates various
  * client side objects which can be used to create windows.
