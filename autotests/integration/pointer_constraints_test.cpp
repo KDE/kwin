@@ -178,22 +178,22 @@ void TestPointerConstraints::testConfinedPointer()
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
 
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(!c->isInteractiveMove());
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
 
     // set the opacity to 0.5
     c->setOpacity(0.5);
     QCOMPARE(c->opacity(), 0.5);
 
     // pointer is confined so shortcut should not work
-    kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
+    Test::pointerAxisVertical(-5, timestamp++);
     QCOMPARE(c->opacity(), 0.5);
-    kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
+    Test::pointerAxisVertical(5, timestamp++);
     QCOMPARE(c->opacity(), 0.5);
 
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
 
     // deactivate the client, this should unconfine
     workspace()->activateClient(nullptr);

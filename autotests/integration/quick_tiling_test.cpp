@@ -357,26 +357,26 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
 
     QFETCH(QPoint, targetPos);
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     while (Cursors::self()->mouse()->pos().x() > targetPos.x()) {
-        kwinApp()->platform()->keyboardKeyPressed(KEY_LEFT, timestamp++);
-        kwinApp()->platform()->keyboardKeyReleased(KEY_LEFT, timestamp++);
+        Test::keyboardKeyPressed(KEY_LEFT, timestamp++);
+        Test::keyboardKeyReleased(KEY_LEFT, timestamp++);
     }
     while (Cursors::self()->mouse()->pos().x() < targetPos.x()) {
-        kwinApp()->platform()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
-        kwinApp()->platform()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
+        Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
+        Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
     }
     while (Cursors::self()->mouse()->pos().y() < targetPos.y()) {
-        kwinApp()->platform()->keyboardKeyPressed(KEY_DOWN, timestamp++);
-        kwinApp()->platform()->keyboardKeyReleased(KEY_DOWN, timestamp++);
+        Test::keyboardKeyPressed(KEY_DOWN, timestamp++);
+        Test::keyboardKeyReleased(KEY_DOWN, timestamp++);
     }
     while (Cursors::self()->mouse()->pos().y() > targetPos.y()) {
-        kwinApp()->platform()->keyboardKeyPressed(KEY_UP, timestamp++);
-        kwinApp()->platform()->keyboardKeyReleased(KEY_UP, timestamp++);
+        Test::keyboardKeyPressed(KEY_UP, timestamp++);
+        Test::keyboardKeyReleased(KEY_UP, timestamp++);
     }
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_ENTER, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_ENTER, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_ENTER, timestamp++);
+    Test::keyboardKeyReleased(KEY_ENTER, timestamp++);
     QCOMPARE(Cursors::self()->mouse()->pos(), targetPos);
     QVERIFY(!workspace()->moveResizeClient());
 
@@ -429,9 +429,9 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QFETCH(QPoint, pointerPos);
     QFETCH(QSize, tileSize);
     quint32 timestamp = 1;
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
-    kwinApp()->platform()->pointerMotion(pointerPos, timestamp++);
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerMotion(pointerPos, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QTEST(c->quickTileMode(), "expectedMode");
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
@@ -444,16 +444,16 @@ void QuickTilingTest::testQuickTilingPointerMove()
     workspace()->performWindowOperation(c, Options::UnrestrictedMoveOp);
     QCOMPARE(c, workspace()->moveResizeClient());
 
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++); // untile the window
-    kwinApp()->platform()->pointerMotion(QPoint(1280, 1024) / 2, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++); // untile the window
+    Test::pointerMotion(QPoint(1280, 1024) / 2, timestamp++);
     QCOMPARE(quickTileChangedSpy.count(), 2);
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(100, 50));
 
-    kwinApp()->platform()->pointerMotion(pointerPos, timestamp++); // tile the window again
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerMotion(pointerPos, timestamp++); // tile the window again
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(quickTileChangedSpy.count(), 3);
     QTEST(c->quickTileMode(), "expectedMode");
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
@@ -521,13 +521,13 @@ void QuickTilingTest::testQuickTilingTouchMove()
     // Note that interactive move will be started with a delay.
     quint32 timestamp = 1;
     QSignalSpy clientStartUserMovedResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
-    kwinApp()->platform()->touchDown(0, QPointF(c->frameGeometry().center().x(), c->frameGeometry().y() + decoration->borderTop() / 2), timestamp++);
+    Test::touchDown(0, QPointF(c->frameGeometry().center().x(), c->frameGeometry().y() + decoration->borderTop() / 2), timestamp++);
     QVERIFY(clientStartUserMovedResizedSpy.wait());
     QCOMPARE(c, workspace()->moveResizeClient());
 
     QFETCH(QPoint, targetPos);
-    kwinApp()->platform()->touchMotion(0, targetPos, timestamp++);
-    kwinApp()->platform()->touchUp(0, timestamp++);
+    Test::touchMotion(0, targetPos, timestamp++);
+    Test::touchUp(0, timestamp++);
     QVERIFY(!workspace()->moveResizeClient());
 
 

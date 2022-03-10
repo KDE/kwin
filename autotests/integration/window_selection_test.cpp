@@ -126,7 +126,7 @@ void TestWindowSelection::testSelectOnWindowPointer()
 
     // simulate left button press
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     // should not have ended the mode
     QCOMPARE(input()->isSelectingWindow(), true);
     QVERIFY(!selectedWindow);
@@ -139,13 +139,13 @@ void TestWindowSelection::testSelectOnWindowPointer()
     input()->keyboard()->update();
 
     // perform a right button click
-    kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, timestamp++);
-    kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, timestamp++);
+    Test::pointerButtonPressed(BTN_RIGHT, timestamp++);
+    Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
     // should not have ended the mode
     QCOMPARE(input()->isSelectingWindow(), true);
     QVERIFY(!selectedWindow);
     // now release
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(selectedWindow, client);
     QCOMPARE(input()->pointer()->focus(), client);
@@ -208,9 +208,9 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     // simulate key press
     quint32 timestamp = 0;
     // move cursor through keys
-    auto keyPress = [&timestamp] (qint32 key) {
-        kwinApp()->platform()->keyboardKeyPressed(key, timestamp++);
-        kwinApp()->platform()->keyboardKeyReleased(key, timestamp++);
+    auto keyPress = [&timestamp](qint32 key) {
+        Test::keyboardKeyPressed(key, timestamp++);
+        Test::keyboardKeyReleased(key, timestamp++);
     };
     while (KWin::Cursors::self()->mouse()->pos().x() >= client->frameGeometry().x() + client->frameGeometry().width()) {
         keyPress(KEY_LEFT);
@@ -225,7 +225,7 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
         keyPress(KEY_UP);
     }
     QFETCH(qint32, key);
-    kwinApp()->platform()->keyboardKeyPressed(key, timestamp++);
+    Test::keyboardKeyPressed(key, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(selectedWindow, client);
     QCOMPARE(input()->pointer()->focus(), client);
@@ -238,7 +238,7 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     QCOMPARE(keyboardLeftSpy.count(), 1);
     QCOMPARE(pointerEnteredSpy.count(), 1);
     QCOMPARE(keyboardEnteredSpy.count(), 2);
-    kwinApp()->platform()->keyboardKeyReleased(key, timestamp++);
+    Test::keyboardKeyReleased(key, timestamp++);
 }
 
 void TestWindowSelection::testSelectOnWindowTouch()
@@ -267,25 +267,25 @@ void TestWindowSelection::testSelectOnWindowTouch()
 
     // simulate touch down
     quint32 timestamp = 0;
-    kwinApp()->platform()->touchDown(0, client->frameGeometry().center(), timestamp++);
+    Test::touchDown(0, client->frameGeometry().center(), timestamp++);
     QVERIFY(!selectedWindow);
-    kwinApp()->platform()->touchUp(0, timestamp++);
+    Test::touchUp(0, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(selectedWindow, client);
 
     // with movement
     selectedWindow = nullptr;
     kwinApp()->platform()->startInteractiveWindowSelection(callback);
-    kwinApp()->platform()->touchDown(0, client->frameGeometry().bottomRight() + QPoint(20, 20), timestamp++);
+    Test::touchDown(0, client->frameGeometry().bottomRight() + QPoint(20, 20), timestamp++);
     QVERIFY(!selectedWindow);
-    kwinApp()->platform()->touchMotion(0, client->frameGeometry().bottomRight() - QPoint(1, 1), timestamp++);
+    Test::touchMotion(0, client->frameGeometry().bottomRight() - QPoint(1, 1), timestamp++);
     QVERIFY(!selectedWindow);
-    kwinApp()->platform()->touchUp(0, timestamp++);
+    Test::touchUp(0, timestamp++);
     QCOMPARE(selectedWindow, client);
     QCOMPARE(input()->isSelectingWindow(), false);
 
     // it cancels active touch sequence on the window
-    kwinApp()->platform()->touchDown(0, client->frameGeometry().center(), timestamp++);
+    Test::touchDown(0, client->frameGeometry().center(), timestamp++);
     QVERIFY(touchStartedSpy.wait());
     selectedWindow = nullptr;
     kwinApp()->platform()->startInteractiveWindowSelection(callback);
@@ -293,10 +293,10 @@ void TestWindowSelection::testSelectOnWindowTouch()
     QVERIFY(touchCanceledSpy.wait());
     QVERIFY(!selectedWindow);
     // this touch up does not yet select the window, it was started prior to the selection
-    kwinApp()->platform()->touchUp(0, timestamp++);
+    Test::touchUp(0, timestamp++);
     QVERIFY(!selectedWindow);
-    kwinApp()->platform()->touchDown(0, client->frameGeometry().center(), timestamp++);
-    kwinApp()->platform()->touchUp(0, timestamp++);
+    Test::touchDown(0, client->frameGeometry().center(), timestamp++);
+    Test::touchUp(0, timestamp++);
     QCOMPARE(selectedWindow, client);
     QCOMPARE(input()->isSelectingWindow(), false);
 
@@ -347,8 +347,8 @@ void TestWindowSelection::testCancelOnWindowPointer()
 
     // simulate left button press
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, timestamp++);
-    kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, timestamp++);
+    Test::pointerButtonPressed(BTN_RIGHT, timestamp++);
+    Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QVERIFY(!selectedWindow);
     QCOMPARE(input()->pointer()->focus(), client);
@@ -406,7 +406,7 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
 
     // simulate left button press
     quint32 timestamp = 0;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_ESC, timestamp++);
+    Test::keyboardKeyPressed(KEY_ESC, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QVERIFY(!selectedWindow);
     QCOMPARE(input()->pointer()->focus(), client);
@@ -419,7 +419,7 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
     QCOMPARE(keyboardLeftSpy.count(), 1);
     QCOMPARE(pointerEnteredSpy.count(), 2);
     QCOMPARE(keyboardEnteredSpy.count(), 2);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_ESC, timestamp++);
+    Test::keyboardKeyReleased(KEY_ESC, timestamp++);
 }
 
 void TestWindowSelection::testSelectPointPointer()
@@ -472,7 +472,7 @@ void TestWindowSelection::testSelectPointPointer()
 
     // simulate left button press
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     // should not have ended the mode
     QCOMPARE(input()->isSelectingWindow(), true);
     QCOMPARE(point, QPoint());
@@ -485,13 +485,13 @@ void TestWindowSelection::testSelectPointPointer()
     input()->keyboard()->update();
 
     // perform a right button click
-    kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, timestamp++);
-    kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, timestamp++);
+    Test::pointerButtonPressed(BTN_RIGHT, timestamp++);
+    Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
     // should not have ended the mode
     QCOMPARE(input()->isSelectingWindow(), true);
     QCOMPARE(point, QPoint());
     // now release
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(point, input()->globalPointer().toPoint());
     QCOMPARE(input()->pointer()->focus(), client);
@@ -522,23 +522,23 @@ void TestWindowSelection::testSelectPointTouch()
 
     // let's create multiple touch points
     quint32 timestamp = 0;
-    kwinApp()->platform()->touchDown(0, QPointF(0, 1), timestamp++);
+    Test::touchDown(0, QPointF(0, 1), timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
-    kwinApp()->platform()->touchDown(1, QPointF(10, 20), timestamp++);
+    Test::touchDown(1, QPointF(10, 20), timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
-    kwinApp()->platform()->touchDown(2, QPointF(30, 40), timestamp++);
+    Test::touchDown(2, QPointF(30, 40), timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
 
     // let's move our points
-    kwinApp()->platform()->touchMotion(0, QPointF(5, 10), timestamp++);
-    kwinApp()->platform()->touchMotion(2, QPointF(20, 25), timestamp++);
-    kwinApp()->platform()->touchMotion(1, QPointF(25, 35), timestamp++);
+    Test::touchMotion(0, QPointF(5, 10), timestamp++);
+    Test::touchMotion(2, QPointF(20, 25), timestamp++);
+    Test::touchMotion(1, QPointF(25, 35), timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
-    kwinApp()->platform()->touchUp(0, timestamp++);
+    Test::touchUp(0, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
-    kwinApp()->platform()->touchUp(2, timestamp++);
+    Test::touchUp(2, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
-    kwinApp()->platform()->touchUp(1, timestamp++);
+    Test::touchUp(1, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(point, QPoint(25, 35));
 }

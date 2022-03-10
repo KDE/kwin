@@ -197,10 +197,10 @@ void ScreenEdgeTest::testTouchEdge()
     // trigger the edge
     QFETCH(QPoint, triggerPos);
     quint32 timestamp = 0;
-    kwinApp()->platform()->touchDown(0, triggerPos, timestamp++);
+    Test::touchDown(0, triggerPos, timestamp++);
     QFETCH(QPoint, motionPos);
-    kwinApp()->platform()->touchMotion(0, motionPos, timestamp++);
-    kwinApp()->platform()->touchUp(0, timestamp++);
+    Test::touchMotion(0, motionPos, timestamp++);
+    Test::touchUp(0, timestamp++);
     QVERIFY(showDesktopSpy.wait());
     QCOMPARE(showDesktopSpy.count(), 1);
     QVERIFY(workspace()->showingDesktop());
@@ -274,9 +274,9 @@ void ScreenEdgeTest::testDeclarativeTouchEdge()
 
     // Trigger the edge through touch
     quint32 timestamp = 0;
-    kwinApp()->platform()->touchDown(0, QPointF(0, 50), timestamp++);
-    kwinApp()->platform()->touchMotion(0, QPointF(500, 50), timestamp++);
-    kwinApp()->platform()->touchUp(0, timestamp++);
+    Test::touchDown(0, QPointF(0, 50), timestamp++);
+    Test::touchMotion(0, QPointF(500, 50), timestamp++);
+    Test::touchUp(0, timestamp++);
 
     QVERIFY(showDesktopSpy.wait());
 }

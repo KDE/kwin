@@ -99,27 +99,27 @@ void TabBoxTest::testCapsLock()
 
     // enable capslock
     quint32 timestamp = 0;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
 
     // press alt+tab
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::AltModifier);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_TAB, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_TAB, timestamp++);
+    Test::keyboardKeyPressed(KEY_TAB, timestamp++);
+    Test::keyboardKeyReleased(KEY_TAB, timestamp++);
 
     QVERIFY(tabboxAddedSpy.wait());
     QVERIFY(TabBox::TabBox::self()->isGrabbed());
 
     // release alt
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
 
     // release caps lock
-    kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
@@ -162,16 +162,16 @@ void TabBoxTest::testMoveForward()
 
     // press alt+tab
     quint32 timestamp = 0;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::AltModifier);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_TAB, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_TAB, timestamp++);
+    Test::keyboardKeyPressed(KEY_TAB, timestamp++);
+    Test::keyboardKeyReleased(KEY_TAB, timestamp++);
 
     QVERIFY(tabboxAddedSpy.wait());
     QVERIFY(TabBox::TabBox::self()->isGrabbed());
 
     // release alt
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
     QCOMPARE(workspace()->activeClient(), c2);
@@ -213,20 +213,20 @@ void TabBoxTest::testMoveBackward()
 
     // press alt+shift+tab
     quint32 timestamp = 0;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::AltModifier);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::AltModifier | Qt::ShiftModifier);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_TAB, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_TAB, timestamp++);
+    Test::keyboardKeyPressed(KEY_TAB, timestamp++);
+    Test::keyboardKeyReleased(KEY_TAB, timestamp++);
 
     QVERIFY(tabboxAddedSpy.wait());
     QVERIFY(TabBox::TabBox::self()->isGrabbed());
 
     // release alt
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
     QCOMPARE(tabboxClosedSpy.count(), 0);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
     QCOMPARE(workspace()->activeClient(), c1);

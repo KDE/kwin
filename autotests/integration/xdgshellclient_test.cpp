@@ -1439,12 +1439,12 @@ void TestXdgShellClient::testPointerInputTransform()
 
     // Enter the surface.
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerMotion(client->pos(), timestamp++);
+    Test::pointerMotion(client->pos(), timestamp++);
     QVERIFY(pointerEnteredSpy.wait());
 
     // Move the pointer to (10, 5) relative to the upper left frame corner, which is located
     // at (0, 0) in the surface-local coordinates.
-    kwinApp()->platform()->pointerMotion(client->pos() + QPoint(10, 5), timestamp++);
+    Test::pointerMotion(client->pos() + QPoint(10, 5), timestamp++);
     QVERIFY(pointerMotionSpy.wait());
     QCOMPARE(pointerMotionSpy.last().first(), QPoint(10, 5));
 
@@ -1463,7 +1463,7 @@ void TestXdgShellClient::testPointerInputTransform()
 
     // Move the pointer to (20, 50) relative to the upper left frame corner, which is located
     // at (10, 20) in the surface-local coordinates.
-    kwinApp()->platform()->pointerMotion(client->pos() + QPoint(20, 50), timestamp++);
+    Test::pointerMotion(client->pos() + QPoint(20, 50), timestamp++);
     QVERIFY(pointerMotionSpy.wait());
     QCOMPARE(pointerMotionSpy.last().first(), QPoint(10, 20) + QPoint(20, 50));
 

@@ -262,9 +262,9 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
     quint32 timestamp = 0;
     QFETCH(QPoint, touchDownPos);
     QFETCH(QPoint, targetPos);
-    kwinApp()->platform()->touchDown(0, touchDownPos, timestamp++);
-    kwinApp()->platform()->touchMotion(0, targetPos, timestamp++);
-    kwinApp()->platform()->touchUp(0, timestamp++);
+    Test::touchDown(0, touchDownPos, timestamp++);
+    Test::touchMotion(0, targetPos, timestamp++);
+    Test::touchUp(0, timestamp++);
     QVERIFY(effectsWindowShownSpy.wait());
     QVERIFY(!client->isHiddenInternal());
     QCOMPARE(effectsWindowShownSpy.count(), 1);
