@@ -184,7 +184,7 @@ bool X11SyncManager::endFrame()
         return true;
     }
 
-    for (int i = 0; i < std::min(2, m_fences.count() - 1); i++) {
+    for (int i = 0; i < std::min<int>(2, m_fences.count() - 1); i++) {
         const int index = (m_next + i) % m_fences.count();
         X11SyncObject *fence = m_fences[index];
 

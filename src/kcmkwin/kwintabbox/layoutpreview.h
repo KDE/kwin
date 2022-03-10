@@ -63,7 +63,7 @@ private:
         QString caption;
         QString icon;
 
-        bool operator==(const ThumbnailInfo &other) {
+        bool operator==(const ThumbnailInfo &other) const {
             return wId == other.wId;
         }
     };
