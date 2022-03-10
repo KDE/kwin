@@ -232,8 +232,10 @@ target_link_libraries(testXkb
     kwineffects
 
     XKB::XKB
-    Qt5::XkbCommonSupportPrivate
 )
+if (QT_MAJOR_VERSION EQUAL "5")
+    target_link_libraries(testXkb Qt5::XkbCommonSupportPrivate)
+endif()
 add_test(NAME kwin-testXkb COMMAND testXkb)
 ecm_mark_as_test(testXkb)
 

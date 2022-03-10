@@ -18,26 +18,6 @@ include(GenerateExportHeader)
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
 
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
-    Concurrent
-    Core
-    DBus
-    Quick
-    UiTools
-    Widgets
-    X11Extras
-)
-
-find_package(Qt5Test ${QT_MIN_VERSION} CONFIG QUIET)
-set_package_properties(Qt5Test PROPERTIES
-    PURPOSE "Required for tests"
-    TYPE OPTIONAL
-)
-add_feature_info("Qt5Test" Qt5Test_FOUND "Required for building tests")
-if (NOT Qt5Test_FOUND)
-    set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
-endif()
-
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
@@ -47,6 +27,31 @@ include(ECMInstallIcons)
 include(ECMOptionalAddSubdirectory)
 include(ECMConfiguredInstall)
 include(ECMQtDeclareLoggingCategory)
+
+find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
+    Concurrent
+    Core
+    DBus
+    Quick
+    UiTools
+    Widgets
+)
+if (QT_MAJOR_VERSION EQUAL "5")
+    find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS X11Extras)
+    find_package(Qt5XkbCommonSupport REQUIRED)
+else()
+    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient)
+endif()
+
+find_package(Qt${QT_MAJOR_VERSION}Test ${QT_MIN_VERSION} CONFIG QUIET)
+set_package_properties(Qt${QT_MAJOR_VERSION}Test PROPERTIES
+    PURPOSE "Required for tests"
+    TYPE OPTIONAL
+)
+add_feature_info("Qt${QT_MAJOR_VERSION}Test" Qt${QT_MAJOR_VERSION}Test_FOUND "Required for building tests")
+if (NOT Qt${QT_MAJOR_VERSION}Test_FOUND)
+    set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
+endif()
 
 add_definitions(
     -DQT_DISABLE_DEPRECATED_BEFORE=0
@@ -195,8 +200,6 @@ set_package_properties(XKB PROPERTIES
     PURPOSE "Required for building KWin with Wayland support"
 )
 
-find_package(Qt5XkbCommonSupport REQUIRED)
-
 find_package(Libinput 1.19)
 set_package_properties(Libinput PROPERTIES TYPE REQUIRED PURPOSE "Required for input handling on Wayland.")
 
@@ -268,10 +271,12 @@ set_package_properties(X11_XCB PROPERTIES
 )
 
 # dependencies for QPA plugin
-find_package(Qt5FontDatabaseSupport REQUIRED)
-find_package(Qt5ThemeSupport REQUIRED)
-find_package(Qt5ServiceSupport REQUIRED)
-find_package(Qt5EventDispatcherSupport REQUIRED)
+if (QT_MAJOR_VERSION EQUAL "5")
+    find_package(Qt5FontDatabaseSupport REQUIRED)
+    find_package(Qt5ThemeSupport REQUIRED)
+    find_package(Qt5ServiceSupport REQUIRED)
+    find_package(Qt5EventDispatcherSupport REQUIRED)
+endif()
 
 find_package(Freetype REQUIRED)
 set_package_properties(Freetype PROPERTIES
@@ -411,7 +416,9 @@ add_subdirectory(src)
 
 if (BUILD_TESTING)
     find_package(WaylandProtocols 1.19 REQUIRED)
-    find_package(QtWaylandScanner ${QT_MIN_VERSION} REQUIRED)
+    if (QT_MAJOR_VERSION EQUAL "5")
+        find_package(QtWaylandScanner ${QT_MIN_VERSION} REQUIRED)
+    endif()
     find_package(Wayland REQUIRED COMPONENTS Client)
     find_package(PlasmaWaylandProtocols CONFIG REQUIRED)
 

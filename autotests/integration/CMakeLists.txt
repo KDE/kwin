@@ -7,40 +7,54 @@ set(KWinIntegrationTestFramework_SOURCES
     kwin_wayland_test.cpp
     test_helpers.cpp
 )
-ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
-    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
-    BASENAME input-method-unstable-v1
-)
-ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
-    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
-    BASENAME text-input-unstable-v3
-)
-ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
-    PROTOCOL protocols/wlr-layer-shell-unstable-v1.xml
-    BASENAME wlr-layer-shell-unstable-v1
-)
-ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
-    PROTOCOL ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
-    BASENAME xdg-shell
-)
-ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
-    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
-    BASENAME xdg-decoration-unstable-v1
-)
-ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
-    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
-    BASENAME idle-inhibit-unstable-v1
-)
-ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
-    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
-    BASENAME kde-output-device-v2
-)
-ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
-    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
-    BASENAME kde-output-management-v2
-)
+add_library(KWinIntegrationTestFramework SHARED)
+if (QT_MAJOR_VERSION EQUAL "5")
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
+        BASENAME input-method-unstable-v1
+    )
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
+        BASENAME text-input-unstable-v3
+    )
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+        PROTOCOL protocols/wlr-layer-shell-unstable-v1.xml
+        BASENAME wlr-layer-shell-unstable-v1
+    )
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+        PROTOCOL ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
+        BASENAME xdg-shell
+    )
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
+        BASENAME xdg-decoration-unstable-v1
+    )
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
+        BASENAME idle-inhibit-unstable-v1
+    )
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+        PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
+        BASENAME kde-output-device-v2
+    )
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+        PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
+        BASENAME kde-output-management-v2
+    )
+else()
+    qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework FILES
+        ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
+        ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
+        ${CMAKE_CURRENT_SOURCE_DIR}/protocols/wlr-layer-shell-unstable-v1.xml
+        ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
+        ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
+        ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
+    )
+endif()
 
-add_library(KWinIntegrationTestFramework SHARED ${KWinIntegrationTestFramework_SOURCES})
+target_sources(KWinIntegrationTestFramework PRIVATE ${KWinIntegrationTestFramework_SOURCES})
 target_link_libraries(KWinIntegrationTestFramework
     PUBLIC
         Qt::Test
