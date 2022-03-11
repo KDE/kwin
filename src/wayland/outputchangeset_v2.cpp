@@ -21,6 +21,8 @@ OutputChangeSetV2Private::OutputChangeSetV2Private(OutputDeviceV2Interface *outp
     , position(outputDevice->globalPosition())
     , scale(outputDevice->scale())
     , overscan(outputDevice->overscan())
+    , vrrPolicy(outputDevice->vrrPolicy())
+    , rgbRange(outputDevice->rgbRange())
 {
 }
 
