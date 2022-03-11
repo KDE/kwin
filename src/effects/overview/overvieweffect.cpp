@@ -88,7 +88,22 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
     const QList<int> touchActivateBorders = OverviewConfig::touchBorderActivate();
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerTouchBorder(ElectricBorder(border), m_toggleAction);
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_toggleAction, [this] (ElectricBorder border, const QSizeF &deltaProgress, const QSize &scaledScreenSize) {
+            const bool wasInProgress = m_partialActivationFactor > 0;
+            const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
+            if (border == ElectricTop || border == ElectricBottom) {
+                m_partialActivationFactor = qMin(1.0, qAbs(deltaProgress.height()) / maxDelta);
+            } else {
+                m_partialActivationFactor = qMin(1.0, qAbs(deltaProgress.width()) / maxDelta);
+            }
+            Q_EMIT partialActivationFactorChanged();
+            if ( !wasInProgress) {
+                Q_EMIT gestureInProgressChanged();
+            }
+            if (!isRunning()) {
+                activate();
+            }
+        });
     }
 }
 
@@ -131,6 +146,16 @@ void OverviewEffect::setBlurBackground(bool blur)
     }
 }
 
+qreal OverviewEffect::partialActivationFactor() const
+{
+    return m_partialActivationFactor;
+}
+
+bool OverviewEffect::gestureInProgress() const
+{
+    return m_partialActivationFactor > 0;
+}
+
 int OverviewEffect::requestedEffectChainPosition() const
 {
     return 70;
@@ -147,11 +172,14 @@ bool OverviewEffect::borderActivated(ElectricBorder border)
 
 void OverviewEffect::toggle()
 {
-    if (!isRunning()) {
+    if (!isRunning() || m_partialActivationFactor > 0.5) {
         activate();
     } else {
         deactivate();
     }
+    m_partialActivationFactor = 0;
+    Q_EMIT gestureInProgressChanged();
+    Q_EMIT partialActivationFactorChanged();
 }
 
 void OverviewEffect::activate()

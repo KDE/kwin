@@ -50,6 +50,9 @@ FocusScope {
                 readonly property bool selected: heap.selectedIndex == index
 
                 state: {
+                    if (effect.gestureInProgress) {
+                        return "partial";
+                    }
                     if (heap.effectiveOrganized) {
                         return "active";
                     }
@@ -108,10 +111,8 @@ FocusScope {
                     anchors.horizontalCenter: thumbSource.horizontalCenter
                     anchors.bottom: thumbSource.bottom
                     anchors.bottomMargin: -height / 4
-                    opacity: heap.organized ? 1 : 0
                     visible: !dragHandler.active
 
-                    TweenBehavior on opacity {}
 
                     PC3.Label {
                         id: caption
@@ -146,12 +147,35 @@ FocusScope {
                             width: thumb.client.width
                             height: thumb.client.height
                         }
+                        PropertyChanges {
+                            target: icon
+                            opacity: 0
+                        }
+                    },
+                    State {
+                        name: "partial"
+                        PropertyChanges {
+                            target: thumb
+                            x: (thumb.client.x - targetScreen.geometry.x - expoLayout.Kirigami.ScenePosition.x) * (1 - effect.partialActivationFactor) + cell.x * effect.partialActivationFactor
+                            y: (thumb.client.y - targetScreen.geometry.y - expoLayout.Kirigami.ScenePosition.y) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
+                            width: thumb.client.width * (1 - effect.partialActivationFactor) + cell.width * effect.partialActivationFactor
+                            height: thumb.client.height * (1 - effect.partialActivationFactor) + cell.height * effect.partialActivationFactor
+                            opacity: thumb.client.minimized ? effect.partialActivationFactor : 1
+                        }
+                        PropertyChanges {
+                            target: icon
+                            opacity: effect.partialActivationFactor
+                        }
                     },
                     State {
                         name: "initial-minimized"
                         extend: "initial"
                         PropertyChanges {
                             target: thumb
+                            opacity: 0
+                        }
+                        PropertyChanges {
+                            target: icon
                             opacity: 0
                         }
                     },
@@ -164,22 +188,23 @@ FocusScope {
                             width: cell.width
                             height: cell.height
                         }
+                        PropertyChanges {
+                            target: icon
+                            opacity: 1
+                        }
                     }
                 ]
 
-                component TweenBehavior : Behavior {
-                    enabled: heap.animationEnabled && !dragHandler.active
+                transitions: Transition {
+                    to: "initial, active"
+                    enabled: heap.animationEnabled
                     NumberAnimation {
                         duration: effect.animationDuration
+                        properties: "x, y, width, height, opacity"
                         easing.type: Easing.OutCubic
                     }
                 }
 
-                TweenBehavior on x {}
-                TweenBehavior on y {}
-                TweenBehavior on width {}
-                TweenBehavior on height {}
-                TweenBehavior on opacity {}
 
                 PlasmaCore.FrameSvgItem {
                     anchors.fill: parent

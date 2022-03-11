@@ -19,6 +19,9 @@ class OverviewEffect : public QuickSceneEffect
     Q_PROPERTY(int animationDuration READ animationDuration NOTIFY animationDurationChanged)
     Q_PROPERTY(ExpoLayout::LayoutMode layout READ layout NOTIFY layoutChanged)
     Q_PROPERTY(bool blurBackground READ blurBackground NOTIFY blurBackgroundChanged)
+    Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
+    // More efficient from a property binding pov rather than binding to partialActivationFactor !== 0
+    Q_PROPERTY(bool gestureInProgress READ gestureInProgress NOTIFY gestureInProgressChanged)
 
 public:
     OverviewEffect();
@@ -33,6 +36,9 @@ public:
     bool blurBackground() const;
     void setBlurBackground(bool blur);
 
+    qreal partialActivationFactor() const;
+    bool gestureInProgress() const;
+
     int requestedEffectChainPosition() const override;
     bool borderActivated(ElectricBorder border) override;
     void reconfigure(ReconfigureFlags flags) override;
@@ -42,6 +48,8 @@ Q_SIGNALS:
     void animationDurationChanged();
     void layoutChanged();
     void blurBackgroundChanged();
+    void partialActivationFactorChanged();
+    void gestureInProgressChanged();
 
 public Q_SLOTS:
     void activate();
@@ -60,6 +68,7 @@ private:
     QList<QKeySequence> m_toggleShortcut;
     QList<ElectricBorder> m_borderActivate;
     QList<ElectricBorder> m_touchBorderActivate;
+    qreal m_partialActivationFactor = 0;
     bool m_blurBackground = false;
     int m_animationDuration = 200;
     ExpoLayout::LayoutMode m_layout = ExpoLayout::LayoutNatural;
