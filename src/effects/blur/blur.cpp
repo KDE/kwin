@@ -415,21 +415,20 @@ bool BlurEffect::supported()
     return supported;
 }
 
+bool BlurEffect::decorationSupportsBlurBehind(const EffectWindow *w) const
+{
+    return w->decoration() && !w->decoration()->blurRegion().isNull();
+}
+
 QRegion BlurEffect::decorationBlurRegion(const EffectWindow *w) const
 {
-    if (!w || !effects->decorationSupportsBlurBehind() || !w->decoration()) {
+    if (!decorationSupportsBlurBehind(w)) {
         return QRegion();
     }
 
     QRegion decorationRegion = QRegion(w->decoration()->rect()) - w->decorationInnerRect();
-
-    if (!w->decoration()->blurRegion().isNull()) {
-        //! we return only blurred regions that belong to decoration region
-        return decorationRegion.intersected(w->decoration()->blurRegion());
-    }
-
-    //! when decoration requests blur but does not provide any blur region we can assume it prefers entire decoration region
-    return decorationRegion;
+    //! we return only blurred regions that belong to decoration region
+    return decorationRegion.intersected(w->decoration()->blurRegion());
 }
 
 QRect BlurEffect::expand(const QRect &rect) const
@@ -456,7 +455,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
     if (value.isValid()) {
         const QRegion appRegion = qvariant_cast<QRegion>(value);
         if (!appRegion.isEmpty()) {
-            if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
+            if (w->decorationHasAlpha() && decorationSupportsBlurBehind(w)) {
                 region = decorationBlurRegion(w);
             }
             region |= appRegion.translated(w->contentsRect().topLeft()) &
@@ -466,7 +465,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
             // for the whole window.
             region = w->rect();
         }
-    } else if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
+    } else if (w->decorationHasAlpha() && decorationSupportsBlurBehind(w)) {
         // If the client hasn't specified a blur region, we'll only enable
         // the effect behind the decoration.
         region = decorationBlurRegion(w);
@@ -599,8 +598,7 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
     if ((scaled || (translated || (mask & PAINT_WINDOW_TRANSFORMED))) && !w->data(WindowForceBlurRole).toBool())
         return false;
 
-    bool blurBehindDecos = effects->decorationsHaveAlpha() &&
-                effects->decorationSupportsBlurBehind();
+    bool blurBehindDecos = effects->decorationsHaveAlpha() && decorationSupportsBlurBehind(w);
 
     if (!w->hasAlpha() && w->opacity() >= 1.0 && !(blurBehindDecos && w->hasDecoration()))
         return false;

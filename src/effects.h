@@ -172,8 +172,6 @@ public:
 
     bool decorationsHaveAlpha() const override;
 
-    bool decorationSupportsBlurBehind() const override;
-
     EffectFrame* effectFrame(EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment) const override;
 
     QVariant kwinOption(KWinOption kwopt) override;
