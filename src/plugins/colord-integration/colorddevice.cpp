@@ -50,7 +50,7 @@ void ColordDevice::updateProfile()
     CdProfileInterface profile(QStringLiteral("org.freedesktop.ColorManager"),
                                profiles.first().path(), QDBusConnection::systemBus());
     if (!profile.isValid()) {
-        qCWarning(KWIN_COLORD) << profiles.first() << "is an invalid color profile";
+        qCWarning(KWIN_COLORD) << profiles.first().path() << "is an invalid color profile";
         return;
     }
 
