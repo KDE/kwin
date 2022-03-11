@@ -1814,6 +1814,10 @@ qreal EffectsHandlerImpl::renderTargetScale() const
 
 KWin::EffectWindow *EffectsHandlerImpl::inputPanel() const
 {
+    if (!InputMethod::self() || !InputMethod::self()->isEnabled()) {
+        return nullptr;
+    }
+
     auto panel = InputMethod::self()->panel();
     if (panel) {
         return panel->effectWindow();
@@ -1823,6 +1827,10 @@ KWin::EffectWindow *EffectsHandlerImpl::inputPanel() const
 
 bool EffectsHandlerImpl::isInputPanelOverlay() const
 {
+    if (!InputMethod::self() || !InputMethod::self()->isEnabled()) {
+        return true;
+    }
+
     auto panel = InputMethod::self()->panel();
     if (panel) {
         return panel->mode() == InputPanelV1Client::Overlay;
