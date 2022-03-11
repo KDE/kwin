@@ -6,6 +6,8 @@
 */
 
 #include "tabletmodemanager.h"
+
+#include "backends/libinput/device.h"
 #include "input.h"
 #include "inputdevice.h"
 #include "input_event.h"
@@ -17,6 +19,21 @@ namespace KWin
 {
 
 KWIN_SINGLETON_FACTORY_VARIABLE(TabletModeManager, s_manager)
+
+static bool shouldIgnoreDevice(InputDevice *device)
+{
+    auto libinput_device = qobject_cast<LibInput::Device*>(device);
+    if (!libinput_device) {
+        return false;
+    }
+
+    bool ignore = false;
+    if (auto udev = libinput_device_get_udev_device(libinput_device->device()); udev) {
+        ignore = udev_device_has_tag(udev, "kwin-ignore-tablet-mode");
+        udev_device_unref(udev);
+    }
+    return ignore;
+}
 
 class TabletModeSwitchEventSpy : public QObject, public InputEventSpy
 {
@@ -73,10 +90,14 @@ public:
     void check()
     {
         const auto devices = input()->devices();
-        const bool hasTouch = std::any_of(devices.constBegin(), devices.constEnd(), [](InputDevice *device) { return device->isTouch(); });
+        const bool hasTouch = std::any_of(devices.constBegin(), devices.constEnd(), [](InputDevice *device) {
+            return device->isTouch() && !shouldIgnoreDevice(device);
+        });
         m_parent->setTabletModeAvailable(hasTouch);
 
-        const bool hasPointer = std::any_of(devices.constBegin(), devices.constEnd(), [](InputDevice *device) { return device->isPointer(); });
+        const bool hasPointer = std::any_of(devices.constBegin(), devices.constEnd(), [](InputDevice *device) {
+            return device->isPointer() && !shouldIgnoreDevice(device);
+        });
         m_parent->setIsTablet(hasTouch && !hasPointer);
     }
 
