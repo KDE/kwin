@@ -18,6 +18,7 @@
 #include <QTimer>
 #include <QWindow>
 #include <cmath> // for ceil()
+#include <cstdlib>
 
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/shadow_interface.h>
@@ -665,7 +666,7 @@ void BlurEffect::generateNoiseTexture()
     }
 
     // Init randomness based on time
-    qsrand((uint)QTime::currentTime().msec());
+    std::srand((uint)QTime::currentTime().msec());
 
     QImage noiseImage(QSize(256, 256), QImage::Format_Grayscale8);
 
@@ -673,7 +674,7 @@ void BlurEffect::generateNoiseTexture()
         uint8_t *noiseImageLine = (uint8_t *) noiseImage.scanLine(y);
 
         for (int x = 0; x < noiseImage.width(); x++) {
-            noiseImageLine[x] = qrand() % m_noiseStrength;
+            noiseImageLine[x] = std::rand() % m_noiseStrength;
         }
     }
 
