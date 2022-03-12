@@ -41,7 +41,7 @@ if (QT_MAJOR_VERSION EQUAL "5")
     find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS X11Extras)
     find_package(Qt5XkbCommonSupport REQUIRED)
 else()
-    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient)
+    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient ShaderTools)
 endif()
 
 find_package(Qt${QT_MAJOR_VERSION}Test ${QT_MIN_VERSION} CONFIG QUIET)

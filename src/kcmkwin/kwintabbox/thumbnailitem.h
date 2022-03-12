@@ -21,6 +21,7 @@ class BrightnessSaturationShader : public QSGMaterialShader
 {
 public:
     BrightnessSaturationShader();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     const char *vertexShader() const override;
     const char *fragmentShader() const override;
     const char *const *attributeNames() const override;
@@ -32,12 +33,20 @@ private:
     int m_id_opacity;
     int m_id_saturation;
     int m_id_brightness;
+#else
+    bool updateUniformData(QSGMaterialShader::RenderState &state, QSGMaterial *newMaterial, QSGMaterial *oldMaterial) override;
+    void updateSampledImage(QSGMaterialShader::RenderState &state, int binding, QSGTexture **texture, QSGMaterial *newMaterial, QSGMaterial *oldMaterial) override;
+#endif
 };
 
 class BrightnessSaturationMaterial : public QSGTextureMaterial
 {
 public:
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QSGMaterialShader *createShader() const override
+#else
+    QSGMaterialShader *createShader(QSGRendererInterface::RenderMode) const override
+#endif
     {
         return new BrightnessSaturationShader;
     }

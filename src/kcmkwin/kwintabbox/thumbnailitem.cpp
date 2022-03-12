@@ -16,6 +16,7 @@
 namespace KWin
 {
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 BrightnessSaturationShader::BrightnessSaturationShader()
     : QSGMaterialShader()
     , m_id_matrix(0)
@@ -93,6 +94,50 @@ void BrightnessSaturationShader::initialize()
     m_id_saturation = program()->uniformLocation("u_saturation");
     m_id_brightness = program()->uniformLocation("u_brightness");
 }
+#else
+BrightnessSaturationShader::BrightnessSaturationShader()
+{
+    setShaderFileName(QSGMaterialShader::VertexStage, QStringLiteral(":/org/kde/kwin/tabbox/shaders/brightnesssaturation.vert.qsb"));
+    setShaderFileName(QSGMaterialShader::FragmentStage, QStringLiteral(":/org/kde/kwin/tabbox/shaders/brightnesssaturation.frag.qsb"));
+}
+
+bool BrightnessSaturationShader::updateUniformData(QSGMaterialShader::RenderState &state, QSGMaterial *newMaterial, QSGMaterial *oldMaterial)
+{
+    bool changed = false;
+    QByteArray *buf = state.uniformData();
+    Q_ASSERT(buf->size() >= 76);
+
+    if (state.isMatrixDirty()) {
+        const QMatrix4x4 m = state.combinedMatrix();
+        memcpy(buf->data(), m.constData(), 64);
+        changed = true;
+    }
+
+    if (state.isOpacityDirty()) {
+        const float opacity = state.opacity();
+        memcpy(buf->data() + 64, &opacity, 4);
+        changed = true;
+    }
+
+    if (!oldMaterial || newMaterial->compare(oldMaterial) != 0) {
+        const auto material = static_cast<BrightnessSaturationMaterial *>(newMaterial);
+        memcpy(buf->data() + 68, &material->saturation, 4);
+        memcpy(buf->data() + 72, &material->brightness, 4);
+        changed = true;
+    }
+
+    return changed;
+}
+
+void BrightnessSaturationShader::updateSampledImage(QSGMaterialShader::RenderState &state, int binding, QSGTexture **texture, QSGMaterial *newMaterial, QSGMaterial *oldMaterial)
+{
+    Q_UNUSED(state);
+    Q_UNUSED(oldMaterial);
+    if (binding == 1) {
+        *texture = static_cast<BrightnessSaturationMaterial *>(newMaterial)->texture();
+    }
+}
+#endif
 
 WindowThumbnailItem::WindowThumbnailItem(QQuickItem *parent)
     : QQuickItem(parent)

@@ -19,6 +19,17 @@ qt_add_dbus_interface(kcm_kwintabbox_PART_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kw
 
 kconfig_add_kcfg_files(kcm_kwintabbox_PART_SRCS kwintabboxsettings.kcfgc kwinswitcheffectsettings.kcfgc kwinpluginssettings.kcfgc)
 kcoreaddons_add_plugin(kcm_kwintabbox SOURCES ${kcm_kwintabbox_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
+if (QT_MAJOR_VERSION EQUAL "6")
+    qt6_add_shaders(kcm_kwintabbox "shaders"
+        BATCHABLE
+        PRECOMPILE
+        OPTIMIZED
+        PREFIX "/org/kde/kwin/tabbox/shaders/"
+        FILES
+            brightnesssaturation.vert
+            brightnesssaturation.frag
+    )
+endif()
 
 kcmutils_generate_desktop_file(kcm_kwintabbox)
 target_link_libraries(kcm_kwintabbox
