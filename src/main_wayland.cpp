@@ -18,6 +18,7 @@
 
 #include "wayland_server.h"
 #include "xwl/xwayland.h"
+#include "xwl/xwaylandlauncher.h"
 
 // KWayland
 #include <KWaylandServer/display.h>
@@ -173,9 +174,9 @@ void ApplicationWayland::continueStartupWithScene()
     }
 
     m_xwayland = new Xwl::Xwayland(this);
-    m_xwayland->setListenFDs(m_xwaylandListenFds);
-    m_xwayland->setDisplayName(m_xwaylandDisplay);
-    m_xwayland->setXauthority(m_xwaylandXauthority);
+    m_xwayland->xwaylandLauncher()->setListenFDs(m_xwaylandListenFds);
+    m_xwayland->xwaylandLauncher()->setDisplayName(m_xwaylandDisplay);
+    m_xwayland->xwaylandLauncher()->setXauthority(m_xwaylandXauthority);
     connect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
     connect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
     m_xwayland->start();

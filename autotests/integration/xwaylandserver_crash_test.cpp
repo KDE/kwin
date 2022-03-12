@@ -15,7 +15,8 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11client.h"
-#include "xwl/xwayland_interface.h"
+#include "xwl/xwayland.h"
+#include "xwl/xwaylandlauncher.h"
 
 #include <xcb/xcb_icccm.h>
 
@@ -117,7 +118,8 @@ void XwaylandServerCrashTest::testCrash()
     // Let's pretend that the Xwayland process has crashed.
     QSignalSpy x11ConnectionChangedSpy(kwinApp(), &Application::x11ConnectionChanged);
     QVERIFY(x11ConnectionChangedSpy.isValid());
-    xwayland()->process()->terminate();
+    Xwl::Xwayland *xwayland = static_cast<Xwl::Xwayland *>(XwaylandInterface::self());
+    xwayland->xwaylandLauncher()->process()->terminate();
     QVERIFY(x11ConnectionChangedSpy.wait());
 
     // When Xwayland crashes, the compositor should tear down the XCB connection and destroy

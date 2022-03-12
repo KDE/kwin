@@ -14,10 +14,10 @@
 #include "databridge.h"
 #include "dnd.h"
 #include "xwldrophandler.h"
+#include "xwaylandlauncher.h"
 
 #include "abstract_output.h"
 #include "main_wayland.h"
-#include "options.h"
 #include "utils/common.h"
 #include "platform.h"
 #include "utils/xcbutils.h"
@@ -25,12 +25,6 @@
 #include "xwayland_logging.h"
 #include "x11eventfilter.h"
 
-#include "xwaylandsocket.h"
-
-#include <KLocalizedString>
-#if KWIN_BUILD_NOTIFICATIONS
-#include <KNotification>
-#endif
 #include <KSelectionOwner>
 
 #include <QAbstractEventDispatcher>
@@ -41,6 +35,7 @@
 #include <QScopeGuard>
 #include <QTimer>
 #include <QtConcurrentRun>
+#include <QSocketNotifier>
 
 #include <cerrno>
 #include <cstring>
@@ -80,204 +75,26 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
 Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
     : XwaylandInterface(parent)
     , m_app(app)
+    , m_launcher(new XwaylandLauncher(this))
 {
-    m_resetCrashCountTimer = new QTimer(this);
-    m_resetCrashCountTimer->setSingleShot(true);
-    connect(m_resetCrashCountTimer, &QTimer::timeout, this, &Xwayland::resetCrashCount);
+    connect(m_launcher, &XwaylandLauncher::started, this, &Xwayland::handleXwaylandReady);
+    connect(m_launcher, &XwaylandLauncher::finished, this, &Xwayland::handleXwaylandFinished);
+    connect(m_launcher, &XwaylandLauncher::errorOccurred, this, &Xwayland::errorOccurred);
 }
 
 Xwayland::~Xwayland()
 {
-    stop();
-}
-
-QProcess *Xwayland::process() const
-{
-    return m_xwaylandProcess;
+    m_launcher->stop();
 }
 
 void Xwayland::start()
 {
-    if (m_xwaylandProcess) {
-        return;
-    }
-
-    if (!m_listenFds.isEmpty()) {
-        Q_ASSERT(!m_displayName.isEmpty());
-    } else {
-        m_socket.reset(new XwaylandSocket(XwaylandSocket::OperationMode::CloseFdsOnExec));
-        if (!m_socket->isValid()) {
-            qFatal("Failed to establish X11 socket");
-        }
-        m_displayName = m_socket->name();
-        m_listenFds = m_socket->fileDescriptors();
-    }
-
-    startInternal();
+    m_launcher->start();
 }
 
-void Xwayland::setListenFDs(const QVector<int> &listenFds)
+XwaylandLauncher *Xwayland::xwaylandLauncher() const
 {
-    m_listenFds = listenFds;
-}
-
-void Xwayland::setDisplayName(const QString &displayName)
-{
-    m_displayName = displayName;
-}
-
-void Xwayland::setXauthority(const QString &xauthority)
-{
-    m_xAuthority = xauthority;
-}
-
-bool Xwayland::startInternal()
-{
-    Q_ASSERT(!m_xwaylandProcess);
-
-    QVector<int> fdsToClose;
-    auto cleanup = qScopeGuard([&fdsToClose] {
-        for (const int fd : qAsConst(fdsToClose)) {
-            close(fd);
-        }
-    });
-
-    int pipeFds[2];
-    if (pipe(pipeFds) != 0) {
-        qCWarning(KWIN_XWL, "Failed to create pipe to start Xwayland: %s", strerror(errno));
-        Q_EMIT errorOccurred();
-        return false;
-    }
-    fdsToClose << pipeFds[1];
-
-    int sx[2];
-    if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
-        qCWarning(KWIN_XWL, "Failed to open socket for XCB connection: %s", strerror(errno));
-        Q_EMIT errorOccurred();
-        return false;
-    }
-    int fd = dup(sx[1]);
-    if (fd < 0) {
-        qCWarning(KWIN_XWL, "Failed to open socket for XCB connection: %s", strerror(errno));
-        Q_EMIT errorOccurred();
-        return false;
-    }
-
-    const int waylandSocket = waylandServer()->createXWaylandConnection();
-    if (waylandSocket == -1) {
-        qCWarning(KWIN_XWL, "Failed to open socket for Xwayland server: %s", strerror(errno));
-        Q_EMIT errorOccurred();
-        return false;
-    }
-    const int wlfd = dup(waylandSocket);
-    if (wlfd < 0) {
-        qCWarning(KWIN_XWL, "Failed to open socket for Xwayland server: %s", strerror(errno));
-        Q_EMIT errorOccurred();
-        return false;
-    }
-
-    m_xcbConnectionFd = sx[0];
-
-    QStringList arguments;
-
-    arguments << m_displayName;
-
-    if (!m_listenFds.isEmpty()) {
-        // xauthority externally set and managed
-        if (!m_xAuthority.isEmpty()) {
-            arguments << QStringLiteral("-auth") << m_xAuthority;
-        }
-
-        for (int socket : qAsConst(m_listenFds)) {
-            int dupSocket = dup(socket);
-            fdsToClose << dupSocket;
-            #if HAVE_XWAYLAND_LISTENFD
-                arguments << QStringLiteral("-listenfd") << QString::number(dupSocket);
-            #else
-                arguments << QStringLiteral("-listen") << QString::number(dupSocket);
-            #endif
-        }
-    }
-
-    arguments << QStringLiteral("-displayfd") << QString::number(pipeFds[1]);
-    arguments << QStringLiteral("-rootless");
-    arguments << QStringLiteral("-wm") << QString::number(fd);
-
-    m_xwaylandProcess = new QProcess(this);
-    m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
-    m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
-    QProcessEnvironment env = m_app->processStartupEnvironment();
-    env.insert("WAYLAND_SOCKET", QByteArray::number(wlfd));
-    env.insert("EGL_PLATFORM", QByteArrayLiteral("DRM"));
-    if (qEnvironmentVariableIsSet("KWIN_XWAYLAND_DEBUG")) {
-        env.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
-    }
-    m_xwaylandProcess->setProcessEnvironment(env);
-    m_xwaylandProcess->setArguments(arguments);
-    connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &Xwayland::handleXwaylandError);
-    connect(m_xwaylandProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            this, &Xwayland::handleXwaylandFinished);
-
-    // When Xwayland starts writing the display name to displayfd, it is ready. Alternatively,
-    // the Xwayland can send us the SIGUSR1 signal, but it's already reserved for VT hand-off.
-    m_readyNotifier = new QSocketNotifier(pipeFds[0], QSocketNotifier::Read, this);
-    connect(m_readyNotifier, &QSocketNotifier::activated, this, &Xwayland::handleXwaylandReady);
-
-    m_xwaylandProcess->start();
-
-    return true;
-}
-
-void Xwayland::stop()
-{
-    if (!m_xwaylandProcess) {
-        return;
-    }
-
-    stopInternal();
-}
-
-void Xwayland::stopInternal()
-{
-    disconnect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Xwayland::updatePrimary);
-    Q_ASSERT(m_xwaylandProcess);
-    m_app->setClosingX11Connection(true);
-
-    delete m_xrandrEventsFilter;
-    m_xrandrEventsFilter = nullptr;
-
-    // If Xwayland has crashed, we must deactivate the socket notifier and ensure that no X11
-    // events will be dispatched before blocking; otherwise we will simply hang...
-    uninstallSocketNotifier();
-    maybeDestroyReadyNotifier();
-
-    DataBridge::destroy();
-    m_selectionOwner.reset();
-
-    destroyX11Connection();
-
-    // When the Xwayland process is finally terminated, the finished() signal will be emitted,
-    // however we don't actually want to process it anymore. Furthermore, we also don't really
-    // want to handle any errors that may occur during the teardown.
-    if (m_xwaylandProcess->state() != QProcess::NotRunning) {
-        disconnect(m_xwaylandProcess, nullptr, this, nullptr);
-        m_xwaylandProcess->terminate();
-        m_xwaylandProcess->waitForFinished(5000);
-    }
-    delete m_xwaylandProcess;
-    m_xwaylandProcess = nullptr;
-
-    waylandServer()->destroyXWaylandConnection(); // This one must be destroyed last!
-
-    m_app->setClosingX11Connection(false);
-}
-
-void Xwayland::restartInternal()
-{
-    if (m_xwaylandProcess) {
-        stopInternal();
-    }
-    startInternal();
+    return m_launcher;
 }
 
 void Xwayland::dispatchEvents()
@@ -291,7 +108,7 @@ void Xwayland::dispatchEvents()
     const int connectionError = xcb_connection_has_error(connection);
     if (connectionError) {
         qCWarning(KWIN_XWL, "The X11 connection broke (error %d)", connectionError);
-        stop();
+        m_launcher->stop();
         return;
     }
 
@@ -331,84 +148,37 @@ void Xwayland::uninstallSocketNotifier()
     m_socketNotifier = nullptr;
 }
 
-void Xwayland::handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus)
-{
-    qCDebug(KWIN_XWL) << "Xwayland process has quit with exit code" << exitCode;
 
-    switch (exitStatus) {
-    case QProcess::NormalExit:
-        stop();
-        break;
-    case QProcess::CrashExit:
-        handleXwaylandCrashed();
-        break;
-    }
+
+void Xwayland::handleXwaylandFinished()
+{
+    disconnect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Xwayland::updatePrimary);
+    m_app->setClosingX11Connection(true);
+
+    delete m_xrandrEventsFilter;
+    m_xrandrEventsFilter = nullptr;
+
+    // If Xwayland has crashed, we must deactivate the socket notifier and ensure that no X11
+    // events will be dispatched before blocking; otherwise we will simply hang...
+    uninstallSocketNotifier();
+
+    DataBridge::destroy();
+    m_selectionOwner.reset();
+
+    destroyX11Connection();
+
+    m_app->setClosingX11Connection(false);
 }
 
-void Xwayland::handleXwaylandCrashed()
-{
-#if KWIN_BUILD_NOTIFICATIONS
-    KNotification::event(QStringLiteral("xwaylandcrash"), i18n("Xwayland has crashed"));
-#endif
-    m_resetCrashCountTimer->stop();
-
-    switch (options->xwaylandCrashPolicy()) {
-    case XwaylandCrashPolicy::Restart:
-        if (++m_crashCount <= options->xwaylandMaxCrashCount()) {
-            restartInternal();
-            m_resetCrashCountTimer->start(std::chrono::minutes(10));
-        } else {
-            qCWarning(KWIN_XWL, "Stopping Xwayland server because it has crashed %d times "
-                      "over the past 10 minutes", m_crashCount);
-            stop();
-        }
-        break;
-    case XwaylandCrashPolicy::Stop:
-        stop();
-        break;
-    }
-}
-
-void Xwayland::resetCrashCount()
-{
-    qCDebug(KWIN_XWL) << "Resetting the crash counter, its current value is" << m_crashCount;
-    m_crashCount = 0;
-}
-
-void Xwayland::handleXwaylandError(QProcess::ProcessError error)
-{
-    switch (error) {
-    case QProcess::FailedToStart:
-        qCWarning(KWIN_XWL) << "Xwayland process failed to start";
-        return;
-    case QProcess::Crashed:
-        qCWarning(KWIN_XWL) << "Xwayland process crashed";
-        break;
-    case QProcess::Timedout:
-        qCWarning(KWIN_XWL) << "Xwayland operation timed out";
-        break;
-    case QProcess::WriteError:
-    case QProcess::ReadError:
-        qCWarning(KWIN_XWL) << "An error occurred while communicating with Xwayland";
-        break;
-    case QProcess::UnknownError:
-        qCWarning(KWIN_XWL) << "An unknown error has occurred in Xwayland";
-        break;
-    }
-    Q_EMIT errorOccurred();
-}
 
 void Xwayland::handleXwaylandReady()
 {
-    // We don't care what Xwayland writes to the displayfd, we just want to know when it's ready.
-    maybeDestroyReadyNotifier();
-
     if (!createX11Connection()) {
         Q_EMIT errorOccurred();
         return;
     }
 
-    qCInfo(KWIN_XWL) << "Xwayland server started on display" << m_displayName;
+    qCInfo(KWIN_XWL) << "Xwayland server started on display" << m_launcher->displayName();
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
     m_selectionOwner.reset(new KSelectionOwner("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow()));
@@ -428,10 +198,10 @@ void Xwayland::handleXwaylandReady()
     DataBridge::create(this);
 
     auto env = m_app->processStartupEnvironment();
-    env.insert(QStringLiteral("DISPLAY"), m_displayName);
-    env.insert(QStringLiteral("XAUTHORITY"), m_xAuthority);
-    qputenv("DISPLAY", m_displayName.toUtf8());
-    qputenv("XAUTHORITY", m_xAuthority.toUtf8());
+    env.insert(QStringLiteral("DISPLAY"), m_launcher->displayName());
+    env.insert(QStringLiteral("XAUTHORITY"), m_launcher->xauthority());
+    qputenv("DISPLAY", m_launcher->displayName().toLatin1());
+    qputenv("XAUTHORITY", m_launcher->xauthority().toLatin1());
     m_app->setProcessStartupEnvironment(env);
 
     connect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Xwayland::updatePrimary);
@@ -468,13 +238,13 @@ void Xwayland::updatePrimary(AbstractOutput *primaryOutput)
 void Xwayland::handleSelectionLostOwnership()
 {
     qCWarning(KWIN_XWL) << "Somebody else claimed ownership of WM_S0. This should never happen!";
-    stop();
+    m_launcher->stop();
 }
 
 void Xwayland::handleSelectionFailedToClaimOwnership()
 {
     qCWarning(KWIN_XWL) << "Failed to claim ownership of WM_S0. This should never happen!";
-    stop();
+    m_launcher->stop();
 }
 
 void Xwayland::handleSelectionClaimedOwnership()
@@ -482,19 +252,9 @@ void Xwayland::handleSelectionClaimedOwnership()
     Q_EMIT started();
 }
 
-void Xwayland::maybeDestroyReadyNotifier()
-{
-    if (m_readyNotifier) {
-        close(m_readyNotifier->socket());
-
-        delete m_readyNotifier;
-        m_readyNotifier = nullptr;
-    }
-}
-
 bool Xwayland::createX11Connection()
 {
-    xcb_connection_t *connection = xcb_connect_to_fd(m_xcbConnectionFd, nullptr);
+    xcb_connection_t *connection = xcb_connect_to_fd(m_launcher->xcbConnectionFd(), nullptr);
 
     const int errorCode = xcb_connection_has_error(connection);
     if (errorCode) {
@@ -535,7 +295,6 @@ void Xwayland::destroyX11Connection()
     m_app->removeNativeX11EventFilter();
 
     xcb_disconnect(m_app->x11Connection());
-    m_xcbConnectionFd = -1;
 
     m_app->setX11Connection(nullptr);
     m_app->setX11DefaultScreen(nullptr);
