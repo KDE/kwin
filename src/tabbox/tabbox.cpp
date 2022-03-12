@@ -110,7 +110,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient*
     if (TabBoxClientImpl* c = static_cast< TabBoxClientImpl* >(client)) {
         auto next = FocusChain::self()->nextMostRecentlyUsed(c->client());
         if (next)
-            return next->tabBoxClient();
+            return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(next->tabBoxClient());
     }
     return QWeakPointer<TabBoxClient>();
 }
@@ -118,7 +118,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient*
 QWeakPointer< TabBoxClient > TabBoxHandlerImpl::firstClientFocusChain() const
 {
     if (auto c = FocusChain::self()->firstMostRecentlyUsed()) {
-        return QWeakPointer<TabBoxClient>(c->tabBoxClient());
+        return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(c->tabBoxClient());
     } else {
         return QWeakPointer<TabBoxClient>();
     }
@@ -145,7 +145,7 @@ int TabBoxHandlerImpl::numberOfDesktops() const
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::activeClient() const
 {
     if (Workspace::self()->activeClient())
-        return Workspace::self()->activeClient()->tabBoxClient();
+        return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(Workspace::self()->activeClient()->tabBoxClient());
     else
         return QWeakPointer<TabBoxClient>();
 }
@@ -261,14 +261,14 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient* cl
         AbstractClient* modal = current->findModal();
         if (modal == nullptr || modal == current)
             ret = current;
-        else if (!clientList().contains(modal->tabBoxClient()))
+        else if (!clientList().contains(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(modal->tabBoxClient())))
             ret = modal;
         else {
             // nothing
         }
     }
     if (ret)
-        return ret->tabBoxClient();
+        return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(ret->tabBoxClient());
     else
         return QWeakPointer<TabBoxClient>();
 }
@@ -279,7 +279,7 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
     TabBoxClientList ret;
     for (Toplevel *toplevel : stacking) {
         if (auto client = qobject_cast<AbstractClient*>(toplevel)) {
-            ret.append(client->tabBoxClient());
+            ret.append(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(client->tabBoxClient()));
         }
     }
     return ret;
@@ -325,7 +325,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
     for (Toplevel *toplevel : stackingOrder) {
         auto client = qobject_cast<AbstractClient*>(toplevel);
         if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->output() == workspace()->activeOutput()) {
-            return client->tabBoxClient();
+            return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(client->tabBoxClient());
         }
     }
     return QWeakPointer<TabBoxClient>();
@@ -678,7 +678,7 @@ QList< int > TabBox::currentDesktopList()
 
 void TabBox::setCurrentClient(AbstractClient *newClient)
 {
-    setCurrentIndex(m_tabBox->index(newClient->tabBoxClient()));
+    setCurrentIndex(m_tabBox->index(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(newClient->tabBoxClient())));
 }
 
 void TabBox::setCurrentDesktop(int newDesktop)
