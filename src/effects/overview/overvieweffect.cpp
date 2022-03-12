@@ -39,6 +39,7 @@ OverviewEffect::OverviewEffect()
     KGlobalAccel::self()->setShortcut(m_toggleAction, {defaultToggleShortcut});
     m_toggleShortcut = KGlobalAccel::self()->shortcut(m_toggleAction);
     effects->registerGlobalShortcut({defaultToggleShortcut}, m_toggleAction);
+    effects->registerTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_toggleAction);
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
 

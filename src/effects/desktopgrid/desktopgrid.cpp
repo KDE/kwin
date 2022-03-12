@@ -102,17 +102,6 @@ DesktopGridEffect::DesktopGridEffect()
         timeline.setCurrentTime(timeline.duration() * cb);
         effects->addRepaintFull();
     });
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 4, a, [this](qreal cb) {
-        if (activated) return;
-
-        if (timeline.currentValue() == 0) {
-            activated = true;
-            setup();
-            activated = false;
-        }
-        timeline.setCurrentTime(timeline.duration() * cb);
-        effects->addRepaintFull();
-    });
     connect(&timeline, &QTimeLine::frameChanged, this, []() {
         effects->addRepaintFull();
     });
