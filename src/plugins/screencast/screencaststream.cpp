@@ -504,8 +504,10 @@ void ScreenCastStream::tryEnqueue(pw_buffer *buffer)
     // we need to insert a fence into the command stream and enqueue the pipewire buffer
     // only after the fence is signaled; otherwise stream consumers will most likely see
     // a corrupted buffer.
+    if (auto scene = Compositor::self()->scene()) {
+        scene->makeOpenGLContextCurrent();
+    }
     if (kwinApp()->platform()->supportsNativeFence()) {
-        Q_ASSERT_X(eglGetCurrentContext(), "tryEnqueue", "no current context");
         m_pendingFence = new EGLNativeFence(kwinApp()->platform()->sceneEglDisplay());
         if (!m_pendingFence->isValid()) {
             qCWarning(KWIN_SCREENCAST) << "Failed to create a native EGL fence";
