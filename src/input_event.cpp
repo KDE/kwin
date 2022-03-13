@@ -27,7 +27,7 @@ MouseEvent::MouseEvent(QEvent::Type type, const QPointF &pos, Qt::MouseButton bu
 WheelEvent::WheelEvent(const QPointF &pos, qreal delta, qint32 discreteDelta, Qt::Orientation orientation,
                        Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, InputRedirection::PointerAxisSource source,
                        quint32 timestamp, InputDevice *device)
-            : QWheelEvent(pos, pos, QPoint(), (orientation == Qt::Horizontal) ? QPoint(delta, 0) : QPoint(0, delta), delta, orientation, buttons, modifiers)
+            : QWheelEvent(pos, pos, QPoint(), (orientation == Qt::Horizontal) ? QPoint(delta, 0) : QPoint(0, delta), buttons, modifiers, Qt::NoScrollPhase, false)
             , m_device(device)
             , m_orientation(orientation)
             , m_delta(delta)

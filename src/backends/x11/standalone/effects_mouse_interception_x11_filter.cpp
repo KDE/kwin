@@ -62,13 +62,8 @@ bool EffectsMouseInterceptionX11Filter::event(xcb_generic_event_t *event)
                     // angleDelta = angleDelta.transposed();
                 }
 
-                if (angleDelta.y()) {
-                    QWheelEvent ev(QPoint(me->event_x, me->event_y), angleDelta.y(), buttons, modifiers, Qt::Vertical);
-                    return m_effects->checkInputWindowEvent(&ev);
-                } else if (angleDelta.x()) {
-                    QWheelEvent ev(QPoint(me->event_x, me->event_y), angleDelta.x(), buttons, modifiers, Qt::Horizontal);
-                    return m_effects->checkInputWindowEvent(&ev);
-                }
+                QWheelEvent ev(QPoint(me->event_x, me->event_y), QCursor::pos(), QPoint(), angleDelta, buttons, modifiers, Qt::NoScrollPhase, false);
+                return m_effects->checkInputWindowEvent(&ev);
             }
             const Qt::MouseButton button = x11ToQtMouseButton(me->detail);
             Qt::MouseButtons buttons = x11ToQtMouseButtons(me->state);

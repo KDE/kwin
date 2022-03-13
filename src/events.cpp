@@ -939,10 +939,10 @@ bool X11Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
                               QPointF(x_root, y_root),
                               QPoint(),
                               angle,
-                              delta,
-                              hor ? Qt::Horizontal : Qt::Vertical,
                               x11ToQtMouseButtons(state),
-                              modifiers);
+                              modifiers,
+                              Qt::NoScrollPhase,
+                              false);
             event.setAccepted(false);
             QCoreApplication::sendEvent(decoration(), &event);
             if (!event.isAccepted() && !hor) {

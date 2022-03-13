@@ -1057,12 +1057,12 @@ class InternalWindowEventFilter : public InputEventFilter {
         const QPointF localPos = event->globalPosition() - internal->position();
         const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
         const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
-        QWheelEvent wheelEvent(localPos, event->globalPosF(), QPoint(),
+        QWheelEvent wheelEvent(localPos, event->globalPosition(), QPoint(),
                                event->angleDelta() * -1,
-                               delta * -1,
-                               orientation,
                                event->buttons(),
-                               event->modifiers());
+                               event->modifiers(),
+                               Qt::NoScrollPhase,
+                               false);
         QCoreApplication::sendEvent(internal, &wheelEvent);
         return wheelEvent.isAccepted();
     }
@@ -1255,10 +1255,10 @@ public:
         const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
         QWheelEvent e(localPos, event->globalPosition(), QPoint(),
                         event->angleDelta(),
-                        delta,
-                        orientation,
                         event->buttons(),
-                        event->modifiers());
+                        event->modifiers(),
+                        Qt::NoScrollPhase,
+                        false);
         e.setAccepted(false);
         QCoreApplication::sendEvent(decoration, &e);
         if (e.isAccepted()) {
