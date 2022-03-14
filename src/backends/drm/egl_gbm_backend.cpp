@@ -642,7 +642,7 @@ bool EglGbmBackend::scanout(AbstractOutput *drmOutput, SurfaceItem *surfaceItem)
     }
     Q_ASSERT(m_outputs.contains(drmOutput));
     SurfaceItemWayland *item = qobject_cast<SurfaceItemWayland *>(surfaceItem);
-    if (!item) {
+    if (!item || m_outputs[drmOutput].current.shadowBuffer) {
         return false;
     }
 
