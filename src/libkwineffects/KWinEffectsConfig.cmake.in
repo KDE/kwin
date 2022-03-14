@@ -3,7 +3,7 @@
 include(CMakeFindDependencyMacro)
 find_dependency(Qt5Core "@QT_MIN_VERSION@")
 find_dependency(Qt5Gui "@QT_MIN_VERSION@")
-find_dependency(KF5ConfigCore "@KF5_MIN_VERSION@")
+find_dependency(KF5Config "@KF5_MIN_VERSION@")
 find_dependency(KF5CoreAddons "@KF5_MIN_VERSION@")
 find_dependency(KF5WindowSystem "@KF5_MIN_VERSION@")
 
