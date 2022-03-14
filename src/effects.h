@@ -162,7 +162,7 @@ public:
     void unreserveElectricBorder(ElectricBorder border, Effect *effect) override;
 
     void registerTouchBorder(ElectricBorder border, QAction *action) override;
-    void registerRealtimeTouchBorder(ElectricBorder border, QAction *action, std::function<void(ElectricBorder border, const QSizeF&, const QSize&)> progressCallback) override;
+    void registerRealtimeTouchBorder(ElectricBorder border, QAction *action, EffectsHandler::touchBorderCallback progressCallback) override;
     void unregisterTouchBorder(ElectricBorder border, QAction *action) override;
 
     QPainter* scenePainter() override;

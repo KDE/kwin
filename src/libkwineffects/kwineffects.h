@@ -871,6 +871,8 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
 
     friend class Effect;
 public:
+    typedef std::function<void(ElectricBorder border, const QSizeF&, EffectScreen *screen)> touchBorderCallback;
+
     explicit EffectsHandler(CompositingType type);
     ~EffectsHandler() override;
     // for use by effects
@@ -996,7 +998,7 @@ public:
      * @see unregisterTouchBorder
      * @since 5.25
      */
-    virtual void registerRealtimeTouchBorder(ElectricBorder border, QAction *action, std::function<void(ElectricBorder border, const QSizeF&, const QSize&)> progressCallback) = 0;
+    virtual void registerRealtimeTouchBorder(ElectricBorder border, QAction *action, touchBorderCallback progressCallback) = 0;
 
     /**
      * Unregisters the given @p action for the given touch @p border.

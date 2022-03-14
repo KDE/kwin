@@ -21,6 +21,7 @@
 // KWin
 #include <config-kwin.h>
 #include "abstract_output.h"
+#include "effects.h"
 #include "gestures.h"
 #include <x11client.h>
 #include "cursor.h"
@@ -57,7 +58,7 @@ static const int TOUCH_TARGET = 3;
 // How far the user needs to swipe before triggering an action.
 static const int MINIMUM_DELTA = 256;
 
-TouchCallback::TouchCallback(QAction *touchUpAction, std::function<void(ElectricBorder border, const QSizeF &, const QSize &)> progressCallback)
+TouchCallback::TouchCallback(QAction *touchUpAction, EffectsHandler::touchBorderCallback progressCallback)
     : m_touchUpAction(touchUpAction)
     , m_progressCallback(progressCallback)
 {}
@@ -70,10 +71,10 @@ QAction *TouchCallback::touchUpAction() const
     return m_touchUpAction;
 }
 
-void TouchCallback::progressCallback(ElectricBorder border, const QSizeF &deltaProgress, const QSize &scaledScreenSize)
+void TouchCallback::progressCallback(ElectricBorder border, const QSizeF &deltaProgress, EffectScreen *screen)
 {
     if (m_progressCallback) {
-        m_progressCallback(border, deltaProgress, scaledScreenSize);
+        m_progressCallback(border, deltaProgress, screen);
     }
 }
 
@@ -120,7 +121,7 @@ Edge::Edge(ScreenEdges *parent)
     connect(m_gesture, &SwipeGesture::deltaProgress, this,
         [this] (const QSizeF &progressDelta) {
             if (!m_touchActions.isEmpty()) {
-                m_touchActions.first().progressCallback(border(), progressDelta / m_output->scale(), m_output->geometry().size());
+                m_touchActions.first().progressCallback(border(), progressDelta / m_output->scale(), EffectScreenImpl::get(m_output));
             }
         }
     );
@@ -157,18 +158,12 @@ void Edge::reserve(QObject *object, const char *slot)
     reserve();
 }
 
-void Edge::reserveTouchCallBack(QAction *action, std::function<void(ElectricBorder border, const QSizeF&, const QSize&)> callback)
+void Edge::reserveTouchCallBack(QAction *action, EffectsHandler::touchBorderCallback callback)
 {
     if (std::find_if(m_touchActions.begin(), m_touchActions.end(), [action] (const TouchCallback &c) { return c.touchUpAction() == action; }) != m_touchActions.end()) {
         return;
     }
-    connect(action, &QAction::destroyed, this,
-        [this, action] {
-            unreserveTouchCallBack(action);
-        }
-    );
-    m_touchActions << TouchCallback(action, callback);
-    reserve();
+    reserveTouchCallBack(TouchCallback(action, callback));
 }
 
 void Edge::reserveTouchCallBack(const TouchCallback &callback)
@@ -1320,7 +1315,7 @@ void ScreenEdges::reserve(AbstractClient *client, ElectricBorder border)
     }
 }
 
-void ScreenEdges::reserveTouch(ElectricBorder border, QAction *action, std::function<void(ElectricBorder border, const QSizeF&, const QSize&)> callback)
+void ScreenEdges::reserveTouch(ElectricBorder border, QAction *action, EffectsHandler::touchBorderCallback callback)
 {
     for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
         if ((*it)->border() == border) {

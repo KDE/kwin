@@ -193,7 +193,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
             continue;
         }
 
-        effects->registerRealtimeTouchBorder(ElectricBorder(i), m_gestureAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const QSize &scaledScreenSize) {
+        effects->registerRealtimeTouchBorder(ElectricBorder(i), m_gestureAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
             if (activated) return;
 
             if (timeline.currentValue() == 0) {
@@ -203,9 +203,9 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
             }
             qreal progress = 0;
             if (border == ElectricTop || border == ElectricBottom) {
-                progress = qAbs(deltaProgress.height() / (scaledScreenSize.height()/2));
+                progress = qAbs(deltaProgress.height() / (screen->geometry().height()/2));
             } else {
-                progress = deltaProgress.width() / scaledScreenSize.width();
+                progress = deltaProgress.width() / screen->geometry().width();
             }
 
             timeline.setDirection(QTimeLine::Forward);

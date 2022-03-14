@@ -20,6 +20,7 @@
 #define KWIN_SCREENEDGE_H
 // KWin
 #include "kwinglobals.h"
+#include "kwineffects.h"
 // KDE includes
 #include <KSharedConfig>
 // Qt
@@ -38,18 +39,19 @@ class AbstractOutput;
 class GestureRecognizer;
 class ScreenEdges;
 class SwipeGesture;
+class EffectScreen;
 
 class KWIN_EXPORT TouchCallback {
 public:
-    explicit TouchCallback(QAction *touchUpAction, std::function<void(ElectricBorder border, const QSizeF&, const QSize&)> progressCallback);
+    explicit TouchCallback(QAction *touchUpAction, EffectsHandler::touchBorderCallback progressCallback);
     ~TouchCallback();
 
     QAction *touchUpAction() const;
-    void progressCallback(ElectricBorder border, const QSizeF &deltaProgress, const QSize &scaledScreenSize);
+    void progressCallback(ElectricBorder border, const QSizeF &deltaProgress, EffectScreen *screen);
 
 private:
     QAction *m_touchUpAction = nullptr;
-    std::function<void(ElectricBorder border, const QSizeF&, const QSize&)> m_progressCallback;
+    EffectsHandler::touchBorderCallback m_progressCallback;
 };
 
 class KWIN_EXPORT Edge : public QObject
@@ -73,7 +75,7 @@ public:
     ElectricBorder border() const;
     void reserve(QObject *object, const char *slot);
     const QHash<QObject *, QByteArray> &callBacks() const;
-    void reserveTouchCallBack(QAction *action, std::function<void(ElectricBorder border, const QSizeF&, const QSize&)> callback = nullptr);
+    void reserveTouchCallBack(QAction *action, EffectsHandler::touchBorderCallback callback = nullptr);
     void reserveTouchCallBack(const TouchCallback &callback);
     void unreserveTouchCallBack(QAction *action);
     QList<TouchCallback> touchCallBacks() const {
@@ -301,7 +303,7 @@ public:
      * @see unreserveTouch
      * @since 5.10
      */
-    void reserveTouch(ElectricBorder border, QAction *action, std::function<void(ElectricBorder border, const QSizeF&, const QSize&)> callback = nullptr);
+    void reserveTouch(ElectricBorder border, QAction *action, EffectsHandler::touchBorderCallback callback = nullptr);
     /**
      * Unreserves the specified @p border from activating the @p action for touch gestures.
      * @see reserveTouch
