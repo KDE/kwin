@@ -223,9 +223,9 @@ Decoration {
         anchors.fill: parent
         // This makes the mask slightly smaller than the frame. Since the svg will have antialiasing and the mask not,
         // there will be artifacts at the corners, if they go under the svg they're less evident
-        anchors.margins: decoration.client.maximized ? 0 : 1
+        anchors.margins: 1
         imagePath: backgroundSvg.imagePath
         opacity: 0
-        enabledBorders: decoration.client.maximized ? PlasmaCore.FrameSvg.NoBorder : PlasmaCore.FrameSvg.TopBorder | PlasmaCore.FrameSvg.BottomBorder | PlasmaCore.FrameSvg.LeftBorder | PlasmaCore.FrameSvg.RightBorder
+        enabledBorders: PlasmaCore.FrameSvg.TopBorder | PlasmaCore.FrameSvg.BottomBorder | PlasmaCore.FrameSvg.LeftBorder | PlasmaCore.FrameSvg.RightBorder
     }
 }

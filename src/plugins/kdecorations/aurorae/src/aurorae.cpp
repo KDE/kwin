@@ -578,21 +578,20 @@ void Decoration::updateBlur()
 
     QRegion mask;
 
-    const QVariant maskProperty = m_item->property("decorationMask");
-    if (static_cast<QMetaType::Type>(maskProperty.type()) == QMetaType::QRegion) {
-        mask = maskProperty.value<QRegion>();
+    if (clientPointer() && clientPointer()->isMaximized()) {
+        mask = QRect(0, 0, m_item->width(), m_item->height());
+    } else {
+        const QVariant maskProperty = m_item->property("decorationMask");
+        if (static_cast<QMetaType::Type>(maskProperty.type()) == QMetaType::QRegion) {
+            mask = maskProperty.value<QRegion>();
 
-        if (!mask.isNull()) {
-            QPoint maskOffset(-m_padding->left(), -m_padding->top());
-
-            if (clientPointer() && !clientPointer()->isMaximized()) {
+            if (!mask.isNull()) {
                 // moving mask by 1,1 because mask size has already been adjusted to be smaller than the frame.
                 // Since the svg will have antialiasing and the mask not, there will be artifacts at the corners,
                 // if they go under the svg they're less evident.
-                maskOffset += QPoint(1, 1);
+                QPoint maskOffset(-m_padding->left()+1, -m_padding->top()+1);
+                mask.translate(maskOffset);
             }
-
-            mask.translate(maskOffset);
         }
     }
 
