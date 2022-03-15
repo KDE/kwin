@@ -443,7 +443,7 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
 
     filterFormatsWithMultiplePlanes(formats);
 
-    QHash<uint32_t, QSet<uint64_t>> supportedFormats;
+    QHash<uint32_t, QVector<uint64_t>> supportedFormats;
     for (auto format : qAsConst(formats)) {
         if (eglQueryDmaBufModifiersEXT != nullptr) {
             EGLint count = 0;
@@ -451,11 +451,7 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
             if (success && count > 0) {
                 QVector<uint64_t> modifiers(count);
                 if (eglQueryDmaBufModifiersEXT(eglDisplay, format, count, modifiers.data(), nullptr, &count)) {
-                    QSet<uint64_t> modifiersSet;
-                    for (const uint64_t &mod : qAsConst(modifiers)) {
-                        modifiersSet.insert(mod);
-                    }
-                    supportedFormats.insert(format, modifiersSet);
+                    supportedFormats.insert(format, modifiers);
                     continue;
                 }
             }
@@ -465,7 +461,7 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
     qCDebug(KWIN_OPENGL) << "EGL driver advertises" << supportedFormats.count() << "supported dmabuf formats" << (eglQueryDmaBufModifiersEXT != nullptr ? "with" : "without") << "modifiers";
 
     auto filterFormats = [&supportedFormats](int bpc) {
-        QHash<uint32_t, QSet<uint64_t>> set;
+        QHash<uint32_t, QVector<uint64_t>> set;
         for (auto it = supportedFormats.constBegin(); it != supportedFormats.constEnd(); it++) {
             if (bpcForFormat(it.key()) == bpc) {
                 set.insert(it.key(), it.value());
