@@ -244,9 +244,12 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
             auto g = static_cast<SwipeGesture *>(*it);
 
             if (g->direction() != direction) {
-                Q_EMIT g->cancelled();
-                it = m_activeSwipeGestures.erase(it);
-                continue;
+                // If a gesture was started from a touchscreen border never cancel it
+                if (!g->minimumXIsRelevant() || !g->maximumXIsRelevant() || !g->minimumYIsRelevant() || !g->maximumYIsRelevant()) {
+                    Q_EMIT g->cancelled();
+                    it = m_activeSwipeGestures.erase(it);
+                    continue;
+                }
             }
 
             it++;

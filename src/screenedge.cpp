@@ -121,7 +121,7 @@ Edge::Edge(ScreenEdges *parent)
     connect(m_gesture, &SwipeGesture::deltaProgress, this,
         [this] (const QSizeF &progressDelta) {
             if (!m_touchActions.isEmpty()) {
-                m_touchActions.first().progressCallback(border(), progressDelta / m_output->scale(), EffectScreenImpl::get(m_output));
+                m_touchActions.first().progressCallback(border(), progressDelta, EffectScreenImpl::get(m_output));
             }
         }
     );
