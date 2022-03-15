@@ -36,7 +36,7 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_bind_resou
     if (resource->version() < ZWP_LINUX_DMABUF_V1_GET_DEFAULT_FEEDBACK_SINCE_VERSION) {
         for (auto it = supportedModifiers.constBegin(); it != supportedModifiers.constEnd(); ++it) {
             const uint32_t &format = it.key();
-            const QSet<uint64_t> &modifiers = it.value();
+            const auto &modifiers = it.value();
             for (const uint64_t &modifier : qAsConst(modifiers)) {
                 if (resource->version() >= ZWP_LINUX_DMABUF_V1_MODIFIER_SINCE_VERSION) {
                     const uint32_t modifier_lo = modifier & 0xffffffff;
@@ -308,7 +308,7 @@ void LinuxDmaBufV1ClientBufferIntegration::setRendererInterface(RendererInterfac
 void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(const QVector<LinuxDmaBufV1Feedback::Tranche> &tranches)
 {
     if (LinuxDmaBufV1FeedbackPrivate::get(d->defaultFeedback.data())->m_tranches != tranches) {
-        QHash<uint32_t, QSet<uint64_t>> set;
+        QHash<uint32_t, QVector<uint64_t>> set;
         for (const auto &tranche : tranches) {
             set.insert(tranche.formatTable);
         }
@@ -514,7 +514,7 @@ struct linux_dmabuf_feedback_v1_table_entry {
     uint64_t modifier;
 };
 
-LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QSet<uint64_t>> &supportedModifiers)
+LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector<uint64_t>> &supportedModifiers)
 {
     QVector<linux_dmabuf_feedback_v1_table_entry> data;
     for (auto it = supportedModifiers.begin(); it != supportedModifiers.end(); it++) {

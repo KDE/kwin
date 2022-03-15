@@ -73,7 +73,7 @@ public:
     struct Tranche {
         dev_t device;
         TrancheFlags flags;
-        QHash<uint32_t, QSet<uint64_t>> formatTable;
+        QHash<uint32_t, QVector<uint64_t>> formatTable;
     };
     /**
      * Sets the list of tranches for this feedback object, with lower indices

@@ -37,7 +37,7 @@ public:
     QScopedPointer<LinuxDmaBufV1Feedback> defaultFeedback;
     QScopedPointer<LinuxDmaBufV1FormatTable> table;
     dev_t mainDevice;
-    QHash<uint32_t, QSet<uint64_t>> supportedModifiers;
+    QHash<uint32_t, QVector<uint64_t>> supportedModifiers;
 
 protected:
     void zwp_linux_dmabuf_v1_bind_resource(Resource *resource) override;
@@ -92,7 +92,7 @@ private:
 class LinuxDmaBufV1FormatTable
 {
 public:
-    LinuxDmaBufV1FormatTable(const QHash<uint32_t, QSet<uint64_t>> &supportedModifiers);
+    LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector<uint64_t>> &supportedModifiers);
     ~LinuxDmaBufV1FormatTable();
 
     int fd = -1;
