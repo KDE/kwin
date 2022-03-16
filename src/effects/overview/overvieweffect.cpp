@@ -90,6 +90,9 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
         m_touchBorderActivate.append(ElectricBorder(border));
         effects->registerRealtimeTouchBorder(ElectricBorder(border), m_toggleAction, [this] (ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
             Q_UNUSED(screen)
+            if (m_toggled) {
+                return;
+            }
             const bool wasInProgress = m_partialActivationFactor > 0;
             const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
             if (border == ElectricTop || border == ElectricBottom) {
@@ -175,6 +178,7 @@ void OverviewEffect::toggle()
 {
     if (!isRunning() || m_partialActivationFactor > 0.5) {
         activate();
+        m_toggled = true;
     } else {
         deactivate();
     }
@@ -198,11 +202,13 @@ void OverviewEffect::deactivate()
         QMetaObject::invokeMethod(view->rootItem(), "stop");
     }
     m_shutdownTimer->start(animationDuration());
+    m_toggled = false;
 }
 
 void OverviewEffect::realDeactivate()
 {
     setRunning(false);
+    m_toggled = false;
 }
 
 void OverviewEffect::quickDeactivate()

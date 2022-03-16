@@ -70,6 +70,7 @@ private:
     QList<ElectricBorder> m_touchBorderActivate;
     qreal m_partialActivationFactor = 0;
     bool m_blurBackground = false;
+    bool m_toggled = false;
     int m_animationDuration = 200;
     ExpoLayout::LayoutMode m_layout = ExpoLayout::LayoutNatural;
 };
