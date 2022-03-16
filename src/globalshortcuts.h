@@ -25,6 +25,11 @@ class SwipeGesture;
 class PinchGesture;
 class GestureRecognizer;
 
+enum class DeviceType {
+    Touchpad,
+    Touchscreen
+};
+
 /**
  * @brief Manager for the global shortcut system inside KWin.
  *
@@ -67,6 +72,8 @@ public:
 
     void registerRealtimeTouchpadPinch(QAction *onUp, std::function<void(qreal)> progressCallback, PinchDirection direction, uint fingerCount = 4);
 
+    void registerTouchscreenSwipe(QAction *action, SwipeDirection direction, uint fingerCount);
+
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
      *
@@ -93,10 +100,10 @@ public:
      */
     bool processAxis(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
-    void processSwipeStart(uint fingerCount);
-    void processSwipeUpdate(const QSizeF &delta);
-    void processSwipeCancel();
-    void processSwipeEnd();
+    void processSwipeStart(DeviceType device, uint fingerCount);
+    void processSwipeUpdate(DeviceType device, const QSizeF &delta);
+    void processSwipeCancel(DeviceType device);
+    void processSwipeEnd(DeviceType device);
 
     void processPinchStart(uint fingerCount);
     void processPinchUpdate(qreal scale, qreal angleDelta, const QSizeF &delta);
@@ -110,13 +117,14 @@ public:
 
 private:
     void objectDeleted(QObject *object);
-    bool addIfNotExists(GlobalShortcut sc);
+    bool addIfNotExists(GlobalShortcut sc, DeviceType device = DeviceType::Touchpad);
 
     QVector<GlobalShortcut> m_shortcuts;
 
     KGlobalAccelD *m_kglobalAccel = nullptr;
     KGlobalAccelInterface *m_kglobalAccelInterface = nullptr;
-    GestureRecognizer *m_gestureRecognizer;
+    QScopedPointer<GestureRecognizer> m_touchpadGestureRecognizer;
+    QScopedPointer<GestureRecognizer> m_touchscreenGestureRecognizer;
 };
 
 struct KeyboardShortcut
@@ -147,15 +155,17 @@ struct PointerAxisShortcut
 };
 struct SwipeShortcut
 {
+    DeviceType device;
     SwipeDirection direction;
     uint fingerCount;
     bool operator==(const SwipeShortcut &rhs) const
     {
-        return direction == rhs.direction && fingerCount == rhs.fingerCount;
+        return direction == rhs.direction && fingerCount == rhs.fingerCount && device == rhs.device;
     }
 };
 struct RealtimeFeedbackSwipeShortcut
 {
+    DeviceType device;
     SwipeDirection direction;
     std::function<void(qreal)> progressCallback;
     uint fingerCount;
@@ -163,7 +173,7 @@ struct RealtimeFeedbackSwipeShortcut
     template<typename T>
     bool operator==(const T &rhs) const
     {
-        return direction == rhs.direction && fingerCount == rhs.fingerCount;
+        return direction == rhs.direction && fingerCount == rhs.fingerCount && device == rhs.device;
     }
 };
 

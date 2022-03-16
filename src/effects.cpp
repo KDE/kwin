@@ -792,6 +792,11 @@ void EffectsHandlerImpl::registerTouchpadPinchShortcut(PinchDirection direction,
     input()->registerTouchpadPinchShortcut(direction, fingerCount, action);
 }
 
+void EffectsHandlerImpl::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
+{
+    input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action);
+}
+
 void *EffectsHandlerImpl::getProxy(QString name)
 {
     for (QVector<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
