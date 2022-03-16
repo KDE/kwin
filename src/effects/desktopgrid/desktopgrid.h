@@ -83,6 +83,7 @@ public:
         return clickBehavior == SwitchDesktopAndActivateWindow;
     }
 private Q_SLOTS:
+    void toggle();
     // slots for global shortcut changed
     // needed to toggle the effect
     void globalShortcutChanged(QAction *action, const QKeySequence& seq);
@@ -105,9 +106,7 @@ private:
     int desktopToLeft(int desktop, bool wrap = true) const;
     int desktopUp(int desktop, bool wrap = true) const;
     int desktopDown(int desktop, bool wrap = true) const;
-    void deactivate();
-    void activate();
-    void toggle();
+    void setActive(bool active);
     void setup();
     void setupGrid();
     void finish();
@@ -128,12 +127,7 @@ private:
     int clickBehavior;
 
     bool activated;
-
     QTimeLine timeline;
-    // used to indicate whether or not the prepaint thingy should drive the
-    // animation.
-    bool timelineRunning = false;
-
     int paintingDesktop;
     int highlightedDesktop;
     int sourceDesktop;
@@ -170,8 +164,7 @@ private:
 
     QVector<OffscreenQuickScene*> m_desktopButtons;
 
-    QAction *m_gestureAction;
-    QAction *m_shortcutAction;
+    QAction *m_activateAction;
 
 };
 
