@@ -20,7 +20,6 @@ Dependencies:
     'frameworks/kwidgetsaddons': '@stable'
     'frameworks/kwindowsystem': '@stable'
     'frameworks/kcompletion': '@stable'
-    'frameworks/kdeclarative': '@stable'
     'frameworks/kcmutils': '@stable'
     'frameworks/knewstuff': '@stable'
     'frameworks/kservice': '@stable'
