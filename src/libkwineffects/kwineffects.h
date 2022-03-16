@@ -871,7 +871,7 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
 
     friend class Effect;
 public:
-    typedef std::function<void(ElectricBorder border, const QSizeF&, EffectScreen *screen)> touchBorderCallback;
+    using TouchBorderCallback = std::function<void(ElectricBorder border, const QSizeF&, EffectScreen *screen)>;
 
     explicit EffectsHandler(CompositingType type);
     ~EffectsHandler() override;
