@@ -205,7 +205,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
             if (border == ElectricTop || border == ElectricBottom) {
                 progress = qAbs(deltaProgress.height() / (screen->geometry().height()/2));
             } else {
-                progress = deltaProgress.width() / screen->geometry().width();
+                progress = qAbs(deltaProgress.width() / (screen->geometry().width()/2));
             }
 
             timeline.setDirection(QTimeLine::Forward);
