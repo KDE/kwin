@@ -68,6 +68,8 @@ private:
     void updateBuffer();
     void updateExtendedBorders();
 
+    bool m_supportsMask{false};
+
     QRect m_contentRect; //the geometry of the part of the buffer that is not a shadow when buffer was created.
     QQuickItem *m_item = nullptr;
     QQmlContext *m_qmlContext = nullptr;

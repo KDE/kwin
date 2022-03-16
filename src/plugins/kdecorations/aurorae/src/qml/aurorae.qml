@@ -11,6 +11,7 @@ Decoration {
     id: root
     property bool animate: false
     property alias decorationMask: maskItem.mask
+    property alias supportsMask: backgroundSvg.supportsMask
     Component.onCompleted: {
         borders.left   = Qt.binding(function() { return Math.max(0, auroraeTheme.borderLeft);});
         borders.right  = Qt.binding(function() { return Math.max(0, auroraeTheme.borderRight);});
@@ -42,6 +43,7 @@ Decoration {
     }
     PlasmaCore.FrameSvg {
         property bool supportsInactive: hasElementPrefix("decoration-inactive")
+        property bool supportsMask: hasElementPrefix("mask")
         property bool supportsMaximized: hasElementPrefix("decoration-maximized")
         property bool supportsMaximizedInactive: hasElementPrefix("decoration-maximized-inactive")
         property bool supportsInnerBorder: hasElementPrefix("innerborder")
