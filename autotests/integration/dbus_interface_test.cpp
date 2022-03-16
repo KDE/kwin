@@ -6,6 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
+#include "config-kwin.h"
+
 #include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "atoms.h"
@@ -112,39 +114,43 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     auto client = clientAddedSpy.first().first().value<AbstractClient *>();
     QVERIFY(client);
 
+    const QVariantMap expectedData {
+        { QStringLiteral("type"), int(NET::Normal) },
+        { QStringLiteral("x"), client->x() },
+        { QStringLiteral("y"), client->y() },
+        { QStringLiteral("width"), client->width() },
+        { QStringLiteral("height"), client->height() },
+        { QStringLiteral("desktops"), client->desktopIds() },
+        { QStringLiteral("minimized"), false },
+        { QStringLiteral("shaded"), false },
+        { QStringLiteral("fullscreen"), false },
+        { QStringLiteral("keepAbove"), false },
+        { QStringLiteral("keepBelow"), false },
+        { QStringLiteral("skipTaskbar"), false },
+        { QStringLiteral("skipPager"), false },
+        { QStringLiteral("skipSwitcher"), false },
+        { QStringLiteral("maximizeHorizontal"), false },
+        { QStringLiteral("maximizeVertical"), false },
+        { QStringLiteral("noBorder"), false },
+        { QStringLiteral("clientMachine"), QString() },
+        { QStringLiteral("localhost"), true },
+        { QStringLiteral("role"), QString() },
+        { QStringLiteral("resourceName"), QStringLiteral("testDbusInterface") },
+        { QStringLiteral("resourceClass"), QStringLiteral("org.kde.foo") },
+        { QStringLiteral("desktopFile"), QStringLiteral("org.kde.foo") },
+        { QStringLiteral("caption"), QStringLiteral("Test window") },
+#if KWIN_BUILD_ACTIVITIES
+        { QStringLiteral("activities"), QStringList() },
+#endif
+    };
+
     // let's get the window info
     QDBusPendingReply<QVariantMap> reply{getWindowInfo(client->internalId())};
     reply.waitForFinished();
     QVERIFY(reply.isValid());
     QVERIFY(!reply.isError());
     auto windowData = reply.value();
-    QVERIFY(!windowData.isEmpty());
-    QCOMPARE(windowData.size(), 25);
-    QCOMPARE(windowData.value(QStringLiteral("type")).toInt(), NET::Normal);
-    QCOMPARE(windowData.value(QStringLiteral("x")).toInt(), client->x());
-    QCOMPARE(windowData.value(QStringLiteral("y")).toInt(), client->y());
-    QCOMPARE(windowData.value(QStringLiteral("width")).toInt(), client->width());
-    QCOMPARE(windowData.value(QStringLiteral("height")).toInt(), client->height());
-    QCOMPARE(windowData.value(QStringLiteral("desktops")).toStringList(), client->desktopIds());
-    QCOMPARE(windowData.value(QStringLiteral("minimized")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("shaded")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("fullscreen")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("keepAbove")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("keepBelow")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("skipTaskbar")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("skipPager")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("skipSwitcher")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("maximizeHorizontal")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("maximizeVertical")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("noBorder")).toBool(), false);
-    QCOMPARE(windowData.value(QStringLiteral("clientMachine")).toString(), QString());
-    QCOMPARE(windowData.value(QStringLiteral("localhost")).toBool(), true);
-    QCOMPARE(windowData.value(QStringLiteral("role")).toString(), QString());
-    QCOMPARE(windowData.value(QStringLiteral("resourceName")).toString(), QStringLiteral("testDbusInterface"));
-    QCOMPARE(windowData.value(QStringLiteral("resourceClass")).toString(), QStringLiteral("org.kde.foo"));
-    QCOMPARE(windowData.value(QStringLiteral("desktopFile")).toString(), QStringLiteral("org.kde.foo"));
-    QCOMPARE(windowData.value(QStringLiteral("caption")).toString(), QStringLiteral("Test window"));
-    QCOMPARE(windowData.value(QStringLiteral("activities")), QStringList());
+    QCOMPARE(windowData, expectedData);
 
     auto verifyProperty = [client] (const QString &name) {
         QDBusPendingReply<QVariantMap> reply{getWindowInfo(client->internalId())};
