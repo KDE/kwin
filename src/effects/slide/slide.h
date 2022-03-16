@@ -18,6 +18,31 @@
 namespace KWin
 {
 
+/*
+ * How it Works:
+ *
+ * This effect doesn't change the current desktop, only recieves changes from the VirtualDesktopManager.
+ * The only visually aparent inputs are desktopChanged() and desktopChanging().
+ *
+ * When responding to desktopChanging(), the draw position is only affected by what's recieved from there.
+ * After desktopChanging() is done, or without desktopChanging() having been called at all, desktopChanged() is called.
+ * The desktopChanged() function configures the m_startPos and m_endPos for the animation, and the duration.
+ *
+ * m_currentPosition and m_paintCtx.translation and everything else not labeled "drawCoordinate" uses desktops as a unit.
+ * Exmp: 1.2 means the dekstop at index 1 shifted over by .2 desktops.
+ * All coords must be positive.
+ *
+ * For the wrapping effect, the render loop has to handle desktop coordinates larger than the total grid's width.
+ * 1. It uses modulus to keep the desktop coords in the range [0, gridWidth].
+ * 2. It will draw the desktop at index 0 at index gridWidth if it has to.
+ * I will not draw any thing farther outside the range than that.
+ *
+ * I've put an explanation of all the important private vars down at the bottom.
+ *
+ * Good luck :)
+ */
+
+
 class SlideEffect : public Effect
 {
     Q_OBJECT
@@ -58,40 +83,49 @@ public:
 
 private Q_SLOTS:
     void desktopChanged(int old, int current, EffectWindow *with);
+    void desktopChanging(uint old, QPointF desktopOffset, EffectWindow* with);
+    void desktopChangingCancelled();
     void windowAdded(EffectWindow *w);
     void windowDeleted(EffectWindow *w);
 
 private:
-    QPoint desktopCoords(int id) const;
-    QRect desktopGeometry(int id) const;
-    int workspaceWidth() const;
-    int workspaceHeight() const;
-
+    QPoint getDrawCoords(QPointF pos, EffectScreen *screen);
     bool isTranslated(const EffectWindow *w) const;
     bool isPainted(const EffectWindow *w) const;
     bool shouldElevate(const EffectWindow *w) const;
+    QPointF moveInsideDesktopGrid(QPointF p);
+    QPointF constrainToDrawableRange(QPointF p);
+    QPointF forcePositivePosition(QPointF p) const;
+    void optimizePath(); //Find the best path to target desktop
 
-    void start(int old, int current, EffectWindow *movingWindow = nullptr);
-    void stop();
+    void startAnimation(int old, int current, EffectWindow *movingWindow = nullptr);
+    void finishedSwitching();
 
 private:
     int m_hGap;
     int m_vGap;
     bool m_slideDocks;
     bool m_slideBackground;
+    int m_animationDuration; // Miliseconds for 1 complete desktop switch
 
     bool m_active = false;
     TimeLine m_timeLine;
-    QPoint m_startPos;
-    QPoint m_diff;
+
+    // When the desktop isn't desktopChanging(), these two variables are used to control the animation path.
+    // They use desktops as a unit.
+    QPointF m_startPos;
+    QPointF m_endPos;
+
     EffectWindow *m_movingWindow = nullptr;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
+    bool m_gestureActive = false; // If we're currently animating a gesture
+    QPointF m_currentPosition; // Should always be kept up to date with where on the grid we're seeing.
 
     struct {
         int desktop;
         bool firstPass;
         bool lastPass;
-        QPoint translation;
+        QPointF translation; //Uses desktops as units
 
         EffectWindowList fullscreenWindows;
     } m_paintCtx;
@@ -101,7 +135,7 @@ private:
 
 inline int SlideEffect::duration() const
 {
-    return m_timeLine.duration().count();
+    return m_animationDuration;
 }
 
 inline int SlideEffect::horizontalGap() const
