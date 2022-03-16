@@ -22,9 +22,11 @@
 
 #include <algorithm>
 #include <QDebug>
+
 namespace KWin {
 
 static bool s_loadingDesktopSettings = false;
+static const double GESTURE_SWITCH_THRESHOLD = .25;
 
 static QString generateDesktopId()
 {
@@ -535,7 +537,7 @@ VirtualDesktop *VirtualDesktopManager::currentDesktop() const
 
 bool VirtualDesktopManager::setCurrent(uint newDesktop)
 {
-    if (newDesktop < 1 || newDesktop > count() || newDesktop == current()) {
+    if (newDesktop < 1 || newDesktop > count()) {
         return false;
     }
     auto d = desktopForX11Id(newDesktop);
@@ -800,9 +802,11 @@ void VirtualDesktopManager::initShortcuts()
     initSwitchToShortcuts();
 
     QAction *nextAction = addAction(QStringLiteral("Switch to Next Desktop"), i18n("Switch to Next Desktop"), &VirtualDesktopManager::slotNext);
-    input()->registerTouchpadSwipeShortcut(SwipeDirection::Right, 4, nextAction);
     QAction *previousAction = addAction(QStringLiteral("Switch to Previous Desktop"), i18n("Switch to Previous Desktop"), &VirtualDesktopManager::slotPrevious);
-    input()->registerTouchpadSwipeShortcut(SwipeDirection::Left, 4, previousAction);
+    Q_UNUSED(nextAction)
+    Q_UNUSED(previousAction)
+
+    //shortcuts
     QAction *slotRightAction = addAction(QStringLiteral("Switch One Desktop to the Right"), i18n("Switch One Desktop to the Right"), &VirtualDesktopManager::slotRight);
     KGlobalAccel::setGlobalShortcut(slotRightAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Right));
     QAction *slotLeftAction = addAction(QStringLiteral("Switch One Desktop to the Left"), i18n("Switch One Desktop to the Left"), &VirtualDesktopManager::slotLeft);
@@ -812,11 +816,82 @@ void VirtualDesktopManager::initShortcuts()
     QAction *slotDownAction = addAction(QStringLiteral("Switch One Desktop Down"), i18n("Switch One Desktop Down"), &VirtualDesktopManager::slotDown);
     KGlobalAccel::setGlobalShortcut(slotDownAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Down));
 
+    // Gestures
+    // These connections decide which desktop to end on after gesture ends
+    connect(m_swipeGestureReleasedRight, &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedRight);
+    connect(m_swipeGestureReleasedLeft, &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedLeft);
+    connect(m_swipeGestureReleasedUp, &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedUp);
+    connect(m_swipeGestureReleasedDown, &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedDown);
+
+    //These take the live feedback from a gesture
+    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedRight, [this](qreal cb) {
+        m_currentDesktopOffset.setX(cb);
+        Q_EMIT currentChanging(current(), m_currentDesktopOffset);
+    });
+    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedLeft, [this](qreal cb) {
+        m_currentDesktopOffset.setX(-cb);
+        Q_EMIT currentChanging(current(), m_currentDesktopOffset);
+    });
+    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Right, 4, m_swipeGestureReleasedRight, [this](qreal cb) {
+        m_currentDesktopOffset.setX(cb);
+        Q_EMIT currentChanging(current(), m_currentDesktopOffset);
+    });
+    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Left, 4, m_swipeGestureReleasedLeft, [this](qreal cb) {
+        m_currentDesktopOffset.setX(-cb);
+        Q_EMIT currentChanging(current(), m_currentDesktopOffset);
+    });
+    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 3, m_swipeGestureReleasedUp, [this](qreal cb) {
+        m_currentDesktopOffset.setY(-cb);
+        Q_EMIT currentChanging(current(), m_currentDesktopOffset);
+    });
+    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 3, m_swipeGestureReleasedDown, [this](qreal cb) {
+        m_currentDesktopOffset.setY(cb);
+        Q_EMIT currentChanging(current(), m_currentDesktopOffset);
+    });
+
     // axis events
     input()->registerAxisShortcut(Qt::ControlModifier | Qt::AltModifier, PointerAxisDown,
                                   findChild<QAction*>(QStringLiteral("Switch to Next Desktop")));
     input()->registerAxisShortcut(Qt::ControlModifier | Qt::AltModifier, PointerAxisUp,
                                   findChild<QAction*>(QStringLiteral("Switch to Previous Desktop")));
+}
+
+void VirtualDesktopManager::gestureReleasedUp()
+{
+    if (m_currentDesktopOffset.y() <= -GESTURE_SWITCH_THRESHOLD) {
+        slotUp();
+    } else {
+        Q_EMIT currentChangingCancelled();
+    }
+    m_currentDesktopOffset = QPointF(0, 0);
+}
+void VirtualDesktopManager::gestureReleasedDown()
+{
+    if (m_currentDesktopOffset.y() >= GESTURE_SWITCH_THRESHOLD) {
+        slotDown();
+    } else {
+        Q_EMIT currentChangingCancelled();
+    }
+    m_currentDesktopOffset = QPointF(0, 0);
+}
+void VirtualDesktopManager::gestureReleasedLeft()
+{
+    if (m_currentDesktopOffset.x() <= -GESTURE_SWITCH_THRESHOLD) {
+        slotLeft();
+    } else {
+        Q_EMIT currentChangingCancelled();
+    }
+    m_currentDesktopOffset = QPointF(0, 0);
+}
+void VirtualDesktopManager::gestureReleasedRight()
+{
+    if (m_currentDesktopOffset.x() >= GESTURE_SWITCH_THRESHOLD) {
+        slotRight();
+    } else {
+        setCurrent(current());
+        Q_EMIT currentChangingCancelled();
+    }
+    m_currentDesktopOffset = QPointF(0, 0);
 }
 
 void VirtualDesktopManager::initSwitchToShortcuts()
