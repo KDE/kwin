@@ -358,18 +358,6 @@ include(CheckSymbolExists)
 check_include_files(unistd.h HAVE_UNISTD_H)
 check_include_files(malloc.h HAVE_MALLOC_H)
 
-check_include_file("sys/prctl.h" HAVE_SYS_PRCTL_H)
-check_symbol_exists(PR_SET_DUMPABLE "sys/prctl.h" HAVE_PR_SET_DUMPABLE)
-check_symbol_exists(PR_SET_PDEATHSIG "sys/prctl.h" HAVE_PR_SET_PDEATHSIG)
-check_include_file("sys/procctl.h" HAVE_SYS_PROCCTL_H)
-check_symbol_exists(PROC_TRACE_CTL "sys/procctl.h" HAVE_PROC_TRACE_CTL)
-if (HAVE_PR_SET_DUMPABLE OR HAVE_PROC_TRACE_CTL)
-    set(CAN_DISABLE_PTRACE TRUE)
-endif()
-add_feature_info("prctl/procctl tracing control"
-                 CAN_DISABLE_PTRACE
-                 "Required for disallowing ptrace on kwin_wayland process")
-
 check_include_file("sys/sysmacros.h" HAVE_SYS_SYSMACROS_H)
 
 check_include_file("linux/vt.h" HAVE_LINUX_VT_H)
