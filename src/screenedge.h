@@ -41,17 +41,18 @@ class ScreenEdges;
 class SwipeGesture;
 class EffectScreen;
 
-class KWIN_EXPORT TouchCallback {
+class TouchCallback {
 public:
-    explicit TouchCallback(QAction *touchUpAction, EffectsHandler::touchBorderCallback progressCallback);
+    using CallbackFunction = std::function<void(ElectricBorder border, const QSizeF&, AbstractOutput *output)>;
+    explicit TouchCallback(QAction *touchUpAction, TouchCallback::CallbackFunction progressCallback);
     ~TouchCallback();
 
     QAction *touchUpAction() const;
-    void progressCallback(ElectricBorder border, const QSizeF &deltaProgress, EffectScreen *screen);
+    void progressCallback(ElectricBorder border, const QSizeF &deltaProgress, AbstractOutput *output);
 
 private:
     QAction *m_touchUpAction = nullptr;
-    EffectsHandler::touchBorderCallback m_progressCallback;
+    TouchCallback::CallbackFunction m_progressCallback;
 };
 
 class KWIN_EXPORT Edge : public QObject
@@ -75,12 +76,8 @@ public:
     ElectricBorder border() const;
     void reserve(QObject *object, const char *slot);
     const QHash<QObject *, QByteArray> &callBacks() const;
-    void reserveTouchCallBack(QAction *action, EffectsHandler::touchBorderCallback callback = nullptr);
-    void reserveTouchCallBack(const TouchCallback &callback);
+    void reserveTouchCallBack(QAction *action, TouchCallback::CallbackFunction callback = nullptr);
     void unreserveTouchCallBack(QAction *action);
-    QList<TouchCallback> touchCallBacks() const {
-        return m_touchActions;
-    }
     void startApproaching();
     void stopApproaching();
     bool isApproaching() const;
@@ -145,6 +142,10 @@ private:
     void handleTouchCallback();
     void switchDesktop(const QPoint &cursorPos);
     void pushCursorBack(const QPoint &cursorPos);
+    void reserveTouchCallBack(const TouchCallback &callback);
+    QVector<TouchCallback> touchCallBacks() const {
+        return m_touchCallbacks;
+    }
     ScreenEdges *m_edges;
     ElectricBorder m_border;
     ElectricBorderAction m_action;
@@ -163,7 +164,8 @@ private:
     AbstractClient *m_client;
     AbstractOutput *m_output;
     SwipeGesture *m_gesture;
-    QList<TouchCallback> m_touchActions;
+    QVector<TouchCallback> m_touchCallbacks;
+    friend class ScreenEdges;
 };
 
 /**
@@ -303,7 +305,7 @@ public:
      * @see unreserveTouch
      * @since 5.10
      */
-    void reserveTouch(ElectricBorder border, QAction *action, EffectsHandler::touchBorderCallback callback = nullptr);
+    void reserveTouch(ElectricBorder border, QAction *action, TouchCallback::CallbackFunction callback = nullptr);
     /**
      * Unreserves the specified @p border from activating the @p action for touch gestures.
      * @see reserveTouch
@@ -414,7 +416,7 @@ private:
     ElectricBorderAction m_actionBottom;
     ElectricBorderAction m_actionBottomLeft;
     ElectricBorderAction m_actionLeft;
-    QMap<ElectricBorder, ElectricBorderAction> m_touchActions;
+    QMap<ElectricBorder, ElectricBorderAction> m_touchCallbacks;
     int m_cornerOffset;
     GestureRecognizer *m_gestureRecognizer;
 

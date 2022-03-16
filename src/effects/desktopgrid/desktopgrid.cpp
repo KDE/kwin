@@ -193,7 +193,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
             continue;
         }
 
-        effects->registerRealtimeTouchBorder(ElectricBorder(i), m_gestureAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
+        effects->registerRealtimeTouchBorder(ElectricBorder(i), m_activateAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
             if (activated) return;
 
             if (timeline.currentValue() == 0) {

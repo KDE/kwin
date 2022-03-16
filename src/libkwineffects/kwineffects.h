@@ -998,7 +998,7 @@ public:
      * @see unregisterTouchBorder
      * @since 5.25
      */
-    virtual void registerRealtimeTouchBorder(ElectricBorder border, QAction *action, touchBorderCallback progressCallback) = 0;
+    virtual void registerRealtimeTouchBorder(ElectricBorder border, QAction *action, TouchBorderCallback progressCallback) = 0;
 
     /**
      * Unregisters the given @p action for the given touch @p border.
