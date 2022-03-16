@@ -43,7 +43,9 @@
 #else
 #include <QX11Info>
 #endif
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QtPlatformHeaders/QGLXNativeContext>
+#endif
 // system
 #include <unistd.h>
 
@@ -322,6 +324,7 @@ bool GlxBackend::initRenderingContext()
     GLXContext globalShareContext = nullptr;
     if (qtGlobalShareContext) {
         qDebug(KWIN_X11STANDALONE) << "Global share context format:" << qtGlobalShareContext->format();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         const QVariant nativeHandle = qtGlobalShareContext->nativeHandle();
         if (!nativeHandle.canConvert<QGLXNativeContext>()) {
             qCDebug(KWIN_X11STANDALONE) << "Invalid QOpenGLContext::globalShareContext()";
@@ -330,6 +333,15 @@ bool GlxBackend::initRenderingContext()
             QGLXNativeContext handle = qvariant_cast<QGLXNativeContext>(nativeHandle);
             globalShareContext = handle.context();
         }
+#else
+        const auto nativeHandle = qtGlobalShareContext->nativeInterface<QNativeInterface::QGLXContext>();
+        if (nativeHandle) {
+            globalShareContext = nativeHandle->nativeContext();
+        } else {
+            qCDebug(KWIN_X11STANDALONE) << "Invalid QOpenGLContext::globalShareContext()";
+            return false;
+        }
+#endif
     }
     if (!globalShareContext) {
         qCWarning(KWIN_X11STANDALONE) << "QOpenGLContext::globalShareContext() is required";

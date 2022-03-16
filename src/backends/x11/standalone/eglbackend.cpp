@@ -19,7 +19,9 @@
 #include "x11_platform.h"
 
 #include <QOpenGLContext>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QtPlatformHeaders/QEGLNativeContext>
+#endif
 
 namespace KWin
 {
@@ -61,6 +63,7 @@ void EglBackend::init()
     EGLContext shareContext = EGL_NO_CONTEXT;
     if (qtShareContext) {
         qDebug(KWIN_X11STANDALONE) << "Global share context format:" << qtShareContext->format();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         const QVariant nativeHandle = qtShareContext->nativeHandle();
         if (!nativeHandle.canConvert<QEGLNativeContext>()) {
             setFailed(QStringLiteral("Invalid QOpenGLContext::globalShareContext()"));
@@ -70,6 +73,16 @@ void EglBackend::init()
             shareContext = handle.context();
             shareDisplay = handle.display();
         }
+#else
+        const auto nativeHandle = qtShareContext->nativeInterface<QNativeInterface::QEGLContext>();
+        if (nativeHandle) {
+            shareContext = nativeHandle->nativeContext();
+            shareDisplay = nativeHandle->display();
+        } else {
+            setFailed(QStringLiteral("Invalid QOpenGLContext::globalShareContext()"));
+            return;
+        }
+#endif
     }
     if (shareContext == EGL_NO_CONTEXT) {
         setFailed(QStringLiteral("QOpenGLContext::globalShareContext() is required"));
