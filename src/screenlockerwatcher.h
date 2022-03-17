@@ -36,10 +36,9 @@ private Q_SLOTS:
     void setLocked(bool activated);
     void activeQueried(QDBusPendingCallWatcher *watcher);
     void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
-    void serviceRegisteredQueried();
-    void serviceOwnerQueried();
 private:
     void initialize();
+    void queryActive();
     OrgFreedesktopScreenSaverInterface *m_interface = nullptr;
     OrgKdeScreensaverInterface *m_kdeInterface = nullptr;
     QDBusServiceWatcher *m_serviceWatcher;
