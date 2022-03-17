@@ -42,10 +42,8 @@
 #include <QtDBus>
 
 // system
-#if __has_include(<unistd.h>)
-#include <unistd.h>
-#endif
 #include <iostream>
+#include <unistd.h>
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
 

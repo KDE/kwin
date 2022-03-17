@@ -42,14 +42,10 @@
 #include <QTimer>
 #include <QtConcurrentRun>
 
-// system
-#if __has_include(<unistd.h>)
-#include <unistd.h>
-#endif
-
-#include <sys/socket.h>
 #include <cerrno>
 #include <cstring>
+#include <sys/socket.h>
+#include <unistd.h>
 
 namespace KWin
 {

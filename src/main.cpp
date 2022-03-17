@@ -46,14 +46,10 @@
 #include <QTranslator>
 #include <QLibraryInfo>
 
-// system
-#if __has_include(<unistd.h>)
-#include <unistd.h>
-#endif
-
 #ifdef __has_include(<malloc.h>)
 #include <malloc.h>
 #endif
+#include <unistd.h>
 
 // xcb
 #include <xcb/damage.h>
