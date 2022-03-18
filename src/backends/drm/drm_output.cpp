@@ -118,21 +118,12 @@ void DrmOutput::updateCursor()
     }
     const auto plane = m_pipeline->pending.crtc->cursorPlane();
     if (!m_cursor || (plane && !plane->formats().value(m_cursor->drmFormat()).contains(DRM_FORMAT_MOD_LINEAR))) {
-        if (plane) {
-            const auto formatModifiers = plane->formats();
-            const auto formats = formatModifiers.keys();
-            for (uint32_t format : formats) {
-                if (!formatModifiers[format].contains(DRM_FORMAT_MOD_LINEAR)) {
-                    continue;
-                }
-                m_cursor = QSharedPointer<DumbSwapchain>::create(m_gpu, m_gpu->cursorSize(), format, QImage::Format::Format_ARGB32_Premultiplied);
-                if (!m_cursor->isEmpty()) {
-                    break;
-                }
-            }
-        } else {
-            m_cursor = QSharedPointer<DumbSwapchain>::create(m_gpu, m_gpu->cursorSize(), DRM_FORMAT_XRGB8888, QImage::Format::Format_ARGB32_Premultiplied);
+        if (plane && (!plane->formats().contains(DRM_FORMAT_ARGB8888) || !plane->formats().value(DRM_FORMAT_ARGB8888).contains(DRM_FORMAT_MOD_LINEAR))) {
+            m_pipeline->setCursor(nullptr);
+            m_setCursorSuccessful = false;
+            return;
         }
+        m_cursor = QSharedPointer<DumbSwapchain>::create(m_gpu, m_gpu->cursorSize(), plane ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888, QImage::Format::Format_ARGB32_Premultiplied);
         if (!m_cursor || m_cursor->isEmpty()) {
             m_pipeline->setCursor(nullptr);
             m_setCursorSuccessful = false;
