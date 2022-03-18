@@ -90,7 +90,7 @@ bool VirtualEglGbmLayer::endRendering(const QRegion &damagedRegion)
         m_currentBuffer = buffer;
         m_currentDamage = damagedRegion;
     }
-    return buffer;
+    return !buffer.isNull();
 }
 
 QRegion VirtualEglGbmLayer::currentDamage() const
