@@ -5,6 +5,7 @@
     SPDX-FileCopyrightText: 2007 Lubos Lunak <l.lunak@kde.org>
     SPDX-FileCopyrightText: 2008 Lucas Murray <lmurray@undefinedfire.com>
     SPDX-FileCopyrightText: 2009 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2021 Carson Black <uhhadd@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -57,19 +58,72 @@ DesktopGridEffect::DesktopGridEffect()
     , scaledSize()
     , scaledOffset()
     , m_proxy(nullptr)
-    , m_activateAction(new QAction(this))
+    , m_gestureAction(new QAction(this))
+    , m_shortcutAction(new QAction(this))
 {
     initConfig<DesktopGridConfig>();
-    // Load shortcuts
-    QAction* a = m_activateAction;
-    a->setObjectName(QStringLiteral("ShowDesktopGrid"));
-    a->setText(i18n("Show Desktop Grid"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
-    shortcut = KGlobalAccel::self()->shortcut(a);
-    effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F8, a);
-    effects->registerTouchpadSwipeShortcut(SwipeDirection::Up, 4, a);
-    connect(a, &QAction::triggered, this, &DesktopGridEffect::toggle);
+
+    // First we set up the gestures...
+    QAction* a = m_gestureAction;
+
+    connect(a, &QAction::triggered, this, [this]() {
+        if (effects->hasActiveFullScreenEffect() && effects->activeFullScreenEffect() != this) {
+            return;
+        }
+        if ((qreal(timeline.currentTime()) / qreal(timeline.duration())) > 0.5) {
+            if (effects->isScreenLocked()) {
+                return;
+            }
+            activated = true;
+            timeline.setDirection(QTimeLine::Forward);
+            timelineRunning = true;
+        } else if (timeline.currentTime() > 0) {
+            activated = false;
+            timeline.setDirection(QTimeLine::Backward);
+            timelineRunning = true;
+        } else {
+            finish();
+        }
+    });
+    effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, 4, a, [this](qreal cb) {
+        if (activated) {
+            return;
+        }
+        if (effects->hasActiveFullScreenEffect() && effects->activeFullScreenEffect() != this) {
+            return;
+        }
+
+        if (timeline.currentValue() == 0) {
+            activated = true;
+            setup();
+            activated = false;
+        }
+
+        timeline.setCurrentTime(timeline.duration() * cb);
+        effects->addRepaintFull();
+    });
+    connect(&timeline, &QTimeLine::frameChanged, this, []() {
+        effects->addRepaintFull();
+    });
+    connect(&timeline, &QTimeLine::finished, this, [this]() {
+        timelineRunning = false;
+        if (timeline.currentTime() == 0) {
+            finish();
+        }
+    });
+
+    // Now we set up the shortcut
+    QAction* s = m_shortcutAction;
+    s->setObjectName(QStringLiteral("ShowDesktopGrid"));
+    s->setText(i18n("Show Desktop Grid"));
+
+    KGlobalAccel::self()->setDefaultShortcut(s, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F8));
+    KGlobalAccel::self()->setShortcut(s, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F8));
+    shortcut = KGlobalAccel::self()->shortcut(s);
+    effects->registerGlobalShortcut(Qt::CTRL | Qt::Key_F8, s);
+
+    connect(s, &QAction::triggered, this, &DesktopGridEffect::toggle);
+
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &DesktopGridEffect::globalShortcutChanged);
     connect(effects, &EffectsHandler::windowAdded, this, &DesktopGridEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &DesktopGridEffect::slotWindowClosed);
@@ -80,7 +134,7 @@ DesktopGridEffect::DesktopGridEffect()
     connect(effects, &EffectsHandler::screenRemoved, this, &DesktopGridEffect::setup);
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
-        setActive(false);
+        deactivate();
         windowMoveElevateTimer->stop();
         if (keyboardGrab) {
             effects->ungrabKeyboard();
@@ -131,14 +185,14 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
     // deactivate and activate all touch border
     const QVector<ElectricBorder> relevantBorders{ElectricLeft, ElectricTop, ElectricRight, ElectricBottom};
     for (auto e : relevantBorders) {
-        effects->unregisterTouchBorder(e, m_activateAction);
+        effects->unregisterTouchBorder(e, m_shortcutAction);
     }
     const auto touchBorders = DesktopGridConfig::touchBorderActivate();
     for (int i : touchBorders) {
         if (!relevantBorders.contains(ElectricBorder(i))) {
             continue;
         }
-        effects->registerTouchBorder(ElectricBorder(i), m_activateAction);
+        effects->registerTouchBorder(ElectricBorder(i), m_shortcutAction);
     }
 }
 
@@ -155,18 +209,28 @@ void DesktopGridEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::mi
         time = 1;
     }
     lastPresentTime = presentTime;
+    if (timelineRunning) {
+        timeline.setCurrentTime(timeline.currentTime() + (timeline.direction() == QTimeLine::Forward ? time : -time));
+
+        if ((timeline.currentTime() <= 0 && timeline.direction() == QTimeLine::Backward)) {
+            timelineRunning = false;
+            // defer until the event loop to finish
+            QTimer::singleShot(0, [this]() {
+                finish();
+            });
+        }
+    }
+    for (int i = 0; i < effects->numberOfDesktops(); i++) {
+        auto item = hoverTimeline[i];
+
+        if (i == highlightedDesktop-1) { // if this is the highlighted desktop, we want to progress the animation from "not highlighted" to "highlight"
+            item->setCurrentTime(item->currentTime() + time);
+        } else { // otherwise we progress from "highlighted" to "not highlighted"
+            item->setCurrentTime(item->currentTime() - time);
+        }
+    }
 
     if (timeline.currentValue() != 0 || activated || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
-        if (activated)
-            timeline.setCurrentTime(timeline.currentTime() + time);
-        else
-            timeline.setCurrentTime(timeline.currentTime() - time);
-        for (int i = 0; i < effects->numberOfDesktops(); i++) {
-            if (i == highlightedDesktop - 1)
-                hoverTimeline[i]->setCurrentTime(hoverTimeline[i]->currentTime() + time);
-            else
-                hoverTimeline[i]->setCurrentTime(hoverTimeline[i]->currentTime() - time);
-        }
         if (isUsingPresentWindows()) {
             for (auto i = m_managers.begin(); i != m_managers.end(); ++i) {
                 for (WindowMotionManager &manager : *i) {
@@ -178,8 +242,6 @@ void DesktopGridEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::mi
         // so with normal screen painting second screen paint would erase parts of the first paint
         if (timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows()))
             data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
-        if (!activated && timeline.currentValue() == 0 && !(isUsingPresentWindows() && isMotionManagerMovingWindows()))
-            finish();
     }
 
     const EffectWindowList windows = effects->stackingOrder();
@@ -254,7 +316,7 @@ void DesktopGridEffect::postPaintScreen()
 {
     bool resetLastPresentTime = true;
 
-    if (activated ? timeline.currentValue() != 1 : timeline.currentValue() != 0) {
+    if (timelineRunning || activated ? timeline.currentValue() != 1 : timeline.currentValue() != 0) {
         effects->addRepaintFull(); // Repaint during zoom
         resetLastPresentTime = false;
     }
@@ -629,7 +691,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
             if (desk > effects->numberOfDesktops())
                 return; // don't quit when missing desktop
             setCurrentDesktop(desk);
-            setActive(false);
+            deactivate();
         }
         if (windowMove) {
             if (wasWindowMove && isUsingPresentWindows()) {
@@ -657,6 +719,30 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
     }
 }
 
+void DesktopGridEffect::activate()
+{
+    activated = true;
+    setup();
+    timeline.setDirection(QTimeLine::Forward);
+    timelineRunning = true;
+    // timeline.resume();
+    effects->addRepaintFull();
+}
+
+void DesktopGridEffect::deactivate()
+{
+    activated = false;
+    timeline.setDirection(QTimeLine::Backward);
+    timelineRunning = true;
+    // timeline.resume();
+    effects->addRepaintFull();
+}
+
+void DesktopGridEffect::toggle()
+{
+    if (activated) deactivate(); else activate();
+}
+
 void DesktopGridEffect::grabbedKeyboardEvent(QKeyEvent* e)
 {
     if (timeline.currentValue() != 1)   // Block user input during animations
@@ -666,8 +752,8 @@ void DesktopGridEffect::grabbedKeyboardEvent(QKeyEvent* e)
     if (e->type() == QEvent::KeyPress) {
         // check for global shortcuts
         // HACK: keyboard grab disables the global shortcuts so we have to check for global shortcut (bug 156155)
-        if (shortcut.contains(e->key() + e->modifiers())) {
-            toggle();
+        if (shortcut.contains(e->key() | e->modifiers())) {
+            deactivate();
             return;
         }
 
@@ -681,7 +767,7 @@ void DesktopGridEffect::grabbedKeyboardEvent(QKeyEvent* e)
             if (desktop <= effects->numberOfDesktops()) {
                 setHighlightedDesktop(desktop);
                 setCurrentDesktop(desktop);
-                setActive(false);
+                deactivate();
             }
             return;
         }
@@ -700,13 +786,13 @@ void DesktopGridEffect::grabbedKeyboardEvent(QKeyEvent* e)
             setHighlightedDesktop(desktopDown(highlightedDesktop, !e->isAutoRepeat()));
             break;
         case Qt::Key_Escape:
-            setActive(false);
+            deactivate();
             return;
         case Qt::Key_Enter:
         case Qt::Key_Return:
         case Qt::Key_Space:
             setCurrentDesktop(highlightedDesktop);
-            setActive(false);
+            deactivate();
             return;
         case Qt::Key_Plus:
             slotAddDesktop();
@@ -1001,50 +1087,6 @@ int DesktopGridEffect::desktopDown(int desktop, bool wrap) const
 //-----------------------------------------------------------------------------
 // Activation
 
-void DesktopGridEffect::toggle()
-{
-    setActive(!activated);
-}
-
-void DesktopGridEffect::setActive(bool active)
-{
-    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
-        return; // Only one fullscreen effect at a time thanks
-    if (active && isMotionManagerMovingWindows())
-        return; // Still moving windows from last usage - don't activate
-    if (activated == active)
-        return; // Already in that state
-
-    activated = active;
-    if (activated) {
-        effects->setShowingDesktop(false);
-        if (timeline.currentValue() == 0)
-            setup();
-    } else {
-        if (isUsingPresentWindows()) {
-            QList<WindowMotionManager>::iterator it;
-            for (auto it = m_managers.begin(); it != m_managers.end(); ++it) {
-                for (WindowMotionManager &manager : *it) {
-                    for (EffectWindow* w : manager.managedWindows()) {
-                        manager.moveWindow(w, w->frameGeometry());
-                    }
-                }
-            }
-        }
-        QTimer::singleShot(zoomDuration + 1, this,
-            [this] {
-                if (activated)
-                    return;
-                for (OffscreenQuickScene *view : qAsConst(m_desktopButtons)) {
-                    view->hide();
-                }
-            }
-        );
-        setHighlightedDesktop(effects->currentDesktop());   // Ensure selected desktop is highlighted
-    }
-    effects->addRepaintFull();
-}
-
 void DesktopGridEffect::setup()
 {
     if (!isActive())
@@ -1212,6 +1254,27 @@ void DesktopGridEffect::finish()
         qDeleteAll(desktopNames);
         desktopNames.clear();
     }
+
+    if (isUsingPresentWindows()) {
+        for (auto it = m_managers.begin(); it != m_managers.end(); ++it) {
+            for (WindowMotionManager &manager : *it) {
+                const auto windows = manager.managedWindows();
+                for (EffectWindow * w : windows) {
+                    manager.moveWindow(w, w->frameGeometry());
+                }
+            }
+        }
+    }
+    QTimer::singleShot(zoomDuration + 1, this,
+        [this] {
+            if (activated)
+                return;
+            for (OffscreenQuickScene *view : qAsConst(m_desktopButtons)) {
+                view->hide();
+            }
+        }
+    );
+    setHighlightedDesktop(effects->currentDesktop());   // Ensure selected desktop is highlighted
 
     windowMoveElevateTimer->stop();
 
