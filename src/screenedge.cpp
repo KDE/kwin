@@ -56,7 +56,7 @@ static const int DISTANCE_RESET = 30;
 static const int TOUCH_TARGET = 3;
 
 // How far the user needs to swipe before triggering an action.
-static const int MINIMUM_DELTA = 256;
+static const int MINIMUM_DELTA = 44;
 
 TouchCallback::TouchCallback(QAction *touchUpAction, TouchCallback::CallbackFunction progressCallback)
     : m_touchUpAction(touchUpAction)
@@ -76,6 +76,11 @@ void TouchCallback::progressCallback(ElectricBorder border, const QSizeF &deltaP
     if (m_progressCallback) {
         m_progressCallback(border, deltaProgress, output);
     }
+}
+
+bool TouchCallback::hasProgressCallback() const
+{
+    return m_progressCallback != nullptr;
 }
 
 Edge::Edge(ScreenEdges *parent)
@@ -108,7 +113,12 @@ Edge::Edge(ScreenEdges *parent)
     );
     connect(m_gesture, &SwipeGesture::started, this, &Edge::startApproaching);
     connect(m_gesture, &SwipeGesture::cancelled, this, &Edge::stopApproaching);
-    connect(m_gesture, &SwipeGesture::cancelled, this, &Edge::handleTouchCallback);
+    connect(m_gesture, &SwipeGesture::cancelled, this, [this] () {
+            if (!m_touchCallbacks.isEmpty() && m_touchCallbacks.first().hasProgressCallback()) {
+                handleTouchCallback();
+            }
+        }
+    );
     connect(m_gesture, &SwipeGesture::progress, this,
         [this] (qreal progress) {
             int factor = progress * 256.0f;

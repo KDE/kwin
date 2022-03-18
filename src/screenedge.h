@@ -49,6 +49,7 @@ public:
 
     QAction *touchUpAction() const;
     void progressCallback(ElectricBorder border, const QSizeF &deltaProgress, AbstractOutput *output);
+    bool hasProgressCallback() const;
 
 private:
     QAction *m_touchUpAction = nullptr;
