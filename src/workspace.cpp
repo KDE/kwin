@@ -236,8 +236,6 @@ void Workspace::init()
     connect(vds, &VirtualDesktopManager::desktopCreated, this, &Workspace::slotDesktopAdded);
     connect(vds, &VirtualDesktopManager::desktopRemoved, this, &Workspace::slotDesktopRemoved);
     connect(vds, &VirtualDesktopManager::currentChanged, this, &Workspace::slotCurrentDesktopChanged);
-    connect(vds, &VirtualDesktopManager::currentChanging, this, &Workspace::slotCurrentDesktopChanging);
-    connect(vds, &VirtualDesktopManager::currentChangingCancelled, this, &Workspace::slotCurrentDesktopChangingCancelled);
     vds->setNavigationWrappingAround(options->isRollOverDesktops());
     connect(options, &Options::rollOverDesktopsChanged, vds, &VirtualDesktopManager::setNavigationWrappingAround);
     vds->setConfig(config);
@@ -1022,17 +1020,6 @@ void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
 
     activateClientOnNewDesktop(VirtualDesktopManager::self()->desktopForX11Id(newDesktop));
     Q_EMIT currentDesktopChanged(oldDesktop, movingClient);
-}
-
-void Workspace::slotCurrentDesktopChanging(uint currentDesktop, QPointF offset)
-{
-    closeActivePopup();
-    Q_EMIT currentDesktopChanging(currentDesktop, offset, movingClient);
-}
-
-void Workspace::slotCurrentDesktopChangingCancelled()
-{
-    Q_EMIT currentDesktopChangingCancelled();
 }
 
 void Workspace::updateClientVisibilityOnDesktopChange(VirtualDesktop *newDesktop)

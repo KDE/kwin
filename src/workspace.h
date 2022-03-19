@@ -491,8 +491,6 @@ private Q_SLOTS:
     void updateCurrentActivity(const QString &new_activity);
     // virtual desktop handling
     void slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop);
-    void slotCurrentDesktopChanging(uint currentDesktop, QPointF delta);
-    void slotCurrentDesktopChangingCancelled();
     void slotDesktopAdded(VirtualDesktop *desktop);
     void slotDesktopRemoved(VirtualDesktop *desktop);
     void slotOutputEnabled(AbstractOutput *output);
@@ -510,8 +508,6 @@ Q_SIGNALS:
     void desktopPresenceChanged(KWin::AbstractClient*, int);
     void currentActivityChanged();
     void currentDesktopChanged(int, KWin::AbstractClient*);
-    void currentDesktopChanging(uint currentDesktop, QPointF delta, KWin::AbstractClient*);//for realtime animations
-    void currentDesktopChangingCancelled();
     void clientAdded(KWin::AbstractClient *);
     void clientRemoved(KWin::AbstractClient*);
     void clientActivated(KWin::AbstractClient*);

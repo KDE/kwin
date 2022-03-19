@@ -155,16 +155,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
             }
         }
     );
-    connect(ws, &Workspace::currentDesktopChanging, this,
-            [this](uint currentDesktop, QPointF offset, KWin::AbstractClient* c){
-                Q_EMIT desktopChanging(currentDesktop, offset, c ? c->effectWindow() : nullptr);
-            }
-    );
-    connect(ws, &Workspace::currentDesktopChangingCancelled, this,
-            [this](){
-                Q_EMIT desktopChangingCancelled();
-            }
-    );
     connect(ws, &Workspace::desktopPresenceChanged, this,
         [this](AbstractClient *c, int old) {
             if (!c->effectWindow()) {

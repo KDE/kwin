@@ -1468,17 +1468,6 @@ Q_SIGNALS:
      * @since 4.9
      */
     void desktopChanged(int oldDesktop, int newDesktop, KWin::EffectWindow *with);
-
-    /**
-     * Signal emmitted while desktop is changing for animation.
-     * @param currentDesktop The current desktop untiotherwise.
-     * @param offset The current desktop offset.
-     * offset.x() = .6 means 60% of the way to the desktop to the right.
-     * Positive Values means Up and Right.
-     */
-    void desktopChanging(uint currentDesktop, QPointF offset, KWin::EffectWindow *with);
-    void desktopChangingCancelled();
-
     /**
      * @since 4.7
      * @deprecated

@@ -35,16 +35,8 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
 
 void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection, uint fingerCount, QAction*)
 {
-    Q_UNUSED(fingerCount)
 }
 
-void InputRedirection::registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> cb)
-{
-    Q_UNUSED(direction)
-    Q_UNUSED(fingerCount)
-    Q_UNUSED(action)
-    Q_UNUSED(cb)
-}
 }
 
 Q_DECLARE_METATYPE(Qt::Orientation)
