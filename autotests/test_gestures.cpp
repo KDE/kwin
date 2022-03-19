@@ -316,7 +316,7 @@ void GestureTest::testSetMinimumDelta()
 
     PinchGesture pinchGesture;
     QCOMPARE(pinchGesture.isMinimumScaleDeltaRelevant(), false);
-    QCOMPARE(pinchGesture.minimumScaleDelta(), DEFAULT_UNIT_SCALE_DELTA);
+    QCOMPARE(pinchGesture.minimumScaleDelta(), DEFAULT_MINIMUM_SCALE_DELTA);
     QCOMPARE(pinchGesture.minimumScaleDeltaReached(1.25), true);
     pinchGesture.setMinimumScaleDelta(.5);
     QCOMPARE(pinchGesture.isMinimumScaleDeltaRelevant(), true);
