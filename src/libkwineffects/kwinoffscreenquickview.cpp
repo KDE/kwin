@@ -27,6 +27,9 @@
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
 #include <QTimer>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <private/qeventpoint_p.h> // for QMutableEventPoint
+#endif
 
 namespace KWin
 {
@@ -72,9 +75,14 @@ public:
     bool m_visible = true;
     bool m_automaticRepaint = true;
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QList<QTouchEvent::TouchPoint> touchPoints;
     Qt::TouchPointStates touchState;
     QTouchDevice *touchDevice;
+#else
+    QList<QEventPoint> touchPoints;
+    QPointingDevice *touchDevice;
+#endif
 
     ulong lastMousePressTime = 0;
     Qt::MouseButton lastMousePressButton = Qt::NoButton;
@@ -175,10 +183,14 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
     connect(d->m_renderControl, &QQuickRenderControl::renderRequested, this, &OffscreenQuickView::handleRenderRequested);
     connect(d->m_renderControl, &QQuickRenderControl::sceneChanged, this, &OffscreenQuickView::handleSceneChanged);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     d->touchDevice = new QTouchDevice{};
     d->touchDevice->setCapabilities(QTouchDevice::Position);
     d->touchDevice->setType(QTouchDevice::TouchScreen);
     d->touchDevice->setMaximumTouchPoints(10);
+#else
+    d->touchDevice = new QPointingDevice({}, {}, QInputDevice::DeviceType::TouchScreen, {}, QInputDevice::Capability::Position, 10, {});
+#endif
 }
 
 OffscreenQuickView::~OffscreenQuickView()
@@ -348,7 +360,11 @@ bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, quint32
 
     d->updateTouchState(Qt::TouchPointPressed, id, pos);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QTouchEvent event(QEvent::TouchBegin, d->touchDevice, Qt::NoModifier, d->touchState, d->touchPoints);
+#else
+    QTouchEvent event(QEvent::TouchBegin, d->touchDevice, Qt::NoModifier, d->touchPoints);
+#endif
     QCoreApplication::sendEvent(d->m_view, &event);
 
     return event.isAccepted();
@@ -360,7 +376,11 @@ bool OffscreenQuickView::forwardTouchMotion(qint32 id, const QPointF &pos, quint
 
     d->updateTouchState(Qt::TouchPointMoved, id, pos);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QTouchEvent event(QEvent::TouchUpdate, d->touchDevice, Qt::NoModifier, d->touchState, d->touchPoints);
+#else
+    QTouchEvent event(QEvent::TouchUpdate, d->touchDevice, Qt::NoModifier, d->touchPoints);
+#endif
     QCoreApplication::sendEvent(d->m_view, &event);
 
     return event.isAccepted();
@@ -372,7 +392,11 @@ bool OffscreenQuickView::forwardTouchUp(qint32 id, quint32 time)
 
     d->updateTouchState(Qt::TouchPointReleased, id, QPointF{});
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QTouchEvent event(QEvent::TouchEnd, d->touchDevice, Qt::NoModifier, d->touchState, d->touchPoints);
+#else
+    QTouchEvent event(QEvent::TouchEnd, d->touchDevice, Qt::NoModifier, d->touchPoints);
+#endif
     QCoreApplication::sendEvent(d->m_view, &event);
 
     return event.isAccepted();
@@ -486,7 +510,11 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
         if (point.state() == Qt::TouchPointReleased) {
             return true;
         }
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         point.setState(Qt::TouchPointStationary);
+#else
+        static_cast<QMutableEventPoint&>(point).setState(QEventPoint::Stationary);
+#endif
         return false;
     }), touchPoints.end());
 
@@ -508,9 +536,14 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
                 return;
             }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             QTouchEvent::TouchPoint point;
-            point.setId(id + idOffset);
             point.setState(Qt::TouchPointPressed);
+#else
+            QMutableEventPoint point;
+            point.setState(QEventPoint::Pressed);
+#endif
+            point.setId(id + idOffset);
             point.setScreenPos(pos);
             point.setScenePos(m_view->mapFromGlobal(pos.toPoint()));
             point.setPos(m_view->mapFromGlobal(pos.toPoint()));
@@ -523,14 +556,20 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
                 return;
             }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             auto &point = *changed;
             point.setLastPos(point.pos());
             point.setLastScenePos(point.scenePos());
             point.setLastScreenPos(point.screenPos());
+            point.setState(Qt::TouchPointMoved);
+#else
+            auto &point = static_cast<QMutableEventPoint&>(*changed);
+            point.setGlobalLastPosition(point.globalPosition());
+            point.setState(QEventPoint::Updated);
+#endif
             point.setScenePos(m_view->mapFromGlobal(pos.toPoint()));
             point.setPos(m_view->mapFromGlobal(pos.toPoint()));
             point.setScreenPos(pos);
-            point.setState(Qt::TouchPointMoved);
         }
         break;
     case Qt::TouchPointReleased: {
@@ -538,10 +577,16 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
                 return;
             }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             auto &point = *changed;
             point.setLastPos(point.pos());
             point.setLastScreenPos(point.screenPos());
             point.setState(Qt::TouchPointReleased);
+#else
+            auto &point = static_cast<QMutableEventPoint&>(*changed);
+            point.setGlobalLastPosition(point.globalPosition());
+            point.setState(QEventPoint::Released);
+#endif
         }
         break;
     default:
@@ -550,9 +595,11 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
 
     // The touch state value is used in QTouchEvent and includes all the states
     // that the current touch points are in.
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     touchState = std::accumulate(touchPoints.begin(), touchPoints.end(), Qt::TouchPointStates{}, [](auto init, const auto &point) {
         return init | point.state();
     });
+#endif
 }
 
 OffscreenQuickScene::OffscreenQuickScene(QObject *parent)
