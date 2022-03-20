@@ -763,7 +763,7 @@ SurfaceTexture *GlxBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
     return new GlxSurfaceTextureX11(this, pixmap);
 }
 
-QRegion GlxBackend::beginFrame(AbstractOutput *output)
+QRegion GlxBackend::beginFrame(RenderOutput *output)
 {
     Q_UNUSED(output)
 
@@ -780,7 +780,7 @@ QRegion GlxBackend::beginFrame(AbstractOutput *output)
     return repaint;
 }
 
-void GlxBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void GlxBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(output)
 

@@ -54,12 +54,19 @@
 
 #include "scene.h"
 #include "abstract_output.h"
+#include "composite.h"
+#include "deleted.h"
+#include "effects.h"
 #include "internal_client.h"
 #include "platform.h"
 #include "renderlayer.h"
+#include "renderloop.h"
+#include "renderoutput.h"
+#include "shadow.h"
 #include "shadowitem.h"
 #include "surfaceitem.h"
 #include "unmanaged.h"
+#include "wayland_server.h"
 #include "waylandclient.h"
 #include "windowitem.h"
 #include "workspace.h"
@@ -67,14 +74,6 @@
 
 #include <QQuickWindow>
 #include <QVector2D>
-
-#include "composite.h"
-#include "deleted.h"
-#include "effects.h"
-#include "renderloop.h"
-#include "shadow.h"
-#include "wayland_server.h"
-#include "x11client.h"
 #include <QtMath>
 
 #include <KWaylandServer/surface_interface.h>
@@ -82,16 +81,13 @@
 namespace KWin
 {
 
-SceneDelegate::SceneDelegate(Scene *scene, QObject *parent)
-    : RenderLayerDelegate(parent)
-    , m_scene(scene)
+SceneDelegate::SceneDelegate(Scene *scene)
+    : SceneDelegate(scene, nullptr)
 {
-    m_scene->addDelegate(this);
 }
 
-SceneDelegate::SceneDelegate(Scene *scene, AbstractOutput *output, QObject *parent)
-    : RenderLayerDelegate(parent)
-    , m_scene(scene)
+SceneDelegate::SceneDelegate(Scene *scene, RenderOutput *output)
+    : m_scene(scene)
     , m_output(output)
 {
     m_scene->addDelegate(this);
@@ -228,7 +224,7 @@ SurfaceItem *Scene::scanoutCandidate() const
         for (int i = stacking_order.count() - 1; i >= 0; i--) {
             Window *window = stacking_order[i];
             Toplevel *toplevel = window->window();
-            if (toplevel->isOnOutput(painted_screen) && window->isVisible() && toplevel->opacity() > 0) {
+            if (toplevel->isOnRenderOutput(painted_screen) && window->isVisible() && toplevel->opacity() > 0) {
                 AbstractClient *c = dynamic_cast<AbstractClient *>(toplevel);
                 if (!c || !c->isFullScreen() || c->opacity() != 1.0) {
                     break;
@@ -258,21 +254,21 @@ SurfaceItem *Scene::scanoutCandidate() const
     return candidate;
 }
 
-void Scene::prePaint(AbstractOutput *output)
+void Scene::prePaint(RenderOutput *output)
 {
     createStackingOrder();
 
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        painted_screen = kwinApp()->platform()->enabledOutputs().constFirst();
+        painted_screen = output;
         setRenderTargetRect(geometry());
         setRenderTargetScale(1);
     } else {
         painted_screen = output;
         setRenderTargetRect(painted_screen->geometry());
-        setRenderTargetScale(painted_screen->scale());
+        setRenderTargetScale(painted_screen->platformOutput()->scale());
     }
 
-    const RenderLoop *renderLoop = painted_screen->renderLoop();
+    const RenderLoop *renderLoop = painted_screen->platformOutput()->renderLoop();
     const std::chrono::milliseconds presentTime =
         std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
 
@@ -291,7 +287,7 @@ void Scene::prePaint(AbstractOutput *output)
 
     ScreenPrePaintData prePaintData;
     prePaintData.mask = 0;
-    prePaintData.screen = EffectScreenImpl::get(painted_screen);
+    prePaintData.screen = EffectScreenImpl::get(painted_screen->platformOutput());
 
     effects->prePaintScreen(prePaintData, m_expectedPresentTimestamp);
     m_paintContext.damage = prePaintData.paint;
@@ -305,7 +301,7 @@ void Scene::prePaint(AbstractOutput *output)
     }
 }
 
-static void resetRepaintsHelper(Item *item, AbstractOutput *output)
+static void resetRepaintsHelper(Item *item, RenderOutput *output)
 {
     item->resetRepaints(output);
 
@@ -315,7 +311,7 @@ static void resetRepaintsHelper(Item *item, AbstractOutput *output)
     }
 }
 
-static void accumulateRepaints(Item *item, AbstractOutput *output, QRegion *repaints)
+static void accumulateRepaints(Item *item, RenderOutput *output, QRegion *repaints)
 {
     *repaints += item->repaints(output);
     item->resetRepaints(output);
@@ -408,11 +404,11 @@ void Scene::postPaint()
 
     if (waylandServer()) {
         const std::chrono::milliseconds frameTime =
-            std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->renderLoop()->lastPresentationTimestamp());
+            std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->platformOutput()->renderLoop()->lastPresentationTimestamp());
 
         for (Window *window : std::as_const(m_windows)) {
             Toplevel *toplevel = window->window();
-            if (!toplevel->isOnOutput(painted_screen)) {
+            if (!toplevel->isOnRenderOutput(painted_screen)) {
                 continue;
             }
             if (auto surface = toplevel->surface()) {
@@ -491,7 +487,7 @@ QRegion Scene::mapToRenderTarget(const QRegion &region) const
 
 void Scene::paintScreen(const QRegion &region)
 {
-    ScreenPaintData data(m_renderTargetProjectionMatrix, EffectScreenImpl::get(painted_screen));
+    ScreenPaintData data(m_renderTargetProjectionMatrix, EffectScreenImpl::get(painted_screen->platformOutput()));
     effects->paintScreen(m_paintContext.mask, region, data);
 
     m_paintScreenCount = 0;
@@ -681,7 +677,7 @@ QPainter *Scene::scenePainter() const
     return nullptr;
 }
 
-QImage *Scene::qpainterRenderBuffer(AbstractOutput *output) const
+QImage *Scene::qpainterRenderBuffer(RenderOutput *output) const
 {
     Q_UNUSED(output)
     return nullptr;

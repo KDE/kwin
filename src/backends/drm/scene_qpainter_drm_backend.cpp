@@ -14,7 +14,7 @@
 #include "drm_pipeline.h"
 #include "drm_qpainter_layer.h"
 #include "drm_virtual_output.h"
-#include "renderloop_p.h"
+#include "renderoutput.h"
 
 #include <drm_fourcc.h>
 
@@ -33,24 +33,24 @@ DrmQPainterBackend::~DrmQPainterBackend()
     m_backend->setRenderBackend(nullptr);
 }
 
-QImage *DrmQPainterBackend::bufferForScreen(AbstractOutput *output)
+QImage *DrmQPainterBackend::bufferForScreen(RenderOutput *output)
 {
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
+    const auto drmOutput = static_cast<DrmAbstractOutput *>(output->platformOutput());
     return dynamic_cast<QPainterLayer *>(drmOutput->outputLayer())->image();
 }
 
-QRegion DrmQPainterBackend::beginFrame(AbstractOutput *output)
+QRegion DrmQPainterBackend::beginFrame(RenderOutput *output)
 {
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
+    const auto drmOutput = static_cast<DrmAbstractOutput *>(output->platformOutput());
     return drmOutput->outputLayer()->startRendering().value_or(QRegion());
 }
 
-void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damage)
+void DrmQPainterBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damage)
 {
     Q_UNUSED(renderedRegion)
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
+    const auto drmOutput = static_cast<DrmAbstractOutput *>(output->platformOutput());
     drmOutput->outputLayer()->endRendering(damage);
-    static_cast<DrmAbstractOutput *>(output)->present();
+    drmOutput->present();
 }
 
 QSharedPointer<DrmPipelineLayer> DrmQPainterBackend::createDrmPipelineLayer(DrmPipeline *pipeline)

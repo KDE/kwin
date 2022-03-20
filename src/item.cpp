@@ -20,7 +20,9 @@ namespace KWin
 Item::Item(Item *parent)
 {
     setParentItem(parent);
-    connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Item::removeRepaints);
+    connect(kwinApp()->platform(), &Platform::outputDisabled, this, [this](auto output) {
+        removeRepaints(output->renderOutput());
+    });
 }
 
 Item::~Item()
@@ -261,12 +263,12 @@ void Item::scheduleRepaintInternal(const QRegion &region)
         for (const auto &output : outputs) {
             const QRegion dirtyRegion = globalRegion & output->geometry();
             if (!dirtyRegion.isEmpty()) {
-                m_repaints[output] += dirtyRegion;
+                m_repaints[output->renderOutput()] += dirtyRegion;
                 output->renderLoop()->scheduleRepaint(this);
             }
         }
     } else {
-        m_repaints[outputs.constFirst()] += globalRegion;
+        m_repaints[outputs.constFirst()->renderOutput()] += globalRegion;
         outputs.constFirst()->renderLoop()->scheduleRepaint(this);
     }
 }
@@ -311,17 +313,17 @@ WindowQuadList Item::quads() const
     return m_quads.value();
 }
 
-QRegion Item::repaints(AbstractOutput *output) const
+QRegion Item::repaints(RenderOutput *output) const
 {
     return m_repaints.value(output, QRect(QPoint(0, 0), screens()->size()));
 }
 
-void Item::resetRepaints(AbstractOutput *output)
+void Item::resetRepaints(RenderOutput *output)
 {
     m_repaints.insert(output, QRegion());
 }
 
-void Item::removeRepaints(AbstractOutput *output)
+void Item::removeRepaints(RenderOutput *output)
 {
     m_repaints.remove(output);
 }

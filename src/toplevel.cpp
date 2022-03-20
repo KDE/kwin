@@ -18,6 +18,7 @@
 #include "composite.h"
 #include "effects.h"
 #include "platform.h"
+#include "renderoutput.h"
 #include "screens.h"
 #include "shadow.h"
 #include "shadowitem.h"
@@ -421,6 +422,11 @@ bool Toplevel::isOnActiveOutput() const
 }
 
 bool Toplevel::isOnOutput(AbstractOutput *output) const
+{
+    return output->geometry().intersects(frameGeometry());
+}
+
+bool Toplevel::isOnRenderOutput(RenderOutput *output) const
 {
     return output->geometry().intersects(frameGeometry());
 }

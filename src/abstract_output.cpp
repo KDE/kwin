@@ -8,7 +8,8 @@
 */
 
 #include "abstract_output.h"
-#include "outputlayer.h"
+#include "renderoutput.h"
+
 #include <KConfigGroup>
 #include <KSharedConfig>
 
@@ -79,17 +80,12 @@ QDebug operator<<(QDebug debug, const AbstractOutput *output)
 
 AbstractOutput::AbstractOutput(QObject *parent)
     : QObject(parent)
-    , m_layer(new OutputLayer(this))
+    , m_renderOutput(new RenderOutput(this))
 {
 }
 
 AbstractOutput::~AbstractOutput()
 {
-}
-
-OutputLayer *AbstractOutput::layer() const
-{
-    return m_layer;
 }
 
 QUuid AbstractOutput::uuid() const
@@ -148,20 +144,6 @@ QString AbstractOutput::serialNumber() const
     return QString();
 }
 
-void AbstractOutput::inhibitDirectScanout()
-{
-    m_directScanoutCount++;
-}
-void AbstractOutput::uninhibitDirectScanout()
-{
-    m_directScanoutCount--;
-}
-
-bool AbstractOutput::directScanoutInhibited() const
-{
-    return m_directScanoutCount;
-}
-
 std::chrono::milliseconds AbstractOutput::dimAnimationTime()
 {
     // See kscreen.kcfg
@@ -171,6 +153,11 @@ std::chrono::milliseconds AbstractOutput::dimAnimationTime()
 bool AbstractOutput::usesSoftwareCursor() const
 {
     return true;
+}
+
+RenderOutput *AbstractOutput::renderOutput() const
+{
+    return m_renderOutput.get();
 }
 
 } // namespace KWin

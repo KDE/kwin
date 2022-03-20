@@ -27,12 +27,12 @@ VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
 
 VirtualQPainterBackend::~VirtualQPainterBackend() = default;
 
-QImage *VirtualQPainterBackend::bufferForScreen(AbstractOutput *output)
+QImage *VirtualQPainterBackend::bufferForScreen(RenderOutput *output)
 {
-    return &m_backBuffers[output];
+    return &m_backBuffers[output->platformOutput()];
 }
 
-QRegion VirtualQPainterBackend::beginFrame(AbstractOutput *output)
+QRegion VirtualQPainterBackend::beginFrame(RenderOutput *output)
 {
     return output->geometry();
 }
@@ -48,15 +48,15 @@ void VirtualQPainterBackend::createOutputs()
     }
 }
 
-void VirtualQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void VirtualQPainterBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
 
-    static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
+    static_cast<VirtualOutput *>(output->platformOutput())->vsyncMonitor()->arm();
 
     if (m_backend->saveFrames()) {
-        m_backBuffers[output].save(QStringLiteral("%1/%s-%3.png").arg(m_backend->screenshotDirPath(), output->name(), QString::number(m_frameCounter++)));
+        m_backBuffers[output->platformOutput()].save(QStringLiteral("%1/%s-%3.png").arg(m_backend->screenshotDirPath(), output->platformOutput()->name(), QString::number(m_frameCounter++)));
     }
 }
 

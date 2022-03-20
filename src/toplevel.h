@@ -42,6 +42,7 @@ class Shadow;
 class SurfaceItem;
 class VirtualDesktop;
 class WindowItem;
+class RenderOutput;
 
 /**
  * Enum to describe the reason why a Toplevel has to be released.
@@ -340,6 +341,7 @@ public:
     int width() const;
     int height() const;
     bool isOnOutput(AbstractOutput *output) const;
+    bool isOnRenderOutput(RenderOutput *output) const;
     bool isOnActiveOutput() const;
     int screen() const; // the screen where the center is
     AbstractOutput *output() const;

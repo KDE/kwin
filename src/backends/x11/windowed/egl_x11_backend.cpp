@@ -11,6 +11,7 @@
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
 #include "main.h"
+#include "renderoutput.h"
 #include "screens.h"
 #include "softwarevsyncmonitor.h"
 #include "x11windowed_backend.h"
@@ -66,22 +67,22 @@ bool EglX11Backend::createSurfaces()
     return true;
 }
 
-QRegion EglX11Backend::beginFrame(AbstractOutput *output)
+QRegion EglX11Backend::beginFrame(RenderOutput *output)
 {
-    const EglX11Output *rendererOutput = m_outputs[output];
+    const EglX11Output *rendererOutput = m_outputs[output->platformOutput()];
     makeContextCurrent(rendererOutput->m_eglSurface);
     GLRenderTarget::pushRenderTarget(rendererOutput->m_renderTarget.data());
     return output->geometry();
 }
 
-void EglX11Backend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglX11Backend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(damagedRegion)
 
-    static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
+    static_cast<X11WindowedOutput *>(output->platformOutput())->vsyncMonitor()->arm();
     GLRenderTarget::popRenderTarget();
 
-    presentSurface(m_outputs[output]->m_eglSurface, renderedRegion, output->geometry());
+    presentSurface(m_outputs[output->platformOutput()]->m_eglSurface, renderedRegion, output->geometry());
 }
 
 void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)

@@ -83,10 +83,10 @@ public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;
 
-    QImage *bufferForScreen(AbstractOutput *output) override;
+    QImage *bufferForScreen(RenderOutput *output) override;
 
-    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    QRegion beginFrame(AbstractOutput *output) override;
+    void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QRegion beginFrame(RenderOutput *output) override;
 
 private:
     void createOutput(AbstractOutput *waylandOutput);

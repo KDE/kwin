@@ -21,6 +21,7 @@
 #include "logging.h"
 #include "options.h"
 
+#include "renderoutput.h"
 #include "screens.h"
 #include "wayland_server.h"
 
@@ -324,11 +325,11 @@ QSharedPointer<KWin::GLTexture> EglWaylandBackend::textureForOutput(KWin::Abstra
     return texture;
 }
 
-void EglWaylandBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &damagedRegion)
+void EglWaylandBackend::aboutToStartPainting(RenderOutput *output, const QRegion &damagedRegion)
 {
     Q_ASSERT_X(output, "aboutToStartPainting", "not using per screen rendering");
-    Q_ASSERT(m_outputs.contains(output));
-    const auto &eglOutput = m_outputs[output];
+    Q_ASSERT(m_outputs.contains(output->platformOutput()));
+    const auto &eglOutput = m_outputs[output->platformOutput()];
     if (eglOutput->m_bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
         QVector<EGLint> rects = regionToRects(damagedRegion, eglOutput->m_waylandOutput);
         const bool correct = eglSetDamageRegionKHR(eglDisplay(), eglOutput->m_eglSurface,
@@ -374,12 +375,12 @@ SurfaceTexture *EglWaylandBackend::createSurfaceTextureWayland(SurfacePixmapWayl
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-QRegion EglWaylandBackend::beginFrame(AbstractOutput *output)
+QRegion EglWaylandBackend::beginFrame(RenderOutput *output)
 {
-    Q_ASSERT(m_outputs.contains(output));
+    Q_ASSERT(m_outputs.contains(output->platformOutput()));
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
-    const auto &eglOutput = m_outputs[output];
+    const auto &eglOutput = m_outputs[output->platformOutput()];
     makeContextCurrent(eglOutput);
 
     GLRenderTarget::pushRenderTarget(eglOutput->renderTarget());
@@ -391,14 +392,14 @@ QRegion EglWaylandBackend::beginFrame(AbstractOutput *output)
     return QRegion();
 }
 
-void EglWaylandBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglWaylandBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_ASSERT(m_outputs.contains(output));
+    Q_ASSERT(m_outputs.contains(output->platformOutput()));
     Q_UNUSED(renderedRegion);
 
     GLRenderTarget::popRenderTarget();
 
-    const auto &eglOutput = m_outputs[output];
+    const auto &eglOutput = m_outputs[output->platformOutput()];
     presentOnSurface(eglOutput, damagedRegion);
 
     if (supportsBufferAge()) {

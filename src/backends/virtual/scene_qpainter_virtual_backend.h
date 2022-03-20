@@ -27,9 +27,9 @@ public:
     VirtualQPainterBackend(VirtualBackend *backend);
     ~VirtualQPainterBackend() override;
 
-    QImage *bufferForScreen(AbstractOutput *output) override;
-    QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QImage *bufferForScreen(RenderOutput *output) override;
+    QRegion beginFrame(RenderOutput *output) override;
+    void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
     void createOutputs();

@@ -75,8 +75,8 @@ public:
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
-    QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QRegion beginFrame(RenderOutput *output) override;
+    void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void init() override;
 
     bool havePlatformBase() const
@@ -85,7 +85,7 @@ public:
     }
 
     QSharedPointer<KWin::GLTexture> textureForOutput(KWin::AbstractOutput *output) const override;
-    void aboutToStartPainting(AbstractOutput *output, const QRegion &damage) override;
+    void aboutToStartPainting(RenderOutput *output, const QRegion &damage) override;
 
 private:
     bool initializeEgl();

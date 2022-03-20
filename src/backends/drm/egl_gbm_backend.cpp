@@ -27,6 +27,7 @@
 #include "logging.h"
 #include "options.h"
 #include "renderloop_p.h"
+#include "renderoutput.h"
 #include "screens.h"
 #include "shadowbuffer.h"
 #include "surfaceitem_wayland.h"
@@ -216,9 +217,9 @@ bool EglGbmBackend::initBufferConfigs()
     return false;
 }
 
-void EglGbmBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &damagedRegion)
+void EglGbmBackend::aboutToStartPainting(RenderOutput *output, const QRegion &damagedRegion)
 {
-    static_cast<DrmAbstractOutput *>(output)->outputLayer()->aboutToStartPainting(damagedRegion);
+    static_cast<DrmAbstractOutput *>(output->platformOutput())->outputLayer()->aboutToStartPainting(damagedRegion);
 }
 
 SurfaceTexture *EglGbmBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
@@ -231,24 +232,24 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-QRegion EglGbmBackend::beginFrame(AbstractOutput *output)
+QRegion EglGbmBackend::beginFrame(RenderOutput *output)
 {
-    return static_cast<DrmAbstractOutput *>(output)->outputLayer()->startRendering().value_or(QRegion());
+    return static_cast<DrmAbstractOutput *>(output->platformOutput())->outputLayer()->startRendering().value_or(QRegion());
 }
 
-void EglGbmBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
+void EglGbmBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion,
                              const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
 
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
+    const auto drmOutput = static_cast<DrmAbstractOutput *>(output->platformOutput());
     drmOutput->outputLayer()->endRendering(damagedRegion);
     drmOutput->present();
 }
 
-bool EglGbmBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)
+bool EglGbmBackend::scanout(RenderOutput *output, SurfaceItem *surfaceItem)
 {
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
+    const auto drmOutput = static_cast<DrmAbstractOutput *>(output->platformOutput());
     if (drmOutput->outputLayer()->scanout(surfaceItem)) {
         drmOutput->present();
         return true;

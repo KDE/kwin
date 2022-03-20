@@ -8,6 +8,7 @@
 */
 #include "scene_qpainter_x11_backend.h"
 #include "main.h"
+#include "renderoutput.h"
 #include "screens.h"
 #include "softwarevsyncmonitor.h"
 #include "x11windowed_backend.h"
@@ -45,22 +46,22 @@ void X11WindowedQPainterBackend::createOutputs()
     }
 }
 
-QImage *X11WindowedQPainterBackend::bufferForScreen(AbstractOutput *output)
+QImage *X11WindowedQPainterBackend::bufferForScreen(RenderOutput *output)
 {
-    return &m_outputs[output]->buffer;
+    return &m_outputs[output->platformOutput()]->buffer;
 }
 
-QRegion X11WindowedQPainterBackend::beginFrame(AbstractOutput *output)
+QRegion X11WindowedQPainterBackend::beginFrame(RenderOutput *output)
 {
     return output->geometry();
 }
 
-void X11WindowedQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void X11WindowedQPainterBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
 
-    static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
+    static_cast<X11WindowedOutput *>(output->platformOutput())->vsyncMonitor()->arm();
 
     xcb_connection_t *c = m_backend->connection();
     const xcb_window_t window = m_backend->window();
@@ -69,7 +70,7 @@ void X11WindowedQPainterBackend::endFrame(AbstractOutput *output, const QRegion 
         xcb_create_gc(c, m_gc, window, 0, nullptr);
     }
 
-    Output *rendererOutput = m_outputs[output];
+    Output *rendererOutput = m_outputs[output->platformOutput()];
     Q_ASSERT(rendererOutput);
 
     // TODO: only update changes?

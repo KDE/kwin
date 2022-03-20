@@ -17,7 +17,7 @@ CursorView::CursorView(QObject *parent)
 {
 }
 
-CursorDelegate::CursorDelegate(AbstractOutput *output, CursorView *view)
+CursorDelegate::CursorDelegate(RenderOutput *output, CursorView *view)
     : m_view(view)
     , m_output(output)
 {

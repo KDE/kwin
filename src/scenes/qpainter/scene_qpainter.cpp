@@ -19,6 +19,7 @@
 #include "main.h"
 #include "platform.h"
 #include "renderloop.h"
+#include "renderoutput.h"
 #include "screens.h"
 #include "surfaceitem.h"
 #include "toplevel.h"
@@ -114,7 +115,7 @@ Shadow *SceneQPainter::createShadow(Toplevel *toplevel)
     return new SceneQPainterShadow(toplevel);
 }
 
-QImage *SceneQPainter::qpainterRenderBuffer(AbstractOutput *output) const
+QImage *SceneQPainter::qpainterRenderBuffer(RenderOutput *output) const
 {
     return m_backend->bufferForScreen(output);
 }

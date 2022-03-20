@@ -13,6 +13,7 @@
 
 #include "composite.h"
 #include "logging.h"
+#include "renderoutput.h"
 
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/shm_pool.h>
@@ -168,23 +169,23 @@ void WaylandQPainterBackend::createOutput(AbstractOutput *waylandOutput)
     m_outputs.insert(waylandOutput, output);
 }
 
-void WaylandQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void WaylandQPainterBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
-    WaylandQPainterOutput *rendererOutput = m_outputs[output];
+    WaylandQPainterOutput *rendererOutput = m_outputs[output->platformOutput()];
     Q_ASSERT(rendererOutput);
 
     rendererOutput->present(rendererOutput->mapToLocal(damagedRegion));
 }
 
-QImage *WaylandQPainterBackend::bufferForScreen(AbstractOutput *output)
+QImage *WaylandQPainterBackend::bufferForScreen(RenderOutput *output)
 {
-    return &m_outputs[output]->back()->image;
+    return &m_outputs[output->platformOutput()]->back()->image;
 }
 
-QRegion WaylandQPainterBackend::beginFrame(AbstractOutput *output)
+QRegion WaylandQPainterBackend::beginFrame(RenderOutput *output)
 {
-    WaylandQPainterOutput *rendererOutput = m_outputs[output];
+    WaylandQPainterOutput *rendererOutput = m_outputs[output->platformOutput()];
     Q_ASSERT(rendererOutput);
 
     WaylandQPainterBufferSlot *slot = rendererOutput->acquire();

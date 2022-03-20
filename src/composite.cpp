@@ -26,6 +26,7 @@
 #include "qpainterbackend.h"
 #include "renderlayer.h"
 #include "renderloop.h"
+#include "renderoutput.h"
 #include "scene.h"
 #include "scenes/opengl/scene_opengl.h"
 #include "scenes/qpainter/scene_qpainter.h"
@@ -420,7 +421,7 @@ void Compositor::startupWithWorkspace()
 AbstractOutput *Compositor::findOutput(RenderLoop *loop) const
 {
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    for (AbstractOutput *output : outputs) {
+    for (const auto &output : outputs) {
         if (output->renderLoop() == loop) {
             return output;
         }
@@ -433,7 +434,7 @@ void Compositor::addOutput(AbstractOutput *output)
     Q_ASSERT(kwinApp()->operationMode() != Application::OperationModeX11);
 
     auto workspaceLayer = new RenderLayer(output->renderLoop());
-    workspaceLayer->setDelegate(new SceneDelegate(m_scene, output));
+    workspaceLayer->setDelegate(new SceneDelegate(m_scene, output->renderOutput()));
     workspaceLayer->setGeometry(output->geometry());
     connect(output, &AbstractOutput::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
         workspaceLayer->setGeometry(output->geometry());
@@ -441,7 +442,7 @@ void Compositor::addOutput(AbstractOutput *output)
 
     auto cursorLayer = new RenderLayer(output->renderLoop());
     cursorLayer->setVisible(false);
-    cursorLayer->setDelegate(new CursorDelegate(output, m_cursorView));
+    cursorLayer->setDelegate(new CursorDelegate(output->renderOutput(), m_cursorView));
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
 
@@ -651,8 +652,9 @@ void Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
-    AbstractOutput *output = findOutput(renderLoop);
-    OutputLayer *outputLayer = output->layer();
+    const auto output = findOutput(renderLoop);
+    const auto renderOutput = output->renderOutput();
+    OutputLayer *outputLayer = renderOutput->layer();
     fTraceDuration("Paint (", output->name(), ")");
 
     RenderLayer *superLayer = m_superlayers[renderLoop];
@@ -669,8 +671,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
             return sublayer->isVisible();
         });
-        if (scanoutPossible && !output->directScanoutInhibited()) {
-            directScanout = m_backend->scanout(output, scanoutCandidate);
+        if (scanoutPossible) {
+            directScanout = m_backend->scanout(renderOutput, scanoutCandidate);
         }
     }
 
@@ -681,13 +683,13 @@ void Compositor::composite(RenderLoop *renderLoop)
         outputLayer->resetRepaints();
         preparePaintPass(superLayer, &surfaceDamage);
 
-        const QRegion repair = m_backend->beginFrame(output);
+        const QRegion repair = m_backend->beginFrame(renderOutput);
         const QRegion bufferDamage = surfaceDamage.united(repair);
-        m_backend->aboutToStartPainting(output, bufferDamage);
+        m_backend->aboutToStartPainting(renderOutput, bufferDamage);
 
         paintPass(superLayer, bufferDamage);
         renderLoop->endFrame();
-        m_backend->endFrame(output, bufferDamage, surfaceDamage);
+        m_backend->endFrame(renderOutput, bufferDamage, surfaceDamage);
     }
 
     postPaintPass(superLayer);

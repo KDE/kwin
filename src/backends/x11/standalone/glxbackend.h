@@ -69,8 +69,8 @@ public:
     GlxBackend(Display *display, X11StandalonePlatform *backend);
     ~GlxBackend() override;
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
-    QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QRegion beginFrame(RenderOutput *output) override;
+    void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool makeCurrent() override;
     void doneCurrent() override;
     OverlayWindow *overlayWindow() const override;

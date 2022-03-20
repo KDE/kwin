@@ -99,6 +99,7 @@ target_sources(kwin PRIVATE
     renderlayer.cpp
     renderlayerdelegate.cpp
     renderloop.cpp
+    renderoutput.cpp
     rootinfo_filter.cpp
     rulebooksettings.cpp
     rules.cpp

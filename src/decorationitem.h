@@ -19,6 +19,7 @@ namespace KWin
 class AbstractClient;
 class Deleted;
 class Toplevel;
+class AbstractOutput;
 
 namespace Decoration
 {

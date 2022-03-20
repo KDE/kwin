@@ -9,6 +9,7 @@
 #include "composite.h"
 #include "cursor.h"
 #include "qpainterbackend.h"
+#include "renderoutput.h"
 
 #include <QPainter>
 
@@ -20,7 +21,7 @@ QPainterCursorView::QPainterCursorView(QObject *parent)
 {
 }
 
-void QPainterCursorView::paint(AbstractOutput *output, const QRegion &region)
+void QPainterCursorView::paint(RenderOutput *output, const QRegion &region)
 {
     QImage *renderTarget = static_cast<QPainterBackend *>(Compositor::self()->backend())->bufferForScreen(output);
     if (Q_UNLIKELY(!renderTarget)) {

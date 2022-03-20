@@ -9,6 +9,7 @@
 #include "cursor.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
+#include "renderoutput.h"
 
 namespace KWin
 {
@@ -22,7 +23,7 @@ OpenGLCursorView::~OpenGLCursorView()
 {
 }
 
-void OpenGLCursorView::paint(AbstractOutput *output, const QRegion &region)
+void OpenGLCursorView::paint(RenderOutput *output, const QRegion &region)
 {
     const Cursor *cursor = Cursors::self()->currentCursor();
     auto allocateTexture = [this]() {

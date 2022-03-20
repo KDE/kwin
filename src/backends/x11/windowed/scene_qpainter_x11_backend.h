@@ -30,9 +30,9 @@ public:
     X11WindowedQPainterBackend(X11WindowedBackend *backend);
     ~X11WindowedQPainterBackend() override;
 
-    QImage *bufferForScreen(AbstractOutput *output) override;
-    QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QImage *bufferForScreen(RenderOutput *output) override;
+    QRegion beginFrame(RenderOutput *output) override;
+    void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
     void createOutputs();

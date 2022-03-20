@@ -44,6 +44,7 @@
 #include "kwinglutils.h"
 #include "kwinoffscreenquickview.h"
 #include "platform.h"
+#include "renderoutput.h"
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
@@ -1798,7 +1799,7 @@ void EffectsHandlerImpl::slotOutputDisabled(AbstractOutput *output)
 
 void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
 {
-    auto output = static_cast<EffectScreenImpl *>(screen)->platformOutput();
+    const auto output = static_cast<EffectScreenImpl *>(screen)->platformOutput()->renderOutput();
     m_scene->prePaint(output);
     m_scene->paint(output->geometry());
     m_scene->postPaint();

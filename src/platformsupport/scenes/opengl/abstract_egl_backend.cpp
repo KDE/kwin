@@ -12,8 +12,10 @@
 #include "egl_dmabuf.h"
 #include "options.h"
 #include "platform.h"
+#include "renderoutput.h"
 #include "utils/egl_context_attribute_builder.h"
 #include "wayland_server.h"
+
 #include <KWaylandServer/display.h>
 // kwin libs
 #include <kwinglplatform.h>

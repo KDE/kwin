@@ -105,7 +105,7 @@ void EglBackend::screenGeometryChanged()
     m_renderTarget.reset(new GLRenderTarget(0, screens()->size()));
 }
 
-QRegion EglBackend::beginFrame(AbstractOutput *output)
+QRegion EglBackend::beginFrame(RenderOutput *output)
 {
     Q_UNUSED(output)
     makeCurrent();
@@ -122,7 +122,7 @@ QRegion EglBackend::beginFrame(AbstractOutput *output)
     return repaint;
 }
 
-void EglBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(output)
 

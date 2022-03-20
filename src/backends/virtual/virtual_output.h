@@ -10,6 +10,7 @@
 #define KWIN_VIRTUAL_OUTPUT_H
 
 #include "abstract_wayland_output.h"
+#include "renderoutput.h"
 
 #include <QObject>
 #include <QRect>

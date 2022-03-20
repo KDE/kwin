@@ -43,14 +43,15 @@ class SurfacePixmapWayland;
 class SurfacePixmapX11;
 class SurfaceTexture;
 class WindowItem;
+class RenderOutput;
 
 class SceneDelegate : public RenderLayerDelegate
 {
     Q_OBJECT
 
 public:
-    explicit SceneDelegate(Scene *scene, QObject *parent = nullptr);
-    explicit SceneDelegate(Scene *scene, AbstractOutput *output, QObject *parent = nullptr);
+    explicit SceneDelegate(Scene *scene);
+    explicit SceneDelegate(Scene *scene, RenderOutput *output);
     ~SceneDelegate() override;
 
     QRegion repaints() const override;
@@ -61,7 +62,7 @@ public:
 
 private:
     Scene *m_scene;
-    AbstractOutput *m_output = nullptr;
+    RenderOutput *const m_output;
 };
 
 class KWIN_EXPORT Scene : public QObject
@@ -95,7 +96,7 @@ public:
     virtual bool initFailed() const = 0;
 
     SurfaceItem *scanoutCandidate() const;
-    void prePaint(AbstractOutput *output);
+    void prePaint(RenderOutput *output);
     void postPaint();
     virtual void paint(const QRegion &region) = 0;
 
@@ -182,7 +183,7 @@ public:
      * The render buffer used by a QPainter based compositor.
      * Default implementation returns @c nullptr.
      */
-    virtual QImage *qpainterRenderBuffer(AbstractOutput *output) const;
+    virtual QImage *qpainterRenderBuffer(RenderOutput *output) const;
 
     /**
      * The backend specific extensions (e.g. EGL/GLX extensions).
@@ -264,7 +265,7 @@ protected:
     };
 
     // The screen that is being currently painted
-    AbstractOutput *painted_screen = nullptr;
+    RenderOutput *painted_screen = nullptr;
 
     // windows in their stacking order
     QVector<Window *> stacking_order;

@@ -30,9 +30,9 @@ public:
     DrmQPainterBackend(DrmBackend *backend);
     ~DrmQPainterBackend();
 
-    QImage *bufferForScreen(AbstractOutput *output) override;
-    QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QImage *bufferForScreen(RenderOutput *output) override;
+    QRegion beginFrame(RenderOutput *output) override;
+    void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) override;
     QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
