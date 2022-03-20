@@ -24,6 +24,7 @@
         "Description[sk]": "Zasunie okná pri zdvihnutí iného okna",
         "Description[sl]": "Zdrsni okna nazaj, ko se dvigne drugo",
         "Description[sv]": "Låt fönster skjutas tillbaka när ett annat fönster höjs",
+        "Description[tr]": "Başka bir pencere yükseltildiğinde pencereleri geri kaydır",
         "Description[uk]": "Ковзання вікон на задній план під час підняття інших вікон",
         "Description[x-test]": "xxSlide back windows when another window is raisedxx",
         "Description[zh_CN]": "激活一个窗口时呈现其他窗口的后滑动效",
@@ -52,6 +53,7 @@
         "Name[sk]": "Zasunúť",
         "Name[sl]": "Zdrsni nazaj",
         "Name[sv]": "Skjut tillbaka",
+        "Name[tr]": "Geri Kaydır",
         "Name[uk]": "Зниження",
         "Name[x-test]": "xxSlide Backxx",
         "Name[zh_CN]": "窗口后滑动效"

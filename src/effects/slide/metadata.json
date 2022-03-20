@@ -23,6 +23,7 @@
         "Description[sk]": "Kľzať plochy pri prepínaní virtuálnych plôch",
         "Description[sl]": "Zdrsni namizja ob preklapljanju navideznih omizij",
         "Description[sv]": "Låt skrivbord skjutas vid byte av virtuella skrivbord",
+        "Description[tr]": "Sanal masaüstleri değiştirilirken masaüstlerini kaydır",
         "Description[uk]": "Ковзання стільниць під час час перемикання стільниць",
         "Description[x-test]": "xxSlide desktops when switching virtual desktopsxx",
         "Description[zh_CN]": "虚拟桌面切换时呈现滑动动效",
@@ -52,6 +53,7 @@
         "Name[sk]": "Posúvať",
         "Name[sl]": "Zdrsni",
         "Name[sv]": "Skjut",
+        "Name[tr]": "Kaydır",
         "Name[uk]": "Ковзання",
         "Name[x-test]": "xxSlidexx",
         "Name[zh_CN]": "滑动"

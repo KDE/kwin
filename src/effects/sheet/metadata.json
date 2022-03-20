@@ -24,6 +24,7 @@
         "Description[sk]": "Modálne dialógy sa plynule objavia/zmiznú pri ich zobrazení alebo skrytí",
         "Description[sl]": "Modalna okna gladko priletijo in odletijo, kadar se prikažejo ali skrijejo",
         "Description[sv]": "Gör att dialogrutor mjukt flyger in eller ut när de visas eller döljs",
+        "Description[tr]": "Kipsel iletişim kutuları gösterilirken veya gizlenirken pürüzsüzce uçmalarını sağlar",
         "Description[uk]": "Плавне влітання або відлітання вікон під час їх появи або приховування",
         "Description[x-test]": "xxMake modal dialogs smoothly fly in and out when they are shown or hiddenxx",
         "Description[zh_CN]": "对话框显示/隐藏时绘制过渡动画",
@@ -52,6 +53,7 @@
         "Name[sk]": "List",
         "Name[sl]": "List",
         "Name[sv]": "Blad",
+        "Name[tr]": "Sayfa",
         "Name[uk]": "Аркуш",
         "Name[x-test]": "xxSheetxx",
         "Name[zh_CN]": "对话框显隐过渡"

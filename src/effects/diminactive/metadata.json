@@ -24,6 +24,7 @@
         "Description[sk]": "Stmaví neaktívne okná",
         "Description[sl]": "Potemni nedejavna okna",
         "Description[sv]": "Gör inaktiva fönster mörkare",
+        "Description[tr]": "Etkin olmayan pencereleri koyulaştır",
         "Description[uk]": "Затемнення неактивних вікон",
         "Description[x-test]": "xxDarken inactive windowsxx",
         "Description[zh_CN]": "非活动的窗口将会变暗",
@@ -53,6 +54,7 @@
         "Name[sk]": "Stmaviť neaktívne",
         "Name[sl]": "Zatemni nedejavne",
         "Name[sv]": "Dämpa inaktiva",
+        "Name[tr]": "Etkin Olmayanları Karart",
         "Name[uk]": "Затемнення неактивних",
         "Name[x-test]": "xxDim Inactivexx",
         "Name[zh_CN]": "非活动窗口变暗"

@@ -24,6 +24,7 @@
         "Description[sk]": "Zväčší časť obrazovky, ktorá je okolo kurzora myši",
         "Description[sl]": "Povečaj del zaslona, ki je blizu miškinega kazalca",
         "Description[sv]": "Förstorar den del av skärmen som är nära muspekaren",
+        "Description[tr]": "Fare imlecinin yakınındaki ekran bölümünü büyüt",
         "Description[uk]": "Збільшення частини екрана поруч з вказівником миші",
         "Description[x-test]": "xxMagnify the section of the screen that is near the mouse cursorxx",
         "Description[zh_CN]": "放大显示鼠标指针附近的一块方形区域的屏幕内容",
@@ -53,6 +54,7 @@
         "Name[sk]": "Lupa",
         "Name[sl]": "Povečevalno steklo",
         "Name[sv]": "Förstoringsglas",
+        "Name[tr]": "Büyüteç",
         "Name[uk]": "Лупа",
         "Name[x-test]": "xxMagnifierxx",
         "Name[zh_CN]": "放大镜 (方形)"

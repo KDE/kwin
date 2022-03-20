@@ -24,6 +24,7 @@
         "Description[sk]": "Pomocný efekt pre odozvu pri spustení",
         "Description[sl]": "Učinek pomočnika pri odzivu začetka",
         "Description[sv]": "Hjälpeffekt för gensvar vid programstart",
+        "Description[tr]": "Başlangıç geri bildirimi için yardımcı efekti",
         "Description[uk]": "Допоміжний ефект перегляду повідомлень, що надсилаються програмою під час запуску",
         "Description[x-test]": "xxHelper effect for startup feedbackxx",
         "Description[zh_CN]": "程序启动反馈辅助效果",
@@ -52,6 +53,7 @@
         "Name[sk]": "Odozva pri spustení",
         "Name[sl]": "Povratni vpliv začetka",
         "Name[sv]": "Gensvar vid programstart",
+        "Name[tr]": "Başlangıç Geri Bildirimi",
         "Name[uk]": "Повідомлення під час запуску",
         "Name[x-test]": "xxStartup Feedbackxx",
         "Name[zh_CN]": "程序启动反馈"

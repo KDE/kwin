@@ -24,6 +24,7 @@
         "Description[sk]": "Deformuje okná pri ich presúvaní",
         "Description[sl]": "Deformiraj okna kadar se premikajo",
         "Description[sv]": "Förvräng fönster medan de flyttas",
+        "Description[tr]": "Pencereler taşınırken onları deforme et",
         "Description[uk]": "Деформація вікон під час їхнього пересування",
         "Description[x-test]": "xxDeform windows while they are movingxx",
         "Description[zh_CN]": "窗口被移动时会呈现惯性晃动特效",
@@ -53,6 +54,7 @@
         "Name[sk]": "Zvlnené okná",
         "Name[sl]": "Trepetajoča okna",
         "Name[sv]": "Ostadiga fönster",
+        "Name[tr]": "Oynak Pencereler",
         "Name[uk]": "Желейні вікна",
         "Name[x-test]": "xxWobbly Windowsxx",
         "Name[zh_CN]": "窗口惯性晃动"

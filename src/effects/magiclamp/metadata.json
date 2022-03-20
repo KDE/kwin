@@ -24,6 +24,7 @@
         "Description[sk]": "Simuluje efekt magickej lampy pri minimalizovaní okien",
         "Description[sl]": "Simuliraj magično svetilko pri strnjevanju oken",
         "Description[sv]": "Simulera en magisk lanterna vid minimering av fönster",
+        "Description[tr]": "Pencereleri küçültürken sihirli bir lambaya öykün",
         "Description[uk]": "Імітація ефекту чарівної лампи під час мінімізації вікон",
         "Description[x-test]": "xxSimulate a magic lamp when minimizing windowsxx",
         "Description[zh_CN]": "窗口最小化时绘制仿照神灯的过渡动画",
@@ -53,6 +54,7 @@
         "Name[sk]": "Magická lampa",
         "Name[sl]": "Magična svetilka",
         "Name[sv]": "Magisk lanterna",
+        "Name[tr]": "Sihirli Lamba",
         "Name[uk]": "Чарівна лампа",
         "Name[x-test]": "xxMagic Lampxx",
         "Name[zh_CN]": "最小化过渡动画 (神灯)"

@@ -23,6 +23,7 @@
         "Description[sk]": "Kĺzať okná ako sa objavujú alebo miznú",
         "Description[sl]": "Okna drsijo, ko se pojavijo ali izginejo",
         "Description[sv]": "Glid fönster när de visas eller försvinner",
+        "Description[tr]": "Pencereleri görünürken veya kaybolurken süzülmelerini sağla",
         "Description[uk]": "Ковзання вікон при появі або зникненні",
         "Description[x-test]": "xxGlide windows as they appear or disappearxx",
         "Description[zh_CN]": "窗口显示/隐藏时呈现滑翔过渡动效",
@@ -52,6 +53,7 @@
         "Name[sk]": "Kĺzať",
         "Name[sl]": "Drsanje",
         "Name[sv]": "Glid",
+        "Name[tr]": "Süzül",
         "Name[uk]": "Плин",
         "Name[x-test]": "xxGlidexx",
         "Name[zh_CN]": "滑翔动效"

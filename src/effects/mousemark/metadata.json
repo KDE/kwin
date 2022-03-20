@@ -24,6 +24,7 @@
         "Description[sk]": "Umožňuje myšou kresliť čiary na ploche",
         "Description[sl]": "Dovoljuje risanje črt na namizje",
         "Description[sv]": "Låter dig rita linjer på skrivbordet",
+        "Description[tr]": "Masaüstünde çizgiler çizmenize izin verir.",
         "Description[uk]": "Можливість малювання ліній на стільниці",
         "Description[x-test]": "xxAllows you to draw lines on the desktopxx",
         "Description[zh_CN]": "用鼠标指针直接在屏幕上画出线条",
@@ -53,6 +54,7 @@
         "Name[sk]": "Stopa myši",
         "Name[sl]": "Oznaka miške",
         "Name[sv]": "Markera med musen",
+        "Name[tr]": "Fare İmi",
         "Name[uk]": "Позначки мишкою",
         "Name[x-test]": "xxMouse Markxx",
         "Name[zh_CN]": "鼠标屏幕画线"

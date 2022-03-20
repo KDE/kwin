@@ -24,6 +24,7 @@
         "Description[sk]": "Zatvorené okná sa rozpadnú na časti",
         "Description[sl]": "Zaprta okna se razletijo na koščke",
         "Description[sv]": "Stängda fönster faller i bitar",
+        "Description[tr]": "Kapanan pencereler parçalara ayrılırlar",
         "Description[uk]": "Розпадання вікон на шматочки під час закриття вікон",
         "Description[x-test]": "xxClosed windows fall into piecesxx",
         "Description[zh_CN]": "窗口关闭时绘制粉碎飞散动画",
@@ -52,6 +53,7 @@
         "Name[sk]": "Rozpadnúť",
         "Name[sl]": "Razpad",
         "Name[sv]": "Fall sönder",
+        "Name[tr]": "Parçalara Ayır",
         "Name[uk]": "Розпадання",
         "Name[x-test]": "xxFall Apartxx",
         "Name[zh_CN]": "窗口粉碎动画"

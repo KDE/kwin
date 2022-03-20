@@ -24,6 +24,7 @@
         "Description[sk]": "Oddiali všetky otvorené okná a zobrazí ich vedľa seba",
         "Description[sl]": "Oddaljite, dokler se ne vsa odprta okna ne prikažejo eno poleg drugega",
         "Description[sv]": "Zooma ut till alla öppnade fönster kan visas sida vid sida",
+        "Description[tr]": "Tüm açık pencereler yan yana görüntülenebilene dek uzaklaştır",
         "Description[uk]": "Зменшення масштабу вікон так, щоб всі відкриті вікна можна було розташувати поряд",
         "Description[x-test]": "xxZoom out until all opened windows can be displayed side-by-sidexx",
         "Description[zh_CN]": "所有窗口缩小后平铺显示在一个画面上",
@@ -53,6 +54,7 @@
         "Name[sk]": "Súčasné okná",
         "Name[sl]": "Prikaži okna",
         "Name[sv]": "Befintliga fönster",
+        "Name[tr]": "Pencereleri Sun",
         "Name[uk]": "Показ вікон",
         "Name[x-test]": "xxPresent Windowsxx",
         "Name[zh_CN]": "窗口平铺展示"

@@ -24,6 +24,7 @@
         "Description[sk]": "Pomocný efekt pre KScreen",
         "Description[sl]": "Učinek pomočnika za KScreen",
         "Description[sv]": "Hjälpeffekt för Kskärm",
+        "Description[tr]": "KScreen için Yardımcı Etkisi",
         "Description[uk]": "Допоміжний ефект KScreen",
         "Description[x-test]": "xxHelper Effect for KScreenxx",
         "Description[zh_CN]": "KScreen 的辅助特效",
@@ -52,6 +53,7 @@
         "Name[sk]": "Kscreen",
         "Name[sl]": "Kscreen",
         "Name[sv]": "Kskärm",
+        "Name[tr]": "Kscreen",
         "Name[uk]": "Kscreen",
         "Name[x-test]": "xxKscreenxx",
         "Name[zh_CN]": "Kscreen 辅助特效"

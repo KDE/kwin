@@ -24,6 +24,7 @@
         "Description[sk]": "Podporuje výber farby",
         "Description[sl]": "Podpira izbiro barve",
         "Description[sv]": "Stöder att hämta en färg",
+        "Description[tr]": "Bir rent seçmeyi destekler",
         "Description[uk]": "Підтримка взяття кольору з екрана",
         "Description[x-test]": "xxSupports picking a colorxx",
         "Description[zh_CN]": "拾色器专用辅助特效",
@@ -53,6 +54,7 @@
         "Name[sk]": "Výber farby",
         "Name[sl]": "Izbirnik barv",
         "Name[sv]": "Färghämtare",
+        "Name[tr]": "Renk Seçici",
         "Name[uk]": "Піпетка",
         "Name[x-test]": "xxColor Pickerxx",
         "Name[zh_CN]": "拾色器"

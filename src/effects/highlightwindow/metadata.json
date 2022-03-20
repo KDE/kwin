@@ -24,6 +24,7 @@
         "Description[sk]": "Zvýrazní príslušné okno pri prechode kurzorom nad položkami v paneli úloh",
         "Description[sl]": "Osvetli ustrezno okno, ko je kazalec miške nad komponento opravilne vrstice",
         "Description[sv]": "Markera motsvarande fönster när pekaren hålls över poster i aktivitetsfältet",
+        "Description[tr]": "Görev çubuğu girdilere arasında gezinirken uygun pencereleri vurgula",
         "Description[uk]": "Підсвічування відповідного вікна у відповідь на наведення вказівника миші на елементи панелі задач",
         "Description[x-test]": "xxHighlight the appropriate window when hovering over taskbar entriesxx",
         "Description[zh_CN]": "鼠标悬停在任务栏项上时突出显示对应的窗口",
@@ -52,6 +53,7 @@
         "Name[sk]": "Zvýrazniť okno",
         "Name[sl]": "Osvetli okno",
         "Name[sv]": "Markera fönster",
+        "Name[tr]": "Pencereyi Vurgula",
         "Name[uk]": "Підсвічування вікна",
         "Name[x-test]": "xxHighlight Windowxx",
         "Name[zh_CN]": "突出显示窗口"

@@ -24,6 +24,7 @@
         "Description[sk]": "Umožňuje vám zobraziť prehľad virtuálnych plôch a okien",
         "Description[sl]": "Omogoča pregled virtualnih namizij in oken",
         "Description[sv]": "Ger dig en översikt av virtuella skrivbord och fönster",
+        "Description[tr]": "Sanal masaüstlerini ve pencerelerin genel bir görünümünü sağlar",
         "Description[uk]": "Надає вам змогу оглядати віртуальні стільниці і вікна",
         "Description[x-test]": "xxAllows you to overview virtual desktops and windowsxx",
         "Description[zh_CN]": "显示包含当前所有虚拟桌面和窗口的桌面概览",
@@ -52,6 +53,7 @@
         "Name[sk]": "Prehľad",
         "Name[sl]": "Pregled",
         "Name[sv]": "Översikt",
+        "Name[tr]": "Genel Görünüm",
         "Name[uk]": "Огляд",
         "Name[x-test]": "xxOverviewxx",
         "Name[zh_CN]": "桌面概览"

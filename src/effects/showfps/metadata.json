@@ -24,6 +24,7 @@
         "Description[sk]": "Zobrazí výkon KWin v rohu obrazovky",
         "Description[sl]": "Prikaz performance Kwina v kotu zaslona",
         "Description[sv]": "Visa prestanda för Kwin i hörnet av skärmen",
+        "Description[tr]": "KWin başarımını pencerenin bir köşesinde görüntüle",
         "Description[uk]": "Показ параметра швидкодії KWin (частоти кадрів) у куті екрана",
         "Description[x-test]": "xxDisplay KWin's performance in the corner of the screenxx",
         "Description[zh_CN]": "在屏幕一角显示 KWin 的每秒帧数图表",
@@ -53,6 +54,7 @@
         "Name[sk]": "Zobraziť FPS",
         "Name[sl]": "Prikaži št. slik sekundi",
         "Name[sv]": "Visa ramar/s",
+        "Name[tr]": "FPS'yi Göster",
         "Name[uk]": "Показ частоти кадрів",
         "Name[x-test]": "xxShow FPSxx",
         "Name[zh_CN]": "显示每秒帧数"

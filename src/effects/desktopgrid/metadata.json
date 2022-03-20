@@ -24,6 +24,7 @@
         "Description[sk]": "Oddiali všetky plochy a zobrazí ich vedľa seba v mriežke",
         "Description[sl]": "Oddalji tako, da so vsa namizja prikazana drug ob drugem v mreži",
         "Description[sv]": "Zooma ut så att alla skrivbord visas sida vid sida i ett rutnät",
+        "Description[tr]": "Uzaklaştır, böylece tüm masaüstleri bir ızgarada yan yana görüntülenirler",
         "Description[uk]": "Зменшення стільниць так, щоб всі стільниці було показано поруч у форматі таблиці",
         "Description[x-test]": "xxZoom out so all desktops are displayed side-by-side in a gridxx",
         "Description[zh_CN]": "所有虚拟桌面缩小后显示在一套网格中",
@@ -53,6 +54,7 @@
         "Name[sk]": "Plochy v mriežke",
         "Name[sl]": "Mreža namizja",
         "Name[sv]": "Skrivbordsrutnät",
+        "Name[tr]": "Masaüstü Izgarası",
         "Name[uk]": "Таблиця стільниць",
         "Name[x-test]": "xxDesktop Gridxx",
         "Name[zh_CN]": "虚拟桌面平铺网格"

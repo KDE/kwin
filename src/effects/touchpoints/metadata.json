@@ -24,6 +24,7 @@
         "Description[sk]": "Vizualizovať dotykové body",
         "Description[sl]": "Vizualiziraj točke dotika",
         "Description[sv]": "Åskådliggör beröringspunkter",
+        "Description[tr]": "Dokunma noktalarını görselleştir",
         "Description[uk]": "Візуалізувати точки дотику",
         "Description[x-test]": "xxVisualize touch pointsxx",
         "Description[zh_CN]": "高亮显示在触控屏幕上的触摸点",
@@ -52,6 +53,7 @@
         "Name[sk]": "Dotykové body",
         "Name[sl]": "Točke dotika",
         "Name[sv]": "Beröringspunkter",
+        "Name[tr]": "Dokunma Noktaları",
         "Name[uk]": "Точки дотику",
         "Name[x-test]": "xxTouch Pointsxx",
         "Name[zh_CN]": "触摸点高亮"
