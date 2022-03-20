@@ -355,11 +355,6 @@ bool DrmConnector::updateProperties()
         m_physicalSize = overwriteSize;
     }
 
-    if (auto bpc = getProp(PropertyIndex::MaxBpc)) {
-        // make sure the driver allows us to use high bpc
-        bpc->setPending(bpc->maxValue());
-    }
-
     // update modes
     bool equal = m_conn->count_modes == m_modes.count();
     for (int i = 0; equal && i < m_conn->count_modes; i++) {

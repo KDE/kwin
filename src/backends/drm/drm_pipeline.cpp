@@ -224,6 +224,9 @@ void DrmPipeline::prepareAtomicModeset()
         m_connector->getProp(DrmConnector::PropertyIndex::Underscan_vborder)->setPending(pending.overscan);
         m_connector->getProp(DrmConnector::PropertyIndex::Underscan_hborder)->setPending(hborder);
     }
+    if (const auto bpc = m_connector->getProp(DrmConnector::PropertyIndex::MaxBpc)) {
+        bpc->setPending(bpc->maxValue());
+    }
 
     pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, activePending());
     pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, activePending() ? pending.mode->blobId() : 0);
