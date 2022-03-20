@@ -117,6 +117,7 @@ private:
     bool m_atomicModeSetting;
     bool m_addFB2ModifiersSupported = false;
     bool m_isNVidia;
+    bool m_isVirtualMachine;
     clockid_t m_presentationClock;
     gbm_device* m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;

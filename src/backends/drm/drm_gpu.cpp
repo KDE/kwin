@@ -75,9 +75,11 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     m_addFB2ModifiersSupported = drmGetCap(fd, DRM_CAP_ADDFB2_MODIFIERS, &capability) == 0 && capability == 1;
     qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << m_devNode;
 
-    // find out if this GPU is using the NVidia proprietary driver
+    // find out what driver this kms device is using
     DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
     m_isNVidia = strstr(version->name, "nvidia-drm");
+    m_isVirtualMachine = strstr(version->name, "virtio") || strstr(version->name, "qxl")
+                        || strstr(version->name, "vmwgfx") || strstr(version->name, "vboxvideo");
     m_gbmDevice = gbm_create_device(m_fd);
 
     m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
@@ -148,9 +150,11 @@ clockid_t DrmGpu::presentationClock() const
 void DrmGpu::initDrmResources()
 {
     // try atomic mode setting
-    bool tmp = false;
-    bool noAMS = qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &tmp) != 0 && tmp;
-    if (noAMS) {
+    bool isEnvVarSet = false;
+    bool noAMS = qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &isEnvVarSet) != 0 && isEnvVarSet;
+    if (m_isVirtualMachine && !isEnvVarSet) {
+        qCWarning(KWIN_DRM, "Atomic Mode Setting disabled on GPU %s because of cursor offset issues in virtual machines", qPrintable(m_devNode));
+    } else if (noAMS) {
         qCWarning(KWIN_DRM) << "Atomic Mode Setting requested off via environment variable. Using legacy mode on GPU" << m_devNode;
     } else if(drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) != 0) {
         qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode on GPU" << m_devNode;
