@@ -15,7 +15,7 @@
 #include <QApplication>
 #include <QLayout>
 
-#include <KWindowSystem/KWindowSystem>
+#include <KWindowSystem>
 #include <kcmodule.h>
 #include <kservice.h>
 
