@@ -41,7 +41,8 @@ class ScreenEdges;
 class SwipeGesture;
 class EffectScreen;
 
-class TouchCallback {
+class TouchCallback
+{
 public:
     using CallbackFunction = std::function<void(ElectricBorder border, const QSizeF&, AbstractOutput *output)>;
     explicit TouchCallback(QAction *touchUpAction, TouchCallback::CallbackFunction progressCallback);

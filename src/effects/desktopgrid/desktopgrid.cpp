@@ -193,25 +193,28 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
             continue;
         }
 
-        effects->registerRealtimeTouchBorder(ElectricBorder(i), m_activateAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
-            if (activated) return;
+        effects->registerRealtimeTouchBorder(ElectricBorder(i),
+                                             m_gestureAction,
+                                             [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
+                                                 if (activated)
+                                                     return;
 
-            if (timeline.currentValue() == 0) {
-                activated = true;
-                setup();
-                activated = false;
-            }
-            qreal progress = 0;
-            if (border == ElectricTop || border == ElectricBottom) {
-                progress = qAbs(deltaProgress.height() / (screen->geometry().height()/2));
-            } else {
-                progress = qAbs(deltaProgress.width() / (screen->geometry().width()/2));
-            }
+                                                 if (timeline.currentValue() == 0) {
+                                                     activated = true;
+                                                     setup();
+                                                     activated = false;
+                                                 }
+                                                 qreal progress = 0;
+                                                 if (border == ElectricTop || border == ElectricBottom) {
+                                                     progress = qAbs(deltaProgress.height() / (screen->geometry().height() / 2));
+                                                 } else {
+                                                     progress = qAbs(deltaProgress.width() / (screen->geometry().width() / 2));
+                                                 }
 
-            timeline.setDirection(QTimeLine::Forward);
-            timeline.setCurrentTime(timeline.duration() * progress);
-            effects->addRepaintFull();
-        });
+                                                 timeline.setDirection(QTimeLine::Forward);
+                                                 timeline.setCurrentTime(timeline.duration() * progress);
+                                                 effects->addRepaintFull();
+                                             });
     }
 }
 

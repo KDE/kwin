@@ -96,9 +96,9 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
             const bool wasInProgress = m_partialActivationFactor > 0;
             const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
             if (border == ElectricTop || border == ElectricBottom) {
-                m_partialActivationFactor = qMin(1.0, qAbs(deltaProgress.height()) / maxDelta);
+                m_partialActivationFactor = std::min(1.0, qAbs(deltaProgress.height()) / maxDelta);
             } else {
-                m_partialActivationFactor = qMin(1.0, qAbs(deltaProgress.width()) / maxDelta);
+                m_partialActivationFactor = std::min(1.0, qAbs(deltaProgress.width()) / maxDelta);
             }
             Q_EMIT partialActivationFactorChanged();
             if ( !wasInProgress) {
