@@ -114,7 +114,7 @@ Edge::Edge(ScreenEdges *parent)
     connect(m_gesture, &SwipeGesture::started, this, &Edge::startApproaching);
     connect(m_gesture, &SwipeGesture::cancelled, this, &Edge::stopApproaching);
     connect(m_gesture, &SwipeGesture::cancelled, this, [this] () {
-            if (!m_touchCallbacks.isEmpty() && m_touchCallbacks.first().hasProgressCallback()) {
+            if (!m_touchCallbacks.isEmpty() && m_touchCallbacks.constFirst().hasProgressCallback()) {
                 handleTouchCallback();
             }
         }
