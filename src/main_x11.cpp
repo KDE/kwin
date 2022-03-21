@@ -22,7 +22,6 @@
 #include <KLocalizedString>
 #include <KPluginMetaData>
 #include <KSelectionOwner>
-#include <KQuickAddons/QtQuickSettings>
 
 #include <qplatformdefs.h>
 #include <QComboBox>
@@ -432,7 +431,6 @@ int main(int argc, char * argv[])
     a.setupTranslator();
 
     KWin::Application::createAboutData();
-    KQuickAddons::QtQuickSettings::init();
 
     QCommandLineOption replaceOption(QStringLiteral("replace"), i18n("Replace already-running ICCCM2.0-compliant window manager"));
 

@@ -28,7 +28,6 @@
 #include <KDesktopFile>
 #include <KLocalizedString>
 #include <KPluginMetaData>
-#include <KQuickAddons/QtQuickSettings>
 #include <KShell>
 
 // Qt
@@ -335,7 +334,6 @@ int main(int argc, char * argv[])
     qunsetenv("QT_QPA_PLATFORM");
 
     KWin::Application::createAboutData();
-    KQuickAddons::QtQuickSettings::init();
 
     const auto availablePlugins = KPluginMetaData::findPlugins(QStringLiteral("org.kde.kwin.waylandbackends"));
     auto hasPlugin = [&availablePlugins] (const QString &name) {
