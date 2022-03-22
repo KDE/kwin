@@ -39,7 +39,14 @@ OverviewEffect::OverviewEffect()
     KGlobalAccel::self()->setShortcut(m_toggleAction, {defaultToggleShortcut});
     m_toggleShortcut = KGlobalAccel::self()->shortcut(m_toggleAction);
     effects->registerGlobalShortcut({defaultToggleShortcut}, m_toggleAction);
-    effects->registerTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_toggleAction);
+    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 4, new QAction(this), [this](qreal cb) { //m_toggleAction
+        if (cb > .2 && !isRunning()) {
+            activate();
+        }
+        if (cb <= .2 && isRunning()) {
+            deactivate();
+        }
+    });
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
 
