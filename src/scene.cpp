@@ -359,23 +359,16 @@ void Scene::preparePaintSimpleScreen()
         accumulateRepaints(sceneWindow->windowItem(), painted_screen, &data.paint);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
-        if (sceneWindow->isOpaque()) {
+        if (toplevel->opacity() == 1.0) {
             const SurfaceItem *surfaceItem = sceneWindow->surfaceItem();
-            if (surfaceItem) {
-                data.opaque = surfaceItem->mapToGlobal(surfaceItem->shape());
+            if (Q_LIKELY(surfaceItem)) {
+                data.opaque = surfaceItem->mapToGlobal(surfaceItem->opaque());
             }
-        } else if (toplevel->hasAlpha() && toplevel->opacity() == 1.0) {
-            const SurfaceItem *surfaceItem = sceneWindow->surfaceItem();
-            if (surfaceItem) {
-                const QRegion shape = surfaceItem->shape();
-                const QRegion opaque = surfaceItem->opaque();
-                data.opaque = surfaceItem->mapToGlobal(shape & opaque);
-            }
-        }
 
-        const AbstractClient *client = dynamic_cast<const AbstractClient *>(toplevel);
-        if (client && !client->decorationHasAlpha() && toplevel->opacity() == 1.0) {
-            data.opaque |= sceneWindow->decorationShape().translated(sceneWindow->pos());
+            const AbstractClient *client = dynamic_cast<const AbstractClient *>(toplevel);
+            if (client && !client->decorationHasAlpha()) {
+                data.opaque |= sceneWindow->decorationShape().translated(sceneWindow->pos());
+            }
         }
 
         sceneWindow->resetPaintingEnabled();
@@ -804,11 +797,6 @@ bool Scene::Window::isVisible() const
         return c->isShown();
     }
     return true; // Unmanaged is always visible
-}
-
-bool Scene::Window::isOpaque() const
-{
-    return toplevel->opacity() == 1.0 && !toplevel->hasAlpha();
 }
 
 bool Scene::Window::isPaintingEnabled() const

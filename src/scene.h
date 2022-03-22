@@ -323,8 +323,6 @@ public:
     void disablePainting(int reason);
     // is the window visible at all
     bool isVisible() const;
-    // is the window fully opaque
-    bool isOpaque() const;
     QRegion decorationShape() const;
     void updateToplevel(Deleted *deleted);
     void referencePreviousPixmap();
