@@ -641,9 +641,18 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
     struct spa_meta_bitmap *spa_meta_bitmap = SPA_MEMBER (spa_meta_cursor,
                                                           spa_meta_cursor->bitmap_offset,
                                                           struct spa_meta_bitmap);
+    spa_meta_bitmap->format = SPA_VIDEO_FORMAT_RGBA;
+    spa_meta_bitmap->offset = sizeof(struct spa_meta_bitmap);
+    spa_meta_bitmap->size.width = std::min(m_cursor.bitmapSize.width(), image.width());
+    spa_meta_bitmap->size.height = std::min(m_cursor.bitmapSize.height(), image.height());
+    spa_meta_bitmap->stride = spa_meta_bitmap->size.width * 4;
 
     uint8_t *bitmap_data = SPA_MEMBER (spa_meta_bitmap, spa_meta_bitmap->offset, uint8_t);
-    QImage dest(bitmap_data, std::min(m_cursor.bitmapSize.width(), image.width()), std::min(m_cursor.bitmapSize.height(), image.height()), QImage::Format_RGBA8888_Premultiplied);
+    QImage dest(bitmap_data,
+                spa_meta_bitmap->size.width,
+                spa_meta_bitmap->size.height,
+                spa_meta_bitmap->stride,
+                QImage::Format_RGBA8888_Premultiplied);
     dest.setDevicePixelRatio(m_cursor.scale);
     dest.fill(Qt::transparent);
 
@@ -651,12 +660,6 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
         QPainter painter(&dest);
         painter.drawImage(QPoint(), image);
     }
-
-    spa_meta_bitmap->format = SPA_VIDEO_FORMAT_RGBA;
-    spa_meta_bitmap->offset = sizeof (struct spa_meta_bitmap);
-    spa_meta_bitmap->size.width = dest.width();
-    spa_meta_bitmap->size.height = dest.height();
-    spa_meta_bitmap->stride = dest.bytesPerLine();
 }
 
 void ScreenCastStream::setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport)
