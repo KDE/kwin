@@ -800,7 +800,7 @@ void VirtualDesktopManager::initShortcuts()
     // Gestures
     // These connections decide which desktop to end on after gesture ends
     connect(m_swipeGestureReleasedX.get(), &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedX);
-    connect(m_swipeGestureReleasedY, &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedY);
+    connect(m_swipeGestureReleasedY.get(), &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedY);
 
     //These take the live feedback from a gesture
     input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), [this](qreal cb) {
