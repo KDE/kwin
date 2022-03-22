@@ -16,6 +16,7 @@
 #include <QPoint>
 #include <QPointer>
 #include <QSize>
+#include <QAction>
 
 // KDE includes
 #include <KConfig>
@@ -24,6 +25,7 @@
 class KLocalizedString;
 class NETRootInfo;
 class QAction;
+class Options;
 
 namespace KWaylandServer
 {
@@ -395,6 +397,17 @@ Q_SIGNALS:
      * @param newDesktop The virtual desktop changed to
      */
     void currentChanged(uint previousDesktop, uint newDesktop);
+
+    /**
+     * Signal emmitted for realtime desktop switching animations.
+     * @param currentDesktop The current virtual desktop
+     * @param offset The current total change in desktop coordinate
+     * Offset x and y are negative if switching Left and Down.
+     * Example: x = 0.6 means 60% of the way to the desktop to the right.
+     */
+    void currentChanging(uint currentDesktop, QPointF offset);
+    void currentChangingCancelled();
+
     /**
      * Signal emitted whenever the desktop layout changes.
      * @param columns The new number of columns in the layout
@@ -437,6 +450,12 @@ private Q_SLOTS:
      * Slot for switch to desktop below action.
      */
     void slotDown();
+
+    /* For gestured desktopSwitching
+     * Called when gesture ended, the thing that actually switches the desktop.
+     */
+    void gestureReleasedY();
+    void gestureReleasedX();
 
 private:
     /**
@@ -481,6 +500,10 @@ private:
     NETRootInfo *m_rootInfo;
     KWaylandServer::PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     KSharedConfig::Ptr m_config;
+
+    QScopedPointer<QAction> m_swipeGestureReleasedY;
+    QScopedPointer<QAction> m_swipeGestureReleasedX;
+    QPointF m_currentDesktopOffset = QPointF(0, 0);
 
     KWIN_SINGLETON_VARIABLE(VirtualDesktopManager, s_manager)
 };
