@@ -18,14 +18,16 @@ namespace KWin
 
 class AbstractOutput;
 
-class RenderOutput
+class KWIN_EXPORT RenderOutput : public QObject
 {
+    Q_OBJECT
 public:
     RenderOutput(AbstractOutput *output);
-    virtual ~RenderOutput() = default;
+    virtual ~RenderOutput();
 
     virtual QRect geometry() const;
     virtual AbstractOutput *platformOutput() const;
+    QSize pixelSize() const;
 
     /**
      * Returns a dummy OutputLayer corresponding to the primary plane.
@@ -34,12 +36,29 @@ public:
      * after the pre paint pass. Planes must be allocated based on the bounding rect, transform,
      * and visibility (for the cursor plane).
      */
-    OutputLayer *layer() const;
-    QSize pixelSize() const;
+    virtual OutputLayer *layer() const = 0;
 
-private:
-    const QScopedPointer<OutputLayer> m_layer;
+    /**
+     * TODO replace this with output layers
+     */
+    virtual bool usesSoftwareCursor() const = 0;
+
+Q_SIGNALS:
+    void geometryChanged();
+
+protected:
     AbstractOutput *const m_output;
 };
 
+class KWIN_EXPORT SimpleRenderOutput : public RenderOutput
+{
+public:
+    SimpleRenderOutput(AbstractOutput *output);
+
+    bool usesSoftwareCursor() const override;
+    OutputLayer *layer() const override;
+
+protected:
+    const QScopedPointer<OutputLayer> m_layer;
+};
 }

@@ -80,7 +80,6 @@ QDebug operator<<(QDebug debug, const AbstractOutput *output)
 
 AbstractOutput::AbstractOutput(QObject *parent)
     : QObject(parent)
-    , m_renderOutput(new RenderOutput(this))
 {
 }
 
@@ -153,11 +152,6 @@ std::chrono::milliseconds AbstractOutput::dimAnimationTime()
 bool AbstractOutput::usesSoftwareCursor() const
 {
     return true;
-}
-
-RenderOutput *AbstractOutput::renderOutput() const
-{
-    return m_renderOutput.get();
 }
 
 } // namespace KWin

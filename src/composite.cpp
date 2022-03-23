@@ -372,22 +372,12 @@ void Compositor::startupWithWorkspace()
     Q_ASSERT(m_scene);
     m_scene->initialize();
 
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
-        workspaceLayer->setDelegate(new SceneDelegate(m_scene));
-        workspaceLayer->setGeometry(workspace()->geometry());
-        connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
-            workspaceLayer->setGeometry(workspace()->geometry());
-        });
-        addSuperLayer(workspaceLayer);
-    } else {
-        for (AbstractOutput *output : outputs) {
-            addOutput(output);
-        }
-        connect(kwinApp()->platform(), &Platform::outputEnabled, this, &Compositor::addOutput);
-        connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Compositor::removeOutput);
+    const auto outputs = kwinApp()->platform()->renderOutputs();
+    for (const auto &output : outputs) {
+        addOutput(output);
     }
+    connect(kwinApp()->platform(), &Platform::renderOutputAdded, this, &Compositor::addOutput);
+    connect(kwinApp()->platform(), &Platform::renderOutputRemoved, this, &Compositor::removeOutput);
 
     m_state = State::On;
 
@@ -418,31 +408,29 @@ void Compositor::startupWithWorkspace()
     }
 }
 
-AbstractOutput *Compositor::findOutput(RenderLoop *loop) const
+RenderOutput *Compositor::findOutput(RenderLoop *loop) const
 {
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = kwinApp()->platform()->renderOutputs();
     for (const auto &output : outputs) {
-        if (output->renderLoop() == loop) {
+        if (output->platformOutput()->renderLoop() == loop) {
             return output;
         }
     }
     return nullptr;
 }
 
-void Compositor::addOutput(AbstractOutput *output)
+void Compositor::addOutput(RenderOutput *output)
 {
-    Q_ASSERT(kwinApp()->operationMode() != Application::OperationModeX11);
-
-    auto workspaceLayer = new RenderLayer(output->renderLoop());
-    workspaceLayer->setDelegate(new SceneDelegate(m_scene, output->renderOutput()));
+    auto workspaceLayer = new RenderLayer(output->platformOutput()->renderLoop());
+    workspaceLayer->setDelegate(new SceneDelegate(m_scene, output));
     workspaceLayer->setGeometry(output->geometry());
-    connect(output, &AbstractOutput::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
+    connect(output, &RenderOutput::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
         workspaceLayer->setGeometry(output->geometry());
     });
 
-    auto cursorLayer = new RenderLayer(output->renderLoop());
+    auto cursorLayer = new RenderLayer(output->platformOutput()->renderLoop());
     cursorLayer->setVisible(false);
-    cursorLayer->setDelegate(new CursorDelegate(output->renderOutput(), m_cursorView));
+    cursorLayer->setDelegate(new CursorDelegate(output, m_cursorView));
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
 
@@ -453,7 +441,7 @@ void Compositor::addOutput(AbstractOutput *output)
         cursorLayer->addRepaintFull();
     };
     updateCursorLayer();
-    connect(output, &AbstractOutput::geometryChanged, cursorLayer, updateCursorLayer);
+    connect(output, &RenderOutput::geometryChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::currentCursorChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::hiddenChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, updateCursorLayer);
@@ -461,9 +449,9 @@ void Compositor::addOutput(AbstractOutput *output)
     addSuperLayer(workspaceLayer);
 }
 
-void Compositor::removeOutput(AbstractOutput *output)
+void Compositor::removeOutput(RenderOutput *output)
 {
-    removeSuperLayer(m_superlayers[output->renderLoop()]);
+    removeSuperLayer(m_superlayers[output->platformOutput()->renderLoop()]);
 }
 
 void Compositor::addSuperLayer(RenderLayer *layer)
@@ -546,8 +534,8 @@ void Compositor::stop()
         removeSuperLayer(*it);
     }
 
-    disconnect(kwinApp()->platform(), &Platform::outputEnabled, this, &Compositor::addOutput);
-    disconnect(kwinApp()->platform(), &Platform::outputDisabled, this, &Compositor::removeOutput);
+    disconnect(kwinApp()->platform(), &Platform::renderOutputAdded, this, &Compositor::addOutput);
+    disconnect(kwinApp()->platform(), &Platform::renderOutputRemoved, this, &Compositor::removeOutput);
 
     delete m_scene;
     m_scene = nullptr;
@@ -653,9 +641,8 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     const auto output = findOutput(renderLoop);
-    const auto renderOutput = output->renderOutput();
-    OutputLayer *outputLayer = renderOutput->layer();
-    fTraceDuration("Paint (", output->name(), ")");
+    OutputLayer *outputLayer = output->layer();
+    fTraceDuration("Paint (", output->platformOutput()->name(), ")");
 
     RenderLayer *superLayer = m_superlayers[renderLoop];
     prePaintPass(superLayer);
@@ -672,7 +659,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             return sublayer->isVisible();
         });
         if (scanoutPossible) {
-            directScanout = m_backend->scanout(renderOutput, scanoutCandidate);
+            directScanout = m_backend->scanout(output, scanoutCandidate);
         }
     }
 
@@ -683,13 +670,13 @@ void Compositor::composite(RenderLoop *renderLoop)
         outputLayer->resetRepaints();
         preparePaintPass(superLayer, &surfaceDamage);
 
-        const QRegion repair = m_backend->beginFrame(renderOutput);
+        const QRegion repair = m_backend->beginFrame(output);
         const QRegion bufferDamage = surfaceDamage.united(repair);
-        m_backend->aboutToStartPainting(renderOutput, bufferDamage);
+        m_backend->aboutToStartPainting(output, bufferDamage);
 
         paintPass(superLayer, bufferDamage);
         renderLoop->endFrame();
-        m_backend->endFrame(renderOutput, bufferDamage, surfaceDamage);
+        m_backend->endFrame(output, bufferDamage, surfaceDamage);
     }
 
     postPaintPass(superLayer);
@@ -697,7 +684,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     // TODO: Put it inside the cursor layer once the cursor layer can be backed by a real output layer.
     if (waylandServer()) {
         const std::chrono::milliseconds frameTime =
-            std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
+            std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->lastPresentationTimestamp());
 
         if (!Cursors::self()->isCursorHidden()) {
             Cursor *cursor = Cursors::self()->currentCursor();

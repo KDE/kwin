@@ -32,6 +32,7 @@
 #include "overlaywindow_x11.h"
 #include "renderloop.h"
 #include "screenedges_filter.h"
+#include "screens.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
 #include "x11_output.h"
@@ -100,6 +101,7 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
     , m_updateOutputsTimer(new QTimer(this))
     , m_x11Display(QX11Info::display())
     , m_renderLoop(new RenderLoop(this))
+    , m_renderOutput(new X11RenderOutput(this))
 {
 #if HAVE_X11_XINPUT
     if (!qEnvironmentVariableIsSet("KWIN_NO_XI2")) {
@@ -674,4 +676,36 @@ void X11StandalonePlatform::updateRefreshRate()
     m_renderLoop->setRefreshRate(refreshRate);
 }
 
+QVector<RenderOutput *> X11StandalonePlatform::renderOutputs() const
+{
+    return {m_renderOutput.get()};
+}
+
+X11RenderOutput::X11RenderOutput(X11StandalonePlatform *platform)
+    : RenderOutput(nullptr)
+    , m_platform(platform)
+    , m_layer(new OutputLayer())
+{
+    connect(workspace(), &Workspace::geometryChanged, this, &X11RenderOutput::geometryChanged);
+}
+
+QRect X11RenderOutput::geometry() const
+{
+    return QRect(QPoint(), screens()->size());
+}
+
+AbstractOutput *X11RenderOutput::platformOutput() const
+{
+    return m_platform->outputs().constFirst();
+}
+
+bool X11RenderOutput::usesSoftwareCursor() const
+{
+    return false;
+}
+
+OutputLayer *X11RenderOutput::layer() const
+{
+    return m_layer.get();
+}
 }

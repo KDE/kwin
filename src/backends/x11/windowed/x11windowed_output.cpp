@@ -11,6 +11,7 @@
 #include <config-kwin.h>
 
 #include "renderloop_p.h"
+#include "renderoutput.h"
 #include "softwarevsyncmonitor.h"
 #include "x11windowed_backend.h"
 
@@ -30,6 +31,7 @@ X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     , m_renderLoop(new RenderLoop(this))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
     , m_backend(backend)
+    , m_renderOutput(new SimpleRenderOutput(this))
 {
     m_window = xcb_generate_id(m_backend->connection());
 
@@ -191,4 +193,8 @@ bool X11WindowedOutput::usesSoftwareCursor() const
     return false;
 }
 
+RenderOutput *X11WindowedOutput::renderOutput() const
+{
+    return m_renderOutput.get();
+}
 }

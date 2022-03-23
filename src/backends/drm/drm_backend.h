@@ -50,6 +50,7 @@ public:
 
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
+    QVector<RenderOutput *> renderOutputs() const override;
 
     void enableOutput(DrmAbstractOutput *output, bool enable);
 
@@ -102,6 +103,7 @@ private:
     QVector<DrmAbstractOutput *> m_outputs;
     // only enabled outputs
     QVector<DrmAbstractOutput *> m_enabledOutputs;
+    QVector<RenderOutput *> m_renderOutputs;
     DrmVirtualOutput *m_placeHolderOutput = nullptr;
 
     bool m_active = false;

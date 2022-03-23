@@ -43,6 +43,7 @@ class ScreenEdges;
 class Session;
 class Toplevel;
 class WaylandOutputConfig;
+class RenderOutput;
 
 class KWIN_EXPORT Outputs : public QVector<AbstractOutput *>
 {
@@ -319,6 +320,7 @@ public:
     {
         return Outputs();
     }
+    virtual QVector<RenderOutput *> renderOutputs() const = 0;
     AbstractOutput *findOutput(int screenId) const;
     AbstractOutput *findOutput(const QUuid &uuid) const;
     AbstractOutput *findOutput(const QString &name) const;
@@ -428,6 +430,9 @@ Q_SIGNALS:
      * @see outputEnabled, outputRemoved
      */
     void outputDisabled(AbstractOutput *output);
+
+    void renderOutputAdded(RenderOutput *output);
+    void renderOutputRemoved(RenderOutput *output);
 
     void primaryOutputChanged(AbstractOutput *primaryOutput);
 

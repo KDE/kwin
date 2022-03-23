@@ -10,6 +10,7 @@
 #include "drm_backend.h"
 #include "drm_gpu.h"
 #include "renderloop_p.h"
+#include "renderoutput.h"
 
 namespace KWin
 {
@@ -18,6 +19,7 @@ DrmAbstractOutput::DrmAbstractOutput(DrmGpu *gpu)
     : AbstractWaylandOutput(gpu->platform())
     , m_renderLoop(new RenderLoop(this))
     , m_gpu(gpu)
+    , m_renderOutput(new SimpleRenderOutput(this))
 {
 }
 
@@ -57,4 +59,8 @@ DrmGpu *DrmAbstractOutput::gpu() const
     return m_gpu;
 }
 
+RenderOutput *DrmAbstractOutput::renderOutput() const
+{
+    return m_renderOutput.get();
+}
 }

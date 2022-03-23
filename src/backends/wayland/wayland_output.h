@@ -31,6 +31,8 @@ class LockedPointer;
 
 namespace KWin
 {
+class RenderOutput;
+
 namespace Wayland
 {
 class WaylandBackend;
@@ -81,6 +83,7 @@ public:
     void updateEnablement(bool enable) override;
     void updateTransform(Transform transform) override;
     void setDpmsMode(KWin::AbstractWaylandOutput::DpmsMode mode) override;
+    RenderOutput *renderOutput() const;
 
 Q_SIGNALS:
     void sizeChanged(const QSize &size);
@@ -99,6 +102,7 @@ private:
     QTimer m_turnOffTimer;
 
     bool m_rendered = false;
+    const QScopedPointer<RenderOutput> m_renderOutput;
 };
 
 class XdgShellOutput : public WaylandOutput

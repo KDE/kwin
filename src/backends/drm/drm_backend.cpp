@@ -499,6 +499,8 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
         return;
     }
     if (enable) {
+        m_renderOutputs << output->renderOutput();
+        Q_EMIT renderOutputAdded(output->renderOutput());
         m_enabledOutputs << output;
         Q_EMIT output->gpu()->outputEnabled(output);
         Q_EMIT outputEnabled(output);
@@ -530,6 +532,8 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
             m_placeholderFilter.reset(new PlaceholderInputEventFilter());
             input()->prependInputEventFilter(m_placeholderFilter.data());
         }
+        m_renderOutputs.removeOne(output->renderOutput());
+        Q_EMIT renderOutputRemoved(output->renderOutput());
         m_enabledOutputs.removeOne(output);
         Q_EMIT output->gpu()->outputDisabled(output);
         Q_EMIT outputDisabled(output);
@@ -695,4 +699,8 @@ DrmRenderBackend *DrmBackend::renderBackend() const
     return m_renderBackend;
 }
 
+QVector<RenderOutput *> DrmBackend::renderOutputs() const
+{
+    return m_renderOutputs;
+}
 }

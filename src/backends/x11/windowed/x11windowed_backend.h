@@ -136,6 +136,7 @@ public:
 
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
+    QVector<RenderOutput *> renderOutputs() const override;
 
 Q_SIGNALS:
     void sizeChanged();
@@ -176,6 +177,7 @@ private:
     int m_minorVersion = 0;
 
     QVector<X11WindowedOutput *> m_outputs;
+    QVector<RenderOutput *> m_renderOutputs;
 };
 
 }

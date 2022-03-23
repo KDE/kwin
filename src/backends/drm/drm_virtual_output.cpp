@@ -15,6 +15,7 @@
 #include "drm_render_backend.h"
 #include "logging.h"
 #include "renderloop_p.h"
+#include "renderoutput.h"
 #include "softwarevsyncmonitor.h"
 
 namespace KWin

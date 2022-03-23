@@ -28,6 +28,7 @@ class Scene;
 class Toplevel;
 class X11Client;
 class X11SyncManager;
+class RenderOutput;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -134,9 +135,9 @@ private:
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
 
-    AbstractOutput *findOutput(RenderLoop *loop) const;
-    void addOutput(AbstractOutput *output);
-    void removeOutput(AbstractOutput *output);
+    RenderOutput *findOutput(RenderLoop *loop) const;
+    void addOutput(RenderOutput *output);
+    void removeOutput(RenderOutput *output);
 
     void addSuperLayer(RenderLayer *layer);
     void removeSuperLayer(RenderLayer *layer);

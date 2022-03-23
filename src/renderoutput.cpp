@@ -13,15 +13,11 @@ namespace KWin
 {
 
 RenderOutput::RenderOutput(AbstractOutput *output)
-    : m_layer(new OutputLayer())
-    , m_output(output)
+    : m_output(output)
 {
 }
 
-OutputLayer *RenderOutput::layer() const
-{
-    return m_layer.get();
-}
+RenderOutput::~RenderOutput() = default;
 
 QRect RenderOutput::geometry() const
 {
@@ -38,4 +34,20 @@ AbstractOutput *RenderOutput::platformOutput() const
     return m_output;
 }
 
+SimpleRenderOutput::SimpleRenderOutput(AbstractOutput *output)
+    : RenderOutput(output)
+    , m_layer(new OutputLayer())
+{
+    connect(output, &AbstractOutput::geometryChanged, this, &RenderOutput::geometryChanged);
+}
+
+OutputLayer *SimpleRenderOutput::layer() const
+{
+    return m_layer.get();
+}
+
+bool SimpleRenderOutput::usesSoftwareCursor() const
+{
+    return m_output->usesSoftwareCursor();
+}
 }

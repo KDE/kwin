@@ -301,6 +301,7 @@ public:
 
     AbstractOutput *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
     void removeVirtualOutput(AbstractOutput *output) override;
+    QVector<RenderOutput *> renderOutputs() const override;
 
 Q_SIGNALS:
     void systemCompositorDied();
@@ -335,6 +336,7 @@ private:
 
     QThread *m_connectionThread;
     QVector<WaylandOutput *> m_outputs;
+    QVector<RenderOutput *> m_renderOutputs;
     int m_pendingInitialOutputs = 0;
 
     WaylandCursor *m_waylandCursor = nullptr;

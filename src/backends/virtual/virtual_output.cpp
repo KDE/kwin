@@ -20,6 +20,7 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent)
     , m_backend(parent)
     , m_renderLoop(new RenderLoop(this))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
+    , m_renderOutput(new SimpleRenderOutput(this))
 {
     connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
 
@@ -78,4 +79,8 @@ void VirtualOutput::updateEnablement(bool enable)
     m_backend->enableOutput(this, enable);
 }
 
+RenderOutput *VirtualOutput::renderOutput() const
+{
+    return m_renderOutput.get();
+}
 }

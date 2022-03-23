@@ -27,7 +27,6 @@ namespace KWin
 {
 class EffectScreenImpl;
 class RenderLoop;
-class RenderOutput;
 
 class KWIN_EXPORT GammaRamp
 {
@@ -214,8 +213,6 @@ public:
 
     virtual bool usesSoftwareCursor() const;
 
-    RenderOutput *renderOutput() const;
-
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.
@@ -259,9 +256,6 @@ Q_SIGNALS:
      * Only to be used for effects
      */
     void changed();
-
-protected:
-    QScopedPointer<RenderOutput> m_renderOutput;
 
 private:
     Q_DISABLE_COPY(AbstractOutput)

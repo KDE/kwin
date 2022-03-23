@@ -25,6 +25,7 @@ namespace KWin
 
 class SoftwareVsyncMonitor;
 class X11WindowedBackend;
+class RenderOutput;
 
 /**
  * Wayland outputs in a nested X11 setup
@@ -68,6 +69,7 @@ public:
     QPointF mapFromGlobal(const QPointF &pos) const;
 
     bool usesSoftwareCursor() const override;
+    RenderOutput *renderOutput() const;
 
 private:
     void initXInputForWindow();
@@ -80,6 +82,7 @@ private:
     QPoint m_hostPosition;
 
     X11WindowedBackend *m_backend;
+    const QScopedPointer<RenderOutput> m_renderOutput;
 };
 
 }

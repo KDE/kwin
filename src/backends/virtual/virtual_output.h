@@ -47,6 +47,7 @@ public:
     }
 
     void updateEnablement(bool enable) override;
+    RenderOutput *renderOutput() const;
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);
@@ -60,6 +61,7 @@ private:
     int m_gammaSize = 200;
     bool m_gammaResult = true;
     int m_identifier;
+    const QScopedPointer<RenderOutput> m_renderOutput;
 };
 
 }

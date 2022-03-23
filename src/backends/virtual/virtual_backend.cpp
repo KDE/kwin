@@ -68,6 +68,8 @@ bool VirtualBackend::initialize()
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput;
         m_outputsEnabled << dummyOutput;
+        m_renderOutputs << dummyOutput->renderOutput();
+        Q_EMIT renderOutputAdded(dummyOutput->renderOutput());
         Q_EMIT outputAdded(dummyOutput);
         Q_EMIT outputEnabled(dummyOutput);
     }
@@ -128,11 +130,15 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
         }
         m_outputs.append(vo);
         m_outputsEnabled.append(vo);
+        m_renderOutputs << vo->renderOutput();
+        Q_EMIT renderOutputAdded(vo->renderOutput());
         Q_EMIT outputAdded(vo);
         Q_EMIT outputEnabled(vo);
     }
 
     for (VirtualOutput *output : disabled) {
+        m_renderOutputs.removeOne(output->renderOutput());
+        Q_EMIT renderOutputRemoved(output->renderOutput());
         m_outputsEnabled.removeOne(output);
         Q_EMIT outputDisabled(output);
     }
@@ -150,10 +156,14 @@ void VirtualBackend::enableOutput(VirtualOutput *output, bool enable)
 {
     if (enable) {
         Q_ASSERT(!m_outputsEnabled.contains(output));
+        m_renderOutputs << output->renderOutput();
+        Q_EMIT renderOutputAdded(output->renderOutput());
         m_outputsEnabled << output;
         Q_EMIT outputEnabled(output);
     } else {
         Q_ASSERT(m_outputsEnabled.contains(output));
+        m_renderOutputs.removeOne(output->renderOutput());
+        Q_EMIT renderOutputRemoved(output->renderOutput());
         m_outputsEnabled.removeOne(output);
         Q_EMIT outputDisabled(output);
     }
@@ -166,6 +176,7 @@ void VirtualBackend::removeOutput(AbstractOutput *output)
     VirtualOutput *virtualOutput = static_cast<VirtualOutput *>(output);
     virtualOutput->setEnabled(false);
 
+    m_renderOutputs.removeOne(virtualOutput->renderOutput());
     m_outputs.removeOne(virtualOutput);
     Q_EMIT outputRemoved(virtualOutput);
 
@@ -174,4 +185,8 @@ void VirtualBackend::removeOutput(AbstractOutput *output)
     Q_EMIT screensQueried();
 }
 
+QVector<RenderOutput *> VirtualBackend::renderOutputs() const
+{
+    return m_renderOutputs;
+}
 }

@@ -22,6 +22,7 @@
 #include "main.h"
 #include "renderloop.h"
 #include "renderloop_p.h"
+#include "renderoutput.h"
 #include "scene.h"
 #include "screens.h"
 #include "session.h"

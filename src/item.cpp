@@ -10,6 +10,7 @@
 #include "main.h"
 #include "platform.h"
 #include "renderloop.h"
+#include "renderoutput.h"
 #include "scene.h"
 #include "screens.h"
 #include "utils/common.h"
@@ -20,8 +21,8 @@ namespace KWin
 Item::Item(Item *parent)
 {
     setParentItem(parent);
-    connect(kwinApp()->platform(), &Platform::outputDisabled, this, [this](auto output) {
-        removeRepaints(output->renderOutput());
+    connect(kwinApp()->platform(), &Platform::renderOutputRemoved, this, [this](auto output) {
+        removeRepaints(output);
     });
 }
 
@@ -257,19 +258,14 @@ void Item::scheduleRepaint(const QRegion &region)
 
 void Item::scheduleRepaintInternal(const QRegion &region)
 {
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = kwinApp()->platform()->renderOutputs();
     const QRegion globalRegion = mapToGlobal(region);
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        for (const auto &output : outputs) {
-            const QRegion dirtyRegion = globalRegion & output->geometry();
-            if (!dirtyRegion.isEmpty()) {
-                m_repaints[output->renderOutput()] += dirtyRegion;
-                output->renderLoop()->scheduleRepaint(this);
-            }
+    for (const auto &output : outputs) {
+        const QRegion dirtyRegion = globalRegion & output->geometry();
+        if (!dirtyRegion.isEmpty()) {
+            m_repaints[output] += dirtyRegion;
+            output->platformOutput()->renderLoop()->scheduleRepaint(this);
         }
-    } else {
-        m_repaints[outputs.constFirst()->renderOutput()] += globalRegion;
-        outputs.constFirst()->renderLoop()->scheduleRepaint(this);
     }
 }
 

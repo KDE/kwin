@@ -16,6 +16,7 @@ namespace KWin
 class DrmBackend;
 class DrmGpu;
 class DrmOutputLayer;
+class RenderOutput;
 
 class DrmAbstractOutput : public AbstractWaylandOutput
 {
@@ -31,12 +32,14 @@ public:
 
     virtual bool present() = 0;
     virtual DrmOutputLayer *outputLayer() const = 0;
+    RenderOutput *renderOutput() const;
 
 protected:
     friend class DrmGpu;
 
     RenderLoop *m_renderLoop;
     DrmGpu *const m_gpu;
+    const QScopedPointer<RenderOutput> m_renderOutput;
 };
 
 }

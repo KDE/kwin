@@ -49,6 +49,7 @@ public:
 
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
+    QVector<RenderOutput *> renderOutputs() const override;
 
     QVector<CompositingType> supportedCompositors() const override
     {
@@ -68,6 +69,7 @@ Q_SIGNALS:
 private:
     QVector<VirtualOutput *> m_outputs;
     QVector<VirtualOutput *> m_outputsEnabled;
+    QVector<RenderOutput *> m_renderOutputs;
     QScopedPointer<QTemporaryDir> m_screenshotDir;
     Session *m_session;
 };
