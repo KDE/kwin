@@ -67,6 +67,7 @@
 #include <KWaylandServer/datacontroldevicemanager_v1_interface.h>
 #include <KWaylandServer/primaryselectiondevicemanager_v1_interface.h>
 #include <KWaylandServer/relativepointer_v1_interface.h>
+#include <KWaylandServer/surface_scale_interface.h>
 
 // Qt
 #include <QCryptographicHash>
@@ -414,6 +415,7 @@ bool WaylandServer::init(InitializationFlags flags)
     );
 
     new ViewporterInterface(m_display, m_display);
+    new ScalerInterface(m_display, m_display);
     m_display->createShm();
     m_seat = new SeatInterface(m_display, m_display);
     new PointerGesturesV1Interface(m_display, m_display);
