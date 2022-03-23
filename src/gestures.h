@@ -19,7 +19,12 @@
 
 namespace KWin
 {
-static const qreal DEFAULT_MINIMUM_SCALE_DELTA = .2; // 20%
+/*
+ * Everytime the scale of the gesture changes by this much, the callback changes by 1.
+ * This is the amount of change for 1 unit of change, like switch by 1 desktop.
+ * */
+static const qreal DEFAULT_UNIT_SCALE_DELTA = .2; // 20%
+
 class Gesture : public QObject
 {
     Q_OBJECT
@@ -171,7 +176,7 @@ private:
     uint m_maximumFingerCount = 0;
     Direction m_direction = Direction::Expanding;
     bool m_minimumScaleDeltaRelevant = false;
-    qreal m_minimumScaleDelta = DEFAULT_MINIMUM_SCALE_DELTA;
+    qreal m_minimumScaleDelta = DEFAULT_UNIT_SCALE_DELTA;
 };
 
 class KWIN_EXPORT GestureRecognizer : public QObject
