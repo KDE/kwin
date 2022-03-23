@@ -234,7 +234,7 @@ bool DrmOutput::present()
             setVrrPolicy(RenderLoop::VrrPolicy::Never);
         }
     }
-    if (m_pipeline->present()) {
+    if (DrmPipeline::presentPipelines({m_pipeline})) {
         Q_EMIT outputChange(m_pipeline->pending.layer->currentDamage());
         return true;
     } else {
