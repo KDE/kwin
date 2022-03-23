@@ -41,20 +41,19 @@ class DrmOutput : public DrmAbstractOutput
 {
     Q_OBJECT
 public:
-    DrmOutput(DrmPipeline *pipeline);
+    DrmOutput(const QVector<DrmConnector *> &connectors);
     ~DrmOutput() override;
 
-    DrmConnector *connector() const;
-    DrmPipeline *pipeline() const;
-
     bool present() override;
+    void pageFlipped(std::chrono::nanoseconds timestamp) const override;
+    QVector<QSharedPointer<RenderOutput>> renderOutputs() const override;
 
     bool queueChanges(const WaylandOutputConfig &config);
     void applyQueuedChanges(const WaylandOutputConfig &config);
     void revertQueuedChanges();
     void updateModes();
 
-    RenderOutput *renderOutput() const override;
+    QVector<DrmConnector *> connectors() const;
 
 private:
     void initOutputDevice();
@@ -69,10 +68,12 @@ private:
     bool setGammaRamp(const GammaRamp &gamma) override;
     void updateCursor();
     void moveCursor();
+    void applyPipelineChanges();
+    void revertPipelineChanges();
 
-    DrmPipeline *m_pipeline;
-    DrmConnector *m_connector;
-    const QScopedPointer<DrmRenderOutput> m_renderOutput;
+    const QVector<DrmConnector *> m_connectors;
+    QVector<DrmPipeline *> m_pipelines;
+    QVector<QSharedPointer<RenderOutput>> m_renderOutputs;
 
     QTimer m_turnOffTimer;
 };
@@ -84,6 +85,7 @@ public:
 
     bool usesSoftwareCursor() const override;
     OutputLayer *layer() const override;
+    QRect geometry() const override;
 
 protected:
     void updateCursor();

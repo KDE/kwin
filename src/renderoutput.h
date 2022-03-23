@@ -25,7 +25,7 @@ public:
     RenderOutput(AbstractOutput *output);
     virtual ~RenderOutput();
 
-    virtual QRect geometry() const;
+    virtual QRect geometry() const = 0;
     virtual AbstractOutput *platformOutput() const;
     QSize pixelSize() const;
     /**
@@ -61,6 +61,7 @@ public:
 
     bool usesSoftwareCursor() const override;
     OutputLayer *layer() const override;
+    QRect geometry() const override;
 
 protected:
     const QScopedPointer<OutputLayer> m_layer;

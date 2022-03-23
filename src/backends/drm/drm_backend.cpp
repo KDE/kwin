@@ -325,15 +325,7 @@ void DrmBackend::updateOutputs()
     }
 
     std::sort(m_outputs.begin(), m_outputs.end(), [](DrmAbstractOutput *a, DrmAbstractOutput *b) {
-        auto da = qobject_cast<DrmOutput *>(a);
-        auto db = qobject_cast<DrmOutput *>(b);
-        if (da && !db) {
-            return true;
-        } else if (da && db) {
-            return da->pipeline()->connector()->id() < db->pipeline()->connector()->id();
-        } else {
-            return false;
-        }
+        return a < b;
     });
     if (oldOutputs != m_outputs) {
         readOutputsConfiguration(m_outputs);
@@ -499,8 +491,11 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
         return;
     }
     if (enable) {
-        m_renderOutputs << output->renderOutput();
-        Q_EMIT renderOutputAdded(output->renderOutput());
+        const auto renderOutputs = output->renderOutputs();
+        for (const auto &renderOutput : renderOutputs) {
+            m_renderOutputs << renderOutput.get();
+            Q_EMIT renderOutputAdded(renderOutput.get());
+        }
         m_enabledOutputs << output;
         Q_EMIT output->gpu()->outputEnabled(output);
         Q_EMIT outputEnabled(output);
@@ -532,8 +527,11 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
             m_placeholderFilter.reset(new PlaceholderInputEventFilter());
             input()->prependInputEventFilter(m_placeholderFilter.data());
         }
-        m_renderOutputs.removeOne(output->renderOutput());
-        Q_EMIT renderOutputRemoved(output->renderOutput());
+        const auto renderOutputs = output->renderOutputs();
+        for (const auto &renderOutput : renderOutputs) {
+            m_renderOutputs.removeOne(renderOutput.get());
+            Q_EMIT renderOutputRemoved(renderOutput.get());
+        }
         m_enabledOutputs.removeOne(output);
         Q_EMIT output->gpu()->outputDisabled(output);
         Q_EMIT outputDisabled(output);

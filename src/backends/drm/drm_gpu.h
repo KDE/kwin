@@ -99,7 +99,7 @@ Q_SIGNALS:
 
 private:
     void dispatchEvents();
-    DrmOutput *findOutput(quint32 connector);
+    DrmOutput *findOutput(DrmConnector *connector);
     DrmLeaseOutput *findLeaseOutput(quint32 connector);
     void removeOutput(DrmOutput *output);
     void removeLeaseOutput(DrmLeaseOutput *output);

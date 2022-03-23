@@ -29,7 +29,7 @@ DrmVirtualOutput::DrmVirtualOutput(DrmGpu *gpu, const QSize &size)
 
 DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size)
     : DrmAbstractOutput(gpu)
-    , m_renderOutput(new SimpleRenderOutput(this, true))
+    , m_renderOutput(QSharedPointer<SimpleRenderOutput>::create(this, true))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
 {
     connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
@@ -90,9 +90,9 @@ bool DrmVirtualOutput::setGammaRamp(const GammaRamp &gamma)
     return true;
 }
 
-RenderOutput *DrmVirtualOutput::renderOutput() const
+QVector<QSharedPointer<RenderOutput>> DrmVirtualOutput::renderOutputs() const
 {
-    return m_renderOutput.get();
+    return {m_renderOutput};
 }
 
 void DrmVirtualOutput::recreateSurface()

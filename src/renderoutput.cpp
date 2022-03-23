@@ -19,11 +19,6 @@ RenderOutput::RenderOutput(AbstractOutput *output)
 
 RenderOutput::~RenderOutput() = default;
 
-QRect RenderOutput::geometry() const
-{
-    return m_output->geometry();
-}
-
 QSize RenderOutput::pixelSize() const
 {
     return geometry().size() * platformOutput()->scale();
@@ -59,5 +54,10 @@ OutputLayer *SimpleRenderOutput::layer() const
 bool SimpleRenderOutput::usesSoftwareCursor() const
 {
     return m_needsSoftwareCursor;
+}
+
+QRect SimpleRenderOutput::geometry() const
+{
+    return m_output->geometry();
 }
 }

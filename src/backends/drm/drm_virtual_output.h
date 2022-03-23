@@ -33,7 +33,7 @@ public:
     bool present() override;
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
-    RenderOutput *renderOutput() const override;
+    QVector<QSharedPointer<RenderOutput>> renderOutputs() const override;
     void recreateSurface();
 
 private:
@@ -41,7 +41,7 @@ private:
     void setDpmsMode(DpmsMode mode) override;
     void updateEnablement(bool enable) override;
 
-    const QScopedPointer<SimpleRenderOutput> m_renderOutput;
+    const QSharedPointer<SimpleRenderOutput> m_renderOutput;
     QSharedPointer<DrmOutputLayer> m_layer;
     bool m_pageFlipPending = true;
     int m_modeIndex = 0;
