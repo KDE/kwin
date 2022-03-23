@@ -8,7 +8,8 @@
 */
 #pragma once
 
-#include <QObject>
+#include "outputlayer.h"
+
 #include <QRegion>
 #include <QSharedPointer>
 #include <optional>
@@ -21,9 +22,8 @@ class DrmBuffer;
 class GLTexture;
 class DrmPipeline;
 
-class DrmOutputLayer : public QObject
+class DrmOutputLayer : public OutputLayer
 {
-    Q_OBJECT
 public:
     virtual ~DrmOutputLayer();
 

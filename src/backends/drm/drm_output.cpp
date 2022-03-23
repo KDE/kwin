@@ -45,6 +45,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
     : DrmAbstractOutput(pipeline->connector()->gpu())
     , m_pipeline(pipeline)
     , m_connector(pipeline->connector())
+    , m_renderOutput(new DrmRenderOutput(this, pipeline))
 {
     m_pipeline->setOutput(this);
     const auto conn = m_pipeline->connector();
@@ -423,9 +424,25 @@ bool DrmOutput::usesSoftwareCursor() const
     return !m_setCursorSuccessful || !m_moveCursorSuccessful;
 }
 
-DrmOutputLayer *DrmOutput::outputLayer() const
+RenderOutput *DrmOutput::renderOutput() const
 {
-    return m_pipeline->pending.layer.data();
+    return m_renderOutput.get();
+}
+
+DrmRenderOutput::DrmRenderOutput(DrmOutput *output, DrmPipeline *pipeline)
+    : RenderOutput(output)
+    , m_pipeline(pipeline)
+{
+}
+
+bool DrmRenderOutput::usesSoftwareCursor() const
+{
+    return m_pipeline->output()->usesSoftwareCursor();
+}
+
+OutputLayer *DrmRenderOutput::layer() const
+{
+    return m_pipeline->pending.layer.get();
 }
 
 }

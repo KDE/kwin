@@ -219,7 +219,7 @@ bool EglGbmBackend::initBufferConfigs()
 
 void EglGbmBackend::aboutToStartPainting(RenderOutput *output, const QRegion &damagedRegion)
 {
-    static_cast<DrmAbstractOutput *>(output->platformOutput())->outputLayer()->aboutToStartPainting(damagedRegion);
+    static_cast<DrmOutputLayer *>(output->layer())->aboutToStartPainting(damagedRegion);
 }
 
 SurfaceTexture *EglGbmBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
@@ -234,7 +234,7 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
 
 QRegion EglGbmBackend::beginFrame(RenderOutput *output)
 {
-    return static_cast<DrmAbstractOutput *>(output->platformOutput())->outputLayer()->startRendering().value_or(QRegion());
+    return static_cast<DrmOutputLayer *>(output->layer())->startRendering().value_or(QRegion());
 }
 
 void EglGbmBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion,
@@ -242,16 +242,14 @@ void EglGbmBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion
 {
     Q_UNUSED(renderedRegion)
 
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output->platformOutput());
-    drmOutput->outputLayer()->endRendering(damagedRegion);
-    drmOutput->present();
+    static_cast<DrmOutputLayer *>(output->layer())->endRendering(damagedRegion);
+    static_cast<DrmAbstractOutput *>(output->platformOutput())->present();
 }
 
 bool EglGbmBackend::scanout(RenderOutput *output, SurfaceItem *surfaceItem)
 {
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output->platformOutput());
-    if (drmOutput->outputLayer()->scanout(surfaceItem)) {
-        drmOutput->present();
+    if (static_cast<DrmOutputLayer *>(output->layer())->scanout(surfaceItem)) {
+        static_cast<DrmAbstractOutput *>(output->platformOutput())->present();
         return true;
     } else {
         return false;
@@ -260,8 +258,7 @@ bool EglGbmBackend::scanout(RenderOutput *output, SurfaceItem *surfaceItem)
 
 QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(RenderOutput *output) const
 {
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output->platformOutput());
-    return static_cast<EglGbmLayer *>(drmOutput->outputLayer())->texture();
+    return static_cast<EglGbmLayer *>(output->layer())->texture();
 }
 
 GbmFormat EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const

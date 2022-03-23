@@ -31,15 +31,13 @@ public:
     DrmGpu *gpu() const;
 
     virtual bool present() = 0;
-    virtual DrmOutputLayer *outputLayer() const = 0;
-    RenderOutput *renderOutput() const;
+    virtual RenderOutput *renderOutput() const = 0;
 
 protected:
     friend class DrmGpu;
 
     RenderLoop *m_renderLoop;
     DrmGpu *const m_gpu;
-    const QScopedPointer<RenderOutput> m_renderOutput;
 };
 
 }

@@ -12,7 +12,7 @@
 #include "drm_abstract_output.h"
 #include "drm_object.h"
 #include "drm_object_plane.h"
-#include "drm_pointer.h"
+#include "renderoutput.h"
 
 #include <QObject>
 #include <QPoint>
@@ -35,8 +35,9 @@ class Cursor;
 class DrmGpu;
 class DrmPipeline;
 class DumbSwapchain;
+class DrmRenderOutput;
 
-class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
+class DrmOutput : public DrmAbstractOutput
 {
     Q_OBJECT
 public:
@@ -47,7 +48,6 @@ public:
     DrmPipeline *pipeline() const;
 
     bool present() override;
-    DrmOutputLayer *outputLayer() const override;
 
     bool queueChanges(const WaylandOutputConfig &config);
     void applyQueuedChanges(const WaylandOutputConfig &config);
@@ -55,6 +55,7 @@ public:
     void updateModes();
 
     bool usesSoftwareCursor() const override;
+    RenderOutput *renderOutput() const override;
 
 private:
     void initOutputDevice();
@@ -72,6 +73,7 @@ private:
 
     DrmPipeline *m_pipeline;
     DrmConnector *m_connector;
+    const QScopedPointer<DrmRenderOutput> m_renderOutput;
 
     QSharedPointer<DumbSwapchain> m_cursor;
     bool m_setCursorSuccessful = false;
@@ -80,6 +82,17 @@ private:
     QTimer m_turnOffTimer;
 };
 
+class DrmRenderOutput : public RenderOutput
+{
+public:
+    DrmRenderOutput(DrmOutput *output, DrmPipeline *pipeline);
+
+    bool usesSoftwareCursor() const override;
+    OutputLayer *layer() const override;
+
+protected:
+    DrmPipeline *const m_pipeline;
+};
 }
 
 Q_DECLARE_METATYPE(KWin::DrmOutput *)

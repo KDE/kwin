@@ -20,6 +20,7 @@ namespace KWin
 class SoftwareVsyncMonitor;
 class VirtualBackend;
 class DrmPipelineLayer;
+class SimpleRenderOutput;
 
 class DrmVirtualOutput : public DrmAbstractOutput
 {
@@ -32,7 +33,7 @@ public:
     bool present() override;
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
-    DrmOutputLayer *outputLayer() const override;
+    RenderOutput *renderOutput() const override;
     void recreateSurface();
 
 private:
@@ -40,6 +41,7 @@ private:
     void setDpmsMode(DpmsMode mode) override;
     void updateEnablement(bool enable) override;
 
+    const QScopedPointer<SimpleRenderOutput> m_renderOutput;
     QSharedPointer<DrmOutputLayer> m_layer;
     bool m_pageFlipPending = true;
     int m_modeIndex = 0;
