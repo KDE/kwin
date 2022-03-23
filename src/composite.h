@@ -135,7 +135,7 @@ private:
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
 
-    RenderOutput *findOutput(RenderLoop *loop) const;
+    AbstractOutput *findOutput(RenderLoop *loop) const;
     void addOutput(RenderOutput *output);
     void removeOutput(RenderOutput *output);
 

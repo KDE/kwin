@@ -1800,13 +1800,14 @@ void EffectsHandlerImpl::slotOutputDisabled(AbstractOutput *output)
 void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
 {
     const auto outputs = kwinApp()->platform()->renderOutputs();
-    auto it = std::find_if(outputs.begin(), outputs.end(), [screen](const auto &output) {
-        return static_cast<EffectScreenImpl *>(screen)->platformOutput() == output->platformOutput();
-    });
-    Q_ASSERT(it != outputs.end());
-    m_scene->prePaint(*it);
-    m_scene->paint((*it)->geometry());
-    m_scene->postPaint();
+    for (const auto &output : outputs) {
+        if (static_cast<EffectScreenImpl *>(screen)->platformOutput() != output->platformOutput()) {
+            continue;
+        }
+        m_scene->prePaint(output);
+        m_scene->paint(output->geometry());
+        m_scene->postPaint();
+    }
 }
 
 bool EffectsHandlerImpl::isCursorHidden() const

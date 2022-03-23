@@ -408,12 +408,12 @@ void Compositor::startupWithWorkspace()
     }
 }
 
-RenderOutput *Compositor::findOutput(RenderLoop *loop) const
+AbstractOutput *Compositor::findOutput(RenderLoop *loop) const
 {
     const auto outputs = kwinApp()->platform()->renderOutputs();
     for (const auto &output : outputs) {
         if (output->platformOutput()->renderLoop() == loop) {
-            return output;
+            return output->platformOutput();
         }
     }
     return nullptr;
@@ -640,46 +640,51 @@ void Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
-    const auto output = findOutput(renderLoop);
-    OutputLayer *outputLayer = output->layer();
-    fTraceDuration("Paint (", output->platformOutput()->name(), ")");
-
-    RenderLayer *superLayer = m_superlayers[renderLoop];
-    prePaintPass(superLayer);
-    superLayer->setOutputLayer(outputLayer);
-
-    SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
-    renderLoop->setFullscreenSurface(scanoutCandidate);
-
-    renderLoop->beginFrame();
-    bool directScanout = false;
-    if (scanoutCandidate) {
-        const auto sublayers = superLayer->sublayers();
-        const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
-            return sublayer->isVisible();
-        });
-        if (scanoutPossible) {
-            directScanout = m_backend->scanout(output, scanoutCandidate);
+    const auto outputs = kwinApp()->platform()->renderOutputs();
+    const auto platformOutput = findOutput(renderLoop);
+    fTraceDuration("Paint (", platformOutput->name(), ")");
+    for (const auto &output : outputs) {
+        if (output->platformOutput()->renderLoop() != renderLoop) {
+            continue;
         }
+        OutputLayer *outputLayer = output->layer();
+        RenderLayer *superLayer = m_superlayers[renderLoop];
+        prePaintPass(superLayer);
+        superLayer->setOutputLayer(outputLayer);
+
+        SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
+        renderLoop->setFullscreenSurface(scanoutCandidate);
+
+        renderLoop->beginFrame();
+        bool directScanout = false;
+        if (scanoutCandidate) {
+            const auto sublayers = superLayer->sublayers();
+            const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
+                return sublayer->isVisible();
+            });
+            if (scanoutPossible) {
+                directScanout = m_backend->scanout(output, scanoutCandidate);
+            }
+        }
+
+        if (directScanout) {
+            renderLoop->endFrame();
+        } else {
+            QRegion surfaceDamage = outputLayer->repaints();
+            outputLayer->resetRepaints();
+            preparePaintPass(superLayer, &surfaceDamage);
+
+            const QRegion repair = m_backend->beginFrame(output);
+            const QRegion bufferDamage = surfaceDamage.united(repair);
+            m_backend->aboutToStartPainting(output, bufferDamage);
+
+            paintPass(superLayer, bufferDamage);
+            renderLoop->endFrame();
+            m_backend->endFrame(output, bufferDamage, surfaceDamage);
+        }
+
+        postPaintPass(superLayer);
     }
-
-    if (directScanout) {
-        renderLoop->endFrame();
-    } else {
-        QRegion surfaceDamage = outputLayer->repaints();
-        outputLayer->resetRepaints();
-        preparePaintPass(superLayer, &surfaceDamage);
-
-        const QRegion repair = m_backend->beginFrame(output);
-        const QRegion bufferDamage = surfaceDamage.united(repair);
-        m_backend->aboutToStartPainting(output, bufferDamage);
-
-        paintPass(superLayer, bufferDamage);
-        renderLoop->endFrame();
-        m_backend->endFrame(output, bufferDamage, surfaceDamage);
-    }
-
-    postPaintPass(superLayer);
 
     // TODO: Put it inside the cursor layer once the cursor layer can be backed by a real output layer.
     if (waylandServer()) {
@@ -688,7 +693,7 @@ void Compositor::composite(RenderLoop *renderLoop)
 
         if (!Cursors::self()->isCursorHidden()) {
             Cursor *cursor = Cursors::self()->currentCursor();
-            if (cursor->geometry().intersects(output->geometry())) {
+            if (cursor->geometry().intersects(platformOutput->geometry())) {
                 cursor->markAsRendered(frameTime);
             }
         }
