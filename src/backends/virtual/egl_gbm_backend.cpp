@@ -199,11 +199,16 @@ static void convertFromGLImage(QImage &img, int w, int h)
 
 void EglGbmBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(output)
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
+}
+
+void EglGbmBackend::present(AbstractOutput *output)
+{
     glFlush();
 
-    static_cast<VirtualOutput *>(output->platformOutput())->vsyncMonitor()->arm();
+    static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
 
     if (m_backend->saveFrames()) {
         QImage img = QImage(QSize(m_backBuffer->width(), m_backBuffer->height()), QImage::Format_ARGB32);

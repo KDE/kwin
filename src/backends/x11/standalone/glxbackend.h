@@ -69,8 +69,11 @@ public:
     GlxBackend(Display *display, X11StandalonePlatform *backend);
     ~GlxBackend() override;
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
+
     QRegion beginFrame(RenderOutput *output) override;
     void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void present(AbstractOutput *output) override;
+
     bool makeCurrent() override;
     void doneCurrent() override;
     OverlayWindow *overlayWindow() const override;
@@ -109,6 +112,7 @@ private:
     std::unique_ptr<SwapEventFilter> m_swapEventFilter;
     QScopedPointer<GLRenderTarget> m_renderTarget;
     DamageJournal m_damageJournal;
+    QRegion m_lastRenderedRegion;
     int m_bufferAge;
     bool m_haveMESACopySubBuffer = false;
     bool m_haveMESASwapControl = false;

@@ -77,12 +77,17 @@ QRegion EglX11Backend::beginFrame(RenderOutput *output)
 
 void EglX11Backend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(output)
     Q_UNUSED(damagedRegion)
+    m_lastRenderedRegion = renderedRegion;
+}
 
-    static_cast<X11WindowedOutput *>(output->platformOutput())->vsyncMonitor()->arm();
+void EglX11Backend::present(AbstractOutput *output)
+{
+    static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
     GLRenderTarget::popRenderTarget();
 
-    presentSurface(m_outputs[output->platformOutput()]->m_eglSurface, renderedRegion, output->geometry());
+    presentSurface(m_outputs[output]->m_eglSurface, m_lastRenderedRegion, output->geometry());
 }
 
 void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)

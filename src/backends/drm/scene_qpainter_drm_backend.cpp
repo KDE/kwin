@@ -47,7 +47,11 @@ void DrmQPainterBackend::endFrame(RenderOutput *output, const QRegion &renderedR
 {
     Q_UNUSED(renderedRegion)
     static_cast<DrmOutputLayer *>(output->layer())->endRendering(damage);
-    static_cast<DrmAbstractOutput *>(output->platformOutput())->present();
+}
+
+void DrmQPainterBackend::present(AbstractOutput *output)
+{
+    static_cast<DrmAbstractOutput *>(output)->present();
 }
 
 QSharedPointer<DrmPipelineLayer> DrmQPainterBackend::createDrmPipelineLayer(DrmPipeline *pipeline)

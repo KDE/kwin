@@ -243,17 +243,16 @@ void EglGbmBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion
     Q_UNUSED(renderedRegion)
 
     static_cast<DrmOutputLayer *>(output->layer())->endRendering(damagedRegion);
-    static_cast<DrmAbstractOutput *>(output->platformOutput())->present();
 }
 
 bool EglGbmBackend::scanout(RenderOutput *output, SurfaceItem *surfaceItem)
 {
-    if (static_cast<DrmOutputLayer *>(output->layer())->scanout(surfaceItem)) {
-        static_cast<DrmAbstractOutput *>(output->platformOutput())->present();
-        return true;
-    } else {
-        return false;
-    }
+    return static_cast<DrmOutputLayer *>(output->layer())->scanout(surfaceItem);
+}
+
+void EglGbmBackend::present(AbstractOutput *output)
+{
+    static_cast<DrmAbstractOutput *>(output)->present();
 }
 
 QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(RenderOutput *output) const

@@ -48,6 +48,8 @@ public:
      * Returns @c true if scanout succeeds, @c false if rendering is necessary
      */
     virtual bool scanout(RenderOutput *output, SurfaceItem *surfaceItem);
+
+    virtual void present(AbstractOutput *output) = 0;
 };
 
 } // namespace KWin

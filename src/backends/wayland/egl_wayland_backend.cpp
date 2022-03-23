@@ -394,18 +394,22 @@ QRegion EglWaylandBackend::beginFrame(RenderOutput *output)
 
 void EglWaylandBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_ASSERT(m_outputs.contains(output->platformOutput()));
+    Q_UNUSED(output)
     Q_UNUSED(renderedRegion);
-
-    GLRenderTarget::popRenderTarget();
-
-    const auto &eglOutput = m_outputs[output->platformOutput()];
-    presentOnSurface(eglOutput, damagedRegion);
-
-    if (supportsBufferAge()) {
-        eglOutput->m_damageJournal.add(damagedRegion);
-    }
+    m_lastDamage = damagedRegion;
 }
 
+void EglWaylandBackend::present(AbstractOutput *output)
+{
+    Q_ASSERT(m_outputs.contains(output));
+    GLRenderTarget::popRenderTarget();
+
+    const auto &eglOutput = m_outputs[output];
+    presentOnSurface(eglOutput, m_lastDamage);
+
+    if (supportsBufferAge()) {
+        eglOutput->m_damageJournal.add(m_lastDamage);
+    }
+}
 }
 }

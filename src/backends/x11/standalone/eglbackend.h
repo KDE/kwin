@@ -33,12 +33,14 @@ public:
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *texture) override;
     QRegion beginFrame(RenderOutput *output) override;
     void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void present(AbstractOutput *output) override;
 
 private:
     void screenGeometryChanged();
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
     void vblank(std::chrono::nanoseconds timestamp);
 
+    QRegion m_lastRenderedRegion;
     X11StandalonePlatform *m_backend;
     SoftwareVsyncMonitor *m_vsyncMonitor;
     DamageJournal m_damageJournal;

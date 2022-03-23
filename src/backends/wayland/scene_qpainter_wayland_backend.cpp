@@ -171,11 +171,16 @@ void WaylandQPainterBackend::createOutput(AbstractOutput *waylandOutput)
 
 void WaylandQPainterBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(output)
     Q_UNUSED(renderedRegion)
-    WaylandQPainterOutput *rendererOutput = m_outputs[output->platformOutput()];
-    Q_ASSERT(rendererOutput);
+    m_lastDamage = damagedRegion;
+}
 
-    rendererOutput->present(rendererOutput->mapToLocal(damagedRegion));
+void WaylandQPainterBackend::present(AbstractOutput *output)
+{
+    WaylandQPainterOutput *rendererOutput = m_outputs[output];
+    Q_ASSERT(rendererOutput);
+    rendererOutput->present(rendererOutput->mapToLocal(m_lastDamage));
 }
 
 QImage *WaylandQPainterBackend::bufferForScreen(RenderOutput *output)

@@ -28,8 +28,11 @@ public:
     ~EglGbmBackend() override;
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+
     QRegion beginFrame(RenderOutput *output) override;
     void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void present(AbstractOutput *output) override;
+
     void init() override;
 
 private:

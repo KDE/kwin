@@ -33,6 +33,8 @@ public:
     QImage *bufferForScreen(RenderOutput *output) override;
     QRegion beginFrame(RenderOutput *output) override;
     void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void present(AbstractOutput *output) override;
+
     QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) override;
     QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 

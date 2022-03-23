@@ -77,6 +77,8 @@ public:
 
     QRegion beginFrame(RenderOutput *output) override;
     void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void present(AbstractOutput *output) override;
+
     void init() override;
 
     bool havePlatformBase() const
@@ -100,6 +102,7 @@ private:
     bool makeContextCurrent(EglWaylandOutput *output);
     void presentOnSurface(EglWaylandOutput *output, const QRegion &damagedRegion);
 
+    QRegion m_lastDamage;
     WaylandBackend *m_backend;
     QMap<AbstractOutput *, EglWaylandOutput *> m_outputs;
     bool m_havePlatformBase;

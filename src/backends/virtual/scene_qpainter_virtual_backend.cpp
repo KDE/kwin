@@ -50,14 +50,17 @@ void VirtualQPainterBackend::createOutputs()
 
 void VirtualQPainterBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(output)
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
-
-    static_cast<VirtualOutput *>(output->platformOutput())->vsyncMonitor()->arm();
-
-    if (m_backend->saveFrames()) {
-        m_backBuffers[output->platformOutput()].save(QStringLiteral("%1/%s-%3.png").arg(m_backend->screenshotDirPath(), output->platformOutput()->name(), QString::number(m_frameCounter++)));
-    }
 }
 
+void VirtualQPainterBackend::present(AbstractOutput *output)
+{
+    static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
+
+    if (m_backend->saveFrames()) {
+        m_backBuffers[output].save(QStringLiteral("%1/%s-%3.png").arg(m_backend->screenshotDirPath(), output->name(), QString::number(m_frameCounter++)));
+    }
+}
 }

@@ -125,17 +125,27 @@ QRegion EglBackend::beginFrame(RenderOutput *output)
 void EglBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(output)
+    m_lastRenderedRegion = renderedRegion;
 
+    // Save the damaged region to history
+    if (supportsBufferAge()) {
+        m_damageJournal.add(damagedRegion);
+    }
+}
+
+void EglBackend::present(AbstractOutput *output)
+{
+    Q_UNUSED(output)
     // Start the software vsync monitor. There is no any reliable way to determine when
     // eglSwapBuffers() or eglSwapBuffersWithDamageEXT() completes.
     m_vsyncMonitor->arm();
 
-    QRegion effectiveRenderedRegion = renderedRegion;
+    QRegion effectiveRenderedRegion = m_lastRenderedRegion;
     if (!GLPlatform::instance()->isGLES()) {
         const QRegion displayRegion(screens()->geometry());
-        if (!supportsBufferAge() && options->glPreferBufferSwap() == Options::CopyFrontBuffer && renderedRegion != displayRegion) {
+        if (!supportsBufferAge() && options->glPreferBufferSwap() == Options::CopyFrontBuffer && m_lastRenderedRegion != displayRegion) {
             glReadBuffer(GL_FRONT);
-            copyPixels(displayRegion - renderedRegion);
+            copyPixels(displayRegion - m_lastRenderedRegion);
             glReadBuffer(GL_BACK);
             effectiveRenderedRegion = displayRegion;
         }
@@ -148,11 +158,6 @@ void EglBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, c
 
     if (overlayWindow() && overlayWindow()->window()) { // show the window only after the first pass,
         overlayWindow()->show(); // since that pass may take long
-    }
-
-    // Save the damaged region to history
-    if (supportsBufferAge()) {
-        m_damageJournal.add(damagedRegion);
     }
 }
 

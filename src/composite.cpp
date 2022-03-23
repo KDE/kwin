@@ -667,9 +667,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             }
         }
 
-        if (directScanout) {
-            renderLoop->endFrame();
-        } else {
+        if (!directScanout) {
             QRegion surfaceDamage = outputLayer->repaints();
             outputLayer->resetRepaints();
             preparePaintPass(superLayer, &surfaceDamage);
@@ -679,12 +677,13 @@ void Compositor::composite(RenderLoop *renderLoop)
             m_backend->aboutToStartPainting(output, bufferDamage);
 
             paintPass(superLayer, bufferDamage);
-            renderLoop->endFrame();
             m_backend->endFrame(output, bufferDamage, surfaceDamage);
         }
 
         postPaintPass(superLayer);
     }
+    renderLoop->endFrame();
+    m_backend->present(platformOutput);
 
     // TODO: Put it inside the cursor layer once the cursor layer can be backed by a real output layer.
     if (waylandServer()) {
