@@ -29,10 +29,12 @@ public:
     Device *device() const;
     libinput_device *nativeDevice() const;
 
-    operator libinput_event*() {
+    operator libinput_event *()
+    {
         return m_event;
     }
-    operator libinput_event*() const {
+    operator libinput_event *() const
+    {
         return m_event;
     }
 
@@ -57,10 +59,12 @@ public:
     InputRedirection::KeyboardKeyState state() const;
     uint32_t time() const;
 
-    operator libinput_event_keyboard*() {
+    operator libinput_event_keyboard *()
+    {
         return m_keyboardEvent;
     }
-    operator libinput_event_keyboard*() const {
+    operator libinput_event_keyboard *() const
+    {
         return m_keyboardEvent;
     }
 
@@ -71,7 +75,7 @@ private:
 class PointerEvent : public Event
 {
 public:
-    PointerEvent(libinput_event* event, libinput_event_type type);
+    PointerEvent(libinput_event *event, libinput_event_type type);
     ~PointerEvent() override;
 
     QPointF absolutePos() const;
@@ -87,10 +91,12 @@ public:
     qint32 discreteAxisValue(InputRedirection::PointerAxis axis) const;
     InputRedirection::PointerAxisSource axisSource() const;
 
-    operator libinput_event_pointer*() {
+    operator libinput_event_pointer *()
+    {
         return m_pointerEvent;
     }
-    operator libinput_event_pointer*() const {
+    operator libinput_event_pointer *() const
+    {
         return m_pointerEvent;
     }
 
@@ -109,10 +115,12 @@ public:
     QPointF absolutePos(const QSize &size) const;
     qint32 id() const;
 
-    operator libinput_event_touch*() {
+    operator libinput_event_touch *()
+    {
         return m_touchEvent;
     }
-    operator libinput_event_touch*() const {
+    operator libinput_event_touch *() const
+    {
         return m_touchEvent;
     }
 
@@ -132,10 +140,12 @@ public:
 
     bool isCancelled() const;
 
-    operator libinput_event_gesture*() {
+    operator libinput_event_gesture *()
+    {
         return m_gestureEvent;
     }
-    operator libinput_event_gesture*() const {
+    operator libinput_event_gesture *() const
+    {
         return m_gestureEvent;
     }
 
@@ -168,7 +178,6 @@ public:
     ~HoldGestureEvent() override;
 };
 
-
 class SwitchEvent : public Event
 {
 public:
@@ -197,28 +206,36 @@ public:
     {
         return libinput_event_tablet_tool_get_time(m_tabletToolEvent);
     }
-    bool xHasChanged() const {
+    bool xHasChanged() const
+    {
         return libinput_event_tablet_tool_x_has_changed(m_tabletToolEvent);
     }
-    bool yHasChanged() const {
+    bool yHasChanged() const
+    {
         return libinput_event_tablet_tool_y_has_changed(m_tabletToolEvent);
     }
-    bool pressureHasChanged() const {
+    bool pressureHasChanged() const
+    {
         return libinput_event_tablet_tool_pressure_has_changed(m_tabletToolEvent);
     }
-    bool distanceHasChanged() const {
+    bool distanceHasChanged() const
+    {
         return libinput_event_tablet_tool_distance_has_changed(m_tabletToolEvent);
     }
-    bool tiltXHasChanged() const {
+    bool tiltXHasChanged() const
+    {
         return libinput_event_tablet_tool_tilt_x_has_changed(m_tabletToolEvent);
     }
-    bool tiltYHasChanged() const {
+    bool tiltYHasChanged() const
+    {
         return libinput_event_tablet_tool_tilt_y_has_changed(m_tabletToolEvent);
     }
-    bool rotationHasChanged() const {
+    bool rotationHasChanged() const
+    {
         return libinput_event_tablet_tool_rotation_has_changed(m_tabletToolEvent);
     }
-    bool sliderHasChanged() const {
+    bool sliderHasChanged() const
+    {
         return libinput_event_tablet_tool_slider_has_changed(m_tabletToolEvent);
     }
 
@@ -227,33 +244,42 @@ public:
     //     libinput_event_tablet_tool_size_major_has_changed(m_tabletToolEvent); } bool
     //     sizeMinorHasChanged() const { return
     //     libinput_event_tablet_tool_size_minor_has_changed(m_tabletToolEvent); }
-    bool wheelHasChanged() const {
+    bool wheelHasChanged() const
+    {
         return libinput_event_tablet_tool_wheel_has_changed(m_tabletToolEvent);
     }
-    QPointF position() const {
+    QPointF position() const
+    {
         return {libinput_event_tablet_tool_get_x(m_tabletToolEvent),
                 libinput_event_tablet_tool_get_y(m_tabletToolEvent)};
     }
-    QPointF delta() const {
+    QPointF delta() const
+    {
         return {libinput_event_tablet_tool_get_dx(m_tabletToolEvent),
                 libinput_event_tablet_tool_get_dy(m_tabletToolEvent)};
     }
-    qreal pressure() const {
+    qreal pressure() const
+    {
         return libinput_event_tablet_tool_get_pressure(m_tabletToolEvent);
     }
-    qreal distance() const {
+    qreal distance() const
+    {
         return libinput_event_tablet_tool_get_distance(m_tabletToolEvent);
     }
-    int xTilt() const {
+    int xTilt() const
+    {
         return libinput_event_tablet_tool_get_tilt_x(m_tabletToolEvent);
     }
-    int yTilt() const {
+    int yTilt() const
+    {
         return libinput_event_tablet_tool_get_tilt_y(m_tabletToolEvent);
     }
-    qreal rotation() const {
+    qreal rotation() const
+    {
         return libinput_event_tablet_tool_get_rotation(m_tabletToolEvent);
     }
-    qreal sliderPosition() const {
+    qreal sliderPosition() const
+    {
         return libinput_event_tablet_tool_get_slider_position(m_tabletToolEvent);
     }
     // Uncomment when depending on libinput 1.14 or when implementing totems
@@ -261,28 +287,34 @@ public:
     //     libinput_event_tablet_tool_get_size_major(m_tabletToolEvent); }
     // qreal sizeMinor() const {
     //     return libinput_event_tablet_tool_get_size_minor(m_tabletToolEvent); }
-    qreal wheelDelta() const {
+    qreal wheelDelta() const
+    {
         return libinput_event_tablet_tool_get_wheel_delta(m_tabletToolEvent);
     }
-    int wheelDeltaDiscrete() const {
+    int wheelDeltaDiscrete() const
+    {
         return libinput_event_tablet_tool_get_wheel_delta_discrete(m_tabletToolEvent);
     }
 
-    bool isTipDown() const {
+    bool isTipDown() const
+    {
         const auto state = libinput_event_tablet_tool_get_tip_state(m_tabletToolEvent);
         return state == LIBINPUT_TABLET_TOOL_TIP_DOWN;
     }
-    bool isNearby() const {
+    bool isNearby() const
+    {
         const auto state = libinput_event_tablet_tool_get_proximity_state(m_tabletToolEvent);
         return state == LIBINPUT_TABLET_TOOL_PROXIMITY_STATE_IN;
     }
 
-    QPointF transformedPosition(const QSize &size) const {
+    QPointF transformedPosition(const QSize &size) const
+    {
         return {libinput_event_tablet_tool_get_x_transformed(m_tabletToolEvent, size.width()),
                 libinput_event_tablet_tool_get_y_transformed(m_tabletToolEvent, size.height())};
     }
 
-    struct libinput_tablet_tool *tool() {
+    struct libinput_tablet_tool *tool()
+    {
         return libinput_event_tablet_tool_get_tool(m_tabletToolEvent);
     }
 
@@ -295,16 +327,19 @@ class TabletToolButtonEvent : public Event
 public:
     TabletToolButtonEvent(libinput_event *event, libinput_event_type type);
 
-    uint buttonId() const {
+    uint buttonId() const
+    {
         return libinput_event_tablet_tool_get_button(m_tabletToolEvent);
     }
 
-    bool isButtonPressed() const {
+    bool isButtonPressed() const
+    {
         const auto state = libinput_event_tablet_tool_get_button_state(m_tabletToolEvent);
         return state == LIBINPUT_BUTTON_STATE_PRESSED;
     }
 
-    struct libinput_tablet_tool *tool() {
+    struct libinput_tablet_tool *tool()
+    {
         return libinput_event_tablet_tool_get_tool(m_tabletToolEvent);
     }
 
@@ -317,13 +352,16 @@ class TabletPadRingEvent : public Event
 public:
     TabletPadRingEvent(libinput_event *event, libinput_event_type type);
 
-    int position() const {
+    int position() const
+    {
         return libinput_event_tablet_pad_get_ring_position(m_tabletPadEvent);
     }
-    int number() const {
+    int number() const
+    {
         return libinput_event_tablet_pad_get_ring_number(m_tabletPadEvent);
     }
-    libinput_tablet_pad_ring_axis_source source() const {
+    libinput_tablet_pad_ring_axis_source source() const
+    {
         return libinput_event_tablet_pad_get_ring_source(m_tabletPadEvent);
     }
 
@@ -336,13 +374,16 @@ class TabletPadStripEvent : public Event
 public:
     TabletPadStripEvent(libinput_event *event, libinput_event_type type);
 
-    int position() const {
+    int position() const
+    {
         return libinput_event_tablet_pad_get_strip_position(m_tabletPadEvent);
     }
-    int number() const {
+    int number() const
+    {
         return libinput_event_tablet_pad_get_strip_number(m_tabletPadEvent);
     }
-    libinput_tablet_pad_strip_axis_source source() const {
+    libinput_tablet_pad_strip_axis_source source() const
+    {
         return libinput_event_tablet_pad_get_strip_source(m_tabletPadEvent);
     }
 
@@ -355,10 +396,12 @@ class TabletPadButtonEvent : public Event
 public:
     TabletPadButtonEvent(libinput_event *event, libinput_event_type type);
 
-    uint buttonId() const {
+    uint buttonId() const
+    {
         return libinput_event_tablet_pad_get_button_number(m_tabletPadEvent);
     }
-    bool isButtonPressed() const {
+    bool isButtonPressed() const
+    {
         const auto state = libinput_event_tablet_pad_get_button_state(m_tabletPadEvent);
         return state == LIBINPUT_BUTTON_STATE_PRESSED;
     }
@@ -367,8 +410,7 @@ private:
     libinput_event_tablet_pad *m_tabletPadEvent;
 };
 
-inline
-libinput_event_type Event::type() const
+inline libinput_event_type Event::type() const
 {
     return m_type;
 }

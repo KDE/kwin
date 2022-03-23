@@ -10,13 +10,13 @@
 #define KWIN_ABSTRACT_WAYLAND_OUTPUT_H
 
 #include "abstract_output.h"
-#include "utils/common.h"
 #include "renderloop.h"
+#include "utils/common.h"
 #include <kwin_export.h>
 
 #include <QObject>
-#include <QTimer>
 #include <QSize>
+#include <QTimer>
 
 namespace KWin
 {
@@ -106,7 +106,8 @@ public:
 
     int refreshRate() const override;
 
-    bool isInternal() const override {
+    bool isInternal() const override
+    {
         return m_internal;
     }
 
@@ -162,17 +163,21 @@ protected:
                     const QSize &physicalSize,
                     const QVector<Mode> &modes, const QByteArray &edid);
 
-    void setName(const QString &name) {
+    void setName(const QString &name)
+    {
         m_name = name;
     }
-    void setInternal(bool set) {
+    void setInternal(bool set)
+    {
         m_internal = set;
     }
 
-    virtual void updateEnablement(bool enable) {
+    virtual void updateEnablement(bool enable)
+    {
         Q_UNUSED(enable);
     }
-    virtual void updateTransform(Transform transform) {
+    virtual void updateTransform(Transform transform)
+    {
         Q_UNUSED(transform);
     }
 

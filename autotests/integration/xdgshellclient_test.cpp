@@ -8,13 +8,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "abstract_wayland_output.h"
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
-#include "effects.h"
 #include "deleted.h"
+#include "effects.h"
 #include "platform.h"
 #include "screens.h"
 #include "virtualdesktops.h"
@@ -25,15 +26,15 @@
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
 
-#include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/appmenu.h>
 
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/display.h>
@@ -41,8 +42,8 @@
 #include <QDBusConnection>
 
 // system
-#include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #include <csignal>
@@ -165,9 +166,9 @@ void TestXdgShellClient::testXdgWindowRepositioning()
 
 void TestXdgShellClient::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted*>();
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWayland::Client::Output*>();
+    qRegisterMetaType<KWin::Deleted *>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWayland::Client::Output *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -186,13 +187,11 @@ void TestXdgShellClient::initTestCase()
 
 void TestXdgShellClient::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat |
-                                         Test::AdditionalWaylandInterface::XdgDecorationV1 |
-                                         Test::AdditionalWaylandInterface::AppMenu));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1 | Test::AdditionalWaylandInterface::AppMenu));
     QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    //put mouse in the middle of screen one
+    // put mouse in the middle of screen one
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
@@ -288,11 +287,11 @@ void TestXdgShellClient::testDesktopPresenceChanged()
     QCOMPARE(desktopPresenceChangedEffectsSpy.count(), 1);
 
     // verify the arguments
-    QCOMPARE(desktopPresenceChangedClientSpy.first().at(0).value<AbstractClient*>(), c);
+    QCOMPARE(desktopPresenceChangedClientSpy.first().at(0).value<AbstractClient *>(), c);
     QCOMPARE(desktopPresenceChangedClientSpy.first().at(1).toInt(), 1);
-    QCOMPARE(desktopPresenceChangedWorkspaceSpy.first().at(0).value<AbstractClient*>(), c);
+    QCOMPARE(desktopPresenceChangedWorkspaceSpy.first().at(0).value<AbstractClient *>(), c);
     QCOMPARE(desktopPresenceChangedWorkspaceSpy.first().at(1).toInt(), 1);
-    QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(0).value<EffectWindow*>(), c->effectWindow());
+    QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(0).value<EffectWindow *>(), c->effectWindow());
     QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(1).toInt(), 1);
     QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(2).toInt(), 2);
 }
@@ -301,37 +300,37 @@ void TestXdgShellClient::testWindowOutputs()
 {
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto size = QSize(200,200);
+    auto size = QSize(200, 200);
 
     QSignalSpy outputEnteredSpy(surface.data(), &KWayland::Client::Surface::outputEntered);
     QSignalSpy outputLeftSpy(surface.data(), &KWayland::Client::Surface::outputLeft);
 
     auto c = Test::renderAndWaitForShown(surface.data(), size, Qt::blue);
-    //move to be in the first screen
-    c->moveResize(QRect(QPoint(100,100), size));
-    //we don't don't know where the compositor first placed this window,
-    //this might fire, it might not
+    // move to be in the first screen
+    c->moveResize(QRect(QPoint(100, 100), size));
+    // we don't don't know where the compositor first placed this window,
+    // this might fire, it might not
     outputEnteredSpy.wait(5);
     outputEnteredSpy.clear();
 
     QCOMPARE(surface->outputs().count(), 1);
-    QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(0,0));
+    QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(0, 0));
 
-    //move to overlapping both first and second screen
-    c->moveResize(QRect(QPoint(1250,100), size));
+    // move to overlapping both first and second screen
+    c->moveResize(QRect(QPoint(1250, 100), size));
     QVERIFY(outputEnteredSpy.wait());
     QCOMPARE(outputEnteredSpy.count(), 1);
     QCOMPARE(outputLeftSpy.count(), 0);
     QCOMPARE(surface->outputs().count(), 2);
     QVERIFY(surface->outputs()[0] != surface->outputs()[1]);
 
-    //move entirely into second screen
-    c->moveResize(QRect(QPoint(1400,100), size));
+    // move entirely into second screen
+    c->moveResize(QRect(QPoint(1400, 100), size));
     QVERIFY(outputLeftSpy.wait());
     QCOMPARE(outputEnteredSpy.count(), 1);
     QCOMPARE(outputLeftSpy.count(), 1);
     QCOMPARE(surface->outputs().count(), 1);
-    QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(1280,0));
+    QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(1280, 0));
 }
 
 void TestXdgShellClient::testMinimizeActiveWindow()
@@ -642,7 +641,7 @@ void TestXdgShellClient::testHidden()
     QVERIFY(c->wantsInput());
     QVERIFY(c->wantsTabFocus());
 
-    //QCOMPARE(workspace()->activeClient(), c);
+    // QCOMPARE(workspace()->activeClient(), c);
 }
 
 void TestXdgShellClient::testDesktopFileName()
@@ -746,7 +745,7 @@ void TestXdgShellClient::testCaptionMultipleWindows()
 
 void TestXdgShellClient::testUnresponsiveWindow_data()
 {
-    QTest::addColumn<QString>("shellInterface");//see env selection in qwaylandintegration.cpp
+    QTest::addColumn<QString>("shellInterface"); // see env selection in qwaylandintegration.cpp
     QTest::addColumn<bool>("socketMode");
 
     QTest::newRow("xdg display") << "xdg-shell" << false;
@@ -793,45 +792,45 @@ void TestXdgShellClient::testUnresponsiveWindow()
     }
     ::kill(process->processId(), SIGUSR1); // send a signal to freeze the process
 
-    killClient = clientAddedSpy.first().first().value<AbstractClient*>();
+    killClient = clientAddedSpy.first().first().value<AbstractClient *>();
     QVERIFY(killClient);
     QSignalSpy unresponsiveSpy(killClient, &AbstractClient::unresponsiveChanged);
-    QSignalSpy killedSpy(process.data(), static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished));
+    QSignalSpy killedSpy(process.data(), static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished));
     QSignalSpy deletedSpy(killClient, &QObject::destroyed);
 
     qint64 startTime = QDateTime::currentMSecsSinceEpoch();
 
-    //wait for the process to be frozen
+    // wait for the process to be frozen
     QTest::qWait(10);
 
-    //pretend the user clicked the close button
+    // pretend the user clicked the close button
     killClient->closeWindow();
 
-    //client should not yet be marked unresponsive nor killed
+    // client should not yet be marked unresponsive nor killed
     QVERIFY(!killClient->unresponsive());
     QVERIFY(killedSpy.isEmpty());
 
     QVERIFY(unresponsiveSpy.wait());
-    //client should be marked unresponsive but not killed
+    // client should be marked unresponsive but not killed
     auto elapsed1 = QDateTime::currentMSecsSinceEpoch() - startTime;
-    QVERIFY(elapsed1 > 900  && elapsed1 < 1200); //ping timer is 1s, but coarse timers on a test across two processes means we need a fuzzy compare
+    QVERIFY(elapsed1 > 900 && elapsed1 < 1200); // ping timer is 1s, but coarse timers on a test across two processes means we need a fuzzy compare
     QVERIFY(killClient->unresponsive());
     QVERIFY(killedSpy.isEmpty());
 
     QVERIFY(deletedSpy.wait());
     if (!socketMode) {
-        //process was killed - because we're across process this could happen in either order
+        // process was killed - because we're across process this could happen in either order
         QVERIFY(killedSpy.count() || killedSpy.wait());
     }
 
     auto elapsed2 = QDateTime::currentMSecsSinceEpoch() - startTime;
-    QVERIFY(elapsed2 > 1800); //second ping comes in a second later
+    QVERIFY(elapsed2 > 1800); // second ping comes in a second later
 }
 
 void TestXdgShellClient::testAppMenu()
 {
-    //register a faux appmenu client
-    QVERIFY (QDBusConnection::sessionBus().registerService("org.kde.kappmenu"));
+    // register a faux appmenu client
+    QVERIFY(QDBusConnection::sessionBus().registerService("org.kde.kappmenu"));
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -845,7 +844,7 @@ void TestXdgShellClient::testAppMenu()
     QCOMPARE(c->applicationMenuServiceName(), QString("service.name"));
     QCOMPARE(c->applicationMenuObjectPath(), QString("object/path"));
 
-    QVERIFY (QDBusConnection::sessionBus().unregisterService("org.kde.kappmenu"));
+    QVERIFY(QDBusConnection::sessionBus().unregisterService("org.kde.kappmenu"));
 }
 
 void TestXdgShellClient::testSendClientWithTransientToDesktop()
@@ -938,7 +937,7 @@ void TestXdgShellClient::testXdgDecoration_data()
     QTest::addColumn<Test::XdgToplevelDecorationV1::mode>("expectedMode");
 
     QTest::newRow("client side requested") << Test::XdgToplevelDecorationV1::mode_client_side << Test::XdgToplevelDecorationV1::mode_client_side;
-    QTest::newRow("server side requested") <<  Test::XdgToplevelDecorationV1::mode_server_side << Test::XdgToplevelDecorationV1::mode_server_side;
+    QTest::newRow("server side requested") << Test::XdgToplevelDecorationV1::mode_server_side << Test::XdgToplevelDecorationV1::mode_server_side;
 }
 
 void TestXdgShellClient::testXdgDecoration()
@@ -953,10 +952,10 @@ void TestXdgShellClient::testXdgDecoration()
     QFETCH(Test::XdgToplevelDecorationV1::mode, requestedMode);
     QFETCH(Test::XdgToplevelDecorationV1::mode, expectedMode);
 
-    //request a mode
+    // request a mode
     deco->set_mode(requestedMode);
 
-    //kwin will send a configure
+    // kwin will send a configure
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     QCOMPARE(decorationConfigureRequestedSpy.count(), 1);
@@ -970,7 +969,7 @@ void TestXdgShellClient::testXdgDecoration()
 
 void TestXdgShellClient::testXdgNeverCommitted()
 {
-    //check we don't crash if we create a shell object but delete the XdgShellClient before committing it
+    // check we don't crash if we create a shell object but delete the XdgShellClient before committing it
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
 }
@@ -988,11 +987,11 @@ void TestXdgShellClient::testXdgInitialState()
 
     const auto size = toplevelConfigureRequestedSpy.first()[0].value<QSize>();
 
-    QCOMPARE(size, QSize(0, 0)); //client should chose it's preferred size
+    QCOMPARE(size, QSize(0, 0)); // client should chose it's preferred size
 
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.first()[0].toUInt());
 
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(200,100), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(200, 100), Qt::blue);
     QCOMPARE(c->size(), QSize(200, 100));
 }
 

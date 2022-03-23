@@ -252,7 +252,8 @@ void ScreenShotSinkPipe2::flush(const QImage &image)
         const QByteArray buffer(reinterpret_cast<const char *>(image.constBits()),
                                 image.sizeInBytes());
         writeBufferToPipe(fileDescriptor, buffer);
-    }, m_fileDescriptor, image);
+    },
+                      m_fileDescriptor, image);
 
     // The ownership of the pipe file descriptor has been moved to the worker thread.
     m_fileDescriptor = -1;

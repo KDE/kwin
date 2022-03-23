@@ -21,20 +21,20 @@
  */
 
 #include <QCoreApplication>
+#include <QDBusConnection>
 #include <QDebug>
 #include <QProcess>
 #include <QTemporaryFile>
-#include <QDBusConnection>
 
-#include <UpdateLaunchEnvironmentJob>
 #include <KSignalHandler>
+#include <UpdateLaunchEnvironmentJob>
 
 #include <signal.h>
 
 #include "wl-socket.h"
-#include "xwaylandsocket.h"
-#include "xauthority.h"
 #include "wrapper_logging.h"
+#include "xauthority.h"
+#include "xwaylandsocket.h"
 
 class KWinWrapper : public QObject
 {
@@ -109,7 +109,6 @@ void KWinWrapper::run()
         if (m_xauthorityFile.open()) {
             args << "--xwayland-xauthority" << m_xauthorityFile.fileName();
         }
-
     }
 
     // attach our main process arguments

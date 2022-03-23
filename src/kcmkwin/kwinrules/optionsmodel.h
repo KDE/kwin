@@ -13,8 +13,8 @@
 #include <QIcon>
 #include <QVariant>
 
-
-namespace KWin {
+namespace KWin
+{
 
 class OptionsModel : public QAbstractListModel
 {
@@ -22,18 +22,21 @@ class OptionsModel : public QAbstractListModel
     Q_PROPERTY(int selectedIndex READ selectedIndex NOTIFY selectedIndexChanged)
 
 public:
-    struct Data {
+    struct Data
+    {
         Data(const QVariant &value, const QString &text, const QIcon &icon = {}, const QString &description = {})
             : value(value)
             , text(text)
             , icon(icon)
             , description(description)
-            {}
+        {
+        }
         Data(const QVariant &value, const QString &text, const QString &description)
             : value(value)
             , text(text)
             , description(description)
-            {}
+        {
+        }
 
         QVariant value;
         QString text;
@@ -42,8 +45,14 @@ public:
     };
 
 public:
-    OptionsModel() : QAbstractListModel(), m_data(), m_index(0) {};
-    OptionsModel(const QList<Data> &data) : QAbstractListModel(), m_data(data), m_index(0) {};
+    OptionsModel()
+        : QAbstractListModel()
+        , m_data()
+        , m_index(0){};
+    OptionsModel(const QList<Data> &data)
+        : QAbstractListModel()
+        , m_data(data)
+        , m_index(0){};
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
@@ -82,8 +91,7 @@ public:
 public:
     RulePolicy(Type type)
         : OptionsModel(policyOptions(type))
-        , m_type(type)
-        {};
+        , m_type(type){};
 
     Type type() const;
     int value() const;
@@ -96,6 +104,6 @@ private:
     Type m_type;
 };
 
-}   //namespace
+} // namespace
 
-#endif  //KWIN_OPTIONS_MODEL_H
+#endif // KWIN_OPTIONS_MODEL_H

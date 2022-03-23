@@ -10,7 +10,6 @@
 // own
 #include "virtualdesktopsdbustypes.h"
 
-
 // Marshall the DBusDesktopDataStruct data into a D-BUS argument
 const QDBusArgument &operator<<(QDBusArgument &argument, const KWin::DBusDesktopDataStruct &desk)
 {

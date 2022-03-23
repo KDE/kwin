@@ -7,11 +7,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "abstract_output.h"
+#include "cursor.h"
 #include "platform.h"
 #include "touch_input.h"
-#include "cursor.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -48,7 +49,7 @@ private:
 
 void TouchInputTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -67,8 +68,7 @@ void TouchInputTest::initTestCase()
 void TouchInputTest::init()
 {
     using namespace KWayland::Client;
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat |
-                                         Test::AdditionalWaylandInterface::XdgDecorationV1));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1));
     QVERIFY(Test::waitForWaylandTouch());
     m_touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
     QVERIFY(m_touch);
@@ -88,11 +88,11 @@ void TouchInputTest::cleanup()
 AbstractClient *TouchInputTest::showWindow(bool decorated)
 {
     using namespace KWayland::Client;
-#define VERIFY(statement) \
-    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))\
+#define VERIFY(statement)                                                 \
+    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) \
         return nullptr;
-#define COMPARE(actual, expected) \
-    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
+#define COMPARE(actual, expected)                                                   \
+    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) \
         return nullptr;
 
     KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());

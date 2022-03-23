@@ -8,17 +8,17 @@
 */
 #include "drm_buffer.h"
 
-#include "logging.h"
 #include "drm_gpu.h"
+#include "logging.h"
 
 // system
 #include <sys/mman.h>
 // c++
 #include <cerrno>
 // drm
+#include <drm_fourcc.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
-#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -102,8 +102,9 @@ DrmDumbBuffer::~DrmDumbBuffer()
     }
 }
 
-bool DrmDumbBuffer::needsModeChange(DrmBuffer *b) const {
-    if (DrmDumbBuffer *db = dynamic_cast<DrmDumbBuffer*>(b)) {
+bool DrmDumbBuffer::needsModeChange(DrmBuffer *b) const
+{
+    if (DrmDumbBuffer *db = dynamic_cast<DrmDumbBuffer *>(b)) {
         return m_stride != db->stride();
     } else {
         return true;
@@ -126,7 +127,7 @@ bool DrmDumbBuffer::map(QImage::Format format)
         return false;
     }
     m_memory = address;
-    m_image = new QImage((uchar*)m_memory, m_size.width(), m_size.height(), m_stride, format);
+    m_image = new QImage((uchar *)m_memory, m_size.width(), m_size.height(), m_stride, format);
     return !m_image->isNull();
 }
 

@@ -17,7 +17,8 @@
 
 #include <array>
 
-struct libinput_device {
+struct libinput_device
+{
     bool keyboard = false;
     bool pointer = false;
     bool touch = false;
@@ -100,22 +101,28 @@ struct libinput_device {
     uint32_t ringCount = 0;
 };
 
-struct libinput_event {
-    virtual ~libinput_event() {}
+struct libinput_event
+{
+    virtual ~libinput_event()
+    {
+    }
     libinput_device *device = nullptr;
     libinput_event_type type = LIBINPUT_EVENT_NONE;
     quint32 time = 0;
 };
 
-struct libinput_event_keyboard : libinput_event {
-    libinput_event_keyboard() {
+struct libinput_event_keyboard : libinput_event
+{
+    libinput_event_keyboard()
+    {
         type = LIBINPUT_EVENT_KEYBOARD_KEY;
     }
     libinput_key_state state = LIBINPUT_KEY_STATE_RELEASED;
     quint32 key = 0;
 };
 
-struct libinput_event_pointer : libinput_event {
+struct libinput_event_pointer : libinput_event
+{
     libinput_button_state buttonState = LIBINPUT_BUTTON_STATE_RELEASED;
     quint32 button = 0;
     bool verticalAxis = false;
@@ -129,12 +136,14 @@ struct libinput_event_pointer : libinput_event {
     QPointF absolutePos;
 };
 
-struct libinput_event_touch : libinput_event {
+struct libinput_event_touch : libinput_event
+{
     qint32 slot = -1;
     QPointF absolutePos;
 };
 
-struct libinput_event_gesture : libinput_event {
+struct libinput_event_gesture : libinput_event
+{
     int fingerCount = 0;
     bool cancelled = false;
     QSizeF delta = QSizeF(0, 0);
@@ -142,7 +151,8 @@ struct libinput_event_gesture : libinput_event {
     qreal angleDelta = 0.0;
 };
 
-struct libinput_event_switch : libinput_event {
+struct libinput_event_switch : libinput_event
+{
     enum class State {
         Off,
         On
@@ -151,7 +161,8 @@ struct libinput_event_switch : libinput_event {
     quint64 timeMicroseconds = 0;
 };
 
-struct libinput {
+struct libinput
+{
     int refCount = 1;
     QByteArray seat;
     int assignSeatRetVal = 0;

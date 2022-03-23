@@ -49,6 +49,7 @@ private Q_SLOTS:
     void testMotifEmpty();
     void testMotif_data();
     void testMotif();
+
 private:
     void testEmpty(WindowGeometry &geometry);
     void testGeometry(WindowGeometry &geometry, const QRect &rect);
@@ -58,12 +59,12 @@ private:
 void TestXcbWrapper::initTestCase()
 {
     qApp->setProperty("x11RootWindow", QVariant::fromValue<quint32>(QX11Info::appRootWindow()));
-    qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+    qApp->setProperty("x11Connection", QVariant::fromValue<void *>(QX11Info::connection()));
 }
 
 void TestXcbWrapper::init()
 {
-    const uint32_t values[] = { true };
+    const uint32_t values[] = {true};
     m_testWindow.create(QRect(0, 0, 10, 10), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     QVERIFY(m_testWindow.isValid());
 }
@@ -160,14 +161,14 @@ void TestXcbWrapper::assignementEmpty()
     testEmpty(other);
     QVERIFY(!other.isRetrieved());
 
-QT_WARNING_PUSH
-QT_WARNING_DISABLE_CLANG("-Wself-assign-overloaded")
+    QT_WARNING_PUSH
+    QT_WARNING_DISABLE_CLANG("-Wself-assign-overloaded")
     // test assignment to self
     geometry = geometry;
     other = other;
     testEmpty(geometry);
     testEmpty(other);
-QT_WARNING_POP
+    QT_WARNING_POP
 }
 
 void TestXcbWrapper::assignmentBeforeRetrieve()
@@ -186,13 +187,13 @@ void TestXcbWrapper::assignmentBeforeRetrieve()
     other = WindowGeometry();
     testEmpty(geometry);
 
-QT_WARNING_PUSH
-QT_WARNING_DISABLE_CLANG("-Wself-assign-overloaded")
+    QT_WARNING_PUSH
+    QT_WARNING_DISABLE_CLANG("-Wself-assign-overloaded")
     // test assignment to self
     geometry = geometry;
     other = other;
     testEmpty(geometry);
-QT_WARNING_POP
+    QT_WARNING_POP
 }
 
 void TestXcbWrapper::assignmentAfterRetrieve()
@@ -206,14 +207,14 @@ void TestXcbWrapper::assignmentAfterRetrieve()
     QVERIFY(other.isRetrieved());
     testGeometry(other, QRect(0, 0, 10, 10));
 
-QT_WARNING_PUSH
-QT_WARNING_DISABLE_CLANG("-Wself-assign-overloaded")
+    QT_WARNING_PUSH
+    QT_WARNING_DISABLE_CLANG("-Wself-assign-overloaded")
     // test assignment to self
     geometry = geometry;
     other = other;
     testEmpty(geometry);
     testGeometry(other, QRect(0, 0, 10, 10));
-QT_WARNING_POP
+    QT_WARNING_POP
 
     // set to empty again
     other = WindowGeometry();
@@ -318,9 +319,9 @@ void TestXcbWrapper::testTransientFor()
     QVERIFY(ok);
     ok = false;
     QCOMPARE(realTransient.value<xcb_window_t>(), (xcb_window_t)m_testWindow);
-    QCOMPARE(realTransient.value<xcb_window_t*>(nullptr, &ok)[0], (xcb_window_t)m_testWindow);
+    QCOMPARE(realTransient.value<xcb_window_t *>(nullptr, &ok)[0], (xcb_window_t)m_testWindow);
     QVERIFY(ok);
-    QCOMPARE(realTransient.value<xcb_window_t*>()[0], (xcb_window_t)m_testWindow);
+    QCOMPARE(realTransient.value<xcb_window_t *>()[0], (xcb_window_t)m_testWindow);
 
     // test for a not existing window
     TransientFor doesntExist(XCB_WINDOW_NONE);
@@ -336,8 +337,8 @@ void TestXcbWrapper::testPropertyByteArray()
     QCOMPARE(prop.toByteArray(&ok), QByteArray());
     QVERIFY(!ok);
     ok = true;
-    QVERIFY(!prop.value<const char*>());
-    QCOMPARE(prop.value<const char*>("bar", &ok), "bar");
+    QVERIFY(!prop.value<const char *>());
+    QCOMPARE(prop.value<const char *>("bar", &ok), "bar");
     QVERIFY(!ok);
     QCOMPARE(QByteArray(StringProperty(testWindow, XCB_ATOM_WM_NAME)), QByteArray());
 
@@ -346,7 +347,7 @@ void TestXcbWrapper::testPropertyByteArray()
     QCOMPARE(prop.toByteArray(), QByteArrayLiteral("foo"));
     QCOMPARE(prop.toByteArray(&ok), QByteArrayLiteral("foo"));
     QVERIFY(ok);
-    QCOMPARE(prop.value<const char*>(nullptr, &ok), "foo");
+    QCOMPARE(prop.value<const char *>(nullptr, &ok), "foo");
     QVERIFY(ok);
     QCOMPARE(QByteArray(StringProperty(testWindow, XCB_ATOM_WM_NAME)), QByteArrayLiteral("foo"));
 
@@ -359,13 +360,13 @@ void TestXcbWrapper::testPropertyByteArray()
     prop = Property(false, testWindow, XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 0, 100000);
     QCOMPARE(prop.toByteArray(), QByteArray());
     QCOMPARE(prop.toByteArray(&ok), QByteArray());
-    //valid bytearray
+    // valid bytearray
     QVERIFY(ok);
-    //The bytearray should be empty
+    // The bytearray should be empty
     QVERIFY(prop.toByteArray().isEmpty());
-    //The bytearray should be not null
+    // The bytearray should be not null
     QVERIFY(!prop.toByteArray().isNull());
-    QVERIFY(!prop.value<const char*>());
+    QVERIFY(!prop.value<const char *>());
     QCOMPARE(QByteArray(StringProperty(testWindow, XCB_ATOM_WM_NAME)), QByteArray());
 
     // verify non existing property
@@ -373,13 +374,13 @@ void TestXcbWrapper::testPropertyByteArray()
     prop = Property(false, testWindow, invalid, XCB_ATOM_STRING, 0, 100000);
     QCOMPARE(prop.toByteArray(), QByteArray());
     QCOMPARE(prop.toByteArray(&ok), QByteArray());
-    //invalid bytearray
+    // invalid bytearray
     QVERIFY(!ok);
-    //The bytearray should be empty
+    // The bytearray should be empty
     QVERIFY(prop.toByteArray().isEmpty());
-    //The bytearray should be not null
+    // The bytearray should be not null
     QVERIFY(prop.toByteArray().isNull());
-    QVERIFY(!prop.value<const char*>());
+    QVERIFY(!prop.value<const char *>());
     QCOMPARE(QByteArray(StringProperty(testWindow, XCB_ATOM_WM_NAME)), QByteArray());
 }
 
@@ -432,7 +433,7 @@ void TestXcbWrapper::testAtom()
     QVERIFY(atom2 == XCB_ATOM_WM_CLIENT_MACHINE);
     QCOMPARE(atom2.name(), QByteArrayLiteral("WM_CLIENT_MACHINE"));
 
-    //destroy before retrieved
+    // destroy before retrieved
     Atom atom3(QByteArrayLiteral("WM_CLIENT_MACHINE"));
     QCOMPARE(atom3.name(), QByteArrayLiteral("WM_CLIENT_MACHINE"));
 }
@@ -483,20 +484,20 @@ void TestXcbWrapper::testMotif_data()
     QTest::addColumn<bool>("expectedMaximize");
     QTest::addColumn<bool>("expectedClose");
 
-    QTest::newRow("none")     << 0u <<  0u << 0u << false << false << true  << true  << true  << true  << true;
-    QTest::newRow("noborder") << 2u <<  5u << 0u << true  << true  << true  << true  << true  << true  << true;
-    QTest::newRow("border")   << 2u <<  5u << 1u << true  << false << true  << true  << true  << true  << true;
-    QTest::newRow("resize")   << 1u <<  2u << 1u << false << false << true  << false << false << false << false;
-    QTest::newRow("move")     << 1u <<  4u << 1u << false << false << false << true  << false << false << false;
-    QTest::newRow("minimize") << 1u <<  8u << 1u << false << false << false << false << true  << false << false;
-    QTest::newRow("maximize") << 1u << 16u << 1u << false << false << false << false << false << true  << false;
-    QTest::newRow("close")    << 1u << 32u << 1u << false << false << false << false << false << false << true;
+    QTest::newRow("none") << 0u << 0u << 0u << false << false << true << true << true << true << true;
+    QTest::newRow("noborder") << 2u << 5u << 0u << true << true << true << true << true << true << true;
+    QTest::newRow("border") << 2u << 5u << 1u << true << false << true << true << true << true << true;
+    QTest::newRow("resize") << 1u << 2u << 1u << false << false << true << false << false << false << false;
+    QTest::newRow("move") << 1u << 4u << 1u << false << false << false << true << false << false << false;
+    QTest::newRow("minimize") << 1u << 8u << 1u << false << false << false << false << true << false << false;
+    QTest::newRow("maximize") << 1u << 16u << 1u << false << false << false << false << false << true << false;
+    QTest::newRow("close") << 1u << 32u << 1u << false << false << false << false << false << false << true;
 
-    QTest::newRow("resize/all")   << 1u <<  3u << 1u << false << false << false << true  << true  << true  << true;
-    QTest::newRow("move/all")     << 1u <<  5u << 1u << false << false << true  << false << true  << true  << true;
-    QTest::newRow("minimize/all") << 1u <<  9u << 1u << false << false << true  << true  << false << true  << true;
-    QTest::newRow("maximize/all") << 1u << 17u << 1u << false << false << true  << true  << true  << false << true;
-    QTest::newRow("close/all")    << 1u << 33u << 1u << false << false << true  << true  << true  << true  << false;
+    QTest::newRow("resize/all") << 1u << 3u << 1u << false << false << false << true << true << true << true;
+    QTest::newRow("move/all") << 1u << 5u << 1u << false << false << true << false << true << true << true;
+    QTest::newRow("minimize/all") << 1u << 9u << 1u << false << false << true << true << false << true << true;
+    QTest::newRow("maximize/all") << 1u << 17u << 1u << false << false << true << true << true << false << true;
+    QTest::newRow("close/all") << 1u << 33u << 1u << false << false << true << true << true << true << false;
 
     QTest::newRow("all") << 1u << 62u << 1u << false << false << true << true << true << true << true;
     QTest::newRow("all/all") << 1u << 63u << 1u << false << false << false << false << false << false << false;
@@ -514,8 +515,7 @@ void TestXcbWrapper::testMotif()
         functions,
         decorations,
         0,
-        0
-    };
+        0};
     xcb_change_property(QX11Info::connection(), XCB_PROP_MODE_REPLACE, m_testWindow, atom, atom, 32, 5, data);
     xcb_flush(QX11Info::connection());
     MotifHints hints(atom);

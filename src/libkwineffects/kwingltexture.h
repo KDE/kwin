@@ -13,11 +13,11 @@
 
 #include <kwinglutils_export.h>
 
-#include <QSize>
-#include <QRegion>
-#include <QSharedPointer>
 #include <QExplicitlySharedDataPointer>
 #include <QMatrix4x4>
+#include <QRegion>
+#include <QSharedPointer>
+#include <QSize>
 
 #include <epoxy/gl.h>
 
@@ -42,10 +42,10 @@ class KWINGLUTILS_EXPORT GLTexture
 {
 public:
     explicit GLTexture(GLenum target);
-    GLTexture(const GLTexture& tex);
-    explicit GLTexture(const QImage& image, GLenum target = GL_TEXTURE_2D);
-    explicit GLTexture(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
-    explicit GLTexture(const QString& fileName);
+    GLTexture(const GLTexture &tex);
+    explicit GLTexture(const QImage &image, GLenum target = GL_TEXTURE_2D);
+    explicit GLTexture(const QPixmap &pixmap, GLenum target = GL_TEXTURE_2D);
+    explicit GLTexture(const QString &fileName);
     GLTexture(GLenum internalFormat, int width, int height, int levels = 1, bool needsMutability = false);
     explicit GLTexture(GLenum internalFormat, const QSize &size, int levels = 1, bool needsMutability = false);
 
@@ -64,7 +64,7 @@ public:
     explicit GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels = 1);
     virtual ~GLTexture();
 
-    GLTexture & operator = (const GLTexture& tex);
+    GLTexture &operator=(const GLTexture &tex);
 
     bool isNull() const;
     QSize size() const;
@@ -99,12 +99,12 @@ public:
      */
     QMatrix4x4 matrix(TextureCoordinateType type) const;
 
-    void update(const QImage& image, const QPoint &offset = QPoint(0, 0), const QRect &src = QRect());
+    void update(const QImage &image, const QPoint &offset = QPoint(0, 0), const QRect &src = QRect());
     virtual void discard();
     void bind();
     void unbind();
     void render(const QRect &rect);
-    void render(const QRegion &region, const QRect& rect, bool hardwareClipping = false);
+    void render(const QRegion &region, const QRect &rect, bool hardwareClipping = false);
 
     GLuint texture() const;
     GLenum target() const;
@@ -149,7 +149,7 @@ public:
 
 protected:
     QExplicitlySharedDataPointer<GLTexturePrivate> d_ptr;
-    GLTexture(GLTexturePrivate& dd);
+    GLTexture(GLTexturePrivate &dd);
 
 private:
     Q_DECLARE_PRIVATE(GLTexture)

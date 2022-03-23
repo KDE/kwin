@@ -163,135 +163,153 @@ void OpenGLContextAttributeBuilderTest::testEgl_data()
     QTest::addColumn<std::vector<int>>("expectedAttribs");
 
     QTest::newRow("fallback") << false << 0 << 0 << false << false << false << false << false << std::vector<int>{EGL_NONE};
-    QTest::newRow("legacy/robust") << false << 0 << 0 << true << false << false << false << false <<
-        std::vector<int>{
-            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
-            EGL_NONE};
-    QTest::newRow("legacy/robust/high priority") << false << 0 << 0 << true << false << false << false << true <<
-        std::vector<int>{
-            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
-            EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
-            EGL_NONE};
-    QTest::newRow("core") << true << 3 << 1 << false << false << false << false << false <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-            EGL_NONE};
-    QTest::newRow("core/high priority") << true << 3 << 1 << false << false << false << false << true <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-            EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
-            EGL_NONE};
-    QTest::newRow("core/robust") << true << 3 << 1 << true << false << false << false << false <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
-            EGL_NONE};
-    QTest::newRow("core/robust/high priority") << true << 3 << 1 << true << false << false << false << true <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
-            EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
-            EGL_NONE};
-    QTest::newRow("core/robust/forward compatible") << true << 3 << 1 << true << true << false << false << false <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_NONE};
-    QTest::newRow("core/robust/forward compatible/high priority") << true << 3 << 1 << true << true << false << false << true <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
-            EGL_NONE};
-    QTest::newRow("core/forward compatible") << true << 3 << 1 << false << true << false << false << false <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_NONE};
-    QTest::newRow("core/forward compatible/high priority") << true << 3 << 1 << false << true << false << false << true <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
-            EGL_NONE};
-    QTest::newRow("core profile/forward compatible") << true << 3 << 2 << false << true << true << false << false <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
-            EGL_NONE};
-    QTest::newRow("core profile/forward compatible/high priority") << true << 3 << 2 << false << true << true << false << true <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
-            EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
-            EGL_NONE};
-    QTest::newRow("compatibility profile/forward compatible") << true << 3 << 2 << false << true << false << true << false <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
-            EGL_NONE};
-    QTest::newRow("compatibility profile/forward compatible/high priority") << true << 3 << 2 << false << true << false << true << true <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
-            EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
-            EGL_NONE};
-    QTest::newRow("core profile/robust/forward compatible") << true << 3 << 2 << true << true << true << false << false <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
-            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
-            EGL_NONE};
-    QTest::newRow("core profile/robust/forward compatible/high priority") << true << 3 << 2 << true << true << true << false << true <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
-            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
-            EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
-            EGL_NONE};
-    QTest::newRow("compatibility profile/robust/forward compatible") << true << 3 << 2 << true << true << false << true << false <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
-            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
-            EGL_NONE};
-    QTest::newRow("compatibility profile/robust/forward compatible/high priority") << true << 3 << 2 << true << true << false << true << true <<
-        std::vector<int>{
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
-            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
-            EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
-            EGL_NONE};
+    QTest::newRow("legacy/robust")
+        << false << 0 << 0 << true << false << false << false << false
+        << std::vector<int>{
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
+               EGL_NONE};
+    QTest::newRow("legacy/robust/high priority")
+        << false << 0 << 0 << true << false << false << false << true
+        << std::vector<int>{
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
+               EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
+               EGL_NONE};
+    QTest::newRow("core")
+        << true << 3 << 1 << false << false << false << false << false
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+               EGL_NONE};
+    QTest::newRow("core/high priority")
+        << true << 3 << 1 << false << false << false << false << true
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+               EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
+               EGL_NONE};
+    QTest::newRow("core/robust")
+        << true << 3 << 1 << true << false << false << false << false
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
+               EGL_NONE};
+    QTest::newRow("core/robust/high priority")
+        << true << 3 << 1 << true << false << false << false << true
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
+               EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
+               EGL_NONE};
+    QTest::newRow("core/robust/forward compatible")
+        << true << 3 << 1 << true << true << false << false << false
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_NONE};
+    QTest::newRow("core/robust/forward compatible/high priority")
+        << true << 3 << 1 << true << true << false << false << true
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
+               EGL_NONE};
+    QTest::newRow("core/forward compatible")
+        << true << 3 << 1 << false << true << false << false << false
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_NONE};
+    QTest::newRow("core/forward compatible/high priority")
+        << true << 3 << 1 << false << true << false << false << true
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
+               EGL_NONE};
+    QTest::newRow("core profile/forward compatible")
+        << true << 3 << 2 << false << true << true << false << false
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
+               EGL_NONE};
+    QTest::newRow("core profile/forward compatible/high priority")
+        << true << 3 << 2 << false << true << true << false << true
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
+               EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
+               EGL_NONE};
+    QTest::newRow("compatibility profile/forward compatible")
+        << true << 3 << 2 << false << true << false << true << false
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
+               EGL_NONE};
+    QTest::newRow("compatibility profile/forward compatible/high priority")
+        << true << 3 << 2 << false << true << false << true << true
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
+               EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
+               EGL_NONE};
+    QTest::newRow("core profile/robust/forward compatible")
+        << true << 3 << 2 << true << true << true << false << false
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
+               EGL_NONE};
+    QTest::newRow("core profile/robust/forward compatible/high priority")
+        << true << 3 << 2 << true << true << true << false << true
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
+               EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
+               EGL_NONE};
+    QTest::newRow("compatibility profile/robust/forward compatible")
+        << true << 3 << 2 << true << true << false << true << false
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
+               EGL_NONE};
+    QTest::newRow("compatibility profile/robust/forward compatible/high priority")
+        << true << 3 << 2 << true << true << false << true << true
+        << std::vector<int>{
+               EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+               EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+               EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+               EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
+               EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
+               EGL_NONE};
 }
 
 void OpenGLContextAttributeBuilderTest::testEgl()
@@ -325,24 +343,32 @@ void OpenGLContextAttributeBuilderTest::testGles_data()
     QTest::addColumn<bool>("highPriority");
     QTest::addColumn<std::vector<int>>("expectedAttribs");
 
-    QTest::newRow("robust") << true << false << std::vector<int>{
-        EGL_CONTEXT_CLIENT_VERSION, 2,
-        EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT,               EGL_TRUE,
-        EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT, EGL_LOSE_CONTEXT_ON_RESET_EXT,
-        EGL_NONE};
-    QTest::newRow("robust/high priority") << true << true << std::vector<int>{
-        EGL_CONTEXT_CLIENT_VERSION, 2,
-        EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT,               EGL_TRUE,
-        EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT, EGL_LOSE_CONTEXT_ON_RESET_EXT,
-        EGL_CONTEXT_PRIORITY_LEVEL_IMG,                     EGL_CONTEXT_PRIORITY_HIGH_IMG,
-        EGL_NONE};
-    QTest::newRow("normal") << false << false << std::vector<int>{
-        EGL_CONTEXT_CLIENT_VERSION, 2,
-        EGL_NONE};
-    QTest::newRow("normal/high priority") << false << true << std::vector<int>{
-        EGL_CONTEXT_CLIENT_VERSION, 2,
-        EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
-        EGL_NONE};
+    QTest::newRow("robust")
+        << true << false
+        << std::vector<int>{
+               EGL_CONTEXT_CLIENT_VERSION, 2,
+               EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT, EGL_TRUE,
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT, EGL_LOSE_CONTEXT_ON_RESET_EXT,
+               EGL_NONE};
+    QTest::newRow("robust/high priority")
+        << true << true
+        << std::vector<int>{
+               EGL_CONTEXT_CLIENT_VERSION, 2,
+               EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT, EGL_TRUE,
+               EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT, EGL_LOSE_CONTEXT_ON_RESET_EXT,
+               EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
+               EGL_NONE};
+    QTest::newRow("normal")
+        << false << false
+        << std::vector<int>{
+               EGL_CONTEXT_CLIENT_VERSION, 2,
+               EGL_NONE};
+    QTest::newRow("normal/high priority")
+        << false << true
+        << std::vector<int>{
+               EGL_CONTEXT_CLIENT_VERSION, 2,
+               EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG,
+               EGL_NONE};
 }
 
 void OpenGLContextAttributeBuilderTest::testGles()
@@ -369,40 +395,48 @@ void OpenGLContextAttributeBuilderTest::testGlx_data()
     QTest::addColumn<bool>("videoPurge");
     QTest::addColumn<std::vector<int>>("expectedAttribs");
 
-    QTest::newRow("fallback") << true << 2 << 1 << false << false << std::vector<int>{
-        GLX_CONTEXT_MAJOR_VERSION_ARB, 2,
-        GLX_CONTEXT_MINOR_VERSION_ARB, 1,
-        0};
-    QTest::newRow("legacy/robust") << false << 0 << 0 << true << false << std::vector<int>{
-        GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-        GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-        0
-    };
-    QTest::newRow("legacy/robust/videoPurge") << false << 0 << 0 << true << true << std::vector<int>{
-        GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-        GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-        GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV, GL_TRUE,
-        0
-    };
-    QTest::newRow("core") << true << 3 << 1 << false << false << std::vector<int>{
-        GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-        GLX_CONTEXT_MINOR_VERSION_ARB, 1,
-        0};
-    QTest::newRow("core/robust") << true << 3 << 1 << true << false << std::vector<int>{
-        GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-        GLX_CONTEXT_MINOR_VERSION_ARB, 1,
-        GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-        GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-        0
-    };
-    QTest::newRow("core/robust/videoPurge") << true << 3 << 1 << true << true << std::vector<int>{
-        GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-        GLX_CONTEXT_MINOR_VERSION_ARB, 1,
-        GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-        GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-        GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV, GL_TRUE,
-        0
-    };
+    QTest::newRow("fallback")
+        << true << 2 << 1 << false << false
+        << std::vector<int>{
+               GLX_CONTEXT_MAJOR_VERSION_ARB, 2,
+               GLX_CONTEXT_MINOR_VERSION_ARB, 1,
+               0};
+    QTest::newRow("legacy/robust")
+        << false << 0 << 0 << true << false
+        << std::vector<int>{
+               GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
+               GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
+               0};
+    QTest::newRow("legacy/robust/videoPurge")
+        << false << 0 << 0 << true << true
+        << std::vector<int>{
+               GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
+               GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
+               GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV, GL_TRUE,
+               0};
+    QTest::newRow("core")
+        << true << 3 << 1 << false << false
+        << std::vector<int>{
+               GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+               GLX_CONTEXT_MINOR_VERSION_ARB, 1,
+               0};
+    QTest::newRow("core/robust")
+        << true << 3 << 1 << true << false
+        << std::vector<int>{
+               GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+               GLX_CONTEXT_MINOR_VERSION_ARB, 1,
+               GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
+               GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
+               0};
+    QTest::newRow("core/robust/videoPurge")
+        << true << 3 << 1 << true << true
+        << std::vector<int>{
+               GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+               GLX_CONTEXT_MINOR_VERSION_ARB, 1,
+               GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
+               GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
+               GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV, GL_TRUE,
+               0};
 #endif
 }
 

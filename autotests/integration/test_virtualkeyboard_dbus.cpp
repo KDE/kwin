@@ -14,11 +14,11 @@
 #include "virtualkeyboard_dbus.h"
 #include "wayland_server.h"
 
-#include <QTest>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingReply>
 #include <QSignalSpy>
+#include <QTest>
 
 #include <virtualkeyboardinterface.h>
 
@@ -54,10 +54,7 @@ void VirtualKeyboardDBusTest::initTestCase()
     QVERIFY(applicationStartedSpy.wait());
     Test::initWaylandWorkspace();
 
-    QVERIFY(setupWaylandConnection(AdditionalWaylandInterface::Seat |
-                                   AdditionalWaylandInterface::InputMethodV1 |
-                                   AdditionalWaylandInterface::TextInputManagerV2 |
-                                   AdditionalWaylandInterface::TextInputManagerV3));
+    QVERIFY(setupWaylandConnection(AdditionalWaylandInterface::Seat | AdditionalWaylandInterface::InputMethodV1 | AdditionalWaylandInterface::TextInputManagerV2 | AdditionalWaylandInterface::TextInputManagerV3));
 }
 
 void VirtualKeyboardDBusTest::init()

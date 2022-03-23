@@ -7,13 +7,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_output.h"
-#include "platform.h"
-#include "x11client.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KWaylandServer/seat_interface.h>
 
@@ -39,8 +40,8 @@ private Q_SLOTS:
 
 void XWaylandInputTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Deleted*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -105,14 +106,16 @@ void X11EventReaderHelper::processXcbEvents()
     while (auto event = xcb_poll_for_event(m_connection)) {
         const uint8_t eventType = event->response_type & ~0x80;
         switch (eventType) {
-            case XCB_ENTER_NOTIFY: {
-                auto enterEvent = reinterpret_cast<xcb_enter_notify_event_t *>(event);
-                Q_EMIT entered(QPoint(enterEvent->event_x, enterEvent->event_y));
-                break; }
-            case XCB_LEAVE_NOTIFY: {
-                auto leaveEvent = reinterpret_cast<xcb_leave_notify_event_t *>(event);
-                Q_EMIT left(QPoint(leaveEvent->event_x, leaveEvent->event_y));
-                break; }
+        case XCB_ENTER_NOTIFY: {
+            auto enterEvent = reinterpret_cast<xcb_enter_notify_event_t *>(event);
+            Q_EMIT entered(QPoint(enterEvent->event_x, enterEvent->event_y));
+            break;
+        }
+        case XCB_LEAVE_NOTIFY: {
+            auto leaveEvent = reinterpret_cast<xcb_leave_notify_event_t *>(event);
+            Q_EMIT left(QPoint(leaveEvent->event_x, leaveEvent->event_y));
+            break;
+        }
         }
         free(event);
     }
@@ -140,9 +143,7 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     xcb_window_t w = xcb_generate_id(c.data());
     const QRect windowGeometry = QRect(0, 0, 100, 200);
     const uint32_t values[] = {
-        XCB_EVENT_MASK_ENTER_WINDOW |
-        XCB_EVENT_MASK_LEAVE_WINDOW
-    };
+        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW};
     xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
@@ -231,9 +232,7 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
 
     xcb_window_t window = xcb_generate_id(c.data());
     const uint32_t values[] = {
-        XCB_EVENT_MASK_ENTER_WINDOW |
-        XCB_EVENT_MASK_LEAVE_WINDOW
-    };
+        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW};
     xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, window, rootWindow(),
                       boundingRect.x, boundingRect.y, boundingRect.width, boundingRect.height,
                       0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, XCB_CW_EVENT_MASK, values);

@@ -11,8 +11,8 @@
 // KWin
 #include <kwinglobals.h>
 // Qt
-#include <QObject>
 #include <QHash>
+#include <QObject>
 
 namespace KWin
 {
@@ -173,7 +173,7 @@ public Q_SLOTS:
     void removeDesktop(VirtualDesktop *desktop);
 
 private:
-    using Chain = QList<AbstractClient*>;
+    using Chain = QList<AbstractClient *>;
     /**
      * @brief Makes @p client the first Client in the given focus @p chain.
      *
@@ -208,26 +208,22 @@ private:
     KWIN_SINGLETON_VARIABLE(FocusChain, s_manager)
 };
 
-inline
-bool FocusChain::contains(AbstractClient *client) const
+inline bool FocusChain::contains(AbstractClient *client) const
 {
     return m_mostRecentlyUsed.contains(client);
 }
 
-inline
-void FocusChain::setSeparateScreenFocus(bool enabled)
+inline void FocusChain::setSeparateScreenFocus(bool enabled)
 {
     m_separateScreenFocus = enabled;
 }
 
-inline
-void FocusChain::setActiveClient(AbstractClient *client)
+inline void FocusChain::setActiveClient(AbstractClient *client)
 {
     m_activeClient = client;
 }
 
-inline
-void FocusChain::setCurrentDesktop(VirtualDesktop *desktop)
+inline void FocusChain::setCurrentDesktop(VirtualDesktop *desktop)
 {
     m_currentDesktop = desktop;
 }

@@ -9,13 +9,13 @@
 */
 #include "drm_virtual_output.h"
 
-#include "renderloop_p.h"
-#include "softwarevsyncmonitor.h"
-#include "drm_gpu.h"
 #include "drm_backend.h"
-#include "logging.h"
+#include "drm_gpu.h"
 #include "drm_layer.h"
 #include "drm_render_backend.h"
+#include "logging.h"
+#include "renderloop_p.h"
+#include "softwarevsyncmonitor.h"
 
 namespace KWin
 {

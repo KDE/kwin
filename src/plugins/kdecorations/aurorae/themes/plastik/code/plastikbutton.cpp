@@ -103,7 +103,7 @@ QPixmap PlastikButtonProvider::requestPixmap(const QString &id, QSize *size, con
 QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool shadow)
 {
     Q_UNUSED(active);
-    if (size%2 == 0)
+    if (size % 2 == 0)
         --size;
 
     QPixmap image(size, size);
@@ -134,249 +134,234 @@ QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool
         lwArrow = 2;
     }
 
-    switch(icon) {
-        case CloseIcon:
-        {
-            int lineWidth = 1;
-            if (r.width() > 16) {
-                lineWidth = 3;
-            } else if (r.width() > 4) {
-                lineWidth = 2;
-            }
-
-            drawObject(p, DiagonalLine, r.x(), r.y(), r.width(), lineWidth);
-            drawObject(p, CrossDiagonalLine, r.x(), r.bottom(), r.width(), lineWidth);
-
-            break;
+    switch (icon) {
+    case CloseIcon: {
+        int lineWidth = 1;
+        if (r.width() > 16) {
+            lineWidth = 3;
+        } else if (r.width() > 4) {
+            lineWidth = 2;
         }
 
-        case MaxIcon:
-        {
-            int lineWidth2 = 1; // frame
-            if (r.width() > 16) {
-                lineWidth2 = 2;
-            } else if (r.width() > 4) {
-                lineWidth2 = 1;
-            }
+        drawObject(p, DiagonalLine, r.x(), r.y(), r.width(), lineWidth);
+        drawObject(p, CrossDiagonalLine, r.x(), r.bottom(), r.width(), lineWidth);
 
-            drawObject(p, HorizontalLine, r.x(), r.top(), r.width(), lwTitleBar);
-            drawObject(p, HorizontalLine, r.x(), r.bottom()-(lineWidth2-1), r.width(), lineWidth2);
-            drawObject(p, VerticalLine, r.x(), r.top(), r.height(), lineWidth2);
-            drawObject(p, VerticalLine, r.right()-(lineWidth2-1), r.top(), r.height(), lineWidth2);
+        break;
+    }
 
-            break;
+    case MaxIcon: {
+        int lineWidth2 = 1; // frame
+        if (r.width() > 16) {
+            lineWidth2 = 2;
+        } else if (r.width() > 4) {
+            lineWidth2 = 1;
         }
 
-        case MaxRestoreIcon:
-        {
-            int lineWidth2 = 1; // frame
-            if (r.width() > 16) {
-                lineWidth2 = 2;
-            } else if (r.width() > 4) {
-                lineWidth2 = 1;
-            }
+        drawObject(p, HorizontalLine, r.x(), r.top(), r.width(), lwTitleBar);
+        drawObject(p, HorizontalLine, r.x(), r.bottom() - (lineWidth2 - 1), r.width(), lineWidth2);
+        drawObject(p, VerticalLine, r.x(), r.top(), r.height(), lineWidth2);
+        drawObject(p, VerticalLine, r.right() - (lineWidth2 - 1), r.top(), r.height(), lineWidth2);
 
-            int margin1, margin2;
-            margin1 = margin2 = lineWidth2*2;
-            if (r.width() < 8)
-                margin1 = 1;
+        break;
+    }
 
-            // background window
-            drawObject(p, HorizontalLine, r.x()+margin1, r.top(), r.width()-margin1, lineWidth2);
-            drawObject(p, HorizontalLine, r.right()-margin2, r.bottom()-(lineWidth2-1)-margin1, margin2, lineWidth2);
-            drawObject(p, VerticalLine, r.x()+margin1, r.top(), margin2, lineWidth2);
-            drawObject(p, VerticalLine, r.right()-(lineWidth2-1), r.top(), r.height()-margin1, lineWidth2);
-
-            // foreground window
-            drawObject(p, HorizontalLine, r.x(), r.top()+margin2, r.width()-margin2, lwTitleBar);
-            drawObject(p, HorizontalLine, r.x(), r.bottom()-(lineWidth2-1), r.width()-margin2, lineWidth2);
-            drawObject(p, VerticalLine, r.x(), r.top()+margin2, r.height(), lineWidth2);
-            drawObject(p, VerticalLine, r.right()-(lineWidth2-1)-margin2, r.top()+margin2, r.height(), lineWidth2);
-
-            break;
+    case MaxRestoreIcon: {
+        int lineWidth2 = 1; // frame
+        if (r.width() > 16) {
+            lineWidth2 = 2;
+        } else if (r.width() > 4) {
+            lineWidth2 = 1;
         }
 
-        case MinIcon:
-        {
-            drawObject(p, HorizontalLine, r.x(), r.bottom()-(lwTitleBar-1), r.width(), lwTitleBar);
+        int margin1, margin2;
+        margin1 = margin2 = lineWidth2 * 2;
+        if (r.width() < 8)
+            margin1 = 1;
 
-            break;
-        }
+        // background window
+        drawObject(p, HorizontalLine, r.x() + margin1, r.top(), r.width() - margin1, lineWidth2);
+        drawObject(p, HorizontalLine, r.right() - margin2, r.bottom() - (lineWidth2 - 1) - margin1, margin2, lineWidth2);
+        drawObject(p, VerticalLine, r.x() + margin1, r.top(), margin2, lineWidth2);
+        drawObject(p, VerticalLine, r.right() - (lineWidth2 - 1), r.top(), r.height() - margin1, lineWidth2);
 
-        case HelpIcon:
-        {
-            int center = r.x()+r.width()/2 -1;
-            int side = r.width()/4;
+        // foreground window
+        drawObject(p, HorizontalLine, r.x(), r.top() + margin2, r.width() - margin2, lwTitleBar);
+        drawObject(p, HorizontalLine, r.x(), r.bottom() - (lineWidth2 - 1), r.width() - margin2, lineWidth2);
+        drawObject(p, VerticalLine, r.x(), r.top() + margin2, r.height(), lineWidth2);
+        drawObject(p, VerticalLine, r.right() - (lineWidth2 - 1) - margin2, r.top() + margin2, r.height(), lineWidth2);
 
-            // paint a question mark... code is quite messy, to be cleaned up later...! :o
+        break;
+    }
 
-            if (r.width() > 16) {
-                int lineWidth = 3;
+    case MinIcon: {
+        drawObject(p, HorizontalLine, r.x(), r.bottom() - (lwTitleBar - 1), r.width(), lwTitleBar);
 
-                // top bar
-                drawObject(p, HorizontalLine, center-side+3, r.y(), 2*side-3-1, lineWidth);
-                // top bar rounding
-                drawObject(p, CrossDiagonalLine, center-side-1, r.y()+5, 6, lineWidth);
-                drawObject(p, DiagonalLine, center+side-3, r.y(), 5, lineWidth);
-                // right bar
-                drawObject(p, VerticalLine, center+side+2-lineWidth, r.y()+3, r.height()-(2*lineWidth+side+2+1), lineWidth);
-                // bottom bar
-                drawObject(p, CrossDiagonalLine, center, r.bottom()-2*lineWidth, side+2, lineWidth);
-                drawObject(p, HorizontalLine, center, r.bottom()-3*lineWidth+2, lineWidth, lineWidth);
-                // the dot
-                drawObject(p, HorizontalLine, center, r.bottom()-(lineWidth-1), lineWidth, lineWidth);
-            } else if (r.width() > 8) {
-                int lineWidth = 2;
+        break;
+    }
 
-                // top bar
-                drawObject(p, HorizontalLine, center-(side-1), r.y(), 2*side-1, lineWidth);
-                // top bar rounding
-                if (r.width() > 9) {
-                    drawObject(p, CrossDiagonalLine, center-side-1, r.y()+3, 3, lineWidth);
-                } else {
-                    drawObject(p, CrossDiagonalLine, center-side-1, r.y()+2, 3, lineWidth);
-                }
-                drawObject(p, DiagonalLine, center+side-1, r.y(), 3, lineWidth);
-                // right bar
-                drawObject(p, VerticalLine, center+side+2-lineWidth, r.y()+2, r.height()-(2*lineWidth+side+1), lineWidth);
-                // bottom bar
-                drawObject(p, CrossDiagonalLine, center, r.bottom()-2*lineWidth+1, side+2, lineWidth);
-                // the dot
-                drawObject(p, HorizontalLine, center, r.bottom()-(lineWidth-1), lineWidth, lineWidth);
+    case HelpIcon: {
+        int center = r.x() + r.width() / 2 - 1;
+        int side = r.width() / 4;
+
+        // paint a question mark... code is quite messy, to be cleaned up later...! :o
+
+        if (r.width() > 16) {
+            int lineWidth = 3;
+
+            // top bar
+            drawObject(p, HorizontalLine, center - side + 3, r.y(), 2 * side - 3 - 1, lineWidth);
+            // top bar rounding
+            drawObject(p, CrossDiagonalLine, center - side - 1, r.y() + 5, 6, lineWidth);
+            drawObject(p, DiagonalLine, center + side - 3, r.y(), 5, lineWidth);
+            // right bar
+            drawObject(p, VerticalLine, center + side + 2 - lineWidth, r.y() + 3, r.height() - (2 * lineWidth + side + 2 + 1), lineWidth);
+            // bottom bar
+            drawObject(p, CrossDiagonalLine, center, r.bottom() - 2 * lineWidth, side + 2, lineWidth);
+            drawObject(p, HorizontalLine, center, r.bottom() - 3 * lineWidth + 2, lineWidth, lineWidth);
+            // the dot
+            drawObject(p, HorizontalLine, center, r.bottom() - (lineWidth - 1), lineWidth, lineWidth);
+        } else if (r.width() > 8) {
+            int lineWidth = 2;
+
+            // top bar
+            drawObject(p, HorizontalLine, center - (side - 1), r.y(), 2 * side - 1, lineWidth);
+            // top bar rounding
+            if (r.width() > 9) {
+                drawObject(p, CrossDiagonalLine, center - side - 1, r.y() + 3, 3, lineWidth);
             } else {
-                int lineWidth = 1;
-
-                // top bar
-                drawObject(p, HorizontalLine, center-(side-1), r.y(), 2*side, lineWidth);
-                // top bar rounding
-                drawObject(p, CrossDiagonalLine, center-side-1, r.y()+1, 2, lineWidth);
-                // right bar
-                drawObject(p, VerticalLine, center+side+1, r.y(), r.height()-(side+2+1), lineWidth);
-                // bottom bar
-                drawObject(p, CrossDiagonalLine, center, r.bottom()-2, side+2, lineWidth);
-                // the dot
-                drawObject(p, HorizontalLine, center, r.bottom(), 1, 1);
+                drawObject(p, CrossDiagonalLine, center - side - 1, r.y() + 2, 3, lineWidth);
             }
+            drawObject(p, DiagonalLine, center + side - 1, r.y(), 3, lineWidth);
+            // right bar
+            drawObject(p, VerticalLine, center + side + 2 - lineWidth, r.y() + 2, r.height() - (2 * lineWidth + side + 1), lineWidth);
+            // bottom bar
+            drawObject(p, CrossDiagonalLine, center, r.bottom() - 2 * lineWidth + 1, side + 2, lineWidth);
+            // the dot
+            drawObject(p, HorizontalLine, center, r.bottom() - (lineWidth - 1), lineWidth, lineWidth);
+        } else {
+            int lineWidth = 1;
 
-            break;
+            // top bar
+            drawObject(p, HorizontalLine, center - (side - 1), r.y(), 2 * side, lineWidth);
+            // top bar rounding
+            drawObject(p, CrossDiagonalLine, center - side - 1, r.y() + 1, 2, lineWidth);
+            // right bar
+            drawObject(p, VerticalLine, center + side + 1, r.y(), r.height() - (side + 2 + 1), lineWidth);
+            // bottom bar
+            drawObject(p, CrossDiagonalLine, center, r.bottom() - 2, side + 2, lineWidth);
+            // the dot
+            drawObject(p, HorizontalLine, center, r.bottom(), 1, 1);
         }
 
-        case NotOnAllDesktopsIcon:
-        {
-            int lwMark = r.width()-lwTitleBar*2-2;
-            if (lwMark < 1)
-                lwMark = 3;
+        break;
+    }
 
-            drawObject(p, HorizontalLine, r.x()+(r.width()-lwMark)/2, r.y()+(r.height()-lwMark)/2, lwMark, lwMark);
+    case NotOnAllDesktopsIcon: {
+        int lwMark = r.width() - lwTitleBar * 2 - 2;
+        if (lwMark < 1)
+            lwMark = 3;
 
-            // Fall through to OnAllDesktopsIcon intended!
-            Q_FALLTHROUGH();
-        }
-        case OnAllDesktopsIcon:
-        {
-            // horizontal bars
-            drawObject(p, HorizontalLine, r.x()+lwTitleBar, r.y(), r.width()-2*lwTitleBar, lwTitleBar);
-            drawObject(p, HorizontalLine, r.x()+lwTitleBar, r.bottom()-(lwTitleBar-1), r.width()-2*lwTitleBar, lwTitleBar);
-            // vertical bars
-            drawObject(p, VerticalLine, r.x(), r.y()+lwTitleBar, r.height()-2*lwTitleBar, lwTitleBar);
-            drawObject(p, VerticalLine, r.right()-(lwTitleBar-1), r.y()+lwTitleBar, r.height()-2*lwTitleBar, lwTitleBar);
+        drawObject(p, HorizontalLine, r.x() + (r.width() - lwMark) / 2, r.y() + (r.height() - lwMark) / 2, lwMark, lwMark);
 
+        // Fall through to OnAllDesktopsIcon intended!
+        Q_FALLTHROUGH();
+    }
+    case OnAllDesktopsIcon: {
+        // horizontal bars
+        drawObject(p, HorizontalLine, r.x() + lwTitleBar, r.y(), r.width() - 2 * lwTitleBar, lwTitleBar);
+        drawObject(p, HorizontalLine, r.x() + lwTitleBar, r.bottom() - (lwTitleBar - 1), r.width() - 2 * lwTitleBar, lwTitleBar);
+        // vertical bars
+        drawObject(p, VerticalLine, r.x(), r.y() + lwTitleBar, r.height() - 2 * lwTitleBar, lwTitleBar);
+        drawObject(p, VerticalLine, r.right() - (lwTitleBar - 1), r.y() + lwTitleBar, r.height() - 2 * lwTitleBar, lwTitleBar);
 
-            break;
-        }
+        break;
+    }
 
-        case NoKeepAboveIcon:
-        {
-            int center = r.x()+r.width()/2;
+    case NoKeepAboveIcon: {
+        int center = r.x() + r.width() / 2;
 
-            // arrow
-            drawObject(p, CrossDiagonalLine, r.x(), center+2*lwArrow, center-r.x(), lwArrow);
-            drawObject(p, DiagonalLine, r.x()+center, r.y()+1+2*lwArrow, center-r.x(), lwArrow);
-            if (lwArrow>1)
-                drawObject(p, HorizontalLine, center-(lwArrow-2), r.y()+2*lwArrow, (lwArrow-2)*2, lwArrow);
+        // arrow
+        drawObject(p, CrossDiagonalLine, r.x(), center + 2 * lwArrow, center - r.x(), lwArrow);
+        drawObject(p, DiagonalLine, r.x() + center, r.y() + 1 + 2 * lwArrow, center - r.x(), lwArrow);
+        if (lwArrow > 1)
+            drawObject(p, HorizontalLine, center - (lwArrow - 2), r.y() + 2 * lwArrow, (lwArrow - 2) * 2, lwArrow);
 
-            // Fall through to KeepAboveIcon intended!
-            Q_FALLTHROUGH();
-        }
-        case KeepAboveIcon:
-        {
-            int center = r.x()+r.width()/2;
+        // Fall through to KeepAboveIcon intended!
+        Q_FALLTHROUGH();
+    }
+    case KeepAboveIcon: {
+        int center = r.x() + r.width() / 2;
 
-            // arrow
-            drawObject(p, CrossDiagonalLine, r.x(), center, center-r.x(), lwArrow);
-            drawObject(p, DiagonalLine, r.x()+center, r.y()+1, center-r.x(), lwArrow);
-            if (lwArrow>1)
-                drawObject(p, HorizontalLine, center-(lwArrow-2), r.y(), (lwArrow-2)*2, lwArrow);
+        // arrow
+        drawObject(p, CrossDiagonalLine, r.x(), center, center - r.x(), lwArrow);
+        drawObject(p, DiagonalLine, r.x() + center, r.y() + 1, center - r.x(), lwArrow);
+        if (lwArrow > 1)
+            drawObject(p, HorizontalLine, center - (lwArrow - 2), r.y(), (lwArrow - 2) * 2, lwArrow);
 
-            break;
-        }
+        break;
+    }
 
-        case NoKeepBelowIcon:
-        {
-            int center = r.x()+r.width()/2;
+    case NoKeepBelowIcon: {
+        int center = r.x() + r.width() / 2;
 
-            // arrow
-            drawObject(p, DiagonalLine, r.x(), center-2*lwArrow, center-r.x(), lwArrow);
-            drawObject(p, CrossDiagonalLine, r.x()+center, r.bottom()-1-2*lwArrow, center-r.x(), lwArrow);
-            if (lwArrow>1)
-                drawObject(p, HorizontalLine, center-(lwArrow-2), r.bottom()-(lwArrow-1)-2*lwArrow, (lwArrow-2)*2, lwArrow);
+        // arrow
+        drawObject(p, DiagonalLine, r.x(), center - 2 * lwArrow, center - r.x(), lwArrow);
+        drawObject(p, CrossDiagonalLine, r.x() + center, r.bottom() - 1 - 2 * lwArrow, center - r.x(), lwArrow);
+        if (lwArrow > 1)
+            drawObject(p, HorizontalLine, center - (lwArrow - 2), r.bottom() - (lwArrow - 1) - 2 * lwArrow, (lwArrow - 2) * 2, lwArrow);
 
-            // Fall through to KeepBelowIcon intended!
-            Q_FALLTHROUGH();
-        }
-        case KeepBelowIcon:
-        {
-            int center = r.x()+r.width()/2;
+        // Fall through to KeepBelowIcon intended!
+        Q_FALLTHROUGH();
+    }
+    case KeepBelowIcon: {
+        int center = r.x() + r.width() / 2;
 
-            // arrow
-            drawObject(p, DiagonalLine, r.x(), center, center-r.x(), lwArrow);
-            drawObject(p, CrossDiagonalLine, r.x()+center, r.bottom()-1, center-r.x(), lwArrow);
-            if (lwArrow>1)
-                drawObject(p, HorizontalLine, center-(lwArrow-2), r.bottom()-(lwArrow-1), (lwArrow-2)*2, lwArrow);
+        // arrow
+        drawObject(p, DiagonalLine, r.x(), center, center - r.x(), lwArrow);
+        drawObject(p, CrossDiagonalLine, r.x() + center, r.bottom() - 1, center - r.x(), lwArrow);
+        if (lwArrow > 1)
+            drawObject(p, HorizontalLine, center - (lwArrow - 2), r.bottom() - (lwArrow - 1), (lwArrow - 2) * 2, lwArrow);
 
-            break;
-        }
+        break;
+    }
 
-        case ShadeIcon:
-        {
-            drawObject(p, HorizontalLine, r.x(), r.y(), r.width(), lwTitleBar);
+    case ShadeIcon: {
+        drawObject(p, HorizontalLine, r.x(), r.y(), r.width(), lwTitleBar);
 
-            break;
-        }
+        break;
+    }
 
-        case UnShadeIcon:
-        {
-            int lw1 = 1;
-            int lw2 = 1;
-            if (r.width() > 16) {
-                lw1 = 4;
-                lw2 = 2;
-            } else if (r.width() > 7) {
-                lw1 = 2;
-                lw2 = 1;
-            }
-
-            int h = qMax( (r.width()/2), (lw1+2*lw2) );
-
-            // horizontal bars
-            drawObject(p, HorizontalLine, r.x(), r.y(), r.width(), lw1);
-            drawObject(p, HorizontalLine, r.x(), r.x()+h-(lw2-1), r.width(), lw2);
-            // vertical bars
-            drawObject(p, VerticalLine, r.x(), r.y(), h, lw2);
-            drawObject(p, VerticalLine, r.right()-(lw2-1), r.y(), h, lw2);
-
-            break;
-        }
-        case AppMenuIcon:
-        {
-            drawObject(p, HorizontalLine, r.x(), r.top()+(lwTitleBar-1), r.width(), lwTitleBar);
-            drawObject(p, HorizontalLine, r.x(), r.center().y(), r.width(), lwTitleBar);
-            drawObject(p, HorizontalLine, r.x(), r.bottom()-(lwTitleBar-1), r.width(), lwTitleBar);
-            break;
+    case UnShadeIcon: {
+        int lw1 = 1;
+        int lw2 = 1;
+        if (r.width() > 16) {
+            lw1 = 4;
+            lw2 = 2;
+        } else if (r.width() > 7) {
+            lw1 = 2;
+            lw2 = 1;
         }
 
-        default:
-            break;
+        int h = qMax((r.width() / 2), (lw1 + 2 * lw2));
+
+        // horizontal bars
+        drawObject(p, HorizontalLine, r.x(), r.y(), r.width(), lw1);
+        drawObject(p, HorizontalLine, r.x(), r.x() + h - (lw2 - 1), r.width(), lw2);
+        // vertical bars
+        drawObject(p, VerticalLine, r.x(), r.y(), h, lw2);
+        drawObject(p, VerticalLine, r.right() - (lw2 - 1), r.y(), h, lw2);
+
+        break;
+    }
+    case AppMenuIcon: {
+        drawObject(p, HorizontalLine, r.x(), r.top() + (lwTitleBar - 1), r.width(), lwTitleBar);
+        drawObject(p, HorizontalLine, r.x(), r.center().y(), r.width(), lwTitleBar);
+        drawObject(p, HorizontalLine, r.x(), r.bottom() - (lwTitleBar - 1), r.width(), lwTitleBar);
+        break;
+    }
+
+    default:
+        break;
     }
 
     p.end();
@@ -386,73 +371,73 @@ QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool
 
 void PlastikButtonProvider::drawObject(QPainter &p, Object object, int x, int y, int length, int lineWidth)
 {
-    switch(object) {
-        case DiagonalLine:
-            if (lineWidth <= 1) {
-                for (int i = 0; i < length; ++i) {
-                    p.drawPoint(x+i,y+i);
-                }
-            } else if (lineWidth <= 2) {
-                for (int i = 0; i < length; ++i) {
-                    p.drawPoint(x+i,y+i);
-                }
-                for (int i = 0; i < (length-1); ++i) {
-                    p.drawPoint(x+1+i,y+i);
-                    p.drawPoint(x+i,y+1+i);
-                }
-            } else {
-                for (int i = 1; i < (length-1); ++i) {
-                    p.drawPoint(x+i,y+i);
-                }
-                for (int i = 0; i < (length-1); ++i) {
-                    p.drawPoint(x+1+i,y+i);
-                    p.drawPoint(x+i,y+1+i);
-                }
-                for (int i = 0; i < (length-2); ++i) {
-                    p.drawPoint(x+2+i,y+i);
-                    p.drawPoint(x+i,y+2+i);
-                }
+    switch (object) {
+    case DiagonalLine:
+        if (lineWidth <= 1) {
+            for (int i = 0; i < length; ++i) {
+                p.drawPoint(x + i, y + i);
             }
-            break;
-        case CrossDiagonalLine:
-            if (lineWidth <= 1) {
-                for (int i = 0; i < length; ++i) {
-                    p.drawPoint(x+i,y-i);
-                }
-            } else if (lineWidth <= 2) {
-                for (int i = 0; i < length; ++i) {
-                    p.drawPoint(x+i,y-i);
-                }
-                for (int i = 0; i < (length-1); ++i) {
-                    p.drawPoint(x+1+i,y-i);
-                    p.drawPoint(x+i,y-1-i);
-                }
-            } else {
-                for (int i = 1; i < (length-1); ++i) {
-                    p.drawPoint(x+i,y-i);
-                }
-                for (int i = 0; i < (length-1); ++i) {
-                    p.drawPoint(x+1+i,y-i);
-                    p.drawPoint(x+i,y-1-i);
-                }
-                for (int i = 0; i < (length-2); ++i) {
-                    p.drawPoint(x+2+i,y-i);
-                    p.drawPoint(x+i,y-2-i);
-                }
+        } else if (lineWidth <= 2) {
+            for (int i = 0; i < length; ++i) {
+                p.drawPoint(x + i, y + i);
             }
-            break;
-        case HorizontalLine:
-            for (int i = 0; i < lineWidth; ++i) {
-                p.drawLine(x,y+i, x+length-1, y+i);
+            for (int i = 0; i < (length - 1); ++i) {
+                p.drawPoint(x + 1 + i, y + i);
+                p.drawPoint(x + i, y + 1 + i);
             }
-            break;
-        case VerticalLine:
-            for (int i = 0; i < lineWidth; ++i) {
-                p.drawLine(x+i,y, x+i, y+length-1);
+        } else {
+            for (int i = 1; i < (length - 1); ++i) {
+                p.drawPoint(x + i, y + i);
             }
-            break;
-        default:
-            break;
+            for (int i = 0; i < (length - 1); ++i) {
+                p.drawPoint(x + 1 + i, y + i);
+                p.drawPoint(x + i, y + 1 + i);
+            }
+            for (int i = 0; i < (length - 2); ++i) {
+                p.drawPoint(x + 2 + i, y + i);
+                p.drawPoint(x + i, y + 2 + i);
+            }
+        }
+        break;
+    case CrossDiagonalLine:
+        if (lineWidth <= 1) {
+            for (int i = 0; i < length; ++i) {
+                p.drawPoint(x + i, y - i);
+            }
+        } else if (lineWidth <= 2) {
+            for (int i = 0; i < length; ++i) {
+                p.drawPoint(x + i, y - i);
+            }
+            for (int i = 0; i < (length - 1); ++i) {
+                p.drawPoint(x + 1 + i, y - i);
+                p.drawPoint(x + i, y - 1 - i);
+            }
+        } else {
+            for (int i = 1; i < (length - 1); ++i) {
+                p.drawPoint(x + i, y - i);
+            }
+            for (int i = 0; i < (length - 1); ++i) {
+                p.drawPoint(x + 1 + i, y - i);
+                p.drawPoint(x + i, y - 1 - i);
+            }
+            for (int i = 0; i < (length - 2); ++i) {
+                p.drawPoint(x + 2 + i, y - i);
+                p.drawPoint(x + i, y - 2 - i);
+            }
+        }
+        break;
+    case HorizontalLine:
+        for (int i = 0; i < lineWidth; ++i) {
+            p.drawLine(x, y + i, x + length - 1, y + i);
+        }
+        break;
+    case VerticalLine:
+        for (int i = 0; i < lineWidth; ++i) {
+            p.drawLine(x + i, y, x + i, y + length - 1);
+        }
+        break;
+    default:
+        break;
     }
 }
 

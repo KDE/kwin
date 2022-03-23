@@ -26,7 +26,7 @@ bool EffectsMouseInterceptionX11Filter::event(xcb_generic_event_t *event)
 {
     const uint8_t eventType = event->response_type & ~0x80;
     if (eventType == XCB_BUTTON_PRESS || eventType == XCB_BUTTON_RELEASE) {
-        auto *me = reinterpret_cast<xcb_button_press_event_t*>(event);
+        auto *me = reinterpret_cast<xcb_button_press_event_t *>(event);
         if (m_window == me->event) {
             const bool isWheel = me->detail >= 4 && me->detail <= 7;
             if (isWheel) {
@@ -78,7 +78,7 @@ bool EffectsMouseInterceptionX11Filter::event(xcb_generic_event_t *event)
             return m_effects->checkInputWindowEvent(&ev);
         }
     } else if (eventType == XCB_MOTION_NOTIFY) {
-        const auto *me = reinterpret_cast<xcb_motion_notify_event_t*>(event);
+        const auto *me = reinterpret_cast<xcb_motion_notify_event_t *>(event);
         if (m_window == me->event) {
             QMouseEvent ev(QEvent::MouseMove, QPoint(me->event_x, me->event_y), QPoint(me->root_x, me->root_y),
                            Qt::NoButton, x11ToQtMouseButtons(me->state), x11ToQtKeyboardModifiers(me->state));

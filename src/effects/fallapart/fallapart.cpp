@@ -38,14 +38,14 @@ void FallApartEffect::reconfigure(ReconfigureFlags)
     blockSize = FallApartConfig::blockSize();
 }
 
-void FallApartEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
+void FallApartEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     if (!windows.isEmpty())
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     effects->prePaintScreen(data, presentTime);
 }
 
-void FallApartEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
+void FallApartEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     auto animationIt = windows.find(w);
     if (animationIt != windows.end() && isRealWindow(w)) {
@@ -81,7 +81,7 @@ void FallApartEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
         for (WindowQuad &quad : quads) {
             // make fragments move in various directions, based on where
             // they are (left pieces generally move to the left, etc.)
-            QPointF p1(quad[ 0 ].x(), quad[ 0 ].y());
+            QPointF p1(quad[0].x(), quad[0].y());
             double xdiff = 0;
             if (p1.x() < w->width() / 2)
                 xdiff = -(w->width() / 2 - p1.x()) / w->width() * 100;
@@ -93,29 +93,29 @@ void FallApartEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
             if (p1.y() > w->height() / 2)
                 ydiff = (p1.y() - w->height() / 2) / w->height() * 100;
             double modif = t * t * 64;
-            srandom(cnt);   // change direction randomly but consistently
+            srandom(cnt); // change direction randomly but consistently
             xdiff += (rand() % 21 - 10);
             ydiff += (rand() % 21 - 10);
             for (int j = 0;
-                    j < 4;
-                    ++j) {
-                quad[ j ].move(quad[ j ].x() + xdiff * modif, quad[ j ].y() + ydiff * modif);
+                 j < 4;
+                 ++j) {
+                quad[j].move(quad[j].x() + xdiff * modif, quad[j].y() + ydiff * modif);
             }
             // also make the fragments rotate around their center
-            QPointF center((quad[ 0 ].x() + quad[ 1 ].x() + quad[ 2 ].x() + quad[ 3 ].x()) / 4,
-                           (quad[ 0 ].y() + quad[ 1 ].y() + quad[ 2 ].y() + quad[ 3 ].y()) / 4);
-            double adiff = (rand() % 720 - 360) / 360. * 2 * M_PI;   // spin randomly
+            QPointF center((quad[0].x() + quad[1].x() + quad[2].x() + quad[3].x()) / 4,
+                           (quad[0].y() + quad[1].y() + quad[2].y() + quad[3].y()) / 4);
+            double adiff = (rand() % 720 - 360) / 360. * 2 * M_PI; // spin randomly
             for (int j = 0;
-                    j < 4;
-                    ++j) {
-                double x = quad[ j ].x() - center.x();
-                double y = quad[ j ].y() - center.y();
+                 j < 4;
+                 ++j) {
+                double x = quad[j].x() - center.x();
+                double y = quad[j].y() - center.y();
                 double angle = atan2(y, x);
                 angle += animationIt->progress * adiff;
                 double dist = sqrt(x * x + y * y);
                 x = dist * cos(angle);
                 y = dist * sin(angle);
-                quad[ j ].move(center.x() + x, center.y() + y);
+                quad[j].move(center.x() + x, center.y() + y);
             }
             ++cnt;
         }
@@ -130,7 +130,7 @@ void FallApartEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-bool FallApartEffect::isRealWindow(EffectWindow* w)
+bool FallApartEffect::isRealWindow(EffectWindow *w)
 {
     // TODO: isSpecialWindow is rather generic, maybe tell windowtypes separately?
     /*
@@ -155,7 +155,7 @@ bool FallApartEffect::isRealWindow(EffectWindow* w)
     return true;
 }
 
-void FallApartEffect::slotWindowClosed(EffectWindow* c)
+void FallApartEffect::slotWindowClosed(EffectWindow *c)
 {
     if (effects->activeFullScreenEffect())
         return;
@@ -163,27 +163,27 @@ void FallApartEffect::slotWindowClosed(EffectWindow* c)
         return;
     if (!c->isVisible())
         return;
-    const void* e = c->data(WindowClosedGrabRole).value<void*>();
+    const void *e = c->data(WindowClosedGrabRole).value<void *>();
     if (e && e != this)
         return;
-    c->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
-    windows[ c ].progress = 0;
+    c->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
+    windows[c].progress = 0;
     c->refWindow();
     redirect(c);
 }
 
-void FallApartEffect::slotWindowDeleted(EffectWindow* c)
+void FallApartEffect::slotWindowDeleted(EffectWindow *c)
 {
     windows.remove(c);
 }
 
-void FallApartEffect::slotWindowDataChanged(EffectWindow* w, int role)
+void FallApartEffect::slotWindowDataChanged(EffectWindow *w, int role)
 {
     if (role != WindowClosedGrabRole) {
         return;
     }
 
-    if (w->data(role).value<void*>() == this) {
+    if (w->data(role).value<void *>() == this) {
         return;
     }
 

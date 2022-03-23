@@ -8,8 +8,8 @@
 
 #include "sharedqmlengine.h"
 
-#include <QQuickItem>
 #include <QQmlEngine>
+#include <QQuickItem>
 #include <QWindow>
 
 namespace KWin
@@ -18,7 +18,10 @@ namespace KWin
 class QuickSceneEffectPrivate
 {
 public:
-    static QuickSceneEffectPrivate *get(QuickSceneEffect *effect) { return effect->d.data(); }
+    static QuickSceneEffectPrivate *get(QuickSceneEffect *effect)
+    {
+        return effect->d.data();
+    }
 
     SharedQmlEngine::Ptr qmlEngine;
     QScopedPointer<QQmlComponent> qmlComponent;
@@ -56,7 +59,9 @@ void QuickSceneView::setRootItem(QQuickItem *item)
     m_rootItem.reset(item);
     m_rootItem->setParentItem(contentItem());
 
-    auto updateSize = [this]() { m_rootItem->setSize(contentItem()->size()); };
+    auto updateSize = [this]() {
+        m_rootItem->setSize(contentItem()->size());
+    };
     updateSize();
     connect(contentItem(), &QQuickItem::widthChanged, m_rootItem.data(), updateSize);
     connect(contentItem(), &QQuickItem::heightChanged, m_rootItem.data(), updateSize);

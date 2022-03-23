@@ -107,7 +107,8 @@ QByteArray AbstractWaylandOutput::edid() const
     return m_edid;
 }
 
-bool AbstractWaylandOutput::Mode::operator==(const Mode &other) const {
+bool AbstractWaylandOutput::Mode::operator==(const Mode &other) const
+{
     return id == other.id && other.flags == flags && size == other.size && refreshRate == other.refreshRate;
 }
 
@@ -231,8 +232,7 @@ void AbstractWaylandOutput::initialize(const QString &model, const QString &manu
 
 QSize AbstractWaylandOutput::orientateSize(const QSize &size) const
 {
-    if (m_transform == Transform::Rotated90 || m_transform == Transform::Rotated270 ||
-            m_transform == Transform::Flipped90 || m_transform == Transform::Flipped270) {
+    if (m_transform == Transform::Rotated90 || m_transform == Transform::Rotated270 || m_transform == Transform::Flipped90 || m_transform == Transform::Flipped270) {
         return size.transposed();
     }
     return size;

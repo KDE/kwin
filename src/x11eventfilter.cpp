@@ -20,14 +20,15 @@ X11EventFilter::X11EventFilter(const QVector<int> &eventTypes)
     kwinApp()->registerEventFilter(this);
 }
 
-
 X11EventFilter::X11EventFilter(int eventType, int opcode, int genericEventType)
     : X11EventFilter(eventType, opcode, QVector<int>{genericEventType})
 {
 }
 
-X11EventFilter::X11EventFilter(int eventType, int opcode, const QVector< int > &genericEventTypes)
-    : m_eventTypes(QVector<int>{eventType}), m_extension(opcode), m_genericEventTypes(genericEventTypes)
+X11EventFilter::X11EventFilter(int eventType, int opcode, const QVector<int> &genericEventTypes)
+    : m_eventTypes(QVector<int>{eventType})
+    , m_extension(opcode)
+    , m_genericEventTypes(genericEventTypes)
 {
     kwinApp()->registerEventFilter(this);
 }

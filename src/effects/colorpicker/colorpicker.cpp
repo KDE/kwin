@@ -7,15 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpicker.h"
+#include <KLocalizedString>
+#include <QDBusConnection>
+#include <QDBusMetaType>
 #include <kwinglutils.h>
 #include <kwinglutils_funcs.h>
-#include <QDBusConnection>
-#include <KLocalizedString>
-#include <QDBusMetaType>
 
 Q_DECLARE_METATYPE(QColor)
 
-QDBusArgument &operator<< (QDBusArgument &argument, const QColor &color)
+QDBusArgument &operator<<(QDBusArgument &argument, const QColor &color)
 {
     argument.beginStructure();
     argument << color.rgba();
@@ -81,7 +81,7 @@ QColor ColorPickerEffect::pick()
     setDelayedReply(true);
     showInfoMessage();
     effects->startInteractivePositionSelection(
-        [this] (const QPoint &p) {
+        [this](const QPoint &p) {
             hideInfoMessage();
             if (p == QPoint(-1, -1)) {
                 // error condition
@@ -91,8 +91,7 @@ QColor ColorPickerEffect::pick()
                 m_scheduledPosition = p;
                 effects->addRepaintFull();
             }
-        }
-    );
+        });
     return QColor();
 }
 

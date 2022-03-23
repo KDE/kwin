@@ -13,8 +13,8 @@
 #include "qpainterbackend.h"
 #include "utils/damagejournal.h"
 
-#include <QObject>
 #include <QImage>
+#include <QObject>
 #include <QWeakPointer>
 
 namespace KWayland
@@ -93,7 +93,7 @@ private:
     void frameRendered();
 
     WaylandBackend *m_backend;
-    QMap<AbstractOutput *, WaylandQPainterOutput*> m_outputs;
+    QMap<AbstractOutput *, WaylandQPainterOutput *> m_outputs;
 };
 
 }

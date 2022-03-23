@@ -7,15 +7,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "abstract_output.h"
-#include "platform.h"
-#include "x11client.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "platform.h"
+#include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "utils/xcbutils.h"
+#include "x11client.h"
 #include <kwineffects.h>
 
 #include <netwm.h>
@@ -40,8 +41,8 @@ private:
 
 void X11DesktopWindowTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Deleted*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -89,7 +90,7 @@ void X11DesktopWindowTest::testDesktopWindow()
     const QRect windowGeometry(0, 0, 1280, 1024);
 
     // helper to find the visual
-    auto findDepth = [&c] () -> xcb_visualid_t {
+    auto findDepth = [&c]() -> xcb_visualid_t {
         // find a visual with 32 depth
         const xcb_setup_t *setup = xcb_get_setup(c.data());
 
@@ -115,11 +116,11 @@ void X11DesktopWindowTest::testDesktopWindow()
 
     const uint32_t values[] = {XCB_PIXMAP_NONE, kwinApp()->x11DefaultScreen()->black_pixel, colormapId};
     auto cookie = xcb_create_window_checked(c.data(), 32, w, rootWindow(),
-                      windowGeometry.x(),
-                      windowGeometry.y(),
-                      windowGeometry.width(),
-                      windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, visualId, XCB_CW_BACK_PIXMAP | XCB_CW_BORDER_PIXEL | XCB_CW_COLORMAP, values);
+                                            windowGeometry.x(),
+                                            windowGeometry.y(),
+                                            windowGeometry.width(),
+                                            windowGeometry.height(),
+                                            0, XCB_WINDOW_CLASS_INPUT_OUTPUT, visualId, XCB_CW_BACK_PIXMAP | XCB_CW_BORDER_PIXEL | XCB_CW_COLORMAP, values);
     QVERIFY(!xcb_request_check(c.data(), cookie));
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));

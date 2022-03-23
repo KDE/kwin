@@ -21,11 +21,11 @@
 #include "logging.h"
 #include "options.h"
 
-#include "wayland_server.h"
 #include "screens.h"
+#include "wayland_server.h"
 
-#include <unistd.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 // kwin libs
 #include <kwinglplatform.h>
@@ -64,7 +64,7 @@ bool EglWaylandOutput::init(EglWaylandBackend *backend)
 
     EGLSurface eglSurface = EGL_NO_SURFACE;
     if (backend->havePlatformBase()) {
-        eglSurface = eglCreatePlatformWindowSurfaceEXT(backend->eglDisplay(), backend->config(), (void *) overlay, nullptr);
+        eglSurface = eglCreatePlatformWindowSurfaceEXT(backend->eglDisplay(), backend->config(), (void *)overlay, nullptr);
     } else {
         eglSurface = eglCreateWindowSurface(backend->eglDisplay(), backend->config(), overlay, nullptr);
     }
@@ -112,7 +112,7 @@ EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
         setFailed("Wayland Backend has not been created");
         return;
     }
-    qCDebug(KWIN_WAYLAND_BACKEND) << "Connected to Wayland display?" << (m_backend->display() ? "yes" : "no" );
+    qCDebug(KWIN_WAYLAND_BACKEND) << "Connected to Wayland display?" << (m_backend->display() ? "yes" : "no");
     if (!m_backend->display()) {
         setFailed("Could not connect to Wayland compositor");
         return;
@@ -122,20 +122,16 @@ EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
     setIsDirectRendering(true);
 
     connect(m_backend, &WaylandBackend::outputAdded, this, &EglWaylandBackend::createEglWaylandOutput);
-    connect(m_backend, &WaylandBackend::outputRemoved, this,
-        [this] (AbstractOutput *output) {
-            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                [output] (const EglWaylandOutput *o) {
-                    return o->m_waylandOutput == output;
-                }
-            );
-            if (it == m_outputs.end()) {
-                return;
-            }
-            cleanupOutput(*it);
-            m_outputs.erase(it);
+    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](AbstractOutput *output) {
+        auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [output](const EglWaylandOutput *o) {
+            return o->m_waylandOutput == output;
+        });
+        if (it == m_outputs.end()) {
+            return;
         }
-    );
+        cleanupOutput(*it);
+        m_outputs.erase(it);
+    });
 }
 
 EglWaylandBackend::~EglWaylandBackend()
@@ -264,13 +260,20 @@ bool EglWaylandBackend::makeContextCurrent(EglWaylandOutput *output)
 bool EglWaylandBackend::initBufferConfigs()
 {
     const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT,
-        EGL_RED_SIZE,             1,
-        EGL_GREEN_SIZE,           1,
-        EGL_BLUE_SIZE,            1,
-        EGL_ALPHA_SIZE,           0,
-        EGL_RENDERABLE_TYPE,      isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
-        EGL_CONFIG_CAVEAT,        EGL_NONE,
+        EGL_SURFACE_TYPE,
+        EGL_WINDOW_BIT,
+        EGL_RED_SIZE,
+        1,
+        EGL_GREEN_SIZE,
+        1,
+        EGL_BLUE_SIZE,
+        1,
+        EGL_ALPHA_SIZE,
+        0,
+        EGL_RENDERABLE_TYPE,
+        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
+        EGL_CONFIG_CAVEAT,
+        EGL_NONE,
         EGL_NONE,
     };
 
@@ -309,7 +312,6 @@ static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutpu
     return rects;
 }
 
-
 QSharedPointer<KWin::GLTexture> EglWaylandBackend::textureForOutput(KWin::AbstractOutput *output) const
 {
     QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, output->pixelSize()));
@@ -328,7 +330,7 @@ void EglWaylandBackend::aboutToStartPainting(AbstractOutput *output, const QRegi
     if (eglOutput->m_bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
         QVector<EGLint> rects = regionToRects(damagedRegion, eglOutput->m_waylandOutput);
         const bool correct = eglSetDamageRegionKHR(eglDisplay(), eglOutput->m_eglSurface,
-                                                   rects.data(), rects.count()/4);
+                                                   rects.data(), rects.count() / 4);
         if (!correct) {
             qCWarning(KWIN_WAYLAND_BACKEND) << "failed eglSetDamageRegionKHR" << eglGetError();
         }
@@ -358,7 +360,6 @@ void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output, const QRegion
     if (supportsBufferAge()) {
         eglQuerySurface(eglDisplay(), output->m_eglSurface, EGL_BUFFER_AGE_EXT, &output->m_bufferAge);
     }
-
 }
 
 SurfaceTexture *EglWaylandBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)

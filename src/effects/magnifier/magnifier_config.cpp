@@ -6,41 +6,43 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "magnifier_config.h"
+
+#include <config-kwin.h>
+
 // KConfigSkeleton
 #include "magnifierconfig.h"
-#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <QAction>
 
+#include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <kconfiggroup.h>
-#include <KActionCollection>
 #include <KPluginFactory>
+#include <kconfiggroup.h>
 
 #include <QDebug>
-#include <QWidget>
 #include <QVBoxLayout>
+#include <QWidget>
 
 K_PLUGIN_CLASS(KWin::MagnifierEffectConfig)
 
 namespace KWin
 {
 
-MagnifierEffectConfigForm::MagnifierEffectConfigForm(QWidget* parent) : QWidget(parent)
+MagnifierEffectConfigForm::MagnifierEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+MagnifierEffectConfig::MagnifierEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     m_ui = new MagnifierEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->addWidget(m_ui);
 
@@ -56,7 +58,7 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList
     m_actionCollection->setConfigGroup(QStringLiteral("Magnifier"));
     m_actionCollection->setConfigGlobal(true);
 
-    QAction* a;
+    QAction *a;
     a = m_actionCollection->addAction(KStandardAction::ZoomIn);
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));
@@ -83,9 +85,9 @@ MagnifierEffectConfig::~MagnifierEffectConfig()
 
 void MagnifierEffectConfig::save()
 {
-    qDebug() << "Saving config of Magnifier" ;
+    qDebug() << "Saving config of Magnifier";
 
-    m_ui->editor->save();   // undo() will restore to this state from now on
+    m_ui->editor->save(); // undo() will restore to this state from now on
     KCModule::save();
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),

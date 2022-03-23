@@ -8,7 +8,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-
 #include "ui_compositing.h"
 #include <kwin_compositing_interface.h>
 
@@ -16,9 +15,9 @@
 #include <QApplication>
 #include <QLayout>
 
+#include <KWindowSystem/KWindowSystem>
 #include <kcmodule.h>
 #include <kservice.h>
-#include <KWindowSystem/KWindowSystem>
 
 #include <algorithm>
 #include <functional>
@@ -35,7 +34,6 @@ class KWinCompositingKCM : public KCModule
 {
     Q_OBJECT
 public:
-
     explicit KWinCompositingKCM(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
 
 public Q_SLOTS:
@@ -102,7 +100,7 @@ void KWinCompositingKCM::reenableGl()
 
 void KWinCompositingKCM::init()
 {
-    auto currentIndexChangedSignal = static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
+    auto currentIndexChangedSignal = static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
 
     // animation speed
     m_form.animationDurationFactor->setMaximum(s_animationMultipliers.size() - 1);
@@ -117,47 +115,41 @@ void KWinCompositingKCM::init()
     }
 
     // gl scale filter
-    connect(m_form.kcfg_glTextureFilter, currentIndexChangedSignal, this,
-        [this](int index) {
-            if (index == 2) {
-                m_form.scaleWarning->animatedShow();
-            } else {
-                m_form.scaleWarning->animatedHide();
-            }
+    connect(m_form.kcfg_glTextureFilter, currentIndexChangedSignal, this, [this](int index) {
+        if (index == 2) {
+            m_form.scaleWarning->animatedShow();
+        } else {
+            m_form.scaleWarning->animatedHide();
         }
-    );
+    });
 
     // tearing prevention
-    connect(m_form.kcfg_glPreferBufferSwap, currentIndexChangedSignal, this,
-        [this](int index) {
-            if (index == 1) {
-                // only when cheap - tearing
-                m_form.tearingWarning->setText(i18n("\"Only when cheap\" only prevents tearing for full screen changes like a video."));
-                m_form.tearingWarning->animatedShow();
-            } else if (index == 2) {
-                // full screen repaints
-                m_form.tearingWarning->setText(i18n("\"Full screen repaints\" can cause performance problems."));
-                m_form.tearingWarning->animatedShow();
-            } else if (index == 3) {
-                // re-use screen content
-                m_form.tearingWarning->setText(i18n("\"Re-use screen content\" causes severe performance problems on MESA drivers."));
-                m_form.tearingWarning->animatedShow();
-            } else {
-                m_form.tearingWarning->animatedHide();
-            }
+    connect(m_form.kcfg_glPreferBufferSwap, currentIndexChangedSignal, this, [this](int index) {
+        if (index == 1) {
+            // only when cheap - tearing
+            m_form.tearingWarning->setText(i18n("\"Only when cheap\" only prevents tearing for full screen changes like a video."));
+            m_form.tearingWarning->animatedShow();
+        } else if (index == 2) {
+            // full screen repaints
+            m_form.tearingWarning->setText(i18n("\"Full screen repaints\" can cause performance problems."));
+            m_form.tearingWarning->animatedShow();
+        } else if (index == 3) {
+            // re-use screen content
+            m_form.tearingWarning->setText(i18n("\"Re-use screen content\" causes severe performance problems on MESA drivers."));
+            m_form.tearingWarning->animatedShow();
+        } else {
+            m_form.tearingWarning->animatedHide();
         }
-    );
+    });
 
     // windowThumbnail
-    connect(m_form.kcfg_HiddenPreviews, currentIndexChangedSignal, this,
-        [this](int index) {
-            if (index == 2) {
-                m_form.windowThumbnailWarning->animatedShow();
-            } else {
-                m_form.windowThumbnailWarning->animatedHide();
-            }
+    connect(m_form.kcfg_HiddenPreviews, currentIndexChangedSignal, this, [this](int index) {
+        if (index == 2) {
+            m_form.windowThumbnailWarning->animatedShow();
+        } else {
+            m_form.windowThumbnailWarning->animatedHide();
         }
-    );
+    });
 
     if (m_settings->openGLIsUnsafe()) {
         m_form.glCrashedWarning->animatedShow();
@@ -172,7 +164,7 @@ void KWinCompositingKCM::updateUnmanagedItemStatus()
 
     bool changed = false;
     if (!inPlasma) {
-      changed |= (animationDuration != m_settings->animationDurationFactor());
+        changed |= (animationDuration != m_settings->animationDurationFactor());
     }
     unmanagedWidgetChangeState(changed);
 
@@ -227,7 +219,6 @@ void KWinCompositingKCM::save()
 
 K_PLUGIN_FACTORY(KWinCompositingConfigFactory,
                  registerPlugin<KWinCompositingKCM>();
-                 registerPlugin<KWinCompositingData>();
-                )
+                 registerPlugin<KWinCompositingData>();)
 
 #include "main.moc"

@@ -8,31 +8,36 @@
 */
 #include "shadowbuffer.h"
 
-#include "logging.h"
 #include "drm_output.h"
+#include "logging.h"
 
 namespace KWin
 {
 
 static const float vertices[] = {
-   -1.0f,  1.0f,
-   -1.0f, -1.0f,
-    1.0f, -1.0f,
+    -1.0f,
+    1.0f,
+    -1.0f,
+    -1.0f,
+    1.0f,
+    -1.0f,
 
-   -1.0f,  1.0f,
-    1.0f, -1.0f,
-    1.0f,  1.0f,
+    -1.0f,
+    1.0f,
+    1.0f,
+    -1.0f,
+    1.0f,
+    1.0f,
 };
 
 static const float texCoords[] = {
-    0.0f,  1.0f,
-    0.0f,  0.0f,
-    1.0f,  0.0f,
+    0.0f, 1.0f,
+    0.0f, 0.0f,
+    1.0f, 0.0f,
 
-    0.0f,  1.0f,
-    1.0f,  0.0f,
-    1.0f,  1.0f
-};
+    0.0f, 1.0f,
+    1.0f, 0.0f,
+    1.0f, 1.0f};
 
 ShadowBuffer::ShadowBuffer(const QSize &size, const GbmFormat &format)
     : m_size(size)

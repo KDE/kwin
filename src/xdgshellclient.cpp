@@ -353,14 +353,12 @@ void XdgSurfaceClient::updateShowOnScreenEdge()
     if (!ScreenEdges::self()) {
         return;
     }
-    if (!readyForPainting() || !m_plasmaShellSurface ||
-            m_plasmaShellSurface->role() != PlasmaShellSurfaceInterface::Role::Panel) {
+    if (!readyForPainting() || !m_plasmaShellSurface || m_plasmaShellSurface->role() != PlasmaShellSurfaceInterface::Role::Panel) {
         ScreenEdges::self()->reserve(this, ElectricNone);
         return;
     }
     const PlasmaShellSurfaceInterface::PanelBehavior panelBehavior = m_plasmaShellSurface->panelBehavior();
-    if ((panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide && isHidden()) ||
-            panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover) {
+    if ((panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide && isHidden()) || panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover) {
         // Screen edge API requires an edge, thus we need to figure out which edge the window borders.
         const QRect clientGeometry = frameGeometry();
         Qt::Edges edges;
@@ -437,7 +435,9 @@ void XdgSurfaceClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
 {
     m_plasmaShellSurface = shellSurface;
 
-    auto updatePosition = [this, shellSurface] { move(shellSurface->position()); };
+    auto updatePosition = [this, shellSurface] {
+        move(shellSurface->position());
+    };
     auto updateRole = [this, shellSurface] {
         NET::WindowType type = NET::Unknown;
         switch (shellSurface->role()) {
@@ -688,8 +688,7 @@ bool XdgToplevelClient::isMaximizable() const
     if (!isResizable()) {
         return false;
     }
-    if (rules()->checkMaximize(MaximizeRestore) != MaximizeRestore ||
-            rules()->checkMaximize(MaximizeFull) != MaximizeFull) {
+    if (rules()->checkMaximize(MaximizeRestore) != MaximizeRestore || rules()->checkMaximize(MaximizeFull) != MaximizeFull) {
         return false;
     }
     return true;
@@ -812,7 +811,7 @@ void XdgToplevelClient::showOnScreenEdge()
 {
     // ShowOnScreenEdge can be called by an Edge, and hideClient could destroy the Edge
     // Use the singleshot to avoid use-after-free
-    QTimer::singleShot(0, this, [this](){
+    QTimer::singleShot(0, this, [this]() {
         showClient();
         workspace()->raiseClient(this);
         if (m_plasmaShellSurface && m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
@@ -1038,12 +1037,10 @@ bool XdgToplevelClient::dockWantsInput() const
 bool XdgToplevelClient::acceptsFocus() const
 {
     if (m_plasmaShellSurface) {
-        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::OnScreenDisplay ||
-            m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::ToolTip) {
+        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::OnScreenDisplay || m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::ToolTip) {
             return false;
         }
-        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Notification ||
-            m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::CriticalNotification) {
+        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Notification || m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::CriticalNotification) {
             return m_plasmaShellSurface->panelTakesFocus();
         }
     }
@@ -1128,7 +1125,7 @@ void XdgToplevelClient::handleResizeRequested(SeatInterface *seat, XdgToplevelIn
     } else {
         cursorPos = input()->touch()->position().toPoint();
     }
-    setInteractiveMoveOffset(cursorPos - pos());  // map from global
+    setInteractiveMoveOffset(cursorPos - pos()); // map from global
     setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
     setUnrestrictedInteractiveMoveResize(false);
     Gravity gravity;
@@ -1275,7 +1272,7 @@ void XdgToplevelClient::handlePingTimeout(quint32 serial)
     if (pingIt.value() == PingReason::CloseWindow) {
         qCDebug(KWIN_CORE) << "Final ping timeout on a close attempt, asking to kill:" << caption();
 
-        //for internal windows, killing the window will delete this
+        // for internal windows, killing the window will delete this
         QPointer<QObject> guard(this);
         killWindow();
         if (!guard) {
@@ -1628,9 +1625,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
         return;
     }
 
-    const QRect clientArea = isElectricBorderMaximizing() ?
-        workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos()) :
-        workspace()->clientArea(MaximizeArea, this, moveResizeGeometry().center());
+    const QRect clientArea = isElectricBorderMaximizing() ? workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos()) : workspace()->clientArea(MaximizeArea, this, moveResizeGeometry().center());
 
     const MaximizeMode oldMode = m_requestedMaximizeMode;
     const QRect oldGeometry = moveResizeGeometry();
@@ -1848,7 +1843,7 @@ QRect XdgPopupClient::transientPlacement(const QRect &bounds) const
             return false;
         }
         if (edges & Qt::RightEdge && target.right() > bounds.right()) {
-            //normal QRect::right issue cancels out
+            // normal QRect::right issue cancels out
             return false;
         }
         if (edges & Qt::BottomEdge && target.bottom() > bounds.bottom()) {
@@ -1859,15 +1854,15 @@ QRect XdgPopupClient::transientPlacement(const QRect &bounds) const
 
     QRect popupRect(popupOffset(positioner.anchorRect(), positioner.anchorEdges(), positioner.gravityEdges(), desiredSize) + positioner.offset() + parentPosition, desiredSize);
 
-    //if that fits, we don't need to do anything
+    // if that fits, we don't need to do anything
     if (inBounds(popupRect)) {
         return popupRect;
     }
-    //otherwise apply constraint adjustment per axis in order XDG Shell Popup states
+    // otherwise apply constraint adjustment per axis in order XDG Shell Popup states
 
     if (positioner.flipConstraintAdjustments() & Qt::Horizontal) {
         if (!inBounds(popupRect, Qt::LeftEdge | Qt::RightEdge)) {
-            //flip both edges (if either bit is set, XOR both)
+            // flip both edges (if either bit is set, XOR both)
             auto flippedAnchorEdge = positioner.anchorEdges();
             if (flippedAnchorEdge & (Qt::LeftEdge | Qt::RightEdge)) {
                 flippedAnchorEdge ^= (Qt::LeftEdge | Qt::RightEdge);
@@ -1878,7 +1873,7 @@ QRect XdgPopupClient::transientPlacement(const QRect &bounds) const
             }
             auto flippedPopupRect = QRect(popupOffset(positioner.anchorRect(), flippedAnchorEdge, flippedGravity, desiredSize) + positioner.offset() + parentPosition, desiredSize);
 
-            //if it still doesn't fit we should continue with the unflipped version
+            // if it still doesn't fit we should continue with the unflipped version
             if (inBounds(flippedPopupRect, Qt::LeftEdge | Qt::RightEdge)) {
                 popupRect.moveLeft(flippedPopupRect.left());
             }
@@ -1909,7 +1904,7 @@ QRect XdgPopupClient::transientPlacement(const QRect &bounds) const
 
     if (positioner.flipConstraintAdjustments() & Qt::Vertical) {
         if (!inBounds(popupRect, Qt::TopEdge | Qt::BottomEdge)) {
-            //flip both edges (if either bit is set, XOR both)
+            // flip both edges (if either bit is set, XOR both)
             auto flippedAnchorEdge = positioner.anchorEdges();
             if (flippedAnchorEdge & (Qt::TopEdge | Qt::BottomEdge)) {
                 flippedAnchorEdge ^= (Qt::TopEdge | Qt::BottomEdge);
@@ -1920,7 +1915,7 @@ QRect XdgPopupClient::transientPlacement(const QRect &bounds) const
             }
             auto flippedPopupRect = QRect(popupOffset(positioner.anchorRect(), flippedAnchorEdge, flippedGravity, desiredSize) + positioner.offset() + parentPosition, desiredSize);
 
-            //if it still doesn't fit we should continue with the unflipped version
+            // if it still doesn't fit we should continue with the unflipped version
             if (inBounds(flippedPopupRect, Qt::TopEdge | Qt::BottomEdge)) {
                 popupRect.moveTop(flippedPopupRect.top());
             }

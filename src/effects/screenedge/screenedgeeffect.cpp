@@ -8,16 +8,17 @@
 */
 #include "screenedgeeffect.h"
 // KWin
-#include <kwinglutils.h>
 #include <kwingltexture.h>
+#include <kwinglutils.h>
 // KDE
 #include <Plasma/Svg>
 // Qt
-#include <QTimer>
 #include <QPainter>
+#include <QTimer>
 #include <QVector4D>
 
-namespace KWin {
+namespace KWin
+{
 
 ScreenEdgeEffect::ScreenEdgeEffect()
     : Effect()
@@ -27,13 +28,11 @@ ScreenEdgeEffect::ScreenEdgeEffect()
     m_cleanupTimer->setInterval(5000);
     m_cleanupTimer->setSingleShot(true);
     connect(m_cleanupTimer, &QTimer::timeout, this, &ScreenEdgeEffect::cleanup);
-    connect(effects, &EffectsHandler::screenLockingChanged, this,
-        [this] (bool locked) {
-            if (locked) {
-                cleanup();
-            }
+    connect(effects, &EffectsHandler::screenLockingChanged, this, [this](bool locked) {
+        if (locked) {
+            cleanup();
         }
-    );
+    });
 }
 
 ScreenEdgeEffect::~ScreenEdgeEffect()
@@ -51,9 +50,9 @@ void ScreenEdgeEffect::ensureGlowSvg()
 
 void ScreenEdgeEffect::cleanup()
 {
-    for (QHash<ElectricBorder, Glow*>::iterator it = m_borders.begin();
-            it != m_borders.end();
-            ++it) {
+    for (QHash<ElectricBorder, Glow *>::iterator it = m_borders.begin();
+         it != m_borders.end();
+         ++it) {
         effects->addRepaint((*it)->geometry);
     }
     qDeleteAll(m_borders);
@@ -63,9 +62,9 @@ void ScreenEdgeEffect::cleanup()
 void ScreenEdgeEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     effects->prePaintScreen(data, presentTime);
-    for (QHash<ElectricBorder, Glow*>::iterator it = m_borders.begin();
-            it != m_borders.end();
-            ++it) {
+    for (QHash<ElectricBorder, Glow *>::iterator it = m_borders.begin();
+         it != m_borders.end();
+         ++it) {
         if ((*it)->strength == 0.0) {
             continue;
         }
@@ -76,9 +75,9 @@ void ScreenEdgeEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
 void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     effects->paintScreen(mask, region, data);
-    for (QHash<ElectricBorder, Glow*>::iterator it = m_borders.begin();
-            it != m_borders.end();
-            ++it) {
+    for (QHash<ElectricBorder, Glow *>::iterator it = m_borders.begin();
+         it != m_borders.end();
+         ++it) {
         const qreal opacity = (*it)->strength;
         if (opacity == 0.0) {
             continue;
@@ -114,19 +113,19 @@ void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             int x = rect.x();
             int y = rect.y();
             switch ((*it)->border) {
-                case ElectricTopRight:
-                    x = rect.x() + rect.width() - size.width();
-                    break;
-                case ElectricBottomRight:
-                    x = rect.x() + rect.width() - size.width();
-                    y = rect.y() + rect.height() - size.height();
-                    break;
-                case ElectricBottomLeft:
-                    y = rect.y() + rect.height() - size.height();
-                    break;
-                default:
-                    // nothing
-                    break;
+            case ElectricTopRight:
+                x = rect.x() + rect.width() - size.width();
+                break;
+            case ElectricBottomRight:
+                x = rect.x() + rect.width() - size.width();
+                y = rect.y() + rect.height() - size.height();
+                break;
+            case ElectricBottomLeft:
+                y = rect.y() + rect.height() - size.height();
+                break;
+            default:
+                // nothing
+                break;
             }
             painter->drawImage(QPoint(x, y), tmp);
         }
@@ -135,7 +134,7 @@ void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
 
 void ScreenEdgeEffect::edgeApproaching(ElectricBorder border, qreal factor, const QRect &geometry)
 {
-    QHash<ElectricBorder, Glow*>::iterator it = m_borders.find(border);
+    QHash<ElectricBorder, Glow *>::iterator it = m_borders.find(border);
     if (it != m_borders.end()) {
         // need to update
         effects->addRepaint((*it)->geometry);
@@ -205,7 +204,7 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
     return glow;
 }
 
-template <typename T>
+template<typename T>
 T *ScreenEdgeEffect::createCornerGlow(ElectricBorder border)
 {
     ensureGlowSvg();
@@ -214,7 +213,7 @@ T *ScreenEdgeEffect::createCornerGlow(ElectricBorder border)
     case ElectricTopLeft:
         return new T(m_glow->pixmap(QStringLiteral("bottomright")).toImage());
     case ElectricTopRight:
-        return  new T(m_glow->pixmap(QStringLiteral("bottomleft")).toImage());
+        return new T(m_glow->pixmap(QStringLiteral("bottomleft")).toImage());
     case ElectricBottomRight:
         return new T(m_glow->pixmap(QStringLiteral("topleft")).toImage());
     case ElectricBottomLeft:
@@ -232,7 +231,7 @@ QSize ScreenEdgeEffect::cornerGlowSize(ElectricBorder border)
     case ElectricTopLeft:
         return m_glow->elementSize(QStringLiteral("bottomright"));
     case ElectricTopRight:
-        return  m_glow->elementSize(QStringLiteral("bottomleft"));
+        return m_glow->elementSize(QStringLiteral("bottomleft"));
     case ElectricBottomRight:
         return m_glow->elementSize(QStringLiteral("topleft"));
     case ElectricBottomLeft:
@@ -242,7 +241,7 @@ QSize ScreenEdgeEffect::cornerGlowSize(ElectricBorder border)
     }
 }
 
-template <typename T>
+template<typename T>
 T *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
 {
     ensureGlowSvg();

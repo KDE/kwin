@@ -5,6 +5,7 @@
 */
 
 #include "kwin_wayland_test.h"
+
 #include "abstract_output.h"
 #include "composite.h"
 #include "main.h"
@@ -100,7 +101,7 @@ void XwaylandServerCrashTest::testCrash()
 
     // Create an override-redirect window.
     xcb_window_t window2 = xcb_generate_id(c.data());
-    const uint32_t values[] = { true };
+    const uint32_t values[] = {true};
     xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, window2, rootWindow(),
                       windowGeometry.x(), windowGeometry.y(),
                       windowGeometry.width(), windowGeometry.height(), 0,

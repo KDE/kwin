@@ -6,11 +6,12 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "mouseclick_config.h"
+
+#include <config-kwin.h>
+
 // KConfigSkeleton
 #include "mouseclickconfig.h"
-#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <QAction>
@@ -27,17 +28,18 @@ K_PLUGIN_CLASS(KWin::MouseClickEffectConfig)
 namespace KWin
 {
 
-MouseClickEffectConfigForm::MouseClickEffectConfigForm(QWidget* parent) : QWidget(parent)
+MouseClickEffectConfigForm::MouseClickEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+MouseClickEffectConfig::MouseClickEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     m_ui = new MouseClickEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
     connect(m_ui->editor, &KShortcutsEditor::keyChange, this, &MouseClickEffectConfig::markAsChanged);
@@ -46,7 +48,7 @@ MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantLi
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
     m_actionCollection->setComponentDisplayName(i18n("KWin"));
 
-    QAction* a = m_actionCollection->addAction(QStringLiteral("ToggleMouseClick"));
+    QAction *a = m_actionCollection->addAction(QStringLiteral("ToggleMouseClick"));
     a->setText(i18n("Toggle Mouse Click Effect"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Asterisk));
@@ -67,7 +69,7 @@ MouseClickEffectConfig::~MouseClickEffectConfig()
 void MouseClickEffectConfig::save()
 {
     KCModule::save();
-    m_ui->editor->save();   // undo() will restore to this state from now on
+    m_ui->editor->save(); // undo() will restore to this state from now on
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());

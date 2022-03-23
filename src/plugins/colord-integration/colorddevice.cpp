@@ -8,8 +8,8 @@
 #include "abstract_output.h"
 #include "colordevice.h"
 #include "colordlogging.h"
-#include "colormanager.h"
 #include "colordprofileinterface.h"
+#include "colormanager.h"
 
 namespace KWin
 {

@@ -27,7 +27,8 @@ KWinActionsConfigForm::KWinActionsConfigForm(QWidget *parent)
 }
 
 KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent), standAlone(_standAlone)
+    : KCModule(parent)
+    , standAlone(_standAlone)
     , m_ui(new KWinMouseConfigForm(this))
 {
     if (settings) {
@@ -79,7 +80,8 @@ bool KTitleBarActionsConfig::isSaveNeeded() const
 }
 
 KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent), standAlone(_standAlone)
+    : KCModule(parent)
+    , standAlone(_standAlone)
     , m_ui(new KWinActionsConfigForm(this))
 {
     if (settings) {

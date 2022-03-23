@@ -31,13 +31,15 @@ public:
     void init();
     void startListening();
 
-    bool hasXinput() const {
+    bool hasXinput() const
+    {
         return m_hasXInput;
     }
     void setCursor(X11Cursor *cursor);
 
 private:
-    Display *display() const {
+    Display *display() const
+    {
         return m_x11Display;
     }
 

@@ -12,9 +12,9 @@
 
 #include <epoxy/egl.h>
 
-#include <qpa/qplatformintegration.h>
-#include <QtServiceSupport/private/qgenericunixservices_p.h>
 #include <QObject>
+#include <QtServiceSupport/private/qgenericunixservices_p.h>
+#include <qpa/qplatformintegration.h>
 
 namespace KWin
 {

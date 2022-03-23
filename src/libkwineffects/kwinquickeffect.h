@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "kwinoffscreenquickview.h"
 #include "kwineffects.h"
+#include "kwinoffscreenquickview.h"
 
 namespace KWin
 {

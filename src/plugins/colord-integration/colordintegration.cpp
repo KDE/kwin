@@ -24,8 +24,7 @@ ColordIntegration::ColordIntegration(QObject *parent)
 
     auto watcher = new QDBusServiceWatcher(QStringLiteral("org.freedesktop.ColorManager"),
                                            QDBusConnection::systemBus(),
-                                           QDBusServiceWatcher::WatchForRegistration |
-                                           QDBusServiceWatcher::WatchForUnregistration, this);
+                                           QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration, this);
 
     connect(watcher, &QDBusServiceWatcher::serviceRegistered, this, &ColordIntegration::initialize);
     connect(watcher, &QDBusServiceWatcher::serviceUnregistered, this, &ColordIntegration::teardown);
@@ -97,7 +96,7 @@ void ColordIntegration::handleOutputAdded(AbstractOutput *output)
     }
 
     QDBusPendingReply<QDBusObjectPath> reply =
-            m_colordInterface->CreateDevice(output->name(), QStringLiteral("temp"), properties);
+        m_colordInterface->CreateDevice(output->name(), QStringLiteral("temp"), properties);
 
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, device, watcher]() {

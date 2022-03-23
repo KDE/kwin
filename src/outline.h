@@ -9,16 +9,17 @@
 
 #ifndef KWIN_OUTLINE_H
 #define KWIN_OUTLINE_H
-#include <kwinglobals.h>
-#include <QRect>
 #include <QObject>
+#include <QRect>
+#include <kwinglobals.h>
 
 #include <kwin_export.h>
 
 class QQmlContext;
 class QQmlComponent;
 
-namespace KWin {
+namespace KWin
+{
 class OutlineVisual;
 
 /**
@@ -32,7 +33,8 @@ class OutlineVisual;
  * @author Arthur Arlt
  * @since 4.7
  */
-class Outline : public QObject {
+class Outline : public QObject
+{
     Q_OBJECT
     Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
     Q_PROPERTY(QRect visualParentGeometry READ visualParentGeometry NOTIFY visualParentGeometryChanged)
@@ -122,9 +124,11 @@ public:
     virtual ~OutlineVisual();
     virtual void show() = 0;
     virtual void hide() = 0;
+
 protected:
     Outline *outline();
     const Outline *outline() const;
+
 private:
     Outline *m_outline;
 };
@@ -136,44 +140,39 @@ public:
     ~CompositedOutlineVisual() override;
     void show() override;
     void hide() override;
+
 private:
     QScopedPointer<QQmlContext> m_qmlContext;
     QScopedPointer<QQmlComponent> m_qmlComponent;
     QScopedPointer<QObject> m_mainItem;
 };
 
-inline
-bool Outline::isActive() const
+inline bool Outline::isActive() const
 {
     return m_active;
 }
 
-inline
-const QRect &Outline::geometry() const
+inline const QRect &Outline::geometry() const
 {
     return m_outlineGeometry;
 }
 
-inline
-const QRect &Outline::visualParentGeometry() const
+inline const QRect &Outline::visualParentGeometry() const
 {
     return m_visualParentGeometry;
 }
 
-inline
-Outline *OutlineVisual::outline()
+inline Outline *OutlineVisual::outline()
 {
     return m_outline;
 }
 
-inline
-const Outline *OutlineVisual::outline() const
+inline const Outline *OutlineVisual::outline() const
 {
     return m_outline;
 }
 
-inline
-Outline *outline()
+inline Outline *outline()
 {
     return Outline::self();
 }

@@ -30,7 +30,8 @@ public:
     void render(QImage *image) override;
     std::chrono::nanoseconds clock() const override;
 
-    QRect region() const {
+    QRect region() const
+    {
         return m_region;
     }
     void updateOutput(AbstractWaylandOutput *output);

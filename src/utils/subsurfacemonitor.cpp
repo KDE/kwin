@@ -40,7 +40,9 @@ void SubSurfaceMonitor::registerSubSurface(SubSurfaceInterface *subSurface)
     connect(surface, &SurfaceInterface::bufferSizeChanged,
             this, &SubSurfaceMonitor::subSurfaceBufferSizeChanged);
     connect(surface, &SurfaceInterface::committed,
-            this, [this, subSurface]() { Q_EMIT subSurfaceCommitted(subSurface); });
+            this, [this, subSurface]() {
+                Q_EMIT subSurfaceCommitted(subSurface);
+            });
 
     registerSurface(surface);
 }

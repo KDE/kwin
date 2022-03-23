@@ -7,16 +7,17 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "wobblywindows_config.h"
+
+#include <config-kwin.h>
+
 // KConfigSkeleton
 #include "wobblywindowsconfig.h"
-#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <KLocalizedString>
-#include <kconfiggroup.h>
 #include <KPluginFactory>
+#include <kconfiggroup.h>
 
 K_PLUGIN_CLASS(KWin::WobblyWindowsEffectConfig)
 
@@ -26,7 +27,8 @@ namespace KWin
 //-----------------------------------------------------------------------------
 // WARNING: This is (kinda) copied from wobblywindows.cpp
 
-struct ParameterSet {
+struct ParameterSet
+{
     int stiffness;
     int drag;
     int move_factor;
@@ -35,39 +37,34 @@ struct ParameterSet {
 static const ParameterSet set_0 = {
     15,
     80,
-    10
-};
+    10};
 
 static const ParameterSet set_1 = {
     10,
     85,
-    10
-};
+    10};
 
 static const ParameterSet set_2 = {
     6,
     90,
-    10
-};
+    10};
 
 static const ParameterSet set_3 = {
     3,
     92,
-    20
-};
+    20};
 
 static const ParameterSet set_4 = {
     1,
     97,
-    25
-};
+    25};
 
-ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
+ParameterSet pset[5] = {set_0, set_1, set_2, set_3, set_4};
 
 //-----------------------------------------------------------------------------
 
-WobblyWindowsEffectConfig::WobblyWindowsEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+WobblyWindowsEffectConfig::WobblyWindowsEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     WobblyWindowsConfig::instance(KWIN_CONFIG);
     m_ui.setupUi(this);

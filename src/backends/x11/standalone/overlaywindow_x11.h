@@ -13,8 +13,10 @@
 #include "overlaywindow.h"
 #include "x11eventfilter.h"
 
-namespace KWin {
-class KWIN_EXPORT OverlayWindowX11 : public OverlayWindow, public X11EventFilter {
+namespace KWin
+{
+class KWIN_EXPORT OverlayWindowX11 : public OverlayWindow, public X11EventFilter
+{
 public:
     OverlayWindowX11();
     ~OverlayWindowX11() override;
@@ -24,7 +26,7 @@ public:
     void setup(xcb_window_t window) override;
     void show() override;
     void hide() override; // hides and resets overlay window
-    void setShape(const QRegion& reg) override;
+    void setShape(const QRegion &reg) override;
     void resize(const QSize &size) override;
     /// Destroys XComposite overlay window
     void destroy() override;
@@ -33,6 +35,7 @@ public:
     void setVisibility(bool visible) override;
 
     bool event(xcb_generic_event_t *event) override;
+
 private:
     void setNoneBackgroundPixmap(xcb_window_t window);
     void setupInputShape(xcb_window_t window);
@@ -43,4 +46,4 @@ private:
 };
 } // namespace
 
-#endif //KWIN_OVERLAYWINDOW_H
+#endif // KWIN_OVERLAYWINDOW_H

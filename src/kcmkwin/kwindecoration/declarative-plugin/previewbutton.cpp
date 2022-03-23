@@ -18,7 +18,7 @@ namespace KDecoration2
 namespace Preview
 {
 
-PreviewButtonItem::PreviewButtonItem(QQuickItem* parent)
+PreviewButtonItem::PreviewButtonItem(QQuickItem *parent)
     : QQuickPaintedItem(parent)
 {
 }
@@ -118,7 +118,7 @@ void PreviewButtonItem::paint(QPainter *painter)
     if (!m_button) {
         return;
     }
-    QRect size { 0, 0, (int)width(), (int)height() };
+    QRect size{0, 0, (int)width(), (int)height()};
     m_button->paint(painter, size);
     painter->setCompositionMode(QPainter::CompositionMode_SourceAtop);
     painter->fillRect(size, m_color);

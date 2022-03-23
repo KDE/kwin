@@ -147,7 +147,8 @@ private Q_SLOTS:
     void testMatchAfterNameChange();
 
 private:
-    template <typename T> void setWindowRule(const QString &property, const T &value, int policy);
+    template<typename T>
+    void setWindowRule(const QString &property, const T &value, int policy);
 
 private:
     KSharedConfig::Ptr m_config;
@@ -220,7 +221,7 @@ std::tuple<AbstractClient *, KWayland::Client::Surface *, Test::XdgToplevel *> c
     return {client, surface, shellSurface};
 }
 
-template <typename T>
+template<typename T>
 void TestXdgShellClientRules::setWindowRule(const QString &property, const T &value, int policy)
 {
     // Initialize RuleBook with the test rule.

@@ -7,8 +7,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "edid.h"
+
 #include "config-kwin.h"
 
 #include <QFile>
@@ -26,7 +26,9 @@ static bool verifyHeader(const uint8_t *data)
     }
 
     return std::all_of(data + 1, data + 7,
-        [](uint8_t byte) { return byte == 0xff; });
+                       [](uint8_t byte) {
+                           return byte == 0xff;
+                       });
 }
 
 static QSize parsePhysicalSize(const uint8_t *data)
@@ -58,7 +60,6 @@ static QByteArray parsePnpId(const uint8_t *data)
 
     return QByteArray(pnpId);
 }
-
 
 static QByteArray parseEisaId(const uint8_t *data)
 {

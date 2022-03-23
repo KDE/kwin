@@ -9,14 +9,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "windowselector.h"
-#include "x11client.h"
 #include "cursor.h"
 #include "unmanaged.h"
-#include "workspace.h"
 #include "utils/xcbutils.h"
+#include "workspace.h"
+#include "x11client.h"
 // XLib
-#include <X11/cursorfont.h>
 #include <X11/Xutil.h>
+#include <X11/cursorfont.h>
 #include <fixx11h.h>
 // XCB
 #include <xcb/xcb_keysyms.h>
@@ -25,15 +25,16 @@ namespace KWin
 {
 
 WindowSelector::WindowSelector()
-    : X11EventFilter(QVector<int>{XCB_BUTTON_PRESS,
-                                  XCB_BUTTON_RELEASE,
-                                  XCB_MOTION_NOTIFY,
-                                  XCB_ENTER_NOTIFY,
-                                  XCB_LEAVE_NOTIFY,
-                                  XCB_KEY_PRESS,
-                                  XCB_KEY_RELEASE,
-                                  XCB_FOCUS_IN,
-                                  XCB_FOCUS_OUT
+    : X11EventFilter(QVector<int>{
+        XCB_BUTTON_PRESS,
+        XCB_BUTTON_RELEASE,
+        XCB_MOTION_NOTIFY,
+        XCB_ENTER_NOTIFY,
+        XCB_LEAVE_NOTIFY,
+        XCB_KEY_PRESS,
+        XCB_KEY_RELEASE,
+        XCB_FOCUS_IN,
+        XCB_FOCUS_OUT,
     })
     , m_active(false)
 {
@@ -43,7 +44,7 @@ WindowSelector::~WindowSelector()
 {
 }
 
-void WindowSelector::start(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
+void WindowSelector::start(std::function<void(KWin::Toplevel *)> callback, const QByteArray &cursorName)
 {
     if (m_active) {
         callback(nullptr);
@@ -58,7 +59,7 @@ void WindowSelector::start(std::function<void(KWin::Toplevel*)> callback, const 
     m_callback = callback;
 }
 
-void WindowSelector::start(std::function<void (const QPoint &)> callback)
+void WindowSelector::start(std::function<void(const QPoint &)> callback)
 {
     if (m_active) {
         callback(QPoint(-1, -1));
@@ -78,12 +79,7 @@ bool WindowSelector::activate(const QByteArray &cursorName)
     xcb_cursor_t cursor = createCursor(cursorName);
 
     xcb_connection_t *c = connection();
-    ScopedCPointer<xcb_grab_pointer_reply_t> grabPointer(xcb_grab_pointer_reply(c, xcb_grab_pointer_unchecked(c, false, rootWindow(),
-        XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE |
-        XCB_EVENT_MASK_POINTER_MOTION |
-        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
-        XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, XCB_WINDOW_NONE,
-        cursor, XCB_TIME_CURRENT_TIME), nullptr));
+    ScopedCPointer<xcb_grab_pointer_reply_t> grabPointer(xcb_grab_pointer_reply(c, xcb_grab_pointer_unchecked(c, false, rootWindow(), XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW, XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, XCB_WINDOW_NONE, cursor, XCB_TIME_CURRENT_TIME), nullptr));
     if (grabPointer.isNull() || grabPointer->status != XCB_GRAB_STATUS_SUCCESS) {
         return false;
     }
@@ -114,12 +110,12 @@ xcb_cursor_t WindowSelector::createCursor(const QByteArray &cursorName)
         // fallback on font
         xcb_connection_t *c = connection();
         const xcb_font_t cursorFont = xcb_generate_id(c);
-        xcb_open_font(c, cursorFont, strlen ("cursor"), "cursor");
+        xcb_open_font(c, cursorFont, strlen("cursor"), "cursor");
         cursor = xcb_generate_id(c);
         xcb_create_glyph_cursor(c, cursor, cursorFont, cursorFont,
-                                XC_pirate,         /* source character glyph */
-                                XC_pirate + 1,     /* mask character glyph */
-                                0, 0, 0, 0, 0, 0);  /* r b g r b g */
+                                XC_pirate, /* source character glyph */
+                                XC_pirate + 1, /* mask character glyph */
+                                0, 0, 0, 0, 0, 0); /* r b g r b g */
         kill_cursor = cursor;
     }
     return cursor;
@@ -128,10 +124,10 @@ xcb_cursor_t WindowSelector::createCursor(const QByteArray &cursorName)
 void WindowSelector::processEvent(xcb_generic_event_t *event)
 {
     if (event->response_type == XCB_BUTTON_RELEASE) {
-        xcb_button_release_event_t *buttonEvent = reinterpret_cast<xcb_button_release_event_t*>(event);
+        xcb_button_release_event_t *buttonEvent = reinterpret_cast<xcb_button_release_event_t *>(event);
         handleButtonRelease(buttonEvent->detail, buttonEvent->child);
     } else if (event->response_type == XCB_KEY_PRESS) {
-        xcb_key_press_event_t *keyEvent = reinterpret_cast<xcb_key_press_event_t*>(event);
+        xcb_key_press_event_t *keyEvent = reinterpret_cast<xcb_key_press_event_t *>(event);
         handleKeyPress(keyEvent->detail, keyEvent->state);
     }
 }
@@ -219,8 +215,8 @@ void WindowSelector::release()
     xcb_ungrab_pointer(connection(), XCB_TIME_CURRENT_TIME);
     ungrabXServer();
     m_active = false;
-    m_callback = std::function<void(KWin::Toplevel*)>();
-    m_pointSelectionFallback = std::function<void(const QPoint&)>();
+    m_callback = std::function<void(KWin::Toplevel *)>();
+    m_pointSelectionFallback = std::function<void(const QPoint &)>();
 }
 
 void WindowSelector::selectWindowId(xcb_window_t window_to_select)
@@ -241,7 +237,7 @@ void WindowSelector::selectWindowId(xcb_window_t window_to_select)
             // We didn't find the client, probably an override-redirect window
             break;
         }
-        window = tree->parent;  // Go up
+        window = tree->parent; // Go up
     }
     if (client) {
         m_callback(client);

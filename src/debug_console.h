@@ -9,10 +9,10 @@
 #ifndef KWIN_DEBUG_CONSOLE_H
 #define KWIN_DEBUG_CONSOLE_H
 
-#include <kwin_export.h>
-#include <config-kwin.h>
 #include "input.h"
 #include "input_event_spy.h"
+#include <config-kwin.h>
+#include <kwin_export.h>
 
 #include <QAbstractItemModel>
 #include <QStyledItemDelegate>
@@ -48,10 +48,9 @@ public:
     explicit DebugConsoleModel(QObject *parent = nullptr);
     ~DebugConsoleModel() override;
 
-
     int columnCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;
-    QModelIndex index(int row, int column, const QModelIndex & parent) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const override;
     int rowCount(const QModelIndex &parent) const override;
     QModelIndex parent(const QModelIndex &child) const override;
 
@@ -60,19 +59,19 @@ private Q_SLOTS:
     void handleClientRemoved(AbstractClient *client);
 
 private:
-    template <class T>
-    QModelIndex indexForClient(int row, int column, const QVector<T*> &clients, int id) const;
-    template <class T>
-    QModelIndex indexForProperty(int row, int column, const QModelIndex &parent, T *(DebugConsoleModel::*filter)(const QModelIndex&) const) const;
-    template <class T>
-    int propertyCount(const QModelIndex &parent, T *(DebugConsoleModel::*filter)(const QModelIndex&) const) const;
+    template<class T>
+    QModelIndex indexForClient(int row, int column, const QVector<T *> &clients, int id) const;
+    template<class T>
+    QModelIndex indexForProperty(int row, int column, const QModelIndex &parent, T *(DebugConsoleModel::*filter)(const QModelIndex &) const) const;
+    template<class T>
+    int propertyCount(const QModelIndex &parent, T *(DebugConsoleModel::*filter)(const QModelIndex &) const) const;
     QVariant propertyData(QObject *object, const QModelIndex &index, int role) const;
-    template <class T>
-    QVariant clientData(const QModelIndex &index, int role, const QVector<T*> clients, const std::function<QString(T*)> &toString) const;
-    template <class T>
-    void add(int parentRow, QVector<T*> &clients, T *client);
-    template <class T>
-    void remove(int parentRow, QVector<T*> &clients, T *client);
+    template<class T>
+    QVariant clientData(const QModelIndex &index, int role, const QVector<T *> clients, const std::function<QString(T *)> &toString) const;
+    template<class T>
+    void add(int parentRow, QVector<T *> &clients, T *client);
+    template<class T>
+    void remove(int parentRow, QVector<T *> &clients, T *client);
     WaylandClient *waylandClient(const QModelIndex &index) const;
     InternalClient *internalClient(const QModelIndex &index) const;
     X11Client *x11Client(const QModelIndex &index) const;
@@ -80,10 +79,9 @@ private:
     int topLevelRowCount() const;
 
     QVector<WaylandClient *> m_waylandClients;
-    QVector<InternalClient*> m_internalClients;
+    QVector<InternalClient *> m_internalClients;
     QVector<X11Client *> m_x11Clients;
-    QVector<Unmanaged*> m_unmanageds;
-
+    QVector<Unmanaged *> m_unmanageds;
 };
 
 class DebugConsoleDelegate : public QStyledItemDelegate
@@ -123,7 +121,7 @@ public:
 
     int columnCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;
-    QModelIndex index(int row, int column, const QModelIndex & parent) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const override;
     int rowCount(const QModelIndex &parent) const override;
     QModelIndex parent(const QModelIndex &child) const override;
 };
@@ -172,7 +170,7 @@ public:
 
     int columnCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;
-    QModelIndex index(int row, int column, const QModelIndex & parent) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const override;
     int rowCount(const QModelIndex &parent) const override;
     QModelIndex parent(const QModelIndex &child) const override;
 

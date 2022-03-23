@@ -9,15 +9,16 @@
 #include "config-kwin.h"
 
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "atoms.h"
-#include "x11client.h"
 #include "deleted.h"
 #include "platform.h"
 #include "rules.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KWayland/Client/surface.h>
 
@@ -54,8 +55,8 @@ private Q_SLOTS:
 
 void TestDbusInterface::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted*>();
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::Deleted *>();
+    qRegisterMetaType<KWin::AbstractClient *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -78,7 +79,8 @@ void TestDbusInterface::cleanup()
     Test::destroyWaylandConnection();
 }
 
-namespace {
+namespace
+{
 QDBusPendingCall getWindowInfo(const QUuid &uuid)
 {
     auto msg = QDBusMessage::createMethodCall(s_destination, s_path, s_interface, QStringLiteral("getWindowInfo"));
@@ -114,33 +116,33 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     auto client = clientAddedSpy.first().first().value<AbstractClient *>();
     QVERIFY(client);
 
-    const QVariantMap expectedData {
-        { QStringLiteral("type"), int(NET::Normal) },
-        { QStringLiteral("x"), client->x() },
-        { QStringLiteral("y"), client->y() },
-        { QStringLiteral("width"), client->width() },
-        { QStringLiteral("height"), client->height() },
-        { QStringLiteral("desktops"), client->desktopIds() },
-        { QStringLiteral("minimized"), false },
-        { QStringLiteral("shaded"), false },
-        { QStringLiteral("fullscreen"), false },
-        { QStringLiteral("keepAbove"), false },
-        { QStringLiteral("keepBelow"), false },
-        { QStringLiteral("skipTaskbar"), false },
-        { QStringLiteral("skipPager"), false },
-        { QStringLiteral("skipSwitcher"), false },
-        { QStringLiteral("maximizeHorizontal"), false },
-        { QStringLiteral("maximizeVertical"), false },
-        { QStringLiteral("noBorder"), false },
-        { QStringLiteral("clientMachine"), QString() },
-        { QStringLiteral("localhost"), true },
-        { QStringLiteral("role"), QString() },
-        { QStringLiteral("resourceName"), QStringLiteral("testDbusInterface") },
-        { QStringLiteral("resourceClass"), QStringLiteral("org.kde.foo") },
-        { QStringLiteral("desktopFile"), QStringLiteral("org.kde.foo") },
-        { QStringLiteral("caption"), QStringLiteral("Test window") },
+    const QVariantMap expectedData = {
+        {QStringLiteral("type"), int(NET::Normal)},
+        {QStringLiteral("x"), client->x()},
+        {QStringLiteral("y"), client->y()},
+        {QStringLiteral("width"), client->width()},
+        {QStringLiteral("height"), client->height()},
+        {QStringLiteral("desktops"), client->desktopIds()},
+        {QStringLiteral("minimized"), false},
+        {QStringLiteral("shaded"), false},
+        {QStringLiteral("fullscreen"), false},
+        {QStringLiteral("keepAbove"), false},
+        {QStringLiteral("keepBelow"), false},
+        {QStringLiteral("skipTaskbar"), false},
+        {QStringLiteral("skipPager"), false},
+        {QStringLiteral("skipSwitcher"), false},
+        {QStringLiteral("maximizeHorizontal"), false},
+        {QStringLiteral("maximizeVertical"), false},
+        {QStringLiteral("noBorder"), false},
+        {QStringLiteral("clientMachine"), QString()},
+        {QStringLiteral("localhost"), true},
+        {QStringLiteral("role"), QString()},
+        {QStringLiteral("resourceName"), QStringLiteral("testDbusInterface")},
+        {QStringLiteral("resourceClass"), QStringLiteral("org.kde.foo")},
+        {QStringLiteral("desktopFile"), QStringLiteral("org.kde.foo")},
+        {QStringLiteral("caption"), QStringLiteral("Test window")},
 #if KWIN_BUILD_ACTIVITIES
-        { QStringLiteral("activities"), QStringList() },
+        {QStringLiteral("activities"), QStringList()},
 #endif
     };
 
@@ -152,7 +154,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     auto windowData = reply.value();
     QCOMPARE(windowData, expectedData);
 
-    auto verifyProperty = [client] (const QString &name) {
+    auto verifyProperty = [client](const QString &name) {
         QDBusPendingReply<QVariantMap> reply{getWindowInfo(client->internalId())};
         reply.waitForFinished();
         return reply.value().value(name).toBool();
@@ -219,7 +221,6 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QVERIFY(reply.value().empty());
 }
 
-
 struct XcbConnectionDeleter
 {
     static inline void cleanup(xcb_connection_t *pointer)
@@ -261,31 +262,31 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     QCOMPARE(client->window(), w);
     QCOMPARE(client->clientSize(), windowGeometry.size());
 
-    const QVariantMap expectedData {
-        { QStringLiteral("type"), NET::Normal },
-        { QStringLiteral("x"), client->x() },
-        { QStringLiteral("y"), client->y() },
-        { QStringLiteral("width"), client->width() },
-        { QStringLiteral("height"), client->height() },
-        { QStringLiteral("desktops"), client->desktopIds() },
-        { QStringLiteral("minimized"), false },
-        { QStringLiteral("shaded"), false },
-        { QStringLiteral("fullscreen"), false },
-        { QStringLiteral("keepAbove"), false },
-        { QStringLiteral("keepBelow"), false },
-        { QStringLiteral("skipTaskbar"), false },
-        { QStringLiteral("skipPager"), false },
-        { QStringLiteral("skipSwitcher"), false },
-        { QStringLiteral("maximizeHorizontal"), false },
-        { QStringLiteral("maximizeVertical"), false },
-        { QStringLiteral("noBorder"), false },
-        { QStringLiteral("role"), QString() },
-        { QStringLiteral("resourceName"), QStringLiteral("foo") },
-        { QStringLiteral("resourceClass"), QStringLiteral("bar") },
-        { QStringLiteral("desktopFile"), QStringLiteral("org.kde.foo") },
-        { QStringLiteral("caption"), QStringLiteral("Some caption") },
+    const QVariantMap expectedData = {
+        {QStringLiteral("type"), NET::Normal},
+        {QStringLiteral("x"), client->x()},
+        {QStringLiteral("y"), client->y()},
+        {QStringLiteral("width"), client->width()},
+        {QStringLiteral("height"), client->height()},
+        {QStringLiteral("desktops"), client->desktopIds()},
+        {QStringLiteral("minimized"), false},
+        {QStringLiteral("shaded"), false},
+        {QStringLiteral("fullscreen"), false},
+        {QStringLiteral("keepAbove"), false},
+        {QStringLiteral("keepBelow"), false},
+        {QStringLiteral("skipTaskbar"), false},
+        {QStringLiteral("skipPager"), false},
+        {QStringLiteral("skipSwitcher"), false},
+        {QStringLiteral("maximizeHorizontal"), false},
+        {QStringLiteral("maximizeVertical"), false},
+        {QStringLiteral("noBorder"), false},
+        {QStringLiteral("role"), QString()},
+        {QStringLiteral("resourceName"), QStringLiteral("foo")},
+        {QStringLiteral("resourceClass"), QStringLiteral("bar")},
+        {QStringLiteral("desktopFile"), QStringLiteral("org.kde.foo")},
+        {QStringLiteral("caption"), QStringLiteral("Some caption")},
 #if KWIN_BUILD_ACTIVITIES
-        { QStringLiteral("activities"), QStringList() },
+        {QStringLiteral("activities"), QStringList()},
 #endif
     };
 
@@ -300,7 +301,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     windowData.remove(QStringLiteral("localhost"));
     QCOMPARE(windowData, expectedData);
 
-    auto verifyProperty = [client] (const QString &name) {
+    auto verifyProperty = [client](const QString &name) {
         QDBusPendingReply<QVariantMap> reply{getWindowInfo(client->internalId())};
         reply.waitForFinished();
         return reply.value().value(name).toBool();

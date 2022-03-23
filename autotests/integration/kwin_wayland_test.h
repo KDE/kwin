@@ -76,7 +76,8 @@ public:
     WaylandTestApplication(OperationMode mode, int &argc, char **argv);
     ~WaylandTestApplication() override;
 
-    void setInputMethodServerToStart(const QString &inputMethodServer) {
+    void setInputMethodServerToStart(const QString &inputMethodServer)
+    {
         m_inputMethodServerToStart = inputMethodServer;
     }
 
@@ -111,14 +112,20 @@ class MockInputMethod;
 class TextInputManagerV3 : public QtWayland::zwp_text_input_manager_v3
 {
 public:
-    ~TextInputManagerV3() override { destroy(); }
+    ~TextInputManagerV3() override
+    {
+        destroy();
+    }
 };
 
 class TextInputV3 : public QObject, public QtWayland::zwp_text_input_v3
 {
     Q_OBJECT
 public:
-    ~TextInputV3() override { destroy(); }
+    ~TextInputV3() override
+    {
+        destroy();
+    }
 
 Q_SIGNALS:
     void preeditString(const QString &text, int cursor_begin, int cursor_end);
@@ -198,10 +205,10 @@ class XdgToplevel : public QObject, public QtWayland::xdg_toplevel
 
 public:
     enum class State {
-        Maximized  = 1 << 0,
+        Maximized = 1 << 0,
         Fullscreen = 1 << 1,
-        Resizing   = 1 << 2,
-        Activated  = 1 << 3
+        Resizing = 1 << 2,
+        Activated = 1 << 3
     };
     Q_DECLARE_FLAGS(States, State)
 
@@ -608,7 +615,6 @@ XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *
 XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QObject *parent = nullptr);
 IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface);
 
-
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.
  * The @p surface gets damaged and committed, thus it's rendered.
@@ -662,22 +668,22 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
 Q_DECLARE_METATYPE(KWin::Test::XdgToplevel::States)
 Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
 
-#define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode) \
-int main(int argc, char *argv[]) \
-{ \
-    setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true); \
-    setenv("QT_QPA_PLATFORM_PLUGIN_PATH", QFileInfo(QString::fromLocal8Bit(argv[0])).absolutePath().toLocal8Bit().constData(), true); \
-    setenv("KWIN_FORCE_OWN_QPA", "1", true); \
-    qunsetenv("KDE_FULL_SESSION"); \
-    qunsetenv("KDE_SESSION_VERSION"); \
-    qunsetenv("XDG_SESSION_DESKTOP"); \
-    qunsetenv("XDG_CURRENT_DESKTOP"); \
-    DPI; \
-    KWin::WaylandTestApplication app(OperationMode, argc, argv); \
-    app.setAttribute(Qt::AA_Use96Dpi, true); \
-    TestObject tc; \
-    return QTest::qExec(&tc, argc, argv); \
-}
+#define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode)                                                                           \
+    int main(int argc, char *argv[])                                                                                                      \
+    {                                                                                                                                     \
+        setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);                                                                      \
+        setenv("QT_QPA_PLATFORM_PLUGIN_PATH", QFileInfo(QString::fromLocal8Bit(argv[0])).absolutePath().toLocal8Bit().constData(), true); \
+        setenv("KWIN_FORCE_OWN_QPA", "1", true);                                                                                          \
+        qunsetenv("KDE_FULL_SESSION");                                                                                                    \
+        qunsetenv("KDE_SESSION_VERSION");                                                                                                 \
+        qunsetenv("XDG_SESSION_DESKTOP");                                                                                                 \
+        qunsetenv("XDG_CURRENT_DESKTOP");                                                                                                 \
+        DPI;                                                                                                                              \
+        KWin::WaylandTestApplication app(OperationMode, argc, argv);                                                                      \
+        app.setAttribute(Qt::AA_Use96Dpi, true);                                                                                          \
+        TestObject tc;                                                                                                                    \
+        return QTest::qExec(&tc, argc, argv);                                                                                             \
+    }
 
 #ifdef NO_XWAYLAND
 #define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps), KWin::Application::OperationModeWaylandOnly)

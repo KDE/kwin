@@ -14,10 +14,10 @@
 
 #include <QSize>
 
-#include "drm_object.h"
-#include "edid.h"
-#include "drm_pointer.h"
 #include "abstract_wayland_output.h"
+#include "drm_object.h"
+#include "drm_pointer.h"
+#include "edid.h"
 
 namespace KWin
 {
@@ -117,9 +117,9 @@ private:
     QVector<QSharedPointer<DrmConnectorMode>> m_modes;
     uint32_t m_possibleCrtcs = 0;
 
-    friend QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj);
+    friend QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj);
 };
 
-QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj);
+QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj);
 
 }

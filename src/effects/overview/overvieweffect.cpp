@@ -55,9 +55,9 @@ OverviewEffect::~OverviewEffect()
 
 QVariantMap OverviewEffect::initialProperties(EffectScreen *screen)
 {
-    return QVariantMap {
-        { QStringLiteral("effect"), QVariant::fromValue(this) },
-        { QStringLiteral("targetScreen"), QVariant::fromValue(screen) },
+    return QVariantMap{
+        {QStringLiteral("effect"), QVariant::fromValue(this)},
+        {QStringLiteral("targetScreen"), QVariant::fromValue(screen)},
     };
 }
 
@@ -88,7 +88,7 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
     const QList<int> touchActivateBorders = OverviewConfig::touchBorderActivate();
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_toggleAction, [this] (ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_toggleAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
             Q_UNUSED(screen)
             if (m_status == Status::Active) {
                 return;
@@ -101,7 +101,7 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
                 m_partialActivationFactor = std::min(1.0, qAbs(deltaProgress.width()) / maxDelta);
             }
             Q_EMIT partialActivationFactorChanged();
-            if ( !wasInProgress) {
+            if (!wasInProgress) {
                 Q_EMIT gestureInProgressChanged();
             }
             if (!isRunning()) {

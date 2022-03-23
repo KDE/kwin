@@ -33,6 +33,7 @@ Q_SIGNALS:
     void requestClose();
 private Q_SLOTS:
     void clicked();
+
 private:
     QElapsedTimer m_armTimer;
 };
@@ -63,18 +64,20 @@ class PresentWindowsEffect
     // TODO: electric borders
 private:
     // Structures
-    struct WindowData {
+    struct WindowData
+    {
         std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
         bool visible;
         bool deleted;
         bool referenced;
         double opacity;
         double highlight;
-        EffectFrame* textFrame;
-        EffectFrame* iconFrame;
+        EffectFrame *textFrame;
+        EffectFrame *iconFrame;
     };
-    typedef QHash<EffectWindow*, WindowData> DataHash;
-    struct GridSize {
+    typedef QHash<EffectWindow *, WindowData> DataHash;
+    struct GridSize
+    {
         int columns;
         int rows;
     };
@@ -84,7 +87,7 @@ public:
     ~PresentWindowsEffect() override;
 
     void reconfigure(ReconfigureFlags) override;
-    void* proxy() override;
+    void *proxy() override;
 
     // Screen painting
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
@@ -105,7 +108,8 @@ public:
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override;
     bool touchUp(qint32 id, quint32 time) override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 70;
     }
 
@@ -138,59 +142,76 @@ public:
     };
 
     // for properties
-    int layoutMode() const {
+    int layoutMode() const
+    {
         return m_layoutMode;
     }
-    bool isShowCaptions() const {
+    bool isShowCaptions() const
+    {
         return m_showCaptions;
     }
-    bool isShowIcons() const {
+    bool isShowIcons() const
+    {
         return m_showIcons;
     }
-    bool isDoNotCloseWindows() const {
+    bool isDoNotCloseWindows() const
+    {
         return m_doNotCloseWindows;
     }
-    bool isIgnoreMinimized() const {
+    bool isIgnoreMinimized() const
+    {
         return m_ignoreMinimized;
     }
-    int accuracy() const {
+    int accuracy() const
+    {
         return m_accuracy;
     }
-    bool isFillGaps() const {
+    bool isFillGaps() const
+    {
         return m_fillGaps;
     }
-    int fadeDuration() const {
+    int fadeDuration() const
+    {
         return m_fadeDuration;
     }
-    bool isShowPanel() const {
+    bool isShowPanel() const
+    {
         return m_showPanel;
     }
-    int leftButtonWindow() const {
+    int leftButtonWindow() const
+    {
         return m_leftButtonWindow;
     }
-    int rightButtonWindow() const {
+    int rightButtonWindow() const
+    {
         return m_rightButtonWindow;
     }
-    int middleButtonWindow() const {
+    int middleButtonWindow() const
+    {
         return m_middleButtonWindow;
     }
-    int leftButtonDesktop() const {
+    int leftButtonDesktop() const
+    {
         return m_leftButtonDesktop;
     }
-    int middleButtonDesktop() const {
+    int middleButtonDesktop() const
+    {
         return m_middleButtonDesktop;
     }
-    int rightButtonDesktop() const {
+    int rightButtonDesktop() const
+    {
         return m_rightButtonDesktop;
     }
 public Q_SLOTS:
     Q_SCRIPTABLE void presentWindows(const QStringList &windows);
     void setActive(bool active);
-    void toggleActive()  {
+    void toggleActive()
+    {
         m_mode = ModeCurrentDesktop;
         setActive(!m_activated);
     }
-    void toggleActiveAllDesktops()  {
+    void toggleActiveAllDesktops()
+    {
         m_mode = ModeAllDesktops;
         setActive(!m_activated);
     }
@@ -205,7 +226,7 @@ public Q_SLOTS:
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowFrameGeometryChanged(KWin::EffectWindow *w, const QRect &old);
     // atoms
-    void slotPropertyNotify(KWin::EffectWindow* w, long atom);
+    void slotPropertyNotify(KWin::EffectWindow *w, long atom);
 
 private Q_SLOTS:
     void closeWindow();
@@ -216,25 +237,28 @@ protected:
     void reCreateGrids();
     void maybeRecreateGrids();
     void calculateWindowTransformations(EffectWindowList windowlist, EffectScreen *screen,
-                                        WindowMotionManager& motionManager, bool external = false);
+                                        WindowMotionManager &motionManager, bool external = false);
     void calculateWindowTransformationsClosest(EffectWindowList windowlist, EffectScreen *screen,
-            WindowMotionManager& motionManager);
+                                               WindowMotionManager &motionManager);
     void calculateWindowTransformationsKompose(EffectWindowList windowlist, EffectScreen *screen,
-            WindowMotionManager& motionManager);
+                                               WindowMotionManager &motionManager);
     void calculateWindowTransformationsNatural(EffectWindowList windowlist, EffectScreen *screen,
-            WindowMotionManager& motionManager);
+                                               WindowMotionManager &motionManager);
 
     // Helper functions for window rearranging
-    inline double aspectRatio(EffectWindow *w) {
+    inline double aspectRatio(EffectWindow *w)
+    {
         return w->width() / double(w->height());
     }
-    inline int widthForHeight(EffectWindow *w, int height) {
+    inline int widthForHeight(EffectWindow *w, int height)
+    {
         return int((height / double(w->height())) * w->width());
     }
-    inline int heightForWidth(EffectWindow *w, int width) {
+    inline int heightForWidth(EffectWindow *w, int width)
+    {
         return int((width / double(w->width())) * w->height());
     }
-    bool isOverlappingAny(EffectWindow *w, const QHash<EffectWindow*, QRect> &targets, const QRegion &border);
+    bool isOverlappingAny(EffectWindow *w, const QHash<EffectWindow *, QRect> &targets, const QRegion &border);
 
     // Filter box
     void updateFilterFrame();
@@ -243,13 +267,13 @@ protected:
     bool isSelectableWindow(EffectWindow *w);
     bool isVisibleWindow(EffectWindow *w);
     void setHighlightedWindow(EffectWindow *w);
-    EffectWindow* relativeWindow(EffectWindow *w, int xdiff, int ydiff, bool wrap) const;
-    EffectWindow* findFirstWindow() const;
+    EffectWindow *relativeWindow(EffectWindow *w, int xdiff, int ydiff, bool wrap) const;
+    EffectWindow *findFirstWindow() const;
     void updateCloseWindow();
 
     // Helper functions for mouse actions
-    void mouseActionWindow(WindowMouseAction& action);
-    void mouseActionDesktop(DesktopMouseAction& action);
+    void mouseActionWindow(WindowMouseAction &action);
+    void mouseActionDesktop(DesktopMouseAction &action);
     void inputEventUpdate(const QPoint &pos, QEvent::Type type = QEvent::None, Qt::MouseButton button = Qt::NoButton);
 
 private:
@@ -293,7 +317,7 @@ private:
     QMap<EffectScreen *, GridSize> m_gridSizes;
 
     // Filter box
-    EffectFrame* m_filterFrame;
+    EffectFrame *m_filterFrame;
     QString m_windowFilter;
 
     // Shortcut - needed to toggle the effect
@@ -316,9 +340,10 @@ private:
     DesktopMouseAction m_middleButtonDesktop;
     DesktopMouseAction m_rightButtonDesktop;
 
-    CloseWindowView* m_closeView;
+    CloseWindowView *m_closeView;
     Qt::Corner m_closeButtonCorner;
-    struct {
+    struct
+    {
         qint32 id = 0;
         bool active = false;
     } m_touch;

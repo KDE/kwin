@@ -13,9 +13,9 @@
 #include "inputmethod.h"
 #include "platform.h"
 #include "pluginmanager.h"
+#include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "utils/xcbutils.h"
 #include "xwl/xwayland.h"
 
 #include <KPluginMetaData>
@@ -27,9 +27,9 @@
 #include <QtConcurrentRun>
 
 // system
-#include <unistd.h>
-#include <sys/socket.h>
 #include <iostream>
+#include <sys/socket.h>
+#include <unistd.h>
 
 Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
 Q_IMPORT_PLUGIN(KGlobalAccelImpl)
@@ -83,7 +83,7 @@ WaylandTestApplication::~WaylandTestApplication()
     // need to unload all effects prior to destroying X connection as they might do X calls
     // also before destroy Workspace, as effects might call into Workspace
     if (effects) {
-        static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
+        static_cast<EffectsHandlerImpl *>(effects)->unloadAllEffects();
     }
     delete m_xwayland;
     m_xwayland = nullptr;

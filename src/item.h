@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "kwinglobals.h"
 #include "kwineffects.h"
+#include "kwinglobals.h"
 
 #include <QMatrix4x4>
 #include <QObject>

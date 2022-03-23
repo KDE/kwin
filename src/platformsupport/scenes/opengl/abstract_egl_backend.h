@@ -19,9 +19,9 @@ struct wl_resource;
 namespace KWin
 {
 
-typedef GLboolean(*eglBindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
-typedef GLboolean(*eglUnbindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
-typedef GLboolean(*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
+typedef GLboolean (*eglBindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
+typedef GLboolean (*eglUnbindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
+typedef GLboolean (*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
 
 struct AbstractEglBackendFunctions
 {
@@ -41,19 +41,24 @@ public:
     bool makeCurrent() override;
     void doneCurrent() override;
 
-    const AbstractEglBackendFunctions *functions() const {
+    const AbstractEglBackendFunctions *functions() const
+    {
         return &m_functions;
     }
-    EGLDisplay eglDisplay() const {
+    EGLDisplay eglDisplay() const
+    {
         return m_display;
     }
-    EGLContext context() const {
+    EGLContext context() const
+    {
         return m_context;
     }
-    EGLSurface surface() const {
+    EGLSurface surface() const
+    {
         return m_surface;
     }
-    EGLConfig config() const {
+    EGLConfig config() const
+    {
         return m_config;
     }
 
@@ -96,7 +101,7 @@ private:
     QList<QByteArray> m_clientExtensions;
     const dev_t m_deviceId;
 
-    static AbstractEglBackend * s_primaryBackend;
+    static AbstractEglBackend *s_primaryBackend;
 };
 
 }

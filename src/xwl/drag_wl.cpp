@@ -16,12 +16,12 @@
 #include "xwldrophandler.h"
 
 #include "atoms.h"
-#include "x11client.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
-#include <KWaylandServer/datasource_interface.h>
 #include <KWaylandServer/datadevice_interface.h>
+#include <KWaylandServer/datasource_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
 
@@ -49,9 +49,9 @@ bool WlToXDrag::handleClientMessage(xcb_client_message_event_t *event)
 }
 
 Xvisit::Xvisit(AbstractClient *target, KWaylandServer::AbstractDataSource *dataSource, QObject *parent)
-    : QObject(parent),
-      m_target(target),
-      m_dataSource(dataSource)
+    : QObject(parent)
+    , m_target(target)
+    , m_dataSource(dataSource)
 {
     // first check supported DND version
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
@@ -147,12 +147,11 @@ bool Xvisit::handleFinished(xcb_client_message_event_t *event)
     }
 
     const bool success = m_version > 4 ? data->data32[1] & 1 : true;
-    const xcb_atom_t usedActionAtom = m_version > 4 ? data->data32[2] :
-                                                      static_cast<uint32_t>(XCB_ATOM_NONE);
+    const xcb_atom_t usedActionAtom = m_version > 4 ? data->data32[2] : static_cast<uint32_t>(XCB_ATOM_NONE);
     Q_UNUSED(success);
     Q_UNUSED(usedActionAtom);
 
-    if (m_dataSource)  {
+    if (m_dataSource) {
         m_dataSource->dndFinished();
     }
     doFinish();
@@ -201,7 +200,7 @@ void Xvisit::receiveOffer()
 {
     retrieveSupportedActions();
     connect(m_dataSource, &KWaylandServer::AbstractDataSource::supportedDragAndDropActionsChanged,
-                          this, &Xvisit::retrieveSupportedActions);
+            this, &Xvisit::retrieveSupportedActions);
     enter();
 }
 
@@ -214,8 +213,8 @@ void Xvisit::enter()
 
     // proxy future pointer position changes
     m_motionConnection = connect(waylandServer()->seat(),
-                          &KWaylandServer::SeatInterface::pointerPosChanged,
-                          this, &Xvisit::sendPosition);
+                                 &KWaylandServer::SeatInterface::pointerPosChanged,
+                                 this, &Xvisit::sendPosition);
 }
 
 void Xvisit::sendEnter()
@@ -322,8 +321,7 @@ void Xvisit::determineProposedAction()
 
 void Xvisit::requestDragAndDropAction()
 {
-    DnDAction action = m_preferredAction != DnDAction::None ? m_preferredAction:
-                                                           DnDAction::Copy;
+    DnDAction action = m_preferredAction != DnDAction::None ? m_preferredAction : DnDAction::Copy;
     // we assume the X client supports Move, but this might be wrong - then
     // the drag just cancels, if the user tries to force it.
 

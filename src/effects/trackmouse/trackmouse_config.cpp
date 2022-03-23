@@ -7,23 +7,23 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
-#include <QAction>
-#include <config-kwin.h>
-#include <kwineffects_interface.h>
-
-#include <KLocalizedString>
-#include <KActionCollection>
-#include <KGlobalAccel>
-#include <KPluginFactory>
-
-#include <QVBoxLayout>
-#include <QLabel>
-
 #include "trackmouse_config.h"
+
+#include <config-kwin.h>
 
 // KConfigSkeleton
 #include "trackmouseconfig.h"
+
+#include <kwineffects_interface.h>
+
+#include <KActionCollection>
+#include <KGlobalAccel>
+#include <KLocalizedString>
+#include <KPluginFactory>
+
+#include <QAction>
+#include <QLabel>
+#include <QVBoxLayout>
 
 K_PLUGIN_CLASS(KWin::TrackMouseEffectConfig)
 
@@ -32,17 +32,18 @@ namespace KWin
 
 static const QString s_toggleTrackMouseActionName = QStringLiteral("TrackMouse");
 
-TrackMouseEffectConfigForm::TrackMouseEffectConfigForm(QWidget* parent) : QWidget(parent)
+TrackMouseEffectConfigForm::TrackMouseEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     TrackMouseConfig::instance(KWIN_CONFIG);
     m_ui = new TrackMouseEffectConfigForm(this);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
     addConfig(TrackMouseConfig::self(), m_ui);

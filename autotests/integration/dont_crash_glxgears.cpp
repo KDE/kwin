@@ -7,12 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
-#include "platform.h"
+
 #include "abstract_client.h"
-#include "x11client.h"
 #include "deleted.h"
+#include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KDecoration2/Decoration>
 
@@ -31,7 +32,7 @@ private Q_SLOTS:
 
 void DontCrashGlxgearsTest::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted*>();
+    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

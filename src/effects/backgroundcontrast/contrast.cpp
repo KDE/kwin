@@ -15,8 +15,8 @@
 #include <QTimer>
 #include <QWindow>
 
-#include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/display.h>
+#include <KWaylandServer/surface_interface.h>
 
 namespace KWin
 {
@@ -57,13 +57,11 @@ ContrastEffect::ContrastEffect()
     connect(effects, &EffectsHandler::windowDeleted, this, &ContrastEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::propertyNotify, this, &ContrastEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::virtualScreenGeometryChanged, this, &ContrastEffect::slotScreenGeometryChanged);
-    connect(effects, &EffectsHandler::xcbConnectionChanged, this,
-        [this] {
-            if (shader && shader->isValid()) {
-                net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
-            }
+    connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
+        if (shader && shader->isValid()) {
+            net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
         }
-    );
+    });
 
     // Fetch the contrast regions for all windows
     const EffectWindowList windowList = effects->stackingOrder();
@@ -105,8 +103,8 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
         const QByteArray value = w->readProperty(net_wm_contrast_region, net_wm_contrast_region, 32);
 
         if (value.size() > 0 && !((value.size() - (16 * sizeof(uint32_t))) % ((4 * sizeof(uint32_t))))) {
-            const uint32_t *cardinals = reinterpret_cast<const uint32_t*>(value.constData());
-            const float *floatCardinals = reinterpret_cast<const float*>(value.constData());
+            const uint32_t *cardinals = reinterpret_cast<const uint32_t *>(value.constData());
+            const float *floatCardinals = reinterpret_cast<const float *>(value.constData());
             unsigned int i = 0;
             for (; i < ((value.size() - (16 * sizeof(uint32_t)))) / sizeof(uint32_t);) {
                 int x = cardinals[i++];
@@ -173,8 +171,7 @@ void ContrastEffect::slotWindowAdded(EffectWindow *w)
     KWaylandServer::SurfaceInterface *surf = w->surface();
 
     if (surf) {
-        m_contrastChangedConnections[w] = connect(surf, &KWaylandServer::SurfaceInterface::contrastChanged, this, [this, w] () {
-
+        m_contrastChangedConnections[w] = connect(surf, &KWaylandServer::SurfaceInterface::contrastChanged, this, [this, w]() {
             if (w) {
                 updateContrastRegion(w);
             }
@@ -190,13 +187,10 @@ void ContrastEffect::slotWindowAdded(EffectWindow *w)
 
 bool ContrastEffect::eventFilter(QObject *watched, QEvent *event)
 {
-    auto internal = qobject_cast<QWindow*>(watched);
+    auto internal = qobject_cast<QWindow *>(watched);
     if (internal && event->type() == QEvent::DynamicPropertyChange) {
-        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
-        if (pe->propertyName() == "kwin_background_region" ||
-            pe->propertyName() == "kwin_background_contrast" ||
-            pe->propertyName() == "kwin_background_intensity" ||
-            pe->propertyName() == "kwin_background_saturation") {
+        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent *>(event);
+        if (pe->propertyName() == "kwin_background_region" || pe->propertyName() == "kwin_background_contrast" || pe->propertyName() == "kwin_background_intensity" || pe->propertyName() == "kwin_background_saturation") {
             if (auto w = effects->findWindow(internal)) {
                 updateContrastRegion(w);
             }
@@ -223,39 +217,39 @@ void ContrastEffect::slotPropertyNotify(EffectWindow *w, long atom)
 
 QMatrix4x4 ContrastEffect::colorMatrix(qreal contrast, qreal intensity, qreal saturation)
 {
-    QMatrix4x4 satMatrix; //saturation
-    QMatrix4x4 intMatrix; //intensity
-    QMatrix4x4 contMatrix; //contrast
+    QMatrix4x4 satMatrix; // saturation
+    QMatrix4x4 intMatrix; // intensity
+    QMatrix4x4 contMatrix; // contrast
 
-    //Saturation matrix
+    // Saturation matrix
     if (!qFuzzyCompare(saturation, 1.0)) {
         const qreal rval = (1.0 - saturation) * .2126;
         const qreal gval = (1.0 - saturation) * .7152;
         const qreal bval = (1.0 - saturation) * .0722;
 
-        satMatrix = QMatrix4x4(rval + saturation, rval,     rval,     0.0,
-            gval,     gval + saturation, gval,     0.0,
-            bval,     bval,     bval + saturation, 0.0,
-            0,        0,        0,        1.0);
+        satMatrix = QMatrix4x4(rval + saturation, rval, rval, 0.0,
+                               gval, gval + saturation, gval, 0.0,
+                               bval, bval, bval + saturation, 0.0,
+                               0, 0, 0, 1.0);
     }
 
-    //IntensityMatrix
+    // IntensityMatrix
     if (!qFuzzyCompare(intensity, 1.0)) {
         intMatrix.scale(intensity, intensity, intensity);
     }
 
-    //Contrast Matrix
+    // Contrast Matrix
     if (!qFuzzyCompare(contrast, 1.0)) {
         const float transl = (1.0 - contrast) / 2.0;
 
-        contMatrix = QMatrix4x4(contrast, 0,        0,        0.0,
-            0,        contrast, 0,        0.0,
-            0,        0,        contrast, 0.0,
-            transl,   transl,   transl,   1.0);
+        contMatrix = QMatrix4x4(contrast, 0, 0, 0.0,
+                                0, contrast, 0, 0.0,
+                                0, 0, contrast, 0.0,
+                                transl, transl, transl, 1.0);
     }
 
     QMatrix4x4 colorMatrix = contMatrix * satMatrix * intMatrix;
-    //colorMatrix = colorMatrix.transposed();
+    // colorMatrix = colorMatrix.transposed();
 
     return colorMatrix;
 }
@@ -298,8 +292,7 @@ QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
     if (value.isValid()) {
         const QRegion appRegion = qvariant_cast<QRegion>(value);
         if (!appRegion.isEmpty()) {
-            region |= appRegion.translated(w->contentsRect().topLeft()) &
-                      w->decorationInnerRect();
+            region |= appRegion.translated(w->contentsRect().topLeft()) & w->decorationInnerRect();
         } else {
             // An empty region means that the blur effect should be enabled
             // for the whole window.
@@ -336,14 +329,13 @@ void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region)
     if (!vertexCount)
         return;
 
-    QVector2D *map = (QVector2D *) vbo->map(vertexCount * sizeof(QVector2D));
+    QVector2D *map = (QVector2D *)vbo->map(vertexCount * sizeof(QVector2D));
     uploadRegion(map, region);
     vbo->unmap();
 
     const GLVertexAttrib layout[] = {
-        { VA_Position, 2, GL_FLOAT, 0 },
-        { VA_TexCoord, 2, GL_FLOAT, 0 }
-    };
+        {VA_Position, 2, GL_FLOAT, 0},
+        {VA_TexCoord, 2, GL_FLOAT, 0}};
 
     vbo->setAttribLayout(layout, 2, sizeof(QVector2D));
 }
@@ -385,14 +377,14 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region
             QRegion scaledShape;
             for (QRect r : shape) {
                 r.moveTo(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
-                            pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
+                         pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
                 r.setWidth(r.width() * data.xScale());
                 r.setHeight(r.height() * data.yScale());
                 scaledShape |= r;
             }
             shape = scaledShape & region;
 
-        //Only translated, not scaled
+            // Only translated, not scaled
         } else if (translated) {
             shape = shape.translated(data.xTranslation(), data.yTranslation());
             shape = shape & region;
@@ -409,11 +401,11 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region
 
 void ContrastEffect::paintEffectFrame(EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity)
 {
-    //FIXME: this is a no-op for now, it should figure out the right contrast, intensity, saturation
+    // FIXME: this is a no-op for now, it should figure out the right contrast, intensity, saturation
     effects->paintEffectFrame(frame, region, opacity, frameOpacity);
 }
 
-void ContrastEffect::doContrast(EffectWindow *w, const QRegion& shape, const QRect& screen, const float opacity, const QMatrix4x4 &screenProjection)
+void ContrastEffect::doContrast(EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection)
 {
     const QRegion actualShape = shape & screen;
     const QRect r = actualShape.boundingRect();
@@ -441,7 +433,6 @@ void ContrastEffect::doContrast(EffectWindow *w, const QRegion& shape, const QRe
 
     shader->setColorMatrix(m_colorMatrices.value(w));
     shader->bind();
-
 
     shader->setOpacity(opacity);
     // Set up the texture matrix to transform from screen coordinates
@@ -477,4 +468,3 @@ bool ContrastEffect::blocksDirectScanout() const
 }
 
 } // namespace KWin
-

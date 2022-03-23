@@ -25,7 +25,8 @@
 #include <QQuickWindow>
 #include <QStandardPaths>
 
-namespace KWin {
+namespace KWin
+{
 
 KWIN_SINGLETON_FACTORY(Outline)
 
@@ -67,7 +68,7 @@ void Outline::hide()
     m_visual->hide();
 }
 
-void Outline::show(const QRect& outlineGeometry)
+void Outline::show(const QRect &outlineGeometry)
 {
     show(outlineGeometry, QRect());
 }
@@ -79,7 +80,7 @@ void Outline::show(const QRect &outlineGeometry, const QRect &visualParentGeomet
     show();
 }
 
-void Outline::setGeometry(const QRect& outlineGeometry)
+void Outline::setGeometry(const QRect &outlineGeometry)
 {
     if (m_outlineGeometry == outlineGeometry) {
         return;
@@ -143,7 +144,7 @@ CompositedOutlineVisual::~CompositedOutlineVisual()
 
 void CompositedOutlineVisual::hide()
 {
-    if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
+    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
         w->hide();
         w->destroy();
     }
@@ -158,7 +159,7 @@ void CompositedOutlineVisual::show()
     if (m_qmlComponent.isNull()) {
         m_qmlComponent.reset(new QQmlComponent(Scripting::self()->qmlEngine()));
         const QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                 kwinApp()->config()->group(QStringLiteral("Outline")).readEntry("QmlPath", QStringLiteral(KWIN_NAME "/outline/plasma/outline.qml")));
+                                                        kwinApp()->config()->group(QStringLiteral("Outline")).readEntry("QmlPath", QStringLiteral(KWIN_NAME "/outline/plasma/outline.qml")));
         if (fileName.isEmpty()) {
             qCDebug(KWIN_CORE) << "Could not locate outline.qml";
             return;

@@ -7,12 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "cursor.h"
 #include "effectloader.h"
 #include "platform.h"
+#include "scripting/scripting.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "scripting/scripting.h"
 
 #define private public
 #include "screenedge.h"
@@ -90,7 +91,7 @@ void ScreenEdgeTest::cleanup()
 {
     // try to unload the script
     const QStringList scripts = {QFINDTESTDATA("./scripts/screenedge.js"), QFINDTESTDATA("./scripts/screenedgeunregister.js"), QFINDTESTDATA("./scripts/touchScreenedge.js")};
-    for (const QString &script: scripts) {
+    for (const QString &script : scripts) {
         if (!script.isEmpty()) {
             if (Scripting::self()->isScriptLoaded(script)) {
                 QVERIFY(Scripting::self()->unloadScript(script));
@@ -105,17 +106,17 @@ void ScreenEdgeTest::testEdge_data()
     QTest::addColumn<KWin::ElectricBorder>("edge");
     QTest::addColumn<QPoint>("triggerPos");
 
-    QTest::newRow("Top")      << KWin::ElectricTop << QPoint(512, 0);
+    QTest::newRow("Top") << KWin::ElectricTop << QPoint(512, 0);
     QTest::newRow("TopRight") << KWin::ElectricTopRight << QPoint(1279, 0);
-    QTest::newRow("Right")    << KWin::ElectricRight << QPoint(1279, 512);
+    QTest::newRow("Right") << KWin::ElectricRight << QPoint(1279, 512);
     QTest::newRow("BottomRight") << KWin::ElectricBottomRight << QPoint(1279, 1023);
     QTest::newRow("Bottom") << KWin::ElectricBottom << QPoint(512, 1023);
     QTest::newRow("BottomLeft") << KWin::ElectricBottomLeft << QPoint(0, 1023);
     QTest::newRow("Left") << KWin::ElectricLeft << QPoint(0, 512);
     QTest::newRow("TopLeft") << KWin::ElectricTopLeft << QPoint(0, 0);
 
-    //repeat a row to show previously unloading and re-registering works
-    QTest::newRow("Top")      << KWin::ElectricTop << QPoint(512, 0);
+    // repeat a row to show previously unloading and re-registering works
+    QTest::newRow("Top") << KWin::ElectricTop << QPoint(512, 0);
 }
 
 void ScreenEdgeTest::testEdge()
@@ -158,13 +159,13 @@ void ScreenEdgeTest::testTouchEdge_data()
     QTest::addColumn<QPoint>("triggerPos");
     QTest::addColumn<QPoint>("motionPos");
 
-    QTest::newRow("Top")      << KWin::ElectricTop << QPoint(50, 0) << QPoint(50, 500);
-    QTest::newRow("Right")    << KWin::ElectricRight << QPoint(1279, 50) << QPoint(500, 50);
+    QTest::newRow("Top") << KWin::ElectricTop << QPoint(50, 0) << QPoint(50, 500);
+    QTest::newRow("Right") << KWin::ElectricRight << QPoint(1279, 50) << QPoint(500, 50);
     QTest::newRow("Bottom") << KWin::ElectricBottom << QPoint(512, 1023) << QPoint(512, 500);
     QTest::newRow("Left") << KWin::ElectricLeft << QPoint(0, 50) << QPoint(500, 50);
 
-    //repeat a row to show previously unloading and re-registering works
-    QTest::newRow("Top")      << KWin::ElectricTop << QPoint(512, 0) << QPoint(512, 500);
+    // repeat a row to show previously unloading and re-registering works
+    QTest::newRow("Top") << KWin::ElectricTop << QPoint(512, 0) << QPoint(512, 500);
 }
 
 void ScreenEdgeTest::testTouchEdge()
@@ -206,7 +207,8 @@ void ScreenEdgeTest::testTouchEdge()
     QVERIFY(workspace()->showingDesktop());
 }
 
-void ScreenEdgeTest::triggerConfigReload() {
+void ScreenEdgeTest::triggerConfigReload()
+{
     workspace()->slotReconfigure();
 }
 
@@ -229,31 +231,31 @@ void ScreenEdgeTest::testEdgeUnregister()
     QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
     QVERIFY(showDesktopSpy.isValid());
 
-    //trigger the edge
+    // trigger the edge
     KWin::Cursors::self()->mouse()->setPos(triggerPos);
     QCOMPARE(showDesktopSpy.count(), 1);
 
-    //reset
-    KWin::Cursors::self()->mouse()->setPos(500,500);
+    // reset
+    KWin::Cursors::self()->mouse()->setPos(500, 500);
     workspace()->slotToggleShowDesktop();
     showDesktopSpy.clear();
 
-    //trigger again, to show that retriggering works
+    // trigger again, to show that retriggering works
     KWin::Cursors::self()->mouse()->setPos(triggerPos);
     QCOMPARE(showDesktopSpy.count(), 1);
 
-    //reset
-    KWin::Cursors::self()->mouse()->setPos(500,500);
+    // reset
+    KWin::Cursors::self()->mouse()->setPos(500, 500);
     workspace()->slotToggleShowDesktop();
     showDesktopSpy.clear();
 
-    //make the script unregister the edge
+    // make the script unregister the edge
     configGroup.writeEntry("mode", "unregister");
     triggerConfigReload();
     KWin::Cursors::self()->mouse()->setPos(triggerPos);
-    QCOMPARE(showDesktopSpy.count(), 0); //not triggered
+    QCOMPARE(showDesktopSpy.count(), 0); // not triggered
 
-    //force the script to unregister a non-registered edge to prove it doesn't explode
+    // force the script to unregister a non-registered edge to prove it doesn't explode
     triggerConfigReload();
 }
 

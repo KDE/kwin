@@ -12,7 +12,6 @@
 #include <QFlag>
 #include <QIcon>
 
-
 namespace KWin
 {
 
@@ -37,25 +36,24 @@ public:
     Q_ENUM(Type)
 
     enum Flags {
-        NoFlags            = 0,
-        AlwaysEnabled      = 1u << 0,
-        StartEnabled       = 1u << 1,
-        AffectsWarning     = 1u << 2,
+        NoFlags = 0,
+        AlwaysEnabled = 1u << 0,
+        StartEnabled = 1u << 1,
+        AffectsWarning = 1u << 2,
         AffectsDescription = 1u << 3,
-        SuggestionOnly     = 1u << 4,
-        AllFlags           = 0b11111
+        SuggestionOnly = 1u << 4,
+        AllFlags = 0b11111
     };
 
 public:
-    RuleItem() {};
+    RuleItem(){};
     RuleItem(const QString &key,
              const RulePolicy::Type policyType,
              const Type type,
              const QString &name,
              const QString &section,
              const QIcon &icon = QIcon::fromTheme("window"),
-             const QString &description = QString("")
-            );
+             const QString &description = QString(""));
     ~RuleItem();
 
     QString key() const;
@@ -69,7 +67,7 @@ public:
     void setEnabled(bool enabled);
 
     bool hasFlag(RuleItem::Flags flag) const;
-    void setFlag(RuleItem::Flags flag, bool active=true);
+    void setFlag(RuleItem::Flags flag, bool active = true);
 
     Type type() const;
     QVariant value() const;
@@ -82,8 +80,8 @@ public:
     uint optionsMask() const;
 
     RulePolicy::Type policyType() const;
-    int policy() const;          // int belongs to anonymous enum in Rules::
-    void setPolicy(int policy);  // int belongs to anonymous enum in Rules::
+    int policy() const; // int belongs to anonymous enum in Rules::
+    void setPolicy(int policy); // int belongs to anonymous enum in Rules::
     QVariant policyModel() const;
     QString policyKey() const;
 
@@ -111,6 +109,6 @@ private:
     uint m_optionsMask;
 };
 
-}   //namespace
+} // namespace
 
-#endif  //KWIN_RULEITEM_H
+#endif // KWIN_RULEITEM_H

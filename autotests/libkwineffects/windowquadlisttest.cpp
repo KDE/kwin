@@ -6,8 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include <kwineffects.h>
 #include <QTest>
+#include <kwineffects.h>
 
 Q_DECLARE_METATYPE(KWin::WindowQuadList)
 
@@ -27,10 +27,10 @@ private:
 KWin::WindowQuad WindowQuadListTest::makeQuad(const QRectF &r)
 {
     KWin::WindowQuad quad;
-    quad[ 0 ] = KWin::WindowVertex(r.x(), r.y(), r.x(), r.y());
-    quad[ 1 ] = KWin::WindowVertex(r.x() + r.width(), r.y(), r.x() + r.width(), r.y());
-    quad[ 2 ] = KWin::WindowVertex(r.x() + r.width(), r.y() + r.height(), r.x() + r.width(), r.y() + r.height());
-    quad[ 3 ] = KWin::WindowVertex(r.x(), r.y() + r.height(), r.x(), r.y() + r.height());
+    quad[0] = KWin::WindowVertex(r.x(), r.y(), r.x(), r.y());
+    quad[1] = KWin::WindowVertex(r.x() + r.width(), r.y(), r.x() + r.width(), r.y());
+    quad[2] = KWin::WindowVertex(r.x() + r.width(), r.y() + r.height(), r.x() + r.width(), r.y() + r.height());
+    quad[3] = KWin::WindowVertex(r.x(), r.y() + r.height(), r.x(), r.y() + r.height());
     return quad;
 }
 
@@ -66,17 +66,17 @@ void WindowQuadListTest::testMakeGrid_data()
 
     orig.append(makeQuad(QRectF(0, 10, 4, 3)));
     expected.clear();
-    expected.append(makeQuad(QRectF(0,  0, 4, 4)));
-    expected.append(makeQuad(QRectF(0,  4, 4, 4)));
-    expected.append(makeQuad(QRectF(0,  8, 4, 2)));
+    expected.append(makeQuad(QRectF(0, 0, 4, 4)));
+    expected.append(makeQuad(QRectF(0, 4, 4, 4)));
+    expected.append(makeQuad(QRectF(0, 8, 4, 2)));
     expected.append(makeQuad(QRectF(0, 10, 4, 2)));
     expected.append(makeQuad(QRectF(0, 12, 4, 1)));
-    expected.append(makeQuad(QRectF(4,  0, 4, 4)));
-    expected.append(makeQuad(QRectF(4,  4, 4, 4)));
-    expected.append(makeQuad(QRectF(4,  8, 4, 2)));
-    expected.append(makeQuad(QRectF(8,  0, 2, 4)));
-    expected.append(makeQuad(QRectF(8,  4, 2, 4)));
-    expected.append(makeQuad(QRectF(8,  8, 2, 2)));
+    expected.append(makeQuad(QRectF(4, 0, 4, 4)));
+    expected.append(makeQuad(QRectF(4, 4, 4, 4)));
+    expected.append(makeQuad(QRectF(4, 8, 4, 2)));
+    expected.append(makeQuad(QRectF(8, 0, 2, 4)));
+    expected.append(makeQuad(QRectF(8, 4, 2, 4)));
+    expected.append(makeQuad(QRectF(8, 8, 2, 2)));
     QTest::newRow("irregularGrid2") << orig << 4 << 11 << expected;
 }
 
@@ -96,10 +96,14 @@ void WindowQuadListTest::testMakeGrid()
             auto vertexTest = [actualQuad, expectedQuad](int index) {
                 const KWin::WindowVertex &actualVertex = actualQuad[index];
                 const KWin::WindowVertex &expectedVertex = expectedQuad[index];
-                if (actualVertex.x() != expectedVertex.x()) return false;
-                if (actualVertex.y() != expectedVertex.y()) return false;
-                if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u())) return false;
-                if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v())) return false;
+                if (actualVertex.x() != expectedVertex.x())
+                    return false;
+                if (actualVertex.y() != expectedVertex.y())
+                    return false;
+                if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u()))
+                    return false;
+                if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v()))
+                    return false;
                 return true;
             };
             found = vertexTest(0) && vertexTest(1) && vertexTest(2) && vertexTest(3);
@@ -107,10 +111,7 @@ void WindowQuadListTest::testMakeGrid()
                 break;
             }
         }
-        QVERIFY2(found, qPrintable(QStringLiteral("%0, %1 / %2, %3").arg(QString::number(actualQuad.left()),
-                                                                         QString::number(actualQuad.top()),
-                                                                         QString::number(actualQuad.right()),
-                                                                         QString::number(actualQuad.bottom()))));
+        QVERIFY2(found, qPrintable(QStringLiteral("%0, %1 / %2, %3").arg(QString::number(actualQuad.left()), QString::number(actualQuad.top()), QString::number(actualQuad.right()), QString::number(actualQuad.bottom()))));
     }
 }
 
@@ -150,15 +151,15 @@ void WindowQuadListTest::testMakeRegularGrid_data()
 
     orig.append(makeQuad(QRectF(0, 10, 4, 2)));
     expected.clear();
-    expected.append(makeQuad(QRectF(0,  0, 5, 3)));
-    expected.append(makeQuad(QRectF(5,  0, 5, 3)));
-    expected.append(makeQuad(QRectF(0,  3, 5, 3)));
-    expected.append(makeQuad(QRectF(5,  3, 5, 3)));
-    expected.append(makeQuad(QRectF(0,  6, 5, 3)));
-    expected.append(makeQuad(QRectF(5,  6, 5, 3)));
-    expected.append(makeQuad(QRectF(0,  9, 5, 1)));
+    expected.append(makeQuad(QRectF(0, 0, 5, 3)));
+    expected.append(makeQuad(QRectF(5, 0, 5, 3)));
+    expected.append(makeQuad(QRectF(0, 3, 5, 3)));
+    expected.append(makeQuad(QRectF(5, 3, 5, 3)));
+    expected.append(makeQuad(QRectF(0, 6, 5, 3)));
+    expected.append(makeQuad(QRectF(5, 6, 5, 3)));
+    expected.append(makeQuad(QRectF(0, 9, 5, 1)));
     expected.append(makeQuad(QRectF(0, 10, 4, 2)));
-    expected.append(makeQuad(QRectF(5,  9, 5, 1)));
+    expected.append(makeQuad(QRectF(5, 9, 5, 1)));
     QTest::newRow("multipleQuads") << orig << 2 << 4 << 9 << expected;
 }
 
@@ -179,10 +180,14 @@ void WindowQuadListTest::testMakeRegularGrid()
             auto vertexTest = [actualQuad, expectedQuad](int index) {
                 const KWin::WindowVertex &actualVertex = actualQuad[index];
                 const KWin::WindowVertex &expectedVertex = expectedQuad[index];
-                if (actualVertex.x() != expectedVertex.x()) return false;
-                if (actualVertex.y() != expectedVertex.y()) return false;
-                if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u())) return false;
-                if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v())) return false;
+                if (actualVertex.x() != expectedVertex.x())
+                    return false;
+                if (actualVertex.y() != expectedVertex.y())
+                    return false;
+                if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u()))
+                    return false;
+                if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v()))
+                    return false;
                 return true;
             };
             found = vertexTest(0) && vertexTest(1) && vertexTest(2) && vertexTest(3);
@@ -190,10 +195,7 @@ void WindowQuadListTest::testMakeRegularGrid()
                 break;
             }
         }
-        QVERIFY2(found, qPrintable(QStringLiteral("%0, %1 / %2, %3").arg(QString::number(actualQuad.left()),
-                                                                         QString::number(actualQuad.top()),
-                                                                         QString::number(actualQuad.right()),
-                                                                         QString::number(actualQuad.bottom()))));
+        QVERIFY2(found, qPrintable(QStringLiteral("%0, %1 / %2, %3").arg(QString::number(actualQuad.left()), QString::number(actualQuad.top()), QString::number(actualQuad.right()), QString::number(actualQuad.bottom()))));
     }
 }
 

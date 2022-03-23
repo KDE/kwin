@@ -8,8 +8,8 @@
 #ifndef GLIDE_CONFIG_H
 #define GLIDE_CONFIG_H
 
-#include <KCModule>
 #include "ui_glide_config.h"
+#include <KCModule>
 
 namespace KWin
 {
@@ -31,4 +31,3 @@ private:
 } // namespace KWin
 
 #endif
-

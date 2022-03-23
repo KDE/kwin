@@ -11,8 +11,8 @@
 
 #include "drm_object.h"
 
-#include <QSharedPointer>
 #include <QPoint>
+#include <QSharedPointer>
 
 namespace KWin
 {
@@ -66,4 +66,3 @@ private:
 }
 
 #endif
-

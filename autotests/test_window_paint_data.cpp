@@ -11,9 +11,9 @@
 
 #include "virtualdesktops.h"
 
-#include <QVector2D>
 #include <QGraphicsRotation>
 #include <QGraphicsScale>
+#include <QVector2D>
 
 #include <QtTest>
 
@@ -46,219 +46,294 @@ public:
     void minimize() override;
     void unminimize() override;
     void closeWindow() override;
-    void referencePreviousWindowPixmap() override {}
-    void unreferencePreviousWindowPixmap() override {}
-    QWindow *internalWindow() const override {
+    void referencePreviousWindowPixmap() override
+    {
+    }
+    void unreferencePreviousWindowPixmap() override
+    {
+    }
+    QWindow *internalWindow() const override
+    {
         return nullptr;
     }
-    bool isDeleted() const override {
+    bool isDeleted() const override
+    {
         return false;
     }
-    bool isMinimized() const override {
+    bool isMinimized() const override
+    {
         return false;
     }
-    double opacity() const override {
+    double opacity() const override
+    {
         return m_opacity;
     }
-    void setOpacity(qreal opacity) {
+    void setOpacity(qreal opacity)
+    {
         m_opacity = opacity;
     }
-    bool hasAlpha() const override {
+    bool hasAlpha() const override
+    {
         return true;
     }
-    QStringList activities() const override {
+    QStringList activities() const override
+    {
         return QStringList();
     }
-    int desktop() const override {
+    int desktop() const override
+    {
         return 0;
     }
-    QVector<uint> desktops() const override {
+    QVector<uint> desktops() const override
+    {
         return {};
     }
-    int x() const override {
+    int x() const override
+    {
         return 0;
     }
-    int y() const override {
+    int y() const override
+    {
         return 0;
     }
-    int width() const override {
+    int width() const override
+    {
         return 100;
     }
-    int height() const override {
+    int height() const override
+    {
         return 100;
     }
-    QSize basicUnit() const override {
+    QSize basicUnit() const override
+    {
         return QSize();
     }
-    QRect geometry() const override {
+    QRect geometry() const override
+    {
         return QRect();
     }
-    QRect expandedGeometry() const override {
+    QRect expandedGeometry() const override
+    {
         return QRect();
     }
-    QRect frameGeometry() const override {
+    QRect frameGeometry() const override
+    {
         return QRect();
     }
-    QRect bufferGeometry() const override {
+    QRect bufferGeometry() const override
+    {
         return QRect();
     }
-    QRect clientGeometry() const override {
+    QRect clientGeometry() const override
+    {
         return QRect();
     }
-    EffectScreen *screen() const override {
+    EffectScreen *screen() const override
+    {
         return nullptr;
     }
-    QPoint pos() const override {
+    QPoint pos() const override
+    {
         return QPoint();
     }
-    QSize size() const override {
-        return QSize(100,100);
+    QSize size() const override
+    {
+        return QSize(100, 100);
     }
-    QRect rect() const override {
-        return QRect(0,0,100,100);
+    QRect rect() const override
+    {
+        return QRect(0, 0, 100, 100);
     }
-    bool isMovable() const override {
+    bool isMovable() const override
+    {
         return true;
     }
-    bool isMovableAcrossScreens() const override {
+    bool isMovableAcrossScreens() const override
+    {
         return true;
     }
-    bool isUserMove() const override {
+    bool isUserMove() const override
+    {
         return false;
     }
-    bool isUserResize() const override {
+    bool isUserResize() const override
+    {
         return false;
     }
-    QRect iconGeometry() const override {
+    QRect iconGeometry() const override
+    {
         return QRect();
     }
-    bool isDesktop() const override {
+    bool isDesktop() const override
+    {
         return false;
     }
-    bool isDock() const override {
+    bool isDock() const override
+    {
         return false;
     }
-    bool isToolbar() const override {
+    bool isToolbar() const override
+    {
         return false;
     }
-    bool isMenu() const override {
+    bool isMenu() const override
+    {
         return false;
     }
-    bool isNormalWindow() const override {
+    bool isNormalWindow() const override
+    {
         return true;
     }
-    bool isSpecialWindow() const override {
+    bool isSpecialWindow() const override
+    {
         return false;
     }
-    bool isDialog() const override {
+    bool isDialog() const override
+    {
         return false;
     }
-    bool isSplash() const override {
+    bool isSplash() const override
+    {
         return false;
     }
-    bool isUtility() const override {
+    bool isUtility() const override
+    {
         return false;
     }
-    bool isDropdownMenu() const override {
+    bool isDropdownMenu() const override
+    {
         return false;
     }
-    bool isPopupMenu() const override {
+    bool isPopupMenu() const override
+    {
         return false;
     }
-    bool isTooltip() const override {
+    bool isTooltip() const override
+    {
         return false;
     }
-    bool isNotification() const override {
+    bool isNotification() const override
+    {
         return false;
     }
-    bool isCriticalNotification() const override {
+    bool isCriticalNotification() const override
+    {
         return false;
     }
-    bool isOnScreenDisplay() const override  {
+    bool isOnScreenDisplay() const override
+    {
         return false;
     }
-    bool isComboBox() const override {
+    bool isComboBox() const override
+    {
         return false;
     }
-    bool isDNDIcon() const override {
+    bool isDNDIcon() const override
+    {
         return false;
     }
-    QRect contentsRect() const override {
+    QRect contentsRect() const override
+    {
         return QRect();
     }
-    bool decorationHasAlpha() const override {
+    bool decorationHasAlpha() const override
+    {
         return false;
     }
-    KDecoration2::Decoration *decoration() const override {
+    KDecoration2::Decoration *decoration() const override
+    {
         return nullptr;
     }
-    QString caption() const override {
+    QString caption() const override
+    {
         return QString();
     }
-    QIcon icon() const override {
+    QIcon icon() const override
+    {
         return QIcon();
     }
-    QString windowClass() const override {
+    QString windowClass() const override
+    {
         return QString();
     }
-    QString windowRole() const override {
+    QString windowRole() const override
+    {
         return QString();
     }
-    NET::WindowType windowType() const override {
+    NET::WindowType windowType() const override
+    {
         return NET::Normal;
     }
-    bool acceptsFocus() const override {
+    bool acceptsFocus() const override
+    {
         return true;
     }
-    bool keepAbove() const override {
+    bool keepAbove() const override
+    {
         return false;
     }
-    bool keepBelow() const override {
+    bool keepBelow() const override
+    {
         return false;
     }
-    bool isModal() const override {
+    bool isModal() const override
+    {
         return false;
     }
-    bool isSkipSwitcher() const override {
+    bool isSkipSwitcher() const override
+    {
         return false;
     }
-    bool isCurrentTab() const override {
+    bool isCurrentTab() const override
+    {
         return true;
     }
-    bool skipsCloseAnimation() const override {
+    bool skipsCloseAnimation() const override
+    {
         return false;
     }
-    KWaylandServer::SurfaceInterface *surface() const override {
+    KWaylandServer::SurfaceInterface *surface() const override
+    {
         return nullptr;
     }
-    bool isFullScreen() const override {
+    bool isFullScreen() const override
+    {
         return false;
     }
-    bool isUnresponsive() const override {
+    bool isUnresponsive() const override
+    {
         return false;
     }
-    bool isPopupWindow() const override {
+    bool isPopupWindow() const override
+    {
         return false;
     }
-    bool isManaged() const override {
+    bool isManaged() const override
+    {
         return true;
     }
-    bool isWaylandClient() const override {
+    bool isWaylandClient() const override
+    {
         return true;
     }
-    bool isX11Client() const override {
+    bool isX11Client() const override
+    {
         return false;
     }
-    bool isOutline() const override {
+    bool isOutline() const override
+    {
         return false;
     }
-    bool isLockScreen() const override {
+    bool isLockScreen() const override
+    {
         return false;
     }
-    pid_t pid() const override {
+    pid_t pid() const override
+    {
         return 0;
     }
-    qlonglong windowId() const override {
+    qlonglong windowId() const override
+    {
         return 0;
     }
 

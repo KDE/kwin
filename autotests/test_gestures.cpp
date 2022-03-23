@@ -8,8 +8,8 @@
 */
 #include "gestures.h"
 
-#include <QTest>
 #include <QSignalSpy>
+#include <QTest>
 #include <QtWidgets/qaction.h>
 #include <iostream>
 
@@ -34,7 +34,7 @@ private Q_SLOTS:
     void testPinchDirection_data();
     void testPinchDirection();
 
-    //swipe only
+    // swipe only
     void testMinimumX_data();
     void testMinimumX();
     void testMinimumY_data();
@@ -45,7 +45,7 @@ private Q_SLOTS:
     void testMaximumY();
     void testStartGeometry();
 
-    //swipe and pinch
+    // swipe and pinch
     void testSetMinimumDelta();
     void testMinimumDeltaReached_data();
     void testMinimumDeltaReached();
@@ -58,14 +58,14 @@ private Q_SLOTS:
     void testSwipeUpdateTrigger_data();
     void testSwipeUpdateTrigger();
 
-    //both
+    // both
     void testSwipeMinFingerStart_data();
     void testSwipeMinFingerStart();
     void testSwipeMaxFingerStart_data();
     void testSwipeMaxFingerStart();
     void testNotEmitCallbacksBeforeDirectionDecided();
 
-    //swipe only
+    // swipe only
     void testSwipeGeometryStart_data();
     void testSwipeGeometryStart();
 };
@@ -351,7 +351,7 @@ void GestureTest::testMinimumDeltaReached()
 {
     GestureRecognizer recognizer;
 
-    //swipe gesture
+    // swipe gesture
     SwipeGesture gesture;
     QFETCH(SwipeGesture::Direction, direction);
     gesture.setDirection(direction);
@@ -394,7 +394,7 @@ void GestureTest::testMinimumDeltaReached()
 
 void GestureTest::testMinimumScaleDelta()
 {
-    //pinch gesture
+    // pinch gesture
     PinchGesture gesture;
     gesture.setDirection(PinchGesture::Direction::Contracting);
     gesture.setMinimumScaleDelta(.5);
@@ -514,7 +514,6 @@ void GestureTest::testSwipeCancel()
     QCOMPARE(triggeredSpy.count(), 0);
 }
 
-
 void GestureTest::testSwipeUpdateTrigger_data()
 {
     QTest::addColumn<KWin::SwipeGesture::Direction>("direction");
@@ -630,26 +629,26 @@ void GestureTest::testNotEmitCallbacksBeforeDirectionDecided()
     QSignalSpy expandSpy(&expand, &PinchGesture::progress);
     QSignalSpy contractSpy(&contract, &PinchGesture::progress);
 
-    //don't release callback until we know the direction of swipe gesture
+    // don't release callback until we know the direction of swipe gesture
     recognizer.startSwipeGesture(4);
     QCOMPARE(upSpy.count(), 0);
     QCOMPARE(downSpy.count(), 0);
     QCOMPARE(rightSpy.count(), 0);
 
-    //up (negative y)
+    // up (negative y)
     recognizer.updateSwipeGesture(QSizeF(0, -1.5));
     QCOMPARE(upSpy.count(), 1);
     QCOMPARE(downSpy.count(), 0);
     QCOMPARE(rightSpy.count(), 0);
 
-    //down (positive y)
-    //recognizer.updateSwipeGesture(QSizeF(0, 0));
+    // down (positive y)
+    // recognizer.updateSwipeGesture(QSizeF(0, 0));
     recognizer.updateSwipeGesture(QSizeF(0, 3));
     QCOMPARE(upSpy.count(), 1);
     QCOMPARE(downSpy.count(), 1);
     QCOMPARE(rightSpy.count(), 0);
 
-    //right
+    // right
     recognizer.cancelSwipeGesture();
     recognizer.startSwipeGesture(4);
     recognizer.updateSwipeGesture(QSizeF(1, 0));
@@ -659,17 +658,17 @@ void GestureTest::testNotEmitCallbacksBeforeDirectionDecided()
 
     recognizer.cancelSwipeGesture();
 
-    //same test for pinch gestures
+    // same test for pinch gestures
     recognizer.startPinchGesture(4);
     QCOMPARE(expandSpy.count(), 0);
     QCOMPARE(contractSpy.count(), 0);
 
-    //contracting
+    // contracting
     recognizer.updatePinchGesture(.5, 0, QSizeF(0, 0));
     QCOMPARE(expandSpy.count(), 0);
     QCOMPARE(contractSpy.count(), 1);
 
-    //expanding
+    // expanding
     recognizer.updatePinchGesture(1.5, 0, QSizeF(0, 0));
     QCOMPARE(expandSpy.count(), 1);
     QCOMPARE(contractSpy.count(), 1);
@@ -707,8 +706,6 @@ void GestureTest::testSwipeGeometryStart()
     recognizer.startSwipeGesture(startPos);
     QTEST(!startedSpy.isEmpty(), "started");
 }
-
-
 
 QTEST_MAIN(GestureTest)
 #include "test_gestures.moc"

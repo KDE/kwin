@@ -37,17 +37,21 @@ public:
 
     void dndAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action) override;
 
-    KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDragAndDropAction() {
+    KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDragAndDropAction()
+    {
         return m_dndAction;
     }
 
-    void dropPerformed() override {
+    void dropPerformed() override
+    {
         Q_EMIT dropped();
     }
-    void dndFinished() override {
+    void dndFinished() override
+    {
         Q_EMIT finished();
     }
-    void dndCancelled() override {
+    void dndCancelled() override
+    {
         Q_EMIT cancelled();
     }
 

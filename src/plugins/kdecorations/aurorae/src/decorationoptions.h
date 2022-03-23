@@ -8,9 +8,9 @@
 
 #include <KDecoration2/Decoration>
 
-#include <QObject>
 #include <QColor>
 #include <QFont>
+#include <QObject>
 #include <QPalette>
 
 namespace KWin
@@ -24,54 +24,71 @@ public:
 
     void update(const QPalette &pal);
 
-    const QColor &titleBarColor(bool active) const {
+    const QColor &titleBarColor(bool active) const
+    {
         return active ? m_activeTitleBarColor : m_inactiveTitleBarColor;
     }
-    const QColor &activeTitleBarColor() const {
+    const QColor &activeTitleBarColor() const
+    {
         return m_activeTitleBarColor;
     }
-    const QColor &inactiveTitleBarColor() const {
+    const QColor &inactiveTitleBarColor() const
+    {
         return m_inactiveTitleBarColor;
     }
-    const QColor &activeTitleBarBlendColor() const {
+    const QColor &activeTitleBarBlendColor() const
+    {
         return m_activeTitleBarBlendColor;
     }
-    const QColor &inactiveTitleBarBlendColor() const {
+    const QColor &inactiveTitleBarBlendColor() const
+    {
         return m_inactiveTitleBarBlendColor;
     }
-    const QColor &frame(bool active) const {
+    const QColor &frame(bool active) const
+    {
         return active ? m_activeFrameColor : m_inactiveFrameColor;
     }
-    const QColor &activeFrame() const {
+    const QColor &activeFrame() const
+    {
         return m_activeFrameColor;
     }
-    const QColor &inactiveFrame() const {
+    const QColor &inactiveFrame() const
+    {
         return m_inactiveFrameColor;
     }
-    const QColor &font(bool active) const {
+    const QColor &font(bool active) const
+    {
         return active ? m_activeFontColor : m_inactiveFontColor;
     }
-    const QColor &activeFont() const {
+    const QColor &activeFont() const
+    {
         return m_activeFontColor;
     }
-    const QColor &inactiveFont() const {
+    const QColor &inactiveFont() const
+    {
         return m_inactiveFontColor;
     }
-    const QColor &activeButtonColor() const {
+    const QColor &activeButtonColor() const
+    {
         return m_activeButtonColor;
     }
-    const QColor &inactiveButtonColor() const {
+    const QColor &inactiveButtonColor() const
+    {
         return m_inactiveButtonColor;
     }
-    const QColor &activeHandle() const {
+    const QColor &activeHandle() const
+    {
         return m_activeHandle;
     }
-    const QColor &inactiveHandle() const {
+    const QColor &inactiveHandle() const
+    {
         return m_inactiveHandle;
     }
-    const QPalette &palette() const {
+    const QPalette &palette() const
+    {
         return m_palette;
     }
+
 private:
     void init(const QPalette &pal);
     QColor m_activeTitleBarColor;
@@ -163,15 +180,15 @@ class DecorationOptions : public QObject
     Q_PROPERTY(int mousePressAndHoldInterval READ mousePressAndHoldInterval CONSTANT)
 public:
     enum BorderSize {
-        BorderNone,      ///< No borders except title
-        BorderNoSides,   ///< No borders on sides
-        BorderTiny,      ///< Minimal borders
-        BorderNormal,    ///< Standard size borders, the default setting
-        BorderLarge,     ///< Larger borders
+        BorderNone, ///< No borders except title
+        BorderNoSides, ///< No borders on sides
+        BorderTiny, ///< Minimal borders
+        BorderNormal, ///< Standard size borders, the default setting
+        BorderLarge, ///< Larger borders
         BorderVeryLarge, ///< Very large borders
-        BorderHuge,      ///< Huge borders
-        BorderVeryHuge,  ///< Very huge borders
-        BorderOversized  ///< Oversized borders
+        BorderHuge, ///< Huge borders
+        BorderVeryHuge, ///< Very huge borders
+        BorderOversized ///< Oversized borders
     };
     Q_ENUM(BorderSize)
     /**
@@ -290,11 +307,11 @@ private:
     int m_bottom;
 };
 
-#define GETTER( name ) \
-inline int Borders::name() const \
-{ \
-    return m_##name;\
-}\
+#define GETTER(name)                 \
+    inline int Borders::name() const \
+    {                                \
+        return m_##name;             \
+    }
 
 GETTER(left)
 GETTER(right)

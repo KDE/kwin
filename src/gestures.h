@@ -11,10 +11,10 @@
 
 #include <kwin_export.h>
 
+#include <QMap>
 #include <QObject>
 #include <QPointF>
 #include <QSizeF>
-#include <QMap>
 #include <QVector>
 
 namespace KWin
@@ -30,6 +30,7 @@ class Gesture : public QObject
     Q_OBJECT
 public:
     ~Gesture() override;
+
 protected:
     explicit Gesture(QObject *parent);
 
@@ -153,9 +154,9 @@ public:
     qreal minimumScaleDelta() const;
 
     /**
-    * scaleDelta is the % scale difference needed to trigger
-    * 0.25 will trigger when scale reaches 0.75 or 1.25
-    */
+     * scaleDelta is the % scale difference needed to trigger
+     * 0.25 will trigger when scale reaches 0.75 or 1.25
+     */
     void setMinimumScaleDelta(const qreal &scaleDelta);
     bool isMinimumScaleDeltaRelevant() const;
 
@@ -199,7 +200,7 @@ public:
     void endSwipeGesture();
 
     int startPinchGesture(uint fingerCount);
-    void updatePinchGesture(qreal scale, qreal angleDelta, const QSizeF& posDelta);
+    void updatePinchGesture(qreal scale, qreal angleDelta, const QSizeF &posDelta);
     void cancelPinchGesture();
     void endPinchGesture();
 

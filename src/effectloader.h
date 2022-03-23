@@ -13,12 +13,12 @@
 #include <KPluginMetaData>
 #include <KSharedConfig>
 // Qt
-#include <QObject>
 #include <QFlags>
 #include <QMap>
+#include <QObject>
 #include <QPair>
-#include <QStaticPlugin>
 #include <QQueue>
+#include <QStaticPlugin>
 
 namespace KWin
 {
@@ -187,7 +187,7 @@ private:
     KSharedConfig::Ptr m_config;
 };
 
-template <typename Loader, typename QueueType>
+template<typename Loader, typename QueueType>
 class EffectLoadQueue;
 /**
  * @brief Helper class to queue the loading of Effects.
@@ -212,17 +212,17 @@ class AbstractEffectLoadQueue : public QObject
 public:
     explicit AbstractEffectLoadQueue(QObject *parent = nullptr)
         : QObject(parent)
-        {
-        }
+    {
+    }
 protected Q_SLOTS:
     virtual void dequeue() = 0;
 
 private:
-    template <typename Loader, typename QueueType>
+    template<typename Loader, typename QueueType>
     friend class EffectLoadQueue;
 };
 
-template <typename Loader, typename QueueType>
+template<typename Loader, typename QueueType>
 class EffectLoadQueue : public AbstractEffectLoadQueue
 {
 public:
@@ -242,6 +242,7 @@ public:
         m_queue.clear();
         m_dequeueScheduled = false;
     }
+
 protected:
     void dequeue() override
     {
@@ -253,6 +254,7 @@ protected:
         m_effectLoader->loadEffect(pair.first, pair.second);
         scheduleDequeue();
     }
+
 private:
     void scheduleDequeue()
     {
@@ -274,7 +276,7 @@ class KWIN_EXPORT ScriptedEffectLoader : public AbstractEffectLoader
 {
     Q_OBJECT
 public:
-    explicit ScriptedEffectLoader(QObject* parent = nullptr);
+    explicit ScriptedEffectLoader(QObject *parent = nullptr);
     ~ScriptedEffectLoader() override;
 
     bool hasEffect(const QString &name) const override;
@@ -290,7 +292,7 @@ private:
     QList<KPluginMetaData> findAllEffects() const;
     KPluginMetaData findEffect(const QString &name) const;
     QStringList m_loadedEffects;
-    EffectLoadQueue< ScriptedEffectLoader, KPluginMetaData > *m_queue;
+    EffectLoadQueue<ScriptedEffectLoader, KPluginMetaData> *m_queue;
     QMetaObject::Connection m_queryConnection;
 };
 
@@ -335,7 +337,7 @@ public:
     void clear() override;
 
 private:
-    QList<AbstractEffectLoader*> m_loaders;
+    QList<AbstractEffectLoader *> m_loaders;
 };
 
 }

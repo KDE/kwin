@@ -16,8 +16,8 @@
 
 #include <cmath>
 
-#include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
+#include <KDecoration2/Decoration>
 
 #include <QPainter>
 

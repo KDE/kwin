@@ -115,7 +115,7 @@ void InputEventsTest::testInitWheelEvent_data()
     QTest::addColumn<QPoint>("expectedAngleDelta");
 
     QTest::newRow("horiz") << Qt::Horizontal << 3.3 << 1 << QPoint(3, 0);
-    QTest::newRow("vert")  << Qt::Vertical   << 2.4 << 2 << QPoint(0, 2);
+    QTest::newRow("vert") << Qt::Vertical << 2.4 << 2 << QPoint(0, 2);
 }
 
 void InputEventsTest::testInitWheelEvent()
@@ -146,7 +146,6 @@ void InputEventsTest::testInitWheelEvent()
     QCOMPARE(event.axisSource(), InputRedirection::PointerAxisSourceWheel);
     // and our custom argument
     QCOMPARE(event.device(), &d);
-
 }
 
 void InputEventsTest::testInitSwitchEvent_data()

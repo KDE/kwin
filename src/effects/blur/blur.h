@@ -12,9 +12,9 @@
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 
-#include <QVector>
-#include <QVector2D>
 #include <QStack>
+#include <QVector2D>
+#include <QVector>
 
 #include <KWaylandServer/blur_interface.h>
 
@@ -38,14 +38,15 @@ public:
 
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
     void paintEffectFrame(EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity) override;
 
     bool provides(Feature feature) override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 75;
     }
 
@@ -85,9 +86,9 @@ private:
 
 private:
     BlurShader *m_shader;
-    QVector <GLRenderTarget*> m_renderTargets;
+    QVector<GLRenderTarget *> m_renderTargets;
     QVector<GLTexture *> m_renderTextures;
-    QStack <GLRenderTarget*> m_renderTargetStack;
+    QStack<GLRenderTarget *> m_renderTargetStack;
 
     QScopedPointer<GLTexture> m_noiseTexture;
 
@@ -102,29 +103,30 @@ private:
     int m_noiseStrength;
     int m_scalingFactor;
 
-    struct OffsetStruct {
+    struct OffsetStruct
+    {
         float minOffset;
         float maxOffset;
         int expandSize;
     };
 
-    QVector <OffsetStruct> blurOffsets;
+    QVector<OffsetStruct> blurOffsets;
 
-    struct BlurValuesStruct {
+    struct BlurValuesStruct
+    {
         int iteration;
         float offset;
     };
 
-    QVector <BlurValuesStruct> blurStrengthValues;
+    QVector<BlurValuesStruct> blurStrengthValues;
 
-    QMap <EffectWindow*, QMetaObject::Connection> windowBlurChangedConnections;
+    QMap<EffectWindow *, QMetaObject::Connection> windowBlurChangedConnections;
 
     static KWaylandServer::BlurManagerInterface *s_blurManager;
     static QTimer *s_blurManagerRemoveTimer;
 };
 
-inline
-bool BlurEffect::provides(Effect::Feature feature)
+inline bool BlurEffect::provides(Effect::Feature feature)
 {
     if (feature == Blur) {
         return true;
@@ -132,8 +134,6 @@ bool BlurEffect::provides(Effect::Feature feature)
     return KWin::Effect::provides(feature);
 }
 
-
 } // namespace KWin
 
 #endif
-

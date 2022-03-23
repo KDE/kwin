@@ -9,12 +9,12 @@
 #pragma once
 #include "drm_layer.h"
 
-#include <QSharedPointer>
-#include <QPointer>
 #include <QMap>
+#include <QPointer>
 #include <QRegion>
-#include <optional>
+#include <QSharedPointer>
 #include <epoxy/egl.h>
+#include <optional>
 
 namespace KWaylandServer
 {
@@ -68,7 +68,8 @@ private:
     };
     MultiGpuImportMode m_importMode = MultiGpuImportMode::Dmabuf;
 
-    struct {
+    struct
+    {
         QPointer<KWaylandServer::SurfaceInterface> surface;
         QMap<uint32_t, QVector<uint64_t>> attemptedFormats;
         bool attemptedThisFrame = false;

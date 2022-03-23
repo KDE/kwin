@@ -7,13 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "qpainterbackend.h"
 #include "drm_render_backend.h"
 #include "dumb_swapchain.h"
+#include "qpainterbackend.h"
 
 #include <QObject>
-#include <QVector>
 #include <QSharedPointer>
+#include <QVector>
 
 namespace KWin
 {

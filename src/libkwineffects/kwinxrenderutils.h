@@ -40,6 +40,7 @@ public:
     explicit XRenderPictureData(xcb_render_picture_t pic = XCB_RENDER_PICTURE_NONE);
     ~XRenderPictureData();
     xcb_render_picture_t value();
+
 private:
     xcb_render_picture_t picture;
     Q_DISABLE_COPY(XRenderPictureData)
@@ -59,9 +60,10 @@ public:
     explicit XRenderPicture(const QImage &img);
     XRenderPicture(xcb_pixmap_t pix, int depth);
     operator xcb_render_picture_t();
+
 private:
     void fromImage(const QImage &img);
-    QExplicitlySharedDataPointer< XRenderPictureData > d;
+    QExplicitlySharedDataPointer<XRenderPictureData> d;
 };
 
 class KWINXRENDERUTILS_EXPORT XFixesRegion
@@ -71,36 +73,32 @@ public:
     virtual ~XFixesRegion();
 
     operator xcb_xfixes_region_t();
+
 private:
     xcb_xfixes_region_t m_region;
 };
 
-inline
-XRenderPictureData::XRenderPictureData(xcb_render_picture_t pic)
+inline XRenderPictureData::XRenderPictureData(xcb_render_picture_t pic)
     : picture(pic)
 {
 }
 
-inline
-xcb_render_picture_t XRenderPictureData::value()
+inline xcb_render_picture_t XRenderPictureData::value()
 {
     return picture;
 }
 
-inline
-XRenderPicture::XRenderPicture(xcb_render_picture_t pic)
+inline XRenderPicture::XRenderPicture(xcb_render_picture_t pic)
     : d(new XRenderPictureData(pic))
 {
 }
 
-inline
-XRenderPicture::operator xcb_render_picture_t()
+inline XRenderPicture::operator xcb_render_picture_t()
 {
     return d->value();
 }
 
-inline
-XFixesRegion::operator xcb_xfixes_region_t()
+inline XFixesRegion::operator xcb_xfixes_region_t()
 {
     return m_region;
 }

@@ -11,14 +11,14 @@
 #ifndef KWIN_POINTER_INPUT_H
 #define KWIN_POINTER_INPUT_H
 
-#include "input.h"
 #include "cursor.h"
+#include "input.h"
 #include "xcursortheme.h"
 
 #include <QElapsedTimer>
 #include <QObject>
-#include <QPointer>
 #include <QPointF>
+#include <QPointer>
 
 class QWindow;
 
@@ -55,10 +55,12 @@ public:
     bool supportsWarping() const;
     void warp(const QPointF &pos);
 
-    QPointF pos() const {
+    QPointF pos() const
+    {
         return m_pos;
     }
-    Qt::MouseButtons buttons() const {
+    Qt::MouseButtons buttons() const
+    {
         return m_qtButtons;
     }
     bool areButtonsPressed() const;
@@ -73,7 +75,8 @@ public:
 
     void setEnableConstraints(bool set);
 
-    bool isConstrained() const {
+    bool isConstrained() const
+    {
         return m_confined || m_locked;
     }
 
@@ -180,7 +183,8 @@ class WaylandCursorImage : public QObject
 public:
     explicit WaylandCursorImage(QObject *parent = nullptr);
 
-    struct Image {
+    struct Image
+    {
         QImage image;
         QPoint hotspot;
     };
@@ -255,11 +259,13 @@ private:
     WaylandCursorImage::Image m_fallbackCursor;
     WaylandCursorImage::Image m_moveResizeCursor;
     WaylandCursorImage::Image m_windowSelectionCursor;
-    struct {
+    struct
+    {
         WaylandCursorImage::Image cursor;
         QMetaObject::Connection connection;
     } m_drag;
-    struct {
+    struct
+    {
         QMetaObject::Connection connection;
         WaylandCursorImage::Image cursor;
     } m_serverCursor;
@@ -276,6 +282,7 @@ class InputRedirectionCursor : public KWin::Cursor
 public:
     explicit InputRedirectionCursor(QObject *parent);
     ~InputRedirectionCursor() override;
+
 protected:
     void doSetPos() override;
     void doStartCursorTracking() override;
@@ -284,6 +291,7 @@ private Q_SLOTS:
     void slotPosChanged(const QPointF &pos);
     void slotPointerButtonChanged();
     void slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods);
+
 private:
     Qt::MouseButtons m_currentButtons;
 };

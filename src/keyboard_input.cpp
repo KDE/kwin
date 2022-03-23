@@ -6,8 +6,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include <config-kwin.h>
 #include "keyboard_input.h"
+
+#include <config-kwin.h>
+
 #include "abstract_client.h"
 #include "input_event.h"
 #include "input_event_spy.h"
@@ -23,7 +25,7 @@
 #include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
-//screenlocker
+// screenlocker
 #if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
 #endif
@@ -127,22 +129,24 @@ void KeyboardInputRedirection::init()
 
     KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.data());
     connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
-        std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, InputRedirection::KeyboardKeyAutoRepeat, std::placeholders::_2, nullptr));
+            std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, InputRedirection::KeyboardKeyAutoRepeat, std::placeholders::_2, nullptr));
     m_input->installInputEventSpy(keyRepeatSpy);
 
-    connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
-    connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
-    connect(workspace(), &Workspace::clientActivated, this,
-        [this] {
-            disconnect(m_activeClientSurfaceChangedConnection);
-            if (auto c = workspace()->activeClient()) {
-                m_activeClientSurfaceChangedConnection = connect(c, &Toplevel::surfaceChanged, this, &KeyboardInputRedirection::update);
-            } else {
-                m_activeClientSurfaceChangedConnection = QMetaObject::Connection();
-            }
-            update();
+    connect(workspace(), &QObject::destroyed, this, [this] {
+        m_inited = false;
+    });
+    connect(waylandServer(), &QObject::destroyed, this, [this] {
+        m_inited = false;
+    });
+    connect(workspace(), &Workspace::clientActivated, this, [this] {
+        disconnect(m_activeClientSurfaceChangedConnection);
+        if (auto c = workspace()->activeClient()) {
+            m_activeClientSurfaceChangedConnection = connect(c, &Toplevel::surfaceChanged, this, &KeyboardInputRedirection::update);
+        } else {
+            m_activeClientSurfaceChangedConnection = QMetaObject::Connection();
         }
-    );
+        update();
+    });
 #if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);

@@ -7,6 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "decorationbridge.h"
+
+#include <config-kwin.h>
+
 #include "decoratedclient.h"
 #include "decorations_logging.h"
 #include "settings.h"
@@ -14,11 +17,10 @@
 #include "abstract_client.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include <config-kwin.h>
 
 // KDecoration
-#include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
+#include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
 
 // KWayland
@@ -140,7 +142,9 @@ void DecorationBridge::initPlugin()
 
 static void recreateDecorations()
 {
-    Workspace::self()->forEachAbstractClient([](AbstractClient *c) { c->invalidateDecoration(); });
+    Workspace::self()->forEachAbstractClient([](AbstractClient *c) {
+        c->invalidateDecoration();
+    });
 }
 
 void DecorationBridge::reconfigure()
@@ -228,7 +232,7 @@ void DecorationBridge::findTheme(const QVariantMap &map)
 
 std::unique_ptr<KDecoration2::DecoratedClientPrivate> DecorationBridge::createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration)
 {
-    return std::unique_ptr<DecoratedClientImpl>(new DecoratedClientImpl(static_cast<AbstractClient*>(decoration->parent()), client, decoration));
+    return std::unique_ptr<DecoratedClientImpl>(new DecoratedClientImpl(static_cast<AbstractClient *>(decoration->parent()), client, decoration));
 }
 
 std::unique_ptr<KDecoration2::DecorationSettingsPrivate> DecorationBridge::settings(KDecoration2::DecorationSettings *parent)
@@ -244,7 +248,7 @@ KDecoration2::Decoration *DecorationBridge::createDecoration(AbstractClient *cli
     if (!m_factory) {
         return nullptr;
     }
-    QVariantMap args({ {QStringLiteral("bridge"), QVariant::fromValue(this)} });
+    QVariantMap args({{QStringLiteral("bridge"), QVariant::fromValue(this)}});
 
     if (!m_theme.isEmpty()) {
         args.insert(QStringLiteral("theme"), m_theme);
@@ -255,8 +259,7 @@ KDecoration2::Decoration *DecorationBridge::createDecoration(AbstractClient *cli
     return deco;
 }
 
-static
-QString settingsProperty(const QVariant &variant)
+static QString settingsProperty(const QVariant &variant)
 {
     if (QLatin1String(variant.typeName()) == QLatin1String("KDecoration2::BorderSize")) {
         return QString::number(variant.toInt());
@@ -284,7 +287,7 @@ QString DecorationBridge::supportInformation() const
         b.append(QStringLiteral("Theme: %1\n").arg(m_theme));
         b.append(QStringLiteral("Plugin recommends border size: %1\n").arg(m_recommendedBorderSize.isNull() ? "No" : m_recommendedBorderSize));
         const QMetaObject *metaOptions = m_settings->metaObject();
-        for (int i=0; i<metaOptions->propertyCount(); ++i) {
+        for (int i = 0; i < metaOptions->propertyCount(); ++i) {
             const QMetaProperty property = metaOptions->property(i);
             if (QLatin1String(property.name()) == QLatin1String("objectName")) {
                 continue;

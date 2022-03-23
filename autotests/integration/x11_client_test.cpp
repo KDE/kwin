@@ -7,17 +7,18 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "atoms.h"
-#include "x11client.h"
 #include "composite.h"
-#include "effects.h"
-#include "effectloader.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "effectloader.h"
+#include "effects.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KWayland/Client/surface.h>
 
@@ -30,7 +31,7 @@ static const QString s_socketName = QStringLiteral("wayland_test_x11_client-0");
 
 class X11ClientTest : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
     void init();
@@ -55,8 +56,8 @@ private Q_SLOTS:
 
 void X11ClientTest::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted*>();
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::Deleted *>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -726,8 +727,9 @@ void X11ClientTest::testX11WindowId()
     QUuid deletedUuid;
     QCOMPARE(deletedUuid.isNull(), true);
 
-    connect(client, &X11Client::windowClosed, this, [&deletedUuid] (Toplevel *, Deleted *d) { deletedUuid = d->internalId(); });
-
+    connect(client, &X11Client::windowClosed, this, [&deletedUuid](Toplevel *, Deleted *d) {
+        deletedUuid = d->internalId();
+    });
 
     NETRootInfo rootInfo(c.data(), NET::WMAllProperties);
     QCOMPARE(rootInfo.activeWindow(), client->window());
@@ -908,7 +910,6 @@ void X11ClientTest::testCaptionMultipleWindows()
     QCOMPARE(QByteArray(info5.visibleName()), QByteArray());
     QTRY_COMPARE(QByteArray(info5.visibleIconName()), QByteArray());
 }
-
 
 void X11ClientTest::testFullscreenWindowGroups()
 {

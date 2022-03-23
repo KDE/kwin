@@ -26,35 +26,43 @@ public:
                         const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestampMicroseconds,
                         InputDevice *device);
 
-    QSizeF delta() const {
+    QSizeF delta() const
+    {
         return m_delta;
     }
 
-    QSizeF deltaUnaccelerated() const {
+    QSizeF deltaUnaccelerated() const
+    {
         return m_deltaUnccelerated;
     }
 
-    quint64 timestampMicroseconds() const {
+    quint64 timestampMicroseconds() const
+    {
         return m_timestampMicroseconds;
     }
 
-    InputDevice *device() const {
+    InputDevice *device() const
+    {
         return m_device;
     }
 
-    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const {
+    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const
+    {
         return m_modifiersRelevantForShortcuts;
     }
 
-    void setModifiersRelevantForGlobalShortcuts(const Qt::KeyboardModifiers &mods) {
+    void setModifiersRelevantForGlobalShortcuts(const Qt::KeyboardModifiers &mods)
+    {
         m_modifiersRelevantForShortcuts = mods;
     }
 
-    quint32 nativeButton() const {
+    quint32 nativeButton() const
+    {
         return m_nativeButton;
     }
 
-    void setNativeButton(quint32 button) {
+    void setNativeButton(quint32 button)
+    {
         m_nativeButton = button;
     }
 
@@ -75,31 +83,38 @@ public:
                         Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, InputRedirection::PointerAxisSource source,
                         quint32 timestamp, InputDevice *device);
 
-    Qt::Orientation orientation() const {
+    Qt::Orientation orientation() const
+    {
         return m_orientation;
     }
 
-    qreal delta() const {
+    qreal delta() const
+    {
         return m_delta;
     }
 
-    qint32 discreteDelta() const {
+    qint32 discreteDelta() const
+    {
         return m_discreteDelta;
     }
 
-    InputRedirection::PointerAxisSource axisSource() const {
+    InputRedirection::PointerAxisSource axisSource() const
+    {
         return m_source;
     }
 
-    InputDevice *device() const {
+    InputDevice *device() const
+    {
         return m_device;
     }
 
-    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const {
+    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const
+    {
         return m_modifiersRelevantForShortcuts;
     }
 
-    void setModifiersRelevantForGlobalShortcuts(const Qt::KeyboardModifiers &mods) {
+    void setModifiersRelevantForGlobalShortcuts(const Qt::KeyboardModifiers &mods)
+    {
         m_modifiersRelevantForShortcuts = mods;
     }
 
@@ -118,15 +133,18 @@ public:
     explicit KeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifiers, quint32 code, quint32 keysym,
                       const QString &text, bool autorepeat, quint32 timestamp, InputDevice *device);
 
-    InputDevice *device() const {
+    InputDevice *device() const
+    {
         return m_device;
     }
 
-    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const {
+    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const
+    {
         return m_modifiersRelevantForShortcuts;
     }
 
-    void setModifiersRelevantForGlobalShortcuts(const Qt::KeyboardModifiers &mods) {
+    void setModifiersRelevantForGlobalShortcuts(const Qt::KeyboardModifiers &mods)
+    {
         m_modifiersRelevantForShortcuts = mods;
     }
 
@@ -144,15 +162,18 @@ public:
     };
     explicit SwitchEvent(State state, quint32 timestamp, quint64 timestampMicroseconds, InputDevice *device);
 
-    State state() const {
+    State state() const
+    {
         return m_state;
     }
 
-    quint64 timestampMicroseconds() const {
+    quint64 timestampMicroseconds() const
+    {
         return m_timestampMicroseconds;
     }
 
-    InputDevice *device() const {
+    InputDevice *device() const
+    {
         return m_device;
     }
 
@@ -187,7 +208,8 @@ public:
                 Qt::KeyboardModifiers keyState, qint64 uniqueID,
                 Qt::MouseButton button, Qt::MouseButtons buttons, const TabletToolId &tabletId);
 
-    const TabletToolId &tabletId() const {
+    const TabletToolId &tabletId() const
+    {
         return m_id;
     }
 

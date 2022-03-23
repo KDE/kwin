@@ -7,15 +7,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_output.h"
-#include "platform.h"
 #include "activities.h"
-#include "x11client.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "platform.h"
+#include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "utils/xcbutils.h"
+#include "x11client.h"
 #include <kwineffects.h>
 
 #include <QDBusConnection>
@@ -45,8 +46,8 @@ private:
 
 void ActivitiesTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Deleted*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -103,11 +104,11 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     const QRect windowGeometry(0, 0, 100, 200);
 
     auto cookie = xcb_create_window_checked(c.data(), 0, w, rootWindow(),
-                      windowGeometry.x(),
-                      windowGeometry.y(),
-                      windowGeometry.width(),
-                      windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, 0, 0, nullptr);
+                                            windowGeometry.x(),
+                                            windowGeometry.y(),
+                                            windowGeometry.width(),
+                                            windowGeometry.height(),
+                                            0, XCB_WINDOW_CLASS_INPUT_OUTPUT, 0, 0, nullptr);
     QVERIFY(!xcb_request_check(c.data(), cookie));
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
@@ -126,7 +127,7 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     QCOMPARE(client->window(), w);
     QVERIFY(client->isDecorated());
 
-    //verify the test machine doesn't have the following activities used
+    // verify the test machine doesn't have the following activities used
     QVERIFY(!Activities::self()->all().contains(QStringLiteral("foo")));
     QVERIFY(!Activities::self()->all().contains(QStringLiteral("bar")));
 

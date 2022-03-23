@@ -8,14 +8,16 @@
 */
 #include "drm_output.h"
 #include "drm_backend.h"
-#include "drm_object_crtc.h"
-#include "drm_object_connector.h"
-#include "drm_gpu.h"
-#include "drm_pipeline.h"
 #include "drm_buffer.h"
+#include "drm_gpu.h"
+#include "drm_object_connector.h"
+#include "drm_object_crtc.h"
+#include "drm_pipeline.h"
 
 #include "composite.h"
 #include "cursor.h"
+#include "drm_layer.h"
+#include "dumb_swapchain.h"
 #include "logging.h"
 #include "main.h"
 #include "renderloop.h"
@@ -24,19 +26,16 @@
 #include "screens.h"
 #include "session.h"
 #include "waylandoutputconfig.h"
-#include "dumb_swapchain.h"
-#include "cursor.h"
-#include "drm_layer.h"
 // Qt
-#include <QMatrix4x4>
 #include <QCryptographicHash>
+#include <QMatrix4x4>
 #include <QPainter>
 // c++
 #include <cerrno>
 // drm
-#include <xf86drm.h>
-#include <libdrm/drm_mode.h>
 #include <drm_fourcc.h>
+#include <libdrm/drm_mode.h>
+#include <xf86drm.h>
 
 namespace KWin
 {

@@ -22,7 +22,7 @@ class KWIN_EXPORT Deleted : public Toplevel
     Q_OBJECT
 
 public:
-    static Deleted* create(Toplevel* c);
+    static Deleted *create(Toplevel *c);
     // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
     void refWindow();
     void unrefWindow();
@@ -35,38 +35,48 @@ public:
     bool isDeleted() const override;
     xcb_window_t frameId() const override;
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
-    Layer layer() const override {
+    Layer layer() const override
+    {
         return m_layer;
     }
-    bool isShade() const override {
+    bool isShade() const override
+    {
         return m_shade;
     }
-    bool isMinimized() const {
+    bool isMinimized() const
+    {
         return m_minimized;
     }
-    bool isModal() const {
+    bool isModal() const
+    {
         return m_modal;
     }
-    QList<AbstractClient*> mainClients() const {
+    QList<AbstractClient *> mainClients() const
+    {
         return m_mainClients;
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
-    bool wasClient() const {
+    bool wasClient() const
+    {
         return m_wasClient;
     }
     QByteArray windowRole() const override;
 
-    bool isFullScreen() const {
+    bool isFullScreen() const
+    {
         return m_fullscreen;
     }
 
-    bool keepAbove() const {
+    bool keepAbove() const
+    {
         return m_keepAbove;
     }
-    bool keepBelow() const {
+    bool keepBelow() const
+    {
         return m_keepBelow;
     }
-    QString caption() const {
+    QString caption() const
+    {
         return m_caption;
     }
 
@@ -75,7 +85,8 @@ public:
      *
      * @returns @c true if the client was a popup, @c false otherwise.
      */
-    bool isPopupWindow() const override {
+    bool isPopupWindow() const override
+    {
         return m_wasPopupWindow;
     }
 
@@ -84,10 +95,12 @@ public:
     /**
      * Whether this Deleted represents the outline.
      */
-    bool isOutline() const override {
+    bool isOutline() const override
+    {
         return m_wasOutline;
     }
-    bool isLockScreen() const override {
+    bool isLockScreen() const override
+    {
         return m_wasLockScreen;
     }
 
@@ -95,8 +108,8 @@ private Q_SLOTS:
     void mainClientClosed(KWin::Toplevel *client);
 
 private:
-    Deleted();   // use create()
-    void copyToDeleted(Toplevel* c);
+    Deleted(); // use create()
+    void copyToDeleted(Toplevel *c);
     ~Deleted() override; // deleted only using unrefWindow()
 
     QMargins m_frameMargins;
@@ -106,7 +119,7 @@ private:
     QStringList activityList;
     QRect contentsRect; // for clientPos()/clientSize()
     xcb_window_t m_frame;
-    QVector <VirtualDesktop *> m_desktops;
+    QVector<VirtualDesktop *> m_desktops;
 
     QRect decoration_left;
     QRect decoration_right;
@@ -116,7 +129,7 @@ private:
     bool m_shade;
     bool m_minimized;
     bool m_modal;
-    QList<AbstractClient*> m_mainClients;
+    QList<AbstractClient *> m_mainClients;
     bool m_wasClient;
     NET::WindowType m_type = NET::Unknown;
     QByteArray m_windowRole;
@@ -136,6 +149,6 @@ inline void Deleted::refWindow()
 
 } // namespace
 
-Q_DECLARE_METATYPE(KWin::Deleted*)
+Q_DECLARE_METATYPE(KWin::Deleted *)
 
 #endif

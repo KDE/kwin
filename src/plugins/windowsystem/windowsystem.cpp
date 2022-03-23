@@ -247,7 +247,9 @@ void WindowSystem::setState(WId win, NET::States state)
 void WindowSystem::setType(WId win, NET::WindowType windowType)
 {
     const auto windows = qApp->allWindows();
-    auto it = std::find_if(windows.begin(), windows.end(), [win] (QWindow *w) { return w->winId() == win; });
+    auto it = std::find_if(windows.begin(), windows.end(), [win](QWindow *w) {
+        return w->winId() == win;
+    });
     if (it == windows.end()) {
         return;
     }
@@ -267,7 +269,7 @@ bool WindowSystem::showingDesktop()
     return false;
 }
 
-QList< WId > WindowSystem::stackingOrder()
+QList<WId> WindowSystem::stackingOrder()
 {
     // KWin should not use KWindowSystem for stacking order
     return {};
@@ -293,12 +295,12 @@ int WindowSystem::viewportWindowToDesktop(const QRect &r)
     return 0;
 }
 
-QList< WId > WindowSystem::windows()
+QList<WId> WindowSystem::windows()
 {
     return {};
 }
 
-QRect WindowSystem::workArea(const QList< WId > &excludes, int desktop)
+QRect WindowSystem::workArea(const QList<WId> &excludes, int desktop)
 {
     Q_UNUSED(excludes)
     Q_UNUSED(desktop)

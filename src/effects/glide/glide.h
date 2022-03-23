@@ -55,10 +55,10 @@ public:
     static bool supported();
 
     enum RotationEdge {
-        Top    = 0,
-        Right  = 1,
+        Top = 0,
+        Right = 1,
         Bottom = 2,
-        Left   = 3
+        Left = 3
     };
     Q_ENUM(RotationEdge)
 
@@ -84,9 +84,11 @@ private:
     std::chrono::milliseconds m_duration;
     QHash<EffectWindow *, GlideAnimation> m_animations;
 
-    struct GlideParams {
+    struct GlideParams
+    {
         RotationEdge edge;
-        struct {
+        struct
+        {
             qreal from;
             qreal to;
         } angle, distance, opacity;

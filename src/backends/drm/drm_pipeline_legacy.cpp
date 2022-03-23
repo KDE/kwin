@@ -7,13 +7,13 @@
  *    SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-#include "drm_pipeline.h"
-#include "drm_gpu.h"
 #include "drm_buffer.h"
-#include "drm_object_crtc.h"
-#include "drm_object_connector.h"
-#include "logging.h"
+#include "drm_gpu.h"
 #include "drm_layer.h"
+#include "drm_object_connector.h"
+#include "drm_object_crtc.h"
+#include "drm_pipeline.h"
+#include "logging.h"
 
 #include <errno.h>
 
@@ -52,7 +52,7 @@ bool DrmPipeline::legacyModeset()
     return true;
 }
 
-bool DrmPipeline::commitPipelinesLegacy(const QVector<DrmPipeline*> &pipelines, CommitMode mode)
+bool DrmPipeline::commitPipelinesLegacy(const QVector<DrmPipeline *> &pipelines, CommitMode mode)
 {
     bool failure = false;
     for (const auto &pipeline : pipelines) {
@@ -102,11 +102,10 @@ bool DrmPipeline::applyPendingChangesLegacy()
             m_connector->getProp(DrmConnector::PropertyIndex::Underscan_vborder)->setPropertyLegacy(pending.overscan);
             m_connector->getProp(DrmConnector::PropertyIndex::Underscan_hborder)->setPropertyLegacy(hborder);
         }
-        if (needsModeset() &&!legacyModeset()) {
+        if (needsModeset() && !legacyModeset()) {
             return false;
         }
-        if (pending.gamma && drmModeCrtcSetGamma(gpu()->fd(), pending.crtc->id(), pending.gamma->size(),
-                                    pending.gamma->red(), pending.gamma->green(), pending.gamma->blue()) != 0) {
+        if (pending.gamma && drmModeCrtcSetGamma(gpu()->fd(), pending.crtc->id(), pending.gamma->size(), pending.gamma->red(), pending.gamma->green(), pending.gamma->blue()) != 0) {
             qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
             return false;
         }

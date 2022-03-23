@@ -11,22 +11,22 @@
 
 #include <errno.h>
 
-#include "logging.h"
+#include "cursor.h"
+#include "drm_backend.h"
+#include "drm_buffer.h"
+#include "drm_buffer_gbm.h"
 #include "drm_gpu.h"
+#include "drm_layer.h"
 #include "drm_object_connector.h"
 #include "drm_object_crtc.h"
 #include "drm_object_plane.h"
-#include "drm_buffer.h"
-#include "cursor.h"
-#include "session.h"
 #include "drm_output.h"
-#include "drm_backend.h"
 #include "egl_gbm_backend.h"
-#include "drm_buffer_gbm.h"
-#include "drm_layer.h"
+#include "logging.h"
+#include "session.h"
 
-#include <gbm.h>
 #include <drm_fourcc.h>
+#include <gbm.h>
 
 namespace KWin
 {
@@ -79,7 +79,7 @@ bool DrmPipeline::present()
     return true;
 }
 
-bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects)
+bool DrmPipeline::commitPipelines(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects)
 {
     Q_ASSERT(!pipelines.isEmpty());
     if (pipelines[0]->gpu()->atomicModeSetting()) {
@@ -89,7 +89,7 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline*> &pipelines, Commit
     }
 }
 
-bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects)
+bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects)
 {
     drmModeAtomicReq *req = drmModeAtomicAlloc();
     if (!req) {
@@ -97,7 +97,7 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline*> &pipelines, 
         return false;
     }
     uint32_t flags = 0;
-    const auto &failed = [pipelines, req, &flags, unusedObjects](){
+    const auto &failed = [pipelines, req, &flags, unusedObjects]() {
         drmModeAtomicFree(req);
         printFlags(flags);
         for (const auto &pipeline : pipelines) {
@@ -413,8 +413,7 @@ DrmOutput *DrmPipeline::output() const
 }
 
 static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {
-    {DRM_FORMAT_XRGB8888, {}}
-};
+    {DRM_FORMAT_XRGB8888, {}}};
 
 bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const
 {
@@ -528,17 +527,17 @@ uint32_t DrmGammaRamp::size() const
 
 uint16_t *DrmGammaRamp::red() const
 {
-    return const_cast<uint16_t*>(m_lut.red());
+    return const_cast<uint16_t *>(m_lut.red());
 }
 
 uint16_t *DrmGammaRamp::green() const
 {
-    return const_cast<uint16_t*>(m_lut.green());
+    return const_cast<uint16_t *>(m_lut.green());
 }
 
 uint16_t *DrmGammaRamp::blue() const
 {
-    return const_cast<uint16_t*>(m_lut.blue());
+    return const_cast<uint16_t *>(m_lut.blue());
 }
 
 void DrmPipeline::printFlags(uint32_t flags)
@@ -562,9 +561,9 @@ void DrmPipeline::printFlags(uint32_t flags)
 void DrmPipeline::printProps(DrmObject *object, PrintMode mode)
 {
     auto list = object->properties();
-    bool any = mode == PrintMode::All || std::any_of(list.constBegin(), list.constEnd(), [](const auto &prop){
-        return prop && !prop->isImmutable() && prop->needsCommit();
-    });
+    bool any = mode == PrintMode::All || std::any_of(list.constBegin(), list.constEnd(), [](const auto &prop) {
+                   return prop && !prop->isImmutable() && prop->needsCommit();
+               });
     if (!any) {
         return;
     }

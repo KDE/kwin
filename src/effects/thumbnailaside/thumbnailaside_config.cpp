@@ -6,40 +6,42 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "thumbnailaside_config.h"
+
+#include <config-kwin.h>
+
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
-#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <QAction>
 
-#include <KLocalizedString>
-#include <kconfiggroup.h>
 #include <KActionCollection>
 #include <KGlobalAccel>
+#include <KLocalizedString>
 #include <KPluginFactory>
+#include <kconfiggroup.h>
 
-#include <QWidget>
 #include <QVBoxLayout>
+#include <QWidget>
 
 K_PLUGIN_CLASS(KWin::ThumbnailAsideEffectConfig)
 
 namespace KWin
 {
 
-ThumbnailAsideEffectConfigForm::ThumbnailAsideEffectConfigForm(QWidget* parent) : QWidget(parent)
+ThumbnailAsideEffectConfigForm::ThumbnailAsideEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     m_ui = new ThumbnailAsideEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->addWidget(m_ui);
 
@@ -55,7 +57,7 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
     m_actionCollection->setConfigGroup(QStringLiteral("ThumbnailAside"));
     m_actionCollection->setConfigGlobal(true);
 
-    QAction* a = m_actionCollection->addAction(QStringLiteral("ToggleCurrentThumbnail"));
+    QAction *a = m_actionCollection->addAction(QStringLiteral("ToggleCurrentThumbnail"));
     a->setText(i18n("Toggle Thumbnail for Current Window"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::CTRL | Qt::Key_T));

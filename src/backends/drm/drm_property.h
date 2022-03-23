@@ -12,9 +12,9 @@
 
 #include <xf86drmMode.h>
 
-#include <QVector>
-#include <QMap>
 #include <QByteArray>
+#include <QMap>
+#include <QVector>
 
 namespace KWin
 {
@@ -32,12 +32,14 @@ public:
     QVector<QByteArray> enumNames() const;
     bool hasEnum(uint64_t value) const;
     bool hasAllEnums() const;
-    template <typename T>
-    T enumForValue(uint64_t value) const {
+    template<typename T>
+    T enumForValue(uint64_t value) const
+    {
         return static_cast<T>(m_enumMap[value]);
     }
-    template <typename T>
-    bool setEnum(T index) {
+    template<typename T>
+    bool setEnum(T index)
+    {
         if (hasEnum(static_cast<uint64_t>(index))) {
             setPending(m_enumMap[static_cast<uint32_t>(index)]);
             return true;
@@ -50,8 +52,8 @@ public:
     bool isImmutable() const;
     bool isLegacy() const;
     /**
-    * Makes this property be ignored by DrmObject::atomicPopulate
-    */
+     * Makes this property be ignored by DrmObject::atomicPopulate
+     */
     void setLegacy();
 
     void setPending(uint64_t value);
@@ -70,7 +72,8 @@ public:
 
     bool setPropertyLegacy(uint64_t value);
     template<typename T>
-    bool setEnumLegacy(T value) {
+    bool setEnumLegacy(T value)
+    {
         if (hasEnum(static_cast<uint64_t>(value))) {
             return setPropertyLegacy(m_enumMap[static_cast<uint32_t>(value)]);
         }

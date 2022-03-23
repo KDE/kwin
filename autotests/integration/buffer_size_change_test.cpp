@@ -25,7 +25,10 @@ class BufferSizeChangeTest : public GenericSceneOpenGLTest
 {
     Q_OBJECT
 public:
-    BufferSizeChangeTest() : GenericSceneOpenGLTest(QByteArrayLiteral("O2")) {}
+    BufferSizeChangeTest()
+        : GenericSceneOpenGLTest(QByteArrayLiteral("O2"))
+    {
+    }
 private Q_SLOTS:
     void init();
     void testShmBufferSizeChange();

@@ -7,18 +7,19 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "zoom_config.h"
+
+#include <config-kwin.h>
+
 // KConfigSkeleton
 #include "zoomconfig.h"
-#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <QAction>
 
+#include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <KActionCollection>
 #include <KPluginFactory>
 
 #include <QVBoxLayout>
@@ -28,18 +29,19 @@ K_PLUGIN_CLASS(KWin::ZoomEffectConfig)
 namespace KWin
 {
 
-ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget* parent) : QWidget(parent)
+ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+ZoomEffectConfig::ZoomEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     ZoomConfig::instance(KWIN_CONFIG);
     m_ui = new ZoomEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
     addConfig(ZoomConfig::self(), m_ui);
@@ -57,7 +59,7 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
     actionCollection->setConfigGroup(QStringLiteral("Zoom"));
     actionCollection->setConfigGlobal(true);
 
-    QAction* a;
+    QAction *a;
     a = actionCollection->addAction(KStandardAction::ZoomIn);
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));

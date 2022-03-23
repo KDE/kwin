@@ -82,10 +82,10 @@ void TestLibinputPointerEvent::testType()
     QCOMPARE(event->type(), type);
     QCOMPARE(event->device(), m_device);
     QCOMPARE(event->nativeDevice(), m_nativeDevice);
-    QCOMPARE((libinput_event*)(*event.data()), pointerEvent);
+    QCOMPARE((libinput_event *)(*event.data()), pointerEvent);
     // verify it's a pointer event
-    QVERIFY(dynamic_cast<PointerEvent*>(event.data()));
-    QCOMPARE((libinput_event_pointer*)(*dynamic_cast<PointerEvent*>(event.data())), pointerEvent);
+    QVERIFY(dynamic_cast<PointerEvent *>(event.data()));
+    QCOMPARE((libinput_event_pointer *)(*dynamic_cast<PointerEvent *>(event.data())), pointerEvent);
 }
 
 void TestLibinputPointerEvent::testButton_data()
@@ -113,7 +113,7 @@ void TestLibinputPointerEvent::testButton()
     pointerEvent->time = time;
 
     QScopedPointer<Event> event(Event::create(pointerEvent));
-    auto pe = dynamic_cast<PointerEvent*>(event.data());
+    auto pe = dynamic_cast<PointerEvent *>(event.data());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_BUTTON);
     QTEST(pe->buttonState(), "expectedButtonState");
@@ -132,20 +132,20 @@ void TestLibinputPointerEvent::testAxis_data()
     QTest::addColumn<KWin::InputRedirection::PointerAxisSource>("expectedAxisSource");
     QTest::addColumn<quint32>("time");
 
-    QTest::newRow("wheel/horizontal") << true  << false << QPointF(3.0, 0.0) << QPoint(1, 0) << LIBINPUT_POINTER_AXIS_SOURCE_WHEEL << KWin::InputRedirection::PointerAxisSourceWheel << 100u;
-    QTest::newRow("wheel/vertical")   << false << true  << QPointF(0.0, 2.5) << QPoint(0, 1) << LIBINPUT_POINTER_AXIS_SOURCE_WHEEL << KWin::InputRedirection::PointerAxisSourceWheel << 200u;
-    QTest::newRow("wheel/both")       << true  << true  << QPointF(1.1, 4.2) << QPoint(1, 1) << LIBINPUT_POINTER_AXIS_SOURCE_WHEEL << KWin::InputRedirection::PointerAxisSourceWheel << 300u;
+    QTest::newRow("wheel/horizontal") << true << false << QPointF(3.0, 0.0) << QPoint(1, 0) << LIBINPUT_POINTER_AXIS_SOURCE_WHEEL << KWin::InputRedirection::PointerAxisSourceWheel << 100u;
+    QTest::newRow("wheel/vertical") << false << true << QPointF(0.0, 2.5) << QPoint(0, 1) << LIBINPUT_POINTER_AXIS_SOURCE_WHEEL << KWin::InputRedirection::PointerAxisSourceWheel << 200u;
+    QTest::newRow("wheel/both") << true << true << QPointF(1.1, 4.2) << QPoint(1, 1) << LIBINPUT_POINTER_AXIS_SOURCE_WHEEL << KWin::InputRedirection::PointerAxisSourceWheel << 300u;
 
-    QTest::newRow("finger/horizontal")      << true  << false << QPointF(3.0, 0.0) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 400u;
-    QTest::newRow("stop finger/horizontal") << true  << false << QPointF(0.0, 0.0) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 500u;
-    QTest::newRow("finger/vertical")        << false << true  << QPointF(0.0, 2.5) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 600u;
-    QTest::newRow("stop finger/vertical")   << false << true  << QPointF(0.0, 0.0) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 700u;
-    QTest::newRow("finger/both")            << true  << true  << QPointF(1.1, 4.2) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 800u;
-    QTest::newRow("stop finger/both")       << true  << true  << QPointF(0.0, 0.0) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 900u;
+    QTest::newRow("finger/horizontal") << true << false << QPointF(3.0, 0.0) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 400u;
+    QTest::newRow("stop finger/horizontal") << true << false << QPointF(0.0, 0.0) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 500u;
+    QTest::newRow("finger/vertical") << false << true << QPointF(0.0, 2.5) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 600u;
+    QTest::newRow("stop finger/vertical") << false << true << QPointF(0.0, 0.0) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 700u;
+    QTest::newRow("finger/both") << true << true << QPointF(1.1, 4.2) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 800u;
+    QTest::newRow("stop finger/both") << true << true << QPointF(0.0, 0.0) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_FINGER << KWin::InputRedirection::PointerAxisSourceFinger << 900u;
 
-    QTest::newRow("continuous/horizontal") << true  << false << QPointF(3.0, 0.0) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_CONTINUOUS << KWin::InputRedirection::PointerAxisSourceContinuous << 1000u;
-    QTest::newRow("continuous/vertical")   << false << true  << QPointF(0.0, 2.5) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_CONTINUOUS << KWin::InputRedirection::PointerAxisSourceContinuous << 1100u;
-    QTest::newRow("continuous/both")       << true  << true  << QPointF(1.1, 4.2) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_CONTINUOUS << KWin::InputRedirection::PointerAxisSourceContinuous << 1200u;
+    QTest::newRow("continuous/horizontal") << true << false << QPointF(3.0, 0.0) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_CONTINUOUS << KWin::InputRedirection::PointerAxisSourceContinuous << 1000u;
+    QTest::newRow("continuous/vertical") << false << true << QPointF(0.0, 2.5) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_CONTINUOUS << KWin::InputRedirection::PointerAxisSourceContinuous << 1100u;
+    QTest::newRow("continuous/both") << true << true << QPointF(1.1, 4.2) << QPoint(0, 0) << LIBINPUT_POINTER_AXIS_SOURCE_CONTINUOUS << KWin::InputRedirection::PointerAxisSourceContinuous << 1200u;
 }
 
 void TestLibinputPointerEvent::testAxis()
@@ -170,7 +170,7 @@ void TestLibinputPointerEvent::testAxis()
     pointerEvent->time = time;
 
     QScopedPointer<Event> event(Event::create(pointerEvent));
-    auto pe = dynamic_cast<PointerEvent*>(event.data());
+    auto pe = dynamic_cast<PointerEvent *>(event.data());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_AXIS);
     QCOMPARE(pe->axis().contains(KWin::InputRedirection::PointerAxisHorizontal), horizontal);
@@ -193,7 +193,7 @@ void TestLibinputPointerEvent::testMotion()
     pointerEvent->time = 500u;
 
     QScopedPointer<Event> event(Event::create(pointerEvent));
-    auto pe = dynamic_cast<PointerEvent*>(event.data());
+    auto pe = dynamic_cast<PointerEvent *>(event.data());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_MOTION);
     QCOMPARE(pe->time(), 500u);
@@ -210,7 +210,7 @@ void TestLibinputPointerEvent::testAbsoluteMotion()
     pointerEvent->time = 500u;
 
     QScopedPointer<Event> event(Event::create(pointerEvent));
-    auto pe = dynamic_cast<PointerEvent*>(event.data());
+    auto pe = dynamic_cast<PointerEvent *>(event.data());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE);
     QCOMPARE(pe->time(), 500u);

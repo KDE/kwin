@@ -7,17 +7,19 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "virtual_backend.h"
-#include "virtual_output.h"
+
+#include <config-kwin.h>
+
+#include "egl_gbm_backend.h"
 #include "scene_qpainter_virtual_backend.h"
 #include "session.h"
+#include "virtual_output.h"
 #include "wayland_server.h"
-#include "egl_gbm_backend.h"
 // Qt
 #include <QTemporaryDir>
 // system
 #include <fcntl.h>
 #include <unistd.h>
-#include <config-kwin.h>
 
 namespace KWin
 {
@@ -64,7 +66,7 @@ bool VirtualBackend::initialize()
     if (m_outputs.isEmpty()) {
         VirtualOutput *dummyOutput = new VirtualOutput(this);
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
-        m_outputs << dummyOutput ;
+        m_outputs << dummyOutput;
         m_outputsEnabled << dummyOutput;
         Q_EMIT outputAdded(dummyOutput);
         Q_EMIT outputEnabled(dummyOutput);

@@ -20,9 +20,9 @@
 #include "waylandclient.h"
 #include "workspace.h"
 #include "x11client.h"
+#include <cerrno>
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
-#include <cerrno>
 
 #include "ui_debug_console.h"
 
@@ -61,15 +61,13 @@
 namespace KWin
 {
 
-
 static QString tableHeaderRow(const QString &title)
 {
     return QStringLiteral("<tr><th colspan=\"2\">%1</th></tr>").arg(title);
 }
 
 template<typename T>
-static
-QString tableRow(const QString &title, const T &argument)
+static QString tableRow(const QString &title, const T &argument)
 {
     return QStringLiteral("<tr><td>%1</td><td>%2</td></tr>").arg(title).arg(argument);
 }
@@ -87,60 +85,60 @@ static QString timestampRowUsec(quint64 timestamp)
 static QString buttonToString(Qt::MouseButton button)
 {
     switch (button) {
-        case Qt::LeftButton:
-            return i18nc("A mouse button", "Left");
-        case Qt::RightButton:
-            return i18nc("A mouse button", "Right");
-        case Qt::MiddleButton:
-            return i18nc("A mouse button", "Middle");
-        case Qt::BackButton:
-            return i18nc("A mouse button", "Back");
-        case Qt::ForwardButton:
-            return i18nc("A mouse button", "Forward");
-        case Qt::TaskButton:
-            return i18nc("A mouse button", "Task");
-        case Qt::ExtraButton4:
-            return i18nc("A mouse button", "Extra Button 4");
-        case Qt::ExtraButton5:
-            return i18nc("A mouse button", "Extra Button 5");
-        case Qt::ExtraButton6:
-            return i18nc("A mouse button", "Extra Button 6");
-        case Qt::ExtraButton7:
-            return i18nc("A mouse button", "Extra Button 7");
-        case Qt::ExtraButton8:
-            return i18nc("A mouse button", "Extra Button 8");
-        case Qt::ExtraButton9:
-            return i18nc("A mouse button", "Extra Button 9");
-        case Qt::ExtraButton10:
-            return i18nc("A mouse button", "Extra Button 10");
-        case Qt::ExtraButton11:
-            return i18nc("A mouse button", "Extra Button 11");
-        case Qt::ExtraButton12:
-            return i18nc("A mouse button", "Extra Button 12");
-        case Qt::ExtraButton13:
-            return i18nc("A mouse button", "Extra Button 13");
-        case Qt::ExtraButton14:
-            return i18nc("A mouse button", "Extra Button 14");
-        case Qt::ExtraButton15:
-            return i18nc("A mouse button", "Extra Button 15");
-        case Qt::ExtraButton16:
-            return i18nc("A mouse button", "Extra Button 16");
-        case Qt::ExtraButton17:
-            return i18nc("A mouse button", "Extra Button 17");
-        case Qt::ExtraButton18:
-            return i18nc("A mouse button", "Extra Button 18");
-        case Qt::ExtraButton19:
-            return i18nc("A mouse button", "Extra Button 19");
-        case Qt::ExtraButton20:
-            return i18nc("A mouse button", "Extra Button 20");
-        case Qt::ExtraButton21:
-            return i18nc("A mouse button", "Extra Button 21");
-        case Qt::ExtraButton22:
-            return i18nc("A mouse button", "Extra Button 22");
-        case Qt::ExtraButton23:
-            return i18nc("A mouse button", "Extra Button 23");
-        case Qt::ExtraButton24:
-            return i18nc("A mouse button", "Extra Button 24");
+    case Qt::LeftButton:
+        return i18nc("A mouse button", "Left");
+    case Qt::RightButton:
+        return i18nc("A mouse button", "Right");
+    case Qt::MiddleButton:
+        return i18nc("A mouse button", "Middle");
+    case Qt::BackButton:
+        return i18nc("A mouse button", "Back");
+    case Qt::ForwardButton:
+        return i18nc("A mouse button", "Forward");
+    case Qt::TaskButton:
+        return i18nc("A mouse button", "Task");
+    case Qt::ExtraButton4:
+        return i18nc("A mouse button", "Extra Button 4");
+    case Qt::ExtraButton5:
+        return i18nc("A mouse button", "Extra Button 5");
+    case Qt::ExtraButton6:
+        return i18nc("A mouse button", "Extra Button 6");
+    case Qt::ExtraButton7:
+        return i18nc("A mouse button", "Extra Button 7");
+    case Qt::ExtraButton8:
+        return i18nc("A mouse button", "Extra Button 8");
+    case Qt::ExtraButton9:
+        return i18nc("A mouse button", "Extra Button 9");
+    case Qt::ExtraButton10:
+        return i18nc("A mouse button", "Extra Button 10");
+    case Qt::ExtraButton11:
+        return i18nc("A mouse button", "Extra Button 11");
+    case Qt::ExtraButton12:
+        return i18nc("A mouse button", "Extra Button 12");
+    case Qt::ExtraButton13:
+        return i18nc("A mouse button", "Extra Button 13");
+    case Qt::ExtraButton14:
+        return i18nc("A mouse button", "Extra Button 14");
+    case Qt::ExtraButton15:
+        return i18nc("A mouse button", "Extra Button 15");
+    case Qt::ExtraButton16:
+        return i18nc("A mouse button", "Extra Button 16");
+    case Qt::ExtraButton17:
+        return i18nc("A mouse button", "Extra Button 17");
+    case Qt::ExtraButton18:
+        return i18nc("A mouse button", "Extra Button 18");
+    case Qt::ExtraButton19:
+        return i18nc("A mouse button", "Extra Button 19");
+    case Qt::ExtraButton20:
+        return i18nc("A mouse button", "Extra Button 20");
+    case Qt::ExtraButton21:
+        return i18nc("A mouse button", "Extra Button 21");
+    case Qt::ExtraButton22:
+        return i18nc("A mouse button", "Extra Button 22");
+    case Qt::ExtraButton23:
+        return i18nc("A mouse button", "Extra Button 23");
+    case Qt::ExtraButton24:
+        return i18nc("A mouse button", "Extra Button 24");
     default:
         return QString();
     }
@@ -208,7 +206,7 @@ void DebugConsoleFilter::pointerEvent(MouseEvent *event)
         text.append(deviceRow(event->device()));
         text.append(timestamp);
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
-        text.append(tableRow(i18nc("A button in a mouse press/release event",  "Native Button code"), event->nativeButton()));
+        text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), event->nativeButton()));
         text.append(tableRow(i18nc("All currently pressed buttons in a mouse press/release event", "Pressed Buttons"), buttonsToString(event->buttons())));
         break;
     case QEvent::MouseButtonRelease:
@@ -500,16 +498,16 @@ void DebugConsoleFilter::tabletToolEvent(TabletEvent *event)
     }
 
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool"))
-                 + tableRow(i18n("EventType"), typeString)
-                 + tableRow(i18n("Position"),
-                            QStringLiteral("%1,%2").arg(event->pos().x()).arg(event->pos().y()))
-                 + tableRow(i18n("Tilt"),
-                            QStringLiteral("%1,%2").arg(event->xTilt()).arg(event->yTilt()))
-                 + tableRow(i18n("Rotation"), QString::number(event->rotation()))
-                 + tableRow(i18n("Pressure"), QString::number(event->pressure()))
-                 + tableRow(i18n("Buttons"), QString::number(event->buttons()))
-                 + tableRow(i18n("Modifiers"), QString::number(event->modifiers()))
-                 + s_tableEnd;
+        + tableRow(i18n("EventType"), typeString)
+        + tableRow(i18n("Position"),
+                   QStringLiteral("%1,%2").arg(event->pos().x()).arg(event->pos().y()))
+        + tableRow(i18n("Tilt"),
+                   QStringLiteral("%1,%2").arg(event->xTilt()).arg(event->yTilt()))
+        + tableRow(i18n("Rotation"), QString::number(event->rotation()))
+        + tableRow(i18n("Pressure"), QString::number(event->pressure()))
+        + tableRow(i18n("Buttons"), QString::number(event->buttons()))
+        + tableRow(i18n("Modifiers"), QString::number(event->modifiers()))
+        + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
@@ -518,10 +516,10 @@ void DebugConsoleFilter::tabletToolEvent(TabletEvent *event)
 void DebugConsoleFilter::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Button"))
-                 + tableRow(i18n("Button"), button)
-                 + tableRow(i18n("Pressed"), pressed)
-                 + tableRow(i18n("Tablet"), qHash(tabletToolId.m_deviceGroupData))
-                 + s_tableEnd;
+        + tableRow(i18n("Button"), button)
+        + tableRow(i18n("Pressed"), pressed)
+        + tableRow(i18n("Tablet"), qHash(tabletToolId.m_deviceGroupData))
+        + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
@@ -530,11 +528,11 @@ void DebugConsoleFilter::tabletToolButtonEvent(uint button, bool pressed, const 
 void DebugConsoleFilter::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId)
 {
     QString text = s_hr + s_tableStart
-                 + tableHeaderRow(i18n("Tablet Pad Button"))
-                 + tableRow(i18n("Button"), button)
-                 + tableRow(i18n("Pressed"), pressed)
-                 + tableRow(i18n("Tablet"), qHash(tabletPadId.data))
-                 + s_tableEnd;
+        + tableHeaderRow(i18n("Tablet Pad Button"))
+        + tableRow(i18n("Button"), button)
+        + tableRow(i18n("Pressed"), pressed)
+        + tableRow(i18n("Tablet"), qHash(tabletPadId.data))
+        + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
@@ -543,11 +541,11 @@ void DebugConsoleFilter::tabletPadButtonEvent(uint button, bool pressed, const T
 void DebugConsoleFilter::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Strip"))
-                 + tableRow(i18n("Number"), number)
-                 + tableRow(i18n("Position"), position)
-                 + tableRow(i18n("isFinger"), isFinger)
-                 + tableRow(i18n("Tablet"), qHash(tabletPadId.data))
-                 + s_tableEnd;
+        + tableRow(i18n("Number"), number)
+        + tableRow(i18n("Position"), position)
+        + tableRow(i18n("isFinger"), isFinger)
+        + tableRow(i18n("Tablet"), qHash(tabletPadId.data))
+        + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
@@ -556,11 +554,11 @@ void DebugConsoleFilter::tabletPadStripEvent(int number, int position, bool isFi
 void DebugConsoleFilter::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Ring"))
-                 + tableRow(i18n("Number"), number)
-                 + tableRow(i18n("Position"), position)
-                 + tableRow(i18n("isFinger"), isFinger)
-                 + tableRow(i18n("Tablet"), qHash(tabletPadId.data))
-                 + s_tableEnd;
+        + tableRow(i18n("Number"), number)
+        + tableRow(i18n("Position"), position)
+        + tableRow(i18n("isFinger"), isFinger)
+        + tableRow(i18n("Tablet"), qHash(tabletPadId.data))
+        + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
@@ -612,33 +610,31 @@ DebugConsole::DebugConsole()
     }
 
     connect(m_ui->quitButton, &QAbstractButton::clicked, this, &DebugConsole::deleteLater);
-    connect(m_ui->tabWidget, &QTabWidget::currentChanged, this,
-        [this] (int index) {
-            // delay creation of input event filter until the tab is selected
-            if (index == 2 && m_inputFilter.isNull()) {
-                m_inputFilter.reset(new DebugConsoleFilter(m_ui->inputTextEdit));
-                input()->installInputEventSpy(m_inputFilter.data());
-            }
-            if (index == 5) {
-                updateKeyboardTab();
-                connect(input(), &InputRedirection::keyStateChanged, this, &DebugConsole::updateKeyboardTab);
-            }
-            if (index == 6) {
-                static_cast<DataSourceModel *>(m_ui->clipboardContent->model())->setSource(waylandServer()->seat()->selection());
-                m_ui->clipboardSource->setText(sourceString(waylandServer()->seat()->selection()));
-                connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::selectionChanged, this, [this](KWaylandServer::AbstractDataSource *source) {
-                    static_cast<DataSourceModel *>(m_ui->clipboardContent->model())->setSource(source);
-                    m_ui->clipboardSource->setText(sourceString(source));
-                });
-                static_cast<DataSourceModel *>(m_ui->primaryContent->model())->setSource(waylandServer()->seat()->primarySelection());
-                m_ui->primarySource->setText(sourceString(waylandServer()->seat()->primarySelection()));
-                connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::primarySelectionChanged, this, [this](KWaylandServer::AbstractDataSource *source) {
-                    static_cast<DataSourceModel *>(m_ui->primaryContent->model())->setSource(source);
-                    m_ui->primarySource->setText(sourceString(source));
-                });
-            }
+    connect(m_ui->tabWidget, &QTabWidget::currentChanged, this, [this](int index) {
+        // delay creation of input event filter until the tab is selected
+        if (index == 2 && m_inputFilter.isNull()) {
+            m_inputFilter.reset(new DebugConsoleFilter(m_ui->inputTextEdit));
+            input()->installInputEventSpy(m_inputFilter.data());
         }
-    );
+        if (index == 5) {
+            updateKeyboardTab();
+            connect(input(), &InputRedirection::keyStateChanged, this, &DebugConsole::updateKeyboardTab);
+        }
+        if (index == 6) {
+            static_cast<DataSourceModel *>(m_ui->clipboardContent->model())->setSource(waylandServer()->seat()->selection());
+            m_ui->clipboardSource->setText(sourceString(waylandServer()->seat()->selection()));
+            connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::selectionChanged, this, [this](KWaylandServer::AbstractDataSource *source) {
+                static_cast<DataSourceModel *>(m_ui->clipboardContent->model())->setSource(source);
+                m_ui->clipboardSource->setText(sourceString(source));
+            });
+            static_cast<DataSourceModel *>(m_ui->primaryContent->model())->setSource(waylandServer()->seat()->primarySelection());
+            m_ui->primarySource->setText(sourceString(waylandServer()->seat()->primarySelection()));
+            connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::primarySelectionChanged, this, [this](KWaylandServer::AbstractDataSource *source) {
+                static_cast<DataSourceModel *>(m_ui->primaryContent->model())->setSource(source);
+                m_ui->primarySource->setText(sourceString(source));
+            });
+        }
+    });
 
     // for X11
     setWindowFlags(Qt::X11BypassWindowManagerHint);
@@ -667,7 +663,7 @@ void DebugConsole::initGLTab()
     m_ui->glVersionLabel->setText(GLPlatform::versionToString(gl->glVersion()));
     m_ui->glslLabel->setText(GLPlatform::versionToString(gl->glslVersion()));
 
-    auto extensionsString = [] (const auto &extensions) {
+    auto extensionsString = [](const auto &extensions) {
         QString text = QStringLiteral("<ul>");
         for (auto extension : extensions) {
             text.append(QStringLiteral("<li>%1</li>").arg(QString::fromLocal8Bit(extension)));
@@ -680,8 +676,8 @@ void DebugConsole::initGLTab()
     m_ui->openGLExtensionsLabel->setText(extensionsString(openGLExtensions()));
 }
 
-template <typename T>
-QString keymapComponentToString(xkb_keymap *map, const T &count, std::function<const char*(xkb_keymap*,T)> f)
+template<typename T>
+QString keymapComponentToString(xkb_keymap *map, const T &count, std::function<const char *(xkb_keymap *, T)> f)
 {
     QString text = QStringLiteral("<ul>");
     for (T i = 0; i < count; i++) {
@@ -691,8 +687,8 @@ QString keymapComponentToString(xkb_keymap *map, const T &count, std::function<c
     return text;
 }
 
-template <typename T>
-QString stateActiveComponents(xkb_state *state, const T &count, std::function<int(xkb_state*,T)> f, std::function<const char*(xkb_keymap*,T)> name)
+template<typename T>
+QString stateActiveComponents(xkb_state *state, const T &count, std::function<int(xkb_state *, T)> f, std::function<const char *(xkb_keymap *, T)> name)
 {
     QString text = QStringLiteral("<ul>");
     xkb_keymap *map = xkb_state_get_keymap(state);
@@ -726,15 +722,13 @@ void DebugConsole::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     // delay the connection to the show event as in ctor the windowHandle returns null
-    connect(windowHandle(), &QWindow::visibleChanged, this,
-        [this] (bool visible) {
-            if (visible) {
-                // ignore
-                return;
-            }
-            deleteLater();
+    connect(windowHandle(), &QWindow::visibleChanged, this, [this](bool visible) {
+        if (visible) {
+            // ignore
+            return;
         }
-    );
+        deleteLater();
+    });
 }
 
 DebugConsoleDelegate::DebugConsoleDelegate(QObject *parent)
@@ -768,8 +762,8 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
         return QStringLiteral("%1,%2 %3x%4").arg(r.x()).arg(r.y()).arg(r.width()).arg(r.height());
     }
     default:
-        if (value.userType() == qMetaTypeId<KWaylandServer::SurfaceInterface*>()) {
-            if (auto s = value.value<KWaylandServer::SurfaceInterface*>()) {
+        if (value.userType() == qMetaTypeId<KWaylandServer::SurfaceInterface *>()) {
+            if (auto s = value.value<KWaylandServer::SurfaceInterface *>()) {
                 return QStringLiteral("KWaylandServer::SurfaceInterface(0x%1)").arg(qulonglong(s), 0, 16);
             } else {
                 return QStringLiteral("nullptr");
@@ -883,19 +877,19 @@ static const int s_x11UnmanagedId = 2;
 static const int s_waylandClientId = 3;
 static const int s_workspaceInternalId = 4;
 static const quint32 s_propertyBitMask = 0xFFFF0000;
-static const quint32 s_clientBitMask   = 0x0000FFFF;
+static const quint32 s_clientBitMask = 0x0000FFFF;
 static const quint32 s_idDistance = 10000;
 
-template <class T>
-void DebugConsoleModel::add(int parentRow, QVector<T*> &clients, T *client)
+template<class T>
+void DebugConsoleModel::add(int parentRow, QVector<T *> &clients, T *client)
 {
     beginInsertRows(index(parentRow, 0, QModelIndex()), clients.count(), clients.count());
     clients.append(client);
     endInsertRows();
 }
 
-template <class T>
-void DebugConsoleModel::remove(int parentRow, QVector<T*> &clients, T *client)
+template<class T>
+void DebugConsoleModel::remove(int parentRow, QVector<T *> &clients, T *client)
 {
     const int remove = clients.indexOf(client);
     if (remove == -1) {
@@ -920,29 +914,21 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
     for (auto u : unmangeds) {
         m_unmanageds.append(u);
     }
-    connect(workspace(), &Workspace::unmanagedAdded, this,
-        [this] (Unmanaged *u) {
-            add(s_x11UnmanagedId -1, m_unmanageds, u);
-        }
-    );
-    connect(workspace(), &Workspace::unmanagedRemoved, this,
-        [this] (Unmanaged *u) {
-            remove(s_x11UnmanagedId -1, m_unmanageds, u);
-        }
-    );
+    connect(workspace(), &Workspace::unmanagedAdded, this, [this](Unmanaged *u) {
+        add(s_x11UnmanagedId - 1, m_unmanageds, u);
+    });
+    connect(workspace(), &Workspace::unmanagedRemoved, this, [this](Unmanaged *u) {
+        remove(s_x11UnmanagedId - 1, m_unmanageds, u);
+    });
     for (InternalClient *client : workspace()->internalClients()) {
         m_internalClients.append(client);
     }
-    connect(workspace(), &Workspace::internalClientAdded, this,
-        [this](InternalClient *client) {
-            add(s_workspaceInternalId -1, m_internalClients, client);
-        }
-    );
-    connect(workspace(), &Workspace::internalClientRemoved, this,
-        [this](InternalClient *client) {
-            remove(s_workspaceInternalId -1, m_internalClients, client);
-        }
-    );
+    connect(workspace(), &Workspace::internalClientAdded, this, [this](InternalClient *client) {
+        add(s_workspaceInternalId - 1, m_internalClients, client);
+    });
+    connect(workspace(), &Workspace::internalClientRemoved, this, [this](InternalClient *client) {
+        remove(s_workspaceInternalId - 1, m_internalClients, client);
+    });
 }
 
 void DebugConsoleModel::handleClientAdded(AbstractClient *client)
@@ -988,8 +974,8 @@ int DebugConsoleModel::topLevelRowCount() const
     return kwinApp()->shouldUseWaylandForCompositing() ? 4 : 2;
 }
 
-template <class T>
-int DebugConsoleModel::propertyCount(const QModelIndex &parent, T *(DebugConsoleModel::*filter)(const QModelIndex&) const) const
+template<class T>
+int DebugConsoleModel::propertyCount(const QModelIndex &parent, T *(DebugConsoleModel::*filter)(const QModelIndex &) const) const
 {
     if (T *t = (this->*filter)(parent)) {
         return t->metaObject()->propertyCount();
@@ -1034,8 +1020,8 @@ int DebugConsoleModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-template <class T>
-QModelIndex DebugConsoleModel::indexForClient(int row, int column, const QVector<T*> &clients, int id) const
+template<class T>
+QModelIndex DebugConsoleModel::indexForClient(int row, int column, const QVector<T *> &clients, int id) const
 {
     if (column != 0) {
         return QModelIndex();
@@ -1046,8 +1032,8 @@ QModelIndex DebugConsoleModel::indexForClient(int row, int column, const QVector
     return createIndex(row, column, s_idDistance * id + row);
 }
 
-template <class T>
-QModelIndex DebugConsoleModel::indexForProperty(int row, int column, const QModelIndex &parent, T *(DebugConsoleModel::*filter)(const QModelIndex&) const) const
+template<class T>
+QModelIndex DebugConsoleModel::indexForProperty(int row, int column, const QModelIndex &parent, T *(DebugConsoleModel::*filter)(const QModelIndex &) const) const
 {
     if (T *t = (this->*filter)(parent)) {
         if (row >= t->metaObject()->propertyCount()) {
@@ -1119,13 +1105,13 @@ QModelIndex DebugConsoleModel::parent(const QModelIndex &child) const
         return QModelIndex();
     }
     if (child.internalId() < s_idDistance * (s_x11ClientId + 1)) {
-        return createIndex(s_x11ClientId -1, 0, s_x11ClientId);
+        return createIndex(s_x11ClientId - 1, 0, s_x11ClientId);
     } else if (child.internalId() < s_idDistance * (s_x11UnmanagedId + 1)) {
-        return createIndex(s_x11UnmanagedId -1, 0, s_x11UnmanagedId);
+        return createIndex(s_x11UnmanagedId - 1, 0, s_x11UnmanagedId);
     } else if (child.internalId() < s_idDistance * (s_waylandClientId + 1)) {
-        return createIndex(s_waylandClientId -1, 0, s_waylandClientId);
+        return createIndex(s_waylandClientId - 1, 0, s_waylandClientId);
     } else if (child.internalId() < s_idDistance * (s_workspaceInternalId + 1)) {
-        return createIndex(s_workspaceInternalId -1, 0, s_workspaceInternalId);
+        return createIndex(s_workspaceInternalId - 1, 0, s_workspaceInternalId);
     }
     return QModelIndex();
 }
@@ -1188,8 +1174,8 @@ QVariant DebugConsoleModel::propertyData(QObject *object, const QModelIndex &ind
     return QVariant();
 }
 
-template <class T>
-QVariant DebugConsoleModel::clientData(const QModelIndex &index, int role, const QVector<T*> clients, const std::function<QString(T*)> &toString) const
+template<class T>
+QVariant DebugConsoleModel::clientData(const QModelIndex &index, int role, const QVector<T *> clients, const std::function<QString(T *)> &toString) const
 {
     if (index.row() >= clients.count()) {
         return QVariant();
@@ -1244,7 +1230,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             return QVariant();
         }
 
-        auto generic = [] (AbstractClient *c) -> QString {
+        auto generic = [](AbstractClient *c) -> QString {
             return c->caption() + QLatin1Char(' ') + QString::fromUtf8(c->metaObject()->className());
         };
         switch (index.parent().internalId()) {
@@ -1275,7 +1261,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
 }
 
 template<class T>
-static T *clientForIndex(const QModelIndex &index, const QVector<T*> &clients, int id)
+static T *clientForIndex(const QModelIndex &index, const QVector<T *> &clients, int id)
 {
     const qint32 row = (index.internalId() & s_clientBitMask) - (s_idDistance * id);
     if (row < 0 || row >= clients.count()) {
@@ -1322,18 +1308,16 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
         auto monitor = new SubSurfaceMonitor(c->surface(), this);
         connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, reset);
         connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, reset);
-        connect (c, &QObject::destroyed, monitor, &QObject::deleteLater);
+        connect(c, &QObject::destroyed, monitor, &QObject::deleteLater);
     };
 
     for (auto c : workspace()->allClientList()) {
         watchSubsurfaces(c);
     }
-    connect(workspace(), &Workspace::clientAdded, this,
-        [reset, watchSubsurfaces] (AbstractClient *c) {
-            watchSubsurfaces(c);
-            reset();
-        }
-    );
+    connect(workspace(), &Workspace::clientAdded, this, [reset, watchSubsurfaces](AbstractClient *c) {
+        watchSubsurfaces(c);
+        reset();
+    });
     connect(workspace(), &Workspace::clientRemoved, this, reset);
     connect(workspace(), &Workspace::unmanagedAdded, this, reset);
     connect(workspace(), &Workspace::unmanagedRemoved, this, reset);
@@ -1351,14 +1335,13 @@ int SurfaceTreeModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         using namespace KWaylandServer;
-        if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(parent.internalPointer())) {
+        if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(parent.internalPointer())) {
             return surface->below().count() + surface->above().count();
         }
         return 0;
     }
     // toplevel are all windows
-    return workspace()->allClientList().count() +
-           workspace()->unmanagedList().count();
+    return workspace()->allClientList().count() + workspace()->unmanagedList().count();
 }
 
 QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &parent) const
@@ -1370,7 +1353,7 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
 
     if (parent.isValid()) {
         using namespace KWaylandServer;
-        if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(parent.internalPointer())) {
+        if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(parent.internalPointer())) {
             int reference = 0;
             const auto &below = surface->below();
             if (row < reference + below.count()) {
@@ -1394,7 +1377,7 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
     int reference = allClients.count();
     const auto &unmanaged = workspace()->unmanagedList();
     if (row < reference + unmanaged.count()) {
-        return createIndex(row, column, unmanaged.at(row-reference)->surface());
+        return createIndex(row, column, unmanaged.at(row - reference)->surface());
     }
     reference += unmanaged.count();
     // not found
@@ -1404,7 +1387,7 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
 QModelIndex SurfaceTreeModel::parent(const QModelIndex &child) const
 {
     using namespace KWaylandServer;
-    if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(child.internalPointer())) {
+    if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(child.internalPointer())) {
         const auto &subsurface = surface->subSurface();
         if (!subsurface) {
             // doesn't reference a subsurface, this is a top-level window
@@ -1464,11 +1447,9 @@ QVariant SurfaceTreeModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
     using namespace KWaylandServer;
-    if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(index.internalPointer())) {
+    if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(index.internalPointer())) {
         if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
-            return QStringLiteral("%1 (%2) - %3").arg(surface->client()->executablePath())
-                                                .arg(surface->client()->processId())
-                                                .arg(surface->id());
+            return QStringLiteral("%1 (%2) - %3").arg(surface->client()->executablePath()).arg(surface->client()->processId()).arg(surface->id());
         } else if (role == Qt::DecorationRole) {
             if (auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(surface->buffer())) {
                 return buffer->data().scaled(QSize(64, 64), Qt::KeepAspectRatio);
@@ -1486,29 +1467,24 @@ InputDeviceModel::InputDeviceModel(QObject *parent)
         setupDeviceConnections(*it);
     }
 
-    connect(input(), &InputRedirection::deviceAdded, this,
-        [this] (InputDevice *d) {
-            beginInsertRows(QModelIndex(), m_devices.count(), m_devices.count());
-            m_devices << d;
-            setupDeviceConnections(d);
-            endInsertRows();
+    connect(input(), &InputRedirection::deviceAdded, this, [this](InputDevice *d) {
+        beginInsertRows(QModelIndex(), m_devices.count(), m_devices.count());
+        m_devices << d;
+        setupDeviceConnections(d);
+        endInsertRows();
+    });
+    connect(input(), &InputRedirection::deviceRemoved, this, [this](InputDevice *d) {
+        const int index = m_devices.indexOf(d);
+        if (index == -1) {
+            return;
         }
-    );
-    connect(input(), &InputRedirection::deviceRemoved, this,
-        [this] (InputDevice *d) {
-            const int index = m_devices.indexOf(d);
-            if (index == -1) {
-                return;
-            }
-            beginRemoveRows(QModelIndex(), index, index);
-            m_devices.removeAt(index);
-            endRemoveRows();
-        }
-    );
+        beginRemoveRows(QModelIndex(), index, index);
+        m_devices.removeAt(index);
+        endRemoveRows();
+    });
 }
 
 InputDeviceModel::~InputDeviceModel() = default;
-
 
 int InputDeviceModel::columnCount(const QModelIndex &parent) const
 {

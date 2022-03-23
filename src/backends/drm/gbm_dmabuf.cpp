@@ -18,7 +18,8 @@ GbmDmaBuf::GbmDmaBuf(GLTexture *texture, gbm_bo *bo, int fd)
     : DmaBufTexture(texture)
     , m_bo(bo)
     , m_fd(fd)
-{}
+{
+}
 
 GbmDmaBuf::~GbmDmaBuf()
 {
@@ -63,8 +64,7 @@ GbmDmaBuf *GbmDmaBuf::createBuffer(const QSize &size, gbm_device *device)
         EGL_DMA_BUF_PLANE0_FD_EXT, fd,
         EGL_DMA_BUF_PLANE0_OFFSET_EXT, EGLint(gbm_bo_get_offset(bo, 0)),
         EGL_DMA_BUF_PLANE0_PITCH_EXT, EGLint(gbm_bo_get_stride(bo)),
-        EGL_NONE
-    };
+        EGL_NONE};
 
     EGLDisplay display = kwinApp()->platform()->sceneEglDisplay();
     if (display == EGL_NO_DISPLAY) {
@@ -81,4 +81,3 @@ GbmDmaBuf *GbmDmaBuf::createBuffer(const QSize &size, gbm_device *device)
 }
 
 }
-

@@ -39,7 +39,7 @@ X11SyncObject::~X11SyncObject()
     // deadlocks waiting for the fence to be signalled.
     // To avoid this, make sure the fence is signalled before
     // deleting the sync.
-    if (m_state == Resetting || m_state == Ready){
+    if (m_state == Resetting || m_state == Ready) {
         trigger();
         // The flush is necessary!
         // The trigger command needs to be sent to the X server.

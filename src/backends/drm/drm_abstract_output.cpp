@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_abstract_output.h"
-#include "drm_gpu.h"
 #include "drm_backend.h"
+#include "drm_gpu.h"
 #include "renderloop_p.h"
 
 namespace KWin

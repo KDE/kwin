@@ -37,9 +37,9 @@ private:
                              double scale,
                              KWaylandServer::ScreencastV1Interface::CursorMode mode);
     void streamRegion(KWaylandServer::ScreencastStreamV1Interface *stream,
-                             const QRect &geometry,
-                             qreal scale,
-                             KWaylandServer::ScreencastV1Interface::CursorMode mode);
+                      const QRect &geometry,
+                      qreal scale,
+                      KWaylandServer::ScreencastV1Interface::CursorMode mode);
 
     void integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream);
 

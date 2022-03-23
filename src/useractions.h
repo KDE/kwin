@@ -170,38 +170,38 @@ private:
     /**
      * The actual main context menu which is show when the UserActionsMenu is invoked.
      */
-    QMenu* m_menu;
+    QMenu *m_menu;
     /**
      * The move to desktop sub menu.
      */
-    QMenu* m_desktopMenu;
+    QMenu *m_desktopMenu;
     /**
      * The move to desktop sub menu, with the Wayland protocol.
      */
-    QMenu* m_multipleDesktopsMenu;
+    QMenu *m_multipleDesktopsMenu;
     /**
      * The move to screen sub menu.
      */
-    QMenu* m_screenMenu;
+    QMenu *m_screenMenu;
     /**
      * The activities sub menu.
      */
-    QMenu* m_activityMenu;
+    QMenu *m_activityMenu;
     /**
      * Menu for further entries added by scripts.
      */
-    QMenu* m_scriptsMenu;
-    QAction* m_resizeOperation;
-    QAction* m_moveOperation;
-    QAction* m_maximizeOperation;
-    QAction* m_shadeOperation;
-    QAction* m_keepAboveOperation;
-    QAction* m_keepBelowOperation;
-    QAction* m_fullScreenOperation;
-    QAction* m_noBorderOperation;
-    QAction* m_minimizeOperation;
-    QAction* m_closeOperation;
-    QAction* m_shortcutOperation;
+    QMenu *m_scriptsMenu;
+    QAction *m_resizeOperation;
+    QAction *m_moveOperation;
+    QAction *m_maximizeOperation;
+    QAction *m_shadeOperation;
+    QAction *m_keepAboveOperation;
+    QAction *m_keepBelowOperation;
+    QAction *m_fullScreenOperation;
+    QAction *m_noBorderOperation;
+    QAction *m_minimizeOperation;
+    QAction *m_closeOperation;
+    QAction *m_shortcutOperation;
     /**
      * The Client for which the menu is shown.
      */
@@ -215,15 +215,17 @@ class ShortcutDialog
 {
     Q_OBJECT
 public:
-    explicit ShortcutDialog(const QKeySequence& cut);
+    explicit ShortcutDialog(const QKeySequence &cut);
     void accept() override;
     QKeySequence shortcut() const;
 public Q_SLOTS:
     void keySequenceChanged();
 Q_SIGNALS:
     void dialogDone(bool ok);
+
 protected:
     void done(int r) override;
+
 private:
     Ui::ShortcutDialog m_ui;
     QKeySequence _shortcut;

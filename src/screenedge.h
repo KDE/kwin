@@ -23,15 +23,16 @@
 // KDE includes
 #include <KSharedConfig>
 // Qt
-#include <QObject>
-#include <QVector>
 #include <QDateTime>
+#include <QObject>
 #include <QRect>
+#include <QVector>
 
 class QAction;
 class QMouseEvent;
 
-namespace KWin {
+namespace KWin
+{
 
 class AbstractClient;
 class AbstractOutput;
@@ -42,7 +43,7 @@ class SwipeGesture;
 class TouchCallback
 {
 public:
-    using CallbackFunction = std::function<void(ElectricBorder border, const QSizeF&, AbstractOutput *output)>;
+    using CallbackFunction = std::function<void(ElectricBorder border, const QSizeF &, AbstractOutput *output)>;
     explicit TouchCallback(QAction *touchUpAction, TouchCallback::CallbackFunction progressCallback);
     ~TouchCallback();
 
@@ -116,6 +117,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void approaching(ElectricBorder border, qreal factor, const QRect &geometry);
     void activatesForTouchGestureChanged();
+
 protected:
     ScreenEdges *edges();
     const ScreenEdges *edges() const;
@@ -126,16 +128,19 @@ protected:
     virtual void doStartApproaching();
     virtual void doStopApproaching();
     virtual void doUpdateBlocking();
+
 private:
     void activate();
     void deactivate();
     bool canActivate(const QPoint &cursorPos, const QDateTime &triggerTime);
     void handle(const QPoint &cursorPos);
     bool handleAction(ElectricBorderAction action);
-    bool handlePointerAction() {
+    bool handlePointerAction()
+    {
         return handleAction(m_action);
     }
-    bool handleTouchAction() {
+    bool handleTouchAction()
+    {
         return handleAction(m_touchAction);
     }
     bool handleByCallback();
@@ -143,7 +148,8 @@ private:
     void switchDesktop(const QPoint &cursorPos);
     void pushCursorBack(const QPoint &cursorPos);
     void reserveTouchCallBack(const TouchCallback &callback);
-    QVector<TouchCallback> touchCallBacks() const {
+    QVector<TouchCallback> touchCallBacks() const
+    {
         return m_touchCallbacks;
     }
     ScreenEdges *m_edges;
@@ -244,7 +250,7 @@ public:
      * @param now the time when the function is called
      * @param forceNoPushBack needs to be called to workaround some DnD clients, don't use unless you want to chek on a DnD event
      */
-    void check(const QPoint& pos, const QDateTime &now, bool forceNoPushBack = false);
+    void check(const QPoint &pos, const QDateTime &now, bool forceNoPushBack = false);
     /**
      * The (dpi dependent) length, reserved for the active corners of each edge - 1/3"
      */
@@ -330,7 +336,7 @@ public:
      * Returns a QVector of all existing screen edge windows
      * @return all existing screen edge windows in a QVector
      */
-    QVector< xcb_window_t > windows() const;
+    QVector<xcb_window_t> windows() const;
 
     bool isDesktopSwitching() const;
     bool isDesktopSwitchingMovingClients() const;
@@ -352,7 +358,8 @@ public:
     ElectricBorderAction actionBottomLeft() const;
     ElectricBorderAction actionLeft() const;
 
-    GestureRecognizer *gestureRecognizer() const {
+    GestureRecognizer *gestureRecognizer() const
+    {
         return m_gestureRecognizer;
     }
 
@@ -406,7 +413,7 @@ private:
     int m_timeThreshold;
     int m_reactivateThreshold;
     Qt::Orientations m_virtualDesktopLayout;
-    QList<Edge*> m_edges;
+    QList<Edge *> m_edges;
     KSharedConfig::Ptr m_config;
     ElectricBorderAction m_actionTopLeft;
     ElectricBorderAction m_actionTop;
@@ -498,7 +505,7 @@ inline ElectricBorder Edge::border() const
     return m_border;
 }
 
-inline const QHash< QObject *, QByteArray > &Edge::callBacks() const
+inline const QHash<QObject *, QByteArray> &Edge::callBacks() const
 {
     return m_callBacks;
 }
@@ -526,7 +533,8 @@ inline void ScreenEdges::setConfig(KSharedConfig::Ptr config)
     m_config = config;
 }
 
-inline int ScreenEdges::cornerOffset() const {
+inline int ScreenEdges::cornerOffset() const
+{
     return m_cornerOffset;
 }
 
@@ -585,11 +593,11 @@ inline void ScreenEdges::setTimeThreshold(int threshold)
     m_timeThreshold = threshold;
 }
 
-#define ACTION( name ) \
-inline ElectricBorderAction ScreenEdges::name() const \
-{ \
-    return m_##name; \
-}
+#define ACTION(name)                                      \
+    inline ElectricBorderAction ScreenEdges::name() const \
+    {                                                     \
+        return m_##name;                                  \
+    }
 
 ACTION(actionTopLeft)
 ACTION(actionTop)

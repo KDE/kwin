@@ -46,4 +46,3 @@ void DecorationPackage::pathChanged(KPackage::Package *package)
 K_PLUGIN_CLASS_WITH_JSON(DecorationPackage, "kwin-packagestructure-decoration.json")
 
 #include "decoration.moc"
-

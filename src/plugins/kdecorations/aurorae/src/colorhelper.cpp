@@ -49,4 +49,3 @@ QColor ColorHelper::foreground(bool active, ColorHelper::ForegroundRole role) co
     KColorScheme kcs(active ? QPalette::Active : QPalette::Inactive, KColorScheme::Button);
     return kcs.foreground(static_cast<KColorScheme::ForegroundRole>(role)).color();
 }
-

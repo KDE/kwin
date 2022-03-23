@@ -7,14 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
-#include "x11client.h"
+
 #include "composite.h"
-#include "effects.h"
-#include "effectloader.h"
 #include "cursor.h"
+#include "effectloader.h"
+#include "effects.h"
 #include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KConfigGroup>
 
@@ -26,7 +27,7 @@ static const QString s_socketName = QStringLiteral("wayland_test_effects_translu
 
 class TranslucencyTest : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
     void init();
@@ -42,8 +43,8 @@ private:
 void TranslucencyTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Effect*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -71,9 +72,9 @@ void TranslucencyTest::initTestCase()
 void TranslucencyTest::init()
 {
     // load the translucency effect
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl*>(effects);
+    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
     // find the effectsloader
-    auto effectloader = e->findChild<AbstractEffectLoader*>();
+    auto effectloader = e->findChild<AbstractEffectLoader *>();
     QVERIFY(effectloader);
     QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
     QVERIFY(effectLoadedSpy.isValid());
@@ -83,13 +84,13 @@ void TranslucencyTest::init()
     QVERIFY(e->isEffectLoaded(QStringLiteral("kwin4_effect_translucency")));
 
     QCOMPARE(effectLoadedSpy.count(), 1);
-    m_translucencyEffect = effectLoadedSpy.first().first().value<Effect*>();
+    m_translucencyEffect = effectLoadedSpy.first().first().value<Effect *>();
     QVERIFY(m_translucencyEffect);
 }
 
 void TranslucencyTest::cleanup()
 {
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl*>(effects);
+    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
     if (e->isEffectLoaded(QStringLiteral("kwin4_effect_translucency"))) {
         e->unloadEffect(QStringLiteral("kwin4_effect_translucency"));
     }

@@ -7,14 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "composite.h"
-#include "effectloader.h"
-#include "x11client.h"
 #include "cursor.h"
+#include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KConfigGroup>
 
@@ -30,7 +31,7 @@ static const QString s_socketName = QStringLiteral("wayland_test_kwin_crash_curs
 
 class DontCrashCursorPhysicalSizeEmpty : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 private Q_SLOTS:
     void init();
     void initTestCase();
@@ -53,7 +54,7 @@ void DontCrashCursorPhysicalSizeEmpty::cleanup()
 
 void DontCrashCursorPhysicalSizeEmpty::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

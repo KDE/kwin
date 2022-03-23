@@ -7,34 +7,36 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include <config-kwin.h>
+
 #include "kwin_wayland_test.h"
+
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
+#include "inputmethod.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "inputmethod.h"
 
+#include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
-#include <KWayland/Client/registry.h>
+#include <KWayland/Client/output.h>
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
 #include <KWayland/Client/pointerconstraints.h>
+#include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shadow.h>
 #include <KWayland/Client/shm_pool.h>
-#include <KWayland/Client/output.h>
 #include <KWayland/Client/subcompositor.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/textinput.h>
-#include <KWayland/Client/appmenu.h>
 #include <KWaylandServer/display.h>
 
-//screenlocker
+// screenlocker
 #if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
 #endif
@@ -42,8 +44,8 @@
 #include <QThread>
 
 // system
-#include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 using namespace KWayland::Client;
@@ -223,7 +225,8 @@ IdleInhibitorV1::~IdleInhibitorV1()
     destroy();
 }
 
-static struct {
+static struct
+{
     ConnectionThread *connection = nullptr;
     EventQueue *queue = nullptr;
     KWayland::Client::Compositor *compositor = nullptr;
@@ -239,7 +242,7 @@ static struct {
     Registry *registry = nullptr;
     WaylandOutputManagementV2 *outputManagementV2 = nullptr;
     QThread *thread = nullptr;
-    QVector<Output*> outputs;
+    QVector<Output *> outputs;
     QVector<WaylandOutputDeviceV2 *> outputDevicesV2;
     IdleInhibitManagerV1 *idleInhibitManagerV1 = nullptr;
     AppMenuManager *appMenu = nullptr;
@@ -270,7 +273,6 @@ KWayland::Client::Surface *inputPanelSurface()
 MockInputMethod::MockInputMethod(struct wl_registry *registry, int id, int version)
     : QtWayland::zwp_input_method_v1(registry, id, version)
 {
-
 }
 MockInputMethod::~MockInputMethod()
 {
@@ -344,7 +346,7 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
     registry->setEventQueue(s_waylandConnection.queue);
 
     QObject::connect(registry, &Registry::outputAnnounced, [=](quint32 name, quint32 version) {
-        Output* output = registry->createOutput(name, version, s_waylandConnection.registry);
+        Output *output = registry->createOutput(name, version, s_waylandConnection.registry);
         s_waylandConnection.outputs << output;
         QObject::connect(output, &Output::removed, [=]() {
             output->deleteLater();
@@ -464,28 +466,28 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
     }
     if (flags.testFlag(AdditionalWaylandInterface::Decoration)) {
         s_waylandConnection.decoration = registry->createServerSideDecorationManager(registry->interface(Registry::Interface::ServerSideDecorationManager).name,
-                                                                                    registry->interface(Registry::Interface::ServerSideDecorationManager).version);
+                                                                                     registry->interface(Registry::Interface::ServerSideDecorationManager).version);
         if (!s_waylandConnection.decoration->isValid()) {
             return false;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::PlasmaShell)) {
         s_waylandConnection.plasmaShell = registry->createPlasmaShell(registry->interface(Registry::Interface::PlasmaShell).name,
-                                                                     registry->interface(Registry::Interface::PlasmaShell).version);
+                                                                      registry->interface(Registry::Interface::PlasmaShell).version);
         if (!s_waylandConnection.plasmaShell->isValid()) {
             return false;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::WindowManagement)) {
         s_waylandConnection.windowManagement = registry->createPlasmaWindowManagement(registry->interface(Registry::Interface::PlasmaWindowManagement).name,
-                                                                                     registry->interface(Registry::Interface::PlasmaWindowManagement).version);
+                                                                                      registry->interface(Registry::Interface::PlasmaWindowManagement).version);
         if (!s_waylandConnection.windowManagement->isValid()) {
             return false;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::PointerConstraints)) {
         s_waylandConnection.pointerConstraints = registry->createPointerConstraints(registry->interface(Registry::Interface::PointerConstraintsUnstableV1).name,
-                                                                                   registry->interface(Registry::Interface::PointerConstraintsUnstableV1).version);
+                                                                                    registry->interface(Registry::Interface::PointerConstraintsUnstableV1).version);
         if (!s_waylandConnection.pointerConstraints->isValid()) {
             return false;
         }
@@ -614,7 +616,7 @@ PointerConstraints *waylandPointerConstraints()
     return s_waylandConnection.pointerConstraints;
 }
 
-AppMenuManager* waylandAppMenuManager()
+AppMenuManager *waylandAppMenuManager()
 {
     return s_waylandConnection.appMenu;
 }

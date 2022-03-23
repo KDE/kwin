@@ -71,9 +71,7 @@ void MinimizeAnimationTest::initTestCase()
 void MinimizeAnimationTest::init()
 {
     QVERIFY(Test::setupWaylandConnection(
-        Test::AdditionalWaylandInterface::PlasmaShell |
-        Test::AdditionalWaylandInterface::WindowManagement
-    ));
+        Test::AdditionalWaylandInterface::PlasmaShell | Test::AdditionalWaylandInterface::WindowManagement));
 }
 
 void MinimizeAnimationTest::cleanup()
@@ -91,7 +89,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize_data()
     QTest::addColumn<QString>("effectName");
 
     QTest::newRow("Magic Lamp") << QStringLiteral("magiclamp");
-    QTest::newRow("Squash")     << QStringLiteral("kwin4_effect_squash");
+    QTest::newRow("Squash") << QStringLiteral("kwin4_effect_squash");
 }
 
 void MinimizeAnimationTest::testMinimizeUnminimize()

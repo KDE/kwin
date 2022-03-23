@@ -10,11 +10,11 @@
 #include "drm_lease_output.h"
 
 #include "KWaylandServer/drmleasedevice_v1_interface.h"
+#include "drm_layer.h"
 #include "drm_object_connector.h"
 #include "drm_object_crtc.h"
 #include "drm_object_plane.h"
 #include "drm_pipeline.h"
-#include "drm_layer.h"
 
 #include "logging.h"
 
@@ -28,8 +28,7 @@ DrmLeaseOutput::DrmLeaseOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDe
         leaseDevice,
         pipeline->connector()->id(),
         pipeline->connector()->modelName(),
-        QStringLiteral("%1 %2").arg(pipeline->connector()->edid()->manufacturerString(), pipeline->connector()->modelName())
-    )
+        QStringLiteral("%1 %2").arg(pipeline->connector()->edid()->manufacturerString(), pipeline->connector()->modelName()))
     , m_pipeline(pipeline)
 {
     qCDebug(KWIN_DRM) << "offering connector" << m_pipeline->connector()->id() << "for lease";

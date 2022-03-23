@@ -8,18 +8,17 @@
 
 #include <KLocalizedString>
 
-
 namespace KWin
 {
 
 QHash<int, QByteArray> OptionsModel::roleNames() const
 {
     return {
-        {Qt::DisplayRole,    QByteArrayLiteral("display")},
+        {Qt::DisplayRole, QByteArrayLiteral("display")},
         {Qt::DecorationRole, QByteArrayLiteral("decoration")},
-        {Qt::ToolTipRole,    QByteArrayLiteral("tooltip")},
-        {Qt::UserRole,       QByteArrayLiteral("value")},
-        {Qt::UserRole + 1,   QByteArrayLiteral("iconName")},
+        {Qt::ToolTipRole, QByteArrayLiteral("tooltip")},
+        {Qt::UserRole, QByteArrayLiteral("value")},
+        {Qt::UserRole + 1, QByteArrayLiteral("iconName")},
     };
 }
 
@@ -40,16 +39,16 @@ QVariant OptionsModel::data(const QModelIndex &index, int role) const
     const Data data = m_data.at(index.row());
 
     switch (role) {
-        case Qt::DisplayRole:
-            return data.text;
-        case Qt::UserRole:
-            return data.value;
-        case Qt::DecorationRole:
-            return data.icon;
-        case Qt::UserRole + 1:
-            return data.icon.name();
-        case Qt::ToolTipRole:
-            return data.description;
+    case Qt::DisplayRole:
+        return data.text;
+    case Qt::UserRole:
+        return data.value;
+    case Qt::DecorationRole:
+        return data.icon;
+    case Qt::UserRole + 1:
+        return data.icon.name();
+    case Qt::ToolTipRole:
+        return data.description;
     }
     return QVariant();
 }
@@ -104,12 +103,12 @@ void OptionsModel::resetValue()
     Q_EMIT selectedIndexChanged(m_index);
 }
 
-void OptionsModel::updateModelData(const QList<Data> &data) {
+void OptionsModel::updateModelData(const QList<Data> &data)
+{
     beginResetModel();
     m_data = data;
     endResetModel();
 }
-
 
 RulePolicy::Type RulePolicy::type() const
 {
@@ -119,7 +118,7 @@ RulePolicy::Type RulePolicy::type() const
 int RulePolicy::value() const
 {
     if (m_type == RulePolicy::NoPolicy) {
-        return Rules::Apply;   // To simplify external checks when rule has no policy
+        return Rules::Apply; // To simplify external checks when rule has no policy
     }
     return OptionsModel::value().toInt();
 }
@@ -127,13 +126,13 @@ int RulePolicy::value() const
 QString RulePolicy::policyKey(const QString &key) const
 {
     switch (m_type) {
-        case NoPolicy:
-            return QString();
-        case StringMatch:
-            return QStringLiteral("%1match").arg(key);
-        case SetRule:
-        case ForceRule:
-            return QStringLiteral("%1rule").arg(key);
+    case NoPolicy:
+        return QString();
+    case StringMatch:
+        return QStringLiteral("%1match").arg(key);
+    case SetRule:
+    case ForceRule:
+        return QStringLiteral("%1rule").arg(key);
     }
 
     return QString();
@@ -141,43 +140,41 @@ QString RulePolicy::policyKey(const QString &key) const
 
 QList<RulePolicy::Data> RulePolicy::policyOptions(RulePolicy::Type type)
 {
-    static const auto stringMatchOptions = QList<RulePolicy::Data> {
+    static const auto stringMatchOptions = QList<RulePolicy::Data>{
         {Rules::UnimportantMatch, i18n("Unimportant")},
-        {Rules::ExactMatch,       i18n("Exact Match")},
-        {Rules::SubstringMatch,   i18n("Substring Match")},
-        {Rules::RegExpMatch,      i18n("Regular Expression")}
-    };
+        {Rules::ExactMatch, i18n("Exact Match")},
+        {Rules::SubstringMatch, i18n("Substring Match")},
+        {Rules::RegExpMatch, i18n("Regular Expression")}};
 
-    static const auto setRuleOptions = QList<RulePolicy::Data> {
+    static const auto setRuleOptions = QList<RulePolicy::Data>{
         {Rules::Apply,
-            i18n("Apply Initially"),
-            i18n("The window property will be only set to the given value after the window is created."
-                 "\nNo further changes will be affected.")},
+         i18n("Apply Initially"),
+         i18n("The window property will be only set to the given value after the window is created."
+              "\nNo further changes will be affected.")},
         {Rules::ApplyNow,
-            i18n("Apply Now"),
-            i18n("The window property will be set to the given value immediately and will not be affected later"
-                 "\n(this action will be deleted afterwards).")},
+         i18n("Apply Now"),
+         i18n("The window property will be set to the given value immediately and will not be affected later"
+              "\n(this action will be deleted afterwards).")},
         {Rules::Remember,
-            i18n("Remember"),
-            i18n("The value of the window property will be remembered and, every time the window"
-                 " is created, the last remembered value will be applied.")},
+         i18n("Remember"),
+         i18n("The value of the window property will be remembered and, every time the window"
+              " is created, the last remembered value will be applied.")},
         {Rules::DontAffect,
-            i18n("Do Not Affect"),
-            i18n("The window property will not be affected and therefore the default handling for it will be used."
-                 "\nSpecifying this will block more generic window settings from taking effect.")},
+         i18n("Do Not Affect"),
+         i18n("The window property will not be affected and therefore the default handling for it will be used."
+              "\nSpecifying this will block more generic window settings from taking effect.")},
         {Rules::Force,
-            i18n("Force"),
-            i18n("The window property will be always forced to the given value.")},
+         i18n("Force"),
+         i18n("The window property will be always forced to the given value.")},
         {Rules::ForceTemporarily,
-            i18n("Force Temporarily"),
-            i18n("The window property will be forced to the given value until it is hidden"
-                 "\n(this action will be deleted after the window is hidden).")}
-    };
+         i18n("Force Temporarily"),
+         i18n("The window property will be forced to the given value until it is hidden"
+              "\n(this action will be deleted after the window is hidden).")}};
 
-    static auto forceRuleOptions = QList<RulePolicy::Data> {
-        setRuleOptions.at(4),  // Rules::Force
-        setRuleOptions.at(5),  // Rules::ForceTemporarily
-        setRuleOptions.at(3),  // Rules::DontAffect
+    static auto forceRuleOptions = QList<RulePolicy::Data>{
+        setRuleOptions.at(4), // Rules::Force
+        setRuleOptions.at(5), // Rules::ForceTemporarily
+        setRuleOptions.at(3), // Rules::DontAffect
     };
 
     switch (type) {
@@ -193,4 +190,4 @@ QList<RulePolicy::Data> RulePolicy::policyOptions(RulePolicy::Type type)
     return {};
 }
 
-}   //namespace
+} // namespace

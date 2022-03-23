@@ -16,7 +16,6 @@
 #include <KLocalizedString>
 #include <KPluginFactory>
 
-
 namespace KWin
 {
 
@@ -47,14 +46,14 @@ KCMKWinRules::KCMKWinRules(QObject *parent, const QVariantList &arguments)
     }
     parseArguments(argList);
 
-    connect(m_rulesModel, &RulesModel::descriptionChanged, this, [this]{
+    connect(m_rulesModel, &RulesModel::descriptionChanged, this, [this] {
         if (m_editIndex.isValid()) {
             m_ruleBookModel->setDescriptionAt(m_editIndex.row(), m_rulesModel->description());
         }
-    } );
-    connect(m_rulesModel, &RulesModel::dataChanged, this, [this]{
+    });
+    connect(m_rulesModel, &RulesModel::dataChanged, this, [this] {
         Q_EMIT m_ruleBookModel->dataChanged(m_editIndex, m_editIndex, {});
-    } );
+    });
     connect(m_ruleBookModel, &RuleBookModel::dataChanged, this, &KCMKWinRules::updateNeedsSave);
 }
 
@@ -167,7 +166,6 @@ int KCMKWinRules::editIndex() const
     return m_editIndex.row();
 }
 
-
 void KCMKWinRules::setRuleDescription(int index, const QString &description)
 {
     if (index < 0 || index >= m_ruleBookModel->rowCount()) {
@@ -182,7 +180,6 @@ void KCMKWinRules::setRuleDescription(int index, const QString &description)
 
     updateNeedsSave();
 }
-
 
 void KCMKWinRules::editRule(int index)
 {
@@ -225,8 +222,8 @@ void KCMKWinRules::moveRule(int sourceIndex, int destIndex)
 {
     const int lastIndex = m_ruleBookModel->rowCount() - 1;
     if (sourceIndex == destIndex
-            || (sourceIndex < 0 || sourceIndex > lastIndex)
-            || (destIndex < 0 || destIndex > lastIndex)) {
+        || (sourceIndex < 0 || sourceIndex > lastIndex)
+        || (destIndex < 0 || destIndex > lastIndex)) {
         return;
     }
 

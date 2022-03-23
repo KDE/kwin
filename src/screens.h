@@ -113,26 +113,22 @@ private:
     KWIN_SINGLETON(Screens)
 };
 
-inline
-int Screens::count() const
+inline int Screens::count() const
 {
     return m_count;
 }
 
-inline
-QSize Screens::size() const
+inline QSize Screens::size() const
 {
     return m_boundingSize;
 }
 
-inline
-QRect Screens::geometry() const
+inline QRect Screens::geometry() const
 {
-    return QRect(QPoint(0,0), size());
+    return QRect(QPoint(0, 0), size());
 }
 
-inline
-Screens *screens()
+inline Screens *screens()
 {
     return Screens::self();
 }

@@ -10,9 +10,9 @@
 #include <abstract_wayland_output.h>
 #include <composite.h>
 #include <kwingltexture.h>
-#include <scene.h>
 #include <kwinglutils.h>
 #include <platform.h>
+#include <scene.h>
 
 #include <QPainter>
 

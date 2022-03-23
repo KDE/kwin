@@ -8,7 +8,6 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "xwaylandlauncher.h"
 
 #include <config-kwin.h>
@@ -20,8 +19,8 @@
 #include "wayland_server.h"
 
 #if KWIN_BUILD_NOTIFICATIONS
-#include <KNotification>
 #include <KLocalizedString>
+#include <KNotification>
 #endif
 
 #include <QAbstractEventDispatcher>
@@ -33,10 +32,10 @@
 #include <QTimer>
 
 // system
-#include <unistd.h>
-#include <sys/socket.h>
 #include <cerrno>
 #include <cstring>
+#include <sys/socket.h>
+#include <unistd.h>
 
 namespace KWin
 {
@@ -150,11 +149,11 @@ bool XwaylandLauncher::startInternal()
         for (int socket : qAsConst(m_listenFds)) {
             int dupSocket = dup(socket);
             fdsToClose << dupSocket;
-            #if HAVE_XWAYLAND_LISTENFD
-                arguments << QStringLiteral("-listenfd") << QString::number(dupSocket);
-            #else
-                arguments << QStringLiteral("-listen") << QString::number(dupSocket);
-            #endif
+#if HAVE_XWAYLAND_LISTENFD
+            arguments << QStringLiteral("-listenfd") << QString::number(dupSocket);
+#else
+            arguments << QStringLiteral("-listen") << QString::number(dupSocket);
+#endif
         }
     }
 
@@ -283,7 +282,8 @@ void XwaylandLauncher::handleXwaylandCrashed()
             m_resetCrashCountTimer->start(std::chrono::minutes(10));
         } else {
             qCWarning(KWIN_XWL, "Stopping Xwayland server because it has crashed %d times "
-                      "over the past 10 minutes", m_crashCount);
+                                "over the past 10 minutes",
+                      m_crashCount);
             stop();
         }
         break;

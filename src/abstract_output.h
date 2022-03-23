@@ -221,7 +221,10 @@ public:
         Flipped270
     };
     Q_ENUM(Transform)
-    virtual Transform transform() const { return Transform::Normal; }
+    virtual Transform transform() const
+    {
+        return Transform::Normal;
+    }
 
     virtual bool usesSoftwareCursor() const;
 

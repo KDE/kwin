@@ -6,24 +6,24 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kwin_wayland_test.h"
-#include "x11client.h"
 #include "composite.h"
-#include "deleted.h"
-#include "effects.h"
-#include "effectloader.h"
 #include "cursor.h"
+#include "deleted.h"
+#include "effectloader.h"
+#include "effects.h"
+#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "renderbackend.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KConfigGroup>
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/registry.h>
-#include <KWayland/Client/surface.h>
 #include <KWayland/Client/slide.h>
+#include <KWayland/Client/surface.h>
 
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
@@ -33,7 +33,7 @@ static const QString s_socketName = QStringLiteral("wayland_test_effects_sliding
 
 class SlidingPopupsTest : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
     void init();
@@ -48,9 +48,9 @@ private Q_SLOTS:
 void SlidingPopupsTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Deleted*>();
-    qRegisterMetaType<KWin::Effect*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
+    qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -88,7 +88,7 @@ void SlidingPopupsTest::init()
 void SlidingPopupsTest::cleanup()
 {
     Test::destroyWaylandConnection();
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl*>(effects);
+    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
     while (!e->loadedEffects().isEmpty()) {
         const QString effect = e->loadedEffects().first();
         e->unloadEffect(effect);
@@ -103,7 +103,6 @@ struct XcbConnectionDeleter
         xcb_disconnect(pointer);
     }
 };
-
 
 void SlidingPopupsTest::testWithOtherEffect_data()
 {
@@ -129,9 +128,9 @@ void SlidingPopupsTest::testWithOtherEffect()
     // this test verifies that slidingpopups effect grabs the window added role
     // independently of the sequence how the effects are loaded.
     // see BUG 336866
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl*>(effects);
+    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
     // find the effectsloader
-    auto effectloader = e->findChild<AbstractEffectLoader*>();
+    auto effectloader = e->findChild<AbstractEffectLoader *>();
     QVERIFY(effectloader);
     QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
     QVERIFY(effectLoadedSpy.isValid());
@@ -145,7 +144,7 @@ void SlidingPopupsTest::testWithOtherEffect()
         QVERIFY(e->isEffectLoaded(effectName));
 
         QCOMPARE(effectLoadedSpy.count(), 1);
-        Effect *effect = effectLoadedSpy.first().first().value<Effect*>();
+        Effect *effect = effectLoadedSpy.first().first().value<Effect *>();
         if (effectName == QStringLiteral("slidingpopups")) {
             slidingPoupus = effect;
         } else {
@@ -267,9 +266,9 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     // independently of the sequence how the effects are loaded.
     // see BUG 336866
     // the test is like testWithOtherEffect, but simulates using a Wayland window
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl*>(effects);
+    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
     // find the effectsloader
-    auto effectloader = e->findChild<AbstractEffectLoader*>();
+    auto effectloader = e->findChild<AbstractEffectLoader *>();
     QVERIFY(effectloader);
     QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
     QVERIFY(effectLoadedSpy.isValid());
@@ -283,7 +282,7 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
         QVERIFY(e->isEffectLoaded(effectName));
 
         QCOMPARE(effectLoadedSpy.count(), 1);
-        Effect *effect = effectLoadedSpy.first().first().value<Effect*>();
+        Effect *effect = effectLoadedSpy.first().first().value<Effect *>();
         if (effectName == QStringLiteral("slidingpopups")) {
             slidingPoupus = effect;
         } else {

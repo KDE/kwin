@@ -7,17 +7,19 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11windowed_backend.h"
-#include "x11windowed_output.h"
+
 #include <config-kwin.h>
-#include "scene_qpainter_x11_backend.h"
-#include "logging.h"
-#include "wayland_server.h"
-#include "utils/xcbutils.h"
+
 #include "egl_x11_backend.h"
+#include "logging.h"
+#include "scene_qpainter_x11_backend.h"
 #include "screens.h"
 #include "session.h"
-#include <kwinxrenderutils.h>
+#include "utils/xcbutils.h"
+#include "wayland_server.h"
+#include "x11windowed_output.h"
 #include <cursor.h>
+#include <kwinxrenderutils.h>
 #include <pointer_input.h>
 // KDE
 #include <KLocalizedString>
@@ -29,13 +31,13 @@
 // X11
 #if HAVE_X11_XINPUT
 #include "ge_event_mem_mover.h"
-#include <X11/extensions/XInput2.h>
 #include <X11/extensions/XI2proto.h>
+#include <X11/extensions/XInput2.h>
 #endif
 // system
-#include <linux/input.h>
 #include <X11/Xlib-xcb.h>
 #include <X11/keysym.h>
+#include <linux/input.h>
 
 namespace KWin
 {
@@ -201,8 +203,8 @@ bool X11WindowedBackend::initialize()
         m_screenNumber = screen;
         m_display = xDisplay;
         for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(m_connection));
-            it.rem;
-            --screen, xcb_screen_next(&it)) {
+             it.rem;
+             --screen, xcb_screen_next(&it)) {
             if (screen == m_screenNumber) {
                 m_screen = it.data;
             }
@@ -211,12 +213,10 @@ bool X11WindowedBackend::initialize()
         XRenderUtils::init(m_connection, m_screen->root);
         createOutputs();
         connect(kwinApp(), &Application::workspaceCreated, this, &X11WindowedBackend::startEventReading);
-        connect(Cursors::self(), &Cursors::currentCursorChanged, this,
-            [this] {
-                KWin::Cursor* c = KWin::Cursors::self()->currentCursor();
-                createCursor(c->image(), c->hotspot());
-            }
-        );
+        connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
+            KWin::Cursor *c = KWin::Cursors::self()->currentCursor();
+            createCursor(c->image(), c->hotspot());
+        });
         setReady(true);
         m_pointerDevice = new X11WindowedInputDevice(this);
         m_pointerDevice->setPointer(true);
@@ -262,17 +262,16 @@ void X11WindowedBackend::initXInput()
     m_xiOpcode = xi_opcode;
     m_majorVersion = major;
     m_minorVersion = minor;
-    m_hasXInput = m_majorVersion >=2 && m_minorVersion >= 2;
+    m_hasXInput = m_majorVersion >= 2 && m_minorVersion >= 2;
 #endif
 }
 
 X11WindowedOutput *X11WindowedBackend::findOutput(xcb_window_t window) const
 {
     auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
-        [window] (X11WindowedOutput *output) {
-            return output->window() == window;
-        }
-    );
+                           [window](X11WindowedOutput *output) {
+                               return output->window() == window;
+                           });
     if (it != m_outputs.constEnd()) {
         return *it;
     }
@@ -336,7 +335,7 @@ void X11WindowedBackend::startEventReading()
 
 static inline qreal fixed1616ToReal(FP1616 val)
 {
-    return (val) * 1.0 / (1 << 16);
+    return (val)*1.0 / (1 << 16);
 }
 #endif
 
@@ -346,69 +345,66 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
     switch (eventType) {
     case XCB_BUTTON_PRESS:
     case XCB_BUTTON_RELEASE:
-        handleButtonPress(reinterpret_cast<xcb_button_press_event_t*>(e));
+        handleButtonPress(reinterpret_cast<xcb_button_press_event_t *>(e));
         break;
     case XCB_MOTION_NOTIFY: {
-            auto event = reinterpret_cast<xcb_motion_notify_event_t*>(e);
-            const X11WindowedOutput *output = findOutput(event->event);
-            if (!output) {
-                break;
-            }
-            const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
-            Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice);
+        auto event = reinterpret_cast<xcb_motion_notify_event_t *>(e);
+        const X11WindowedOutput *output = findOutput(event->event);
+        if (!output) {
+            break;
         }
-        break;
+        const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
+        Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice);
+    } break;
     case XCB_KEY_PRESS:
     case XCB_KEY_RELEASE: {
-            auto event = reinterpret_cast<xcb_key_press_event_t*>(e);
-            if (eventType == XCB_KEY_PRESS) {
-                if (!m_keySymbols) {
-                    m_keySymbols = xcb_key_symbols_alloc(m_connection);
-                }
-                const xcb_keysym_t kc = xcb_key_symbols_get_keysym(m_keySymbols, event->detail, 0);
-                if (kc == XK_Control_R) {
-                    grabKeyboard(event->time);
-                }
-                Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
-                                                    InputRedirection::KeyboardKeyPressed,
-                                                    event->time,
-                                                    m_keyboardDevice);
-            } else {
-                Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
-                                                    InputRedirection::KeyboardKeyReleased,
-                                                    event->time,
-                                                    m_keyboardDevice);
+        auto event = reinterpret_cast<xcb_key_press_event_t *>(e);
+        if (eventType == XCB_KEY_PRESS) {
+            if (!m_keySymbols) {
+                m_keySymbols = xcb_key_symbols_alloc(m_connection);
             }
+            const xcb_keysym_t kc = xcb_key_symbols_get_keysym(m_keySymbols, event->detail, 0);
+            if (kc == XK_Control_R) {
+                grabKeyboard(event->time);
+            }
+            Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
+                                                InputRedirection::KeyboardKeyPressed,
+                                                event->time,
+                                                m_keyboardDevice);
+        } else {
+            Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
+                                                InputRedirection::KeyboardKeyReleased,
+                                                event->time,
+                                                m_keyboardDevice);
         }
-        break;
+    } break;
     case XCB_CONFIGURE_NOTIFY:
-        updateSize(reinterpret_cast<xcb_configure_notify_event_t*>(e));
+        updateSize(reinterpret_cast<xcb_configure_notify_event_t *>(e));
         break;
     case XCB_ENTER_NOTIFY: {
-            auto event = reinterpret_cast<xcb_enter_notify_event_t*>(e);
-            const X11WindowedOutput *output = findOutput(event->event);
-            if (!output) {
-                break;
-            }
-            const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
-            Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice);
+        auto event = reinterpret_cast<xcb_enter_notify_event_t *>(e);
+        const X11WindowedOutput *output = findOutput(event->event);
+        if (!output) {
+            break;
         }
-        break;
+        const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
+        Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice);
+    } break;
     case XCB_CLIENT_MESSAGE:
-        handleClientMessage(reinterpret_cast<xcb_client_message_event_t*>(e));
+        handleClientMessage(reinterpret_cast<xcb_client_message_event_t *>(e));
         break;
     case XCB_EXPOSE:
-        handleExpose(reinterpret_cast<xcb_expose_event_t*>(e));
+        handleExpose(reinterpret_cast<xcb_expose_event_t *>(e));
         break;
     case XCB_MAPPING_NOTIFY:
         if (m_keySymbols) {
-            xcb_refresh_keyboard_mapping(m_keySymbols, reinterpret_cast<xcb_mapping_notify_event_t*>(e));
+            xcb_refresh_keyboard_mapping(m_keySymbols, reinterpret_cast<xcb_mapping_notify_event_t *>(e));
         }
         break;
 #if HAVE_X11_XINPUT
     case XCB_GE_GENERIC: {
         GeEventMemMover ge(e);
-        auto te = reinterpret_cast<xXIDeviceEvent*>(e);
+        auto te = reinterpret_cast<xXIDeviceEvent *>(e);
         const X11WindowedOutput *output = findOutput(te->event);
         if (!output) {
             break;
@@ -434,7 +430,7 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
             break;
         }
         case XI_TouchOwnership: {
-            auto te = reinterpret_cast<xXITouchOwnershipEvent*>(e);
+            auto te = reinterpret_cast<xXITouchOwnershipEvent *>(e);
             XIAllowTouchEvents(m_display, te->deviceid, te->sourceid, te->touchid, XIAcceptTouch);
             break;
         }
@@ -463,9 +459,7 @@ void X11WindowedBackend::grabKeyboard(xcb_timestamp_t time)
         }
         if (grab->status == XCB_GRAB_STATUS_SUCCESS) {
             const auto c = xcb_grab_pointer_unchecked(m_connection, false, window(),
-                                                      XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE |
-                                                      XCB_EVENT_MASK_POINTER_MOTION |
-                                                      XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
+                                                      XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
                                                       XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC,
                                                       window(), XCB_CURSOR_NONE, time);
             ScopedCPointer<xcb_grab_pointer_reply_t> grab(xcb_grab_pointer_reply(m_connection, c, nullptr));
@@ -485,9 +479,7 @@ void X11WindowedBackend::grabKeyboard(xcb_timestamp_t time)
 void X11WindowedBackend::updateWindowTitle()
 {
     const QString grab = m_keyboardGrabbed ? i18n("Press right control to ungrab input") : i18n("Press right control key to grab input");
-    const QString title = QStringLiteral("%1 (%2) - %3").arg(i18n("KDE Wayland Compositor"),
-                                                             waylandServer()->socketName(),
-                                                             grab);
+    const QString title = QStringLiteral("%1 (%2) - %3").arg(i18n("KDE Wayland Compositor"), waylandServer()->socketName(), grab);
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         (*it)->setWindowTitle(title);
     }
@@ -496,8 +488,9 @@ void X11WindowedBackend::updateWindowTitle()
 void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
 {
     auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                           [event] (X11WindowedOutput *output) { return output->window() == event->window; }
-              );
+                           [event](X11WindowedOutput *output) {
+                               return output->window() == event->window;
+                           });
     if (it == m_outputs.end()) {
         return;
     }
@@ -610,7 +603,7 @@ void X11WindowedBackend::createCursor(const QImage &srcImage, const QPoint &hots
     const xcb_gcontext_t gc = xcb_generate_id(m_connection);
     const xcb_cursor_t cid = xcb_generate_id(m_connection);
 
-    //right now on X we only have one scale between all screens, and we know we will have at least one screen
+    // right now on X we only have one scale between all screens, and we know we will have at least one screen
     const qreal outputScale = 1;
     const QSize targetSize = srcImage.size() * outputScale / srcImage.devicePixelRatio();
     const QImage img = srcImage.scaled(targetSize, Qt::KeepAspectRatio);
@@ -660,7 +653,7 @@ X11WindowedInputDevice *X11WindowedBackend::touchDevice() const
 
 OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
 {
-    return  new EglX11Backend(this);
+    return new EglX11Backend(this);
 }
 
 QPainterBackend *X11WindowedBackend::createQPainterBackend()
@@ -685,7 +678,7 @@ xcb_window_t X11WindowedBackend::windowForScreen(AbstractOutput *output) const
     if (!output) {
         return XCB_WINDOW_NONE;
     }
-    return static_cast<X11WindowedOutput*>(output)->window();
+    return static_cast<X11WindowedOutput *>(output)->window();
 }
 
 xcb_window_t X11WindowedBackend::window() const

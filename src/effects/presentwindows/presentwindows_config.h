@@ -22,14 +22,14 @@ class PresentWindowsEffectConfigForm : public QWidget, public Ui::PresentWindows
 {
     Q_OBJECT
 public:
-    explicit PresentWindowsEffectConfigForm(QWidget* parent);
+    explicit PresentWindowsEffectConfigForm(QWidget *parent);
 };
 
 class PresentWindowsEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit PresentWindowsEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
+    explicit PresentWindowsEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
     ~PresentWindowsEffectConfig() override;
 
 public Q_SLOTS:
@@ -37,8 +37,8 @@ public Q_SLOTS:
     void defaults() override;
 
 private:
-    PresentWindowsEffectConfigForm* m_ui;
-    KActionCollection* m_actionCollection;
+    PresentWindowsEffectConfigForm *m_ui;
+    KActionCollection *m_actionCollection;
 };
 
 } // namespace

@@ -7,14 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_output.h"
-#include "platform.h"
-#include "x11client.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "platform.h"
 #include "screenedge.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 #include <kwineffects.h>
 
 #include <netwm.h>
@@ -39,8 +40,8 @@ private Q_SLOTS:
 
 void ScreenEdgeClientShowTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Deleted*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -71,7 +72,6 @@ void ScreenEdgeClientShowTest::init()
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
     QVERIFY(waylandServer()->clients().isEmpty());
 }
-
 
 struct XcbConnectionDeleter
 {
@@ -163,16 +163,16 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     // go into event loop to trigger xcb_flush
     QTest::qWait(1);
 
-    //hide window again
+    // hide window again
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
     xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w, atom, XCB_ATOM_CARDINAL, 32, 1, &location);
     xcb_flush(c.data());
     QVERIFY(clientHiddenSpy.wait());
     QVERIFY(client->isHiddenInternal());
     QFETCH(QRect, resizedWindowGeometry);
-    //resizewhile hidden
+    // resizewhile hidden
     client->moveResize(resizedWindowGeometry);
-    //triggerPos shouldn't be valid anymore
+    // triggerPos shouldn't be valid anymore
     Cursors::self()->mouse()->setPos(triggerPos);
     QVERIFY(client->isHiddenInternal());
 

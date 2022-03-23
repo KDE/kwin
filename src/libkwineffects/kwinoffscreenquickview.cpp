@@ -14,13 +14,12 @@
 #include "sharedqmlengine.h"
 
 #include <QGuiApplication>
+#include <QQmlComponent>
+#include <QQmlContext>
 #include <QQmlEngine>
 #include <QQuickItem>
-#include <QQmlContext>
-#include <QQmlComponent>
-#include <QQmlEngine>
-#include <QQuickView>
 #include <QQuickRenderControl>
+#include <QQuickView>
 #include <QStyleHints>
 
 #include <QOffscreenSurface>
@@ -89,7 +88,7 @@ public:
 
     void releaseResources();
 
-    void updateTouchState(Qt::TouchPointState state, qint32 id, const QPointF& pos);
+    void updateTouchState(Qt::TouchPointState state, qint32 id, const QPointF &pos);
 };
 
 class Q_DECL_HIDDEN OffscreenQuickScene::Private
@@ -98,7 +97,6 @@ public:
     Private()
         : qmlEngine(SharedQmlEngine::engine())
     {
-
     }
 
     SharedQmlEngine::Ptr qmlEngine;
@@ -170,7 +168,9 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
         }
     }
 
-    auto updateSize = [this]() { contentItem()->setSize(d->m_view->size()); };
+    auto updateSize = [this]() {
+        contentItem()->setSize(d->m_view->size());
+    };
     updateSize();
     connect(d->m_view, &QWindow::widthChanged, this, updateSize);
     connect(d->m_view, &QWindow::heightChanged, this, updateSize);
@@ -297,8 +297,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
     switch (e->type()) {
     case QEvent::MouseMove:
     case QEvent::MouseButtonPress:
-    case QEvent::MouseButtonRelease:
-    {
+    case QEvent::MouseButtonRelease: {
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
         const QPoint widgetPos = d->m_view->mapFromGlobal(me->pos());
         QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
@@ -321,8 +320,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
     }
     case QEvent::HoverEnter:
     case QEvent::HoverLeave:
-    case QEvent::HoverMove:
-    {
+    case QEvent::HoverMove: {
         QHoverEvent *he = static_cast<QHoverEvent *>(e);
         const QPointF widgetPos = d->m_view->mapFromGlobal(he->pos());
         const QPointF oldWidgetPos = d->m_view->mapFromGlobal(he->oldPos());
@@ -331,8 +329,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
         e->setAccepted(cloneEvent.isAccepted());
         return;
     }
-    case QEvent::Wheel:
-    {
+    case QEvent::Wheel: {
         QWheelEvent *we = static_cast<QWheelEvent *>(e);
         const QPointF widgetPos = d->m_view->mapFromGlobal(we->position().toPoint());
         QWheelEvent cloneEvent(widgetPos, we->globalPosition(), we->pixelDelta(), we->angleDelta(), we->buttons(),
@@ -429,7 +426,7 @@ void OffscreenQuickView::setVisible(bool visible)
     }
     d->m_visible = visible;
 
-    if (visible){
+    if (visible) {
         Q_EMIT d->m_renderControl->renderRequested();
     } else {
         // deferred to not change GL context
@@ -507,16 +504,17 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
     // points to Stationary so we only have one touch point with a different
     // state.
     touchPoints.erase(std::remove_if(touchPoints.begin(), touchPoints.end(), [](QTouchEvent::TouchPoint &point) {
-        if (point.state() == Qt::TouchPointReleased) {
-            return true;
-        }
+                          if (point.state() == Qt::TouchPointReleased) {
+                              return true;
+                          }
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        point.setState(Qt::TouchPointStationary);
+                          point.setState(Qt::TouchPointStationary);
 #else
-        static_cast<QMutableEventPoint&>(point).setState(QEventPoint::Stationary);
+                              static_cast<QMutableEventPoint &>(point).setState(QEventPoint::Stationary);
 #endif
-        return false;
-    }), touchPoints.end());
+                          return false;
+                      }),
+                      touchPoints.end());
 
     // QtQuick Pointer Handlers incorrectly consider a touch point with ID 0
     // to be an invalid touch point. This has been fixed in Qt 6 but could not
@@ -532,63 +530,60 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
 
     switch (state) {
     case Qt::TouchPointPressed: {
-            if (changed != touchPoints.end()) {
-                return;
-            }
+        if (changed != touchPoints.end()) {
+            return;
+        }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            QTouchEvent::TouchPoint point;
-            point.setState(Qt::TouchPointPressed);
+        QTouchEvent::TouchPoint point;
+        point.setState(Qt::TouchPointPressed);
 #else
-            QMutableEventPoint point;
-            point.setState(QEventPoint::Pressed);
+        QMutableEventPoint point;
+        point.setState(QEventPoint::Pressed);
 #endif
-            point.setId(id + idOffset);
-            point.setScreenPos(pos);
-            point.setScenePos(m_view->mapFromGlobal(pos.toPoint()));
-            point.setPos(m_view->mapFromGlobal(pos.toPoint()));
+        point.setId(id + idOffset);
+        point.setScreenPos(pos);
+        point.setScenePos(m_view->mapFromGlobal(pos.toPoint()));
+        point.setPos(m_view->mapFromGlobal(pos.toPoint()));
 
-            touchPoints.append(point);
-        }
-        break;
+        touchPoints.append(point);
+    } break;
     case Qt::TouchPointMoved: {
-            if (changed == touchPoints.end()) {
-                return;
-            }
+        if (changed == touchPoints.end()) {
+            return;
+        }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            auto &point = *changed;
-            point.setLastPos(point.pos());
-            point.setLastScenePos(point.scenePos());
-            point.setLastScreenPos(point.screenPos());
-            point.setState(Qt::TouchPointMoved);
+        auto &point = *changed;
+        point.setLastPos(point.pos());
+        point.setLastScenePos(point.scenePos());
+        point.setLastScreenPos(point.screenPos());
+        point.setState(Qt::TouchPointMoved);
 #else
-            auto &point = static_cast<QMutableEventPoint&>(*changed);
-            point.setGlobalLastPosition(point.globalPosition());
-            point.setState(QEventPoint::Updated);
+        auto &point = static_cast<QMutableEventPoint &>(*changed);
+        point.setGlobalLastPosition(point.globalPosition());
+        point.setState(QEventPoint::Updated);
 #endif
-            point.setScenePos(m_view->mapFromGlobal(pos.toPoint()));
-            point.setPos(m_view->mapFromGlobal(pos.toPoint()));
-            point.setScreenPos(pos);
-        }
-        break;
+        point.setScenePos(m_view->mapFromGlobal(pos.toPoint()));
+        point.setPos(m_view->mapFromGlobal(pos.toPoint()));
+        point.setScreenPos(pos);
+    } break;
     case Qt::TouchPointReleased: {
-            if (changed == touchPoints.end()) {
-                return;
-            }
+        if (changed == touchPoints.end()) {
+            return;
+        }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            auto &point = *changed;
-            point.setLastPos(point.pos());
-            point.setLastScreenPos(point.screenPos());
-            point.setState(Qt::TouchPointReleased);
+        auto &point = *changed;
+        point.setLastPos(point.pos());
+        point.setLastScreenPos(point.screenPos());
+        point.setState(Qt::TouchPointReleased);
 #else
-            auto &point = static_cast<QMutableEventPoint&>(*changed);
-            point.setGlobalLastPosition(point.globalPosition());
-            point.setState(QEventPoint::Released);
+        auto &point = static_cast<QMutableEventPoint &>(*changed);
+        point.setGlobalLastPosition(point.globalPosition());
+        point.setState(QEventPoint::Released);
 #endif
-        }
-        break;
+    } break;
     default:
         break;
     }
@@ -655,7 +650,9 @@ void OffscreenQuickScene::setSource(const QUrl &source)
 
     item->setParentItem(contentItem());
 
-    auto updateSize = [item, this]() { item->setSize(contentItem()->size()); };
+    auto updateSize = [item, this]() {
+        item->setSize(contentItem()->size());
+    };
     updateSize();
     connect(contentItem(), &QQuickItem::widthChanged, item, updateSize);
     connect(contentItem(), &QQuickItem::heightChanged, item, updateSize);

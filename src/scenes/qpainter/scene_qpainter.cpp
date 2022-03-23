@@ -10,25 +10,25 @@
 #include "qpaintersurfacetexture.h"
 // KWin
 #include "abstract_client.h"
+#include "abstract_output.h"
 #include "composite.h"
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
 #include "effects.h"
 #include "main.h"
+#include "platform.h"
 #include "renderloop.h"
 #include "screens.h"
 #include "surfaceitem.h"
 #include "toplevel.h"
-#include "platform.h"
 #include "windowitem.h"
-#include "abstract_output.h"
 
 #include <kwinoffscreenquickview.h>
 // Qt
+#include <KDecoration2/Decoration>
 #include <QDebug>
 #include <QPainter>
-#include <KDecoration2/Decoration>
 
 #include <cmath>
 
@@ -226,7 +226,7 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
     }
 
     QPainterSurfaceTexture *platformSurfaceTexture =
-            static_cast<QPainterSurfaceTexture *>(surfaceTexture->texture());
+        static_cast<QPainterSurfaceTexture *>(surfaceTexture->texture());
     if (!platformSurfaceTexture->isValid()) {
         platformSurfaceTexture->create();
     } else {
@@ -298,7 +298,6 @@ void QPainterEffectFrame::render(const QRegion &region, double opacity, double f
     }
     QPainter *painter = m_scene->scenePainter();
 
-
     // Render the actual frame
     if (m_effectFrame->style() == EffectFrameUnstyled) {
         painter->save();
@@ -311,7 +310,7 @@ void QPainterEffectFrame::render(const QRegion &region, double opacity, double f
         painter->restore();
     } else if (m_effectFrame->style() == EffectFrameStyled) {
         qreal left, top, right, bottom;
-        m_effectFrame->frame().getMargins(left, top, right, bottom);   // m_geometry is the inner geometry
+        m_effectFrame->frame().getMargins(left, top, right, bottom); // m_geometry is the inner geometry
         QRect geom = m_effectFrame->geometry().adjusted(-left, -top, right, bottom);
         painter->drawPixmap(geom, m_effectFrame->frame().framePixmap());
     }
@@ -359,7 +358,7 @@ void QPainterEffectFrame::render(const QRegion &region, double opacity, double f
 //****************************************
 // QPainterShadow
 //****************************************
-SceneQPainterShadow::SceneQPainterShadow(Toplevel* toplevel)
+SceneQPainterShadow::SceneQPainterShadow(Toplevel *toplevel)
     : Shadow(toplevel)
 {
 }
@@ -433,9 +432,7 @@ void SceneQPainterDecorationRenderer::resizeImages()
 
     auto checkAndCreate = [this](int index, const QSize &size) {
         auto dpr = effectiveDevicePixelRatio();
-        if (m_images[index].size() != size * dpr ||
-            m_images[index].devicePixelRatio() != dpr)
-        {
+        if (m_images[index].size() != size * dpr || m_images[index].devicePixelRatio() != dpr) {
             m_images[index] = QImage(size * dpr, QImage::Format_ARGB32_Premultiplied);
             m_images[index].setDevicePixelRatio(dpr);
             m_images[index].fill(Qt::transparent);

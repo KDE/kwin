@@ -7,20 +7,21 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "composite.h"
-#include "effectloader.h"
-#include "x11client.h"
 #include "cursor.h"
+#include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KConfigGroup>
 
+#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/pointer.h>
 #include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/surface_interface.h>
 
@@ -34,7 +35,7 @@ static const QString s_socketName = QStringLiteral("wayland_test_kwin_scene_qpai
 
 class SceneQPainterTest : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
     void cleanup();
@@ -53,7 +54,7 @@ void SceneQPainterTest::cleanup()
 
 void SceneQPainterTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -210,14 +211,14 @@ void SceneQPainterTest::testWindowScaled()
     // now let's map the window
     s->setScale(2);
 
-    //draw a blue square@400x600 with red rectangle@200x200 in the middle
-    const QSize size(400,600);
+    // draw a blue square@400x600 with red rectangle@200x200 in the middle
+    const QSize size(400, 600);
     QImage img(size, QImage::Format_ARGB32_Premultiplied);
     img.fill(Qt::blue);
     QPainter surfacePainter(&img);
-    surfacePainter.fillRect(200,300,200,200, Qt::red);
+    surfacePainter.fillRect(200, 300, 200, 200, Qt::red);
 
-    //add buffer
+    // add buffer
     Test::render(s.data(), img);
     QVERIFY(pointerEnteredSpy.wait());
     p->setCursor(cs.data(), QPoint(5, 5));
@@ -229,7 +230,7 @@ void SceneQPainterTest::testWindowScaled()
     QPainter painter(&referenceImage);
     painter.fillRect(0, 0, 200, 300, Qt::blue);
     painter.fillRect(100, 150, 100, 100, Qt::red);
-    painter.fillRect(5, 5, 10, 10, Qt::red); //cursor
+    painter.fillRect(5, 5, 10, 10, Qt::red); // cursor
 
     const auto outputs = kwinApp()->platform()->enabledOutputs();
     QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(outputs.constFirst()));
@@ -336,7 +337,6 @@ void SceneQPainterTest::testX11Window()
     xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
     xcb_map_window(c.data(), w);
     xcb_flush(c.data());
-
 
     // we should get a client for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);

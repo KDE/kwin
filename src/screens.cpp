@@ -7,14 +7,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "screens.h"
-#include <abstract_client.h>
+
+#include <config-kwin.h>
+
 #include "abstract_output.h"
 #include "cursor.h"
-#include "utils/common.h"
-#include "settings.h"
-#include <workspace.h>
-#include <config-kwin.h>
 #include "platform.h"
+#include "settings.h"
+#include "utils/common.h"
+#include <abstract_client.h>
+#include <workspace.h>
 
 namespace KWin
 {

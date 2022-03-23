@@ -4,14 +4,15 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "glide_config.h"
-// KConfigSkeleton
-#include "glideconfig.h"
+
 #include <config-kwin.h>
 
-#include <kwineffects_interface.h>
+// KConfigSkeleton
+#include "glideconfig.h"
+
 #include <KPluginFactory>
+#include <kwineffects_interface.h>
 
 K_PLUGIN_CLASS(KWin::GlideEffectConfig)
 

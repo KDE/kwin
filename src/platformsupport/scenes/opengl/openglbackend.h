@@ -66,7 +66,8 @@ public:
      *
      * @return bool @c true if the creation of the Backend failed, @c false otherwise.
      */
-    bool isFailed() const {
+    bool isFailed() const
+    {
         return m_failed;
     }
     /**
@@ -77,11 +78,13 @@ public:
      *
      * @return bool @c true if the GL context is direct, @c false if indirect
      */
-    bool isDirectRendering() const {
+    bool isDirectRendering() const
+    {
         return m_directRendering;
     }
 
-    bool supportsBufferAge() const {
+    bool supportsBufferAge() const
+    {
         return m_haveBufferAge;
     }
 
@@ -104,14 +107,16 @@ public:
      *
      * Not the OpenGL (ES) extension!
      */
-    QList<QByteArray> extensions() const {
+    QList<QByteArray> extensions() const
+    {
         return m_extensions;
     }
 
     /**
      * @returns whether the backend specific extensions contains @p extension.
      */
-    bool hasExtension(const QByteArray &extension) const {
+    bool hasExtension(const QByteArray &extension) const
+    {
         return m_extensions.contains(extension);
     }
 
@@ -141,11 +146,13 @@ protected:
      *
      * @param direct @c true if the OpenGL context is direct, @c false if indirect
      */
-    void setIsDirectRendering(bool direct) {
+    void setIsDirectRendering(bool direct)
+    {
         m_directRendering = direct;
     }
 
-    void setSupportsBufferAge(bool value) {
+    void setSupportsBufferAge(bool value)
+    {
         m_haveBufferAge = value;
     }
 
@@ -169,7 +176,8 @@ protected:
      *
      * These are the EGL/GLX extensions, not the OpenGL extensions
      */
-    void setExtensions(const QList<QByteArray> &extensions) {
+    void setExtensions(const QList<QByteArray> &extensions)
+    {
         m_extensions = extensions;
     }
 

@@ -48,8 +48,7 @@ SGIVideoSyncVsyncMonitorHelper::SGIVideoSyncVsyncMonitorHelper(QObject *parent)
     const int attribs[] = {
         GLX_RENDER_TYPE, GLX_RGBA_BIT,
         GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
-        0
-    };
+        0};
 
     GLXFBConfig config = chooseGlxFbConfig(m_display, attribs);
     if (!config) {

@@ -12,9 +12,9 @@
 #define KWIN_GLUTILS_H
 
 // kwin
-#include <kwinglutils_export.h>
-#include "kwinglutils_funcs.h"
 #include "kwingltexture.h"
+#include "kwinglutils_funcs.h"
+#include <kwinglutils_export.h>
 
 // Qt
 #include <QSize>
@@ -28,8 +28,8 @@ class QVector3D;
 class QVector4D;
 class QMatrix4x4;
 
-template< class K, class V > class QHash;
-
+template<class K, class V>
+class QHash;
 
 namespace KWin
 {
@@ -41,17 +41,16 @@ class GLVertexBufferPrivate;
 //  well as checking for GL version and extensions
 //  Note that GL context has to be created by the time this function is called
 typedef void (*resolveFuncPtr)();
-void KWINGLUTILS_EXPORT initGL(const std::function<resolveFuncPtr(const char*)> &resolveFunction);
+void KWINGLUTILS_EXPORT initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction);
 // Cleans up all resources hold by the GL Context
 void KWINGLUTILS_EXPORT cleanupGL();
-
 
 bool KWINGLUTILS_EXPORT hasGLVersion(int major, int minor, int release = 0);
 // use for both OpenGL and GLX extensions
 bool KWINGLUTILS_EXPORT hasGLExtension(const QByteArray &extension);
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
-bool KWINGLUTILS_EXPORT checkGLError(const char* txt);
+bool KWINGLUTILS_EXPORT checkGLError(const char *txt);
 
 QList<QByteArray> KWINGLUTILS_EXPORT openGLExtensions();
 
@@ -59,14 +58,15 @@ class KWINGLUTILS_EXPORT GLShader
 {
 public:
     enum Flags {
-        NoFlags         = 0,
+        NoFlags = 0,
         ExplicitLinking = (1 << 0)
     };
 
     GLShader(const QString &vertexfile, const QString &fragmentfile, unsigned int flags = NoFlags);
     ~GLShader();
 
-    bool isValid() const  {
+    bool isValid() const
+    {
         return mValid;
     }
 
@@ -75,15 +75,15 @@ public:
 
     bool link();
 
-    int uniformLocation(const char* name);
+    int uniformLocation(const char *name);
 
-    bool setUniform(const char* name, float value);
-    bool setUniform(const char* name, int value);
-    bool setUniform(const char* name, const QVector2D& value);
-    bool setUniform(const char* name, const QVector3D& value);
-    bool setUniform(const char* name, const QVector4D& value);
-    bool setUniform(const char* name, const QMatrix4x4& value);
-    bool setUniform(const char* name, const QColor& color);
+    bool setUniform(const char *name, float value);
+    bool setUniform(const char *name, int value);
+    bool setUniform(const char *name, const QVector2D &value);
+    bool setUniform(const char *name, const QVector3D &value);
+    bool setUniform(const char *name, const QVector4D &value);
+    bool setUniform(const char *name, const QMatrix4x4 &value);
+    bool setUniform(const char *name, const QColor &color);
 
     bool setUniform(int location, float value);
     bool setUniform(int location, int value);
@@ -93,13 +93,13 @@ public:
     bool setUniform(int location, const QMatrix4x4 &value);
     bool setUniform(int location, const QColor &value);
 
-    int attributeLocation(const char* name);
-    bool setAttribute(const char* name, float value);
+    int attributeLocation(const char *name);
+    bool setAttribute(const char *name, float value);
     /**
      * @return The value of the uniform as a matrix
      * @since 4.7
      */
-    QMatrix4x4 getUniformMatrix4x4(const char* name);
+    QMatrix4x4 getUniformMatrix4x4(const char *name);
 
     enum MatrixUniform {
         TextureMatrix = 0,
@@ -127,7 +127,7 @@ public:
     };
 
     enum IntUniform {
-        AlphaToOne,     ///< @deprecated no longer used
+        AlphaToOne, ///< @deprecated no longer used
         IntUniformCount
     };
 
@@ -137,16 +137,16 @@ public:
     };
 
     bool setUniform(MatrixUniform uniform, const QMatrix4x4 &matrix);
-    bool setUniform(Vec2Uniform uniform,   const QVector2D &value);
-    bool setUniform(Vec4Uniform uniform,   const QVector4D &value);
-    bool setUniform(FloatUniform uniform,  float value);
-    bool setUniform(IntUniform uniform,    int value);
-    bool setUniform(ColorUniform uniform,  const QVector4D &value);
-    bool setUniform(ColorUniform uniform,  const QColor &value);
+    bool setUniform(Vec2Uniform uniform, const QVector2D &value);
+    bool setUniform(Vec4Uniform uniform, const QVector4D &value);
+    bool setUniform(FloatUniform uniform, float value);
+    bool setUniform(IntUniform uniform, int value);
+    bool setUniform(ColorUniform uniform, const QVector4D &value);
+    bool setUniform(ColorUniform uniform, const QColor &value);
 
 protected:
     GLShader(unsigned int flags = NoFlags);
-    bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
+    bool loadFromFiles(const QString &vertexfile, const QString &fragmentfile);
     bool load(const QByteArray &vertexSource, const QByteArray &fragmentSource);
     const QByteArray prepareSource(GLenum shaderType, const QByteArray &sourceCode) const;
     bool compile(GLuint program, GLenum shaderType, const QByteArray &sourceCode) const;
@@ -156,9 +156,9 @@ protected:
 
 private:
     unsigned int mProgram;
-    bool mValid:1;
-    bool mLocationsResolved:1;
-    bool mExplicitLinking:1;
+    bool mValid : 1;
+    bool mLocationsResolved : 1;
+    bool mExplicitLinking : 1;
     int mMatrixLocation[MatrixCount];
     int mVec2Location[Vec2UniformCount];
     int mVec4Location[Vec4UniformCount];
@@ -169,16 +169,14 @@ private:
     friend class ShaderManager;
 };
 
-
 enum class ShaderTrait {
-    MapTexture       = (1 << 0),
-    UniformColor     = (1 << 1),
-    Modulate         = (1 << 2),
+    MapTexture = (1 << 0),
+    UniformColor = (1 << 1),
+    Modulate = (1 << 2),
     AdjustSaturation = (1 << 3),
 };
 
 Q_DECLARE_FLAGS(ShaderTraits, ShaderTrait)
-
 
 /**
  * @short Manager for Shaders.
@@ -303,7 +301,7 @@ private:
     QByteArray generateFragmentSource(ShaderTraits traits) const;
     GLShader *generateShader(ShaderTraits traits);
 
-    QStack<GLShader*> m_boundShaders;
+    QStack<GLShader *> m_boundShaders;
     QHash<ShaderTraits, GLShader *> m_shaderHash;
     static ShaderManager *s_shaderManager;
 };
@@ -353,28 +351,24 @@ private:
     GLShader *m_shader;
 };
 
-inline
-ShaderBinder::ShaderBinder(GLShader *shader)
+inline ShaderBinder::ShaderBinder(GLShader *shader)
     : m_shader(shader)
 {
     ShaderManager::instance()->pushShader(shader);
 }
 
-inline
-ShaderBinder::ShaderBinder(ShaderTraits traits)
+inline ShaderBinder::ShaderBinder(ShaderTraits traits)
     : m_shader(nullptr)
 {
     m_shader = ShaderManager::instance()->pushShader(traits);
 }
 
-inline
-ShaderBinder::~ShaderBinder()
+inline ShaderBinder::~ShaderBinder()
 {
     ShaderManager::instance()->popShader();
 }
 
-inline
-GLShader* ShaderBinder::shader()
+inline GLShader *ShaderBinder::shader()
 {
     return m_shader;
 }
@@ -414,21 +408,25 @@ public:
     /**
      * Returns the framebuffer object handle to this render target object.
      */
-    GLuint handle() const {
+    GLuint handle() const
+    {
         return mFramebuffer;
     }
     /**
      * Returns the size of the color attachment to this render target object.
      */
-    QSize size() const {
+    QSize size() const
+    {
         return mSize;
     }
-    bool valid() const {
+    bool valid() const
+    {
         return mValid;
     }
 
     static void initStatic();
-    static bool supported()  {
+    static bool supported()
+    {
         return sSupported;
     }
 
@@ -442,7 +440,7 @@ public:
      * @param targets The stack of GLRenderTargets
      * @since 5.13
      */
-    static void pushRenderTargets(QStack <GLRenderTarget*> targets);
+    static void pushRenderTargets(QStack<GLRenderTarget *> targets);
 
     static void pushRenderTarget(GLRenderTarget *target);
     static GLRenderTarget *popRenderTarget();
@@ -480,7 +478,7 @@ private:
     static void cleanup();
     static bool sSupported;
     static bool s_blitSupported;
-    static QStack<GLRenderTarget*> s_renderTargets;
+    static QStack<GLRenderTarget *> s_renderTargets;
 
     GLuint mFramebuffer = 0;
     QSize mSize;
@@ -503,10 +501,10 @@ enum VertexAttributeType {
  */
 struct GLVertexAttrib
 {
-    int index;            /** The attribute index */
-    int size;             /** The number of components [1..4] */
-    GLenum type;          /** The type (e.g. GL_FLOAT) */
-    int relativeOffset;   /** The relative offset of the attribute */
+    int index; /** The attribute index */
+    int size; /** The number of components [1..4] */
+    GLenum type; /** The type (e.g. GL_FLOAT) */
+    int relativeOffset; /** The relative offset of the attribute */
 };
 
 /**
@@ -582,7 +580,7 @@ public:
      * @param texcoords The texture coordinates for each vertex.
      * Size must equal 2 * @a numberVertices.
      */
-    void setData(int numberVertices, int dim, const float* vertices, const float* texcoords);
+    void setData(int numberVertices, int dim, const float *vertices, const float *texcoords);
 
     /**
      * Maps an unused range of the data store into the client's address space.
@@ -640,7 +638,7 @@ public:
      * Same as above restricting painting to @a region if @a hardwareClipping is true.
      * It's within the caller's responsibility to enable GL_SCISSOR_TEST.
      */
-    void render(const QRegion& region, GLenum primitiveMode, bool hardwareClipping = false);
+    void render(const QRegion &region, GLenum primitiveMode, bool hardwareClipping = false);
     /**
      * Sets the color the geometry will be rendered with.
      * For legacy rendering glColor is used before rendering the geometry.
@@ -651,7 +649,7 @@ public:
      * @see isUseColor
      * @since 4.7
      */
-    void setColor(const QColor& color, bool enableColor = true);
+    void setColor(const QColor &color, bool enableColor = true);
     /**
      * @return @c true if geometry will be painted with a color, @c false otherwise
      * @see setUseColor
@@ -712,7 +710,7 @@ public:
     static GLVertexBuffer *streamingBuffer();
 
 private:
-    GLVertexBufferPrivate* const d;
+    GLVertexBufferPrivate *const d;
 };
 
 } // namespace

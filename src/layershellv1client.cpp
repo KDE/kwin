@@ -6,8 +6,8 @@
 
 #include "layershellv1client.h"
 #include "abstract_output.h"
-#include "layershellv1integration.h"
 #include "deleted.h"
+#include "layershellv1integration.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -22,16 +22,16 @@ namespace KWin
 
 static NET::WindowType scopeToType(const QString &scope)
 {
-    static const QHash<QString, NET::WindowType> scopeToType {
-        { QStringLiteral("desktop"), NET::Desktop },
-        { QStringLiteral("dock"), NET::Dock },
-        { QStringLiteral("crititical-notification"), NET::CriticalNotification },
-        { QStringLiteral("notification"), NET::Notification },
-        { QStringLiteral("tooltip"), NET::Tooltip },
-        { QStringLiteral("on-screen-display"), NET::OnScreenDisplay },
-        { QStringLiteral("dialog"), NET::Dialog },
-        { QStringLiteral("splash"), NET::Splash },
-        { QStringLiteral("utility"), NET::Utility },
+    static const QHash<QString, NET::WindowType> scopeToType{
+        {QStringLiteral("desktop"), NET::Desktop},
+        {QStringLiteral("dock"), NET::Dock},
+        {QStringLiteral("crititical-notification"), NET::CriticalNotification},
+        {QStringLiteral("notification"), NET::Notification},
+        {QStringLiteral("tooltip"), NET::Tooltip},
+        {QStringLiteral("on-screen-display"), NET::OnScreenDisplay},
+        {QStringLiteral("dialog"), NET::Dialog},
+        {QStringLiteral("splash"), NET::Splash},
+        {QStringLiteral("utility"), NET::Utility},
     };
     return scopeToType.value(scope.toLower(), NET::Normal);
 }

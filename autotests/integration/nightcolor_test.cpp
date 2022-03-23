@@ -7,11 +7,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
-#include "platform.h"
-#include "wayland_server.h"
 
-#include "plugins/nightcolor/nightcolormanager.h"
+#include "platform.h"
 #include "plugins/nightcolor/constants.h"
+#include "plugins/nightcolor/nightcolormanager.h"
+#include "wayland_server.h"
 
 #include <KConfigGroup>
 
@@ -102,7 +102,6 @@ void NightColorTest::testConfigRead()
     } else {
         QCOMPARE(manager->mode(), mode);
     }
-
 }
 
 WAYLANDTEST_MAIN(NightColorTest)

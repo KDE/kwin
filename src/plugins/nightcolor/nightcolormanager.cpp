@@ -27,7 +27,8 @@
 #include <QDBusConnection>
 #include <QTimer>
 
-namespace KWin {
+namespace KWin
+{
 
 static const int QUICK_ADJUST_DURATION = 2000;
 static const int TEMPERATURE_STEP = 50;
@@ -67,7 +68,7 @@ NightColorManager::NightColorManager(QObject *parent)
             QStringLiteral("/org/kde/osdService"),
             QStringLiteral("org.kde.osdService"),
             QStringLiteral("showText"));
-        message.setArguments({ iconName, text });
+        message.setArguments({iconName, text});
 
         QDBusConnection::sessionBus().asyncCall(message);
     });
@@ -305,8 +306,8 @@ void NightColorManager::readConfig()
     int diffME = mrB.msecsTo(evB);
     if (diffME <= 0) {
         // morning not strictly before evening - use defaults
-        mrB = QTime(6,0);
-        evB = QTime(18,0);
+        mrB = QTime(6, 0);
+        evB = QTime(18, 0);
         diffME = mrB.msecsTo(evB);
     }
     int diffMin = qMin(diffME, MSC_DAY - diffME);
@@ -314,8 +315,8 @@ void NightColorManager::readConfig()
     int trTime = s->transitionTime() * 1000 * 60;
     if (trTime < 0 || diffMin <= trTime) {
         // transition time too long - use defaults
-        mrB = QTime(6,0);
-        evB = QTime(18,0);
+        mrB = QTime(6, 0);
+        evB = QTime(18, 0);
         trTime = FALLBACK_SLOW_UPDATE_TIME;
     }
     m_morning = mrB;
@@ -448,9 +449,13 @@ void NightColorManager::resetSlowUpdateTimer()
         m_slowUpdateTimer = new QTimer(this);
         m_slowUpdateTimer->setSingleShot(false);
         if (isDay) {
-            connect(m_slowUpdateTimer, &QTimer::timeout, this, [this]() {slowUpdate(m_dayTargetTemp);});
+            connect(m_slowUpdateTimer, &QTimer::timeout, this, [this]() {
+                slowUpdate(m_dayTargetTemp);
+            });
         } else {
-            connect(m_slowUpdateTimer, &QTimer::timeout, this, [this]() {slowUpdate(m_nightTargetTemp);});
+            connect(m_slowUpdateTimer, &QTimer::timeout, this, [this]() {
+                slowUpdate(m_nightTargetTemp);
+            });
         }
 
         // calculate interval such as temperature is changed by TEMPERATURE_STEP K per timer timeout
@@ -581,16 +586,16 @@ DateTimes NightColorManager::getSunTimings(const QDateTime &dateTime, double lat
     const bool endDefined = !dateTimes.second.isNull();
     if (!beginDefined || !endDefined) {
         if (beginDefined) {
-            dateTimes.second = dateTimes.first.addMSecs( FALLBACK_SLOW_UPDATE_TIME );
+            dateTimes.second = dateTimes.first.addMSecs(FALLBACK_SLOW_UPDATE_TIME);
         } else if (endDefined) {
-            dateTimes.first = dateTimes.second.addMSecs( - FALLBACK_SLOW_UPDATE_TIME );
+            dateTimes.first = dateTimes.second.addMSecs(-FALLBACK_SLOW_UPDATE_TIME);
         } else {
             // Just use default values for morning and evening, but the user
             // will probably deactivate Night Color anyway if he is living
             // in a region without clear sun rise and set.
             const QTime referenceTime = morning ? QTime(6, 0) : QTime(18, 0);
             dateTimes.first = QDateTime(dateTime.date(), referenceTime);
-            dateTimes.second = dateTimes.first.addMSecs( FALLBACK_SLOW_UPDATE_TIME );
+            dateTimes.second = dateTimes.first.addMSecs(FALLBACK_SLOW_UPDATE_TIME);
         }
     }
     return dateTimes;
@@ -598,11 +603,9 @@ DateTimes NightColorManager::getSunTimings(const QDateTime &dateTime, double lat
 
 bool NightColorManager::checkAutomaticSunTimings() const
 {
-    if (m_prev.first.isValid() && m_prev.second.isValid() &&
-            m_next.first.isValid() && m_next.second.isValid()) {
+    if (m_prev.first.isValid() && m_prev.second.isValid() && m_next.first.isValid() && m_next.second.isValid()) {
         const QDateTime todayNow = QDateTime::currentDateTime();
-        return m_prev.first <= todayNow && todayNow < m_next.first &&
-                m_prev.first.msecsTo(m_next.first) < MSC_DAY * 23./24;
+        return m_prev.first <= todayNow && todayNow < m_next.first && m_prev.first.msecsTo(m_next.first) < MSC_DAY * 23. / 24;
     }
     return false;
 }
@@ -619,7 +622,7 @@ int NightColorManager::currentTargetTemp() const
     }
 
     if (m_mode == NightColorMode::Constant) {
-       return m_nightTargetTemp;
+        return m_nightTargetTemp;
     }
 
     const QDateTime todayNow = QDateTime::currentDateTime();

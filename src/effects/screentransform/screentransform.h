@@ -38,7 +38,8 @@ public:
     static bool supported();
 
 private:
-    struct ScreenState {
+    struct ScreenState
+    {
         ~ScreenState();
         bool isSecondHalf() const
         {

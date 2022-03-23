@@ -46,12 +46,12 @@ private:
 void TestXcbSizeHints::initTestCase()
 {
     qApp->setProperty("x11RootWindow", QVariant::fromValue<quint32>(QX11Info::appRootWindow()));
-    qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+    qApp->setProperty("x11Connection", QVariant::fromValue<void *>(QX11Info::connection()));
 }
 
 void TestXcbSizeHints::init()
 {
-    const uint32_t values[] = { true };
+    const uint32_t values[] = {true};
     m_testWindow.create(QRect(0, 0, 10, 10), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     QVERIFY(m_testWindow.isValid());
 }
@@ -101,44 +101,44 @@ void TestXcbSizeHints::testSizeHints_data()
     QTest::addColumn<qint32>("expectedGravity");
 
     QTest::newRow("userPos") << QPoint(1, 2) << QSize() << QSize() << QSize() << QSize() << QSize() << QSize() << QSize() << 0
-        << 1 << 1 << 2 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
+                             << 1 << 1 << 2 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+                             << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
     QTest::newRow("userSize") << QPoint() << QSize(1, 2) << QSize() << QSize() << QSize() << QSize() << QSize() << QSize() << 0
-        << 2 << 0 << 0 << 1 << 2 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
+                              << 2 << 0 << 0 << 1 << 2 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+                              << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
     QTest::newRow("minSize") << QPoint() << QSize() << QSize(1, 2) << QSize() << QSize() << QSize() << QSize() << QSize() << 0
-        << 16 << 0 << 0 << 0 << 0 << 1 << 2 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        << QSize(1, 2) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
+                             << 16 << 0 << 0 << 0 << 0 << 1 << 2 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+                             << QSize(1, 2) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
     QTest::newRow("maxSize") << QPoint() << QSize() << QSize() << QSize(1, 2) << QSize() << QSize() << QSize() << QSize() << 0
-        << 32 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 2 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        << QSize(0, 0) << QSize(1, 2) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
+                             << 32 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 2 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+                             << QSize(0, 0) << QSize(1, 2) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
     QTest::newRow("maxSize0") << QPoint() << QSize() << QSize() << QSize(0, 0) << QSize() << QSize() << QSize() << QSize() << 0
-        << 32 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        << QSize(0, 0) << QSize(1, 1) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
+                              << 32 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+                              << QSize(0, 0) << QSize(1, 1) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
     QTest::newRow("min/maxSize") << QPoint() << QSize() << QSize(1, 2) << QSize(3, 4) << QSize() << QSize() << QSize() << QSize() << 0
-        << 48 << 0 << 0 << 0 << 0 << 1 << 2 << 3 << 4 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        << QSize(1, 2) << QSize(3, 4) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
+                                 << 48 << 0 << 0 << 0 << 0 << 1 << 2 << 3 << 4 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+                                 << QSize(1, 2) << QSize(3, 4) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
     QTest::newRow("resizeInc") << QPoint() << QSize() << QSize() << QSize() << QSize(1, 2) << QSize() << QSize() << QSize() << 0
-        << 64 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 2 << 0 << 0 << 0 << 0 << 0 << 0
-        << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 2) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
+                               << 64 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 2 << 0 << 0 << 0 << 0 << 0 << 0
+                               << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 2) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
     QTest::newRow("resizeInc0") << QPoint() << QSize() << QSize() << QSize() << QSize(0, 0) << QSize() << QSize() << QSize() << 0
-        << 64 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
+                                << 64 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+                                << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
     QTest::newRow("aspect") << QPoint() << QSize() << QSize() << QSize() << QSize() << QSize(1, 2) << QSize(3, 4) << QSize() << 0
-        << 128 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 2 << 3 << 4 << 0 << 0
-        << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, 2) << QSize(3, 4) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
+                            << 128 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 2 << 3 << 4 << 0 << 0
+                            << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, 2) << QSize(3, 4) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
     QTest::newRow("aspectDivision0") << QPoint() << QSize() << QSize() << QSize() << QSize() << QSize(1, 0) << QSize(3, 0) << QSize() << 0
-        << 128 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 0 << 3 << 0 << 0 << 0
-        << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, 1) << QSize(3, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
+                                     << 128 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 0 << 3 << 0 << 0 << 0
+                                     << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, 1) << QSize(3, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_NORTH_WEST);
     QTest::newRow("baseSize") << QPoint() << QSize() << QSize() << QSize() << QSize() << QSize() << QSize() << QSize(1, 2) << 0
-        << 256 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 2
-        << QSize(1, 2) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(1, 2) << qint32(XCB_GRAVITY_NORTH_WEST);
+                              << 256 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 1 << 2
+                              << QSize(1, 2) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(1, 2) << qint32(XCB_GRAVITY_NORTH_WEST);
     QTest::newRow("gravity") << QPoint() << QSize() << QSize() << QSize() << QSize() << QSize() << QSize() << QSize() << qint32(XCB_GRAVITY_STATIC)
-        << 512 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_STATIC);
+                             << 512 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+                             << QSize(0, 0) << QSize(INT_MAX, INT_MAX) << QSize(1, 1) << QSize(1, INT_MAX) << QSize(INT_MAX, 1) << QSize(0, 0) << qint32(XCB_GRAVITY_STATIC);
     QTest::newRow("all") << QPoint(1, 2) << QSize(3, 4) << QSize(5, 6) << QSize(7, 8) << QSize(9, 10) << QSize(11, 12) << QSize(13, 14) << QSize(15, 16) << 1
-        << 1011 << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 9 << 10 << 11 << 12 << 13 << 14 << 15 << 16
-        << QSize(5, 6) << QSize(7, 8) << QSize(9, 10) << QSize(11, 12) << QSize(13, 14) << QSize(15, 16) << qint32(XCB_GRAVITY_NORTH_WEST);
+                         << 1011 << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 9 << 10 << 11 << 12 << 13 << 14 << 15 << 16
+                         << QSize(5, 6) << QSize(7, 8) << QSize(9, 10) << QSize(11, 12) << QSize(13, 14) << QSize(15, 16) << qint32(XCB_GRAVITY_NORTH_WEST);
 }
 
 void TestXcbSizeHints::testSizeHints()

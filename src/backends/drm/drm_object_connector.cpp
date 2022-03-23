@@ -9,11 +9,11 @@
 */
 #include "drm_object_connector.h"
 #include "drm_gpu.h"
-#include "drm_pointer.h"
-#include "logging.h"
-#include "drm_pipeline.h"
 #include "drm_object_crtc.h"
 #include "drm_output.h"
+#include "drm_pipeline.h"
+#include "drm_pointer.h"
+#include "logging.h"
 
 #include <main.h>
 // frameworks
@@ -26,18 +26,18 @@ namespace KWin
 
 static bool checkIfEqual(const drmModeModeInfo *one, const drmModeModeInfo *two)
 {
-    return one->clock       == two->clock
-        && one->hdisplay    == two->hdisplay
+    return one->clock == two->clock
+        && one->hdisplay == two->hdisplay
         && one->hsync_start == two->hsync_start
-        && one->hsync_end   == two->hsync_end
-        && one->htotal      == two->htotal
-        && one->hskew       == two->hskew
-        && one->vdisplay    == two->vdisplay
+        && one->hsync_end == two->hsync_end
+        && one->htotal == two->htotal
+        && one->hskew == two->hskew
+        && one->vdisplay == two->vdisplay
         && one->vsync_start == two->vsync_start
-        && one->vsync_end   == two->vsync_end
-        && one->vtotal      == two->vtotal
-        && one->vscan       == two->vscan
-        && one->vrefresh    == two->vrefresh;
+        && one->vsync_end == two->vsync_end
+        && one->vtotal == two->vtotal
+        && one->vscan == two->vscan
+        && one->vrefresh == two->vrefresh;
 }
 
 static quint64 refreshRateForMode(_drmModeModeInfo *m)
@@ -105,30 +105,20 @@ bool DrmConnectorMode::operator==(const DrmConnectorMode &otherMode)
 
 DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
     : DrmObject(gpu, connectorId, {
-            PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
-            PropertyDefinition(QByteArrayLiteral("non-desktop"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("DPMS"), Requirement::RequiredForLegacy),
-            PropertyDefinition(QByteArrayLiteral("EDID"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("overscan"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("vrr_capable"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("underscan"), Requirement::Optional, {
-                QByteArrayLiteral("off"),
-                QByteArrayLiteral("on"),
-                QByteArrayLiteral("auto")
-            }),
-            PropertyDefinition(QByteArrayLiteral("underscan vborder"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("underscan hborder"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("Broadcast RGB"), Requirement::Optional, {
-                QByteArrayLiteral("Automatic"),
-                QByteArrayLiteral("Full"),
-                QByteArrayLiteral("Limited 16:235")
-            }),
-            PropertyDefinition(QByteArrayLiteral("max bpc"), Requirement::Optional),
-            PropertyDefinition(QByteArrayLiteral("link-status"), Requirement::Optional, {
-                QByteArrayLiteral("Good"),
-                QByteArrayLiteral("Bad")
-            }),
-        }, DRM_MODE_OBJECT_CONNECTOR)
+                                      PropertyDefinition(QByteArrayLiteral("CRTC_ID"), Requirement::Required),
+                                      PropertyDefinition(QByteArrayLiteral("non-desktop"), Requirement::Optional),
+                                      PropertyDefinition(QByteArrayLiteral("DPMS"), Requirement::RequiredForLegacy),
+                                      PropertyDefinition(QByteArrayLiteral("EDID"), Requirement::Optional),
+                                      PropertyDefinition(QByteArrayLiteral("overscan"), Requirement::Optional),
+                                      PropertyDefinition(QByteArrayLiteral("vrr_capable"), Requirement::Optional),
+                                      PropertyDefinition(QByteArrayLiteral("underscan"), Requirement::Optional, {QByteArrayLiteral("off"), QByteArrayLiteral("on"), QByteArrayLiteral("auto")}),
+                                      PropertyDefinition(QByteArrayLiteral("underscan vborder"), Requirement::Optional),
+                                      PropertyDefinition(QByteArrayLiteral("underscan hborder"), Requirement::Optional),
+                                      PropertyDefinition(QByteArrayLiteral("Broadcast RGB"), Requirement::Optional, {QByteArrayLiteral("Automatic"), QByteArrayLiteral("Full"), QByteArrayLiteral("Limited 16:235")}),
+                                      PropertyDefinition(QByteArrayLiteral("max bpc"), Requirement::Optional),
+                                      PropertyDefinition(QByteArrayLiteral("link-status"), Requirement::Optional, {QByteArrayLiteral("Good"), QByteArrayLiteral("Bad")}),
+                                  },
+                DRM_MODE_OBJECT_CONNECTOR)
     , m_pipeline(new DrmPipeline(this))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
@@ -206,7 +196,7 @@ QString DrmConnector::modelName() const
 bool DrmConnector::isInternal() const
 {
     return m_conn->connector_type == DRM_MODE_CONNECTOR_LVDS || m_conn->connector_type == DRM_MODE_CONNECTOR_eDP
-                || m_conn->connector_type == DRM_MODE_CONNECTOR_DSI;
+        || m_conn->connector_type == DRM_MODE_CONNECTOR_DSI;
 }
 
 QSize DrmConnector::physicalSize() const
@@ -346,9 +336,7 @@ bool DrmConnector::updateProperties()
     // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
     // as this information is used to calculate DPI info, it's going to result in everything being huge
     const QByteArray unknown = QByteArrayLiteral("unknown");
-    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId().isEmpty() ? unknown : m_edid.eisaId())
-                                                       .group(m_edid.monitorName().isEmpty() ? unknown : m_edid.monitorName())
-                                                       .group(m_edid.serialNumber().isEmpty() ? unknown : m_edid.serialNumber());
+    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId().isEmpty() ? unknown : m_edid.eisaId()).group(m_edid.monitorName().isEmpty() ? unknown : m_edid.monitorName()).group(m_edid.serialNumber().isEmpty() ? unknown : m_edid.serialNumber());
     if (group.hasKey("PhysicalSize")) {
         const QSize overwriteSize = group.readEntry("PhysicalSize", m_physicalSize);
         qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber() << " from " << m_physicalSize << "to " << overwriteSize;
@@ -415,7 +403,7 @@ DrmConnector::LinkStatus DrmConnector::linkStatus() const
     return LinkStatus::Good;
 }
 
-QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj)
+QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj)
 {
     QDebugStateSaver saver(s);
     if (obj) {
@@ -427,11 +415,7 @@ QDebug& operator<<(QDebug& s, const KWin::DrmConnector *obj)
             connState = QStringLiteral("Connected");
         }
 
-        s.nospace() << "DrmConnector(id=" << obj->id() <<
-                       ", gpu="<< obj->gpu() <<
-                       ", name="<< obj->modelName() <<
-                       ", connection=" << connState <<
-                       ", countMode=" << (obj->m_conn ? obj->m_conn->count_modes : 0)
+        s.nospace() << "DrmConnector(id=" << obj->id() << ", gpu=" << obj->gpu() << ", name=" << obj->modelName() << ", connection=" << connState << ", countMode=" << (obj->m_conn ? obj->m_conn->count_modes : 0)
                     << ')';
     } else {
         s << "DrmConnector(0x0)";

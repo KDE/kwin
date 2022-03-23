@@ -10,17 +10,17 @@
 #define KWIN_DRM_OUTPUT_H
 
 #include "drm_abstract_output.h"
-#include "drm_pointer.h"
 #include "drm_object.h"
 #include "drm_object_plane.h"
+#include "drm_pointer.h"
 
 #include <QObject>
 #include <QPoint>
+#include <QSharedPointer>
 #include <QSize>
 #include <QVector>
-#include <QSharedPointer>
-#include <xf86drmMode.h>
 #include <chrono>
+#include <xf86drmMode.h>
 
 namespace KWin
 {
@@ -82,6 +82,6 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWin::DrmOutput*)
+Q_DECLARE_METATYPE(KWin::DrmOutput *)
 
 #endif

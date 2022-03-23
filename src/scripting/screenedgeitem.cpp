@@ -7,7 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "screenedgeitem.h"
+
 #include <config-kwin.h>
+
 #include "screenedge.h"
 
 #include <QAction>
@@ -15,7 +17,7 @@
 namespace KWin
 {
 
-ScreenEdgeItem::ScreenEdgeItem(QObject* parent)
+ScreenEdgeItem::ScreenEdgeItem(QObject *parent)
     : QObject(parent)
     , m_enabled(true)
     , m_edge(NoEdge)

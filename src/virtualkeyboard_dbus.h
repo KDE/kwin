@@ -8,8 +8,8 @@
 */
 #pragma once
 
-#include <QObject>
 #include "inputmethod.h"
+#include <QObject>
 
 namespace KWin
 {

@@ -11,10 +11,10 @@
 
 #include "utils/damagejournal.h"
 
-#include <QVector>
-#include <QSize>
-#include <QSharedPointer>
 #include <QImage>
+#include <QSharedPointer>
+#include <QSize>
+#include <QVector>
 
 namespace KWin
 {

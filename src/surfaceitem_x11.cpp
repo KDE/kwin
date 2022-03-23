@@ -80,7 +80,7 @@ void SurfaceItemX11::waitForDamage()
     m_havePendingDamageRegion = false;
 
     xcb_xfixes_fetch_region_reply_t *reply =
-            xcb_xfixes_fetch_region_reply(kwinApp()->x11Connection(), m_damageCookie, nullptr);
+        xcb_xfixes_fetch_region_reply(kwinApp()->x11Connection(), m_damageCookie, nullptr);
     if (!reply) {
         qCDebug(KWIN_CORE) << "Failed to check damage region";
         return;

@@ -25,12 +25,13 @@ public:
     bool windowEvent(xcb_generic_event_t *e);
     bool track(xcb_window_t w);
     bool hasScheduledRelease() const;
-    static void deleteUnmanaged(Unmanaged* c);
+    static void deleteUnmanaged(Unmanaged *c);
     int desktop() const override;
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
     QPoint clientPos() const override;
-    Layer layer() const override {
+    Layer layer() const override
+    {
         return UnmanagedLayer;
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;

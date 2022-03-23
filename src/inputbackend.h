@@ -27,7 +27,9 @@ public:
     KSharedConfigPtr config() const;
     void setConfig(KSharedConfigPtr config);
 
-    virtual void initialize() {}
+    virtual void initialize()
+    {
+    }
 
 Q_SIGNALS:
     void deviceAdded(InputDevice *device);

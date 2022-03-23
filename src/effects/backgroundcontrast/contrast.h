@@ -12,8 +12,8 @@
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 
-#include <QVector>
 #include <QVector2D>
+#include <QVector>
 
 #include <KWaylandServer/contrast_interface.h>
 
@@ -39,7 +39,8 @@ public:
     bool provides(Feature feature) override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 76;
     }
 
@@ -64,14 +65,13 @@ private:
 private:
     ContrastShader *shader;
     long net_wm_contrast_region = 0;
-    QHash< const EffectWindow*, QMatrix4x4> m_colorMatrices;
-    QHash< const EffectWindow*, QMetaObject::Connection > m_contrastChangedConnections; // used only in Wayland to keep track of effect changed
+    QHash<const EffectWindow *, QMatrix4x4> m_colorMatrices;
+    QHash<const EffectWindow *, QMetaObject::Connection> m_contrastChangedConnections; // used only in Wayland to keep track of effect changed
     static KWaylandServer::ContrastManagerInterface *s_contrastManager;
     static QTimer *s_contrastManagerRemoveTimer;
 };
 
-inline
-bool ContrastEffect::provides(Effect::Feature feature)
+inline bool ContrastEffect::provides(Effect::Feature feature)
 {
     if (feature == Contrast) {
         return true;
@@ -79,8 +79,6 @@ bool ContrastEffect::provides(Effect::Feature feature)
     return KWin::Effect::provides(feature);
 }
 
-
 } // namespace KWin
 
 #endif
-

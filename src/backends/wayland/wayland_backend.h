@@ -9,11 +9,11 @@
 */
 #ifndef KWIN_WAYLAND_BACKEND_H
 #define KWIN_WAYLAND_BACKEND_H
+#include <config-kwin.h>
 // KWin
 #include "inputbackend.h"
 #include "inputdevice.h"
 #include "platform.h"
-#include <config-kwin.h>
 #include <kwinglobals.h>
 // Qt
 #include <QHash>
@@ -76,7 +76,8 @@ public:
     ~WaylandCursor() override;
 
     virtual void init();
-    virtual void move(const QPointF &globalPosition) {
+    virtual void move(const QPointF &globalPosition)
+    {
         Q_UNUSED(globalPosition)
     }
 
@@ -87,10 +88,12 @@ protected:
     virtual void doInstallImage(wl_buffer *image, const QSize &size, qreal scale);
     void drawSurface(wl_buffer *image, const QSize &size, qreal scale);
 
-    KWayland::Client::Surface *surface() const {
+    KWayland::Client::Surface *surface() const
+    {
         return m_surface;
     }
-    WaylandBackend *backend() const {
+    WaylandBackend *backend() const
+    {
         return m_backend;
     }
 
@@ -187,12 +190,27 @@ public:
     WaylandSeat(KWayland::Client::Seat *nativeSeat, WaylandBackend *backend);
     ~WaylandSeat() override;
 
-    WaylandBackend *backend() const { return m_backend; }
+    WaylandBackend *backend() const
+    {
+        return m_backend;
+    }
 
-    WaylandInputDevice *pointerDevice() const { return m_pointerDevice; }
-    WaylandInputDevice *relativePointerDevice() const { return m_relativePointerDevice; }
-    WaylandInputDevice *keyboardDevice() const { return m_keyboardDevice; }
-    WaylandInputDevice *touchDevice() const { return m_touchDevice; }
+    WaylandInputDevice *pointerDevice() const
+    {
+        return m_pointerDevice;
+    }
+    WaylandInputDevice *relativePointerDevice() const
+    {
+        return m_relativePointerDevice;
+    }
+    WaylandInputDevice *keyboardDevice() const
+    {
+        return m_keyboardDevice;
+    }
+    WaylandInputDevice *touchDevice() const
+    {
+        return m_touchDevice;
+    }
 
     void createRelativePointer();
     void destroyRelativePointer();
@@ -219,11 +237,11 @@ private:
 };
 
 /**
-* @brief Class encapsulating all Wayland data structures needed by the Egl backend.
-*
-* It creates the connection to the Wayland Compositor, sets up the registry and creates
-* the Wayland output surfaces and its shell mappings.
-*/
+ * @brief Class encapsulating all Wayland data structures needed by the Egl backend.
+ *
+ * It creates the connection to the Wayland Compositor, sets up the registry and creates
+ * the Wayland output surfaces and its shell mappings.
+ */
 class KWIN_EXPORT WaylandBackend : public Platform
 {
     Q_OBJECT
@@ -246,16 +264,20 @@ public:
 
     void flush();
 
-    WaylandSeat *seat() const {
+    WaylandSeat *seat() const
+    {
         return m_seat;
     }
-    KWayland::Client::PointerGestures *pointerGestures() const {
+    KWayland::Client::PointerGestures *pointerGestures() const
+    {
         return m_pointerGestures;
     }
-    KWayland::Client::PointerConstraints *pointerConstraints() const {
+    KWayland::Client::PointerConstraints *pointerConstraints() const
+    {
         return m_pointerConstraints;
     }
-    KWayland::Client::RelativePointerManager *relativePointerManager() const {
+    KWayland::Client::RelativePointerManager *relativePointerManager() const
+    {
         return m_relativePointerManager;
     }
 
@@ -265,11 +287,12 @@ public:
 
     QVector<CompositingType> supportedCompositors() const override;
 
-    WaylandOutput* getOutputAt(const QPointF &globalPosition);
+    WaylandOutput *getOutputAt(const QPointF &globalPosition);
     WaylandOutput *findOutput(KWayland::Client::Surface *nativeSurface) const;
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
-    QVector<WaylandOutput*> waylandOutputs() const {
+    QVector<WaylandOutput *> waylandOutputs() const
+    {
         return m_outputs;
     }
     void addConfiguredOutput(WaylandOutput *output);
@@ -311,7 +334,7 @@ private:
     KWayland::Client::PointerGestures *m_pointerGestures = nullptr;
 
     QThread *m_connectionThread;
-    QVector<WaylandOutput*> m_outputs;
+    QVector<WaylandOutput *> m_outputs;
     int m_pendingInitialOutputs = 0;
 
     WaylandCursor *m_waylandCursor = nullptr;
@@ -328,26 +351,22 @@ private:
 #endif
 };
 
-inline
-wl_display *WaylandBackend::display()
+inline wl_display *WaylandBackend::display()
 {
     return m_display;
 }
 
-inline
-KWayland::Client::Compositor *WaylandBackend::compositor()
+inline KWayland::Client::Compositor *WaylandBackend::compositor()
 {
     return m_compositor;
 }
 
-inline
-KWayland::Client::SubCompositor *WaylandBackend::subCompositor()
+inline KWayland::Client::SubCompositor *WaylandBackend::subCompositor()
 {
     return m_subCompositor;
 }
 
-inline
-KWayland::Client::ShmPool* WaylandBackend::shmPool()
+inline KWayland::Client::ShmPool *WaylandBackend::shmPool()
 {
     return m_shm;
 }

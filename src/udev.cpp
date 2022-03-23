@@ -13,12 +13,12 @@
 #include "utils/common.h"
 // Qt
 #include <QByteArray>
-#include <QScopedPointer>
 #include <QDebug>
+#include <QScopedPointer>
 // system
-#include <libudev.h>
-#include <functional>
 #include <cerrno>
+#include <functional>
+#include <libudev.h>
 
 namespace KWin
 {
@@ -228,7 +228,8 @@ QMap<QByteArray, QByteArray> UdevDevice::properties() const
     QMap<QByteArray, QByteArray> r;
     auto it = udev_device_get_properties_list_entry(m_device);
     auto current = it;
-    udev_list_entry_foreach (current, it) {
+    udev_list_entry_foreach(current, it)
+    {
         r.insert(udev_list_entry_get_name(current), udev_list_entry_get_value(current));
     }
     return r;

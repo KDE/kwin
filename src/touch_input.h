@@ -13,8 +13,8 @@
 
 #include <QHash>
 #include <QObject>
-#include <QPointer>
 #include <QPointF>
+#include <QPointer>
 
 namespace KWin
 {
@@ -45,24 +45,30 @@ public:
     void cancel();
     void frame();
 
-    void setDecorationPressId(qint32 id) {
+    void setDecorationPressId(qint32 id)
+    {
         m_decorationId = id;
     }
-    qint32 decorationPressId() const {
+    qint32 decorationPressId() const
+    {
         return m_decorationId;
     }
-    void setInternalPressId(qint32 id) {
+    void setInternalPressId(qint32 id)
+    {
         m_internalId = id;
     }
-    qint32 internalPressId() const {
+    qint32 internalPressId() const
+    {
         return m_internalId;
     }
 
-    QPointF position() const override {
+    QPointF position() const override
+    {
         return m_lastPosition;
     }
 
-    int touchPointCount() const {
+    int touchPointCount() const
+    {
         return m_activeTouchPoints.count();
     }
 

@@ -36,12 +36,13 @@ public:
     Session *session() const override;
     bool initialize() override;
 
-    bool saveFrames() const {
+    bool saveFrames() const
+    {
         return !m_screenshotDir.isNull();
     }
     QString screenshotDirPath() const;
 
-    QPainterBackend* createQPainterBackend() override;
+    QPainterBackend *createQPainterBackend() override;
     OpenGLBackend *createOpenGLBackend() override;
 
     Q_INVOKABLE void setVirtualOutputs(int count, QVector<QRect> geometries = QVector<QRect>(), QVector<int> scales = QVector<int>());
@@ -49,7 +50,8 @@ public:
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
 
-    QVector<CompositingType> supportedCompositors() const override {
+    QVector<CompositingType> supportedCompositors() const override
+    {
         if (selectedCompositor() != NoCompositing) {
             return {selectedCompositor()};
         }
@@ -64,8 +66,8 @@ Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
 
 private:
-    QVector<VirtualOutput*> m_outputs;
-    QVector<VirtualOutput*> m_outputsEnabled;
+    QVector<VirtualOutput *> m_outputs;
+    QVector<VirtualOutput *> m_outputsEnabled;
     QScopedPointer<QTemporaryDir> m_screenshotDir;
     Session *m_session;
 };

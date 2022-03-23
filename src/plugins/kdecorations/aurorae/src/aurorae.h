@@ -33,7 +33,7 @@ namespace Aurorae
 class Decoration : public KDecoration2::Decoration
 {
     Q_OBJECT
-    Q_PROPERTY(KDecoration2::DecoratedClient* client READ clientPointer CONSTANT)
+    Q_PROPERTY(KDecoration2::DecoratedClient *client READ clientPointer CONSTANT)
 public:
     explicit Decoration(QObject *parent = nullptr, const QVariantList &args = QVariantList());
     ~Decoration() override;
@@ -70,7 +70,7 @@ private:
 
     bool m_supportsMask{false};
 
-    QRect m_contentRect; //the geometry of the part of the buffer that is not a shadow when buffer was created.
+    QRect m_contentRect; // the geometry of the part of the buffer that is not a shadow when buffer was created.
     QQuickItem *m_item = nullptr;
     QQmlContext *m_qmlContext = nullptr;
     KWin::Borders *m_borders;

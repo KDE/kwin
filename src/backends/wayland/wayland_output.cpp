@@ -61,7 +61,7 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 {
     m_renderLoop->setRefreshRate(s_refreshRate);
 
-    const Mode mode {
+    const Mode mode{
         .size = pixelSize,
         .refreshRate = s_refreshRate,
         .flags = ModeFlag::Current,
@@ -69,7 +69,7 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     };
 
     static uint i = 0;
-    initialize(QStringLiteral("model_%1").arg(i++), "manufacturer_TODO", "eisa_TODO", "serial_TODO", pixelSize, { mode }, {});
+    initialize(QStringLiteral("model_%1").arg(i++), "manufacturer_TODO", "eisa_TODO", "serial_TODO", pixelSize, {mode}, {});
 
     moveTo(logicalPosition);
     setCurrentModeInternal(mode.size, mode.refreshRate);
@@ -78,7 +78,7 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 
 void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
 {
-    const Mode mode {
+    const Mode mode{
         .size = pixelSize,
         .refreshRate = s_refreshRate,
         .flags = ModeFlag::Current,
@@ -214,20 +214,16 @@ void XdgShellOutput::lockPointer(Pointer *pointer, bool lock)
         m_pointerLock = nullptr;
         return;
     }
-    connect(m_pointerLock, &LockedPointer::locked, this,
-        [this] {
-            m_hasPointerLock = true;
-            Q_EMIT backend()->pointerLockChanged(true);
-        }
-    );
-    connect(m_pointerLock, &LockedPointer::unlocked, this,
-        [this] {
-            delete m_pointerLock;
-            m_pointerLock = nullptr;
-            m_hasPointerLock = false;
-            Q_EMIT backend()->pointerLockChanged(false);
-        }
-    );
+    connect(m_pointerLock, &LockedPointer::locked, this, [this]() {
+        m_hasPointerLock = true;
+        Q_EMIT backend()->pointerLockChanged(true);
+    });
+    connect(m_pointerLock, &LockedPointer::unlocked, this, [this]() {
+        delete m_pointerLock;
+        m_pointerLock = nullptr;
+        m_hasPointerLock = false;
+        Q_EMIT backend()->pointerLockChanged(false);
+    });
 }
 
 }

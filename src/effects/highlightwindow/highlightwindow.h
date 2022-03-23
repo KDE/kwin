@@ -23,7 +23,8 @@ public:
     HighlightWindowEffect();
     ~HighlightWindowEffect() override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 70;
     }
 
@@ -32,10 +33,10 @@ public:
     Q_SCRIPTABLE void highlightWindows(const QStringList &windows);
 
 public Q_SLOTS:
-    void slotWindowAdded(KWin::EffectWindow* w);
+    void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
-    void slotPropertyNotify(KWin::EffectWindow* w, long atom, EffectWindow *addedWindow = nullptr);
+    void slotPropertyNotify(KWin::EffectWindow *w, long atom, EffectWindow *addedWindow = nullptr);
 
 private:
     quint64 startGhostAnimation(EffectWindow *window);

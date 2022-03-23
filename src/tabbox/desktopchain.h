@@ -110,7 +110,7 @@ public Q_SLOTS:
     void useChain(const QString &identifier);
 
 private:
-    typedef QHash< QString, DesktopChain > DesktopChains;
+    typedef QHash<QString, DesktopChain> DesktopChains;
     /**
      * Creates a new desktop chain for the given @p identifier and adds it to the list
      * of identifiers.

@@ -4,8 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "windowsrunnerinterface.h"
 #include "main.h"
+#include "windowsrunnerinterface.h"
 
 #include <KPluginFactory>
 

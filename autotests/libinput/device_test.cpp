@@ -6,14 +6,15 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "mock_libinput.h"
-#include "backends/libinput/device.h"
 #include <config-kwin.h>
+
+#include "backends/libinput/device.h"
+#include "mock_libinput.h"
 
 #include <KSharedConfig>
 
-#include <QDBusInterface>
 #include <QDBusConnection>
+#include <QDBusInterface>
 #include <QtTest>
 
 #include <linux/input.h>
@@ -161,13 +162,16 @@ private Q_SLOTS:
     void testSwitch();
 };
 
-namespace {
-template <typename T>
+namespace
+{
+template<typename T>
 T dbusProperty(const QString &name, const char *property)
 {
-    QDBusInterface interface{QStringLiteral("org.kde.kwin.tests.libinputdevice"),
-                             QStringLiteral("/org/kde/KWin/InputDevice/") + name,
-                             QStringLiteral("org.kde.KWin.InputDevice")};
+    QDBusInterface interface {
+        QStringLiteral("org.kde.kwin.tests.libinputdevice"),
+            QStringLiteral("/org/kde/KWin/InputDevice/") + name,
+            QStringLiteral("org.kde.KWin.InputDevice")
+    };
     return interface.property(property).value<T>();
 }
 }
@@ -930,7 +934,7 @@ void TestLibinputDevice::testLeftHanded_data()
     QTest::newRow("unsupported/true") << false << false << true << false << false;
     QTest::newRow("unsupported/false") << false << false << false << true << false;
     QTest::newRow("true -> false") << true << false << true << false << false;
-    QTest::newRow("false -> true") << true << false << false << true  << true;
+    QTest::newRow("false -> true") << true << false << false << true << true;
     QTest::newRow("set fails") << true << true << true << false << true;
     QTest::newRow("true -> true") << true << false << true << true << true;
     QTest::newRow("false -> false") << true << false << false << false << false;
@@ -967,23 +971,23 @@ void TestLibinputDevice::testSupportedButtons_data()
     QTest::addColumn<Qt::MouseButtons>("setButtons");
     QTest::addColumn<Qt::MouseButtons>("expectedButtons");
 
-    QTest::newRow("left")    << true << Qt::MouseButtons(Qt::LeftButton)    << Qt::MouseButtons(Qt::LeftButton);
-    QTest::newRow("right")   << true << Qt::MouseButtons(Qt::RightButton)   << Qt::MouseButtons(Qt::RightButton);
-    QTest::newRow("middle")  << true << Qt::MouseButtons(Qt::MiddleButton)  << Qt::MouseButtons(Qt::MiddleButton);
-    QTest::newRow("extra1")  << true << Qt::MouseButtons(Qt::ExtraButton1)  << Qt::MouseButtons(Qt::ExtraButton1);
-    QTest::newRow("extra2")  << true << Qt::MouseButtons(Qt::ExtraButton2)  << Qt::MouseButtons(Qt::ExtraButton2);
-    QTest::newRow("back")    << true << Qt::MouseButtons(Qt::BackButton)    << Qt::MouseButtons(Qt::BackButton);
+    QTest::newRow("left") << true << Qt::MouseButtons(Qt::LeftButton) << Qt::MouseButtons(Qt::LeftButton);
+    QTest::newRow("right") << true << Qt::MouseButtons(Qt::RightButton) << Qt::MouseButtons(Qt::RightButton);
+    QTest::newRow("middle") << true << Qt::MouseButtons(Qt::MiddleButton) << Qt::MouseButtons(Qt::MiddleButton);
+    QTest::newRow("extra1") << true << Qt::MouseButtons(Qt::ExtraButton1) << Qt::MouseButtons(Qt::ExtraButton1);
+    QTest::newRow("extra2") << true << Qt::MouseButtons(Qt::ExtraButton2) << Qt::MouseButtons(Qt::ExtraButton2);
+    QTest::newRow("back") << true << Qt::MouseButtons(Qt::BackButton) << Qt::MouseButtons(Qt::BackButton);
     QTest::newRow("forward") << true << Qt::MouseButtons(Qt::ForwardButton) << Qt::MouseButtons(Qt::ForwardButton);
-    QTest::newRow("task")    << true << Qt::MouseButtons(Qt::TaskButton)    << Qt::MouseButtons(Qt::TaskButton);
+    QTest::newRow("task") << true << Qt::MouseButtons(Qt::TaskButton) << Qt::MouseButtons(Qt::TaskButton);
 
-    QTest::newRow("no pointer/left")    << false << Qt::MouseButtons(Qt::LeftButton)    << Qt::MouseButtons();
-    QTest::newRow("no pointer/right")   << false << Qt::MouseButtons(Qt::RightButton)   << Qt::MouseButtons();
-    QTest::newRow("no pointer/middle")  << false << Qt::MouseButtons(Qt::MiddleButton)  << Qt::MouseButtons();
-    QTest::newRow("no pointer/extra1")  << false << Qt::MouseButtons(Qt::ExtraButton1)  << Qt::MouseButtons();
-    QTest::newRow("no pointer/extra2")  << false << Qt::MouseButtons(Qt::ExtraButton2)  << Qt::MouseButtons();
-    QTest::newRow("no pointer/back")    << false << Qt::MouseButtons(Qt::BackButton)    << Qt::MouseButtons();
+    QTest::newRow("no pointer/left") << false << Qt::MouseButtons(Qt::LeftButton) << Qt::MouseButtons();
+    QTest::newRow("no pointer/right") << false << Qt::MouseButtons(Qt::RightButton) << Qt::MouseButtons();
+    QTest::newRow("no pointer/middle") << false << Qt::MouseButtons(Qt::MiddleButton) << Qt::MouseButtons();
+    QTest::newRow("no pointer/extra1") << false << Qt::MouseButtons(Qt::ExtraButton1) << Qt::MouseButtons();
+    QTest::newRow("no pointer/extra2") << false << Qt::MouseButtons(Qt::ExtraButton2) << Qt::MouseButtons();
+    QTest::newRow("no pointer/back") << false << Qt::MouseButtons(Qt::BackButton) << Qt::MouseButtons();
     QTest::newRow("no pointer/forward") << false << Qt::MouseButtons(Qt::ForwardButton) << Qt::MouseButtons();
-    QTest::newRow("no pointer/task")    << false << Qt::MouseButtons(Qt::TaskButton)    << Qt::MouseButtons();
+    QTest::newRow("no pointer/task") << false << Qt::MouseButtons(Qt::TaskButton) << Qt::MouseButtons();
 
     QTest::newRow("all") << true
                          << Qt::MouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MiddleButton | Qt::ExtraButton1 | Qt::ExtraButton2 | Qt::BackButton | Qt::ForwardButton | Qt::TaskButton)
@@ -1057,7 +1061,6 @@ void TestLibinputDevice::testAlphaNumericKeyboard()
     QTEST(dbusProperty<bool>(d.sysName(), "alphaNumericKeyboard"), "isAlpha");
 }
 
-
 void TestLibinputDevice::testEnabled_data()
 {
     QTest::addColumn<bool>("supported");
@@ -1069,7 +1072,7 @@ void TestLibinputDevice::testEnabled_data()
     QTest::newRow("unsupported/true") << false << false << true << false << true;
     QTest::newRow("unsupported/false") << false << false << false << true << true;
     QTest::newRow("true -> false") << true << false << true << false << false;
-    QTest::newRow("false -> true") << true << false << false << true  << true;
+    QTest::newRow("false -> true") << true << false << false << true << true;
     QTest::newRow("set fails") << true << true << true << false << true;
     QTest::newRow("true -> true") << true << false << true << true << true;
     QTest::newRow("false -> false") << true << false << false << false << false;
@@ -1392,7 +1395,8 @@ void TestLibinputDevice::testScrollTwoFinger()
     QFETCH(bool, setShouldFail);
     QFETCH(bool, supportsScrollTwoFinger);
     device.supportedScrollMethods = (supportsScrollTwoFinger ? LIBINPUT_CONFIG_SCROLL_2FG : LIBINPUT_CONFIG_SCROLL_NO_SCROLL) | LIBINPUT_CONFIG_SCROLL_EDGE;
-    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_2FG : otherValue ? LIBINPUT_CONFIG_SCROLL_EDGE : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_2FG : otherValue ? LIBINPUT_CONFIG_SCROLL_EDGE
+                                                                              : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
     device.setScrollMethodReturnValue = setShouldFail;
 
     Device d(&device);
@@ -1440,7 +1444,8 @@ void TestLibinputDevice::testScrollEdge()
     QFETCH(bool, setShouldFail);
     QFETCH(bool, supportsScrollEdge);
     device.supportedScrollMethods = (supportsScrollEdge ? LIBINPUT_CONFIG_SCROLL_EDGE : LIBINPUT_CONFIG_SCROLL_NO_SCROLL) | LIBINPUT_CONFIG_SCROLL_2FG;
-    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_EDGE : otherValue ? LIBINPUT_CONFIG_SCROLL_2FG : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_EDGE : otherValue ? LIBINPUT_CONFIG_SCROLL_2FG
+                                                                               : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
     device.setScrollMethodReturnValue = setShouldFail;
 
     Device d(&device);
@@ -1488,7 +1493,8 @@ void TestLibinputDevice::testScrollButtonDown()
     QFETCH(bool, setShouldFail);
     QFETCH(bool, supportsScrollButtonDown);
     device.supportedScrollMethods = (supportsScrollButtonDown ? LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN : LIBINPUT_CONFIG_SCROLL_NO_SCROLL) | LIBINPUT_CONFIG_SCROLL_2FG;
-    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN : otherValue ? LIBINPUT_CONFIG_SCROLL_2FG : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN : otherValue ? LIBINPUT_CONFIG_SCROLL_2FG
+                                                                                         : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
     device.setScrollMethodReturnValue = setShouldFail;
 
     Device d(&device);
@@ -1612,7 +1618,7 @@ void TestLibinputDevice::testLmrTapButtonMap_data()
     QTest::newRow("false -> true, fingerCount 0") << false << true << true << false << 0;
 
     // TODO: is this a fail in libinput?
-    //QTest::newRow("false -> true, fingerCount 1") << false << true << true << false << 1;
+    // QTest::newRow("false -> true, fingerCount 1") << false << true << true << false << 1;
 }
 
 void TestLibinputDevice::testLmrTapButtonMap()
@@ -1777,13 +1783,13 @@ void TestLibinputDevice::testLoadPointerAccelerationProfile_data()
     QTest::addColumn<QString>("configValuePropNameString");
 
     QTest::newRow("pointerAccelerationProfileFlat -> pointerAccelerationProfileAdaptive")
-            << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
-            << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
     QTest::newRow("pointerAccelerationProfileAdaptive -> pointerAccelerationProfileFlat")
-            << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive"
-            << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat";
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive"
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat";
     QTest::newRow("pointerAccelerationProfileAdaptive -> pointerAccelerationProfileAdaptive")
-            << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive" << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive" << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
 }
 
 void TestLibinputDevice::testLoadPointerAccelerationProfile()
@@ -1802,7 +1808,7 @@ void TestLibinputDevice::testLoadPointerAccelerationProfile()
 
     libinput_device device;
     device.supportedPointerAccelerationProfiles = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT | LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE;
-    device.pointerAccelerationProfile = (libinput_config_accel_profile) initValue;
+    device.pointerAccelerationProfile = (libinput_config_accel_profile)initValue;
     device.setPointerAccelerationProfileReturnValue = false;
 
     Device d(&device);
@@ -1836,17 +1842,17 @@ void TestLibinputDevice::testLoadClickMethod_data()
     QTest::addColumn<QString>("configValuePropNameString");
 
     QTest::newRow("clickMethodAreas -> clickMethodClickfinger")
-            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas"
-            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger";
+        << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas"
+        << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger";
     QTest::newRow("clickMethodClickfinger -> clickMethodAreas")
-            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger"
-            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas";
+        << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger"
+        << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas";
     QTest::newRow("clickMethodAreas -> clickMethodAreas")
-            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas"
-            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas";
+        << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas"
+        << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas";
     QTest::newRow("clickMethodClickfinger -> clickMethodClickfinger")
-            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger"
-            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger";
+        << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger"
+        << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger";
 }
 
 void TestLibinputDevice::testLoadClickMethod()
@@ -1865,7 +1871,7 @@ void TestLibinputDevice::testLoadClickMethod()
 
     libinput_device device;
     device.supportedClickMethods = LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS | LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER;
-    device.clickMethod = (libinput_config_click_method) initValue;
+    device.clickMethod = (libinput_config_click_method)initValue;
     device.setClickMethodReturnValue = false;
 
     Device d(&device);
@@ -2106,9 +2112,9 @@ void TestLibinputDevice::testLoadScrollMethod_data()
     QTest::addColumn<quint32>("configValue");
     QTest::addColumn<QString>("configValuePropNameString");
 
-    QTest::newRow("scrollTwoFinger -> scrollEdge") << (quint32) LIBINPUT_CONFIG_SCROLL_2FG << "scrollTwoFinger" << (quint32) LIBINPUT_CONFIG_SCROLL_EDGE << "scrollEdge";
-    QTest::newRow("scrollOnButtonDown -> scrollTwoFinger") << (quint32) LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN << "scrollOnButtonDown" << (quint32) LIBINPUT_CONFIG_SCROLL_2FG << "scrollTwoFinger";
-    QTest::newRow("scrollEdge -> scrollEdge") << (quint32) LIBINPUT_CONFIG_SCROLL_EDGE << "scrollEdge" << (quint32) LIBINPUT_CONFIG_SCROLL_EDGE << "scrollEdge";
+    QTest::newRow("scrollTwoFinger -> scrollEdge") << (quint32)LIBINPUT_CONFIG_SCROLL_2FG << "scrollTwoFinger" << (quint32)LIBINPUT_CONFIG_SCROLL_EDGE << "scrollEdge";
+    QTest::newRow("scrollOnButtonDown -> scrollTwoFinger") << (quint32)LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN << "scrollOnButtonDown" << (quint32)LIBINPUT_CONFIG_SCROLL_2FG << "scrollTwoFinger";
+    QTest::newRow("scrollEdge -> scrollEdge") << (quint32)LIBINPUT_CONFIG_SCROLL_EDGE << "scrollEdge" << (quint32)LIBINPUT_CONFIG_SCROLL_EDGE << "scrollEdge";
 }
 
 void TestLibinputDevice::testLoadScrollMethod()
@@ -2127,7 +2133,7 @@ void TestLibinputDevice::testLoadScrollMethod()
 
     libinput_device device;
     device.supportedScrollMethods = LIBINPUT_CONFIG_SCROLL_2FG | LIBINPUT_CONFIG_SCROLL_EDGE | LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN;
-    device.scrollMethod = (libinput_config_scroll_method) initValue;
+    device.scrollMethod = (libinput_config_scroll_method)initValue;
     device.setScrollMethodReturnValue = false;
 
     Device d(&device);

@@ -46,8 +46,8 @@ public:
     QString compositingNotPossibleReason() const override;
     bool openGLCompositingIsBroken() const override;
     void createOpenGLSafePoint(OpenGLSafePoint safePoint) override;
-    void startInteractiveWindowSelection(std::function<void (KWin::Toplevel *)> callback, const QByteArray &cursorName = QByteArray()) override;
-    void startInteractivePositionSelection(std::function<void (const QPoint &)> callback) override;
+    void startInteractiveWindowSelection(std::function<void(KWin::Toplevel *)> callback, const QByteArray &cursorName = QByteArray()) override;
+    void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) override;
 
     PlatformCursorImage cursorImage() const override;
 
@@ -82,7 +82,7 @@ private:
     static bool hasGlx();
 
     X11Output *findX11Output(const QString &name) const;
-    template <typename T>
+    template<typename T>
     void doUpdateOutputs();
     void updateRefreshRate();
     void updateCursor();

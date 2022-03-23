@@ -10,8 +10,8 @@
 #include "abstract_output.h"
 #include "cursor.h"
 #include "platform.h"
-#include "waylandoutputconfig.h"
 #include "wayland_server.h"
+#include "waylandoutputconfig.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>

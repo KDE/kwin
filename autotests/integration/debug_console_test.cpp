@@ -7,17 +7,18 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "debug_console.h"
 #include "internal_client.h"
 #include "platform.h"
+#include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "utils/xcbutils.h"
 
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
@@ -386,7 +387,10 @@ class HelperWindow : public QRasterWindow
 {
     Q_OBJECT
 public:
-    HelperWindow() : QRasterWindow(nullptr) {}
+    HelperWindow()
+        : QRasterWindow(nullptr)
+    {
+    }
     ~HelperWindow() override = default;
 
 Q_SIGNALS:
@@ -400,7 +404,8 @@ Q_SIGNALS:
     void keyReleased();
 
 protected:
-    void paintEvent(QPaintEvent *event) override {
+    void paintEvent(QPaintEvent *event) override
+    {
         Q_UNUSED(event)
         QPainter p(this);
         p.fillRect(0, 0, width(), height(), Qt::red);

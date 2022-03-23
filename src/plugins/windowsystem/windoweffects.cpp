@@ -16,20 +16,23 @@ namespace KWin
 {
 
 WindowEffects::WindowEffects()
-    : QObject(),
-      KWindowEffectsPrivate()
+    : QObject()
+    , KWindowEffectsPrivate()
 {
 }
 
 WindowEffects::~WindowEffects()
-{}
+{
+}
 
 namespace
 {
 QWindow *findWindow(WId win)
 {
     const auto windows = qApp->allWindows();
-    auto it = std::find_if(windows.begin(), windows.end(), [win] (QWindow *w) { return w->winId() == win; });
+    auto it = std::find_if(windows.begin(), windows.end(), [win](QWindow *w) {
+        return w->winId() == win;
+    });
     if (it == windows.end()) {
         return nullptr;
     }
@@ -42,7 +45,7 @@ bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
     if (!effects) {
         return false;
     }
-    auto e = static_cast<EffectsHandlerImpl*>(effects);
+    auto e = static_cast<EffectsHandlerImpl *>(effects);
     switch (effect) {
     case KWindowEffects::BackgroundContrast:
         return e->isEffectLoaded(QStringLiteral("contrast"));

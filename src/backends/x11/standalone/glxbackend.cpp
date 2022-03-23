@@ -13,17 +13,17 @@
 
 // own
 #include "glxbackend.h"
+#include "glx_context_attribute_builder.h"
 #include "glxconvenience.h"
 #include "logging.h"
-#include "glx_context_attribute_builder.h"
 #include "omlsynccontrolvsyncmonitor.h"
 #include "sgivideosyncvsyncmonitor.h"
 #include "softwarevsyncmonitor.h"
 #include "x11_platform.h"
 // kwin
+#include "composite.h"
 #include "options.h"
 #include "overlaywindow.h"
-#include "composite.h"
 #include "platform.h"
 #include "renderloop_p.h"
 #include "scene.h"
@@ -49,26 +49,27 @@
 // system
 #include <unistd.h>
 
-#include <deque>
 #include <algorithm>
+#include <deque>
 #if HAVE_DL_LIBRARY
 #include <dlfcn.h>
 #endif
 
 #ifndef XCB_GLX_BUFFER_SWAP_COMPLETE
 #define XCB_GLX_BUFFER_SWAP_COMPLETE 1
-typedef struct xcb_glx_buffer_swap_complete_event_t {
-    uint8_t            response_type; /**<  */
-    uint8_t            pad0; /**<  */
-    uint16_t           sequence; /**<  */
-    uint16_t           event_type; /**<  */
-    uint8_t            pad1[2]; /**<  */
+typedef struct xcb_glx_buffer_swap_complete_event_t
+{
+    uint8_t response_type; /**<  */
+    uint8_t pad0; /**<  */
+    uint16_t sequence; /**<  */
+    uint16_t event_type; /**<  */
+    uint8_t pad1[2]; /**<  */
     xcb_glx_drawable_t drawable; /**<  */
-    uint32_t           ust_hi; /**<  */
-    uint32_t           ust_lo; /**<  */
-    uint32_t           msc_hi; /**<  */
-    uint32_t           msc_lo; /**<  */
-    uint32_t           sbc; /**<  */
+    uint32_t ust_hi; /**<  */
+    uint32_t ust_lo; /**<  */
+    uint32_t msc_hi; /**<  */
+    uint32_t msc_lo; /**<  */
+    uint32_t sbc; /**<  */
 } xcb_glx_buffer_swap_complete_event_t;
 #endif
 
@@ -78,16 +79,16 @@ namespace KWin
 {
 
 SwapEventFilter::SwapEventFilter(xcb_drawable_t drawable, xcb_glx_drawable_t glxDrawable)
-    : X11EventFilter(Xcb::Extensions::self()->glxEventBase() + XCB_GLX_BUFFER_SWAP_COMPLETE),
-      m_drawable(drawable),
-      m_glxDrawable(glxDrawable)
+    : X11EventFilter(Xcb::Extensions::self()->glxEventBase() + XCB_GLX_BUFFER_SWAP_COMPLETE)
+    , m_drawable(drawable)
+    , m_glxDrawable(glxDrawable)
 {
 }
 
 bool SwapEventFilter::event(xcb_generic_event_t *event)
 {
     const xcb_glx_buffer_swap_complete_event_t *swapEvent =
-            reinterpret_cast<xcb_glx_buffer_swap_complete_event_t *>(event);
+        reinterpret_cast<xcb_glx_buffer_swap_complete_event_t *>(event);
     if (swapEvent->drawable != m_drawable && swapEvent->drawable != m_glxDrawable) {
         return false;
     }
@@ -113,12 +114,12 @@ GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
     , m_x11Display(display)
     , m_backend(backend)
 {
-     // Force initialization of GLX integration in the Qt's xcb backend
-     // to make it call XESetWireToEvent callbacks, which is required
-     // by Mesa when using DRI2.
-     QOpenGLContext::supportsThreadedOpenGL();
+    // Force initialization of GLX integration in the Qt's xcb backend
+    // to make it call XESetWireToEvent callbacks, which is required
+    // by Mesa when using DRI2.
+    QOpenGLContext::supportsThreadedOpenGL();
 
-     connect(screens(), &Screens::sizeChanged, this, &GlxBackend::screenGeometryChanged);
+    connect(screens(), &Screens::sizeChanged, this, &GlxBackend::screenGeometryChanged);
 }
 
 GlxBackend::~GlxBackend()
@@ -156,15 +157,15 @@ GlxBackend::~GlxBackend()
 
 typedef void (*glXFuncPtr)();
 
-static glXFuncPtr getProcAddress(const char* name)
+static glXFuncPtr getProcAddress(const char *name)
 {
     glXFuncPtr ret = nullptr;
 #if HAVE_EPOXY_GLX
-    ret = glXGetProcAddress((const GLubyte*) name);
+    ret = glXGetProcAddress((const GLubyte *)name);
 #endif
 #if HAVE_DL_LIBRARY
     if (ret == nullptr)
-        ret = (glXFuncPtr) dlsym(RTLD_DEFAULT, name);
+        ret = (glXFuncPtr)dlsym(RTLD_DEFAULT, name);
 #endif
     return ret;
 }
@@ -182,7 +183,7 @@ void GlxBackend::init()
 
     // resolve glXSwapIntervalMESA if available
     if (hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"))) {
-        glXSwapIntervalMESA = (glXSwapIntervalMESA_func) getProcAddress("glXSwapIntervalMESA");
+        glXSwapIntervalMESA = (glXSwapIntervalMESA_func)getProcAddress("glXSwapIntervalMESA");
     } else {
         glXSwapIntervalMESA = nullptr;
     }
@@ -226,9 +227,9 @@ void GlxBackend::init()
 
     // Check whether certain features are supported
     m_haveMESACopySubBuffer = hasExtension(QByteArrayLiteral("GLX_MESA_copy_sub_buffer"));
-    m_haveMESASwapControl   = hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
-    m_haveEXTSwapControl    = hasExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
-    m_haveSGISwapControl    = hasExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
+    m_haveMESASwapControl = hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
+    m_haveEXTSwapControl = hasExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
+    m_haveSGISwapControl = hasExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
 
     bool haveSwapInterval = m_haveMESASwapControl || m_haveEXTSwapControl || m_haveSGISwapControl;
 
@@ -312,7 +313,7 @@ bool GlxBackend::checkVersion()
 
 void GlxBackend::initExtensions()
 {
-    const QByteArray string = (const char *) glXQueryExtensionsString(display(), QX11Info::appScreen());
+    const QByteArray string = (const char *)glXQueryExtensionsString(display(), QX11Info::appScreen());
     setExtensions(string.split(' '));
 }
 
@@ -420,15 +421,15 @@ bool GlxBackend::initBuffer()
         return false;
 
     if (overlayWindow()->create()) {
-        xcb_connection_t * const c = connection();
+        xcb_connection_t *const c = connection();
 
         // Try to create double-buffered window in the overlay
         xcb_visualid_t visual;
-        glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID, (int *) &visual);
+        glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID, (int *)&visual);
 
         if (!visual) {
-           qCCritical(KWIN_X11STANDALONE) << "The GLXFBConfig does not have an associated X visual";
-           return false;
+            qCCritical(KWIN_X11STANDALONE) << "The GLXFBConfig does not have an associated X visual";
+            return false;
         }
 
         xcb_colormap_t colormap = xcb_generate_id(c);
@@ -454,33 +455,31 @@ bool GlxBackend::initBuffer()
 bool GlxBackend::initFbConfig()
 {
     const int attribs[] = {
-        GLX_RENDER_TYPE,    GLX_RGBA_BIT,
-        GLX_DRAWABLE_TYPE,  GLX_WINDOW_BIT,
-        GLX_RED_SIZE,       1,
-        GLX_GREEN_SIZE,     1,
-        GLX_BLUE_SIZE,      1,
-        GLX_ALPHA_SIZE,     0,
-        GLX_DEPTH_SIZE,     0,
-        GLX_STENCIL_SIZE,   0,
-        GLX_CONFIG_CAVEAT,  GLX_NONE,
-        GLX_DOUBLEBUFFER,   true,
-        0
-    };
+        GLX_RENDER_TYPE, GLX_RGBA_BIT,
+        GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+        GLX_RED_SIZE, 1,
+        GLX_GREEN_SIZE, 1,
+        GLX_BLUE_SIZE, 1,
+        GLX_ALPHA_SIZE, 0,
+        GLX_DEPTH_SIZE, 0,
+        GLX_STENCIL_SIZE, 0,
+        GLX_CONFIG_CAVEAT, GLX_NONE,
+        GLX_DOUBLEBUFFER, true,
+        0};
 
     const int attribs_srgb[] = {
-        GLX_RENDER_TYPE,                  GLX_RGBA_BIT,
-        GLX_DRAWABLE_TYPE,                GLX_WINDOW_BIT,
-        GLX_RED_SIZE,                     1,
-        GLX_GREEN_SIZE,                   1,
-        GLX_BLUE_SIZE,                    1,
-        GLX_ALPHA_SIZE,                   0,
-        GLX_DEPTH_SIZE,                   0,
-        GLX_STENCIL_SIZE,                 0,
-        GLX_CONFIG_CAVEAT,                GLX_NONE,
-        GLX_DOUBLEBUFFER,                 true,
+        GLX_RENDER_TYPE, GLX_RGBA_BIT,
+        GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+        GLX_RED_SIZE, 1,
+        GLX_GREEN_SIZE, 1,
+        GLX_BLUE_SIZE, 1,
+        GLX_ALPHA_SIZE, 0,
+        GLX_DEPTH_SIZE, 0,
+        GLX_STENCIL_SIZE, 0,
+        GLX_CONFIG_CAVEAT, GLX_NONE,
+        GLX_DOUBLEBUFFER, true,
         GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB, true,
-        0
-    };
+        0};
 
     // Only request sRGB configurations with default depth 24 as it can cause problems with other default depths. See bugs #408594 and #423014.
     if (Xcb::defaultDepth() == 24) {
@@ -496,13 +495,13 @@ bool GlxBackend::initFbConfig()
     }
 
     int fbconfig_id, visual_id, red, green, blue, alpha, depth, stencil, srgb;
-    glXGetFBConfigAttrib(display(), fbconfig, GLX_FBCONFIG_ID,  &fbconfig_id);
-    glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID,    &visual_id);
-    glXGetFBConfigAttrib(display(), fbconfig, GLX_RED_SIZE,     &red);
-    glXGetFBConfigAttrib(display(), fbconfig, GLX_GREEN_SIZE,   &green);
-    glXGetFBConfigAttrib(display(), fbconfig, GLX_BLUE_SIZE,    &blue);
-    glXGetFBConfigAttrib(display(), fbconfig, GLX_ALPHA_SIZE,   &alpha);
-    glXGetFBConfigAttrib(display(), fbconfig, GLX_DEPTH_SIZE,   &depth);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_FBCONFIG_ID, &fbconfig_id);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID, &visual_id);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_RED_SIZE, &red);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_GREEN_SIZE, &green);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_BLUE_SIZE, &blue);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_ALPHA_SIZE, &alpha);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_DEPTH_SIZE, &depth);
     glXGetFBConfigAttrib(display(), fbconfig, GLX_STENCIL_SIZE, &stencil);
     glXGetFBConfigAttrib(display(), fbconfig, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB, &srgb);
 
@@ -557,11 +556,11 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
 
     FBConfigInfo *info = new FBConfigInfo;
     m_fbconfigHash.insert(visual, info);
-    info->fbconfig            = nullptr;
+    info->fbconfig = nullptr;
     info->bind_texture_format = 0;
-    info->texture_targets     = 0;
-    info->y_inverted          = 0;
-    info->mipmap              = 0;
+    info->texture_targets = 0;
+    info->y_inverted = 0;
+    info->mipmap = 0;
 
     const xcb_render_pictformat_t format = XRenderUtils::findPictFormat(visual);
     const xcb_render_directformat_t *direct = XRenderUtils::findPictFormatInfo(format);
@@ -571,9 +570,9 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         return info;
     }
 
-    const int red_bits   = bitCount(direct->red_mask);
+    const int red_bits = bitCount(direct->red_mask);
     const int green_bits = bitCount(direct->green_mask);
-    const int blue_bits  = bitCount(direct->blue_mask);
+    const int blue_bits = bitCount(direct->blue_mask);
     const int alpha_bits = bitCount(direct->alpha_mask);
 
     const int depth = visualDepth(visual);
@@ -581,21 +580,20 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
     const auto rgb_sizes = std::tie(red_bits, green_bits, blue_bits);
 
     const int attribs[] = {
-        GLX_RENDER_TYPE,    GLX_RGBA_BIT,
-        GLX_DRAWABLE_TYPE,  GLX_WINDOW_BIT | GLX_PIXMAP_BIT,
-        GLX_X_VISUAL_TYPE,  GLX_TRUE_COLOR,
-        GLX_X_RENDERABLE,   true,
-        GLX_CONFIG_CAVEAT,  int(GLX_DONT_CARE), // The ARGB32 visual is marked non-conformant in Catalyst
-        GLX_FRAMEBUFFER_SRGB_CAPABLE_EXT,  int(GLX_DONT_CARE), // The ARGB32 visual is marked sRGB capable in mesa/i965
-        GLX_BUFFER_SIZE,    red_bits + green_bits + blue_bits + alpha_bits,
-        GLX_RED_SIZE,       red_bits,
-        GLX_GREEN_SIZE,     green_bits,
-        GLX_BLUE_SIZE,      blue_bits,
-        GLX_ALPHA_SIZE,     alpha_bits,
-        GLX_STENCIL_SIZE,   0,
-        GLX_DEPTH_SIZE,     0,
-        0
-    };
+        GLX_RENDER_TYPE, GLX_RGBA_BIT,
+        GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT | GLX_PIXMAP_BIT,
+        GLX_X_VISUAL_TYPE, GLX_TRUE_COLOR,
+        GLX_X_RENDERABLE, true,
+        GLX_CONFIG_CAVEAT, int(GLX_DONT_CARE), // The ARGB32 visual is marked non-conformant in Catalyst
+        GLX_FRAMEBUFFER_SRGB_CAPABLE_EXT, int(GLX_DONT_CARE), // The ARGB32 visual is marked sRGB capable in mesa/i965
+        GLX_BUFFER_SIZE, red_bits + green_bits + blue_bits + alpha_bits,
+        GLX_RED_SIZE, red_bits,
+        GLX_GREEN_SIZE, green_bits,
+        GLX_BLUE_SIZE, blue_bits,
+        GLX_ALPHA_SIZE, alpha_bits,
+        GLX_STENCIL_SIZE, 0,
+        GLX_DEPTH_SIZE, 0,
+        0};
 
     int count = 0;
     GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
@@ -605,7 +603,8 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         return info;
     }
 
-    struct FBConfig {
+    struct FBConfig
+    {
         GLXFBConfig config;
         int depth;
         int stencil;
@@ -616,28 +615,28 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
 
     for (int i = 0; i < count; i++) {
         int red, green, blue;
-        glXGetFBConfigAttrib(display(), configs[i], GLX_RED_SIZE,   &red);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_RED_SIZE, &red);
         glXGetFBConfigAttrib(display(), configs[i], GLX_GREEN_SIZE, &green);
-        glXGetFBConfigAttrib(display(), configs[i], GLX_BLUE_SIZE,  &blue);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_BLUE_SIZE, &blue);
 
         if (std::tie(red, green, blue) != rgb_sizes)
             continue;
 
         xcb_visualid_t visual;
-        glXGetFBConfigAttrib(display(), configs[i], GLX_VISUAL_ID, (int *) &visual);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_VISUAL_ID, (int *)&visual);
 
         if (visualDepth(visual) != depth)
             continue;
 
         int bind_rgb, bind_rgba;
         glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_RGBA_EXT, &bind_rgba);
-        glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_RGB_EXT,  &bind_rgb);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_RGB_EXT, &bind_rgb);
 
         if (!bind_rgb && !bind_rgba)
             continue;
 
         int depth, stencil;
-        glXGetFBConfigAttrib(display(), configs[i], GLX_DEPTH_SIZE,   &depth);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_DEPTH_SIZE, &depth);
         glXGetFBConfigAttrib(display(), configs[i], GLX_STENCIL_SIZE, &stencil);
 
         int texture_format;
@@ -669,11 +668,11 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         glXGetFBConfigAttrib(display(), candidate.config, GLX_BIND_TO_TEXTURE_TARGETS_EXT, &texture_targets);
         glXGetFBConfigAttrib(display(), candidate.config, GLX_Y_INVERTED_EXT, &y_inverted);
 
-        info->fbconfig            = candidate.config;
+        info->fbconfig = candidate.config;
         info->bind_texture_format = candidate.format;
-        info->texture_targets     = texture_targets;
-        info->y_inverted          = y_inverted;
-        info->mipmap              = 0;
+        info->texture_targets = texture_targets;
+        info->y_inverted = y_inverted;
+        info->mipmap = 0;
     }
 
     if (info->fbconfig) {
@@ -681,7 +680,7 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         int visual_id = 0;
 
         glXGetFBConfigAttrib(display(), info->fbconfig, GLX_FBCONFIG_ID, &fbc_id);
-        glXGetFBConfigAttrib(display(), info->fbconfig, GLX_VISUAL_ID,   &visual_id);
+        glXGetFBConfigAttrib(display(), info->fbconfig, GLX_VISUAL_ID, &visual_id);
 
         qCDebug(KWIN_X11STANDALONE).nospace() << "Using FBConfig 0x" << Qt::hex << fbc_id << " for visual 0x" << Qt::hex << visual_id;
     }
@@ -708,7 +707,7 @@ void GlxBackend::present(const QRegion &damage)
     if (fullRepaint) {
         glXSwapBuffers(display(), glxWindow);
         if (supportsBufferAge()) {
-            glXQueryDrawable(display(), glxWindow, GLX_BACK_BUFFER_AGE_EXT, (GLuint *) &m_bufferAge);
+            glXQueryDrawable(display(), glxWindow, GLX_BACK_BUFFER_AGE_EXT, (GLuint *)&m_bufferAge);
         }
     } else if (m_haveMESACopySubBuffer) {
         for (const QRect &r : damage) {
@@ -788,8 +787,8 @@ void GlxBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
 
     present(effectiveRenderedRegion);
 
-    if (overlayWindow()->window())  // show the window only after the first pass,
-        overlayWindow()->show();   // since that pass may take long
+    if (overlayWindow()->window()) // show the window only after the first pass,
+        overlayWindow()->show(); // since that pass may take long
 
     // Save the damaged region to history
     if (supportsBufferAge()) {
@@ -818,7 +817,7 @@ void GlxBackend::doneCurrent()
     glXMakeCurrent(display(), None, nullptr);
 }
 
-OverlayWindow* GlxBackend::overlayWindow() const
+OverlayWindow *GlxBackend::overlayWindow() const
 {
     return m_overlayWindow;
 }
@@ -907,12 +906,11 @@ bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
         GLX_TEXTURE_FORMAT_EXT, info->bind_texture_format,
         GLX_MIPMAP_TEXTURE_EXT, false,
         GLX_TEXTURE_TARGET_EXT, m_target == GL_TEXTURE_2D ? GLX_TEXTURE_2D_EXT : GLX_TEXTURE_RECTANGLE_EXT,
-        0
-    };
+        0};
 
-    m_glxPixmap     = glXCreatePixmap(m_backend->display(), info->fbconfig, texture->pixmap(), attrs);
-    m_size          = texture->size();
-    m_yInverted     = info->y_inverted ? true : false;
+    m_glxPixmap = glXCreatePixmap(m_backend->display(), info->fbconfig, texture->pixmap(), attrs);
+    m_size = texture->size();
+    m_yInverted = info->y_inverted ? true : false;
     m_canUseMipmaps = false;
 
     glGenTextures(1, &m_texture);

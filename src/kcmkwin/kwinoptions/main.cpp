@@ -7,21 +7,21 @@
 #include "main.h"
 
 #include <QLayout>
-//Added by qt3to4:
+// Added by qt3to4:
 #include <QVBoxLayout>
 
 #include <QtDBus>
 
 #include <KLocalizedString>
-#include <kconfig.h>
-#include <kaboutdata.h>
 #include <KPluginFactory>
+#include <kaboutdata.h>
+#include <kconfig.h>
 
+#include "kwinoptions_kdeglobals_settings.h"
+#include "kwinoptions_settings.h"
+#include "kwinoptionsdata.h"
 #include "mouse.h"
 #include "windows.h"
-#include "kwinoptions_settings.h"
-#include "kwinoptions_kdeglobals_settings.h"
-#include "kwinoptionsdata.h"
 
 K_PLUGIN_FACTORY(KWinOptionsFactory, registerPlugin<KWinOptions>();)
 
@@ -29,7 +29,7 @@ class KFocusConfigStandalone : public KFocusConfig
 {
     Q_OBJECT
 public:
-    KFocusConfigStandalone(QWidget* parent, const QVariantList &)
+    KFocusConfigStandalone(QWidget *parent, const QVariantList &)
         : KFocusConfig(true, nullptr, parent)
     {
         initialize(new KWinOptionsSettings(this));
@@ -40,7 +40,7 @@ class KMovingConfigStandalone : public KMovingConfig
 {
     Q_OBJECT
 public:
-    KMovingConfigStandalone(QWidget* parent, const QVariantList &)
+    KMovingConfigStandalone(QWidget *parent, const QVariantList &)
         : KMovingConfig(true, nullptr, parent)
     {
         initialize(new KWinOptionsSettings(this));
@@ -51,7 +51,7 @@ class KAdvancedConfigStandalone : public KAdvancedConfig
 {
     Q_OBJECT
 public:
-    KAdvancedConfigStandalone(QWidget* parent, const QVariantList &)
+    KAdvancedConfigStandalone(QWidget *parent, const QVariantList &)
         : KAdvancedConfig(true, nullptr, nullptr, parent)
     {
         initialize(new KWinOptionsSettings(this), new KWinOptionsKDEGlobalsSettings(this));
@@ -143,7 +143,6 @@ void KWinOptions::save()
     QDBusConnection::sessionBus().send(message);
 }
 
-
 void KWinOptions::defaults()
 {
     KCModule::defaults();
@@ -187,7 +186,6 @@ void KWinOptions::updateUnmanagedState()
 
     unmanagedWidgetDefaultState(isDefault);
 }
-
 
 KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
     : KCModule(parent)

@@ -13,13 +13,12 @@
 #include <virtualdesktopsdbustypes.h>
 
 #include <QAbstractListModel>
-#include <QSortFilterProxyModel>
 #include <QObject>
+#include <QSortFilterProxyModel>
 
 #if KWIN_BUILD_ACTIVITIES
 #include <KActivities/Consumer>
 #endif
-
 
 namespace KWin
 {
@@ -58,7 +57,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex & index, const QVariant & value, int role) override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     QModelIndex indexOf(const QString &key) const;
     bool hasRule(const QString &key) const;

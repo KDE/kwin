@@ -7,10 +7,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "effectsmodel.h"
 
 #include <config-kwin.h>
+
 #include <kwin_effects_interface.h>
 
 #include <KAboutData>
@@ -46,8 +46,7 @@ static QString translatedCategory(const QString &category)
         QStringLiteral("Tools"),
         QStringLiteral("Virtual Desktop Switching Animation"),
         QStringLiteral("Window Management"),
-        QStringLiteral("Window Open/Close Animation")
-    };
+        QStringLiteral("Window Open/Close Animation")};
 
     static const QVector<QString> translatedCategories = {
         i18nc("Category of Desktop Effects, used as section header", "Accessibility"),
@@ -57,8 +56,7 @@ static QString translatedCategory(const QString &category)
         i18nc("Category of Desktop Effects, used as section header", "Tools"),
         i18nc("Category of Desktop Effects, used as section header", "Virtual Desktop Switching Animation"),
         i18nc("Category of Desktop Effects, used as section header", "Window Management"),
-        i18nc("Category of Desktop Effects, used as section header", "Window Open/Close Animation")
-    };
+        i18nc("Category of Desktop Effects, used as section header", "Window Open/Close Animation")};
 
     const int index = knownCategories.indexOf(category);
     if (index == -1) {
@@ -288,8 +286,7 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 {
     const auto plugins = KPackage::PackageLoader::self()->listPackages(
         QStringLiteral("KWin/Effect"),
-        QStringLiteral("kwin/effects")
-    );
+        QStringLiteral("kwin/effects"));
     for (const KPluginMetaData &plugin : plugins) {
         EffectData effect;
 
@@ -320,7 +317,7 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
             QDir package(QFileInfo(plugin.metaDataFileName()).dir());
             package.cd(QStringLiteral("contents"));
             const QString xmlFile = package.filePath(QStringLiteral("config/main.xml"));
-            const QString uiFile =package.filePath(QStringLiteral("ui/config.ui"));
+            const QString uiFile = package.filePath(QStringLiteral("ui/config.ui"));
             effect.configurable = QFileInfo::exists(xmlFile) && QFileInfo::exists(uiFile);
         } else {
             effect.configurable = false;
@@ -358,7 +355,7 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
         for (int i = 0; i < pluginEffect.authors().count(); ++i) {
             effect.authorName.append(pluginEffect.authors().at(i).name());
             effect.authorEmail.append(pluginEffect.authors().at(i).emailAddress());
-            if (i+1 < pluginEffect.authors().count()) {
+            if (i + 1 < pluginEffect.authors().count()) {
                 effect.authorName.append(", ");
                 effect.authorEmail.append(", ");
             }
@@ -402,16 +399,15 @@ void EffectsModel::load(LoadOptions options)
     loadPluginEffects(kwinConfig);
 
     std::sort(m_pendingEffects.begin(), m_pendingEffects.end(),
-        [](const EffectData &a, const EffectData &b) {
-            if (a.category == b.category) {
-                if (a.exclusiveGroup == b.exclusiveGroup) {
-                    return a.name < b.name;
-                }
-                return a.exclusiveGroup < b.exclusiveGroup;
-            }
-            return a.category < b.category;
-        }
-    );
+              [](const EffectData &a, const EffectData &b) {
+                  if (a.category == b.category) {
+                      if (a.exclusiveGroup == b.exclusiveGroup) {
+                          return a.name < b.name;
+                      }
+                      return a.exclusiveGroup < b.exclusiveGroup;
+                  }
+                  return a.category < b.category;
+              });
 
     auto commit = [this, options] {
         if (options == LoadOptions::KeepDirty) {
@@ -420,10 +416,9 @@ void EffectsModel::load(LoadOptions options)
                     continue;
                 }
                 auto effectIt = std::find_if(m_pendingEffects.begin(), m_pendingEffects.end(),
-                    [oldEffect](const EffectData &data) {
-                        return data.serviceName == oldEffect.serviceName;
-                    }
-                );
+                                             [oldEffect](const EffectData &data) {
+                                                 return data.serviceName == oldEffect.serviceName;
+                                             });
                 if (effectIt == m_pendingEffects.end()) {
                     continue;
                 }
@@ -454,46 +449,43 @@ void EffectsModel::load(LoadOptions options)
         const int serial = ++m_lastSerial;
 
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(interface.areEffectsSupported(effectNames), this);
-        connect(watcher, &QDBusPendingCallWatcher::finished, this,
-            [=](QDBusPendingCallWatcher *self) {
-                self->deleteLater();
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, [=](QDBusPendingCallWatcher *self) {
+            self->deleteLater();
 
-                if (m_lastSerial != serial) {
-                    return;
-                }
-
-                const QDBusPendingReply<QList<bool > > reply = *self;
-                if (reply.isError()) {
-                    commit();
-                    return;
-                }
-
-                const QList<bool> supportedValues = reply.value();
-                if (supportedValues.count() != effectNames.count()) {
-                    return;
-                }
-
-                for (int i = 0; i < effectNames.size(); ++i) {
-                    const bool supported = supportedValues.at(i);
-                    const QString effectName = effectNames.at(i);
-
-                    auto it = std::find_if(m_pendingEffects.begin(), m_pendingEffects.end(),
-                        [effectName](const EffectData &data) {
-                            return data.serviceName == effectName;
-                        }
-                    );
-                    if (it == m_pendingEffects.end()) {
-                        continue;
-                    }
-
-                    if ((*it).supported != supported) {
-                        (*it).supported = supported;
-                    }
-                }
-
-                commit();
+            if (m_lastSerial != serial) {
+                return;
             }
-        );
+
+            const QDBusPendingReply<QList<bool>> reply = *self;
+            if (reply.isError()) {
+                commit();
+                return;
+            }
+
+            const QList<bool> supportedValues = reply.value();
+            if (supportedValues.count() != effectNames.count()) {
+                return;
+            }
+
+            for (int i = 0; i < effectNames.size(); ++i) {
+                const bool supported = supportedValues.at(i);
+                const QString effectName = effectNames.at(i);
+
+                auto it = std::find_if(m_pendingEffects.begin(), m_pendingEffects.end(),
+                                       [effectName](const EffectData &data) {
+                                           return data.serviceName == effectName;
+                                       });
+                if (it == m_pendingEffects.end()) {
+                    continue;
+                }
+
+                if ((*it).supported != supported) {
+                    (*it).supported = supported;
+                }
+            }
+
+            commit();
+        });
     } else {
         commit();
     }
@@ -583,19 +575,17 @@ bool EffectsModel::isDefaults() const
 bool EffectsModel::needsSave() const
 {
     return std::any_of(m_effects.constBegin(), m_effects.constEnd(),
-        [](const EffectData &data) {
-            return data.changed;
-        }
-    );
+                       [](const EffectData &data) {
+                           return data.changed;
+                       });
 }
 
 QModelIndex EffectsModel::findByPluginId(const QString &pluginId) const
 {
     auto it = std::find_if(m_effects.constBegin(), m_effects.constEnd(),
-        [pluginId](const EffectData &data) {
-            return data.serviceName == pluginId;
-        }
-    );
+                           [pluginId](const EffectData &data) {
+                               return data.serviceName == pluginId;
+                           });
     if (it == m_effects.constEnd()) {
         return {};
     }
@@ -638,15 +628,12 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
     dialog->windowHandle()->setTransientParent(transientParent);
 
     auto buttons = new QDialogButtonBox(
-        QDialogButtonBox::Ok |
-        QDialogButtonBox::Cancel |
-        QDialogButtonBox::RestoreDefaults,
-        dialog
-    );
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults,
+        dialog);
     connect(buttons, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
     connect(buttons, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
     connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked,
-        module, &KCModule::defaults);
+            module, &KCModule::defaults);
     connect(module, &KCModule::defaulted, this, [=](bool defaulted) {
         buttons->button(QDialogButtonBox::RestoreDefaults)->setEnabled(!defaulted);
     });

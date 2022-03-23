@@ -38,7 +38,7 @@ public:
     QSharedPointer<OutputChangeSet> constChangeSet(AbstractWaylandOutput *output) const;
 
 private:
-    QMap<AbstractWaylandOutput*, QSharedPointer<OutputChangeSet>> m_properties;
+    QMap<AbstractWaylandOutput *, QSharedPointer<OutputChangeSet>> m_properties;
 };
 
 }

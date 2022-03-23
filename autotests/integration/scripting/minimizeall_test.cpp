@@ -67,8 +67,7 @@ static QString locateMainScript(const QString &pluginName)
         QStringLiteral("kwin/scripts"),
         [&](const KPluginMetaData &metaData) {
             return metaData.pluginId() == pluginName;
-        }
-    );
+        });
     if (offers.isEmpty()) {
         return QString();
     }

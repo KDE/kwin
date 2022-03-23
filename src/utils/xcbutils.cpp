@@ -14,19 +14,21 @@
 // xcb
 #include <xcb/composite.h>
 #include <xcb/damage.h>
+#include <xcb/glx.h>
 #include <xcb/randr.h>
 #include <xcb/render.h>
 #include <xcb/shape.h>
 #include <xcb/sync.h>
 #include <xcb/xfixes.h>
-#include <xcb/glx.h>
 // system
 #include <sys/shm.h>
 #include <sys/types.h>
 
-namespace KWin {
+namespace KWin
+{
 
-namespace Xcb {
+namespace Xcb
+{
 
 static const int COMPOSITE_MAX_MAJOR = 0;
 static const int COMPOSITE_MAX_MINOR = 4;
@@ -316,8 +318,7 @@ static QVector<QByteArray> glxErrorCodes()
         QByteArrayLiteral("BadPbuffer"),
         QByteArrayLiteral("BadCurrentDrawable"),
         QByteArrayLiteral("BadWindow"),
-        QByteArrayLiteral("GLXBadProfileARB")
-    };
+        QByteArrayLiteral("GLXBadProfileARB")};
 }
 
 ExtensionData::ExtensionData()
@@ -374,28 +375,28 @@ void Extensions::init()
     xcb_prefetch_extension_data(c, &xcb_sync_id);
     xcb_prefetch_extension_data(c, &xcb_glx_id);
 
-    m_shape.name     = QByteArray("SHAPE");
-    m_randr.name     = QByteArray("RANDR");
-    m_damage.name    = QByteArray("DAMAGE");
+    m_shape.name = QByteArray("SHAPE");
+    m_randr.name = QByteArray("RANDR");
+    m_damage.name = QByteArray("DAMAGE");
     m_composite.name = QByteArray("Composite");
-    m_fixes.name     = QByteArray("XFIXES");
-    m_render.name    = QByteArray("RENDER");
-    m_sync.name      = QByteArray("SYNC");
-    m_glx.name       = QByteArray("GLX");
+    m_fixes.name = QByteArray("XFIXES");
+    m_render.name = QByteArray("RENDER");
+    m_sync.name = QByteArray("SYNC");
+    m_glx.name = QByteArray("GLX");
 
-    m_shape.opCodes     = shapeOpCodes();
-    m_randr.opCodes     = randrOpCodes();
-    m_damage.opCodes    = damageOpCodes();
+    m_shape.opCodes = shapeOpCodes();
+    m_randr.opCodes = randrOpCodes();
+    m_damage.opCodes = damageOpCodes();
     m_composite.opCodes = compositeOpCodes();
-    m_fixes.opCodes     = fixesOpCodes();
-    m_render.opCodes    = renderOpCodes();
-    m_sync.opCodes      = syncOpCodes();
-    m_glx.opCodes       = glxOpCodes();
+    m_fixes.opCodes = fixesOpCodes();
+    m_render.opCodes = renderOpCodes();
+    m_sync.opCodes = syncOpCodes();
+    m_glx.opCodes = glxOpCodes();
 
-    m_randr.errorCodes  = randrErrorCodes();
+    m_randr.errorCodes = randrErrorCodes();
     m_damage.errorCodes = damageErrorCodes();
-    m_fixes.errorCodes  = fixesErrorCodes();
-    m_glx.errorCodes    = glxErrorCodes();
+    m_fixes.errorCodes = fixesErrorCodes();
+    m_glx.errorCodes = glxErrorCodes();
 
     extensionQueryReply(xcb_get_extension_data(c, &xcb_shape_id), &m_shape);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_randr_id), &m_randr);
@@ -459,12 +460,12 @@ void Extensions::init()
         initVersion<xcb_sync_initialize_reply_t>(syncVersion, &xcb_sync_initialize_reply, &m_sync);
     }
     qCDebug(KWIN_CORE) << "Extensions: shape: 0x" << QString::number(m_shape.version, 16)
-                 << " composite: 0x" << QString::number(m_composite.version, 16)
-                 << " render: 0x" << QString::number(m_render.version, 16)
-                 << " fixes: 0x" << QString::number(m_fixes.version, 16)
-                 << " randr: 0x" << QString::number(m_randr.version, 16)
-                 << " sync: 0x" << QString::number(m_sync.version, 16)
-                 << " damage: 0x " << QString::number(m_damage.version, 16);
+                       << " composite: 0x" << QString::number(m_composite.version, 16)
+                       << " render: 0x" << QString::number(m_render.version, 16)
+                       << " fixes: 0x" << QString::number(m_fixes.version, 16)
+                       << " randr: 0x" << QString::number(m_randr.version, 16)
+                       << " sync: 0x" << QString::number(m_sync.version, 16)
+                       << " damage: 0x " << QString::number(m_damage.version, 16);
 }
 
 void Extensions::extensionQueryReply(const xcb_query_extension_reply_t *extension, ExtensionData *dataToFill)
@@ -546,8 +547,7 @@ QVector<ExtensionData> Extensions::extensions() const
         m_render,
         m_fixes,
         m_sync,
-        m_glx
-    };
+        m_glx};
 }
 
 //****************************************
@@ -579,7 +579,7 @@ bool Shm::init()
         return false;
     }
     ScopedCPointer<xcb_shm_query_version_reply_t> version(xcb_shm_query_version_reply(connection(),
-        xcb_shm_query_version_unchecked(connection()), nullptr));
+                                                                                      xcb_shm_query_version_unchecked(connection()), nullptr));
     if (version.isNull()) {
         qCDebug(KWIN_CORE) << "Failed to get SHM extension version information";
         return false;

@@ -7,8 +7,8 @@
 */
 
 #include "screencaststream.h"
-#include "cursor.h"
 #include "composite.h"
+#include "cursor.h"
 #include "dmabuftexture.h"
 #include "eglnativefence.h"
 #include "kwineffects.h"
@@ -41,8 +41,8 @@ namespace KWin
 
 void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message)
 {
-    ScreenCastStream *pw = static_cast<ScreenCastStream*>(data);
-    qCDebug(KWIN_SCREENCAST) << "state changed"<< pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
+    ScreenCastStream *pw = static_cast<ScreenCastStream *>(data);
+    qCDebug(KWIN_SCREENCAST) << "state changed" << pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
 
     switch (state) {
     case PW_STREAM_STATE_ERROR:
@@ -67,54 +67,50 @@ void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_
     }
 }
 
-#define CURSOR_BPP	4
-#define CURSOR_META_SIZE(w,h)	(sizeof(struct spa_meta_cursor) + \
-				 sizeof(struct spa_meta_bitmap) + w * h * CURSOR_BPP)
+#define CURSOR_BPP 4
+#define CURSOR_META_SIZE(w, h) (sizeof(struct spa_meta_cursor) + sizeof(struct spa_meta_bitmap) + w * h * CURSOR_BPP)
 static const int videoDamageRegionCount = 16;
 
 void ScreenCastStream::newStreamParams()
 {
     const int bpp = videoFormat.format == SPA_VIDEO_FORMAT_RGB || videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
-    auto stride = SPA_ROUND_UP_N (m_resolution.width() * bpp, 4);
+    auto stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
 
     uint8_t paramsBuffer[1024];
-    spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT (paramsBuffer, sizeof (paramsBuffer));
+    spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT(paramsBuffer, sizeof(paramsBuffer));
     int buffertypes;
 
     if (m_hasModifier) {
-        buffertypes = (1<<SPA_DATA_DmaBuf);
+        buffertypes = (1 << SPA_DATA_DmaBuf);
     } else {
-        buffertypes = (1<<SPA_DATA_MemFd);
+        buffertypes = (1 << SPA_DATA_MemFd);
     }
 
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
     const spa_pod *params[] = {
-        (spa_pod*) spa_pod_builder_add_object(&pod_builder,
+        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
                                               SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers,
                                               SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(&resolution),
                                               SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(16, 2, 16),
-                                              SPA_PARAM_BUFFERS_blocks, SPA_POD_Int (1),
+                                              SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(1),
                                               // TODO[no_use_linear]: stride, size and align should be dropped for dmabufs,
                                               // or queried via test allocation
                                               SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
                                               SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
                                               SPA_PARAM_BUFFERS_align, SPA_POD_Int(16),
                                               SPA_PARAM_BUFFERS_dataType, SPA_POD_CHOICE_FLAGS_Int(buffertypes)),
-        (spa_pod*) spa_pod_builder_add_object (&pod_builder,
-                                               SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
-                                               SPA_PARAM_META_type, SPA_POD_Id (SPA_META_Cursor),
-                                               SPA_PARAM_META_size, SPA_POD_Int (CURSOR_META_SIZE (m_cursor.bitmapSize.width(), m_cursor.bitmapSize.height()))),
-        (spa_pod*) spa_pod_builder_add_object(&pod_builder,
-                                                SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
-                                                SPA_PARAM_META_type, SPA_POD_Id(SPA_META_VideoDamage),
-                                                SPA_PARAM_META_size, SPA_POD_CHOICE_RANGE_Int(
-                                                            sizeof(struct spa_meta_region) * videoDamageRegionCount,
-                                                            sizeof(struct spa_meta_region) * 1,
-                                                            sizeof(struct spa_meta_region) * videoDamageRegionCount)),
-        (spa_pod*) spa_pod_builder_add_object(&pod_builder,
-                                                SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
-                                                SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Header),
-                                                SPA_PARAM_META_size, SPA_POD_Int(sizeof(struct spa_meta_header))),
+        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
+                                              SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
+                                              SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Cursor),
+                                              SPA_PARAM_META_size, SPA_POD_Int(CURSOR_META_SIZE(m_cursor.bitmapSize.width(), m_cursor.bitmapSize.height()))),
+        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
+                                              SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
+                                              SPA_PARAM_META_type, SPA_POD_Id(SPA_META_VideoDamage),
+                                              SPA_PARAM_META_size, SPA_POD_CHOICE_RANGE_Int(sizeof(struct spa_meta_region) * videoDamageRegionCount, sizeof(struct spa_meta_region) * 1, sizeof(struct spa_meta_region) * videoDamageRegionCount)),
+        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
+                                              SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
+                                              SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Header),
+                                              SPA_PARAM_META_size, SPA_POD_Int(sizeof(struct spa_meta_header))),
     };
 
     pw_stream_update_params(pwStream, params, 4);
@@ -127,7 +123,7 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
     }
 
     ScreenCastStream *pw = static_cast<ScreenCastStream *>(data);
-    spa_format_video_raw_parse (format, &pw->videoFormat);
+    spa_format_video_raw_parse(format, &pw->videoFormat);
     // TODO[explicit_modifiers]: check if modifier list or single modifier,
     // make test allocation, fixate format, ...
     // depends on how flexible kwin will become in that regard.
@@ -149,13 +145,13 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
         dmabuf.reset(kwinApp()->platform()->createDmaBufTexture(stream->m_resolution));
 
     if (dmabuf) {
-      spa_data->type = SPA_DATA_DmaBuf;
-      spa_data->fd = dmabuf->fd();
-      spa_data->data = nullptr;
-      spa_data->maxsize = dmabuf->stride() * stream->m_resolution.height();
+        spa_data->type = SPA_DATA_DmaBuf;
+        spa_data->fd = dmabuf->fd();
+        spa_data->data = nullptr;
+        spa_data->maxsize = dmabuf->stride() * stream->m_resolution.height();
 
-      stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuf);
-#ifdef F_SEAL_SEAL //Disable memfd on systems that don't have it, like BSD < 12
+        stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuf);
+#ifdef F_SEAL_SEAL // Disable memfd on systems that don't have it, like BSD < 12
     } else {
         if (!(spa_data[0].type & (1 << SPA_DATA_MemFd))) {
             qCCritical(KWIN_SCREENCAST) << "memfd: Client doesn't support memfd buffer data type";
@@ -163,7 +159,7 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
         }
 
         const int bytesPerPixel = stream->m_source->hasAlphaChannel() ? 4 : 3;
-        const int stride = SPA_ROUND_UP_N (stream->m_resolution.width() * bytesPerPixel, 4);
+        const int stride = SPA_ROUND_UP_N(stream->m_resolution.width() * bytesPerPixel, 4);
         spa_data->maxsize = stride * stream->m_resolution.height();
         spa_data->type = SPA_DATA_MemFd;
         spa_data->fd = memfd_create("kwin-screencast-memfd", MFD_CLOEXEC | MFD_ALLOW_SEALING);
@@ -173,7 +169,7 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
         }
         spa_data->mapoffset = 0;
 
-        if (ftruncate (spa_data->fd, spa_data->maxsize) < 0) {
+        if (ftruncate(spa_data->fd, spa_data->maxsize) < 0) {
             qCCritical(KWIN_SCREENCAST) << "memfd: Can't truncate to" << spa_data->maxsize;
             return;
         }
@@ -204,8 +200,8 @@ void ScreenCastStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
     struct spa_buffer *spa_buffer = buffer->buffer;
     struct spa_data *spa_data = spa_buffer->datas;
     if (spa_data && spa_data->type == SPA_DATA_MemFd) {
-        munmap (spa_data->data, spa_data->maxsize);
-        close (spa_data->fd);
+        munmap(spa_data->data, spa_data->maxsize);
+        close(spa_data->fd);
     }
 }
 
@@ -283,18 +279,18 @@ bool ScreenCastStream::createStream()
     const spa_pod *params[2];
     int n_params;
 
-    auto canCreateDmaBuf = [this] () -> bool {
+    auto canCreateDmaBuf = [this]() -> bool {
         return !QSharedPointer<DmaBufTexture>(kwinApp()->platform()->createDmaBufTexture(m_resolution)).isNull();
     };
     const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
 
     if (canCreateDmaBuf()) {
-      params[0] = buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, &modifier, 1);
-      params[1] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
-      n_params = 2;
+        params[0] = buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, &modifier, 1);
+        params[1] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
+        n_params = 2;
     } else {
-      params[0] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
-      n_params = 1;
+        params[0] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
+        n_params = 1;
     }
 
     pw_stream_add_listener(pwStream, &streamListener, &pwStreamEvents, this);
@@ -365,7 +361,7 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
     struct spa_buffer *spa_buffer = buffer->buffer;
     struct spa_data *spa_data = spa_buffer->datas;
 
-    uint8_t *data = (uint8_t *) spa_data->data;
+    uint8_t *data = (uint8_t *)spa_data->data;
     if (!data && spa_buffer->datas->type != SPA_DATA_DmaBuf) {
         qCWarning(KWIN_SCREENCAST) << "Failed to record frame: invalid buffer data";
         pw_stream_queue_buffer(pwStream, buffer);
@@ -377,7 +373,7 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
     if (data || spa_data[0].type == SPA_DATA_MemFd) {
         const bool hasAlpha = m_source->hasAlphaChannel();
         const int bpp = data && !hasAlpha ? 3 : 4;
-        const uint stride = SPA_ROUND_UP_N (size.width() * bpp, 4);
+        const uint stride = SPA_ROUND_UP_N(size.width() * bpp, 4);
 
         QImage dest(data, size.width(), size.height(), stride, hasAlpha ? QImage::Format_RGBA8888_Premultiplied : QImage::Format_RGB888);
         if (dest.sizeInBytes() > spa_data->maxsize) {
@@ -439,11 +435,11 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
 
     if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
         sendCursorData(Cursors::self()->currentCursor(),
-                        (spa_meta_cursor *) spa_buffer_find_meta_data (spa_buffer, SPA_META_Cursor, sizeof (spa_meta_cursor)));
+                       (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     }
 
     if (spa_meta *vdMeta = spa_buffer_find_meta(spa_buffer, SPA_META_VideoDamage)) {
-        struct spa_meta_region *r = (spa_meta_region *) spa_meta_first(vdMeta);
+        struct spa_meta_region *r = (spa_meta_region *)spa_meta_first(vdMeta);
 
         // If there's too many rectangles, we just send the bounding rect
         if (damagedRegion.rectCount() > videoDamageRegionCount - 1) {
@@ -466,7 +462,7 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
         }
     }
 
-    spa_meta_header *spaHeader = (spa_meta_header *) spa_buffer_find_meta_data(spa_buffer, SPA_META_Header, sizeof(spaHeader));
+    spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Header, sizeof(spaHeader));
     if (spaHeader) {
         spaHeader->flags = 0;
         spaHeader->dts_offset = 0;
@@ -508,7 +504,7 @@ void ScreenCastStream::recordCursor()
     struct spa_buffer *spa_buffer = m_pendingBuffer->buffer;
     spa_buffer->datas[0].chunk->size = 0;
     sendCursorData(Cursors::self()->currentCursor(),
-                   (spa_meta_cursor *) spa_buffer_find_meta_data (spa_buffer, SPA_META_Cursor, sizeof (spa_meta_cursor)));
+                   (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     enqueue();
 }
 
@@ -555,8 +551,8 @@ void ScreenCastStream::enqueue()
 }
 
 spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
-             struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
-             uint64_t *modifiers, int modifierCount)
+                                       struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
+                                       uint64_t *modifiers, int modifierCount)
 {
     struct spa_pod_frame f[2];
     int i, c;
@@ -597,12 +593,12 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
 
     /* maximal framerate */
     spa_pod_builder_add(b, SPA_FORMAT_VIDEO_maxFramerate,
-        SPA_POD_CHOICE_RANGE_Fraction(
-            SPA_POD_Fraction(maxFramerate),
-            SPA_POD_Fraction(minFramerate),
-            SPA_POD_Fraction(maxFramerate)),
-      0);
-    return (spa_pod*)spa_pod_builder_pop(b, &f[0]);
+                        SPA_POD_CHOICE_RANGE_Fraction(
+                            SPA_POD_Fraction(maxFramerate),
+                            SPA_POD_Fraction(minFramerate),
+                            SPA_POD_Fraction(maxFramerate)),
+                        0);
+    return (spa_pod *)spa_pod_builder_pop(b, &f[0]);
 }
 
 QRect ScreenCastStream::cursorGeometry(Cursor *cursor) const
@@ -636,18 +632,18 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
     }
 
     m_cursor.lastKey = image.cacheKey();
-    spa_meta_cursor->bitmap_offset = sizeof (struct spa_meta_cursor);
+    spa_meta_cursor->bitmap_offset = sizeof(struct spa_meta_cursor);
 
-    struct spa_meta_bitmap *spa_meta_bitmap = SPA_MEMBER (spa_meta_cursor,
-                                                          spa_meta_cursor->bitmap_offset,
-                                                          struct spa_meta_bitmap);
+    struct spa_meta_bitmap *spa_meta_bitmap = SPA_MEMBER(spa_meta_cursor,
+                                                         spa_meta_cursor->bitmap_offset,
+                                                         struct spa_meta_bitmap);
     spa_meta_bitmap->format = SPA_VIDEO_FORMAT_RGBA;
     spa_meta_bitmap->offset = sizeof(struct spa_meta_bitmap);
     spa_meta_bitmap->size.width = std::min(m_cursor.bitmapSize.width(), image.width());
     spa_meta_bitmap->size.height = std::min(m_cursor.bitmapSize.height(), image.height());
     spa_meta_bitmap->stride = spa_meta_bitmap->size.width * 4;
 
-    uint8_t *bitmap_data = SPA_MEMBER (spa_meta_bitmap, spa_meta_bitmap->offset, uint8_t);
+    uint8_t *bitmap_data = SPA_MEMBER(spa_meta_bitmap, spa_meta_bitmap->offset, uint8_t);
     QImage dest(bitmap_data,
                 spa_meta_bitmap->size.width,
                 spa_meta_bitmap->size.height,

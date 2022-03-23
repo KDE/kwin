@@ -6,27 +6,29 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+
 #include "platform.h"
 
-#include "abstract_output.h"
 #include <config-kwin.h>
+
+#include "abstract_output.h"
 #include "composite.h"
 #include "cursor.h"
 #include "effects.h"
 #include "keyboard_input.h"
-#include <KCoreAddons>
-#include "overlaywindow.h"
 #include "outline.h"
+#include "overlaywindow.h"
 #include "pointer_input.h"
 #include "scene.h"
-#include "screens.h"
 #include "screenedge.h"
+#include "screens.h"
 #include "touch_input.h"
 #include "wayland_server.h"
 #include "waylandoutputconfig.h"
+#include <KCoreAddons>
 
-#include <KWaylandServer/outputconfiguration_v2_interface.h>
 #include <KWaylandServer/outputchangeset_v2.h>
+#include <KWaylandServer/outputconfiguration_v2_interface.h>
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qtx11extras_p.h>
@@ -43,12 +45,12 @@ Platform::Platform(QObject *parent)
     : QObject(parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
 {
-    connect(this, &Platform::outputDisabled, this, [this] (AbstractOutput *output) {
+    connect(this, &Platform::outputDisabled, this, [this](AbstractOutput *output) {
         if (m_primaryOutput == output) {
             setPrimaryOutput(enabledOutputs().value(0, nullptr));
         }
     });
-    connect(this, &Platform::outputEnabled, this, [this] (AbstractOutput *output) {
+    connect(this, &Platform::outputEnabled, this, [this](AbstractOutput *output) {
         if (!m_primaryOutput) {
             setPrimaryOutput(output);
         }
@@ -61,7 +63,7 @@ Platform::~Platform()
 
 PlatformCursorImage Platform::cursorImage() const
 {
-    Cursor* cursor = Cursors::self()->currentCursor();
+    Cursor *cursor = Cursors::self()->currentCursor();
     return PlatformCursorImage(cursor->image(), cursor->hotspot());
 }
 
@@ -102,7 +104,7 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
     const auto changes = config->changes();
     for (auto it = changes.begin(); it != changes.end(); it++) {
         const KWaylandServer::OutputChangeSetV2 *changeset = it.value();
-        auto output = qobject_cast<AbstractWaylandOutput*>(findOutput(it.key()->uuid()));
+        auto output = qobject_cast<AbstractWaylandOutput *>(findOutput(it.key()->uuid()));
         if (!output) {
             qCWarning(KWIN_CORE) << "Could NOT find output matching " << it.key()->uuid();
             continue;
@@ -120,8 +122,8 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
     }
 
     const auto allOutputs = outputs();
-    bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [&cfg](const auto &output){
-        auto o = qobject_cast<AbstractWaylandOutput*>(output);
+    bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [&cfg](const auto &output) {
+        auto o = qobject_cast<AbstractWaylandOutput *>(output);
         if (!o) {
             qCWarning(KWIN_CORE) << "Platform::requestOutputsChange should only be called for Wayland platforms!";
             return false;
@@ -156,20 +158,20 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
 bool Platform::applyOutputChanges(const WaylandOutputConfig &config)
 {
     const auto availableOutputs = outputs();
-    QVector<AbstractOutput*> toBeEnabledOutputs;
-    QVector<AbstractOutput*> toBeDisabledOutputs;
+    QVector<AbstractOutput *> toBeEnabledOutputs;
+    QVector<AbstractOutput *> toBeDisabledOutputs;
     for (const auto &output : availableOutputs) {
-        if (config.constChangeSet(qobject_cast<AbstractWaylandOutput*>(output))->enabled) {
+        if (config.constChangeSet(qobject_cast<AbstractWaylandOutput *>(output))->enabled) {
             toBeEnabledOutputs << output;
         } else {
             toBeDisabledOutputs << output;
         }
     }
     for (const auto &output : toBeEnabledOutputs) {
-        static_cast<AbstractWaylandOutput*>(output)->applyChanges(config);
+        static_cast<AbstractWaylandOutput *>(output)->applyChanges(config);
     }
     for (const auto &output : toBeDisabledOutputs) {
-        static_cast<AbstractWaylandOutput*>(output)->applyChanges(config);
+        static_cast<AbstractWaylandOutput *>(output)->applyChanges(config);
     }
     return true;
 }
@@ -183,9 +185,9 @@ AbstractOutput *Platform::findOutput(const QUuid &uuid) const
 {
     const auto outs = outputs();
     auto it = std::find_if(outs.constBegin(), outs.constEnd(),
-        [uuid](AbstractOutput *output) {
-            return output->uuid() == uuid; }
-    );
+                           [uuid](AbstractOutput *output) {
+                               return output->uuid() == uuid;
+                           });
     if (it != outs.constEnd()) {
         return *it;
     }
@@ -238,7 +240,7 @@ void Platform::keyboardKeyReleased(quint32 key, quint32 time)
     if (!input()) {
         return;
     }
-   input()->keyboard()->processKey(key, InputRedirection::KeyboardKeyReleased, time);
+    input()->keyboard()->processKey(key, InputRedirection::KeyboardKeyReleased, time);
 }
 
 void Platform::keyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
@@ -491,7 +493,7 @@ void Platform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
     Q_UNUSED(safePoint)
 }
 
-void Platform::startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
+void Platform::startInteractiveWindowSelection(std::function<void(KWin::Toplevel *)> callback, const QByteArray &cursorName)
 {
     if (!input()) {
         callback(nullptr);
@@ -550,7 +552,7 @@ void Platform::updateXTime()
 OutlineVisual *Platform::createOutline(Outline *outline)
 {
     if (Compositor::compositing()) {
-       return new CompositedOutlineVisual(outline);
+        return new CompositedOutlineVisual(outline);
     }
     return nullptr;
 }
@@ -558,7 +560,7 @@ OutlineVisual *Platform::createOutline(Outline *outline)
 void Platform::invertScreen()
 {
     if (effects) {
-        if (Effect *inverter = static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::ScreenInversion)) {
+        if (Effect *inverter = static_cast<EffectsHandlerImpl *>(effects)->provides(Effect::ScreenInversion)) {
             qCDebug(KWIN_CORE) << "inverting screen using Effect plugin";
             QMetaObject::invokeMethod(inverter, "toggleScreenInversion", Qt::DirectConnection);
         }

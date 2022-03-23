@@ -12,16 +12,16 @@
 
 #include <QScopedPointer>
 
-#include <xf86drmMode.h>
 #include <xf86drm.h>
+#include <xf86drmMode.h>
 
 namespace KWin
 {
 
-template <typename T>
+template<typename T>
 struct DrmDeleter;
 
-template <>
+template<>
 struct DrmDeleter<drmVersion>
 {
     static void cleanup(drmVersion *version)
@@ -30,7 +30,7 @@ struct DrmDeleter<drmVersion>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModeAtomicReq>
 {
     static void cleanup(drmModeAtomicReq *req)
@@ -39,7 +39,7 @@ struct DrmDeleter<drmModeAtomicReq>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModeConnector>
 {
     static void cleanup(drmModeConnector *connector)
@@ -48,7 +48,7 @@ struct DrmDeleter<drmModeConnector>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModeCrtc>
 {
     static void cleanup(drmModeCrtc *crtc)
@@ -57,7 +57,7 @@ struct DrmDeleter<drmModeCrtc>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModeFB>
 {
     static void cleanup(drmModeFB *fb)
@@ -66,7 +66,7 @@ struct DrmDeleter<drmModeFB>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModeEncoder>
 {
     static void cleanup(drmModeEncoder *encoder)
@@ -75,7 +75,7 @@ struct DrmDeleter<drmModeEncoder>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModeModeInfo>
 {
     static void cleanup(drmModeModeInfo *info)
@@ -84,7 +84,7 @@ struct DrmDeleter<drmModeModeInfo>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModeObjectProperties>
 {
     static void cleanup(drmModeObjectProperties *properties)
@@ -93,7 +93,7 @@ struct DrmDeleter<drmModeObjectProperties>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModePlane>
 {
     static void cleanup(drmModePlane *plane)
@@ -102,7 +102,7 @@ struct DrmDeleter<drmModePlane>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModePlaneRes>
 {
     static void cleanup(drmModePlaneRes *resources)
@@ -111,7 +111,7 @@ struct DrmDeleter<drmModePlaneRes>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModePropertyRes>
 {
     static void cleanup(drmModePropertyRes *property)
@@ -120,7 +120,7 @@ struct DrmDeleter<drmModePropertyRes>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModePropertyBlobRes>
 {
     static void cleanup(drmModePropertyBlobRes *blob)
@@ -129,7 +129,7 @@ struct DrmDeleter<drmModePropertyBlobRes>
     }
 };
 
-template <>
+template<>
 struct DrmDeleter<drmModeRes>
 {
     static void cleanup(drmModeRes *resources)
@@ -138,10 +138,9 @@ struct DrmDeleter<drmModeRes>
     }
 };
 
-template <typename T>
+template<typename T>
 using DrmScopedPointer = QScopedPointer<T, DrmDeleter<T>>;
 
 }
 
 #endif
-

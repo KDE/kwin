@@ -5,8 +5,8 @@
 */
 #include "plugin.h"
 #include "buttonsmodel.h"
-#include "previewbutton.h"
 #include "previewbridge.h"
+#include "previewbutton.h"
 #include "previewclient.h"
 #include "previewitem.h"
 #include "previewsettings.h"
@@ -35,5 +35,3 @@ void Plugin::registerTypes(const char *uri)
 
 }
 }
-
-

@@ -35,7 +35,8 @@ public:
     void reconfigure(ReconfigureFlags flags) override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 40;
     }
 
@@ -76,7 +77,8 @@ private:
         Out
     };
 
-    struct Animation {
+    struct Animation
+    {
         AnimationKind kind;
         TimeLine timeLine;
         std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
@@ -90,14 +92,15 @@ private:
         Bottom
     };
 
-    struct AnimationData {
+    struct AnimationData
+    {
         int offset;
         Location location;
         std::chrono::milliseconds slideInDuration;
         std::chrono::milliseconds slideOutDuration;
         int slideLength;
     };
-    QHash<const EffectWindow*, AnimationData> m_animationsData;
+    QHash<const EffectWindow *, AnimationData> m_animationsData;
 };
 
 inline int SlidingPopupsEffect::slideInDuration() const

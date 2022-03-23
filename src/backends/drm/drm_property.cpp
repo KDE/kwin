@@ -9,8 +9,8 @@
 */
 
 #include "drm_property.h"
-#include "drm_object.h"
 #include "drm_gpu.h"
+#include "drm_object.h"
 #include "logging.h"
 #include <cerrno>
 
@@ -75,10 +75,10 @@ bool DrmProperty::setPropertyLegacy(uint64_t value)
 
 void DrmProperty::initEnumMap(drmModePropertyRes *prop)
 {
-    if ( ( !(prop->flags & DRM_MODE_PROP_ENUM) && !(prop->flags & DRM_MODE_PROP_BITMASK) )
-            || prop->count_enums < 1 ) {
+    if ((!(prop->flags & DRM_MODE_PROP_ENUM) && !(prop->flags & DRM_MODE_PROP_BITMASK))
+        || prop->count_enums < 1) {
         qCWarning(KWIN_DRM) << "Property '" << prop->name << "' ( id ="
-                          << m_propId << ") should be enum valued, but it is not.";
+                            << m_propId << ") should be enum valued, but it is not.";
         return;
     }
 

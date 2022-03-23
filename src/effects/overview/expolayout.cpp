@@ -330,7 +330,7 @@ static int distance(const QPoint &a, const QPoint &b)
 static QRect centered(ExpoCell *cell, const QRect &bounds)
 {
     const QSize scaled = QSize(cell->naturalWidth(), cell->naturalHeight())
-            .scaled(bounds.size(), Qt::KeepAspectRatio);
+                             .scaled(bounds.size(), Qt::KeepAspectRatio);
 
     return QRect(bounds.center().x() - scaled.width() / 2,
                  bounds.center().y() - scaled.height() / 2,
@@ -367,7 +367,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         int slotCandidate = -1, slotCandidateDistance = INT_MAX;
         const QPoint pos = cell->naturalRect().center();
 
-        for (int i = 0; i < columns*rows; ++i) { // all slots
+        for (int i = 0; i < columns * rows; ++i) { // all slots
             const int dist = distance(pos, slotCenters[i]);
             if (dist < slotCandidateDistance) { // window is interested in this slot
                 ExpoCell *occupier = takenSlots[i];
@@ -397,7 +397,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         QRect target(area.x() + (slot % columns) * slotWidth,
                      area.y() + (slot / columns) * slotHeight,
                      slotWidth, slotHeight);
-        target.adjust(m_spacing, m_spacing, -m_spacing, -m_spacing);   // Borders
+        target.adjust(m_spacing, m_spacing, -m_spacing, -m_spacing); // Borders
         target = target.marginsRemoved(cell->margins());
 
         qreal scale;
@@ -416,9 +416,9 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         if (scale > 2.0 || (scale > 1.0 && (cell->naturalWidth() > 300 || cell->naturalHeight() > 300))) {
             scale = (cell->naturalWidth() > 300 || cell->naturalHeight() > 300) ? 1.0 : 2.0;
             target = QRect(
-                         target.center().x() - int(cell->naturalWidth() * scale) / 2,
-                         target.center().y() - int(cell->naturalHeight() * scale) / 2,
-                         scale * cell->naturalWidth(), scale * cell->naturalHeight());
+                target.center().x() - int(cell->naturalWidth() * scale) / 2,
+                target.center().y() - int(cell->naturalHeight() * scale) / 2,
+                scale * cell->naturalWidth(), scale * cell->naturalHeight());
         }
 
         cell->setX(target.x());
@@ -510,9 +510,9 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                         diff.setX(1);
                     }
                     // Try to keep screen aspect ratio
-                    //if (bounds.height() / bounds.width() > area.height() / area.width())
+                    // if (bounds.height() / bounds.width() > area.height() / area.width())
                     //    diff.setY(diff.y() / 2);
-                    //else
+                    // else
                     //    diff.setX(diff.x() / 2);
                     // Approximate a vector of between 10px and 20px in magnitude in the same direction
                     diff *= m_accuracy / qreal(diff.manhattanLength());
@@ -606,7 +606,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                 // This may cause some slight distortion if the windows are enlarged a large amount
                 int widthDiff = m_accuracy;
                 int heightDiff = heightForWidth(cell, target->width() + widthDiff) - target->height();
-                int xDiff = widthDiff / 2;  // Also move a bit in the direction of the enlarge, allows the
+                int xDiff = widthDiff / 2; // Also move a bit in the direction of the enlarge, allows the
                 int yDiff = heightDiff / 2; // center windows to be enlarged if there is gaps on the side.
 
                 // heightDiff (and yDiff) will be re-computed after each successful enlargement attempt

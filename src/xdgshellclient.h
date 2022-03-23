@@ -36,7 +36,9 @@ class AbstractOutput;
 class XdgSurfaceConfigure
 {
 public:
-    virtual ~XdgSurfaceConfigure() {}
+    virtual ~XdgSurfaceConfigure()
+    {
+    }
 
     enum ConfigureFlag {
         ConfigurePosition = 0x1,

@@ -11,7 +11,6 @@
 
 #include <QVector>
 
-
 using DecorationButtonsList = QVector<KDecoration2::DecorationButtonType>;
 
 namespace Utils

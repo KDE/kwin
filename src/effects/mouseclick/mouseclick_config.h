@@ -23,21 +23,21 @@ class MouseClickEffectConfigForm : public QWidget, public Ui::MouseClickEffectCo
 {
     Q_OBJECT
 public:
-    explicit MouseClickEffectConfigForm(QWidget* parent);
+    explicit MouseClickEffectConfigForm(QWidget *parent);
 };
 
 class MouseClickEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit MouseClickEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
+    explicit MouseClickEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
     ~MouseClickEffectConfig() override;
 
     void save() override;
 
 private:
-    MouseClickEffectConfigForm* m_ui;
-    KActionCollection* m_actionCollection;
+    MouseClickEffectConfigForm *m_ui;
+    KActionCollection *m_actionCollection;
 };
 
 } // namespace

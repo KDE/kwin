@@ -7,22 +7,23 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
-#include "x11client.h"
+
 #include "composite.h"
 #include "cursor.h"
-#include "effects.h"
 #include "effectloader.h"
+#include "effects.h"
 #include "platform.h"
 #include "renderbackend.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KConfigGroup>
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/registry.h>
-#include <KWayland/Client/surface.h>
 #include <KWayland/Client/slide.h>
+#include <KWayland/Client/surface.h>
 
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
@@ -32,7 +33,7 @@ static const QString s_socketName = QStringLiteral("wayland_test_effects_wobbly_
 
 class WobblyWindowsShadeTest : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
     void init();
@@ -43,8 +44,8 @@ private Q_SLOTS:
 
 void WobblyWindowsShadeTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Effect*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -95,10 +96,9 @@ struct XcbConnectionDeleter
 void WobblyWindowsShadeTest::testShadeMove()
 {
     // this test simulates the condition from BUG 390953
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl*>(effects);
+    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl *>(effects);
     QVERIFY(e->loadEffect(QStringLiteral("wobblywindows")));
     QVERIFY(e->isEffectLoaded(QStringLiteral("wobblywindows")));
-
 
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));

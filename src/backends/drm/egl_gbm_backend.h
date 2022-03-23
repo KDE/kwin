@@ -41,7 +41,8 @@ class EglGbmLayer;
 class DrmOutputLayer;
 class DrmPipeline;
 
-struct GbmFormat {
+struct GbmFormat
+{
     uint32_t drmFormat = 0;
     EGLint redSize = -1;
     EGLint greenSize = -1;

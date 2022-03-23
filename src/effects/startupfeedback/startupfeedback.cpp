@@ -20,8 +20,8 @@
 #include <QTimer>
 // KDE
 #include <KConfigGroup>
-#include <KSharedConfig>
 #include <KSelectionOwner>
+#include <KSharedConfig>
 #include <KWindowSystem>
 // KWin
 #include <kwinglutils.h>
@@ -52,22 +52,17 @@ static const int BLINKING_FRAMES = 5;
 static const int BLINKING_FRAME_DURATION = 100;
 // duration of one blinking animation
 static const int BLINKING_DURATION = BLINKING_FRAME_DURATION * BLINKING_FRAMES;
-//const int color_to_pixmap[] = { 0, 1, 2, 3, 2, 1 };
+// const int color_to_pixmap[] = { 0, 1, 2, 3, 2, 1 };
 static const int FRAME_TO_BOUNCE_YOFFSET[] = {
-    -5, -1, 2, 5, 8, 10, 12, 13, 15, 15, 15, 15, 14, 12, 10, 8, 5, 2, -1, -5
-};
+    -5, -1, 2, 5, 8, 10, 12, 13, 15, 15, 15, 15, 14, 12, 10, 8, 5, 2, -1, -5};
 static const QSize BOUNCE_SIZES[] = {
-    QSize(16, 16), QSize(14, 18), QSize(12, 20), QSize(18, 14), QSize(20, 12)
-};
+    QSize(16, 16), QSize(14, 18), QSize(12, 20), QSize(18, 14), QSize(20, 12)};
 static const int FRAME_TO_BOUNCE_TEXTURE[] = {
-    0, 0, 0, 1, 2, 2, 1, 0, 3, 4, 4, 3, 0, 1, 2, 2, 1, 0, 0, 0
-};
+    0, 0, 0, 1, 2, 2, 1, 0, 3, 4, 4, 3, 0, 1, 2, 2, 1, 0, 0, 0};
 static const int FRAME_TO_BLINKING_COLOR[] = {
-    0, 1, 2, 3, 2, 1
-};
+    0, 1, 2, 3, 2, 1};
 static const QColor BLINKING_COLORS[] = {
-    Qt::black, Qt::darkGray, Qt::lightGray, Qt::white, Qt::white
-};
+    Qt::black, Qt::darkGray, Qt::lightGray, Qt::white, Qt::white};
 static const int s_startupDefaultTimeout = 5;
 
 StartupFeedbackEffect::StartupFeedbackEffect()
@@ -169,7 +164,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
     }
 }
 
-void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
+void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     int time = 0;
     if (m_lastPresentTime.count()) {
@@ -182,7 +177,7 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono
     }
     if (m_active) {
         // need the unclipped version
-        switch(m_type) {
+        switch (m_type) {
         case BouncingFeedback:
             m_progress = (m_progress + time) % BOUNCE_DURATION;
             m_frame = qRound((qreal)m_progress / (qreal)BOUNCE_FRAME_DURATION) % BOUNCE_FRAMES;
@@ -200,14 +195,14 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
-void StartupFeedbackEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
+void StartupFeedbackEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     effects->paintScreen(mask, region, data);
     if (m_active) {
-        GLTexture* texture;
-        switch(m_type) {
+        GLTexture *texture;
+        switch (m_type) {
         case BouncingFeedback:
-            texture = m_bouncingTextures[ FRAME_TO_BOUNCE_TEXTURE[ m_frame ]].get();
+            texture = m_bouncingTextures[FRAME_TO_BOUNCE_TEXTURE[m_frame]].get();
             break;
         case BlinkingFeedback: // fall through
         case PassiveFeedback:
@@ -220,7 +215,7 @@ void StartupFeedbackEffect::paintScreen(int mask, const QRegion &region, ScreenP
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         texture->bind();
         if (m_type == BlinkingFeedback && m_blinkingShader && m_blinkingShader->isValid()) {
-            const QColor& blinkingColor = BLINKING_COLORS[ FRAME_TO_BLINKING_COLOR[ m_frame ]];
+            const QColor &blinkingColor = BLINKING_COLORS[FRAME_TO_BLINKING_COLOR[m_frame]];
             ShaderManager::instance()->pushShader(m_blinkingShader.get());
             m_blinkingShader->setUniform(GLShader::Color, blinkingColor);
         } else {
@@ -246,8 +241,8 @@ void StartupFeedbackEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void StartupFeedbackEffect::slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
-        Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers)
+void StartupFeedbackEffect::slotMouseChanged(const QPoint &pos, const QPoint &oldpos, Qt::MouseButtons buttons,
+                                             Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers)
 {
     Q_UNUSED(pos)
     Q_UNUSED(oldpos)
@@ -289,7 +284,7 @@ void StartupFeedbackEffect::gotRemoveStartup(const QString &id)
         return;
     }
     m_currentStartup = m_startups.begin().key();
-    start(m_startups[ m_currentStartup ]);
+    start(m_startups[m_currentStartup]);
 }
 
 void StartupFeedbackEffect::gotStartupChange(const QString &id, const QIcon &icon)
@@ -335,7 +330,7 @@ void StartupFeedbackEffect::stop()
     m_active = false;
     m_lastPresentTime = std::chrono::milliseconds::zero();
     effects->makeOpenGLContextCurrent();
-    switch(m_type) {
+    switch (m_type) {
     case BouncingFeedback:
         for (int i = 0; i < 5; ++i) {
             m_bouncingTextures[i].reset();
@@ -353,10 +348,10 @@ void StartupFeedbackEffect::stop()
     effects->addRepaintFull();
 }
 
-void StartupFeedbackEffect::prepareTextures(const QPixmap& pix)
+void StartupFeedbackEffect::prepareTextures(const QPixmap &pix)
 {
     effects->makeOpenGLContextCurrent();
-    switch(m_type) {
+    switch (m_type) {
     case BouncingFeedback:
         for (int i = 0; i < 5; ++i) {
             m_bouncingTextures[i].reset(new GLTexture(scalePixmap(pix, BOUNCE_SIZES[i])));
@@ -378,9 +373,9 @@ void StartupFeedbackEffect::prepareTextures(const QPixmap& pix)
     }
 }
 
-QImage StartupFeedbackEffect::scalePixmap(const QPixmap& pm, const QSize& size) const
+QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size) const
 {
-    const QSize& adjustedSize = size * m_bounceSizesRatio;
+    const QSize &adjustedSize = size * m_bounceSizesRatio;
     QImage scaled = pm.toImage().scaled(adjustedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     if (scaled.format() != QImage::Format_ARGB32_Premultiplied && scaled.format() != QImage::Format_ARGB32)
         scaled = scaled.convertToFormat(QImage::Format_ARGB32);
@@ -389,7 +384,7 @@ QImage StartupFeedbackEffect::scalePixmap(const QPixmap& pm, const QSize& size) 
     QPainter p(&result);
     p.setCompositionMode(QPainter::CompositionMode_Source);
     p.fillRect(result.rect(), Qt::transparent);
-    p.drawImage((20 * m_bounceSizesRatio - adjustedSize.width()) / 2, (20*m_bounceSizesRatio - adjustedSize.height()) / 2, scaled, 0, 0, adjustedSize.width(), adjustedSize.height() * m_bounceSizesRatio);
+    p.drawImage((20 * m_bounceSizesRatio - adjustedSize.width()) / 2, (20 * m_bounceSizesRatio - adjustedSize.height()) / 2, scaled, 0, 0, adjustedSize.width(), adjustedSize.height() * m_bounceSizesRatio);
     return result;
 }
 
@@ -405,12 +400,12 @@ QRect StartupFeedbackEffect::feedbackRect() const
     else
         xDiff = 32 + 7;
     int yDiff = xDiff;
-    GLTexture* texture = nullptr;
+    GLTexture *texture = nullptr;
     int yOffset = 0;
-    switch(m_type) {
+    switch (m_type) {
     case BouncingFeedback:
-        texture = m_bouncingTextures[ FRAME_TO_BOUNCE_TEXTURE[ m_frame ]].get();
-        yOffset = FRAME_TO_BOUNCE_YOFFSET[ m_frame ] * m_bounceSizesRatio;
+        texture = m_bouncingTextures[FRAME_TO_BOUNCE_TEXTURE[m_frame]].get();
+        yOffset = FRAME_TO_BOUNCE_YOFFSET[m_frame] * m_bounceSizesRatio;
         break;
     case BlinkingFeedback: // fall through
     case PassiveFeedback:
@@ -422,8 +417,8 @@ QRect StartupFeedbackEffect::feedbackRect() const
     }
     const QPoint cursorPos = effects->cursorPos() + QPoint(xDiff, yDiff + yOffset);
     QRect rect;
-    if( texture )
-       rect = QRect(cursorPos, texture->size());
+    if (texture)
+        rect = QRect(cursorPos, texture->size());
     return rect;
 }
 

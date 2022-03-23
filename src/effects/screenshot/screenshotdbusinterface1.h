@@ -151,7 +151,10 @@ private Q_SLOTS:
     void handleSourceCancelled();
 
 private:
-    enum class InfoMessageMode { Window, Screen, };
+    enum class InfoMessageMode {
+        Window,
+        Screen,
+    };
 
     void takeScreenShot(EffectScreen *screen, ScreenShotFlags flags, ScreenShotSink1 *sink);
     void takeScreenShot(const QList<EffectScreen *> &screens, ScreenShotFlags flags, ScreenShotSink1 *sink);

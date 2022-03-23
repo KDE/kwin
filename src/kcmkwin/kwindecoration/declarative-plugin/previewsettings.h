@@ -6,10 +6,10 @@
 #ifndef KDECOARTIONS_PREVIEW_SETTINGS_H
 #define KDECOARTIONS_PREVIEW_SETTINGS_H
 
-#include <KDecoration2/Private/DecorationSettingsPrivate>
 #include <KDecoration2/DecorationSettings>
-#include <QObject>
+#include <KDecoration2/Private/DecorationSettingsPrivate>
 #include <QAbstractListModel>
+#include <QObject>
 
 namespace KDecoration2
 {
@@ -25,21 +25,20 @@ class BorderSizesModel : public QAbstractListModel
 public:
     explicit BorderSizesModel(QObject *parent = nullptr);
     ~BorderSizesModel() override;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-    QHash< int, QByteArray > roleNames() const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QHash<int, QByteArray> roleNames() const override;
+
 private:
-    QList<BorderSize> m_borders = QList<BorderSize>({
-        BorderSize::None,
-        BorderSize::NoSides,
-        BorderSize::Tiny,
-        BorderSize::Normal,
-        BorderSize::Large,
-        BorderSize::VeryLarge,
-        BorderSize::Huge,
-        BorderSize::VeryHuge,
-        BorderSize::Oversized
-    });
+    QList<BorderSize> m_borders = QList<BorderSize>({BorderSize::None,
+                                                     BorderSize::NoSides,
+                                                     BorderSize::Tiny,
+                                                     BorderSize::Normal,
+                                                     BorderSize::Large,
+                                                     BorderSize::VeryLarge,
+                                                     BorderSize::Huge,
+                                                     BorderSize::VeryHuge,
+                                                     BorderSize::Oversized});
 };
 
 class PreviewSettings : public QObject, public DecorationSettingsPrivate
@@ -59,7 +58,8 @@ public:
     ~PreviewSettings() override;
     bool isAlphaChannelSupported() const override;
     bool isOnAllDesktopsAvailable() const override;
-    bool isCloseOnDoubleClickOnMenu() const override {
+    bool isCloseOnDoubleClickOnMenu() const override
+    {
         return m_closeOnDoubleClick;
     }
     BorderSize borderSize() const override;
@@ -71,22 +71,25 @@ public:
     QAbstractItemModel *leftButtonsModel() const;
     QAbstractItemModel *rightButtonsModel() const;
     QAbstractItemModel *availableButtonsModel() const;
-    QAbstractItemModel *borderSizesModel() const {
+    QAbstractItemModel *borderSizesModel() const
+    {
         return m_borderSizes;
     }
 
-    QVector< DecorationButtonType > decorationButtonsLeft() const override;
-    QVector< DecorationButtonType > decorationButtonsRight() const override;
+    QVector<DecorationButtonType> decorationButtonsLeft() const override;
+    QVector<DecorationButtonType> decorationButtonsRight() const override;
 
     Q_INVOKABLE void addButtonToLeft(int row);
     Q_INVOKABLE void addButtonToRight(int row);
 
-    int borderSizesIndex() const {
+    int borderSizesIndex() const
+    {
         return m_borderSize;
     }
     void setBorderSizesIndex(int index);
 
-    QFont font() const override {
+    QFont font() const override
+    {
         return m_font;
     }
     void setFont(const QFont &font);
@@ -125,7 +128,8 @@ public:
 
     QSharedPointer<DecorationSettings> settings() const;
     DecorationSettings *settingsPointer() const;
-    int borderSizesIndex() const {
+    int borderSizesIndex() const
+    {
         return m_borderSize;
     }
     void setBorderSizesIndex(int index);

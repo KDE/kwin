@@ -8,9 +8,9 @@
 */
 #pragma once
 
-#include <QVector>
 #include <QByteArray>
 #include <QMap>
+#include <QVector>
 
 // drm
 #include <xf86drmMode.h>
@@ -45,7 +45,7 @@ public:
     DrmGpu *gpu() const;
     uint32_t type() const;
     QString typeName() const;
-    QVector<DrmProperty*> properties();
+    QVector<DrmProperty *> properties();
 
     void commit();
     void commitPending();
@@ -55,7 +55,7 @@ public:
     virtual bool needsModeset() const = 0;
     virtual bool updateProperties();
 
-    template <typename T>
+    template<typename T>
     bool setPending(T prop, uint64_t new_value)
     {
         if (auto &property = m_props.at(static_cast<uint32_t>(prop))) {
@@ -65,15 +65,16 @@ public:
         return false;
     }
 
-    template <typename T>
+    template<typename T>
     bool propHasEnum(T prop, uint64_t value) const
     {
         const auto &property = m_props.at(static_cast<uint32_t>(prop));
         return property ? property->hasEnum(value) : false;
     }
 
-    template <typename T>
-    DrmProperty *getProp(T propIndex) const {
+    template<typename T>
+    DrmProperty *getProp(T propIndex) const
+    {
         return m_props[static_cast<uint32_t>(propIndex)];
     }
 
@@ -100,7 +101,7 @@ protected:
 
     bool initProps();
 
-    template <typename T>
+    template<typename T>
     void deleteProp(T prop)
     {
         delete m_props[static_cast<uint32_t>(prop)];
@@ -118,4 +119,4 @@ private:
 
 }
 
-QDebug operator<<(QDebug stream, const KWin::DrmObject*);
+QDebug operator<<(QDebug stream, const KWin::DrmObject *);

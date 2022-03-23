@@ -26,8 +26,7 @@ static QRegion computeDirtyRegion(const QRect &windowRect)
         s_lineWidth / 2,
         s_lineWidth / 2,
         s_lineWidth / 2,
-        s_lineWidth / 2
-    );
+        s_lineWidth / 2);
 
     QRegion dirtyRegion;
 
@@ -49,11 +48,11 @@ static QRegion computeDirtyRegion(const QRect &windowRect)
         dirtyRegion += horizontalBarRect;
 
         const QRect outlineOuterRect = screenWindowRect
-            .marginsAdded(outlineMargins)
-            .adjusted(-1, -1, 1, 1);
+                                           .marginsAdded(outlineMargins)
+                                           .adjusted(-1, -1, 1, 1);
         const QRect outlineInnerRect = screenWindowRect
-            .marginsRemoved(outlineMargins)
-            .adjusted(1, 1, -1, -1);
+                                           .marginsRemoved(outlineMargins)
+                                           .adjusted(1, 1, -1, -1);
         dirtyRegion += QRegion(outlineOuterRect) - QRegion(outlineInnerRect);
     }
 
@@ -126,7 +125,7 @@ void SnapHelperEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
         for (EffectScreen *screen : screens) {
             const QRect rect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
             const int midX = rect.x() + rect.width() / 2;
-            const int midY = rect.y() + rect.height() / 2 ;
+            const int midY = rect.y() + rect.height() / 2;
             const int halfWidth = m_geometry.width() / 2;
             const int halfHeight = m_geometry.height() / 2;
 

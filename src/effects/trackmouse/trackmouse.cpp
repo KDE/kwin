@@ -15,9 +15,9 @@
 #include "trackmouseconfig.h"
 
 #include <QAction>
+#include <QMatrix4x4>
 #include <QPainter>
 #include <QTime>
-#include <QMatrix4x4>
 
 #include <kwinconfig.h>
 #include <kwinglutils.h>
@@ -35,7 +35,7 @@ TrackMouseEffect::TrackMouseEffect()
 {
     initConfig<TrackMouseConfig>();
     m_texture[0] = m_texture[1] = nullptr;
-    if ( effects->isOpenGLCompositing() || effects->compositingType() == QPainterCompositing)
+    if (effects->isOpenGLCompositing() || effects->compositingType() == QPainterCompositing)
         m_angleBase = 90.0;
     m_mousePolling = false;
 
@@ -57,7 +57,8 @@ TrackMouseEffect::~TrackMouseEffect()
     if (m_mousePolling)
         effects->stopMousePolling();
     for (int i = 0; i < 2; ++i) {
-        delete m_texture[i]; m_texture[i] = nullptr;
+        delete m_texture[i];
+        m_texture[i] = nullptr;
     }
 }
 
@@ -79,27 +80,27 @@ void TrackMouseEffect::reconfigure(ReconfigureFlags)
             effects->startMousePolling();
         m_mousePolling = true;
     } else if (m_mousePolling) {
-            effects->stopMousePolling();
+        effects->stopMousePolling();
         m_mousePolling = false;
     }
 }
 
-void TrackMouseEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
+void TrackMouseEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     QTime t = QTime::currentTime();
     m_angle = ((t.second() % 4) * m_angleBase) + (t.msec() / 1000.0 * m_angleBase);
     m_lastRect[0].moveCenter(cursorPos());
     m_lastRect[1].moveCenter(cursorPos());
-    data.paint |= m_lastRect[0].adjusted(-1,-1,1,1);
+    data.paint |= m_lastRect[0].adjusted(-1, -1, 1, 1);
 
     effects->prePaintScreen(data, presentTime);
 }
 
-void TrackMouseEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
+void TrackMouseEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
-    effects->paintScreen(mask, region, data);   // paint normal screen
+    effects->paintScreen(mask, region, data); // paint normal screen
 
-    if ( effects->isOpenGLCompositing() && m_texture[0] && m_texture[1]) {
+    if (effects->isOpenGLCompositing() && m_texture[0] && m_texture[1]) {
         ShaderBinder binder(ShaderTrait::MapTexture);
         GLShader *shader(binder.shader());
         if (!shader) {
@@ -108,12 +109,12 @@ void TrackMouseEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         QMatrix4x4 matrix(data.projectionMatrix());
-        const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width()/2.0, m_lastRect[0].height()/2.0);
-        const float x = p.x()*data.xScale() + data.xTranslation();
-        const float y = p.y()*data.yScale() + data.yTranslation();
+        const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width() / 2.0, m_lastRect[0].height() / 2.0);
+        const float x = p.x() * data.xScale() + data.xTranslation();
+        const float y = p.y() * data.yScale() + data.yTranslation();
         for (int i = 0; i < 2; ++i) {
             matrix.translate(x, y, 0.0);
-            matrix.rotate(i ? -2*m_angle : m_angle, 0, 0, 1.0);
+            matrix.rotate(i ? -2 * m_angle : m_angle, 0, 0, 1.0);
             matrix.translate(-x, -y, 0.0);
             QMatrix4x4 mvp(matrix);
             mvp.translate(m_lastRect[i].x(), m_lastRect[i].y());
@@ -125,11 +126,11 @@ void TrackMouseEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
         glDisable(GL_BLEND);
     } else if (effects->compositingType() == QPainterCompositing && !m_image[0].isNull() && !m_image[1].isNull()) {
         QPainter *painter = effects->scenePainter();
-        const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width()/2.0, m_lastRect[0].height()/2.0);
+        const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width() / 2.0, m_lastRect[0].height() / 2.0);
         for (int i = 0; i < 2; ++i) {
             painter->save();
             painter->translate(p.x(), p.y());
-            painter->rotate(i ? -2*m_angle : m_angle);
+            painter->rotate(i ? -2 * m_angle : m_angle);
             painter->translate(-p.x(), -p.y());
             painter->drawImage(m_lastRect[i], m_image[i]);
             painter->restore();
@@ -139,7 +140,7 @@ void TrackMouseEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
 
 void TrackMouseEffect::postPaintScreen()
 {
-    effects->addRepaint(m_lastRect[0].adjusted(-1,-1,1,1));
+    effects->addRepaint(m_lastRect[0].adjusted(-1, -1, 1, 1));
     effects->postPaintScreen();
 }
 
@@ -183,7 +184,7 @@ void TrackMouseEffect::toggle()
     effects->addRepaint(m_lastRect[0].adjusted(-1, -1, 1, 1));
 }
 
-void TrackMouseEffect::slotMouseChanged(const QPoint&, const QPoint&,
+void TrackMouseEffect::slotMouseChanged(const QPoint &, const QPoint &,
                                         Qt::MouseButtons, Qt::MouseButtons,
                                         Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
@@ -228,7 +229,7 @@ void TrackMouseEffect::loadTexture()
         return;
 
     for (int i = 0; i < 2; ++i) {
-        if ( effects->isOpenGLCompositing()) {
+        if (effects->isOpenGLCompositing()) {
             QImage img(f[i]);
             m_texture[i] = new GLTexture(img);
             m_lastRect[i].setSize(img.size());

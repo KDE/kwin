@@ -7,16 +7,17 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_output.h"
-#include "platform.h"
-#include "x11client.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "platform.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 #include <kwineffects.h>
 
 #include <KWayland/Client/compositor.h>
@@ -57,8 +58,8 @@ private:
 
 void StrutsTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Deleted*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -107,24 +108,24 @@ void StrutsTest::testWaylandStruts_data()
     QTest::addColumn<QRect>("workArea");
     QTest::addColumn<QRegion>("restrictedMoveArea");
 
-    QTest::newRow("bottom/0") << QVector<QRect>{QRect(0, 992, 1280, 32)}    << QRect(0, 0, 1280, 992)   << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 992) << QRegion(0, 992, 1280, 32);
-    QTest::newRow("bottom/1") << QVector<QRect>{QRect(1280, 992, 1280, 32)} << QRect(0, 0, 1280, 1024)  << QRect(1280, 0, 1280, 992)  << QRect(0, 0, 2560, 992) << QRegion(1280, 992, 1280, 32);
-    QTest::newRow("top/0")    << QVector<QRect>{QRect(0, 0, 1280, 32)}      << QRect(0, 32, 1280, 992)  << QRect(1280, 0, 1280, 1024) << QRect(0, 32, 2560, 992) << QRegion(0, 0, 1280, 32);
-    QTest::newRow("top/1")    << QVector<QRect>{QRect(1280, 0, 1280, 32)}   << QRect(0, 0, 1280, 1024)  << QRect(1280, 32, 1280, 992) << QRect(0, 32, 2560, 992) << QRegion(1280, 0, 1280, 32);
-    QTest::newRow("left/0")   << QVector<QRect>{QRect(0, 0, 32, 1024)}      << QRect(32, 0, 1248, 1024) << QRect(1280, 0, 1280, 1024) << QRect(32, 0, 2528, 1024) << QRegion(0, 0, 32, 1024);
-    QTest::newRow("left/1")   << QVector<QRect>{QRect(1280, 0, 32, 1024)}   << QRect(0, 0, 1280, 1024)  << QRect(1312, 0, 1248, 1024) << QRect(0, 0, 2560, 1024) << QRegion(1280, 0, 32, 1024);
-    QTest::newRow("right/0")  << QVector<QRect>{QRect(1248, 0, 32, 1024)}   << QRect(0, 0, 1248, 1024)  << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 1024) << QRegion(1248, 0, 32, 1024);
-    QTest::newRow("right/1")  << QVector<QRect>{QRect(2528, 0, 32, 1024)}   << QRect(0, 0, 1280, 1024)  << QRect(1280, 0, 1248, 1024) << QRect(0, 0, 2528, 1024) << QRegion(2528, 0, 32, 1024);
+    QTest::newRow("bottom/0") << QVector<QRect>{QRect(0, 992, 1280, 32)} << QRect(0, 0, 1280, 992) << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 992) << QRegion(0, 992, 1280, 32);
+    QTest::newRow("bottom/1") << QVector<QRect>{QRect(1280, 992, 1280, 32)} << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 992) << QRect(0, 0, 2560, 992) << QRegion(1280, 992, 1280, 32);
+    QTest::newRow("top/0") << QVector<QRect>{QRect(0, 0, 1280, 32)} << QRect(0, 32, 1280, 992) << QRect(1280, 0, 1280, 1024) << QRect(0, 32, 2560, 992) << QRegion(0, 0, 1280, 32);
+    QTest::newRow("top/1") << QVector<QRect>{QRect(1280, 0, 1280, 32)} << QRect(0, 0, 1280, 1024) << QRect(1280, 32, 1280, 992) << QRect(0, 32, 2560, 992) << QRegion(1280, 0, 1280, 32);
+    QTest::newRow("left/0") << QVector<QRect>{QRect(0, 0, 32, 1024)} << QRect(32, 0, 1248, 1024) << QRect(1280, 0, 1280, 1024) << QRect(32, 0, 2528, 1024) << QRegion(0, 0, 32, 1024);
+    QTest::newRow("left/1") << QVector<QRect>{QRect(1280, 0, 32, 1024)} << QRect(0, 0, 1280, 1024) << QRect(1312, 0, 1248, 1024) << QRect(0, 0, 2560, 1024) << QRegion(1280, 0, 32, 1024);
+    QTest::newRow("right/0") << QVector<QRect>{QRect(1248, 0, 32, 1024)} << QRect(0, 0, 1248, 1024) << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 1024) << QRegion(1248, 0, 32, 1024);
+    QTest::newRow("right/1") << QVector<QRect>{QRect(2528, 0, 32, 1024)} << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1248, 1024) << QRect(0, 0, 2528, 1024) << QRegion(2528, 0, 32, 1024);
 
     // same with partial panels not covering the whole area
-    QTest::newRow("part bottom/0") << QVector<QRect>{QRect(100, 992, 1080, 32)}  << QRect(0, 0, 1280, 992)   << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 992) << QRegion(100, 992, 1080, 32);
-    QTest::newRow("part bottom/1") << QVector<QRect>{QRect(1380, 992, 1080, 32)} << QRect(0, 0, 1280, 1024)  << QRect(1280, 0, 1280, 992)  << QRect(0, 0, 2560, 992) << QRegion(1380, 992, 1080, 32);
-    QTest::newRow("part top/0")    << QVector<QRect>{QRect(100, 0, 1080, 32)}    << QRect(0, 32, 1280, 992)  << QRect(1280, 0, 1280, 1024) << QRect(0, 32, 2560, 992) << QRegion(100, 0, 1080, 32);
-    QTest::newRow("part top/1")    << QVector<QRect>{QRect(1380, 0, 1080, 32)}   << QRect(0, 0, 1280, 1024)  << QRect(1280, 32, 1280, 992) << QRect(0, 32, 2560, 992) << QRegion(1380, 0, 1080, 32);
-    QTest::newRow("part left/0")   << QVector<QRect>{QRect(0, 100, 32, 824)}     << QRect(32, 0, 1248, 1024) << QRect(1280, 0, 1280, 1024) << QRect(32, 0, 2528, 1024) << QRegion(0, 100, 32, 824);
-    QTest::newRow("part left/1")   << QVector<QRect>{QRect(1280, 100, 32, 824)}  << QRect(0, 0, 1280, 1024)  << QRect(1312, 0, 1248, 1024) << QRect(0, 0, 2560, 1024) << QRegion(1280, 100, 32, 824);
-    QTest::newRow("part right/0")  << QVector<QRect>{QRect(1248, 100, 32, 824)}  << QRect(0, 0, 1248, 1024)  << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 1024) << QRegion(1248, 100, 32, 824);
-    QTest::newRow("part right/1")  << QVector<QRect>{QRect(2528, 100, 32, 824)}  << QRect(0, 0, 1280, 1024)  << QRect(1280, 0, 1248, 1024) << QRect(0, 0, 2528, 1024) << QRegion(2528, 100, 32, 824);
+    QTest::newRow("part bottom/0") << QVector<QRect>{QRect(100, 992, 1080, 32)} << QRect(0, 0, 1280, 992) << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 992) << QRegion(100, 992, 1080, 32);
+    QTest::newRow("part bottom/1") << QVector<QRect>{QRect(1380, 992, 1080, 32)} << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 992) << QRect(0, 0, 2560, 992) << QRegion(1380, 992, 1080, 32);
+    QTest::newRow("part top/0") << QVector<QRect>{QRect(100, 0, 1080, 32)} << QRect(0, 32, 1280, 992) << QRect(1280, 0, 1280, 1024) << QRect(0, 32, 2560, 992) << QRegion(100, 0, 1080, 32);
+    QTest::newRow("part top/1") << QVector<QRect>{QRect(1380, 0, 1080, 32)} << QRect(0, 0, 1280, 1024) << QRect(1280, 32, 1280, 992) << QRect(0, 32, 2560, 992) << QRegion(1380, 0, 1080, 32);
+    QTest::newRow("part left/0") << QVector<QRect>{QRect(0, 100, 32, 824)} << QRect(32, 0, 1248, 1024) << QRect(1280, 0, 1280, 1024) << QRect(32, 0, 2528, 1024) << QRegion(0, 100, 32, 824);
+    QTest::newRow("part left/1") << QVector<QRect>{QRect(1280, 100, 32, 824)} << QRect(0, 0, 1280, 1024) << QRect(1312, 0, 1248, 1024) << QRect(0, 0, 2560, 1024) << QRegion(1280, 100, 32, 824);
+    QTest::newRow("part right/0") << QVector<QRect>{QRect(1248, 100, 32, 824)} << QRect(0, 0, 1248, 1024) << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 1024) << QRegion(1248, 100, 32, 824);
+    QTest::newRow("part right/1") << QVector<QRect>{QRect(2528, 100, 32, 824)} << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1248, 1024) << QRect(0, 0, 2528, 1024) << QRegion(2528, 100, 32, 824);
 
     // multiple panels
     QTest::newRow("two bottom panels") << QVector<QRect>{QRect(100, 992, 1080, 32), QRect(1380, 984, 1080, 40)} << QRect(0, 0, 1280, 992) << QRect(1280, 0, 1280, 984) << QRect(0, 0, 2560, 984) << QRegion(100, 992, 1080, 32).united(QRegion(1380, 984, 1080, 40));
@@ -162,7 +163,7 @@ void StrutsTest::testWaylandStruts()
 
     QFETCH(QVector<QRect>, windowGeometries);
     // create the panels
-    QHash<KWayland::Client::Surface*, AbstractClient *> clients;
+    QHash<KWayland::Client::Surface *, AbstractClient *> clients;
     for (auto it = windowGeometries.constBegin(), end = windowGeometries.constEnd(); it != end; it++) {
         const QRect windowGeometry = *it;
         KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
@@ -249,8 +250,8 @@ void StrutsTest::testMoveWaylandPanel()
     QVERIFY(c->hasStrut());
     QCOMPARE(workspace()->clientArea(PlacementArea, outputs[0], desktop), QRect(0, 0, 1280, 1000));
     QCOMPARE(workspace()->clientArea(MaximizeArea, outputs[0], desktop), QRect(0, 0, 1280, 1000));
-    QCOMPARE(workspace()->clientArea(PlacementArea,outputs[1], desktop), QRect(1280, 0, 1280, 1024));
-    QCOMPARE(workspace()->clientArea(MaximizeArea,outputs[1], desktop), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(PlacementArea, outputs[1], desktop), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, outputs[1], desktop), QRect(1280, 0, 1280, 1024));
     QCOMPARE(workspace()->clientArea(WorkArea, outputs[0], desktop), QRect(0, 0, 2560, 1000));
 
     QSignalSpy frameGeometryChangedSpy(c, &AbstractClient::frameGeometryChanged);
@@ -260,8 +261,8 @@ void StrutsTest::testMoveWaylandPanel()
     QCOMPARE(c->frameGeometry(), QRect(1280, 1000, 1280, 24));
     QCOMPARE(workspace()->clientArea(PlacementArea, outputs[0], desktop), QRect(0, 0, 1280, 1024));
     QCOMPARE(workspace()->clientArea(MaximizeArea, outputs[0], desktop), QRect(0, 0, 1280, 1024));
-    QCOMPARE(workspace()->clientArea(PlacementArea,outputs[1], desktop), QRect(1280, 0, 1280, 1000));
-    QCOMPARE(workspace()->clientArea(MaximizeArea,outputs[1], desktop), QRect(1280, 0, 1280, 1000));
+    QCOMPARE(workspace()->clientArea(PlacementArea, outputs[1], desktop), QRect(1280, 0, 1280, 1000));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, outputs[1], desktop), QRect(1280, 0, 1280, 1000));
     QCOMPARE(workspace()->clientArea(WorkArea, outputs[0], desktop), QRect(0, 0, 2560, 1000));
 }
 
@@ -272,7 +273,7 @@ void StrutsTest::testWaylandMobilePanel()
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
     const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
 
-    //First enable maxmizing policy
+    // First enable maxmizing policy
     KConfigGroup group = kwinApp()->config()->group("Windows");
     group.writeEntry("Placement", "Maximizing");
     group.sync();
@@ -383,106 +384,106 @@ void StrutsTest::testX11Struts_data()
                                         << QRect(0, 0, 2560, 980)
                                         << QRegion(0, 980, 1279, 44);
     QTest::newRow("top panel/no strut") << QRect(0, 0, 1280, 44)
-                                           << 0 << 0 << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << QRect(0, 0, 1280, 1024)
-                                           << QRect(1280, 0, 1280, 1024)
-                                           << QRect(0, 0, 2560, 1024)
-                                           << QRegion();
+                                        << 0 << 0 << 0 << 0
+                                        << 0 << 0
+                                        << 0 << 0
+                                        << 0 << 0
+                                        << 0 << 0
+                                        << QRect(0, 0, 1280, 1024)
+                                        << QRect(1280, 0, 1280, 1024)
+                                        << QRect(0, 0, 2560, 1024)
+                                        << QRegion();
     QTest::newRow("top panel/strut") << QRect(0, 0, 1280, 44)
-                                           << 0 << 0 << 44 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 1279
-                                           << 0 << 0
-                                           << QRect(0, 44, 1280, 980)
-                                           << QRect(1280, 0, 1280, 1024)
-                                           << QRect(0, 44, 2560, 980)
-                                           << QRegion(0, 0, 1279, 44);
+                                     << 0 << 0 << 44 << 0
+                                     << 0 << 0
+                                     << 0 << 0
+                                     << 0 << 1279
+                                     << 0 << 0
+                                     << QRect(0, 44, 1280, 980)
+                                     << QRect(1280, 0, 1280, 1024)
+                                     << QRect(0, 44, 2560, 980)
+                                     << QRegion(0, 0, 1279, 44);
     QTest::newRow("left panel/no strut") << QRect(0, 0, 60, 1024)
-                                           << 0 << 0 << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << QRect(0, 0, 1280, 1024)
-                                           << QRect(1280, 0, 1280, 1024)
-                                           << QRect(0, 0, 2560, 1024)
-                                           << QRegion();
+                                         << 0 << 0 << 0 << 0
+                                         << 0 << 0
+                                         << 0 << 0
+                                         << 0 << 0
+                                         << 0 << 0
+                                         << QRect(0, 0, 1280, 1024)
+                                         << QRect(1280, 0, 1280, 1024)
+                                         << QRect(0, 0, 2560, 1024)
+                                         << QRegion();
     QTest::newRow("left panel/strut") << QRect(0, 0, 60, 1024)
-                                           << 60 << 0 << 0 << 0
-                                           << 0 << 1023
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << QRect(60, 0, 1220, 1024)
-                                           << QRect(1280, 0, 1280, 1024)
-                                           << QRect(60, 0, 2500, 1024)
-                                           << QRegion(0, 0, 60, 1023);
+                                      << 60 << 0 << 0 << 0
+                                      << 0 << 1023
+                                      << 0 << 0
+                                      << 0 << 0
+                                      << 0 << 0
+                                      << QRect(60, 0, 1220, 1024)
+                                      << QRect(1280, 0, 1280, 1024)
+                                      << QRect(60, 0, 2500, 1024)
+                                      << QRegion(0, 0, 60, 1023);
     QTest::newRow("right panel/no strut") << QRect(1220, 0, 60, 1024)
-                                           << 0 << 0 << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << QRect(0, 0, 1280, 1024)
-                                           << QRect(1280, 0, 1280, 1024)
-                                           << QRect(0, 0, 2560, 1024)
-                                           << QRegion();
+                                          << 0 << 0 << 0 << 0
+                                          << 0 << 0
+                                          << 0 << 0
+                                          << 0 << 0
+                                          << 0 << 0
+                                          << QRect(0, 0, 1280, 1024)
+                                          << QRect(1280, 0, 1280, 1024)
+                                          << QRect(0, 0, 2560, 1024)
+                                          << QRegion();
     QTest::newRow("right panel/strut") << QRect(1220, 0, 60, 1024)
-                                           << 0 << 1340 << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 1023
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << QRect(0, 0, 1220, 1024)
-                                           << QRect(1280, 0, 1280, 1024)
-                                           << QRect(0, 0, 2560, 1024)
-                                           << QRegion(1220, 0, 60, 1023);
+                                       << 0 << 1340 << 0 << 0
+                                       << 0 << 0
+                                       << 0 << 1023
+                                       << 0 << 0
+                                       << 0 << 0
+                                       << QRect(0, 0, 1220, 1024)
+                                       << QRect(1280, 0, 1280, 1024)
+                                       << QRect(0, 0, 2560, 1024)
+                                       << QRegion(1220, 0, 60, 1023);
     // second screen
     QTest::newRow("bottom panel 1/no strut") << QRect(1280, 980, 1280, 44)
-                                           << 0 << 0 << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << QRect(0, 0, 1280, 1024)
-                                           << QRect(1280, 0, 1280, 1024)
-                                           << QRect(0, 0, 2560, 1024)
-                                           << QRegion();
+                                             << 0 << 0 << 0 << 0
+                                             << 0 << 0
+                                             << 0 << 0
+                                             << 0 << 0
+                                             << 0 << 0
+                                             << QRect(0, 0, 1280, 1024)
+                                             << QRect(1280, 0, 1280, 1024)
+                                             << QRect(0, 0, 2560, 1024)
+                                             << QRegion();
     QTest::newRow("bottom panel 1/strut") << QRect(1280, 980, 1280, 44)
-                                           << 0 << 0 << 0 << 44
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 1280 << 2559
-                                           << QRect(0, 0, 1280, 1024)
-                                           << QRect(1280, 0, 1280, 980)
-                                           << QRect(0, 0, 2560, 980)
-                                           << QRegion(1280, 980, 1279, 44);
+                                          << 0 << 0 << 0 << 44
+                                          << 0 << 0
+                                          << 0 << 0
+                                          << 0 << 0
+                                          << 1280 << 2559
+                                          << QRect(0, 0, 1280, 1024)
+                                          << QRect(1280, 0, 1280, 980)
+                                          << QRect(0, 0, 2560, 980)
+                                          << QRegion(1280, 980, 1279, 44);
     QTest::newRow("top panel 1/no strut") << QRect(1280, 0, 1280, 44)
-                                           << 0 << 0 << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << QRect(0, 0, 1280, 1024)
-                                           << QRect(1280, 0, 1280, 1024)
-                                           << QRect(0, 0, 2560, 1024)
-                                           << QRegion();
+                                          << 0 << 0 << 0 << 0
+                                          << 0 << 0
+                                          << 0 << 0
+                                          << 0 << 0
+                                          << 0 << 0
+                                          << QRect(0, 0, 1280, 1024)
+                                          << QRect(1280, 0, 1280, 1024)
+                                          << QRect(0, 0, 2560, 1024)
+                                          << QRegion();
     QTest::newRow("top panel 1 /strut") << QRect(1280, 0, 1280, 44)
-                                           << 0 << 0 << 44 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 1280 << 2559
-                                           << 0 << 0
-                                           << QRect(0, 0, 1280, 1024)
-                                           << QRect(1280, 44, 1280, 980)
-                                           << QRect(0, 44, 2560, 980)
-                                           << QRegion(1280, 0, 1279, 44);
+                                        << 0 << 0 << 44 << 0
+                                        << 0 << 0
+                                        << 0 << 0
+                                        << 1280 << 2559
+                                        << 0 << 0
+                                        << QRect(0, 0, 1280, 1024)
+                                        << QRect(1280, 44, 1280, 980)
+                                        << QRect(0, 44, 2560, 980)
+                                        << QRegion(1280, 0, 1279, 44);
     QTest::newRow("left panel 1/no strut") << QRect(1280, 0, 60, 1024)
                                            << 0 << 0 << 0 << 0
                                            << 0 << 0
@@ -494,46 +495,46 @@ void StrutsTest::testX11Struts_data()
                                            << QRect(0, 0, 2560, 1024)
                                            << QRegion();
     QTest::newRow("left panel 1/strut") << QRect(1280, 0, 60, 1024)
-                                           << 1340 << 0 << 0 << 0
-                                           << 0 << 1023
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << QRect(0, 0, 1280, 1024)
-                                           << QRect(1340, 0, 1220, 1024)
-                                           << QRect(0, 0, 2560, 1024)
-                                           << QRegion(1280, 0, 60, 1023);
+                                        << 1340 << 0 << 0 << 0
+                                        << 0 << 1023
+                                        << 0 << 0
+                                        << 0 << 0
+                                        << 0 << 0
+                                        << QRect(0, 0, 1280, 1024)
+                                        << QRect(1340, 0, 1220, 1024)
+                                        << QRect(0, 0, 2560, 1024)
+                                        << QRegion(1280, 0, 60, 1023);
     // invalid struts
     QTest::newRow("bottom panel/ invalid strut") << QRect(0, 980, 1280, 44)
-                                        << 1280 << 0 << 0 << 44
-                                        << 980 << 1024
-                                        << 0 << 0
-                                        << 0 << 0
-                                        << 0 << 1279
-                                        << QRect(0, 0, 1280, 1024)
-                                        << QRect(1280, 0, 1280, 1024)
-                                        << QRect(0, 0, 2560, 1024)
-                                        << QRegion(0, 980, 1280, 44);
+                                                 << 1280 << 0 << 0 << 44
+                                                 << 980 << 1024
+                                                 << 0 << 0
+                                                 << 0 << 0
+                                                 << 0 << 1279
+                                                 << QRect(0, 0, 1280, 1024)
+                                                 << QRect(1280, 0, 1280, 1024)
+                                                 << QRect(0, 0, 2560, 1024)
+                                                 << QRegion(0, 980, 1280, 44);
     QTest::newRow("top panel/ invalid strut") << QRect(0, 0, 1280, 44)
-                                           << 1280 << 0 << 44 << 0
-                                           << 0 << 44
-                                           << 0 << 0
-                                           << 0 << 1279
-                                           << 0 << 0
-                                           << QRect(0, 0, 1280, 1024)
-                                           << QRect(1280, 0, 1280, 1024)
-                                           << QRect(0, 0, 2560, 1024)
-                                           << QRegion(0, 0, 1280, 44);
+                                              << 1280 << 0 << 44 << 0
+                                              << 0 << 44
+                                              << 0 << 0
+                                              << 0 << 1279
+                                              << 0 << 0
+                                              << QRect(0, 0, 1280, 1024)
+                                              << QRect(1280, 0, 1280, 1024)
+                                              << QRect(0, 0, 2560, 1024)
+                                              << QRegion(0, 0, 1280, 44);
     QTest::newRow("top panel/invalid strut 2") << QRect(0, 0, 1280, 44)
-                                           << 0 << 0 << 1024 << 0
-                                           << 0 << 0
-                                           << 0 << 0
-                                           << 0 << 1279
-                                           << 0 << 0
-                                           << QRect(0, 0, 1280, 1024)
-                                           << QRect(1280, 0, 1280, 1024)
-                                           << QRect(0, 0, 2560, 1024)
-                                           << QRegion();
+                                               << 0 << 0 << 1024 << 0
+                                               << 0 << 0
+                                               << 0 << 0
+                                               << 0 << 1279
+                                               << 0 << 0
+                                               << QRect(0, 0, 1280, 1024)
+                                               << QRect(1280, 0, 1280, 1024)
+                                               << QRect(0, 0, 2560, 1024)
+                                               << QRegion();
 }
 
 struct XcbConnectionDeleter
@@ -925,7 +926,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     NETExtendedStrut strut;
     strut.left_start = 0;
     strut.left_end = 1050;
-    strut.left_width = 1366+24;
+    strut.left_width = 1366 + 24;
     strut.right_start = 0;
     strut.right_end = 0;
     strut.right_width = 0;

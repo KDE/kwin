@@ -4,9 +4,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include "screenshotdbusinterface1.h"
 
 #include <config-kwin.h>
-#include "screenshotdbusinterface1.h"
+
 #include "screenshotlogging.h"
 #include "utils/serviceutils.h"
 
@@ -344,7 +345,8 @@ void ScreenShotSinkPipe1::flush(const QImage &image)
         } else {
             close(fd);
         }
-    }, m_fileDescriptor, image);
+    },
+                      m_fileDescriptor, image);
 
     // The ownership of the pipe file descriptor has been moved to the worker thread.
     m_fileDescriptor = -1;
@@ -366,7 +368,8 @@ void ScreenShotSinkPipe1::flushMulti(const QList<QImage> &images)
         } else {
             close(fd);
         }
-    }, m_fileDescriptor, images);
+    },
+                      m_fileDescriptor, images);
 
     // The ownership of the pipe file descriptor has been moved to the worker thread.
     m_fileDescriptor = -1;
@@ -417,7 +420,7 @@ static xcb_pixmap_t xpixmapFromImage(const QImage &image)
     xcb_gcontext_t gc = xcb_generate_id(c);
 
     xcb_create_pixmap(c, image.depth(), pixmap, effects->x11RootWindow(),
-        image.width(), image.height());
+                      image.width(), image.height());
     xcb_create_gc(c, gc, pixmap, 0, nullptr);
 
     const int bytesPerPixel = image.depth() >> 3;
@@ -541,9 +544,9 @@ void ScreenShotDBusInterface1::screenshotWindowUnderCursor(int mask)
     while (it != first) {
         hoveredWindow = *(--it);
         if (hoveredWindow->isOnCurrentDesktop()
-                && !hoveredWindow->isMinimized()
-                && !hoveredWindow->isDeleted()
-                && hoveredWindow->frameGeometry().contains(cursor)) {
+            && !hoveredWindow->isMinimized()
+            && !hoveredWindow->isDeleted()
+            && hoveredWindow->frameGeometry().contains(cursor)) {
             break;
         }
         hoveredWindow = nullptr;

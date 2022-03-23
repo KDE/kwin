@@ -12,9 +12,9 @@
 #include "constants.h"
 #include "plugin.h"
 
+#include <QDateTime>
 #include <QObject>
 #include <QPair>
-#include <QDateTime>
 
 #include <KConfigWatcher>
 
@@ -26,8 +26,8 @@ namespace KWin
 class ClockSkewNotifier;
 class NightColorDBusInterface;
 
-typedef QPair<QDateTime,QDateTime> DateTimes;
-typedef QPair<QTime,QTime> Times;
+typedef QPair<QDateTime, QDateTime> DateTimes;
+typedef QPair<QTime, QTime> Times;
 
 /**
  * This enum type is used to specify operation mode of the night color manager.
@@ -272,8 +272,8 @@ private:
     DateTimes m_next = DateTimes();
 
     // manual times from config
-    QTime m_morning = QTime(6,0);
-    QTime m_evening = QTime(18,0);
+    QTime m_morning = QTime(6, 0);
+    QTime m_evening = QTime(18, 0);
     int m_trTime = 30; // saved in minutes > 1
 
     // auto location provided by work space

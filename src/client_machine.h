@@ -14,10 +14,11 @@
 
 // forward declaration
 struct addrinfo;
-template <typename T>
+template<typename T>
 class QFutureWatcher;
 
-namespace KWin {
+namespace KWin
+{
 
 class GetAddrInfo : public QObject
 {
@@ -77,26 +78,22 @@ private:
     bool m_resolving;
 };
 
-inline
-bool ClientMachine::isLocal() const
+inline bool ClientMachine::isLocal() const
 {
     return m_localhost;
 }
 
-inline
-const QByteArray &ClientMachine::hostName() const
+inline const QByteArray &ClientMachine::hostName() const
 {
     return m_hostName;
 }
 
-inline
-QByteArray ClientMachine::localhost()
+inline QByteArray ClientMachine::localhost()
 {
     return "localhost";
 }
 
-inline
-bool ClientMachine::isResolving() const
+inline bool ClientMachine::isResolving() const
 {
     return m_resolving;
 }

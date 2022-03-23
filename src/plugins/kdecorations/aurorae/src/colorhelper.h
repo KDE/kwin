@@ -6,8 +6,8 @@
 #ifndef COLOR_HELPER_H
 #define COLOR_HELPER_H
 
-#include <QObject>
 #include <QColor>
+#include <QObject>
 
 /**
  * @short Helper to manipulate colors.
@@ -193,8 +193,8 @@ public:
      * Conversely, if the base color is very light, the 'light' shades will be
      * darker than the base color, with light() == mid().
      */
-    Q_INVOKABLE QColor shade(const QColor& color, ShadeRole role);
-    Q_INVOKABLE QColor shade(const QColor& color, ShadeRole role, qreal contrast);
+    Q_INVOKABLE QColor shade(const QColor &color, ShadeRole role);
+    Q_INVOKABLE QColor shade(const QColor &color, ShadeRole role, qreal contrast);
     /**
      * Retrieve the requested shade color, using the specified color as the
      * base color and the specified contrast.
@@ -211,7 +211,7 @@ public:
      *
      * @see KColorUtils::shade
      */
-    Q_INVOKABLE QColor multiplyAlpha(const QColor& color, qreal alpha);
+    Q_INVOKABLE QColor multiplyAlpha(const QColor &color, qreal alpha);
     /**
      * Retrieve the requested background brush's color for the @p active button.
      * @param active Whether the active or inactive palette should be used.

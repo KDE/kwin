@@ -78,7 +78,7 @@ bool X11Output::setGammaRamp(const GammaRamp &gamma)
     }
 
     xcb_randr_set_crtc_gamma(kwinApp()->x11Connection(), m_crtc, gamma.size(), gamma.red(),
-        gamma.green(), gamma.blue());
+                             gamma.green(), gamma.blue());
 
     return true;
 }

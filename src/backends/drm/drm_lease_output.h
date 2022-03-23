@@ -9,9 +9,9 @@
 
 #pragma once
 
+#include <KWaylandServer/drmleasedevice_v1_interface.h>
 #include <QObject>
 #include <QVector>
-#include <KWaylandServer/drmleasedevice_v1_interface.h>
 
 namespace KWin
 {

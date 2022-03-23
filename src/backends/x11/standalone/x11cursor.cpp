@@ -40,13 +40,11 @@ X11Cursor::X11Cursor(QObject *parent, bool xInputSupport)
     }
 
 #ifndef KCMRULES
-    connect(kwinApp(), &Application::workspaceCreated, this,
-        [this] {
-            if (Xcb::Extensions::self()->isFixesAvailable()) {
-                m_xfixesFilter = std::make_unique<XFixesCursorEventFilter>(this);
-            }
+    connect(kwinApp(), &Application::workspaceCreated, this, [this]() {
+        if (Xcb::Extensions::self()->isFixesAvailable()) {
+            m_xfixesFilter = std::make_unique<XFixesCursorEventFilter>(this);
         }
-    );
+    });
 #endif
 }
 
@@ -64,8 +62,7 @@ void X11Cursor::doSetPos()
 
 void X11Cursor::doGetPos()
 {
-    if (m_timeStamp != XCB_TIME_CURRENT_TIME &&
-            m_timeStamp == xTime()) {
+    if (m_timeStamp != XCB_TIME_CURRENT_TIME && m_timeStamp == xTime()) {
         // time stamps did not change, no need to query again
         return;
     }
@@ -123,8 +120,8 @@ void X11Cursor::mousePolled()
     doGetPos(); // Update if needed
     if (lastPos != currentPos() || lastMask != m_buttonMask) {
         Q_EMIT mouseChanged(currentPos(), lastPos,
-            x11ToQtMouseButtons(m_buttonMask), x11ToQtMouseButtons(lastMask),
-            x11ToQtKeyboardModifiers(m_buttonMask), x11ToQtKeyboardModifiers(lastMask));
+                            x11ToQtMouseButtons(m_buttonMask), x11ToQtMouseButtons(lastMask),
+                            x11ToQtKeyboardModifiers(m_buttonMask), x11ToQtKeyboardModifiers(lastMask));
         lastPos = currentPos();
         lastMask = m_buttonMask;
     }

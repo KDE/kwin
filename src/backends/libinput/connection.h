@@ -15,10 +15,10 @@
 
 #include <QObject>
 #include <QPointer>
-#include <QSize>
 #include <QRecursiveMutex>
-#include <QVector>
+#include <QSize>
 #include <QStringList>
+#include <QVector>
 
 class QSocketNotifier;
 class QThread;
@@ -39,7 +39,8 @@ class KWIN_EXPORT Connection : public QObject
 public:
     ~Connection() override;
 
-    void setInputConfig(const KSharedConfigPtr &config) {
+    void setInputConfig(const KSharedConfigPtr &config)
+    {
         m_config = config;
     }
 
@@ -68,8 +69,8 @@ private:
     Context *m_input;
     QSocketNotifier *m_notifier;
     QRecursiveMutex m_mutex;
-    QVector<Event*> m_eventQueue;
-    QVector<Device*> m_devices;
+    QVector<Event *> m_eventQueue;
+    QVector<Device *> m_devices;
     KSharedConfigPtr m_config;
 
     KWIN_SINGLETON(Connection)

@@ -21,11 +21,12 @@ class BrightnessSaturationShader : public QSGMaterialShader
 {
 public:
     BrightnessSaturationShader();
-    const char* vertexShader() const override;
-    const char* fragmentShader() const override;
-    const char*const* attributeNames() const override;
-    void updateState(const RenderState& state, QSGMaterial* newMaterial, QSGMaterial* oldMaterial) override;
+    const char *vertexShader() const override;
+    const char *fragmentShader() const override;
+    const char *const *attributeNames() const override;
+    void updateState(const RenderState &state, QSGMaterial *newMaterial, QSGMaterial *oldMaterial) override;
     void initialize() override;
+
 private:
     int m_id_matrix;
     int m_id_opacity;
@@ -36,10 +37,12 @@ private:
 class BrightnessSaturationMaterial : public QSGTextureMaterial
 {
 public:
-    QSGMaterialShader* createShader() const override {
+    QSGMaterialShader *createShader() const override
+    {
         return new BrightnessSaturationShader;
     }
-    QSGMaterialType *type() const override {
+    QSGMaterialType *type() const override
+    {
         static QSGMaterialType type;
         return &type;
     }
@@ -59,10 +62,12 @@ public:
     explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
     ~WindowThumbnailItem() override;
 
-    qulonglong wId() const {
+    qulonglong wId() const
+    {
         return m_wId;
     }
-    QQuickItem *clipTo() const {
+    QQuickItem *clipTo() const
+    {
         return m_clipToItem;
     }
     qreal brightness() const;
@@ -88,6 +93,7 @@ Q_SIGNALS:
     void brightnessChanged();
     void saturationChanged();
     void sourceSizeChanged();
+
 private:
     void findImage();
     qulonglong m_wId;

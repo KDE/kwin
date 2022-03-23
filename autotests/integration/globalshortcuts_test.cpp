@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
-#include "x11client.h"
+
 #include "cursor.h"
 #include "input.h"
 #include "internal_client.h"
@@ -16,6 +16,7 @@
 #include "useractions.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KWayland/Client/surface.h>
 #include <KWaylandServer/keyboard_interface.h>
@@ -96,34 +97,31 @@ void GlobalShortcutsTest::testNonLatinLayout_data()
     QTest::addColumn<Qt::Key>("qtKey");
 
     for (const auto &modifier :
-             QVector<QPair<int, Qt::Modifier>> {
-                {KEY_LEFTCTRL, Qt::CTRL},
-                {KEY_LEFTALT, Qt::ALT},
-                {KEY_LEFTSHIFT, Qt::SHIFT},
-                {KEY_LEFTMETA, Qt::META},
-             } )
-    {
+         QVector<QPair<int, Qt::Modifier>>{
+             {KEY_LEFTCTRL, Qt::CTRL},
+             {KEY_LEFTALT, Qt::ALT},
+             {KEY_LEFTSHIFT, Qt::SHIFT},
+             {KEY_LEFTMETA, Qt::META},
+         }) {
         for (const auto &key :
              QVector<QPair<int, Qt::Key>> {
-
                  // Tab is example of a key usually the same on different layouts, check it first
-                {KEY_TAB, Qt::Key_Tab},
+                 {KEY_TAB, Qt::Key_Tab},
 
-                 // Then check a key with a Latin letter.
-                 // The symbol will probably be differ on non-Latin layout.
-                 // On Russian layout, "w" key has a cyrillic letter "ц"
-                {KEY_W, Qt::Key_W},
+                     // Then check a key with a Latin letter.
+                     // The symbol will probably be differ on non-Latin layout.
+                     // On Russian layout, "w" key has a cyrillic letter "ц"
+                     {KEY_W, Qt::Key_W},
 
-             #if QT_VERSION_MAJOR > 5	// since Qt 5 LTS is frozen
-                 // More common case with any Latin1 symbol keys, including punctuation, should work also.
-                 // "`" key has a "ё" letter on Russian layout
-                 // FIXME: QTBUG-90611
-                {KEY_GRAVE, Qt::Key_QuoteLeft},
-             #endif
-             } )
-        {
+#if QT_VERSION_MAJOR > 5 // since Qt 5 LTS is frozen
+                     // More common case with any Latin1 symbol keys, including punctuation, should work also.
+                     // "`" key has a "ё" letter on Russian layout
+                     // FIXME: QTBUG-90611
+                     {KEY_GRAVE, Qt::Key_QuoteLeft},
+#endif
+             }) {
             QTest::newRow(QKeySequence(modifier.second + key.second).toString().toLatin1().constData())
-                            << modifier.first << modifier.second << key.first << key.second;
+                << modifier.first << modifier.second << key.first << key.second;
         }
     }
 }
@@ -315,9 +313,7 @@ void GlobalShortcutsTest::testX11ClientShortcut()
     xcb_window_t w = xcb_generate_id(c.data());
     const QRect windowGeometry = QRect(0, 0, 10, 20);
     const uint32_t values[] = {
-        XCB_EVENT_MASK_ENTER_WINDOW |
-        XCB_EVENT_MASK_LEAVE_WINDOW
-    };
+        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW};
     xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
@@ -409,7 +405,7 @@ void GlobalShortcutsTest::testWaylandClientShortcut()
     shellSurface.reset();
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
-    QTRY_VERIFY_WITH_TIMEOUT(workspace()->shortcutAvailable(seq), 500); //we need the try since KGlobalAccelPrivate::unregister is async
+    QTRY_VERIFY_WITH_TIMEOUT(workspace()->shortcutAvailable(seq), 500); // we need the try since KGlobalAccelPrivate::unregister is async
 }
 
 void GlobalShortcutsTest::testSetupWindowShortcut()
@@ -431,7 +427,7 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     auto dialog = shortcutDialogAddedSpy.first().first().value<InternalClient *>();
     QVERIFY(dialog);
     QVERIFY(dialog->isInternal());
-    auto sequenceEdit = workspace()->shortcutDialog()->findChild<QKeySequenceEdit*>();
+    auto sequenceEdit = workspace()->shortcutDialog()->findChild<QKeySequenceEdit *>();
     QVERIFY(sequenceEdit);
 
     // the QKeySequenceEdit field does not get focus, we need to pass it focus manually

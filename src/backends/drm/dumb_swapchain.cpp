@@ -8,8 +8,8 @@
 */
 
 #include "dumb_swapchain.h"
-#include "drm_gpu.h"
 #include "drm_buffer.h"
+#include "drm_gpu.h"
 #include "logging.h"
 
 namespace KWin
@@ -28,7 +28,10 @@ DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat,
             break;
         }
         buffer->image()->fill(Qt::black);
-        m_slots.append(Slot{.buffer = buffer, .age = 0,});
+        m_slots.append(Slot{
+            .buffer = buffer,
+            .age = 0,
+        });
     }
     m_damageJournal.setCapacity(2);
     if (m_slots.count() < 2) {

@@ -27,8 +27,8 @@ class TouchPointsEffect
 public:
     TouchPointsEffect();
     ~TouchPointsEffect() override;
-    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
     bool isActive() const override;
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override;
@@ -36,32 +36,36 @@ public:
     bool touchUp(qint32 id, quint32 time) override;
 
     // for properties
-    qreal lineWidth() const {
+    qreal lineWidth() const
+    {
         return m_lineWidth;
     }
-    int ringLife() const {
+    int ringLife() const
+    {
         return m_ringLife;
     }
-    int ringSize() const {
+    int ringSize() const
+    {
         return m_ringMaxSize;
     }
-    int ringCount() const {
+    int ringCount() const
+    {
         return m_ringCount;
     }
 
 private:
-    inline void drawCircle(const QColor& color, float cx, float cy, float r);
-    inline void paintScreenSetup(int mask, QRegion region, ScreenPaintData& data);
-    inline void paintScreenFinish(int mask, QRegion region, ScreenPaintData& data);
+    inline void drawCircle(const QColor &color, float cx, float cy, float r);
+    inline void paintScreenSetup(int mask, QRegion region, ScreenPaintData &data);
+    inline void paintScreenFinish(int mask, QRegion region, ScreenPaintData &data);
 
     void repaint();
 
     float computeAlpha(int time, int ring);
     float computeRadius(int time, bool press, int ring);
-    void drawCircleGl(const QColor& color, float cx, float cy, float r);
-    void drawCircleQPainter(const QColor& color, float cx, float cy, float r);
-    void paintScreenSetupGl(int mask, QRegion region, ScreenPaintData& data);
-    void paintScreenFinishGl(int mask, QRegion region, ScreenPaintData& data);
+    void drawCircleGl(const QColor &color, float cx, float cy, float r);
+    void drawCircleQPainter(const QColor &color, float cx, float cy, float r);
+    void paintScreenSetupGl(int mask, QRegion region, ScreenPaintData &data);
+    void paintScreenFinishGl(int mask, QRegion region, ScreenPaintData &data);
 
     Qt::GlobalColor colorForId(quint32 id);
 
@@ -70,7 +74,8 @@ private:
     int m_ringLife = 300;
     float m_ringMaxSize = 20.0;
 
-    struct TouchPoint {
+    struct TouchPoint
+    {
         QPointF pos;
         int time = 0;
         bool press;
@@ -80,7 +85,6 @@ private:
     QHash<quint32, QPointF> m_latestPositions;
     QHash<quint32, Qt::GlobalColor> m_colors;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
-
 };
 
 } // namespace

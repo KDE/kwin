@@ -69,7 +69,8 @@ QStringList Selection::atomToMimeTypes(xcb_atom_t atom)
     } else if (atom == atoms->text) {
         mimeTypes << QString::fromLatin1("text/plain");
     } else if (atom == atoms->uri_list) {
-        mimeTypes << "text/uri-list" << "text/x-uri";
+        mimeTypes << "text/uri-list"
+                  << "text/x-uri";
     } else {
         mimeTypes << atomName(atom);
     }
@@ -158,9 +159,7 @@ void Selection::sendSelectionNotify(xcb_selection_request_event_t *event, bool s
 void Selection::registerXfixes()
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
-    const uint32_t mask = XCB_XFIXES_SELECTION_EVENT_MASK_SET_SELECTION_OWNER |
-            XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_WINDOW_DESTROY |
-            XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_CLIENT_CLOSE;
+    const uint32_t mask = XCB_XFIXES_SELECTION_EVENT_MASK_SET_SELECTION_OWNER | XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_WINDOW_DESTROY | XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_CLIENT_CLOSE;
     xcb_xfixes_select_selection_input(xcbConn,
                                       m_window,
                                       m_atom,
@@ -301,13 +300,13 @@ void Selection::startTransferToX(xcb_selection_request_event_t *event, qint32 fd
         Q_EMIT transferFinished(transfer->timestamp());
 
         // TODO: serialize? see comment below.
-//        const bool wasActive = (transfer == m_wlToXTransfers[0]);
+        //        const bool wasActive = (transfer == m_wlToXTransfers[0]);
         transfer->deleteLater();
         m_wlToXTransfers.removeOne(transfer);
         endTimeoutTransfersTimer();
-//        if (wasActive && !m_wlToXTransfers.isEmpty()) {
-//            m_wlToXTransfers[0]->startTransferFromSource();
-//        }
+        //        if (wasActive && !m_wlToXTransfers.isEmpty()) {
+        //            m_wlToXTransfers[0]->startTransferFromSource();
+        //        }
     });
 
     // add it to list of queued transfers
@@ -316,9 +315,9 @@ void Selection::startTransferToX(xcb_selection_request_event_t *event, qint32 fd
     // TODO: Do we need to serialize the transfers, or can we do
     //       them in parallel as we do it right now?
     transfer->startTransferFromSource();
-//    if (m_wlToXTransfers.size() == 1) {
-//        transfer->startTransferFromSource();
-//    }
+    //    if (m_wlToXTransfers.size() == 1) {
+    //        transfer->startTransferFromSource();
+    //    }
     startTimeoutTransfersTimer();
 }
 

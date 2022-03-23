@@ -4,37 +4,36 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "module.h"
+
+#include "config-kwin.h"
+
+#include "kwinscriptsdata.h"
 #include "ui_module.h"
 
-#include <QFileDialog>
-#include <QStringList>
-#include <QStandardPaths>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QStringList>
 
 #include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KMessageWidget>
+#include <KNSWidgets/Button>
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
 #include <KPackage/PackageStructure>
 #include <KPluginFactory>
 
-#include <KNSWidgets/Button>
-
-#include "kwinscriptsdata.h"
-#include "config-kwin.h"
-
-Module::Module(QWidget *parent, const QVariantList &args) :
-    KCModule(parent, args),
-    ui(new Ui::Module),
-    m_kwinConfig(KSharedConfig::openConfig("kwinrc")),
-    m_kwinScriptsData(new KWinScriptsData(this))
+Module::Module(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
+    , ui(new Ui::Module)
+    , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
+    , m_kwinScriptsData(new KWinScriptsData(this))
 {
     KAboutData *about = new KAboutData("kwin-scripts",
                                        i18n("KWin Scripts"),

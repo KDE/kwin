@@ -11,11 +11,11 @@
 #pragma once
 
 #include <QObject>
-#include <QScopedPointer>
-#include <QVector>
 #include <QProcess>
+#include <QScopedPointer>
 #include <QSocketNotifier>
 #include <QTemporaryFile>
+#include <QVector>
 
 #include <kwin_export.h>
 

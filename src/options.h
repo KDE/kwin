@@ -195,7 +195,6 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(LatencyPolicy latencyPolicy READ latencyPolicy WRITE setLatencyPolicy NOTIFY latencyPolicyChanged)
     Q_PROPERTY(RenderTimeEstimator renderTimeEstimator READ renderTimeEstimator WRITE setRenderTimeEstimator NOTIFY renderTimeEstimatorChanged)
 public:
-
     explicit Options(QObject *parent = nullptr);
     ~Options() override;
 
@@ -238,17 +237,21 @@ public:
     };
     Q_ENUM(FocusPolicy)
 
-    FocusPolicy focusPolicy() const {
+    FocusPolicy focusPolicy() const
+    {
         return m_focusPolicy;
     }
-    bool isNextFocusPrefersMouse() const {
+    bool isNextFocusPrefersMouse() const
+    {
         return m_nextFocusPrefersMouse;
     }
 
-    XwaylandCrashPolicy xwaylandCrashPolicy() const {
+    XwaylandCrashPolicy xwaylandCrashPolicy() const
+    {
         return m_xwaylandCrashPolicy;
     }
-    int xwaylandMaxCrashCount() const {
+    int xwaylandMaxCrashCount() const
+    {
         return m_xwaylandMaxCrashCount;
     }
 
@@ -256,97 +259,111 @@ public:
      * Whether clicking on a window raises it in FocusFollowsMouse
      * mode or not.
      */
-    bool isClickRaise() const {
+    bool isClickRaise() const
+    {
         return m_clickRaise;
     }
 
     /**
      * Whether autoraise is enabled FocusFollowsMouse mode or not.
      */
-    bool isAutoRaise() const {
+    bool isAutoRaise() const
+    {
         return m_autoRaise;
     }
 
     /**
      * Autoraise interval
      */
-    int autoRaiseInterval() const {
+    int autoRaiseInterval() const
+    {
         return m_autoRaiseInterval;
     }
 
     /**
      * Delayed focus interval.
      */
-    int delayFocusInterval() const {
+    int delayFocusInterval() const
+    {
         return m_delayFocusInterval;
     }
 
     /**
      * Whether shade hover is enabled or not.
      */
-    bool isShadeHover() const {
+    bool isShadeHover() const
+    {
         return m_shadeHover;
     }
 
     /**
      * Shade hover interval.
      */
-    int shadeHoverInterval() {
+    int shadeHoverInterval()
+    {
         return m_shadeHoverInterval;
     }
 
     /**
      * Whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
      */
-    bool isSeparateScreenFocus() const {
+    bool isSeparateScreenFocus() const
+    {
         return m_separateScreenFocus;
     }
 
-    bool activeMouseScreen() const {
+    bool activeMouseScreen() const
+    {
         return m_activeMouseScreen;
     }
 
-    Placement::Policy placement() const {
+    Placement::Policy placement() const
+    {
         return m_placement;
     }
 
-    bool focusPolicyIsReasonable() {
+    bool focusPolicyIsReasonable()
+    {
         return m_focusPolicy == ClickToFocus || m_focusPolicy == FocusFollowsMouse;
     }
 
     /**
      * The size of the zone that triggers snapping on desktop borders.
      */
-    int borderSnapZone() const {
+    int borderSnapZone() const
+    {
         return m_borderSnapZone;
     }
 
     /**
      * The size of the zone that triggers snapping with other windows.
      */
-    int windowSnapZone() const {
+    int windowSnapZone() const
+    {
         return m_windowSnapZone;
     }
 
     /**
      * The size of the zone that triggers snapping on the screen center.
      */
-    int centerSnapZone() const {
+    int centerSnapZone() const
+    {
         return m_centerSnapZone;
     }
-
 
     /**
      * Snap only when windows will overlap.
      */
-    bool isSnapOnlyWhenOverlapping() const {
+    bool isSnapOnlyWhenOverlapping() const
+    {
         return m_snapOnlyWhenOverlapping;
     }
 
     /**
      * Whether or not we roll over to the other edge when switching desktops past the edge.
      */
-    bool isRollOverDesktops() const {
+    bool isRollOverDesktops() const
+    {
         return m_rollOverDesktops;
     }
 
@@ -355,7 +372,8 @@ public:
      *
      * @see allowClientActivation
      */
-    int focusStealingPreventionLevel() const {
+    int focusStealingPreventionLevel() const
+    {
         return m_focusStealingPreventionLevel;
     }
 
@@ -386,99 +404,139 @@ public:
     };
     Q_ENUM(WindowOperation)
 
-    WindowOperation operationTitlebarDblClick() const {
+    WindowOperation operationTitlebarDblClick() const
+    {
         return OpTitlebarDblClick;
     }
-    WindowOperation operationMaxButtonLeftClick() const {
+    WindowOperation operationMaxButtonLeftClick() const
+    {
         return opMaxButtonLeftClick;
     }
-    WindowOperation operationMaxButtonRightClick() const {
+    WindowOperation operationMaxButtonRightClick() const
+    {
         return opMaxButtonRightClick;
     }
-    WindowOperation operationMaxButtonMiddleClick() const {
+    WindowOperation operationMaxButtonMiddleClick() const
+    {
         return opMaxButtonMiddleClick;
     }
     WindowOperation operationMaxButtonClick(Qt::MouseButtons button) const;
 
-
     enum MouseCommand {
-        MouseRaise, MouseLower, MouseOperationsMenu, MouseToggleRaiseAndLower,
-        MouseActivateAndRaise, MouseActivateAndLower, MouseActivate,
-        MouseActivateRaiseAndPassClick, MouseActivateAndPassClick,
-        MouseMove, MouseUnrestrictedMove,
-        MouseActivateRaiseAndMove, MouseActivateRaiseAndUnrestrictedMove,
-        MouseResize, MouseUnrestrictedResize,
-        MouseShade, MouseSetShade, MouseUnsetShade,
-        MouseMaximize, MouseRestore, MouseMinimize,
-        MouseNextDesktop, MousePreviousDesktop,
-        MouseAbove, MouseBelow,
-        MouseOpacityMore, MouseOpacityLess,
+        MouseRaise,
+        MouseLower,
+        MouseOperationsMenu,
+        MouseToggleRaiseAndLower,
+        MouseActivateAndRaise,
+        MouseActivateAndLower,
+        MouseActivate,
+        MouseActivateRaiseAndPassClick,
+        MouseActivateAndPassClick,
+        MouseMove,
+        MouseUnrestrictedMove,
+        MouseActivateRaiseAndMove,
+        MouseActivateRaiseAndUnrestrictedMove,
+        MouseResize,
+        MouseUnrestrictedResize,
+        MouseShade,
+        MouseSetShade,
+        MouseUnsetShade,
+        MouseMaximize,
+        MouseRestore,
+        MouseMinimize,
+        MouseNextDesktop,
+        MousePreviousDesktop,
+        MouseAbove,
+        MouseBelow,
+        MouseOpacityMore,
+        MouseOpacityLess,
         MouseClose,
         MouseNothing
     };
     Q_ENUM(MouseCommand)
 
     enum MouseWheelCommand {
-        MouseWheelRaiseLower, MouseWheelShadeUnshade, MouseWheelMaximizeRestore,
-        MouseWheelAboveBelow, MouseWheelPreviousNextDesktop,
+        MouseWheelRaiseLower,
+        MouseWheelShadeUnshade,
+        MouseWheelMaximizeRestore,
+        MouseWheelAboveBelow,
+        MouseWheelPreviousNextDesktop,
         MouseWheelChangeOpacity,
         MouseWheelNothing
     };
     Q_ENUM(MouseWheelCommand)
 
-    MouseCommand operationTitlebarMouseWheel(int delta) const {
+    MouseCommand operationTitlebarMouseWheel(int delta) const
+    {
         return wheelToMouseCommand(CmdTitlebarWheel, delta);
     }
-    MouseCommand operationWindowMouseWheel(int delta) const {
+    MouseCommand operationWindowMouseWheel(int delta) const
+    {
         return wheelToMouseCommand(CmdAllWheel, delta);
     }
 
-    MouseCommand commandActiveTitlebar1() const {
+    MouseCommand commandActiveTitlebar1() const
+    {
         return CmdActiveTitlebar1;
     }
-    MouseCommand commandActiveTitlebar2() const {
+    MouseCommand commandActiveTitlebar2() const
+    {
         return CmdActiveTitlebar2;
     }
-    MouseCommand commandActiveTitlebar3() const {
+    MouseCommand commandActiveTitlebar3() const
+    {
         return CmdActiveTitlebar3;
     }
-    MouseCommand commandInactiveTitlebar1() const {
+    MouseCommand commandInactiveTitlebar1() const
+    {
         return CmdInactiveTitlebar1;
     }
-    MouseCommand commandInactiveTitlebar2() const {
+    MouseCommand commandInactiveTitlebar2() const
+    {
         return CmdInactiveTitlebar2;
     }
-    MouseCommand commandInactiveTitlebar3() const {
+    MouseCommand commandInactiveTitlebar3() const
+    {
         return CmdInactiveTitlebar3;
     }
-    MouseCommand commandWindow1() const {
+    MouseCommand commandWindow1() const
+    {
         return CmdWindow1;
     }
-    MouseCommand commandWindow2() const {
+    MouseCommand commandWindow2() const
+    {
         return CmdWindow2;
     }
-    MouseCommand commandWindow3() const {
+    MouseCommand commandWindow3() const
+    {
         return CmdWindow3;
     }
-    MouseCommand commandWindowWheel() const {
+    MouseCommand commandWindowWheel() const
+    {
         return CmdWindowWheel;
     }
-    MouseCommand commandAll1() const {
+    MouseCommand commandAll1() const
+    {
         return CmdAll1;
     }
-    MouseCommand commandAll2() const {
+    MouseCommand commandAll2() const
+    {
         return CmdAll2;
     }
-    MouseCommand commandAll3() const {
+    MouseCommand commandAll3() const
+    {
         return CmdAll3;
     }
-    MouseWheelCommand commandAllWheel() const {
+    MouseWheelCommand commandAllWheel() const
+    {
         return CmdAllWheel;
     }
-    uint keyCmdAllModKey() const {
+    uint keyCmdAllModKey() const
+    {
         return CmdAllModKey;
     }
-    Qt::KeyboardModifier commandAllModifier() const {
+    Qt::KeyboardModifier commandAllModifier() const
+    {
         switch (CmdAllModKey) {
         case Qt::Key_Alt:
             return Qt::AltModifier;
@@ -502,38 +560,44 @@ public:
      * @returns true if a window gets maximized when it reaches top screen edge
      * while being moved.
      */
-    bool electricBorderMaximize() const {
+    bool electricBorderMaximize() const
+    {
         return electric_border_maximize;
     }
     /**
      * @returns true if window is tiled to half screen when reaching left or
      * right screen edge while been moved.
      */
-    bool electricBorderTiling() const {
+    bool electricBorderTiling() const
+    {
         return electric_border_tiling;
     }
     /**
      * @returns the factor that determines the corner part of the edge (ie. 0.1 means tiny corner)
      */
-    float electricBorderCornerRatio() const {
+    float electricBorderCornerRatio() const
+    {
         return electric_border_corner_ratio;
     }
 
-    bool borderlessMaximizedWindows() const {
+    bool borderlessMaximizedWindows() const
+    {
         return borderless_maximized_windows;
     }
 
     /**
      * Timeout before non-responding application will be killed after attempt to close.
      */
-    int killPingTimeout() const {
+    int killPingTimeout() const
+    {
         return m_killPingTimeout;
     }
 
     /**
      * Whether to hide utility windows for inactive applications.
      */
-    bool isHideUtilityWindowsForInactive() const {
+    bool isHideUtilityWindowsForInactive() const
+    {
         return m_hideUtilityWindowsForInactive;
     }
 
@@ -545,35 +609,42 @@ public:
     //----------------------
     // Compositing settings
     void reloadCompositingSettings(bool force = false);
-    CompositingType compositingMode() const {
+    CompositingType compositingMode() const
+    {
         return m_compositingMode;
     }
-    void setCompositingMode(CompositingType mode) {
+    void setCompositingMode(CompositingType mode)
+    {
         m_compositingMode = mode;
     }
     // Separate to mode so the user can toggle
     bool isUseCompositing() const;
 
     // General preferences
-    HiddenPreviews hiddenPreviews() const {
+    HiddenPreviews hiddenPreviews() const
+    {
         return m_hiddenPreviews;
     }
     // OpenGL
     // 1 = yes,
     // 2 = try trilinear when transformed; else 1,
     // -1 = auto
-    int glSmoothScale() const {
+    int glSmoothScale() const
+    {
         return m_glSmoothScale;
     }
 
     // Settings that should be auto-detected
-    bool isGlStrictBinding() const {
+    bool isGlStrictBinding() const
+    {
         return m_glStrictBinding;
     }
-    bool isGlStrictBindingFollowsDriver() const {
+    bool isGlStrictBindingFollowsDriver() const
+    {
         return m_glStrictBindingFollowsDriver;
     }
-    OpenGLPlatformInterface glPlatformInterface() const {
+    OpenGLPlatformInterface glPlatformInterface() const
+    {
         return m_glPlatformInterface;
     }
 
@@ -584,7 +655,8 @@ public:
         AutoSwapStrategy = 'a',
     };
     Q_ENUM(GlSwapStrategy)
-    GlSwapStrategy glPreferBufferSwap() const {
+    GlSwapStrategy glPreferBufferSwap() const
+    {
         return m_glPreferBufferSwap;
     }
 
@@ -593,7 +665,8 @@ public:
         return m_windowsBlockCompositing;
     }
 
-    bool moveMinimizedWindowsToEndOfTabBoxFocusChain() const {
+    bool moveMinimizedWindowsToEndOfTabBoxFocusChain() const
+    {
         return m_MoveMinimizedWindowsToEndOfTabBoxFocusChain;
     }
 
@@ -660,100 +733,132 @@ public:
     void setRenderTimeEstimator(RenderTimeEstimator estimator);
 
     // default values
-    static WindowOperation defaultOperationTitlebarDblClick() {
+    static WindowOperation defaultOperationTitlebarDblClick()
+    {
         return MaximizeOp;
     }
-    static WindowOperation defaultOperationMaxButtonLeftClick() {
+    static WindowOperation defaultOperationMaxButtonLeftClick()
+    {
         return MaximizeOp;
     }
-    static WindowOperation defaultOperationMaxButtonRightClick() {
+    static WindowOperation defaultOperationMaxButtonRightClick()
+    {
         return HMaximizeOp;
     }
-    static WindowOperation defaultOperationMaxButtonMiddleClick() {
+    static WindowOperation defaultOperationMaxButtonMiddleClick()
+    {
         return VMaximizeOp;
     }
-    static MouseCommand defaultCommandActiveTitlebar1() {
+    static MouseCommand defaultCommandActiveTitlebar1()
+    {
         return MouseRaise;
     }
-    static MouseCommand defaultCommandActiveTitlebar2() {
+    static MouseCommand defaultCommandActiveTitlebar2()
+    {
         return MouseNothing;
     }
-    static MouseCommand defaultCommandActiveTitlebar3() {
+    static MouseCommand defaultCommandActiveTitlebar3()
+    {
         return MouseOperationsMenu;
     }
-    static MouseCommand defaultCommandInactiveTitlebar1() {
+    static MouseCommand defaultCommandInactiveTitlebar1()
+    {
         return MouseActivateAndRaise;
     }
-    static MouseCommand defaultCommandInactiveTitlebar2() {
+    static MouseCommand defaultCommandInactiveTitlebar2()
+    {
         return MouseNothing;
     }
-    static MouseCommand defaultCommandInactiveTitlebar3() {
+    static MouseCommand defaultCommandInactiveTitlebar3()
+    {
         return MouseOperationsMenu;
     }
-    static MouseCommand defaultCommandWindow1() {
+    static MouseCommand defaultCommandWindow1()
+    {
         return MouseActivateRaiseAndPassClick;
     }
-    static MouseCommand defaultCommandWindow2() {
+    static MouseCommand defaultCommandWindow2()
+    {
         return MouseActivateAndPassClick;
     }
-    static MouseCommand defaultCommandWindow3() {
+    static MouseCommand defaultCommandWindow3()
+    {
         return MouseActivateAndPassClick;
     }
-    static MouseCommand defaultCommandWindowWheel() {
+    static MouseCommand defaultCommandWindowWheel()
+    {
         return MouseNothing;
     }
-    static MouseCommand defaultCommandAll1() {
+    static MouseCommand defaultCommandAll1()
+    {
         return MouseUnrestrictedMove;
     }
-    static MouseCommand defaultCommandAll2() {
+    static MouseCommand defaultCommandAll2()
+    {
         return MouseToggleRaiseAndLower;
     }
-    static MouseCommand defaultCommandAll3() {
+    static MouseCommand defaultCommandAll3()
+    {
         return MouseUnrestrictedResize;
     }
-    static MouseWheelCommand defaultCommandTitlebarWheel() {
+    static MouseWheelCommand defaultCommandTitlebarWheel()
+    {
         return MouseWheelNothing;
     }
-    static MouseWheelCommand defaultCommandAllWheel() {
+    static MouseWheelCommand defaultCommandAllWheel()
+    {
         return MouseWheelNothing;
     }
-    static uint defaultKeyCmdAllModKey() {
+    static uint defaultKeyCmdAllModKey()
+    {
         return Qt::Key_Alt;
     }
-    static CompositingType defaultCompositingMode() {
+    static CompositingType defaultCompositingMode()
+    {
         return OpenGLCompositing;
     }
-    static bool defaultUseCompositing() {
+    static bool defaultUseCompositing()
+    {
         return true;
     }
-    static HiddenPreviews defaultHiddenPreviews() {
+    static HiddenPreviews defaultHiddenPreviews()
+    {
         return HiddenPreviewsShown;
     }
-    static int defaultGlSmoothScale() {
+    static int defaultGlSmoothScale()
+    {
         return 2;
     }
-    static bool defaultGlStrictBinding() {
+    static bool defaultGlStrictBinding()
+    {
         return true;
     }
-    static bool defaultGlStrictBindingFollowsDriver() {
+    static bool defaultGlStrictBindingFollowsDriver()
+    {
         return true;
     }
-    static GlSwapStrategy defaultGlPreferBufferSwap() {
+    static GlSwapStrategy defaultGlPreferBufferSwap()
+    {
         return AutoSwapStrategy;
     }
-    static OpenGLPlatformInterface defaultGlPlatformInterface() {
+    static OpenGLPlatformInterface defaultGlPlatformInterface()
+    {
         return kwinApp()->shouldUseWaylandForCompositing() ? EglPlatformInterface : GlxPlatformInterface;
     }
-    static XwaylandCrashPolicy defaultXwaylandCrashPolicy() {
+    static XwaylandCrashPolicy defaultXwaylandCrashPolicy()
+    {
         return XwaylandCrashPolicy::Restart;
     }
-    static int defaultXwaylandMaxCrashCount() {
+    static int defaultXwaylandMaxCrashCount()
+    {
         return 3;
     }
-    static LatencyPolicy defaultLatencyPolicy() {
+    static LatencyPolicy defaultLatencyPolicy()
+    {
         return LatencyMedium;
     }
-    static RenderTimeEstimator defaultRenderTimeEstimator() {
+    static RenderTimeEstimator defaultRenderTimeEstimator()
+    {
         return RenderTimeEstimatorMaximum;
     }
     /**
@@ -904,7 +1009,7 @@ private:
     MouseCommand wheelToMouseCommand(MouseWheelCommand com, int delta) const;
 };
 
-extern KWIN_EXPORT Options* options;
+extern KWIN_EXPORT Options *options;
 
 } // namespace
 

@@ -9,8 +9,7 @@
 #include "vsyncmonitor.h"
 
 #include <epoxy/glx.h>
-#include <GL/glxext.h>
-#include "fixx11h.h"
+#include <fixx11h.h>
 
 #include <QThread>
 

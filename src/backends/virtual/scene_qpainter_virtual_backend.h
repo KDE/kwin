@@ -11,9 +11,9 @@
 
 #include "qpainterbackend.h"
 
+#include <QMap>
 #include <QObject>
 #include <QVector>
-#include <QMap>
 
 namespace KWin
 {

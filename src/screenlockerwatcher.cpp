@@ -10,8 +10,8 @@
 #include "wayland_server.h"
 
 // dbus generated
-#include "screenlocker_interface.h"
 #include "kscreenlocker_interface.h"
+#include "screenlocker_interface.h"
 
 namespace KWin
 {

@@ -25,7 +25,6 @@ public:
 
     virtual QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) = 0;
     virtual QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) = 0;
-
 };
 
 }

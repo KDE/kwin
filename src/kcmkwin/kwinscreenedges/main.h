@@ -43,8 +43,8 @@ protected:
 private:
     KWinScreenEdgesConfigForm *m_form;
     KSharedConfigPtr m_config;
-    QStringList m_scripts; //list of script IDs ordered in the list they are presented in the menu
-    QHash<QString, KWinScreenEdgeScriptSettings*> m_scriptSettings;
+    QStringList m_scripts; // list of script IDs ordered in the list they are presented in the menu
+    QHash<QString, KWinScreenEdgeScriptSettings *> m_scriptSettings;
     KWinScreenEdgeData *m_data;
 
     enum EffectActions {

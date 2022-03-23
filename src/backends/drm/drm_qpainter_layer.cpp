@@ -7,15 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_qpainter_layer.h"
-#include "dumb_swapchain.h"
 #include "drm_abstract_output.h"
-#include "drm_buffer.h"
-#include "scene_qpainter_drm_backend.h"
-#include "drm_gpu.h"
 #include "drm_backend.h"
+#include "drm_buffer.h"
+#include "drm_gpu.h"
+#include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
-#include "drm_output.h"
+#include "dumb_swapchain.h"
+#include "scene_qpainter_drm_backend.h"
 
 #include <drm_fourcc.h>
 
@@ -77,7 +77,6 @@ QImage *DrmQPainterLayer::image()
     return m_swapchain ? m_swapchain->currentBuffer()->image() : nullptr;
 }
 
-
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
     : m_output(output)
 {
@@ -106,7 +105,6 @@ QImage *DrmVirtualQPainterLayer::image()
 {
     return &m_image;
 }
-
 
 DrmLeaseQPainterLayer::DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline)
     : DrmPipelineLayer(pipeline)

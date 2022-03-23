@@ -5,8 +5,8 @@
 
 */
 
-#include <KMessageBox>
 #include <KLocalizedString>
+#include <KMessageBox>
 #include <kauth_version.h>
 #if KAUTH_VERSION >= QT_VERSION_CHECK(5, 92, 0)
 #include <KAuth/Action>
@@ -27,7 +27,7 @@
 #include <cerrno>
 #include <csignal>
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     KLocalizedString::setApplicationDomain("kwin");
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("xcb"));
@@ -38,7 +38,6 @@ int main(int argc, char* argv[])
     QCoreApplication::setOrganizationDomain(QStringLiteral("kde.org"));
     QApplication::setApplicationDisplayName(i18n("Window Manager"));
     QCoreApplication::setApplicationVersion(QStringLiteral("1.0"));
-
 
     QCommandLineOption pidOption(QStringLiteral("pid"),
                                  i18n("PID of the application to terminate"), i18n("pid"));
@@ -76,7 +75,7 @@ int main(int argc, char* argv[])
     bool time_ok = false;
     xcb_timestamp_t timestamp = parser.value(timestampOption).toULong(&time_ok);
     if (!pid_ok || pid == 0 || !id_ok || id == XCB_WINDOW_NONE || !time_ok || timestamp == XCB_TIME_CURRENT_TIME
-            || hostname.isEmpty() || caption.isEmpty() || appname.isEmpty()) {
+        || hostname.isEmpty() || caption.isEmpty() || appname.isEmpty()) {
         fprintf(stdout, "%s\n", qPrintable(i18n("This helper utility is not supposed to be called directly.")));
         parser.showHelp(1);
     }
@@ -90,13 +89,12 @@ int main(int argc, char* argv[])
     QString question = i18nc("@info", "<b>Application \"%1\" is not responding</b>", appname);
     question += isLocal
         ? xi18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3) but the application is not responding.</para>",
-            caption, appname, pidString)
+                 caption, appname, pidString)
         : xi18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3), running on host \"%4\", but the application is not responding.</para>",
-            caption, appname, pidString, hostname);
+                 caption, appname, pidString, hostname);
     question += xi18nc("@info",
-        "<para>Do you want to terminate this application?</para>"
-        "<para><warning>Terminating the application will close all of its child windows. Any unsaved data will be lost.</warning></para>"
-        );
+                       "<para>Do you want to terminate this application?</para>"
+                       "<para><warning>Terminating the application will close all of its child windows. Any unsaved data will be lost.</warning></para>");
 
     KGuiItem continueButton = KGuiItem(i18n("&Terminate Application %1", appname), QStringLiteral("edit-bomb"));
     KGuiItem cancelButton = KGuiItem(i18n("Wait Longer"), QStringLiteral("chronometer"));

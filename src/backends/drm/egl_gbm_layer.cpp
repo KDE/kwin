@@ -7,28 +7,28 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "egl_gbm_layer.h"
-#include "gbm_surface.h"
 #include "drm_abstract_output.h"
+#include "drm_backend.h"
 #include "drm_gpu.h"
-#include "egl_gbm_backend.h"
-#include "shadowbuffer.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "dumb_swapchain.h"
-#include "logging.h"
 #include "egl_dmabuf.h"
-#include "surfaceitem_wayland.h"
+#include "egl_gbm_backend.h"
+#include "gbm_surface.h"
 #include "kwineglimagetexture.h"
-#include "drm_backend.h"
 #include "kwineglutils_p.h"
+#include "logging.h"
+#include "shadowbuffer.h"
+#include "surfaceitem_wayland.h"
 
-#include "KWaylandServer/surface_interface.h"
 #include "KWaylandServer/linuxdmabufv1clientbuffer.h"
+#include "KWaylandServer/surface_interface.h"
 
 #include <QRegion>
 #include <drm_fourcc.h>
-#include <gbm.h>
 #include <errno.h>
+#include <gbm.h>
 #include <unistd.h>
 
 namespace KWin
@@ -196,7 +196,7 @@ bool EglGbmLayer::createGbmSurface(uint32_t format, const QVector<uint64_t> &mod
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
     const bool allowModifiers = m_eglBackend->gpu()->addFB2ModifiersSupported() && m_pipeline->gpu()->addFB2ModifiersSupported()
-                                && ((m_eglBackend->gpu()->isNVidia() && !modifiersEnvSet) || (modifiersEnvSet && modifiersEnv));
+        && ((m_eglBackend->gpu()->isNVidia() && !modifiersEnvSet) || (modifiersEnvSet && modifiersEnv));
 
     const auto size = m_pipeline->bufferSize();
     const auto config = m_eglBackend->config(format);
@@ -283,7 +283,7 @@ QSharedPointer<GLTexture> EglGbmLayer::texture() const
         return QSharedPointer<EGLImageTexture>::create(m_eglBackend->eglDisplay(), image, GL_RGBA8, m_pipeline->sourceSize());
     };
     if (m_scanoutBuffer) {
-        return createImage(dynamic_cast<GbmBuffer*>(m_scanoutBuffer.data()));
+        return createImage(dynamic_cast<GbmBuffer *>(m_scanoutBuffer.data()));
     }
     if (m_shadowBuffer) {
         return m_shadowBuffer->texture();

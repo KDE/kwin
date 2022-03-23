@@ -7,9 +7,9 @@
 #pragma once
 
 #include "dmabuftexture.h"
-#include <gbm.h>
 #include <QSize>
 #include <epoxy/egl.h>
+#include <gbm.h>
 
 namespace KWin
 {

@@ -7,9 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "keyboard_layout.h"
-#include "keyboard_layout_switching.h"
-#include "keyboard_input.h"
 #include "input_event.h"
+#include "keyboard_input.h"
+#include "keyboard_layout_switching.h"
 #include "main.h"
 #include "platform.h"
 
@@ -18,8 +18,8 @@
 #include <QAction>
 #include <QDBusConnection>
 #include <QDBusMessage>
-#include <QDBusPendingCall>
 #include <QDBusMetaType>
+#include <QDBusPendingCall>
 
 namespace KWin
 {
@@ -131,9 +131,9 @@ void KeyboardLayout::loadShortcuts()
     m_layoutShortcuts.clear();
     const QString componentName = QStringLiteral("KDE Keyboard Layout Switcher");
     const quint32 count = m_xkb->numberOfLayouts();
-    for (uint i = 0; i < count ; ++i) {
+    for (uint i = 0; i < count; ++i) {
         // layout name is translated in the action name in keyboard kcm!
-        const QString action = QStringLiteral("Switch keyboard layout to %1").arg( translatedLayout(m_xkb->layoutName(i)) );
+        const QString action = QStringLiteral("Switch keyboard layout to %1").arg(translatedLayout(m_xkb->layoutName(i)));
         const auto shortcuts = KGlobalAccel::self()->globalShortcut(componentName, action);
         if (shortcuts.isEmpty()) {
             continue;
@@ -211,7 +211,7 @@ void KeyboardLayoutDBusInterface::switchToPreviousLayout()
 bool KeyboardLayoutDBusInterface::setLayout(uint index)
 {
     const quint32 previousLayout = m_xkb->currentLayout();
-    if ( !m_xkb->switchToLayout(index) ) {
+    if (!m_xkb->switchToLayout(index)) {
         return false;
     }
     m_keyboardLayout->checkLayoutChange(previousLayout);
@@ -232,7 +232,7 @@ QVector<KeyboardLayoutDBusInterface::LayoutNames> KeyboardLayoutDBusInterface::g
     const int layoutsSize = m_xkb->numberOfLayouts();
     const int displayNamesSize = displayNames.size();
     for (int i = 0; i < layoutsSize; ++i) {
-        ret.append( {m_xkb->layoutShortName(i), i < displayNamesSize ? displayNames.at(i) : QString(), translatedLayout(m_xkb->layoutName(i))} );
+        ret.append({m_xkb->layoutShortName(i), i < displayNamesSize ? displayNames.at(i) : QString(), translatedLayout(m_xkb->layoutName(i))});
     }
     return ret;
 }

@@ -9,22 +9,24 @@
 */
 
 #include "workspace_wrapper.h"
-#include "x11client.h"
 #include "outline.h"
 #include "platform.h"
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
+#include "x11client.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 
-#include <QDesktopWidget>
 #include <QApplication>
+#include <QDesktopWidget>
 
-namespace KWin {
+namespace KWin
+{
 
-WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
+WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
+    : QObject(parent)
 {
     KWin::Workspace *ws = KWin::Workspace::self();
     KWin::VirtualDesktopManager *vds = KWin::VirtualDesktopManager::self();
@@ -49,12 +51,10 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
 #endif
     connect(screens(), &Screens::sizeChanged, this, &WorkspaceWrapper::virtualScreenSizeChanged);
     connect(screens(), &Screens::geometryChanged, this, &WorkspaceWrapper::virtualScreenGeometryChanged);
-    connect(screens(), &Screens::countChanged, this,
-        [this] (int previousCount, int currentCount) {
-            Q_UNUSED(previousCount)
-            Q_EMIT numberScreensChanged(currentCount);
-        }
-    );
+    connect(screens(), &Screens::countChanged, this, [this](int previousCount, int currentCount) {
+        Q_UNUSED(previousCount)
+        Q_EMIT numberScreensChanged(currentCount);
+    });
     // TODO Plasma 6: Remove it.
     connect(QApplication::desktop(), &QDesktopWidget::resized, this, &WorkspaceWrapper::screenResized);
 
@@ -134,10 +134,11 @@ QStringList WorkspaceWrapper::activityList() const
 #endif
 }
 
-#define SLOTWRAPPER(name) \
-void WorkspaceWrapper::name( ) { \
-    Workspace::self()->name(); \
-}
+#define SLOTWRAPPER(name)          \
+    void WorkspaceWrapper::name()  \
+    {                              \
+        Workspace::self()->name(); \
+    }
 
 SLOTWRAPPER(slotSwitchToNextScreen)
 SLOTWRAPPER(slotWindowToNextScreen)
@@ -183,10 +184,11 @@ SLOTWRAPPER(slotWindowToDesktopDown)
 
 #undef SLOTWRAPPER
 
-#define SLOTWRAPPER(name,modes) \
-void WorkspaceWrapper::name() { \
-    Workspace::self()->quickTileWindow(modes); \
-}
+#define SLOTWRAPPER(name, modes)                   \
+    void WorkspaceWrapper::name()                  \
+    {                                              \
+        Workspace::self()->quickTileWindow(modes); \
+    }
 
 SLOTWRAPPER(slotWindowQuickTileLeft, QuickTileFlag::Left)
 SLOTWRAPPER(slotWindowQuickTileRight, QuickTileFlag::Right)
@@ -199,10 +201,11 @@ SLOTWRAPPER(slotWindowQuickTileBottomRight, QuickTileFlag::Bottom | QuickTileFla
 
 #undef SLOTWRAPPER
 
-#define SLOTWRAPPER(name,direction) \
-void WorkspaceWrapper::name() { \
-    Workspace::self()->switchWindow(Workspace::direction); \
-}
+#define SLOTWRAPPER(name, direction)                           \
+    void WorkspaceWrapper::name()                              \
+    {                                                          \
+        Workspace::self()->switchWindow(Workspace::direction); \
+    }
 
 SLOTWRAPPER(slotSwitchWindowUp, DirectionNorth)
 SLOTWRAPPER(slotSwitchWindowDown, DirectionSouth)
@@ -211,21 +214,22 @@ SLOTWRAPPER(slotSwitchWindowLeft, DirectionWest)
 
 #undef SLOTWRAPPER
 
-#define SLOTWRAPPER(name,direction) \
-void WorkspaceWrapper::name( ) { \
-    VirtualDesktopManager::self()->moveTo<direction>(options->isRollOverDesktops()); \
-}
+#define SLOTWRAPPER(name, direction)                                                     \
+    void WorkspaceWrapper::name()                                                        \
+    {                                                                                    \
+        VirtualDesktopManager::self()->moveTo<direction>(options->isRollOverDesktops()); \
+    }
 
-SLOTWRAPPER(slotSwitchDesktopNext,DesktopNext)
-SLOTWRAPPER(slotSwitchDesktopPrevious,DesktopPrevious)
-SLOTWRAPPER(slotSwitchDesktopRight,DesktopRight)
-SLOTWRAPPER(slotSwitchDesktopLeft,DesktopLeft)
-SLOTWRAPPER(slotSwitchDesktopUp,DesktopAbove)
-SLOTWRAPPER(slotSwitchDesktopDown,DesktopBelow)
+SLOTWRAPPER(slotSwitchDesktopNext, DesktopNext)
+SLOTWRAPPER(slotSwitchDesktopPrevious, DesktopPrevious)
+SLOTWRAPPER(slotSwitchDesktopRight, DesktopRight)
+SLOTWRAPPER(slotSwitchDesktopLeft, DesktopLeft)
+SLOTWRAPPER(slotSwitchDesktopUp, DesktopAbove)
+SLOTWRAPPER(slotSwitchDesktopDown, DesktopBelow)
 
 #undef SLOTWRAPPER
 
-void WorkspaceWrapper::setActiveClient(KWin::AbstractClient* client)
+void WorkspaceWrapper::setActiveClient(KWin::AbstractClient *client)
 {
     KWin::Workspace::self()->activateClient(client);
 }
@@ -384,8 +388,10 @@ void WorkspaceWrapper::sendClientToScreen(AbstractClient *client, int screen)
     }
 }
 
-QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject* parent)
-    : WorkspaceWrapper(parent) {}
+QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)
+    : WorkspaceWrapper(parent)
+{
+}
 
 QList<KWin::AbstractClient *> QtScriptWorkspaceWrapper::clientList() const
 {
@@ -417,8 +423,10 @@ KWin::AbstractClient *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListPr
     return workspace()->allClientList().at(index);
 }
 
-DeclarativeScriptWorkspaceWrapper::DeclarativeScriptWorkspaceWrapper(QObject* parent)
-    : WorkspaceWrapper(parent) {}
+DeclarativeScriptWorkspaceWrapper::DeclarativeScriptWorkspaceWrapper(QObject *parent)
+    : WorkspaceWrapper(parent)
+{
+}
 
 } // KWin
 

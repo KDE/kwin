@@ -43,7 +43,7 @@ public:
 
     InputBackend *createInputBackend() override;
     QPainterBackend *createQPainterBackend() override;
-    OpenGLBackend* createOpenGLBackend() override;
+    OpenGLBackend *createOpenGLBackend() override;
     DmaBufTexture *createDmaBufTexture(const QSize &size) override;
     Session *session() const override;
     bool initialize() override;
@@ -85,13 +85,13 @@ protected:
 
 private:
     friend class DrmGpu;
-    void addOutput(DrmAbstractOutput* output);
-    void removeOutput(DrmAbstractOutput* output);
+    void addOutput(DrmAbstractOutput *output);
+    void removeOutput(DrmAbstractOutput *output);
     void activate(bool active);
     void reactivate();
     void deactivate();
     void updateOutputs();
-    bool readOutputsConfiguration(const QVector<DrmAbstractOutput*> &outputs);
+    bool readOutputsConfiguration(const QVector<DrmAbstractOutput *> &outputs);
     void handleUdevEvent();
     DrmGpu *addGpu(const QString &fileName);
 
@@ -99,21 +99,19 @@ private:
     QScopedPointer<UdevMonitor> m_udevMonitor;
     Session *m_session = nullptr;
     // all outputs, enabled and disabled
-    QVector<DrmAbstractOutput*> m_outputs;
+    QVector<DrmAbstractOutput *> m_outputs;
     // only enabled outputs
-    QVector<DrmAbstractOutput*> m_enabledOutputs;
+    QVector<DrmAbstractOutput *> m_enabledOutputs;
     DrmVirtualOutput *m_placeHolderOutput = nullptr;
 
     bool m_active = false;
     const QStringList m_explicitGpus;
-    QVector<DrmGpu*> m_gpus;
+    QVector<DrmGpu *> m_gpus;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
     QScopedPointer<PlaceholderInputEventFilter> m_placeholderFilter;
     DrmRenderBackend *m_renderBackend = nullptr;
 };
 
-
 }
 
 #endif
-

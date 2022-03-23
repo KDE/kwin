@@ -15,7 +15,6 @@
 
 #include <kwineffects.h>
 
-
 namespace KWin
 {
 class GLTexture;
@@ -36,9 +35,9 @@ public:
     ~ShowFpsEffect() override;
 
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
     void postPaintScreen() override;
     enum {
         INSIDE_GRAPH,
@@ -50,27 +49,35 @@ public:
     }; // fps text position
 
     // for properties
-    qreal configuredAlpha() const {
+    qreal configuredAlpha() const
+    {
         return alpha;
     }
-    int configuredX() const {
+    int configuredX() const
+    {
         return x;
     }
-    int configuredY() const {
+    int configuredY() const
+    {
         return y;
     }
-    QRect configuredFpsTextRect() const {
+    QRect configuredFpsTextRect() const
+    {
         return fpsTextRect;
     }
-    int configuredTextAlign() const {
+    int configuredTextAlign() const
+    {
         return textAlign;
     }
-    QFont configuredTextFont() const {
+    QFont configuredTextFont() const
+    {
         return textFont;
     }
-    QColor configuredTextColor() const {
+    QColor configuredTextColor() const
+    {
         return textColor;
     }
+
 private:
     void paintGL(int fps, const QMatrix4x4 &projectionMatrix);
     void paintQPainter(int fps);
@@ -82,13 +89,13 @@ private:
     enum {
         NUM_PAINTS = 100,
     }; // remember time needed to paint this many paints
-    int paints[ NUM_PAINTS ]; // time needed to paint
-    int paint_size[ NUM_PAINTS ]; // number of pixels painted
-    int paints_pos;  // position in the queue
+    int paints[NUM_PAINTS]; // time needed to paint
+    int paint_size[NUM_PAINTS]; // number of pixels painted
+    int paints_pos; // position in the queue
     enum {
         MAX_FPS = 200,
     };
-    qint64 frames[ MAX_FPS ]; // the time when the frame was done
+    qint64 frames[MAX_FPS]; // the time when the frame was done
     int frames_pos; // position in the queue
     double alpha;
     int x;

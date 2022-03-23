@@ -8,22 +8,24 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include <config-kwin.h>
 #include "xwayland.h"
+
+#include <config-kwin.h>
+
 #include "cursor.h"
 #include "databridge.h"
 #include "dnd.h"
-#include "xwldrophandler.h"
 #include "xwaylandlauncher.h"
+#include "xwldrophandler.h"
 
 #include "abstract_output.h"
 #include "main_wayland.h"
-#include "utils/common.h"
 #include "platform.h"
+#include "utils/common.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
-#include "xwayland_logging.h"
 #include "x11eventfilter.h"
+#include "xwayland_logging.h"
 
 #include <KSelectionOwner>
 
@@ -33,9 +35,9 @@
 #include <QHostInfo>
 #include <QRandomGenerator>
 #include <QScopeGuard>
+#include <QSocketNotifier>
 #include <QTimer>
 #include <QtConcurrentRun>
-#include <QSocketNotifier>
 
 #include <cerrno>
 #include <cstring>
@@ -70,7 +72,6 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
     m_backend->updatePrimary(kwinApp()->platform()->primaryOutput());
     return false;
 }
-
 
 Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
     : XwaylandInterface(parent)
@@ -148,8 +149,6 @@ void Xwayland::uninstallSocketNotifier()
     m_socketNotifier = nullptr;
 }
 
-
-
 void Xwayland::handleXwaylandFinished()
 {
     disconnect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Xwayland::updatePrimary);
@@ -169,7 +168,6 @@ void Xwayland::handleXwaylandFinished()
 
     m_app->setClosingX11Connection(false);
 }
-
 
 void Xwayland::handleXwaylandReady()
 {

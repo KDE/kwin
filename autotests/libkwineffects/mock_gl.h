@@ -12,8 +12,10 @@
 #include <QByteArray>
 #include <QVector>
 
-struct MockGL {
-    struct {
+struct MockGL
+{
+    struct
+    {
         QByteArray vendor;
         QByteArray renderer;
         QByteArray version;

@@ -13,16 +13,16 @@
 #include "kwinglutils_funcs.h"
 #include <epoxy/gl.h>
 
-#include <QRegularExpression>
-#include <QStringList>
 #include <QDebug>
 #include <QOpenGLContext>
+#include <QRegularExpression>
+#include <QStringList>
 
 #include <sys/utsname.h>
 
-#include <iostream>
 #include <iomanip>
 #include <ios>
+#include <iostream>
 
 namespace KWin
 {
@@ -41,7 +41,7 @@ static qint64 parseVersionString(const QByteArray &version)
     while (end < version.length() && (version[end] == '.' || QChar::fromLatin1(version[end]).isDigit()))
         end++;
 
-    const QByteArray result = version.mid(start, end-start);
+    const QByteArray result = version.mid(start, end - start);
     const QList<QByteArray> tokens = result.split('.');
     const qint64 major = tokens.at(0).toInt();
     const qint64 minor = tokens.count() > 1 ? tokens.at(1).toInt() : 0;
@@ -63,8 +63,8 @@ static qint64 getXServerVersion()
         if (vendorName.contains("X.Org")) {
             const int release = setup->release_number;
             major = (release / 10000000);
-            minor = (release /   100000) % 100;
-            patch = (release /     1000) % 100;
+            minor = (release / 100000) % 100;
+            patch = (release / 1000) % 100;
         }
     }
 
@@ -97,128 +97,128 @@ static ChipClass detectRadeonClass(const QByteArray &chipset)
     if (chipset.isEmpty())
         return UnknownRadeon;
 
-    if (chipset.contains("R100")  ||
-        chipset.contains("RV100") ||
-        chipset.contains("RS100"))
+    if (chipset.contains("R100")
+        || chipset.contains("RV100")
+        || chipset.contains("RS100"))
         return R100;
 
-    if (chipset.contains("RV200") ||
-        chipset.contains("RS200") ||
-        chipset.contains("R200")  ||
-        chipset.contains("RV250") ||
-        chipset.contains("RS300") ||
-        chipset.contains("RV280"))
+    if (chipset.contains("RV200")
+        || chipset.contains("RS200")
+        || chipset.contains("R200")
+        || chipset.contains("RV250")
+        || chipset.contains("RS300")
+        || chipset.contains("RV280"))
         return R200;
 
-    if (chipset.contains("R300")  ||
-        chipset.contains("R350")  ||
-        chipset.contains("R360")  ||
-        chipset.contains("RV350") ||
-        chipset.contains("RV370") ||
-        chipset.contains("RV380"))
+    if (chipset.contains("R300")
+        || chipset.contains("R350")
+        || chipset.contains("R360")
+        || chipset.contains("RV350")
+        || chipset.contains("RV370")
+        || chipset.contains("RV380"))
         return R300;
 
-    if (chipset.contains("R420")  ||
-        chipset.contains("R423")  ||
-        chipset.contains("R430")  ||
-        chipset.contains("R480")  ||
-        chipset.contains("R481")  ||
-        chipset.contains("RV410") ||
-        chipset.contains("RS400") ||
-        chipset.contains("RC410") ||
-        chipset.contains("RS480") ||
-        chipset.contains("RS482") ||
-        chipset.contains("RS600") ||
-        chipset.contains("RS690") ||
-        chipset.contains("RS740"))
+    if (chipset.contains("R420")
+        || chipset.contains("R423")
+        || chipset.contains("R430")
+        || chipset.contains("R480")
+        || chipset.contains("R481")
+        || chipset.contains("RV410")
+        || chipset.contains("RS400")
+        || chipset.contains("RC410")
+        || chipset.contains("RS480")
+        || chipset.contains("RS482")
+        || chipset.contains("RS600")
+        || chipset.contains("RS690")
+        || chipset.contains("RS740"))
         return R400;
 
-    if (chipset.contains("RV515") ||
-        chipset.contains("R520")  ||
-        chipset.contains("RV530") ||
-        chipset.contains("R580")  ||
-        chipset.contains("RV560") ||
-        chipset.contains("RV570"))
+    if (chipset.contains("RV515")
+        || chipset.contains("R520")
+        || chipset.contains("RV530")
+        || chipset.contains("R580")
+        || chipset.contains("RV560")
+        || chipset.contains("RV570"))
         return R500;
 
-    if (chipset.contains("R600")  ||
-        chipset.contains("RV610") ||
-        chipset.contains("RV630") ||
-        chipset.contains("RV670") ||
-        chipset.contains("RV620") ||
-        chipset.contains("RV635") ||
-        chipset.contains("RS780") ||
-        chipset.contains("RS880"))
+    if (chipset.contains("R600")
+        || chipset.contains("RV610")
+        || chipset.contains("RV630")
+        || chipset.contains("RV670")
+        || chipset.contains("RV620")
+        || chipset.contains("RV635")
+        || chipset.contains("RS780")
+        || chipset.contains("RS880"))
         return R600;
 
-    if (chipset.contains("R700")  ||
-        chipset.contains("RV770") ||
-        chipset.contains("RV730") ||
-        chipset.contains("RV710") ||
-        chipset.contains("RV740"))
+    if (chipset.contains("R700")
+        || chipset.contains("RV770")
+        || chipset.contains("RV730")
+        || chipset.contains("RV710")
+        || chipset.contains("RV740"))
         return R700;
 
-    if (chipset.contains("EVERGREEN") ||  // Not an actual chipset, but returned by R600G in 7.9
-        chipset.contains("CEDAR")     ||
-        chipset.contains("REDWOOD")   ||
-        chipset.contains("JUNIPER")   ||
-        chipset.contains("CYPRESS")   ||
-        chipset.contains("HEMLOCK")   ||
-        chipset.contains("PALM"))
+    if (chipset.contains("EVERGREEN") // Not an actual chipset, but returned by R600G in 7.9
+        || chipset.contains("CEDAR")
+        || chipset.contains("REDWOOD")
+        || chipset.contains("JUNIPER")
+        || chipset.contains("CYPRESS")
+        || chipset.contains("HEMLOCK")
+        || chipset.contains("PALM"))
         return Evergreen;
 
-    if (chipset.contains("SUMO")   ||
-        chipset.contains("SUMO2")  ||
-        chipset.contains("BARTS")  ||
-        chipset.contains("TURKS")  ||
-        chipset.contains("CAICOS") ||
-        chipset.contains("CAYMAN"))
+    if (chipset.contains("SUMO")
+        || chipset.contains("SUMO2")
+        || chipset.contains("BARTS")
+        || chipset.contains("TURKS")
+        || chipset.contains("CAICOS")
+        || chipset.contains("CAYMAN"))
         return NorthernIslands;
 
-    if (chipset.contains("TAHITI")   ||
-        chipset.contains("PITCAIRN") ||
-        chipset.contains("VERDE")    ||
-        chipset.contains("OLAND")    ||
-        chipset.contains("HAINAN")) {
+    if (chipset.contains("TAHITI")
+        || chipset.contains("PITCAIRN")
+        || chipset.contains("VERDE")
+        || chipset.contains("OLAND")
+        || chipset.contains("HAINAN")) {
         return SouthernIslands;
     }
 
-    if (chipset.contains("BONAIRE") ||
-        chipset.contains("KAVERI")  ||
-        chipset.contains("KABINI")  ||
-        chipset.contains("HAWAII")  ||
-        chipset.contains("MULLINS")) {
+    if (chipset.contains("BONAIRE")
+        || chipset.contains("KAVERI")
+        || chipset.contains("KABINI")
+        || chipset.contains("HAWAII")
+        || chipset.contains("MULLINS")) {
         return SeaIslands;
     }
 
-    if (chipset.contains("TONGA")   ||
-        chipset.contains("TOPAZ")   ||
-        chipset.contains("FIJI")    ||
-        chipset.contains("CARRIZO") ||
-        chipset.contains("STONEY")) {
+    if (chipset.contains("TONGA")
+        || chipset.contains("TOPAZ")
+        || chipset.contains("FIJI")
+        || chipset.contains("CARRIZO")
+        || chipset.contains("STONEY")) {
         return VolcanicIslands;
     }
 
-    if (chipset.contains("POLARIS10") ||
-        chipset.contains("POLARIS11") ||
-        chipset.contains("POLARIS12") ||
-        chipset.contains("VEGAM")) {
+    if (chipset.contains("POLARIS10")
+        || chipset.contains("POLARIS11")
+        || chipset.contains("POLARIS12")
+        || chipset.contains("VEGAM")) {
         return ArcticIslands;
     }
 
-    if (chipset.contains("VEGA10") ||
-        chipset.contains("VEGA12") ||
-        chipset.contains("VEGA20") ||
-        chipset.contains("RAVEN")  ||
-        chipset.contains("RAVEN2") ||
-        chipset.contains("RENOIR") ||
-        chipset.contains("ARCTURUS")) {
+    if (chipset.contains("VEGA10")
+        || chipset.contains("VEGA12")
+        || chipset.contains("VEGA20")
+        || chipset.contains("RAVEN")
+        || chipset.contains("RAVEN2")
+        || chipset.contains("RENOIR")
+        || chipset.contains("ARCTURUS")) {
         return Vega;
     }
 
-    if (chipset.contains("NAVI10") ||
-        chipset.contains("NAVI12") ||
-        chipset.contains("NAVI14")) {
+    if (chipset.contains("NAVI10")
+        || chipset.contains("NAVI12")
+        || chipset.contains("NAVI14")) {
         return Navi;
     }
 
@@ -226,19 +226,19 @@ static ChipClass detectRadeonClass(const QByteArray &chipset)
     QString name = extract(chipset16, QStringLiteral("HD [0-9]{4}")); // HD followed by a space and 4 digits
     if (!name.isEmpty()) {
         const int id = QStringView(name).right(4).toInt();
-        if (id == 6250 || id == 6310)   // Palm
+        if (id == 6250 || id == 6310) // Palm
             return Evergreen;
 
         if (id >= 6000 && id < 7000)
-            return NorthernIslands;    // HD 6xxx
+            return NorthernIslands; // HD 6xxx
 
         if (id >= 5000 && id < 6000)
-            return Evergreen;          // HD 5xxx
+            return Evergreen; // HD 5xxx
 
         if (id >= 4000 && id < 5000)
-            return R700;               // HD 4xxx
+            return R700; // HD 4xxx
 
-        if (id >= 2000 && id < 4000)    // HD 2xxx/3xxx
+        if (id >= 2000 && id < 4000) // HD 2xxx/3xxx
             return R600;
 
         return UnknownRadeon;
@@ -292,7 +292,7 @@ static ChipClass detectNVidiaClass(const QString &chipset)
     if (!name.isEmpty()) {
         const int id = QStringView(chipset).mid(2, -1).toInt(nullptr, 16); // Strip the 'NV' from the id
 
-        switch(id & 0xf0) {
+        switch (id & 0xf0) {
         case 0x00:
         case 0x10:
             return NV10;
@@ -325,11 +325,11 @@ static ChipClass detectNVidiaClass(const QString &chipset)
         return NV20;
 
     if (chipset.contains(QLatin1String("GeForce4"))) {
-        if (chipset.contains(QLatin1String("MX 420"))  ||
-                chipset.contains(QLatin1String("MX 440"))  || // including MX 440SE
-                chipset.contains(QLatin1String("MX 460"))  ||
-                chipset.contains(QLatin1String("MX 4000")) ||
-                chipset.contains(QLatin1String("PCX 4300")))
+        if (chipset.contains(QLatin1String("MX 420"))
+            || chipset.contains(QLatin1String("MX 440")) // including MX 440SE
+            || chipset.contains(QLatin1String("MX 460"))
+            || chipset.contains(QLatin1String("MX 4000"))
+            || chipset.contains(QLatin1String("PCX 4300")))
             return NV10;
 
         return NV20;
@@ -381,37 +381,37 @@ static ChipClass detectIntelClass(const QByteArray &chipset)
 {
     // see mesa repository: src/mesa/drivers/dri/intel/intel_context.c
     // GL 1.3, DX8? SM ?
-    if (chipset.contains("845G")        ||
-            chipset.contains("830M")        ||
-            chipset.contains("852GM/855GM") ||
-            chipset.contains("865G"))
+    if (chipset.contains("845G")
+        || chipset.contains("830M")
+        || chipset.contains("852GM/855GM")
+        || chipset.contains("865G"))
         return I8XX;
 
     // GL 1.4, DX 9.0, SM 2.0
-    if (chipset.contains("915G")   ||
-            chipset.contains("E7221G") ||
-            chipset.contains("915GM")  ||
-            chipset.contains("945G")   ||   // DX 9.0c
-            chipset.contains("945GM")  ||
-            chipset.contains("945GME") ||
-            chipset.contains("Q33")    ||   // GL1.5
-            chipset.contains("Q35")    ||
-            chipset.contains("G33")    ||
-            chipset.contains("965Q")   ||   // GMA 3000, but apparently considered gen 4 by the driver
-            chipset.contains("946GZ")  ||   // GMA 3000, but apparently considered gen 4 by the driver
-            chipset.contains("IGD"))
+    if (chipset.contains("915G")
+        || chipset.contains("E7221G")
+        || chipset.contains("915GM")
+        || chipset.contains("945G") // DX 9.0c
+        || chipset.contains("945GM")
+        || chipset.contains("945GME")
+        || chipset.contains("Q33") // GL1.5
+        || chipset.contains("Q35")
+        || chipset.contains("G33")
+        || chipset.contains("965Q") // GMA 3000, but apparently considered gen 4 by the driver
+        || chipset.contains("946GZ") // GMA 3000, but apparently considered gen 4 by the driver
+        || chipset.contains("IGD"))
         return I915;
 
     // GL 2.0, DX 9.0c, SM 3.0
-    if (chipset.contains("965G")       ||
-            chipset.contains("G45/G43")    || // SM 4.0
-            chipset.contains("965GM")      || // GL 2.1
-            chipset.contains("965GME/GLE") ||
-            chipset.contains("GM45")       ||
-            chipset.contains("Q45/Q43")    ||
-            chipset.contains("G41")        ||
-            chipset.contains("B43")        ||
-            chipset.contains("Ironlake"))
+    if (chipset.contains("965G")
+        || chipset.contains("G45/G43") // SM 4.0
+        || chipset.contains("965GM") // GL 2.1
+        || chipset.contains("965GME/GLE")
+        || chipset.contains("GM45")
+        || chipset.contains("Q45/Q43")
+        || chipset.contains("G41")
+        || chipset.contains("B43")
+        || chipset.contains("Ironlake"))
         return I965;
 
     // GL 3.1, CL 1.1, DX 10.1
@@ -502,17 +502,13 @@ static ChipClass detectQualcommClass(const QByteArray &chipClass)
 static ChipClass detectPanfrostClass(const QByteArray &chipClass)
 {
 
-    if (chipClass.contains("T720")   ||
-           chipClass.contains("T760"))
+    if (chipClass.contains("T720") || chipClass.contains("T760"))
         return MaliT7XX;
 
-    if (chipClass.contains("T820")   ||
-           chipClass.contains("T860"))
+    if (chipClass.contains("T820") || chipClass.contains("T860"))
         return MaliT8XX;
 
-    if (chipClass.contains("G31")   ||
-           chipClass.contains("G52") ||
-           chipClass.contains("G72"))
+    if (chipClass.contains("G31") || chipClass.contains("G52") || chipClass.contains("G72"))
         return MaliGXX;
 
     return UnknownPanfrost;
@@ -541,7 +537,7 @@ QString GLPlatform::driverToString(Driver driver)
 }
 QByteArray GLPlatform::driverToString8(Driver driver)
 {
-    switch(driver) {
+    switch (driver) {
     case Driver_R100:
         return QByteArrayLiteral("Radeon");
     case Driver_R200:
@@ -592,7 +588,7 @@ QString GLPlatform::chipClassToString(ChipClass chipClass)
 }
 QByteArray GLPlatform::chipClassToString8(ChipClass chipClass)
 {
-    switch(chipClass) {
+    switch (chipClass) {
     case R100:
         return QByteArrayLiteral("R100");
     case R200:
@@ -699,33 +695,29 @@ QByteArray GLPlatform::chipClassToString8(ChipClass chipClass)
     }
 }
 
-
-
 // -------
 
-
-
 GLPlatform::GLPlatform()
-    : m_driver(Driver_Unknown),
-      m_chipClass(UnknownChipClass),
-      m_recommendedCompositor(QPainterCompositing),
-      m_glVersion(0),
-      m_glslVersion(0),
-      m_mesaVersion(0),
-      m_driverVersion(0),
-      m_galliumVersion(0),
-      m_serverVersion(0),
-      m_kernelVersion(0),
-      m_looseBinding(false),
-      m_supportsGLSL(false),
-      m_limitedGLSL(false),
-      m_textureNPOT(false),
-      m_limitedNPOT(false),
-      m_packInvert(false),
-      m_virtualMachine(false),
-      m_preferBufferSubData(false),
-      m_platformInterface(NoOpenGLPlatformInterface),
-      m_gles(false)
+    : m_driver(Driver_Unknown)
+    , m_chipClass(UnknownChipClass)
+    , m_recommendedCompositor(QPainterCompositing)
+    , m_glVersion(0)
+    , m_glslVersion(0)
+    , m_mesaVersion(0)
+    , m_driverVersion(0)
+    , m_galliumVersion(0)
+    , m_serverVersion(0)
+    , m_kernelVersion(0)
+    , m_looseBinding(false)
+    , m_supportsGLSL(false)
+    , m_limitedGLSL(false)
+    , m_textureNPOT(false)
+    , m_limitedNPOT(false)
+    , m_packInvert(false)
+    , m_virtualMachine(false)
+    , m_preferBufferSubData(false)
+    , m_platformInterface(NoOpenGLPlatformInterface)
+    , m_gles(false)
 {
 }
 
@@ -737,9 +729,9 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 {
     m_platformInterface = platformInterface;
 
-    m_vendor       = (const char*)glGetString(GL_VENDOR);
-    m_renderer     = (const char*)glGetString(GL_RENDERER);
-    m_version      = (const char*)glGetString(GL_VERSION);
+    m_vendor = (const char *)glGetString(GL_VENDOR);
+    m_renderer = (const char *)glGetString(GL_RENDERER);
+    m_version = (const char *)glGetString(GL_VERSION);
 
     // Parse the OpenGL version
     const QList<QByteArray> versionTokens = m_version.split(' ');
@@ -761,11 +753,11 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         glGetIntegerv(GL_NUM_EXTENSIONS, &count);
 
         for (int i = 0; i < count; i++) {
-            const char *name = (const char *) glGetStringi(GL_EXTENSIONS, i);
+            const char *name = (const char *)glGetStringi(GL_EXTENSIONS, i);
             m_extensions.insert(name);
         }
     } else {
-        const QByteArray extensions = (const char *) glGetString(GL_EXTENSIONS);
+        const QByteArray extensions = (const char *)glGetString(GL_EXTENSIONS);
         QList<QByteArray> extensionsList = extensions.split(' ');
         m_extensions = {extensionsList.constBegin(), extensionsList.constEnd()};
     }
@@ -781,9 +773,9 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_supportsGLSL = true;
         m_textureNPOT = true;
     } else {
-        m_supportsGLSL = m_extensions.contains("GL_ARB_shader_objects") &&
-                         m_extensions.contains("GL_ARB_fragment_shader") &&
-                         m_extensions.contains("GL_ARB_vertex_shader");
+        m_supportsGLSL = (m_extensions.contains("GL_ARB_shader_objects")
+                          && m_extensions.contains("GL_ARB_fragment_shader")
+                          && m_extensions.contains("GL_ARB_vertex_shader"));
 
         m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
     }
@@ -796,14 +788,13 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 
     if (m_supportsGLSL) {
         // Parse the GLSL version
-        m_glsl_version = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+        m_glsl_version = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
         m_glslVersion = parseVersionString(m_glsl_version);
     }
 
     m_chipset = QByteArrayLiteral("Unknown");
     m_preferBufferSubData = false;
     m_packInvert = m_extensions.contains("GL_MESA_pack_invert");
-
 
     // Mesa classic drivers
     // ====================================================
@@ -882,7 +873,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     else if (m_renderer.contains("Panfrost")) {
         m_driver = Driver_Panfrost;
         m_chipClass = detectPanfrostClass(m_renderer);
-     }
+    }
 
     else if (m_renderer == "Software Rasterizer") {
         m_driver = Driver_Swrast;
@@ -908,10 +899,8 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         if (m_renderer.contains("Gallium")) {
             // Sample renderer string: Gallium 0.4 on AMD RV740
             m_galliumVersion = parseVersionString(tokens.at(1));
-            m_chipset = (tokens.at(3) == "AMD" || tokens.at(3) == "ATI") ?
-                        tokens.at(4) : tokens.at(3);
-        }
-        else {
+            m_chipset = (tokens.at(3) == "AMD" || tokens.at(3) == "ATI") ? tokens.at(4) : tokens.at(3);
+        } else {
             // The renderer string does not contain "Gallium" anymore.
             m_chipset = tokens.at(0);
             // We don't know the actual version anymore, but it's at least 0.4.
@@ -925,61 +914,13 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         }
 
         // R600G
-        else if (m_vendor == "X.Org" &&
-                (m_renderer.contains("R6")        ||
-                 m_renderer.contains("R7")        ||
-                 m_renderer.contains("RV6")       ||
-                 m_renderer.contains("RV7")       ||
-                 m_renderer.contains("RS780")     ||
-                 m_renderer.contains("RS880")     ||
-                 m_renderer.contains("CEDAR")     ||
-                 m_renderer.contains("REDWOOD")   ||
-                 m_renderer.contains("JUNIPER")   ||
-                 m_renderer.contains("CYPRESS")   ||
-                 m_renderer.contains("HEMLOCK")   ||
-                 m_renderer.contains("PALM")      ||
-                 m_renderer.contains("EVERGREEN") ||
-                 m_renderer.contains("SUMO")      ||
-                 m_renderer.contains("SUMO2")     ||
-                 m_renderer.contains("BARTS")     ||
-                 m_renderer.contains("TURKS")     ||
-                 m_renderer.contains("CAICOS")    ||
-                 m_renderer.contains("CAYMAN"))) {
+        else if (m_vendor == "X.Org" && (m_renderer.contains("R6") || m_renderer.contains("R7") || m_renderer.contains("RV6") || m_renderer.contains("RV7") || m_renderer.contains("RS780") || m_renderer.contains("RS880") || m_renderer.contains("CEDAR") || m_renderer.contains("REDWOOD") || m_renderer.contains("JUNIPER") || m_renderer.contains("CYPRESS") || m_renderer.contains("HEMLOCK") || m_renderer.contains("PALM") || m_renderer.contains("EVERGREEN") || m_renderer.contains("SUMO") || m_renderer.contains("SUMO2") || m_renderer.contains("BARTS") || m_renderer.contains("TURKS") || m_renderer.contains("CAICOS") || m_renderer.contains("CAYMAN"))) {
             m_chipClass = detectRadeonClass(m_chipset);
             m_driver = Driver_R600G;
         }
 
         // RadeonSI
-        else if ((m_vendor == "X.Org" || m_vendor == "AMD") &&
-                (m_renderer.contains("TAHITI")    ||
-                 m_renderer.contains("PITCAIRN")  ||
-                 m_renderer.contains("VERDE")     ||
-                 m_renderer.contains("OLAND")     ||
-                 m_renderer.contains("HAINAN")    ||
-                 m_renderer.contains("BONAIRE")   ||
-                 m_renderer.contains("KAVERI")    ||
-                 m_renderer.contains("KABINI")    ||
-                 m_renderer.contains("HAWAII")    ||
-                 m_renderer.contains("MULLINS")   ||
-                 m_renderer.contains("TOPAZ")     ||
-                 m_renderer.contains("TONGA")     ||
-                 m_renderer.contains("FIJI")      ||
-                 m_renderer.contains("CARRIZO")   ||
-                 m_renderer.contains("STONEY")    ||
-                 m_renderer.contains("POLARIS10") ||
-                 m_renderer.contains("POLARIS11") ||
-                 m_renderer.contains("POLARIS12") ||
-                 m_renderer.contains("VEGAM")     ||
-                 m_renderer.contains("VEGA10")    ||
-                 m_renderer.contains("VEGA12")    ||
-                 m_renderer.contains("VEGA20")    ||
-                 m_renderer.contains("RAVEN")     ||
-                 m_renderer.contains("RAVEN2")    ||
-                 m_renderer.contains("RENOIR")    ||
-                 m_renderer.contains("ARCTURUS")  ||
-                 m_renderer.contains("NAVI10")    ||
-                 m_renderer.contains("NAVI12")    ||
-                 m_renderer.contains("NAVI14"))) {
+        else if ((m_vendor == "X.Org" || m_vendor == "AMD") && (m_renderer.contains("TAHITI") || m_renderer.contains("PITCAIRN") || m_renderer.contains("VERDE") || m_renderer.contains("OLAND") || m_renderer.contains("HAINAN") || m_renderer.contains("BONAIRE") || m_renderer.contains("KAVERI") || m_renderer.contains("KABINI") || m_renderer.contains("HAWAII") || m_renderer.contains("MULLINS") || m_renderer.contains("TOPAZ") || m_renderer.contains("TONGA") || m_renderer.contains("FIJI") || m_renderer.contains("CARRIZO") || m_renderer.contains("STONEY") || m_renderer.contains("POLARIS10") || m_renderer.contains("POLARIS11") || m_renderer.contains("POLARIS12") || m_renderer.contains("VEGAM") || m_renderer.contains("VEGA10") || m_renderer.contains("VEGA12") || m_renderer.contains("VEGA20") || m_renderer.contains("RAVEN") || m_renderer.contains("RAVEN2") || m_renderer.contains("RENOIR") || m_renderer.contains("ARCTURUS") || m_renderer.contains("NAVI10") || m_renderer.contains("NAVI12") || m_renderer.contains("NAVI14"))) {
             m_chipClass = detectRadeonClass(m_renderer);
             m_driver = Driver_RadeonSI;
         }
@@ -1041,8 +982,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_recommendedCompositor = OpenGLCompositing;
         }
 
-        if (driver() == Driver_R600G ||
-                (driver() == Driver_R600C && m_renderer.contains("DRI2"))) {
+        if (driver() == Driver_R600G || (driver() == Driver_R600C && m_renderer.contains("DRI2"))) {
             m_looseBinding = true;
         }
     }
@@ -1151,9 +1091,9 @@ static void print(const QByteArray &label, const QByteArray &setting)
 
 void GLPlatform::printResults() const
 {
-    print(QByteArrayLiteral("OpenGL vendor string:"),   m_vendor);
+    print(QByteArrayLiteral("OpenGL vendor string:"), m_vendor);
     print(QByteArrayLiteral("OpenGL renderer string:"), m_renderer);
-    print(QByteArrayLiteral("OpenGL version string:"),  m_version);
+    print(QByteArrayLiteral("OpenGL version string:"), m_version);
 
     if (m_supportsGLSL)
         print(QByteArrayLiteral("OpenGL shading language version string:"), m_glsl_version);
@@ -1171,8 +1111,8 @@ void GLPlatform::printResults() const
 
     if (isMesaDriver())
         print(QByteArrayLiteral("Mesa version:"), versionToString8(mesaVersion()));
-    //if (galliumVersion() > 0)
-    //    print("Gallium version:", versionToString(m_galliumVersion));
+    // if (galliumVersion() > 0)
+    //     print("Gallium version:", versionToString(m_galliumVersion));
     if (serverVersion() > 0)
         print(QByteArrayLiteral("X server version:"), versionToString8(m_serverVersion));
     if (kernelVersion() > 0)
@@ -1186,7 +1126,7 @@ void GLPlatform::printResults() const
 
 bool GLPlatform::supports(GLFeature feature) const
 {
-    switch(feature) {
+    switch (feature) {
     case LooseBinding:
         return m_looseBinding;
 
@@ -1370,4 +1310,3 @@ void GLPlatform::cleanup()
 }
 
 } // namespace KWin
-

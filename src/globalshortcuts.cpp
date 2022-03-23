@@ -8,19 +8,21 @@
 */
 // own
 #include "globalshortcuts.h"
+// config
+#include <config-kwin.h>
 // kwin
 #include "gestures.h"
 #include "kwinglobals.h"
 #include "main.h"
 #include "utils/common.h"
-#include <config-kwin.h>
 // KDE
 #include <KGlobalAccel/private/kglobalaccel_interface.h>
 #include <KGlobalAccel/private/kglobalacceld.h>
 // Qt
 #include <QAction>
-#include <variant>
+// system
 #include <signal.h>
+#include <variant>
 
 namespace KWin
 {
@@ -36,8 +38,7 @@ GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
     };
     static const QMap<PinchDirection, PinchGesture::Direction> pinchDirs = {
         {PinchDirection::Expanding, PinchGesture::Direction::Expanding},
-        {PinchDirection::Contracting, PinchGesture::Direction::Contracting}
-    };
+        {PinchDirection::Contracting, PinchGesture::Direction::Contracting}};
     if (auto swipeGesture = std::get_if<SwipeShortcut>(&sc)) {
         m_swipeGesture.reset(new SwipeGesture());
         m_swipeGesture->setDirection(swipeDirs[swipeGesture->direction]);
@@ -173,7 +174,7 @@ void GlobalShortcutsManager::registerTouchpadSwipe(QAction *action, SwipeDirecti
     addIfNotExists(GlobalShortcut(SwipeShortcut{direction, fingerCount}, action));
 }
 
-void GlobalShortcutsManager::registerRealtimeTouchpadSwipe(QAction *action, std::function<void (qreal)> progressCallback, SwipeDirection direction, uint fingerCount)
+void GlobalShortcutsManager::registerRealtimeTouchpadSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount)
 {
     addIfNotExists(GlobalShortcut(RealtimeFeedbackSwipeShortcut{direction, progressCallback, fingerCount}, action));
 }

@@ -7,21 +7,22 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
-#include "platform.h"
+
 #include "abstract_client.h"
-#include "x11client.h"
 #include "composite.h"
 #include "deleted.h"
-#include "effects.h"
 #include "effectloader.h"
+#include "effects.h"
+#include "platform.h"
+#include "scripting/scriptedeffect.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "scripting/scriptedeffect.h"
+#include "x11client.h"
 
 #include <KDecoration2/Decoration>
 
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
@@ -42,8 +43,8 @@ private Q_SLOTS:
 
 void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted*>();
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::Deleted *>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
@@ -75,10 +76,10 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
         if (qstrcmp((*it)->metaObject()->className(), "KWin::EffectLoader") != 0) {
             continue;
         }
-        QVERIFY(QMetaObject::invokeMethod(*it, "effectLoaded", Q_ARG(KWin::Effect*, effect), Q_ARG(QString, QStringLiteral("crashy"))));
+        QVERIFY(QMetaObject::invokeMethod(*it, "effectLoaded", Q_ARG(KWin::Effect *, effect), Q_ARG(QString, QStringLiteral("crashy"))));
         break;
     }
-    QVERIFY(static_cast<EffectsHandlerImpl*>(effects)->isEffectLoaded(QStringLiteral("crashy")));
+    QVERIFY(static_cast<EffectsHandlerImpl *>(effects)->isEffectLoaded(QStringLiteral("crashy")));
 
     using namespace KWayland::Client;
     // create a window

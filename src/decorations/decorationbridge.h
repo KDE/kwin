@@ -45,17 +45,20 @@ public:
     std::unique_ptr<KDecoration2::DecoratedClientPrivate> createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration) override;
     std::unique_ptr<KDecoration2::DecorationSettingsPrivate> settings(KDecoration2::DecorationSettings *parent) override;
 
-    QString recommendedBorderSize() const {
+    QString recommendedBorderSize() const
+    {
         return m_recommendedBorderSize;
     }
 
-    bool showToolTips() const {
+    bool showToolTips() const
+    {
         return m_showToolTips;
     }
 
     void reconfigure();
 
-    const QSharedPointer<KDecoration2::DecorationSettings> &settings() const {
+    const QSharedPointer<KDecoration2::DecorationSettings> &settings() const
+    {
         return m_settings;
     }
 

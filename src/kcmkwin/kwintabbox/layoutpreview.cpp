@@ -9,16 +9,16 @@
 // own
 #include "layoutpreview.h"
 
-#include <QApplication>
-#include <QDebug>
-#include <QQmlEngine>
-#include <QQmlContext>
-#include <QScreen>
-#include <QStandardPaths>
+#include <KApplicationTrader>
 #include <KConfigGroup>
 #include <KDesktopFile>
 #include <KLocalizedString>
-#include <KApplicationTrader>
+#include <QApplication>
+#include <QDebug>
+#include <QQmlContext>
+#include <QQmlEngine>
+#include <QScreen>
+#include <QStandardPaths>
 
 namespace KWin
 {
@@ -41,30 +41,30 @@ LayoutPreview::LayoutPreview(const QString &path, bool showDesktopThumbnail, QOb
         qDebug() << component->errorString();
     }
     QObject *item = component->create();
-    auto findSwitcher = [item]() -> SwitcherItem* {
+    auto findSwitcher = [item]() -> SwitcherItem * {
         if (!item) {
             return nullptr;
         }
-        if (SwitcherItem *i = qobject_cast<SwitcherItem*>(item)) {
+        if (SwitcherItem *i = qobject_cast<SwitcherItem *>(item)) {
             return i;
-        } else if (QQuickWindow *w = qobject_cast<QQuickWindow*>(item)) {
-            return w->contentItem()->findChild<SwitcherItem*>();
+        } else if (QQuickWindow *w = qobject_cast<QQuickWindow *>(item)) {
+            return w->contentItem()->findChild<SwitcherItem *>();
         }
-        return item->findChild<SwitcherItem*>();
+        return item->findChild<SwitcherItem *>();
     };
     if (SwitcherItem *switcher = findSwitcher()) {
         m_item = switcher;
         static_cast<ExampleClientModel *>(switcher->model())->showDesktopThumbnail(showDesktopThumbnail);
         switcher->setVisible(true);
     }
-    auto findWindow = [item]() -> QQuickWindow* {
+    auto findWindow = [item]() -> QQuickWindow * {
         if (!item) {
             return nullptr;
         }
-        if (QQuickWindow *w = qobject_cast<QQuickWindow*>(item)) {
+        if (QQuickWindow *w = qobject_cast<QQuickWindow *>(item)) {
             return w;
         }
-        return item->findChild<QQuickWindow*>();
+        return item->findChild<QQuickWindow *>();
     };
     if (QQuickWindow *w = findWindow()) {
         w->setKeyboardGrabEnabled(true);
@@ -80,11 +80,8 @@ LayoutPreview::~LayoutPreview()
 bool LayoutPreview::eventFilter(QObject *object, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress) {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-        if (keyEvent->key() == Qt::Key_Escape ||
-                keyEvent->key() == Qt::Key_Return ||
-                keyEvent->key() == Qt::Key_Enter ||
-                keyEvent->key() == Qt::Key_Space) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->key() == Qt::Key_Escape || keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Space) {
             object->deleteLater();
             deleteLater();
         }
@@ -95,8 +92,8 @@ bool LayoutPreview::eventFilter(QObject *object, QEvent *event)
             m_item->decrementIndex();
         }
     } else if (event->type() == QEvent::MouseButtonPress) {
-        if (QWindow *w = qobject_cast<QWindow*>(object)) {
-            if (!w->geometry().contains(static_cast<QMouseEvent*>(event)->globalPos())) {
+        if (QWindow *w = qobject_cast<QWindow *>(object)) {
+            if (!w->geometry().contains(static_cast<QMouseEvent *>(event)->globalPos())) {
                 object->deleteLater();
                 deleteLater();
             }
@@ -105,8 +102,8 @@ bool LayoutPreview::eventFilter(QObject *object, QEvent *event)
     return QObject::eventFilter(object, event);
 }
 
-ExampleClientModel::ExampleClientModel (QObject* parent)
-    : QAbstractListModel (parent)
+ExampleClientModel::ExampleClientModel(QObject *parent)
+    : QAbstractListModel(parent)
 {
     init();
 }
@@ -118,22 +115,22 @@ ExampleClientModel::~ExampleClientModel()
 void ExampleClientModel::init()
 {
     if (const auto s = KApplicationTrader::preferredService(QStringLiteral("inode/directory"))) {
-        m_thumbnails << ThumbnailInfo{ WindowThumbnailItem::Dolphin, s->name(), s->icon() };
+        m_thumbnails << ThumbnailInfo{WindowThumbnailItem::Dolphin, s->name(), s->icon()};
     }
     if (const auto s = KApplicationTrader::preferredService(QStringLiteral("text/html"))) {
-        m_thumbnails << ThumbnailInfo{ WindowThumbnailItem::Konqueror, s->name(), s->icon() };
+        m_thumbnails << ThumbnailInfo{WindowThumbnailItem::Konqueror, s->name(), s->icon()};
     }
     if (const auto s = KApplicationTrader::preferredService(QStringLiteral("message/rfc822"))) {
-        m_thumbnails << ThumbnailInfo{ WindowThumbnailItem::KMail, s->name(), s->icon() };
+        m_thumbnails << ThumbnailInfo{WindowThumbnailItem::KMail, s->name(), s->icon()};
     }
     if (const auto s = KService::serviceByDesktopName(QStringLiteral("kdesystemsettings"))) {
-        m_thumbnails << ThumbnailInfo{ WindowThumbnailItem::Systemsettings, s->name(), s->icon() };
+        m_thumbnails << ThumbnailInfo{WindowThumbnailItem::Systemsettings, s->name(), s->icon()};
     }
 }
 
 void ExampleClientModel::showDesktopThumbnail(bool showDesktop)
 {
-    const ThumbnailInfo desktopThumbnail = ThumbnailInfo { WindowThumbnailItem::Desktop, i18n("Show Desktop"), QStringLiteral("desktop") };
+    const ThumbnailInfo desktopThumbnail = ThumbnailInfo{WindowThumbnailItem::Desktop, i18n("Show Desktop"), QStringLiteral("desktop")};
     const int desktopIndex = m_thumbnails.indexOf(desktopThumbnail);
     if (showDesktop == (desktopIndex >= 0)) {
         return;
@@ -192,11 +189,11 @@ int ExampleClientModel::rowCount(const QModelIndex &parent) const
 QHash<int, QByteArray> ExampleClientModel::roleNames() const
 {
     return {
-        { CaptionRole, QByteArrayLiteral("caption") },
-        { MinimizedRole, QByteArrayLiteral("minimized") },
-        { DesktopNameRole, QByteArrayLiteral("desktopName") },
-        { IconRole, QByteArrayLiteral("icon") },
-        { WindowIdRole, QByteArrayLiteral("windowId") },
+        {CaptionRole, QByteArrayLiteral("caption")},
+        {MinimizedRole, QByteArrayLiteral("minimized")},
+        {DesktopNameRole, QByteArrayLiteral("desktopName")},
+        {IconRole, QByteArrayLiteral("icon")},
+        {WindowIdRole, QByteArrayLiteral("windowId")},
     };
 }
 
@@ -250,13 +247,12 @@ void SwitcherItem::incrementIndex()
 
 void SwitcherItem::decrementIndex()
 {
-    int index = m_currentIndex -1;
+    int index = m_currentIndex - 1;
     if (index < 0) {
-        index = m_model->rowCount() -1;
+        index = m_model->rowCount() - 1;
     }
     setCurrentIndex(index);
 }
 
 } // namespace KWin
 } // namespace TabBox
-

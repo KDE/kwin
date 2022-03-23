@@ -11,7 +11,6 @@
 
 #include <QAbstractListModel>
 
-
 namespace KWin
 {
 

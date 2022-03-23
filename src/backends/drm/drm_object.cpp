@@ -38,7 +38,7 @@ bool DrmObject::initProps()
     }
     if (KWIN_DRM().isDebugEnabled()) {
         auto debug = QMessageLogger(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, KWIN_DRM().categoryName()).debug().nospace();
-        switch(m_objectType) {
+        switch (m_objectType) {
         case DRM_MODE_OBJECT_CONNECTOR:
             debug << "Connector ";
             break;
@@ -208,7 +208,7 @@ QDebug operator<<(QDebug s, const KWin::DrmObject *obj)
 {
     QDebugStateSaver saver(s);
     if (obj) {
-        s.nospace() << "DrmObject(id=" << obj->id() << ", gpu="<< obj->gpu() << ')';
+        s.nospace() << "DrmObject(id=" << obj->id() << ", gpu=" << obj->gpu() << ')';
     } else {
         s << "DrmObject(0x0)";
     }

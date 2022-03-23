@@ -8,12 +8,12 @@
 */
 
 #include "inputpanelv1client.h"
+#include "abstract_wayland_output.h"
 #include "deleted.h"
+#include "inputmethod.h"
+#include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "abstract_wayland_output.h"
-#include "platform.h"
-#include "inputmethod.h"
 #include <KWaylandServer/output_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
@@ -74,69 +74,69 @@ void KWin::InputPanelV1Client::reposition()
     }
 
     switch (m_mode) {
-        case Toplevel: {
-            QSize panelSize = surface()->size();
-            if (!panelSize.isValid() || panelSize.isEmpty()) {
-                return;
-            }
+    case Toplevel: {
+        QSize panelSize = surface()->size();
+        if (!panelSize.isValid() || panelSize.isEmpty()) {
+            return;
+        }
 
-            QRect availableArea;
-            QRect outputArea;
-            if (m_output) {
-                outputArea = m_output->geometry();
-                if (waylandServer()->isScreenLocked()) {
-                    availableArea = outputArea;
-                } else {
-                    availableArea = workspace()->clientArea(MaximizeArea, this, m_output);
-                }
+        QRect availableArea;
+        QRect outputArea;
+        if (m_output) {
+            outputArea = m_output->geometry();
+            if (waylandServer()->isScreenLocked()) {
+                availableArea = outputArea;
             } else {
-                availableArea = workspace()->clientArea(MaximizeArea, this);
-                outputArea = workspace()->clientArea(FullScreenArea, this);
+                availableArea = workspace()->clientArea(MaximizeArea, this, m_output);
             }
+        } else {
+            availableArea = workspace()->clientArea(MaximizeArea, this);
+            outputArea = workspace()->clientArea(FullScreenArea, this);
+        }
 
-            panelSize = panelSize.boundedTo(availableArea.size());
+        panelSize = panelSize.boundedTo(availableArea.size());
 
-            QRect geo(availableArea.bottomLeft() - QPoint{0, panelSize.height()}, panelSize);
-            geo.translate((availableArea.width() - panelSize.width())/2, availableArea.height() - outputArea.height());
-            moveResize(geo);
-        }   break;
-        case Overlay: {
-            auto textInputSurface = waylandServer()->seat()->focusedTextInputSurface();
-            auto textClient = waylandServer()->findClient(textInputSurface);
-            QRect cursorRectangle;
-            auto textInputV2 = waylandServer()->seat()->textInputV2();
-            if (textInputV2 && textInputV2->isEnabled() && textInputV2->surface() == textInputSurface) {
-                cursorRectangle = textInputV2->cursorRectangle();
+        QRect geo(availableArea.bottomLeft() - QPoint{0, panelSize.height()}, panelSize);
+        geo.translate((availableArea.width() - panelSize.width()) / 2, availableArea.height() - outputArea.height());
+        moveResize(geo);
+    } break;
+    case Overlay: {
+        auto textInputSurface = waylandServer()->seat()->focusedTextInputSurface();
+        auto textClient = waylandServer()->findClient(textInputSurface);
+        QRect cursorRectangle;
+        auto textInputV2 = waylandServer()->seat()->textInputV2();
+        if (textInputV2 && textInputV2->isEnabled() && textInputV2->surface() == textInputSurface) {
+            cursorRectangle = textInputV2->cursorRectangle();
+        }
+        auto textInputV3 = waylandServer()->seat()->textInputV3();
+        if (textInputV3 && textInputV3->isEnabled() && textInputV3->surface() == textInputSurface) {
+            cursorRectangle = textInputV3->cursorRectangle();
+        }
+        if (textClient) {
+            cursorRectangle.translate(textClient->bufferGeometry().topLeft());
+            const QRect screen = Workspace::self()->clientArea(PlacementArea, cursorRectangle.bottomLeft(), 0);
+
+            // Reuse the similar logic like xdg popup
+            QRect popupRect(popupOffset(cursorRectangle, Qt::BottomEdge | Qt::LeftEdge, Qt::RightEdge | Qt::BottomEdge, surface()->size()), surface()->size());
+
+            if (popupRect.left() < screen.left()) {
+                popupRect.moveLeft(screen.left());
             }
-            auto textInputV3 = waylandServer()->seat()->textInputV3();
-            if (textInputV3 && textInputV3->isEnabled() && textInputV3->surface() == textInputSurface) {
-                cursorRectangle = textInputV3->cursorRectangle();
+            if (popupRect.right() > screen.right()) {
+                popupRect.moveRight(screen.right());
             }
-            if (textClient) {
-                cursorRectangle.translate(textClient->bufferGeometry().topLeft());
-                const QRect screen = Workspace::self()->clientArea(PlacementArea, cursorRectangle.bottomLeft(), 0);
+            if (popupRect.top() < screen.top() || popupRect.bottom() > screen.bottom()) {
+                auto flippedPopupRect =
+                    QRect(popupOffset(cursorRectangle, Qt::TopEdge | Qt::LeftEdge, Qt::RightEdge | Qt::TopEdge, surface()->size()), surface()->size());
 
-                // Reuse the similar logic like xdg popup
-                QRect popupRect(popupOffset(cursorRectangle, Qt::BottomEdge | Qt::LeftEdge, Qt::RightEdge | Qt::BottomEdge, surface()->size()), surface()->size());
-
-                if (popupRect.left() < screen.left()) {
-                    popupRect.moveLeft(screen.left());
+                // if it still doesn't fit we should continue with the unflipped version
+                if (flippedPopupRect.top() >= screen.top() || flippedPopupRect.bottom() <= screen.bottom()) {
+                    popupRect.moveTop(flippedPopupRect.top());
                 }
-                if (popupRect.right() > screen.right()) {
-                    popupRect.moveRight(screen.right());
-                }
-                if (popupRect.top() < screen.top() || popupRect.bottom() > screen.bottom()) {
-                    auto flippedPopupRect =
-                        QRect(popupOffset(cursorRectangle, Qt::TopEdge | Qt::LeftEdge, Qt::RightEdge | Qt::TopEdge, surface()->size()), surface()->size());
-
-                    // if it still doesn't fit we should continue with the unflipped version
-                    if (flippedPopupRect.top() >= screen.top() || flippedPopupRect.bottom() <= screen.bottom()) {
-                        popupRect.moveTop(flippedPopupRect.top());
-                    }
-                }
-                moveResize(popupRect);
             }
-        }   break;
+            moveResize(popupRect);
+        }
+    } break;
     }
 }
 

@@ -37,7 +37,7 @@ static void grabTexture(GLTexture *texture, QImage *image)
 
     texture->bind();
     if (GLPlatform::instance()->isGLES()) {
-        glReadPixels(0, 0, image->width(), image->height(), image->hasAlphaChannel() ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, (GLvoid*)image->bits());
+        glReadPixels(0, 0, image->width(), image->height(), image->hasAlphaChannel() ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, (GLvoid *)image->bits());
     } else if (GLPlatform::instance()->glVersion() >= kVersionNumber(4, 5)) {
         glGetTextureImage(texture->texture(), 0, image->hasAlphaChannel() ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, image->sizeInBytes(), image->bits());
     } else {

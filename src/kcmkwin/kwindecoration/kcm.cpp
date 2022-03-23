@@ -4,17 +4,18 @@
 
     SPDX-License-Identifier: LGPL-2.0-only
 */
-
 #include "kcm.h"
-#include "decorationmodel.h"
-#include "declarative-plugin/buttonsmodel.h"
+
 #include <config-kwin.h>
+
+#include "declarative-plugin/buttonsmodel.h"
+#include "decorationmodel.h"
 
 #include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KPluginFactory>
 #include <KNSCore/Engine>
+#include <KPluginFactory>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -26,10 +27,9 @@
 #include "kwindecorationdata.h"
 #include "kwindecorationsettings.h"
 
-K_PLUGIN_FACTORY_WITH_JSON(KCMKWinDecorationFactory, "kwindecoration.json", registerPlugin<KCMKWinDecoration>();registerPlugin<KWinDecorationData>();)
+K_PLUGIN_FACTORY_WITH_JSON(KCMKWinDecorationFactory, "kwindecoration.json", registerPlugin<KCMKWinDecoration>(); registerPlugin<KWinDecorationData>();)
 
 Q_DECLARE_METATYPE(KDecoration2::BorderSize)
-
 
 namespace
 {
@@ -70,7 +70,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     connect(this, &KCMKWinDecoration::borderSizeChanged, this, &KCMKWinDecoration::borderIndexChanged);
     connect(this, &KCMKWinDecoration::themeChanged, this, &KCMKWinDecoration::borderIndexChanged);
 
-    connect(this, &KCMKWinDecoration::themeChanged, this, [=](){
+    connect(this, &KCMKWinDecoration::themeChanged, this, [=]() {
         if (m_data->settings()->borderSizeAuto()) {
             setBorderSize(recommendedBorderSize());
         }
@@ -91,7 +91,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     // Update the themes when the color scheme or a theme's settings change
     QDBusConnection::sessionBus()
         .connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
-            this, SLOT(reloadKWinSettings()));
+                 this, SLOT(reloadKWinSettings()));
 
     QMetaObject::invokeMethod(m_themesModel, &KDecoration2::Configuration::DecorationsModel::init, Qt::QueuedConnection);
 }
@@ -180,8 +180,7 @@ QStringList KCMKWinDecoration::borderSizesModel() const
     // Use index 0 for borderSizeAuto == true
     // The rest of indexes get offset by 1
     QStringList model = Utils::getBorderSizeNames().values();
-    model.insert(0, i18nc("%1 is the name of a border size",
-                          "Theme's default (%1)", model.at(recommendedBorderSize())));
+    model.insert(0, i18nc("%1 is the name of a border size", "Theme's default (%1)", model.at(recommendedBorderSize())));
     return model;
 }
 

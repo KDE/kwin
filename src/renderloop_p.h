@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "renderloop.h"
 #include "renderjournal.h"
+#include "renderloop.h"
 
 #include <QTimer>
 

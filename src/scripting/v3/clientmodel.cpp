@@ -67,11 +67,11 @@ void ClientModel::handleClientRemoved(AbstractClient *client)
 QHash<int, QByteArray> ClientModel::roleNames() const
 {
     return {
-        { Qt::DisplayRole, QByteArrayLiteral("display") },
-        { ClientRole, QByteArrayLiteral("client") },
-        { ScreenRole, QByteArrayLiteral("screen") },
-        { DesktopRole, QByteArrayLiteral("desktop") },
-        { ActivityRole, QByteArrayLiteral("activity") },
+        {Qt::DisplayRole, QByteArrayLiteral("display")},
+        {ClientRole, QByteArrayLiteral("client")},
+        {ScreenRole, QByteArrayLiteral("screen")},
+        {DesktopRole, QByteArrayLiteral("desktop")},
+        {ActivityRole, QByteArrayLiteral("activity")},
     };
 }
 

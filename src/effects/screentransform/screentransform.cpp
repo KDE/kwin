@@ -34,7 +34,8 @@ bool ScreenTransformEffect::supported()
 qreal transformAngle(EffectScreen::Transform current, EffectScreen::Transform old)
 {
     auto ensureShort = [](int angle) {
-        return angle > 180 ? angle - 360 : angle < -180 ? angle + 360 : angle;
+        return angle > 180 ? angle - 360 : angle < -180 ? angle + 360
+                                                        : angle;
     };
     // % 4 to ignore flipped cases (for now)
     return ensureShort((int(current) % 4 - int(old) % 4) * 90);

@@ -128,8 +128,8 @@ void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const 
     const int verticesPerQuad = indexedQuads ? 4 : 6;
 
     const GLVertexAttrib attribs[] = {
-        { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
-        { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
+        {VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position)},
+        {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord)},
     };
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -163,7 +163,7 @@ void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const 
     vbo->unbindArrays();
 }
 
-void DeformEffect::drawWindow(EffectWindow *window, int mask, const QRegion& region, WindowPaintData &data)
+void DeformEffect::drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)
 {
     DeformOffscreenData *offscreenData = d->windows.value(window);
     if (!offscreenData) {
@@ -206,9 +206,9 @@ void DeformEffect::handleWindowDeleted(EffectWindow *window)
 void DeformEffect::setupConnections()
 {
     d->windowDamagedConnection =
-            connect(effects, &EffectsHandler::windowDamaged, this, &DeformEffect::handleWindowDamaged);
+        connect(effects, &EffectsHandler::windowDamaged, this, &DeformEffect::handleWindowDamaged);
     d->windowDeletedConnection =
-            connect(effects, &EffectsHandler::windowDeleted, this, &DeformEffect::handleWindowDeleted);
+        connect(effects, &EffectsHandler::windowDeleted, this, &DeformEffect::handleWindowDeleted);
 }
 
 void DeformEffect::destroyConnections()

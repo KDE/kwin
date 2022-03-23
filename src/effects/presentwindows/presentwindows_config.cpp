@@ -7,19 +7,20 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "presentwindows_config.h"
+
+#include <config-kwin.h>
+
 // KConfigSkeleton
 #include "presentwindowsconfig.h"
-#include <config-kwin.h>
-#include <kwineffects_interface.h>
 #include <QAction>
+#include <kwineffects_interface.h>
 
-#include <kconfiggroup.h>
 #include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KPluginFactory>
+#include <kconfiggroup.h>
 
 #include <QVBoxLayout>
 
@@ -28,17 +29,18 @@ K_PLUGIN_CLASS(KWin::PresentWindowsEffectConfig)
 namespace KWin
 {
 
-PresentWindowsEffectConfigForm::PresentWindowsEffectConfigForm(QWidget* parent) : QWidget(parent)
+PresentWindowsEffectConfigForm::PresentWindowsEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QVariantList& args)
-    :   KCModule(parent, args)
+PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     m_ui = new PresentWindowsEffectConfigForm(this);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->addWidget(m_ui);
 
@@ -49,19 +51,19 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     m_actionCollection->setConfigGroup(QStringLiteral("PresentWindows"));
     m_actionCollection->setConfigGlobal(true);
 
-    QAction* a = m_actionCollection->addAction(QStringLiteral("ExposeAll"));
+    QAction *a = m_actionCollection->addAction(QStringLiteral("ExposeAll"));
     a->setText(i18n("Toggle Present Windows (All desktops)"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F10) << Qt::Key_LaunchC);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F10) << Qt::Key_LaunchC);
 
-    QAction* b = m_actionCollection->addAction(QStringLiteral("Expose"));
+    QAction *b = m_actionCollection->addAction(QStringLiteral("Expose"));
     b->setText(i18n("Toggle Present Windows (Current desktop)"));
     b->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(b, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F9));
     KGlobalAccel::self()->setShortcut(b, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F9));
 
-    QAction* c = m_actionCollection->addAction(QStringLiteral("ExposeClass"));
+    QAction *c = m_actionCollection->addAction(QStringLiteral("ExposeClass"));
     c->setText(i18n("Toggle Present Windows (Window class)"));
     c->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(c, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F7));

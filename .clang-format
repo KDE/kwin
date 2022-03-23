@@ -1,0 +1,83 @@
+---
+---
+# SPDX-FileCopyrightText: 2019 Christoph Cullmann <cullmann@kde.org>
+# SPDX-FileCopyrightText: 2019 Gernot Gebhard <gebhard@absint.com>
+#
+# SPDX-License-Identifier: MIT
+
+---
+Language: JavaScript
+DisableFormat: true
+---
+
+# Style for C++
+Language: Cpp
+Standard: c++17
+
+# base is WebKit coding style: https://webkit.org/code-style-guidelines/
+# below are only things set that diverge from this style!
+BasedOnStyle: WebKit
+
+# 4 spaces indent
+TabWidth: 4
+
+# No line limit
+ColumnLimit: 0
+
+# sort includes inside line separated groups
+SortIncludes: true
+
+# Braces are usually attached, but not after functions or class declarations.
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: false
+  AfterStruct: true
+  AfterUnion: false
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
+
+# CrlInstruction *a;
+PointerAlignment: Right
+
+# horizontally aligns arguments after an open bracket.
+AlignAfterOpenBracket: Align
+
+# don't move all parameters to new line
+AllowAllParametersOfDeclarationOnNextLine: false
+
+# no single line functions
+AllowShortFunctionsOnASingleLine: None
+
+# In case we have an if statement with multiple lines the operator should be at the beginning of the line
+# but we do not want to break assignments
+BreakBeforeBinaryOperators: NonAssignment
+
+# format C++11 braced lists like function calls
+Cpp11BracedListStyle: true
+
+# do not put a space before C++11 braced lists
+SpaceBeforeCpp11BracedList: false
+
+# no namespace indentation to keep indent level low
+NamespaceIndentation: None
+
+# we use template< without space.
+SpaceAfterTemplateKeyword: false
+
+# Always break after template declaration
+AlwaysBreakTemplateDeclarations: true
+
+# macros for which the opening brace stays attached.
+ForEachMacros: [ foreach, Q_FOREACH, BOOST_FOREACH, forever, Q_FOREVER, QBENCHMARK, QBENCHMARK_ONCE , wl_resource_for_each, wl_resource_for_each_safe ]
+
+# keep lambda formatting multi-line if not empty
+AllowShortLambdasOnASingleLine: Empty
+
+# We do not want clang-format to put all arguments on a new line
+AllowAllArgumentsOnNextLine: false

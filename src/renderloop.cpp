@@ -13,7 +13,7 @@
 namespace KWin
 {
 
-template <typename T>
+template<typename T>
 T alignTimestamp(const T &timestamp, const T &alignment)
 {
     return timestamp + ((alignment - (timestamp % alignment)) % alignment);
@@ -28,7 +28,9 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
     : q(q)
 {
     compositeTimer.setSingleShot(true);
-    QObject::connect(&compositeTimer, &QTimer::timeout, q, [this]() { dispatch(); });
+    QObject::connect(&compositeTimer, &QTimer::timeout, q, [this]() {
+        dispatch();
+    });
 }
 
 void RenderLoopPrivate::scheduleRepaint()
@@ -48,7 +50,7 @@ void RenderLoopPrivate::scheduleRepaint()
     nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
     if (nextPresentationTimestamp < currentTime && presentMode == SyncMode::Fixed) {
         nextPresentationTimestamp = lastPresentationTimestamp
-                + alignTimestamp(currentTime - lastPresentationTimestamp, vblankInterval);
+            + alignTimestamp(currentTime - lastPresentationTimestamp, vblankInterval);
     }
 
     // Estimate when it's a good time to perform the next compositing cycle.

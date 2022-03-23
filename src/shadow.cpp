@@ -9,8 +9,8 @@
 */
 #include "shadow.h"
 // kwin
-#include "atoms.h"
 #include "abstract_client.h"
+#include "atoms.h"
 #include "composite.h"
 #include "internal_client.h"
 #include "scene.h"
@@ -20,8 +20,8 @@
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationShadow>
 
-#include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/shadow_interface.h>
+#include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/surface_interface.h>
 
 #include <QWindow>
@@ -76,7 +76,7 @@ Shadow *Shadow::createShadowFromX11(Toplevel *toplevel)
 
 Shadow *Shadow::createShadowFromDecoration(Toplevel *toplevel)
 {
-    AbstractClient *c = qobject_cast<AbstractClient*>(toplevel);
+    AbstractClient *c = qobject_cast<AbstractClient *>(toplevel);
     if (!c) {
         return nullptr;
     }
@@ -127,15 +127,15 @@ Shadow *Shadow::createShadowFromInternalWindow(Toplevel *toplevel)
     return shadow;
 }
 
-QVector< uint32_t > Shadow::readX11ShadowProperty(xcb_window_t id)
+QVector<uint32_t> Shadow::readX11ShadowProperty(xcb_window_t id)
 {
     QVector<uint32_t> ret;
     if (id != XCB_WINDOW_NONE) {
         Xcb::Property property(false, id, atoms->kde_net_wm_shadow, XCB_ATOM_CARDINAL, 0, 12);
-        uint32_t *shadow = property.value<uint32_t*>();
+        uint32_t *shadow = property.value<uint32_t *>();
         if (shadow) {
             ret.reserve(12);
-            for (int i=0; i<12; ++i) {
+            for (int i = 0; i < 12; ++i) {
                 ret << shadow[i];
             }
         }
@@ -143,7 +143,7 @@ QVector< uint32_t > Shadow::readX11ShadowProperty(xcb_window_t id)
     return ret;
 }
 
-bool Shadow::init(const QVector< uint32_t > &data)
+bool Shadow::init(const QVector<uint32_t> &data)
 {
     QVector<Xcb::WindowGeometry> pixmapGeometries(ShadowElementsCount);
     QVector<xcb_get_image_cookie_t> getImageCookies(ShadowElementsCount);
@@ -168,7 +168,7 @@ bool Shadow::init(const QVector< uint32_t > &data)
     for (int i = 0; i < ShadowElementsCount; ++i) {
         auto *reply = xcb_get_image_reply(c, getImageCookies.at(i), nullptr);
         if (!reply) {
-            discardReplies(i+1);
+            discardReplies(i + 1);
             return false;
         }
         auto &geo = pixmapGeometries[i];
@@ -193,8 +193,8 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
     if (m_decorationShadow) {
         // disconnect previous connections
         disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_topLevel, &Toplevel::updateShadow);
-        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::updateShadow);
-        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged,       m_topLevel, &Toplevel::updateShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged, m_topLevel, &Toplevel::updateShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged, m_topLevel, &Toplevel::updateShadow);
     }
     m_decorationShadow = decoration->shadow();
     if (!m_decorationShadow) {
@@ -202,8 +202,8 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
     }
     // setup connections - all just mapped to recreate
     connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_topLevel, &Toplevel::updateShadow);
-    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::updateShadow);
-    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged,       m_topLevel, &Toplevel::updateShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged, m_topLevel, &Toplevel::updateShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged, m_topLevel, &Toplevel::updateShadow);
 
     m_offset = m_decorationShadow->padding();
     Q_EMIT offsetChanged();
@@ -223,7 +223,7 @@ static QPixmap shadowTileForBuffer(KWaylandServer::ClientBuffer *buffer)
     return QPixmap();
 }
 
-bool Shadow::init(const QPointer< KWaylandServer::ShadowInterface > &shadow)
+bool Shadow::init(const QPointer<KWaylandServer::ShadowInterface> &shadow)
 {
     if (!shadow) {
         return false;
@@ -289,7 +289,7 @@ bool Shadow::updateShadow()
     }
 
     if (m_decorationShadow) {
-        if (AbstractClient *c = qobject_cast<AbstractClient*>(m_topLevel)) {
+        if (AbstractClient *c = qobject_cast<AbstractClient *>(m_topLevel)) {
             if (c->decoration()) {
                 if (init(c->decoration())) {
                     return true;

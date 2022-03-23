@@ -16,78 +16,95 @@ namespace KWin
 class KWIN_EXPORT AbstractOpenGLContextAttributeBuilder
 {
 public:
-    virtual ~AbstractOpenGLContextAttributeBuilder() {
+    virtual ~AbstractOpenGLContextAttributeBuilder()
+    {
     }
 
-    void setVersion(int major, int minor = 0) {
+    void setVersion(int major, int minor = 0)
+    {
         m_versionRequested = true;
         m_majorVersion = major;
         m_minorVersion = minor;
     }
 
-    bool isVersionRequested() const {
+    bool isVersionRequested() const
+    {
         return m_versionRequested;
     }
 
-    int majorVersion() const {
+    int majorVersion() const
+    {
         return m_majorVersion;
     }
 
-    int minorVersion() const {
+    int minorVersion() const
+    {
         return m_minorVersion;
     }
 
-    void setRobust(bool robust) {
+    void setRobust(bool robust)
+    {
         m_robust = robust;
     }
 
-    bool isRobust() const {
+    bool isRobust() const
+    {
         return m_robust;
     }
 
-    void setForwardCompatible(bool forward) {
+    void setForwardCompatible(bool forward)
+    {
         m_forwardCompatible = forward;
     }
 
-    bool isForwardCompatible() const {
+    bool isForwardCompatible() const
+    {
         return m_forwardCompatible;
     }
 
-    void setCoreProfile(bool core) {
+    void setCoreProfile(bool core)
+    {
         m_coreProfile = core;
         if (m_coreProfile) {
             setCompatibilityProfile(false);
         }
     }
 
-    bool isCoreProfile() const {
+    bool isCoreProfile() const
+    {
         return m_coreProfile;
     }
 
-    void setCompatibilityProfile(bool compatibility) {
+    void setCompatibilityProfile(bool compatibility)
+    {
         m_compatibilityProfile = compatibility;
         if (m_compatibilityProfile) {
             setCoreProfile(false);
         }
     }
 
-    bool isCompatibilityProfile() const {
+    bool isCompatibilityProfile() const
+    {
         return m_compatibilityProfile;
     }
 
-    void setResetOnVideoMemoryPurge(bool reset) {
+    void setResetOnVideoMemoryPurge(bool reset)
+    {
         m_resetOnVideoMemoryPurge = reset;
     }
 
-    bool isResetOnVideoMemoryPurge() const {
+    bool isResetOnVideoMemoryPurge() const
+    {
         return m_resetOnVideoMemoryPurge;
     }
 
-    void setHighPriority(bool highPriority) {
+    void setHighPriority(bool highPriority)
+    {
         m_highPriority = highPriority;
     }
 
-    bool isHighPriority() const {
+    bool isHighPriority() const
+    {
         return m_highPriority;
     }
 

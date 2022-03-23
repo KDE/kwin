@@ -13,8 +13,8 @@
 #include <QObject>
 #include <QVector>
 
-#include <KSharedConfig>
 #include <KConfigGroup>
+#include <KSharedConfig>
 typedef uint32_t xkb_layout_index_t;
 
 class QAction;
@@ -60,7 +60,7 @@ private:
     Xkb *m_xkb;
     xkb_layout_index_t m_layout = 0;
     KConfigGroup m_configGroup;
-    QVector<QAction*> m_layoutShortcuts;
+    QVector<QAction *> m_layoutShortcuts;
     KeyboardLayoutDBusInterface *m_dbusInterface = nullptr;
     KeyboardLayoutSwitching::Policy *m_policy = nullptr;
 };
@@ -74,12 +74,12 @@ public:
     explicit KeyboardLayoutDBusInterface(Xkb *xkb, const KConfigGroup &configGroup, KeyboardLayout *parent);
     ~KeyboardLayoutDBusInterface() override;
 
-	struct LayoutNames
-	{
-		QString shortName;
-		QString displayName;
-		QString longName;
-	};
+    struct LayoutNames
+    {
+        QString shortName;
+        QString displayName;
+        QString longName;
+    };
 
 public Q_SLOTS:
     void switchToNextLayout();

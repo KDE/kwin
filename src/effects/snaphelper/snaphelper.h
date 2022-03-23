@@ -42,7 +42,8 @@ private:
     QRect m_geometry;
     EffectWindow *m_window = nullptr;
 
-    struct Animation {
+    struct Animation
+    {
         bool active = false;
         TimeLine timeLine;
         std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();

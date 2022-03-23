@@ -22,15 +22,14 @@ namespace KWin
 {
 
 static const qreal s_alpha = 0.2;
-static const QVector<QColor> s_colors {
+static const QVector<QColor> s_colors{
     Qt::red,
     Qt::green,
     Qt::blue,
     Qt::cyan,
     Qt::magenta,
     Qt::yellow,
-    Qt::gray
-};
+    Qt::gray};
 
 ShowPaintEffect::ShowPaintEffect()
 {

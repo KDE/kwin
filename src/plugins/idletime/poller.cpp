@@ -11,9 +11,8 @@
 #include <KIdleTime>
 
 #include "wayland_server.h"
-#include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/idle_interface.h>
-
+#include <KWaylandServer/seat_interface.h>
 
 namespace KWin
 {
@@ -60,7 +59,7 @@ void KWinIdleTimePoller::addTimeout(int newTimeout)
     auto timer = new QTimer();
     timer->setInterval(newTimeout);
     timer->setSingleShot(true);
-    timer->callOnTimeout(this, [newTimeout, this](){
+    timer->callOnTimeout(this, [newTimeout, this]() {
         m_idling = true;
         Q_EMIT timeoutReached(newTimeout);
     });
@@ -122,7 +121,7 @@ void KWinIdleTimePoller::stopCatchingIdleEvents()
 void KWinIdleTimePoller::simulateUserActivity()
 {
     if (waylandServer()->idle()->isInhibited()) {
-        return ;
+        return;
     }
     processActivity();
     waylandServer()->simulateUserActivity();
@@ -133,7 +132,7 @@ void KWinIdleTimePoller::removeTimeout(int nextTimeout)
     delete m_timeouts.take(nextTimeout);
 }
 
-QList< int > KWinIdleTimePoller::timeouts() const
+QList<int> KWinIdleTimePoller::timeouts() const
 {
     return m_timeouts.keys();
 }

@@ -19,15 +19,15 @@ class PresentWindowsEffect;
 class PresentWindowsEffectProxy
 {
 public:
-    explicit PresentWindowsEffectProxy(PresentWindowsEffect* effect);
+    explicit PresentWindowsEffectProxy(PresentWindowsEffect *effect);
     ~PresentWindowsEffectProxy();
 
-    void calculateWindowTransformations(EffectWindowList windows, EffectScreen *screen, WindowMotionManager& manager);
+    void calculateWindowTransformations(EffectWindowList windows, EffectScreen *screen, WindowMotionManager &manager);
 
     void reCreateGrids();
 
 private:
-    PresentWindowsEffect* m_effect;
+    PresentWindowsEffect *m_effect;
 };
 
 } // namespace

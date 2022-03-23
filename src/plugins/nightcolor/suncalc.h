@@ -10,8 +10,8 @@
 #define KWIN_SUNCALCULATOR_H
 
 #include <QDate>
-#include <QTime>
 #include <QPair>
+#include <QTime>
 
 namespace KWin
 {

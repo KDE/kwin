@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include <kwinglutils_export.h>
 #include <kwingltexture.h>
+#include <kwinglutils_export.h>
 
 typedef void *EGLImageKHR;
 typedef void *EGLDisplay;
@@ -31,4 +31,3 @@ private:
 };
 
 }
-

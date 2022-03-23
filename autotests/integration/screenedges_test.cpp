@@ -14,8 +14,8 @@
 #include "cursor.h"
 #include "effectloader.h"
 #include "main.h"
-#include "screenedge.h"
 #include "platform.h"
+#include "screenedge.h"
 #include "wayland_server.h"
 #include "workspace.h"
 

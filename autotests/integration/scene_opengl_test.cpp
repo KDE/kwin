@@ -12,7 +12,10 @@ class SceneOpenGLTest : public GenericSceneOpenGLTest
 {
     Q_OBJECT
 public:
-    SceneOpenGLTest() : GenericSceneOpenGLTest(QByteArrayLiteral("O2")) {}
+    SceneOpenGLTest()
+        : GenericSceneOpenGLTest(QByteArrayLiteral("O2"))
+    {
+    }
 };
 
 WAYLANDTEST_MAIN(SceneOpenGLTest)

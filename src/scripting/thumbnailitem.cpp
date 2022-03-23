@@ -20,9 +20,9 @@
 #include <kwingltexture.h>
 #include <kwinglutils.h>
 
-#include <QSGImageNode>
-#include <QRunnable>
 #include <QQuickWindow>
+#include <QRunnable>
+#include <QSGImageNode>
 #include <QSGTextureProvider>
 
 namespace KWin
@@ -309,7 +309,7 @@ void WindowThumbnailItem::setClient(AbstractClient *client)
         disconnect(m_client, &AbstractClient::damaged,
                    this, &WindowThumbnailItem::invalidateOffscreenTexture);
         disconnect(m_client, &AbstractClient::frameGeometryChanged,
-                this, &WindowThumbnailItem::updateImplicitSize);
+                   this, &WindowThumbnailItem::updateImplicitSize);
     }
     m_client = client;
     if (m_client) {

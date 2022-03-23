@@ -10,9 +10,9 @@
 
 #include "drm_object.h"
 
-#include <qobjectdefs.h>
-#include <QSharedPointer>
 #include <QMap>
+#include <QSharedPointer>
+#include <qobjectdefs.h>
 
 namespace KWin
 {
@@ -53,12 +53,12 @@ public:
     Q_ENUM(TypeIndex)
 
     enum class Transformation : uint32_t {
-        Rotate0     = 1 << 0,
-        Rotate90    = 1 << 1,
-        Rotate180   = 1 << 2,
-        Rotate270   = 1 << 3,
-        ReflectX    = 1 << 4,
-        ReflectY    = 1 << 5
+        Rotate0 = 1 << 0,
+        Rotate90 = 1 << 1,
+        Rotate180 = 1 << 2,
+        Rotate270 = 1 << 3,
+        ReflectX = 1 << 4,
+        ReflectY = 1 << 5
     };
     Q_ENUM(Transformation)
     Q_DECLARE_FLAGS(Transformations, Transformation);
@@ -96,4 +96,3 @@ private:
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::DrmPlane::Transformations)
-

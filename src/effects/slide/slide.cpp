@@ -67,11 +67,11 @@ inline QRegion buildClipRegion(const QPoint &pos, int w, int h)
     const QSize screenSize = effects->virtualScreenSize();
     QRegion r = QRect(pos, screenSize);
     if (effects->optionRollOverDesktops()) {
-        r |= (r & QRect(-w, 0, w, h)).translated(w, 0);  // W
-        r |= (r & QRect(w, 0, w, h)).translated(-w, 0);  // E
+        r |= (r & QRect(-w, 0, w, h)).translated(w, 0); // W
+        r |= (r & QRect(w, 0, w, h)).translated(-w, 0); // E
 
-        r |= (r & QRect(0, -h, w, h)).translated(0, h);  // N
-        r |= (r & QRect(0, h, w, h)).translated(0, -h);  // S
+        r |= (r & QRect(0, -h, w, h)).translated(0, h); // N
+        r |= (r & QRect(0, h, w, h)).translated(0, -h); // S
 
         r |= (r & QRect(-w, -h, w, h)).translated(w, h); // NW
         r |= (r & QRect(w, -h, w, h)).translated(-w, h); // NE
@@ -130,15 +130,15 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
  */
 inline void wrapDiff(QPoint &diff, int w, int h)
 {
-    if (diff.x() > w/2) {
+    if (diff.x() > w / 2) {
         diff.setX(diff.x() - w);
-    } else if (diff.x() < -w/2) {
+    } else if (diff.x() < -w / 2) {
         diff.setX(diff.x() + w);
     }
 
-    if (diff.y() > h/2) {
+    if (diff.y() > h / 2) {
         diff.setY(diff.y() - h);
-    } else if (diff.y() < -h/2) {
+    } else if (diff.y() < -h / 2) {
         diff.setY(diff.y() + h);
     }
 }

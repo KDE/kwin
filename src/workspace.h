@@ -64,14 +64,15 @@ public:
     explicit Workspace();
     ~Workspace() override;
 
-    static Workspace* self() {
+    static Workspace *self()
+    {
         return _self;
     }
 
-    bool workspaceEvent(xcb_generic_event_t*);
-    bool workspaceEvent(QEvent*);
+    bool workspaceEvent(xcb_generic_event_t *);
+    bool workspaceEvent(QEvent *);
 
-    bool hasClient(const AbstractClient*);
+    bool hasClient(const AbstractClient *);
 
     /**
      * @brief Finds the first Client matching the condition expressed by passed in @p func.
@@ -101,8 +102,8 @@ public:
      * @return KWin::X11Client *The found Client or @c null
      * @see findClient(Predicate, xcb_window_t)
      */
-    X11Client *findClient(std::function<bool (const X11Client *)> func) const;
-    AbstractClient *findAbstractClient(std::function<bool (const AbstractClient*)> func) const;
+    X11Client *findClient(std::function<bool(const X11Client *)> func) const;
+    AbstractClient *findAbstractClient(std::function<bool(const AbstractClient *)> func) const;
     AbstractClient *findAbstractClient(const QUuid &internalId) const;
     /**
      * @brief Finds the Client matching the given match @p predicate for the given window.
@@ -113,9 +114,9 @@ public:
      * @see findClient(std::function<bool (const X11Client *)>)
      */
     X11Client *findClient(Predicate predicate, xcb_window_t w) const;
-    void forEachClient(std::function<void (X11Client *)> func);
-    void forEachAbstractClient(std::function<void (AbstractClient*)> func);
-    Unmanaged *findUnmanaged(std::function<bool (const Unmanaged*)> func) const;
+    void forEachClient(std::function<void(X11Client *)> func);
+    void forEachAbstractClient(std::function<void(AbstractClient *)> func);
+    Unmanaged *findUnmanaged(std::function<bool(const Unmanaged *)> func) const;
     /**
      * @brief Finds the Unmanaged with the given window id.
      *
@@ -123,9 +124,9 @@ public:
      * @return KWin::Unmanaged* Found Unmanaged or @c null if there is no Unmanaged with given Id.
      */
     Unmanaged *findUnmanaged(xcb_window_t w) const;
-    void forEachUnmanaged(std::function<void (Unmanaged*)> func);
-    Toplevel *findToplevel(std::function<bool (const Toplevel*)> func) const;
-    void forEachToplevel(std::function<void (Toplevel *)> func);
+    void forEachUnmanaged(std::function<void(Unmanaged *)> func);
+    Toplevel *findToplevel(std::function<bool(const Toplevel *)> func) const;
+    void forEachToplevel(std::function<void(Toplevel *)> func);
 
     Toplevel *findToplevel(const QUuid &internalId) const;
 
@@ -140,7 +141,7 @@ public:
     Toplevel *findInternal(QWindow *w) const;
 
     QRect clientArea(clientAreaOption, const AbstractOutput *output, const VirtualDesktop *desktop) const;
-    QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
+    QRect clientArea(clientAreaOption, const QPoint &p, int desktop) const;
     QRect clientArea(clientAreaOption, const Toplevel *window) const;
     QRect clientArea(clientAreaOption, const Toplevel *window, const AbstractOutput *output) const;
     QRect clientArea(clientAreaOption, const Toplevel *window, const QPoint &pos) const;
@@ -162,51 +163,52 @@ public:
      * Returns the active client, i.e. the client that has the focus (or None
      * if no client has the focus)
      */
-    AbstractClient* activeClient() const;
+    AbstractClient *activeClient() const;
     /**
      * Client that was activated, but it's not yet really activeClient(), because
      * we didn't process yet the matching FocusIn event. Used mostly in focus
      * stealing prevention code.
      */
-    AbstractClient* mostRecentlyActivatedClient() const;
+    AbstractClient *mostRecentlyActivatedClient() const;
 
     AbstractClient *clientUnderMouse(AbstractOutput *output) const;
 
-    void activateClient(AbstractClient*, bool force = false);
-    bool requestFocus(AbstractClient* c, bool force = false);
+    void activateClient(AbstractClient *, bool force = false);
+    bool requestFocus(AbstractClient *c, bool force = false);
     enum ActivityFlag {
         ActivityFocus = 1 << 0, // focus the window
         ActivityFocusForce = 1 << 1 | ActivityFocus, // focus even if Dock etc.
         ActivityRaise = 1 << 2 // raise the window
     };
     Q_DECLARE_FLAGS(ActivityFlags, ActivityFlag)
-    bool takeActivity(AbstractClient* c, ActivityFlags flags);
-    bool allowClientActivation(const AbstractClient* c, xcb_timestamp_t time = -1U, bool focus_in = false,
+    bool takeActivity(AbstractClient *c, ActivityFlags flags);
+    bool allowClientActivation(const AbstractClient *c, xcb_timestamp_t time = -1U, bool focus_in = false,
                                bool ignore_desktop = false);
     bool restoreFocus();
-    void gotFocusIn(const AbstractClient*);
-    void setShouldGetFocus(AbstractClient*);
-    bool activateNextClient(AbstractClient* c);
-    bool focusChangeEnabled() {
+    void gotFocusIn(const AbstractClient *);
+    void setShouldGetFocus(AbstractClient *);
+    bool activateNextClient(AbstractClient *c);
+    bool focusChangeEnabled()
+    {
         return block_focus == 0;
     }
 
     /**
      * Indicates that the client c is being moved or resized by the user.
      */
-    void setMoveResizeClient(AbstractClient* c);
+    void setMoveResizeClient(AbstractClient *c);
 
     QRect adjustClientArea(AbstractClient *client, const QRect &area) const;
-    QPoint adjustClientPosition(AbstractClient* c, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
-    QRect adjustClientSize(AbstractClient* c, QRect moveResizeGeom, Gravity gravity);
-    void raiseClient(AbstractClient* c, bool nogroup = false);
-    void lowerClient(AbstractClient* c, bool nogroup = false);
-    void raiseClientRequest(AbstractClient* c, NET::RequestSource src = NET::FromApplication, xcb_timestamp_t timestamp = 0);
+    QPoint adjustClientPosition(AbstractClient *c, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
+    QRect adjustClientSize(AbstractClient *c, QRect moveResizeGeom, Gravity gravity);
+    void raiseClient(AbstractClient *c, bool nogroup = false);
+    void lowerClient(AbstractClient *c, bool nogroup = false);
+    void raiseClientRequest(AbstractClient *c, NET::RequestSource src = NET::FromApplication, xcb_timestamp_t timestamp = 0);
     void lowerClientRequest(X11Client *c, NET::RequestSource src, xcb_timestamp_t timestamp);
-    void lowerClientRequest(AbstractClient* c);
-    void restackClientUnderActive(AbstractClient*);
+    void lowerClientRequest(AbstractClient *c);
+    void restackClientUnderActive(AbstractClient *);
     void restack(AbstractClient *c, AbstractClient *under, bool force = false);
-    void raiseOrLowerClient(AbstractClient*);
+    void raiseOrLowerClient(AbstractClient *);
     void resetUpdateToolWindowsTimer();
     void restoreSessionStackingOrder(X11Client *c);
     void updateStackingOrder(bool propagate_new_clients = false);
@@ -215,38 +217,43 @@ public:
     void constrain(AbstractClient *below, AbstractClient *above);
     void unconstrain(AbstractClient *below, AbstractClient *above);
 
-    void clientHidden(AbstractClient*);
-    void clientAttentionChanged(AbstractClient* c, bool set);
+    void clientHidden(AbstractClient *);
+    void clientAttentionChanged(AbstractClient *c, bool set);
 
     /**
      * @return List of clients currently managed by Workspace
      */
-    const QList<X11Client *> &clientList() const {
+    const QList<X11Client *> &clientList() const
+    {
         return m_x11Clients;
     }
     /**
      * @return List of unmanaged "clients" currently registered in Workspace
      */
-    const QList<Unmanaged *> &unmanagedList() const {
+    const QList<Unmanaged *> &unmanagedList() const
+    {
         return m_unmanaged;
     }
     /**
      * @return List of deleted "clients" currently managed by Workspace
      */
-    const QList<Deleted *> &deletedList() const {
+    const QList<Deleted *> &deletedList() const
+    {
         return deleted;
     }
     /**
      * @returns List of all clients (either X11 or Wayland) currently managed by Workspace
      */
-    const QList<AbstractClient*> allClientList() const {
+    const QList<AbstractClient *> allClientList() const
+    {
         return m_allClients;
     }
 
     /**
      * @returns List of all internal clients currently managed by Workspace
      */
-    const QList<InternalClient *> &internalClients() const {
+    const QList<InternalClient *> &internalClients() const
+    {
         return m_internalClients;
     }
 
@@ -281,20 +288,22 @@ public:
     const QList<Toplevel *> &stackingOrder() const;
     QList<Toplevel *> xStackingOrder() const;
     QList<X11Client *> ensureStackingOrder(const QList<X11Client *> &clients) const;
-    QList<AbstractClient*> ensureStackingOrder(const QList<AbstractClient*> &clients) const;
+    QList<AbstractClient *> ensureStackingOrder(const QList<AbstractClient *> &clients) const;
 
     AbstractClient *topClientOnDesktop(VirtualDesktop *desktop, AbstractOutput *output = nullptr, bool unconstrained = false,
                                        bool only_normal = true) const;
     AbstractClient *findDesktop(bool topmost, VirtualDesktop *desktop) const;
-    void sendClientToDesktop(AbstractClient* c, int desktop, bool dont_activate);
-    void windowToPreviousDesktop(AbstractClient* c);
-    void windowToNextDesktop(AbstractClient* c);
+    void sendClientToDesktop(AbstractClient *c, int desktop, bool dont_activate);
+    void windowToPreviousDesktop(AbstractClient *c);
+    void windowToNextDesktop(AbstractClient *c);
     void sendClientToOutput(AbstractClient *client, AbstractOutput *output);
 
-    void addManualOverlay(xcb_window_t id) {
+    void addManualOverlay(xcb_window_t id)
+    {
         manual_overlays << id;
     }
-    void removeManualOverlay(xcb_window_t id) {
+    void removeManualOverlay(xcb_window_t id)
+    {
         manual_overlays.removeOne(id);
     }
 
@@ -302,15 +311,16 @@ public:
      * Shows the menu operations menu for the client and makes it active if
      * it's not already.
      */
-    void showWindowMenu(const QRect& pos, AbstractClient* cl);
-    const UserActionsMenu *userActionsMenu() const {
+    void showWindowMenu(const QRect &pos, AbstractClient *cl);
+    const UserActionsMenu *userActionsMenu() const
+    {
         return m_userActionsMenu;
     }
 
     void showApplicationMenu(const QRect &pos, AbstractClient *c, int actionId);
 
-    void updateMinimizedOfTransients(AbstractClient*);
-    void updateOnAllDesktopsOfTransients(AbstractClient*);
+    void updateMinimizedOfTransients(AbstractClient *);
+    void updateOnAllDesktopsOfTransients(AbstractClient *);
     void checkTransients(xcb_window_t w);
 
     void storeSession(const QString &sessionName, SMSavePhase phase);
@@ -318,7 +328,7 @@ public:
     void storeSubSession(const QString &name, QSet<QByteArray> sessionIds);
     void loadSubSessionInfo(const QString &name);
 
-    SessionInfo* takeSessionInfo(X11Client *);
+    SessionInfo *takeSessionInfo(X11Client *);
 
     // D-Bus interface
     QString supportInformation() const;
@@ -330,23 +340,23 @@ public:
     void setShowingDesktop(bool showing);
     bool showingDesktop() const;
 
-    void removeX11Client(X11Client *);   // Only called from X11Client::destroyClient() or X11Client::releaseWindow()
-    void setActiveClient(AbstractClient*);
-    Group* findGroup(xcb_window_t leader) const;
-    void addGroup(Group* group);
-    void removeGroup(Group* group);
-    Group* findClientLeaderGroup(const X11Client *c) const;
+    void removeX11Client(X11Client *); // Only called from X11Client::destroyClient() or X11Client::releaseWindow()
+    void setActiveClient(AbstractClient *);
+    Group *findGroup(xcb_window_t leader) const;
+    void addGroup(Group *group);
+    void removeGroup(Group *group);
+    Group *findClientLeaderGroup(const X11Client *c) const;
 
-    void removeUnmanaged(Unmanaged*);   // Only called from Unmanaged::release()
-    void removeDeleted(Deleted*);
-    void addDeleted(Deleted*, Toplevel*);
+    void removeUnmanaged(Unmanaged *); // Only called from Unmanaged::release()
+    void removeDeleted(Deleted *);
+    void addDeleted(Deleted *, Toplevel *);
 
-    bool checkStartupNotification(xcb_window_t w, KStartupInfoId& id, KStartupInfoData& data);
+    bool checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KStartupInfoData &data);
 
     void focusToNull(); // SELI TODO: Public?
 
-    void clientShortcutUpdated(AbstractClient* c);
-    bool shortcutAvailable(const QKeySequence &cut, AbstractClient* ignore = nullptr) const;
+    void clientShortcutUpdated(AbstractClient *c);
+    bool shortcutAvailable(const QKeySequence &cut, AbstractClient *ignore = nullptr) const;
     bool globalShortcutsDisabled() const;
     void disableGlobalShortcutsForClient(bool disable);
 
@@ -359,7 +369,7 @@ public:
     int packPositionDown(const AbstractClient *client, int oldY, bool bottomEdge) const;
 
     void cancelDelayFocus();
-    void requestDelayFocus(AbstractClient*);
+    void requestDelayFocus(AbstractClient *);
 
     /**
      * updates the mouse position to track whether a focus follow mouse focus change was caused by
@@ -368,7 +378,7 @@ public:
      * since an active window doesn't receive mouse events, it must also be invoked if a (potentially)
      * active window might be moved/resize away from the cursor (causing a leave event)
      */
-    void updateFocusMousePosition(const QPoint& pos);
+    void updateFocusMousePosition(const QPoint &pos);
     QPoint focusMousePosition() const;
 
     /**
@@ -376,7 +386,8 @@ public:
      *
      * If none of clients is being moved or resized, @c null will be returned.
      */
-    AbstractClient* moveResizeClient() {
+    AbstractClient *moveResizeClient()
+    {
         return movingClient;
     }
 
@@ -392,7 +403,8 @@ public:
     };
     void switchWindow(Direction direction);
 
-    ShortcutDialog *shortcutDialog() const {
+    ShortcutDialog *shortcutDialog() const
+    {
         return client_keys_dialog;
     }
 
@@ -417,12 +429,12 @@ public:
     void removeInternalClient(InternalClient *client);
 
 public Q_SLOTS:
-    void performWindowOperation(KWin::AbstractClient* c, Options::WindowOperation op);
+    void performWindowOperation(KWin::AbstractClient *c, Options::WindowOperation op);
     // Keybindings
-    //void slotSwitchToWindow( int );
+    // void slotSwitchToWindow( int );
     void slotWindowToDesktop(VirtualDesktop *desktop);
 
-    //void slotWindowToListPosition( int );
+    // void slotWindowToListPosition( int );
     void slotSwitchToScreen();
     void slotWindowToScreen();
     void slotSwitchToNextScreen();
@@ -504,19 +516,19 @@ Q_SIGNALS:
     void workspaceInitialized();
     void geometryChanged();
 
-    //Signals required for the scripting interface
-    void desktopPresenceChanged(KWin::AbstractClient*, int);
+    // Signals required for the scripting interface
+    void desktopPresenceChanged(KWin::AbstractClient *, int);
     void currentActivityChanged();
-    void currentDesktopChanged(int, KWin::AbstractClient*);
+    void currentDesktopChanged(int, KWin::AbstractClient *);
     void clientAdded(KWin::AbstractClient *);
-    void clientRemoved(KWin::AbstractClient*);
-    void clientActivated(KWin::AbstractClient*);
-    void clientDemandsAttentionChanged(KWin::AbstractClient*, bool);
-    void clientMinimizedChanged(KWin::AbstractClient*);
-    void groupAdded(KWin::Group*);
-    void unmanagedAdded(KWin::Unmanaged*);
-    void unmanagedRemoved(KWin::Unmanaged*);
-    void deletedRemoved(KWin::Deleted*);
+    void clientRemoved(KWin::AbstractClient *);
+    void clientActivated(KWin::AbstractClient *);
+    void clientDemandsAttentionChanged(KWin::AbstractClient *, bool);
+    void clientMinimizedChanged(KWin::AbstractClient *);
+    void groupAdded(KWin::Group *);
+    void unmanagedAdded(KWin::Unmanaged *);
+    void unmanagedRemoved(KWin::Unmanaged *);
+    void deletedRemoved(KWin::Deleted *);
     void configChanged();
     void showingDesktopChanged(bool showing);
     /**
@@ -540,19 +552,19 @@ private:
     void initializeX11();
     void cleanupX11();
     void initShortcuts();
-    template <typename Slot>
+    template<typename Slot>
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut,
                       Slot slot, const QVariant &data = QVariant());
-    template <typename T, typename Slot>
+    template<typename T, typename Slot>
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, const QVariant &data = QVariant());
-    void setupWindowShortcut(AbstractClient* c);
+    void setupWindowShortcut(AbstractClient *c);
     bool switchWindow(AbstractClient *c, Direction direction, QPoint curPos, VirtualDesktop *desktop);
 
-    void propagateClients(bool propagate_new_clients);   // Called only from updateStackingOrder
+    void propagateClients(bool propagate_new_clients); // Called only from updateStackingOrder
     QList<Toplevel *> constrainedStackingOrder();
-    void raiseClientWithinApplication(AbstractClient* c);
-    void lowerClientWithinApplication(AbstractClient* c);
-    bool allowFullClientRaising(const AbstractClient* c, xcb_timestamp_t timestamp);
+    void raiseClientWithinApplication(AbstractClient *c);
+    void lowerClientWithinApplication(AbstractClient *c);
+    bool allowFullClientRaising(const AbstractClient *c, xcb_timestamp_t timestamp);
     void blockStackingUpdates(bool block);
     void updateToolWindows(bool also_hide);
     void fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geom);
@@ -565,8 +577,8 @@ private:
     X11Client *createClient(xcb_window_t w, bool is_mapped);
     void setupClientConnections(AbstractClient *client);
     void addClient(X11Client *c);
-    Unmanaged* createUnmanaged(xcb_window_t w);
-    void addUnmanaged(Unmanaged* c);
+    Unmanaged *createUnmanaged(xcb_window_t w);
+    void addUnmanaged(Unmanaged *c);
 
     void addShellClient(AbstractClient *client);
     void removeShellClient(AbstractClient *client);
@@ -592,43 +604,43 @@ private:
     };
 
     QList<Constraint *> m_constraints;
-    QWidget* active_popup;
-    AbstractClient* active_popup_client;
+    QWidget *active_popup;
+    AbstractClient *active_popup_client;
 
     int m_initialDesktop;
     void loadSessionInfo(const QString &sessionName);
     void addSessionInfo(KConfigGroup &cg);
 
-    QList<SessionInfo*> session;
+    QList<SessionInfo *> session;
 
     void updateXStackingOrder();
     void updateTabbox();
 
     AbstractOutput *m_activeOutput = nullptr;
-    AbstractClient* active_client;
-    AbstractClient* last_active_client;
-    AbstractClient* movingClient;
+    AbstractClient *active_client;
+    AbstractClient *last_active_client;
+    AbstractClient *movingClient;
 
     // Delay(ed) window focus timer and client
-    QTimer* delayFocusTimer;
-    AbstractClient* delayfocus_client;
+    QTimer *delayFocusTimer;
+    AbstractClient *delayfocus_client;
     QPoint focusMousePos;
 
     QList<X11Client *> m_x11Clients;
-    QList<AbstractClient*> m_allClients;
+    QList<AbstractClient *> m_allClients;
     QList<Unmanaged *> m_unmanaged;
     QList<Deleted *> deleted;
     QList<InternalClient *> m_internalClients;
 
     QList<Toplevel *> unconstrained_stacking_order; // Topmost last
     QList<Toplevel *> stacking_order; // Topmost last
-    QVector<xcb_window_t> manual_overlays; //Topmost last
+    QVector<xcb_window_t> manual_overlays; // Topmost last
     bool force_restacking;
     QList<Toplevel *> x_stacking; // From XQueryTree()
     std::unique_ptr<Xcb::Tree> m_xStackingQueryTree;
     bool m_xStackingDirty = false;
-    QList<AbstractClient*> should_get_focus; // Last is most recent
-    QList<AbstractClient*> attention_chain;
+    QList<AbstractClient *> should_get_focus; // Last is most recent
+    QList<AbstractClient *> attention_chain;
 
     bool showing_desktop;
 
@@ -650,8 +662,8 @@ private:
 
     void modalActionsSwitch(bool enabled);
 
-    ShortcutDialog* client_keys_dialog;
-    AbstractClient* client_keys_client;
+    ShortcutDialog *client_keys_dialog;
+    AbstractClient *client_keys_client;
     bool global_shortcuts_disabled_for_client;
 
     // Timer to collect requests for 'reconfigure'
@@ -659,7 +671,7 @@ private:
 
     QTimer updateToolWindowsTimer;
 
-    static Workspace* _self;
+    static Workspace *_self;
 
     bool workspaceInit;
 
@@ -687,6 +699,7 @@ private:
     QScopedPointer<X11EventFilter> m_syncAlarmFilter;
 
     SessionManager *m_sessionManager;
+
 private:
     friend bool performTransiencyCheck();
     friend Workspace *workspace();
@@ -698,16 +711,18 @@ private:
 class StackingUpdatesBlocker
 {
 public:
-    explicit StackingUpdatesBlocker(Workspace* w)
-        : ws(w) {
+    explicit StackingUpdatesBlocker(Workspace *w)
+        : ws(w)
+    {
         ws->blockStackingUpdates(true);
     }
-    ~StackingUpdatesBlocker() {
+    ~StackingUpdatesBlocker()
+    {
         ws->blockStackingUpdates(false);
     }
 
 private:
-    Workspace* ws;
+    Workspace *ws;
 };
 
 class ColorMapper : public QObject
@@ -718,6 +733,7 @@ public:
     ~ColorMapper() override;
 public Q_SLOTS:
     void update();
+
 private:
     xcb_colormap_t m_default;
     xcb_colormap_t m_installed;
@@ -741,13 +757,13 @@ inline AbstractClient *Workspace::mostRecentlyActivatedClient() const
     return should_get_focus.count() > 0 ? should_get_focus.last() : active_client;
 }
 
-inline void Workspace::addGroup(Group* group)
+inline void Workspace::addGroup(Group *group)
 {
     Q_EMIT groupAdded(group);
     groups.append(group);
 }
 
-inline void Workspace::removeGroup(Group* group)
+inline void Workspace::removeGroup(Group *group)
 {
     groups.removeAll(group);
 }
@@ -781,10 +797,10 @@ inline bool Workspace::globalShortcutsDisabled() const
 inline void Workspace::forceRestacking()
 {
     force_restacking = true;
-    StackingUpdatesBlocker blocker(this);   // Do restacking if not blocked
+    StackingUpdatesBlocker blocker(this); // Do restacking if not blocked
 }
 
-inline void Workspace::updateFocusMousePosition(const QPoint& pos)
+inline void Workspace::updateFocusMousePosition(const QPoint &pos)
 {
     focusMousePos = pos;
 }
@@ -794,14 +810,12 @@ inline QPoint Workspace::focusMousePosition() const
     return focusMousePos;
 }
 
-inline
-void Workspace::forEachClient(std::function< void (X11Client *) > func)
+inline void Workspace::forEachClient(std::function<void(X11Client *)> func)
 {
     std::for_each(m_x11Clients.constBegin(), m_x11Clients.constEnd(), func);
 }
 
-inline
-void Workspace::forEachUnmanaged(std::function< void (Unmanaged*) > func)
+inline void Workspace::forEachUnmanaged(std::function<void(Unmanaged *)> func)
 {
     std::for_each(m_unmanaged.constBegin(), m_unmanaged.constEnd(), func);
 }

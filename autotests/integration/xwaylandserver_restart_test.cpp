@@ -5,6 +5,7 @@
 */
 
 #include "kwin_wayland_test.h"
+
 #include "composite.h"
 #include "main.h"
 #include "platform.h"

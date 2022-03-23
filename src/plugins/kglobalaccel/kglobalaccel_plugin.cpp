@@ -36,7 +36,9 @@ void KGlobalAccelImpl::setEnabled(bool enabled)
         qFatal("This plugin is intended to be used with KWin and this is not KWin, exiting now");
     } else {
         if (!m_inputDestroyedConnection) {
-            m_inputDestroyedConnection = connect(s_input, &QObject::destroyed, this, [this] { m_shuttingDown = true; });
+            m_inputDestroyedConnection = connect(s_input, &QObject::destroyed, this, [this] {
+                m_shuttingDown = true;
+            });
         }
     }
     s_input->registerGlobalAccel(enabled ? this : nullptr);

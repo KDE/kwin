@@ -5,6 +5,7 @@
 */
 
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "main.h"
@@ -84,7 +85,7 @@ void LayerShellV1ClientTest::testOutput_data()
 {
     QTest::addColumn<int>("screenId");
 
-    QTest::addRow("first output")  << 0;
+    QTest::addRow("first output") << 0;
     QTest::addRow("second output") << 1;
 }
 
@@ -127,33 +128,29 @@ void LayerShellV1ClientTest::testAnchor_data()
     QTest::addColumn<int>("anchor");
     QTest::addColumn<QRect>("expectedGeometry");
 
-    QTest::addRow("left")         << int(Test::LayerSurfaceV1::anchor_left)
-                                  << QRect(0, 450, 280, 124);
+    QTest::addRow("left") << int(Test::LayerSurfaceV1::anchor_left)
+                          << QRect(0, 450, 280, 124);
 
-    QTest::addRow("top left")     << (Test::LayerSurfaceV1::anchor_top |
-                                      Test::LayerSurfaceV1::anchor_left)
-                                  << QRect(0, 0, 280, 124);
+    QTest::addRow("top left") << (Test::LayerSurfaceV1::anchor_top | Test::LayerSurfaceV1::anchor_left)
+                              << QRect(0, 0, 280, 124);
 
-    QTest::addRow("top")          << int(Test::LayerSurfaceV1::anchor_top)
-                                  << QRect(500, 0, 280, 124);
+    QTest::addRow("top") << int(Test::LayerSurfaceV1::anchor_top)
+                         << QRect(500, 0, 280, 124);
 
-    QTest::addRow("top right")    << (Test::LayerSurfaceV1::anchor_top |
-                                      Test::LayerSurfaceV1::anchor_right)
-                                  << QRect(1000, 0, 280, 124);
+    QTest::addRow("top right") << (Test::LayerSurfaceV1::anchor_top | Test::LayerSurfaceV1::anchor_right)
+                               << QRect(1000, 0, 280, 124);
 
-    QTest::addRow("right")        << int(Test::LayerSurfaceV1::anchor_right)
-                                  << QRect(1000, 450, 280, 124);
+    QTest::addRow("right") << int(Test::LayerSurfaceV1::anchor_right)
+                           << QRect(1000, 450, 280, 124);
 
-    QTest::addRow("bottom right") << (Test::LayerSurfaceV1::anchor_bottom |
-                                      Test::LayerSurfaceV1::anchor_right)
+    QTest::addRow("bottom right") << (Test::LayerSurfaceV1::anchor_bottom | Test::LayerSurfaceV1::anchor_right)
                                   << QRect(1000, 900, 280, 124);
 
-    QTest::addRow("bottom")       << int(Test::LayerSurfaceV1::anchor_bottom)
-                                  << QRect(500, 900, 280, 124);
+    QTest::addRow("bottom") << int(Test::LayerSurfaceV1::anchor_bottom)
+                            << QRect(500, 900, 280, 124);
 
-    QTest::addRow("bottom left")  << (Test::LayerSurfaceV1::anchor_bottom |
-                                      Test::LayerSurfaceV1::anchor_left)
-                                  << QRect(0, 900, 280, 124);
+    QTest::addRow("bottom left") << (Test::LayerSurfaceV1::anchor_bottom | Test::LayerSurfaceV1::anchor_left)
+                                 << QRect(0, 900, 280, 124);
 }
 
 void LayerShellV1ClientTest::testAnchor()
@@ -194,41 +191,37 @@ void LayerShellV1ClientTest::testMargins_data()
     QTest::addColumn<QMargins>("margins");
     QTest::addColumn<QRect>("expectedGeometry");
 
-    QTest::addRow("left")         << int(Test::LayerSurfaceV1::anchor_left)
-                                  << QMargins(100, 0, 0, 0)
-                                  << QRect(100, 450, 280, 124);
+    QTest::addRow("left") << int(Test::LayerSurfaceV1::anchor_left)
+                          << QMargins(100, 0, 0, 0)
+                          << QRect(100, 450, 280, 124);
 
-    QTest::addRow("top left")     << (Test::LayerSurfaceV1::anchor_top |
-                                      Test::LayerSurfaceV1::anchor_left)
-                                  << QMargins(100, 200, 0, 0)
-                                  << QRect(100, 200, 280, 124);
+    QTest::addRow("top left") << (Test::LayerSurfaceV1::anchor_top | Test::LayerSurfaceV1::anchor_left)
+                              << QMargins(100, 200, 0, 0)
+                              << QRect(100, 200, 280, 124);
 
-    QTest::addRow("top")          << int(Test::LayerSurfaceV1::anchor_top)
-                                  << QMargins(0, 200, 0, 0)
-                                  << QRect(500, 200, 280, 124);
+    QTest::addRow("top") << int(Test::LayerSurfaceV1::anchor_top)
+                         << QMargins(0, 200, 0, 0)
+                         << QRect(500, 200, 280, 124);
 
-    QTest::addRow("top right")    << (Test::LayerSurfaceV1::anchor_top |
-                                      Test::LayerSurfaceV1::anchor_right)
-                                  << QMargins(0, 200, 300, 0)
-                                  << QRect(700, 200, 280, 124);
+    QTest::addRow("top right") << (Test::LayerSurfaceV1::anchor_top | Test::LayerSurfaceV1::anchor_right)
+                               << QMargins(0, 200, 300, 0)
+                               << QRect(700, 200, 280, 124);
 
-    QTest::addRow("right")        << int(Test::LayerSurfaceV1::anchor_right)
-                                  << QMargins(0, 0, 300, 0)
-                                  << QRect(700, 450, 280, 124);
+    QTest::addRow("right") << int(Test::LayerSurfaceV1::anchor_right)
+                           << QMargins(0, 0, 300, 0)
+                           << QRect(700, 450, 280, 124);
 
-    QTest::addRow("bottom right") << (Test::LayerSurfaceV1::anchor_bottom |
-                                      Test::LayerSurfaceV1::anchor_right)
+    QTest::addRow("bottom right") << (Test::LayerSurfaceV1::anchor_bottom | Test::LayerSurfaceV1::anchor_right)
                                   << QMargins(0, 0, 300, 400)
                                   << QRect(700, 500, 280, 124);
 
-    QTest::addRow("bottom")       << int(Test::LayerSurfaceV1::anchor_bottom)
-                                  << QMargins(0, 0, 0, 400)
-                                  << QRect(500, 500, 280, 124);
+    QTest::addRow("bottom") << int(Test::LayerSurfaceV1::anchor_bottom)
+                            << QMargins(0, 0, 0, 400)
+                            << QRect(500, 500, 280, 124);
 
-    QTest::addRow("bottom left")  << (Test::LayerSurfaceV1::anchor_bottom |
-                                      Test::LayerSurfaceV1::anchor_left)
-                                  << QMargins(100, 0, 0, 400)
-                                  << QRect(100, 500, 280, 124);
+    QTest::addRow("bottom left") << (Test::LayerSurfaceV1::anchor_bottom | Test::LayerSurfaceV1::anchor_left)
+                                 << QMargins(100, 0, 0, 400)
+                                 << QRect(100, 500, 280, 124);
 }
 
 void LayerShellV1ClientTest::testMargins()
@@ -269,9 +262,9 @@ void LayerShellV1ClientTest::testLayer_data()
     QTest::addColumn<int>("protocolLayer");
     QTest::addColumn<Layer>("compositorLayer");
 
-    QTest::addRow("overlay")    << int(Test::LayerShellV1::layer_overlay)    << UnmanagedLayer;
-    QTest::addRow("top")        << int(Test::LayerShellV1::layer_top)        << AboveLayer;
-    QTest::addRow("bottom")     << int(Test::LayerShellV1::layer_bottom)     << BelowLayer;
+    QTest::addRow("overlay") << int(Test::LayerShellV1::layer_overlay) << UnmanagedLayer;
+    QTest::addRow("top") << int(Test::LayerShellV1::layer_top) << AboveLayer;
+    QTest::addRow("bottom") << int(Test::LayerShellV1::layer_bottom) << BelowLayer;
     QTest::addRow("background") << int(Test::LayerShellV1::layer_background) << DesktopLayer;
 }
 
@@ -312,9 +305,9 @@ void LayerShellV1ClientTest::testPlacementArea_data()
     QTest::addColumn<int>("exclusiveZone");
     QTest::addColumn<QRect>("placementArea");
 
-    QTest::addRow("left")   << int(Test::LayerSurfaceV1::anchor_left)   << 300 << QRect(300, 0, 980, 1024);
-    QTest::addRow("top")    << int(Test::LayerSurfaceV1::anchor_top)    << 300 << QRect(0, 300, 1280, 724);
-    QTest::addRow("right")  << int(Test::LayerSurfaceV1::anchor_right)  << 300 << QRect(0, 0, 980, 1024);
+    QTest::addRow("left") << int(Test::LayerSurfaceV1::anchor_left) << 300 << QRect(300, 0, 980, 1024);
+    QTest::addRow("top") << int(Test::LayerSurfaceV1::anchor_top) << 300 << QRect(0, 300, 1280, 724);
+    QTest::addRow("right") << int(Test::LayerSurfaceV1::anchor_right) << 300 << QRect(0, 0, 980, 1024);
     QTest::addRow("bottom") << int(Test::LayerSurfaceV1::anchor_bottom) << 300 << QRect(0, 0, 1280, 724);
 }
 
@@ -357,22 +350,17 @@ void LayerShellV1ClientTest::testFill_data()
     QTest::addColumn<QSize>("desiredSize");
     QTest::addColumn<QRect>("expectedGeometry");
 
-    QTest::addRow("horizontal") << (Test::LayerSurfaceV1::anchor_left |
-                                    Test::LayerSurfaceV1::anchor_right)
+    QTest::addRow("horizontal") << (Test::LayerSurfaceV1::anchor_left | Test::LayerSurfaceV1::anchor_right)
                                 << QSize(0, 124)
                                 << QRect(0, 450, 1280, 124);
 
-    QTest::addRow("vertical")   << (Test::LayerSurfaceV1::anchor_top |
-                                    Test::LayerSurfaceV1::anchor_bottom)
-                                << QSize(280, 0)
-                                << QRect(500, 0, 280, 1024);
+    QTest::addRow("vertical") << (Test::LayerSurfaceV1::anchor_top | Test::LayerSurfaceV1::anchor_bottom)
+                              << QSize(280, 0)
+                              << QRect(500, 0, 280, 1024);
 
-    QTest::addRow("all")        << (Test::LayerSurfaceV1::anchor_left |
-                                    Test::LayerSurfaceV1::anchor_top |
-                                    Test::LayerSurfaceV1::anchor_right |
-                                    Test::LayerSurfaceV1::anchor_bottom)
-                                << QSize(0, 0)
-                                << QRect(0, 0, 1280, 1024);
+    QTest::addRow("all") << (Test::LayerSurfaceV1::anchor_left | Test::LayerSurfaceV1::anchor_top | Test::LayerSurfaceV1::anchor_right | Test::LayerSurfaceV1::anchor_bottom)
+                         << QSize(0, 0)
+                         << QRect(0, 0, 1280, 1024);
 }
 
 void LayerShellV1ClientTest::testFill()
@@ -493,9 +481,9 @@ void LayerShellV1ClientTest::testActivate_data()
     QTest::addColumn<int>("layer");
     QTest::addColumn<bool>("active");
 
-    QTest::addRow("overlay")    << int(Test::LayerShellV1::layer_overlay)    << true;
-    QTest::addRow("top")        << int(Test::LayerShellV1::layer_top)        << true;
-    QTest::addRow("bottom")     << int(Test::LayerShellV1::layer_bottom)     << false;
+    QTest::addRow("overlay") << int(Test::LayerShellV1::layer_overlay) << true;
+    QTest::addRow("top") << int(Test::LayerShellV1::layer_top) << true;
+    QTest::addRow("bottom") << int(Test::LayerShellV1::layer_bottom) << false;
     QTest::addRow("background") << int(Test::LayerShellV1::layer_background) << false;
 }
 

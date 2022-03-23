@@ -9,47 +9,48 @@
 
 #include <QApplication>
 #include <QCheckBox>
-#include <QRadioButton>
-#include <QLabel>
-#include <QHBoxLayout>
 #include <QFormLayout>
-#include <QtDBus>
 #include <QGroupBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QRadioButton>
 #include <QScreen>
+#include <QtDBus>
 
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KWindowSystem>
 
-#include "windows.h"
 #include "kwinoptions_settings.h"
+#include "windows.h"
 #include <kwin_effects_interface.h>
 
-#include "kwinoptions_settings.h"
 #include "kwinoptions_kdeglobals_settings.h"
+#include "kwinoptions_settings.h"
 #include <KConfigDialogManager>
 
-#define  CLICK_TO_FOCUS                 0
-#define  CLICK_TO_FOCUS_MOUSE_PRECEDENT 1
-#define  FOCUS_FOLLOWS_MOUSE            2
-#define  FOCUS_FOLLOWS_MOUSE_PRECEDENT  3
-#define  FOCUS_UNDER_MOUSE              4
-#define  FOCUS_STRICTLY_UNDER_MOUSE     5
+#define CLICK_TO_FOCUS 0
+#define CLICK_TO_FOCUS_MOUSE_PRECEDENT 1
+#define FOCUS_FOLLOWS_MOUSE 2
+#define FOCUS_FOLLOWS_MOUSE_PRECEDENT 3
+#define FOCUS_UNDER_MOUSE 4
+#define FOCUS_STRICTLY_UNDER_MOUSE 5
 
 namespace
 {
 constexpr int defaultFocusPolicyIndex = CLICK_TO_FOCUS;
 }
 
-KWinFocusConfigForm::KWinFocusConfigForm(QWidget* parent)
+KWinFocusConfigForm::KWinFocusConfigForm(QWidget *parent)
     : QWidget(parent)
 {
     setupUi(parent);
 }
 
-KFocusConfig::KFocusConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget * parent)
-    : KCModule(parent), standAlone(_standAlone)
+KFocusConfig::KFocusConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
+    : KCModule(parent)
+    , standAlone(_standAlone)
     , m_ui(new KWinFocusConfigForm(this))
 {
     if (settings) {
@@ -221,14 +222,15 @@ bool KFocusConfig::isSaveNeeded() const
     return managedWidgetChangeState() || m_unmanagedChangeState;
 }
 
-KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget* parent)
+KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget *parent)
     : QWidget(parent)
 {
     setupUi(parent);
 }
 
 KAdvancedConfig::KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings, QWidget *parent)
-    : KCModule(parent), standAlone(_standAlone)
+    : KCModule(parent)
+    , standAlone(_standAlone)
     , m_ui(new KWinAdvancedConfigForm(this))
 {
     if (settings && globalSettings) {
@@ -276,7 +278,6 @@ void KAdvancedConfig::save(void)
         QDBusMessage message =
             QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
-
     }
 }
 
@@ -290,14 +291,15 @@ bool KAdvancedConfig::isSaveNeeded() const
     return managedWidgetChangeState();
 }
 
-KWinMovingConfigForm::KWinMovingConfigForm(QWidget* parent)
+KWinMovingConfigForm::KWinMovingConfigForm(QWidget *parent)
     : QWidget(parent)
 {
     setupUi(parent);
 }
 
 KMovingConfig::KMovingConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent), standAlone(_standAlone)
+    : KCModule(parent)
+    , standAlone(_standAlone)
     , m_ui(new KWinMovingConfigForm(this))
 {
     if (settings) {

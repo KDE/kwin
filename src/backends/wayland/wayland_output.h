@@ -46,12 +46,16 @@ public:
 
     void init(const QPoint &logicalPosition, const QSize &pixelSize);
 
-    virtual void lockPointer(KWayland::Client::Pointer *pointer, bool lock) {
+    virtual void lockPointer(KWayland::Client::Pointer *pointer, bool lock)
+    {
         Q_UNUSED(pointer)
         Q_UNUSED(lock)
     }
 
-    virtual bool pointerIsLocked() { return false; }
+    virtual bool pointerIsLocked()
+    {
+        return false;
+    }
 
     /**
      * @brief defines the geometry of the output
@@ -60,14 +64,17 @@ public:
      */
     void setGeometry(const QPoint &logicalPosition, const QSize &pixelSize);
 
-    KWayland::Client::Surface* surface() const {
+    KWayland::Client::Surface *surface() const
+    {
         return m_surface;
     }
 
-    bool rendered() const {
+    bool rendered() const
+    {
         return m_rendered;
     }
-    void resetRendered() {
+    void resetRendered()
+    {
         m_rendered = false;
     }
 
@@ -80,7 +87,8 @@ Q_SIGNALS:
     void frameRendered();
 
 protected:
-    WaylandBackend *backend() {
+    WaylandBackend *backend()
+    {
         return m_backend;
     }
 

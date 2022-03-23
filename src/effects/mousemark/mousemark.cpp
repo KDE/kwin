@@ -13,11 +13,11 @@
 // KConfigSkeleton
 #include "mousemarkconfig.h"
 
+#include <KGlobalAccel>
+#include <KLocalizedString>
 #include <QAction>
 #include <kwinconfig.h>
 #include <kwinglplatform.h>
-#include <KGlobalAccel>
-#include <KLocalizedString>
 
 #include <QPainter>
 
@@ -26,12 +26,12 @@
 namespace KWin
 {
 
-#define NULL_POINT (QPoint( -1, -1 )) // null point is (0,0), which is valid :-/
+#define NULL_POINT (QPoint(-1, -1)) // null point is (0,0), which is valid :-/
 
 MouseMarkEffect::MouseMarkEffect()
 {
     initConfig<MouseMarkConfig>();
-    QAction* a = new QAction(this);
+    QAction *a = new QAction(this);
     a->setObjectName(QStringLiteral("ClearMouseMarks"));
     a->setText(i18n("Clear All Mouse Marks"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F11));
@@ -68,12 +68,12 @@ void MouseMarkEffect::reconfigure(ReconfigureFlags)
     color.setAlphaF(1.0);
 }
 
-void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
+void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
-    effects->paintScreen(mask, region, data);   // paint normal screen
+    effects->paintScreen(mask, region, data); // paint normal screen
     if (marks.isEmpty() && drawing.isEmpty())
         return;
-    if ( effects->isOpenGLCompositing()) {
+    if (effects->isOpenGLCompositing()) {
         if (!GLPlatform::instance()->isGLES()) {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -132,15 +132,15 @@ void MouseMarkEffect::drawMark(QPainter *painter, const Mark &mark)
         return;
     }
     for (int i = 0; i < mark.count() - 1; ++i) {
-        painter->drawLine(mark[i], mark[i+1]);
+        painter->drawLine(mark[i], mark[i + 1]);
     }
 }
 
-void MouseMarkEffect::slotMouseChanged(const QPoint& pos, const QPoint&,
-                                   Qt::MouseButtons, Qt::MouseButtons,
-                                   Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
+void MouseMarkEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
+                                       Qt::MouseButtons, Qt::MouseButtons,
+                                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
-    if (modifiers == (Qt::META | Qt::SHIFT | Qt::CTRL)) {  // start/finish arrow
+    if (modifiers == (Qt::META | Qt::SHIFT | Qt::CTRL)) { // start/finish arrow
         if (arrow_start != NULL_POINT) {
             marks.append(createArrow(arrow_start, pos));
             arrow_start = NULL_POINT;
@@ -152,7 +152,7 @@ void MouseMarkEffect::slotMouseChanged(const QPoint& pos, const QPoint&,
     if (arrow_start != NULL_POINT)
         return;
     // TODO the shortcuts now trigger this right before they're activated
-    if (modifiers == (Qt::META | Qt::SHIFT)) {  // activated
+    if (modifiers == (Qt::META | Qt::SHIFT)) { // activated
         if (drawing.isEmpty())
             drawing.append(pos);
         if (drawing.last() == pos)
@@ -194,12 +194,12 @@ MouseMarkEffect::Mark MouseMarkEffect::createArrow(QPoint arrow_start, QPoint ar
     Mark ret;
     double angle = atan2((double)(arrow_end.y() - arrow_start.y()), (double)(arrow_end.x() - arrow_start.x()));
     ret += arrow_start + QPoint(50 * cos(angle + M_PI / 6),
-                                50 * sin(angle + M_PI / 6));   // right one
+                                50 * sin(angle + M_PI / 6)); // right one
     ret += arrow_start;
     ret += arrow_end;
     ret += arrow_start; // it's connected lines, so go back with the middle one
     ret += arrow_start + QPoint(50 * cos(angle - M_PI / 6),
-                                50 * sin(angle - M_PI / 6));   // left one
+                                50 * sin(angle - M_PI / 6)); // left one
     return ret;
 }
 
@@ -221,6 +221,4 @@ bool MouseMarkEffect::isActive() const
     return (!marks.isEmpty() || !drawing.isEmpty()) && !effects->isScreenLocked();
 }
 
-
 } // namespace
-

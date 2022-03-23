@@ -12,9 +12,9 @@
 #include "datasource.h"
 #include "selection_source.h"
 
-#include "x11client.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KWaylandServer/seat_interface.h>
 
@@ -33,8 +33,7 @@ Primary::Primary(xcb_atom_t atom, QObject *parent)
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
-    const uint32_t clipboardValues[] = { XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
-                                   XCB_EVENT_MASK_PROPERTY_CHANGE };
+    const uint32_t clipboardValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE};
     xcb_create_window(xcbConn,
                       XCB_COPY_FROM_PARENT,
                       window(),
@@ -108,7 +107,7 @@ void Primary::checkWlSource()
         removeSource();
         return;
     }
-    if (!qobject_cast<KWin::X11Client*>(workspace()->activeClient())) {
+    if (!qobject_cast<KWin::X11Client *>(workspace()->activeClient())) {
         // no active client or active client is Wayland native
         removeSource();
         return;

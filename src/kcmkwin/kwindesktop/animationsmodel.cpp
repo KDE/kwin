@@ -17,26 +17,22 @@ namespace KWin
 AnimationsModel::AnimationsModel(QObject *parent)
     : EffectsModel(parent)
 {
-    connect(this, &EffectsModel::loaded, this,
-        [this] {
-            setAnimationEnabled(modelAnimationEnabled());
-            setAnimationIndex(modelAnimationIndex());
-            loadDefaults();
+    connect(this, &EffectsModel::loaded, this, [this]() {
+        setAnimationEnabled(modelAnimationEnabled());
+        setAnimationIndex(modelAnimationIndex());
+        loadDefaults();
+    });
+    connect(this, &AnimationsModel::animationIndexChanged, this, [this]() {
+        const QModelIndex index_ = index(m_animationIndex, 0);
+        if (!index_.isValid()) {
+            return;
         }
-    );
-    connect(this, &AnimationsModel::animationIndexChanged, this,
-        [this] {
-            const QModelIndex index_ = index(m_animationIndex, 0);
-            if (!index_.isValid()) {
-                return;
-            }
-            const bool configurable = index_.data(ConfigurableRole).toBool();
-            if (configurable != m_currentConfigurable) {
-                m_currentConfigurable = configurable;
-                Q_EMIT currentConfigurableChanged();
-            }
+        const bool configurable = index_.data(ConfigurableRole).toBool();
+        if (configurable != m_currentConfigurable) {
+            m_currentConfigurable = configurable;
+            Q_EMIT currentConfigurableChanged();
         }
-    );
+    });
 }
 
 bool AnimationsModel::animationEnabled() const
@@ -166,8 +162,7 @@ bool AnimationsModel::needsSave() const
         const QModelIndex index_ = index(i, 0);
         const bool enabledConfig = kwinConfig.readEntry(
             index_.data(ServiceNameRole).toString() + QLatin1String("Enabled"),
-            index_.data(EnabledByDefaultRole).toBool()
-        );
+            index_.data(EnabledByDefaultRole).toBool());
         const bool enabled = (m_animationEnabled && i == m_animationIndex);
 
         if (enabled != enabledConfig) {

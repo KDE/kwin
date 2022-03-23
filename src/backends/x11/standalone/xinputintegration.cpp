@@ -7,21 +7,21 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "xinputintegration.h"
-#include "main.h"
-#include "logging.h"
+#include "ge_event_mem_mover.h"
 #include "gestures.h"
+#include "logging.h"
+#include "main.h"
 #include "platform.h"
 #include "screenedge.h"
 #include "x11cursor.h"
-#include "ge_event_mem_mover.h"
 
 #include "input.h"
-#include "x11eventfilter.h"
 #include "modifier_only_shortcuts.h"
+#include "x11eventfilter.h"
 #include <kwinglobals.h>
 
-#include <X11/extensions/XInput2.h>
 #include <X11/extensions/XI2proto.h>
+#include <X11/extensions/XInput2.h>
 
 #include <linux/input.h>
 
@@ -30,7 +30,7 @@ namespace KWin
 
 static inline qreal fixed1616ToReal(FP1616 val)
 {
-    return (val) * 1.0 / (1 << 16);
+    return (val)*1.0 / (1 << 16);
 }
 
 class XInputEventFilter : public X11EventFilter
@@ -38,81 +38,83 @@ class XInputEventFilter : public X11EventFilter
 public:
     XInputEventFilter(int xi_opcode)
         : X11EventFilter(XCB_GE_GENERIC, xi_opcode, QVector<int>{XI_RawMotion, XI_RawButtonPress, XI_RawButtonRelease, XI_RawKeyPress, XI_RawKeyRelease, XI_TouchBegin, XI_TouchUpdate, XI_TouchOwnership, XI_TouchEnd})
-        {}
+    {
+    }
     ~XInputEventFilter() override = default;
 
-    bool event(xcb_generic_event_t *event) override {
+    bool event(xcb_generic_event_t *event) override
+    {
         GeEventMemMover ge(event);
         switch (ge->event_type) {
         case XI_RawKeyPress: {
-            auto re = reinterpret_cast<xXIRawEvent*>(event);
+            auto re = reinterpret_cast<xXIRawEvent *>(event);
             kwinApp()->platform()->keyboardKeyPressed(re->detail - 8, re->time);
             break;
         }
         case XI_RawKeyRelease: {
-            auto re = reinterpret_cast<xXIRawEvent*>(event);
+            auto re = reinterpret_cast<xXIRawEvent *>(event);
             kwinApp()->platform()->keyboardKeyReleased(re->detail - 8, re->time);
             break;
         }
         case XI_RawButtonPress: {
-                auto e = reinterpret_cast<xXIRawEvent*>(event);
-                switch (e->detail) {
-                // TODO: this currently ignores left handed settings, for current usage not needed
-                // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
-                case XCB_BUTTON_INDEX_1:
-                    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, e->time);
-                    break;
-                case XCB_BUTTON_INDEX_2:
-                    kwinApp()->platform()->pointerButtonPressed(BTN_MIDDLE, e->time);
-                    break;
-                case XCB_BUTTON_INDEX_3:
-                    kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, e->time);
-                    break;
-                case XCB_BUTTON_INDEX_4:
-                case XCB_BUTTON_INDEX_5:
-                    // vertical axis, ignore on press
-                    break;
+            auto e = reinterpret_cast<xXIRawEvent *>(event);
+            switch (e->detail) {
+            // TODO: this currently ignores left handed settings, for current usage not needed
+            // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
+            case XCB_BUTTON_INDEX_1:
+                kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, e->time);
+                break;
+            case XCB_BUTTON_INDEX_2:
+                kwinApp()->platform()->pointerButtonPressed(BTN_MIDDLE, e->time);
+                break;
+            case XCB_BUTTON_INDEX_3:
+                kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, e->time);
+                break;
+            case XCB_BUTTON_INDEX_4:
+            case XCB_BUTTON_INDEX_5:
+                // vertical axis, ignore on press
+                break;
                 // TODO: further buttons, horizontal scrolling?
-                }
             }
+        }
             if (m_x11Cursor) {
                 m_x11Cursor->schedulePoll();
             }
             break;
         case XI_RawButtonRelease: {
-                auto e = reinterpret_cast<xXIRawEvent*>(event);
-                switch (e->detail) {
-                // TODO: this currently ignores left handed settings, for current usage not needed
-                // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
-                case XCB_BUTTON_INDEX_1:
-                    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, e->time);
-                    break;
-                case XCB_BUTTON_INDEX_2:
-                    kwinApp()->platform()->pointerButtonReleased(BTN_MIDDLE, e->time);
-                    break;
-                case XCB_BUTTON_INDEX_3:
-                    kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, e->time);
-                    break;
-                case XCB_BUTTON_INDEX_4:
-                    kwinApp()->platform()->pointerAxisVertical(120, e->time);
-                    break;
-                case XCB_BUTTON_INDEX_5:
-                    kwinApp()->platform()->pointerAxisVertical(-120, e->time);
-                    break;
+            auto e = reinterpret_cast<xXIRawEvent *>(event);
+            switch (e->detail) {
+            // TODO: this currently ignores left handed settings, for current usage not needed
+            // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
+            case XCB_BUTTON_INDEX_1:
+                kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, e->time);
+                break;
+            case XCB_BUTTON_INDEX_2:
+                kwinApp()->platform()->pointerButtonReleased(BTN_MIDDLE, e->time);
+                break;
+            case XCB_BUTTON_INDEX_3:
+                kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, e->time);
+                break;
+            case XCB_BUTTON_INDEX_4:
+                kwinApp()->platform()->pointerAxisVertical(120, e->time);
+                break;
+            case XCB_BUTTON_INDEX_5:
+                kwinApp()->platform()->pointerAxisVertical(-120, e->time);
+                break;
                 // TODO: further buttons, horizontal scrolling?
-                }
             }
+        }
             if (m_x11Cursor) {
                 m_x11Cursor->schedulePoll();
             }
             break;
         case XI_TouchBegin: {
-            auto e = reinterpret_cast<xXIDeviceEvent*>(event);
+            auto e = reinterpret_cast<xXIDeviceEvent *>(event);
             m_lastTouchPositions.insert(e->detail, QPointF(fixed1616ToReal(e->event_x), fixed1616ToReal(e->event_y)));
             break;
         }
         case XI_TouchUpdate: {
-            auto e = reinterpret_cast<xXIDeviceEvent*>(event);
+            auto e = reinterpret_cast<xXIDeviceEvent *>(event);
             const QPointF touchPosition = QPointF(fixed1616ToReal(e->event_x), fixed1616ToReal(e->event_y));
             if (e->detail == m_trackingTouchId) {
                 const auto last = m_lastTouchPositions.value(e->detail);
@@ -122,7 +124,7 @@ public:
             break;
         }
         case XI_TouchEnd: {
-            auto e = reinterpret_cast<xXIDeviceEvent*>(event);
+            auto e = reinterpret_cast<xXIDeviceEvent *>(event);
             if (e->detail == m_trackingTouchId) {
                 ScreenEdges::self()->gestureRecognizer()->endSwipeGesture();
             }
@@ -131,10 +133,10 @@ public:
             break;
         }
         case XI_TouchOwnership: {
-            auto e = reinterpret_cast<xXITouchOwnershipEvent*>(event);
+            auto e = reinterpret_cast<xXITouchOwnershipEvent *>(event);
             auto it = m_lastTouchPositions.constFind(e->touchid);
             if (it == m_lastTouchPositions.constEnd()) {
-                XIAllowTouchEvents(display(), e->deviceid,  e->sourceid, e->touchid, XIRejectTouch);
+                XIAllowTouchEvents(display(), e->deviceid, e->sourceid, e->touchid, XIRejectTouch);
             } else {
                 if (ScreenEdges::self()->gestureRecognizer()->startSwipeGesture(it.value()) > 0) {
                     m_trackingTouchId = e->touchid;
@@ -152,15 +154,18 @@ public:
         return false;
     }
 
-    void setCursor(const QPointer<X11Cursor> &cursor) {
+    void setCursor(const QPointer<X11Cursor> &cursor)
+    {
         m_x11Cursor = cursor;
     }
-    void setDisplay(Display *display) {
+    void setDisplay(Display *display)
+    {
         m_x11Display = display;
     }
 
 private:
-    Display *display() const {
+    Display *display() const
+    {
         return m_x11Display;
     }
 
@@ -175,10 +180,12 @@ class XKeyPressReleaseEventFilter : public X11EventFilter
 public:
     XKeyPressReleaseEventFilter(uint32_t type)
         : X11EventFilter(type)
-    {}
+    {
+    }
     ~XKeyPressReleaseEventFilter() override = default;
 
-    bool event(xcb_generic_event_t *event) override {
+    bool event(xcb_generic_event_t *event) override
+    {
         xcb_key_press_event_t *ke = reinterpret_cast<xcb_key_press_event_t *>(event);
         if (ke->event == ke->root) {
             const uint8_t eventType = event->response_type & ~0x80;
@@ -250,7 +257,7 @@ void XInputIntegration::startListening()
         XISetMask(mask1, XI_RawKeyPress);
         XISetMask(mask1, XI_RawKeyRelease);
     }
-    if (m_majorVersion >=2 && m_minorVersion >= 2) {
+    if (m_majorVersion >= 2 && m_minorVersion >= 2) {
         // touch events since 2.2
         XISetMask(mask1, XI_TouchBegin);
         XISetMask(mask1, XI_TouchUpdate);

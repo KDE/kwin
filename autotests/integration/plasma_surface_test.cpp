@@ -7,16 +7,17 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "abstract_output.h"
-#include "platform.h"
 #include "cursor.h"
+#include "platform.h"
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/registry.h>
@@ -239,7 +240,6 @@ void PlasmaSurfaceTest::testOSDPlacementManualPosition()
     QVERIFY(c->isOnScreenDisplay());
     QCOMPARE(c->frameGeometry(), QRect(50, 70, 100, 50));
 }
-
 
 void PlasmaSurfaceTest::testPanelTypeHasStrut_data()
 {

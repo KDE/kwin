@@ -9,17 +9,17 @@
 #ifndef KWIN_VIRTUAL_KEYBOARD_H
 #define KWIN_VIRTUAL_KEYBOARD_H
 
-#include <vector>
 #include <utility>
+#include <vector>
 
 #include <QObject>
 
-#include <kwinglobals.h>
 #include <kwin_export.h>
+#include <kwinglobals.h>
 
+#include <KWaylandServer/textinput_v2_interface.h>
 #include <QPointer>
 #include <QTimer>
-#include <KWaylandServer/textinput_v2_interface.h>
 
 class QProcess;
 
@@ -42,13 +42,17 @@ class KWIN_EXPORT InputMethod : public QObject
 {
     Q_OBJECT
 public:
-    enum ForwardModifiersForce { NoForce = 0, Force = 1 };
+    enum ForwardModifiersForce {
+        NoForce = 0,
+        Force = 1,
+    };
 
     ~InputMethod() override;
 
     void init();
     void setEnabled(bool enable);
-    bool isEnabled() const {
+    bool isEnabled() const
+    {
         return m_enabled;
     }
     bool isActive() const;
@@ -59,7 +63,7 @@ public:
     bool isAvailable() const;
 
     InputPanelV1Client *panel() const;
-    void setPanel(InputPanelV1Client* client);
+    void setPanel(InputPanelV1Client *client);
     void setInputMethodCommand(const QString &path);
 
     KWaylandServer::InputMethodGrabV1 *keyboardGrab();
@@ -109,7 +113,8 @@ private:
     bool touchEventTriggered() const;
     void resetPendingPreedit();
 
-    struct {
+    struct
+    {
         QString text = QString();
         qint32 cursor = 0;
         std::vector<std::pair<quint32, quint32>> highlightRanges;

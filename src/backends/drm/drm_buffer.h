@@ -23,7 +23,11 @@ public:
     DrmBuffer(DrmGpu *gpu, uint32_t format, uint64_t modifier);
     virtual ~DrmBuffer() = default;
 
-    virtual bool needsModeChange(DrmBuffer *b) const {Q_UNUSED(b) return false;}
+    virtual bool needsModeChange(DrmBuffer *b) const
+    {
+        Q_UNUSED(b)
+        return false;
+    }
 
     quint32 bufferId() const;
     const QSize &size() const;
@@ -64,4 +68,3 @@ private:
 }
 
 #endif
-

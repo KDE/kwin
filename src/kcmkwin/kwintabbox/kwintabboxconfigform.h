@@ -11,8 +11,8 @@
 #ifndef __KWINTABBOXCONFIGFORM_H__
 #define __KWINTABBOXCONFIGFORM_H__
 
-#include <QWidget>
 #include <QStandardItemModel>
+#include <QWidget>
 
 #include "tabboxconfig.h"
 
@@ -32,15 +32,12 @@ class KWinTabBoxConfigForm : public QWidget
     Q_OBJECT
 
 public:
-    enum class TabboxType
-    {
+    enum class TabboxType {
         Main,
         Alternative,
     };
 
-
-    enum EffectComboRole
-    {
+    enum EffectComboRole {
         LayoutPath = Qt::UserRole + 1,
         AddonEffect, // i.e not builtin effects
     };

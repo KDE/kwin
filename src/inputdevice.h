@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "kwin_export.h"
 #include "input.h"
+#include "kwin_export.h"
 
 #include <QObject>
 

@@ -36,7 +36,7 @@ void XwaylandClient::associate()
 void XwaylandClient::initialize()
 {
     if (!readyForPainting()) { // avoid "setReadyForPainting()" function calling overhead
-        if (syncRequest().counter == XCB_NONE) {  // cannot detect complete redraw, consider done now
+        if (syncRequest().counter == XCB_NONE) { // cannot detect complete redraw, consider done now
             setReadyForPainting();
             setupWindowManagementInterface();
         }

@@ -41,7 +41,7 @@ public:
     void *mappedData() const;
     uint32_t stride() const;
     KWaylandServer::ClientBuffer *clientBuffer() const;
-    gbm_bo* getBo() const;
+    gbm_bo *getBo() const;
 
 protected:
     GbmSurface *m_surface = nullptr;
@@ -70,4 +70,3 @@ private:
 }
 
 #endif
-

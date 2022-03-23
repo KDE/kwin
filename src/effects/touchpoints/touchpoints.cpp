@@ -40,8 +40,7 @@ static const Qt::GlobalColor s_colors[] = {
     Qt::gray,
     Qt::darkBlue,
     Qt::darkRed,
-    Qt::darkGreen
-};
+    Qt::darkGreen};
 
 Qt::GlobalColor TouchPointsEffect::colorForId(quint32 id)
 {
@@ -95,7 +94,7 @@ bool TouchPointsEffect::touchUp(qint32 id, quint32 time)
     return false;
 }
 
-void TouchPointsEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
+void TouchPointsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     int time = 0;
     if (m_lastPresentTime.count()) {
@@ -121,7 +120,7 @@ void TouchPointsEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::mi
     effects->prePaintScreen(data, presentTime);
 }
 
-void TouchPointsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
+void TouchPointsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     effects->paintScreen(mask, region, data);
 
@@ -167,7 +166,7 @@ void TouchPointsEffect::repaint()
         QRegion dirtyRegion;
         const int radius = m_ringMaxSize + m_lineWidth;
         for (auto it = m_points.constBegin(), end = m_points.constEnd(); it != end; ++it) {
-            dirtyRegion |= QRect(it->pos.x() - radius, it->pos.y() - radius, 2*radius, 2*radius);
+            dirtyRegion |= QRect(it->pos.x() - radius, it->pos.y() - radius, 2 * radius, 2 * radius);
         }
         effects->addRepaint(dirtyRegion);
     }
@@ -178,7 +177,7 @@ bool TouchPointsEffect::isActive() const
     return !m_points.isEmpty();
 }
 
-void TouchPointsEffect::drawCircle(const QColor& color, float cx, float cy, float r)
+void TouchPointsEffect::drawCircle(const QColor &color, float cx, float cy, float r)
 {
     if (effects->isOpenGLCompositing())
         drawCircleGl(color, cx, cy, r);
@@ -186,30 +185,30 @@ void TouchPointsEffect::drawCircle(const QColor& color, float cx, float cy, floa
         drawCircleQPainter(color, cx, cy, r);
 }
 
-void TouchPointsEffect::paintScreenSetup(int mask, QRegion region, ScreenPaintData& data)
+void TouchPointsEffect::paintScreenSetup(int mask, QRegion region, ScreenPaintData &data)
 {
     if (effects->isOpenGLCompositing())
         paintScreenSetupGl(mask, region, data);
 }
 
-void TouchPointsEffect::paintScreenFinish(int mask, QRegion region, ScreenPaintData& data)
+void TouchPointsEffect::paintScreenFinish(int mask, QRegion region, ScreenPaintData &data)
 {
     if (effects->isOpenGLCompositing())
         paintScreenFinishGl(mask, region, data);
 }
 
-void TouchPointsEffect::drawCircleGl(const QColor& color, float cx, float cy, float r)
+void TouchPointsEffect::drawCircleGl(const QColor &color, float cx, float cy, float r)
 {
     static const int num_segments = 80;
     static const float theta = 2 * 3.1415926 / float(num_segments);
-    static const float c = cosf(theta); //precalculate the sine and cosine
+    static const float c = cosf(theta); // precalculate the sine and cosine
     static const float s = sinf(theta);
     float t;
 
-    float x = r;//we start at angle = 0
+    float x = r; // we start at angle = 0
     float y = 0;
 
-    GLVertexBuffer* vbo = GLVertexBuffer::streamingBuffer();
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     vbo->setUseColor(true);
     vbo->setColor(color);
@@ -217,8 +216,8 @@ void TouchPointsEffect::drawCircleGl(const QColor& color, float cx, float cy, fl
     verts.reserve(num_segments * 2);
 
     for (int ii = 0; ii < num_segments; ++ii) {
-        verts << x + cx << y + cy;//output vertex
-        //apply the rotation matrix
+        verts << x + cx << y + cy; // output vertex
+        // apply the rotation matrix
         t = x;
         x = c * x - s * y;
         y = s * t + c * y;
@@ -246,7 +245,7 @@ void TouchPointsEffect::paintScreenSetupGl(int, QRegion, ScreenPaintData &data)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void TouchPointsEffect::paintScreenFinishGl(int, QRegion, ScreenPaintData&)
+void TouchPointsEffect::paintScreenFinishGl(int, QRegion, ScreenPaintData &)
 {
     glDisable(GL_BLEND);
 
@@ -254,4 +253,3 @@ void TouchPointsEffect::paintScreenFinishGl(int, QRegion, ScreenPaintData&)
 }
 
 } // namespace
-

@@ -11,10 +11,10 @@
 // own
 #include "netinfo.h"
 // kwin
-#include "x11client.h"
 #include "rootinfo_filter.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
+#include "x11client.h"
 // Qt
 #include <QDebug>
 
@@ -32,88 +32,88 @@ RootInfo *RootInfo::create()
     xcb_create_window(kwinApp()->x11Connection(), XCB_COPY_FROM_PARENT, supportWindow, kwinApp()->x11RootWindow(),
                       0, 0, 1, 1, 0, XCB_COPY_FROM_PARENT,
                       XCB_COPY_FROM_PARENT, XCB_CW_OVERRIDE_REDIRECT, values);
-    const uint32_t lowerValues[] = { XCB_STACK_MODE_BELOW }; // See usage in layers.cpp
+    const uint32_t lowerValues[] = {XCB_STACK_MODE_BELOW}; // See usage in layers.cpp
     // we need to do the lower window with a roundtrip, otherwise NETRootInfo is not functioning
     ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(kwinApp()->x11Connection(),
-        xcb_configure_window_checked(kwinApp()->x11Connection(), supportWindow, XCB_CONFIG_WINDOW_STACK_MODE, lowerValues)));
+                                                                xcb_configure_window_checked(kwinApp()->x11Connection(), supportWindow, XCB_CONFIG_WINDOW_STACK_MODE, lowerValues)));
     if (!error.isNull()) {
         qCDebug(KWIN_CORE) << "Error occurred while lowering support window: " << error->error_code;
     }
 
-    const NET::Properties properties = NET::Supported |
-        NET::SupportingWMCheck |
-        NET::ClientList |
-        NET::ClientListStacking |
-        NET::DesktopGeometry |
-        NET::NumberOfDesktops |
-        NET::CurrentDesktop |
-        NET::ActiveWindow |
-        NET::WorkArea |
-        NET::CloseWindow |
-        NET::DesktopNames |
-        NET::WMName |
-        NET::WMVisibleName |
-        NET::WMDesktop |
-        NET::WMWindowType |
-        NET::WMState |
-        NET::WMStrut |
-        NET::WMIconGeometry |
-        NET::WMIcon |
-        NET::WMPid |
-        NET::WMMoveResize |
-        NET::WMFrameExtents |
-        NET::WMPing;
-    const NET::WindowTypes types = NET::NormalMask |
-        NET::DesktopMask |
-        NET::DockMask |
-        NET::ToolbarMask |
-        NET::MenuMask |
-        NET::DialogMask |
-        NET::OverrideMask |
-        NET::UtilityMask |
-        NET::SplashMask; // No compositing window types here unless we support them also as managed window types
-    const NET::States states = NET::Modal |
-        //NET::Sticky | // Large desktops not supported (and probably never will be)
-        NET::MaxVert |
-        NET::MaxHoriz |
-        NET::Shaded |
-        NET::SkipTaskbar |
-        NET::KeepAbove |
-        //NET::StaysOnTop | // The same like KeepAbove
-        NET::SkipPager |
-        NET::Hidden |
-        NET::FullScreen |
-        NET::KeepBelow |
-        NET::DemandsAttention |
-        NET::SkipSwitcher |
-        NET::Focused;
-    NET::Properties2 properties2 = NET::WM2UserTime |
-        NET::WM2StartupId |
-        NET::WM2AllowedActions |
-        NET::WM2RestackWindow |
-        NET::WM2MoveResizeWindow |
-        NET::WM2ExtendedStrut |
-        NET::WM2KDETemporaryRules |
-        NET::WM2ShowingDesktop |
-        NET::WM2DesktopLayout |
-        NET::WM2FullPlacement |
-        NET::WM2FullscreenMonitors |
-        NET::WM2KDEShadow |
-        NET::WM2OpaqueRegion |
-        NET::WM2GTKFrameExtents;
+    const NET::Properties properties = NET::Supported
+        | NET::SupportingWMCheck
+        | NET::ClientList
+        | NET::ClientListStacking
+        | NET::DesktopGeometry
+        | NET::NumberOfDesktops
+        | NET::CurrentDesktop
+        | NET::ActiveWindow
+        | NET::WorkArea
+        | NET::CloseWindow
+        | NET::DesktopNames
+        | NET::WMName
+        | NET::WMVisibleName
+        | NET::WMDesktop
+        | NET::WMWindowType
+        | NET::WMState
+        | NET::WMStrut
+        | NET::WMIconGeometry
+        | NET::WMIcon
+        | NET::WMPid
+        | NET::WMMoveResize
+        | NET::WMFrameExtents
+        | NET::WMPing;
+    const NET::WindowTypes types = NET::NormalMask
+        | NET::DesktopMask
+        | NET::DockMask
+        | NET::ToolbarMask
+        | NET::MenuMask
+        | NET::DialogMask
+        | NET::OverrideMask
+        | NET::UtilityMask
+        | NET::SplashMask; // No compositing window types here unless we support them also as managed window types
+    const NET::States states = NET::Modal
+        // | NET::Sticky // Large desktops not supported (and probably never will be)
+        | NET::MaxVert
+        | NET::MaxHoriz
+        | NET::Shaded
+        | NET::SkipTaskbar
+        | NET::KeepAbove
+        // | NET::StaysOnTop // The same like KeepAbove
+        | NET::SkipPager
+        | NET::Hidden
+        | NET::FullScreen
+        | NET::KeepBelow
+        | NET::DemandsAttention
+        | NET::SkipSwitcher
+        | NET::Focused;
+    NET::Properties2 properties2 = NET::WM2UserTime
+        | NET::WM2StartupId
+        | NET::WM2AllowedActions
+        | NET::WM2RestackWindow
+        | NET::WM2MoveResizeWindow
+        | NET::WM2ExtendedStrut
+        | NET::WM2KDETemporaryRules
+        | NET::WM2ShowingDesktop
+        | NET::WM2DesktopLayout
+        | NET::WM2FullPlacement
+        | NET::WM2FullscreenMonitors
+        | NET::WM2KDEShadow
+        | NET::WM2OpaqueRegion
+        | NET::WM2GTKFrameExtents;
 #if KWIN_BUILD_ACTIVITIES
-        properties2 |= NET::WM2Activities;
+    properties2 |= NET::WM2Activities;
 #endif
-    const NET::Actions actions = NET::ActionMove |
-        NET::ActionResize |
-        NET::ActionMinimize |
-        NET::ActionShade |
-        //NET::ActionStick | // Sticky state is not supported
-        NET::ActionMaxVert |
-        NET::ActionMaxHoriz |
-        NET::ActionFullScreen |
-        NET::ActionChangeDesktop |
-        NET::ActionClose;
+    const NET::Actions actions = NET::ActionMove
+        | NET::ActionResize
+        | NET::ActionMinimize
+        | NET::ActionShade
+        // | NET::ActionStick // Sticky state is not supported
+        | NET::ActionMaxVert
+        | NET::ActionMaxHoriz
+        | NET::ActionFullScreen
+        | NET::ActionChangeDesktop
+        | NET::ActionClose;
 
     s_self = new RootInfo(supportWindow, "KWin", properties, types, states, properties2, actions, screen_number);
     return s_self;
@@ -157,7 +157,7 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
         if (src != NET::FromApplication && src != FromTool)
             src = NET::FromTool;
         if (src == NET::FromTool)
-            workspace->activateClient(c, true);   // force
+            workspace->activateClient(c, true); // force
         else if (c == workspace->mostRecentlyActivatedClient()) {
             return; // WORKAROUND? With > 1 plasma activities, we cause this ourselves. bug #240673
         } else { // NET::FromApplication
@@ -166,9 +166,9 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
                 workspace->activateClient(c);
             // if activation of the requestor's window would be allowed, allow activation too
             else if (active_window != XCB_WINDOW_NONE
-                    && (c2 = workspace->findClient(Predicate::WindowMatch, active_window)) != nullptr
-                    && workspace->allowClientActivation(c2,
-                            timestampCompare(timestamp, c2->userTime() > 0 ? timestamp : c2->userTime()), false, true)) {
+                     && (c2 = workspace->findClient(Predicate::WindowMatch, active_window)) != nullptr
+                     && workspace->allowClientActivation(c2,
+                                                         timestampCompare(timestamp, c2->userTime() > 0 ? timestamp : c2->userTime()), false, true)) {
                 workspace->activateClient(c);
             } else
                 c->demandAttention();
@@ -237,7 +237,8 @@ void RootInfo::setActiveClient(AbstractClient *client)
 
 WinInfo::WinInfo(X11Client *c, xcb_window_t window,
                  xcb_window_t rwin, NET::Properties properties, NET::Properties2 properties2)
-    : NETWinInfo(kwinApp()->x11Connection(), window, rwin, properties, properties2, NET::WindowManager), m_client(c)
+    : NETWinInfo(kwinApp()->x11Connection(), window, rwin, properties, properties2, NET::WindowManager)
+    , m_client(c)
 {
 }
 

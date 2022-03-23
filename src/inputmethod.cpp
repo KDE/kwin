@@ -6,43 +6,44 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include <config-kwin.h>
 #include "inputmethod.h"
+
+#include <config-kwin.h>
+
 #include "abstract_client.h"
-#include "virtualkeyboard_dbus.h"
 #include "input.h"
 #include "inputpanelv1client.h"
 #include "keyboard_input.h"
-#include "utils/common.h"
 #include "screens.h"
+#include "utils/common.h"
+#include "virtualkeyboard_dbus.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
 #include "deleted.h"
-#include "touch_input.h"
 #include "tablet_input.h"
+#include "touch_input.h"
 
+#include <KLocalizedString>
+#include <KShell>
 #include <KWaylandServer/display.h>
+#include <KWaylandServer/inputmethod_v1_interface.h>
 #include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/textinput_v3_interface.h>
 #include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/inputmethod_v1_interface.h>
-
-#include <KShell>
-#include <KLocalizedString>
+#include <KWaylandServer/textinput_v3_interface.h>
 
 #include <QDBusConnection>
-#include <QDBusPendingCall>
 #include <QDBusMessage>
-#include <QMenu>
+#include <QDBusPendingCall>
 #include <QKeyEvent>
+#include <QMenu>
 
 #include <linux/input-event-codes.h>
-#include <xkbcommon/xkbcommon-keysyms.h>
 #include <unistd.h>
+#include <xkbcommon/xkbcommon-keysyms.h>
 
 using namespace KWaylandServer;
 
@@ -190,7 +191,7 @@ void InputMethod::setPanel(InputPanelV1Client *client)
     Q_EMIT panelChanged();
 }
 
-void InputMethod::setTrackedClient(AbstractClient* trackedClient)
+void InputMethod::setTrackedClient(AbstractClient *trackedClient)
 {
     // Reset the old client virtual keybaord geom if necessary
     // Old and new clients could be the same if focus moves between subsurfaces
@@ -340,8 +341,7 @@ void InputMethod::setEnabled(bool enabled)
         QStringLiteral("org.kde.plasmashell"),
         QStringLiteral("/org/kde/osdService"),
         QStringLiteral("org.kde.osdService"),
-        QStringLiteral("virtualKeyboardEnabledChanged")
-    );
+        QStringLiteral("virtualKeyboardEnabledChanged"));
     msg.setArguments({enabled});
     QDBusConnection::sessionBus().asyncCall(msg);
     if (!m_enabled) {
@@ -357,7 +357,7 @@ void InputMethod::setEnabled(bool enabled)
 
 static quint32 keysymToKeycode(quint32 sym)
 {
-    switch(sym) {
+    switch (sym) {
     case XKB_KEY_BackSpace:
         return KEY_BACKSPACE;
     case XKB_KEY_Return:
@@ -520,7 +520,7 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
                 if (preedit.highlightRanges.front().first == cursor) {
                     quint32 end = preedit.highlightRanges.front().second;
                     bool nonContinousHighlight = false;
-                    for (size_t i = 1 ; i < preedit.highlightRanges.size(); i ++) {
+                    for (size_t i = 1; i < preedit.highlightRanges.size(); i++) {
                         if (end >= preedit.highlightRanges[i].first) {
                             end = std::max(end, preedit.highlightRanges[i].second);
                         } else {
@@ -752,7 +752,8 @@ bool InputMethod::isAvailable() const
     return !m_inputMethodCommand.isEmpty();
 }
 
-void InputMethod::resetPendingPreedit() {
+void InputMethod::resetPendingPreedit()
+{
     preedit.text = QString();
     preedit.cursor = 0;
     preedit.highlightRanges.clear();

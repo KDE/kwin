@@ -11,20 +11,20 @@
 #include "drag_x.h"
 
 #include "databridge.h"
+#include "datasource.h"
 #include "dnd.h"
 #include "selection_source.h"
 #include "xwayland.h"
-#include "datasource.h"
 
 #include "abstract_client.h"
 #include "atoms.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
+#include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/datasource_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/datadevice_interface.h>
 
 #include <QMouseEvent>
 #include <QTimer>
@@ -46,8 +46,8 @@ static QStringList atomToMimeTypes(xcb_atom_t atom)
     } else if (atom == atoms->text) {
         mimeTypes << QString::fromLatin1("text/plain");
     } else if (atom == atoms->uri_list || atom == atoms->netscape_url || atom == atoms->moz_url) {
-    // We identify netscape and moz format as less detailed formats text/uri-list,
-    // text/x-uri and accept the information loss.
+        // We identify netscape and moz format as less detailed formats text/uri-list,
+        // text/x-uri and accept the information loss.
         mimeTypes << QString::fromLatin1("text/uri-list") << QString::fromLatin1("text/x-uri");
     } else {
         mimeTypes << Selection::atomName(atom);
@@ -84,7 +84,7 @@ XToWlDrag::XToWlDrag(X11Source *source)
                 checkForFinished();
             });
 
-            QTimer::singleShot(2000, this, [this]{
+            QTimer::singleShot(2000, this, [this] {
                 if (!m_visit->entered() || !m_visit->dropHandled()) {
                     // X client timed out
                     Q_EMIT finish(this);
@@ -102,7 +102,7 @@ XToWlDrag::XToWlDrag(X11Source *source)
         checkForFinished();
     });
     connect(&m_selectionSource, &XwlDataSource::cancelled, this, [this] {
-        if (m_visit && !m_visit->leave())  {
+        if (m_visit && !m_visit->leave()) {
             connect(m_visit, &WlVisit::finish, this, &XToWlDrag::checkForFinished);
         }
         checkForFinished();
@@ -143,8 +143,7 @@ DragEventReply XToWlDrag::moveFilter(Toplevel *target, const QPoint &pos)
     const bool hasCurrent = m_visit;
     m_visit = nullptr;
 
-    if (!target || !target->surface() ||
-            target->surface()->client() == waylandServer()->xWaylandConnection()) {
+    if (!target || !target->surface() || target->surface()->client() == waylandServer()->xWaylandConnection()) {
         // currently there is no target or target is an Xwayland window
         // handled here and by X directly
         if (hasCurrent) {
@@ -155,7 +154,7 @@ DragEventReply XToWlDrag::moveFilter(Toplevel *target, const QPoint &pos)
         return DragEventReply::Ignore;
     }
     // new Wl native target
-    auto *ac = static_cast<AbstractClient*>(target);
+    auto *ac = static_cast<AbstractClient *>(target);
     m_visit = new WlVisit(ac, this);
     connect(m_visit, &WlVisit::offersReceived, this, &XToWlDrag::setOffers);
     return DragEventReply::Ignore;
@@ -244,7 +243,9 @@ bool XToWlDrag::checkForFinished()
         return false;
     }
     const bool transfersFinished = std::all_of(m_dataRequests.begin(), m_dataRequests.end(),
-                                               [](QPair<xcb_timestamp_t, bool> req) { return req.second; });
+                                               [](QPair<xcb_timestamp_t, bool> req) {
+                                                   return req.second;
+                                               });
     if (transfersFinished) {
         m_visit->sendFinished();
         Q_EMIT finish(this);
@@ -253,23 +254,22 @@ bool XToWlDrag::checkForFinished()
 }
 
 WlVisit::WlVisit(AbstractClient *target, XToWlDrag *drag)
-    : QObject(drag),
-      m_target(target),
-      m_drag(drag)
+    : QObject(drag)
+    , m_target(target)
+    , m_drag(drag)
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
     m_window = xcb_generate_id(xcbConn);
     DataBridge::self()->dnd()->overwriteRequestorWindow(m_window);
 
-    const uint32_t dndValues[] = { XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
-                                   XCB_EVENT_MASK_PROPERTY_CHANGE };
+    const uint32_t dndValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE};
     xcb_create_window(xcbConn,
                       XCB_COPY_FROM_PARENT,
                       m_window,
                       kwinApp()->x11RootWindow(),
                       0, 0,
-                      8192, 8192,           // TODO: get current screen size and connect to changes
+                      8192, 8192, // TODO: get current screen size and connect to changes
                       0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT,
                       XCB_COPY_FROM_PARENT,
@@ -328,7 +328,9 @@ bool WlVisit::handleClientMessage(xcb_client_message_event_t *event)
 static bool hasMimeName(const Mimes &mimes, const QString &name)
 {
     return std::any_of(mimes.begin(), mimes.end(),
-                       [name](const Mime &m) { return m.first == name; });
+                       [name](const Mime &m) {
+                           return m.first == name;
+                       });
 }
 
 bool WlVisit::handleEnter(xcb_client_message_event_t *event)
@@ -350,7 +352,7 @@ bool WlVisit::handleEnter(xcb_client_message_event_t *event)
         for (size_t i = 0; i < 3; i++) {
             xcb_atom_t mimeAtom = data->data32[2 + i];
             const auto mimeStrings = atomToMimeTypes(mimeAtom);
-            for (const auto &mime : mimeStrings ) {
+            for (const auto &mime : mimeStrings) {
                 if (!hasMimeName(offers, mime)) {
                     offers << Mime(mime, mimeAtom);
                 }
@@ -415,8 +417,7 @@ bool WlVisit::handlePosition(xcb_client_message_event_t *event)
     const xcb_timestamp_t timestamp = data->data32[3];
     m_drag->x11Source()->setTimestamp(timestamp);
 
-    xcb_atom_t actionAtom = m_version > 1 ? data->data32[4] :
-                                            atoms->xdnd_action_copy;
+    xcb_atom_t actionAtom = m_version > 1 ? data->data32[4] : atoms->xdnd_action_copy;
     auto action = Dnd::atomToClientAction(actionAtom);
 
     if (action == DnDAction::None) {

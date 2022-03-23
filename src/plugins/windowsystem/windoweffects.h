@@ -5,8 +5,8 @@
 */
 #pragma once
 #include <KWindowSystem/private/kwindoweffects_p.h>
-#include <kwindowsystem_version.h>
 #include <QObject>
+#include <kwindowsystem_version.h>
 
 namespace KWin
 {

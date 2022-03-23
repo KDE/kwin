@@ -39,11 +39,12 @@ class WlToXDrag : public Drag
 {
     Q_OBJECT
     using Drag::Drag;
+
 public:
     DragEventReply moveFilter(Toplevel *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
-private:
 
+private:
     Q_DISABLE_COPY(WlToXDrag)
 };
 
@@ -64,10 +65,12 @@ public:
     void sendPosition(const QPointF &globalPos);
     void leave();
 
-    bool finished() const {
+    bool finished() const
+    {
         return m_state.finished;
     }
-    AbstractClient *target() const {
+    AbstractClient *target() const
+    {
         return m_target;
     }
     void drop();
@@ -96,7 +99,8 @@ private:
 
     QMetaObject::Connection m_motionConnection;
 
-    struct {
+    struct
+    {
         bool pending = false;
         bool cached = false;
         QPoint cache;
@@ -109,7 +113,8 @@ private:
     // decided upon by the compositor
     KWaylandServer::DataDeviceManagerInterface::DnDAction m_proposedAction = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
 
-    struct {
+    struct
+    {
         bool entered = false;
         bool dropped = false;
         bool finished = false;

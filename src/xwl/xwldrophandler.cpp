@@ -8,17 +8,18 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
+#include "xwldrophandler.h"
 #include "databridge.h"
 #include "dnd.h"
 #include "drag_wl.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11client.h"
-#include "xwldrophandler.h"
 
 #include <KWaylandServer/seat_interface.h>
 
-namespace KWin::Xwl {
+namespace KWin::Xwl
+{
 
 XwlDropHandler::XwlDropHandler()
     : KWaylandServer::AbstractDropHandler(nullptr)
@@ -43,7 +44,9 @@ bool XwlDropHandler::handleClientMessage(xcb_client_message_event_t *event)
 void XwlDropHandler::updateDragTarget(KWaylandServer::SurfaceInterface *surface, quint32 serial)
 {
     Q_UNUSED(serial)
-    auto client = workspace()->findClient([surface](const X11Client *c) {return c->surface() == surface;});
+    auto client = workspace()->findClient([surface](const X11Client *c) {
+        return c->surface() == surface;
+    });
     if (m_xvisit && client == m_xvisit->target()) {
         return;
     }
@@ -56,6 +59,5 @@ void XwlDropHandler::updateDragTarget(KWaylandServer::SurfaceInterface *surface,
     if (client) {
         m_xvisit = new Xvisit(client, waylandServer()->seat()->dragSource(), this);
     }
-
 }
 }

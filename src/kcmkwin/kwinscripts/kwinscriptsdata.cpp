@@ -20,7 +20,7 @@ KWinScriptsData::KWinScriptsData(QObject *parent, const QVariantList &args)
 
 QVector<KPluginMetaData> KWinScriptsData::pluginMetaDataList() const
 {
-    auto filter =  [](const KPluginMetaData &md) {
+    auto filter = [](const KPluginMetaData &md) {
         return md.isValid() && !md.rawData().value("X-KWin-Exclude-Listing").toBool();
     };
 

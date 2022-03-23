@@ -8,9 +8,9 @@
 */
 
 #include "syncalarmx11filter.h"
+#include "utils/xcbutils.h"
 #include "workspace.h"
 #include "x11client.h"
-#include "utils/xcbutils.h"
 
 namespace KWin
 {

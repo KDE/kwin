@@ -16,8 +16,8 @@
 #include "platform.h"
 #include "utils/xcbutils.h"
 // Qt
-#include <QLoggingCategory>
 #include <QDebug>
+#include <QLoggingCategory>
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
 
@@ -75,9 +75,7 @@ void EglOnXBackend::init()
     }
 
     initKWinGL();
-    if (!hasExtension(QByteArrayLiteral("EGL_KHR_image")) &&
-        (!hasExtension(QByteArrayLiteral("EGL_KHR_image_base")) ||
-         !hasExtension(QByteArrayLiteral("EGL_KHR_image_pixmap")))) {
+    if (!hasExtension(QByteArrayLiteral("EGL_KHR_image")) && (!hasExtension(QByteArrayLiteral("EGL_KHR_image_base")) || !hasExtension(QByteArrayLiteral("EGL_KHR_image_pixmap")))) {
         setFailed(QStringLiteral("Required support for binding pixmaps to EGLImages not found, disabling compositing"));
         return;
     }
@@ -135,8 +133,7 @@ bool EglOnXBackend::initRenderingContext()
         setHavePlatformBase(havePlatformBase);
         if (havePlatformBase) {
             // Make sure that the X11 platform is supported
-            if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11")) &&
-                !hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_x11"))) {
+            if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11")) && !hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_x11"))) {
                 qCWarning(KWIN_CORE) << "EGL_EXT_platform_base is supported, but neither EGL_EXT_platform_x11 nor EGL_KHR_platform_x11 is supported."
                                      << "Cannot create EGLDisplay on X11";
                 return false;
@@ -219,7 +216,7 @@ EGLSurface EglOnXBackend::createSurface(xcb_window_t window)
     EGLSurface surface = EGL_NO_SURFACE;
     if (havePlatformBase()) {
         // eglCreatePlatformWindowSurfaceEXT() expects a pointer to the Window.
-        surface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *) &nativeWindow, nullptr);
+        surface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)&nativeWindow, nullptr);
     } else {
         // eglCreateWindowSurface() expects a Window, not a pointer to the Window. Use
         // a c style cast as there are (buggy) platforms where the size of the Window
@@ -235,13 +232,20 @@ bool EglOnXBackend::initBufferConfigs()
 {
     initBufferAge();
     const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT | (supportsBufferAge() ? 0 : EGL_SWAP_BEHAVIOR_PRESERVED_BIT),
-        EGL_RED_SIZE,             1,
-        EGL_GREEN_SIZE,           1,
-        EGL_BLUE_SIZE,            1,
-        EGL_ALPHA_SIZE,           0,
-        EGL_RENDERABLE_TYPE,      isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
-        EGL_CONFIG_CAVEAT,        EGL_NONE,
+        EGL_SURFACE_TYPE,
+        EGL_WINDOW_BIT | (supportsBufferAge() ? 0 : EGL_SWAP_BEHAVIOR_PRESERVED_BIT),
+        EGL_RED_SIZE,
+        1,
+        EGL_GREEN_SIZE,
+        1,
+        EGL_BLUE_SIZE,
+        1,
+        EGL_ALPHA_SIZE,
+        0,
+        EGL_RENDERABLE_TYPE,
+        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
+        EGL_CONFIG_CAVEAT,
+        EGL_NONE,
         EGL_NONE,
     };
 
@@ -274,7 +278,7 @@ bool EglOnXBackend::initBufferConfigs()
     return true;
 }
 
-OverlayWindow* EglOnXBackend::overlayWindow() const
+OverlayWindow *EglOnXBackend::overlayWindow() const
 {
     return m_overlayWindow;
 }

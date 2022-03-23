@@ -7,29 +7,29 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "virtual_egl_gbm_layer.h"
-#include "gbm_surface.h"
 #include "drm_abstract_output.h"
+#include "drm_backend.h"
 #include "drm_gpu.h"
-#include "egl_gbm_backend.h"
-#include "shadowbuffer.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
-#include "dumb_swapchain.h"
-#include "logging.h"
-#include "egl_dmabuf.h"
-#include "surfaceitem_wayland.h"
-#include "kwineglimagetexture.h"
-#include "drm_backend.h"
 #include "drm_virtual_output.h"
+#include "dumb_swapchain.h"
+#include "egl_dmabuf.h"
+#include "egl_gbm_backend.h"
+#include "gbm_surface.h"
+#include "kwineglimagetexture.h"
 #include "kwineglutils_p.h"
+#include "logging.h"
+#include "shadowbuffer.h"
+#include "surfaceitem_wayland.h"
 
-#include "KWaylandServer/surface_interface.h"
 #include "KWaylandServer/linuxdmabufv1clientbuffer.h"
+#include "KWaylandServer/surface_interface.h"
 
 #include <QRegion>
 #include <drm_fourcc.h>
-#include <gbm.h>
 #include <errno.h>
+#include <gbm.h>
 #include <unistd.h>
 
 namespace KWin

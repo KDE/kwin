@@ -68,13 +68,13 @@
 #include <QQuickWindow>
 #include <QVector2D>
 
-#include "x11client.h"
+#include "composite.h"
 #include "deleted.h"
 #include "effects.h"
 #include "renderloop.h"
 #include "shadow.h"
 #include "wayland_server.h"
-#include "composite.h"
+#include "x11client.h"
 #include <QtMath>
 
 #include <KWaylandServer/surface_interface.h>
@@ -229,12 +229,12 @@ SurfaceItem *Scene::scanoutCandidate() const
         return nullptr;
     }
     SurfaceItem *candidate = nullptr;
-    if (!static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
-        for (int i = stacking_order.count() - 1; i >=0; i--) {
+    if (!static_cast<EffectsHandlerImpl *>(effects)->blocksDirectScanout()) {
+        for (int i = stacking_order.count() - 1; i >= 0; i--) {
             Window *window = stacking_order[i];
             Toplevel *toplevel = window->window();
             if (toplevel->isOnOutput(painted_screen) && window->isVisible() && toplevel->opacity() > 0) {
-                AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
+                AbstractClient *c = dynamic_cast<AbstractClient *>(toplevel);
                 if (!c || !c->isFullScreen() || c->opacity() != 1.0) {
                     break;
                 }
@@ -279,7 +279,7 @@ void Scene::prePaint(AbstractOutput *output)
 
     const RenderLoop *renderLoop = painted_screen->renderLoop();
     const std::chrono::milliseconds presentTime =
-            std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
+        std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
 
     if (Q_UNLIKELY(presentTime < m_expectedPresentTimestamp)) {
         qCDebug(KWIN_CORE,
@@ -420,7 +420,7 @@ void Scene::postPaint()
 
     if (waylandServer()) {
         const std::chrono::milliseconds frameTime =
-                std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->renderLoop()->lastPresentationTimestamp());
+            std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->renderLoop()->lastPresentationTimestamp());
 
         for (Window *window : std::as_const(m_windows)) {
             Toplevel *toplevel = window->window();
@@ -442,23 +442,23 @@ static QMatrix4x4 createProjectionMatrix(const QRect &rect)
     // and an aspect ratio of 1.0.
     QMatrix4x4 ret;
     ret.setToIdentity();
-    const float fovY   =   std::tan(qDegreesToRadians(60.0f) / 2);
-    const float aspect =    1.0f;
-    const float zNear  =    0.1f;
-    const float zFar   =  100.0f;
+    const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
+    const float aspect = 1.0f;
+    const float zNear = 0.1f;
+    const float zFar = 100.0f;
 
-    const float yMax   =  zNear * fovY;
-    const float yMin   = -yMax;
-    const float xMin   =  yMin * aspect;
-    const float xMax   =  yMax * aspect;
+    const float yMax = zNear * fovY;
+    const float yMin = -yMax;
+    const float xMin = yMin * aspect;
+    const float xMax = yMax * aspect;
 
     ret.frustum(xMin, xMax, yMin, yMax, zNear, zFar);
 
     const float scaleFactor = 1.1 * fovY / yMax;
     ret.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
-    ret.scale( (xMax - xMin) * scaleFactor / rect.width(),
-                             -(yMax - yMin) * scaleFactor / rect.height(),
-                              0.001);
+    ret.scale((xMax - xMin) * scaleFactor / rect.width(),
+              -(yMax - yMin) * scaleFactor / rect.height(),
+              0.001);
     ret.translate(-rect.x(), -rect.y());
     return ret;
 }
@@ -511,7 +511,7 @@ void Scene::paintScreen(const QRegion &region)
 }
 
 // the function that'll be eventually called by paintScreen() above
-void Scene::finalPaintScreen(int mask, const QRegion &region, ScreenPaintData& data)
+void Scene::finalPaintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     m_paintScreenCount++;
     if (mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
@@ -570,7 +570,7 @@ void Scene::addToplevel(Toplevel *c)
 {
     Q_ASSERT(!m_windows.contains(c));
     Scene::Window *w = createWindow(c);
-    m_windows[ c ] = w;
+    m_windows[c] = w;
 
     connect(c, &Toplevel::windowClosed, this, &Scene::windowClosed);
 
@@ -621,7 +621,7 @@ void Scene::createStackingOrder()
             windows.removeAll(win);
         }
         if (waylandServer() && waylandServer()->isScreenLocked()) {
-            if(!win->isLockScreen() && !win->isInputMethod()) {
+            if (!win->isLockScreen() && !win->isInputMethod()) {
                 windows.removeAll(win);
             }
         }
@@ -630,7 +630,7 @@ void Scene::createStackingOrder()
     // TODO: cache the stacking_order in case it has not changed
     for (Toplevel *c : std::as_const(windows)) {
         Q_ASSERT(m_windows.contains(c));
-        stacking_order.append(m_windows[ c ]);
+        stacking_order.append(m_windows[c]);
     }
 }
 
@@ -641,7 +641,7 @@ void Scene::clearStackingOrder()
 
 void Scene::paintWindow(Window *w, int mask, const QRegion &region)
 {
-    if (region.isEmpty())  // completely clipped
+    if (region.isEmpty()) // completely clipped
         return;
 
     WindowPaintData data(w->window()->effectWindow(), screenProjectionMatrix());
@@ -650,17 +650,17 @@ void Scene::paintWindow(Window *w, int mask, const QRegion &region)
 
 void Scene::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
 {
-    static_cast<EffectsHandlerImpl*>(effects)->paintDesktop(desktop, mask, region, data);
+    static_cast<EffectsHandlerImpl *>(effects)->paintDesktop(desktop, mask, region, data);
 }
 
 // the function that'll be eventually called by paintWindow() above
-void Scene::finalPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data)
+void Scene::finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     effects->drawWindow(w, mask, region, data);
 }
 
 // will be eventually called from drawWindow()
-void Scene::finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data)
+void Scene::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     if (waylandServer() && waylandServer()->isScreenLocked() && !w->window()->isLockScreen() && !w->window()->isInputMethod()) {
         return;
@@ -801,7 +801,7 @@ bool Scene::Window::isVisible() const
         return false;
     if (!toplevel->isOnCurrentActivity())
         return false;
-    if (AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel))
+    if (AbstractClient *c = dynamic_cast<AbstractClient *>(toplevel))
         return c->isShown();
     return true; // Unmanaged is always visible
 }
@@ -821,8 +821,8 @@ void Scene::Window::resetPaintingEnabled()
     disable_painting = 0;
     if (toplevel->isDeleted())
         disable_painting |= PAINT_DISABLED_BY_DELETE;
-    if (static_cast<EffectsHandlerImpl*>(effects)->isDesktopRendering()) {
-        if (!toplevel->isOnDesktop(static_cast<EffectsHandlerImpl*>(effects)->currentRenderedDesktop())) {
+    if (static_cast<EffectsHandlerImpl *>(effects)->isDesktopRendering()) {
+        if (!toplevel->isOnDesktop(static_cast<EffectsHandlerImpl *>(effects)->currentRenderedDesktop())) {
             disable_painting |= PAINT_DISABLED_BY_DESKTOP;
         }
     } else {
@@ -831,7 +831,7 @@ void Scene::Window::resetPaintingEnabled()
     }
     if (!toplevel->isOnCurrentActivity())
         disable_painting |= PAINT_DISABLED_BY_ACTIVITY;
-    if (AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel)) {
+    if (AbstractClient *c = dynamic_cast<AbstractClient *>(toplevel)) {
         if (c->isMinimized())
             disable_painting |= PAINT_DISABLED_BY_MINIMIZE;
         if (c->isHiddenInternal()) {
@@ -873,7 +873,7 @@ void Scene::Window::updateWindowPosition()
 //****************************************
 // Scene::EffectFrame
 //****************************************
-Scene::EffectFrame::EffectFrame(EffectFrameImpl* frame)
+Scene::EffectFrame::EffectFrame(EffectFrameImpl *frame)
     : m_effectFrame(frame)
 {
 }

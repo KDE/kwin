@@ -51,13 +51,14 @@ private:
 private:
     std::chrono::milliseconds m_duration;
 
-    struct Animation {
+    struct Animation
+    {
         TimeLine timeLine;
         int parentY;
         std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
     };
 
-    QHash<EffectWindow*, Animation> m_animations;
+    QHash<EffectWindow *, Animation> m_animations;
 };
 
 inline int SheetEffect::requestedEffectChainPosition() const

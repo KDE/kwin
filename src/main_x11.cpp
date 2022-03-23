@@ -14,8 +14,8 @@
 
 #include "platform.h"
 #include "sm.h"
-#include "workspace.h"
 #include "utils/xcbutils.h"
+#include "workspace.h"
 
 #include <KConfigGroup>
 #include <KCrash>
@@ -23,7 +23,6 @@
 #include <KPluginMetaData>
 #include <KSelectionOwner>
 
-#include <qplatformdefs.h>
 #include <QComboBox>
 #include <QCommandLineParser>
 #include <QDialog>
@@ -33,6 +32,7 @@
 #include <QPushButton>
 #include <QSurfaceFormat>
 #include <QVBoxLayout>
+#include <qplatformdefs.h>
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qtx11extras_p.h>
 #else
@@ -58,14 +58,14 @@ class AlternativeWMDialog : public QDialog
 {
 public:
     AlternativeWMDialog()
-        : QDialog() {
-        QWidget* mainWidget = new QWidget(this);
-        QVBoxLayout* layout = new QVBoxLayout(mainWidget);
-        QString text = i18n(
-                           "KWin is unstable.\n"
-                           "It seems to have crashed several times in a row.\n"
-                           "You can select another window manager to run:");
-        QLabel* textLabel = new QLabel(text, mainWidget);
+        : QDialog()
+    {
+        QWidget *mainWidget = new QWidget(this);
+        QVBoxLayout *layout = new QVBoxLayout(mainWidget);
+        QString text = i18n("KWin is unstable.\n"
+                            "It seems to have crashed several times in a row.\n"
+                            "You can select another window manager to run:");
+        QLabel *textLabel = new QLabel(text, mainWidget);
         layout->addWidget(textLabel);
         wmList = new QComboBox(mainWidget);
         wmList->setEditable(true);
@@ -87,17 +87,19 @@ public:
         raise();
     }
 
-    void addWM(const QString& wm) {
+    void addWM(const QString &wm)
+    {
         // TODO: Check if WM is installed
         if (!QStandardPaths::findExecutable(wm).isEmpty())
             wmList->addItem(wm);
     }
-    QString selectedWM() const {
+    QString selectedWM() const
+    {
         return wmList->currentText();
     }
 
 private:
-    QComboBox* wmList;
+    QComboBox *wmList;
 };
 
 class KWinSelectionOwner : public KSelectionOwner
@@ -110,9 +112,10 @@ public:
     }
 
 private:
-    bool genericReply(xcb_atom_t target_P, xcb_atom_t property_P, xcb_window_t requestor_P) override {
+    bool genericReply(xcb_atom_t target_P, xcb_atom_t property_P, xcb_window_t requestor_P) override
+    {
         if (target_P == xa_version) {
-            int32_t version[] = { 2, 0 };
+            int32_t version[] = {2, 0};
             xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, requestor_P,
                                 property_P, XCB_ATOM_INTEGER, 32, 2, version);
         } else
@@ -120,15 +123,17 @@ private:
         return true;
     }
 
-    void replyTargets(xcb_atom_t property_P, xcb_window_t requestor_P) override {
+    void replyTargets(xcb_atom_t property_P, xcb_window_t requestor_P) override
+    {
         KSelectionOwner::replyTargets(property_P, requestor_P);
-        xcb_atom_t atoms[ 1 ] = { xa_version };
+        xcb_atom_t atoms[1] = {xa_version};
         // PropModeAppend !
         xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_APPEND, requestor_P,
                             property_P, XCB_ATOM_ATOM, 32, 1, atoms);
     }
 
-    void getAtoms() override {
+    void getAtoms() override
+    {
         KSelectionOwner::getAtoms();
         if (xa_version == XCB_ATOM_NONE) {
             const QByteArray name(QByteArrayLiteral("VERSION"));
@@ -142,7 +147,8 @@ private:
         }
     }
 
-    xcb_atom_t make_selection_atom(int screen_P) {
+    xcb_atom_t make_selection_atom(int screen_P)
+    {
         if (screen_P < 0)
             screen_P = QX11Info::appScreen();
         QByteArray screen(QByteArrayLiteral("WM_S"));
@@ -178,7 +184,7 @@ ApplicationX11::~ApplicationX11()
     setTerminating();
     destroyCompositor();
     destroyWorkspace();
-    if (!owner.isNull() && owner->ownerWindow() != XCB_WINDOW_NONE)   // If there was no --replace (no new WM)
+    if (!owner.isNull() && owner->ownerWindow() != XCB_WINDOW_NONE) // If there was no --replace (no new WM)
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
 }
 
@@ -198,12 +204,11 @@ void ApplicationX11::lostSelection()
     quit();
 }
 
-
 static xcb_screen_t *findXcbScreen(xcb_connection_t *connection, int screen)
 {
     for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(connection));
-            it.rem;
-            --screen, xcb_screen_next(&it)) {
+         it.rem;
+         --screen, xcb_screen_next(&it)) {
         if (screen == 0) {
             return it.data;
         }
@@ -221,12 +226,12 @@ void ApplicationX11::performStartup()
     setX11DefaultScreen(findXcbScreen(x11Connection(), x11ScreenNumber()));
 
     owner.reset(new KWinSelectionOwner(Application::x11ScreenNumber()));
-    connect(owner.data(), &KSelectionOwner::failedToClaimOwnership, []{
+    connect(owner.data(), &KSelectionOwner::failedToClaimOwnership, [] {
         fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit().constData(), stderr);
         ::exit(1);
     });
     connect(owner.data(), &KSelectionOwner::lostOwnership, this, &ApplicationX11::lostSelection);
-    connect(owner.data(), &KSelectionOwner::claimedOwnership, this, [this]{
+    connect(owner.data(), &KSelectionOwner::claimedOwnership, this, [this] {
         installNativeX11EventFilter();
         // first load options - done internally by a different thread
         createOptions();
@@ -266,7 +271,7 @@ void ApplicationX11::performStartup()
     createAtoms();
 }
 
-bool ApplicationX11::notify(QObject* o, QEvent* e)
+bool ApplicationX11::notify(QObject *o, QEvent *e)
 {
     if (e->spontaneous() && Workspace::self()->workspaceEvent(e))
         return true;
@@ -313,9 +318,9 @@ void ApplicationX11::notifyKSplash()
 {
     // Tell KSplash that KWin has started
     QDBusMessage ksplashProgressMessage = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KSplash"),
-                                                                            QStringLiteral("/KSplash"),
-                                                                            QStringLiteral("org.kde.KSplash"),
-                                                                            QStringLiteral("setStage"));
+                                                                         QStringLiteral("/KSplash"),
+                                                                         QStringLiteral("org.kde.KSplash"),
+                                                                         QStringLiteral("setStage"));
     ksplashProgressMessage.setArguments(QList<QVariant>() << QStringLiteral("wm"));
     QDBusConnection::sessionBus().asyncCall(ksplashProgressMessage);
 }
@@ -335,7 +340,7 @@ void ApplicationX11::crashHandler(int signal)
 
 } // namespace
 
-int main(int argc, char * argv[])
+int main(int argc, char *argv[])
 {
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
@@ -367,7 +372,7 @@ int main(int argc, char * argv[])
         QByteArray display_name = qgetenv("DISPLAY");
 
         if ((pos = display_name.lastIndexOf('.')) != -1)
-            display_name.remove(pos, 10);   // 10 is enough to be sure we removed ".s"
+            display_name.remove(pos, 10); // 10 is enough to be sure we removed ".s"
 
         for (int i = 0; i < number_of_screens; i++) {
             // If execution doesn't pass by here, then kwin
@@ -388,8 +393,8 @@ int main(int argc, char * argv[])
         // In the next statement, display_name shouldn't contain a screen
         // number. If it had it, it was removed at the "pos" check
         const QString envir = QStringLiteral("DISPLAY=%1.%2")
-            .arg(display_name.data())
-            .arg(KWin::Application::x11ScreenNumber());
+                                  .arg(display_name.data())
+                                  .arg(KWin::Application::x11ScreenNumber());
 
         if (putenv(strdup(envir.toLatin1().constData()))) {
             fprintf(stderr, "%s: WARNING: unable to set DISPLAY environment variable\n", argv[0]);
@@ -439,7 +444,7 @@ int main(int argc, char * argv[])
     parser.addOption(replaceOption);
 #if KWIN_BUILD_ACTIVITIES
     QCommandLineOption noActivitiesOption(QStringLiteral("no-kactivities"),
-                                        i18n("Disable KActivities integration."));
+                                          i18n("Disable KActivities integration."));
     parser.addOption(noActivitiesOption);
 #endif
 

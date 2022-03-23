@@ -21,9 +21,11 @@ LibinputBackend::LibinputBackend(QObject *parent)
     m_connection = LibInput::Connection::create(this);
     m_connection->moveToThread(m_thread);
 
-    connect(m_connection, &LibInput::Connection::eventsRead, this, [this]() {
-        m_connection->processEvents();
-    }, Qt::QueuedConnection);
+    connect(
+        m_connection, &LibInput::Connection::eventsRead, this, [this]() {
+            m_connection->processEvents();
+        },
+        Qt::QueuedConnection);
 
     // Direct connection because the deviceAdded() and the deviceRemoved() signals are emitted
     // from the main thread.

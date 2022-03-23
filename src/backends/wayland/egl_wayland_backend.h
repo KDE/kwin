@@ -79,7 +79,8 @@ public:
     void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void init() override;
 
-    bool havePlatformBase() const {
+    bool havePlatformBase() const
+    {
         return m_havePlatformBase;
     }
 
@@ -100,7 +101,7 @@ private:
     void presentOnSurface(EglWaylandOutput *output, const QRegion &damagedRegion);
 
     WaylandBackend *m_backend;
-    QMap<AbstractOutput *, EglWaylandOutput*> m_outputs;
+    QMap<AbstractOutput *, EglWaylandOutput *> m_outputs;
     bool m_havePlatformBase;
     friend class EglWaylandTexture;
 };

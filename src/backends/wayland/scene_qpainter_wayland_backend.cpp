@@ -121,7 +121,7 @@ WaylandQPainterBufferSlot *WaylandQPainterOutput::acquire()
     m_back = new WaylandQPainterBufferSlot(buffer);
     m_slots.append(m_back);
 
-//    qCDebug(KWIN_WAYLAND_BACKEND) << "Created a new back buffer for output surface" << m_waylandOutput->surface();
+    //    qCDebug(KWIN_WAYLAND_BACKEND) << "Created a new back buffer for output surface" << m_waylandOutput->surface();
     return m_back;
 }
 
@@ -141,24 +141,20 @@ WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
 {
 
     const auto waylandOutputs = m_backend->waylandOutputs();
-    for (auto *output: waylandOutputs) {
+    for (auto *output : waylandOutputs) {
         createOutput(output);
     }
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandQPainterBackend::createOutput);
-    connect(m_backend, &WaylandBackend::outputRemoved, this,
-        [this] (AbstractOutput *waylandOutput) {
-            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                [waylandOutput] (WaylandQPainterOutput *output) {
-                    return output->m_waylandOutput == waylandOutput;
-                }
-            );
-            if (it == m_outputs.end()) {
-                return;
-            }
-            delete *it;
-            m_outputs.erase(it);
+    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](AbstractOutput *waylandOutput) {
+        auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [waylandOutput](WaylandQPainterOutput *output) {
+            return output->m_waylandOutput == waylandOutput;
+        });
+        if (it == m_outputs.end()) {
+            return;
         }
-    );
+        delete *it;
+        m_outputs.erase(it);
+    });
 }
 
 WaylandQPainterBackend::~WaylandQPainterBackend()

@@ -10,18 +10,18 @@
 #include "drm_buffer_gbm.h"
 #include "gbm_surface.h"
 
-#include "logging.h"
 #include "drm_gpu.h"
+#include "logging.h"
 
 // system
 #include <sys/mman.h>
 // c++
 #include <cerrno>
 // drm
+#include <drm_fourcc.h>
+#include <gbm.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
-#include <gbm.h>
-#include <drm_fourcc.h>
 // KWaylandServer
 #include "KWaylandServer/clientbuffer.h"
 #include "KWaylandServer/linuxdmabufv1clientbuffer.h"
@@ -44,8 +44,8 @@ GbmBuffer::GbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *cli
     if (planes.first().modifier != DRM_FORMAT_MOD_INVALID || planes.first().offset > 0 || planes.count() > 1) {
         gbm_import_fd_modifier_data data = {};
         data.format = clientBuffer->format();
-        data.width = (uint32_t) clientBuffer->size().width();
-        data.height = (uint32_t) clientBuffer->size().height();
+        data.width = (uint32_t)clientBuffer->size().width();
+        data.height = (uint32_t)clientBuffer->size().height();
         data.num_fds = planes.count();
         data.modifier = planes.first().modifier;
         for (int i = 0; i < planes.count(); i++) {
@@ -58,8 +58,8 @@ GbmBuffer::GbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *cli
         const auto &plane = planes.first();
         gbm_import_fd_data data = {};
         data.fd = plane.fd;
-        data.width = (uint32_t) clientBuffer->size().width();
-        data.height = (uint32_t) clientBuffer->size().height();
+        data.width = (uint32_t)clientBuffer->size().width();
+        data.height = (uint32_t)clientBuffer->size().height();
         data.stride = plane.stride;
         data.format = clientBuffer->format();
         m_bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT);
@@ -114,7 +114,7 @@ KWaylandServer::ClientBuffer *GbmBuffer::clientBuffer() const
     return m_clientBuffer;
 }
 
-gbm_bo* GbmBuffer::getBo() const
+gbm_bo *GbmBuffer::getBo() const
 {
     return m_bo;
 }
@@ -128,7 +128,6 @@ uint32_t GbmBuffer::stride() const
 {
     return m_stride;
 }
-
 
 DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
     : DrmBuffer(gpu, gbm_bo_get_format(bo), gbm_bo_get_modifier(bo))
@@ -159,10 +158,10 @@ void DrmGbmBuffer::initialize()
         return;
     }
     m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
-    uint32_t handles[4] = { };
-    uint32_t strides[4] = { };
-    uint32_t offsets[4] = { };
-    uint64_t modifiers[4] = { };
+    uint32_t handles[4] = {};
+    uint32_t strides[4] = {};
+    uint32_t offsets[4] = {};
+    uint64_t modifiers[4] = {};
 
     if (gbm_bo_get_handle_for_plane(m_bo, 0).s32 != -1) {
         for (int i = 0; i < gbm_bo_get_plane_count(m_bo); i++) {
@@ -203,7 +202,7 @@ void DrmGbmBuffer::initialize()
 
 bool DrmGbmBuffer::needsModeChange(DrmBuffer *b) const
 {
-    if (DrmGbmBuffer *sb = dynamic_cast<DrmGbmBuffer*>(b)) {
+    if (DrmGbmBuffer *sb = dynamic_cast<DrmGbmBuffer *>(b)) {
         return hasBo() != sb->hasBo();
     } else {
         return true;

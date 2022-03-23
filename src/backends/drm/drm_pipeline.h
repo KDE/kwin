@@ -10,16 +10,16 @@
 #pragma once
 
 #include <QPoint>
+#include <QSharedPointer>
 #include <QSize>
 #include <QVector>
-#include <QSharedPointer>
 
-#include <xf86drmMode.h>
 #include <chrono>
+#include <xf86drmMode.h>
 
+#include "abstract_wayland_output.h"
 #include "drm_object_plane.h"
 #include "renderloop_p.h"
-#include "abstract_wayland_output.h"
 
 namespace KWin
 {
@@ -96,10 +96,11 @@ public:
     void setOutput(DrmOutput *output);
     DrmOutput *output() const;
 
-    struct State {
+    struct State
+    {
         DrmCrtc *crtc = nullptr;
         bool active = true; // whether or not the pipeline should be currently used
-        bool enabled = true;// whether or not the pipeline needs a crtc
+        bool enabled = true; // whether or not the pipeline needs a crtc
         QSharedPointer<DrmConnectorMode> mode;
         uint32_t overscan = 0;
         AbstractWaylandOutput::RgbRange rgbRange = AbstractWaylandOutput::RgbRange::Automatic;
@@ -125,7 +126,7 @@ public:
         CommitModeset
     };
     Q_ENUM(CommitMode);
-    static bool commitPipelines(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects = {});
+    static bool commitPipelines(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects = {});
 
 private:
     bool activePending() const;
@@ -139,17 +140,20 @@ private:
     bool applyPendingChangesLegacy();
     bool setCursorLegacy();
     bool moveCursorLegacy();
-    static bool commitPipelinesLegacy(const QVector<DrmPipeline*> &pipelines, CommitMode mode);
+    static bool commitPipelinesLegacy(const QVector<DrmPipeline *> &pipelines, CommitMode mode);
 
     // atomic modesetting only
     bool populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);
     void atomicCommitFailed();
     void atomicCommitSuccessful(CommitMode mode);
     void prepareAtomicModeset();
-    static bool commitPipelinesAtomic(const QVector<DrmPipeline*> &pipelines, CommitMode mode, const QVector<DrmObject*> &unusedObjects);
+    static bool commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects);
 
     // logging helpers
-    enum class PrintMode { OnlyChanged, All };
+    enum class PrintMode {
+        OnlyChanged,
+        All,
+    };
     static void printFlags(uint32_t flags);
     static void printProps(DrmObject *object, PrintMode mode);
 

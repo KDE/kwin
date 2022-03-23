@@ -39,7 +39,6 @@ private:
     quint32 m_key = 0;
 };
 
-
 }
 
 #endif

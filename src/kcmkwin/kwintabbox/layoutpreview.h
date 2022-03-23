@@ -31,6 +31,7 @@ public:
     ~LayoutPreview() override;
 
     bool eventFilter(QObject *object, QEvent *event) override;
+
 private:
     SwitcherItem *m_item;
 };
@@ -58,12 +59,14 @@ public:
     void showDesktopThumbnail(bool showDesktop);
 
 private:
-    struct ThumbnailInfo {
+    struct ThumbnailInfo
+    {
         WindowThumbnailItem::Thumbnail wId;
         QString caption;
         QString icon;
 
-        bool operator==(const ThumbnailInfo &other) const {
+        bool operator==(const ThumbnailInfo &other) const
+        {
             return wId == other.wId;
         }
     };
@@ -71,7 +74,6 @@ private:
     void init();
     QList<ThumbnailInfo> m_thumbnails;
 };
-
 
 class SwitcherItem : public QObject
 {

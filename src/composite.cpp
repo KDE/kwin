@@ -6,13 +6,14 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include <config-kwin.h>
 #include "composite.h"
+
+#include <config-kwin.h>
+
 #include "abstract_output.h"
 #include "cursorview_opengl.h"
 #include "cursorview_qpainter.h"
 #include "dbusinterface.h"
-#include "x11client.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
 #include "effects.h"
@@ -34,10 +35,11 @@
 #include "unmanaged.h"
 #include "useractions.h"
 #include "utils/common.h"
+#include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 #include "x11syncmanager.h"
-#include "utils/xcbutils.h"
 
 #include <kwinglplatform.h>
 #include <kwingltexture.h>
@@ -56,9 +58,9 @@
 #include <QMenu>
 #include <QOpenGLContext>
 #include <QQuickWindow>
-#include <QtConcurrentRun>
 #include <QTextStream>
 #include <QTimerEvent>
+#include <QtConcurrentRun>
 
 #include <xcb/composite.h>
 #include <xcb/damage.h>
@@ -104,20 +106,25 @@ public:
         : KSelectionOwner(selection, kwinApp()->x11Connection(), kwinApp()->x11RootWindow())
         , m_owning(false)
     {
-        connect (this, &CompositorSelectionOwner::lostOwnership,
-                 this, [this]() { m_owning = false; });
+        connect(this, &CompositorSelectionOwner::lostOwnership,
+                this, [this]() {
+                    m_owning = false;
+                });
     }
-    bool owning() const {
+    bool owning() const
+    {
         return m_owning;
     }
-    void setOwning(bool own) {
+    void setOwning(bool own)
+    {
         m_owning = own;
     }
+
 private:
     bool m_owning;
 };
 
-Compositor::Compositor(QObject* workspace)
+Compositor::Compositor(QObject *workspace)
     : QObject(workspace)
 {
     connect(options, &Options::configChanged, this, &Compositor::configChanged);
@@ -143,15 +150,15 @@ Compositor::Compositor(QObject* workspace)
     if (kwinApp()->platform()->isReady()) {
         QTimer::singleShot(0, this, &Compositor::start);
     }
-    connect(kwinApp()->platform(), &Platform::readyChanged, this,
-        [this] (bool ready) {
+    connect(
+        kwinApp()->platform(), &Platform::readyChanged, this, [this](bool ready) {
             if (ready) {
                 start();
             } else {
                 stop();
             }
-        }, Qt::QueuedConnection
-    );
+        },
+        Qt::QueuedConnection);
 
     // register DBus
     new CompositorDBusInterface(this);
@@ -262,7 +269,7 @@ bool Compositor::setupStart()
         supportedCompositors.prepend(options->compositingMode());
     } else {
         qCWarning(KWIN_CORE)
-                << "Configured compositor not supported by Platform. Falling back to defaults";
+            << "Configured compositor not supported by Platform. Falling back to defaults";
     }
 
     for (auto type : qAsConst(supportedCompositors)) {
@@ -330,7 +337,7 @@ void Compositor::initializeX11()
     }
 
     if (!m_selectionOwner) {
-        char selection_name[ 100 ];
+        char selection_name[100];
         sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
         m_selectionOwner = new CompositorSelectionOwner(selection_name);
         connect(m_selectionOwner, &CompositorSelectionOwner::lostOwnership,
@@ -688,7 +695,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     // TODO: Put it inside the cursor layer once the cursor layer can be backed by a real output layer.
     if (waylandServer()) {
         const std::chrono::milliseconds frameTime =
-                std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
+            std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
 
         if (!Cursors::self()->isCursorHidden()) {
             Cursor *cursor = Cursors::self()->currentCursor();
@@ -835,13 +842,13 @@ void X11Compositor::suspend(X11Compositor::SuspendReason reason)
     if (reason & ScriptSuspend) {
         // When disabled show a shortcut how the user can get back compositing.
         const auto shortcuts = KGlobalAccel::self()->shortcut(
-            workspace()->findChild<QAction*>(QStringLiteral("Suspend Compositing")));
+            workspace()->findChild<QAction *>(QStringLiteral("Suspend Compositing")));
         if (!shortcuts.isEmpty()) {
             // Display notification only if there is the shortcut.
             const QString message =
-                    i18n("Desktop effects have been suspended by another application.<br/>"
-                         "You can resume using the '%1' shortcut.",
-                         shortcuts.first().toString(QKeySequence::NativeText));
+                i18n("Desktop effects have been suspended by another application.<br/>"
+                     "You can resume using the '%1' shortcut.",
+                     shortcuts.first().toString(QKeySequence::NativeText));
 #if KWIN_BUILD_NOTIFICATIONS
             KNotification::event(QStringLiteral("compositingsuspendeddbus"), message);
 #endif
@@ -977,12 +984,13 @@ void X11Compositor::updateClientCompositeBlocking(X11Client *c)
         if (c->isBlockingCompositing()) {
             // Do NOT attempt to call suspend(true) from within the eventchain!
             if (!(m_suspended & BlockRuleSuspend))
-                QMetaObject::invokeMethod(this, [this]() {
+                QMetaObject::invokeMethod(
+                    this, [this]() {
                         suspend(BlockRuleSuspend);
-                    }, Qt::QueuedConnection);
+                    },
+                    Qt::QueuedConnection);
         }
-    }
-    else if (m_suspended & BlockRuleSuspend) {
+    } else if (m_suspended & BlockRuleSuspend) {
         // If !c we just check if we can resume in case a blocking client was lost.
         bool shouldResume = true;
 
@@ -995,9 +1003,11 @@ void X11Compositor::updateClientCompositeBlocking(X11Client *c)
         }
         if (shouldResume) {
             // Do NOT attempt to call suspend(false) from within the eventchain!
-                QMetaObject::invokeMethod(this, [this]() {
-                        resume(BlockRuleSuspend);
-                    }, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(
+                this, [this]() {
+                    resume(BlockRuleSuspend);
+                },
+                Qt::QueuedConnection);
         }
     }
 }

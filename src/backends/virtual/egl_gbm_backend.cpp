@@ -11,10 +11,10 @@
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
 #include "composite.h"
-#include "virtual_backend.h"
 #include "options.h"
 #include "screens.h"
 #include "softwarevsyncmonitor.h"
+#include "virtual_backend.h"
 #include "virtual_output.h"
 #include <logging.h>
 // kwin libs
@@ -117,13 +117,20 @@ bool EglGbmBackend::initRenderingContext()
 bool EglGbmBackend::initBufferConfigs()
 {
     const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT,
-        EGL_RED_SIZE,             1,
-        EGL_GREEN_SIZE,           1,
-        EGL_BLUE_SIZE,            1,
-        EGL_ALPHA_SIZE,           0,
-        EGL_RENDERABLE_TYPE,      isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
-        EGL_CONFIG_CAVEAT,        EGL_NONE,
+        EGL_SURFACE_TYPE,
+        EGL_WINDOW_BIT,
+        EGL_RED_SIZE,
+        1,
+        EGL_GREEN_SIZE,
+        1,
+        EGL_BLUE_SIZE,
+        1,
+        EGL_ALPHA_SIZE,
+        0,
+        EGL_RENDERABLE_TYPE,
+        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
+        EGL_CONFIG_CAVEAT,
+        EGL_NONE,
         EGL_NONE,
     };
 
@@ -176,16 +183,15 @@ static void convertFromGLImage(QImage &img, int w, int h)
     } else {
         // OpenGL gives ABGR (i.e. RGBA backwards); Qt wants ARGB
         for (int y = 0; y < h; y++) {
-            uint *q = reinterpret_cast<uint*>(img.scanLine(y));
+            uint *q = reinterpret_cast<uint *>(img.scanLine(y));
             for (int x = 0; x < w; ++x) {
                 const uint pixel = *q;
                 *q = ((pixel << 16) & 0xff0000) | ((pixel >> 16) & 0xff)
-                     | (pixel & 0xff00ff00);
+                    | (pixel & 0xff00ff00);
 
                 q++;
             }
         }
-
     }
     img = img.mirrored();
 }
@@ -200,7 +206,7 @@ void EglGbmBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegi
 
     if (m_backend->saveFrames()) {
         QImage img = QImage(QSize(m_backBuffer->width(), m_backBuffer->height()), QImage::Format_ARGB32);
-        glReadnPixels(0, 0, m_backBuffer->width(), m_backBuffer->height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(), (GLvoid*)img.bits());
+        glReadnPixels(0, 0, m_backBuffer->width(), m_backBuffer->height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(), (GLvoid *)img.bits());
         convertFromGLImage(img, m_backBuffer->width(), m_backBuffer->height());
         img.save(QStringLiteral("%1/%2.png").arg(m_backend->saveFrames()).arg(QString::number(m_frameCounter++)));
     }

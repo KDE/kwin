@@ -11,9 +11,9 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWaylandServer/display.h>
 #include <KWaylandServer/clientbuffer.h>
 #include <KWaylandServer/clientconnection.h>
+#include <KWaylandServer/display.h>
 #include <KWaylandServer/surface_interface.h>
 
 #include <QFileInfo>
@@ -46,8 +46,7 @@ WaylandClient::WaylandClient(SurfaceInterface *surface)
             this, &WaylandClient::updateClientOutputs);
     connect(this, &WaylandClient::desktopFileNameChanged,
             this, &WaylandClient::updateIcon);
-    connect(screens(), &Screens::changed, this,
-            &WaylandClient::updateClientOutputs);
+    connect(screens(), &Screens::changed, this, &WaylandClient::updateClientOutputs);
     connect(surface->client(), &ClientConnection::aboutToBeDestroyed,
             this, &WaylandClient::destroyClient);
 
@@ -146,13 +145,12 @@ bool WaylandClient::belongsToDesktop() const
     const auto clients = waylandServer()->clients();
 
     return std::any_of(clients.constBegin(), clients.constEnd(),
-        [this](const AbstractClient *client) {
-            if (belongsToSameApplication(client, SameApplicationChecks())) {
-                return client->isDesktop();
-            }
-            return false;
-        }
-    );
+                       [this](const AbstractClient *client) {
+                           if (belongsToSameApplication(client, SameApplicationChecks())) {
+                               return client->isDesktop();
+                           }
+                           return false;
+                       });
 }
 
 void WaylandClient::updateClientOutputs()

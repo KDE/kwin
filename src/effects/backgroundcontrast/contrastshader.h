@@ -25,7 +25,8 @@ public:
 
     static ContrastShader *create();
 
-    bool isValid() const {
+    bool isValid() const
+    {
         return mValid;
     }
 
@@ -41,7 +42,8 @@ public:
     float opacity() const;
 
 protected:
-    void setIsValid(bool value) {
+    void setIsValid(bool value)
+    {
         mValid = value;
     }
     void reset();
@@ -56,8 +58,6 @@ private:
     float m_opacity;
 };
 
-
 } // namespace KWin
 
 #endif
-

@@ -107,7 +107,7 @@ void InternalClient::pointerLeaveEvent()
 bool InternalClient::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == m_internalWindow && event->type() == QEvent::DynamicPropertyChange) {
-        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
+        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent *>(event);
         if (pe->propertyName() == s_skipClosePropertyName) {
             setSkipCloseAnimation(m_internalWindow->property(s_skipClosePropertyName).toBool());
         }
@@ -377,9 +377,7 @@ void InternalClient::destroyClient()
 
 bool InternalClient::hasPopupGrab() const
 {
-    return !m_internalWindow->flags().testFlag(Qt::WindowTransparentForInput) &&
-            m_internalWindow->flags().testFlag(Qt::Popup) &&
-            !m_internalWindow->flags().testFlag(Qt::ToolTip);
+    return !m_internalWindow->flags().testFlag(Qt::WindowTransparentForInput) && m_internalWindow->flags().testFlag(Qt::Popup) && !m_internalWindow->flags().testFlag(Qt::ToolTip);
 }
 
 void InternalClient::popupDone()
@@ -437,8 +435,7 @@ bool InternalClient::belongsToSameApplication(const AbstractClient *other, SameA
     if (otherInternal == this) {
         return true;
     }
-    return otherInternal->internalWindow()->isAncestorOf(internalWindow()) ||
-            internalWindow()->isAncestorOf(otherInternal->internalWindow());
+    return otherInternal->internalWindow()->isAncestorOf(internalWindow()) || internalWindow()->isAncestorOf(otherInternal->internalWindow());
 }
 
 void InternalClient::doInteractiveResizeSync()
@@ -526,7 +523,9 @@ void InternalClient::syncGeometryToInternalWindow()
         return;
     }
 
-    QTimer::singleShot(0, this, [this] { requestGeometry(frameGeometry()); });
+    QTimer::singleShot(0, this, [this] {
+        requestGeometry(frameGeometry());
+    });
 }
 
 void InternalClient::updateInternalWindowGeometry()

@@ -15,16 +15,16 @@
 #include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KPluginFactory>
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
-#include <QtDBus>
+#include <KPluginFactory>
 #include <QVBoxLayout>
+#include <QtDBus>
 
 #include "kwinscreenedgeconfigform.h"
 #include "kwinscreenedgedata.h"
-#include "kwinscreenedgesettings.h"
 #include "kwinscreenedgescriptsettings.h"
+#include "kwinscreenedgesettings.h"
 
 K_PLUGIN_FACTORY(KWinScreenEdgesConfigFactory, registerPlugin<KWin::KWinScreenEdgesConfig>(); registerPlugin<KWin::KWinScreenEdgeData>();)
 
@@ -87,8 +87,8 @@ void KWinScreenEdgesConfig::save()
     QDBusConnection::sessionBus().send(message);
     // and reconfigure the effects
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                             QStringLiteral("/Effects"),
-                                             QDBusConnection::sessionBus());
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("overview"));
     interface.reconfigureEffect(QStringLiteral("presentwindows"));
     interface.reconfigureEffect(QStringLiteral("desktopgrid"));
@@ -139,7 +139,7 @@ void KWinScreenEdgesConfig::monitorInit()
     const auto scripts = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
 
     KConfigGroup config(m_config, "Plugins");
-    for (const KPluginMetaData &script: scripts) {
+    for (const KPluginMetaData &script : scripts) {
         if (script.value(QStringLiteral("X-KWin-Border-Activate")) != QLatin1String("true")) {
             continue;
         }

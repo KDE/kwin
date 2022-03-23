@@ -11,38 +11,38 @@
 #include "basiceglsurfacetexture_wayland.h"
 // kwin
 #include "composite.h"
+#include "drm_abstract_output.h"
 #include "drm_backend.h"
 #include "drm_buffer_gbm.h"
+#include "drm_gpu.h"
+#include "drm_lease_egl_gbm_layer.h"
 #include "drm_output.h"
+#include "drm_pipeline.h"
+#include "dumb_swapchain.h"
+#include "egl_dmabuf.h"
+#include "egl_gbm_layer.h"
 #include "gbm_surface.h"
+#include "kwineglutils_p.h"
+#include "linux_dmabuf.h"
 #include "logging.h"
 #include "options.h"
 #include "renderloop_p.h"
 #include "screens.h"
-#include "surfaceitem_wayland.h"
-#include "drm_gpu.h"
-#include "linux_dmabuf.h"
-#include "dumb_swapchain.h"
-#include "kwineglutils_p.h"
 #include "shadowbuffer.h"
-#include "drm_pipeline.h"
-#include "drm_abstract_output.h"
-#include "egl_dmabuf.h"
-#include "egl_gbm_layer.h"
+#include "surfaceitem_wayland.h"
 #include "virtual_egl_gbm_layer.h"
-#include "drm_lease_egl_gbm_layer.h"
 // kwin libs
-#include <kwinglplatform.h>
 #include <kwineglimagetexture.h>
+#include <kwinglplatform.h>
 // system
+#include <drm_fourcc.h>
+#include <errno.h>
 #include <gbm.h>
 #include <unistd.h>
-#include <errno.h>
-#include <drm_fourcc.h>
 // kwayland server
-#include "KWaylandServer/surface_interface.h"
-#include "KWaylandServer/linuxdmabufv1clientbuffer.h"
 #include "KWaylandServer/clientconnection.h"
+#include "KWaylandServer/linuxdmabufv1clientbuffer.h"
+#include "KWaylandServer/surface_interface.h"
 
 namespace KWin
 {
@@ -74,8 +74,7 @@ bool EglGbmBackend::initializeEgl()
         const bool hasKHRGBM = hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_gbm"));
         const GLenum platform = hasMesaGBM ? EGL_PLATFORM_GBM_MESA : EGL_PLATFORM_GBM_KHR;
 
-        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base")) ||
-                (!hasMesaGBM && !hasKHRGBM)) {
+        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base")) || (!hasMesaGBM && !hasKHRGBM)) {
             setFailed("Missing one or more extensions between EGL_EXT_platform_base, "
                       "EGL_MESA_platform_gbm, EGL_KHR_platform_gbm");
             return false;
@@ -127,13 +126,20 @@ bool EglGbmBackend::initRenderingContext()
 bool EglGbmBackend::initBufferConfigs()
 {
     const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT,
-        EGL_RED_SIZE,             1,
-        EGL_GREEN_SIZE,           1,
-        EGL_BLUE_SIZE,            1,
-        EGL_ALPHA_SIZE,           0,
-        EGL_RENDERABLE_TYPE,      isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
-        EGL_CONFIG_CAVEAT,        EGL_NONE,
+        EGL_SURFACE_TYPE,
+        EGL_WINDOW_BIT,
+        EGL_RED_SIZE,
+        1,
+        EGL_GREEN_SIZE,
+        1,
+        EGL_BLUE_SIZE,
+        1,
+        EGL_ALPHA_SIZE,
+        0,
+        EGL_RENDERABLE_TYPE,
+        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
+        EGL_CONFIG_CAVEAT,
+        EGL_NONE,
         EGL_NONE,
     };
 
@@ -205,14 +211,14 @@ bool EglGbmBackend::initBufferConfigs()
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
         gbm_format_name_desc name;
         gbm_format_get_name(gbmFormat, &name);
-        qCCritical(KWIN_DRM, "EGL config %d has format %s with %d,%d,%d,%d bits for r,g,b,a",  i, name.name, redSize, greenSize, blueSize, alphaSize);
+        qCCritical(KWIN_DRM, "EGL config %d has format %s with %d,%d,%d,%d bits for r,g,b,a", i, name.name, redSize, greenSize, blueSize, alphaSize);
     }
     return false;
 }
 
 void EglGbmBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &damagedRegion)
 {
-    static_cast<DrmAbstractOutput*>(output)->outputLayer()->aboutToStartPainting(damagedRegion);
+    static_cast<DrmAbstractOutput *>(output)->outputLayer()->aboutToStartPainting(damagedRegion);
 }
 
 SurfaceTexture *EglGbmBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
@@ -227,7 +233,7 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
 
 QRegion EglGbmBackend::beginFrame(AbstractOutput *output)
 {
-    return static_cast<DrmAbstractOutput*>(output)->outputLayer()->startRendering().value_or(QRegion());
+    return static_cast<DrmAbstractOutput *>(output)->outputLayer()->startRendering().value_or(QRegion());
 }
 
 void EglGbmBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
@@ -235,14 +241,14 @@ void EglGbmBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegi
 {
     Q_UNUSED(renderedRegion)
 
-    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
+    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
     drmOutput->outputLayer()->endRendering(damagedRegion);
     drmOutput->present();
 }
 
 bool EglGbmBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)
 {
-    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
+    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
     if (drmOutput->outputLayer()->scanout(surfaceItem)) {
         drmOutput->present();
         return true;
@@ -253,8 +259,8 @@ bool EglGbmBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)
 
 QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output) const
 {
-    const auto drmOutput = static_cast<DrmAbstractOutput*>(output);
-    return static_cast<EglGbmLayer*>(drmOutput->outputLayer())->texture();
+    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
+    return static_cast<EglGbmLayer *>(drmOutput->outputLayer())->texture();
 }
 
 GbmFormat EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const
@@ -264,7 +270,7 @@ GbmFormat EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const
         return gbmFormat.drmFormat == format;
     });
     if (it == m_formats.end()) {
-        return GbmFormat {
+        return GbmFormat{
             .drmFormat = DRM_FORMAT_XRGB8888,
             .redSize = 8,
             .greenSize = 8,

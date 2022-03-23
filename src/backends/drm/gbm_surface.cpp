@@ -8,22 +8,22 @@
 */
 #include "gbm_surface.h"
 
-#include <gbm.h>
 #include <errno.h>
+#include <gbm.h>
 
-#include "egl_gbm_backend.h"
+#include "drm_backend.h"
 #include "drm_gpu.h"
-#include "logging.h"
+#include "egl_gbm_backend.h"
 #include "kwineglutils_p.h"
 #include "kwinglplatform.h"
-#include "drm_backend.h"
+#include "logging.h"
 
 namespace KWin
 {
 
 GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config)
     : m_surface(gbm_surface_create(gpu->gbmDevice(), size.width(), size.height(), format, flags))
-    , m_eglBackend(static_cast<EglGbmBackend*>(gpu->platform()->renderBackend()))
+    , m_eglBackend(static_cast<EglGbmBackend *>(gpu->platform()->renderBackend()))
     , m_size(size)
     , m_format(format)
     , m_renderTarget(new GLRenderTarget(0, size))
@@ -40,7 +40,7 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t
 
 GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config)
     : m_surface(gbm_surface_create_with_modifiers(gpu->gbmDevice(), size.width(), size.height(), format, modifiers.isEmpty() ? nullptr : modifiers.constData(), modifiers.count()))
-    , m_eglBackend(static_cast<EglGbmBackend*>(gpu->platform()->renderBackend()))
+    , m_eglBackend(static_cast<EglGbmBackend *>(gpu->platform()->renderBackend()))
     , m_size(size)
     , m_format(format)
     , m_modifiers(modifiers)

@@ -9,12 +9,12 @@
 #ifndef KWIN_COLORPICKER_H
 #define KWIN_COLORPICKER_H
 
-#include <kwineffects.h>
+#include <QColor>
 #include <QDBusContext>
 #include <QDBusMessage>
 #include <QDBusUnixFileDescriptor>
 #include <QObject>
-#include <QColor>
+#include <kwineffects.h>
 
 namespace KWin
 {
@@ -29,7 +29,8 @@ public:
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 0;
     }
 

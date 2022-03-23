@@ -529,23 +529,22 @@ void ActivationTest::stackScreensHorizontally()
     // Process pending wl_output bind requests before destroying all outputs.
     QTest::qWait(1);
 
-    const QVector<QRect> screenGeometries {
+    const QVector<QRect> screenGeometries{
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
     };
 
-    const QVector<int> screenScales {
+    const QVector<int> screenScales{
         1,
         1,
     };
 
     QMetaObject::invokeMethod(kwinApp()->platform(),
-        "setVirtualOutputs",
-        Qt::DirectConnection,
-        Q_ARG(int, screenGeometries.count()),
-        Q_ARG(QVector<QRect>, screenGeometries),
-        Q_ARG(QVector<int>, screenScales)
-    );
+                              "setVirtualOutputs",
+                              Qt::DirectConnection,
+                              Q_ARG(int, screenGeometries.count()),
+                              Q_ARG(QVector<QRect>, screenGeometries),
+                              Q_ARG(QVector<int>, screenScales));
 }
 
 void ActivationTest::stackScreensVertically()
@@ -553,23 +552,22 @@ void ActivationTest::stackScreensVertically()
     // Process pending wl_output bind requests before destroying all outputs.
     QTest::qWait(1);
 
-    const QVector<QRect> screenGeometries {
+    const QVector<QRect> screenGeometries{
         QRect(0, 0, 1280, 1024),
         QRect(0, 1024, 1280, 1024),
     };
 
-    const QVector<int> screenScales {
+    const QVector<int> screenScales{
         1,
         1,
     };
 
     QMetaObject::invokeMethod(kwinApp()->platform(),
-        "setVirtualOutputs",
-        Qt::DirectConnection,
-        Q_ARG(int, screenGeometries.count()),
-        Q_ARG(QVector<QRect>, screenGeometries),
-        Q_ARG(QVector<int>, screenScales)
-    );
+                              "setVirtualOutputs",
+                              Qt::DirectConnection,
+                              Q_ARG(int, screenGeometries.count()),
+                              Q_ARG(QVector<QRect>, screenGeometries),
+                              Q_ARG(QVector<int>, screenScales));
 }
 
 }

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "config-kwin.h"
+
 #include "kwinglobals.h"
 
 #include <KWaylandServer/screencast_v1_interface.h>
@@ -46,7 +47,8 @@ public:
     bool init();
     uint framerate();
     uint nodeId();
-    QString error() const {
+    QString error() const
+    {
         return m_error;
     }
 
@@ -61,7 +63,7 @@ public:
     void setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport);
 
 public Q_SLOTS:
-     void recordCursor();
+    void recordCursor();
 
 Q_SIGNALS:
     void streamReady(quint32 nodeId);
@@ -81,7 +83,7 @@ private:
     void newStreamParams();
     void tryEnqueue(pw_buffer *buffer);
     void enqueue();
-    spa_pod* buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
+    spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          uint64_t *modifiers, int modifier_count);
 
@@ -100,7 +102,8 @@ private:
     bool m_hasModifier = false;
     QString m_error;
 
-    struct {
+    struct
+    {
         KWaylandServer::ScreencastV1Interface::CursorMode mode = KWaylandServer::ScreencastV1Interface::Hidden;
         const QSize bitmapSize = QSize(256, 256);
         qreal scale = 1;

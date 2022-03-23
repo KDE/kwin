@@ -9,9 +9,9 @@
 #ifndef KWIN_DRM_GBM_SURFACE_H
 #define KWIN_DRM_GBM_SURFACE_H
 
+#include <QVector>
 #include <cstdint>
 #include <epoxy/egl.h>
-#include <QVector>
 #include <optional>
 
 #include "drm_buffer_gbm.h"
@@ -63,7 +63,7 @@ private:
 
     QSharedPointer<GbmBuffer> m_currentBuffer;
     QSharedPointer<DrmGbmBuffer> m_currentDrmBuffer;
-    QVector<GbmBuffer*> m_lockedBuffers;
+    QVector<GbmBuffer *> m_lockedBuffers;
     QScopedPointer<GLRenderTarget> m_renderTarget;
 };
 

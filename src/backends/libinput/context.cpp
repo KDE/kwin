@@ -84,17 +84,17 @@ void Context::dispatch()
 
 const struct libinput_interface Context::s_interface = {
     Context::openRestrictedCallback,
-    Context::closeRestrictedCallBack
+    Context::closeRestrictedCallBack,
 };
 
 int Context::openRestrictedCallback(const char *path, int flags, void *user_data)
 {
-    return ((Context*)user_data)->openRestricted(path, flags);
+    return ((Context *)user_data)->openRestricted(path, flags);
 }
 
 void Context::closeRestrictedCallBack(int fd, void *user_data)
 {
-    ((Context*)user_data)->closeRestricted(fd);
+    ((Context *)user_data)->closeRestricted(fd);
 }
 
 int Context::openRestricted(const char *path, int flags)
@@ -116,7 +116,7 @@ int Context::openRestricted(const char *path, int flags)
     }
 
     if (flags & O_NONBLOCK) {
-            fl |= O_NONBLOCK;
+        fl |= O_NONBLOCK;
     }
 
     if (fcntl(fd, F_SETFL, fl) < 0) {
@@ -131,7 +131,7 @@ int Context::openRestricted(const char *path, int flags)
     }
 
     if (!(flags & O_CLOEXEC)) {
-            fl &= ~FD_CLOEXEC;
+        fl &= ~FD_CLOEXEC;
     }
 
     if (fcntl(fd, F_SETFD, fl) < 0) {

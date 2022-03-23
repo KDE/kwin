@@ -17,7 +17,6 @@
 #include <KGlobalAccel>
 #include <KShortcutsEditor>
 
-
 namespace KWin
 {
 

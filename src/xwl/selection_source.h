@@ -42,21 +42,26 @@ class SelectionSource : public QObject
 public:
     SelectionSource(Selection *selection);
 
-    xcb_timestamp_t timestamp() const {
+    xcb_timestamp_t timestamp() const
+    {
         return m_timestamp;
     }
-    void setTimestamp(xcb_timestamp_t time) {
+    void setTimestamp(xcb_timestamp_t time)
+    {
         m_timestamp = time;
     }
 
 protected:
-    Selection *selection() const {
+    Selection *selection() const
+    {
         return m_selection;
     }
-    void setWindow(xcb_window_t window) {
+    void setWindow(xcb_window_t window)
+    {
         m_window = window;
     }
-    xcb_window_t window() const {
+    xcb_window_t window() const
+    {
         return m_window;
     }
 
@@ -100,7 +105,7 @@ private:
     Q_DISABLE_COPY(WlSource)
 };
 
-using Mimes = QVector<QPair<QString, xcb_atom_t> >;
+using Mimes = QVector<QPair<QString, xcb_atom_t>>;
 
 /**
  * Representing an X data source.
@@ -114,14 +119,16 @@ public:
 
     void getTargets();
 
-    Mimes offers() const {
+    Mimes offers() const
+    {
         return m_offers;
     }
     void setOffers(const Mimes &offers);
 
     bool handleSelectionNotify(xcb_selection_notify_event_t *event);
 
-    void setRequestor(xcb_window_t window) {
+    void setRequestor(xcb_window_t window)
+    {
         setWindow(window);
     }
 

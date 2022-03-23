@@ -57,15 +57,13 @@ QVariant DecorationsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QHash< int, QByteArray > DecorationsModel::roleNames() const
+QHash<int, QByteArray> DecorationsModel::roleNames() const
 {
-    QHash<int, QByteArray> roles({
-        {Qt::DisplayRole, QByteArrayLiteral("display")},
-        {PluginNameRole, QByteArrayLiteral("plugin")},
-        {ThemeNameRole, QByteArrayLiteral("theme")},
-        {ConfigurationRole, QByteArrayLiteral("configureable")},
-        {RecommendedBorderSizeRole, QByteArrayLiteral("recommendedbordersize")}
-    });
+    QHash<int, QByteArray> roles({{Qt::DisplayRole, QByteArrayLiteral("display")},
+                                  {PluginNameRole, QByteArrayLiteral("plugin")},
+                                  {ThemeNameRole, QByteArrayLiteral("theme")},
+                                  {ConfigurationRole, QByteArrayLiteral("configureable")},
+                                  {RecommendedBorderSizeRole, QByteArrayLiteral("recommendedbordersize")}});
     return roles;
 }
 

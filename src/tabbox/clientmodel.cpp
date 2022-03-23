@@ -24,7 +24,7 @@ namespace KWin
 namespace TabBox
 {
 
-ClientModel::ClientModel(QObject* parent)
+ClientModel::ClientModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
 }
@@ -33,7 +33,7 @@ ClientModel::~ClientModel()
 {
 }
 
-QVariant ClientModel::data(const QModelIndex& index, int role) const
+QVariant ClientModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -45,11 +45,11 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
     int clientIndex = index.row();
     if (clientIndex >= m_clientList.count())
         return QVariant();
-    QSharedPointer<TabBoxClient> client = m_clientList[ clientIndex ].toStrongRef();
+    QSharedPointer<TabBoxClient> client = m_clientList[clientIndex].toStrongRef();
     if (!client) {
         return QVariant();
     }
-    switch(role) {
+    switch (role) {
     case Qt::DisplayRole:
     case CaptionRole: {
         QString caption = client->caption();
@@ -68,7 +68,7 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
     case MinimizedRole:
         return client->isMinimized();
     case CloseableRole:
-        //clients that claim to be first are not closeable
+        // clients that claim to be first are not closeable
         return client->isCloseable() && !client->isFirstInTabBox();
     case IconRole:
         return client->icon();
@@ -92,13 +92,13 @@ QString ClientModel::longestCaption() const
     return caption;
 }
 
-int ClientModel::columnCount(const QModelIndex& parent) const
+int ClientModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return 1;
 }
 
-int ClientModel::rowCount(const QModelIndex& parent) const
+int ClientModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         return 0;
@@ -106,13 +106,13 @@ int ClientModel::rowCount(const QModelIndex& parent) const
     return m_clientList.count();
 }
 
-QModelIndex ClientModel::parent(const QModelIndex& child) const
+QModelIndex ClientModel::parent(const QModelIndex &child) const
 {
     Q_UNUSED(child)
     return QModelIndex();
 }
 
-QModelIndex ClientModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex ClientModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (row < 0 || column != 0 || parent.isValid()) {
         return QModelIndex();
@@ -126,12 +126,12 @@ QModelIndex ClientModel::index(int row, int column, const QModelIndex& parent) c
 QHash<int, QByteArray> ClientModel::roleNames() const
 {
     return {
-        { CaptionRole, QByteArrayLiteral("caption") },
-        { DesktopNameRole, QByteArrayLiteral("desktopName") },
-        { MinimizedRole, QByteArrayLiteral("minimized") },
-        { WIdRole, QByteArrayLiteral("windowId") },
-        { CloseableRole, QByteArrayLiteral("closeable") },
-        { IconRole, QByteArrayLiteral("icon") },
+        {CaptionRole, QByteArrayLiteral("caption")},
+        {DesktopNameRole, QByteArrayLiteral("desktopName")},
+        {MinimizedRole, QByteArrayLiteral("minimized")},
+        {WIdRole, QByteArrayLiteral("windowId")},
+        {CloseableRole, QByteArrayLiteral("closeable")},
+        {IconRole, QByteArrayLiteral("icon")},
     };
 }
 
@@ -163,9 +163,9 @@ void ClientModel::createClientList(int desktop, bool partialReset)
 
     beginResetModel();
     m_clientList.clear();
-    QList< QWeakPointer< TabBoxClient > > stickyClients;
+    QList<QWeakPointer<TabBoxClient>> stickyClients;
 
-    switch(tabBox->config().clientSwitchingMode()) {
+    switch (tabBox->config().clientSwitchingMode()) {
     case TabBoxConfig::FocusChainSwitching: {
         auto c = start;
         if (!tabBox->isInFocusChain(c.data())) {
@@ -217,12 +217,12 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         break;
     }
     }
-    for (const QWeakPointer< TabBoxClient > &c : qAsConst(stickyClients)) {
+    for (const QWeakPointer<TabBoxClient> &c : qAsConst(stickyClients)) {
         m_clientList.removeAll(c);
         m_clientList.prepend(c);
     }
     if (tabBox->config().clientApplicationsMode() != TabBoxConfig::AllWindowsCurrentApplication
-            && (tabBox->config().showDesktopMode() == TabBoxConfig::ShowDesktopClient || m_clientList.isEmpty())) {
+        && (tabBox->config().showDesktopMode() == TabBoxConfig::ShowDesktopClient || m_clientList.isEmpty())) {
         QWeakPointer<TabBoxClient> desktopClient = tabBox->desktopClient();
         if (!desktopClient.isNull())
             m_clientList.append(desktopClient);

@@ -11,7 +11,8 @@ namespace KWin
 
 KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED(BlurEffect,
                                       "metadata.json.stripped",
-                                      return BlurEffect::supported();,
+                                      return BlurEffect::supported();
+                                      ,
                                       return BlurEffect::enabledByDefault();)
 
 } // namespace KWin

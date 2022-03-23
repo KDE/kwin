@@ -11,7 +11,6 @@
 
 #include <KQuickAddons/ConfigModule>
 
-
 namespace KWin
 {
 class RuleSettings;
@@ -58,7 +57,7 @@ private:
 
 private:
     RuleBookModel *m_ruleBookModel;
-    RulesModel* m_rulesModel;
+    RulesModel *m_rulesModel;
 
     QPersistentModelIndex m_editIndex;
 

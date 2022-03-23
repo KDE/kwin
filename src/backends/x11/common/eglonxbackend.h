@@ -29,19 +29,22 @@ public:
     EglOnXBackend(Display *display);
     explicit EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, int screenNumber, xcb_window_t renderingWindow);
     ~EglOnXBackend() override;
-    OverlayWindow* overlayWindow() const override;
+    OverlayWindow *overlayWindow() const override;
     void init() override;
 
 protected:
     virtual bool createSurfaces();
     EGLSurface createSurface(xcb_window_t window);
-    void setHavePlatformBase(bool have) {
+    void setHavePlatformBase(bool have)
+    {
         m_havePlatformBase = have;
     }
-    bool havePlatformBase() const {
+    bool havePlatformBase() const
+    {
         return m_havePlatformBase;
     }
-    bool havePostSubBuffer() const {
+    bool havePostSubBuffer() const
+    {
         return surfaceHasSubPost;
     }
     bool makeContextCurrent(const EGLSurface &surface);

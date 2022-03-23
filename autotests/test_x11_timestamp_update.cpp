@@ -31,7 +31,6 @@ public:
 
 protected:
     void performStartup() override;
-
 };
 
 X11TestApplication::X11TestApplication(int &argc, char **argv)
@@ -47,7 +46,7 @@ X11TestApplication::X11TestApplication(int &argc, char **argv)
     addLibraryPath(ownPath);
 
     const KPluginMetaData plugin = KPluginMetaData::findPluginById(QStringLiteral("org.kde.kwin.platforms"),
-                                                        QStringLiteral("KWinX11Platform"));
+                                                                   QStringLiteral("KWinX11Platform"));
     if (!plugin.isValid()) {
         quit();
         return;

@@ -14,7 +14,6 @@
 
 #include "ui_magiclamp_config.h"
 
-
 namespace KWin
 {
 
@@ -22,20 +21,20 @@ class MagicLampEffectConfigForm : public QWidget, public Ui::MagicLampEffectConf
 {
     Q_OBJECT
 public:
-    explicit MagicLampEffectConfigForm(QWidget* parent);
+    explicit MagicLampEffectConfigForm(QWidget *parent);
 };
 
 class MagicLampEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit MagicLampEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
+    explicit MagicLampEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
 
 public Q_SLOTS:
     void save() override;
 
 private:
-    MagicLampEffectConfigForm* m_ui;
+    MagicLampEffectConfigForm *m_ui;
 };
 
 } // namespace

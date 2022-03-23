@@ -25,15 +25,16 @@ public:
         // adds an extra 4 bytes and generic events cookie data is on the wire right after the standard 32 bytes.
         // Move this data back to have the same layout in memory as it was on the wire
         // and allow casting, overwriting the full_sequence field.
-        memmove((char*) m_event + 32, (char*) m_event + 36, m_event->length * 4);
+        memmove((char *)m_event + 32, (char *)m_event + 36, m_event->length * 4);
     }
     ~GeEventMemMover()
     {
         // move memory layout back, so that Qt can do the same without breaking
-        memmove((char*) m_event + 36, (char *) m_event + 32, m_event->length * 4);
+        memmove((char *)m_event + 36, (char *)m_event + 32, m_event->length * 4);
     }
 
-    xcb_ge_generic_event_t *operator->() const {
+    xcb_ge_generic_event_t *operator->() const
+    {
         return m_event;
     }
 

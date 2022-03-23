@@ -8,10 +8,10 @@
 */
 #pragma once
 
-#include <optional>
+#include <QObject>
 #include <QRegion>
 #include <QSharedPointer>
-#include <QObject>
+#include <optional>
 
 namespace KWin
 {

@@ -9,9 +9,9 @@
 
 #include "backends/libinput/device.h"
 #include "input.h"
-#include "inputdevice.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "inputdevice.h"
 
 #include <QDBusConnection>
 
@@ -22,7 +22,7 @@ KWIN_SINGLETON_FACTORY_VARIABLE(TabletModeManager, s_manager)
 
 static bool shouldIgnoreDevice(InputDevice *device)
 {
-    auto libinput_device = qobject_cast<LibInput::Device*>(device);
+    auto libinput_device = qobject_cast<LibInput::Device *>(device);
     if (!libinput_device) {
         return false;
     }
@@ -63,9 +63,8 @@ public:
     }
 
 private:
-    TabletModeManager * const m_parent;
+    TabletModeManager *const m_parent;
 };
-
 
 class TabletModeTouchpadRemovedSpy : public QObject
 {
@@ -102,7 +101,7 @@ public:
     }
 
 private:
-    TabletModeManager * const m_parent;
+    TabletModeManager *const m_parent;
 };
 
 TabletModeManager::TabletModeManager(QObject *parent)
@@ -117,8 +116,7 @@ TabletModeManager::TabletModeManager(QObject *parent)
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin"),
                                                  QStringLiteral("org.kde.KWin.TabletModeManager"),
                                                  this,
-                                                 QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals
-    );
+                                                 QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals);
 
     connect(input(), &InputRedirection::hasTabletModeSwitchChanged, this, &TabletModeManager::hasTabletModeInputChanged);
 }

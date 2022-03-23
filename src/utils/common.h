@@ -16,8 +16,8 @@
 // kwin
 #include <kwinglobals.h>
 // Qt
-#include <QLoggingCategory>
 #include <QList>
+#include <QLoggingCategory>
 #include <QMatrix4x4>
 #include <QPoint>
 #include <QRect>
@@ -54,11 +54,11 @@ Q_ENUM_NS(Layer)
 
 enum StrutArea {
     StrutAreaInvalid = 0, // Null
-    StrutAreaTop     = 1 << 0,
-    StrutAreaRight   = 1 << 1,
-    StrutAreaBottom  = 1 << 2,
-    StrutAreaLeft    = 1 << 3,
-    StrutAreaAll     = StrutAreaTop | StrutAreaRight | StrutAreaBottom | StrutAreaLeft,
+    StrutAreaTop = 1 << 0,
+    StrutAreaRight = 1 << 1,
+    StrutAreaBottom = 1 << 2,
+    StrutAreaLeft = 1 << 3,
+    StrutAreaAll = StrutAreaTop | StrutAreaRight | StrutAreaBottom | StrutAreaLeft,
 };
 Q_DECLARE_FLAGS(StrutAreas, StrutArea)
 
@@ -67,11 +67,13 @@ class StrutRect : public QRect
 public:
     explicit StrutRect(QRect rect = QRect(), StrutArea area = StrutAreaInvalid);
     StrutRect(int x, int y, int width, int height, StrutArea area = StrutAreaInvalid);
-    StrutRect(const StrutRect& other);
-    StrutRect &operator=(const StrutRect& other);
-    inline StrutArea area() const {
+    StrutRect(const StrutRect &other);
+    StrutRect &operator=(const StrutRect &other);
+    inline StrutArea area() const
+    {
         return m_area;
     }
+
 private:
     StrutArea m_area;
 };
@@ -90,32 +92,32 @@ enum ShadeMode {
  * @note these values are written to session files, don't change the order
  */
 enum MaximizeMode {
-    MaximizeRestore    = 0, ///< The window is not maximized in any direction.
-    MaximizeVertical   = 1, ///< The window is maximized vertically.
+    MaximizeRestore = 0, ///< The window is not maximized in any direction.
+    MaximizeVertical = 1, ///< The window is maximized vertically.
     MaximizeHorizontal = 2, ///< The window is maximized horizontally.
     /// Equal to @p MaximizeVertical | @p MaximizeHorizontal
     MaximizeFull = MaximizeVertical | MaximizeHorizontal,
 };
 
-inline
-MaximizeMode operator^(MaximizeMode m1, MaximizeMode m2)
+inline MaximizeMode operator^(MaximizeMode m1, MaximizeMode m2)
 {
     return MaximizeMode(int(m1) ^ int(m2));
 }
 
 enum class QuickTileFlag {
-    None        = 0,
-    Left        = 1 << 0,
-    Right       = 1 << 1,
-    Top         = 1 << 2,
-    Bottom      = 1 << 3,
-    Horizontal  = Left | Right,
-    Vertical    = Top | Bottom,
-    Maximize    = Left | Right | Top | Bottom,
+    None = 0,
+    Left = 1 << 0,
+    Right = 1 << 1,
+    Top = 1 << 2,
+    Bottom = 1 << 3,
+    Horizontal = Left | Right,
+    Vertical = Top | Bottom,
+    Maximize = Left | Right | Top | Bottom,
 };
 Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
 
-template <typename T> using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
+template<typename T>
+using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
 
 void KWIN_EXPORT updateXTime();
 void KWIN_EXPORT grabXServer();
@@ -140,10 +142,12 @@ static inline QRegion mapRegion(const QMatrix4x4 &matrix, const QRegion &region)
 class XServerGrabber
 {
 public:
-    XServerGrabber() {
+    XServerGrabber()
+    {
         grabXServer();
     }
-    ~XServerGrabber() {
+    ~XServerGrabber()
+    {
         ungrabXServer();
     }
 };

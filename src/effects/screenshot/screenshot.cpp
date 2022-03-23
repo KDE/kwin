@@ -64,12 +64,11 @@ static void convertFromGLImage(QImage &img, int w, int h)
             for (int x = 0; x < w; ++x) {
                 const uint pixel = *q;
                 *q = ((pixel << 16) & 0xff0000) | ((pixel >> 16) & 0xff)
-                     | (pixel & 0xff00ff00);
+                    | (pixel & 0xff00ff00);
 
                 q++;
             }
         }
-
     }
     img = img.mirrored();
 }
@@ -392,7 +391,7 @@ void ScreenShotEffect::grabPointerImage(QImage &snapshot, int xOffset, int yOffs
 bool ScreenShotEffect::isActive() const
 {
     return (!m_windowScreenShots.isEmpty() || !m_areaScreenShots.isEmpty() || !m_screenScreenShots.isEmpty())
-            && !effects->isScreenLocked();
+        && !effects->isScreenLocked();
 }
 
 int ScreenShotEffect::requestedEffectChainPosition() const
