@@ -341,6 +341,15 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVect
         for (const auto &conn : qAsConst(connectors)) {
             qCWarning(KWIN_DRM) << "disabling connector" << conn->modelName() << "without a crtc";
             conn->pipeline()->pending.crtc = nullptr;
+            if (conn->isTiled()) {
+                // don't accept situations where only some connectors of a tile group can be powered
+                const bool enabledTiles = std::find_if(m_connectors.constBegin(), m_connectors.constEnd(), [conn, connectors](const auto &c) {
+                    return c->tileGroup() == conn->tileGroup() && !connectors.contains(c);
+                }) != m_connectors.constEnd();
+                if (enabledTiles) {
+                    return false;
+                }
+            }
         }
         return testPipelines();
     }
@@ -397,6 +406,10 @@ bool DrmGpu::testPendingConfiguration(TestMode mode)
             crtcs.removeOne(output->pipeline()->pending.crtc);
         }
     }
+    // sort connectors by tiling group, so that tiled outputs get preferred
+    std::sort(connectors.begin(), connectors.end(), [](const auto &c1, const auto &c2) {
+        return c1->tileGroup() < c2->tileGroup();
+    });
     if (m_atomicModeSetting) {
         // sort outputs by being already connected (to any CRTC) so that already working outputs get preferred
         std::sort(connectors.begin(), connectors.end(), [](auto c1, auto c2) {
