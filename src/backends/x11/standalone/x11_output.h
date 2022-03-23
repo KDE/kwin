@@ -51,7 +51,6 @@ public:
     void setPhysicalSize(const QSize &size);
 
     QSize pixelSize() const override;
-    bool usesSoftwareCursor() const override;
 
 private:
     void setCrtc(xcb_randr_crtc_t crtc);

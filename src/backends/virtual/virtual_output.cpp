@@ -20,7 +20,7 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent)
     , m_backend(parent)
     , m_renderLoop(new RenderLoop(this))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
-    , m_renderOutput(new SimpleRenderOutput(this))
+    , m_renderOutput(new SimpleRenderOutput(this, true))
 {
     connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
 

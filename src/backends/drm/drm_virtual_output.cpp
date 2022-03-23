@@ -29,7 +29,7 @@ DrmVirtualOutput::DrmVirtualOutput(DrmGpu *gpu, const QSize &size)
 
 DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size)
     : DrmAbstractOutput(gpu)
-    , m_renderOutput(new SimpleRenderOutput(this))
+    , m_renderOutput(new SimpleRenderOutput(this, true))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
 {
     connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);

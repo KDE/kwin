@@ -43,9 +43,10 @@ AbstractOutput *RenderOutput::platformOutput() const
     return m_output;
 }
 
-SimpleRenderOutput::SimpleRenderOutput(AbstractOutput *output)
+SimpleRenderOutput::SimpleRenderOutput(AbstractOutput *output, bool needsSoftwareCursor)
     : RenderOutput(output)
     , m_layer(new OutputLayer())
+    , m_needsSoftwareCursor(needsSoftwareCursor)
 {
     connect(output, &AbstractOutput::geometryChanged, this, &RenderOutput::geometryChanged);
 }
@@ -57,6 +58,6 @@ OutputLayer *SimpleRenderOutput::layer() const
 
 bool SimpleRenderOutput::usesSoftwareCursor() const
 {
-    return m_output->usesSoftwareCursor();
+    return m_needsSoftwareCursor;
 }
 }

@@ -149,9 +149,4 @@ std::chrono::milliseconds AbstractOutput::dimAnimationTime()
     return std::chrono::milliseconds(KSharedConfig::openConfig()->group("Effect-Kscreen").readEntry("Duration", 250));
 }
 
-bool AbstractOutput::usesSoftwareCursor() const
-{
-    return true;
-}
-
 } // namespace KWin

@@ -54,7 +54,6 @@ public:
     void revertQueuedChanges();
     void updateModes();
 
-    bool usesSoftwareCursor() const override;
     RenderOutput *renderOutput() const override;
 
 private:
@@ -75,10 +74,6 @@ private:
     DrmConnector *m_connector;
     const QScopedPointer<DrmRenderOutput> m_renderOutput;
 
-    QSharedPointer<DumbSwapchain> m_cursor;
-    bool m_setCursorSuccessful = false;
-    bool m_moveCursorSuccessful = false;
-    QRect m_lastCursorGeometry;
     QTimer m_turnOffTimer;
 };
 
@@ -91,6 +86,14 @@ public:
     OutputLayer *layer() const override;
 
 protected:
+    void updateCursor();
+    void moveCursor();
+
+    QSharedPointer<DumbSwapchain> m_cursor;
+    bool m_setCursorSuccessful;
+    bool m_moveCursorSuccessful;
+    QRect m_lastCursorGeometry;
+
     DrmPipeline *const m_pipeline;
 };
 }

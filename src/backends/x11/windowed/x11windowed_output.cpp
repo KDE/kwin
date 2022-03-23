@@ -31,7 +31,7 @@ X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     , m_renderLoop(new RenderLoop(this))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
     , m_backend(backend)
-    , m_renderOutput(new SimpleRenderOutput(this))
+    , m_renderOutput(new SimpleRenderOutput(this, false))
 {
     m_window = xcb_generate_id(m_backend->connection());
 
@@ -186,11 +186,6 @@ void X11WindowedOutput::vblank(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
     renderLoopPrivate->notifyFrameCompleted(timestamp);
-}
-
-bool X11WindowedOutput::usesSoftwareCursor() const
-{
-    return false;
 }
 
 RenderOutput *X11WindowedOutput::renderOutput() const

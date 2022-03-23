@@ -30,7 +30,7 @@ WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
     , m_renderLoop(new RenderLoop(this))
     , m_surface(surface)
     , m_backend(backend)
-    , m_renderOutput(new SimpleRenderOutput(this))
+    , m_renderOutput(new SimpleRenderOutput(this, false))
 {
     static int identifier = -1;
     identifier++;

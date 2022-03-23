@@ -57,12 +57,13 @@ protected:
 class KWIN_EXPORT SimpleRenderOutput : public RenderOutput
 {
 public:
-    SimpleRenderOutput(AbstractOutput *output);
+    SimpleRenderOutput(AbstractOutput *output, bool needsSoftwareCursor);
 
     bool usesSoftwareCursor() const override;
     OutputLayer *layer() const override;
 
 protected:
     const QScopedPointer<OutputLayer> m_layer;
+    const bool m_needsSoftwareCursor;
 };
 }
