@@ -37,7 +37,6 @@
 #include <KLocalizedString>
 #include <KStartupInfo>
 #include <KWindowSystem>
-#include <KColorScheme>
 // Qt
 #include <QApplication>
 #include <QDebug>
