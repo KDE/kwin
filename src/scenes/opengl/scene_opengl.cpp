@@ -131,7 +131,7 @@ QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) co
 void SceneOpenGL::paintBackground(const QRegion &region)
 {
     if (region == infiniteRegion()) {
-        glClearColor(0, 0, 0, 1);
+        glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
     } else if (!region.isEmpty()) {
         QVector<float> verts;
@@ -294,7 +294,7 @@ void SceneOpenGL::doPaintBackground(const QVector< float >& vertices)
 {
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    vbo->setUseColor(true);
+    vbo->setColor(QColor(0, 0, 0, 0));
     vbo->setData(vertices.count() / 2, 2, vertices.data(), nullptr);
 
     ShaderBinder binder(ShaderTrait::UniformColor);
