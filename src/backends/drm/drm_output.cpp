@@ -384,7 +384,7 @@ void DrmOutput::pageFlipped(std::chrono::nanoseconds timestamp) const
 }
 
 DrmRenderOutput::DrmRenderOutput(DrmOutput *output, DrmPipeline *pipeline)
-    : RenderOutput(output)
+    : DrmAbstractRenderOutput(output)
     , m_pipeline(pipeline)
 {
     connect(output, &DrmOutput::geometryChanged, this, &DrmRenderOutput::geometryChanged);

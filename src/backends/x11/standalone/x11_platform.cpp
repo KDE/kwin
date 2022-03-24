@@ -684,7 +684,6 @@ QVector<RenderOutput *> X11StandalonePlatform::renderOutputs() const
 X11RenderOutput::X11RenderOutput(X11StandalonePlatform *platform)
     : RenderOutput(nullptr)
     , m_platform(platform)
-    , m_layer(new OutputLayer())
 {
     connect(workspace(), &Workspace::geometryChanged, this, &X11RenderOutput::geometryChanged);
 }
@@ -704,8 +703,4 @@ bool X11RenderOutput::usesSoftwareCursor() const
     return false;
 }
 
-OutputLayer *X11RenderOutput::layer() const
-{
-    return m_layer.get();
-}
 }

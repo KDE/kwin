@@ -10,6 +10,7 @@
 #ifndef KWIN_EGL_WAYLAND_BACKEND_H
 #define KWIN_EGL_WAYLAND_BACKEND_H
 #include "abstract_egl_backend.h"
+#include "outputlayer.h"
 #include "utils/damagejournal.h"
 // wayland
 #include <wayland-egl.h>
@@ -28,21 +29,24 @@ class WaylandBackend;
 class WaylandOutput;
 class EglWaylandBackend;
 
-class EglWaylandOutput : public QObject
+class EglWaylandOutput : public OutputLayer
 {
-    Q_OBJECT
 public:
-    EglWaylandOutput(WaylandOutput *output, QObject *parent = nullptr);
+    EglWaylandOutput(WaylandOutput *output, EglWaylandBackend *backend);
     ~EglWaylandOutput() override;
+
+    QRegion beginFrame() override;
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void aboutToStartPainting(const QRegion &damage) override;
 
     bool init(EglWaylandBackend *backend);
     void updateSize();
-
-    GLRenderTarget *renderTarget() const;
+    bool makeContextCurrent();
 
 private:
     void resetBufferAge();
 
+    EglWaylandBackend *const m_backend;
     WaylandOutput *m_waylandOutput;
     wl_egl_window *m_overlay = nullptr;
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
@@ -75,9 +79,8 @@ public:
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
-    QRegion beginFrame(RenderOutput *output) override;
-    void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void present(AbstractOutput *output) override;
+    OutputLayer *getLayer(RenderOutput *output) override;
 
     void init() override;
 
@@ -87,7 +90,6 @@ public:
     }
 
     QSharedPointer<GLTexture> textureForOutput(RenderOutput *output) const override;
-    void aboutToStartPainting(RenderOutput *output, const QRegion &damage) override;
 
 private:
     bool initializeEgl();
@@ -97,14 +99,12 @@ private:
     bool createEglWaylandOutput(AbstractOutput *output);
 
     void cleanupSurfaces() override;
-    void cleanupOutput(EglWaylandOutput *output);
 
-    bool makeContextCurrent(EglWaylandOutput *output);
     void presentOnSurface(EglWaylandOutput *output, const QRegion &damagedRegion);
 
     QRegion m_lastDamage;
     WaylandBackend *m_backend;
-    QMap<AbstractOutput *, EglWaylandOutput *> m_outputs;
+    QMap<AbstractOutput *, QSharedPointer<EglWaylandOutput>> m_outputs;
     bool m_havePlatformBase;
     friend class EglWaylandTexture;
 };

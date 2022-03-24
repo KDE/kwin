@@ -33,22 +33,6 @@ DrmQPainterBackend::~DrmQPainterBackend()
     m_backend->setRenderBackend(nullptr);
 }
 
-QImage *DrmQPainterBackend::bufferForScreen(RenderOutput *output)
-{
-    return dynamic_cast<QPainterLayer *>(output->layer())->image();
-}
-
-QRegion DrmQPainterBackend::beginFrame(RenderOutput *output)
-{
-    return static_cast<DrmOutputLayer *>(output->layer())->startRendering().value_or(QRegion());
-}
-
-void DrmQPainterBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damage)
-{
-    Q_UNUSED(renderedRegion)
-    static_cast<DrmOutputLayer *>(output->layer())->endRendering(damage);
-}
-
 void DrmQPainterBackend::present(AbstractOutput *output)
 {
     static_cast<DrmAbstractOutput *>(output)->present();
@@ -68,4 +52,8 @@ QSharedPointer<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput 
     return QSharedPointer<DrmVirtualQPainterLayer>::create(output);
 }
 
+OutputLayer *DrmQPainterBackend::getLayer(RenderOutput *output)
+{
+    return static_cast<DrmRenderOutput *>(output)->layer();
+}
 }

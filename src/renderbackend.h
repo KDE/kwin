@@ -17,6 +17,7 @@ class AbstractOutput;
 class OverlayWindow;
 class SurfaceItem;
 class RenderOutput;
+class OutputLayer;
 
 /**
  * The RenderBackend class is the base class for all rendering backends.
@@ -33,22 +34,7 @@ public:
 
     virtual bool checkGraphicsReset();
 
-    /**
-     * Notifies about starting to paint.
-     *
-     * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
-     */
-    virtual void aboutToStartPainting(RenderOutput *output, const QRegion &damage);
-
-    virtual QRegion beginFrame(RenderOutput *output) = 0;
-    virtual void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
-
-    /**
-     * Tries to directly scan out a surface to the screen
-     * Returns @c true if scanout succeeds, @c false if rendering is necessary
-     */
-    virtual bool scanout(RenderOutput *output, SurfaceItem *surfaceItem);
-
+    virtual OutputLayer *getLayer(RenderOutput *output) = 0;
     virtual void present(AbstractOutput *output) = 0;
 };
 

@@ -26,8 +26,24 @@
 namespace KWin
 {
 
+EglOutputLayer::EglOutputLayer(EglBackend *backend)
+    : m_backend(backend)
+{
+}
+
+QRegion EglOutputLayer::beginFrame()
+{
+    return m_backend->beginFrame();
+}
+
+void EglOutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    return m_backend->endFrame(renderedRegion, damagedRegion);
+}
+
 EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
     : EglOnXBackend(display)
+    , m_layer(new EglOutputLayer(this))
     , m_backend(backend)
 {
     // There is no any way to determine when a buffer swap completes with EGL. Fallback
@@ -105,9 +121,8 @@ void EglBackend::screenGeometryChanged()
     m_renderTarget.reset(new GLRenderTarget(0, screens()->size()));
 }
 
-QRegion EglBackend::beginFrame(RenderOutput *output)
+QRegion EglBackend::beginFrame()
 {
-    Q_UNUSED(output)
     makeCurrent();
 
     QRegion repaint;
@@ -122,9 +137,8 @@ QRegion EglBackend::beginFrame(RenderOutput *output)
     return repaint;
 }
 
-void EglBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(output)
     m_lastRenderedRegion = renderedRegion;
 
     // Save the damaged region to history
@@ -183,6 +197,12 @@ void EglBackend::vblank(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_backend->renderLoop());
     renderLoopPrivate->notifyFrameCompleted(timestamp);
+}
+
+OutputLayer *EglBackend::getLayer(RenderOutput *output)
+{
+    Q_UNUSED(output)
+    return m_layer.get();
 }
 
 EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture)

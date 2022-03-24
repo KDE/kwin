@@ -78,7 +78,7 @@ private:
     QTimer m_turnOffTimer;
 };
 
-class DrmRenderOutput : public RenderOutput
+class DrmRenderOutput : public DrmAbstractRenderOutput
 {
 public:
     DrmRenderOutput(DrmOutput *output, DrmPipeline *pipeline);

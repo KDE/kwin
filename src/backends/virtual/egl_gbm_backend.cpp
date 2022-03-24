@@ -30,9 +30,26 @@
 namespace KWin
 {
 
+VirtualEglOutputLayer::VirtualEglOutputLayer(EglGbmBackend *backend)
+    : m_backend(backend)
+{
+}
+
+QRegion VirtualEglOutputLayer::beginFrame()
+{
+    return m_backend->beginFrame();
+}
+
+void VirtualEglOutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    Q_UNUSED(renderedRegion)
+    Q_UNUSED(damagedRegion)
+}
+
 EglGbmBackend::EglGbmBackend(VirtualBackend *b)
     : AbstractEglBackend()
     , m_backend(b)
+    , m_layer(new VirtualEglOutputLayer(this))
 {
     // Egl is always direct rendering
     setIsDirectRendering(true);
@@ -158,9 +175,8 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-QRegion EglGbmBackend::beginFrame(RenderOutput *output)
+QRegion EglGbmBackend::beginFrame()
 {
-    Q_UNUSED(output)
     if (!GLRenderTarget::currentRenderTarget()) {
         GLRenderTarget::pushRenderTarget(m_fbo);
     }
@@ -197,13 +213,6 @@ static void convertFromGLImage(QImage &img, int w, int h)
     img = img.mirrored();
 }
 
-void EglGbmBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
-{
-    Q_UNUSED(output)
-    Q_UNUSED(renderedRegion)
-    Q_UNUSED(damagedRegion)
-}
-
 void EglGbmBackend::present(AbstractOutput *output)
 {
     glFlush();
@@ -219,6 +228,12 @@ void EglGbmBackend::present(AbstractOutput *output)
     GLRenderTarget::popRenderTarget();
 
     eglSwapBuffers(eglDisplay(), surface());
+}
+
+OutputLayer *EglGbmBackend::getLayer(RenderOutput *output)
+{
+    Q_UNUSED(output)
+    return m_layer.get();
 }
 
 } // namespace

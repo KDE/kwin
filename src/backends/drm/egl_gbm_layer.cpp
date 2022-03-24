@@ -61,7 +61,7 @@ void EglGbmLayer::destroyResources()
     m_oldGbmSurface.reset();
 }
 
-std::optional<QRegion> EglGbmLayer::startRendering()
+QRegion EglGbmLayer::beginFrame()
 {
     m_scanoutBuffer.reset();
     // dmabuf feedback
@@ -81,14 +81,14 @@ std::optional<QRegion> EglGbmLayer::startRendering()
             m_gbmSurface = m_oldGbmSurface;
         } else {
             if (!createGbmSurface()) {
-                return std::optional<QRegion>();
+                return QRegion();
             }
             // dmabuf might work with the new surface
             m_importMode = MultiGpuImportMode::Dmabuf;
         }
     }
     if (!m_gbmSurface->makeContextCurrent()) {
-        return std::optional<QRegion>();
+        return QRegion();
     }
     auto repaintRegion = m_gbmSurface->repaintRegion(m_pipeline->output()->geometry());
 
@@ -103,7 +103,7 @@ std::optional<QRegion> EglGbmLayer::startRendering()
                 const auto format = m_eglBackend->gbmFormatForDrmFormat(m_gbmSurface->format());
                 m_shadowBuffer = QSharedPointer<ShadowBuffer>::create(m_pipeline->sourceSize(), format);
                 if (!m_shadowBuffer->isComplete()) {
-                    return std::optional<QRegion>();
+                    return QRegion();
                 }
             } else {
                 m_shadowBuffer.reset();
@@ -132,8 +132,9 @@ void EglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
     }
 }
 
-bool EglGbmLayer::endRendering(const QRegion &damagedRegion)
+void EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(renderedRegion)
     if (m_shadowBuffer) {
         GLRenderTarget::popRenderTarget();
         // TODO handle m_pipeline->pending.bufferTransformation != Rotate0
@@ -152,7 +153,6 @@ bool EglGbmLayer::endRendering(const QRegion &damagedRegion)
         m_currentBuffer = buffer;
         m_currentDamage = damagedRegion;
     }
-    return !buffer.isNull();
 }
 
 QRegion EglGbmLayer::currentDamage() const
@@ -181,13 +181,9 @@ QSharedPointer<DrmBuffer> EglGbmLayer::testBuffer()
 
 bool EglGbmLayer::renderTestBuffer()
 {
-    if (!startRendering()) {
-        return false;
-    }
+    beginFrame();
     glClear(GL_COLOR_BUFFER_BIT);
-    if (!endRendering(m_pipeline->output()->geometry())) {
-        return false;
-    }
+    endFrame(m_pipeline->output()->geometry(), m_pipeline->output()->geometry());
     return true;
 }
 

@@ -37,7 +37,6 @@ public:
     QRect geometry() const override;
     AbstractOutput *platformOutput() const override;
     bool usesSoftwareCursor() const override;
-    OutputLayer *layer() const override;
 
 private:
     X11StandalonePlatform *const m_platform;

@@ -45,10 +45,35 @@ namespace KWin
 namespace Wayland
 {
 
-EglWaylandOutput::EglWaylandOutput(WaylandOutput *output, QObject *parent)
-    : QObject(parent)
+static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutput *output)
+{
+    const int height = output->modeSize().height();
+    const QMatrix4x4 matrix = WaylandOutput::logicalToNativeMatrix(output->geometry(),
+                                                                   output->scale(),
+                                                                   output->transform());
+
+    QVector<EGLint> rects;
+    rects.reserve(region.rectCount() * 4);
+    for (const QRect &_rect : region) {
+        const QRect rect = matrix.mapRect(_rect);
+
+        rects << rect.left();
+        rects << height - (rect.y() + rect.height());
+        rects << rect.width();
+        rects << rect.height();
+    }
+    return rects;
+}
+
+EglWaylandOutput::EglWaylandOutput(WaylandOutput *output, EglWaylandBackend *backend)
+    : m_backend(backend)
     , m_waylandOutput(output)
 {
+}
+
+EglWaylandOutput::~EglWaylandOutput()
+{
+    wl_egl_window_destroy(m_overlay);
 }
 
 bool EglWaylandOutput::init(EglWaylandBackend *backend)
@@ -82,15 +107,6 @@ bool EglWaylandOutput::init(EglWaylandBackend *backend)
     return true;
 }
 
-EglWaylandOutput::~EglWaylandOutput()
-{
-}
-
-GLRenderTarget *EglWaylandOutput::renderTarget() const
-{
-    return m_renderTarget.data();
-}
-
 void EglWaylandOutput::updateSize()
 {
     const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
@@ -103,6 +119,54 @@ void EglWaylandOutput::updateSize()
 void EglWaylandOutput::resetBufferAge()
 {
     m_bufferAge = 0;
+}
+
+bool EglWaylandOutput::makeContextCurrent()
+{
+    const EGLSurface eglSurface = m_eglSurface;
+    if (eglSurface == EGL_NO_SURFACE) {
+        return false;
+    }
+    if (eglMakeCurrent(m_backend->eglDisplay(), eglSurface, eglSurface, m_backend->context()) == EGL_FALSE) {
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
+        return false;
+    }
+
+    EGLint error = eglGetError();
+    if (error != EGL_SUCCESS) {
+        qCWarning(KWIN_WAYLAND_BACKEND) << "Error occurred while creating context " << error;
+        return false;
+    }
+
+    return true;
+}
+
+QRegion EglWaylandOutput::beginFrame()
+{
+    eglWaitNative(EGL_CORE_NATIVE_ENGINE);
+    makeContextCurrent();
+    GLRenderTarget::pushRenderTarget(m_renderTarget.get());
+
+    if (m_backend->supportsBufferAge()) {
+        return m_damageJournal.accumulate(m_bufferAge, m_waylandOutput->geometry());
+    }
+    return QRegion();
+}
+
+void EglWaylandOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+}
+
+void EglWaylandOutput::aboutToStartPainting(const QRegion &damage)
+{
+    if (m_bufferAge > 0 && !damage.isEmpty() && m_backend->supportsPartialUpdate()) {
+        QVector<EGLint> rects = regionToRects(damage, m_waylandOutput);
+        const bool correct = eglSetDamageRegionKHR(m_backend->eglDisplay(), m_eglSurface,
+                                                   rects.data(), rects.count() / 4);
+        if (!correct) {
+            qCWarning(KWIN_WAYLAND_BACKEND) << "failed eglSetDamageRegionKHR" << eglGetError();
+        }
+    }
 }
 
 EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
@@ -124,13 +188,12 @@ EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
 
     connect(m_backend, &WaylandBackend::outputAdded, this, &EglWaylandBackend::createEglWaylandOutput);
     connect(m_backend, &WaylandBackend::outputRemoved, this, [this](AbstractOutput *output) {
-        auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [output](const EglWaylandOutput *o) {
+        auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [output](const auto &o) {
             return o->m_waylandOutput == output;
         });
         if (it == m_outputs.end()) {
             return;
         }
-        cleanupOutput(*it);
         m_outputs.erase(it);
     });
 }
@@ -142,26 +205,17 @@ EglWaylandBackend::~EglWaylandBackend()
 
 void EglWaylandBackend::cleanupSurfaces()
 {
-    for (auto o : qAsConst(m_outputs)) {
-        cleanupOutput(o);
-    }
     m_outputs.clear();
 }
 
 bool EglWaylandBackend::createEglWaylandOutput(AbstractOutput *waylandOutput)
 {
-    const auto &output = new EglWaylandOutput(static_cast<WaylandOutput *>(waylandOutput), this);
+    const auto &output = QSharedPointer<EglWaylandOutput>::create(static_cast<WaylandOutput *>(waylandOutput), this);
     if (!output->init(this)) {
-        delete output;
         return false;
     }
     m_outputs.insert(waylandOutput, output);
     return true;
-}
-
-void EglWaylandBackend::cleanupOutput(EglWaylandOutput *output)
-{
-    wl_egl_window_destroy(output->m_overlay);
 }
 
 bool EglWaylandBackend::initializeEgl()
@@ -234,30 +288,10 @@ bool EglWaylandBackend::initRenderingContext()
         return false;
     }
 
-    auto *firstOutput = m_outputs.first();
+    const auto firstOutput = m_outputs.first();
     // set our first surface as the one for the abstract backend, just to make it happy
     setSurface(firstOutput->m_eglSurface);
-    return makeContextCurrent(firstOutput);
-}
-
-bool EglWaylandBackend::makeContextCurrent(EglWaylandOutput *output)
-{
-    const EGLSurface eglSurface = output->m_eglSurface;
-    if (eglSurface == EGL_NO_SURFACE) {
-        return false;
-    }
-    if (eglMakeCurrent(eglDisplay(), eglSurface, eglSurface, context()) == EGL_FALSE) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
-        return false;
-    }
-
-    EGLint error = eglGetError();
-    if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_WAYLAND_BACKEND) << "Error occurred while creating context " << error;
-        return false;
-    }
-
-    return true;
+    return firstOutput->makeContextCurrent();
 }
 
 bool EglWaylandBackend::initBufferConfigs()
@@ -295,49 +329,15 @@ bool EglWaylandBackend::initBufferConfigs()
     return true;
 }
 
-static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutput *output)
-{
-    const int height = output->modeSize().height();
-    const QMatrix4x4 matrix = WaylandOutput::logicalToNativeMatrix(output->geometry(),
-                                                                   output->scale(),
-                                                                   output->transform());
-
-    QVector<EGLint> rects;
-    rects.reserve(region.rectCount() * 4);
-    for (const QRect &_rect : region) {
-        const QRect rect = matrix.mapRect(_rect);
-
-        rects << rect.left();
-        rects << height - (rect.y() + rect.height());
-        rects << rect.width();
-        rects << rect.height();
-    }
-    return rects;
-}
 
 QSharedPointer<GLTexture> EglWaylandBackend::textureForOutput(RenderOutput *output) const
 {
     QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, output->pixelSize()));
-    GLRenderTarget::pushRenderTarget(m_outputs[output->platformOutput()]->renderTarget());
+    GLRenderTarget::pushRenderTarget(m_outputs[output->platformOutput()]->m_renderTarget.get());
     GLRenderTarget renderTarget(texture.data());
     renderTarget.blitFromFramebuffer(QRect(0, texture->height(), texture->width(), -texture->height()));
     GLRenderTarget::popRenderTarget();
     return texture;
-}
-
-void EglWaylandBackend::aboutToStartPainting(RenderOutput *output, const QRegion &damagedRegion)
-{
-    Q_ASSERT_X(output, "aboutToStartPainting", "not using per screen rendering");
-    Q_ASSERT(m_outputs.contains(output->platformOutput()));
-    const auto &eglOutput = m_outputs[output->platformOutput()];
-    if (eglOutput->m_bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
-        QVector<EGLint> rects = regionToRects(damagedRegion, eglOutput->m_waylandOutput);
-        const bool correct = eglSetDamageRegionKHR(eglDisplay(), eglOutput->m_eglSurface,
-                                                   rects.data(), rects.count() / 4);
-        if (!correct) {
-            qCWarning(KWIN_WAYLAND_BACKEND) << "failed eglSetDamageRegionKHR" << eglGetError();
-        }
-    }
 }
 
 void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output, const QRegion &damage)
@@ -375,41 +375,22 @@ SurfaceTexture *EglWaylandBackend::createSurfaceTextureWayland(SurfacePixmapWayl
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-QRegion EglWaylandBackend::beginFrame(RenderOutput *output)
-{
-    Q_ASSERT(m_outputs.contains(output->platformOutput()));
-    eglWaitNative(EGL_CORE_NATIVE_ENGINE);
-
-    const auto &eglOutput = m_outputs[output->platformOutput()];
-    makeContextCurrent(eglOutput);
-
-    GLRenderTarget::pushRenderTarget(eglOutput->renderTarget());
-
-    if (supportsBufferAge()) {
-        return eglOutput->m_damageJournal.accumulate(eglOutput->m_bufferAge, eglOutput->m_waylandOutput->geometry());
-    }
-
-    return QRegion();
-}
-
-void EglWaylandBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
-{
-    Q_UNUSED(output)
-    Q_UNUSED(renderedRegion);
-    m_lastDamage = damagedRegion;
-}
-
 void EglWaylandBackend::present(AbstractOutput *output)
 {
     Q_ASSERT(m_outputs.contains(output));
     GLRenderTarget::popRenderTarget();
 
     const auto &eglOutput = m_outputs[output];
-    presentOnSurface(eglOutput, m_lastDamage);
+    presentOnSurface(eglOutput.get(), m_lastDamage);
 
     if (supportsBufferAge()) {
         eglOutput->m_damageJournal.add(m_lastDamage);
     }
+}
+
+OutputLayer *EglWaylandBackend::getLayer(RenderOutput *output)
+{
+    return m_outputs[output->platformOutput()].get();
 }
 }
 }

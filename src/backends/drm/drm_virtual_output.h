@@ -34,6 +34,8 @@ public:
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
     QVector<QSharedPointer<RenderOutput>> renderOutputs() const override;
+
+    OutputLayer *layer() const;
     void recreateSurface();
 
 private:
@@ -49,4 +51,14 @@ private:
     SoftwareVsyncMonitor *m_vsyncMonitor;
 };
 
+class DrmVirtualRenderOutput : public DrmAbstractRenderOutput
+{
+public:
+    DrmVirtualRenderOutput(DrmVirtualOutput *output);
+
+    OutputLayer *layer() const override;
+
+private:
+    DrmVirtualOutput *const m_output;
+};
 }

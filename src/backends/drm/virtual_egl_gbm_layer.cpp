@@ -61,7 +61,7 @@ void VirtualEglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
     }
 }
 
-std::optional<QRegion> VirtualEglGbmLayer::startRendering()
+QRegion VirtualEglGbmLayer::beginFrame()
 {
     // gbm surface
     if (doesGbmSurfaceFit(m_gbmSurface.data())) {
@@ -71,26 +71,26 @@ std::optional<QRegion> VirtualEglGbmLayer::startRendering()
             m_gbmSurface = m_oldGbmSurface;
         } else {
             if (!createGbmSurface()) {
-                return std::optional<QRegion>();
+                return QRegion();
             }
         }
     }
     if (!m_gbmSurface->makeContextCurrent()) {
-        return std::optional<QRegion>();
+        return QRegion();
     }
     GLRenderTarget::pushRenderTarget(m_gbmSurface->renderTarget());
     return m_gbmSurface->repaintRegion(m_output->geometry());
 }
 
-bool VirtualEglGbmLayer::endRendering(const QRegion &damagedRegion)
+void VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(renderedRegion)
     GLRenderTarget::popRenderTarget();
     const auto buffer = m_gbmSurface->swapBuffers(damagedRegion.intersected(m_output->geometry()));
     if (buffer) {
         m_currentBuffer = buffer;
         m_currentDamage = damagedRegion;
     }
-    return !buffer.isNull();
 }
 
 QRegion VirtualEglGbmLayer::currentDamage() const

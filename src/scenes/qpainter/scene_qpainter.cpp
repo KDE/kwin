@@ -71,7 +71,7 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
 
 void SceneQPainter::paint(const QRegion &region)
 {
-    QImage *buffer = m_backend->bufferForScreen(painted_screen);
+    QImage *buffer = m_backend->getLayer(painted_screen)->image();
     if (buffer && !buffer->isNull()) {
         m_painter->begin(buffer);
         m_painter->setWindow(painted_screen->geometry());
@@ -117,7 +117,7 @@ Shadow *SceneQPainter::createShadow(Toplevel *toplevel)
 
 QImage *SceneQPainter::qpainterRenderBuffer(RenderOutput *output) const
 {
-    return m_backend->bufferForScreen(output);
+    return m_backend->getLayer(output)->image();
 }
 
 //****************************************

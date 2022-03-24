@@ -20,21 +20,13 @@ class DrmVirtualOutput;
 class DrmQPainterBackend;
 class DrmDumbBuffer;
 
-class QPainterLayer
-{
-public:
-    virtual ~QPainterLayer() = default;
-
-    virtual QImage *image() = 0;
-};
-
-class DrmQPainterLayer : public DrmPipelineLayer, public QPainterLayer
+class DrmQPainterLayer : public DrmPipelineLayer
 {
 public:
     DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline);
 
-    std::optional<QRegion> startRendering() override;
-    bool endRendering(const QRegion &damagedRegion) override;
+    QRegion beginFrame() override;
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QSharedPointer<DrmBuffer> testBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     QRegion currentDamage() const override;
@@ -47,13 +39,13 @@ private:
     QRegion m_currentDamage;
 };
 
-class DrmVirtualQPainterLayer : public DrmOutputLayer, public QPainterLayer
+class DrmVirtualQPainterLayer : public DrmOutputLayer
 {
 public:
     DrmVirtualQPainterLayer(DrmVirtualOutput *output);
 
-    std::optional<QRegion> startRendering() override;
-    bool endRendering(const QRegion &damagedRegion) override;
+    QRegion beginFrame() override;
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     QRegion currentDamage() const override;
     QImage *image() override;
@@ -68,6 +60,9 @@ class DrmLeaseQPainterLayer : public DrmPipelineLayer
 {
 public:
     DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline);
+
+    QRegion beginFrame() override;
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     QSharedPointer<DrmBuffer> testBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;

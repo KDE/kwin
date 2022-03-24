@@ -9,7 +9,7 @@
 #pragma once
 
 #include <QRect>
-#include <QScopedPointer>
+#include <QSharedPointer>
 
 #include "outputlayer.h"
 
@@ -34,15 +34,6 @@ public:
     QRect relativePixelGeometry() const;
 
     /**
-     * Returns a dummy OutputLayer corresponding to the primary plane.
-     *
-     * TODO: remove this. The Compositor should allocate and deallocate hardware planes
-     * after the pre paint pass. Planes must be allocated based on the bounding rect, transform,
-     * and visibility (for the cursor plane).
-     */
-    virtual OutputLayer *layer() const = 0;
-
-    /**
      * TODO replace this with output layers
      */
     virtual bool usesSoftwareCursor() const = 0;
@@ -60,11 +51,9 @@ public:
     SimpleRenderOutput(AbstractOutput *output, bool needsSoftwareCursor);
 
     bool usesSoftwareCursor() const override;
-    OutputLayer *layer() const override;
     QRect geometry() const override;
 
 protected:
-    const QScopedPointer<OutputLayer> m_layer;
     const bool m_needsSoftwareCursor;
 };
 }

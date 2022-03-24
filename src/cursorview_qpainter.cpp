@@ -23,7 +23,7 @@ QPainterCursorView::QPainterCursorView(QObject *parent)
 
 void QPainterCursorView::paint(RenderOutput *output, const QRegion &region)
 {
-    QImage *renderTarget = static_cast<QPainterBackend *>(Compositor::self()->backend())->bufferForScreen(output);
+    QImage *renderTarget = Compositor::self()->backend()->getLayer(output)->image();
     if (Q_UNLIKELY(!renderTarget)) {
         return;
     }

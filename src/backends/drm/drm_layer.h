@@ -27,17 +27,6 @@ class DrmOutputLayer : public OutputLayer
 public:
     virtual ~DrmOutputLayer();
 
-    virtual void aboutToStartPainting(const QRegion &damagedRegion);
-    virtual std::optional<QRegion> startRendering();
-    virtual bool endRendering(const QRegion &damagedRegion);
-
-    /**
-     * attempts to directly scan out the current buffer of the surfaceItem
-     * @returns true if scanout was successful
-     *          false if rendering is required
-     */
-    virtual bool scanout(SurfaceItem *surfaceItem);
-
     virtual QSharedPointer<GLTexture> texture() const;
 
     virtual QRegion currentDamage() const;

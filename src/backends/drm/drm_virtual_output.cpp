@@ -100,4 +100,19 @@ void DrmVirtualOutput::recreateSurface()
     m_layer = m_gpu->platform()->renderBackend()->createLayer(this);
 }
 
+OutputLayer *DrmVirtualOutput::layer() const
+{
+    return m_layer.get();
+}
+
+DrmVirtualRenderOutput::DrmVirtualRenderOutput(DrmVirtualOutput *output)
+    : DrmAbstractRenderOutput(output)
+    , m_output(output)
+{
+}
+
+OutputLayer *DrmVirtualRenderOutput::layer() const
+{
+    return m_output->layer();
+}
 }

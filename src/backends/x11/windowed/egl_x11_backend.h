@@ -10,6 +10,7 @@
 #define KWIN_EGL_X11_BACKEND_H
 #include "eglonxbackend.h"
 #include "kwinglutils.h"
+#include "outputlayer.h"
 
 #include <QMap>
 
@@ -17,12 +18,26 @@ namespace KWin
 {
 
 class X11WindowedBackend;
+class EglX11Backend;
 
-class EglX11Output
+class EglX11Output : public OutputLayer
 {
 public:
+    EglX11Output(AbstractOutput *output, EglX11Backend *backend, EGLSurface surface);
+    ~EglX11Output();
+
+    QRegion beginFrame() override;
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+
+private:
+    EglX11Backend *const m_backend;
+    AbstractOutput *const m_output;
+
     EGLSurface m_eglSurface;
     QScopedPointer<GLRenderTarget> m_renderTarget;
+    QRegion m_lastRenderedRegion;
+
+    friend class EglX11Backend;
 };
 
 /**
@@ -39,9 +54,8 @@ public:
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     void init() override;
-    QRegion beginFrame(RenderOutput *output) override;
-    void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void present(AbstractOutput *output) override;
+    OutputLayer *getLayer(RenderOutput *output) override;
 
 protected:
     void cleanupSurfaces() override;
@@ -50,8 +64,7 @@ protected:
 private:
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
 
-    QRegion m_lastRenderedRegion;
-    QMap<AbstractOutput *, EglX11Output *> m_outputs;
+    QMap<AbstractOutput *, QSharedPointer<EglX11Output>> m_outputs;
     X11WindowedBackend *m_backend;
 };
 

@@ -64,12 +64,10 @@ public:
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
-    QRegion beginFrame(RenderOutput *output) override;
-    void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void present(AbstractOutput *output) override;
+    OutputLayer *getLayer(RenderOutput *output) override;
 
     void init() override;
-    bool scanout(RenderOutput *output, SurfaceItem *surfaceItem) override;
     bool prefer10bpc() const override;
     QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) override;
     QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
@@ -83,9 +81,6 @@ public:
 
 Q_SIGNALS:
     void aboutToBeDestroyed();
-
-protected:
-    void aboutToStartPainting(RenderOutput *output, const QRegion &damage) override;
 
 private:
     bool initializeEgl();

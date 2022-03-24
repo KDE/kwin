@@ -8,6 +8,7 @@
 
 #include "eglonxbackend.h"
 #include "openglsurfacetexture_x11.h"
+#include "outputlayer.h"
 #include "utils/damagejournal.h"
 
 #include <kwingltexture.h>
@@ -19,6 +20,19 @@ namespace KWin
 class EglPixmapTexturePrivate;
 class SoftwareVsyncMonitor;
 class X11StandalonePlatform;
+class EglBackend;
+
+class EglOutputLayer : public OutputLayer
+{
+public:
+    EglOutputLayer(EglBackend *backend);
+
+    QRegion beginFrame() override;
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+
+private:
+    EglBackend *const m_backend;
+};
 
 class EglBackend : public EglOnXBackend
 {
@@ -31,15 +45,18 @@ public:
     void init() override;
 
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *texture) override;
-    QRegion beginFrame(RenderOutput *output) override;
-    void endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void present(AbstractOutput *output) override;
+    OutputLayer *getLayer(RenderOutput *output) override;
+
+    QRegion beginFrame();
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
 
 private:
     void screenGeometryChanged();
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
     void vblank(std::chrono::nanoseconds timestamp);
 
+    const QScopedPointer<EglOutputLayer> m_layer;
     QRegion m_lastRenderedRegion;
     X11StandalonePlatform *m_backend;
     SoftwareVsyncMonitor *m_vsyncMonitor;

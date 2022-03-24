@@ -10,10 +10,14 @@
 #include "drm_backend.h"
 #include "drm_gpu.h"
 #include "renderloop_p.h"
-#include "renderoutput.h"
 
 namespace KWin
 {
+
+DrmAbstractRenderOutput::DrmAbstractRenderOutput(AbstractOutput *output)
+    : RenderOutput(output)
+{
+}
 
 DrmAbstractOutput::DrmAbstractOutput(DrmGpu *gpu)
     : AbstractWaylandOutput(gpu->platform())

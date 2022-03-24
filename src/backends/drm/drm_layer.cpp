@@ -16,28 +16,6 @@ namespace KWin
 
 DrmOutputLayer::~DrmOutputLayer() = default;
 
-void DrmOutputLayer::aboutToStartPainting(const QRegion &damagedRegion)
-{
-    Q_UNUSED(damagedRegion)
-}
-
-bool DrmOutputLayer::scanout(SurfaceItem *surfaceItem)
-{
-    Q_UNUSED(surfaceItem)
-    return false;
-}
-
-std::optional<QRegion> DrmOutputLayer::startRendering()
-{
-    return {};
-}
-
-bool DrmOutputLayer::endRendering(const QRegion &damagedRegion)
-{
-    Q_UNUSED(damagedRegion)
-    return false;
-}
-
 QRegion DrmOutputLayer::currentDamage() const
 {
     return {};

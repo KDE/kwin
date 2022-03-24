@@ -40,15 +40,9 @@ AbstractOutput *RenderOutput::platformOutput() const
 
 SimpleRenderOutput::SimpleRenderOutput(AbstractOutput *output, bool needsSoftwareCursor)
     : RenderOutput(output)
-    , m_layer(new OutputLayer())
     , m_needsSoftwareCursor(needsSoftwareCursor)
 {
     connect(output, &AbstractOutput::geometryChanged, this, &RenderOutput::geometryChanged);
-}
-
-OutputLayer *SimpleRenderOutput::layer() const
-{
-    return m_layer.get();
 }
 
 bool SimpleRenderOutput::usesSoftwareCursor() const

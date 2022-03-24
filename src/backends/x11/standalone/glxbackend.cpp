@@ -103,6 +103,21 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
     return true;
 }
 
+GlxOutputLayer::GlxOutputLayer(GlxBackend *backend)
+    : m_backend(backend)
+{
+}
+
+QRegion GlxOutputLayer::beginFrame()
+{
+    return m_backend->beginFrame();
+}
+
+void GlxOutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    return m_backend->endFrame(renderedRegion, damagedRegion);
+}
+
 GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
     : OpenGLBackend()
     , m_overlayWindow(kwinApp()->platform()->createOverlayWindow())
@@ -110,6 +125,7 @@ GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
     , fbconfig(nullptr)
     , glxWindow(None)
     , ctx(nullptr)
+    , m_outputLayer(new GlxOutputLayer(this))
     , m_bufferAge(0)
     , m_x11Display(display)
     , m_backend(backend)
@@ -763,10 +779,8 @@ SurfaceTexture *GlxBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
     return new GlxSurfaceTextureX11(this, pixmap);
 }
 
-QRegion GlxBackend::beginFrame(RenderOutput *output)
+QRegion GlxBackend::beginFrame()
 {
-    Q_UNUSED(output)
-
     QRegion repaint;
     makeCurrent();
 
@@ -780,9 +794,8 @@ QRegion GlxBackend::beginFrame(RenderOutput *output)
     return repaint;
 }
 
-void GlxBackend::endFrame(RenderOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(output)
     m_lastRenderedRegion = renderedRegion;
 
     // Save the damaged region to history
@@ -844,6 +857,12 @@ void GlxBackend::doneCurrent()
 OverlayWindow *GlxBackend::overlayWindow() const
 {
     return m_overlayWindow;
+}
+
+OutputLayer *GlxBackend::getLayer(RenderOutput *output)
+{
+    Q_UNUSED(output)
+    return m_outputLayer.get();
 }
 
 GlxSurfaceTextureX11::GlxSurfaceTextureX11(GlxBackend *backend, SurfacePixmapX11 *texture)

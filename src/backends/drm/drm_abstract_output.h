@@ -9,6 +9,7 @@
 #pragma once
 
 #include "abstract_wayland_output.h"
+#include "renderoutput.h"
 
 namespace KWin
 {
@@ -16,7 +17,14 @@ namespace KWin
 class DrmBackend;
 class DrmGpu;
 class DrmOutputLayer;
-class RenderOutput;
+
+class DrmAbstractRenderOutput : public RenderOutput
+{
+public:
+    DrmAbstractRenderOutput(AbstractOutput *output);
+
+    virtual OutputLayer *layer() const = 0;
+};
 
 class DrmAbstractOutput : public AbstractWaylandOutput
 {
