@@ -34,6 +34,7 @@
 #include "wl-socket.h"
 #include "wrapper_logging.h"
 #include "xauthority.h"
+#include "xwaylandlauncher.h"
 #include "xwaylandsocket.h"
 
 class KWinWrapper : public QObject
@@ -154,6 +155,14 @@ void KWinWrapper::run()
         // The service name is merely there to indicate to the world that we're up and ready with all envs exported
         QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWinWrapper"));
     });
+
+    // start Xwayland
+
+    auto xLauncher = new KWin::Xwl::XwaylandLauncher(this);
+    xLauncher->setDisplayName(m_xwlSocket->name());
+    xLauncher->setListenFDs(m_xwlSocket->fileDescriptors());
+    xLauncher->setXauthority(m_xauthorityFile.fileName());
+    xLauncher->start();
 }
 
 int main(int argc, char **argv)

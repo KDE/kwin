@@ -17,8 +17,8 @@
 #include "tabletmodemanager.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "xwl/lib/xwaylandlauncher.h"
 #include "xwl/xwayland.h"
-#include "xwl/xwaylandlauncher.h"
 
 // KWayland
 #include <KWaylandServer/display.h>
