@@ -29,14 +29,15 @@ class GbmSurface;
 class DumbSwapchain;
 class ShadowBuffer;
 class EglGbmBackend;
+class DrmPlane;
 
 class EglGbmLayer : public DrmPipelineLayer
 {
 public:
-    EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
+    EglGbmLayer(EglGbmBackend *eglbackend, DrmPipeline *pipeline);
     ~EglGbmLayer();
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void aboutToStartPainting(const QRegion &damagedRegion) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
@@ -45,6 +46,7 @@ public:
     bool hasDirectScanoutBuffer() const override;
     QRegion currentDamage() const override;
     QSharedPointer<GLTexture> texture() const override;
+    QRect geometry() const override;
 
 private:
     bool createGbmSurface(uint32_t format, const QVector<uint64_t> &modifiers);

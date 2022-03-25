@@ -237,9 +237,9 @@ QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(RenderOutput *output) 
     return static_cast<EglGbmLayer *>(dynamic_cast<DrmAbstractRenderOutput *>(output)->layer())->texture();
 }
 
-OutputLayer *EglGbmBackend::getLayer(RenderOutput *output)
+QVector<OutputLayer *> EglGbmBackend::getLayers(RenderOutput *output)
 {
-    return static_cast<DrmAbstractRenderOutput *>(output)->layer();
+    return {static_cast<DrmAbstractRenderOutput *>(output)->layer()};
 }
 
 GbmFormat EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const

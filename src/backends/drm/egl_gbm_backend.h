@@ -65,7 +65,7 @@ public:
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
     void present(AbstractOutput *output) override;
-    OutputLayer *getLayer(RenderOutput *output) override;
+    QVector<OutputLayer *> getLayers(RenderOutput *output) override;
 
     void init() override;
     bool prefer10bpc() const override;

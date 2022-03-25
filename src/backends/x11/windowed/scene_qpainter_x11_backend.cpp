@@ -30,20 +30,25 @@ X11WindowedQPainterLayer::~X11WindowedQPainterLayer()
 {
 }
 
-QImage *X11WindowedQPainterLayer::image()
+std::optional<QRegion> X11WindowedQPainterLayer::beginFrame(const QRect &geometry)
 {
-    return &m_buffer;
-}
-
-QRegion X11WindowedQPainterLayer::beginFrame()
-{
-    return m_output->geometry();
+    return geometry;
 }
 
 void X11WindowedQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
+}
+
+QImage *X11WindowedQPainterLayer::image()
+{
+    return &m_buffer;
+}
+
+QRect X11WindowedQPainterLayer::geometry() const
+{
+    return m_output->geometry();
 }
 
 xcb_window_t X11WindowedQPainterLayer::window() const
@@ -97,8 +102,8 @@ void X11WindowedQPainterBackend::present(AbstractOutput *output)
                   buffer->sizeInBytes(), buffer->constBits());
 }
 
-OutputLayer *X11WindowedQPainterBackend::getLayer(RenderOutput *output)
+QVector<OutputLayer *> X11WindowedQPainterBackend::getLayers(RenderOutput *output)
 {
-    return m_outputs[output->platformOutput()].get();
+    return {m_outputs[output->platformOutput()].get()};
 }
 }

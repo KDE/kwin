@@ -141,20 +141,22 @@ bool EglWaylandOutput::makeContextCurrent()
     return true;
 }
 
-QRegion EglWaylandOutput::beginFrame()
+std::optional<QRegion> EglWaylandOutput::beginFrame(const QRect &geometry)
 {
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
     makeContextCurrent();
     GLRenderTarget::pushRenderTarget(m_renderTarget.get());
 
     if (m_backend->supportsBufferAge()) {
-        return m_damageJournal.accumulate(m_bufferAge, m_waylandOutput->geometry());
+        return m_damageJournal.accumulate(m_bufferAge, geometry);
     }
     return QRegion();
 }
 
 void EglWaylandOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(renderedRegion)
+    Q_UNUSED(damagedRegion)
 }
 
 void EglWaylandOutput::aboutToStartPainting(const QRegion &damage)
@@ -167,6 +169,11 @@ void EglWaylandOutput::aboutToStartPainting(const QRegion &damage)
             qCWarning(KWIN_WAYLAND_BACKEND) << "failed eglSetDamageRegionKHR" << eglGetError();
         }
     }
+}
+
+QRect EglWaylandOutput::geometry() const
+{
+    return m_waylandOutput->geometry();
 }
 
 EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
@@ -388,9 +395,9 @@ void EglWaylandBackend::present(AbstractOutput *output)
     }
 }
 
-OutputLayer *EglWaylandBackend::getLayer(RenderOutput *output)
+QVector<OutputLayer *> EglWaylandBackend::getLayers(RenderOutput *output)
 {
-    return m_outputs[output->platformOutput()].get();
+    return {m_outputs[output->platformOutput()].get()};
 }
 }
 }

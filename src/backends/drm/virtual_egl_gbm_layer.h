@@ -36,12 +36,13 @@ public:
     VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output);
 
     void aboutToStartPainting(const QRegion &damagedRegion) override;
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
 
     QRegion currentDamage() const override;
     QSharedPointer<GLTexture> texture() const override;
+    QRect geometry() const override;
 
 private:
     bool createGbmSurface();

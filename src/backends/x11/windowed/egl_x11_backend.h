@@ -26,8 +26,9 @@ public:
     EglX11Output(AbstractOutput *output, EglX11Backend *backend, EGLSurface surface);
     ~EglX11Output();
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QRect geometry() const override;
 
 private:
     EglX11Backend *const m_backend;
@@ -55,7 +56,7 @@ public:
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     void init() override;
     void present(AbstractOutput *output) override;
-    OutputLayer *getLayer(RenderOutput *output) override;
+    QVector<OutputLayer *> getLayers(RenderOutput *output) override;
 
 protected:
     void cleanupSurfaces() override;

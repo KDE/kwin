@@ -120,7 +120,7 @@ void SceneDelegate::postPaint()
 
 void SceneDelegate::paint(const QRegion &region)
 {
-    m_scene->paint(region);
+    m_scene->paint(layer()->outputLayer(), region);
 }
 
 //****************************************

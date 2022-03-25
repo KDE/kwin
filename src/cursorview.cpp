@@ -17,9 +17,8 @@ CursorView::CursorView(QObject *parent)
 {
 }
 
-CursorDelegate::CursorDelegate(RenderOutput *output, CursorView *view)
+CursorDelegate::CursorDelegate(CursorView *view)
     : m_view(view)
-    , m_output(output)
 {
 }
 
@@ -27,7 +26,7 @@ void CursorDelegate::paint(const QRegion &region)
 {
     const Cursor *cursor = Cursors::self()->currentCursor();
     if (region.intersects(cursor->geometry())) {
-        m_view->paint(m_output, region);
+        m_view->paint(layer()->outputLayer(), region);
     }
 }
 

@@ -49,8 +49,9 @@ WaylandQPainterOutput::~WaylandQPainterOutput()
     m_slots.clear();
 }
 
-QRegion WaylandQPainterOutput::beginFrame()
+std::optional<QRegion> WaylandQPainterOutput::beginFrame(const QRect &geometry)
 {
+    Q_UNUSED(geometry)
     WaylandQPainterBufferSlot *slot = acquire();
     return accumulateDamage(slot->age);
 }
@@ -152,6 +153,11 @@ QRegion WaylandQPainterOutput::mapToLocal(const QRegion &region) const
     return region.translated(-m_waylandOutput->geometry().topLeft());
 }
 
+QRect WaylandQPainterOutput::geometry() const
+{
+    return m_waylandOutput->geometry();
+}
+
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     : QPainterBackend()
     , m_backend(b)
@@ -191,9 +197,9 @@ void WaylandQPainterBackend::present(AbstractOutput *output)
     rendererOutput->present(rendererOutput->mapToLocal(m_lastDamage));
 }
 
-OutputLayer *WaylandQPainterBackend::getLayer(RenderOutput *output)
+QVector<OutputLayer *> WaylandQPainterBackend::getLayers(RenderOutput *output)
 {
-    return m_outputs[output->platformOutput()].get();
+    return {m_outputs[output->platformOutput()].get()};
 }
 
 }

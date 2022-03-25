@@ -18,7 +18,7 @@ class QPainterCursorView final : public CursorView
 public:
     explicit QPainterCursorView(QObject *parent = nullptr);
 
-    void paint(RenderOutput *output, const QRegion &region) override;
+    void paint(OutputLayer *layer, const QRegion &region) override;
 };
 
 } // namespace KWin

@@ -430,7 +430,7 @@ void Compositor::addOutput(RenderOutput *output)
 
     auto cursorLayer = new RenderLayer(output->platformOutput()->renderLoop());
     cursorLayer->setVisible(false);
-    cursorLayer->setDelegate(new CursorDelegate(output, m_cursorView));
+    cursorLayer->setDelegate(new CursorDelegate(m_cursorView));
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
 
@@ -647,7 +647,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         if (output->platformOutput()->renderLoop() != renderLoop) {
             continue;
         }
-        const auto outputLayer = m_backend->getLayer(output);
+        const auto outputLayer = m_backend->getLayers(output).constLast();
         RenderLayer *superLayer = m_superlayers[renderLoop];
         prePaintPass(superLayer);
         superLayer->setOutputLayer(outputLayer);
@@ -672,7 +672,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             outputLayer->resetRepaints();
             preparePaintPass(superLayer, &surfaceDamage);
 
-            const QRegion repair = outputLayer->beginFrame();
+            const QRegion repair = outputLayer->beginFrame(output->geometry()).value_or(QRegion());
             const QRegion bufferDamage = surfaceDamage.united(repair);
             outputLayer->aboutToStartPainting(bufferDamage);
 

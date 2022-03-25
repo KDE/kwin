@@ -25,12 +25,13 @@ class DrmQPainterLayer : public DrmPipelineLayer
 public:
     DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline);
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QSharedPointer<DrmBuffer> testBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     QRegion currentDamage() const override;
     QImage *image() override;
+    QRect geometry() const override;
 
 private:
     bool doesSwapchainFit() const;
@@ -44,11 +45,12 @@ class DrmVirtualQPainterLayer : public DrmOutputLayer
 public:
     DrmVirtualQPainterLayer(DrmVirtualOutput *output);
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     QRegion currentDamage() const override;
     QImage *image() override;
+    QRect geometry() const override;
 
 private:
     QImage m_image;
@@ -61,11 +63,12 @@ class DrmLeaseQPainterLayer : public DrmPipelineLayer
 public:
     DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline);
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     QSharedPointer<DrmBuffer> testBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
+    QRect geometry() const override;
 
 private:
     QSharedPointer<DrmDumbBuffer> m_buffer;

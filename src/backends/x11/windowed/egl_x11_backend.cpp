@@ -35,17 +35,22 @@ EglX11Output::~EglX11Output()
     eglDestroySurface(m_backend->eglDisplay(), m_eglSurface);
 }
 
-QRegion EglX11Output::beginFrame()
+std::optional<QRegion> EglX11Output::beginFrame(const QRect &geometry)
 {
     eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
     GLRenderTarget::pushRenderTarget(m_renderTarget.data());
-    return m_output->geometry();
+    return geometry;
 }
 
 void EglX11Output::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(damagedRegion)
     m_lastRenderedRegion = renderedRegion;
+}
+
+QRect EglX11Output::geometry() const
+{
+    return m_output->geometry();
 }
 
 EglX11Backend::EglX11Backend(X11WindowedBackend *backend)
@@ -123,9 +128,9 @@ SurfaceTexture *EglX11Backend::createSurfaceTextureInternal(SurfacePixmapInterna
     return new BasicEGLSurfaceTextureInternal(this, pixmap);
 }
 
-OutputLayer *EglX11Backend::getLayer(RenderOutput *output)
+QVector<OutputLayer *> EglX11Backend::getLayers(RenderOutput *output)
 {
-    return m_outputs[output->platformOutput()].get();
+    return {m_outputs[output->platformOutput()].get()};
 }
 
 } // namespace

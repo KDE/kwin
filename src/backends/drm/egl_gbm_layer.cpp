@@ -61,7 +61,7 @@ void EglGbmLayer::destroyResources()
     m_oldGbmSurface.reset();
 }
 
-QRegion EglGbmLayer::beginFrame()
+std::optional<QRegion> EglGbmLayer::beginFrame(const QRect &geometry)
 {
     m_scanoutBuffer.reset();
     // dmabuf feedback
@@ -90,7 +90,7 @@ QRegion EglGbmLayer::beginFrame()
     if (!m_gbmSurface->makeContextCurrent()) {
         return QRegion();
     }
-    auto repaintRegion = m_gbmSurface->repaintRegion(m_pipeline->output()->geometry());
+    auto repaintRegion = m_gbmSurface->repaintRegion(geometry);
 
     // shadow buffer
     if (doesShadowBufferFit(m_shadowBuffer.data())) {
@@ -181,7 +181,7 @@ QSharedPointer<DrmBuffer> EglGbmLayer::testBuffer()
 
 bool EglGbmLayer::renderTestBuffer()
 {
-    beginFrame();
+    beginFrame(m_pipeline->output()->geometry());
     glClear(GL_COLOR_BUFFER_BIT);
     endFrame(m_pipeline->output()->geometry(), m_pipeline->output()->geometry());
     return true;
@@ -498,4 +498,8 @@ bool EglGbmLayer::hasDirectScanoutBuffer() const
     return m_scanoutBuffer != nullptr;
 }
 
+QRect EglGbmLayer::geometry() const
+{
+    return m_pipeline->output()->geometry();
+}
 }

@@ -30,9 +30,10 @@ public:
     X11WindowedQPainterLayer(AbstractOutput *output, X11WindowedBackend *backend);
     ~X11WindowedQPainterLayer();
 
-    QImage *image() override;
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QImage *image() override;
+    QRect geometry() const override;
 
     xcb_window_t window() const;
 
@@ -52,7 +53,7 @@ public:
     ~X11WindowedQPainterBackend();
 
     void present(AbstractOutput *output) override;
-    OutputLayer *getLayer(RenderOutput *output) override;
+    QVector<OutputLayer *> getLayers(RenderOutput *output) override;
 
 private:
     void createOutputs();

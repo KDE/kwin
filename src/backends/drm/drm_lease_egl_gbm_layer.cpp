@@ -57,14 +57,20 @@ QSharedPointer<DrmBuffer> DrmLeaseEglGbmLayer::currentBuffer() const
     return m_buffer;
 }
 
-QRegion DrmLeaseEglGbmLayer::beginFrame()
+std::optional<QRegion> DrmLeaseEglGbmLayer::beginFrame(const QRect &geometry)
 {
-    return QRegion();
+    Q_UNUSED(geometry)
+    return std::optional<QRegion>();
 }
 
 void DrmLeaseEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
+}
+
+QRect DrmLeaseEglGbmLayer::geometry() const
+{
+    return QRect();
 }
 }

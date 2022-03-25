@@ -25,9 +25,9 @@ VirtualQPainterLayer::VirtualQPainterLayer(AbstractOutput *output)
     m_image.fill(Qt::black);
 }
 
-QRegion VirtualQPainterLayer::beginFrame()
+std::optional<QRegion> VirtualQPainterLayer::beginFrame(const QRect &geometry)
 {
-    return m_output->geometry();
+    return geometry;
 }
 
 void VirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -39,6 +39,11 @@ void VirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion
 QImage *VirtualQPainterLayer::image()
 {
     return &m_image;
+}
+
+QRect VirtualQPainterLayer::geometry() const
+{
+    return m_output->geometry();
 }
 
 VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
@@ -69,8 +74,8 @@ void VirtualQPainterBackend::present(AbstractOutput *output)
     }
 }
 
-OutputLayer *VirtualQPainterBackend::getLayer(RenderOutput *output)
+QVector<OutputLayer *> VirtualQPainterBackend::getLayers(RenderOutput *output)
 {
-    return m_backBuffers[output->platformOutput()].get();
+    return {m_backBuffers[output->platformOutput()].get()};
 }
 }

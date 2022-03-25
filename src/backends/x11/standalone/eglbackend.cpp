@@ -31,14 +31,20 @@ EglOutputLayer::EglOutputLayer(EglBackend *backend)
 {
 }
 
-QRegion EglOutputLayer::beginFrame()
+std::optional<QRegion> EglOutputLayer::beginFrame(const QRect &geometry)
 {
+    Q_UNUSED(geometry)
     return m_backend->beginFrame();
 }
 
 void EglOutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     return m_backend->endFrame(renderedRegion, damagedRegion);
+}
+
+QRect EglOutputLayer::EglOutputLayer::geometry() const
+{
+    return screens()->geometry();
 }
 
 EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
@@ -199,10 +205,10 @@ void EglBackend::vblank(std::chrono::nanoseconds timestamp)
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
-OutputLayer *EglBackend::getLayer(RenderOutput *output)
+QVector<OutputLayer *> EglBackend::getLayers(RenderOutput *output)
 {
     Q_UNUSED(output)
-    return m_layer.get();
+    return {m_layer.get()};
 }
 
 EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture)

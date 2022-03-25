@@ -44,6 +44,7 @@ class SurfacePixmapX11;
 class SurfaceTexture;
 class WindowItem;
 class RenderOutput;
+class OutputLayer;
 
 class SceneDelegate : public RenderLayerDelegate
 {
@@ -98,7 +99,7 @@ public:
     SurfaceItem *scanoutCandidate() const;
     void prePaint(RenderOutput *output);
     void postPaint();
-    virtual void paint(const QRegion &region) = 0;
+    virtual void paint(OutputLayer *layer, const QRegion &region) = 0;
 
     /**
      * Adds the Toplevel to the Scene.

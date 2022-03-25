@@ -108,14 +108,20 @@ GlxOutputLayer::GlxOutputLayer(GlxBackend *backend)
 {
 }
 
-QRegion GlxOutputLayer::beginFrame()
+std::optional<QRegion> GlxOutputLayer::beginFrame(const QRect &geometry)
 {
+    Q_UNUSED(geometry)
     return m_backend->beginFrame();
 }
 
 void GlxOutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     return m_backend->endFrame(renderedRegion, damagedRegion);
+}
+
+QRect GlxOutputLayer::geometry() const
+{
+    return screens()->geometry();
 }
 
 GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
@@ -859,10 +865,10 @@ OverlayWindow *GlxBackend::overlayWindow() const
     return m_overlayWindow;
 }
 
-OutputLayer *GlxBackend::getLayer(RenderOutput *output)
+QVector<OutputLayer *> GlxBackend::getLayers(RenderOutput *output)
 {
     Q_UNUSED(output)
-    return m_outputLayer.get();
+    return {m_outputLayer.get()};
 }
 
 GlxSurfaceTextureX11::GlxSurfaceTextureX11(GlxBackend *backend, SurfacePixmapX11 *texture)

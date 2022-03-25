@@ -35,9 +35,10 @@ public:
     EglWaylandOutput(WaylandOutput *output, EglWaylandBackend *backend);
     ~EglWaylandOutput() override;
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void aboutToStartPainting(const QRegion &damage) override;
+    QRect geometry() const override;
 
     bool init(EglWaylandBackend *backend);
     void updateSize();
@@ -80,7 +81,7 @@ public:
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
     void present(AbstractOutput *output) override;
-    OutputLayer *getLayer(RenderOutput *output) override;
+    QVector<OutputLayer *> getLayers(RenderOutput *output) override;
 
     void init() override;
 

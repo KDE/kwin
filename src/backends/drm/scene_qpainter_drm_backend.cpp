@@ -52,8 +52,8 @@ QSharedPointer<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput 
     return QSharedPointer<DrmVirtualQPainterLayer>::create(output);
 }
 
-OutputLayer *DrmQPainterBackend::getLayer(RenderOutput *output)
+QVector<OutputLayer *> DrmQPainterBackend::getLayers(RenderOutput *output)
 {
-    return static_cast<DrmRenderOutput *>(output)->layer();
+    return {static_cast<DrmRenderOutput *>(output)->layer()};
 }
 }

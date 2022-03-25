@@ -35,8 +35,9 @@ VirtualEglOutputLayer::VirtualEglOutputLayer(EglGbmBackend *backend)
 {
 }
 
-QRegion VirtualEglOutputLayer::beginFrame()
+std::optional<QRegion> VirtualEglOutputLayer::beginFrame(const QRect &geometry)
 {
+    Q_UNUSED(geometry)
     return m_backend->beginFrame();
 }
 
@@ -44,6 +45,11 @@ void VirtualEglOutputLayer::endFrame(const QRegion &renderedRegion, const QRegio
 {
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
+}
+
+QRect VirtualEglOutputLayer::geometry() const
+{
+    return screens()->geometry();
 }
 
 EglGbmBackend::EglGbmBackend(VirtualBackend *b)
@@ -230,10 +236,10 @@ void EglGbmBackend::present(AbstractOutput *output)
     eglSwapBuffers(eglDisplay(), surface());
 }
 
-OutputLayer *EglGbmBackend::getLayer(RenderOutput *output)
+QVector<OutputLayer *> EglGbmBackend::getLayers(RenderOutput *output)
 {
     Q_UNUSED(output)
-    return m_layer.get();
+    return {m_layer.get()};
 }
 
 } // namespace

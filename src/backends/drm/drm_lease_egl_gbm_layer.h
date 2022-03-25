@@ -21,10 +21,11 @@ class DrmLeaseEglGbmLayer : public DrmPipelineLayer
 public:
     DrmLeaseEglGbmLayer(EglGbmBackend *backend, DrmPipeline *pipeline);
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QSharedPointer<DrmBuffer> testBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
+    QRect geometry() const override;
 
 private:
     QSharedPointer<DrmBuffer> m_buffer;

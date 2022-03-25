@@ -61,8 +61,10 @@ void VirtualEglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
     }
 }
 
-QRegion VirtualEglGbmLayer::beginFrame()
+std::optional<QRegion> VirtualEglGbmLayer::beginFrame(const QRect &geometry)
 {
+    Q_UNUSED(geometry)
+
     // gbm surface
     if (doesGbmSurfaceFit(m_gbmSurface.data())) {
         m_oldGbmSurface.reset();
@@ -187,4 +189,8 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
     return true;
 }
 
+QRect VirtualEglGbmLayer::geometry() const
+{
+    return m_output->geometry();
+}
 }

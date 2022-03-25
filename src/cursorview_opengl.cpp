@@ -23,7 +23,7 @@ OpenGLCursorView::~OpenGLCursorView()
 {
 }
 
-void OpenGLCursorView::paint(RenderOutput *output, const QRegion &region)
+void OpenGLCursorView::paint(OutputLayer *layer, const QRegion &region)
 {
     const Cursor *cursor = Cursors::self()->currentCursor();
     auto allocateTexture = [this]() {
@@ -55,10 +55,10 @@ void OpenGLCursorView::paint(RenderOutput *output, const QRegion &region)
         }
     }
 
-    const QRect cursorRect = cursor->geometry();
+    const QRect cursorRect = cursor->geometry().translated(-layer->geometry().topLeft());
 
     QMatrix4x4 mvp;
-    mvp.ortho(output->geometry());
+    mvp.ortho(layer->geometry());
     mvp.translate(cursorRect.x(), cursorRect.y());
 
     // Don't need to call GLVertexBuffer::beginFrame() and GLVertexBuffer::endOfFrame() because

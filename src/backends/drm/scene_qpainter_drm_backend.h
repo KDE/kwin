@@ -31,7 +31,7 @@ public:
     ~DrmQPainterBackend();
 
     void present(AbstractOutput *output) override;
-    OutputLayer *getLayer(RenderOutput *output) override;
+    QVector<OutputLayer *> getLayers(RenderOutput *output) override;
 
     QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) override;
     QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;

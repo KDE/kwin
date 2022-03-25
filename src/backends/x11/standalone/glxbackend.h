@@ -65,8 +65,9 @@ class GlxOutputLayer : public OutputLayer
 public:
     GlxOutputLayer(GlxBackend *backend);
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QRect geometry() const override;
 
 private:
     GlxBackend *const m_backend;
@@ -93,7 +94,7 @@ public:
     OverlayWindow *overlayWindow() const override;
     void init() override;
 
-    OutputLayer *getLayer(RenderOutput *output) override;
+    QVector<OutputLayer *> getLayers(RenderOutput *output) override;
 
     Display *display() const
     {

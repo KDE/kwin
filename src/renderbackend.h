@@ -34,7 +34,10 @@ public:
 
     virtual bool checkGraphicsReset();
 
-    virtual OutputLayer *getLayer(RenderOutput *output) = 0;
+    /**
+     * @returns all usable outputlayers for the given RenderOutput, sorted in descending z order
+     */
+    virtual QVector<OutputLayer *> getLayers(RenderOutput *output) = 0;
     virtual void present(AbstractOutput *output) = 0;
 };
 

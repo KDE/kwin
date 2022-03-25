@@ -53,9 +53,10 @@ public:
     WaylandQPainterOutput(WaylandOutput *output);
     ~WaylandQPainterOutput() override;
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QImage *image() override;
+    QRect geometry() const override;
 
     bool init(KWayland::Client::ShmPool *pool);
     void updateSize(const QSize &size);
@@ -88,7 +89,7 @@ public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;
 
-    OutputLayer *getLayer(RenderOutput *output) override;
+    QVector<OutputLayer *> getLayers(RenderOutput *output) override;
     void present(AbstractOutput *output) override;
 
 private:

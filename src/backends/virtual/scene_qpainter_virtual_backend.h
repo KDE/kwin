@@ -27,9 +27,10 @@ class VirtualQPainterLayer : public OutputLayer
 public:
     VirtualQPainterLayer(AbstractOutput *output);
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QImage *image() override;
+    QRect geometry() const override;
 
 private:
     AbstractOutput *const m_output;
@@ -44,7 +45,7 @@ public:
     ~VirtualQPainterBackend() override;
 
     void present(AbstractOutput *output) override;
-    OutputLayer *getLayer(RenderOutput *output) override;
+    QVector<OutputLayer *> getLayers(RenderOutput *output) override;
 
 private:
     void createOutputs();

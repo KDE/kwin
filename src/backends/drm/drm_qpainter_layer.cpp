@@ -30,13 +30,13 @@ DrmQPainterLayer::DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pip
     });
 }
 
-QRegion DrmQPainterLayer::beginFrame()
+std::optional<QRegion> DrmQPainterLayer::beginFrame(const QRect &geometry)
 {
     if (!doesSwapchainFit()) {
         m_swapchain = QSharedPointer<DumbSwapchain>::create(m_pipeline->gpu(), m_pipeline->sourceSize(), DRM_FORMAT_XRGB8888);
     }
     QRegion needsRepaint;
-    if (!m_swapchain->acquireBuffer(m_pipeline->output()->geometry(), &needsRepaint)) {
+    if (!m_swapchain->acquireBuffer(geometry, &needsRepaint)) {
         return QRegion();
     }
     return needsRepaint;
@@ -77,13 +77,20 @@ QImage *DrmQPainterLayer::image()
     return m_swapchain ? m_swapchain->currentBuffer()->image() : nullptr;
 }
 
+QRect DrmQPainterLayer::geometry() const
+{
+    return m_pipeline->output()->geometry();
+}
+
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
     : m_output(output)
 {
 }
 
-QRegion DrmVirtualQPainterLayer::beginFrame()
+std::optional<QRegion> DrmVirtualQPainterLayer::beginFrame(const QRect &geometry)
 {
+    Q_UNUSED(geometry)
+
     if (m_image.isNull() || m_image.size() != m_output->pixelSize()) {
         m_image = QImage(m_output->pixelSize(), QImage::Format_RGB32);
     }
@@ -104,6 +111,11 @@ QRegion DrmVirtualQPainterLayer::currentDamage() const
 QImage *DrmVirtualQPainterLayer::image()
 {
     return &m_image;
+}
+
+QRect DrmVirtualQPainterLayer::geometry() const
+{
+    return m_output->geometry();
 }
 
 DrmLeaseQPainterLayer::DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline)
@@ -128,14 +140,20 @@ QSharedPointer<DrmBuffer> DrmLeaseQPainterLayer::currentBuffer() const
     return m_buffer;
 }
 
-QRegion DrmLeaseQPainterLayer::beginFrame()
+std::optional<QRegion> DrmLeaseQPainterLayer::beginFrame(const QRect &geometry)
 {
-    return QRegion();
+    Q_UNUSED(geometry)
+    return std::optional<QRegion>();
 }
 
 void DrmLeaseQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
+}
+
+QRect DrmLeaseQPainterLayer::geometry() const
+{
+    return QRect();
 }
 }

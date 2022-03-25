@@ -27,8 +27,9 @@ class EglOutputLayer : public OutputLayer
 public:
     EglOutputLayer(EglBackend *backend);
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QRect geometry() const override;
 
 private:
     EglBackend *const m_backend;
@@ -46,7 +47,7 @@ public:
 
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *texture) override;
     void present(AbstractOutput *output) override;
-    OutputLayer *getLayer(RenderOutput *output) override;
+    QVector<OutputLayer *> getLayers(RenderOutput *output) override;
 
     QRegion beginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);

@@ -10,6 +10,7 @@
 
 #include <QObject>
 #include <QRegion>
+#include <optional>
 
 class QImage;
 
@@ -36,7 +37,7 @@ public:
      */
     virtual void aboutToStartPainting(const QRegion &damage);
 
-    virtual QRegion beginFrame() = 0;
+    virtual std::optional<QRegion> beginFrame(const QRect &geometry) = 0;
     virtual void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
 
     /**
@@ -50,6 +51,8 @@ public:
      * default implementation returns nullptr
      */
     virtual QImage *image();
+
+    virtual QRect geometry() const = 0;
 
 private:
     QRegion m_repaints;

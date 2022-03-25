@@ -1805,7 +1805,7 @@ void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
             continue;
         }
         m_scene->prePaint(output);
-        m_scene->paint(output->geometry());
+        m_scene->paint(Compositor::self()->backend()->getLayers(output).constLast(), output->geometry());
         m_scene->postPaint();
     }
 }

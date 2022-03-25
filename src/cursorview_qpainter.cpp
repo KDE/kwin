@@ -21,16 +21,16 @@ QPainterCursorView::QPainterCursorView(QObject *parent)
 {
 }
 
-void QPainterCursorView::paint(RenderOutput *output, const QRegion &region)
+void QPainterCursorView::paint(OutputLayer *layer, const QRegion &region)
 {
-    QImage *renderTarget = Compositor::self()->backend()->getLayer(output)->image();
+    QImage *renderTarget = layer->image();
     if (Q_UNLIKELY(!renderTarget)) {
         return;
     }
 
     const Cursor *cursor = Cursors::self()->currentCursor();
     QPainter painter(renderTarget);
-    painter.setWindow(output->geometry());
+    painter.setWindow(layer->geometry());
     painter.setClipRegion(region);
     painter.drawImage(cursor->geometry(), cursor->image());
 }

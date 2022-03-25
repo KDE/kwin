@@ -23,8 +23,9 @@ class VirtualEglOutputLayer : public OutputLayer
 public:
     VirtualEglOutputLayer(EglGbmBackend *backend);
 
-    QRegion beginFrame() override;
+    std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QRect geometry() const override;
 
 private:
     EglGbmBackend *const m_backend;
@@ -45,7 +46,7 @@ public:
 
     QRegion beginFrame();
     void present(AbstractOutput *output) override;
-    OutputLayer *getLayer(RenderOutput *output) override;
+    QVector<OutputLayer *> getLayers(RenderOutput *output) override;
 
     void init() override;
 
